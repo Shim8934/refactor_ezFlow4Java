@@ -68,6 +68,9 @@
 			var pSelectTab = "completedoclist";
 			var Tab1_SelectID = "";
 		    var Tab1_flag = true;
+			//2018-07-17 김보미 - 프로그래스바
+			var startTime = "";
+			var endTime = "";
 			
 			var selectelem = null;
 			
@@ -756,6 +759,9 @@
 					DeleteDay += ':'+now.getSeconds();
 					
 					if (confirm("<spring:message code='ezApprovalG.t1728' />")) {
+						//2018-10-26 김보미 - 프로그레스바
+						ShowMailProgress();
+						
 						$.ajax({
 							type : "POST",
 							dataType : "text",
@@ -776,6 +782,22 @@
 							},
 							error : function() {
 								alert("<spring:message code='ezApproval.t131' />");
+							},
+							complete: function() {
+						        //2018-10-26 김보미 - 프로그레스바
+						        endTime = new Date();//프로그래스바 종료시간
+								var timeDiff = endTime - startTime;
+								timeDiff /= 1000;
+								var seconds = (timeDiff % 60).toFixed(1);
+								
+								if (seconds <= 0.3) { //0.3초보다 적으면
+									seconds = 300 - (timeDiff * 1000);
+									setTimeout(function() {
+										HiddenMailProgress();
+									}, seconds);
+								} else {
+							        HiddenMailProgress();
+								}
 							}
 						})
 					}
@@ -948,6 +970,21 @@
 		        	document.getElementById("contentlist").style.height = height + "px";
 		        	document.getElementById("contentlist").style.overflow = "auto";
 		        }
+			    
+		        //2018-10-26 김보미 - 프로그래스바		
+				function ShowMailProgress() {
+		        	startTime = new Date();//프로그래스바 시작시간
+					CurrenWidth = document.body.clientWidth;
+		        	
+				    document.getElementById("mailPanel").style.display = "";
+				    document.getElementById("MailProgress").style.top = "400px";
+				    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+				    document.getElementById("MailProgress").style.display = "";
+				}
+				function HiddenMailProgress() {
+				    document.getElementById("mailPanel").style.display = "none";
+				    document.getElementById("MailProgress").style.display = "none";
+				}
 		</script>
 	</head>
 	
@@ -1099,4 +1136,10 @@
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");
 	</script>
+	
+    <!-- 2018-10-26 김보미 - 프로그레스바 -->
+    <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" >&nbsp;</div>
+    <div style="width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;" id="MailProgress">
+    <img src="/images/email/progress_img.gif" style="padding-top:20px;">
+    <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>	
 </HTML>

@@ -46,6 +46,9 @@
 			var startDate = "";
 			var endDate = "";
 			
+			var startTime = "";
+            var endTime = "";
+			
 			var companyID = "";
 			
 			// 화면 호출시 실행 함수
@@ -312,9 +315,27 @@
 				}
 			}
 
+			// 2018-10-26 김민성 - 관리자 히스토리 새로고침 프로그래스 바 추가
 			// 새로고침 클릭시 이벤트
 			function reload() {
+				ShowMailProgress();
+				
 				goToPage(CurPage);
+				
+				endTime = new Date();//프로그래스바 종료시간
+				var timeDiff = endTime - startTime;
+				timeDiff /= 1000;
+				var seconds = (timeDiff % 60).toFixed(1);
+				
+				if (seconds <= 0.3) { //0.3초보다 적으면
+					seconds = 300 - (timeDiff * 1000);
+					setTimeout(function() {
+						HiddenMailProgress();
+					}, seconds);
+				} else {
+			        HiddenMailProgress();
+				}
+
 			}
 
 			// 검색 버튼 클릭시 이벤트
@@ -484,6 +505,22 @@
 		    $(function(){
 	    		windowResize();
 		    });
+		    
+			 // 2018-10-26 김민성 - 관리자 히스토리 새로고침 프로그래스 바 추가
+		    function ShowMailProgress() {
+	        	startTime = new Date();//프로그래스바 시작시간
+				CurrenWidth = document.body.clientWidth;
+	        	
+			    document.getElementById("mailPanel").style.display = "";
+			    document.getElementById("MailProgress").style.top = "400px";
+			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+			    document.getElementById("MailProgress").style.display = "";
+			}
+		    
+			function HiddenMailProgress() {
+			    document.getElementById("mailPanel").style.display = "none";
+			    document.getElementById("MailProgress").style.display = "none";
+			}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -532,6 +569,12 @@
 				</td>
 			</tr>
 		</table>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="mailPanel"></div>
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" >&nbsp;</div>
+	    <div style="width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;" id="MailProgress">
+            <img src="/images/email/progress_img.gif" style="padding-top:20px;">
+            <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
+        </div>
 		<table style="margin: 10px 0px;">
 			<tr>
 				<td width="98%" style="color: #333;">▒ ${mailLogKeepPeriodMessage}</td>

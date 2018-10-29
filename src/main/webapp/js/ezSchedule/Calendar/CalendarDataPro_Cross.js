@@ -89,6 +89,19 @@ function chk_scheduleCSS() {
 function sDataTemp() {
 }
 
+function dateDiff(_date1, _date2) {
+    var diffDate_1 = _date1 instanceof Date ? _date1 : new Date(_date1);
+    var diffDate_2 = _date2 instanceof Date ? _date2 : new Date(_date2);
+ 
+    diffDate_1 = new Date(diffDate_1.getFullYear(), diffDate_1.getMonth()+1, diffDate_1.getDate());
+    diffDate_2 = new Date(diffDate_2.getFullYear(), diffDate_2.getMonth()+1, diffDate_2.getDate());
+ 
+    var diff = Math.abs(diffDate_2.getTime() - diffDate_1.getTime());
+    diff = Math.ceil(diff / (1000 * 3600 * 24));
+ 
+    return diff;
+}
+
 var OrgDataSDT;
 var OrgDataEDT;
 function getCalMonthViewSource_after(text) {
@@ -106,15 +119,23 @@ function getCalMonthViewSource_after(text) {
             var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
             OrgDataSDT = new Date(DataSDT);
             OrgDataEDT = new Date(DataEDT);
-            if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { 
+            
+            var diff = Math.abs(OrgDataEDT.getTime() - OrgDataSDT.getTime());
+            diff = Math.ceil(diff / (1000 * 3600 * 24));
+            
+            if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) {
 
                 var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
                 var day = 1000 * 60 * 60 * 24;
                 betweenDay = parseInt(betweenDay / day, 10);
+                
                 for (var j = 0; j <= betweenDay; j++) {
                     tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                     CalMonthDataBind(tempData[k]);
                     DataSDT.setDate(DataSDT.getDate() + 1);
+                    if (dateDiff(DataSDT, DataEDT) < 1 && _Dtend.substring(10) == " 00:00:00.0") {
+                    	break;
+                    }
                     k += 1;
                 }
             } else {
@@ -194,6 +215,9 @@ function getCalWeekViewSource_after(text) {
                     var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
                     var day = 1000 * 60 * 60 * 24;
                     betweenDay = parseInt(betweenDay / day, 10);
+                    if (_Dtend.substring(10) == " 00:00:00.0") {
+                    	betweenDay = betweenDay - 1;
+                    }
                 } else
                     betweenDay = 0;
 
@@ -290,6 +314,9 @@ function getCalDayViewSource_after(text) {
                     var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
                     var day = 1000 * 60 * 60 * 24;
                     betweenDay = parseInt(betweenDay / day, 10);
+                    if (_Dtend.substring(10) == " 00:00:00.0") {
+                    	betweenDay = betweenDay - 1;
+                    }
                 } else
                     betweenDay = 0;
 
@@ -297,6 +324,9 @@ function getCalDayViewSource_after(text) {
                     tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                     CalDayAllDataBind(tempData[k], k);
                     DataSDT.setDate(DataSDT.getDate() + 1);
+                    if (dateDiff(DataSDT, DataEDT) < 1 && _Dtend.substring(10) == " 00:00:00.0") {
+                    	break;
+                    }
                     k += 1;
                 }
 
@@ -646,14 +676,20 @@ function CalMonthDataBind(oAppointment) {
         }
 
         oTd.appendChild(oSpan);
-
+        
+        var getThisDate = oAppointment.o_start.getFullYear() +"-"+ leadingZeros((oAppointment.o_start.getMonth() + 1), 2) +"-"+ leadingZeros((oAppointment.o_start.getDate()), 2)
+        var getOrgStartDate = oAppointment.OrgStartDate.substring(0,10);
+        var getOrgEndDate = oAppointment.OrgEndDate.substring(0,10);
+        
         var pTime = "";
         var pSubject;
-        if (oAppointment.DateType != 2) {
-            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+        if (oAppointment.DateType != 2 && (getThisDate > getOrgStartDate && getThisDate < getOrgEndDate)) {
+        	pTime = strLang39;
+            pSubject = oAppointment.Subject;
+        } else if (oAppointment.DateType != 2) {
+        	pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
             pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
-        }
-        else {
+        } else {
             pTime = strLang39;
             pSubject = oAppointment.Subject;
         }
@@ -772,15 +808,23 @@ function CalWeekDataBind(oAppointment, order) {
             oSpan.className = "icon_h";
             oTd.appendChild(oSpan);
         }
+        
+        var getThisDate = oAppointment.o_start.getFullYear() +"-"+ leadingZeros((oAppointment.o_start.getMonth() + 1), 2) +"-"+ leadingZeros((oAppointment.o_start.getDate()), 2)
+        var getOrgStartDate = oAppointment.OrgStartDate.substring(0,10);
+        var getOrgEndDate = oAppointment.OrgEndDate.substring(0,10);
+        
 
         var pTime = "";
         var pSubject;
 
-        if (oAppointment.DateType != 2) {
-            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+        if (oAppointment.DateType != 2 && (getThisDate > getOrgStartDate && getThisDate < getOrgEndDate)) {
+        	pTime = "";
             pSubject = oAppointment.Subject;
-        }
-        else {
+        } else if (oAppointment.DateType != 2) {
+	    	//pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+        	pTime = oAppointment.dtstartDisplay
+	        pSubject = oAppointment.Subject;
+        } else {
             pTime = strLang39;
             pSubject = oAppointment.Subject;
         }
@@ -1023,16 +1067,22 @@ function CalDayDataBind(oAppointment, order) {
             oSpan.className = "icon_h";
             oTd.appendChild(oSpan);
         }
-
-
+        
+        var getThisDate = oAppointment.o_start.getFullYear() +"-"+ leadingZeros((oAppointment.o_start.getMonth() + 1), 2) +"-"+ leadingZeros((oAppointment.o_start.getDate()), 2)
+        var getOrgStartDate = oAppointment.OrgStartDate.substring(0,10);
+        var getOrgEndDate = oAppointment.OrgEndDate.substring(0,10);
+        
         var pTime = "";
         var pSubject;
 
-        if (oAppointment.DateType != 2) {
-            pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+        if (oAppointment.DateType != 2 && (getThisDate > getOrgStartDate && getThisDate < getOrgEndDate)) {
+        	pTime = "";
             pSubject = oAppointment.Subject;
-        }
-        else {
+        } else if (oAppointment.DateType != 2) {
+	    	//pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+        	pTime = oAppointment.dtstartDisplay
+	        pSubject = oAppointment.Subject;
+        } else {
             pTime = strLang39;
             pSubject = oAppointment.Subject;
         }
