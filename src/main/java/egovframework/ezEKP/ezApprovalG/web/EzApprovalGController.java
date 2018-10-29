@@ -436,6 +436,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orderOption = request.getParameter("orderOption");
 		String searchQuery = request.getParameter("searchQuery");
 		String searchCompanyID = request.getParameter("searchCompanyID");
+		String searchStatus = request.getParameter("searchStatus");
 
 		logger.debug("listType = " + listType + " || userID = " + userID + " || deptID = " + deptID);
 		
@@ -546,6 +547,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				searchQuery += " AND TBL_APRDOCINFO.COMPANYID = '" + searchCompanyID + "' ";
 			} else {
 				searchQuery += " AND COMPANYID = '" + searchCompanyID + "' ";
+			}
+		}
+		
+		if(searchStatus != null && !searchStatus.equals("") && !searchStatus.equals("ALL")) {
+			if (listType.equals("1") || listType.equals("2") || listType.equals("3") ) {
+				searchQuery += " AND FUNCTIONTYPE = '" + searchStatus + "' ";
 			}
 		}
 		
@@ -4641,6 +4648,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		String searchQuery = request.getParameter("searchQuery");
+		String searchStatus = request.getParameter("searchStatus");
 		String userLang = userInfo.getLang();
 		Document xmlDomSub = null;
 		
@@ -4718,6 +4726,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
             
             if (tempQuery.indexOf("URGENTAPPROVAL;") != -1) {
                 returnQuery += " AND TBL_EXPAPRDOCINFO.URGENTAPPROVAL = '" + xmlDomSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
+            }
+            
+            if (searchStatus != null && !searchStatus.equals("") && !searchStatus.equals("ALL")) {
+            	returnQuery += " AND APRSTATE = '" + searchStatus + "' ";
             }
             returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.TENANT_ID =" + userInfo.getTenantId();
             searchQuery = returnQuery;
@@ -6088,6 +6100,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String subQuery = "";
 		String orderCell = "";
 		String orderOption = "";
+		String searchStatus = "";
 		
 		String result = "";
 	
@@ -6109,8 +6122,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
         docState = xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent();
         orderCell = xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent();
         orderOption = xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent();
+        searchStatus = xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent();
         String ReturnQuery = "(1 = 1) ";
-        Document xmldomsub = commonUtil.convertStringToDocument(xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent());
+        Document xmldomsub = commonUtil.convertStringToDocument(xmlDom.getDocumentElement().getChildNodes().item(23).getTextContent());
         String TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
         
         if(TempQuery.indexOf("KAPR;") > -1) {
@@ -6139,13 +6153,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
         }
         subQuery = ReturnQuery;
         
-        if ( xmlDom.getDocumentElement().getChildNodes().getLength() > 22)
+        if ( xmlDom.getDocumentElement().getChildNodes().getLength() > 24)
         {
-            if (xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent().trim() != "")
-                subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent();
+            if (xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent().trim() != "")
+                subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent();
         }
          result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftfrom, draftto, apprfrom,
-                papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
+                papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, searchStatus,
+                userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 		
          logger.debug("getFormSearchDocListS ended");
          
@@ -7078,6 +7093,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//2018-09-28 김보미 - 검색 추가
 		String searchQuery = request.getParameter("searchQuery");
 		String listType = request.getParameter("listType");
+		String searchStatus = request.getParameter("searchStatus");
 
 		String userLang = userInfo.getLang();
 		Document domSub = null;
@@ -7149,6 +7165,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 		returnQuery += " AND STARTDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true ) + " ','%Y-%m-%d %H:%i:%s') ";
                 	}
                 }
+            }
+            
+            if (searchStatus != null && !searchStatus.equals("") && !searchStatus.equals("ALL")) {
+            	returnQuery += " AND tbl_endreceiptpointinfo.processyn = '" + searchStatus + "' ";
             }
             
             if (tempQuery.indexOf("FORMID;") != -1) {

@@ -28,6 +28,7 @@ function getDocList() {
     }
     
     var searchCompanyID = $("#selectCompany option:selected").val();
+    var searchStatus = $("#sel_status option:selected").val();
     
     $.ajax({
 		type : "POST",
@@ -46,7 +47,8 @@ function getDocList() {
 				orderOption  : OrderOption,
 				searchQuery  : SQLPARADATA,
 				subQuery     : SubQuery,
-				searchCompanyID : searchCompanyID
+				searchCompanyID : searchCompanyID,
+				searchStatus : searchStatus
 				},
 		success: function(xml){
 			getDocList_after(loadXMLString(xml));
@@ -112,8 +114,6 @@ function getDocList_after(xml) {
     var preDocList = new ListView();
    	preDocList.LoadFromID('DocList');
    	var preSelectedRow = preDocList.GetSelectedRows();
-   	
-   	console.log('preSelectedRow', preSelectedRow);
 
     makePageSelPage();
 
@@ -266,6 +266,8 @@ function getReceivedDocList(p_FormCd) {
 
     CurrentDocList = "Receive";
     
+    var searchStatus = $("#sel_status option:selected").val();
+    
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -280,7 +282,8 @@ function getReceivedDocList(p_FormCd) {
 				pageNum : pageNum,
 				orderCell : OrderCell,
 				orderOption : OrderOption,
-				searchQuery : SQLPARADATA
+				searchQuery : SQLPARADATA,
+				searchStatus : searchStatus
 				},
 		success: function(xml){
 			getReceivedDocList_after(loadXMLString(xml));
@@ -400,6 +403,8 @@ function getSendOutDocList() {
         OrderOption = "";
         OrderCell = "";
     }
+    
+    var searchStatus = $("#sel_status option:selected").val();
 
     $.ajax({
 		type : "POST",
@@ -415,7 +420,8 @@ function getSendOutDocList() {
 				orderCell : OrderCell,
 				orderOption : OrderOption,
 				listType : pListTypeValue,
-				searchQuery  : SQLPARADATA
+				searchQuery  : SQLPARADATA,
+				searchStatus : searchStatus
 				},
 		success: function(xml){
 			getSendOutDocList_after(loadXMLString(xml));
@@ -1699,7 +1705,7 @@ function makePageSelPage() {
     document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
 
     try {
-    	if (ViewLeftCount == "YES") {
+    	if (ViewLeftCount == "YES" && ($("#sel_status option:selected").val() == "ALL" || $("#sel_status option:selected").val() == undefined)) {
     		switch (pListTypeValue) {
     		case "1":
     			parent.frames["left"].document.getElementById("count1").innerHTML = "(" + pTotalCnt + ")";

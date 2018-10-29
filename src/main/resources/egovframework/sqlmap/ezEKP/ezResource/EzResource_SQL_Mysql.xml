@@ -841,8 +841,6 @@
 			AND
 				A.OWNERID = #v_POWNERID#
 			AND
-				A.DEPTNM = BB.DEPTNM
-			AND
 				REFLAG = '1'				
 			AND
 				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
@@ -852,6 +850,8 @@
 				( BB.DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR BB.DEPTNM2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
 			AND 
 				A.TENANT_ID = #tenantID#	
+			GROUP BY
+				A.NUM
         	ORDER BY
         		STARTDATE ASC,
                 ENDDATE DESC
