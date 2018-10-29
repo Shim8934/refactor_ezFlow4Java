@@ -1367,29 +1367,29 @@
 			    		//no, 이름, 출근, 퇴근, 근태유형, 일시, 근무지 및 내용
 		    			if (vo.typeId == "A01") { //출근리스트
 				    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
-			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:55px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
-			    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(11,16))));
-			    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
-				    		objTr.append($("<td style='max-width:10%; width:10%;' title ='" + "출/퇴근" + "'></td>").append($("<div style='width:55px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text("출/퇴근")));
-			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
+			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(11,16))));
+			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+				    		objTr.append($("<td style='max-width:8%; width:8%;' title ='" + "출/퇴근" + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text("출/퇴근")));
+			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    			} else if (vo.typeId == "A03") { //퇴근
 		    				endTimeList.push(vo);
 		    			} else if (vo.typeId == "A02") { //지각
 				    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
-			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:55px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
-			    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span>")));
-			    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
-				    		objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.typeName + "'></td>").append($("<div style='width:55px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.typeName)));
-			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
+			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span>")));
+			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+				    		objTr.append($("<td style='max-width:8%; width:8%;' title ='" + vo.typeName + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.typeName)));
+			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    			} else { //휴근
 				    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
-			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:55px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
-			    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttBlueText'>" + vo.startDate.substring(11,16) + "</span>")));
-			    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span>")));
-				    		objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.typeName + "'></td>").append($("<div style='width:55px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.typeName)));
-			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
+			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttBlueText'>" + vo.startDate.substring(11,16) + "</span>")));
+			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span>")));
+				    		objTr.append($("<td style='max-width:8%; width:8%;' title ='" + vo.typeName + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.typeName)));
+			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    			}
 		    		}		
@@ -1398,7 +1398,7 @@
 		    	
 		    	//퇴근 리스트
 		    	endTimeList.forEach(function(vo, index) {
-		    		$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(11,16) + "</div>");
+		    		$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(11,16) + "</div>");
 		    	});
 			}
 			function attitudeList(result) {
@@ -1425,7 +1425,7 @@
 			    		if (listTrId != "") { //리스트에 이미 있는 경우
 			    			if ($("#" + listTrId + " td:eq(5) div").text() == null || $("#" + listTrId + " td:eq(5) div").text() == "") { //
 				    			//유형
-				    			$("#" + listTrId + " td:eq(4)").html("<div style='width:55px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.typeName + "</div>");
+				    			$("#" + listTrId + " td:eq(4)").html("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.typeName + "</div>");
 				    			$("#" + listTrId + " td:eq(4)").attr("title",vo.typeName);
 				    			
 				    			//일시
@@ -1457,7 +1457,7 @@
 				    			}
 				    			$("#" + listTrId + " td:eq(6)").attr("title",statusContent);
 			    			} else {
-				    			var objTr = $("<tr></tr>").append($("<td style='max-width:10%; width:10%;' title ='" + vo.typeName + "'></td>").append($("<div style='width:55px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.typeName)));
+				    			var objTr = $("<tr></tr>").append($("<td style='max-width:8%; width:8%;' title ='" + vo.typeName + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.typeName)));
 					    		//일시
 				    			if (vo.dateType == 1) {
 					    			objTr.append($("<td></td>").append($("<div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,11))));
@@ -1504,10 +1504,11 @@
 			    		} else {
 			    			//no, 이름, 출근, 퇴근, 근태유형, 일시, 근무지 및 내용
 			    			var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
-			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:55px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
-			    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
-			    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
-				    		objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.typeName + "'></td>").append($("<div style='width:55px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.typeName)));
+			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
+			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+				    		objTr.append($("<td style='max-width:8%; width:8%;' title ='" + vo.typeName + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.typeName)));
+				    		
 				    		//일시
 			    			if (vo.dateType == 1) {
 				    			objTr.append($("<td></td>").append($("<div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,11))));
