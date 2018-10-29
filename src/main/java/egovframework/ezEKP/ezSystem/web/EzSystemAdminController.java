@@ -463,6 +463,8 @@ public class EzSystemAdminController {
 			if (userInfo == null) {
 				return "cmm/error/adminDenied";
 			}
+			
+			model.addAttribute("cloudFlag", false);
 		} else {
 			model.addAttribute("cloudFlag", true);
 		}
