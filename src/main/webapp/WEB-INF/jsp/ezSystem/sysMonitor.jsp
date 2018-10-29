@@ -13,13 +13,13 @@
 <script type="text/javascript" src="${util.addVer('/js/jui/lib/core.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jui/dist/chart.min.js')}"></script>
 <script type="text/javascript">
+	var cloudFlag = "${cloudFlag}";
 
 	$(document).ready(function(){
 		var obj = JSON.parse('${serverList}');
 		var list = obj[0].getSysInfo;
 		var str = "";
 		var setDiv = "";
-		var cloudFlag = "${cloudFlag}";
 		
 		// 서버의 갯수만큼 checkbox 생성
 		for (var i = 0; i < obj.length; i++) {
