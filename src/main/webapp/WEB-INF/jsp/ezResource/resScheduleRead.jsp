@@ -388,7 +388,25 @@
 	            if (pSelUserID != "") {
 	                window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID + "&dept=" + deptID, "", "left=" + px + ",top=" + py + ",height=" + c_Height + "px,width=" + c_Width + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            }
-	        }  
+	        }
+			
+			function addRelatedCabinet() {
+				//* moon 2018.07.26
+				window.open("/ezCabinet/cabinetAddRelated.do?module=resrc", "addRelated", getOpenWindowfeature(480, 505));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+				return feature;
+			}
 		</script>
 	</head>
 	
@@ -425,7 +443,10 @@
 										</c:otherwise>
 									</c:choose>
 								</c:if>
-							</c:if>	                            
+							</c:if>
+							<c:if test="${useCabinet == 'YES'}">
+								<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+							</c:if>
                     	</ul>
                 	</div>
                 	<div id="close">

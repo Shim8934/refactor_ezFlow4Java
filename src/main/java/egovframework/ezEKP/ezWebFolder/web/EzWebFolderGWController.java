@@ -760,7 +760,7 @@ public class EzWebFolderGWController {
 		logger.debug("putFileRename end");
 		return result;
 	}
-
+	
 	@RequestMapping(value="/rest/ezwebfolder/filemove/modes/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject putFileMove(@PathVariable(value="mode") String mode, Locale locale, HttpServletRequest request) throws Exception {
 		logger.debug("putFileMove start");

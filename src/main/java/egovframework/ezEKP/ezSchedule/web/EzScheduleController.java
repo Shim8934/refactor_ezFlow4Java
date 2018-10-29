@@ -67,6 +67,7 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -129,6 +130,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	
 	@Resource(name="EzPortalService")
 	private EzPortalService ezPortalService;
+	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
 	
 	/**
 	 * 일정관리 인덱스화면 호출함수
@@ -2045,6 +2049,12 @@ public class EzScheduleController extends EgovFileMngUtil {
         int tenantId = loginVO.getTenantId();
         String companyID = loginVO.getCompanyID();
         
+        //baonk 추가 2018-08-08
+        String use_cabinet = ezCommonService.getTenantConfig("useCabinet", loginVO.getTenantId());
+        if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("schedl", loginVO);
+		}
+        
         //일정 상세정보
         ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, tenantId, companyID);
          
@@ -2122,6 +2132,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("resourceCnt", resourceCnt);
         model.addAttribute("_admin", _admin);
         model.addAttribute("_editPosible", _editPosible);
+        model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
         
 		return "ezSchedule/scheduleRead";
 	}

@@ -853,7 +853,23 @@
 		    function btn_One_Line_Reply_Onclick() {
 		    	openCommunityBoardComment();
 	    		return;
-		    } 
+		    }
+			function addRelatedCabinet() {
+				window.open("/ezCabinet/cabinetAddRelated.do?module=commu", "addRelated", getOpenWindowfeature(480, 505));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+				return feature;
+			}
 		</script>
 	</head>
 	<body class = "popup">
@@ -926,6 +942,9 @@
 									</c:choose>
 								</c:otherwise>
 	                    	</c:choose>
+							<c:if test="${useCabinet == 'YES'}">
+								<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+							</c:if>
 	                    </ul>
 	                </div>
 	                <div id="close">

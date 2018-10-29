@@ -315,6 +315,24 @@
 	            post_to_url("/ezSchedule/scheduleContentsPrint.do", params, "post");
 	        }
 	
+			function addRelatedCabinet() {
+				//* moon 2018.07.26
+				window.open("/ezCabinet/cabinetAddRelated.do?module=schedl", "addRelated", getOpenWindowfeature(480, 505));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+				return feature;
+			}
+	        
 	        function post_to_url(path, params, method) {
 	            method = method || "post";
 	
@@ -372,9 +390,12 @@
                                 </c:if>
                             	<li>
                             		<span onclick="Print_onClick()"><spring:message code='ezSchedule.t217' /></span>
-                            	</li>                            	
+                            	</li>
+								<c:if test="${useCabinet == 'YES'}">
+									<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+								</c:if>
 	                        </ul>
-	                    </div>	                    
+	                    </div>
 	                    <div id="close">
 	                        <ul>
 	                            <li>

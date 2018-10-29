@@ -524,6 +524,22 @@
 				$("#divCross").css("height", res);
 			}
 			
+			function addRelatedCabinet() {
+				window.open("/ezCabinet/cabinetAddRelated.do?module=option", "addRelated", getOpenWindowfeature(480, 505));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+				return feature;
+			}
 		</script>
 	</head>
 	<style>
@@ -571,7 +587,10 @@
 	                        <c:if test="${result.memberID == userInfo.id}">
 	                        	 <li><span onclick="circularReUse()"><spring:message code='ezCircular.t183' /></span></li>
 	                        </c:if>
-	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>	                        
+	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>
+							<c:if test="${useCabinet == 'YES'}">
+								<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+                    		</c:if>
                     	</ul>
                 	</div>
                 	<div id="close">

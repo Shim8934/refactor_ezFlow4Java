@@ -123,7 +123,10 @@
 							</c:if>
 							<!-- 		        	인쇄 -->
 							<li><span onclick='printJournal();'> <spring:message code='main.t73' /></span></li>
-	
+							<!-- 캐비넷  -->
+							<c:if test="${useCabinet == 'YES'}">
+								<li><span onclick='addRelatedCabinet()'><spring:message code='ezCabinet.t125' /></span></li>
+							</c:if>
 							<c:set var="userAgentInfo" value="${fn:toLowerCase(header['User-Agent'])}" />
 <%-- 							<c:if test="${fn:indexOf(userAgentInfo,'trident') eq -1}"> --%>
 <!-- 									        		엑셀저장 -->
@@ -444,6 +447,24 @@
 		    	return true;
 		    }
 		    
+			function addRelatedCabinet() {
+				//* moon 2018.07.26
+				window.open("/ezCabinet/cabinetAddRelated.do?module=jounl", "addRelated", getOpenWindowfeature(480, 505));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+				return feature;
+			}
+			
 		  //업무일지 댓글
 		    function openJournalReply() {
 		    	DivPopUpShow($('body').prop('scrollWidth') * 0.95, $('body').prop('scrollHeight') * 0.92, "/ezJournal/journalReply.do?journalId="+journalId);

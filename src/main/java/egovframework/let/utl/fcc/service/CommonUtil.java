@@ -1296,6 +1296,11 @@ public class CommonUtil {
 		return resultBody;
 	}
 	
+	public String getMailPassword() {
+		String pass = jspw;
+		return pass;
+	}
+	
 	/**
 	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드
 	 * @param resteUrl
@@ -1356,7 +1361,7 @@ public class CommonUtil {
 		logger.debug("getJsonFromMemoRestApi ended");
 		return resultBody;
 	}
-
+	
 	public String getWildcardEscapedString(String s, int dbName) {
 		if (dbName == ORACLE) {
 			if ((s.indexOf('%') == -1) && (s.indexOf('_') == -1) && (s.indexOf('\\') == -1)) {

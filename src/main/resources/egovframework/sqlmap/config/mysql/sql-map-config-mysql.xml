@@ -51,6 +51,10 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Mysql_m.xml"/>
 	<!--사다리게임 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezLadder/EzLadder_SQL_Mysql.xml"/>
+	<!-- 케비닛 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinet_SQL_Mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinet_SQL_Mysql_h.xml"/>
+	
     <!-- 메모 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezMemo/EzMemo_SQL_Mysql.xml"/>
     
@@ -78,6 +82,8 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezSystem/EzSystemAdmin_SQL_Mysql.xml"/>
     <!-- 웹폴더 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolderAdmin_SQL_Mysql.xml"/>
+	<!-- 케비닛 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinetAdmin_SQL_Mysql.xml"/>
     <!-- 3.모바일 모듈관리 SQL쿼리 XML -->
     
     <!-- 전자결재 -->

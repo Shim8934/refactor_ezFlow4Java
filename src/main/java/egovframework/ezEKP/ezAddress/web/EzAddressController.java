@@ -40,6 +40,7 @@ import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
 import egovframework.ezEKP.ezAddress.vo.AddressOldZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -76,6 +77,9 @@ public class EzAddressController{
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
+	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
 	
 	/**
 	 * 도로명 주소 팝업창 호출 함수 (Open API)
@@ -586,6 +590,12 @@ public class EzAddressController{
 		String compAdmin = "";
 		String deptAdmin = "";
 		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("addrs", userInfo);
+		}
+		
 		String pAddressId = request.getParameter("addressid") == null ? "" : request.getParameter("addressid");
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
@@ -634,6 +644,7 @@ public class EzAddressController{
 		model.addAttribute("pFolderId", pFolderId);
 		model.addAttribute("pFolderType", pFolderType);
 		model.addAttribute("getsMemo", replaceMemo);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		logger.debug("addressRead ended.");
 		logger.debug("useEditor=" + useEditor + ",noneActiveX=" + noneActiveX + ",userInfo=" + userInfo
@@ -790,6 +801,12 @@ public class EzAddressController{
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String noneActiveX = "YES";
 		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("addrs", userInfo);
+		}
+		
 		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 			compAdmin = "Y";
 			deptAdmin = "Y";
@@ -835,6 +852,7 @@ public class EzAddressController{
 		model.addAttribute("useAnyoneEdit", useAnyoneEdit);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("noneActiveX", noneActiveX);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		logger.debug("addressReadGroup ended.");
 		logger.debug("pFolderType=" + pFolderType + ",pAddressId=" + pAddressId + ",userInfo=" + userInfo + ",addressInfo=" + addressInfo

@@ -353,7 +353,7 @@ function toggleUploadBttn(levelValue) {
 	if (levelValue == '0') {
 		dragDropAreaElmt.ondragenter = null;
 		dragDropAreaElmt.ondragover  = null;
-		dragDropAreaElmt.ondragover  = null;
+		dragDropAreaElmt.ondrop      = null;
 	}
 	else {
 		dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};

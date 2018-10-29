@@ -1,0 +1,464 @@
+.left_cabinet span {background: url(/images/cabinet/left_cabinet.png) no-repeat left center; display: inline-block; height: 50px; line-height: 48px; font-weight: normal; color: #fff; margin: 0px 0px 0px 16px; padding: 0px 0px 0px 33px; text-align: center; font-family: Malgun Gothic; font-size: 20px;}
+.left_cabinet {height: 52px; background: #0470e4;}
+#left {overflow: hidden;}
+#left h3 {border-top: none; border-bottom: none;}
+#left >ul >li {list-style-type: none;}
+#left >ul >li:only-child {padding: 0px;}
+#left ul li.on {font-weight: bold;}
+.leftbody ul:not(:last-child) li:last-child {border-bottom: none;}
+#mainmenu >ul >li >img {margin-right: -2px;}
+.mainbody.notover {overflow: hidden !important;}
+
+.bnkCabSelect {background-color: #e9f1ff; cursor: pointer;}
+.bnkCabNormal:hover {background-color: #f4f5f5; cursor: pointer;}
+
+.bnkCabSelect2, .bnkCabNormal2 {cursor: pointer;}
+.bnkCabSelect2 .imgCabDivMain, .bnkCabSelect2 .txtCabTd {background-color: #e9f1ff;}
+.bnkCabNormal2:hover .imgCabDivMain {background-color: #f4f5f5;}
+
+.adminPanel {width:100%; padding:9px 16px 15px; font-weight: bold;}
+.adminPanel img {vertical-align: middle; margin-top: -2px; width: 20px;}
+.adminPanel span {margin-left: 10px; font-size: 18px; padding-top: 3px; color: #333; font-family: Malgun Gothic, Meiryo UI;}
+.deptOrg .mainlist tr th {border-top: none !important;}
+.cabiMain {margin-left:5px}
+.cabiMain .cabBttnDiv {width: 680px; text-align: center;}
+.cabiMain .bttnDiv {width: 300px; text-align: center;}
+.cabGeneral {margin: 0px 10px;}
+.cabGeneral .cabBttnDiv {width: 680px; text-align: center;}
+.cabGeneral .cabBttnDiv a.imgbtn, .cabiMain .bttnDiv a.imgbtn, .cabiMain .cabBttnDiv a.imgbtn {box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
+.cabGeneral .cabBttnDiv a.imgbtn span, .cabiMain .bttnDiv a.imgbtn span, .cabiMain .cabBttnDiv a.imgbtn span {height: 24px; line-height: 24px; font-weight: bold; font-size: 12px; color: #000;}
+.cabPersonalDiv, .cabGroupDiv {height: 500px; display: flex;}
+.cabPersonalDiv >div {border: 1px solid #ddd;}
+.cabPersonalDiv .compOrg, .cabGroupDiv .compOrg {width: 250px; min-width: 250px; padding: 5px;}
+.cabPersonalDiv .compOrg >div, .cabPersonalDiv .deptOrg >div {height: 100%; width: 100%;}
+.cabPersonalDiv .compOrg >div {overflow: auto; white-space: nowrap;}
+.cabPersonalDiv .deptOrg {flex: 1; margin-left: 10px;}
+.cabGroupDiv .selectBttns {min-width: 30px; width: 30px; height: 37px;; margin: auto 5px;}
+.selectBttns >div >img {cursor: pointer; width: 16px; height: 16px; margin: 0px auto; display: block;}
+.selectBttns >div:first-child {margin-bottom: 5px;}
+.cabGroupDiv .compOrg {display: flex; flex-flow: column;}
+.compOrg .deptPart {height: 250px; margin-bottom: 10px; overflow: auto;}
+.compOrg .usersPart {flex: 1;}
+.compOrg .deptPart, .compOrg .usersPart, .cabGroupDiv .userDiv {border: 1px solid #ddd;}
+.cabGroupDiv .userDiv {flex: 1;}
+.cabTtlInf {font-weight: normal; color: #666;}
+.cabTtlInf >span {color: #017BEC !important; font-weight: bold !important;}
+
+.compSelect {margin: 10px 0px;}
+.compSelect >span {font-size: 12px; display:inline-block; vertical-align: middle;}
+.compSelect >select {font-size: 12px; height: 20px; display:inline-block;}
+.mainbody #mainSetting {margin: 10px 0px;}
+.content.config {width: 680px; margin-top: 5px;}
+.content.on {width: 300px;}
+.content.on tr {height: 40px;}
+.content .white {background-color: #fff !important;}
+.content .large {width: 40%;}
+.white >input[type='text'] {height: 30px; padding: 0px 5px; outline: none;}
+.spanName, .selectedNode {height: 22px; line-height: 22px; color: #000; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}
+.spanName:hover {color: #9b9b9b;}
+.selectedNode {font-weight: bold;}
+.cabinetMinus, .cabinetPlus {width: 18px; height: 18px; cursor: pointer;}
+.perSettingOff, .perSettingOn {overflow: hidden; width: 300px; height: 110px; position: fixed; z-index: 2000;}
+.userCapDiv {margin: 10px 0px; overflow: auto;}
+
+/* Volume part */
+.cabVolumeDiv {width: 677px; border: 1px solid #d6d6d6; margin-top:5px}
+.cabVolumeDiv >div {width:400px; height:200px; display: inline-block;}
+.volumeDiv {margin: auto;padding: 0px; width: 176px; overflow: hidden; margin-top: 15px; margin-bottom: 10px;}
+/* .volumeDiv >div:first-child {margin-left:20px; margin-top: 10px; width: 80%; height: 7px; background-color: white; border: 1px solid #ddd; overflow: hidden;}
+.volumeDiv .volumeBar {width: 80%;}
+.volumeDiv .volumes {text-align:center; margin-top:10px; margin-bottom:5px; font-weight: bold; font-family: dotum;} */
+
+.myBar_red    {background-color: #ff1616    ;}
+.myBar_orange {background-color: #ff7f00    ;}
+.myBar_yellow {background-color: #ffb600    ;}
+.myBar_green  {background-color: #4CAF50    ;}
+.myBar_white  {background-color: transparent;}
+
+.cabSelectConf {width: 50px;}
+.cabPreviewMode {width: 100px;}
+.cabDivPrevW {height: 100%; overflow: hidden; vertical-align: top; flex: 1; display: flex; margin-left: 5px;}
+.cabMainPrevW {height: 100%; width: 100%; position: relative;}
+.cabMainPrevW >div {width: 100%; height: 100%; display: flex; flex-flow: column;}
+.cabPrevTitle {width: 100%; color: #333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px; clear: both; padding: 0px; height: 36px; line-height: 36px; display: flex;}
+.cabPrevTitle .cabPrevIcon {background-image: url('/images/kr/cm/btn_newpopup.gif'); background-repeat: no-repeat; background-position: center left; margin-left: 14px; padding-right: 5px; display: inline-block; float: left; cursor: pointer; height: 100%; width: 27px;}
+.prevHeaderCabW {border-top: 1px solid #ddd;}
+.prevHeaderCabW >div, .prevHeaderCabH >div {background-color: #f8f8fa; border-bottom: solid 1px #e8e8e8; position: relative;}
+.prevHeaderCabW >span, .prevHeaderCabH >span {margin-top: 50px;height: 10px; display: inline-block; text-align: center; width: 100%;}
+.cabPrevTitle .cabTitleTxt {height: 100%; color: #333; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; flex: 1;}
+.cabPreDate {display: inline-block; width: 150px; font-size: 12px; color: #333; text-align: center;}
+.cabPrevItem {margin: 0px; padding: 4px 10px 2px 14px; font-size: 12px; color: #666;}
+.cabPrevItem dt {font-weight: normal; margin: 0px 10px 0px 0px; line-height: 18px; padding: 0px 0px 2px 0px; color: #919293;}
+.cabPrevItem dd {margin: -19px 0px 0px 0px; padding: 0px 0px 2px 60px; line-height: 18px; word-break: break-all;}
+.cabPrevItem .ddRes {padding: 0px 0px 2px 70px !important;}
+.zoomDiv {text-align: left; padding: 5px; margin: 0px; line-height: 0px;}
+.zoomDiv >img {cursor: pointer;}
+
+.txtSpan {cursor: pointer;}
+.txtSpan:hover {color: #164aad !important; text-decoration: none !important;}
+.icDown, .icUp {margin: 0px 0px 0px 3px; cursor: pointer; width: 11px; height: 11px; display: inline-block; vertical-align: middle;}
+.icDown {background: url(/images/icon_graydown.gif) no-repeat center bottom;}
+.icUp {background: url(/images/icon_grayup.gif) no-repeat center bottom;}
+.relateList, .relateList2 {padding: 0px; margin: 3px 0px 0px 0px; line-height: 18px;}
+.relateList2 .txtSpan {text-decoration: underline;}
+.relateList.hide, .relateList2.hide {display: none;}
+.relateList em, .relateList2 em {font-style: normal;}
+.cabWrapFile {padding: 8px;}
+.itemContentH, .itemContentW {overflow: auto; flex: 1; display: flex; flex-flow: column;}
+.itemContentH .fileDetailDiv, .itemContentW .fileDetailDiv {height: auto !important; min-height: auto !important;}
+
+.cabDivPrevH {width: 100%; overflow: hidden; flex: 1; display: flex;}
+.cabMainPrevH {width: 100%; position: relative; padding-top: 5px;}
+.cabMainPrevH >div {height: 100%; display: flex; flex-flow: column;}
+.cabinetTree {margin: 10px 10px 0px 10px; min-height: 100px; white-space: nowrap; overflow-x: auto;}
+.cabinetTree2:empty {padding: 0px !important;}
+.cabinetTree2 {margin: 10px; white-space: nowrap; overflow-x: auto; min-height: 100px;}
+.cabinetImg {width: 18px; height: 18px; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
+.cabSpanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent;}
+.overY {overflow-y: hidden !important;}
+.cabManag {border-top: 1px solid #eaeaea !important;}
+
+/* Table css */
+.inputTh {width: 20px;}
+.nameTh, .deptTh, .valueTh, .limitTh {width: 25%;}
+.valueTd {white-space: nowrap;}
+.valueTd input[type='text'] {width: 70px; max-width: 70px; padding: 0px 5px;}
+.valueTd span {margin-left: 5px;}
+.cabTable2 {width: 680px; border: 1px solid #efefef; border-collapse: collapse;}
+.cabTable2 tr th {width: 50%;}
+.cabTable2 tr {height: 32px;}
+.cabTable2 tr td {text-align: center; border-bottom: 1px solid #efefef; color: #5b5a5a; word-wrap: break-word; padding: 5px 4px 3px 4px; font-weight: normal; font-size: 12px; border-spacing: 0;}
+.cabTable2 tr td label {margin-right: 3px;}
+.cabTable2 tr td input[type='radio'] {vertical-align: middle; margin: 0px 3px;}
+.cabTable .cabName, .cabTable2 .cabName {text-align: left !important; padding-left: 20% !important;}
+.cabViewPopup {width:150px; position: absolute; background-color:#fff; z-index: 2500;}
+.cabViewPopup .popupwrap1 {background-color:#fff; border: 1px solid #666a64; padding: 0px; margin: 0px; position: relative;}
+.cabViewPopup .popupwrap2 {border: 2px solid #e5e5e5; padding: 10px;}
+
+.cabPanel {position: absolute; top: 0px; left: 0px; botom: 0px; right: 0px; height: 100%; width: 100%; background: transparent;}
+.cabTbl {width: 100%; text-algin: center;}
+.cabTbl th {cursor: pointer !important;}
+.cabTbl .inputTh {width: 20px;}
+.cabTbl .noTh   {width: 20px; text-align: center;}
+.cabTbl .typeTh {width: 60px; text-align: center;}
+.cabTbl .ttlTh  {width: 40%;}
+.cabTbl .userTh {width: 30%;}
+.cabTbl .dateTh {width: 30%;}
+.cabTbl .sizeTh {width: 101px; text-align: center;}
+.tableDataDiv {overflow-y: auto; overflow-x: hidden;}
+
+.cabcol {width: 80px;}
+.cabTitle {line-height: 20px;}
+.list_element.cabinet {width: 100%; border-spacing: 0px; border-collapse: collapse; border:none;}
+.list_element.cabinet select {width: 40px; height: 20px;}
+
+.ui-resizable-e, .ui-resizable-s {border: 1px solid #ddd; background-repeat: no-repeat;}
+.ui-resizable-e {background-image: url('/images/prevview_hbar_dotted.gif'); width: 5px !important; background-position: center;}
+.ui-resizable-s {background-image: url('/images/prevview_bar_dotted.gif'); height: 5px !important; background-position: center -2px;}
+
+.organInfTbl {width: 100%; margin-top: -1px;}
+.organInfTbl tr th {white-space: normal; background-color: white; border-top: 1px solid #ddd; border-bottom: 1px solid #eaeaea;}
+
+.cabShareSearTbl {margin-top: 3px; width: 100%;}
+.cabShareSearTbl tr td:nth-child(1) >div {margin-left: 5px;}
+.cabShareSearTbl tr td:nth-child(1) >div >input[type='text'] {width: 130px; margin: 0px; height: 21px; padding-left: 5px;}
+.cabShareSearTbl tr td:nth-child(2) >div {float: right; margin-right: 5px; position: relative;}
+.cabOrganTbl {margin-top: 3px;}
+.cabOrganTbl .listview {width: 440px; border-top: none !important;}
+.cabOrganTbl tr td:first-child {border-right: 0px;}
+.bnkOrgTree {width: 220px; height: 518px; overflow-x: auto; overflow-y: auto; white-space: nowrap;}
+.cabOrganDeptTbl {table-layout: fixed; width: 100%;  border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0; border-collapse: collapse;}
+.cabOrganDeptTbl tr th{text-align: left; border: 0px; text-decoration: none; color: #777; font-size: 12px; line-height: 19px; padding: 4px 4px 0px; white-space: normal; background-color: white; border-top: 1px solid #ddd; border-bottom: 1px solid #eaeaea;}
+.cabOrganDeptTbl tr th >span:nth-child(1) {font-weight: normal; margin-top: 2px; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;}
+.cabOrganDeptTbl tr th >span:nth-child(1) >img {vertical-align: middle; margin-right: 3px;}
+/* .cabOrganDeptTbl tr th >span:nth-child(1) >span {color: #017BEC;} */
+.cabOrganDeptTbl tr th >span:nth-child(2) {float: right; position: relative;}
+.cabColor {color: #017BEC !important;}
+
+/* cabinet item */
+.topSearchSpan {float: right; font-weight: normal; color: black;}
+.topSearchSpan >select {height: 27px; margin-right: 0px; border: 1px solid #cbcbcb; min-width:80px; outline: none;}
+.topSearchSpan >input[type='text'] {width: 150px; ime-mode: active; height: 27px; border: 1px solid #cbcbcb; border-right: 0px; vertical-align: top; outline: none; padding: 0px 3px;}
+.topSearchSpan >a {float: right;}
+.topSearchSpan >a img {border: none; cursor: pointer;}
+.btnimg.cabinet {width: 22px; height: 20px;}
+.popup.cabsearch, .popup.cabChgon {border-radius: 5px;}
+.cabSearchPanel, .cabSearchPanel2 {z-index: 2000; position: fixed; border:1px solid #666; background-color: #fff;; border-radius: 5px;}
+.cabSearchPanel {height: auto; width: 464px;}
+.cabSearchPanel2 {height: 148px; width: 500px;}
+.cabSearchPanel h1, .cabSearchPanel2 h1 {margin-top: 0px !important;}
+.cabtable {border-collapse: collapse; width:100%; margin-bottom: 10px;}
+.cabtable .layerHeader >img {vertical-align: middle; padding-bottom: 1px; width: 16px;}
+.cabSearchTh2 {border-left-color:white !important; border-right-color:white !important;height:10px !important;}
+.cabSearchTd2 select {margin: 0px 5px;}
+.cabSearchTd2 >div {display: flex;}
+.cabSearchTd2 input[type='text'] { flex: 1; outline: none; padding: 0px 5px; margin-right: 5px;}
+.cabSearchTd {border:1px solid #b6b6b6; background-color:#fff;}
+.cabSearchTd input[type='text'] {height: 23px; width: 100%; outline: none; padding: 0px 5px;}
+.cabSearchTd input[type='text']:focus, .cabSearchTd2 input[type='text']:focus, .white >input[type='text']:focus, .cabRlSearch input[type='text']:focus, .cbNameInputDiv >input[type='text']:focus, .topSearchSpan >input[type='text']:focus {border-color:#66afe9; outline:0; -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6); box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
+.cabSearchTd .cabDate {width: 100px !important; text-align: center;}
+.cabBttn2 span {display:inline-block; border:1px solid #d0d0d0; border-radius:3px; font:12px gulim; letter-spacing:-1; vertical-align:top; text-align: center;}
+.cabBttn2 span {padding: 4px 10px;}
+.cabBttn2 span:hover {color:rgb(4, 112, 227); border-color:rgb(4, 112, 227);}
+.cabSearchTd .searchDetail {padding-right: 5px; white-space: nowrap;}
+.cabSearchTd >div {display: flex; align-items: center;}
+.cabSearchTd .cabSearchName {flex: 1; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; padding-left: 5px;}
+.cabBttn2 {cursor: pointer;}
+.cabRlSearch {height: auto; width: 100%;}
+.cabRlSearch >div {display: flex; width: 450px;}
+.cabRlSearch input[type='text'] {flex: 1; height: 24px; margin-right: 5px; padding: 0px 5px; outline: none;}
+.cabRlMain {width: 100%; display: flex; height: 458px; margin-top: 10px;}
+.cabRlMain .cabRlTreeMain {height: 100%; flex: 1; display: flex;}
+.cabRlTreeMain .cabRlTreeDiv {width: 220px; min-width: 220px; border: 1px solid #ddd; margin-right: 5px; overflow: auto;}
+.cabRlTreeDiv .cbTree {padding: 5px; white-space: nowrap;}
+.cabRlTreeMain .cabRlSelect {flex: 1; border: 1px solid #ddd; display: flex; flex-flow: column;}
+.rlSelectTtl, .rlSelectTtl2 {height: 24px; min-height: 24px; text-align: center; background-color: #e1e1e1; font-size: 13px; line-height: 24px; font-weight: bold;}
+.rlSelectTtl {display: flex;}
+.rlSelectTtl >div:first-child {padding: 0px 5px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.rlSelectTtl span {color: #017BEC !important; font-weight: bold !important;}
+.rlSelectTtl >div:last-child {font-weight: normal; color: #666;}
+.rlSelectTblDiv {flex: 1; overflow: auto;}
+.rlSelectTbl {width: 100%; border: none; border-collapse: collapse; table-layout: fixed;}
+.rlSelectTbl tr {height: 25px; border-bottom: 1px solid #ddd; cursor: pointer;}
+.rlSelectTbl th, .rlSelectTbl td {border: none; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.rlSelectTbl td {padding: 0px 5px;}
+.rlSelectTbl .tdLeft {text-align: left !important;}
+.rlSelectTbl .thType {width: 40px;}
+.rlSelectTbl td >img {height: 20px; width: 20px; padding: 2px 2px;}
+.cabRlMain .cabRlSelected {width: 260px; min-width: 260px; border: 1px solid #ddd; display: flex; flex-flow: column;}
+.cabRlMain .cabRlBttnDiv {width: 32px; height: 100%; display: flex; flex-flow: column; padding: 0px 8px;}
+.cabRlBttnDiv >div {width: 16px; margin: auto;}
+.cabRlBttnDiv >div >img {width: 16px; height: 16px; cursor: pointer;}
+.cabIfrmPreview {border: 0px; display: inline-block; z-index: 0;}
+.blockLeft {width: 100%; height: 100%; z-index: 10;}
+
+/* cabinet share */
+.cabShareInf {padding: 15px;}
+.cabShareInf tr th {width: 50px;}
+.cabShareInf tr td {padding-left: 10px;}
+.cabShareSearPanel {background-color: #f8f8fa; margin-top: 15px; border: 1px solid #eaeaea; margin: 10px 0px 0px 0px; padding: 0px; clear: both; overflow: hidden; z-index: 1;}
+.cabShareSearPanelSub {border-bottom: 0px; height:26px; list-style: none; margin: 0px; padding: 0px;}
+.cabOrganTextListDiv, .cabOrganImgListDiv {vertical-align: top; height: 441px; overflow: auto; width: 440px;}
+.cabOrganTextListDiv .mainlist {width: 100%;}
+.cabOrganTextListDiv .mainlist tr:first-child td {color: #333; background-color: #f8f8fa;}
+.cabOrganTextListDiv .mainlist tr:first-child td:nth-child(1){width: 150px;}
+.cabOrganTextListDiv .mainlist tr:first-child td:nth-child(2){width: 130px;}
+.cabOrganTextListDiv .mainlist tr:not(first-child) td:nth-child(1) {overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 150px;}
+.cabOrganTextListDiv .mainlist tr:not(first-child) td:nth-child(2) {width: 80px;}
+.cabOrganImgListDiv {text-align: center;}
+.cabShareBttn {width: 30px; text-align: center;}
+.cabShareBttn >img {width: 16px; height: 16px; margin: 2px 0px; border: 0px; cursor: pointer;}
+.cabShareListDiv, .cabShareListDiv2 {border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; margin-top: 3px;}
+.cabShareListDiv >div, .cabShareListDiv2 >div {width: 100%; overflow-x: auto; overflow-y: auto;}
+.cabShareListDiv >div {height: 520px;}
+.cabShareListDiv2 >div {height: 340px;}
+.cabShareListDiv .mainlist, .cabShareListDiv2 .mainlist {width: 100%;}
+.cabShareListDiv .mainlist tr:first-child td, .cabShareListDiv2 .mainlist tr:first-child td {color: #333; background-color: #f8f8fa;}
+.cabShareListDiv .mainlist tr:not(first-child) td:first-child, .cabShareListDiv2 .mainlist tr:not(first-child) td:first-child {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.cabpgshare {height: 47px; min-height: 47px;}
+
+.imgCabDivMain {display: flex; height: 99px; border: 1px solid #ddd; margin-top: 5px;}
+.imgCabDivMain >div:first-child {height: 99px; width: 99px; display: flex; align-items: center; min-width: 99px; justify-content: center;}
+.imgCabDivMain >div:last-child  {display: flex; align-items: center;}
+
+.selectDeptNm span {color: #666;}
+.storageDiv {min-height: 20px; position: relative;}
+.storageDiv span {float: right; line-height: 20px;}
+
+.cabFogPanel {width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; z-index: 1000; background: none rgba(0,0,0,0.5);}
+.popup .cabBttnDiv, .cabdivBttn2 {margin: 0px 0px 0px -10px; margin-top: 10px; height: 28px !important; background: none; border: none; border-top: 1px solid #eee; padding: 7px 0px; background-color: #fcfcfc; position: fixed; text-align: center; bottom: 0px; width: 100%;}
+.cabBttn {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding-left: 12px; vertical-align: top; cursor: pointer; margin-bottom: 2px; border: 1px solid #ccc; border-radius: 2px; background-color: white; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
+.cabBttn span {background-repeat: no-repeat; height: 20px; padding-right: 12px; font: 12px gulim; letter-spacing: -1; vertical-align: top; height: 24px; line-height: 24px; font-weight: solid; font-size: 12px; color: #000;}
+.cabdivBttn {text-align: center; margin: -9px; margin-top: 10px; padding: 7px; border-top: 1px solid #eee; background-color: #fcfcfc;}
+
+.divInfo {width: 100%;}
+.divInfo ul {list-style: none; padding: 8px;}
+.divInfo table + table {margin-top: 15px;}
+.divInfo .cabmemo {height: 90px; overflow: auto; margin: 8px 0px;}
+.divAddInfo {height: 70px;}
+.tblFileInf, .cabShareInf, .tblAddRelatedInf, .tblEmailInf, .tblBoardInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
+.tblFileInf tr td, .tblEmailInf tr td, .tblFileInf tr th, .cabShareInf tr td, .cabShareInf tr th, .tblEmailInf tr th, .tblBoardInf tr th, .tblBoardInf tr td, .tblAddRelatedInf tr th, .tblAddRelatedInf tr td {border: 1px solid #ddd;}
+.tblFileInf tr th, .tblAddRelatedInf tr th {width: 80px; font-weight: normal; text-align: left;}
+.tblEmailInf tr th, .tblBoardInf tr th {text-align: left; max-width: 100px; width: 80px; font-weight: normal; min-width: 100px;}
+.tblFileInf tr td, .cabShareInf, .tblEmailInf tr td, .tblBoardInf tr td, .tblAddRelatedInf tr td {padding: 0px 5px; background: #fff; height: 29px; word-break: break-all;}
+.tblFileInf .overfl, .tblEmailInf .overfl, .tblBoardInf .overfl {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.tblFileInput, .tblAddRelatedInput {width: 100%; height: 24px; padding: 5px;}
+.rlFileDiv {display: flex; align-items: center;}
+.rlDocDiv {flex: 1; border: none; margin-right: 8px; outline: none; padding: 0px 5px; max-height: 30px; height: 20px; overflow-y: auto;}
+.rlDocDiv span {cursor: pointer; color: blue; text-decoration: underline; line-height: 20px;}
+.rlDocDiv span:hover {text-decoration:none; text-shadow: 1px 1px 1px #ccc;}
+.rlDocDiv em, .cabemailDiv em {padding-right: 5px; font-style: normal; padding-left: 2px;}
+
+.wide {width: 52%;}
+.wide2 {width: 88%;}
+.nowrap {white-space:nowrap; min-width: 135px;}
+
+.cabemailDiv {border: none; max-height: 30px; height: 20px; overflow-y: auto;}
+.cabemailDiv span {cursor: pointer; line-height: 20px;}
+.cabemailDiv span:hover {color: #164aad;}
+
+.fileUploadDiv  {padding: 2.5px; border: 1px solid #ddd; min-height: 430px; overflow: auto; cursor: pointer; flex: 1;}
+.fileDetailDiv2 {padding: 2.5px; border: 1px solid #ddd; min-height: 450px; overflow: auto; cursor: pointer; flex: 1;}
+.htmlDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 300px; height: 300px; overflow: auto; cursor: pointer;}
+.fileDetailDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 450px; height: 450px; overflow: auto; cursor: pointer;}
+.divInform {width: 100%; height: 100%; min-height: 60px; display: flex; flex-flow: column; justify-content: center; align-items: center;}
+.divInform .nofile {line-height: 60px;}
+.divInform span + span {margin-top: 5px;}
+.fileList {width: 100%; height: auto;}
+.ulFiles {margin: 0px; padding: 0px; list-style: none;}
+.ulFiles li {float: left; width: 50%; min-width: 50%; height: 65px; position: relative; padding: 2.5px; box-sizing: border-box;}
+.ulFiles li >img {position: absolute; top: 4.5px; right: 2.5px;}
+.ulFiles li:lastChild {padding-bottom: 5px;}
+
+.mailContDiv1  {margin: 10px 0px; border: 1px solid #ddd; min-height: 410px; height: 410px; overflow: auto;}
+.mailContDiv2  {margin: 10px 0px; border: 1px solid #ddd; min-height: 440px; height: 440px; overflow: auto;}
+.boardContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 470px; height: 470px; overflow: auto;}
+.boardContDiv2 {margin: 10px 0px; border: 1px solid #ddd; min-height: 440px; height: 440px; overflow: auto;}
+.optionContDiv {margin: 10px 0px; border: 1px solid #ddd; min-height: 470px; height: 470px; overflow: auto;}
+.resContDiv    {margin: 10px 0px; border: 1px solid #ddd; min-height: 410px; height: 410px; overflow: auto;}
+.schContDiv1   {margin: 10px 0px; border: 1px solid #ddd; min-height: 350px; height: 350px; overflow: auto;}
+.schContDiv2   {margin: 10px 0px; border: 1px solid #ddd; min-height: 380px; height: 380px; overflow: auto;}
+.todoContDiv   {margin: 10px 0px; border: 1px solid #ddd; min-height: 420px; height: 420px; overflow: auto;}
+.commuContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 440px; height: 440px; overflow: auto;}
+.apprvContDiv  {margin: 10px 0px; border: 1px solid #ddd; min-height: 550px; height: 550px; overflow: auto;}
+.commuPhotoContDiv {margin: 10px 0px; border: 1px solid #ddd; min-height: 470px; height: 470px; overflow: auto;}
+.journalContDiv    {margin: 10px 0px; border: 1px solid #ddd; min-height: 440px; height: 440px; overflow: auto;}
+
+.addressContDiv {margin: 10px 0px; border: 1px solid #ddd; min-height: 440px; height: 440px; overflow: auto;}
+.addressContDiv >select {background: none; border: none !important; outline: none !important; padding-right: .1em !important; height: 100%!important;}
+
+.cabDivFile {display: flex; border: 1px solid #ddd; width: 100%; height: 100%;}
+.cabDivFile .cabImgAva {height: 40px; width: 40px; min-width: 40px; margin: 10px 5px;}
+.cabDivFile .cabImgAva >img {height: 100%; width: 100%;}
+.cabDivFile .cabFileInf {display: flex; flex: 1; flex-flow: column; overflow: hidden; padding-top: 8px;}
+.cabDivFile .cabFileInf >span:first-child {padding: 6px 4px 4px 0px; max-height: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.cabDivFile .cabFileInf >span:last-child {padding: 2px 4px 4px 0px;}
+
+.popup.cabFileDelon, .popup.cabFileDeloff {overflow: hidden; width: 450px; height: 183px; position: fixed; z-index: 2000; border-radius: 4px;}
+.popup.cabFileDeloff, .popup.cabFileMoveoff, .popup.cabAddoff, .popup.cabMoveoff, .cabDeloff, .fileList.off, .cabSearchPanel.off, .perSettingOff, .cabSearchPanel2.off, .popup.cabChgoff, .popup.cabPhotooff {display: none;}
+.popup .cabfdTop {margin: 0px; margin-top: 2px; padding-left: 0px;}
+.popup .delTxt {margin: 0px; height: 62px; border: 1px solid #ddd; padding: 15px; font-size: 12px;}
+.popup.cabFileMoveoff, .popup.cabFileMoveon {overflow: hidden; width: 320px; height: 380px; position: fixed; z-index: 2000; border-radius: 4px;}
+.popup .cabMoveFile {margin-top: 4px; border: 1px solid #ddd; min-height: 263px; height: 263px; overflow: auto; padding: 10px; white-space: nowrap;}
+.popup .cabMgTree {margin: 0px 3px; padding: 10px; border: 1px solid #ddd; min-height: 375px; height: 375px; overflow: auto; white-space: nowrap;}
+.popup.cabMag {padding-bottom: 0px !important; overflow: hidden;}
+.popup.cabAddoff, .popup.cabAddon {overflow: hidden; width: 300px; height: 150px; position: fixed; z-index: 2000; border-radius: 4px;}
+.popup.cabMoveoff, .popup.cabMoveon {overflow: hidden; width: 320px; height: 395px; position: fixed; z-index: 2000; border-radius: 4px;}
+.popup .cabMoveTree {margin: -3px 0px 0px; border: 1px solid #ddd; min-height: 280px; height: 280px; overflow: auto; padding: 10px; white-space: nowrap;}
+.cabDeloff, .cabDelon {overflow: hidden; border-radius: 4px; width: 330px; height: 205px; position: fixed; z-index: 2000;}
+.popup .cabDelInf {height: 46px; border: 1px solid #ddd; font-size: 12px; padding: 10px;}
+.popup.cabRelatedFile, .popup.cabAddMain, .popup.cabShareFile, .popup.cabDetail {overflow: hidden;}
+.popup.cabDetail {min-width: 700px;}
+.popup >h3 {font-size: 11pt; font-weight: bold; color: black; height: 44px; margin-left: 1px; margin-bottom: 8px; line-height: 36px;}
+.popup.cabChgoff, .popup.cabChgon {overflow: hidden; width: 300px; height: 176px; position: fixed; z-index: 2000;}
+.popup .addRlWrapper {min-height: 335px; height: 335px; display: flex; flex-flow: column;}
+.popup.cabPhotooff, .popup.cabPhotoon {overflow: hidden; width: 410px; height: 450px; position: fixed; z-index: 2000;}
+.cabphoselect {padding: 0px 10px; overflow-y: auto; background-color: #fff; margin: 0px; border: none; height: 355px; list-style: none;}
+.cabphoselect li {float: left; width: 33.33%; display: flex; height: 120px; justify-content: center; align-items: center;}
+.cabphoselect li >div {position: relative; height: 100px; width: 100px; margin: 0px; padding: 0px; line-height: 0px;}
+.ptdownloadwrap {display:inline-block;}
+.ptdownloadwrap input[type='checkbox'] {vertical-align: top; position: absolute; z-index: 1; left: 2px; top: 2px; margin: 0px;}
+.ptdownloadwrap img {cursor:pointer; width: 100px; height: 100px;}
+
+.addRelatedConfig {height: 42px;}
+.cabMgRelTree {position: relative; margin: 10px 5px; padding: 10px; border: 1px solid #ddd; overflow: auto; flex: 1; background-color: #fff;}
+.cabMgRelTree.hid {overflow: hidden !important;}
+.cabMgRelTree .mdlRelTree {height: 100%; z-index: 1; white-space: nowrap;}
+.cabMgRelTree .mdlFog {width: 100%; height: 100%; z-index: 2; background-color: rgba(206,214,227,0.4); position: absolute; display: none; top: 0px; left: 0px;}
+
+.cabClose {position: absolute; right: 10px; top: 10px;}
+.cabClose >ul {margin: 0px; padding: 0px; list-style: none;}
+.cabClose >ul >li {display: block; float: left; margin: 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
+.cabClose >ul >li >span {display: inline-block; width: 25px; height: 28px; background-image: url(/images/close_xBtn.png); background-repeat: no-repeat; background-position: 4px 6px;}
+.cbNameInputDiv >input[type='text'] {width: 100%; margin-top: 3px; height: 25px; padding: 0px 4px;}
+.checkBnk {width: 27px;}
+.checkBnk input {vertical-align: middle;}
+.cabTd5 {width: 20%;}
+.cabTd6 {width: 5%;}
+.cabTd7 {width: 8%;}
+.cabTd8 {width: 15%;}
+.cabCenter {text-align: center !important;}
+.cabTxtOver {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+
+.spanDown, .spanUp {cursor:pointer; border-radius: 50%; text-align: center; line-height: 14px; margin-top: -1px; position: relative; width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-left: 2px; box-sizing: border-box;}
+.spanDown:before   {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 5px 4px 0px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
+.spanUp:before     {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 0px 4px 5px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
+
+/* Cabinet share */
+.organCabTbl {margin-top: 5px !important; margin-right: auto !important; margin-left: auto !important; border: none !important; font-size: 12px; table-layout: fixed; width: 400px;}
+.organCabTbl td {border: 0px !important; padding: 0px;}
+.organCabTbl .pic {width: 90px; height: 90px; border: 1px solid #cfcfcf!important; overflow: hidden; background: url(/images/noperson.png) center; background-repeat: no-repeat;}
+.organCabTbl .trCabTxt, .organCabTbl .txtCabTd, .mainlist .imgCabTd {display: none;}
+
+.organCabTbl .pic img {border: none !important;}
+.organCabTbl .pic img {width: 90px; height: 90px;}
+.cUserInfor {text-align: left;}
+
+.cabrlframe {border: none; width: 100%; flex: 1; min-height: 0px; min-width: 0px;}
+.cabrlframe2 {border: none; width: 100%; min-height: 0px; min-width: 0px; height: 100%; display: block;}
+.cabuloff{display: none;}
+.cabrltxt {padding: 0px 5px !important; margin-top: 5px; word-wrap: break-word;}
+.previewmail_addfile.cabattach {padding: 0px 5px !important; width: auto !important; margin-bottom: 10px; font-family: 굴림;}
+.cabSpanAttach {cursor: pointer;}
+.cabSpanAttach img {width: 16px; height: 16px; vertical-align: middle;}
+.title_btn, .cabSpanAttach >span {color: #666; cursor: pointer;}
+.title_btn:hover, .cabSpanAttach:hover >span, .cursor:hover {color: #164aad;}
+.cursor {cursor: pointer;}
+.icon_rbtn img {width: 16px; height: 16px;}
+.cabtxtPrint {padding: 8px; border: 1px solid #ddd; margin-top: 10px; overflow-x: hidden;}
+.cabtxtPrint .cabrltxt table, th, td {margin: auto;}
+.cabtxtPrint .cabrltxt p {margin-top: 0px !important; margin-bottom: 0px !important;}
+.cabwrapPrintoff, .cabwrapPrinton {pointer-events: none;}
+.cabwrapPrintoff {display: none;}
+/* .cabdatetd {width: 150px;} */
+.cabtaskTtl {display: flex; margin: 5px 0px;}
+.cabtaskTtl img {width: 14px; height: 14px; padding: 3px 5px 3px 0px;}
+
+.wrap_progress .ui-datepicker-year, .wrap_progress .ui-datepicker-month, .wrap_progress .ui-datepicker-calendar td {pointer-events: none;}
+.wrap_progress .ui-datepicker .ui-datepicker-title {font-size: 12px !important;}
+.cabrltxt .layout tr {background-color: transparent !important;}
+
+/* photo css */
+.cabphotoul {list-style: none; margin: 0px; padding: 0px; overflow: hidden; display: flex; flex: 1; flex-wrap: wrap; height: 60px; justify-content: center;}
+.cabphotoul li {min-width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; float: left; margin: 0px 4px;}
+.cabphotoul li img {height: 40px; width: 60px; cursor: pointer; opacity: 0.35;}
+.cabphotoul .selectedImg, .cabphotoul li img:hover {opacity: 1 !important;}
+.cabphotobttn {width: 35px; min-width: 35px; display: flex; justify-content: center; align-items: center;}
+.cabphotobttn img {width: 30px; height: 30px; cursor: pointer;}
+.cabphotobttn2 {width: 60px; min-width: 60px; display: flex; justify-content: center; align-items: center;}
+.cabphotobttn2 img {width: 50px; height: 50px; cursor: pointer;}
+.cabmainphoto {max-width: 100%; max-height: 100%; min-height: 10px; width: auto; height: auto; position: absolute; top: 0px; bottom: 0px; right: 0px; left: 0px; margin: auto;}
+.cabphotfull {height: 100%; width: 100%;}
+.cabphotowrap {display: flex; flex-flow: column; height: 100%; width: 100%;}
+.cabphotomain {flex: 1; display: flex; margin: 20px 0px;}
+.cabphotslide {flex: 1; justify-content: center; align-items: center; position: relative;}
+.cabphotodes {height: 40px; min-height: 40px; text-align: center; word-break: break-all; font-size: 14px;}
+.cabphotoprev {height: 80px; min-height: 80px; display: flex; background:#f8f8fa; border-top:1px solid #ddd;}
+.cabphotoprevmain {flex: 1;}
+.cabphotooff, .cabUploadHelp.off {display: none;}
+.scrollPrint {padding: 7px 0px;}
+.popup_noti_btnarea.cabdelpp {border-radius: 0px 0px 4px 4px !important;}
+.cabcolor th {background-color: #eff6ff !important; color:#333;}
+.blankBody {height: 100%; min-width: 450px; min-height: 450px;}
+.blankDiv {border-radius: 30px; display: flex; flex-flow: column; justify-content: center; align-items: center;}
+.blankDiv img {width:205px; height:205px;}
+.blankDiv .blankMsg {font-size: 15px; font-weight: bold; margin: 15px 0px; padding: 0px; color: #656565; height: 25px; line-height: 25px;}
+.cabBlankMain {height: 83%; display: flex; align-items: center; justify-content: center;}
+.cabStore {display: block; padding-left: 0px; height: 28px; margin-bottom: 15px; margin-top: 3px; vertical-align: middle;}
+.cabStore span {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding: 0px 8px 0px 8px; vertical-align: top; cursor: pointer; border-radius: 3px; background-color: white; border: 1px solid #829dc7; height: 26px; line-height: 27px; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1);}
+.cabUploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
+.cabwrapperDiv, .cabwrapperDiv2 {margin: 10px 0px; display: flex; flex-flow: column;}
+.cabwrapperDiv {height: 464px;}
+.cabwrapperDiv2 {height: 530px;}
+.cabphotowrp {display: flex; align-items: center; justify-content: center; height: 80px;}
+
+.cabBttnDiv2 {display: block; padding-left: 0px; height: 28px; margin-bottom: 15px; margin-top: 3px; vertical-align: middle;}
+.cabBttnDiv2 span{white-space: nowrap; display: inline-block; background-repeat: no-repeat; vertical-align: top; cursor: pointer; border-radius: 3px; background-color: white; padding: 0px 8px 0px 8px; border: 1px solid #829dc7; height: 26px; line-height: 27px; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1);}
+
+*:focus::-webkit-input-placeholder { opacity: 0;}
+*:focus:-moz-placeholder { opacity: 0;}
+*:focus::-moz-placeholder { opacity: 0;}
+*:focus:-ms-input-placeholder { opacity: 0;}
+*:focus::placeholder { opacity: 0;}
+
+@media print {.cabBttnDiv, .cabBttnDiv2, .cabClose {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .cabwrapperDiv2, .fileDetailDiv2, .mailContDiv1, .mailContDiv2, .addressContDiv, .divInfo .cabmemo {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;} .wide {width: 40% !important;} .wide2 {width: 84% !important;} .overfl {white-space: normal !important;} .tblFileInf tr td, .tblEmailInf tr td, .tblBoardInf tr td, .tblAddRelatedInf tr td {line-height: 21px !important;} }
