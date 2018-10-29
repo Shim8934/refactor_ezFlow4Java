@@ -3248,7 +3248,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String result = "";
         if (approvalFlag.equals("S")) {
         	result = ezApprovalGService.getSearchDocListS("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFrom, draftTo, aprFrom,
-        			aprTo, "", "", draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
+        			aprTo, "", "", draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "ALL", companyID, userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
         } else {
         	result = ezApprovalGService.getSearchDocList("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay, 
     				draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
