@@ -463,6 +463,8 @@ public class EzSystemAdminController {
 			if (userInfo == null) {
 				return "cmm/error/adminDenied";
 			}
+		} else {
+			model.addAttribute("cloudFlag", true);
 		}
 		
 		InetAddress local = InetAddress.getLocalHost();
@@ -508,17 +510,21 @@ public class EzSystemAdminController {
 	/**
 	 * 선택된 서버의 CPU, 메모리, 네트워크 등 정보 가져오기
 	 * */
-	@RequestMapping(value="/admin/ezSystem/sysMonitorREST.do")
+	@RequestMapping(value = {"/admin/ezSystem/sysMonitorREST.do", "/gCloud/sysMonitorREST.do"})
 	public String sysMonitorREST(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("sysMonitorREST started.");
 		logger.debug("<<<serverSN : " + request.getParameter("serverSN"));
 		
-		//관리자 권한체크
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);	
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		
-		if (userInfo == null) {
-			return "cmm/error/adminDenied";
-		}		
+		if (requestURL.indexOf("admin/ezSystem") > -1) {
+			//관리자 권한체크
+			LoginVO userInfo = commonUtil.checkAdmin(loginCookie);	
+			
+			if (userInfo == null) {
+				return "cmm/error/adminDenied";
+			}		
+		}
 		
 		InetAddress local = InetAddress.getLocalHost();
 		String localIP = local.getHostAddress();		

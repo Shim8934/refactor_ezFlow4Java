@@ -19,6 +19,7 @@
 		var list = obj[0].getSysInfo;
 		var str = "";
 		var setDiv = "";
+		var cloudFlag = "${cloudFlag}";
 		
 		// 서버의 갯수만큼 checkbox 생성
 		for (var i = 0; i < obj.length; i++) {
@@ -292,8 +293,14 @@
 	      	
 			// 그래프에 필요한 데이터 가져오기
 	    	function getInfo() {
+				var url = "/admin/ezSystem/sysMonitorREST.do";
+				
+				if (cloudFlag) {
+					url = "/gCloud/sysMonitorREST.do";
+				}
+				
 	    		$.ajax ({
-	    			url : "/admin/ezSystem/sysMonitorREST.do",
+	    			url : url,
 	    			type : "POST",
 	    			dataType : "json",
 	    			data : {
