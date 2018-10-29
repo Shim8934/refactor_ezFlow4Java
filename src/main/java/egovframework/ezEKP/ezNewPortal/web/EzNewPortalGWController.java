@@ -1177,6 +1177,7 @@ public class EzNewPortalGWController {
 			
 			JSONArray menus = (JSONArray) jsonParam.get("menus");
 			
+			ezNewPortalService.udpateMenuOrder(menus, companyId, userInfo.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);

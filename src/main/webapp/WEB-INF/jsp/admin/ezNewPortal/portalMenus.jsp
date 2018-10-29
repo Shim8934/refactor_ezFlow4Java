@@ -205,9 +205,8 @@
 					var result = JSON.parse(request.responseText);
 					var menuInfo = result.menuInfo;
 					var menuNames = result.menuNames;
-					var menuAuth = result.menuAuths;
-					var menuAuthsY = menuAuth.menuAuthsY;
-					var menuAuthsN = menuAuth.menuAuthsN;
+					var menuAuthsY = result.menuAuths.menuAuthsY;
+					var menuAuthsN = result.menuAuths.menuAuthsN;
 					
 					var menusHTML = "<li class='menuDetails'>";
 					menusHTML += "<div id='menuDetails" + menuInfo.menuId + "'>";
@@ -266,9 +265,9 @@
 						var menuAuthsYList = "";
 						
 						menuAuthsY.forEach(function(item, index) {
-							if (item.isUser) {
+							if (item.userType) {
 								menuAuthsYList += "," + item.userName;
-								menuAuthsYList += "(" + item.userDeptName + ")";	
+								menuAuthsYList += "(" + item.userDeptName + ")";
 							} else {
 								menuAuthsYList += "," + item.userDeptName;
 							}
@@ -286,9 +285,9 @@
 						var menuAuthsNList = "";
 						
 						menuAuthsN.forEach(function(item, index) {
-							if (item.isUser) {
+							if (item.userType) {
 								menuAuthsNList += "," + item.userName;
-								menuAuthsNList += "(" + item.userDeptName + ")";	
+								menuAuthsNList += "(" + item.userDeptName + ")";
 							} else {
 								menuAuthsNList += "," + item.userDeptName;
 							}

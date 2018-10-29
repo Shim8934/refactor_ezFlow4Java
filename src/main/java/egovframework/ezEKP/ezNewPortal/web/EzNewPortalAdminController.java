@@ -431,6 +431,7 @@ public class EzNewPortalAdminController {
 	/**
 	 * 관리자 메뉴 순서조정
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezNewPortal/updateMenuOrder.do")
 	public void updateMenuOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("updateMenuOrder started.");
@@ -441,10 +442,11 @@ public class EzNewPortalAdminController {
 		param.put("userId", userInfo.getId());
 		
 		JSONObject jsonParam = new JSONObject();
+		jsonParam.put("menus", paramMap.get("menus"));
 		
 		String url = "/rest/admin/ezPortal/menus/order/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", jsonParam);
 		
 		String status = resultBody.get("status").toString();
 		

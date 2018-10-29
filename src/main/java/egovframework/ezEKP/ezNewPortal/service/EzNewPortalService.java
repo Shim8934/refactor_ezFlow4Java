@@ -113,6 +113,10 @@ public interface EzNewPortalService {
 	 * 관리자 메뉴삭제
 	 */
 	public void deleteMenu(int menuId, String companyId, int tenantId) throws Exception;
+	/**
+	 * 관리자 메뉴 순서변경
+	 */
+	public void udpateMenuOrder(JSONArray menus, String companyId, int tenantId) throws Exception;
 	
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
 	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception;
