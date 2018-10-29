@@ -464,6 +464,8 @@ function reBuildXml() {
 
 ////2018-03-13 김은석 추가
 function getDocListjson(pageNum) {
+	//2018-10-16 김보미 - 프로그레스바
+	ShowMailProgress();
 	
 	var docnumber = $("#DocNumber").val();
 	var doctitle = $("#DocTitle").val();
@@ -541,6 +543,22 @@ function getDocListjson(pageNum) {
 				},
 				error : function(err) {
 					//alert(err);
+				},
+				complete: function() {
+			        //2018-10-16 김보미 - 프로그레스바
+			        endTime = new Date();//프로그래스바 종료시간
+					var timeDiff = endTime - startTime;
+					timeDiff /= 1000;
+					var seconds = (timeDiff % 60).toFixed(1);
+					
+					if (seconds <= 0.3) { //0.3초보다 적으면
+						seconds = 300 - (timeDiff * 1000);
+						setTimeout(function() {
+							HiddenMailProgress();
+						}, seconds);
+					} else {
+				        HiddenMailProgress();
+					}
 				}
 			});
 		makePageSelPage();

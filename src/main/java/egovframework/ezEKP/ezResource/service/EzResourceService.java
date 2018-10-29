@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezResource.service;
 import java.util.List;
 import java.util.Locale;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
@@ -29,7 +30,7 @@ public interface EzResourceService {
 	
 	public ResSelectFormIDVO selectFormID(String resID, int tenantID) throws Exception;
 	
-	public ResAdminVO getResourceAdminInfo(String brdID, int tenantID) throws Exception;
+	public List<ResAdminVO> getResourceAdminInfo(String brdID, int tenantID, String[] ownerList) throws Exception;
 	
 	public ResGetSendMailToUserVO getSendMailToUser(String resID, int num, int tenantID) throws Exception;
 	
@@ -79,5 +80,7 @@ public interface EzResourceService {
 	public void delFormID(String delCode, int tenantID) throws Exception;
 	
 	public String getDeptID(String writerID, String deptNm, int tenantID, String companyID) throws Exception;
+
+	public List<OrganUserVO> getOwnerInfo(String[] ownerList, int tenantID, String companyID) throws Exception;
 	
 }

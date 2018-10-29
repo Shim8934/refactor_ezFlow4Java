@@ -1331,6 +1331,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
+	public void createJMochaDistributionSub() throws Exception {
+		ezCommonDAO.createJMochaDistributionSub();
+	}
+
+	@Override
 	public void addUserMasterManualFlag() throws Exception {
 		ezCommonDAO.addUserMasterManualFlag();
 	}

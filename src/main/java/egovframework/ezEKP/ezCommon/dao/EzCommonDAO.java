@@ -289,6 +289,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void createJMochaDistributionSub() throws Exception {
+		try {
+			select("EzCommonDAO.checkJmochaDistributionSub");
+		} catch (Exception e) {
+			logger.debug("jmocha_distribution_sub doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createJmochaDistributionSub");
+		}
+	}
+
 	public void addUserMasterManualFlag() throws Exception {
 		try {
 			select("EzCommonDAO.checkUserMasterManualFlag");
