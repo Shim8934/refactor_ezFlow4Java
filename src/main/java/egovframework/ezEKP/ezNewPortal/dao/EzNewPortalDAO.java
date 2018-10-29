@@ -81,6 +81,17 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void deleteUserMenuOrder(Map<String, Object> map) throws Exception {
 		delete("ezNewPortal.deleteUserMenuOrder", map);
 	}
+	
+	// 퀵 링크 불러오기
+	public List<?> getQuickLinkList(Map<String, Object> map) throws Exception {
+		return (List<?>)list("ezNewPortal.getQuickLinkList", map);
+	}
+	
+	// 퀵 링크 전체 개수 불러오기
+	public int getQuickLinkTotalCnt(Map<String, Object> map) throws Exception {
+		return (int) select("ezNewPortal.getQuickLinkTotalCnt", map);
+	}
+	
 	/* 박종균 끝 */
 	
 	/**

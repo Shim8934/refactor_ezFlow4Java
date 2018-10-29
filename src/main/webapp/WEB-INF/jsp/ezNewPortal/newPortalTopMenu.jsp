@@ -328,11 +328,9 @@
 				// 메뉴 순서 초기화 버튼인 경우 아닌 경우 
 				console.log('newPortalTopMenu.isInitOrder',newPortalTopMenu.isInitOrder);
 				if (newPortalTopMenu.isInitOrder) {
-					console.log("delete");
 					xhr.open('DELETE', '/ezNewPortal/deleteUserMenuOrder.do');
 					xhr.send();
 				} else {
-					console.log("patch");
 					xhr.open('PATCH', '/ezNewPortal/updateUserMenuOrder.do');
 					xhr.setRequestHeader('Content-Type', 'application/json');
 					xhr.send(JSON.stringify({

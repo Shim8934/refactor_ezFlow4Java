@@ -19,7 +19,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+
 
 
 
@@ -128,6 +131,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		return "/ezNewPortal/newPortalMain";
 	}
 	
+	// 종균 시작
 	/**
 	 * 포탈 탑메뉴 호출 함수
 	 */
@@ -192,7 +196,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	@RequestMapping(value = "/ezNewPortal/deleteUserMenuOrder.do")
 	@ResponseBody
 	public JSONObject deleteUserMenuOrder(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
-		logger.debug("k Start");
+		logger.debug("deleteUserMenuOrder Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String url = "/rest/ezPortal/menus/order/users/" + userId;
@@ -211,6 +215,34 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		logger.debug("deleteUserMenuOrder End");
 		return resultObj;
 	}	
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezNewPortal/getQuickLink.do")
+	@ResponseBody
+	public JSONObject getQuickLink(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("getQuickLink Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyId = userInfo.getCompanyID();
+		String url = "/rest/ezPortal/quickLink/company/" + companyId;
+		String userId = userInfo.getId();
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("page", req.getParameter("page"));
+
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "GET", null);
+		String status = resultBody.get("status").toString();		
+		
+		JSONObject resultObj = new JSONObject();
+
+		if (status.equals("ok")) {
+			resultObj.put("data" , resultBody.get("data"));
+		}		
+		
+		logger.debug("getQuickLink End");
+		return resultObj;
+	}
+	// 종균 끝
+	
 	
 	/**
 	 * 포탈 메인 화면 호출 함수

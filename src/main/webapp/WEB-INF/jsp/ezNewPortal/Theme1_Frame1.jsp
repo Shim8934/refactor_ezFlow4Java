@@ -38,6 +38,120 @@
  	var birthdayTotalCount = 0;
  	var timer;
  	
+ 	var quickLinkPage = {
+ 		current: 1,
+ 		total: 1,
+ 	};
+ 	
+ 	var setQuickLinkList = function (data) {
+ 		var quickList = data.quickLinkList;
+ 		var totalCnt = data.totalPageCnt;
+ 		
+ 		quickLinkPage.total = totalCnt;
+ 		
+ 		var quickUl = document.getElementById('QuickUl');
+ 		
+ 		// 현재 리스트를 갖고 있는 경우 삭제 후 진행
+ 		while (quickUl.hasChildNodes()) {
+ 			quickUl.removeChild(quickUl.firstChild);
+ 		}
+ 		
+		quickList.forEach(function (item, index) {
+			var li = document.createElement('li');
+			li.classList.add('linkText');
+			li.textContent = item.quickLinkName;
+			
+			// 이벤트 등록
+			li.addEventListener('click', function(){
+				// size가 FULL인 경우 vs 아닌 경우
+				if(item.size === 'FULL') {
+					window.open(item.url, '_blank', '');
+				} else if (item.size.indexOf(':') > 0) {
+					var sizeArr = item.size.split(':');
+					var popupX = (window.screen.width / 2) - (sizeArr[0] /2);
+					var popupY = (window.screen.height / 2) - (sizeArr[1] /2);
+					var option = 'width='+sizeArr[0]+'px,height='+sizeArr[1]+'px, left='+popupX+', top='+popupY+', status = no, toolbar=no, menubar=no,location=no, resizable=0';
+					window.open(item.url, '_blank', option);
+				}
+			});
+			
+			quickUl.appendChild(li);
+		});
+		
+		// 퀵링크 페이지 					
+		var btnLay = document.getElementById('btnLay');
+		
+		// 현재 리스트를 갖고 있는 경우 삭제 후 진행
+ 		while (btnLay.hasChildNodes()) {
+ 			btnLay.removeChild(btnLay.firstChild);
+ 		}		
+		
+		var linkBtnPre = document.createElement('span');
+		linkBtnPre.classList.add('linkBtn_pre');
+		var preBtnImg = document.createElement('img');
+		
+		if(quickLinkPage.current*1 === 1) {
+			preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn_dis.png');
+			preBtnImg.setAttribute('id', 'preBtnDis');
+		} else {
+			preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn.png');
+			preBtnImg.setAttribute('id', 'preBtn');
+		}
+		
+		linkBtnPre.appendChild(preBtnImg);
+		
+		var linkBtnNext = document.createElement('span');
+		linkBtnNext.classList.add('linkBtn_next');
+		var nextBtnImg = document.createElement('img');
+		
+		if(quickLinkPage.current*1 === totalCnt*1) {
+			nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn_dis.png');
+			nextBtnImg.setAttribute('id', 'nextBtnDis');
+		} else {
+			nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn.png');
+			nextBtnImg.setAttribute('id', 'nextBtn');
+		}
+		
+		linkBtnNext.appendChild(nextBtnImg);
+		
+		btnLay.appendChild(linkBtnPre);
+		btnLay.appendChild(linkBtnNext);
+		
+		// 페이징 클릭 이벤트
+		var preBtn = document.getElementById('preBtn');
+		var nextBtn = document.getElementById('nextBtn');
+
+		if(preBtn !== null) {
+			preBtn.addEventListener('click', function () {
+				quickLinkPage.current = (quickLinkPage.current*1) - 1;
+				getQuickLink();
+			});	
+		}
+		
+		if(nextBtn !== null) {
+			nextBtn.addEventListener('click', function () {
+				quickLinkPage.current = (quickLinkPage.current*1) + 1;
+				getQuickLink();
+			});
+		}
+		
+ 	}
+ 	
+ 	var getQuickLink = function () {
+ 		var xhr = new XMLHttpRequest();
+ 		xhr.onload = function () {
+ 			if (xhr.status >= 200 && xhr.status < 300) {
+ 				var parseData = JSON.parse(xhr.responseText);
+ 				setQuickLinkList(parseData.data);
+ 			} else {
+ 				console.error(xhr.responseText);	
+ 			}
+ 		};
+ 		xhr.open('GET', '/ezNewPortal/getQuickLink.do?page='+quickLinkPage.current); 		
+ 		xhr.setRequestHeader('Content-Type', 'application/json');
+ 		xhr.send();
+ 	}
+ 	
 	$(function() {
 		$("#featured").orbit();
 	 	
@@ -141,6 +255,9 @@
 		$("#quickApprovalwrite").on('click', {'menu' : 'appr'}, quickMenuOpenRight);
 		$("#quickSchedulewrite").on('click', {'menu' : 'schedule'}, quickMenuOpenRight);
 		$("#quickOrgan").on('click', {'menu' : 'organ'}, quickMenuOpenRight);
+
+		// 퀵링크 호출
+		getQuickLink();		
 		
 		//포틀릿 드래그 앤 드롭
 		$(".portlet_area").sortable({
@@ -151,8 +268,8 @@
 		});
 		
 		$(".portlet_area").disableSelection();
+		
 	});
-	
 	</script>
 	<style type="text/css">
 		.notEmptySlider {
@@ -295,14 +412,9 @@
 			<div class="aside_link">
 				<p class="linkmenu_title">Link</p>
 				<ul class="linkmenu" id="QuickUl">
-				<li class="linkText">닷넷데모</li><li class="linkText">협업메뉴얼</li>
-				<li class="linkText">비즈메카</li><li class="linkText">페이스북</li>
-				<li class="linkText">블로그</li>
 				</ul>
 				<div class="linkBtn">
-					<p class="btnLay">
-						<span class="linkBtn_pre" id="preBtn" onclick="QuickMove(1)"><img src="/images/ezNewPortal/link_preBtn_dis.png"></span>
-						<span class="linkBtn_next" id="nextBtn" onclick="QuickMove(2)"><img src="/images/ezNewPortal/link_nextBtn.png"></span>
+					<p class="btnLay" id="btnLay">
 					</p>
 				</div>
 			</div>

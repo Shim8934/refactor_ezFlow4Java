@@ -530,8 +530,6 @@ public class EzNewPortalGWController {
 			// 초기화 하면 회사에서 지정한 메뉴 순서로 출력
 			List<MenuInfoVO> compMenuList = ezNewPortalService.getCompanyMenuList(companyId, tenantId, langType);
 			
-			LOGGER.debug("comMenuList: " + compMenuList.toString());
-			
 			data.put("menuList", compMenuList);
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -553,13 +551,24 @@ public class EzNewPortalGWController {
 	public JSONObject getQuickLinkList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getQuickLinkList started.");
 		JSONObject result = new JSONObject();
-
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-
+			//int page = Integer.parseInt(request.getParameter("page"));
+			int page = Integer.parseInt(request.getParameter("page"));
+			int limit = 5; // 한 페이지에 뿌려지는 리스트 개수 // 다르게 처리할 수 있는 방법 찾아보기
+			int tenantId = info.getTenantId();
+			JSONObject data = new JSONObject();
+			
+			List<?> quickLinkList= ezNewPortalService.getQuickLinkList(companyId, tenantId, page, limit);
+			data.put("quickLinkList", quickLinkList);
+			
+			int totalPageCnt = ezNewPortalService.getQuickLinkTotalPageCnt(companyId, tenantId, limit);
+			data.put("totalPageCnt", totalPageCnt);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

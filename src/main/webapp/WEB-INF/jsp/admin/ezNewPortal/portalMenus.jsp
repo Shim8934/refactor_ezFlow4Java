@@ -374,7 +374,6 @@
 			var menuNames = $(".menuNameInput");
 			var menuNamesCount = menuNames.length;
 			var menuType = event.data.menuType;
-			var iconUrl = "";
 			
 			//메뉴 사용 유무
 			var menuUsed = $(".menuSwitch").find("input[type='checkbox']").prop("checked");
@@ -383,7 +382,7 @@
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
 			
 			//아이콘
-			iconUrl = $(".menuIcon").find("span").attr("class");
+			var iconUrl = $(".menuIcon").find("span").attr("class");
 			
 			var menuInfo = {
 				"menuId" : menuId,
