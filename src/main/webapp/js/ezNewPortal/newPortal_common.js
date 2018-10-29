@@ -717,7 +717,6 @@ function viewQuick() {
 
 // 퀵메뉴
 function quickMenuOpenRight(event) {
-	//console.log("dddd", event.data.menu);
 	var url = '';
 	var location = '';
 	var option = '';
@@ -732,7 +731,7 @@ function quickMenuOpenRight(event) {
 		        
 	var pTop = (pheight - conHeight) / 2;
 	var pLeft = (pwidth - 890) / 2;			
-	
+
 	switch (menu) {
 		case 'mail':    
 		    url = '/ezEmail/mailWrite.do?cmd=NEW';

@@ -12,6 +12,7 @@
 <typeAlias alias="CommunityMyCommunityVO" type="egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO"/>
 <typeAlias alias="CommunityCClubUserVO" type="egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO"/>
 <typeAlias alias="PortalUserInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO"/>
+<typeAlias alias="QuickLinkVO" type="egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO"/>
 <typeAlias alias="MenuInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO"/>
 <typeAlias alias="PortletNameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO"/>
 <typeAlias alias="MenuAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO"/>
@@ -396,6 +397,51 @@ AND
 	user_id = #userId#
 ]]>	
 </delete>
+
+<!-- 퀵 링크 불러오기 -->
+<select id="ezNewPortal.getQuickLinkList" parameterClass="Map" resultClass="QuickLinkVO">
+<![CDATA[
+SELECT
+	quicklinkid, 
+    quicklinkname, 
+    quicklinkname2, 
+    quicklinkname3, 
+    linktype, 
+    url,
+    size_ as size
+FROM 
+	tbl_ps_quicklink as Q
+JOIN 
+	tbl_usermaster as U
+ON 
+	Q.tenant_id = U.tenant_id
+AND 
+	Q.reguserid = U.cn
+WHERE 
+	Q.TENANT_ID = #tenantId#
+AND 
+	U.PHYSICALDELIVERYOFFICENAME = #companyId#
+LIMIT #limit#
+OFFSET #offset#
+]]>	
+</select>
+<!-- 퀵 링크 전체 개수 가져오기 -->
+<select id="ezNewPortal.getQuickLinkTotalCnt" parameterClass="Map" resultClass="Integer">
+SELECT
+	count(*)
+FROM 
+	tbl_ps_quicklink as Q
+JOIN 
+	tbl_usermaster as U
+ON 
+	Q.tenant_id = U.tenant_id
+AND 
+	Q.reguserid = U.cn
+WHERE 
+	Q.TENANT_ID = #tenantId#
+AND 
+	U.PHYSICALDELIVERYOFFICENAME = #companyId#
+</select>
 
 <!-- 현재 진행중이면서 참여하고 있는 투표 개수  -->
 <select id="ezNewPortal.getVotePortletCount" parameterClass="Map" resultClass="Integer">

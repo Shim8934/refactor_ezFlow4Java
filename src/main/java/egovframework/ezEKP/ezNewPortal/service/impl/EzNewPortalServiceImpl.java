@@ -194,6 +194,39 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("[Serivce] deleteUserMenuOrder Ended");
 	}
 	
+	// 퀵링크 가져오기
+	public List<?> getQuickLinkList(String companyId, int tenantId, int page, int limit) throws Exception {
+		LOGGER.debug("[Serivce] getQuickLinkList Started");
+		
+		int offset = (page-1) * limit;
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("limit", limit);
+		map.put("offset", offset);
+		
+		LOGGER.debug("[Serivce] getQuickLinkList Ended");
+		return ezNewPortalDAO.getQuickLinkList(map);
+	}
+	// 퀵링크 전체 페이지 개수 가져오기
+	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit) throws Exception {
+		LOGGER.debug("[Serivce] getQuickLinkTotalPageCnt Started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		int totalCnt = ezNewPortalDAO.getQuickLinkTotalCnt(map);
+		
+		float pageCnt = (float)totalCnt / (float)limit;
+
+LOGGER.debug("!!!!!!!!!pageCnt :" + Math.ceil(pageCnt));		
+		
+		LOGGER.debug("[Serivce] getQuickLinkTotalPageCnt Ended");
+		return (int) Math.ceil(pageCnt);
+	}
+	
 	@Override
 	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) {
 		LOGGER.debug("[Serivce] getVotePortletCount Started");
