@@ -1780,13 +1780,13 @@ public class EzScheduleController extends EgovFileMngUtil {
         String enddate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    	Calendar cal = Calendar.getInstance();
-    	cal.setTime(sdf.parse(enddate));
-    	
-    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
-    		cal.add(Calendar.MINUTE, -1);        		
-    		enddate = sdf.format(cal.getTime());
-    	}
+//    	Calendar cal = Calendar.getInstance();
+//    	cal.setTime(sdf.parse(enddate));
+//    	
+//    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
+//    		cal.add(Calendar.MINUTE, -1);        		
+//    		enddate = sdf.format(cal.getTime());
+//    	}
 
     	startdate = sdf.format(sdf.parse(startdate));
     	enddate = sdf.format(sdf.parse(enddate));
