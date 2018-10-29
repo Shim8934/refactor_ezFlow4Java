@@ -491,9 +491,9 @@
 				
 				var attValue = currElem.getAttribute("data-reform_flag");
 				
-				// true 값을 리턴하면 Namo 에디터가 마우스 이벤트 처리를 하지 않는다.
+				// false 값을 리턴하면 Tagfree 에디터가 마우스 이벤트 처리를 하지 않는다.
 				// IE에서는 리폼에서 만든 control일 때 true를 리턴하지 않으면
-				// Namo 에디터가 UI 처리를 직접하기 때문에 true를 반환하도록 한다.
+				// Tagfree 에디터가 UI 처리를 직접하기 때문에 false를 반환하도록 한다.
 				if (attValue == "1") {
 					return false;
 				}
@@ -573,7 +573,7 @@
 </head>
 <body>
 	<ul class="contentlayout">
-		<li class="contentlayout_right" style="width: 285px; margin-left: 10px;">
+		<li class="contentlayout_right" style="width: 285px;">
 			<!-- reform -->
 			<!-- 최적화사이즈widht285px  가변가능-widht변경가능 -->
 			<div id="reform">
@@ -807,7 +807,7 @@
 				<c:when test="${editor eq 'TAGFREE'}">
 					<table id="PreForm" style="height:<c:out value="${height}"/>px;">
 						<tr>
-							<td id="xfe_ex" valign="top" style="width:80|0px; height:<c:out value="${height}"/>px;"><script type="text/javascript">
+							<td id="xfe_ex" valign="top" style="width:800px; height:<c:out value="${height}"/>px;"><script type="text/javascript">
 								var userLang = "${userlang}";
 								var uploadFilePath = "/ezEditor/tfxUpload.do?type=";
 								var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?type=";

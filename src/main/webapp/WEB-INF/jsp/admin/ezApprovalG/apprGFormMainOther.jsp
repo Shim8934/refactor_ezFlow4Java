@@ -170,6 +170,10 @@
 		            }
 		        }
 		        
+		        <c:if test="${useReform}">
+		        	document.getElementById("TForm").style.width = "1080px";
+		        	window.resizeTo(1132, window.outerHeight);
+		        </c:if>
 		    });
 		
 		    function Editor_Complete() {
@@ -1350,7 +1354,7 @@
 		        <h2 id="H4" class="receiver_tltype01" style="margin-bottom:5px;">
 		        	<span style="min-width: 45px;" id="Span4"><spring:message code='ezApproval.reform.t001'/></span>
 		        </h2>
-		        <iframe id="iframe_ApvReForm" class="viewbox" src="/admin/ezApprovalG/reformDesignProcessor.do?height=880&id=editor2" name="iframe_ApvReForm" frameborder="0" style="padding: 0; height: 100%; width: 100%; overflow: auto; border:none"></iframe>
+		        <iframe id="iframe_ApvReForm" class="viewbox" src="/admin/ezApprovalG/reformDesignProcessor.do?height=880&id=editor2" name="iframe_ApvReForm" frameborder="0" style="padding: 0; height: 100%; width: 1080px; overflow: auto; border:none"></iframe>
 		    </div>
 		    <div id="ApvForm_content8" style="width:100%;height:90%;display:none; padding-top:10px;">
 		        <h2 id="H8" class="receiver_tltype01" style="margin-bottom:5px;">

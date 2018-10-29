@@ -36,6 +36,31 @@ function onFormDocumentLoadHandlerForNamo() {
 function onFormDocumentLoadHandlerForTagfree() {
 	isTagfree = true;
 	onFormDocumentLoadHandler();
+	
+	xfe.xfeDocumentEvent.oldXfeMouseDown = xfe.xfeDocumentEvent.xfeMouseDown;
+	xfe.xfeDocumentEvent.oldXfeMouseUp = xfe.xfeDocumentEvent.xfeMouseUp;
+	
+	xfe.xfeDocumentEvent.xfeMouseDown = function(event) {
+		var targetElement = xfeEventUtil.getTarget(event);
+		
+		if (targetElement != undefined && targetElement.getAttribute("data-reform_flag") === "1") {
+			event.preventDefault();
+			event.stopPropagation();
+		} else {
+			xfe.xfeDocumentEvent.oldXfeMouseDown(event);
+		}
+	}
+	
+	xfe.xfeDocumentEvent.xfeMouseUp = function(event) {
+		var targetElement = xfeEventUtil.getTarget(event);
+		
+		if (targetElement != undefined && targetElement.getAttribute("data-reform_flag") === "1") {
+			event.preventDefault();
+			event.stopPropagation();
+		} else {
+			xfe.xfeDocumentEvent.oldXfeMouseUp(event);
+		}
+	}
 }
 
 function onFormDocumentLoadHandler() {
@@ -518,6 +543,7 @@ function reform_actualOnClickHandler(event) {
 	loadControlProperties(currentControlElement);
 	showControlProperties(currentControlElement);
 	
+	event.preventDefault();
 	event.cancelBubble = true;
 	if (event.stopPropagation) {
 		event.stopPropagation();
@@ -1397,7 +1423,7 @@ function addTextarea() {
 	var controlElement = webEditorDocument.createElement("textarea");
 	controlElement.setAttribute("data-reform_flag", "1");
 	controlElement.setAttribute("onclick", "return reform_onClickHandler(event);");
-	controlElement.setAttribute("style", "width: 100px;");
+	controlElement.setAttribute("style", "width: 100px; resize: none;");
 	var controlID = getNextAutoID();
 	controlElement.setAttribute("id", controlID);
 	
