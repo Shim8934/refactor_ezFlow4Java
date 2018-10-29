@@ -1488,14 +1488,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String getDistributionUserName (int tenantID,  String groupName) throws Exception {
+	public String getDistributionUserName (int tenantID,  String groupName, String companyId) throws Exception {
 		logger.debug("getDistributionUserName started.");
 		logger.debug("tenantId=" + tenantID + ",groupName=" + groupName);
 		
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 		
 		String inputParams = "domainName=" + URLEncoder.encode(domain, "UTF-8") 
-				+"&groupName=" + URLEncoder.encode(groupName, "UTF-8");
+							+"&groupName=" + URLEncoder.encode(groupName, "UTF-8")
+							+"&companyId=" + URLEncoder.encode(companyId, "UTF-8");
 		
 		logger.debug("inputParams=" + inputParams);
 
@@ -1529,9 +1530,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return userName;
 	}
 	@Override
-	public String mailDelDistributionList (int tenantID ,String cn) throws  Exception{
+	public String mailDelDistributionList (int tenantID ,String cn, String companyId) throws  Exception{
 		logger.debug("mailDelDistributionList started.");
-		logger.debug("tenantId=" + tenantID + ",cn=" + cn);
+		logger.debug("tenantId=" + tenantID + ",cn=" + cn + ",companyId=" + companyId);
 		
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 
@@ -1563,6 +1564,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
 					+ "&domain=" + URLEncoder.encode(domain, "UTF-8");
 
+			String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
+			
+			// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
+			if (!companyDomainName.isEmpty()) {
+				String email = cn + "@" + companyDomainName;
+				
+				inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
+			}
+			
 			logger.debug("inputParams=" + inputParams);
 
 			String requestURL = config.getProperty("config.JGwServerURL")
@@ -1595,7 +1605,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("deleteTargetAddressUser started.");
 		logger.debug("tenantID=" + tenantID + ",groupName=" + groupName);
 
-		String userName = getDistributionUserName(tenantID, groupName);
+		String userName = getDistributionUserName(tenantID, groupName, companyID);
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 		String useBizmekaSpambox = ezCommonService.getTenantConfig(
 				"UseBizmekaSpambox", tenantID);

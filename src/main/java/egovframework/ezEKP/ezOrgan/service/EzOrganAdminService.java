@@ -93,9 +93,9 @@ public interface EzOrganAdminService {
 	
 	public String mailUpdateDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception;
 	
-	public String getDistributionUserName (int tenantID, String groupName) throws Exception;
+	public String getDistributionUserName (int tenantID, String groupName, String companyId) throws Exception;
 
-	public String mailDelDistributionList(int tenantID, String cn) throws Exception;
+	public String mailDelDistributionList(int tenantID, String cn, String companyId) throws Exception;
 	
 	public String deleteTargetAddressUser (int tenantID, String groupName, String memberID, String companyID) throws Exception;
 	

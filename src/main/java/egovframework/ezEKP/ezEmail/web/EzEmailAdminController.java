@@ -2,7 +2,7 @@ package egovframework.ezEKP.ezEmail.web;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -18,9 +18,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.tomcat.jni.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -32,13 +30,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -49,9 +48,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -104,6 +101,9 @@ public class EzEmailAdminController {
 	
 	@Autowired
 	private Properties globals;
+	
+	@Autowired
+	private EzAddressService ezAddressService;
 
 	/**
 	 * 공용배포그룹관리 화면 호출 함수
@@ -175,12 +175,42 @@ public class EzEmailAdminController {
 			
 			if (cn != null && !cn.equals("null") && !cn.isEmpty()) {
 				//cn을 포함하는 공용배포그룹
-				List<MailDistributionVO> distributionSearchList = ezEmailService
+				List<MailDistributionVO> distributionUpperList = ezEmailService
 						.getDistributioUpperList(cn, auth.getTenantId());
 				
-				for (MailDistributionVO vo : distributionSearchList) {
-					distributionTotalList.remove(vo);
+				int totalSzie = distributionTotalList.size();
+				
+				logger.debug("totalSzie=" + totalSzie);
+				
+				//공용배포그룹 전체 리스트에서 자기 자신 제외
+				for (int i = totalSzie - 1 ; i >= 0; i--) {
+					String totalId = distributionTotalList.get(i).getId();
+					
+					if (totalId.equals(cn)) {
+						distributionTotalList.remove(i);
+					}
+					
 				}
+				
+				totalSzie = distributionTotalList.size();
+				int upperSize = distributionUpperList.size();
+				
+				logger.debug("totalSzie=" + totalSzie + ",upperSize=" + upperSize);
+				
+				//공용배포그룹에서 자기를 포함하는 공용배포그룹 제외
+				for (int i = totalSzie - 1 ; i >= 0; i--) {
+					String totalId = distributionTotalList.get(i).getId();
+					
+					for (int j = upperSize - 1; j >= 0; j--) {
+						String upperId = distributionUpperList.get(j).getId();
+						
+						if (totalId.equals(upperId)) {
+							distributionTotalList.remove(i);
+						}
+						
+					}
+				}
+				
 			}
 			
 			StringBuilder sb = new StringBuilder();
@@ -276,20 +306,75 @@ public class EzEmailAdminController {
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 		String name = doc.getElementsByTagName("NAME").item(0).getTextContent();
 		String id = doc.getElementsByTagName("ID").item(0).getTextContent();
+		
 		NodeList memberIdList = doc.getElementsByTagName("MEMBERID");
+		NodeList addressIdList = doc.getElementsByTagName("ADDRESSID");
+		NodeList addressNameList = doc.getElementsByTagName("ADDRESSNAME");
+		NodeList addressMailList = doc.getElementsByTagName("ADDRESSMAIL");
+		NodeList addressTypeList = doc.getElementsByTagName("ADDRESSTYPE");
+		NodeList directMailList = doc.getElementsByTagName("DIRECTMAIL");
+		NodeList directNameList = doc.getElementsByTagName("DIRECTNAME");
 
 		int tenantID = auth.getTenantId();
-
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
-
+		
 		int reasonCode = -100;
 		String result = "ERROR";
 		String bizmekaResult = "ERROR";
-
+		String inputParams = "";
+		String requestURL = "";
+		String response = "";
+		List<Map<String,String>> distributionSubList = null;
+		AddressVO addressInfo = null;
+		Map<String,String> distributionSubMap = null;
+				
 		try {
+			String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");			
 			String useBizmekaSpambox = ezCommonService.getTenantConfig(
 					"UseBizmekaSpambox", tenantID);
 
+			distributionSubList = new ArrayList<Map<String,String>>();
+			
+			//주소록 distributionSubList에 추가
+			for (int i = 0; i < addressTypeList.getLength(); i++) {
+				String addressType = addressTypeList.item(i).getTextContent();
+				
+				//주소록 타입이 그룹일 경우
+				if (addressType.equals("MAILGROUP")) {
+					addressInfo =  ezAddressService.getAddressInfo(tenantID, auth.getPrimary(), addressIdList.item(i).getTextContent());
+					String address = addressInfo.getsMemo();
+				
+					if (address != null && !address.trim().equals("")) {
+						String[] addressRows = address.split(";");
+						
+						for (String addr : addressRows) {
+							distributionSubMap = new HashMap<String, String>();
+							String[] subRows = addr.split("<");
+							String subName = subRows[0].replaceAll("\"", "");
+							
+							distributionSubMap.put("subName", subName);
+							distributionSubMap.put("subEmail", subRows[1].substring(0, subRows[1].length() -1));
+							distributionSubList.add(distributionSubMap);
+						}
+					}					
+				} else if (addressType.equals("MAIL")) {
+					distributionSubMap = new HashMap<String, String>();
+					distributionSubMap.put("subName", addressNameList.item(i).getTextContent());
+					distributionSubMap.put("subEmail", addressMailList.item(i).getTextContent());
+					distributionSubList.add(distributionSubMap);
+				}
+			}
+			
+			//직접 입력 한 이름 distributionSubList에 추가
+			for (int i = 0; i < directMailList.getLength(); i++) {
+				if (directNameList.getLength() > 0) {
+					distributionSubMap = new HashMap<String, String>();
+					distributionSubMap.put("subName", directNameList.item(i).getTextContent());
+					distributionSubMap.put("subEmail", directMailList.item(i).getTextContent());
+					distributionSubList.add(distributionSubMap);
+				}
+			}
+			
 			// 새 공용배포그룹 등록하는 경우
 			if (cn == null || cn.equals("")) {
 				if (useBizmekaSpambox.equals("YES")) {
@@ -316,20 +401,27 @@ public class EzEmailAdminController {
 						throw new Exception("bizmekaAddDistributionList failed");
 					}
 				}
-				
-				String inputParams = "companyId="
+							
+				inputParams = "companyId="
 						+ URLEncoder.encode(companyId, "UTF-8") + "&name="
 						+ URLEncoder.encode(name, "UTF-8") + "&id="
 						+ URLEncoder.encode(id, "UTF-8") + "&domain="
 						+ URLEncoder.encode(domain, "UTF-8");
-
+				
+				// 공용배포그룹 맴버가 조직도 or 공용그룹인 경우
 				for (int i = 0; i < memberIdList.getLength(); i++) {
 					inputParams += "&memberId="
 							+ URLEncoder.encode(memberIdList.item(i)
 									.getTextContent(), "UTF-8");
+				}					
+								
+				// 공용배포그룹 멤버가 주소록 or 직접입력인 경우
+				for (int i = 0; i < distributionSubList.size(); i++) {
+					String subName = distributionSubList.get(i).get("subName");
+					String subEmail = distributionSubList.get(i).get("subEmail");
+					inputParams += "&subName=" + URLEncoder.encode(subName, "UTF-8") 
+								+ "&subEmail=" + URLEncoder.encode(subEmail, "UTF-8");
 				}
-
-				String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
 				
 				// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
 				if (!companyDomainName.isEmpty()) {
@@ -339,14 +431,14 @@ public class EzEmailAdminController {
 				}
 				
 				logger.debug("inputParams=" + inputParams);
-
-				String requestURL = config.getProperty("config.JGwServerURL")
+				
+				requestURL = config.getProperty("config.JGwServerURL")
 						+ "/jMochaAccess/setDistributionList";
-				String response = ezEmailUtil.getWebServiceResult(requestURL,
+				response = ezEmailUtil.getWebServiceResult(requestURL,
 						inputParams);
-
+				
 				logger.debug("response=" + response);
-
+				
 				if (response != null) {
 					JSONParser jsonParser = new JSONParser();
 					JSONObject responseObj = (JSONObject) jsonParser
@@ -357,8 +449,8 @@ public class EzEmailAdminController {
 						reasonCode = ((Long) responseObj.get("reasonCode"))
 								.intValue();
 					}
-				}
-				// 기존 공용배포그룹을 수정하는 경우
+				}									
+			// 기존 공용배포그룹을 수정하는 경우
 			} else {
 				if (useBizmekaSpambox.equals("YES")) {
 					String bizmekaAdminId = ezCommonService.getTenantConfig(
@@ -385,21 +477,29 @@ public class EzEmailAdminController {
 								"bizmekaEditDistributionList failed");
 					}
 				}
-
-				String inputParams = "companyId="
+								
+				inputParams = "companyId="
 						+ URLEncoder.encode(companyId, "UTF-8") + "&cn="
 						+ URLEncoder.encode(cn, "UTF-8") + "&name="
 						+ URLEncoder.encode(name, "UTF-8") + "&id="
 						+ URLEncoder.encode(id, "UTF-8") + "&domain="
 						+ URLEncoder.encode(domain, "UTF-8");
-
+				
+				// 공용배포그룹 맴버가 조직도 or 공용그룹인 경우
 				for (int i = 0; i < memberIdList.getLength(); i++) {
 					inputParams += "&memberId="
 							+ URLEncoder.encode(memberIdList.item(i)
 									.getTextContent(), "UTF-8");
 				}
-
-				String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
+								
+				// 공용배포그룹 멤버가 주소록 or 직접입력인 경우
+				for (int i = 0; i < distributionSubList.size(); i++) {
+					String subName = distributionSubList.get(i).get("subName");
+					String subEmail = distributionSubList.get(i).get("subEmail");
+					
+					inputParams += "&subName=" + URLEncoder.encode(subName, "UTF-8") 
+								+ "&subEmail=" + URLEncoder.encode(subEmail, "UTF-8");
+				}
 				
 				// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
 				if (!companyDomainName.isEmpty()) {
@@ -410,13 +510,13 @@ public class EzEmailAdminController {
 				
 				logger.debug("inputParams=" + inputParams);
 
-				String requestURL = config.getProperty("config.JGwServerURL")
+				requestURL = config.getProperty("config.JGwServerURL")
 						+ "/jMochaAccess/updateDistributionList";
-				String response = ezEmailUtil.getWebServiceResult(requestURL,
+				response = ezEmailUtil.getWebServiceResult(requestURL,
 						inputParams);
 
 				logger.debug("response=" + response);
-
+				
 				if (response != null) {
 					JSONParser jsonParser = new JSONParser();
 					JSONObject responseObj = (JSONObject) jsonParser
@@ -465,6 +565,8 @@ public class EzEmailAdminController {
 
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
+		String companyId = doc.getElementsByTagName("COMPID").item(0)
+				.getTextContent();
 
 		try {
 			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
@@ -499,10 +601,16 @@ public class EzEmailAdminController {
 			for (int i = 0; i < resultArray.size(); i++) {
 				JSONObject address = (JSONObject) resultArray.get(i);
 				String pCn = (String) address.get("cn");
-				pCn = pCn.substring(0, pCn.indexOf("@"));
+				String pCnDomain = pCn.substring(pCn.indexOf("@") + 1, pCn.length());
 				String pClass = (String) address.get("class");
 				String displayName = (String) address.get("displayName"); //
-
+				
+				if (domain.equals(pCnDomain)) {
+					pCn = pCn.substring(0, pCn.indexOf("@"));
+				} else {
+					pClass = "distributionSub";
+				}
+				
 				logger.debug("pCn=" + pCn + ", pClass=" + pClass + ", displayName=" + displayName);
 
 				if (pClass.equals("group")) {
@@ -545,7 +653,7 @@ public class EzEmailAdminController {
 						sb.append("</ROW>");
 						}
 
-				} else {
+				} else if (pClass.equals("user")) {
 					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn,
 							userInfo.getPrimary(), userInfo.getTenantId());
 					if (user != null) {
@@ -568,7 +676,26 @@ public class EzEmailAdminController {
 								+ commonUtil.cleanValue(user.getTitle())
 								+ "</TITLE>");
 						sb.append("</ROW>");
-					}
+					} 
+				} else {//distribution_sub에서 가져오기(주소록, 직접입력)
+					MailDistributionVO distributionSubVO = ezEmailService
+						.getDistributionSub(cn, pCn, companyId, userInfo.getTenantId());
+					if (distributionSubVO != null) {
+						sb.append("<ROW>");
+						sb.append("<CLASS>" + pClass + "</CLASS>");
+						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+						sb.append("<DISPLAYNAME>"
+								+ commonUtil.cleanValue(distributionSubVO.getName())
+								+ "</DISPLAYNAME>");
+						sb.append("<MAIL>"
+								+ commonUtil.cleanValue(distributionSubVO.getMail())
+								+ "</MAIL>");
+						sb.append("<DEPT>"
+								+ commonUtil.cleanValue(distributionSubVO.getMail())
+								+ "</DEPT>");
+						sb.append("</ROW>");
+					} 
+					
 				}
 			}
 
@@ -602,9 +729,8 @@ public class EzEmailAdminController {
 		}
 
 		Document doc = commonUtil.convertStringToDocument(bodyData);
-		String companyId = doc.getElementsByTagName("COMPID").item(0)
-				.getTextContent();		
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
+		String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 
 		int tenantID = auth.getTenantId();
 
@@ -648,14 +774,15 @@ public class EzEmailAdminController {
 			}
 			
 			logger.debug("inputParams=" + inputParams);
-
+			
 			String requestURL = config.getProperty("config.JGwServerURL")
 					+ "/jMochaAccess/deleteDistribution";
+			
 			String response = ezEmailUtil.getWebServiceResult(requestURL,
 					inputParams);
 
 			logger.debug("response=" + response);
-
+			
 			if (response != null) {
 				JSONParser jsonParser = new JSONParser();
 				JSONObject responseObj = (JSONObject) jsonParser

@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -55,7 +57,6 @@ import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -125,6 +126,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addAddJobMasterOrderBy();
     	ezCommonService.createTblIPAccessID();
     	ezCommonService.createTblIPAccessIP();
+    	ezCommonService.createJMochaDistributionSub();
     	ezCommonService.addUserMasterManualFlag();
     	ezCommonService.addDeptMasterManualFlag();
     	
@@ -900,6 +902,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String checkID = config.getProperty("config.USE_CHECKUPSTR");
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());
+		String useCloud = ezCommonService.getTenantConfig("useCloud", userInfo.getTenantId());
 		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
 		
 		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
@@ -914,6 +917,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("birthDay", "");
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("useCloud", useCloud);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 		model.addAttribute("locale", userInfo.getLocale());
@@ -1462,7 +1466,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					String beforePosition = useRankMailUser.getExtensionAttribute10(); //이전의 직책
 					
 					if (jobTile != null && !jobTile.equals("")) {
-						String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile);
+						String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile, companyId);
 						jobTile2 = String.valueOf(UUID.randomUUID()).substring(0,8);
 
 						logger.debug("jobTitle UUID=" + jobTile2);
@@ -1471,7 +1475,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobTile, userName, companyId, tenantID, cn);
 								 
 							 } else {// 직위로 공용배포그룹이 없을때  or 직위 를 변경할때
-								 String beforeTitleUserName = ezOrganAdminService.getDistributionUserName(tenantID, beforeTitle);
+								 String beforeTitleUserName = ezOrganAdminService.getDistributionUserName(tenantID, beforeTitle, companyId);
 								 if (beforeTitleUserName != null && !beforeTitleUserName.equals("")) {
 									 result = ezOrganAdminService.deleteTargetAddressUser(tenantID, beforeTitle, cn, companyId);
 								 }
@@ -1481,7 +1485,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						}
 						
 					if (jobPostion != null && !jobTile.equals("")) {
-						String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion);
+						String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion, companyId);
 						jobPostion2 = String.valueOf(UUID.randomUUID()).substring(0,8);
 						
 						logger.debug("jobPostion2 UUID=" + jobPostion2);
@@ -1489,7 +1493,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						 if (beforePosition != null && beforePosition.equals(jobPostion)) {//직책으로 공용 배포그룹 존재할떄
 							 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobPostion, userName, companyId, tenantID, cn);
 						 } else {// 직책으로 공용배포그룹이 없을때 or 직책 을 변경할때
-							 String beforeTitleUserName = ezOrganAdminService.getDistributionUserName(tenantID, beforeTitle);
+							 String beforeTitleUserName = ezOrganAdminService.getDistributionUserName(tenantID, beforeTitle, companyId);
 							if (beforeTitleUserName != null && !beforeTitleUserName.equals("")) {
 								result = ezOrganAdminService.deleteTargetAddressUser(tenantID, beforePosition, cn, companyId);
 							}
@@ -1505,10 +1509,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         		e.printStackTrace();
         		ezOrganAdminService.deleteTargetAddressUser(tenantID, jobTile2, vo.getCn(), companyId);//직위 공용배포 그룹에서 user 삭제
         		ezOrganAdminService.deleteTargetAddressUser(tenantID, jobPostion2, vo.getCn(), companyId);//직책 공용배포 그룹에서 user 삭제
-        		String userNameTitle = ezOrganAdminService.getDistributionUserName(tenantID, vo.getTitle());//user의 기존 직위 공용 배포 그룹 이름 가져오기
+        		String userNameTitle = ezOrganAdminService.getDistributionUserName(tenantID, vo.getTitle(), companyId);//user의 기존 직위 공용 배포 그룹 이름 가져오기
         		ezOrganAdminService.mailUpdateDistributionList(ezCommonService.getTenantConfig("DomainName", tenantID),
         				vo.getTitle(), userNameTitle, companyId, tenantID, vo.getCn());//기존 user의 직위 공용 배포 그룹에 user 추가 
-        		String userNamePosition = ezOrganAdminService.getDistributionUserName(tenantID, vo.getTitle());//user의 기존 직책 공용 배포 그룹 이름 가져오기
+        		String userNamePosition = ezOrganAdminService.getDistributionUserName(tenantID, vo.getTitle(), companyId);//user의 기존 직책 공용 배포 그룹 이름 가져오기
         		ezOrganAdminService.mailUpdateDistributionList(ezCommonService.getTenantConfig("DomainName", tenantID),
         				vo.getExtensionAttribute10(), userNamePosition, companyId, tenantID, vo.getCn());//기존 user의 직책 공용 배포 그룹에 user 추가
         		e.printStackTrace();
@@ -1589,7 +1593,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								companyId = deptVO.getExtensionAttribute2();//회사 ID
 								
 								if (jobTile != null && !jobTile.equals("")) {
-									String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile);
+									String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile, companyId);
 									jobTile2 = String.valueOf(UUID.randomUUID()).substring(0,8);
 									logger.debug("jobTitle UUID=" + jobTile2);
 										
@@ -1602,7 +1606,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								}
 									
 								if (jobPostion != null && !jobPostion.equals("")) {
-									String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion);
+									String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion, companyId);
 									jobPostion2 = String.valueOf(UUID.randomUUID()).substring(0,8);
 									logger.debug("jobPostion2 UUID=" + jobPostion2);
 									 
@@ -1636,8 +1640,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							e.printStackTrace();
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 							ezEmailUserAdminService.removeUser(mailAddr);
-							ezOrganAdminService.mailDelDistributionList(tenantID, vo.getTitle()); //직위 공용 배포 그룹 삭제
-							ezOrganAdminService.mailDelDistributionList(tenantID, vo.getExtensionAttribute10()); //직책 공용 배포 그룹 삭제
+							ezOrganAdminService.mailDelDistributionList(tenantID, vo.getTitle(), vo.getCompany()); //직위 공용 배포 그룹 삭제
+							ezOrganAdminService.mailDelDistributionList(tenantID, vo.getExtensionAttribute10(), vo.getCompany()); //직책 공용 배포 그룹 삭제
 							e.printStackTrace();
 							result = "EMAIL_ERROR";
 						}
@@ -1672,6 +1676,49 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					} catch (Exception e) {
 						logger.error("setInitInboxRule error.");
 						e.printStackTrace();
+					}
+				}
+				
+				// 클라우드 서비스 관리자 및 고객 관리자에게 메일 발송
+				if (ezCommonService.getTenantConfig("useCloud", tenantID).equals("YES")) {
+					try {
+						String subject = //"[클라우드] 새로운 유저가 추가되었습니다";
+								ezCommonService.getTenantConfig("cloudAddUserMailSubject", tenantID);
+						String contentStr = //"<html><head><meta charset=\"utf-8\"></head><body><div style=\"width: 80%;margin: 0px auto;\"><p style=\"font-weight: bold;\">클라우드에 유저가 추가되었습니다. 해당 내용은 아래와 같습니다.</p><ul><ol>서버 메일 주소: %s</ol><ol>추가한 관리자명: %s</ol><ol>추가된 유저명: %s</ol><ol>일자: %s</ol></ul><div id=\"cloud-message\" style=\"margin: 0px auto;margin-top: 20px;padding: 10px;background: rgb(238, 238, 238);height: 100px;\"><h3 style=\"margin: 0px;\">* 추가된 유저 요금은 일할계산되어 자동 익월 청구됩니다.<br>* 문의: 고객지원센터 080-258-0007</h3></div></div></body></html>";
+								ezCommonService.getTenantConfig("cloudAddUserMailContent", tenantID);
+						
+						String recipientsStr = ezCommonService.getTenantConfig("cloudAddUserMailTo", tenantID);
+						
+						InternetAddress from = InternetAddress.parse(userInfo.getEmail())[0];
+						InternetAddress[] recipients = InternetAddress.parse(recipientsStr);
+						
+						StringBuilder contentBuilder = new StringBuilder();
+						
+						String[] contentFragments = contentStr.split("%s");
+						String[] args = { domain, userInfo.getDisplayName(), vo.getDisplayName(), LocalDateTime.now().toString() };
+
+						int fragmentSize = contentFragments.length;
+
+						for (int i = 0; i < fragmentSize; i++) {
+							contentBuilder.append(contentFragments[i]);
+
+							if (i != fragmentSize - 1) {
+								contentBuilder.append(args[i]);
+							}
+						}
+						
+						final String content = contentBuilder.toString();
+						
+						for (InternetAddress recipient : recipients) {
+							try {
+								ezEmailService.sendMailWithExplicitRecipients(new InternetAddress[] {recipient}, loginCookie, from, recipients, null, null, subject, content, false);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					} catch (Exception ex) {
+						logger.error("sendEmailToCloudAdmins error.");
+						ex.printStackTrace();
 					}
 				}
 	        }
@@ -3051,7 +3098,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			String userName = "";
 			
 			if (!jobTile.equals("")) {
-				userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile);
+				userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile, companyId);
 				String jobTile2 = String.valueOf(UUID.randomUUID()).substring(0,8);
 				logger.debug("jobTitle UUID=" + jobTile2);
 				
@@ -3064,7 +3111,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 			
 			if (!jobPostion.equals("")) {
-				userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion);
+				userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion, companyId);
 				String jobPostion2 = String.valueOf(UUID.randomUUID()).substring(0,8);
 				logger.debug("jobPostion2 UUID=" + jobPostion2);
 				 
