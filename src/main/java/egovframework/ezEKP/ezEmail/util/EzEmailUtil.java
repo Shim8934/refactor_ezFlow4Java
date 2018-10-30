@@ -671,15 +671,23 @@ public class EzEmailUtil {
 	public List<String> getBodyInfo(Part part, String folderPath, long uid, 
 			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint, boolean mobile, Locale locale, 
 			String secureKey, String securePassword) throws Exception {
-		return this.getBodyInfo(part, folderPath, uid, bodyPartIndex, attachedFileList, forPrint, mobile, locale, secureKey, securePassword, false);
+		
+		Map<String, Object> extraMap = new HashMap<String, Object>();
+		
+		extraMap.put("forPrint", forPrint);
+		extraMap.put("mobile", mobile);
+		extraMap.put("secureKey", secureKey);
+		extraMap.put("securePassword", securePassword);
+		extraMap.put("includeInlineAsAttachment", false);
+		
+		return this.getBodyInfo(part, folderPath, uid, bodyPartIndex, attachedFileList, locale, extraMap);
 	}
 	
 	/**
 	 * 메일 Multipart 정보 반환 함수
 	 */
 	public List<String> getBodyInfo(Part part, String folderPath, long uid, 
-			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint, boolean mobile, Locale locale, 
-			String secureKey, String securePassword, boolean includeInlineAsAttachment) throws Exception {
+			int bodyPartIndex, List<Map<String, String>> attachedFileList, Locale locale, Map<String, Object> extraMap) throws Exception {
 		List<String> resultList = new ArrayList<String>();
 		
 		String htmlBody = "";
@@ -690,6 +698,12 @@ public class EzEmailUtil {
 		
 		logger.debug("contentType=" + part.getContentType());
 		logger.debug("disposition=" + part.getDisposition());
+		
+		boolean forPrint = (boolean)extraMap.get("forPrint");
+		boolean mobile = (boolean)extraMap.get("mobile");
+		String secureKey = (String)extraMap.get("secureKey");
+		String securePassword = (String)extraMap.get("securePassword");
+		boolean includeInlineAsAttachment = (boolean)extraMap.get("includeInlineAsAttachment");
 		
 		// 아래 if문 조건에 disposition이 attachment인지 체크했는데
 		// iphone에서 inline-image를 보냈을 때 inline-image가 mulitpart/related에 들어있지 않고 mulitpart/mixed에 들어있어서
@@ -1085,7 +1099,7 @@ public class EzEmailUtil {
 					logger.debug("disposition=" + p.getDisposition());
 				// text/html 파트가 나오거나 multipart/related or mixed 파트가 나올 수도 있다.	
 				} else {
-					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, locale, extraMap);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -1126,7 +1140,7 @@ public class EzEmailUtil {
 					logger.debug("contentType=" + p.getContentType());
 					logger.debug("disposition=" + p.getDisposition());	
 				} else {				
-					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -1150,7 +1164,7 @@ public class EzEmailUtil {
 					isHtmlOrAlternativeFound = true;
 					
 					// 코린도에서 수신된 메일 중 multipart/related 안에 첨부파일이 있는 경우가 있어 패러메터값을 -1 대신 i로 변경함
-					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -1176,10 +1190,12 @@ public class EzEmailUtil {
 					Part p = mp.getBodyPart(i);
 					
 					if (p.isMimeType("text/plain")) {
-						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
+						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 						htmlBody += tempList.get(0);						
 					} else if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)) {
-						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword, true);
+						
+						extraMap.put("includeInlineAsAttachment", true);
+						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 						htmlBody += tempList.get(0);
 						pAttachListHtml += tempList.get(1);
 						filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -1197,7 +1213,7 @@ public class EzEmailUtil {
 			
 			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
-				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
+				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 				htmlBody += tempList.get(0);
 				pAttachListHtml += tempList.get(1);
 				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
