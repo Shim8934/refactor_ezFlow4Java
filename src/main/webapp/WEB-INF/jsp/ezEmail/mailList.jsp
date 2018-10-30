@@ -100,6 +100,8 @@
 		    var importExportMode = false;
 		    var useCountryIP = "${useCountryIP}";
 		    var shareId = "${shareId}";
+		    var systemCountryCode = "${systemCountryCode}";
+		    var useShowSystemCountry = "${useShowSystemCountry}";
 		    
 		    function defineHost(protocol){
 	    		var host = "";
