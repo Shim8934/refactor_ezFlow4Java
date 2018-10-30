@@ -1592,8 +1592,10 @@ public class EzNewPortalGWController {
 					boardInfo.setText(commonUtil.cleanValue(boardInfo.getBoardName2()));
 				}
 				
-				if (boardInfo.getParent().equals("top")) {
-					boardInfo.setParent("#");
+				if (!boardInfo.getParent().equals("top")) {
+					if (boardInfo.getTopParent().equals("top")) {
+						boardInfo.setParent("#");
+					}
 				}
 				
 				boardTree.set(i, boardInfo);

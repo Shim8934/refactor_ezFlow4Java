@@ -622,9 +622,35 @@ public class EzNewPortalAdminController {
 			
 			if (result.equals("ok")) {
 				model.addAttribute("boardList", resultBody.get("data"));
+				model.addAttribute("companyId", companyId);
 			}
 			
+			LOGGER.debug("openBoardTree ended.");
 			return "/admin/ezNewPortal/portalBoardTree";
 		}
+	}
+	
+	@RequestMapping(value = "/admin/ezNewPortal/getSubBoards.do")
+	@ResponseBody
+	public JSONArray getSubBoards(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, @RequestBody Map<String, Object> paramMap, Model model) throws Exception {
+		LOGGER.debug("getSubBoards started.");
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String userId = userInfo.getId();
+		String companyId = paramMap.get("companyId").toString();
+		JSONArray subBoards = new JSONArray();
+		
+		paramMap.put("userId", userId);
+		
+		String url = "/rest/admin/ezPortal/boards/tree/companies/" + companyId;
+
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, req, "get", null);
+		String result = resultBody.get("status").toString();
+		
+		if (result.equals("ok")) {
+			subBoards = (JSONArray) resultBody.get("data");
+		}
+		
+		LOGGER.debug("getSubBoards ended.");
+		return subBoards;
 	}
 }

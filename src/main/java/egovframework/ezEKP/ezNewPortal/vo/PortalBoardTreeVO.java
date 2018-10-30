@@ -7,6 +7,8 @@ public class PortalBoardTreeVO {
 	private String text;
 	private String boardName1;
 	private String boardName2;
+	private int sort;
+	private String topParent;
 	
 	public String getId() {
 		return id;
@@ -38,11 +40,25 @@ public class PortalBoardTreeVO {
 	public void setBoardName2(String boardName2) {
 		this.boardName2 = boardName2;
 	}
+	public int getSort() {
+		return sort;
+	}
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
+	public String getTopParent() {
+		return topParent;
+	}
+	public void setTopParent(String topParent) {
+		this.topParent = topParent;
+	}
 	
 	@Override
 	public String toString() {
 		return "PortalBoardTreeVO [id=" + id + ", parent=" + parent + ", text=" + text + ", boardName1=" + boardName1
-				+ ", boardName2=" + boardName2 + "]";
+				+ ", boardName2=" + boardName2 + ", sort=" + sort + ", topParent=" + topParent + "]";
 	}
+	
+	
 	
 }

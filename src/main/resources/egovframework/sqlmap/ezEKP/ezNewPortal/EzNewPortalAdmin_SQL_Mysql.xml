@@ -379,31 +379,37 @@
 	<select id="ezNewPortal.getBoardTree" parameterClass="Map" resultClass="PortalBoardTreeVO">
 		<![CDATA[
 			SELECT 
-				boardid  as id,
-				parentboardid as parent,
-				boardname as boardname1,
-				boardname2 as boardname2
+				A.boardid  as id,
+				A.parentboardid as parent,
+				A.boardname as boardname1,
+				A.boardname2 as boardname2,
+				A.treevieworder as sort,
+				B.parentboardid as topParent
 			FROM
-				TBL_BOARD_BOARDINFO
+				TBL_BOARD_BOARDINFO A
+			LEFT JOIN
+				TBL_BOARD_BOARDINFO B
+			ON
+				A.parentboardid = B.boardid
 			WHERE
 		]]>
 		<isEqual property="parentBoardId" compareValue="top">
 		<![CDATA[
-				parentboardid = #parentBoardId#
+				A.parentboardid = #parentBoardId#
 		]]>
 		</isEqual>
 		<isNotEqual property="parentBoardId" compareValue="top">
 		<![CDATA[
-				boardtreepath LIKE CONCAT('%,', #parentBoardId#, ',%')
+				A.boardtreepath LIKE CONCAT('%', #parentBoardId#, '%')
 		]]>
 		</isNotEqual>	
 		<![CDATA[
 			AND
-				(companyid = #companyId# OR companyid IS NULL)
+				(A.companyid = #companyId# OR A.companyid IS NULL)
 			AND
-				tenant_id = #tenantId#
+				A.tenant_id = #tenantId#
 			ORDER BY
-				treevieworder;
+				A.treevieworder;
 		]]>
 	</select>
 </sqlMap>
