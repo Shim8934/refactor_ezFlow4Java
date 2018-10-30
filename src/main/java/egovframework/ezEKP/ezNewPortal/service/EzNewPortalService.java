@@ -40,6 +40,8 @@ public interface EzNewPortalService {
 	public void deleteUserMenuOrder(String companyId, int tenantId, String userId) throws Exception;
 	public List<?> getQuickLinkList(String companyId, int tenantId, int page, int limit) throws Exception; 
 	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit) throws Exception;
+	public List<?> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception;
+	public List<?> getUserFrameListAndSelectedFrame(String companyId, int tenantId, String userId) throws Exception;
 	/**
 	 * 유은정
 	 */
