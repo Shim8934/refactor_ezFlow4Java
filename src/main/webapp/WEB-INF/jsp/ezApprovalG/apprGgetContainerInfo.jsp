@@ -632,7 +632,7 @@
 		        var selRow = DocList.GetSelectedRows();
 		        var tr = selRow[0];
 		        if (tr != null && typeof (selRow.length) != "undefined" && selRow.length > 0) {
-		            if (jobState == "APPROVAL") {
+		            if (jobState == "APPROVAL" || jobState == "CIRCUL") {
 		                if (tr.getAttribute("DATA5") == "Y") {
 		                    var heigth = window.screen.availHeight;
 		                    var width = window.screen.availWidth;
