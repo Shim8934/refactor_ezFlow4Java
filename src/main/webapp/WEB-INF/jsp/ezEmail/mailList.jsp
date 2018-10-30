@@ -99,6 +99,8 @@
 		    var isSentItems = "${isSentItems}";
 		    var importExportMode = false;
 		    var useCountryIP = "${useCountryIP}";
+		    var systemCountryCode = "${systemCountryCode}";
+		    var useShowSystemCountry = "${useShowSystemCountry}";
 		    
 		    function defineHost(protocol){
 	    		var host = "";

@@ -699,11 +699,19 @@ public class EzEmailUtil {
 		logger.debug("contentType=" + part.getContentType());
 		logger.debug("disposition=" + part.getDisposition());
 		
-		boolean forPrint = (boolean)extraMap.get("forPrint");
-		boolean mobile = (boolean)extraMap.get("mobile");
-		String secureKey = (String)extraMap.get("secureKey");
-		String securePassword = (String)extraMap.get("securePassword");
-		boolean includeInlineAsAttachment = (boolean)extraMap.get("includeInlineAsAttachment");
+		boolean forPrint = false;
+		boolean mobile = false;
+		String secureKey = null;
+		String securePassword = null;
+		boolean includeInlineAsAttachment = false;
+		
+		if (extraMap != null) {
+			if (extraMap.get("forPrint") != null) forPrint = (boolean)extraMap.get("forPrint");
+			if (extraMap.get("mobile") != null) mobile = (boolean)extraMap.get("mobile");
+			if (extraMap.get("secureKey") != null) secureKey = (String)extraMap.get("secureKey");
+			if (extraMap.get("securePassword") != null) securePassword = (String)extraMap.get("securePassword");
+			if (extraMap.get("includeInlineAsAttachment") != null) includeInlineAsAttachment = (boolean)extraMap.get("includeInlineAsAttachment");
+		}
 		
 		// 아래 if문 조건에 disposition이 attachment인지 체크했는데
 		// iphone에서 inline-image를 보냈을 때 inline-image가 mulitpart/related에 들어있지 않고 mulitpart/mixed에 들어있어서
