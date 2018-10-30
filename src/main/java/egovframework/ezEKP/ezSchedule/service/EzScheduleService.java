@@ -108,5 +108,4 @@ public interface EzScheduleService {
 	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId ,String companyID) throws Exception;
 
 	public void deleteScheduleRepe(String scheduleId, int tenantId) throws Exception;
-	
 }

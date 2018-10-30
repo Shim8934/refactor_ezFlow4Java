@@ -13,6 +13,7 @@
 <script type="text/javascript" src="${util.addVer('/js/jui/lib/core.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jui/dist/chart.min.js')}"></script>
 <script type="text/javascript">
+	var cloudFlag = "${cloudFlag}";
 
 	$(document).ready(function(){
 		var obj = JSON.parse('${serverList}');
@@ -292,8 +293,14 @@
 	      	
 			// 그래프에 필요한 데이터 가져오기
 	    	function getInfo() {
+				var url = "/admin/ezSystem/sysMonitorREST.do";
+				
+				if (cloudFlag) {
+					url = "/gCloud/sysMonitorREST.do";
+				}
+				
 	    		$.ajax ({
-	    			url : "/admin/ezSystem/sysMonitorREST.do",
+	    			url : url,
 	    			type : "POST",
 	    			dataType : "json",
 	    			data : {

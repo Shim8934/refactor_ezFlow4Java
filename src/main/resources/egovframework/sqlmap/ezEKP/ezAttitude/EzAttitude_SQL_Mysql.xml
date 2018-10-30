@@ -148,82 +148,154 @@
 	
 	<select id="ezAttitudeDAO.getAttitudeList" parameterClass="Map" resultMap="attitude" remapResults="true">
 		<![CDATA[
-			SELECT 
-				A.ATTITUDE_ID,
-				A.COMPANY_ID,
-				A.TENANT_ID,
-				A.WRITER_ID,
-				A.DEPT_ID,
-				IF(
-					date_add(A.START_DATE, INTERVAL +#offsetMin# minute) < #startDate#, 
-					CONCAT(substr(#startDate#,1,11), substr(A.START_DATE,12)), 
-					date_format(date_add(A.START_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
-				  ) AS START_DATE,
-				IF(
-					date_add(A.END_DATE, INTERVAL +#offsetMin# minute) > #endDate#, 
-					CONCAT(substr(#endDate#,1,11), substr(A.END_DATE,12)), 
-					date_format(date_add(A.END_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
-				  ) AS END_DATE,
-				A.MODAPPL,
-				A.REGION,
-				A.MOBILE,
-				A.BIZSUB,
-				A.CONTENT,
-				A.IP,
-				A.DATE_TYPE,
-				A.TYPE_ID,
-				B.TYPE_NAME$lang$ AS TYPE_NAME,
-				B.IMG_PATH,
-				C.DISPLAYNAME$lang$ AS WRITER_NAME,
-				C.DESCRIPTION$lang$ AS WRITER_DEPT_NAME
-			FROM   
-				tbl_attitude A 
-			INNER JOIN 
-				tbl_attitude_type B 
-			ON 
-				(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
-			INNER JOIN 
-				tbl_usermaster C
-			ON
-				(C.CN = A.WRITER_ID AND A.COMPANY_ID = C.PHYSICALDELIVERYOFFICENAME AND A.TENANT_ID = C.TENANT_ID)
-			WHERE
-			]]>
-			(
-			<isNotEmpty property="pidListArr">
-				<iterate prepend="WRITER_ID IN" property="pidListArr" open="(" close=")" conjunction=",">
-			      		#pidListArr[]#
-				</iterate>
-				<isNotEmpty property="deptIdArr" prepend="or">
-					<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
-			      		#deptIdArr[]#
-					</iterate>
-				</isNotEmpty> 
-			</isNotEmpty>
-			<isEmpty property="pidListArr">
-				<isNotEmpty property="deptIdArr">
-					<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
-			      		#deptIdArr[]#
-					</iterate>
-				</isNotEmpty>
-			</isEmpty>
-			)
-			<isNotEmpty property="typeId" prepend="and">
-				A.TYPE_ID = #typeId#
-			</isNotEmpty>
-			AND
-				A.TENANT_ID = #tenantId#
-			<![CDATA[
-			AND  
+			SELECT * FROM (
+				SELECT 
+					A.ATTITUDE_ID,
+					A.COMPANY_ID,
+					A.TENANT_ID,
+					A.WRITER_ID,
+					A.DEPT_ID,
+					IF(
+						date_add(A.START_DATE, INTERVAL +#offsetMin# minute) < #startDate#, 
+						CONCAT(substr(#startDate#,1,11), substr(A.START_DATE,12)), 
+						date_format(date_add(A.START_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
+					  ) AS START_DATE,
+					IF(
+						date_add(A.END_DATE, INTERVAL +#offsetMin# minute) > #endDate#, 
+						CONCAT(substr(#endDate#,1,11), substr(A.END_DATE,12)), 
+						date_format(date_add(A.END_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
+					  ) AS END_DATE,
+					A.MODAPPL,
+					A.REGION,
+					A.MOBILE,
+					A.BIZSUB,
+					A.CONTENT,
+					A.IP,
+					A.DATE_TYPE,
+					A.TYPE_ID,
+					B.TYPE_NAME$lang$ AS TYPE_NAME,
+					B.IMG_PATH,
+					C.DISPLAYNAME$lang$ AS WRITER_NAME,
+					C.DESCRIPTION$lang$ AS WRITER_DEPT_NAME
+				FROM   
+					tbl_attitude A 
+				INNER JOIN 
+					tbl_attitude_type B 
+				ON 
+					(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
+				INNER JOIN 
+					tbl_usermaster C
+				ON
+					(C.CN = A.WRITER_ID AND A.COMPANY_ID = C.PHYSICALDELIVERYOFFICENAME AND A.TENANT_ID = C.TENANT_ID)
+				WHERE
+				]]>
 				(
-					(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 
-					or
-					(date_add(END_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) < #endDate#) 
-					or
-					(date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) >= #endDate#)
+				<isNotEmpty property="pidListArr">
+					<iterate prepend="WRITER_ID IN" property="pidListArr" open="(" close=")" conjunction=",">
+				      		#pidListArr[]#
+					</iterate>
+					<isNotEmpty property="deptIdArr" prepend="or">
+						<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+				      		#deptIdArr[]#
+						</iterate>
+					</isNotEmpty> 
+				</isNotEmpty>
+				<isEmpty property="pidListArr">
+					<isNotEmpty property="deptIdArr">
+						<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+				      		#deptIdArr[]#
+						</iterate>
+					</isNotEmpty>
+				</isEmpty>
 				)
+				<isNotEmpty property="typeId" prepend="and">
+					A.TYPE_ID = #typeId#
+				</isNotEmpty>
+				AND
+					A.TENANT_ID = #tenantId#
+				<![CDATA[
+				AND  
+					(
+						(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 
+						or
+						(date_add(END_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) < #endDate#) 
+						or
+						(date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) >= #endDate#)
+					)
+		]]>
+		
+		
+			<isNotEmpty property="deptIdArr">
+				<![CDATA[
+					UNION
+					SELECT 
+						D.ATTITUDE_ID,
+						D.COMPANY_ID,
+						D.TENANT_ID,
+						D.WRITER_ID,
+						D.DEPT_ID,
+						IF(
+							date_add(D.START_DATE, INTERVAL +#offsetMin# minute) < #startDate#, 
+							CONCAT(substr(#startDate#,1,11), substr(D.START_DATE,12)), 
+							date_format(date_add(D.START_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
+						  ) AS START_DATE,
+						IF(
+							date_add(D.END_DATE, INTERVAL +#offsetMin# minute) > #endDate#, 
+							CONCAT(substr(#endDate#,1,11), substr(D.END_DATE,12)), 
+							date_format(date_add(D.END_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
+						  ) AS END_DATE,
+						D.MODAPPL,
+						D.REGION,
+						D.MOBILE,
+						D.BIZSUB,
+						D.CONTENT,
+						D.IP,
+						D.DATE_TYPE,
+						D.TYPE_ID,
+						E.TYPE_NAME$lang$ AS TYPE_NAME,
+						E.IMG_PATH,
+						F.DISPLAYNAME$lang$ AS WRITER_NAME,
+						F.DESCRIPTION$lang$ AS WRITER_DEPT_NAME
+					FROM   
+						tbl_attitude D 
+					INNER JOIN 
+						tbl_attitude_type E 
+					ON 
+						(D.TYPE_ID = E.TYPE_ID AND D.COMPANY_ID = E.COMPANY_ID AND D.TENANT_ID = E.TENANT_ID)
+					INNER JOIN 
+						tbl_usermaster F
+					ON
+						(F.CN = D.WRITER_ID AND D.COMPANY_ID = F.PHYSICALDELIVERYOFFICENAME AND D.TENANT_ID = F.TENANT_ID)
+					INNER JOIN
+						TBL_ADDJOBMASTER G
+					ON (
+					]]>
+						<iterate prepend="G.DEPTID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+					    	#deptIdArr[]#
+						</iterate>
+						AND D.TENANT_ID = G.TENANT_ID AND D.WRITER_ID = G.CN
+						)
+					WHERE
+						D.TENANT_ID = #tenantId#
+					<isNotEmpty property="typeId" prepend="and">
+						D.TYPE_ID = #typeId#
+					</isNotEmpty>
+					<![CDATA[
+					AND  
+						(
+							(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 
+							or
+							(date_add(END_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) < #endDate#) 
+							or
+							(date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) >= #endDate#)
+						)
+				]]>
+			</isNotEmpty>
+		) AS H
+		<![CDATA[
 			ORDER BY
-				A.TYPE_ID,
-				A.START_DATE DESC
+				H.START_DATE,
+				H.TYPE_ID
 		]]>
 	</select>
 
