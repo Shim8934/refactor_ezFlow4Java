@@ -102,7 +102,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String userId = userInfo.getId();
 		String url = "/rest/ezPortal/startpage/users/" + userId;
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
 		String returnUrl = "";
 		String useMemo = "";
@@ -142,7 +142,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String url = "/rest/ezPortal/menus/users/" + userId;
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
 
 		if (status.equals("ok")) {
@@ -174,7 +174,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String url = "/rest/ezPortal/menus/order/users/" + userId;
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "patch", jObj);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
 		String status = resultBody.get("status").toString();
 		String result = "failure";
 
@@ -201,7 +201,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String url = "/rest/ezPortal/menus/order/users/" + userId;
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "delete", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "delete", null);
 		String status = resultBody.get("status").toString();
 		String result = "failure";
 
@@ -233,7 +233,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		param.put("userId", userId);
 		param.put("page", req.getParameter("page"));
 
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "GET", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "GET", null);
 		String status = resultBody.get("status").toString();		
 		
 		JSONObject resultObj = new JSONObject();
@@ -267,7 +267,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();		
 		String url = "/rest/ezPortal/portlets/users/" + userId;	
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "GET", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "GET", null);
 		String status = resultBody.get("status").toString();	
 		
 		JSONObject resultObj = new JSONObject();
@@ -292,7 +292,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String userId = userInfo.getId();
 		String url = "/rest/ezPortal/settingInfo/users/" + userId;
 		String returnUrl = "/ezNewPortal/";
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
 		String status = resultBody.get("status").toString();
 		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		Calendar cal = Calendar.getInstance();
@@ -351,7 +351,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String userId = userInfo.getId();
 		String url = "/rest/ezPortal/portlets/order/users/" + userId;
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "patch", jsonParam);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jsonParam);
 		String status = resultBody.get("status").toString();
 		
 		if (status.equals("fail")) {
@@ -384,7 +384,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		param.put("birthdayCurPage", req.getParameter("birthdayCurPage"));
 		param.put("birthdayCount", req.getParameter("birthdayCount"));
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		JSONObject birthdayInfo = new JSONObject();
 		String status = resultBody.get("status").toString();
 		
@@ -414,7 +414,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		
 		String url = "/rest/ezPortal/bestEmployee/months/" + month;
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String status = resultBody.get("status").toString();
 		JSONObject bestEmployee = new JSONObject();
 		
@@ -442,7 +442,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String userId = userInfo.getId();		
 		String url = "/rest/ezPortal/settingInfo/unreadCounts/users/" + userId;
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String status = resultBody.get("status").toString();
 		JSONObject unreadCounts = new JSONObject();
 		
@@ -539,7 +539,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		int menuId = Integer.parseInt(req.getParameter("menuId"));
 		String url = "/rest/ezPortal/startpage/menus/" + menuId + "/users/" + userId;
 		
-		commonUtil.getJsonFromRestApi(url, null, req, "patch", null);
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", null);
 		
 		logger.debug("updateUserStartPage End");
 	}
@@ -552,7 +552,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String userId = userInfo.getId();
 		String url = "/rest/ezPortal/themes/users/" + userId;
 		
-		commonUtil.getJsonFromRestApi(url, null, req, "delete", null);
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "delete", null);
 		
 		logger.debug("deleteUserThemeSetting End");
 	}
@@ -569,7 +569,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("frameDefault", req.getParameter("frameDefault"));
 		
-		commonUtil.getJsonFromRestApi(url, param, req, "patch", null);
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "patch", null);
 		
 		logger.debug("updateUserThemeSetting End");		
 	}
