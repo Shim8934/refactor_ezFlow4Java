@@ -340,8 +340,9 @@
 		    	var listSize = dtl.length > 3 ? 3 : dtl.length;
 		    	var str = "";
 		    	
-		    	str += '<li class="first_approval">';
-		    	str += '	<p class="approval_tit" onclick=\'opendocview("'+ data.docID +'", "'+ data.href +'", "'+ data.aprMemberID +'", "'+ data.aprMemberName +'", "'+ data.aprMemberDeptID +'", "'+ data.docState +'", "'+ data.functionType +'")\'>'
+		    	str += '<li class="first_approval" onclick=\'opendocview("'+ data.docID +'", "'+ data.href +'", "'+ data.aprMemberID +'", "'+ data.aprMemberName +'", "'+ data.aprMemberDeptID +'", "'+ data.docState +'", "'+ data.functionType +'", "${userInfo.companyID}")\'>';
+		    	//str += '	<p class="approval_tit" onclick=\'opendocview("'+ data.docID +'", "'+ data.href +'", "'+ data.aprMemberID +'", "'+ data.aprMemberName +'", "'+ data.aprMemberDeptID +'", "'+ data.docState +'", "'+ data.functionType +'", "${userInfo.companyID}")\'>'
+		    	str += '	<p class="approval_tit">'
 		    	str += '	<span class="txt">'+ data.docTitle +'</span><span class="date">'+ data.startDate.substr(5, 11).replace(/-/gi, ".") +'</span><span class="name">'+ data.writerName +'</span></p>';
 		    	str += '	<div class="approval_content">';
 		    	
@@ -421,7 +422,7 @@
 			function dataAssembler(data) {
 				var str = "";
 				
-				str += '<li onclick=\'opendocview("'+ data.docID +'", "'+ data.href +'", "'+ data.aprMemberID +'", "'+ data.aprMemberName +'", "'+ data.aprMemberDeptID +'", "'+ data.docState +'", "'+ data.functionType +'", "'+ data.companyID +'")\'>';
+				str += '<li onclick=\'opendocview("'+ data.docID +'", "'+ data.href +'", "'+ data.aprMemberID +'", "'+ data.aprMemberName +'", "'+ data.aprMemberDeptID +'", "'+ data.docState +'", "'+ data.functionType +'", "${userInfo.companyID}")\'>';
 				str += '	<span class="txt">'+ data.docTitle +'</span>';
 				str += '	<span class="date">'+ data.startDate.substr(5, 11).replace(/-/gi,'.')+'</span>';				
 				str += '	<span class="name">'+ data.writerName +'</span>';

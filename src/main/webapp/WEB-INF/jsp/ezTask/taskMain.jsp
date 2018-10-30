@@ -647,7 +647,7 @@
 
 		        DateChange();
 		    }
-
+			
 		    function DeleteTask() {
 		        if (strListIdInfo == null || strListIdInfo == "") {
 		            alert("<spring:message code='ezTask.t104' />");
@@ -704,6 +704,7 @@
 		        getTaskList();
 		    }
 
+		    var cnt, cnt2, cnt3;
 		    function after_DateChange(xml) {
 	            listdom = loadXMLString(xml);
 
@@ -725,11 +726,11 @@
 	                currentpage = 1;	            	
 	            }
 
-	            var cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
-	            var cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
-	            var cnt3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
+	            cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
+	            cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
+	            cnt3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
 	            allCnt = getNodeText(listdom.documentElement.getElementsByTagName("ALLCNT")[0]);
-
+				
 	            if ($(".tabon").attr("divname") == "taskprog") {
 	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t200901' />" + " (" + currentCount + ")";
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t200903' />" + " (" + cnt2 + ")";
@@ -749,7 +750,7 @@
 
 	            show_page();
 	            makePageSelPage();
-
+	            window.parent.frames["left"].cntLoad();
 	            return;
 		    }
 
