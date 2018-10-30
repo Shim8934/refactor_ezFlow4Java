@@ -1345,7 +1345,14 @@ public class CommonUtil {
 			}
 		}
 		
-		RestTemplate rest = new RestTemplate();
+		RestTemplate rest = null;
+		
+		if (methodType.equals("patch")) {
+			ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+			rest = new RestTemplate(httpRequestFactory);
+		} else {
+			rest = new RestTemplate();
+		}
 		
 		HttpMethod method = null;
 		switch (methodType) {
@@ -1360,6 +1367,9 @@ public class CommonUtil {
 			break;
 		case "delete":
 			method = HttpMethod.DELETE;
+			break;
+		case "patch":
+			method = HttpMethod.PATCH;
 			break;
 		default:
 			method = HttpMethod.GET;
@@ -1376,6 +1386,7 @@ public class CommonUtil {
 		} catch (org.json.simple.parser.ParseException e) {
 			e.printStackTrace();
 		}
+		
 		logger.debug("getJsonFromRestApi ended.");
 		return resultBody;
 	}
