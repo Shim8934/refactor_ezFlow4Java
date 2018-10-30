@@ -1363,14 +1363,14 @@
 				var endTimeList = []; //퇴근시간 배열
 				
 		    	result.forEach(function(vo, index) {
-		    		if (vo.typeId == "A01" || vo.typeId == "A03" || vo.typeId == "A02" || vo.typeId == "A07") { //출근, 퇴근, 지각, 휴근 
+		    		if (vo.typeId == "A01" || vo.typeId == "A03" || vo.typeId == "A02" || vo.typeId == "A07") { //출근, 퇴근, 지각, 휴근
 			    		//no, 이름, 출근, 퇴근, 근태유형, 일시, 근무지 및 내용
 		    			if (vo.typeId == "A01") { //출근리스트
 				    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
 			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(11,16))));
 			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
-				    		objTr.append($("<td style='max-width:8%; width:8%;' title ='" + "출/퇴근" + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text("출/퇴근")));
+				    		objTr.append($("<td style='max-width:8%; width:8%;' title ='" + "<spring:message code='ezAttitude.t231'/>" + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text("<spring:message code='ezAttitude.t231'/>")));
 			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    			} else if (vo.typeId == "A03") { //퇴근
@@ -1392,8 +1392,11 @@
 			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    			}
-		    		}		
-		    		$("#addpopupDay_list tbody").append(objTr);
+		    		}
+		    		
+		    		if (objTr) {
+			    		$("#addpopupDay_list tbody").append(objTr);
+		    		}
 	    		});
 		    	
 		    	//퇴근 리스트
