@@ -272,6 +272,13 @@
 	                } catch (e) { }
 	            } catch (e) {
 	            }
+	            
+	            if (approvalFlag != 'G') {
+		            AddOption(sel_status, '<spring:message code="ezApprovalG.t1434"/>', 'H');
+		            AddOption(sel_status,'<spring:message code="ezApprovalG.t1422"/>', 'I');
+		            AddOption(sel_status, '<spring:message code="ezApprovalG.t1687"/>', 'N');
+		            AddOption(sel_status, '<spring:message code="ezApproval.t854"/>', 'Y');
+	            }
 	        };
 			
 	        // 부재자정보 체크
@@ -1546,6 +1553,10 @@
 		    function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
 		    	return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 		    }
+		    
+		    function onSelect_Status() {
+		    	GetDocSearch();
+		    }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1599,7 +1610,14 @@
 	            <li style="vertical-align: middle;">
 	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
-		        	</select>  
+		        	</select>
+		        	<c:if test = "${approvalFlag != 'G'}">
+		        		<div id="sel_status_div" style="display:inline;">
+						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
+							<option value="ALL"><spring:message code='ezPoll.t104'/></option>
+			        	</select>  
+		        	</div>
+		        	</c:if>  
 		        </li>
 	        </ul>
 	        <!-- 	        후결 문서함 -->
