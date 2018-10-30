@@ -589,6 +589,7 @@
 			    	rtnVal += "</select>";
 			    } else {
 			    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;'></select>";
+			    	jobID = ""; jobTitle = ""; jobTitle2 = "";
 			    }
 			    
 		    	document.getElementById("JobTitleOption").innerHTML = rtnVal;
