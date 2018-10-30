@@ -310,13 +310,13 @@
 	</head>
 	<body class="mainbody" style="height: 95%;">
 	    <h1><spring:message code = 'ezEmail.jje05'/><span></span></h1>
-	    <span><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
+	    <span style="display:none;"><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
 		    <select id="ListCompany" style="height:29px">
 	        	<c:forEach var="item" items="${list}">
 	        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
             	</c:forEach>
-		    </select><br>
-	    </span><br><br>
+		    </select>
+	    </span>
 	    
 	    <div style="float: left; margin-right: 10px; position:relative;">
 	    <!-- 서명 템플릿 목록 -->
