@@ -39,6 +39,7 @@
 <result property="portletOrder" 			column="PORTLET_ORDER" />
 <result property="portletName" 				column="PORTLET_NAME" />
 <result property="portletUrl" 				column="PORTLET_URL" />
+<result property="portletBoardId" 			column="BOARD_ID" />
 </resultMap>
 <resultMap class="PortletInfoVO" id="PortletInfoVO">
 <result property="portletId" 				column="PORTLET_ID" />
@@ -50,6 +51,7 @@
 <result property="portletCategory" 			column="PORTLET_CATEGORY" />
 <result property="connectionUrl" 			column="CONNECTION_URL" />
 <result property="portletUsed" 				column="PORTLET_USED" 		javaType="boolean"/>
+<result property="portletBoardId" 			column="BOARD_ID" />
 </resultMap>
 <resultMap class="BoardListVO" id="BoardListVO">
 <result property="itemID" 				column="ITEMID" />
@@ -120,6 +122,8 @@
 <result property="connectionUrl" 			column="CONNECTION_URL" />
 <result property="portletUsed" 				column="PORTLET_USED" 		javaType="boolean"/>
 <result property="menuId" 					column="MENU_ID" />
+<result property="boardName1" 				column="BOARDNAME" />
+<result property="boardName2" 				column="BOARDNAME2" />
 </resultMap>
 <resultMap class="PortletNameInfoVO" id="PortletNameInfoVO">
 <result property="portletId" 				column="PORTLET_ID" />
@@ -753,7 +757,7 @@ AND
 <select id="ezNewPortal.getPortletOrderUser" parameterClass="Map" resultMap="PortletOrderVO">
 <![CDATA[
 SELECT
-	A.PORTLET_ID, A.PORTLET_ORDER, B.PORTLET_NAME, C.PORTLET_URL
+	A.PORTLET_ID, A.PORTLET_ORDER, B.PORTLET_NAME, C.PORTLET_URL, D.BOARD_ID
 FROM	
 	TBL_PORTAL_PORTLET_USER A
 JOIN
@@ -798,7 +802,7 @@ ORDER BY
 <isNull property="order">
 <![CDATA[
 SELECT
-	A.PORTLET_ID, A.PORTLET_ORDER, B.PORTLET_NAME, C.PORTLET_URL
+	A.PORTLET_ID, A.PORTLET_ORDER, B.PORTLET_NAME, C.PORTLET_URL, A.BOARD_ID
 FROM	
 	TBL_PORTAL_PORTLET_COMP A
 JOIN
@@ -857,7 +861,8 @@ SELECT
     A.DEFAULT_ORDER,
     B.PORTLET_CATEGORY,
     B.CONNECTION_URL,
-    B.PORTLET_USED AS PORTLET_USED
+    B.PORTLET_USED AS PORTLET_USED,
+    B.BOARD_ID
 FROM
 	TBL_PORTAL_PORTLET A
 JOIN
@@ -1430,10 +1435,17 @@ SELECT A.PORTLET_ID,
        A.PORTLET_USED AS PORTLET_USED,
        C.MENU_ID,
        C.DEFAULT_ORDER,
-       C.PORTLET_URL
+       C.PORTLET_URL,
+       A.BOARD_ID,
+       D.BOARDNAME,
+       D.BOARDNAME2
   FROM TBL_PORTAL_PORTLET_COMP A
   JOIN TBL_PORTAL_PORTLET C
     ON A.PORTLET_ID = C.PORTLET_ID
+  LEFT JOIN TBL_BOARD_BOARDINFO D
+  	ON A.BOARD_ID = D.BOARDID
+  	AND A.COMPANY_ID = D.COMPANYID
+  	AND	A.TENANT_ID = D.TENANT_ID
  WHERE A.COMPANY_ID = #companyId#
    AND A.TENANT_ID = #tenantId#;
    

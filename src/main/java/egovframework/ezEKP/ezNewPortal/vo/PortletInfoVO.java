@@ -16,6 +16,8 @@ public class PortletInfoVO {
 	private boolean portletUsed; //포틀릿 사용 여부 : 사용(true), 사용안함(false)
 	private String portletBoardId; // 포틀릿 연결 게시판 id
 	private List<PortletNameInfoVO> portletNameList; // 포틀릿명 리스트
+	private String boardName1;
+	private String boardName2;
 	
 	
 	public List<PortletNameInfoVO> getPortletNameList() {
@@ -90,16 +92,28 @@ public class PortletInfoVO {
 	public void setPortletBoardId(String portletBoardId) {
 		this.portletBoardId = portletBoardId;
 	}
-	
+
+	public String getBoardName1() {
+		return boardName1;
+	}
+	public void setBoardName1(String boardName1) {
+		this.boardName1 = boardName1;
+	}
+	public String getBoardName2() {
+		return boardName2;
+	}
+	public void setBoardName2(String boardName2) {
+		this.boardName2 = boardName2;
+	}
 	@Override
 	public String toString() {
-		return "PortletInfoVO [portletId=" + portletId + ", portletOrder="
-				+ portletOrder + ", portletName=" + portletName + ", menuId="
-				+ menuId + ", portletUrl=" + portletUrl + ", isGeneral="
-				+ isGeneral + ", defaultOrder=" + defaultOrder
-				+ ", portletCategory=" + portletCategory + ", connectionUrl="
-				+ connectionUrl + ", portletUsed=" + portletUsed
-				+ ", portletBoardId=" + portletBoardId + ", portletNameList="
-				+ portletNameList + "]";
+		return "PortletInfoVO [portletId=" + portletId + ", portletOrder=" + portletOrder + ", portletName="
+				+ portletName + ", menuId=" + menuId + ", portletUrl=" + portletUrl + ", isGeneral=" + isGeneral
+				+ ", defaultOrder=" + defaultOrder + ", portletCategory=" + portletCategory + ", connectionUrl="
+				+ connectionUrl + ", portletUsed=" + portletUsed + ", portletBoardId=" + portletBoardId
+				+ ", portletNameList=" + portletNameList + ", boardName1=" + boardName1 + ", boardName2=" + boardName2
+				+ "]";
 	}
+	
+
 }

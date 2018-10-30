@@ -141,7 +141,7 @@
 					});
 					
 					//메뉴 추가 관련
-					menusHTML += "<li class='menuAdd' id='menuAdd'><dl><dt><span class='icon_topmenu' style='background:none; font-size:20px; font-weight:bold'>+</span></dt><dd>메뉴추가</dd></li>";
+					menusHTML += "<li class='menuAdd' id='menuAdd'><dl><dt><span class='icon_topmenu' style='background:none; font-size:20px; font-weight:bold'>+</span></dt><dd>메뉴추가</dd></dl></li>";
 					
 					$("#menuList").html(menusHTML);
 					

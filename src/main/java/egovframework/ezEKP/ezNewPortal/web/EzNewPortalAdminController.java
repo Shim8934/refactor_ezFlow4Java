@@ -151,7 +151,7 @@ public class EzNewPortalAdminController {
 		
 		String url = "/rest/admin/ezportal/companies";
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
 				
 		String status = resultBody.get("status").toString();
 		
@@ -179,7 +179,7 @@ public class EzNewPortalAdminController {
 		
 		String url = "/rest/admin/ezportal/themes/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
 				
 		String status = resultBody.get("status").toString();
 		
@@ -206,7 +206,7 @@ public class EzNewPortalAdminController {
 		
 		String url = "/rest/admin/ezPortal/themes/" + paramMap.get("themeId") + "/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
 				
 		String status = resultBody.get("status").toString();
 		
@@ -242,7 +242,7 @@ public class EzNewPortalAdminController {
 		
 		String url = "/rest/admin/ezPortal/themes/" + paramMap.get("themeId") + "/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", jsonParam);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 				
 		String status = resultBody.get("status").toString();
 		
@@ -271,7 +271,7 @@ public class EzNewPortalAdminController {
 		
 		String url = "/rest/admin/ezPortal/menus/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
 		
 		String status = resultBody.get("status").toString();
 		
@@ -299,7 +299,7 @@ public class EzNewPortalAdminController {
 		//메뉴정보요청
 		String url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
 		
 		JSONParser jp = new JSONParser();
 		resultBody = (JSONObject) jp.parse(resultBody.toJSONString());
@@ -316,7 +316,7 @@ public class EzNewPortalAdminController {
 		//해당메뉴 권한정보요청
 		url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/authorities/companies/" + paramMap.get("companyId");
 		
-		resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
 		
 		status = resultBody.get("status").toString();
 		
@@ -351,7 +351,7 @@ public class EzNewPortalAdminController {
 		
 		String url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", jsonParam);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 		
 		String status = resultBody.get("status").toString();
 		
@@ -365,7 +365,7 @@ public class EzNewPortalAdminController {
 		
 		url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/authorities/companies/" + paramMap.get("companyId");
 		
-		resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", jsonParam);
+		resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 		
 		status = resultBody.get("status").toString();
 		
@@ -398,7 +398,7 @@ public class EzNewPortalAdminController {
 		
 		String url = "/rest/admin/ezPortal/menus/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "post", jsonParam);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "post", jsonParam);
 		
 		String status = resultBody.get("status").toString();
 		
@@ -423,7 +423,7 @@ public class EzNewPortalAdminController {
 		
 		String url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "delete", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "delete", null);
 		
 		String status = resultBody.get("status").toString();
 		
@@ -452,7 +452,7 @@ public class EzNewPortalAdminController {
 		
 		String url = "/rest/admin/ezPortal/menus/order/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "patch", jsonParam);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 		
 		String status = resultBody.get("status").toString();
 		
@@ -489,7 +489,7 @@ public class EzNewPortalAdminController {
 			
 			String url = "/rest/admin/ezportal/companies";
 			
-			JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
 					
 			String status = resultBody.get("status").toString();
 			
@@ -592,6 +592,39 @@ public class EzNewPortalAdminController {
 			LOGGER.debug("portalMenuIconSelect ended.");
 			
 			return "/admin/ezNewPortal/portalMenuIconSelect";
+		}
+	}
+	
+	@RequestMapping(value = "/admin/ezNewPortal/openBoardTree.do")
+	public String openBoardTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("openBoardTree started.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			LOGGER.debug("openBoardTree accessDenied.");
+			
+			return "cmm/error/adminDenied";
+		} else {
+			LOGGER.debug("openBoardTree ended.");
+			//게시판이 top인 목록 가져오기
+			String userId = userInfo.getId();
+			String companyId = request.getParameter("companyId");
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("parentBoardId", "top");
+			param.put("userId", userId);
+			
+			String url = "/rest/admin/ezPortal/boards/tree/companies/" + companyId;
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+			String result = resultBody.get("status").toString();
+			
+			if (result.equals("ok")) {
+				model.addAttribute("boardList", resultBody.get("data"));
+			}
+			
+			return "/admin/ezNewPortal/portalBoardTree";
 		}
 	}
 }

@@ -14,6 +14,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -62,7 +63,8 @@ public interface EzNewPortalService {
 	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId);
 	public void deleteUserThemeSetting(String userId, int tenantId, String companyId);
 	public void updateUserThemeSetting(int usedTheme, int usedFrame, String userId, int tenantId, String companyId);
-	
+	//관리자부분
+	public List<PortalBoardTreeVO> getBoardTree(String parentBoardId, String companyId, int tenantId) throws Exception;
 	/**
 	 * 이효진
 	 */
