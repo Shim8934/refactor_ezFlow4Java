@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -310,7 +311,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		delete("ezNewPortal.deleteMenuAuth", map);
 	}
 	/** -------------------- */
-	
+	@SuppressWarnings("unchecked")
+	public List<PortalBoardTreeVO> getBoardTree(Map<String, Object> map) throws Exception {
+		return (List<PortalBoardTreeVO>) list("ezNewPortal.getBoardTree", map);
+	}
 	/**
 	 * 구해안
 	 */

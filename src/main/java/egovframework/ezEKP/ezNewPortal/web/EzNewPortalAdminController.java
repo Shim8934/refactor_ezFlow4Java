@@ -594,4 +594,37 @@ public class EzNewPortalAdminController {
 			return "/admin/ezNewPortal/portalMenuIconSelect";
 		}
 	}
+	
+	@RequestMapping(value = "/admin/ezNewPortal/openBoardTree.do")
+	public String openBoardTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("openBoardTree started.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			LOGGER.debug("openBoardTree accessDenied.");
+			
+			return "cmm/error/adminDenied";
+		} else {
+			LOGGER.debug("openBoardTree ended.");
+			//게시판이 top인 목록 가져오기
+			String userId = userInfo.getId();
+			String companyId = request.getParameter("companyId");
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("parentBoardId", "top");
+			param.put("userId", userId);
+			
+			String url = "/rest/admin/ezPortal/boards/tree/companies/" + companyId;
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+			String result = resultBody.get("status").toString();
+			
+			if (result.equals("ok")) {
+				model.addAttribute("boardList", resultBody.get("data"));
+			}
+			
+			return "/admin/ezNewPortal/portalBoardTree";
+		}
+	}
 }

@@ -103,10 +103,21 @@
 	  }
 
 	  //게시판 설정 
-	  var openBoardTree = function(event) {
-		  var portletId = event.data.portletId;
-		  var boardId = $("#portlet" + portletId).find(".boardName").attr("data1");
-		  
+	var openBoardTree = function(event) {
+		var portletId = event.data.portletId;
+		var companyId = $('#ListCompany option:selected').val();
+		var boardId = $("#portlet" + portletId).find(".boardName").attr("data1");
+        var wWeight = "355";
+        var wHeight = "600";
+
+        var heigth = window.screen.availHeight;
+        var width = window.screen.availWidth;
+
+        var left = (width - wWeight) / 2;
+        var top = (heigth - wHeight) / 2;
+        
+        window.open("/admin/ezNewPortal/openBoardTree.do?portletId=" + portletId + "&companyId=" + companyId, "",
+            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 	  }
 	  
 	  var PortletInfoUpdate = function() {

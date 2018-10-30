@@ -36,6 +36,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -661,6 +662,18 @@ LOGGER.debug("!!!!!!!!!pageCnt :" + Math.ceil(pageCnt));
 		LOGGER.debug("updateUserThemeSetting ended.");
 	}
 	
+	//관리자부분!! ------ boardtree가져오기
+	@Override
+	public List<PortalBoardTreeVO> getBoardTree(String parentBoardId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getBoardTree started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("parentBoardId", parentBoardId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("getBoardTree ended.");
+		return ezNewPortalDAO.getBoardTree(map);
+	}
 	/**
 	 * 이효진
 	 */
