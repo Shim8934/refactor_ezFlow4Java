@@ -198,7 +198,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("lang", loginVO.getLang());
 		model.addAttribute("userOffset", userOffset);
 		
-		return "/ezSchedule/scheduleLeft";
+		if(funCode.equals("3")) {
+			return "/ezTask/taskLeft";
+		} else {
+			return "/ezSchedule/scheduleLeft";
+		}
 	}
 	
 	/**
