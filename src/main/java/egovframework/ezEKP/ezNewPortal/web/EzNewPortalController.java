@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -249,10 +250,21 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	/**
 	 * 사용자 프레임 리스트 출력
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/getUserFrameList.do")
 	public JSONObject getUserFrameList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getUserFrameList Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();		
+		String url = "/rest/ezPortal/frames/users/" + userId;	
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, req, "GET", null);
+		String status = resultBody.get("status").toString();	
 		
+		JSONObject resultObj = new JSONObject();
+
+		if (status.equals("ok")) {
+			resultObj.put("data" , resultBody.get("data"));
+		}		
 		logger.debug("getUserFrameList End");
 		return null;
 	}
@@ -271,7 +283,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String status = resultBody.get("status").toString();	
 		
 		JSONObject resultObj = new JSONObject();
-		
+
 		if (status.equals("ok")) {
 			resultObj.put("data" , resultBody.get("data"));
 		}			

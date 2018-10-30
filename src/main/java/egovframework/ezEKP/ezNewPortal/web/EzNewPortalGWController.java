@@ -593,9 +593,16 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			JSONObject data = new JSONObject();
+			List<?> frameList = ezNewPortalService.getUserFrameListAndSelectedFrame(companyId, tenantId, userId);
 
+			data.put("frameList", frameList);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -641,9 +648,18 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-
+			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
+			String portletLang = info.getLang();
+			String deptId = info.getDeptId();
+			JSONObject data = new JSONObject();
+			
+			List<?> portletList = ezNewPortalService.getUserPortletList(portletLang, userId, tenantId, companyId, deptId);
+			data.put("portletList", portletList);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

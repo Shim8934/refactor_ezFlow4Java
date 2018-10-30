@@ -223,11 +223,95 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		int totalCnt = ezNewPortalDAO.getQuickLinkTotalCnt(map);
 		
 		float pageCnt = (float)totalCnt / (float)limit;
-
-LOGGER.debug("!!!!!!!!!pageCnt :" + Math.ceil(pageCnt));		
 		
 		LOGGER.debug("[Serivce] getQuickLinkTotalPageCnt Ended");
 		return (int) Math.ceil(pageCnt);
+	}
+	
+	public List<?> getUserFrameListAndSelectedFrame(String companyId, int tenantId, String userId) throws Exception {
+		LOGGER.debug("[Serivce] getUserFrameListAndSelectedFrame Started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		
+		List<FrameInfoVO> frameList = new ArrayList<FrameInfoVO>();
+		/**
+		 * 1. 회사 프레임리스트 가져오기
+		 * 2. 유저 프레임 정보 가져오기
+		 * 3. 유저 프레임 정보가 없을 경우 회사에서 선택된 프레임 정보 사용
+		 * 4. 유저 프레임 정보가 있을 경우 그대로 사용
+		 */
+		
+		// 1. 유저 프레임 정보 가져오기
+		List<FrameInfoVO> userFrame = ezNewPortalDAO.getUserUsableFrameList(map);
+		// 유저가 설정한 적이 없을 경우 회사 정보 가져오기
+		if(userFrame.size() < 1) {
+			List<FrameInfoVO> compFrame = ezNewPortalDAO.getCompUsableFrameList(map);
+			frameList = compFrame;
+		} else {
+			frameList = userFrame;
+		}
+
+		LOGGER.debug("[Serivce] getUserFrameListAndSelectedFrame Ended");
+		return frameList;
+	}
+	
+	public List<PortletInfoVO> getPortletOrderCompForUser(String portletLang, int tenantId, String companyId, String deptId, String userId) throws Exception {
+		LOGGER.debug("[Serivce] getPortletOrderCompForUse Started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("portletLang", portletLang);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("deptId", deptId);
+		map.put("userId", userId);
+		
+		List<PortletInfoVO> portletOrderComp = ezNewPortalDAO.getPortletOrderCompForUser(map);
+
+		LOGGER.debug("[Serivce] getPortletOrderCompForUse Ended");
+		return portletOrderComp;		
+	}
+	
+	// 사용자 포틀릿 리스트 가져오기
+	public List<?> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception {
+		LOGGER.debug("[Serivce] getUserPortletList Started");
+		List<Map<?, ?>> resultList = new ArrayList<>();
+		/** 
+		 * tbl_portal_portlet_user에 해당 유저 관련 정보가 없으면?
+		 * -> 회사 포틀릿 전체를 쓰는 것으로 판단
+		 * tbl_portal_portlet_user에 해당 유저 정보가 존재하면?
+		 * -> 그 안에 있는 포틀릿만 쓰는 것으로 판단
+		*/
+		List<PortletInfoVO> compPortletList = getPortletOrderCompForUser(portletLang, tenantId, companyId, deptId, userId);
+		List<PortletInfoVO> userPortletList = getPortletOrderUser(portletLang, userId, tenantId, companyId);		
+
+		if(userPortletList.size() < 1) {
+			Iterator<PortletInfoVO> it = compPortletList.iterator();
+			while (it.hasNext()) {
+				Map<String, Object> map = commonUtil.transBean2Map(it.next());
+				map.put("use", "on");
+				resultList.add(map);
+			}
+		} else {
+			Iterator<PortletInfoVO> comp = compPortletList.iterator();
+			while (comp.hasNext()) {
+				PortletInfoVO compVO = comp.next();
+				Map<String, Object> map = commonUtil.transBean2Map(compVO);
+				Iterator<PortletInfoVO> user = userPortletList.iterator();
+				while (user.hasNext()) {
+					PortletInfoVO userVO = user.next();
+					if(compVO.getPortletId() == userVO.getPortletId()) {
+						map.put("use", "on");
+						break;
+					} else {
+						map.put("use", "off");
+					}
+				}
+				resultList.add(map);
+			}	
+		}
+		LOGGER.debug("[Serivce] getUserPortletList Ended");
+		return resultList;
 	}
 	
 	@Override
