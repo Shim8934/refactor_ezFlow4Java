@@ -447,6 +447,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         String postalCode = (String)map.get("v_POSTALCODE");
         String streetAddress = (String)map.get("v_ADDRESS");
         String extensionAttribute6 = (String)map.get("v_EXTATTR6");
+        String extensionAttribute7 = (String)map.get("v_EXTATTR7");
+        String extensionAttribute8 = (String)map.get("v_EXTATTR8");
         String extensionAttribute10 = (String)map.get("v_EXTATTR10");
         String extensionAttribute102 = (String)map.get("v_EXTATTR102");
         String extensionAttribute14 = (String)map.get("v_EXTATTR14");
@@ -483,11 +485,13 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         String param23 = "birth=" + URLEncoder.encode(birth, "UTF-8");
         String param24 = "birthType=" + URLEncoder.encode(birthType, "UTF-8");
         String param25 = "password=" + URLEncoder.encode(password, "UTF-8");
+        String param26 = "extensionAttribute7=" + URLEncoder.encode(extensionAttribute7, "UTF-8");
+        String param27 = "extensionAttribute8=" + URLEncoder.encode(extensionAttribute8, "UTF-8");
         String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5 + "&" + param6
                     + "&" + param7 + "&" + param8 + "&" + param9 + "&" + param10 + "&" + param11 + "&" + param12
                     + "&" + param13 + "&" + param14 + "&" + param15 + "&" + param16 + "&" + param17 + "&" + param18
                     + "&" + param19 + "&" + param20 + "&" + param21 + "&" + param22 + "&" + param23 + "&" + param24
-                    + "&" + param25;
+                    + "&" + param25 + "&" + param26 + "&" + param27;
 
         String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/addUser";
         String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
@@ -711,6 +715,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         if (vo.getExtensionAttribute6() != null) {
             String param = "extensionAttribute6=" + URLEncoder.encode(vo.getExtensionAttribute6(), "UTF-8");
             inputParams += "&" + param;
+        }
+        if (vo.getExtensionAttribute7() != null) {
+        	String param = "extensionAttribute7=" + URLEncoder.encode(vo.getExtensionAttribute7(), "UTF-8");
+        	inputParams += "&" + param;
+        }
+        if (vo.getExtensionAttribute8() != null) {
+        	String param = "extensionAttribute8=" + URLEncoder.encode(vo.getExtensionAttribute8(), "UTF-8");
+        	inputParams += "&" + param;
         }
         if (vo.getExtensionAttribute10() != null) {
             String param = "extensionAttribute10=" + URLEncoder.encode(vo.getExtensionAttribute10(), "UTF-8");

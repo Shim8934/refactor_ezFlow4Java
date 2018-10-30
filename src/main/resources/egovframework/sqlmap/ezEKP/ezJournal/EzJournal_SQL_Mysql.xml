@@ -1238,6 +1238,18 @@
 			and 
 				recieve_date is null
 		</isNotEmpty>
+		<isEmpty property="isUser">
+			update
+				tbl_journal_view 
+			set
+				tenant_id = #tenantId#
+			where
+				journal_id = #journalId#
+			and
+				tenant_id = #tenantId#
+			and 
+				user_id = #userId#
+		</isEmpty>
 	</insert>
 
 	<!-- 일지 상세 내용 -->
