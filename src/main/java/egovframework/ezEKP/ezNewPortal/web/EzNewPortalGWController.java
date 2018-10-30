@@ -2076,7 +2076,7 @@ public class EzNewPortalGWController {
 
 			// 회사의 포토게시판의 포틀릿 정보 가져오기
 			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
-			String boardId = portlet.getConnectionUrl();
+			String boardId = portlet.getPortletBoardId();
 			data.put("boardId", boardId);
 			data.put("portletName", portlet.getPortletName());
 

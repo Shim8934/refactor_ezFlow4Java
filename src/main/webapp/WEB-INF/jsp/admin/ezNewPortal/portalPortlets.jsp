@@ -17,22 +17,29 @@
 	<style type="text/css">
 	body {min-width: 520px;background-color:white;}
   	.column {width: 1820px; padding-bottom: 100px;}
-  	.portlet {postion: relative;margin: 0 1em 1em 0;padding: 0.3em;display : inline-block;vertical-align : top;}
-  	.portlet-header {padding: 0.4em 0.7em;margin-bottom: 0.5em;position: relative;}
+  	.portlet, .newPortlet {postion: relative;margin: 0 1em 1em 0;padding: 0.3em;display : inline-block;vertical-align : top;}
+  	.portlet-header {padding: 0.4em 0.7em;margin-bottom: 0.5em;position: relative;cursor:move;}
   	.portlet-toggle {top: 50%;right: 0;float:right;}
   	.portlet-content {padding: 0.4em;clear:both;}
   	.portlet-placeholder {border: 1px dotted black; margin: 0 1em 1em 0; height: 50px;}
-	.col {padding: 16px 16px 5px 16px;}
-	.updatePortlet {float : right;margin : 0px; padding : 0px;}
-	.boardSetting {margin:0px;padding:0px;text-align:left;}
+	.col, .newPortlet {padding: 16px 16px 5px 16px;}
+	.updatePortlet, .addNewPortlet {float : right;margin : 0px; padding : 0px;}
+	.boardSetting {margin:0px 0px 0px 12px;padding:0px;text-align:left;display:inline-block;vertical-align:top;}
 	.portletInfo {display:inline-block;marging-top:8px;}
 	.portletInfoTH {background-color : white;border:0px; padding-left:0px;}
 	.portletInfoTH, .portletInfoTD {padding-bottom : 6px;}
 	.ui-widget-header .ui-icon {background-image : url(/js/jquery-ui/images/ui-icons_444444_256x240.png);}
+	.ui-widget-content {background : none;}
+	.ui-widget-header {background : none;}
 	.boardNotUsed {height:2.6em;}
 	.portletInfo {width : 100%;}
 	.portletInfoTD {width:100%;}
-	.portletInfoTD input {width:100%;}
+	.portletInfoTD input[type='text'] {width:79%;}
+	.addPortlet {border:2px dashed black; text-align:center;height:18.3em;}
+	.addPortlet dl {margin:87px;}
+	.portlet-toggle {cursor:pointer;}
+	.newPortlet .portlet-header {cursor:default;}
+	.setBoard {display : none;}
 	/* switch */
 	.switch {position: absolute;display: inline-block;width: 60px;height: 25px;margin-top:-13px;}
 	.switch input {opacity: 0;width: 0;height: 0;}
@@ -47,19 +54,19 @@
 	
 	/* portlet media query */
 	@media only screen and (min-width :1921px) {
-		.portlet{ width:483px;}
+		.portlet, .newPortlet{ width:483px;}
 	}
 
 	@media only screen and (max-width :1920px) and (min-width :1423px) {
-		.portlet{ width:32%;}
+		.portlet, .newPortlet{ width:32%;}
 	}
 
 	@media only screen and (max-width :1422px) and (min-width :1280px) {
-		.portlet{width:48%;}
+		.portlet, .newPortlet{width:48%;}
 	}
 
 	@media only screen and (max-width : 1279px) {
-		.portlet {width:410px;}
+		.portlet, .newPortlet {width:410px;}
 	}
 	</style>
 	<script type="text/javascript">	
@@ -79,29 +86,36 @@
 	  
 	  
 	  //이벤트 연결 함수
-	  function portletAdd() {
+	  var portletAdd = function() {
 		  
 	  }
 	  
-	  function portletDel() {
+	  var portletDel = function() {
 			  
 	  }
 	 
-	  function updatePortletOrder() {
+	  var updatePortletOrder = function () {
 		  
 	  }
 	 
-	  function portletOrderReset() {
+	  var portletOrderReset = function() {
 	 	  
 	  }
+
+	  //게시판 설정 
+	  var openBoardTree = function(event) {
+		  var portletId = event.data.portletId;
+		  var boardId = $("#portlet" + portletId).find(".boardName").attr("data1");
+		  
+	  }
 	  
-	  function PortletInfoUpdate() {
-	 	 var portlets = $(".portlet");
-	
+	  var PortletInfoUpdate = function() {
+	 	var portlets = $(".portlet");
+		
 	  }
 	  
 	  //포틀릿 리스트 불러오는 함수
-	  function getPortletList() {
+	  var getPortletList = function() {
 		var companyId = $('#ListCompany option:selected').val();
 		
 		$.ajax({
@@ -131,7 +145,7 @@
 					portletNameList = result[i].portletNameList;
 					menuId = result[i].menuId;
 					portletNameListCnt = portletNameList.length;
-		
+					
 					listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='"+portletOrder +"'>"	
 					listHTML += "<div class='portlet-header'>" + portletNameList[arrayLang].portletName + "</div>";
 					listHTML += "<div class='portlet-content'>";
@@ -157,10 +171,13 @@
 						listHTML += "<tr><th class='portletInfoTH'>포틀릿명(" + language + ") :</th><td class='portletInfoTD'><input type='text' value='" + portletNameList[j].portletName + "'></td></tr>"
 					 }
 					
-					listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' value='"+ portletURL +"'></td></tr>";
+					if (!result[i].general) {
+						listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' value='"+ portletURL +"'></td></tr>";
+					}
 					
-					if (menuId == 4) {
+					if (menuId == 4 && portletId != 10) {
 						listHTML += "<tr><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
+						listHTML += "<input class='boardName' type='text' value='" + result[i].boardName1 + "' data1='" + result[i].portletBoardId + "' readonly>";
 						listHTML += "<div class='btnpositionJsp boardSetting'>";
 						listHTML += "<a class='imgbtn boardSettingtBtn'>";
 						listHTML += "<span>설정</span></a></div></td></tr>";
@@ -172,6 +189,7 @@
 					listHTML += "</li>";
 				}
 				
+				listHTML += "<li class='portlet addPortlet'><dl><dt><span class='icon_topmenu' style='background:none; font-size:20px; font-weight:bold'>+</span></dt><dd>메뉴추가</dd></li>";
 				document.getElementById("portletListContainer").innerHTML = listHTML;
 				
 				for (var i = 0; i < portletCnt; i++) { //포틀릿 사용여부에 따라 title 변경
@@ -181,6 +199,11 @@
 					} else {
 						$("#portlet" + result[i].portletId).find(".portlet-header").css("background-color", "#e3e3e3");
 						$("#portlet" + result[i].portletId).find(".switch").find("input").prop("checked", false);
+					}
+					
+					//포틀릿 게시판 설정이 있으면 설정 버튼 활성화
+					if ((result[i].menuId == 4 && result[i].portletId != 10) || result[i].portletType == "B") {
+						$("#portlet" + result[i].portletId).find(".boardSetting").on("click", {"portletId" : result[i].portletId}, openBoardTree);
 					}
 				}
 				
@@ -194,9 +217,9 @@
 	  
 	  function loadAfter() {
 		$( ".col-container" ).sortable({
+			items : "li.col",
 		    handle: ".portlet-header",
-		    cancel: ".portlet-toggle",
-		    placeholder: "portlet"
+		    cancel: ".portlet-toggle"
 		});
 		
 		$( ".portlet" )
@@ -212,8 +235,63 @@
 			
 		});
 		
+		$(".addPortlet").on("click", showAddPortletForm);
 	  }
 	  
+	  var showAddPortletForm = function() {
+		$(".addPortlet").remove();
+		
+		var listHTML = "";
+		listHTML += "<li class='newPortlet'>"	
+		listHTML += "<div class='portlet-header'>포틀릿 추가</div>";
+		listHTML += "<div class='portlet-content'>";
+		listHTML += "<div class='btnpositionJsp addNewPortlet'>";
+		listHTML += "<a class='imgbtn addNewPortletBtn'>";
+		listHTML += "<span>추가</span></a></div>";
+		listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'>포틀릿 사용  : </th>"
+		listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td>";
+		listHTML += "</tr>";
+		
+		//언어
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(한국어) :</th><td class='portletInfoTD'><input type='text'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(영어) :</th><td class='portletInfoTD'><input type='text'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(일본어) :</th><td class='portletInfoTD'><input type='text'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text'></td></tr>";
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿 타입 : </th><td class='portletInfoTD'><input type='radio' name='category' value='M' checked>&nbsp;메일&nbsp;<input type='radio' name='category' value='B'>&nbsp;게시판&nbsp;<input type='radio' name='category' value='A'>&nbsp;전자결재&nbsp;<input type='radio' name='category' value='L'>&nbsp;외부링크</td>";
+		listHTML += "<tr class='setBoard'><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
+		listHTML += "<input type='text'>";
+		listHTML += "<div class='btnpositionJsp boardSetting'>";
+		listHTML += "<a class='imgbtn boardSettingtBtn'>";
+		listHTML += "<span>설정</span></a></div></td></tr>";
+		listHTML += "</table>";
+		listHTML += "</li>";
+		
+		$("#portletListContainer").append(listHTML);
+		
+		$(".addPortlet").on("click", showAddPortletForm);
+		$(".col-container").sortable("destroy");
+
+		$( ".col-container" ).sortable({
+			items : "li.col",
+		    handle: ".portlet-header",
+		    cancel: ".portlet-toggle"
+		});
+		
+		$( ".newPortlet")
+		.addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+		.find( ".portlet-header" )
+		.addClass( "ui-widget-header ui-corner-all" );
+		
+		$("input:radio").on("click", function(){
+			if ($(this).prop("checked") && $(this).attr("value") == "B") {
+				$(".setBoard").css("display", "table-row");
+			} else {
+				$(".setBoard").css("display", "none");
+			}
+		});
+		
+		$(".addNewPortlet").on("click", portletAdd);
+	  }
 	</script>
 </head>
 	
