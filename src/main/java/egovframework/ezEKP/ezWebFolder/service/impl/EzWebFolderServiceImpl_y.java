@@ -217,8 +217,8 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			flag = "1";
 			
 			if (searchEndDate != "" ) {
-				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
-				searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+				searchStartDate = searchStartDate + " 00:00:00";
+				searchEndDate   = searchEndDate + " 23:59:59";
 			}
 		}
 
@@ -294,8 +294,8 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 			flag = "1";
 			
 			if (searchEndDate != "" ) {
-				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
-				searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+				searchStartDate = searchStartDate + " 00:00:00";
+				searchEndDate   = searchEndDate + " 23:59:59";
 			}
 		}
 		
@@ -346,8 +346,6 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("folderType", folderType);
 		map.put("searchExt", searchExt);
 		map.put("searchFileName", searchFileName);
-		map.put("searchStartDate", searchStartDate);
-		map.put("searchEndDate", searchEndDate);
 		map.put("searchCreateName", searchCreateName);
 		map.put("searchFileType", searchFileType);
 		map.put("searchPageCount", searchPageCount);
@@ -364,7 +362,18 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		if (searchExt != "" || searchStartDate != "" || searchEndDate != ""
 				|| searchCreateName != "" || searchFileName != "") {
 			flag = "1";
+			
+			if (searchEndDate != "" ) {
+//				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
+//				searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+				searchStartDate = searchStartDate + " 00:00:00";
+				searchEndDate   = searchEndDate + " 23:59:59";
+				
+			}
 		}
+		
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
 
 		List<Map<String, String>> idList = ezWebFolderService_m
 				.getPermissionIdMapList(userId, deptId, companyId, tenantId);
@@ -440,8 +449,6 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		map.put("folderType", folderType);
 		map.put("searchExt", searchExt);
 		map.put("searchFileName", searchFileName);
-		map.put("searchStartDate", searchStartDate);
-		map.put("searchEndDate", searchEndDate);
 		map.put("searchCreateName", searchCreateName);
 		map.put("searchFileType", searchFileType);
 		map.put("searchPageCount", searchPageCount);
@@ -458,7 +465,14 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		if (searchExt != "" || searchStartDate != "" || searchEndDate != ""
 				|| searchCreateName != "" || searchFileName != "") {
 			flag = "1";
+			
+			if (searchEndDate != "" ) {
+				searchStartDate = searchStartDate + " 00:00:00";
+				searchEndDate   = searchEndDate + " 23:59:59";
+			}
 		}
+		map.put("searchStartDate", searchStartDate);
+		map.put("searchEndDate", searchEndDate);
 		
 		List<Map<String, String>> idList = ezWebFolderService_m
 				.getPermissionIdMapList(userId, deptId, companyId, tenantId);

@@ -8112,6 +8112,9 @@
 								   		 TBL_EXPENDAPRDOCINFO.EDMSYN,
 								   		 IFNULL(TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,'') AS SECURITYAPPROVAL,
 								   		 TBL_ENDAPRDOCINFO.COMPANYID
+								   		 <isEqual property="approvalFlag" compareValue="S">
+								   		 ,PROCESSYN
+								   		 </isEqual>
 							   	<isEqual property="approvalFlag" compareValue="S">
 								   		  ,CASE WHEN $v_PSTRLANG$ = '1' THEN C.NAME
 								   		  		WHEN $v_PSTRLANG$ = '2' THEN C.NAME2
@@ -8458,6 +8461,24 @@
 							      	TBL_EXPENDAPRDOCINFO.EDMSYN,
 							      	TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL
 							   	</isNotEmpty>
+							   	<isNotEmpty property="v_PROCESSYN">
+			                    <isEqual property="v_PROCESSYN" compareValue="Y">
+						   		<![CDATA[
+						   		AND 
+						   		(	PROCESSYN <> 'H'
+						   		AND 
+						   			PROCESSYN <> 'I'	
+						   		AND
+						   			PROCESSYN <> 'N'
+						   		OR
+						   			PROCESSYN IS NULL)
+						   		]]>
+						   		</isEqual>
+					   		   	<isNotEqual property="v_PROCESSYN" compareValue="Y">
+						   		AND
+						   			PROCESSYN = #v_PROCESSYN#
+						   		</isNotEqual>
+						   		</isNotEmpty>
 							   	<isNotEmpty property="v_ORDEROPTION">
 							   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
 							   			<isEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
@@ -13427,6 +13448,24 @@
    		</isNotEmpty>
    		</isEqual>
    		
+   		<isNotEmpty property="v_PROCESSYN">
+   		<isEqual property="v_PROCESSYN" compareValue="Y">
+   		<![CDATA[
+   		AND 
+   		(	PROCESSYN <> 'H'
+   		AND 
+   			PROCESSYN <> 'I'	
+   		AND
+   			PROCESSYN <> 'N'
+   		OR
+   			PROCESSYN IS NULL)
+   		]]>
+   		</isEqual>
+   		<isNotEqual property="v_PROCESSYN" compareValue="Y">
+   		AND
+   			PROCESSYN = #v_PROCESSYN#
+   		</isNotEqual>
+   		</isNotEmpty>
    		<isNotEmpty property="v_SUBQUERY"> 
    		AND 
    			$v_SUBQUERY$
