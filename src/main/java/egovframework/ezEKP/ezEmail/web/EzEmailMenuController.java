@@ -313,6 +313,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		
 		logger.debug("showMailLeft ended.");
 		
+		if(funCode.equals("2")) {
+			return "ezAddress/addressLeft";
+		}
 		return "ezEmail/mailLeft";
 	}
 	
