@@ -717,7 +717,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
-		model.addAttribute("htmlBody", bodyInfoList.get(0));
+		String htmlBody = bodyInfoList.get(0).replace("{", "%7B").replace("}", "%7D");
+		model.addAttribute("htmlBody", htmlBody);
 		
 		logger.debug("readMailOriginal ended.");
 		
