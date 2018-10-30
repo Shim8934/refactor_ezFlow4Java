@@ -875,6 +875,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		// 코린도에서 extensionAttribute11 필드를 한국인, 현지인 구분에 사용하여 추가함
 		map.put("v_EXTATTR11", vo.getExtensionAttribute11() != null ? vo.getExtensionAttribute11() : "");
+
+		// 직위/직책 CODE( 7=직위, 8=직책 )
+		map.put("v_EXTATTR7", vo.getExtensionAttribute7() != null ? vo.getExtensionAttribute7() : "");
+		map.put("v_EXTATTR8", vo.getExtensionAttribute8() != null ? vo.getExtensionAttribute8() : "");
 		
 		map.put("v_LDAPPATH", "");
 		map.put("v_BIRTH", vo.getBirth() != null ? vo.getBirth() : "");		

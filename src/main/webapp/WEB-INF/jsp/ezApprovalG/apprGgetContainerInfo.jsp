@@ -226,7 +226,9 @@
 		                    GetDocSearch();
 	                	} else if (LoadSquery != ""){
 	                		// 후결문서함
-	                		if(LoadSquery.includes('AprType')) {
+	                		//2018-10-30 김보미 - ie에서 includes() 지원하지 않는 문제
+ 	                		//if(LoadSquery.includes('AprType')) {
+	                		if(LoadSquery.indexOf('AprType') >= 0) {
 	                			checkBujaeInfo();
 	                		}
 	                		 for (i = 0; i <= 13; i++) {
@@ -630,7 +632,7 @@
 		        var selRow = DocList.GetSelectedRows();
 		        var tr = selRow[0];
 		        if (tr != null && typeof (selRow.length) != "undefined" && selRow.length > 0) {
-		            if (jobState == "APPROVAL") {
+		            if (jobState == "APPROVAL" || jobState == "CIRCUL") {
 		                if (tr.getAttribute("DATA5") == "Y") {
 		                    var heigth = window.screen.availHeight;
 		                    var width = window.screen.availWidth;
