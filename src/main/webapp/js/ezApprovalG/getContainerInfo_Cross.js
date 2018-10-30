@@ -195,10 +195,14 @@ function GetDocSearch() {
         createNodeAndInsertText(xmlpara, objNode, "PageNum", curpage);
         createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
         createNodeAndInsertText(xmlpara, objNode, "DocState", "");
-        createNodeAndInsertText(xmlpara, objNode, "SearchQuery", SQLPARADATA);
+        var searchStatus = $("#sel_status option:selected").val();
+        createNodeAndInsertText(xmlpara, objNode, "searchStatus", searchStatus);
+        
         createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
         createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
         createNodeAndInsertText(xmlpara, objNode, "pSubQuery", subCondition);
+        
+        createNodeAndInsertText(xmlpara, objNode, "SearchQuery", SQLPARADATA);
         
 	    if (GamSaFlag){
 	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", false);

@@ -598,6 +598,7 @@ public class EzEmailMailListController {
 		String end = doc.getElementsByTagName("END").item(0).getTextContent();
 		String search = doc.getElementsByTagName("SEARCH").item(0).getTextContent();
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
+		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
 		
 		if (doc.getElementsByTagName("SHAREID").item(0) != null) {
 			String shareId = doc.getElementsByTagName("SHAREID").item(0).getTextContent();
@@ -615,7 +616,7 @@ public class EzEmailMailListController {
 		
 		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
 		            + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
-					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex);
+					+ ",search=" + search + ",viewSelectIndex=" + viewSelectIndex + ",useCountryIP=" + useCountryIP);
 		
 		String returnData = "";
 		
@@ -809,8 +810,6 @@ public class EzEmailMailListController {
 				}
 				
 				// 2018-10-05 메일리스트에 보낸사람 국기표시 박예연
-				String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
-				
 				if (useCountryIP.equals("YES")) {
 					try {
 						String[] ctryCode = message.getHeader("X-Jmocha-Country-Code");
