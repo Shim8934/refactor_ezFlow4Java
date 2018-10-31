@@ -105,7 +105,7 @@
 									copyToClip();
 									break;
 								case "menu2":
-									btnPrint_onClick();
+									btnPrint();
 									break;
 								case "menu3":
 									copyToMemo("popup");
