@@ -16,7 +16,8 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript">
- 		var cn = "";
+//  	var cn = "";
+ 		var jobID = "";
 		var mode = "${mode}";
 		var type = "${type}";
 		var jobCnt = "${jobCnt}";
@@ -36,7 +37,8 @@
 		        document.getElementById("companyName").value = RetValue[0]; 
 	        }
 	        if (RetValue[1] != "") {
-	        	cn = RetValue[1];
+// 	        	cn = RetValue[1];
+	        	jobID = RetValue[1];
 	        }
 	        if (type == "001") {
 		        if (mode == "Add") {
@@ -68,14 +70,15 @@
 		function ValidationValues() {
 			var rtnVal = false;
 			
-			cn = document.getElementById("cn").value;
+// 			cn = document.getElementById("cn").value;
 			sort = document.getElementById("sort").value;
 			useFlag = document.getElementById("useFlag").value;
 			displayName1 = document.getElementById("displayName1").value;
 			displayName2 = document.getElementById("displayName2").value;
 			
 			if (type == "001") {
-				if (cn.trim() == "" || displayName1.trim() == "" || displayName2.trim() == "") {
+// 				if (cn.trim() == "" || displayName1.trim() == "" || displayName2.trim() == "") {
+				if (displayName1.trim() == "" || displayName2.trim() == "") {
 					alert("<spring:message code='ezOrgan.csj09' />");
 				} else if (!sort.match(/^\d+$/)) {
 					alert("<spring:message code='ezOrgan.csj10' />");
@@ -83,13 +86,14 @@
 		            alert("<spring:message code='ezOrgan.csj14' />");
 				} else if (displayName2.indexOf("&") != -1 || displayName2.indexOf("<") != -1 || displayName2.indexOf(">") != -1 || displayName2.indexOf(";") != -1 || displayName2.indexOf(":") != -1) {
 					alert("<spring:message code='ezOrgan.csj14' />");
-				} else if (mode == "Add" && !checkJobCnt(cn)) {
-					alert("<spring:message code='ezOrgan.csj08' />");
+// 				} else if (mode == "Add" && !checkJobCnt(cn)) {
+// 					alert("<spring:message code='ezOrgan.csj08' />");
 				} else {
 					rtnVal = true;
 				}
 			} else if (type == "002") {
-				if (cn.trim() == "" || displayName1.trim() == "" || displayName2.trim() == "") {
+// 				if (cn.trim() == "" || displayName1.trim() == "" || displayName2.trim() == "") {
+				if (displayName1.trim() == "" || displayName2.trim() == "") {
 					alert("<spring:message code='ezOrgan.csj09' />");
 				} else if (!sort.match(/^\d+$/)) {
 					alert("<spring:message code='ezOrgan.csj10' />");
@@ -97,8 +101,8 @@
 		            alert("<spring:message code='ezOrgan.csj23' />");
 				} else if (displayName2.indexOf("&") != -1 || displayName2.indexOf("<") != -1 || displayName2.indexOf(">") != -1 || displayName2.indexOf(";") != -1 || displayName2.indexOf(":") != -1) {
 					alert("<spring:message code='ezOrgan.csj23' />");
-				} else if (mode == "Add" && !checkJobCnt(cn)) {
-					alert("<spring:message code='ezOrgan.csj19' />");
+// 				} else if (mode == "Add" && !checkJobCnt(cn)) {
+// 					alert("<spring:message code='ezOrgan.csj19' />");
 				} else {
 					rtnVal = true;
 				}				
@@ -115,7 +119,8 @@
             	async : false,
             	data : 
             	{
-            		cn : cn,
+//             		cn : cn,
+            		jobID : jobID,
             		type : type,
             		mode : mode,
             		sort : sort,
@@ -128,7 +133,8 @@
             		var ReturnArray = new Array();
 	            		ReturnArray[0] = result;
 	            		ReturnArray[1] = mode;
-	            		ReturnArray[2] = cn;
+// 	            		ReturnArray[2] = cn;
+	            		ReturnArray[2] = jobID;
 	            		ReturnArray[3] = type;
 	            		
             		if (ReturnFunction != null) {
@@ -151,7 +157,8 @@
             	async : false,
             	data : 
             	{
-            		cn : cn,
+//             		cn : cn,
+            		jobID : jobID,
             		type : type,
             		mode : mode,
             		companyID : companyID
@@ -163,17 +170,18 @@
             	}
             });
 			
-			if (SelectNodes(xmlDom, "DATA/CN").length > 0) {
-				document.getElementById("cn").value = SelectSingleNodeValueNew(xmlDom, "DATA/CN").trim();
-				document.getElementById("cn").disabled = true;
+// 			if (SelectNodes(xmlDom, "DATA/CN").length > 0) {
+			if (SelectNodes(xmlDom, "DATA/JOBID").length > 0) {
+// 				document.getElementById("cn").value = SelectSingleNodeValueNew(xmlDom, "DATA/CN").trim();
+// 				document.getElementById("cn").disabled = true;
 				document.getElementById("displayName1").value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME").trim();
 				document.getElementById("displayName2").value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME2").trim();
 				document.getElementById("useFlag").value = SelectSingleNodeValueNew(xmlDom, "DATA/USEFLAG").trim();
 				document.getElementById("sort").value = SelectSingleNodeValueNew(xmlDom, "DATA/SORT").trim();
 			}
 		}
-		/* 직위 중복검사 Method */
-		function checkJobCnt(cn) {
+		/* 직위 중복검사 Method (사용안함) */
+		/* function checkJobCnt(cn) {
 			var rtnFlag = true;
 			$.ajax({
             	type : "POST",
@@ -196,7 +204,7 @@
             	}
             });
 			return rtnFlag;
-		}
+		} */
 	</script>
 	<style type="text/css">
 		.content input {width:100%;}
@@ -218,10 +226,10 @@
 		</tr>
 		<c:choose>
 			<c:when test="${type eq '001'}">
-				<tr>
+				<%-- <tr>
 					<th><spring:message code='ezOrgan.csj03' /><span style="color:red"> *</span></th>
 					<td colspan="2"><input type="text" id="cn"/></td>
-				</tr>
+				</tr> --%>
 				<tr>
 					<th rowspan="2"><spring:message code='ezOrgan.csj04' /><span style="color:red"> *</span></th>
 					<th><spring:message code='ezApprovalG.t1764'/></th>
@@ -233,10 +241,10 @@
 				</tr>
 			</c:when>
 			<c:when test="${type eq '002'}">
-				<tr>
+				<%-- <tr>
 					<th><spring:message code='ezOrgan.csj16' /><span style="color:red"> *</span></th>
 					<td colspan="2"><input type="text" id="cn"/></td>
-				</tr>
+				</tr> --%>
 				<tr>
 					<th rowspan="2"><spring:message code='ezOrgan.csj17' /><span style="color:red"> *</span></th>
 					<th><spring:message code='ezApprovalG.t1764'/></th>

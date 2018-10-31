@@ -181,6 +181,8 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useSeparatedLargeFileFolder', '분리된 대용량 첨부파일 폴더 사용여부', 'YES', 'YES: 사용 (default:NO)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useCountryIP', '메일 보낸사람 국기 표시 여부', 'NO', '메일 리스트에서 보낸사람 앞에 국기를 표시한다. YES: 사용 (default:NO)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'chkSchedulePublic', '일정등록 공개범위 기본값 설정 여부', 'OFF', '일정작성시 사용자의 일정 공개 기본값 설정 기능 사용 여부 ON : 일정 공개/비공개 기본값 설정 기능 사용 OFF : 일정 비공개 기본값 설정', '2018-10-25 00:00:00', '일정관리');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useMobileManagemant','모바일 설정 통합 사용 여부','NO','모바일 설정 사용여부 (default : NO) (관리자)', '2018-10-25 00:00:00', '모바일');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useAllowUserMobileManagement','모바일 설정 유저의 사용 여부 ','YES','유저의 모바일 설정 사용여부 (default: YES) (유저)', '2018-10-25 00:00:00', '모바일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useScheduleIcs', '일정관리 ICS파일 가져오기 기능 사용 여부', 'NO', '일정관리에서 ICS파일 가져오기 기능 사용 여부 YES: 사용 / NO: 사용안함 (default: NO)', '2018-10-30 00:00:00', '일정관리');
 
 

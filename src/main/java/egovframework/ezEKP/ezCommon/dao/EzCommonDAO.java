@@ -318,4 +318,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addDeptMasterManualFlag");
 		}
 	}
+	
+	public void createJobMasterTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblUserJobMaster");
+		} catch (Exception e) {
+			logger.debug("tbl_user_jobmaster doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblUserJobMaster");
+		}
+	}
 }
