@@ -134,6 +134,26 @@ public class EzNewPortalAdminController {
 		}
 	}
 	
+	/**
+	 * 관리자 메뉴 권한 조직도 화면조회
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/menuAuth.do")
+	public String menuAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LOGGER.debug("menuAuth started.");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			LOGGER.debug("portalThemes accessDenied.");
+			
+			return "cmm/error/adminDenied";
+		} else {
+			LOGGER.debug("menuAuth ended.");
+			
+			return "/admin/ezNewPortal/menuAuth";
+		}
+	}
+	
 	
 	/** **************************** */
 	
