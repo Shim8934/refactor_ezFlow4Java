@@ -83,7 +83,8 @@
 			var companyID = $("#ListCompany option:selected").val();
 			var companyNM = $("#ListCompany option:selected").text();
 			var type = Tab1_SelectID;
-			var cn;
+// 			var cn;
+			var jobID;
 			
 			var jobList = new ListView();
 			
@@ -105,7 +106,8 @@
 					}
 					return;
 				} else {
-					cn = oArrRows[0].getAttribute("DATA1");
+// 					cn = oArrRows[0].getAttribute("DATA1");
+					jobID = oArrRows[0].getAttribute("DATA1");
 				}
 			}
 			/* 추가, 수정의 경우 팝업창 호출 */
@@ -118,16 +120,18 @@
 				
 				var args = new Array();
 				args[0] = companyNM;
-				args[1] = cn;
+// 				args[1] = cn;
+				args[1] = jobID;
 				
 				titleInfo_dialogArguments[0] = args;
 			    titleInfo_dialogArguments[1] = titleInfo_Complete;
 			    
-			    var OpenWin = window.open(url, "jobTitlePopupUI", GetOpenWindowfeature(460, 320));
+			    var OpenWin = window.open(url, "jobTitlePopupUI", GetOpenWindowfeature(460, 290));
 				try { OpenWin.focus(); } catch (e) { }
 			/* 삭제의 경우 직위가 사용중인지 확인 후, 삭제처리 */
 			} else if (mode == "Del") {
-				if (!checkTitleUserCnt(cn)) {
+// 				if (!checkTitleUserCnt(cn)) {
+				if (!checkTitleUserCnt(jobID)) {
 					if (type == "001") {
 						alert("<spring:message code = 'ezOrgan.csj13'/>");
 					} else if (type == "002") {
@@ -144,7 +148,8 @@
 		            	async : false,
 		            	data : 
 		            	{
-		            		cn : cn,
+// 		            		cn : cn,
+		            		jobID : jobID,
 		            		type : type,
 		            		companyID : companyID
 		            	},
@@ -212,7 +217,8 @@
 	            	async : false,
 	            	data : 
 	            	{
-	            		cn : oArrRows[0].getAttribute("DATA1"),
+// 	            		cn : oArrRows[0].getAttribute("DATA1"),
+	            		jobID : oArrRows[0].getAttribute("DATA1"),
 	            		type : Tab1_SelectID,
 	            		companyID : $("#ListCompany option:selected").val()
 	            	},
@@ -280,7 +286,7 @@
 	        }
 	    }
 		/* 삭제 시, 직위를 사용중인 유저 유무를 체크하는 Method */
-		function checkTitleUserCnt(cn) {
+		function checkTitleUserCnt(jobID) {
 			var rtnFlag = true;
 			$.ajax({
             	type : "POST",
@@ -289,7 +295,8 @@
             	async : false,
             	data : 
             	{
-            		cn : cn,
+//             		cn : cn,
+            		jobID : jobID,
             		type : Tab1_SelectID,
             		companyID : $("#ListCompany option:selected").val()
             	},
@@ -366,7 +373,8 @@
 	            	async : false,
 	            	data : 
 	            	{
-	            		cn : oArrRows[0].getAttribute("DATA1"),
+// 	            		cn : oArrRows[0].getAttribute("DATA1"),
+ 	            		jobID : oArrRows[0].getAttribute("DATA1"),
 	            		type : Tab1_SelectID,
 	            		companyID : $("#ListCompany option:selected").val()
 	            	},
@@ -506,11 +514,11 @@
 <xml id="listviewheader" style="display:none">
 	<LISTVIEWDATA>
 	   	<HEADERS>
-     		<HEADER>
+     		<%-- <HEADER>
        		<NAME><spring:message code='ezOrgan.csj03' /></NAME>
 			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
-			</HEADER>
+			</HEADER> --%>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj04' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
 			<WIDTH>100</WIDTH>
@@ -563,11 +571,11 @@
 <xml id="listviewheader2" style="display:none">
 	<LISTVIEWDATA>
 	   	<HEADERS>
-     		<HEADER>
+     		<%-- <HEADER>
        		<NAME><spring:message code='ezOrgan.csj16' /></NAME>
 			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
-			</HEADER>
+			</HEADER> --%>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj17' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
 			<WIDTH>100</WIDTH>

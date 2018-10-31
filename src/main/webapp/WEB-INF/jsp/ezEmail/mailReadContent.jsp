@@ -5,7 +5,6 @@
 <html>
 	<head>
 	    <title></title>
-	    	<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 	        <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 	        <link rel="stylesheet" href="${util.addVer('/css/ezMemo/memoContext.css')}">
 			<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
@@ -15,6 +14,9 @@
 	    	<script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    	<script src="http://code.jquery.com/jquery-3.2.1.js"></script>
 			<script type="text/javascript" src="${util.addVer('/js/ezMemo/contextmenu.js')}"></script>
+			<style> 
+				p { margin-bottom: 0; margin-top: 0; } 
+			</style>
 	    	<script language="javascript" type="text/javascript">
 			    var g_rejectWord = "${rejectKeyWord}";
 			    var g_paramURL = "${url}";
@@ -105,7 +107,7 @@
 									copyToClip();
 									break;
 								case "menu2":
-									btnPrint_onClick();
+									btnPrint();
 									break;
 								case "menu3":
 									copyToMemo("popup");
@@ -451,13 +453,13 @@
 	  	<div id="context-menus" class="context-menus">
 	   		<table cellpadding="2" cellspacing="1" border="0" style="width:150px;" class="popuplist">
 	   			<tr>
-	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu1" style="font-size:12px;width:100%;display:inline-block;text-align:left;"><img src="/images/ezMemo/contextCopy.png" align="absmiddle" hspace="5"><spring:message code='ezMemo.t0060' /></span></td>
+	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu1"><img src="/images/ezMemo/contextCopy.png" align="absmiddle" hspace="5"><spring:message code='ezMemo.t0060' /></span></td>
 	      		</tr>
 	      		<tr>
-	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu2" style="font-size:12px;width:100%;display:inline-block;text-align:left;"><img src="/images/ezMemo/contextPrint.png"  align="absmiddle" hspace="5"><spring:message code='ezMemo.t0061' /></span></td>
+	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu2"><img src="/images/ezMemo/contextPrint.png"  align="absmiddle" hspace="5"><spring:message code='ezMemo.t0061' /></span></td>
 	      		</tr>
 	      		<tr>
-	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu3" style="font-size:12px;width:100%;display:inline-block;text-align:left;"><img src="/images/ezMemo/contextMemoAdd.png" align="absmiddle" hspace="5"><spring:message code='ezMemo.t0062' /></span></td>
+	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu3"><img src="/images/ezMemo/contextMemoAdd.png" align="absmiddle" hspace="5"><spring:message code='ezMemo.t0062' /></span></td>
 	      		</tr>
 	    	</table>	
 	  	</div> 
