@@ -2406,6 +2406,36 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
+	public MailSharedMailboxUserVO getSharedMailboxPermissionInfo(String shareId, int tenantId, String userId) throws Exception {
+		logger.debug("getSharedMailboxPermissionInfo started.");
+		logger.debug("shareId=" + shareId + ",tenantId=" + tenantId);
+		
+		String tenantIdParam = "tenantId=" + tenantId;
+		String shareIdParam = "shareId=" + URLEncoder.encode(shareId, "UTF-8");
+		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		String inputParams = tenantIdParam + "&" + shareIdParam + "&" + userIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getShareMailBoxPermissionInfo";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		MailSharedMailboxUserVO shareMailBoxPermissonInfo = new MailSharedMailboxUserVO();
+        if (((String)object.get("resultCode")).equals("OK") && (Long)object.get("reasonCode") == 0) {
+        	JSONObject result = (JSONObject)object.get("result");
+        	shareMailBoxPermissonInfo.setShareId((String)result.get("shareId"));
+        	shareMailBoxPermissonInfo.setDeletePermission((String)result.get("delete_permission"));
+        	shareMailBoxPermissonInfo.setSendPermission((String)result.get("send_permission"));
+        	shareMailBoxPermissonInfo.setShareName((String)result.get("displayname"));
+        }
+		
+		logger.debug("getSharedMailboxPermissionInfo ended.");
+		return shareMailBoxPermissonInfo;
+	}
+	
+	@Override
 	public String delSharedMailboxAllUser(String shareId, int tenantId) throws Exception {
 		logger.debug("delSharedMailboxAllUser started.");
 		logger.debug("shareId=" + shareId + ",tenantId=" + tenantId);

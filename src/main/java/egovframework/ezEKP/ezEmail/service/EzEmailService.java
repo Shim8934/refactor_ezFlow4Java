@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.mail.internet.InternetAddress;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
@@ -19,6 +20,7 @@ import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -87,4 +89,5 @@ public interface EzEmailService {
 	public String delSharedMailboxAllUser(String shareId, int tenantId) throws Exception;
 	public String setSharedMailboxUsers(String shareId, JSONArray userList, int tenantId) throws Exception;
 	MailDistributionVO getDistributionSub(String userName, String subMail, String companyId, int tenantId) throws Exception;
+	public MailSharedMailboxUserVO getSharedMailboxPermissionInfo(String shareId, int tenantId, String userId) throws Exception;
 }
