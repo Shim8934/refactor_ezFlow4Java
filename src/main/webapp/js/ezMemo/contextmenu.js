@@ -24,6 +24,11 @@ function copy() {
 	        } 
 	    } 
 		content = html; 
+		
+		// child가 null로 잡힌 영역을 원 selection 영역으로 넣어줌
+		if(content === "") {
+			content = sel.toString();
+		}
 	} else { 
 		content = sel.toString(); 
 	} 
@@ -55,6 +60,7 @@ function copyToClip() {
 	tempTextArea.select(); 
 	document.execCommand('copy', false, null); 
 	document.body.removeChild(tempTextArea); 
+	alert(strLangMemo19);
 } 
  
 function copyToMemo(mode) { 
