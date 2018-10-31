@@ -76,7 +76,7 @@
 	var arrayLang = Number(lang) - 1;
 	
 	$( function() {
-		$("#ListCompany").on("onChange", getPortletList);
+		$("#ListCompany").on("change", getPortletList);
 		getPortletList();	
 	});
 	
