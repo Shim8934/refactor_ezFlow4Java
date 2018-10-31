@@ -199,6 +199,11 @@
 		    function AttachAllDownload() {
 		    	
 		    	var url = "/ezEmail/downloadAttachAll.do";
+		    	
+		    	if (typeof(shareId) != "undefined" && shareId != "") {
+		    		url += "?shareId=" + encodeURIComponent(shareId);
+		    	}
+		    	
 		    	var fileLen = document.getElementsByName("MailAttachDownloadItems").length;
 		    	var params = "";
 		    	var folderPath = "";

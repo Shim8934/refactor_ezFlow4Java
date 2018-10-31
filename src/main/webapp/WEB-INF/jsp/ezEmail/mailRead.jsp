@@ -51,6 +51,7 @@
 		    var isSecureMail = "${isSecureMail}";
 		    var useReSend = "${useReSend}";
 		    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간
+		    var shareId = "${shareId}";
 		    
 		    window.onresize = window_onresize;
 		    
@@ -118,8 +119,13 @@
 		            conWidth = 890;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
-		
-		        window.open("/ezEmail/mailPrint.do?URL=" + encodeURIComponent(g_paramURL), "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1, scrollbars=1");
+				var url = "/ezEmail/mailPrint.do?URL=" + encodeURIComponent(g_paramURL);
+		        
+				if (typeof(shareId) != "undefined" && shareId != "") {
+					url += "&shareId=" + encodeURIComponent(shareId);
+				}
+				
+		        window.open(url, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1, scrollbars=1");
 		    }
 			function window_onresize()
 		    {
@@ -418,7 +424,13 @@
 		    }
 		    
 		    function secureInfo_onClick() {
-		    	DivPopUpShow(550, 500, "/ezEmail/secureMailInfo.do?url=" + encodeURIComponent(g_paramURL));
+		    	var url = "/ezEmail/secureMailInfo.do?url=" + encodeURIComponent(g_paramURL);
+		    	
+		    	if (typeof(shareId) != "undefined" && shareId != "") {
+		    		url += "&shareId=" + encodeURIComponent(shareId);
+		    	}
+		    	
+		    	DivPopUpShow(550, 500, url);
 		    }
 		    
 		    function reSend_onClick() {
@@ -565,6 +577,9 @@
 			<input  type="hidden" id="iptFolderPath"  name="iptFolderPath" value="">
 		    <input  type="hidden" id="iptURL"  name="iptURL" value="">
 		    <input  type="hidden" id="iSecurity"  name="iSecurity" value="">
+		    <c:if test="${shareId != null && shareId != ''}">
+		    	<input  type="hidden" id="shareId"  name="shareId" value="${shareId}">
+		    </c:if>
 		</form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

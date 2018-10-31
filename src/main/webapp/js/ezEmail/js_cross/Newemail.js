@@ -720,7 +720,16 @@ function prevShow() {
         Old_Preview_Href = Preview_Href;
         var strQuery = "<URL>" + Preview_Href + "</URL>";
         xmlhttp_mailPreview = createXMLHttpRequest();
-        xmlhttp_mailPreview.open("POST", "/ezEmail/mailPrevShow.do?MSGFLAG=N", true);
+        
+        var previewUrl;
+        
+        if (typeof(shareId) != "undefined" && shareId != "") {
+        	previewUrl = "/ezEmail/mailPrevShow.do?MSGFLAG=N&shareId=" + encodeURIComponent(shareId);
+        } else {
+        	previewUrl = "/ezEmail/mailPrevShow.do?MSGFLAG=N";
+        }
+        
+        xmlhttp_mailPreview.open("POST", previewUrl, true);
         xmlhttp_mailPreview.onreadystatechange = event_xmlhttp_mailPreview_Complete;
         xmlhttp_mailPreview.send(strQuery);
 
@@ -1379,7 +1388,13 @@ function callMsgDlg(szContentClass, Href) {
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     if (!g_bdraft) {
         var pURI;
-        pURI = "/ezEmail/mailRead.do?iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);            
+        
+        if (typeof(shareId) != "undefined" && shareId != "") {
+        	pURI = "/ezEmail/mailRead.do?shareId=" + encodeURIComponent(shareId) + "&iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);            
+        } else {
+        	pURI = "/ezEmail/mailRead.do?iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);            
+        }
+        
         ReadMailOpenNewWin = window.open(pURI, "", feature);
         
         if (ReadMailOpenNewWin != null) {

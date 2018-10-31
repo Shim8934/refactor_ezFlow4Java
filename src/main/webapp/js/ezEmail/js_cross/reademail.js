@@ -390,7 +390,14 @@ var address_selectAddress_dialogArguments = new Array();
 function func_addaddr() {
 	address_selectAddress_dialogArguments[1] = func_addaddr2;
 	address_selectAddress_dialogArguments[2] = [];
-	DivPopUpShow(600, 500, "/ezEmail/mailSelectAddress.do?url=" + encodeURIComponent(g_paramURL));
+	
+	var url = "/ezEmail/mailSelectAddress.do?url=" + encodeURIComponent(g_paramURL);
+	
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		url += "&shareId=" + encodeURIComponent(shareId);
+	}
+	
+	DivPopUpShow(600, 500, url);
 }
 
 var address_foldermanage_dialogArguments = new Array();
@@ -609,13 +616,13 @@ function receiveCheck_onClick() {
     try { OpenWin.focus(); } catch (e) { }
 }
 function view_original() {
-
-    if (navigator.appVersion.indexOf("MSIE 6") > -1) {
-        MM_openBrWindow('/ezEmail/mailReadOriginal.do?url=' + encodeURIComponent(g_paramURL), 800, 660);
-    }
-    else {
-        MM_openBrWindow('/ezEmail/mailReadOriginal.do?url=' + encodeURIComponent(g_paramURL), 850, 650);
-    }
+	var url = "/ezEmail/mailReadOriginal.do?url=" + encodeURIComponent(g_paramURL);
+	
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		url += "&shareId=" + encodeURIComponent(shareId);
+	}
+	
+	MM_openBrWindow(url, 850, 650);
 }
 function MM_openBrWindow(url, w, h) {
     var pheight = window.screen.availHeight;

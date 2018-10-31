@@ -1167,17 +1167,23 @@
 		    </tr>
 		    </table>
 		</div>
-		<form name="PrevViewFormH" action="mailPreviewContent.do" method="post" target="ifrmPreViewH" >
-		<input  type="hidden"  name="iptURL" value="">
-		<input  type="hidden" name="iSecurity" value="">
+		<form name="PrevViewFormH" action="/ezEmail/mailPreviewContent.do" method="post" target="ifrmPreViewH" >
+			<input  type="hidden"  name="iptURL" value="">
+			<input  type="hidden" name="iSecurity" value="">
+			<c:if test="${shareId != null and shareId != ''}">
+				<input  type="hidden" name="shareId" value="${shareId}">
+			</c:if>
 		</form>
-		<form name="PrevViewFormW" action="mailPreviewContent.do" method="post" target="ifrmPreViewW">
-		<input  type="hidden"  name="iptURL" value="">
-		<input  type="hidden" name="iSecurity" value="">
+		<form name="PrevViewFormW" action="/ezEmail/mailPreviewContent.do" method="post" target="ifrmPreViewW">
+			<input  type="hidden"  name="iptURL" value="">
+			<input  type="hidden" name="iSecurity" value="">
+			<c:if test="${shareId != null and shareId != ''}">
+				<input  type="hidden" name="shareId" value="${shareId}">
+			</c:if>
 		</form>
 		<form name="mailWriteSenderClick" action="mailWrite.do" method="post"> <!-- 추가 -->
-		<input  type="hidden"  name="cmd" value="NEW">
-		<input  type="hidden" name="msgto" value="">
+			<input  type="hidden"  name="cmd" value="NEW">
+			<input  type="hidden" name="msgto" value="">
 		</form>
 		<iframe name="importMailboxIframe" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="importMailboxform" name="importMailboxform" enctype="multipart/form-data" target="importMailboxIframe">
