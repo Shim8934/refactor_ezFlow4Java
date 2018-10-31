@@ -523,7 +523,62 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		if (tempResultList != null) {
 			resultList = realList(resultList, tempResultList, orgStartDate, orgEndDate);
 		}
-
+		
+//		String realEndDate = resultList.get(resultList.size()-1).getEndDate();
+//		
+//		if (realEndDate.substring(10).equals("00:00:00.0")) {
+//			resultList.remove(resultList.size()-1);
+//		}
+		int resultCount = resultList.size();
+		ScheduleInfoVO svo = null;
+		ScheduleInfoVO svoAfter = null;
+		String svoId = "";
+		String svoIdAfter = "";
+		List<Integer> svoIndex = new ArrayList<Integer>();
+		String svoRepetition = null;
+		String[] info = null;
+		if (resultCount > 0) {
+			for (int i = 0; i < resultCount; i++) {
+				svo = resultList.get(i);
+				svoId = svo.getScheduleId();
+				svoRepetition = svo.getRepetition();
+				if (svoRepetition.equals("") || svoRepetition == null) {
+					continue;
+				} else {
+					info = svo.getRepetition().split("\\|");
+					
+					if (i+1 == resultCount && Integer.parseInt(info[0]) < 1){
+						if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+							svoIndex.add(i);
+						}
+						break;
+					} else if (i+1 == resultCount) {
+						break;
+					}
+					svoAfter = resultList.get(i+1);
+					svoIdAfter = svoAfter.getScheduleId();
+					
+					if (!svoId.equals(svoIdAfter) && Integer.parseInt(info[0]) < 1) {
+						if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+							svoIndex.add(i);
+						}
+					}
+				}
+			}
+		}
+		
+		int svoIndexCount = svoIndex.size();
+		
+		if (svoIndexCount > 0) {
+			for (int i = svoIndexCount-1; i >= 0; i--) {
+				resultList.remove(svoIndex.get(i).intValue());
+			}
+		}
+		
+		for (ScheduleInfoVO svo5 : resultList) {
+			logger.debug(svo5.getScheduleId()+"  :  "+svo5.getStartDate()+"  ,  "+svo5.getEndDate()+"  ,  "+svo5.getRepetition());
+		}
+		
 		return resultList;
 	}
 	

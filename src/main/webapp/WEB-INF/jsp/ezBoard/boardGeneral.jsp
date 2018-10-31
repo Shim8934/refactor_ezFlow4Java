@@ -96,20 +96,6 @@
      			var PreviewWContent = document.getElementById("WPreUser").value;
      			var PreviewHList = document.getElementById("HListUser").value;
      			var PreviewHContent = document.getElementById("HPreUser").value;
-     			
-     			//2018-10-30 김보미 - 미리보기 선택값에 따라 지정한 값 외에는 기본값 들어가게 변경
-     			if (PreviewMode == "OFF") {
-         			PreviewWList = "50";
-         			PreviewWContent = "50";
-         			PreviewHList = "50";
-         			PreviewHContent = "50";
-            	} else if (PreviewMode == "H") {
-         			PreviewWList = "50";
-         			PreviewWContent = "50";
-            	} else {
-         			PreviewHList = "50";
-         			PreviewHContent = "50";
-            	}
      		
      			$.ajax({
      				url : '/ezBoard/board_generallist_save.do',
