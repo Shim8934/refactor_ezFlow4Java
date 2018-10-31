@@ -3,11 +3,14 @@ package egovframework.ezEKP.ezTalkGate.web;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezTalkGate.util.EzTalkGateUtil;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -55,6 +59,12 @@ public class EzTalkGateController {
 	@Autowired
 	private CommonUtil commonUtil;
 	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
+	
+	@Autowired
+	private Properties config;
+	
     @Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
 	
@@ -84,6 +94,33 @@ public class EzTalkGateController {
 			
 			if (isUserExists) {
 				result = "OK";
+				// 2018.10.25 yjks - 모바일 사용 설정 확인 추가 
+    			String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", tenantId);
+    			
+    			if (useMobileManagemant.equals("YES")) {
+    				String notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, orgId, "notUseMobileLogin");
+    				String adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, orgId, "adminOrderNotUsedMobileLogin");
+    				
+    				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
+    					logger.debug("cannot use mobile login. userId=" + orgId);
+    					result = "NOTUSE";
+    				} else {
+    					String inputParams = "userId=" + orgId + "&deviceId=";
+    					logger.debug("userId=" + orgId + ",deviceId=");
+    					
+    					String requestURL = "/ezTalkGate/getUserMobileDeviceInfo";
+    					String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+    					logger.debug("getResult=" + getResult);
+    					
+    					JSONParser parser = new JSONParser();
+    					JSONObject resultObj = (JSONObject) parser.parse(getResult);
+    					
+    					if (resultObj.get("data").equals("1")) {
+    						logger.debug("this device cannot use. userId=" + orgId);
+    						result = "NOTUSE";
+    					}
+    				}
+    			}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

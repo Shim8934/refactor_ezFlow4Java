@@ -1053,6 +1053,8 @@
 			<![CDATA[   	
 			AND
 				A.TENANT_ID = #tenantID#	
+			GROUP BY
+				A.NUM
 			ORDER BY
 				STARTDATE ASC,
 				ENDDATE DESC 

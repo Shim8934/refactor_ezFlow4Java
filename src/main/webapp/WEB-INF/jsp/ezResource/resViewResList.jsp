@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -411,21 +412,36 @@
 	  			<tr>
 	    			<th style="padding:0px; width:30px"><input type="checkbox" name="checkbox" onClick="reverse(this.checked)" id="Checkbox1"></th>
 	    			<th> <spring:message code='ezResource.t39' /></th>
-	    			<th style="width:120px"> <spring:message code='ezResource.t366' /></th>
+	    			<%-- <th style="width:120px"> <spring:message code='ezResource.t366' /></th> --%>
 	    			<th style="width:100px"> <spring:message code='ezResource.t106' /></th>
-	    			<th style="width:100px"> <spring:message code='ezResource.t37' /></th>
+	    			<%-- <th style="width:100px"> <spring:message code='ezResource.t37' /></th> --%>
 	    			<th style="width:120px"> <spring:message code='ezResource.t367' /></th>
+	    			<th style="width:120px"> <spring:message code='ezPersonal.t1024' /></th>
 	    			<th style="width:150px;"> <spring:message code='ezResource.t148' /></th>
 	  			</tr>
 				<c:if test="${!empty resBrdList}" >
-					<c:forEach var="list"  items="${resBrdList}" begin="${start}">
+					<c:forEach var="list"  items="${resBrdList}" begin="${start}" varStatus="value">
 	  					<tr>
 	    					<td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></td>
-							<td onClick="Item_View('${list.brdID}');"	style="cursor: pointer; word-wrap:break-word;" align="left"><c:out value='${list.brdNm}' /> </td>
-							<td id="OwnDeptID" value="${list.ownDeptNm}" style="word-wrap:break-word;"><nobr>${list.ownDeptNm}</nobr> </td>
-							<td id="OwnerID"  style="cursor:pointer; word-wrap:break-word;" value="${list.ownerID}" onClick="MemberInfo_onDblclick('${list.ownerID}', '${list.ownDeptID }')" nowrap>${list.ownerNm}</td>
-							<td id="OwnerPosition" style="word-wrap:break-word;">${list.ownerPosition}</td>
+							<td onClick="Item_View('${list.brdID}');"	style="cursor: pointer; word-wrap:break-word;" align="left">
+								<c:if test="${list.approveFlag eq 0}">
+									<img src="../images/OrganTree_cross/ic-Item.gif">
+								</c:if>
+								<c:if test="${list.approveFlag eq 1}">
+									<img src="../images/calendar/icon_resource_ok.png">
+								</c:if>
+								<c:out value='${list.brdNm}' />
+							</td>
+							<%-- <td id="OwnDeptID" value="${list.ownDeptNm}" style="word-wrap:break-word;"><nobr>${list.ownDeptNm}</nobr> </td> --%>
+							<td id="OwnerID"  style="word-wrap:break-word;" value="${list.ownerID}" nowrap>${list.ownerNm}
+								<c:set var="ownerList" value="${fn:split(list.ownerID, ',') }"/>
+								<c:if test="${fn:length(ownerList) > 1 }">
+									<spring:message code='ezCircular.t50'/> <c:out value="${fn:length(ownerList)-1}"/><spring:message code='ezCircular.t51'/>
+								</c:if>
+							</td>
+							<%-- <td id="OwnerPosition" style="word-wrap:break-word;">${list.ownerPosition}</td> --%>
 							<td id="OwnerCall" style="word-wrap:break-word;">${list.ownerCall} </td>			
+							<td id="makeDate" style="word-wrap:break-word;">${list.makeDate} </td>		
 							<td id="ResLocation" style="word-wrap:break-word;"><c:out value='${list.resLocation}'/></td>				<!-- 2018-07-13 김민성 - 테이블 형식에서는 정보 모두 출력하도록 변경 -->
 						</tr> 
 					</c:forEach>
