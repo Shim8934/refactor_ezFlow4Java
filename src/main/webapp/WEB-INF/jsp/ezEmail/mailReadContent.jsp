@@ -19,6 +19,7 @@
 			    var g_paramURL = "${url}";
 			    var objLink = document.all("BigSizeFileLink");
 			    var memoFlag = "<c:out value='${memoFlag}' />";
+			    var mouseTop;
 			    
 			    if (objLink != null) {
 					
@@ -93,6 +94,7 @@
 							}
 							conObject.style.left = contextLeft + "px";
 							conObject.style.top = contextTop + "px";
+							mouseTop = contextTop + "px";
 						}
 						
 						$(".menus").click(function(){
