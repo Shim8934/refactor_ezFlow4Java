@@ -380,6 +380,7 @@
 				sign_no
 			FROM 
 				JMOCHA_MAIL_SIGNATURE_TEMPLATE
+			LIMIT 1
 		]]>
 	</select>
 				
