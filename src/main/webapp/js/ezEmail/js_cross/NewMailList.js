@@ -488,7 +488,7 @@ function MakeListInfoHTML(ConentObject) {
             }
             
             if (searchMode) {
-            	pSearchListCount = XmlRows.length;
+            	pSearchListCount = p_TotalCnt.split(";")[4]
             }
             
             if(XmlRows.length == "0"){
