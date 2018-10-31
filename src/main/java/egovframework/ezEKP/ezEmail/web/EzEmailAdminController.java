@@ -1417,22 +1417,26 @@ public class EzEmailAdminController {
 			
 			returnJsonArr = ezEmailService.selectOneSignatureTemplate(signNo);
 			JSONObject obj = (JSONObject) returnJsonArr.get(0);
-			content = obj.get("content").toString();
-			content = replaceUserInfo(vo, content);
 			
-			JSONObject newObj = new JSONObject();
+			if (obj != null) {
+				content = obj.get("content").toString();
+				content = replaceUserInfo(vo, content);
+				
+				JSONObject newObj = new JSONObject();
+				
+				// content replace 메소드 후 리턴
+				newObj.put("signNo", obj.get("signNo").toString());
+				newObj.put("content", content);
+				newObj.put("displayname", obj.get("displayname").toString());
+				newObj.put("displayname2", obj.get("displayname2").toString());
+				
+				returnJsonArr = new JSONArray();
+				returnJsonArr.add(newObj);
+				
+				
+				logger.debug("jsonArr=" + returnJsonArr);
+			}
 			
-			// content replace 메소드 후 리턴
-			newObj.put("signNo", obj.get("signNo").toString());
-			newObj.put("content", content);
-			newObj.put("displayname", obj.get("displayname").toString());
-			newObj.put("displayname2", obj.get("displayname2").toString());
-			
-			returnJsonArr = new JSONArray();
-			returnJsonArr.add(newObj);
-			
-			
-			logger.debug("jsonArr=" + returnJsonArr);
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
