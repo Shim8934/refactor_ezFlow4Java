@@ -385,7 +385,8 @@
 				A.boardname2 as boardname2,
 				A.treevieworder as sort,
 				B.parentboardid as topParent,
-				A.boardcolor
+				A.boardcolor,
+				IFNULL(A.gubun, -1) as gubun
 			FROM
 				TBL_BOARD_BOARDINFO A
 			LEFT JOIN

@@ -24,6 +24,7 @@
   	.portlet-placeholder {border: 1px dotted black; margin: 0 1em 1em 0; height: 50px;}
 	.col, .newPortlet {padding: 16px 16px 5px 16px;}
 	.updatePortlet, .addNewPortlet {float : right;margin : 0px; padding : 0px;}
+	.deletePortletBtn {margin-left:7px;}
 	.boardSetting {margin:0px 0px 0px 12px;padding:0px;text-align:left;display:inline-block;vertical-align:top;}
 	.portletInfo {display:inline-block;marging-top:8px;}
 	.portletInfoTH {background-color : white;border:0px; padding-left:0px;}
@@ -79,10 +80,7 @@
 	  } );
 	  
 	  //이벤트 세팅
-	  $("#portletAdd").on("click", portletAdd);
-	  $("#portletDel").on("click", portletDel);
 	  $("#portletOrderReset").on("click", portletOrderReset);
-	  $("#PortletInfoUpdate").on("click", PortletInfoUpdate);
 	  
 	  
 	  //이벤트 연결 함수
@@ -90,7 +88,7 @@
 		  
 	  }
 	  
-	  var portletDel = function() {
+	  var portletDelete = function() {
 			  
 	  }
 	 
@@ -120,7 +118,7 @@
             "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 	  }
 	  
-	  var PortletInfoUpdate = function() {
+	  var portletUpdate = function() {
 	 	var portlets = $(".portlet");
 		
 	  }
@@ -162,7 +160,14 @@
 					listHTML += "<div class='portlet-content'>";
 					listHTML += "<div class='btnpositionJsp updatePortlet'>";
 					listHTML += "<a class='imgbtn updatePortletBtn'>";
-					listHTML += "<span>저장</span></a></div>";
+					listHTML += "<span>저장</span></a>";
+					
+					if (!result[i].general) {
+						listHTML += "<a class='imgbtn deletePortletBtn'>";
+						listHTML += "<span>삭제</span></a>"
+					}
+					
+					listHTML += "</div>";
 					listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'>포틀릿 사용  : </th>"
 					listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td>";
 					listHTML += "</tr>";
@@ -185,7 +190,7 @@
 					if (!result[i].general) {
 						listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' value='"+ portletURL +"'></td></tr>";
 					}
-					console.log(result[i]);
+					
 					if (menuId == 4 && portletId != 10) {
 						listHTML += "<tr><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
 						listHTML += "<input id='portletBoard" + portletId + "' class='boardName' type='text' value='" + result[i].boardName1 + "' data1='" + result[i].portletBoardId + "' readonly>";
@@ -247,8 +252,10 @@
 		});
 		
 		$(".addPortlet").on("click", showAddPortletForm);
-	  }
-	  
+		
+		$(".updatePortletBtn").on("click", portletUpdate);
+		$(".deletePortletBtn").on("click", portletDelete);
+	  } 
 	  var showAddPortletForm = function() {
 		$(".addPortlet").remove();
 		
@@ -270,7 +277,7 @@
 		listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text'></td></tr>";
 		listHTML += "<tr><th class='portletInfoTH'>포틀릿 타입 : </th><td class='portletInfoTD'><input type='radio' name='category' value='M' checked>&nbsp;메일&nbsp;<input type='radio' name='category' value='B'>&nbsp;게시판&nbsp;<input type='radio' name='category' value='A'>&nbsp;전자결재&nbsp;<input type='radio' name='category' value='L'>&nbsp;외부링크</td>";
 		listHTML += "<tr class='setBoard'><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
-		listHTML += "<input type='text'>";
+		listHTML += "<input id='newPortletBoard' type='text'>";
 		listHTML += "<div class='btnpositionJsp boardSetting'>";
 		listHTML += "<a class='imgbtn boardSettingtBtn'>";
 		listHTML += "<span>설정</span></a></div></td></tr>";
@@ -302,6 +309,7 @@
 		});
 		
 		$(".addNewPortlet").on("click", portletAdd);
+		$(".newPortlet").find(".boardSetting").on("click", {"portletId" : null}, openBoardTree);
 	  }
 	</script>
 </head>
@@ -314,10 +322,8 @@
         	<c:forEach var="item" items="${companyList}">
            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
            	</c:forEach>
-	    </select><br /><br />
+	    </select>
 		<ul style="margin-top: 15px;">
-			<li id="portletAdd"><span>포틀릿 추가</span></li>
-			<li id="portletDel"><span>포틀릿 삭제</span></li>
 			<li id="portletOrderReset"><span>포틀릿 순서 초기화</span></li>
 		</ul>
 	</div>

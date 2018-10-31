@@ -36,9 +36,17 @@
 		</table>
 	</div>
 	<div id="selBoard" class="btnposition btnpositionNew"><a class="imgbtn"><span>선택</span></a></div>
+	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+    </div>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/dist/jstree.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 <script type="text/javascript">
+var board_alertArguments = new Array();
+
 $(function(){
 	$("#close").on("click", function(){
 		window.close();
@@ -61,21 +69,42 @@ var eventSetting = function() {
 }
 
 var selectBoard = function(event) {
-	if ($(".jstree") == undefined) {
-		alert("게시판을 선택해 주세요.");
+	board_alertArguments[1] = DivPopUpHidden;
+	
+	if ($(".jstree").length == 0) {
+    	var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("게시판을 선택해주세요.") + "&MESSAGE=" + encodeURIComponent("게시판을 선택해주세요.") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+		DivPopUpShow(330, 205, url);
+		return;
 	} else {
 		var selBoard = $("li[aria-selected='true']");
 		
-		if (selBoard == undefined) {
-			alert("게시판을 선택해 주세요.");
+		if (selBoard.length == 0) {
+	    	var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("게시판을 선택해주세요.") + "&MESSAGE=" + encodeURIComponent("게시판을 선택해주세요.") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+			DivPopUpShow(330, 205, url);
+			return;
 		} else {
+			var portletId = "<c:out value='${portletId}'/>";
+			var gubun = selBoard.attr("gubun");
+		
+			if (portletId == 9 && (gubun != 3 && gubun != 4)) {
+		    	var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("선택된 게시판은 포토 게시판이나 썸네일 게시판이 아닙니다.") + "&MESSAGE=" + encodeURIComponent("선택된 게시판은 포토 게시판이나 썸네일 게시판이 아닙니다.") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+				DivPopUpShow(330, 205, url);
+				return;
+			}
+			
 			var boardName = selBoard.find(".jstree-clicked").text();
 			selBoard = selBoard.attr("id");
 			
-			var portletId = "<c:out value='${portletId}'/>";
-			window.opener.document.getElementById("portletBoard" + portletId).value =  boardName;
-			window.opener.document.getElementById("portletBoard" + portletId).setAttribute("value", boardName);
-			window.opener.document.getElementById("portletBoard" + portletId).setAttribute("data1", selBoard);
+			if (portletId == "null") {
+				window.opener.document.getElementById("newPortletBoard").value = boardName;
+				window.opener.document.getElementById("newPortletBoard").setAttribute("value", boardName);
+				window.opener.document.getElementById("newPortletBoard").setAttribute("data1", selBoard);
+			} else {
+				window.opener.document.getElementById("portletBoard" + portletId).value =  boardName;
+				window.opener.document.getElementById("portletBoard" + portletId).setAttribute("value", boardName);
+				window.opener.document.getElementById("portletBoard" + portletId).setAttribute("data1", selBoard);
+			}
+			
 			window.close();
 		}
 	}
@@ -105,7 +134,7 @@ var getSubBoards = function(event) {
 		request.onload = function() {
 			if (request.status >= 200 && request.status < 400) {
 				var result = JSON.parse(request.responseText);
-				console.log(result);
+				
 				$("#boardSub" + boardIndex).jstree({
 					'core' : {
 						'data' : result,
@@ -134,6 +163,8 @@ var getSubBoards = function(event) {
 							//board.id.querySelectorAll("jstree-anchor").style.color = board.boardColor;
 							$("#\\" + boardId + "").find(".jstree-anchor").css("color", board.boardColor);
 						}
+						
+						$("#\\" + boardId + "").attr("gubun", board.gubun);
 					}
 				});
 			}
