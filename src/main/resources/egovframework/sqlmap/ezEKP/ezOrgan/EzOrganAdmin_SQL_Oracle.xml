@@ -4464,6 +4464,7 @@
 	  		<isNotNull property="birth" prepend=","> <![CDATA[birth = #birth#]]></isNotNull>
 	  		<isNotNull property="info" prepend=","> <![CDATA[info = #info#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute7" prepend=","> <![CDATA[extensionAttribute7 = #extensionAttribute7#]]></isNotNull>
+	  		<isNotNull property="extensionAttribute8" prepend=","> <![CDATA[extensionAttribute8 = #extensionAttribute8#]]></isNotNull>
 	  	</dynamic>
 	  	<![CDATA[
       		WHERE
