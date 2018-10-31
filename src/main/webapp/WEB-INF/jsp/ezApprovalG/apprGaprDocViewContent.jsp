@@ -15,6 +15,10 @@
 				background-color:#fff;
 				border-collapse:collapse
 			}
+			
+			#div_Content table {
+		     	word-break : break-word;   
+		    }
 	    </style>
 	    <script language="javascript" type="text/javascript">
 // 	        var XmlBodyATT = createXmlDom();
