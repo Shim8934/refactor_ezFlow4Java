@@ -294,7 +294,7 @@ function MakeListInfoHTML(ConentObject) {
                             break;
                         case "receiveInfo":
                         	_TDColum.style.width = "18px";
-                        	if (recipientsLen > 2 || p_Group == "yes") {
+                        	if (recipientsLen >= 2 || p_Group == "yes") {
                         		_TDColum.innerHTML = "<span style='cursor: pointer'><IMG src='/images/receivedCheck_closed.png'></span>";
                         		_TDColum.setAttribute("viewSelect", "false");
                         		_TDColum.onclick = function () { viewReceivers(this); };
@@ -488,7 +488,7 @@ function MakeListInfoHTML(ConentObject) {
             }
             
             if (searchMode) {
-            	pSearchListCount = XmlRows.length;
+            	pSearchListCount = p_TotalCnt.split(";")[4]
             }
             
             if(XmlRows.length == "0"){

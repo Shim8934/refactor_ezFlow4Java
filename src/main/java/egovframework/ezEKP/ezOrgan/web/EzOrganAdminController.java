@@ -129,6 +129,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.createJMochaDistributionSub();
     	ezCommonService.addUserMasterManualFlag();
     	ezCommonService.addDeptMasterManualFlag();
+    	ezCommonService.createJobMasterTable();
     	
     	logger.debug("init ended.");
     }
@@ -3374,7 +3375,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String cn = request.getParameter("cn");
+//		String cn = request.getParameter("cn");
+		String jobID = request.getParameter("jobID");
 		String type = request.getParameter("type");
 		String mode = request.getParameter("mode");
 		String companyID = request.getParameter("companyID");
@@ -3388,7 +3390,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("jobCnt", jobCnt);
 		model.addAttribute("type", type);
 		model.addAttribute("mode", mode);
-		model.addAttribute("cn", cn);
+		model.addAttribute("jobID", jobID);
+//		model.addAttribute("cn", cn);
 
 		logger.debug("jobTitlePopupUI ended.");
 		return "admin/ezOrgan/jobTitlePopupUi";
@@ -3401,7 +3404,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 
-		String cn = request.getParameter("cn");
+//		String cn = request.getParameter("cn");
+		String jobID = request.getParameter("jobID");
 		String type = request.getParameter("type");
 		String mode = request.getParameter("mode");
 		String displayName = request.getParameter("displayName1");
@@ -3412,9 +3416,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String result = "";
 		if (mode.equals("Add")) {
-			result = ezOrganAdminService.setTitle(type, cn, displayName, displayName2, useFlag, Integer.parseInt(sort), companyID, userInfo.getTenantId());
+			result = ezOrganAdminService.setTitle(type, "", displayName, displayName2, useFlag, Integer.parseInt(sort), companyID, userInfo.getTenantId());
 		} else if (mode.equals("Mod")) {
-			result = ezOrganAdminService.updateTitle(type, cn, displayName, displayName2, useFlag, Integer.parseInt(sort), companyID, userInfo.getTenantId());
+			result = ezOrganAdminService.updateTitle(type, jobID, displayName, displayName2, useFlag, Integer.parseInt(sort), companyID, userInfo.getTenantId());
 		}
 		
 		logger.debug("Action mode = " + mode + " | " + "Action result = " + result);
@@ -3446,11 +3450,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String cn = request.getParameter("cn");
+//		String cn = request.getParameter("cn");
+		String jobID = request.getParameter("jobID");
 		String type = request.getParameter("type");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezOrganAdminService.deleteTitle(type, cn, companyID, userInfo.getTenantId());
+		String result = ezOrganAdminService.deleteTitle(type, jobID, companyID, userInfo.getTenantId());
 		
 		logger.debug("jobTitleListView ended.");
 		return result;
@@ -3463,11 +3468,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String cn = request.getParameter("cn");
+//		String cn = request.getParameter("cn");
+		String jobID = request.getParameter("jobID");
 		String type = request.getParameter("type");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezOrganAdminService.getTitleUserList(type, cn, userInfo.getPrimary(), companyID, userInfo.getTenantId());
+		String result = ezOrganAdminService.getTitleUserList(type, jobID, userInfo.getPrimary(), companyID, userInfo.getTenantId());
 		
 		logger.debug("jobTitleUserListView ended.");
 		return result;
@@ -3480,11 +3486,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String cn = request.getParameter("cn");
+//		String cn = request.getParameter("cn");
+		String jobID = request.getParameter("jobID");
 		String type = request.getParameter("type");
 		String companyID = request.getParameter("companyID");
 		
-		String result = String.valueOf(ezOrganAdminService.getTitleUserListCnt(type, cn, companyID, userInfo.getTenantId()));
+		String result = String.valueOf(ezOrganAdminService.getTitleUserListCnt(type, jobID, companyID, userInfo.getTenantId()));
 		
 		logger.debug("jobTitleUserListCnt ended.");
 		return result;
@@ -3497,11 +3504,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String cn = request.getParameter("cn");
+//		String cn = request.getParameter("cn");
+		String jobID = request.getParameter("jobID");
 		String type = request.getParameter("type");
 		String companyID = request.getParameter("companyID");
 		
-		String result = String.valueOf(ezOrganAdminService.getTitleCnt(type, cn, companyID, userInfo.getTenantId()));
+		String result = String.valueOf(ezOrganAdminService.getTitleCnt(type, jobID, companyID, userInfo.getTenantId()));
 		
 		logger.debug("jobTitleCnt ended.");
 		return result;
@@ -3514,11 +3522,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String cn = request.getParameter("cn");
+//		String cn = request.getParameter("cn");
+		String jobID = request.getParameter("jobID");
 		String type = request.getParameter("type");
 		String companyID = request.getParameter("companyID");
 		
-		String rtnXml = ezOrganAdminService.getTitleInfo(type, cn, companyID, userInfo.getTenantId());
+		String rtnXml = ezOrganAdminService.getTitleInfo(type, jobID, companyID, userInfo.getTenantId());
 		
 		logger.debug("jobTitleInfo ended.");
 		return rtnXml;
@@ -3531,9 +3540,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String cn = request.getParameter("cn");
+//		String cn = request.getParameter("cn");
+		String jobID = request.getParameter("jobID");
 		
-		OrganUserVO vo = ezOrganAdminService.getUserInfo(cn, userInfo.getPrimary(), userInfo.getTenantId());
+		OrganUserVO vo = ezOrganAdminService.getUserInfo(jobID, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		String companyID = vo.getPhysicalDeliveryOfficeName();
 		

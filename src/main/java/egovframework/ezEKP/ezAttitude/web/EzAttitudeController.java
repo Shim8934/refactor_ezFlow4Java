@@ -2415,7 +2415,8 @@ public class EzAttitudeController {
 				attitudeVO = (JSONObject) resultBody.get("data");
 				model.addAttribute("attitudeInfo", attitudeVO);
 			}
-		} 
+		}
+		//해당 근태에 대한 부서
 		deptId = (String) attitudeVO.get("deptId") == null ? "null" : (String) attitudeVO.get("deptId");
 		
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
@@ -2425,7 +2426,7 @@ public class EzAttitudeController {
 			adminFlag = "true";
 		}
 		
-		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth/hyo";
 		
 		headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -2435,7 +2436,7 @@ public class EzAttitudeController {
 		
 		builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyID)
-				.queryParam("isAllDept", isAllDept)
+				.queryParam("listAuthType", "M")
 				.queryParam("userId", userInfo.getId());
 		
 		rest = new RestTemplate();
@@ -2452,22 +2453,6 @@ public class EzAttitudeController {
 		
 		if(status.equals("ok")){
 			deptList = (JSONArray) resultBody.get("data");
-		}
-		
-		int myDeptCount = 0;
-		
-		for(int i = 0; i < deptList.size(); i++) {
-			JSONObject dept = (JSONObject) deptList.get(i);
-			if (dept.get("deptId").equals(userInfo.getDeptID())) {
-				myDeptCount++;
-			}
-		}
-		
-		for(int i = 0; i < deptList.size(); i++) {
-			JSONObject dept = (JSONObject) deptList.get(i);
-			if (dept.get("mine") != null && dept.get("mine").equals("yes")) {
-				dept.put("authType", "R");
-			}
 		}
 		
 		//권한 부서 목록에서 부서의 권한을 읽음
