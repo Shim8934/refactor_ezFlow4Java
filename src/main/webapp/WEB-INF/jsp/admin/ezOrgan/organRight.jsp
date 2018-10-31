@@ -711,7 +711,7 @@
 					return;
 				}
 
-			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=430px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(430, 315));
+			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
 			}
 		    
 			function Change_List(){
