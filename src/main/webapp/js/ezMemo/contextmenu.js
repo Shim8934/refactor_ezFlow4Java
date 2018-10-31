@@ -49,6 +49,9 @@ function copy() {
 	}  
 } 
  
+/**
+ * 컨텍스트메뉴 클립보드 복사
+ */
 function copyToClip() { 
 	if(content === "") { 
 		alert(strLangMemo1); 
@@ -63,6 +66,10 @@ function copyToClip() {
 	alert(strLangMemo19);
 } 
  
+
+/**
+ * 컨텍스트메뉴 메모 추가
+ */
 function copyToMemo(mode) { 
 	if(content === "") { 
 		alert(strLangMemo1); 
@@ -90,8 +97,10 @@ function copyToMemo(mode) {
 	});		 
 }
 
-function btnPrint()
-{
+/**
+ * 컨텍스트메뉴 인쇄
+ */
+function btnPrint() {
     var pheight = window.screen.availHeight;
     var conHeight = pheight * 0.8;
     var pwidth = window.screen.availWidth;
