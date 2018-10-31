@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
@@ -97,6 +98,8 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.web.EzEmailMailReadController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -187,6 +190,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", info.getTenantId());
 			
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
@@ -230,10 +234,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				mailFolderList.add(folder);
 			}
+			JSONObject data = new JSONObject();
+			data.put("mailFolderList", mailFolderList);
+			data.put("useSharedMailbox", useSharedMailbox);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", mailFolderList);			
+			result.put("data", data);			
 		} catch (Exception e) {
 			e.printStackTrace();
 			
@@ -247,6 +254,145 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		}
 		
 		LOGGER.debug("MOBILE G/W MAIL mMailFolderList ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 이메일 [GET] 왼쪽 슬라이드 메뉴에 공유 편지함 목록 조회
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/shared-folders-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object mMailSharedFolderList(HttpServletRequest request, @PathVariable String userId) {
+		LOGGER.debug("MOBILE G/W MAIL mMailSharedFolderList started.");		
+		LOGGER.debug("userId=" + userId);
+		
+		JSONObject result = new JSONObject();
+		IMAPAccess ia = null;
+		
+		try {
+			JSONObject data = new JSONObject();
+			JSONArray shareMailInfoList = new JSONArray();
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			
+			List<Map<String, String>> sharedMailBoxList = ezEmailService.getUserSharedMailboxList(userId, info.getTenantId());
+			
+			for (int i = 0; i < sharedMailBoxList.size(); i++) {
+				JSONObject shareMailInfo = new JSONObject();
+				JSONArray mailFolderList = new JSONArray();
+				String shareId = sharedMailBoxList.get(i).get("shareId");
+				String deletePermission = sharedMailBoxList.get(i).get("deletePermission");
+				String sendPermission = sharedMailBoxList.get(i).get("sendPermission");
+				String shareName = sharedMailBoxList.get(i).get("shareName");
+				String mail = sharedMailBoxList.get(i).get("mail");
+				String compId = sharedMailBoxList.get(i).get("compId");
+				String userEmail = shareId + "@" + domainName;
+				String password = jspw;
+
+				String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+				Locale locale = new Locale(ld);
+
+				LOGGER.debug("locale : ," + locale.getDisplayLanguage());
+
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+				List<Folder> subMailFolder = null;
+
+				LOGGER.debug("getTopLevelFolders");
+
+				String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", info.getTenantId());
+				boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
+
+				subMailFolder = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);
+
+				JSONObject folder = null;
+				for (int j = 0; j < subMailFolder.size(); j++) {
+					Folder f = subMailFolder.get(j);
+
+					String displayName = ezEmailUtil.getDisplayNameFromFolderId(f.getName(), locale);
+
+					folder = new JSONObject();
+
+					folder.put("name", displayName);
+					folder.put("fullName", f.getFullName());
+					folder.put("unReadCount", f.getUnreadMessageCount());
+
+					if (f.list().length > 0) {
+						folder.put("hasSub", true);
+					} else {
+						folder.put("hasSub", false);
+					}
+					mailFolderList.add(folder);
+				}
+
+				shareMailInfo.put("mailFolderList", mailFolderList);
+				shareMailInfo.put("shareId", shareId);
+				shareMailInfo.put("deletePermission", deletePermission);
+				shareMailInfo.put("sendPermission", sendPermission);
+				shareMailInfo.put("shareName", shareName);
+				shareMailInfo.put("mail", mail);
+				shareMailInfo.put("compId", compId);
+				shareMailInfoList.add(shareMailInfo);
+			}
+			data.put("shareMailInfoList", shareMailInfoList);
+
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");			
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		LOGGER.debug("MOBILE G/W MAIL mMailSharedFolderList ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 유저의 공유 사서함 권한 가져오기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/share/{shareId:.+}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getShareMailBoxPermissionInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable String shareId) {		
+		LOGGER.debug("MOBILE G/W MAIL getShareMailBoxPermissionInfo started.");
+		LOGGER.debug("userId=" + userId + "shareId=" + shareId);
+		
+		JSONObject result = new JSONObject();
+        try {
+        	String serverName = request.getHeader("x-user-host");
+    		MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+    		MailSharedMailboxUserVO shareMailBoxPermissionInfo = ezEmailService.getSharedMailboxPermissionInfo(shareId, info.getTenantId(), userId);
+			
+        	JSONObject permissionInfo = new JSONObject();;
+        	permissionInfo.put("shareId", shareMailBoxPermissionInfo.getShareId());
+        	permissionInfo.put("deletePermission", shareMailBoxPermissionInfo.getDeletePermission());
+        	permissionInfo.put("sendPermission", shareMailBoxPermissionInfo.getSendPermission());
+        	permissionInfo.put("shareName", shareMailBoxPermissionInfo.getShareName());
+            
+            result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", permissionInfo);	
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");	
+		
+		}
+        
+		LOGGER.debug("MOBILE G/W MAIL getShareMailBoxPermissionInfo ended.");
 		
 		return result;
 	}
