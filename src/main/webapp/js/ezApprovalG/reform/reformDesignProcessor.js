@@ -17,6 +17,40 @@ var isTagfree = false;
 var selectedNodeToMoveOrCopy = null;
 var selectedNodeIdToMoveOrCopy = null;
 var lastSelectedElement = null;
+var savedRanges = [];
+
+function saveSelection() {
+	var selection = webEditorDocument.getSelection();
+	savedRanges = [];
+	
+	if (selection.rangeCount) {
+		for (var i = 0, len = selection.rangeCount; i < len; i++) {
+			savedRanges.push(selection.getRangeAt(i));
+		}
+	}
+}
+
+function restoreSelection() {
+	var selection = webEditorDocument.getSelection();
+	
+	selection.removeAllRanges();
+	
+	for (var i = 0, len = savedRanges.length; i < len; i++) {
+		selection.addRange(savedRanges[i]);
+	}
+}
+
+function moveCursorToElement(element) {
+	var selection = webEditorDocument.getSelection();
+	var parentElement = element.parentElement;
+	
+	if (selection != null && parentElement != null) {
+		var selectionIndex = Array.prototype.indexOf.call(parentElement.childNodes, element);
+		
+		selection.collapse(parentElement, selectionIndex + 1);
+		saveSelection();
+	}
+}
 
 function onFormDocumentLoadHandlerForFormProcessor() {
 	isFormProcessor = true;
@@ -46,17 +80,21 @@ function onFormDocumentLoadHandlerForTagfree() {
 		if (targetElement != undefined && targetElement.getAttribute("data-reform_flag") === "1") {
 			event.preventDefault();
 			event.stopPropagation();
+			
+			mouseDown(event);
 		} else {
 			xfe.xfeDocumentEvent.oldXfeMouseDown(event);
 		}
 	}
-	
+
 	xfe.xfeDocumentEvent.xfeMouseUp = function(event) {
 		var targetElement = xfeEventUtil.getTarget(event);
 		
 		if (targetElement != undefined && targetElement.getAttribute("data-reform_flag") === "1") {
 			event.preventDefault();
 			event.stopPropagation();
+			
+			mouseDown(event);
 		} else {
 			xfe.xfeDocumentEvent.oldXfeMouseUp(event);
 		}
@@ -527,6 +565,11 @@ function reform_actualOnClickHandler(event) {
 		}
 	}
 	
+	if (target.tagName == "TABLE") {
+		moveCursorToElement(target);
+		saveSelection();
+	}
+	
 	currentControlElement = target;
 	currentControlElementId = currentControlElement.id;
 	if (currentControlElementId == null || currentControlElementId == "") {
@@ -775,15 +818,105 @@ function insertElementToDocument(element) {
 		// Label 콘트롤 뒤에 키보드 입력 시 Label 콘트롤 안에 입력되는 것을 방지하기 위해 빈공간 삽입
 		DEXT5.setInsertHTML(element.outerHTML + "&nbsp;");
 	} else if (isNamo) {
+//		if (element.getAttribute("data-reform_hidden_control_flag") == "1") {
+//			webEditorDocument.body.insertBefore(element, webEditorDocument.body.firstChild);
+//			return;
+//		}
+//		
+//		containerNode = CrossEditor2.GetCaretObject();
+//		containerNode.appendChild(element);
+//		// Label 콘트롤 뒤에 키보드 입력 시 Label 콘트롤 안에 입력되는 것을 방지하기 위해 빈공간 삽입
+//		containerNode.appendChild(webEditorDocument.createTextNode('\u00A0'));
+		
 		if (element.getAttribute("data-reform_hidden_control_flag") == "1") {
 			webEditorDocument.body.insertBefore(element, webEditorDocument.body.firstChild);
+			moveCursorToElement(element);
 			return;
 		}
 		
-		containerNode = CrossEditor2.GetCaretObject();
-		containerNode.appendChild(element);
-		// Label 콘트롤 뒤에 키보드 입력 시 Label 콘트롤 안에 입력되는 것을 방지하기 위해 빈공간 삽입
-		containerNode.appendChild(webEditorDocument.createTextNode('\u00A0'));
+		var selection = null;
+		var containerNode = null;
+		
+		if (webEditorDocument.getSelection) {
+			restoreSelection();
+			
+			selection = webEditorDocument.getSelection();
+			containerNode = selection.anchorNode;
+		} else {
+			return;
+		}
+		
+		if (containerNode == null) {
+			webEditorDocument.body.insertBefore(element, webEditorDocument.body.firstChild);
+			moveCursorToElement(element);
+			return;
+		}
+		
+		if (containerNode.nodeType == 3) {
+			// test node head
+			if (webEditorDocument.getSelection().anchorOffset == 0) {
+				containerNode.parentNode.insertBefore(element, containerNode);
+			} else {
+				containerNode.parentNode.insertBefore(element, containerNode.nextSibling);
+			}
+		} else {
+			var childNodes = containerNode.childNodes;
+			
+			if (childNodes.length == 0) {
+				containerNode.appendChild(element);
+			} else if (childNodes.length == 1 && childNodes.item(0).nodeName == "BR") {
+				containerNode.replaceChild(element, childNodes.item(0));
+			} else {
+				containerNode.insertBefore(element, childNodes.item(selection.anchorOffset));
+			}
+		}
+		
+		moveCursorToElement(element);
+	} else if (isTagfree) {
+		if (element.getAttribute("data-reform_hidden_control_flag") == "1") {
+			webEditorDocument.body.insertBefore(element, webEditorDocument.body.firstChild);
+			moveCursorToElement(element);
+			return;
+		}
+		
+		var selection = null;
+		var containerNode = null;
+		
+		if (webEditorDocument.getSelection) {
+			restoreSelection();
+			
+			selection = webEditorDocument.getSelection();
+			containerNode = selection.anchorNode;
+		} else {
+			return;
+		}
+		
+		if (containerNode == null) {
+			webEditorDocument.body.insertBefore(element, webEditorDocument.body.firstChild);
+			moveCursorToElement(element);
+			return;
+		}
+		
+		if (containerNode.nodeType == 3) {
+			// test node head
+			if (webEditorDocument.getSelection().anchorOffset == 0) {
+				containerNode.parentNode.insertBefore(element, containerNode);
+			} else {
+				containerNode.parentNode.insertBefore(element, containerNode.nextSibling);
+			}
+		} else {
+			var childNodes = containerNode.childNodes;
+			
+			if (childNodes.length == 0) {
+				containerNode.appendChild(element);
+			} else if (childNodes.length == 1 && childNodes.item(0).nodeName == "BR") {
+				containerNode.replaceChild(element, childNodes.item(0));
+			} else {
+				containerNode.insertBefore(element, childNodes.item(selection.anchorOffset));
+			}
+		}
+		
+		moveCursorToElement(element);
 	} else {
 		var firstElementChild = element.firstElementChild;
 		if (firstElementChild != null && firstElementChild.getAttribute("data-reform_hidden_control_flag") == "1") {
@@ -795,9 +928,7 @@ function insertElementToDocument(element) {
 		var attValue;
 		var containerNode = null;
 		
-		if (isTagfree) {
-			containerNode = lastSelectedElement;
-		} else if (webEditorDocument.getSelection) {
+		if (webEditorDocument.getSelection) {
 			containerNode = webEditorDocument.getSelection().anchorNode;
 		} else {
 			containerNode = webEditorDocument.selection.createRange().parentElement();

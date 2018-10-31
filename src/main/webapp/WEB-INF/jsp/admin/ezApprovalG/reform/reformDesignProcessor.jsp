@@ -371,9 +371,9 @@
 					var currElem = e.targetNode;
 					lastSelectedElement = currElem;
 					
-					while (/TBODY|TR|TH|TD/.test(currElem.nodeName)) {
-						currElem = currElem.parentElement;
-					}
+// 					while (/TBODY|TR|TH|TD/.test(currElem.nodeName)) {
+// 						currElem = currElem.parentElement;
+// 					}
 					
 					var attValue = currElem.getAttribute("data-reform_flag");
 					
@@ -381,8 +381,12 @@
 					// IE에서는 리폼에서 만든 control일 때 true를 리턴하지 않으면
 					// Namo 에디터가 UI 처리를 직접하기 때문에 true를 반환하도록 한다.
 					if (attValue == "1") {
+						moveCursorToElement(currElem);
+						
 						return true;
 					}
+				} else if (e.type == "mouseup") {
+					saveSelection();
 				}
 				
 				return false;
@@ -391,6 +395,7 @@
 			function CE_OnKeyActive(e) {
 				if (e.type == "keyup") {
 					restoreAfterHTMLSourceEditInNamo();
+					saveSelection();
 					
 					lastSelectedElement = e.targetNode;
 				}
@@ -458,29 +463,15 @@
 				}
 			}
 
-			function checkCellField() {
-				if (parent.Attribute_Write != undefined) {
-					// 태그프리 블록지정시 xfe.getCurrentElement()는 배열로 리턴. 블록지정이 아닐경우는 1개만 리턴
-					var selectE = xfe.getCurrentElement();
-					
-					if (Array.isArray(selectE)) {
-						if (selectE.length > 1) {
-							selectE = selectE[0];
-						}
-					}
-					
-					if (selectE != null && selectE.tagName == "TD")
-						parent.Attribute_Write(GetAttribute(selectE, "id"));
-					else {
-						while (selectE && !selectE.previousElementSibling && !selectE.nextElementSibling) {
-							selectE = selectE.parentNode;
-							if (selectE.tagName == "TD") {
-								parent.Attribute_Write(GetAttribute(selectE, "id"));
-								break;
-							}
-						}
-					}
-				}
+			function keyUp(event) {
+				restoreAfterHTMLSourceEditInNamo();
+				saveSelection();
+				
+				lastSelectedElement = event.target;
+			}
+
+			function mouseUp(event) {
+				saveSelection();
 			}
 
 			function mouseDown(event) {
@@ -492,9 +483,9 @@
 				var attValue = currElem.getAttribute("data-reform_flag");
 				
 				// false 값을 리턴하면 Tagfree 에디터가 마우스 이벤트 처리를 하지 않는다.
-				// IE에서는 리폼에서 만든 control일 때 true를 리턴하지 않으면
-				// Tagfree 에디터가 UI 처리를 직접하기 때문에 false를 반환하도록 한다.
 				if (attValue == "1") {
+					moveCursorToElement(currElem);
+					
 					return false;
 				}
 			}
@@ -750,27 +741,31 @@
 				<c:when test="${editor eq 'DEXT'}">
 					<table id="PreForm" style="vertical-align: top; border-spacing: 0px;">
 						<tr>
-							<td valign="top" style="width: 100%; vertical-align: top;"><script type="text/javascript">
-								// the following line is commented out since it causes an error message(editor's name is not correct. Please check editor's name)
-								// is displayed.
-								//                    DEXT5.config.DialogWindow = parent.window;
-								
-								DEXT5.util.DEXT5_CheckEditorVisible = function() { return 1; }
-								
-								DEXT5.config.RemoveItem = "about";
-								DEXT5.config.StatusBarItem = "design,source";
-								DEXT5.config.ManagerMode = "1";
-								DEXT5.config.zXssRemoveEvents = "onevent";
-								
-								DEXT5.config.userFontFamily = editorInfo.defaultFontFamily;
-								DEXT5.config.Lang = "<spring message code = 'main.t0619' />";
-								DEXT5.config.userFontSize = editorInfo.defaultFontSize;
-								
-								DEXT5.config.Height = <c:out value="${height}"/> + "px";
-								
-								//var editorid = new Dext5editor(dextId);
-								new Dext5editor(dextId);
-							</script></td>
+							<td valign="top" style="width: 100%; vertical-align: top;">
+								<script type="text/javascript">
+									// the following line is commented out since it causes an error message(editor's name is not correct. Please check editor's name)
+									// is displayed.
+									//                    DEXT5.config.DialogWindow = parent.window;
+									
+									DEXT5.util.DEXT5_CheckEditorVisible = function() {
+										return 1;
+									}
+
+									DEXT5.config.RemoveItem = "about";
+									DEXT5.config.StatusBarItem = "design,source";
+									DEXT5.config.ManagerMode = "1";
+									DEXT5.config.zXssRemoveEvents = "onevent";
+									
+									DEXT5.config.userFontFamily = editorInfo.defaultFontFamily;
+									DEXT5.config.Lang = "<spring message code = 'main.t0619' />";
+									DEXT5.config.userFontSize = editorInfo.defaultFontSize;
+									
+									DEXT5.config.Height = <c:out value="${height}"/> + "px";
+									
+									//var editorid = new Dext5editor(dextId);
+									new Dext5editor(dextId);
+								</script>
+							</td>
 							<td id="rootTD"></td>
 						</tr>
 					</table>
@@ -778,80 +773,84 @@
 				<c:when test="${editor eq 'NAMO'}">
 					<table id="PreForm" style="overflow: auto; vertical-align: top; border-spacing: 0px;">
 						<tr>
-							<td valign="top" style="width: 100%; vertical-align: top;"><script type="text/javascript">
-								var CrossEditor2 = new NamoSE("Namo2"); //애경 - 양식작성기의 나모 변수와 같아서 2로 변경
-								var uploadUrl = "${serverUrl}/ezEditor/namoUpload.do?type=";
-								var userLang = "${userlang}";
-								
-								CrossEditor2.params.UploadFileExecutePath = uploadUrl;
-								
-								CrossEditor2.params.Height = parent.document.documentElement.clientHeight - 150;
-								CrossEditor2.params.Width = parent.document.documentElement.clientWidth - 270;
-								
-								if (userLang == "1") {
-									CrossEditor2.params.UserLang = "kor";
-								} else if (userLang == "2") {
-									CrossEditor2.params.UserLang = "enu";
-								} else if (userLang == "3") {
-									CrossEditor2.params.UserLang = "jpn";
-								} else {
-									CrossEditor2.params.UserLang = "chs";
-								}
+							<td valign="top" style="width: 800px; vertical-align: top;">
+								<script type="text/javascript">
+									var CrossEditor2 = new NamoSE("Namo2"); //애경 - 양식작성기의 나모 변수와 같아서 2로 변경
+									var uploadUrl = "${serverUrl}/ezEditor/namoUpload.do?type=";
+									var userLang = "${userlang}";
+									
+									CrossEditor2.params.UploadFileExecutePath = uploadUrl;
+									
+									CrossEditor2.params.Height = "762px";
+// 									CrossEditor2.params.Width = "100%";
+									
+									if (userLang == "1") {
+										CrossEditor2.params.UserLang = "kor";
+									} else if (userLang == "2") {
+										CrossEditor2.params.UserLang = "enu";
+									} else if (userLang == "3") {
+										CrossEditor2.params.UserLang = "jpn";
+									} else {
+										CrossEditor2.params.UserLang = "chs";
+									}
 
-								CrossEditor2.EditorStart();
-							</script></td>
+									CrossEditor2.EditorStart();
+								</script>
+							</td>
 							<td id="rootTD"></td>
 						</tr>
 					</table>
 				</c:when>
 				<c:when test="${editor eq 'TAGFREE'}">
-					<table id="PreForm" style="height:<c:out value="${height}"/>px;">
+					<table id="PreForm" style="overflow: auto; vertical-align: top; border-spacing: 0px;">
 						<tr>
-							<td id="xfe_ex" valign="top" style="width:800px; height:<c:out value="${height}"/>px;"><script type="text/javascript">
-								var userLang = "${userlang}";
-								var uploadFilePath = "/ezEditor/tfxUpload.do?type=";
-								var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?type=";
-								
-								var lang = "";
-								
-								switch (userLang) {
-								case "1":
-									lang = "korean";
-									break;
-								case "2":
-									lang = "english";
-									break;
-								case "3":
-									lang = "japanese";
-									break;
-								case "4":
-									//중국어 간체 (번체는 chinese_t)
-									lang = "chinese_s";
-									break;
-								default:
-									lang = "korean";
-									break;
-								}
+							<td id="xfe_ex" valign="top" style="width:800px;">
+								<script type="text/javascript">
+									var userLang = "${userlang}";
+									var uploadFilePath = "/ezEditor/tfxUpload.do?type=";
+									var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?type=";
+									
+									var lang = "";
+									
+									switch (userLang) {
+									case "1":
+										lang = "korean";
+										break;
+									case "2":
+										lang = "english";
+										break;
+									case "3":
+										lang = "japanese";
+										break;
+									case "4":
+										//중국어 간체 (번체는 chinese_t)
+										lang = "chinese_s";
+										break;
+									default:
+										lang = "korean";
+										break;
+									}
 
-								xfe = new XFE({
-									lang: lang,
-									basePath: "/js/ezEditor/tfxEditor",
-									width: '100%',
-									height: '100%',
-									initFilePath: "/js/ezEditor/tfxEditor/config/reform/env.xml",
-									initFontFamilyMenu: editorInfo.initFontFamilyMenu,
-									initFontFamily: editorInfo.defaultFontFamily,
-									initFontSize: editorInfo.defaultFontSize,
-									uploadFilePath: uploadFilePath,
-									uploadPasteContentsPath: uploadPasteContentsPath,
-									onLoad: initLoad,
-									onMouseUp: checkCellField,
-									onMouseDown: mouseDown,
-									onKeyUp: checkCellField
-								});
-								
-								xfe.render('xfe_ex');
-							</script></td>
+									xfe = new XFE({
+										lang: lang,
+										basePath: "/js/ezEditor/tfxEditor",
+										width: '100%',
+										height: '762px',
+										initFilePath: "/js/ezEditor/tfxEditor/config/reform/env.xml",
+										initFontFamilyMenu: editorInfo.initFontFamilyMenu,
+										initFontFamily: editorInfo.defaultFontFamily,
+										initFontSize: editorInfo.defaultFontSize,
+										uploadFilePath: uploadFilePath,
+										uploadPasteContentsPath: uploadPasteContentsPath,
+										onLoad: initLoad,
+										onMouseUp: mouseUp,
+										onMouseDown: mouseDown,
+										onKeyUp: keyUp
+									});
+									
+									xfe.render('xfe_ex');
+								</script>
+							</td>
 							<td id="rootTD"></td>
 						</tr>
 					</table>
