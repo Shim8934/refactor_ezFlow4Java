@@ -118,12 +118,14 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		String userEditor = "";
 		String noneActiveX = "YES";
+		String flag = request.getParameter("flag");
 		
 		userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useOnlyInnerMail", ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
+		model.addAttribute("flag", flag);
 		
 		logger.debug("mailConfig ended.");
 		return "ezEmail/mailConfig";

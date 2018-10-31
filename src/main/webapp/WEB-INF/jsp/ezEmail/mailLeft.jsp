@@ -593,7 +593,7 @@
 	        
 	        function mail_Config() {
 	        	detailView();
-	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do";
+	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=email";
 	        }
 	        function Address_Menu_Click() {
 	            LoadAddressTree(true);

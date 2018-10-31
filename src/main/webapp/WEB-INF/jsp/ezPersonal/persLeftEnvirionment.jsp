@@ -165,7 +165,10 @@
 				}
 			}
 		    function mail_Config() {
-		        parent.frames["right"].location.href = "/ezEmail/mailConfig.do";
+		        parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=email";
+		    }
+		    function address_Config() {
+		        parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=address";
 		    }
 		    function Pims_Config() {
 		        parent.frames["right"].location.href = "/ezSchedule/scheduleConfigMain.do";
@@ -209,6 +212,7 @@
 			<h2><span id="UserInfo" name="UserInfo" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t172' /></span><ul></ul></h2>
 			<c:if test="${isMailUsed == 'Y'}">
 				<h2><span  id="MailEnv" name="MailEnv" onClick="mail_Config()" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900006' /></span></h2><ul></ul>
+				<h2><span  id="AddressEnv" name="AddressEnv" onClick="address_Config()" style="width:100%;display:inline-block"><spring:message code='ezAddress.hyh001' /></span></h2><ul></ul>
             </c:if>
             <c:if test="${firstScreen_Mail != 'YES' && packageType != 'mail'}">
             	<c:if test="${isScheduleUsed == 'Y'}">

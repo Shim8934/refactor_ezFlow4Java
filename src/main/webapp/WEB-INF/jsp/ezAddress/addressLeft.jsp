@@ -403,7 +403,14 @@
 			// 환경설정 호출
 			function mail_Config() {
 				detailView();
-		 		parent.frames["right"].location.href = "/ezEmail/mailConfig.do";
+		 		parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=address";
+			}
+			
+			// 주소록 트리 이름
+			function send_AddressTitle() {
+				var addressNames = document.getElementsByClassName("node_selected");
+				var addressTitle = addressNames[0].innerText;
+				return addressTitle;
 			}
 	    </script>
 		<style type="text/css">

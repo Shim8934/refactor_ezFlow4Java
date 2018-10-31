@@ -86,8 +86,8 @@
 	                document.getElementById("exportaddress_Cross").style.display = "none";
 	            }
 	            Window_onresize();
+	            addressTitleMapping();
 	            Get_AddressList();
-	
 	        }
 	        
 	        /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
@@ -790,10 +790,15 @@
 	        	}
 	        }
 	        
+	        // 주소록 title mapping 
+	        function addressTitleMapping() {
+	        	var addressTitle = parent.frames["left"].send_AddressTitle();
+				document.getElementById("presentcell").innerHTML = addressTitle;
+	        }
 	    </script>
     </head>
 	<body class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
-		<h1><spring:message code='ezAddress.t231' /><span id="mailBoxInfo"></span></h1>
+		<h1><span id="presentcell"></span><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
 			    <li><span  onClick="new_address()"><spring:message code='ezAddress.t236' /></span></li>
