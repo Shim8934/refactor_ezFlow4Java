@@ -389,7 +389,8 @@
 				JOBID
 			FROM 
 				TBL_USER_JOBMASTER
-			LIMIT 1
+			WHERE
+				ROWNUM <= 1
 		]]>
 	</select>
 	
