@@ -11,8 +11,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hsqldb.types.Type;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -238,8 +240,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalApprovalListPortlet started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String portletId = request.getParameter("portletId");
-		String portletName = request.getParameter("portletName");
+		
+		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("portalApprovalListPortlet ended.");
 		
@@ -255,7 +257,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("type", paramMap.get("type"));
@@ -266,10 +267,19 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
-			Map<String, Object> resultMap = (Map<String, Object>) data.get("resultMap");
-			JSONArray resultList = (JSONArray) resultMap.get("list");
+			
+			JSONParser jp = new JSONParser();
+			data = (JSONObject) jp.parse(data.toJSONString());
+			
+			JSONArray resultList = (JSONArray) data.get("list");
 			
 			model.addAttribute("resultList", resultList);
+			model.addAttribute("imgPath", commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId()));
+			
+			//진행중인 문서일 경우에만 aprLines
+			if (data.containsKey("aprLines")) {
+				model.addAttribute("aprLines", (JSONArray) data.get("aprLines"));
+			}
 		}
 		
 		logger.debug("getApprovalList ended.");

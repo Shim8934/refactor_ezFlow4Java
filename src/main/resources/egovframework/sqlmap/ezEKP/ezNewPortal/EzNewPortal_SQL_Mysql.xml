@@ -1095,6 +1095,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			    DOCINFO.writername,
 			    DOCINFO.writername2,
 			    DOCINFO.href,
+			    DOCINFO.companyid,
 	            LINEINFO.aprmemberdeptid,
 	            LINEINFO.aprmemberdeptname,
 	            LINEINFO.aprmemberid,
@@ -1106,13 +1107,36 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			ON
 				DOCINFO.tenant_id = LINEINFO.tenant_id
 			AND
-				DOCINFO.companyid = LINEINFO.companid
+				DOCINFO.companyid = LINEINFO.companyid
 			AND
 				DOCINFO.docid = LINEINFO.docid
 			WHERE
 				DOCINFO.tenant_id = #tenantId#
 			AND
-				DOCINFO.companyid = #companyId#
+				DOCINFO.companyid IN (SELECT
+										extensionattribute2
+									FROM
+										TBL_DEPTMASTER
+									JOIN
+										TBL_ADDJOBMASTER
+									ON
+										TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+									AND
+										TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid
+									WHERE
+										TBL_ADDJOBMASTER.tenant_id = #tenantId#
+									AND
+										TBL_ADDJOBMASTER.cn = #userId#
+									UNION ALL
+									SELECT
+										physicaldeliveryofficename
+									FROM
+										TBL_USERMASTER
+									WHERE
+										cn = #userId#
+									AND
+										tenant_id = #tenantId#
+									)
 			AND
 				LINEINFO.aprmemberid = #userId#
 			AND
@@ -1128,6 +1152,48 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		]]>
 	</select>
 	
+	<select id="ezNewPortal.getApprovalDoingLines" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		<![CDATA[
+			SELECT 
+		        LINEINFO.aprmembersn AS aprmembersn,
+		        LINEINFO.aprstate AS aprstate,
+		        CODEINFO.name$lang$ AS ext1,
+		        CODEINFO.name2 AS name2,
+		        CODEINFO.name3 AS name3,
+		        CODEINFO.name4 AS name4,
+		        LINEINFO.aprmemberid AS aprmemberid,
+		        LINEINFO.aprmembername AS aprmembername,
+		        LINEINFO.aprmembername2 AS aprmembername2,
+		        USER.extensionattribute2 AS ext2
+		    FROM 
+		        TBL_APRLINEINFO AS LINEINFO
+		    JOIN 
+		        TBL_CODELIST AS CODEINFO
+		    ON 
+		        LINEINFO.tenant_id = CODEINFO.tenant_id
+		    AND 
+		        LINEINFO.companyid = CODEINFO.companyid
+		    AND 
+		        LINEINFO.aprstate = CODEINFO.code2
+		    JOIN
+		        TBL_USERMASTER AS USER
+		    ON
+		        LINEINFO.tenant_id = USER.tenant_id
+		    AND
+		        LINEINFO.companyid = USER.physicaldeliveryofficename
+		    AND
+		        LINEINFO.aprmemberid = USER.cn
+		    WHERE 
+		        LINEINFO.docid = #docId#
+		    AND 
+		        LINEINFO.tenant_id = #tenantId#
+		    AND 
+		        LINEINFO.companyid = #companyId#
+		    AND 
+		        CODEINFO.code1 = #code1#
+		]]>
+	</select>
+	
 	<select id="ezNewPortal.getApprovalRejectList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
 			SELECT
@@ -1139,13 +1205,37 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			    writerid,
 			    writername,
 			    writername2,
-			    href
+			    href,
+			    companyid
 			FROM
 				TBL_APRDOCINFO
 			WHERE
 				tenant_id = #tenantId#
 			AND
-				companyid = #companyId#
+				companyid IN (SELECT
+									extensionattribute2
+								FROM
+									TBL_DEPTMASTER
+								JOIN
+									TBL_ADDJOBMASTER
+								ON
+									TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+								AND
+									TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid
+								WHERE
+									TBL_ADDJOBMASTER.tenant_id = #tenantId#
+								AND
+									TBL_ADDJOBMASTER.cn = #userId#
+								UNION ALL
+								SELECT
+									physicaldeliveryofficename
+								FROM
+									TBL_USERMASTER
+								WHERE
+									cn = #userId#
+								AND
+									tenant_id = #tenantId#
+								)
 			AND
 				writerid = #userId#
 			AND
@@ -1168,7 +1258,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			    DOCINFO.writerid,
 			    DOCINFO.writername,
 			    DOCINFO.writername2,
-			    DOCINFO.href
+			    DOCINFO.href,
+			    DOCINFO.companyid
 			FROM
 				TBL_APRDOCINFO AS DOCINFO
 			JOIN
@@ -1182,7 +1273,30 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			WHERE
 				DOCINFO.tenant_id = #tenantId#
 			AND
-				DOCINFO.companyid = #companyId#
+				DOCINFO.companyid IN (SELECT
+										extensionattribute2
+									FROM
+										TBL_DEPTMASTER
+									JOIN
+										TBL_ADDJOBMASTER
+									ON
+										TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+									AND
+										TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid
+									WHERE
+										TBL_ADDJOBMASTER.tenant_id = #tenantId#
+									AND
+										TBL_ADDJOBMASTER.cn = #userId#
+									UNION ALL
+									SELECT
+										physicaldeliveryofficename
+									FROM
+										TBL_USERMASTER
+									WHERE
+										cn = #userId#
+									AND
+										tenant_id = #tenantId#
+									)
 			AND
 				LINEINFO.aprmemberid = #userId#
 			AND

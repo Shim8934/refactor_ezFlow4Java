@@ -2243,11 +2243,10 @@ public class EzNewPortalGWController {
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
 			String type = request.getParameter("type");
+			int tenantId = info.getTenantId();
+			String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
 
-			Map<String, Object> resultMap = ezNewPortalService.getApprovalList(userId, info.getCompanyID(), info.getTenantId(), info.getOffset(), type);
-
-			JSONObject data = new JSONObject();
-			data.put("resultMap", resultMap);
+			JSONObject data = ezNewPortalService.getApprovalList(userId, info.getCompanyID(), tenantId, info.getOffset(), type, approvalFlag, info.getLang());
 
 			result.put("status", "ok");
 			result.put("code", 0);

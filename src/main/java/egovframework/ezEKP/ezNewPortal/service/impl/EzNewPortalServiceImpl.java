@@ -761,8 +761,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	/**
 	 * 이효진
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Object> getApprovalList(String userId, String companyId, int tenantId, String offset, String type) throws Exception {
+	public JSONObject getApprovalList(String userId, String companyId, int tenantId, String offset, String type, String approvalFlag, String lang) throws Exception {
 		LOGGER.debug("getApprovalList started.");
 		LOGGER.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || type = " + type);
 		
@@ -773,13 +774,28 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("offset",commonUtil.getMinuteUTC(offset));
 		
 		List<ApprGDocListVO> list = null;
-		Map<String, Object> result = new HashMap<String, Object>();
+		JSONObject result = new JSONObject();
 		
 		switch (type) {
 		case "doing":
 			//결재할
 			list = ezNewPortalDAO.getApprovalDoingList(map);
 			result.put("list", list);
+			
+			if (list != null) {
+				if (approvalFlag.equalsIgnoreCase("G")) {
+					map.put("code1", "A04");
+				} else {
+					map.put("code1", "SA04");
+				}
+				
+				map.put("docId", list.get(0).getDocID());
+				map.put("lang", lang.equals("1") ? "" : lang);
+				
+				//결재선 정보
+				list = assembleApprPortletList(map);
+				result.put("aprLines", list);
+			}
 			
 			break;
 		case "reject":
@@ -794,7 +810,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			result.put("list", list);
 			
 			break;
-
 		default:
 			break;
 		}
@@ -802,6 +817,37 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getApprovalList ended.");
 		
 		return result;
+	}
+	
+	private List<ApprGDocListVO> assembleApprPortletList(Map<String, Object> param) throws Exception {
+		LOGGER.debug("assembleApprPortletList started.");
+		
+		List<ApprGDocListVO> ret = new ArrayList<ApprGDocListVO>();
+		int index = 0;
+		boolean isUser = false;
+		
+		Iterator<ApprGDocListVO> it = ezNewPortalDAO.getApprovalDoingLines(param).iterator();
+		while(it.hasNext() && index < 3) {
+			ApprGDocListVO vo = it.next();
+			if (index == 0 && vo.getAprMemberSN().equalsIgnoreCase("1")) {
+				ret.add(vo);
+			} else {
+				if(isUser && ret.size() < 3) {
+					ret.add(vo);
+				}
+				// 현재 유저 결재선 정보와 바로 뒷 사람 정보까지 넣고 while문 종료!
+				if(param.get("userId").toString().equalsIgnoreCase(vo.getAprMemberID())) {
+					ret.add(vo);
+					isUser = true;
+				}
+			}
+			
+			index++;
+		}
+		
+		LOGGER.debug("assembleApprPortletList ended.");
+		
+		return ret;
 	}
 	
 	@Override
