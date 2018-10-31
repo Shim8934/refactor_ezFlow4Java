@@ -363,8 +363,8 @@
 	    		<spring:message code='ezAttitude.t1'/>
 	        </div>
 	        <div class="btn_writeBox_work">
-	        	<p class="btn_write02"><span class="worksT"><spring:message code='ezAttitude.t65'/></span><span class="workT"></span></p> 
-	        	<p class="btn_write01"><span class="worksT"><spring:message code='ezAttitude.t64'/></span><span class="workT">15:20</span></p>
+	        	<p class="btn_write02" id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)"><span class="worksT"><spring:message code='ezAttitude.t65'/></span><span class="workT"></span></p> 
+	        	<p class="btn_write01" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><span class="worksT"><spring:message code='ezAttitude.t64'/></span><span class="workT">15:20</span></p>
 	        </div>
 	        <h2 class="on">
 	        	<span>
