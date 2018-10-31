@@ -59,7 +59,16 @@ function copyToClip() {
 	} 
 	var tempTextArea = document.createElement('textarea'); 
 	tempTextArea.value = content;
+	tempTextArea.setAttribute('readonly', '');                // Make it readonly to be tamper-proof
+	tempTextArea.style.position = 'absolute';                 
+	tempTextArea.style.left = '-9999px';  
+	tempTextArea.style.top = mouseTop;  
 	document.body.appendChild(tempTextArea); 
+	
+	const selected =            
+	document.getSelection().rangeCount > 0        // Check if there is any content selected previously
+	      ? document.getSelection().getRangeAt(0)     // Store selection if found
+	      : false;                              
 	tempTextArea.select(); 
 	document.execCommand('copy', false, null); 
 	document.body.removeChild(tempTextArea); 
