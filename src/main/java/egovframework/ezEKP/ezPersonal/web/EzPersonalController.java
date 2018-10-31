@@ -33,6 +33,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +58,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -128,6 +132,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 	
 	@Autowired
     private LocaleResolver localeResolver;
+	
+	@Autowired
+    private EzEmailUtil ezEmailUtil;
 	
     // dhlee
     @Autowired
@@ -951,6 +958,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String noneActiveX = "YES";
+		String userMobileManaged = "NO";
 		// 모바일 설정
 		//String radBirthType1 = "";
 		//String radBirthType2 = "";
@@ -998,6 +1006,12 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
+		String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", userInfo.getTenantId());
+		String useAllowUserMobileManagement = ezCommonService.getTenantConfig("useAllowUserMobileManagement", userInfo.getTenantId());
+		
+		if (useMobileManagemant.equals("YES") && useAllowUserMobileManagement.equals("YES")) {
+			userMobileManaged = "YES";
+		}
 		
 		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
 			useZipCodeSearch = "YES";
@@ -1028,6 +1042,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 		model.addAttribute("locale", userInfo.getLocale());
+		model.addAttribute("userMobileManaged", userMobileManaged);
 		
 		logger.debug("changePersonInfo ended");
 		return "/ezPersonal/persChangePersonInfo";
@@ -1655,4 +1670,156 @@ public class EzPersonalController extends EgovFileMngUtil {
 		logger.debug("removeShareApproval ended");
 		return "OK";
 	}
+	
+	/**
+	 * 포탈 환경설정 개인정보관리 모바일설정 화면 호출 메서드 - 2018.10.22 (yjks)
+	 */
+	@RequestMapping(value = "/ezPersonal/mobileManaged.do")
+	public String mobileManaged(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
+			Model model, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("mobileManaged started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int tenantId = userInfo.getTenantId();
+		String userId = userInfo.getId();
+		String inputParams = "userId=" + userId;
+		String getResult = "";
+		String returnZero = "0";
+		logger.debug("inputParams=" + inputParams);
+		
+		JSONParser parser = new JSONParser();
+		JSONArray jsonArr = new JSONArray();
+		
+		String requestURL = "/ezTalkGate/getUserMobileDeviceList";
+		
+		getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+		logger.debug("result=" + getResult);
+		
+		JSONObject resultObj = (JSONObject) parser.parse(getResult);
+		
+		if (!resultObj.get("data").equals("false")) {
+			jsonArr = (JSONArray) resultObj.get("data");
+			model.addAttribute("deviceInfo", jsonArr);
+		} else {
+			model.addAttribute("deviceInfo", returnZero);
+		}
+		
+		String adminOrder = ezCommonService.getUserConfigInfo(tenantId, userId, "adminOrderNotUsedMobileLogin");
+		String notUserMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId, "notUseMobileLogin");
+		
+		if (adminOrder.equals("")) {
+			adminOrder = returnZero;
+		}
+		
+		if (notUserMobileLogin.equals("")) {
+			notUserMobileLogin = returnZero;
+		}
+		
+		model.addAttribute("adminOrder", adminOrder);
+		model.addAttribute("notUserMobileLogin", notUserMobileLogin);
+		
+		logger.debug("mobileManaged ended");
+		return "/ezPersonal/persPersonMobileManaged";
+	}
+	
+	/**
+	 * 포탈 환경설정 개인정보관리 모바일설정 전체 사용/사용안함 업데이트 메서드 - 2018.10.22 (yjks)
+	 */
+	@RequestMapping(value = "/ezPersonal/setMobileManaged.do")
+	public void setMobileManaged(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
+			Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		logger.debug("setMobileManaged started");
+		String returnValue = "OK";
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		String notUsed = request.getParameter("pNotUsed");
+		String userId = userInfo.getId();
+		
+		try {
+			// 해당 사용자 전체 사용안함 처리 
+			String notUserMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId, "notUseMobileLogin");
+			logger.debug("notUserMobileLogin=" + notUserMobileLogin + ", notUsed=" + notUsed);
+			
+			// notUsed는 사용자가 사용안함이면 notUseMobileLogin 처리
+			// 관리자의 사용안함이면 현재상태에서 disabled 처리
+			if (notUserMobileLogin.equals("")) {
+				ezCommonService.insertUserConfigInfo(tenantId, userId, "notUseMobileLogin", notUsed);
+			} else {
+				ezCommonService.updateUserConfigInfo(tenantId, userId, "notUseMobileLogin", notUsed);
+			}
+		} catch (Exception e) {
+			returnValue = "ERROR";
+			
+			e.printStackTrace();
+		}
+		
+		response.addHeader("customStatus", returnValue);
+		logger.debug("setMobileManaged ended. " + returnValue);
+	}
+	
+	/**
+	 * 포탈 환경설정 개인정보관리 모바일설정 모바일 기기 삭제 메서드 - 2018.10.22 (yjks)
+	 */
+	@RequestMapping(value = "/ezPersonal/deleteMobileDeviceManaged.do")
+	public void deleteMobileDeviceManaged(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
+			Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		logger.debug("deleteMobileDeviceManaged started");
+		String returnValue = "DELETE";
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String devId = request.getParameter("pDevId");
+		String inputParams = "userId=" + userId + "&devId=" + devId;
+		String getResult = "";
+		logger.debug("inputParams=" + inputParams);
+		
+		try {
+			String requestURL = "/ezTalkGate/deleteUserMobileDevice";
+			
+			getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+			logger.debug("getResult=" + getResult);
+		} catch (Exception e) {
+			returnValue = "ERROR";
+			e.printStackTrace();
+		}
+		
+		response.addHeader("customStatus", returnValue);
+		logger.debug("deleteMobileDeviceManaged ended.");
+	}
+	
+	/**
+	 *  포탈 환경설정 개인정보관리 모바일설정 모바일 기기 사용여부 저장 메서드 - 2018.10.22 (yjks)
+	 */
+	@RequestMapping(value= "/ezPersonal/setMobileDeviceInfo.do")
+	public void setMobileDeviceInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
+			Model model, HttpServletRequest request, Locale locale, HttpServletResponse response) throws Exception {
+		logger.debug("setMobileDeviceInfo started");
+		String returnValue = "OK";
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String devId = request.getParameter("pDevId");
+		String notUsed = request.getParameter("pState");
+		String inputParams = "userId=" + userId + "&devId=" + devId + "&notUsed=" + notUsed;
+		String getResult = "";
+		logger.debug("inputParams=" + inputParams);
+		
+		try {
+			String requestURL = "/ezTalkGate/setMobileDeviceInfo";
+			
+			getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+			logger.debug("getResult=" + getResult);
+		} catch (Exception e) {
+			returnValue = "ERROR";
+			
+			e.printStackTrace();
+		}
+		
+		response.addHeader("customStatus", returnValue);
+		logger.debug("setMobileDeviceInfo ended.");
+	}
+	
 }
