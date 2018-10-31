@@ -19,6 +19,7 @@ var GroupminImg ="/images/ImgIcon/groupmin.gif";
 var GroupSenderImg ="/images/ImgIcon/groupsender.gif";
 var GroupSubjectImg ="/images/ImgIcon/groupsubject.gif";
 var GroupColor = "#666666";
+var pSearchListCount = 0;
 
 
 function HeaderIni(HeaderObject) {
@@ -293,7 +294,7 @@ function MakeListInfoHTML(ConentObject) {
                             break;
                         case "receiveInfo":
                         	_TDColum.style.width = "18px";
-                        	if (recipientsLen > 2 || p_Group == "yes") {
+                        	if (recipientsLen >= 2 || p_Group == "yes") {
                         		_TDColum.innerHTML = "<span style='cursor: pointer'><IMG src='/images/receivedCheck_closed.png'></span>";
                         		_TDColum.setAttribute("viewSelect", "false");
                         		_TDColum.onclick = function () { viewReceivers(this); };
@@ -443,26 +444,53 @@ function MakeListInfoHTML(ConentObject) {
                     	_TR.lastChild.innerHTML = "";
                     	
                     	// 2018-10-05 메일리스트에 보낸사람 국기표시 박예연
+                    	// 현재 국가도 표시할지 여부 : useShowSystemCountry - YES : 현재 상태 한국도 나오는 상태 , NO 현재국가는 안나오는 상태
                     	if (useCountryIP == "YES" && g_foldertype == "" && p_countryCode != "") {
-                    		var _img = document.createElement("img");
-                    		_img.style.width = "18px";
-                    		_img.style.height = "18px";
-                    		_img.style.verticalAlign = "bottom";
-                    		_img.style.padding = "0px 0px 1px 0px";
-                    		
-                			if (p_countryCode == "unknown") {
-                				p_countryCode = "qm";
-                			}
-                			
-                			_img.src = "/images/countryIcon/" + p_countryCode + ".png";
-                			_TR.lastChild.appendChild(_img);
-                    	}
+	                    			
+            				// 본인국가 표시 
+            				if (useShowSystemCountry == "YES") {
+            					
+            					var _img = document.createElement("img");
+            					_img.style.width = "18px";
+            					_img.style.height = "18px";
+            					_img.style.verticalAlign = "bottom";
+            					_img.style.padding = "0px 0px 1px 0px";
+            					
+            					if (p_countryCode == "unknown") {
+            						p_countryCode = "qm";
+            					}
+            					
+            					_img.src = "/images/countryIcon/" + p_countryCode + ".png";
+            					_TR.lastChild.appendChild(_img);
+            				} else {
+            					// 본인국가 표시 안함 
+            					if ( p_countryCode != systemCountryCode.toLowerCase() ) {
+            						var _img = document.createElement("img");
+            						_img.style.width = "18px";
+            						_img.style.height = "18px";
+            						_img.style.verticalAlign = "bottom";
+            						_img.style.padding = "0px 0px 1px 0px";
+            						
+            						if (p_countryCode == "unknown") {
+            							p_countryCode = "qm";
+            						}
+            						
+            						_img.src = "/images/countryIcon/" + p_countryCode + ".png";
+            						_TR.lastChild.appendChild(_img);
+            					}
+            				}
+                    	} 
                     	
                     	_TR.lastChild.appendChild(_TDColumSpan);
                     }
                 }
                 GetListInfo_ContentObject.appendChild(_TR);
             }
+            
+            if (searchMode) {
+            	pSearchListCount = p_TotalCnt.split(";")[4]
+            }
+            
             if(XmlRows.length == "0"){
                 var _TR = document.createElement("TR");
             	var _TDColum = document.createElement("TD");
@@ -950,9 +978,9 @@ function GetListIevent_ongetxmlcomplete() {
             isScrollMailList();
             
             HiddenMailProgress();
-            if (typeof (searchMode) != "undefined") {
+           /* if (typeof (searchMode) != "undefined") {
             	searchMode = false;
-            }
+            }*/
             GetList_HTTP = null;
             
             /* 수아 재은 수정 (선택된 input href) */
@@ -1092,6 +1120,13 @@ function mf_updatePageInfoGroupList(szRangeHeader) {
 }
 
 function MailListRefreshByTimeout() {
+	
+	if (typeof (searchMode) != "undefined" && typeof (importExportMode) != "undefined") {
+		if (searchMode || importExportMode) {
+			return;
+		}
+	}
+	
 	setTimeout(function() {
 		MailListRefresh();
 	}, 500);
@@ -1099,11 +1134,6 @@ function MailListRefreshByTimeout() {
 
 function MailListRefresh() {
 	ContextMenuHidden();
-	if (typeof (searchMode) != "undefined" && typeof (importExportMode) != "undefined") {
-		if (searchMode || importExportMode) {
-			return;
-		}
-	}
 	
 	parent.frames["left"].detailView();
     
@@ -1215,7 +1245,13 @@ function makePageSelPage() {
     PagingHTML += strtext;
     var totalPage = parseInt(document.getElementById("MailList").getAttribute("MaxPage"));
     var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
-    document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang255 + "<span id='folderUnreadCount' style='color:#017BEC;'> " + pFolderUnReadCount + " </span>" + strLang257 + " / " + strLang256 + "<span id='folderTotalCount' style='color:#017BEC;'> " + pFolderTotalCount + " </span>" + strLang257 + "</b>]";
+    
+    if (searchMode) {
+    	document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang156 + "<span id='pSearchListCount' style='color:#017BEC;'> " + pSearchListCount + " </span>" + strLang157 + "]";
+    } else {
+    	document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang255 + "<span id='folderUnreadCount' style='color:#017BEC;'> " + pFolderUnReadCount + " </span>" + strLang257 + " / " + strLang256 + "<span id='folderTotalCount' style='color:#017BEC;'> " + pFolderTotalCount + " </span>" + strLang257 + "</b>]";
+    }
+    
     if (totalPage > 1 && pageNum != 1) {
         PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\"></span>";
     }

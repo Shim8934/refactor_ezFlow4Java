@@ -71,7 +71,7 @@
             listview.SetID("lvJobTitleList");
             listview.SetMulSelectable(false);
             listview.SetRowOnClick("JobTitle_UserList");
-            listview.SetSelectFlag(true);
+            listview.SetSelectFlag(false);
             listview.SetRowOnDblClick("JobTitleView");
             listview.SetHeightFree(true);
             listview.DataSource(headerData);
@@ -83,74 +83,96 @@
 			var companyID = $("#ListCompany option:selected").val();
 			var companyNM = $("#ListCompany option:selected").text();
 			var type = Tab1_SelectID;
-			var cn;
+// 			var cn;
+			var jobID;
 			
-			/* 직위관리 TYPE */
+			var jobList = new ListView();
+			
 			if (type == "001") {
-				var jobTitleList = new ListView();
-				jobTitleList.LoadFromID("lvJobTitleList");
-				var oArrRows = jobTitleList.GetSelectedRows();
-				/* 수정, 삭제의 경우 선택된 Row가 있나 체크후 CN 추출 */
-				if (mode == "Mod" || mode == "Del") {
-					if (oArrRows == 0) {
-						alert("<spring:message code = 'ezOrgan.csj07'/>");
-						return;
-					} else {
-						cn = oArrRows[0].getAttribute("DATA1");
-					}
-				}
-				/* 추가, 수정의 경우 팝업창 호출 */
-				if (mode == "Add" || mode == "Mod") {
-					var url = "/admin/ezOrgan/jobTitlePopupUI.do?type=" + type + "&mode=" + mode + "&companyID=" + companyID;
-					/* 수정의 경우 CN 추가 GET 파라미터 전송 */
-					if (mode == "Mod") {
-						url += "&cn=" + encodeURIComponent(cn);
-					}
-					
-					var args = new Array();
-					args[0] = companyNM;
-					
-					titleInfo_dialogArguments[0] = args;
-				    titleInfo_dialogArguments[1] = titleInfo_Complete;
-				    
-				    var OpenWin = window.open(url, "jobTitlePopupUI", GetOpenWindowfeature(460, 320));
-					try { OpenWin.focus(); } catch (e) { }
-				/* 삭제의 경우 직위가 사용중인지 확인 후, 삭제처리 */
-				} else if (mode == "Del") {
-					if (!checkTitleUserCnt(cn)) {
-						alert("<spring:message code = 'ezOrgan.csj13'/>");
-						return;
-					}
-					
-					if (confirm("<spring:message code = 'ezOrgan.pjg01'/>")) {
-						$.ajax({
-			            	type : "POST",
-			            	dataType: "text",
-			            	url : "/admin/ezOrgan/jobTitleDelete.do",
-			            	async : false,
-			            	data : 
-			            	{
-			            		cn : cn,
-			            		type : type,
-			            		companyID : companyID
-			            	},
-			            	success : function (result) {
-			            		if (result == "TRUE") {
-			            			alert("<spring:message code = 'ezBoard.t54'/>");
-			            		} else {
-				            		alert("<spring:message code = 'ezBoard.t55'/>");
-			            		}
-			            		JobTitle_List();
-			            		JobTitle_UserList();
-			            	},
-			            	error : function(e) {
-			            		alert("<spring:message code = 'ezBoard.t55'/>");
-			            	}
-			            });
-					}
-				}
-			/* 직책관리 TYPE(미구현) */
+				jobList.LoadFromID("lvJobTitleList");
 			} else if (type == "002") {
+				jobList.LoadFromID("lvJobPositionList");
+			}
+			
+			var oArrRows = jobList.GetSelectedRows();
+			
+			/* 수정, 삭제의 경우 선택된 Row가 있나 체크후 CN 추출 */
+			if (mode == "Mod" || mode == "Del") {
+				if (oArrRows == 0) {
+					if (type == "001") {
+						alert("<spring:message code = 'ezOrgan.csj07'/>");
+					} else {
+						alert("<spring:message code = 'ezOrgan.csj18'/>");
+					}
+					return;
+				} else {
+// 					cn = oArrRows[0].getAttribute("DATA1");
+					jobID = oArrRows[0].getAttribute("DATA1");
+				}
+			}
+			/* 추가, 수정의 경우 팝업창 호출 */
+			if (mode == "Add" || mode == "Mod") {
+				var url = "/admin/ezOrgan/jobTitlePopupUI.do?type=" + type + "&mode=" + mode + "&companyID=" + companyID;
+				/* 수정의 경우 CN 추가 GET 파라미터 전송 */
+// 				if (mode == "Mod") {
+// 					url += "&cn=" + encodeURIComponent(cn);
+// 				}
+				
+				var args = new Array();
+				args[0] = companyNM;
+// 				args[1] = cn;
+				args[1] = jobID;
+				
+				titleInfo_dialogArguments[0] = args;
+			    titleInfo_dialogArguments[1] = titleInfo_Complete;
+			    
+			    var OpenWin = window.open(url, "jobTitlePopupUI", GetOpenWindowfeature(460, 290));
+				try { OpenWin.focus(); } catch (e) { }
+			/* 삭제의 경우 직위가 사용중인지 확인 후, 삭제처리 */
+			} else if (mode == "Del") {
+// 				if (!checkTitleUserCnt(cn)) {
+				if (!checkTitleUserCnt(jobID)) {
+					if (type == "001") {
+						alert("<spring:message code = 'ezOrgan.csj13'/>");
+					} else if (type == "002") {
+						alert("<spring:message code = 'ezOrgan.csj22'/>");
+					}
+					return;
+				}
+				
+				if (confirm("<spring:message code = 'ezOrgan.pjg01'/>")) {
+					$.ajax({
+		            	type : "POST",
+		            	dataType: "text",
+		            	url : "/admin/ezOrgan/jobTitleDelete.do",
+		            	async : false,
+		            	data : 
+		            	{
+// 		            		cn : cn,
+		            		jobID : jobID,
+		            		type : type,
+		            		companyID : companyID
+		            	},
+		            	success : function (result) {
+		            		if (result == "TRUE") {
+		            			alert("<spring:message code = 'ezBoard.t54'/>");
+		            		} else {
+			            		alert("<spring:message code = 'ezBoard.t55'/>");
+		            		}
+		            		
+		            		if (type == "001") {
+		    		        	JobTitle_List();
+		    		        	JobTitle_UserList();
+		    	        	} else {
+		    		        	JobPosition_List();
+		    		        	JobPosition_UserList();
+		    	        	}
+		            	},
+		            	error : function(e) {
+		            		alert("<spring:message code = 'ezBoard.t55'/>");
+		            	}
+		            });
+				}
 			}
 		}
 		/* 직위관리 팝업 return Complete Method */
@@ -165,8 +187,13 @@
 	        	} else {
 	        		alert("<spring:message code = 'main.sp12'/>");
 	        	}
-	        	JobTitle_List();
-	        	JobTitle_UserList();
+	        	if (rtnVal[3] == "001") {
+		        	JobTitle_List();
+		        	JobTitle_UserList();
+	        	} else {
+		        	JobPosition_List();
+		        	JobPosition_UserList();
+	        	}
 	        }
 	    }
 		/* 직위리스트 Row더블클릭 Action */
@@ -190,7 +217,8 @@
 	            	async : false,
 	            	data : 
 	            	{
-	            		cn : oArrRows[0].getAttribute("DATA1"),
+// 	            		cn : oArrRows[0].getAttribute("DATA1"),
+	            		jobID : oArrRows[0].getAttribute("DATA1"),
 	            		type : Tab1_SelectID,
 	            		companyID : $("#ListCompany option:selected").val()
 	            	},
@@ -223,7 +251,12 @@
 		/* 유저리스트 Row더블클릭 Action */
 		function info_user() {
 	        var listview = new ListView();
-	        listview.LoadFromID("lvJobTitleUserList");
+	        
+	        if (Tab1_SelectID == "001") {
+		        listview.LoadFromID("lvJobTitleUserList");
+	        } else {
+		        listview.LoadFromID("lvJobPositionUserList");
+	        }
 	        
 	        var oArrRows = listview.GetSelectedRows();
 	        if (oArrRows != 0) {
@@ -246,11 +279,14 @@
 	        if (typeof (rtnValue) != "undefined") {
 	        	alert("<spring:message code='ezOrgan.t11' />");
 	        }
-	        
-	        JobTitle_UserList();
+	        if (Tab1_SelectID == "001") {
+		        JobTitle_UserList();
+	        } else if (Tab1_SelectID == "002") {
+	        	JobPosition_UserList();
+	        }
 	    }
 		/* 삭제 시, 직위를 사용중인 유저 유무를 체크하는 Method */
-		function checkTitleUserCnt(cn) {
+		function checkTitleUserCnt(jobID) {
 			var rtnFlag = true;
 			$.ajax({
             	type : "POST",
@@ -259,7 +295,8 @@
             	async : false,
             	data : 
             	{
-            		cn : cn,
+//             		cn : cn,
+            		jobID : jobID,
             		type : Tab1_SelectID,
             		companyID : $("#ListCompany option:selected").val()
             	},
@@ -274,10 +311,98 @@
 			return rtnFlag;
 		}
 		
-		/* 직책관리를 위한 메소드(미구현) */
+		/* 직책관리 리스트 호출 */
 		function JobPosition_List() {
+			var xmldom;
+			var companyID = $("#ListCompany option:selected").val();
+			var type = Tab1_SelectID;
+			
+			$.ajax({
+            	type : "POST",
+            	dataType: "text",
+            	url : "/admin/ezOrgan/jobTitleListView.do",
+            	async : false,
+            	data : 
+            	{
+            		type : type,
+            		companyID : companyID
+            	},
+            	success : function (result) {
+            		xmldom = loadXMLString(result);
+            	},
+            	error : function(e) {
+            	}
+            });
+			
+			var headerData = createXmlDom();
+            headerData = loadXMLString(listviewheader2.innerHTML.toUpperCase());
+			
+            var oRows = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
+		    if (oRows.length > 0) {
+	            var xmlRtn = xmldom.documentElement.getElementsByTagName("ROWS")[0];
+	            var Node = headerData.importNode(xmlRtn, true);
+	            headerData.documentElement.appendChild(Node);
+		    }
+            
+            document.getElementById("JobListView").innerHTML = "";
+            
+            var listview = new ListView();
+            listview.SetID("lvJobPositionList");
+            listview.SetMulSelectable(false);
+            listview.SetRowOnClick("JobPosition_UserList");
+            listview.SetSelectFlag(false);
+            listview.SetRowOnDblClick("JobTitleView");
+            listview.SetHeightFree(true);
+            listview.DataSource(headerData);
+            listview.DataBind("JobListView");
 		}
+		/* 직책을 사용중인 유저리스트 호출 Method */
 		function JobPosition_UserList() {
+			var xmldom, xmlRtn, Node;
+			var headerData = createXmlDom();
+            headerData = loadXMLString(userlistviewheader2.innerHTML.toUpperCase());
+			
+			var jobList = new ListView();
+			jobList.LoadFromID("lvJobPositionList");
+			var oArrRows = jobList.GetSelectedRows();
+			if (oArrRows != 0) {
+				$.ajax({
+	            	type : "POST",
+	            	dataType: "text",
+	            	url : "/admin/ezOrgan/jobTitleUserListView.do",
+	            	async : false,
+	            	data : 
+	            	{
+// 	            		cn : oArrRows[0].getAttribute("DATA1"),
+ 	            		jobID : oArrRows[0].getAttribute("DATA1"),
+	            		type : Tab1_SelectID,
+	            		companyID : $("#ListCompany option:selected").val()
+	            	},
+	            	success : function (result) {
+	            		xmldom = loadXMLString(result);
+	            	},
+	            	error : function(e) {
+	            	}
+	            });
+				
+				var oRows = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
+			    if (oRows.length > 0) {
+					xmlRtn = xmldom.documentElement.getElementsByTagName("ROWS")[0];
+		            Node = headerData.importNode(xmlRtn, true);
+		            headerData.documentElement.appendChild(Node);
+			    }
+			}
+			
+			document.getElementById("JobUserListView").innerHTML = "";
+            
+            var listview = new ListView();
+            listview.SetID("lvJobPositionUserList");
+            listview.SetMulSelectable(false);
+            listview.SetSelectFlag(false);
+            listview.SetRowOnDblClick("info_user");
+            listview.SetHeightFree(true);
+            listview.DataSource(headerData);
+            listview.DataBind("JobUserListView");
 		}
 		
 		/* Tab관련 메소드들 ↓ */
@@ -362,7 +487,7 @@
 	<div class="portlet_tabpart01" style="width: 1160px;">
 		<div class="portlet_tabpart01_top" id="tab1">
 			<p><span id="001"><spring:message code='ezOrgan.csj02' /></span></p>
-			<!-- <p><span id="002">직책관리</span></p> -->
+			<p><span id="002"><spring:message code='ezOrgan.csj15' /></span></p>
 	    </div>
 	</div>
 	<script type="text/javascript">
@@ -389,11 +514,11 @@
 <xml id="listviewheader" style="display:none">
 	<LISTVIEWDATA>
 	   	<HEADERS>
-     		<HEADER>
+     		<%-- <HEADER>
        		<NAME><spring:message code='ezOrgan.csj03' /></NAME>
 			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
-			</HEADER>
+			</HEADER> --%>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj04' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
 			<WIDTH>100</WIDTH>
@@ -432,6 +557,63 @@
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t69' /></NAME>
+			<WIDTH>100</WIDTH>
+			<STYLE>border-top:0px;</STYLE>
+			</HEADER>
+			<HEADER>
+			<NAME><spring:message code='ezOrgan.t285' /></NAME>
+			<WIDTH>100</WIDTH>
+			<STYLE>border-top:0px;</STYLE>
+			</HEADER>
+    	</HEADERS>
+  	</LISTVIEWDATA>
+</xml>
+<xml id="listviewheader2" style="display:none">
+	<LISTVIEWDATA>
+	   	<HEADERS>
+     		<%-- <HEADER>
+       		<NAME><spring:message code='ezOrgan.csj16' /></NAME>
+			<WIDTH>100</WIDTH>
+			<STYLE>border-top:0px;</STYLE>
+			</HEADER> --%>
+			<HEADER>
+			<NAME><spring:message code='ezOrgan.csj17' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
+			<WIDTH>100</WIDTH>
+			<STYLE>border-top:0px;</STYLE>
+			</HEADER>
+			<HEADER>
+			<NAME><spring:message code='ezOrgan.csj17' />(<spring:message code='ezApprovalG.t1765'/>)</NAME>
+			<WIDTH>100</WIDTH>
+			<STYLE>border-top:0px;</STYLE>
+			</HEADER>
+			<HEADER>
+			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
+			<WIDTH>50</WIDTH>
+			<STYLE>border-top:0px;</STYLE>
+			</HEADER>
+			<HEADER>
+			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
+			<WIDTH>50</WIDTH>
+			<STYLE>border-top:0px;</STYLE>
+			</HEADER>
+    	</HEADERS>
+  	</LISTVIEWDATA>
+</xml>
+<xml id="userlistviewheader2" style="display:none">
+	<LISTVIEWDATA>
+	   	<HEADERS>
+     		<HEADER>
+       		<NAME><spring:message code='ezOrgan.t218' /></NAME>
+			<WIDTH>100</WIDTH>
+			<STYLE>border-top:0px;</STYLE>
+			</HEADER>
+			<HEADER>
+			<NAME><spring:message code='ezOrgan.t67' /></NAME>
+			<WIDTH>100</WIDTH>
+			<STYLE>border-top:0px;</STYLE>
+			</HEADER>
+			<HEADER>
+			<NAME><spring:message code='ezOrgan.t1500' /></NAME>
 			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>

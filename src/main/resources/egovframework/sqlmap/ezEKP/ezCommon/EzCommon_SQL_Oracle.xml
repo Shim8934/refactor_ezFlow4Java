@@ -411,5 +411,33 @@
 		)
 		
 	</statement>
+		
+	<select id="EzCommonDAO.checkTblUserJobMaster" resultClass="String">
+		<![CDATA[
+			SELECT 
+				JOBID
+			FROM 
+				TBL_USER_JOBMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserJobMaster"> 
+		CREATE TABLE "TBL_USER_JOBMASTER" 
+		(	
+		"JOBID" NUMBER(10,0) NOT NULL ENABLE,
+		"TYPE" NVARCHAR2(50) NOT NULL ENABLE, 
+		"CN" NVARCHAR2(100), 
+		"DISPLAYNAME" NVARCHAR2(200), 
+		"DISPLAYNAME2" NVARCHAR2(200), 
+		"USEFLAG" NVARCHAR2(2), 
+		"SORT" NUMBER(10,0), 
+		"CREATEDATE" DATE, 
+		"COMPANYID" VARCHAR2(40 BYTE) NOT NULL ENABLE, 
+		"TENANT_ID" NUMBER(5,0) DEFAULT 0 NOT NULL ENABLE, 
+		 CONSTRAINT "TBL_USER_JOBMASTER_PK" PRIMARY KEY ("JOBID", "TYPE", "COMPANYID", "TENANT_ID")
+		 )
+	</statement>
 	
 </sqlMap>

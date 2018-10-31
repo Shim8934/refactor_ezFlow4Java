@@ -1344,4 +1344,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createJMochaMailSignatureTemplate() throws Exception {
 		ezCommonDAO.createJmochaMailSignatureTemplate();
 	}
+	
+	public void createJobMasterTable() throws Exception {
+		ezCommonDAO.createJobMasterTable();
+	}
 }

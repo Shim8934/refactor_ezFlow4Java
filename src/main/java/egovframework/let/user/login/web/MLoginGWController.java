@@ -140,6 +140,48 @@ public class MLoginGWController {
     			
     			return result;
     		} else {
+    			// 모바일 사용 설정 확인 
+    			String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", tenantId);
+    			
+    			if (useMobileManagemant.equals("YES")) {
+    				String notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, uid, "notUseMobileLogin");
+    				String adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, uid, "adminOrderNotUsedMobileLogin");
+    				
+    				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
+    					LOGGER.debug("cannot use mobile login. userId=" + uid);
+    					
+    					result.put("status", "error");
+    					result.put("code", "6");			
+    					result.put("data", "cannot use mobile login.");
+    					
+    					return result;
+    				} else {
+    					String deviceId = request.getParameter("deviceID") == null ? "" : request.getParameter("deviceID");
+    					
+    					if (!deviceId.equals("")) {
+    						String inputParams = "userId=" + uid + "&deviceId=" + deviceId;
+    						LOGGER.debug("userId=" + uid + ",deviceId=" + deviceId);
+    						
+    						String requestURL = "/ezTalkGate/getUserMobileDeviceInfo";
+    						String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+    						LOGGER.debug("getResult=" + getResult);
+    						
+    						JSONParser parser = new JSONParser();
+    						JSONObject resultObj = (JSONObject) parser.parse(getResult);
+    						
+    						if (resultObj.get("data").equals("1")) {
+    							LOGGER.debug("this device cannot use. userId=" + uid);
+    							
+    							result.put("status", "error");
+    							result.put("code", "6");			
+    							result.put("data", "this device cannot use.");
+    							
+    							return result;
+    						}
+    					}
+    				}
+    			}
+    			
     			// 사용자 ID를 사용해 로그인하는 경우
     			if (uid.equals(resultVO.getId())) {
     				loginVO.setId(uid);

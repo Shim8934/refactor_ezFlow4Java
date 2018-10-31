@@ -531,6 +531,9 @@ public class EzWebFolderGWController_y {
 			LOGGER.debug("-------folderUpp" + fldDetail.getFolderUpper());
 			
 			data.put("folderUpp", fldDetail.getFolderUpper());
+			data.put("createDate", fldDetail.getCreateDate());
+			data.put("updateDate", fldDetail.getUpdateDate());
+			data.put("folderName", fldDetail.getFolderName1());
 			data.put("folderPath", folderPath2);
 			data.put("originalPath", originalPath);
 			data.put("fileList", fileList);
@@ -609,7 +612,7 @@ public class EzWebFolderGWController_y {
 			LOGGER.debug("usrListCnt : " + usrListCnt + " ||  tenantId : " +tenantId + " || userId : " + userId);
 			
 			int listCount = request.getParameter("listCount") 	!= null ? Integer.parseInt(request.getParameter("listCount")) 	: usrListCnt;
-			if ( Integer.parseInt(request.getParameter("listCount")) == 0 ) {
+			if (listCount == 0) {
 				listCount = usrListCnt ;
 			}
 			int pStart = request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;

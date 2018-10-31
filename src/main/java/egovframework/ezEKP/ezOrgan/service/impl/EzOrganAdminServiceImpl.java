@@ -875,6 +875,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		// 코린도에서 extensionAttribute11 필드를 한국인, 현지인 구분에 사용하여 추가함
 		map.put("v_EXTATTR11", vo.getExtensionAttribute11() != null ? vo.getExtensionAttribute11() : "");
+
+		// 직위/직책 CODE( 7=직위, 8=직책 )
+		map.put("v_EXTATTR7", vo.getExtensionAttribute7() != null ? vo.getExtensionAttribute7() : "");
+		map.put("v_EXTATTR8", vo.getExtensionAttribute8() != null ? vo.getExtensionAttribute8() : "");
 		
 		map.put("v_LDAPPATH", "");
 		map.put("v_BIRTH", vo.getBirth() != null ? vo.getBirth() : "");		
@@ -1757,12 +1761,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			
 			for (int i = 0; i < jobList.size(); i++) {
 				rtnVal.append("<ROW>");
-				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getCn() + "]]></VALUE>");
-				rtnVal.append("<DATA1><![CDATA[" + jobList.get(i).getCn() + "]]></DATA1>");
-				rtnVal.append("<DATA2>" + jobList.get(i).getType() + "</DATA2>");
-				rtnVal.append("<DATA3>" + jobList.get(i).getSort() + "</DATA3>");
+				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName() + "]]></VALUE>");
+				rtnVal.append("<DATA1>" + jobList.get(i).getJobID() + "</DATA1>");
+				rtnVal.append("<DATA2>" + jobList.get(i).getType()  + "</DATA2>");
+				rtnVal.append("<DATA3>" + jobList.get(i).getSort()  + "</DATA3>");
 				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4></CELL>");
-				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName() + "]]></VALUE></CELL>");
 				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></VALUE></CELL>");
 				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getUseFlag() + "</VALUE></CELL>");
 				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getSort() + "</VALUE></CELL>");
@@ -1780,12 +1783,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String getTitleInfo(String type, String cn, String companyID, int tenantID) throws Exception {
+	public String getTitleInfo(String type, String jobID, String companyID, int tenantID) throws Exception {
 		logger.debug("getTitleInfo started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TYPE", type);
-		map.put("v_CN", cn);
+		map.put("v_JOBID", jobID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 
@@ -1794,8 +1797,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		StringBuffer rtnVal = new StringBuffer();
 		if (vo != null) {
 			rtnVal.append("<DATA>");
+			rtnVal.append("<JOBID>" + vo.getJobID() + "</JOBID>");
 			rtnVal.append("<TYPE>" + vo.getType() + "</TYPE>");
-			rtnVal.append("<CN><![CDATA[" + vo.getCn() + "]]></CN>");
 			rtnVal.append("<DISPLAYNAME><![CDATA[" + vo.getDisplayName() + "]]></DISPLAYNAME>");
 			rtnVal.append("<DISPLAYNAME2><![CDATA[" + vo.getDisplayName2() + "]]></DISPLAYNAME2>");
 			rtnVal.append("<USEFLAG>" + vo.getUseFlag() + "</USEFLAG>");
@@ -1811,14 +1814,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public String updateTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception {
+	public String updateTitle(String type, String jobID, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception {
 		logger.debug("updateTitle started.");
 		
 		String rtnVal = "";
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TYPE", type);
-		map.put("v_CN", cn);
+		map.put("v_JOBID", jobID);
 		map.put("v_DISPLAYNAME", displayName);
 		map.put("v_DISPLAYNAME2", displayName2);
 		map.put("v_USEFLAG", useFlag);
@@ -1840,14 +1843,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String deleteTitle(String type, String cn, String companyID, int tenantID) throws Exception {
+	public String deleteTitle(String type, String jobID, String companyID, int tenantID) throws Exception {
 		logger.debug("deleteTitle started.");
 		
 		String rtnVal = "";
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TYPE", type);
-		map.put("v_CN", cn);
+		map.put("v_JOBID", jobID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
@@ -1864,14 +1867,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String getTitleUserList(String type, String cn, String primary, String companyID, int tenantID) throws Exception {
+	public String getTitleUserList(String type, String jobID, String primary, String companyID, int tenantID) throws Exception {
 		logger.debug("getTitleUserList started.");
 
 		StringBuffer rtnVal = new StringBuffer();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TYPE", type);
-		map.put("v_CN", cn);
+		map.put("v_JOBID", jobID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
@@ -1923,11 +1926,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public int getTitleUserListCnt(String type, String cn, String companyID, int tenantID) throws Exception {
+	public int getTitleUserListCnt(String type, String jobID, String companyID, int tenantID) throws Exception {
 		logger.debug("getTitleUserListCnt started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TYPE", type);
-		map.put("v_CN", cn);
+		map.put("v_JOBID", jobID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
@@ -1938,11 +1941,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public int getTitleCnt(String type, String cn, String companyID, int tenantID) throws Exception {
+	public int getTitleCnt(String type, String jobID, String companyID, int tenantID) throws Exception {
 		logger.debug("getTitleCnt started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TYPE", type);
-		map.put("v_CN", cn);
+		map.put("v_JOBID", jobID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
