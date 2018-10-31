@@ -28,6 +28,7 @@
 	    	var useAddressOpenAPI = "${useAddressOpenAPI}"
 	    	var useBizmekaSpambox = "${useBizmekaSpambox}";
 	    	var locale = "<c:out value='${locale}'/>";
+	    	var companyID;
 	    	
 			$(document).ready(function(){
 				var toYear = new Date().getFullYear();
@@ -86,6 +87,16 @@
 	            } catch (e) {
 	                RetValue = window.dialogArguments;
 	            }
+	            
+	            if (RetValue[4] != "") {
+	            	if (RetValue[5] != "" && RetValue[5] == "addJob") {
+	            		companyID = getUserCompanyID(RetValue[2]);
+	            	} else {
+			        	companyID = RetValue[4];
+	            	}
+			        getTitleOption();
+			        getPositionOption();
+		        }
 
 	            /* dhlee: Safari에서 영문 입력이 되지 않아 제거함.
 		        try {
@@ -121,6 +132,7 @@
 		            DeptID = RetValue[0];	
 		            document.getElementById('btn_PhotoAdd').style.display = "none";
 		            document.getElementById('btn_PhotoDel').style.display = "none";
+		            document.getElementById("cloud-message").style.display = "";
 		        }else{
 		            OrgUserID = RetValue[2];
 		            document.getElementById("DeptName").value = RetValue[1];
@@ -141,13 +153,13 @@
 						dataType : "text",
 						url : "/admin/ezOrgan/getEntryInfo.do",
 						async : false,
-						data : {cn : document.getElementById("UserID").value, prop : "description;extensionAttribute10;extensionAttribute14;displayName;title;extensionAttribute15;telephoneNumber;homePhone;facsimileTelephoneNumber;mobile;postalCode;streetAddress;mail;extensionAttribute1;extensionAttribute2;extensionAttribute6;birth;birthType", pMode : "user" },
+						data : {cn : document.getElementById("UserID").value, prop : "description;extensionAttribute10;extensionAttribute14;displayName;title;extensionAttribute15;telephoneNumber;homePhone;facsimileTelephoneNumber;mobile;postalCode;streetAddress;mail;extensionAttribute1;extensionAttribute2;extensionAttribute6;birth;birthType;extensionAttribute7;extensionAttribute8", pMode : "user" },
 						success : function(result){
 							xmlDom = loadXMLString(result);
 							document.getElementById("UserName").value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME1").trim();
 			                document.getElementById("UserName2").value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME2").trim();
-			                document.getElementById("JobTitle").value = SelectSingleNodeValueNew(xmlDom, "DATA/TITLE1").trim();
-			                document.getElementById("JobTitle2").value = SelectSingleNodeValueNew(xmlDom, "DATA/TITLE2").trim();
+// 			                document.getElementById("JobTitle").value = SelectSingleNodeValueNew(xmlDom, "DATA/TITLE1").trim();
+//			                document.getElementById("JobTitle2").value = SelectSingleNodeValueNew(xmlDom, "DATA/TITLE2").trim();
 			                document.getElementById("SortNum").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE15").trim();
 			                document.getElementById("PhoneNumber").value = SelectSingleNodeValueNew(xmlDom, "DATA/TELEPHONENUMBER").trim();
 			                document.getElementById("HomePhone").value = SelectSingleNodeValueNew(xmlDom, "DATA/HOMEPHONE").trim();
@@ -156,12 +168,23 @@
 			                document.getElementById("ZipCode").value = SelectSingleNodeValueNew(xmlDom, "DATA/POSTALCODE").trim();
 			                document.getElementById("HomeAddr").value = SelectSingleNodeValueNew(xmlDom, "DATA/STREETADDRESS").trim();
 			                document.getElementById("MailAlias").value = SelectSingleNodeValueNew(xmlDom, "DATA/MAIL").trim();
-			                document.getElementById("JobPosition").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE101").trim();
-			                document.getElementById("JobPosition2").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE102").trim();
+// 			                document.getElementById("JobPosition").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE101").trim();
+// 			                document.getElementById("JobPosition2").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE102").trim();
 			                document.getElementById("DeptName").value = SelectSingleNodeValueNew(xmlDom, "DATA/DESCRIPTION1").trim();
 			                document.getElementById("DeptName2").value = SelectSingleNodeValueNew(xmlDom, "DATA/DESCRIPTION2").trim();
 			                document.getElementById("SocialNum").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE14").trim();
 			                document.getElementById("txtBirth").value = SelectSingleNodeValueNew(xmlDom, "DATA/BIRTH").trim();
+			                
+			                try {
+				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim() != "") {
+				                	document.getElementById(SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim()).selected = "true";
+				                	titleChange();
+				                }
+				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim() != "") {
+				                	document.getElementById(SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim()).selected = "true";
+				                	positionChange();
+				                }
+			                } catch(e) {}
 			                
 			                if (SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == "Y" || SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == ""){
 			                    eval("birth_S").checked = true;
@@ -349,22 +372,22 @@
 		            alert("<spring:message code='ezOrgan.t261' /><,> <spring:message code='ezOrgan.t260' />");
 		            return;
 		        }
-		        if (JobTitle.value.indexOf("&") != -1 || JobTitle.value.indexOf("<") != -1 || JobTitle.value.indexOf(">") != -1) {
-		            alert("<spring:message code='ezOrgan.t262' /><,> <spring:message code='ezOrgan.t260' />");
-		            return;
-		        }
-		        if (JobTitle2.value.indexOf("&") != -1 || JobTitle2.value.indexOf("<") != -1 || JobTitle2.value.indexOf(">") != -1) {
-		            alert("<spring:message code='ezOrgan.t262' /><,> <spring:message code='ezOrgan.t260' />");
-		            return;
-		        }
-		        if (JobPosition.value.indexOf("&") != -1 || JobPosition.value.indexOf("<") != -1 || JobPosition.value.indexOf(">") != -1) {
-		            alert("<spring:message code='ezOrgan.t263' /><,> <spring:message code='ezOrgan.t260' />");
-		            return;
-		        }
-		        if (JobPosition2.value.indexOf("&") != -1 || JobPosition2.value.indexOf("<") != -1 || JobPosition2.value.indexOf(">") != -1) {
-		            alert("<spring:message code='ezOrgan.t263' /><,> <spring:message code='ezOrgan.t260' />");
-		            return;
-		        }
+// 		        if (JobTitle.value.indexOf("&") != -1 || JobTitle.value.indexOf("<") != -1 || JobTitle.value.indexOf(">") != -1) {
+// 		            alert("<spring:message code='ezOrgan.t262' /><,> <spring:message code='ezOrgan.t260' />");
+// 		            return;
+// 		        }
+// 		        if (JobTitle2.value.indexOf("&") != -1 || JobTitle2.value.indexOf("<") != -1 || JobTitle2.value.indexOf(">") != -1) {
+// 		            alert("<spring:message code='ezOrgan.t262' /><,> <spring:message code='ezOrgan.t260' />");
+// 		            return;
+// 		        }
+// 		        if (JobPosition.value.indexOf("&") != -1 || JobPosition.value.indexOf("<") != -1 || JobPosition.value.indexOf(">") != -1) {
+// 		            alert("<spring:message code='ezOrgan.t263' /><,> <spring:message code='ezOrgan.t260' />");
+// 		            return;
+// 		        }
+// 		        if (JobPosition2.value.indexOf("&") != -1 || JobPosition2.value.indexOf("<") != -1 || JobPosition2.value.indexOf(">") != -1) {
+// 		            alert("<spring:message code='ezOrgan.t263' /><,> <spring:message code='ezOrgan.t260' />");
+// 		            return;
+// 		        }
 		        if (trim(SecurityLevel.value) != "" && parseInt(SecurityLevel.value) != SecurityLevel.value) {
 		            alert("<spring:message code='ezOrgan.t265' />");
 		            return;
@@ -400,10 +423,10 @@
 					url : "/admin/ezOrgan/saveUserInfo.do",
 					async : true,
 					data : {parentCn : DeptID, cn : document.getElementById("UserID").value, displayName : UserName.value, displayName2 : UserName2.value, password : Password.value,
-						    mailNickName : mailNickName, title : JobTitle.value, title2 : JobTitle2.value, extensionAttribute15 : SortNum.value, extensionAttribute6 : SecurityLevel.value,
-						    extensionAttribute14 : SocialNum.value, extensionAttribute10 : JobPosition.value, extensionAttribute102 : JobPosition2.value, telephoneNumber : PhoneNumber.value,
+						    mailNickName : mailNickName, title : jobTitle, title2 : jobTitle2, extensionAttribute15 : SortNum.value, extensionAttribute6 : SecurityLevel.value,
+						    extensionAttribute14 : SocialNum.value, extensionAttribute10 : jobPosition, extensionAttribute102 : jobPosition2, telephoneNumber : PhoneNumber.value,
 						    homePhone : HomePhone.value, facsimileTelephoneNumber : FaxNum.value, mobile : Mobile.value, postalCode : ZipCode.value, streetAddress : HomeAddr.value,
-						    birthType : birthtype, birth : document.getElementById("txtBirth").value, manualFlag : "Y"
+						    birthType : birthtype, birth : document.getElementById("txtBirth").value, manualFlag : "Y", extensionAttribute7 : jobID, extensionAttribute8 : jobID2 
 					},
 					success : function(result) {
 					    if (useBizmekaSpambox == "YES") {
@@ -524,6 +547,147 @@
 					}
 				});
 		    }
+		    var jobTitle, jobTitle2, jobID;
+		    function getTitleOption() {
+		    	var xmldom, rtnVal, flag, i;
+		    	
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezOrgan/jobTitleListView.do",
+					data : {
+						type : "001",
+						companyID : companyID
+					},
+					async : false,
+					success : function(result){
+						xmldom = loadXMLString(result);
+					},
+					error : function(){
+					}
+				});
+		    	
+		    	var oRows = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
+			    if (oRows.length > 0) {
+			    	flag = true;
+			    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;' onchange='titleChange()'>";
+			    	for (i = 0; i < oRows.length; i++) {
+			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
+				    		if (flag) {
+					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
+					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
+					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE");
+					    		flag = false;
+				    		}
+				    		
+				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
+						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) 
+						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE")) + "'>";
+					    		
+				    		if ("${userPrimary}" == "1") {
+					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE"));
+				    		} else {
+					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE"));
+				    		}
+				    		
+				    		rtnVal += "</option>";
+			    		}
+			    	}
+			    	rtnVal += "</select>";
+			    } else {
+			    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;'></select>";
+			    	jobID = ""; jobTitle = ""; jobTitle2 = "";
+			    }
+			    
+		    	document.getElementById("JobTitleOption").innerHTML = rtnVal;
+		    }
+		    function titleChange() {
+		    	var target = document.getElementById("titleSelector");
+		    	var option = target.options[target.options.selectedIndex];
+		    	jobID = option.id;
+		    	jobTitle = option.getAttribute("nmval");
+		    	jobTitle2 = option.getAttribute("nmval2");
+		    }
+		    
+		    var jobPosition, jobPosition2, jobID2;
+		    function getPositionOption() {
+		    	var xmldom, rtnVal, flag, i;
+		    	
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezOrgan/jobTitleListView.do",
+					data : {
+						type : "002",
+						companyID : companyID
+					},
+					async : false,
+					success : function(result){
+						xmldom = loadXMLString(result);
+					},
+					error : function(){
+					}
+				});
+		    	
+		    	var oRows = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
+			    if (oRows.length > 0) {
+			    	flag = true;
+			    	rtnVal = "<select id='positionSelector' style='width:100%;height:25px;' onchange='positionChange()'>";
+			    	for (i = 0; i < oRows.length; i++) {
+			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
+				    		if (flag) {
+				    			jobID2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
+					    		jobPosition = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
+					    		jobPosition2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE");
+					    		flag = false;
+				    		}
+				    		
+				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
+						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) 
+						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE")) + "'>";
+					    		
+				    		if ("${userPrimary}" == "1") {
+					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE"));
+				    		} else {
+					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE"));
+				    		}
+				    		
+				    		rtnVal += "</option>";
+			    		}
+			    	}
+			    	rtnVal += "</select>";
+			    } else {
+			    	rtnVal = "<select id='positionSelector' style='width:100%;height:25px;'></select>";
+			    	jobID2 = ""; jobPosition = ""; jobPosition2 = "";
+			    }
+			    
+		    	document.getElementById("JobPositionOption").innerHTML = rtnVal;
+		    }
+		    function positionChange() {
+		    	var target = document.getElementById("positionSelector");
+		    	var option = target.options[target.options.selectedIndex];
+		    	jobID2 = option.id;
+		    	jobPosition = option.getAttribute("nmval");
+		    	jobPosition2 = option.getAttribute("nmval2");
+		    }
+		    function getUserCompanyID(userID) {
+		    	var rtnVal = "";
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezOrgan/getUserCompanyID.do",
+					data : {
+						cn : userID
+					},
+					async : false,
+					success : function(result) {
+						rtnVal = result;
+					},
+					error : function(){
+					}
+				});
+		    	return rtnVal;
+		    }
 	    </script>
 	</head>
 	<body class="popup">
@@ -599,35 +763,38 @@
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t279' /></th>
 	            <td style="width: 240px; padding: 0">
 	                <table style="width:100%">
-	                    <tr class="primary">
-	                        <th><c:out value='${primary}'/></th>
-	                        <td>
-	                            <input id="JobTitle" name="txtUserJobTitle" style="width: 100%" maxlength="50"/>
+	                    <tr>
+	                        <%-- <th><c:out value='${primary}'/></th> --%>
+	                        <td colspan="2">
+	                        	<div id="JobTitleOption"></div>
+	                            <!-- <input id="JobTitle" name="txtUserJobTitle" style="width: 100%" maxlength="50"/> -->
 	                        </td>
 	                    </tr>
-	                    <tr class="secondary">
+	                    <%-- <tr class="secondary">
+	                    	<th colspan="2"></th>
 	                        <th><c:out value='${secondary}'/></th>
 	                        <td>
-	                            <input id="JobTitle2" type="text" style="width: 100%" maxlength="50"/>
+	                            <input id="JobTitle2" type="text" style="width: 100%" maxlength="50" disabled="disabled"/>
 	                        </td>
-	                    </tr>
+	                    </tr> --%>
 	                </table>
 	            </td>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t280' /></th>
 	            <td style="width: 240px; padding: 0">
 	                <table style="width:100%">
-	                    <tr class="primary">
-	                        <th><c:out value='${primary}'/></th>
-	                        <td>
-	                            <input name="Input2" id="JobPosition" style="width: 100%" maxlength="50"/>
+	                    <tr>
+	                        <%-- <th><c:out value='${primary}'/></th> --%>
+	                        <td colspan="2">
+	                        	<div id="JobPositionOption"></div>
+	                            <!-- <input name="Input2" id="JobPosition" style="width: 100%" maxlength="50"/> -->
 	                        </td>
 	                    </tr>
-	                    <tr class="secondary">
+	                    <%-- <tr class="secondary">
 	                        <th><c:out value='${secondary}'/></th>
 	                        <td>
 	                            <input id="JobPosition2" type="text" style="width: 100%" maxlength="50"/>
 	                        </td>
-	                    </tr>
+	                    </tr> --%>
 	                </table>
 	            </td>
 	        </tr>       
@@ -659,7 +826,7 @@
 	    <br />
 	    <table id="Tbl_Contract" class="content" style="width:800px;">
 	        <tr>
-	            <th id="mailtitle" style="width: 80px; text-align:center"><spring:message code='ezOrgan.t288' /></th>
+	            <th id="mailtitle" style="width: 80px; text-align:center"><spring:message code='ezOrgan.t99' /></th>
 	            <td colspan="5">
 	                <input id="MailAlias" style="WIDTH: 100%; display: none" size="11" />
 	                <span id="mailcontext"><spring:message code='ezOrgan.t289' /></span>
@@ -714,7 +881,12 @@
 	                <input id="HomeAddr" style="WIDTH: 100%;" maxlength="150"/>
 	            </td>
 	        </tr>
-	    </table>   
+	    </table>
+	    <c:if test="${useCloud == 'YES'}">
+	    <div id="cloud-message" style="display: none; margin-top: 20px; padding-left: 10px; background: #eee; height: 100px;">
+	    	<h1>* 추가된 유저 요금은 일할계산되어 자동 익월 청구됩니다.<br>* 문의: 고객지원센터 080-258-0007</h1>
+	    </div>
+	    </c:if>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>

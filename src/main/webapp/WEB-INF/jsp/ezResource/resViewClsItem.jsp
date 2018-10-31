@@ -35,16 +35,43 @@
       				</div>
       				<table class="content">
         				<tr>
-          					<th> <spring:message code="ezResource.t151"/></th>
-          					<td name="OwnDept" idval="${ownDeptNm}">${ownDeptNm}</td>
-          					<th> <spring:message code="ezResource.t152"/></th>
-          					<td id="MakeDate" style="padding-right:15px;width:120px" nowrap> ${makeDate}</td>
+        				<th> <spring:message code="ezResource.t153"/></th>
+          					<td name="Owner" idval="${ownerID}" nmval="${strBrdNm}">
+								<c:forEach var="list"  items="${ownerList}" begin="0" varStatus="value">
+									<c:if test ="${not value.last }">
+										${list.displayName }, 
+									</c:if>
+									<c:if test ="${value.last }">
+										${list.displayName }
+									</c:if>
+								</c:forEach>
+							</td>
+          					<%-- <th> <spring:message code="ezResource.t151"/></th>
+          					<td name="OwnDept" idval="${ownDeptNm}">${ownDeptNm}</td> --%>
+          					<%-- <th> <spring:message code="ezResource.t152"/></th>
+          					<td id="MakeDate" style="padding-right:15px;width:120px" nowrap> ${makeDate}</td> --%>
         				</tr>
         				<tr>
-          					<th> <spring:message code="ezResource.t153"/></th>
-          					<td name="Owner" idval="${ownerID}" nmval="${strBrdNm}">${ownerNm}(${ownerPosition}) </td>
           					<th> <spring:message code="ezResource.t155"/></th>
-          					<td name="OwnerCall" style="padding-right:15px;width:120px" nowrap> ${ownerCall}</td>
+          					<td colspan="3" name="OwnerCall" style="padding-right:15px;width:120px" nowrap> ${ownerCall}</td>
+          					<%-- <th> <spring:message code="ezResource.rkms01"/></th>
+          					<td colspan="3"  name="subOwner" idval="${ownerID}" nmval="${strBrdNm}">${ownerNm}(${ownerPosition}) </td>
+          					<td colspan="3"  name="subOwner"  >
+          					<div id="subOwner" style="overflow-y:auto; line-height:25px; height:25px;">
+          					<c:if test="${!empty ownerList}" >
+									<c:forEach var="list"  items="${ownerList}" begin="1" varStatus="value">
+										<c:if test ="${not value.last }">
+											${list.displayName }(${list.description }),  
+										</c:if>
+										<c:if test ="${value.last }">
+											${list.displayName }(${list.description }) 
+										</c:if>
+									</c:forEach>
+								</c:if>
+							</div>
+							</td> --%>
+          					<%-- <th> <spring:message code="ezResource.t155"/></th>
+          					<td name="OwnerCall" style="padding-right:15px;width:120px" nowrap> ${ownerCall}</td> --%>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t39"/></th>

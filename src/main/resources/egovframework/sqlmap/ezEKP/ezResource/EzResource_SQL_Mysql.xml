@@ -13,6 +13,7 @@
     <typeAlias  alias="ResGetSendMailToUserVO"         			type="egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO"/>
     <typeAlias  alias="ResAdminVO"         						type="egovframework.ezEKP.ezResource.vo.ResAdminVO"/>
     <typeAlias  alias="ResDateVO"         						type="egovframework.ezEKP.ezResource.vo.ResDateVO"/>
+    <typeAlias  alias="OrganUserVO"         						type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO"       id="resGetAdmSubClsTreeVO">
 		<result property="brdID"				column="BRD_ID"					columnIndex="1"/>
@@ -132,6 +133,7 @@
 		<result property="ownerPosition"		column="OWNERPOSITION"		    columnIndex="22"/>
 		<result property="replyMailFg"			column="REPLY_MAIL_FG"		    columnIndex="23"		nullValue="0"/>
 		<result property="resLocation"			column="RESLOCATION"			columnIndex="24"		nullValue=""/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="25"/>
 	</resultMap>
 	
 	<resultMap class="ResBrdVO" 				   id="resBrdVO">
@@ -226,11 +228,7 @@
 		<result property="characterID"			column="CHARACTERID"			columnIndex="19"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="20"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
-		<result property="ownerNm2"			    column="OWNERNM2"			    columnIndex="22"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="23"/>
-		<result property="deptNm2"				column="DEPTNM2"				columnIndex="24"/>
-		<result property="jobTitle"				column="JOBTITLE"				columnIndex="25"/>
-		<result property="jobTitle2"			column="JOBTITLE2"				columnIndex="26"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" 		    id="resGetRepResourceVO">
@@ -773,12 +771,8 @@
             	A.companyID ,
             	CHARACTERID ,
             	APPROVEFLAG ,
-            	BB.OWNERNM  ,
-            	BB.OWNERNM2  ,
-            	BB.DEPTNM  ,
-            	BB.DEPTNM2  , 
-            	BB.JOBTITLE  ,
-            	BB.JOBTITLE2  
+            	A.OWNERNM  ,
+            	A.DEPTNM  
 			FROM
 				TBL_RS_SCHEDULE A
 			JOIN
@@ -840,17 +834,17 @@
 			AND
 				A.OWNERID = #v_POWNERID#
 			AND
-				A.DEPTNM = BB.DEPTNM
-			AND
 				REFLAG = '1'				
 			AND
 				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
 			AND
-				( BB.OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') OR BB.OWNERNM2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
+				( A.OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') OR BB.OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') OR BB.OWNERNM2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
 			AND
-				( BB.DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR BB.DEPTNM2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
+				( A.DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR BB.DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR BB.DEPTNM2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
 			AND 
 				A.TENANT_ID = #tenantID#	
+			GROUP BY
+				A.NUM
         	ORDER BY
         		STARTDATE ASC,
                 ENDDATE DESC
@@ -942,9 +936,10 @@
 				ATTACH_SIZE, BRD_ACCESS, BRD_COMPANY, BRD_COUNT, 
                 BRD_EXPLAIN, BRD_GB, BRD_GROUP, BRD_ID, BRD_LEVEL, $v_PBRDNM$ AS BRD_NM, 
                 BRD_POSTTERM, BRD_REF, BRD_STEP, BRD_UPPER, BRD_URL, 
-                MAKEDATE, OWNDEPTID,  $v_POWNDEPTNM$  AS OWNDEPTNM, OWNERCALL, 
+                CONCAT(SUBSTR(MAKEDATE, 1, 4), '-', SUBSTR(MAKEDATE, 5, 2), '-', SUBSTR(MAKEDATE, 7, 2)) MAKEDATE, 
+                OWNDEPTID,  $v_POWNDEPTNM$  AS OWNDEPTNM, OWNERCALL, 
                 OWNERID,  $v_POWNERNM$  AS OWNERNM,  $v_POWNERPOSITION$   AS OWNERPOSITION, 
-                REPLY_MAIL_FG, RESLOCATION 
+                REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG 
 			FROM
 				TBL_RS_BRD  
 			WHERE
@@ -1369,8 +1364,6 @@
 			AND
 				BRD_ID = #v_PBRDID#
 			AND
-				OWNERID = #v_PUSERID#
-			AND
 				TENANT_ID = #tenantID#	
 		]]>	
 	</select>
@@ -1682,6 +1675,42 @@
 		]]>
 	</select>
 	
+	<select id="EzResourceDAO.getOwnerInfo" parameterClass="Map" resultClass="OrganUserVO">
+		  SELECT *
+				FROM ( SELECT  
+								D.CN, D.DISPLAYNAME, D.title, D.DESCRIPTION , D.DESCRIPTION2, D.department
+							FROM  
+								TBL_USERMASTER D 
+							WHERE  
+								D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
+							UNION ALL 
+							SELECT  
+								B.cn, B.DISPLAYNAME, A.title, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid 
+							FROM  
+								TBL_USERMASTER B  
+							INNER JOIN  
+								TBL_ADDJOBMASTER A  
+							ON  
+								A.CN = B.CN  
+							AND  
+								A.TENANT_ID = B.TENANT_ID        
+							RIGHT JOIN  
+								TBL_DEPTMASTER C 
+							ON  
+								A.DEPTID = C.CN 
+							AND  
+								B.TENANT_ID = C.TENANT_ID    
+							WHERE  
+								A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# ) BB
+					     <iterate prepend="WHERE BB.cn IN" property="ownerList" open="(" close=")" conjunction=",">
+					            #ownerList[]#
+					     </iterate>
+					GROUP BY(BB.CN)
+						<iterate prepend="ORDER BY FIELD(BB.CN, " property="ownerList" close=")" conjunction=",">
+					            #ownerList[]#
+					     </iterate>
+	</select>
+	
 	<delete id="EzResourceDAO.modifyResSch_D1" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
@@ -1981,15 +2010,17 @@
         <![CDATA[
 	       SELECT
                BRD_NM BRDNM ,
-               OWNERID ,
-               OWNERNM ,
+               HR.DISPLAYNAME OWNERNM ,
                HR.MAIL MAILADDRESS  
             FROM
                TBL_RS_BRD RES
             JOIN
                 TBL_USERMASTER HR
-            ON
-                RES.OwnerID = HR.CN
+             ]]>
+           	<iterate prepend="ON HR.CN IN" property="ownerList" open="(" close=")" conjunction=",">
+				  #ownerList[]#
+			</iterate>
+			<![CDATA[
             AND
                 RES.TENANT_ID = HR.TENANT_ID    
             WHERE

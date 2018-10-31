@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/functionLib_cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var strBrd_ID = "${brdID}";
 			var strCompanyID = "${companyID}";
@@ -18,9 +19,18 @@
 			var userName = "<c:out value='${userName}' />";
 			var deptID = "${deptID}";
 			var deptName = "<c:out value='${deptName}' />";
+			var displayName = "<c:out value='${displayName}' />";
+			var title = "<c:out value='${title}'/>";
+			var res_owner = { "flag" : new Array(), "ownerId": new Array(), "ownerDept" : new Array(), "ownerName" : new Array(), "ownerName1" : new Array(), "ownerDeptName" : new Array() };
 			
 			window.onload = function () {
 				document.getElementById("Brd_NM").focus();
+				
+				res_owner["ownerId"][0] = userID;
+				res_owner["ownerDept"][0] = deptID;
+				res_owner["ownerName"][0] = displayName;
+				res_owner["ownerName1"][0] = title;
+				res_owner["ownerDeptName"][0] = deptName;
 			}
 
 			function btnSave_Click() {
@@ -39,7 +49,12 @@
 					document.getElementById("Brd_NM").focus();
 					return;
 				}
-
+				
+				var ownerList = res_owner["ownerId"][0];
+				for(var i=1; i<res_owner.ownerId.length; i++) {
+					ownerList += "," + res_owner["ownerId"][i];
+				}
+				
 				// 2018-07-10 김민성 - 자원관리 글자수 체크 maxlength로 수정
 				/* var brdNmTag = document.getElementById("Brd_NM");
 				var brdNm2Tag = document.getElementById("Brd_NM2");
@@ -64,19 +79,25 @@
 				createNodeInsert(xmlpara, objNode, "PARADATA");
 				createNodeAndInsertText(xmlpara, objNode, "DATA", strBrd_ID);
 				
-				if (document.getElementById("OwnDept").getAttribute("idVal", "0") == "") {
+				createNodeAndInsertText(xmlpara, objNode, "DATA", res_owner["ownerDept"][0]);	// deptID
+				createNodeAndInsertText(xmlpara, objNode, "DATA", res_owner["ownerDeptName"][0]);	// deptName
+				
+				/* if (document.getElementById("OwnDept").getAttribute("idVal", "0") == "") {
 					createNodeAndInsertText(xmlpara, objNode, "DATA", deptID);
 				} else {
 					createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("OwnDept").getAttribute("idVal", "0"));
-				}
+				} 
 
 				if (document.getElementById("OwnDept").value == "") {
 					createNodeAndInsertText(xmlpara, objNode, "DATA", deptName);
 				} else {
 					createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("OwnDept").value);
-				}
+				}*/
 
-				if (document.getElementById("Owner").getAttribute("idVal", "0") == "") {
+				createNodeAndInsertText(xmlpara, objNode, "DATA", ownerList);	// userID
+				createNodeAndInsertText(xmlpara, objNode, "DATA", res_owner["ownerName"][0]);	// userName
+				
+				/* if (document.getElementById("Owner").getAttribute("idVal", "0") == "") {
 					createNodeAndInsertText(xmlpara, objNode, "DATA", userID);
 				} else {
 					createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("Owner").getAttribute("idVal", "0"));
@@ -86,9 +107,10 @@
 					createNodeAndInsertText(xmlpara, objNode, "DATA", userName);
 				} else {
 					createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("Owner").getAttribute("NmVal", "0"));
-				}
+				} */
 
-			    createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("Owner").getAttribute("position", "0"));
+			    //createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("Owner").getAttribute("position", "0"));
+				createNodeAndInsertText(xmlpara, objNode, "DATA", "0");
 				createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("OwnerCall").value);
 				createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("Brd_NM").value);
 				createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("ResLocation").value);
@@ -110,6 +132,7 @@
 				
 				createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("Brd_NM2").value);
 
+				//createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("subOwner1").value);
 				xmlHttp.open("Post", "/ezResource/callAddClsItem.do", false);
 				xmlHttp.send(xmlpara);
 
@@ -140,9 +163,12 @@
 			}
 
 			var select_person_cross_dialogArguments = new Array();
-			function btnTakeOwner_Click() {
+			function btnTakeOwner_Click(val) {
+				res_owner["flag"][0] = val;
+				
+				select_person_cross_dialogArguments[0] = res_owner;
 				select_person_cross_dialogArguments[1] = btnTakeOwner_Click_Complete;
-				var OpenWin = window.open("/ezResource/selectPerson.do", "selectPerson", GetOpenWindowfeature(750, 550));
+				var OpenWin = window.open("/ezResource/selectPerson.do", "selectPerson", GetOpenWindowfeature(1050, 550));
 				
 				try { 
 					OpenWin.focus(); 
@@ -153,17 +179,31 @@
 			
 			function btnTakeOwner_Click_Complete(retVal) {
 				if (typeof (retVal) != "undefined") {
-					var strOwner = retVal;
-					var arrOwner;
-
-					arrOwner = strOwner.split(";");
-					document.getElementById("Owner").value = arrOwner[0] + "(" + arrOwner[2] + ")";
-					document.getElementById("Owner").setAttribute("NmVal", arrOwner[0]);
-					document.getElementById("Owner").setAttribute("idVal", arrOwner[1]);
-					document.getElementById("Owner").setAttribute("position", arrOwner[2]);
-					document.getElementById("OwnDept").value = arrOwner[3];
-					document.getElementById("OwnDept").setAttribute("idVal", arrOwner[4]);
-					document.getElementById("OwnerCall").value = arrOwner[5];
+					//document.getElementById("Owner").innerHTML = retVal["ownerName"][0] + "(" + retVal["ownerName1"][0] + ")";
+					//document.getElementById("subOwner").innerHTML = "";
+					document.getElementById("Owner").innerHTML = "";
+					var length = retVal.ownerName.length;
+					for(var i=0; i<length; i++) {
+						if(length-1 != i) {
+							document.getElementById("Owner").innerHTML += retVal["ownerName"][i] + ", ";
+						}
+						else {
+							document.getElementById("Owner").innerHTML += retVal["ownerName"][i];
+						}
+					}
+					
+					res_owner = retVal;
+					/* var strOwner = retVal;
+						var arrOwner;
+	
+						arrOwner = strOwner.split(";");
+						document.getElementById("Owner").value = arrOwner[0] + "(" + arrOwner[2] + ")";
+						document.getElementById("Owner").setAttribute("NmVal", arrOwner[0]);
+						document.getElementById("Owner").setAttribute("idVal", arrOwner[1]);
+						document.getElementById("Owner").setAttribute("position", arrOwner[2]);
+						document.getElementById("OwnDept").value = arrOwner[3];
+						document.getElementById("OwnDept").setAttribute("idVal", arrOwner[4]);
+						document.getElementById("OwnerCall").value = arrOwner[5]; */
 				}
 			}
 
@@ -229,21 +269,39 @@
 					</script>
 					<table class="content">
         				<tr>
-          					<th> <spring:message code="ezResource.t151"/></th>
-          					<td><input type="text" name="OwnDept" id="OwnDept" idval="${deptID}" value="<c:out value='${deptName}' />" style="width: 100%" readonly></td>
-          					<th> <spring:message code="ezResource.t152"/></th>
-          					<td id="MakeDate" nowrap style="width:120px;padding-right:15px">${makeDate} </td>
-        				</tr>
-        				<tr>
-          					<th> <spring:message code="ezResource.t153"/></th>
-          					<td>
-          						<input type="text" name="Owner" id="Owner" idval="${userID}" position="<c:out value='${title}' />" nmval="<c:out value='${displayName}' />" value="<c:out value='${displayName}' />(<c:out value='${title}' />)" style="width: 200px" readonly>
-            						<a class="imgbtn imgbck">
-            							<span onClick="btnTakeOwner_Click();"><spring:message code="ezResource.t154"/></span>
+        					<th> <spring:message code="ezResource.t153"/></th>
+          					<td colspan="2" style="border-right: 0px;">
+            						<div id="Owner" style="overflow-y:auto; line-height:25px; height:25px;" >
+            							<c:out value='${displayName}' />
+	            					</div>
+	            			</td>
+	            			<td style="border-left:0px">
+            						<a class="imgbtn imgbck" style="float:right">
+            							<span onClick="btnTakeOwner_Click('ListViewOwner');"><spring:message code="ezResource.t154"/></span>
             						</a>
             				</td>
+          						<%-- <input type="text" name="Owner" id="Owner" idval="${userID}" position="<c:out value='${title}' />" nmval="<c:out value='${displayName}' />" value="<c:out value='${displayName}' />(<c:out value='${title}' />)" style="width: 200px" readonly> --%>
+          					<%-- <th> <spring:message code="ezResource.t151"/></th>
+          					<td><input type="text" name="OwnDept" id="OwnDept" idval="${deptID}" value="<c:out value='${deptName}' />" style="width: 100%" readonly></td> --%>
+        				</tr>
+        				<tr>
           					<th> <spring:message code="ezResource.t155"/></th>
-          					<td><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 150px" maxlength="20"></td>
+          					<td colspan="3"><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 100%" maxlength="20"></td>
+          					<%-- <th> <spring:message code="ezResource.rkms01"/></th>
+          					<td colspan="3" >
+          						<table style="width:100%;">
+        							<tr>
+										<th style="border:0px; padding:0px; padding-right:2px;"><a class="imgbtn imgbck"><span onClick="btnTakeOwner_Click('ListViewsubOwner');"><spring:message code="ezResource.t154"/></span></a>
+            						</th>
+										<td><div id="subOwner" style="overflow-y:auto; line-height:25px; height:25px;"></div></td>
+        							</tr>
+    							</table>
+            						<a class="imgbtn imgbck">
+            							<span onClick="btnTakeOwner_Click('ListViewsubOwner');"><spring:message code="ezResource.t154"/></span>
+            						</a>
+            						<div id="subOwner" style="overflow-y:auto; line-height:25px; display:inline"></div>
+          						<!-- <input type="text" name="subOwner" id="subOwner" style="width: 200px" readonly> -->
+            				</td> --%>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t39"/></th>

@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.HandlerMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -449,15 +450,23 @@ public class EzSystemAdminController {
 	 * 전체 서버 목록 가져오기.
 	 * config.properties에 현재 포함 다른 서버 목록 전부 저장
 	 * */
-	@RequestMapping(value="/admin/ezSystem/sysREST.do")
+	@RequestMapping(value = {"/admin/ezSystem/sysREST.do", "/gCloud/sysREST.do"})
 	public String sysREST(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request , Model model) throws Exception {
 		logger.debug("sysREST started.");
 		
-		//관리자 권한 체크
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		
-		if (userInfo == null) {
-			return "cmm/error/adminDenied";
+		if (requestURL.indexOf("admin/ezSystem") > -1) {
+			//관리자 권한 체크
+			LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+			
+			if (userInfo == null) {
+				return "cmm/error/adminDenied";
+			}
+			
+			model.addAttribute("cloudFlag", false);
+		} else {
+			model.addAttribute("cloudFlag", true);
 		}
 		
 		InetAddress local = InetAddress.getLocalHost();
@@ -503,17 +512,21 @@ public class EzSystemAdminController {
 	/**
 	 * 선택된 서버의 CPU, 메모리, 네트워크 등 정보 가져오기
 	 * */
-	@RequestMapping(value="/admin/ezSystem/sysMonitorREST.do")
+	@RequestMapping(value = {"/admin/ezSystem/sysMonitorREST.do", "/gCloud/sysMonitorREST.do"})
 	public String sysMonitorREST(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("sysMonitorREST started.");
 		logger.debug("<<<serverSN : " + request.getParameter("serverSN"));
 		
-		//관리자 권한체크
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);	
+		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		
-		if (userInfo == null) {
-			return "cmm/error/adminDenied";
-		}		
+		if (requestURL.indexOf("admin/ezSystem") > -1) {
+			//관리자 권한체크
+			LoginVO userInfo = commonUtil.checkAdmin(loginCookie);	
+			
+			if (userInfo == null) {
+				return "cmm/error/adminDenied";
+			}		
+		}
 		
 		InetAddress local = InetAddress.getLocalHost();
 		String localIP = local.getHostAddress();		

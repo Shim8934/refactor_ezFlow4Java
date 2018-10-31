@@ -304,18 +304,36 @@
 						resourceId   : val01						
 					},
 					success: function(result){
-						if (result.primary == "1") {						
-							$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
-							$("#ownerDept").html(result.resBrd.ownDeptNm);
-							$("#brdNm").html(result.resBrd.brdNm);
-						} else {
-							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
-							$("#ownerDept").html(result.resBrd.ownDeptNm2);
-							$("#brdNm").html(result.resBrd.brdNm2);
+						// 2018-10-30 김민성 - 자원 정보 레이어 팝업 관리자 리스트, 관리자 정보 조회, 등록일 정보 추가
+						var ownerID = result.resBrd.ownerID;
+						var subOwner = result.ownerList;
+						var strOwnerList = "";
+						
+						for(var i=0; i<subOwner.length; i++) {
+							strOwnerList += "<span onclick=\"OpenUserInfo('" + subOwner[i].cn + "','" + subOwner[i].department + "')\">"+subOwner[i].displayName+"</span>";
+							if(i != subOwner.length-1) {
+								strOwnerList += ", ";
+							}
 						}
 						
+						/* var ownerID = result.resBrd.ownerID.split(";");
+						if (result.primary == "1") {						
+							$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownDeptNm + ")");
+							$("#ownerNm").attr("ownerID", ownerID);
+							$("#ownerNm").attr("onclick", ownerID);
+							$("#submanager").html(result.resBrd.ownDeptNm);
+							$("#brdNm").html(result.resBrd.brdNm);
+						} else {
+							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownDeptNm2 + ")");
+							$("#ownerNm").attr("ownerID", "mins99");
+							$("#submanager").html(result.resBrd.ownDeptNm2);
+							$("#brdNm").html(result.resBrd.brdNm2);
+						} */
+						$("#brdNm").html(result.resBrd.brdNm);
 						$("#ownerCall").html(result.resBrd.ownerCall);
-						$("#resLocation").html(result.resBrd.resLocation);						
+						$("#resLocation").html(result.resBrd.resLocation);					
+						
+						$("#ownerInfo").html(strOwnerList);
 						
 						var approveFlag = result.resBrd.approveFlag;
 						
@@ -324,6 +342,8 @@
 						} else {
 							$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
 						}
+						
+						$("#resDate").html(result.resBrd.makeDate);
 						
 						var resbrdExc = "";
 						if (result.resBrd.brdExplain != null) {
@@ -346,6 +366,13 @@
 						
 					}
 				});	    		
+	        }
+	    	
+	    	// 2018-10-19 김민성 - 작성자 이름 클릭 시 사원정보보기 팝업
+			function OpenUserInfo(userID, deptID) {
+	        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+	            feature = feature + GetOpenPosition(420, 438);
+	            window.open("/ezCommon/showPersonInfo.do?id=" + userID + "&dept=" + deptID, "", feature);
 	        }
 		</script>
 	</head>
@@ -444,12 +471,12 @@
 	        	<table id="resourceDataTable" style="width:478px; margin-top:10px;">
 					<tr>
 						<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
-						<td><span id="ownerNm"></span></td>
+						<td><span id="ownerNm"><span id="ownerInfo" style="cursor:pointer"></span></span></td>
 					</tr>
-					<tr>
-						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t151'/></th>
-						<td><span id="ownerDept"></span></td>
-					</tr>
+					<%-- <tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.rkms01'/></th>
+						<td><span id="submanager"></span></td>
+					</tr> --%>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
 						<td><span id="ownerCall"></span></td>
@@ -461,6 +488,10 @@
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
 						<td id="approveFlag"></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezBoard.t5007'/></th>
+						<td><span id="resDate"></span></td>
 					</tr>
 					<tr>
 						<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
