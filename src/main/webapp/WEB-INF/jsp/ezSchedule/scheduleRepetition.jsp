@@ -164,8 +164,7 @@
 		    function ok_click()
 		    {
 		    	var rtn = new Array();
-
-	    		
+				
 		    	rtn["SDATE"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 		    	rtn["EDATE"] = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 		    
@@ -215,7 +214,7 @@
 		    		} else {		    			
 		    			alert("<spring:message code='ezSchedule.t61' />");
 		    			list_ReCount.focus();
-		    			return;		    			
+		    			return;
 		    		}		
 		    	} else {		    		
 		    	    if(!check_time()) {		    	    	
@@ -231,6 +230,13 @@
 	        	}
 		    	
 		    	if (alldaycheck.checked == true) {
+		    		var realEndDate = new Date(parseInt($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val().substring(0,4),10), 
+							   				   parseInt($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val().substring(5,7),10)-1, 
+							   				   parseInt($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val().substring(8),10)+1);
+					var realEndDateRealFormat = realEndDate.getFullYear() + "-" + leadingZeros((realEndDate.getMonth() + 1), 2) + "-" + leadingZeros((realEndDate.getDate()), 2);
+
+					rtn["EDATE"] = realEndDateRealFormat + " " + $('#Etimepicker').val();
+					
 		    		repetition += "|1";
 		    		allDayString = strLang39;
 		    	} else {
@@ -883,7 +889,7 @@
 	    			sTimeTemp = $('#Stimepicker').val();
 		    		eTimeTemp = $('#Etimepicker').val();
 		    		$('#Stimepicker').timepicker("setTime", "00:00");
-		    		$('#Etimepicker').timepicker("setTime", "23:59");
+		    		$('#Etimepicker').timepicker("setTime", "00:00");
 		    	}else{
 		    		$('#Stimepicker').timepicker("setTime", sTimeTemp);
 		    		$('#Etimepicker').timepicker("setTime", eTimeTemp);
@@ -895,7 +901,7 @@
 		    		if($("#alldaycheck").prop("checked") == true){
 		    			$("#alldaycheck").prop("checked", false);
 		    		}
-		    		if($('#Stimepicker').val() == "00:00" && $('#Etimepicker').val() == "23:59"){
+		    		if($('#Stimepicker').val() == "00:00" && $('#Etimepicker').val() == "00:00"){
 		    			$("#alldaycheck").prop("checked", true);
 		    		}
 		    	});
@@ -903,7 +909,7 @@
 		    		if($("#alldaycheck").prop("checked") == true){
 		    			$("#alldaycheck").prop("checked", false);
 		    		}
-		    		if(($('#Stimepicker').val() == "00:00") && ($('#Etimepicker').val() == "23:59")){
+		    		if(($('#Stimepicker').val() == "00:00") && ($('#Etimepicker').val() == "00:00")){
 		    			$("#alldaycheck").prop("checked", true);
 		    		}
 		    	});

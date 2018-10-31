@@ -16,3 +16,4 @@ var strLangMemo15 = "총";
 var strLangMemo16 = "개";
 var strLangMemo17 = "리스트를 선택해 주세요.";
 var strLangMemo18 = "삭제하시겠습니까?";
+var strLangMemo19 = "복사되었습니다.";
