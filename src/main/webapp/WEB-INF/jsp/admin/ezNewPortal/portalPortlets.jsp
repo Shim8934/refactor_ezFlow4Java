@@ -76,30 +76,119 @@
 	var arrayLang = Number(lang) - 1;
 	
 	$( function() {
+		$("#ListCompany").on("onChange", getPortletList);
 		getPortletList();	
-	  } );
+	});
+	
+	//이벤트 세팅
+	$("#portletOrderReset").on("click", portletOrderReset);
+	
+	
+	//이벤트 연결 함수
+	var portletAdd = function() {
+		var companiesObj = document.getElementById("ListCompany");
+		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+		
+		//포틀릿 사용 여부
+		var isUsed = $("#newPortlet").find(".switch").find("input").prop("checked");
+		
+		//포틀릿 이름 리스트
+		var portletNameList = $("#newPortlet").find(".portletName");
+		var portletNameListCount = portletNameList.length;
+		var nameList = [];
+		var portletNameEmptyNum = 0;
+		
+		for (var i = 0; i < portletNameListCount; i++) {
+			
+			if (portletNameList[i].value == "") {
+				portletNameEmptyNum++;
+			}
+			
+			nameList.push({"portletName" : portletNameList[i].value, "portletLang" : portletNameList[i].getAttribute("data1")});
+		}
+		
+		if (portletNameEmptyNum >= portletNameListCount) {
+			alert("하나 이상의 포틀릿 이름을 입력해주세요.");
+			return;
+		}
+			
+		//게시판 설정(게시판 아이디)
+		var boardName = $("#newPortletBoard");
+		var boardId = null;
+		
+		if (boardName != undefined) {
+			boardId = boardName.attr("data1");
+		}
+			
+		//새로운 포틀릿인 경우 connection url
+		var connectionUrl = $("#newPortlet").find(".connectionUrl").val();
+		
+		if (connectionUrl == "") {
+			alert("연결 URL을 입력해주세요.");
+			return;
+		}
+		
+		//새로운 포틀릿인 경우 포틀릿 타입 지정
+		var portletCategory = $("#newPortlet").find("input[name='category']:checked").val();
+		
+		if (portletCategory == "B" && boardId == null) {
+			alert("게시판을 선택해 주세요.");
+			return;
+		}
+		
+		var request = new XMLHttpRequest();
+		request.open('POST', '/admin/ezNewPortal/addPortlet.do', true);
+		request.setRequestHeader('content-type', 'application/json');
+		
+		request.onload = function() { 
+			//getPortletList(); 
+		};
+		
+		request.onerror = function() {}
+		
+		var data = JSON.stringify({
+			companyId : companyValue,
+			nameList : nameList,
+			boardId : boardId,
+			portletUsed : isUsed,
+			connectionUrl : connectionUrl,
+			portletCategory : portletCategory
+		});
+		 
+		request.send(data);
+	}
 	  
-	  //이벤트 세팅
-	  $("#portletOrderReset").on("click", portletOrderReset);
-	  
-	  
-	  //이벤트 연결 함수
-	  var portletAdd = function() {
-		  
-	  }
-	  
-	  var portletDelete = function() {
-			  
-	  }
+	var portletDelete = function(event) {
+		var companiesObj = document.getElementById("ListCompany");
+		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+		var portletId = event.data.portletId;
+		
+		var request = new XMLHttpRequest();
+		request.open('POST', '/admin/ezNewPortal/deletePortlet.do', true);
+		request.setRequestHeader('content-type', 'application/json');
+		
+		request.onload = function() { 
+			//getPortletList(); 
+		};
+		
+		request.onerror = function() {}
+		
+		var data = JSON.stringify({
+			companyId : companyValue,
+			portletId : portletId
+		});
+		 
+		request.send(data);
+	}
 	 
-	  var updatePortletOrder = function () {
-	  }
+	var updatePortletOrder = function () {
+	}
 	 
-	  var portletOrderReset = function() {
-	 	  
-	  }
+	var portletOrderReset = function() {
+		
+	}
 
-	  //게시판 설정 
+	//게시판 설정 
 	var openBoardTree = function(event) {
 		var portletId = event.data.portletId;
 		var companyId = $('#ListCompany option:selected').val();
@@ -117,7 +206,7 @@
             "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 	  }
 	  
-	  var portletUpdate = function(event) {
+	var portletUpdate = function(event) {
 		var companiesObj = document.getElementById("ListCompany");
 		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 
@@ -145,22 +234,25 @@
 		}
 		
 		//새로운 포틀릿인 경우 ...connection url
-		var url = $("#connectionUrl");
+		var url = $("#portletBoard" + portletId).find(".connectionUrl");
 		var connectionUrl = null;
 		
 		if (url != undefined) {
-			connectionUrl = url.value();
+			connectionUrl = url.value;
 		}
 		
 		var request = new XMLHttpRequest();
 		request.open('POST', '/admin/ezNewPortal/updatePortlet.do', true);
 		request.setRequestHeader('content-type', 'application/json');
 		
-		request.onload = function() {};
+		request.onload = function() { 
+			//getPortletList(); 
+		};
 		
 		request.onerror = function() {}
 		
 		var data = JSON.stringify({
+			portletId : portletId,
 			companyId : companyValue,
 			nameList : nameList,
 			boardId : boardId,
@@ -169,10 +261,10 @@
 		});
 		 
 		request.send(data);
-	  }
+	}
 	  
-	  //포틀릿 리스트 불러오는 함수
-	  var getPortletList = function() {
+	//포틀릿 리스트 불러오는 함수
+	var getPortletList = function() {
 		var companyId = $('#ListCompany option:selected').val();
 		
 		$.ajax({
@@ -232,11 +324,11 @@
 							language = "일본어";
 						}
 						
-						listHTML += "<tr><th class='portletInfoTH'>포틀릿명(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "'type='text' value='" + portletNameList[j].portletName + "'></td></tr>"
+						listHTML += "<tr><th class='portletInfoTH'>포틀릿명(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + portletNameList[j].portletName + "'></td></tr>"
 					 }
 					
 					if (!result[i].general) {
-						listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' value='"+ portletURL +"'></td></tr>";
+						listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"'></td></tr>";
 					}
 					
 					if (menuId == 4 && portletId != 10) {
@@ -283,9 +375,9 @@
 				console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 			}
 		});
-	  }
+	}
 	  
-	  function loadAfter() {
+	function loadAfter() {
 		$( ".col-container" ).sortable({
 			items : "li.col",
 		    handle: ".portlet-header",
@@ -306,12 +398,12 @@
 		});
 		
 		$(".addPortlet").on("click", showAddPortletForm);
-	  } 
-	  var showAddPortletForm = function() {
+	} 
+	var showAddPortletForm = function() {
 		$(".addPortlet").remove();
 		
 		var listHTML = "";
-		listHTML += "<li class='newPortlet'>"	
+		listHTML += "<li id='newPortlet' class='newPortlet'>"	
 		listHTML += "<div class='portlet-header'>포틀릿 추가</div>";
 		listHTML += "<div class='portlet-content'>";
 		listHTML += "<div class='btnpositionJsp addNewPortlet'>";
@@ -322,10 +414,10 @@
 		listHTML += "</tr>";
 		
 		//언어
-		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(한국어) :</th><td class='portletInfoTD'><input type='text'></td></tr>"
-		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(영어) :</th><td class='portletInfoTD'><input type='text'></td></tr>"
-		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(일본어) :</th><td class='portletInfoTD'><input type='text'></td></tr>"
-		listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input id='connectionUrl' type='text'></td></tr>";
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(한국어) :</th><td class='portletInfoTD'><input class='portletName' data1='1' type='text'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(영어) :</th><td class='portletInfoTD'><input class='portletName' data1='2' type='text'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(일본어) :</th><td class='portletInfoTD'><input class='portletName' data1='3' type='text'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input class='connectionUrl' type='text'></td></tr>";
 		listHTML += "<tr><th class='portletInfoTH'>포틀릿 타입 : </th><td class='portletInfoTD'><input type='radio' name='category' value='M' checked>&nbsp;메일&nbsp;<input type='radio' name='category' value='B'>&nbsp;게시판&nbsp;<input type='radio' name='category' value='A'>&nbsp;전자결재&nbsp;<input type='radio' name='category' value='L'>&nbsp;외부링크</td>";
 		listHTML += "<tr class='setBoard'><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
 		listHTML += "<input id='newPortletBoard' type='text'>";
@@ -361,7 +453,7 @@
 		
 		$(".addNewPortlet").on("click", {"portletId" : null}, portletAdd);
 		$(".newPortlet").find(".boardSetting").on("click", {"portletId" : null}, openBoardTree);
-	  }
+	}
 	</script>
 </head>
 	
@@ -369,7 +461,7 @@
 	<h1>포틀릿 관리</h1>
 	<div id="mainmenu">
 		<span><b>회사 선택  : </b></span>
-		<select id="ListCompany" onChange="selectCompanyID()">
+		<select id="ListCompany">
         	<c:forEach var="item" items="${companyList}">
            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
            	</c:forEach>

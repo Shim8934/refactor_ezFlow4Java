@@ -110,7 +110,7 @@
 					document.getElementById("ListCompany").innerHTML = companiesHTML;
 					
 					document.getElementById("ListCompany").addEventListener('change', function() {
-						getThemes();
+						getMenus();
 					});
 				} else {
 					// We reached our target server, but it returned an error
