@@ -357,8 +357,55 @@
     	
 		</script>
 	</head>
-<body class="leftbody">
-	<div class="left_pims" title="<spring:message code='ezAttitude.t1'/>"><span><spring:message code='ezAttitude.t1'/></span></div>
+	<body class="newLeft">
+		<div id="left" class="lnb" style="overflow: auto">
+	    	<!-- <div class="lnb_btn"></div> -->
+	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
+	    	<div class="left_title" title="메일">근태관리
+	        	<span class="sub_iconLNB tree_leftconfig" title="근태관리환경설정"></span>
+	        </div>
+	        <div class="btn_writeBox_work">
+	        	<p class="btn_write02"><span class="worksT">퇴근</span><span class="workT"></span></p> 
+	        	<p class="btn_write01"><span class="worksT">출근</span><span class="workT">15:20</span></p>
+	        </div>
+	        <ul class="lnbUL">
+	        	<div class="tree">
+	            	<span>
+	                	<span>
+	                    	<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_individual"></span><span class="h2_text">개인근태현황</span>
+	                            </div>
+	                    	</span>
+	                        <span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_department"></span><span class="h2_text">부서근태현황</span>
+	                            </div>
+	                    	</span>
+	                    </span>        
+	                </span>
+	            </div>
+	        </ul>
+	        <h2 class="on">
+	        	<span>
+	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title">수정신청관리</span>
+	            </span>
+	        </h2>
+	        <ul class="lnbUL">
+	        	<div class="tree">
+	            	<span>
+	                	<span>
+	                    	<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_change"></span><span class="h2_text">나의수정신청</span>
+	                            </div>
+	                    	</span>
+	                    </span>        
+	                </span>
+	            </div>
+	        </ul>
+	    </div>
+	<%-- <div class="left_pims" title="<spring:message code='ezAttitude.t1'/>"><span><spring:message code='ezAttitude.t1'/></span></div>
 	<div id="left" style="border-top:1px solid #dedede">
 		<div style="display: block;">
 			<article class="time">
@@ -376,10 +423,10 @@
     						<dd id="outAttiBtn" class="out" type="A03" datetype="2" onclick="checkHoliday(this)">입력</dd>
     					</dl>
     				</div>
-<%-- 					<p id="inAttiClock" style="margin:3px 0px 0px 7px; font-size:15px; text-align: left; margin-left:47px; padding-left:22px;"><spring:message code='ezAttitude.t64'/> : <spring:message code='ezAttitude.t71'/></p> --%>
-<%-- 					<p id="outAttiClock" style="margin:7px 0px 30px 8px;  font-size:15px; text-align: left; margin-left:47px; padding-left:22px;"><spring:message code='ezAttitude.t65'/> : <spring:message code='ezAttitude.t72'/></p> --%>
-<%-- 					<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezAttitude.t64'/></span> --%>
-<%-- 					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:2px"><spring:message code='ezAttitude.t65'/></span> --%>
+					<p id="inAttiClock" style="margin:3px 0px 0px 7px; font-size:15px; text-align: left; margin-left:47px; padding-left:22px;"><spring:message code='ezAttitude.t64'/> : <spring:message code='ezAttitude.t71'/></p>
+					<p id="outAttiClock" style="margin:7px 0px 30px 8px;  font-size:15px; text-align: left; margin-left:47px; padding-left:22px;"><spring:message code='ezAttitude.t65'/> : <spring:message code='ezAttitude.t72'/></p>
+					<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezAttitude.t64'/></span>
+					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:2px"><spring:message code='ezAttitude.t65'/></span>
 				</div>
 			</article>
 		</div>
@@ -419,6 +466,6 @@
 		<c:if test="${attitudeAdminCheck == true}">
 			<h3><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block"><spring:message code='ezAttitude.t73'/></span></h3>
 		</c:if>
-	</div>
+	</div> --%>
 </body>
 </html>

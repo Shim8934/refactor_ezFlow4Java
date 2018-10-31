@@ -387,7 +387,16 @@
 		 
 			// 주소작성창 호출
 			function newAddress() {
-				window.parent.frames["right"].new_address();
+				var wWeight = "600";
+                var wHeight = "500";
+
+                var heigth = window.screen.availHeight;
+                var width = window.screen.availWidth;
+
+                var left = (width - wWeight) / 2;
+                var top = (heigth - wHeight) / 2;
+                window.open("/ezAddress/addressWrite.do?ownerid=" + encodeURIComponent("${userInfo.id}") + "&folderid=&foldertype=", "",
+                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 			}
 			
 			
@@ -426,10 +435,11 @@
 	</head>
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
-	    	<div class="lnb_btn"></div>
+	    	<!-- <div class="lnb_btn"></div> -->
 	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
-	    	<div class="left_title" title="<spring:message code='ezAddress.t231' />" onclick="mail_Config()"><spring:message code='ezAddress.t231' />
-	        	<span class="sub_iconLNB tree_leftconfig" title="주소록환경설정"></span>
+	    	<div class="left_title" title="<spring:message code='ezAddress.t231' />">
+	    		<spring:message code='ezAddress.t231' />
+	        	<span class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezEmail.t99000044" />" onclick="mail_Config()"></span>
 	        </div>
 	        <div class="btn_writeBox" onclick="newAddress()">
 	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span><spring:message code='ezAddress.t236' /></p>

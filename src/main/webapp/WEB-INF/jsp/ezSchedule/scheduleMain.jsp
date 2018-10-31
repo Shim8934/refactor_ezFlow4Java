@@ -1074,7 +1074,7 @@
         <h1 id="titleimg">${defaultTitle}</h1>
         <div id="mainmenu">
             <ul>
-            	<li><span id="pn_img" onClick="WriteSchedule()"><spring:message code='ezSchedule.t214'/></span></li>
+            	<li class="important"><span id="pn_img" onClick="WriteSchedule()"><spring:message code='ezSchedule.t214'/></span></li>
             	<li><span onClick="PrintSchedule()"><spring:message code='ezSchedule.t217'/></span></li>
               	<li><span onClick="RefreshView()"><spring:message code='ezSchedule.t218'/></span></li>              	
 		      	<!-- <li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li> -->

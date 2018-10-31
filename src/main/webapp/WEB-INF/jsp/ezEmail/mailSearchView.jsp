@@ -806,10 +806,10 @@
 		<h1><spring:message code="ezEmail.t641" /></h1>
 		<div id="mainmenu">
 			<ul>
-			  <li><span onclick="new_mail_onclick()"><spring:message code="ezEmail.t510" /></span></li>
-			  <li><span onClick="reply_mail_onclick()"><spring:message code="ezEmail.t511" /></span></li>
-			  <li><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
-			  <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
+			  <li class="important"><span onclick="new_mail_onclick()"><spring:message code="ezEmail.t510" /></span></li>
+			  <li class="important"><span onClick="reply_mail_onclick()"><spring:message code="ezEmail.t511" /></span></li>
+			  <li class="important"><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
+			  <li class="important"><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
 			  <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 			  <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
 			  <li><span onClick="deleteWork()"><spring:message code="ezEmail.t95" /></span></li>

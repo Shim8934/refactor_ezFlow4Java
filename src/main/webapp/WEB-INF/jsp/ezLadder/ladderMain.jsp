@@ -109,7 +109,7 @@
 		</h1>
 		<div id="mainmenu">
 			<ul style="width:100%;">
-				<li id="btnInsert" onClick="newLad()" ><a><span><spring:message code="ezLadder.t018"/></span></a></li>
+				<li class="important" id="btnInsert" onClick="newLad()" ><span><spring:message code="ezLadder.t018"/></span></li>
 				<li style="float:right; font-weight:normal; position: relative; top:4px; right:22px;">
 					<input type="radio" class="participantBtn" id="part" onclick="participant(this.value)" value="part">
 					<label for="part"><spring:message code='ezLadder.t012' /></label>	

@@ -1116,7 +1116,6 @@
 			<c:if test="${listType eq 'department' or listType eq 'mine'}">
 				<li style="background: none"><select id="formId" onchange="goToPageByFormName();" style="height:29px;"></select></li>
 			</c:if>
-			<li style=""></li>
 			<li id="right">
 				<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" status="off" onclick="savePreviewRayer('NONE')">
 				<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" status="off" onclick="savePreviewRayer('W')"> 

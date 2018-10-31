@@ -929,7 +929,7 @@
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	
-		<h1><spring:message code='ezTask.t84' /><span id="mailBoxInfo"></span>
+		<h1><span id="titleSpan"></span><span id="mailBoxInfo"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
 		    <!-- 2018-07-17 구해안 라디오박스 검색창 select box로 변경 및 스타일 다른 모듈과 같도록 수정-->
 		    <select id="formId" name="searchCheck" style="width:80px; height:27px; border-color: #c8c8c8;">
@@ -945,14 +945,14 @@
 		    </span>
 		</h1>
 		
-		<div class="portlet_tabpart01" style="margin-top:3px;text-align:right">
+		<div class="portlet_tabpart01" style="margin-top:3px;text-align:right;display:none">
 		    <div class="portlet_tabpart01_top" id="tab1">
 		        <p><span id="1tab1" divname="taskprog"><spring:message code='ezTask.t200901' /></span></p>
 		        <p><span id="1tab3" divname="taskrepetition"><spring:message code='ezTask.t200902' /></span></p>
 		        <p><span id="1tab2" divname="taskdictate"><spring:message code='ezTask.t200903' /></span></p>		        
 		    </div>
+		    <br />
 		</div>
-		<br />
 		<div id="mainmenu">
 			<ul>
 				<!-- 2018-05-24 구해안 이미지 이동 -->
@@ -982,7 +982,7 @@
 		</div>
 		
 		<script type="text/javascript">
-			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+			//selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
 		<table style="WIDTH: 100%;overflow:AUTO;" id="list">
@@ -1067,8 +1067,4 @@
 		
 		<div id="tblPageRayer"></div>
 	</body>
-	
-	<script type="text/javascript">
-	    Tab1_NewTabIni("tab1");
-	</script>
 </html>

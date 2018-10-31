@@ -24,13 +24,13 @@
 
 /* 개인,부서,회사 색상 */
 .calendar_month .td_list td.individual{color:#666666;}
-.calendar_month .td_list td .individual{border-radius:2px; display:inline-block; width:10px; height:10px; border:1px solid #018bfa; background:#018bfa; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 개인 */
+.calendar_month .td_list td .individual{border-radius: 7px;display:inline-block;width: 5px;height: 5px;border:1px solid #018bfa;background:#018bfa;overflow:hidden;margin:-2px 5px 0px 0px;padding:0;vertical-align:middle;}/* 개인 */
 .calendar_month .td_list td.department{color:#666666;}
-.calendar_month .td_list td .department{border-radius:2px; display:inline-block; width:10px; height:10px; border:1px solid #01b43f; background:#01b43f; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 부서 */
+.calendar_month .td_list td .department{border-radius:7px; display:inline-block; width:5px; height:5px; border:1px solid #01b43f; background:#01b43f; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 부서 */
 .calendar_month .td_list td.company{color:#666666;}
-.calendar_month .td_list td .company{border-radius:2px; display:inline-block; width:10px; height:10px; border:1px solid #ff1c71; background:#ff1c71; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 회사 */
+.calendar_month .td_list td .company{border-radius: 7px;display:inline-block;width: 5px;height: 5px;border:1px solid #ff1c71;background:#ff1c71;overflow:hidden;margin:-2px 5px 0px 0px;padding:0;vertical-align:middle;}/* 회사 */
 .calendar_month .td_list td.Group{color:#666666;}
-.calendar_month .td_list td .Group{border-radius:2px; display:inline-block; width:10px; height:10px; border:1px solid #e9de13; background:#e9de13; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 그룹 */
+.calendar_month .td_list td .Group{border-radius:7px; display:inline-block; width:5px; height:5px; border:1px solid #e9de13; background:#e9de13; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 그룹 */
 /* //개인,부서,회사 색상 */
 .calendar_month .td_list td .icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
 .calendar_month .td_list td .icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */

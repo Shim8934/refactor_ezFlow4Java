@@ -5,16 +5,16 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	   	<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+	   	<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 	    <style>
-	    	.tree {
-	    		min-height : 100px;
-	    	}
 	    	.groupBoard {
 				width:158px;
 				overflow:hidden;
 				text-overflow:ellipsis;
+			}
+			#FromTreeView {
+				height: 100%;
 			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -247,13 +247,14 @@
 		        /* 18-05-17 김민성 - tootip 추가 및 글자수 관련 style 수정 */
 		        var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
-		        
+   
 		        /* 2018-10-11 홍승비 - 접근권한 등의 문제로 트리노드를 확장할 수 없는 경우에는 건너뛰도록 수정 */
 		        if (typeof(title2[0]) != "undefined") {
 			        var nodeLevel = title2[0].getAttribute("nodelevel");
+			        
 			        for(var i=0; i<title2.length; i++) {
 			        	var spanW = 152 - (18 * nodeLevel);
-			        	title3 = title2[i].getElementsByClassName("node_normal");
+			        	title3 = title2[i].getElementsByClassName("h2_text");
 			        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2"));
 			        	
 			        	/* 2018-08-24 홍승비 - 게시판명의 width가 음수가 되는 경우 분기 처리 */
@@ -366,7 +367,7 @@
 		        treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
 
 		        /* 18-05-17 김민성 - tootip 추가 및 글자수 관련 style 수정 */
-		        var node = document.getElementById(TreeIdx);
+		       /*  var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
 		        if(nodeLevel > 9)
@@ -377,7 +378,7 @@
 		        	title3[0].style.width = 152 - 18*nodeLevel +'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
-		        }
+		        } */
 		        
 		    }
 		
@@ -435,9 +436,9 @@
 		    }
 		
 		    function ShowMyBoardItem(val01) {		// 마이 게시판 선택
-		    	$(".on").attr("class", "off");
+		    	/* $(".on").attr("class", "off");
 		    	$(".myb h2").attr("class", "on");
-		    	$(".myb").next().attr("class", "on");
+		    	$(".myb").next().attr("class", "on"); */
 		    	
 		        SetTreeConfig();
 		        document.getElementById('TreeCtrl_MyBoardTree').innerHTML = "";
@@ -449,15 +450,26 @@
 		        treeView.DataSource(GetMyBoardItem("0"));
 		        treeView.DataBind("TreeCtrl_MyBoardTree");
 		        first++;
-		        
+	            
+	            $("h2.on").not($("#myBoardList")).attr("class","off");
+	            $("#TopBoardsList .lnbUL").attr("class","off");
+	            
+	            if ($("#myBoardList").attr("class") == "off") {
+	            	$("#myBoardList").attr("class","on");
+	            	$("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL");
+	            } else {
+	            	$("#myBoardList").attr("class","off");
+	            	$("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");	
+	            }
+	            
 		        /* 18-05-16 김민성 - tootip 추가 및 글자수 관련 style 수정 */
-				var node = $(".node_normal");
+				/* var node = $(".node_normal");
 				for(var i=0; i<node.length; i++) {
 					node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
 					node[i].style.width = '152px';
 					node[i].style.textOverflow = 'ellipsis';
 					node[i].style.overflow = 'hidden';
-				} 
+				}  */
 		    }
 		    function GetMyBoardItem(pRootTreeID) {
 		    	var returnXML = "";
@@ -498,13 +510,13 @@
 //					$(".on").attr("class", "off"); 게시물 등록,수정,삭제 등의 작업 완료시, 왼쪽 게시판 리스트가 초기화되는 버그때문에 주석처리
 
 				//TopBoard가 아닌 게시판의 왼쪽 게시판 리스트를 닫는다.
-				$(".fList h2").attr("class", "off"); // 즐겨찾기 off
+				/* $(".fList h2").attr("class", "off"); // 즐겨찾기 off
 				$(".qst h2").attr("class", "off"); // 전자설문 off
 				$(".pollDiv h2").attr("class", "off"); // 투표 off
 				$(".myb h2").attr("class", "off"); // 마이게시판 상위 off
 				$(".myb").next().attr("class", "off");//마이게시판 하위 ul off
 				$(".ApprDiv").attr("class", "off");
-				$(".ladder h2").attr("class", "off"); // 사다리게임 off
+				$(".ladder h2").attr("class", "off"); // 사다리게임 off */
 					
 		            var rootBoardID = ID;
 		            var num = obj.split("TreeCtrl");
@@ -517,16 +529,44 @@
 		            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
 		            treeView.DataBind(obj + "obj");
 		            tempID = ID;		            
+
+		            var ctr = $("#TreeCtr"+num[1]).closest("h2");
+		            var ctrobj = $("#"+obj + "obj").closest("ul");
+		            
+		            $("h2.on").not(ctr).attr("class","off");
+		            $("#TopBoardsList .lnbUL").attr("class","lnbUL off");
+		            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
+		            
+		            if (ctr.attr("class") == "off") {
+		            	ctr.attr("class","on");		            	
+		            	ctrobj.attr("class","lnbUL");
+		            	
+		            	/* ctrobj.animate({
+		            		maxHeight: "250px"
+		            	}, 500, function(){
+			            	ctrobj.attr("class","lnbUL");
+		            	}); */		            	
+		            } else {
+		            	ctrobj.attr("class","lnbUL off");
+		            	ctr.attr("class","off");
+		            	
+		            	/* ctrobj.animate({
+		            		maxHeight: "0px"
+		            	}, 500, function(){		            			
+		            		ctrobj.attr("class","lnbUL off");
+		            		ctr.attr("class","off")
+		            	}); */		            	
+		            }
 // 		        }
 
 		            /* 18-05-17 김민성 - tootip 추가 및 글자수 관련 style 수정 */
-					var node = $(".node_normal");
+					/* var node = $(".node_normal");
 					for(var i=0; i<node.length; i++) {
 						node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
 						node[i].style.width = '152px';
 						node[i].style.textOverflow = 'ellipsis';
 						node[i].style.overflow = 'hidden';
-					} 
+					} */ 
 		    }
 		    
 		    function GetSubBoard(pRootBoardID, pSubFlag) {
@@ -580,9 +620,9 @@
 		        }
 		    }
 		    function Open_Func(idx) {
-		    	$(".on").attr("class", "off");
-		    	$(".qst h2").attr("class", "on");
-				$(".qst").next().attr("class", "on");
+		    	$("h2.on").attr("class", "off");
+		    	$("#TopBoardsList .lnbUL").attr("class","lnbUL off");
+	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
 				
 				if (typeof window.parent.frames["right"] == "undefined") {
 					if (idx == 1) {
@@ -611,9 +651,9 @@
 		    }
 
 			function Poll_Open(idx) {
-				$(".on").attr("class", "off");
-				$(".pollDiv h2").attr("class", "on");
-				$(".pollDiv").next().attr("class", "on");
+				$("h2.on").attr("class", "off");
+				$("#TopBoardsList .lnbUL").attr("class","lnbUL off");
+	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
 				
 				if (typeof window.parent.frames["right"] == "undefined") {
 					 if (idx == 1) {
@@ -647,9 +687,9 @@
 		    }
 			
 			function ladder_Func(idx) {
-				$(".on").attr("class", "off");
-				$(".ladder h2").attr("class", "on");
-				$(".ladder").next().attr("class", "on");
+				$("h2.on").attr("class", "off");
+				$("#TopBoardsList .lnbUL").attr("class","lnbUL off");
+	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
 				
 				if (typeof window.parent.frames["right"] == "undefined") {
 					rightFrame.src = "/ezLadder/ladderMain.do?brdID=7";
@@ -665,9 +705,9 @@
 			}
 			
 			function memo_Func(idx) {
-				$(".on").attr("class", "off");
-				$(".memo h2").attr("class", "on");
-				$(".memo").next().attr("class", "on");
+				$("h2.on").attr("class", "off");
+				$("#TopBoardsList .lnbUL").attr("class","lnbUL off");
+	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
 				
 				if (CrossYN()) {
 					window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8";
@@ -718,9 +758,9 @@
 		        }
 		    }
 		    function favoriteList() {
-		    	$(".on").attr("class", "off");
-		    	$(".fList h2").attr("class", "on");
-		    	$(".fList").next().attr("class", "on");
+		    	$("h2.on").attr("class", "off");
+		    	$("#TopBoardsList .lnbUL").attr("class","lnbUL off");
+	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
 		    	
 		    	if (typeof window.parent.frames["right"] == "undefined") {
 					rightFrame.src = "/ezBoard/boardItemList_favorite.do";
@@ -784,6 +824,10 @@
 				}
 		    }
 		    function boardSearch(){
+		    	$("h2.on").attr("class", "off");
+		    	$("#TopBoardsList .lnbUL").attr("class","lnbUL off");
+	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
+	            
 		      	if (typeof window.parent.frames["right"] == "undefined") {
 					rightFrame.src = "/ezBoard/boardSearchView.do";
 				} else {
@@ -799,8 +843,139 @@
 	 
 	    </script>
 	</head>
-	<body class="leftbody" style="overflow: auto; height:100%">
-	    <div id="left" style="overflow: auto">
+	<body class="newLeft">
+		<div id="left" class="lnb" style="overflow: auto">
+	    	<!-- <div class="lnb_btn"></div> -->
+	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
+	    	<div class="left_title" title="<spring:message code='ezBoard.t116'/>">
+	    		<spring:message code='ezBoard.t116'/>
+	        	<span onclick="boardConfig()" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezBoard.t0005" />"></span>
+	        </div>
+	        <div class="btn_writeBox">
+	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span>게시글 등록</p>
+	        </div>
+	        <div class="lnb_lay">
+		        <h2 onclick="favoriteList()">
+		        	<span>
+		            	<span class="sub_iconLNB tree_board_star"></span><span class="h2Title"><spring:message code="ezBoard.t00010" /></span>
+		            </span>
+		        </h2>
+		        <c:if test="${MyBoardTopFlag == 'NO'}">
+			        <h2 class="off" id="myBoardList">
+			        	<span>
+			            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="ShowMyBoardItem()"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
+			            </span>
+			        </h2>	        
+			        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul">
+			        	<div class="tree" id='TreeCtrl_MyBoardTree'></div>
+			        </ul>
+		        </c:if>
+		        <div id='TopBoardsList'>
+		        	<script type="text/javascript">
+		        		parser = new DOMParser();
+	        		    xmlDoc = parser.parseFromString("${resultXML}","text/xml");
+	        			var i = 0;
+	        			$(xmlDoc).find("NODE").each(function(){
+	       			        document.write("<h2 class='off'>");
+	       			     	document.write("<span>");
+	       			     	document.write("<span class='sub_iconLNB tree_arrow_up'></span>");
+	       			     	document.write("<span id='TreeCtr" + i + "' class='h2Title' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
+	               					+ "\")'>" + $(this).find("DATA2").text() + "</span>");
+	       			     	document.write("</span>");
+	           				/* document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
+	           					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); */ 
+	           				document.write("</h2>\n");
+	           				document.write("<ul class='lnbUL off'>\n");
+	           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj'></div>\n");
+	           				document.write("</ul>\n");
+	           				i++;
+	        			});
+		        	</script>
+		        </div>
+		        <c:if test="${MyBoardTopFlag != 'NO'}">
+		        	<h2 class="off" id="myBoardList">
+			        	<span>
+			            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="ShowMyBoardItem(this)"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
+			            </span>
+			        </h2>
+			        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul" style="overflow:hidden">
+			        	<div class="tree" id='TreeCtrl_MyBoardTree'></div>
+			        	<div class="tree">
+				        	<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_my"></span><span class="h2_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span>
+	                            </div>
+	                    	</span>
+	                    	<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_my"></span><span class="h2_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span>
+	                            </div>
+	                    	</span>
+	                    	<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_my"></span><span class="h2_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span>
+	                            </div>
+	                    	</span>
+	                    </div>	
+			        </ul>
+			    </c:if>
+		        <ul class="lnbUL">
+		        	<div class="tree">
+		            	<span>
+		                	<span>
+		                		<c:if test="${useQuestion == 'YES'}">
+			                    	<span>
+			                        	<div class="node_div">
+			                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_qst"></span><span class="h2_text" onclick="Open_Func(1)"><spring:message code="ezBoard.t365" /></span>
+			                            </div>
+			                    	</span>
+		                    	</c:if>
+		                        <span class="pollDiv" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};">
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_poll"></span><span class="h2_text" onclick="Poll_Open(1)"><spring:message code="ezBoard.t371" /></span>
+		                            </div>
+		                    	</span>
+		                    	<c:if test="${ladderFlag == 'YES'}">
+			                        <span class="ladder">
+			                        	<div class="node_div">
+			                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_ladder"></span><span class="h2_text" onclick="ladder_Func(1)"><spring:message code="ezBoard.l001" /></span>
+			                            </div>
+			                    	</span>
+			                    </c:if>	
+			                    <c:if test="${memoFlag == 'YES'}">
+			                        <span class="memo">
+			                        	<div class="node_div">
+			                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_memo"></span><span class="h2_text" onclick="memo_Func(1)"><spring:message code="ezMemo.t001" /></span>
+			                            </div>
+			                    	</span>
+		                    	</c:if>
+		                    </span>        
+		                </span>
+		            </div>
+		        </ul>
+		        <ul class="lnbUL">
+		        	<div class="tree">
+		            	<span>
+		                	<span>
+		                    	<span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span>
+		                            </div>
+		                    	</span>
+		                    	<c:if test="${applyFlag == 'OK'}">
+		                    		<span>
+			                        	<div class="node_div">
+			                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onclick="Apprboard()"><spring:message code="ezBoard.t999001" /><span id="applyCount">${applyCount}</span></span>
+			                            </div>
+			                    	</span>
+		                    	</c:if>
+		                    </span>        
+		                </span>
+		            </div>
+		        </ul>
+			</div>		        
+	    </div>
+	    <%-- <div id="left" style="overflow: auto">
 	        <div class="left_board" title="<spring:message code='ezBoard.t116'/>"><span><spring:message code='ezBoard.t116'/></span></div>
 	        <c:if test="${MyBoardTopFlag != 'NO'}">
 	        	<div class="fList" onclick="favoriteList()">
@@ -811,9 +986,9 @@
 	        	</div>
 	        	<ul></ul>		        
 		        <div class="myb" id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
-		        <%-- 2018-09-20 홍승비 - window.onload 시 마이게시판 디폴트 클래스를 off로 수정 --%>
+		        2018-09-20 홍승비 - window.onload 시 마이게시판 디폴트 클래스를 off로 수정
 		            <h2 class="off">
-	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
+		            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span>
 		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group_new.gif" width="14px" />
 		            </h2>
 		        </div>
@@ -825,7 +1000,7 @@
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></h3>
 		        </ul>
 	        </c:if>
-	        <%-- 2018-09-20 홍승비 - window.onload 시 게시판리스트 디폴트 클래스를 off로 수정 --%>
+	        2018-09-20 홍승비 - window.onload 시 게시판리스트 디폴트 클래스를 off로 수정
 	        <div id='TopBoardsList'>
 	        	<script type="text/javascript">
 	        		parser = new DOMParser();
@@ -853,7 +1028,7 @@
 	        	<ul></ul>
 		        <div class="myb" id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
 		            <h2 class="off">
-	<%-- 	            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span> --%>
+		            <span style="background:url('/images/i_group.gif') no-repeat 8px; border-bottom:1px solid #aeabab; display: inline-block; width: 100%;"><spring:message code="ezBoard.t360"/></span>
 		            	<span><spring:message code="ezBoard.t360"/></span><img style="margin-left: 7px;vertical-align: middle" alt="" src="/images/i_group_new.gif" align="middle" />
 		            </h2>
 		        </div>
@@ -871,26 +1046,26 @@
 		        	<h2><span><spring:message code="ezBoard.t365" /></span></h2>		        
 		    	</div>
 		    	<ul></ul>
-		    	<%-- <ul>
+		    	<ul>
 	            	<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(1)"><spring:message code="ezBoard.t366" /></span></li>
 	            	<c:if test="${questionAdmin == 'true' }">
 	            		<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
 	            	</c:if>
-	        	</ul> --%>
+	        	</ul>
 		    </c:if>
-		  <%--   <c:if test="${applyFlag == 'OK'}">
+		    <c:if test="${applyFlag == 'OK'}">
 	            <div class="ApprDiv" onclick="Apprboard()">
 			        <h2>
 			            <span><spring:message code="ezBoard.t999001" /> <span id="applyCount">(${applyCount})</span></span>
 			        </h2>
 	            </div>
-		    </c:if> --%>
+		    </c:if>
 		    <div class="pollDiv" onclick="Poll_Open(1)" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};">
 	        	<h2><span><spring:message code="ezBoard.t371" /></span></h2>
 	        </div>
 	        <ul>
-	            <%-- <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
-	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(2)"><spring:message code="ezBoard.t373" /></span></li> --%>	            
+	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
+	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(2)"><spring:message code="ezBoard.t373" /></span></li>	            
 	        </ul>
 			
 			 <c:if test="${ladderFlag == 'YES'}">
@@ -935,6 +1110,6 @@
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
 	        $(".on").attr("class", "off");
-	    </script>
+	    </script> --%> 
 	</body>
 </html>

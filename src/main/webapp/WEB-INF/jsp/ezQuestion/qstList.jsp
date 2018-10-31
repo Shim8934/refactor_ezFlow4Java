@@ -598,7 +598,7 @@
 		<div id="mainmenu">
 			<ul>
 				<c:if test="${adminYN == 'Y' }">
-					<li><span onclick="qstWhite()"><spring:message code="ezBoard.t367" /></span></li>
+					<li class="important"><span onclick="qstWhite()"><spring:message code="ezBoard.t367" /></span></li>
 					<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				</c:if>	
 				<li><span onClick="menu_Result()"><spring:message code="ezQuestion.t303" /></span></li>
