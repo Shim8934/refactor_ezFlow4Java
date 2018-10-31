@@ -128,20 +128,28 @@ function getCalMonthViewSource_after(text) {
                 var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
                 var day = 1000 * 60 * 60 * 24;
                 betweenDay = parseInt(betweenDay / day, 10);
+                if (_Dtend.substring(10) == " 00:00:00.0") {
+                	betweenDay = betweenDay - 1;
+                }
                 
                 for (var j = 0; j <= betweenDay; j++) {
                     tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                     CalMonthDataBind(tempData[k]);
                     DataSDT.setDate(DataSDT.getDate() + 1);
-                    if (dateDiff(DataSDT, DataEDT) < 1 && _Dtend.substring(10) == " 00:00:00.0") {
-                    	break;
-                    }
+//                    if (dateDiff(DataSDT, DataEDT) < 1 && _Dtend.substring(10) == " 00:00:00.0") {
+//                    	break;
+//                    }
                     k += 1;
                 }
-            } else {
+            } else {            	
                 tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                 CalMonthDataBind(tempData[k]);
                 k += 1;
+//                if (k+1 == nlength) {
+//                	DataSDT = null;
+//                    DataEDT = null;
+//                    break;
+//                }
             }
             DataSDT = null;
             DataEDT = null;

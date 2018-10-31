@@ -2044,10 +2044,11 @@ public class EzScheduleController extends EgovFileMngUtil {
         String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
         int tenantId = loginVO.getTenantId();
         String companyID = loginVO.getCompanyID();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         
         //일정 상세정보
         ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, tenantId, companyID);
-         
+        
         //일정기간 계산        
         if (vo.getDateType().equals("3")){        	
         	_repeatcount = request.getParameter("repeatcount");
@@ -2060,7 +2061,18 @@ public class EzScheduleController extends EgovFileMngUtil {
         					+ vo.getStartDate().substring(11, 16) + " ~ " + vo.getEndDate().substring(11, 16);        		
         	}        	
         } else if (vo.getDateType().equals("2")){
-        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);        	
+        	//하루종일 일때 endDate 수정
+        	String realEndDateFormat = "";
+        	if (vo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+        		Date realEndDate = sdf.parse(vo.getEndDate().substring(0,10));
+        		Calendar cal = Calendar.getInstance();
+        		cal.setTime(realEndDate);
+        		cal.add(Calendar.DATE, 1);
+        		realEndDate = cal.getTime();
+        		realEndDateFormat = sdf.format(realEndDate);
+        	}
+        	
+        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + realEndDateFormat + " (" + msg.getMessage("ezSchedule.t280", locale);        	
         } else {
         	dateString = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16);
         }
