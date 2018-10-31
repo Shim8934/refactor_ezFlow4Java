@@ -103,12 +103,12 @@
     	<table class="content">
         	<tr>
             	<th>
-            		<span><strong>사용안함</strong></span>
+            		<span><strong><spring:message code="ezPersonal.t1000" /></strong></span>
             	</th>
             	<td class="pos1" colspan="2">
 	                <input id="chkMobileNotUse" name="chkMobileNotUse" type="checkbox" 
 	                	<c:if test="${notUserMobileLogin eq 1}"> checked="checked" </c:if> onchange="changeChk(this);" />
-	                <span id="" style="color:#000000"> (※스마트폰 분실시 반드시 체크하여 주시기 바랍니다.)</span>
+	                <span id="" style="color:#000000"> (※<spring:message code="ezPersonal.kyj03" />)</span>
 				</td>
 			</tr>
     	</table>
@@ -118,10 +118,10 @@
     	<br/>
     	<table class="mainlist" style="white-space: nowrap; width:100%; overflow-x: hidden; overflow-y: scroll;">
             <tr>
-                <th width='30%'>등록기기</th>
-                <th width='20%'>사용여부</th>
-                <th width='30%'>등록일자</th>
-                <th width='20%'>기기삭제</th>
+                <th width='30%'><spring:message code="ezPersonal.kyj01" /></th>
+                <th width='20%'><spring:message code="ezPersonal.t513" /></th>
+                <th width='30%'><spring:message code="ezApproval.t367" /></th>
+                <th width='20%'><spring:message code="ezPersonal.kyj02" /></th>
             </tr>
             <c:if test="${deviceInfo ne '0'}">
 	    		<c:forEach items="${deviceInfo}" var="list">
@@ -130,8 +130,8 @@
 						<td>${list.devType} ${list.subType}</td>
 						<td>
 							<select name="selectbox" id='selectChangeState' onchange='selectChange("${list.devId}",this,"S")'>
-								<option value='0' <c:if test="${notUsed eq 0}"> selected="selected" </c:if>>사용</option>
-								<option value='1' <c:if test="${notUsed eq 1}"> selected="selected" </c:if>>사용안함</option>
+								<option value='0' <c:if test="${notUsed eq 0}"> selected="selected" </c:if>><spring:message code="ezPersonal.t937" /></option>
+								<option value='1' <c:if test="${notUsed eq 1}"> selected="selected" </c:if>><spring:message code="ezPersonal.t1000" /></option>
 							</select>
 						</td>
 						<td>${list.regDate}</td>

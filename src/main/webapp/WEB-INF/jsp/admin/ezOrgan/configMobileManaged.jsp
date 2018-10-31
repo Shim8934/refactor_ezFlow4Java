@@ -73,13 +73,13 @@
 		<br/>
 		<table  class="content">
 			<tr>
-			  	<th>사용자 정보</th>
+			  	<th><spring:message code="ezOrgan.kyj08" /></th>
 				<td style="padding-left: 5px;">
 					<span id="userInfo"></span>
 				</td>
 			</tr>
 			<tr>
-			  	<th>사용안함</th>
+			  	<th><spring:message code="ezOrgan.kyj02" /></th>
 				<td>
 					<input type="checkbox" id="notUsed" value="1" onchange="changeChk(this)" 
 						<c:if test="${adminOrder eq 1}"> checked="checked" </c:if> />
