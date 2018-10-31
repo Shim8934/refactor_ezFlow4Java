@@ -695,12 +695,10 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(brdID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		// 2018-10-24 김민성 - 자원 관리자 및 부관리자 처리
+		// 2018-10-30 김민성 - 자원 멀티관리자 데이터 처리
 		String[] ownerList = resBrd.getOwnerID().split(",");
-		if(ownerList.length > 1) {
-			List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
-			model.addAttribute("ownerList", ownerInfoList);
-		}
+		List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+		
 		strBrdID = resBrd.getBrdID();
 		strBrdExplain = resBrd.getBrdExplain();
 		strResLocation = resBrd.getResLocation();
@@ -729,6 +727,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		}*/
 			
 	
+		model.addAttribute("ownerList", ownerInfoList);
 		model.addAttribute("strBrdID", strBrdID); 
 		model.addAttribute("strBrdNm", strBrdNm);
 		model.addAttribute("brdExplain", strBrdExplain);

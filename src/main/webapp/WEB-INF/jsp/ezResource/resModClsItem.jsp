@@ -29,14 +29,14 @@
 					res_owner["ownerName1"][i] = ownerList[i]["ownerName1"];
 					res_owner["ownerDeptName"][i] = ownerList[i]["ownerDeptName"];
 				}
-				document.getElementById("subOwner").innerHTML = "";
+				document.getElementById("Owner").innerHTML = "";
 				var length = res_owner.ownerName.length;
-				for(var i=1; i<length; i++) {
+				for(var i=0; i<length; i++) {
 					if(length-1 != i) {
-						document.getElementById("subOwner").innerHTML += res_owner["ownerName"][i] + "(" + res_owner["ownerName1"][i] + "), ";
+						document.getElementById("Owner").innerHTML += res_owner["ownerName"][i] + ", ";
 					}
 					else {
-						document.getElementById("subOwner").innerHTML += res_owner["ownerName"][i] + "(" + res_owner["ownerName1"][i] + ")";
+						document.getElementById("Owner").innerHTML += res_owner["ownerName"][i];
 					}
 				}
 			}
@@ -180,15 +180,16 @@
 			
 			function btnTakeOwner_Click_Complete(retVal) {
 				if (typeof (retVal) != "undefined") {
-					document.getElementById("Owner").innerHTML = retVal["ownerName"][0] + "(" + retVal["ownerName1"][0] + ")";
-					document.getElementById("subOwner").innerHTML = "";
+					//document.getElementById("Owner").innerHTML = retVal["ownerName"][0] + "(" + retVal["ownerName1"][0] + ")";
+					//document.getElementById("subOwner").innerHTML = "";
+					document.getElementById("Owner").innerHTML = "";
 					var length = retVal.ownerName.length;
-					for(var i=1; i<length; i++) {
+					for(var i=0; i<length; i++) {
 						if(length-1 != i) {
-							document.getElementById("subOwner").innerHTML += retVal["ownerName"][i] + "(" + retVal["ownerName1"][i] + "), ";
+							document.getElementById("Owner").innerHTML += retVal["ownerName"][i] + ", ";
 						}
 						else {
-							document.getElementById("subOwner").innerHTML += retVal["ownerName"][i] + "(" + retVal["ownerName1"][i] + ")";
+							document.getElementById("Owner").innerHTML += retVal["ownerName"][i];
 						}
 					}
 					res_owner = retVal;
@@ -226,22 +227,31 @@
 					</script>
       				<table class="content">
         				<tr>
-          					<th> <spring:message code="ezResource.t153"/></th>
-          					<td>	
-	          					<a class="imgbtn imgbck"><span onClick="btnTakeOwner_Click('ListViewOwner');"><spring:message code="ezResource.t154"/></span></a>
+        					<th> <spring:message code="ezResource.t153"/></th>
+          					<td colspan="2" style="border-right: 0px;">
+            						<div id="Owner" style="overflow-y:auto; line-height:25px; height:25px;"></div>
+	            			</td>
+	            			<td style="border-left:0px">
+            						<a class="imgbtn imgbck" style="float:right">
+            							<span onClick="btnTakeOwner_Click('ListViewOwner');"><spring:message code="ezResource.t154"/></span>
+            						</a>
+            				</td>
+          					<%-- <th> <spring:message code="ezResource.t153"/></th>
+          					<td colspan="3">	
 	          					<div id="Owner" style="overflow-y:auto; line-height:25px; display:inline" ><c:out value='${ownerNm}' />(<c:out value='${ownerPosition}' />)</div>
-	          						<%-- <input type="text" name="Owner" id="Owner" idval="${ownerID}" nmval="${ownerNm}" position="${ownerPosition}"
-									value="${ownerNm}(${ownerPosition})" style="width: 200px" readonly> --%>
-							</td>
-          					<th> <spring:message code="ezResource.t155"/></th>
-          					<td style="white-space:nowrap">
-          						<input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 150px" maxLength="20">
-          					</td>
-          					<%-- <th> <spring:message code="ezResource.t152"/></th>
+	          					<a class="imgbtn imgbck" style="float:right"><span onClick="btnTakeOwner_Click('ListViewOwner');"><spring:message code="ezResource.t154"/></span></a>
+	          						<input type="text" name="Owner" id="Owner" idval="${ownerID}" nmval="${ownerNm}" position="${ownerPosition}"
+									value="${ownerNm}(${ownerPosition})" style="width: 200px" readonly>
+							</td> 
+          					<th> <spring:message code="ezResource.t152"/></th>
           					<td id="MakeDate" nowrap style="width:120px;padding-right:15px"> ${makeDate} </td> --%>
         				</tr>
         				<tr>
-          					<th> <spring:message code="ezResource.rkms01"/></th>
+          					<th> <spring:message code="ezResource.t155"/></th>
+          					<td colspan="3" style="white-space:nowrap">
+          						<input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 100%" maxLength="20">
+          					</td>
+          					<%-- <th> <spring:message code="ezResource.rkms01"/></th>
           					<td colspan="3">
           						<table style="width:100%;">
         							<tr>
@@ -250,13 +260,13 @@
 										<td><div id="subOwner" style="overflow-y:auto; line-height:25px; height:25px;"></div></td>
         							</tr>
     							</table>
-          					<%-- <a class="imgbtn imgbck"><span onClick="btnTakeOwner_Click('ListViewsubOwner');"><spring:message code="ezResource.t154"/></span></a>
+          					<a class="imgbtn imgbck"><span onClick="btnTakeOwner_Click('ListViewsubOwner');"><spring:message code="ezResource.t154"/></span></a>
           					<div id="subOwner" style="overflow-y:auto; line-height:25px; height:25px;">
-							</div> --%>
-          						<%-- <input type="text" name="Owner" id="Owner" idval="${ownerID}" nmval="${ownerNm}" position="${ownerPosition}"
-								value="${ownerNm}(${ownerPosition})" style="width: 200px" readonly> --%>
-          						<%-- <input type="text" name="OwnDept" id="OwnDept" idval="${ownDeptID}" value="${ownDeptNm}" style="width: 100%"> --%>
-          					</td>
+							</div>
+          						<input type="text" name="Owner" id="Owner" idval="${ownerID}" nmval="${ownerNm}" position="${ownerPosition}"
+								value="${ownerNm}(${ownerPosition})" style="width: 200px" readonly> 
+          						<input type="text" name="OwnDept" id="OwnDept" idval="${ownDeptID}" value="${ownDeptNm}" style="width: 100%"> 
+          					</td> --%>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t39"/></th>
