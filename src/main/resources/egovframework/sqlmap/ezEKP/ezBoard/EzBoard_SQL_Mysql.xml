@@ -3606,6 +3606,8 @@
 	        	extensionattribute1 = '0'
 	        AND 
 	        	extensionattribute2 = '1'
+	        AND
+				(APPRFLAG = 'Y' OR APPRFLAG IS NULL)
         ]]>
 	</select>
 	

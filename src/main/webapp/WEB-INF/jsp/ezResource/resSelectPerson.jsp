@@ -25,6 +25,7 @@
 	    	}
 	    </style>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/control/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/control/TreeViewCtrl.js')}"></script>
@@ -71,8 +72,8 @@
 		    xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 		    xmlHTTP.send(strQuery);
 		    
-		    m_ownerTitleList = new Array(Owner, subOwner);
-            m_ownerWindowList = new Array(ListViewOwner, ListViewsubOwner);
+		    //m_ownerTitleList = new Array(Owner, subOwner);
+            //m_ownerWindowList = new Array(ListViewOwner, ListViewsubOwner);
 
             /* AddressTreeView = new window['treeview.htc'].TreeView('AddressTreeView', 'AddressTreeView');
             AddressTreeView.attachEvent('requestdata', address_requestdata);
@@ -83,7 +84,7 @@
 		    ListTypeChangeIcon();
 		    
 		    ownerListview("OwnerList", "ListViewOwner");
-		    ownerListview("subOwnerList", "ListViewsubOwner");
+		    //ownerListview("subOwnerList", "ListViewsubOwner");
 		    
 		    var listView = new ListView();
             listView.LoadFromID("OwnerList");
@@ -91,19 +92,14 @@
             var totalRows = listView.GetDataRows();
             var totalLen = totalRows.length;
             
-            var listView2 = new ListView();
+           /*  var listView2 = new ListView();
             listView2.LoadFromID("subOwnerList");
             
             var totalRows2 = listView2.GetDataRows();
-            var totalLen2 = totalRows2.length;
+            var totalLen2 = totalRows2.length; */
 
             var stridlength = 0;
             if (RetValue != undefined && RetValue["ownerId"] != undefined && RetValue["ownerId"] != "") {
-            	
-            	var pparsingXML = "";
-                var pparsingXML2 = "";
-
-                pparsingXML2 = "<LISTVIEWDATA><ROWS>"
                 var strName;
                 var strId;
                 var strName1;
@@ -112,24 +108,31 @@
                 var strDeptName1;
                 var strDeptName2;
 
-                strId = RetValue["ownerId"][0];
-                strDept = RetValue["ownerDept"][0];
-                strName = RetValue["ownerName"][0];
-                strName1 = RetValue["ownerName1"][0];
+                for(var i=0; i<RetValue.ownerId.length; i++) {
+                	var pparsingXML = "";
+                    var pparsingXML2 = "";
 
-                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strDept + "]]></DATA2>";
-                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName + "]]></DATA3>";
-                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strName1 + "]]></DATA4>";
-                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "(" + strName1 + ")" + "]]></VALUE></CELL></ROW>";
-                
-                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
-                var Resultxml = loadXMLString(pparsingXML2);
+                    pparsingXML2 = "<LISTVIEWDATA><ROWS>"
+                    
+	                strId = RetValue["ownerId"][i];
+	                strDept = RetValue["ownerDept"][i];
+	                strName = RetValue["ownerName"][i];
+	                strName1 = RetValue["ownerName1"][i];
+					
+	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strDept + "]]></DATA2>";
+	                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName + "]]></DATA3>";
+	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strName1 + "]]></DATA4>";
+	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "(" + strName1 + ")" + "]]></VALUE></CELL></ROW>";
+	                
+	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
+	                var Resultxml = loadXMLString(pparsingXML2);
+	            	
+	            	var objTr = listView.AddRow(i);
+	            	listView.AddDataRow(objTr, Resultxml);
+                }
             	
-            	var objTr = listView.AddRow(0);
-            	listView.AddDataRow(objTr, Resultxml);
-            	
-            	for(var i=1; i<RetValue.ownerId.length; i++) {
+            	/* for(var i=1; i<RetValue.ownerId.length; i++) {
 	            	var pparsingXML = "";
 	                var pparsingXML2 = "";
 	
@@ -158,7 +161,7 @@
 	            	
 	            	var objTr = listView2.AddRow(i-1);
             		listView2.AddDataRow(objTr, Resultxml);
-           		}
+           		} */
             }
             	 
             /*    stridlength = RetValue["ownerid"].length;
@@ -212,12 +215,12 @@
             } */
 		    
 		    ChangeListView_onClick(getOrganListType());
-            if(RetValue["flag"][0] == "ListViewOwner") {
+            /* if(RetValue["flag"][0] == "ListViewOwner") {
            	 	SelectOwnerWindow(Owner, ListViewOwner);
             }
             else {
             	SelectOwnerWindow(subOwner, ListViewsubOwner);
-            }
+            } */
            	 
 		}
 		
@@ -227,9 +230,7 @@
             listview.SetHeightFree(true);
             listview.SetSelectFlag(false);
             listview.SetMulSelectable(true);
-            if(pID != "OwnerList") {
-            	listview.SetRowOnDblClick("DeleteOwner()");
-            }
+            listview.SetRowOnDblClick("DeleteOwner()");
             listview.DataSource(loadXMLString("<LISTVIEWDATA></LISTVIEWDATA>"));
             listview.DataBind(pListView);
             listview.RowDataBind();
@@ -515,6 +516,7 @@
 		                treeView.SetID("FromTreeView");
 		                treeView.SetUseAgency(true);
 		                treeView.SetRequestData("TreeViewRequestData");
+		                treeView.SetMulSelectable(true);
 		                treeView.SetNodeClick("TreeViewNodeClick");
 		                treeView.SetNodeDblClick("TreeViewNodeDbClick");
 		                treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
@@ -534,14 +536,22 @@
 				selList.LoadFromID(listid);
 
 				var totalRows = selList.GetDataRows();
+				var totalLen = totalRows.length;
 				
-				rtn["ownerId"][0] = GetAttribute(totalRows[0], "DATA1");
-				rtn["ownerDept"][0] = GetAttribute(totalRows[0], "DATA2");
-				rtn["ownerName"][0] = GetAttribute(totalRows[0], "DATA3");
-				rtn["ownerName1"][0] = GetAttribute(totalRows[0], "DATA4");
-				rtn["ownerDeptName"][0] = GetAttribute(totalRows[0], "DATA5");
+				if(totalLen == 0) {
+					alert("<spring:message code='ezResource.rkms01'/>");
+					return;
+				}
 				
-				var listid2 = "subOwnerList";
+				for (var i = 0; i < totalLen; i++) {
+					rtn["ownerId"][i] = GetAttribute(totalRows[i], "DATA1");
+					rtn["ownerDept"][i] = GetAttribute(totalRows[i], "DATA2");
+					rtn["ownerName"][i] = GetAttribute(totalRows[i], "DATA3");
+					rtn["ownerName1"][i] = GetAttribute(totalRows[i], "DATA4");
+					rtn["ownerDeptName"][i] = GetAttribute(totalRows[i], "DATA5");
+				}
+				
+				/* var listid2 = "subOwnerList";
 				var selList2 = new ListView();
 				selList2.LoadFromID(listid2);
 				var totalRows2 = selList2.GetDataRows();
@@ -553,7 +563,7 @@
 					rtn["ownerName"][i+1] = GetAttribute(totalRows2[i], "DATA3");
 					rtn["ownerName1"][i+1] = GetAttribute(totalRows2[i], "DATA4");
 					rtn["ownerDeptName"][i+1] = GetAttribute(totalRows2[i], "DATA5");
-				}
+				} */
 				
 				if (ReturnFunction != null) {
 	                ReturnFunction(rtn);
@@ -646,6 +656,7 @@
 		                MainTable.style.marginLeft = "auto";
 		                MainTable.style.marginRight = "auto";
 		                var M_TR = document.createElement("TR");
+		                M_TR.setAttribute("id", "MailUserlist_" + i);
 		                M_TR.style.cursor = "pointer";
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
@@ -829,13 +840,138 @@
 		        }
 		    }
 		    function event_listMout(obj) {
+		    	for (var i = 0; i < listContentArry.length; i++) {
+	                if (document.getElementById(listContentArry[i]) == obj) {
+	                    return;
+	                }
+	            }
 		        if (p_ListOrderObject != obj ) {
 		            for (var RowCnt = 0; RowCnt < obj.childNodes.length; RowCnt++) {
 		                obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
 		            }
 		        }
 		    }
+		    /* 
+		    var PressShiftKey = false;
+	        var PressCtrlKey = false;
+	        function event_listOnkeyUp(event) {
+	            if (navigator.userAgent.indexOf('Firefox') != -1) {
+	                if (!event) event = window.event;
+	            }
+	            switch (event.keyCode) {
+	                case 16: PressShiftKey = false; break;
+	                case 17: PressCtrlKey = false; break;
+	                case 46: deleteWork(false); break;
+	            }
+	
+	        }
+	        
+	        function event_listOnkeyDown(event) {
+	            if (navigator.userAgent.indexOf('Firefox') != -1) {
+	                if (!event) event = window.event;
+	            }
+	            switch (event.keyCode) {
+	                case 16: PressShiftKey = true; break;
+	                case 17: PressCtrlKey = true; break;
+	            }
+	        } */
+		    
+		    var listContentArry = new Array();
+		    var listSubContentArry = new Array();
+	        var listEventCheckbox = false;
+	        var listSubEventCheckbox = false;
 		    function event_listclick(obj) {
+		    	 /* if (!listEventCheckbox) {
+		                if (!PressShiftKey && !PressCtrlKey && listContentArry.length > 0) {
+		                    for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
+		                        p_ListOrderObject = document.getElementById(listContentArry[Cnt]);
+		                        
+		                        if (p_ListOrderObject != null) {
+			                        for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
+			                            p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
+			                        }
+		                        }	
+		                    }
+		                    listContentArry = new Array();
+		                }
+		                if (PressShiftKey) {
+		                    var SelectedPreObj = null;
+		                    for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
+		                        p_ListOrderObject = document.getElementById(listContentArry[Cnt]);
+		                        if (Cnt == 0)
+		                            SelectedPreObj = p_ListOrderObject;
+		
+		                        for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
+		                            p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
+		                        }
+		                    }
+		                    listContentArry = new Array();
+		                    if (p_ListOrderObject == null || p_ListOrderObject == "")
+		                        return;
+		
+		                    var PrelistContent;
+		                    if (SelectedPreObj == null)
+		                        PrelistContent = p_ListOrderObject.getAttribute("id");
+		                    else
+		                        PrelistContent = SelectedPreObj.getAttribute("id");
+		
+		                    p_ListOrderObject = obj;
+		
+		
+		                    var CurlistContent = obj.getAttribute("id");
+		                    var PrePoint = parseInt(PrelistContent.replace("MailUserlist_", ""));
+		                    var CurPoint = parseInt(CurlistContent.replace("MailUserlist_", ""));
+		                    if (PrePoint < CurPoint) {
+		
+		                        for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) {
+		                            p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
+		                            for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
+		                                p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
+		                            }
+		                            listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
+		                        }
+		
+		                    }
+		                    else if (PrePoint > CurPoint) {
+		                        for (var Cnt = PrePoint; Cnt >= CurPoint; Cnt--) {
+		                            p_ListOrderObject = document.getElementById("MailUserlist_" + Cnt);
+		                            for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
+		                                p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
+		                            }
+		                            listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
+		                        }
+		                    }
+		                    else
+		                        return;
+		
+		                }
+		                else {
+		                    p_ListOrderObject = obj;
+		                    var insertFlag = true;
+		                    for (var i = 0; i < listContentArry.length; i++) {
+		                        if (listContentArry[i] == p_ListOrderObject.getAttribute("id")) {
+		                            insertFlag = false;
+		                            if (PressCtrlKey) {
+		                                listContentArry.splice(i, 1);
+		                                for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
+		                                    p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
+		                                }
+		                                if (listContentArry.length == 0)
+		                                    p_ListOrderObject = "";
+		                            }
+		                        }
+		                    }
+		                    if (insertFlag) {
+		                        for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
+		                            p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
+		                        }
+		
+		                        listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
+		                    }
+		                }
+		            }
+		            else
+		                listEventCheckbox = false; */
 		        if (p_ListOrderObject != obj && p_ListOrderObject != null) {
 		            for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
 		                p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
@@ -844,10 +980,11 @@
 		        p_ListOrderObject = obj;
 		        for (var RowCnt = 0; RowCnt < obj.childNodes.length; RowCnt++) {
 		            obj.childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
-		        }
+		        } 
 		    }
 		    function event_listDBclick(obj) {
-		    	 if (m_selectedWindow != null) {
+		    	InsertOwner("MsgToList");
+		    	 /* if (m_selectedWindow != null) {
 			            var pListView = "";
 			            if (m_selectedWindow.id == "ListViewOwner") {
 			                pListView = "MsgToList";
@@ -856,7 +993,7 @@
 			                pListView = "MsgCCList";
 			            }
 			            InsertOwner(pListView);
-			        }
+			        } */
 		    }
 		    var BlockSize = 10;
 		    function td_Create1(strtext) {
@@ -1047,10 +1184,10 @@
 	        			var userId = p_ListOrderObject.getAttribute("_data2");
 	        			var currOwner = $("#OwnerList_TR_0").attr("data1");
 	        			var IsInsert = CheckMailReceiver(userId, "3");
-	        			if (userId == currOwner) {		// 선택한 유저가 이미 부관리자에 추가된 경우
+	        			/* if (userId == currOwner) {		// 선택한 유저가 이미 부관리자에 추가된 경우
 	        				alert("<spring:message code='ezQuestion.t18'/>");
-		   				}
-	        			else if(IsInsert) {
+		   				} */
+	        			if(IsInsert) {
 	        				alert("<spring:message code='ezQuestion.t18'/>");
 	        			}
 	        			else {
@@ -1087,12 +1224,28 @@
         	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
         	                var Resultxml = loadXMLString(pparsingXML2);
         	            	
-        	                listView.DeleteRow(totalRows[0].id);
+        	                var MaxID = 0;
+	                        var InitTr = listView.GetDataRows();
+	                        var MaxCntNum = 0;
+	                        for (var j = 0  ; j < InitTr.length  ; j++) {
+	                            var curnum = Number(listView.GetSelectedRowID(j).substring(listView.GetSelectedRowID(j).lastIndexOf('_') + 1), listView.GetSelectedRowID(j).length);
+	                            if (MaxID < curnum) {
+	                                MaxID = curnum;
+	                                MaxCntNum = j;
+	                            }
+	                        }
+	                        
+	    	            	var objTr = listView.AddRow(InitTr.length);
+	    	            	if (MaxCntNum != 0)
+	                            MaxCntNum = MaxCntNum + 1;
+	                        SetAttribute(objTr, "id", listView.GetSelectedRowID(MaxCntNum).substring(0, listView.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	    	            	listView.AddDataRow(objTr, Resultxml);
+        	                /* listView.DeleteRow(totalRows[0].id);
         	            	var objTr = listView.AddRow(0);
-        	            	listView.AddDataRow(objTr, Resultxml);
+        	            	listView.AddDataRow(objTr, Resultxml); */
 	        			}
 	        		}
-	        		else {				// 부관리자 추가
+	        		/* else {				// 부관리자 추가
 	        			var userId = p_ListOrderObject.getAttribute("_data2");
 	        			var currOwner = $("#OwnerList_TR_0").attr("data1");
 	        			if (userId == currOwner) {		// 선택한 유저가 이미 관리자에 추가된 경우
@@ -1152,13 +1305,13 @@
 		    	            	listView.AddDataRow(objTr, Resultxml);
 	        				}
 	        			}
-	   				}
+	   				} */
 	   			}
 	        }
 	        
 	        function DeleteOwner() {
 	            var selList = new ListView();
-	            selList.LoadFromID("subOwnerList");
+	            selList.LoadFromID("OwnerList");
 	            var arrRows = selList.GetSelectedRows();
 	            var strName = "";
 	            for (var i = 0; i < arrRows.length; i++) {
@@ -1166,7 +1319,7 @@
 	            }
 	        }
 	        
-	        function SelectOwnerWindow(Title, selectedWindow) {
+	        /* function SelectOwnerWindow(Title, selectedWindow) {
 	            for (var count = 0; count < m_ownerTitleList.length; count++) {
 	                m_ownerTitleList[count].style.fontWeight = "normal";
 	                m_ownerWindowList[count].style.backgroundColor = m_titleNoneSelectedColor;
@@ -1182,7 +1335,7 @@
 	
 	            selectedWindow.normalColor = m_titleSelectedColor;
 	            m_selectedWindow = selectedWindow;
-	        }
+	        } */
 	        
 	        function CheckMailReceiver(selRow, option) {
 				var rtnValue = false;
@@ -1195,11 +1348,11 @@
 					email = selRow;
 
 				var _listview = new ListView();
-				_listview.LoadFromID("subOwnerList");
+				_listview.LoadFromID("OwnerList");
 				var arrRows = _listview.GetDataRows();
 
 				for (count2 = 0; count2 < arrRows.length; count2++) {
-					if (email.trim() == $("tr[id*='subOwnerList_TR']").eq(count2).attr("data1").trim()) {
+					if (email.trim() == $("tr[id*='OwnerList_TR']").eq(count2).attr("data1").trim()) {
 						rtnValue = true;
 						break;
 					}
@@ -1329,18 +1482,18 @@
 	                    <tbody><tr id="ListMsgTo">
 	                        <td style="width: 30px; text-align: center;">
 	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;margin-top:22px" onclick="InsertOwner('MsgToList')"><br>
-	                            <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="">
+	                            <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteOwner()">
 	                        </td>
 	                        <td style="vertical-align: top;">
-	                            <h2 id="Owner" class="receiver_tltype01" onclick="SelectOwnerWindow(Owner,ListViewOwner)" style="cursor: pointer; font-weight: bold;">
-	                                <span style="min-width: 45px;" id="ToTitleStr">관리자</span>
+	                            <h2 id="Owner" class="receiver_tltype01" style="cursor: pointer; font-weight: bold;">
+	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code="ezResource.t106"/></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewOwner" ondragover="onDragEnter(event, this)" ondrop="onDrop(event, this)" style="width: 250px; height: 100px; overflow: auto; background-color: rgb(244, 250, 255);" onclick="SelectOwnerWindow(ToTitle,this)" ondblclick="" class="ui-sortable"></div>
+	                                <div id="ListViewOwner" ondragover="onDragEnter(event, this)" ondrop="onDrop(event, this)" style="width: 250px; height: 427px; overflow: auto;" onclick="" ondblclick="" class="ui-sortable"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
-	                    <tr id="ListMsgCC">
+	                    <!-- <tr id="ListMsgCC">
 	                        <td style="width: 30px; text-align: center;">
 	                            <br>
 	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;margin-top:22px" onclick="InsertOwner('MsgCCList')"><br>
@@ -1355,7 +1508,7 @@
 	                                <div id="ListViewsubOwner" ondragover="onDragEnter(event, this)" ondrop="onDrop(event, this)" style="width: 250px; height: 283px; overflow: auto; background-color: white;" onclick="SelectOwnerWindow(CCTitle,this)" ondblclick="" class="ui-sortable"></div>
 	                            </div>
 	                        </td>
-	                    </tr>
+	                    </tr> -->
 	                </tbody></table>
 	            </td>
 		    </tr>

@@ -179,15 +179,16 @@
 			
 			function btnTakeOwner_Click_Complete(retVal) {
 				if (typeof (retVal) != "undefined") {
-					document.getElementById("Owner").innerHTML = retVal["ownerName"][0] + "(" + retVal["ownerName1"][0] + ")";
-					document.getElementById("subOwner").innerHTML = "";
+					//document.getElementById("Owner").innerHTML = retVal["ownerName"][0] + "(" + retVal["ownerName1"][0] + ")";
+					//document.getElementById("subOwner").innerHTML = "";
+					document.getElementById("Owner").innerHTML = "";
 					var length = retVal.ownerName.length;
-					for(var i=1; i<length; i++) {
+					for(var i=0; i<length; i++) {
 						if(length-1 != i) {
-							document.getElementById("subOwner").innerHTML += retVal["ownerName"][i] + "(" + retVal["ownerName1"][i] + "), ";
+							document.getElementById("Owner").innerHTML += retVal["ownerName"][i] + ", ";
 						}
 						else {
-							document.getElementById("subOwner").innerHTML += retVal["ownerName"][i] + "(" + retVal["ownerName1"][i] + ")";
+							document.getElementById("Owner").innerHTML += retVal["ownerName"][i];
 						}
 					}
 					
@@ -269,20 +270,24 @@
 					<table class="content">
         				<tr>
         					<th> <spring:message code="ezResource.t153"/></th>
-          					<td>
-            						<a class="imgbtn imgbck">
+          					<td colspan="2" style="border-right: 0px;">
+            						<div id="Owner" style="overflow-y:auto; line-height:25px; height:25px;" >
+            							<c:out value='${displayName}' />
+	            					</div>
+	            			</td>
+	            			<td style="border-left:0px">
+            						<a class="imgbtn imgbck" style="float:right">
             							<span onClick="btnTakeOwner_Click('ListViewOwner');"><spring:message code="ezResource.t154"/></span>
             						</a>
-            						<div id="Owner" style="overflow-y:auto; line-height:25px; display:inline" ><c:out value='${displayName}' />(<c:out value='${title}' />)</div>
-          						<%-- <input type="text" name="Owner" id="Owner" idval="${userID}" position="<c:out value='${title}' />" nmval="<c:out value='${displayName}' />" value="<c:out value='${displayName}' />(<c:out value='${title}' />)" style="width: 200px" readonly> --%>
             				</td>
+          						<%-- <input type="text" name="Owner" id="Owner" idval="${userID}" position="<c:out value='${title}' />" nmval="<c:out value='${displayName}' />" value="<c:out value='${displayName}' />(<c:out value='${title}' />)" style="width: 200px" readonly> --%>
           					<%-- <th> <spring:message code="ezResource.t151"/></th>
           					<td><input type="text" name="OwnDept" id="OwnDept" idval="${deptID}" value="<c:out value='${deptName}' />" style="width: 100%" readonly></td> --%>
-          					<th> <spring:message code="ezResource.t155"/></th>
-          					<td><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 150px" maxlength="20"></td>
         				</tr>
         				<tr>
-          					<th> <spring:message code="ezResource.rkms01"/></th>
+          					<th> <spring:message code="ezResource.t155"/></th>
+          					<td colspan="3"><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 100%" maxlength="20"></td>
+          					<%-- <th> <spring:message code="ezResource.rkms01"/></th>
           					<td colspan="3" >
           						<table style="width:100%;">
         							<tr>
@@ -291,12 +296,12 @@
 										<td><div id="subOwner" style="overflow-y:auto; line-height:25px; height:25px;"></div></td>
         							</tr>
     							</table>
-            						<%-- <a class="imgbtn imgbck">
+            						<a class="imgbtn imgbck">
             							<span onClick="btnTakeOwner_Click('ListViewsubOwner');"><spring:message code="ezResource.t154"/></span>
             						</a>
-            						<div id="subOwner" style="overflow-y:auto; line-height:25px; display:inline"></div> --%>
+            						<div id="subOwner" style="overflow-y:auto; line-height:25px; display:inline"></div>
           						<!-- <input type="text" name="subOwner" id="subOwner" style="width: 200px" readonly> -->
-            				</td>
+            				</td> --%>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t39"/></th>

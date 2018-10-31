@@ -225,7 +225,7 @@ function covBody(pbody) {
     }
     
     BodyStr = BodyStr.replace(/[^-]height='height:\d+'/ig, "");
-    BodyStr = BodyStr.replace(/([^-]height:)(\d+)/ig, pxToMm).replace(/(width:)(\d+)/ig, pxToMm);
+    BodyStr = BodyStr.replace(/([^-]height:)(\d+[\w?]*)/ig, pxToMm).replace(/(width:)(\d+[\w?]*)/ig, pxToMm);
     BodyStr = BodyStr.replace(/(border-)(left|right|top|bottom):[\w\d\s#.(),]*;/g, "");
     //BodyStr = BodyStr.replace(/width="(.*?)[0-9]*/ig, " $&mm");
     //BodyStr = BodyStr.replace(/width='(.*?)[0-9]*/ig, " $&mm");

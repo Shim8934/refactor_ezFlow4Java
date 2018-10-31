@@ -122,6 +122,8 @@ public class EzEmailMailListController {
 		String useSearchContent = ezCommonService.getTenantConfig("useSearchContent", userInfo.getTenantId());
 		String useMailNewWindow = ezCommonService.getTenantConfig("useMailNewWindow", userInfo.getTenantId()); 
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
+		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", userInfo.getTenantId());
 
 		if (useEncryptZipForEmail.equals("")) {
 			useEncryptZipForEmail = "NO";
@@ -191,6 +193,8 @@ public class EzEmailMailListController {
 		model.addAttribute("useMailNewWindow", useMailNewWindow); 
 		model.addAttribute("sentFolderId", ezEmailUtil.getSentFolderId(locale));
 		model.addAttribute("useCountryIP", useCountryIP);
+		model.addAttribute("systemCountryCode", systemCountryCode);
+		model.addAttribute("useShowSystemCountry", useShowSystemCountry);
 
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor

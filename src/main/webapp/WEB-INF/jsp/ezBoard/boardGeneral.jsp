@@ -77,7 +77,14 @@
         	function Cancel_Click() {
         		document.getElementById("listcount").value = "${boardListConfig.listCount}";
         		document.getElementById("PreviewMode").value = "${boardListConfig.preview}";
-        		if("${boardListConfig.preview}"=="OFF"){
+        		//2018-10-30 김보미 - 리스트 영역, 미리보기 영역 갯수도 초기화
+        		PreviewOption(document.getElementById("PreviewMode"));
+        		document.getElementById("HListUser").value = "${boardListConfig.previewHList}";
+        		document.getElementById("WListUser").value = "${boardListConfig.previewWList}";
+        		document.getElementById("HPreUser").value = "${boardListConfig.previewHContent}";
+        		document.getElementById("WPreUser").value = "${boardListConfig.previewWContent}";    
+
+			 	if("${boardListConfig.preview}"=="OFF"){
         			document.getElementById("PreviewHSizeDiv").style.display = "none";
                   	document.getElementById("PreviewWSizeDiv").style.display = "none";
         		}
