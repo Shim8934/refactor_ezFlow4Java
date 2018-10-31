@@ -542,33 +542,25 @@ public class EzNewPortalAdminController {
 	}
 	
 	/**
-	 * 관리자 포탈 포틀릿목록 조회
+	 * 관리자 포탈 포틀릿 업데이트
 	 */
-	@RequestMapping(value = "/admin/ezNewPortal/updatePortlets.do")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezNewPortal/updatePortlet.do")
 	@ResponseBody
-	public JSONArray updatePortalPortlets(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
-		LOGGER.debug("getPortalPortlets started.");
+	public void updatePortlet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, @RequestBody JSONObject paramMap, Model model) throws Exception {
+		LOGGER.debug("updatePortlet started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String portletId = req.getParameter("portletId");
-		String companyId = req.getParameter("companyId");
-		String url = "/rest/admin/ezPortal/portlets/"+portletId+"/companies/"+companyId;
+//		String portletId = req.getParameter("portletId");
+//		String companyId = req.getParameter("companyId");
+//		String url = "/rest/admin/ezPortal/portlets/" + portletId + "/companies/" + companyId;
 		
+		paramMap.put("userId", userInfo.getId());
+		System.out.println(paramMap.get("companyId"));
+		JSONObject nameList = new JSONObject();
 		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", userInfo.getId());		
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "PATCH", null);
-		String result = resultBody.get("status").toString();
-		JSONArray json = new JSONArray();
-		
-		if (result.equals("ok")) {
-			JSONObject data = (JSONObject) resultBody.get("data");
-			json = (JSONArray) data.get("PortletList");
-		}
-		LOGGER.debug("json : " + json);
-		LOGGER.debug("getPortalPortlets Ended");
-		return json;
+		//commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", paramMap);
+		LOGGER.debug("updatePortlet Ended");
 	}
 	
 	/** ----------------------------------------------- */
@@ -653,5 +645,48 @@ public class EzNewPortalAdminController {
 		
 		LOGGER.debug("getSubBoards ended.");
 		return subBoards;
+	}
+	
+	/**
+	 * 관리자 포탈 포틀릿 추가
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/addPortlets.do")
+	@ResponseBody
+	public void addPortlets(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+		LOGGER.debug("addPortlets started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = req.getParameter("portletId");
+		String companyId = req.getParameter("companyId");
+		String url = "/rest/admin/ezPortal/portlets/"+portletId+"/companies/"+companyId;
+		
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());		
+		
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "post", null);
+		
+		LOGGER.debug("addPortlets Ended");
+	}
+	
+	/**
+	 * 관리자 포탈 포틀릿 삭제
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/deletePortlets.do")
+	@ResponseBody
+	public void deletePortlets(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+		LOGGER.debug("addPortlets started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = req.getParameter("portletId");
+		String companyId = req.getParameter("companyId");
+		String url = "/rest/admin/ezPortal/portlets/"+portletId+"/companies/"+companyId;
+		
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());		
+		
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "delete", null);
+		LOGGER.debug("addPortlets Ended");
 	}
 }

@@ -128,7 +128,7 @@ var getSubBoards = function(event) {
 		var companyId = "<c:out value='${companyId}'/>";
 		
 		var request = new XMLHttpRequest();
-		request.open('POST', '/admin/ezNewPortal/getSubBoards.do', false);
+		request.open('POST', '/admin/ezNewPortal/getSubBoards.do', true);
 		request.setRequestHeader('content-type', 'application/json');
 		
 		request.onload = function() {

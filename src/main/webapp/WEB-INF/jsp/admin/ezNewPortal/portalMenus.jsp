@@ -66,8 +66,11 @@
 		<div id="mainmenu">    
 		    <span><b>회사선택 :</b> 
 			    <select id="ListCompany">
-			    </select><br /><br />
+			    </select>
 		    </span>
+			<ul style="margin-top: 15px;">
+				<li id="menuOrderReset"><span>메뉴 순서 초기화</span></li>
+			</ul>
 		</div>
 		<ul id="menuList">
 		</ul>
@@ -81,7 +84,11 @@
 		$(function(){
 			getCompanies();
 			getMenus();
+			document.getElementById("menuOrderReset").addEventListener("click", resetMenuOrder);
 		});
+		
+		var resetMenuOrder = function() {
+		}
 		
 		var getCompanies = function() {
 			var request = new XMLHttpRequest();
