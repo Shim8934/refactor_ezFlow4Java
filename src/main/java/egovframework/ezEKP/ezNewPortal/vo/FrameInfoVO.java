@@ -7,6 +7,14 @@ public class FrameInfoVO {
 	private int themeId; //프레임과 연관된 테마 아이디
 	private boolean frameUsed; //프레임 사용여부 : 사용(true) 미사용(false)
 	private boolean frameDefault; //기본 프레임인지 여부 : 기본(true), 기본 아님(false)
+	private int usedFrame;        // 사용중인 프레임 아이디
+	
+	public int getUsedFrame() {
+		return usedFrame;
+	}
+	public void setUsedFrame(int usedFrame) {
+		this.usedFrame = usedFrame;
+	}
 	public int getFrameId() {
 		return frameId;
 	}
@@ -48,7 +56,9 @@ public class FrameInfoVO {
 	
 	@Override
 	public String toString() {
-		return "FrameInfoVO [frameId=" + frameId + ", frameName=" + frameName + ", themeId=" + themeId + ", frameUsed="
-				+ frameUsed + ", frameDefault=" + frameDefault + "]";
+		return "FrameInfoVO [frameId=" + frameId + ", frameName=" + frameName
+				+ ", themeId=" + themeId + ", frameUsed=" + frameUsed
+				+ ", frameDefault=" + frameDefault + ", usedFrame=" + usedFrame
+				+ "]";
 	}
 }

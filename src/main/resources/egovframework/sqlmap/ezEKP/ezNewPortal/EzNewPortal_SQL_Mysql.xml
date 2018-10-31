@@ -17,6 +17,7 @@
 <typeAlias alias="PortletNameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO"/>
 <typeAlias alias="MenuAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO"/>
 <typeAlias alias="MenuNameVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuNameVO"/>
+<typeAlias alias="FrameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -123,6 +124,7 @@
 <result property="menuId" 					column="MENU_ID" />
 <result property="boardName1" 				column="BOARDNAME" />
 <result property="boardName2" 				column="BOARDNAME2" />
+<result property="portletBoardId" 			column="BOARD_ID" />
 </resultMap>
 <resultMap class="PortletNameInfoVO" id="PortletNameInfoVO">
 <result property="portletId" 				column="PORTLET_ID" />
@@ -468,6 +470,7 @@ OFFSET #offset#
 
 <!-- 퀵 링크 전체 개수 가져오기 -->
 <select id="ezNewPortal.getQuickLinkTotalCnt" parameterClass="Map" resultClass="Integer">
+<![CDATA[
 SELECT
 	count(*)
 FROM 
@@ -482,6 +485,108 @@ WHERE
 	Q.TENANT_ID = #tenantId#
 AND 
 	U.PHYSICALDELIVERYOFFICENAME = #companyId#
+]]>		
+</select>
+
+<select id="ezNewPortal.getPortletOrderCompForUser" parameterClass="Map" resultMap="PortletOrderVO">
+<![CDATA[
+SELECT
+	A.PORTLET_ID, A.PORTLET_ORDER, B.PORTLET_NAME, C.PORTLET_URL
+FROM	
+	TBL_PORTAL_PORTLET_COMP A
+JOIN
+	TBL_PORTAL_PORTLET_NAME B
+ON
+	A.PORTLET_ID = B.PORTLET_ID
+AND
+	A.MENU_ID = B.MENU_ID
+AND
+	A.COMPANY_ID = B.COMPANY_ID
+AND
+	B.PORTLET_LANG = #portletLang#
+JOIN
+	TBL_PORTAL_PORTLET C
+ON
+	A.PORTLET_ID = C.PORTLET_ID
+WHERE
+	A.TENANT_ID = #tenantId#
+AND
+	A.COMPANY_ID = #companyId#
+AND
+	A.PORTLET_USED = '1'
+AND
+	C.MENU_ID not in (
+		SELECT MENU_ID FROM (
+		SELECT MENU_ID FROM TBL_PORTAL_MENU_AUTH
+		WHERE COMPANY_ID = #companyId#
+		AND TENANT_ID = #tenantId#
+		AND USER_ID = #userId#
+		AND ACCESS_YN = '0'
+		AND USER_TYPE = '1'
+
+		UNION
+
+		SELECT MENU_ID FROM TBL_PORTAL_MENU_AUTH
+		WHERE COMPANY_ID = #companyId#
+		AND TENANT_ID = #tenantId#
+		AND USER_ID = #deptId#
+		AND ACCESS_YN = '0'
+		AND USER_TYPE = '2' ) AS A  
+    )
+ORDER BY
+	A.PORTLET_ORDER
+]]>		
+</select>
+
+<!-- 유저가 사용 가능한 프레임 리스트 -->
+<select id="ezNewPortal.getUserUsableFrameList" parameterClass="Map" resultClass="FrameInfoVO">
+SELECT 
+	theme_id as themeId,
+    frame_id as frameId,
+    frame_used as frameUsed,
+    frame_default as frameDefault,
+    used_frame as usedFrame
+FROM 
+	tbl_portal_frame_comp as fcomp
+JOIN 
+	tbl_portal_theme_user as tuser
+ON 
+	fcomp.tenant_id = tuser.tenant_id
+AND 
+	fcomp.company_id = tuser.company_id
+AND 
+	fcomp.theme_id = tuser.used_theme
+WHERE 
+	fcomp.company_id = #companyId#
+AND 
+	fcomp.tenant_id = #tenantId#
+AND 
+	tuser.user_id = #userId#
+</select>
+
+<!-- 회사가 설정한 테마에서 사용가능한 프레임 리스트 -->
+<select id="ezNewPortal.getCompUsableFrameList" parameterClass="Map" resultClass="FrameInfoVO">
+SELECT 
+	fcomp.theme_id as themeId,
+    fcomp.frame_id as frameId,
+    fcomp.frame_used as frameUsed,
+    fcomp.frame_default as frameDefault 
+FROM 
+	tbl_portal_frame_comp as fcomp
+JOIN 
+	tbl_portal_theme_comp as tcomp
+ON 
+	fcomp.tenant_id = tcomp.tenant_id
+AND 
+	fcomp.company_id = tcomp.company_id
+AND 
+	fcomp.theme_id = tcomp.theme_id
+WHERE 
+	fcomp.company_id = #companyId#
+AND 
+	fcomp.tenant_id = #tenantId#
+AND 
+	tcomp.theme_default = '1'  
 </select>
 
 <!-- 현재 진행중이면서 참여하고 있는 투표 개수  -->

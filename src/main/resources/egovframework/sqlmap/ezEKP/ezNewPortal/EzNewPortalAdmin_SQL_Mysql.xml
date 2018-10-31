@@ -2,6 +2,7 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 <sqlMap namespace="ezNewPortalAdmin">
 	<typeAlias alias="FrameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO"/>
+	<typeAlias alias="PortalBoardTreeVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO"/>
 	
 	<select id="ezNewPortal.getThemeInfo" parameterClass="Map" resultClass="ThemeInfoVO">
 		<![CDATA[
@@ -373,4 +374,43 @@
 				menu_id = #menuId#
 		]]>
 	</delete>
+	
+	<!-- 유은정 -->
+	<select id="ezNewPortal.getBoardTree" parameterClass="Map" resultClass="PortalBoardTreeVO">
+		<![CDATA[
+			SELECT 
+				A.boardid  as id,
+				A.parentboardid as parent,
+				A.boardname as boardname1,
+				A.boardname2 as boardname2,
+				A.treevieworder as sort,
+				B.parentboardid as topParent,
+				A.boardcolor
+			FROM
+				TBL_BOARD_BOARDINFO A
+			LEFT JOIN
+				TBL_BOARD_BOARDINFO B
+			ON
+				A.parentboardid = B.boardid
+			WHERE
+		]]>
+		<isEqual property="parentBoardId" compareValue="top">
+		<![CDATA[
+				A.parentboardid = #parentBoardId#
+		]]>
+		</isEqual>
+		<isNotEqual property="parentBoardId" compareValue="top">
+		<![CDATA[
+				A.boardtreepath LIKE CONCAT('%', #parentBoardId#, '%')
+		]]>
+		</isNotEqual>	
+		<![CDATA[
+			AND
+				(A.companyid = #companyId# OR A.companyid IS NULL)
+			AND
+				A.tenant_id = #tenantId#
+			ORDER BY
+				A.treevieworder;
+		]]>
+	</select>
 </sqlMap>

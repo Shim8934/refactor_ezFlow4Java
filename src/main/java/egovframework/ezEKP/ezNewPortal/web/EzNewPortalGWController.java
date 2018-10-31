@@ -49,6 +49,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -593,9 +594,16 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			JSONObject data = new JSONObject();
+			List<?> frameList = ezNewPortalService.getUserFrameListAndSelectedFrame(companyId, tenantId, userId);
 
+			data.put("frameList", frameList);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -641,9 +649,18 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-
+			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
+			String portletLang = info.getLang();
+			String deptId = info.getDeptId();
+			JSONObject data = new JSONObject();
+			
+			List<?> portletList = ezNewPortalService.getUserPortletList(portletLang, userId, tenantId, companyId, deptId);
+			data.put("portletList", portletList);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", data);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1413,10 +1430,12 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantId = info.getTenantId();
-
+			String lang = info.getLang();
+			
 			JSONObject data = new JSONObject();
 
 			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId);
+			
 			for (PortletInfoVO pvo : portletList) {
 				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId());
 				pvo.setPortletNameList(portletNameList);
@@ -1572,10 +1591,38 @@ public class EzNewPortalGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			String parentBoardId = request.getParameter("parentBoardId");
+			String lang = info.getLang();
+			
+			List<PortalBoardTreeVO> boardTree = ezNewPortalService.getBoardTree(parentBoardId, companyId, tenantId);
+			
+			//html clean value
+			int boardTreeCount = boardTree.size();
+			for (int i = 0; i < boardTreeCount; i++) {
+				PortalBoardTreeVO boardInfo= boardTree.get(i);
+				
+				if (lang.equals("1")) {
+					boardInfo.setText(commonUtil.cleanValue(boardInfo.getBoardName1()));
+				} else {
+					boardInfo.setText(commonUtil.cleanValue(boardInfo.getBoardName2()));
+				}
+				
+				if (!boardInfo.getParent().equals("top")) {
+					if (boardInfo.getTopParent().equals("top")) {
+						boardInfo.setParent("#");
+					}
+				}
+				
+				boardTree.set(i, boardInfo);
+				System.out.println(boardTree.get(i).toString());
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", boardTree);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

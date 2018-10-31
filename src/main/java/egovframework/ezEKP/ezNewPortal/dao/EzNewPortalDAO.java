@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -84,12 +85,30 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	
 	// 퀵 링크 불러오기
 	public List<?> getQuickLinkList(Map<String, Object> map) throws Exception {
-		return (List<?>)list("ezNewPortal.getQuickLinkList", map);
+		return (List<?>) list("ezNewPortal.getQuickLinkList", map);
 	}
 	
 	// 퀵 링크 전체 개수 불러오기
 	public int getQuickLinkTotalCnt(Map<String, Object> map) throws Exception {
 		return (int) select("ezNewPortal.getQuickLinkTotalCnt", map);
+	}
+
+	// 사용자가 볼수 있는 회사 포틀릿
+	@SuppressWarnings("unchecked")
+	public List<PortletInfoVO> getPortletOrderCompForUser(Map<String, Object> map) throws Exception {
+		return (List<PortletInfoVO>) list("ezNewPortal.getPortletOrderCompForUser", map);
+	}
+	
+	// 사용자 사용가능 프레임 리스트
+	@SuppressWarnings("unchecked")
+	public List<FrameInfoVO> getUserUsableFrameList(Map<String, Object> map) throws Exception {
+		return (List<FrameInfoVO>) list("ezNewPortal.getUserUsableFrameList", map);
+	}
+	
+	// 회사가 선택한 테마에서 사용 가능한 프레임 리스트
+	@SuppressWarnings("unchecked")
+	public List<FrameInfoVO> getCompUsableFrameList(Map<String, Object> map) throws Exception {
+		return (List<FrameInfoVO>) list("ezNewPortal.getCompUsableFrameList", map); 
 	}
 	
 	/* 박종균 끝 */
@@ -315,7 +334,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		delete("ezNewPortal.deleteMenuAuth", map);
 	}
 	/** -------------------- */
-	
+	@SuppressWarnings("unchecked")
+	public List<PortalBoardTreeVO> getBoardTree(Map<String, Object> map) throws Exception {
+		return (List<PortalBoardTreeVO>) list("ezNewPortal.getBoardTree", map);
+	}
 	/**
 	 * 구해안
 	 */

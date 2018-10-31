@@ -103,10 +103,21 @@
 	  }
 
 	  //게시판 설정 
-	  var openBoardTree = function(event) {
-		  var portletId = event.data.portletId;
-		  var boardId = $("#portlet" + portletId).find(".boardName").attr("data1");
-		  
+	var openBoardTree = function(event) {
+		var portletId = event.data.portletId;
+		var companyId = $('#ListCompany option:selected').val();
+		var boardId = $("#portlet" + portletId).find(".boardName").attr("data1");
+        var wWeight = "355";
+        var wHeight = "600";
+
+        var heigth = window.screen.availHeight;
+        var width = window.screen.availWidth;
+
+        var left = (width - wWeight) / 2;
+        var top = (heigth - wHeight) / 2;
+        
+        window.open("/admin/ezNewPortal/openBoardTree.do?portletId=" + portletId + "&companyId=" + companyId, "",
+            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 	  }
 	  
 	  var PortletInfoUpdate = function() {
@@ -174,10 +185,10 @@
 					if (!result[i].general) {
 						listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' value='"+ portletURL +"'></td></tr>";
 					}
-					
+					console.log(result[i]);
 					if (menuId == 4 && portletId != 10) {
 						listHTML += "<tr><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
-						listHTML += "<input class='boardName' type='text' value='" + result[i].boardName1 + "' data1='" + result[i].portletBoardId + "' readonly>";
+						listHTML += "<input id='portletBoard" + portletId + "' class='boardName' type='text' value='" + result[i].boardName1 + "' data1='" + result[i].portletBoardId + "' readonly>";
 						listHTML += "<div class='btnpositionJsp boardSetting'>";
 						listHTML += "<a class='imgbtn boardSettingtBtn'>";
 						listHTML += "<span>설정</span></a></div></td></tr>";
