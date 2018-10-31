@@ -1133,16 +1133,12 @@
 		        parameter[0] = "${userInfo.deptID}";
 		        parameter[1] = "A01000";
 
-		        if ("${userApprovalG}" == ("YES")) {
-		            url = "/ezApprovalG/getFormCont.do";
-		        } else {
-		            url = "/ezApproval/getFormCont.do";
-		        }
+	            url = "/ezApprovalG/getFormCont.do";
 		        
 		        if (CrossYN()) {
 		            getformcont_cross_dialogArguments[0] = parameter;
 		            getformcont_cross_dialogArguments[1] = openForm_Complete;
-		            getformcont_Cross_OpenWin = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+		            getformcont_Cross_OpenWin = window.open(url, "/ezApprovalG/getFormCont.do", GetOpenWindowfeature(713, 570));
 		            
 		            try { getformcont_Cross_OpenWin.focus(); } catch (e) {}
 		        } else {

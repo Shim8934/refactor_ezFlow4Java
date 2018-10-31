@@ -142,6 +142,13 @@ public class ApprGDocListVO {
 	private String formFileLocation;
 	private String formDocType;
 	
+	/** 포탈전자결재목록 포틀릿  */
+	private String ext1;
+    private String name2;
+    private String name3;
+    private String name4;
+    private String ext2;
+	
 	public String getCompanyName2() {
 		return companyName2;
 	}
@@ -567,6 +574,36 @@ public class ApprGDocListVO {
 	}
 	public void setProcessYN(String processYN) {
 		this.processYN = processYN;
+	}
+	public String getExt1() {
+		return ext1;
+	}
+	public void setExt1(String ext1) {
+		this.ext1 = ext1;
+	}
+	public String getName2() {
+		return name2;
+	}
+	public void setName2(String name2) {
+		this.name2 = name2;
+	}
+	public String getName3() {
+		return name3;
+	}
+	public void setName3(String name3) {
+		this.name3 = name3;
+	}
+	public String getName4() {
+		return name4;
+	}
+	public void setName4(String name4) {
+		this.name4 = name4;
+	}
+	public String getExt2() {
+		return ext2;
+	}
+	public void setExt2(String ext2) {
+		this.ext2 = ext2;
 	}
 	
 }
