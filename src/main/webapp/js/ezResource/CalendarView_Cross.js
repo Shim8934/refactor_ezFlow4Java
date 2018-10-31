@@ -334,7 +334,7 @@ function CalendarView(pTagetID) {
     	changeYear: true,
     	autoSize: true,
     	showOn: "both",
-    	buttonImage: "/images/ImgIcon/calendar-month.gif",
+    	buttonImage: "/images/ImgIcon/calendar-month.png",
     	buttonImageOnly: true,
     	onSelect: function (dateText, inst) {
     	   var iMonth = parseInt($('.datePick').val().substring(5,7),10)-1;
@@ -379,7 +379,7 @@ function CalendarView(pTagetID) {
     		changeYear: true,
     		autoSize: true,
     		showOn: "both",
-    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+    		buttonImage: "/images/ImgIcon/calendar-month.png",
     		buttonImageOnly: true,
     		dateFormat: 'yy-mm-dd',
     		showMonthAfterYear: true, 
@@ -416,7 +416,7 @@ function CalendarView(pTagetID) {
     		changeYear: true,
     		autoSize: true,
     		showOn: "both",
-    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+    		buttonImage: "/images/ImgIcon/calendar-month.png",
     		buttonImageOnly: true,
     		dateFormat: 'yy-mm-dd',
     		showMonthAfterYear: true, 
@@ -451,7 +451,7 @@ function CalendarView(pTagetID) {
     }else{   
             $(".datePick").monthpicker({
             	showOn: "both",
-        		buttonImage: "/images/ImgIcon/calendar-month.gif",
+        		buttonImage: "/images/ImgIcon/calendar-month.png",
         		buttonImageOnly: true,
         		onSelect: function (dateText, inst) {
         			var iMonth = parseInt($('.datePick').val().substring(5,7),10)-1;

@@ -116,15 +116,15 @@
 	    				if (result[i].typeId == "A01") {
 		    				$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
 							$("#inAttiBtn").removeClass("out").addClass("in");
-							$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+							$("#inAttiBtn").html("<span class='sub_iconLNB workIcon'></span>" + "<span class='workT'>"+result[i].startDate.split(" ")[1].substring(0,5)+"</span>");
 	    				} else if (result[i].typeId == "A02") {
 	    					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
-							$("#inAttiBtn").removeClass("out").addClass("lateIn");
-							$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+							$("#inAttiBtn").removeClass("out").addClass("lateIn");							
+							$("#inAttiBtn").html("<span class='sub_iconLNB workIcon'></span>" + "<span class='workT'>"+result[i].startDate.split(" ")[1].substring(0,5)+"</span>");
 	    				} else if (result[i].typeId == "A03") {
 	    					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
 							$("#outAttiBtn").removeClass("out").addClass("in");
-							$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+							$("#outAttiBtn").html("<span class='sub_iconLNB workIcon'></span>" + "<span class='workT'>"+result[i].startDate.split(" ")[1].substring(0,5)+"</span>");
 	    				}
 	    			}
 	    		}
@@ -363,8 +363,8 @@
 	    		<spring:message code='ezAttitude.t1'/>
 	        </div>
 	        <div class="btn_writeBox_work">
-	        	<p class="btn_write02" id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)"><span class="worksT"><spring:message code='ezAttitude.t65'/></span><span class="workT"></span></p> 
-	        	<p class="btn_write01" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><span class="worksT"><spring:message code='ezAttitude.t64'/></span><span class="workT">15:20</span></p>
+	        	<p class="btn_write02" id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)"><span class="sub_iconLNB workIcon"></span><span class="workT"><spring:message code='ezAttitude.t65'/></span></p> 
+	        	<p class="btn_write01" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><span class="sub_iconLNB workIcon"></span><span class="workT"><spring:message code='ezAttitude.t64'/></span></p>
 	        </div>
 	        <h2 class="on">
 	        	<span>
@@ -425,7 +425,7 @@
 	                	<span>
 	                		<span>
 	                        	<div class="node_div">
-	                        		<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_change"></span><span class="h2_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t73'/></span>
+	                        		<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTimeset"></span><span class="h2_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t73'/></span>
 	                            </div>
 	                    	</span>
 	                    </span>

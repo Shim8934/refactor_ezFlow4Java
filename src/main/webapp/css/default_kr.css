@@ -417,7 +417,8 @@ form{display:inline;margin:0}
 	overflow:hidden;
 	width:100%;
 	padding:0;
-	margin:0;	
+	margin:0;
+	height:31px;	
 	margin-bottom:3px !important;
 }
 
@@ -2276,7 +2277,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .volumeDL dt span{ display:inline-block; color:#959595;}
 .volumeDL dd{margin:0px; padding:0px; float:right; color:#0470e4;}
 
-.imgbck {background-color: #e8e8ea; border:1px solid #cccccf;}
+.imgbck {background-color: #f1f3f5; border:1px solid #e2e3e6;}
 .leftbody .extra span{
 	border-bottom: 1px solid white;
 	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 14px #fff;
@@ -2351,7 +2352,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .btn_writeBox_work .btn_write01{ margin:0px 0px 0px 0px; padding:0px; width:auto; text-align:left; height:30px; line-height:28px; background:#0b56ab; float:none; overflow:hidden; cursor:pointer;}
 .btn_writeBox_work .btn_write01:hover{ background:#1264c1;}
 .btn_writeBox_work span.worksT{font-family:Malgun Gothic, malgun gothic; font-size:12px; padding:0px 10px 0px 10px; display:inline-block; color:#fff; overflow:hidden; height:30px; line-height:30px;}
-.btn_writeBox_work span.workT{ display:inline-block; margin:0px; padding:0px; font-family:Malgun Gothic, malgun gothic; font-size:18px; color:#fff; overflow:hidden; height:30px; line-height:30px;}
+.btn_writeBox_work span.workT{ display:inline-block; margin:0px; padding:0px 0px 0px 10px; font-family:Malgun Gothic, malgun gothic; font-size:14px; color:#fff; overflow:hidden; height:30px; line-height:28px;}
 .btn_writeBox_work .btn_write02{margin:0px 0px 0px 2px; padding:0px; width:98px; text-align:left; height:30px; line-height:28px; background:#196dcb; float:right; overflow:hidden; cursor:pointer;}
 .btn_writeBox_work .btn_write02:hover{ background:#1f79de;}
 
@@ -2403,9 +2404,11 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .tree_businessLog_year{ background-position:-130px -78px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 연간업무일지 */
 .tree_businessLog_receive{ background-position:-156px -78px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 수신일지함 */
 
+.workIcon{ background-position:-182px -104px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 10px; cursor:pointer;} /* tree 근태버튼아이콘 */
 .tree_workTime_individual{ background-position:-26px -104px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 개인근태현황 */
 .tree_workTime_department{ background-position:-52px -104px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 부서근태현황 */
 .tree_workTime_change{ background-position:-78px -104px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 나의수정신청 */
+.tree_workTimeset{ background-position:-208px -104px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 근태정보관리 */
 
 .tree_board_star{ background-position:-26px -130px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 게시판 즐겨찾기 */
 
@@ -2439,6 +2442,9 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 
 .lnb_newIcon{ background-position:-208px -26px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree new 아이콘 */
 
+.tree_env_myPortal{ background-position:-26px -182px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 환경설정 마이포탈페이지 */
+.tree_env_firstPage{ background-position:-52px -182px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 환경설정 초기화면설정 */
+
 /* left LNB tree text */
 .lnb h2 .h2Title{font-family:Malgun Gothic, malgun gothic; font-size:13px; font-weight:bold; color:#393939; padding:0px 0px 0px 0px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:80%; box-sizing:border-box; display:inline-block;}
 .h2_text{ font-size:13px; height:30px; line-height:30px; color:#393939; display:inline-block; padding:0px 0px 0px 5px;font-family:Malgun Gothic, malgun gothic; cursor:pointer;white-space:nowrap; text-overflow:ellipsis; overflow: hidden; box-sizing:border-box;}
@@ -2451,6 +2457,10 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .mail_space{height:39px; line-height:39px; background:#bbbfc3; position:absolute; bottom:0px; width:220px;}
 .mail_space .mail_spaceText{font-family:Malgun Gothic, malgun gothic; font-size:14px; color:#fff; display:inline-block; margin:0px; padding:0px 0px 0px 20px; position:absolute;}
 .mail_space .mailBar{ display:inline-block; width:30%; height:39px; background:#82b9f6; margin:0px; padding:0px;}
+
+/* left community */
+.lnb_comIng{ margin:30px 0px 15px 0px; padding:0px; text-align:center;}
+.lnb_comText{ margin:0px; padding:0px; text-align:center; color:#393939; font-size:13px;}
 
 /* 장진혁 */
 .newLeft { background-color: #e4e8ec; overflow:hidden;}

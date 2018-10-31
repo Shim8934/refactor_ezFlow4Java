@@ -290,7 +290,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var settime = "${startDateTime}";
@@ -308,7 +308,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
        			
@@ -900,7 +900,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var settime = "${startDateTime}";
@@ -935,7 +935,7 @@
 		                            changeYear: true,
 		                            autoSize: true,
 		                            showOn: "both",
-		                            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		                            buttonImage: "/images/ImgIcon/calendar-month.png",
 		                            buttonImageOnly: true
 		                        });
 		                        var NowDate2 = new Date();
