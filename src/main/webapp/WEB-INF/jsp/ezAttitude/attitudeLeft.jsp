@@ -21,7 +21,7 @@
 			.time {
 				float:left;
 				width:100%;
-				margin:0px 0px 5px 0px;
+				border-bottom:1px solid #cdd2d9;
 			}
 			
 			.time .title {
@@ -83,15 +83,13 @@
 			closedDay = closedDay.split(",");
 			
 			parseDate();
-			attiClock();
+			//attiClock();
 			setAttiBtnHover();
 			getAttitudeList();
 			getHolidayList();
 		    select_memorialDays(uselang);
 		    
 		    document.getElementById('userAttitude').onclick();
-		    
-		    initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		}
 		
 		 function leadingZeros(n, digits) {
@@ -116,7 +114,7 @@
 	    			leaveEarlyFlag = false;
 	    			for (var i = 0; i < result.length; i++) {
 	    				if (result[i].typeId == "A01") {
-		    					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+		    				$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
 							$("#inAttiBtn").removeClass("out").addClass("in");
 							$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 	    				} else if (result[i].typeId == "A02") {
@@ -361,34 +359,16 @@
 		<div id="left" class="lnb" style="overflow: auto">
 	    	<!-- <div class="lnb_btn"></div> -->
 	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
-	    	<div class="left_title" title="메일">근태관리
-	        	<span class="sub_iconLNB tree_leftconfig" title="근태관리환경설정"></span>
+	    	<div class="left_title" title="<spring:message code='ezAttitude.t1'/>">
+	    		<spring:message code='ezAttitude.t1'/>
 	        </div>
 	        <div class="btn_writeBox_work">
-	        	<p class="btn_write02"><span class="worksT">퇴근</span><span class="workT"></span></p> 
-	        	<p class="btn_write01"><span class="worksT">출근</span><span class="workT">15:20</span></p>
+	        	<p class="btn_write02"><span class="worksT"><spring:message code='ezAttitude.t65'/></span><span class="workT"></span></p> 
+	        	<p class="btn_write01"><span class="worksT"><spring:message code='ezAttitude.t64'/></span><span class="workT">15:20</span></p>
 	        </div>
-	        <ul class="lnbUL">
-	        	<div class="tree">
-	            	<span>
-	                	<span>
-	                    	<span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_individual"></span><span class="h2_text">개인근태현황</span>
-	                            </div>
-	                    	</span>
-	                        <span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_department"></span><span class="h2_text">부서근태현황</span>
-	                            </div>
-	                    	</span>
-	                    </span>        
-	                </span>
-	            </div>
-	        </ul>
 	        <h2 class="on">
 	        	<span>
-	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title">수정신청관리</span>
+	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t1'/></span>
 	            </span>
 	        </h2>
 	        <ul class="lnbUL">
@@ -397,13 +377,62 @@
 	                	<span>
 	                    	<span>
 	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_change"></span><span class="h2_text">나의수정신청</span>
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_individual"></span><span class="h2_text" id="userAttitude" onclick="functionFlag(1)"><spring:message code='ezAttitude.t143'/></span>
+	                            </div>
+	                    	</span>
+	                        <span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_department"></span><span class="h2_text" id="deptAttitude" onclick="functionFlag(2)"><spring:message code='ezAttitude.t144'/></span>
 	                            </div>
 	                    	</span>
 	                    </span>        
 	                </span>
 	            </div>
 	        </ul>
+	        <h2 class="on">
+	        	<span>
+	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t7'/></span>
+	            </span>
+	        </h2>
+	        <ul class="lnbUL">
+	        	<div class="tree">
+	            	<span>
+	                	<span>
+	                		<span>
+	                        	<div class="node_div">
+	                        		<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_change"></span><span class="h2_text" onclick="functionFlag(3)"><spring:message code='ezAttitude.t166'/></span>
+	                            </div>
+	                    	</span>
+	                    	<c:if test="${attitudeAdminCheck == true}">
+		                    	<span>
+		                        	<div class="node_div">
+		                        		<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_change"></span><span class="h2_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t7'/>
+		                        			<c:if test="${totalAtt != 0 }">
+												<span class="attCount">(${totalAtt})</span>
+											</c:if>
+		                        		</span>
+		                            </div>
+		                    	</span>
+		                    </c:if>
+	                    </span>        
+	                </span>
+	            </div>
+	        </ul>
+	        <c:if test="${attitudeAdminCheck == true}">
+	        <ul class="lnbUL">
+	        	<div class="tree">
+	            	<span>
+	                	<span>
+	                		<span>
+	                        	<div class="node_div">
+	                        		<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_change"></span><span class="h2_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t73'/></span>
+	                            </div>
+	                    	</span>
+	                    </span>
+	                </span>    	
+				</div>
+			</ul>
+			</c:if>
 	    </div>
 	<%-- <div class="left_pims" title="<spring:message code='ezAttitude.t1'/>"><span><spring:message code='ezAttitude.t1'/></span></div>
 	<div id="left" style="border-top:1px solid #dedede">
