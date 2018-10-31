@@ -623,6 +623,7 @@ public class EzNewPortalAdminController {
 			if (result.equals("ok")) {
 				model.addAttribute("boardList", resultBody.get("data"));
 				model.addAttribute("companyId", companyId);
+				model.addAttribute("portletId", request.getParameter("portletId"));
 			}
 			
 			LOGGER.debug("openBoardTree ended.");

@@ -1430,10 +1430,12 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantId = info.getTenantId();
-
+			String lang = info.getLang();
+			
 			JSONObject data = new JSONObject();
 
 			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId);
+			
 			for (PortletInfoVO pvo : portletList) {
 				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId());
 				pvo.setPortletNameList(portletNameList);

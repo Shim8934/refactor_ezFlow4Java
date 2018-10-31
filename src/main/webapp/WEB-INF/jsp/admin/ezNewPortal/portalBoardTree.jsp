@@ -24,7 +24,7 @@
 		<c:forEach items="${boardList }" var="board" varStatus="status">
 			<tr>
 				<td>
-					<h2 class="boardTop" id="board${status.index }" data1="${board.id}"><span><c:out value="${board.text }"/></span></h2>
+					<h2 class="boardTop off" id="board${status.index }" data1="${board.id}"><span><c:out value="${board.text }"/></span></h2>
 				</td>
 			</tr>
 			<tr>
@@ -35,7 +35,7 @@
 		</c:forEach>
 		</table>
 	</div>
-	<div class="btnposition btnpositionNew"><a class="imgbtn"><span>선택</span></a></div>
+	<div id="selBoard" class="btnposition btnpositionNew"><a class="imgbtn"><span>선택</span></a></div>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/dist/jstree.min.js')}"></script>
 <script type="text/javascript">
@@ -48,6 +48,8 @@ $(function(){
 });
 
 var eventSetting = function() {
+	$("#selBoard").on("click", selectBoard);
+	
 	var boardIdList = $(".boardTop");
 	var boardIdListCount = boardIdList.length;
 	
@@ -58,44 +60,94 @@ var eventSetting = function() {
 	}
 }
 
-var getSubBoards = function(event) {
-	$(".jstree").jstree('destroy');
-	
-	var parentBoardId = event.data.boardId;
-	var boardIndex = event.data.boardIndex;
-	var companyId = "<c:out value='${companyId}'/>";
-	
-	var request = new XMLHttpRequest();
-	request.open('POST', '/admin/ezNewPortal/getSubBoards.do', false);
-	request.setRequestHeader('content-type', 'application/json');
-	
-	request.onload = function() {
-		if (request.status >= 200 && request.status < 400) {
-			var result = JSON.parse(request.responseText);
+var selectBoard = function(event) {
+	if ($(".jstree") == undefined) {
+		alert("게시판을 선택해 주세요.");
+	} else {
+		var selBoard = $("li[aria-selected='true']");
+		
+		if (selBoard == undefined) {
+			alert("게시판을 선택해 주세요.");
+		} else {
+			var boardName = selBoard.find(".jstree-clicked").text();
+			selBoard = selBoard.attr("id");
 			
-			$("#boardSub" + boardIndex).jstree({
-				'core' : {
-					'data' : result,
-					'multiple' : false
-				},
-				'plugins' : ['sort', 'wholerow', 'types'],
-				'types' : {
-					'default' : {
-						'icon' : "/images/OrganTree_cross/fldr.gif"
-					}
-				}
-			});
+			var portletId = "<c:out value='${portletId}'/>";
+			window.opener.document.getElementById("portletBoard" + portletId).value =  boardName;
+			window.opener.document.getElementById("portletBoard" + portletId).setAttribute("value", boardName);
+			window.opener.document.getElementById("portletBoard" + portletId).setAttribute("data1", selBoard);
+			window.close();
 		}
 	}
+}
+
+var getSubBoards = function(event) {
+	var nowBoardTree = $(".jstree").attr("id");
+
+	var parentBoardId = event.data.boardId;
+	var boardIndex = event.data.boardIndex;
 	
-	request.onerror = function() {}
+	$(".jstree").jstree('destroy');
 	
-	var data = JSON.stringify({
-		parentBoardId : parentBoardId,
-		companyId : companyId
-	});
-	 
-	request.send(data);
+	
+	if (nowBoardTree == "boardSub" + boardIndex) {
+		$("#board" + boardIndex).attr("class", "boardTop off");
+	} else {
+		$(".boardTop").attr("class", "boardTop off");
+		$("#board" + boardIndex).attr("class", "boardTop on");
+		
+		var companyId = "<c:out value='${companyId}'/>";
+		
+		var request = new XMLHttpRequest();
+		request.open('POST', '/admin/ezNewPortal/getSubBoards.do', false);
+		request.setRequestHeader('content-type', 'application/json');
+		
+		request.onload = function() {
+			if (request.status >= 200 && request.status < 400) {
+				var result = JSON.parse(request.responseText);
+				console.log(result);
+				$("#boardSub" + boardIndex).jstree({
+					'core' : {
+						'data' : result,
+						'multiple' : false,
+						'animation' : 0
+					},
+					'plugins' : ['sort', 'wholerow', 'types'],
+					'sort' : function (a, b) {
+						var compare1 = this.get_node(a);
+						var compare2 = this.get_node(b);
+						
+						return (compare1.sort > compare2.sort)? -1 : 1;
+					},
+					'types' : {
+						'default' : {
+							'icon' : "/images/OrganTree_cross/fldr.gif"
+						}
+					}
+				}).on("ready.jstree", function(){
+					var resultCount = result.length;
+					
+					for (var i = 0; i < resultCount; i++) {
+						var board = result[i];
+						var boardId = board.id.replace("}", "\\}");
+						if (board.boardColor != null && board.boardColor != "#000000") {
+							//board.id.querySelectorAll("jstree-anchor").style.color = board.boardColor;
+							$("#\\" + boardId + "").find(".jstree-anchor").css("color", board.boardColor);
+						}
+					}
+				});
+			}
+		}
+		
+		request.onerror = function() {}
+		
+		var data = JSON.stringify({
+			parentBoardId : parentBoardId,
+			companyId : companyId
+		});
+		 
+		request.send(data);
+	}
 }
 </script>
 </body>

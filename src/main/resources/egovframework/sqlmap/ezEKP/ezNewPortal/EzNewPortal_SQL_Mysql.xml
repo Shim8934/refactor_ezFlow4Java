@@ -124,6 +124,7 @@
 <result property="menuId" 					column="MENU_ID" />
 <result property="boardName1" 				column="BOARDNAME" />
 <result property="boardName2" 				column="BOARDNAME2" />
+<result property="portletBoardId" 			column="BOARD_ID" />
 </resultMap>
 <resultMap class="PortletNameInfoVO" id="PortletNameInfoVO">
 <result property="portletId" 				column="PORTLET_ID" />
