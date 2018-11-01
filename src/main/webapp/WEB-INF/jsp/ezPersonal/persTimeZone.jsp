@@ -50,7 +50,7 @@
 		}            
         function flag_onClick(obj, type) {
             if (type == "img") {
-                document.getElementsByName('rad_flag')[obj.name - 1].checked = true;
+            	$("input:radio[id=" + obj.name + "]").prop('checked', true);
                 flagValue = obj.name;
             }
             else {
