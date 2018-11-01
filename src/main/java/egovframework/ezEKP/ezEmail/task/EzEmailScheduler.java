@@ -112,6 +112,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	/**
 	 * 관리자 - 자동삭제 
 	 */
+	@SuppressWarnings("unchecked")
 	@Scheduled(cron = "${config.cron.deleteAllUserOldMail}")
 	public void deleteAllUserMail() throws Exception {
 		logger.debug("deleteAllUserOldMail scheduler started.");
@@ -123,7 +124,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		
 		try {
 			int tenantId = 0;
-					
+			IMAPAccess ia = null;
 			String useAllUserOldMailDelete = ezCommonService.getTenantConfig("useAllUserOldMailDelete", tenantId);
 			String useAllUserOldMailDeletePeriod = ezCommonService.getTenantConfig("useAllUserOldMailDeletePeriod", tenantId);
 			
@@ -143,8 +144,39 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				
 				if (!object.get("resultCode").equals("OK")) {
 					logger.debug("Cannot delete AllUserOldMail.");
+				} else {
+					// 유저리스트 받아서! 유저 폴더 1개 만들고 다시 삭제 해서 쿼터 재계산 하도록 구성.
+					List<String> userList = new ArrayList<>();
+					userList = (List<String>) object.get("userList");
+					logger.debug("userList size=" + userList.size() + ", userList=" + userList.toString());
+					
+					Locale locale = null;
+					String returnValue = null;
+					
+					if (userList.size() > 0) {
+						for (String userEmail : userList) {
+							// imap 접근 
+							ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), 
+									userEmail, "_jmocha_101", egovMessageSource, locale, ezEmailUtil);
+							String folderPath = ia.getFolder("INBOX").getFolder("443c2406b761402a").getFullName();
+							int result = ia.createFolder(folderPath);
+							
+							if (result == 0) {
+								returnValue = "OK";
+								result = ia.deleteFolder(folderPath);
+								
+								if (result != 0) {
+									logger.debug("result=" + result);
+									returnValue = "ERROR";
+								}
+							} else if (result == 2) {
+								returnValue = "ALREADY_EXISTS";
+							}
+							
+							logger.debug("returnValue=" + returnValue);
+						}
+					}
 				}
-				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

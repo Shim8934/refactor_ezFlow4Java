@@ -11,6 +11,9 @@
 		<script type="text/javascript">
 			var shareId = "${shareId}";
 		</script>
+		<style> 
+			p { margin-bottom: 0; margin-top: 0; } 
+		</style>
 	</head>
 	<body style="margin:3px 3px 3px 3px;">
 		<div style="width:100%;height:100%;">

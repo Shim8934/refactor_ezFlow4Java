@@ -1642,9 +1642,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		if (pageID == null || pageID.equals("")) {
-			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength();) {
-				pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
-				break;
+			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+				String menuLang = xmlDom.getElementsByTagName("LANG").item(i).getTextContent();
+				if (userInfo.getLang().equals(menuLang)) {
+					pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
+				}
 			}
 		}
 		
@@ -2049,9 +2051,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		if (pageID == null || pageID.equals("")) {
-			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength();) {
-				pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
-				break;
+			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+				String menuLang = xmlDom.getElementsByTagName("LANG").item(i).getTextContent();
+				if (userInfo.getLang().equals(menuLang)) {
+					pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
+				}
 			}
 		}
 		
@@ -2464,7 +2468,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		String pageID = "";
-		String layoutList = "";
+		String layoutList = "" ;
 		String pSelected = "";
 		String mainAreaExist = "NO";
 		String subAreaExist = "NO";
@@ -2477,9 +2481,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		if (pageID == null || pageID.equals("")) {
-			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength();) {
-				pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
-				break;
+			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+				String menuLang = xmlDom.getElementsByTagName("LANG").item(i).getTextContent();
+				if (userInfo.getLang().equals(menuLang)) {
+					pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
+				}
 			}
 		}
 		
@@ -2606,9 +2612,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		if (pageID == null || pageID.equals("")) {
-			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength();) {
-				pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
-				break;
+			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
+				String menuLang = xmlDom.getElementsByTagName("LANG").item(i).getTextContent();
+				if (userInfo.getLang().equals(menuLang)) {
+					pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
+				}
 			}
 		}
 		
