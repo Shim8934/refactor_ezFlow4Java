@@ -55,6 +55,37 @@ CREATE TABLE `james_mail` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `james_mail_backup`
+--
+
+DROP TABLE IF EXISTS `james_mail_backup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `james_mail_backup` (
+  `MAILBOX_ID` bigint(20) NOT NULL,
+  `MAIL_UID` bigint(20) NOT NULL,
+  `MAIL_IS_ANSWERED` bit(1) NOT NULL,
+  `MAIL_BODY_START_OCTET` int(11) NOT NULL,
+  `MAIL_CONTENT_OCTETS_COUNT` bigint(20) NOT NULL,
+  `MAIL_IS_DELETED` bit(1) NOT NULL,
+  `MAIL_IS_DRAFT` bit(1) NOT NULL,
+  `MAIL_IS_FLAGGED` bit(1) NOT NULL,
+  `MAIL_DATE` datetime DEFAULT NULL,
+  `MAIL_MIME_TYPE` varchar(200) DEFAULT NULL,
+  `MAIL_MODSEQ` bigint(20) DEFAULT NULL,
+  `MAIL_IS_RECENT` bit(1) NOT NULL,
+  `MAIL_IS_SEEN` bit(1) NOT NULL,
+  `MAIL_MIME_SUBTYPE` varchar(200) DEFAULT NULL,
+  `MAIL_TEXTUAL_LINE_COUNT` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`MAILBOX_ID`,`MAIL_UID`),
+  KEY `I_JMS_MIL_MAIL_IS_DELETED` (`MAIL_IS_DELETED`),
+  KEY `I_JMS_MIL_MAIL_IS_RECENT` (`MAIL_IS_RECENT`),
+  KEY `I_JMS_MIL_MAIL_IS_SEEN` (`MAIL_IS_SEEN`),
+  KEY `I_JMS_MIL_MAIL_MODSEQ` (`MAIL_MODSEQ`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `james_mail_blob`
 --
 
@@ -72,6 +103,26 @@ CREATE TABLE `james_mail_blob` (
   KEY `INDEX_MESSAGE_BLOB_MSG_ID` (`MAIL_BLOB_ID`),
   KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
   CONSTRAINT `james_mail_blob_ibfk_1` FOREIGN KEY (`MAILBOX_ID`, `MAIL_UID`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `james_mail_blob_backup`
+--
+
+DROP TABLE IF EXISTS `james_mail_blob_backup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `james_mail_blob_backup` (
+  `MAIL_BLOB_ID` bigint(20) NOT NULL,
+  `MAIL_BYTES` longblob NOT NULL,
+  `MAIL_BODY_STRUCTURE` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `HEADER_BYTES` mediumblob NOT NULL,
+  `MAILBOX_ID` bigint(20) DEFAULT NULL,
+  `MAIL_UID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`MAIL_BLOB_ID`),
+  KEY `INDEX_MESSAGE_BLOB_MSG_ID` (`MAIL_BLOB_ID`),
+  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -147,6 +198,26 @@ DROP TABLE IF EXISTS `james_mailbox`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `james_mailbox` (
+  `MAILBOX_ID` bigint(20) NOT NULL,
+  `MAILBOX_HIGHEST_MODSEQ` bigint(20) NOT NULL,
+  `MAILBOX_LAST_UID` bigint(20) NOT NULL,
+  `MAILBOX_NAME` varchar(200) NOT NULL,
+  `MAILBOX_NAMESPACE` varchar(200) NOT NULL,
+  `MAILBOX_UID_VALIDITY` bigint(20) NOT NULL,
+  `USER_NAME` varchar(200) NOT NULL,
+  PRIMARY KEY (`MAILBOX_ID`),
+  KEY `I_JMS_LBX_USER_NAME` (`USER_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `james_mailbox_backup`
+--
+
+DROP TABLE IF EXISTS `james_mailbox_backup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `james_mailbox_backup` (
   `MAILBOX_ID` bigint(20) NOT NULL,
   `MAILBOX_HIGHEST_MODSEQ` bigint(20) NOT NULL,
   `MAILBOX_LAST_UID` bigint(20) NOT NULL,
@@ -866,6 +937,24 @@ CREATE TABLE `jmocha_scheduler_server` (
   `server` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`scheduler`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jmocha_shared_mailbox`
+--
+
+DROP TABLE IF EXISTS `jmocha_shared_mailbox`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_shared_mailbox` (
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `SHARE_ID` varchar(100) NOT NULL,
+  `USER_ID` varchar(100) NOT NULL,
+  `DELETE_PERMISSION` varchar(4) DEFAULT NULL,
+  `SEND_PERMISSION` varchar(4) DEFAULT NULL,
+  `ORDERBY` int(11) DEFAULT NULL,
+  PRIMARY KEY (`TENANT_ID`,`SHARE_ID`,`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7974,8 +8063,7 @@ CREATE TABLE `tbl_ps_empmonth` (
   `TERM` varchar(20) NOT NULL,
   `DATE_` datetime DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`PHYSICALDELIVERYOFFICENAME`,`TERM`),
-  UNIQUE KEY `PK_TBL_PS_EMPMONTH` (`TENANT_ID`,`PHYSICALDELIVERYOFFICENAME`,`TERM`)
+  PRIMARY KEY (`TENANT_ID`,`PHYSICALDELIVERYOFFICENAME`,`TERM`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
