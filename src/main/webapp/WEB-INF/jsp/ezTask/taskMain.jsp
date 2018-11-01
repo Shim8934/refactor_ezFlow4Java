@@ -995,7 +995,7 @@
 		    </span>
 		</h1>
 		
-		<div class="portlet_tabpart01" style="margin-top:3px;text-align:right;display:none">
+		<div class="portlet_tabpart01" id="portlet_tabpart01" style="margin-top:3px;text-align:right;display:none">
 		    <div class="portlet_tabpart01_top" id="tab1">
 		        <p><span id="1tab1" divname="taskprog"><spring:message code='ezTask.t200901' /></span></p>
 		        <p><span id="1tab3" divname="taskrepetition"><spring:message code='ezTask.t200902' /></span></p>

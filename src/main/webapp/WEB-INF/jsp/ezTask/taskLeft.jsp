@@ -164,7 +164,11 @@
 	        
 	        // 업무작성창 load
 	        function WritePopup() {
-	        	window.parent.frames["right"].WriteTask();
+	        	if(window.parent.frames["right"].document.getElementById("portlet_tabpart01")) {
+	        		window.parent.frames["right"].WriteTask();	
+	        	} 
+	        	feature = GetOpenPosition(790, 775);
+                window.open("/ezTask/taskWrite.do", "", "height=775px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 	        }
 	        
 	        function cntLoad() {
