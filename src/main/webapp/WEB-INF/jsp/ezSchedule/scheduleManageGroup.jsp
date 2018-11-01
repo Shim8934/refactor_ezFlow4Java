@@ -186,6 +186,8 @@
 		    function add_group_Complete(rtn) {
 		        if (typeof (rtn) != "undefined")
 		            getGroupList();
+		        	//2018-11-01 김보미 - 일정그룹 추가시 left바에 그룹 바로 보이도록
+		        	parent.frames["left"].groupRefresh();
 		    }
 					
 		    function del_group() {		

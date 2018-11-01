@@ -202,8 +202,6 @@
 			    			schedule_get_holiday();
 			    		}
 			        }); 
-			        
-			    	schedule_get_holiday();
 		    	} else {
 		    		schedule_get_holiday();
 		    	}

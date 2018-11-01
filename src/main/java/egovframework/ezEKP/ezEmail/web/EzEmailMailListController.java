@@ -1565,7 +1565,7 @@ public class EzEmailMailListController {
 				subject = (subject != null) ? subject : "";
 				
 				if (ezEmailUtil.hasSecureMailFlag(message)) {
-					subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
+					subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"12\" />" + subject;
 				}
 				
 				sb.append("<NODE>");
