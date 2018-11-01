@@ -743,4 +743,24 @@ public class EzNewPortalAdminController {
 		//commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, req, "delete", null);
 		LOGGER.debug("addPortlets Ended");
 	}
+	
+	/**
+	 * 관리자 포탈 포틀릿 순서 업데이트
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezNewPortal/updatePortletOrder.do")
+	@ResponseBody
+	public void updatePortletOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject json, HttpServletRequest req, Model model) throws Exception {
+		LOGGER.debug("updatePortletOrder started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyId = json.get("companyId").toString();
+		String url = "/rest/admin/ezPortal/portlets/order/companies/" + companyId;
+		System.out.println(companyId);
+		System.out.println(json.get("portlets"));
+		json.put("userId", userInfo.getId());		
+		
+		//commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", json);
+		LOGGER.debug("updatePortletOrder Ended");
+	}
 }

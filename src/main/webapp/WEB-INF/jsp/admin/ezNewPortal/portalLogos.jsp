@@ -86,7 +86,7 @@ var getCompanies = function() {
 			document.getElementById("ListCompany").innerHTML = companiesHTML;
 			
 			document.getElementById("ListCompany").addEventListener('change', function() {
-				getThemes();
+				getLogos();
 			});
 		} else {
 			// We reached our target server, but it returned an error
@@ -98,6 +98,10 @@ var getCompanies = function() {
 	};
 	
 	request.send();
+}
+
+var getLogos = function() {
+	
 }
 </script>
 </body>

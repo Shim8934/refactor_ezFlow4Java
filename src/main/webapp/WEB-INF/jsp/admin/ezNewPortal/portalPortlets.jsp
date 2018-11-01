@@ -78,13 +78,13 @@
 	$( function() {
 		$("#ListCompany").on("change", getPortletList);
 		getPortletList();	
+		//이벤트 세팅
+		$("#portletOrderReset").on("click", portletOrderReset);
 	});
 	
-	//이벤트 세팅
-	$("#portletOrderReset").on("click", portletOrderReset);
 	
 	
-	//이벤트 연결 함수
+	//포틀릿 추가
 	var portletAdd = function() {
 		var companiesObj = document.getElementById("ListCompany");
 		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
@@ -180,12 +180,79 @@
 		 
 		request.send(data);
 	}
-	 
+	
+	//순서변경
 	var updatePortletOrder = function () {
-	}
-	 
-	var portletOrderReset = function() {
+		var companiesObj = document.getElementById("ListCompany");
+		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 		
+		//포틀릿 순서가져오기
+		var portletList = $(".col");
+		var portletListCount = portletList.length;
+		var portletOrderList = [];
+		
+		for (var i = 0; i < portletListCount; i++) {
+			var order = i + 1;
+			var portletId = portletList[i].id;
+			portletId = portletId.substring(7);
+			
+			portletOrderList.push({"companyOrder" : order, "portletId" : portletId});
+		}
+		
+		var request = new XMLHttpRequest();
+		
+		request.open('POST', '/admin/ezNewPortal/updatePortletOrder.do', true);
+		request.setRequestHeader('content-type', 'application/json');
+		
+		request.onload = function() { 
+			//getPortletList(); 
+		};
+		
+		request.onerror = function() {}
+		
+		var data = JSON.stringify({
+			companyId : companyValue,
+			portlets : portletOrderList
+		});
+		 
+		request.send(data);
+	}
+	
+	//순서초기화
+	var portletOrderReset = function() {
+ 		var companiesObj = document.getElementById("ListCompany");
+		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+		
+		//포틀릿 순서가져오기
+		var portletList = $(".col");
+		var portletListCount = portletList.length;
+		var portletOrderList = [];
+		
+		for (var i = 0; i < portletListCount; i++) {
+			var order = portletList[i].getAttribute("data1");
+			var portletId = portletList[i].id;
+			portletId = portletId.substring(7);
+			
+			portletOrderList.push({"companyOrder" : order, "portletId" : portletId});
+		}
+		
+		var request = new XMLHttpRequest();
+		
+		request.open('POST', '/admin/ezNewPortal/updatePortletOrder.do', true);
+		request.setRequestHeader('content-type', 'application/json');
+		
+		request.onload = function() { 
+			//getPortletList(); 
+		};
+		
+		request.onerror = function() {}
+		
+		var data = JSON.stringify({
+			companyId : companyValue,
+			portlets : portletOrderList
+		});
+		 
+		request.send(data);
 	}
 
 	//게시판 설정 
@@ -209,7 +276,7 @@
 	var portletUpdate = function(event) {
 		var companiesObj = document.getElementById("ListCompany");
 		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
-
+		
 		//포틀릿 아이디
 		var portletId = event.data.portletId;
 		
@@ -287,7 +354,7 @@
 				
 				for (var i = 0; i < portletCnt; i++) {
 					portletId = result[i].portletId;
-					portletOrder = result[i].portletOrder;
+					defaultOrder = result[i].defaultOrder;
 					portletName = result[i].portletName;
 					portletType = result[i].portletType;
 					portletURL = result[i].connectionUrl;
@@ -295,7 +362,7 @@
 					menuId = result[i].menuId;
 					portletNameListCnt = portletNameList.length;
 					
-					listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='"+portletOrder +"'>"	
+					listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder + "'>"	
 					listHTML += "<div class='portlet-header'>" + portletNameList[arrayLang].portletName + "</div>";
 					listHTML += "<div class='portlet-content'>";
 					listHTML += "<div class='btnpositionJsp updatePortlet'>";
@@ -381,7 +448,10 @@
 		$( ".col-container" ).sortable({
 			items : "li.col",
 		    handle: ".portlet-header",
-		    cancel: ".portlet-toggle"
+		    cancel: ".portlet-toggle",
+		    update : function(event, ui) {
+		    	updatePortletOrder();
+		    }
 		});
 		
 		$( ".portlet" )
