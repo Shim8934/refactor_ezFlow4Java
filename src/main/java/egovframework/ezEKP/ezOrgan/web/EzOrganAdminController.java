@@ -1442,9 +1442,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    logger.debug("tenantID=" + tenantID + ",parentCn=" + vo.getParentCn());
 	    
 		String result = "";		
-		String jobTile2 = "";
-		String jobPostion2 = "";
-		String companyId = "";
 		
 		// 전체관리자가 아닌데 전체관리자 권한을 설정하려는 경우엔 CHECKPERMISSION을 반환한다.
         if (userInfo.getRollInfo().indexOf("c=1") == -1 
@@ -1458,14 +1455,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         		result = "OK";
         	} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
         		e.printStackTrace();
-        		ezOrganAdminService.deleteTargetAddressUser(tenantID, jobTile2, vo.getCn(), companyId);//직위 공용배포 그룹에서 user 삭제
-        		ezOrganAdminService.deleteTargetAddressUser(tenantID, jobPostion2, vo.getCn(), companyId);//직책 공용배포 그룹에서 user 삭제
-        		String userNameTitle = ezOrganAdminService.getDistributionUserName(tenantID, vo.getTitle(), companyId);//user의 기존 직위 공용 배포 그룹 이름 가져오기
-        		ezOrganAdminService.mailUpdateDistributionList(ezCommonService.getTenantConfig("DomainName", tenantID),
-        				vo.getTitle(), userNameTitle, companyId, tenantID, vo.getCn());//기존 user의 직위 공용 배포 그룹에 user 추가 
-        		String userNamePosition = ezOrganAdminService.getDistributionUserName(tenantID, vo.getTitle(), companyId);//user의 기존 직책 공용 배포 그룹 이름 가져오기
-        		ezOrganAdminService.mailUpdateDistributionList(ezCommonService.getTenantConfig("DomainName", tenantID),
-        				vo.getExtensionAttribute10(), userNamePosition, companyId, tenantID, vo.getCn());//기존 user의 직책 공용 배포 그룹에 user 추가
         		e.printStackTrace();
         		result = "EMAIL_ERROR";
         	}
