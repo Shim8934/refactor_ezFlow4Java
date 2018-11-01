@@ -307,7 +307,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			});
@@ -1544,11 +1544,10 @@
 			<h1 id="titleimg"><spring:message code='ezAttitude.t144'/></h1>
 		</c:if>
 		<div id="mainmenu">
-			<ul>
+			<ul class="on">
 				<c:if test="${adminFlag == 'true'}">
 		        	<li id="btnAbsentedList"><span onClick="popupAbsentedList()"><spring:message code='ezAttitude.t6'/></span></li>
 		        	<li id="btnExcelDown"><span onClick="excelDown()"><spring:message code='ezAttitude.t145'/></span></li>
-					<!-- <li id="divisionBar" style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 					<li>
 						<select id="authDeptList" style="width:130px; height:28px;<c:if test="${displayFlag == 'false'}"> display:none </c:if>" onchange="deptChange()">
 							<c:forEach var="dept" items="${deptList}">
@@ -1571,6 +1570,15 @@
 				</c:if>
 			</ul>
 		</div>
+
+		<div class="calendar_pagenav">
+	        <ul class="contentlayout">
+	            <li class="contentlayout_left" id="preM"></li>
+	            <li class="contentlayout_right" id="preN"></li>
+	            <li class="contentlayout_none"><span class="spanText" id="calTitle"></span>
+	            </li>
+	        </ul>
+	    </div>
 		
 		<table>
 			<tr>
