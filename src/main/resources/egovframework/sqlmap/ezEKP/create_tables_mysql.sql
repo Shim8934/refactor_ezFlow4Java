@@ -5377,20 +5377,6 @@ CREATE TABLE `tbl_expendaprline` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_ezoms_usercount`
---
-
-DROP TABLE IF EXISTS `tbl_ezoms_usercount`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ezoms_usercount` (
-  `SERVERNAME` varchar(50) NOT NULL,
-  `USERCOUNT` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`SERVERNAME`)
-) ENGINE=FEDERATED DEFAULT CHARSET=utf8 CONNECTION='ezoms_link/customer_usercount';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_form_autorule`
 --
 
