@@ -662,7 +662,9 @@
 		    function RefreshView() {
 		        isrefresh = true;
 		        selectelem = null;
-
+		        if(filter !== "" ) {
+		        	searchFlag = true;
+		        }
 		        DateChange();
 		    }
 			
