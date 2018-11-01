@@ -409,6 +409,15 @@ function checkAndCorrectExistenceOfAllControls() {
 	}
 }
 
+function checkOfAvailableDataBindElements() {
+	var listElement = webEditorDocument.getElementById("__reform_data_bind_list");
+	
+	if (listElement == null) {
+		resetUIDataBindControlList();
+		return;
+	}
+}
+
 function restoreAfterHTMLSourceEditInDEXT5() {
 	checkAndCorrectExistenceOfAllControls();
 	
@@ -453,6 +462,7 @@ function restoreAfterHTMLSourceEditInDEXT5() {
 
 function restoreAfterHTMLSourceEditInNamo() {
 	checkAndCorrectExistenceOfAllControls();
+	checkOfAvailableDataBindElements();
 	
 	if (currentControlElementId != null && currentControlElementId != "") {
 		var currentControl = webEditorDocument.getElementById(currentControlElementId);
@@ -818,15 +828,15 @@ function insertElementToDocument(element) {
 		// Label 콘트롤 뒤에 키보드 입력 시 Label 콘트롤 안에 입력되는 것을 방지하기 위해 빈공간 삽입
 		DEXT5.setInsertHTML(element.outerHTML + "&nbsp;");
 	} else if (isNamo) {
-//		if (element.getAttribute("data-reform_hidden_control_flag") == "1") {
-//			webEditorDocument.body.insertBefore(element, webEditorDocument.body.firstChild);
-//			return;
-//		}
-//		
-//		containerNode = CrossEditor2.GetCaretObject();
-//		containerNode.appendChild(element);
-//		// Label 콘트롤 뒤에 키보드 입력 시 Label 콘트롤 안에 입력되는 것을 방지하기 위해 빈공간 삽입
-//		containerNode.appendChild(webEditorDocument.createTextNode('\u00A0'));
+		// if (element.getAttribute("data-reform_hidden_control_flag") == "1") {
+		// webEditorDocument.body.insertBefore(element, webEditorDocument.body.firstChild);
+		// return;
+		// }
+		//		
+		// containerNode = CrossEditor2.GetCaretObject();
+		// containerNode.appendChild(element);
+		// // Label 콘트롤 뒤에 키보드 입력 시 Label 콘트롤 안에 입력되는 것을 방지하기 위해 빈공간 삽입
+		// containerNode.appendChild(webEditorDocument.createTextNode('\u00A0'));
 		
 		if (element.getAttribute("data-reform_hidden_control_flag") == "1") {
 			webEditorDocument.body.insertBefore(element, webEditorDocument.body.firstChild);

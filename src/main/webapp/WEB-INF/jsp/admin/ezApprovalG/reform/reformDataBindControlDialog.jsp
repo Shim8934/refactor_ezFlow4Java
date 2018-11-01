@@ -25,6 +25,10 @@
 	table-layout: fixed
 }
 
+#prop_id:invalid::placeholder {
+	color: #666;
+}
+
 #prop_sql {
 	font-family: Courier New, Helvetica, sans-serif;
 	font-size: 14px;
@@ -89,6 +93,12 @@ textarea {
 		var dataBindControlID = controlElement.value.trim();
 		if (dataBindControlID == "") {
 			dataBindControlID = dataBindID;
+			
+			if (dataBindControlID === undefined) {
+				alert("아이디를 입력해주세요.");
+				controlElement.focus();
+				return;
+			}
 		} else if (dataBindID != dataBindControlID) {
 			var existingElement = webEditorDocument.getElementById(dataBindControlID);
 			if (existingElement != null) {
@@ -134,7 +144,7 @@ textarea {
 			<tr>
 				<th>데이터연동<br />아이디
 				</th>
-				<td><input id="prop_id" type="text" /></td>
+				<td><input id="prop_id" type="text" placeholder="아이디를 입력해주세요" required/></td>
 			</tr>
 			<tr>
 				<th>데이터소스</th>
