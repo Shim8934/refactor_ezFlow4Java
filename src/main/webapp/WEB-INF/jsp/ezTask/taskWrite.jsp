@@ -66,6 +66,7 @@
 			/*2018-05-23 구해안 버그 수정을 위해 boolean 변수 2개 추가*/
 			var timeCheck = false;
 			var radioCheck = false;
+			var flag = "<c:out value='${flag}'/>";
 			
 			$(function () {
 				 $("#Sdatepicker").datepicker({

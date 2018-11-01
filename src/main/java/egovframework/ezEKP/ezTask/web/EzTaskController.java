@@ -1137,6 +1137,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 		String realPath = commonUtil.getRealPath(request);
+		String flag = request.getParameter("flag") == null ? "" : request.getParameter("flag");
 		
 		String taskID = request.getParameter("taskID");
 		TaskInfoVO taskInfoVO = null;
@@ -1212,6 +1213,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("taskAttachList", strAttach.toString());
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
+		model.addAttribute("flag", flag);
 		
 		logger.debug("taskWrite ended.");
 		

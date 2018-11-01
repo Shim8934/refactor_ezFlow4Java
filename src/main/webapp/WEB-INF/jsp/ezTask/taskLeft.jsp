@@ -66,43 +66,14 @@
 	                }
 	            }
 	        }
-	        function skinChange(v_data) {
-	            if (v_data == "2") {
-	                //document.getElementById("pims1").style.display = "block";
-	                //document.getElementById("pims2").style.display = "none";
-	                //document.getElementById("pims3").style.display = "none";
-	            }
-	            else if (v_data == "4") {
-	                //document.getElementById("pims1").style.display = "none";
-	                //document.getElementById("pims2").style.display = "block";
-	                //document.getElementById("pims3").style.display = "none";
-	            }
-	            else if (v_data == "3") {
-	            //    document.getElementById("pims1").style.display = "none";
-	               // document.getElementById("pims2").style.display = "block";
-	              //  document.getElementById("pims3").style.display = "none";
-	            }
-	            else {
-	               // document.getElementById("pims1").style.display = "none";
-	             //   document.getElementById("pims2").style.display = "none";
-	              //  document.getElementById("pims3").style.display = "block";
-	            }
-	        }
 	        
 	        var taskFlag = true;
 		    function Function_Flag(v_data, subfolder) {
-		        skinChange(v_data);
-
-		        v_data = parseInt(v_data);
-		        _funCode = v_data;
 
 		        switch (v_data) {
 		            case 3:		// Task
-		            	if(taskFlag == false) {
-		            		window.parent.frames["right"].ChangeTab(window.parent.frames["right"].document.getElementById('1tab1'));
-		            	} else {
-		            		window.open("/ezTask/taskMain.do?taskFlag=normal", "right");
-		            	}
+		            	window.open("/ezTask/taskMain.do?taskFlag=normal", "right");
+		            
 		            	taskFlag = false;
 		                break;
 
@@ -112,84 +83,90 @@
 		                break;
 		            
 		            case 11:		// Search public calendar
-		            	$('.checkSelect').each(function() {
-				            $(this).prop('checked',true);			            
-				        });
-		            	$('#select-all').prop('checked',true);
-		            	$('#IDClick').css('pointer-events','none');
 		                window.open("/ezSchedule/scheduleConfigMain.do?flag=task", "right");
 		                taskFlag = true;
 		                break;
 		                
 		            case 12:		// repeat task
-		            	if(taskFlag == false) {
-		            		window.parent.frames["right"].ChangeTab(window.parent.frames["right"].document.getElementById('1tab3'));
-		            	} else {
-		            		window.open("/ezTask/taskMain.do?taskFlag=repeat", "right");
-		            	}
+		           		window.open("/ezTask/taskMain.do?taskFlag=repeat", "right");
+		            	
 		            	taskFlag = false;
 		            	break;
 		            	
 		            case 13:		// send task
-		            	if(taskFlag == false) {
-		            		window.parent.frames["right"].ChangeTab(window.parent.frames["right"].document.getElementById('1tab2'));
-		            	} else {
-		            		window.open("/ezTask/taskMain.do?taskFlag=send", "right");
-		            	}
+		            	window.open("/ezTask/taskMain.do?taskFlag=send", "right");
+		            	
 		            	taskFlag = false;
 		            	break;
 		            	
 		        }
 		    }		   
 		
-	        function WebPartToggle(obj) {
-	            /* if (obj.listNum && currentListNum != obj.listNum + 1) {
-	                level1El.item(currentListNum - 1).className = null;
-	                level2El.item(currentListNum - 1).className = "off";
-	            }
-
-	            if (level2El.item(obj.listNum).className == "on") {
-	                level1El.item(obj.listNum).className = null;
-	                level2El.item(obj.listNum).className = "off";
-	            }
-	            else {
-	                level1El.item(obj.listNum).className = "on";
-	                level2El.item(obj.listNum).className = "on";
-	            }
-
-	            currentListNum = obj.listNum + 1;
-
-	            setMenu(level2El.item(obj.listNum)); */
-	        }
-	        
 	        // 업무작성창 load
-	        function WritePopup() {
-	        	if(window.parent.frames["right"].document.getElementById("portlet_tabpart01")) {
-	        		window.parent.frames["right"].WriteTask();	
-	        	} 
+	        function WritePopup() {// 왼쪽(일반업무, 반복업무, 보낸업무) => 왼쪽 업무작성 버튼 입력
+	        	// 환경설정, 업무검색 페이지 => 업무작성
 	        	feature = GetOpenPosition(790, 775);
-                window.open("/ezTask/taskWrite.do", "", "height=775px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+                window.open("/ezTask/taskWrite.do?flag=other", "", "height=775px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 	        }
 	        
 	        function cntLoad() {
+	        	// 일반업무
 	        	if (window.parent.frames["right"].cnt > 0) {
 	        		$("#taskCnt").html(window.parent.frames["right"].cnt);
+	        	} else if(window.parent.frames["right"].cnt == 0) {
+	        		$("#taskCnt").html("");
 	        	}
+	        	// 반복업무
 	        	if (window.parent.frames["right"].cnt3 > 0) {
 	        		$("#task2Cnt").html(window.parent.frames["right"].cnt3);	
+	        	} else if(window.parent.frames["right"].cnt3 == 0) {
+	        		$("#task2Cnt").html("");
 	        	}
+	        	// 보낸업무
 	        	if (window.parent.frames["right"].cnt2 > 0) {
 	        		$("#task3Cnt").html(window.parent.frames["right"].cnt2);	        		
+	        	} else if(window.parent.frames["right"].cnt2 == 0) {
+	        		$("#task3Cnt").html("");
 	        	}
 	        }
+	        
+	        function getTaskList() {		    	
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezTask/taskGetList.do",
+					data : {
+						"startDate" : "",
+						"endDate" : "",
+						type : 1,
+						"filter" : "",
+						"chkValue" : "",
+						"searchClass" : "",
+						taskStatusCount : 2,
+						useDate : "",
+						pSelectTab : "taskprog"
+					},
+					success : function(xml) {
+						listdom = loadXMLString(xml);
+						count = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
+			            count2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
+			            count3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
+			            $("#taskCnt").html(count);
+			            $("#task2Cnt").html(count3);
+			            $("#task3Cnt").html(count2);
+					},
+					error : function() {
+						alert("<spring:message code='ezTask.t992' />");
+					}
+				});
+		    }
 		</script>
 	</head>
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
-	    	<!-- <div class="lnb_btn"></div> -->
-	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
 	    	<div class="left_title" title="<spring:message code='ezSchedule.t1011'/>"><spring:message code='ezSchedule.t1011'/>
-	        	<span onClick="Function_Flag('11')" class="sub_iconLNB tree_leftconfig" title="업무관리환경설정"></span>
+	        	<span onClick="Function_Flag(11)" class="sub_iconLNB tree_leftconfig" title="<spring:message code='ezTask.hyh001'/>"></span>
 	        </div>
 	        <div class="btn_writeBox" onclick="WritePopup()">
 	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span><spring:message code='ezTask.t113' /></p>
@@ -232,88 +209,5 @@
 	        </ul>
 	    </div>
 	</body>
-<%-- 	<body class="leftbody">
-        <div class="left_pims" title="<spring:message code='ezSchedule.t1010'/>"><span><spring:message code='ezSchedule.t1010'/></span></div>
-        <input type="hidden" id="chk_str" value="">
-	    <div id="left">
-	    	
-	        <div class="left_pims1" title="<spring:message code='ezSchedule.t1010'/>" id='pims1'></div>
-		    <div class="left_pims2" title="<spring:message code='ezSchedule.t1017'/>" id='pims2' style="display:none"></div>
-		    <div class="left_pims3" title="<spring:message code='ezSchedule.t1011'/>" id='pims3' style="display:none"></div>
-		    <h2 class="on"><span id="Schedule" onclick="Function_Flag(2)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1010'/></span></h2>
-		    <ul>		
-		    	<!-- 2018-06-07 구해안 mini 호출하는 부분 삭제하고 체크박스 생성 -->    	
-		    	<!-- <div id="CalendarMini" style="padding-top:5px;margin:0px 10px 10px 10px;"></div> -->
-		    	<div id="IDClick">
-		    	<!-- 2018-07-11 구해안 left 체크박스 label에 title 삽입 -->
-		    	<label class="IDcontainer" onchange="chk_all()"><spring:message code='ezSchedule.t220'/>
-				  <input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse">
-				  <span class="checkmark"></span>
-				</label>
-				<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t221'/>
-				  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${loginVO.id}" class="checkSelect">
-				  <span class="checkmark" style="background:#018bfa;"></span>
-				</label>
-				<c:if test='${!empty scheSec}'>
-					<c:forEach var="sec" items="${scheSec}">
-						<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${sec.secName }"style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t372'/>${sec.secName }</span>
-						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${sec.secId }" class="checkSelect">
-						  <span class="checkmark" style="background-color:#018bfa;"></span>
-						</label>
-					</c:forEach>
-				</c:if>
-					<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t222'/>
-					  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${loginVO.deptID}" class="checkSelect">
-					  <span class="checkmark" style="background:#01b43f;"></span>
-					</label>
-				
-				<c:if test='${!empty scheDept}'>
-					<c:forEach var="dep" items="${scheDept}">
-						<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${dep.deptName }"style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t373'/>${dep.deptName }</span>
-						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${dep.deptId }" class="checkSelect">
-						  <span class="checkmark" style="background-color:#01b43f;"></span>
-						</label>
-					</c:forEach>
-				</c:if>
-				<c:if test='${!empty scheCum}'>
-					<c:forEach var="cum" items="${scheCum}">
-						<c:if test="${cum.deptId ne loginVO.deptID}">
-							<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${cum.titleName }" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t373'/>${cum.titleName }</span>
-							  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
-							  <span class="checkmark" style="background-color:#01b43f;"></span>
-							</label>
-						</c:if>
-					</c:forEach>
-				</c:if>
-				<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t223'/>
-				  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="3" value="${loginVO.companyID}" class="checkSelect">
-				  <span class="checkmark" style="background:#ff1c71;"></span>
-				</label>
-				<c:if test='${!empty groupList}'>
-					<c:forEach var="group" items="${groupList}">
-						<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${group.groupName }" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t375'/>${group.groupName }</span>
-						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="7" value="${group.groupId }" class="checkSelect">
-						  <span class="checkmark" style="background-color:#e9de13;"></span>
-						</label>
-					</c:forEach>
-				</c:if>
-		    	</div>
-		    	<!-- 2018-06-08 구해안 일정관리 탭 삭제 -->
-			    <li style="border-top:1px solid #dedede" evt="0"><span id='Schedule_Main' onClick="Function_Flag(2)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1010'/></span></li>	            
-				<li style="border-top:1px solid #eaeaea" evt="0"><span id='Schedule_Group' onClick="Function_Flag(5)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t252'/></span></li>
-			    <li evt="0"><span id='Schedule_Search' onClick="Function_Flag(6)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1018'/></span></li>
-			    <li evt="0"><span id='Schedule_Public_Search' onClick="Function_Flag(10)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1021'/></span></li>
-		    </ul>
-		    <h2><span id='Task' onClick="Function_Flag(3)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1011'/></span></h2>
-		    <ul>
-			    <li><span id='Task_Main' onClick="Function_Flag(3)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1011'/></span></li>
-			    <li><span id='Task_Search' onClick="Function_Flag(7)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1019'/></span></li>
-		    </ul>
-	        <h3><span id='Schedule_Config' onClick="Function_Flag('11')" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1012'/></span></h3>
-		</div>		
-	    <script type="text/javascript">
-		    initToggleList(document.getElementById("left"), "h2", "ul", "li");
-	    </script> --%>
-	    
 	</body>
 </html>
