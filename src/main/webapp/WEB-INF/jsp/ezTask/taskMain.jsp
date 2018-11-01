@@ -71,7 +71,7 @@
 		        switch(taskFlag) {
 		        	case "normal":
 		        		ChangeTab(document.getElementById("1tab1"));
-		        		currentTab = "1tab1";
+		        		//currentTab = "1tab1";
 			        	$("#1tab1").click();
 			        	break;
 		        	case "repeat":
@@ -161,15 +161,15 @@
                 window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 820px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 	
-		    function WriteTask() {
+		    function WriteTask(flag) {
 		    	var feature = "";
-		    	
+		    	taskFlag = currentTab;
 		    	if (useTodoMemo == 'YES') {
 		    		feature = GetOpenPosition(790, 830);
-	                window.open("/ezTask/taskWrite.do", "", "height=830px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+	                window.open("/ezTask/taskWrite.do?flag=" + flag, "", "height=830px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    	} else {
 		    		feature = GetOpenPosition(790, 775);
-	                window.open("/ezTask/taskWrite.do", "", "height=775px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+	                window.open("/ezTask/taskWrite.do?flag=" + flag, "", "height=775px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    	}
 		    }
 	
@@ -744,11 +744,14 @@
 	                currentpage = 1;	            	
 	            }
 
-	            cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
-	            cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
-	            cnt3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
-	            allCnt = getNodeText(listdom.documentElement.getElementsByTagName("ALLCNT")[0]);
-				
+	            
+	            if(!searchFlag){
+	            	cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
+		            cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
+		            cnt3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
+		            allCnt = getNodeText(listdom.documentElement.getElementsByTagName("ALLCNT")[0]);
+	            }
+	            
 	            // 왼쪽메뉴 카운트 수
 	            if ($(".tabon").attr("divname") == "taskprog") {
 	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t200901' />" + " (" + currentCount + ")";
@@ -771,27 +774,40 @@
 	            switch (currentTab) {
 		            case "normal":
 		                type = "1";
+		                cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200901' />";
-		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + cnt + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + currentCount + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
 		                currentTab = "normal";
+		                if(chkValue === "memo") {
+		                	cnt = currentCount;
+		                }
 		                break;
 		            case "send":
 		                type = "2";
+		                cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200903' />";
-		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + cnt2 + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + currentCount + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
 		                currentTab = "send";
+		                if(chkValue === "memo") {
+		                	cnt2 = currentCount;
+		                }
 		                break;
 		            case "repeat":
 		                type = "3";
+		                cnt3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200902' />";
-		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + cnt3 + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + currentCount + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
 		                currentTab = "repeat"
+		                if(chkValue === "memo") {
+			                cnt3 = currentCount;
+						}
 		                break;
 		        }
-
+				
 	            show_page();
 	            makePageSelPage();
 	            window.parent.frames["left"].cntLoad();
+	            searchFlag = false;
 	            return;
 		    }
 
@@ -880,6 +896,7 @@
 
 		    var chkValue = "";
 		    var filter = "";
+		    searchFlag = false;
 		    function search() {
 		        if ($.trim($("#txt_keyword").val()) == "") {
 		        	alert("<spring:message code='ezTask.t990' />");
@@ -900,6 +917,7 @@
 		            return;
 		        }
 		        
+		        searchFlag = true;
 		        getTaskList();
 		    }
 		    
@@ -1006,7 +1024,7 @@
 		<div id="mainmenu">
 			<ul>
 				<!-- 2018-05-24 구해안 이미지 이동 -->
-				<li><span id="pn_img" onClick="WriteTask()"><spring:message code='ezTask.t113' /></span></li>
+				<li><span id="pn_img" onClick="WriteTask('right')"><spring:message code='ezTask.t113' /></span></li>
 				<li><span onClick="DeleteTask()"><spring:message code='ezTask.t115' /></span></li>
 				<li><span onClick="RefreshView()"><spring:message code='ezTask.t116' /></span></li>
 
