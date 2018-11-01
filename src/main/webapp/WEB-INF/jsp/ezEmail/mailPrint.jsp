@@ -26,6 +26,10 @@
 				border:1px solid #d2d2d2;
 				padding:2px 10px;
 			}
+			p {
+				margin-bottom: 0; 
+				margin-top: 0;
+			}
 		</style>
 		</c:if>
 		<c:if test="${userLang == '2'}">
@@ -45,6 +49,10 @@
 				background-color:#f8f8f8;
 				border:1px solid #ddd;
 				padding:2px 10px;
+			}
+			p {
+				margin-bottom: 0; 
+				margin-top: 0;
 			}
 		</style>
 		</c:if>
@@ -66,6 +74,10 @@
 				border:1px solid #d2d2d2;
 				padding:2px 10px;
 			}
+			p {
+				margin-bottom: 0; 
+				margin-top: 0;
+			}
 		</style>
 		</c:if>
 		<c:if test="${userLang == '4'}">
@@ -85,6 +97,10 @@
 				background-color:#f8f8f8;
 				border:1px solid #ddd;
 				padding:2px 10px;
+			}
+			p {
+				margin-bottom: 0; 
+				margin-top: 0;
 			}
 		</style>
 		</c:if>

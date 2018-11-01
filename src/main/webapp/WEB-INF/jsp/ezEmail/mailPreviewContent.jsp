@@ -15,12 +15,16 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/Newemail.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/contextmenu.js')}"></script>
+	    <style> 
+			p { margin-bottom: 0; margin-top: 0; } 
+		</style>
 	    <script language="javascript" type="text/javascript">
 	        var g_paramURL = "${url}";
 	        var editor = "${Use_Editor}";
 	        var pNoneActiveX = "${NoneActiveX}";
 		    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간
 		    var memoFlag = "<c:out value='${memoFlag}' />";
+		    var mouseTop;
 		    
 	        function window_onload() {
 	        	if(memoFlag === "YES") {
@@ -73,6 +77,7 @@
 						}
 						conObject.style.left = contextLeft + "px";
 						conObject.style.top = contextTop + "px";
+						mouseTop = contextTop + "px";
 					}
 					
 					$(".menus").click(function(){

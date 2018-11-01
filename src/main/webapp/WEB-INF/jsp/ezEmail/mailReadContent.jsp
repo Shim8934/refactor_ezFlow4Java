@@ -14,11 +14,15 @@
 	    	<script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    	<script src="http://code.jquery.com/jquery-3.2.1.js"></script>
 			<script type="text/javascript" src="${util.addVer('/js/ezMemo/contextmenu.js')}"></script>
+			<style> 
+				p { margin-bottom: 0; margin-top: 0; } 
+			</style>
 	    	<script language="javascript" type="text/javascript">
 			    var g_rejectWord = "${rejectKeyWord}";
 			    var g_paramURL = "${url}";
 			    var objLink = document.all("BigSizeFileLink");
 			    var memoFlag = "<c:out value='${memoFlag}' />";
+			    var mouseTop;
 			    
 			    if (objLink != null) {
 					
@@ -93,6 +97,7 @@
 							}
 							conObject.style.left = contextLeft + "px";
 							conObject.style.top = contextTop + "px";
+							mouseTop = contextTop + "px";
 						}
 						
 						$(".menus").click(function(){
