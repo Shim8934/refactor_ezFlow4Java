@@ -342,25 +342,29 @@
 			});
 			
 			function scheduleGetLunarUse() {
-			    $.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/ezSchedule/scheduleGetLunarUse.do",
-		    		data : {
-		    			COMPANYID  : "${userInfo.companyID}"		    			
-		    		},
-		    		success: function(result) {		    			
-		    			if (result == "0") {
-		    				LunarUse = true;
-		    			} else if(result == "1") {
-		    				LunarUse = true;
-		    			} else {
-		    				LunarUse = false;
-		    			}		    			
-		    			getHolidayList();
-		    		}
-		        });
+				if (uselang != 3) {
+				    $.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezSchedule/scheduleGetLunarUse.do",
+			    		data : {
+			    			COMPANYID  : "${userInfo.companyID}"		    			
+			    		},
+			    		success: function(result) {		    			
+			    			if (result == "0") {
+			    				LunarUse = true;
+			    			} else if(result == "1") {
+			    				LunarUse = true;
+			    			} else {
+			    				LunarUse = false;
+			    			}		    			
+			    			getHolidayList();
+			    		}
+			        });
+				} else {
+					getHolidayList();
+				}
 			}
 			
 			/**
