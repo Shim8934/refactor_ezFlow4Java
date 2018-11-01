@@ -22,6 +22,7 @@
 	        var pNoneActiveX = "${NoneActiveX}";
 		    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간
 		    var memoFlag = "<c:out value='${memoFlag}' />";
+		    var shareId = "${shareId}";
 		    
 	        function window_onload() {
 	        	if(memoFlag === "YES") {
@@ -292,9 +293,15 @@
 		        xml += "<NAME><![CDATA[" + obj.getAttribute("fileid") + "]]></NAME>";
 		        xml += "</ROW>";
 		        xml += "<ITEMID><![CDATA[" + g_paramURL + "]]></ITEMID></FILE>";
-	
+				
+				var requestUrl = "/ezEmail/mailDelReadInterAttach.do";
+		        
+				if (typeof(shareId) != "undefined" && shareId != "") {
+					requestUrl += "?shareId=" + encodeURIComponent(shareId);
+				}
+		        
 		        var xmlHTTP = new XMLHttpRequest();
-		        xmlHTTP.open("POST", "/ezEmail/mailDelReadInterAttach.do", false);
+		        xmlHTTP.open("POST", requestUrl, false);
 		        xmlHTTP.send(xml);
 	
 		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {

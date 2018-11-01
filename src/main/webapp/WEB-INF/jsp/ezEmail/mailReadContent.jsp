@@ -20,6 +20,7 @@
 			    var g_paramURL = "${url}";
 			    var objLink = document.all("BigSizeFileLink");
 			    var memoFlag = "<c:out value='${memoFlag}' />";
+			    var shareId = "${shareId}";
 			    
 			    if (objLink != null) {
 					
@@ -297,9 +298,15 @@
 			        xml += "<NAME><![CDATA[" + obj.getAttribute("fileid") + "]]></NAME>";
 			        xml += "</ROW>";
 			        xml += "<ITEMID><![CDATA[" + g_paramURL + "]]></ITEMID></FILE>";
-			
+					
+			        var requestUrl = "/ezEmail/mailDelReadInterAttach.do";
+			        
+					if (typeof(shareId) != "undefined" && shareId != "") {
+						requestUrl += "?shareId=" + encodeURIComponent(shareId);
+					}
+			        
 			        var xmlHTTP = new XMLHttpRequest();
-			        xmlHTTP.open("POST", "/ezEmail/mailDelReadInterAttach.do", false);
+			        xmlHTTP.open("POST", requestUrl, false);
 			        xmlHTTP.send(xml);
 			
 			        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {

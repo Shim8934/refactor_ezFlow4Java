@@ -388,7 +388,14 @@ function Read_StatusChange(pGubun) {
             createNodeAndInsertText(xmlpara, objNode, "MESSAGEID", document.getElementById(listSubContentArry[i]).getAttribute("_href"));
         }
     }
-    xmlHTTP.open("POST", "/ezEmail/mailSetReadChange.do", false);
+    
+    var url = "/ezEmail/mailSetReadChange.do";
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		url += "?shareId=" + encodeURIComponent(shareId);
+	}
+    
+    xmlHTTP.open("POST", url, false);
     xmlHTTP.send(xmlpara);
     MailListRefresh();
 }
@@ -401,7 +408,14 @@ function move_mail_onclick() {
     
     mail_movecopy_cross_dialogArguments[1] = move_mail_onclick_Complete;
     mail_movecopy_cross_dialogArguments[2] = "CLOSE";
-    var OpenWin = window.open("/ezEmail/mailMoveCopy.do", "mail_movecopy_cross", GetOpenWindowfeature(322, 380));
+    
+    var requestUrl = "/ezEmail/mailMoveCopy.do";
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	}
+    
+    var OpenWin = window.open(requestUrl, "mail_movecopy_cross", GetOpenWindowfeature(322, 380));
     try { OpenWin.focus(); } catch (e) { }
 }
 function move_mail_onclick_Complete(moveUrl) {
@@ -452,7 +466,14 @@ function Mail_CopyPostSend(Mode, Url, szItemID) {
     createNodeAndInsertText(xmlpara, objNode, "CMD", Mode);
     createNodeAndInsertText(xmlpara, objNode, "UNIQUEID", szItemID);
     createNodeAndInsertText(xmlpara, objNode, "FOLDERID", Url);
-    xmlhttp_mailCopy.open("POST", "/ezEmail/mailMoveCopyMessage.do", true);
+    
+    var requestUrl = "/ezEmail/mailMoveCopyMessage.do";
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	}
+    
+    xmlhttp_mailCopy.open("POST", requestUrl, true);
     xmlhttp_mailCopy.onreadystatechange = event_Mail_CopyPostSend;
     event_Mail_CopyPostSend.mode = Mode;
     xmlhttp_mailCopy.send(xmlpara);
@@ -487,7 +508,14 @@ function Mail_MoveDeletePostSend(Mode, Url, szItemID) {
     createNodeInsert(xmlpara, objNode, "DATA");
     createNodeAndInsertText(xmlpara, objNode, "UNIQUEID", szItemID);
     createNodeAndInsertText(xmlpara, objNode, "FOLDERID", Url);
-    xmlhttp_mailMoveDelete.open("POST", "/ezEmail/mailDelete.do?cmd=" + Mode, true);
+    
+    var url = "/ezEmail/mailDelete.do?cmd=" + Mode;
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+		url += "&shareId=" + encodeURIComponent(shareId);
+	}
+    
+    xmlhttp_mailMoveDelete.open("POST", url, true);
     xmlhttp_mailMoveDelete.onreadystatechange = event_xmlhttp_mailMoveDelete_Complete;
     event_xmlhttp_mailMoveDelete_Complete.mode = Mode;
     xmlhttp_mailMoveDelete.send(xmlpara);
@@ -627,8 +655,15 @@ function reject_onclick() {
         var url = "";
         url = document.getElementById(RejectArray[n]).getAttribute("_href");
         createNodeAndInsertText(xmlpara, objNode, "ITEMID", url);
+        
+        var requestUrl = "/ezEmail/mailGetFromEmail.do";
+        
+		if (typeof(shareId) != "undefined" && shareId != "") {
+			requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		}
+        
         try {
-            xmlHTTP.open("POST", "/ezEmail/mailGetFromEmail.do", false);
+            xmlHTTP.open("POST", requestUrl, false);
             xmlHTTP.send(xmlpara);
 
             if (xmlHTTP.status < 200 || xmlHTTP.status > 300) {
@@ -721,12 +756,10 @@ function prevShow() {
         var strQuery = "<URL>" + Preview_Href + "</URL>";
         xmlhttp_mailPreview = createXMLHttpRequest();
         
-        var previewUrl;
+        var previewUrl = "/ezEmail/mailPrevShow.do?MSGFLAG=N";
         
         if (typeof(shareId) != "undefined" && shareId != "") {
-        	previewUrl = "/ezEmail/mailPrevShow.do?MSGFLAG=N&shareId=" + encodeURIComponent(shareId);
-        } else {
-        	previewUrl = "/ezEmail/mailPrevShow.do?MSGFLAG=N";
+        	previewUrl += "&shareId=" + encodeURIComponent(shareId);
         }
         
         xmlhttp_mailPreview.open("POST", previewUrl, true);
@@ -1387,12 +1420,10 @@ function callMsgDlg(szContentClass, Href) {
     var pLeft = (pwidth - 890) / 2;
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     if (!g_bdraft) {
-        var pURI;
+        var pURI = "/ezEmail/mailRead.do?iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);
         
         if (typeof(shareId) != "undefined" && shareId != "") {
-        	pURI = "/ezEmail/mailRead.do?shareId=" + encodeURIComponent(shareId) + "&iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);            
-        } else {
-        	pURI = "/ezEmail/mailRead.do?iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);            
+        	pURI += "&shareId=" + encodeURIComponent(shareId);
         }
         
         ReadMailOpenNewWin = window.open(pURI, "", feature);
@@ -1672,9 +1703,14 @@ function toggle_flag() {
     createNodeAndInsertText(xmlDom, objNode, "STARTDATE", pSDate);
     createNodeAndInsertText(xmlDom, objNode, "ENDDATE", pEDate);
 
-
+    var url = "/ezEmail/mailSetFlag.do";
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		url += "?shareId=" + encodeURIComponent(shareId);
+	}
+    
     try {
-        flagXmlHttp.open("POST", "/ezEmail/mailSetFlag.do", true);
+        flagXmlHttp.open("POST", url, true);
         flagXmlHttp.onreadystatechange = event_toggle_flag_end;
         flagXmlHttp.send(xmlDom);
     }

@@ -94,6 +94,13 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezEmail/mailMoveCopy.do")
 	public String mailMoveCopy(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		String shareId = request.getParameter("shareId");
+		logger.debug("shareId=" + shareId);
+		
+		if (shareId != null) {
+			model.addAttribute("shareId", shareId);
+		}
+		
 		if (request.getParameter("fm") != null) {
 			model.addAttribute("isFolderManager", "1");
 		} else {

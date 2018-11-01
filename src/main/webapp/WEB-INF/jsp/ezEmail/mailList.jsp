@@ -287,7 +287,7 @@
 		        var HeaderObject = document.getElementById("MailHeader");
 		        var ContentObject = document.getElementById("MailList");	        
 		        HeaderIni(HeaderObject);       
-		        GetListInfo(HeaderObject, ContentObject, shareId);	        
+		        GetListInfo(HeaderObject, ContentObject);	        
 		        PreviewMode_ChangeBtn();
 		        window_onunload_Event = true;
 		                        

@@ -843,7 +843,7 @@ function MailSelect_One() {
         document.getElementById("Maillist_0").onclick();
 }
 var pOldSearchKeyword;
-function GetListInfo(HeaderObject, ContentObject, shareId) {
+function GetListInfo(HeaderObject, ContentObject) {
 	/* 수아 재은 수정 */
 	checkedHrefArry = getCheckHrefArry();
     
@@ -889,11 +889,11 @@ function GetListInfo(HeaderObject, ContentObject, shareId) {
     
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
     
-    if (typeof(shareId) != "undefined" && shareId != "") {
-    	createNodeAndInsertText(xmlpara, objNode, "SHAREID", shareId);
-    }
-    
     var _url = "/ezEmail/mailGetList.do";
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	_url += "?shareId=" + encodeURIComponent(shareId);
+    }
     
     if (useReceivingChk) {
     	_url = "/ezEmail/getReceiverMailList.do";
@@ -945,9 +945,15 @@ function GetListInfo_SUB(HeaderObject, ContentObject) {
     createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
     
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
-
+    
+    var url = "/ezEmail/mailGetList.do";
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	url += "?shareId=" + encodeURIComponent(shareId);
+    }
+    
     GetList_HTTP_SUB = createXMLHttpRequest();
-    GetList_HTTP_SUB.open("POST", "/ezEmail/mailGetList.do", true);
+    GetList_HTTP_SUB.open("POST", url, true);
     GetList_HTTP_SUB.onreadystatechange = GetListIevent_ongetxmlcomplete_SUB;
     GetList_HTTP_SUB.send(xmlpara);
     GetListInfo_HeaderObject = HeaderObject;
@@ -1097,7 +1103,7 @@ function on_changeView(listtypeValue) {
     var HeaderObject = document.getElementById("MailHeader");
     var ContentObject = document.getElementById("MailList");
     HeaderIni(HeaderObject);
-    GetListInfo(HeaderObject,ContentObject, shareId);
+    GetListInfo(HeaderObject,ContentObject);
 }
 function mf_updatePageInfo(szRangeHeader) {
     var pageCount = parseInt(document.getElementById("MailList").getAttribute("listpageCount"));
@@ -1206,13 +1212,13 @@ function BasicViewHeaderChange(pGubun, pFolderType) {
     var HeaderObject = document.getElementById("MailHeader");
     var ContentObject = document.getElementById("MailList");
     HeaderIni(HeaderObject);
-    GetListInfo(HeaderObject, ContentObject, shareId);
+    GetListInfo(HeaderObject, ContentObject);
 }
 function goToPageByNum(szNum) {
     document.getElementById("MailList").setAttribute("curPage", szNum)
     var HeaderObject = document.getElementById("MailHeader");
     var ContentObject = document.getElementById("MailList");
-    GetListInfo(HeaderObject,ContentObject, shareId);
+    GetListInfo(HeaderObject,ContentObject);
 }
 function selbeforeBlock() {
     var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
@@ -1426,7 +1432,7 @@ function event_HeaderClick(obj) {
     }
     var HeaderObject = document.getElementById("MailHeader");
     var ContentObject = document.getElementById("MailList");
-    GetListInfo(HeaderObject, ContentObject, shareId);
+    GetListInfo(HeaderObject, ContentObject);
 }
 
 function event_SubHeaderClick(obj) {

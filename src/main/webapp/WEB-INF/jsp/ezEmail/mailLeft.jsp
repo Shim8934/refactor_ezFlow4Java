@@ -1035,8 +1035,10 @@
 			        var xmlDOM = createXmlDom();
 			        var objNode;
 			        createNodeInsert(xmlDOM, objNode, "DATA");
-			        createNodeAndInsertText(xmlDOM, objNode, "SHAREID", shareId);
-			        xmlHTTP.open("POST", "/ezEmail/getSharedFolderlist.do", false);
+			        createNodeAndInsertText(xmlDOM, objNode, "URL", "");
+			        createNodeAndInsertText(xmlDOM, objNode, "BCOUNT", "-1");
+			        
+			        xmlHTTP.open("POST", "/ezEmail/getFolderList.do?shareId=" + encodeURIComponent(shareId), false);
 			        xmlHTTP.send(xmlDOM);
 
 			        var nodeTreeXml = xmlHTTP.responseText.replace("<DATA>", "").replace("</DATA>", "");

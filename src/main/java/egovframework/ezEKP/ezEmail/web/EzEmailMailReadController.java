@@ -2042,7 +2042,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					logger.debug("pSubject=" + pSubject);
 					
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, true, false, locale, null, null);
+					Map<String, Object> extraMap = new HashMap<String, Object>();
+					extraMap.put("forPrint", true);
+					extraMap.put("shareId", shareId);
+					
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
 					pBody = bodyInfoList.get(0);
 					pBody = pBody;
 					pAttachListHtml = bodyInfoList.get(1);
@@ -3646,6 +3650,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		String url = request.getParameter("url");
 		String myEmail = userInfo.getEmail();
+		
+		String shareId = request.getParameter("shareId");
+		logger.debug("shareId=" + shareId);
+		
+		if (shareId != null) {
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+			} else {
+				model.addAttribute("shareId", shareId);
+			}
+		}
 		
 		model.addAttribute("url", url);
 		model.addAttribute("myEmail", myEmail);

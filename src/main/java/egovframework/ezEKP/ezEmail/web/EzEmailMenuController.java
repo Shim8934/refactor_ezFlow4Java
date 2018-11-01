@@ -333,6 +333,21 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
+		
+		String shareId = request.getParameter("shareId");
+		logger.debug("shareId=" + shareId);
+		
+		if (shareId != null) {
+			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("getFolderList ended.");
+				
+				return "";
+			}
+			
+			userEmail = shareId + "@" + domainName;
+		}
+		
 		logger.debug("userEmail=" + userEmail);
 		
 		Document doc = commonUtil.convertRequestToDocument(request);
@@ -343,7 +358,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		boolean isSubscribe = true;
 		String folderManamger = request.getParameter("fm");
 		
-		if (folderManamger != null) {
+		if (folderManamger != null && folderManamger.equals("1")) {
 			isSubscribe = false;
 		}
 		
@@ -1672,107 +1687,4 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		return "ezEmail/mailImportOption";
 	}
 	
-	/**
-	 * 메일 폴더 리스트 정보 호출 함수
-	 */
-	@RequestMapping(value="/ezEmail/getSharedFolderlist.do", produces="text/xml; charset=utf-8")
-	@ResponseBody
-	public String getSharedFolderlist(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
-		logger.debug("getSharedFolderlist started.");
-		
-		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String password = userInfo.get(1);
-		
-		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
-		Document doc = commonUtil.convertRequestToDocument(request);
-		String shareId = doc.getElementsByTagName("SHAREID").item(0).getTextContent();
-		String userAccount = shareId + "@" + domainName;
-		
-		logger.debug("userId=" + loginInfo.getId() + ",shareId=" + shareId);
-		
-		StringBuilder rootFolderXML = new StringBuilder();
-		rootFolderXML.append("<DATA>");
-		
-		IMAPAccess ia = null;
-		try {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
-				throw new Exception("the user cannot access the shareId.");
-			}
-			
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userAccount, password, egovMessageSource, locale, ezEmailUtil);
-			
-			String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", loginInfo.getTenantId());
-			boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
-			
-			List<Folder> rootMailFolderList = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);
-			
-			for (int i = 0, j = 0; i < rootMailFolderList.size(); i++) {
-				Folder folder = rootMailFolderList.get(i);
-				
-				String folderId = folder.getName();
-				String displayName = ezEmailUtil.getDisplayNameFromFolderId(folderId, locale);
-				
-				int folderUnreadMessageCount = folder.getUnreadMessageCount();
-				
-				rootFolderXML.append("<node imgidx='1'");
-				
-				if (folderUnreadMessageCount > 0) {
-					rootFolderXML.append(" caption='" + displayName + "(" + folderUnreadMessageCount + ")'");
-				} else {
-					rootFolderXML.append(" caption='" + displayName + "'");
-				}
-				
-				rootFolderXML.append(" foldername='" + displayName + "'");
-
-				if (folderId.equalsIgnoreCase(ezEmailUtil.getInboxFolderId())) {
-					rootFolderXML.append(" orgBoxName='0'");
-					rootFolderXML.append(" fullcaption='_INBOX'"); //수정
-				} else if (folderId.equalsIgnoreCase(ezEmailUtil.getSentFolderId(locale))) {
-					rootFolderXML.append(" orgBoxName='1'");
-					rootFolderXML.append(" fullcaption='_SENT'"); //수정
-				} else if (folderId.equalsIgnoreCase(ezEmailUtil.getDraftsFolderId(locale))) {
-					rootFolderXML.append(" orgBoxName='2'");
-					rootFolderXML.append(" fullcaption='_DRAFT'"); //수정
-				} else if (folderId.equalsIgnoreCase(ezEmailUtil.getTrashFolderId(locale))) {
-					rootFolderXML.append(" orgBoxName='3'");
-					rootFolderXML.append(" fullcaption='_DELETE'"); //수정
-				} else if (folderId.equalsIgnoreCase(ezEmailUtil.getPersonalFolderId(locale))) {
-					rootFolderXML.append(" orgBoxName='4'");
-					rootFolderXML.append(" fullcaption='_PERSONAL'"); //수정
-				} else if (folderId.equalsIgnoreCase(ezEmailUtil.getJunkFolderId(locale))) {
-					rootFolderXML.append(" orgBoxName='5'");
-					rootFolderXML.append(" fullcaption='_JUNK'"); //수정
-				} else {
-					rootFolderXML.append(" orgBoxName='" + ((j++) + 6) + "'");
-					rootFolderXML.append(" fullcaption='_NONE'"); //수정
-				}
-
-				rootFolderXML.append(" href='" + folder.getFullName() + "'"); //수정
-				
-				if (folder.listSubscribed().length > 0) {
-					rootFolderXML.append(" hassub='1'");
-				}
-				
-				if (folderUnreadMessageCount > 0) {
-					rootFolderXML.append(" style='font-weight:bold'");
-				}
-				
-				rootFolderXML.append("></node>");
-			}
-		} catch (Exception e) {
-			logger.error("Error get unread message count: " + e.getMessage());
-			e.printStackTrace();
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
-		}
-		
-		rootFolderXML.append("</DATA>");
-
-		logger.debug("getSharedFolderlist ended.");
-		return rootFolderXML.toString();
-	}
 }

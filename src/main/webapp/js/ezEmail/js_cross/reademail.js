@@ -129,7 +129,14 @@ var mail_movecopy_cross_dialogArguments = new Array();
 function move_onClick() {
     mail_movecopy_cross_dialogArguments[1] = move_onclick_Complete;
     mail_movecopy_cross_dialogArguments[2] = DivPopUpHidden;
-    DivPopUpShow(320, 375, "/ezEmail/mailMoveCopy.do");
+    
+    var requestUrl = "/ezEmail/mailMoveCopy.do";
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	}
+    
+    DivPopUpShow(320, 375, requestUrl);
 }
 function move_onclick_Complete(moveUrl) {
     DivPopUpHidden();
@@ -206,8 +213,14 @@ function delete_mail() {
         createNodeAndInsertText(xmlDOM, objNode, "CMD", pisDelete);
         createNodeAndInsertText(xmlDOM, objNode, "UNIQUEID", g_paramURL);
         createNodeAndInsertText(xmlDOM, objNode, "FOLDERID", "");
-
-        g_deleteHttp.open("POST", "/ezEmail/mailDelete.do?cmd=" + pisDelete, true);
+        
+        var url = "/ezEmail/mailDelete.do?cmd=" + pisDelete;
+        
+        if (typeof(shareId) != "undefined" && shareId != "") {
+    		url += "&shareId=" + encodeURIComponent(shareId);
+    	}
+        
+        g_deleteHttp.open("POST", url, true);
         g_deleteHttp.onreadystatechange = event_deletemail_end;
         g_deleteHttp.send(xmlDOM);
 
@@ -293,7 +306,13 @@ function CopyOrMoveMail(cmd, itemIDs, copyFolderID) {
         createNodeAndInsertText(xmlDOM, objNode, "UNIQUEID", itemIDs);
         createNodeAndInsertText(xmlDOM, objNode, "FOLDERID", copyFolderID);
 
-        g_copyItemHttp.open("POST", "/ezEmail/mailMoveCopyMessage.do", true);
+        var requestUrl = "/ezEmail/mailMoveCopyMessage.do";
+        
+    	if (typeof(shareId) != "undefined" && shareId != "") {
+    		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    	}
+        
+        g_copyItemHttp.open("POST", requestUrl, true);
         event_CopyOrMoveMail.cmd = cmd;
         g_copyItemHttp.onreadystatechange = event_CopyOrMoveMail;
         g_copyItemHttp.send(xmlDOM);
@@ -655,8 +674,14 @@ function toggle_flag() {
     createNodeAndInsertText(xmlDom, objNode, "STARTDATE", pSDate);
     createNodeAndInsertText(xmlDom, objNode, "ENDDATE", pEDate);
 
+    var url = "/ezEmail/mailSetFlag.do";
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		url += "?shareId=" + encodeURIComponent(shareId);
+	}
+    
     try {
-        flagXmlHttp.open("POST", "/ezEmail/mailSetFlag.do", true);
+        flagXmlHttp.open("POST", url, true);
         flagXmlHttp.onreadystatechange = event_toggle_flag_end;
         flagXmlHttp.send(xmlDom);
     }

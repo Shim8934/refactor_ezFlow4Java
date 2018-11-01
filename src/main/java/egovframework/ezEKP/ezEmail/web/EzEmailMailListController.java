@@ -581,7 +581,7 @@ public class EzEmailMailListController {
 	 */
 	@RequestMapping(value="/ezEmail/mailGetList.do",method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String getMailList(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
+	public String getMailList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
 		logger.debug("getMailList started.");
 		logger.debug("bodyData=" + bodyData);
 		
@@ -603,11 +603,10 @@ public class EzEmailMailListController {
 		String search = doc.getElementsByTagName("SEARCH").item(0).getTextContent();
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
+		String shareId = request.getParameter("shareId");
+		logger.debug("shareId=" + shareId);
 		
-		if (doc.getElementsByTagName("SHAREID").item(0) != null) {
-			String shareId = doc.getElementsByTagName("SHAREID").item(0).getTextContent();
-			logger.debug("userId=" + userInfo.getId() + ",shareId=" + shareId);
-			
+		if (shareId != null) {
 			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
 				logger.debug("the user cannot access the shareId.");
 				logger.debug("getMailList ended.");
@@ -931,6 +930,7 @@ public class EzEmailMailListController {
 	@RequestMapping(value="/ezEmail/mailDelete.do",method=RequestMethod.POST)
 	@ResponseBody
 	public String mailDelete(@CookieValue("loginCookie") String loginCookie, 
+			HttpServletRequest request,
 			@RequestParam("cmd") String cmd,
 			@RequestBody String bodyData,
 			Locale locale, Model model) throws Exception {
@@ -981,7 +981,20 @@ public class EzEmailMailListController {
 		try {
 	        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 	        userEmail = userInfo.getId() + "@" + domainName;
-			
+	        String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+	        
+	        if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailDelete ended.");
+					
+					return "";
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
+	        
 	        logger.debug("userEmail=" + userEmail);
 	        
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -1077,8 +1090,8 @@ public class EzEmailMailListController {
 	 */
 	@RequestMapping(value="/ezEmail/mailMoveCopyMessage.do")
 	@ResponseBody
-	public String mailMoveCopyMessage(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
-			Locale locale, Model model) throws Exception {
+	public String mailMoveCopyMessage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, 
+			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
 		logger.debug("mailMoveCopyMessage started.");
 		logger.debug("bodyData=" + bodyData);
 		
@@ -1114,7 +1127,20 @@ public class EzEmailMailListController {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 	        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 	        userEmail = userInfo.getId() + "@" + domainName;
-			
+	        String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+	        
+	        if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailMoveCopyMessage ended.");
+					
+					return "";
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
+	        
 	        logger.debug("userEmail=" + userEmail);
 	        
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -1190,6 +1216,7 @@ public class EzEmailMailListController {
 	@RequestMapping(value="/ezEmail/mailSetFlag.do",method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetFlag(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request,
 			@RequestBody String bodyData,
 			Locale locale, Model model) throws Exception {
 		logger.debug("mailSetFlag started.");
@@ -1205,6 +1232,20 @@ public class EzEmailMailListController {
         String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
         String userEmail = userInfo.getId() + "@" + domainName;
 		
+        String shareId = request.getParameter("shareId");
+		logger.debug("shareId=" + shareId);
+        
+        if (shareId != null) {
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("mailSetFlag ended.");
+				
+				return "";
+			}
+			
+			userEmail = shareId + "@" + domainName;
+		}
+        
         logger.debug("userEmail=" + userEmail);
         
 		Document doc = commonUtil.convertStringToDocument(bodyData);
@@ -1275,6 +1316,7 @@ public class EzEmailMailListController {
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetReadChange(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request,
 			@RequestBody String bodyData,
 			Locale locale, Model model) throws Exception {
 		logger.debug("mailSetReadChange started.");
@@ -1288,6 +1330,20 @@ public class EzEmailMailListController {
         String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
         String userEmail = userInfo.getId() + "@" + domainName;
 		
+        String shareId = request.getParameter("shareId");
+		logger.debug("shareId=" + shareId);
+        
+        if (shareId != null) {
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("mailSetReadChange ended.");
+				
+				return "";
+			}
+			
+			userEmail = shareId + "@" + domainName;
+		}
+        
         logger.debug("userEmail=" + userEmail);
         
 		Document doc = commonUtil.convertStringToDocument(bodyData);
@@ -1345,7 +1401,7 @@ public class EzEmailMailListController {
 	 */
 	@RequestMapping(value="/ezEmail/mailGetFromEmail.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailGetFromEmail(@CookieValue("loginCookie") String loginCookie,
+	public String mailGetFromEmail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
 		logger.debug("mailGetFromEmail started.");
 		logger.debug("bodyData=" + bodyData);
@@ -1376,6 +1432,20 @@ public class EzEmailMailListController {
         String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
         String userEmail = loginInfo.getId() + "@" + domainName;
 		
+        String shareId = request.getParameter("shareId");
+		logger.debug("shareId=" + shareId);
+        
+        if (shareId != null) {
+			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("mailGetFromEmail ended.");
+				
+				return "";
+			}
+			
+			userEmail = shareId + "@" + domainName;
+		}
+        
         logger.debug("userEmail=" + userEmail);
         
 		IMAPAccess ia = null;
