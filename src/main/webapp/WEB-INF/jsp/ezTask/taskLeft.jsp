@@ -79,23 +79,23 @@
 
 		            case 7:		// Search Task
 		                window.open("/ezTask/taskSearch.do", "right");
+		                getTaskList();
 		            	taskFlag = true;
 		                break;
 		            
 		            case 11:		// Search public calendar
 		                window.open("/ezSchedule/scheduleConfigMain.do?flag=task", "right");
+		                getTaskList();
 		                taskFlag = true;
 		                break;
 		                
 		            case 12:		// repeat task
 		           		window.open("/ezTask/taskMain.do?taskFlag=repeat", "right");
-		            	
 		            	taskFlag = false;
 		            	break;
 		            	
 		            case 13:		// send task
 		            	window.open("/ezTask/taskMain.do?taskFlag=send", "right");
-		            	
 		            	taskFlag = false;
 		            	break;
 		            	
@@ -104,6 +104,10 @@
 		
 	        // 업무작성창 load
 	        function WritePopup() {// 왼쪽(일반업무, 반복업무, 보낸업무) => 왼쪽 업무작성 버튼 입력
+	        	if(window.parent.frames["right"].document.getElementById("portlet_tabpart01")) {
+	        		window.parent.frames["right"].WriteTask("left");
+	        		return;
+	        	} 
 	        	// 환경설정, 업무검색 페이지 => 업무작성
 	        	feature = GetOpenPosition(790, 775);
                 window.open("/ezTask/taskWrite.do?flag=other", "", "height=775px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
