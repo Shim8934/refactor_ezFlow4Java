@@ -5654,6 +5654,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userLang = userInfo.getLang();
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String viewCompany = ezCommonService.getTenantConfig("viewCompany", userInfo.getTenantId()); //companyID 관련 tenant_config 추가 [return ::> 1 = 회사 보임(YES), 0 = 회사 가림(NO)]
+		String searchCompanyID = xmlDom.getDocumentElement().getChildNodes().item(11).getTextContent();
 		
 		Document xmlDomSub = null;
 		//<SEARCHQUERy> > 10인 경우	
@@ -5730,6 +5731,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
             // URGENTAPPROVAL -> 긴급결재 여부
             if (tempQuery.indexOf("URGENTAPPROVAL;") != -1) {
                 returnQuery += " AND URGENTAPPROVAL = '" + xmlDomSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
+            }
+            if (searchCompanyID != null && !searchCompanyID.equals("")) {
+            	returnQuery += " AND COMPANYID = '" + searchCompanyID + "' ";
             }
             returnQuery += " AND TENANT_ID = " + userInfo.getTenantId() ; 
             searchQuery = returnQuery;         
