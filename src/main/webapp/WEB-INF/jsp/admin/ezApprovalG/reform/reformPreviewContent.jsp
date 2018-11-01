@@ -75,7 +75,6 @@
 	var pUse_IE11Browser = "${ie11editor}";
 	
 	window.onload = function() {
-		// 		try {
 		// reform
 		if (isNamo) {
 			document.getElementById('div_Content').innerHTML = CrossEditor.GetBodyValue("XHTML");
@@ -87,11 +86,7 @@
 		Set_EditorContentURL("");
 		reformUseProc.onLoadHandler();
 		
-		parent.childFrameLoadCompleted();
 		// reform - end
-		// 		} catch (e) {
-		
-		// 		}
 	}
 
 	// reform

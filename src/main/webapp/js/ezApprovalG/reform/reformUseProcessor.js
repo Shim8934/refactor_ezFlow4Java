@@ -790,6 +790,8 @@ reformUseProc.doReset = function(controls) {
 			}
 		}
 	}
+	
+	reformUseProc.resizeFrame();
 };
 
 reformUseProc.removeOnClickHandlerFromGrid = function(controlElement) {
@@ -1035,6 +1037,7 @@ reformUseProc.onLoadHandler = function() {
 	
 	// if it is in the approve stage, just leave the data intact at the load time.
 	if (stageName != "draft") {
+		reformUseProc.resizeFrame();
 		return;
 	}
 	
@@ -1086,6 +1089,8 @@ reformUseProc.onLoadHandler = function() {
 	if (typeof (reform_onAfterLoadHandler) !== "undefined") {
 		reform_onAfterLoadHandler();
 	}
+	
+	reformUseProc.resizeFrame();
 };
 
 reformUseProc.onUnloadHandler = function() {
@@ -1188,6 +1193,8 @@ reformUseProc.defaultChangeHandler = function(controls) {
 			handler(controlElement);
 		} catch (e) {}
 	}
+	
+	reformUseProc.resizeFrame();
 };
 
 reformUseProc.setControlValue = function(controlElement, value) {
@@ -1836,4 +1843,20 @@ reformUseProc.resizeTextArea = function(textAreaControl) {
 reformUseProc.setListBoxSelectedIndex = function(controlElement, selectedIndex) {
 	controlElement.selectedIndex = selectedIndex;
 	this.defaultChangeHandler(controlElement);
+};
+
+reformUseProc.resizeFrame = function() {
+	if (parent === null) {
+		return;
+	}
+	
+	// iframe의 크기를 리폼 양식의 크기에 맞게 재조정
+	var iframeContent = parent.document.getElementById("iframe_content");
+	var parentElement = iframeContent.parentElement;
+	
+	var scrollHeight = iframeContent.contentWindow.document.body.scrollHeight;
+	
+	if (parentElement.scrollHeight < scrollHeight) {
+		iframeContent.style.height = (scrollHeight + 20) + "px";
+	}
 };

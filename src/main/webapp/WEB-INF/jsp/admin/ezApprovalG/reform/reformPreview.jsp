@@ -34,20 +34,6 @@
 		} catch (e) {}
 	};
 	
-	function childFrameLoadCompleted() {
-		// 리폼 양식이 로드되는 iframe의 크기를 리폼 양식의 크기에 맞게 재조정한다.
-		var iframeContent = document.getElementById("iframe_content");
-		var parentElement = iframeContent.parentElement;
-		
-		//  		if (parentElement.id == 'body') {
-		var scrollHeight = iframeContent.contentWindow.document.body.scrollHeight;
-		
-		if (parentElement.scrollHeight < scrollHeight) {
-			iframeContent.style.height = (scrollHeight + 20) + "px";
-		}
-		//  		}
-	}
-
 	window.onunload = function() {
 		completionHandlerForDialog();
 	};
