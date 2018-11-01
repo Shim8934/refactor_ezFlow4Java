@@ -24,6 +24,7 @@
 	        var pNoneActiveX = "${NoneActiveX}";
 		    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간
 		    var memoFlag = "<c:out value='${memoFlag}' />";
+		    var mouseTop;
 		    
 	        function window_onload() {
 	        	if(memoFlag === "YES") {
@@ -76,6 +77,7 @@
 						}
 						conObject.style.left = contextLeft + "px";
 						conObject.style.top = contextTop + "px";
+						mouseTop = contextTop + "px";
 					}
 					
 					$(".menus").click(function(){
