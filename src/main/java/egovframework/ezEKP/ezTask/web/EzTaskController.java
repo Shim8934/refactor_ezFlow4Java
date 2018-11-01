@@ -88,7 +88,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		int tenantID = userInfo.getTenantId();
 		
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
-
+		String taskFlag = request.getParameter("taskFlag") == null ? "normal" : request.getParameter("taskFlag");
+				
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
 		TaskGeneralVO taskGeneralVO = ezTaskService.getTaskGeneral(userInfo.getId(), userInfo.getTenantId());
 
@@ -107,6 +108,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("completeColor", configVO.getCompleteColor());
 		model.addAttribute("useTodoMemo", useTodoMemo);
 		model.addAttribute("taskGeneralVO", taskGeneralVO);
+		model.addAttribute("taskFlag", taskFlag);
 
 		logger.debug("taskMain ended.");
 

@@ -89,6 +89,7 @@
 	            }
 	        }
 	        
+	        var taskFlag = true;
 		    function Function_Flag(v_data, subfolder) {
 		        skinChange(v_data);
 
@@ -97,11 +98,17 @@
 
 		        switch (v_data) {
 		            case 3:		// Task
-		                window.open("/ezTask/taskMain.do", "right");		                
+		            	if(taskFlag == false) {
+		            		window.parent.frames["right"].ChangeTab(window.parent.frames["right"].document.getElementById('1tab1'));
+		            	} else {
+		            		window.open("/ezTask/taskMain.do?taskFlag=normal", "right");
+		            	}
+		            	taskFlag = false;
 		                break;
 
 		            case 7:		// Search Task
 		                window.open("/ezTask/taskSearch.do", "right");
+		            	taskFlag = true;
 		                break;
 		            
 		            case 11:		// Search public calendar
@@ -110,16 +117,28 @@
 				        });
 		            	$('#select-all').prop('checked',true);
 		            	$('#IDClick').css('pointer-events','none');
-		                window.open("/ezSchedule/scheduleConfigMain.do", "right");
+		                window.open("/ezSchedule/scheduleConfigMain.do?flag=task", "right");
+		                taskFlag = true;
 		                break;
 		                
 		            case 12:		// repeat task
-		            	window.parent.frames["right"].ChangeTab(window.parent.frames["right"].document.getElementById('1tab3'));		            	
+		            	if(taskFlag == false) {
+		            		window.parent.frames["right"].ChangeTab(window.parent.frames["right"].document.getElementById('1tab3'));
+		            	} else {
+		            		window.open("/ezTask/taskMain.do?taskFlag=repeat", "right");
+		            	}
+		            	taskFlag = false;
 		            	break;
 		            	
 		            case 13:		// send task
-		            	window.parent.frames["right"].ChangeTab(window.parent.frames["right"].document.getElementById('1tab2'));
+		            	if(taskFlag == false) {
+		            		window.parent.frames["right"].ChangeTab(window.parent.frames["right"].document.getElementById('1tab2'));
+		            	} else {
+		            		window.open("/ezTask/taskMain.do?taskFlag=send", "right");
+		            	}
+		            	taskFlag = false;
 		            	break;
+		            	
 		        }
 		    }		   
 		
@@ -166,7 +185,7 @@
 	    	<!-- <div class="lnb_btn"></div> -->
 	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
 	    	<div class="left_title" title="<spring:message code='ezSchedule.t1011'/>"><spring:message code='ezSchedule.t1011'/>
-	        	<span class="sub_iconLNB tree_leftconfig" title="업무관리환경설정"></span>
+	        	<span onClick="Function_Flag('11')" class="sub_iconLNB tree_leftconfig" title="업무관리환경설정"></span>
 	        </div>
 	        <div class="btn_writeBox" onclick="WritePopup()">
 	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span><spring:message code='ezTask.t113' /></p>

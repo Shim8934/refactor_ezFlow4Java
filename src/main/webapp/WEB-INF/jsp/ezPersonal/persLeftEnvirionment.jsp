@@ -171,10 +171,13 @@
 		        parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=address";
 		    }
 		    function Pims_Config() {
-		        parent.frames["right"].location.href = "/ezSchedule/scheduleConfigMain.do";
+		        parent.frames["right"].location.href = "/ezSchedule/scheduleConfigMain.do?flag=schedule";
 		    }
 		    function Approval_Config() {
 		        parent.frames["right"].location.href = "/ezPersonal/ezApprovalConfig.do";
+		    }
+		    function Task_Config() {
+		        parent.frames["right"].location.href = "/ezSchedule/scheduleConfigMain.do?flag=task";
 		    }
 		</script>
 	</head>
@@ -217,6 +220,7 @@
             <c:if test="${firstScreen_Mail != 'YES' && packageType != 'mail'}">
             	<c:if test="${isScheduleUsed == 'Y'}">
             		<h2><span  id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()" style="width:100%;display:inline-block" ><spring:message code='ezPersonal.t999900007' /></span></h2><ul></ul>
+            		<h2><span  id="TaskEnv" name="TaskEnv" onClick="Task_Config()" style="width:100%;display:inline-block" ><spring:message code='ezTask.hyh001' /></span></h2><ul></ul>
             	</c:if>
 	            <c:if test="${packageType == 'standard'}">
 	            	<c:if test="${isApprUsed == 'Y'}">

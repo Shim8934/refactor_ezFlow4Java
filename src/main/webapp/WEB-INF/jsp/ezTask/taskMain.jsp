@@ -41,6 +41,8 @@
 		    var userlang = "${userInfo.lang}";
 		    var primary = "${userInfo.primary}";
 		    var useTodoMemo = "${useTodoMemo }";
+		    var taskFlag = "<c:out value='${taskFlag}' />";
+		    var currentTab;
 		    
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -54,6 +56,7 @@
 		        var height = parseInt(document.documentElement.clientHeight - 215);
 
 		        document.getElementById("list").style.height = height + "px";
+		        
 		        if (changeTab == "taskre") {
 			        ChangeTab(document.getElementById("1tab3"));
 			        $("#1tab3").click();
@@ -65,6 +68,21 @@
 		        	$("#1tab1").click();
 		        }
 		        
+		        switch(taskFlag) {
+		        	case "normal":
+		        		ChangeTab(document.getElementById("1tab1"));
+		        		currentTab = "1tab1";
+			        	$("#1tab1").click();
+			        	break;
+		        	case "repeat":
+		        		ChangeTab(document.getElementById("1tab3"));
+			        	$("#1tab3").click();
+			        	break;
+		        	case "send":
+		        		ChangeTab(document.getElementById("1tab2"));
+			        	$("#1tab2").click();
+			        	break;
+		        }
 		        selectelem = "";
 		    }
 		    
@@ -164,7 +182,7 @@
 			    var strtext;
 			    var PagingHTML = "";
 			    document.getElementById("tblPageRayer").innerHTML = "";
-			    document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + allCnt + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+			    
 			    strtext = "<div class='pagenavi'>";
 			    PagingHTML += strtext;
 			    var totalPage = totalpage;
@@ -731,6 +749,7 @@
 	            cnt3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
 	            allCnt = getNodeText(listdom.documentElement.getElementsByTagName("ALLCNT")[0]);
 				
+	            // 왼쪽메뉴 카운트 수
 	            if ($(".tabon").attr("divname") == "taskprog") {
 	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t200901' />" + " (" + currentCount + ")";
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t200903' />" + " (" + cnt2 + ")";
@@ -747,6 +766,28 @@
 		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t200902' />" + " (" + currentCount + ")";
 		            $(".sort_radio").show();
 	            }
+	            
+	            // 업무 작성, 삭제시 카운트 refresh
+	            switch (currentTab) {
+		            case "normal":
+		                type = "1";
+		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200901' />";
+		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + cnt + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                currentTab = "normal";
+		                break;
+		            case "send":
+		                type = "2";
+		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200903' />";
+		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + cnt2 + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                currentTab = "send";
+		                break;
+		            case "repeat":
+		                type = "3";
+		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200902' />";
+		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + cnt3 + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                currentTab = "repeat"
+		                break;
+		        }
 
 	            show_page();
 	            makePageSelPage();
@@ -806,12 +847,21 @@
 		        switch (pSelectTab) {
 		            case "taskprog":
 		                type = "1";
+		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200901' />";
+		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + cnt + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                currentTab = "normal";
 		                break;
 		            case "taskdictate":
 		                type = "2";
+		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200903' />";
+		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + cnt2 + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                currentTab = "send";
 		                break;
 		            case "taskrepetition":
 		                type = "3";
+		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200902' />";
+		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + cnt3 + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                currentTab = "repeat"
 		                break;
 		        }
 
@@ -929,7 +979,7 @@
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	
-		<h1><span id="titleSpan"></span><span id="mailBoxInfo"></span>
+		<h1><span id="presentcell"></span><span id="mailBoxInfo"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
 		    <!-- 2018-07-17 구해안 라디오박스 검색창 select box로 변경 및 스타일 다른 모듈과 같도록 수정-->
 		    <select id="formId" name="searchCheck" style="width:80px; height:27px; border-color: #c8c8c8;">

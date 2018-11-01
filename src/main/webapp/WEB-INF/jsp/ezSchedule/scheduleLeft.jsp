@@ -375,7 +375,7 @@
 				        });
 		            	$('#select-all').prop('checked',true);
 		            	$('#IDClick').css('pointer-events','none');
-		                window.open("/ezSchedule/scheduleConfigMain.do", "right");
+		                window.open("/ezSchedule/scheduleConfigMain.do?flag=schedule", "right");
 		                break;
 		        }
 		    }

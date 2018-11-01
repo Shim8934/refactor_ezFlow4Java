@@ -1240,10 +1240,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 환경설정 메인
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleConfigMain.do")
-	public String scheduleConfigMain() throws Exception {
-		
+	public String scheduleConfigMain(Model model, HttpServletRequest request) throws Exception {
 		logger.debug("============ scheduleConfigMain started ============");
 		
+		String flag = request.getParameter("flag") == null ? "" : request.getParameter("flag");
+		model.addAttribute("flag", flag);
+		
+		logger.debug("============ scheduleConfigMain ended ============");
 		return "/ezSchedule/scheduleConfigMain";
 	}
 	
