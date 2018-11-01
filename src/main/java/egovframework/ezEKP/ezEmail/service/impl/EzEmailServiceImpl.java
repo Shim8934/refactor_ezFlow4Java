@@ -1364,12 +1364,27 @@ public class EzEmailServiceImpl implements EzEmailService {
 			int attachIDPos1 = url.indexOf("&folderPath=") + 12;
             int attachIDPos2 = url.indexOf("&uid=");
             int attachIDPos3 = url.indexOf("&contentId=");
+            int attachIDPos4 = url.indexOf("&shareId=");
 			
             String mailbox = url.substring(attachIDPos1, attachIDPos2);
             mailbox = URLDecoder.decode(mailbox, "utf-8");
             String uidStr = url.substring(attachIDPos2 + 5, attachIDPos3);
-            String contentId = url.substring(attachIDPos3 + 11);
+            String contentId = null;
+            
+            if (attachIDPos4 > -1) {
+            	contentId = url.substring(attachIDPos3 + 11, attachIDPos4);
+                
+            	String shareId = url.substring(attachIDPos4 + 9);
+            	shareId = URLDecoder.decode(shareId, "utf-8");
+            	logger.debug("shareId=" + shareId);
+            	
+            	userAccount = shareId + "@" + domainName;
+            } else {
+            	contentId = url.substring(attachIDPos3 + 11);
+            }
+            
             contentId = URLDecoder.decode(contentId, "utf-8");
+            
             logger.debug("mailbox=" + mailbox + ",uid=" + uidStr + ",contentId=" + contentId);
             
             IMAPAccess ia = null;

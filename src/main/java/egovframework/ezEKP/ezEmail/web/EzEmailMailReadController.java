@@ -2317,7 +2317,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					sb.append("<DATE><![CDATA[" + dateStr + "]]></DATE>");
 					
 					List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);
+					
+					Map<String, Object> extraMap = new HashMap<String, Object>();
+					extraMap.put("shareId", shareId);
+					
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, attachedFileList, locale, extraMap);
 					
 					String htmlBody = bodyInfoList.get(0);
 					htmlBody = EgovStringUtil.getSpclStrCnvr(htmlBody);
@@ -2501,7 +2505,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					sb.append("<DATE><![CDATA[" + dateStr + "]]></DATE>");
 					
 					List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);
+					
+					Map<String, Object> extraMap = new HashMap<String, Object>();
+					extraMap.put("shareId", shareId);
+					
+					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, attachedFileList, locale, extraMap);
 					
 					String htmlBody = bodyInfoList.get(0);
 					htmlBody = EgovStringUtil.getSpclStrCnvr(htmlBody);

@@ -51,6 +51,7 @@
 		    var isSecureMail = "${isSecureMail}";
 		    var useReSend = "${useReSend}";
 		    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간
+		    var dotNetIntegration = "${dotNetIntegration}";
 		    var shareId = "${shareId}";
 		    
 		    window.onresize = window_onresize;
@@ -309,32 +310,30 @@
 		    
             // 닷넷 게시판 선택 모듈을 호출하는 경우엔 Cross Origin(서로 도메인이 다름)으로 인해 opener를 통한 NewItem_onclick_Complete에
             // 직접적 접근이 허용되지 않아 window.postMessage와 Message Event Listener를 사용함
-            <c:if test="${dotNetIntegration == 'YES'}">
-            window.addEventListener("message", function(e) {
-                var ret = new Array();
+            if (dotNetIntegration == "YES") {
+            	window.addEventListener("message", function(e) {
+                    var ret = new Array();
 
-                // 사용자가 선택한 게시판의 ID가 리턴됨
-                ret = e.data;
-                
-                NewItem_onclick_Complete(ret);
-            });
-            </c:if>
+                    // 사용자가 선택한 게시판의 ID가 리턴됨
+                    ret = e.data;
+                    
+                    NewItem_onclick_Complete(ret);
+                });
+            }
 		    
 		    // 메일읽기창에서 '게시' 버튼을 누를 때 호출됨		    
 		    function NewItem_onclick() {
 		        if (CrossYN()) {
 		            writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		            		            		           
-		            <c:if test="${dotNetIntegration == 'YES'}">
-		            // IE가 window.postMessage를 Cross Origin에서 지원하지 않는 관계로 동일 사이트의 윈도우를
-		            // 띄운 후 그 안에서 iframe으로 처리해야 한다.
-		            var OpenWin = window.open("/ezBoard/writeBoardSelectModalDotNet.do", "WriteBoardSelect_Modal", GetOpenWindowfeatureNoScrollbar(355, 660));		            
-		            </c:if>
 		            
-		            <c:if test="${dotNetIntegration != 'YES'}">
-		            // 자체 게시판 선택 모듈을 호출하는 경우
-		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
-		            </c:if>
+		            if (dotNetIntegration == "YES") {
+		            	// IE가 window.postMessage를 Cross Origin에서 지원하지 않는 관계로 동일 사이트의 윈도우를
+			            // 띄운 후 그 안에서 iframe으로 처리해야 한다.
+			            var OpenWin = window.open("/ezBoard/writeBoardSelectModalDotNet.do", "WriteBoardSelect_Modal", GetOpenWindowfeatureNoScrollbar(355, 660));
+		            } else {
+		            	// 자체 게시판 선택 모듈을 호출하는 경우
+			            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+		            }
 		            
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
@@ -367,12 +366,13 @@
 		                    alert(strLang337);
 		                }
 		                else {
-		                    if (CrossYN() || pNoneActiveX == "YES") {
-		                        window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		                    }
-		                    else {
-		                    	window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		                    }
+		                	var requestUrl = "/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL);
+		                	
+		                	if (typeof(shareId) != "undefined" && shareId != "") {
+		                		requestUrl += "&mailShareId=" + encodeURIComponent(shareId);
+		    				}
+		                	
+		                    window.open(requestUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		                }
 		            }
 		        }
@@ -395,17 +395,19 @@
 		                alert(strLang337);
 		            }
 		            else {
-		                if (CrossYN() || pNoneActiveX == "YES")
-		                    <c:if test="${dotNetIntegration == 'YES'}">
-		                    window.open("${dotNetUrl}/myoffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		                    </c:if>
-				            <c:if test="${dotNetIntegration != 'YES'}">		                    
-		                    window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		                    </c:if>
-		                else {
-	                        window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		                }
-		
+		            	var requestUrl; 
+		            	
+		            	if (dotNetIntegration == "YES") {
+		            		requestUrl = "${dotNetUrl}/myoffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL);
+		            	} else {
+		            		requestUrl = "/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL);
+		            	}
+	                	
+	                	if (typeof(shareId) != "undefined" && shareId != "") {
+	                		requestUrl += "&mailShareId=" + encodeURIComponent(shareId);
+	    				}
+		            	
+	                	window.open(requestUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		        }
 		    }
