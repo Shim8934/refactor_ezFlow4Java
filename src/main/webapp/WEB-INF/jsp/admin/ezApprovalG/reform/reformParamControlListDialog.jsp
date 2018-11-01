@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title><spring:message code='ezApproval.reform.t009' /></title>
+<title><spring:message code='reform.params.title' /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 <link rel="stylesheet" href="${util.addVer('/css/reform/designProcessor.css')}" type="text/css">
@@ -96,7 +96,7 @@ input, textarea {
 </head>
 <body class="popup" style="overflow: hidden" onload="onLoadHandler()">
 	<h1 style="margin-bottom: 0px">
-		<spring:message code='ezApproval.reform.t009' />
+		<spring:message code='reform.params.title' />
 	</h1>
 	<div id="close">
 		<ul>
@@ -107,12 +107,12 @@ input, textarea {
 	</div>
 	<table style="width: 100%; margin-top: 5px">
 		<tr>
-			<td><p id="directive_message">Ctrl키를 누르고 SQL문의 인자 순서대로 선택하세요.</p> <select multiple id="prop_param_control_list" size="6" class="textarea" onchange="onChangeHandler(this)"></select></td>
+			<td><p id="directive_message"><spring:message code='reform.params.directive' /></p> <select multiple id="prop_param_control_list" size="6" class="textarea" onchange="onChangeHandler(this)"></select></td>
 		</tr>
 	</table>
 	<div class="btnposition btnpositionNew">
 		<a class="imgbtn">
-			<span onclick="btnOK_onclick()"><spring:message code='ezApproval.reform.t005' /></span>
+			<span onclick="btnOK_onclick()"><spring:message code='reform.public.confirm' /></span>
 		</a>
 	</div>
 </body>

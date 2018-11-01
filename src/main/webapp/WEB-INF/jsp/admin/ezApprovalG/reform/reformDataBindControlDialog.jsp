@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title><spring:message code='ezApproval.reform.t007' /></title>
+<title><spring:message code='reform.databind.title' /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 <link rel="stylesheet" href="${util.addVer('/css/reform/designProcessor.css')}" type="text/css">
@@ -14,7 +14,7 @@
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <style type="text/css">
 .tbl_type {
-	border: 0
+	border: 0;
 }
 
 .tbl_type {
@@ -22,7 +22,7 @@
 	border-bottom: 1px solid #dddee2;
 	font-family: '돋움', dotum;
 	font-size: 12px;
-	table-layout: fixed
+	table-layout: fixed;
 }
 
 #prop_id:invalid::placeholder {
@@ -79,7 +79,7 @@ textarea {
 				}
 			}
 			if (!isFound) {
-				alert("현재 설정된 데이터소스가 존재하지 않습니다.");
+				alert("<spring:message code='reform.databind.warning.notfound' />");
 			}
 			
 			controlElement = document.getElementById("prop_sql");
@@ -95,14 +95,14 @@ textarea {
 			dataBindControlID = dataBindID;
 			
 			if (dataBindControlID === undefined) {
-				alert("아이디를 입력해주세요.");
+				alert("<spring:message code='reform.databind.invalid.id' />");
 				controlElement.focus();
 				return;
 			}
 		} else if (dataBindID != dataBindControlID) {
 			var existingElement = webEditorDocument.getElementById(dataBindControlID);
 			if (existingElement != null) {
-				alert("이미 사용 중인 아이디입니다. 다른 아이디를 입력해 주세요.");
+				alert("<spring:message code='reform.invalid.id.duplicated' />");
 				controlElement.focus();
 				return;
 			}
@@ -126,7 +126,7 @@ textarea {
 </head>
 <body class="popup" style="overflow: hidden" onload="onLoadHandler()">
 	<h1 style="margin-bottom: 0px">
-		<spring:message code='ezApproval.reform.t007' />
+		<spring:message code='reform.databind.title' />
 	</h1>
 	<div id="close">
 		<ul>
@@ -142,23 +142,29 @@ textarea {
 		</colgroup>
 		<tbody>
 			<tr>
-				<th>데이터연동<br />아이디
+				<th><spring:message code='reform.databind.id' />
 				</th>
-				<td><input id="prop_id" type="text" placeholder="아이디를 입력해주세요" required/></td>
+				<td>
+					<input id="prop_id" type="text" />
+				</td>
 			</tr>
 			<tr>
-				<th>데이터소스</th>
-				<td><select id="prop_data_source" style="width: 100%;"></select></td>
+				<th><spring:message code='reform.databind.source' /></th>
+				<td>
+					<select id="prop_data_source" style="width: 100%;"></select>
+				</td>
 			</tr>
 			<tr>
-				<th>SQL</th>
-				<td><textarea id="prop_sql"></textarea></td>
+				<th><spring:message code='reform.databind.sql' /></th>
+				<td>
+					<textarea id="prop_sql"></textarea>
+				</td>
 			</tr>
 		</tbody>
 	</table>
 	<div class="btnposition btnpositionNew">
 		<a class="imgbtn">
-			<span onclick="btnOK_onclick()"><spring:message code='ezApproval.reform.t005' /></span>
+			<span onclick="btnOK_onclick()"><spring:message code='reform.public.confirm' /></span>
 		</a>
 	</div>
 </body>

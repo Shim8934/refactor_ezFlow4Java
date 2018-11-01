@@ -738,7 +738,7 @@ function reform_pasteCopiedNode() {
 		
 		if (controlType == "grid") {
 			if (isGridControlHasChildControl(targetElement)) {
-				alert("자식 콘트롤이 있는 그리드 콘트롤은 복제할 수 없습니다.");
+				alert(message["invalid.grid.copy"]);
 				return;
 			}
 		}
@@ -1715,7 +1715,7 @@ function removeControl(controlElement) {
 	
 	if (controlType == "grid") {
 		if (isGridControlHasChildControl(controlElement)) {
-			alert("그리드안에 자식 콘트롤이 있습니다. 자식 콘트롤을 먼저 삭제해 주세요.");
+			alert(message["invalid.grid.remove"]);
 			return;
 		}
 	}
@@ -1833,64 +1833,64 @@ function loadControlProperties(controlElement) {
 	
 	if (tagName == "TH" || tagName == "TD") {
 		element = document.getElementById("prop1_name");
-		element.innerHTML = "스타일";
+		element.innerHTML = message["attr.style"];
 		element = document.getElementById("prop1_value");
 		element.innerHTML = '<input id="prop_style" type="text" readonly="readonly" onclick="showStyleDialog()" />';
 		
 		element = document.getElementById("prop2_name");
-		element.innerHTML = "값";
+		element.innerHTML = message["attr.value"];
 		element = document.getElementById("prop2_value");
 		element.innerHTML = '<input id="prop_value" type="text" onchange="propValueChanged(this)" />';
 	} else if (controlType == "select-one") {
 		element = document.getElementById("prop1_name");
-		element.innerHTML = "콘트롤아이디";
+		element.innerHTML = message["attr.id"];
 		element = document.getElementById("prop1_value");
 		element.innerHTML = '<input id="prop_id" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop2_name");
-		element.innerHTML = "스타일";
+		element.innerHTML = message["attr.style"];
 		element = document.getElementById("prop2_value");
 		element.innerHTML = '<input id="prop_style" type="text" readonly="readonly" onclick="showStyleDialog()" />';
 		
 		element = document.getElementById("prop3_name");
-		element.innerHTML = "값";
+		element.innerHTML = message["attr.value"];
 		element = document.getElementById("prop3_value");
 		element.innerHTML = '<input id="prop_value" type="text" readonly="readonly" onclick="showSelectValueDialog()" />';
 		
 		element = document.getElementById("prop4_name");
-		element.innerHTML = "크기";
+		element.innerHTML = message["attr.size"];
 		element = document.getElementById("prop4_value");
 		element.innerHTML = '<input id="prop_size" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop5_name");
-		element.innerHTML = "데이터연동소스";
+		element.innerHTML = message["attr.databind.source"];
 		element = document.getElementById("prop5_value");
 		element.innerHTML = '<select id="prop_data_bind_source" onchange="propValueChanged(this)">\
                                         <option value=""></option>\
                                     </select>';
 		
 		element = document.getElementById("prop6_name");
-		element.innerHTML = "데이터연동 값컬럼";
+		element.innerHTML = message["attr.databind.value"];
 		element = document.getElementById("prop6_value");
 		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop7_name");
-		element.innerHTML = "데이터연동 표시컬럼";
+		element.innerHTML = message["attr.databind.display"];
 		element = document.getElementById("prop7_value");
 		element.innerHTML = '<input id="prop_data_bind_display_column" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop8_name");
-		element.innerHTML = "인자콘트롤목록";
+		element.innerHTML = message["attr.databind.param"];
 		element = document.getElementById("prop8_value");
 		element.innerHTML = '<input id="prop_param_control_list" type="text" readonly="readonly" onclick="showParamControlListDialog()" />';
 		
 		element = document.getElementById("prop9_name");
-		element.innerHTML = "헤더";
+		element.innerHTML = message["attr.header"];
 		element = document.getElementById("prop9_value");
 		element.innerHTML = '<input id="prop_header" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop10_name");
-		element.innerHTML = "탭순서";
+		element.innerHTML = message["attr.tabindex"];
 		element = document.getElementById("prop10_value");
 		element.innerHTML = '<input id="prop_tabindex" type="text" onchange="propValueChanged(this)" />';
 		
@@ -1918,17 +1918,17 @@ function loadControlProperties(controlElement) {
 		var attValue3 = controlElement.getAttribute("data-reform_hidden_control_flag");
 		if (attValue == "1") {
 			element = document.getElementById("prop1_name");
-			element.innerHTML = "콘트롤아이디";
+			element.innerHTML = message["attr.id"];
 			element = document.getElementById("prop1_value");
 			element.innerHTML = '<input id="prop_id" type="text" onchange="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop2_name");
-			element.innerHTML = "스타일";
+			element.innerHTML = message["attr.style"];
 			element = document.getElementById("prop2_value");
 			element.innerHTML = '<input id="prop_style" type="text" readonly="readonly" onclick="showStyleDialog()" />';
 			
 			element = document.getElementById("prop3_name");
-			element.innerHTML = "탭순서";
+			element.innerHTML = message["attr.tabindex"];
 			element = document.getElementById("prop3_value");
 			element.innerHTML = '<input id="prop_tabindex" type="text" onchange="propValueChanged(this)" />';
 			
@@ -1948,22 +1948,22 @@ function loadControlProperties(controlElement) {
 			element.innerHTML = '<input id="event_on_key_up" type="text" onchange="propValueChanged(this)" />';
 		} else if (attValue2 == "1") {
 			element = document.getElementById("prop1_name");
-			element.innerHTML = "콘트롤아이디";
+			element.innerHTML = message["attr.id"];
 			element = document.getElementById("prop1_value");
 			element.innerHTML = '<input id="prop_id" type="text" onchange="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop2_name");
-			element.innerHTML = "스타일";
+			element.innerHTML = message["attr.style"];
 			element = document.getElementById("prop2_value");
 			element.innerHTML = '<input id="prop_style" type="text" readonly="readonly" onclick="showStyleDialog()" />';
 			
 			element = document.getElementById("prop3_name");
-			element.innerHTML = "간격";
+			element.innerHTML = message["attr.timegap"];
 			element = document.getElementById("prop3_value");
 			element.innerHTML = '<input id="prop_time_gap" type="text" onchange="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop4_name");
-			element.innerHTML = "탭순서";
+			element.innerHTML = message["attr.tabindex"];
 			element = document.getElementById("prop4_value");
 			element.innerHTML = '<input id="prop_tabindex" type="text" onchange="propValueChanged(this)" />';
 			
@@ -1983,29 +1983,29 @@ function loadControlProperties(controlElement) {
 			element.innerHTML = '<input id="event_on_key_up" type="text" onchange="propValueChanged(this)" />';
 		} else if (attValue3 == "1") {
 			element = document.getElementById("prop1_name");
-			element.innerHTML = "콘트롤아이디";
+			element.innerHTML = message["attr.id"];
 			element = document.getElementById("prop1_value");
 			element.innerHTML = '<input id="prop_id" type="text" onchange="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop2_name");
-			element.innerHTML = "값";
+			element.innerHTML = message["attr.value"];
 			element = document.getElementById("prop2_value");
 			element.innerHTML = '<input id="prop_value" type="text" onchange="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop3_name");
-			element.innerHTML = "데이터연동소스";
+			element.innerHTML = message["attr.databind.source"];
 			element = document.getElementById("prop3_value");
 			element.innerHTML = '<select id="prop_data_bind_source" onchange="propValueChanged(this)">\
                                         <option value=""></option>\
                                     </select>';
 			
 			element = document.getElementById("prop4_name");
-			element.innerHTML = "데이터연동 값컬럼";
+			element.innerHTML = message["attr.databind.value"];
 			element = document.getElementById("prop4_value");
 			element.innerHTML = '<input id="prop_data_bind_value_column" type="text" onchange="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop5_name");
-			element.innerHTML = "인자콘트롤목록";
+			element.innerHTML = message["attr.databind.param"];
 			element = document.getElementById("prop5_value");
 			element.innerHTML = '<input id="prop_param_control_list" type="text" readonly="readonly" onclick="showParamControlListDialog()" />';
 			
@@ -2029,44 +2029,44 @@ function loadControlProperties(controlElement) {
 			element.innerHTML = '<input id="event_on_post_change" type="text" onchange="propValueChanged(this)" />';
 		} else {
 			element = document.getElementById("prop1_name");
-			element.innerHTML = "콘트롤아이디";
+			element.innerHTML = message["attr.id"];
 			element = document.getElementById("prop1_value");
 			element.innerHTML = '<input id="prop_id" type="text" onchange="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop2_name");
-			element.innerHTML = "스타일";
+			element.innerHTML = message["attr.style"];
 			element = document.getElementById("prop2_value");
 			element.innerHTML = '<input id="prop_style" type="text" readonly="readonly" onclick="showStyleDialog()" />';
 			
 			element = document.getElementById("prop3_name");
-			element.innerHTML = "값";
+			element.innerHTML = message["attr.value"];
 			element = document.getElementById("prop3_value");
 			element.innerHTML = '<input id="prop_value" type="text" onchange="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop4_name");
-			element.innerHTML = "읽기전용";
+			element.innerHTML = message["attr.readonly"];
 			element = document.getElementById("prop4_value");
 			element.innerHTML = '<input id="prop_read_only" type="checkbox" onchange="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop5_name");
-			element.innerHTML = "데이터연동소스";
+			element.innerHTML = message["attr.databind.source"];
 			element = document.getElementById("prop5_value");
 			element.innerHTML = '<select id="prop_data_bind_source" onchange="propValueChanged(this)">\
                                         <option value=""></option>\
                                     </select>';
 			
 			element = document.getElementById("prop6_name");
-			element.innerHTML = "데이터연동 값컬럼";
+			element.innerHTML = message["attr.databind.value"];
 			element = document.getElementById("prop6_value");
 			element.innerHTML = '<input id="prop_data_bind_value_column" type="text" onchange="propValueChanged(this)" />';
 			
 			element = document.getElementById("prop7_name");
-			element.innerHTML = "인자콘트롤목록";
+			element.innerHTML = message["attr.databind.param"];
 			element = document.getElementById("prop7_value");
 			element.innerHTML = '<input id="prop_param_control_list" type="text" readonly="readonly" onclick="showParamControlListDialog()" />';
 			
 			element = document.getElementById("prop8_name");
-			element.innerHTML = "탭순서";
+			element.innerHTML = message["attr.tabindex"];
 			element = document.getElementById("prop8_value");
 			element.innerHTML = '<input id="prop_tabindex" type="text" onchange="propValueChanged(this)" />';
 			
@@ -2096,49 +2096,49 @@ function loadControlProperties(controlElement) {
 		}
 	} else if (controlType == "checkbox") {
 		element = document.getElementById("prop1_name");
-		element.innerHTML = "콘트롤아이디";
+		element.innerHTML = message["attr.id"];
 		element = document.getElementById("prop1_value");
 		element.innerHTML = '<input id="prop_id" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop2_name");
-		element.innerHTML = "스타일";
+		element.innerHTML = message["attr.style"];
 		element = document.getElementById("prop2_value");
 		element.innerHTML = '<input id="prop_style" type="text" readonly="readonly" onclick="showStyleDialog()" />';
 		
 		element = document.getElementById("prop3_name");
-		element.innerHTML = "값";
+		element.innerHTML = message["attr.value"];
 		element = document.getElementById("prop3_value");
 		element.innerHTML = '<input id="prop_value" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop4_name");
-		element.innerHTML = "읽기전용";
+		element.innerHTML = message["attr.readonly"];
 		element = document.getElementById("prop4_value");
 		element.innerHTML = '<input id="prop_read_only" type="checkbox" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop5_name");
-		element.innerHTML = "체크상태";
+		element.innerHTML = message["attr.check"];
 		element = document.getElementById("prop5_value");
 		element.innerHTML = '<input id="prop_checked_state" type="checkbox" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop6_name");
-		element.innerHTML = "데이터연동소스";
+		element.innerHTML = message["attr.databind.source"];
 		element = document.getElementById("prop6_value");
 		element.innerHTML = '<select id="prop_data_bind_source" onchange="propValueChanged(this)">\
                                         <option value=""></option>\
                                     </select>';
 		
 		element = document.getElementById("prop7_name");
-		element.innerHTML = "데이터연동 값컬럼";
+		element.innerHTML = message["attr.databind.value"];
 		element = document.getElementById("prop7_value");
 		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop8_name");
-		element.innerHTML = "인자콘트롤목록";
+		element.innerHTML = message["attr.databind.param"];
 		element = document.getElementById("prop8_value");
 		element.innerHTML = '<input id="prop_param_control_list" type="text" readonly="readonly" onclick="showParamControlListDialog()" />';
 		
 		element = document.getElementById("prop9_name");
-		element.innerHTML = "탭순서";
+		element.innerHTML = message["attr.tabindex"];
 		element = document.getElementById("prop9_value");
 		element.innerHTML = '<input id="prop_tabindex" type="text" onchange="propValueChanged(this)" />';
 		
@@ -2162,49 +2162,49 @@ function loadControlProperties(controlElement) {
 		element.innerHTML = '<input id="event_on_post_change" type="text" onchange="propValueChanged(this)" />';
 	} else if (controlType == "radio") {
 		element = document.getElementById("prop1_name");
-		element.innerHTML = "콘트롤아이디";
+		element.innerHTML = message["attr.id"];
 		element = document.getElementById("prop1_value");
 		element.innerHTML = '<input id="prop_id" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop2_name");
-		element.innerHTML = "스타일";
+		element.innerHTML = message["attr.style"];
 		element = document.getElementById("prop2_value");
 		element.innerHTML = '<input id="prop_style" type="text" readonly="readonly" onclick="showStyleDialog()" />';
 		
 		element = document.getElementById("prop3_name");
-		element.innerHTML = "값";
+		element.innerHTML = message["attr.value"];
 		element = document.getElementById("prop3_value");
 		element.innerHTML = '<input id="prop_value" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop4_name");
-		element.innerHTML = "읽기전용";
+		element.innerHTML = message["attr.readonly"];
 		element = document.getElementById("prop4_value");
 		element.innerHTML = '<input id="prop_read_only" type="checkbox" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop5_name");
-		element.innerHTML = "체크상태";
+		element.innerHTML = message["attr.check"];
 		element = document.getElementById("prop5_value");
 		element.innerHTML = '<input id="prop_checked_state" type="checkbox" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop6_name");
-		element.innerHTML = "데이터연동소스";
+		element.innerHTML = message["attr.databind.source"];
 		element = document.getElementById("prop6_value");
 		element.innerHTML = '<select id="prop_data_bind_source" onchange="propValueChanged(this)">\
                                         <option value=""></option>\
                                     </select>';
 		
 		element = document.getElementById("prop7_name");
-		element.innerHTML = "데이터연동 값컬럼";
+		element.innerHTML = message["attr.databind.value"];
 		element = document.getElementById("prop7_value");
 		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop8_name");
-		element.innerHTML = "인자콘트롤목록";
+		element.innerHTML = message["attr.databind.param"];
 		element = document.getElementById("prop8_value");
 		element.innerHTML = '<input id="prop_param_control_list" type="text" readonly="readonly" onclick="showParamControlListDialog()" />';
 		
 		element = document.getElementById("prop9_name");
-		element.innerHTML = "탭순서";
+		element.innerHTML = message["attr.tabindex"];
 		element = document.getElementById("prop9_value");
 		element.innerHTML = '<input id="prop_tabindex" type="text" onchange="propValueChanged(this)" />';
 		
@@ -2228,22 +2228,22 @@ function loadControlProperties(controlElement) {
 		element.innerHTML = '<input id="event_on_post_change" type="text" onchange="propValueChanged(this)" />';
 	} else if (controlType == "button") {
 		element = document.getElementById("prop1_name");
-		element.innerHTML = "콘트롤아이디";
+		element.innerHTML = message["attr.id"];
 		element = document.getElementById("prop1_value");
 		element.innerHTML = '<input id="prop_id" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop2_name");
-		element.innerHTML = "스타일";
+		element.innerHTML = message["attr.style"];
 		element = document.getElementById("prop2_value");
 		element.innerHTML = '<input id="prop_style" type="text" readonly="readonly" onclick="showStyleDialog()" />';
 		
 		element = document.getElementById("prop3_name");
-		element.innerHTML = "값";
+		element.innerHTML = message["attr.value"];
 		element = document.getElementById("prop3_value");
 		element.innerHTML = '<input id="prop_value" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop4_name");
-		element.innerHTML = "탭순서";
+		element.innerHTML = message["attr.tabindex"];
 		element = document.getElementById("prop4_value");
 		element.innerHTML = '<input id="prop_tabindex" type="text" onchange="propValueChanged(this)" />';
 		
@@ -2253,64 +2253,64 @@ function loadControlProperties(controlElement) {
 		element.innerHTML = '<input id="event_on_click" type="text" onchange="propValueChanged(this)" />';
 	} else if (controlType == "label") {
 		element = document.getElementById("prop1_name");
-		element.innerHTML = "콘트롤아이디";
+		element.innerHTML = message["attr.id"];
 		element = document.getElementById("prop1_value");
 		element.innerHTML = '<input id="prop_id" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop2_name");
-		element.innerHTML = "스타일";
+		element.innerHTML = message["attr.style"];
 		element = document.getElementById("prop2_value");
 		element.innerHTML = '<input id="prop_style" type="text" readonly="readonly" onclick="showStyleDialog()" />';
 		
 		element = document.getElementById("prop3_name");
-		element.innerHTML = "값";
+		element.innerHTML = message["attr.value"];
 		element = document.getElementById("prop3_value");
 		element.innerHTML = '<input id="prop_value" type="text" onchange="propValueChanged(this)" />';
 	} else if (controlType == "grid") {
 		element = document.getElementById("prop1_name");
-		element.innerHTML = "콘트롤아이디";
+		element.innerHTML = message["attr.id"];
 		element = document.getElementById("prop1_value");
 		element.innerHTML = '<input id="prop_id" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop2_name");
-		element.innerHTML = "스타일";
+		element.innerHTML = message["attr.style"];
 		element = document.getElementById("prop2_value");
 		element.innerHTML = '<input id="prop_style" type="text" readonly="readonly" onclick="showStyleDialog()" />';
 		
 		element = document.getElementById("prop3_name");
-		element.innerHTML = "헤더";
+		element.innerHTML = message["attr.header"];
 		element = document.getElementById("prop3_value");
 		element.innerHTML = '<input id="prop_has_header" type="checkbox" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop4_name");
-		element.innerHTML = "푸터";
+		element.innerHTML = message["attr.footer"];
 		element = document.getElementById("prop4_value");
 		element.innerHTML = '<input id="prop_has_footer" type="checkbox" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop5_name");
-		element.innerHTML = "컬럼수";
+		element.innerHTML = message["attr.columncount"];
 		element = document.getElementById("prop5_value");
 		element.innerHTML = '<input id="prop_column_count" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop6_name");
-		element.innerHTML = "데이터연동소스";
+		element.innerHTML = message["attr.databind.source"];
 		element = document.getElementById("prop6_value");
 		element.innerHTML = '<select id="prop_data_bind_source" onchange="propValueChanged(this)">\
                                         <option value=""></option>\
                                     </select>';
 		
 		element = document.getElementById("prop7_name");
-		element.innerHTML = "데이터연동 값컬럼";
+		element.innerHTML = message["attr.databind.value"];
 		element = document.getElementById("prop7_value");
 		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop8_name");
-		element.innerHTML = "데이터연동 표시컬럼";
+		element.innerHTML = message["attr.databind.display"];
 		element = document.getElementById("prop8_value");
 		element.innerHTML = '<input id="prop_data_bind_display_column" type="text" readonly="readonly" onclick="showDisplayColumnDialog()" />';
 		
 		element = document.getElementById("prop9_name");
-		element.innerHTML = "인자콘트롤목록";
+		element.innerHTML = message["attr.databind.param"];
 		element = document.getElementById("prop9_value");
 		element.innerHTML = '<input id="prop_param_control_list" type="text" readonly="readonly" onclick="showParamControlListDialog()" />';
 		
@@ -2339,44 +2339,44 @@ function loadControlProperties(controlElement) {
 		element.innerHTML = '<input id="event_on_data_loaded" type="text" onchange="propValueChanged(this)" />';
 	} else if (controlType == "textarea") {
 		element = document.getElementById("prop1_name");
-		element.innerHTML = "콘트롤아이디";
+		element.innerHTML = message["attr.id"];
 		element = document.getElementById("prop1_value");
 		element.innerHTML = '<input id="prop_id" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop2_name");
-		element.innerHTML = "스타일";
+		element.innerHTML = message["attr.style"];
 		element = document.getElementById("prop2_value");
 		element.innerHTML = '<input id="prop_style" type="text" readonly="readonly" onclick="showStyleDialog()" />';
 		
 		element = document.getElementById("prop3_name");
-		element.innerHTML = "값";
+		element.innerHTML = message["attr.value"];
 		element = document.getElementById("prop3_value");
 		element.innerHTML = '<input id="prop_value" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop4_name");
-		element.innerHTML = "읽기전용";
+		element.innerHTML = message["attr.readonly"];
 		element = document.getElementById("prop4_value");
 		element.innerHTML = '<input id="prop_read_only" type="checkbox" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop5_name");
-		element.innerHTML = "데이터연동소스";
+		element.innerHTML = message["attr.databind.source"];
 		element = document.getElementById("prop5_value");
 		element.innerHTML = '<select id="prop_data_bind_source" onchange="propValueChanged(this)">\
                                         <option value=""></option>\
                                     </select>';
 		
 		element = document.getElementById("prop6_name");
-		element.innerHTML = "데이터연동 값컬럼";
+		element.innerHTML = message["attr.databind.value"];
 		element = document.getElementById("prop6_value");
 		element.innerHTML = '<input id="prop_data_bind_value_column" type="text" onchange="propValueChanged(this)" />';
 		
 		element = document.getElementById("prop7_name");
-		element.innerHTML = "인자콘트롤목록";
+		element.innerHTML = message["attr.databind.param"];
 		element = document.getElementById("prop7_value");
 		element.innerHTML = '<input id="prop_param_control_list" type="text" readonly="readonly" onclick="showParamControlListDialog()" />';
 		
 		element = document.getElementById("prop8_name");
-		element.innerHTML = "탭순서";
+		element.innerHTML = message["attr.tabindex"];
 		element = document.getElementById("prop8_value");
 		element.innerHTML = '<input id="prop_tabindex" type="text" onchange="propValueChanged(this)" />';
 		
@@ -3092,7 +3092,7 @@ function propValueChanged(propControlElement) {
 			}
 		}
 		if (existingElement != null) {
-			alert("이미 사용 중인 아이디입니다. 다른 아이디를 입력해 주세요.");
+			alert(message["invalid.id.duplicated"]);
 			propControlElement.value = currentControlID;
 			return;
 		}
@@ -3340,7 +3340,7 @@ function propValueChanged(propControlElement) {
 	} else if (propControlID == "prop_time_gap") {
 		propControlElement.value = propControlElement.value.trim();
 		if (isNaN(propControlElement.value)) {
-			alert("숫자를 입력해 주세요.")
+			alert(message["invalid.nan"])
 
 			propControlElement.value = currentControlElement.getAttribute("data-reform_time_gap");
 			return;
@@ -4274,7 +4274,7 @@ function showModifyDataBindControlDialog() {
 function showDeleteDataBindControlDialog() {
 	var controlElement = document.getElementById("data_bind_control_list");
 	if (controlElement.options.length > 0) {
-		var response = confirm("정말로 삭제하시겠습니까?");
+		var response = confirm(message["confirm.delete"]);
 		if (response == true) {
 			var dataBindID = controlElement.options[controlElement.selectedIndex].value;
 			removeDataBindControl(dataBindID);

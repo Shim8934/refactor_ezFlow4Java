@@ -7,6 +7,7 @@
 <title></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="${util.addVer('/css/reform/designProcessor.css')}" type="text/css">
+<jsp:include page="lang/lang.jsp"></jsp:include>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -571,23 +572,23 @@
 				<!-- section1 -->
 				<div class="section border_not">
 					<a href="#" class="btn_type1" onclick="showPreview()">
-						<span>미리보기</span>
+						<span><spring:message code='reform.design.preview' /></span>
 					</a>
 				</div>
 				<!-- //section1 -->
 				<!-- section2 -->
 				<div class="section">
 					<h2 class="h2">
-						<span class="title">데이터연동</span>
+						<span class="title"><spring:message code='reform.design.databind' /></span>
 						<ul class="btn_type2">
 							<li onclick="showAddDataBindControlDialog()">
-								<span>추가</span>
+								<span><spring:message code='reform.design.databind.add' /></span>
 							</li>
 							<li onclick="showDeleteDataBindControlDialog()">
-								<span>삭제</span>
+								<span><spring:message code='reform.design.databind.remove' /></span>
 							</li>
 							<li onclick="showModifyDataBindControlDialog()">
-								<span>수정</span>
+								<span><spring:message code='reform.design.databind.modify' /></span>
 							</li>
 						</ul>
 					</h2>
@@ -634,16 +635,16 @@
 					</ul>
 					<ul class="btn_type2">
 						<li onclick="reform_removeCurrentControl()">
-							<span>삭제</span>
+							<span><spring:message code='reform.design.control.remove' /></span>
 						</li>
 						<li onclick="reform_selectNodeToMoveOrCopy()">
-							<span>콘트롤선택</span>
+							<span><spring:message code='reform.design.control.select' /></span>
 						</li>
 						<li onclick="reform_moveCopiedNode()">
-							<span>이동</span>
+							<span><spring:message code='reform.design.control.move' /></span>
 						</li>
 						<li onclick="reform_pasteCopiedNode()">
-							<span>복제</span>
+							<span><spring:message code='reform.design.control.copy' /></span>
 						</li>
 					</ul>
 				</div>
@@ -651,7 +652,7 @@
 				<!-- section2 -->
 				<div class="section">
 					<h2 class="h2">
-						<span class="title">속성</span>
+						<span class="title"><spring:message code='reform.design.attribute' /></span>
 						</h3>
 						<div class="box_deco">
 							<table class="tbl_type1" border="1" cellspacing="0">
@@ -706,7 +707,7 @@
 				<!-- section2 -->
 				<div class="section border_nob ">
 					<h2 class="h2">
-						<span class="title">이벤트</span>
+						<span class="title"><spring:message code='reform.design.event' /></span>
 						</h3>
 						<div class="box_deco">
 							<table class="tbl_type1" border="1" cellspacing="0">

@@ -4,8 +4,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title></title>
+<title><spring:message code='reform.selectvalue.title' /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 <link rel="stylesheet" href="${util.addVer('/css/reform/designProcessor.css')}" type="text/css">
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
@@ -31,15 +32,16 @@
 	color: #333;
 }
 
-input, textarea {
-	ime-mode: inactive;
+textarea {
+	width: 100% !important;
+	box-sizing: border-box;
 }
 </style>
 <script type="text/javascript">
 	var args = window.opener.argsForDialog;
 	var selectValueList = args.selectValueList;
 	var completionHandlerForDialog = args.completionHandlerForDialog;
-	var returnValue = null; 
+	var returnValue = null;
 	
 	function onLoadHandler() {
 		var controlElement = document.getElementById("prop_select_value");
@@ -65,25 +67,30 @@ input, textarea {
 </script>
 </head>
 <body class="popup" onload="onLoadHandler()">
-	<div class="popup_wrap" style="width: 100%; height: 100%; top: 0px; left: 0px; overflow: hidden;">
-		<div class="popup_reform">
-			<h1>값설정</h1>
-			<div class="contents">
-				<div id="directive_message">항목을 한 줄씩 입력하세요.</div>
-				<textarea id="prop_select_value" class="textarea"></textarea>
-				<!-- 버튼영역 -->
-				<div class="btn_area">
-					<a href="#" class="btn_type3" onclick="btnOK_onclick()">
-						<span><strong>확인</strong></span>
-					</a>
-					<a href="#" class="btn_type3" onclick="btncancel_onclick()">
-						<span>취소</span>
-					</a>
+	<h1 style="margin-bottom: 0px">
+		<spring:message code='reform.selectvalue.title' />
+	</h1>
+	<div id="close">
+		<ul>
+			<li>
+				<span onclick="window.close()"></span>
+			</li>
+		</ul>
+	</div>
+	<table style="width: 100%; margin-top: 5px">
+		<tr>
+			<td>
+				<div id="directive_message">
+					<spring:message code='reform.params.directive' />
 				</div>
-				<!--// 버튼영역 -->
-			</div>
-		</div>
-		<div class="popup_shadow"></div>
+				<textarea id="prop_select_value" class="textarea"></textarea>
+			</td>
+		</tr>
+	</table>
+	<div class="btnposition btnpositionNew">
+		<a class="imgbtn">
+			<span onclick="btnOK_onclick()"><spring:message code='reform.public.confirm' /></span>
+		</a>
 	</div>
 </body>
 </html>

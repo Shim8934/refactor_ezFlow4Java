@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title><spring:message code='ezApproval.reform.t010' /></title>
+<title><spring:message code='reform.selection.title' /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/reform/reformUseProcessor.js')}"></script>
@@ -82,7 +82,7 @@
 </head>
 <body class="popup" style="overflow: hidden" onload="onLoadHandler()">
 	<h1 style="margin-bottom: 0px">
-		<spring:message code='ezApproval.reform.t010' />
+		<spring:message code='reform.selection.title' />
 	</h1>
 	<div id="close">
 		<ul>
@@ -101,7 +101,7 @@
 	</table>
 	<div class="btnposition btnpositionNew">
 		<a class="imgbtn">
-			<span onclick="btnOK_onclick()"><spring:message code='ezApproval.reform.t005' /></span>
+			<span onclick="btnOK_onclick()"><spring:message code='reform.public.confirm' /></span>
 		</a>
 	</div>
 </body>
