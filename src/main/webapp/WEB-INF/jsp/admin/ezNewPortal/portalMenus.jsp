@@ -139,7 +139,7 @@
 					var menusHTML = "";
 					
 					menuList.forEach(function (item, index) {
-						menusHTML += "<li class='menu' id='menu" + item.menuId + "'>";
+						menusHTML += "<li class='menu' id='menu" + item.menuId + "' data1='" + item.defaultOrder + "'>";
 						menusHTML += "<dl>";
 						menusHTML += "<dt><span class='" + item.iconUrl + "'>";
 						menusHTML += "</span></dt>";
