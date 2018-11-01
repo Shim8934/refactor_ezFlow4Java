@@ -16,8 +16,11 @@
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}" />
 	<style type="text/css">
 	body {min-width: 520px;background-color:white;}
+	.ui-widget-header .ui-icon {background-image : url(/js/jquery-ui/images/ui-icons_444444_256x240.png);}
+	.ui-widget-content {background : none;}
+	.ui-widget-header {background : none;}
   	.column {width: 1820px; padding-bottom: 100px;}
-  	.portlet, .newPortlet {postion: relative;margin: 0 1em 1em 0;padding: 0.3em;display : inline-block;vertical-align : top;}
+  	.portlet, .newPortlet {postion: relative;margin: 0 1em 1em 0;padding: 0.3em;display : inline-block;vertical-align : top; background-color : #ffffff;}
   	.portlet-header {padding: 0.4em 0.7em;margin-bottom: 0.5em;position: relative;cursor:move;}
   	.portlet-toggle {top: 50%;right: 0;float:right;}
   	.portlet-content {padding: 0.4em;clear:both;}
@@ -29,9 +32,6 @@
 	.portletInfo {display:inline-block;marging-top:8px;}
 	.portletInfoTH {background-color : white;border:0px; padding-left:0px;}
 	.portletInfoTH, .portletInfoTD {padding-bottom : 6px;}
-	.ui-widget-header .ui-icon {background-image : url(/js/jquery-ui/images/ui-icons_444444_256x240.png);}
-	.ui-widget-content {background : none;}
-	.ui-widget-header {background : none;}
 	.boardNotUsed {height:2.6em;}
 	.portletInfo {width : 100%;}
 	.portletInfoTD {width:100%;}
@@ -534,6 +534,10 @@
 		
 		$(".addNewPortlet").on("click", {"portletId" : null}, portletAdd);
 		$(".newPortlet").find(".boardSetting").on("click", {"portletId" : null}, openBoardTree);
+	}
+	
+	var showToastMessage = function (portletId) {
+		
 	}
 	</script>
 </head>

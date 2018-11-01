@@ -618,7 +618,7 @@
 			request.open('POST', '/admin/ezNewPortal/updateMenuOrder.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
-			request.onload = function() { getMenus();}
+			request.onload = function() { getMenus(); }
 			
 			request.onerror = function() {}
 			

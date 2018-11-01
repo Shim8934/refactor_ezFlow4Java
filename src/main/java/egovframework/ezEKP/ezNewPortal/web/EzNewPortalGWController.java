@@ -1509,13 +1509,15 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/companies/{companyId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject insertPortlet(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
+	public JSONObject insertPortlet(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W insertCompanyPortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
+			int tenantId = info.getTenantId();
+			
 
 			result.put("status", "ok");
 			result.put("code", 0);
