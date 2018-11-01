@@ -181,9 +181,10 @@
 		            	break;
 		        }
 		        
-		        if (g_foldertype != "sent" && g_foldertype != "draft")
-		            btnReject.style.display = "";
-		
+		        if (g_foldertype != "sent" && g_foldertype != "draft" && shareId == "") {
+		        	btnReject.style.display = "";
+		        }
+				
 		        pMailListDiv = pPreviewWList;
 		        pMailPreVDiv = pPreviewWContent;
 		        pMailListDiv_H = pPreviewHList;
