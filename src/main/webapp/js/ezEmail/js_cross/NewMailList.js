@@ -353,7 +353,7 @@ function MakeListInfoHTML(ConentObject) {
                             	p_Subject = strLang97;
                             }
                             if (p_SecureMail == 1) {
-                            	p_Subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + p_Subject;
+                            	p_Subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"12\" />" + p_Subject;
                             }
 
                             if (useMailNewWindow == "YES") {
