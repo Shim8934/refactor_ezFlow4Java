@@ -215,7 +215,7 @@
 				});
 				// 취소버튼과 같은 역할
 				var editMenuCancel = document.getElementById('editMenuCancel');
-				editMenuCancel.click();				
+				editMenuCancel.click();			
 			}
 		}				
 		
@@ -284,8 +284,8 @@
 			var editMenuCancel = document.getElementById('editMenuCancel');
 			editMenuCancel.addEventListener('click', function() {
 				
-				document.getElementById('editMenuBtn').style = 'none';
-				document.getElementById('editBtn').style = 'block';
+				document.getElementById('editMenuBtn').style.display = 'none';
+				document.getElementById('editBtn').style.display = 'block';
 				
 				var sortedMenu = document.getElementById('toggleMenu');
 				sortedMenu.className = 'full_menu_toggleUL';
