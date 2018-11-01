@@ -81,7 +81,7 @@ textarea {
 		<tr>
 			<td>
 				<div id="directive_message">
-					<spring:message code='reform.params.directive' />
+					<spring:message code='reform.selectvalue.directive' />
 				</div>
 				<textarea id="prop_select_value" class="textarea"></textarea>
 			</td>
