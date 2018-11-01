@@ -546,18 +546,17 @@ public class EzNewPortalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getPortlets.do")
 	@ResponseBody
-	public JSONArray getPortalPortlets(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+	public JSONArray getPortalPortlets(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap,
+			HttpServletRequest req, Model model) throws Exception {
 		LOGGER.debug("getPortalPortlets started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String companyId = req.getParameter("companyId");
-		String url = "/rest/admin/ezPortal/portlets/companies/"+companyId;
+		String companyId = paramMap.get("companyId").toString();
+		String url = "/rest/admin/ezPortal/portlets/companies/" + companyId;
 		
+		paramMap.put("userId", userInfo.getId());		
 		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", userInfo.getId());		
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, req, "get", null);
 		String result = resultBody.get("status").toString();
 		JSONArray json = new JSONArray();
 		

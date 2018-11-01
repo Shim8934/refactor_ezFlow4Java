@@ -90,10 +90,10 @@
 		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 		
 		//포틀릿 사용 여부
-		var isUsed = $("#newPortlet").find(".switch").find("input").prop("checked");
+		var isUsed = document.getElementById("newPortlet").querySelectorAll(".switch")[0].querySelectorAll("input")[0].checked;
 		
 		//포틀릿 이름 리스트
-		var portletNameList = $("#newPortlet").find(".portletName");
+		var portletNameList = document.getElementById("newPortlet").querySelectorAll(".portletName");
 		var portletNameListCount = portletNameList.length;
 		var nameList = [];
 		var portletNameEmptyNum = 0;
@@ -113,15 +113,15 @@
 		}
 			
 		//게시판 설정(게시판 아이디)
-		var boardName = $("#newPortletBoard");
+		var boardName = document.getElementById("newPortletBoard");
 		var boardId = null;
 		
 		if (boardName != undefined) {
-			boardId = boardName.attr("data1");
+			boardId = boardName.getAttribute("data1");
 		}
 			
 		//새로운 포틀릿인 경우 connection url
-		var connectionUrl = $("#newPortlet").find(".connectionUrl").val();
+		var connectionUrl = document.getElementById("newPortlet").querySelector(".connectionUrl").value;
 		
 		if (connectionUrl == "") {
 			alert("연결 URL을 입력해주세요.");
@@ -129,7 +129,7 @@
 		}
 		
 		//새로운 포틀릿인 경우 포틀릿 타입 지정
-		var portletCategory = $("#newPortlet").find("input[name='category']:checked").val();
+		var portletCategory = document.getElementById("newPortlet").querySelector("input[name='category']:checked").value;
 		
 		if (portletCategory == "B" && boardId == null) {
 			alert("게시판을 선택해 주세요.");
@@ -224,7 +224,7 @@
 		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 		
 		//포틀릿 순서가져오기
-		var portletList = $(".col");
+		var portletList = document.getElementsByClassName("col");
 		var portletListCount = portletList.length;
 		var portletOrderList = [];
 		
@@ -258,8 +258,9 @@
 	//게시판 설정 
 	var openBoardTree = function(event) {
 		var portletId = event.data.portletId;
-		var companyId = $('#ListCompany option:selected').val();
-		var boardId = $("#portlet" + portletId).find(".boardName").attr("data1");
+ 		var companiesObj = document.getElementById("ListCompany");
+		var companyId = companiesObj.options[companiesObj.selectedIndex].value;
+		var boardId = document.getElementById("portlet" + portletId).querySelector(".boardName").getAttribute("data1");
         var wWeight = "355";
         var wHeight = "600";
 
@@ -281,10 +282,10 @@
 		var portletId = event.data.portletId;
 		
 		//포틀릿 사용 여부
-		var isUsed = $("#portlet" + portletId).find(".switch").find("input").prop("checked");
+		var isUsed = document.getElementById("portlet" + portletId).querySelectorAll(".switch")[0].querySelectorAll("input")[0].checked;
 		
 		//포틀릿 이름 리스트
-		var portletNameList = $("#portlet" + portletId).find(".portletName");
+		var portletNameList = document.getElementById("portlet" + portletId).querySelectorAll(".portletName");
 		var portletNameListCount = portletNameList.length;
 		var nameList = [];
 		
@@ -293,18 +294,18 @@
 		}
 		
 		//게시판 설정(게시판 아이디)
-		var boardName = $("#portletBoard" + portletId);
+		var boardName = document.getElementById("portletBoard" + portletId);
 		var boardId = null;
 		
-		if (boardName != undefined) {
-			boardId = boardName.attr("data1");
+		if (boardName != null) {
+			boardId = boardName.getAttribute("data1");
 		}
 		
 		//새로운 포틀릿인 경우 ...connection url
-		var url = $("#portletBoard" + portletId).find(".connectionUrl");
+		var url = document.getElementById("portlet" + portletId).querySelector(".connectionUrl");
 		var connectionUrl = null;
 		
-		if (url != undefined) {
+		if (url != null) {
 			connectionUrl = url.value;
 		}
 		
@@ -332,16 +333,16 @@
 	  
 	//포틀릿 리스트 불러오는 함수
 	var getPortletList = function() {
-		var companyId = $('#ListCompany option:selected').val();
+		var companiesObj = document.getElementById("ListCompany");
+		var companyId = companiesObj.options[companiesObj.selectedIndex].value;
 		
-		$.ajax({
-			type : "POST",
-			dataType : "json",
-			url : "/admin/ezNewPortal/getPortlets.do",
-			data : {
-				companyId : companyId
-			},
-			success : function(result){
+		var request = new XMLHttpRequest();
+		request.open('POST', '/admin/ezNewPortal/getPortlets.do', true);
+		request.setRequestHeader('content-type', 'application/json');
+		
+		request.onload = function() { 
+			if (request.status >= 200 && request.status < 400) {
+				var result = JSON.parse(request.responseText);
 				var portletId = "";
 				var portletOrder = "";
 				var portletName = "";
@@ -437,11 +438,16 @@
 				}
 				
 				loadAfter();
-			},
-			error:function(request,status,error){
-				console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 			}
+		};
+		
+		request.onerror = function() {}
+		
+		var data = JSON.stringify({
+			companyId : companyId
 		});
+		 
+		request.send(data);
 	}
 	  
 	function loadAfter() {
@@ -497,9 +503,9 @@
 		listHTML += "</table>";
 		listHTML += "</li>";
 		
-		$("#portletListContainer").append(listHTML);
+		document.getElementById("portletListContainer").insertAdjacentHTML('beforeend', listHTML);
 		
-		$(".addPortlet").on("click", showAddPortletForm);
+		//jquery ui - sortable(드래그앤드랍)
 		$(".col-container").sortable("destroy");
 
 		$( ".col-container" ).sortable({
@@ -512,13 +518,18 @@
 		.addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
 		.find( ".portlet-header" )
 		.addClass( "ui-widget-header ui-corner-all" );
+		//jquery ui - 끝
 		
-		$("input:radio").on("click", function(){
-			if ($(this).prop("checked") && $(this).attr("value") == "B") {
-				$(".setBoard").css("display", "table-row");
-			} else {
-				$(".setBoard").css("display", "none");
-			}
+		var categoryList = document.querySelectorAll("input[name='category']");
+		
+		[].forEach.call(categoryList, function(category) {
+			category.addEventListener("click", function(){
+				if (this.value == "B" && this.checked) {
+					document.getElementById("newPortlet").querySelector(".setBoard").style.display = "table-row";
+				} else {
+					document.getElementById("newPortlet").querySelector(".setBoard").style.display = "none";
+				}
+			});
 		});
 		
 		$(".addNewPortlet").on("click", {"portletId" : null}, portletAdd);
