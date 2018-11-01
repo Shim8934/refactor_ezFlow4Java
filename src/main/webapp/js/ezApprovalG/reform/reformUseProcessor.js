@@ -9,7 +9,7 @@ reformUseProc.executeQuery = function(dataBindControlID, documentOfDataBindContr
 	
 	var dataBindControl = documentOfDataBindControl.getElementById(dataBindControlID);
 	if (dataBindControl == null) {
-		alert(dataBindControlID + " 데이터연동 콘트롤이 존재하지 않습니다.");
+		alert(dataBindControlID + message["error.notfound.databindcontrol"]);
 		return;
 	}
 	

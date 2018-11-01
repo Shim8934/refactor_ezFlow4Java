@@ -1,6 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<script>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%><script>
 	message = {
 		"invalid.nan": "<spring:message code='reform.invalid.nan' />",
 		"invalid.id.duplicated": "<spring:message code='reform.invalid.id.duplicated' />",
