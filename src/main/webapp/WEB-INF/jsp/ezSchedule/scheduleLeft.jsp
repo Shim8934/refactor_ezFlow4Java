@@ -351,6 +351,9 @@
 	                	//document.getElementById('Schedule_Config').parentElement.onclick();
 	                    document.getElementById('Schedule_Config').onclick();
 	                }
+	                else if ("5" == _funCode) {
+	                	Function_Flag(5);
+	                }
 	            }
 	            else {	                
 	                if ("2" == _funCode) {
@@ -371,6 +374,9 @@
 	                }	            	               
 	                else if ("11" == _funCode) {
 	                    document.getElementById('Schedule_Config').click();	                    
+	                }
+	                else if ("5" == _funCode) {
+	                	Function_Flag(5);
 	                }
 	            }
 	        }
@@ -477,8 +483,12 @@
 	        function MonthMiniDbClick(obj) {
 	            if (_funCode == 2)
 	                parent.frames["right"].WriteDateSchedule_left(obj)
-	        }	        
-	      
+	        }
+	        
+	      	//2018-11-01 김보미 - 일정그룹 추가시 left바에 그룹 바로 보이도록
+	        function groupRefresh() {
+	        	frm.submit();
+	        } 
 		</script>
 	</head>
 
@@ -564,6 +574,7 @@
 	    <script type="text/javascript">
 		    initToggleList(document.getElementById("left"), "h2", "ul", "li");
 	    </script>
-	    
+	    <!-- 2018-11-01 김보미 - 일정그룹 추가시 left바에 그룹 바로 보이도록 -->
+	    <form id="frm" action="/ezSchedule/scheduleLeft.do?funCode=5"></form>
 	</body>
 </html>
