@@ -874,9 +874,17 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						subject = ezEmailUtil.getSubject(orgMessage);
 						subject = (subject != null) ? subject : "";
 						
+						Map<String, Object> extraMap = new HashMap<String, Object>();
+						extraMap.put("forPrint", false);
+						extraMap.put("mobile", false);
+						extraMap.put("secureKey", null);
+						extraMap.put("securePassword", null);
+						extraMap.put("includeInlineAsAttachment", false);
+						extraMap.put("shareId", userId);
+						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);					
 						tempBody = bodyInfoList.get(0);
 						
 						if (attachedFileList.size() > 0) {
@@ -953,9 +961,17 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        		
 		        		subject = orgMessage.getSubject();
 						subject = (subject != null) ? subject : "";
-		        		
+						
+						Map<String, Object> extraMap = new HashMap<String, Object>();
+						extraMap.put("forPrint", false);
+						extraMap.put("mobile", false);
+						extraMap.put("secureKey", null);
+						extraMap.put("securePassword", null);
+						extraMap.put("includeInlineAsAttachment", false);
+						extraMap.put("shareId", userId);
+						
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);					
 						bodyValue = bodyInfoList.get(0);
 		        		
 		        		if (attachedFileList.size() > 0) {
@@ -1150,9 +1166,17 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						
 						sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p><br/><br/>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
 						
+						Map<String, Object> extraMap = new HashMap<String, Object>();
+						extraMap.put("forPrint", false);
+						extraMap.put("mobile", false);
+						extraMap.put("secureKey", null);
+						extraMap.put("securePassword", null);
+						extraMap.put("includeInlineAsAttachment", false);
+						extraMap.put("shareId", userId);
+						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);					
 						String tmphtmlbody = bodyInfoList.get(0);
 			            
 			            bodyValue = sb.toString() + tmphtmlbody;
@@ -3293,8 +3317,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					
 					mail.put("flag", flagged);
 					mail.put("folderName", f.getName());
-															
-					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, attachedFileList, false, true, locale, null, null);
+					
+					Map<String, Object> extraMap = new HashMap<String, Object>();
+					extraMap.put("forPrint", false);
+					extraMap.put("mobile", false);
+					extraMap.put("secureKey", null);
+					extraMap.put("securePassword", null);
+					extraMap.put("includeInlineAsAttachment", false);
+					extraMap.put("shareId", userId);
+					
+					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, attachedFileList, locale, extraMap);
 
 					double size = Double.parseDouble(bodyInfoList.get(2));
 					String strSize = ezEmailUtil.getSizeWithUnit(size);
