@@ -595,7 +595,7 @@ function onViewDate(szCmd) {
         	dayView = 2;
             typeCal = 2;
             if (document.getElementById(g_selTDID))
-                document.getElementById(g_selTDID).style.backgroundColor = "#edf4fd";
+                document.getElementById(g_selTDID).style.backgroundColor = "#e4e8ec";
             if (document.getElementById(g_selTRID))
                 document.getElementById(g_selTRID).style.backgroundColor = "";
             if (g_selTDID != null && g_selTDID != "")
@@ -617,7 +617,7 @@ function onViewDate(szCmd) {
             if (document.getElementById(g_selTDID))
                 document.getElementById(g_selTDID).style.backgroundColor = "";
             if (document.getElementById(g_selTRID))
-                document.getElementById(g_selTRID).style.backgroundColor = "#edf4fd";
+                document.getElementById(g_selTRID).style.backgroundColor = "#e4e8ec";
             if (g_selTDID != null && g_selTDID != "")
                 sDate = new Date(g_selTDID.substring(7, 11), parseInt(g_selTDID.substring(12, 14)) - 1, parseInt(g_selTDID.substring(15, 17)));
 

@@ -30,7 +30,7 @@
 	    		cursor : pointer;
 	    }
     	tr.hover:hover {background:#eee; color:#fff;}
-		.selectTR {background-color: #edf4fd;}
+		.selectTR {background-color: #e4e8ec;}
 		#searchTable {
 			border-top: 1px solid #e8e8e8;
 			border-left: 1px solid #e8e8e8;
@@ -63,7 +63,7 @@
 		var g_timezone 		  = "${userTimeSet}";
 		var offsetMin 		  = "${offsetMin}";
 		var type 			  = "all";
-		var m_strColorSelect = "#edf4fd";
+		var m_strColorSelect = "#e4e8ec";
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
 		var adminFlag = "${adminFlag}";
