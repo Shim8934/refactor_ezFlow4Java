@@ -114,7 +114,7 @@
        			<h1><spring:message code='ezSchedule.t00010' /></h1>		
        		</c:when>
        		<c:otherwise>
-       			<h1><spring:message code='ezSchedule.t00010' /></h1>	
+       			<h1><spring:message code='ezTask.hyh001' /></h1>	
        		</c:otherwise>
        	</c:choose>
    		<div class="portlet_tabpart01" style="margin-top:3px;text-align:right">

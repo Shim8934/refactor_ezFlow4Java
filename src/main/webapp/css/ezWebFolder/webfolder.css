@@ -3,11 +3,11 @@
 .webFolderDiv {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; cursor: pointer;}
 .webFolderDiv:hover {background-color: #f4f5f5;}
 
-.webFolderDiv2 {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; background-color:#edf4fd; cursor: pointer;}
+.webFolderDiv2 {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; background-color:#e4e8ec; cursor: pointer;}
 .wfdivBttn {text-align: center; margin: -9px; margin-top: 10px; padding: 7px; border-top: 1px solid #eee; background-color: #fcfcfc;}
 
 .bnkWebFolder:hover {background-color: #f4f5f5; cursor: pointer;}
-.bnkWebFolder2 {background-color: #edf4fd; cursor: pointer;}
+.bnkWebFolder2 {background-color: #e4e8ec; cursor: pointer;}
 .bnkWebFolder .checkBnk {vertical-align: middle;}
 
 .none-drag, .webFolderImg {vertical-align: middle; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
@@ -60,15 +60,15 @@
 
 .userInfo:hover {cursor:pointer;}
 .userInfo:hover {background-color:#f4f5f5;}
-.userInfo2 {cursor:pointer; background-color:#edf4fd;}
+.userInfo2 {cursor:pointer; background-color:#e4e8ec;}
 
 .selectedDept {cursor:pointer;}
 .selectedDept:hover {background-color:#f4f5f5;}
-.selectedDept2 {cursor:pointer; background-color:#edf4fd;}
+.selectedDept2 {cursor:pointer; background-color:#e4e8ec;}
 
 .selectedUser {cursor:pointer;}
 .selectedUser:hover {background-color:#f4f5f5;}
-.selectedUser2 {cursor:pointer; background-color:#edf4fd;}
+.selectedUser2 {cursor:pointer; background-color:#e4e8ec;}
 
 .separator {font-size:14px; padding-right: 5px; line-height: 18px;}
 .aName {cursor: pointer; white-space: nowrap; display: flex; flex: 0 10 auto; overflow: hidden; text-overflow: ellipsis; min-width: 20px;}

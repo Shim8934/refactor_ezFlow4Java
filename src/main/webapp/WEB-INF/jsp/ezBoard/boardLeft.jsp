@@ -66,17 +66,17 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        if (Func == "1") {
-		            WebPartToggle(level1El.item(level1El.length - 2));
+		            //WebPartToggle(level1El.item(level1El.length - 2));
 		            Open_Func(1);
 		        }
 		        else if (Func == "3") {
-		        	WebPartToggle(level1El.item(level1El.length - 1));
+		        	//WebPartToggle(level1El.item(level1El.length - 1));
 		        	Poll_Open(1);
 				} else if (Func == "4") {
-					WebPartToggle(level1El.item(level1El.length - 1));
+					//WebPartToggle(level1El.item(level1El.length - 1));
 					ladder_Func(1);
 				} else if (Func == "5") {
-					WebPartToggle(level1El.item(level1El.length - 1));
+					//WebPartToggle(level1El.item(level1El.length - 1));
 					memo_Func(1);
 				}
 		        /* 2018-09-20 홍승비 - 윈도우 온로드 시 마이게시판 우선적으로 열리는 부분 주석처리 */

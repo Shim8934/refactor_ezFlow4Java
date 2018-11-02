@@ -109,7 +109,7 @@
 						if (result["list"] != "") {
 							getCommunityList_after(result["list"]);
 						} else {
-							$("#MyCopList").html("<div style='height:435px;text-align:center;'><img style='margin-top:100px;margin-bottom:20px' src='/images/signcommunity.png' /><div style='margin-top:15px'><div style='color:#979797'>"+strLang86+"</div><div style='margin-top:5px;color:#979797'>"+strLang87+"</div></div></div>");
+							$("#MyCopList").html("<p class='lnb_comIng'><img src='/images/kr/left/lnb_comImg.png'></p><p class='lnb_comText'>" + strLang86 +"<br>" + strLang87 + "</p>");
 						}
 					}
 				});
@@ -577,8 +577,25 @@
             }
 		</script>
 	</head>
-	<body class="leftbody" id="body">
-	    <div id="left">
+	<body class="newLeft" id="body">
+		<div id="left" class="lnb" style="overflow: auto">
+	    	<!-- <div class="lnb_btn"></div> -->
+	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
+	    	<div class="left_title" title="<spring:message code='main.t1006' />">
+	    		<spring:message code='main.t1006' />
+	        </div>
+	        <div class="btn_writeBox">
+	        	<p class="btn_write01" onclick="make_Cop()"><span class="sub_iconLNB tree_write"></span><spring:message code="ezCommunity.t1011" /></p>
+	        </div>
+	        <div id="MyCopList">
+	            <!-- list -->
+	            <ul class="list_thumbnail" id="list_thumbnail"></ul>
+	            <!-- list -->
+	        </div>
+	        <!-- <p class="lnb_comIng"><img src="/images/kr/left/lnb_comImg.png"></p>
+	        <p class="lnb_comText">My 커뮤니티가 없습니다.<br>커뮤니티에 가입해보세요.</p> -->
+	    </div>
+	    <%-- <div id="left">
 	        <div class="left_cop" title="<spring:message code='main.t1006' />"><span><spring:message code='main.t1006' /></span></div>
 	        <!-- mylist -->	        
 	        <div style="overflow: auto; overflow-x: hidden; background-color: white; min-height:435px; padding:5px" id="MyCopList">
@@ -605,8 +622,8 @@
 	
 	        <div class="community_banner commMake btn_comm" onclick="make_Cop()">
 	        	<spring:message code="ezCommunity.t1011" />
-	            <%-- <img src="<spring:message code='ezCommunity.i4' />" width="181" height="90"> --%>
+	            <img src="<spring:message code='ezCommunity.i4' />" width="181" height="90">
 	        </div>
-    	</div>
+    	</div> --%>
 	</body>
 </html>

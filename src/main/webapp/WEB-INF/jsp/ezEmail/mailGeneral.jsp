@@ -228,7 +228,7 @@
 			        _popObj.style.backgroundColor = "#ffffff";
 			    }
 			    _popObj = obj;
-			    obj.style.backgroundColor = "#edf4fd";
+			    obj.style.backgroundColor = "#e4e8ec";
 			}
 			var ConCellRow = null;
 			function pop_modify(obj) {

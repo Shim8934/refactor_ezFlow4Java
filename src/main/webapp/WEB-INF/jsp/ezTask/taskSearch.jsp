@@ -97,7 +97,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#edf4fd";
+		        elem.style.backgroundColor = "#e4e8ec";
 		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
 		    }
 		    
@@ -106,7 +106,7 @@
 
 				if ($("#checkboxAll").is(":checked")) {
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body td").css("background", "#edf4fd");
+					$(".row_body td").css("background", "#e4e8ec");
 				} else {
 					$(":checkbox[name=myCheckbox]").prop("checked", false);
 					$(".row_body td").css("background", "");

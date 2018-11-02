@@ -1771,18 +1771,20 @@ form{display:inline;margin:0}
 	margin:0px 0px ;
 	padding:0px;
 	list-style:none;
-	background:#fff;
+	background:#e4e8ec;
 	z-index:1;
-	
+	cursor: pointer;
 }
 #left .list_thumbnail li {
-	padding:3px 0px 2px 0px; 
-	border-bottom:1px solid #eaeaea;
+	padding:10px 0px; 
+	border-bottom:1px solid #cdd2d9;
 	vertical-align:middle;
 	height:33px;
-	line-height:16px;
+	line-height:26px;
 	vertical-align:middle;
 	white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+	font-weight:bold;
+	font-size:13px;
 }
 #left .list_thumbnail li .thumbnail {
 	vertical-align:middle;
@@ -1791,6 +1793,9 @@ form{display:inline;margin:0}
 	display:inline-block;
 	margin-top:3px;	
 }
+
+#left .list_thumbnail li .thumbnail img{ border-radius:30px; width:25px !important; height:25px !important;}
+
 #left .list_thumbnail li .name {
 	display:inline;
 	vertical-align:middle;
@@ -2266,7 +2271,8 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 	right: 45px;	
 }
 .extraMenu ul li span {padding-top:2px !important;}
-#mainmenu select {height: 29px !important; line-height:27px !important; border:none;}
+#mainmenu li select{ border:none;}
+#mainmenu select {height: 29px !important; line-height:27px !important;}
 
 .mail_volume{ margin:auto; padding:0px; width:176px; overflow:hidden; margin-top:15px;margin-bottom:10px}
 .volume_num{ margin:0px; padding:0px;}
@@ -2522,7 +2528,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 /* mainmenuLayout */
 #mainmenuLayout { position: relative; }
 .mainmenuLayout_calendar { position: relative; }
-.calendar_pagenav { position: absolute; left: 50%; top:50px; width: 230px; margin-left: -115px; }
+.calendar_pagenav { position: absolute; left: 50%; top:50px; width: 269px; margin-left: -134px; }
 .calendar_pagenav .spanText { display: block !important; text-align: center; font-size:18px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; letter-spacing:-1px;}
 .mainmenuTab {position:relative;margin: -9px 15px 11px 15px;}
 .mainmenuTab .mainmenuTabUL { text-align: center; padding: 0px 0px 0px 1px; margin: 0px; }
