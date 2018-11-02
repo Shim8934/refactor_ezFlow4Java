@@ -11,7 +11,7 @@
 		<div class="panel-body form-horizontal ceMobileEditor">
 			<div class="form-group">
 				<div class="col-xs-12">
-					<h1 class="text-center"><img src="http://comp.namo.co.kr/admin/images/bi_ce4.png" alt="Namo CrossEditor4 Logo" title="Namo CrossEditor4 Logo" /></h1>
+					<h1 class="text-center"><img src="http://comp.namoeditor.co.kr/admin/images/bi_ce4.png" alt="Namo CrossEditor4 Logo" title="Namo CrossEditor4 Logo" /></h1>
 					<h5 class="text-center">Mobile Sample Page</h5>
 				</div>
 			</div>
@@ -20,32 +20,32 @@
 					<input type="text" class="form-control" id="name" name="name" placeholder="Name">
 				</div>
 				<div class="col-xs-6">
-					<input type="text" class="form-control" id="pe_te" name="pe_te" placeholder="Email">
+					<input type="text" class="form-control" id="pe_ub" name="pe_ub" placeholder="Email">
 				</div>
 			</div>
-			<div class="form-group" id="pe_auN">
+			<div class="form-group" id="pe_aLa">
 				<div class="col-xs-12">
-					<textarea id="pe_aGp" name="pe_aGp" alt="initText" title="initText" Style="width:730px; height:450px; font-size:10pt"><p>Welcome to <span style="font-weight: bold;">CrossEditor 4.0</span> sample page</p></textarea>
+					<textarea id="pe_aKN" name="pe_aKN" alt="initText" title="initText" Style="width:730px; height:450px; font-size:10pt"><p>Welcome to <span style="font-weight: bold;">CrossEditor 4.0</span> sample page</p></textarea>
 					<script type="text/javascript" language="javascript">
 
-						var CrossEditor = new NamoSE('pe_aGp');
+						var CrossEditor = new NamoSE('pe_aKN');
 						CrossEditor.params.Width = "100%";
 						CrossEditor.params.ConfigXmlURL = "mobile/config/Config_mobile.xml";
 						CrossEditor.params.CreateTab = "9|9|9";
 						CrossEditor.EditorStart();
 						
 						function OnInitCompleted(e){
-							e.editorTarget.SetBodyValue(document.getElementById("pe_aGp").value);
+							e.editorTarget.SetBodyValue(document.getElementById("pe_aKN").value);
 
-							var pe_auN = document.getElementById("pe_auN");
-							var pe_bcy = window.innerHeight - pe_auN.offsetTop - 85;
-							CrossEditor.SetUISize("100%", pe_bcy);
+							var pe_aLa = document.getElementById("pe_aLa");
+							var pe_bla = window.innerHeight - pe_aLa.offsetTop - 85;
+							CrossEditor.SetUISize("100%", pe_bla);
 						}
 					</script>
 				</div>
 			</div>
 			<div class="text-center">
-				<button class="btn btn-info" id="pe_bsG" onclick="alert('[내용]\n' + CrossEditor.GetBodyValue('XHTML'));">등록하기</button>
+				<button class="btn btn-info" id="pe_bKC" onclick="alert('[내용]\n' + CrossEditor.GetBodyValue('XHTML'));">등록하기</button>
 			</div>
 		</div>
 	</body>	

@@ -1,28 +1,62 @@
 <%@page contentType="text/html;charset=utf-8" %>
-<%@page import="java.util.*"%>
 <%@page import="java.util.regex.PatternSyntaxException"%>
 <%@page import="java.io.*"%>
 <%@page import="java.net.*"%>
 <%@page import="java.awt.*"%>
-<%@page import="java.awt.Image"%>
-<%@page import="java.awt.image.BufferedImage"%>
-<%@page import="javax.imageio.ImageIO"%>
 <%@page import="javax.swing.ImageIcon"%>
-<%@page import="java.io.File"%>
-<%@page import="java.io.IOException"%>
 <%@page import="java.util.List"%>
-<%@page import="java.util.Iterator"%>
 <%@page import="org.apache.commons.fileupload.servlet.ServletFileUpload"%>
 <%@page import="org.apache.commons.fileupload.disk.DiskFileItemFactory"%>
 <%@page import="org.apache.commons.fileupload.FileItem"%>
-<%@page import="org.apache.commons.fileupload.FileUploadException"%>
 <%@page import="org.apache.commons.fileupload.FileUploadBase"%>
 <%@page import="org.apache.commons.codec.binary.Base64"%>
 <%@include file="Util.jsp"%>
 <%@include file="SecurityTool.jsp"%>
 <%@include file="Vaccine.jsp"%>
+<%@page import="javax.imageio.*"%>
+<%@page import="javax.imageio.stream.ImageInputStream"%>
+<%@page import="javax.imageio.stream.FileImageInputStream"%>
+
+<%!
+public Dimension getImageDim(final String path) {
+    Dimension result = null;
+    String suffix = this.getFileSuffix(path);
+    Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
+    if (iter.hasNext()) {
+        ImageReader reader = iter.next();
+        try {
+            ImageInputStream stream = new FileImageInputStream(new File(path));
+            reader.setInput(stream);
+            int width = reader.getWidth(reader.getMinIndex());
+            int height = reader.getHeight(reader.getMinIndex());
+            result = new Dimension(width, height);
+        } catch (IOException e) {
+            //System.out.println(e.getMessage());
+			return null;
+        } finally {
+            reader.dispose();
+        }
+    } else {
+        System.out.println("No reader found for given format: " + suffix);
+    }
+    return result;
+}
+private String getFileSuffix(final String path) {
+    String result = null;
+    if (path != null) {
+        result = "";
+        if (path.lastIndexOf('.') != -1) {
+            result = path.substring(path.lastIndexOf('.'));
+            if (result.charAt(0) == '.') {
+                result = result.substring(1);
+            }
+        }
+    }
+    return result;
+}
+%>
+
 <%
-	String encType = "utf-8"; 
 	/*
 	if(detectXSSEx(request.getParameter("licenseCheck")) != null){
 		if(detectXSSEx(request.getParameter("licenseCheck")).toLowerCase().equalsIgnoreCase("true")){
@@ -75,12 +109,9 @@
 		
 	String imageTemp = "";
 	String scriptValue = "";
-	String fileRealPath = "";
 	String saveFolder = "";
 	String returnParam ="";
-	String scriptTag = "";
 	String ContextPath = request.getContextPath();
-	String ServerName = request.getServerName();
 	
 	ServletContext context = getServletConfig().getServletContext();
 
@@ -147,7 +178,7 @@
 		imageUPath = imageUPath + "/";
 
 	if (imagePhysicalPath.equalsIgnoreCase("")) {
-		String DompaserValue = Dompaser(imageUPath);
+		String DompaserValue = dompaser(imageUPath);
 		if (DompaserValue.equalsIgnoreCase("")) {
 			imagePhysicalPath = context.getRealPath(imageUPath);
 
@@ -189,8 +220,13 @@
 
 	String imagePhysicalPathsubFolder = imagePhysicalPath;
 	File SaveSubFolder = new File(imagePhysicalPathsubFolder + "upload");
-	if(!SaveSubFolder.exists())
+	if(!SaveSubFolder.exists()){
+		SaveSubFolder.setExecutable(false, true);
+		SaveSubFolder.setReadable(true);
+		SaveSubFolder.setWritable(false, true);
+
 		SaveSubFolder.mkdir();
+	}
 	imagePhysicalPathsubFolder += "upload" + File.separator;
 	File DeleteTempFolder = null;
 	
@@ -251,6 +287,8 @@
 			String filename = "";
 			String type = "";
 
+			String imageSize = "";
+
 			//while(iter.hasNext()){
 			//	FileItem fileItem = (FileItem) iter.next();    
 			for(int i=0; items.size()>i; i++){
@@ -293,6 +331,7 @@
 													
 				} else {  
 					if(fileItem.getSize()>0) { 
+						imageSize = Long.toString(fileItem.getSize());
 						if(fileItem.getSize() > maxSize){
 							scriptValue = executeScript(response, "invalid_size", Integer.toString(maxSize), useExternalServer, imageDomain, imageEditorFlag, checkPlugin);
 		
@@ -311,7 +350,7 @@
 							   return;
 							}
 							*/
-							if (filename.indexOf(".jsp") != -1 || filename.indexOf(".jspx") != -1 || filename.indexOf(".js") != -1 || filename.indexOf(".html") != -1 || filename.indexOf(".htm") != -1) {
+							if (filename.toLowerCase().indexOf(".jsp") != -1 || filename.toLowerCase().indexOf(".jspx") != -1 || filename.toLowerCase().indexOf(".js") != -1 || filename.toLowerCase().indexOf(".html") != -1 || filename.toLowerCase().indexOf(".htm") != -1) {
 							   //scriptValue = executeScript(response, "invalid_image", "prohibited extensions", useExternalServer, imageDomain, imageEditorFlag, checkPlugin);
 								scriptValue = executeScript(response, "UploadFileExtBlock", "", useExternalServer, imageDomain, imageEditorFlag, checkPlugin);
 								if(scriptValue != null){
@@ -337,7 +376,7 @@
 							fileItem.delete(); 
 							DeleteTempFolder = uploadedFile;
 						}catch(IOException ex) {
-							System.out.println("An internal exception occured!");
+							//System.out.println("An internal exception occured!");
 						} 
 					}
 				}
@@ -371,7 +410,6 @@
 			}
 			String realFileName = fileTempName.replace(' ', '_');
 			String fileCheck =filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();	
-			String typeCheck = type.substring(0,type.indexOf("/")); 
 			
 			if (!isImageValid(imageKind, fileCheck)) {
 				if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase(""))
@@ -388,15 +426,17 @@
 			* 2016.03.23 [4.0] hylee
 			* image check
 			*/	
-			/*
-			 2016.11.09 update by nkpark (문제가 있어서 일시적으로 주석처리 추후 다시 살펴봐야함)
-			if("image".equalsIgnoreCase(imageKind)) {
+			
+			//2016.11.09 update by nkpark (문제가 있어서 일시적으로 주석처리 추후 다시 살펴봐야함)
+			//2018-08-07 [CROSS4-799][롯데백화점] 실제 이미지 파일인지 체크하는 로직
+			if("image".equalsIgnoreCase(imageKind) || "backgroundimage".equalsIgnoreCase(imageKind)) {
 				int oriWidthCheck = 0, oriHeightCheck = 0;
-				Image imgCheck = new ImageIcon(imagePhysicalPathsubFolder + filename).getImage();
-				oriWidthCheck = imgCheck.getWidth(null);
-				oriHeightCheck = imgCheck.getHeight(null);
+				//Image imgCheck = new ImageIcon(imagePhysicalPathsubFolder + filename).getImage();
+				//oriWidthCheck = imgCheck.getWidth(null);
+				//oriHeightCheck = imgCheck.getHeight(null);
+				Dimension ds = getImageDim(imagePhysicalPathsubFolder + filename);
 				
-				if (oriWidthCheck < 0 || oriHeightCheck < 0) {
+				if (ds == null) {
 					if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase(""))
 						tempFolderDelete(tempFileFolder);
 
@@ -404,20 +444,33 @@
 					response.getWriter().println(scriptValue);
 					return;
 				}
-			} */
+
+				oriWidthCheck = ds.width;
+				oriHeightCheck = ds.height;
+			} 
 			/* end */
 			
 			if(uploadFileSubDir.equalsIgnoreCase("false")) { 
 				if(imageUPath.equalsIgnoreCase("")) {
 					File imageSaveSubFolder = new File(imagePhysicalPath + imageKindSubFolder);
-					if(!imageSaveSubFolder.exists())
+					if(!imageSaveSubFolder.exists()){
+						imageSaveSubFolder.setExecutable(false, true);
+						imageSaveSubFolder.setReadable(true);
+						imageSaveSubFolder.setWritable(false, true);
+
 						imageSaveSubFolder.mkdir();
+					}
 					imagePhysicalPath += imageKindSubFolder + File.separator;
 				}
 			} else {
 				File imageSaveSubFolder = new File(imagePhysicalPath + imageKindSubFolder);
-				if(!imageSaveSubFolder.exists())
+				if(!imageSaveSubFolder.exists()){
+					imageSaveSubFolder.setExecutable(false, true);
+					imageSaveSubFolder.setReadable(true);
+					imageSaveSubFolder.setWritable(false, true);
+
 					imageSaveSubFolder.mkdir();
+				}
 				imagePhysicalPath += imageKindSubFolder + File.separator;
 
 				saveFolder = getChildDirectory(imagePhysicalPath, imageMaxCount); 
@@ -456,12 +509,17 @@
 				if (imageUNameType.equalsIgnoreCase("real")) {
 					String enFileName = filenamecheck.substring(0, filenamecheck.lastIndexOf("."));
 					String enFileExt = filenamecheck.substring(filenamecheck.lastIndexOf("."));
-					sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
-					byte[] keyByte = enFileName.getBytes("utf-8");
-					imgLinkParams = URLEncoder.encode(urlFilePath + encoder.encode(keyByte).replaceAll("/", "==NamOSeSlaSH==") + enFileExt + "|" + imageUNameType);
+					//sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
+					//byte[] keyByte = enFileName.getBytes("utf-8");
+					//라이브러리 추가 요함 -> https://commons.apache.org/proper/commons-codec/download_codec.cgi
+					//imgLinkParams = java.net.URLEncoder.encode(urlFilePath + encoder.encode(keyByte).replaceAll("/", "==NamOSeSlaSH==") + enFileExt + "|" + imageUNameType);
+					byte[] encoded2 = Base64.encodeBase64(enFileName.getBytes());
+					enFileName = new String(encoded2);
+
+					imgLinkParams = java.net.URLEncoder.encode(urlFilePath + enFileName.replaceAll("/", "==NamOSeSlaSH==") + enFileExt + "|" + imageUNameType);
 					urlFilePath = imgLinkPathRename + imgLinkParams;
 				} else {
-					imgLinkParams = URLEncoder.encode(urlFilePath + filenamecheck + "|" + imageUNameType);
+					imgLinkParams = java.net.URLEncoder.encode(urlFilePath + filenamecheck + "|" + imageUNameType);
 					urlFilePath = imgLinkPathRename + imgLinkParams;
 				}
 			} else {
@@ -521,6 +579,9 @@
 			if (editorFrame == null)
 				editorFrame ="";
 
+			if (imageSize == null)
+				imageSize ="";
+
 
 			returnParam = "{";
 			//returnParam += "\"imageURL\":\"" + urlFilePath.replaceAll("'", "\\\\\"") + "\",";
@@ -531,6 +592,7 @@
 			returnParam += "\"imageWidthUnit\":\"" + imageWidthUnit + "\",";
 			returnParam += "\"imageHeight\":\"" + imageHeight + "\",";
 			returnParam += "\"imageHeightUnit\":\"" + imageHeightUnit + "\",";
+			returnParam += "\"imageSize\":\"" + imageSize + "\",";
 			
 			/*
 			* 2013.03.28 [3.0] mwHong
@@ -558,12 +620,11 @@
 				int oriHeight = 0;
 				try {
 					//2012.06.05 [2.0.4.16->2.0.4.17] nkpark heap memory
-					File oriObj = new File(imagePhysicalPathsubFolder + filename);
 					Image img = new ImageIcon(imagePhysicalPathsubFolder + filename).getImage();
 					oriWidth = img.getWidth(null);
 					oriHeight = img.getHeight(null);
 				} catch(RuntimeException e) {
-					System.out.println("An internal exception occured!");
+					//System.out.println("An internal exception occured!");
 				}
 				
 				returnParam += "\"imageOrgWidth\":\"" + oriWidth + "\",";

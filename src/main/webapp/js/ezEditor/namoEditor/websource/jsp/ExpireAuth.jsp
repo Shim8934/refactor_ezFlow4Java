@@ -15,7 +15,7 @@
 <%@include file="SecurityTool.jsp"%>
 <%@include file="expireInfo.jsp"%>
 <%!
-	static public String getEncMD5(String str) throws Exception {
+	static public String getEncMD5(String str) {
 	   String MD5 = ""; 
 		try{
 			MessageDigest md = MessageDigest.getInstance("MD5"); 
@@ -28,7 +28,7 @@
 			MD5 = sb.toString();
 			
 		}catch(NoSuchAlgorithmException e){
-			e.printStackTrace(); 
+			//e.printStackTrace(); 
 			MD5 = null; 
 		}
 		return MD5;
