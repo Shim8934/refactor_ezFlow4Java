@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="${util.addVer('/css/style.css')}" />
 		<link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" />
+		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<style>
 			.node_selected
 			{
@@ -29,11 +30,18 @@
 			}
 			
 			.node_div {height:30px;}
+			
+			#mCSB_1_container {
+				margin-right: 0px;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/organtreeview.htc.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/ResTreeInfo_cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
+		
 		<script type="text/javascript" id="clientEventHandlersJS" >
 		    var brdId		= "${brdID}";			
     		var Brd_Nm		= "<c:out value='${brdNm}' />";			
@@ -51,11 +59,11 @@
     		}
 
 		    window.onresize = function () {
-        		document.getElementById("TreeView").style.height = document.documentElement.clientHeight - 125 + "px";
+//         		document.getElementById("TreeView").style.height = document.documentElement.clientHeight - 125 + "px";
     		}
 
     		window.onload = function () {
-        		document.getElementById("TreeView").style.height = document.documentElement.clientHeight - 125 + "px";
+//         		document.getElementById("TreeView").style.height = document.documentElement.clientHeight - 125 + "px";
         		var TreeView = new organtreeview('TreeView', 'TreeView');
         		TreeView.attachEvent('requestdata', TreeView_onNodeExpanded);
         		TreeView.attachEvent('nodeselect', TreeView_onNodeClick);
@@ -71,6 +79,11 @@
             		TreeView.update();
         		}
         		TreeLoad();
+        		
+        		leftResize();
+		        $(".resourceListBox").mCustomScrollbar({
+	        		theme : "dark"
+	        	});	
     		}
 
     		function locationInfo(pBrdNm) {
@@ -167,6 +180,14 @@
 		            try { Schedule_Add_ck.focus(); } catch (e) {}
 		        }
 		    }
+		    
+		    function leftResize(){
+	        	$(".resourceListBox").height(window.innerHeight-105);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+        	});
 	</script>
 	</head>
 	<body class="newLeft">
@@ -179,60 +200,62 @@
 	        <div class="btn_writeBox">
 	        	<p class="btn_write01" onclick='resourceWrite()'><span class="sub_iconLNB tree_write"></span><spring:message code="main.t00034" /></p>
 	        </div>
-	        <ul class="lnbUL">
-	        	<div class="tree" id="TreeView"></div>
-	        	<!-- <div class="tree">
-	            	<span>
-	                	<span>
-	                    	<span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_minus"></span><span class="sub_iconLNB tree_folder"></span><span class="h2_text">회의실</span>
-	                            </div>
-	                    	</span>
-	                        <span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_resource_standard"></span><span class="h2_text">3층대회의실</span>
-	                            </div>
-	                    	</span>
-	                        <span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_resource_standard"></span><span class="h2_text">3층소회의실</span>
-	                            </div>
-	                    	</span>
-	                        <span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_resource_standard"></span><span class="h2_text">5층대회의실</span>
-	                            </div>
-	                    	</span>
-	                        <span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_resource_standard"></span><span class="h2_text">5층소회의실</span>
-	                            </div>
-	                    	</span>
-	                        <span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_minus"></span><span class="sub_iconLNB tree_folder"></span><span class="h2_text">공용차량</span>
-	                            </div>
-	                    	</span>
-	                        <span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_resource_ok"></span><span class="h2_text">공용차량(13하1330)</span>
-	                            </div>
-	                    	</span>
-	                        <span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_minus"></span><span class="sub_iconLNB tree_folder"></span><span class="h2_text">빔프로젝트</span>
-	                            </div>
-	                    	</span>
-	                        <span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_resource_no"></span><span class="h2_text">빔프로젝트01</span>
-	                            </div>
-	                    	</span>
-	                    </span>        
-	                </span>
-	            </div> -->
-	        </ul>
+	        <div class="resourceListBox" style="overflow:hidden; padding-right: 0;">
+		        <ul class="lnbUL">
+		        	<div class="tree" id="TreeView" style="overflow-y: hidden; height: 100%;"></div>
+		        	<!-- <div class="tree">
+		            	<span>
+		                	<span>
+		                    	<span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_minus"></span><span class="sub_iconLNB tree_folder"></span><span class="h2_text">회의실</span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_resource_standard"></span><span class="h2_text">3층대회의실</span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_resource_standard"></span><span class="h2_text">3층소회의실</span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_resource_standard"></span><span class="h2_text">5층대회의실</span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_resource_standard"></span><span class="h2_text">5층소회의실</span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_minus"></span><span class="sub_iconLNB tree_folder"></span><span class="h2_text">공용차량</span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_resource_ok"></span><span class="h2_text">공용차량(13하1330)</span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_minus"></span><span class="sub_iconLNB tree_folder"></span><span class="h2_text">빔프로젝트</span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_resource_no"></span><span class="h2_text">빔프로젝트01</span>
+		                            </div>
+		                    	</span>
+		                    </span>        
+		                </span>
+		            </div> -->
+		        </ul>
+	        </div>
 	    </div>
 		<%-- <div id="left">
 	        <div class="left_resource" title="<spring:message code="main.t28" />"><span><spring:message code="main.t28" /></span></div>

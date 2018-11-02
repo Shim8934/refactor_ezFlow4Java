@@ -6,6 +6,7 @@
 	<head>
 	    <title>left_mail</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -15,6 +16,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 	    <!-- 재은 수정 -->
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
 	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
@@ -71,6 +73,9 @@
 	            Function_Flag(funcCode);
 	            //LoadAddressTree(true);
 	            previewSubTreeCall();
+	            $(".mailListBox").mCustomScrollbar({
+	        		theme : "dark"
+	        	});	
 	        }
 	        
 	        /**
@@ -1042,6 +1047,9 @@
 				font-family: Malgun gothic;
 				font-size: 14px;
 			}
+			#mCSB_1_container {
+				margin-right: 0px;
+			}
 		</style>
 	</head>
 	<body class="newLeft">
@@ -1056,7 +1064,9 @@
 	        	<p class="btn_write01" onclick="write_Letter()"><span class="sub_iconLNB tree_write"></span><spring:message code="ezEmail.t99000013" /></p>
 	        </div>
 	        <ul class="lnbUL">
-	        	<div class="tree" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
+	        	<div class="mailListBox tree" id="PostTreeView" style="overflow:hidden; padding-right: 0; height: 184px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();">
+			    </div>
+<!-- 	        	<div class="tree" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div> -->
 	        </ul>
 	        <ul class="lnbUL">
 	        	<div class="tree">

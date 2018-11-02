@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="${util.addVer('/css/email_tree.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />		
 	    <link rel="stylesheet" href="${util.addVer('/css/ezSchedule/Calendar_cross.css')}" type="text/css" />
+	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	    <style>
 			/* Hide the browser's default checkbox */
 			.IDcontainer input {
@@ -82,6 +83,9 @@
 				width: 150px;
 				margin-left:7px;
 			}
+			#mCSB_1_container {
+				margin-right: 0px;
+			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
@@ -93,6 +97,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarView_Cross.js')}"></script>  
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarDataPro_Cross.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 	    
 	    <script type="text/javascript">
 	    	var UserOffset = "${userOffset}";
@@ -259,6 +264,7 @@
 	
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
+	        	leftResize();
 	            if (pStartday == 1) {
 	                DefaultView = 1;
 	            } else {
@@ -323,6 +329,9 @@
 	                    document.getElementById('Schedule_Config').click();	                    
 	                }
 	            }
+	            $(".scheduleListBox").mCustomScrollbar({
+	        		theme : "dark"
+	        	});	
 	        }
 	        
 		    function Function_Flag(v_data, subfolder) {
@@ -390,6 +399,14 @@
 	            
 				window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "", "height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
+	        
+	        function leftResize(){
+	        	$(".scheduleListBox").height(window.innerHeight-105);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+        	});
 		</script>
 	</head>
 
@@ -405,88 +422,90 @@
 	        <div class="btn_writeBox" onclick="WriteSchedule()">
 	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span><spring:message code='ezSchedule.t214'/></p>
 	        </div>
-	        <ul class="lnbUL">
-	        	<div class="tree">
-		    		<!-- 2018-07-11 구해안 left 체크박스 label에 title 삽입 -->
-		    		<label class="IDcontainer" onchange="chk_all()">
-		    			<span class="h2_text"><spring:message code='ezSchedule.t220'/></span>
-						<input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse" style="left:0px">
-				  		<span class="checkmark" style="background:rgb(125, 125, 125);"></span>
-					</label>
-					<span class="sub_iconLNB tree_manage" style="position:absolute;top:112px;right:11px" onClick="Function_Flag(5)"></span>
-					<label class="IDcontainer" onchange="chk_DisplayChange()">
-						<span class="h2_text"><spring:message code='ezSchedule.t221'/></span>
-				  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${loginVO.id}" class="checkSelect">
-				  		<span class="checkmark" style="background:rgb(1, 138, 249);"></span>
-					</label>
-					<c:if test='${!empty scheSec}'>
-						<c:forEach var="sec" items="${scheSec}">
-							<label class="IDcontainer" onchange="chk_DisplayChange()">
-								<span class="h2_text" title="${sec.secName }"><spring:message code='ezSchedule.t372'/>${sec.secName }</span>
-						 	 	<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${sec.secId }" class="checkSelect">
-							  	<span class="checkmark" style="background-color:rgb(1, 138, 249);"></span>
-							</label>
-						</c:forEach>
-					</c:if>
-					<label class="IDcontainer" onchange="chk_DisplayChange()">
-						<span class="h2_text"><spring:message code='ezSchedule.t222'/></span>
-						<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${loginVO.deptID}" class="checkSelect">
-					  	<span class="checkmark" style="background:rgb(1, 179, 63);"></span>
-					</label>				
-					<c:if test='${!empty scheDept}'>
-						<c:forEach var="dep" items="${scheDept}">
-							<label class="IDcontainer" onchange="chk_DisplayChange()">
-								<span class="h2_text" title="${dep.deptName }"><spring:message code='ezSchedule.t373'/>${dep.deptName }</span>
-						  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${dep.deptId }" class="checkSelect">
-						  		<span class="checkmark" style="background-color:rgb(1, 179, 63);"></span>
-							</label>
-						</c:forEach>
-					</c:if>
-					<c:if test='${!empty scheCum}'>
-						<c:forEach var="cum" items="${scheCum}">
-							<c:if test="${cum.deptId ne loginVO.deptID}">
+        	<div class="scheduleListBox" style="overflow:hidden; padding-right: 0;">
+		        <ul class="lnbUL">
+		        	<div class="tree" style="overflow:hidden;">
+			    		<!-- 2018-07-11 구해안 left 체크박스 label에 title 삽입 -->
+			    		<label class="IDcontainer" onchange="chk_all()">
+			    			<span class="h2_text"><spring:message code='ezSchedule.t220'/></span>
+							<input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse" style="left:0px">
+					  		<span class="checkmark" style="background:rgb(125, 125, 125);"></span>
+						</label>
+						<span class="sub_iconLNB tree_manage" style="position:absolute;top:112px;right:11px" onClick="Function_Flag(5)"></span>
+						<label class="IDcontainer" onchange="chk_DisplayChange()">
+							<span class="h2_text"><spring:message code='ezSchedule.t221'/></span>
+					  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${loginVO.id}" class="checkSelect">
+					  		<span class="checkmark" style="background:rgb(1, 138, 249);"></span>
+						</label>
+						<c:if test='${!empty scheSec}'>
+							<c:forEach var="sec" items="${scheSec}">
 								<label class="IDcontainer" onchange="chk_DisplayChange()">
-									<span class="h2_text" title="${cum.titleName }"><spring:message code='ezSchedule.t373'/>${cum.titleName }</span>
-									<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
-								  	<span class="checkmark" style="background-color:rgb(1, 179, 63);"></span>
+									<span class="h2_text" title="${sec.secName }"><spring:message code='ezSchedule.t372'/>${sec.secName }</span>
+							 	 	<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${sec.secId }" class="checkSelect">
+								  	<span class="checkmark" style="background-color:rgb(1, 138, 249);"></span>
 								</label>
-							</c:if>
-						</c:forEach>
-					</c:if>
-					<label class="IDcontainer" onchange="chk_DisplayChange()">
-						<span class="h2_text"><spring:message code='ezSchedule.t223'/></span>
-				  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="3" value="${loginVO.companyID}" class="checkSelect">
-				  		<span class="checkmark" style="background:rgb(254, 28, 113);"></span>
-					</label>
-					<c:if test='${!empty groupList}'>
-						<c:forEach var="group" items="${groupList}">
-							<label class="IDcontainer" onchange="chk_DisplayChange()">
-								<span class="h2_text" title="${group.groupName }"><spring:message code='ezSchedule.t375'/>${group.groupName }</span>
-						  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="7" value="${group.groupId }" class="checkSelect">
-						  		<span class="checkmark" style="background-color:#e9de13;"></span>
-							</label>
-						</c:forEach>
-					</c:if>
-		    	</div>
-	        </ul>
-	        <ul class="lnbUL">
-	        	<div class="tree">
-	            	<span>
-	                	<span>
-	                    	<span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span>
-	                            </div>
-	                    	</span>
-	                        <span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_pims_search_open"></span><span class="h2_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span>
-	                            </div>
-	                    	</span>
-	                    </span>        
-	                </span>
-	            </div>
-	        </ul>
+							</c:forEach>
+						</c:if>
+						<label class="IDcontainer" onchange="chk_DisplayChange()">
+							<span class="h2_text"><spring:message code='ezSchedule.t222'/></span>
+							<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${loginVO.deptID}" class="checkSelect">
+						  	<span class="checkmark" style="background:rgb(1, 179, 63);"></span>
+						</label>				
+						<c:if test='${!empty scheDept}'>
+							<c:forEach var="dep" items="${scheDept}">
+								<label class="IDcontainer" onchange="chk_DisplayChange()">
+									<span class="h2_text" title="${dep.deptName }"><spring:message code='ezSchedule.t373'/>${dep.deptName }</span>
+							  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${dep.deptId }" class="checkSelect">
+							  		<span class="checkmark" style="background-color:rgb(1, 179, 63);"></span>
+								</label>
+							</c:forEach>
+						</c:if>
+						<c:if test='${!empty scheCum}'>
+							<c:forEach var="cum" items="${scheCum}">
+								<c:if test="${cum.deptId ne loginVO.deptID}">
+									<label class="IDcontainer" onchange="chk_DisplayChange()">
+										<span class="h2_text" title="${cum.titleName }"><spring:message code='ezSchedule.t373'/>${cum.titleName }</span>
+										<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
+									  	<span class="checkmark" style="background-color:rgb(1, 179, 63);"></span>
+									</label>
+								</c:if>
+							</c:forEach>
+						</c:if>
+						<label class="IDcontainer" onchange="chk_DisplayChange()">
+							<span class="h2_text"><spring:message code='ezSchedule.t223'/></span>
+					  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="3" value="${loginVO.companyID}" class="checkSelect">
+					  		<span class="checkmark" style="background:rgb(254, 28, 113);"></span>
+						</label>
+						<c:if test='${!empty groupList}'>
+							<c:forEach var="group" items="${groupList}">
+								<label class="IDcontainer" onchange="chk_DisplayChange()">
+									<span class="h2_text" title="${group.groupName }"><spring:message code='ezSchedule.t375'/>${group.groupName }</span>
+							  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="7" value="${group.groupId }" class="checkSelect">
+							  		<span class="checkmark" style="background-color:#e9de13;"></span>
+								</label>
+							</c:forEach>
+						</c:if>
+			    	</div>
+		        </ul>
+		        <ul class="lnbUL">
+		        	<div class="tree" style="overflow:hidden;">
+		            	<span>
+		                	<span>
+		                    	<span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_pims_search_open"></span><span class="h2_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span>
+		                            </div>
+		                    	</span>
+		                    </span>        
+		                </span>
+		            </div>
+		        </ul>
+	        </div>
 	    </div>
 	    
 	    <%-- 2018-10-18 장진혁 / 기존 schedule left 백업 --%>

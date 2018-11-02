@@ -7,6 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	   	<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	    <style>
 	    	.groupBoard {
 				width:158px;
@@ -16,11 +17,16 @@
 			#FromTreeView {
 				height: 100%;
 			}
+			#mCSB_1_container {
+				margin-right: 0px;
+			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
+	    
 		<script type="text/javascript" >
 	        var SSUserID = "${userInfo.id}";
 	        var SSUserName = "${userInfo.name}";
@@ -126,6 +132,10 @@
 		                favoriteList();
 		            }
 		        }
+		        leftResize();
+		        $(".boardListBox").mCustomScrollbar({
+	        		theme : "dark"
+	        	});	
 		    };
 		    function BoardRedirect() {
 		        var spans = document.getElementById("TopBoardsList").getElementsByTagName("div");
@@ -840,6 +850,14 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 		    
+		    function leftResize(){
+	        	$(".boardListBox").height(window.innerHeight-105);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+        	});
+		    
 	 
 	    </script>
 	</head>
@@ -854,126 +872,128 @@
 	        <div class="btn_writeBox">
 	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span>게시글 등록</p>
 	        </div>
-	        <div class="lnb_lay">
-		        <h2 onclick="favoriteList()">
-		        	<span>
-		            	<span class="sub_iconLNB tree_board_star"></span><span class="h2Title"><spring:message code="ezBoard.t00010" /></span>
-		            </span>
-		        </h2>
-		        <c:if test="${MyBoardTopFlag == 'NO'}">
-			        <h2 class="off" id="myBoardList">
+	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
+		        <div class="lnb_lay">
+			        <h2 onclick="favoriteList()">
 			        	<span>
-			            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="ShowMyBoardItem()"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
-			            </span>
-			        </h2>	        
-			        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul">
-			        	<div class="tree" id='TreeCtrl_MyBoardTree'></div>
-			        </ul>
-		        </c:if>
-		        <div id='TopBoardsList'>
-		        	<script type="text/javascript">
-		        		parser = new DOMParser();
-	        		    xmlDoc = parser.parseFromString("${resultXML}","text/xml");
-	        			var i = 0;
-	        			$(xmlDoc).find("NODE").each(function(){
-	       			        document.write("<h2 class='off'>");
-	       			     	document.write("<span>");
-	       			     	document.write("<span class='sub_iconLNB tree_arrow_up'></span>");
-	       			     	document.write("<span id='TreeCtr" + i + "' class='h2Title' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
-	               					+ "\")'>" + $(this).find("DATA2").text() + "</span>");
-	       			     	document.write("</span>");
-	           				/* document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
-	           					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); */ 
-	           				document.write("</h2>\n");
-	           				document.write("<ul class='lnbUL off'>\n");
-	           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj'></div>\n");
-	           				document.write("</ul>\n");
-	           				i++;
-	        			});
-		        	</script>
-		        </div>
-		        <c:if test="${MyBoardTopFlag != 'NO'}">
-		        	<h2 class="off" id="myBoardList">
-			        	<span>
-			            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="ShowMyBoardItem(this)"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
+			            	<span class="sub_iconLNB tree_board_star"></span><span class="h2Title"><spring:message code="ezBoard.t00010" /></span>
 			            </span>
 			        </h2>
-			        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul" style="overflow:hidden">
-			        	<div class="tree" id='TreeCtrl_MyBoardTree'></div>
-			        	<div class="tree">
+			        <c:if test="${MyBoardTopFlag == 'NO'}">
+				        <h2 class="off" id="myBoardList">
 				        	<span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_my"></span><span class="h2_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span>
-	                            </div>
-	                    	</span>
-	                    	<span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_my"></span><span class="h2_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span>
-	                            </div>
-	                    	</span>
-	                    	<span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_my"></span><span class="h2_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span>
-	                            </div>
-	                    	</span>
-	                    </div>	
-			        </ul>
-			    </c:if>
-		        <ul class="lnbUL">
-		        	<div class="tree">
-		            	<span>
-		                	<span>
-		                		<c:if test="${useQuestion == 'YES'}">
-			                    	<span>
-			                        	<div class="node_div">
-			                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_qst"></span><span class="h2_text" onclick="Open_Func(1)"><spring:message code="ezBoard.t365" /></span>
-			                            </div>
-			                    	</span>
-		                    	</c:if>
-		                        <span class="pollDiv" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};">
+				            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="ShowMyBoardItem()"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
+				            </span>
+				        </h2>	        
+				        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul">
+				        	<div class="tree" id='TreeCtrl_MyBoardTree'></div>
+				        </ul>
+			        </c:if>
+			        <div id='TopBoardsList'>
+			        	<script type="text/javascript">
+			        		parser = new DOMParser();
+		        		    xmlDoc = parser.parseFromString("${resultXML}","text/xml");
+		        			var i = 0;
+		        			$(xmlDoc).find("NODE").each(function(){
+		       			        document.write("<h2 class='off'>");
+		       			     	document.write("<span>");
+		       			     	document.write("<span class='sub_iconLNB tree_arrow_up'></span>");
+		       			     	document.write("<span id='TreeCtr" + i + "' class='h2Title' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
+		               					+ "\")'>" + $(this).find("DATA2").text() + "</span>");
+		       			     	document.write("</span>");
+		           				/* document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
+		           					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); */ 
+		           				document.write("</h2>\n");
+		           				document.write("<ul class='lnbUL off'>\n");
+		           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj'></div>\n");
+		           				document.write("</ul>\n");
+		           				i++;
+		        			});
+			        	</script>
+			        </div>
+			        <c:if test="${MyBoardTopFlag != 'NO'}">
+			        	<h2 class="off" id="myBoardList">
+				        	<span>
+				            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="ShowMyBoardItem(this)"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
+				            </span>
+				        </h2>
+				        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul" style="overflow:hidden">
+				        	<div class="tree" id='TreeCtrl_MyBoardTree'></div>
+				        	<div class="tree">
+					        	<span>
 		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_poll"></span><span class="h2_text" onclick="Poll_Open(1)"><spring:message code="ezBoard.t371" /></span>
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_my"></span><span class="h2_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span>
 		                            </div>
 		                    	</span>
-		                    	<c:if test="${ladderFlag == 'YES'}">
-			                        <span class="ladder">
-			                        	<div class="node_div">
-			                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_ladder"></span><span class="h2_text" onclick="ladder_Func(1)"><spring:message code="ezBoard.l001" /></span>
-			                            </div>
-			                    	</span>
-			                    </c:if>	
-			                    <c:if test="${memoFlag == 'YES'}">
-			                        <span class="memo">
-			                        	<div class="node_div">
-			                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_memo"></span><span class="h2_text" onclick="memo_Func(1)"><spring:message code="ezMemo.t001" /></span>
-			                            </div>
-			                    	</span>
-		                    	</c:if>
-		                    </span>        
-		                </span>
-		            </div>
-		        </ul>
-		        <ul class="lnbUL">
-		        	<div class="tree">
-		            	<span>
-		                	<span>
 		                    	<span>
 		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span>
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_my"></span><span class="h2_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span>
 		                            </div>
 		                    	</span>
-		                    	<c:if test="${applyFlag == 'OK'}">
-		                    		<span>
+		                    	<span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_my"></span><span class="h2_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span>
+		                            </div>
+		                    	</span>
+		                    </div>	
+				        </ul>
+				    </c:if>
+			        <ul class="lnbUL">
+			        	<div class="tree">
+			            	<span>
+			                	<span>
+			                		<c:if test="${useQuestion == 'YES'}">
+				                    	<span>
+				                        	<div class="node_div">
+				                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_qst"></span><span class="h2_text" onclick="Open_Func(1)"><spring:message code="ezBoard.t365" /></span>
+				                            </div>
+				                    	</span>
+			                    	</c:if>
+			                        <span class="pollDiv" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};">
 			                        	<div class="node_div">
-			                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onclick="Apprboard()"><spring:message code="ezBoard.t999001" /><span id="applyCount">${applyCount}</span></span>
+			                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_poll"></span><span class="h2_text" onclick="Poll_Open(1)"><spring:message code="ezBoard.t371" /></span>
 			                            </div>
 			                    	</span>
-		                    	</c:if>
-		                    </span>        
-		                </span>
-		            </div>
-		        </ul>
-			</div>		        
+			                    	<c:if test="${ladderFlag == 'YES'}">
+				                        <span class="ladder">
+				                        	<div class="node_div">
+				                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_ladder"></span><span class="h2_text" onclick="ladder_Func(1)"><spring:message code="ezBoard.l001" /></span>
+				                            </div>
+				                    	</span>
+				                    </c:if>	
+				                    <c:if test="${memoFlag == 'YES'}">
+				                        <span class="memo">
+				                        	<div class="node_div">
+				                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_memo"></span><span class="h2_text" onclick="memo_Func(1)"><spring:message code="ezMemo.t001" /></span>
+				                            </div>
+				                    	</span>
+			                    	</c:if>
+			                    </span>        
+			                </span>
+			            </div>
+			        </ul>
+			        <ul class="lnbUL">
+			        	<div class="tree">
+			            	<span>
+			                	<span>
+			                    	<span>
+			                        	<div class="node_div">
+			                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span>
+			                            </div>
+			                    	</span>
+			                    	<c:if test="${applyFlag == 'OK'}">
+			                    		<span>
+				                        	<div class="node_div">
+				                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onclick="Apprboard()"><spring:message code="ezBoard.t999001" /><span id="applyCount">${applyCount}</span></span>
+				                            </div>
+				                    	</span>
+			                    	</c:if>
+			                    </span>        
+			                </span>
+			            </div>
+			        </ul>
+				</div>	
+			</div>	        
 	    </div>
 	    <%-- <div id="left" style="overflow: auto">
 	        <div class="left_board" title="<spring:message code='ezBoard.t116'/>"><span><spring:message code='ezBoard.t116'/></span></div>

@@ -9,6 +9,7 @@
 		<title>left_community</title>
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<style>
 			.btn_comm {
 				border: 1px solid rgb(208, 208, 208);
@@ -22,12 +23,17 @@
 			    font-weight: bold;
 			    background: linear-gradient(#fff, #f8f8f8);
 			}			
+			#mCSB_1_container {
+				margin-right: 0px;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
+				
 		<script type="text/javascript">
 			var ResultString;
 	        var code = "<c:out value='${code}'/>";
@@ -98,6 +104,10 @@
 	            }
 	            getCommunityList();
 	            //getBoardList();
+	            leftResize();
+		        $(".communityListBox").mCustomScrollbar({
+	        		theme : "dark"
+	        	});	
 	        }
 			
 			function getCommunityList() {
@@ -575,37 +585,47 @@
                  feature = feature + GetOpenPosition(850, 560);
                 window.open("/ezCommunity/commMake.do", "", feature);
             }
+            
+            function leftResize(){
+	        	$(".communityListBox").height(window.innerHeight-105);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+        	});
 		</script>
 	</head>
 	<body class="leftbody" id="body">
 	    <div id="left">
 	        <div class="left_cop" title="<spring:message code='main.t1006' />"><span><spring:message code='main.t1006' /></span></div>
-	        <!-- mylist -->	        
-	        <div style="overflow: auto; overflow-x: hidden; background-color: white; min-height:435px; padding:5px" id="MyCopList">
-	            <!-- list -->
-	            <ul class="list_thumbnail" id="list_thumbnail">
-	            </ul>
-	            <!-- list -->
-	        </div>
-	
-	        <!--/ mylist -->
-	        <!-- notice -->
-	        <h2 class="community_lt" style="display:none">
-	        	<span><img src="/images/kr/left/icon_speaker.gif"></span>
-	            <spring:message code='ezCommunity.t2001' />
-	            <span class="btn_right" onclick="List_more()"><img src="/images/kr/community/btn_cmmore.gif"></span>
-	        </h2>
-	        <div class="divwrap" style="display:none">
-	            <ul class="list_communitynoti" id="list_communitynoti">
-	                <!-- 최대10개 -->
-	            </ul>
-	            <p class="bland_border"></p>
-	        </div>
-	        <!-- /notice -->
-	
-	        <div class="community_banner commMake btn_comm" onclick="make_Cop()">
-	        	<spring:message code="ezCommunity.t1011" />
-	            <%-- <img src="<spring:message code='ezCommunity.i4' />" width="181" height="90"> --%>
+	        <div class="communityListBox" style="overflow:hidden; padding-right: 0;">
+		        <!-- mylist -->	        
+		        <div style="overflow-x: hidden; background-color: white; min-height:435px; padding:5px" id="MyCopList">
+		            <!-- list -->
+		            <ul class="list_thumbnail" id="list_thumbnail">
+		            </ul>
+		            <!-- list -->
+		        </div>
+		
+		        <!--/ mylist -->
+		        <!-- notice -->
+		        <h2 class="community_lt" style="display:none">
+		        	<span><img src="/images/kr/left/icon_speaker.gif"></span>
+		            <spring:message code='ezCommunity.t2001' />
+		            <span class="btn_right" onclick="List_more()"><img src="/images/kr/community/btn_cmmore.gif"></span>
+		        </h2>
+		        <div class="divwrap" style="display:none">
+		            <ul class="list_communitynoti" id="list_communitynoti">
+		                <!-- 최대10개 -->
+		            </ul>
+		            <p class="bland_border"></p>
+		        </div>
+		        <!-- /notice -->
+		
+		        <div class="community_banner commMake btn_comm" onclick="make_Cop()">
+		        	<spring:message code="ezCommunity.t1011" />
+		            <%-- <img src="<spring:message code='ezCommunity.i4' />" width="181" height="90"> --%>
+		        </div>
 	        </div>
     	</div>
 	</body>
