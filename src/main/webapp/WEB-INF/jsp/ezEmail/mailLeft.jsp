@@ -39,14 +39,14 @@
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
-	            if (document.documentElement.clientHeight > 900) {
-	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";
-	                /* document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px"; */
-	            }
-	            else {
-	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.33) + "px";
-	                /* document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.38 + "px"; */
-	            }
+// 	            if (document.documentElement.clientHeight > 900) {
+// 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";
+// 	                /* document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px"; */
+// 	            }
+// 	            else {
+// 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.33) + "px";
+// 	                /* document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.38 + "px"; */
+// 	            }
 	        }
 	        
 	        window.onload = function () {
@@ -60,22 +60,23 @@
 	                document.body.style.UserSelect = 'none';
 	            }
 	            
-	            if (document.documentElement.clientHeight > 900) {
-	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";
-	                /* document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px"; */
-	            }
-	            else {
-	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.33) + "px";
-	                /* document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.38 + "px"; */
-	            }
+// 	            if (document.documentElement.clientHeight > 900) {
+// 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";
+// 	                /* document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px"; */
+// 	            }
+// 	            else {
+// 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.33) + "px";
+// 	                /* document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.38 + "px"; */
+// 	            }
 	            
 	            document.getElementById("mailexportall").style.display = "none";
 	            Function_Flag(funcCode);
 	            //LoadAddressTree(true);
 	            previewSubTreeCall();
-	            $(".mailListBox").mCustomScrollbar({
+	            leftResize();
+		        $(".taskListBox").mCustomScrollbar({
 	        		theme : "dark"
-	        	});	
+	        	});
 	        }
 	        
 	        /**
@@ -1029,6 +1030,15 @@
 
 		        window.open("/ezEmail/mailWrite.do?cmd=NEW&operatorMailAddress=" + operatorMailAddress, "", feature);
 		    }
+			
+			function leftResize(){
+	        	$(".taskListBox").height(window.innerHeight-135);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+        	});
+	        
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1050,6 +1060,12 @@
 			#mCSB_1_container {
 				margin-right: 0px;
 			}
+			.mCSB_scrollTools {
+				opacity: 0.3;
+				width: 6px;
+				margin-Top: 5px;
+				margin-bottom: 5px;
+			}
 		</style>
 	</head>
 	<body class="newLeft">
@@ -1063,60 +1079,60 @@
 	        	<p class="btn_write02"><span class="sub_iconLNB tree_Mwrite"></span><spring:message code="ezEmail.t99000010" /></p> 
 	        	<p class="btn_write01" onclick="write_Letter()"><span class="sub_iconLNB tree_write"></span><spring:message code="ezEmail.t99000013" /></p>
 	        </div>
-	        <ul class="lnbUL">
-	        	<div class="mailListBox tree" id="PostTreeView" style="overflow:hidden; padding-right: 0; height: 184px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();">
-			    </div>
-<!-- 	        	<div class="tree" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div> -->
-	        </ul>
-	        <ul class="lnbUL">
-	        	<div class="tree">
-	            	<span>
-	                	<span>
-	                    	<span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onclick="Open_Search();"><spring:message code="ezEmail.t641" /></span>
-	                            </div>
-	                    	</span>
-	                    	<c:if test="${useOnlyInnerMail != 'YES'}">
-		                        <span>
+        	<div class="taskListBox" style="overflow:hidden; padding-right: 0;">
+		        <ul class="lnbUL">
+		        	<div class="tree" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
+		        </ul>
+		        <ul class="lnbUL">
+		        	<div class="tree">
+		            	<span>
+		                	<span>
+		                    	<span>
 		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outlook_mail"></span><span class="h2_text" onclick="check_pop3()"><spring:message code="ezEmail.t490" /></span>
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onclick="Open_Search();"><spring:message code="ezEmail.t641" /></span>
 		                            </div>
 		                    	</span>
-	                    	</c:if>
-	                        <span id="mailimport">
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outlook_mail_get"></span><span class="h2_text" onclick="mail_import()"><spring:message code="ezEmail.t99000015" /></span> 
-	                            </div>
-	                    	</span>
-	                    	<span id="mailexportall" style="display: none;">
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outlook_mail_get"></span><span class="h2_text" onclick="mail_exportall()"><spring:message code="ezEmail.t99000014" /></span> 
-	                            </div>
-	                    	</span>
-	                        <span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_reservation"></span><span class="h2_text" onclick="Open_ReservationManage()"><spring:message code="ezEmail.t605" /></span>
-	                            </div>
-	                    	</span>
-	                    	<c:if test="${useBizmekaSpambox == 'YES'}">
-		                    	<span> 
-		                    		<div class="node_div">
-		                    			<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_reservation"></span><span class="h2_text" onclick="openSpamBox()"><spring:message code="ezEmail.ldh01" /></span>
+		                    	<c:if test="${useOnlyInnerMail != 'YES'}">
+			                        <span>
+			                        	<div class="node_div">
+			                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outlook_mail"></span><span class="h2_text" onclick="check_pop3()"><spring:message code="ezEmail.t490" /></span>
+			                            </div>
+			                    	</span>
+		                    	</c:if>
+		                        <span id="mailimport">
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outlook_mail_get"></span><span class="h2_text" onclick="mail_import()"><spring:message code="ezEmail.t99000015" /></span> 
 		                            </div>
-		                        </span>
-			                </c:if>
-			                <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
-				                <span> 
-		                    		<div class="node_div">
-		                    			<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB left_admin_mail"></span><span class="h2_text" onclick="operatorSendMail()"><spring:message code="ezEmail.0hun01" /></span>
+		                    	</span>
+		                    	<span id="mailexportall" style="display: none;">
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outlook_mail_get"></span><span class="h2_text" onclick="mail_exportall()"><spring:message code="ezEmail.t99000014" /></span> 
 		                            </div>
-		                        </span>
-	                        </c:if>
-	                    </span>        
-	                </span>
-	            </div>
-	        </ul>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_reservation"></span><span class="h2_text" onclick="Open_ReservationManage()"><spring:message code="ezEmail.t605" /></span>
+		                            </div>
+		                    	</span>
+		                    	<c:if test="${useBizmekaSpambox == 'YES'}">
+			                    	<span> 
+			                    		<div class="node_div">
+			                    			<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_reservation"></span><span class="h2_text" onclick="openSpamBox()"><spring:message code="ezEmail.ldh01" /></span>
+			                            </div>
+			                        </span>
+				                </c:if>
+				                <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
+					                <span> 
+			                    		<div class="node_div">
+			                    			<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB left_admin_mail"></span><span class="h2_text" onclick="operatorSendMail()"><spring:message code="ezEmail.0hun01" /></span>
+			                            </div>
+			                        </span>
+		                        </c:if>
+		                    </span>        
+		                </span>
+		            </div>
+		        </ul>
+	        </div>
 	        <div class="mail_space">
 	        	<span class="mail_spaceText"><spring:message code="main.t00045" />&nbsp;<span class="userPer" id="usePer"></span></span><span  id="myBar" class="mailBar"></span>
 	        </div>
