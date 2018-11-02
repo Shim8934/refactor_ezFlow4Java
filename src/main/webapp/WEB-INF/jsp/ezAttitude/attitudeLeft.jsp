@@ -12,11 +12,13 @@
 		<link rel="stylesheet" href="${util.addVer('/css/main.css')}" type="text/css"/>	
 		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/clockTemp1.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" />	
+		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<style>
 			.time {
 				float:left;
@@ -65,6 +67,9 @@
 				height:20px;
 				font-family: Malgun Gothic, Meiryo UI;
 			}
+			#mCSB_1_container {
+				margin-right: 0px;
+			}  	
 		</style>
 		
 		<script type="text/javascript">
@@ -90,6 +95,11 @@
 		    select_memorialDays(uselang);
 		    
 		    document.getElementById('userAttitude').onclick();
+		    
+		    leftResize();
+	        $(".attitudeListBox").mCustomScrollbar({
+        		theme : "dark"
+        	});
 		}
 		
 		 function leadingZeros(n, digits) {
@@ -353,6 +363,14 @@
 	    	})
 	    }
     	
+    	function leftResize(){
+        	$(".attitudeListBox").height(window.innerHeight-105);
+        }
+        
+        $( window ).resize(function() {
+        	leftResize();
+    	});
+    	
 		</script>
 	</head>
 	<body class="newLeft">
@@ -366,73 +384,75 @@
 	        	<p class="btn_write02" id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)"><span class="sub_iconLNB workIcon"></span><span class="workT"><spring:message code='ezAttitude.t65'/></span></p> 
 	        	<p class="btn_write01" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><span class="sub_iconLNB workIcon"></span><span class="workT"><spring:message code='ezAttitude.t64'/></span></p>
 	        </div>
-	        <h2 class="on">
-	        	<span>
-	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t1'/></span>
-	            </span>
-	        </h2>
-	        <ul class="lnbUL">
-	        	<div class="tree">
-	            	<span>
-	                	<span>
-	                    	<span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_individual"></span><span class="h2_text" id="userAttitude" onclick="functionFlag(1)"><spring:message code='ezAttitude.t143'/></span>
-	                            </div>
-	                    	</span>
-	                        <span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_department"></span><span class="h2_text" id="deptAttitude" onclick="functionFlag(2)"><spring:message code='ezAttitude.t144'/></span>
-	                            </div>
-	                    	</span>
-	                    </span>        
-	                </span>
-	            </div>
-	        </ul>
-	        <h2 class="on">
-	        	<span>
-	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t7'/></span>
-	            </span>
-	        </h2>
-	        <ul class="lnbUL">
-	        	<div class="tree">
-	            	<span>
-	                	<span>
-	                		<span>
-	                        	<div class="node_div">
-	                        		<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_change"></span><span class="h2_text" onclick="functionFlag(3)"><spring:message code='ezAttitude.t166'/></span>
-	                            </div>
-	                    	</span>
-	                    	<c:if test="${attitudeAdminCheck == true}">
+	        <div class="attitudeListBox" style="overflow:hidden; padding-right: 0;">
+		        <h2 class="on">
+		        	<span>
+		            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t1'/></span>
+		            </span>
+		        </h2>
+		        <ul class="lnbUL">
+		        	<div class="tree">
+		            	<span>
+		                	<span>
 		                    	<span>
 		                        	<div class="node_div">
-		                        		<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_change"></span><span class="h2_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t7'/>
-		                        			<c:if test="${totalAtt != 0 }">
-												<span class="attCount">(${totalAtt})</span>
-											</c:if>
-		                        		</span>
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_individual"></span><span class="h2_text" id="userAttitude" onclick="functionFlag(1)"><spring:message code='ezAttitude.t143'/></span>
 		                            </div>
 		                    	</span>
-		                    </c:if>
-	                    </span>        
-	                </span>
-	            </div>
-	        </ul>
-	        <c:if test="${attitudeAdminCheck == true}">
-	        <ul class="lnbUL">
-	        	<div class="tree">
-	            	<span>
-	                	<span>
-	                		<span>
-	                        	<div class="node_div">
-	                        		<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTimeset"></span><span class="h2_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t73'/></span>
-	                            </div>
-	                    	</span>
-	                    </span>
-	                </span>    	
-				</div>
-			</ul>
-			</c:if>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_department"></span><span class="h2_text" id="deptAttitude" onclick="functionFlag(2)"><spring:message code='ezAttitude.t144'/></span>
+		                            </div>
+		                    	</span>
+		                    </span>        
+		                </span>
+		            </div>
+		        </ul>
+		        <h2 class="on">
+		        	<span>
+		            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t7'/></span>
+		            </span>
+		        </h2>
+		        <ul class="lnbUL">
+		        	<div class="tree">
+		            	<span>
+		                	<span>
+		                		<span>
+		                        	<div class="node_div">
+		                        		<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_change"></span><span class="h2_text" onclick="functionFlag(3)"><spring:message code='ezAttitude.t166'/></span>
+		                            </div>
+		                    	</span>
+		                    	<c:if test="${attitudeAdminCheck == true}">
+			                    	<span>
+			                        	<div class="node_div">
+			                        		<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_change"></span><span class="h2_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t7'/>
+			                        			<c:if test="${totalAtt != 0 }">
+													<span class="attCount">(${totalAtt})</span>
+												</c:if>
+			                        		</span>
+			                            </div>
+			                    	</span>
+			                    </c:if>
+		                    </span>        
+		                </span>
+		            </div>
+		        </ul>
+		        <c:if test="${attitudeAdminCheck == true}">
+		        <ul class="lnbUL">
+		        	<div class="tree">
+		            	<span>
+		                	<span>
+		                		<span>
+		                        	<div class="node_div">
+		                        		<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTimeset"></span><span class="h2_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t73'/></span>
+		                            </div>
+		                    	</span>
+		                    </span>
+		                </span>    	
+					</div>
+				</ul>
+				</c:if>
+			</div>
 	    </div>
 	<%-- <div class="left_pims" title="<spring:message code='ezAttitude.t1'/>"><span><spring:message code='ezAttitude.t1'/></span></div>
 	<div id="left" style="border-top:1px solid #dedede">

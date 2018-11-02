@@ -17,8 +17,15 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
 	    <!-- 재은 수정 -->
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
+	    <style type="text/css">
+	    	#mCSB_1_container {
+				margin-right: 0px;
+			}  	
+	    </style>
 	    <script type="text/javascript">
 	        var pUse_Editor = "${useEditor}";
 	        var subCode = "${subCode}";
@@ -61,6 +68,11 @@
 	            }
 
 	            Address_Menu_Click();
+	            
+	            leftResize();
+		        $(".addressListBox").mCustomScrollbar({
+	        		theme : "dark"
+	        	});
 	        }
 	        
 
@@ -412,6 +424,14 @@
 				var addressTitle = addressNames[0].innerText;
 				return addressTitle;
 			}
+			
+			function leftResize(){
+	        	$(".addressListBox").height(window.innerHeight-105);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+        	});
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -451,42 +471,44 @@
 	        <div class="btn_writeBox" onclick="newAddress()">
 	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span><spring:message code='ezAddress.t236' /></p>
 	        </div>
-	        <ul class="lnbUL">
-	        	<div class="tree" id="AddressTreeView">
-	            	<span>
-	                	<span>
-	                    	<span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_individual"></span><span class="h2_text"><spring:message code='ezAddress.t145' /></span><span class="sub_iconLNB tree_manage" onclick="address_foldermanage()"></span>
-	                            </div>
-	                    	</span>
-	                        <span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_department"></span><span class="h2_text"><spring:message code='ezAddress.t146' /></span>
-	                            </div>
-	                    	</span>
-	                        <span>
-	                        	<div class="node_div">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_company"></span><span class="h2_text"><spring:message code='ezAddress.t147' /></span>
-	                            </div>
-	                    	</span>
-	                    </span>        
-	                </span>
-	            </div>
-	        </ul>
-	        <ul class="lnbUL">
-	        	<div class="tree">
-	            	<span>
-	                	<span>
-	                    	<span>
-	                        	<div class="node_div" onclick="address_Search()">
-	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text"><spring:message code="ezEmail.t99000042" /></span>
-	                            </div>
-	                    	</span>
-	                    </span>        
-	                </span>
-	            </div>
-	        </ul>
+	        <div class="addressListBox" style="overflow:hidden; padding-right: 0;">
+		        <ul class="lnbUL">
+		        	<div class="tree" id="AddressTreeView">
+		            	<span>
+		                	<span>
+		                    	<span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_individual"></span><span class="h2_text"><spring:message code='ezAddress.t145' /></span><span class="sub_iconLNB tree_manage" onclick="address_foldermanage()"></span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_department"></span><span class="h2_text"><spring:message code='ezAddress.t146' /></span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_company"></span><span class="h2_text"><spring:message code='ezAddress.t147' /></span>
+		                            </div>
+		                    	</span>
+		                    </span>        
+		                </span>
+		            </div>
+		        </ul>
+		        <ul class="lnbUL">
+		        	<div class="tree">
+		            	<span>
+		                	<span>
+		                    	<span>
+		                        	<div class="node_div" onclick="address_Search()">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text"><spring:message code="ezEmail.t99000042" /></span>
+		                            </div>
+		                    	</span>
+		                    </span>        
+		                </span>
+		            </div>
+		        </ul>
+	        </div>
 	    </div>
 	    <xml id="RootFolderXML" style="display: none;">
 	    ${rootFolderXML}
