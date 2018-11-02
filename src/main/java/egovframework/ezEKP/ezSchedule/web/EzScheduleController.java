@@ -375,7 +375,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 					}			
 					ScheduleSecretaryVO data = tList.get(i);			
 					indiListSub += "\'" + data.getSecId()+ "\',";			
-					System.out.println("비서가 있다고??? 회장인데?? : " + data.getSecId() + " , 이름 : " + data.getSecName());
 				}				
 			}
 			
@@ -2103,7 +2102,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         	}
         	
         	model.addAttribute("attachList", aList);
-        }       
+        }
         
         //참석자 관련 권한부여
         String _admin = "Y";
@@ -2120,6 +2119,15 @@ public class EzScheduleController extends EgovFileMngUtil {
         ) {
         	_admin = "N";
         	_editPosible = "N";
+        }
+        //비서 권한 부여
+        List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(loginVO.getId(), loginVO.getLang(), tenantId ,companyID);
+        
+        for (ScheduleSecretaryVO ssvo : tList) {
+        	if (ssvo.getSecId().equals(vo.getOwnerId())) {
+        		_admin = "Y";
+        		_editPosible = "Y";
+        	}
         }
         
         model.addAttribute("scheduleInfo", vo);        

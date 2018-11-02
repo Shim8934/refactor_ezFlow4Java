@@ -268,7 +268,7 @@
 				data : {
 					search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value,
 					cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;",
+					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
 					page : CurPage ,
 					type : "user"
 				} ,
