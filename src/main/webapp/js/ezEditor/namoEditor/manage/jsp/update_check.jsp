@@ -41,13 +41,13 @@
 	if(update_xml.exists()){
 		boolean update_check_value = update_check(update_xml_url,before_xml_url);
 		if(update_check_value){
-			result_pop = "<script language=\"javascript\">alert(NamoSELang.pe_Lb)</script>";
+			result_pop = "<script language=\"javascript\">alert(NamoSELang.pe_IG)</script>";
 			String saveCheck = update_xml(update_xml_url,before_xml_url);
 			if(saveCheck.equals("sucess")){
 				result_sc = resultStrSc;
 			}
 			else{
-				result_sc = "<script language=\"javascript\">alert(NamoSELang.pe_DN+NamoSELang.pe_qZ);window.document.location.href='manager_setting.jsp';</script>";
+				result_sc = "<script language=\"javascript\">alert(NamoSELang.pe_BB+NamoSELang.pe_sl);window.document.location.href='manager_setting.jsp';</script>";
 			}
 		}
 		else{
@@ -62,7 +62,7 @@
 <html>
 	<head>
 		<script type="text/javascript" src="../../lib/jquery-1.7.2.min.js"> </script>
-		<script type="text/javascript">var ce$=$.noConflict(true); </script>
+		<script type="text/javascript">var ce$=namo$.noConflict(true); </script>
 		<script type="text/javascript" src="../manage_common.js"> </script>
 		<script type="text/javascript" language="javascript" src="../../js/namo_cengine.js"> </script>
 	</head>

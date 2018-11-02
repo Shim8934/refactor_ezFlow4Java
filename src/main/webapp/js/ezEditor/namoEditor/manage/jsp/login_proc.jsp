@@ -90,11 +90,11 @@
 			result_sc = "<script>window.document.location.href='update_check.jsp';</script>";
 		}
 		else{
-			result_sc = "<script>alert(NamoSELang.pe_vj);history.back();</script>";
+			result_sc = "<script>alert(NamoSELang.pe_xl);history.back();</script>";
 		}
 	}
 	else{
-		result_sc = "<script>alert(NamoSELang.pe_ML);history.back();</script>";
+		result_sc = "<script>alert(NamoSELang.pe_Jl);history.back();</script>";
 	}
 
 %>
@@ -102,7 +102,7 @@
 <html>
 	<head>
 	<script type="text/javascript" src="../../lib/jquery-1.7.2.min.js"> </script>
-	<script type="text/javascript">var ce$=$.noConflict(true); </script>
+	<script type="text/javascript">var ce$=namo$.noConflict(true); </script>
 		<script type="text/javascript" src="../manage_common.js"> </script>
 		<script type="text/javascript" language="javascript" src="../../js/namo_cengine.js"> </script>
 	</head>
