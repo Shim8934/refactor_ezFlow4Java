@@ -15,7 +15,7 @@
 		"attr.databind.source": "<spring:message code='reform.attr.databind.source' />",
 		"attr.databind.value": "<spring:message code='reform.attr.databind.value' />",
 		"attr.databind.display": "<spring:message code='reform.attr.databind.display' />",
-		"attr.databind.param'": "<spring:message code='reform.attr.databind.param' />",
+		"attr.databind.param": "<spring:message code='reform.attr.databind.param' />",
 		"attr.header": "<spring:message code='reform.attr.header' />",
 		"attr.footer": "<spring:message code='reform.attr.footer' />",
 		"attr.columncount": "<spring:message code='reform.attr.columncount' />",

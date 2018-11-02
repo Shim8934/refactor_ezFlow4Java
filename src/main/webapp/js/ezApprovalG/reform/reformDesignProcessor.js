@@ -14,6 +14,7 @@ var isDEXT = false;
 var isFormProcessor = false;
 var isNamo = false;
 var isTagfree = false;
+var isKukudocs = false;
 var selectedNodeToMoveOrCopy = null;
 var selectedNodeIdToMoveOrCopy = null;
 var lastSelectedElement = null;
@@ -101,6 +102,11 @@ function onFormDocumentLoadHandlerForTagfree() {
 	}
 }
 
+function onFormDocumentLoadHandlerForKukudocs() {
+	isKukudocs = true;
+	onFormDocumentLoadHandler();
+}
+
 function onFormDocumentLoadHandler() {
 	if (isDEXT) {
 		webEditorDocument = DEXT5.getDext5Dom().ownerDocument;
@@ -110,6 +116,8 @@ function onFormDocumentLoadHandler() {
 		webEditorDocument = pzFormProc_reform.editor.DOM;
 	} else if (isTagfree) {
 		webEditorDocument = xfe.getDom();
+	} else if (isKukudocs) {
+		webEditorDocument = kukudocsEditor.editorDocument;
 	}
 	
 	webEditorDocument.reform_onClickHandler = reform_onClickHandler;
@@ -883,6 +891,51 @@ function insertElementToDocument(element) {
 		
 		moveCursorToElement(element);
 	} else if (isTagfree) {
+		if (element.getAttribute("data-reform_hidden_control_flag") == "1") {
+			webEditorDocument.body.insertBefore(element, webEditorDocument.body.firstChild);
+			moveCursorToElement(element);
+			return;
+		}
+		
+		var selection = null;
+		var containerNode = null;
+		
+		if (webEditorDocument.getSelection) {
+			restoreSelection();
+			
+			selection = webEditorDocument.getSelection();
+			containerNode = selection.anchorNode;
+		} else {
+			return;
+		}
+		
+		if (containerNode == null) {
+			webEditorDocument.body.insertBefore(element, webEditorDocument.body.firstChild);
+			moveCursorToElement(element);
+			return;
+		}
+		
+		if (containerNode.nodeType == 3) {
+			// test node head
+			if (webEditorDocument.getSelection().anchorOffset == 0) {
+				containerNode.parentNode.insertBefore(element, containerNode);
+			} else {
+				containerNode.parentNode.insertBefore(element, containerNode.nextSibling);
+			}
+		} else {
+			var childNodes = containerNode.childNodes;
+			
+			if (childNodes.length == 0) {
+				containerNode.appendChild(element);
+			} else if (childNodes.length == 1 && childNodes.item(0).nodeName == "BR") {
+				containerNode.replaceChild(element, childNodes.item(0));
+			} else {
+				containerNode.insertBefore(element, childNodes.item(selection.anchorOffset));
+			}
+		}
+		
+		moveCursorToElement(element);
+	} else if (isKukudocs) {
 		if (element.getAttribute("data-reform_hidden_control_flag") == "1") {
 			webEditorDocument.body.insertBefore(element, webEditorDocument.body.firstChild);
 			moveCursorToElement(element);

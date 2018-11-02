@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -597,14 +596,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
 		// 현재 사용 중인 에디터
 		String editor = ezCommonService.getTenantConfig("EDITOR", tenantId);
-		String height = Optional.ofNullable(request.getParameter("height")).orElse("");
 		
 		String defaultFontFamily = egovMessageSource.getMessage("main.t246", userInfo.getLocale());
 		String  defaultFontSize = "13px";
 		
 		// 사용자 언어가 한국어이고 editorFontStyle 값이 있을 경우 editorFontStyle 값 적용
 		if (userInfo.getLang().equals("1")) {
-			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", tenantId);
 
 			if (!editorFontStyle.isEmpty()) {
 				String[] fontInfo = editorFontStyle.split("\\|");
@@ -613,29 +611,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}
 		}
 		
-		// 에디터 특성에 따른 처리
-		switch (editor) {
-		case "DEXT":
-			// dext 에디터는 아이디와 유저 언어 정보가 필요
-			String id = Optional.ofNullable(request.getParameter("id")).orElse("");
-			model.addAttribute("id", id);
-			model.addAttribute("userlang", userInfo.getLang());
-			break;
-		case "NAMO":
-			// 나모 에디터는 업로드 URL, 유저 언어 정보가 필요
-			//TODO: http/https 설정값
-			String serverUrl = "http://" + userInfo.getServerName();
-			model.addAttribute("serverurl", serverUrl);
-			model.addAttribute("userlang", userInfo.getLang());
-			
-			logger.debug("serverUrl=" + serverUrl);
-			break;
-		default:
-			break;
-		}
-		
 		model.addAttribute("editor", editor);
-		model.addAttribute("height", height);
+		model.addAttribute("userlang", userInfo.getLang());
 		model.addAttribute("defaultFontFamily", defaultFontFamily);
 		model.addAttribute("defaultFontSize", defaultFontSize);
 

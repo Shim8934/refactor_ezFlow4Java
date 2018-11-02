@@ -17,14 +17,15 @@
 	var editorInfo = {
 		initFontFamilyMenu: "<spring:message code='main.t0620' />".split(";"),
 		defaultFontFamily: "${defaultFontFamily}",
-		defaultFontSize: "${defaultFontSize}"
+		defaultFontSize: "${defaultFontSize}",
+		height: "762px"
 	}
 </script>
 <c:choose>
 	<c:when test="${editor eq 'DEXT'}">
 		<script type="text/javascript" src="${util.addVer('/js/ezEditor/dext5Editor/js/dext5editor.js')}"></script>
 		<script type="text/javascript">
-			var dextId = "${id}";
+			var dextId = "reform-dext";
 			
 			// 이 함수는 DEXT 에디터에 양식이 로드되기 전 DEXT 에디터의 초기화가 완료되면 호출된다.
 			function dext_editor_loaded_event(editor) {
@@ -372,9 +373,9 @@
 					var currElem = e.targetNode;
 					lastSelectedElement = currElem;
 					
-// 					while (/TBODY|TR|TH|TD/.test(currElem.nodeName)) {
-// 						currElem = currElem.parentElement;
-// 					}
+					// 					while (/TBODY|TR|TH|TD/.test(currElem.nodeName)) {
+					// 						currElem = currElem.parentElement;
+					// 					}
 					
 					var attValue = currElem.getAttribute("data-reform_flag");
 					
@@ -512,6 +513,68 @@
 				} catch (e) {
 					return "";
 				}
+			}
+		</script>
+	</c:when>
+	<c:when test="${editor eq 'KUKUDOCS'}">
+		<link rel="stylesheet" href="${util.addVer('/js/ezEditor/kukudocsEditor/stylesheets/style.css')}" />
+		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-1.9.1.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-ui-1.11.4.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/javascripts/build/Editor.bundle.js')}"></script>
+		<script>
+			function onLoaded() {
+				// 기존 양식을 로드하는 경우
+				if (parent.reformUrl != "") {
+					// AJAX를 동기식으로 호출하여 양식을 로드한다.
+					SetEditorContentURL(parent.reformUrl);
+				}
+				
+				// kukudocsEditor.setKeyEvent(onKeyEvent);
+				// kukudocsEditor.setMouseEvent(onMouseEvent);
+				onFormDocumentLoadHandlerForKukudocs();
+				
+				webEditorDocument.addEventListener("keyup", keyUp);
+				webEditorDocument.addEventListener("mousedown", mouseDown);
+				webEditorDocument.addEventListener("mouseup", mouseUp);
+			}
+
+			function keyUp(event) {
+				restoreAfterHTMLSourceEditInNamo();
+				saveSelection();
+				
+				lastSelectedElement = event.target;
+			}
+
+			function mouseUp(event) {
+				saveSelection();
+			}
+
+			function mouseDown(event) {
+				restoreAfterHTMLSourceEditInNamo();
+				
+				var currElem = event.target;
+				lastSelectedElement = currElem;
+				
+				var attValue = currElem.getAttribute("data-reform_flag");
+				
+				// false 값을 리턴하면 Tagfree 에디터가 마우스 이벤트 처리를 하지 않는다.
+				if (attValue == "1") {
+					moveCursorToElement(currElem);
+					
+					event.preventDefault();
+				}
+			}
+
+			function SetEditorContentURL(pURL) {
+				var tempStr = ConvertMHTtoHTML(pURL);
+				var tempXML = loadXMLString(tempStr);
+				var XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
+				var htmlData = getNodeText(XmlBodyDATA);
+				kukudocsEditor.SetEditorContent(htmlData);
+			}
+
+			function GetEditorContent() {
+				return kukudocsEditor.GetEditorContent();
 			}
 		</script>
 	</c:when>
@@ -742,12 +805,14 @@
 				<c:when test="${editor eq 'DEXT'}">
 					<table id="PreForm" style="vertical-align: top; border-spacing: 0px;">
 						<tr>
-							<td valign="top" style="width: 100%; vertical-align: top;">
+							<td valign="top" style="width: 800px; vertical-align: top;">
 								<script type="text/javascript">
 									// the following line is commented out since it causes an error message(editor's name is not correct. Please check editor's name)
 									// is displayed.
 									//                    DEXT5.config.DialogWindow = parent.window;
 									
+									// 에디터가 hidden 처리되면 로드 안하다가 필요할때 로드해주는 조건을 체크해주는건데,
+									// 이상하게 작동을 안 하여 무조건 로드되도록 함수를 덮어 씌움
 									DEXT5.util.DEXT5_CheckEditorVisible = function() {
 										return 1;
 									}
@@ -761,7 +826,7 @@
 									DEXT5.config.Lang = "<spring message code = 'main.t0619' />";
 									DEXT5.config.userFontSize = editorInfo.defaultFontSize;
 									
-									DEXT5.config.Height = <c:out value="${height}"/> + "px";
+									DEXT5.config.Height = editorInfo.height;
 									
 									//var editorid = new Dext5editor(dextId);
 									new Dext5editor(dextId);
@@ -776,14 +841,13 @@
 						<tr>
 							<td valign="top" style="width: 800px; vertical-align: top;">
 								<script type="text/javascript">
-									var CrossEditor2 = new NamoSE("Namo2"); //애경 - 양식작성기의 나모 변수와 같아서 2로 변경
-									var uploadUrl = "${serverUrl}/ezEditor/namoUpload.do?type=";
+									var CrossEditor2 = new NamoSE("reform-namo");
+									var uploadUrl = "/ezEditor/namoUpload.do?type=";
 									var userLang = "${userlang}";
 									
 									CrossEditor2.params.UploadFileExecutePath = uploadUrl;
-									
-									CrossEditor2.params.Height = "762px";
-// 									CrossEditor2.params.Width = "100%";
+									CrossEditor2.params.Height = editorInfo.height;
+									// CrossEditor2.params.Width = "100%";
 									
 									if (userLang == "1") {
 										CrossEditor2.params.UserLang = "kor";
@@ -805,7 +869,7 @@
 				<c:when test="${editor eq 'TAGFREE'}">
 					<table id="PreForm" style="overflow: auto; vertical-align: top; border-spacing: 0px;">
 						<tr>
-							<td id="xfe_ex" valign="top" style="width:800px;">
+							<td id="xfe_ex" valign="top" style="width: 800px;">
 								<script type="text/javascript">
 									var userLang = "${userlang}";
 									var uploadFilePath = "/ezEditor/tfxUpload.do?type=";
@@ -836,7 +900,7 @@
 										lang: lang,
 										basePath: "/js/ezEditor/tfxEditor",
 										width: '100%',
-										height: '762px',
+										height: editorInfo.height,
 										initFilePath: "/js/ezEditor/tfxEditor/config/reform/env.xml",
 										initFontFamilyMenu: editorInfo.initFontFamilyMenu,
 										initFontFamily: editorInfo.defaultFontFamily,
@@ -853,6 +917,156 @@
 								</script>
 							</td>
 							<td id="rootTD"></td>
+						</tr>
+					</table>
+				</c:when>
+				<c:when test="${editor eq 'KUKUDOCS'}">
+					<table id="PreForm" style="overflow: auto; vertical-align: top; border-spacing: 0px;">
+						<tr>
+							<td id="reform-kukudocs" valign="top" style="width: 785px;">
+								<script>
+									// 언어 설정
+									var lang = "";
+									var userLang = "${userlang}";
+									
+									switch (userLang) {
+									case "1":
+										lang = "ko";
+										break;
+									case "2":
+										lang = "en";
+										break;
+									case "3":
+										lang = "ja";
+										break;
+									case "4":
+										lang = "zh";
+										break;
+									default:
+										lang = "en";
+										break;
+									}
+
+									// 메뉴 설정			
+									var customAlignMenu = [ 'about', 'print', 'undo', 'redo', 'text_paste', 'textFormatCopy', 'textFormatPaste', 'link', 'unlink', 'image', 'symbol', 'horizontal', 'numbered_list', 'bullet_list', 'outdent', 'indent', 'table', 'table_insert_left',
+											'table_insert_right', 'table_insert_top', 'table_insert_bottom', 'table_remove_col', 'table_remove_row', 'table_remove_table', 'table_merge', 'table_split_col', 'table_split_row', 'table_background_color', 'table_border_style', 'align_left',
+											'align_center', 'align_right', 'align_justify', 'paragraph_margin', 'template', 'heading', 'fontFamily', 'fontSize', 'line_height', 'bold', 'italic', 'underline', 'strike_through', 'remove_format', 'color', 'backgroundColor' ];
+									
+									// 이미지 업로드 URL 설정
+									var imageUploadURL = "/ezEditor/kukudocsUpload.do?type=";
+									
+									// 폰트 크기 리스트 설정
+									var fontSize = [ {
+										name: '8px',
+										value: '8px'
+									}, {
+										name: '9px',
+										value: '9px'
+									}, {
+										name: '10px',
+										value: '10px'
+									}, {
+										name: '11px',
+										value: '11px'
+									}, {
+										name: '12px',
+										value: '12px'
+									}, {
+										name: '13px',
+										value: '13px'
+									}, {
+										name: '14px',
+										value: '14px'
+									}, {
+										name: '15px',
+										value: '15px'
+									}, {
+										name: '16px',
+										value: '16px'
+									}, {
+										name: '18px',
+										value: '18px'
+									}, {
+										name: '20px',
+										value: '20px'
+									}, {
+										name: '22px',
+										value: '22px'
+									}, {
+										name: '24px',
+										value: '24px'
+									}, {
+										name: '26px',
+										value: '26px'
+									}, {
+										name: '30px',
+										value: '30px'
+									}, {
+										name: '36px',
+										value: '36px'
+									}, {
+										name: '42px',
+										value: '42px'
+									}, {
+										name: '48px',
+										value: '48px'
+									}, {
+										name: '54px',
+										value: '54px'
+									}, {
+										name: '72px',
+										value: '72px'
+									}, {
+										name: '80px',
+										value: '80px'
+									}, {
+										name: '88px',
+										value: '88px'
+									}, {
+										name: '100px',
+										value: '100px'
+									} ];
+									
+									// 폰트 리스트 설정
+									var fontFamilyArr = editorInfo.initFontFamilyMenu;
+									var fontFamily = [];
+									
+									for (var i = 0; i < fontFamilyArr.length; i++) {
+										fontFamily[i] = {
+											name: fontFamilyArr[i],
+											value: fontFamilyArr[i]
+										}
+									}
+
+									var kukudocsEditor = new KuKudocsEditor('reform-kukudocs', {
+										width: '100%',
+										height: editorInfo.height,
+										defaultLanguage: lang,
+										languagePathURL: '/js/ezEditor/kukudocsEditor/lang/',
+										defaultFontFamily: editorInfo.defaultFontFamily,
+										defaultFontSize: editorInfo.defaultFontSize,
+										fontSize: fontSize,
+										fontFamily: fontFamily,
+										defaultTableWidth: 700,
+										customMagicLineStyle: 'background-color:#888;',
+										customAlignMenu: customAlignMenu,
+										useMenuBar: false,
+										useHTMLMode: true,
+										useTextMode: false,
+										usePreviewMode: false,
+										useEditorResize: false,
+										useFirstFocus: false,
+										useOnlyTableContentMenu: true,
+										useSecurityEvent: false,
+										publicPathURL: '/js/ezEditor/kukudocsEditor/',
+										defaultEditorStylePath: '/js/ezEditor/kukudocsEditor/stylesheets/editor_style.css',
+										loadingImageURL: '/js/ezEditor/kukudocsEditor/images/load.gif',
+										errorImageURL: '/js/ezEditor/kukudocsEditor/images/error.png',
+										imageUploadURL: imageUploadURL,
+										Editor_Complete: onLoaded
+									});
+								</script>
+							</td>
 						</tr>
 					</table>
 				</c:when>
