@@ -652,14 +652,14 @@ function ListView() {
                 var oText;
 
                 if (j == 1) {
-                    oText = document.createElement("IMG");
+                    oText = document.createElement("span");
                     if (strValue == 1) {
-                        oText.src = "/images/calendar/icon_resource_ok.png";
-                        oText.style.paddingLeft = "5px";
+                        oText.className = "sub_iconLNB tree_resource_ok";
+                        oText.style.marginTop = "0px";
                     }
                     else {
-                        oText.src = "/images/calendar/icon_resource_no.png";
-                        oText.style.paddingLeft = "5px";
+                    	oText.className = "sub_iconLNB tree_resource_no";
+                    	oText.style.marginTop = "0px";
                     }
                 }
                 else if (j == 8) {

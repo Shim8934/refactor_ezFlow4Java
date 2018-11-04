@@ -19,7 +19,7 @@
 			    color: #0470e4;
 			    display: inline-block;
 			    padding: 0px 0px 0px 5px;
-			    font-family: Malgun Gothic, Gulim;
+			    font-family: Malgun Gothic, malgun gothic;
 			    cursor: pointer;
 			    width: 76%;
 			    white-space: nowrap;

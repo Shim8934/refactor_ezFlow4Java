@@ -703,7 +703,7 @@
 			  <ul>
 			    <li><span onclick="SetReadNew_onclick()"><spring:message code="ezBoard.t204"/></span></li>
 				<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-			    <li><span onClick="refresh_onclick()"><spring:message code="ezBoard.t205"/></span></li>
+			    <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
 			    <%-- <li><span onClick="ReservationItem_onclick()"><spring:message code="ezBoard.t276"/></span></li> --%>  
 			    <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">

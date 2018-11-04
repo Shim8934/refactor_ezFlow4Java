@@ -801,19 +801,18 @@
 		<h1><span id="presentcell"></span><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
-			    <li><span  onClick="new_address()"><spring:message code='ezAddress.t236' /></span></li>
-				<li><span  onClick="new_group()"><spring:message code='ezAddress.t237' /></span></li>
+			    <li class="important"><span onClick="new_address()"><spring:message code='ezAddress.t236' /></span></li>
+				<li class="important"><span onClick="new_group()"><spring:message code='ezAddress.t237' /></span></li>
+				<li class="important"><span onclick="ShowQuickAddres();"><spring:message code='ezAddress.t2002' /></span></li>
 				<li id="importaddress" style="display:none;"><span  onClick="address_inout(1)"><spring:message code='ezAddress.t210' /></span></li>
 				<li id="exportaddress" style="display:none;"><span  onClick="address_inout(0)"><spring:message code='ezAddress.t143' /></span></li>
 				<li id="importaddress_Cross"><span onclick="clickImport()"><spring:message code='ezAddress.t210' /></span></li>
         		<li id="exportaddress_Cross"><span onclick="clickExport()"><spring:message code='ezAddress.t143' /></span></li>
 				<li><span onClick="write_letter()"><spring:message code='ezAddress.t238' /></span></li>
-				<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-				<li><span id="SearchOption" mode="off" onClick="doLayerPopup()"><spring:message code='ezAddress.t142' /></span></li>
 				<li><span onClick="move_address()"><spring:message code='ezAddress.t239' /></span></li>
-				<li><span onClick="delete_address()"><spring:message code='ezAddress.t175' /></span></li>
-				<li><span onClick="window.location.reload(false)"><spring:message code='ezAddress.t240' /></span></li>
-				<li><span onclick="ShowQuickAddres();"><spring:message code='ezAddress.t2002' /></span></li>
+				<li><span id="SearchOption" mode="off" onClick="doLayerPopup()"><spring:message code='ezAddress.t142' /></span></li>
+				<li onClick="delete_address()"><span class="icon16 icon16_delete"></span></li>
+				<li onClick="window.location.reload(false)"><span class="icon16 icon16_refresh"></span></li>
 				<li style="background:none;float:right">
 					<select id="ListViewType" onchange="View_Change();">
 						<option value="card" <c:if test="${pListType == 'card'}"> selected</c:if>><spring:message code='ezAddress.t2000' /></option>

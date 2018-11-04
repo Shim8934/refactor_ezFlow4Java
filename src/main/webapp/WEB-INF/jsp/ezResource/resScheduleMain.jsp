@@ -520,7 +520,33 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		
 		<div id="mainmenu">
+            <ul class="on">
+            	<li class="important"><span id="pn_img" onClick="newSchedule_onclick(event)"><spring:message code='ezResource.t171'/></span></li>
+            	<li><span onclick='showRes(${resID});'><spring:message code='ezResource.t142'/></span></li>
+            	<c:if test="${adminFg eq 'Y'}" >
+    				<li><span onClick="btnform_onclick();"><spring:message code='ezResource.t378'/></span></li>
+    				<c:if test="${approveFlag eq '1'}" >
+    					<li id="approvlist"><span onClick="btnApprov_list();"><spring:message code='ezResource.t1000'/></span></li>
+    				</c:if>
+    			</c:if>
+            </ul>
+		</div>
+		<div class="calendar_pagenav" style="width:180px;margin-left:-89px">
+	        <ul class="contentlayout">
+	            <li class="contentlayout_left" id="preM"></li>
+	            <li class="contentlayout_right" id="preN"></li>
+	            <li class="contentlayout_none"><span class="spanText" id="calTitle"></span>
+	            </li>
+	        </ul>
+	    </div>
+	    <div class="mainmenuTab">
+	        <ul class="mainmenuTabUL">
+	            <li id="dayView" class="off"><span onclick='onViewDate("DAY");'><spring:message code='ezSchedule.t140'/></span></li><li id="weekView" class="off"><span onclick='onViewDate("WEEK");'><spring:message code='ezSchedule.t141'/></span></li><li id="monView" class="on"><span onclick='onViewDate("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
+	        </ul>
+	    </div>
+		<%-- <div id="mainmenu">
   			<ul>
     			<li><span id="pn_img" onClick="newSchedule_onclick(event)"><spring:message code='ezResource.t171'/></span></li>
     			<!-- 2018-06-05 구해안 자원정보 버튼 추가 및 resinfo 정보 popup으로 수정 -->
@@ -539,9 +565,9 @@
 				<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t370'/></li>
     			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t369'/></li>
   			</ul>  			
-		</div>
+		</div> --%>
 		<script type="text/javascript">
-    		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+    		//selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		<table>   
 			<tr>

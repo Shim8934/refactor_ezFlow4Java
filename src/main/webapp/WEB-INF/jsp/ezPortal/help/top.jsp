@@ -7,7 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf=8">
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<style type="text/css">
-			td,a {font-family: Arial, gulim;font-size: 9pt;word-break:keep-all; white-space:nowrap; color:#555555; text-decoration:none}
+			td,a {font-family: Arial, malgun gothic;font-size: 9pt;word-break:keep-all; white-space:nowrap; color:#555555; text-decoration:none}
 			.over{
 				padding-left:15px; padding-right:15px; 
 				background-repeat:no-repeat;

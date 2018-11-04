@@ -42,7 +42,7 @@
 				margin-left:7px;
 				display:inline-block;
 				padding: 5px 4px;
-				font: 12px gulim;
+				font: 12px malgun gothic;
 				padding-top: 7px;
  				border: 1px solid #ddd;
  				color: #666;

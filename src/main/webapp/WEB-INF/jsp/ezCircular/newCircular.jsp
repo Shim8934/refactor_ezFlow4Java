@@ -643,9 +643,9 @@
 	    </h1>
 	    <div id="mainmenu" style="margin-bottom:8px">
 	        <ul>
-	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
+	            <li class="important"><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
 	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t198'/></span></li>
-	            <li><span onClick="refresh_onclick()"><spring:message code='ezCircular.t173'/></span></li>
+	            <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh"></span></li>
 				<li style="background:none;cursor:default;border:0px;color:#393939"><span style="display:inline-block; border:0px; width:16px; height:16px; background:url(/images/ImgIcon/msg-rd.gif); overflow:hidden; margin:7px 0px 0px 15px; padding:0; vertical-align:middle;box-shadow:none"></span>&nbsp;<spring:message code='ezCircular.t197'/></li>
 	            <li style="background:none;cursor:default;border:0px;color:#393939"><span style="display:inline-block; border:0px; width:16px; height:16px; background:url(/images/ImgIcon/msg-unrd.gif); overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;box-shadow:none"></span>&nbsp;<spring:message code='ezCircular.t143'/></li>
 	            <li style="background:none;cursor:default;border:0px;color:#393939"><span style="display:inline-block; border:0px; width:16px; height:16px; background:url(/images/ImgIcon/circular_share2.gif); overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;box-shadow:none"></span>&nbsp;<spring:message code='ezCircular.t188'/></li>

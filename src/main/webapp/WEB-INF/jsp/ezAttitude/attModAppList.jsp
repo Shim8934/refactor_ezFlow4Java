@@ -938,11 +938,11 @@
 		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.t166' /><span id="mailBoxInfo"></span></h1>
         <div id="mainmenu">
         <ul id="tb_Parent">
-			<li><span onClick="attList_del()"><spring:message code='ezAttitude.t164'/></span></li>
+        	<li id="search"><span onClick="search_popup()"><spring:message code='ezAttitude.t121'/></span></li>
 		    <li id="reply"><span onClick="get_excelAtt_list()"><spring:message code='ezAttitude.t145'/></span></li>
-	        <li><span onClick="att_search('refresh')"><spring:message code='ezAttitude.t122'/></span></li>
-	        <li id="search"><span onClick="search_popup()"><spring:message code='ezAttitude.t121'/></span></li>
-			<li id="right">
+		    <li onClick="attList_del()"><span class="icon16 icon16_delete"></span></li>
+	        <li onClick="att_search('refresh')"><span class="icon16 icon16_refresh"></span></li>
+			<li id="right" style="margin-right:5px">
 				<span style="float:right;font-weight:normal;color:black;border: none;box-shadow:none;">
 					<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t124'/></label>
 					<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.t209'/></label>

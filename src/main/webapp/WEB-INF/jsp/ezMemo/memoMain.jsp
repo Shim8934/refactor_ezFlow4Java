@@ -179,12 +179,12 @@
 		  <ul>
 		        <li class="important"><span onclick="newMemo()"><spring:message code='ezMemo.t0014'/></span></li>
 		        <li><span onClick="allClick()"><spring:message code='ezMemo.t0013'/></span></li>
-		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezMemo.t0015'/></span></li>
 		        <li><span onClick="memoMove()"><spring:message code='ezMemo.t0022'/></span></li>
 		        <li><span onClick="memoDisplayChange()"><spring:message code='ezMemo.t0017'/></span></li>
 		        <li><span onClick="memoDisplayChange2()"><spring:message code='ezMemo.t0024'/></span></li>
 		        <li><span onClick="doLayerPopup(this);"><spring:message code='ezMemo.t0016'/></span></li>
-		        <li><span onClick="refresh_onclick()"><spring:message code='ezMemo.t0018'/></span></li> 
+		        <li onClick="DeleteItem_onclick()"><span class="icon16 icon16_delete"></span></li>
+		        <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh"></span></li> 
 		        <li><select id="memoType" style="height: 20px; width:175px;" onchange="getMemoList('folder')"></select></li>
 		        <li id="right" class="off">
 		        	<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);">

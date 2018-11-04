@@ -812,8 +812,8 @@
 			  <li class="important"><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
 			  <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 			  <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
-			  <li><span onClick="deleteWork()"><spring:message code="ezEmail.t95" /></span></li>
 			  <li><span onClick="delete_mail()"><spring:message code="ezEmail.t156" /></span></li>
+			  <li><span class="icon16 icon16_delete" onClick="deleteWork()"><spring:message code="ezEmail.t95" /></span></li>
 			</ul>
 		</div>  
 		<table class="content"> 

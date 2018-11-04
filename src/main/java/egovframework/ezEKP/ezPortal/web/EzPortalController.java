@@ -213,7 +213,7 @@ public class EzPortalController extends EgovFileMngUtil {
                             "<link href=\""+egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
                             "<style type='text/css'>" +
                             "<!--" +
-                            ".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
+                            ".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:malgun gothic, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
                             ".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}" +
                             ".warnintxt01 { position:relative }" +
                             ".warningimg { position:absolute; top:0px; left:0px;}" +
@@ -966,7 +966,7 @@ public class EzPortalController extends EgovFileMngUtil {
 					"<link href="+egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
 					"<style type='text/css'>" +
 					"<!--" +
-					".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
+					".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:malgun gothic, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
 					".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}" +
 					".warnintxt01 { position:relative }" +
 					".warningimg { position:absolute; top:0px; left:0px;}" +

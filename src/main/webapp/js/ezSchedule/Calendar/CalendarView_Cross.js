@@ -133,9 +133,11 @@ function CalendarView(pTagetID,chk_str) {
 
                     var dayText;
                     if (LunarUse)
-                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname + " (" + LunarDate + ")";
+                        //dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname + " (" + LunarDate + ")";
+                    	dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " (" + LunarDate + ")";
                     else
-                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
+                        //dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
+                    	dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
 
 
                     var current_day = new Date(sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2));
@@ -158,12 +160,7 @@ function CalendarView(pTagetID,chk_str) {
             var mSpan = document.createElement("SPAN");
             mSpan.className = "icon16 calendarleft";
             
-            // 2018-06-07 구해안 mini에서 호출하는 날짜 이동 함수 지우고 직접 생성
-            if (typeCal == 0)
-            	mSpan.setAttribute("onclick", "parent.frames[\"left\"].preMonth()");
-            else
-            	mSpan.setAttribute("onclick", "parent.frames[\"left\"].preDay()");
-            
+            // 2018-06-07 구해안 mini에서 호출하는 날짜 이동 함수 지우고 직접 생성 
             if (typeCal == 0)
             	mSpan.setAttribute("onclick", "preMonth()");
             else
@@ -193,11 +190,6 @@ function CalendarView(pTagetID,chk_str) {
             mSpan.className = "icon16 calendarright";
 
             // 2018-06-07 구해안 mini에서 호출하는 날짜 이동 함수 지우고 직접 생성
-            if (typeCal == 0)
-            	mSpan.setAttribute("onclick", "parent.frames[\"left\"].nextMonth()");
-            else
-            	mSpan.setAttribute("onclick", "parent.frames[\"left\"].nextDay()"); 
-            
             if (typeCal == 0)
             	mSpan.setAttribute("onclick", "nextMonth()");
             else

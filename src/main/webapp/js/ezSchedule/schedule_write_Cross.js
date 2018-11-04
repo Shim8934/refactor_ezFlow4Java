@@ -443,7 +443,7 @@ function checkFontInfo(str)
 		
     if((str.substring(0,3)).toUpperCase() == "<P>")
     {
-        str = "<FONT size=2 face=굴림>" + str + "</FONT>";
+        str = "<FONT size=2 face=malgun gothic>" + str + "</FONT>";
     }
     return str;
 }

@@ -1281,7 +1281,7 @@
 				                	<span>
 				                    	<span>
 				                        	<div class="node_div">
-				                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_appr_complete"></span><span class="h2_text" id="approvalForDoc_sub01" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.lhj14'/></span>
+				                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_appr_ing"></span><span class="h2_text" id="approvalForDoc_sub01" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.lhj14'/></span>
 				                            </div>
 				                    	</span>
 				                    	<span>

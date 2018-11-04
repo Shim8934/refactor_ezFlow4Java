@@ -6,10 +6,10 @@
 .calendar_month_navi th .btn_prev{display: inline-block; vertical-align: top; margin: 2px 12px 0px; height:17px;cursor:pointer;}
 .calendar_month_navi th .btn_next{display: inline-block; vertical-align: top; margin: 2px 0px 0px 12px; height:17px;cursor:pointer;}
 .calendar_month{table-layout:fixed; vertical-align:top;}
-.calendar_month th{color:#2f2f2f;height:26px; background:#fff; border:1px solid #e0e0e2; padding:0; margin:0;}
+.calendar_month th{color:#2f2f2f;height:26px; background:#fff; border:1px solid #dedede; padding:0; margin:0;}
 .calendar_month th.sun{color:#ee1c25;}
 .calendar_month th.sat{color:rgb(0, 72, 149);}
-.calendar_month td{width:14.2%; border:1px solid #e0e0e2;}
+.calendar_month td{width:14.2%; border:1px solid #dedede;}
 .calendar_month td.gray{background:#f8f8fa;}
 .calendar_month td.today{background:#f0f6ff;}
 .calendar_month .td_day{table-layout:fixed; width:100%; cursor:pointer;}
@@ -33,3 +33,6 @@
 .calendar_layer .btn ul{list-style:none; margin:0 20px; padding:0px 3px; overflow:hidden; text-align:center;width:200px;clear:both;list-style-type:none}
 .calendar_layer .btn ul li{float:left; height:27px; line-height:27px; background:url(/images/calendar/btn_calendar_l.gif) no-repeat left top; padding:0px 3px 0px 8px;}
 .calendar_layer .btn ul li span{display:inline-block; background:url(/images/calendar/btn_calendar_r.gif) no-repeat right top; padding:0px 8px 0px 3px; font-weight:normal; color:#555555;}
+
+td.sun {background: #fdf7f7;}
+td.sat {background: #f7f9fd;}

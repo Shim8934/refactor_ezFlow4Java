@@ -1026,9 +1026,9 @@
 		<div id="mainmenu">
 			<ul>
 				<!-- 2018-05-24 구해안 이미지 이동 -->
-				<li><span id="pn_img" onClick="WriteTask('right')"><spring:message code='ezTask.t113' /></span></li>
-				<li><span onClick="DeleteTask()"><spring:message code='ezTask.t115' /></span></li>
-				<li><span onClick="RefreshView()"><spring:message code='ezTask.t116' /></span></li>
+				<li class="important"><span id="pn_img" onClick="WriteTask('right')"><spring:message code='ezTask.t113' /></span></li>
+				<li onClick="DeleteTask()"><span class="icon16 icon16_delete"></span></li>
+				<li onClick="RefreshView()"><span class="icon16 icon16_refresh"></span></li>
 
 				<!-- 완료 -->
 				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;padding-right: 20px;">

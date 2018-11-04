@@ -1171,8 +1171,10 @@ form{display:inline;margin:0}
 }
 .tbresult { background:#fafafa}
 
-.icon_01{background:url(/images/calendar/icon_resource_no.png) no-repeat left top; padding-left:17px; padding-right:5px; height:16px;}
-.icon_02{background:url(/images/calendar/icon_resource_ok.png) no-repeat left top; padding-left:17px; padding-right:5px; height:16px;}
+.icon_01{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -286px -52px;}
+.icon_02{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -260px -52px;}
+
+
 
 
 .table_layout 
@@ -1199,7 +1201,7 @@ form{display:inline;margin:0}
 .weektd_01
 {
 
-	border:1px solid #dddddd; 
+	border:1px solid #e0e0e2; 
 	font-weight:normal; 
 	color:#003f7d;
 	padding-left:5px;
@@ -1212,16 +1214,17 @@ form{display:inline;margin:0}
 .weektd_02
 {
 	padding:7px;
-	border:1px solid #dddddd; 
+	border:1px solid #e0e0e2; 
 	background:#ffffff; 
 	vertical-align:top;
 	overflow:hidden;
 }
 .todaytd_01
 {
-	border:1px solid #dddddd;  
+	border:1px solid #e0e0e2;  
 	background:#f8f8fa;
 	color:#003f7d;
+	height:36px;
 	font-weight:normal;
 	padding-left:5px;
 }
@@ -1229,7 +1232,7 @@ form{display:inline;margin:0}
 {
 	height:30px;
 	background-color:white;
-	border:1px solid #dddddd;	
+	border:1px solid #e0e0e2;	
 }
 
 .mainlist{table-layout:fixed; border:0 none !important;font-family:malgun gothic, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
@@ -1408,7 +1411,7 @@ form{display:inline;margin:0}
 /* pagenavi */
 #tblPageRayer {width:100% !important}
 .popup_pagenavi {border-top:1px solid #c8c8c8;}
-.pagenavi {float:none; margin: 0px; padding: 10px 0; line-height: normal; text-align: center; overflow:hidden;font-family:Dotum, "돋움", malgun gothic, "굴림", Arial, Helvetica, sans-serif;}
+.pagenavi {float:none; margin: 0px; padding: 10px 0; line-height: normal; text-align: center; overflow:hidden;font-family:Dotum, "돋움", malgun gothic, "malgun gothic", Arial, Helvetica, sans-serif;}
 .pagenavi span {display: inline-block; height: 27px; line-height: 27px; margin: 0px 2px; padding: 0px 9px 0px 9px; border: 1px solid #c8c8c8; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; box-sizing:border-box; font-size: 12px; text-align: center; font-weight: bold; color: #333; cursor: pointer;}
 .pagenavi span:hover {color: #ffffff;}
 .pagenavi span.on {color: #ffffff;}
@@ -2456,7 +2459,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .h2_text{ font-size:13px; height:30px; line-height:30px; color:#393939; display:inline-block; padding:0px 0px 0px 5px;font-family:Malgun Gothic, malgun gothic; cursor:pointer;white-space:nowrap; text-overflow:ellipsis; overflow: hidden; box-sizing:border-box;}
 .h2_text .tRed{ font-weight:bold; color:#ff0000; padding:0px 0px 0px 2px; font-family:Malgun Gothic, malgun gothic;}
 .h2_text:hover{ color:#0470e4; font-weight:bold;}
-.confirmation{font-family:Malgun Gothic, malgun gothic; float:right; font-size:12px; color:#393939; border-left:1px solid #c7c7c7; border-right:1px solid #c7c7c7; border-top:1px solid #c7c7c7; border-bottom:1px solid #909193; background:#fff; padding:1px 2px 4px 2px; margin:8px 0px 0px 0px; cursor:pointer; position:absolute; left:147px; top:141px;} /* 장진혁 */
+.confirmation{font-family:Malgun Gothic, malgun gothic; float:right; font-size:12px; color:#393939; border-left:1px solid #c7c7c7; border-right:1px solid #c7c7c7; border-top:1px solid #c7c7c7; border-bottom:1px solid #909193; background:#fff; padding:1px 2px 4px 2px; margin:6px 0px 0px 0px; cursor:pointer; position:absolute; left:147px;} /* 장진혁 */
 .confirmation:hover{ color:#0470e4;}
 
 /* left mail 용량 */

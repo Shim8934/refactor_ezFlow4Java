@@ -793,7 +793,7 @@ function CreateLayer(uri, MyID)
 
 	    if (!g_newlayer)
 	    {
-		    g_newlayer = document.createElement('<div id="ContextMenu" style="position:absolute;z-index:1000;color:navy;display:inline;font-size:10pt;font-family:gulim;font-weight:bold;" onclick="this.style.display=\'none\';" onmouseout="this.style.display=\'none\';" onmouseover="this.style.display=\'\';"></div>');
+		    g_newlayer = document.createElement('<div id="ContextMenu" style="position:absolute;z-index:1000;color:navy;display:inline;font-size:10pt;font-family:malgun gothic;font-weight:bold;" onclick="this.style.display=\'none\';" onmouseout="this.style.display=\'none\';" onmouseover="this.style.display=\'\';"></div>');
 	    }
     	
 	    g_newlayer.style.left = oouiX + 'px';

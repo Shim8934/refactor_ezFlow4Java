@@ -10,7 +10,7 @@
     float: left;
     width: 150px;
     height: 250px;
-    font-family: Roboto, "Helvetica Neue", Arial, NanumBarunGothicOTF, NanumBarunGothic, "나눔바른고딕", "Apple SD Gothic Neo", Gulim, "굴림", sans-serif;
+    font-family: Roboto, "Helvetica Neue", Arial, NanumBarunGothicOTF, NanumBarunGothic, "나눔바른고딕", "Apple SD Gothic Neo", malgun gothic, "malgun gothic", sans-serif;
     background: #eeded0;
 }
 
@@ -73,7 +73,7 @@
     float: left;
     width: 657px;
     height: 210px;
-    font-family: Gulim, Dotum, Arial, Helvetica, sans-serif;
+    font-family: malgun gothic, Dotum, Arial, Helvetica, sans-serif;
     box-sizing: border-box;
 }
 
@@ -103,7 +103,7 @@
     border-right: 1px solid #dcdcdc;
     border-bottom: 0 none;
     border-left: 1px solid #dcdcdc;
-    font-family: Roboto, "Helvetica Neue", Arial, NanumBarunGothicOTF, NanumBarunGothic, "나눔바른고딕", "Apple SD Gothic Neo", Gulim, "굴림", sans-serif;
+    font-family: Roboto, "Helvetica Neue", Arial, NanumBarunGothicOTF, NanumBarunGothic, "나눔바른고딕", "Apple SD Gothic Neo", malgun gothic, "malgun gothic", sans-serif;
     font-size: 15px;
     font-weight: 800;
     cursor: pointer;

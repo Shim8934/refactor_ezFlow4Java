@@ -63,7 +63,7 @@
 			    white-space: nowrap;
 			    overflow: hidden;
 			    text-overflow: ellipsis;
-			    font-family:Malgun Gothic, Gulim;
+			    font-family:Malgun Gothic, malgun gothic;
 			    font-size: 13px;
 			    padding-top:0px;
 			    margin:0px;
@@ -71,7 +71,7 @@
 			}
 			
 			.IDcontainer span {
-				font-family:Malgun Gothic, Gulim;
+				font-family:Malgun Gothic, malgun gothic;
 			}
 			
 			/* 2018-08-03 김보미 - 클릭시마다 앞의 체크박스 ui 틀어지는 현상 막기 */
@@ -437,7 +437,7 @@
 							<input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse" style="left:0px">
 					  		<span class="checkmark" style="background:rgb(125, 125, 125);"></span>
 						</label>
-						<span class="sub_iconLNB tree_manage" style="position:absolute;top:112px;right:11px" onClick="Function_Flag(5)"></span>
+						<span class="sub_iconLNB tree_manage" style="position:absolute;top:10px;right:11px" onClick="Function_Flag(5)"></span>
 						<label class="IDcontainer" onchange="chk_DisplayChange()">
 							<span class="h2_text"><spring:message code='ezSchedule.t221'/></span>
 					  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${loginVO.id}" class="checkSelect">
