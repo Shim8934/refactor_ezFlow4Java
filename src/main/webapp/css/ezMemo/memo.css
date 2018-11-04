@@ -32,7 +32,7 @@ select::-ms-expand {
 .mamo06{ background:url(../../images/ezMemo/memo06.png) no-repeat left center; overflow:hidden;}
 .memoTit{ margin:4px 5px 0px 5px; padding:0px 10px; height:37px; line-height:35px; overflow:hidden;}
 .memoTit input{ width: 13px; height: 13px; vertical-align: middle; float:left; margin-top:10px; margin-right:5px; }
-.memoTit .mtitText{ margin:0px; padding:0px; font-family:Gulim; color:#696969; font-size:11px; float:left;}
+.memoTit .mtitText{ margin:0px; padding:0px; font-family:malgun gothic; color:#696969; font-size:11px; float:left;}
 .mamo01 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-32px 0px; width:16px; height:16px; cursor:pointer;}
 .mamo01 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px 0px; width:16px; height:16px; cursor:pointer;}
 .mamo01 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px 0px; width:16px; height:16px; cursor:pointer;}
@@ -110,7 +110,7 @@ select::-ms-expand {
 
 /* memoBtn */
 .memoBtn{ position:absolute; bottom:10px; right:10px; text-align:center; width:72px; height:72px; box-sizing:border-box; border:1px solid #327fd3; background:rgba(4, 112, 228, 0.70) url(../../images/ezMemo/memoBtn_icon.png) no-repeat center 17px; cursor:pointer; border-radius:45px; -webkit-border-radius:45px; -moz-border-radius:45px;}
-.memoBtn span{ display:inline-block; padding:45px 0px 0px 0px; margin:0px; color:#fff; font-size:12px; font-family:Gulim; }
+.memoBtn span{ display:inline-block; padding:45px 0px 0px 0px; margin:0px; color:#fff; font-size:12px; font-family:malgun gothic; }
 .memo_add{ background:url(../../images/ezMemo/memo_add.png) no-repeat center; margin:0 auto; padding:0px; width:242px; height:292px; text-align:center; cursor:pointer;}
 .memo_add span{ font-size:13px; color:#fff; display:inline-block; margin:0px; padding:200px 0px 0px 0px;}
 
@@ -134,9 +134,9 @@ h1 {  font-size:13px; margin:0px 0px 10px 0px; height:24px; line-height:15px; pa
 .footBtn{font-size:18px;line-height:33px;text-align:center;margin: 0px;padding: 0px;height: 46px;}
 .memoModal {z-index: 10000;padding-top:top: 0px;width: 150px;width: 251px;height: 301px;overflow: hidden;background-color: rgba(0,0,0,0.4);position: absolute;margin-left: 5px;margin-top: 3px;}
 .modRm-wrap{display:inline-block; margin:6px 3px 0px 3px; padding:0px; cursor:pointer;}
-.modRm-wrap span{width: auto; word-break: keep-all; white-space: nowrap; padding: 6px 10px 0px 10px;height: 18px; background-color: white; border: 1px solid #bbbbbb;border-radius: 3px;font-family: 'gulim','arial'; cursor: pointer; color: #000;font-weight: bold; box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.25);}
+.modRm-wrap span{width: auto; word-break: keep-all; white-space: nowrap; padding: 6px 10px 0px 10px;height: 18px; background-color: white; border: 1px solid #bbbbbb;border-radius: 3px;font-family: 'malgun gothic','arial'; cursor: pointer; color: #000;font-weight: bold; box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.25);}
 .close-wrap{display:inline-block; margin:6px 0px 0px 0px; padding:0px; cursor:pointer;}
-.close-wrap span{width: auto; word-break: keep-all; white-space: nowrap; padding: 6px 10px 0px 10px;height: 18px; background-color: white; border: 1px solid #bbbbbb;border-radius: 3px;font-family: 'gulim','arial'; cursor: pointer; color: #000;font-weight: bold; box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.25);}
+.close-wrap span{width: auto; word-break: keep-all; white-space: nowrap; padding: 6px 10px 0px 10px;height: 18px; background-color: white; border: 1px solid #bbbbbb;border-radius: 3px;font-family: 'malgun gothic','arial'; cursor: pointer; color: #000;font-weight: bold; box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.25);}
 
 
 /* portalMain 메모분류함  */
