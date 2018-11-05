@@ -12,6 +12,9 @@ import java.util.Map;
 
 
 
+
+
+
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
@@ -59,4 +62,5 @@ public interface MResourceService {
 	
 	public MResourceScheduleVO getResBrdDetail(String ownerId, String companyId, int tenantId) throws Exception;
 	
+	public List<String> getResAdminAuth(String userId, int tenantId) throws Exception;
 }
