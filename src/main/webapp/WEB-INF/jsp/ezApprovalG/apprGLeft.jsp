@@ -1111,7 +1111,7 @@
 	        }
 	        
 	        function leftResize(){
-	        	$(".apprListBox").height(window.innerHeight-105);
+	        	$(".apprListBox").height(window.innerHeight-105<c:if test="${isSubTitle}">-30</c:if>);
 	        }
 	        
 	        $( window ).resize(function() {
