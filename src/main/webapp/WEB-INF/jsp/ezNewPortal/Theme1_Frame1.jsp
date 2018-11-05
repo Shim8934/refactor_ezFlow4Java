@@ -181,6 +181,18 @@
 <script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/newPortal_common.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+<!-- 일정관리 -->
+<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/schedulePortlet.js')}"></script>		
+<c:choose>
+	<c:when test="${checkBrowser == true}">
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_IEEIP.js')}"></script>
+	</c:when>
+	<c:otherwise>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_EIP.js')}"></script>
+	</c:otherwise>
+</c:choose>
+<!-- 일정관리 끝 -->
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
 	var photoBoardPage = 1;

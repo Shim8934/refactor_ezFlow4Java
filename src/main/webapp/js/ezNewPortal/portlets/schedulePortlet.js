@@ -8,7 +8,8 @@ window.onload = function () {
 	openerCalendarMiniView = CalendarMiniView;
 	openerCalendarMiniDataSource = CalendarMiniDataSource;
 	
-	CalendarMiniView("CalendarMini");	    		
+	CalendarMiniView("CalendarMini");
+	CalendarMiniDataSource();
     
 	getScheduleList(nowDay, "P");
 	

@@ -2380,12 +2380,12 @@ public class EzNewPortalGWController {
 			
 			String offset = info.getOffSet();
 			String offSetMin = commonUtil.getMinuteUTC(offset);
+
 			
-			String startDate = request.getParameter("selectDate");
-			String endDate = request.getParameter("selectDate");
+			String startDate = (request.getParameter("STARTDATE") == null || request.getParameter("STARTDATE") == "") ? request.getParameter("selectDate") : request.getParameter("STARTDATE");
+			String endDate = (request.getParameter("ENDDATE") == null || request.getParameter("ENDDATE") == "") ? request.getParameter("selectDate") : request.getParameter("ENDDATE");
+			String idList = (request.getParameter("IDLIST") == null || request.getParameter("IDLIST") == "") ? "T" : request.getParameter("IDLIST");
 			
-			String idList = "T";
-					
 			String indiList = "";
 			String pidList = "";
 			String pidListSub = "";

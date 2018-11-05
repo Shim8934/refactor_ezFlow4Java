@@ -244,7 +244,7 @@ function MonthMiniData(oThisDate) {
 
     var oDiv = document.createElement("DIV");
     oDiv.setAttribute("onclick", "DayOnMouseClick(this);");
-    oDiv.setAttribute("ondblclick", "MonthMiniDbClick()");
+//    oDiv.setAttribute("ondblclick", "MonthMiniDbClick()");
 
     var pDateData = oThisDate.getDate()
 
@@ -273,20 +273,29 @@ function MonthMiniData(oThisDate) {
 function DayOnMouseClick(event) {
     if (!event) event = window.event;
 
-    if (document.getElementById(g_selTDID))
+    if ($("#"+g_selTDID)) {
+    	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+    }
+    
+    if ($("#"+g_selTRID)) {
+    	$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    }
+    
+    /*if (document.getElementById(g_selTDID))
         document.getElementById(g_selTDID).style.backgroundColor = "";
     if (document.getElementById(g_selTRID))
-        document.getElementById(g_selTRID).style.backgroundColor = "";
-
-   
+        document.getElementById(g_selTRID).style.backgroundColor = "";*/   
  
-        document.getElementById(event.getAttribute("id")).style.backgroundColor = "#c3c3c3";
-        g_selTRID = event.parentNode.parentNode.getAttribute("id");
-        g_selTDID = event.getAttribute("id");
+    //document.getElementById(event.getAttribute("id")).style.backgroundColor = "#f0f6ff";
+	$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+	//$("#"+event.getAttribute("id")).parent().css("border-radius","20px");
+	
+    g_selTRID = event.parentNode.parentNode.getAttribute("id");
+    g_selTDID = event.getAttribute("id");
 
-        var sDate = event.getAttribute("id").substring(7, 17);
-        date = sDate;
-        getScheduleList(date, pMode);
+    var sDate = event.getAttribute("id").substring(7, 17);
+    date = sDate;
+    getScheduleList(date, pMode);
         
 }
 
@@ -295,7 +304,7 @@ var delFlag = false;
 function CalendarMiniDataSource() {
     if (!document.getElementById("MiniCalendar"))
         return;
-
+    
     $.ajax({
 		type : "POST",
 		dataType : "json",
@@ -319,7 +328,6 @@ function sTempData() {
 }
 
 function getCalendarMiniDataSource_after(resultList) {
-
     var tempData = new Array();
     var k = 0;
     
@@ -360,13 +368,36 @@ function getCalendarMiniDataSource_after(resultList) {
 }
 
 function MiniDataBind(oAppointment) {
-
     var objElm = document.getElementById("TDMINI_" + oAppointment.trID + "_Day");
     if (objElm) {
-        objElm.style.fontWeight = "bold"
+//        objElm.style.fontWeight = "bold"
+    	if ($("#"+"TDMINI_" + oAppointment.trID + "_Day").parent().children(".dataHave").length > 0) {
+    		return;
+    	} else {
+    		$("#"+"TDMINI_" + oAppointment.trID + "_Day").parent().append("<div class='dataHave' style='height:1px;line-height:1px' onclick='clickDay(\"TDMINI_" + oAppointment.trID + "_Day\")'>·</div>");
+    	}
     }
 }
 
+function clickDay(val01) {
+    if ($("#"+g_selTDID)) {
+    	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+    }
+    
+    if ($("#"+g_selTRID)) {
+    	$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    }
+    
+	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+	
+    g_selTRID = $("#"+val01).parent().parent().attr("id");
+    g_selTDID = val01;
+
+    var sDate = val01.substring(7, 17);
+
+    date = sDate;
+    getScheduleList(date, pMode);
+}
 
 function mfGetUTFIsoDate(iYr, iMon, iDate, iHr, iMin) {
     var oDate = new Date();

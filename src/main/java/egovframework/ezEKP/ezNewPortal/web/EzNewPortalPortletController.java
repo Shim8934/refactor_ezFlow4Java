@@ -247,6 +247,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("selectDate", request.getParameter("selectDate"));
+		param.put("STARTDATE", request.getParameter("STARTDATE"));
+		param.put("ENDDATE", request.getParameter("ENDDATE"));
 		
 		String url = "/rest/ezportal/portlets/schedulelist";
 		
