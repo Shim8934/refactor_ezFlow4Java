@@ -112,13 +112,13 @@ var getCompanies = function() {
 				companyLogoHTML += "<div class='logoIcon'><img></img></div>";
 				companyLogoHTML += "</div>";
 				companyLogoHTML += "<div class='logoContent'>";
-				companyLogoHTML += "<div id='imgTop' class='btnpositionJsp updateLogo'><a class='imgbtn updateLogoBtn'><span>등록</span></a></div>";
+				companyLogoHTML += "<div id='imgCompany' class='btnpositionJsp updateLogo'><a class='imgbtn updateLogoBtn'><span>등록</span></a></div>";
 				companyLogoHTML += "<ul>";
 				companyLogoHTML += "<li># 회사의 대표 로그인 로고의 이미지를 변경합니다.</li>";
 				companyLogoHTML += "<li># 가로 x 세로의 크기는 000(px) x 000(px) 입니다.</li>";
 				companyLogoHTML += "</ul></div></div></div></div>";
 				
-				$(body).append(companyLogoHTML);
+				$("body").append(companyLogoHTML);
 			}
 		} else {
 			// We reached our target server, but it returned an error
@@ -172,6 +172,7 @@ var uploadImgBtn = function (obj){
 	tempObj = obj;
 	console.log(tempObj);
 	console.log(this.id);
+	document.getElementById("imgFile").setAttribute("data1", this.id);
     document.getElementById("imgFile").click();
 }
 
@@ -187,9 +188,19 @@ var imgUpload = function () {
         alert("<spring:message code = 'ezPoll.t208' />");
         return;
     }	 
+    var logoType = document.getElementById("imgFile").getAttribute("data1");
+    
+    if (logoType == "imgLogin") {
+    	logoType = "L";
+    } else if (logoType == "imgTop") {
+    	logoType = "P";
+    } else if (logoType == "imgCompany") {
+    	logoType = "R";
+    }
     
     fd.append("file", _file);
     fd.append("companyId", companyValue);
+    fd.append("logoType", logoType);
     
     var request = new XMLHttpRequest();
     
@@ -199,7 +210,15 @@ var imgUpload = function () {
 	    
 	    request.onload = function() {
 	    	var result = request.responseText;
-	    	$(".loginLogo").find(".logoIcon").find("img").attr("src", result);
+	    	
+	    	if (logoType == "L") {
+	    		$(".loginLogo").find(".logoIcon").find("img").attr("src", result);
+	    	} else if (logoType == "P") {
+	    		$(".portalLogo").find(".logoIcon").find("img").attr("src", result);
+	    	} else if (logoType == "R") {
+	    		$(".companyLogo").find(".logoIcon").find("img").attr("src", result);
+	    	}
+	    	
 	    }
     } else {
     	alert("<spring:message code = 'ezCommunity.lhj03' /> (jpg, png, bmp)");

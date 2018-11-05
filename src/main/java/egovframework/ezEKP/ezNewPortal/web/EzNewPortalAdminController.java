@@ -883,7 +883,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			writeUploadedFile(multiFile, newFileName, pDirPath + "uploadFile");
         }
         
-        json.put("logoType", "L");
+        json.put("logoType", request.getParameter("logoType"));
         json.put("logoUrl", newFileName);
 		JSONObject result = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, request, "patch", json);
 		String status = result.get("status").toString();

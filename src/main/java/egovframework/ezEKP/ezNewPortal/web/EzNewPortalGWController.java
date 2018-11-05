@@ -424,12 +424,17 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String deptId = info.getDeptId();
 			String langType = info.getLang();
-			String logoType = "portal";
+			String logoType = "P";
 			JSONObject data = new JSONObject();
 			/**
 			 * 1) 로고
 			 */
 			String logoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, logoType);
+			
+			if (logoUrl == null || logoUrl == "") {
+				logoUrl = "/files/upload_portal/Top/Logo/logo.gif";
+			}
+			
 			LOGGER.debug("logoUrl : " + logoUrl);
 
 			/**
