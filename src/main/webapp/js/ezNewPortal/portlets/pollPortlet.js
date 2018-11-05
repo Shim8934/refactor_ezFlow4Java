@@ -80,7 +80,7 @@ var getPollPortletList = function () {
 				assemblePollList(poll);	
 			}
 		} else {
-			console.error(xhr.responsText);	
+			console.error(xhr.responseText);	
 		}
 	}
 	xhr.open('GET', '/ezNewPortal/getPollPortlet.do');
