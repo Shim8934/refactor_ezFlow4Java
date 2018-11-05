@@ -490,8 +490,10 @@ function viewPortletEnv() {
 
 	var feature = GetOpenPosition(760, 645);
 	
-	DivPopUpShow($('body').prop('scrollWidth') * 0.9, 435, "/ezNewPortal/portletSetting.do", "",
-		"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+//	DivPopUpShow($('body').prop('scrollWidth') * 0.9, 435, "/ezNewPortal/portletSetting.do", "",
+//		"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+	DivPopUpShow(1000, 700, "/ezNewPortal/portletSetting.do", "",
+		"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);	
 }
 
 //근태관리 연동
