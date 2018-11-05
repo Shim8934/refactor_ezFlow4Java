@@ -3237,6 +3237,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("setUserMobileManaged ended");
 	}
 
+	/*
+	 * 직함관리 페이지 호출 메서드
+	 * */
 	@RequestMapping(value="/admin/ezOrgan/jobInfoList.do", produces="application/text; charset=utf8")
 	public String jobTitleList(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobInfoList started.");
@@ -3264,7 +3267,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("jobInfoList ended.");
 		return "admin/ezOrgan/jobInfoList";
 	}
-	
+	/*
+	 * 직함관리 등록/수정 팝업창 호출 메서드 
+	 * */
 	@RequestMapping(value="/admin/ezOrgan/jobTitlePopupUI.do", produces="application/text; charset=utf8")
 	public String jobTitlePopupUI(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobTitlePopupUI started.");
@@ -3296,13 +3301,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("jobTitlePopupUI ended.");
 		return "admin/ezOrgan/jobTitlePopupUi";
 	}
-	
+	/*
+	 * 직함관리 등록/수정 버튼 동작 메서드 
+	 * */
 	@RequestMapping(value="/admin/ezOrgan/jobTitleAction.do")
 	@ResponseBody
 	public String jobTitleAction(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobTitleAction started.");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
 
 //		String cn = request.getParameter("cn");
 		String jobID = request.getParameter("jobID");
@@ -3326,7 +3337,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		return result;
 	}
-	
+	/*
+	 * 직함관리 직위/직책 리스트 호출 메서드
+	 * */
 	@RequestMapping(value="/admin/ezOrgan/jobTitleListView.do", produces="application/text; charset=utf8")
 	@ResponseBody
 	public String jobTitleListView(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
@@ -3342,13 +3355,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("jobTitleListView ended.");
 		return result;
 	}
-	
+	/*
+	 * 직함관리 직위/직책 삭제 메서드
+	 * */
 	@RequestMapping(value="/admin/ezOrgan/jobTitleDelete.do", produces="application/text; charset=utf8")
 	@ResponseBody
 	public String jobTitleDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobTitleListView started.");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
 		
 //		String cn = request.getParameter("cn");
 		String jobID = request.getParameter("jobID");
@@ -3360,7 +3379,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("jobTitleListView ended.");
 		return result;
 	}
-	
+	/*
+	 * 직함관리 직위/직책 사용중인 사용자 리스트 호출 메서드
+	 * */
 	@RequestMapping(value="/admin/ezOrgan/jobTitleUserListView.do", produces="application/text; charset=utf8")
 	@ResponseBody
 	public String jobTitleUserListView(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
@@ -3378,7 +3399,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("jobTitleUserListView ended.");
 		return result;
 	}
-	
+	/*
+	 * 직함관리 직위/직책 사용중인 사용자수 조회 메서드(삭제 시, 사용중인 사용자가 있는지 검사를 위한 메서드 | 직위/직책 사용중이면 삭제 불가함)
+	 * */
 	@RequestMapping(value="/admin/ezOrgan/jobTitleUserListCnt.do", produces="application/text; charset=utf8")
 	@ResponseBody
 	public String jobTitleUserListCnt(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
@@ -3396,7 +3419,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("jobTitleUserListCnt ended.");
 		return result;
 	}
-	
+	/*
+	 * 직함관리 직위/직책 갯수 조회 메서드(중복 조회를 하기 위한 메서드)
+	 * */
 	@RequestMapping(value="/admin/ezOrgan/jobTitleCnt.do", produces="application/text; charset=utf8")
 	@ResponseBody
 	public String jobTitleCnt(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
@@ -3406,15 +3431,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 //		String cn = request.getParameter("cn");
 		String jobID = request.getParameter("jobID");
+		String mode = request.getParameter("mode");
+		String displayName = request.getParameter("displayName");
+		String displayName2 = request.getParameter("displayName2");
 		String type = request.getParameter("type");
 		String companyID = request.getParameter("companyID");
 		
-		String result = String.valueOf(ezOrganAdminService.getTitleCnt(type, jobID, companyID, userInfo.getTenantId()));
+		String result = String.valueOf(ezOrganAdminService.getTitleCnt(type, jobID, mode, displayName, displayName2, companyID, userInfo.getTenantId()));
 		
 		logger.debug("jobTitleCnt ended.");
 		return result;
 	}
-	
+	/*
+	 * 직함관리 직위/직책 정보 조회 메서드(수정 시, 정보를 호출하기 위한 메서드)
+	 * */
 	@RequestMapping(value="/admin/ezOrgan/jobTitleInfo.do", produces="application/text; charset=utf8")
 	@ResponseBody
 	public String jobTitleInfo(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
@@ -3432,7 +3462,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("jobTitleInfo ended.");
 		return rtnXml;
 	}
-	
+	/*
+	 * 직함관리 유저의 회사를 조회하는 메서드(회사간 겸직 시, 그 회사의 직위/직책을 불러오기 위한 회사 조회)
+	 * */
 	@RequestMapping(value="/admin/ezOrgan/getUserCompanyID.do", produces="application/text; charset=utf8")
 	@ResponseBody
 	public String getUserCompanyID(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
