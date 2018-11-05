@@ -18,7 +18,7 @@
 	
 	<body class="newLeft"> 
 		<div id="left" class="lnb" style="overflow: auto">
-			<div class="left_title" title="포탈">포탈</div>
+			<div class="admin_left_title" title="포탈">포탈</div>
 				<!-- themes -->
 				<h2><span class = "leftMenu_btn" id = "themes">테마관리</span><ul></ul></h2>
 				<!-- menus -->	

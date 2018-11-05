@@ -119,7 +119,7 @@
 	</head>
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
-  			<div class="left_title" title="<spring:message code='main.t23' />">
+  			<div class="admin_left_title" title="<spring:message code='main.t23' />">
 	  			<c:if test="${dotNetIntegration != 'YES'}"><spring:message code='main.t23' /></c:if>
 	  			<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.t24' /></c:if>
   			</div>

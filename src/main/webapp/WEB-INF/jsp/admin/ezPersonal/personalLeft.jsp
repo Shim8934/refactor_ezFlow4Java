@@ -60,7 +60,7 @@
 	</head>
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
-			<div class="left_title" title="<spring:message code = 'main.t7' />"><spring:message code = 'main.t7' /></div>   
+			<div class="admin_left_title" title="<spring:message code = 'main.t7' />"><spring:message code = 'main.t7' /></div>   
 		  	<%-- <h2>
 		  		 <span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'main.t65' /></span>
 		    	<ul></ul> <!-- 공지사항 사용안함 -->

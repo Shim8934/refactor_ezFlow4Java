@@ -90,57 +90,51 @@
 			}
 		</script>
 	</head>
-	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-		<div id="left" style="overflow-x:hidden">
-			<div class="left_admin" title="<spring:message code='main.t10'/>"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code='main.t25'/></div>
+	<body class="newLeft">
+		<div id="left" class="lnb" style="overflow: auto">
+			<div class="admin_left_title" title="<spring:message code='main.t10'/>"><spring:message code='main.t25'/></div>
 			
-	        	<h2><span style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code='main.t10'/></span><ul></ul></h2>
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(15)"><spring:message code='ezApprovalG.csj02'/></span><ul></ul></h2>
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='main.t36'/></span><ul></ul></h2>
-				
-				<c:if test="${approvalFlag == 'S' }">
-					<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='main.t37'/></span><ul></ul></h2>
-					<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='main.t38'/></span><ul></ul></h2>
-				</c:if>
-				
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='main.t39'/></span><ul></ul></h2>
-				
-				<c:choose>
-					<c:when test="${approvalFlag == 'S' }">
-						<h2><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='main.t40'/></span><ul></ul></h2>	
-					</c:when>
-					<c:otherwise>
-						<h2><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='main.t46'/></span><ul></ul></h2>	
-						<h2><span style="display:inline-block;width:100%;" onClick="goPage(7)"><spring:message code='main.t47'/></span><ul></ul></h2>
-					</c:otherwise>
-				</c:choose>
-				
-				<c:choose>
-					<c:when test="${approvalFlag == 'S' }">
-						
-					</c:when>
-					<c:otherwise>
-						<h2><span style="display:inline-block;width:100%;" onClick="goPage(8)"><spring:message code='main.t41'/></span><ul></ul></h2>
-					</c:otherwise>
-				</c:choose>
-				
-				<c:choose>
-					<c:when test="${approvalFlag == 'S' }">
-					</c:when>
-					<c:otherwise>
-						<h2><span style="display:inline-block;width:100%;" onClick="goPage(9)"><spring:message code='main.t48'/></span><ul></ul></h2>
-						<h2><span style="display:inline-block;width:100%;" onClick="goPage(10)"><spring:message code='main.t49'/></span><ul></ul></h2>
-					</c:otherwise>
-				</c:choose>
-				<c:if test="${useAdminBujae == 'YES'}">
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(14)"><spring:message code='main.t0628'/></span><ul></ul></h2>				
-				</c:if>
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(11)"><spring:message code='main.t42'/></span><ul></ul></h2>	
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(12)"><spring:message code='main.t50'/></span><ul></ul></h2>	
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(13)"><spring:message code='main.t51'/></span><ul></ul></h2>	
-			</div>
-		<script type="text/javascript">
-			initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		</script>
+        	<h2><span style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code='main.t10'/></span></h2>
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(15)"><spring:message code='ezApprovalG.csj02'/></span></h2>
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='main.t36'/></span></h2>
+			
+			<c:if test="${approvalFlag == 'S' }">
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='main.t37'/></span></h2>
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='main.t38'/></span></h2>
+			</c:if>
+			
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='main.t39'/></span></h2>
+			
+			<c:choose>
+				<c:when test="${approvalFlag == 'S' }">
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='main.t40'/></span></h2>	
+				</c:when>
+				<c:otherwise>
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='main.t46'/></span></h2>	
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(7)"><spring:message code='main.t47'/></span></h2>
+				</c:otherwise>
+			</c:choose>
+			
+			<c:choose>
+				<c:when test="${approvalFlag == 'S' }"></c:when>
+				<c:otherwise>
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(8)"><spring:message code='main.t41'/></span></h2>
+				</c:otherwise>
+			</c:choose>
+			
+			<c:choose>
+				<c:when test="${approvalFlag == 'S' }"></c:when>
+				<c:otherwise>
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(9)"><spring:message code='main.t48'/></span></h2>
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(10)"><spring:message code='main.t49'/></span></h2>
+				</c:otherwise>
+			</c:choose>
+			<c:if test="${useAdminBujae == 'YES'}">
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(14)"><spring:message code='main.t0628'/></span></h2>				
+			</c:if>
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(11)"><spring:message code='main.t42'/></span></h2>	
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(12)"><spring:message code='main.t50'/></span></h2>	
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(13)"><spring:message code='main.t51'/></span></h2>	
+		</div>
 	</body>
 </html>

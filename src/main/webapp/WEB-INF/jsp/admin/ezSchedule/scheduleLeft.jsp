@@ -43,17 +43,15 @@
 		</script>
 	
 	</head>
-	<body class="leftbody">
-		<div id="left">
-  			<div class="left_admin" title="<spring:message code='ezSchedule.t14' />"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code='ezSchedule.t1010' /></div> 
-  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='ezSchedule.t36' /></span><ul></ul></h2>
-  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='ezSchedule.t4003' /></span><ul></ul></h2>
-  			<!-- #13470 일본은 음력사용 안함 -->
-  			<%-- <h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='ezSchedule.t6000' /></span><ul></ul></h2> --%>
-  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='ezSchedule.t9990007' /></span><ul></ul></h2>
+	<body class="newLeft">
+		<div id="left" class="lnb" style="overflow: auto">
+  			<div class="admin_left_title" title="<spring:message code='ezSchedule.t14' />"><spring:message code='ezSchedule.t1010' /></div> 
+  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='ezSchedule.t36' /></span></h2>
+  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='ezSchedule.t4003' /></span></h2>
+  			<c:if test="${lang != 3}">
+	  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='ezSchedule.t6000' /></span></h2>
+  			</c:if>
+  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='ezSchedule.t9990007' /></span></h2>
 		</div>
-		<script type="text/javascript">
-			initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		</script>
 	</body>
 </html>

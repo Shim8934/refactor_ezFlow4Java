@@ -23,10 +23,6 @@ function getScheduleList(date, mode) {
 
 function getScheduleList_after(resultList, mode, date) {
 	try {
-		if($('.nodata')){
-			$('.nodata').remove();
-		}
-
 		//2018-07-04 포탈에서 read.do 호출시 출처를 알기위한 변수추가
 		var pageFrom = 'Portal';
 		
