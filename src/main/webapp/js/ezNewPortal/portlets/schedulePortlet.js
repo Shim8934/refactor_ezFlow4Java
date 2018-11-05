@@ -22,80 +22,77 @@ window.onload = function () {
 }
 
 function getScheduleList(date, mode) {
-    selDate = date;			    
-
-    $.ajax({
+	selDate = date;			    
+	
+	$.ajax({
 		type : "POST",
-		dataType : "text",
+		dataType : "json",
 		async : true,
 		url : "/ezNewPortal/getScheduleList.do",
 		data : {
 			selectDate  : date		    			
 		},
-		success: function(text){
-			getScheduleList_after(text, mode, date);
+		success: function(json){
+			getScheduleList_after(json.resultList, mode, date);
 		}
-    });
+	});
 }
 
-function getScheduleList_after(text, mode, date) {
-    try {
-    	if($('.nodata')){
-	    	$('.nodata').remove();
-    	}
-        var xmldom = createXmlDom();
-        xmldom = loadXMLString(text);
-        //2018-07-04 포탈에서 read.do 호출시 출처를 알기위한 변수추가
-        var pageFrom = 'Portal';
-        
-        var listHTML = "";
-        listHTML += "<ul class='sscheduleUL'>";
-        
-        for (var i = 0; i < 3; i++) {
-        	if (getNodeText(xmldom.getElementsByTagName("SCHEDULEID").item(i)) != null && getNodeText(xmldom.getElementsByTagName("SCHEDULEID").item(i)) != "") {
-	    		var SCHEDULETYPE = getNodeText(xmldom.getElementsByTagName("SCHEDULETYPE").item(i));
-	            var SCHEDULEID = getNodeText(xmldom.getElementsByTagName("SCHEDULEID").item(i));			            
-	            var DATETYPE = getNodeText(xmldom.getElementsByTagName("DATETYPE").item(i));
-	            var REPEATCOUNT = getNodeText(xmldom.getElementsByTagName("REPEATCOUNT").item(i));
-	            var STARTDATE = getNodeText(xmldom.getElementsByTagName("STARTDATE").item(i));
-	            var ENDDATE = getNodeText(xmldom.getElementsByTagName("ENDDATE").item(i));
-	            var TITLE = getNodeText(xmldom.getElementsByTagName("TITLE").item(i));
-	            var startTime = STARTDATE.split(' ')[1].substring(0,5);
-	            var endTime = ENDDATE.split(' ')[1].substring(0,5);
-	            var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));			            
-            	listHTML += "<li class='scheduleLi' onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\">";
-            	listHTML += "<p class='scheduleTime'>";
-            	
-            	var timeClass = "";
-            	if(SCHEDULETYPE == 1) {
-            		timeClass = "Tindividual";
-            		listHTML += "<span class='Tindividual'>" + strLang125 + "</span>";
-            	} else if (SCHEDULETYPE == 2) {
-            		timeClass = "Tdept";
-            		listHTML += "<span class='Tdept'>" + strLang126 + "</span>";
-            	} else if (SCHEDULETYPE == 3) {
-            		timeClass = "Tcompany";
-            		listHTML += "<span class='Tcompany'>" + strLang127 + "</span>";
-            	} else if (SCHEDULETYPE == 7) {
-            		timeClass = "Tgroup";
-            		listHTML += "<span class='Tgroup'>" + strLang130 + "</span>";
-            	} else {
-            		listHTML += "";
-            	}
-            	
-            	listHTML += "<span class='" + timeClass + "_timeText'>" + startTime + " ~ " + endTime + "</span></p>";
-            	listHTML += "<p class='scheduleText'>";
-            	listHTML += MakeXMLString(TITLE)+"</p></li>";
-            } else {
-            	listHTML += "<li class='scheduleLi_nodata'>";
-            	listHTML += "<p class='sNodataText'>" + strLang277 + "</p>";	
-            	listHTML += "<p class='sNodataPlus' onclick='scheduleWrite()'><img src='/images/kr/main/schedule_plus.png'></p></li>";
-            }
-        }
-        listHTML += "</ul'>";
-        document.getElementById("scheduleList").innerHTML = listHTML;
+function getScheduleList_after(resultList, mode, date) {
+	try {
+		if($('.nodata')){
+			$('.nodata').remove();
+		}
 
-    } catch (e) {}
+		//2018-07-04 포탈에서 read.do 호출시 출처를 알기위한 변수추가
+		var pageFrom = 'Portal';
+		
+		var listHTML = "";
+		listHTML += "<ul class='sscheduleUL'>";
+		for (var i = 0; i < 3; i++) {
+			if (resultList[i] != null && resultList[i] != "") {
+				var SCHEDULETYPE = resultList[i].scheduleType;
+				var SCHEDULEID = resultList[i].scheduleId;			            
+				var DATETYPE = resultList[i].dateType;
+				var REPEATCOUNT = resultList[i].repeatCount;
+				var STARTDATE = resultList[i].startDate;
+				var ENDDATE = resultList[i].endDate;
+				var TITLE = resultList[i].title;
+				var startTime = STARTDATE.split(' ')[1].substring(0,5);
+				var endTime = ENDDATE.split(' ')[1].substring(0,5);
+				var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));			            
+				listHTML += "<li class='scheduleLi' onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\">";
+				listHTML += "<p class='scheduleTime'>";
+				var timeClass = "";
+				if(SCHEDULETYPE == 1) {
+					timeClass = "Tindividual";
+					listHTML += "<span class='Tindividual'>" + strLang125_1 + "</span>";
+				} else if (SCHEDULETYPE == 2) {
+					timeClass = "Tdept";
+					listHTML += "<span class='Tdept'>" + strLang126_1 + "</span>";
+				} else if (SCHEDULETYPE == 3) {
+					timeClass = "Tcompany";
+					listHTML += "<span class='Tcompany'>" + strLang127_1 + "</span>";
+				} else if (SCHEDULETYPE == 7) {
+					timeClass = "Tgroup";
+					listHTML += "<span class='Tgroup'>" + strLang130_1 + "</span>";
+				} else {
+					listHTML += "";
+				}
+				
+				listHTML += "<span class='" + timeClass + "_timeText'>" + startTime + " ~ " + endTime + "</span></p>";
+				listHTML += "<p class='scheduleText'>";
+				listHTML += TITLE+"</p></li>";
+			} else {
+				listHTML += "<li class='scheduleLi_nodata'>";
+				listHTML += "<p class='sNodataText'>" + strLang277 + "</p>";	
+				listHTML += "<p class='sNodataPlus' onclick='scheduleWrite()'><img src='/images/kr/main/schedule_plus.png'></p></li>";
+			}
+		}
+		listHTML += "</ul'>";
+		document.getElementById("scheduleList").innerHTML = listHTML;
+		
+	} catch (e) {}
 }
 
 function scheduleWrite() {

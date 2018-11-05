@@ -306,8 +306,8 @@ function CalendarMiniDataSource() {
 			GROUPID : groupid,
 			IDLIST : (idlist == "") ? idtype : idlist
 		},
-		success: function(text){
-			getCalendarMiniDataSource_after(text)
+		success: function(json){
+			getCalendarMiniDataSource_after(json.resultList)
 			delFlag = false;
 		}
     }); 
@@ -319,20 +319,16 @@ function sTempData() {
 
 
 //function getCalendarMiniDataSource_after(xmlhttp) {
-function getCalendarMiniDataSource_after(text){
+function getCalendarMiniDataSource_after(resultList){
     var tempData = new Array();
     
     try {
-
         if (MiniHttp.responseText == "") return;
-        var listNode = loadXMLString(text);
-        var nlength = SelectNodes(listNode, "DATA/ROW").length;
+        
         var k = 0;
-        for (var i = 0; i < nlength; i++) {
-            var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
-
-            var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
-            var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");
+        $.each(resultList, function(idx, item) {
+        	var _Dtstart = item.startDate;
+        	var _Dtend = item.endDate;
             var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
             var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
 
@@ -362,7 +358,7 @@ function getCalendarMiniDataSource_after(text){
             }
             DataSDT = null;
             DataEDT = null;
-        }
+        })
         
         tempData = null;
     }

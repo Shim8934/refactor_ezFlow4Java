@@ -298,7 +298,7 @@ function CalendarMiniDataSource() {
 
     $.ajax({
 		type : "POST",
-		dataType : "text",
+		dataType : "json",
 		async : (!delFlag ? true : false),
 		url : "/ezNewPortal/getScheduleList.do",
 		data : {
@@ -308,8 +308,8 @@ function CalendarMiniDataSource() {
 			GROUPID : groupid,
 			IDLIST : (idlist == "") ? 'T' : idlist
 		},
-		success: function(text){
-			getCalendarMiniDataSource_after(text)
+		success: function(json){
+			getCalendarMiniDataSource_after(json.resultList);
 			delFlag = false;
 		}
     }); 
@@ -318,57 +318,45 @@ function CalendarMiniDataSource() {
 function sTempData() {
 }
 
-
-function getCalendarMiniDataSource_after(text) {
+function getCalendarMiniDataSource_after(resultList) {
 
     var tempData = new Array();
-
-    try {
-        var listNode = loadXMLString(text);
-        var nlength = SelectNodes(listNode, "DATA/ROW").length;
-        var k = 0;
-        for (var i = 0; i < nlength; i++) {
-            var objNodes = SelectNodes(listNode, "DATA/ROW")[i];
-
-            var _Dtstart = SelectSingleNodeValue(objNodes, "STARTDATE");
-            var _Dtend = SelectSingleNodeValue(objNodes, "ENDDATE");
-            var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7)) - 1, parseInt(_Dtstart.substring(8, 10)), parseInt(_Dtstart.substring(11, 13)), parseInt(_Dtstart.substring(14, 16)));
-            var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7)) - 1, parseInt(_Dtend.substring(8, 10)), parseInt(_Dtend.substring(11, 13)), parseInt(_Dtend.substring(14, 16)));
-
-            if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
-
-                var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
-                var day = 1000 * 60 * 60 * 24;
-                betweenDay = parseInt(betweenDay / day, 10);
-
-                for (var j = 0; j <= betweenDay; j++) {
-
-                    var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
-                    tempData[k] = new sTempData();
-                    tempData[k].trID = trID;
-
-                    MiniDataBind(tempData[k]);
-                    DataSDT.setDate(DataSDT.getDate() + 1);
-                    k += 1;
-                }
-            } else {
-                var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
-                tempData[k] = new sTempData();
-                tempData[k].trID = trID;
-
-                MiniDataBind(tempData[k]);
-                k += 1;
-            }
-            DataSDT = null;
-            DataEDT = null;
-        }
-        
-        tempData = null;
-    }
-    catch (e) {
-    	// 2016-08-01 schedule_get_list.aspx 구현될때까지 주석처리
-        //alert("getCalendarMiniDataSource_after : " + e.description);
-    }
+    var k = 0;
+    
+    $.each(resultList, function(idx, item) {
+    	var _Dtstart = item.startDate;
+    	var _Dtend = item.endDate;
+    	var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7)) - 1, parseInt(_Dtstart.substring(8, 10)), parseInt(_Dtstart.substring(11, 13)), parseInt(_Dtstart.substring(14, 16)));
+    	var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7)) - 1, parseInt(_Dtend.substring(8, 10)), parseInt(_Dtend.substring(11, 13)), parseInt(_Dtend.substring(14, 16)));
+    	
+    	if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
+    		
+    		var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
+    		var day = 1000 * 60 * 60 * 24;
+    		betweenDay = parseInt(betweenDay / day, 10);
+    		
+    		for (var j = 0; j <= betweenDay; j++) {
+    			
+    			var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
+    			tempData[k] = new sTempData();
+    			tempData[k].trID = trID;
+    			
+    			MiniDataBind(tempData[k]);
+    			DataSDT.setDate(DataSDT.getDate() + 1);
+    			k += 1;
+    		}
+    	} else {
+    		var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
+    		tempData[k] = new sTempData();
+    		tempData[k].trID = trID;
+    		
+    		MiniDataBind(tempData[k]);
+    		k += 1;
+    	}
+    	DataSDT = null;
+    	DataEDT = null;
+    })
+    tempData = null;
 }
 
 function MiniDataBind(oAppointment) {

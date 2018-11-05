@@ -238,11 +238,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	/**
 	 * 포틀릿 - 일정관리 목록 조회
 	 */
-	@RequestMapping(value = "/ezNewPortal/getScheduleList.do", produces = "application/text; charset=utf8")
-	@ResponseBody
+	@RequestMapping(value = "/ezNewPortal/getScheduleList.do")
 	public String getScheduleList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getScheduleList Start");
-
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -255,28 +254,16 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String status = resultBody.get("status").toString();
 		
-		StringBuilder sb = new StringBuilder("<DATA>");
 		if (status.equals("ok")) {
 			JSONArray resultList = (JSONArray) resultBody.get("data");
 			
-			for(int i = 0; i < resultList.size(); i++) {			
-				JSONObject data = (JSONObject) resultList.get(i);
-				
-				Iterator dataKeyIter = new HashSet(data.keySet()).iterator();
-				
-				sb.append("<ROW>");
-				while (dataKeyIter.hasNext()) {
-				    String keyName = (String)dataKeyIter.next();
-					sb.append("<" + keyName.toUpperCase() + ">" + data.get(keyName) + "</" + keyName.toUpperCase() + ">");
-				}
-				sb.append("</ROW>");
-			}
-			sb.append("</DATA>");
+			model.addAttribute("resultList", resultList);
 		}
 		
 		logger.debug("getScheduleList End");
-		return sb.toString();
+		return "json";
 	} 
+	
 	
 	/**
 	 * 포틀릿 - 전자결재 목록 포틀릿
