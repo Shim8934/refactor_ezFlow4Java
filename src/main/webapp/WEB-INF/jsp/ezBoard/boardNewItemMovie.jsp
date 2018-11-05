@@ -1,0 +1,705 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+	<head>
+	    <title><spring:message code='ezBoard.t368'/></title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	    <style type="text/css">
+	         .preView {
+	         	width: 70px;
+	         	height: 70px;
+	         	text-align: center;
+	         	border:1px solid silver;
+	         }
+	         textarea {
+	         	resize:none;
+	         }
+	     </style>
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+   	    <c:if test="${!isCrossBrowser}">
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain.js')}"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem.js')}"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
+	    </c:if>
+	    <c:if test="${isCrossBrowser}">
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain_CK.js')}"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem_CK.js')}"></script>
+	    </c:if>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
+	    <script type="text/javascript">
+	        var pMode = "NEW";
+	        var AttachLimit = "${boardInfo.attachSizeLimit}";
+	        var pBoardID = "${boardID}";
+	        var pUrl = "${url}";
+	        var PhotoBoard = "N";
+	        var spanimagename = "";
+	        var resultcmd = "";
+	        var strNow = "${strNow}";		
+	        var bodycount = "0";
+	        var pAttachListXml = "";
+	        var gubun = "3";
+	        var SSUserID = "${userInfo.id}";
+		    var SSUserName = "${userInfo.displayName1}";
+		    var SSUserName2 = "${userInfo.displayName2}";
+		    var SSDeptID = "${userInfo.deptID}";
+		    var SSDeptName = "${userInfo.deptName1}";
+		    var SSDeptName2 = "${userInfo.deptName2}";
+		    var SSCompanyID = "${userInfo.companyID}";
+		    var SSCompanyName = "${userInfo.companyName1}";
+		    var SSCompanyName2 = "${userInfo.companyName2}";
+	        var strUserRank = "${userInfo.title1}";
+		    var strUserRank2 = "${userInfo.title2}";
+		    var strUserPhone = "${userInfo.phone}";
+	        var pUploadFilePath = "${uploadFilePath}";
+	        var isdad = false;
+	        var isfileup = false;
+	        var pUse_Editor = "${useEditor}";
+	        var pNoneActiveX = "YES";
+	        var saveItemBoardId = "";
+	        var SelBoard = false;
+	        
+	        function window_onload() {
+	            var ua = navigator.userAgent;
+	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+	                document.getElementById("file1").multiple = false;
+	                window.resizeTo(780, 750);
+	            }
+	            try{
+	                new FormData();
+	                isdad = true;
+	            }
+	            catch (e) {
+	            }
+	            
+	            document.getElementById("addimagecontent").style.height = document.documentElement.clientHeight - 280 + "PX";
+	        }
+	        
+	        /* 2018-08-08 홍승비 - 썸네일+포토게시물 등록창 세로길이 리사이즈 추가 */
+	        window.onresize = function () {
+	        	 document.getElementById("addimagecontent").style.height = document.documentElement.clientHeight - 280 + "PX";
+	        }
+	
+		    function MakeXMLString(str)
+		    {
+			    str = ReplaceText(str, "&", "&amp;");
+			    str = ReplaceText(str, "<", "&lt;");
+			    str = ReplaceText(str, ">", "&gt;");
+			    return str;
+		    }
+		    
+	        function ReplaceText( orgStr, findStr, replaceStr )
+		    {
+			    var re = new RegExp( findStr, "gi" );
+			    return ( orgStr.replace( re, replaceStr ) );
+		    }
+	
+	        function addimageline(moviePath, localFileName, movieUniqueID, movieSize)
+	        {
+	            var movieid = moviePath;
+                tmpContents = new Array();
+
+                if (document.getElementById(movieid) != "" && document.getElementById(movieid) != null) {
+                    return "false";
+                }
+
+                var resultHTML = "";
+				resultHTML = "<table width='100%' height='420px' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + movieid + "' name='" + moviePath + "' uniqueId='" + movieUniqueID + "' >" +
+				"<tr><td style='border-top:0 none; padding:6px; text-align:center;'><video id='" + movieid + "' title='" + localFileName + "' size='" + movieSize + "' uniqueId='" + movieUniqueID + 
+				"' style='max-width: 640px; max-height: 360px;' name='movieView' controls></video></td></tr></table>";
+
+                var movieContent = document.getElementById("addimagecontent");
+                movieContent.innerHTML += resultHTML;
+                
+                console.log("movieid     ::    " + movieid);
+
+                 if (movieContent != null && movieContent != "") {
+                    var movieSrc = "/ezBoard/getBoardMovieInfo.do?type=BOARDMOVIETEMP&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(movieUniqueID);
+                    console.log("movieSrc     ::    " + movieSrc);
+                    
+                    document.getElementById(movieid).src = movieSrc;
+                    bodycount = parseInt(bodycount) + 1;
+                }
+	        }
+	
+	        function GetSmallUrl() {
+	            var xmldom_attachlist = createXmlDom();
+	            var strRet = "";
+	            var filepath = "";
+	
+	            if (typeof (pAttachListXml) == "string")
+	                xmldom_attachlist = loadXMLString(pAttachListXml);
+	            else
+	                xmldom_attachlist = pAttachListXml;
+	
+	            if (isdad || CrossYN()) {
+	                if (xmldom_attachlist == false) {
+	                    xmldom_attachlist = null;
+	                    return "";
+	                }
+	            }
+	            var xmldomNodes = xmldom_attachlist.getElementsByTagName('DATA2');
+	
+	            for (var i = 0; i < xmldomNodes.length; i++) {
+	                filepath = getNodeText(xmldomNodes.item(i));
+	                if (filepath.indexOf(pBoardID) != -1) {
+	                    var idx = filepath.lastIndexOf("/");
+	                    if (idx != -1) {
+	                        strRet += filepath.substr(0, idx + 1) + "s_" + filepath.substr(idx + 1) + "|";
+	                    }
+	
+	                } else {
+	                    if (saveItemBoardId != "" && saveItemBoardId == pBoardID)
+	                        strRet += "tempUploadFile/s_" + getNodeText(xmldomNodes.item(i)) + "|";
+	                    else
+	                        strRet += saveItemBoardId + "/uploadFile/s_" + getNodeText(xmldomNodes.item(i)) + "|";
+	                }
+	            }
+	            xmldom_attachlist = null;
+	            return strRet;
+	        }
+	        
+	        function SaveItem(pMode)
+	        {
+	            if (pBoardID == "") {
+	                if (!SelBoard) {
+	                    alert("<spring:message code='ezBoard.t173'/>");
+	                    return;
+	                }
+	            }
+	
+	            var bodycount = document.getElementById("addimagecontent").childNodes.length;
+	            var file = "";
+	            var content = "";
+	            var filename = "";
+	            var mainImageID = "";
+	            
+	            if(bodycount == 0)
+	            {
+	                alert("<spring:message code='ezBoard.hsb07'/>");
+	                return;
+	            }
+	
+				filename = document.getElementsByName('movieView')[0].title;
+			
+			    var strXML = "";
+			    var newID = "";
+			    var pStartDate = "";
+			    var pEndDate ="9999-12-30 23:59:59";
+			
+			    if (txtTitle.value == "" || trim(txtTitle.value) == "")
+			    {
+				    alert("<spring:message code='ezBoard.t390'/>");
+				    txtTitle.focus();
+				    return;				
+			    }
+	            
+			    newID = "{" + GetGUID() + "}";
+	
+			    var xmlhttp = createXMLHttpRequest();
+			    var xmldom = createXmlDom();
+			
+			    strXML += "<NODES>";
+			    strXML += "<NODE>";
+			    
+			    //2006.11.28 포토게시물 5건까지 등록할 수 있도록 수정
+	            var itemid = "";
+	            itemid = "{" + GetGUID() + "}";
+                strXML += "<ITEMID>" + itemid + "</ITEMID>";
+                strXML += "<ITEMID>" + itemid + "</ITEMID>";
+	            strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
+	            
+	            var importance = "0";
+			    // 수정(2008.03.19) : 사용자 정보가 누락되는 경우 체크하는 부분 추가
+	
+				strXML += "<WRITERID>" + SSUserID + "</WRITERID>";
+				strXML += "<WRITERNAME>" + MakeXMLString(SSUserName) + "</WRITERNAME>";
+				strXML += "<WRITERNAME2>" + MakeXMLString(SSUserName2) + "</WRITERNAME2>";
+				strXML += "<DEPTID>" + SSDeptID + "</DEPTID>";
+				strXML += "<DEPTNAME>" + MakeXMLString(SSDeptName) + "</DEPTNAME>";
+				strXML += "<DEPTNAME2>" + MakeXMLString(SSDeptName2) + "</DEPTNAME2>";
+				strXML += "<COMPANYID>" + SSCompanyID + "</COMPANYID>";
+				strXML += "<COMPANYNAME>" + MakeXMLString(SSCompanyName) + "</COMPANYNAME>";
+				strXML += "<COMPANYNAME2>" + MakeXMLString(SSCompanyName2) + "</COMPANYNAME2>";
+	            strXML += "<IMPORTANCE>" + importance + "</IMPORTANCE>";
+			    strXML += "<TITLE>" + MakeXMLString(txtTitle.value) + "</TITLE>";
+			    strXML += "<STARTDATE>" + pStartDate + "</STARTDATE>";
+			    strXML += "<ENDDATE>" + pEndDate + "</ENDDATE>";
+			    strXML += "<ABSTRACT></ABSTRACT>";
+			    strXML += "<ATTACHMENTS>" + MakeXMLString(AttachFileList_Photo()) + "</ATTACHMENTS>";
+				strXML += "<UPPERITEMIDTREE>" + newID + "</UPPERITEMIDTREE>";
+				strXML += "<PARENTWRITEDATE></PARENTWRITEDATE>";
+				strXML += "<ITEMLEVEL>1</ITEMLEVEL>";
+	            strXML += "<FILEPATH>" + pUploadFilePath + "</FILEPATH>";
+			    //확장 필드(필요에 따라 추가)
+			    strXML += "<EXTENSIONATTRIBUTE1></EXTENSIONATTRIBUTE1>";
+			    strXML += "<EXTENSIONATTRIBUTE2></EXTENSIONATTRIBUTE2>";
+				strXML += "<EXTENSIONATTRIBUTE3>" + strUserRank + "</EXTENSIONATTRIBUTE3>";	//직급으로 사용
+				strXML += "<EXTENSIONATTRIBUTE32>" + strUserRank2 + "</EXTENSIONATTRIBUTE32>";	//직급으로 사용
+				strXML += "<EXTENSIONATTRIBUTE4>" + MakeXMLString(txtPhotoFile.value) + "</EXTENSIONATTRIBUTE4>";//이미지명으로 사용함
+			    strXML += "<EXTENSIONATTRIBUTE5>" + MakeXMLString(GetSmallUrl()) + "</EXTENSIONATTRIBUTE5>";
+			    
+			    //20121018_[을지]_포토앨범 : 앨범소개 내용전달
+	            strXML += "<CONTENT>" + MakeXMLString(movieContent.value) + "</CONTENT>";		    
+	            strXML += "<DOCPASSWORD></DOCPASSWORD>";
+	            
+	            //20121018_[을지]_포토앨범 : 사진별 앨범 소개 글
+	            strXML += "<CONTENT2>" + MakeXMLString(content) + "</CONTENT2>";
+	            strXML += "<IMAGE_FILENAME>" + MakeXMLString(filename) + "</IMAGE_FILENAME>";
+	            
+	            // 여기에 썸네일 이미지 만들어서 저장?
+	            strXML += "<MAINIMAGEID>" + mainImageID + "</MAINIMAGEID>";
+			    strXML += "</NODE>";
+			    strXML += "</NODES>";
+			    
+	            xmldom.async = false;
+			    xmldom.preserveWhiteSpace = true;
+			    xmldom = loadXMLString(strXML);
+			    xmlhttp.open("POST", "/ezBoard/saveItemPhoto.do?mode=" + pMode + "&guBun=" + gubun, false);
+			    xmlhttp.send(xmldom);
+	            
+	            var strItemID = "";
+	
+	            if (SelectSingleNodeValue(loadXMLString(xmlhttp.responseText), "RESULT") == "OK") {
+				    xmlhttp = null;
+				    xmldom = null;
+				    if (pMode != "temp") {
+						if (strItemID == "")
+						{
+						    xmlhttp = createXMLHttpRequest();
+							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
+							xmlhttp.send();		
+							xmlhttp = null;
+						}
+						if (pMode == "reply")
+						{
+						    xmlhttp = createXMLHttpRequest();
+						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid + "&itemTreeID=" + strUpperItemIDTree, false);
+						    xmlhttp.send();
+						    xmlhttp = null;
+						}
+						if ("${boardInfo.apprMail_FG}" == "Y") {
+						    xmlhttp = createXMLHttpRequest();
+						    if (pMode != "modify") {
+						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
+						    } else {
+						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
+						    }
+						    xmlhttp.send();
+						    xmlhttp = null;
+						}
+						
+		                alert("<spring:message code='ezBoard.t399'/>");
+				    } else {
+		                alert("<spring:message code='ezBoard.t10033'/>");
+				    }
+				    
+				    try {
+				    	window.opener.leftCountRf();
+					} catch (e) {}
+					
+	                try {
+	                    window.opener.location.reload(false);
+	                }
+	                catch (e) { }
+	
+					window.close();
+	            } else {
+	                if (loadXMLString(xmlhttp.responseText).text == "INACCESSIBLE")
+	                    alert(strLang173);
+	                else
+	                    alert("<spring:message code='ezBoard.t403'/>" + loadXMLString(xmlhttp.responseText).text);
+		        }
+		
+		        xmlhttp = null;
+		        xmldom = null;
+		    }
+	        
+	        /* 2018-11-05 홍승비 - 동영상파일 확장자체크 추가 */
+		    function MovieTemp_onclick() {
+		        if (document.form.file1.value != "") {
+		            var fd = new FormData();
+		            
+	            	var file1val = document.getElementById("file1").files[0].name;
+			        var exIndex = file1val.lastIndexOf('.');
+					var extension = file1val.substring(exIndex+1, file1val.length);
+			        var check = false;
+			        check = compareExtension(check, extension);
+			        
+			        if (!check) {
+			        	document.getElementById("file1").files[0] = "";
+			        	alert("<spring:message code ='ezBoard.hsb05' />");
+			        	return;
+			        }
+			        else {
+	                	fd.append("file1", document.getElementById("form").file1.files[0]);
+			        }
+				        
+		            fd.append("mode", document.getElementById("mode").value);
+		            isfileup = true;
+		            xhr = new XMLHttpRequest();
+		            xhr.upload.addEventListener("progress", uploadProgress, false);
+		            xhr.addEventListener("load", uploadComplete, false);
+		            xhr.open("POST", "/ezBoard/boardMovieUpload.do?mode=MOVIE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+		            xhr.send(fd);
+		            document.getElementById("progdiv").style.display = "";
+		        }
+		    }
+		    
+	        // 동영상 임시 업로드 이후 동작2 
+		    function returnvalue(strXML) {
+		        ImgaeReturnXml = loadXMLString(strXML);
+		        var nodes = SelectNodes(ImgaeReturnXml, "ROOT/NODES/NODE");
+		        
+		        console.log("동영상 임시 업로드 이후");
+		        console.log(nodes.length);
+		        
+	            if (getNodeText(GetChildNodes(nodes[0])[1]) == "overflow") {
+	                alert("" + strLang8 + "" + AttachLimit + "MB" + strLang9 + "");
+	                return;
+	            }
+	            saveItemBoardId = pBoardID;
+	            var rtnMode = getNodeText(GetChildNodes(nodes[0])[5]);
+	            var movieFileName = getNodeText(GetChildNodes(nodes[0])[0]);
+	            var localFileName = getNodeText(GetChildNodes(nodes[0])[2]);
+	            var movieFileSize = getNodeText(GetChildNodes(nodes[0])[3]);
+	            var movieUniqueID = getNodeText(GetChildNodes(nodes[0])[6]);
+
+	            addimageline(movieFileName, localFileName, movieUniqueID, movieFileSize);
+	            
+	            console.log("addimageline 종료");
+		
+		        var attachXml = "<LISTVIEWDATA><ROWS>";
+		        for (var i = 0 ; i < document.getElementById("addimagecontent").childNodes.length ; i++) {
+		            attachXml += "<ROW><CELL>";
+		            attachXml += "<DATA1>" + "/upload_board/tempUploadFile/" + GetAttribute(document.getElementsByName('movieView')[i], 'uniqueId') + "</DATA1>";
+		            attachXml += "<DATA2>" + GetAttribute(document.getElementsByName('movieView')[i], 'uniqueId') + "</DATA2>";
+		            attachXml += "<DATA3></DATA3>";
+		            attachXml += "<DATA4></DATA4>";
+		            attachXml += "<DATA5>Y</DATA5>";
+		            attachXml += "<DATA6>" + GetAttribute(document.getElementsByName('movieView')[i], 'size') + "</DATA6>";
+		            attachXml += "</CELL></ROW>";
+		        }
+		        attachXml += "</ROWS></LISTVIEWDATA>";  //pAttachListXml
+		
+		        var xmlDom = createXmlDom();
+		        xmlDom = loadXMLString(attachXml);
+		        pAttachListXml = xmlDom;
+		    }
+		
+		    // 동영상 추가는 한개만 가능
+		    function btn_MovieAttachAdd() {
+	        	if (document.getElementById("addimagecontent").childNodes.length > 0) {
+	        		alert("<spring:message code ='ezBoard.hsb06' />");
+		        	return;
+	        	}
+		    	
+	        	document.getElementById('mode').value = "MOVIE";
+	            document.form.file1.click();
+		    }
+		
+		    // 동영상 삭제
+		    function btn_MovieAttachDel()
+		    {
+				var xmlhttp = createXMLHttpRequest();
+	            var uniqueID = "";
+	            var fd = new FormData();
+	            var imgDiv = document.getElementById("addimagecontent");
+	            uniqueID =  GetAttribute(document.getElementsByName('movieView')[0], 'uniqueid');
+	            
+	            if (uniqueID == null || uniqueID == "") {
+	            	alert("<spring:message code='ezBoard.t601'/>");
+		    		return;	
+	            }
+	            
+	            console.log("uniqueID in delete      ::     " + uniqueID);
+	            
+	            xmlhttp.open("POST", "/ezBoard/boardMovieUpload.do?mode=DEL&boardID=" + pBoardID +"&uniqueID=" + uniqueID, false);
+	            xmlhttp.send(fd);
+	            
+				pAttachListXml = "";
+				imgDiv.removeChild(imgDiv.childNodes[0]);
+				
+		        xmldom = null;
+		        xmlHTTP = null;
+		    }
+		
+		    //create guid
+		    function S4() {
+		        return ((CustomRandom() * 0x10000) | 0).toString(16).substring(1);
+		    }
+		
+		    function GetGUID() {
+		        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+		    }
+		    
+		    /* 2018-06-08 홍승비 - 사진 순서 정렬을 위한 이미지ID 조정 (000~999)  */
+		    function getZeroNum(count){
+		    	var zeroNum = "000" + count;
+		    	zeroNum = zeroNum.substring(zeroNum.length - 3);
+		    	return zeroNum;
+		    }
+		
+		    function CustomRandom() {
+		        var now = new Date();
+		        var seed = now.getMilliseconds();
+		        return Math.random(seed) + 1;
+		    }
+		     //
+		
+		    function onDragEnter(evt) {
+		        try{
+		            evt.dataTransfer.dropEffect = "copy";
+		            evt.stopPropagation();
+		            evt.preventDefault();
+		        }
+		        catch (e) {
+		            evt.dataTransfer.dropEffect = "none";
+		        }
+		    }
+		    function onDragOver(evt) {
+		        try{
+		            evt.dataTransfer.dropEffect = "copy";
+		            evt.stopPropagation();
+		            evt.preventDefault();
+		        }
+		        catch(e){
+		            evt.dataTransfer.dropEffect = "none";
+		        }
+		    }
+		    var xhr = null;
+		    function onDrop(evt) {
+		        try{
+		            evt.stopPropagation();
+		            evt.preventDefault();
+		
+		            if (isfileup) {
+		                alert("<spring:message code='ezBoard.t2000'/>");
+		                return;
+		            }
+		
+		            var file = evt.dataTransfer.files;
+		
+		            var fd = new FormData();
+		            for (var i = 0; i < file.length; i++) {
+		                fd.append("file1", file[i]);
+		            }
+		            fd.append("mode", document.getElementById("mode").value);
+		            isfileup = true;
+		            xhr = new XMLHttpRequest();
+		            xhr.upload.addEventListener("progress", uploadProgress, false);
+		            xhr.addEventListener("load", uploadComplete, false);
+		            xhr.open("POST", "/ezBoard/boardMovieUpload.do?mode=MOVIE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+		            xhr.send(fd);
+		
+		            document.getElementById("progdiv").style.display = "";
+		        }
+		        catch(e){
+		        }
+		    }
+		    function uploadProgress(evt) {
+		        if (evt.lengthComputable) {
+		            var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+		            document.getElementById('prog_bar').style.width = percentComplete + "%";
+		            document.getElementById('prog_num').innerHTML = percentComplete;
+		        }
+		    }
+		    
+		    // 동영상 업로드(저장은 아님) 완료 후 동작
+		    function uploadComplete() {
+		        document.getElementById("progdiv").style.display = "none";
+		        document.getElementById("prog_bar").style.width = "0%";
+		        document.getElementById("prog_num").innerHTML = "";
+		        document.getElementById("file1").value = "";
+		        returnvalue(xhr.responseText);
+		        isfileup = false;
+		    }
+		    var writeboardselect_modal_dialogArguments = new Array();
+		    function NewItem_onclick() {
+		        if (CrossYN()) {
+		            writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
+		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+		            try { OpenWin.focus(); } catch (e) { }
+		        }
+		        else {
+		            var wWeight = "355";
+		            var wHeight = "600";
+		            var heigth = window.screen.availHeight;
+		            var width = window.screen.availWidth;
+		            var left = (width - wWeight) / 2;
+		            var top = (heigth - wHeight) / 2;
+		            var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "",
+		                "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
+		
+		            if (typeof (ret) != "undefined" && typeof (ret) == "object") {
+		                GetBoardInfo();
+		                if (ret[2] != "3" && ret[2] != "4") {
+		                    if (!confirm("<spring:message code='ezBoard.t10055'/>"))
+		                        return;
+		                    else {
+	                            document.location.href = "/ezBoard/boardNewItem.do?boardID=" + ret[0] + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
+		                    }
+		                }
+		                pBoardID = ret[0];
+		                document.getElementById("BoardSpan").innerHTML = ret[1];
+		
+		                SelBoard = true;
+		            }
+		        }
+		    }
+	        function NewItem_onclick_Complete(ret) {
+	            if (typeof (ret) != "undefined" && typeof (ret) == "object") {
+	                GetBoardInfo();
+	                if (ret[2] != "3" && ret[2] != "4") {
+	                    if (!confirm("<spring:message code='ezBoard.t10055'/>"))
+	                        return;
+	                    else {
+                            document.location.href = "/ezBoard/boardNewItem.do?boardID=" + ret[0] + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
+	                    }
+	                }
+	                pBoardID = ret[0];
+	                document.getElementById("BoardSpan").innerHTML = ret[1];
+	
+	                SelBoard = true;
+	            }
+	        }
+		    function GetBoardInfo() {
+		        var xmlhttp_boardinfo = createXMLHttpRequest();
+		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + pBoardID, false);
+		        xmlhttp_boardinfo.send();
+		        if (xmlhttp_boardinfo.status == 200) {
+		            pBoardName = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "BOARDNAME")[0]);
+		            AttachLimit = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "ATTACHLIMIT")[0]);
+		            ExpireDays = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "EXPIREDAYS")[0]);
+		            gubun = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "GUBUN")[0]);
+		        }
+		        xmlhttp_boardinfo = null;
+		    }
+		    
+		    /* 2018-11-05 홍승비 - HTML5 지원 동영상파일 확장자체크 추가 */
+		    function compareExtension(check, extension) {
+	    		var filterExtension = new Array("mp4", "ogg", "webm");
+	    		for (var i = 0; i < filterExtension.length; i++) {
+	        		if (extension.toLowerCase() == filterExtension[i]) {
+	            		check = true;
+	            		break;
+	        		}
+	    		}
+	    		return check;
+			}
+	    </script>
+	</head>
+	<c:if test="${!isCrossBrowser}">
+		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
+		    Append_AttachAdd(filename);
+		</script>
+	</c:if>
+	<body class="popup" onload="window_onload()">
+	    <table border="0" class="layout">
+	        <tr>
+	            <td style="height:20px">
+	              <div id="menu">
+	                <ul>
+	                  <li ><span onClick="SaveItem('new');"><spring:message code='ezBoard.t98'/></span></li>
+	                  <li ><span ID='btn_add' onclick='btn_MovieAttachAdd()'><spring:message code='ezQuestion.t180'/><spring:message code='ezBoard.t602'/></span></li>
+	                  <li ><span id="btn_del" onClick="return btn_MovieAttachDel()"><spring:message code='ezQuestion.t180'/><spring:message code='ezBoard.t89'/></span></li>
+	                  <li><span  onClick="SaveItem('temp');"><spring:message code='ezBoard.t10034'/></span></li>
+	                </ul>
+	              </div>
+	              <div id="close">
+	                <ul>
+	                    <li ><span onclick="window.close();"></span></li>
+	                </ul>
+	              </div>
+				<script type="text/javascript">
+				    selToggleList(document.getElementById("menu"), "ul", "li", "0");	    
+				</script>
+	        </td>
+	  </tr>
+	  <tr>
+	      <td>
+	      <table border="0" cellspacing="0" cellpadding="0" class="content" style="table-layout:fixed;">
+	        <tr>
+	          <th style="width:100px; text-align:center"">
+	          	<c:choose>
+	          		<c:when test="${boardType != 'SELECT'}">
+		                <spring:message code='ezBoard.t142'/>
+	          		</c:when>
+	          		<c:otherwise>
+		                <a class="imgbtn" onclick="NewItem_onclick()"><span><spring:message code='ezBoard.t171'/></span></a>
+	          		</c:otherwise>
+	          	</c:choose>
+	          </th>
+	          <td style="width:70%" id="tdBoardName">
+	          	<c:choose>
+	          		<c:when test="${boardType != 'SELECT'}">
+	          			${boardInfo.boardName}
+	          		</c:when>
+	          		<c:otherwise>
+	          			<c:choose>
+	          				<c:when test="${boardID == ''}">
+			                    <span id="BoardSpan"><spring:message code='ezBoard.t57'/></span>
+	          				</c:when>
+	          				<c:otherwise>
+			                    <span id="BoardSpan">${boardInfo.boardName}</span>
+	          				</c:otherwise>
+	          			</c:choose>
+	          		</c:otherwise>
+	          	</c:choose>
+	          </td>
+	          <th style="width:80px; text-align:center"><spring:message code='ezBoard.t207'/></th>
+	          <td style="width:120px; text-align:center">${userID}</td>
+	        </tr>
+	        <tr>
+	          <th style="text-align:center"><spring:message code='ezBoard.t208'/></th>
+	          <td colspan="3" style="width:100%; vertical-align:middle; padding:0px 5px 0px 3px; margin:0;"><INPUT type="text" id="txtTitle" style="WIDTH:100%;word-wrap:break-word;word-break:break-all; border:1px solid #ddd; margin:0px; padding:2px 0px 2px 0px;" value="" maxlength="100" /></td>
+	        </tr>
+	        <tr style="display:none;">
+	          <th><spring:message code='ezBoard.t1001'/></th>
+	          <td class="pos1" colspan="3" style="width:100%;"><input style="width:600px;" id="fileData" name="fileData" type="file" onchange="fileUploadPreview(this, 'preView')" /></td>
+	        </tr>
+	        <tr style="display:none;">
+	          <th><spring:message code='ezBoard.t1021'/></th>
+	          <td class="pos1" colspan="3" style="width:100%"><input type="text" id="txtPhotoFile" style="width:85%" readonly ></td>
+	        </tr>
+	        <tr>
+	            <th><spring:message code='ezQuestion.t180'/><spring:message code='ezCommunity.t18'/></th>
+	            <td colspan="3" style="height:100px; margin:0; padding:3px 5px 3px 3px;"><textarea style="width:100%; height:100px; margin:0; padding:0; border:1px solid #ddd;" id="movieContent" wrap="hard"></textarea></td>
+	        </tr>
+	      </table>
+	      </td>
+	  </tr>
+	  <tr>
+	    <td>
+	        <table style="width:100%; border:1px solid #ddd; border-top:0 none; table-layout:fixed;" border="0" cellspacing="0" cellpadding="0">
+	        <tr>
+	            <th style="text-align:center ;padding-left:2px;border:0;"><spring:message code='ezBoard.t431'/></th>
+	        </tr>
+	      </table>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td colspan="4">
+	        <div id="addimagecontent" style="overflow:auto;width:100%;height:415px; vertical-align:top" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)"></div>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td>
+	        <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
+	        <form method="post" id="form" name="form" enctype="multipart/form-data" action="" target="ifrm" style="display: none">
+	        <input type="file" name="file1" id="file1"  style="width: 1px; height: 1px;" onchange="MovieTemp_onclick()" accept="video/*"/>
+	        <input type="hidden" name="mode" id="mode" />
+	        </form>
+	    </td>
+	  </tr>
+
+	    </table>
+	    <div id="progdiv" class="progarea" style="z-index:6000;position:absolute;top:370px;left:227px;display:none">
+	        <P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
+	    </div>
+	</body>
+</html>

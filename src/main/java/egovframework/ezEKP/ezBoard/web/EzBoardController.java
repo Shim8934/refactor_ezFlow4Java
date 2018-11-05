@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -1172,7 +1173,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	boardVO.setLang(userInfo.getLang());
     	boardVO.setTenantID(userInfo.getTenantId());
     	
-    	if (boardType.equals("4")) { // 썸네일 
+    	if (boardType.equals("4") || boardType.equals("7")) { // 썸네일, 동영상
     		resultXML = getThumbList(boardVO, userInfo, type);
     	} else if (boardType.equals("5")) { //Q&A
     		resultXML = getQnAListItem(boardVO, userInfo, type, boardInfo.getBoardAdmin_FG());
@@ -2252,7 +2253,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardVO.setSearchQuery(returnQuery);
 		String boardXML = "";
 		
-		if (boardVO.getBoardType().equals("4")) {
+		if (boardVO.getBoardType().equals("4") || boardVO.getBoardType().equals("7")) {
 			boardXML = getSearchThumbListXML(userInfo, boardVO);
 		} else if (boardVO.getBoardType().equals("M")) {
 			boardXML = getSearchMyBoardListItemXML(userInfo, boardVO, mode);
@@ -8168,6 +8169,427 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		logger.debug("downloadAttachAll ended.");
 	}
+	
+	/**
+	 * 동영상게시판 호출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/boardItemListMovie.do")
+	public String boardItemListMovie(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("boardItemListMovie started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String mode = "new";
+		String apprFlag = "Y";
+		String useOCS = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
+		String boardID = request.getParameter("boardID");
+		String boardType = request.getParameter("boardType");
+		String adminType = request.getParameter("adminType");
+		String buttonHidden = "N";
+		String boardName = request.getParameter("boardName");
+		String useOneLineCount = "NO";
+		String sortBy = "";
+		int page = 0;
+		
+		if (request.getParameter("buttonHidden") != null) {
+			buttonHidden = request.getParameter("buttonHidden");
+		}
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
+		
+		if (boardInfo.getListView_FG().equals("true")) {
+			boardName = boardInfo.getBoardName();
+			
+			if (request.getParameter("sortBy") != null) {
+				sortBy = request.getParameter("sortBy");
+			}
+			
+			if (request.getParameter("page") == null) {
+				page = 1;
+			} else {
+				page = Integer.parseInt(request.getParameter("page"));
+			}
+		}
+		
+		model.addAttribute("mode", mode);
+		model.addAttribute("apprFlag", apprFlag);
+		model.addAttribute("useOCS", useOCS);
+		model.addAttribute("useRunTime", useRunTime);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("boardType", boardType);
+		model.addAttribute("adminType", adminType);
+		model.addAttribute("buttonHidden", buttonHidden);
+		model.addAttribute("boardName", commonUtil.cleanValue(boardName));
+		model.addAttribute("useOneLineCount", useOneLineCount);
+		model.addAttribute("sortBy", sortBy);
+		model.addAttribute("page", page);
+		model.addAttribute("boardProperty", boardProperty);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("boardItemListMovie ended");
+		return "ezBoard/boardItemListMovie";
+	}
+	
+	/**
+	 * 게시판 동영상게시물 게시하기 호출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/newBoardItemMovie.do")
+	public String newBoardItemMovie(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("newBoardItemMovie started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userID = userInfo.getDisplayName1();
+		String userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String boardID = request.getParameter("boardID");
+		String url = request.getParameter("url");
+		String boardType = request.getParameter("bType");
+		String uploadFilePath = "";
+		String strNow = "";
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
+		if (boardInfo.getWrite_FG().equals("false")) {
+			return "main/warning"; 
+		}
+		
+		uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
+		strNow = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		
+		model.addAttribute("userID", userID);
+		model.addAttribute("userEditor", userEditor);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("url", url);
+		model.addAttribute("boardType", boardType);
+		model.addAttribute("uploadFilePath", uploadFilePath);
+		model.addAttribute("strNow", strNow);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("newBoardItemMovie ended");
+		return "ezBoard/boardNewItemMovie";
+	}
+	
+	/**
+	 * 동영상게시판 동영상 업로드
+	 */
+	@RequestMapping(value = "/ezBoard/boardMovieUpload.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String MovieUpload(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("MovieUpload started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String mode = request.getParameter("mode");
+		String pFileLimit = request.getParameter("fileLimit");
+		String uniqueID = request.getParameter("uniqueID");
+		String realPath = commonUtil.getRealPath(request);
+		String dirPath = "";
+		String serverPath = "";
+		String resultUpload = "";
+		String fileName = "";
+		String fileLocation = "";
+		String thumbnailName = "";
+		long fileSize = 0;
+		
+		MultipartFile multiFile = null;
+		
+		if (mode.equals("MOVIE")) { // 동영상 업로드
+			multiFile = request.getFile("file1");
+			dirPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
+			serverPath = dirPath + commonUtil.separator;
+		} else if (mode.equals("DEL")) { // 삭제
+			
+			logger.debug("삭제 진입!");
+			
+			String delServerPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
+			String imagePath = "";
+			String s_imagePath = "";
+
+			imagePath = delServerPath + commonUtil.separator + uniqueID;
+			s_imagePath = delServerPath + commonUtil.separator + "s_" + uniqueID;
+			File file = new File(imagePath);
+			File file1 = new File(s_imagePath);
+			
+			if (file.exists()) {
+				
+				logger.debug("삭제1");
+				
+				deleteFile(imagePath);
+			}
+			
+			if (file1.exists()) {
+				
+				logger.debug("삭제2");
+				
+				deleteFile(s_imagePath);
+			}
+			
+			return "DEL";
+		} else { // 임시저장
+			multiFile = request.getFile("file1");
+			dirPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId());
+			serverPath = dirPath + commonUtil.separator;
+		}
+		
+		String uniqueName = "";
+		File file = new File(serverPath);
+		
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		StringBuffer strXML = new StringBuffer();
+		
+		strXML.append("<ROOT><NODES>");
+		
+		if (pFileLimit != null && pFileLimit.equals("0") || pFileLimit.equals("")) {
+			pFileLimit = "2";
+		}
+		
+		int fileLimit = Integer.parseInt(pFileLimit) * 1024 * 1024;
+		
+		fileSize = multiFile.getSize();
+		if (fileSize > fileLimit) {
+			resultUpload = "overflow";
+			strXML.append("<NODE><PUPLOADSN><![CDATA[" + uniqueName + "]]></PUPLOADSN>");
+			strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+			strXML.append("<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>");
+			strXML.append("<FILESIZE>" + fileSize + "</FILESIZE>");
+			strXML.append("<FILELOCATION><![CDATA[" + fileLocation + "]]></FILELOCATION>");
+			strXML.append("<MODE><![CDATA[" + mode + "]]></MODE>");
+			strXML.append("</NODE>");
+		} else {
+			if (multiFile.getOriginalFilename() != null && !multiFile.getOriginalFilename().equals("")) {
+				String pFileName = multiFile.getOriginalFilename();
+				
+				if (pFileName.indexOf(commonUtil.separator.toString()) > 0) {
+					pFileName = pFileName.split("/")[pFileName.split("/").length - 1];
+				}
+				
+				fileName = commonUtil.cleanValue(pFileName);
+			}
+			
+			/* 2018-09-20 홍승비 - 이미지 등록 시 3자리 이상 확장자 잘리는 문제 수정 */
+			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+			String guid = "{" + UUID.randomUUID().toString() + "}";
+			
+			uniqueName = guid + "." + extension;
+			thumbnailName = "s_" + guid + "." + extension;
+			
+			
+			logger.debug("uniqueName(동영상)     ::    " + uniqueName);
+			logger.debug("serverPath(동영상)     ::    " + serverPath);
+			
+			
+			writeUploadedFile(multiFile, uniqueName, serverPath);
+			fileLocation = uniqueName;
+			File movieFile = new File(serverPath + uniqueName);	
+			
+			logger.debug("::동영상 임시파일 생성 완료(서버의 fileroot 내에 생성됨)");
+			
+			/*
+			int nImgWidth = 0;
+			int nImgHeight = 0;
+			
+			if (movieFile.exists()) {
+				BufferedImage bi = ImageIO.read(movieFile);		
+				
+				nImgWidth = bi.getWidth();
+				nImgHeight = bi.getHeight();
+				int nWidth = 0, nHeight = 0;
+				
+				if (nImgWidth > nImgHeight) {
+					nWidth = 640;
+					nHeight = (bi.getHeight() * nWidth) / bi.getWidth();
+				} else {
+					nHeight = 360;
+					nWidth = (bi.getWidth() * nHeight) / bi.getHeight();
+				}
+				
+				BufferedImage bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
+				bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
+				ImageIO.write(bufferedImage, extension, new File(serverPath + thumbnailName));
+			}
+			*/
+			
+			resultUpload = "true";
+			
+			// 임시로 업로드한 동영상 파일을 boardNewItemMovie.jsp로 되돌려준다.
+			strXML.append("<NODE><THUMBNAILNAME><![CDATA[" + thumbnailName + "]]></THUMBNAILNAME>");
+			strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+			strXML.append("<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>");
+			strXML.append("<FILESIZE>" + fileSize + "</FILESIZE>");
+			strXML.append("<FILELOCATION><![CDATA[" + serverPath + thumbnailName + "]]></FILELOCATION>");
+			strXML.append("<MODE><![CDATA[" + mode + "]]></MODE>");
+			strXML.append("<UNIQUEID><![CDATA[" + uniqueName + "]]></UNIQUEID>");
+			strXML.append("<OFILENAME><![CDATA[" + multiFile.getOriginalFilename() + "]]></OFILENAME>");
+			strXML.append("</NODE>");
+		}
+		
+		strXML.append("</NODES></ROOT>");
+
+		logger.debug("MovieUpload ended");
+		return strXML.toString();
+	}
+	
+	/**
+	 * 동영상게시판 게시물 호출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/boardItemViewMovie.do")
+	public String boardItemViewMovie(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("boardItemViewMovie started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String mode = "new";
+		String adjacentItemsEnableFlag = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
+		String showAdjacent = request.getParameter("showAdjacent");
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String location = request.getParameter("location");
+		String useOCS = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+		String publicModulus = egovFileScrty.getPbm();
+		String publicExponent = "10001";
+		
+		BoardListVO boardItem = new BoardListVO();
+		BoardVO boardAdjacent = null;
+		
+		mode = request.getParameter("mode");
+		
+		if (!accessCheck(itemID, location, userInfo)) {
+			return "main/warning";
+		}
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
+		if (!boardInfo.getRead_FG().equals("true")) {
+			return "main/warning";
+		}
+		
+		if (mode == null || !mode.equals("temp")) {
+			boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		} else {
+			boardItem = ezBoardService.getBrdGetItemInfoTemp(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		}
+		
+		ezBoardService.setAsRead(userInfo, boardID, itemID);
+		
+		if (boardItem == null || boardItem.getWriterID() == null || boardItem.getWriterID().equals("")) {
+			return "main/error";
+		}
+		
+		if (boardItem.getApprFlag() != null && boardItem.getApprFlag().equals("N")) {
+			int checkCnt = ezBoardService.checkApprUserList(userInfo.getId(), itemID, userInfo.getTenantId());
+			if (checkCnt == 0) {
+				boardItem.setApprFlag("");
+			}
+		}
+		
+		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
+		
+		if (boardItem.getEndDate().substring(0, 4).equals("9999")) {
+			boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287", userInfo.getLocale()));
+		}
+		
+		if (adjacentItemsEnableFlag != null && showAdjacent != null && adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
+			if (boardItem.getUpperItemIDTree() == null || boardItem.getUpperItemIDTree().equals("")) {
+				boardItem.setUpperItemIDTree(itemID);
+			}
+			
+			if (boardInfo.getGuBun().equals("3")) {
+				boardAdjacent = getAdjacentItems(itemID, boardID, boardItem.getUpperItemIDTree(), boardItem.getParentWriteDate(), userInfo.getTenantId());
+			} else {
+				boardAdjacent = getAdjacentItemsPhoto(itemID, boardID, boardItem.getUpperItemIDTree(), boardItem.getParentWriteDate(), userInfo.getTenantId());
+			}
+			
+			if (boardAdjacent.getPreviousTitle().equals("")) {
+				boardAdjacent.setPreviousTitle(egovMessageSource.getMessage("ezBoard.t330", userInfo.getLocale()));
+			}
+			
+			if (boardAdjacent.getNextTitle().equals("")) {
+				boardAdjacent.setNextTitle(egovMessageSource.getMessage("ezBoard.t331", userInfo.getLocale()));
+			}
+		}
+		
+		if (boardInfo.getBoardName() != null && !boardInfo.getBoardName().equals("")) {
+			boardInfo.setBoardName(commonUtil.cleanValue(boardInfo.getBoardName()));
+		}
+		
+		if (boardInfo.getBoardName1() != null && !boardInfo.getBoardName1().equals("")) {
+			boardInfo.setBoardName1(commonUtil.cleanValue(boardInfo.getBoardName1()));
+		}
+		
+		if (boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().equals("")) {
+			boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
+		}
+		
+		boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false));
+		boardItem.setEndDate(commonUtil.getDateStringInUTC(boardItem.getEndDate(), userInfo.getOffset(), false));
+		boardItem.setParentWriteDate(commonUtil.getDateStringInUTC(boardItem.getParentWriteDate(), userInfo.getOffset(), false));
+		
+		//2017.12.29 강민수92 댓글 갯수 구하기
+		if (boardProperty.getOneLineReply().equals("1")) {
+			String commentCount = ezBoardService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId());
+			model.addAttribute("commentCount", commentCount);
+		}
+		
+		/* 2018-06-20 홍승비 - 포토/썸네일 승인게시판 게시물 apprFlag 수정 */
+		model.addAttribute("boardAdjacent", boardAdjacent);
+		model.addAttribute("itemID", itemID);
+		model.addAttribute("apprFlag", boardItem.getApprFlag());
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("useOCS", useOCS);
+		model.addAttribute("boardItem", boardItem);
+		model.addAttribute("adjacentItemsEnableFlag", adjacentItemsEnableFlag);
+		model.addAttribute("showAdjacent", showAdjacent);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("oneLineReplyFlag", boardProperty.getOneLineReply());
+		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("publicExponent", publicExponent);
+
+		logger.debug("boardItemViewMovie ended");
+		return "ezBoard/boardItemViewMovie";
+	}
+	
+	/**
+	 * 동영상게시판 동영상정보 가져오기
+	 */
+	@RequestMapping(value = "/ezBoard/getBoardMovieInfo.do")
+	public void getBoardMovieInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("getBoardMovieInfo started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String type = request.getParameter("type");
+		String boardID = request.getParameter("boardID");
+		String fileName = request.getParameter("fileName");
+		String realPath = commonUtil.getRealPath(request);
+		String pSignatureDir = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
+		String filePath = "";
+		
+		if (type.equals("BOARDTHUM")) {
+			pSignatureDir = pSignatureDir + commonUtil.separator + boardID + commonUtil.separator + "uploadFile";
+		} else { // BOARDMOVIETEMP
+			pSignatureDir = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
+		}
+		
+		filePath = pSignatureDir + commonUtil.separator + fileName;
+		
+		if (filePath != null && !filePath.equals("")) {
+			logger.debug("filePath : " + filePath + "|| fileName : " + fileName);
+			logger.debug("realPath + filePath      ::       " + realPath + filePath);
+			
+			downFile(request, response, realPath + filePath, fileName);
+		}
+
+		logger.debug("getBoardMovieInfo ended");
+	}
+	
 
 }
 
