@@ -2904,11 +2904,25 @@ function Option_onClick() {
     letteroption_cross_dialogArguments[1] = Option_onClick_Complete;
     letteroption_cross_dialogArguments[2] = DivPopUpHidden;
     
-    if (individualmailuser != "0") {
-        DivPopUpShow(410, 325, "/ezEmail/letterOption.do");
-    } else {
-        DivPopUpShow(410, 250, "/ezEmail/letterOption.do");
-    }
+    var requestUrl = "/ezEmail/letterOption.do";
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    	
+    	if (individualmailuser != "0") {
+	        DivPopUpShow(410, 250, requestUrl);
+	    } else {
+	        DivPopUpShow(410, 175, requestUrl);
+	    }
+	} else {
+		if (individualmailuser != "0") {
+	        DivPopUpShow(410, 325, requestUrl);
+	    } else {
+	        DivPopUpShow(410, 250, requestUrl);
+	    }
+	}
+    
+    
 }
 
 function Option_onClick_Complete(m_rgParams4PostOption) {

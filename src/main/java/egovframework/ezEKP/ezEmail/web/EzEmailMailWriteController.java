@@ -4854,6 +4854,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		String useReceiptExternal = ezCommonService.getTenantConfig("useReceiptExternal", tenantId);
 		
+		String shareId = request.getParameter("shareId");
+		logger.debug("shareId=" + shareId);
+		
+		if (shareId != null) {
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+			} else {
+				model.addAttribute("shareId", shareId);
+			}
+		}
+		
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("individualMailUser", individualMailUser);
