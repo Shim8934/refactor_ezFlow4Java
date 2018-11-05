@@ -437,6 +437,11 @@
 		    
 		    function reSend_onClick() {
 		        var pURI = "/ezEmail/mailWrite.do?cmd=RESEND&URL=" + encodeURIComponent(g_paramURL);
+		        
+		        if (typeof(shareId) != "undefined" && shareId != "") {
+		        	pURI += "&shareId=" + encodeURIComponent(shareId);
+		    	}
+		        
 		        var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
 		        newwin.focus();
 		    }

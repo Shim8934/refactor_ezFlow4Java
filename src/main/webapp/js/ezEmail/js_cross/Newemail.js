@@ -227,7 +227,13 @@ function ReSend(pURL, pEmail) {
     var pLeft = (pwidth - 890) / 2;
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px,width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
     
-    window.open("/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail), "", feature);
+    var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail);
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	}
+    
+    window.open(requestUrl, "", feature);
     /*if (CrossYN() || pNoneActiveX == "YES") {
         window.open("/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail), "", feature);
     }
@@ -263,8 +269,14 @@ function reply_mail_onclick() {
         if (conWidth > 890)
             conWidth = 890;
         var pTop = (pheight - conHeight) / 2;
-        var pLeft = (pwidth - 890) / 2;        
+        var pLeft = (pwidth - 890) / 2;
+        
         var pURI = "/ezEmail/mailWrite.do?cmd=REPLY&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
+        
+    	if (typeof(shareId) != "undefined" && shareId != "") {
+    		pURI += "&shareId=" + encodeURIComponent(shareId);
+    	}
+        
         var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
         newwin.focus();
     }
@@ -302,6 +314,11 @@ function all_reply_mail_onclick() {
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - 890) / 2;
         var pURI = "/ezEmail/mailWrite.do?cmd=REPLYALL&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
+        
+        if (typeof(shareId) != "undefined" && shareId != "") {
+        	pURI += "&shareId=" + encodeURIComponent(shareId);
+    	}
+        
         var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
         newwin.focus();
     }
@@ -326,6 +343,11 @@ function reSend_onClick() {
         }
         
         var pURI = "/ezEmail/mailWrite.do?cmd=RESEND&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
+        
+        if (typeof(shareId) != "undefined" && shareId != "") {
+        	pURI += "&shareId=" + encodeURIComponent(shareId);
+    	}
+        
         var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
         newwin.focus();
     }
@@ -358,6 +380,11 @@ function transmission_mail_onclick() {
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - 890) / 2;
         var pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
+        
+        if (typeof(shareId) != "undefined" && shareId != "") {
+        	pURI += "&shareId=" + encodeURIComponent(shareId);
+    	}
+        
         var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
         newwin.focus();
     }
@@ -1434,7 +1461,13 @@ function callMsgDlg(szContentClass, Href) {
     }
     else {
     	
-    	ReadMailOpenNewWin = window.open("/ezEmail/mailWrite.do?cmd=EDIT&URL=" + encodeURIComponent(Href), "", feature);
+    	var pURI = "/ezEmail/mailWrite.do?cmd=EDIT&URL=" + encodeURIComponent(Href);
+    	
+    	if (typeof(shareId) != "undefined" && shareId != "") {
+    		pURI += "&shareId=" + encodeURIComponent(shareId);
+    	}
+    	
+    	ReadMailOpenNewWin = window.open(pURI, "", feature);
         /*if (CrossYN() || pNoneActiveX == "YES")
             ReadMailOpenNewWin = window.open("mail_write_Cross.aspx?cmd=EDIT&URL=" + encodeURIComponent(Href), "", feature);
         else

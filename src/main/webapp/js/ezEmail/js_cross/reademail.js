@@ -57,7 +57,13 @@ function ReSend(pURL, pEmail) {
     var pLeft = (pwidth - 890) / 2;
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
     
-    window.open("/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail), "", feature);
+    var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail);
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	}
+    
+    window.open(requestUrl, "", feature);
     /*if (CrossYN() || pNoneActiveX == "YES") {
         window.open("mail_write_Cross.aspx?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + pEmail, "", feature);
     }
@@ -102,8 +108,14 @@ function reply_onClick() {
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - 890) / 2;
-
-    window.location.href = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(g_paramURL) + "&cmd=REPLY";        
+    
+    var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(g_paramURL) + "&cmd=REPLY";
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	}
+    
+    window.location.href = requestUrl;
 }
 
 function allreply_onClick() {
@@ -113,7 +125,13 @@ function allreply_onClick() {
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - 890) / 2;
     
-    window.location.href = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(g_paramURL) + "&cmd=REPLYALL";
+    var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(g_paramURL) + "&cmd=REPLYALL";
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	}
+    
+    window.location.href = requestUrl;
 }
 
 function pass_onClick() {
@@ -123,7 +141,13 @@ function pass_onClick() {
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - 890) / 2;
     
-    window.location.href = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(g_paramURL) + "&cmd=FORWARD";
+    var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(g_paramURL) + "&cmd=FORWARD";
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	}
+    
+    window.location.href = requestUrl;
 }
 var mail_movecopy_cross_dialogArguments = new Array();
 function move_onClick() {

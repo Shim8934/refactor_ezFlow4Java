@@ -229,8 +229,14 @@ function do_Attach_Add(ocx_file, forceBigFileUpload) {
         if (extFlag)
             alert(strLang323);
         
+        var requestUrl = "/ezEmail/mailInterAttachCK.do";
+        
+    	if (typeof(shareId) != "undefined" && shareId != "") {
+    		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    	}
+        
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        xmlhttp.open("POST", "/ezEmail/mailInterAttachCK.do", false);
+        xmlhttp.open("POST", requestUrl, false);
         xmlhttp.send(xmlDoc.xml);
 
         if (xmlhttp.status == "200") {
@@ -932,9 +938,15 @@ function Save_onClick_Complete(ReturnValue) {
                 }
 
                 g_saveHttp = createXMLHttpRequest();
-
+                
+                var requestUrl = "/ezEmail/mailInterSend.do";
+                
+                if (typeof(shareId) != "undefined" && shareId != "") {
+            		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+				}
+                
                 if (!isClosedSave) {
-                    g_saveHttp.open("POST", "/ezEmail/mailInterSend.do", true);
+                    g_saveHttp.open("POST", requestUrl, true);
                     event_SaveonClick.savemode = Save_onClick_Complete.savemode;
 
                     if (Save_onClick_Complete.savemode == "sendsave" || (Save_onClick_Complete.savemode == "tempsave" && !isAutoSave)) {
@@ -946,7 +958,7 @@ function Save_onClick_Complete(ReturnValue) {
                     g_saveHttp.send(xmlDoc);
                 }
                 else {
-                    g_saveHttp.open("POST", "/ezEmail/mailInterSend.do", false);
+                    g_saveHttp.open("POST", requestUrl, false);
                     g_saveHttp.send(xmlDoc);
                 }
                 xmlDoc = null;

@@ -400,22 +400,23 @@
 	            oForm.appendChild(oInputHidden);
 	            window.document.body.appendChild(oForm);
 	            
+	            var pURI = "";
+	            
 	            if (Division == "ALLRE") {
-	                var pURI = "/ezEmail/mailWrite.do?cmd=REPLYALL&URL=" + encodeURIComponent(g_paramURL);
-	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() 
-	                		+ ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                newwin.focus();	            	
+	                pURI = "/ezEmail/mailWrite.do?cmd=REPLYALL&URL=" + encodeURIComponent(g_paramURL);
 	            } else if (Division == "RE") {
-	                var pURI = "/ezEmail/mailWrite.do?cmd=REPLY&URL=" + encodeURIComponent(g_paramURL);
-	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() 
-	                		+ ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                newwin.focus();
+	                pURI = "/ezEmail/mailWrite.do?cmd=REPLY&URL=" + encodeURIComponent(g_paramURL);
 	            } else if (Division = "FW") {
-	            	var pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(g_paramURL);
-	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() 
-	                		+ ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                newwin.focus();
+	            	pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(g_paramURL);
 	            }
+	            
+	            if (typeof(shareId) != "undefined" && shareId != "") {
+	            	pURI += "&shareId=" + encodeURIComponent(shareId);
+	        	}
+	            
+	            var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() 
+                		+ ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+                newwin.focus();
 	        }
 	        
 	        //업무일지 상세보기

@@ -167,6 +167,7 @@
 	    var attitudeIncludeMe = false; 
 	    var searchStartDate = "${searchStartDate}";
 	    var searchEndDate = "${searchEndDate}";
+	    var shareId = "${shareId}";
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -457,7 +458,13 @@
 	    var isDelted = false;
 	    function delDrafts() {
 	        var xmlhttp = createXMLHttpRequest();
-	        xmlhttp.open("GET", "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url) + "&delid=" + filedate, false);
+	        var requestUrl = "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url) + "&delid=" + filedate;
+	        
+	    	if (typeof(shareId) != "undefined" && shareId != "") {
+	    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	    	}
+	        
+	        xmlhttp.open("GET", requestUrl, false);
 	        xmlhttp.send();
 	        xmlhttp = null;
 	        isDelted = true;
@@ -848,8 +855,15 @@
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "ITEMID", "Y");
 	            }
 	        }
+	        
+	        var requestUrl = "/ezEmail/mailInterAttachCK.do";
+	        
+	    	if (typeof(shareId) != "undefined" && shareId != "") {
+	    		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	    	}
+	        
 	        xmlhttp = createXMLHttpRequest();
-	        xmlhttp.open("POST", "/ezEmail/mailInterAttachCK.do", false);
+	        xmlhttp.open("POST", requestUrl, false);
 	        xmlhttp.send(xmlDoc);
 	        var aitem;
 	        var xmlReturnValue = createXmlDom();
@@ -899,6 +913,10 @@
 			                				+ "mode=Attach"
 			                				+ "&folderPath=" + encodeURIComponent(folderPath)
 			                				+ "&filename=" + encodeURIComponent(filename);
+			                
+			                if (typeof(shareId) != "undefined" && shareId != "") {
+			                	aitem += "&shareId=" + encodeURIComponent(shareId);
+					    	}
 		                }
 		                
 		                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");
@@ -2180,7 +2198,14 @@
 	        <tr>
 	            <td style="padding-top: 5px;height:20px;vertical-align:middle;">
 	                <img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px" /><span style="color:#3a76c3;height:18px;display:inline-block;margin-left:5px">${pAttachWarning}</span>
-	                <iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do"></iframe>
+	                <c:choose>
+	                	<c:when test="${shareId != null and shareId != ''}">
+	                		<iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do?shareId=${shareId}"></iframe>
+	                	</c:when>
+	                	<c:otherwise>
+	                		<iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do"></iframe>
+	                	</c:otherwise>
+	                </c:choose>
 	            </td>
 	        </tr>
             </c:if>

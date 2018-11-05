@@ -426,8 +426,13 @@
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
 		        var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px,width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+		        var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND";
 		        
-		        window.open("/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND", "", feature);
+		        if (shareId != "") {
+		        	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+		        }
+		        
+		        window.open(requestUrl, "", feature);
 		    }
 		    
 		    function mailGeneralSave() {
@@ -1185,6 +1190,9 @@
 		<form name="mailWriteSenderClick" action="mailWrite.do" method="post"> <!-- 추가 -->
 			<input  type="hidden"  name="cmd" value="NEW">
 			<input  type="hidden" name="msgto" value="">
+			<c:if test="${shareId != null and shareId != ''}">
+				<input  type="hidden" name="shareId" value="${shareId}">
+			</c:if>
 		</form>
 		<iframe name="importMailboxIframe" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="importMailboxform" name="importMailboxform" enctype="multipart/form-data" target="importMailboxIframe">
