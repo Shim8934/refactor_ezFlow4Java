@@ -459,6 +459,7 @@ public class EzNewPortalAdminController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezNewPortal/updateMenuOrder.do")
+	@ResponseBody
 	public void updateMenuOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("updateMenuOrder started.");
 		
@@ -546,18 +547,17 @@ public class EzNewPortalAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getPortlets.do")
 	@ResponseBody
-	public JSONArray getPortalPortlets(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+	public JSONArray getPortalPortlets(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap,
+			HttpServletRequest req, Model model) throws Exception {
 		LOGGER.debug("getPortalPortlets started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String companyId = req.getParameter("companyId");
-		String url = "/rest/admin/ezPortal/portlets/companies/"+companyId;
+		String companyId = paramMap.get("companyId").toString();
+		String url = "/rest/admin/ezPortal/portlets/companies/" + companyId;
 		
+		paramMap.put("userId", userInfo.getId());		
 		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", userInfo.getId());		
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, req, "get", null);
 		String result = resultBody.get("status").toString();
 		JSONArray json = new JSONArray();
 		
@@ -591,8 +591,9 @@ public class EzNewPortalAdminController {
 		System.out.println(json.get("boardId")); //없으면 null
 		System.out.println(json.get("portletUsed"));
 		System.out.println(json.get("connectionUrl"));//없으면 null
+		System.out.println(json.get("menuId")); //없으면 null
 		
-		//commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", json);
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", json);
 		LOGGER.debug("updatePortlet Ended");
 	}
 	
@@ -716,9 +717,9 @@ public class EzNewPortalAdminController {
 		System.out.println(json.get("boardId"));
 		System.out.println(json.get("portletUsed"));
 		System.out.println(json.get("connectionUrl"));
-		System.out.println(json.get("portletCategory"));
+		System.out.println(json.get("menuId"));
 		
-		//commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "post", json);
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "post", json);
 		
 		LOGGER.debug("addPortlets Ended");
 	}
@@ -740,7 +741,7 @@ public class EzNewPortalAdminController {
 		
 		paramMap.put("userId", userInfo.getId());		
 		
-		//commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, req, "delete", null);
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, req, "delete", null);
 		LOGGER.debug("addPortlets Ended");
 	}
 	
@@ -760,7 +761,50 @@ public class EzNewPortalAdminController {
 		System.out.println(json.get("portlets"));
 		json.put("userId", userInfo.getId());		
 		
-		//commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", json);
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", json);
 		LOGGER.debug("updatePortletOrder Ended");
+	}
+	
+	/**
+	 * 메뉴 목록 가져오기
+	 * @param loginCookie
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/openPortalMenu.do")
+	public String openPortalMenu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("openPortalMenu started.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			LOGGER.debug("openBoardTree accessDenied.");
+			
+			return "cmm/error/adminDenied";
+		} else {
+			LOGGER.debug("openBoardTree ended.");
+			//게시판이 top인 목록 가져오기
+			String userId = userInfo.getId();
+			String companyId = request.getParameter("companyId");
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("userId", userId);
+			
+			String url = "/rest/admin/ezPortal/menus/companies/" + companyId;
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+			String result = resultBody.get("status").toString();
+			
+			if (result.equals("ok")) {
+				model.addAttribute("menuList", resultBody.get("data"));
+				model.addAttribute("companyId", companyId);
+				model.addAttribute("portletId", request.getParameter("portletId"));
+			}
+			
+			LOGGER.debug("openPortalMenu ended.");
+			return "/admin/ezNewPortal/portalPortletMenu";
+		}
 	}
 }

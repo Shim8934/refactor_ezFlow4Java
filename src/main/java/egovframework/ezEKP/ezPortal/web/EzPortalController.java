@@ -38,6 +38,7 @@ import org.w3c.dom.Document;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -212,7 +213,7 @@ public class EzPortalController extends EgovFileMngUtil {
                             "<link href=\""+egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
                             "<style type='text/css'>" +
                             "<!--" +
-                            ".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
+                            ".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:malgun gothic, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
                             ".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}" +
                             ".warnintxt01 { position:relative }" +
                             ".warningimg { position:absolute; top:0px; left:0px;}" +
@@ -781,7 +782,10 @@ public class EzPortalController extends EgovFileMngUtil {
 				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId(), userInfo.getCompanyID());
 				height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId(), userInfo.getCompanyID());
 				baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID(), userInfo.getTenantId());
-//				logger.debug("strHTML="+strHTML);
+				logger.debug("userInfo.getCompanyID() = "+userInfo.getCompanyID());
+				logger.debug("width = "+width);
+				logger.debug("height = "+height);
+				logger.debug("baseType = "+baseType);
 			}
 		}
 		
@@ -814,7 +818,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			portalPageCategoryXML += "</DATA>";
 			portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
 		}
-		
+
 		model.addAttribute("strHTML", strHTML);
 		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
 		model.addAttribute("displayName", displayName);
@@ -963,7 +967,7 @@ public class EzPortalController extends EgovFileMngUtil {
 					"<link href="+egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
 					"<style type='text/css'>" +
 					"<!--" +
-					".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
+					".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:malgun gothic, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
 					".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}" +
 					".warnintxt01 { position:relative }" +
 					".warningimg { position:absolute; top:0px; left:0px;}" +
@@ -1091,6 +1095,18 @@ public class EzPortalController extends EgovFileMngUtil {
 					pMoveURL = pMoveURL + "&pClassID=" + pUserID;
 				}
 			}
+			
+			/* 2018-08-24 새로운 포탈 */
+			String type = req.getParameter("type");
+			
+			if (type != null && !type.equals("")) {
+				if (pMoveURL.indexOf("?") == -1) {
+					pMoveURL = pMoveURL + "?type=" + type;
+				} else {
+					pMoveURL = pMoveURL + "&type=" + type;
+				}
+			}
+			
 			resp.getWriter().write("<script> function window_onload() { window.location.href = \"" + pMoveURL + "\"; } </script>");
 			resp.getWriter().write("<body onload='window_onload()'></body>");
 		} else {
@@ -1182,11 +1198,13 @@ public class EzPortalController extends EgovFileMngUtil {
 		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
 		
 		if (result != null && !result.equals("")) {
-			userPhoto = "<img id=myimg src='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=61 height=64>";
+			userPhoto = "<img id=myimg src='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=36 height=36>";
 		} else {
 			userPhoto = "";
 		}
 		logger.debug("userPhoto="+userPhoto);
+		//2018-08-29 장진혁 - 이미지 슬라이더
+		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
 		
 		//새로고침 시간 컨피그화
 		String refreshSecond = config.getProperty("refreshSecond");
@@ -1201,6 +1219,12 @@ public class EzPortalController extends EgovFileMngUtil {
 		//근태관리 사용에 따른 시계 사용 유무 로직
 		isUseAttMenuItem = ezPortalService.getMainMenuItemUID(accessID, attitudeLinkURL, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
 		String accessList = ezPortalService.getAccessList(userInfo);
+		
+		//근태 태넌트 추가
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
 		
 		/*
 		 * 환경설정 좌측 메뉴 리스트에 있는 모듈의 URL과 이름을 map에 추가
@@ -1220,6 +1244,46 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), "");
 		
+		Calendar cal = Calendar.getInstance();
+		String curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
+	
+		model.addAttribute("curMon", curMon);
+		
+		//이달의 우수사원
+		String filePath = "";
+		String displayNameBirth = "";
+		String titleBirth = "";
+		String description = "";
+				
+		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + curMon;
+		
+		PersonalGetEmpOfMonthVO resultBirth = ezPersonalService.getEmpOfMonth(term, userInfo);
+		
+		if (resultBirth != null) {
+			if (resultBirth.getFilePath() != null && !resultBirth.getFilePath().equals("")) {
+				filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + resultBirth.getFilePath();
+			} else {
+				filePath = "/images/kr/main/bestEmployee_pic_none.png";
+			}
+			
+			if (userInfo.getPrimary().equals("1")) {
+				displayNameBirth = resultBirth.getDisplayName();
+				titleBirth = resultBirth.getTitle();
+				description = resultBirth.getDescription();
+			} else {
+				displayNameBirth = resultBirth.getDisplayName2();
+				titleBirth = resultBirth.getTitle2();
+				description = resultBirth.getDescription2();
+			}
+		} else {
+			filePath = "/images/kr/main/bestEmployee_pic_none.png";
+		}
+		
+		model.addAttribute("displayNameBirth", displayNameBirth);
+		model.addAttribute("titleBirth", titleBirth);
+		model.addAttribute("description", description);
+		model.addAttribute("filePath", filePath);
+		model.addAttribute("result", resultBirth);
 		List<PortalTopOtherCompanyAddJobVO> companyList = ezPortalService.getAllCompanyList(userInfo.getId(), userInfo.getTenantId());
 		
 		/*
@@ -1252,11 +1316,24 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("checkBrowser", checkBrowser);
+		model.addAttribute("type", req.getParameter("type"));
+		model.addAttribute("sliderList", sliderList);
 		model.addAttribute("companyList", companyList);
 		model.addAttribute("loginIP", loginIP);
 		//근태관리 추가
 		model.addAttribute("serverTime", serverTime);
 		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);
+		model.addAttribute("use_attitude", use_attitude);
+		
+		/**
+		 * 협업 메뉴가 존재할 경우 통계 화면 대신 협업 포틀릿 호출
+		 * */
+		//String accessList = ezPortalService.getAccessList(userInfo);
+		logger.debug("accessList: " + accessID);
+		String workspaceUID = ezPortalService.getWorkspaceUID(userInfo.getTenantId());
+		Boolean hasWorkspace = ezPortalService.checkViewRightBln(workspaceUID, accessID, userInfo.getTenantId());
+		logger.debug("workspace author: " + userInfo.getId() + " " + hasWorkspace.toString());		
+		model.addAttribute("hasWorkspace", hasWorkspace);
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";
@@ -1409,41 +1486,10 @@ public class EzPortalController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String filePath = "";
-		String displayName = "";
-		String title = "";
-		String description = "";
-		
-		Calendar cal = Calendar.getInstance();
-		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
-		
-		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo);
-		
-		if (result != null) {
-			if (result.getFilePath() != null && !result.getFilePath().equals("")) {
-				filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + result.getFilePath();
-			} else {
-				filePath = "/images/default_pic.gif";
-			}
-			
-			if (userInfo.getPrimary().equals("1")) {
-				displayName = result.getDisplayName();
-				title = result.getTitle();
-				description = result.getDescription();
-			} else {
-				displayName = result.getDisplayName2();
-				title = result.getTitle2();
-				description = result.getDescription2();
-			}
-		}
-		
-		model.addAttribute("displayName", displayName);
-		model.addAttribute("title", title);
-		model.addAttribute("description", description);
-		model.addAttribute("filePath", filePath);
-		model.addAttribute("result", result);
-		
+		model.addAttribute("userInfo", userInfo);
+
 		logger.debug("wpNewSide ended");
+		
 		return "/ezPortal/portalWpNewSide";
 	}
 	
@@ -1456,15 +1502,45 @@ public class EzPortalController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String id = "ROOT"; // Get_Favoritelist 함수에서 id에  "ROOT"로 박아두어서 함께 복사했으나 쿼리에는 타지 않는다.
+		String kind = "000"; // 양식종류 전체에 해당하는 value 값, Portal에 양식종류 선택하는 셀렉트 박스 제작시 "000" 하드코딩을 빼고 req로 값 불러올 것
+		String searchType = "";
+		String searchName = "";
+		String type = req.getParameter("type");
+		int listType = 1;
+		String nowDate = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
+		nowDate = nowDate.substring(0, 16);
+		
+		logger.debug("wpNewApprMail type : " + type);
+		
+		if (type.equals("favo")) {
+			List<ApprGFormVO> result = ezApprovalGService.getFormInfoByPortal(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+			
+			logger.debug("result : " + result + "    result.size() : " + result.size());
+			
+			model.addAttribute("result", result);
+		}
+		
+		//2018-09-18 구해안 부재자 정보 가져오기
+		String buJaeInfo = "";
+		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
+		Document doc = commonUtil.convertStringToDocument(result);
+		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
+		
+		/* 2018-08-24 새로운 포틀릿 */
+		model.addAttribute("type", type);
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("host", userInfo.getServerName());
+		model.addAttribute("buJaeInfo", buJaeInfo);
+		model.addAttribute("nowDate", nowDate);
+		model.addAttribute("listType", listType);
 
 		logger.debug("wpNewApprMail ended");
 		return "/ezPortal/portalWpNewApprMail";
 	}
-	
+		
 	/**
 	 * 포탈 - webPart 배너 화면 호출 함수
 	 */
@@ -1502,117 +1578,48 @@ public class EzPortalController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		model.addAttribute("userInfo", userInfo);
-
+		String filePath = "";
+		String displayName = "";
+		String title = "";
+		String description = "";
+		
+		Calendar cal = Calendar.getInstance();
+		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
+		
+		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo);
+		
+		if (result != null) {
+			if (result.getFilePath() != null && !result.getFilePath().equals("")) {
+				filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + result.getFilePath();
+			} else {
+				filePath = "/images/default_pic.gif";
+			}
+			
+			if (userInfo.getPrimary().equals("1")) {
+				displayName = result.getDisplayName();
+				title = result.getTitle();
+				description = result.getDescription();
+			} else {
+				displayName = result.getDisplayName2();
+				title = result.getTitle2();
+				description = result.getDescription2();
+			}
+		}
+		
+		model.addAttribute("displayName", displayName);
+		model.addAttribute("title", title);
+		model.addAttribute("description", description);
+		model.addAttribute("filePath", filePath);
+		model.addAttribute("result", result);
+		
 		logger.debug("wpNewBoardSTD ended");
+
 		return "/ezPortal/portalWpNewBoardSTD";
 	}
 	
 	/**
 	 * 포탈 - webPart 설문참여 화면 호출 함수
 	 */
-/*	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
-	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
-		logger.debug("wpNewPoll Start");
-		
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String votePoll = "";
-		int pPollItemSeq = 0;
-		String pPollTitle = "";
-		String pPollResultContent = "";
-		
-		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
-		
-		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
-		
-		if (result != null) {
-			if (result.getResult() > 0) {
-				if (result.getResult() != 0) {
-					votePoll = Integer.toString(result.getResult());
-				}
-			} else {
-				votePoll = "";
-			}	
-			
-			if (result.getItemSeq() > 0) {
-				if (result.getItemSeq() != 0) {
-					pPollItemSeq = result.getItemSeq();
-					int maxAns = Integer.parseInt(result.getPollSelectionCount());
-					pPollTitle = userInfo.getPrimary().equals("1") ? result.getPollTitle() : result.getPollTitle2();
-					
-					List<PersonalLightPollVO> list = ezPersonalService.getPollResultOrderResult(pPollItemSeq, userInfo.getTenantId());
-					
-					int pTotalCnt = 0;
-					
-					for (int i=0; i<list.size(); i++) {
-						pTotalCnt = pTotalCnt + list.get(i).getCount();
-					}
-					
-					List<Integer> pPollResultList = new ArrayList<Integer>();
-					int resultPrintCnt = 0;
-					
-					for (int i=0; i<list.size(); i++) {
-						if (i >= 4) {
-							break;
-						} else {
-							float poolRstCnt = list.get(i).getCount();
-							float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
-							String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
-							String titleString = strAnswer;
-							if (strAnswer.length() > 11) {
-								strAnswer = strAnswer.substring(0, 11) + "…";
-							}
-							pPollResultList.add(list.get(i).getResult());
-							pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
-							"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
-							"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
-							"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
-							"</dl>";
-	                        resultPrintCnt++;
-						}
-					}
-					
-					if (resultPrintCnt < 4) {
-						for (int i=1; i<=maxAns; i++) {
-							boolean isDuplication = false;
-							for (int j=0; j<pPollResultList.size(); j++) {
-								if (i == pPollResultList.get(j)) {
-									isDuplication = true;
-									break;
-								}
-							}
-							
-							if (!isDuplication) {
-								String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
-								String titleString = strAnswer;
-								if (strAnswer.length() > 13) {
-									strAnswer = strAnswer.substring(0, 13) + "...";
-								}
-								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
-	                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
-	                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
-																resultPrintCnt++;
-								if (resultPrintCnt == 4) {
-									break;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		model.addAttribute("pPollTitle", pPollTitle);
-		model.addAttribute("votePoll", votePoll);
-		model.addAttribute("pPollItemSeq", pPollItemSeq);
-		model.addAttribute("pPollResultContent", pPollResultContent);
-		model.addAttribute("userLang", userInfo.getLang());
-		
-		logger.debug("wpNewPoll End");
-		return "/ezPortal/portalWpNewPoll";
-	}*/
-	
 	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
 	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("wpNewVote is running!");
@@ -1628,7 +1635,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String votePoll = "";
 		int pPollItemSeq = 0;
 		String pPollTitle = "";
-		String pPollResultContent = "";
+		StringBuilder pPollResultContent = new StringBuilder();
 		
 		String checkFlag = ezCommonService.getTenantConfig("useBallotSystem", userInfo.getTenantId());
 		
@@ -1737,7 +1744,7 @@ public class EzPortalController extends EgovFileMngUtil {
 						
 						List<Integer> pPollResultList = new ArrayList<Integer>();
 						int resultPrintCnt = 0;
-						
+
 						for (int i=0; i<list.size(); i++) {
 							if (i >= 4) {
 								break;
@@ -1746,32 +1753,12 @@ public class EzPortalController extends EgovFileMngUtil {
 								float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
 								String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
 								String titleString = strAnswer;
-								// 2018-07-25 김보미 - 주석
-//								if (strAnswer.length() > 11) {
-//									strAnswer = strAnswer.substring(0, 11) + "…";
-//								}
+
 								pPollResultList.add(list.get(i).getResult());
-								// 2018-07-25 김보미 - content부분 변경
-//								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
-//								"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
-//								"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
-//								"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
-//								"</dl>";
-								pPollResultContent += 
-								"<div class='poll_list1'>" + 								    
-									"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
-										"<div style='float:left; display: block;'>" + list.get(i).getResult() + "." + "</div>" +
-										"<div class='Pt_QstOptTitleDiv' title='" + titleString + "'>" + titleString + "</div>" +
-										"<div id='info" + list.get(i).getResult() + "' class='Pt_QstInfoDiv'>&nbsp" + 
-											 "<span class='Pt_QstInfoVotes'>"+ list.get(i).getCount() + "</span>" +
-											 egovMessageSource.getMessage("main.t20000", locale) + "/" +
-											 "<span class='Pt_QstInfoPercent'>" + String.format("%.1f", poolRstPer) + "</span>" +
-										"%</div>" +
-									"</div>" +
-									"<div class='graphbar1' id='divGraph" + list.get(i).getResult() + "' style='display: block;'>" +
-										"<p id='graph" + list.get(i).getResult() + "' class='gx_bar11' style='width:" + Math.round((poolRstCnt / pTotalCnt) * 100) + "%;'></p>" +
-									"</div>"+	
-								"</div>";
+								
+								pPollResultContent.append("<li class='voteList_0"+(i+1)+"'><div class='voteT'><span class='Vnum'>"+ list.get(i).getResult() + "</span><span class='Vtext'>" + titleString + "</span></div>");
+								pPollResultContent.append("<div class='percent'>" + String.format("%.0f", poolRstPer) + "%</div>");
+								pPollResultContent.append("<div class='voteGraph'><span style='width:" + Math.round((poolRstCnt / pTotalCnt) * 100) + "%'></span></div></li>");
 								
 		                        resultPrintCnt++;
 							}
@@ -1790,31 +1777,14 @@ public class EzPortalController extends EgovFileMngUtil {
 								if (!isDuplication) {
 									String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
 									String titleString = strAnswer;
-									// 2018-07-25 김보미 - 주석
-//									if (strAnswer.length() > 13) {
-//										strAnswer = strAnswer.substring(0, 13) + "...";
-//									}
-									// 2018-07-25 김보미 - content부분 변경
-//									pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
-//		                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
-//		                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
-									pPollResultContent += 
-									"<div class='poll_list1'>" + 								    
-										"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
-											"<div style='float:left; display: block;'>" + i + "." + "</div>" +
-											"<div class='Pt_QstOptTitleDiv' title='" + titleString + "'>" + titleString + "</div>" +
-											"<div id='info" + i + "' class='Pt_QstInfoDiv'>&nbsp" + 
-												 "<span class='Pt_QstInfoVotes'>0</span>" +
-												 egovMessageSource.getMessage("main.t20000", locale) + "/" +
-												 "<span class='Pt_QstInfoPercent'>0.0</span>" +
-											"%</div>" +
-										"</div>" +
-										"<div class='graphbar1' id='divGraph" + i + "' style='display: block;'>" +
-											"<p id='graph" + i + "' class='gx_bar11' style='display: none;'></p>" +
-										"</div>"+
-									"</div>";
+									
+									/* 2018-09-10 홍승비 - 비어있는 설문조사 보기 생성 */
+									pPollResultContent.append("<li class='voteList_0"+(resultPrintCnt+1)+"'><div class='voteT'><span class='Vnum'>"+ i + "</span><span class='Vtext'>" + titleString + "</span></div>");
+									pPollResultContent.append("<div class='percent'>0%</div>");
+									pPollResultContent.append("<div class='voteGraph'><span style='width:0%'></span></div></li>");
 									
 									resultPrintCnt++;
+									
 									if (resultPrintCnt == 4) {
 										break;
 									}
@@ -1828,15 +1798,13 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("pPollTitle", pPollTitle);
 			model.addAttribute("votePoll", votePoll);
 			model.addAttribute("pPollItemSeq", pPollItemSeq);
-			model.addAttribute("pPollResultContent", pPollResultContent);
+			model.addAttribute("pPollResultContent", pPollResultContent.toString());
 			model.addAttribute("userLang", userInfo.getLang());
 			
 			logger.debug("wpNewPoll End");
 			return "/ezPortal/portalWpNewPoll";
-		}	
-		
+		}
 	}
-	
 	
 	/**
 	 * 포탈 - webPart 결재 통계 화면 호출 함수
@@ -1849,57 +1817,71 @@ public class EzPortalController extends EgovFileMngUtil {
 		int dMaxCount = 0;
 		int sMaxCount = 0;
 		
-		Calendar cal = Calendar.getInstance();
-		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-01 00:00:00";
-		String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)) + " 23:59:59";
+		/**
+		 * 협업 메뉴가 존재할 경우 통계 화면 대신 협업 포틀릿 호출
+		 * */
+		String accessList = ezPortalService.getAccessList(userInfo);
+		logger.debug("accessList: " + accessList);
+		String workspaceUID = ezPortalService.getWorkspaceUID(userInfo.getTenantId());
+		Boolean hasWorkspace = ezPortalService.checkViewRightBln(workspaceUID, accessList, userInfo.getTenantId());
+		logger.debug("workspace author: " + userInfo.getId() + " " + hasWorkspace.toString());
 		
-		if (startDate != null && startDate.split("-")[1].equals("0")) {
-			startDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-01 00:00:00";
-		}
-		
-		if (endDate != null && endDate.split("-")[1].equals("0")) {
-			endDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-" + ezPortalService.daysInMonth(12, cal.get(Calendar.YEAR)-1) + " 23:59:59";
-		}
-		
-		logger.debug("startDate="+startDate+", endDate="+endDate);
-		
-		List<ApprGgetDeptStacticsVO> list = ezApprovalGService.getDeptStactics(startDate, endDate, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
-		
-		String dMax = "1";
-		
-		if (list.size() > 0) {
-			for (int j=0; j<String.valueOf(list.get(0).getDraftCount()).length() - 1; j++) {
-				dMax = dMax + "0";
+		if(!hasWorkspace) {
+			Calendar cal = Calendar.getInstance();
+			String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-01 00:00:00";
+			String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)) + " 23:59:59";
+			
+			if (startDate != null && startDate.split("-")[1].equals("0")) {
+				startDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-01 00:00:00";
 			}
 			
-			dMaxCount = list.get(0).getDraftCount() + Integer.parseInt(dMax);
-			sMaxCount = list.get(0).getSusinCount() + Integer.parseInt(dMax);
+			if (endDate != null && endDate.split("-")[1].equals("0")) {
+				endDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-" + ezPortalService.daysInMonth(12, cal.get(Calendar.YEAR)-1) + " 23:59:59";
+			}
 			
-			for (int i=0; i<list.size(); i++) {
-				if (sMaxCount < list.get(i).getSusinCount() + Integer.parseInt(dMax)) {
-					sMaxCount = list.get(i).getSusinCount() + Integer.parseInt(dMax);
+			logger.debug("startDate="+startDate+", endDate="+endDate);
+			
+			List<ApprGgetDeptStacticsVO> list = ezApprovalGService.getDeptStactics(startDate, endDate, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
+			
+			String dMax = "1";
+			
+			if (list.size() > 0) {
+				for (int j=0; j<String.valueOf(list.get(0).getDraftCount()).length() - 1; j++) {
+					dMax = dMax + "0";
 				}
-			}
-			dMaxCount = dMaxCount + sMaxCount;
-			
-			logger.debug("listSize="+list.size());
-			for (int i=0; i<list.size(); i++) {
-				logger.debug("draftCount="+list.get(i).getDraftCount());
-				logger.debug("susinCount="+list.get(i).getSusinCount());
-				float draftPercent = (float)list.get(i).getDraftCount() / dMaxCount * 100;
-				float susinPercent = (float)list.get(i).getSusinCount() / dMaxCount * 100;
 				
-				list.get(i).setDraftCount((int)(draftPercent));
-				list.get(i).setSusinCount((int)(susinPercent));
+				dMaxCount = list.get(0).getDraftCount() + Integer.parseInt(dMax);
+				sMaxCount = list.get(0).getSusinCount() + Integer.parseInt(dMax);
+				
+				for (int i=0; i<list.size(); i++) {
+					if (sMaxCount < list.get(i).getSusinCount() + Integer.parseInt(dMax)) {
+						sMaxCount = list.get(i).getSusinCount() + Integer.parseInt(dMax);
+					}
+				}
+				dMaxCount = dMaxCount + sMaxCount;
+				
+				logger.debug("listSize="+list.size());
+				for (int i=0; i<list.size(); i++) {
+					logger.debug("draftCount="+list.get(i).getDraftCount());
+					logger.debug("susinCount="+list.get(i).getSusinCount());
+					float draftPercent = (float)list.get(i).getDraftCount() / dMaxCount * 100;
+					float susinPercent = (float)list.get(i).getSusinCount() / dMaxCount * 100;
+					
+					list.get(i).setDraftCount((int)(draftPercent));
+					list.get(i).setSusinCount((int)(susinPercent));
+				}
+			} else {
+				dMax = "0";
+				dMaxCount = 0;
 			}
+			logger.debug("dMaxCount="+dMaxCount);
+			
+			model.addAttribute("dMaxCount", dMaxCount);
+			model.addAttribute("list", list);
 		} else {
-			dMax = "0";
-			dMaxCount = 0;
+			model.addAttribute("userID", userInfo.getId());
 		}
-		logger.debug("dMaxCount="+dMaxCount);
-		
-		model.addAttribute("dMaxCount", dMaxCount);
-		model.addAttribute("list", list);
+		model.addAttribute("hasWorkspace", hasWorkspace);
 
 		logger.debug("wpNewGraph ended");
 		return "/ezPortal/portalWpNewGraph";
@@ -1977,9 +1959,13 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		int noViewCnt = 0;
 		int cnt = 0;
+		int page = Integer.parseInt(req.getParameter("page"));
+		
 		String[] noViewArrayID = new String[1000];
 		String[] arrayID = new String[1000];
 		StringBuilder result = new StringBuilder("<DATA>");
+		
+		List<PersonalGetQuickLinkMenuVO> realList = new ArrayList<PersonalGetQuickLinkMenuVO>();
 		
 //		String deptFullPath = ezOrganService.getDeptFullPath(userInfo.getDeptID(), userInfo.getTenantId());
 //		
@@ -2017,16 +2003,30 @@ public class EzPortalController extends EgovFileMngUtil {
 					
 					if (TF) {
 						arrayID[cnt] = getQuickLinkMenu.get(k).getQuickLinkID();
+						realList.add(getQuickLinkMenu.get(k));						
 						cnt ++;
-						result.append(commonUtil.getQueryResult(getQuickLinkMenu.get(k)));
 					}
 				}
 			}
 		}
-		result.append("</DATA>");
-		logger.debug("quickLinkXML="+result.toString());
+		
+		int lastSize = 0;
+		
+		if (page+5 >= realList.size()) {
+			lastSize = realList.size();
+		} else {
+			lastSize = page+5;
+		}
+		
+		for (int z=page; z < lastSize; z++) {
+			result.append(commonUtil.getQueryResult(realList.get(z)));
+		}
+		
+		result.append("<SIZE><PAGE>" + realList.size() + "</PAGE></SIZE></DATA>");
 
+		logger.debug("quickLinkXML="+result.toString());
 		logger.debug("getQuickLink ended");
+		
 		return result.toString();
 	}
 	
@@ -4076,5 +4076,14 @@ public class EzPortalController extends EgovFileMngUtil {
 			resp.getWriter().close();
 		}
 		logger.debug("boardPortlet ended");
+	}
+	
+	@RequestMapping(value = "/ezPortal/wpNewSchedule.do")
+	public String wpNewSchedule(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("wpNewSchedule started");
+		
+		logger.debug("wpNewSchedule ended");
+		
+		return "/ezPortal/portalWpNewSchedule";
 	}	
 }

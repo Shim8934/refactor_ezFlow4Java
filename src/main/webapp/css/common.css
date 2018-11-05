@@ -13,9 +13,9 @@ img{border:0; vertical-align: middle;}
 html, body{margin:0; padding:0; height: 100%;width: 100%;}
 body, input, button, select, input, textarea, td, th {
     color: #666666;
-    font: 12px Dotum,Gulim,Tahoma,Sans-serif;
+    font: 12px malgun gothic,Tahoma,Sans-serif;
 }
-h1{font-family:"굴림", Gulim, AppleGothic, Sans-serif; font-size:13pt;}
+h1{font-family:"malgun gothic", malgun gothic, AppleGothic, Sans-serif; font-size:13pt;}
 h2{  color: #727272;
     font-size: 1.4em;
     line-height: 1.125em;
@@ -37,7 +37,7 @@ input.text {
 
 input{
     color: #67625C;
-    font-family: gulim;
+    font-family: malgun gothic;
     font-size: 1em;
     vertical-align: middle;
 }
@@ -225,7 +225,7 @@ select {
 .paging_align a:active{color:#0958A5;} 
 .paging_align a:visited{color:#0958A5;}
 
-.btn_style01{font-family:"굴림", Gulim, AppleGothic, Sans-serif; font-size:13pt;background:none;}
+.btn_style01{font-family:"malgun gothic", malgun gothic, AppleGothic, Sans-serif; font-size:13pt;background:none;}
 
 #search_first_ul {padding-left:10px;}
 #search_first_ul li{display:inline;padding-right:25px;}

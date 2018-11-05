@@ -1022,6 +1022,10 @@
 			        try {
 			            window.opener.Refresh_Window();
 			        } catch (e) { }
+			        
+			        try {
+			            window.opener.getApprGraph("appr");
+			        } catch (e) { }
 			    }
 	
 			    function btnSave_onclick() {

@@ -228,7 +228,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("lang", loginVO.getLang());
 		model.addAttribute("userOffset", userOffset);
 		
-		return "/ezSchedule/scheduleLeft";
+		if(funCode.equals("3")) {
+			return "/ezTask/taskLeft";
+		} else {
+			return "/ezSchedule/scheduleLeft";
+		}
 	}
 	
 	/**
@@ -1270,10 +1274,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 환경설정 메인
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleConfigMain.do")
-	public String scheduleConfigMain() throws Exception {
-		
+	public String scheduleConfigMain(Model model, HttpServletRequest request) throws Exception {
 		logger.debug("============ scheduleConfigMain started ============");
 		
+		String flag = request.getParameter("flag") == null ? "" : request.getParameter("flag");
+		model.addAttribute("flag", flag);
+		
+		logger.debug("============ scheduleConfigMain ended ============");
 		return "/ezSchedule/scheduleConfigMain";
 	}
 	

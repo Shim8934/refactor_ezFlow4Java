@@ -33,7 +33,7 @@
 			var g_timezone = "${userTimeSet}";
 			var offsetMin = "${offsetMin}";
 		    var checkval = "f";
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#e4e8ec";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var pNoneActiveX = "YES";
@@ -55,7 +55,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -63,7 +63,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var NowDate = utcDate2(offsetMin);
@@ -806,14 +806,14 @@
 		<h1><spring:message code="ezEmail.t641" /></h1>
 		<div id="mainmenu">
 			<ul>
-			  <li><span onclick="new_mail_onclick()"><spring:message code="ezEmail.t510" /></span></li>
-			  <li><span onClick="reply_mail_onclick()"><spring:message code="ezEmail.t511" /></span></li>
-			  <li><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
-			  <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
+			  <li class="important"><span onclick="new_mail_onclick()"><spring:message code="ezEmail.t510" /></span></li>
+			  <li class="important"><span onClick="reply_mail_onclick()"><spring:message code="ezEmail.t511" /></span></li>
+			  <li class="important"><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
+			  <li class="important"><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
 			  <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 			  <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
-			  <li><span onClick="deleteWork()"><spring:message code="ezEmail.t95" /></span></li>
 			  <li><span onClick="delete_mail()"><spring:message code="ezEmail.t156" /></span></li>
+			  <li><span class="icon16 icon16_delete" onClick="deleteWork()"><spring:message code="ezEmail.t95" /></span></li>
 			</ul>
 		</div>  
 		<table class="content"> 

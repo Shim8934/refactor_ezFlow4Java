@@ -124,6 +124,8 @@
 <result property="menuId" 					column="MENU_ID" />
 <result property="boardName1" 				column="BOARDNAME" />
 <result property="boardName2" 				column="BOARDNAME2" />
+<result property="portletBoardId" 			column="BOARD_ID" />
+<result property="menuName" 				column="MENU_NAME" />
 </resultMap>
 <resultMap class="PortletNameInfoVO" id="PortletNameInfoVO">
 <result property="portletId" 				column="PORTLET_ID" />
@@ -641,6 +643,7 @@ AND
 	a.TENANT_ID = #tenantId#
 ]]>
 </select>
+<!-- 은정 -->
 <!-- 가장 최근에 만들어진 진행중이면서 사용자가 참여 중인 투표 정보 가져오기 -->
 <select id="ezNewPortal.getVotePortletInfo" parameterClass="Map" resultMap="PollQuestionVO">
 <![CDATA[
@@ -1441,7 +1444,8 @@ SELECT A.PORTLET_ID,
        C.PORTLET_URL,
        A.BOARD_ID,
        D.BOARDNAME,
-       D.BOARDNAME2
+       D.BOARDNAME2,
+       E.MENU_NAME
   FROM TBL_PORTAL_PORTLET_COMP A
   JOIN TBL_PORTAL_PORTLET C
     ON A.PORTLET_ID = C.PORTLET_ID
@@ -1449,9 +1453,14 @@ SELECT A.PORTLET_ID,
   	ON A.BOARD_ID = D.BOARDID
   	AND A.COMPANY_ID = D.COMPANYID
   	AND	A.TENANT_ID = D.TENANT_ID
+  LEFT JOIN TBL_PORTAL_MENU_NAME E
+ ON	A.menu_id = E.menu_id
+ AND A.COMPANY_ID = E.COMPANY_ID
+ AND A.tenant_id = E.tenant_id
+ AND E.menu_lang = #menuLang#
  WHERE A.COMPANY_ID = #companyId#
-   AND A.TENANT_ID = #tenantId#;
-   
+   AND A.TENANT_ID = #tenantId#
+ ORDER BY A.portlet_order
 ]]>
 </select>
 

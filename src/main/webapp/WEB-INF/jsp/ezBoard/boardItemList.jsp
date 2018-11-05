@@ -282,7 +282,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -290,7 +290,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		
@@ -1297,14 +1297,10 @@
 		<c:if test="${boardInfo.buttonHidden == 'N'}">
 			<div id="mainmenu">
 			  <ul>
-		        <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321' /></span></li>
+		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321' /></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204' /></span></li>
-			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89' /></span></li>
 		        <li id="btn_copy"><span onClick="CopyItem_onclick()"><spring:message code='ezBoard.t274' /></span></li>
 		        <li id="btn_move"><span onClick="MoveItem_onclick()"><spring:message code='ezBoard.t134' /></span></li>
-			    <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-		        <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205' /></span></li>
 		        <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188' /></span></li>
 		        <li><span onClick="AddToMyBoards()"><spring:message code='ezBoard.t10051' /></span></li>
 		        <%-- <c:if test="${boardInfo.guBun ne '2'}">
@@ -1322,6 +1318,8 @@
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
 			        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
 		        </c:if>
+		        <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
+		        <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
 			  </ul>
 			</div>
 			<script type="text/javascript">

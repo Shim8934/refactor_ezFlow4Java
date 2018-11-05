@@ -414,4 +414,122 @@
 				A.treevieworder;
 		]]>
 	</select>
+	
+	<insert id="ezNewPortal.insertPortlet" parameterClass="Map">
+		<selectKey keyProperty="portletId" resultClass="Integer">
+			SELECT
+				AUTO_INCREMENT
+			FROM
+				INFORMATION_SCHEMA.TABLES
+			WHERE
+				TABLE_NAME = "TBL_PORTAL_PORTLET";
+		</selectKey>
+		
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_PORTLET
+				(menu_id, portlet_url, portlet_type, default_order)
+			VALUES
+				(#menuId#, #connectionUrl#, 'A', (SELECT MAX(A.portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE A.tenant_id = #tenantId# AND A.company_id = #companyId#))
+		]]>
+	</insert>
+	
+	<insert id="ezNewPortal.insertPortletComp" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_PORTLET_COMP
+			(company_id,	tenant_id,		portlet_id,		menu_id,	portlet_category, 
+			connection_url,	portlet_used,	portlet_order, 	board_id)
+		VALUES
+			(#companyId#,	#tenantId#,		#portletId#,	#menuId#,	#portletCategory#,
+			#connectionUrl#,	#portletUsed#,	(SELECT MAX(portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE tenant_id = #tenantId# AND company_id = #companyId#),	#boardId#)
+	]]>
+	</insert>
+	
+	<insert id="ezNewPortal.updateCompanyPortletNameInfo" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_PORTLET_NAME
+			(portlet_id,	menu_id,	portlet_lang,	tenant_id,	company_id,	portlet_name)
+		VALUES
+			(#portletId#,	#menuId#,	#portletLang#,	#tenantId#,	#companyId#,	#portletName#)
+		ON DUPLICATE KEY UPDATE portlet_name=#portletName#
+	]]>
+	</insert>
+	
+	<update id="ezNewPortal.updateCompanyPortletInfo" parameterClass="Map">
+	<![CDATA[
+		UPDATE
+			TBL_PORTAL_PORTLET_COMP A
+		JOIN
+			TBL_PORTAL_PORTLET B
+		ON
+			A.portlet_id = B.portlet_id
+		SET
+			A.menu_id = #menuId#,
+			A.portlet_used = #portletUsed#,
+	]]>
+	<isNotNull property="connectionUrl">
+	<![CDATA[
+			B.portlet_url = #connectionUrl#,
+			B.menu_id = #menuId#,	
+	]]>
+	</isNotNull>
+	<![CDATA[
+			A.board_id = #boardId#
+		WHERE
+			A.tenant_id = #tenantId#
+		AND
+			A.company_id = #companyId#
+		AND
+			A.portlet_id = #portletId#
+	]]>
+	</update>
+	
+	<delete id="ezNewPortal.deletePortletName" parameterClass="map">
+	<![CDATA[
+		DELETE FROM
+			TBL_PORTAL_PORTLET_NAME
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			company_id = #companyId#
+		AND
+			portlet_id = #portletId#
+	]]>
+	</delete>
+	
+	<delete id="ezNewPortal.deletePortletComp" parameterClass="map">
+	<![CDATA[
+		DELETE FROM
+			TBL_PORTAL_PORTLET_COMP
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			company_id = #companyId#
+		AND
+			portlet_id = #portletId#
+	]]>
+	</delete>
+	
+	<delete id="ezNewPortal.deletePortlet" parameterClass="map">
+	<![CDATA[
+		DELETE FROM
+			TBL_PORTAL_PORTLET
+		WHERE
+			portlet_id = #portletId#
+	]]>
+	</delete>
+	
+	<update id="ezNewPortal.updateCompanyPortletOrder" parameterClass="Map">
+	<![CDATA[
+		UPDATE 
+			TBL_PORTAL_PORTLET_COMP
+		SET
+			portlet_order = #portletOrder#
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND 
+			portlet_id = #portletId#
+	]]>
+	</update>
 </sqlMap>

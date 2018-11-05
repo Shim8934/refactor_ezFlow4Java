@@ -32,7 +32,7 @@
 			<div class='logoIcon'><span></span></div>
 		</div>
 		<div class="logoContent">
-			<div class='btnpositionJsp updateLogo'><a class='imgbtn updateLogoBtn'><span>등록</span></a></div>
+			<div id = "imgLogin" class='btnpositionJsp updateLogo'><a class='imgbtn updateLogoBtn'><span>등록</span></a></div>
 			<ul>
 				<li># 홈페이지 접속 시, 로그인 상단의 로고의 이미지를 변경합니다.</li>
 				<li># 가로 x 세로의 크기는 000(px) x 000(px) 입니다.</li>
@@ -49,7 +49,7 @@
 			</div>
 			
 			<div class="logoContent">
-				<div class='btnpositionJsp updateLogo'><a class='imgbtn updateLogoBtn'><span>등록</span></a></div>
+				<div id="imgTop" class='btnpositionJsp updateLogo'><a class='imgbtn updateLogoBtn'><span>등록</span></a></div>
 				<ul>
 					<li># 홈페이지 접속 시, 로그인 상단의 로고의 이미지를 변경합니다.</li>
 					<li># 가로 x 세로의 크기는 000(px) x 000(px) 입니다.</li>
@@ -58,12 +58,22 @@
 		</div>
 	</div>
 </div>
+<input id="imgFile" type="file" style="display:none" />
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript">
 $(function(){
 	getCompanies();
+	
+	var updateLogoList = document.getElementsByClassName("updateLogo");
+	var updateLogoListCount = updateLogoList.length;
+	
+	for (var i = 0; i < updateLogoListCount; i++) {
+		updateLogoList[i].addEventListener("click", uploadImgBtn);
+	}
+	
+	document.getElementById("imgFile").addEventListener("change", imgUpload);
 });
 
 var getCompanies = function() {
@@ -102,6 +112,21 @@ var getCompanies = function() {
 
 var getLogos = function() {
 	
+}
+
+var uploadImgBtn = function (obj){
+	tempObj = obj;
+	console.log(tempObj);
+	console.log(this.id);
+    document.getElementById("imgFile").click();
+}
+
+var imgUpload = function () {
+	console.log(this);
+	var fd = new FormData();		    	
+	var _file = document.getElementById("imgFile").files[0];    	
+	var ext = _file.name.split('.').pop().toLowerCase();
+	console.log(_file);
 }
 </script>
 </body>

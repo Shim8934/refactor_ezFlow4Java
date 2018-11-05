@@ -139,7 +139,7 @@
 					var menusHTML = "";
 					
 					menuList.forEach(function (item, index) {
-						menusHTML += "<li class='menu' id='menu" + item.menuId + "' data1='" + item.defaultOrder + "'>";
+						menusHTML += "<li class='menu' id='menu" + item.menuId + "'>";
 						menusHTML += "<dl>";
 						menusHTML += "<dt><span class='" + item.iconUrl + "'>";
 						menusHTML += "</span></dt>";
@@ -618,7 +618,7 @@
 			request.open('POST', '/admin/ezNewPortal/updateMenuOrder.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
-			request.onload = function() { getMenus();}
+			request.onload = function() { getMenus(); }
 			
 			request.onerror = function() {}
 			

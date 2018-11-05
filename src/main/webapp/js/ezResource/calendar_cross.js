@@ -592,10 +592,17 @@ function ToggleView(cmdView)
 function onViewDate(szCmd) {
     switch (szCmd.toUpperCase()) {
         case "DAY":
+        	$("#monView").attr("class","off");
+            $("#weekView").attr("class","off");
+            $("#dayView").attr("class","on");
+            
+            $(".calendar_pagenav").css("width","269px");
+            $(".calendar_pagenav").css("margin-left","-134px");
+             
         	dayView = 2;
             typeCal = 2;
             if (document.getElementById(g_selTDID))
-                document.getElementById(g_selTDID).style.backgroundColor = "#edf4fd";
+                document.getElementById(g_selTDID).style.backgroundColor = "#e4e8ec";
             if (document.getElementById(g_selTRID))
                 document.getElementById(g_selTRID).style.backgroundColor = "";
             if (g_selTDID != null && g_selTDID != "")
@@ -612,12 +619,19 @@ function onViewDate(szCmd) {
             break;
             // 주보기		
         case "WEEK":
+        	$("#monView").attr("class","off");
+            $("#weekView").attr("class","on");
+            $("#dayView").attr("class","off");
+            
+            $(".calendar_pagenav").css("width","269px");
+            $(".calendar_pagenav").css("margin-left","-134px");
+            
         	dayView = 1;
             typeCal = 1;
             if (document.getElementById(g_selTDID))
                 document.getElementById(g_selTDID).style.backgroundColor = "";
             if (document.getElementById(g_selTRID))
-                document.getElementById(g_selTRID).style.backgroundColor = "#edf4fd";
+                document.getElementById(g_selTRID).style.backgroundColor = "#e4e8ec";
             if (g_selTDID != null && g_selTDID != "")
                 sDate = new Date(g_selTDID.substring(7, 11), parseInt(g_selTDID.substring(12, 14)) - 1, parseInt(g_selTDID.substring(15, 17)));
 
@@ -632,6 +646,13 @@ function onViewDate(szCmd) {
             break;
 
         case "MONTH":
+        	$("#monView").attr("class","on");
+            $("#weekView").attr("class","off");
+            $("#dayView").attr("class","off");
+            
+            $(".calendar_pagenav").css("width","180px");
+            $(".calendar_pagenav").css("margin-left","-89px");
+            
         	dayView = 0;
             typeCal = 0;
             if (document.getElementById(g_selTDID))

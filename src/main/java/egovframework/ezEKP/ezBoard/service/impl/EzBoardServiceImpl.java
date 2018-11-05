@@ -436,6 +436,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String tempString = ezBoardDAO.getBoardApprJoinItem(myFavoriteVO);
 		int rtnCount = 0;
 		
+		 /* 2018-09-14 홍승비 - 포틀릿에 표출되는 게시판에서 공지사항 리스트 제거 */
+		if (myFavoriteVO.getType().equals("portletBoard")) {
+			myFavoriteVO.setType("1");
+		}
+		
 		if (tempString != null && !tempString.equals("")) {
 			rtnCount = ezBoardDAO.getBrdTotalItemCount(myFavoriteVO);
 		} else {
@@ -859,6 +864,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Override
 	public List<HashMap<String, Object>> getBoardListItem(String boardID, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, int tenantID) throws Exception {
 		logger.debug("getBoardListItem started");
+		String pType = type;
 
 		if (orderOption1.length() > 0) {
 			if (orderOption1.indexOf("WRITEDATE") > -1) {
@@ -882,12 +888,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		String tempString = ezBoardDAO.getBoardApprJoinItem(boardMyFavoriteVO);
 		
+		/* 2018-09-14 홍승비 - 포틀릿에 표출되는 게시판에서 공지사항 리스트 제거 */
+		if (pType.equals("portletBoard")) {
+			pType = "1";		
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PUSERID", userID);
 		map.put("v_PBOARDID", boardID);
 		map.put("v_TENANTID", tenantID);
-		map.put("type", type);
+		map.put("type", pType);
 		map.put("startRow", startRow);
 		map.put("endRow", endRow);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));

@@ -16,22 +16,23 @@
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}" />
 	<style type="text/css">
 	body {min-width: 520px;background-color:white;}
+	.ui-widget-header .ui-icon {background-image : url(/js/jquery-ui/images/ui-icons_444444_256x240.png);}
+	.ui-widget-content {background : none;}
+	.ui-widget-header {background : none;}
   	.column {width: 1820px; padding-bottom: 100px;}
-  	.portlet, .newPortlet {postion: relative;margin: 0 1em 1em 0;padding: 0.3em;display : inline-block;vertical-align : top;}
+  	.portlet, .newPortlet {position: relative;margin: 0 1em 1em 0;padding: 0.3em;display : inline-block;vertical-align : top; background-color : #ffffff;}
   	.portlet-header {padding: 0.4em 0.7em;margin-bottom: 0.5em;position: relative;cursor:move;}
   	.portlet-toggle {top: 50%;right: 0;float:right;}
   	.portlet-content {padding: 0.4em;clear:both;}
   	.portlet-placeholder {border: 1px dotted black; margin: 0 1em 1em 0; height: 50px;}
 	.col, .newPortlet {padding: 16px 16px 5px 16px;}
+	.addPortlet:hover {cursor:pointer;}
 	.updatePortlet, .addNewPortlet {float : right;margin : 0px; padding : 0px;}
 	.deletePortletBtn {margin-left:7px;}
-	.boardSetting {margin:0px 0px 0px 12px;padding:0px;text-align:left;display:inline-block;vertical-align:top;}
+	.boardSetting, .menuSetting {margin:0px 0px 0px 12px;padding:0px;text-align:left;display:inline-block;vertical-align:top;}
 	.portletInfo {display:inline-block;marging-top:8px;}
 	.portletInfoTH {background-color : white;border:0px; padding-left:0px;}
 	.portletInfoTH, .portletInfoTD {padding-bottom : 6px;}
-	.ui-widget-header .ui-icon {background-image : url(/js/jquery-ui/images/ui-icons_444444_256x240.png);}
-	.ui-widget-content {background : none;}
-	.ui-widget-header {background : none;}
 	.boardNotUsed {height:2.6em;}
 	.portletInfo {width : 100%;}
 	.portletInfoTD {width:100%;}
@@ -49,6 +50,7 @@
 	input:checked + .slider {  background-color: #2196F3;}
 	input:focus + .slider { box-shadow: 0 0 1px #2196F3;}
 	input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transform: translateX(26px);transform: translateX(26px);}
+	.toastArea { padding : 10px; position : absolute; background : rgba(0, 0, 0, 0.33); display : block; color : #ffffff; font-size: 12px; border-radius: 3px;}
 	/* Rounded sliders */
 	.slider.round {border-radius: 15px;}
 	.slider.round:before {border-radius: 50%;}
@@ -90,10 +92,10 @@
 		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 		
 		//포틀릿 사용 여부
-		var isUsed = $("#newPortlet").find(".switch").find("input").prop("checked");
+		var isUsed = document.getElementById("newPortlet").querySelectorAll(".switch")[0].querySelectorAll("input")[0].checked;
 		
 		//포틀릿 이름 리스트
-		var portletNameList = $("#newPortlet").find(".portletName");
+		var portletNameList = document.getElementById("newPortlet").querySelectorAll(".portletName");
 		var portletNameListCount = portletNameList.length;
 		var nameList = [];
 		var portletNameEmptyNum = 0;
@@ -113,25 +115,30 @@
 		}
 			
 		//게시판 설정(게시판 아이디)
-		var boardName = $("#newPortletBoard");
+		var boardName = document.getElementById("newPortletBoard");
 		var boardId = null;
 		
 		if (boardName != undefined) {
-			boardId = boardName.attr("data1");
+			boardId = boardName.getAttribute("data1");
 		}
 			
 		//새로운 포틀릿인 경우 connection url
-		var connectionUrl = $("#newPortlet").find(".connectionUrl").val();
+		var connectionUrl = document.getElementById("newPortlet").querySelector(".connectionUrl").value;
 		
 		if (connectionUrl == "") {
 			alert("연결 URL을 입력해주세요.");
 			return;
 		}
 		
-		//새로운 포틀릿인 경우 포틀릿 타입 지정
-		var portletCategory = $("#newPortlet").find("input[name='category']:checked").val();
+		//새로운 포틀릿인 경우 관련 메뉴 지정
+		var portletMenuId = document.getElementById("newPortlet").querySelector("#newPortletMenu").getAttribute("data1");
 		
-		if (portletCategory == "B" && boardId == null) {
+		if (portletMenuId == null) {
+			alert("추가할 포틀릿과 관련된 메뉴를 설정해주세요.");
+			return;
+		}
+		
+		if (portletMenuId == 4 && boardId == null) {
 			alert("게시판을 선택해 주세요.");
 			return;
 		}
@@ -141,7 +148,7 @@
 		request.setRequestHeader('content-type', 'application/json');
 		
 		request.onload = function() { 
-			//getPortletList(); 
+			getPortletList(); 
 		};
 		
 		request.onerror = function() {}
@@ -152,7 +159,7 @@
 			boardId : boardId,
 			portletUsed : isUsed,
 			connectionUrl : connectionUrl,
-			portletCategory : portletCategory
+			menuId : portletMenuId
 		});
 		 
 		request.send(data);
@@ -168,7 +175,7 @@
 		request.setRequestHeader('content-type', 'application/json');
 		
 		request.onload = function() { 
-			//getPortletList(); 
+			getPortletList(); 
 		};
 		
 		request.onerror = function() {}
@@ -196,17 +203,15 @@
 			var portletId = portletList[i].id;
 			portletId = portletId.substring(7);
 			
-			portletOrderList.push({"companyOrder" : order, "portletId" : portletId});
+			portletOrderList.push({"portletOrder" : order, "portletId" : portletId});
 		}
-		
-		var request = new XMLHttpRequest();
+		console.log(portletOrderList);
+ 		var request = new XMLHttpRequest();
 		
 		request.open('POST', '/admin/ezNewPortal/updatePortletOrder.do', true);
 		request.setRequestHeader('content-type', 'application/json');
 		
-		request.onload = function() { 
-			//getPortletList(); 
-		};
+		request.onload = function() {};
 		
 		request.onerror = function() {}
 		
@@ -224,7 +229,7 @@
 		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 		
 		//포틀릿 순서가져오기
-		var portletList = $(".col");
+		var portletList = document.getElementsByClassName("col");
 		var portletListCount = portletList.length;
 		var portletOrderList = [];
 		
@@ -233,7 +238,7 @@
 			var portletId = portletList[i].id;
 			portletId = portletId.substring(7);
 			
-			portletOrderList.push({"companyOrder" : order, "portletId" : portletId});
+			portletOrderList.push({"portletOrder" : order, "portletId" : portletId});
 		}
 		
 		var request = new XMLHttpRequest();
@@ -242,7 +247,7 @@
 		request.setRequestHeader('content-type', 'application/json');
 		
 		request.onload = function() { 
-			//getPortletList(); 
+			getPortletList(); 
 		};
 		
 		request.onerror = function() {}
@@ -258,8 +263,13 @@
 	//게시판 설정 
 	var openBoardTree = function(event) {
 		var portletId = event.data.portletId;
-		var companyId = $('#ListCompany option:selected').val();
-		var boardId = $("#portlet" + portletId).find(".boardName").attr("data1");
+ 		var companiesObj = document.getElementById("ListCompany");
+		var companyId = companiesObj.options[companiesObj.selectedIndex].value;
+		
+		if (portletId != null) {
+			var boardId = document.getElementById("portlet" + portletId).querySelector(".boardName").getAttribute("data1");
+		}
+		
         var wWeight = "355";
         var wHeight = "600";
 
@@ -281,10 +291,10 @@
 		var portletId = event.data.portletId;
 		
 		//포틀릿 사용 여부
-		var isUsed = $("#portlet" + portletId).find(".switch").find("input").prop("checked");
+		var isUsed = document.getElementById("portlet" + portletId).querySelectorAll(".switch")[0].querySelectorAll("input")[0].checked;
 		
 		//포틀릿 이름 리스트
-		var portletNameList = $("#portlet" + portletId).find(".portletName");
+		var portletNameList = document.getElementById("portlet" + portletId).querySelectorAll(".portletName");
 		var portletNameListCount = portletNameList.length;
 		var nameList = [];
 		
@@ -293,19 +303,34 @@
 		}
 		
 		//게시판 설정(게시판 아이디)
-		var boardName = $("#portletBoard" + portletId);
+		var boardName = document.getElementById("portletBoard" + portletId);
 		var boardId = null;
 		
-		if (boardName != undefined) {
-			boardId = boardName.attr("data1");
+		if (boardName != null) {
+			boardId = boardName.getAttribute("data1");
 		}
 		
 		//새로운 포틀릿인 경우 ...connection url
-		var url = $("#portletBoard" + portletId).find(".connectionUrl");
+		var url = document.getElementById("portlet" + portletId).querySelector(".connectionUrl");
 		var connectionUrl = null;
 		
-		if (url != undefined) {
+		if (url != null) {
 			connectionUrl = url.value;
+		}
+		
+		//새로운 포틀릿인 경우에는 메뉴 아이디
+		var portletMenuId = document.getElementById("portlet" + portletId).querySelector("#newPortletMenu");
+		var menuId = null;
+		
+		if (portletMenuId != null) {
+			menuId = portletMenuId.getAttribute("data1")
+		} else {
+			menuId = document.getElementById("portlet" + portletId).getAttribute("data2");
+		}
+		
+		if (menuId == 4 && boardId == null) {
+			alert("게시판을 선택해 주세요.");
+			return;
 		}
 		
 		var request = new XMLHttpRequest();
@@ -313,7 +338,8 @@
 		request.setRequestHeader('content-type', 'application/json');
 		
 		request.onload = function() { 
-			//getPortletList(); 
+			showToastMessage(portletId);
+			getPortletList(); 
 		};
 		
 		request.onerror = function() {}
@@ -324,7 +350,8 @@
 			nameList : nameList,
 			boardId : boardId,
 			portletUsed : isUsed,
-			connectionUrl : connectionUrl
+			connectionUrl : connectionUrl,
+			menuId : menuId
 		});
 		 
 		request.send(data);
@@ -332,16 +359,16 @@
 	  
 	//포틀릿 리스트 불러오는 함수
 	var getPortletList = function() {
-		var companyId = $('#ListCompany option:selected').val();
+		var companiesObj = document.getElementById("ListCompany");
+		var companyId = companiesObj.options[companiesObj.selectedIndex].value;
 		
-		$.ajax({
-			type : "POST",
-			dataType : "json",
-			url : "/admin/ezNewPortal/getPortlets.do",
-			data : {
-				companyId : companyId
-			},
-			success : function(result){
+		var request = new XMLHttpRequest();
+		request.open('POST', '/admin/ezNewPortal/getPortlets.do', true);
+		request.setRequestHeader('content-type', 'application/json');
+		
+		request.onload = function() { 
+			if (request.status >= 200 && request.status < 400) {
+				var result = JSON.parse(request.responseText);
 				var portletId = "";
 				var portletOrder = "";
 				var portletName = "";
@@ -362,7 +389,7 @@
 					menuId = result[i].menuId;
 					portletNameListCnt = portletNameList.length;
 					
-					listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder + "'>"	
+					listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder + "' data2='" + menuId + "'>"	
 					listHTML += "<div class='portlet-header'>" + portletNameList[arrayLang].portletName + "</div>";
 					listHTML += "<div class='portlet-content'>";
 					listHTML += "<div class='btnpositionJsp updatePortlet'>";
@@ -396,6 +423,12 @@
 					
 					if (!result[i].general) {
 						listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"'></td></tr>";
+						listHTML += "<tr><th class='portletInfoTH'>관련 메뉴 : </th><td class='portletInfoTD'>";
+						listHTML += "<input id='portletMenu" + portletId + "' type='text' value='" + result[i].menuName + "'readonly>";
+						listHTML += "<div class='btnpositionJsp menuSetting'>";
+						listHTML += "<a class='imgbtn menuSettingtBtn'>";
+						listHTML += "<span>선택</span></a></div>";
+						listHTML += "</td></tr>";
 					}
 					
 					if (menuId == 4 && portletId != 10) {
@@ -433,15 +466,21 @@
 					
 					if (!result[i].general) {
 						$("#portlet" + result[i].portletId).find(".deletePortletBtn").on("click", {"portletId" : result[i].portletId}, portletDelete);
+						$("#portletMenu" + result[i].portletId).find(".menuSetting").on("click", {"portletId" : result[i].portletId}, openMenuList);
 					}
 				}
 				
 				loadAfter();
-			},
-			error:function(request,status,error){
-				console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 			}
+		};
+		
+		request.onerror = function() {}
+		
+		var data = JSON.stringify({
+			companyId : companyId
 		});
+		 
+		request.send(data);
 	}
 	  
 	function loadAfter() {
@@ -488,7 +527,12 @@
 		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(영어) :</th><td class='portletInfoTD'><input class='portletName' data1='2' type='text'></td></tr>"
 		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(일본어) :</th><td class='portletInfoTD'><input class='portletName' data1='3' type='text'></td></tr>"
 		listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input class='connectionUrl' type='text'></td></tr>";
-		listHTML += "<tr><th class='portletInfoTH'>포틀릿 타입 : </th><td class='portletInfoTD'><input type='radio' name='category' value='M' checked>&nbsp;메일&nbsp;<input type='radio' name='category' value='B'>&nbsp;게시판&nbsp;<input type='radio' name='category' value='A'>&nbsp;전자결재&nbsp;<input type='radio' name='category' value='L'>&nbsp;외부링크</td>";
+		listHTML += "<tr><th class='portletInfoTH'>관련 메뉴 : </th><td class='portletInfoTD'>";
+		listHTML += "<input id='newPortletMenu' type='text' readonly>";
+		listHTML += "<div class='btnpositionJsp menuSetting'>";
+		listHTML += "<a class='imgbtn menuSettingtBtn'>";
+		listHTML += "<span>선택</span></a></div>";
+		listHTML += "</td></tr>";
 		listHTML += "<tr class='setBoard'><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
 		listHTML += "<input id='newPortletBoard' type='text'>";
 		listHTML += "<div class='btnpositionJsp boardSetting'>";
@@ -497,9 +541,9 @@
 		listHTML += "</table>";
 		listHTML += "</li>";
 		
-		$("#portletListContainer").append(listHTML);
+		document.getElementById("portletListContainer").insertAdjacentHTML('beforeend', listHTML);
 		
-		$(".addPortlet").on("click", showAddPortletForm);
+		//jquery ui - sortable(드래그앤드랍)
 		$(".col-container").sortable("destroy");
 
 		$( ".col-container" ).sortable({
@@ -512,17 +556,63 @@
 		.addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
 		.find( ".portlet-header" )
 		.addClass( "ui-widget-header ui-corner-all" );
+		//jquery ui - 끝
 		
-		$("input:radio").on("click", function(){
-			if ($(this).prop("checked") && $(this).attr("value") == "B") {
-				$(".setBoard").css("display", "table-row");
-			} else {
-				$(".setBoard").css("display", "none");
-			}
-		});
+		/* var categoryList = document.querySelectorAll("input[name='category']");
+		
+		[].forEach.call(categoryList, function(category) {
+			category.addEventListener("click", function(){
+				if (this.value == "B" && this.checked) {
+					document.getElementById("newPortlet").querySelector(".setBoard").style.display = "table-row";
+				} else {
+					document.getElementById("newPortlet").querySelector(".setBoard").style.display = "none";
+				}
+			});
+		}); */
+		
+		$("#newPortlet").find(".menuSetting").on("click", {"portletId" : null}, openMenuList);
 		
 		$(".addNewPortlet").on("click", {"portletId" : null}, portletAdd);
 		$(".newPortlet").find(".boardSetting").on("click", {"portletId" : null}, openBoardTree);
+	}
+	
+	var openMenuList = function (event) {
+		var portletId = event.data.portletId;
+ 		var companiesObj = document.getElementById("ListCompany");
+		var companyId = companiesObj.options[companiesObj.selectedIndex].value;
+        var wWeight = "639";
+        var wHeight = "415";
+
+        var heigth = window.screen.availHeight;
+        var width = window.screen.availWidth;
+
+        var left = (width - wWeight) / 2;
+        var top = (heigth - wHeight) / 2;
+        
+        window.open("/admin/ezNewPortal/openPortalMenu.do?portletId=" + portletId + "&companyId=" + companyId, "",
+            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+	}
+	
+	var showToastMessage = function (portletId) {
+		var doc = window.document;
+		var alertMessage = "저장되었습니다.";
+		var toastArea = doc.createElement("div");
+		
+		toastArea.innerHTML = alertMessage;
+		toastArea.setAttribute("class", "toastArea");
+		toastArea.style.top = "115px";
+		toastArea.style.left = "185px";
+		toastArea.style.display = "block";
+		toastArea.id = "toast" + portletId;
+		
+		$("#portlet" + portletId).prepend(toastArea);
+		
+		setTimeout(function() {
+			$("#toast" + portletId).fadeOut(1000, function() {
+				var parent = doc.getElementById("portlet" + portletId);
+				parent.removeChild(toastArea);
+			})
+		}, 500);
 	}
 	</script>
 </head>

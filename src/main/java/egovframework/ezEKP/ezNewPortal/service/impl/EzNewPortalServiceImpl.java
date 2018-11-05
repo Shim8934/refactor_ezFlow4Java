@@ -758,6 +758,118 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getBoardTree ended.");
 		return ezNewPortalDAO.getBoardTree(map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void insertPortlet(JSONObject portletInfo, JSONArray portletNames, String companyId, int tenantId)
+			throws Exception {
+		LOGGER.debug("insertPortlet started.");
+		Map<String, Object> map = new HashMap<>();
+		
+		//메뉴
+		map = new ObjectMapper().readValue(portletInfo.toJSONString(), Map.class);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		//포틀릿 insert 후에 아이디 가져옴
+		int portletId = ezNewPortalDAO.insertPortlet(map);
+		
+		map.put("portletId", portletId);
+		map.put("companyLang", 1);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezNewPortalDAO.insertPortletComp(map);
+		
+		String menuId = portletInfo.get("menuId").toString();
+		
+		//포틀릿이름
+		for (Object item : portletNames) {
+			if (item instanceof JSONObject) {
+				JSONObject portletNameInfo = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(portletNameInfo.toJSONString(), Map.class);
+				map.put("menuId", menuId);
+				map.put("portletId", portletId);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				
+				ezNewPortalDAO.updateCompanyPortletNameInfo(map);
+			}
+		}
+		LOGGER.debug("insertPortlet ended.");
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public void updateCompanyPortletInfo(JSONObject portletInfo, JSONArray portletNames, String companyId, int tenantId)
+			throws Exception {
+		LOGGER.debug("updateCompanyPortletInfo started.");
+		Map<String, Object> map = new HashMap<>();
+		
+		//메뉴
+		map = new ObjectMapper().readValue(portletInfo.toJSONString(), Map.class);
+		map.put("companyLang", 1);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezNewPortalDAO.updateCompanyPortletInfo(map);
+		
+		String menuId = map.get("menuId").toString();
+		
+		//포틀릿이름
+		for (Object item : portletNames) {
+			if (item instanceof JSONObject) {
+				JSONObject portletNameInfo = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(portletNameInfo.toJSONString(), Map.class);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				map.put("menuId", menuId);
+				
+				ezNewPortalDAO.updateCompanyPortletNameInfo(map);
+			}
+		}
+		LOGGER.debug("updateCompanyPortletInfo ended.");
+		
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public void updateCompanyPortletOrder(JSONArray portletList, int tenantId, String companyId) throws Exception {
+		LOGGER.debug("updateCompanyPortletOrder started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		//포틀릿 순서
+		for (Object item : portletList) {
+			if (item instanceof JSONObject) {
+				JSONObject portletOrder = (JSONObject) item;
+				map = new ObjectMapper().readValue(portletOrder.toJSONString(), Map.class);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				
+				ezNewPortalDAO.updateCompanyPortletOrder(map);
+			}
+		}
+		LOGGER.debug("updateCompanyPortletOrder ended.");
+		
+	}
+	@Override
+	public void deletePortlet(int portletId, String companyId, int tenantId) {
+		LOGGER.debug("deletePortlet started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("portletId", portletId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		//tbl_portal_portlet_name 지우기
+		ezNewPortalDAO.deletePortletName(map);
+		
+		//tbl_portal_portlet_comp 지우기
+		ezNewPortalDAO.deletePortletComp(map);
+		
+		//tbl_portal_portlet 지우기
+		ezNewPortalDAO.deletePortlet(map);
+		
+		LOGGER.debug("deletePortlet ended.");
+	}
 	/**
 	 * 이효진
 	 */
@@ -1325,12 +1437,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<PortletInfoVO> getPortletList(String companyId, int tenantId) {
+	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang) {
 		LOGGER.debug("getPortletList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("menuLang", menuLang);
 		
 		List<PortletInfoVO> portetList = ezNewPortalDAO.getPortletList(map);
 		
@@ -1352,4 +1465,5 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getPortletList started");
 		return portetList;
 	}
+
 }

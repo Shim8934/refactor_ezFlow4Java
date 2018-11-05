@@ -41,7 +41,7 @@
 			        yearRange: sYear+":"+eYear,  
 			        //autoSize: true,
 			        showOn: "button",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			    $("#txtBirth").datepicker("option", "dateFormat", "yy-mm-dd");

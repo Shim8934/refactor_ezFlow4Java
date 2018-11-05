@@ -20,6 +20,9 @@
 			#resourceDataTable tr th{
 				font-weight: normal;
 			}
+			.table_layout th {
+				border-top : 1px solid #e0e0e2;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -125,7 +128,7 @@
 	    		} else {
 		            DefaultView = 0;
 	    		}
-	    		
+
 	        	try {
 	            	if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                	document.body.style.MozUserSelect = 'none';
@@ -195,10 +198,16 @@
 		            if (type == "WEEK") {
 	    	            document.getElementById("TR_Line2").style.display = "";
 	        	        weekonload(date.getFullYear(), parseInt(date.getMonth()) + 1, date.getDate());
+	        	        $("#Weekbtn").attr("class","on");
+	        	        $("#ToDaybtn").attr("class","off");
+	        	        
+	        	        $("#divViewHeader").css("color","");
 		            }
 		            else if (type == "TODAY") {
 	    	            document.getElementById("TR_Line2").style.display = "";
 	        	        todayonlaod(date.getFullYear(), parseInt(date.getMonth()) + 1, date.getDate());
+	        	        $("#Weekbtn").attr("class","off");
+	        	        $("#ToDaybtn").attr("class","on");
 	            	}
 	        	} else {
 	            	document.getElementById("TR_Line2").style.display = "none";
@@ -380,6 +389,32 @@
 		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
 		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
 		<div id="mainmenu" onload = "makePageSelPage()">
+            <ul class="on">
+            	<c:if test="${adminFg eq 'Y'}">
+            		<li class="important"><span onClick="btnAdd_Click();"><spring:message code="ezResource.t363" /></span></li>	
+    				<li><span onClick="btnView_Resource();"><spring:message code="ezResource.t17" /></span></li>
+              	</c:if>
+              	<span id = "noResListSpan">
+              		<%-- <li style="background:none;float:right;cursor:default;border:0px;color:#393939">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
+					<li style="background:none;float:right;cursor:default;border:0px;color:#393939"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li> --%>
+				</span>
+            </ul>
+		</div>
+		<div class="calendar_pagenav" id="weeklyline">
+	        <ul class="contentlayout">
+	            <li class="contentlayout_left" id="preM"><span class="icon16 calendarleft" onclick="pagenavi('PREV');"></span></li>
+	            <li class="contentlayout_right" id="preN"><span class="icon16 calendarright" onclick="pagenavi('NEXT');"></span></li>
+	            <li class="contentlayout_none"><span class="spanText" id="divViewHeader"></span>
+	            </li>
+	        </ul>
+	    </div>
+
+	    <div class="mainmenuTab">
+	        <ul class="mainmenuTabUL">
+	            <li id="ToDaybtn" class="off"><span onClick="setweek_onload('TODAY');"><spring:message code='ezSchedule.t140'/></span></li><li id="Weekbtn" class="on"><span onClick="setweek_onload('WEEK');"><spring:message code='ezSchedule.t141'/></span></li>
+	        </ul>
+	    </div>
+		<%-- <div id="mainmenu" onload = "makePageSelPage()">
   			<ul>
     			<c:if test="${adminFg eq 'Y'}">
     				<li><span onClick="btnAdd_Click();"><spring:message code="ezResource.t363" /></span></li>	
@@ -390,14 +425,14 @@
     			<li id="ToDaybtn"><span onClick="setweek_onload('TODAY');"><spring:message code="ezResource.t251" /></span></li>
     			<li id="Weekbtn"><span onClick="setweek_onload('WEEK');"><spring:message code="ezResource.t253" /></span></li>
     			<!-- 2018-06-05 구해안 허가,비허가 오른쪽으로 ui 수정 -->
-      			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
-				<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li>
+      			<li style="background:none;float:right;cursor:default;border:0px;color:#393939">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
+				<li style="background:none;float:right;cursor:default;border:0px;color:#393939"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li>
   				</span>
   			</ul>
-		</div>
+		</div> --%>
 		
 		<script type="text/javascript">
-    		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+    		//selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
     	<table style="width:100%;margin-top:-37px;" id="mainlist" >
@@ -412,15 +447,6 @@
             	<td style="vertical-align:top;">
                 	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;overflow-y: auto;overflow-x:hidden;" >
                 		<table style="width:100%;">
-                    		<tr id="weeklyline">
-                				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f0f6ff;">
-                					<div style="border:1px solid #d1ddec;height:35px;line-height: 33px">
-					                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
-					                	&nbsp;<span id="divViewHeader" class="calResTitleSpan"></span>&nbsp;
-					                	<img src="/images/calendar/btn_calendar_mini_next.gif" style="cursor:pointer;vertical-align:middle;" id=Img3 onClick="pagenavi('NEXT');">
-				                	</div>
-				            	</td>
-				            </tr>
                     		<tr>
                       			<td colspan="2" id='weekviewer' class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  -->
                         			<div id="tooltip" style="position:absolute; visibility:hidden; z-index:1000;"></div> 
@@ -428,7 +454,7 @@
                         		</td>
                     		</tr>
                     		<tr id="noapproval" style="display:none;">
-                        		<td colspan="2" style="font-weight:bold;padding-top:15px;padding-left:5px;vertical-align:bottom;" ><h2>▒&nbsp;<spring:message code="ezResource.t402" /></h2></td>
+                        		<td colspan="2" style="padding-top:15px;padding-left:5px;vertical-align:bottom;" ><h2 style="font-weight: normal">▒&nbsp;<spring:message code="ezResource.t402" /></h2></td>
                     		</tr>
                     		<tr>
                       			<td colspan="2" id='tdCalViewCell2'  class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  ---->

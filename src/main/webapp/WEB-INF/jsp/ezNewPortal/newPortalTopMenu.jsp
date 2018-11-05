@@ -25,15 +25,16 @@
 			float: right;
 		}
 		#editBtn img {
-			width: 20px;
-			height: 20px;
+			width: 19px;
+			height: 19px;
 			margin-right: 10px;
-			margin-top: 7px;
+			margin-top: 8px;
 			cursor: pointer;
 		}
 		#editMenuBtn {
 			display: none;
 		}
+		.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
 		</style>
 		<script type="text/javascript">
 		
@@ -119,7 +120,7 @@
 				str += '<div id="menu_toggle">';
 				str += '	<div class="full_menu_toggle"><ul class="full_menu_toggleUL" id="toggleMenu"></ul></div>';
 				str += '	<div class="menu_toggle_context" id="expandMenuFooter">'
-				str += '		<div id="editBtn"><img src="/images/kr/left/icon_setup.gif" /></div>';
+				str += '		<div id="editBtn"><img src="/images/ezNewPortal/icon_setup.png" /></div>';
 				str += '		<div id="editMenuBtn">'
 				str += '			<span class="topMenuBtn" id="editMenuCancel">취소</span>';
 				str += '			<span class="topMenuBtn" id="editMenuSave">저장</span>';
@@ -264,9 +265,18 @@
 				// 드래그앤드롭
 				$('#toggleMenu').sortable({
 					activate: function () {
+						$("li.ui-sortable-placeholder").css("visibility", "visible");
+						$("li.ui-sortable-placeholder").css("border-right", "1px dashed #898989");
+						$("li.ui-sortable-placeholder").css("border-bottom", "1px dashed #898989");
+						
 						if(newPortalTopMenu.isInitOrder === true) {
 							newPortalTopMenu.isInitOrder = false;
 						}
+					},
+					change : function() {
+						$("li.ui-sortable-placeholder").css("visibility", "visible");
+						$("li.ui-sortable-placeholder").css("border-right", "1px dashed #898989");
+						$("li.ui-sortable-placeholder").css("border-bottom", "1px dashed #898989");
 					}
 				});
 				$('#toggleMenu').sortable("option", "disabled", false);

@@ -168,8 +168,10 @@ var strLang1003 = "You have already registered a certain share information.";
 var strLang275 = "Unable to register prior to the start today.";
 //2018.02.22
 var strLangKMS1 = "You can only repeat more than 100 times.";
-/ * 2018-07-16 * /
+/* 2018-07-16 */
 var strLang276 = "Please select one group to view members";
+/*2018-09-27*/
+var strLang277 = "Please insert schedule";
 //2018.10.24
 var strLangKHJ1 = "날짜를 지정해 주세요.";
 var strLangKHJ2 = "시작일을 지정해 주세요.";

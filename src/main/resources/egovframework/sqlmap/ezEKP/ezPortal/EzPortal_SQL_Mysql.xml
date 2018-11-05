@@ -453,58 +453,64 @@
 	<select id="EzPortalDAO.topGetUserInfo" parameterClass="Map" resultMap="portalTBLUserInfoVO">
 		<![CDATA[
 			SELECT
-				B.* 
+				A.*
         	FROM
-        		TBL_TOPMENU_GENERAL A, TBL_USERINFO B
+        		TBL_USERINFO A
+        	JOIN
+        		TBL_TOPMENU_GENERAL B
+        	ON
+        		A.tenant_id = B.tenant_id
+        	AND
+        		A.uid_ = B.uid_
        		WHERE
-       			( NOT EXISTS ( SELECT 
-       								 	UID_ 
-                             		 FROM 
-                             		 	TBL_TOPMENU_ITEMS 
-                              		 WHERE
-                              		 	UID_ = A.UID_
-                              		 AND
-                              		 	TENANT_ID = #tenantID#	 ) )
+       			(NOT EXISTS
+       				(SELECT
+						uid_
+					FROM
+						TBL_TOPMENU_ITEMS
+					WHERE
+						uid_ = B.uid_
+					AND
+						tenant_id = #tenantID#))
 			AND
-				A.UID_ = B.UID_
-            AND
-                A.TENANT_ID = B.TENANT_ID
+				A.tenant_id = #tenantID#
 			AND
-				A.UseFlag = 'Y'
+				A.userid = #v_pUSERID#
 			AND
-				B.UserID = #v_pUSERID#
-			AND
-				A.TENANT_ID = #tenantID#
+				B.useflag = 'Y'
 		]]>
 	</select>
 	
 	<select id="EzPortalDAO.topGetUserInfo2" parameterClass="Map" resultMap="portalTBLUserInfoVO">
 		<![CDATA[
-			 SELECT
+			SELECT
 			 	B.* 
         	FROM
-        		TBL_TOPMENU_GENERAL A, TBL_USERINFO B
+        		TBL_USERINFO A
+        	JOIN
+        		TBL_TOPMENU_GENERAL B
+        	ON
+        		A.uid_ = B.uid_
+        	AND
+        		A.tenant_id = B.tenant_id
        		WHERE
-       			( NOT EXISTS ( SELECT
-       									 UID_ 
-                             		FROM
-                             			TBL_TOPMENU_ITEMS 
-                              		WHERE
-                              			UID_ = A.UID_
-                              		AND
-                              			TENANT_ID = #tenantID#	 ) )
-            AND
-            	A.UID_ = B.UID_
-            AND
-                A.TENANT_ID = B.TENANT_ID  
+				(NOT EXISTS
+					(SELECT
+						UID_
+                    FROM
+						TBL_TOPMENU_ITEMS 
+					WHERE
+						uid_ = B.uid_
+					AND
+						tenant_id = #tenantID#))
 			AND
-				A.UseFlag = 'Y'
+				A.tenant_id = #tenantID#
 			AND
-				B.UserID = #v_pUSERID#
+				A.userid = #v_pUSERID#
 			AND
-				B.lang = #v_pLANG#
+				A.lang = #v_pLANG#
 			AND
-				A.TENANT_ID = #tenantID#	
+				B.useflag = 'Y'
 		]]>
 	</select>
 	
@@ -516,38 +522,40 @@
         		DUAL
        		WHERE
        			NOT EXISTS
-       				( SELECT
-       				  	B.* 
-                      FROM
-                      	TBL_PORTALPAGE_GENERAL A, TBL_PORTALPAGE_GENERAL B
-                      WHERE
-                      	( NOT EXISTS
-                      		( SELECT
-                      		  	UID_ 
-                              FROM
-                              	TBL_PORTALPAGE_ITEMS 
-							  WHERE
-							  	UID_ = A.UID_
-							  AND
-							  	TENANT_ID = #tenantID#	 ) )
-             		  AND
-             		  	A.UID_ = B.ParentUID
-             		  AND
-             		  	A.TENANT_ID = B.TENANT_ID	
-                      AND
-                      	A.UseFlag = #v_pUSERFLAG#
-					  AND
-					  	B.CompanyID = #v_pCOMPANYID#
-					  AND
-					  	B.ParentUID = #v_pPARENTUID#
-					  AND
-					  	B.GubunFlag = #v_pGUBUNFLAG#
-					  AND
-					  	B.CreatorID = #v_pUSERID#
-					  AND 
-					  	B.TENANT_ID = #tenantID#
-					  AND
-					  	A.TENANT_ID = #tenantID#		 )
+       				(SELECT
+						A.*
+					FROM
+						TBL_PORTALPAGE_GENERAL A
+					JOIN
+						TBL_PORTALPAGE_GENERAL B
+					ON
+						A.tenant_id = B.tenant_id
+					AND
+						A.parentuid = B.uid_
+					AND
+						A.companyid = B.companyid
+					WHERE
+						(NOT EXISTS
+							(SELECT
+								uid_
+							FROM
+								TBL_PORTALPAGE_ITEMS
+							WHERE
+								uid_ = B.uid_
+							AND
+								tenant_id = #tenantID#))
+					AND
+						A.tenant_id = #tenantID#
+					AND
+						A.companyid = #v_pCOMPANYID#
+					AND
+						B.useflag = #v_pUSERFLAG#
+					AND
+						A.parentuid = #v_pPARENTUID#
+					AND
+						A.gubunflag = #v_pGUBUNFLAG#
+					AND
+						A.creatorid = #v_pUSERID#)
 		]]>
 	</select>
 	
@@ -2525,6 +2533,18 @@
 				TENANT_ID = #tenantID#	
 		]]>
 	</update>
+	
+	<select id="EzPortalDAO.getWorkspaceUID" parameterClass="Map" resultClass="String">
+		SELECT 
+			UID_ 
+        FROM 
+        	tbl_menuitem_items_menuitems
+		WHERE 
+			tenant_id = #tenantID#
+		AND 
+			linkUrl LIKE '%workspace%'
+		LIMIT 1	
+	</select>
 	
 	<select id="EzPortalDAO.getMainMenuItemUID" parameterClass="Map" resultClass="String">
 		select

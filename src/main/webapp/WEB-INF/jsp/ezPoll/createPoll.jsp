@@ -203,7 +203,7 @@
 		        	changeYear: true,
 		        	autoSize: true,
 		        	showOn: "both",
-		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+		        	buttonImage: "/images/ImgIcon/calendar-month.png",
 		        	buttonImageOnly: true,
 		            onSelect: function(dateText, inst) {
 		            	dateCompare(dateText, SDate);
@@ -215,7 +215,7 @@
 		    	    changeYear: true,
 		        	autoSize: true,
 		        	showOn: "both",
-		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+		        	buttonImage: "/images/ImgIcon/calendar-month.png",
 		        	buttonImageOnly: true
 		    	});		
 		
@@ -508,7 +508,7 @@
 	        	autoSize: true,
 	        	format: 'yyyy-mm-dd',
 	        	showOn: "both",
-	        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	        	buttonImage: "/images/ImgIcon/calendar-month.png",
 	        	buttonImageOnly: true,
 	            onSelect: function(dateText, inst) {
 	            	dateCompare(dateText);
@@ -521,7 +521,7 @@
 	        	autoSize: true,
 	        	format: 'yyyy-mm-dd',
 	        	showOn: "both",
-	        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	        	buttonImage: "/images/ImgIcon/calendar-month.png",
 	        	buttonImageOnly: true
 	    	});
 			

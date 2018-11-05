@@ -40,7 +40,7 @@
 			        yearRange: sYear+":"+eYear,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 				});
 			    
@@ -407,7 +407,7 @@
             		<th><spring:message code='ezPersonal.t2003'/></th>
             		<td colspan="3">
                 		<input type="text" id="txtBirth" style="width:80px;text-align:center;" value="${txtBirth}" onkeydown="return checkKey()">
-                			<img id="TempCalImage" src="/images/ImgIcon/calendar-month.gif" style="margin-bottom:-5px"/>
+                			<img id="TempCalImage" src="/images/ImgIcon/calendar-month.png" style="margin-bottom:-5px"/>
                 			&nbsp;&nbsp;
              			   <c:choose>
                 				<c:when test="${birthType eq 'Y'}">

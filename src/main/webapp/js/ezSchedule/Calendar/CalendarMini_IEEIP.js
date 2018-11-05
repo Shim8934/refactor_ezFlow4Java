@@ -46,7 +46,7 @@ function CalendarMiniView(pTagetID) {
         mSpan.style.marginLeft = "6px";
         mSpan.style.cursor = "pointer";
         var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "/images/kr/main/btn_calendar_prev.gif");
+        mImg.setAttribute("src", "/images/kr/main/calender_pre.png");
         mImg.setAttribute("border", "0");
         mImg.setAttribute("onclick", "preMonth()");
         mSpan.appendChild(mImg);
@@ -55,13 +55,12 @@ function CalendarMiniView(pTagetID) {
 
         var mTd = document.createElement("TD");
         mTd.className = "calendar_mini_day"
-        var mSel = document.createElement("SELECT");
-        
+        /*var mSel = document.createElement("SELECT");        
         mSel.setAttribute("name", "iYear");
         mSel.setAttribute("id", "iYear");
-        mSel.setAttribute("onchange", "changeYear()");
+        mSel.setAttribute("onchange", "changeYear()");*/
 
-        var curYear = sDate.getFullYear() + 3;
+        /*var curYear = sDate.getFullYear() + 3;
         for (var i = curYear; i >= curYear - 6; i--) {
             var mOpt = document.createElement("OPTION");
             mOpt.setAttribute("Value", i);
@@ -73,10 +72,17 @@ function CalendarMiniView(pTagetID) {
             mOpt.appendChild(mText);
             mSel.appendChild(mOpt);
         }
+        mTd.appendChild(mSel); */
+        curYear = sDate.getFullYear();
+       	curMonth = sDate.getMonth()+1;
+       	
+       	curMonth = (curMonth < 10 ? "0"+curMonth : curMonth);
 
-        mTd.appendChild(mSel);
+        var dateSpan = "<span id='iYear'>" + curYear +"</span>.<span id='iMon'>" + curMonth + "</span>";
 
-        var mSel = document.createElement("SELECT");
+        mTd.innerHTML = dateSpan;
+
+        /*var mSel = document.createElement("SELECT");
         mSel.style.marginLeft = "10px";
         mSel.setAttribute("name", "iMon");
         mSel.setAttribute("id", "iMon");
@@ -95,7 +101,7 @@ function CalendarMiniView(pTagetID) {
             mOpt.appendChild(mText);
             mSel.appendChild(mOpt);
         }
-        mTd.appendChild(mSel);
+        mTd.appendChild(mSel);*/
 
         mTr.appendChild(mTd);
 
@@ -105,7 +111,7 @@ function CalendarMiniView(pTagetID) {
         mSpan.style.marginRight = "15px";
         mSpan.style.cursor = "pointer";
         var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "/images/kr/main/btn_calendar_next.gif");
+        mImg.setAttribute("src", "/images/kr/main/calender_next.png");
         mImg.setAttribute("border", "0");
         mImg.setAttribute("onclick", "nextMonth()");
         mSpan.appendChild(mImg);
@@ -132,8 +138,8 @@ function CalendarMiniView(pTagetID) {
 }
 
 function GetTableMiniBodyObj() {
-    var year = document.getElementById("iYear").value;
-    var month = parseInt(document.getElementById("iMon").value, 10);
+	var year = document.getElementById("iYear").innerHTML;
+    var month = parseInt(document.getElementById("iMon").innerHTML);
 
     if (DefaultView == 0)
         dayOfWeeks = strLang5_1; // 일>토
@@ -219,7 +225,7 @@ function MonthMiniData(oThisDate) {
 
     var oDiv = document.createElement("DIV");
     oDiv.setAttribute("onclick", "DayOnMouseClick(this);");
-    oDiv.setAttribute("ondblclick", "MonthMiniDbClick()");
+    /*oDiv.setAttribute("ondblclick", "MonthMiniDbClick()");*/
 
     var pDateData = oThisDate.getDate();
 
@@ -249,22 +255,31 @@ function MonthMiniData(oThisDate) {
 //자원데이터에 마우스 클릭시
 function DayOnMouseClick(event) {
     if (!event) event = window.event;
+    
+    if ($("#"+g_selTDID)) {
+    	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+    }
+    
+    if ($("#"+g_selTRID)) {
+    	$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    }
 
-    if (document.getElementById(g_selTDID))
+    /*if (document.getElementById(g_selTDID))
         document.getElementById(g_selTDID).style.backgroundColor = "";
     if (document.getElementById(g_selTRID))
-        document.getElementById(g_selTRID).style.backgroundColor = "";
+        document.getElementById(g_selTRID).style.backgroundColor = "";*/
 
    
  
-        document.getElementById(event.getAttribute("id")).style.backgroundColor = "#c3c3c3";
-        g_selTRID = event.parentNode.parentNode.getAttribute("id");
-        g_selTDID = event.getAttribute("id");
+        //document.getElementById(event.getAttribute("id")).style.backgroundColor = "#f0f6ff";
+    $("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    
+    g_selTRID = event.parentNode.parentNode.getAttribute("id");
+    g_selTDID = event.getAttribute("id");
 
-        var sDate = event.getAttribute("id").substring(7, 17);
-        date = sDate;
-        getScheduleList(date, pMode);
-        
+    var sDate = event.getAttribute("id").substring(7, 17);
+    date = sDate;
+    getScheduleList(date, pMode);
 }
 
 var MiniHttp;
@@ -354,8 +369,29 @@ function MiniDataBind(oAppointment) {
 
     var objElm = document.getElementById("TDMINI_" + oAppointment.trID + "_Day");
     if (objElm) {
-        objElm.style.fontWeight = "bold"
+        //objElm.style.fontWeight = "bold";
+        $("#"+"TDMINI_" + oAppointment.trID + "_Day").parent().append("<div class='dataHave' style='height:1px;line-height:1px' onclick='clickDay(\"TDMINI_" + oAppointment.trID + "_Day\")'>·</div>");        
     }
+}
+
+function clickDay(val01) {
+    if ($("#"+g_selTDID)) {
+    	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+    }
+    
+    if ($("#"+g_selTRID)) {
+    	$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    }
+    
+	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+	
+    g_selTRID = $("#"+val01).parent().parent().attr("id");
+    g_selTDID = val01;
+
+    var sDate = val01.substring(7, 17);
+
+    date = sDate;
+    getScheduleList(date, pMode);
 }
 
 
@@ -435,8 +471,8 @@ function mfFormatTime(iMin) {
 
 //이전월 이동
 function preMonth() {
-    var iMonth = parseInt(document.getElementById("iMon").value, 10) - 1;
-    var iYear = document.getElementById("iYear").value;
+	var iMonth = parseInt(document.getElementById("iMon").innerHTML, 10) - 1;
+    var iYear = document.getElementById("iYear").innerHTML;
 
     if (iMonth < 1) {
         iYear--;
@@ -447,8 +483,8 @@ function preMonth() {
         iMonth = 1;
     }
 
-    document.getElementById("iYear").value = iYear;
-    document.getElementById("iMon").value = iMonth;
+    document.getElementById("iYear").innerHTML = iYear;
+    document.getElementById("iMon").innerHTML = iMonth;
     sDate.setFullYear(iYear, iMonth - 1, 14);
         
 
@@ -460,8 +496,8 @@ function preMonth() {
 
 //다음월 이동
 function nextMonth() {
-    var iMonth = parseInt(document.getElementById("iMon").value, 10) + 1;
-    var iYear = document.getElementById("iYear").value;
+    var iMonth = parseInt(document.getElementById("iMon").innerHTML, 10) + 1;
+    var iYear = document.getElementById("iYear").innerHTML;
 
     if (iMonth < 1) {
         iYear--;
@@ -473,8 +509,8 @@ function nextMonth() {
     }
 
     sDate.setFullYear(iYear, iMonth - 1, 14);
-    document.getElementById("iYear").value = iYear;
-    document.getElementById("iMon").value = iMonth;
+    document.getElementById("iYear").innerHTML = iYear;
+    document.getElementById("iMon").innerHTML = iMonth;
 
    
     CalendarMiniView("CalendarMini");

@@ -118,22 +118,24 @@
 		    	if (numberOptions == null) {
 		    		return;
 		    	} 		    	
-		    	
+
 				for (var i = 0; i < numberOptions; i++) {
 					var graph = document.getElementById("graph" + votesArr[i][0]);	
 					var divGrap = document.getElementById("divGraph" + votesArr[i][0]);
-					var inforDiv = document.getElementById("info" + votesArr[i][0]);
+					var percentDiv = document.getElementById("percent" + votesArr[i][0]);
+					/* var inforDiv = document.getElementById("info" + votesArr[i][0]); */
 					
 					if (totalVotes > 0 && seeResultBefore == 1) {
-						var spaceElmt = document.getElementById("space" + votesArr[i][0]);
+						/* var spaceElmt = document.getElementById("space" + votesArr[i][0]); */
 						
-						if (spaceElmt != null) {
+						/* if (spaceElmt != null) {
 							spaceElmt.style.display = "none";
-						}
+						} */
 						
 						var percent = votesArr[i][1]/totalVotes;												
-						inforDiv.innerHTML = "&nbsp<span class='Pt_QstInfoVotes'>" + votesArr[i][1] + "</span><spring:message code = 'ezPoll.t166'/>/"
-											 + "<span class='Pt_QstInfoPercent'>" +  (percent * 100).toFixed(1) + "</span>" + "%";
+						/* inforDiv.innerHTML = "&nbsp<span class='Pt_QstInfoVotes'>" + votesArr[i][1] + "</span><spring:message code = 'ezPoll.t166'/>/"
+											 + "<span class='Pt_QstInfoPercent'>" +  (percent * 100).toFixed(1) + "</span>" + "%"; */
+						percentDiv.innerHTML = (percent * 100).toFixed(0) + "%";
 						
 						if (votesArr[i][1] != 0) {																					
 							graph.style.display = "inline-block";		
@@ -146,15 +148,65 @@
 					}
 					else {
 						graph.style.display = "none";
-						inforDiv.innerHTML = "&nbsp<span class='Pt_QstInfoVotes'>" + votesArr[i][1] + "</span><spring:message code = 'ezPoll.t166'/>/"
-											 + "<span class='Pt_QstInfoPercent'>0.0</span>" + "%";
+						/* inforDiv.innerHTML = "&nbsp<span class='Pt_QstInfoVotes'>" + votesArr[i][1] + "</span><spring:message code = 'ezPoll.t166'/>/"
+											 + "<span class='Pt_QstInfoPercent'>0.0</span>" + "%"; */
 					}
 				}
 			}
 		</script>						
 	</head>
 	<body>
-		<section class="body_bg1">
+		<div class="layDIV">
+	        <dl class="portlet_title">
+	            <dt class="portletText"><spring:message code='main.t2002' /><span id="todayVotes" class="tab_num"> (<c:out value='${totalVoteToday}'/>)</span></dt>
+	            <dd class="portletPlus" onclick="viewQstList()"><img src="/images/kr/main/portlet_Plus.png"></dd>
+	        </dl>
+	       	 <c:choose>
+		        <c:when test="${qstId != -1}">
+		        	<p class="voteTitle">"<c:out value='${qstTitle}'/>"</p>
+			        <p class="voteBtn" onclick="vote_poll()"><spring:message code='main.t2001' /></p>
+			        <ul class="voteList">
+			         	<c:forEach var="_option" items="${listOptions}" varStatus="loop"> 
+			         		<li class="voteList_0${loop.index+1}">
+			         			<div class="voteT" style='width:${seeResultBefore == 1 ? "22%" : "82%"}'><span class="Vnum">${loop.index+1}</span><span class="Vtext"><c:out value ="${_option.content}" /></span></div>
+                                <div class="percent" id="percent<c:out value ="${_option.ansId}" />">0%</div>
+                                <c:choose>
+	               						<c:when test="${seeResultBefore == 1}">
+			               					<div class="voteGraph" id="divGraph<c:out value ="${_option.ansId}" />">
+				               					<span id="graph<c:out value ="${_option.ansId}" />" style="width:0px"></span>           					
+				               				</div>				               				
+	               						</c:when>
+	               						<c:otherwise>
+	               							<div class="voteGraph" style="display: none;" id="divGraph<c:out value ="${_option.ansId}" />">
+				               					<span id="graph<c:out value ="${_option.ansId}" />" style="width:0px"></span>           					
+				               				</div>
+	               						</c:otherwise>
+	               					</c:choose>
+	               					<script type="text/javascript">		               					
+		               					var voteNum = ${_option.votesNumber};
+		               					var optionID = ${_option.ansId};		               					
+		               					votesArr.push([optionID, voteNum]);	  
+		               					totalVotes = totalVotes + voteNum;
+			               			</script> 
+                            </li>   
+			         	</c:forEach>
+			        </ul>
+		        </c:when>
+  				<c:otherwise>
+  					<%-- <div class="nodata_portlet">
+						<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>
+						<p><spring:message code='main.t261' /></p>
+					</div> --%>
+					<ul class="portlet_list">
+						<dl class='nodata'>
+		                	<dt><img src='/images/kr/main/nodata.png'></dt>
+		                	<dd>"<spring:message code='main.t00026' />"</dd>
+	                	</dl>
+                	</ul>
+  				</c:otherwise>
+  			</c:choose>
+	    </div>
+		<%-- <section class="body_bg1">
 			<article class="portletbox pollbox">
    				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt" style="display: inline-block;"><spring:message code='main.t2002' /></span> <span id="todayVotes" style="position: absolute; top: 14px; left: 41px;" class="tab_num"> (<c:out value='${totalVoteToday}'/>)</span><span class="btn_more" onclick="viewQstList()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span></div>
   				<div class="pollcont" style="overflow-y: hidden; overflow-x: hidden;">
@@ -213,6 +265,6 @@
    				</div>
    				<div class="guide"><span class="lb"></span><span class="rb"></span></div>
 			</article>
-		</section>
+		</section> --%>
 	</body>
 </html>

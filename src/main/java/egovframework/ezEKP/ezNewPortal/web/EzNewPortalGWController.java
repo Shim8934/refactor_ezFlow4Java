@@ -1434,7 +1434,7 @@ public class EzNewPortalGWController {
 			
 			JSONObject data = new JSONObject();
 
-			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId);
+			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang));
 			
 			for (PortletInfoVO pvo : portletList) {
 				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId());
@@ -1461,14 +1461,22 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/order/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateCompanyPortletOrder(HttpServletRequest request, @PathVariable String companyId) throws Exception {
+	public JSONObject updateCompanyPortletOrder(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyPortletOrder started.");
 		JSONObject result = new JSONObject();
 
 		try {
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
+			int tenantId = info.getTenantId();
+			
+			JSONArray portletList = (JSONArray) jsonParam.get("portlets");
+			
+			ezNewPortalService.updateCompanyPortletOrder(portletList, tenantId, companyId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
@@ -1509,13 +1517,28 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/companies/{companyId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject insertPortlet(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
+	public JSONObject insertPortlet(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W insertCompanyPortlet started.");
 		JSONObject result = new JSONObject();
-
+		
 		try {
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			
+			String userId = jsonParam.get("userId").toString();
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			JSONObject portletInfo = new JSONObject();
+			portletInfo.put("boardId", jsonParam.get("boardId"));
+			portletInfo.put("portletUsed", jsonParam.get("portletUsed"));
+			portletInfo.put("connectionUrl", jsonParam.get("connectionUrl"));
+			portletInfo.put("menuId", jsonParam.get("menuId"));
+			
+			JSONArray portletNames = (JSONArray) jsonParam.get("nameList");
+			
+			ezNewPortalService.insertPortlet(portletInfo, portletNames, companyId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1540,7 +1563,10 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-
+			int tenantId = info.getTenantId();
+			
+			ezNewPortalService.deletePortlet(portletId, companyId, tenantId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
@@ -1557,17 +1583,29 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updatePortletInfo(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
+	public JSONObject updatePortletInfo(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updatePortletInfo started.");
 		JSONObject result = new JSONObject();
-		String userId = request.getParameter("userId");
+		JSONParser jp = new JSONParser();
+		jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+		
+		String userId = jsonParam.get("userId").toString();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			int tenantId = info.getTenantId();
-			String portletLang = info.getLang();
+			//String portletLang = info.getLang();
+			JSONObject portletInfo = new JSONObject();
+			portletInfo.put("portletId", jsonParam.get("portletId"));
+			portletInfo.put("boardId", jsonParam.get("boardId"));
+			portletInfo.put("portletUsed", jsonParam.get("portletUsed"));
+			portletInfo.put("connectionUrl", jsonParam.get("connectionUrl"));
+			portletInfo.put("menuId", jsonParam.get("menuId"));
+			
+			JSONArray portletNames = (JSONArray) jsonParam.get("nameList");
+			ezNewPortalService.updateCompanyPortletInfo(portletInfo, portletNames, companyId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2327,20 +2365,152 @@ public class EzNewPortalGWController {
 	}
 
 	/**
-	 * 포탈개인화 G/W [GET] 포틀릿 - 일정관리
+	 * 포탈개인화 G/W [GET] 포틀릿 - 일정관리 리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/portlets/schedule", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezportal/portlets/schedulelist", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getSchedulePortlet(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getSchedulePortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-
+			
+			String offset = info.getOffSet();
+			String offSetMin = commonUtil.getMinuteUTC(offset);
+			
+			String startDate = request.getParameter("selectDate");
+			String endDate = request.getParameter("selectDate");
+			
+			String idList = "T";
+					
+			String indiList = "";
+			String pidList = "";
+			String pidListSub = "";
+			String indiListSub = "";
+			
+			if(startDate != null && !startDate.equals("")) {
+				String[] sDate = startDate.split("-");
+				String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
+				String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+				
+				startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
+			}
+			
+			if(endDate != null && !endDate.equals("")) {
+				String[] eDate = endDate.split("-");		
+				String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
+				String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
+				
+				endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
+			}
+			
+			String utcStartTime = commonUtil.getDateStringInUTC(startDate, offset, true);
+			String utcEndTime = commonUtil.getDateStringInUTC(endDate, offset, true);
+			
+			String lang = info.getPrimary();
+			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
+			String deptId = info.getDeptId();
+			
+			List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(userId, lang, tenantId ,companyId);
+			List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(userId, lang, tenantId ,companyId);
+			List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userId, lang, tenantId, companyId);
+			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId() ,companyId);
+			
+			if (idList == null) {
+				idList = "";
+			}
+			
+			//2018-06-08 구해안 T인 경우를 제외하고 나머지는 id값 그대로 가공해서 넘기기
+			if (idList.equals("T") || idList.equals("")) {
+				indiList = "'" + userId + "'";
+				
+				if(tList != null && tList.size()>0){
+					for (int i = 0; i < tList.size(); i++) {
+						if (i == 0) {
+							indiListSub += ",";
+						}			
+						ScheduleSecretaryVO data = tList.get(i);			
+						indiListSub += "\'" + data.getSecId()+ "\',";			
+					}				
+				}
+				
+				pidList = "'" + deptId + "'," + "'" + companyId + "'";
+				
+				
+				if(dList != null && dList.size()>0){
+					for (int i = 0; i < dList.size(); i++) {
+						if(tList == null || tList.size()<=0){
+							if (i == 0) {
+								pidListSub += ",";
+							}	
+						}
+						ScheduleDeptVO data = dList.get(i);			
+						pidListSub += "\'" + data.getDeptId()+ "\',";				
+					}				
+				}
+				
+				if(cList != null && cList.size()>0 ){
+					for (int i = 0; i < cList.size(); i++) {							
+						if(dList == null || dList.size()<=0){
+							if (i == 0) {
+								pidListSub += ",";
+							}	
+						}
+						ScheduleCumulerVO data = cList.get(i);			
+						pidListSub += "\'" + data.getDeptId()+ "\',";				
+					}				
+				}
+				
+				for (int i = 0; i < gList.size(); i++) {
+					if((dList == null || dList.size()<=0) && (cList == null || cList.size()<=0)){
+						if (i == 0) {
+							pidListSub += ",";
+						}
+					}
+						ScheduleGroupListVO data = gList.get(i);			
+						pidListSub += "\'" + data.getGroupId() + "\',";
+						
+						/*if (i != gList.size()-1) {
+							pidListSub += ",";
+						}*/
+					}
+				
+				if(indiListSub.equals("") || indiListSub == null){
+					indiListSub = ",\'\'";
+				}else{				
+					indiListSub = indiListSub.substring(0, indiListSub.length()-1);
+				}
+				
+				indiList += indiListSub;
+				
+				if(pidListSub.equals("") || pidListSub == null){
+					pidListSub = ",\'\'";
+				}else{				
+					pidListSub = pidListSub.substring(0, pidListSub.length()-1);
+				}
+				
+				pidList += pidListSub;
+				
+			} else if(idList.equals("chkAllFalse")) {
+				indiList = "";
+				pidList = "\'\'";
+			} else if (idList.equals("P")) {
+				indiList = "'" + userId + "'";
+				pidList = "";
+			}else {
+				pidList = idList;
+			}		
+			
+			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",tenantId, companyId, userId);		
+			
+			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", sList);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

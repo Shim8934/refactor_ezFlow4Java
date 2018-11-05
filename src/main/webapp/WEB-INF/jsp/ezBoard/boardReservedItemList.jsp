@@ -128,8 +128,8 @@
 						}
 			        }
 		        	
-					console.log("boardArrayList[" + i + "] = " + boardArrayList[i]);
-					console.log("itemList = " + itemList);
+					/* console.log("boardArrayList[" + i + "] = " + boardArrayList[i]);
+					console.log("itemList = " + itemList); */
 					
 					xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + boardId + "&itemList=" + itemList, false);
 		        	xmlhttp.send();
@@ -284,8 +284,8 @@
 		<c:when test="${isVpn != 1}">
 			<div id="mainmenu">
 			  <ul>
-			    <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89'/></span></li>
-			    <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205'/></span></li>
+			    <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
+			    <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
 			    	<c:if test="${orgBoardParameters != ''}">
 					    <li><span onClick="BoardItemList()"><spring:message code='ezBoard.t206'/></span></li>
 			    	</c:if>

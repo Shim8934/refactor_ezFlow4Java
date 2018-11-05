@@ -3,11 +3,11 @@
 .webFolderDiv {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; cursor: pointer;}
 .webFolderDiv:hover {background-color: #f4f5f5;}
 
-.webFolderDiv2 {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; background-color:#edf4fd; cursor: pointer;}
+.webFolderDiv2 {height: 32px; border-bottom: 1px solid #ddd; vertical-align: middle; background-color:#e4e8ec; cursor: pointer;}
 .wfdivBttn {text-align: center; margin: -9px; margin-top: 10px; padding: 7px; border-top: 1px solid #eee; background-color: #fcfcfc;}
 
 .bnkWebFolder:hover {background-color: #f4f5f5; cursor: pointer;}
-.bnkWebFolder2 {background-color: #edf4fd; cursor: pointer;}
+.bnkWebFolder2 {background-color: #e4e8ec; cursor: pointer;}
 .bnkWebFolder .checkBnk {vertical-align: middle;}
 
 .none-drag, .webFolderImg {vertical-align: middle; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
@@ -19,14 +19,14 @@
 #progress-wrp .status {top:4px; left:48%; position:absolute; display:inline-block; color: #333; font-weight: bold; font-family: monospace;}
 
 .webfolderBttn {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding-left: 12px; vertical-align: top; cursor: pointer; margin-bottom: 2px; border: 1px solid #ccc; border-radius: 2px; background-color: white; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
-.webfolderBttn span {background-repeat: no-repeat; height: 20px; padding-right: 12px; font: 12px gulim; letter-spacing: -1; vertical-align: top; height: 24px; line-height: 24px; font-weight: bold; font-size: 12px; color: #000;}
+.webfolderBttn span {background-repeat: no-repeat; height: 20px; padding-right: 12px; font: 12px malgun gothic; letter-spacing: -1; vertical-align: top; height: 24px; line-height: 24px; font-weight: bold; font-size: 12px; color: #000;}
 .webfolderBttn span:hover, .webfolderBttn2 span:hover, #mainmenu2 > ul > li > a > span:hover {color:rgb(4, 112, 227); border-color:rgb(4, 112, 227);}
 
 .webfolderBttn2{cursor: pointer; line-height: 30px;}
-.webfolderBttn2 span {color: #393939; display:inline-block; border:1px solid #d2d2d2; border-radius:2px; padding:0px 4px; height:27px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:30px; text-align: center; box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.25);}
+.webfolderBttn2 span {color: #393939; display:inline-block; border:1px solid #d2d2d2; border-radius:2px; padding:0px 4px; height:27px; font:12px malgun gothic; letter-spacing:-1; vertical-align:top; line-height:30px; text-align: center; box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.25);}
 
 .webfolderBttn3 {cursor: pointer; line-height: 30px;}
-.webfolderBttn3 span {color: #666; display:inline-block; border:1px solid #ccc; border-radius:3px; padding:0px 10px; height:30px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:30px; text-align: center;}
+.webfolderBttn3 span {color: #666; display:inline-block; border:1px solid #ccc; border-radius:3px; padding:0px 10px; height:30px; font:12px malgun gothic; letter-spacing:-1; vertical-align:top; line-height:30px; text-align: center;}
 
 .webfolderImg {width: 18px; height: 18px;}
 .spanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; display:inline-block; width:80%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
@@ -60,15 +60,15 @@
 
 .userInfo:hover {cursor:pointer;}
 .userInfo:hover {background-color:#f4f5f5;}
-.userInfo2 {cursor:pointer; background-color:#edf4fd;}
+.userInfo2 {cursor:pointer; background-color:#e4e8ec;}
 
 .selectedDept {cursor:pointer;}
 .selectedDept:hover {background-color:#f4f5f5;}
-.selectedDept2 {cursor:pointer; background-color:#edf4fd;}
+.selectedDept2 {cursor:pointer; background-color:#e4e8ec;}
 
 .selectedUser {cursor:pointer;}
 .selectedUser:hover {background-color:#f4f5f5;}
-.selectedUser2 {cursor:pointer; background-color:#edf4fd;}
+.selectedUser2 {cursor:pointer; background-color:#e4e8ec;}
 
 .separator {font-size:14px; padding-right: 5px; line-height: 18px;}
 .aName {cursor: pointer; white-space: nowrap; display: flex; flex: 0 10 auto; overflow: hidden; text-overflow: ellipsis; min-width: 20px;}
@@ -96,7 +96,7 @@
 #mainmenu2 > ul{width:100%; padding:0; margin:0; margin-bottom:3px !important; height:30px;}
 #mainmenu2 > ul > li img {vertical-align:middle;}
 #mainmenu2 > ul > li, #mainmenu2 li.off {display:block; float:left; margin:0 1px 0 1px; cursor:pointer; line-height:27px; padding-right:3px;}
-#mainmenu2 > ul > li > a > span, #mainmenu2 > ul > li > a > span.off {display:block; float:left; padding:5px 4px; font:12px gulim; letter-spacing:-1; padding-top:7px; border:1px solid #d2d2d2; color:#666; border-radius: 2px; box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.25);}
+#mainmenu2 > ul > li > a > span, #mainmenu2 > ul > li > a > span.off {display:block; float:left; padding:5px 4px; font:12px malgun gothic; letter-spacing:-1; padding-top:7px; border:1px solid #d2d2d2; color:#666; border-radius: 2px; box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.25);}
 #mainmenu2 li span img, #mainmenu2 li span.off img {vertical-align:middle;}
 #mainmenu2 li.on {}
 #mainmenu2 li.on > a > span {color:rgb(4, 112, 227); border-color:rgb(4, 112, 227);}

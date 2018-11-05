@@ -34,10 +34,10 @@ function fnValueClick() {
         var parentTR = window.event.srcElement.parentElement;
 
         if (BeforeClickID == "")
-            parentTR.cells[0].style.backgroundColor = "#edf4fd";
+            parentTR.cells[0].style.backgroundColor = "#e4e8ec";
         else {
             BeforeClickID.style.backgroundColor = "#fff";
-            parentTR.cells[0].style.backgroundColor = "#edf4fd";
+            parentTR.cells[0].style.backgroundColor = "#e4e8ec";
         }
 
         BeforeClickID = parentTR.cells[0];
