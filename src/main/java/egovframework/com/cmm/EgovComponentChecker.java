@@ -33,11 +33,10 @@ public class EgovComponentChecker extends EgovAbstractServiceImpl implements App
 	public static ApplicationContext context;
 
 	@Override
-	@SuppressWarnings("static-access")
 	public void setApplicationContext(ApplicationContext context)
 		throws BeansException {
 
-		this.context = context;
+		EgovComponentChecker.context = context;
 	}
 
 	/**

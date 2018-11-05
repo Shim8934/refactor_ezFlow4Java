@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-	<licenseNumber>9504-0101-170036</licenseNumber>
-	<domainKey>0f5075f36d68a624c27fe8cbb1b8f230ef7ed0bc64c9d4b35a0f19e0cf530976</domainKey>
+	<licenseNumber>9504-9999-000919</licenseNumber>
+	<domainKey>6d43b91c68fe593a111132ee25ed808be83cd4a45188a5294f382646ef0912a63fc1dd0d0f4ff08a4dcacf67b7fed146</domainKey>
 	<maxImageNum>20</maxImageNum>
 	<maxImageWidth>1600</maxImageWidth>
 	<maxImageHeight>1600</maxImageHeight>

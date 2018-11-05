@@ -100,22 +100,13 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailReaderList.do")
 	public String mailConfig(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		
 		String url = request.getParameter("url") == null ? "" : request.getParameter("url");
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-		List<SysParamVO> configList = ezSystemAdminService.getSysParam(loginInfo.getTenantId());
-		Map<String, String> configMap = new HashMap<String, String>();
-
-		for (SysParamVO param : configList) {
-			configMap.put(param.getName(), param.getValue());
-			
-			if (param.getName().equals("IS_READ_DELETE")) {
-				String isReadDelete = param.getValue();
-				model.addAttribute("isReadDelete", isReadDelete);
-			}
-		}
+		String isReadDelete = ezCommonService.getTenantConfig("IS_READ_DELETE", loginInfo.getTenantId());
 		
+		model.addAttribute("isReadDelete", isReadDelete);
 		model.addAttribute("url", url);
+		
 		return "ezEmail/mailReaderList";
 	}
 	

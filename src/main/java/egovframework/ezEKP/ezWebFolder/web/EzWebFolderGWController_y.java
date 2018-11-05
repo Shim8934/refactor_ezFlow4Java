@@ -707,6 +707,9 @@ public class EzWebFolderGWController_y {
 			LOGGER.debug("-------folderUpp" + fldDetail.getFolderUpper());
 			
 			data.put("folderUpp", fldDetail.getFolderUpper());
+			data.put("createDate", fldDetail.getCreateDate());
+			data.put("updateDate", fldDetail.getUpdateDate());
+			data.put("folderName", fldDetail.getFolderName1());
 			data.put("folderPath", folderPath2);
 			data.put("originalPath", originalPath);
 			data.put("fileList", fileList);

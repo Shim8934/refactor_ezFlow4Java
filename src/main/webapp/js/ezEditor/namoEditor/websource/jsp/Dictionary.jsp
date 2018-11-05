@@ -8,6 +8,8 @@
 String source = request.getParameter("source");
 String target = request.getParameter("target");
 String input = request.getParameter("input");
+BufferedReader in = null;
+InputStreamReader isr = null;
 //System.out.println(source +" : "+target+" : "+input);
 try {
             
@@ -22,27 +24,40 @@ try {
 		conn.setUseCaches(false);
 		conn.setRequestMethod("POST");
 
-		BufferedReader in = null;
-		in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+		isr = new InputStreamReader(conn.getInputStream(), "UTF-8");
+		in = new BufferedReader(isr);
 		String inputLine;
 		StringBuffer sb =  new StringBuffer();
 		while((inputLine = in.readLine()) != null) {
-			System.out.println(inputLine);
+			//System.out.println(inputLine);
 			sb.append(inputLine);
 		}   
 		conn.disconnect();
 		response.getWriter().println(sb.toString());
-	}catch(Exception e) {
-		System.out.println("E 1="+e.getMessage()+", E 2="+e.toString());
-		e.printStackTrace();
+	}catch(java.io.IOException e) {
+		//System.out.println("E 1="+e.getMessage()+", E 2="+e.toString());
+		//e.printStackTrace();
 		String errMsg = "{'outputs':[{'error':'internal server error.'}]}";
 		response.getWriter().println(errMsg);
+	}finally{
+		try{
+			if( in != null){
+				in.close();
+				in = null;
+			}
+			if( isr != null){
+				isr.close();
+				isr = null;
+			}
+		}catch(java.io.IOException err1){
+			//System.out.println("An internal exception occured!!");
+		}
 	}
                  
 
-}catch(Exception e) {
-	System.out.println("E 1="+e.getMessage()+", E 2="+e.toString());
-	e.printStackTrace();
+}catch(java.net.MalformedURLException e) {
+	//System.out.println("E 1="+e.getMessage()+", E 2="+e.toString());
+	//e.printStackTrace();
 	String errMsg = "{'outputs':[{'error':'internal server error.'}]}";
 	response.getWriter().println(errMsg);
 }

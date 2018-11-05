@@ -1941,11 +1941,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public int getTitleCnt(String type, String jobID, String companyID, int tenantID) throws Exception {
+	public int getTitleCnt(String type, String jobID, String mode, String displayName, String displayName2, String companyID, int tenantID) throws Exception {
 		logger.debug("getTitleCnt started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TYPE", type);
 		map.put("v_JOBID", jobID);
+		map.put("v_MODE", mode);
+		map.put("v_DISPLAYNAME", displayName);
+		map.put("v_DISPLAYNAME2", displayName2);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
