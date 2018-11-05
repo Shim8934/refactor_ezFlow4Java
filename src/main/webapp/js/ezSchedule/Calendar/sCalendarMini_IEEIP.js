@@ -26,130 +26,132 @@ if (typeof UserOffset !== 'undefined' && UserOffset) {
 
 var nowDay = (nowDate.getFullYear()) + "-" + leadingZeros((nowDate.getMonth() + 1), 2) + "-" + leadingZeros(nowDate.getDate(), 2);
 
-function CalendarMiniView(pTagetID) {	
-    document.getElementById(pTagetID).innerHTML = "";
-
-    var objElm = document.getElementById(pTagetID);
-    if (objElm) {
-        var mTable = document.createElement("TABLE");
-        mTable.className = "scalendar_mini_title";///
-        mTable.setAttribute("id", "MiniCalendar")
-        mTable.setAttribute("cellpadding", "0");
-        mTable.setAttribute("cellspacing", "0");
-        mTable.setAttribute("border", "0");
-        mTable.setAttribute("width", "100%");
-        var mTr = document.createElement("TR");
-
-        var mTd = document.createElement("TD");
-        mTd.className = "btn_prev"
-        var mSpan = document.createElement("SPAN");
-        mSpan.style.marginLeft = "6px";
-        mSpan.style.cursor = "pointer";
-        var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
-        mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "preMonth()");
-        mSpan.appendChild(mImg);
-        mTd.appendChild(mSpan);
-        mTr.appendChild(mTd);
-
-        var mTd = document.createElement("TD");
-        mTd.className = "calendar_mini_day"
-        var mSel = document.createElement("SELECT");
-        mSel.style.display = "none";///
-        mSel.setAttribute("name", "iYear");
-        mSel.setAttribute("id", "iYear");
-        mSel.setAttribute("onchange", "changeYear()");
-
-        var curYear = sDate.getFullYear() + 3;
-        for (var i = curYear; i >= curYear - 6; i--) {
-            var mOpt = document.createElement("OPTION");
-            mOpt.setAttribute("Value", i);
-
-            if ((curYear - 3) == i)
-                mOpt.setAttribute("selected", "");
-
-            var mText = document.createTextNode(i);
-            mOpt.appendChild(mText);
-            mSel.appendChild(mOpt);
-        }
-
-        mTd.appendChild(mSel);
-
-        var mSel = document.createElement("SELECT");
-        mSel.style.display = "none";///
-        mSel.style.marginLeft = "10px";
-        mSel.setAttribute("name", "iMon");
-        mSel.setAttribute("id", "iMon");
-        mSel.setAttribute("onchange", "changeMonth()");
-
-        var curMonth = sDate.getMonth() + 1;
-        for (var j = 1; j <= 12; j++) {
-
-            var mOpt = document.createElement("OPTION");
-            mOpt.setAttribute("Value", j);
-
-            if (curMonth == j)
-                mOpt.setAttribute("selected", "");
-
-            var mText = document.createTextNode(j);
-            mOpt.appendChild(mText);
-            mSel.appendChild(mOpt);
-        }
-        mTd.appendChild(mSel);
-        
-        var iySpan = document.createElement("SPAN");
-        iySpan.setAttribute("id", "iYear");
-
-        var curYear = sDate.getFullYear();
-        var yText = document.createTextNode(curYear);
-        iySpan.appendChild(yText);
-
-        mTd.appendChild(iySpan);
-
-        var dotText = document.createTextNode(".");
-        mTd.appendChild(dotText);
-
-        var imSpan = document.createElement("SPAN");//년 월 select박스인것 바꿔야할듯
-        imSpan.setAttribute("id", "iMon");
-
-        var curMonth = sDate.getMonth() + 1;
-        var mText = document.createTextNode(curMonth);
-        imSpan.appendChild(mText);
-        
-        mTd.appendChild(imSpan);
-        mTr.appendChild(mTd);
-
-        var mTd = document.createElement("TD");
-        mTd.className = "btn_next"
-        var mSpan = document.createElement("SPAN");
-        mSpan.style.marginRight = "15px";
-        mSpan.style.cursor = "pointer";
-        var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
-        mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "nextMonth()");
-        mSpan.appendChild(mImg);
-        mTd.appendChild(mSpan);
-        mTr.appendChild(mTd);
-
-
-        mTable.appendChild(mTr);
-        objElm.appendChild(mTable);
-
-        var oTable = document.createElement("TABLE");
-
-        oTable.setAttribute("id", "");
-        oTable.setAttribute("cellpadding", "0");
-        oTable.setAttribute("cellspacing", "0");
-        oTable.setAttribute("border", "0");
-        oTable.setAttribute("width", "100%");
-        oTable.className = "scalendar_mini";///
-
-        var oTBody = GetTableMiniBodyObj();
-        oTable.appendChild(oTBody);
-        objElm.appendChild(oTable);
-    }
+function CalendarMiniView(pTagetID) {
+	if (document.getElementById(pTagetID)) {
+		document.getElementById(pTagetID).innerHTML = "";
+		
+		var objElm = document.getElementById(pTagetID);
+		if (objElm) {
+			var mTable = document.createElement("TABLE");
+			mTable.className = "scalendar_mini_title";///
+			mTable.setAttribute("id", "MiniCalendar")
+			mTable.setAttribute("cellpadding", "0");
+			mTable.setAttribute("cellspacing", "0");
+			mTable.setAttribute("border", "0");
+			mTable.setAttribute("width", "100%");
+			var mTr = document.createElement("TR");
+			
+			var mTd = document.createElement("TD");
+			mTd.className = "btn_prev"
+				var mSpan = document.createElement("SPAN");
+			mSpan.style.marginLeft = "6px";
+			mSpan.style.cursor = "pointer";
+			var mImg = document.createElement("IMG");
+			mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
+			mImg.setAttribute("border", "0");
+			mImg.setAttribute("onclick", "preMonth()");
+			mSpan.appendChild(mImg);
+			mTd.appendChild(mSpan);
+			mTr.appendChild(mTd);
+			
+			var mTd = document.createElement("TD");
+			mTd.className = "calendar_mini_day"
+				var mSel = document.createElement("SELECT");
+			mSel.style.display = "none";///
+			mSel.setAttribute("name", "iYear");
+			mSel.setAttribute("id", "iYear");
+			mSel.setAttribute("onchange", "changeYear()");
+			
+			var curYear = sDate.getFullYear() + 3;
+			for (var i = curYear; i >= curYear - 6; i--) {
+				var mOpt = document.createElement("OPTION");
+				mOpt.setAttribute("Value", i);
+				
+				if ((curYear - 3) == i)
+					mOpt.setAttribute("selected", "");
+				
+				var mText = document.createTextNode(i);
+				mOpt.appendChild(mText);
+				mSel.appendChild(mOpt);
+			}
+			
+			mTd.appendChild(mSel);
+			
+			var mSel = document.createElement("SELECT");
+			mSel.style.display = "none";///
+			mSel.style.marginLeft = "10px";
+			mSel.setAttribute("name", "iMon");
+			mSel.setAttribute("id", "iMon");
+			mSel.setAttribute("onchange", "changeMonth()");
+			
+			var curMonth = sDate.getMonth() + 1;
+			for (var j = 1; j <= 12; j++) {
+				
+				var mOpt = document.createElement("OPTION");
+				mOpt.setAttribute("Value", j);
+				
+				if (curMonth == j)
+					mOpt.setAttribute("selected", "");
+				
+				var mText = document.createTextNode(j);
+				mOpt.appendChild(mText);
+				mSel.appendChild(mOpt);
+			}
+			mTd.appendChild(mSel);
+			
+			var iySpan = document.createElement("SPAN");
+			iySpan.setAttribute("id", "iYear");
+			
+			var curYear = sDate.getFullYear();
+			var yText = document.createTextNode(curYear);
+			iySpan.appendChild(yText);
+			
+			mTd.appendChild(iySpan);
+			
+			var dotText = document.createTextNode(".");
+			mTd.appendChild(dotText);
+			
+			var imSpan = document.createElement("SPAN");//년 월 select박스인것 바꿔야할듯
+			imSpan.setAttribute("id", "iMon");
+			
+			var curMonth = sDate.getMonth() + 1;
+			var mText = document.createTextNode(curMonth);
+			imSpan.appendChild(mText);
+			
+			mTd.appendChild(imSpan);
+			mTr.appendChild(mTd);
+			
+			var mTd = document.createElement("TD");
+			mTd.className = "btn_next"
+				var mSpan = document.createElement("SPAN");
+			mSpan.style.marginRight = "15px";
+			mSpan.style.cursor = "pointer";
+			var mImg = document.createElement("IMG");
+			mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
+			mImg.setAttribute("border", "0");
+			mImg.setAttribute("onclick", "nextMonth()");
+			mSpan.appendChild(mImg);
+			mTd.appendChild(mSpan);
+			mTr.appendChild(mTd);
+			
+			
+			mTable.appendChild(mTr);
+			objElm.appendChild(mTable);
+			
+			var oTable = document.createElement("TABLE");
+			
+			oTable.setAttribute("id", "");
+			oTable.setAttribute("cellpadding", "0");
+			oTable.setAttribute("cellspacing", "0");
+			oTable.setAttribute("border", "0");
+			oTable.setAttribute("width", "100%");
+			oTable.className = "scalendar_mini";///
+			
+			var oTBody = GetTableMiniBodyObj();
+			oTable.appendChild(oTBody);
+			objElm.appendChild(oTable);
+		}
+	}
 }
 
 function GetTableMiniBodyObj() {
@@ -305,7 +307,7 @@ function CalendarMiniDataSource() {
     
     $.ajax({
 		type : "POST",
-		dataType : "text",
+		dataType : "json",
 		async : (!delFlag ? true : false),
 		url : "/ezNewPortal/getScheduleList.do",
 		data : {
@@ -332,42 +334,42 @@ function getCalendarMiniDataSource_after(resultList){
     var tempData = new Array();
     
     try {
-        if (MiniHttp.responseText == "") return;
+//        if (MiniHttp.responseText == "") return;
         
         var k = 0;
-        $.each(resultList, function(idx, item) {
-        	var _Dtstart = item.startDate;
-        	var _Dtend = item.endDate;
-            var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
-            var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
-
-            if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
-
-                var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
-                var day = 1000 * 60 * 60 * 24;
-                betweenDay = parseInt(betweenDay / day, 10);
-
-                for (var j = 0; j <= betweenDay; j++) {
-
-                    var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
-                    tempData[k] = new sTempData();
-                    tempData[k].trID = trID;
-
-                    MiniDataBind(tempData[k]);
-                    DataSDT.setDate(DataSDT.getDate() + 1);
-                    k += 1;
-                }
-            } else {
-                var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
-                tempData[k] = new sTempData();
-                tempData[k].trID = trID;
-
-                MiniDataBind(tempData[k]);
-                k += 1;
-            }
-            DataSDT = null;
-            DataEDT = null;
-        })
+    	$.each(resultList, function(idx, item) {
+    		var _Dtstart = item.startDate;
+    		var _Dtend = item.endDate;
+    		var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
+    		var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
+    		
+    		if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
+    			
+    			var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
+    			var day = 1000 * 60 * 60 * 24;
+    			betweenDay = parseInt(betweenDay / day, 10);
+    			
+    			for (var j = 0; j <= betweenDay; j++) {
+    				
+    				var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
+    				tempData[k] = new sTempData();
+    				tempData[k].trID = trID;
+    				
+    				MiniDataBind(tempData[k]);
+    				DataSDT.setDate(DataSDT.getDate() + 1);
+    				k += 1;
+    			}
+    		} else {
+    			var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
+    			tempData[k] = new sTempData();
+    			tempData[k].trID = trID;
+    			
+    			MiniDataBind(tempData[k]);
+    			k += 1;
+    		}
+    		DataSDT = null;
+    		DataEDT = null;
+    	})
         
         tempData = null;
     }
@@ -381,20 +383,24 @@ function MiniDataBind(oAppointment) {
     var objElm = document.getElementById("TDMINI_" + oAppointment.trID + "_Day");
     if (objElm) {
 //        objElm.style.fontWeight = "bold"
-    	$("#"+"TDMINI_" + oAppointment.trID + "_Day").parent().append("<div class='dataHave' style='height:1px;line-height:1px' onclick='clickDay(\"TDMINI_" + oAppointment.trID + "_Day\")'>·</div>");
+    	if ($("#"+"TDMINI_" + oAppointment.trID + "_Day").parent().children(".dataHave").length > 0) {
+    		return;
+    	} else {
+    		$("#"+"TDMINI_" + oAppointment.trID + "_Day").parent().append("<div class='dataHave' style='height:1px;line-height:1px' onclick='clickDay(\"TDMINI_" + oAppointment.trID + "_Day\")'>·</div>");
+    	}
     }
 }
 
 function clickDay(val01) {
-//    if ($("#"+g_selTDID)) {
-//    	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
-//    }
-//    
-//    if ($("#"+g_selTRID)) {
-//    	$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
-//    }
+    if ($("#"+g_selTDID)) {
+    	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+    }
     
-//	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    if ($("#"+g_selTRID)) {
+    	$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    }
+    
+	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
 	
     g_selTRID = $("#"+val01).parent().parent().attr("id");
     g_selTDID = val01;

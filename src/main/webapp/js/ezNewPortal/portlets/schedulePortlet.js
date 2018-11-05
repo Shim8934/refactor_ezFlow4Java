@@ -4,24 +4,6 @@
 var pMode = "P";
 var openerCalendarMiniView, openerCalendarMiniDataSource;
 
-window.onload = function () {
-	openerCalendarMiniView = CalendarMiniView;
-	openerCalendarMiniDataSource = CalendarMiniDataSource;
-	
-	CalendarMiniView("CalendarMini");
-	CalendarMiniDataSource();
-    
-	getScheduleList(nowDay, "P");
-	
-    if (navigator.userAgent.indexOf('Firefox') != -1) {
-    	document.body.style.MozUserSelect = 'none';
-    	document.body.style.WebkitUserSelect = 'none';
-    	document.body.style.khtmlUserSelect = 'none';
-    	document.body.style.oUserSelect = 'none';
-    	document.body.style.UserSelect = 'none';
-	}
-}
-
 function getScheduleList(date, mode) {
 	selDate = date;			    
 	
