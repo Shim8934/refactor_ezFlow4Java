@@ -20,12 +20,6 @@
 			#mCSB_1_container {
 				margin-right: 0px;
 			}
-			.mCSB_scrollTools {
-				opacity: 0.3;
-				width: 6px;
-				margin-Top: 5px;
-				margin-bottom: 5px;
-			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -863,6 +857,19 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 		    
+		    function boardWrite(){
+		    	var wWeight = "355";
+                var wHeight = "600";
+
+                var heigth = window.screen.availHeight;
+                var width = window.screen.availWidth;
+
+                var left = (width - wWeight) / 2;
+                var top = (heigth - wHeight) / 2;
+                window.open("/ezBoard/writeBoardSelect.do", "",
+                    "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		    }
+		    
 		    function leftResize(){
 	        	$(".boardListBox").height(window.innerHeight-105);
 	        }
@@ -883,7 +890,7 @@
 	        	<span onclick="boardConfig()" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezBoard.t0005" />"></span>
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span>게시글 등록</p>
+	        	<p class="btn_write01" onclick="boardWrite();"><span class="sub_iconLNB tree_write"></span>게시글 등록</p>
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
 		        <div class="lnb_lay">
