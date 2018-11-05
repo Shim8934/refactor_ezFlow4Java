@@ -117,25 +117,58 @@
 			}
 	    </script>
 	</head>
-	<body class="leftbody" style="margin:0px 0px 0px 0px">
-		<div id="left">
-  			<div class="left_admin" title="<spring:message code='main.t23' />"><img src="/images/admin/first.png" width="13px" height="13px"/>
+	<body class="newLeft">
+		<div id="left" class="lnb" style="overflow: auto">
+  			<div class="left_title" title="<spring:message code='main.t23' />">
 	  			<c:if test="${dotNetIntegration != 'YES'}"><spring:message code='main.t23' /></c:if>
 	  			<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.t24' /></c:if>
-  			</div>   
-  			<h2>
-  				<span onClick="goPage(1)" style="display:inline-block;width:100%;">
-	  				<c:if test="${dotNetIntegration != 'YES'}"><spring:message code='main.t56' /></c:if>
-	  				<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.t24' /></c:if>
-  				</span>
-  			</h2>  
+  			</div>
   			<c:if test="${dotNetIntegration != 'YES'}">
-    		<ul>
-		        <li><span id="Organ" style="width: 100%; display: inline-block;" onClick="goPage(1)" ><spring:message code='main.t56' /></span></li>
-		        <li><span id="CheckAdmin" style="width: 100%; display: inline-block;" onClick="goPage(12)" ><spring:message code='main.t00062' /></span></li>
-		        <li><span id="Addjob" style="width: 100%; display: inline-block;" onClick="goPage(13)" ><spring:message code='main.t00063' /></span></li>
-		        <li><span id="JobInfo" style="width: 100%; display: inline-block;" onClick="goPage(31)"><spring:message code='ezOrgan.csj01' /></span></li>
-		    </ul>   
+	  			<h2 class="on">
+	  				<span>
+	  					<span class="sub_iconLNB tree_arrow_up"></span>
+		  				<span class="h2Title"><spring:message code='main.t56' /></span>
+		  			</span>	
+	  			</h2>
+  			</c:if>
+  			<c:if test="${dotNetIntegration == 'YES'}">
+	  			<h2>
+	  				<span onClick="goPage(1)">
+	  					<span class="sub_iconLNB tree_arrow_up"></span>
+		  				<span class="h2Title"><spring:message code='main.t24' /></span>
+		  			</span>
+  				</h2>
+  			</c:if>
+  			  
+  			<c:if test="${dotNetIntegration != 'YES'}">
+	    		<ul class="lnbUL">
+	    			<div class="tree">
+	            		<span>
+	                		<span>
+	                			<span>
+	                        		<div class="node_div">
+			        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_myPortal"></span><span class="h2_text" id="Organ" onClick="goPage(1)" ><spring:message code='main.t56' /></span>
+			        				</div>
+			        			</span>
+			        			<span>
+	                        		<div class="node_div">		
+			        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_myPortal"></span><span class="h2_text" id="CheckAdmin" onClick="goPage(12)" ><spring:message code='main.t00062' /></span>
+			        				</div>
+			        			</span>
+			        			<span>
+	                        		<div class="node_div">	
+			        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_myPortal"></span><span class="h2_text" id="Addjob" onClick="goPage(13)" ><spring:message code='main.t00063' /></span>
+			        				</div>
+			        			</span>
+			        			<span>
+	                        		<div class="node_div">		
+			        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_myPortal"></span><span class="h2_text" id="JobInfo" onClick="goPage(31)"><spring:message code='ezOrgan.csj01' /></span>
+			        				</div>
+			        			</span>
+			        		</span>
+			        	</span>
+			        </div>					
+			    </ul>   
 		    </c:if>
   			<h2>
   				<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
@@ -205,9 +238,6 @@
 		    </ul>			            				
             </c:if>						
 		</div>
-		<script type="text/javascript">
-			initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		</script>	    
         <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
 	</body>
 </html>
