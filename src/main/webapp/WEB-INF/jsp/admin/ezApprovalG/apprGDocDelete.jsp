@@ -182,7 +182,7 @@
 		    		changeYear: true,
 		    		autoSize: true,
 		    		showOn: "both",
-		    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		    		buttonImage: "/images/ImgIcon/calendar-month.png",
 		    		buttonImageOnly: true,
 		    		maxDate: 0,
 		    		onSelect: function(selected) {
@@ -196,7 +196,7 @@
 		    		changeYear: true,
 		    		autoSize: true,
 		    		showOn: "both",
-		    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		    		buttonImage: "/images/ImgIcon/calendar-month.png",
 		    		buttonImageOnly: true,
 		    		maxDate: 0,
 		    		onSelect: function(selected) {
@@ -647,7 +647,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#edf4fd";
+		        elem.style.backgroundColor = "#e4e8ec";
 		        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
 
 		        // 목록화면 나오고 처음 선택할 때 strListIDInfo 값 셋팅
@@ -678,7 +678,7 @@
 						strListDeptNameInfo = "";
 
 						$(":checkbox[name=myCheckbox]").prop("checked", true);
-						$(".row_body").css("background", "#edf4fd");
+						$(".row_body").css("background", "#e4e8ec");
 
 						$(":checkbox[name=myCheckbox]:checked").each(function(){
 							deleteListWriterName.push($(this).attr("writerName") + ";");

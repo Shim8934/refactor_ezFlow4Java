@@ -24,7 +24,7 @@
 	    		cursor : pointer;
 	    	}
 	    	tr.hover:hover {background:#eee; color:#fff;}
-			.selectTR {background-color: #edf4fd;}
+			.selectTR {background-color: #e4e8ec;}
 			#searchTable {
 				border-top: 1px solid #e8e8e8;
 				border-left: 1px solid #e8e8e8;
@@ -103,7 +103,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			    $("#Edatepicker").datepicker({
@@ -111,7 +111,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			});

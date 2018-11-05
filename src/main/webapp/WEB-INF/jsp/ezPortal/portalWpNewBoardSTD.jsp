@@ -19,14 +19,14 @@
 		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
-		 	var pBoardID_NewBoardSTD = "${pBoardID}";
-		    var pBoardType_NewBoardSTD = "${pBoardGubun}";
-		    var BoardCnt_NewBoardSTD = parseInt("${pHeaderCount}");
-		    var strLang1_NewBoardSTD = "<spring:message code='main.t00026' />";
-		    var pNoneActiveX = "${pNoneActiveX}";
-		    var selTab = "";
-		    
-		    document.onselectstart = function () { return false; };
+			var pBoardID_NewBoardSTD = "${pBoardID}";
+			var pBoardType_NewBoardSTD = "${pBoardGubun}";
+			var BoardCnt_NewBoardSTD = parseInt("${pHeaderCount}");
+			var strLang1_NewBoardSTD = "<spring:message code='main.t00026' />";
+			var pNoneActiveX = "${pNoneActiveX}";
+			var selTab = "";
+			
+			document.onselectstart = function () { return false; };
 		    
 		    function window_onload_NewBoardSTD() {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -384,5 +384,5 @@
 		        
 		        window_onload_NewBoardSTD();	
 		</script>
-	</head>	
+	</head>
 </html>

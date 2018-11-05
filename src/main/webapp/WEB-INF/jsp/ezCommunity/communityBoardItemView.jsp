@@ -63,7 +63,7 @@
 	    	
 	    	window.onload = function () {
 	    		$("#message").contents().find("body").css("word-wrap", "break-word");
-	    		$("#message").contents().find("body").css("font-family", "Gulim, arial, verdana");
+	    		$("#message").contents().find("body").css("font-family", "malgun gothic, arial, verdana");
 				$("#message").contents().find("body").css("font-size", "13px");
 	    		
 	    	    try {

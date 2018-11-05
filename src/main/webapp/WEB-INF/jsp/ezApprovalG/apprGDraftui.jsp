@@ -1031,6 +1031,9 @@
 		            bAttachProcess = true;
 		        }
 		        catch (e) { }
+		        try {
+		            window.opener.getApprGraph("appr");
+		        } catch (e) { }
 		    }
 		    function btnConn_onclick() {
 		        var pIdx = FormProc.editor.DOM.body.getAttribute("processkey");

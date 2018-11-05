@@ -1,4 +1,4 @@
-﻿﻿@charset "utf-8";
+﻿@charset "utf-8";
 /* CSS Document */
 
 /* base */
@@ -128,7 +128,8 @@ nav > .full_nav.on .full_menu { background-position: 0px -155px; width: 25px; he
 nav > .countBox {position:relative; float: right; width: 56px; height: 54px; padding: 18px 0px; text-align: center; box-sizing: border-box; display:none;}
 nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; display: inline-block; height: 16px; line-height: 16px; background: #8b8f91; border-radius: 16px; padding: 0px 4px; font-size: 12px; color:#fff; vertical-align: top; }
 
-.full_menu_toggle {position:relative; border: 1px solid #424242; overflow:hidden;}
+#menu_toggle{ border:1px solid #424242;}
+.full_menu_toggle {position:relative;/* border: 1px solid #424242; */overflow:hidden;}
 .full_menu_toggleUL {list-style:none; margin:0px; padding:0px;}
 .full_menu_toggleUL > li { float: left; width: 100px; height: 100px; background:#fff; border-right: 1px solid #d9d9d9; border-bottom:1px solid #d9d9d9; box-sizing: border-box; cursor:pointer;} 
 /* .full_menu_toggleUL > li { float: left; width: 100px; height: 100px; background:#fff; border: 1px solid #d9d9d9; box-sizing: border-box; cursor:pointer;} */ 
@@ -140,7 +141,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .full_menu_toggleDL > dd { display: table-cell; width:98px; height:56px; margin: 0px; padding: 0px 5px; text-align:center; vertical-align:middle; font-size:15px; font-weight:bold; color:#000; letter-spacing:-1px;}
 
 .full_menu_toggleUL_edit {list-style:none; margin:0px; padding:0px;}
-.full_menu_toggleUL_edit > li { float: left; width: 100px; height: 100px; background:#fff; border: 1px dashed #d9d9d9; box-sizing: border-box; cursor:pointer;} 
+.full_menu_toggleUL_edit > li {float: left;width: 100px;height: 100px;background:#fff;border-right: 1px dashed #898989;border-bottom: 1px dashed #898989;box-sizing: border-box;cursor:pointer;} 
 
 /* ---------ㅡmain css ---------ㅡ */ 
 /* layout */
@@ -436,9 +437,10 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .pollList .pollList_04 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
 
 /* top_menu Button */
-.topMenuBtn{ margin:5px 5px 5px 5px; padding:2px 10px; float:right; font-size:12px; font-weight:bold; border:1px solid #bbb; background:line-gradient; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; cursor:pointer; color:#333;}
-.menu_toggle_context { height:35px; }
-.menu_toggle_context .initOrder { float: left; }
+.topMenuBtn{margin: 4px 5px 0px 0px;padding: 0px 10px;float:right;font-size: 12px;line-height: 23px;height: 24px;background: #fff;font-weight: bold;border-top: 1px solid #c7c7c7;border-left: 1px solid #c7c7c7;border-right: 1px solid #c7c7c7;border-bottom: 1px solid #909193;cursor:pointer;color: #393939;}
+.topMenuBtn:hover{border:1px solid #0470e4; color:#0470e4;}
+.menu_toggle_context {height:35px;background: #f5f4f4;border-top: 1px solid #d9d9d9;margin: -1px 0px 0px 0px;}
+.menu_toggle_context .initOrder {float: left;margin: 4px 5px 0px 5px;}
 
 /* photo_board */
 .photo_board{}

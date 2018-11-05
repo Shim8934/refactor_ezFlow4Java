@@ -148,49 +148,7 @@ public class ApprGDocListVO {
     private String name3;
     private String name4;
     private String ext2;
-	
-	public String getCompanyName2() {
-		return companyName2;
-	}
-	public void setCompanyName2(String companyName2) {
-		this.companyName2 = companyName2;
-	}
-	public String getCompanyName() {
-		return companyName;
-	}
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-	public String getFormFileLocation() {
-		return formFileLocation;
-	}
-	public void setFormFileLocation(String formFileLocation) {
-		this.formFileLocation = formFileLocation;
-	}
-	public String getFormDocType() {
-		return formDocType;
-	}
-	public void setFormDocType(String formDocType) {
-		this.formDocType = formDocType;
-	}
-	public String getDocstateName() {
-		return docstateName;
-	}
-	public void setDocstateName(String docstateName) {
-		this.docstateName = docstateName;
-	}
-	public String getSendFlag() {
-		return sendFlag;
-	}
-	public void setSendFlag(String sendFlag) {
-		this.sendFlag = sendFlag;
-	}
-	public String getLinkDate() {
-		return linkDate;
-	}
-	public void setLinkDate(String linkDate) {
-		this.linkDate = linkDate;
-	}
+	private String ext3;
 	public String getDocID() {
 		return docID;
 	}
@@ -437,6 +395,18 @@ public class ApprGDocListVO {
 	public void setCompanyID(String companyID) {
 		this.companyID = companyID;
 	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	public String getCompanyName2() {
+		return companyName2;
+	}
+	public void setCompanyName2(String companyName2) {
+		this.companyName2 = companyName2;
+	}
 	public String getItemCode() {
 		return itemCode;
 	}
@@ -575,6 +545,36 @@ public class ApprGDocListVO {
 	public void setProcessYN(String processYN) {
 		this.processYN = processYN;
 	}
+	public String getLinkDate() {
+		return linkDate;
+	}
+	public void setLinkDate(String linkDate) {
+		this.linkDate = linkDate;
+	}
+	public String getSendFlag() {
+		return sendFlag;
+	}
+	public void setSendFlag(String sendFlag) {
+		this.sendFlag = sendFlag;
+	}
+	public String getDocstateName() {
+		return docstateName;
+	}
+	public void setDocstateName(String docstateName) {
+		this.docstateName = docstateName;
+	}
+	public String getFormFileLocation() {
+		return formFileLocation;
+	}
+	public void setFormFileLocation(String formFileLocation) {
+		this.formFileLocation = formFileLocation;
+	}
+	public String getFormDocType() {
+		return formDocType;
+	}
+	public void setFormDocType(String formDocType) {
+		this.formDocType = formDocType;
+	}
 	public String getExt1() {
 		return ext1;
 	}
@@ -604,6 +604,42 @@ public class ApprGDocListVO {
 	}
 	public void setExt2(String ext2) {
 		this.ext2 = ext2;
+	}
+	public String getExt3() {
+		return ext3;
+	}
+	public void setExt3(String ext3) {
+		this.ext3 = ext3;
+	}
+	
+	@Override
+	public String toString() {
+		return "ApprGDocListVO [docID=" + docID + ", formID=" + formID + ", orgDocID=" + orgDocID + ", docType="
+				+ docType + ", docState=" + docState + ", functionType=" + functionType + ", href=" + href
+				+ ", docTitle=" + docTitle + ", docNo=" + docNo + ", hasAttachYn=" + hasAttachYn + ", hasOpinionYn="
+				+ hasOpinionYn + ", startDate=" + startDate + ", endDate=" + endDate + ", writerID=" + writerID
+				+ ", writerName=" + writerName + ", writerJobTitle=" + writerJobTitle + ", writerDeptID=" + writerDeptID
+				+ ", writerDeptName=" + writerDeptName + ", isPublic=" + isPublic + ", writerName2=" + writerName2
+				+ ", writerJobTitle2=" + writerJobTitle2 + ", writerDeptName2=" + writerDeptName2 + ", aprMemberSN="
+				+ aprMemberSN + ", aprType=" + aprType + ", aprState=" + aprState + ", aprMemberID=" + aprMemberID
+				+ ", aprMemberName=" + aprMemberName + ", aprMemberName2=" + aprMemberName2 + ", aprMemberJobTitle="
+				+ aprMemberJobTitle + ", aprMemberJobTitle2=" + aprMemberJobTitle2 + ", aprMemberDeptID="
+				+ aprMemberDeptID + ", aprMemberDeptName=" + aprMemberDeptName + ", aprMemberDeptName2="
+				+ aprMemberDeptName2 + ", formName=" + formName + ", formName2=" + formName2 + ", urgentApproval="
+				+ urgentApproval + ", receivedDate=" + receivedDate + ", securityCode=" + securityCode
+				+ ", storagePeriod=" + storagePeriod + ", keyword=" + keyword + ", companyID=" + companyID
+				+ ", companyName=" + companyName + ", companyName2=" + companyName2 + ", itemCode=" + itemCode
+				+ ", itemName=" + itemName + ", securityApproval=" + securityApproval + ", tempAttribute="
+				+ tempAttribute + ", status=" + status + ", specialRecordCode=" + specialRecordCode + ", publicityCode="
+				+ publicityCode + ", publicityYN=" + publicityYN + ", limitRange=" + limitRange + ", pageNum=" + pageNum
+				+ ", cabinetID=" + cabinetID + ", taskCode=" + taskCode + ", docNumCode=" + docNumCode
+				+ ", orgDocNumCode=" + orgDocNumCode + ", seperateAttachXML=" + seperateAttachXML + ", summary="
+				+ summary + ", itemName2=" + itemName2 + ", signCheck=" + signCheck + ", edmsYN=" + edmsYN
+				+ ", containerID=" + containerID + ", receiptPointName=" + receiptPointName + ", receiptPointName2="
+				+ receiptPointName2 + ", processYN=" + processYN + ", linkDate=" + linkDate + ", sendFlag=" + sendFlag
+				+ ", docstateName=" + docstateName + ", formFileLocation=" + formFileLocation + ", formDocType="
+				+ formDocType + ", ext1=" + ext1 + ", name2=" + name2 + ", name3=" + name3 + ", name4=" + name4
+				+ ", ext2=" + ext2 + ", ext3=" + ext3 + "]";
 	}
 	
 }

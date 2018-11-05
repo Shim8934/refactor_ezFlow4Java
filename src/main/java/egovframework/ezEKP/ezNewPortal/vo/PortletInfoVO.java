@@ -18,6 +18,7 @@ public class PortletInfoVO {
 	private List<PortletNameInfoVO> portletNameList; // 포틀릿명 리스트
 	private String boardName1;
 	private String boardName2;
+	private String menuName;
 	
 	
 	public List<PortletNameInfoVO> getPortletNameList() {
@@ -105,6 +106,12 @@ public class PortletInfoVO {
 	public void setBoardName2(String boardName2) {
 		this.boardName2 = boardName2;
 	}
+	public String getMenuName() {
+		return menuName;
+	}
+	public void setMenuName(String menuName) {
+		this.menuName = menuName;
+	}
 	@Override
 	public String toString() {
 		return "PortletInfoVO [portletId=" + portletId + ", portletOrder=" + portletOrder + ", portletName="
@@ -112,7 +119,7 @@ public class PortletInfoVO {
 				+ ", defaultOrder=" + defaultOrder + ", portletCategory=" + portletCategory + ", connectionUrl="
 				+ connectionUrl + ", portletUsed=" + portletUsed + ", portletBoardId=" + portletBoardId
 				+ ", portletNameList=" + portletNameList + ", boardName1=" + boardName1 + ", boardName2=" + boardName2
-				+ "]";
+				+ ", menuName=" + menuName + "]";
 	}
 	
 

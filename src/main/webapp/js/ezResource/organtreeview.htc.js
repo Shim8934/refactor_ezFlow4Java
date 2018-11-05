@@ -222,19 +222,21 @@ function organtreeview(thisobjid, elobjid) {
                 return;
 
             var toggleel = document.getElementById(g_toggleid + nodeIdx);
-            if (toggleel.src.indexOf(g_baseImageName["plus_normal"]) == -1 &&
+            /*if (toggleel.src.indexOf(g_baseImageName["plus_normal"]) == -1 &&
 		    toggleel.src.indexOf(g_baseImageName["minus_normal"]) == -1 &&
 		    toggleel.src.indexOf(g_baseImageName["plus_end"]) == -1 &&
 		    toggleel.src.indexOf(g_baseImageName["minus_end"]) == -1)
-                return;
+                return;*/
 
             var childel = document.getElementById(g_childid + nodeIdx);
             if (childel.style.display == "none") {
                 childel.style.display = "inline-block";
-                if (toggleel.src.indexOf(g_baseImageName["plus_normal"]) >= 0) {
-                	toggleel.src = g_baseImage["minus_normal"];
+                if (toggleel.className.indexOf("sub_iconLNB tree_plus") >= 0) {
+                	//toggleel.src = g_baseImage["minus_normal"];
+                	toggleel.className = "sub_iconLNB tree_minus";
                 } else {
-                	toggleel.src = g_baseImage["minus_end"];
+                	//toggleel.src = g_baseImage["minus_end"];
+                	toggleel.className = "sub_iconLNB tree_plus";
                 }
                     
                 if (childel.innerHTML == "") {
@@ -247,10 +249,12 @@ function organtreeview(thisobjid, elobjid) {
                 }
             } else {
                 childel.style.display = "none";
-                if (toggleel.src.indexOf(g_baseImageName["minus_normal"]) >= 0) {
-                	toggleel.src = g_baseImage["plus_normal"];
+                if (toggleel.className.indexOf("sub_iconLNB tree_minus") >= 0) {
+                	//toggleel.src = g_baseImage["plus_normal"];
+                	toggleel.className = "sub_iconLNB tree_plus";
                 } else {
-                	toggleel.src = g_baseImage["plus_end"];
+                	//toggleel.src = g_baseImage["plus_end"];
+                	toggleel.className = "sub_iconLNB tree_plus";
                 }
             }
         }).call(this, nodeIdx) :
@@ -260,19 +264,21 @@ function organtreeview(thisobjid, elobjid) {
                 return;
 
             var toggleel = document.getElementById(g_toggleid + nodeIdx);
-            if (toggleel.src.indexOf(g_baseImageName["plus_normal"]) == -1 &&
+            /*if (toggleel.src.indexOf(g_baseImageName["plus_normal"]) == -1 &&
 		    toggleel.src.indexOf(g_baseImageName["minus_normal"]) == -1 &&
 		    toggleel.src.indexOf(g_baseImageName["plus_end"]) == -1 &&
 		    toggleel.src.indexOf(g_baseImageName["minus_end"]) == -1)
-                return;
+                return;*/
 
             var childel = document.getElementById(g_childid + nodeIdx);
             if (childel.style.display == "none") {
                 childel.style.display = "inline-block";
-                if (toggleel.src.indexOf(g_baseImageName["plus_normal"]) >= 0) {
-                	toggleel.src = g_baseImage["minus_normal"];
+                if (toggleel.className.indexOf("sub_iconLNB tree_plus") >= 0) {
+                	//toggleel.src = g_baseImage["minus_normal"];
+                	toggleel.className = "sub_iconLNB tree_minus";
                 } else {
-                	toggleel.src = g_baseImage["minus_end"];
+                	//toggleel.src = g_baseImage["minus_end"];
+                	toggleel.className = "sub_iconLNB tree_minus";
                 }
                     
                 if (childel.innerHTML == "") {
@@ -283,10 +289,12 @@ function organtreeview(thisobjid, elobjid) {
                 }
             } else {
                 childel.style.display = "none";
-                if (toggleel.src.indexOf(g_baseImageName["minus_normal"]) >= 0) {
-                	toggleel.src = g_baseImage["plus_normal"];
+                if (toggleel.className.indexOf("sub_iconLNB tree_minus") >= 0) {	
+                	//toggleel.src = g_baseImage["plus_normal"];
+                	toggleel.className = "sub_iconLNB tree_plus";
                 } else {
-                	toggleel.src = g_baseImage["plus_end"];
+                	//toggleel.src = g_baseImage["plus_end"];
+                	toggleel.className = "sub_iconLNB tree_plus";
                 }
             }
         }).call(this, nodeIdx);
@@ -362,7 +370,8 @@ function organtreeview(thisobjid, elobjid) {
                 return;
 
             if (g_selectedIdx != -1) {
-                document.getElementById(g_nodeid + g_selectedIdx).className = g_baseClass["normal"];
+                //document.getElementById(g_nodeid + g_selectedIdx).className = g_baseClass["normal"];
+            	document.getElementById(g_nodeid + g_selectedIdx).className = "h2_text";
             }
 
             document.getElementById(g_nodeid + nodeIdx).className = g_baseClass["selected"];
@@ -926,24 +935,24 @@ function organtreeview(thisobjid, elobjid) {
 
 	        var elementid = targetEl.id;
 
-	        if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "") {
+	        /*if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "") {
 	            if (g_selectedIdx == elementid.split(g_nodeid)[1]) {
 	                document.getElementById(elementid).className = g_baseClass["selected"];
 	            }
 	            else {
 	                document.getElementById(elementid).className = g_baseClass["normal"];
 	            }
-	        }
+	        }*/
 	    }).call(this, event) :
 	    (function() { // IE
 	        var elementid = window.event.srcElement.id;
 
-	        if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "") {
+	        /*if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "") {
 	            if (g_selectedIdx == elementid.split(g_nodeid)[1])
 	                document.getElementById(elementid).className = g_baseClass["selected"];
 	            else
 	                document.getElementById(elementid).className = g_baseClass["normal"];
-	        }
+	        }*/
 	    }).call(this);
     }
 
@@ -1047,7 +1056,7 @@ function organtreeview(thisobjid, elobjid) {
             else
                 var depth = g_nodeArray["depth"][nodeIdx];
 
-            var childHtml = "<span style='display:block;width:150px;'>";
+            var childHtml = "<span>";
             //2016-10-10
             var childLength = nodeXML.childElementCount; //nodeXML.length;
             //var childLength = nodeXML.getElementsByTagName('NODE').item(0).childElementCount;
@@ -1060,13 +1069,15 @@ function organtreeview(thisobjid, elobjid) {
 
                 var nodeCount = g_nodeCount;
                 var mydepth = depth;
-                var nodeHtml = "<span style='display:block;'><span style='height:18px;overflow-y:hidden;white-space:nowrap;display:inline-block;'>";
+                var nodeHtml = "<span'><span><div class='node_div'>";
 
                 for (var j = 0; j < depth.length; j++) {
                     if (depth.charAt(j) == "1")
-                        nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                        //nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    	nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
                     else
-                        nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                        //nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    	nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
                 }
 
                 var bEndNode = (i == childLength - 1) ? true : false;
@@ -1076,41 +1087,48 @@ function organtreeview(thisobjid, elobjid) {
                     bParent = false;
                 }
 
-                nodeHtml += "<img src='";
+                //nodeHtml += "<img src='";
+                
                 if (bParent) {
                     if (!bEndNode) {
                         if (findchildnodevalue(childNode, 'NODES') == null) {
-                            nodeHtml += g_baseImage["plus_normal"];
+                            //nodeHtml += g_baseImage["plus_normal"];
+                        	nodeHtml += "<span class='sub_iconLNB tree_plus' id='" + g_toggleid + nodeCount + "'></span>";
                         }
                         else {
-                            nodeHtml += g_baseImage["minus_normal"];
+                            //nodeHtml += g_baseImage["minus_normal"];
+                        	nodeHtml += "<span class='sub_iconLNB tree_minus' id='" + g_toggleid + nodeCount + "'></span>";
                         }
                         mydepth += "1";
                     }
                     else {
                         if (findchildnodevalue(childNode, 'NODES') == null) {
-                            nodeHtml += g_baseImage["plus_end"];
+                            //nodeHtml += g_baseImage["plus_end"];
+                        	nodeHtml += "<span class='sub_iconLNB tree_plus' id='" + g_toggleid + nodeCount + "'></span>";
                         }
                         else {
-                            nodeHtml += g_baseImage["minus_end"];
+                            //nodeHtml += g_baseImage["minus_end"];
+                        	nodeHtml += "<span class='sub_iconLNB tree_minus' id='" + g_toggleid + nodeCount + "'></span>";
                         }
 
                         mydepth += "0";
                     }
 
-                    nodeHtml += ("' style='cursor:pointer' id='" + g_toggleid + nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    //nodeHtml += ("' style='cursor:pointer' id='" + g_toggleid + nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
                 }
                 else {
                     if (!bEndNode) {
-                        nodeHtml += g_baseImage["dot_normal"];
+                        //nodeHtml += g_baseImage["dot_normal"];
+                    	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "1";
                     }
                     else {
-                        nodeHtml += g_baseImage["dot_end"];
+                        //nodeHtml += g_baseImage["dot_end"];
+                    	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "0";
                     }
 
-                    nodeHtml += ("' id='" + g_toggleid + nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    //nodeHtml += ("' id='" + g_toggleid + nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
                 }
 
                 if (findchildnodevalue(childNode, "SETNODEICONBYNAME") != null) {
@@ -1119,12 +1137,15 @@ function organtreeview(thisobjid, elobjid) {
 				else
 				{
 				    if (findchildnodevalue(childNode, "DATA7") == 1) //자원관리에서 1:분류 2:자원 이미지 달리표현하기 2008-09-30
-					    nodeHtml += ("<img src='" + g_images["BASE"] + "'>"); 
+					    //nodeHtml += ("<img src='" + g_images["BASE"] + "'>"); 
+				    	nodeHtml += "<span class='sub_iconLNB tree_folder'></span>"; 
 				    else
 				        if (findchildnodevalue(childNode, "DATA15") == 1)
-				            nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
+				            //nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
+				        	nodeHtml += "<span class='sub_iconLNB tree_resource_ok'></span>";
 				        else
-				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='padding-right:4px'>");
+				            //nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='padding-right:4px'>");
+				        	nodeHtml += "<span class='sub_iconLNB tree_resource_standard'></span>";
 				}
 
                 //if (childNode.selectSingleNode("SELECT") != null) {
@@ -1132,22 +1153,25 @@ function organtreeview(thisobjid, elobjid) {
                     //2018-07-12 김보미 - 자원명 길 경우 처리    
                     //nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
                     //g_baseClass["selected"] + "' style='display:inline-block;'>");
-                    nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
+                    /*nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
                   		g_baseClass["selected"] + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + (168 - (mydepth.length * 18)) + "px;'" +
-                  		" title='" + findchildnodevalue(childNode, "VALUE") + "'>");
+                  		" title='" + findchildnodevalue(childNode, "VALUE") + "'>");*/
+                	
+                	nodeHtml += "<span class='h2_text' id='" + g_nodeid + nodeCount + "'>";
                     g_selectedIdx = nodeCount;
                 }
                 else {
                     //2018-07-12 김보미 - 자원명 길 경우 처리    
                     //nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
                     //g_baseClass["normal"] + "' style='display:inline-block;'>");
-                    nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
+                    /*nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
                   		g_baseClass["normal"] + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + (168 - (mydepth.length * 18)) + "px;'" +
-                  		" title='" + findchildnodevalue(childNode, "VALUE") + "'>");
+                  		" title='" + findchildnodevalue(childNode, "VALUE") + "'>");*/
+                	nodeHtml += "<span class='h2_text' id='" + g_nodeid + nodeCount + "'>";
                 }
-
-                //nodeHtml += (childNode.selectSingleNode("VALUE").text + "</span></a></div>");
-                nodeHtml += (findchildnodevalue(childNode, "VALUE") + "</span></a></span>");
+                
+                //nodeHtml += (findchildnodevalue(childNode, "VALUE") + "</span></a></span>");
+                nodeHtml += (findchildnodevalue(childNode, "VALUE") + "</span></div></span>");
 
                 g_nodeArray["nodeXML"][nodeCount] = new Array();
                 var hasnodes = false;
@@ -1198,13 +1222,16 @@ function organtreeview(thisobjid, elobjid) {
                 var nodeCount = g_nodeCount;
                 var mydepth = depth;
                 var childNode = nodeXML.item(i);
-                var nodeHtml = "<span style='display:block;'><span style='height:18px;overflow-y:hidden;white-space:nowrap;display:inline-block;'>";
+                //var nodeHtml = "<span style='display:block;'><span style='height:18px;overflow-y:hidden;white-space:nowrap;display:inline-block;'>";
+                var nodeHtml = "<span'><span><div class='node_div'>";
 
                 for (var j = 0; j < depth.length; j++) {
                     if (depth.charAt(j) == "1")
-                        nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                        //nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    	nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
                     else
-                        nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                        //nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    	nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
                 }
 
                 var bEndNode = (i == childLength - 1) ? true : false;
@@ -1214,37 +1241,44 @@ function organtreeview(thisobjid, elobjid) {
                     bParent = false;
                 }
 
-                nodeHtml += "<img src='";
+                //nodeHtml += "<img src='";
+                
                 if (bParent) {
                     if (!bEndNode) {
                         if (childNode.selectSingleNode("NODES") == null)
-                            nodeHtml += g_baseImage["plus_normal"];
+                            //nodeHtml += g_baseImage["plus_normal"];
+                        	nodeHtml += "<span class='sub_iconLNB tree_plus' id='" + g_toggleid + nodeCount + "'></span>";
                         else
-                            nodeHtml += g_baseImage["minus_normal"];
+                            //nodeHtml += g_baseImage["minus_normal"];
+                        	nodeHtml += "<span class='sub_iconLNB tree_minus' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "1";
                     }
                     else {
                         if (childNode.selectSingleNode("NODES") == null)
-                            nodeHtml += g_baseImage["plus_end"];
+                            //nodeHtml += g_baseImage["plus_end"];
+                        	nodeHtml += "<span class='sub_iconLNB tree_plus' id='" + g_toggleid + nodeCount + "'></span>";
                         else
-                            nodeHtml += g_baseImage["minus_end"];
+                            //nodeHtml += g_baseImage["minus_end"];
+                        	nodeHtml += "<span class='sub_iconLNB tree_minus' id='" + g_toggleid + nodeCount + "'></span>";
 
                         mydepth += "0";
                     }
 
-                    nodeHtml += ("' style='cursor:pointer' id='" + g_toggleid + nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    //nodeHtml += ("' style='cursor:pointer' id='" + g_toggleid + nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
                 }
                 else {
                     if (!bEndNode) {
-                        nodeHtml += g_baseImage["dot_normal"];
+                        //nodeHtml += g_baseImage["dot_normal"];
+                    	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "1";
                     }
                     else {
-                        nodeHtml += g_baseImage["dot_end"];
+                        //nodeHtml += g_baseImage["dot_end"];
+                    	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "0";
                     }
 
-                    nodeHtml += ("' id='" + g_toggleid + nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    //nodeHtml += ("' id='" + g_toggleid + nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
                 }
 
 				if (childNode.selectSingleNode("SETNODEICONBYNAME") != null)
@@ -1252,24 +1286,29 @@ function organtreeview(thisobjid, elobjid) {
 				else
 				{
 				    if (childNode.selectSingleNode("DATA7").text == 1) //자원관리에서 1:분류 2:자원 이미지 달리표현하기 2008-09-30
-				        nodeHtml += ("<img src='" + g_images["BASE"] + "'>");
+				        //nodeHtml += ("<img src='" + g_images["BASE"] + "'>");
+				    	nodeHtml += "<span class='sub_iconLNB tree_folder'></span>"; 
 				    else
 				        if (childNode.selectSingleNode("DATA15").text == 1)
-				            nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
+				            //nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
+				        	nodeHtml += "<span class='sub_iconLNB tree_resource_ok'></span>"; 
 				        else
-				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='padding-right:4px'>");
+				            //nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='padding-right:4px'>");
+				        	nodeHtml += "<span class='sub_iconLNB tree_resource_standard'></span>"; 
 				}
 
                 if (childNode.selectSingleNode("SELECT") != null) {
-                    nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
-						g_baseClass["selected"] + "' style='display:inline-block;'>");
+                    /*nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
+						g_baseClass["selected"] + "' style='display:inline-block;'>");*/
+                	nodeHtml += "<span class='h2_text' id='" + g_nodeid + nodeCount + "'>";
                     g_selectedIdx = nodeCount;
                 }
                 else
-                    nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
-						g_baseClass["normal"] + "' style='display:inline-block;'>");
+                    /*nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
+						g_baseClass["normal"] + "' style='display:inline-block;'>");*/
+                	nodeHtml += "<span class='h2_text' id='" + g_nodeid + nodeCount + "'>";
 
-                nodeHtml += (childNode.selectSingleNode("VALUE").text + "</span></a></span>");
+                nodeHtml += (childNode.selectSingleNode("VALUE").text + "</span></div></span>");
 
                 g_nodeArray["nodeXML"][nodeCount] = new Array();
                 for (var j = 0; j < childNode.childNodes.length; j++) {

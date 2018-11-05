@@ -1434,7 +1434,7 @@ public class EzNewPortalGWController {
 			
 			JSONObject data = new JSONObject();
 
-			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId);
+			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang));
 			
 			for (PortletInfoVO pvo : portletList) {
 				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId());
@@ -1461,14 +1461,22 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/order/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateCompanyPortletOrder(HttpServletRequest request, @PathVariable String companyId) throws Exception {
+	public JSONObject updateCompanyPortletOrder(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateCompanyPortletOrder started.");
 		JSONObject result = new JSONObject();
 
 		try {
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
+			int tenantId = info.getTenantId();
+			
+			JSONArray portletList = (JSONArray) jsonParam.get("portlets");
+			
+			ezNewPortalService.updateCompanyPortletOrder(portletList, tenantId, companyId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
@@ -1509,15 +1517,28 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/companies/{companyId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject insertPortlet(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
+	public JSONObject insertPortlet(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W insertCompanyPortlet started.");
 		JSONObject result = new JSONObject();
-
+		
 		try {
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			
+			String userId = jsonParam.get("userId").toString();
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
+			JSONObject portletInfo = new JSONObject();
+			portletInfo.put("boardId", jsonParam.get("boardId"));
+			portletInfo.put("portletUsed", jsonParam.get("portletUsed"));
+			portletInfo.put("connectionUrl", jsonParam.get("connectionUrl"));
+			portletInfo.put("menuId", jsonParam.get("menuId"));
+			
+			JSONArray portletNames = (JSONArray) jsonParam.get("nameList");
+			
+			ezNewPortalService.insertPortlet(portletInfo, portletNames, companyId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1542,7 +1563,10 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-
+			int tenantId = info.getTenantId();
+			
+			ezNewPortalService.deletePortlet(portletId, companyId, tenantId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
@@ -1559,17 +1583,29 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updatePortletInfo(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
+	public JSONObject updatePortletInfo(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updatePortletInfo started.");
 		JSONObject result = new JSONObject();
-		String userId = request.getParameter("userId");
+		JSONParser jp = new JSONParser();
+		jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+		
+		String userId = jsonParam.get("userId").toString();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			int tenantId = info.getTenantId();
-			String portletLang = info.getLang();
+			//String portletLang = info.getLang();
+			JSONObject portletInfo = new JSONObject();
+			portletInfo.put("portletId", jsonParam.get("portletId"));
+			portletInfo.put("boardId", jsonParam.get("boardId"));
+			portletInfo.put("portletUsed", jsonParam.get("portletUsed"));
+			portletInfo.put("connectionUrl", jsonParam.get("connectionUrl"));
+			portletInfo.put("menuId", jsonParam.get("menuId"));
+			
+			JSONArray portletNames = (JSONArray) jsonParam.get("nameList");
+			ezNewPortalService.updateCompanyPortletInfo(portletInfo, portletNames, companyId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);

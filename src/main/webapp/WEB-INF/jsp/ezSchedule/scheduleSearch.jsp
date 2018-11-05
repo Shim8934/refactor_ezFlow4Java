@@ -64,7 +64,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -72,7 +72,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var SDate;
@@ -193,7 +193,7 @@
 			
 		    function onmouseOver(elem) {
 		        elem.style.color = "blue";
-		        elem.style.backgroundColor = "#edf4fd";
+		        elem.style.backgroundColor = "#e4e8ec";
 		    }
 		
 		    function onmouseOut(elem) {

@@ -598,16 +598,15 @@
 		<div id="mainmenu">
 			<ul>
 				<c:if test="${adminYN == 'Y' }">
-					<li><span onclick="qstWhite()"><spring:message code="ezBoard.t367" /></span></li>
+					<li class="important"><span onclick="qstWhite()"><spring:message code="ezBoard.t367" /></span></li>
 					<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
-				</c:if>	
+				</c:if>
+				<li class="important"><span onClick="menu_reuse()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if>><spring:message code="ezQuestion.t700" /></span></li>
 				<li><span onClick="menu_Result()"><spring:message code="ezQuestion.t303" /></span></li>
 				<li><span onClick="menu_Analysis()"><spring:message code="ezQuestion.t304" /></span></li>
-				<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
-				<li><span onClick="menu_Search()"><spring:message code="ezQuestion.t34" /></span></li>
 				<li><span onClick="menu_InfoModify()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if> ><spring:message code="ezQuestion.t305" /></span></li>
-				<li><span onClick="menu_Delete()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if>><spring:message code="ezQuestion.t177" /></span></li>
-				<li><span onClick="menu_reuse()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if>><spring:message code="ezQuestion.t700" /></span></li>
+				<li><span onClick="menu_Search()"><spring:message code="ezQuestion.t34" /></span></li>
+				<li><span class="icon16 icon16_delete" onClick="menu_Delete()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if>></span></li>
 			</ul>
 		</div>
 		<script type="text/javascript">

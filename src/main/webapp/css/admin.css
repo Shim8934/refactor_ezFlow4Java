@@ -1,4 +1,4 @@
-TD,input, text, div,select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: gulim, arial,verdana;}
+TD,input, text, div,select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: malgun gothic, arial,verdana;}
 input,SELECT{HEIGHT: 20px}
 .td{empty-cells:show}
 TEXTAREA{padding:5px}
@@ -31,7 +31,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 .pstitle{background-color: ECECEC;padding-left:10px;padding-right:10px;padding-top:5px;padding-bottom:5px;white-space: nowrap;word-break:keep-all;word-wrap:normal}
 .btnposition{padding-right:10px;text-align:right}
 
-.pmenu{FONT-SIZE: 9pt;FONT-FAMILY: gulim,arial,verdana;padding-left:8px;padding-right:6px; white-space: nowrap; text-align: center;vertical-align: middle;background-image:url(../images/pbar.gif);background-position:left;background-repeat:no-repeat;}
+.pmenu{FONT-SIZE: 9pt;FONT-FAMILY: malgun gothic,arial,verdana;padding-left:8px;padding-right:6px; white-space: nowrap; text-align: center;vertical-align: middle;background-image:url(../images/pbar.gif);background-position:left;background-repeat:no-repeat;}
 
 
 /* �Ʒ����ʹ� ���ֹ��� css - ������ ���������*/
@@ -51,7 +51,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 {
     FONT-SIZE: 9pt;
     COLOR: darkblue;
-    FONT-FAMILY: gulim, arial,verdana;
+    FONT-FAMILY: malgun gothic, arial,verdana;
     TEXT-DECORATION: underline;
     cursGroupor: help
 }
@@ -73,7 +73,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
     COLOR: black;
     PADDING-TOP: 5px;
     BORDER-BOTTOM: black 1px solid;
-    FONT-FAMILY: gulim, arial,verdana;
+    FONT-FAMILY: malgun gothic, arial,verdana;
 }
 
 
@@ -86,7 +86,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 	height:46px;
 	line-height:46px; 
 	margin:0px;
-	font-family: Malgun Gothic, gulim;
+	font-family: Malgun Gothic, malgun gothic;
 	padding:0px 10px;}
 #adminmenu{
 	clear: both;

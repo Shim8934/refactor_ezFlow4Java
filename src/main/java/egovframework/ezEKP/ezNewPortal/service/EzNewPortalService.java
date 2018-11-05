@@ -65,6 +65,11 @@ public interface EzNewPortalService {
 	public void updateUserThemeSetting(int usedTheme, int usedFrame, String userId, int tenantId, String companyId);
 	//관리자부분
 	public List<PortalBoardTreeVO> getBoardTree(String parentBoardId, String companyId, int tenantId) throws Exception;
+	public void insertPortlet(JSONObject portletInfo, JSONArray portletNames,  String companyId, int tenantId) throws Exception;
+	public void updateCompanyPortletInfo(JSONObject portletInfo, JSONArray portletNames,  String companyId, int tenantId) throws Exception;
+	public void updateCompanyPortletOrder(JSONArray portletList, int tenantId, String companyId) throws Exception ;
+	public void deletePortlet(int portletId, String companyId, int tenantId);
+	
 	/**
 	 * 이효진
 	 */
@@ -143,6 +148,6 @@ public interface EzNewPortalService {
 	 * @return List<PortletInfoVO>
 	 * @throws Exception
 	 */
-	public List<PortletInfoVO> getPortletList(String companyId, int tenantId);
+	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang);
 	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId);
 }
