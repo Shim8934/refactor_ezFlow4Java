@@ -1,4 +1,4 @@
-﻿﻿//오늘의 날짜 (년도, 월, 일, 오늘의 요일)
+﻿﻿﻿//오늘의 날짜 (년도, 월, 일, 오늘의 요일)
 var weektodate = new Date();
 
 //전역변수 (년도, 월, 일, 요일)
@@ -1299,7 +1299,7 @@ function tableListControl_today() {
                             _TD.title_name = strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "&#13;" + strLang268 + " : " + getNodeText(xmldom.getElementsByTagName("dept_name")[j]);
                             _TD.align = "center";
                             _TD.style.backgroundColor = "rgba(237, 244, 253, 1)";
-                            _TD.style.border = "1px solid #b5c8e3";//일보기>허가요청중인 자원 td border
+                            //_TD.style.border = "1px solid #b5c8e3";//일보기>허가요청중인 자원 td border
                             /*_TD.style.borderTopWidth = "0px";
                             _TD.style.borderLeftWidth = "0px";*/
                             _TD.style.width = 100 + "%";
