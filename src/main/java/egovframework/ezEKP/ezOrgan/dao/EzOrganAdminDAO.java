@@ -1665,7 +1665,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
      * Active Directory
      * - 부서의 부서 이동
      * */
-    @SuppressWarnings("static-access")
 	public void moveDeptInAD(DirContext ctx, Map<String, Object> map, String dept) throws Exception {
     	logger.debug("moveDeptInAD started.");
     	
@@ -1696,14 +1695,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	// 부모 부서의 dn이 있다는 것 -> 하위 부서에서 이동한다는 뜻.    	
     	if (!parDept.equalsIgnoreCase("NOTHING")) {
         	ModificationItem[] delDept = new ModificationItem[1];
-        	delDept[0] = new ModificationItem(ctx.REMOVE_ATTRIBUTE, new BasicAttribute("member", curDept));
+        	delDept[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, new BasicAttribute("member", curDept));
         	ctx.modifyAttributes(parDept, delDept);
     	}
     	
     	// movDept의 dn이 존재하는 경우, 이동할 부서의 member에 현재 부서 dn 추가
     	if (!movDept.equalsIgnoreCase("NOTHING")) {
         	ModificationItem[] addDept = new ModificationItem[1];
-        	addDept[0] = new ModificationItem(ctx.ADD_ATTRIBUTE, new BasicAttribute("member", curDept));
+        	addDept[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute("member", curDept));
         	ctx.modifyAttributes(movDept, addDept);            	
     	} 
     	
@@ -1912,7 +1911,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
      * attr : 변경될 attribute
      * value : 새로 변경되는 내용
      * */
-    @SuppressWarnings("static-access")
 	public ModificationItem chkADAttribute(DirContext ctx, String dn, String attr, String value) throws Exception {
 	
 		ModificationItem mod;
@@ -1927,7 +1925,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		if (container.size() == 0) {
 			//현재 attribute가 존재하지 않음 && value값이 존재함
 			if (value != null && !value.equalsIgnoreCase("")) {
-				mod = new ModificationItem(ctx.ADD_ATTRIBUTE, new BasicAttribute(attr, value));
+				mod = new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute(attr, value));
 			//현재 attribute가 존재하지 않음 && value값이 존재하지 않음. 또다시 빈값이 들어온 경우
 			} else {
 				mod = null;
@@ -1936,10 +1934,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 			//현재 attribute가 존재하는 경우 && value값이 존재하지 않는 경우.
 	    	if ( value == null || value.equalsIgnoreCase("") ) {
 	    		//mod = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute(attr, "empty"));
-	    		mod = new ModificationItem(ctx.REMOVE_ATTRIBUTE, new BasicAttribute(attr));
+	    		mod = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, new BasicAttribute(attr));
 	    	//현재 attribute가 존재하는 경우 && value값지 존재하는 경우
 	    	} else {    		
-	    		mod = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute(attr, value));
+	    		mod = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute(attr, value));
 	    	}    
 		}		
     	return mod;
@@ -1950,7 +1948,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
      * - 유저의 부서이동
      * dept : 변경될 부서ID
      * */
-    @SuppressWarnings("static-access")
 	public void moveUserInAD(DirContext ctx, Map<String, Object> map, String dept) throws Exception {
     	logger.debug("moveUserInAD started.");
     	// 현재 유저 dn
@@ -1977,8 +1974,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	 * */
     	ModificationItem[] mods = new ModificationItem[2];
     	
-    	mods[0] = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute("department", dept.trim() ));
-    	mods[1] = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute("description", movDisplay.trim() ));
+    	mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("department", dept.trim() ));
+    	mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("description", movDisplay.trim() ));
     	ctx.modifyAttributes(curUser, mods);
     	
     	/**
@@ -1986,7 +1983,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	 * 2. 변경 부서에 유저 추가 
     	 * */    	
     	ModificationItem[] delUser = new  ModificationItem[1];    	
-    	delUser[0] = new ModificationItem(ctx.REMOVE_ATTRIBUTE, new BasicAttribute("member", curUser));
+    	delUser[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, new BasicAttribute("member", curUser));
     	ctx.modifyAttributes(curDept, delUser);
     	
     	String newDN = getADdata(ctx, map.get("v_CN").toString(), "user", "dn");
@@ -1994,7 +1991,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	logger.debug("newDN : " + newDN);
     	
     	ModificationItem[] addUser = new ModificationItem[1];
-    	addUser[0] = new ModificationItem(ctx.ADD_ATTRIBUTE, new BasicAttribute("member", newDN));
+    	addUser[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute("member", newDN));
     	ctx.modifyAttributes(movDept, addUser);
     	
     	logger.debug("moveUserInAD ended.");
@@ -2037,7 +2034,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
      * Active Directory
      * - 유저 패스워드 변경
      * */
-    @SuppressWarnings( "static-access" )  
     public void changePasswordInAD(DirContext ctx, LoginVO vo) throws Exception {
     	logger.debug("changePasswordInAD started.");   
     	
@@ -2051,8 +2047,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	
     	ModificationItem[] mods = new ModificationItem[2];
 
-    	mods[0] = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute("unicodePwd", pwdArray));
-    	mods[1] = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute("userAccountControl", Integer.toString( UF_NORMAL_ACCOUNT + UF_DONT_EXPIRE_PASSWD ) ));
+    	mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("unicodePwd", pwdArray));
+    	mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userAccountControl", Integer.toString( UF_NORMAL_ACCOUNT + UF_DONT_EXPIRE_PASSWD ) ));
 
     	ctx.modifyAttributes(getDN, mods);
     	// 한 번만 실행하면 직전 패스워드로도 로그인이 되어 두 번 수행함
