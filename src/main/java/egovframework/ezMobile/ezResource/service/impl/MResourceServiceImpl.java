@@ -1438,6 +1438,8 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PAUTHYN", authYn);
 		map.put("tenantID", tenantID);
 		map.put("check", check);
+		
+		LOGGER.debug("sql이 없을수도 있나");
 		return mResourceDAO.getScheduleApprList(map);
 	}
 	
@@ -1460,6 +1462,8 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	
 	@Override
 	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdList(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn) {	
+		LOGGER.debug("getResApprBrdList start.");
+		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PBRDCOMPANY", brdCompany);
 		map.put("v_PUSERID", userId);
@@ -1500,5 +1504,13 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		return result;
 	}
 	
+	@Override
+	public List<String> getResAdminAuth(String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		
+		return mResourceDAO.getResAdminAuth(map);
+	}
 }
 

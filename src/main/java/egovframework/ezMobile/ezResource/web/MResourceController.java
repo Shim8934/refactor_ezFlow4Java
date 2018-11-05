@@ -279,13 +279,15 @@ public class MResourceController extends EgovFileMngUtil {
 		JSONArray folderList = new JSONArray();
 		
 
-	
-		folderList = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+		Map<String, Object> resultMap = (Map<String, Object>) resultBody.get("data");	
+		folderList = gson.fromJson(gson.toJson(resultMap.get("list")), JSONArray.class);
 			
 			LOGGER.debug("folderList" + folderList);
 			
 			model.addAttribute("folderListCnt", folderList.size());
 			model.addAttribute("folderList", folderList);
+			
+			model.addAttribute("adminYn", resultMap.get("adminYn"));
 		LOGGER.debug("getResFolderList ended.");
 		return "json";
 	}

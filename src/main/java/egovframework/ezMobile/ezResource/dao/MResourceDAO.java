@@ -177,5 +177,9 @@ public class MResourceDAO extends EgovAbstractDAO {
 		return  (List<MResourceGetAdmSubClsTreeVO>) list("MResourceDAO.getResApprBrdListCheck", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<String> getResAdminAuth(Map<String, Object> map){
+		return (List<String>) list("MResourceDAO.getResAdminAuth", map);
+	}
 }
 
