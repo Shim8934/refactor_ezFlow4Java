@@ -1,13 +1,17 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,14 +24,18 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
-public class EzNewPortalAdminController {
+public class EzNewPortalAdminController extends EgovFileMngUtil {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzNewPortalAdminController.class);
 	
@@ -40,6 +48,8 @@ public class EzNewPortalAdminController {
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
+	@Autowired
+	private EzCommonService ezCommonService;
 	
 	/**
 	 * @author 이효진
@@ -525,6 +535,7 @@ public class EzNewPortalAdminController {
 		}
 	}
 	
+	//관리자 로고관리 > 화면 출력
 	@RequestMapping(value = "/admin/ezNewPortal/portalLogos.do")
 	public String portalManageLogo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("portalManageLogo started.");
@@ -585,13 +596,6 @@ public class EzNewPortalAdminController {
 		String url = "/rest/admin/ezPortal/portlets/" + portletId + "/companies/" + companyId;
 		
 		json.put("userId", userInfo.getId());
-		System.out.println(json.get("portletId"));
-		System.out.println(json.get("companyId"));
-		System.out.println(json.get("nameList"));
-		System.out.println(json.get("boardId")); //없으면 null
-		System.out.println(json.get("portletUsed"));
-		System.out.println(json.get("connectionUrl"));//없으면 null
-		System.out.println(json.get("menuId")); //없으면 null
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", json);
 		LOGGER.debug("updatePortlet Ended");
@@ -712,12 +716,6 @@ public class EzNewPortalAdminController {
 		String url = "/rest/admin/ezPortal/portlets/companies/" + companyId;
 		
 		json.put("userId", userInfo.getId());
-		System.out.println(json.get("companyId"));
-		System.out.println(json.get("nameList"));
-		System.out.println(json.get("boardId"));
-		System.out.println(json.get("portletUsed"));
-		System.out.println(json.get("connectionUrl"));
-		System.out.println(json.get("menuId"));
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "post", json);
 		
@@ -806,5 +804,98 @@ public class EzNewPortalAdminController {
 			LOGGER.debug("openPortalMenu ended.");
 			return "/admin/ezNewPortal/portalPortletMenu";
 		}
+	}
+	
+	//관리자 로고리스트 불러오기
+	@RequestMapping(value = "/admin/ezNewPortal/getCompanyLogos.do")
+	@ResponseBody
+	public JSONArray getCompanyLogos(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody Map<String, Object> paramMap, Model model) throws Exception {
+		LOGGER.debug("getCompanyLogos started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyId = paramMap.get("companyId").toString();
+		String url = "/rest/admin/ezPortal/logos/companies/" + companyId;
+		paramMap.put("userId", userInfo.getId());		
+
+		JSONArray logoList = new JSONArray();
+		JSONObject result = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, request, "get", null);
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			logoList = (JSONArray) result.get("data");
+		}
+		
+		LOGGER.debug("getCompanyLogos Ended");
+		
+		return logoList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezNewPortal/uploadLogo.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String updateCompanyLogo(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("updateCompanyLogo started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyId = request.getParameter("companyId").toString();
+		String url = "/rest/admin/ezPortal/logos/companies/" + companyId;
+		String userId = userInfo.getId();
+		JSONObject json = new JSONObject();
+		json.put("userId", userId);
+		
+		MultipartFile multiFile = request.getFile("file");
+		
+		String realPath = request.getServletContext().getRealPath("");
+		String pFileName = "";
+        String sGUID = "";
+        String pUploadSN = "";        
+        String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+        
+        sGUID = UUID.randomUUID().toString();
+        pUploadSN = "{" + sGUID + "}";
+
+        if (StringUtils.isNotEmpty(multiFile.getOriginalFilename()) && StringUtils.isNotBlank(multiFile.getOriginalFilename())) {        	
+            String _pFileName = multiFile.getOriginalFilename();
+            
+            if (_pFileName.indexOf(commonUtil.separator) > 0) {
+                _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
+            }
+            
+            pFileName = _pFileName;
+        }
+        
+        String pDirPath = commonUtil.getUploadPath("upload_newPortal.ROOT", userInfo.getTenantId());
+        pDirPath = realPath + pDirPath;
+        
+        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+        	pDirPath = pDirPath + commonUtil.separator;
+        }
+        
+        File file = new File(pDirPath + "uploadFile");
+
+        if (!file.exists()) {
+        	file.mkdir();        
+        }
+        
+        String extend = pFileName.substring(pFileName.lastIndexOf(".") + 1);
+        String newFileName = pUploadSN + "." + extend;
+        
+        if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {           	
+			writeUploadedFile(multiFile, newFileName, pDirPath + "uploadFile");
+        }
+        
+        json.put("logoType", "L");
+        json.put("logoUrl", newFileName);
+		JSONObject result = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, request, "patch", json);
+		String status = result.get("status").toString();
+		String logoUrl = "";
+		
+		if (status.equals("ok")) {
+			logoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", userInfo.getTenantId()) + commonUtil.separator + "uploadFile" + commonUtil.separator + newFileName;
+		}
+		
+		LOGGER.debug("logoUrl : " + logoUrl);
+		LOGGER.debug("updateCompanyLogo ended");
+		
+		return logoUrl;
 	}
 }

@@ -17,6 +17,7 @@ import egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalLogoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -369,6 +370,22 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	
 	public void deletePortletName (Map<String, Object> map) {
 		delete("ezNewPortal.deletePortletName", map);
+	}
+	
+	//회사 로고 업데이트
+	public void updateCompanyLogo (Map<String, Object> map) {
+		update ("ezNewPortal.updateCompanyLogo", map);
+	}
+	
+	//회사 로고 url 하나 가져오기
+	public String getCompanyLogo (Map<String, Object> map) {
+		return (String) select ("ezNewPortal.getCompanyLogo", map);
+	}
+	
+	//회사 로고 리스트 가져오기
+	@SuppressWarnings("unchecked")
+	public List<PortalLogoVO> getCompanyLogoList (Map<String, Object> map) {
+		return (List<PortalLogoVO>) list("ezNewPortal.getCompanyLogoList", map);
 	}
 	/**
 	 * 구해안

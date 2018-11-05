@@ -420,11 +420,11 @@
 							language = "일본어";
 						}
 						
-						listHTML += "<tr><th class='portletInfoTH'>포틀릿명(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + portletNameList[j].portletName + "'></td></tr>"
+						listHTML += "<tr><th class='portletInfoTH'>포틀릿명(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + portletNameList[j].portletName + "' maxlength='50'></td></tr>"
 					 }
 					
 					if (!result[i].general) {
-						listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"'></td></tr>";
+						listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"' maxlength='100'></td></tr>";
 						listHTML += "<tr><th class='portletInfoTH'>관련 메뉴 : </th><td class='portletInfoTD'>";
 						listHTML += "<input id='portletMenu" + portletId + "' type='text' value='" + result[i].menuName + "'readonly>";
 						listHTML += "<div class='btnpositionJsp menuSetting'>";
@@ -525,10 +525,10 @@
 		listHTML += "</tr>";
 		
 		//언어
-		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(한국어) :</th><td class='portletInfoTD'><input class='portletName' data1='1' type='text'></td></tr>"
-		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(영어) :</th><td class='portletInfoTD'><input class='portletName' data1='2' type='text'></td></tr>"
-		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(일본어) :</th><td class='portletInfoTD'><input class='portletName' data1='3' type='text'></td></tr>"
-		listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input class='connectionUrl' type='text'></td></tr>";
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(한국어) :</th><td class='portletInfoTD'><input class='portletName' data1='1' type='text' maxlength='50'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(영어) :</th><td class='portletInfoTD'><input class='portletName' data1='2' type='text' maxlength='50'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(일본어) :</th><td class='portletInfoTD'><input class='portletName' data1='3' type='text' maxlength='50'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input class='connectionUrl' type='text' maxlength='100'></td></tr>";
 		listHTML += "<tr><th class='portletInfoTH'>관련 메뉴 : </th><td class='portletInfoTD'>";
 		listHTML += "<input id='newPortletMenu' type='text' readonly>";
 		listHTML += "<div class='btnpositionJsp menuSetting'>";
@@ -536,7 +536,7 @@
 		listHTML += "<span>선택</span></a></div>";
 		listHTML += "</td></tr>";
 		listHTML += "<tr class='setBoard'><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
-		listHTML += "<input id='newPortletBoard' type='text'>";
+		listHTML += "<input id='newPortletBoard' type='text' readonly>";
 		listHTML += "<div class='btnpositionJsp boardSetting'>";
 		listHTML += "<a class='imgbtn boardSettingtBtn'>";
 		listHTML += "<span>설정</span></a></div></td></tr>";
