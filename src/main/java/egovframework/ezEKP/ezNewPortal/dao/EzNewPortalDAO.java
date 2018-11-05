@@ -112,6 +112,18 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<FrameInfoVO>) list("ezNewPortal.getCompUsableFrameList", map); 
 	}
 	
+	public void updateUserUsedFrame(Map<String, Object> map) throws Exception {
+		update("ezNewPortal.updateUserUsedFrame", map);
+	}
+	
+	public void deleteUserUsedPortlet(Map<String, Object> map) throws Exception {
+		delete("ezNewPortal.deleteUserUsedPortlet", map);
+	}
+	
+	public void insertUserUsedPortlet(Map<String, Object> map) throws Exception {
+		insert("ezNewPortal.insertUserUsedPortlet", map);
+	}
+	
 	/* 박종균 끝 */
 	
 	/**

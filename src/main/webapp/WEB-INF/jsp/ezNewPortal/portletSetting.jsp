@@ -24,9 +24,12 @@ h3 { padding-left: 20px; padding-top: 15px; padding-bottom: 10px; }
 .set-frame { height: 45%; }
 .set-portlet { height: 40%; display: inline; }
 .set-action { height: 10%; display: flex; justify-content: center; align-items: center;} 
-.ui-portlet { position:relative; border: 1px solid #aaaaaa; width: 272px; height: 40px; /* background-color: rgb(176, 228, 255); */ background-color: #E0E3E4; border-radius: 5px; padding-left: 10px; margin: 10px; line-height: 40px;}
+.ui-portlet { position:relative; border: 1px solid #aaaaaa; width: 272px; height: 40px; /* background-color: rgb(176, 228, 255); */ border-radius: 5px; padding-left: 10px; margin: 10px; line-height: 40px;}
+.ui-portlet-on { background-color: #E5EFFF; }
+.ui-portlet-off { background-color: #E0E3E4; }
 .ui-portlet-content { font-weight: bold; display: inline-block;}
 .ui-portlet-list { padding-left: 20px; height: 200px; width: 97%;}
+.ui-portlet-span { display: inline-block; width: 70%;}
 .flipsterLi { width:330px; height: 240px; }
 
 .frameList { height: 250px; background-color: #e0e3e4; margin-left: 20px; margin-right: 20px; padding-top: 15px; padding-bottom: 10px;}
@@ -35,7 +38,7 @@ h3 { padding-left: 20px; padding-top: 15px; padding-bottom: 10px; }
 .paginationBtn { border: 1px solid black; width: 100px; height: 30px; margin-left:20px; margin-right:20px;}
 
 /* switch */
-.switch {position: absolute; display: inline-block; width: 60px; height: 25px; margin-left: 150px; margin-top: 6px;}
+.switch {position: absolute; display: inline-block; width: 60px; height: 25px; /* margin-left: 150px;  */margin-top: 6px;}
 .switch input {opacity: 0;width: 0;height: 0;}
 .slider {  position: absolute;  cursor: pointer;  top: 0;  left: 0;  right: 0;  bottom: 0;  background-color: #ccc;  -webkit-transition: .4s;  transition: .4s;}
 .slider:before {  position: absolute;  content: "";  height: 17px;  width: 18px;  left: 4px;  bottom: 4px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
@@ -49,50 +52,27 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 <script type="text/javascript">
 
 var portletSetting = {
-	selectedFrame: '',	
+	selectedFrame: '',
+	usedtheme: '',
 };
 
 $(function() {
 	
 	$("#closeBtn").on("click", popupClose);
 	$("#cancelBtn").on("click", popupClose);
-
-	$(".frameList").flipster({
-		style: 'carousel',
-	    spacing: -0.4,
-	    nav: false,
-	    buttons: true,
-	    fadeIn : 0,
-	});
-	
-	$('#frameList').on('click', function() {
-		console.log(this);
-	});
-
-	 $(".ui-portlet-list").mCustomScrollbar({
-		theme : "dark",
-		mouseWheelPixels: 70, 
-		//scrollInertia: 60,
-	});		
 	
 	var selectFrame = function () {
 		var selectedFrame = document.querySelector('div.select-flipster');
 		selectedFrame && selectedFrame.classList.remove('select-flipster');
 		
+		// 선택된 내용에 select-flipster 추가하기.
 		var currentLi = document.querySelector('li.flipster__item--current').firstChild;
 		var currentFrame = currentLi.firstElementChild;
 		currentFrame.classList.add('select-flipster');
-		console.log(currentFrame.dataset.frameid);
 		
 		// 설정된 프레임id
 		portletSetting.selectedFrame = currentFrame.dataset.frameid; 
 	}	
-	
-	var frameUl = document.getElementById('frameUl');
-	HTMLCollection.prototype.forEach = Array.prototype.forEach;
-	frameUl.children.forEach(function(item, index) {
-		item.addEventListener('click', selectFrame);
-	});
 	
 	// 프레임 리스트 출력
 	var getUserFrameList = function () {
@@ -101,22 +81,45 @@ $(function() {
 			if (xhr.status >= 200 && xhr.status < 300) {
 				var ul = document.getElementById('frameUl');
 				var frameList = JSON.parse(xhr.responseText).data.frameList;
-				console.log('frameList!!!!!!!!!',frameList);
-				frameList.forEach(function(item, index) {
+
+				frameList.forEach(function (item, index) {
+					console.log('frame item', item);	
 					var li = document.createElement('li');
 					var div = document.createElement('div');
 					div.className = 'flipsterLi';
-					div.setAttribute('data-frameid', frameId);
+					
+					// 초기 선택된 frame 설정
+					if (item.usedFrame*1 === item.frameId*1) {
+						div.className = 'select-flipster';
+						portletSetting.selectedFrame = item.frameId;
+						portletSetting.usedTheme = item.themeId;
+					}
+					div.dataset.frameid = item.frameId
+					div.dataset.themeid = item.themeId;
 					
 					// 프레임 이미지 나오면 변경하자!!
 					var img = document.createElement('img');
 					img.src = 'https://fakeimg.pl/330x240/282828';
 					div.appendChild(img);
-					
 					li.appendChild(div);
-					
 					ul.appendChild(li);
 				});
+				
+				// jquey flipster 적용
+				$(".frameList").flipster({
+					style: 'carousel',
+				    spacing: -0.4,
+				    nav: false,
+				    buttons: true,
+				    fadeIn : 0,
+				});
+				
+				var frameUl = document.getElementById('frameUl');
+				HTMLCollection.prototype.forEach = Array.prototype.forEach;
+				frameUl.children.forEach(function(item, index) {
+					item.addEventListener('click', selectFrame);
+				});				
+				
 			} else {
 				console.error(xhr.responseText);	
 			}
@@ -124,13 +127,74 @@ $(function() {
 		xhr.open('GET', '/ezNewPortal/getUserFrameList.do');
 		xhr.send();
 	}
+
 	// 포틀릿 리스트 출력
-	
 	var getUserPortletList = function () {
 		var xhr = new XMLHttpRequest();
 		xhr.onload = function () {
 			if (xhr.status >= 200 && xhr.status < 300) {
-				console.log('user\'s portlet list... ', xhr.responseText)
+				var portletList = document.getElementById('portletList'); 
+				var list = JSON.parse(xhr.responseText).data.portletList;
+				list.forEach(function (item, index) {
+	 				var div = document.createElement('div');
+	 				div.classList.add('ui-portlet');
+	 				// 사용중인 포틀릿
+	 				if (item.use === 'on') {
+	 					div.classList.add('ui-portlet-on');
+	 				} else {
+	 					div.classList.add('ui-portlet-off');
+	 				}	 				
+	 				
+	 				div.classList.add('ui-portlet-content');
+					var nameSpan = document.createElement('span');
+					nameSpan.className = 'ui-portlet-span';
+					nameSpan.textContent = item.portletName;
+					nameSpan.dataset.portletid = item.portletId;
+					nameSpan.dataset.portletorder = item.portletOrder;
+					nameSpan.dataset.menuid = item.menuId;
+					
+					var label = document.createElement('label');
+					label.className = 'switch';
+					
+					var input = document.createElement('input');
+					input.type = 'checkbox';
+					input.id = 'portletid_' + item.portletId;
+
+	 				// 사용중인 포틀릿
+	 				if (item.use === 'on') {
+	 					input.setAttribute('checked', true);
+	 				}
+	 				
+	 				// checkbox click event
+	 				input.addEventListener('click', function() {
+	 					if(this.getAttribute('checked')) {
+	 						this.removeAttribute('checked');	
+	 						div.classList.remove('ui-portlet-on');
+	 						div.classList.add('ui-portlet-off');
+	 					} else {
+	 						this.setAttribute('checked', true);
+	 						div.classList.remove('ui-portlet-off');
+	 						div.classList.add('ui-portlet-on');	 						
+	 					}
+	 				});
+					
+					var slideSpan = document.createElement('span');
+					slideSpan.classList.add('slider');
+					slideSpan.classList.add('round');
+					
+					label.appendChild(input);
+					label.appendChild(slideSpan);
+					div.appendChild(nameSpan);
+					div.appendChild(label);			
+					
+					portletList.appendChild(div);
+				});
+
+				$(".ui-portlet-list").mCustomScrollbar({
+					theme : "dark",
+					mouseWheelPixels: 70, 
+					//scrollInertia: 60,
+				});						
 			} else {
 				console.error(xhr.responseText);	
 			}
@@ -140,8 +204,49 @@ $(function() {
 	}
 	
 	getUserFrameList();
-	//getUserPortletList();
+	getUserPortletList();
 	
+	var saveBtn = document.getElementById('saveBtn');
+	saveBtn.addEventListener('click', function (){
+		if(!confirm('변경된 내용을 저장하시겠습니까?')) return;
+
+		var portletList = [];
+		var classList = document.getElementsByClassName('ui-portlet-span');
+		HTMLCollection.prototype.forEach = Array.prototype.forEach;
+		classList.forEach(function (item, index) {
+			
+			console.log('item!!', item);
+			var switchBtn = document.getElementById('portletid_' + item.dataset.portletid);
+			if (switchBtn.getAttribute('checked')) {
+				var obj = {
+					portletId: item.dataset.portletid,
+					portletOrder: item.dataset.portletorder,
+					menuId: item.dataset.menuid
+				}
+				portletList.push(obj);				
+			}
+		});
+		
+		var param = {
+			frameId: portletSetting.selectedFrame,
+			themeId: portletSetting.usedTheme,
+			portletList: portletList,
+		}
+		
+		console.log('param', param);
+		
+		var xhr = new XMLHttpRequest();
+		xhr.onload = function () {
+			if(xhr.status >= 200 && xhr.status < 300) {
+				console.log(xhr.responseText);
+			} else {
+				console.error(xhr.responseText);
+			}
+		}
+		xhr.open('PATCH', '/ezNewPortal/updateUserFrameAndPortelt.do');
+		xhr.setRequestHeader('Content-Type', 'application/json');
+		xhr.send(JSON.stringify({param: param}));
+	});
 });
 
 
@@ -160,86 +265,12 @@ function popupClose() {
 	<h3>⊙&nbsp;화면 프레임 설정</h3>
 	<div class="frameList">
 		<ul id="frameUl">
-<!-- 			<li>
-				<div class="flipsterLi" data-frameid='1'><img src="https://fakeimg.pl/330x240/282828/"></div>
-			</li>	
-			<li>
-				<div class="flipsterLi" data-frameid='2'><img src="https://fakeimg.pl/330x240/282828/"></div>
-			</li>	
-			<li>
-				<div class="flipsterLi" data-frameid='3'><img src="https://fakeimg.pl/330x240/282828/"></div>
-			</li>	 -->	
 		</ul>
 	</div>
 </section>
 <section class="set-portlet">
 	<h3>⊙&nbsp;포틀릿 설정</h3>
-	<div class="ui-portlet-list">
-  		<div class="ui-portlet ui-portlet-content">
-  			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div> 		
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>
- 		<div class="ui-portlet ui-portlet-content">
- 			<span>포틀릿 1</span>
- 			<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>
- 		</div>		
-	</div>
+	<div class="ui-portlet-list" id="portletList"></div>
 </section>
 <section class="set-action">
 	<div class="button-location">
