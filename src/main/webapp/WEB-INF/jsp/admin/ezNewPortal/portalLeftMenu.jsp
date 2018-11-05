@@ -16,9 +16,9 @@
 		}
 	</style>
 	
-	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
-		<div id="left">
-			<div class="left_admin" title="포탈"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;포탈</div>
+	<body class="newLeft"> 
+		<div id="left" class="lnb" style="overflow: auto">
+			<div class="left_title" title="포탈">포탈</div>
 				<!-- themes -->
 				<h2><span class = "leftMenu_btn" id = "themes">테마관리</span><ul></ul></h2>
 				<!-- menus -->	
@@ -33,8 +33,6 @@
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript">
-		initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		
 		var eventSetting = function() {
 			var elementList = document.querySelectorAll('.leftMenu_btn');
 			
