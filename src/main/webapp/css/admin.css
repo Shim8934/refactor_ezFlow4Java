@@ -33,8 +33,6 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 
 .pmenu{FONT-SIZE: 9pt;FONT-FAMILY: malgun gothic,arial,verdana;padding-left:8px;padding-right:6px; white-space: nowrap; text-align: center;vertical-align: middle;background-image:url(../images/pbar.gif);background-position:left;background-repeat:no-repeat;}
 
-
-/* �Ʒ����ʹ� ���ֹ��� css - ������ ���������*/
 .rpad{PADDING-RIGHT: 20px;TEXT-ALIGN: right}
 .atitle_stat{PADDING-RIGHT: 0px;COLOR: #ffffff;HEIGHT: 25px;BACKGROUND-COLOR: #a5b8dd}
 .atitle_stat2{PADDING-RIGHT: 5px;PADDING-LEFT: 0px;COLOR: #ffffff;HEIGHT: 25px;BACKGROUND-COLOR: #ffffff}
@@ -78,7 +76,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 
 
 /* admin top */
-.admin_top{margin:0;background:rgb(0, 72, 149);}
+.admin_top{margin:0;background: #3d8fea;}
 .admin_top h1{
 	font-size:18px;
 	color: white;
@@ -100,7 +98,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 	margin:0px;
 	padding:0 0 0 10px;
 	background:white;
-	border-top:1px solid rgb(0, 72, 149);
+	border-top: 1px solid #3d8fea;
 	border-bottom:1px solid #ccc;
 	}
 #adminmenu li, #adminmenu li.off{
@@ -121,5 +119,5 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 	line-height:29px;
 	font-size:13px;
 }
-#adminmenu li.on span{height:30px;line-height: 30px; color: rgb(0, 72, 149)}
+#adminmenu li.on span{height:30px;line-height: 30px;color: #2271ca;}
 .adminsub{background-color:#f5f5f5;height:25px}

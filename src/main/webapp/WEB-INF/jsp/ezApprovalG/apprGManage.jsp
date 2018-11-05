@@ -359,7 +359,7 @@
 		        
 			    AddOption(sel_status, '<spring:message code="ezPoll.t104"/>', "ALL");
 			    
-			    $('#sel_status_div').show();
+			    $('#sel_status_div').closest("li").show();
 			    
 		        if (pListTypeValue == "1") {
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1422"/>', "002");
@@ -384,7 +384,7 @@
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t155"/>', "S");
 		        	AddOption(sel_status, strLangAprState21, "V");
 		        } else {
-		        	$('#sel_status_div').hide();
+		        	$('#sel_status_div').closest("li").hide();
 		        }
 		        
 		    }
@@ -1995,6 +1995,13 @@
 		        	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">    
 		            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
 		        	</select>
+		        </li>
+		        <li style="vertical-align: middle;">
+		        	<div id="sel_status_div" style="display:inline;">
+						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
+			            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
+			        	</select>  
+		        	</div>
 		        </li>
 		        <c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21'}">
 			        <li style="vertical-align: middle;">		        	
