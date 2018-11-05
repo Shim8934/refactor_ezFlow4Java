@@ -655,7 +655,13 @@ function write_mail(userinfo) {
     window.close();
 }
 function receiveCheck_onClick() {
-    var OpenWin = window.open("/ezEmail/mailReaderList.do?url=" + encodeURIComponent(g_paramURL), "mail_readerlist", GetOpenWindowfeature(620, 500));
+	var requestUrl = "/ezEmail/mailReaderList.do?url=" + encodeURIComponent(g_paramURL);
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	}
+	
+    var OpenWin = window.open(requestUrl, "mail_readerlist", GetOpenWindowfeature(620, 500));
     try { OpenWin.focus(); } catch (e) { }
 }
 function view_original() {

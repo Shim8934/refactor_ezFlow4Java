@@ -687,8 +687,14 @@ function viewReceivers(obj) {
         xmlhttp_MailReceiverList = null;
         
         var strQuery = "<MESSAGEID>" + decodeURIComponent(parentHref) + "</MESSAGEID>";
+        var requestUrl = "/ezEmail/mailGetReceiveList.do";
+        
+    	if (typeof(shareId) != "undefined" && shareId != "") {
+    		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    	}
+        
         xmlhttp_MailReceiverList = createXMLHttpRequest();
-        xmlhttp_MailReceiverList.open("POST", "/ezEmail/mailGetReceiveList.do", true);
+        xmlhttp_MailReceiverList.open("POST", requestUrl, true);
         xmlhttp_MailReceiverList.onreadystatechange = function() { getReaderCount(parentId); }
         xmlhttp_MailReceiverList.send(strQuery);
 		

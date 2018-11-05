@@ -547,6 +547,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userInfo.getId() + "@" + domainName;
+		String mailId = userInfo.getId();
 		String shareId = request.getParameter("shareId");
 		logger.debug("shareId=" + shareId);
 		
@@ -559,6 +560,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 			userEmail = shareId + "@" + domainName;
+			mailId = shareId;
 			model.addAttribute("shareId", shareId);
 		}
 		
@@ -622,12 +624,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     							logger.debug("MDNSentFlag isn't set.");
     							
     							// retrieve user info from db.
-    							OrganUserVO userVO = ezOrganAdminService.getUserInfo(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
+    							OrganUserVO userVO = ezOrganAdminService.getUserInfo(mailId, userInfo.getPrimary(), userInfo.getTenantId());
     							
     							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
     									userEmail, password);
     							
-    							processAutoMDN(sa, message, userInfo.getEmail(), userVO.getDisplayName(), userInfo.getTenantId());
+    							processAutoMDN(sa, message, userVO.getMail(), userVO.getDisplayName(), userInfo.getTenantId());
     						}
     						else {
     							logger.debug("MDNSentFlag is set");
@@ -1705,6 +1707,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userInfo.getId() + "@" + domainName;
+		String mailId = userInfo.getId();
 		String shareId = request.getParameter("shareId");
 		logger.debug("shareId=" + shareId);
 		
@@ -1717,6 +1720,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 			userEmail = shareId + "@" + domainName;
+			mailId = shareId;
+			
 			model.addAttribute("shareId", shareId);
 		}
 		
@@ -1788,12 +1793,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     							logger.debug("MDNSentFlag isn't set.");
     							
     							// retrieve user info from db.
-    							OrganUserVO userVO = ezOrganAdminService.getUserInfo(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
+    							OrganUserVO userVO = ezOrganAdminService.getUserInfo(mailId, userInfo.getPrimary(), userInfo.getTenantId());
     							
     							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
     									userEmail, password);
     							
-    							processAutoMDN(sa, message, userInfo.getEmail(), userVO.getDisplayName(), userInfo.getTenantId());
+    							processAutoMDN(sa, message, userVO.getMail(), userVO.getDisplayName(), userInfo.getTenantId());
     						}
     						else {
     							logger.debug("MDNSentFlag is set");
