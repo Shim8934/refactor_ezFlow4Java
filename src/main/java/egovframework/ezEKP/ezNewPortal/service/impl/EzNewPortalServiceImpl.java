@@ -258,8 +258,41 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return frameList;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void updateUserUsedFrame(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception {
+		LOGGER.debug("[Serivce] updateUserUsedFrame Started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> param = (Map<String, Object>) jObj.get("param");
+		
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("frameId", param.get("frameId"));
+		map.put("themeId", param.get("themeId"));
+		
+		LOGGER.debug("map.toString() : " + map.toString());
+		
+		ezNewPortalDAO.updateUserUsedFrame(map);
+		
+		LOGGER.debug("[Serivce] updateUserUsedFrame Ended");
+	}
+	
+	public void updateUserUsedPortlet(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception {
+		LOGGER.debug("[Serivce] updateUserUsedPortlet Started");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		// 유저 포틀릿은 delete & insert로 진행
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);		
+		ezNewPortalDAO.deleteUserUsedPortlet(map);
+		
+		
+		LOGGER.debug("[Serivce] updateUserUsedPortlet Ended");
+	}
+	
 	public List<PortletInfoVO> getPortletOrderCompForUser(String portletLang, int tenantId, String companyId, String deptId, String userId) throws Exception {
-		LOGGER.debug("[Serivce] getPortletOrderCompForUse Started");
+		LOGGER.debug("[Serivce] getPortletOrderCompForUser Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("portletLang", portletLang);
 		map.put("tenantId", tenantId);
@@ -269,7 +302,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<PortletInfoVO> portletOrderComp = ezNewPortalDAO.getPortletOrderCompForUser(map);
 
-		LOGGER.debug("[Serivce] getPortletOrderCompForUse Ended");
+		LOGGER.debug("[Serivce] getPortletOrderCompForUser Ended");
 		return portletOrderComp;		
 	}
 	
@@ -853,12 +886,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 	}
 	@Override
-	public void deletePortlet(int portletId, String companyId, int tenantId) {
+	public void deletePortlet(int portletId, int menuId, String companyId, int tenantId) {
 		LOGGER.debug("deletePortlet started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("portletId", portletId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("menuId", menuId);
+		
 		//tbl_portal_portlet_name 지우기
 		ezNewPortalDAO.deletePortletName(map);
 		

@@ -295,6 +295,32 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		logger.debug("getUserPortletList End");
 		return resultObj;
 	}	
+	
+	/**
+	 * 사용자 프레임 변경 & 포틀릿 설정 변경 
+	 */
+	@RequestMapping(value = "/ezNewPortal/updateUserFrameAndPortelt.do")
+	public JSONObject updateUserFrameAndPortlet(HttpServletRequest req, @RequestBody JSONObject jObj ,Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("updateUserFrameAndPortlet Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();		
+		
+		logger.debug("jObj.toString() : " + jObj.toString());
+		
+		/* 사용자 프레임 변경 */
+		String url = "/rest/ezPortal/frames/users/" + userId;
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
+		String status = resultBody.get("status").toString();
+		
+		
+		/* 사용자 포틀릿 사용 변경 */
+		url = "/rest/ezPortal/portlets/users/" + userId;
+		resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
+		status = resultBody.get("status").toString();
+		
+		logger.debug("updateUserFrameAndPortlet End");
+		return null;
+	}
 	// 종균 끝
 	
 	
