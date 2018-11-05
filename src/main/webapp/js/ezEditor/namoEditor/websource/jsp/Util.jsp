@@ -1,6 +1,4 @@
 <%@page import="java.util.*"%>
-<%@page import="java.util.Date"%>
-<%@page import="java.lang.*"%>
 <%@page import="java.io.*"%>
 <%@page import="java.net.*"%>
 <%@page import ="javax.xml.parsers.DocumentBuilder"%>
@@ -65,7 +63,7 @@ public String getImageKind(String typeCheck)
 	}
 }
 
-public boolean IsArray(String appExtensions, String fileCheck)
+public boolean isArray(String appExtensions, String fileCheck)
 {
 	String app[] =  appExtensions.split(",");
 	boolean value = false;
@@ -121,7 +119,13 @@ public String getChildDirectory(String path, String maxCount)
 		childName = "000000" + Integer.toString(childNum);
 		childName = childName.substring(childName.length() - 6);
 		File dirNew = new File(path+File.separator+childName);
-		dirNew.mkdir();
+		if(!dirNew.exists()){
+			dirNew.setExecutable(false, true);
+			dirNew.setReadable(true);
+			dirNew.setWritable(false, true);
+
+			dirNew.mkdir();
+		}
 	}
 
 	String childPath = path + File.separator + childName;
@@ -150,7 +154,13 @@ public String getChildDirectory(String path, String maxCount)
 		}
 		
 		File dir4 = new File(path+File.separator+childName);
-		dir4.mkdir();
+		if(!dir4.exists()){
+			dir4.setExecutable(false, true);
+			dir4.setReadable(true);
+			dir4.setWritable(false, true);
+
+			dir4.mkdir();
+		}
 	}
 	return childName;
 }
@@ -233,7 +243,7 @@ public int fileCopy(String path, String savePath)
 		}
 		catch(IOException e)
 		{
-			System.out.println("1:An internal exception occured!");
+			//System.out.println("1:An internal exception occured!");
 		}
 	}
 	return check;
@@ -290,7 +300,7 @@ public String getEditorAuth(String filename, String conn, String conval)
 	}
 	catch(IOException e)
 	{
-		System.out.println("2:An internal exception occured!");
+		//System.out.println("2:An internal exception occured!");
 	}
 	finally
 	{
@@ -308,7 +318,7 @@ public String getEditorAuth(String filename, String conn, String conval)
 		}
 		catch(IOException e)
 		{
-			System.out.println("3:An internal exception occured!");
+			//System.out.println("3:An internal exception occured!");
 		}
 	}
 	return result;
@@ -369,7 +379,7 @@ public long getDateDiff(String targetDate)
 
         dateDiff = diffInMSec / (24 * 60 * 60 * 1000);
 	}catch(RuntimeException e){
-		System.out.println("4:An internal exception occured!");
+		//System.out.println("4:An internal exception occured!");
 	}
 
 	return dateDiff;
@@ -403,8 +413,13 @@ public String executeFileScript(HttpServletResponse response, String result, Str
 				if (result.equalsIgnoreCase("virus") || "UploadFileExtBlock".equalsIgnoreCase(result)) {
 					param += "\"addmsg\":\"" + addmsg + "\"";
 				} else {
-					// [4.0.0.22] json.parse 오류 수정
-					param += "\"addmsg\":[" + addmsg + "]";
+					if(result.equalsIgnoreCase("success")){
+						// [4.0.0.22] json.parse 오류 수정
+						param += "\"addmsg\":[" + addmsg + "]";
+					}else{
+						// [4.0.0.22] json.parse 오류 수정
+						param += "\"addmsg\":\"[" + addmsg + "]\"";
+					}
 				}
 				param += "}";
 			} else {
@@ -432,7 +447,7 @@ public String executeFileScript(HttpServletResponse response, String result, Str
 				response.sendRedirect(useExternalServer + result_sc);
 				return "";
 			} catch (IOException e) {
-				System.out.println("5:An internal exception occured!");
+				//System.out.println("5:An internal exception occured!");
 			}
 		} else {
 			result_sc = "<script language='javascript' type='text/javascript'>";
@@ -473,7 +488,11 @@ public String executeScript(HttpServletResponse response, String result, String 
 				if (result.equalsIgnoreCase("virus")) {
 					param += "\"addmsg\":\"" + addmsg + "\"";
 				} else {
-					param += "\"addmsg\":[" + addmsg + "]";
+					if(result.equalsIgnoreCase("success")){
+						param += "\"addmsg\":[" + addmsg + "]";
+					}else{
+						param += "\"addmsg\":\"[" + addmsg + "]\"";
+					}
 				}
 
 				param += "}";
@@ -501,7 +520,7 @@ public String executeScript(HttpServletResponse response, String result, String 
 				response.sendRedirect(useExternalServer + result_sc);
 				return "";
 			} catch (IOException e) {
-				System.out.println("6:An internal exception occured!");
+				//System.out.println("6:An internal exception occured!");
 			}
 		} else {
 			result_sc = "<script language='javascript' type='text/javascript'>";
@@ -514,7 +533,7 @@ public String executeScript(HttpServletResponse response, String result, String 
 }
 
 
-public String Dompaser(String image_temp)
+public String dompaser(String image_temp)
 {
 	String imageUrl = image_temp;
 	String oContextPath = "";
@@ -570,19 +589,19 @@ public String Dompaser(String image_temp)
 					}
 				} catch(RuntimeException e2) {
 					//continue;
-					System.out.println("7:An internal exception occured!");
+					//System.out.println("7:An internal exception occured!");
 				}
 			}
 		}
 	} catch (ParserConfigurationException  e) {
 		oPhygicalPath = "";
-		System.out.println("8:An internal exception occured!");
+		//System.out.println("8:An internal exception occured!");
 	}catch (IOException  e) {
 		oPhygicalPath = "";
-		System.out.println("9:An internal exception occured!");
+		//System.out.println("9:An internal exception occured!");
 	}catch (SAXException  e) {
 		oPhygicalPath = "";
-		System.out.println("10:An internal exception occured!");
+		//System.out.println("10:An internal exception occured!");
 	}
 
 	return oPhygicalPath;
@@ -723,15 +742,15 @@ public static Element configXMlLoad1(String configValue)
 		root.normalize();
 		return root;
 	}catch (SAXParseException err) {
-		System.out.println("internal exception occured!");
+		//System.out.println("internal exception occured!");
 	} catch (SAXException e) {
-		System.out.println("internal exception occured!");
+		//System.out.println("internal exception occured!");
 	} catch (java.net.MalformedURLException mfx) {
-		System.out.println("internal exception occured!");
+		//System.out.println("internal exception occured!");
 	} catch (java.io.IOException e) {
-		System.out.println("internal exception occured!");
+		//System.out.println("internal exception occured!");
 	} catch (Exception pce) {
-		System.out.println("internal exception occured!");
+		//System.out.println("internal exception occured!");
 	}
 	return null;
 }
@@ -859,7 +878,14 @@ public String tempFolderCreate(String path)
 
 	path = path + randomValue + File.separator;
 	File tempSubFolder = new File(path); 
-	tempSubFolder.mkdir();
+
+	if(!tempSubFolder.exists()){
+		tempSubFolder.setExecutable(false, true);
+		tempSubFolder.setReadable(true);
+		tempSubFolder.setWritable(false, true);
+
+		tempSubFolder.mkdir();
+	}
 
 	return path;
 }

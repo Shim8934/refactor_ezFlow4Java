@@ -1598,9 +1598,12 @@ public class EzCircularController extends EgovFileMngUtil {
         }
         File file = new File(pDirPath + "uploadFile");
         File tempFile = new File(pDirPath + "tempUploadFile");
-
+        
+        logger.debug("pDirPath : " + pDirPath);
+        
+        // 2018-11-01 김민성 - uploadFile 폴더 생성안되는 문제 수정
         if (!file.exists()) {
-        	file.mkdir();
+        	file.mkdirs();
         }
         
         if (!tempFile.exists()) {

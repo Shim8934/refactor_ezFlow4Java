@@ -699,12 +699,10 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(brdID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		// 2018-10-24 김민성 - 자원 관리자 및 부관리자 처리
+		// 2018-10-30 김민성 - 자원 멀티관리자 데이터 처리
 		String[] ownerList = resBrd.getOwnerID().split(",");
-		if(ownerList.length > 1) {
-			List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
-			model.addAttribute("ownerList", ownerInfoList);
-		}
+		List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+		
 		strBrdID = resBrd.getBrdID();
 		strBrdExplain = resBrd.getBrdExplain();
 		strResLocation = resBrd.getResLocation();
@@ -733,6 +731,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		}*/
 			
 	
+		model.addAttribute("ownerList", ownerInfoList);
 		model.addAttribute("strBrdID", strBrdID); 
 		model.addAttribute("strBrdNm", strBrdNm);
 		model.addAttribute("brdExplain", strBrdExplain);
@@ -2205,7 +2204,7 @@ public class EzResourceController extends EgovFileMngUtil {
         
         StringBuilder bodyContent = new StringBuilder();
 
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
         
         if (userInfo.getPrimary().equals("1")) {
         	bodyContent.append(userInfo.getDisplayName() +"[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
@@ -2264,7 +2263,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
         StringBuilder bodyContent = new StringBuilder();
 
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
         
         if (approve.equals("1")) {
         	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900007", userInfo.getLocale()));

@@ -128,7 +128,7 @@
 				xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
                 xmlHTTP.send(sendStr + "</DATA>");
 
-                if (previewSubTreeStatus != previewSubTreeSlb) {
+                if ((typeof previewSubTreeStatus != "undefined") && previewSubTreeStatus != previewSubTreeSlb) {
                 	var type = previewSubTreeSlb;
                 	window.parent.parent.frames["left"].previewSubTreeCall(type);
                 }

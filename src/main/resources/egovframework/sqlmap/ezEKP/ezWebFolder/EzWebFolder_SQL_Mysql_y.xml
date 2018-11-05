@@ -205,8 +205,7 @@
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				 (DATE_FORMAT(t.CREATE_DATE,'%Y-%m-%d %H:%i:%s') >=  #searchStartDate# 
-				 	AND DATE_FORMAT(t.CREATE_DATE,'%Y-%m-%d %H:%i:%s') <= #searchEndDate#)
+				 (t.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND t.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))	
 					
 			]]>
 		</isNotEqual>	
@@ -435,8 +434,7 @@
    		]]>	
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+				 (t.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND t.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))						
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
@@ -506,8 +504,7 @@
 	         ]]>   
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+			 	(t.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND t.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))	
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
@@ -569,8 +566,7 @@
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+			 	(t.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND t.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))	
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
@@ -750,8 +746,7 @@
 			</isNotEqual>
 			<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DATE_FORMAT(folder.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(folder.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)	
+					 (folder.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND folder.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))	
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -823,8 +818,7 @@
 			</isNotEqual>
 			<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DATE_FORMAT(folder.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(folder.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)	
+					 (folder.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND folder.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))	
 				]]>
 			</isNotEqual>
 	</select>
@@ -954,8 +948,7 @@
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+				 (t.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND t.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))	
 			]]>
 		</isNotEqual>	
 		) totalCount
@@ -1011,8 +1004,7 @@
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+				 (t.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND t.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))
 			]]>
 		</isNotEqual>	
 		<![CDATA[
@@ -1225,7 +1217,7 @@
 		    and 
 		        folder.FOLDER_ID != #folderId#
 			and 
-				folder.FOLDER_ID like (			
+				folder.FOLDER_PATH like (			
 					select path 
 			        from (
 						select concat(df.folder_path ,'%') as path

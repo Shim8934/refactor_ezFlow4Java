@@ -24,6 +24,9 @@
 		<Template></Template>
 		<ServerUrl>2</ServerUrl>
 		<ResizeBar></ResizeBar>
+		<MenuInEditor></MenuInEditor>
+		<AutoSavePeriod></AutoSavePeriod>
+		<HideAddImageCheckbox></HideAddImageCheckbox>
 	</General>
 	<Editor>
 		<SetFocus></SetFocus>
@@ -64,7 +67,14 @@
 		<CreateToolbar></CreateToolbar>
 		<CreateTab></CreateTab>
 		<IsQuestAutoSave></IsQuestAutoSave>
+		<Menu>true</Menu>
+		<QuickMenu>false</QuickMenu>
+		<DisplayLoadingBar>true</DisplayLoadingBar>
 	</UI>
+	<ImageEditor>
+		<CanvasWidth>1600</CanvasWidth>
+		<CanvasHeight>1600</CanvasHeight>
+	</ImageEditor>
 	<User>
 		<AddMenu></AddMenu>
 	</User>

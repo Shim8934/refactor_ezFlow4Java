@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html>
+<html xml:lang="ko" lang="ko">
 <head>
 	<title>Namo CrossEditor</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -9,18 +9,19 @@
 	
 	<script src="./lib/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript" language="javascript">
+		var $ = namo$;
 		$(function() {
-			var Profanitystr = "염병,병신,멍청이,바보,얼간이";
+			var Profanitystr = "초딩,깡패,꺼벙이,멍청이,바보,사이비";
 
-			$("#pe_ajI").val(Profanitystr);
-			$("#pe_bkE").click(function(){
+			$("#pe_awz").val(Profanitystr);
+			$("#pe_bxs").click(function(){
 				if (CrossEditor.IsPrivacyInfo(true,true,true)) {
 					alert('개인정보 발견');
 				} else {
 					alert('개인정보가 발견되지 않았습니다.');
 				}
 			});
-			$("#pe_bkN").click(function(){
+			$("#pe_bzv").click(function(){
 				if (CrossEditor.IsProhibitProfanity()) {
 					var arr = CrossEditor.GetProhibitProfanity();
 					alert("욕설단어가 발견되었습니다. " + "\n [" + arr.toString() + "]");
@@ -28,47 +29,47 @@
 					alert('욕설단어가 발견되지 않았습니다.');
 				}
 			});
-			$("#pe_bbP").click(function(){
+			$("#pe_boU").click(function(){
 				var len = CrossEditor.GetTextValueLength();
 				alert(len);
 			});
-			$("#pe_bkA").click(function(){
-				CrossEditor.params.ProfanityStr = $("#pe_ajI").val();
+			$("#pe_bAu").click(function(){
+				CrossEditor.params.ProfanityStr = $("#pe_awz").val();
 			});
-			$("#pe_bla").click(function(){
-				$("#pe_ajI").val(Profanitystr);
+			$("#pe_bzt").click(function(){
+				$("#pe_awz").val(Profanitystr);
 				CrossEditor.params.ProfanityStr = Profanitystr;
 			});
-			$(".pe_aWE").click(function(){
+			$(".pe_bpP").click(function(){
 				if (CrossEditor) {
-					pe_bR({Csslist:$("#pe_aWl").val()});
+					pe_bh({Csslist:$("#pe_aXO").val()});
 				}
 			});
-			$(".pe_bak").click(function(){
+			$(".pe_bqX").click(function(){
 				if (CrossEditor) {
-					pe_bR ({Placeholder:$("#pe_aSY").val()});
+					pe_bh ({Placeholder:$("#pe_aXD").val()});
 				}
 			});
-			$(".pe_bhY").click(function(){
+			$(".pe_bGF").click(function(){
 				if (CrossEditor) {
-					var pe_aku = 2;
-					var id = $("input:radio[name=pe_aKg]:checked").attr("id");
+					var serverURL = 2;
+					var id = $("input:radio[name=pe_aQS]:checked").attr("id");
 					switch (id) {
-					case "pe_aRj":
-						pe_aku = 1;
+					case "pe_bbN":
+						serverURL = 1;
 						break;
-					case "pe_aku":
-						pe_aku = 2;
+					case "serverURL":
+						serverURL = 2;
 						break;
 
 					}
-					pe_bR ({pe_wy :pe_aku});
+					pe_bh ({ServerUrl :serverURL});
 				}
 			});
 
 			});
 
-		function pe_bR(obj)
+		function pe_bh(obj)
 		{
 			if (CrossEditor) {
 				CrossEditor.destroyEditor();
@@ -80,7 +81,7 @@
 		}
 
 
-		function pe_du(obj){
+		function pe_ew(obj){
 			if (obj.value == "ShowTab(false)"){
 				CrossEditor.ShowTab(false);
 				obj.value = "ShowTab(true)";
@@ -90,7 +91,7 @@
 			}
 		}
 
-		function pe_bB(obj){
+		function pe_ah(obj){
 			if (obj.value == "ShowToolbar(Hide All)"){
 				CrossEditor.ShowToolbar(0, 0);
 				CrossEditor.ShowToolbar(1, 0);
@@ -106,7 +107,7 @@
 			}
 		}
 
-		function pe_dQ(obj){
+		function pe_eb(obj){
 			if (obj.value == "SetUISize(800,600)"){
 				CrossEditor.SetUISize("800", "600");
 				obj.value = "SetUISize(100%,600)";
@@ -135,13 +136,13 @@
 	
 	<table>
 		<tr>
-			<td><h3><span id="pe_NW"></span>&nbsp;Sample Page - <span id="pe_aPO"></span></h3></td>
+			<td><h3><span id="pe_VA"></span>&nbsp;Sample Page - <span id="pe_bgC"></span></h3></td>
 		</tr>
 		<tr>
 			<td id="ce-parent-node" style="width:730px;">
-				<textarea id="pe_azh" name="pe_azh" alt="initText" title="initText" Style="width:730px; height:450px; font-size:10pt"><p>Welcome to <span style="font-weight: bold;">CrossEditor 4.0</span> sample page</p></textarea>
+				<textarea id="pe_aLR" name="pe_aLR" alt="initText" title="initText" Style="width:730px; height:450px; font-size:10pt"><p>Welcome to <span style="font-weight: bold;">CrossEditor 4.0</span> sample page</p></textarea>
 				<script type="text/javascript" language="javascript">
-					var CrossEditor = new NamoSE('pe_azh');
+					var CrossEditor = new NamoSE('pe_aLR');
 					CrossEditor.params.Width = "100%";
 					CrossEditor.params.UserLang = "auto";
 					CrossEditor.params.FullScreen = false;
@@ -150,7 +151,7 @@
 
 					CrossEditor.EditorStart();
 					function OnInitCompleted(e){
-						e.editorTarget.SetBodyValue(document.getElementById("pe_azh").value);
+						e.editorTarget.SetBodyValue(document.getElementById("pe_aLR").value);
 						}
 				</script>
 			</td>
@@ -158,18 +159,20 @@
 	</table>
 	
 	
+	
+	
 	<div style="width:724px;border:none;padding:5px;">
-		<input id="pe_bjw" type="radio" checked name="pe_aKg" /><label for="pe_bjw" style="margin-right:13px">도메인 제외 URL</label>
-		<input id="pe_aRj" type="radio" name="pe_aKg"/><label for="pe_aRj" style="margin-right:13px">전체 URL</label>
-		<button class="pe_bhY" style="margin-left:448px">적용</button>
+		<input id="pe_bFu" type="radio" checked name="pe_aQS" /><label for="pe_bFu" style="margin-right:13px">도메인 제외 URL</label>
+		<input id="pe_bbN" type="radio" name="pe_aQS"/><label for="pe_bbN" style="margin-right:13px">전체 URL</label>
+		<button class="pe_bGF" style="margin-left:448px">적용</button>
 	</div>
 	<div style="width:724px;border:none;padding:5px;">
-		<label for="pe_aWl" style="margin-right:13px">css file url </label><input  style="width:584px" id="pe_aWl" type="text" value="" placeholder="css파일간의 구분자 ',' (예 - test.css,test1.css)" />
-		<button class="pe_aWE">적용</button>
+		<label for="pe_aXO" style="margin-right:13px">css file url </label><input  style="width:584px" id="pe_aXO" type="text" value="" placeholder="css파일간의 구분자 ',' (예 - test.css,test1.css)" />
+		<button class="pe_bpP">적용</button>
 	</div>
 	<div style="width:724px;border:none;padding:5px;">
-		<label for="pe_aSY" style="margin-right:10px">placeholder</label><input  style="width:584px" id="pe_aSY" type="text" value="" placeholder="placeholder문자열 (예 - 여기에 내용을 입력하세요.)" />
-		<button class="pe_bak">적용</button>
+		<label for="pe_aXD" style="margin-right:10px">placeholder</label><input  style="width:584px" id="pe_aXD" type="text" value="" placeholder="placeholder문자열 (예 - 여기에 내용을 입력하세요.)" />
+		<button class="pe_bqX">적용</button>
 	</div>
 	<div style="width:724px;border:none;padding:5px;">
 		<div style="width:100%;border-bottom: 1px dotted rgb(100,100,100);padding-bottom: 9px;text-align: center;">	
@@ -179,19 +182,19 @@
 			<input type="button" style="width:162px;background-color: rgb(100,100,255);color:rgb(255,255,255)"id="setBodyValue" name="setBodyValue" value="SetBodyValue()" onclick="CrossEditor.SetBodyValue(document.getElementById('value').value)">
 		</div>
 		<div style="width:100%;padding-top:9px;border-bottom: 1px dotted rgb(100,100,100);padding-bottom: 9px;text-align: center;">	
-			<label style="margin-right:5px" for="pe_ajI">욕설금지단어</label>
-			<input style="width:531px" type="text" id="pe_ajI" />
-			<input id="pe_bkA" style="margin-left:5px" type="button" name="" value="적용" />
-			<input id="pe_bla" style="margin-left:3px" type="button" name="" value="초기화" />
+			<label style="margin-right:5px" for="pe_awz">금지어설정</label>
+			<input style="width:531px" type="text" id="pe_awz" />
+			<input id="pe_bAu" style="margin-left:5px" type="button" name="" value="적용" />
+			<input id="pe_bzt" style="margin-left:3px" type="button" name="" value="초기화" />
 		</div>
 		<div style="width:100%;padding-top:9px;">	
-			<button id="pe_bkE">개인정보 유무 검사</button>
-			<button id="pe_bkN">욕설 유무 검사</button>
-			<button id="pe_bbP">본문 내용의 문자 길이</button>
+			<button id="pe_bxs">개인정보 유무 검사</button>
+			<button id="pe_bzv">금지어 유무 검사</button>
+			<button id="pe_boU">본문 내용의 문자 길이</button>
 		</div>
 	</div>
 
-	<textarea placeholder="HTML 소스 내용" id="value" style="width:730px; height:150px;background-color: rgb(200,200,240)"></textarea>
+	<textarea placeholder="HTML 소스 내용" id="value" style="width:730px; height:150px;background-color: rgb(200,200,240)" alt="test_sample" title="test_sample" ></textarea>
 </body>
 </html>
 

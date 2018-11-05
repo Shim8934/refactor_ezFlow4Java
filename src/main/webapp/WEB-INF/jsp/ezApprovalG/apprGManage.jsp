@@ -342,8 +342,53 @@
 		        } catch (e) {
 		            hideProgress();
 		        }
+		        
+		        var selectedStatusCell = $("#sel_status option:selected").val();
+		        if (selectedStatusCell == undefined) {
+		        	change_statusCell();
+		        }
+		        
 		    }
-		
+			
+		    function change_statusCell() {
+		        var statusCell = document.getElementById("sel_status");
+		        
+		        while(statusCell.hasChildNodes()) {
+		        	statusCell.removeChild(statusCell.firstChild);	
+		        }
+		        
+			    AddOption(sel_status, '<spring:message code="ezPoll.t104"/>', "ALL");
+			    
+			    $('#sel_status_div').show();
+			    
+		        if (pListTypeValue == "1") {
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1422"/>', "002");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t50"/>', "005");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
+		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
+		        } else if (pListTypeValue == "2" || pListTypeValue == "3") {
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1422"/>', "002");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t50"/>', "005");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
+		        } else if (pListTypeValue == "4") {
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.garm06"/>', "011");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1432"/>', "014");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1430"/>', "012");
+		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
+		        } else if (pListTypeValue == "9") {
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1308"/>', "I");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t239"/>', "Y");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.F0031"/>', "R");
+		        	AddOption(sel_status, '<spring:message code="ezApproval.t155"/>', "S");
+		        	AddOption(sel_status, strLangAprState21, "V");
+		        } else {
+		        	$('#sel_status_div').hide();
+		        }
+		        
+		    }
+		    
 		    var SelYearFlag = false;
 		    function onSelect_Year() {
 		        SelYearFlag = true;
@@ -393,6 +438,17 @@
 		        }
 		        else if (pListTypeValue == "21") {
 		            getDocList();
+		        }
+		    }
+		    
+		    function onSelect_Status() {
+		    	pageNum = 1;
+		        if (pListTypeValue == "1" || pListTypeValue == "2" || pListTypeValue == "3") {
+		            getDocList();
+		        } else if (pListTypeValue == "4") {
+		        	getReceivedDocList();
+		        } else if (pListTypeValue == "9") {
+		        	getSendOutDocList();
 		        }
 		    }
 		
@@ -1392,6 +1448,9 @@
 		        createNodeAndInsertText(xmlpara, objNode, "ORDEROPTION", OrderOption);
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
 		        createNodeAndInsertText(xmlpara, objNode, "APPROVALFLAG", approvalFlag);
+		        
+		        var searchCompanyID = $("#selectCompany option:selected").val();
+		        createNodeAndInsertText(xmlpara, objNode, "searchCompanyID", searchCompanyID);
 
 		        var wWeigth = 700;
 		        var wHeigth = 480;
@@ -1941,10 +2000,15 @@
 		        	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">    
 		            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
 		        	</select>  
+		        	<div id="sel_status_div" style="display:inline;">
+						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
+			            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
+			        	</select>  
+		        	</div>
 		        	<c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21'}">
 						<select id="selectCompany" onchange="getDocListByCompany();">
 							<option value="">
-								<spring:message code='ezPoll.t237'/>
+								<spring:message code='main.t74'/>
 							</option>
 							<c:forEach items="${companyList }" var="company">
 								<option value="${company.companyID }">

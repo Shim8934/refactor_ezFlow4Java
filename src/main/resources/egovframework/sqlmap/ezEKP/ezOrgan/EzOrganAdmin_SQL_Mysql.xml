@@ -128,11 +128,11 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_USERMASTER
-   				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, MANUAL_FLAG, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID,
+   				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE7, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, MANUAL_FLAG, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID,
                     DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2
                 )
    			VALUES
-   				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR11#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, #nowDate#, #v_MANUAL_FLAG#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID#,
+   				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR7#, #v_EXTATTR8#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR11#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, #nowDate#, #v_MANUAL_FLAG#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID#,
                     (SELECT DISPLAYNAME FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
@@ -1001,10 +1001,10 @@
 			(#menuItemUUID11#,'204',#menuItemUUID40#,#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID12#,'202',null,#topMenuJaUUID#,'設定','設定',null,3,null,'/ezPortal/environmentMain.do','main',null,' ',#tenantID#),
 			(#menuItemUUID13#,'204','4d0e8144-011d-4483-ac42-43c179b9dc87',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
-			(#menuItemUUID14#,'203',null,#topMenuEnUUID#,'메일','메일',null,2,'46418adc-1f61-4e30-b8f8-53faebaf83b4','/ezEmail/mailMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID14#,'203',null,#topMenuEnUUID#,'Mail','Mail',null,2,'46418adc-1f61-4e30-b8f8-53faebaf83b4','/ezEmail/mailMain.do',null,null,null,#tenantID#),
 			(#menuItemUUID15#,'202',null,#topMenuJaUUID#,'ヘルプ','ヘルプ',null,4,null,'/ezPortal/help/help.do','helpWindow',null,'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0',#tenantID#),
 			(#menuItemUUID16#,'204','8a485e8a-9162-479d-a21a-fda9585e0e3e',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
-			(#menuItemUUID17#,'203',null,#topMenuEnUUID#,'전자결재','전자결재',null,4,'8f89f7ea-cc5b-43f6-a522-d57f584fe3f7','/ezApproval/apprMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID17#,'203',null,#topMenuEnUUID#,'Approval','Approval',null,4,'8f89f7ea-cc5b-43f6-a522-d57f584fe3f7','/ezApproval/apprMain.do',null,null,null,#tenantID#),
 			(#menuItemUUID18#,'204','49e1b202-c2ae-4a4d-980a-29239b3e6e14',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID19#,'202',null,#topMenuKoUUID#,'로그아웃','eng_로그아웃',null,5,null,'/user/login/actionLogout.do','top',null,null,#tenantID#),
 			(#menuItemUUID20#,'203',null,#topMenuJaUUID#,'メール','E-Mail',null,2,'586258b4-f2ac-4416-b9ec-328132df65d0','/ezEmail/mailMain.do',null,null,null,#tenantID#),
@@ -1021,10 +1021,10 @@
 			(#menuItemUUID31#,'203',null,#topMenuKoUUID#,'게시판','게시판',null,5,'e45ac7ba-496d-47fa-a711-db8bb16fd95a','/ezBoard/boardMain.do','main',null,' ',#tenantID#),
 			(#menuItemUUID32#,'204',#menuItemUUID31#,#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID33#,'204','ac7b2e1b-71b2-4c46-b544-66468bfaf2f9',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
-			(#menuItemUUID34#,'203',null,#topMenuEnUUID#,'게시판','게시판',null,5,'e6f32470-e5ea-4e38-9d3d-337d41fedccd','/ezBoard/boardMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID34#,'203',null,#topMenuEnUUID#,'Board','Board',null,5,'e6f32470-e5ea-4e38-9d3d-337d41fedccd','/ezBoard/boardMain.do',null,null,null,#tenantID#),
 			(#menuItemUUID35#,'202',null,#topMenuKoUUID#,'직원조회','eng_직원조회',null,2,null,'/ezPersonal/personSearch.do',' ',null,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0',#tenantID#),
 			(#menuItemUUID36#,'204',#menuItemUUID3#,#topMenuJaUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
-			(#menuItemUUID37#,'203',null,#topMenuEnUUID#,'커뮤니티','커뮤니티en',null,6,'ac5d2eca-a340-42dc-95ae-1a4c42ff7885','/ezCommunity/communityMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID37#,'203',null,#topMenuEnUUID#,'Community','Community',null,6,'ac5d2eca-a340-42dc-95ae-1a4c42ff7885','/ezCommunity/communityMain.do',null,null,null,#tenantID#),
 			(#menuItemUUID38#,'202',null,#topMenuJaUUID#,'ログアウト','ログアウト',null,5,null,'/user/login/actionLogout.do','top',null,null,#tenantID#),
 			(#menuItemUUID39#,'203',null,#topMenuJaUUID#,'設備管理','Resource',null,9,'d351b126-4e3a-486c-ab85-ef78738abead','/ezResource/resMain.do',null,null,null,#tenantID#),
 			(#menuItemUUID40#,'203',null,#topMenuKoUUID#,'커뮤니티','커뮤니티en',null,6,'80e37141-1c98-40b4-a7dc-8298e1abdce0','/ezCommunity/communityMain.do','main',null,' ',#tenantID#),
@@ -1062,7 +1062,7 @@
 			(#menuItemUUID73#,'204','193e8246-8215-4680-9fc0-3f7a5c13e12c',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID74#,'204',#menuItemUUID76#,#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID75#,'204','6260bacb-398a-4391-8871-fd80142981bf',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
-			(#menuItemUUID76#,'203',null,#topMenuEnUUID#,'홈','HOME',null,1,'8ac377c8-e8e6-463d-a44f-e6a47202b45f','/ezPortal/myPortal.do',null,null,null,#tenantID#),
+			(#menuItemUUID76#,'203',null,#topMenuEnUUID#,'HOME','HOME',null,1,'8ac377c8-e8e6-463d-a44f-e6a47202b45f','/ezPortal/myPortal.do',null,null,null,#tenantID#),
 			(#menuItemUUID77#,'204',#menuItemUUID34#,#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID78#,'204',#menuItemUUID44#,#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID79#,'204',#menuItemUUID37#,#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
@@ -1077,9 +1077,9 @@
 			(#menuItemUUID88#,'204','062d1b08-991f-414b-80b2-406312da7095',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID89#,'204',#menuItemUUID23#,#topMenuKoUUID#,null,null,null,null,null,null,null,100,null,#tenantID#),
 			(#menuItemUUID90#,'203',null,#topMenuJaUUID#,'コミュニティ','Community',null,6,'9dcb873f-4254-45b2-87f2-1e326a63db78','/ezCommunity/communityMain.do',null,null,null,#tenantID#),
-			(#menuItemUUID91#,'203',null,#topMenuEnUUID#,'자원관리','자원관리',null,9,'bf71381c-4e0e-415a-82aa-dfcc1f0b4c7d','/ezResource/resMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID91#,'203',null,#topMenuEnUUID#,'Resource','Resource',null,9,'bf71381c-4e0e-415a-82aa-dfcc1f0b4c7d','/ezResource/resMain.do',null,null,null,#tenantID#),
 			(#menuItemUUID92#,'203',null,#topMenuKoUUID#,'홈','HOME',null,1,'d7e86d24-137e-4934-bf70-87fed28f5530','/ezPortal/myPortal.do','main',null,' ',#tenantID#),
-			(#menuItemUUID93#,'203',null,#topMenuEnUUID#,'전자결재','전자결재',null,10,'1ab34e97-4c6b-4249-a80a-4c4214486b95','/ezApprovalG/apprGMain.do',null,null,null,#tenantID#),
+			(#menuItemUUID93#,'203',null,#topMenuEnUUID#,'Approval','Approval',null,10,'1ab34e97-4c6b-4249-a80a-4c4214486b95','/ezApprovalG/apprGMain.do',null,null,null,#tenantID#),
 			(#menuItemUUID94#,'202',null,#topMenuEnUUID#,'Configuration','Configuration',null,3,null,'/ezPortal/environmentMain.do','main',null,' ',#tenantID#),
 			(#menuItemUUID95#,'204','0fbe027c-9241-4922-bf97-cc6d10e402c9',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID96#,'204','e254ef6f-d602-4d40-8e39-b44177a8737c',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
@@ -3592,6 +3592,7 @@
 	  		<isNotNull property="birth" prepend=","> <![CDATA[birth = #birth#]]></isNotNull>
 	  		<isNotNull property="info" prepend=","> <![CDATA[info = #info#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute7" prepend=","> <![CDATA[extensionAttribute7 = #extensionAttribute7#]]></isNotNull>
+	  		<isNotNull property="extensionAttribute8" prepend=","> <![CDATA[extensionAttribute8 = #extensionAttribute8#]]></isNotNull>
 	  	</dynamic>
 	  	<![CDATA[
       		WHERE
@@ -3937,6 +3938,7 @@
 	</insert>
 	<select id="EzOrganAdminDAO.selectTitleList" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
 		SELECT 
+			JOBID,
 			TYPE, 
 			CN, 
 			DISPLAYNAME, 
@@ -3957,7 +3959,9 @@
 			SORT
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleInfo" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
+	<![CDATA[
 		SELECT 
+			JOBID,
 			TYPE, 
 			CN, 
 			DISPLAYNAME, 
@@ -3968,13 +3972,14 @@
 		FROM 
 			TBL_USER_JOBMASTER
 		WHERE
-			CN = #v_CN#
+			JOBID = #v_JOBID#
 		AND
 			TYPE = #v_TYPE#
 		AND
 			COMPANYID = #v_COMPANYID# 
 		AND 
 			TENANT_ID = #v_TENANTID#
+	]]>
 	</select>
 	<update id="EzOrganAdminDAO.updateTitle" parameterClass="Map">
 	<![CDATA[
@@ -3986,7 +3991,7 @@
 			USEFLAG = #v_USEFLAG#,
 			SORT = #v_SORT#
 		WHERE
-			CN = #v_CN#
+			JOBID = #v_JOBID#
 		AND
 			TYPE = #v_TYPE#
 		AND
@@ -3996,26 +4001,37 @@
 	]]>
 	</update>
 	<update id="EzOrganAdminDAO.updateTitle2" parameterClass="Map">
-	<![CDATA[
 		UPDATE
 			TBL_USERMASTER
+	<isEqual property="v_TYPE" compareValue="001">
+	<![CDATA[
 		SET
 			TITLE = #v_DISPLAYNAME#,
 			TITLE2 = #v_DISPLAYNAME2#
 		WHERE
-			EXTENSIONATTRIBUTE7 = #v_CN#
+			EXTENSIONATTRIBUTE7 = #v_JOBID#
+	]]>
+	</isEqual>
+	<isEqual property="v_TYPE" compareValue="002">
+	<![CDATA[
+		SET
+			EXTENSIONATTRIBUTE10 = #v_DISPLAYNAME#,
+			EXTENSIONATTRIBUTE102 = #v_DISPLAYNAME2#
+		WHERE
+			EXTENSIONATTRIBUTE8 = #v_JOBID#
+	]]>
+	</isEqual>
 		AND
 			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
 		AND
 			TENANT_ID = #v_TENANTID#
-	]]>
 	</update>
 	<delete id="EzOrganAdminDAO.deleteTitle" parameterClass="Map">
 	<![CDATA[
 		DELETE FROM
 			TBL_USER_JOBMASTER
 		WHERE
-			CN = #v_CN#
+			JOBID = #v_JOBID#
 		AND
 			TYPE = #v_TYPE#
 		AND
@@ -4025,7 +4041,6 @@
 	]]>
 	</delete>
 	<select id="EzOrganAdminDAO.selectTitleUserList" parameterClass="Map" resultClass="OrganUserVO" remapResults="true">
-	<![CDATA[
 		SELECT 
 			TBL_USERMASTER.CN,
 			TBL_USERMASTER.DISPLAYNAME,
@@ -4038,23 +4053,44 @@
 			TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2
 		FROM 
 			TBL_USERMASTER
-		JOIN 
-			TBL_USER_JOBMASTER
-		ON 
-			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.CN 
-		AND 
-			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
-		AND 
-			TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
-		WHERE
-			TBL_USER_JOBMASTER.TYPE = #v_TYPE#
-		AND
-			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_CN#
-		AND 
-			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
-		AND
-			TBL_USERMASTER.TENANT_ID = #v_TENANTID#
-	]]>
+		<isEqual property="v_TYPE" compareValue="001">
+		<![CDATA[
+			JOIN 
+				TBL_USER_JOBMASTER
+			ON 
+				TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
+			AND 
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+			AND 
+				TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+			AND
+				TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
+		]]>
+		</isEqual>
+		<isEqual property="v_TYPE" compareValue="002">
+		<![CDATA[
+			JOIN 
+				TBL_USER_JOBMASTER
+			ON 
+				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
+			AND 
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+			AND 
+				TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+			AND
+				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
+		]]>
+		</isEqual>
+			AND
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+			AND
+				TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+			AND 
+                TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleListCnt" parameterClass="Map" resultClass="int" remapResults="true">
 		SELECT
@@ -4069,15 +4105,16 @@
 			TENANT_ID = #v_TENANTID#
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleUserListCnt" parameterClass="Map" resultClass="int" remapResults="true">
-	<![CDATA[
 		SELECT 
 			COUNT(*)
 		FROM 
 			TBL_USERMASTER
+	<isEqual property="v_TYPE" compareValue="001">
+	<![CDATA[
 		JOIN 
 			TBL_USER_JOBMASTER
 		ON 
-			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.CN 
+			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
 		AND 
 			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
 		AND 
@@ -4085,21 +4122,48 @@
 		WHERE
 			TBL_USER_JOBMASTER.TYPE = #v_TYPE#
 		AND
-			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_CN#
+			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
+	]]>
+	</isEqual>
+	<isEqual property="v_TYPE" compareValue="002">
+	<![CDATA[
+		JOIN 
+			TBL_USER_JOBMASTER
+		ON 
+			TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
+		AND 
+			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+		AND 
+			TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+		WHERE
+			TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+		AND
+			TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
+	]]>
+	</isEqual>
 		AND 
 			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
 		AND
 			TBL_USERMASTER.TENANT_ID = #v_TENANTID#
-	]]>
+		AND 
+            TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleCnt" parameterClass="Map" resultClass="int" remapResults="true">
-	<![CDATA[
 		SELECT
 			COUNT(*)
 		FROM
 			TBL_USER_JOBMASTER
 		WHERE
-			CN = #v_CN#
+		<isEqual property="v_MODE" compareValue="Mod">
+		<![CDATA[
+			JOBID <> #v_JOBID#
+		AND
+		]]>
+		</isEqual>
+	<![CDATA[
+			(DISPLAYNAME = #v_DISPLAYNAME#
+		OR
+			DISPLAYNAME2 = #v_DISPLAYNAME2#)
 		AND
 			TYPE = #v_TYPE#
 		AND

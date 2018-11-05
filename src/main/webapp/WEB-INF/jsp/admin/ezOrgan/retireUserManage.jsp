@@ -257,17 +257,13 @@
 			    }
 			    
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
-		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));
+		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));
 		        try { OpenWin.focus(); } catch (e) { }			    
 			}
 			
 		    function mod_password_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		            var length = CheckBoxArr.length;
-		            if (!confirm(length + "<spring:message code='ezOrgan.t40' />")){
-			        	return;
-		            }		            
-		            
 			    	var data = "";
 			    	
 			        for (var i = 0 ; i < length ; i++) {

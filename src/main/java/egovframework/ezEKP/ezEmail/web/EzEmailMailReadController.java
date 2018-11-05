@@ -1915,7 +1915,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, true, false, locale, null, null);
 					pBody = bodyInfoList.get(0);
-					pBody = pBody;
 					pAttachListHtml = bodyInfoList.get(1);
 					
 					if (bodyInfoList.get(4).equals("OK")) {

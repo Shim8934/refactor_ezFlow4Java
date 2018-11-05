@@ -5,7 +5,6 @@
 <html>
 	<head>
 		<title><spring:message code='ezAddress.t320' /></title>
-		<meta name="CODE_LANGUAGE" Content="C#">
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
         <link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>

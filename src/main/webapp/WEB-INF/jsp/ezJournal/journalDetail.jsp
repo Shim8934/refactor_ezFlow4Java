@@ -437,11 +437,12 @@
 		    	var data = $('#message').contents().find('#journalContent').html();
 		    	var mywindow = window.open('', 'journalContent', 'height=1000,width=1000');
 		    	mywindow.document.write('<html><head><title><spring:message code="ezJournal.t1" /></title>');
+		    	mywindow.document.write('<style type="text/css">p {margin-top: 0px;margin-bottom: 0px;}</style>');
 		    	mywindow.document.write('</head><body >');
 		    	mywindow.document.write(data);
 		    	mywindow.document.write('</body></html>');
-		    	mywindow.document.close(); // IE >= 10에 필요
-		    	mywindow.focus(); // necessary for IE >= 10
+		    	mywindow.document.close();
+		    	mywindow.focus();
 		    	mywindow.print();
 		    	mywindow.close();
 		    	return true;

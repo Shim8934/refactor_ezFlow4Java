@@ -1053,6 +1053,8 @@
 			<![CDATA[   	
 			AND
 				A.TENANT_ID = #tenantID#	
+			GROUP BY
+				A.NUM
 			ORDER BY
 				STARTDATE ASC,
 				ENDDATE DESC 
@@ -1480,7 +1482,9 @@
 			]]>	
 			<isNotEqual property="v_PAUTHYN" compareValue="A">		
 			AND
-            	C.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND C.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )	
+            	( C.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND C.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )	
+			OR 
+				C.OWNERID = #v_PUSERID# OR C.OWNERID LIKE CONCAT('%', ',' , #v_PUSERID#) OR C.OWNERID LIKE CONCAT(#v_PUSERID#, ',' , '%') )
 			</isNotEqual>
 			<isNotEmpty property="v_POWNERID">				
 			AND 
@@ -1578,7 +1582,9 @@
 						]]>	
 			<isNotEqual property="v_PAUTHYN" compareValue="A">			
 			AND
-            	D.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND D.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )
+            	( D.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND D.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )
+			 OR 
+			 	D.OWNERID = #v_PUSERID# OR D.OWNERID LIKE CONCAT('%', ',' , #v_PUSERID#) OR D.OWNERID LIKE CONCAT(#v_PUSERID#, ',' , '%') )
 			 </isNotEqual>
 			<isNotEmpty property="v_POWNERID">				
 			AND
@@ -1635,7 +1641,9 @@
 			]]>	
 			<isNotEqual property="v_PAUTHYN" compareValue="A">	
       		AND
-            	A.BRD_UPPER IN (SELECT B.RESID FROM TBL_RS_RESACL B WHERE (B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone') AND A.TENANT_ID = B.TENANT_ID AND B.ACCESS_LVL = '1' )
+            	( A.BRD_UPPER IN (SELECT B.RESID FROM TBL_RS_RESACL B WHERE (B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone') AND A.TENANT_ID = B.TENANT_ID AND B.ACCESS_LVL = '1' )
+            OR
+            	A.OWNERID = #v_PUSERID# OR A.OWNERID LIKE CONCAT('%', ',' , #v_PUSERID#) OR A.OWNERID LIKE CONCAT(#v_PUSERID#, ',' , '%') )
 			</isNotEqual>
 			<![CDATA[
 			AND
@@ -1683,5 +1691,18 @@
      			TENANT_ID = #tenantID#	
 		]]>
 	</update>
+	
+	<select id="MResourceDAO.getResAdminAuth" parameterClass="Map" resultClass="String">	
+		<![CDATA[
+			SELECT
+				BRD_ID
+			FROM 
+				TBL_RS_BRD
+			WHERE 
+				( OWNERID = #userId# OR OWNERID LIKE CONCAT('%', ',', #userId#) OR OWNERID LIKE CONCAT(#userId#, ',', '%') )
+			AND 
+				TENANT_ID = #tenantId#  
+		]]>
+	</select>
 </sqlMap>
 
