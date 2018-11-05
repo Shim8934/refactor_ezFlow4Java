@@ -77,10 +77,10 @@
 	boolean check =  xmlCreate(xmlText,filenames);
 	
 	if(check){
-		result_sc = "<script type='text/javascript' language='javascript'>alert(NamoSELang.pe_vD);window.document.location.href='manager_setting.jsp?Tab=" + detectXSSEx(request.getParameter("Tab")) + "';</script>";
+		result_sc = "<script type='text/javascript' language='javascript'>alert(NamoSELang.pe_vO);window.document.location.href='manager_setting.jsp?Tab=" + detectXSSEx(request.getParameter("Tab")) + "';</script>";
 	}
 	else{
-		result_sc = "<script>alert(NamoSELang.pe_qZ+'" + fileName + "');history.back();</script> ";
+		result_sc = "<script>alert(NamoSELang.pe_sl+'" + fileName + "');history.back();</script> ";
 	}
 
 %>
@@ -88,7 +88,7 @@
 <html>
 <head>
 	<script type="text/javascript" src="../../lib/jquery-1.7.2.min.js"> </script>
-	<script type="text/javascript">var ce$=$.noConflict(true); </script>
+	<script type="text/javascript">var ce$=namo$.noConflict(true); </script>
 	<script type="text/javascript" src="../manage_common.js"> </script>
 	<script type="text/javascript" src="../../js/namo_cengine.js"> </script>
 </head>

@@ -6,9 +6,9 @@
 <html>
 <head>
 <title>Namo CrossEditor : Admin</title>
-	<script type="text/javascript">var pe_sl="pe_Fs"; </script>
+	<script type="text/javascript">var pe_vV="pe_Mr"; </script>
 	<script type="text/javascript" src="../../lib/jquery-1.7.2.min.js"> </script>
-	<script type="text/javascript">var ce$=$.noConflict(true); </script>
+	<script type="text/javascript">var ce$=namo$.noConflict(true); </script>
 	<script type="text/javascript" src="../manage_common.js"> </script>
 	<script type="text/javascript" language="javascript" src="../../js/namo_cengine.js"> </script>
 	<script type="text/javascript" language="javascript" src="../manager.js"> </script>
@@ -19,80 +19,80 @@
 
 <%@include file = "../include/top.html"%>
 
-<div id="pe_atq" class="pe_hE">	
-	<table class="pe_qf">
+<div id="pe_ayq" class="pe_hW">	
+	<table class="pe_uj">
 	  <tr>
-		<td class="pe_hE">
+		<td class="pe_hW">
 		
 			<table id="Info">
 				<tr>
 					<td style="padding:0 0 0 10px;height:30px;text-align:left">
-					<font style="font-size:14pt;color:#3e77c1;font-weight:bold;text-decoration:none;"><span id="pe_Er"></span></font></td>
-					<td id="InfoText"><span id="pe_uQ"></span></td>
+					<font style="font-size:14pt;color:#3e77c1;font-weight:bold;text-decoration:none;"><span id="pe_BX"></span></font></td>
+					<td id="InfoText"><span id="pe_wc"></span></td>
 				</tr>
 				<tr>
-					<td colspan="2"><img id="pe_wG" src="../images/title_line.jpg" alt="" /></td>
+					<td colspan="2"><img id="pe_DI" src="../images/title_line.jpg" alt="" /></td>
 				</tr>
 			</table>
 		
 		</td>
 	  </tr>
 	  <tr>
-		<td class="pe_hE">
+		<td class="pe_hW">
 			
-				<form method="post" id="pe_azG" action="account_proc.jsp" onsubmit="return pe_z(this);">
-				<table class="pe_kJ" >
+				<form method="post" id="pe_aFL" action="account_proc.jsp" onsubmit="return pe_q(this);">
+				<table class="pe_nM" >
 				  <tr>
 					<td>
 
-						<table class="pe_dt">
-						  <tr><td class="pe_ek" colspan="3"></td></tr>
+						<table class="pe_dS">
+						  <tr><td class="pe_hv" colspan="3"></td></tr>
 						</table>
 						 
-						<table class="pe_dt" >
+						<table class="pe_dS" >
 						  <tr>
-							<td class="pe_dd">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_zx"></span></b></td>
-							<td class="pe_ch"></td>
-							<td class="pe_cc">
+							<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_zr"></span></b></td>
+							<td class="pe_fn"></td>
+							<td class="pe_el">
 								<input type="hidden" name="u_id" id="u_id" value="<%=detectXSSEx(session.getAttribute("memId").toString())%>" autocomplete="off"/>
-								<input type="password" name="passwd" id="passwd" value="" class="pe_kL" autocomplete="off"/>
+								<input type="password" name="passwd" id="passwd" value="" class="pe_mt" autocomplete="off"/>
 							</td>
 						  </tr>
 						  <tr>
-							<td class="pe_bX" colspan="3"></td>
+							<td class="pe_eI" colspan="3"></td>
 						  </tr>
 						  <tr>
-							<td class="pe_dd">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Gr"></span></b></td>
-							<td class="pe_ch"></td>
-							<td class="pe_cc">
-								<input type="password" name="newPasswd" id="newPasswd" value="" class="pe_kL" autocomplete="off"/>
+							<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Fe"></span></b></td>
+							<td class="pe_fn"></td>
+							<td class="pe_el">
+								<input type="password" name="newPasswd" id="newPasswd" value="" class="pe_mt" autocomplete="off"/>
 							</td>
 						  </tr>
 						  <tr>
-							<td class="pe_bX" colspan="3"></td>
+							<td class="pe_eI" colspan="3"></td>
 						  </tr>
 						  <tr>
-							<td class="pe_dd">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_FX"></span></b></td>
-							<td class="pe_ch"></td>
-							<td class="pe_cc">
-								<input type="password" name="newPasswdCheck" id="newPasswdCheck" value="" class="pe_kL" autocomplete="off"/>
+							<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_FP"></span></b></td>
+							<td class="pe_fn"></td>
+							<td class="pe_el">
+								<input type="password" name="newPasswdCheck" id="newPasswdCheck" value="" class="pe_mt" autocomplete="off"/>
 							</td>
 						  </tr>
 						</table>
 					
-						<table class="pe_dt">
-						  <tr><td class="pe_ek" colspan="3"></td></tr>
+						<table class="pe_dS">
+						  <tr><td class="pe_hv" colspan="3"></td></tr>
 						</table>
 								
 					</td>
 				  </tr>
-				  <tr id="pe_FZ">
-					<td id="pe_Gz">
+				  <tr id="pe_Pr">
+					<td id="pe_Pc">
 						<ul style="margin:0 auto;width:170px;">
-							<li class="pe_ea">
-								<input type="submit" id="pe_Eh" value="" class="pe_eM pe_fk" style="width:66px;height:26px;" />
+							<li class="pe_io">
+								<input type="submit" id="pe_Ll" value="" class="pe_iT pe_fZ" style="width:66px;height:26px;" />
 							</li>
-							<li class="pe_ea"><input type="button" id="pe_uU" value="" class="pe_eM pe_fk" style="width:66px;height:26px;"></li>
+							<li class="pe_io"><input type="button" id="pe_AK" value="" class="pe_iT pe_fZ" style="width:66px;height:26px;"></li>
 						</ul>
 					</td>
 				  </tr>
@@ -108,7 +108,7 @@
 <%@include file = "../include/bottom.html"%>
 
 </body>
-<script>var webPageKind='<%=detectXSSEx(session.getAttribute("webPageKind").toString())%>';topInit();pe_S(); </script>
+<script>var webPageKind='<%=detectXSSEx(session.getAttribute("webPageKind").toString())%>';topInit();pe_bM(); </script>
 
 </html>
 
