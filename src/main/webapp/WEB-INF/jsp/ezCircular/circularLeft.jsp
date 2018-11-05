@@ -13,17 +13,12 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/treeview.htc.js')}"></script>	    
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
+		
 	    <link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<style>
-			#left ul li.on{
-				font-weight:bold;
-				color:black;
-			}
-			 #left ul li.ing{
-				font-weight:normal;
-				color:#9b9b9b;
-			}
 			/* ellipisis 추가 */
 			.node_normal{
 	    		overflow:hidden;
@@ -36,18 +31,27 @@
 	    		text-overflow:ellipsis;
 	    		display:inline-block;
 	    		width:146px;
-	    	}	    	
+	    	}	  
+	    	#mCSB_1_container {
+				margin-right: 0px;
+			}  	
+			.mCSB_scrollTools {
+				opacity: 0.3;
+				width: 6px;
+				margin-Top: 5px;
+				margin-bottom: 5px;
+			}
 		</style>
 	    <script type="text/javascript">
 	        document.onselectstart = function () { return false; };
 	        
 	        window.onresize = function () {
-	            if (document.documentElement.clientHeight > 900) {
-	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";	                
-	            }
-	            else {
-	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";	                
-	            }
+// 	            if (document.documentElement.clientHeight > 900) {
+// 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";	                
+// 	            }
+// 	            else {
+// 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";	                
+// 	            }
 	        }
 	        
 	        window.onload = function () {
@@ -58,12 +62,12 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
-	            if (document.documentElement.clientHeight > 900) {
-	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";	                
-	            }
-	            else {
-	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";	                
-	            }
+// 	            if (document.documentElement.clientHeight > 900) {
+// 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";	                
+// 	            }
+// 	            else {
+// 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";	                
+// 	            }
 	            
 	            LoadEmailTree();
 	            
@@ -73,6 +77,11 @@
 	            getNewCircularCount();
 	            
 	           	applyEllipsis();
+	           	
+	           	leftResize();
+		        $(".circularListBox").mCustomScrollbar({
+	        		theme : "dark"
+	        	});	
 	        }
 	        
 	        /** ellipsis 추가 */
@@ -138,16 +147,12 @@
 
 	        /* 2017-05-17 장진혁 구현 */	        
 	        function openFolder() {
-	        	if ($("#PostTreeView").height() != "0"){	        	
-		        	$("#PostTreeView").height("0px");	        	
-		        	$("#PostTreeView").css("padding","0px");
-		        	$("#openImg").attr("src", "/images/cllps.gif");
-		        	$("#PostTreeView").css("border-top", "0px");		        	
+	        	if ($("#PostTreeView").css("display") == "none") {	        	
+	        		$("#PostTreeView").css("display", "");
+	        		$("#openDoc").attr("class", "sub_iconLNB tree_arrow_up");
 	        	} else {
-	        		$("#PostTreeView").height("200px");	        	
-		        	$("#PostTreeView").css("padding","10px 15px");
-		        	$("#openImg").attr("src", "/images/expnd.gif");
-		        	$("#PostTreeView").css("border-top", "1px solid #eaeaea");
+	        		$("#PostTreeView").css("display", "none");
+	        		$("#openDoc").attr("class", "sub_iconLNB tree_blank");
 	        	}
 	        }
 	        
@@ -298,10 +303,107 @@
 					parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
 				}
 			}
+			
+			var writeboardselect_modal_dialogArguments = new Array();
+			function CircularWrite_onclick() {
+				var feature = GetOpenPosition(820, 900);
+				url = "/ezCircular/circularWrite.do?mode=write";
+				var OpenWin = window.open(url, "", "width=820, height=900, status=no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
+			    OpenWin.focus();     
+			}
+			
+			function getLeftCount() {		    	
+		    	getNewCircularCount();		    	
+		    }
+			
+			function refresh_onclick() {
+				parent.frames["right"].refresh_onclick();
+		    }
+			
+			function leftResize(){
+	        	$(".circularListBox").height(window.innerHeight-105);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+        	});
 	    </script>
 	</head>
-	<body class="leftbody">
-	    <div id="left">
+	<body class="newLeft">
+		<div id="left" class="lnb" style="overflow: auto">
+	    	<!-- <div class="lnb_btn"></div> -->
+	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
+	    	<div class="left_title" title="<spring:message code="ezCircular.t1" />">
+	    		<spring:message code="ezCircular.t1" />
+	        	<span class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezCircular.t10" />" onclick="circularConfig()"></span>
+	        </div>
+	        <div class="btn_writeBox">
+	        	<p class="btn_write01" onClick="CircularWrite_onclick()"><span class="sub_iconLNB tree_write"></span><spring:message code='ezCircular.t55'/></p>
+	        </div>
+	        <div class="circularListBox" style="overflow:hidden; padding-right: 0;">
+		        <ul class="lnbUL">
+		        	<div class="tree">
+		            	<span>
+		                	<span>
+		                    	<span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_circular_new"></span><span class="h2_text" id="newCircular" onclick="newCircular()"><spring:message code="ezCircular.t2" /> <span id="newCircularCount"></span></span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_circular_in"></span><span class="h2_text" id="circularComplete" onclick="circularComplete()"><spring:message code="ezCircular.t3" /><span id="circularCompleteCount"></span></span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_circular_write"></span><span class="h2_text" id="circularMyCircular" onclick="circularMyCircular()"><spring:message code="ezCircular.t4" /><span id="myCircularCount"></span></span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outbox"></span><span class="h2_text" id="circularTemp" onclick="circularTemp()"><spring:message code="ezCircular.t5" /><span id="circularTempCount"></span></span>
+		                            </div>
+		                    	</span>
+		                        <span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_delete"></span><span class="h2_text" id="circularDelete" onclick="circularDelete()"><spring:message code="ezCircular.t6" /><span id="circularDeleteCount"></span></span>
+		                            </div>
+		                    	</span>
+		                    </span>        
+		                </span>
+		            </div>
+		        </ul>
+		        <ul class="lnbUL">
+		        	<div class="tree" style="overflow: hidden;">
+		            	<span>
+		                	<span>
+		                    	<span>
+		                        	<div class="node_div" id="circularDoc">
+		                            	<span class="sub_iconLNB tree_blank" id="openDoc"></span><span class="sub_iconLNB tree_circular_document"></span><span class="h2_text" onclick="openFolder()"><spring:message code="ezCircular.t7" /></span><span class="sub_iconLNB tree_manage" onclick="folder_Manage()"></span>
+		                            </div>
+		                    	</span>
+		                        <div class="circularDoc" id="PostTreeView" style="display:none"></div>
+		                    </span>        
+		                </span>
+		            </div>
+		        </ul>
+		        <ul class="lnbUL">
+		        	<div class="tree">
+		            	<span>
+		                	<span>
+		                    	<span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onclick="circular_Search()"><spring:message code="ezCircular.t8" /></span>
+		                            </div>
+		                    	</span>
+		                    </span>        
+		                </span>
+		            </div>
+		        </ul>
+	        </div>
+	    </div>
+	    <%-- <div id="left">
 	        <div class="left_circular" title="<spring:message code="ezCircular.t1" />"><span><spring:message code="ezCircular.t1" /></span></div>
 	        <h2><span style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t1" /></span></h2>				
 	        <ul id="iconul">
@@ -313,10 +415,10 @@
 				<li id="circularDoc" onclick="openFolder()"><span style="width:100%;display:inline-block;"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><span><spring:message code="ezCircular.t7" /></span>&nbsp;&nbsp;<img src="/images/cllps.gif" id="openImg" class="icon"></span></li>	            
 	        </ul>
 	        <div class="tree" style="height: 0px;background-color: #ffffff; overflow: auto; padding:0px; border-bottom:1px solid #eaeaea;" id="PostTreeView"></div>
-	        <%-- <ul id="extra">    
+	        <ul id="extra">    
 	            <li><span onclick="circular_Search()" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t8" /></span></li>
 	            <li><span onclick="folder_Manage()" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t9" /></span></li>	            
-	        </ul>	        --%>
+	        </ul>	       
 	        <div class="extra">
 	        	<span onclick="circular_Search()" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t8" /></span>
 	        	<span onclick="folder_Manage()" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t9" /></span>
@@ -325,7 +427,7 @@
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
-	    </script>
+	    </script> --%>
 	    <xml id="RootFolderXML" style="display: none;"></xml>
 	    <!-- 2018-07-17 김보미 - 프로그레스바 -->
 	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>

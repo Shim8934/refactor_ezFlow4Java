@@ -91,9 +91,9 @@
 		            _RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
 		        }
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(0).style.backgroundColor = "#e4e8ec";
+		        obj.childNodes.item(1).style.backgroundColor = "#e4e8ec";
+		        obj.childNodes.item(2).style.backgroundColor = "#e4e8ec";
 		        tempid = obj.getAttribute("backgroundid");
 		        MakeDescription(obj.id);
 		    }

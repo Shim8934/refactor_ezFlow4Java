@@ -15,7 +15,6 @@
 				display: inline-block;
 			}
 			.node_div span {
-				width:266px;
 				overflow:hidden;
 				text-overflow:ellipsis;
 			}

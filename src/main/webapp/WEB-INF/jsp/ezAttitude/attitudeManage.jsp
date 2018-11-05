@@ -83,7 +83,7 @@
 					changeYear : true,
 					autoSize : true,
 					showOn : "both",
-					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImage : "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly : true
 				});
 				
@@ -92,7 +92,7 @@
 					changeYear : true,
 					autoSize : true,
 					showOn : "both",
-					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImage : "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly : true
 				});
 
@@ -136,7 +136,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			    $("#Edatepicker").datepicker({
@@ -144,7 +144,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			});
@@ -849,11 +849,10 @@
 	    <div>
 	    	<div id="mainmenu">
 				<ul>
-					<li><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
+					<li class="important"><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
+					<li><span onclick="searchPopup();"><spring:message code='ezAttitude.t121'/></span></li>
 		      		<li><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></li>
-					<li><span onclick="refresh();"><spring:message code='ezAttitude.t122'/></span></li>
-		      		<li><span onclick="searchPopup();"><spring:message code='ezAttitude.t121'/></span></li>
-					<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
+					<li onclick="refresh();"><span class="icon16 icon16_refresh"></span></li>
 					<li>						
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="padding-right:40px; width:100%; height:28px;">
 		      				<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>

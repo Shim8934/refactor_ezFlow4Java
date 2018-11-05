@@ -66,11 +66,11 @@
 }
 
 .selectTR {
-	background-color: #edf4fd;
+	background-color: #e4e8ec;
 }
 
 .selectTD {
-	background-color: #edf4fd;
+	background-color: #e4e8ec;
 }
 
 #journalListBody #journalList tr<c:if test="${listType ne 'temp' }">.noView</c:if> td {
@@ -845,7 +845,7 @@
 					changeYear : true,
 					autoSize : true,
 					showOn : "both",
-					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImage : "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly : true
 				});
 				
@@ -854,7 +854,7 @@
 					changeYear : true,
 					autoSize : true,
 					showOn : "both",
-					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImage : "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly : true
 				});
 
@@ -1076,7 +1076,7 @@
 		<ul>
 			<!-- 		  	일지쓰기 -->
 			<c:if test="${listType eq 'department' or listType eq 'mine' }">
-				<li><span onClick="writejournal()"><spring:message code='ezJournal.t57' /></span></li>
+				<li class="important"><span onClick="writejournal()"><spring:message code='ezJournal.t57' /></span></li>
 			</c:if>
 			<!-- 		  	확인완료 -->
 			<c:if test="${listType eq 'recv' }">
@@ -1090,20 +1090,13 @@
 			<c:if test="${listType eq 'temp' }">
 				<li><span onClick="modifyJournal()"><spring:message code='ezJournal.t107' /></span></li>
 			</c:if>
-			<!-- 		  	삭제 -->
-<%-- 			<c:if --%>
-<%-- 				test="${listType eq 'temp' or listType eq 'recv' or listType eq 'mine'}"> --%>
-			<li><span onClick="deleteJournal()"><spring:message code='ezJournal.t108' /></span></li>
-<%-- 			</c:if> --%>
 			<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine'}">
 				<!-- 		  	상세검색 -->
 				<li><span id="SearchOption" onClick="doLayerPopup(this);" mode="off"><spring:message code='ezJournal.t59' /></span></li>
 				<!-- 		  	취합 -->
 				<li><span onClick="doSelectSumJournal();"><spring:message code='ezJournal.t60' /></span></li>
 			</c:if>
-			<c:if test="${listType eq 'department' or listType eq 'mine'}">
-				<!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-			</c:if>
+			<li onClick="deleteJournal()"><span class="icon16 icon16_delete"></span></li>
 			<c:if test="${listType eq 'department'}">
 				<li style="background: none"><select id="dept" onchange="goToPageByDeptId();" style="height:29px;">
 					<c:forEach items="${deptList}" var="dept">
@@ -1116,7 +1109,6 @@
 			<c:if test="${listType eq 'department' or listType eq 'mine'}">
 				<li style="background: none"><select id="formId" onchange="goToPageByFormName();" style="height:29px;"></select></li>
 			</c:if>
-			<li style=""></li>
 			<li id="right">
 				<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" status="off" onclick="savePreviewRayer('NONE')">
 				<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" status="off" onclick="savePreviewRayer('W')"> 

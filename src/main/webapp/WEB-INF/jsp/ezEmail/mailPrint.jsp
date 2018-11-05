@@ -15,7 +15,7 @@
 				empty-cells: show;
 				padding:0;margin:0;
 				font-size:12px;
-				font-family: 'Gulim', 'arial', 'verdana';
+				font-family: 'malgun gothic', 'arial', 'verdana';
 			}
 			th{
 				white-space: nowrap;
@@ -39,7 +39,7 @@
 				empty-cells: show;
 				padding:0;margin:0;
 				font-size:12px;
-				font-family: 'Gulim', 'arial', 'verdana';
+				font-family: 'malgun gothic', 'arial', 'verdana';
 			}
 			th{
 				white-space: nowrap;
@@ -87,7 +87,7 @@
 				empty-cells: show;
 				padding:0;margin:0;
 				font-size:12px;
-				font-family:'Gulim','simsun', 'simhei', 'arial', 'verdana';
+				font-family:'malgun gothic','simsun', 'simhei', 'arial', 'verdana';
 			}
 			th{
 				white-space: nowrap;

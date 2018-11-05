@@ -9,6 +9,7 @@
 		<title>left_community</title>
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<style>
 			.btn_comm {
 				border: 1px solid rgb(208, 208, 208);
@@ -22,12 +23,23 @@
 			    font-weight: bold;
 			    background: linear-gradient(#fff, #f8f8f8);
 			}			
+			#mCSB_1_container {
+				margin-right: 0px;
+			}
+			.mCSB_scrollTools {
+				opacity: 0.3;
+				width: 6px;
+				margin-Top: 5px;
+				margin-bottom: 5px;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
+				
 		<script type="text/javascript">
 			var ResultString;
 	        var code = "<c:out value='${code}'/>";
@@ -98,6 +110,10 @@
 	            }
 	            getCommunityList();
 	            //getBoardList();
+	            leftResize();
+		        $(".communityListBox").mCustomScrollbar({
+	        		theme : "dark"
+	        	});	
 	        }
 			
 			function getCommunityList() {
@@ -109,7 +125,7 @@
 						if (result["list"] != "") {
 							getCommunityList_after(result["list"]);
 						} else {
-							$("#MyCopList").html("<div style='height:435px;text-align:center;'><img style='margin-top:100px;margin-bottom:20px' src='/images/signcommunity.png' /><div style='margin-top:15px'><div style='color:#979797'>"+strLang86+"</div><div style='margin-top:5px;color:#979797'>"+strLang87+"</div></div></div>");
+							$("#MyCopList").html("<p class='lnb_comIng'><img src='/images/kr/left/lnb_comImg.png'></p><p class='lnb_comText'>" + strLang86 +"<br>" + strLang87 + "</p>");
 						}
 					}
 				});
@@ -575,10 +591,37 @@
                  feature = feature + GetOpenPosition(850, 560);
                 window.open("/ezCommunity/commMake.do", "", feature);
             }
+            
+            function leftResize(){
+	        	$(".communityListBox").height(window.innerHeight-105);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+        	});
 		</script>
 	</head>
-	<body class="leftbody" id="body">
-	    <div id="left">
+	<body class="newLeft" id="body">
+		<div id="left" class="lnb" style="overflow: auto">
+	    	<!-- <div class="lnb_btn"></div> -->
+	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
+	    	<div class="left_title" title="<spring:message code='main.t1006' />">
+	    		<spring:message code='main.t1006' />
+	        </div>
+	        <div class="btn_writeBox">
+	        	<p class="btn_write01" onclick="make_Cop()"><span class="sub_iconLNB tree_write"></span><spring:message code="ezCommunity.t1011" /></p>
+	        </div>
+	        <div class="communityListBox" style="overflow:hidden; padding-right: 0;">
+		        <div id="MyCopList">
+		            <!-- list -->
+		            <ul class="list_thumbnail" id="list_thumbnail"></ul>
+		            <!-- list -->
+		        </div>
+	        </div>
+	        <!-- <p class="lnb_comIng"><img src="/images/kr/left/lnb_comImg.png"></p>
+	        <p class="lnb_comText">My 커뮤니티가 없습니다.<br>커뮤니티에 가입해보세요.</p> -->
+	    </div>
+	    <%-- <div id="left">
 	        <div class="left_cop" title="<spring:message code='main.t1006' />"><span><spring:message code='main.t1006' /></span></div>
 	        <!-- mylist -->	        
 	        <div style="overflow: auto; overflow-x: hidden; background-color: white; min-height:435px; padding:5px" id="MyCopList">
@@ -605,8 +648,8 @@
 	
 	        <div class="community_banner commMake btn_comm" onclick="make_Cop()">
 	        	<spring:message code="ezCommunity.t1011" />
-	            <%-- <img src="<spring:message code='ezCommunity.i4' />" width="181" height="90"> --%>
+	            <img src="<spring:message code='ezCommunity.i4' />" width="181" height="90">
 	        </div>
-    	</div>
+    	</div> --%>
 	</body>
 </html>

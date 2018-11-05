@@ -1,0 +1,148 @@
+@CHARSET "UTF-8";
+.collaborateBox {
+    width: 933px;
+    height: 320px;
+    border: 1px solid #dcdcdc;
+    box-sizing: border-box;
+}
+
+.collaborate_tab {
+    float: left;
+    width: 150px;
+    height: 250px;
+    font-family: Roboto, "Helvetica Neue", Arial, NanumBarunGothicOTF, NanumBarunGothic, "나눔바른고딕", "Apple SD Gothic Neo", malgun gothic, "malgun gothic", sans-serif;
+    background: #eeded0;
+}
+
+.collaborate_tabTitle {
+    height: 41px;
+    line-height: 41px;
+    margin: -1px 0px 0px -1px;
+    padding: 0px 0px 0px 44px;
+    background: url(../images/kr/main/icon_collaborateTItle.png) #f99e4a no-repeat left top;
+    font-size: 15px;
+    color: #ffffff;
+}
+
+.collaborate_tabList {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.collaborate_tabList li {
+    cursor: pointer;
+}
+
+.collaborate_tabList li:hover {
+    background: #ffffff;
+}
+
+.collaborate_tabList li.on {
+    background: #ffffff;
+}
+
+.collaborate_tabList li span {
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+}
+
+.collaborate_tabList li span.icon_me {
+    padding: 0px 0px 0px 44px;
+    background: url(../images/kr/main/icon_collaborate01.png) no-repeat;
+}
+
+.collaborate_tabList li span.icon_team {
+    padding: 0px 0px 0px 44px;
+    background: url(../images/kr/main/icon_collaborate02.png) no-repeat;
+}
+
+.collaborate_tabList li span.icon_work {
+    padding: 0px 0px 0px 44px;
+    background: url(../images/kr/main/icon_collaborate03.png) no-repeat;
+}
+
+.collaborate_tabList li span.icon_more {
+    padding: 0px 0px 0px 44px;
+    background: url(../images/kr/main/icon_collaborate04.png) no-repeat;
+}
+
+.collaborate_list {
+    float: left;
+    width: 657px;
+    height: 210px;
+    font-family: malgun gothic, Dotum, Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+}
+
+.collaborate_list .title {
+    position: relative;
+    width: 100%;
+    height: 38px;
+}
+
+.collaborate_listTab {
+    position: relative;
+    height: 40px;
+    margin: 0px;
+    padding: 0px;
+    border-bottom: 1px solid #f99e4a;
+    margin: -1px 0px 0px 0px;
+    z-index: 0;
+}
+
+.collaborate_listTab dt {
+    float: left;
+    height: 39px;
+    line-height: 39px;
+    padding: 0px 34px;
+    margin: 0px 0px 0px -1px;
+    border-top: 1px solid #dcdcdc;
+    border-right: 1px solid #dcdcdc;
+    border-bottom: 0 none;
+    border-left: 1px solid #dcdcdc;
+    font-family: Roboto, "Helvetica Neue", Arial, NanumBarunGothicOTF, NanumBarunGothic, "나눔바른고딕", "Apple SD Gothic Neo", malgun gothic, "malgun gothic", sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.collaborate_listTab dt span {
+    display: inline-block;
+}
+
+.collaborate_listTab dt.on {
+    position: relative;
+    border-top: 1px solid #f99e4a;
+    border-right: 1px solid #f99e4a;
+    border-bottom: 1px solid #ffffff;
+    border-left: 1px solid #f99e4a;
+    color: #f99e4a;
+    z-index: 100;
+    overflow: hidden;
+}
+
+.collaborate_listTab dt:hover {
+    position: relative;
+    border-top: 1px solid #f99e4a;
+    border-right: 1px solid #f99e4a;
+    border-bottom: 1px solid #ffffff;
+    border-left: 1px solid #f99e4a;
+    color: #f99e4a;
+    z-index: 100;
+    overflow: hidden;
+}
+
+.collaborate_listTab dd {
+    float: right;
+    height: 40px;
+    margin: 1px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    cursor: pointer;
+}
+
+.collaboratecont {
+    padding: 15px 13px 0px 31px;
+}

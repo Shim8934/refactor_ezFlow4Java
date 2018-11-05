@@ -2,12 +2,15 @@ package egovframework.ezEKP.ezApprovalG.service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
@@ -343,7 +346,11 @@ public interface EzApprovalGService {
 	public String getRecordClassInfo(Document xmlDom, int tenantID) throws Exception;
 	
 	public String getAprDocList (String pListType, String userID, String userDeptID, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String pSubQuery, String strLang, int tenantID, String offset) throws Exception;
-
+	
+	public Map<String, Object> getPortletAprList(Map<String, Object> param, String offset) throws Exception;
+	
+	public Map<String, Object> getPortletApprGapTime(Map<String, Object> param) throws Exception;
+	
 	public String getRecordHistory(Document xmlDom, LoginVO userInfo) throws Exception;
 
 	public String moveRecord(Document xmlDom, String lang, int tenantID) throws Exception;
@@ -438,6 +445,8 @@ public interface EzApprovalGService {
 			String draftDeptName, String docState, String string, String pageSize, String pageNum, String orderCell,	String orderOption, String searchStatus, String companyID, String lang, String string2,	int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception;
 
 	public List<ApprGContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception;
+	
+	public List<ApprGFormVO> getFormInfoByPortal(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang, int tenantID) throws Exception;
 
 	public String getAutoDocNumItem(String formID, String lang, String companyID, int tenantID) throws Exception;
 

@@ -919,13 +919,18 @@
 			    } catch (e) { }
 			
 			    try {
-			        if (bAttachProcess == false)
-			            window.opener.Refresh_Window();
+// 			        if (bAttachProcess == false)
+			        	//Refresh_Window() 사용안함으로 주석처리
+			            //window.opener.Refresh_Window();
 			    } catch (e) { }
 			
 			    try {
 			        bAttachProcess = true;
 			    } catch (e) { }
+			    
+		        try {
+		            window.opener.getApprGraph("appr");
+		        } catch (e) { }
 			}
 	
 			function btn_Attach_onclick() {

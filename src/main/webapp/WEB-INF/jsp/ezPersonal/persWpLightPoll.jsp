@@ -43,12 +43,13 @@
 	            cursor: pointer;
             	margin: 1px;
         	}
-        	input[type=radio] { vertical-align: middle }
+        	label {line-height: 22px; vertical-align: top;}
         	/* 2018-07-26 김보미 */ 
         	.line_ellipsis {
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space:nowrap;
+				margin: 3px 0px;
         	}
         	.question span {
         		display: block;

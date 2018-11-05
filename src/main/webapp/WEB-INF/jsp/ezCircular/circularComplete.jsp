@@ -660,9 +660,9 @@
 	    </h1>
 	    <div id="mainmenu">
 	        <ul>
-	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
-	            <li><span onClick="CircularDelete_onclick()"><spring:message code='ezCircular.t30'/></span></li>
+	            <li class="important"><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
 	            <li><span onClick="CircularMove_onclick()"><spring:message code='ezCircular.t56'/></span></li>
+	            <li onClick="CircularDelete_onclick()"><span class="icon16 icon16_delete"></span></li>
 	            <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
