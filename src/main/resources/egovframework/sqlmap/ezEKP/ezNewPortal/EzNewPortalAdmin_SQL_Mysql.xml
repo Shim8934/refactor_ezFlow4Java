@@ -515,6 +515,8 @@
 			TBL_PORTAL_PORTLET
 		WHERE
 			portlet_id = #portletId#
+		AND
+			menu_id = #menuId#
 	]]>
 	</delete>
 	

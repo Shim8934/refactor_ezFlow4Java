@@ -886,12 +886,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 	}
 	@Override
-	public void deletePortlet(int portletId, String companyId, int tenantId) {
+	public void deletePortlet(int portletId, int menuId, String companyId, int tenantId) {
 		LOGGER.debug("deletePortlet started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("portletId", portletId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("menuId", menuId);
+		
 		//tbl_portal_portlet_name 지우기
 		ezNewPortalDAO.deletePortletName(map);
 		

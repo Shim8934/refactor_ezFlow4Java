@@ -169,6 +169,7 @@
 		var companiesObj = document.getElementById("ListCompany");
 		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 		var portletId = event.data.portletId;
+		var menuId = event.data.menuId;
 		
 		var request = new XMLHttpRequest();
 		request.open('POST', '/admin/ezNewPortal/deletePortlet.do', true);
@@ -182,7 +183,8 @@
 		
 		var data = JSON.stringify({
 			companyId : companyValue,
-			portletId : portletId
+			portletId : portletId,
+			menuId : menuId
 		});
 		 
 		request.send(data);
@@ -465,7 +467,7 @@
 					$("#portlet" + result[i].portletId).find(".updatePortletBtn").on("click", {"portletId" : result[i].portletId}, portletUpdate);
 					
 					if (!result[i].general) {
-						$("#portlet" + result[i].portletId).find(".deletePortletBtn").on("click", {"portletId" : result[i].portletId}, portletDelete);
+						$("#portlet" + result[i].portletId).find(".deletePortletBtn").on("click", {"portletId" : result[i].portletId, "menuId" : result[i].menuId}, portletDelete);
 						$("#portletMenu" + result[i].portletId).find(".menuSetting").on("click", {"portletId" : result[i].portletId}, openMenuList);
 					}
 				}
