@@ -119,13 +119,13 @@ public class LoginController {
     	logger.debug("ezOffice365Auth=" + ezOffice365Auth);
     	
         if (ezOffice365Auth.equals("YES")) {        	
-        	return "redirect:/ezPortal/portalMain.do";
-        	//return "redirect:/ezNewPortal/newPortalMain.do";         	
+//        	return "redirect:/ezPortal/portalMain.do";
+        	return "redirect:/ezNewPortal/newPortalMain.do";         	
         }
         
     	if (commonUtil.isLoginCookieExists(request, response)) {
-        	return "redirect:/ezPortal/portalMain.do";
-        	//return "redirect:/ezNewPortal/newPortalMain.do"; 
+//        	return "redirect:/ezPortal/portalMain.do";
+        	return "redirect:/ezNewPortal/newPortalMain.do"; 
     	}
         	
     	String pbm = egovFileScrty.getPbm();
@@ -347,8 +347,8 @@ public class LoginController {
 	        	cookieName.setPath("/");
 	        	response.addCookie(cookieName);
 
-	        	return "redirect:/ezPortal/portalMain.do";
-	        	//return "redirect:/ezNewPortal/newPortalMain.do";
+//	        	return "redirect:/ezPortal/portalMain.do";
+	        	return "redirect:/ezNewPortal/newPortalMain.do";
         		
         	} else {
         		//Check login state of the user
@@ -433,8 +433,8 @@ public class LoginController {
     		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
     		        	//session = request.getSession();
 
-    		        	return "redirect:/ezPortal/portalMain.do";
-    		        	//return "redirect:/ezNewPortal/newPortalMain.do";
+//    		        	return "redirect:/ezPortal/portalMain.do";
+    		        	return "redirect:/ezNewPortal/newPortalMain.do";
     		        	
     				}
     			// 해당 사용자의 로그인이 블록된 경우

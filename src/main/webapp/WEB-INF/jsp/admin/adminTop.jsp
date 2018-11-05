@@ -21,8 +21,8 @@
 			    <c:if test="${packageType == 'standard' && firstScreen_Mail == 'NO'}">
 				//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
 				//메인화면 포탈로 설정 2016-10-04 지정석
-					window.open("/admin/ezPortal/portalMain.do", "bottom");
-					//window.open("/admin/ezNewPortal/portalMain.do", "bottom");
+					//window.open("/admin/ezPortal/portalMain.do", "bottom");
+					window.open("/admin/ezNewPortal/portalMain.do", "bottom");
 				</c:if>
 				<c:if test="${use_portal != 'YES'}">
 					window.open("/admin/ezPersonal/personalMain.do", "bottom");
@@ -66,8 +66,8 @@
 					    parent.frames["bottom"].location.href = "/ezStatistics/statisticsMain.do";				
 						break;
 					case "menu10":		
- 					    parent.frames["bottom"].location.href = "/admin/ezPortal/portalMain.do";
-					    //parent.frames["bottom"].location.href = "/admin/ezNewPortal/portalMain.do";
+ 					    //parent.frames["bottom"].location.href = "/admin/ezPortal/portalMain.do";
+					    parent.frames["bottom"].location.href = "/admin/ezNewPortal/portalMain.do";
 						break;								
 					case "menu12":		
 					    parent.frames["bottom"].location.href = "/admin/ezResource/resourceMain.do";

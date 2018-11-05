@@ -641,7 +641,7 @@
 				<li><span onclick="refreshView()"><spring:message code='ezWebFolder.t139' /></span></li>
 				<!-- <li><img src="/images/i_bar.gif" /></li> -->
 				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li>
-				<li style="float:left; height: 28px;">
+				<li style="float:left;">
 					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value)">
 						<option value=""><spring:message code='ezWebFolder.t191' /></option>
 						<option value="document"><spring:message code='ezWebFolder.t192' /></option>
