@@ -1564,12 +1564,14 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantId = info.getTenantId();
+			int menuId = Integer.parseInt(request.getParameter("menuId"));
 			
-			ezNewPortalService.deletePortlet(portletId, companyId, tenantId);
+			ezNewPortalService.deletePortlet(portletId, menuId, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
