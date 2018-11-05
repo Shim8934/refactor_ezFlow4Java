@@ -1612,14 +1612,17 @@
 	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>
-		        	<c:if test = "${approvalFlag != 'G'}">
-		        		<div id="sel_status_div" style="display:inline;">
-						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
-							<option value="ALL"><spring:message code='ezPoll.t104'/></option>
-			        	</select>  
-		        	</div>
-		        	</c:if>  
 		        </li>
+		        	<c:if test = "${approvalFlag != 'G'}">
+		        		<li style="vertical-align: middle;">
+		        			<div id="sel_status_div" style="display:inline;">
+							<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
+								<option value="ALL"><spring:message code='ezPoll.t104'/></option>
+			        		</select>  
+		        			</div>
+		        		</li>
+		        	</c:if>  
+		        
 	        </ul>
 	        <!-- 	        후결 문서함 -->
 	    	<ul id="menuapr">
