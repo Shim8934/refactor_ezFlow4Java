@@ -338,6 +338,35 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<PortalBoardTreeVO> getBoardTree(Map<String, Object> map) throws Exception {
 		return (List<PortalBoardTreeVO>) list("ezNewPortal.getBoardTree", map);
 	}
+	
+	public int insertPortlet(Map<String, Object> map) {
+		return (int) insert("ezNewPortal.insertPortlet", map); 
+	}
+	
+	public void insertPortletComp(Map<String, Object> map) {
+		insert("ezNewPortal.insertPortletComp", map);
+	}
+	
+	public void updateCompanyPortletNameInfo(Map<String, Object> map) {
+		insert("ezNewPortal.updateCompanyPortletNameInfo", map);
+	}
+	
+	public void updateCompanyPortletInfo(Map<String, Object> map) {
+		update("ezNewPortal.updateCompanyPortletInfo", map);
+	}
+	
+	public void deletePortletComp (Map<String, Object> map) {
+		delete("ezNewPortal.deletePortletComp", map);
+	}
+	
+	public void deletePortlet (Map<String, Object> map) {
+		delete("ezNewPortal.deletePortlet", map);
+	}
+	
+	public void updateCompanyPortletOrder (Map<String, Object> map) {
+		update("ezNewPortal.updateCompanyPortletOrder", map);
+	}
+	
 	/**
 	 * 구해안
 	 */
