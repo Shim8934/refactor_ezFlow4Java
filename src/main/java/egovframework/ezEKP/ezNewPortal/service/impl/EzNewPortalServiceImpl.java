@@ -841,13 +841,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//포틀릿 순서
 		for (Object item : portletList) {
 			if (item instanceof JSONObject) {
-				JSONObject portletNameInfo = (JSONObject) item;
-				
-				map = new ObjectMapper().readValue(portletNameInfo.toJSONString(), Map.class);
+				JSONObject portletOrder = (JSONObject) item;
+				map = new ObjectMapper().readValue(portletOrder.toJSONString(), Map.class);
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
 				
-				ezNewPortalDAO.updateCompanyPortletNameInfo(map);
+				ezNewPortalDAO.updateCompanyPortletOrder(map);
 			}
 		}
 		LOGGER.debug("updateCompanyPortletOrder ended.");
@@ -860,8 +859,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("portletId", portletId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		//tbl_portal_portlet_name 지우기
+		ezNewPortalDAO.deletePortletName(map);
 		
-		//tbl_portal_portlet_comp에 있는거 먼저 지우기
+		//tbl_portal_portlet_comp 지우기
 		ezNewPortalDAO.deletePortletComp(map);
 		
 		//tbl_portal_portlet 지우기

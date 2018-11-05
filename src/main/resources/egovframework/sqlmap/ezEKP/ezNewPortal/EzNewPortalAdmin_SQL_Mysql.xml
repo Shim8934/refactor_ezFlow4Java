@@ -483,6 +483,19 @@
 	]]>
 	</update>
 	
+	<delete id="ezNewPortal.deletePortletName" parameterClass="map">
+	<![CDATA[
+		DELETE FROM
+			TBL_PORTAL_PORTLET_NAME
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			company_id = #companyId#
+		AND
+			portlet_id = #portletId#
+	]]>
+	</delete>
+	
 	<delete id="ezNewPortal.deletePortletComp" parameterClass="map">
 	<![CDATA[
 		DELETE FROM
