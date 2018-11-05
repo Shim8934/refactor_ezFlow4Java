@@ -42,6 +42,8 @@ public interface EzNewPortalService {
 	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit) throws Exception;
 	public List<?> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception;
 	public List<?> getUserFrameListAndSelectedFrame(String companyId, int tenantId, String userId) throws Exception;
+	public void updateUserUsedFrame(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
+	public void updateUserUsedPortlet(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
 	/**
 	 * 유은정
 	 */
@@ -68,7 +70,7 @@ public interface EzNewPortalService {
 	public void insertPortlet(JSONObject portletInfo, JSONArray portletNames,  String companyId, int tenantId) throws Exception;
 	public void updateCompanyPortletInfo(JSONObject portletInfo, JSONArray portletNames,  String companyId, int tenantId) throws Exception;
 	public void updateCompanyPortletOrder(JSONArray portletList, int tenantId, String companyId) throws Exception ;
-	public void deletePortlet(int portletId, String companyId, int tenantId);
+	public void deletePortlet(int portletId, int menuId, String companyId, int tenantId);
 	
 	/**
 	 * 이효진

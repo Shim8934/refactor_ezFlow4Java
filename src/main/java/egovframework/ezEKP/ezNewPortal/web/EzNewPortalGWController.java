@@ -618,14 +618,18 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/frames/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateUserFrame(HttpServletRequest request, @PathVariable String userId) throws Exception {
+	public JSONObject updateUserFrame(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jObj) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateUserFrame started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
 
+			ezNewPortalService.updateUserUsedFrame(userId, tenantId, companyId, jObj);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
@@ -675,14 +679,20 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updateUserPortletSetting(HttpServletRequest request, @PathVariable String userId) throws Exception {
+	public JSONObject updateUserPortletSetting(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jObj) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateUserPortletSetting started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-
+			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
+			
+			LOGGER.debug("2222paramData : " + jObj.toJSONString());
+			
+			ezNewPortalService.updateUserUsedPortlet(userId, tenantId, companyId, jObj);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
@@ -1564,12 +1574,14 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantId = info.getTenantId();
+			int menuId = Integer.parseInt(request.getParameter("menuId"));
 			
-			ezNewPortalService.deletePortlet(portletId, companyId, tenantId);
+			ezNewPortalService.deletePortlet(portletId, menuId, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

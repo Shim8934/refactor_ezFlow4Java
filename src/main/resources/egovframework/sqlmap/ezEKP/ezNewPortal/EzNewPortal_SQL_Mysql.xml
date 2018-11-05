@@ -495,7 +495,8 @@ SELECT
 	A.PORTLET_ID AS PORTLETID, 
 	A.PORTLET_ORDER AS PORTLETORDER, 
 	B.PORTLET_NAME AS PORTLETNAME, 
-	C.PORTLET_URL AS PORTLETURL
+	C.PORTLET_URL AS PORTLETURL,
+	B.MENU_ID AS MENUID
 FROM	
 	TBL_PORTAL_PORTLET_COMP as A
 JOIN
@@ -544,6 +545,7 @@ ORDER BY
 
 <!-- 유저가 사용 가능한 프레임 리스트 -->
 <select id="ezNewPortal.getUserUsableFrameList" parameterClass="Map" resultClass="FrameInfoVO">
+<![CDATA[
 SELECT 
 	theme_id as themeId,
     frame_id as frameId,
@@ -566,10 +568,12 @@ AND
 	fcomp.tenant_id = #tenantId#
 AND 
 	tuser.user_id = #userId#
+]]>	
 </select>
 
 <!-- 회사가 설정한 테마에서 사용가능한 프레임 리스트 -->
 <select id="ezNewPortal.getCompUsableFrameList" parameterClass="Map" resultClass="FrameInfoVO">
+<![CDATA[
 SELECT 
 	fcomp.theme_id as themeId,
     fcomp.frame_id as frameId,
@@ -591,7 +595,36 @@ AND
 	fcomp.tenant_id = #tenantId#
 AND 
 	tcomp.theme_default = '1'  
+]]>		
 </select>
+
+<update id="ezNewPortal.updateUserUsedFrame" parameterClass="Map">
+<![CDATA[
+INSERT INTO 
+	tbl_portal_theme_user(USER_ID, COMPANY_ID, TENANT_ID, USED_THEME, USED_FRAME)
+VALUES 
+	(#userId#, #companyId#, #tenantId#, #themeId#, #frameId#)
+ON DUPLICATE KEY 
+	UPDATE user_id = #userId#, company_id = #companyId#, tenant_id = #tenantId#
+]]>	
+</update>
+
+<delete id="ezNewPortal.deleteUserUsedPortlet" parameterClass="Map">
+<![CDATA[
+DELETE FROM 
+	tbl_portal_portlet_user
+WHERE 
+	user_id = #userId#
+AND 
+	tenant_id = #tenantId#
+AND 
+	company_id = #companyId#
+]]>		
+</delete>
+
+<insert id="ezNewPortal.insertUserUsedPortlet" parameterClass="Map">
+
+</insert>
 
 <!-- 현재 진행중이면서 참여하고 있는 투표 개수  -->
 <select id="ezNewPortal.getVotePortletCount" parameterClass="Map" resultClass="Integer">
