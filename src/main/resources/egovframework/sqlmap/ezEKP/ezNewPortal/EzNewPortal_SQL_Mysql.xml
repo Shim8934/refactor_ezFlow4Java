@@ -622,10 +622,6 @@ AND
 ]]>		
 </delete>
 
-<insert id="ezNewPortal.deleteUserUsedPortlet" parameterClass="Map">
-
-</insert>
-
 <!-- 현재 진행중이면서 참여하고 있는 투표 개수  -->
 <select id="ezNewPortal.getVotePortletCount" parameterClass="Map" resultClass="Integer">
 <![CDATA[
