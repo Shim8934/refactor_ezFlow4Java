@@ -252,6 +252,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/getUserFrameList.do")
+	@ResponseBody
 	public JSONObject getUserFrameList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getUserFrameList Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -264,9 +265,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 		if (status.equals("ok")) {
 			resultObj.put("data" , resultBody.get("data"));
+			logger.debug("FrameList: " + resultBody.get("data").toString());
 		}		
 		logger.debug("getUserFrameList End");
-		return null;
+		return resultObj;
 	}
 	
 	/**
@@ -274,6 +276,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/getUserPortletList.do")
+	@ResponseBody
 	public JSONObject getUserPortletList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getUserPortletList Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -286,6 +289,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 		if (status.equals("ok")) {
 			resultObj.put("data" , resultBody.get("data"));
+			logger.debug("PortletList: " + resultBody.get("data").toString());
 		}			
 		
 		logger.debug("getUserPortletList End");
