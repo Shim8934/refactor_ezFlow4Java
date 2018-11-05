@@ -86,8 +86,8 @@
 		            alert("<spring:message code='ezOrgan.csj14' />");
 				} else if (displayName2.indexOf("&") != -1 || displayName2.indexOf("<") != -1 || displayName2.indexOf(">") != -1 || displayName2.indexOf(";") != -1 || displayName2.indexOf(":") != -1) {
 					alert("<spring:message code='ezOrgan.csj14' />");
-// 				} else if (mode == "Add" && !checkJobCnt(cn)) {
-// 					alert("<spring:message code='ezOrgan.csj08' />");
+				} else if (!checkJobDisplayNames()) {
+					alert("<spring:message code='ezOrgan.csj08' />");
 				} else {
 					rtnVal = true;
 				}
@@ -101,8 +101,8 @@
 		            alert("<spring:message code='ezOrgan.csj23' />");
 				} else if (displayName2.indexOf("&") != -1 || displayName2.indexOf("<") != -1 || displayName2.indexOf(">") != -1 || displayName2.indexOf(";") != -1 || displayName2.indexOf(":") != -1) {
 					alert("<spring:message code='ezOrgan.csj23' />");
-// 				} else if (mode == "Add" && !checkJobCnt(cn)) {
-// 					alert("<spring:message code='ezOrgan.csj19' />");
+				} else if (!checkJobDisplayNames()) {
+					alert("<spring:message code='ezOrgan.csj19' />");
 				} else {
 					rtnVal = true;
 				}				
@@ -180,8 +180,8 @@
 				document.getElementById("sort").value = SelectSingleNodeValueNew(xmlDom, "DATA/SORT").trim();
 			}
 		}
-		/* 직위 중복검사 Method (사용안함) */
-		/* function checkJobCnt(cn) {
+		/* 직위/직책 이름 중복검사 Method */
+		function checkJobDisplayNames() {
 			var rtnFlag = true;
 			$.ajax({
             	type : "POST",
@@ -190,8 +190,11 @@
             	async : false,
             	data : 
             	{
-            		cn : cn,
+					jobID : jobID,
             		type : type,
+            		mode : mode,
+            		displayName : displayName1,
+            		displayName2 : displayName2,
             		companyID : companyID
             	},
             	success : function (result) {
@@ -204,7 +207,7 @@
             	}
             });
 			return rtnFlag;
-		} */
+		}
 	</script>
 	<style type="text/css">
 		.content input {width:100%;}

@@ -263,7 +263,6 @@ public class EzStatisticsMailLogController {
 	/**
 	 * 엑셀 내려받기 함수 
 	 */
-	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/ezStatistics/statisticsMailLogExcelExport.do")
 	public void statisticsMailLogExcelExport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Locale locale)  throws Exception {
 		logger.debug("statisticsMailLogExcelExport started.");
@@ -330,7 +329,7 @@ public class EzStatisticsMailLogController {
 		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 		
 		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short)font.BOLDWEIGHT_BOLD);
+		font.setBoldweight((short)HSSFFont.BOLDWEIGHT_BOLD);
 		headerStyle.setFont(font);
 		
 		row = sheet.createRow(0);
