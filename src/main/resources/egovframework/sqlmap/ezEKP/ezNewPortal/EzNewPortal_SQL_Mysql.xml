@@ -622,7 +622,7 @@ AND
 ]]>		
 </delete>
 
-<insert id="ezNewPortal.deleteUserUsedPortlet" parameterClass="Map">
+<insert id="ezNewPortal.insertUserUsedPortlet" parameterClass="Map">
 
 </insert>
 

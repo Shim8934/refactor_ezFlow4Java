@@ -285,7 +285,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);		
-		ezNewPortalDAO.deleteUserUsedPortlet(map);
+		//ezNewPortalDAO.deleteUserUsedPortlet(map);
+		
+		LOGGER.debug("jObj : " + jObj.toJSONString());
 		
 		
 		LOGGER.debug("[Serivce] updateUserUsedPortlet Ended");
