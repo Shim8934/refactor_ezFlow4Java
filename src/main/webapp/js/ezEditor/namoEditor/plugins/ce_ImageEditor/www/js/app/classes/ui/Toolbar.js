@@ -79,6 +79,7 @@ tools_apply_filter
 	};
 
 	var ERROR_NO_FILE_SELECTED = "ERROR_NO_FILE_SELECTED";
+	var ERROR_IMAGE_SIZE_INVALID = "ERROR_IMAGE_SIZE_INVALID";
 
 
 
@@ -171,6 +172,14 @@ tools_apply_filter
 							if(!file) {
 								throw ERROR_NO_FILE_SELECTED;
 							}
+
+							if(opener && opener.ce_ImageEditorPlugin && opener.ce_ImageEditorPlugin._oThis){
+								var saveFileSizeLimit = opener.ce_ImageEditorPlugin._oThis.getUploadFileSizeLimit();
+								if(file.size > saveFileSizeLimit.image){
+									throw ERROR_IMAGE_SIZE_INVALID;
+								}
+							}
+
 							var fileReader = new FileReader();
 							fileReader.onload = function(result) {
 								resolve(fileReader);
@@ -280,6 +289,29 @@ tools_apply_filter
 					if(e===ERROR_NO_FILE_SELECTED) {
 						// no file selected
 						console.log('skip proc by ERROR_NO_FILE_SELECTED')
+					}else if(e===ERROR_IMAGE_SIZE_INVALID) {
+						/*
+						var error_dialog_config = {
+							title: 'Image Editor',
+							type: 'alert',
+							width: 400,
+							modal: true,
+							destroyWhenClose: true
+						};
+						
+						var addMsg = "";
+						if(opener && opener.ce_ImageEditorPlugin && opener.ce_ImageEditorPlugin._oThis){
+							var saveFileSizeLimit = opener.ce_ImageEditorPlugin._oThis.getUploadFileSizeLimit();
+							if(saveFileSizeLimit.image){
+								addMsg = " (" + saveFileSizeLimit.image + " " + NHIE.Lang.SupportLowVersion + ")";
+							}
+						}
+
+						error_dialog_config.content = '<p>'+NHIE.Lang.PluginImageSizeInvalid + addMsg +'</p>';
+						var error_dialog = new Dialog(error_dialog_config);
+						error_dialog.show();
+						*/
+						NHIE.dialog['alert_dialog_imagesizeinvalid'].show();
 					} else {
 						console.log('e.NHIE_ERROR - ',e.NHIE_ERROR)
 						if(e.NHIE_ERROR === 'ERROR') {

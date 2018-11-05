@@ -1131,7 +1131,6 @@ public class EzEmailAdminController {
 	/**
 	 * 엑셀 워크시트 생성 및 자동 다운로드 함수
 	 */
-	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/admin/ezEmail/statisticsListExcelExport.do")
 	public void MailQuotaExcelExport(@CookieValue("loginCookie") String loginCookie,Model model,
 			  						 HttpServletRequest request,String searchKeycode,String searchKeyword,
@@ -1230,7 +1229,7 @@ public class EzEmailAdminController {
 		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 	
 		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
+		font.setBoldweight((short) HSSFFont.BOLDWEIGHT_BOLD);
 		headerStyle.setFont(font);
 
 		row = sheet.createRow(0);

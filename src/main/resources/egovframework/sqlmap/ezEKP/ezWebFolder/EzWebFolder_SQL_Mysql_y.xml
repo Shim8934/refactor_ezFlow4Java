@@ -1217,7 +1217,7 @@
 		    and 
 		        folder.FOLDER_ID != #folderId#
 			and 
-				folder.FOLDER_ID like (			
+				folder.FOLDER_PATH like (			
 					select path 
 			        from (
 						select concat(df.folder_path ,'%') as path
