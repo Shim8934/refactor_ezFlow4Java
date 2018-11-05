@@ -42,6 +42,8 @@ public interface EzNewPortalService {
 	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit) throws Exception;
 	public List<?> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception;
 	public List<?> getUserFrameListAndSelectedFrame(String companyId, int tenantId, String userId) throws Exception;
+	public void updateUserUsedFrame(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
+	public void updateUserUsedPortlet(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
 	/**
 	 * 유은정
 	 */
