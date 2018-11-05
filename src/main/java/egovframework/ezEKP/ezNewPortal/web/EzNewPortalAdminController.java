@@ -761,7 +761,7 @@ public class EzNewPortalAdminController {
 		System.out.println(json.get("portlets"));
 		json.put("userId", userInfo.getId());		
 		
-		//commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", json);
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", json);
 		LOGGER.debug("updatePortletOrder Ended");
 	}
 	

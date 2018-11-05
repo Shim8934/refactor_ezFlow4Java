@@ -148,7 +148,7 @@
 		request.setRequestHeader('content-type', 'application/json');
 		
 		request.onload = function() { 
-			//getPortletList(); 
+			getPortletList(); 
 		};
 		
 		request.onerror = function() {}
@@ -175,7 +175,7 @@
 		request.setRequestHeader('content-type', 'application/json');
 		
 		request.onload = function() { 
-			//getPortletList(); 
+			getPortletList(); 
 		};
 		
 		request.onerror = function() {}
@@ -205,15 +205,13 @@
 			
 			portletOrderList.push({"portletOrder" : order, "portletId" : portletId});
 		}
-		
-		var request = new XMLHttpRequest();
+		console.log(portletOrderList);
+ 		var request = new XMLHttpRequest();
 		
 		request.open('POST', '/admin/ezNewPortal/updatePortletOrder.do', true);
 		request.setRequestHeader('content-type', 'application/json');
 		
-		request.onload = function() { 
-			//getPortletList(); 
-		};
+		request.onload = function() {};
 		
 		request.onerror = function() {}
 		
@@ -249,7 +247,7 @@
 		request.setRequestHeader('content-type', 'application/json');
 		
 		request.onload = function() { 
-			//getPortletList(); 
+			getPortletList(); 
 		};
 		
 		request.onerror = function() {}
@@ -380,7 +378,7 @@
 				var portletNameList;
 				var listHTML = "";
 				var portletCnt = result.length;
-				console.log(result);
+				
 				for (var i = 0; i < portletCnt; i++) {
 					portletId = result[i].portletId;
 					defaultOrder = result[i].defaultOrder;
@@ -426,7 +424,7 @@
 					if (!result[i].general) {
 						listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"'></td></tr>";
 						listHTML += "<tr><th class='portletInfoTH'>관련 메뉴 : </th><td class='portletInfoTD'>";
-						listHTML += "<input id='portletMenu" + portletId + "' type='text' readonly>";
+						listHTML += "<input id='portletMenu" + portletId + "' type='text' value='" + result[i].menuName + "'readonly>";
 						listHTML += "<div class='btnpositionJsp menuSetting'>";
 						listHTML += "<a class='imgbtn menuSettingtBtn'>";
 						listHTML += "<span>선택</span></a></div>";

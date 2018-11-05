@@ -367,6 +367,9 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		update("ezNewPortal.updateCompanyPortletOrder", map);
 	}
 	
+	public void deletePortletName (Map<String, Object> map) {
+		delete("ezNewPortal.deletePortletName", map);
+	}
 	/**
 	 * 구해안
 	 */
