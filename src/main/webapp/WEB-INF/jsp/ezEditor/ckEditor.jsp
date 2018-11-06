@@ -95,6 +95,7 @@
             	    
             	    resultStr = resultStr.replace(/\r\n/gi, "");
             	    resultStr = resultStr.replace(/\n/gi, "");
+            	    resultStr = resultStr.replace(/\s+/gi, " ");
             	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
             	    resultStr = resultStr.replace(/<p>/gi, "\n");
             	    resultStr = resultStr.replace(/<br .*?>/gi, "\n");
@@ -104,6 +105,7 @@
             	    resultStr = resultStr.replace(/<.*?".*?".*?>/gi, "");
             	    resultStr = resultStr.replace(/<.*?'.*?'.*?>/gi, "");
             	    resultStr = resultStr.replace(/<.*?>/gi, "");
+            	    resultStr = resultStr.replace(/ +/gi, " ");
             	    resultStr = resultStr.replace(/&nbsp;/gi, " ");
             	    resultStr = resultStr.replace(/&lt;/gi, "<");
             	    resultStr = resultStr.replace(/&gt;/gi, ">");

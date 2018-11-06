@@ -1450,6 +1450,9 @@
 		        createNodeAndInsertText(xmlpara, objNode, "APPROVALFLAG", approvalFlag);
 		        
 		        var searchCompanyID = $("#selectCompany option:selected").val();
+		        if(searchCompanyID == undefined) {
+		        	searchCompanyID = "";
+		        }
 		        createNodeAndInsertText(xmlpara, objNode, "searchCompanyID", searchCompanyID);
 
 		        var wWeigth = 700;

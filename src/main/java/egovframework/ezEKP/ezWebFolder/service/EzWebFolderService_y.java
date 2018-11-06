@@ -78,4 +78,8 @@ public interface EzWebFolderService_y {
 	 * </pre>
 	 * **/
 	JSONObject checkPermissions(String userId, String deptId, String comId, String folders, String files, int tenantId) throws Exception;
+	
+	// file, folder 탐색기 연동위한 explorer 
+	FileVO getFolderFileDetailForExplorer(String fldFile, String fldFileId, String userId, int tenantId ,String comId ,String offset, String primary) throws Exception;
+	
 }
