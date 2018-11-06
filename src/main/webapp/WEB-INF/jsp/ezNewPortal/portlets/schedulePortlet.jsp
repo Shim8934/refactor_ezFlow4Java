@@ -6,7 +6,7 @@
 <head>
 </head>
 <body>
-	<div class="layDIV02">
+	<div class="layDIV">
 		<dl class="portlet_title sortablePortlet">
 			<dt class="portletText"><spring:message code='main.t203' /></dt>
 			<dd class="portletPlus" onclick="goSchedule();">
