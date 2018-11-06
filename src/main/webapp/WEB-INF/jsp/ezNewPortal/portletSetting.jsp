@@ -32,7 +32,7 @@ h3 { padding-left: 20px; margin-top: 10px; margin-bottom: 5px; }
 .ui-portlet-span { display: inline-block; width: 70%;}
 .flipsterLi { width:330px; height: 240px; margin-top:20px}
 
-.frameList { height: 280px; background-color: #e0e3e4; margin-left: 20px; margin-right: 20px;}
+.frameList { height: 280px; /* background-color: #e0e3e4; */ margin-left: 20px; margin-right: 20px;}
 .select-flipster img{ border:3px solid #0088CC; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
 
 .paginationBtn { border: 1px solid black; width: 100px; height: 30px; margin-left:20px; margin-right:20px;}
@@ -49,6 +49,33 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .slider.round {border-radius: 15px;}
 .slider.round:before {border-radius: 50%;}
 </style>
+</head>
+<body id="set-body">
+<section class="set-head">
+	<h1>▒&nbsp;포틀릿 설정</h1>
+</section>
+<section class="set-frame">
+	<h3>⊙&nbsp;화면 프레임 설정</h3>
+	<div class="frameList" id="frameList">
+		<ul id="frameUl">
+		</ul>
+	</div>
+</section>
+<section class="set-portlet">
+	<h3>⊙&nbsp;포틀릿 설정</h3>
+	<div class="ui-portlet-list" id="portletList"></div>
+</section>
+<section class="set-action">
+	<div class="button-location">
+		<p class="pollBtn" id="cancelBtn">취소</p>
+		<p class="pollBtn" id="saveBtn">저장</p>
+	</div>
+</section>
+<div id="close">
+	<ul>
+		<li><span id="closeBtn"></span></li>
+	</ul>
+</div>
 <script type="text/javascript">
 
 var portletSetting = {
@@ -56,12 +83,27 @@ var portletSetting = {
 	usedtheme: '',
 };
 
+var bodyFrameSetting = function (type) {
+	var bodyFrame = parent.document.getElementsByClassName('mainbg')[0];
+
+	if (type === "on") {
+    bodyFrame.style.width = '100%';
+	    bodyFrame.style.position = 'fixed';
+	    bodyFrame.style.overflowY = 'scroll';				
+	} else if (type === "off") {
+	    bodyFrame.style.width = '';
+	    bodyFrame.style.position = '';
+	    bodyFrame.style.overflowY = '';				
+	}
+}
 
 
 $(function() {
 	
 	$("#closeBtn").on("click", popupClose);
 	$("#cancelBtn").on("click", popupClose);
+
+
 	
 	var selectFrame = function () {
 		var selectedFrame = document.querySelector('div.select-flipster');
@@ -118,7 +160,7 @@ $(function() {
 					li.appendChild(div);
 					ul.appendChild(li);
 				});
-				
+
 				// jquey flipster 적용
 				$(".frameList").flipster({
 					style: 'carousel',
@@ -128,6 +170,15 @@ $(function() {
 				    start: (portletSetting.selectedFrame*1) - 1,
 				    fadeIn : 0,
 				});
+				
+				// 배경색은 리스트 화면에 출력할 때 설정하는 걸로!
+				var frameList = document.getElementById('frameList').style.backgroundColor = '#e0e3e4';
+				
+				// flipsterBtn 위치 고정
+				var flipsterBtnPrev = document.getElementsByClassName('flipster__button--prev')[0];
+				var flipsterBtnNext = document.getElementsByClassName('flipster__button--next')[0];
+				flipsterBtnPrev.style.top = '50%';
+				flipsterBtnNext.style.top = '50%';
 				
 				var frameUl = document.getElementById('frameUl');
 				HTMLCollection.prototype.forEach = Array.prototype.forEach;
@@ -220,6 +271,7 @@ $(function() {
 	
 	getUserFrameList();
 	getUserPortletList();
+	bodyFrameSetting('on');
 	
 	var saveBtn = document.getElementById('saveBtn');
 	saveBtn.addEventListener('click', function (){
@@ -252,6 +304,7 @@ $(function() {
 			if(xhr.status >= 200 && xhr.status < 300) {
 				console.log('success', xhr.responseText);
 
+				bodyFrameSetting('off');
 				parent.DivPopUpHidden();
 				window.close();
 				parent.document.location.reload()
@@ -268,37 +321,11 @@ $(function() {
 
 
 function popupClose() {
+	bodyFrameSetting('off');
 	parent.DivPopUpHidden();
 	window.close();
 }
 
 </script>
-</head>
-<body id="set-body">
-<section class="set-head">
-	<h1>▒&nbsp;포틀릿 설정</h1>
-</section>
-<section class="set-frame">
-	<h3>⊙&nbsp;화면 프레임 설정</h3>
-	<div class="frameList">
-		<ul id="frameUl">
-		</ul>
-	</div>
-</section>
-<section class="set-portlet">
-	<h3>⊙&nbsp;포틀릿 설정</h3>
-	<div class="ui-portlet-list" id="portletList"></div>
-</section>
-<section class="set-action">
-	<div class="button-location">
-		<p class="pollBtn" id="cancelBtn">취소</p>
-		<p class="pollBtn" id="saveBtn">저장</p>
-	</div>
-</section>
-<div id="close">
-	<ul>
-		<li><span id="closeBtn"></span></li>
-	</ul>
-</div>
 </body>
 </html>
