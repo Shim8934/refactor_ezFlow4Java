@@ -300,12 +300,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 사용자 프레임 변경 & 포틀릿 설정 변경 
 	 */
 	@RequestMapping(value = "/ezNewPortal/updateUserFrameAndPortelt.do")
-	public JSONObject updateUserFrameAndPortlet(HttpServletRequest req, @RequestBody JSONObject jObj ,Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+	@ResponseBody
+	public String updateUserFrameAndPortlet(HttpServletRequest req, @RequestBody JSONObject jObj ,Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updateUserFrameAndPortlet Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();		
-		
-		logger.debug("jObj.toString() : " + jObj.toString());
+		String result = "success";
 		
 		/* 사용자 프레임 변경 */
 		String url = "/rest/ezPortal/frames/users/" + userId;
@@ -318,8 +318,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
 		status = resultBody.get("status").toString();
 		
+		logger.debug("status" + status);
+		
+		if(status.equals("error")) {
+			result = "failure";
+		}
+		
 		logger.debug("updateUserFrameAndPortlet End");
-		return null;
+		return result;
 	}
 	// 종균 끝
 	
@@ -349,7 +355,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			JSONObject data = (JSONObject) resultBody.get("data");
 			model.addAttribute("portletOrder", data.get("portletOrder"));
 			model.addAttribute("usedTheme", data.get("usedTheme"));
-			model.addAttribute("usedFrame", data.get("usedFrame"));
+			model.addAttribute("usedFrame", "Frame4");
 			model.addAttribute("sliderList", data.get("sliderList"));
 			model.addAttribute("userPhoto", data.get("userPhoto"));
 			model.addAttribute("userName", data.get("userName"));
@@ -365,8 +371,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("useSchedule", data.get("useSchedule"));
 			
 			String usedTheme = data.get("usedTheme").toString();
-			String usedFrame = data.get("usedFrame").toString();
-			returnUrl += "Theme" + usedTheme + "_" + usedFrame;
+			returnUrl += "Theme" + usedTheme;
 			logger.debug("returnUrl : " + returnUrl);
 		}
 		

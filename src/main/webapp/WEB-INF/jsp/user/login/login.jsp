@@ -41,7 +41,7 @@
 			#layerTitle{margin-bottom: 20px;}
 			
 			/* 2018-11-06 포탈개인화 로고 설정 - 유은정 */
-			.logo img {width:100%; height:100%;}
+			.logo img {width:137px; height:38px;}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>

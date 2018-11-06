@@ -35,7 +35,7 @@
 			display: none;
 		}
 		.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
-		.logo, #logoUrl {width:100%; height:100%;}
+		#logoUrl {width:106px; height:42px;}
 		</style>
 		<script type="text/javascript">
 		

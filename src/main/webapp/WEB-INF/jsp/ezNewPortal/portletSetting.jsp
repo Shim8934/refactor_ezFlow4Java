@@ -17,7 +17,7 @@
 <style type="text/css">
 html { height: 100%; }
 #set-body { background-color: white; }
-h3 { padding-left: 20px; padding-top: 15px; padding-bottom: 10px; }
+h3 { padding-left: 20px; margin-top: 10px; margin-bottom: 5px; }
 
 .set-head { background-color: #E5EFFF; height: 5%; display: flex; align-items: center; padding-top: 5px; padding-bottom: 5px;}
 .set-head h1 { font-size: 20px; margin-left: 20px;}
@@ -30,10 +30,10 @@ h3 { padding-left: 20px; padding-top: 15px; padding-bottom: 10px; }
 .ui-portlet-content { font-weight: bold; display: inline-block;}
 .ui-portlet-list { padding-left: 20px; height: 200px; width: 97%;}
 .ui-portlet-span { display: inline-block; width: 70%;}
-.flipsterLi { width:330px; height: 240px; }
+.flipsterLi { width:330px; height: 240px; margin-top:20px}
 
-.frameList { height: 250px; background-color: #e0e3e4; margin-left: 20px; margin-right: 20px; padding-top: 15px; padding-bottom: 10px;}
-.select-flipster img{ border:5px solid #0088CC; }
+.frameList { height: 280px; /* background-color: #e0e3e4; */ margin-left: 20px; margin-right: 20px;}
+.select-flipster img{ border:3px solid #0088CC; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
 
 .paginationBtn { border: 1px solid black; width: 100px; height: 30px; margin-left:20px; margin-right:20px;}
 
@@ -49,6 +49,33 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .slider.round {border-radius: 15px;}
 .slider.round:before {border-radius: 50%;}
 </style>
+</head>
+<body id="set-body">
+<section class="set-head">
+	<h1>▒&nbsp;포틀릿 설정</h1>
+</section>
+<section class="set-frame">
+	<h3>⊙&nbsp;화면 프레임 설정</h3>
+	<div class="frameList" id="frameList">
+		<ul id="frameUl">
+		</ul>
+	</div>
+</section>
+<section class="set-portlet">
+	<h3>⊙&nbsp;포틀릿 설정</h3>
+	<div class="ui-portlet-list" id="portletList"></div>
+</section>
+<section class="set-action">
+	<div class="button-location">
+		<p class="pollBtn" id="cancelBtn">취소</p>
+		<p class="pollBtn" id="saveBtn">저장</p>
+	</div>
+</section>
+<div id="close">
+	<ul>
+		<li><span id="closeBtn"></span></li>
+	</ul>
+</div>
 <script type="text/javascript">
 
 var portletSetting = {
@@ -56,10 +83,27 @@ var portletSetting = {
 	usedtheme: '',
 };
 
+var bodyFrameSetting = function (type) {
+	var bodyFrame = parent.document.getElementsByClassName('mainbg')[0];
+
+	if (type === "on") {
+    bodyFrame.style.width = '100%';
+	    bodyFrame.style.position = 'fixed';
+	    bodyFrame.style.overflowY = 'scroll';				
+	} else if (type === "off") {
+	    bodyFrame.style.width = '';
+	    bodyFrame.style.position = '';
+	    bodyFrame.style.overflowY = '';				
+	}
+}
+
+
 $(function() {
 	
 	$("#closeBtn").on("click", popupClose);
 	$("#cancelBtn").on("click", popupClose);
+
+
 	
 	var selectFrame = function () {
 		var selectedFrame = document.querySelector('div.select-flipster');
@@ -83,14 +127,26 @@ $(function() {
 				var frameList = JSON.parse(xhr.responseText).data.frameList;
 
 				frameList.forEach(function (item, index) {
-					console.log('frame item', item);	
+					
 					var li = document.createElement('li');
 					var div = document.createElement('div');
 					div.className = 'flipsterLi';
 					
-					// 초기 선택된 frame 설정
+					// 최초 회사 frame 설정
+					if(item.frameDefault) {
+						div.classList.add('select-flipster');
+						portletSetting.selectedFrame = item.frameId;
+						portletSetting.usedTheme = item.themeId;						
+					}
+					
+					// 사용자가 선택한 frame 설정
 					if (item.usedFrame*1 === item.frameId*1) {
-						div.className = 'select-flipster';
+						var selectFlipster = document.getElementsByClassName('select-flipster')[0];
+						
+						if(selectFlipster !== undefined) {
+							selectFlipster.classList.remove('select-flipster');
+						}
+						div.classList.add('select-flipster');
 						portletSetting.selectedFrame = item.frameId;
 						portletSetting.usedTheme = item.themeId;
 					}
@@ -99,20 +155,30 @@ $(function() {
 					
 					// 프레임 이미지 나오면 변경하자!!
 					var img = document.createElement('img');
-					img.src = 'https://fakeimg.pl/330x240/282828';
+					img.src = 'https://fakeimg.pl/330x240/FFFFFF';
 					div.appendChild(img);
 					li.appendChild(div);
 					ul.appendChild(li);
 				});
-				
+
 				// jquey flipster 적용
 				$(".frameList").flipster({
 					style: 'carousel',
 				    spacing: -0.4,
 				    nav: false,
 				    buttons: true,
+				    start: (portletSetting.selectedFrame*1) - 1,
 				    fadeIn : 0,
 				});
+				
+				// 배경색은 리스트 화면에 출력할 때 설정하는 걸로!
+				var frameList = document.getElementById('frameList').style.backgroundColor = '#e0e3e4';
+				
+				// flipsterBtn 위치 고정
+				var flipsterBtnPrev = document.getElementsByClassName('flipster__button--prev')[0];
+				var flipsterBtnNext = document.getElementsByClassName('flipster__button--next')[0];
+				flipsterBtnPrev.style.top = '50%';
+				flipsterBtnNext.style.top = '50%';
 				
 				var frameUl = document.getElementById('frameUl');
 				HTMLCollection.prototype.forEach = Array.prototype.forEach;
@@ -205,6 +271,7 @@ $(function() {
 	
 	getUserFrameList();
 	getUserPortletList();
+	bodyFrameSetting('on');
 	
 	var saveBtn = document.getElementById('saveBtn');
 	saveBtn.addEventListener('click', function (){
@@ -215,7 +282,6 @@ $(function() {
 		HTMLCollection.prototype.forEach = Array.prototype.forEach;
 		classList.forEach(function (item, index) {
 			
-			console.log('item!!', item);
 			var switchBtn = document.getElementById('portletid_' + item.dataset.portletid);
 			if (switchBtn.getAttribute('checked')) {
 				var obj = {
@@ -233,55 +299,33 @@ $(function() {
 			portletList: portletList,
 		}
 		
-		console.log('param', param);
-		
 		var xhr = new XMLHttpRequest();
 		xhr.onload = function () {
 			if(xhr.status >= 200 && xhr.status < 300) {
-				console.log(xhr.responseText);
+				console.log('success', xhr.responseText);
+
+				bodyFrameSetting('off');
+				parent.DivPopUpHidden();
+				window.close();
+				parent.document.location.reload()
 			} else {
-				console.error(xhr.responseText);
+				console.error('failure', xhr.responseText);
 			}
 		}
 		xhr.open('PATCH', '/ezNewPortal/updateUserFrameAndPortelt.do');
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.send(JSON.stringify({param: param}));
 	});
+
 });
 
 
 function popupClose() {
+	bodyFrameSetting('off');
 	parent.DivPopUpHidden();
 	window.close();
 }
 
 </script>
-</head>
-<body id="set-body">
-<section class="set-head">
-	<h1>▒&nbsp;포틀릿 설정</h1>
-</section>
-<section class="set-frame">
-	<h3>⊙&nbsp;화면 프레임 설정</h3>
-	<div class="frameList">
-		<ul id="frameUl">
-		</ul>
-	</div>
-</section>
-<section class="set-portlet">
-	<h3>⊙&nbsp;포틀릿 설정</h3>
-	<div class="ui-portlet-list" id="portletList"></div>
-</section>
-<section class="set-action">
-	<div class="button-location">
-		<p class="pollBtn" id="cancelBtn">취소</p>
-		<p class="pollBtn" id="saveBtn">저장</p>
-	</div>
-</section>
-<div id="close">
-	<ul>
-		<li><span id="closeBtn"></span></li>
-	</ul>
-</div>
 </body>
 </html>

@@ -30,11 +30,17 @@
 		display: block;
 	}
 	.slider_section {height:515px; width:280px;}
+	.right_float {float:right;}
 </style>
 </head>
 <body class="mainbg">
 	<div id="center">
+	<c:if test="${usedFrame eq 'Frame2'  || usedFrame eq 'Frame4'}">
+		<section class="section_left right_float" style="height:1130px;">
+	</c:if>
+	<c:if test="${usedFrame eq 'Frame1'  || usedFrame eq 'Frame3'}">
 		<section class="section_left" style="height:1130px;">
+	</c:if>
 			<article class="rolling_info">
 			<div class="slider_section">
 				<div class="rolling" id="featured">
@@ -209,11 +215,16 @@
  	var birthdayCurPage = 0;
  	var birthdayTotalCount = 0;
  	var timer;
+ 	var frameId = "<c:out value='${usedFrame}'/>";
  	
  	var quickLinkPage = {
  		current: 1,
  		total: 1,
  	};
+	
+ 	window.onresize = function(event) {
+ 		frameSetting(frameId);
+ 	}
  	
  	var setQuickLinkList = function (data) {
  		var quickList = data.quickLinkList;
@@ -326,17 +337,16 @@
  	
 	$(function() {
 		$("#featured").orbit();
-	 	
+		
 		var portletCount = portletOrder.length;
+		var portletHTML = "";
 		
 		for (var i = 0; i < portletCount; i++) {
-			var strHTML = "";
-			strHTML += "<div class='box_shadow' id='";
-			strHTML += portletOrder[i].portletId + "Portlet'>";
-			strHTML += "</div>";
-			
-			$(".portlet_area").append(strHTML);
+			portletHTML += "<div class='box_shadow' id='" + portletOrder[i].portletId + "Portlet'></div>";
 		}
+		
+		$(".portlet_area").html(portletHTML);
+ 		frameSetting(frameId);
 		
 		for (var i = 0; i < portletCount; i++) {
 			var portletId = portletOrder[i].portletId;
@@ -442,6 +452,25 @@
 		$(".portlet_area").disableSelection();
 		
 	});
+	
+	var frameSetting = function (frameSetId) {
+		console.log(frameSetId);
+		frameId = frameSetId;
+		
+		if (frameSetId == "Frame3" || frameSetId == "Frame4") {
+			var media1921 = window.matchMedia("only screen and (min-width: 1921px)");
+			var media1686 = window.matchMedia("only screen and (max-width :1920px) and (min-width :1686px)");
+			var media1280 = window.matchMedia("only screen and (max-width :1685px) and (min-width :1280px)");
+			
+			if (media1921.matches) {
+				$(".box_shadow").css("width", "483px");
+			} else if (media1686.matches) {
+				$(".box_shadow").css("width", "48%");
+			} else if (media1280.matches) {
+				$(".box_shadow").css("width", "48%");
+			}
+		}
+	}
 	</script>
 	</body>
 </html>
