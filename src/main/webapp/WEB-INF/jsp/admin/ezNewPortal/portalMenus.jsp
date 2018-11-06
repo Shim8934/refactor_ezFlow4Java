@@ -354,7 +354,7 @@
 					$(".iconBtn").on("click", uploadIconImg);
 					
 					//권한설정 기능
-					$(".menuAuthBtn").on("click", {"menuId" : menuInfo.menuId, "mode" : "view"}, openMenuAuth);
+					$(".menuAuthBtn").on("click", {"menuId" : menuInfo.menuId, "companyId" : companyValue, "mode" : "view"}, openMenuAuth);
 					
 					//저장기능 
 					$(".updateMenu").on("click", {"menuId" : menuInfo.menuId, "menuType" : menuInfo.menuType}, updateMenu);
@@ -634,7 +634,9 @@
 			var mode = event.data.mode;
 			
 			if (mode == "view") {
-				var menuId = event.data.menuId;
+				var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId;
+				var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
+		    		try { OpenWin.focus(); } catch (e) { }
 			}
 		}
 

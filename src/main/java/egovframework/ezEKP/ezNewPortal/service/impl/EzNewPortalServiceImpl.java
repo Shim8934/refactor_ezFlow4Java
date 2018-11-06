@@ -1372,6 +1372,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
+		//TODO 2018-11-06 이효진 포틀릿 삭제로직 포함시켜라
+		//deletePortlet
+		
 		ezNewPortalDAO.deleteMenuAuth(map);
 		ezNewPortalDAO.deleteMenuNames(map);
 		ezNewPortalDAO.deleteMenuComp(map);
