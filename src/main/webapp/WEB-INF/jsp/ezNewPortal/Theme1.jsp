@@ -453,10 +453,11 @@
 		
 	});
 	
-	var frameSetting = function (frameId) {
-		console.log(frameId);
+	var frameSetting = function (frameSetId) {
+		console.log(frameSetId);
+		frameId = frameSetId;
 		
-		if (frameId == "Frame3" || frameId == "Frame4") {
+		if (frameSetId == "Frame3" || frameSetId == "Frame4") {
 			var media1921 = window.matchMedia("only screen and (min-width: 1921px)");
 			var media1686 = window.matchMedia("only screen and (max-width :1920px) and (min-width :1686px)");
 			var media1280 = window.matchMedia("only screen and (max-width :1685px) and (min-width :1280px)");
