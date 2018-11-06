@@ -3,7 +3,7 @@
 <sqlMap namespace="ezNewPortalAdmin">
 	<typeAlias alias="FrameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO"/>
 	<typeAlias alias="PortalBoardTreeVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO"/>
-	
+	<typeAlias alias="PortalLogoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalLogoVO"/>
 	<select id="ezNewPortal.getThemeInfo" parameterClass="Map" resultClass="ThemeInfoVO">
 		<![CDATA[
 			SELECT
@@ -534,4 +534,52 @@
 			portlet_id = #portletId#
 	]]>
 	</update>
+	
+	<update id="ezNewPortal.updateCompanyLogo" parameterClass="Map">
+		<isNotNull property="companyId">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_LOGO
+				(company_id, tenant_id, logo_type, logo_url)
+			VALUES
+				(#companyId#, #tenantId#, #logoType#, #logoUrl#)
+			ON DUPLICATE KEY UPDATE
+				logo_url = #logoUrl#
+		]]>
+		</isNotNull>
+		<isNull property="companyId">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_LOGO
+				(company_id, tenant_id, logo_type, logo_url)
+			VALUES
+				(#tenantId#, #tenantId#, #logoType#, #logoUrl#)
+			ON DUPLICATE KEY UPDATE
+				logo_url = #logoUrl#
+		]]>
+		</isNull>
+	</update>
+	
+	<select id="ezNewPortal.getCompanyLogoList" parameterClass="Map" resultClass="PortalLogoVO">
+	<![CDATA[
+		SELECT
+			logo_url as logourl,
+			logo_type as logotype
+		FROM
+			TBL_PORTAL_LOGO
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+	]]>
+	</select>
+	
+	<select id="ezNewPortal.getTenantIdByServerName" parameterClass="Map" resultClass="Integer">
+	<![CDATA[
+		SELECT	
+			tenant_id
+		FROM
+			TBL_TENANT_SERVERNAME
+		WHERE
+			server_name = #serverName#
+	]]>
+	</select>
 </sqlMap>

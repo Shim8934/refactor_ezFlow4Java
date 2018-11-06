@@ -50,6 +50,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalLogoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -423,12 +424,19 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String deptId = info.getDeptId();
 			String langType = info.getLang();
-			String logoType = "portal";
+			String logoType = "P";
 			JSONObject data = new JSONObject();
 			/**
 			 * 1) 로고
 			 */
 			String logoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, logoType);
+			
+			if (logoUrl == null || logoUrl == "") {
+				logoUrl = "/files/upload_portal/Top/Logo/logo.gif";
+			} else {
+				logoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + logoUrl;
+			}
+			
 			LOGGER.debug("logoUrl : " + logoUrl);
 
 			/**
@@ -688,8 +696,6 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
-			
-			LOGGER.debug("2222paramData : " + jObj.toJSONString());
 			
 			ezNewPortalService.updateUserUsedPortlet(userId, tenantId, companyId, jObj);
 			
@@ -1012,18 +1018,26 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-
-			String primary = userInfo.getPrimary();
+			LoginVO userInfo = new LoginVO();
+			String primary = "";
+			int tenantId = 0;
+			
+			if (userId == null) {
+				tenantId = ezNewPortalService.getTnenantIdByServerName(serverName);
+				primary = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+			} else {
+				userInfo = commonUtil.getUserForGw(userId, serverName);
+				primary = userInfo.getPrimary();
+				tenantId = userInfo.getTenantId();
+				result.put("userCompany", userInfo.getCompanyID());
+				result.put("lang", userInfo.getLang());
+			}
 
 			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 
-			resultList = ezOrganAdminService.getCompanyList(primary, userInfo.getTenantId());
+			resultList = ezOrganAdminService.getCompanyList(primary, tenantId);
 
 			result.put("data", resultList);
-			result.put("userCompany", userInfo.getCompanyID());
-			result.put("lang", userInfo.getLang());
 			result.put("primary", primary);
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1031,6 +1045,7 @@ public class EzNewPortalGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1693,10 +1708,73 @@ public class EzNewPortalGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+			LoginVO userInfo = new LoginVO();
+			int tenantId = 0;
+			
+			if (userId == null) {
+				tenantId = ezNewPortalService.getTnenantIdByServerName(serverName);
+			} else {
+				userInfo = commonUtil.getUserForGw(userId, serverName);
+				tenantId = userInfo.getTenantId();
+				result.put("userCompany", userInfo.getCompanyID());
+				result.put("lang", userInfo.getLang());
+			}
+			
+			
 
+			String loginLogoUrl = "";
+			String portalLogoUrl = "";
+			
+			//로그인 가져오기
+			if (companyId != null) {
+				loginLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "L");
+				portalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "P");
+			}
+			String companyLogoUrl = ezNewPortalService.getPortalLogoInfo(null, tenantId, "R");
+			
+			if (loginLogoUrl == null || loginLogoUrl == "") {
+				loginLogoUrl = "/images/kr/login/logo.gif";
+			} else {
+				loginLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + loginLogoUrl;
+			}
+			
+			if (portalLogoUrl == null || portalLogoUrl == "") {
+				portalLogoUrl = "/files/upload_portal/Top/Logo/logo.gif";
+			} else {
+				portalLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + portalLogoUrl;
+			}
+			
+			if (companyLogoUrl == null || companyLogoUrl == "") {
+				companyLogoUrl = "/images/kr/login/logo.gif";
+			} else {
+				companyLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + companyLogoUrl;
+			}
+			
+			
+			List<PortalLogoVO> logoList = new ArrayList<PortalLogoVO>();
+			
+			PortalLogoVO loginLogo = new PortalLogoVO();
+			loginLogo.setLogoType("L");
+			loginLogo.setLogoUrl(loginLogoUrl);
+			
+			logoList.add(loginLogo);
+			
+			PortalLogoVO portalLogo = new PortalLogoVO();
+			portalLogo.setLogoType("P");
+			portalLogo.setLogoUrl(portalLogoUrl);
+			
+			logoList.add(portalLogo);
+			
+			PortalLogoVO companyLogo = new PortalLogoVO();
+			companyLogo.setLogoType("R");
+			companyLogo.setLogoUrl(companyLogoUrl);
+			
+			logoList.add(companyLogo);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", logoList);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1710,23 +1788,31 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [POST] 로고 등록하기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/logos/companies/{companyId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject insertCompanyLogo(HttpServletRequest request, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W insertCompanyLogo started.");
+	@RequestMapping(value = "/rest/admin/ezPortal/logos/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	public JSONObject updateCompanyLogo(HttpServletRequest request, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
+		LOGGER.debug("ezNewPortal G/W updateCompanyLogo started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
+			int tenantId = info.getTenantId();
+			String logoType = jsonParam.get("logoType").toString();
+			String logoUrl = jsonParam.get("logoUrl").toString();
+			
+			ezNewPortalService.updateCompanyLogo(companyId, tenantId, logoType, logoUrl);
+			
+			String addedLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, logoType);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", addedLogoUrl);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W insertCompanyLogo ended.");
+		LOGGER.debug("ezNewPortal G/W updateCompanyLogo ended.");
 		return result;
 	}
 

@@ -240,12 +240,16 @@ SELECT
 FROM 
 	TBL_PORTAL_LOGO
 WHERE 
-	COMPANY_ID = #companyId#
-AND 
 	TENANT_ID = #tenantId#
 AND 
 	LOGO_TYPE = #logoType#
 ]]>	
+<isNotNull property="companyId">
+<![CDATA[
+AND
+	company_id = #companyId#
+]]>
+</isNotNull>
 </select>
 
 <!-- 사용자 접근 가능 메뉴 리스트 -->
@@ -605,7 +609,7 @@ INSERT INTO
 VALUES 
 	(#userId#, #companyId#, #tenantId#, #themeId#, #frameId#)
 ON DUPLICATE KEY 
-	UPDATE user_id = #userId#, company_id = #companyId#, tenant_id = #tenantId#
+	UPDATE USED_FRAME = #frameId#
 ]]>	
 </update>
 
@@ -623,7 +627,12 @@ AND
 </delete>
 
 <insert id="ezNewPortal.insertUserUsedPortlet" parameterClass="Map">
-
+<![CDATA[
+INSERT INTO 
+	tbl_portal_portlet_user(user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id)
+values
+	 (#userId#, #tenantId#, #companyId#, #portletId#, #portletOrder#, #menuId#)
+]]>		
 </insert>
 
 <!-- 현재 진행중이면서 참여하고 있는 투표 개수  -->
