@@ -2569,4 +2569,33 @@ public class EzNewPortalGWController {
 		LOGGER.debug("boardAuthCheck ended");
 		return authCheck;
 	}
+	
+	/**
+	 * 포탈개인화 G/W [GET] 포틀릿 - 슬라이드 이미지
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezportal/portlets/slideimages", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getslideimagesPortlet(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getslideimagesPortlet started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+
+			List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(info.getCompanyID(), "USER", null, info.getTenantId());
+
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", sliderList);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getslideimagesPortlet ended.");
+		return result;
+	}
 }

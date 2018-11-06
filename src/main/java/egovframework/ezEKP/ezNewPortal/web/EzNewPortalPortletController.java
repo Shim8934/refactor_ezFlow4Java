@@ -687,4 +687,30 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalBirthdayPortlet End");
 		return "/ezNewPortal/portlets/birthdayPortlet";
 	}
+	
+	/**
+	 * 포틀릿 - 슬라이드 이미지
+	 */
+	@RequestMapping(value = "/ezNewPortal/slideImagePortlet.do")
+	public String portalSlideImagePortlet(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("portalSlideImagePortlet Start");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/ezportal/portlets/slideimages";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("sliderList", resultBody.get("data"));
+		}
+		
+		logger.debug("portalSlideImagePortlet End");
+		return "/ezNewPortal/portlets/slideImagePortlet";
+	}
 }
