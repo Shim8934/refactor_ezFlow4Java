@@ -294,6 +294,21 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		
 		String userEmail = userInfo.getId() + "@" + domainName;
+		
+		String shareId = request.getParameter("shareId");
+		logger.debug("shareId=" + shareId);
+		
+		if (shareId != null) {
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("mailGetUse ended.");
+				
+				return "";
+			}
+			
+			userEmail = shareId + "@" + domainName;
+		}
+		
 		logger.debug("userEmail=" + userEmail);
 		
 		IMAPAccess ia = null;

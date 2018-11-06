@@ -128,15 +128,16 @@
 	        
 	        
 	        // 수정 수아 재은
-	        function detailView() {
+	        function detailView(_shareId) {
 	        	
-	        	/* xml_http = createXMLHttpRequest();
-                xml_http.open("POST", "/ezEmail/mailGetUse.do", true);
-                xml_http.onreadystatechange = test;
-                xml_http.send(); */
-              
+	        	var requestUrl = "/ezEmail/mailGetUse.do";
+	        	
+	        	if (typeof(_shareId) != "undefined" && _shareId != "") {
+	            	requestUrl += "?shareId=" + encodeURIComponent(_shareId);
+	            }
+	        	
                 $.ajax({
-                    url: "/ezEmail/mailGetUse.do",
+                    url: requestUrl,
                     type: "POST",
                     dataType: "xml",
                     error : function(error) {
@@ -701,6 +702,7 @@
 	        function Email_Menu_Click() {
 	        	shareId = "";
 	        	treeviewStr = "PostTreeView";
+	        	detailView();
 	            eval(treeviewStr).select(1);
 	        }
 	        
@@ -1110,6 +1112,8 @@
 			    } else {
 			    	eval(treeviewStr).select(1);
 			    }
+			    
+			    detailView(shareId);
 			}
 			
 			function LoadEmailTree2(RootShareFolderXML) {

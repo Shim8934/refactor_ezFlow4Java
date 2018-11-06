@@ -1154,7 +1154,11 @@ function MailListRefreshByTimeout() {
 function MailListRefresh() {
 	ContextMenuHidden();
 	
-	parent.frames["left"].detailView();
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		parent.frames["left"].detailView(shareId);
+	} else {
+		parent.frames["left"].detailView();
+	}
     
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
         goToPageByNum(MailList.getAttribute("curPage"));
