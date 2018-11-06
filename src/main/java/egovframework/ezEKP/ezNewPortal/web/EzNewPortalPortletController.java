@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -670,5 +671,20 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		logger.debug("portalPhotoItemList Ended");
 		return json;
+	}
+	
+	/**
+	 * 포틀릿 - 생일자
+	 */
+	@RequestMapping(value = "/ezNewPortal/birthdayPortlet.do")
+	public String portalBirthdayPortlet(HttpServletRequest req, Model model) throws Exception {
+		logger.debug("portalBirthdayPortlet Start");
+		
+		Calendar cal = Calendar.getInstance();
+		String nowMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
+		model.addAttribute("nowMonth", nowMonth);
+		
+		logger.debug("portalBirthdayPortlet End");
+		return "/ezNewPortal/portlets/birthdayPortlet";
 	}
 }

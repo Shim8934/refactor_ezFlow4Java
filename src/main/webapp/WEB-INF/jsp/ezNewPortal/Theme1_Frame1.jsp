@@ -183,7 +183,6 @@
 <script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
 <!-- 일정관리 -->
 <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/schedulePortlet.js')}"></script>		
 <c:choose>
 	<c:when test="${checkBrowser == true}">
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_IEEIP.js')}"></script>
