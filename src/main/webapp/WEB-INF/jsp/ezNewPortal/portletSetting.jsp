@@ -56,15 +56,9 @@ var portletSetting = {
 	usedtheme: '',
 };
 
+
+
 $(function() {
-	
-	$('.mainbg').css({'overflow': 'hidden', 'height': '100%'});
-	$('.mainbg').on('scroll touchmove mousewheel', function(event) {
-		console.log('111111');
-	 	event.preventDefault();
-	 	event.stopPropagation();
-	 	return false;
-	});	
 	
 	$("#closeBtn").on("click", popupClose);
 	$("#cancelBtn").on("click", popupClose);
@@ -92,7 +86,6 @@ $(function() {
 
 				frameList.forEach(function (item, index) {
 					
-					console.log('item', item);
 					var li = document.createElement('li');
 					var div = document.createElement('div');
 					div.className = 'flipsterLi';
@@ -253,12 +246,15 @@ $(function() {
 			themeId: portletSetting.usedTheme,
 			portletList: portletList,
 		}
-		console.log(param);
 		
 		var xhr = new XMLHttpRequest();
 		xhr.onload = function () {
 			if(xhr.status >= 200 && xhr.status < 300) {
 				console.log('success', xhr.responseText);
+
+				parent.DivPopUpHidden();
+				window.close();
+				parent.document.location.reload()
 			} else {
 				console.error('failure', xhr.responseText);
 			}
@@ -267,6 +263,7 @@ $(function() {
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.send(JSON.stringify({param: param}));
 	});
+
 });
 
 
