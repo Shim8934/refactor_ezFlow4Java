@@ -1531,6 +1531,10 @@ function mailExport_start(pwd){
 		var parameters = "url=" + encodeURIComponent(PcSaveArrayList[0].getAttribute("_href"));
 		var fullpath = "/ezEmail/mailExport.do?" + parameters;
 		
+		if (typeof(shareId) != "undefined" && shareId != "") {
+			fullpath += "&shareId=" + encodeURIComponent(shareId);
+    	}
+		
 		AttachDownFrame.location.href = fullpath;
 		AttachDownFrame.target = "_blank";
 		
@@ -1548,11 +1552,17 @@ function mailExport_start(pwd){
 		
 		ShowMailProgress();
 		
+		var requestUrl = "/ezEmail/mailExportZip.do";
+		
+		if (typeof(shareId) != "undefined" && shareId != "") {
+			requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    	}
+		
 		$.ajax({
 			type : "POST",
 			dataType : "text",
 			async : true,
-			url : "/ezEmail/mailExportZip.do",
+			url : requestUrl,
 			data : folderIdAndMessageIdList,
 			complete: function(){
 				HiddenMailProgress();
@@ -1561,6 +1571,11 @@ function mailExport_start(pwd){
 				
 				if (result != "") {
 					var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result + "&encryptPw=" + encryptPw;
+					
+					if (typeof(shareId) != "undefined" && shareId != "") {
+						fullpath += "&shareId=" + encodeURIComponent(shareId);
+			    	}
+					
 					AttachDownFrame.location.href = fullpath;
 					AttachDownFrame.target = "_blank";
 				} else {
