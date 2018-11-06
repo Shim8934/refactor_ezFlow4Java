@@ -57,9 +57,8 @@ function copy() {
 	}
 	
 	// 폰트 스타일 주석 삭제
-	var pattern = /<!--.*-->/;
+	var pattern = /<!--([\s\S]+)-->/;
 	content = content.replace(pattern, "").trim();
-	
 } 
  
 /**
