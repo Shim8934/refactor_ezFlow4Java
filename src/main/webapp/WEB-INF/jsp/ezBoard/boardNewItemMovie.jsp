@@ -42,7 +42,7 @@
 	        var strNow = "${strNow}";		
 	        var bodycount = "0";
 	        var pAttachListXml = "";
-	        var gubun = "3";
+	        var gubun = "7";
 	        var SSUserID = "${userInfo.id}";
 		    var SSUserName = "${userInfo.displayName1}";
 		    var SSUserName2 = "${userInfo.displayName2}";
@@ -98,7 +98,7 @@
 			    return ( orgStr.replace( re, replaceStr ) );
 		    }
 	
-	        function addimageline(moviePath, localFileName, movieUniqueID, movieSize)
+	        function addMovieLine(moviePath, localFileName, movieUniqueID, movieSize)
 	        {
 	            var movieid = moviePath;
                 tmpContents = new Array();
@@ -110,7 +110,7 @@
                 var resultHTML = "";
 				resultHTML = "<table width='100%' height='420px' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + movieid + "' name='" + moviePath + "' uniqueId='" + movieUniqueID + "' >" +
 				"<tr><td style='border-top:0 none; padding:6px; text-align:center;'><video id='" + movieid + "' title='" + localFileName + "' size='" + movieSize + "' uniqueId='" + movieUniqueID + 
-				"' style='max-width: 640px; max-height: 360px;' name='movieView' controls></video></td></tr></table>";
+				"' style='max-width: 640px; max-height: 360px;' name='movieView' controls /></td></tr></table>";
 
                 var movieContent = document.getElementById("addimagecontent");
                 movieContent.innerHTML += resultHTML;
@@ -126,43 +126,50 @@
                 }
 	        }
 	
+	        // pAttachListXml은 여기에서 사용된다!
+	        // 앞부분 파일패스(tempUploadFile, uploadFile)와 s_가 붙은 경로를 생성한다.
+	        // s_부분은 필요없으므로 제거한다.
 	        function GetSmallUrl() {
 	            var xmldom_attachlist = createXmlDom();
 	            var strRet = "";
 	            var filepath = "";
 	
-	            if (typeof (pAttachListXml) == "string")
+	            if (typeof (pAttachListXml) == "string") {
 	                xmldom_attachlist = loadXMLString(pAttachListXml);
-	            else
+	            } else {
 	                xmldom_attachlist = pAttachListXml;
-	
-	            if (isdad || CrossYN()) {
-	                if (xmldom_attachlist == false) {
-	                    xmldom_attachlist = null;
-	                    return "";
-	                }
-	            }
+				}
+
+                if (xmldom_attachlist == false) {
+                    xmldom_attachlist = null;
+                    return "";
+                }
+                
 	            var xmldomNodes = xmldom_attachlist.getElementsByTagName('DATA2');
-	
-	            for (var i = 0; i < xmldomNodes.length; i++) {
-	                filepath = getNodeText(xmldomNodes.item(i));
-	                if (filepath.indexOf(pBoardID) != -1) {
-	                    var idx = filepath.lastIndexOf("/");
-	                    if (idx != -1) {
-	                        strRet += filepath.substr(0, idx + 1) + "s_" + filepath.substr(idx + 1) + "|";
-	                    }
-	
-	                } else {
-	                    if (saveItemBoardId != "" && saveItemBoardId == pBoardID)
-	                        strRet += "tempUploadFile/s_" + getNodeText(xmldomNodes.item(i)) + "|";
-	                    else
-	                        strRet += saveItemBoardId + "/uploadFile/s_" + getNodeText(xmldomNodes.item(i)) + "|";
-	                }
-	            }
+				
+	            console.log(xmldomNodes);
+	            
+                filepath = getNodeText(xmldomNodes.item(0));
+                if (filepath.indexOf(pBoardID) != -1) {
+                    var idx = filepath.lastIndexOf("/");
+                    if (idx != -1) {
+                        strRet += filepath.substr(0, idx + 1) + filepath.substr(idx + 1) + "|";
+                    }
+                } else {
+                    if (saveItemBoardId != "" && saveItemBoardId == pBoardID) { // 아직 동영상이 임시 업로드 파일패스에만 존재
+                        strRet += "tempUploadFile/" + getNodeText(xmldomNodes.item(0));
+					} else { // 동영상이 실제 업로드되어 존재
+                        strRet += saveItemBoardId + "/uploadFile/" + getNodeText(xmldomNodes.item(0));
+					}
+                }
+	            
+	            console.log("GetSmallUrl()의 strRet    ::    " + strRet);
+	            
 	            xmldom_attachlist = null;
 	            return strRet;
 	        }
 	        
+	        // 저장 버튼을 누른 뒤, 조건을 체크하고 영상에서 썸네일을 추출한다.
 	        function SaveItem(pMode)
 	        {
 	            if (pBoardID == "") {
@@ -185,6 +192,8 @@
 	            }
 	
 				filename = document.getElementsByName('movieView')[0].title;
+				
+				console.log("filename    ::   " + filename);
 			
 			    var strXML = "";
 			    var newID = "";
@@ -197,6 +206,17 @@
 				    txtTitle.focus();
 				    return;				
 			    }
+			        
+			    // 저장조건체크 이후, 동영상에서 썸네일 추출하여 업로드 (동기적으로 사용하므로 false 처리)
+	            var fd2 = new FormData();
+		        var thumbnail = makeThumbnail(document.getElementsByName('movieView')[0].id);
+		        fd2.append("thumbnail", thumbnail);
+		        
+		        xhr2 = new XMLHttpRequest();
+	            xhr2.open("POST", "/ezBoard/boardMovieThumb.do?thumbnailID=" + document.getElementsByName('movieView')[0].id + "&fileLimit=" + AttachLimit, false);
+	            xhr2.send(fd2);
+			    
+	            console.log(thumbnail);
 	            
 			    newID = "{" + GetGUID() + "}";
 	
@@ -209,9 +229,8 @@
 			    //2006.11.28 포토게시물 5건까지 등록할 수 있도록 수정
 	            var itemid = "";
 	            itemid = "{" + GetGUID() + "}";
-                strXML += "<ITEMID>" + itemid + "</ITEMID>";
-                strXML += "<ITEMID>" + itemid + "</ITEMID>";
-	            strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
+                strXML += "<ITEMID>" + itemid + "</ITEMID>"; // 이 게시물의 id
+	            strXML += "<BOARDID>" + pBoardID + "</BOARDID>"; // 이 게시판의 id
 	            
 	            var importance = "0";
 			    // 수정(2008.03.19) : 사용자 정보가 누락되는 경우 체크하는 부분 추가
@@ -230,7 +249,7 @@
 			    strXML += "<STARTDATE>" + pStartDate + "</STARTDATE>";
 			    strXML += "<ENDDATE>" + pEndDate + "</ENDDATE>";
 			    strXML += "<ABSTRACT></ABSTRACT>";
-			    strXML += "<ATTACHMENTS>" + MakeXMLString(AttachFileList_Photo()) + "</ATTACHMENTS>";
+			    strXML += "<ATTACHMENTS></ATTACHMENTS>"; // 동영상게시판은 첨부파일 안씀// 공백처리
 				strXML += "<UPPERITEMIDTREE>" + newID + "</UPPERITEMIDTREE>";
 				strXML += "<PARENTWRITEDATE></PARENTWRITEDATE>";
 				strXML += "<ITEMLEVEL>1</ITEMLEVEL>";
@@ -239,20 +258,25 @@
 			    strXML += "<EXTENSIONATTRIBUTE1></EXTENSIONATTRIBUTE1>";
 			    strXML += "<EXTENSIONATTRIBUTE2></EXTENSIONATTRIBUTE2>";
 				strXML += "<EXTENSIONATTRIBUTE3>" + strUserRank + "</EXTENSIONATTRIBUTE3>";	//직급으로 사용
-				strXML += "<EXTENSIONATTRIBUTE32>" + strUserRank2 + "</EXTENSIONATTRIBUTE32>";	//직급으로 사용
-				strXML += "<EXTENSIONATTRIBUTE4>" + MakeXMLString(txtPhotoFile.value) + "</EXTENSIONATTRIBUTE4>";//이미지명으로 사용함
+				strXML += "<EXTENSIONATTRIBUTE32>" + strUserRank2 + "</EXTENSIONATTRIBUTE32>";	//직급(다국어)으로 사용
+				strXML += "<EXTENSIONATTRIBUTE4></EXTENSIONATTRIBUTE4>"; // 사용하지 않는 속성(기존첨부)				
+				// pAttachListXml은 여기에서 사용됨!! photoSaveDB 메서드에서 이 경로를 이용해 DB에 저장한다.
 			    strXML += "<EXTENSIONATTRIBUTE5>" + MakeXMLString(GetSmallUrl()) + "</EXTENSIONATTRIBUTE5>";
 			    
-			    //20121018_[을지]_포토앨범 : 앨범소개 내용전달
-	            strXML += "<CONTENT>" + MakeXMLString(movieContent.value) + "</CONTENT>";		    
+			    //20121018_[을지]_포토앨범 : 앨범소개 내용전달 // = 동영상소개
+	            strXML += "<CONTENT>" + MakeXMLString(movieContent.value) + "</CONTENT>";
 	            strXML += "<DOCPASSWORD></DOCPASSWORD>";
-	            
-	            //20121018_[을지]_포토앨범 : 사진별 앨범 소개 글
-	            strXML += "<CONTENT2>" + MakeXMLString(content) + "</CONTENT2>";
 	            strXML += "<IMAGE_FILENAME>" + MakeXMLString(filename) + "</IMAGE_FILENAME>";
 	            
-	            // 여기에 썸네일 이미지 만들어서 저장?
-	            strXML += "<MAINIMAGEID>" + mainImageID + "</MAINIMAGEID>";
+	            var imageID =  "{" + GetGUID() + "}";
+	            // 저장될 동영상의 ID를 썸네일 이미지와 동일하게 사용한다. 무조건 메인플래그로 지정한다.
+	            strXML += "<CONTENT2></CONTENT2>"; // 사진 별 소개이므로 제거
+	             strXML += "<IMAGE_COUNT>1</IMAGE_COUNT>";
+	            strXML += "<IMAGE_ID>" + imageID + "</IMAGE_ID>";
+	            strXML += "<MAINIMAGEID>" + imageID + "</MAINIMAGEID>";
+	            
+	            /* 2018-11-06 홍승비 - 게시판 체크용 구분값 추가 */
+	            strXML += "<GUBUN>" + gubun + "</GUBUN>";
 			    strXML += "</NODE>";
 			    strXML += "</NODES>";
 			    
@@ -322,8 +346,7 @@
 	        /* 2018-11-05 홍승비 - 동영상파일 확장자체크 추가 */
 		    function MovieTemp_onclick() {
 		        if (document.form.file1.value != "") {
-		            var fd = new FormData();
-		            
+		            var fd = new FormData();		            
 	            	var file1val = document.getElementById("file1").files[0].name;
 			        var exIndex = file1val.lastIndexOf('.');
 					var extension = file1val.substring(exIndex+1, file1val.length);
@@ -343,7 +366,7 @@
 		            isfileup = true;
 		            xhr = new XMLHttpRequest();
 		            xhr.upload.addEventListener("progress", uploadProgress, false);
-		            xhr.addEventListener("load", uploadComplete, false);
+		            xhr.addEventListener("load", uploadComplete, false); // uploadComplete() 메서드에서 업로드된 동영상으로 썸네일을 생성한다.
 		            xhr.open("POST", "/ezBoard/boardMovieUpload.do?mode=MOVIE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
 		            xhr.send(fd);
 		            document.getElementById("progdiv").style.display = "";
@@ -357,38 +380,40 @@
 		        
 		        console.log("동영상 임시 업로드 이후");
 		        console.log(nodes.length);
+		        console.log(ImgaeReturnXml);
 		        
 	            if (getNodeText(GetChildNodes(nodes[0])[1]) == "overflow") {
 	                alert("" + strLang8 + "" + AttachLimit + "MB" + strLang9 + "");
 	                return;
 	            }
 	            saveItemBoardId = pBoardID;
-	            var rtnMode = getNodeText(GetChildNodes(nodes[0])[5]);
-	            var movieFileName = getNodeText(GetChildNodes(nodes[0])[0]);
-	            var localFileName = getNodeText(GetChildNodes(nodes[0])[2]);
-	            var movieFileSize = getNodeText(GetChildNodes(nodes[0])[3]);
-	            var movieUniqueID = getNodeText(GetChildNodes(nodes[0])[6]);
+	            var rtnMode = getNodeText(GetChildNodes(nodes[0])[5]); // MODE
+	            var movieFileName = getNodeText(GetChildNodes(nodes[0])[0]); // THUMBNAILNAME (s_{GUID})
+	            var localFileName = getNodeText(GetChildNodes(nodes[0])[2]); // PFILENAME
+	            var movieFileSize = getNodeText(GetChildNodes(nodes[0])[3]); // FILESIZE
+	            var movieUniqueID = getNodeText(GetChildNodes(nodes[0])[6]); // UNIQUEID ({GUID})
 
-	            addimageline(movieFileName, localFileName, movieUniqueID, movieFileSize);
+	            addMovieLine(movieFileName, localFileName, movieUniqueID, movieFileSize);
 	            
-	            console.log("addimageline 종료");
-		
+	            console.log("addMovieLine 종료");
+
 		        var attachXml = "<LISTVIEWDATA><ROWS>";
-		        for (var i = 0 ; i < document.getElementById("addimagecontent").childNodes.length ; i++) {
-		            attachXml += "<ROW><CELL>";
-		            attachXml += "<DATA1>" + "/upload_board/tempUploadFile/" + GetAttribute(document.getElementsByName('movieView')[i], 'uniqueId') + "</DATA1>";
-		            attachXml += "<DATA2>" + GetAttribute(document.getElementsByName('movieView')[i], 'uniqueId') + "</DATA2>";
-		            attachXml += "<DATA3></DATA3>";
-		            attachXml += "<DATA4></DATA4>";
-		            attachXml += "<DATA5>Y</DATA5>";
-		            attachXml += "<DATA6>" + GetAttribute(document.getElementsByName('movieView')[i], 'size') + "</DATA6>";
-		            attachXml += "</CELL></ROW>";
-		        }
+	            attachXml += "<ROW><CELL>";
+	            attachXml += "<DATA1>" + "/upload_board/tempUploadFile/" + GetAttribute(document.getElementsByName('movieView')[0], 'uniqueId') + "</DATA1>";
+	            attachXml += "<DATA2>" + GetAttribute(document.getElementsByName('movieView')[0], 'uniqueId') + "</DATA2>";
+	            attachXml += "<DATA3></DATA3>";
+	            attachXml += "<DATA4></DATA4>";
+	            attachXml += "<DATA5>Y</DATA5>";
+	            attachXml += "<DATA6>" + GetAttribute(document.getElementsByName('movieView')[0], 'size') + "</DATA6>";
+	            attachXml += "</CELL></ROW>";
 		        attachXml += "</ROWS></LISTVIEWDATA>";  //pAttachListXml
+		        
+		      	console.log("attachXml      ::      " + attachXml);
 		
 		        var xmlDom = createXmlDom();
 		        xmlDom = loadXMLString(attachXml);
 		        pAttachListXml = xmlDom;
+
 		    }
 		
 		    // 동영상 추가는 한개만 가능
@@ -509,7 +534,6 @@
 		        }
 		    }
 		    
-		    // 동영상 업로드(저장은 아님) 완료 후 동작
 		    function uploadComplete() {
 		        document.getElementById("progdiv").style.display = "none";
 		        document.getElementById("prog_bar").style.width = "0%";
@@ -591,6 +615,21 @@
 	    		}
 	    		return check;
 			}
+		    
+		    /* 2018-11-06 홍승비 - 동영상 파일에서 썸네일 이미지 추출 */
+		    function makeThumbnail(videoID) {
+			    var canvas = document.createElement("CANVAS");
+			    var video = document.getElementById(videoID);
+			 	// 썸네일 이미지의 크기는 71.4px * 50px
+			 	// png가 네모의 좌측상단에 붙어서? 생성되므로 캔버스 트기를 조정한다.
+			 	canvas.width = 71.4;
+			 	canvas.height = 50;
+			    canvas.getContext("2d").drawImage(video, 0, 0, 71.4, 50);
+			 	
+			 	console.log(video);
+			 	
+			 	return canvas.toDataURL();
+			}
 	    </script>
 	</head>
 	<c:if test="${!isCrossBrowser}">
@@ -661,10 +700,6 @@
 	        <tr style="display:none;">
 	          <th><spring:message code='ezBoard.t1001'/></th>
 	          <td class="pos1" colspan="3" style="width:100%;"><input style="width:600px;" id="fileData" name="fileData" type="file" onchange="fileUploadPreview(this, 'preView')" /></td>
-	        </tr>
-	        <tr style="display:none;">
-	          <th><spring:message code='ezBoard.t1021'/></th>
-	          <td class="pos1" colspan="3" style="width:100%"><input type="text" id="txtPhotoFile" style="width:85%" readonly ></td>
 	        </tr>
 	        <tr>
 	            <th><spring:message code='ezQuestion.t180'/><spring:message code='ezCommunity.t18'/></th>

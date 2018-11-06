@@ -724,9 +724,10 @@ function ListView() {
                     ImgElement.style.height = "50px";
                     ImgElement.style.width = "71.4px";
                     
-                    /* 2018-11-05 홍승비 - 동영상게시판인 경우, 썸네일에 플레이버튼 표시 */
+                    /* 2018-11-06 홍승비 - 동영상게시판인 경우, 썸네일 경로에 s_붙이고 플레이버튼 표시 */
                     if (gubun == 7) {
-                    	
+                    	ImgElement.src = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(getNodeText(oDatas[0])) +
+                    	"&fileName=s_" + encodeURI(Filename.substring(0, Filename.lastIndexOf(".") + 1) + "png");              	
                     	ImgElement.style.filter = "brightness(75%)";
                     	
 	                    var ImgElementPlay = document.createElement("IMG");

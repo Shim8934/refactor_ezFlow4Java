@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezBoard.web;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -34,6 +35,7 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -5712,7 +5714,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			return "<RESULT>INACCESSIBLE</RESULT>";
 		}
 		
-		if (guBun.equals("3") || guBun.equals("4")) {
+		if (guBun.equals("3") || guBun.equals("4") || guBun.equals("7")) {
 			itemIDs = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
 			itemID = itemIDs.split(";");
 		}
@@ -8274,7 +8276,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 동영상게시판 동영상 업로드
+	 * 동영상게시판 동영상과 썸네일 업로드
 	 */
 	@RequestMapping(value = "/ezBoard/boardMovieUpload.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
@@ -8295,7 +8297,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String thumbnailName = "";
 		long fileSize = 0;
 		
-		MultipartFile multiFile = null;
+		MultipartFile multiFile = null; // 동영상과 썸네일을 저장한다.
 		
 		if (mode.equals("MOVIE")) { // 동영상 업로드
 			multiFile = request.getFile("file1");
@@ -8375,8 +8377,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			/* 2018-09-20 홍승비 - 이미지 등록 시 3자리 이상 확장자 잘리는 문제 수정 */
 			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-			String guid = "{" + UUID.randomUUID().toString() + "}";
 			
+			// 동영상과 썸네일은 동일한 guid 사용(앞부분의 s_로 파일 구분)
+			String guid = "{" + UUID.randomUUID().toString() + "}";
 			uniqueName = guid + "." + extension;
 			thumbnailName = "s_" + guid + "." + extension;
 			
@@ -8386,36 +8389,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			
 			writeUploadedFile(multiFile, uniqueName, serverPath);
-			fileLocation = uniqueName;
-			File movieFile = new File(serverPath + uniqueName);	
 			
 			logger.debug("::동영상 임시파일 생성 완료(서버의 fileroot 내에 생성됨)");
-			
-			/*
-			int nImgWidth = 0;
-			int nImgHeight = 0;
-			
-			if (movieFile.exists()) {
-				BufferedImage bi = ImageIO.read(movieFile);		
-				
-				nImgWidth = bi.getWidth();
-				nImgHeight = bi.getHeight();
-				int nWidth = 0, nHeight = 0;
-				
-				if (nImgWidth > nImgHeight) {
-					nWidth = 640;
-					nHeight = (bi.getHeight() * nWidth) / bi.getWidth();
-				} else {
-					nHeight = 360;
-					nWidth = (bi.getWidth() * nHeight) / bi.getHeight();
-				}
-				
-				BufferedImage bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
-				bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
-				ImageIO.write(bufferedImage, extension, new File(serverPath + thumbnailName));
-			}
-			*/
-			
 			resultUpload = "true";
 			
 			// 임시로 업로드한 동영상 파일을 boardNewItemMovie.jsp로 되돌려준다.
@@ -8433,6 +8408,78 @@ public class EzBoardController extends EgovFileMngUtil{
 		strXML.append("</NODES></ROOT>");
 
 		logger.debug("MovieUpload ended");
+		return strXML.toString();
+	}
+	
+	/**
+	 * 동영상게시판 동영상과 썸네일 업로드
+	 */
+	@RequestMapping(value = "/ezBoard/boardMovieThumb.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String MovieThumbUpload(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("MovieThumbUpload started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pFileLimit = request.getParameter("fileLimit");
+		String thumbnailID = request.getParameter("thumbnailID");
+		String realPath = commonUtil.getRealPath(request);
+		String dirPath = "";
+		String serverPath = "";
+		String resultUpload = "";		
+		String thumbFile = ""; // 썸네일을 저장한다. canvas로 저장한 문자열 형태 (toDateURL...)의 이미지 파일이 온다.
+		
+		thumbFile = request.getParameter("thumbnail");
+		dirPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());	
+		serverPath = dirPath + commonUtil.separator;
+		
+		logger.debug("serverPath(썸네일 생성)     ::    " + serverPath);
+		logger.debug("multiFile in thumbCreate    ::    " + thumbFile);
+		logger.debug("serverPath + thumbnailID in thumbCreate    ::    " + serverPath + thumbnailID);
+		
+		File file = new File(serverPath);
+		
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		StringBuffer strXML = new StringBuffer();
+		
+		strXML.append("<ROOT><NODES>");
+		
+		if (pFileLimit != null && pFileLimit.equals("0") || pFileLimit.equals("")) {
+			pFileLimit = "2";
+		}
+		
+		// 썸네일을 만들어서 저장하자!(thumbnailName 사용)
+		logger.debug("::썸네일 파일 만들어서 저장하기 시작");
+		
+		thumbnailID = thumbnailID.substring(0, thumbnailID.lastIndexOf(".") + 1) + "png";
+		
+		File movieFile = new File(serverPath + thumbnailID);
+		//writeUploadedFile(multiFile.get(i), thumbnailID, serverPath);
+		BufferedImage bi = null;
+		String[] base64Arr = thumbFile.split(",");
+		byte[] imageByte = Base64.decodeBase64(base64Arr[1]);
+		
+		ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
+		bi = ImageIO.read(bis);
+		bis.close();
+
+		ImageIO.write(bi, "png", movieFile); // 파일생성
+		
+		logger.debug("::썸네일 생성, 업로드 완료");
+		
+		resultUpload = "true";
+		
+		// 임시로 업로드한 동영상 파일을 boardNewItemMovie.jsp로 되돌려준다.
+		strXML.append("<NODE><THUMBNAILNAME><![CDATA[" + thumbnailID + "]]></THUMBNAILNAME>");
+		strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+		strXML.append("</NODE>");
+
+		strXML.append("</NODES></ROOT>");
+
+		logger.debug("MovieThumbUpload ended");
 		return strXML.toString();
 	}
 	

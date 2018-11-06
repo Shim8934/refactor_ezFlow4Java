@@ -60,10 +60,9 @@
 				var commentCount = "${commentCount}";
 		        var ImageCount = "";
 		        var viewimage = "";
-		        var pListImage = "";
-		        var pImageID= "";
-		        var pListImageContent = "";
-		        var resultimage = "";
+		        var moviePath = "";
+		        var movieID= "";
+		        var movieContent = "";
 		        var pPage = 1;
 		        var imagepage = "0";
 		        var imagetotalcount = "";
@@ -112,16 +111,15 @@
 		
 		            xmldom = loadXMLString(result);
 		            
-	                pListImageContent += getNodeText(xmldom.getElementsByTagName("FILECONTENT")[0]);
-	                pListImage += getNodeText(xmldom.getElementsByTagName("FILEPATH")[0]);
-	                pImageID += getNodeText(xmldom.getElementsByTagName("IMAGEID")[0]);
-	                resultimage += getNodeText(xmldom.getElementsByTagName("IMAGEPATH")[0]);
+	            //    movieContent = getNodeText(xmldom.getElementsByTagName("FILECONTENT")[0]);
+	                moviePath = getNodeText(xmldom.getElementsByTagName("FILEPATH")[0]);
+	          //      movieID = getNodeText(xmldom.getElementsByTagName("IMAGEID")[0]);
 	                
-	                console.log("pListImage      ::     " + pListImage);
-	                console.log("pImageID      ::     " + pImageID);
-	                console.log("resultimage      ::     " + resultimage);
+	                console.log("moviePath      ::     " + moviePath);
+	            //    console.log("movieID      ::     " + movieID);
+	          //      console.log("resultimage      ::     " + resultimage);
 	                
-					ImageMain(pListImage);
+					movieMain(moviePath);
 		        }
 		        
 		        //강민수92 댓글 클릭 이벤트
@@ -462,68 +460,16 @@
 				    message.AGoDown.click();
 				}
 		
-		        function ImageMain(imagefilename)
+		        function movieMain(imagefilename)
 		        {
 		            var mainfilename = imagefilename;
 		            if (imagefilename.indexOf("s_") > -1) {
 		                mainfilename = imagefilename.split("s_")[0] + imagefilename.split("s_")[1];
 		            }
 		    
-		            viewimage = imagefilename.id;
-		
-		            document.getElementById("mainimages").style.display = "none";
-		            document.getElementById("mainimages").src = mainfilename;
-		            document.getElementById("mainimages").name = imagefilename.name;
-		
-		            imageloding();
-		        }
-		
-		        function imageloding()
-		        {
-					var newimage = new Image();
-			        newimage.src = document.getElementById("mainimages").src;
-
-			        /* 2018-04-25 홍승비 - 기존 setTimeout을 이미지.onload로 수정 */
-			        newimage.onload = function() {
-					    var we = newimage.width;
-						var he = newimage.height;
-	
-						if (we > 640) {
-							document.getElementById("mainimages").width = 640;
-					  	} else {
-					  		document.getElementById("mainimages").width = we;
-					  	}
-						if (he > 360) {
-							document.getElementById("mainimages").height = 360;
-						} else {
-							document.getElementById("mainimages").height = he;
-						}
-	
-						document.getElementById("mainimages").style.display = "";
-			
-			            var maxWidth = 640;
-			            var maxHeight = 360;
-			            var ratio = 0;
-		
-			            if (we > maxWidth) {
-			                ratio = maxWidth / we;
-			                document.getElementById("mainimages").width = maxWidth;
-			                document.getElementById("mainimages").height = he * ratio;
-			
-			                if (document.getElementById("mainimages").height > maxHeight) {
-			                    ratio = maxHeight / document.getElementById("mainimages").height;
-			                    document.getElementById("mainimages").height = maxHeight;
-			                    document.getElementById("mainimages").width = document.getElementById("mainimages").width * ratio;
-			                }
-			            }
-			            else {
-			                if (he > maxHeight) {
-			                    ratio = maxHeight / he;
-			                    document.getElementById("mainimages").height = maxHeight;
-			                    document.getElementById("mainimages").width = we * ratio;
-			                }
-			            }
-			        }
+		            viewimage = imagefilename.id;	
+		            document.getElementById("mainVideo").src = mainfilename;
+		            document.getElementById("mainVideo").name = imagefilename.name;
 		        }
 		        
 		        function showHideLayers()
@@ -531,7 +477,7 @@
 		            showDiv.style.display = "block";
 		        }
 		
-		        function btn_ImgOnclick(pMod) {
+		        function btn_movieMod(pMod) {
 		            var swidth;
 		            var sheight;
 		            var pwidth = window.screen.availWidth;
@@ -539,62 +485,26 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		
-		
-		            if (pMod == "Del") {
-		                if ((pListImage.split(";").length - 1) == 1) {
-		                    if (!confirm(strLang48)) return;
-		                    var xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
-		                    xmlhttp.send();
-		
-		                    if (xmlhttp.responseText == "NO") {
-		                        alert("<spring:message code='ezBoard.t265'/>");
-		                        return;
-		                    }
-		
-		                    xmlhttp = null;
-		                    try {
-			                	window.opener.leftCountRf();
-							} catch (e) {
-							}
-		                    try {
-		                        window.opener.refresh_onclick();
-		                    } catch (e) {
-		                    }
-		                    window.close();
-		                }
-		                else {
-		                    swidth = 440;
-		                    sheight = 520;
-		                    
-		                    pleft = (pwidth - swidth) / 2;
-				            ptop = (pheight - sheight) / 2;
-				            
-		                    window.open("/ezBoard/boardItemDelete.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&mod=" + pMod, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		                }
-		            }
-		            else {
-		            	var agent = navigator.userAgent.toLowerCase();
-		            	
-		            	if ((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1) {
-		            		if (gubun != 4) {
-		            			swidth = 440;
-			               		sheight = 460;
-		            		} else {
-			            		swidth = 460;
-				                sheight = 380;
-		            		}
-		            	} else {
-		               		swidth = 460;
-		                	sheight = 380;
-		            	}
-		                
-			            pleft = (pwidth - swidth) / 2;
-			            ptop = (pheight - sheight) / 2;
-			            
-		                window.open("/ezBoard/modifyImageItem.do?imageID=" + document.getElementById("mainimages").name + "&boardID=" + pBoardID + "&itemID=" + pItemID + "&page=" + pPage + "&mod=image&guBun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft, "");
-		            }
-		        }
+	            	var agent = navigator.userAgent.toLowerCase();
+	            	
+	            	if ((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1) {
+	            		if (gubun != 4) {
+	            			swidth = 440;
+		               		sheight = 460;
+	            		} else {
+		            		swidth = 460;
+			                sheight = 380;
+	            		}
+	            	} else {
+	               		swidth = 460;
+	                	sheight = 380;
+	            	}
+	                
+		            pleft = (pwidth - swidth) / 2;
+		            ptop = (pheight - sheight) / 2;
+		            
+	                window.open("/ezBoard/modifyImageItem.do?imageID=" + document.getElementById("mainVideo").name + "&boardID=" + pBoardID + "&itemID=" + pItemID + "&page=" + pPage + "&mod=image&guBun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft, "");
+				}
 		
 		        function page_reload()
 		        {
@@ -691,11 +601,10 @@
 		
 		                var ret = window.showModalDialog("/ezBoard/photoAlbumEdit.do", params, feature);
 		                if (ret == "OK")
-		                    page_reload();
-		
-		            }
-		           
+		                    page_reload();	
+		            }		           
 		        }
+		        
 		        function btn_albumEdit_Complete(ret) {
 		            DivPopUpHidden();
 		            if (ret == "OK")
@@ -756,18 +665,18 @@
 		                    if (CrossYN()) {
 		                        if (document.getElementById("viewboxlist").getElementsByTagName("IMG")[i].style.opacity == "1") {
 		                            if (i == document.getElementById("viewboxlist").getElementsByTagName("IMG").length - 1)
-		                                ImageMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[0]);
+		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[0]);
 		                            else
-		                                ImageMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[i + 1]);
+		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[i + 1]);
 		
 		                            break;
 		                        }
 		                    } else {
 		                        if (document.getElementById("viewboxlist").getElementsByTagName("IMG")[i].style.filter == "Alpha(Opacity=100)") {
 		                            if (i == document.getElementById("viewboxlist").getElementsByTagName("IMG").length - 1)
-		                                ImageMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[0]);
+		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[0]);
 		                            else
-		                                ImageMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[i + 1]);
+		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[i + 1]);
 		
 		                            break;
 		                        }
@@ -777,18 +686,18 @@
 		                    if (CrossYN()) {
 		                        if (document.getElementById("viewboxlist").getElementsByTagName("IMG")[i].style.opacity == "1") {
 		                            if (i == 0)
-		                                ImageMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[document.getElementById("viewboxlist").getElementsByTagName("IMG").length - 1]);
+		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[document.getElementById("viewboxlist").getElementsByTagName("IMG").length - 1]);
 		                            else
-		                                ImageMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[i - 1]);
+		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[i - 1]);
 		
 		                            break;
 		                        }
 		                    } else {
 		                        if (document.getElementById("viewboxlist").getElementsByTagName("IMG")[i].style.filter == "Alpha(Opacity=100)") {
 		                            if (i == 0)
-		                                ImageMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[document.getElementById("viewboxlist").getElementsByTagName("IMG").length - 1]);
+		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[document.getElementById("viewboxlist").getElementsByTagName("IMG").length - 1]);
 		                            else
-		                                ImageMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[i - 1]);
+		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[i - 1]);
 		
 		                            break;
 		                        }
@@ -854,7 +763,7 @@
 			                <li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005'/></span></li>
 			                <li><span onClick="Appr_onclick('C')"><spring:message code='ezBoard.t999014'/></span></li>
 			                	<c:if test="${boardItem.writerID == userInfo.id}">
-				                	<li ID='btn_Modify' ><span  onclick="btn_ImgOnclick('Mod')"><spring:message code='ezBoard.t1002'/></span></li>
+				                	<li ID='btn_Modify' ><span  onclick="btn_movieMod('Mod')"><spring:message code='ezBoard.t1002'/></span></li>
 				                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t1004'/></span></li>
 				                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t1005'/></span></li>
 		                    	</c:if>
@@ -869,7 +778,7 @@
 	        				</c:if>
 							<!--		강민수92 end -->
 		        			<c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || boardItem.writerID == userInfo.id}">
-			                    <li ID='btn_Modify' ><span  onclick="btn_ImgOnclick('Mod')"><spring:message code='ezQuestion.t180'/><spring:message code='ezBoard.t316'/></span></li>
+			                    <li ID='btn_Modify' ><span  onclick="btn_movieMod('Mod')"><spring:message code='ezQuestion.t180'/><spring:message code='ezBoard.t316'/></span></li>
 			                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t89'/></span></li>
 			                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t316'/></span></li>
 		        			</c:if>
@@ -928,10 +837,10 @@
 		        <table style="width:100%; border:1px solid #ddd; min-height:450px;">
 		        <tr style="display:table-cell;">
 		            <td style="display:inline-block;">
-		                <table id="imagetable">
+		                <table id="movieTable">
 		                    <tr>  
-		                        <td style="min-width:400px; min-height:300px;">
-		                            <img id="mainimages" class="thumbnail" style="background-color:#ffffff;cursor:pointer;" src=""/>            
+		                        <td>
+		                            <video id="mainVideo" style="width: 640px; height: 360px;" src="" controls />            
 		                        </td>
 		                    </tr>
 		           	    </table>
