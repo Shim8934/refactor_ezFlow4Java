@@ -37,6 +37,7 @@ import egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalLogoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -922,6 +923,42 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		ezNewPortalDAO.deletePortlet(map);
 		
 		LOGGER.debug("deletePortlet ended.");
+	}
+	
+	@Override
+	public void updateCompanyLogo(String companyId, int tenantId, String logoType, String logoUrl) {
+		LOGGER.debug("updateCompanyLogo started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("logoType", logoType);
+		map.put("logoUrl", logoUrl);
+		
+		ezNewPortalDAO.updateCompanyLogo(map);
+		LOGGER.debug("updateCompanyLogo ended.");
+	}
+	
+	@Override
+	public List<PortalLogoVO> getCompanyLogoList(String companyId, int tenantId) {
+		LOGGER.debug("getCompanyLogoList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		List<PortalLogoVO> companyLogoList = ezNewPortalDAO.getCompanyLogoList(map);
+		LOGGER.debug("getCompanyLogoList ended.");
+		return companyLogoList;
+	}
+	
+	@Override
+	public int getTnenantIdByServerName(String serverName) {
+		LOGGER.debug("getTnenantIdByServerName started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("serverName", serverName);
+		
+		int tenantId = ezNewPortalDAO.getTenantIdByServerName(map);
+		LOGGER.debug("getTnenantIdByServerName ended.");
+		return tenantId;
 	}
 	/**
 	 * 이효진

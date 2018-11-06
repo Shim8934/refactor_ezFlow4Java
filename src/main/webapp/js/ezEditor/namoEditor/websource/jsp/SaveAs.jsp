@@ -1,9 +1,8 @@
 <% request.setCharacterEncoding("utf-8"); %>  
 <%@ page import="java.net.*" contentType="text/html; charset=UTF-8" isErrorPage="true" %>
 <%@ page import="java.io.*"%>
-<%@ page import="java.util.regex.PatternSyntaxException" %>
 <%
-  if (request.getParameter("save_string") != null && !request.getParameter("save_string").equals("")){
+  if (request.getParameter("save_string") != null && !"".equals(request.getParameter("save_string"))){
 
 		response.setContentType("text/html");
 		response.setCharacterEncoding("utf-8");

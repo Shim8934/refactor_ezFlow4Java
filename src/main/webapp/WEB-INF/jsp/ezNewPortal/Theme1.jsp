@@ -29,12 +29,20 @@
 		cursor : pointer;
 		display: block;
 	}
+	.slider_section {height:515px; width:280px;}
+	.right_float {float:right;}
 </style>
 </head>
 <body class="mainbg">
 	<div id="center">
+	<c:if test="${usedFrame eq 'Frame2'  || usedFrame eq 'Frame4'}">
+		<section class="section_left right_float" style="height:1130px;">
+	</c:if>
+	<c:if test="${usedFrame eq 'Frame1'  || usedFrame eq 'Frame3'}">
 		<section class="section_left" style="height:1130px;">
+	</c:if>
 			<article class="rolling_info">
+			<div class="slider_section">
 				<div class="rolling" id="featured">
             	<c:choose>
 	            	<c:when test="${not empty sliderList}">
@@ -55,6 +63,7 @@
 	            	</c:otherwise>
 	            </c:choose>
            	 	</div>
+			</div>
            	 	<dl class="info">
             		<dt class="infoImg"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="36px" height="36px" /></c:if><c:if test='${userPhoto != ""}'><img id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></dt>
                		<dd class="infoName">${userName} ${userTitle}</dd>
@@ -181,6 +190,18 @@
 <script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/newPortal_common.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+<!-- 일정관리 -->
+<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/schedulePortlet.js')}"></script>		
+<c:choose>
+	<c:when test="${checkBrowser == true}">
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_IEEIP.js')}"></script>
+	</c:when>
+	<c:otherwise>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_EIP.js')}"></script>
+	</c:otherwise>
+</c:choose>
+<!-- 일정관리 끝 -->
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
 	var photoBoardPage = 1;
@@ -194,11 +215,16 @@
  	var birthdayCurPage = 0;
  	var birthdayTotalCount = 0;
  	var timer;
+ 	var frameId = "<c:out value='${usedFrame}'/>";
  	
  	var quickLinkPage = {
  		current: 1,
  		total: 1,
  	};
+	
+ 	window.onresize = function(event) {
+ 		frameSetting(frameId);
+ 	}
  	
  	var setQuickLinkList = function (data) {
  		var quickList = data.quickLinkList;
@@ -311,17 +337,16 @@
  	
 	$(function() {
 		$("#featured").orbit();
-	 	
+		
 		var portletCount = portletOrder.length;
+		var portletHTML = "";
 		
 		for (var i = 0; i < portletCount; i++) {
-			var strHTML = "";
-			strHTML += "<div class='box_shadow' id='";
-			strHTML += portletOrder[i].portletId + "Portlet'>";
-			strHTML += "</div>";
-			
-			$(".portlet_area").append(strHTML);
+			portletHTML += "<div class='box_shadow' id='" + portletOrder[i].portletId + "Portlet'></div>";
 		}
+		
+		$(".portlet_area").html(portletHTML);
+ 		frameSetting(frameId);
 		
 		for (var i = 0; i < portletCount; i++) {
 			var portletId = portletOrder[i].portletId;
@@ -427,6 +452,24 @@
 		$(".portlet_area").disableSelection();
 		
 	});
+	
+	var frameSetting = function (frameId) {
+		console.log(frameId);
+		
+		if (frameId == "Frame3" || frameId == "Frame4") {
+			var media1921 = window.matchMedia("only screen and (min-width: 1921px)");
+			var media1686 = window.matchMedia("only screen and (max-width :1920px) and (min-width :1686px)");
+			var media1280 = window.matchMedia("only screen and (max-width :1685px) and (min-width :1280px)");
+			
+			if (media1921.matches) {
+				$(".box_shadow").css("width", "483px");
+			} else if (media1686.matches) {
+				$(".box_shadow").css("width", "48%");
+			} else if (media1280.matches) {
+				$(".box_shadow").css("width", "48%");
+			}
+		}
+	}
 	</script>
 	</body>
 </html>

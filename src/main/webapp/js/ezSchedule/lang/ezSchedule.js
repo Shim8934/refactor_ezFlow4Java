@@ -129,11 +129,15 @@ var strLang122 = "월";
 var strLang123 = "일";
 var strLang124 = "종일일정";
 var strLang125 = "개인일정";
+var strLang125_1 = "개인일정";
 var strLang126 = "부서일정";
+var strLang126_1 = "부서일정";
 var strLang127 = "회사일정";
+var strLang127_1 = "회사일정";
 var strLang128 = "시";
 var strLang129 = "분";
 var strLang130 = "그룹일정";
+var strLang130_1 = "그룹일정";
 
 var strLang253 = "선택된 자원이 없습니다."
 var strLang254 = "선택된 자원은 삭제할 수 없습니다."

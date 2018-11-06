@@ -388,7 +388,7 @@
 		CREATE TABLE `tbl_user_jobmaster` (
 		  `JOBID` bigint(20) NOT NULL AUTO_INCREMENT,
 		  `TYPE` varchar(50) NOT NULL,
-		  `CN` varchar(100) NOT NULL,
+		  `CN` varchar(100) DEFAULT NULL,
 		  `DISPLAYNAME` varchar(200) DEFAULT NULL,
 		  `DISPLAYNAME2` varchar(200) DEFAULT NULL,
 		  `USEFLAG` varchar(2) DEFAULT NULL,

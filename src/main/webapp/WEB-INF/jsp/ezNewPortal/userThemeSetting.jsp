@@ -72,19 +72,20 @@ function updateUserThemeSetting(event) {
 	height:400px;
 }
 .themeImage{
-	width: 800px;
-	height : 450px;
-	background-color : #bcdceb;
-	padding : 20px;
-	text-align : center;
+	 width: 800px;
+    height: 450px;
+    background-color: #e0e0e0;
+    padding: 20px;
+    text-align: center;
 }
 #themeList {
 	height : 700px;
 }
 .themeContent {
-	border : 1px solid black;
-	padding : 10px 10px;
-	text-align : center;
+	padding: 10px 10px;
+    text-align: center;
+    background: #4e9aec;
+    color: #fff;
 }
 
 .btnpositionJsp a.imgbtn span {
@@ -92,10 +93,11 @@ function updateUserThemeSetting(event) {
 }
 
 #usedTheme {
-	text-align : center;
-	margin-top : 15px;
-	padding : 7px;
-	font-weight : bold;
+	text-align: center;
+    margin-top: 15px;
+    padding: 7px;
+    font-weight: bold;
+    color: #000;
 }
 </style>
 </head>
@@ -106,25 +108,6 @@ function updateUserThemeSetting(event) {
 			<li id="themeInit"><span>테마설정 초기화</span></li>
 		</ul>
 	</div>
-	<table border="0" cellspacing="0" cellpadding="0" class="ltitle">
-		<tr>
-			<td height="1" class="dotted"></td>
-		</tr>	
-		<tr>
-			<td height="1"  bgcolor="#ffffff"></td>
-		</tr>		
-		<tr>
-			<td height="50" > 
-				<div>▒&nbsp;적용하고자 하는 홈 테마를 선택하세요.</div>
-			</td>
-		</tr>
-		<tr>
-			<td height="1"  bgcolor="#ffffff"></td>
-		</tr>
-		<tr>
-			<td  class="dotted"></td>
-		</tr>
-	</table>
 	<div id="themeList">
 		<ul>
 			<c:forEach items="${themeList }" var="theme">
@@ -133,7 +116,7 @@ function updateUserThemeSetting(event) {
 						<img src="/images/ezNewPortal/Theme1.GIF" class="themeImg">
 						<c:choose>
 							<c:when test="${theme.themeId eq usedTheme }">
-								<div id="usedTheme"><span>적용 중인 테마</span></div>	
+								<div id="usedTheme"><span>"적용 중인 테마"</span></div>	
 							</c:when>
 							<c:otherwise>
 								<div class="btnpositionJsp"><a class="imgbtn"><span>기본 테마 선택</span></a></div>

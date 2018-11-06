@@ -250,7 +250,7 @@
 	            if(approvalFlag == "G") {
 		            CheckGubunInit();
 		
-		            if (pReDraftFlag == "DRAFT") {
+		            if (pReDraftFlag == "DRAFT" || pReDraftFlag == "REDRAFT") {
 		                document.getElementById("btnaddress").style.display = "";
 		            }
 		            if (window.screen.height <= 768) {

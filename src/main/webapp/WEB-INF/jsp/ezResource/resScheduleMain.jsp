@@ -82,6 +82,7 @@
 	    var pUse_Editor = "${useEditor}";
 	    var pNoneActiveX = "${nonActiveX}";
 	    var pStartday = "${startDay}";
+	    var lunarUseFlag = "${lunarUseFlag}";
 	    var LunarUse = false;
 	    var dayView = 0;
 	    
@@ -182,19 +183,22 @@
 	    }
 
 	    function event_schedule_get_lunaruse() {
-	       /*  if (xmlhttp == null || xmlhttp.readyState != 4)
-	            return;
-
-	        if (xmlhttp.responseText == "0")
-	            LunarUse = true;
-	        else if (xmlhttp.responseText == "1")
-	            LunarUse = true;
-	        else */
-	        
-	        // #13470 일본은 음력사용 안함
-	        LunarUse = false;
-
-	        schedule_get_holiday();
+	       if (getLang == 3) {
+	    	   schedule_get_holiday();
+	       } else {
+		       if (xmlhttp == null || xmlhttp.readyState != 4)
+		            return;
+	
+		       if (xmlhttp.responseText == "0")
+		            LunarUse = true;
+		       else if (xmlhttp.responseText == "1")
+		            LunarUse = true;
+		       else 
+		        
+		       LunarUse = false;
+		    	   
+		       schedule_get_holiday();
+	       }
 	    }
 	    
 	    var agent = navigator.userAgent.toLowerCase(); 
@@ -562,7 +566,7 @@
     			</c:if>
             </ul>
 		</div>
-		<div class="calendar_pagenav" style="width:180px;margin-left:-89px">
+		<div class="calendar_pagenav">
 	        <ul class="contentlayout">
 	            <li class="contentlayout_left" id="preM"></li>
 	            <li class="contentlayout_right" id="preN"></li>

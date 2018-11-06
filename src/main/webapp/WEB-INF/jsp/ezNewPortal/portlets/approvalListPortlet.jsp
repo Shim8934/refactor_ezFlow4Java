@@ -15,13 +15,7 @@
                 <dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /></span></dt>
                 <dd class="portletPlus" onclick="Appmore_btnClick()"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
             </dl>
-            <ul id ="ApprList" class="portlet_list">
-				<dl class='nodata'>
-					<dt><img src='/images/ezNewPortal/nodata.png'></dt>
-					<dd><spring:message code='main.t00026' /></dd>
-				</dl>
-
-            </ul>
+            <ul id ="ApprList" class="portlet_list"></ul>
         </div>
 		
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>

@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezNewPortal.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -223,14 +225,47 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		return "json";
 	}
 	/**
-	 * 포틀릿 - 공지사항
+	 * 포틀릿 - 일정관리 
 	 */
 	@RequestMapping(value = "/ezNewPortal/schedulePortlet.do")
 	public String portalSchedulePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalSchedulePortlet Start");
 		
+		logger.debug("portalSchedulePortlet End");
 		return "/ezNewPortal/portlets/schedulePortlet";
 	}
+	
+	/**
+	 * 포틀릿 - 일정관리 목록 조회
+	 */
+	@RequestMapping(value = "/ezNewPortal/getScheduleList.do")
+	public String getScheduleList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getScheduleList Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("selectDate", request.getParameter("selectDate"));
+		param.put("STARTDATE", request.getParameter("STARTDATE"));
+		param.put("ENDDATE", request.getParameter("ENDDATE"));
+		
+		String url = "/rest/ezportal/portlets/schedulelist";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONArray resultList = (JSONArray) resultBody.get("data");
+			
+			model.addAttribute("resultList", resultList);
+		}
+		
+		logger.debug("getScheduleList End");
+		return "json";
+	} 
+	
 	
 	/**
 	 * 포틀릿 - 전자결재 목록 포틀릿
