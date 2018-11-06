@@ -3615,7 +3615,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 새게시물,임시게시물게시하기 호출 Method
 	 */
-	@RequestMapping(value = {"/ezBoard/boardNewItem.do", "/ezBoard/boardNewItemTempPhoto.do"})
+	@RequestMapping(value = {"/ezBoard/boardNewItem.do", "/ezBoard/boardNewItemTempPhoto.do", "/ezBoard/boardNewItemTempMovie.do"})
 	public String newBoardItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, BoardListVO boardListVO, Model model) throws Exception {
 		logger.debug("newBoardItem started");
 
@@ -3845,6 +3845,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("newBoardItem ended");
+		
+		logger.debug("requestURL    ::    " + requestURL);
 		return requestURL;
 	}
 	
@@ -5708,11 +5710,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		Document doc = commonUtil.convertStringToDocument(resultXML);
 		String mainImageID = doc.getElementsByTagName("MAINIMAGEID").item(0).getTextContent();
 		
+		logger.debug("::1");
+		
 		BoardPropertyVO boardInfo = getBoardInfo(doc.getElementsByTagName("BOARDID").item(0).getTextContent(), userInfo);
 		
 		if (boardInfo.getWrite_FG().equals("false")) {
 			return "<RESULT>INACCESSIBLE</RESULT>";
 		}
+		
+		logger.debug("::2");
 		
 		if (guBun.equals("3") || guBun.equals("4") || guBun.equals("7")) {
 			itemIDs = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
@@ -5726,8 +5732,12 @@ public class EzBoardController extends EgovFileMngUtil{
 			mode = "New";
 		}
 		
+		logger.debug("::3");
+		
 		doc.getElementsByTagName("ITEMID").item(0).setTextContent(itemID[0]);
 		doc.getElementsByTagName("UPPERITEMIDTREE").item(0).setTextContent(itemID[0]);
+		
+		logger.debug("::4");
 		
 		result = ezBoardService.newItemPhoto(doc, mode, realPath, userInfo, mainImageID);
 
