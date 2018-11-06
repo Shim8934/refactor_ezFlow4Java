@@ -239,6 +239,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_SecureMail = SelectSingleNodeValue(XmlRows[Cnt], "securemail");
                 var p_Readdt = SelectSingleNodeValue(XmlRows[Cnt], "readdt");
                 var p_Group = SelectSingleNodeValue(XmlRows[Cnt], "group");
+                var p_RecipientCount = SelectSingleNodeValue(XmlRows[Cnt], "recipientCount");
                 var p_countryCode = SelectSingleNodeValue(XmlRows[Cnt], "countryCode");
                 var recipients = [];
             	var recipientsLen = 1;
@@ -294,7 +295,7 @@ function MakeListInfoHTML(ConentObject) {
                             break;
                         case "receiveInfo":
                         	_TDColum.style.width = "18px";
-                        	if (recipientsLen >= 2 || p_Group == "yes") {
+                        	if (p_RecipientCount >= 2 || p_Group == "yes") {
                         		_TDColum.innerHTML = "<span style='cursor: pointer'><IMG src='/images/receivedCheck_closed.png'></span>";
                         		_TDColum.setAttribute("viewSelect", "false");
                         		_TDColum.onclick = function () { viewReceivers(this); };

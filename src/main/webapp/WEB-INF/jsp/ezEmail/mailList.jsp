@@ -132,6 +132,7 @@
 		    	}
 		    	
 		    	if (g_moveUrl == 'receiveChk') {
+		    		document.getElementById("reply").style.display = "none";
 		    		document.getElementById("toggle_flag_btn").style.display = "none"; 
 		    		document.getElementById("read_stat").style.display = "none";
 		    		document.getElementById("unread_stat").style.display = "none";

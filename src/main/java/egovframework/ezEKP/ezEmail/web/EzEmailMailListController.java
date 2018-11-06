@@ -435,15 +435,23 @@ public class EzEmailMailListController {
 						
 						if (email != null) {
 							
-							if (aliasAddressList.containsKey(email)) { //Alias주소인 경우
+							// 메일 수신자의 주소가 alias 주소인 경우 real(account) 주소로 바꾼다.
+							if (aliasAddressList.containsKey(email)) {
 								email = aliasAddressList.get(email);
 							}
 							
 							for (MailReadVO vo : readList) {
-								if (vo.getReaderEmail().equals(email)) {
-									readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffset(), false);
-									readCount++;
-									//break;
+								// readList의 reader 주소가 alias 주소인 경우 real(account) 주소로 바꾸어 비교한다.
+								if (aliasAddressList.containsKey(vo.getReaderEmail())) {
+									if (aliasAddressList.get(vo.getReaderEmail()).equals(email)) {
+										readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffset(), false);
+										readCount++;
+									}
+								} else {								
+									if (vo.getReaderEmail().equals(email)) {
+										readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffset(), false);
+										readCount++;
+									}
 								}
 							}
 							
@@ -492,6 +500,7 @@ public class EzEmailMailListController {
 				sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
 				sb.append(String.format("<readdt><![CDATA[%s]]></readdt>", readDate));
 				sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));
+				sb.append(String.format("<recipientCount><![CDATA[%d]]></recipientCount>", addresses1.length));
 				
 				// subject
 				String subject = ezEmailUtil.getSubject(message);								
