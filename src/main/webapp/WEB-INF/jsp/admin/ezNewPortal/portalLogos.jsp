@@ -10,8 +10,9 @@
 .logoTitle {width:98%; padding:11px; background-color:#f3f2f2;font-size:15px;font-weight:bold;border:1px solid #747474;}
 .logoIconInfo {display:inline-block;vertical-align:top;margin:23px;}
 .logoIcon {width:250px;height:200px;border:1px solid black;margin-bottom:10px;text-align:center;vertical-align:middle;}
-.logoIcon span, .logoIcon img {margin:50px;}
-img {width:150px; height:100px;}
+.logoIcon img {margin-top:70px;}
+.loginLogo img, .companyLogo img {width:137px; height:38px;}
+.portalLogo img {width:106px; height:42px;}
 .logoContent {display:inline-block;margin-top:20px;}
 .updateLogo {display : inline-block;}
 .logoContent ul {margin-top:5px;padding-left:7px;}
@@ -36,7 +37,7 @@ img {width:150px; height:100px;}
 			<div id = "imgLogin" class='btnpositionJsp updateLogo'><a class='imgbtn updateLogoBtn'><span>등록</span></a></div>
 			<ul>
 				<li># 로그인 로고의 이미지를 변경합니다.</li>
-				<li># 가로 x 세로의 크기는 000(px) x 000(px) 입니다.</li>
+				<li># 가로 x 세로의 크기는 137(px) x 38(px) 입니다.</li>
 			</ul>
 		</div>
 	</div>
@@ -53,7 +54,7 @@ img {width:150px; height:100px;}
 				<div id="imgTop" class='btnpositionJsp updateLogo'><a class='imgbtn updateLogoBtn'><span>등록</span></a></div>
 				<ul>
 					<li># 홈페이지 접속 후, 상단의 로고의 이미지를 변경합니다.</li>
-					<li># 가로 x 세로의 크기는 000(px) x 000(px) 입니다.</li>
+					<li># 가로 x 세로의 크기는 106(px) x 42(px) 입니다.</li>
 				</ul>
 			</div>
 		</div>
@@ -115,7 +116,7 @@ var getCompanies = function() {
 				companyLogoHTML += "<div id='imgCompany' class='btnpositionJsp updateLogo'><a class='imgbtn updateLogoBtn'><span>등록</span></a></div>";
 				companyLogoHTML += "<ul>";
 				companyLogoHTML += "<li># 회사의 대표 로그인 로고의 이미지를 변경합니다.</li>";
-				companyLogoHTML += "<li># 가로 x 세로의 크기는 000(px) x 000(px) 입니다.</li>";
+				companyLogoHTML += "<li># 가로 x 세로의 크기는 137(px) x 38(px) 입니다.</li>";
 				companyLogoHTML += "</ul></div></div></div></div>";
 				
 				$("body").append(companyLogoHTML);
@@ -204,7 +205,7 @@ var imgUpload = function () {
     
     var request = new XMLHttpRequest();
     
-    if ( ext=="jpeg" || ext == "jpg" || ext == "png" || ext == "bmp") {
+    if ( ext == "jpeg" || ext == "jpg" || ext == "png" || ext == "bmp") {
 	    request.open("POST", "/admin/ezNewPortal/uploadLogo.do");
 	    request.send(fd);
 	    

@@ -57,6 +57,7 @@
 			/* Rounded sliders */
 			.slider.round {border-radius: 15px;}
 			.slider.round:before {border-radius: 50%;}
+			.mainbody {height:97%;}
 		</style>
 	</head>
 	
