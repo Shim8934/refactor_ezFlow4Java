@@ -464,7 +464,7 @@ function getBirthdayEmployeesList() {
 					$("#B" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
 				}
 			} else {
-				$("#nodata_NewBirth").css("display", "");
+				$("#nodata_NewBirth").css("display", "block");
 				$("#birthcont").css("display", "none");
 			}
 			// 프로젝트 종료 시 주석 해제
