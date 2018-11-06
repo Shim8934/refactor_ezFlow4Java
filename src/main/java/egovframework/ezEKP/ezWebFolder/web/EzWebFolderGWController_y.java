@@ -804,4 +804,57 @@ public class EzWebFolderGWController_y {
 
 	}
 	
+	/**
+	 * 
+	 * 탐색기 연동위한 folder file과 id를 전송시 상세 정보 출력해주는 메서드 추가 
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezwebfolder/fldfile/{fldfile}/fldfile-Detail", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getFldFileDetail(@PathVariable String fldfile, HttpServletRequest request) {
+		LOGGER.debug("getFldFileDetail started.");
+		
+		JSONObject jsonObj = new JSONObject();
+		String serverName 	= request.getHeader("x-user-host")      			!= null ? request.getHeader("x-user-host") 			: "" ;
+		String userId 		= request.getParameter("userId");
+		String fldfileId 	= request.getParameter("fldfileId");
+
+		FileVO fileFldDetail = new FileVO();
+		JSONObject data = new JSONObject();
+		
+		if (fldfile.equals("") || userId.equals("") || fldfileId.equals("")) {
+			LOGGER.debug("Parameter error!");
+			jsonObj.put("status", "error");
+			jsonObj.put("code", 1);
+			
+			LOGGER.debug("getFldFileDetail method ended");
+			return jsonObj;
+		}
+		
+		try {
+			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = common.getTenantId();
+			String offset = common.getOffSet();
+			String primary = common.getPrimary();
+			String comId = common.getCompanyId();
+			
+			fileFldDetail = service.getFolderFileDetailForExplorer(fldfile, fldfileId, userId, tenantId, comId, offset, primary);
+			
+			data.put("fileList", fileFldDetail);
+			
+			jsonObj.put("status", "ok");
+			jsonObj.put("code", 0);
+			jsonObj.put("data", data);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.debug(" fail ");
+			jsonObj.put("status", "error");
+			jsonObj.put("code", 2);
+			jsonObj.put("data", "");
+		}
+		
+		LOGGER.debug("getFldFileDetail method ended");
+		return jsonObj;
+	}
+	
 }

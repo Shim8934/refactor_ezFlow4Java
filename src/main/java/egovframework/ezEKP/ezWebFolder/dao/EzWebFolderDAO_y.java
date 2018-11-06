@@ -148,4 +148,13 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public int checkCompanyFolderPermission(Map<String, Object> map) {
 		return (int) select("EzWebFolderDAO_y.checkCompanyFolderPermission", map);
 	}
+	
+	// 파일 상세 정보 탐색기지원
+	public FileVO getFileDetailForExplorer(Map<String, Object> map) {
+		return (FileVO) select("EzWebFolderDAO_y.getFileDetailForExplorer", map);
+	}
+	// 폴더 상세 정보 탐색기지원
+	public FileVO getFolderDetailForExplorer(Map<String, Object> map) {
+		return (FileVO) select("EzWebFolderDAO_y.getFolderDetailForExplorer", map);
+	}
 }

@@ -1289,4 +1289,67 @@
 		</iterate>
 		AND FU.TENANT_ID = #tenantId#
 	</select>
+	
+	<select id="EzWebFolderDAO_y.getFileDetailForExplorer"  parameterClass="Map" resultMap="fileVO">
+		<![CDATA[
+			SELECT DISTINCT
+				f.FILE_ID 	 			AS FILE_ID ,
+				f.FILE_NAME  			AS FILE_NAME	,
+				f.FILE_PATH	  			AS FILE_PATH	, 
+                f.FILE_SIZE   			AS FILE_SIZE	,
+				f.TYPE_ID	    		AS TYPE_ID		,
+				f.DOWN_COUNT   			AS DOWN_COUNT   ,
+				f.FILE_EXT	  			AS FILE_EXT     ,
+				f.FOLDER_ID	    		AS FOLDER_ID    ,
+				f.USE_STATUS     		AS USE_STATUS   ,
+				f.CREATE_ID	    		AS CREATE_ID    ,
+				if ( #primary# = '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
+				f.CREATE_NAME2 as CREATE_NAME2,
+				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				f.UPDATE_ID	  			as UPDATE_ID,
+				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,    
+				f.TENANT_ID    			as TENANT_ID,
+				"" 				  		as TYPE_ICON ,
+				folder.FOLDER_PATH	  	as FOLDER_PATH,
+				folder.FOLDER_NAME1    	as FOLDER_NAME1,
+				"" 						AS FAVORITE_STATUS,
+				"" 						AS FILESHARE_STATUS,
+				if (f.FILE_EXT = 'folder',0,1) as FOLDER_SORT,
+				"" 						AS TYPE_NAME,
+				f.CREATE_ID 	AS OWNER_ID 		
+			FROM TBL_WEBFOLDER_FILE f LEFT OUTER JOIN TBL_WEBFOLDER_FOLDER folder on folder.FOLDER_ID = f.FOLDER_ID and f.TENANT_ID = folder.TENANT_ID
+			WHERE f.FILE_ID = #fldFileId# AND f.TENANT_ID = #tenantId#
+		]]>
+	</select>
+	<select id="EzWebFolderDAO_y.getFolderDetailForExplorer"  parameterClass="Map" resultMap="fileVO">
+		<![CDATA[
+			SELECT DISTINCT
+				folder.FOLDER_ID    AS FILE_ID 	    ,     
+				folder.FOLDER_NAME1 AS FILE_NAME	,     
+				folder.FOLDER_PATH  AS FILE_PATH	,     
+				0					AS FILE_SIZE	,     
+				'folder'			AS TYPE_ID		, 	  
+				0 					AS DOWN_COUNT   ,     
+				'folder'            AS FILE_EXT     ,     
+				folder.FOLDER_ID	AS FOLDER_ID    ,     
+				folder.USE_STATUS   AS USE_STATUS   ,     
+				folder.CREATE_ID	AS CREATE_ID    ,     
+				if ( #primary# = '1' , folder.CREATE_NAME1, folder.CREATE_NAME2) as CREATE_NAME1,
+				folder.CREATE_NAME2 as CREATE_NAME2,
+				DATE_ADD(folder.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				folder.UPDATE_ID	AS UPDATE_ID,  
+				DATE_ADD(folder.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				folder.TENANT_ID	AS TENANT_ID    ,   
+				"" 				  		as TYPE_ICON ,
+				folder.FOLDER_PATH  AS FOLDER_PATH  ,     
+				folder.FOLDER_NAME1 AS FOLDER_NAME1 ,  
+				"" 					AS FAVORITE_STATUS,
+				"" 					AS FILESHARE_STATUS,  
+				if (type.FILE_EXT ='folder',0,1) as FOLDER_SORT,
+				"" 	AS TYPE_NAME,
+				folder.OWNER_ID 	AS OWNER_ID 	
+			FROM TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_filetype type on  "folder" = type.FILE_EXT and folder.TENANT_ID = type.TENANT_ID
+				WHERE folder.FOLDER_ID = #fldFileId# and folder.TENANT_ID =#tenantId# 
+		]]>
+	</select>
 </sqlMap>
