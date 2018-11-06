@@ -918,4 +918,25 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		return logoUrl;
 	}
+	
+	/**
+	 * 관리자 포탈 테마상세정보 미리보기 호출
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/themePreview.do")
+	public String themePreview(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("themePreview started.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			LOGGER.debug("themePreview accessDenied.");
+			
+			return "cmm/error/adminDenied";
+		} else {
+			model.addAttribute("themeId", request.getParameter("themeId"));
+			model.addAttribute("frameId", request.getParameter("frameId"));
+			LOGGER.debug("themePreview ended.");
+			return "/admin/ezNewPortal/themePreview";
+		}
+	}
 }

@@ -365,8 +365,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("useSchedule", data.get("useSchedule"));
 			
 			String usedTheme = data.get("usedTheme").toString();
-			String usedFrame = data.get("usedFrame").toString();
-			returnUrl += "Theme" + usedTheme + "_" + usedFrame;
+			returnUrl += "Theme" + usedTheme;
 			logger.debug("returnUrl : " + returnUrl);
 		}
 		

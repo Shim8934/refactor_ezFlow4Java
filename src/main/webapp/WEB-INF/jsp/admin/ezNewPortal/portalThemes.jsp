@@ -355,7 +355,23 @@
 		//미리보기
 		var openThemePreview = function(event) {
 			var themeId = event.data.themeId;
-			alert("미리보기 눌렀음!");
+			var frameId = document.getElementById("themeDetails" + themeId).querySelector("input[name='frameDefault']:checked").getAttribute("value");
+			frameId = frameId.substring(1);
+			
+			var portletId = event.data.portletId;
+	 		var companiesObj = document.getElementById("ListCompany");
+			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
+	        var wWeight = "900";
+	        var wHeight = "750";
+
+	        var heigth = window.screen.availHeight;
+	        var width = window.screen.availWidth;
+
+	        var left = (width - wWeight) / 2;
+	        var top = (heigth - wHeight) / 2;
+	        
+	        window.open("/admin/ezNewPortal/themePreview.do?themeId=" + themeId + "&frameId=" + frameId, "",
+	            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		}
 	</script>
 </html>
