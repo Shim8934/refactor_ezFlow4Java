@@ -1394,9 +1394,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		logger.debug("downloadMailZip started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		String userAccount = userInfo.getId() + "@" + domainName;
-		logger.debug("userAccount=" + userAccount);
+		String userEmail = userInfo.getEmail();
+		logger.debug("userEmail=" + userEmail);
 		
 		String encryptPw = request.getParameter("encryptPw");
 		String tempZipName = request.getParameter("temp");
@@ -1411,7 +1410,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		// 2017.11.21 코린도 - 암호화된 ZIP 파일 내보내기
 		if (!encryptPw.equals("")) {
 			String zipFileName = ezEmailUtil.encryptZipFile(filePath, folderPath, encryptPw);
-			downFile(request, response, zipFileName, userAccount + ".zip");
+			downFile(request, response, zipFileName, userEmail + ".zip");
 			
 			File secureFile = new File(zipFileName);
 			
@@ -1419,7 +1418,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				logger.debug("zip file is deleted. filePath=" + zipFileName);
 			}
 		} else {
-			downFile(request, response, filePath, userAccount + ".zip");
+			downFile(request, response, filePath, userEmail + ".zip");
 		}
 		
 		File zipFile = new File(filePath);
@@ -1440,9 +1439,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		logger.debug("downloadMailboxZip started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		String userAccount = userInfo.getId() + "@" + domainName;
-		logger.debug("userAccount=" + userAccount);
+		String userEmail = userInfo.getEmail();
+		logger.debug("userEmail=" + userEmail);
 		
 		String folderName = request.getParameter("folderName");
 		String tempZipName = request.getParameter("temp");
@@ -1467,7 +1465,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		if (!encryptPw.equals("")) {
 			String zipFileName = ezEmailUtil.encryptZipFile(filePath, folderPath, encryptPw);
 			handleMessage(jsonStr, session);
-			downFile(request, response, zipFileName, userAccount + "_" + folderName + ".zip");
+			downFile(request, response, zipFileName, userEmail + "_" + folderName + ".zip");
 			
 			File secureFile = new File(zipFileName);
 			
@@ -1476,7 +1474,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 		} else {
 			handleMessage(jsonStr, session);
-			downFile(request, response, filePath, userAccount + "_" + folderName + ".zip");
+			downFile(request, response, filePath, userEmail + "_" + folderName + ".zip");
 		}
 		
 		File zipFile = new File(filePath);
