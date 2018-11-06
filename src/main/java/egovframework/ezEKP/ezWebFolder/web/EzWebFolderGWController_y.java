@@ -809,19 +809,19 @@ public class EzWebFolderGWController_y {
 	 * 탐색기 연동위한 folder file과 id를 전송시 상세 정보 출력해주는 메서드 추가 
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezwebfolder/fldfile/{fldfile}/fldfile-Detail", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezwebfolder/fldfile/{fldfile}/fldfile-detail", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFldFileDetail(@PathVariable String fldfile, HttpServletRequest request) {
 		LOGGER.debug("getFldFileDetail started.");
 		
 		JSONObject jsonObj = new JSONObject();
 		String serverName 	= request.getHeader("x-user-host")      			!= null ? request.getHeader("x-user-host") 			: "" ;
 		String userId 		= request.getParameter("userId");
-		String fldfileId 	= request.getParameter("fldfileId");
+		String fldFileId 	= request.getParameter("fldFileId");
 
-		FileVO fileFldDetail = new FileVO();
+		FileVO fldFileDetail = new FileVO();
 		JSONObject data = new JSONObject();
 		
-		if (fldfile.equals("") || userId.equals("") || fldfileId.equals("")) {
+		if (fldfile.equals("") || userId.equals("") || fldFileId.equals("")) {
 			LOGGER.debug("Parameter error!");
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
@@ -837,9 +837,9 @@ public class EzWebFolderGWController_y {
 			String primary = common.getPrimary();
 			String comId = common.getCompanyId();
 			
-			fileFldDetail = service.getFolderFileDetailForExplorer(fldfile, fldfileId, userId, tenantId, comId, offset, primary);
+			fldFileDetail = service.getFolderFileDetailForExplorer(fldfile, fldFileId, userId, tenantId, comId, offset, primary);
 			
-			data.put("fileList", fileFldDetail);
+			data.put("fileList", fldFileDetail);
 			
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
