@@ -76,7 +76,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 
 
 /* admin top */
-.admin_top{margin:0;background: #3d8fea;}
+.admin_top{margin:0;background: #687077;}
 .admin_top h1{
 	font-size:18px;
 	color: white;
@@ -98,7 +98,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 	margin:0px;
 	padding:0 0 0 10px;
 	background:white;
-	border-top: 1px solid #3d8fea;
+	border-top: 1px solid #687077;
 	border-bottom:1px solid #ccc;
 	}
 #adminmenu li, #adminmenu li.off{
