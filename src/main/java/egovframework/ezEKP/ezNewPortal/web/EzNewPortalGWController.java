@@ -689,8 +689,6 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 			
-			LOGGER.debug("2222paramData : " + jObj.toJSONString());
-			
 			ezNewPortalService.updateUserUsedPortlet(userId, tenantId, companyId, jObj);
 			
 			result.put("status", "ok");
