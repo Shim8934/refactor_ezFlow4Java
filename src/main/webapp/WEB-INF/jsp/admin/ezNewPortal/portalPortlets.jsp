@@ -27,8 +27,8 @@
   	.portlet-placeholder {border: 1px dotted black; margin: 0 1em 1em 0; height: 50px;}
 	.col, .newPortlet {padding: 16px 16px 5px 16px;}
 	.addPortlet:hover {cursor:pointer;}
-	.updatePortlet, .addNewPortlet {float : right;margin : 0px; padding : 0px;}
-	.deletePortletBtn {margin-left:7px;}
+	.updatePortlet, .addNewPortlet, .cancelNewPortlet {float : right;margin : 0px; padding : 0px;}
+	.deletePortletBtn, .cancelNewPortletBtn {margin-left:7px;}
 	.boardSetting, .menuSetting {margin:0px 0px 0px 12px;padding:0px;text-align:left;display:inline-block;vertical-align:top;}
 	.portletInfo {display:inline-block;marging-top:8px;}
 	.portletInfoTH {background-color : white;border:0px; padding-left:0px;}
@@ -166,6 +166,12 @@
 	}
 	  
 	var portletDelete = function(event) {
+		var response = confirm("포틀릿을 삭제하시겠습니까?");
+		
+		if (!response) {
+			return;
+		}
+		
 		var companiesObj = document.getElementById("ListCompany");
 		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 		var portletId = event.data.portletId;
@@ -420,13 +426,20 @@
 							language = "일본어";
 						}
 						
-						listHTML += "<tr><th class='portletInfoTH'>포틀릿명(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + portletNameList[j].portletName + "'></td></tr>"
+						listHTML += "<tr><th class='portletInfoTH'>포틀릿명(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + portletNameList[j].portletName + "' maxlength='50'></td></tr>"
 					 }
 					
 					if (!result[i].general) {
-						listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"'></td></tr>";
+						listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"' maxlength='100'></td></tr>";
 						listHTML += "<tr><th class='portletInfoTH'>관련 메뉴 : </th><td class='portletInfoTD'>";
-						listHTML += "<input id='portletMenu" + portletId + "' type='text' value='" + result[i].menuName + "'readonly>";
+						
+						var menuName = result[i].menuName;
+						
+						if (menuName == null || menuName == "null") {
+							menuName = "관련 메뉴 없음";
+						}
+						
+						listHTML += "<input id='portletMenu" + portletId + "' type='text' value='" + menuName + "'readonly>";
 						listHTML += "<div class='btnpositionJsp menuSetting'>";
 						listHTML += "<a class='imgbtn menuSettingtBtn'>";
 						listHTML += "<span>선택</span></a></div>";
@@ -467,8 +480,9 @@
 					$("#portlet" + result[i].portletId).find(".updatePortletBtn").on("click", {"portletId" : result[i].portletId}, portletUpdate);
 					
 					if (!result[i].general) {
+						$("#portletMenu" + result[i].portletId).parent().find(".menuSetting").on("click", {"portletId" : result[i].portletId}, openMenuList);
 						$("#portlet" + result[i].portletId).find(".deletePortletBtn").on("click", {"portletId" : result[i].portletId, "menuId" : result[i].menuId}, portletDelete);
-						$("#portletMenu" + result[i].portletId).find(".menuSetting").on("click", {"portletId" : result[i].portletId}, openMenuList);
+						
 					}
 				}
 				
@@ -519,16 +533,18 @@
 		listHTML += "<div class='portlet-content'>";
 		listHTML += "<div class='btnpositionJsp addNewPortlet'>";
 		listHTML += "<a class='imgbtn addNewPortletBtn'>";
-		listHTML += "<span>추가</span></a></div>";
+		listHTML += "<span>추가</span></a>";
+		listHTML += "<a class='imgbtn cancelNewPortletBtn'>";
+		listHTML += "<span>취소</span></a></div>";
 		listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'>포틀릿 사용  : </th>"
 		listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td>";
 		listHTML += "</tr>";
 		
 		//언어
-		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(한국어) :</th><td class='portletInfoTD'><input class='portletName' data1='1' type='text'></td></tr>"
-		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(영어) :</th><td class='portletInfoTD'><input class='portletName' data1='2' type='text'></td></tr>"
-		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(일본어) :</th><td class='portletInfoTD'><input class='portletName' data1='3' type='text'></td></tr>"
-		listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input class='connectionUrl' type='text'></td></tr>";
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(한국어) :</th><td class='portletInfoTD'><input class='portletName' data1='1' type='text' maxlength='50'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(영어) :</th><td class='portletInfoTD'><input class='portletName' data1='2' type='text' maxlength='50'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(일본어) :</th><td class='portletInfoTD'><input class='portletName' data1='3' type='text' maxlength='50'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input class='connectionUrl' type='text' maxlength='100'></td></tr>";
 		listHTML += "<tr><th class='portletInfoTH'>관련 메뉴 : </th><td class='portletInfoTD'>";
 		listHTML += "<input id='newPortletMenu' type='text' readonly>";
 		listHTML += "<div class='btnpositionJsp menuSetting'>";
@@ -536,7 +552,7 @@
 		listHTML += "<span>선택</span></a></div>";
 		listHTML += "</td></tr>";
 		listHTML += "<tr class='setBoard'><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
-		listHTML += "<input id='newPortletBoard' type='text'>";
+		listHTML += "<input id='newPortletBoard' type='text' readonly>";
 		listHTML += "<div class='btnpositionJsp boardSetting'>";
 		listHTML += "<a class='imgbtn boardSettingtBtn'>";
 		listHTML += "<span>설정</span></a></div></td></tr>";
@@ -574,8 +590,13 @@
 		
 		$("#newPortlet").find(".menuSetting").on("click", {"portletId" : null}, openMenuList);
 		
-		$(".addNewPortlet").on("click", {"portletId" : null}, portletAdd);
+		$(".addNewPortletBtn").on("click", {"portletId" : null}, portletAdd);
+		$(".cancelNewPortletBtn").on("click", cancelPortlet);
 		$(".newPortlet").find(".boardSetting").on("click", {"portletId" : null}, openBoardTree);
+	}
+	
+	var cancelPortlet = function() {
+		getPortletList();
 	}
 	
 	var openMenuList = function (event) {
@@ -583,7 +604,7 @@
  		var companiesObj = document.getElementById("ListCompany");
 		var companyId = companiesObj.options[companiesObj.selectedIndex].value;
         var wWeight = "639";
-        var wHeight = "415";
+        var wHeight = "445";
 
         var heigth = window.screen.availHeight;
         var width = window.screen.availWidth;

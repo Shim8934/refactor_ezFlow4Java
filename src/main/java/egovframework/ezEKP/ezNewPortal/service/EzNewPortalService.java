@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalLogoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -71,6 +72,9 @@ public interface EzNewPortalService {
 	public void updateCompanyPortletInfo(JSONObject portletInfo, JSONArray portletNames,  String companyId, int tenantId) throws Exception;
 	public void updateCompanyPortletOrder(JSONArray portletList, int tenantId, String companyId) throws Exception ;
 	public void deletePortlet(int portletId, int menuId, String companyId, int tenantId);
+	public void updateCompanyLogo(String companyId, int tenantId, String logoType, String logoUrl);
+	public List<PortalLogoVO> getCompanyLogoList(String companyId, int tenantId);
+	public int getTnenantIdByServerName(String serverName);
 	
 	/**
 	 * 이효진

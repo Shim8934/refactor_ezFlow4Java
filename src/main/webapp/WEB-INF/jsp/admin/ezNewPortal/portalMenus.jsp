@@ -57,6 +57,7 @@
 			/* Rounded sliders */
 			.slider.round {border-radius: 15px;}
 			.slider.round:before {border-radius: 50%;}
+			.mainbody {height:97%;}
 		</style>
 	</head>
 	
@@ -257,12 +258,12 @@
 						}
 						
 						menusHTML += country + ")</th>";
-						menusHTML += "<td><input class='menuNameInput' id='menu" +  item.menuLang + "' type='text' value='" + item.menuName + "'></td>";
+						menusHTML += "<td><input class='menuNameInput' id='menu" +  item.menuLang + "' type='text' value='" + item.menuName + "' maxlength='50'></td>";
 						menusHTML += "</tr>";
 					});
 					
 					menusHTML += "</table></li>";
-					menusHTML += "<li class='conUrl'>[연결 URL]<input type='text' value='" + menuInfo.menuUrl + "'></li>"
+					menusHTML += "<li class='conUrl'>[연결 URL]<input type='text' value='" + menuInfo.menuUrl + "' maxlength='100'></li>"
 					menusHTML += "</ul></div>";
 					menusHTML += "<div class='menuAuth'><div class='btnpositionJsp menuAuthBtn'><a class='imgbtn'><span>권한 설정</span></a></div>";
 					menusHTML += "<div class='accessOK'>[접근 허용]"
@@ -354,7 +355,7 @@
 					$(".iconBtn").on("click", uploadIconImg);
 					
 					//권한설정 기능
-					$(".menuAuthBtn").on("click", {"menuId" : menuInfo.menuId, "mode" : "view"}, openMenuAuth);
+					$(".menuAuthBtn").on("click", {"menuId" : menuInfo.menuId, "companyId" : companyValue, "mode" : "view"}, openMenuAuth);
 					
 					//저장기능 
 					$(".updateMenu").on("click", {"menuId" : menuInfo.menuId, "menuType" : menuInfo.menuType}, updateMenu);
@@ -452,19 +453,19 @@
 			//메뉴 언어
 			menusHTML += "<tr>";
 			menusHTML += "<th>메뉴명(한국어)</th>";
-			menusHTML += "<td><input class='menuNameInput' id='menu1' type='text'></td>";
+			menusHTML += "<td><input class='menuNameInput' id='menu1' type='text' maxlength='50'></td>";
 			menusHTML += "</tr>";
 			menusHTML += "<tr>";
 			menusHTML += "<th>메뉴명(영어)</th>";
-			menusHTML += "<td><input class='menuNameInput' id='menu2' type='text'></td>";
+			menusHTML += "<td><input class='menuNameInput' id='menu2' type='text' maxlength='50'></td>";
 			menusHTML += "</tr>";
 			menusHTML += "<tr>";
 			menusHTML += "<th>메뉴명(일본어)</th>";
-			menusHTML += "<td><input class='menuNameInput' id='menu3' type='text'></td>";
+			menusHTML += "<td><input class='menuNameInput' id='menu3' type='text' maxlength='50'></td>";
 			menusHTML += "</tr>";
 			
 			menusHTML += "</table></li>";
-			menusHTML += "<li class='conUrl'>[연결 URL]<input type='text'></li>"
+			menusHTML += "<li class='conUrl'>[연결 URL]<input type='text' maxlength='100'></li>"
 			menusHTML += "</ul></div>";
 			menusHTML += "<div class='menuAuth'><div class='btnpositionJsp menuAuthBtn'><a class='imgbtn'><span>권한 설정</span></a></div>";
 			menusHTML += "<div class='accessOK'>[접근 허용]</div>";
@@ -634,7 +635,9 @@
 			var mode = event.data.mode;
 			
 			if (mode == "view") {
-				var menuId = event.data.menuId;
+				var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId;
+				var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
+		    		try { OpenWin.focus(); } catch (e) { }
 			}
 		}
 
