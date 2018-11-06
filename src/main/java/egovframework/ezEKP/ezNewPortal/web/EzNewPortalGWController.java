@@ -433,6 +433,8 @@ public class EzNewPortalGWController {
 			
 			if (logoUrl == null || logoUrl == "") {
 				logoUrl = "/files/upload_portal/Top/Logo/logo.gif";
+			} else {
+				logoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + logoUrl;
 			}
 			
 			LOGGER.debug("logoUrl : " + logoUrl);
@@ -1018,18 +1020,26 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-
-			String primary = userInfo.getPrimary();
+			LoginVO userInfo = new LoginVO();
+			String primary = "";
+			int tenantId = 0;
+			
+			if (userId == null) {
+				tenantId = ezNewPortalService.getTnenantIdByServerName(serverName);
+				primary = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+			} else {
+				userInfo = commonUtil.getUserForGw(userId, serverName);
+				primary = userInfo.getPrimary();
+				tenantId = userInfo.getTenantId();
+				result.put("userCompany", userInfo.getCompanyID());
+				result.put("lang", userInfo.getLang());
+			}
 
 			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 
-			resultList = ezOrganAdminService.getCompanyList(primary, userInfo.getTenantId());
+			resultList = ezOrganAdminService.getCompanyList(primary, tenantId);
 
 			result.put("data", resultList);
-			result.put("userCompany", userInfo.getCompanyID());
-			result.put("lang", userInfo.getLang());
 			result.put("primary", primary);
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1037,6 +1047,7 @@ public class EzNewPortalGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1699,13 +1710,30 @@ public class EzNewPortalGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			int tenantId = info.getTenantId();
+			String userId = request.getParameter("userId");
+			LoginVO userInfo = new LoginVO();
+			int tenantId = 0;
+			
+			if (userId == null) {
+				tenantId = ezNewPortalService.getTnenantIdByServerName(serverName);
+			} else {
+				userInfo = commonUtil.getUserForGw(userId, serverName);
+				tenantId = userInfo.getTenantId();
+				result.put("userCompany", userInfo.getCompanyID());
+				result.put("lang", userInfo.getLang());
+			}
+			
+			
+
+			String loginLogoUrl = "";
+			String portalLogoUrl = "";
 			
 			//로그인 가져오기
-			String loginLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "L");
-			String portalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "P");
-			String companyLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "R");
+			if (companyId != null) {
+				loginLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "L");
+				portalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "P");
+			}
+			String companyLogoUrl = ezNewPortalService.getPortalLogoInfo(null, tenantId, "R");
 			
 			if (loginLogoUrl == null || loginLogoUrl == "") {
 				loginLogoUrl = "/images/kr/login/logo.gif";

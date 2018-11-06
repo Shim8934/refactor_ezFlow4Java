@@ -228,6 +228,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void insertUserThemeSetting(Map<String, Object> map) {
 		insert("ezNewPortal.insertUserThemeSetting", map);
 	}
+	
+	public int getTenantIdByServerName(Map<String, Object> map) {
+		return (int) select("ezNewPortal.getTenantIdByServerName", map);
+	}
 	/**
 	 * 이효진
 	 */

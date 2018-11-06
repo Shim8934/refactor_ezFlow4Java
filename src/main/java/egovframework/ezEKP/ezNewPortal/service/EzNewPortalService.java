@@ -74,6 +74,7 @@ public interface EzNewPortalService {
 	public void deletePortlet(int portletId, int menuId, String companyId, int tenantId);
 	public void updateCompanyLogo(String companyId, int tenantId, String logoType, String logoUrl);
 	public List<PortalLogoVO> getCompanyLogoList(String companyId, int tenantId);
+	public int getTnenantIdByServerName(String serverName);
 	
 	/**
 	 * 이효진

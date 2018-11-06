@@ -933,6 +933,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getCompanyLogoList ended.");
 		return companyLogoList;
 	}
+	
+	@Override
+	public int getTnenantIdByServerName(String serverName) {
+		LOGGER.debug("getTnenantIdByServerName started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("serverName", serverName);
+		
+		int tenantId = ezNewPortalDAO.getTenantIdByServerName(map);
+		LOGGER.debug("getTnenantIdByServerName ended.");
+		return tenantId;
+	}
 	/**
 	 * 이효진
 	 */

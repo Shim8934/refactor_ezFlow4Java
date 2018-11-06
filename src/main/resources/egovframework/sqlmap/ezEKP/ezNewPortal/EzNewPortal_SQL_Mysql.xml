@@ -240,12 +240,16 @@ SELECT
 FROM 
 	TBL_PORTAL_LOGO
 WHERE 
-	COMPANY_ID = #companyId#
-AND 
 	TENANT_ID = #tenantId#
 AND 
 	LOGO_TYPE = #logoType#
 ]]>	
+<isNotNull property="companyId">
+<![CDATA[
+AND
+	company_id = #companyId#
+]]>
+</isNotNull>
 </select>
 
 <!-- 사용자 접근 가능 메뉴 리스트 -->

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hsqldb.result.Result;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -839,8 +840,10 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String companyId = request.getParameter("companyId").toString();
 		String url = "/rest/admin/ezPortal/logos/companies/" + companyId;
 		String userId = userInfo.getId();
+		String logoType = request.getParameter("logoType");
 		JSONObject json = new JSONObject();
 		json.put("userId", userId);
+        json.put("logoType", logoType);
 		
 		MultipartFile multiFile = request.getFile("file");
 		
@@ -881,9 +884,26 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
         
         if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {           	
 			writeUploadedFile(multiFile, newFileName, pDirPath + "uploadFile");
+			
+			String originUrl = "/rest/admin/ezPortal/logos/companies/" + companyId;
+			JSONObject originResult = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), originUrl, null, request, "patch", json);
+			String originStatus = originResult.get("status").toString();
+			
+			if (originStatus.equals("ok")) {
+				JSONArray logoList = (JSONArray) originResult.get("data");
+				int logoListCount = logoList.size();
+				
+				for (int i = 0; i < logoListCount; i ++) {
+					JSONObject logo = (JSONObject) logoList.get(i);
+					
+					if (logo.get("logoType").equals(logoType)) {
+						String filePath = pDirPath + "uploadFile" + logo.get("logoUrl");
+						deleteFile(filePath);
+					}
+				}
+			}
         }
         
-        json.put("logoType", request.getParameter("logoType"));
         json.put("logoUrl", newFileName);
 		JSONObject result = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, request, "patch", json);
 		String status = result.get("status").toString();

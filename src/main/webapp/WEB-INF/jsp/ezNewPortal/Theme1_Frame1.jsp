@@ -29,12 +29,14 @@
 		cursor : pointer;
 		display: block;
 	}
+	.slider_section {height:515px; width:280px;}
 </style>
 </head>
 <body class="mainbg">
 	<div id="center">
 		<section class="section_left" style="height:1130px;">
 			<article class="rolling_info">
+			<div class="slider_section">
 				<div class="rolling" id="featured">
             	<c:choose>
 	            	<c:when test="${not empty sliderList}">
@@ -55,6 +57,7 @@
 	            	</c:otherwise>
 	            </c:choose>
            	 	</div>
+			</div>
            	 	<dl class="info">
             		<dt class="infoImg"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="36px" height="36px" /></c:if><c:if test='${userPhoto != ""}'><img id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></dt>
                		<dd class="infoName">${userName} ${userTitle}</dd>
