@@ -300,12 +300,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 사용자 프레임 변경 & 포틀릿 설정 변경 
 	 */
 	@RequestMapping(value = "/ezNewPortal/updateUserFrameAndPortelt.do")
-	public JSONObject updateUserFrameAndPortlet(HttpServletRequest req, @RequestBody JSONObject jObj ,Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+	@ResponseBody
+	public String updateUserFrameAndPortlet(HttpServletRequest req, @RequestBody JSONObject jObj ,Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updateUserFrameAndPortlet Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();		
-		
-		logger.debug("jObj.toString() : " + jObj.toString());
+		String result = "success";
 		
 		/* 사용자 프레임 변경 */
 		String url = "/rest/ezPortal/frames/users/" + userId;
@@ -318,8 +318,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
 		status = resultBody.get("status").toString();
 		
+		logger.debug("status" + status);
+		
+		if(status.equals("error")) {
+			result = "failure";
+		}
+		
 		logger.debug("updateUserFrameAndPortlet End");
-		return null;
+		return result;
 	}
 	// 종균 끝
 	

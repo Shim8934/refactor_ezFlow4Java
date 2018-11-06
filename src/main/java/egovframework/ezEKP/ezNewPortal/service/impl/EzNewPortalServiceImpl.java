@@ -278,17 +278,33 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("[Serivce] updateUserUsedFrame Ended");
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void updateUserUsedPortlet(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception {
 		LOGGER.debug("[Serivce] updateUserUsedPortlet Started");
 		Map<String, Object> map = new HashMap<String, Object>();
-
+		Map<String, Object> param = (Map<String, Object>) jObj.get("param");
 		// 유저 포틀릿은 delete & insert로 진행
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);		
-		//ezNewPortalDAO.deleteUserUsedPortlet(map);
 		
-		LOGGER.debug("jObj : " + jObj.toJSONString());
+		// 삭제할 때 
+		ezNewPortalDAO.deleteUserUsedPortlet(map);
+		
+		List<Map<String, Object>> portletList = (List<Map<String, Object>>) param.get("portletList");
+		for (int i=0; i<portletList.size(); i++) {
+			LOGGER.debug(portletList.get(i).toString());
+			Map<String, Object> portletMap = new HashMap<String, Object>();
+			portletMap.put("userId", userId);
+			portletMap.put("tenantId", tenantId);
+			portletMap.put("companyId", companyId);				
+			portletMap.put("portletId", portletList.get(i).get("portletId"));
+			portletMap.put("portletOrder", portletList.get(i).get("portletOrder"));
+			portletMap.put("menuId", portletList.get(i).get("menuId"));
+			
+			LOGGER.debug("portletMap:" + portletMap.toString());
+			ezNewPortalDAO.insertUserUsedPortlet(portletMap);
+		}
 		
 		
 		LOGGER.debug("[Serivce] updateUserUsedPortlet Ended");

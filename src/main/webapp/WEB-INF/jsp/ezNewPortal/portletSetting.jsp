@@ -17,7 +17,7 @@
 <style type="text/css">
 html { height: 100%; }
 #set-body { background-color: white; }
-h3 { padding-left: 20px; padding-top: 15px; padding-bottom: 10px; }
+h3 { padding-left: 20px; margin-top: 10px; margin-bottom: 5px; }
 
 .set-head { background-color: #E5EFFF; height: 5%; display: flex; align-items: center; padding-top: 5px; padding-bottom: 5px;}
 .set-head h1 { font-size: 20px; margin-left: 20px;}
@@ -30,10 +30,10 @@ h3 { padding-left: 20px; padding-top: 15px; padding-bottom: 10px; }
 .ui-portlet-content { font-weight: bold; display: inline-block;}
 .ui-portlet-list { padding-left: 20px; height: 200px; width: 97%;}
 .ui-portlet-span { display: inline-block; width: 70%;}
-.flipsterLi { width:330px; height: 240px; }
+.flipsterLi { width:330px; height: 240px; margin-top:20px}
 
-.frameList { height: 250px; background-color: #e0e3e4; margin-left: 20px; margin-right: 20px; padding-top: 15px; padding-bottom: 10px;}
-.select-flipster img{ border:5px solid #0088CC; }
+.frameList { height: 280px; background-color: #e0e3e4; margin-left: 20px; margin-right: 20px;}
+.select-flipster img{ border:3px solid #0088CC; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
 
 .paginationBtn { border: 1px solid black; width: 100px; height: 30px; margin-left:20px; margin-right:20px;}
 
@@ -55,6 +55,8 @@ var portletSetting = {
 	selectedFrame: '',
 	usedtheme: '',
 };
+
+
 
 $(function() {
 	
@@ -83,14 +85,26 @@ $(function() {
 				var frameList = JSON.parse(xhr.responseText).data.frameList;
 
 				frameList.forEach(function (item, index) {
-					console.log('frame item', item);	
+					
 					var li = document.createElement('li');
 					var div = document.createElement('div');
 					div.className = 'flipsterLi';
 					
-					// 초기 선택된 frame 설정
+					// 최초 회사 frame 설정
+					if(item.frameDefault) {
+						div.classList.add('select-flipster');
+						portletSetting.selectedFrame = item.frameId;
+						portletSetting.usedTheme = item.themeId;						
+					}
+					
+					// 사용자가 선택한 frame 설정
 					if (item.usedFrame*1 === item.frameId*1) {
-						div.className = 'select-flipster';
+						var selectFlipster = document.getElementsByClassName('select-flipster')[0];
+						
+						if(selectFlipster !== undefined) {
+							selectFlipster.classList.remove('select-flipster');
+						}
+						div.classList.add('select-flipster');
 						portletSetting.selectedFrame = item.frameId;
 						portletSetting.usedTheme = item.themeId;
 					}
@@ -99,7 +113,7 @@ $(function() {
 					
 					// 프레임 이미지 나오면 변경하자!!
 					var img = document.createElement('img');
-					img.src = 'https://fakeimg.pl/330x240/282828';
+					img.src = 'https://fakeimg.pl/330x240/FFFFFF';
 					div.appendChild(img);
 					li.appendChild(div);
 					ul.appendChild(li);
@@ -111,6 +125,7 @@ $(function() {
 				    spacing: -0.4,
 				    nav: false,
 				    buttons: true,
+				    start: (portletSetting.selectedFrame*1) - 1,
 				    fadeIn : 0,
 				});
 				
@@ -215,7 +230,6 @@ $(function() {
 		HTMLCollection.prototype.forEach = Array.prototype.forEach;
 		classList.forEach(function (item, index) {
 			
-			console.log('item!!', item);
 			var switchBtn = document.getElementById('portletid_' + item.dataset.portletid);
 			if (switchBtn.getAttribute('checked')) {
 				var obj = {
@@ -233,20 +247,23 @@ $(function() {
 			portletList: portletList,
 		}
 		
-		console.log('param', param);
-		
 		var xhr = new XMLHttpRequest();
 		xhr.onload = function () {
 			if(xhr.status >= 200 && xhr.status < 300) {
-				console.log(xhr.responseText);
+				console.log('success', xhr.responseText);
+
+				parent.DivPopUpHidden();
+				window.close();
+				parent.document.location.reload()
 			} else {
-				console.error(xhr.responseText);
+				console.error('failure', xhr.responseText);
 			}
 		}
 		xhr.open('PATCH', '/ezNewPortal/updateUserFrameAndPortelt.do');
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.send(JSON.stringify({param: param}));
 	});
+
 });
 
 
