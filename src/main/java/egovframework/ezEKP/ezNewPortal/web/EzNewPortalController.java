@@ -349,7 +349,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			JSONObject data = (JSONObject) resultBody.get("data");
 			model.addAttribute("portletOrder", data.get("portletOrder"));
 			model.addAttribute("usedTheme", data.get("usedTheme"));
-			model.addAttribute("usedFrame", data.get("usedFrame"));
+			model.addAttribute("usedFrame", "Frame4");
 			model.addAttribute("sliderList", data.get("sliderList"));
 			model.addAttribute("userPhoto", data.get("userPhoto"));
 			model.addAttribute("userName", data.get("userName"));
