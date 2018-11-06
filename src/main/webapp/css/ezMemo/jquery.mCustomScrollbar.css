@@ -64,7 +64,7 @@ y-axis
 
 	.mCSB_scrollTools{ /* contains scrollbar markup (draggable element, dragger rail, buttons etc.) */
 		position: absolute;
-		width: 16px;
+		width: 6px;
 		height: auto;
 		left: auto;
 		top: 0;
@@ -332,7 +332,7 @@ yx-axis
 	
 	/* default theme ("light") */
 
-	.mCSB_scrollTools{ opacity: 0.75; filter: "alpha(opacity=75)"; -ms-filter: "alpha(opacity=75)"; }
+	.mCSB_scrollTools{ opacity: 0.3; filter: "alpha(opacity=30)"; -ms-filter: "alpha(opacity=30)"; }
 	
 	.mCS-autoHide > .mCustomScrollBox > .mCSB_scrollTools,
 	.mCS-autoHide > .mCustomScrollBox ~ .mCSB_scrollTools{ opacity: 0; filter: "alpha(opacity=0)"; -ms-filter: "alpha(opacity=0)"; }

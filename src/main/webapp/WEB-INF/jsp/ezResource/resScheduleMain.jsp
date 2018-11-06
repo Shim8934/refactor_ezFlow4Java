@@ -562,7 +562,7 @@
     			</c:if>
             </ul>
 		</div>
-		<div class="calendar_pagenav" style="width:180px;margin-left:-89px">
+		<div class="calendar_pagenav">
 	        <ul class="contentlayout">
 	            <li class="contentlayout_left" id="preM"></li>
 	            <li class="contentlayout_right" id="preN"></li>
