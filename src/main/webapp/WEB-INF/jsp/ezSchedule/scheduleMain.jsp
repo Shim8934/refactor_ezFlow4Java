@@ -220,18 +220,12 @@
 		            typeCal = 0;
 		            // 2018-06-07 구해안 미니 호출 부분 주석처리
 		            parent.frames["left"].typeCal = 0;
-		            $(".calendar_pagenav").css("width","180px");
-		            $(".calendar_pagenav").css("margin-left","-89px");
 		        } else if (pDefaultview == 1) {
 		            typeCal = 1;
 		            parent.frames["left"].typeCal = 1;
-		            $(".calendar_pagenav").css("width","269px");
-		            $(".calendar_pagenav").css("margin-left","-134px");
 		        } else if (pDefaultview == 0) {
 		            typeCal = 2;
 		            parent.frames["left"].typeCal = 2;
-		            $(".calendar_pagenav").css("width","269px");
-		            $(".calendar_pagenav").css("margin-left","-134px");
 		        }
 
 		        if (pStartday == 1)
@@ -628,9 +622,6 @@
 		                $("#monView").attr("class","off");
 		                $("#weekView").attr("class","off");
 		                $("#dayView").attr("class","on");
-		                
-		                $(".calendar_pagenav").css("width","269px");
-			            $(".calendar_pagenav").css("margin-left","-134px");
 
 		                if (g_selTDID != null && g_selTDID != "") {
 		                    sDate = new Date(g_selTDID.substring(7, 11), parseInt(g_selTDID.substring(12, 14)) - 1, parseInt(g_selTDID.substring(15, 17)));
@@ -654,9 +645,6 @@
 		                $("#monView").attr("class","off");
 		                $("#weekView").attr("class","on");
 		                $("#dayView").attr("class","off");
-		                
-		                $(".calendar_pagenav").css("width","269px");
-			            $(".calendar_pagenav").css("margin-left","-134px");
 
 		                if (g_selTDID != null && g_selTDID != "") {
 		                    sDate = new Date(g_selTDID.substring(7, 11), parseInt(g_selTDID.substring(12, 14)) - 1, parseInt(g_selTDID.substring(15, 17)));
@@ -680,9 +668,6 @@
 		                $("#monView").attr("class","on");
 		                $("#weekView").attr("class","off");
 		                $("#dayView").attr("class","off");
-		                
-		                $(".calendar_pagenav").css("width","180px");
-			            $(".calendar_pagenav").css("margin-left","-89px");
 			            
 		                /* var ItemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
 
