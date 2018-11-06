@@ -350,7 +350,7 @@
 		    }
 		    function CheckOpinionYN() {
 		        if (pHasOpinionYN == "Y") {
-		            var pInformationContent = "<spring:message code='ezApprovalG.t9'/>" + "<br>" + "<spring:message code='ezApprovalG.t10'/>";
+		            var pInformationContent = "<spring:message code='ezApprovalG.t9'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
 		            OpenInformationUI(pInformationContent, CheckOpinionYN_Complete);
 		        } else {
 		            if (pDraftFlag == "SUSIN")

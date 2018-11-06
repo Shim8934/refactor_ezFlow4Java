@@ -129,11 +129,15 @@ var strLang122 = "月";
 var strLang123 = "日";
 var strLang124 = "終日";
 var strLang125 = "個人日程";
+var strLang125_1 = "個人日程";
 var strLang126 = "部署日程";
+var strLang126_1 = "部署日程";
 var strLang127 = "会社日程";
+var strLang127_1 = "会社日程";
 var strLang128 = "時";
 var strLang129 = "分";
 var strLang130 = "グループスケジュール";
+var strLang130_1 = "グループスケジュール";
 
 var strLang253 = "選択した設備がありません。"
 var strLang254 = "選択した設備は削除できません。"

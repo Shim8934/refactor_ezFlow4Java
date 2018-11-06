@@ -595,9 +595,6 @@ function onViewDate(szCmd) {
         	$("#monView").attr("class","off");
             $("#weekView").attr("class","off");
             $("#dayView").attr("class","on");
-            
-            $(".calendar_pagenav").css("width","269px");
-            $(".calendar_pagenav").css("margin-left","-134px");
              
         	dayView = 2;
             typeCal = 2;
@@ -623,9 +620,6 @@ function onViewDate(szCmd) {
             $("#weekView").attr("class","on");
             $("#dayView").attr("class","off");
             
-            $(".calendar_pagenav").css("width","269px");
-            $(".calendar_pagenav").css("margin-left","-134px");
-            
         	dayView = 1;
             typeCal = 1;
             if (document.getElementById(g_selTDID))
@@ -649,9 +643,6 @@ function onViewDate(szCmd) {
         	$("#monView").attr("class","on");
             $("#weekView").attr("class","off");
             $("#dayView").attr("class","off");
-            
-            $(".calendar_pagenav").css("width","180px");
-            $(".calendar_pagenav").css("margin-left","-89px");
             
         	dayView = 0;
             typeCal = 0;

@@ -4149,13 +4149,21 @@
             TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleCnt" parameterClass="Map" resultClass="int" remapResults="true">
-	<![CDATA[
 		SELECT
 			COUNT(*)
 		FROM
 			TBL_USER_JOBMASTER
 		WHERE
-			JOBID = #v_JOBID#
+		<isEqual property="v_MODE" compareValue="Mod">
+		<![CDATA[
+			JOBID <> #v_JOBID#
+		AND
+		]]>
+		</isEqual>
+	<![CDATA[
+			(DISPLAYNAME = #v_DISPLAYNAME#
+		OR
+			DISPLAYNAME2 = #v_DISPLAYNAME2#)
 		AND
 			TYPE = #v_TYPE#
 		AND

@@ -7,6 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>portalLeftMenu</title>
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	</head>
 	
 	<style>
@@ -14,11 +15,15 @@
 			display : inline-block;
 			width : 100%;
 		}
+		#mCSB_1_container {
+				margin-right: 0px;
+		} 
 	</style>
 	
-	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
-		<div id="left">
-			<div class="left_admin" title="포탈"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;포탈</div>
+	<body class="newLeft"> 
+		<div id="left" class="lnb" style="overflow: auto">
+			<div class="admin_left_title" title="포탈">포탈</div>.
+			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<!-- themes -->
 				<h2><span class = "leftMenu_btn" id = "themes">테마관리</span><ul></ul></h2>
 				<!-- menus -->	
@@ -27,14 +32,15 @@
 				<h2><span class = "leftMenu_btn" id = "portlets">포틀릿관리</span><ul></ul></h2>
 				<!-- logos -->	
 				<h2><span class = "leftMenu_btn" id = "logos">로고설정</span><ul></ul></h2>
+			</div>
 		</div>
 	</body>
 	
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 	<script type="text/javascript">
-		initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		
 		var eventSetting = function() {
 			var elementList = document.querySelectorAll('.leftMenu_btn');
 			
@@ -62,6 +68,21 @@
 		}
 		
 		eventSetting();
+		
+		$(document).ready(function() {
+			leftResize();
+	        $(".adminListBox").mCustomScrollbar({
+	    		theme : "dark"
+	    	});
+		});
+        
+        function leftResize(){
+        	$(".adminListBox").height(window.innerHeight-78);
+        }
+        
+        $( window ).resize(function() {
+        	leftResize();
+    	});
 		
 	</script>
 </html>

@@ -46,7 +46,19 @@ function copy() {
 		}
 	} else { // 크롬 사파리  
 		content = content.replace(/\n\n/ig, '\n'); 
-	}  
+	}
+	
+	// 글자 작게, 크게  selection 되는 부분 잘라내기
+	var searchTerm = 'P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}';
+	var indexOfFirst = content.indexOf(searchTerm);
+	if(indexOfFirst>-1) {
+		var startIndex = indexOfFirst + 40;
+		content = content.substring(startIndex);
+	}
+	
+	// 폰트 스타일 주석 삭제
+	var pattern = /<!--([\s\S]+)-->/;
+	content = content.replace(pattern, "").trim();
 } 
  
 /**

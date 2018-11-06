@@ -369,6 +369,16 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			logger.debug("returnUrl : " + returnUrl);
 		}
 		
+		//김보미 추가 - calenderMini는 ie와 크롬일 때랑 파일이 틀려서 구분값 필요함.
+		boolean checkBrowser;
+		if (req.getHeader("User-Agent").indexOf("Trident") > 0 || req.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+			checkBrowser = true;
+		} else {
+			checkBrowser = false;
+		}
+		
+		model.addAttribute("checkBrowser", checkBrowser);
+		
 		logger.debug("portalMainPage End");
 		return returnUrl;
 	}

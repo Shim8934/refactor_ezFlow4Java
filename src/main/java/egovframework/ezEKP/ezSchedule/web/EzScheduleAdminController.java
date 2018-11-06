@@ -393,6 +393,7 @@ public class EzScheduleAdminController {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
+			logger.debug("여기로 들어온다고??");
 			return "0";
 		}else{
 			

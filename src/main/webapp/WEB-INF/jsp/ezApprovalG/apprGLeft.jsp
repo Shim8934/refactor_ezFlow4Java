@@ -35,12 +35,6 @@
 			#mCSB_1_container {
 				margin-right: 0px;
 			}
-			.mCSB_scrollTools {
-				opacity: 0.3;
-				width: 6px;
-				margin-Top: 5px;
-				margin-bottom: 5px;
-			}
 	    </style>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.7.2.min.js')}"></script>
@@ -503,9 +497,106 @@
 			        catch (e) { }
 		    }
 		
+		    var getformcont_cross_dialogArguments = new Array();
+		    var getformcont_Cross_OpenWin = "";
 		    function btnDraft_onclick() {
-		        parent.frames["right"].btnDraft_onclick();
+		    	var parameter = new Array();
+		        parameter[0] = "sol2";
+		        parameter[1] = "A01000";
+
+		        if ("YES" == ("YES")) {
+		            url = "/ezApprovalG/getFormCont.do";
+		        } else {
+		            url = "/ezApproval/getFormCont.do";
+		        }
+		        
+		        if (CrossYN()) {
+		            getformcont_cross_dialogArguments[0] = parameter;
+		            getformcont_cross_dialogArguments[1] = openForm_Complete;
+		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+		            
+		            try { getFormCont_Cross.focus(); } catch (e) {}
+		        } else {
+		            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+		            var ret = window.showModalDialog(url, parameter, feature);
+		            formURL = ret[0];
+		            formDocType = ret[1];
+		            
+		            if (formURL != "cancel") {
+		                openDraftUI(formURL, formDocType);
+		            }
+		        }
 		    }
+		    
+		    function openForm_Complete(ret) {
+		        formURL = ret[0];
+		        formDocType = ret[1];
+
+		        if (formURL != "cancel") {
+		            openDraftUI();
+		        }
+		    }
+
+		    function openDraftUI() {
+		        var pArgument = new Array();
+		        var gb = "";
+		        
+		        if ("YES" == ("YES"))
+		            gb = "G";
+		        
+	        	pArgument[0] = "jongp";
+	            pArgument[1] = formURL;
+	            pArgument[2] = "DRAFT";
+	            pArgument[3] = formDocType;
+	            pArgument[4] = "0"
+	            pArgument[5] = ""
+	            pArgument[6] = ""
+	            pArgument[7] = "";
+
+	            var openLocation = "";
+	            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+	                if (!isIE()) {
+	                    alert("한글양식은 Cross Browser 를 지원하지 않습니다.");
+	                    return;
+	                } else {
+	                   var openLocation = "/ezApprovalG/draftuiHWP.do";
+	                }
+	            } else {
+	                var openLocation = "/ezApprovalG/draftui.do";
+	            }
+	            
+                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
+                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
+                
+	            openwindow(openLocation, "", 890, 620);
+	        }
+		    
+		    function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
+		        try {
+		            var heigth = window.screen.availHeight;
+		            var width = window.screen.availWidth;
+
+		            var left = 0;
+		            var top = 0;
+
+		            if (window.screen.width > 800) {
+		                var pleftpos;
+
+		                pleftpos = parseInt(width) - 967;
+		                heigth = parseInt(heigth) - 30;
+		                width = parseInt(width) - pleftpos;
+
+		                left = pleftpos / 2;
+		            } else {
+
+		                heigth = parseInt(heigth) - 30;
+		                width = parseInt(width) - 10;
+		            }
+		            window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+
+		        } catch (e) {}
+		    }	
 		
 		    function cmdOK_onclick(ContainerID, ContName, SubQuery) {
 		        if (PresentOpen != "CONTAINER") {
@@ -1024,7 +1115,7 @@
 	        }
 	        
 	        function leftResize(){
-	        	$(".apprListBox").height(window.innerHeight-105);
+	        	$(".apprListBox").height(window.innerHeight-105<c:if test="${isSubTitle}">-30</c:if>);
 	        }
 	        
 	        $( window ).resize(function() {
@@ -1042,7 +1133,7 @@
 	        	<span class="sub_iconLNB tree_leftconfig" id="ApprovalConfig" onClick="Open_Func(this)" title="<spring:message code='ezApprovalG.t1800'/>"></span>
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span>기안하기</p>
+	        	<p class="btn_write01" onclick="btnDraft_onclick();"><span class="sub_iconLNB tree_write"></span>기안하기</p>
 	        </div>
 	        <c:if test="${isSubTitle}">
 		        <select name="country_id" id="country_id" tabindex="1">

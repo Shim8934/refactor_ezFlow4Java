@@ -129,11 +129,15 @@ var strLang122 = ".";
 var strLang123 = "";
 var strLang124 = "all day long";
 var strLang125 = "Personal schedule";
+var strLang125_1 = "Personal schedule";
 var strLang126 = "Department schedule";
+var strLang126_1 = "Department schedule";
 var strLang127 = "Company Schedule";
+var strLang127_1 = "Company Schedule";
 var strLang128 = ".";
 var strLang129 = "";
 var strLang130 = "Group Schedule";
+var strLang130_1 = "Group Schedule";
 
 var strLang253 = "Do not have the resources selected."
 var strLang254 = "The selected resource can not be deleted."
