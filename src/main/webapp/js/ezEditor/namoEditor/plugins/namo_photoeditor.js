@@ -273,12 +273,12 @@ var namophotoeditorPlugin = {
 		newLayer.style.display = "none";
 
 		if (!(t.photoFlashVer > 0 && t.photoFlashVer >= 10)) {
-			newLayer.innerHTML = "<div class='NamoSE_shadow_box p6' style='width:100%; height:100%; text-align:center;'><table cellpadding='0' cellspacing='0' class='plugin_photoeditor' style='margin:100px auto;'><tr><td><img alt='photoeditor_msg_title.gif'></td></tr><tr><td id='peditorMsgTitle' class='peditor_title'>"+ NamoSELang.PhotoEditorFlashPlayer10HigherMsg +"</td></tr><tr><td><a href='#'><img id='peditorFlashPlayerDownload' alt='flashplayer_download.gif'></a></td></tr></table></div>";
+			newLayer.innerHTML = "<div class='NamoSE_shadow_box p6' style='width:100%; height:100%; text-align:center;'><table cellpadding='0' cellspacing='0' class='plugin_photoeditor' style='margin:100px auto;'><tr><td><img alt='photoeditor_msg_title.gif'></td></tr><tr><td id='peditorMsgTitle' class='peditor_title'>"+ NamoSELang.PhotoEditorFlashPlayer10HigherMsg +"<br>(" + this._oThis.config.FlashPlayerUrlPath + ")</td></tr><tr><td><a href='#'><img id='peditorFlashPlayerDownload' alt='flashplayer_download.gif'></a></td></tr></table></div>";
 			newPluginHolder.body.appendChild(newLayer);
 			var expNewLayer = t.printFlashPlayerDownMsg(newLayer);
 			return expNewLayer;
 		} else {
-			newLayer.innerHTML = "<div class='NamoSE_shadow_box p6' style='padding:0;' alt='noClose'><table cellpadding='0' cellspacing='0' class='plugin_photoeditor' alt='noClose'><tr><td id='flashTd'></td></tr></table><div class='btLine' style='padding-bottom:7px;' alt='noClose'><img name='confirm' alt='btn_plugin_bk_small.gif' class='NamoSE_btn_style NamoSE_btn_small' /> <img name='cancel' alt='btn_plugin_bk_small.gif' class='NamoSE_btn_style NamoSE_btn_small' /></div></div>";
+			newLayer.innerHTML = "<div class='NamoSE_shadow_box p6' style='padding:0;' alt='noClose'><table cellpadding='0' cellspacing='0' class='plugin_photoeditor' alt='noClose'><tr><td id='flashTd'></td></tr></table><div class='btLine' style='padding-bottom:7px;' alt='noClose'><img name='confirm' alt='btn_plugin_bk_small.gif' class='NamoSE_btn_style_photo NamoSE_btn_small' /> <img name='cancel' alt='btn_plugin_bk_small.gif' class='NamoSE_btn_style_photo NamoSE_btn_small' /></div></div>";
 			newPluginHolder.body.appendChild(newLayer);
 		}
 

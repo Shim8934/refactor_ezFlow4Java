@@ -36,7 +36,7 @@
 					return;
 				}
 			    if(ReturnFunction != null){
-			    	if (confirm(opener.changePassLength + "<spring:message code='ezOrgan.t40' />")){
+			    	if (confirm(opener.CheckBoxArr.length + "<spring:message code='ezOrgan.t40' />")){
 				        ReturnFunction(NewPassword.value);
 		            }
 			    }else{

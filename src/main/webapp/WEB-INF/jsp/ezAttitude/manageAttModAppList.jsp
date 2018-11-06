@@ -1066,7 +1066,7 @@
 		</script>
 </head>
 	<body id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
-		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.t7' /><span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code='ezAttitude.t7' /><span id="mailBoxInfo"></span></h1>
         <div id="mainmenu">
         <ul id="tb_Parent">
 			<li id="appr"><span onClick="modApprove()"><spring:message code='ezAttitude.t210'/></span></li>

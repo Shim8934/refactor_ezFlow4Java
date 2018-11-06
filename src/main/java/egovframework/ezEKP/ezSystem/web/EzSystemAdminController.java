@@ -328,7 +328,6 @@ public class EzSystemAdminController {
 	/*
 	 * 엑셀 워크시트 생성 및 자동 다운로드 함수
 	 */
-	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/admin/ezSystem/systemLoginHistExcelExport.do")
 	public void statisticsMailLogExcelExport(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request,
 			String searchKeycode, String searchKeyword, String startDate, String endDate, Locale locale, HttpServletResponse response)  throws Exception {
@@ -384,7 +383,7 @@ public class EzSystemAdminController {
 		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 
 		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short)font.BOLDWEIGHT_BOLD);
+		font.setBoldweight((short)HSSFFont.BOLDWEIGHT_BOLD);
 		headerStyle.setFont(font);
 		
 		row = sheet.createRow(0);

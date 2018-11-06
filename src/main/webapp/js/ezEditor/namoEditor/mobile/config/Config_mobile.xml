@@ -8,7 +8,7 @@
 	</Product>
 	<General>
 		<WebServerOS>LINUX</WebServerOS>
-		<WebServerInfo>ETC</WebServerInfo>
+		<WebServerInfo>Tomcat</WebServerInfo>
 		<WebLanguage>JSP</WebLanguage>
 		<ImageSavePath></ImageSavePath>
 		<Width>300</Width>
