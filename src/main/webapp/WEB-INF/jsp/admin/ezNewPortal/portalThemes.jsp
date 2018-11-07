@@ -12,7 +12,7 @@
 			.themeThumbnails {width : 350px; height : 200px; border : 3px solid #7d7d7d; margin-top : 15px;}
 			.themesImgDetails {width : 500px; height : 350px; border : 3px solid #898989;margin:15px; float:left;}
 			#themeList li {margin : 10px; display : inline-block;}
-			.theme {position:relative;background-color : white; width : 375px; height : 270px; text-align : center; border: 1px solid #949292;}
+			.theme {position:relative;background-color : white; width : 375px; height : 270px; text-align : center; border: 2px solid #949292;}
 			.themeHr {margin-top : 10px;width : 85%;margin-left : 30px;}
 			.themeTitle {margin-top : 9px;}
 			.themeNotUsed {display:none;width:100%; height:87%;background-color:#e1e1e180; z-index:99;position:absolute; right:0; top:0;}
@@ -87,12 +87,14 @@
 			
 			if (nowShowDetails == "themeDetails" + themeId) { 
 				$(".themeDetails").slideUp();
+				$('.theme').css('border', '2px solid #949292');
 			} else {
 				$(".themeDetails").hide();
+				$('.theme').css('border', '2px solid #949292');
+				$('#theme' + this.id).css('border', '2px solid #0088CC');				
 			}
 			
 			$(".themeDetails").attr("class", "themeDetails hideDetails");
-			
 			if (nowShowDetails != "themeDetails" + themeId) {
 				if (nowShowDetails == undefined) {
 					$("#themeDetails" + themeId).slideDown();
@@ -162,7 +164,7 @@
 						themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
 						themesHTML += "<span class='setDefault'><img src='/images/arr_down.gif'/></span>"
 						themesHTML += "<span class='themeName'>" + item.themeName + "</span>";
-						themesHTML += "<span class='themeSetting'><img src='/images/kr/left/icon_setup.gif'/></span>";
+						themesHTML += "<span class='themeSetting' id='"+item.themeId+"'><img src='/images/kr/left/icon_setup.gif'/></span>";
 						themesHTML += "</div>";
 						themesHTML += "</li>";
 						
