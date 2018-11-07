@@ -122,6 +122,8 @@
 	   	<script type="text/javascript">
 	   		//트리조직도 JSON
 	   		var treeContent;
+	   		// 설정된 권한목록
+	   		var menuAuths = new Array();
 	   		// 선택된 수신자 배열
 	   		var receiverList = [];
 	   		// 선택된 수신자 이름
@@ -422,6 +424,7 @@
 	   		
 	   		// 선택한 사람을 수신자에 추가
 	   		function setAuthorViewUser() {
+alert(menuAuths);
 	   			if (selUserId != "" && selUserId != undefined) {
 		   			var receiverId = selUserId;
 		   			var chkFlag = true;
@@ -470,8 +473,6 @@
 	   			
 	   			authsHTML = "";
 	   			
-	   			Array.prototype.push.apply(menuAuthsY, menuAuthsN);
-	   			
 	   			if (menuAuths != null && menuAuths.length != 0) {
 					menuAuthsN.forEach(function(item, index) {
 						authsHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
@@ -505,19 +506,8 @@
 						authHTML += "</td>";
 					});
 				}
-   				
-		    	var $receiverList = $("#receiverList");
-		    	var strHTML = "";
-// 		    	for (var i = 0; i < receiverList.length; i++) {
-// 		    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
-// 		    		strHTML += "<tr style='cursor:pointer;' class='hover' id=" + receiverList[i].userId + " data-id=" + receiverList[i].userId + " data-id=" + + " onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver()'>";
-// 		    		strHTML += "<td>";
-// 		    		strHTML += receiverList[i].userName;
-// 		    		strHTML += "</td>";
-// 		    		strHTML += "</tr>";
-// 		    		strHTML += "</table>";
-// 		    	}
-// 		    	$receiverList.html(strHTML);
+	   			
+	   			document.getElementById("receiverList").innerHTML = authHTML;
 		    }
 	   		
 	   		function addFavoriteLine() {
@@ -584,7 +574,7 @@
 	   			window.close();
 	   		}
 	   		
-	   		/** 요기 내꺼 */
+	   		/** get MenuAuth data */
 	   		var getMenuAuths = function() {
 	   			var menuId = "${menuId}";
 				var companyValue = "${companyId}";
@@ -593,10 +583,19 @@
 				request.open('POST', '/admin/ezNewPortal/getMenuAuths.do', true);
 				request.setRequestHeader('content-type', 'application/json');
 				
-				request.onload = function() {
-					
-					
-					drawReceiverList();
+				request.onload = function(result) {
+					if (request.status >= 200 && request.status < 400) {
+						var result = JSON.parse(request.responseText);
+						var menuAuthsY = result.menuAuths.menuAuthsY;
+						var menuAuthsN = result.menuAuths.menuAuthsN;
+						
+						menuAuths = new Array();
+						
+						Array.prototype.push.apply(menuAuths, menuAuthsY);
+						Array.prototype.push.apply(menuAuths, menuAuthsN);
+						
+						drawReceiverList();
+					}
 				}
 				
 				request.onerror = function() {}
