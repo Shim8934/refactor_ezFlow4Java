@@ -582,4 +582,47 @@
 			server_name = #serverName#
 	]]>
 	</select>
+	
+	<select id="ezNewPortal.getPortletIdsByMenuId" parameterClass="Map" resultClass="Integer">
+	<![CDATA[
+		SELECT	
+			portlet_id
+		FROM
+			TBL_PORTAL_PORTLET_COMP
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			menu_id = #menuId#
+	]]>
+	</select>
+	
+	<delete id="ezNewPortal.deleteMenuUser" parameterClass="Map">
+	<![CDATA[
+		DELETE FROM
+			TBL_PORTAL_MENU_USER
+		WHERE
+			menu_id = #menuId#
+		AND
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+	]]>
+	</delete>
+	
+	<delete id="ezNewPortal.deletePortletUser" parameterClass="Map">
+	<![CDATA[
+		DELETE FROM
+			TBL_PORTAL_PORTLET_USER
+		WHERE
+			portlet_id = #portletId#
+		AND
+			menu_id = #menuId#
+		AND
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+	]]>
+	</delete>
 </sqlMap>

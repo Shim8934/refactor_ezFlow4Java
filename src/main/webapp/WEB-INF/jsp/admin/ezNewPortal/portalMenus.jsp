@@ -559,7 +559,7 @@
 		}
 		
 		var deleteMenu = function (event) {
-			var response = confirm("메뉴를 삭제하시겠습니까?");
+			var response = confirm("메뉴를 삭제하면 메뉴와 관련된 포틀릿도 함께 삭제됩니다.\n메뉴를 삭제하시겠습니까?");
 			
 			if (response) {
 				var menuId = event.data.menuId;
