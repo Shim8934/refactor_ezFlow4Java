@@ -330,7 +330,10 @@
 			menuId = document.getElementById("portlet" + portletId).getAttribute("data2");
 		}
 		
-		if (menuId == 4 && boardId == null) {
+		// 즐겨찾기 포틀릿 응급처치만 해놓음
+		var favoriteBoardUrl = document.getElementById("portlet" + portletId).dataset.url; 
+		
+		if ((menuId == 4 && favoriteBoardUrl != '/ezNewPortal/favoriteBoardPortlet.do' ) && boardId == null) {
 			alert("게시판을 선택해 주세요.");
 			return;
 		}
@@ -391,7 +394,7 @@
 					menuId = result[i].menuId;
 					portletNameListCnt = portletNameList.length;
 					
-					listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder + "' data2='" + menuId + "'>"	
+					listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder + "' data2='" + menuId + "' data-url='" + result[i].portletUrl + "'>";
 					listHTML += "<div class='portlet-header'>" + portletNameList[arrayLang].portletName + "</div>";
 					listHTML += "<div class='portlet-content'>";
 					listHTML += "<div class='btnpositionJsp updatePortlet'>";
