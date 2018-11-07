@@ -315,7 +315,7 @@
 	                strXML += "<ITEMID>" + strItemID + "</ITEMID>";
 	            }
 	            
-	            console.log("strItemID     ::     " + strItemID); // undefined 현상
+	            console.log("strItemID     ::     " + strItemID);
 	            
 	            var importance = "0";
 			    // 수정(2008.03.19) : 사용자 정보가 누락되는 경우 체크하는 부분 추가

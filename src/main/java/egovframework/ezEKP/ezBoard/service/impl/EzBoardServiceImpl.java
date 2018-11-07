@@ -547,6 +547,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
+		logger.debug("동영상 수정 시 map     ::     " + map.toString());
+		
 		ezBoardDAO.photoListUpdate(map);
 		
 		if (mainFg.equals("Y")) {
@@ -660,7 +662,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		ezBoardDAO.deleteBoardReply(map);
 		ezBoardDAO.deleteBoardItemRead2(map);
 		
-		if (mode != null && mode.equals("PHOTO")) {
+		logger.debug("게시물 삭제 시 map     ::    " + map.toString());
+		logger.debug("게시물 삭제 시 mode     ::    " + mode);
+		
+		if (mode != null && (mode.equals("PHOTO") || mode.equals("MOVIE"))) {
 			BoardListVO boardListVO = new BoardListVO();
 			boardListVO.setItemID(itemID);
 			boardListVO.setTenantID(tenantID);

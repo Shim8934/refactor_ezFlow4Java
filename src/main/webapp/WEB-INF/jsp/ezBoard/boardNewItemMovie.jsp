@@ -37,8 +37,6 @@
 	        var pBoardID = "${boardID}";
 	        var pUrl = "${url}";
 	        var PhotoBoard = "N";
-	        var spanimagename = "";
-	        var resultcmd = "";
 	        var strNow = "${strNow}";		
 	        var bodycount = "0";
 	        var pAttachListXml = "";
@@ -56,7 +54,6 @@
 		    var strUserRank2 = "${userInfo.title2}";
 		    var strUserPhone = "${userInfo.phone}";
 	        var pUploadFilePath = "${uploadFilePath}";
-	        var isdad = false;
 	        var isfileup = false;
 	        var pUse_Editor = "${useEditor}";
 	        var pNoneActiveX = "YES";
@@ -66,7 +63,6 @@
 	        function window_onload() {
 	            try{
 	                new FormData();
-	                isdad = true;
 	            }
 	            catch (e) {
 	            }
@@ -352,16 +348,15 @@
 			        	document.getElementById("file1").files[0] = "";
 			        	alert("<spring:message code ='ezBoard.hsb05' />");
 			        	return;
-			        }
-			        else {
+			        } else {
 	                	fd.append("file1", document.getElementById("form").file1.files[0]);
 			        }
 				        
-		            fd.append("mode", document.getElementById("mode").value);
+		            //fd.append("mode", document.getElementById("mode").value);
 		            isfileup = true;
 		            xhr = new XMLHttpRequest();
 		            xhr.upload.addEventListener("progress", uploadProgress, false);
-		            xhr.addEventListener("load", uploadComplete, false); // uploadComplete() 메서드에서 업로드된 동영상으로 썸네일을 생성한다.
+		            xhr.addEventListener("load", uploadComplete, false);
 		            xhr.open("POST", "/ezBoard/boardMovieUpload.do?mode=MOVIE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
 		            xhr.send(fd);
 		            document.getElementById("progdiv").style.display = "";
@@ -508,7 +503,7 @@
 		            for (var i = 0; i < file.length; i++) {
 		                fd.append("file1", file[i]);
 		            }
-		            fd.append("mode", document.getElementById("mode").value);
+		           // fd.append("mode", document.getElementById("mode").value);
 		            isfileup = true;
 		            xhr = new XMLHttpRequest();
 		            xhr.upload.addEventListener("progress", uploadProgress, false);

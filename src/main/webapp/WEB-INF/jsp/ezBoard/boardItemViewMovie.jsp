@@ -59,7 +59,6 @@
 				var gubun = "${boardInfo.guBun}";
 				var commentCount = "${commentCount}";
 		        var ImageCount = "";
-		        var viewimage = "";
 		        var moviePath = "";
 		        var movieID= "";
 		        var movieContent = "";
@@ -113,13 +112,14 @@
 		            
 	            //    movieContent = getNodeText(xmldom.getElementsByTagName("FILECONTENT")[0]);
 	                moviePath = getNodeText(xmldom.getElementsByTagName("FILEPATH")[0]);
-	          //      movieID = getNodeText(xmldom.getElementsByTagName("IMAGEID")[0]);
+	                movieID = getNodeText(xmldom.getElementsByTagName("IMAGEID")[0]);
+	                movieName = getNodeText(xmldom.getElementsByTagName("IMAGENAME")[0]);
 	                
 	                console.log("moviePath      ::     " + moviePath);
-	            //    console.log("movieID      ::     " + movieID);
-	          //      console.log("resultimage      ::     " + resultimage);
+	                console.log("movieID      ::     " + movieID);
+	                console.log("movieName      ::     " + movieName);
 	                
-					movieMain(moviePath);
+					movieMain(movieID, moviePath, movieName);
 		        }
 		        
 		        //강민수92 댓글 클릭 이벤트
@@ -161,12 +161,6 @@
 				var checkpassword_dialogArguments = new Array();
 				function btn_Delete_Onclick()
 				{
-					if (CheckIfHasReplies())
-					{
-						alert("<spring:message code='ezBoard.t196'/>");
-						return;
-					}
-		
 					if(Delete_FG != "true") {
 						alert("<spring:message code='ezBoard.t265'/>");
 						return;
@@ -183,7 +177,7 @@
 			            }
 	
 			            var xmlhttp = createXMLHttpRequest();
-			            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
+			            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURI(pBoardID) + "&itemList=" + encodeURI(pItemID) + "&mode=MOVIE", false);
 			            xmlhttp.send();
 	
 			            if (xmlhttp.responseText == "NO") {
@@ -203,34 +197,7 @@
 			            window.close();
 				    }
 				}
-		
-		    function btn_Delete_Onclick_Complete(ret) {
-		        if (ret != "OK") {
-		            alert("<spring:message code='ezBoard.t265'/>");
-		            return;
-		        }
-		
-		        if (!confirm(strLang48)) return;
-		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
-		        xmlhttp.send();
-		
-		        if (xmlhttp.responseText == "NO") {
-		            alert("<spring:message code='ezBoard.t265'/>");
-		            return;
-		        }
-		
-		        xmlhttp = null;
-		        try {
-                	window.opener.leftCountRf();
-				} catch (e) {
-				}
-		        try {
-		            window.opener.refresh_onclick();
-		        } catch (e) {
-		        }
-		    }
-		    
+				
 		        window.onunload = function () {
 		        };
 				function btnClose_onclick()
@@ -257,7 +224,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		
-					var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;			
+					var szHref = "/ezBoard/itemReadList.do?boardID=" + encodeURI(pBoardID) + "&itemID=" + encodeURI(pItemID);			
 					var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
 		
 					if (CrossYN()) {
@@ -460,16 +427,15 @@
 				    message.AGoDown.click();
 				}
 		
-		        function movieMain(imagefilename)
+		        function movieMain(movieID, moviePath, movieName)
 		        {
-		            var mainfilename = imagefilename;
-		            if (imagefilename.indexOf("s_") > -1) {
-		                mainfilename = imagefilename.split("s_")[0] + imagefilename.split("s_")[1];
-		            }
-		    
-		            viewimage = imagefilename.id;	
-		            document.getElementById("mainVideo").src = mainfilename;
-		            document.getElementById("mainVideo").name = imagefilename.name;
+		            document.getElementById("mainVideo").src = moviePath;
+		            document.getElementById("mainVideo").setAttribute("movieid", movieID);
+		            document.getElementById("mainVideo").title = movieName;
+		            
+		            // 크롬은 가능하나, IE10~11에서는 불가능하다. 크로스브라우징 필요
+		            document.getElementById("movieDownload").href = moviePath;
+		            document.getElementById("movieDownload").download = movieName;
 		        }
 		        
 		        function showHideLayers()
@@ -477,39 +443,21 @@
 		            showDiv.style.display = "block";
 		        }
 		
-		        function btn_movieMod(pMod) {
+		        function btn_movieMod() {
 		            var swidth;
 		            var sheight;
 		            var pwidth = window.screen.availWidth;
 		            var pheight = window.screen.availHeight;
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
-		
-	            	var agent = navigator.userAgent.toLowerCase();
-	            	
-	            	if ((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1) {
-	            		if (gubun != 4) {
-	            			swidth = 440;
-		               		sheight = 460;
-	            		} else {
-		            		swidth = 460;
-			                sheight = 380;
-	            		}
-	            	} else {
-	               		swidth = 460;
-	                	sheight = 380;
-	            	}
-	                
+		 	
+               		swidth = 460;
+                	sheight = 380;	                
 		            pleft = (pwidth - swidth) / 2;
 		            ptop = (pheight - sheight) / 2;
 		            
-	                window.open("/ezBoard/modifyImageItem.do?imageID=" + document.getElementById("mainVideo").name + "&boardID=" + pBoardID + "&itemID=" + pItemID + "&page=" + pPage + "&mod=image&guBun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft, "");
+	                window.open("/ezBoard/modifyMovieItem.do?movieID=" + encodeURI(document.getElementById("mainVideo").getAttribute("movieid")) + "&boardID=" + encodeURI(pBoardID) + "&itemID=" + encodeURI(pItemID) + "&page=" + pPage + "&guBun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft, "");
 				}
-		
-		        function page_reload()
-		        {
-		            window.location.reload();
-		        }
 		
 		        function btn_Add_Onclick()
 		        {
@@ -522,63 +470,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		
-		            window.open("/ezBoard/addImageItem.do?&boardID=" + pBoardID + "&itemID=" + pItemID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft , "");
-		        }
-		
-		        function btn_SmallIamge(Page)
-		        {
-		            var NewPage = "";
-		
-		            if (Page == "Next") {
-		                var endpage = pPage * 10;
-		                if (imagetotalcount <= endpage) {
-		                    return;
-		                }
-		                else {
-		                    imagepage = 0;
-		                    NewPage = parseInt(pPage) + 1;
-		                }
-		            }
-		            else if (Page == "Nextimage") {
-		                var endpage = pPage * 10;
-		
-		                if (imagetotalcount <= endpage) {
-		                    imagepage = 0;
-		                    NewPage = 1;
-		                }
-		                else {
-		                    imagepage = 0;
-		                    NewPage = parseInt(pPage) + 1;
-		                }
-		            }
-		            else if (Page == "Prev") {
-		                imagepage = 9;
-		                if (pPage == 1) {
-		                    if (imagetotalcount % 10 > 0) {
-		                        pPage = Number(imagetotalcount / 10) + 2;
-		                    } else {
-		                        pPage = Number(imagetotalcount / 10) + 1;
-		                    }
-		                    imagepage = imagetotalcount % 10 - 1;
-		                }
-		                NewPage = parseInt(pPage) - 1;
-		            }
-		            
-		            pPage = NewPage;
-		    
-		            $.ajax({
-						type : "POST",
-						dataType : "text",
-						async : false,
-						url : "/ezBoard/imageViewList.do",
-						data : { boardID   : pBoardID, 
-								 itemID    : pItemID,
-								 page      : NewPage
-							   },
-						success: function(result){
-							ImageViewTable(result);
-						}        			
-					});
+		            window.open("/ezBoard/addImageItem.do?&boardID=" + encodeURI(pBoardID) + "&itemID=" + encodeURI(pItemID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft , "");
 		        }
 		
 		        var photoalbumedit_dialogArguments = new Array();
@@ -589,130 +481,26 @@
 		            params[1] = pItemID;
 		            params[2] = document.getElementById("title").textContent;
 		            params[3] = document.getElementById("Div2").textContent;
-		            if (CrossYN()) {
-		                photoalbumedit_dialogArguments[0] = params;
-		                photoalbumedit_dialogArguments[1] = btn_albumEdit_Complete;
-		                DivPopUpShow(400, 200, "/ezBoard/photoAlbumEdit.do");
-		            }
-		            else {
-		                var swidth = 400;
-		                var sheight = 200;
-		                var feature = "status:no;dialogWidth:" + swidth + "px;dialogHeight:" + sheight + "px;help:no;scroll:no;edge:sunken";
-		
-		                var ret = window.showModalDialog("/ezBoard/photoAlbumEdit.do", params, feature);
-		                if (ret == "OK")
-		                    page_reload();	
-		            }		           
+	                photoalbumedit_dialogArguments[0] = params;
+	                photoalbumedit_dialogArguments[1] = btn_albumEdit_Complete;
+	                DivPopUpShow(400, 200, "/ezBoard/movieAlbumEdit.do");          
 		        }
 		        
 		        function btn_albumEdit_Complete(ret) {
 		            DivPopUpHidden();
-		            if (ret == "OK")
-		                page_reload();
+		            if (ret == "OK") {
+						window.location.reload();
+		        	}
 		        }
 		        
-		        /* 2018-06-01 홍승비 - 페이징 코드 수정, 도달 불가능 코드 삭제 */
-		        function pageimageover()
-		        {
-		            var endpage = pPage * 10;
-		            if(imagetotalcount > endpage && pPage == 1)
-		            {
-		                document.getElementById("SmallImageNext").style.display = "";		                
-		            }
-		            else if(pPage == 1 && imagetotalcount <= 10)
-		            {
-		                document.getElementById("SmallImagePrev").style.display = "none";
-		                document.getElementById("SmallImageNext").style.display = "none";
-		            }
-		            else if(pPage != 1 && imagetotalcount <= endpage)
-		            {
-		                document.getElementById("SmallImagePrev").style.display = "";
-		                document.getElementById("SmallImageNext").style.display = "none";
-		            }
-		            else
-		            {
-		                document.getElementById("SmallImagePrev").style.display = "";
-		                document.getElementById("SmallImageNext").style.display = "";
-		            }
-		        }
-		
-		        function btn_ImgDownload()
-		        {
-		            var swidth;
-		            var sheight;
-		
-		            swidth = 420;
-		            sheight = 500;
-		            
-		            var pwidth = window.screen.availWidth;
-		            var pheight = window.screen.availHeight;
-		            
-		            var pleft = (pwidth - swidth) / 2;
-		            var ptop = (pheight - sheight) / 2;
-		            
-		            window.open("/ezBoard/imageDownload.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");			
-		        }
-		
-		    	//mouseWheel Event 
-// 		        document.onmousewheel = ScrollControl;
-		
-		        function ScrollControl()
-		        {
-		            for(var i = 0  ; i < document.getElementById("viewboxlist").getElementsByTagName("IMG").length ; i++)
-		            {
-		                if(event.wheelDelta == "120")
-		                {
-		                    if (CrossYN()) {
-		                        if (document.getElementById("viewboxlist").getElementsByTagName("IMG")[i].style.opacity == "1") {
-		                            if (i == document.getElementById("viewboxlist").getElementsByTagName("IMG").length - 1)
-		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[0]);
-		                            else
-		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[i + 1]);
-		
-		                            break;
-		                        }
-		                    } else {
-		                        if (document.getElementById("viewboxlist").getElementsByTagName("IMG")[i].style.filter == "Alpha(Opacity=100)") {
-		                            if (i == document.getElementById("viewboxlist").getElementsByTagName("IMG").length - 1)
-		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[0]);
-		                            else
-		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[i + 1]);
-		
-		                            break;
-		                        }
-		                    }
-		
-		                } else {
-		                    if (CrossYN()) {
-		                        if (document.getElementById("viewboxlist").getElementsByTagName("IMG")[i].style.opacity == "1") {
-		                            if (i == 0)
-		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[document.getElementById("viewboxlist").getElementsByTagName("IMG").length - 1]);
-		                            else
-		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[i - 1]);
-		
-		                            break;
-		                        }
-		                    } else {
-		                        if (document.getElementById("viewboxlist").getElementsByTagName("IMG")[i].style.filter == "Alpha(Opacity=100)") {
-		                            if (i == 0)
-		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[document.getElementById("viewboxlist").getElementsByTagName("IMG").length - 1]);
-		                            else
-		                                movieMain(document.getElementById("viewboxlist").getElementsByTagName("IMG")[i - 1]);
-		
-		                            break;
-		                        }
-		                    }
-		                }
-		            }
-		        }
 		        function Appr_onclick(pFlag) {
 		            if (pFlag == "C") {
-		                var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + pItemID + ";&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
+		                var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + encodeURI(pItemID) + ";&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
 		            else {
 		                var xmlhttp = createXMLHttpRequest();
-		                xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + pItemID + ";&mode=" + pFlag, false);
+		                xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + encodeURI(pItemID) + ";&mode=" + pFlag, false);
 		                xmlhttp.send();
 		
 		                if (xmlhttp.responseText == "OK") {
@@ -737,7 +525,10 @@
 		            }
 		            window.close();
 		        }
-		    	//mouseWheel Event  END
+		        function window_reload() {
+			        window.location.href = window.location.href;
+			    }
+		        
 		        function btn_ReWrite() {
 		            var pheight = window.screen.availHeight;
 		            var pwidth = window.screen.availWidth;
@@ -745,7 +536,7 @@
 		            var pLeft = (pwidth - 765) / 2;
 		            window.close();
 		            
-		            window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&location=", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=679,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURI(pBoardID) + "&itemID=" + encodeURI(pItemID) + "&mode=modify" + "&location=", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=679,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        }
 		    	
 		</script>
@@ -762,7 +553,7 @@
 			                <li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005'/></span></li>
 			                <li><span onClick="Appr_onclick('C')"><spring:message code='ezBoard.t999014'/></span></li>
 			                	<c:if test="${boardItem.writerID == userInfo.id}">
-				                	<li ID='btn_Modify' ><span  onclick="btn_movieMod('Mod')"><spring:message code='ezBoard.t1002'/></span></li>
+				                	<li ID='btn_Modify' ><span  onclick="btn_movieMod()"><spring:message code='ezQuestion.t180'/><spring:message code='ezBoard.t316'/></span></li>
 				                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t1004'/></span></li>
 				                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t1005'/></span></li>
 		                    	</c:if>
@@ -777,12 +568,12 @@
 	        				</c:if>
 							<!--		강민수92 end -->
 		        			<c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || boardItem.writerID == userInfo.id}">
-			                    <li ID='btn_Modify' ><span  onclick="btn_movieMod('Mod')"><spring:message code='ezQuestion.t180'/><spring:message code='ezBoard.t316'/></span></li>
-			                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t89'/></span></li>
-			                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t316'/></span></li>
+			                    <li ID='btn_Modify' ><span  onclick="btn_movieMod()"><spring:message code='ezQuestion.t180'/><spring:message code='ezBoard.t316'/></span></li>
+			                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t1004'/></span></li>
+			                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t1005'/></span></li>
 		        			</c:if>
 		                    <li ID='btn_Read' ><span  onclick="ReaderList()"><spring:message code='ezBoard.t1006'/></span></li>
-		                    <li ID='btn_down' ><span  onclick="btn_ImgDownload()"><spring:message code='ezQuestion.t180'/><spring:message code='ezQuestion.t567'/></span></li>
+		                    <li ID='btn_down' ><a id="movieDownload"><span><spring:message code='ezQuestion.t180'/><spring:message code='ezQuestion.t567'/></span></a></li>
 		        		</c:otherwise>
 		        	</c:choose>
 		        </ul>
