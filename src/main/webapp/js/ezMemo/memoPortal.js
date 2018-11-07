@@ -969,10 +969,10 @@ function setMemoLayerMode(mode) {
  * noteBlock 내 더블클릭시, 음영 삭제 메서드
  */
 function noteClearSelection() {
-	//var noteBlock = document.getElementsByClassName('noteBlock');
-	//noteBlock[0].addEventListener("dblclick", clearSelection, false);
+	var noteBlock = document.getElementsByClassName('noteBlock');
+	noteBlock[0].addEventListener("dblclick", clearSelection, false);
 	
-	$(".noteBlock").on("selectstart", function(event){return false;});
+	//$(".noteBlock").on("selectstart", function(event){return false;});
 }
 
 

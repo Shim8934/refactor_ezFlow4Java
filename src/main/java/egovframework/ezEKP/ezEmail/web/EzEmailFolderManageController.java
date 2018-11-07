@@ -30,6 +30,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -65,6 +66,9 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+	
+	@Autowired
+	private EzEmailService ezEmailService;
 	
 	/**
 	 * 편지함 관리 화면 호출 함수
@@ -115,7 +119,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezEmail/mailMakeFolder.do")
 	@ResponseBody
-	public String mailMakeFolder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+	public String mailMakeFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		logger.debug("mailMakeFolder started.");
 		logger.debug("bodyData=" + bodyData);
 		
@@ -148,7 +152,22 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userAccount = userInfo.getId() + "@" + domainName;
-		logger.debug("userEmail=" + userAccount);
+		
+		String shareId = request.getParameter("shareId");
+		logger.debug("shareId=" + shareId);
+		
+		if (shareId != null) {
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("mailMakeFolder ended.");
+				
+				return "";
+			}
+			
+			userAccount = shareId + "@" + domainName;
+		}
+		
+		logger.debug("userAccount=" + userAccount);
 		
 		IMAPAccess ia = null;
         boolean isNewUserQuotaNeeded = false;	

@@ -247,7 +247,7 @@ function ReSend(pURL, pEmail) {
 
 function reply_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
-        alert(strLang43);
+        alert(strLang42);
     }
     
     if (listContentArry.length > 1 || listSubContentArry.length > 1) {
@@ -290,11 +290,11 @@ function GetNewGuid() {
 
 function all_reply_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
-        alert(strLang45);
+        alert(strLang42);
     }
     
     if (listContentArry.length > 1 || listSubContentArry.length > 1) {
-        alert(strLang46);
+        alert(strLang44);
         return;
     }
     else {
@@ -327,11 +327,11 @@ function all_reply_mail_onclick() {
 function reSend_onClick() {
 	
 	if (listContentArry.length == 0 && listSubContentArry.length == 0) {
-        alert(strLangKYJ01);
+        alert(strLang42);
     }
     
     if (listContentArry.length > 1 || listSubContentArry.length > 1) {
-        alert(strLangKYJ02);
+        alert(strLang44);
         return;
     } else {
         var pSelectItem;
@@ -356,11 +356,11 @@ function reSend_onClick() {
 
 function transmission_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
-        alert(strLang47);
+        alert(strLang42);
     }
     
     if (listContentArry.length > 1 || listSubContentArry.length > 1) {
-        alert(strLang48);
+        alert(strLang44);
         return;
     }
     else {
@@ -391,7 +391,7 @@ function transmission_mail_onclick() {
 }
 function Read_StatusChange(pGubun) {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
-        alert(strLang311);
+        alert(strLang42);
         return;
     }
 
@@ -429,7 +429,7 @@ function Read_StatusChange(pGubun) {
 var mail_movecopy_cross_dialogArguments = new Array();
 function move_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
-        alert(strLang51);
+        alert(strLang42);
         return;
     }
     
@@ -582,7 +582,7 @@ function refreshUnreadCount() {
 }
 function deleteWork(bDel) {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
-        alert(strLang57);
+        alert(strLang42);
         return;
     }
     
@@ -639,11 +639,11 @@ function delAllFile() {
 }
 function receiveCheck_onClick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
-        alert(strLang49);
+        alert(strLang42);
         return;
     }
     if (listContentArry.length > 1 || listSubContentArry.length > 1) {
-        alert(strLang50);
+        alert(strLang44);
         return;
     }
     var url = "";
@@ -671,7 +671,7 @@ function ListCount(pCount) {
 var denial_cross_dialogArguments = new Array();
 function reject_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
-        alert(strLang60);
+        alert(strLang42);
         return;
     }
     var RejectArray = new Array();
@@ -1531,6 +1531,10 @@ function mailExport_start(pwd){
 		var parameters = "url=" + encodeURIComponent(PcSaveArrayList[0].getAttribute("_href"));
 		var fullpath = "/ezEmail/mailExport.do?" + parameters;
 		
+		if (typeof(shareId) != "undefined" && shareId != "") {
+			fullpath += "&shareId=" + encodeURIComponent(shareId);
+    	}
+		
 		AttachDownFrame.location.href = fullpath;
 		AttachDownFrame.target = "_blank";
 		
@@ -1548,11 +1552,17 @@ function mailExport_start(pwd){
 		
 		ShowMailProgress();
 		
+		var requestUrl = "/ezEmail/mailExportZip.do";
+		
+		if (typeof(shareId) != "undefined" && shareId != "") {
+			requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    	}
+		
 		$.ajax({
 			type : "POST",
 			dataType : "text",
 			async : true,
-			url : "/ezEmail/mailExportZip.do",
+			url : requestUrl,
 			data : folderIdAndMessageIdList,
 			complete: function(){
 				HiddenMailProgress();
@@ -1561,6 +1571,11 @@ function mailExport_start(pwd){
 				
 				if (result != "") {
 					var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result + "&encryptPw=" + encryptPw;
+					
+					if (typeof(shareId) != "undefined" && shareId != "") {
+						fullpath += "&shareId=" + encodeURIComponent(shareId);
+			    	}
+					
 					AttachDownFrame.location.href = fullpath;
 					AttachDownFrame.target = "_blank";
 				} else {
@@ -1708,7 +1723,7 @@ function event_flag(obj) {
 var flagXmlHttp;
 function toggle_flag() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
-        alert(strLang311);
+        alert(strLang42);
         return;
     }
     var pSelectItem;

@@ -594,18 +594,23 @@ function ListView() {
         objTr.style.cursor = "pointer";
         objTr.onmouseover = new Function("tr_mouseover(this)");
         objTr.onmouseout = new Function("tr_mouseout(this)");
-        if (_rowonclick != null)
-            objTr.onclick = new Function("tr_select(\"" + objTr.id + "\", \"" + _thisID + "\", " + _rowonclick + ");");
-        else
-            objTr.onclick = new Function("tr_select(\"" + objTr.id + "\", \"" + _thisID + "\");");
+        
+        if (_rowonclick != null) {
+        	objTr.onclick = new Function("tr_select(\"" + objTr.id + "\", \"" + _thisID + "\", " + _rowonclick + ");");
+        } else {
+        	objTr.onclick = new Function("tr_select(\"" + objTr.id + "\", \"" + _thisID + "\");");
+        }
 
         var oCells = GetElementsByTagName(addXml, "CELL");
         var oDatas = GetDataElements(oCells[0]);
+        
         for (var j = 0; j < oDatas.length; j++) {
             var strData = oDatas[j].tagName;
             var strValue = "";
-            if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null)
-                strValue = oDatas[j].firstChild.nodeValue;
+            
+            if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null) {
+            	strValue = oDatas[j].firstChild.nodeValue;
+            }
 
             objTr.setAttribute(strData, strValue);
         }
@@ -614,17 +619,13 @@ function ListView() {
             var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
             var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
             var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
-
-
             var oText = document.createTextNode(strValue);
             var objTd = document.createElement("TD");
 
             if (strStyle != "") {
                 if (new RegExp(/MSIE/).test(navigator.userAgent)) {
                     objTd.style.setAttribute("cssText", strStyle);
-
-                }
-                else {
+                } else {
                     strStyle = strStyle.replace(/center/, "-moz-center");
                     objTd.setAttribute("style", strStyle);
                 }
@@ -632,27 +633,35 @@ function ListView() {
 
             if (strClass != "") {
                 objTd.className = strClass;
+            } else {
+                objTd.style.whiteSpace = "nowrap";
             }
-            else {
+            
+            if (_Align[j] == 0) {
+            	objTd.align = "left";
+            } else {
+            	objTd.align = "center";
             }
-            if (_Align[j] == 0)
-                objTd.align = "left";
-            else
-                objTd.align = "center";
 
             if (_SecIdx != j) {
                 objTd.onmouseover = new Function("td_mouseover(this)");
                 objTd.onmouseout = new Function("td_mouseout(this)");
             }
+            
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
+            
+            objTr.draggable = "true";
+            
             objTd = null;
             oText = null;
         }
+        
         objTr = null;
         oCells = null;
         oDatas = null;
     }
+    
     function GetDataElements(pObjElm) {
         var elements = new Array();
         var idx = 0;

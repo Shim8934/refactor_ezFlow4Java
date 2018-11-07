@@ -153,11 +153,13 @@
 		                ezapralert_cross_dialogArguments[1] = CompleteFunction;
 		            else
 		                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-		            DivPopUpShow(330, 203, url);
+		            DivPopUpShow(330, 205, url);
+		            //스크롤바 생기는 현상 제거
+		            document.getElementById("iFramePanel").style.top = "0px";
 		        }
 		        else {
-		            var feature = "status:no;dialogWidth:330px;dialogHeight:203px;help:no;scroll:no;edge:sunken";
-		            feature = feature + GetShowModalPosition(330, 203);
+		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		            feature = feature + GetShowModalPosition(330, 205);
 		            var RtnVal = window.showModalDialog(url, parameter, feature);
 		        }
 		    }

@@ -844,4 +844,26 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		return new JSONObject(result);
 	}
 
+	@Override
+	public FileVO getFolderFileDetailForExplorer(String fldfile, String fldFileId, String userId, int tenantId,	String comId, 
+			String offset, String primary) throws Exception {
+		
+		FileVO detailData = new FileVO();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("fldFileId", fldFileId);
+		map.put("tenantId", tenantId);
+		map.put("comId", comId);
+		map.put("userId", userId);
+		map.put("offset", offset);
+		map.put("primary", primary);
+		
+		if (fldfile.equals("fld")) {
+			detailData = ezWebFolderDAO_y.getFolderDetailForExplorer(map);
+		} else if (fldfile.equals("file")) {
+			detailData = ezWebFolderDAO_y.getFileDetailForExplorer(map);
+		}
+		return detailData;
+		
+	}
+
 }

@@ -132,6 +132,7 @@
 		    	}
 		    	
 		    	if (g_moveUrl == 'receiveChk') {
+		    		document.getElementById("reply").style.display = "none";
 		    		document.getElementById("toggle_flag_btn").style.display = "none"; 
 		    		document.getElementById("read_stat").style.display = "none";
 		    		document.getElementById("unread_stat").style.display = "none";
@@ -655,11 +656,17 @@
 			            ShowMailProgressNew();
 			            ShowPercent(0);
 			            
+			            var requestUrl = "/ezEmail/mailboxExportZip.do";
+			            
+			            if (typeof(shareId) != "undefined" && shareId != "") {
+			            	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+				    	}
+			            
 						$.ajax({
 							type : "POST",
 							dataType : "text",
 							async : true,
-							url : "/ezEmail/mailboxExportZip.do",
+							url : requestUrl,
 							data : { folderPath : '${url}', userkey : userkey},
 							success : function(result) {
 								if (result == "") {
@@ -680,6 +687,11 @@
 											+ encodeURIComponent('${folderName}')
 											+ "&temp=" + result + "&encryptPw=" + encodeURIComponent(encryptPw)
 											+ "&userkey=" + encodeURIComponent(userkey);
+									
+									if (typeof(shareId) != "undefined" && shareId != "") {
+										fullpath += "&shareId=" + encodeURIComponent(shareId);
+							    	}
+									
 									AttachDownFrame.location.href = fullpath;
 									AttachDownFrame.target = "_blank";
 					          
@@ -768,11 +780,17 @@
 		        	if (obj.status == "transferStart") {
 		            	userkey = obj.userkey;
 			            var frm = document.getElementById("importMailboxform");
-						frm.action = "/ezEmail/mailboxImportZip.do?folderPath="
-								+ encodeURIComponent('${url}') 
-								+ "&userkey=" + encodeURIComponent(userkey)
-								+ "&encryptPw=" + encodeURIComponent(encryptPw)
-								+ "&tempId=" + encodeURIComponent(path);
+			            var requestUrl = "/ezEmail/mailboxImportZip.do?folderPath="
+							+ encodeURIComponent('${url}') 
+							+ "&userkey=" + encodeURIComponent(userkey)
+							+ "&encryptPw=" + encodeURIComponent(encryptPw)
+							+ "&tempId=" + encodeURIComponent(path);
+				        
+				        if (typeof(shareId) != "undefined" && shareId != "") {
+				        	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+				    	}
+			            
+						frm.action = requestUrl;
 						frm.submit();
 						
 		            } else if (obj.status == 'progress') {
