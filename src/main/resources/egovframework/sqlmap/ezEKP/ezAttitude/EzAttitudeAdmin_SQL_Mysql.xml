@@ -480,6 +480,8 @@
 					(substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 1)
 		       )
 		]]>
+		     AND
+		     	NOT((D.EXTENSIONATTRIBUTE1 IS NULL OR D.EXTENSIONATTRIBUTE1 = '') AND D.CN <![CDATA[<>]]> D.EXTENSIONATTRIBUTE2)
 		<isNotEmpty property="companyId">
 		<![CDATA[
 			AND 

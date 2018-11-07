@@ -487,7 +487,8 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 						+ pDivi 
 						+ egovMessageSource.getMessage("ezCommunity.t54", locale);*/
 								
-				String content = "<DIV id='msgBody' style='FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana' name='urn:schemas:httpmail:textdescription'>" + subject.toString() + "</DIV>";
+				// 2018-11-07 김민성 - 커뮤니티 승인 메일 폰트 수정
+				String content = "<DIV id='msgBody' style='FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name='urn:schemas:httpmail:textdescription'>" + subject.toString() + "</DIV>";
 				
 				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject.toString(), content, false);
 			}

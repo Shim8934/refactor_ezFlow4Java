@@ -5,6 +5,8 @@
 public String checkVirusFile(String strFilePath, String strCopyPath, String strVaccinePath)
 {
 	String strRet = "";
+	BufferedReader br = null;
+	InputStreamReader isr = null;
 	try {
 		String[] cmdArray = new String[3];
 		String strPath = "";
@@ -18,7 +20,7 @@ public String checkVirusFile(String strFilePath, String strCopyPath, String strV
 
 		File file = new File(strPath);
 		if (!file.isFile()) {
-			System.out.println(file.getCanonicalPath().toString());
+			//System.out.println(file.getCanonicalPath().toString());
 			return strRet;
 		}
 		String strCpyFile = strCopyPath + fileNameTimeSetting();
@@ -29,7 +31,8 @@ public String checkVirusFile(String strFilePath, String strCopyPath, String strV
 		cmdArray[1] = "--scanFile";
 		cmdArray[2] = strCpyFile;
 		Process p = Runtime.getRuntime().exec(cmdArray);
-		BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		isr = new InputStreamReader(p.getInputStream());
+		br = new BufferedReader(isr);
 		String line = null;
 		ArrayList<String> ar = new ArrayList<String>();
 		while((line = br.readLine()) != null){
@@ -48,8 +51,21 @@ public String checkVirusFile(String strFilePath, String strCopyPath, String strV
 		}
 		File fileCpy = new File(strCpyFile);
 		fileCpy.delete();
-	} catch(Exception e){
-		System.out.println(e);
+	} catch(java.io.IOException e){
+		//System.out.println(e);
+	}finally{
+		try{
+			if( br != null){
+				br.close();
+				br = null;
+			}
+			if( isr != null){
+				isr.close();
+				isr = null;
+			}	
+		}catch(java.io.IOException err1){
+			//System.out.println("An internal exception occured!!");
+		}
 	}
 	return strRet;
 }

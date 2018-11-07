@@ -5399,7 +5399,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    }
 	}
 	
-	@SuppressWarnings("static-access")
 	@RequestMapping(value="/ezEmail/downloadAttachInWriter.do")
 	public void downloadAttachInWriter(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
@@ -5437,7 +5436,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (folder == null || !folder.exists()) {
 				logger.debug("folder not found. folderPath=" + folderPath);
 			} else {
-				folder.open(folder.READ_ONLY);
+				folder.open(Folder.READ_ONLY);
 				
 				Message message = null;
 				

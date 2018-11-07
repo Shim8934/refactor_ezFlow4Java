@@ -63,9 +63,9 @@
 		    		},
 		    		success: function(text) {
 		    			
-		    			if(text='0'){
+		    			if(text=='0'){
 		    				alert("<spring:message code='ezAddress.t1' />");
-		    			}else if(text='1'){
+		    			}else if(text=='1'){
 		    				
 		    			alert("<spring:message code='ezSchedule.t4012' />");
 		    			}

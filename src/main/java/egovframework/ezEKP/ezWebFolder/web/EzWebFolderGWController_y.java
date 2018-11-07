@@ -707,6 +707,9 @@ public class EzWebFolderGWController_y {
 			LOGGER.debug("-------folderUpp" + fldDetail.getFolderUpper());
 			
 			data.put("folderUpp", fldDetail.getFolderUpper());
+			data.put("createDate", fldDetail.getCreateDate());
+			data.put("updateDate", fldDetail.getUpdateDate());
+			data.put("folderName", fldDetail.getFolderName1());
 			data.put("folderPath", folderPath2);
 			data.put("originalPath", originalPath);
 			data.put("fileList", fileList);
@@ -799,6 +802,59 @@ public class EzWebFolderGWController_y {
 		LOGGER.debug("checkPermission ended.");
 		return jsonObj;
 
+	}
+	
+	/**
+	 * 
+	 * 탐색기 연동위한 folder file과 id를 전송시 상세 정보 출력해주는 메서드 추가 
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezwebfolder/fldfile/{fldfile}/fldfile-detail", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getFldFileDetail(@PathVariable String fldfile, HttpServletRequest request) {
+		LOGGER.debug("getFldFileDetail started.");
+		
+		JSONObject jsonObj = new JSONObject();
+		String serverName 	= request.getHeader("x-user-host")      			!= null ? request.getHeader("x-user-host") 			: "" ;
+		String userId 		= request.getParameter("userId");
+		String fldFileId 	= request.getParameter("fldFileId");
+
+		FileVO fldFileDetail = new FileVO();
+		JSONObject data = new JSONObject();
+		
+		if (fldfile.equals("") || userId.equals("") || fldFileId.equals("")) {
+			LOGGER.debug("Parameter error!");
+			jsonObj.put("status", "error");
+			jsonObj.put("code", 1);
+			
+			LOGGER.debug("getFldFileDetail method ended");
+			return jsonObj;
+		}
+		
+		try {
+			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = common.getTenantId();
+			String offset = common.getOffSet();
+			String primary = common.getPrimary();
+			String comId = common.getCompanyId();
+			
+			fldFileDetail = service.getFolderFileDetailForExplorer(fldfile, fldFileId, userId, tenantId, comId, offset, primary);
+			
+			data.put("fileList", fldFileDetail);
+			
+			jsonObj.put("status", "ok");
+			jsonObj.put("code", 0);
+			jsonObj.put("data", data);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.debug(" fail ");
+			jsonObj.put("status", "error");
+			jsonObj.put("code", 2);
+			jsonObj.put("data", "");
+		}
+		
+		LOGGER.debug("getFldFileDetail method ended");
+		return jsonObj;
 	}
 	
 }
