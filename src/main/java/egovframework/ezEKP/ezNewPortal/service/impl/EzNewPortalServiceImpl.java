@@ -963,6 +963,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getTnenantIdByServerName ended.");
 		return tenantId;
 	}
+	
+	@Override
+	public void updateCompanyDefaultTheme(int themeId, String companyId, int tenantId) {
+		LOGGER.debug("updateCompanyDefaultTheme started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("themeId", themeId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezNewPortalDAO.updateCompanyDefaultTheme(map);
+		LOGGER.debug("updateCompanyDefaultTheme ended.");
+	}
 	/**
 	 * 이효진
 	 */

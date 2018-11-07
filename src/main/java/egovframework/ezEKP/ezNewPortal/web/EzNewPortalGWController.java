@@ -1160,15 +1160,18 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 회사별 테마 미리보기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/frames/{frameId}/preview/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getCompanyThemePreview(HttpServletRequest request, @PathVariable int themeId, @PathVariable int frameId, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCompanyThemePreview started.");
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/default/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	public JSONObject updateCompanyDefaultTheme(HttpServletRequest request, @PathVariable int themeId, @PathVariable String companyId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W updateCompanyDefaultTheme started.");
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-
+			int tenantId = info.getTenantId();
+			
+			ezNewPortalService.updateCompanyDefaultTheme(themeId, companyId, tenantId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
@@ -1176,7 +1179,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getCompanyThemePreview ended.");
+		LOGGER.debug("ezNewPortal G/W updateCompanyDefaultTheme ended.");
 		return result;
 	}
 

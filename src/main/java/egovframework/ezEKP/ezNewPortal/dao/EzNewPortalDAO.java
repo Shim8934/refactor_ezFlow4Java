@@ -244,7 +244,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	
 	public void deletePortletUser (Map<String, Object> map) {
 		delete("ezNewPortal.deletePortletUser", map);
-	} 
+	}
+	
+	public void updateCompanyDefaultTheme (Map<String, Object> map) {
+		update("ezNewPortal.updateCompanyDefaultTheme", map);
+	}
 	/**
 	 * 이효진
 	 */
