@@ -8720,5 +8720,36 @@ public class EzBoardController extends EgovFileMngUtil{
 		return "ezBoard/boardModifyMovieItem";
 	}
 
+	/** 동영상게시판 미리보기 호출 */
+	@RequestMapping(value = "/ezBoard/boardItemPreViewMovieContent.do")
+	public String boardItemPreViewMovieContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("boardItemPreViewMovieContent started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String showAdjacent = request.getParameter("showAdjacent");
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String mode = request.getParameter("mode");
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
+		if (!boardInfo.getRead_FG().equals("true")) {
+        	return "main/warning";
+        }
+		
+		ezBoardService.setAsRead(userInfo, boardID, itemID);
+
+		model.addAttribute("itemID", itemID);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("mode", mode);
+		model.addAttribute("showAdjacent", showAdjacent);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("boardInfo", boardInfo);
+				
+		logger.debug("boardItemPreViewMovieContent ended");
+		
+		return "ezBoard/boardItemPreViewMovieContent";
+	}
 }
 
