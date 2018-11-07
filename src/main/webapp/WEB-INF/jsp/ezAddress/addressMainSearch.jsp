@@ -356,8 +356,8 @@
 	    <h1><spring:message code='ezAddress.t312' /></h1>
 	    <div id="mainmenu">
 	        <ul>
-	            <li><span onclick="write_letter()"><spring:message code='ezAddress.t313' /></span></li>
 	            <li><span onclick="move_address()"><spring:message code='ezAddress.t176' /></span></li>
+	            <li><span onclick="write_letter()"><spring:message code='ezAddress.t313' /></span></li>
 	            <li onclick="delete_address()"><span class="icon16 icon16_delete"></span></li>
 	            <li onclick="window.location.reload(false)"><span class="icon16 icon16_refresh"></span></li>
 	            <li style="background:none;float:right">

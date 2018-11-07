@@ -808,9 +808,9 @@
 				<li id="exportaddress" style="display:none;"><span  onClick="address_inout(0)"><spring:message code='ezAddress.t143' /></span></li>
 				<li id="importaddress_Cross"><span onclick="clickImport()"><spring:message code='ezAddress.t210' /></span></li>
         		<li id="exportaddress_Cross"><span onclick="clickExport()"><spring:message code='ezAddress.t143' /></span></li>
-				<li><span onClick="write_letter()"><spring:message code='ezAddress.t238' /></span></li>
 				<li><span onClick="move_address()"><spring:message code='ezAddress.t239' /></span></li>
-				<li><span id="SearchOption" mode="off" onClick="doLayerPopup()"><spring:message code='ezAddress.t142' /></span></li>
+				<li><span onClick="write_letter()"><spring:message code='ezAddress.t238' /></span></li>
+				<li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup()"></span></li>
 				<li onClick="delete_address()"><span class="icon16 icon16_delete"></span></li>
 				<li onClick="window.location.reload(false)"><span class="icon16 icon16_refresh"></span></li>
 				<li style="background:none;float:right">

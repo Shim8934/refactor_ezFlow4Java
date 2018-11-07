@@ -1071,8 +1071,8 @@
         <ul id="tb_Parent">
 			<li id="appr"><span onClick="modApprove()"><spring:message code='ezAttitude.t210'/></span></li>
         	<li id="ret"><span onClick="modReturn()"><spring:message code='ezAttitude.t211'/></span></li>
-        	<li id="search"><span onClick="search_popup()"><spring:message code='ezAttitude.t121'/></span></li>
 	        <li id="reply"><span onClick="get_excelAtt_list()"><spring:message code='ezAttitude.t145'/></span></li>
+	        <li id="search"><span class="icon16 icon16_search" onClick="search_popup()"></span></li>
         	<li onClick="att_search('refresh')"><span class="icon16 icon16_refresh"></span></li>
 			<li>
 				<select id="writerDept_search" onchange="dept_change()" style="height:28px;">
@@ -1084,7 +1084,7 @@
 					</c:forEach>
 				</select>
 			</li>
-			<li id="right">
+			<li id="right" style="margin-right:5px">
 				<span style="float:right;font-weight:normal;color:black;border: none; box-shadow:none;">
 					<input name="searchCheck" id="Radio1" type="radio" value="all" <c:if test="${adminFlag != 'true'}">checked</c:if> style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t124'/></label>
 					<input name="searchCheck" id="Radio2" type="radio" value="0" <c:if test="${adminFlag == 'true'}">checked</c:if> style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.t209'/></label>
