@@ -36,7 +36,7 @@
 						var imgPath = result.imgPath;
 						var docsHTML = "";
 						
-						if (docList) {
+						if (docList.length > 0) {
 							switch (type) {
 							case "doing":
 								docList.forEach(function(item, index) {
