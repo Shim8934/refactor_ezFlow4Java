@@ -75,6 +75,7 @@ public interface EzNewPortalService {
 	public void updateCompanyLogo(String companyId, int tenantId, String logoType, String logoUrl);
 	public List<PortalLogoVO> getCompanyLogoList(String companyId, int tenantId);
 	public int getTnenantIdByServerName(String serverName);
+	public void updateCompanyDefaultTheme(int themeId, String companyId, int tenantId);
 	
 	/**
 	 * 이효진

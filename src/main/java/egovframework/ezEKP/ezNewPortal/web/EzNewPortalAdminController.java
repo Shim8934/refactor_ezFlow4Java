@@ -1003,4 +1003,30 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			return "/admin/ezNewPortal/themePreview";
 		}
 	}
+	
+	@RequestMapping(value = "/admin/ezNewPortal/updateCompanyDefaultTheme.do")
+	@ResponseBody
+	public void updateCompanyDefaultTheme(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("updateCompanyDefaultTheme started.");
+
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+		
+		if (user == null) {
+			LOGGER.debug("updateCompanyDefaultTheme accessDenied.");
+			
+		} else {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String userId = userInfo.getId();
+			String themeId = paramMap.get("themeId").toString();
+			String companyId = paramMap.get("companyId").toString();
+			
+			paramMap.put("userId", userId);
+			
+			String url = "/rest/admin/ezPortal/themes/" + themeId + "/default/companies/" + companyId;
+			System.out.println(url);
+			commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, request, "patch", null);
+			
+			LOGGER.debug("updateCompanyDefaultTheme ended.");
+		}
+	}
 }

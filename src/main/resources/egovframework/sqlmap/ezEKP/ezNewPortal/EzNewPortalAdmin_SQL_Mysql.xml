@@ -625,4 +625,18 @@
 			tenant_id = #tenantId#
 	]]>
 	</delete>
+	
+	<update id="ezNewPortal.updateCompanyDefaultTheme" parameterClass="Map">
+	<![CDATA[
+		UPDATE
+			tbl_portal_theme_comp
+		SET
+			theme_default = CASE WHEN theme_id = #themeId# THEN 1 ELSE 0 END,
+			theme_used = CASE WHEN theme_id = #themeId# THEN 1 ELSE theme_used END
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+	]]>
+	</update>
 </sqlMap>
