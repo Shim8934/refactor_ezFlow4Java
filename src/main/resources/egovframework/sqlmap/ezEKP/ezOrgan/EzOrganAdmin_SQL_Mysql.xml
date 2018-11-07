@@ -4172,6 +4172,38 @@
 			TENANT_ID = #v_TENANTID#
 	]]>
 	</select>
+	
+	<update id="EzOrganAdminDAO.updateDBData_userOrder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_USERMASTER
+			SET
+				EXTENSIONATTRIBUTE15 = EXTENSIONATTRIBUTE15 + 1
+			WHERE
+				DEPARTMENT = #v_PARENTCN#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				EXTENSIONATTRIBUTE15 IS NOT NULL
+			AND 
+				EXTENSIONATTRIBUTE15 >= #v_EXTATTR15#
+		]]>
+	</update>
+	
+	<update id="EzOrganAdminDAO.updateDBData_userOrderIsNull" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_USERMASTER
+			SET
+				EXTENSIONATTRIBUTE15 = 1
+			WHERE
+				DEPARTMENT = #v_PARENTCN#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				EXTENSIONATTRIBUTE15 IS NULL
+		]]>
+	</update>
  	 
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}

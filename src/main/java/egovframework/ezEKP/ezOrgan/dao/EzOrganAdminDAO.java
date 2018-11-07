@@ -544,6 +544,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         }            
 	}
 	
+	public void updateDBData_userOrder(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateDBData_userOrder", map);
+	}
+	
+	public void updateDBData_userOrderIsNull(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateDBData_userOrderIsNull", map);
+	}
+	
     private void updateDBData_companyForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String companyId = (String)map.get("v_CN");

@@ -871,7 +871,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_EXTATTR10", vo.getExtensionAttribute10() != null ? vo.getExtensionAttribute10() : "");
 		map.put("v_EXTATTR102", vo.getExtensionAttribute102() != null ? vo.getExtensionAttribute102() : "");
 		map.put("v_EXTATTR14", vo.getExtensionAttribute14() != null ? vo.getExtensionAttribute14() : "");
-		map.put("v_EXTATTR15", vo.getExtensionAttribute15() != null ? vo.getExtensionAttribute15() : "");
 		
 		// 코린도에서 extensionAttribute11 필드를 한국인, 현지인 구분에 사용하여 추가함
 		map.put("v_EXTATTR11", vo.getExtensionAttribute11() != null ? vo.getExtensionAttribute11() : "");
@@ -892,10 +891,27 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
 		
+		// 트리뷰순서값이 null일 경우 현재 추가한 사원이 제일 위에 오도록
+		// 나머지 사원들의 트리뷰순서값들을 1씩 증가
+		if (checkExtrattrIsNull(vo.getExtensionAttribute15())) {
+			vo.setExtensionAttribute15("0");
+			//ezOrganAdminDao.updateDBData_userOrderIsNull(map);		
+		}
 		
+		map.put("v_EXTATTR15", vo.getExtensionAttribute15());
+		
+		ezOrganAdminDao.updateDBData_userOrder(map);
 		ezOrganAdminDao.insertDBData_user(map);
 				
 		logger.debug("insertDBData_user ended");
+	}
+	
+	public boolean checkExtrattrIsNull(String str) {
+		if (str.equals("") || str == null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
     @Override
