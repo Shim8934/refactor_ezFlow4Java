@@ -1221,7 +1221,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("menuAuthsY", menuAuthsY);
-		resultMap.put("menuAuthsY", menuAuthsN);
+		resultMap.put("menuAuthsN", menuAuthsN);
 		
 		LOGGER.debug("getMenuAuth ended.");
 		

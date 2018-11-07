@@ -399,9 +399,9 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 메뉴권한목록 조회
 	 */
-	@RequestMapping(value = "/admin/ezNewPortal/getMenuAuth.do")
-	public String getMenuAuth(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("getMenuAuth started.");
+	@RequestMapping(value = "/admin/ezNewPortal/getMenuAuths.do")
+	public String getMenuAuths(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("getMenuAuths started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -420,7 +420,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("menuAuths", resultBody.get("data"));
 		}
 		
-		LOGGER.debug("getMenuAuth ended.");
+		LOGGER.debug("getMenuAuths ended.");
 		
 		return "json";
 	}
