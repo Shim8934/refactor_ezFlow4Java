@@ -1702,6 +1702,8 @@
 				( OWNERID = #userId# OR OWNERID LIKE CONCAT('%', ',', #userId#) OR OWNERID LIKE CONCAT(#userId#, ',', '%') )
 			AND 
 				TENANT_ID = #tenantId#  
+			AND
+				BRD_COMPANY = #companyId#
 		]]>
 	</select>
 </sqlMap>
