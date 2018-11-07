@@ -127,13 +127,16 @@ $(function() {
 				var frameList = JSON.parse(xhr.responseText).data.frameList;
 
 				frameList.forEach(function (item, index) {
-					
+console.log(item);					
 					var li = document.createElement('li');
 					var div = document.createElement('div');
 					div.className = 'flipsterLi';
 					
+					var selectFlipster = document.getElementsByClassName('select-flipster')[0];
+					
 					// 최초 회사 frame 설정
-					if(item.frameDefault) {
+					if(selectFlipster === undefined && item.frameDefault) {
+						console.log('default setting');
 						div.classList.add('select-flipster');
 						portletSetting.selectedFrame = item.frameId;
 						portletSetting.usedTheme = item.themeId;						
@@ -141,7 +144,10 @@ $(function() {
 					
 					// 사용자가 선택한 frame 설정
 					if (item.usedFrame*1 === item.frameId*1) {
-						var selectFlipster = document.getElementsByClassName('select-flipster')[0];
+						console.log('user setting');
+						console.log(item.usedFrame);
+						console.log(item.frameId);
+						//var selectFlipster = document.getElementsByClassName('select-flipster')[0];
 						
 						if(selectFlipster !== undefined) {
 							selectFlipster.classList.remove('select-flipster');
