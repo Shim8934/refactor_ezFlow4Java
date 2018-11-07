@@ -55,6 +55,10 @@ function copy() {
 		var startIndex = indexOfFirst + 40;
 		content = content.substring(startIndex);
 	}
+	
+	// 폰트 스타일 주석 삭제
+	var pattern = /<!--([\s\S]+)-->/;
+	content = content.replace(pattern, "").trim();
 } 
  
 /**

@@ -858,7 +858,7 @@
             (#portalItemUID12#,'배너_우수사원_포틀릿','Banner_TopUser_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID12#),' ','0','1',225,'0',#companyID#,null,null,330,null,#tenantID# ),
             (#portalItemUID14#,'우수커뮤니티_포틀릿','Community_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID14#),' ','0','1',235,'0',#companyID#,null,null,330,null,#tenantID# ),
             (#portalItemUID4#,'슬라이드이미지_포틀릿','SlideImage_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID4#),' ','0','1',225,'0',#companyID#,null,null,517,null,#tenantID# ),
-            (#portalItemUID17#,'포토_생일 통합 포틀릿','Photo_Birthday_Total_Portlet,1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID17#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
+            (#portalItemUID17#,'포토_생일 통합 포틀릿','Photo_Birthday_Total_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID17#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
             (#portalItemUID18#,'공지_슬라이드_이모저모 통합 포틀릿','Notice_Slide_Total_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID18#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
             (#portalItemUID15#,'결재사용현황_포틀릿','ApprovalUse_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID15#),' ','0','1',225,'0',#companyID#,null,null,348,null,#tenantID# ),
             (#portalItemUID5#,'결재_메일 통합 포틀릿','Approval_Mail_Total_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID5#),' ','0','1',235,'0',#companyID#,null,null,797,null,#tenantID# ),
