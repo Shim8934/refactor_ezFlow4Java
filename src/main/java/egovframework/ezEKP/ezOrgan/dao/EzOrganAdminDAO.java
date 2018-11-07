@@ -548,6 +548,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		update("EzOrganAdminDAO.updateDBData_userOrder", map);
 	}
 	
+	public void updateDBData_addjobmasterOrder(Map<String, Object> map) throws Exception {
+		update ("EzOrganAdminDAO.updateDBData_addjobmasterOrder", map);
+	}
+	
 	public void updateDBData_userOrderIsNull(Map<String, Object> map) throws Exception {
 		update("EzOrganAdminDAO.updateDBData_userOrderIsNull", map);
 	}

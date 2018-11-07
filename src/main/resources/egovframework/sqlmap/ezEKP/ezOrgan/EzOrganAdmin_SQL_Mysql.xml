@@ -4190,6 +4190,23 @@
 		]]>
 	</update>
 	
+	<update id="EzOrganAdminDAO.updateDBData_addjobmasterOrder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ADDJOBMASTER
+			SET
+				ORDERBY = ORDERBY + 1
+			WHERE
+				DEPTID = #v_PARENTCN#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				ORDERBY IS NOT NULL
+			AND
+				ORDERBY >= #v_EXTATTR15#
+		]]>
+	</update>
+	
 	<update id="EzOrganAdminDAO.updateDBData_userOrderIsNull" parameterClass="Map">
 		<![CDATA[
 			UPDATE

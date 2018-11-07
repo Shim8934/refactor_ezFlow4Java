@@ -900,7 +900,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15());
 		
-		ezOrganAdminDao.updateDBData_userOrder(map);
+		ezOrganAdminDao.updateDBData_addjobmasterOrder(map); // 겸직되어있는 사용자 트리뷰순서값 1씩 증가
+		ezOrganAdminDao.updateDBData_userOrder(map); // 원부서 사용자 트리뷰순서값 1씩 증가
 		ezOrganAdminDao.insertDBData_user(map);
 				
 		logger.debug("insertDBData_user ended");
