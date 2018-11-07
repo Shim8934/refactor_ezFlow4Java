@@ -395,11 +395,23 @@ public class EzNewPortalGWController {
 			// List<ThemeInfoVO> userThemeList =
 			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
 			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId);
-
+			int userThemeListCount = userThemeList.size();
+			int userThemeMiddleIndex = userThemeListCount / 2;
+			
+			for (int i = 0; i < userThemeListCount; i++) {
+				ThemeInfoVO theme = userThemeList.get(i);
+				
+				if (theme.isThemeDefault()) {
+					userThemeList.remove(i);
+					userThemeList.add(userThemeMiddleIndex, theme);
+				}
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", userThemeList);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
