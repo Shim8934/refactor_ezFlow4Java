@@ -913,6 +913,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("menuId", menuId);
 		
+		//tbl_portal_portlet_user 지우기
+		ezNewPortalDAO.deletePortletUser(map);
+		
 		//tbl_portal_portlet_name 지우기
 		ezNewPortalDAO.deletePortletName(map);
 		
@@ -1389,8 +1392,22 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		
 		//TODO 2018-11-06 이효진 포틀릿 삭제로직 포함시켜라
-		//deletePortlet
+		//deletePortlet ---- 2018-11-07 유은정 개발
+		//메뉴아이디에 포함되어있는 포틀릿 아이디 목록 가져오기
+		List<Integer> portletList = ezNewPortalDAO.getPortletIdsByMenuId(map);
+		int portletListCount = portletList.size();
 		
+		for (int i = 0; i < portletListCount; i++) {
+			int portletId = portletList.get(i);
+			map.put("portletId", portletId);
+			
+			ezNewPortalDAO.deletePortletUser(map);
+			ezNewPortalDAO.deletePortletName(map);
+			ezNewPortalDAO.deletePortletComp(map);
+			ezNewPortalDAO.deletePortlet(map);
+		}
+		
+		ezNewPortalDAO.deleteMenuUser(map);
 		ezNewPortalDAO.deleteMenuAuth(map);
 		ezNewPortalDAO.deleteMenuNames(map);
 		ezNewPortalDAO.deleteMenuComp(map);

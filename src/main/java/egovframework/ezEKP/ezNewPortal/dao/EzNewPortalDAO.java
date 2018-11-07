@@ -232,6 +232,19 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public int getTenantIdByServerName(Map<String, Object> map) {
 		return (int) select("ezNewPortal.getTenantIdByServerName", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Integer> getPortletIdsByMenuId (Map<String, Object> map) {
+		return (List<Integer>) list("ezNewPortal.getPortletIdsByMenuId", map);
+	}
+	
+	public void deleteMenuUser (Map<String, Object> map) {
+		delete("ezNewPortal.deleteMenuUser", map);
+	}
+	
+	public void deletePortletUser (Map<String, Object> map) {
+		delete("ezNewPortal.deletePortletUser", map);
+	} 
 	/**
 	 * 이효진
 	 */
