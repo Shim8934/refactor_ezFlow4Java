@@ -875,11 +875,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						subject = (subject != null) ? subject : "";
 						
 						Map<String, Object> extraMap = new HashMap<String, Object>();
-						extraMap.put("forPrint", false);
-						extraMap.put("mobile", false);
-						extraMap.put("secureKey", null);
-						extraMap.put("securePassword", null);
-						extraMap.put("includeInlineAsAttachment", false);
 						extraMap.put("shareId", userId);
 						
 						// analyze the message and retrieve the attached file list.
@@ -963,11 +958,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						subject = (subject != null) ? subject : "";
 						
 						Map<String, Object> extraMap = new HashMap<String, Object>();
-						extraMap.put("forPrint", false);
-						extraMap.put("mobile", false);
-						extraMap.put("secureKey", null);
-						extraMap.put("securePassword", null);
-						extraMap.put("includeInlineAsAttachment", false);
 						extraMap.put("shareId", userId);
 						
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
@@ -1167,11 +1157,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p><br/><br/>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
 						
 						Map<String, Object> extraMap = new HashMap<String, Object>();
-						extraMap.put("forPrint", false);
-						extraMap.put("mobile", false);
-						extraMap.put("secureKey", null);
-						extraMap.put("securePassword", null);
-						extraMap.put("includeInlineAsAttachment", false);
 						extraMap.put("shareId", userId);
 						
 						// analyze the message and retrieve the attached file list.
@@ -3319,11 +3304,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					mail.put("folderName", f.getName());
 					
 					Map<String, Object> extraMap = new HashMap<String, Object>();
-					extraMap.put("forPrint", false);
-					extraMap.put("mobile", false);
-					extraMap.put("secureKey", null);
-					extraMap.put("securePassword", null);
-					extraMap.put("includeInlineAsAttachment", false);
+					extraMap.put("mobile", true);
 					extraMap.put("shareId", userId);
 					
 					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, attachedFileList, locale, extraMap);
