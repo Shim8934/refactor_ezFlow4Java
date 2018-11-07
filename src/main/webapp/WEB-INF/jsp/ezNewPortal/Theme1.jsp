@@ -31,6 +31,8 @@
 	}
 	.slider_section {height:515px; width:280px;}
 	.right_float {float:right;}
+	#nodata_NewBirth {display:none;}
+	#featured {background : none;}
 </style>
 </head>
 <body class="mainbg">
