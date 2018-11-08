@@ -614,7 +614,10 @@
 	        }
 	        
 	        function mail_Config() {
-	        	detailView();
+	        	if (shareId == "") {
+	        		detailView();
+	        	}
+	        	
 	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do";
 	        }
 	        function Address_Menu_Click() {
