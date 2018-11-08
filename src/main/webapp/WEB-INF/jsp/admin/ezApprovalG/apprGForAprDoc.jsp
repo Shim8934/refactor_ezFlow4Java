@@ -922,7 +922,7 @@
     			<input type="hidden" id="SCompID" value="${userInfo.companyID }" >
 			</c:if>
         	<ul>        		
-            	<li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
+            	<li id="SearchCondi"><span class="icon16 icon16_search" onclick="return SearchCondi_onclick()"></span></li>
             	<c:if test="${useEditApprDoc == 'YES' }">
             		<li id="modifyButton"><span onclick="return modifyDocumnet()"><spring:message code= 'ezApprovalG.t44' /></span></li>
             	</c:if>

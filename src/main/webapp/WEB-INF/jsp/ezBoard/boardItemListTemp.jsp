@@ -954,7 +954,7 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
-	            <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188'/></span></li>
+	            <li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup(this)"></span></li>
 	            <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
 	            <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
 	            <li id="right">

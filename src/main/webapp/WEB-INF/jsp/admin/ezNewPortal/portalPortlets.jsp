@@ -166,6 +166,12 @@
 	}
 	  
 	var portletDelete = function(event) {
+		var response = confirm("포틀릿을 삭제하시겠습니까?");
+		
+		if (!response) {
+			return;
+		}
+		
 		var companiesObj = document.getElementById("ListCompany");
 		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 		var portletId = event.data.portletId;

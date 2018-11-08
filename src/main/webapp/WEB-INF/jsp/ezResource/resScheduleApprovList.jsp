@@ -837,7 +837,7 @@
   			<ul>
     			<li><span id="Span1" onClick="btn_Approv()"><spring:message code='ezResource.t191'/></span></li>
     			<li><span id="pn_img" onClick="btn_ApprovCancel()"><spring:message code='ezResource.t190'/></span></li>
-    			<li><span onclick='btn_Delete();'><spring:message code='ezResource.t65'/></span></li>
+    			<li><span class="icon16 icon16_delete" onclick='btn_Delete();'></span></li>
     			<li><span onclick='ViewCalendar()'><spring:message code='ezResource.t255'/></span></li>
     			<li style="background:none;float:right">
         			<select id="listviewtype" onchange="getCalendarList('search')">

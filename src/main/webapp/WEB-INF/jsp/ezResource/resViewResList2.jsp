@@ -155,6 +155,7 @@
 	    	               	document.getElementById("noResListSpan").style.display = "none";
 	    	               	//document.getElementById("tbar2").style.display = "none";
 	                	} else {
+	                		document.getElementById("noResListSpan").style.display = "none";
 	                		document.getElementById("mainmenu").style.display = "none";
 	                	} 
 	                	document.getElementById("tdDateCalendarViewer").innerHTML = document.getElementById("EmptyMsg").innerHTML;
@@ -394,10 +395,10 @@
             		<li class="important"><span onClick="btnAdd_Click();"><spring:message code="ezResource.t363" /></span></li>	
     				<li><span onClick="btnView_Resource();"><spring:message code="ezResource.t17" /></span></li>
               	</c:if>
-              	<span id = "noResListSpan">
+              	<!-- <span id = "noResListSpan"> -->
               		<%-- <li style="background:none;float:right;cursor:default;border:0px;color:#393939">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
 					<li style="background:none;float:right;cursor:default;border:0px;color:#393939"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li> --%>
-				</span>
+				<!-- </span> -->
             </ul>
 		</div>
 		<div class="calendar_pagenav" id="weeklyline">
@@ -409,7 +410,7 @@
 	        </ul>
 	    </div>
 
-	    <div class="mainmenuTab">
+	    <div class="mainmenuTab" id="noResListSpan">
 	        <ul class="mainmenuTabUL">
 	            <li id="ToDaybtn" class="off"><span onClick="setweek_onload('TODAY');"><spring:message code='ezSchedule.t140'/></span></li><li id="Weekbtn" class="on"><span onClick="setweek_onload('WEEK');"><spring:message code='ezSchedule.t141'/></span></li>
 	        </ul>
