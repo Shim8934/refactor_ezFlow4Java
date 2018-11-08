@@ -31,15 +31,16 @@ function ptlGetAttitudeList() {
 }
 
 function ptlAttiClock() {
-    var ptlH, ptlM;
-    var ptlS;
+    var h, m;
+    var s;
     var ptlTime = " ";
     
+    nowAttiTime.setMinutes(nowAttiTime.getMinutes() + 1);
     ptlTime = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2);
     document.getElementById("ptlTimeFlow").innerHTML = ptlTime;
 
     if (ptlTime == "00:00" || ptlTime == "12:00") {
-    	ptlAmPmCheck(nowAttiTime.getHours())
+    	ptlAmPmCheck(nowAttiTime.getHours());
     }
     
     gizmo = setTimeout("ptlAttiClock()", 1000 * 60);
