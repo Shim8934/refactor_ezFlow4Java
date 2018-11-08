@@ -77,6 +77,7 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @RestController
 public class EzNewPortalGWController {
@@ -154,7 +155,7 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-			String portletLang = info.getLang();
+			String portletLang = info.getPrimary();
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
 			
 			// 사용자 설정 테마/프레임 가져오기
@@ -2684,7 +2685,6 @@ public class EzNewPortalGWController {
 
 			List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(info.getCompanyID(), "USER", null, info.getTenantId());
 
-
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", sliderList);
@@ -2694,6 +2694,85 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("ezNewPortal G/W getslideimagesPortlet ended.");
+		return result;
+	}
+	
+	/**
+	 * 포탈개인화 G/W [GET] 포틀릿 - 유저정보
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezportal/portlets/userinfomations", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getuserInfomationsPortlet(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getuserInfomationsPortlet started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			String userName = "";
+			String userTitle = "";
+			String deptName = "";
+			String userPhoto = "";
+			String userEmail = "";
+
+			// 회원정보 불러오기
+			if (info.getPrimary().equals("1")) {
+				userName = info.getUserName();
+				userTitle = info.getTitle();
+				deptName = info.getDeptName();
+			} else {
+				userName = info.getUserName2();
+				userTitle = info.getTitle2();
+				deptName = info.getDeptName2();
+			}
+			userEmail = info.getEmail();
+			
+			// 유저이미지
+			String imgUrl = ezOrganService.getPropertyValue(userId, "extensionAttribute2", info.getTenantId());
+
+			if (imgUrl != null && !imgUrl.equals("")) {
+				userPhoto = commonUtil.getUploadPath("upload_personal.PHOTO", info.getTenantId()) + commonUtil.separator + imgUrl;
+			}
+			
+			//근태 사용여부
+			String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());			
+			if (useAttitude == null || useAttitude.equals("")) {
+				useAttitude = "YES";
+			}
+			
+			//마지막(최종)접속시간
+			String lastLogin = "";
+			
+			lastLogin = ezOrganService.getLastLogin(userId, info.getTenantId());
+			
+			if (lastLogin != null) {
+				lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+				lastLogin = commonUtil.getDateStringInUTC(lastLogin, info.getOffSet(), false);
+			} else {
+				lastLogin = "";
+			}
+			
+			JSONObject data = new JSONObject();
+			data.put("useAttitude", useAttitude);
+			data.put("userName", userName);
+			data.put("userTitle", userTitle);
+			data.put("deptName", deptName);
+			data.put("userPhoto", userPhoto);
+			data.put("userEmail", userEmail);
+			data.put("lastLogin", lastLogin);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getuserInfomationsPortlet ended.");
 		return result;
 	}
 }

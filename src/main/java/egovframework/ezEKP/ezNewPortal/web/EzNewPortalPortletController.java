@@ -45,6 +45,7 @@ import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -712,5 +713,39 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		logger.debug("portalSlideImagePortlet End");
 		return "/ezNewPortal/portlets/slideImagePortlet";
+	}
+	
+	/**
+	 * 포틀릿 - 유저정보
+	 */
+	@RequestMapping(value = "/ezNewPortal/userInfoPortlet.do")
+	public String portalUserInfoPortlet(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("portalUserInfoPortlet Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/ezportal/portlets/userinfomations";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			
+			model.addAttribute("useAttitude", data.get("useAttitude"));
+			model.addAttribute("userName", data.get("userName"));
+			model.addAttribute("userTitle", data.get("userTitle"));
+			model.addAttribute("deptName", data.get("deptName"));
+			model.addAttribute("userPhoto", data.get("userPhoto"));
+			model.addAttribute("userEmail", data.get("userEmail"));
+			model.addAttribute("lastLogin", data.get("lastLogin"));
+		}
+		
+		logger.debug("portalUserInfoPortlet End");
+		return "/ezNewPortal/portlets/userInfoPortlet";
 	}
 }
