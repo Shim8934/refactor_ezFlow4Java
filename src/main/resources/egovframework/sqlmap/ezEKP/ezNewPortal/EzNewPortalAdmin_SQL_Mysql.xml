@@ -639,4 +639,17 @@
 			tenant_id = #tenantId#
 	]]>
 	</update>
+	
+	<delete id="ezNewPortal.deleteCompanyLogo" parameterClass="Map">
+	<![CDATA[
+		DELETE FROM
+			TBL_PORTAL_LOGO
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			company_id = #companyId#
+		AND
+			logo_type = #logoType#
+	]]>
+	</delete>
 </sqlMap>

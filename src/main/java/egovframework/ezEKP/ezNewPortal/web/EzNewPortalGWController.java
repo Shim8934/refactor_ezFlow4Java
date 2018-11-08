@@ -1788,7 +1788,8 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String logoType = jsonParam.get("logoType").toString();
 			String logoUrl = jsonParam.get("logoUrl").toString();
-			
+			System.out.println(logoType);
+			System.out.println(logoUrl);
 			ezNewPortalService.updateCompanyLogo(companyId, tenantId, logoType, logoUrl);
 			
 			String addedLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, logoType);
@@ -1804,7 +1805,34 @@ public class EzNewPortalGWController {
 		LOGGER.debug("ezNewPortal G/W updateCompanyLogo ended.");
 		return result;
 	}
+	
+	/**
+	 * 포탈개인화 G/W [DELETE] 로고 삭제하기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/logos/{logoType}/companies/{companyId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteLogo(HttpServletRequest request, @PathVariable String logoType, @PathVariable String companyId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W deleteLogo started.");
+		JSONObject result = new JSONObject();
 
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId").toString());
+			int tenantId = info.getTenantId();
+			
+			ezNewPortalService.deleteCompanyLogo(companyId, tenantId, logoType);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W deleteLogo ended.");
+		return result;
+	}
+	
 	// ///포틀릿///////구해안
 	/**
 	 * 포탈개인화 G/W [GET] 포틀릿 - 게시판 즐겨찾기 포틀릿 조회

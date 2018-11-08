@@ -15,7 +15,7 @@
 .logoIcon span, .logoIcon img {margin:50px;}
 img {width:150px; height:100px;}
 .logoContent {display:inline-block;margin-top:20px;}
-.updateLogo {display : inline-block;}
+.btnpositionJsp {display : inline-block;}
 .logoContent ul {margin-top:5px;padding-left:7px;}
 .logoContent ul li {font-size:14px;font-weight:bold; display:block;padding:14px 0px;}
 </style>
@@ -36,7 +36,7 @@ img {width:150px; height:100px;}
 		</div>
 		<div class="logoContent">
 			<c:if test="${adminCheck eq true }">
-				<div id = "imgLogin" class='btnpositionJsp updateLogo'><a class='imgbtn updateLogoBtn'><span>등록</span></a></div>
+				<div id = "imgLogin" class='btnpositionJsp'><a class='imgbtn updateLogoBtn'><span>등록</span></a> <a class='imgbtn deleteLogoBtn'><span>삭제</span></a></div>
 			</c:if>
 			<ul>
 				<li># 로그인 로고의 이미지를 변경합니다.</li>
@@ -55,7 +55,7 @@ img {width:150px; height:100px;}
 			</div>
 			
 			<div class="logoContent">
-				<div id="imgTop" class='btnpositionJsp updateLogo'><a class='imgbtn updateLogoBtn'><span>등록</span></a></div>
+				<div id="imgTop" class='btnpositionJsp'><a class='imgbtn updateLogoBtn'><span>등록</span></a> <a class='imgbtn deleteLogoBtn'><span>삭제</span></a></div>
 				<ul>
 					<li># 홈페이지 접속 후, 상단의 로고의 이미지를 변경합니다.</li>
 					<li># 가로 x 세로의 크기는 000(px) x 000(px) 입니다.</li>
@@ -73,11 +73,13 @@ img {width:150px; height:100px;}
 $(function(){
 	getCompanies();
 	getLogos();
-	var updateLogoList = document.getElementsByClassName("updateLogo");
+	var updateLogoList = document.getElementsByClassName("updateLogoBtn");
+	var deleteLogoList = document.getElementsByClassName("deleteLogoBtn");
 	var updateLogoListCount = updateLogoList.length;
 	
 	for (var i = 0; i < updateLogoListCount; i++) {
 		updateLogoList[i].addEventListener("click", uploadImgBtn);
+		deleteLogoList[i].addEventListener("click", deleteLogo);
 	}
 	
 	document.getElementById("imgFile").addEventListener("change", imgUpload);
@@ -155,7 +157,7 @@ var uploadImgBtn = function (obj){
 	tempObj = obj;
 	console.log(tempObj);
 	console.log(this.id);
-	document.getElementById("imgFile").setAttribute("data1", this.id);
+	document.getElementById("imgFile").setAttribute("data1", this.parentElement.id);
     document.getElementById("imgFile").click();
 }
 
@@ -182,7 +184,7 @@ var imgUpload = function () {
     fd.append("file", _file);
     fd.append("companyId", companyValue);
     fd.append("logoType", logoType);
-    
+    console.log(logoType);
     var request = new XMLHttpRequest();
     
     if ( ext == "jpeg" || ext == "jpg" || ext == "png" || ext == "bmp" || ext == "gif") {
@@ -208,6 +210,48 @@ var imgUpload = function () {
     	alert("<spring:message code = 'ezCommunity.lhj03' /> (jpg, png, bmp, jpeg, gif)");
     	return false;
     }
+}
+
+var deleteLogo = function() {
+	var response = confirm("로고를 삭제하시겠습니까?");
+	
+	if (response) {
+		var companiesObj = document.getElementById("ListCompany");
+		var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+		var logoType = this.parentElement.getAttribute("id");
+	    
+	    if (logoType == "imgLogin") {
+	    	logoType = "L";
+	    } else if (logoType == "imgTop") {
+	    	logoType = "P";
+	    }
+	    var request = new XMLHttpRequest();
+	    request.open("POST", "/admin/ezNewPortal/deleteLogo.do", true);
+	    request.setRequestHeader('content-type', 'application/json');
+	    
+	    request.onload = function() {
+	    	var logoUrl = "";
+	    	
+	    	if (logoType == "L") {
+	    		logoUrl = "/images/kr/login/logo.gif";
+	    		document.getElementsByClassName("loginLogo")[0].querySelector(".logoIcon").querySelector("img").setAttribute("src", logoUrl);
+	    	} else if (logoType == "P") {
+	    		logoUrl = "/files/upload_portal/Top/Logo/logo.gif";
+	    		document.getElementsByClassName("portalLogo")[0].querySelector(".logoIcon").querySelector("img").setAttribute("src", logoUrl);
+	    	}
+	    }
+	    
+		var data = JSON.stringify({
+			companyId : companyValue,
+			logoType : logoType
+		});
+		
+	    request.send(data);
+	    console.log(logoType);
+	} else {
+		return;
+	}
+	
 }
 </script>
 </body>

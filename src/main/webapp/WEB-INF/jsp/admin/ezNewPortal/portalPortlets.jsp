@@ -20,7 +20,7 @@
 	.ui-widget-content {background : none;}
 	.ui-widget-header {background : none;}
   	.column {width: 1820px; padding-bottom: 100px;}
-  	.portlet, .newPortlet {position: relative;margin: 0 1em 1em 0;padding: 0.3em;display : inline-block;vertical-align : top; background-color : #ffffff;}
+  	.portlet, .newPortlet {float:none; position: relative;margin: 0 1em 1em 0;padding: 0.3em;display : inline-block;vertical-align : top; background-color : #ffffff;}
   	.portlet-header {padding: 0.4em 0.7em;margin-bottom: 0.5em;position: relative;cursor:move;}
   	.portlet-toggle {top: 50%;right: 0;float:right;}
   	.portlet-content {padding: 0.4em;clear:both;}
@@ -32,7 +32,7 @@
 	.boardSetting, .menuSetting {margin:0px 0px 0px 12px;padding:0px;text-align:left;display:inline-block;vertical-align:top;}
 	.portletInfo {display:inline-block;marging-top:8px;}
 	.portletInfoTH {background-color : white;border:0px; padding-left:0px;}
-	.portletInfoTH, .portletInfoTD {padding-bottom : 6px;}
+	.portletInfoTH, .portletInfoTD {padding-bottom : 5px;}
 	.boardNotUsed {height:2.6em;}
 	.portletInfo {width : 100%;}
 	.portletInfoTD {width:100%;}

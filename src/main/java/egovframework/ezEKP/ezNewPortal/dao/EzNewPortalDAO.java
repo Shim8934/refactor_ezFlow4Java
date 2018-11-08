@@ -420,6 +420,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<PortalLogoVO> getCompanyLogoList (Map<String, Object> map) {
 		return (List<PortalLogoVO>) list("ezNewPortal.getCompanyLogoList", map);
 	}
+	
+	public void deleteCompanyLogo(Map<String, Object> map) {
+		delete("ezNewPortal.deleteCompanyLogo", map);
+	}
 	/**
 	 * 구해안
 	 */
@@ -457,4 +461,5 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<PortletNameInfoVO> getPortletNameList(Map<String, Object> map) {
 		return (List<PortletNameInfoVO>) list("ezNewPortal.getPortletNameList", map);
 	}
+
 }
