@@ -70,7 +70,6 @@
 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";
 	                document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px";
 	            } */
-	            document.getElementById("mailexportall").style.display = "none";
 	            Function_Flag(funcCode);
 	            LoadAddressTree(true);
 	            previewSubTreeCall();
@@ -416,14 +415,6 @@
 	            var OpenWin = window.open("/ezEmail/mailGetPop3.do", "mail_getpop3_cross", GetOpenWindowfeature(460, 360));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
-	        function mail_exportall() {
-	            var param = { "href": new Array(), "parent": new Object(), "url": new String() };
-	            param["name"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "foldername");
-	            param["url"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-	            var feature = "dialogWidth:480px; dialogHeight:265px; scroll:no; status:no; help:no; scroll:no; edge:sunken";
-	            feature = feature + GetShowModalPosition(480, 265);
-	            window.showModalDialog("/myoffice/ezEmail/htm/mail_exportall.aspx", param, feature);
-	        }
 	        var mail_foldermanage_Cross_dialogArguments = new Array();
 	        function folder_manage() {
 	            mail_foldermanage_Cross_dialogArguments[1] = folder_manager_after;
@@ -546,73 +537,6 @@
 	            frmSpam.target = "right";
 	            frmSpam.submit();
 	        }
-	        function mail_export() {
-	            parent.frames["right"].mail_export();
-	        }
-	        function mail_exportall() {
-	            var param = { "href": new Array(), "parent": new Object(), "url": new String() };
-	            param["name"] = PostTreeView.getvalue(PostTreeView.selectedIndex, "foldername");
-	            param["url"] = PostTreeView.getvalue(PostTreeView.selectedIndex, "href");
-	            param["parent"] = window.parent.frames("right");
-	            var feature = "dialogWidth:480px; dialogHeight:265px; scroll:no; status:no; help:no; scroll:no; edge:sunken";
-	            feature = feature + GetShowModalPosition(480, 265);
-	            window.showModalDialog("/myoffice/ezEmail/htm/mail_exportall.aspx", param, feature);
-	        }
-	        var mail_import_cross_dialogArguments = new Array();
-	        function mail_import() {
-	            var param = { "foldername": new Array(), "href": new Object() };
-	            param["foldername"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "foldername");
-	            param["href"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-	            mail_import_cross_dialogArguments[0] = param;
-	            mail_import_cross_dialogArguments[1] = mail_import_Complete;
-	            var OpenWin = window.open("/ezEmail/mailImport.do", "mail_foldermanage_Cross", GetOpenWindowfeature(500, 400));
-	            try { OpenWin.focus(); } catch (e) { }
-	        }
-	        /* function mail_import_Complete() {
-	        	if (typeof (window.parent.frames["right"].MailListRefresh) == "function")
-	                window.parent.frames["right"].MailListRefresh();
-	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
-	            PostTreeView.update();
-	            if (PostTreeView.selectedIndex() == -1) {
-	                PostTreeView.select(1);
-	            }
-	        }  */
-	        // 수정 수아 재은
-	        function mail_import_Complete() {
-	        	if (typeof (window.parent.frames["right"].MailListRefresh) == "function")
-	                window.parent.frames["right"].MailListRefresh();
-	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
-	            PostTreeView.update();
-	            if (PostTreeView.selectedIndex() == -1) {
-	            	var allHref = mail_import_cross_dialogArguments[0]["href"];
-	            	
-	            	// 처음 선택한 메일함
-	            	if (allHref != null && allHref != "") {
-	            		var splitHref = allHref.split(".");
-	            		
-	            		// 하위메일함일 경우
-	            		if (splitHref.length > 1) {
-	            			var pStr = "";
-	            			
-	            			// select를 하기위해 상위 메일함의 하위메일함을 불러 열어줌
-	            			for (i = 0; i < splitHref.length-1; i++) {
-	            				pStr += splitHref[i];
-	            				var splitIndex = PostTreeView.findindex("href", pStr);
-	            				
-	            				requestdata({"nodeIdx": splitIndex});
-	            				pStr += ".";
-	            			}
-	            		}
-	            		
-		        		var getNowIndex= PostTreeView.findindex("href", allHref);
-		        		
-		                PostTreeView.select(getNowIndex);
-		        	} else {
-	                	PostTreeView.select(1);
-		        	}
-	            }
-	        }
-	        
 	        function mail_Config() {
 	        	if (shareId == "") {
 	        		detailView();
@@ -1228,9 +1152,6 @@
 		        <c:if test="${useOnlyInnerMail != 'YES'}">
 	            <li><span onclick="check_pop3()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t490" /></span></li>
 	            </c:if>
-	            <li id="mailexport"><span style="width: 100%; display: inline-block;" onclick="mail_export()"><spring:message code="ezEmail.t378" /></span></li>
-	            <li id="mailexportall" style="display: none;"><span style="width: 100%; display: inline-block;" onclick="mail_exportall()"><spring:message code="ezEmail.t99000014" /></span></li>
-	            <li id="mailimport"><span onclick="mail_import()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000015" /></span></li>
 	            <li><span onclick="Open_ReservationManage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t605" /></span></li>
                 <c:if test="${useBizmekaSpambox == 'YES'}"> 
                 <li><span onclick="openSpamBox()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.ldh01" /></span></li>

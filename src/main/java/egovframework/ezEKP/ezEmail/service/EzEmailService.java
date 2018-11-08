@@ -22,6 +22,7 @@ import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
+import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -88,6 +89,12 @@ public interface EzEmailService {
 	public MailSharedMailboxVO getSharedMailboxInfo(String shareId, int tenantId) throws Exception;
 	public String delSharedMailboxAllUser(String shareId, int tenantId) throws Exception;
 	public String setSharedMailboxUsers(String shareId, JSONArray userList, int tenantId) throws Exception;
+	public JSONArray selectAllSignatureTemplate(String companyId, String tenantId) throws Exception;
+	public JSONArray selectSearchSignatureTemplate(String companyId, String tenantId, String search, String userLang) throws Exception;
+	public void deleteSignatureTemplate(String signNo) throws Exception;
+	public JSONArray selectOneSignatureTemplate(String signNo) throws Exception;
+	public void addSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception;
+	public void setSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception;
 	MailDistributionVO getDistributionSub(String userName, String subMail, String companyId, int tenantId) throws Exception;
 	public MailSharedMailboxUserVO getSharedMailboxPermissionInfo(String shareId, int tenantId, String userId) throws Exception;
 }

@@ -570,23 +570,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * PC에서 메일 가져오기 화면 호출 함수
-	 */
-	@RequestMapping(value="/ezEmail/mailImport.do")
-	public String mailImport(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		logger.debug("mailImport started.");
-		
-		String browser = ClientUtil.getClientInfo(request, "browser");
-		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
-		
-		model.addAttribute("isCrossBrowser", isCrossBrowser);
-		
-		logger.debug("mailImport ended.");
-		
-		return "ezEmail/mailImport";
-	}
-	
-	/**
 	 * PC에서 메일 가져오기 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailImportUpload.do", produces = "text/plain; charset=utf-8")

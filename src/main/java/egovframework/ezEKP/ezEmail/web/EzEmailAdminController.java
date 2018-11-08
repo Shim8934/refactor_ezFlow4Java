@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,6 +52,8 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
+import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
+import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -688,8 +691,8 @@ public class EzEmailAdminController {
 						sb.append("</ROW>");
 					} 
 				} else {//distribution_sub에서 가져오기(주소록, 직접입력)
-					MailDistributionVO distributionSubVO = ezEmailService
-						.getDistributionSub(cn, pCn, companyId, userInfo.getTenantId());
+					MailDistributionVO distributionSubVO = ezEmailService.getDistributionSub(cn, pCn, companyId, userInfo.getTenantId());
+					
 					if (distributionSubVO != null) {
 						sb.append("<ROW>");
 						sb.append("<CLASS>" + pClass + "</CLASS>");
@@ -993,7 +996,6 @@ public class EzEmailAdminController {
 	/**
 	 * 회원별 메일함 사용용량 및 총용량
 	 */
-
 	@RequestMapping(value = "/admin/ezEmail/mailQuotaList.do")
 	public String statisticsList_view(@CookieValue("loginCookie")String loginCookie, Model model) throws Exception {
 		
@@ -2111,7 +2113,295 @@ public class EzEmailAdminController {
 				ia.close();
 				ia = null;
 			}
-		}		
+		}
+	}
+	
+    /**
+	 * 서명 템플릿 메인화면 호출 함수
+	 * 
+	 * @param String loginCookie, Model model
+	 * @return String
+	 */
+	@RequestMapping(value = "/admin/ezEmail/signatureMain.do")
+	public String signatureMainView(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("signatureMainView started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+
+		}
+
+		model.addAttribute("list", resultList);
+		model.addAttribute("userLang", userInfo.getPrimary());
+
+		logger.debug("signatureMainView ended.");
+
+		return "admin/ezEmail/signatureMain";
+
+	}
+	
+	/**
+	 * 서명 템플릿 목록 조회
+	 * 
+	 * @param companyId
+	 * @return : JSONArray
+	 */
+	@RequestMapping("/admin/ezEmail/readSignList.do")
+	@ResponseBody
+	public JSONArray readSignList(@CookieValue("loginCookie") String loginCookie, String companyId, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("readSignList started.");
+		logger.debug("companyId=" + companyId);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		JSONArray returnJsonArr = new JSONArray();
+
+		try {
+			returnJsonArr = ezEmailService.selectAllSignatureTemplate(companyId, Integer.toString(userInfo.getTenantId()));
+			logger.debug("jsonArr=" + returnJsonArr);
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+		
+		logger.debug("readSignList ended.");
+		return returnJsonArr;
+	}
+	
+	/**
+	 * 서명 템플릿 목록 검색
+	 * 
+	 * @param companyId, search
+	 * @return : JSONArray
+	 */
+	@RequestMapping("/admin/ezEmail/searchSignList.do")
+	@ResponseBody
+	public JSONArray searchSignList(@CookieValue("loginCookie") String loginCookie, String companyId, String search, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("searchSignList started.");
+		logger.debug("companyId=" + companyId);
+		logger.debug("search=" + search);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		JSONArray returnJsonArr = new JSONArray();
+
+		try {
+			returnJsonArr = ezEmailService.selectSearchSignatureTemplate(companyId, Integer.toString(userInfo.getTenantId()), search, userInfo.getPrimary());
+			logger.debug("jsonArr=" + returnJsonArr);
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+		
+		logger.debug("searchSignList ended.");
+		return returnJsonArr;
+	}
+	
+	/**
+	 * 서명 템플릿 삭제
+	 * 
+	 * @param companyId, signNo
+	 * @return : void
+	 */
+	@RequestMapping("/admin/ezEmail/deleteSignTemplate.do")
+	@ResponseBody
+	public void deleteSignTemplate(@CookieValue("loginCookie") String loginCookie, String signNo, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("deleteSignTemplate started.");
+		logger.debug("signNo=" + signNo);
+
+		try {
+			ezEmailService.deleteSignatureTemplate(signNo);
+		} catch (Exception e) {
+			 e.printStackTrace();
+		}
+		
+		logger.debug("deleteSignTemplate ended.");
+	}
+	
+	/**
+	 * 서명 템플릿 개별 조회
+	 * 
+	 * @param companyId, signNo
+	 * @return : void
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/admin/ezEmail/signaturePreview.do")
+	@ResponseBody
+	public JSONArray signaturePreview(@CookieValue("loginCookie") String loginCookie, String signNo, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("signaturePreview started.");
+		logger.debug("signNo=" + signNo);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		OrganUserVO vo = ezOrganAdminService.getUserInfo(userInfo.getId(), "1", userInfo.getTenantId());
+		String content = "";
+
+		JSONArray returnJsonArr = new JSONArray();
+
+		try {
+			
+			returnJsonArr = ezEmailService.selectOneSignatureTemplate(signNo);
+			JSONObject obj = (JSONObject) returnJsonArr.get(0);
+			
+			if (obj != null) {
+				content = obj.get("content").toString();
+				content = replaceUserInfo(vo, content);
+				
+				JSONObject newObj = new JSONObject();
+				
+				// content replace 메소드 후 리턴
+				newObj.put("signNo", obj.get("signNo").toString());
+				newObj.put("content", content);
+				newObj.put("displayname", obj.get("displayname").toString());
+				newObj.put("displayname2", obj.get("displayname2").toString());
+				
+				returnJsonArr = new JSONArray();
+				returnJsonArr.add(newObj);
+				
+				
+				logger.debug("jsonArr=" + returnJsonArr);
+			}
+			
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+		
+		logger.debug("signaturePreview ended.");
+		return returnJsonArr;
+	}
+	
+	/**
+	 * 서명 템플릿 추가,수정 팝업 화면
+	 */
+	@RequestMapping("/admin/ezEmail/signEditPopUp.do")
+	public String signEditPopUp(
+			@CookieValue("loginCookie") String loginCookie, Locale locale, String paramSignNo, String type, Model model) throws Exception {
+		logger.debug("signEditPopUp started.");
+		logger.debug("signNo=" + paramSignNo + ", type=" + type);
+		
+		String signNo = "";
+		String content = "";
+		String displayname = "";
+		String displayname2 = "";
+		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+        logger.debug("defaultFontAndSize=" + defaultFontAndSize);
+        
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		if (type.equals("modify")) { 
+			JSONArray returnJsonArr = new JSONArray();
+			
+			try {
+				returnJsonArr = ezEmailService.selectOneSignatureTemplate(paramSignNo);
+				logger.debug("jsonArr=" + returnJsonArr);
+				
+				JSONObject obj = (JSONObject) returnJsonArr.get(0);
+				signNo = obj.get("signNo").toString();
+				content = obj.get("content").toString();
+				displayname = obj.get("displayname").toString();
+				displayname2 = obj.get("displayname2").toString();
+				
+			} catch (Exception e) {
+				// e.printStackTrace();
+			}
+		} 
+		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
+		model.addAttribute("signNo", signNo);
+		model.addAttribute("content", content);
+		model.addAttribute("displayname", displayname);
+		model.addAttribute("displayname2", displayname2);
+		model.addAttribute("type", type);
+
+		logger.debug("signNo=" + signNo + ", content=" + content + ", displayname=" + displayname + ", displayname2=" + displayname2);
+		logger.debug("signEditPopUp ended.");
+		return "admin/ezEmail/signatureEditPopUp";
+	}
+	
+	/**
+	 * 서명 템플릿 추가
+	 * 
+	 * @param String loginCookie, Model model
+	 */
+	@RequestMapping(value = "/admin/ezEmail/setSignatureTemplate.do")
+	@ResponseBody
+	public void setSignatureTemplate(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailSignatureTemplateVO signTemplate, String type) throws Exception {
+		logger.debug("setSignatureTemplate started.");
+		logger.debug("signTemplate=" + signTemplate);
+		logger.debug("type=" + type);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		try {
+			if (type.equals("add")) {
+				signTemplate.setCompanyId(userInfo.getCompanyID());
+				signTemplate.setTenantId(Integer.toString(userInfo.getTenantId()));
+				ezEmailService.addSignatureTemplate(signTemplate);
+			} else {
+				ezEmailService.setSignatureTemplate(signTemplate);
+			}
+			
+		} catch (Exception e) {
+			 e.printStackTrace();
+		}
+
+		logger.debug("setSignatureTemplate ended.");
+
+	}
+	
+	/**
+	 * 서명 템플릿 미리보기
+	 * 
+	 * @param String loginCookie, Model model
+	 */
+	@RequestMapping(value = "/admin/ezEmail/signaturePreviewContent.do")
+	public String signaturePreviewContent(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("signaturePreviewContent started.");
+		
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String content = request.getParameter("content");
+		logger.debug("content=" + content);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		OrganUserVO vo = ezOrganAdminService.getUserInfo(userInfo.getId(), "1", userInfo.getTenantId());
+		content = replaceUserInfo(vo, content);
+		
+		model.addAttribute("content", content);
+
+		logger.debug("signaturePreviewContent ended.");
+		return "admin/ezEmail/signaturePreview";
+
+	}
+	
+	private String replaceUserInfo(OrganUserVO _vo, String content) {
+		content = content.replace("${company}", _vo.getCompany1()).replace("${engCompany}", _vo.getCompany2()).replace("${name}", _vo.getDisplayName1()).replace("${engName}", _vo.getDisplayName2())
+				.replace("${department}", _vo.getDescription1()).replace("${email}", _vo.getMail()).replace("${title}", _vo.getTitle1() == null ? "" : _vo.getTitle1())
+				.replace("${position}", _vo.getExtensionAttribute101() == null ? "" : _vo.getExtensionAttribute101()).replace("${officePhone}", _vo.getTelephoneNumber() == null ? "" : _vo.getTelephoneNumber())
+				.replace("${homePhone}", _vo.getHomePhone() == null ? "" : _vo.getHomePhone()).replace("${fax}", _vo.getFacsimileTelephoneNumber() == null ? "" : _vo.getFacsimileTelephoneNumber())
+				.replace("${mobile}", _vo.getMobile() == null ? "" : _vo.getMobile()).replace("${zipCode}", _vo.getPostalCode() == null ? "" : _vo.getPostalCode()).replace("${address}", _vo.getStreetAddress() == null ? "" : _vo.getStreetAddress())
+				.replace("${birth}", _vo.getBirth() == null ? "" : _vo.getBirth()).replace("${empNo}", _vo.getExtensionAttribute14() == null ? "" : _vo.getExtensionAttribute14());
+	
+		return content;
 	}
 	
 }
