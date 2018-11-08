@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -44,6 +45,7 @@ import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -730,5 +732,80 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		logger.debug("portalPhotoItemList Ended");
 		return json;
+	}
+	
+	/**
+	 * 포틀릿 - 생일자
+	 */
+	@RequestMapping(value = "/ezNewPortal/birthdayPortlet.do")
+	public String portalBirthdayPortlet(HttpServletRequest req, Model model) throws Exception {
+		logger.debug("portalBirthdayPortlet Start");
+		
+		Calendar cal = Calendar.getInstance();
+		String nowMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
+		model.addAttribute("nowMonth", nowMonth);
+		
+		logger.debug("portalBirthdayPortlet End");
+		return "/ezNewPortal/portlets/birthdayPortlet";
+	}
+	
+	/**
+	 * 포틀릿 - 슬라이드 이미지
+	 */
+	@RequestMapping(value = "/ezNewPortal/slideImagePortlet.do")
+	public String portalSlideImagePortlet(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("portalSlideImagePortlet Start");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/ezportal/portlets/slideimages";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("sliderList", resultBody.get("data"));
+		}
+		
+		logger.debug("portalSlideImagePortlet End");
+		return "/ezNewPortal/portlets/slideImagePortlet";
+	}
+	
+	/**
+	 * 포틀릿 - 유저정보
+	 */
+	@RequestMapping(value = "/ezNewPortal/userInfoPortlet.do")
+	public String portalUserInfoPortlet(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("portalUserInfoPortlet Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/ezportal/portlets/userinfomations";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			
+			model.addAttribute("useAttitude", data.get("useAttitude"));
+			model.addAttribute("userName", data.get("userName"));
+			model.addAttribute("userTitle", data.get("userTitle"));
+			model.addAttribute("deptName", data.get("deptName"));
+			model.addAttribute("userPhoto", data.get("userPhoto"));
+			model.addAttribute("userEmail", data.get("userEmail"));
+			model.addAttribute("lastLogin", data.get("lastLogin"));
+		}
+		
+		logger.debug("portalUserInfoPortlet End");
+		return "/ezNewPortal/portlets/userInfoPortlet";
 	}
 }
