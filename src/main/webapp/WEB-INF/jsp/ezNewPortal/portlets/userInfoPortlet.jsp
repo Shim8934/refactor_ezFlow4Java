@@ -26,7 +26,9 @@
 	        </dl>
 	        <div class="time_check">
 	        	<div class="presentTime">
-	                <p class="timeTxt" style="margin:0px"><span id="ptlTimeFlow"></span><span class="timeAM">AM</span><span class="timePM">PM</span></p>
+	                <p class="timeTxt" style="margin:0px"><span id="ptlTimeFlow"></span>
+	                <span class="timeAM">AM</span>
+	                <span class="timePM">PM</span></p>
 	            </div>
 	            <div class="main_time">
 	            	<dl class="timeCheckIn out" id="ptlInAttiBtn" type="A01" datetype="2" onclick="ptlCheckHoliday(this)">

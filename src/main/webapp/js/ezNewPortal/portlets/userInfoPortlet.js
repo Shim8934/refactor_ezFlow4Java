@@ -37,10 +37,22 @@ function ptlAttiClock() {
     
     ptlTime = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2);
     document.getElementById("ptlTimeFlow").innerHTML = ptlTime;
-    if (time == "00:00") {
-    	//$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
+
+    if (ptlTime == "00:00" || ptlTime == "12:00") {
+    	ptlAmPmCheck(nowAttiTime.getHours())
     }
+    
     gizmo = setTimeout("ptlAttiClock()", 1000 * 60);
+}
+
+function ptlAmPmCheck(hours) {
+	if (Number(hours) >= 12 ) {
+    	$(".presentTime .timeTxt span.timePM").css("display","");
+    	$(".presentTime .timeTxt span.timeAM").css("display","none");
+    } else {
+    	$(".presentTime .timeTxt span.timePM").css("display","none");
+    	$(".presentTime .timeTxt span.timeAM").css("display","");
+    }
 }
 
 //휴일 체크

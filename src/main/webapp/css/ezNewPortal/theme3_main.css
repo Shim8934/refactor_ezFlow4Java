@@ -231,7 +231,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .presentTime .timeTxt{margin:9px 0px; padding:0px; text-align:center;}
 .presentTime .timeTxt span{vertical-align:middle; color:#ffffff; font-size:40px; font-weight:bold; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
 .presentTime .timeTxt span.timeAM{margin:0px 0px 0px 10px; padding:0px; font-size:12px; font-weight:normal;}
-.presentTime .timeTxt span.timePM{display:none; margin:0px 0px 0px 10px; padding:0px; font-size:12px; font-weight:normal;}
+.presentTime .timeTxt span.timePM{margin:0px 0px 0px 10px; padding:0px; font-size:12px; font-weight:normal;}
 
 .presentTime_commuteNone{width:100%;}
 
