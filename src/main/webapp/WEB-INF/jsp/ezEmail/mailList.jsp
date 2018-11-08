@@ -905,6 +905,10 @@
         			data.append("file1", input.files[i]);
         		}
         		
+        		if (shareId != "") {
+        			data.append("shareId", shareId);
+        		}
+        		
         		$.ajax({
         			type: 'POST',
         			enctype: 'multipart/form-data',
