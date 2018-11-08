@@ -322,7 +322,8 @@
 					
 					if (nowShowDetails != "menuDetails" + menuId) {
 						if (nowShowDetails == undefined) {
-							$("#menu" + menuId).after(menusHTML);
+							//$("#menu" + menuId).after(menusHTML);
+							$("#menuAdd").after(menusHTML);
 							
 							if (menuInfo.menuUsed) {
 								$("#menuDetails" + menuInfo.menuId).find(".menuSwitch").find("input[type='checkbox']").prop("checked", true);
@@ -330,7 +331,8 @@
 							
 							$(".menuDetails").slideDown();
 						} else {
-							$("#menu" + menuId).after(menusHTML);
+							//$("#menu" + menuId).after(menusHTML);
+							$("#menuAdd").after(menusHTML);
 
 							if (menuInfo.menuUsed) {
 								$("#menuDetails" + menuInfo.menuId).find(".menuSwitch").find("input[type='checkbox']").prop("checked", true);
