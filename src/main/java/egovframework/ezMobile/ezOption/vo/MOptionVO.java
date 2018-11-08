@@ -13,11 +13,21 @@ public class MOptionVO {
 	private String listCnt;			/** 개인환경설정  메인화면 리스트 표출갯수 설정  */
 		
 	private String useSecurity;		/** 개인환경설정  전자결재 보안설정  */
+	
+	private String UsePrimaryLangOnly; /** 개인환경설정 타언어 사용여부  */
 		
 	private int tenantId;			/** 계열사 Id */
 
 	public String getUserId() {
 		return userId;
+	}
+
+	public String getUsePrimaryLangOnly() {
+		return UsePrimaryLangOnly;
+	}
+
+	public void setUsePrimaryLangOnly(String usePrimaryLangOnly) {
+		UsePrimaryLangOnly = usePrimaryLangOnly;
 	}
 
 	public void setUserId(String userId) {
