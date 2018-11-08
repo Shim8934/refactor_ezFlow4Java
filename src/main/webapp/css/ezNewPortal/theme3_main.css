@@ -237,7 +237,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 .main_time{float:right; width:150px; height:76px; margin:0px; padding:0px;}
 .main_time .timeCheckIn{float:left; width:calc(50% - 1px); height:76px; margin:0px; padding:0px; color:#ffffff; font-size:13px; border-left:1px solid #ffffff; text-align:center; background:#45a8fb; cursor:pointer;}
-.main_time .timeCheckIn.lateIn{font-size:18px; font-weight:bold; background:#45c3fb;}
+.main_time .timeCheckIn.lateIn{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
 .main_time .timeCheckIn.lateIn dd{margin:-4px 0px 0px 0px;}
 .main_time .timeCheckIn dt{margin:15px 0px 12px 0px; padding:0px;}
 .main_time .timeCheckIn dd{margin:0px; padding:0px;}
@@ -610,9 +610,9 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .info .infoMail{margin:12px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
 .info .infoTime{margin:12px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
 .info .infoSet{position:absolute; top:-20px; right:48px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
-.info .infoSet img{vertical-align:middle; margin:5px 0px 0px 0px;}
+.info .infoSet img{margin:5px 0px 0px 0px;}
 .info .infoLogout{position:absolute; top:-20px; right:16px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
-.info .infoLogout img{vertical-align:middle; margin:5px 0px 0px 0px;}
+.info .infoLogout img{margin:5px 0px 0px 0px;}
 @media only screen and (max-width :1730px) and (min-width :1280px) {
 	.info .infoImg{margin:0px 24px 34px 0px;}
 	.info .infoTime{margin:12px 0px 0px 13px;}

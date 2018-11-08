@@ -13,12 +13,12 @@ function ptlGetAttitudeList() {
 				if (result[i].typeId == "A01") { //출근
  					$("#ptlInAttiBtn").attr("onclick", "").unbind("mouseenter");
 					$("#ptlInAttiBtn").removeClass("out").addClass("lateIn");
-//					$("#ptlInAttiBtn dt").css("margin-bottom","5px"); //시간글자가 너무 내려가는데 테마1에서만 그러는지. 다 그러면 css줄것
+					$("#ptlInAttiBtn dt").css("margin-bottom","5px");
 					$("#ptlInAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
 				} else if (result[i].typeId == "A02") { //지각
 					$("#ptlInAttiBtn").attr("onclick", "").unbind("mouseenter");
 					$("#ptlInAttiBtn").removeClass("out").addClass("lateIn");
-//					$("#ptlInAttiBtn dt").css("margin-bottom","5px"); //시간글자가 너무 내려가는데 테마1에서만 그러는지. 다 그러면 css줄것
+					$("#ptlInAttiBtn dt").css("margin-bottom","5px");
 					$("#ptlInAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
 				} else if (result[i].typeId == "A03") { //퇴근
 					$("#ptlOutAttiBtn").attr("onclick", "").unbind("mouseenter");
