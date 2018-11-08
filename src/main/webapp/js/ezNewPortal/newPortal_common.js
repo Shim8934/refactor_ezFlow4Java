@@ -12,7 +12,7 @@ function updatePortletOrderUser() {
 		
 		if (portletId) { // 테마3의 경우 class가 box_shadow인것이 한 포틀릿 안에 있으므로 아이디가 존재 하는 경우에만 하도록.
 			portletId = portletId.substring(0, portletId.indexOf("P"));
-			
+		}	
 		updateOrder.push({"portletOrder" : i + 1, "portletId" : portletId});
 	}
 	
