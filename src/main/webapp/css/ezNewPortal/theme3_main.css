@@ -157,6 +157,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .portlet_title{ margin:0px; padding:0px; height:46px; line-height:44px; box-sizing:border-box; overflow:hidden; background:rgba(255,255,255,0.7);}
 .portlet_title .portletText{ margin:0px; padding:0px 0px 0px 20px; font-size:16px; color:#333; font-weight:bold; letter-spacing:-1px; float:left; overflow:hidden;}
 .portlet_title .portletPlus{ margin:0px; padding:0px; float:right; overflow:hidden; cursor:pointer;}
+.sortablePortlet:hover {cursor : move;}
 
 /* portlet_list */
 .portlet_list{ margin:0px; padding:12px 0px; list-style:none; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; background:#ffffff; height: inherit;} 
