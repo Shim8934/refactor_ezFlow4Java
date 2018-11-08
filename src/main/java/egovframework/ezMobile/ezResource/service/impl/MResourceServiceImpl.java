@@ -1505,10 +1505,11 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 	
 	@Override
-	public List<String> getResAdminAuth(String userId, int tenantId) throws Exception {
+	public List<String> getResAdminAuth(String userId, int tenantId, String companyId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
 		
 		return mResourceDAO.getResAdminAuth(map);
 	}

@@ -265,6 +265,11 @@
 	        function GetEditorBody() {
 	        	return CKEDITOR.instances.editor1.document.$.body;
 	        }
+	        
+	        // 현재 위치에 텍스트 넣는 함수(서명 템플릿 관리>서명 템플릿 추가 및 수정 팝업창에서 사용)
+	        function setCursorAtText(text) {
+	        	CKEDITOR.instances.editor1.insertHtml(text);
+	        }
 		</script> 
 	</head>
 	<body style="margin: 0px; padding: 0px;">
