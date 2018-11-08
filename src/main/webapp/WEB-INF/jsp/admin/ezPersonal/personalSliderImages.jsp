@@ -261,11 +261,11 @@
 	    <br /><br /><br />
 	    <div id="mainmenu">
 	    	<ul>
-	        	<li><span id ="NEW" onClick="btn_Select(this)"><spring:message code = 'ezPersonal.t105' /></span></li>
+	        	<li class="important"><span id ="NEW" onClick="btn_Select(this)"><spring:message code = 'ezPersonal.t105' /></span></li>
 				<li><span onclick="sliderdelete();"><spring:message code = 'ezPersonal.t99' /></span></li>
-				<li><span onclick="Reload();"><spring:message code = 'ezPersonal.t20006' /></span></li>
-				<li><span onclick="Priority_UP();" style="padding-top:5px"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code = 'ezPersonal.t366' />"/></span></li>
-				<li><span onclick="Priority_DOWN();" style="padding-top:5px"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code = 'ezPersonal.t367' />" /></span></li>
+				<li><span class="icon16 icon16_refresh" onclick="Reload();"></span></li>
+				<li><span onclick="Priority_UP();"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code = 'ezPersonal.t366' />"/></span></li>
+				<li><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code = 'ezPersonal.t367' />" /></span></li>
 			</ul>
 	    </div>
 	    

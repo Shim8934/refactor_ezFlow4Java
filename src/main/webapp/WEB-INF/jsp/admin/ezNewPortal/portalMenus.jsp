@@ -62,13 +62,12 @@
 	</head>
 	
 	<body class="mainbody">
-		<h1>메뉴관리</h1>
+		<h1>
+			메뉴관리
+			<select class="companySelect" id="ListCompany"></select>
+		</h1>
 		
-		<div id="mainmenu">    
-		    <span><b>회사선택 :</b> 
-			    <select id="ListCompany">
-			    </select>
-		    </span>
+		<div id="mainmenu">
 			<ul style="margin-top: 15px;">
 				<li id="menuOrderReset"><span>메뉴 순서 초기화</span></li>
 			</ul>

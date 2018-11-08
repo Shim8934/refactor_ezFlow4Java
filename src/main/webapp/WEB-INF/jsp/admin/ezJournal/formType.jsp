@@ -50,22 +50,20 @@
 		</style>
 	</head>
 	<body class="mainbody"> 
-		<h1><spring:message code='ezJournal.t2' /></h1>
+		<h1>
+			<spring:message code='ezJournal.t2' />
+			<select class="companySelect" name="companyId" onchange="journal_get_formuse(this.value)">
+            	<c:forEach items="${compList}" var="company">
+	            	<option value="${company.companyId }"
+            		<c:if test="${company.selected eq 'selected' }">
+            			selected
+            		</c:if>
+	            	><c:out value='${company.companyName }'/></option>
+            	</c:forEach>
+            </select>
+		</h1>
 		<form class="journalForm">
-			<div id="mainmenu" style="padding-left: 5px; padding-bottom: 5px;">
-				<span><b><spring:message code = 'ezJournal.t11' /></b></span>
-	            <select name="companyId" onchange="journal_get_formuse(this.value)">
-	            	<c:forEach items="${compList}" var="company">
-		            	<option value="${company.companyId }"
-	            		<c:if test="${company.selected eq 'selected' }">
-	            			selected
-	            		</c:if>
-		            	><c:out value='${company.companyName }'/></option>
-	            	</c:forEach>
-	            </select>
-	            <br>
-			</div>
-			<table class="content" style="width: 400px; margin-left: 5px;">
+			<table class="content" style="width: 400px; margin-left: 5px; margin-top:30px">
 			    <tr>
 			        <th style="text-align: center; width:250px;"><spring:message code='ezJournal.t12' /></th>
 			        <th style="text-align: center; width:50px;"><spring:message code='ezJournal.t13' /></th>

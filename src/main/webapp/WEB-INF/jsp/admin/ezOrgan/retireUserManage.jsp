@@ -564,28 +564,26 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code='ezOrgan.t311'/><span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
-		<div id="mainmenu"> <!-- mainmenu -->    
-   		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-   			    <select id="ListCompany" onChange="selectCompanyID()">
-   		        	<c:forEach var="item" items="${companylist}">
-   	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-   	            	</c:forEach>
-   			    </select><br /><br />
-   		    </span>
-   		</div>
+		<h1>
+			<spring:message code='ezOrgan.t311'/><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
+			<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
+	        	<c:forEach var="item" items="${companylist}">
+            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            	</c:forEach>
+		    </select>
+		</h1>
 		<div id="mainmenu">
 			<ul>
 				<c:if test="${dotNetIntegration != 'YES'}">
-		    	<li><span onClick="Restore_onclick()"><spring:message code='ezOrgan.t312'/></span></li>
-		    	</c:if>
-		        <li><span onClick="Delete_onclick()"><spring:message code='ezOrgan.t142'/></span></li>
+		    		<li><span onClick="Restore_onclick()"><spring:message code='ezOrgan.t312'/></span></li>
+		    	</c:if>		        
 		        <c:if test="${dotNetIntegration != 'YES'}">
-                <li><span onClick="mod_password()"><spring:message code='ezOrgan.t90'/></span></li>
+                	<li><span onClick="mod_password()"><spring:message code='ezOrgan.t90'/></span></li>
                 </c:if>
+                <li><span class="icon16 icon16_delete" onClick="Delete_onclick()"></span></li>
 		  	</ul>
 		</div>
-		<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2;">
+		<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #ddd;">
 		<tr>
 			<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 				<span id="topmenu" style="width: 500px"><spring:message code='ezOrgan.0hun01'/> : &nbsp;
@@ -616,7 +614,7 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<div id="contentlist" style="width:100%; height: 653px; overflow: auto;">
+		<div id="contentlist" style="width:100%; height: 653px; overflow: auto; margin-top:5px">
 			<div>
 				<table class="mainlist" style="width:100%">
 					<thead style> 

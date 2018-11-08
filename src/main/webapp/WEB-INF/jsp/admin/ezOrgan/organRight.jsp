@@ -1518,7 +1518,7 @@
 		</xml>
 		<h1>
 		<c:if test="${dotNetIntegration != 'YES'}">
-		<spring:message code='ezOrgan.t72' />
+		<spring:message code='main.t56' />
 		</c:if>
 		<c:if test="${dotNetIntegration == 'YES'}">
 		<spring:message code='main.t24' />

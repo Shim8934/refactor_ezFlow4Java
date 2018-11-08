@@ -276,11 +276,11 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 
-		<table class="content" >
+		<table class="content" style="height:35px">
 			<form name="page">
 				<tr>
-					<th><spring:message code = 'ezCommunity.t28' /></th>
-					<td>
+					<th style="border:0px"><spring:message code = 'ezCommunity.t28' /></th>
+					<td style="border-left:0px; background: #f8f8fa;">
 						<select name="s_radio" style="vertical-align:middle">
 							<option value="title" selected><spring:message code = 'ezCommunity.t124' /></option>
 							<option value="titleContent"><spring:message code = 'ezCommunity.t169' /></option>
@@ -294,9 +294,7 @@
 			</form>
 		</table>
 		
-		<br>
-		
-		<table class="mainlist" style="width:100%">
+		<table class="mainlist" style="width:100%;margin-top:5px">
 			<span id="idSpan">${idSpanValue}</span>
 		</table>
 		

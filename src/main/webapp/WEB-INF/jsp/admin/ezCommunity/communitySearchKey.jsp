@@ -247,17 +247,17 @@
 	<body class="mainbody" onload = "makePageSelPage()">
 		<h1><spring:message code = 'ezCommunity.t1117' /><span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
 		<form name="adm_search_key" method="post" ID="Form1">
-	    	<table class="content">
+	    	<table class="content" style="height:35px">
 				<tr>
-					<th ><spring:message code = 'ezCommunity.t31' /></th>
-			  		<td>
+					<th style="border:0px"><spring:message code = 'ezCommunity.t31' /></th>
+			  		<td style="border-left:0px; background-color: #f8f8fa">
 						<select id="QuerySelect" name="QuerySelect" style="vertical-align:middle; height: 22px; margin-left:2px;">
 							<option selected value="pCommunityName"><spring:message code = 'ezCommunity.t9991' /></option>
 							<option value="pCommuintyDesc" ><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></option>
 						</select>
 						
 						<input name="text" type="text" style="WIDTH:200px;vertical-align:middle; height: 22px;" id="txt_SearchQuery" onKeyPress="return get_search_CommunityInfo(event)"> 
-						<a class="imgbtn imgbck" style="vertical-align:middle; margin-bottom:0px;"><span onClick="search_CommunityInfo()"><spring:message code = 'ezCommunity.t31' /></span></a>
+						<a class="imgbtn" style="vertical-align:middle; margin-bottom:0px;"><span onClick="search_CommunityInfo()"><spring:message code = 'ezCommunity.t31' /></span></a>
 			  		</td>
 				</tr>
 			</table>
@@ -268,8 +268,7 @@
 			<input type="text" id="txt_inputPageNum" style="WIDTH:35px" value='${ iPage }' onKeyDown="moveToPage()">
 			<img src="/images/page_next.gif" width="15" height="16" align="absmiddle" id="Img1"  onClick="nextPage_onclick()"></div>--%>
 			
-			<br />
-			<div id="contentlist" style="width:100%; overflow: auto;">
+			<div id="contentlist" style="width:100%; overflow: auto; margin-top:5px;">
 				<div>
 					<table class="mainlist" style="width:100%">
 						<tr>
@@ -299,7 +298,6 @@
 					</table>
 				</div>
 			</div>
-			<br />
 			<div id="tblPageRayer"></div>
 		</form>
 	</body>

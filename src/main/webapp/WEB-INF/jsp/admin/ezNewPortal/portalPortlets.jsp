@@ -20,33 +20,36 @@
 	.ui-widget-content {background : none;}
 	.ui-widget-header {background : none;}
   	.column {width: 1820px; padding-bottom: 100px;}
-  	.portlet, .newPortlet {float:none; position: relative;margin: 0 1em 1em 0;padding: 0.3em;display : inline-block;vertical-align : top; background-color : #ffffff;}
-  	.portlet-header {padding: 0.4em 0.7em;margin-bottom: 0.5em;position: relative;cursor:move;}
+  	.portlet, .newPortlet {margin:0px 15px 15px 0px;display : inline-block;vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+  	.portlet-header {background:rgb(189,194,198); padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#fff;}
   	.portlet-toggle {top: 50%;right: 0;float:right;}
-  	.portlet-content {padding: 0.4em;clear:both;}
+  	.portlet-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box;}
   	.portlet-placeholder {border: 1px dotted black; margin: 0 1em 1em 0; height: 50px;}
-	.col, .newPortlet {padding: 16px 16px 5px 16px;}
+	.col, .newPortlet {padding:0px;}
 	.addPortlet:hover {cursor:pointer;}
-	.updatePortlet, .addNewPortlet, .cancelNewPortlet {float : right;margin : 0px; padding : 0px;}
-	.deletePortletBtn, .cancelNewPortletBtn {margin-left:7px;}
-	.boardSetting, .menuSetting {margin:0px 0px 0px 12px;padding:0px;text-align:left;display:inline-block;vertical-align:top;}
+	.updatePortlet, .addNewPortlet {float :right;margin :0px; padding :0px;}
+	.updatePortletBtn span{float:right; height:28px; /* background: #5d656c; */ padding: 0px 9px; line-height: 25px; display: inline-block; border: 1px solid white; margin:6px 5px 0px 0px; color: #fff; box-sizing: border-box;}
+	.deletePortletBtn span{float:right; height:28px; /* background: #5d656c; */ padding: 0px 9px; line-height: 25px; display: inline-block; border: 1px solid white; margin:6px 5px 0px 0px; color: #fff; box-sizing: border-box;}
+	.boardSetting, .menuSetting {float:right; position:relative; margin-top:-20px; margin-right:5px; padding:0px;text-align:left;display:inline-block;vertical-align:top;cursor:pointer;}
 	.portletInfo {display:inline-block;marging-top:8px;}
-	.portletInfoTH {background-color : white;border:0px; padding-left:0px;}
-	.portletInfoTH, .portletInfoTD {padding-bottom : 5px;}
+	.portletInfoTH {background-color :white;border:0px; padding:0px 15px 0px 0px; color:#393939; font-weight:bold; letter-spacing:-1px; line-height:34px;}
+	.portletInfoTH, .portletInfoTD {}
 	.boardNotUsed {height:2.6em;}
 	.portletInfo {width : 100%;}
 	.portletInfoTD {width:100%;}
-	.portletInfoTD input[type='text'] {width:79%;}
-	.addPortlet {border:2px dashed black; text-align:center;height:18.3em;}
+	.portletInfoTD input[type='text'] {width:100%; height:27px; font-size:12px; padding:0px 0px 0px 5px; color:#393939;}
+	.addPortlet {border:1px dashed #aab2ba; text-align:center;height:18.3em; border-radius:0px;}
 	.addPortlet dl {margin:87px;}
 	.portlet-toggle {cursor:pointer;}
 	.newPortlet .portlet-header {cursor:default;}
 	.setBoard {display : none;}
+	.cancelNewPortletBtn span{float:right; height:28px; background: #5d656c; padding: 0px 9px; line-height: 25px; display: inline-block; border: 1px solid #535c63; margin:6px 5px 0px 0px; color: #fff; box-sizing: border-box;}
+	.addNewPortletBtn span{float:right; height:28px; background: #5d656c; padding: 0px 9px; line-height: 25px; display: inline-block; border: 1px solid #535c63; margin:6px 5px 0px 0px; color: #fff; box-sizing: border-box;}
 	/* switch */
-	.switch {position: absolute;display: inline-block;width: 60px;height: 25px;margin-top:-13px;}
+	.switch {position: absolute;display: inline-block;width: 60px;height: 22px;margin-top:-10px;}
 	.switch input {opacity: 0;width: 0;height: 0;}
 	.slider {  position: absolute;  cursor: pointer;  top: 0;  left: 0;  right: 0;  bottom: 0;  background-color: #ccc;  -webkit-transition: .4s;  transition: .4s;}
-	.slider:before {  position: absolute;  content: "";  height: 17px;  width: 18px;  left: 4px;  bottom: 4px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
+	.slider:before {  position: absolute;  content: "";  height: 13px;  width: 13px;  left: 8px;  bottom: 5px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
 	input:checked + .slider {  background-color: #2196F3;}
 	input:focus + .slider { box-shadow: 0 0 1px #2196F3;}
 	input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transform: translateX(26px);transform: translateX(26px);}
@@ -61,7 +64,7 @@
 	}
 
 	@media only screen and (max-width :1920px) and (min-width :1423px) {
-		.portlet, .newPortlet{ width:32%;}
+		.portlet, .newPortlet{ width:20%;}
 	}
 
 	@media only screen and (max-width :1422px) and (min-width :1280px) {
@@ -397,18 +400,15 @@
 					portletNameListCnt = portletNameList.length;
 					
 					listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder + "' data2='" + menuId + "' data-url='" + result[i].portletUrl + "'>";
-					listHTML += "<div class='portlet-header'>" + portletNameList[arrayLang].portletName + "</div>";
-					listHTML += "<div class='portlet-content'>";
-					listHTML += "<div class='btnpositionJsp updatePortlet'>";
-					listHTML += "<a class='imgbtn updatePortletBtn'>";
-					listHTML += "<span>저장</span></a>";
-					
+					listHTML += "<div class='portlet-header'>" + portletNameList[arrayLang].portletName;
 					if (!result[i].general) {
-						listHTML += "<a class='imgbtn deletePortletBtn'>";
+						listHTML += "<a class='deletePortletBtn'>";
 						listHTML += "<span>삭제</span></a>"
 					}
-					
+					listHTML += "<a class='updatePortletBtn'>";
+					listHTML += "<span>저장</span></a>";
 					listHTML += "</div>";
+					listHTML += "<div class='portlet-content'>";
 					listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'>포틀릿 사용  : </th>"
 					listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td>";
 					listHTML += "</tr>";
@@ -440,17 +440,17 @@
 						
 						listHTML += "<input id='portletMenu" + portletId + "' type='text' value='" + menuName + "'readonly>";
 						listHTML += "<div class='btnpositionJsp menuSetting'>";
-						listHTML += "<a class='imgbtn menuSettingtBtn'>";
-						listHTML += "<span>선택</span></a></div>";
+						listHTML += "<a class='menuSettingtBtn'>";
+						listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div>";
 						listHTML += "</td></tr>";
 					}
 					
 					if (menuId == 4 && portletId != 10) {
 						listHTML += "<tr class='boardTR'><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
 						listHTML += "<input id='portletBoard" + portletId + "' class='boardName' type='text' value='" + result[i].boardName1 + "' data1='" + result[i].portletBoardId + "' readonly>";
-						listHTML += "<div class='btnpositionJsp boardSetting'>";
-						listHTML += "<a class='imgbtn boardSettingtBtn'>";
-						listHTML += "<span>설정</span></a></div></td></tr>";
+						listHTML += "<div class='boardSetting'>";
+						listHTML += "<a class='boardSettingtBtn'>";
+						listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
 					} else {
 						listHTML += "<tr class='boardNotUsed'><th class='portletInfoTH'>&nbsp;</th><td class='portletInfoTD'>&nbsp;<br/></td></tr>";
 					}
@@ -459,15 +459,16 @@
 					listHTML += "</li>";
 				}
 				
-				listHTML += "<li class='portlet addPortlet'><dl><dt><span class='icon_topmenu' style='background:none; font-size:20px; font-weight:bold'>+</span></dt><dd>메뉴추가</dd></li>";
+				listHTML += "<li class='portlet addPortlet'><div style='margin-top:90px'><img src='/images/admin/admin_portlet_plus.png' /></div></li>";
 				document.getElementById("portletListContainer").innerHTML = listHTML;
 				
 				for (var i = 0; i < portletCnt; i++) { //포틀릿 사용여부에 따라 title 변경
 					if (result[i].portletUsed) {
-						$("#portlet" + result[i].portletId).find(".portlet-header").css("background-color", "#b0e4ff");
+						//$("#portlet" + result[i].portletId).find(".portlet-header").css("background-color", "#687077");
+						$("#portlet" + result[i].portletId).find(".portlet-header").css("background-color", "steelblue");
 						$("#portlet" + result[i].portletId).find(".switch").find("input").prop("checked", true);
 					} else {
-						$("#portlet" + result[i].portletId).find(".portlet-header").css("background-color", "#e3e3e3");
+						$("#portlet" + result[i].portletId).find(".portlet-header").css("background-color", "#bdc2c6");
 						$("#portlet" + result[i].portletId).find(".switch").find("input").prop("checked", false);
 					}
 					
@@ -512,49 +513,50 @@
 			.addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
 			.find( ".portlet-header" )
 			.addClass( "ui-widget-header ui-corner-all" )
-			.prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+			//.prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
 		 
-		$( ".portlet-toggle" ).on( "click", function() {
+		/* $( ".portlet-toggle" ).on( "click", function() {
 			var icon = $( this );
 			icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
 			icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
 			
-		});
+		}); */
 		
 		$(".addPortlet").on("click", showAddPortletForm);
-	} 
+	}
+ 
 	var showAddPortletForm = function() {
 		$(".addPortlet").remove();
 		
 		var listHTML = "";
-		listHTML += "<li id='newPortlet' class='newPortlet'>"	
-		listHTML += "<div class='portlet-header'>포틀릿 추가</div>";
-		listHTML += "<div class='portlet-content'>";
-		listHTML += "<div class='btnpositionJsp addNewPortlet'>";
-		listHTML += "<a class='imgbtn addNewPortletBtn'>";
+		listHTML += "<li id='newPortlet' class='newPortlet'>";
+		listHTML += "<div class='portlet-header'>포틀릿 추가";
+		listHTML += "<a class='cancelNewPortletBtn'>";
+		listHTML += "<span>취소</span></a>";
+		listHTML += "<a class='addNewPortletBtn'>";
 		listHTML += "<span>추가</span></a>";
-		listHTML += "<a class='imgbtn cancelNewPortletBtn'>";
-		listHTML += "<span>취소</span></a></div>";
-		listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'>포틀릿 사용  : </th>"
+		listHTML += "</div>";
+		listHTML += "<div class='portlet-content'>";
+		listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'>포틀릿 사용 </th>"
 		listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td>";
 		listHTML += "</tr>";
 		
 		//언어
-		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(한국어) :</th><td class='portletInfoTD'><input class='portletName' data1='1' type='text' maxlength='50'></td></tr>"
-		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(영어) :</th><td class='portletInfoTD'><input class='portletName' data1='2' type='text' maxlength='50'></td></tr>"
-		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(일본어) :</th><td class='portletInfoTD'><input class='portletName' data1='3' type='text' maxlength='50'></td></tr>"
-		listHTML += "<tr><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input class='connectionUrl' type='text' maxlength='100'></td></tr>";
-		listHTML += "<tr><th class='portletInfoTH'>관련 메뉴 : </th><td class='portletInfoTD'>";
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(한국어) </th><td class='portletInfoTD'><input class='portletName' data1='1' type='text' maxlength='50'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(영어) </th><td class='portletInfoTD'><input class='portletName' data1='2' type='text' maxlength='50'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>포틀릿명(일본어) </th><td class='portletInfoTD'><input class='portletName' data1='3' type='text' maxlength='50'></td></tr>"
+		listHTML += "<tr><th class='portletInfoTH'>연결 URL </th><td class='portletInfoTD'><input class='connectionUrl' type='text' maxlength='100'></td></tr>";
+		listHTML += "<tr><th class='portletInfoTH'>관련 메뉴 </th><td class='portletInfoTD'>";
 		listHTML += "<input id='newPortletMenu' type='text' readonly>";
 		listHTML += "<div class='btnpositionJsp menuSetting'>";
-		listHTML += "<a class='imgbtn menuSettingtBtn'>";
-		listHTML += "<span>선택</span></a></div>";
+		listHTML += "<a class='menuSettingtBtn'>";
+		listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div>";
 		listHTML += "</td></tr>";
-		listHTML += "<tr class='setBoard'><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
+		listHTML += "<tr class='setBoard'><th class='portletInfoTH'>게시판 설정 </th><td class='portletInfoTD'>";
 		listHTML += "<input id='newPortletBoard' type='text' readonly>";
 		listHTML += "<div class='btnpositionJsp boardSetting'>";
-		listHTML += "<a class='imgbtn boardSettingtBtn'>";
-		listHTML += "<span>설정</span></a></div></td></tr>";
+		listHTML += "<a class='boardSettingtBtn'>";
+		listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
 		listHTML += "</table>";
 		listHTML += "</li>";
 		
@@ -597,7 +599,6 @@
 	var cancelPortlet = function() {
 		getPortletList();
 	}
-	
 	var openMenuList = function (event) {
 		var portletId = event.data.portletId;
  		var companiesObj = document.getElementById("ListCompany");
@@ -636,27 +637,24 @@
 			})
 		}, 500);
 	}
-	
 	</script>
 </head>
 	
 <body class="mainbody" marginwidth="0" marginheight="0">
-	<h1>포틀릿 관리</h1>
-	<div id="mainmenu">
-		<span><b>회사 선택  : </b></span>
-		<select id="ListCompany">
+	<h1>
+		포틀릿 관리
+		<select class="companySelect" id="ListCompany">
         	<c:forEach var="item" items="${companyList}">
            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
            	</c:forEach>
 	    </select>
+	</h1>
+	<div id="mainmenu">
 		<ul style="margin-top: 15px;">
 			<li id="portletOrderReset"><span>포틀릿 순서 초기화</span></li>
 		</ul>
 	</div>
-	
-	<h1># 드래그 앤 드롭을 하고 순서저장 버튼을 누르면 기본 포틀릿 순서를 지정할 수 있습니다.</h1>
-	<br>
-	
+		
 	<ul id="portletListContainer" class="col-container">
 			
 	</ul>

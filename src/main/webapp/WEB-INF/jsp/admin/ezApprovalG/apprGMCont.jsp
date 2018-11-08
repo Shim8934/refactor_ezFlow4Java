@@ -274,18 +274,15 @@
     			</HEADERS>
   			</LISTVIEWDATA>
 		</xml>
-		<h1><spring:message code='ezApprovalG.t1591'/></h1>
-		<div id="mainmenu">
-		    <span>
-		    	<b><spring:message code='ezApprovalG.t1276'/></b>	    	
-		    	<select id="SCompID" name="SCompID" onchange="selectCompanyID()" style="height:29px">
-		    		<c:forEach var="item" items="${list}">
-	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-	            </select>            
-		    </span>
-	    </div>
-	    <table>
+		<h1>
+			<spring:message code='ezApprovalG.t1591'/>
+			<select class="companySelect" id="SCompID" name="SCompID" onchange="selectCompanyID()" style="height:29px">
+	    		<c:forEach var="item" items="${list}">
+            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            	</c:forEach>
+            </select>
+		</h1>
+	    <table style="margin-top:30px">
 	        <tr>
 	            <td>
 	                <h2 class="h2_dot" style="padding-top:0px"><spring:message code='ezApprovalG.t232'/></h2>

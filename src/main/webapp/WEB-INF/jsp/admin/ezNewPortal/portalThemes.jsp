@@ -56,16 +56,11 @@
 	</head>
 	
 	<body class="mainbody">
-		<h1>테마관리</h1>
-		
-		<div id="mainmenu">    
-		    <span><b>회사선택 :</b> 
-			    <select id="ListCompany">
-			    </select><br /><br />
-		    </span>
-		</div>
-		
-		<ul id="themeList">
+		<h1 class="adminH1">
+			테마관리
+			<select class="companySelect" id="ListCompany"></select>
+		</h1>
+		<ul id="themeList" style="margin-top:30px">
 		</ul>
 	</body>
 	

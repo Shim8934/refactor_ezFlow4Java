@@ -85,7 +85,7 @@
 		
 		    <div id="mainmenu">
 				<ul>
-		            <li><span onClick="btn_Select()"><spring:message code = 'ezPersonal.t105' /></span></li>
+		            <li class="important"><span onClick="btn_Select()"><spring:message code = 'ezPersonal.t105' /></span></li>
 				</ul>
 		    </div>
 		    <script type="text/javascript">
