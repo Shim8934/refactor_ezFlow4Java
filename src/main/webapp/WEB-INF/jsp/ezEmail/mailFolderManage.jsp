@@ -468,7 +468,6 @@
 			}
 			
 			function manageClose() {
-				window.opener.detailView();
 				window.close();
 			}
 			
