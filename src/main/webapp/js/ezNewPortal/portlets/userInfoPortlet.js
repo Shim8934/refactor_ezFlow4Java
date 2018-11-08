@@ -31,18 +31,16 @@ function ptlGetAttitudeList() {
 }
 
 function ptlAttiClock() {
-    var h, m;
-    var s;
-    var time = " ";
+    var ptlH, ptlM;
+    var ptlS;
+    var ptlTime = " ";
     
-//    nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
-    time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2);
-    document.getElementById("ptlTimeFlow").innerHTML = time;
+    ptlTime = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2);
+    document.getElementById("ptlTimeFlow").innerHTML = ptlTime;
     if (time == "00:00") {
     	//$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
     }
     gizmo = setTimeout("ptlAttiClock()", 1000 * 60);
-    
 }
 
 //휴일 체크
