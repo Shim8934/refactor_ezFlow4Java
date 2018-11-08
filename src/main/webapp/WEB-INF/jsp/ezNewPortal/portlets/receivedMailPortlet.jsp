@@ -10,7 +10,7 @@
 </head>
 <body>
 	<article class="box_shadow">
-		<input type="hidden" id="mailPercent" value="${mailPercent}">
+		<!-- <input type="hidden" id="mailPercent" value="0"> -->
 		<div class="layDIV">
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">
@@ -19,34 +19,32 @@
 				<dd class="portletPlus" onclick="Mailmore_btnClick()">
 					<img src="/images/kr/main/portlet_Plus.png">
 				</dd>
-				<dd class="mailGraph">
-					<p class="mGraph">
-						<span id="mGraphSpan"></span>
-					</p>
-					<span class="mGraph_text" id="UseMailBox"> ${mailboxDetail }
-						<span>${mailboxQuotaStr }</span>
-					</span>
+				<dd class="mailGraph" id="mailGraph">
+					<%--   <p class="mGraph"><span id="mGraphSpan"></span></p>
+                <span class="mGraph_text" id="UseMailBox">
+                ${mailboxDetail }
+                <span>${mailboxQuotaStr }</span>
+                </span> --%>
 				</dd>
 			</dl>
 			<ul id="MailList" class="portlet_list">
-				<c:choose>
-					<c:when test="${empty mailList }">
-						<dl class='nodata'>
-							<dt>
-								<img src='/images/kr/main/nodata.png'>
-							</dt>
-							<dd>데이터 없음</dd>
-						</dl>
-					</c:when>
-					<c:otherwise>
-						<c:forEach var="mail" begin="0" end="4" items="${mailList}" varStatus="i">
-							<li class="${mail.readClass}" onclick="open_mail('${mail.href}')">
-								<span class='txt'><c:out value="${mail.subject }" escapeXml="true" /></span> <span class='date'><c:out value="${mail.receivedDateStr }" escapeXml="true" /></span> 
-								<span class='name'><c:out value="${mail.sender }" escapeXml="true" /></span>
-							</li>
-						</c:forEach>
-					</c:otherwise>
-				</c:choose>
+				<%-- <c:choose>
+		  	<c:when test="${empty mailList }">
+				<dl class='nodata'>
+			  	<dt><img src='/images/kr/main/nodata.png'></dt>
+			  	<dd>데이터 없음</dd>
+				</dl>
+		  	</c:when>
+			<c:otherwise>
+				<c:forEach var="mail" begin="0" end="4" items="${mailList}" varStatus="i">
+					<li class="${mail.readClass}" onclick="open_mail('${mail.href}')">
+						<span class='txt'><c:out value="${mail.subject }" escapeXml="true"/></span>
+						<span class='date'><c:out value="${mail.receivedDateStr }" escapeXml="true"/></span>
+						<span class='name'><c:out value="${mail.sender }" escapeXml="true"/></span>
+					</li>
+				</c:forEach>
+			</c:otherwise>
+		</c:choose>	      --%>
 			</ul>
 		</div>
 	</article>
