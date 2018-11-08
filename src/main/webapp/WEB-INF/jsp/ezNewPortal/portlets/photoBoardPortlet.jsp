@@ -9,14 +9,14 @@
 <head>
 </head>
 <body>
-	<article class="box_shadow">
+	<article class="photo_board box_shadow">
 		<div class="layDIV">
 			<dl class="portlet_title photo_board sortablePortlet">
 				<dt class="portletText" data1="${boardId }">
 					<c:out value="${portletName }" />
 				</dt>
 				<dd class="portletPlus" id="photoBoardPlus">
-					<img src="/images/ezNewPortal/portlet_Plus.png">
+					<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
 				</dd>
 				<c:if test="${access eq 'true' }">
 					<dd class="nextBtn">

@@ -14,7 +14,7 @@
 				<spring:message code='main.t203' />
 			</dt>
 			<dd class="portletPlus" onclick="goSchedule();">
-				<img src="/images/kr/main/portlet_Plus.png">
+				<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
 			</dd>
 		</dl>
 		<div class="sCalendarArea">

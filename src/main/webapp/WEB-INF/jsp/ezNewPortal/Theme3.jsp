@@ -29,6 +29,11 @@
 		cursor : pointer;
 		display: block;
 	}
+	
+	.portlet {
+		 margin:20px 0px 0px 16px;
+		 height:250px;
+	}
 	.slider_section {height:515px; width:280px;}
 	.right_float {float:right;}
 	#nodata_NewBirth {display:none;}
@@ -109,6 +114,7 @@
  	var birthdayTotalCount = 0;
  	var timer;
  	var frameId = "<c:out value='${usedFrame}'/>";
+ 	var usedTheme = "<c:out value='${usedTheme}'/>";
  	
  	var quickLinkPage = {
  		current: 1,
@@ -235,7 +241,7 @@
 		var portletHTML = "";
 		
 		for (var i = 0; i < portletCount; i++) {
-			portletHTML += "<div class='box_shadow' id='" + portletOrder[i].portletId + "Portlet'></div>";
+			portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
 		}
 		
 		$(".portlet_area").html(portletHTML);
@@ -250,7 +256,7 @@
 				$.ajax({
 					type : "POST",
 					dataType : "html",
-					data : {"portletId" : portletId, "portletName" : portletName},
+					data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
 					url : portletUrl,
 					success : function(result) {
 						$("#" + portletId + "Portlet").append(result);
