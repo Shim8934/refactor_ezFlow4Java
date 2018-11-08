@@ -647,9 +647,19 @@
 		WHERE
 			tenant_id = #tenantId#
 		AND
-			company_id = #companyId#
-		AND
 			logo_type = #logoType#
 	]]>
+	<isEqual property="logoType" compareValue="L">
+	<![CDATA[
+		AND
+			company_id = #tenantId#
+	]]>
+	</isEqual>
+	<isNotEqual property="logoType" compareValue="L">
+	<![CDATA[
+		AND
+			company_id = #companyId#
+	]]>
+	</isNotEqual>
 	</delete>
 </sqlMap>
