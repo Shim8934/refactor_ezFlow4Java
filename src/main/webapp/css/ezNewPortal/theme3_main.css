@@ -141,7 +141,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 /* layout */
 #Center {min-height:600px; margin:0px; min-width:1260px; background:url(/images/ezNewPortal/theme3Img/main_background.png) center top no-repeat; background-size:cover;}
 .section_left{  margin:0px; padding:0px; float:left; overflow:hidden; border-right:0px solid #cdcdcd; width:0px; box-sizing:border-box; background:#fff;}
-.section_main{ overflow:hidden; padding:0px 16px 0px 0px; float:none; min-width:880px; max-width:1920px; box-sizing:border-box;}
+.section_main{ overflow:hidden; padding:0px 16px 20px 0px; float:none; min-width:880px; max-width:1920px; box-sizing:border-box;}
 .section_main .mainLayout_left{ overflow:hidden; float:left; padding:0px 0px 0px 18px; box-sizing:border-box; }
 .section_main .mainLayout_middle{ overflow:hidden;  padding:0px 0px 0px 16px; float:left; box-sizing:border-box; }
 .section_main .mainLayout_right{ float:left; padding:0px 0px 0px 16px; box-sizing:border-box; overflow:hidden; }
@@ -157,6 +157,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .portlet_title{ margin:0px; padding:0px; height:46px; line-height:44px; box-sizing:border-box; overflow:hidden; background:rgba(255,255,255,0.7);}
 .portlet_title .portletText{ margin:0px; padding:0px 0px 0px 20px; font-size:16px; color:#333; font-weight:bold; letter-spacing:-1px; float:left; overflow:hidden;}
 .portlet_title .portletPlus{ margin:0px; padding:0px; float:right; overflow:hidden; cursor:pointer;}
+.sortablePortlet:hover {cursor : move;}
 
 /* portlet_list */
 .portlet_list{ margin:0px; padding:12px 0px; list-style:none; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; background:#ffffff; height: inherit;} 
