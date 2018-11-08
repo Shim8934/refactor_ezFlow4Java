@@ -8319,9 +8319,6 @@ public class EzBoardController extends EgovFileMngUtil{
 			dirPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
 			serverPath = dirPath + commonUtil.separator;
 		} else if (mode.equals("DEL")) { // 삭제
-			
-			logger.debug("삭제 진입!");
-			
 			String delServerPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
 			String imagePath = "";
 			String s_imagePath = "";

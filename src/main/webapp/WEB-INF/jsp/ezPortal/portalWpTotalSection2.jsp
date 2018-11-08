@@ -135,7 +135,7 @@
 
             	if (pBoardType == "3" || pBoardType == "4") {
                 	window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
-            	} else if (pBoardType_NewBoardSTD == "7") {
+            	} else if (pBoardType == "7") {
 	            	window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=765,top=" + pTop + ",left=" + pLeft, "");
 	            } else {
                 	if (CrossYN() || pNoneActiveX == "YES")
