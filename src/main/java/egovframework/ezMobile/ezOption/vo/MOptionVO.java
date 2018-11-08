@@ -14,7 +14,7 @@ public class MOptionVO {
 		
 	private String useSecurity;		/** 개인환경설정  전자결재 보안설정  */
 	
-	private String UsePrimaryLangOnly; /** 개인환경설정 타언어 사용여부  */
+	private String usePrimaryLangOnly; /** 개인환경설정 타언어 사용여부  */
 		
 	private int tenantId;			/** 계열사 Id */
 
@@ -23,11 +23,11 @@ public class MOptionVO {
 	}
 
 	public String getUsePrimaryLangOnly() {
-		return UsePrimaryLangOnly;
+		return usePrimaryLangOnly;
 	}
 
 	public void setUsePrimaryLangOnly(String usePrimaryLangOnly) {
-		UsePrimaryLangOnly = usePrimaryLangOnly;
+		this.usePrimaryLangOnly = usePrimaryLangOnly;
 	}
 
 	public void setUserId(String userId) {
