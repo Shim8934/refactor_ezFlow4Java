@@ -226,26 +226,26 @@
 											<c:when test="${portalEnv == '0'}">
 						                    	<span>
 						                        	<div class="node_div">
-						                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_myPortal"></span><span class="h2_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900002' /></span>
+						                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_appr"></span><span class="h2_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900002' /></span>
 						                            </div>
 						                    	</span>
 						                        <span>
 						                        	<div class="node_div">
-						                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_myPortal"></span><span class="h2_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900005' /></span>
+						                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_appr"></span><span class="h2_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900005' /></span>
 						                            </div>
 						                    	</span>
 						                    </c:when>
 						                    <c:when test="${portalEnv == '1'}">
 						                    	<span>
 						                        	<div class="node_div">
-						                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_myPortal"></span><span class="h2_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900002' /></span>
+						                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_appr"></span><span class="h2_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900002' /></span>
 						                            </div>
 						                    	</span>
 						                    </c:when>
 						                    <c:when test="${portalEnv == '2'}">
 						                        <span>
 						                        	<div class="node_div">
-						                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_myPortal"></span><span class="h2_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900005' /></span>
+						                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_appr"></span><span class="h2_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900005' /></span>
 						                            </div>
 						                    	</span>
 						                    </c:when>
@@ -255,12 +255,12 @@
 					            </c:if>
 					            <span>
 		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_myPortal"></span><span class="h2_text" id="UserInfo" name="UserInfo" onClick="Open_Func(this)"><spring:message code='ezPersonal.t172' /></span>
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_appr"></span><span class="h2_text" id="UserInfo" name="UserInfo" onClick="Open_Func(this)"><spring:message code='ezPersonal.t172' /></span>
 		                            </div>
 		                    	</span>	
 		                        <span>
 		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_myPortal"></span><span class="h2_text" id="TimeZone" name="TimeZone" onClick="Open_Func(this)"><spring:message code='ezPersonal.t999900010' /></span>
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_appr"></span><span class="h2_text" id="TimeZone" name="TimeZone" onClick="Open_Func(this)"><spring:message code='ezPersonal.t999900010' /></span>
 		                            </div>
 		                    	</span>
 							</span>        

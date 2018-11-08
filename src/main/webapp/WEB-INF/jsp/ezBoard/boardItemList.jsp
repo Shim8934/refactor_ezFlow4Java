@@ -1301,8 +1301,6 @@
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204' /></span></li>
 		        <li id="btn_copy"><span onClick="CopyItem_onclick()"><spring:message code='ezBoard.t274' /></span></li>
 		        <li id="btn_move"><span onClick="MoveItem_onclick()"><spring:message code='ezBoard.t134' /></span></li>
-		        <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188' /></span></li>
-		        <li><span onClick="AddToMyBoards()"><spring:message code='ezBoard.t10051' /></span></li>
 		        <%-- <c:if test="${boardInfo.guBun ne '2'}">
 		        	<li><span onClick="ReservationItem_onclick()"><spring:message code='ezBoard.t276' /></span></li> 
 		        </c:if> --%>
@@ -1318,6 +1316,8 @@
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
 			        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
 		        </c:if>
+		        <li><span class="icon16 icon16_star" onClick="AddToMyBoards()"></span></li>
+		        <li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup(this)"></span></li>
 		        <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
 		        <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
 			  </ul>

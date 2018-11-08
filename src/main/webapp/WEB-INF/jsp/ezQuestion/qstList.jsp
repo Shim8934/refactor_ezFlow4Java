@@ -605,7 +605,7 @@
 				<li><span onClick="menu_Result()"><spring:message code="ezQuestion.t303" /></span></li>
 				<li><span onClick="menu_Analysis()"><spring:message code="ezQuestion.t304" /></span></li>
 				<li><span onClick="menu_InfoModify()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if> ><spring:message code="ezQuestion.t305" /></span></li>
-				<li><span onClick="menu_Search()"><spring:message code="ezQuestion.t34" /></span></li>
+				<li><span class="icon16 icon16_search" onClick="menu_Search()"></span></li>
 				<li><span class="icon16 icon16_delete" onClick="menu_Delete()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if>></span></li>
 			</ul>
 		</div>

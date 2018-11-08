@@ -177,21 +177,21 @@
 	                			<span>
 	                        		<div class="node_div">
 	                        			<span class="sub_iconLNB tree_blank"></span>
-	                        			<span class="sub_iconLNB tree_env_myPortal"></span>
+	                        			<span class="sub_iconLNB tree_admin_stats"></span>
 	                					<span class="h2_text" onclick="goPage(16)"><spring:message code='ezStatistics.t1047' /></span>
 	                				</div>
 	                			</span>
 	                			<span>
 	                        		<div class="node_div">
 	                        			<span class="sub_iconLNB tree_blank"></span>
-	                        			<span class="sub_iconLNB tree_env_myPortal"></span>
+	                        			<span class="sub_iconLNB tree_admin_stats"></span>
 	                					<span class="h2_text" onclick="goPage(17)"><spring:message code='ezStatistics.t1045' /></span>
 	                				</div>
 	                			</span>
 	                			<span>
 	                        		<div class="node_div">
 	                        			<span class="sub_iconLNB tree_blank"></span>
-	                        			<span class="sub_iconLNB tree_env_myPortal"></span>
+	                        			<span class="sub_iconLNB tree_admin_stats"></span>
 	                					<span class="h2_text" onclick="goPage(18)"><spring:message code='ezStatistics.t1048' /></span>
 	                				</div>
 	                			</span>
