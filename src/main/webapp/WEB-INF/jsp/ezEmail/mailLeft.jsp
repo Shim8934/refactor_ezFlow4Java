@@ -516,9 +516,6 @@
 	            frmSpam.target = "right";
 	            frmSpam.submit();
 	        }
-	        function mail_export() {
-	            parent.frames["right"].mail_export();
-	        }
 	        var mail_import_cross_dialogArguments = new Array();
 	        function mail_import() {
 	            var param = { "foldername": new Array(), "href": new Object() };
@@ -1051,7 +1048,6 @@
 		        <c:if test="${useOnlyInnerMail != 'YES'}">
 	            <li><span onclick="check_pop3()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t490" /></span></li>
 	            </c:if>
-	            <li id="mailexport"><span style="width: 100%; display: inline-block;" onclick="mail_export()"><spring:message code="ezEmail.t378" /></span></li>
 	            <li id="mailimport"><span onclick="mail_import()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000015" /></span></li>
 	            <li><span onclick="Open_ReservationManage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t605" /></span></li>
                 <c:if test="${useBizmekaSpambox == 'YES'}"> 
