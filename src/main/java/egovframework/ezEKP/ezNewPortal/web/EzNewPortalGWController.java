@@ -1731,10 +1731,9 @@ public class EzNewPortalGWController {
 			
 			//로그인 가져오기
 			if (companyId != null) {
-				loginLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "L");
+				loginLogoUrl = ezNewPortalService.getPortalLogoInfo(null, tenantId, "L");
 				portalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "P");
 			}
-			String companyLogoUrl = ezNewPortalService.getPortalLogoInfo(null, tenantId, "R");
 			
 			if (loginLogoUrl == null || loginLogoUrl == "") {
 				loginLogoUrl = "/images/kr/login/logo.gif";
@@ -1747,13 +1746,6 @@ public class EzNewPortalGWController {
 			} else {
 				portalLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + portalLogoUrl;
 			}
-			
-			if (companyLogoUrl == null || companyLogoUrl == "") {
-				companyLogoUrl = "/images/kr/login/logo.gif";
-			} else {
-				companyLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + companyLogoUrl;
-			}
-			
 			
 			List<PortalLogoVO> logoList = new ArrayList<PortalLogoVO>();
 			
@@ -1768,12 +1760,6 @@ public class EzNewPortalGWController {
 			portalLogo.setLogoUrl(portalLogoUrl);
 			
 			logoList.add(portalLogo);
-			
-			PortalLogoVO companyLogo = new PortalLogoVO();
-			companyLogo.setLogoType("R");
-			companyLogo.setLogoUrl(companyLogoUrl);
-			
-			logoList.add(companyLogo);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

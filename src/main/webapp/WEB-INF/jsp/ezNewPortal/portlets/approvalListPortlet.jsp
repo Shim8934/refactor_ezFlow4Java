@@ -8,16 +8,17 @@
 		<title>approvalListPortlet</title>
 	</head>
 	<body>
-		<div class="layDIV approval">
-            <dl class="portlet_tab sortablePortlet">
-                <dt id="doingTab" class="on" onclick="apprChangeTab(this)"><span><spring:message code='main.t00003' /></span></dt>
-                <dt id="rejectTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00004' /></span></dt>
-                <dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /></span></dt>
-                <dd class="portletPlus" onclick="Appmore_btnClick()"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
-            </dl>
-            <ul id ="ApprList" class="portlet_list"></ul>
-        </div>
-		
+		<article class="box_shadow">
+			<div class="layDIV approval">
+            	<dl class="portlet_tab sortablePortlet">
+                	<dt id="doingTab" class="on" onclick="apprChangeTab(this)"><span><spring:message code='main.t00003' /></span></dt>
+                	<dt id="rejectTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00004' /></span></dt>
+                	<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /></span></dt>
+                	<dd class="portletPlus" onclick="Appmore_btnClick()"><img src="/images/ezNewPortal/portlet_Plus.png"></dd>
+            	</dl>
+            	<ul id ="ApprList" class="portlet_list"></ul>
+        	</div>
+		</article>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script src="${util.addVer('/js/jquery/raphael.2.1.0.min.js')}"></script>

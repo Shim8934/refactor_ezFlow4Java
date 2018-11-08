@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -612,7 +613,16 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			
 			return "cmm/error/adminDenied";
 		} else {
-			
+        	String isAdmin = userInfo.getRollInfo();
+        	boolean adminCheck = false;
+        	
+        	if (isAdmin.indexOf("c=1") == -1) {
+        		adminCheck = false; 
+        	} else {
+        		adminCheck = true;
+        	}
+        	
+        	model.addAttribute("adminCheck", adminCheck);
 			LOGGER.debug("portalManageLogo ended.");
 			return "/admin/ezNewPortal/portalLogos";
 		}
@@ -880,8 +890,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = paramMap.get("companyId").toString();
 		String url = "/rest/admin/ezPortal/logos/companies/" + companyId;
-		paramMap.put("userId", userInfo.getId());		
-
+		paramMap.put("userId", userInfo.getId());
+		
 		JSONArray logoList = new JSONArray();
 		JSONObject result = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, request, "get", null);
 		String status = result.get("status").toString();
@@ -908,7 +918,18 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		JSONObject json = new JSONObject();
 		json.put("userId", userId);
         json.put("logoType", logoType);
-		
+        String logoUrl = "";
+
+        if (logoType.equals("L")) {
+        	LoginVO adminCheck = commonUtil.checkAdmin(loginCookie);
+        	String isAdmin = adminCheck.getRollInfo();
+        	
+        	if (isAdmin.indexOf("c=1") == -1) {
+        		logoUrl = "rejected";
+        		return logoUrl;
+        	}
+        	
+        }
 		MultipartFile multiFile = request.getFile("file");
 		
 		String realPath = request.getServletContext().getRealPath("");
@@ -971,7 +992,6 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
         json.put("logoUrl", newFileName);
 		JSONObject result = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, request, "patch", json);
 		String status = result.get("status").toString();
-		String logoUrl = "";
 		
 		if (status.equals("ok")) {
 			logoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", userInfo.getTenantId()) + commonUtil.separator + "uploadFile" + commonUtil.separator + newFileName;

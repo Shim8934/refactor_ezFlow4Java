@@ -3,7 +3,7 @@
  */
 //포틀릿 순서 업데이트
 function updatePortletOrderUser() {
-	var portlets = $(".box_shadow");
+	var portlets = $(".portlet");
 	var updateOrder = [];
 	var portletsCount = portlets.length;
 	

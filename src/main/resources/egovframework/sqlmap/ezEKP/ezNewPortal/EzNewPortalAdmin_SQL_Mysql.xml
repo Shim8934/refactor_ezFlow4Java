@@ -536,7 +536,7 @@
 	</update>
 	
 	<update id="ezNewPortal.updateCompanyLogo" parameterClass="Map">
-		<isNotNull property="companyId">
+		<isEqual property="logoType" compareValue="P">
 		<![CDATA[
 			INSERT INTO TBL_PORTAL_LOGO
 				(company_id, tenant_id, logo_type, logo_url)
@@ -545,8 +545,8 @@
 			ON DUPLICATE KEY UPDATE
 				logo_url = #logoUrl#
 		]]>
-		</isNotNull>
-		<isNull property="companyId">
+		</isEqual>
+		<isEqual property="logoType" compareValue="L">
 		<![CDATA[
 			INSERT INTO TBL_PORTAL_LOGO
 				(company_id, tenant_id, logo_type, logo_url)
@@ -555,7 +555,7 @@
 			ON DUPLICATE KEY UPDATE
 				logo_url = #logoUrl#
 		]]>
-		</isNull>
+		</isEqual>
 	</update>
 	
 	<select id="ezNewPortal.getCompanyLogoList" parameterClass="Map" resultClass="PortalLogoVO">

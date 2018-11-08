@@ -33,6 +33,8 @@
 	.right_float {float:right;}
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
+	.box_shadow {width:auto;margin:0px;}
+	.portlet {height:250px; margin:20px 0px 0px 16px;background-color:#ffffff;}
 </style>
 </head>
 <body class="mainbg">
@@ -344,7 +346,7 @@
 		var portletHTML = "";
 		
 		for (var i = 0; i < portletCount; i++) {
-			portletHTML += "<div class='box_shadow' id='" + portletOrder[i].portletId + "Portlet'></div>";
+			portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
 		}
 		
 		$(".portlet_area").html(portletHTML);
@@ -446,6 +448,12 @@
 		//포틀릿 드래그 앤 드롭
 		$(".portlet_area").sortable({
 			handle : ".sortablePortlet",
+			start : function (event, block) {
+				$(".ui-sortable-helper").css({
+					'width' : $(".box_shadow").outerWidth(),
+					'height' : $(".box_shadow").outerHeight()
+				});
+			},
 			update : function(event, ui) {
 				updatePortletOrderUser();
 			}
@@ -465,11 +473,11 @@
 			var media1280 = window.matchMedia("only screen and (max-width :1685px) and (min-width :1280px)");
 			
 			if (media1921.matches) {
-				$(".box_shadow").css("width", "483px");
+				$(".portlet").css("width", "483px");
 			} else if (media1686.matches) {
-				$(".box_shadow").css("width", "48%");
+				$(".portlet").css("width", "48%");
 			} else if (media1280.matches) {
-				$(".box_shadow").css("width", "48%");
+				$(".portlet").css("width", "48%");
 			}
 		}
 	}

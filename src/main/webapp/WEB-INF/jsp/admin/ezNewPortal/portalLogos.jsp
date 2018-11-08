@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,10 +35,13 @@ img {width:150px; height:100px;}
 			<div class='logoIcon'><img></img></div>
 		</div>
 		<div class="logoContent">
-			<div id = "imgLogin" class='btnpositionJsp updateLogo'><a class='imgbtn updateLogoBtn'><span>등록</span></a></div>
+			<c:if test="${adminCheck eq true }">
+				<div id = "imgLogin" class='btnpositionJsp updateLogo'><a class='imgbtn updateLogoBtn'><span>등록</span></a></div>
+			</c:if>
 			<ul>
 				<li># 로그인 로고의 이미지를 변경합니다.</li>
 				<li># 가로 x 세로의 크기는 000(px) x 000(px) 입니다.</li>
+				<li># 로그인 로고의 이미지는 전체관리자만 변경 가능합니다.</li>
 			</ul>
 		</div>
 	</div>
@@ -100,26 +105,6 @@ var getCompanies = function() {
 			document.getElementById("ListCompany").addEventListener('change', function() {
 				getLogos();
 			});
-			
-			if (companyList.length > 1) {
-				var companyLogoHTML = "";
-				
-				companyLogoHTML += "<div class='companyLogo'>";
-				companyLogoHTML += "<div class='logoTitle'>대표 메뉴 로고 설정</div>";
-				companyLogoHTML += "<div class='logoInfo'>";
-				companyLogoHTML += "<div class='logoInfo'>";
-				companyLogoHTML += "<div class='logoIconInfo'>";
-				companyLogoHTML += "<div class='logoIcon'><img></img></div>";
-				companyLogoHTML += "</div>";
-				companyLogoHTML += "<div class='logoContent'>";
-				companyLogoHTML += "<div id='imgCompany' class='btnpositionJsp updateLogo'><a class='imgbtn updateLogoBtn'><span>등록</span></a></div>";
-				companyLogoHTML += "<ul>";
-				companyLogoHTML += "<li># 회사의 대표 로그인 로고의 이미지를 변경합니다.</li>";
-				companyLogoHTML += "<li># 가로 x 세로의 크기는 000(px) x 000(px) 입니다.</li>";
-				companyLogoHTML += "</ul></div></div></div></div>";
-				
-				$("body").append(companyLogoHTML);
-			}
 		} else {
 			// We reached our target server, but it returned an error
 		}
@@ -152,8 +137,6 @@ var getLogos = function() {
 				$(".loginLogo").find(".logoIcon").find("img").attr("src", logoUrl);
 			} else if (logoType == "P") {
 				$(".portalLogo").find(".logoIcon").find("img").attr("src", logoUrl);
-			} else if (logoType == "R") {
-				$(".companyLogo").find(".logoIcon").find("img").attr("src", logoUrl);
 			}
 		}
 		
@@ -194,8 +177,6 @@ var imgUpload = function () {
     	logoType = "L";
     } else if (logoType == "imgTop") {
     	logoType = "P";
-    } else if (logoType == "imgCompany") {
-    	logoType = "R";
     }
     
     fd.append("file", _file);
@@ -204,24 +185,27 @@ var imgUpload = function () {
     
     var request = new XMLHttpRequest();
     
-    if ( ext=="jpeg" || ext == "jpg" || ext == "png" || ext == "bmp") {
+    if ( ext == "jpeg" || ext == "jpg" || ext == "png" || ext == "bmp" || ext == "gif") {
 	    request.open("POST", "/admin/ezNewPortal/uploadLogo.do");
 	    request.send(fd);
 	    
 	    request.onload = function() {
 	    	var result = request.responseText;
 	    	
+	    	if (result == "rejected") {
+	    		alert("로그인 이미지는 전체관리자만 변경가능합니다.");
+	    		return;
+	    	}
+	    	
 	    	if (logoType == "L") {
 	    		$(".loginLogo").find(".logoIcon").find("img").attr("src", result);
 	    	} else if (logoType == "P") {
 	    		$(".portalLogo").find(".logoIcon").find("img").attr("src", result);
-	    	} else if (logoType == "R") {
-	    		$(".companyLogo").find(".logoIcon").find("img").attr("src", result);
 	    	}
 	    	
 	    }
     } else {
-    	alert("<spring:message code = 'ezCommunity.lhj03' /> (jpg, png, bmp)");
+    	alert("<spring:message code = 'ezCommunity.lhj03' /> (jpg, png, bmp, jpeg, gif)");
     	return false;
     }
 }

@@ -84,7 +84,24 @@ var selectMenu = function() {
 		window.opener.document.getElementById("portletMenu" + portletId).setAttribute("data1", menuId);
 		
 		if (menuId == 4) {
-			window.opener.document.getElementById("portlet" + portletId).querySelector(".setBoard").style.display = "table-row";
+			var boardHTML = "<th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
+			boardHTML += "<input id='portletBoard" + portletId + "' type='text' readonly>";
+			boardHTML += "<div class='btnpositionJsp boardSetting'>";
+			boardHTML += "<a class='imgbtn boardSettingtBtn'>";
+			boardHTML += "<span>설정</span></a></div></td>";
+			
+			if (window.opener.document.getElementById("portlet" + portletId).querySelector(".boardNotUsed") != null) {
+				window.opener.document.getElementById("portlet" + portletId).querySelector(".boardNotUsed").innerHTML = boardHTML;
+				window.opener.document.getElementById("portlet" + portletId).querySelector(".boardNotUsed").classList.add("boardTR");
+				window.opener.document.getElementById("portlet" + portletId).querySelector(".boardNotUsed").classList.remove("boardNotUsed");
+				window.opener.document.getElementById("portlet" + portletId).setAttribute("data2", 4);
+				window.opener.$("#portlet" + portletId).find(".boardTR").find(".boardSettingtBtn").on("click", {"portletId" : portletId}, window.opener.openBoardTree);	
+			}
+			//window.opener.document.getElementById("portletBoard" + portletId).addEventListener("click", openBoardTree);
+		} else {
+			var boardHTML =  "<th class='portletInfoTH'>&nbsp;</th><td class='portletInfoTD'>&nbsp;<br/></td>";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").innerHTML = boardHTML;
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").classList.add("boardNotUsed");
 		}
 	}
 	

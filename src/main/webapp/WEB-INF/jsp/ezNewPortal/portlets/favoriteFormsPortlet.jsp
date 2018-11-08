@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 	</head>
 	<body>
+	<article class="box_shadow">
 		<div class="layDIV">
 			<dl class="portlet_title sortablePortlet">
 				<!-- portalMain에서 타이틀 넣어주는게 나을꺼같은데 -->
@@ -49,7 +50,7 @@
 				</div>
 			</div>
 		</div>
-		
+	</article>
 		<script type="text/javascript">
 		//개똥이라 수정해야함 긁고 붙이고해서 돌아가게만 해놓음
 		

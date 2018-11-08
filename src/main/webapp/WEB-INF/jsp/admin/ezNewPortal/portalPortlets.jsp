@@ -138,7 +138,7 @@
 			return;
 		}
 		
-		if (portletMenuId == 4 && boardId == null) {
+		if (portletMenuId == 4 && boardId == null && portletId != 10) {
 			alert("게시판을 선택해 주세요.");
 			return;
 		}
@@ -268,10 +268,6 @@
  		var companiesObj = document.getElementById("ListCompany");
 		var companyId = companiesObj.options[companiesObj.selectedIndex].value;
 		
-		if (portletId != null) {
-			var boardId = document.getElementById("portlet" + portletId).querySelector(".boardName").getAttribute("data1");
-		}
-		
         var wWeight = "355";
         var wHeight = "600";
 
@@ -283,7 +279,7 @@
         
         window.open("/admin/ezNewPortal/openBoardTree.do?portletId=" + portletId + "&companyId=" + companyId, "",
             "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-	  }
+	}
 	  
 	var portletUpdate = function(event) {
 		var companiesObj = document.getElementById("ListCompany");
@@ -444,7 +440,7 @@
 					}
 					
 					if (menuId == 4 && portletId != 10) {
-						listHTML += "<tr><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
+						listHTML += "<tr class='boardTR'><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
 						listHTML += "<input id='portletBoard" + portletId + "' class='boardName' type='text' value='" + result[i].boardName1 + "' data1='" + result[i].portletBoardId + "' readonly>";
 						listHTML += "<div class='btnpositionJsp boardSetting'>";
 						listHTML += "<a class='imgbtn boardSettingtBtn'>";
@@ -634,6 +630,7 @@
 			})
 		}, 500);
 	}
+	
 	</script>
 </head>
 	

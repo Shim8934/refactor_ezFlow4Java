@@ -6,9 +6,11 @@
 <head>
 </head>
 <body>
-	<div class="layDIV">
+	<article class="box_shadow">
+		<div class="layDIV">
            <dl class="portlet_tab sortablePortlet" id="BoardTab"></dl>
            <ul class="portlet_list" id="BoardList"></ul>
-    </div>		
+    	</div>
+    </article>
 </body>
 </html>
