@@ -68,7 +68,6 @@
 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";
 	                document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px";
 	            } */
-	            document.getElementById("mailexportall").style.display = "none";
 	            Function_Flag(funcCode);
 	            LoadAddressTree(true);
 	            previewSubTreeCall();
@@ -399,14 +398,6 @@
 	            var OpenWin = window.open("/ezEmail/mailGetPop3.do", "mail_getpop3_cross", GetOpenWindowfeature(460, 360));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
-	        function mail_exportall() {
-	            var param = { "href": new Array(), "parent": new Object(), "url": new String() };
-	            param["name"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "foldername");
-	            param["url"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-	            var feature = "dialogWidth:480px; dialogHeight:265px; scroll:no; status:no; help:no; scroll:no; edge:sunken";
-	            feature = feature + GetShowModalPosition(480, 265);
-	            window.showModalDialog("/myoffice/ezEmail/htm/mail_exportall.aspx", param, feature);
-	        }
 	        var mail_foldermanage_Cross_dialogArguments = new Array();
 	        function folder_manage() {
 	            mail_foldermanage_Cross_dialogArguments[1] = folder_manager_after;
@@ -527,15 +518,6 @@
 	        }
 	        function mail_export() {
 	            parent.frames["right"].mail_export();
-	        }
-	        function mail_exportall() {
-	            var param = { "href": new Array(), "parent": new Object(), "url": new String() };
-	            param["name"] = PostTreeView.getvalue(PostTreeView.selectedIndex, "foldername");
-	            param["url"] = PostTreeView.getvalue(PostTreeView.selectedIndex, "href");
-	            param["parent"] = window.parent.frames("right");
-	            var feature = "dialogWidth:480px; dialogHeight:265px; scroll:no; status:no; help:no; scroll:no; edge:sunken";
-	            feature = feature + GetShowModalPosition(480, 265);
-	            window.showModalDialog("/myoffice/ezEmail/htm/mail_exportall.aspx", param, feature);
 	        }
 	        var mail_import_cross_dialogArguments = new Array();
 	        function mail_import() {
@@ -1070,7 +1052,6 @@
 	            <li><span onclick="check_pop3()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t490" /></span></li>
 	            </c:if>
 	            <li id="mailexport"><span style="width: 100%; display: inline-block;" onclick="mail_export()"><spring:message code="ezEmail.t378" /></span></li>
-	            <li id="mailexportall" style="display: none;"><span style="width: 100%; display: inline-block;" onclick="mail_exportall()"><spring:message code="ezEmail.t99000014" /></span></li>
 	            <li id="mailimport"><span onclick="mail_import()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000015" /></span></li>
 	            <li><span onclick="Open_ReservationManage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t605" /></span></li>
                 <c:if test="${useBizmekaSpambox == 'YES'}"> 
