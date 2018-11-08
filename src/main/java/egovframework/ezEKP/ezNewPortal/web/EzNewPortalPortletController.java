@@ -135,6 +135,17 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/receivedMailPortlet.do")
 	public String portalReceivedMailPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalReceivedMailPortlet Start");
+				
+		logger.debug("portalReceivedMailPortlet End");
+		return "/ezNewPortal/portlets/receivedMailPortlet";
+	}
+	
+	/**
+	 * 포틀릿 - 받은메일
+	 */
+	@RequestMapping(value = "/ezNewPortal/receivedMailPortletList.do")
+	public String portalReceivedMailPortletList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portalReceivedMailPortlet Start");
 		userInfo = commonUtil.userInfo(loginCookie);
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String password = userIdAndPassword.get(1);	
@@ -161,7 +172,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("portalReceivedMailPortlet End");
-		return "/ezNewPortal/portlets/receivedMailPortlet";
+		return "json";
 	}
 	
 	

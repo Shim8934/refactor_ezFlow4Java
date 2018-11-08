@@ -9,21 +9,21 @@
 	<head>
 	</head>
 <body>
-	<input type="hidden" id="mailPercent" value="${mailPercent}">
+	<!-- <input type="hidden" id="mailPercent" value="0"> -->
 	<div class="layDIV">
         <dl class="portlet_title sortablePortlet">
             <dt class="portletText"><spring:message code='main.t00038' /></dt>
             <dd class="portletPlus" onclick="Mailmore_btnClick()"><img src="/images/kr/main/portlet_Plus.png"></dd>
-            <dd class="mailGraph">
-                <p class="mGraph"><span id="mGraphSpan"></span></p>
+            <dd class="mailGraph" id="mailGraph">
+              <%--   <p class="mGraph"><span id="mGraphSpan"></span></p>
                 <span class="mGraph_text" id="UseMailBox">
                 ${mailboxDetail }
                 <span>${mailboxQuotaStr }</span>
-                </span>
+                </span> --%>
             </dd>
         </dl>
 		<ul id="MailList" class="portlet_list">
-		  <c:choose>
+		  <%-- <c:choose>
 		  	<c:when test="${empty mailList }">
 				<dl class='nodata'>
 			  	<dt><img src='/images/kr/main/nodata.png'></dt>
@@ -39,7 +39,7 @@
 					</li>
 				</c:forEach>
 			</c:otherwise>
-		</c:choose>	     
+		</c:choose>	      --%>
 		</ul>
      </div>
 </body>
