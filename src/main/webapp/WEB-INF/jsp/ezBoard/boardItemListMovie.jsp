@@ -74,8 +74,8 @@
 		    var SQLPARADATA = "";
 		    var pAdminType = "${adminType}";
 		    var lang = "${userInfo.lang}";
-		    var previewType = "PHOTO";
-		    var clickPreviweType = "PHOTO";
+		    var previewType = "MOVIE";
+		    var clickPreviweType = "MOVIE";
 		    var CurrentHeight = 0;
 		    var CurrenWidth = 0;
 		    var pMailListHeightW = 0;

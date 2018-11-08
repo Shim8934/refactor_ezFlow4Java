@@ -82,8 +82,6 @@
 		            var check = false;
 		            check = compareExtension(check, extension);
 		            
-		            console.log("수정 시 동영상 확장자     ::    " + extension);
-
 		            if (!check) {
 		            	document.getElementById("file1").files[0] = "";
 			        	alert("<spring:message code ='ezBoard.hsb05' />");
@@ -92,7 +90,6 @@
 	                	fd.append("file1", document.getElementById("form").file1.files[0]);
 			        }
 		            
-		         //   fd.append("mode", document.getElementById("mode").value);
 		            xhr = new XMLHttpRequest();
 		            xhr.addEventListener("load", uploadComplete, false);
 		            xhr.open("POST", "/ezBoard/boardMovieUpload.do?mode=MOVIE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
@@ -110,9 +107,6 @@
                 
                 if (ImgaeReturnXml != "") {
                     nodes = SelectNodes(ImgaeReturnXml, "ROOT/NODES/NODE");
-/* 
-                    rtnMode = getNodeText(GetChildNodes(nodes[0])[5]);
-                    movieFileName = getNodeText(GetChildNodes(nodes[0])[0]); // THUMBNAILNAME (s_{GUID})*/
                     
                     var rtnMode = getNodeText(GetChildNodes(nodes[0])[5]); // MODE
     	            var movieFileName = getNodeText(GetChildNodes(nodes[0])[0]); // THUMBNAILNAME (s_{GUID})
@@ -137,13 +131,11 @@
 		        xhr2 = new XMLHttpRequest();
 	            xhr2.open("POST", "/ezBoard/boardMovieThumb.do?thumbnailID=" + movieFileName + "&fileLimit=" + AttachLimit, false);
 	            xhr2.send(fd2);
-			    
-	            console.log(thumbnail);
-                
+	            
                 var strXML = "";
                 strXML = "<DATA>";
                 strXML += "<NODE>";
-                strXML += "<IMAGEID>" + movieID + "</IMAGEID>"; // 기존 IMAGEID를 조건으로 걸어 PHOTO테이블 업데이트하므로
+                strXML += "<IMAGEID>" + movieID + "</IMAGEID>"; // 기존 IMAGEID(movieID)를 조건으로 걸어 PHOTO테이블 업데이트
                 strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
                 if (moviePath == undefined) {
                     strXML += "<FILEPATH></FILEPATH>";
@@ -185,12 +177,6 @@
 	            var movieFileName = getNodeText(GetChildNodes(nodes[0])[0]); // THUMBNAILNAME (s_{GUID})
 	            var movieUniqueID = getNodeText(GetChildNodes(nodes[0])[6]); // UNIQUEID ({GUID})
 	            
-	            console.log("동영상 임시 업로드 이후");
-		        console.log(nodes.length);
-		        console.log(ImgaeReturnXml);
-		        console.log("rtnMode    ::    " + rtnMode);
-		        console.log("movieFileName    ::    " + movieFileName);
-
 	            document.getElementById("mainVideo").src = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(movieUniqueID);
 	            document.getElementById("mainVideo").name = movieUniqueID;
 	        }
@@ -245,13 +231,10 @@
 			    var canvas = document.createElement("CANVAS");
 			    var video = document.getElementById(videoID);
 			 	// 썸네일 이미지의 크기는 71.4px * 50px
-			 	// png가 네모의 좌측상단에 붙어서? 생성되므로 캔버스 트기를 조정한다.
 			 	canvas.width = 71.4;
 			 	canvas.height = 50;
 			    canvas.getContext("2d").drawImage(video, 0, 0, 71.4, 50);
-			 	
-			 	console.log(video);
-			 	
+			    
 			 	return canvas.toDataURL();
 			}
    		</script>

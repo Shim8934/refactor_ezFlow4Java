@@ -1079,8 +1079,10 @@
 	
 	                    if (ret[2] == "3" || ret[2] == "4") {
 	                        window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
-	                    }
-	                    else {
+	                    } else if (ret[2] == "7") {
+	                    	feature = GetOpenWindowfeature(765, 700);
+	                    	window.open("/ezBoard/newBoardItemMovie.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+	                    } else {
                             window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 	                    }
 	                }
@@ -1098,8 +1100,10 @@
 	                var feature = GetOpenWindowfeature(765, 820);
 	                if (ret[2] == "3" || ret[2] == "4") {
 	                    window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
-	                }
-	                else {
+	                } else if (ret[2] == "7") {
+                    	feature = GetOpenWindowfeature(765, 700);
+                    	window.open("/ezBoard/newBoardItemMovie.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+                    } else {
                         window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 	                }
 	            }

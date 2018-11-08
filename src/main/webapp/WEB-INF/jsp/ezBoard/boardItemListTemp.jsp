@@ -927,7 +927,7 @@
 		            if(ret[2] == "3" || ret[2] == "4") {
 		                window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 		            } else if (ret[2] == "7" ) {
-						var feature = GetOpenWindowfeature(765, 679);
+						var feature = GetOpenWindowfeature(765, 700);
 	                	window.open("/ezBoard/newBoardItemMovie.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 	                } else {
 	                    window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
@@ -941,6 +941,7 @@
 		        if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
 		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
 		        } else if (obj.getAttribute("DATA10") == "7" ) {
+		        	feature = GetOpenWindowfeature(765, 700);
 		        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
 		        } else {
 	                window.open("/ezBoard/boardNewItem.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");

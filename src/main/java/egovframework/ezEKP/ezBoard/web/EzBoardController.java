@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -3845,8 +3844,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		logger.debug("newBoardItem ended");
-		
-		logger.debug("requestURL    ::    " + requestURL);
 		return requestURL;
 	}
 	
@@ -4466,8 +4463,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		mode = request.getParameter("mode");
 		boardID = request.getParameter("boardID");
 		
-		logger.debug("게시물삭제 컨트롤러진입 mode     ::    " + mode);
-		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
 		String result = ezBoardService.deleteItem(itemList, mode, boardID, realPath, userInfo, boardInfo);
@@ -4592,7 +4587,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		if (boardInfo.getGuBun() != null && boardInfo.getUrl() != null && (boardInfo.getGuBun().equals("2") || !boardInfo.getUrl().trim().equals("") || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4"))) {
+		if (boardInfo.getGuBun() != null && boardInfo.getUrl() != null && (boardInfo.getGuBun().equals("2") || !boardInfo.getUrl().trim().equals("") || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4") || boardInfo.getGuBun().equals("7"))) {
 			result = "<RESULT>anonyboard</RESULT>";
 		} else if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
 			result = "<RESULT>attributeextension</RESULT>";
@@ -5712,15 +5707,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		Document doc = commonUtil.convertStringToDocument(resultXML);
 		String mainImageID = doc.getElementsByTagName("MAINIMAGEID").item(0).getTextContent();
 		
-		logger.debug("::1");
-		
 		BoardPropertyVO boardInfo = getBoardInfo(doc.getElementsByTagName("BOARDID").item(0).getTextContent(), userInfo);
 		
 		if (boardInfo.getWrite_FG().equals("false")) {
 			return "<RESULT>INACCESSIBLE</RESULT>";
 		}
-		
-		logger.debug("::2");
 		
 		if (guBun.equals("3") || guBun.equals("4") || guBun.equals("7")) {
 			itemIDs = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
@@ -5734,12 +5725,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			mode = "New";
 		}
 		
-		logger.debug("::3");
-		
 		doc.getElementsByTagName("ITEMID").item(0).setTextContent(itemID[0]);
 		doc.getElementsByTagName("UPPERITEMIDTREE").item(0).setTextContent(itemID[0]);
-		
-		logger.debug("::4");
 		
 		result = ezBoardService.newItemPhoto(doc, mode, realPath, userInfo, mainImageID);
 
@@ -6336,9 +6323,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		int startRow = (page - 1) * boardInfo.getSs_board_maxRows() + 1;
 		int endRow = page * boardInfo.getSs_board_maxRows();
 		
-		// 예약게시물 표출 시, companyID로 조건을 준다.
 		List<BoardListVO> reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getCompanyID(), userInfo.getTenantId());
-		// 예약게시물 카운트 시, companyID로 조건을 준다.
 		totalCount = ezBoardService.getReservedItemListCount(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (reservedList == null && page > 1) {
@@ -8327,7 +8312,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String thumbnailName = "";
 		long fileSize = 0;
 		
-		MultipartFile multiFile = null; // 동영상과 썸네일을 저장한다.
+		MultipartFile multiFile = null;
 		
 		if (mode.equals("MOVIE")) { // 동영상 업로드
 			multiFile = request.getFile("file1");
@@ -8347,16 +8332,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			File file1 = new File(s_imagePath);
 			
 			if (file.exists()) {
-				
-				logger.debug("삭제1");
-				
 				deleteFile(imagePath);
 			}
 			
 			if (file1.exists()) {
-				
-				logger.debug("삭제2");
-				
 				deleteFile(s_imagePath);
 			}
 			
@@ -8413,17 +8392,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			uniqueName = guid + "." + extension;
 			thumbnailName = "s_" + guid + "." + extension;
 			
-			
-			logger.debug("uniqueName(동영상)     ::    " + uniqueName);
-			logger.debug("serverPath(동영상)     ::    " + serverPath);
-			
-			
 			writeUploadedFile(multiFile, uniqueName, serverPath);
 			
-			logger.debug("::동영상 임시파일 생성 완료(서버의 fileroot 내에 생성됨)");
 			resultUpload = "true";
 			
-			// 임시로 업로드한 동영상 파일을 boardNewItemMovie.jsp로 되돌려준다.
 			strXML.append("<NODE><THUMBNAILNAME><![CDATA[" + thumbnailName + "]]></THUMBNAILNAME>");
 			strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
 			strXML.append("<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>");
@@ -8463,10 +8435,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		dirPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());	
 		serverPath = dirPath + commonUtil.separator;
 		
-		logger.debug("serverPath(썸네일 생성)     ::    " + serverPath);
-		logger.debug("multiFile in thumbCreate    ::    " + thumbFile);
-		logger.debug("serverPath + thumbnailID in thumbCreate    ::    " + serverPath + thumbnailID);
-		
 		File file = new File(serverPath);
 		
 		if (!file.exists()) {
@@ -8481,13 +8449,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			pFileLimit = "2";
 		}
 		
-		// 썸네일을 만들어서 저장하자!(thumbnailName 사용)
-		logger.debug("::썸네일 파일 만들어서 저장하기 시작");
-		
 		thumbnailID = thumbnailID.substring(0, thumbnailID.lastIndexOf(".") + 1) + "png";
 		
 		File movieFile = new File(serverPath + thumbnailID);
-		//writeUploadedFile(multiFile.get(i), thumbnailID, serverPath);
 		BufferedImage bi = null;
 		String[] base64Arr = thumbFile.split(",");
 		byte[] imageByte = Base64.decodeBase64(base64Arr[1]);
@@ -8496,17 +8460,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		bi = ImageIO.read(bis);
 		bis.close();
 
-		ImageIO.write(bi, "png", movieFile); // 파일생성
-		
-		logger.debug("::썸네일 생성, 업로드 완료");
+		ImageIO.write(bi, "png", movieFile);
 		
 		resultUpload = "true";
 		
-		// 임시로 업로드한 동영상 파일을 boardNewItemMovie.jsp로 되돌려준다.
 		strXML.append("<NODE><THUMBNAILNAME><![CDATA[" + thumbnailID + "]]></THUMBNAILNAME>");
 		strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
 		strXML.append("</NODE>");
-
 		strXML.append("</NODES></ROOT>");
 
 		logger.debug("MovieThumbUpload ended");
@@ -8659,8 +8619,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (filePath != null && !filePath.equals("")) {
 			logger.debug("filePath : " + filePath + "|| fileName : " + fileName);
-			logger.debug("realPath + filePath      ::       " + realPath + filePath);
-			
 			downFile(request, response, realPath + filePath, fileName);
 		}
 
@@ -8689,7 +8647,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String guBun = request.getParameter("guBun");
-		String g_ImageUrl = "";
+		String movieUrl = "";
 		String moviePath = "";
 		int imageCnt = 10;
 		int pStartRow = (page - 1) * imageCnt + 1;
@@ -8702,10 +8660,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String filePath = movieList.get(0).getFilePath();
 		int idx = filePath.lastIndexOf(commonUtil.separator);
 		
-		g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1);
-		logger.debug("g_ImageUrl    ::   " + g_ImageUrl);
-		
-		moviePath = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[7].replace("s_", "");
+		movieUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1);
+		moviePath = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + movieUrl.split("/")[7].replace("s_", "");
 		
 		model.addAttribute("movieID", movieID);
 		model.addAttribute("moviePath", moviePath);
@@ -8714,8 +8670,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("guBun", guBun);
 		
-		logger.debug("moviePath     ::    "  + moviePath);
-
 		logger.debug("modifyMovieItem ended");
 		return "ezBoard/boardModifyMovieItem";
 	}

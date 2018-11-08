@@ -547,8 +547,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
-		logger.debug("동영상 수정 시 map     ::     " + map.toString());
-		
 		ezBoardDAO.photoListUpdate(map);
 		
 		if (mainFg.equals("Y")) {
@@ -661,9 +659,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		ezBoardDAO.deleteBoardItem(map);
 		ezBoardDAO.deleteBoardReply(map);
 		ezBoardDAO.deleteBoardItemRead2(map);
-		
-		logger.debug("게시물 삭제 시 map     ::    " + map.toString());
-		logger.debug("게시물 삭제 시 mode     ::    " + mode);
 		
 		if (mode != null && (mode.equals("PHOTO") || mode.equals("MOVIE"))) {
 			BoardListVO boardListVO = new BoardListVO();
@@ -2317,8 +2312,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		String strFilePath = "";
 		
-		logger.debug("photoSaveDB에 전달된 구분값     ::   " + boardListVO.getGuBun());
-		
 		// 포토게시판, 썸네일게시판
 		if (!boardListVO.getGuBun().equals("7")) {
 			for (int i = 0; i < boardListVO.getImageCount(); i++) {
@@ -2362,10 +2355,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			File file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
 			File s_file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + tempFilePath);
-			logger.debug("photosaveDB의 strFilePath(1)     ::     " + strFilePath);
-			logger.debug("photosaveDB의 strFilePath(s_file)     ::     " + s_file);
-		
-			// 썸네일파일의 고유 ID는 동영상 파일과 같고, 파일명에 's_'가 추가된 .png 파일임
+			
+			// 썸네일파일의 고유 ID는 동영상 파일과 같고, 파일명에 's_'가 추가된 .png 파일
 			strFilePath = commonUtil.getUploadPath("upload_board.ROOT", boardListVO.getTenantID()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().replace("tempUploadFile", "");
 			tempFilePath = strFilePath.substring(0, strFilePath.lastIndexOf("{")) + "s_";
 			tempFilePath += strFilePath.substring(strFilePath.lastIndexOf("{"), strFilePath.length());
@@ -2373,8 +2364,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			File mvFile = new File(boardListVO.getRealPath() + commonUtil.separator + strFilePath);
 			File s_mvfile = new File(boardListVO.getRealPath() + commonUtil.separator + tempFilePath);
-			logger.debug("photosaveDB의 strFilePath(2)     ::     " + strFilePath);
-			logger.debug("photosaveDB의 strFilePath(s_mvfile)     ::     " + s_mvfile);
+			
 			if(!mvFile.exists()){
 				FileUtils.copyFile(file, mvFile);
 			}
@@ -3042,6 +3032,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		try {
 			BoardListVO boardListVO = new BoardListVO();
+
 			boolean saveMHTResult = false;
 			
 			boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
@@ -3112,8 +3103,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 			}
 			
-			logger.debug("::mht 저장 이후");
-			
 			if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
 				boardListVO.setHasAttach("1");
 			} else {
@@ -3128,8 +3117,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardListVO.setImagePath(doc.getElementsByTagName("IMAGE_ID").item(0).getTextContent());
 			boardListVO.setImageContent(doc.getElementsByTagName("CONTENT2").item(0).getTextContent());
 			boardListVO.setImageNames(doc.getElementsByTagName("IMAGE_FILENAME").item(0).getTextContent());
-						
-			logger.debug("::DB저장 이전");
+			
 			/* 2018-11-06 홍승비 - 포토/썸네일/동영상게시판 구분용 설정 추가 */
 			if (doc.getElementsByTagName("GUBUN").item(0).getTextContent() != null) {
 				boardListVO.setGuBun(doc.getElementsByTagName("GUBUN").item(0).getTextContent());

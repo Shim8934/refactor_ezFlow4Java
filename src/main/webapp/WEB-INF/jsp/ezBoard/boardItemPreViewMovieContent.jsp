@@ -45,7 +45,6 @@
 		    var Delete_FG = "${boardInfo.delete_FG}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var pReservedItem = "";
-		    var g_progresswin;
 		    var OneLineReplyFlag = "";
 			var gubun = "${boardInfo.guBun}";
 		    var ImageCount = "";
@@ -59,14 +58,10 @@
 		    var imagetotalcount = "";
 		    var imgWidth = "57px";
 		    var imgHeight = "37px";
+		    
 		    window.onresize = window_resize;
 		    window.onload = function () {
 		        imageViewInit();
-		        
-		        if (g_progresswin) {
-		        	g_progresswin.close();
-		        }
-		        
 		        window_resize();
 		    }
 		    
@@ -90,12 +85,6 @@
 	            return "{" + result + "}";
 	        }
 	        
-	        function ImageUrl(pUrl, cnt) {
-	            var link = "/myoffice/Common/ImgFileRead.asp?PUrl=" + pUrl + "&Cnt=" + cnt;
-	
-	            return link;
-	        }
-	
 	     // 한줄답변 코드 주석처리
 	       /* function CheckIfHasReplies() {
 	            var xmlhttp = createXMLHttpRequest();
@@ -276,7 +265,7 @@
 	        }
 	
 	        function ImageViewTable(result) {
-	            var xmldom = createXmlDom();           
+	            var xmldom = createXmlDom();
 	            xmldom = loadXMLString(result);
 	            
                 moviePath = getNodeText(xmldom.getElementsByTagName("FILEPATH")[0]);

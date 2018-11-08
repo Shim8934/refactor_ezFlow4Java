@@ -347,7 +347,6 @@
 	                chkURLBoard.checked = false;
 	                chkMovieBoard.checked = false;
 	            }
-	            
 	            /* 2018-11-05 홍승비 - 동영상게시판 구분 추가 */
 	            if (event.srcElement.id == "chkMovieBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
@@ -358,7 +357,6 @@
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
 	            }
-	            
 	            if (event.srcElement.id == "chkQnABoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
 	           //     chkGroupBoard.checked = false;
