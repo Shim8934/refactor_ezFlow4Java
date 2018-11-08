@@ -269,7 +269,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("shareId=" + shareId);
 		
 		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
 				logger.debug("the user cannot access the shareId.");
 				shareId = null;
 			} else {
@@ -1291,7 +1291,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("shareId=" + shareId);
 		
 		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 2, userInfo.getTenantId())) {
 				logger.debug("the user cannot access the shareId.");
 			} else {
 				model.addAttribute("shareId", shareId);
@@ -2554,7 +2554,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("shareId=" + shareId);
 		
 		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
 				logger.debug("the user cannot access the shareId.");
 				logger.debug("mailInterAttach ended.");
 				
@@ -2811,7 +2811,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("shareId=" + shareId);
 		
 		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 2, userInfo.getTenantId())) {
 				logger.debug("the user cannot access the shareId.");
 				logger.debug("mailInterSend ended.");
 				

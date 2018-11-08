@@ -23,6 +23,8 @@
 			    var objLink = document.all("BigSizeFileLink");
 			    var memoFlag = "<c:out value='${memoFlag}' />";
 			    var shareId = "${shareId}";
+			    var deletePermission = "${deletePermission}";
+			    var sendPermission = "${sendPermission}";
 			    var mouseTop;
 			    
 			    if (objLink != null) {
@@ -47,6 +49,14 @@
 				    }
 					sizeBtnAppend();
 					sentDateView();
+					
+					if (shareId != "" && deletePermission != "Y") {
+						var divsToHide = document.getElementsByClassName("icon_rbtn");
+						
+					    for(var i = 0; i < divsToHide.length; i++){
+					        divsToHide[i].style.display = "none";
+					    }
+					}
 					
 					if(memoFlag === "YES") {
 						/* 마우스 오른쪽 메뉴 변수 */

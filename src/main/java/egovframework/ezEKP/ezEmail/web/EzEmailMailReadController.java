@@ -77,6 +77,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
@@ -158,7 +159,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 			userEmail = shareId + "@" + domainName;
+			
+			MailSharedMailboxUserVO shareVO = ezEmailService.getSharedMailboxPermissionInfo(shareId, loginInfo.getTenantId(), loginInfo.getId());
+			
 			model.addAttribute("shareId", shareId);
+			model.addAttribute("deletePermission", shareVO.getDeletePermission());
+			model.addAttribute("sendPermission", shareVO.getSendPermission());
 		}
 		
 		logger.debug("userEmail=" + userEmail);
@@ -561,7 +567,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			userEmail = shareId + "@" + domainName;
 			mailId = shareId;
+			
+			MailSharedMailboxUserVO shareVO = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
+			
 			model.addAttribute("shareId", shareId);
+			model.addAttribute("deletePermission", shareVO.getDeletePermission());
+			model.addAttribute("sendPermission", shareVO.getSendPermission());
 		}
 		
 		logger.debug("userEmail=" + userEmail);
@@ -1722,7 +1733,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			userEmail = shareId + "@" + domainName;
 			mailId = shareId;
 			
+			MailSharedMailboxUserVO shareVO = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
+			
 			model.addAttribute("shareId", shareId);
+			model.addAttribute("deletePermission", shareVO.getDeletePermission());
+			model.addAttribute("sendPermission", shareVO.getSendPermission());
 		}
 		
 		logger.debug("userEmail=" + userEmail);
@@ -2107,7 +2122,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("shareId=" + shareId);
 		
 		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 1, loginInfo.getTenantId())) {
 				logger.debug("the user cannot access the shareId.");
 				logger.debug("mailDelInterAttach ended.");
 				

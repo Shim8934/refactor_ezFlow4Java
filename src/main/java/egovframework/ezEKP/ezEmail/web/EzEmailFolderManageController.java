@@ -157,7 +157,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		logger.debug("shareId=" + shareId);
 		
 		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
 				logger.debug("the user cannot access the shareId.");
 				logger.debug("mailMakeFolder ended.");
 				

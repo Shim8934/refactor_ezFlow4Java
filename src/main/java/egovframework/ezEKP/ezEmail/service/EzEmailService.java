@@ -84,6 +84,17 @@ public interface EzEmailService {
 	public List<String> aliasMailCheck(String address) throws Exception;
 	public List<Map<String, String>> getUserSharedMailboxList(String userId, int tenantId) throws Exception;
 	public boolean checkUserShareId(String userId, String shareId, int tenantId) throws Exception;
+	/**
+	 * <pre>
+	 * 사용자의 공유사서함 사용 권한 체크
+	 * 
+	 * permissionType
+	 *   0: 공유자인지 체크
+	 *   1: 삭제(이동/복사 포함) 권한이 있는지 체크
+	 *   2: 메일 전송 권한이 있는지 체크
+	 *   3: 삭제(이동/복사 포함), 메일 전송 권한이 있는지 체크
+	 * </pre>
+	 */
 	public boolean checkUserShareId(String userId, String shareId, int permissionType, int tenantId) throws Exception;
 	public List<MailSharedMailboxVO> getSharedMailboxList(String compId, int tenantId) throws Exception;
 	public MailSharedMailboxVO getSharedMailboxInfo(String shareId, int tenantId) throws Exception;
