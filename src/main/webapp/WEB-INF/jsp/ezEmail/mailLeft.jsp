@@ -431,16 +431,20 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function folder_manager_after(RtnVal) {
-	            if (RtnVal) {
+	            if (RtnVal && shareId == "") {
 	                var href = PostTreeView.getvalue(1, "href");
-	                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(1, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(1, "href"));
 	                PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
 	                PostTreeView.update();
+	                
 	                if (PostTreeView.selectedIndex() == -1) {
 	                    PostTreeView.select(1);
 	                }
+	                
+	                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(1, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(1, "href"));
 	                window.open(url, "right");
+	                
 	                previewSubTreeCall();
+	            	detailView();
 	            }
 	        }
 	        
