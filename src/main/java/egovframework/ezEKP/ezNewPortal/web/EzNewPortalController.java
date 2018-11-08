@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -517,6 +518,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	}
 	
 	//테마 설정 화면 호출
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/userThemeSetting.do")
 	public String userThemeSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("userThemeSetting Start");
@@ -527,9 +529,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String settingUrl = "/rest/ezPortal/settingInfo/users/" + userId;
 		JSONObject settingResultBody = commonUtil.getJsonFromRestApi(settingUrl, null, req, "get", null);
 		String settingStatus = settingResultBody.get("status").toString();
-
+		String usedTheme = "";
+		
 		if (settingStatus.equals("ok")) {
 			JSONObject settingData = (JSONObject) settingResultBody.get("data");
+			usedTheme = settingData.get("usedTheme").toString();
 			model.addAttribute("usedTheme", settingData.get("usedTheme"));
 		}
 		
@@ -539,6 +543,20 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String themeStatus = themeResultBody.get("status").toString();
 		
 		if (themeStatus.equals("ok")) {
+			JSONArray themeList = (JSONArray) themeResultBody.get("data");
+			int themeListCount = themeList.size();
+			int userThemeMiddleIndex = themeListCount / 2;
+			
+			for (int i = 0; i < themeListCount; i++) {
+				JSONObject theme = (JSONObject) themeList.get(i);
+				String themeId = theme.get("themeId").toString();
+				
+				if (themeId.equals(usedTheme)) {
+					themeList.remove(i);
+					themeList.add(userThemeMiddleIndex, theme);
+				}
+			}
+			
 			model.addAttribute("themeList", themeResultBody.get("data"));
 		}
 		
