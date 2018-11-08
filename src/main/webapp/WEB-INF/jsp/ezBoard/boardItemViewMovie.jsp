@@ -432,10 +432,7 @@
 		            document.getElementById("mainVideo").src = moviePath;
 		            document.getElementById("mainVideo").setAttribute("movieid", movieID);
 		            document.getElementById("mainVideo").title = movieName;
-		            
-		            // 크롬은 가능하나, IE10~11에서는 불가능하다. 크로스브라우징 필요
-		            document.getElementById("movieDownload").href = moviePath;
-		            document.getElementById("movieDownload").download = movieName;
+		            document.getElementById("movieDownload").href = "/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(moviePath) + "&fileName=" + javaURLEncode(movieName);
 		        }
 		        
 		        function showHideLayers()
