@@ -869,9 +869,11 @@
         			alert("<spring:message code='ezEmail.jje04'/>");
         			return;
         		}
-        		
-	        	ShowMailProgressNew();
 	        	
+        		ShowMailProgressNew();
+	        	document.getElementById("MailProgress").style.backgroundColor = "";
+	        	document.getElementById("cancleProgressBtn").style.display = "none";
+        		
         		var data = new FormData();
         		data.append("folderid", g_moveUrl);
         		
