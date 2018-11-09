@@ -15,7 +15,14 @@
 		</div>
 	    <div class="box_shadow info_right" style="margin:0px; margin-left:7px">
 	        <dl class="info">
-	        	<dt class="infoImg"><img src="/images/ezNewPortal/theme3Img/my_pic.png"></dt>
+	        	<dt class="infoImg" <c:if test="${userPhoto ne null && userPhoto ne ''}">style="margin:0px"</c:if>>
+	        		<c:if test="${userPhoto eq null || userPhoto eq ''}">
+		        		<img src="/images/ezNewPortal/theme3Img/my_pic.png">
+	        		</c:if>
+	        		<c:if test="${userPhoto ne null && userPhoto ne ''}">
+		        		<img src="${userPhoto }">
+	        		</c:if>
+	        	
 	            <dd class="infoName">${userName }</dd>
 	            <dd class="infoTeam">${deptName }</dd>
 	            <dd class="infoMail">${userEmail }</dd>
