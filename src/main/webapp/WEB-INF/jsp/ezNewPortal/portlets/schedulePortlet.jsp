@@ -7,21 +7,45 @@
 <head>
 </head>
 <body>
-	<article class="box_shadow">
-	<div class="layDIV">
-		<dl class="portlet_title sortablePortlet">
-			<dt class="portletText">
-				<spring:message code='main.t203' />
-			</dt>
-			<dd class="portletPlus" onclick="goSchedule();">
-				<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
-			</dd>
-		</dl>
-		<div class="sCalendarArea">
-			<div id="CalendarMini" class="scalender"></div>
-			<div id="scheduleList" class="sschedule_list"></div>
-		</div>
-	</div>
-	</article>
+	<c:choose>
+		<c:when test="${usedTheme == 1}">
+			<article class="box_shadow">
+			<div class="layDIV">
+				<dl class="portlet_title sortablePortlet">
+					<dt class="portletText">
+						<spring:message code='main.t203' />
+					</dt>
+					<dd class="portletPlus" onclick="goSchedule();">
+						<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+					</dd>
+				</dl>
+				<div class="sCalendarArea">
+					<div id="CalendarMini" class="scalender"></div>
+					<div id="scheduleList" class="sschedule_list"></div>
+				</div>
+			</div>
+			</article>
+		</c:when>
+		<c:when test="${usedTheme == 3}">
+			<article class="schedule_small box_shadow schedule_calendar">
+				<div class="layDIV">
+					<div class="sCalendarArea">
+						<div id="CalendarMini" class="scalendar"></div>
+					</div>
+				</div>
+			</article>
+			
+			<article class="schedule_small box_shadow schedule_scheduleList">
+				<div class="layDIV">
+					<div class="sCalendarArea">
+						<div id="scheduleList" class="sschedule_list"></div> 
+					</div>
+				</div>
+			</article>
+		</c:when>
+		<c:otherwise>
+			
+		</c:otherwise>
+	</c:choose>
 </body>
 </html>
