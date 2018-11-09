@@ -153,8 +153,14 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public FileVO getFileDetailForExplorer(Map<String, Object> map) {
 		return (FileVO) select("EzWebFolderDAO_y.getFileDetailForExplorer", map);
 	}
+	
 	// 폴더 상세 정보 탐색기지원
 	public FileVO getFolderDetailForExplorer(Map<String, Object> map) {
 		return (FileVO) select("EzWebFolderDAO_y.getFolderDetailForExplorer", map);
+	}
+	
+	// 파일 overWrite 기능 (탐색기 지원)
+	public int updateFileRealData (Map<String, Object> map ) {
+		return update("EzWebFolderDAO_y.updateFileRealData", map);
 	}
 }
