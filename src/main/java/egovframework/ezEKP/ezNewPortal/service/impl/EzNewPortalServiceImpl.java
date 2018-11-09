@@ -1011,7 +1011,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			list = ezNewPortalDAO.getApprovalDoingList(map);
 			result.put("list", list);
 			
-			if (list != null) {
+			if (list.size() > 0) {
 				if (approvalFlag.equalsIgnoreCase("G")) {
 					map.put("code1", "A04");
 				} else {
