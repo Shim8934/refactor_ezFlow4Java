@@ -256,8 +256,13 @@ function MakeListInfoHTML(ConentObject) {
                 _TR.setAttribute("_contentclass", p_ContentClass);
                 _TR.setAttribute("_isdraft", p_IsDraft);
                 _TR.setAttribute("securemail", p_SecureMail);
-                _TR.setAttribute("draggable", true);
-                _TR.ondragstart = function () { drag(event) };
+                
+                if (shareId != "" && deletePermission != "Y") {
+                	_TR.setAttribute("draggable", false);
+                } else {
+                	_TR.setAttribute("draggable", true);
+                	_TR.ondragstart = function () { drag(event) };
+                }
             
                 var _TDCheckBox = document.createElement("TD");
                 _TDCheckBox.style.width = "22px";
@@ -437,9 +442,11 @@ function MakeListInfoHTML(ConentObject) {
                     	_TDColumSpan.style.padding = "7px 3px";
                     	_TDColumSpan.innerHTML = innerHTML;
                     	
-                    	if(useMailWriteSenderClick == "YES") {
-                    		_TDColumSpan.onclick = function (event) { event_senderNameClick(this.parentElement, event); };
-                    		_TDColumSpan.ondblclick = function (event) { event_senderNameDBClick(event); };
+                    	if (useMailWriteSenderClick == "YES") {
+                    		if (shareId == "" || (shareId != "" && sendPermission == "Y")) {
+                    			_TDColumSpan.onclick = function (event) { event_senderNameClick(this.parentElement, event); };
+                    			_TDColumSpan.ondblclick = function (event) { event_senderNameDBClick(event); };
+                    		}
                     	}
                     	
                     	_TR.lastChild.innerHTML = "";
@@ -1154,7 +1161,11 @@ function MailListRefreshByTimeout() {
 function MailListRefresh() {
 	ContextMenuHidden();
 	
-	parent.frames["left"].detailView();
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		parent.frames["left"].detailView(shareId);
+	} else {
+		parent.frames["left"].detailView();
+	}
     
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
         goToPageByNum(MailList.getAttribute("curPage"));

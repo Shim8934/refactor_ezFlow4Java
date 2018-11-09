@@ -570,23 +570,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * PC에서 메일 가져오기 화면 호출 함수
-	 */
-	@RequestMapping(value="/ezEmail/mailImport.do")
-	public String mailImport(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		logger.debug("mailImport started.");
-		
-		String browser = ClientUtil.getClientInfo(request, "browser");
-		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
-		
-		model.addAttribute("isCrossBrowser", isCrossBrowser);
-		
-		logger.debug("mailImport ended.");
-		
-		return "ezEmail/mailImport";
-	}
-	
-	/**
 	 * PC에서 메일 가져오기 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailImportUpload.do", produces = "text/plain; charset=utf-8")
@@ -602,6 +585,21 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
+		
+		String shareId = request.getParameter("shareId");
+		logger.debug("shareId=" + shareId);
+		
+		if (shareId != null) {
+			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("mailImportUpload ended.");
+				
+				return "";
+			}
+			
+			userEmail = shareId + "@" + domainName;
+		}
+		
 		logger.debug("userEmail=" + userEmail);
 		
 		List<MultipartFile> multiFile = request.getFiles("file1");
@@ -694,6 +692,21 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
+		
+		String shareId = request.getParameter("shareId");
+		logger.debug("shareId=" + shareId);
+		
+		if (shareId != null) {
+			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("mailImportUploadX ended.");
+				
+				return "";
+			}
+			
+			userEmail = shareId + "@" + domainName;
+		}
+		
 		logger.debug("userEmail=" + userEmail);
 		
 		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),

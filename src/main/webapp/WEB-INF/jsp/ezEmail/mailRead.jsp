@@ -53,6 +53,8 @@
 		    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간
 		    var dotNetIntegration = "${dotNetIntegration}";
 		    var shareId = "${shareId}";
+		    var deletePermission = "${deletePermission}";
+		    var sendPermission = "${sendPermission}";
 		    
 		    window.onresize = window_onresize;
 		    
@@ -100,7 +102,20 @@
 		        	document.getElementById("HolderSent").style.display = "none";
 		            document.getElementById("HolderElse").style.display = "";
 		        }
-		        		        
+		        
+		        if (shareId != "" && sendPermission != "Y") {
+		        	btnReply.style.display = "none";
+		        	btnAllReply.style.display = "none";
+		        	btnForward.style.display = "none";
+		        	liReSend.style.display = "none";
+		        	HolderSent.style.display = "none";
+		        }
+		        
+		        if (shareId != "" && deletePermission != "Y") {
+		        	btnMove.style.display = "none";
+		        	btnDelete.style.display = "none";
+		        }
+		        
 		        try{
 		            if(ReadCountCheck=="N")
 		            {

@@ -108,7 +108,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		logger.debug("shareId=" + shareId);
 		
 		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
 				logger.debug("the user cannot access the shareId.");
 			} else {
 				model.addAttribute("shareId", shareId);
@@ -147,7 +147,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		logger.debug("shareId=" + shareId);
 		
 		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
 				logger.debug("the user cannot access the shareId.");
 				logger.debug("mailGetReceiveList ended.");
 				
@@ -415,7 +415,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		logger.debug("shareId=" + shareId);
 		
 		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
 				logger.debug("the user cannot access the shareId.");
 				logger.debug("mailCancelSend ended.");
 				

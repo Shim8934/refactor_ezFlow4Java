@@ -100,6 +100,8 @@
 		    var importExportMode = false;
 		    var useCountryIP = "${useCountryIP}";
 		    var shareId = "${shareId}";
+		    var deletePermission = "${deletePermission}";
+		    var sendPermission = "${sendPermission}";
 		    var systemCountryCode = "${systemCountryCode}";
 		    var useShowSystemCountry = "${useShowSystemCountry}";
 		    
@@ -182,10 +184,37 @@
 		            	break;
 		        }
 		        
-		        if (g_foldertype != "sent" && g_foldertype != "draft" && shareId == "") {
+		        if (g_foldertype != "sent" && g_foldertype != "draft") {
 		        	btnReject.style.display = "";
 		        }
 				
+		        if (shareId != "") {
+		        	btnReject.style.display = 'none';
+		        }
+		        
+		        if (shareId != "" && sendPermission != "Y") {
+		        	newMailBtn.style.display = 'none';
+		        	reply.style.display = 'none';
+		        	replyAllBtn.style.display = 'none';
+		        	liReSend.style.display = 'none';
+		        	relayBtn.style.display = 'none';
+		        	receivecheck.style.display = 'none';
+		        	replyAllMenu.style.display = 'none';
+		        	relayMenu.style.display = 'none';
+		        	replyMenu.style.display = 'none';
+		        }
+		        
+		        if (shareId != "" && deletePermission != "Y") {
+		        	importBtn.style.display = 'none';
+		        	moveBtn.style.display = 'none';
+		        	trashBtn.style.display = 'none';
+		        	deleteone.style.display = 'none';
+		        	deleteall.style.display = 'none';
+		        	moveMenu.style.display = 'none';
+		        	theBody.onkeyup = function(){};
+		        	theBody.onkeydown = function(){};
+		        }
+		        
 		        pMailListDiv = pPreviewWList;
 		        pMailPreVDiv = pPreviewWContent;
 		        pMailListDiv_H = pPreviewHList;
@@ -875,6 +904,67 @@
 				
 			}
 	        
+	        function mail_import_onclick() {
+	        	document.getElementById("file").value = "";
+	        	document.getElementById("file").click();
+	        }
+	        
+	        function mail_import() {
+        		var input = document.getElementById("file");
+        		
+        		if (input.value == "") {
+        			return;
+        		}
+        		
+        		var fileCount = input.files.length;
+        		
+        		if (fileCount > 100) {
+        			alert("<spring:message code='ezEmail.jje04'/>");
+        			return;
+        		}
+	        	
+        		ShowMailProgressNew();
+	        	document.getElementById("MailProgress").style.backgroundColor = "";
+	        	document.getElementById("cancleProgressBtn").style.display = "none";
+        		
+        		var data = new FormData();
+        		data.append("folderid", g_moveUrl);
+        		
+        		for (var i = 0; i < fileCount; i++) {
+        			data.append("file1", input.files[i]);
+        		}
+        		
+        		if (shareId != "") {
+        			data.append("shareId", shareId);
+        		}
+        		
+        		$.ajax({
+        			type: 'POST',
+        			enctype: 'multipart/form-data',
+        			url: '/ezEmail/mailImportUpload.do',
+        			data: data,
+        			processData: false,
+                    contentType: false,
+                    cache: false,
+        			success: function(result) {
+        				HiddenMailProgressNew();
+        				
+        				if (result == "OK") {
+        	                alert("<spring:message code='ezEmail.t403' />");
+        	                MailListRefresh();
+        	            } else if (result.indexOf("NO APPEND failed.") > -1) {
+        		        	alert(strLang241);
+        	            } else {
+        	            	alert("<spring:message code='ezEmail.t404' />");
+        	            }
+        			},
+        			error: function(e) {
+        				HiddenMailProgressNew();
+        				alert("<spring:message code='ezEmail.t404' />" + e.responseText);
+        			}
+        		});
+	        }
+	        
 			function mailbox_import() {
 				document.getElementById("file1").click();
 			}
@@ -980,19 +1070,20 @@
 	    </h1>	
         <div id="mainmenu">
         <ul id="tb_Parent">
-          <li><span onClick="new_mail_onclick()"><spring:message code="ezEmail.t510" /></span></li>
+          <li id="newMailBtn"><span onClick="new_mail_onclick()"><spring:message code="ezEmail.t510" /></span></li>
           <li id="reply"><span onClick="reply_mail_onclick()"><spring:message code="ezEmail.t511" /></span></li>
-          <li><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
+          <li id="replyAllBtn"><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
           <li id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
-          <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
+          <li id="relayBtn"><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
           <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
           <li id="read_stat"><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
           <li id="unread_stat"><span onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></span></li>
           <li onClick="mail_export();" id="EmailPCSave"><span><spring:message code="ezEmail.t378" /></span></li>
+          <li id="importBtn" onClick="mail_import_onclick();"><span><spring:message code="ezEmail.t407" /></span></li>
           <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="img_Newbtn"><spring:message code="ezEmail.t550" /></span></li>
-          <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
+          <li id="moveBtn"><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
           <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-          <li><span onClick="deleteWork(false)"><spring:message code="ezEmail.t95" /></span></li>
+          <li id="trashBtn"><span onClick="deleteWork(false)"><spring:message code="ezEmail.t95" /></span></li>
           <li id="deleteone"><span onClick="deleteWork(true)"><spring:message code="ezEmail.t156" /></span></li>
           <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>
           <li onClick="MailListRefresh()"><span class="img_Newbtn"><spring:message code="ezEmail.t515" /></span></li>
@@ -1156,13 +1247,13 @@
 		</div>
 		<div id="ContextMenuDiv" style="position:absolute;top:180px;z-index:6000;display:none;">
 		    <table cellpadding=2 cellspacing=1 border=0 style="width:150px;" class="popuplist">
-		    <tr>
+		    <tr id="replyAllMenu">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="all_reply_mail_onclick();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_reall.gif" alt=""  align="absmiddle" hspace="5"><spring:message code="ezEmail.t512" /></span></td>
 		    </tr>
-		    <tr>
+		    <tr id="relayMenu">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="transmission_mail_onclick();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_fw.gif" alt="" align="absmiddle" border="0" hspace="5"><spring:message code="ezEmail.t513" /></span></td>
 		    </tr>
-		    <tr>
+		    <tr id="replyMenu">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="reply_mail_onclick();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_mailreply.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.t511" /></span></td>
 		    </tr>
 		    <tr>
@@ -1171,7 +1262,7 @@
 		    <tr>
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="Read_StatusChange('U');HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/view-document.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t99000007" /></span></td>
 		    </tr>
-		    <tr>
+		    <tr id="moveMenu">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="move_mail_onclick();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/move.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.t482" /></span></td>
 		    </tr>
 		    <tr>
@@ -1212,6 +1303,7 @@
 				<input  type="hidden" name="shareId" value="${shareId}">
 			</c:if>
 		</form>
+	    <input type="file" name="file" id="file" accept=".eml" onchange="mail_import()" style="display: none;" multiple />
 		<iframe name="importMailboxIframe" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="importMailboxform" name="importMailboxform" enctype="multipart/form-data" target="importMailboxIframe">
 	        <input type="file" name="file1" id="file1" accept=".zip" onchange="mailbox_attach_import()" style="display: none"/>

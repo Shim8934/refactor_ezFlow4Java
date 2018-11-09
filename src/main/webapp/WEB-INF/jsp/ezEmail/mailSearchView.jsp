@@ -811,6 +811,7 @@
 			  <li><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
 			  <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
 			  <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
+			  <li><span onClick="mail_export()"><spring:message code="ezEmail.t378" /></span></li>
 			  <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
 			  <li><span onClick="deleteWork()"><spring:message code="ezEmail.t95" /></span></li>
 			  <li><span onClick="delete_mail()"><spring:message code="ezEmail.t156" /></span></li>

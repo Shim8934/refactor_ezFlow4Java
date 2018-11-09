@@ -59,6 +59,7 @@ import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
+import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -2508,6 +2509,179 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		logger.debug("setSharedMailboxUsers ended.");
 		return result;
+	}
+	
+	@Override
+	public JSONArray selectAllSignatureTemplate(String companyId, String tenantId) throws Exception {
+		logger.debug("selectAllSignatureTemplate started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId);
+		
+		String tenantStr = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		String companyIdStr = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
+		String inputParams = companyIdStr + "&" + tenantStr;
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMailSignatureTemplate", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONArray json = new JSONArray();
+		
+		if (!strJson.equals("")){
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+			
+			json = (JSONArray) object.get("result");
+			
+			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1 || json.size() <= 0) {
+				//throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("selectAllSignatureTemplate ended.");
+		
+		return json;
+		
+	}
+	
+	@Override
+	public JSONArray selectSearchSignatureTemplate(String companyId, String tenantId, String search, String userLang) throws Exception {
+		logger.debug("selectSearchSignatureTemplate started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ", search=" + search + ",userLang=" + userLang);
+		
+		String tenantStr = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		String companyIdStr = "tenantId=" + URLEncoder.encode(tenantId, "UTF-8");
+		String searchStr = "search=" + URLEncoder.encode(search, "UTF-8");
+		String userLangStr = "userLang=" + URLEncoder.encode(userLang, "UTF-8");
+		String inputParams = companyIdStr + "&" + tenantStr + "&" + searchStr + "&" + userLangStr;
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getSearchMailSignatureTemplate", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONArray json = new JSONArray();
+		
+		if (!strJson.equals("")){
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+			
+			json = (JSONArray) object.get("result");
+			
+			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1 || json.size() <= 0) {
+				//throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("selectSearchSignatureTemplate ended.");
+		
+		return json;
+	}
+	
+	@Override
+	public void deleteSignatureTemplate(String signNo) throws Exception {	
+		logger.debug("deleteSignatureTemplate started. signNo=" + signNo);
+		
+		String signNoStr = "signNo=" + URLEncoder.encode(signNo, "UTF-8");
+		
+		String inputParams = signNoStr;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/deleteSignatureTemplate", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK")) {
+        	throw new Exception("JGwServer ERROR");
+        }
+        
+        logger.debug("deleteSignatureTemplate ended.");
+        
+	}
+	
+	@Override
+	public JSONArray selectOneSignatureTemplate(String signNo) throws Exception {
+		logger.debug("selectOneSignatureTemplate started.");
+		logger.debug("signNo=" + signNo);
+		
+		String signNoStr = "signNo=" + URLEncoder.encode(signNo, "UTF-8");
+		String inputParams = signNoStr;
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getOneSignatureTemplate", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONArray json = new JSONArray();
+		
+		if (!strJson.equals("")){
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+			
+			json = (JSONArray) object.get("result");
+			
+			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1 || json.size() <= 0) {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("selectOneSignatureTemplate ended.");
+		
+		return json;
+	}
+	
+	@Override
+	public void addSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception {
+		logger.debug("addSignatureTemplate started. signTemplate=" + signTemplate);
+		
+		String companyIdStr = "companyId=" + URLEncoder.encode(signTemplate.getCompanyId(), "UTF-8");
+		String tenantIdStr = "tenantId=" + URLEncoder.encode(signTemplate.getTenantId(), "UTF-8");
+		String displaynameStr = "displayname=" + URLEncoder.encode(signTemplate.getDisplayname(), "UTF-8");
+		String displayname2Str = "displayname2=" + URLEncoder.encode(signTemplate.getDisplayname2(), "UTF-8");
+		String contentStr = "content=" + URLEncoder.encode(signTemplate.getContent(), "UTF-8");
+		
+		String inputParams = companyIdStr + "&" + tenantIdStr + "&" + displaynameStr + "&" + displayname2Str + "&" + contentStr;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/insertSignatureTemplate", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK")) {
+        	throw new Exception("JGwServer ERROR");
+        }
+        
+        logger.debug("addSignatureTemplate ended.");
+	}
+	
+	@Override
+	public void setSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception {
+		logger.debug("setSignatureTemplate started. signTemplate=" + signTemplate);
+		
+		String displaynameStr = "displayname=" + URLEncoder.encode(signTemplate.getDisplayname(), "UTF-8");
+		String displayname2Str = "displayname2=" + URLEncoder.encode(signTemplate.getDisplayname2(), "UTF-8");
+		String contentStr = "content=" + URLEncoder.encode(signTemplate.getContent(), "UTF-8");
+		String signNoStr = "signNo=" + URLEncoder.encode(signTemplate.getSignNo(), "UTF-8");
+		
+		String inputParams = displaynameStr + "&" + displayname2Str + "&" + contentStr + "&" + signNoStr;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/updateSignatureTemplate", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK")) {
+        	throw new Exception("JGwServer ERROR");
+        }
+        
+        logger.debug("setSignatureTemplate ended.");
+        
 	}
 	
 	@Override

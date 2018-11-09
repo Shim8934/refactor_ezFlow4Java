@@ -52,6 +52,7 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -104,11 +105,20 @@ public class EzEmailMailListController {
 		String dispname = request.getParameter("dispname");
 		String url = request.getParameter("url");
 		url = (url != null) ? url : "INBOX";
-		String shareId = request.getParameter("shareId");
 		
-		logger.debug("dispname=" + dispname + ",url=" + url + ",shareId=" + shareId);
+		logger.debug("dispname=" + dispname + ",url=" + url);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String shareId = request.getParameter("shareId");
+		logger.debug("shareId=" + shareId);
+		
+		if (shareId != null) {
+			MailSharedMailboxUserVO shareVO = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
+			model.addAttribute("shareId", shareId);
+			model.addAttribute("deletePermission", shareVO.getDeletePermission());
+			model.addAttribute("sendPermission", shareVO.getSendPermission());
+		}
 		
 		String folderName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		String folderType = "";
@@ -194,7 +204,6 @@ public class EzEmailMailListController {
 		model.addAttribute("useMailNewWindow", useMailNewWindow); 
 		model.addAttribute("sentFolderId", ezEmailUtil.getSentFolderId(locale));
 		model.addAttribute("useCountryIP", useCountryIP);
-		model.addAttribute("shareId", shareId);
 		model.addAttribute("systemCountryCode", systemCountryCode);
 		model.addAttribute("useShowSystemCountry", useShowSystemCountry);
 
@@ -994,7 +1003,7 @@ public class EzEmailMailListController {
 			logger.debug("shareId=" + shareId);
 	        
 	        if (shareId != null) {
-				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("mailDelete ended.");
 					
@@ -1140,7 +1149,7 @@ public class EzEmailMailListController {
 			logger.debug("shareId=" + shareId);
 	        
 	        if (shareId != null) {
-				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("mailMoveCopyMessage ended.");
 					
