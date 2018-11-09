@@ -26,16 +26,10 @@
 		<div id="birthcount" style="display: none;">
 			<ul class="birthList" id="birthdayList"></ul>
 		</div>
-		<div id="nodata_NewBirthday" style="">
-			<dl class="nodata">
-				<dt style="padding-top: 33px">
-					<img src="/images/ezNewPortal/nodata.png">
-				</dt>
-				<dd>
-					"
-					<spring:message code='main.t00026' />
-					"
-				</dd>
+		<div id="nodata_NewBirthday">
+			<dl class='nodata'>
+				<dt><img src='/images/kr/main/nodata.png'></dt>
+				<dd><spring:message code='main.t00026' /></dd>
 			</dl>
 		</div>
 	</div>
