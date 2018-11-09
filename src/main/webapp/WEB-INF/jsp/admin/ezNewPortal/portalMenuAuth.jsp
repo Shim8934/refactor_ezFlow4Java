@@ -22,6 +22,20 @@
 			.selectTR{
 				background-color: rgb(237, 244, 253);
 			}
+			/* switch */
+			.switch {position: absolute;display: inline-block;width: 60px;height: 22px;margin-top:-10px;}
+			.switch input {opacity: 0;width: 0;height: 0;}
+			.slider {  position: absolute;  cursor: pointer;  top: 0;  left: 0;  right: 0;  bottom: 0;  background-color: #ccc;  -webkit-transition: .4s;  transition: .4s;}
+			.slider:before {  position: absolute;  content: "";  height: 13px;  width: 13px;  left: 8px;  bottom: 5px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
+			input:checked + .slider {  background-color: #2196F3;}
+			input:focus + .slider { box-shadow: 0 0 1px #2196F3;}
+			input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transform: translateX(26px);transform: translateX(26px);}
+			/* Rounded sliders */
+			.slider.round {border-radius: 15px;}
+			.slider.round:before {border-radius: 50%;}
+			
+			.nameTD {width:70%;}
+			.authTD {position:relative;}
 	    </style>
 	</head>
 	<body class="popup" style="overflow: hidden;"> 
@@ -415,24 +429,29 @@
 	   			selUserId = $(elem).attr("id");
 	   			selUserName = $(elem).attr("name");
 	   			selDeptId = $(elem).attr("deptId");
+	   			console.log(selUserId);
 	   			//user / dept 구분
 	   		}
 	   		
 	   		// 선택한 사람을 수신자에 추가
 	   		function setAuthorViewUser() {
+	   			console.log(selUserId);
 	   			if (selUserId != "" && selUserId != undefined) {
 		   			var receiverId = selUserId;
 		   			var chkFlag = true;
 		   			userName = selUserName;
+	   				var userDeptName = $(".jstree-clicked").text();
+	   				var menuId = "<c:out value='${menuId}'/>";
+	   				var userType = true;
 	   				
-		   			for(var i = 0; i < receiverList.length; i++) {
-		   				if (receiverList[i].userId == receiverId) {
+		   			for(var i = 0; i < menuAuths.length; i++) {
+		   				if (menuAuths[i].userId == receiverId) {
 		   					chkFlag = false;
 		   				}
 		   			}
 		   			
 		   			if (chkFlag) {
-						receiverList.push({"userName" : userName, "userId" : receiverId});
+		   				menuAuths.push({"userName" : userName, "userId" : receiverId, "userDeptName" : userDeptName, "menuId" : menuId, "userType" : userType});
 		   			} else {
 		   				alert("<spring:message code='ezJournal.t127'/>");
 		   			}
@@ -457,7 +476,8 @@
 		    }
 	   		
 	   		var drawAuths = function() {
-	   			var authsHTML = "";
+	   			var authsHTML = "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
+	   			authsHTML += "<tr><th class='nameTD'>이름(부서)</th><th class='authTD'>권한</th></table>";
 	   			
 				menuAuths.forEach(function(item, index) {
 					authsHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
@@ -469,7 +489,7 @@
 					authsHTML += " data-userType=" + item.userType;
 					authsHTML += " data-accessYN=" + item.accessYN;
 					authsHTML += " onclick='setMainListUserAuthorDept(this)' ondblclick='deleteAuth()'>";
-					authsHTML += "<td>";
+					authsHTML += "<td class='nameTD'>";
 					
 					if (item.userType) {
 						authsHTML += item.userName;
@@ -480,18 +500,24 @@
 					
 					authsHTML += "</td>";
 					
-					authsHTML += "<td>";
+					authsHTML += "<td class='authTD'>";
 					
 					if (item.accessYN === true) {
-						authsHTML += "접근";
+						authsHTML += "<label class='switch'><input type='checkbox' checked><span class='slider round'></span></label>";
 					} else {
-						authsHTML += "거부";
+						authsHTML += "<label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
 					}
 					
 					authsHTML += "</td>";
 				});
 	   			
 	   			document.getElementById("authList").innerHTML = authsHTML;
+	   			
+	   			$("input[type='checkbox']").change(function() {
+	   				var isChecked = $(this).is(":checked");
+	   				var userId = $("#authList").find(".selectTR").attr("data-id");
+	   				
+	   			});
 		    }
 	   		
 	   		function applyReceiver() {
