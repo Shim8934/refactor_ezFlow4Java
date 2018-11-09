@@ -31,16 +31,26 @@
                 </dl>
             </div>
             <div class="personal_content">
-            	<dl class="time">
-                	<dt>현재시간</dt>
-                    <dd id="timeFlow"></dd>
-                </dl>
-                <dl class="commute commute_on">
-                	<dt>08:45</dt>
-                </dl>
-                <dl class="commute">
-                	<dt>퇴근</dt>
-                </dl>
+            <c:choose>
+            	<c:when test="${useAttitude eq 'YES' }">
+	             	<dl class="time">
+	                	<dt>현재시간</dt>
+	                    <dd id="timeFlow"></dd>
+	                </dl>
+	                <dl class="commute">
+	                	<dt id="inAttiBtn" class="out" type="A01" datetype="2" onclick="checkHoliday(this)">출근</dt>
+	                </dl>
+	                <dl class="commute">
+	                	<dt id="outAttiBtn" class="out" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</dt>
+	                </dl>            	
+            	</c:when>
+            	<c:otherwise>
+	            	<dl class="time commuteNone">
+	                	<dt>현재시간</dt>
+	                    <dd id="timeFlow"></dd>
+	                </dl>            	
+            	</c:otherwise>
+            </c:choose>
             </div>
         </article>
         <div class="schedule">
@@ -176,35 +186,35 @@
                         <dl class="writebannerDL">
                             <dt><img src="/images/ezNewPortal/theme2Img/writebanner01.png" alt="새메일"></dt>
                             <dt>새메일</dt>
-                            <dd>9</dd>
+                            <dd id="unreadMailCount">0</dd>
                         </dl>
                     </li>
                     <li>
                         <dl class="writebannerDL">
                             <dt><img src="/images/ezNewPortal/theme2Img/writebanner02.png" alt="결재문서"></dt>
                             <dt>결재문서</dt>
-                            <dd class="count0">0</dd>
+                            <dd id="approvalCount">0</dd>
                         </dl>
                     </li>
                     <li>
                         <dl class="writebannerDL">
                             <dt><img src="/images/ezNewPortal/theme2Img/writebanner03.png" alt="오늘일정"></dt>
                             <dt>오늘일정</dt>
-                            <dd>9</dd>
+                            <dd id="scheduleCount">0</dd>
                         </dl>
                     </li>
                     <li>
                         <dl class="writebannerDL">
                             <dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="전자설문"></dt>
                             <dt>전자설문</dt>
-                            <dd class="count0">0</dd>
+                            <dd id="pollCount">0</dd>
                         </dl>
                     </li>
                     <li>
                         <dl class="writebannerDL">
                             <dt><img src="/images/ezNewPortal/theme2Img/writebanner05.png" alt="회람판"></dt>
                             <dt>회람판</dt>
-                            <dd>9</dd>
+                            <dd id="circularCount">0</dd>
                         </dl>
                     </li>
                     <li>
@@ -219,12 +229,12 @@
         </div>
         <article class="excellentemployee">
         	<p><span>이달의</span><span class="blue">우수사원</span></p>
-            <div class="excellentcontent">
+            <div class="excellentcontent" id="excellentcontent">
                 <dl>
-                    <dt><img src="/images/ezNewPortal/theme2Img/excellent_pic.png"></dt>
+                    <dt id="emPic"></dt>
                     <dd><img src="/images/ezNewPortal/theme2Img/icon_excellent.png"></dd>
                 </dl>
-                <p class="name"><span>UI/UX팀</span><span>홍길동</span></p>
+                <!-- <p class="name"><span>UI/UX팀</span><span>홍길동</span></p> -->
             </div>
         </article>
         <article class="event">
@@ -300,6 +310,11 @@
  	var timer;
  	var frameId = "<c:out value='${usedFrame}'/>";
  	
+ 	var quickLinkPage = {
+ 		current: 1,
+ 		total: 1,
+ 	}; 	
+ 	
  	window.onresize = function(event) {
  		frameSetting(frameId);
  	}
@@ -322,6 +337,172 @@
 			}
 		}
 	} 	
+	
+ 	var getQuickLink = function () {
+ 		var xhr = new XMLHttpRequest();
+ 		xhr.onload = function () {
+ 			if (xhr.status >= 200 && xhr.status < 300) {
+ 				var parseData = JSON.parse(xhr.responseText);
+ 				setQuickLinkList(parseData.data);
+ 			} else {
+ 				console.error(xhr.responseText);	
+ 			}
+ 		};
+ 		xhr.open('GET', '/ezNewPortal/getQuickLink.do?page='+quickLinkPage.current); 		
+ 		xhr.setRequestHeader('Content-Type', 'application/json');
+ 		xhr.send();
+ 	}	
+	
+ 	var setQuickLinkList = function (data) {
+ 		var quickList = data.quickLinkList;
+ 		var totalCnt = data.totalPageCnt;
+ 		
+ 		quickLinkPage.total = totalCnt;
+ 		
+ 		var quickUl = document.getElementById('QuickUl');
+ 		
+ 		// 현재 리스트를 갖고 있는 경우 삭제 후 진행
+ 		while (quickUl.hasChildNodes()) {
+ 			quickUl.removeChild(quickUl.firstChild);
+ 		}
+ 		
+		quickList.forEach(function (item, index) {
+			var li = document.createElement('li');
+			li.classList.add('linkText');
+			li.textContent = item.quickLinkName;
+			
+			// 이벤트 등록
+			li.addEventListener('click', function(){
+				// size가 FULL인 경우 vs 아닌 경우
+				if(item.size === 'FULL') {
+					window.open(item.url, '_blank', '');
+				} else if (item.size.indexOf(':') > 0) {
+					var sizeArr = item.size.split(':');
+					var popupX = (window.screen.width / 2) - (sizeArr[0] /2);
+					var popupY = (window.screen.height / 2) - (sizeArr[1] /2);
+					var option = 'width='+sizeArr[0]+'px,height='+sizeArr[1]+'px, left='+popupX+', top='+popupY+', status = no, toolbar=no, menubar=no,location=no, resizable=0';
+					window.open(item.url, '_blank', option);
+				}
+			});
+			
+			quickUl.appendChild(li);
+		});
+		
+		// 퀵링크 페이지 					
+		var btnLay = document.getElementById('btnLay');
+		
+		// 현재 리스트를 갖고 있는 경우 삭제 후 진행
+ 		while (btnLay.hasChildNodes()) {
+ 			btnLay.removeChild(btnLay.firstChild);
+ 		}		
+		
+		var linkBtnPre = document.createElement('span');
+		linkBtnPre.classList.add('linkBtn_pre');
+		var preBtnImg = document.createElement('img');
+		
+		if(quickLinkPage.current*1 === 1) {
+			preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn_dis.png');
+			preBtnImg.setAttribute('id', 'preBtnDis');
+		} else {
+			preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn.png');
+			preBtnImg.setAttribute('id', 'preBtn');
+		}
+		
+		linkBtnPre.appendChild(preBtnImg);
+		
+		var linkBtnNext = document.createElement('span');
+		linkBtnNext.classList.add('linkBtn_next');
+		var nextBtnImg = document.createElement('img');
+		
+		if(quickLinkPage.current*1 === totalCnt*1) {
+			nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn_dis.png');
+			nextBtnImg.setAttribute('id', 'nextBtnDis');
+		} else {
+			nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn.png');
+			nextBtnImg.setAttribute('id', 'nextBtn');
+		}
+		
+		linkBtnNext.appendChild(nextBtnImg);
+		
+		btnLay.appendChild(linkBtnPre);
+		btnLay.appendChild(linkBtnNext);
+		
+		// 페이징 클릭 이벤트
+		var preBtn = document.getElementById('preBtn');
+		var nextBtn = document.getElementById('nextBtn');
+
+		if(preBtn !== null) {
+			preBtn.addEventListener('click', function () {
+				quickLinkPage.current = (quickLinkPage.current*1) - 1;
+				getQuickLink();
+			});	
+		}
+		
+		if(nextBtn !== null) {
+			nextBtn.addEventListener('click', function () {
+				quickLinkPage.current = (quickLinkPage.current*1) + 1;
+				getQuickLink();
+			});
+		}
+		
+ 	}	
+	
+	//월별 우수사원 정보 호출
+	var getMonthlyBestEmployeeTheme2 = function () {
+		$.ajax({
+			type : "POST",
+			url : "/ezNewPortal/getMonthlyBestEmployee.do",
+			dataType : "json",
+			success : function(result) {
+				var bestEmployee = result.bestEmployee;
+				var strHTML = "";
+				var excellentContent = document.getElementById('excellentcontent');
+				
+				if(bestEmployee === null) {
+					var emPic = document.getElementById('emPic');
+					
+					var img = document.createElement('img');
+ 					img.style.width = '100%';
+					img.style.height = '100%'; 
+					img.src = '\/images/ezNewPortal/bestEmployee_pic_none.png';
+
+					emPic.appendChild(img);
+					
+					var p = document.createElement('p');
+					p.className = 'name';
+
+					var spanDept = document.createElement('span');
+					spanDept.textContent = '데이터가 없습니다.';
+					
+					p.appendChild(spanDept);
+				} else {
+					var emPic = document.getElementById('emPic');
+					
+					var img = document.createElement('img');
+ 					img.style.width = '100%';
+					img.style.height = '100%';
+					img.src = bestEmployee.userImg;
+					
+					emPic.appendChild(img);
+					
+					var p = document.createElement('p');
+					p.className = 'name';
+
+					var spanDept = document.createElement('span');
+					spanDept.textContent = bestEmployee.userDeptName;
+					
+					var spanName = document.createElement('span');
+					spanName.textContent = bestEmployee.userName;
+					
+					p.appendChild(spanDept);
+					p.appendChild(spanName);
+				}
+
+				excellentContent.appendChild(p);
+				$(".emDL").append(strHTML);
+			}
+		});
+	}
  	
 	$(function() {
 		$("#featured").orbit();
@@ -406,7 +587,8 @@
 		getMonthlyBirthdayEmployees();
 		
 		//이달의 우수사원 불러오기
-		getMonthlyBestEmployee();
+		//getMonthlyBestEmployee();
+		getMonthlyBestEmployeeTheme2();
 		
 		//개인환경설정으로 이동 동작 연결
 		$("#personalEnv").on("click", viewPersonalEnv);

@@ -282,7 +282,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .mailGraph .mGraph_text span{ color:#999;}
 
 /* schedule */
-.schedule{padding:0px; overflow:hidden; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; height:240px;}
+.schedule{padding:0px; overflow:hidden; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; height:220px;}
 .CalendarArea{ overflow:hidden;}
 .CalendarArea .calender {width:75%; overflow:hidden; float:left; padding:14px 22px 0px 22px; box-sizing:border-box;}
 .calendar_mini_title{table-layout:fixed; text-align:center; height:25px; margin:0px 0px 4px 0px; padding:0px 8px;}
