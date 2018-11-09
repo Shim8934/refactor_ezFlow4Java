@@ -72,36 +72,39 @@ var selectMenu = function() {
 	if (portletId == "null") {
 		window.opener.document.getElementById("newPortletMenu").value = menuName;
 		window.opener.document.getElementById("newPortletMenu").setAttribute("value", menuName);
-		window.opener.document.getElementById("newPortletMenu").setAttribute("data1", menuId);
+		window.opener.document.getElementById("newPortletMenu").setAttribute("data2", menuId);
 
 		if (menuId == 4) {
-			window.opener.document.getElementById("newPortlet").querySelector(".setBoard").style.display = "table-row";
+			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "table-row";
+			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "none";
+			window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
+		} else {
+			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "none";
+			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "table-row";
+			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").value = "";
+			window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "";
+			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").setAttribute("data1", "");
+			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").setAttribute("value", "");
 		}
 		 
 	} else {
 		window.opener.document.getElementById("portletMenu" + portletId).value =  menuName;
 		window.opener.document.getElementById("portletMenu" + portletId).setAttribute("value", menuName);
-		window.opener.document.getElementById("portletMenu" + portletId).setAttribute("data1", menuId);
+		window.opener.document.getElementById("portlet" + portletId).setAttribute("data2", menuId);
 		
 		if (menuId == 4) {
-			var boardHTML = "<th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
-			boardHTML += "<input id='portletBoard" + portletId + "' type='text' readonly>";
-			boardHTML += "<div class='btnpositionJsp boardSetting'>";
-			boardHTML += "<a class='imgbtn boardSettingtBtn'>";
-			boardHTML += "<span>설정</span></a></div></td>";
-			
-			if (window.opener.document.getElementById("portlet" + portletId).querySelector(".boardNotUsed") != null) {
-				window.opener.document.getElementById("portlet" + portletId).querySelector(".boardNotUsed").innerHTML = boardHTML;
-				window.opener.document.getElementById("portlet" + portletId).querySelector(".boardNotUsed").classList.add("boardTR");
-				window.opener.document.getElementById("portlet" + portletId).querySelector(".boardNotUsed").classList.remove("boardNotUsed");
-				window.opener.document.getElementById("portlet" + portletId).setAttribute("data2", 4);
-				window.opener.$("#portlet" + portletId).find(".boardTR").find(".boardSettingtBtn").on("click", {"portletId" : portletId}, window.opener.openBoardTree);	
-			}
-			//window.opener.document.getElementById("portletBoard" + portletId).addEventListener("click", openBoardTree);
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").style.display = "table-row";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionTR").style.display = "none";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "/ezNewPortal/boardPortlet.do");
 		} else {
-			var boardHTML =  "<th class='portletInfoTH'>&nbsp;</th><td class='portletInfoTD'>&nbsp;<br/></td>";
-			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").innerHTML = boardHTML;
-			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").classList.add("boardNotUsed");
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").style.display = "none";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionTR").style.display = "table-row";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "");
+			window.opener.document.getElementById("portletBoard" + portletId).value = "";
+			window.opener.document.getElementById("portletBoard" + portletId).setAttribute("data1", "");
+			window.opener.document.getElementById("portletBoard" + portletId).setAttribute("value", "");
 		}
 	}
 	
