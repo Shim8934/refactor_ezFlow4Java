@@ -425,70 +425,13 @@
 		        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 		    }
 		    
-		    /* 2018-06-08 홍승비 - 사진 순서 정렬을 위한 이미지ID 조정 (000~999)  */
-		    function getZeroNum(count){
-		    	var zeroNum = "000" + count;
-		    	zeroNum = zeroNum.substring(zeroNum.length - 3);
-		    	return zeroNum;
-		    }
-		
 		    function CustomRandom() {
 		        var now = new Date();
 		        var seed = now.getMilliseconds();
 		        return Math.random(seed) + 1;
 		    }
 		     //
-		
-		    function onDragEnter(evt) {
-		        try{
-		            evt.dataTransfer.dropEffect = "copy";
-		            evt.stopPropagation();
-		            evt.preventDefault();
-		        }
-		        catch (e) {
-		            evt.dataTransfer.dropEffect = "none";
-		        }
-		    }
-		    function onDragOver(evt) {
-		        try{
-		            evt.dataTransfer.dropEffect = "copy";
-		            evt.stopPropagation();
-		            evt.preventDefault();
-		        }
-		        catch(e){
-		            evt.dataTransfer.dropEffect = "none";
-		        }
-		    }
-		    var xhr = null;
-		    function onDrop(evt) {
-		        try{
-		            evt.stopPropagation();
-		            evt.preventDefault();
-		
-		            if (isfileup) {
-		                alert("<spring:message code='ezBoard.t2000'/>");
-		                return;
-		            }
-		
-		            var file = evt.dataTransfer.files;
-		
-		            var fd = new FormData();
-		            for (var i = 0; i < file.length; i++) {
-		                fd.append("file1", file[i]);
-		            }
-		            
-		            isfileup = true;
-		            xhr = new XMLHttpRequest();
-		            xhr.upload.addEventListener("progress", uploadProgress, false);
-		            xhr.addEventListener("load", uploadComplete, false);
-		            xhr.open("POST", "/ezBoard/boardMovieUpload.do?mode=MOVIE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
-		            xhr.send(fd);
-		
-		            document.getElementById("progdiv").style.display = "";
-		        }
-		        catch(e){
-		        }
-		    }
+		     
 		    function uploadProgress(evt) {
 		        if (evt.lengthComputable) {
 		            var percentComplete = Math.round(evt.loaded * 100 / evt.total);
@@ -652,7 +595,7 @@
 	  </tr>
 	  <tr>
 	    <td colspan="4">
-	        <div id="addimagecontent" style="overflow:auto;width:100%;height:415px; vertical-align:top" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)"></div>
+	        <div id="addimagecontent" style="overflow:auto;width:100%;height:415px; vertical-align:top"></div>
 	    </td>
 	  </tr>
 	  <tr>

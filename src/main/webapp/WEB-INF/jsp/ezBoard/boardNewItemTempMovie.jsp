@@ -134,7 +134,6 @@
 				var movieID = getNodeText(xmldom.getElementsByTagName("IMAGEID")[0]);
 				var movieUniqueID = moviePath.substring(moviePath.lastIndexOf("/") + 1, moviePath.length);
 				var localFileName = getNodeText(xmldom.getElementsByTagName("IMAGENAME")[0]);
-				var movieContent = getNodeText(xmldom.getElementsByTagName("movieContent")[0]);
 				
 				moviePath = moviePath.split('/')[7];
 				
@@ -153,7 +152,7 @@
 				    saveImageId_main = movieID + " ";
 				}
 				
-				addMovieLine(moviePath, localFileName, movieUniqueID, movieContent);
+				addMovieLine(moviePath, localFileName, movieUniqueID, "");
 
                 attachXml += "</ROWS></LISTVIEWDATA>";  //pAttachListXml
 
@@ -176,7 +175,7 @@
 			    return ( orgStr.replace( re, replaceStr ) );
 		    }
 	
-	        function addMovieLine(moviePath, localFileName, movieUniqueID, movieContent)
+	        function addMovieLine(moviePath, localFileName, movieUniqueID, movieFileSize)
 	        {
 	            var movieid = moviePath;
                 tmpContents = new Array();
@@ -187,7 +186,7 @@
 
                 var resultHTML = "";
 				resultHTML = "<table width='100%' height='420px' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + movieid + "' name='" + moviePath + "' uniqueId='" + movieUniqueID + "' >" +
-				"<tr><td style='border-top:0 none; padding:6px; text-align:center;'><video id='" + movieid + "' title='" + localFileName + "' uniqueId='" + movieUniqueID + 
+				"<tr><td style='border-top:0 none; padding:6px; text-align:center;'><video id='" + movieid + "' title='" + localFileName + "' size='" + movieFileSize + "' uniqueId='" + movieUniqueID + 
 				"' style='width: 640px; height: 360px;' name='movieView' controls /></td></tr></table>";
 
                 var movieContent = document.getElementById("addimagecontent");
@@ -518,13 +517,6 @@
 		        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 		    }
 		    
-		    /* 2018-06-08 홍승비 - 사진 순서 정렬을 위한 이미지ID 조정 (000~999)  */
-		    function getZeroNum(count){
-		    	var zeroNum = "000" + count;
-		    	zeroNum = zeroNum.substring(zeroNum.length - 3);
-		    	return zeroNum;
-		    }
-		
 		    function CustomRandom() {
 		        var now = new Date();
 		        var seed = now.getMilliseconds();
@@ -532,56 +524,6 @@
 		    }
 		     //
 		
-		    function onDragEnter(evt) {
-		        try{
-		            evt.dataTransfer.dropEffect = "copy";
-		            evt.stopPropagation();
-		            evt.preventDefault();
-		        }
-		        catch (e) {
-		            evt.dataTransfer.dropEffect = "none";
-		        }
-		    }
-		    function onDragOver(evt) {
-		        try{
-		            evt.dataTransfer.dropEffect = "copy";
-		            evt.stopPropagation();
-		            evt.preventDefault();
-		        }
-		        catch(e){
-		            evt.dataTransfer.dropEffect = "none";
-		        }
-		    }
-		    var xhr = null;
-		    function onDrop(evt) {
-		        try{
-		            evt.stopPropagation();
-		            evt.preventDefault();
-		
-		            if (isfileup) {
-		                alert("<spring:message code='ezBoard.t2000'/>");
-		                return;
-		            }
-		
-		            var file = evt.dataTransfer.files;
-		
-		            var fd = new FormData();
-		            for (var i = 0; i < file.length; i++) {
-		                fd.append("file1", file[i]);
-		            }
-		            fd.append("mode", document.getElementById("mode").value);
-		            isfileup = true;
-		            xhr = new XMLHttpRequest();
-		            xhr.upload.addEventListener("progress", uploadProgress, false);
-		            xhr.addEventListener("load", uploadComplete, false);
-		            xhr.open("POST", "/ezBoard/boardMovieUpload.do?mode=MOVIE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
-		            xhr.send(fd);
-		
-		            document.getElementById("progdiv").style.display = "";
-		        }
-		        catch(e){
-		        }
-		    }
 		    function uploadProgress(evt) {
 		        if (evt.lengthComputable) {
 		            var percentComplete = Math.round(evt.loaded * 100 / evt.total);
@@ -597,19 +539,6 @@
 		        document.getElementById("file1").value = "";
 		        returnvalue(xhr.responseText);
 		        isfileup = false;
-		    }
-		    
-		    function GetBoardInfo() {
-		        var xmlhttp_boardinfo = createXMLHttpRequest();
-		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + pBoardID, false);
-		        xmlhttp_boardinfo.send();
-		        if (xmlhttp_boardinfo.status == 200) {
-		            pBoardName = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "BOARDNAME")[0]);
-		            AttachLimit = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "ATTACHLIMIT")[0]);
-		            ExpireDays = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "EXPIREDAYS")[0]);
-		            gubun = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "GUBUN")[0]);
-		        }
-		        xmlhttp_boardinfo = null;
 		    }
 		    
 		    /* 2018-11-05 홍승비 - HTML5 지원 동영상파일 확장자체크 추가 */
@@ -699,7 +628,7 @@
 	  </tr>
 	  <tr>
 	    <td colspan="4">
-	        <div id="addimagecontent" style="overflow:auto;width:100%;height:423px; vertical-align:top" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)"></div>
+	        <div id="addimagecontent" style="overflow:auto;width:100%;height:423px; vertical-align:top"></div>
 	    </td>
 	  </tr>
 	  <tr>

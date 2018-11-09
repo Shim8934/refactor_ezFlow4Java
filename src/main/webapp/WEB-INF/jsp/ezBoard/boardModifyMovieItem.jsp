@@ -180,37 +180,9 @@
 	            document.getElementById("mainVideo").src = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(movieUniqueID);
 	            document.getElementById("mainVideo").name = movieUniqueID;
 	        }
-	
-	        function S4() {
-	            return ((CustomRandom() * 0x10000) | 0).toString(16).substring(1);
-	        }
-	
-	        function GetGUID() {
-	            return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-	        }
-	
-	        function CustomRandom() {
-	            var now = new Date();
-	            var seed = now.getMilliseconds();
-	            return Math.random(seed) + 1;
-	        }
-	
-	        function MakeXMLString(str)
-		    {
-			    str = ReplaceText(str, "&", "&amp;");
-			    str = ReplaceText(str, "<", "&lt;");
-			    str = ReplaceText(str, ">", "&gt;");
-			    return str;
-		    }
-		    
-	        function ReplaceText( orgStr, findStr, replaceStr )
-		    {
-			    var re = new RegExp( findStr, "gi" );
-			    return ( orgStr.replace( re, replaceStr ) );
-		    }
-	        
+	       	
 	        function btn_movieChange() {
-				document.getElementById('mode').value = "PHOTO";
+				//document.getElementById('mode').value = "PHOTO";
 				document.form.file1.click();
 			}
 	        
@@ -268,15 +240,14 @@
 	        <tr>
 	            <td style="width:100%; height:250px; border:1px solid #ddd; padding:5px;background:#e5e5e5;" >
 	                <div class="viewbox" style="width:100%; border:0 none; padding:0; background:none;">
-	                	<%-- 2018-06-12 홍승비 - 사진수정 시 이미지 비율 유지 --%>
-		                    <table style="width:100%; min-height:241px;">
-		                        <tr>
-		                            <td style="text-align:center">
-		                                <span id='imagechange1' class='preView' style='display:none;' value=""></span>
-		                                <video src="${moviePath}" id="mainVideo" style="cursor:pointer;max-width:430px; min-height:241px;" controls />
-		                            </td>
-		                        </tr>
-		                    </table>
+						<table style="width:100%; min-height:241px;">
+	                        <tr>
+	                            <td style="text-align:center">
+	                                <span id='imagechange1' class='preView' style='display:none;' value=""></span>
+	                                <video src="${moviePath}" id="mainVideo" style="cursor:pointer;max-width:430px; min-height:241px;" controls />
+	                            </td>
+	                        </tr>
+	                    </table>
 	                </div>
 	            </td>
 	        </tr>

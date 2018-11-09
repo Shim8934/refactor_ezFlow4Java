@@ -455,21 +455,7 @@
 		            
 	                window.open("/ezBoard/modifyMovieItem.do?movieID=" + encodeURI(document.getElementById("mainVideo").getAttribute("movieid")) + "&boardID=" + encodeURI(pBoardID) + "&itemID=" + encodeURI(pItemID) + "&page=" + pPage + "&guBun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft, "");
 				}
-		
-		        function btn_Add_Onclick()
-		        {
-		            var swidth = 500;
-		            var sheight = 525;
-		
-		            var pwidth = window.screen.availWidth;
-		            var pheight = window.screen.availHeight;
-		            
-		            var pleft = (pwidth - swidth) / 2;
-		            var ptop = (pheight - sheight) / 2;
-		
-		            window.open("/ezBoard/addImageItem.do?&boardID=" + encodeURI(pBoardID) + "&itemID=" + encodeURI(pItemID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft , "");
-		        }
-		
+		        
 		        var photoalbumedit_dialogArguments = new Array();
 		        function btn_albumEdit()
 		        {
