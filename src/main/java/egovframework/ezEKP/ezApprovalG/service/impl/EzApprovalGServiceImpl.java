@@ -19742,6 +19742,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							resultXML.append("<DATA9>" + "0" + "</DATA9>");
 						}
 						
+						String formId = makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent());
+						
 						resultXML.append("<DATA10>" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "</DATA10>");
 						resultXML.append("<DATA11>" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "</DATA11>");
 						resultXML.append("<DATA12>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA12>");
@@ -19750,8 +19752,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						resultXML.append("<DATA15>" + makeListField(docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent()) + "</DATA15>");
 						resultXML.append("<DATA16>" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "</DATA16>");
 						//일괄결재로 인한 추가인데 위에 DATA17 겹침
-						resultXML.append("<DATA17>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA17>");
+						resultXML.append("<DATA17>" + formId + "</DATA17>");
 						resultXML.append("<orgCompanyID><![CDATA[" + makeListField(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "]]></orgCompanyID>");
+						
+						resultXML.append("<REFORMFLAG>" + (isReform(formId, companyID, tenantID) ? "Y" : "N") + "</REFORMFLAG>");
 					}
 					
 					if (fieldName.equals("HASATTACHYN")) {
