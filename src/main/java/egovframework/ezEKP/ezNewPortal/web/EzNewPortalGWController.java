@@ -176,6 +176,8 @@ public class EzNewPortalGWController {
 			String userTitle = "";
 			String deptName = "";
 			String userPhoto = "";
+			String lastLogin = commonUtil.getDateStringInUTC(info.getLastLogin(), info.getOffSet(), false);
+			//String lastLogin = info.getLastLogin();
 
 			// 회원정보 불러오기
 			if (portletLang.equals("1")) {
@@ -245,6 +247,8 @@ public class EzNewPortalGWController {
 			data.put("useMail", useMail);
 			data.put("useApproval", useApproval);
 			data.put("useSchedule", useSchedule);
+			data.put("lastLogin", lastLogin);
+			data.put("userEmail", info.getEmail());
 
 			result.put("status", "ok");
 			result.put("code", 0);
