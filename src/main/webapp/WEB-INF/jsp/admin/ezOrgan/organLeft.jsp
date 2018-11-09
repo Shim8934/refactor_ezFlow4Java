@@ -170,22 +170,22 @@
 		                		<span>
 		                			<span>
 		                        		<div class="node_div">
-				        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_myPortal"></span><span class="h2_text" id="Organ" onClick="goPage(1)" ><spring:message code='main.t56' /></span>
+				        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_admin_organization"></span><span class="h2_text" id="Organ" onClick="goPage(1)" ><spring:message code='main.t56' /></span>
 				        				</div>
 				        			</span>
 				        			<span>
 		                        		<div class="node_div">		
-				        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_myPortal"></span><span class="h2_text" id="CheckAdmin" onClick="goPage(12)" ><spring:message code='main.t00062' /></span>
+				        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_admin_organization"></span><span class="h2_text" id="CheckAdmin" onClick="goPage(12)" ><spring:message code='main.t00062' /></span>
 				        				</div>
 				        			</span>
 				        			<span>
 		                        		<div class="node_div">	
-				        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_myPortal"></span><span class="h2_text" id="Addjob" onClick="goPage(13)" ><spring:message code='main.t00063' /></span>
+				        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_admin_organization"></span><span class="h2_text" id="Addjob" onClick="goPage(13)" ><spring:message code='main.t00063' /></span>
 				        				</div>
 				        			</span>
 				        			<span>
 		                        		<div class="node_div">		
-				        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_myPortal"></span><span class="h2_text" id="JobInfo" onClick="goPage(31)"><spring:message code='ezOrgan.csj01' /></span>
+				        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_admin_organization"></span><span class="h2_text" id="JobInfo" onClick="goPage(31)"><spring:message code='ezOrgan.csj01' /></span>
 				        				</div>
 				        			</span>
 				        		</span>

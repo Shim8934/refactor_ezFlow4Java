@@ -6,7 +6,8 @@
 <head>
 </head>
 <body>
-	<article class="box_shadow">
+	<input type="hidden" value="${usedTheme }" id="usedTheme">
+	<article class="board box_shadow">
 		<div class="layDIV">
            <dl class="portlet_tab sortablePortlet" id="BoardTab"></dl>
            <ul class="portlet_list" id="BoardList"></ul>

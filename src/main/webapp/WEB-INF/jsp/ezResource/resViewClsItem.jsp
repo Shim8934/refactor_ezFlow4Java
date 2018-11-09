@@ -94,7 +94,7 @@
         				</tr>
       				</table>
       				<br>
-      				<h2><spring:message code="ezResource.t158"/></h2>
+      				<h2 style="font-size:12px;margin-bottom:8px"><spring:message code="ezResource.t158"/></h2>
       			</td>
   			</tr>
   			<tr>

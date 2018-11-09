@@ -10,7 +10,7 @@
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">weather Portlet (날씨)</dt>
 				<dd class="portletPlus">
-					<img src="/images/ezNewPortal/portlet_Plus.png">
+					<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
 				</dd>
 			</dl>
 		</div>

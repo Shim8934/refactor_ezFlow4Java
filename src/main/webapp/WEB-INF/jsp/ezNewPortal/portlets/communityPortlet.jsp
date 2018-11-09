@@ -9,7 +9,7 @@
 <head>
 </head>
 <body>
-	<article class="box_shadow">
+	<article class="community box_shadow">
 		<div class="layDIV">
 			<input type="hidden" id="CommuSize" value="${CommuSize}">
 			<dl class="portlet_title sortablePortlet">
@@ -17,7 +17,7 @@
 					<c:out value="${portletName }" />
 				</dt>
 				<dd class="portletPlus" id="communityPlus">
-					<img src="/images/kr/main/portlet_Plus.png">
+					<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
 				</dd>
 			</dl>
 			<div class="community_list">

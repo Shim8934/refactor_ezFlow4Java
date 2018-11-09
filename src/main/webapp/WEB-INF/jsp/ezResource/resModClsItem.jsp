@@ -306,11 +306,11 @@
 						</tr>
       				</table>
       				<br>
-					<h2><spring:message code="ezResource.t158"/></h2>
+					<h2 style="font-size:12px;margin-bottom:8px;"><spring:message code="ezResource.t158"/></h2>
 				</td>
   			</tr>
   			<tr>
-    			<td style="padding-bottom:1px; height:100%; padding-right:12px; padding-top:10px;">
+    			<td style="padding-bottom:1px; height:100%; padding-right:12px;">
         			<textarea name="Brd_Explain" id="Brd_Explain" style="width: 100%; height: 100%;resize:none" maxlength="2000"><c:out value='${brdExplain}' /></textarea>
     			</td>
   			</tr>

@@ -397,10 +397,10 @@
 		<div id="mainmenu">
   			<ul>
     			<c:if test="${adminFg eq 'Y'}">
-    				<li><span onClick="btnAdd_Click();"><spring:message code='ezResource.t363' /></span></li>
+    				<li class="important"><span onClick="btnAdd_Click();"><spring:message code='ezResource.t363' /></span></li>
     			</c:if>
     			<li><span onClick="btnModify_Click();"><spring:message code='ezResource.t364' /></span></li>
-    			<li><span onClick="btnDelete_Click();"><spring:message code='ezResource.t365' /></span></li>
+    			<li><span class="icon16 icon16_delete" onClick="btnDelete_Click();"></span></li>
     			<li><span onClick="btnCcalendar_Click();"><spring:message code='ezResource.t400' /></span></li>
   			</ul>
 		</div>
@@ -425,10 +425,10 @@
 	    					<td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></td>
 							<td onClick="Item_View('${list.brdID}');"	style="cursor: pointer; word-wrap:break-word;" align="left">
 								<c:if test="${list.approveFlag eq 0}">
-									<img src="../images/OrganTree_cross/ic-Item.gif">
+									<span class="sub_iconLNB tree_resource_standard" style="margin-top: 0px;"></span>
 								</c:if>
 								<c:if test="${list.approveFlag eq 1}">
-									<img src="../images/calendar/icon_resource_ok.png">
+									<span class="sub_iconLNB tree_resource_ok" style="margin-top: 0px;"></span>
 								</c:if>
 								<c:out value='${list.brdNm}' />
 							</td>
@@ -448,7 +448,7 @@
 				</c:if>
 				<c:if test="${empty resBrdList}">
 					<tr>
-	    				<td colspan="7" style="text-align: center"><spring:message code='main.t00026' /></td>
+	    				<td colspan="6" style="text-align: center"><spring:message code='main.t00026' /></td>
 	    			</tr>
 				</c:if>
 			</table>

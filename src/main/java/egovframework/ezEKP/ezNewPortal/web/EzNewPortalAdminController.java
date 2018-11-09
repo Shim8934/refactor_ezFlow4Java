@@ -1049,4 +1049,30 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			LOGGER.debug("updateCompanyDefaultTheme ended.");
 		}
 	}
+	
+	@RequestMapping(value = "/admin/ezNewPortal/deleteLogo.do")
+	@ResponseBody
+	public void deleteLogo(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("deleteLogo started.");
+
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+		
+		if (user == null) {
+			LOGGER.debug("deleteLogo accessDenied.");
+			
+		} else {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String userId = userInfo.getId();
+			String logoType = paramMap.get("logoType").toString();
+			String companyId = paramMap.get("companyId").toString();
+			
+			paramMap.put("userId", userId);
+			
+			String url = "/rest/admin/ezPortal/logos/" + logoType + "/companies/" + companyId;
+			System.out.println(url);
+			commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, request, "delete", null);
+			
+			LOGGER.debug("deleteLogo ended.");
+		}
+	}
 }

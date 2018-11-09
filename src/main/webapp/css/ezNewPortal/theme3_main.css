@@ -141,7 +141,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 /* layout */
 #Center {min-height:600px; margin:0px; min-width:1260px; background:url(/images/ezNewPortal/theme3Img/main_background.png) center top no-repeat; background-size:cover;}
 .section_left{  margin:0px; padding:0px; float:left; overflow:hidden; border-right:0px solid #cdcdcd; width:0px; box-sizing:border-box; background:#fff;}
-.section_main{ overflow:hidden; padding:0px 16px 0px 0px; float:none; min-width:880px; max-width:1920px; box-sizing:border-box;}
+.section_main{ overflow:hidden; padding:0px 16px 20px 0px; float:none; min-width:880px; max-width:1920px; box-sizing:border-box;}
 .section_main .mainLayout_left{ overflow:hidden; float:left; padding:0px 0px 0px 18px; box-sizing:border-box; }
 .section_main .mainLayout_middle{ overflow:hidden;  padding:0px 0px 0px 16px; float:left; box-sizing:border-box; }
 .section_main .mainLayout_right{ float:left; padding:0px 0px 0px 16px; box-sizing:border-box; overflow:hidden; }
@@ -151,12 +151,13 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .layDIV02{ height:520px; background:#fff; overflow:hidden; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} /* 장진혁 */
 
 /* box_shadow */
-.box_shadow{/*background: #fff;*/ padding:0px; margin:20px 0px 0px 16px; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); width:410px; height:250px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow: hidden; border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;} /*장진혁 */
+.box_shadow{/*background: #fff;*/ padding:0px; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); width:auto; height:250px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow: hidden; border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;} /*장진혁 */
 
 /* portlet_title */
 .portlet_title{ margin:0px; padding:0px; height:46px; line-height:44px; box-sizing:border-box; overflow:hidden; background:rgba(255,255,255,0.7);}
 .portlet_title .portletText{ margin:0px; padding:0px 0px 0px 20px; font-size:16px; color:#333; font-weight:bold; letter-spacing:-1px; float:left; overflow:hidden;}
 .portlet_title .portletPlus{ margin:0px; padding:0px; float:right; overflow:hidden; cursor:pointer;}
+.sortablePortlet:hover {cursor : move;}
 
 /* portlet_list */
 .portlet_list{ margin:0px; padding:12px 0px; list-style:none; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; background:#ffffff; height: inherit;} 
@@ -408,7 +409,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* vote */
 .vote{ overflow:hidden;}
-.vote_contents{background:#ffffff; padding:0px 0px 5px 0px;} /* 20181105 추가 */
+.vote_contents{background:#ffffff; padding:0px 0px 5px 0px; height: inherit;} /* 20181105 추가 */
 .voteTitle{ margin:0px 10px;; padding:10px 0px; text-align:left; font-size:13px; font-weight:bold; color:#333; letter-spacing:-0.5; float:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:80%;}
 .voteBtn{ margin:7px 10px 0px 0px; padding:2px 10px; float:right; font-size:12px; font-weight:bold; border:1px solid #bbb; background:line-gradient; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; cursor:pointer; color:#333;}
 .voteList{margin:0px 10px; padding:3px 0px; list-style:none; clear:both; overflow:hidden; border-top:1px solid #e3e3e3; height: inherit;}
@@ -441,6 +442,43 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .voteList .voteList_04 .voteGraph{ width:60%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#d5d5d5; overflow:hidden; margin:3px 0px 0px 0px;}
 .voteList .voteList_04 .voteGraph span{height:13px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#0dbeff;}
 .voteList .voteList_04 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
+.voteLay{height: inherit;}
+
+/* poll */
+.poll{ overflow:hidden;}
+.pollTitle{ margin:0px 10px;; padding:10px 0px; text-align:left; font-size:13px; font-weight:bold; color:#333; letter-spacing:-0.5; float:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:80%;}
+.pollBtn{ margin:7px 10px 0px 0px; padding:2px 10px; float:right; font-size:12px; font-weight:bold; border:1px solid #bbb; background:line-gradient; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; cursor:pointer; color:#333;}
+.pollList{margin:0px 10px; padding:3px 0px; list-style:none; clear:both; overflow:hidden; border-top:1px solid #e3e3e3; }
+.pollList li{ margin:0px 0px; padding:9px 0px;}
+.pollList .pollList_01{overflow:hidden; height:20px; line-height:20px; border-bottom:1px dashed #e5e5e5;}
+.pollList .pollList_01 .pollT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:22%; text-align:left;}
+.pollList .pollList_01 .pollT .Vnum{ margin:0px 3px 0px 0px; padding:1px 6px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#0470e4; font-size:13px; font-weight:bold; color:#fff;}
+.pollList .pollList_01 .pollT .Vtext{ font-size:13px; color:#555;}
+.pollList .pollList_01 .pollGraph{ width:60%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#d5d5d5; overflow:hidden; margin:3px 0px 0px 0px;}
+.pollList .pollList_01 .pollGraph span{height:13px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#0470e4;}
+.pollList .pollList_01 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
+.pollList .pollList_02{overflow:hidden; height:20px; line-height:20px; border-bottom:1px dashed #e5e5e5;}
+.pollList .pollList_02 .pollT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:22%; text-align:left;}
+.pollList .pollList_02 .pollT .Vnum{ margin:0px 3px 0px 0px; padding:1px 6px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#81bc3d; font-size:13px; font-weight:bold; color:#fff;}
+.pollList .pollList_02 .pollT .Vtext{ font-size:13px; color:#555;}
+.pollList .pollList_02 .pollGraph{ width:60%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#d5d5d5; overflow:hidden; margin:3px 0px 0px 0px;}
+.pollList .pollList_02 .pollGraph span{height:13px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#81bc3d;}
+.pollList .pollList_02 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
+.pollList .pollList_03{overflow:hidden; height:20px; line-height:20px; border-bottom:1px dashed #e5e5e5;}
+.pollList .pollList_03 .pollT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:22%; text-align:left;}
+.pollList .pollList_03 .pollT .Vnum{ margin:0px 3px 0px 0px; padding:1px 6px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#fa9900; font-size:13px; font-weight:bold; color:#fff;}
+.pollList .pollList_03 .pollT .Vtext{ font-size:13px; color:#555;}
+.pollList .pollList_03 .pollGraph{ width:60%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#d5d5d5; overflow:hidden; margin:3px 0px 0px 0px;}
+.pollList .pollList_03 .pollGraph span{height:13px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#fa9900;}
+.pollList .pollList_03 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
+.pollList .pollList_04{overflow:hidden; height:20px; line-height:20px;}
+.pollList .pollList_04 .pollT{ margin:0px; padding:0px 10px; float:left; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:22%; text-align:left;}
+.pollList .pollList_04 .pollT .Vnum{ margin:0px 3px 0px 0px; padding:1px 6px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#0dbeff; font-size:13px; font-weight:bold; color:#fff;}
+.pollList .pollList_04 .pollT .Vtext{ font-size:13px; color:#555;}
+.pollList .pollList_04 .pollGraph{ width:60%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#d5d5d5; overflow:hidden; margin:3px 0px 0px 0px;}
+.pollList .pollList_04 .pollGraph span{height:13px; display:block; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#0dbeff;}
+.pollList .pollList_04 .percent{ font-family:Gulim; float:right; padding:0px 10px 0px 0px; font-weight:bold; font-size:12px; color:#555; overflow:hidden;}
+.pollLay{height: inherit;}
 
 /* photo_board */
 .photo_board{}
@@ -510,7 +548,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 /* main media query */
 @media only screen and (min-width :1921px) {
-	.box_shadow{ width:483px; float:left;}
+	.portlet{ width:483px; float:left;}
 }
 
 @media only screen and (max-width :1920px) and (min-width :1686px) { 
@@ -518,8 +556,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_right{  width:33.3%;}
 	.section_main .mainLayout_left{ width:33.3%;}
 	.section_main .mainLayout_middle{ width:33.3%;}
-	.box_shadow{ width:32%; float:left;}
-	.bannerText{ padding:73px 18px 0px 0px;}
+	.portlet{ width:32%; float:left;}
+	/* .bannerText{ padding:73px 18px 0px 0px;} */
 }
 
 @media only screen and (max-width :1685px) and (min-width :1280px) {
@@ -527,7 +565,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_right{ clear:both; width:50%;}
 	.section_main .mainLayout_left{ width:50%;}
 	.section_main .mainLayout_middle{ width:50%;}
-	.box_shadow{width:48%; float:left;}
+	.portlet{width:48%; float:left;}
 	.vote{ margin:0px 2px; float:left; overflow:hidden;}
 	.stats_graph{ float:left; overflow:hidden;}
 	.groupware_banner{ float:left; margin-top:0px}
@@ -535,7 +573,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 }
 
 @media only screen and (max-width : 1279px) {
-	.box_shadow {width:410px; float:left;}
+	.portlet {width:410px; float:left;}
 }
 
 /* collaborate */

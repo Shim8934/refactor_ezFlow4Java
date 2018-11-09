@@ -5,12 +5,12 @@
 <head>
 </head>
 <body>
-	<article class="box_shadow">
+	<article class="notice box_shadow">
 	<div class="layDIV">
 		<dl class="portlet_title sortablePortlet">
 			<dt class="portletText">공지사항</dt>
 			<dd class="portletPlus" id="noticePlus">
-				<img src="/images/ezNewPortal/portlet_Plus.png">
+				<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
 			</dd>
 		</dl>
 		<ul class="noti_portlet_list" id="BoardList_NewBoard">

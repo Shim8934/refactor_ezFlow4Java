@@ -196,7 +196,6 @@
 <script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
 <!-- 일정관리 -->
 <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/schedulePortlet.js')}"></script>		
 <c:choose>
 	<c:when test="${checkBrowser == true}">
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_IEEIP.js')}"></script>
@@ -220,6 +219,7 @@
  	var birthdayTotalCount = 0;
  	var timer;
  	var frameId = "<c:out value='${usedFrame}'/>";
+ 	var usedTheme = "<c:out value='${usedTheme}'/>";
  	
  	var quickLinkPage = {
  		current: 1,
@@ -361,7 +361,7 @@
 				$.ajax({
 					type : "POST",
 					dataType : "html",
-					data : {"portletId" : portletId, "portletName" : portletName},
+					data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
 					url : portletUrl,
 					success : function(result) {
 						$("#" + portletId + "Portlet").append(result);

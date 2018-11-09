@@ -181,7 +181,7 @@
   			<div class="admin_left_title"><spring:message code="ezResource.t17" /></div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<div><h1 id="ToTitle" class="receiver_tltype01" style="border-bottom:0px;margin-left:8px;"><spring:message code="ezResource.t71" /></h1></div>
-	    		<div id="TreeView" valign="top" style="behavior:url(/js/ezResource/organtreeview.htc);
+	    		<div id="TreeView" valign="top" style="behavior:url(/js/ezResource/organtreeview.htc); height:250px; overflow-x:hidden;overflow-y:auto;
 	    			BORDER:#e4e8ec 1px solid; BACKGROUND-COLOR:#e4e8ec; margin-top:5px; margin-left:3px;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
 					onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" onclick="brdlistsInit()">
 				</div>

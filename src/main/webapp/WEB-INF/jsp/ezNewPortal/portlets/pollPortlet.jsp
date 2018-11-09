@@ -6,14 +6,16 @@
 </head>
 <body>
 	<article class="box_shadow">
-		<div class="layDiv">
+		<div class="layDiv pollLay">
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">설문조사</dt>
 				<dd class="portletPlus" id="pollPlus">
-					<img src="/images/ezNewPortal/portlet_Plus.png">
+					<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
 				</dd>
 			</dl>
+			<div class="vote_contents">
 			<div id="pollInfo"></div>
+			</div>
 		</div>
 	</article>
 </body>

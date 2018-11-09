@@ -975,6 +975,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		ezNewPortalDAO.updateCompanyDefaultTheme(map);
 		LOGGER.debug("updateCompanyDefaultTheme ended.");
 	}
+	
+	@Override
+	public void deleteCompanyLogo(String companyId, int tenantId, String logoType) {
+		LOGGER.debug("deleteCompanyLogo started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("logoType", logoType);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezNewPortalDAO.deleteCompanyLogo(map);
+		LOGGER.debug("deleteCompanyLogo ended.");
+	}
 	/**
 	 * 이효진
 	 */

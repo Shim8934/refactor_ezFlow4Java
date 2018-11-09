@@ -9,19 +9,20 @@
 <head>
 </head>
 <body>
-	<article class="box_shadow">
-		<div class="layDiv">
+	<article class="vote box_shadow">
+		<div class="layDiv voteLay">
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">
 					<c:out value="${portletName }" />
 					(<c:out value='${voteCount }' />)
 				</dt>
 				<dd class="portletPlus" id="votePlus">
-					<img src="/images/ezNewPortal/portlet_Plus.png">
+					<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
 				</dd>
 			</dl>
 			<c:choose>
 				<c:when test="${voteCount ne 0 }">
+					<div class="vote_contents">
 					<p class="voteTitle">
 						"<c:out value="${title }" />"
 					</p>
@@ -43,6 +44,7 @@
 							</c:if>
 						</c:forEach>
 					</ul>
+					</div>
 				</c:when>
 				<c:otherwise>
 					<ul class="portlet_list">
