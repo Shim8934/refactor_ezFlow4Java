@@ -47,7 +47,12 @@ function CalendarMiniView(pTagetID) {
 			mSpan.style.marginLeft = "6px";
 			mSpan.style.cursor = "pointer";
 			var mImg = document.createElement("IMG");
-			mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
+			
+	        if (Number($("#schedule_usedTheme").val()) === 3) {
+	        	mImg.setAttribute("src", "/images/ezNewPortal/theme3Img/calender_pre.png");
+	        } else {
+	        	mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
+	        }
 			mImg.setAttribute("border", "0");
 			mImg.setAttribute("onclick", "preMonth()");
 			mSpan.appendChild(mImg);
@@ -127,7 +132,11 @@ function CalendarMiniView(pTagetID) {
 			mSpan.style.marginRight = "15px";
 			mSpan.style.cursor = "pointer";
 			var mImg = document.createElement("IMG");
-			mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
+	        if (Number($("#schedule_usedTheme").val()) === 3) {
+	        	mImg.setAttribute("src", "/images/ezNewPortal/theme3Img/calender_next.png");
+	        } else {
+	        	mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
+	        }
 			mImg.setAttribute("border", "0");
 			mImg.setAttribute("onclick", "nextMonth()");
 			mSpan.appendChild(mImg);
