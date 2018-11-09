@@ -12,7 +12,7 @@ function ptlGetAttitudeList() {
 			for (var i = 0; i < result.length; i++) {
 				if (result[i].typeId == "A01") { //출근
  					$("#ptlInAttiBtn").attr("onclick", "").unbind("mouseenter");
-					$("#ptlInAttiBtn").removeClass("out").addClass("lateIn");
+					$("#ptlInAttiBtn").removeClass("out").addClass("in");
 					$("#ptlInAttiBtn dt").css("margin-bottom","5px");
 					$("#ptlInAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
 				} else if (result[i].typeId == "A02") { //지각
@@ -22,7 +22,8 @@ function ptlGetAttitudeList() {
 					$("#ptlInAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
 				} else if (result[i].typeId == "A03") { //퇴근
 					$("#ptlOutAttiBtn").attr("onclick", "").unbind("mouseenter");
-					$("#ptlOutAttiBtn").removeClass("out").addClass("lateIn");
+					$("#ptlOutAttiBtn").removeClass("out").addClass("in");
+					$("#ptlOutAttiBtn dt").css("margin-bottom","5px");
 					$("#ptlOutAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
 				}
 			}
