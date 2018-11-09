@@ -242,7 +242,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .main_time .timeCheckIn dt{margin:15px 0px 12px 0px; padding:0px;}
 .main_time .timeCheckIn dd{margin:0px; padding:0px;}
 .main_time .timeCheckOut{float:left; width:calc(50% - 1px); height:76px; margin:0px; padding:0px; color:#ffffff; font-size:13px; border-left:1px solid #ffffff; text-align:center; background:#45a8fb; cursor:pointer;}
-.main_time .timeCheckOut.in{font-size:18px; font-weight:bold; background:#45c3fb;}
+.main_time .timeCheckOut.in{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
 .main_time .timeCheckOut.in dd{margin:-4px 0px 0px 0px;}
 .main_time .timeCheckOut dt{margin:15px 0px 12px 0px; padding:0px;}
 .main_time .timeCheckOut dd{margin:0px; padding:0px;}
