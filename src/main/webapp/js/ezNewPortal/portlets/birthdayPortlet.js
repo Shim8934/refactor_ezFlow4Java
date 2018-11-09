@@ -3,53 +3,53 @@
  */
 //main.t00046	=	이달의 생일
 //main.t1002	=	월 생일자
-
-var birthMonth = Number($("#nowMonth").val());
-var birthCurPage = 0;
-var birthTotalCount = 0;
+var ptlTimer;
+var ptlBirthMonth = Number($("#nowMonth").val());
+var ptlBirthCurPage = 0;
+var ptlBirthTotalCount = 0;
 
 //생일자 목록 month 세팅
-function getMonthlyBirthday(event) {
+function ptlGetMonthlyBirthday(event) {
 	if (event  != undefined) {
 		var isNext = event.data.isNext;
 		
 		if (isNext) {
-			if (birthMonth === 12) {
-				birthMonth = 1;
+			if (ptlBirthMonth === 12) {
+				ptlBirthMonth = 1;
 			} else {
-				birthMonth += 1;
+				ptlBirthMonth += 1;
 			}
 		} else {
-			if (birthMonth === 1) {
-				birthMonth = 12;
+			if (ptlBirthMonth === 1) {
+				ptlBirthMonth = 12;
 			} else {
-				birthMonth -= 1;
+				ptlBirthMonth -= 1;
 			}
 		}
 	}
 	
-	birthCurPage = 0;
+	ptlBirthCurPage = 0;
 	getBirthdayList();
 }
 //생일자 불러오기
 function getBirthdayList() {
-	window.clearTimeout(timer);
+	window.clearTimeout(ptlTimer);
 	
 	$.ajax({
 		type : "POST",
 		url : "/ezNewPortal/getMonthlyBirthdayEmployees.do",
 		dataType : "json",
-		data : {"birthdayMonth" : birthMonth, "birthdayCurPage" : birthCurPage, "birthdayCount" : 6},
+		data : {"birthdayMonth" : ptlBirthMonth, "birthdayCurPage" : ptlBirthCurPage, "birthdayCount" : 6},
 		success : function(result) {
-			birthdayTotalCount = result.birthdayTotalCount;
+			ptlBirthTotalCount = result.birthdayTotalCount;
 			
-			if (birthCurPage != 0) {
-				birthCurPage = result.birthdayCurPage;
+			if (ptlBirthCurPage != 0) {
+				ptlBirthCurPage = result.birthdayCurPage;
 			}
 			
 			var birthdayList = result.birthdayList;
 			
-			var birth = birthMonth;
+			var birth = ptlBirthMonth;
 			
 			if (birth < 10) {
 				birth = "0" + birth;
@@ -89,12 +89,12 @@ function getBirthdayList() {
 				$("#birthcount").css("display", "none");
 			}
 			// 프로젝트 종료 시 주석 해제
-/*			timer = window.setInterval(function() {
-				if (birthdayTotalCount > 6) {
-					birthdayCurPage++;
-					getBirthdayEmployeesList();
+			ptlTimer = window.setInterval(function() {
+				if (ptlBirthTotalCount > 6) {
+					ptlBirthCurPage++;
+					getBirthdayList();
 				}
-			}, 5000);*/
+			}, 5000);
 		},
 		error : function() {
 			alert(messages.strLang2);

@@ -357,7 +357,11 @@
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
 			
-			(function (portletId, portletUrl, portletName) {
+			console.log('id',portletId);
+			console.log('url',portletUrl);
+			console.log('name',portletName);
+			
+  			(function (portletId, portletUrl, portletName) {
 				$.ajax({
 					type : "POST",
 					dataType : "html",
