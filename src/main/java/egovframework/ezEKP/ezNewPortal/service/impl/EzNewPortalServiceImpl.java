@@ -1152,6 +1152,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
+		if ((boolean)map.get("themeDefault")) {
+			ezNewPortalDAO.updateThemeDefault(map);
+		}
+		
 		ezNewPortalDAO.updateThemeInfo(map);
 		
 		for (Object item : frameInfos) {
