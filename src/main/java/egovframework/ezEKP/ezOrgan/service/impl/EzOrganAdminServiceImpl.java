@@ -416,7 +416,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
     		
     		map.put("timeUTC", timeUTC);
+    		map.put("v_EXTATTR15", "0");
     		
+    		// 사원이동 시 트리뷰순서값을 0으로 세팅
+    		ezOrganAdminDao.updateDBData_addjobmasterOrder(map); // 겸직되어있는 사용자 트리뷰순서값 1씩 증가
+			ezOrganAdminDao.updateDBData_userOrder(map); // 원부서 사용자 트리뷰순서값 1씩 증가
 	    	ezOrganAdminDao.moveGroupUser_U(map);
 	    	
 	    	/**
@@ -1125,7 +1129,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_DEPTID", pDeptID);
             		map.put("v_TITLE1", sTitle1);
             		map.put("v_TITLE2", sTitle2);
-            		map.put("v_EXTATTR15", "-1");
+            		map.put("v_EXTATTR15", "0");
             		map.put("v_PARENTCN", pDeptID);
                     
             		String bizmekaResult = "ERROR";
@@ -1150,11 +1154,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     					}
     					
         				if ((pDeptID != null && !pDeptID.equals("")) || (sTitle1 != null && !sTitle1.equals(""))) {
-        					ezOrganAdminDao.setAddJob_I(map);
+        					
         					// 겸직 시 조직도에서 트리뷰순서값 0으로 수정(맨 위에 세팅 되도록)
                     		// 부서 사용자 순서값 1씩 증가
                     		ezOrganAdminDao.updateDBData_userOrder(map);
                     		ezOrganAdminDao.updateDBData_addjobmasterOrder(map);
+        					ezOrganAdminDao.setAddJob_I(map);
+        					
         				}       
             		} catch (Exception e) { // Exception이 발생하면 Group Email 주소로부터 취소 처리를 한다.
             		    ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
