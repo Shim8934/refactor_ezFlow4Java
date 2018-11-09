@@ -531,7 +531,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
         	startNo = Integer.parseInt(start);
 			endNo = Integer.parseInt(end);
-			int listCount = endNo - startNo + 1;
+			int listCount = endNo - startNo;
 			
 			if (listCount < 0) {
 				listCount = 0;
