@@ -131,57 +131,29 @@ public class LoginController {
     	}
         	
     	String pbm = egovFileScrty.getPbm();
+    	
     	//2018-11-05 유은정 - 포탈 개인화 관련 logo 추가
-    	String companyUrl = "/rest/admin/ezportal/companies";
-    	JSONObject companyResult = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), companyUrl, null, request, "get", null);
-    	String companyStatus = companyResult.get("status").toString();
     	String logo = "";
     	
-    	if (companyStatus.equals("ok")) {
-    		JSONArray companyList = (JSONArray) companyResult.get("data");
-    		int companyListCount = companyList.size();
+    	String companyId = null;
+    	String logoUrl = "/rest/admin/ezPortal/logos/companies/" + companyId;
+    	JSONObject logoResult = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), logoUrl, null, request, "get", null);
+    	String logoStatus = logoResult.get("status").toString();
+    	
+    	if (logoStatus.equals("ok")) {
+    		JSONArray logoList = (JSONArray) logoResult.get("data");
+    		int logoListCount = logoList.size();
     		
-    		if (companyListCount > 1) {
-    			String companyId = null;
-    			String logoUrl = "/rest/admin/ezPortal/logos/companies/" + companyId;
-    			JSONObject logoResult = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), logoUrl, null, request, "get", null);
-    			String logoStatus = logoResult.get("status").toString();
+    		for (int i = 0; i < logoListCount; i++) {
+    			JSONObject logoJson = (JSONObject) logoList.get(i);
     			
-    			if (logoStatus.equals("ok")) {
-    				JSONArray logoList = (JSONArray) logoResult.get("data");
-    				int logoListCount = logoList.size();
-    				
-    				for (int i = 0; i < logoListCount; i++) {
-    					JSONObject logoJson = (JSONObject) logoList.get(i);
-    					
-    					if (logoJson.get("logoType").equals("R")) {
-    						logo = logoJson.get("logoUrl").toString();
-    						break;
-    					}
-    				}
-    			}
-    		} else {
-    			JSONObject company = (JSONObject) companyList.get(0);
-    			String companyId = company.get("cn").toString();
-    			String logoUrl = "/rest/admion/ezPortal/logos/companies/" + companyId;
-    			JSONObject logoResult = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), logoUrl, null, request, "get", null);
-    			String logoStatus = logoResult.get("status").toString();
-    			
-    			if (logoStatus.equals("ok")) {
-    				JSONArray logoList = (JSONArray) logoResult.get("data");
-    				int logoListCount = logoList.size();
-    				
-    				for (int i = 0; i < logoListCount; i++) {
-    					JSONObject logoJson = (JSONObject) logoList.get(i);
-    					
-    					if (logoJson.get("logoType").equals("L")) {
-    						logo = logoJson.get("logoUrl").toString();
-    						break;
-    					}
-    				}
+    			if (logoJson.get("logoType").equals("L")) {
+    				logo = logoJson.get("logoUrl").toString();
+    				break;
     			}
     		}
     	}
+    	
     	logger.debug("logoUrl : " + logo);
     	//유은정 끝
     	
