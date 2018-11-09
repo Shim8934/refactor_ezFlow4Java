@@ -375,7 +375,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 					}			
 					ScheduleSecretaryVO data = tList.get(i);			
 					indiListSub += "\'" + data.getSecId()+ "\',";			
-					System.out.println("비서가 있다고??? 회장인데?? : " + data.getSecId() + " , 이름 : " + data.getSecName());
 				}				
 			}
 			
@@ -2044,10 +2043,11 @@ public class EzScheduleController extends EgovFileMngUtil {
         String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
         int tenantId = loginVO.getTenantId();
         String companyID = loginVO.getCompanyID();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         
         //일정 상세정보
         ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, tenantId, companyID);
-         
+        
         //일정기간 계산        
         if (vo.getDateType().equals("3")){        	
         	_repeatcount = request.getParameter("repeatcount");
@@ -2060,7 +2060,18 @@ public class EzScheduleController extends EgovFileMngUtil {
         					+ vo.getStartDate().substring(11, 16) + " ~ " + vo.getEndDate().substring(11, 16);        		
         	}        	
         } else if (vo.getDateType().equals("2")){
-        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);        	
+        	//하루종일 일때 endDate 수정
+        	String realEndDateFormat = "";
+        	if (vo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+        		Date realEndDate = sdf.parse(vo.getEndDate().substring(0,10));
+        		Calendar cal = Calendar.getInstance();
+        		cal.setTime(realEndDate);
+        		cal.add(Calendar.DATE, 1);
+        		realEndDate = cal.getTime();
+        		realEndDateFormat = sdf.format(realEndDate);
+        	}
+        	
+        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + realEndDateFormat + " (" + msg.getMessage("ezSchedule.t280", locale);        	
         } else {
         	dateString = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16);
         }
@@ -2091,7 +2102,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         	}
         	
         	model.addAttribute("attachList", aList);
-        }       
+        }
         
         //참석자 관련 권한부여
         String _admin = "Y";
@@ -2108,6 +2119,15 @@ public class EzScheduleController extends EgovFileMngUtil {
         ) {
         	_admin = "N";
         	_editPosible = "N";
+        }
+        //비서 권한 부여
+        List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(loginVO.getId(), loginVO.getLang(), tenantId ,companyID);
+        
+        for (ScheduleSecretaryVO ssvo : tList) {
+        	if (ssvo.getSecId().equals(vo.getOwnerId())) {
+        		_admin = "Y";
+        		_editPosible = "Y";
+        	}
         }
         
         model.addAttribute("scheduleInfo", vo);        
@@ -2787,7 +2807,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 					String edate      = "";
 					
 					//content를 mht로 바꾸기 위해서
-					content = "<HTML><HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><style>P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }</style></HEAD><BODY>" + contentSplit(content) + "</BODY>" + "</HTML>";
+					content = "<html><head><meta content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><style type=\"text/css\">P { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } DIV { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }TD { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } UL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } OL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } LI { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } BODY { MARGIN-RIGHT: 10px; FONT-SIZE:10PT; LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic } TABLE TD { text-indent: 0px } BLOCKQUOTE { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}</style></head><body><div>" + contentSplit(content)  + "</div></body></html>";
 					content = contentToMHT(content, scheme, realPath, loginVO.getLocale());
 					
 					DtStart dtStart  = vEvent.getStartDate();

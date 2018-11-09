@@ -176,7 +176,7 @@
 	        }
 
 	        function refresh_onclick() {
-	        	if ($('#tblList tbody tr').children().length == '11') {
+	        	if ($('#tblList tbody tr').children().length == '11' && CurPage != '1') {
 	        		newPage = parseInt(CurPage) - 1;
 		            
 	        		if (newPage == 0) {

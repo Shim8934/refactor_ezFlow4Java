@@ -775,9 +775,9 @@
 		                 <img src="/images/pbar.gif" align="absmiddle"></li> 
 					<li id="menuTable" class="sel" style="background:none; border:none; margin:0; vertical-align:top;">
 		              <select name="importantSelect" id="importantSelect" onChange="important_change()">
-		                <option><spring:message code='ezEmail.t360' /></option>
-		                <option selected="selected"><spring:message code='ezEmail.t361' /></option>
-		                <option><spring:message code='ezEmail.t362' /></option>
+		                <option value="0"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t360' /></option>
+                        <option value="1" selected="selected"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t361' /></option>
+                        <option value="2"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t362' /></option>
 		              </select>
 		            </li>
 		            <li style="display:none;" class="sel" style="background:none; border:none; padding:0 5px">${strSelectHtml}</li>&nbsp;&nbsp;

@@ -410,11 +410,11 @@ function clearSelection() {
  */
 function bodyClearSelection() {
 	var doc = window.document;
-	//var mainbody = doc.getElementsByClassName('mainbody');
+	var mainbody = doc.getElementsByClassName('mainbody');
 	var mainmenu = doc.getElementById('mainmenu');
 	
-	//mainbody[0].addEventListener("dblclick", clearSelection, false);
-	$(".mainbody").on("selectstart", function(event){return false;});
+	mainbody[0].addEventListener("dblclick", clearSelection, false);
+	//$(".mainbody").on("selectstart", function(event){return false;});
 	mainmenu.addEventListener("click", clearSelection, false);
 	mainmenu.addEventListener("drag", clearSelection, false);
 }

@@ -13,9 +13,12 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +26,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
@@ -33,6 +39,7 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
+import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -40,7 +47,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 
 
 @RestController
-public class EzWebFolderGWController_y {
+public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderGWController_y.class);
 	
 	@Autowired
@@ -531,6 +538,9 @@ public class EzWebFolderGWController_y {
 			LOGGER.debug("-------folderUpp" + fldDetail.getFolderUpper());
 			
 			data.put("folderUpp", fldDetail.getFolderUpper());
+			data.put("createDate", fldDetail.getCreateDate());
+			data.put("updateDate", fldDetail.getUpdateDate());
+			data.put("folderName", fldDetail.getFolderName1());
 			data.put("folderPath", folderPath2);
 			data.put("originalPath", originalPath);
 			data.put("fileList", fileList);
@@ -609,7 +619,7 @@ public class EzWebFolderGWController_y {
 			LOGGER.debug("usrListCnt : " + usrListCnt + " ||  tenantId : " +tenantId + " || userId : " + userId);
 			
 			int listCount = request.getParameter("listCount") 	!= null ? Integer.parseInt(request.getParameter("listCount")) 	: usrListCnt;
-			if ( Integer.parseInt(request.getParameter("listCount")) == 0 ) {
+			if (listCount == 0) {
 				listCount = usrListCnt ;
 			}
 			int pStart = request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
@@ -704,6 +714,9 @@ public class EzWebFolderGWController_y {
 			LOGGER.debug("-------folderUpp" + fldDetail.getFolderUpper());
 			
 			data.put("folderUpp", fldDetail.getFolderUpper());
+			data.put("createDate", fldDetail.getCreateDate());
+			data.put("updateDate", fldDetail.getUpdateDate());
+			data.put("folderName", fldDetail.getFolderName1());
 			data.put("folderPath", folderPath2);
 			data.put("originalPath", originalPath);
 			data.put("fileList", fileList);
@@ -796,6 +809,159 @@ public class EzWebFolderGWController_y {
 		LOGGER.debug("checkPermission ended.");
 		return jsonObj;
 
+	}
+	
+	/**
+	 * 탐색기 연동위한 folder file과 id를 전송시 상세 정보 출력해주는 메서드 추가 
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezwebfolder/fldfile/{fldfile}/fldfile-detail", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getFldFileDetail(@PathVariable String fldfile, HttpServletRequest request) {
+		LOGGER.debug("getFldFileDetail started.");
+		
+		JSONObject jsonObj = new JSONObject();
+		String serverName 	= request.getHeader("x-user-host")      			!= null ? request.getHeader("x-user-host") 			: "" ;
+		String userId 		= request.getParameter("userId");
+		String fldFileId 	= request.getParameter("fldFileId");
+
+		FileVO fldFileDetail = new FileVO();
+		JSONObject data = new JSONObject();
+		
+		if (fldfile.equals("") || userId.equals("") || fldFileId.equals("")) {
+			LOGGER.debug("Parameter error!");
+			jsonObj.put("status", "error");
+			jsonObj.put("code", 1);
+			
+			LOGGER.debug("getFldFileDetail method ended");
+			return jsonObj;
+		}
+		
+		try {
+			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = common.getTenantId();
+			String offset = common.getOffSet();
+			String primary = common.getPrimary();
+			String comId = common.getCompanyId();
+			
+			fldFileDetail = service.getFolderFileDetailForExplorer(fldfile, fldFileId, userId, tenantId, comId, offset, primary);
+			
+			data.put("fileList", fldFileDetail);
+			
+			jsonObj.put("status", "ok");
+			jsonObj.put("code", 0);
+			jsonObj.put("data", data);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.debug(" fail ");
+			jsonObj.put("status", "error");
+			jsonObj.put("code", 2);
+			jsonObj.put("data", "");
+		}
+		
+		LOGGER.debug("getFldFileDetail method ended");
+		return jsonObj;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezwebfolder/filemanage/file-upload-overwrite", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject postFileUploadOverWrite(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, Locale locale, HttpServletRequest request) throws Exception {
+		LOGGER.debug("postFileUploadOverWrite start");
+		JSONParser jp          = new JSONParser();
+		JSONObject jsonObject  = (JSONObject) jp.parse(dataList);
+		
+		String serverName      = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host")          : "";
+		JSONArray nameArray    = jsonObject.get("nameArray")    != null ? (JSONArray) jsonObject.get("nameArray") : null;
+		String userId          = jsonObject.get("userId")       != null ? (String) jsonObject.get("userId")       : "";
+		String folderId        = jsonObject.get("folderId")     != null ? (String) jsonObject.get("folderId")     : "";
+		JSONArray fileIdArray  = jsonObject.get("fileIdArray")   	!= null ? (JSONArray) jsonObject.get("fileIdArray")	  : null;
+		JSONObject result      = new JSONObject();
+		
+		LOGGER.debug("Servername: " + serverName + " || UserId: " + userId + " || FolderId: " + folderId ); 
+		
+		if (nameArray == null || serverName.equals("") || userId.equals("") || folderId.equals("") || fileIdArray == null ) {
+			LOGGER.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		if (nameArray.size() != multiFileLists.size() || fileIdArray.size() != multiFileLists.size()) {
+			System.out.println(fileIdArray.size());
+			System.out.println(nameArray.size());
+			System.out.println(multiFileLists.size());
+			LOGGER.debug("Some files upload failed!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+		int tenantId = userInfo.getTenantId();
+		String primary = userInfo.getPrimary();
+		String realPath  = request.getServletContext().getRealPath("");
+		
+		if (!isWebfolderAdmin(userInfo)){
+			JSONObject permissionResult = service.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, null, userInfo.getTenantId());
+			
+			if ("error".equals(permissionResult.get("status"))) {
+				result.put("status", "error");
+				result.put("code", 2);
+				return result;
+			}
+		}
+		
+		WebfolderConfigVO webfolderConfig   = ezWebFolderAdminService.getWebfolderConfig(userInfo.getCompanyID(), userInfo.getTenantId());
+		double limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Double.parseDouble(webfolderConfig.getUploadLimit());
+		double totalUploadSize              = 0;
+		
+		for (int i = 0; i < multiFileLists.size(); i++) {
+			totalUploadSize += multiFileLists.get(i).getSize();
+		}
+		
+		if (limitUploadValue * 1073741824 < totalUploadSize) {
+			result.put("status", "error");
+			result.put("code", 4);
+			return result;
+		}
+		
+		UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
+		LOGGER.debug("userCapacity!");
+		
+		double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
+		double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;
+		
+		if (totalUploadSize > (totalCapa - totalUsed)) {
+			LOGGER.debug("Not enough storage to upload these files!");
+			result.put("status", "error");
+			result.put("code", 5);
+			return result;
+		}
+		
+		JSONObject returnData = service.fileUpdateOverwrite( multiFileLists, nameArray, userInfo, folderId, fileIdArray, realPath, tenantId);
+		if (returnData.get("status") == "ok") {
+			result.put("status", "ok");
+			result.put("code", 0);
+		} else {
+			result.put("status", "error");
+			result.put("code", 3);
+		}
+		
+
+		LOGGER.debug("postFileUploadOverWrite end");
+		return result;
+	}
+	
+	public String getWebFolderDirPath(int tenantId) {
+		return commonUtil.getUploadPath("upload_webfolder.ROOT", tenantId) + commonUtil.separator;
+	}
+	
+	private boolean isWebfolderAdmin(LoginVO user) {
+		return isWebfolderAdmin(user.getRollInfo());
+	}
+	
+	private boolean isWebfolderAdmin(String rollInfo) {
+		return rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("wf=1");
 	}
 	
 }

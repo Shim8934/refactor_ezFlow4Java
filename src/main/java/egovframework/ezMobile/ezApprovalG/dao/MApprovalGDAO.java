@@ -93,4 +93,7 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 		return update("MApprovalG.delAbsenteeInfo", map);
 	}
 
+	public int getCheckAprState(Map<String, Object> map) throws Exception {
+		return (int) select("MApprovalG.getCheckAprState", map);
+	}
 }

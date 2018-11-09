@@ -182,28 +182,29 @@
 		    }		    
 		    
 		    function schedule_get_lunaruse() {
-			    /* $.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/ezSchedule/scheduleGetLunarUse.do",
-		    		data : {
-		    			COMPANYID  : "${userInfo.companyID}"		    			
-		    		},
-		    		success: function(text) {		    			
-		    			if (text == "0") {
-		    				LunarUse = true;
-		    			} else if(text == "1") {
-		    				LunarUse = true;
-		    			} else {
-		    				LunarUse = false;
-		    			}
-		    			schedule_get_holiday();
-		    		}
-		        }); */
-		        
-		        // #13470 일본은 음력사용 안함
-		    	schedule_get_holiday();
+		    	if (uselang != 3) {
+				    $.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezSchedule/scheduleGetLunarUse.do",
+			    		data : {
+			    			COMPANYID  : "${userInfo.companyID}"		    			
+			    		},
+			    		success: function(text) {		    			
+			    			if (text == "0") {
+			    				LunarUse = true;
+			    			} else if(text == "1") {
+			    				LunarUse = true;
+			    			} else {
+			    				LunarUse = false;
+			    			}
+			    			schedule_get_holiday();
+			    		}
+			        }); 
+		    	} else {
+		    		schedule_get_holiday();
+		    	}
 			}
 
 		    var schedule_receive_attendant_cross_dialogArguments = new Array();

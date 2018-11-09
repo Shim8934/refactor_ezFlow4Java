@@ -49,15 +49,15 @@ public static Element configXMlLoad(String configValue)
 		root.normalize();
 		return root;
 	}catch (SAXParseException err) {
-		System.out.println("System Error 1");
+		//System.out.println("System Error 1");
 	} catch (SAXException e) {
-		System.out.println("System Error 2");
+		//System.out.println("System Error 2");
 	} catch (java.net.MalformedURLException mfx) {
-		System.out.println("System Error 3");
+		//System.out.println("System Error 3");
 	} catch (java.io.IOException e) {
-		System.out.println("System Error 4");
+		//System.out.println("System Error 4");
 	} catch (javax.xml.parsers.ParserConfigurationException e) {
-		System.out.println("System Error 5");
+		//System.out.println("System Error 5");
 	}
 	return null;
 }
@@ -113,7 +113,7 @@ public Hashtable childValueList(Element root)
 			return settingValue;
 	} 
 	catch (RuntimeException e) {
-			System.out.println("System Error 6");
+			//System.out.println("System Error 6");
 			return settingValue;
 	}
 }
@@ -209,12 +209,13 @@ public boolean xmlCreate(String xmlText, String filenames)
 	boolean check = true;
 
 	Writer fout = null;
+	OutputStream fos = null;
 	try{
 		File f = new File(filenames);
 		if(f.canWrite()){
 			
-
-			fout = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
+			fos = new FileOutputStream(f);
+			fout = new OutputStreamWriter(fos, "UTF-8");
 			fout.write(detectXSSEx2(xmlText));
 		}
 		else{
@@ -222,7 +223,7 @@ public boolean xmlCreate(String xmlText, String filenames)
 		}
 	}
 	catch (java.io.IOException e) {
-		System.out.println("System Error 8");
+		//System.out.println("System Error 8");
 	}
 	finally{
 		try{
@@ -230,10 +231,14 @@ public boolean xmlCreate(String xmlText, String filenames)
 					fout.close();
 					fout = null;
 				}
+				if( fos != null){
+					fos.close();
+					fos = null;
+				}
 			}catch(java.io.IOException err1){
-				System.out.println("An internal exception occured!!");
+				//System.out.println("An internal exception occured!!");
 			}catch(Exception err){
-				System.out.println("An internal exception occured!!");
+				//System.out.println("An internal exception occured!!");
 			}
 	}
 	return check;
@@ -256,7 +261,7 @@ public String encrypt(String EncMthd,String strData)
 			return strENCData;
 	}
 	catch(NoSuchAlgorithmException e){
-			System.out.println("System Error 9");
+			//System.out.println("System Error 9");
 			return strENCData = "";
 	}
 }
@@ -289,9 +294,9 @@ public String manageInFo_text(String urlPPath)
 		fr.close();
 
 	}catch(java.io.FileNotFoundException e1){
-		System.out.println("System Error 10");		
+		//System.out.println("System Error 10");		
 	}catch(java.io.IOException e2){
-		System.out.println("System Error 11");
+		//System.out.println("System Error 11");
 	}finally{
 		try{
 			if( manageInfoText != null){
@@ -303,9 +308,9 @@ public String manageInFo_text(String urlPPath)
 				fr = null;
 			}
 		}catch(java.io.IOException err1){
-			System.out.println("An internal exception occured!!!");
+			//System.out.println("An internal exception occured!!!");
 		}catch(Exception err){
-			System.out.println("An internal exception occured!!!");
+			//System.out.println("An internal exception occured!!!");
 		}
 	}
 

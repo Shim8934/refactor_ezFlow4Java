@@ -73,4 +73,9 @@ public interface EzCommonService {
 	public void addUserMasterManualFlag() throws Exception;
 	
 	public void addDeptMasterManualFlag() throws Exception;
+	
+	public void createJMochaMailSignatureTemplate() throws Exception;
+
+	public void createJobMasterTable() throws Exception;
+
 }

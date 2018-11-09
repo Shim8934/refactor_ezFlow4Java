@@ -5,7 +5,6 @@
 <html>
 <head>
     <title><spring:message code='ezEmail.t535' /></title>
-    <meta name="CODE_LANGUAGE" content="C#">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
     <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">

@@ -86,6 +86,11 @@
 	        function GetEditorBody() {
 	        	return kukudocsEditor.getContentViewElement()[0];
 	        }
+	        
+	        // 현재 위치에 텍스트 넣는 함수(서명 템플릿 관리>서명 템플릿 추가 및 수정 팝업창에서 사용)
+	        function setCursorAtText(text) {
+	        	kukudocsEditor.InsertTextByFocus(text);
+	        }
 		</script> 
 	</head>
 	<body>
@@ -158,15 +163,15 @@
 				{name:'22px', value:'22px'},
 				{name:'24px', value:'24px'},
 				{name:'26px', value:'26px'},
-				{name:'36px', value:'30px'},
+				{name:'30px', value:'30px'},
 				{name:'36px', value:'36px'},
-				{name:'36px', value:'42px'},
-				{name:'36px', value:'48px'},
+				{name:'42px', value:'42px'},
+				{name:'48px', value:'48px'},
 				{name:'54px', value:'54px'},
-				{name:'54px', value:'72px'},
-				{name:'54px', value:'80px'},
-				{name:'72px', value:'88px'},
-				{name:'72px', value:'100px'}
+				{name:'72px', value:'72px'},
+				{name:'80px', value:'80px'},
+				{name:'88px', value:'88px'},
+				{name:'100px', value:'100px'}
 			];
 			
 			// 폰트 리스트 설정

@@ -101,8 +101,9 @@
 
 		int pad = 0;
 
-		for (int i = base64.length() - 1; base64.charAt(i) == '='; i--)
+		for (int i = base64.length() - 1; base64.charAt(i) == '='; i--){
 			pad++;
+		}
 
 		int length = base64.length() * 6 / 8 - pad;
 		byte[] raw = new byte[length];
@@ -116,8 +117,9 @@
 					+ (getValue(base64.charAt(i + 2)) << 6)
 					+ (getValue(base64.charAt(i + 3)));
 
-			for (int j = 0; j < 3 && rawIndex + j < raw.length; j++)
+			for (int j = 0; j < 3 && rawIndex + j < raw.length; j++){
 				raw[rawIndex + j] = (byte) ((block >> (8 * (2 - j))) & 0xff);
+			}
 
 			rawIndex += 3;
 		}

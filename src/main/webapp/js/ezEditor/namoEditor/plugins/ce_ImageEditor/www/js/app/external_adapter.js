@@ -79,6 +79,7 @@ define([
 								result.src = src;
 								result.width = info.imageOrgWidth;
 								result.height = info.imageOrgHeight;
+								result.size = info.imageSize;
 							} else {
 								result.success = false;
 								result.message = lib.err.ERR_NO_IMAGE; //
@@ -210,8 +211,10 @@ define([
 					console.log(result)
 					if(result.success) {
 						var src = result.src;
+						var size = result.size;
 						getOpenerPlugin().execute({
 							src: src,
+							size: size,
 							//src: dataSrc,
 							alt: NHIE.app.__imageTitle,
 							width: canvas.width,

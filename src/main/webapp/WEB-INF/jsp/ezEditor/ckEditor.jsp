@@ -95,6 +95,7 @@
             	    
             	    resultStr = resultStr.replace(/\r\n/gi, "");
             	    resultStr = resultStr.replace(/\n/gi, "");
+            	    resultStr = resultStr.replace(/\s+/gi, " ");
             	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
             	    resultStr = resultStr.replace(/<p>/gi, "\n");
             	    resultStr = resultStr.replace(/<br .*?>/gi, "\n");
@@ -104,6 +105,7 @@
             	    resultStr = resultStr.replace(/<.*?".*?".*?>/gi, "");
             	    resultStr = resultStr.replace(/<.*?'.*?'.*?>/gi, "");
             	    resultStr = resultStr.replace(/<.*?>/gi, "");
+            	    resultStr = resultStr.replace(/ +/gi, " ");
             	    resultStr = resultStr.replace(/&nbsp;/gi, " ");
             	    resultStr = resultStr.replace(/&lt;/gi, "<");
             	    resultStr = resultStr.replace(/&gt;/gi, ">");
@@ -262,6 +264,11 @@
 	        
 	        function GetEditorBody() {
 	        	return CKEDITOR.instances.editor1.document.$.body;
+	        }
+	        
+	        // 현재 위치에 텍스트 넣는 함수(서명 템플릿 관리>서명 템플릿 추가 및 수정 팝업창에서 사용)
+	        function setCursorAtText(text) {
+	        	CKEDITOR.instances.editor1.insertHtml(text);
 	        }
 		</script> 
 	</head>
