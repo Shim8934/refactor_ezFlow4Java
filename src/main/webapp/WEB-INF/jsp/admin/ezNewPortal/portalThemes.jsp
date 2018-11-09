@@ -310,7 +310,7 @@
 				
 				//현재 전체적으로 기본테마가 있는지 확인
 				if (!$("input[name='themeDefault']").is(":checked")) {
-					alert("기본 테마를 설정해 주세요.");
+					alert("설정된 기본 테마가 없습니다.");
 					return;
 				}
 				

@@ -228,7 +228,13 @@
 	
  	window.onresize = function(event) {
  		frameSetting(frameId);
+		leftResize();
  	}
+ 	
+ 	var leftResize = function() {
+		var wwh = $('.section_main').prop("scrollHeight") + 30;
+		$(".section_left").css("height", wwh +"px");
+	}
  	
  	var setQuickLinkList = function (data) {
  		var quickList = data.quickLinkList;
@@ -464,7 +470,8 @@
 		});
 		
 		$(".portlet_area").disableSelection();
-		
+
+		leftResize();
 	});
 	
 	var frameSetting = function (frameSetId) {
