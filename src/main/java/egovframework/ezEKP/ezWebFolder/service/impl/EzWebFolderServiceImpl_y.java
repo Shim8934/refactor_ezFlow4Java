@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,12 +9,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_m;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_y;
@@ -24,9 +28,10 @@ import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 
 @Service("EzWebFolderService_y")
-public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
+public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFolderService_y{
 	@Autowired
 	private EzWebFolderDAO_y ezWebFolderDAO_y;
 
@@ -864,6 +869,73 @@ public class EzWebFolderServiceImpl_y implements EzWebFolderService_y {
 		}
 		return detailData;
 		
+	}
+
+	@Override
+	public JSONObject fileUpdateOverwrite(List<MultipartFile> multiFileLists, JSONArray nameArray, LoginVO userInfo,
+			String folderId, JSONArray fileIdArray , String realPath, int tenantId) throws Exception {
+		
+		String fileName = "";
+		String path = "";
+		String userId = userInfo.getId();
+		String comId = userInfo.getCompanyID();
+		String offset = userInfo.getOffset();
+		String primary = userInfo.getPrimary();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		JSONObject result = new JSONObject();
+		long[] fileSize            = new long[multiFileLists.size()];
+		
+		// 파일 가지고 온 array의 이름과 id를 가지고 다시 업로드 시켜야함
+		// id의 정보를 가지고 와서 그 id의 정보를 가지고 온다 
+		for (int i = 0; i < multiFileLists.size(); i++ ) {
+
+			FileVO filevo;
+			filevo = getFolderFileDetailForExplorer("file", (String)(((JSONObject)fileIdArray.get(i)).get("fileIdArray")), userId, tenantId , comId, offset, primary);
+			fileName = filevo.getFilePath();
+			String[] arryStrings = fileName.split("/");
+			fileName = arryStrings[arryStrings.length-1];
+			LOGGER.debug("before fileName is " + fileName);
+			
+			int dotPos     = fileName.lastIndexOf(".");
+			String extend  = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
+			String newName = UUID.randomUUID().toString() + "." + extend;
+			path = commonUtil.getUploadPath("upload_webfolder.ROOT", tenantId) + commonUtil.separator; 
+			LOGGER.debug("new fileName is " + newName);
+			
+			Date date      = new Date();
+			// 실제 파일을 생성
+			writeUploadedFile(multiFileLists.get(i), newName, realPath+path);
+			
+			String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+			
+			fileSize[i]    = multiFileLists.get(i).getSize();
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("filePath", path+newName);
+			map.put("userId", userId);
+			map.put("fileId", filevo.getFileId());
+			map.put("tenantId", tenantId);
+			map.put("timeUTC",timeUTC);
+			map.put("fileSize", fileSize[i] );
+			
+			// 새로운 filePath로 경로 생성 및 db 업데이트
+			int updateResult = ezWebFolderDAO_y.updateFileRealData(map);
+			
+			// db 업데이트 성공시 기존 파일 delete
+			path = realPath + path;
+			File file = new File(path+fileName);
+			if (file.exists() && file.isFile()) {
+				if (file.delete()) {
+					LOGGER.debug("delete success.");
+				}
+			} else {
+				LOGGER.debug("file is not exists.");
+			}
+			
+		}
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
 	}
 
 }

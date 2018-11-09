@@ -834,7 +834,8 @@ function openApprovUI(allFlag) {
         pArgument[0] = GetAttribute(tr[0], "DATA1");      
         pArgument[1] = GetAttribute(tr[0], "DATA4");		
         pArgument[2] = GetAttribute(tr[0], "DATA5");		
-        pArgument[3] = GetAttribute(tr[0], "DATA7");	
+        pArgument[3] = GetAttribute(tr[0], "DATA7");
+        pArgument[4] = GetAttribute(tr[0], "APRMEMBERSN")
         var orgCompanyID = GetAttribute(tr[0], "orgCompanyID");
 
         if (GetAttribute(tr[0], "DATA12") == "017") {
@@ -872,7 +873,7 @@ function openApprovUI(allFlag) {
             openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2")) + "&aprMemberSN=" + pArgument[4];
         }
         openwindow(openLocation, "ApprovUI", 880, 550);
     }
@@ -890,7 +891,7 @@ function InitlvAprLine() {
     if (oArrRows.length != 0) {
         var tr = oArrRows[0];
 
-        if (pListTypeValue == "1") {
+        if (pListTypeValue == "1" || pListTypeValue == "11") {
             document.getElementById("tbtnforcecallback").style.display = "none";
         }
 
@@ -1165,7 +1166,7 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
             openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
         }
 
-        if (g_selReturn == "Y" && pListTypeValue == "1") {
+        if (g_selReturn == "Y" && (pListTypeValue == "1" || pListTypeValue == "11")) {
             openLocation = openLocation + "&RetFlag=" + g_selReturn;
             g_selReturn = "N";
         }
@@ -1739,6 +1740,9 @@ function makePageSelPage() {
     		case "99":
     			parent.frames["left"].document.getElementById("count99").innerHTML = "(" + pTotalCnt + ")";
     			break;
+    		case "11":
+    			parent.frames["left"].document.getElementById("count11").innerHTML = "(" + pTotalCnt + ")";
+    			break;
     		}
     	}
 	} catch (e) {
@@ -1880,7 +1884,7 @@ function setbuttonenable() {
     else
         document.getElementById("tbar1").style.display = "";*/
 
-    if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 10 && pListTypeValue != 99) {
+    if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 10 && pListTypeValue != 99 && pListTypeValue != 11) {
     	document.getElementById("tbtnRedraft").style.display = "none";		
         //SwapImage(document.getElementById("btnRedraft"), "dis");
         document.getElementById("tbtnRemoveDoc").style.display = "none";
@@ -1944,7 +1948,7 @@ function setbuttonenable() {
                 document.getElementById("tbtnRemoveDoc").style.display = "none";
             }
         }
-    } else if (pListTypeValue == 1 || pListTypeValue == 10 || pListTypeValue == 99) {
+    } else if (pListTypeValue == 1 || pListTypeValue == 10 || pListTypeValue == 99 || pListTypeValue == 11) {
         document.getElementById("tbtnTotalSave").style.display = "";
         document.getElementById("tbtnSimsa").style.display = "none";
         //document.getElementById("tbtnGongRam").style.display = "";
@@ -2034,7 +2038,11 @@ function setbuttonenable() {
                 //SwapImage(document.getElementById("btnRedraft"), "dis");
                 document.getElementById("tbtnRemoveDoc").style.display = "none";
                 document.getElementById("tbtnApprove").style.display = "";
-                document.getElementById("tbtnApprove1").style.display = "";
+                if (pListTypeValue == "11") {
+                	document.getElementById("tbtnApprove1").style.display = "none";
+                } else {
+                	document.getElementById("tbtnApprove1").style.display = "";
+                }
                 //document.getElementById("tbtnApproveALL").style.display = "";
 
                 document.getElementById("tbtnReceipt").style.display = "none";
@@ -2178,7 +2186,7 @@ function setbuttonenable() {
         } catch (e) { }
     }
 
-    if (pListTypeValue != "4" && pListTypeValue != "1") {
+    if (pListTypeValue != "4" && pListTypeValue != "1" && pListTypeValue != "11") {
         document.getElementById("tbtnReturn").style.display = "none";
     }
     

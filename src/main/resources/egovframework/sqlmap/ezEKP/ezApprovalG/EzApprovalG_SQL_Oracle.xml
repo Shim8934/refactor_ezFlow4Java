@@ -2595,7 +2595,15 @@
           	WHERE  
           		DOCID = #v_PDOCID#
             AND 
-            	APRMEMBERID = #v_PAPRUSERID#
+            	(
+            		APRMEMBERID = #v_PAPRUSERID#
+            ]]>
+           	<isEqual property="shareApprovalFlag" compareValue="YES">
+           		OR
+           			APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_PAPRUSERID#)
+           	</isEqual>
+            <![CDATA[
+            	)
             AND 
             	( APRSTATE = '002' OR APRSTATE = '005'  OR APRSTATE = '000' )
             AND
@@ -2641,7 +2649,15 @@
             WHERE  
             	DOCID = #v_PDOCID#
             AND 
-            	APRMEMBERID = #v_PAPRUSERID#
+            	(
+            		APRMEMBERID = #v_PAPRUSERID#
+            ]]>
+           	<isEqual property="shareApprovalFlag" compareValue="YES">
+           		OR
+           			APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_PAPRUSERID#)
+           	</isEqual>
+            <![CDATA[
+            	)
             AND
 				TENANT_ID = #v_TENANTID#
 			AND
@@ -2917,8 +2933,16 @@
                       		TBL_APRLINEINFO 
                       WHERE  
                       		DOCID = #v_PDOCID#
-                      AND 
+                      AND
+                      		( 
                       		APRMEMBERID = #v_PAPRUSERID#
+                      ]]>
+		           	  <isEqual property="shareApprovalFlag" compareValue="YES">
+		           	  OR
+		           		    APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_PAPRUSERID#)
+	                  </isEqual>
+		              <![CDATA[
+		              		)
                       AND
 							TENANT_ID = #v_TENANTID#
 					  AND
@@ -10405,6 +10429,98 @@
 							TENANT_ID = #v_TENANTID# 
 						)
 	   		]]>
+   		<isEqual property="v_shareApprovalFlag" compareValue="YES">
+		   	UNION ALL
+		   	<![CDATA[
+		   	SELECT 
+					COUNT(DOCID) AS COUNT 
+				FROM (
+						SELECT
+							*
+						FROM 
+							VAPRDOINGDOCLIST 
+				   		WHERE 
+				   			APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE SHAREUSERID = #v_USERID#) 
+				   		AND 
+				   			APRTYPE <> '015' 
+				   		AND 
+				   			 STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
+				   		AND 
+				   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
+				   		AND	
+				   			TENANT_ID = #v_TENANTID#
+				   		AND
+							COMPANYID IN (
+									SELECT 
+										EXTENSIONATTRIBUTE2 
+									FROM 
+										TBL_DEPTMASTER 
+									INNER JOIN 
+										TBL_ADDJOBMASTER 
+									ON
+										(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+										AND 
+										TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+									WHERE 
+										TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+									AND 
+										TBL_ADDJOBMASTER.CN = #v_USERID#
+									UNION ALL
+									SELECT 
+										PHYSICALDELIVERYOFFICENAME
+									FROM
+										TBL_USERMASTER
+									WHERE
+										CN = #v_USERID#
+									AND
+										TENANT_ID = #v_TENANTID# 
+									)
+				   		
+				   		UNION ALL
+				   			
+				   		SELECT
+			   				*
+			   			FROM
+			   				VENDCHAMJODOCINFO
+			   			WHERE
+			   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE SHAREUSERID = #v_USERID#) 
+				   		AND 
+				   			APRTYPE <> '015' 
+				   		AND 
+				   			 STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
+				   		AND 
+				   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
+				   		AND	
+				   			TENANT_ID = #v_TENANTID#
+				   		AND
+							COMPANYID IN (
+									SELECT 
+										EXTENSIONATTRIBUTE2 
+									FROM 
+										TBL_DEPTMASTER 
+									INNER JOIN 
+										TBL_ADDJOBMASTER 
+									ON
+										(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+										AND 
+										TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+									WHERE 
+										TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
+									AND 
+										TBL_ADDJOBMASTER.CN = #v_USERID#
+									UNION ALL
+									SELECT 
+										PHYSICALDELIVERYOFFICENAME
+									FROM
+										TBL_USERMASTER
+									WHERE
+										CN = #v_USERID#
+									AND
+										TENANT_ID = #v_TENANTID# 
+									)
+				   		) AS B
+	   			]]>
+		</isEqual>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.aprGetNewID" parameterClass="Map" resultClass="String"> -->
@@ -14213,7 +14329,15 @@
 										TENANT_ID = #v_TENANTID# 
 									)
 		      			AND 
-		      				APRMEMBERID IN ($v_USERIDS$) 
+		      				(
+		      				APRMEMBERID IN ($v_USERIDS$)
+		      			]]>
+		      			<isEqual property="shareApprovalFlag" compareValue="YES">
+			          	OR
+			          		APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)
+			          	</isEqual>
+		      			<![CDATA[ 
+		      				)
 		      			AND 
 		      				APRTYPE <> '015' 
 		      			
@@ -14252,8 +14376,16 @@
 										TENANT_ID = #v_TENANTID# 
 									)
 		      			AND 
-		      				APRMEMBERID IN ($v_USERIDS$) 
-		      			AND 
+		      				(
+		      				APRMEMBERID IN ($v_USERIDS$)
+		      			]]>
+		      			<isEqual property="shareApprovalFlag" compareValue="YES">
+			          	OR
+			          		APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)
+			          	</isEqual>
+		      			<![CDATA[ 
+		      				)
+		      			AND  
 		      				APRTYPE <> '015' )
 			]]>
 		</isEqual>
@@ -26609,7 +26741,13 @@
          WHERE  
            	DOCID = #v_PDOCID#
          AND 
-           	APRMEMBERID = #v_PAPRUSERID#
+         	(
+           		APRMEMBERID = #v_PAPRUSERID#
+           	<isEqual property="shareApprovalFlag" compareValue="YES">
+           	OR
+           		APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_PAPRUSERID#)
+           	</isEqual>
+           	)
          AND
 			TENANT_ID = #v_TENANTID#
 		 AND
@@ -27561,4 +27699,62 @@
 		AND
 			CN = #v_companyID#
 	</update>
+	<select id="EzApprovalG.getShareOwnerId" parameterClass="Map" resultClass="String">
+		SELECT
+			OWNERID
+		FROM
+			TBL_PS_SHAREAPPROVAL
+		WHERE
+			TENANTID = #v_TENANTID#
+		AND
+			SHAREUSERID = #v_USERID#
+	</select>
+	
+	<select id="EzApprovalG.getCheckAprState" parameterClass="Map" resultClass="Integer">
+		SELECT
+			IF (
+				B.DOCID = 0,
+				CASE
+					WHEN #v_DOCSTATE# = '017'
+					THEN (
+							SELECT
+								COUNT(DOCID)
+							FROM
+								VENDCHAMJODOCINFO
+							WHERE
+								DOCID = #v_DOCID#
+							AND
+								APRMEMBERSN = #v_APRMEMBERSN#
+							AND
+								APRSTATE IN ('000')
+							AND
+								COMPANYID = #v_COMPANYID#
+							AND
+								TENANT_ID = #v_TENANTID#
+						  )
+					ELSE 0
+				END,
+				B.DOCID
+				)
+		FROM
+			(
+			SELECT
+				COUNT(DOCID) DOCID
+			FROM
+				VAPRDOINGDOCLIST
+			WHERE
+				DOCID = #v_DOCID#
+			AND
+				APRMEMBERSN = #v_APRMEMBERSN#
+			AND
+				APRSTATE IN ('002', '005', '000')
+			<isEqual property="v_DOCSTATE" compareValue="011">
+			AND
+				DOCSTATE = #v_DOCSTATE#
+			</isEqual>
+			AND
+				COMPANYID = #v_COMPANYID#
+			AND
+				TENANT_ID = #v_TENANTID#) B
+	</select>
 </sqlMap>
