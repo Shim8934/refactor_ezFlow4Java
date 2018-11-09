@@ -808,4 +808,45 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalUserInfoPortlet End");
 		return "/ezNewPortal/portlets/userInfoPortlet";
 	}
+	
+	/**
+	 * 2018-11-09 홍승비 - 동영상게시판 포틀릿
+	 */
+	@RequestMapping(value = "/ezNewPortal/movieBoardPortlet.do")
+	public String portalMovieBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie,HttpServletResponse resp) throws Exception {
+		logger.debug("portalMovieBoardPortlet Start");
+		
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = req.getParameter("portletId");
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("startRow", 0);
+		param.put("photoCount", 2);
+		param.put("portletId", portletId);
+		String url = "/rest/ezPortal/portlets/photoBoard";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		String result = resultBody.get("status").toString();
+		
+		if (result.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			String access = data.get("access").toString();
+			model.addAttribute("access", access);
+			model.addAttribute("boardId", data.get("boardId"));
+			model.addAttribute("portletName", data.get("portletName"));
+			
+			if (access.equals("true")) {
+				model.addAttribute("photoBoardList", data.get("photoBoardList"));
+			}
+		}
+		
+		model.addAttribute("portletId", portletId);
+		logger.debug("portalMovieBoardPortlet End");
+		return "/ezNewPortal/portlets/movieBoardPortlet";
+	}
+	
 }
