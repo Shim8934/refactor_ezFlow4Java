@@ -840,7 +840,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("portletName", data.get("portletName"));
 			
 			if (access.equals("true")) {
-				model.addAttribute("photoBoardList", data.get("photoBoardList"));
+				model.addAttribute("movieBoardList", data.get("photoBoardList"));
 			}
 		}
 		
