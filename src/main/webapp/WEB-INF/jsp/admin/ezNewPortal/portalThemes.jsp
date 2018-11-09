@@ -148,7 +148,8 @@
 					var result = JSON.parse(request.responseText);
 					var themes = result.list;
 					var themesHTML = "";
-					
+					console.log(themes);
+					console.log(result);
 					themes.forEach(function (item, index) {
 						themesHTML += "<li>";
 						themesHTML += "<div class='theme' id='theme" + item.themeId + "'>";
@@ -165,9 +166,9 @@
 						
 						themesHTML += "<div class='themeDetails' id='themeDetails" + item.themeId + "'>";
 						themesHTML += "<div class='themeInfo'>";
-						themesHTML += "<div class='themeActive'><div>[테마 활성화] </div><label class='switch'><input type='checkbox'><span class='slider round'></span></label></div>";
+						themesHTML += "<div class='themeActive'><div>[테마 활성화] </div><label class='switch'><input type='checkbox' name='usedTheme'><span class='slider round'></span></label></div>";
 						themesHTML += "<div class='btnpositionJsp'><a class='imgbtn previewBtn'><span>미리보기</span></a><a class='imgbtn updateThemeBtn'><span>저장</span></a><div id='close' class='close'><ul><li><span></li></ul></div></div>";
-						themesHTML += "<div class='themeDefault'>[기본 테마 설정] <input type='radio' name='defaultTheme'/></div>";
+						themesHTML += "<div class='themeDefault'>[기본 테마 설정] <label class='switch'><input type='checkbox' name='defaultTheme'><span class='slider round'></span></label></div>";
 						themesHTML += "<div class='themeContent'></div>";
 						themesHTML += "</div>";
 						themesHTML += "<div class='frameInfo'>";
@@ -188,10 +189,23 @@
 						
 						if (!item.themeUsed) {
 							$("#theme" + item.themeId).find(".themeNotUsed").css("display", "");
+						} else {
+							$("#themeDetails" + item.themeId).find("input[name='usedTheme']").prop("checked", true);
 						}
 						
 						if (item.themeDefault) {
 							$("#theme" + item.themeId).addClass("defaultTheme");
+							$("#themeDetails" + item.themeId).find("input[name='defaultTheme']").prop("checked", true);
+						}
+					});
+					
+					$("input[name='defaultTheme']").change(function(){
+						var checked = $(this).is(":checked");
+						
+						$("input[name='defaultTheme']").prop("checked", false);
+						
+						if (checked) {
+							$(this).prop("checked", true);
 						}
 					});
 					
@@ -230,14 +244,6 @@
 					var frameList = result.frameInfos;
 					
 					$("#themeDetails" + theme.themeId).find(".themeContent").text(theme.themeContent);
-					
-					if (theme.themeUsed) {
-						$("#themeDetails" + theme.themeId).find(".switch").find("input").prop("checked", true);
-					}
-					
-					if (theme.themeDefault) {
-						$("#themeDetails" + theme.themeId).find(".themeDefault").find("input").prop("checked", true);
-					}
 					
 					var frameHTML = "";
 					frameHTML += "<tr class='frameImg'>";
@@ -302,6 +308,12 @@
 				var themeDefault = $("#themeDetails" + themeId).find(".themeDefault").find("input").prop("checked");
 				var themeInfo = {"themeUsed" : themeUsed, "themeDefault" : themeDefault, "themeId" : themeId};
 				
+				//현재 전체적으로 기본테마가 있는지 확인
+				if (!$("input[name='themeDefault']").is(":checked")) {
+					alert("설정된 기본 테마가 없습니다.");
+					return;
+				}
+				
 				//프레임 사용여부
 				var frameList = $("#themeDetails" + themeId).find("input:checkbox[name=frameUsed]");
 				var frameListCount = frameList.length;
@@ -332,11 +344,7 @@
 				request.open('POST', '/admin/ezNewPortal/updateThemeInfo.do', true);
 				request.setRequestHeader('Content-Type', 'application/json');
 				request.onload = function() {
-					if (request.status >= 200 && request.status < 400) {
-						
-					} else {
-						// We reached our target server, but it returned an error
-					}
+					getThemes();
 				}
 				
 				request.onerror = function() {

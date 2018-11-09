@@ -663,6 +663,19 @@
 	]]>
 	</update>
 	
+	<update id="ezNewPortal.updateThemeDefault" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PORTAL_THEME_COMP
+			SET
+				theme_default = CASE WHEN theme_id = #themeId# THEN 1 ELSE 0 END
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+		]]>
+	</update>
+	
 	<delete id="ezNewPortal.deleteCompanyLogo" parameterClass="Map">
 	<![CDATA[
 		DELETE FROM
