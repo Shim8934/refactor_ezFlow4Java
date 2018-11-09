@@ -1233,10 +1233,10 @@
 		<input  type="hidden"  name="iptURL" value="">
 		<input  type="hidden" name="iSecurity" value="">
 		</form>
-		<form name="mailWriteSenderClick" action="mailWrite.do" method="post"> <!-- 추가 -->
+		<!-- <form name="mailWriteSenderClick" action="mailWrite.do" method="post"> 추가
 		<input  type="hidden"  name="cmd" value="NEW">
 		<input  type="hidden" name="msgto" value="">
-		</form>
+		</form> -->
 	    <input type="file" name="file" id="file" accept=".eml" onchange="mail_import()" style="display: none;" multiple />
 		<iframe name="importMailboxIframe" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="importMailboxform" name="importMailboxform" enctype="multipart/form-data" target="importMailboxIframe">
