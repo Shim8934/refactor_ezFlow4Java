@@ -851,6 +851,63 @@
 				
 			}
 	        
+	        function mail_import_onclick() {
+	        	document.getElementById("file").value = "";
+	        	document.getElementById("file").click();
+	        }
+	        
+	        function mail_import() {
+        		var input = document.getElementById("file");
+        		
+        		if (input.value == "") {
+        			return;
+        		}
+        		
+        		var fileCount = input.files.length;
+        		
+        		if (fileCount > 100) {
+        			alert("<spring:message code='ezEmail.jje04'/>");
+        			return;
+        		}
+	        	
+        		ShowMailProgressNew();
+	        	document.getElementById("MailProgress").style.backgroundColor = "";
+	        	document.getElementById("cancleProgressBtn").style.display = "none";
+        		
+        		var data = new FormData();
+        		data.append("folderid", g_moveUrl);
+        		
+        		for (var i = 0; i < fileCount; i++) {
+        			data.append("file1", input.files[i]);
+        		}
+        		
+        		$.ajax({
+        			type: 'POST',
+        			enctype: 'multipart/form-data',
+        			url: '/ezEmail/mailImportUpload.do',
+        			data: data,
+        			processData: false,
+                    contentType: false,
+                    cache: false,
+        			success: function(result) {
+        				HiddenMailProgressNew();
+        				
+        				if (result == "OK") {
+        	                alert("<spring:message code='ezEmail.t403' />");
+        	                MailListRefresh();
+        	            } else if (result.indexOf("NO APPEND failed.") > -1) {
+        		        	alert(strLang241);
+        	            } else {
+        	            	alert("<spring:message code='ezEmail.t404' />");
+        	            }
+        			},
+        			error: function(e) {
+        				HiddenMailProgressNew();
+        				alert("<spring:message code='ezEmail.t404' />" + e.responseText);
+        			}
+        		});
+	        }
+	        
 			function mailbox_import() {
 				document.getElementById("file1").click();
 			}
@@ -965,6 +1022,7 @@
           <li id="read_stat"><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
           <li id="unread_stat"><span onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></span></li>
           <li onClick="mail_export();" id="EmailPCSave"><span><spring:message code="ezEmail.t378" /></span></li>
+          <li onClick="mail_import_onclick();"><span><spring:message code="ezEmail.t407" /></span></li>
           <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="img_Newbtn"><spring:message code="ezEmail.t550" /></span></li>
           <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
           <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
@@ -1175,10 +1233,11 @@
 		<input  type="hidden"  name="iptURL" value="">
 		<input  type="hidden" name="iSecurity" value="">
 		</form>
-		<form name="mailWriteSenderClick" action="mailWrite.do" method="post"> <!-- 추가 -->
+		<!-- <form name="mailWriteSenderClick" action="mailWrite.do" method="post"> 추가
 		<input  type="hidden"  name="cmd" value="NEW">
 		<input  type="hidden" name="msgto" value="">
-		</form>
+		</form> -->
+	    <input type="file" name="file" id="file" accept=".eml" onchange="mail_import()" style="display: none;" multiple />
 		<iframe name="importMailboxIframe" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="importMailboxform" name="importMailboxform" enctype="multipart/form-data" target="importMailboxIframe">
 	        <input type="file" name="file1" id="file1" accept=".zip" onchange="mailbox_attach_import()" style="display: none"/>

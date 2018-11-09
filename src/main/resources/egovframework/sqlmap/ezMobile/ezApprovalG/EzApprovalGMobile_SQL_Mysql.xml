@@ -384,6 +384,134 @@
 			LIMIT
 				#listSize#
 		</isEqual>
+		<isEqual property="type" compareValue="SHARE">
+			<![CDATA[
+			SELECT * FROM (
+				SELECT 
+					DOCID,
+					DOCTITLE,
+					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE,
+					WRITERNAME$lang$ WRITERNAME,
+					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					HASATTACHYN,
+					HASOPINIONYN,
+					APRTYPE,
+					FUNCTIONTYPE,
+					APRMEMBERSN,
+					URGENTAPPROVAL,
+					'APR' as MODE,
+					companyID
+				FROM 
+					VAPRDOINGDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND
+	   				STARTDATE < #lastDate#
+	   			AND
+	   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
+			<![CDATA[
+				UNION ALL
+				
+				SELECT 
+					DOCID,
+					DOCTITLE,
+					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE,
+					WRITERNAME$lang$ WRITERNAME,
+					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					HASATTACHYN,
+					HASOPINIONYN,
+					APRTYPE,
+					FUNCTIONTYPE,
+					APRMEMBERSN,
+					URGENTAPPROVAL,
+					'END' as MODE,
+					companyID
+				FROM 
+					VENDCHAMJODOCINFO 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND
+	   				STARTDATE < #lastDate#
+	   			AND
+	   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
+				) as LIST
+				ORDER BY 
+					STARTDATE DESC
+				LIMIT
+					#listSize#
+		</isEqual>
 	</select>
 	
 	<select id="MApprovalG.getDoApproveListCount" parameterClass="Map" resultClass="Integer" remapResults="true">
@@ -687,6 +815,108 @@
 				A.WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
 			</isNotEmpty>
 		</isEqual>
+		<isEqual property="type" compareValue="SHARE">
+			<![CDATA[
+				SELECT 
+					COUNT(*)
+				FROM ( 
+				SELECT 
+					*
+				FROM 
+					VAPRDOINGDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			 AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND 
+	   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
+	   			AND 
+	   				STARTDATE < #nowDate#
+	   			AND
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
+			<![CDATA[
+				UNION ALL
+				
+				SELECT 
+					*
+				FROM 
+					VENDCHAMJODOCINFO 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+					COMPANYID IN (
+							SELECT 
+								EXTENSIONATTRIBUTE2 
+							FROM 
+								TBL_DEPTMASTER 
+							INNER JOIN 
+								TBL_ADDJOBMASTER 
+							ON
+								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+								AND 
+								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+							WHERE 
+								TBL_ADDJOBMASTER.TENANT_ID = #tenantID# 
+							AND 
+								TBL_ADDJOBMASTER.CN = #userId#
+							UNION ALL
+							SELECT 
+								PHYSICALDELIVERYOFFICENAME
+							FROM
+								TBL_USERMASTER
+							WHERE
+								CN = #userId#
+							AND
+								TENANT_ID = #tenantID# 
+							)
+	   			AND
+	   				STARTDATE < #nowDate#
+	   			AND
+	   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND
+	   				APRMEMBERSN <> 1
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
+			) as LIST
+		</isEqual>
 	</select>
 	
 	<select id="MApprovalG.getLeftCount" parameterClass="Map" resultClass="MApprGLeftVO">
@@ -834,6 +1064,48 @@
 				AND  
 					F.CODE1 ='A04'
 		   	</isEqual>) as aprEndCount
+		   	<isEqual property="useShareApproval" compareValue="YES">
+			   	<![CDATA[
+				   	,(	SELECT 
+							COUNT(*)
+						FROM 
+						(SELECT
+							*
+						FROM
+							VAPRDOINGDOCLIST 
+			   			WHERE
+			   				TENANT_ID = #tenantID#
+			   			AND
+			   				COMPANYID = #companyID#
+			   			AND 
+			   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
+			   			AND 
+			   				STARTDATE < #nowDate#
+			   			AND
+			   				APRTYPE <> '015' 
+			   			AND
+			   				APRMEMBERSN <> 1
+			   				
+			   			UNION ALL
+					
+						SELECT 
+							*
+						FROM 
+							VENDCHAMJODOCINFO 
+			   			WHERE
+			   				TENANT_ID = #tenantID#
+			   			AND
+			   				COMPANYID = #companyID#
+			   			AND
+			   				STARTDATE < #nowDate#
+			   			AND
+			   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
+			   			AND 
+			   				APRTYPE <> '015'
+			   			AND
+			   				APRMEMBERSN <> 1) as LIST ) as aprShareCount
+				]]>
+		   	</isEqual>
 	</select>
 	
 	<select id="MApprovalG.getAprLineInfo" parameterClass="Map" resultClass="MApprGAprLineInfoVO">
@@ -1039,6 +1311,40 @@
 	   			LIMIT
 	   				1
 			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="SHARE">
+			<isEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT 
+						HREF
+					FROM
+						VAPRDOINGDOCLIST 
+		   			WHERE
+		   				TENANT_ID = #tenantID#
+		   			AND
+		   				COMPANYID = #companyID#
+		   			AND
+		   				DOCID = #docID#
+		   			LIMIT
+		   				1
+				]]>
+			</isEqual>
+			<isNotEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT 
+						HREF
+					FROM
+						VENDCHAMJODOCINFO 
+		   			WHERE
+		   				TENANT_ID = #tenantID#
+		   			AND
+		   				COMPANYID = #companyID#
+		   			AND
+		   				DOCID = #docID#
+		   			LIMIT
+		   				1
+				]]>
+			</isNotEqual>
 		</isEqual>
 	</select>
 	
@@ -1490,6 +1796,90 @@
 			LIMIT
 				1
 		</isEqual>
+		<isEqual property="type" compareValue="SHARE">
+			<isEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT
+						DOCID,
+						ORGDOCID,
+						FORMID,
+						HREF,
+						HASATTACHYN,
+						APRMEMBERID,
+						APRMEMBERNAME,
+						APRMEMBERNAME2,
+						APRMEMBERDEPTID,
+						DOCSTATE,
+						DOCTITLE,
+						CASE 
+		   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+		   					ELSE WRITERNAME$lang$
+		   				END WRITERNAME,
+		   				CASE 
+		   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+		   					ELSE WRITERDEPTNAME$lang$
+		   				END WRITERDEPTNAME,
+		   				CASE 
+		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+		   					ELSE WRITERJOBTITLE$lang$
+		   				END WRITERJOBTITLE
+					FROM
+						VAPRDOINGDOCLIST
+					WHERE
+						TENANT_ID = #tenantID#
+					AND
+						COMPANYID = #companyID#
+					AND
+						DOCID = #docID#
+				]]>
+				<isNotEmpty property="aprMemberSN" prepend="AND">
+					APRMEMBERSN = #aprMemberSN#
+				</isNotEmpty>
+					LIMIT
+						1
+			</isEqual>
+			<isNotEqual property="mode" compareValue="APR">
+				<![CDATA[
+					SELECT
+						DOCID,
+						ORGDOCID,
+						FORMID,
+						HREF,
+						HASATTACHYN,
+						APRMEMBERID,
+						APRMEMBERNAME,
+						APRMEMBERNAME2,
+						APRMEMBERDEPTID,
+						DOCSTATE,
+						DOCTITLE,
+						CASE 
+		   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+		   					ELSE WRITERNAME$lang$
+		   				END WRITERNAME,
+		   				CASE 
+		   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+		   					ELSE WRITERDEPTNAME$lang$
+		   				END WRITERDEPTNAME,
+		   				CASE 
+		   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+		   					ELSE WRITERJOBTITLE$lang$
+		   				END WRITERJOBTITLE
+					FROM
+						VENDCHAMJODOCINFO
+					WHERE
+						TENANT_ID = #tenantID#
+					AND
+						COMPANYID = #companyID#
+					AND
+						DOCID = #docID#
+				]]>
+				<isNotEmpty property="aprMemberSN" prepend="AND">
+					APRMEMBERSN = #aprMemberSN#
+				</isNotEmpty>
+					LIMIT
+						1
+			</isNotEqual>
+		</isEqual>
 	</select>
 	
 	<insert id="MApprovalG.insertOpinionInfo" parameterClass="Map">
@@ -1605,4 +1995,42 @@
 					1
 		
 		</select>
+	<select id="MApprovalG.getCheckAprState" parameterClass="Map" resultClass="Integer">
+		<isEqual property="mode" compareValue="APR">
+			<![CDATA[
+				SELECT
+					COUNT(DOCID)
+				FROM
+					VAPRDOINGDOCLIST
+				WHERE
+					TENANT_ID = #tenantId#
+				AND
+					COMPANYID = #companyId#
+				AND
+					DOCID = #docId#
+				AND
+					APRMEMBERSN = #aprMemberSN#
+				AND
+					APRSTATE IN ('002', '005', '000')
+			]]>
+		</isEqual>
+		<isNotEqual property="mode" compareValue="APR">
+			<![CDATA[
+				SELECT
+					COUNT(DOCID)
+				FROM
+					VENDCHAMJODOCINFO
+				WHERE
+					TENANT_ID = #tenantId#
+				AND
+					COMPANYID = #companyId#
+				AND
+					DOCID = #docId#
+				AND
+					APRMEMBERSN = #aprMemberSN#
+				AND
+					APRSTATE IN ('002', '005', '000')
+			]]>
+		</isNotEqual>
+	</select>
 </sqlMap>
