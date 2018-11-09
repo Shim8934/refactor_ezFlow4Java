@@ -866,7 +866,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/filemanage/file-upload-overwrite", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postFileUploadOverWrite(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, Locale locale, HttpServletRequest request) throws Exception {
-		LOGGER.debug("postFileUploadGW start");
+		LOGGER.debug("postFileUploadOverWrite start");
 		JSONParser jp          = new JSONParser();
 		JSONObject jsonObject  = (JSONObject) jp.parse(dataList);
 		
@@ -948,7 +948,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		}
 		
 
-		LOGGER.debug("putFileMove end");
+		LOGGER.debug("postFileUploadOverWrite end");
 		return result;
 	}
 	
