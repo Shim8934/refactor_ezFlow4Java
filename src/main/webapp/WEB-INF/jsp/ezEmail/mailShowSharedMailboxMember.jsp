@@ -46,15 +46,15 @@
 			<div class="box" id="maillist" style="overflow-y:auto; overflow-x:hidden; width:100%; height:320px;border:0px">
 			  <table style="width:100%;" class="popuplist" style="table-layout:fixed;" id="checkboxtable">
 			    <tr>
-			      <th style="padding-left:5px;"><spring:message code='ezEmail.t712' /></th>
-			      <th style="width:100px;text-align:center;"><spring:message code='ezEmail.t26' /></th>
-			      <th style="width:80px;text-align:center;"><spring:message code='ezEmail.t28' /></th>
-			      <th style="width:80px;text-align:center;"><spring:message code='ezEmail.t31' /></th>
+			      <th style="text-align:center;"><spring:message code='ezEmail.t712' /></th>
+			      <th style="width:120px;text-align:center;"><spring:message code='ezEmail.t26' /></th>
+			      <th style="width:120px;text-align:center;"><spring:message code='ezEmail.t28' /></th>
+			      <th style="width:120px;text-align:center;"><spring:message code='ezEmail.t31' /></th>
 			    </tr>
 			    
 			    <c:forEach var="item" items="${list}">
 				    <tr>
-				      <td style="padding-left:5px;">${item.company}</td>
+				      <td style="text-align:center;">${item.company}</td>
 				      <td style="text-align:center;">${item.dept}</td>
 				      <td style="text-align:center;">${item.title}</td>
 				      <td style="text-align:center;">${item.displayName}</td>
