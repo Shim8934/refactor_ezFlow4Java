@@ -143,7 +143,7 @@
 										selectFlipster.classList.remove('select-flipster');
 									}
 									div.classList.add('select-flipster');
-									portletSetting.selectedFrame = item.frameId;
+									portletSetting.selectedFrame = index;
 									portletSetting.usedTheme = item.themeId;
 								}
 								div.dataset.frameid = item.frameId
@@ -157,16 +157,16 @@
 								li.appendChild(div);
 								ul.appendChild(li);
 							});
-							
+							console.log('start frame', portletSetting.selectedFrame);
 							// jquey flipster 적용
-							$(".frameList").flipster({
+ 							$(".frameList").flipster({
 								style: 'carousel',
 							    spacing: -0.4,
 							    nav: false,
 							    buttons: true,
-							    start: (portletSetting.selectedFrame*1) - 1,
+							    start: (portletSetting.selectedFrame*1),
 							    fadeIn : 0,
-							});							
+							});					
 
 							// 프레임이 한 개인 경우 별도 처리
 							var listCnt = frameList.length; 
