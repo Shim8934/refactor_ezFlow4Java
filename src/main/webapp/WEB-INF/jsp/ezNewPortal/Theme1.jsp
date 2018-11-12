@@ -40,6 +40,27 @@
 	.infoImg img {width:60px; height:60px;}
 	.info .infoImg {margin:0px 24px 0px 0px;}
 	.attitudePtl {border:none;}
+	
+	@media only screen and (max-width :1730px) and (min-width :1280px) {
+		.info_left {width:180px;}
+		.info_right {width : calc(100% - 188px);}
+		.info .infoImg {margin:0px 24px 50px 0px;}
+	}
+	/* main media query */
+	@media only screen and (min-width :1921px) {
+		.info_left {width:180px;}
+		.info_right {width : calc(100% - 188px);}
+		.info .infoImg {margin:0px 24px 50px 0px;}
+	}
+
+	@media only screen and (max-width :1920px) and (min-width :1686px) { 
+		.info_left {width:103px;}
+		.info_right {width : calc(100% - 111px);}
+	}
+
+	@media only screen and (max-width : 1279px) {
+		.portlet {width:410px; float:left;}
+	}
 </style>
 </head>
 <body class="mainbg">
@@ -74,7 +95,7 @@
            	 	</div>
 			</div>
            	 	<dl class="info">
-            		<dt class="infoImg"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="36px" height="36px" /></c:if><c:if test='${userPhoto != ""}'><img id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></dt>
+            		<dt class="infoImg"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="36px" height="36px" style="width:36px;height:36px;" /></c:if><c:if test='${userPhoto != ""}'><img id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></dt>
                		<dd class="infoName">${userName} ${userTitle}</dd>
                 	<dd class="infoTeam">${deptName}</dd>
                 	<%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>

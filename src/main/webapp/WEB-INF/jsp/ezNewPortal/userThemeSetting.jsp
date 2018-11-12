@@ -35,6 +35,7 @@ $(function(){
 		$("#T" + themeId).find(".btnpositionJsp").on("click", {"themeId" : themeId, "frameDefault" : frameDefault}, updateUserThemeSetting);
 	}
 	
+	$("#usedTheme").parent().addClass("usedThemeBorder");
 });
 
 function deleteUserThemeSetting() {
@@ -99,6 +100,8 @@ function updateUserThemeSetting(event) {
     font-weight: bold;
     color: #000;
 }
+
+.usedThemeBorder {border : 2px solid #2710ff;}
 </style>
 </head>
 <body class="mainbody">
