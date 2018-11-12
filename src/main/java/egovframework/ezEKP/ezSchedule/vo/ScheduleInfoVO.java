@@ -494,5 +494,27 @@ public class ScheduleInfoVO {
 	public void setCompanyid(String companyid) {
 		this.companyid = companyid;
 	}
+
+	@Override
+	public String toString() {
+		return "ScheduleInfoVO [scheduleId=" + scheduleId + ", parentId="
+				+ parentId + ", ownerId=" + ownerId + ", ownerName="
+				+ ownerName + ", ownerName2=" + ownerName2 + ", creatorId="
+				+ creatorId + ", creatorName=" + creatorName
+				+ ", creatorName2=" + creatorName2 + ", createDate="
+				+ createDate + ", modifierId=" + modifierId + ", modifierName="
+				+ modifierName + ", modifierName2=" + modifierName2
+				+ ", modifyDate=" + modifyDate + ", scheduleType="
+				+ scheduleType + ", importance=" + importance
+				+ ", hasAttendant=" + hasAttendant + ", hasAttach=" + hasAttach
+				+ ", hasComment=" + hasComment + ", isReadOnly=" + isReadOnly
+				+ ", isPublic=" + isPublic + ", dateType=" + dateType
+				+ ", startDate=" + startDate + ", endDate=" + endDate
+				+ ", repetition=" + repetition + ", repetitionDel="
+				+ repetitionDel + ", title=" + title + ", location=" + location
+				+ ", content=" + content + ", contentPath=" + contentPath
+				+ ", groupName=" + groupName + ", companyid=" + companyid
+				+ ", repeatCount=" + repeatCount + "]";
+	}
 	
 }
