@@ -68,6 +68,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);			
 			LOGGER.debug("opt: " + opt.toString());
 			
+			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
+			opt.setUsePrimaryLangOnly(usePrimaryLangOnly);
+			
 			String obj = "";
 			Gson gson = new Gson();
 			obj = gson.toJson(opt);

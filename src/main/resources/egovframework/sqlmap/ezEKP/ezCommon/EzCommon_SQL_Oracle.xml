@@ -383,6 +383,35 @@
 			MANUAL_FLAG NVARCHAR2(2) DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkJMochaMailSignatureTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				sign_no
+			FROM 
+				JMOCHA_MAIL_SIGNATURE_TEMPLATE
+			WHERE
+				rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createJMochaMailSignatureTemplate"> 
+	 	CREATE TABLE JMOCHA_MAIL_SIGNATURE_TEMPLATE 
+		(
+		  SIGN_NO NUMBER NOT NULL 
+		, CONTENT LONG VARCHAR 
+		, DISPLAYNAME VARCHAR2(45) 
+		, DISPLAYNAME2 VARCHAR2(45) 
+		, TENANT_ID NUMBER DEFAULT 0 NOT NULL 
+		, COMPANY_ID VARCHAR2(45) 
+		, CONSTRAINT JMOCHA_MAIL_SIGNATURE_TEMPLATE_PK PRIMARY KEY 
+		  (
+		    SIGN_NO 
+		  )
+		  ENABLE 
+		)
+		
+	</statement>
+		
 	<select id="EzCommonDAO.checkTblUserJobMaster" resultClass="String">
 		<![CDATA[
 			SELECT 

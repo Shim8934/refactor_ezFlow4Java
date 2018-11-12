@@ -711,7 +711,7 @@
 	                    var strEmail = document.getElementById(listContentArry[0]).getAttribute("_data3");
 	                }
 	                else {
-	                    alert("<spring:message code='ezEmail.t1014' />");
+	                    alert(strLang42);
 	                    return;
 	                }
 	            }
@@ -727,7 +727,7 @@
 	                    }
 	                }
 	                else {
-	                    alert("<spring:message code='ezEmail.t1014' />");
+	                    alert(strLang42);
 	                    return;
 	                }
 	            } else if (selTab == "DistributionList") {
@@ -738,7 +738,7 @@
 	                    var strEmail = GetAttribute(arrRows[0], "DATA2");
 	                }
 	                else {
-	                    alert("<spring:message code='ezEmail.t1014' />");
+	                    alert(strLang42);
 	                    return;
 	                }
 	            }

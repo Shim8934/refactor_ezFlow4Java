@@ -226,13 +226,23 @@ public class MResourceGWController extends EgovFileMngUtil {
 				authYn = "A";
 			}*/
 			
+			// 2018-11-07 김민성 - 자원 관리자 권한 가진 자원 체크
+			List<MResourceGetAdmSubClsTreeVO> adminCheckList = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
+
+			if(adminCheckList.size() > 0) {
+				authYn = "Y";
+			}
+			LOGGER.debug("authYn : " + authYn);
+			
 			// 자원 관리자 권한 가진 자원이 있는지 체크해서 adminYn 값 Y로
-			List<String> adminResList = mResourceService.getResAdminAuth(userId, tenantId);
+			List<String> adminResList = mResourceService.getResAdminAuth(userId, tenantId, brdCompany);
 			
 			if(adminResList.size() > 0) {
 				adminYn = "Y";
 			}
+			LOGGER.debug("adminYn : " + adminYn);
 			
+			resultMap.put("authYn", authYn);
 			resultMap.put("adminYn", adminYn);
 			
 			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResBrdList(brdId, brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
@@ -1037,17 +1047,33 @@ public class MResourceGWController extends EgovFileMngUtil {
 			if(!authYn.equals("A")) {
 				
 				List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
-				if(list.size() > 0) {
-					authCheck = "Y";
+				if(ownerId != "" || !ownerId.equals("1")) {
+					for(int i=0; i<list.size(); i++) {
+						if(list.get(i).getBrdId().equals(ownerId)) {
+							authCheck = "Y";
+						}
+					}
+				}
+				else {
+					if(list.size() > 0) {
+						authCheck = "Y";
+					}
 				}
 			}
 
 			LOGGER.debug("authCheck: " + authCheck);
 			
 			// 2018-10-31 김민성 - 자원 관리자 권한 가진 자원이 있는지 체크
-			List<String> adminResList = mResourceService.getResAdminAuth(userId, tenantId);
-			for(int i=0; i<adminResList.size(); i++) {
-				if(adminResList.get(i).equals(ownerId)) {
+			List<String> adminResList = mResourceService.getResAdminAuth(userId, tenantId, brdCompany);
+			if(ownerId != "") {
+				for(int i=0; i<adminResList.size(); i++) {
+					if(adminResList.get(i).equals(ownerId)) {
+						adminYn = "Y";
+					}
+				}
+			}
+			else {
+				if(adminResList.size() > 0) {
 					adminYn = "Y";
 				}
 			}

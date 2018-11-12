@@ -13,6 +13,7 @@
 	    .tabpart01UL{
 	    	position:absolute;
 	    	top:35px;
+	    	right:0px;
 	    	background:white;
 	    	padding:25px;
 	    	border:1px solid #999;
@@ -86,10 +87,15 @@
 					selectedNode = document.querySelectorAll('[data1="'+selectedNode+'"]')[0].id;	
 					if (selectedNode != "") {
 						document.getElementById(selectedNode).className = "tabon";
-						Tab1_SelectID = selectedNode;					
-						document.getElementById("overSpan").className = "";
-					} else {					
-						document.getElementById("overSpan").className = "tabon";
+						Tab1_SelectID = selectedNode;
+						
+						if (document.getElementById("overSpan")) {
+							document.getElementById("overSpan").className = "";
+						}
+					} else {
+						if (document.getElementById("overSpan")) {
+							document.getElementById("overSpan").className = "tabon";
+						}
 						Tab1_SelectID = "overSpan";
 					}
 					document.getElementById("tabpart01UL").style.display = "none";	
