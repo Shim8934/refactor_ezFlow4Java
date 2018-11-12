@@ -625,22 +625,22 @@
 		</div>
 		<div id="mainmenu">
 			<ul>
-				<li><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186' /></span></li>
-				<li id="upload"><span onclick="buttons.fileUpload()"><spring:message code='ezWebFolder.t187' /></span></li>
-				<li><span onclick="buttons.fileDelete()"><spring:message code='ezWebFolder.t274' /></span></li>
+				<li class="important"><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186' /></span></li>
+				<li class="important" id="upload"><span onclick="buttons.fileUpload()"><spring:message code='ezWebFolder.t187' /></span></li>
 				<li><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t273' /></span></li>
 				<li><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t275' /></span></li>
 				<li><span onclick="shareContext.addShareView()"><spring:message code='ezWebFolder.t254' /></span></li>			
 				<!-- <li><img src="/images/i_bar.gif" /></li> -->
-				<li><span onclick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281' /></span></li>
+				<li><span class="icon16 icon16_star" onclick="favoriteContext.toggleAll()"></span></li>
 	<%-- 			<li id=""><a onClick=""     style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t272'/></span></a></li> --%>
 				<!-- <li><img src="/images/i_bar.gif"></li> -->
-				<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123' /></span></li>
+				<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span class="icon16 icon16_search"></span></li>
+				<li><span class="icon16 icon16_delete" onclick="buttons.fileDelete()"></span></li>
 				<!-- <li><img src="/images/i_bar.gif"></li> -->
 	<!-- 			<li id=""><a onClick="folder_Manage()"style="margin-top: 3px;"><span>폴더관리</span></a></li> -->
-				<li><span onclick="refreshView()"><spring:message code='ezWebFolder.t139' /></span></li>
+				<li><span class="icon16 icon16_refresh" onclick="refreshView()"></span></li>
 				<!-- <li><img src="/images/i_bar.gif" /></li> -->
-				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li>
+				<li style="float:right;border:0px;background-color: white"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li>
 				<li style="float:left;">
 					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value)">
 						<option value=""><spring:message code='ezWebFolder.t191' /></option>

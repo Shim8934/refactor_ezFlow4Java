@@ -48,7 +48,13 @@ function CalendarMiniView(pTagetID) {
         //mSpan.style.marginLeft = "6px";
         //mSpan.style.marginTop = "4px";
         var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
+        
+        if (Number($("#schedule_usedTheme").val()) === 3) {
+        	mImg.setAttribute("src", "/images/ezNewPortal/theme3Img/calender_pre.png");
+        } else {
+        	mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
+        }
+        
         mImg.setAttribute("border", "0");
         mImg.setAttribute("onclick", "preMonth()");
         mSpan.appendChild(mImg);
@@ -130,7 +136,11 @@ function CalendarMiniView(pTagetID) {
         //mSpan.style.marginRight = "6px";
         //mSpan.style.marginTop = "4px";
         var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
+        if (Number($("#schedule_usedTheme").val()) === 3) {
+        	mImg.setAttribute("src", "/images/ezNewPortal/theme3Img/calender_next.png");
+        } else {
+        	mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
+        }
         mImg.setAttribute("border", "0");
         mImg.setAttribute("onclick", "nextMonth()");
         mSpan.appendChild(mImg);
@@ -272,13 +282,18 @@ function MonthMiniData(oThisDate) {
 //자원데이터에 마우스 클릭시
 function DayOnMouseClick(event) {
     if (!event) event = window.event;
-
-    if ($("#"+g_selTDID)) {
-    	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
-    }
     
-    if ($("#"+g_selTRID)) {
-    	$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    if (usedTheme == 3) {
+    	$("#"+g_selTDID).parent().removeClass('schedule');
+    	$("#"+g_selTRID).parent().removeClass('schedule');
+    } else {
+    	if ($("#"+g_selTDID)) {
+    		$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+    	}
+    	
+    	if ($("#"+g_selTRID)) {
+    		$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    	}
     }
     
     /*if (document.getElementById(g_selTDID))
@@ -287,7 +302,11 @@ function DayOnMouseClick(event) {
         document.getElementById(g_selTRID).style.backgroundColor = "";*/   
  
     //document.getElementById(event.getAttribute("id")).style.backgroundColor = "#f0f6ff";
-	$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    if (usedTheme == 3) {
+    	$("#"+event.getAttribute("id")).parent().addClass('schedule');
+    } else {
+    	$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    }
 	//$("#"+event.getAttribute("id")).parent().css("border-radius","20px");
 	
     g_selTRID = event.parentNode.parentNode.getAttribute("id");
@@ -380,15 +399,25 @@ function MiniDataBind(oAppointment) {
 }
 
 function clickDay(val01) {
-    if ($("#"+g_selTDID)) {
-    	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+	
+	 if (usedTheme == 3) {
+	    	$("#"+g_selTDID).parent().removeClass('schedule');
+	    	$("#"+g_selTRID).parent().removeClass('schedule');
+    } else {
+    	if ($("#"+g_selTDID)) {
+    		$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+    	}
+    	
+    	if ($("#"+g_selTRID)) {
+    		$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    	}
     }
-    
-    if ($("#"+g_selTRID)) {
-    	$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
-    }
-    
-	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+	 
+	if (usedTheme == 3) {
+		$("#"+val01).parent().addClass('schedule');
+    } else {
+    	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    } 
 	
     g_selTRID = $("#"+val01).parent().parent().attr("id");
     g_selTDID = val01;

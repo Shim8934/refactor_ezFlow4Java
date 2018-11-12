@@ -2468,7 +2468,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 /* left mail 용량 */
 .mail_space{height:39px; line-height:39px; background:#bbbfc3; position:absolute; bottom:0px; width:220px;}
 .mail_space .mail_spaceText{font-family:Malgun Gothic, malgun gothic; font-size:14px; color:#fff; display:inline-block; margin:0px; padding:0px 0px 0px 20px; position:absolute;}
-.mail_space .mailBar{ display:inline-block; width:30%; height:39px; background:#82b9f6; margin:0px; padding:0px;}
+.mail_space .mailBar{ display:inline-block; width:0%; height:39px; background:#82b9f6; margin:0px; padding:0px;}
 
 /* left community */
 .lnb_comIng{ margin:30px 0px 15px 0px; padding:0px; text-align:center;}
