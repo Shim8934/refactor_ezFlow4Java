@@ -9,7 +9,7 @@
 <head>
 </head>
 <body>
-	<article class="photo_board box_shadow">
+	<article class="photo_board box_shadow photo_portlet">
 		<div class="layDIV">
 			<dl class="portlet_title photo_board sortablePortlet">
 				<dt class="portletText" data1="${boardId }">

@@ -1411,13 +1411,14 @@ public class EzNewPortalGWController {
 			
 			JSONObject menuInfo =(JSONObject) jsonParam.get("menuInfo");
 			JSONArray menuNames = (JSONArray) jsonParam.get("menuNames");
-			JSONObject menuAuths = (JSONObject) jsonParam.get("menuAuths");
+			JSONArray menuAuths = (JSONArray) jsonParam.get("menuAuths");
 			
 			ezNewPortalService.insertMenu(menuInfo, menuNames, menuAuths, companyId, userInfo.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -2640,7 +2641,7 @@ public class EzNewPortalGWController {
 			
 			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",tenantId, companyId, userId);		
 			
-			
+			LOGGER.debug("sList : " + sList.toString());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", sList);

@@ -14,8 +14,8 @@ function photoBoardMovePage(event) {
 		}
 	}
 	
-	var boardId = $(".photo_board").find(".portletText").attr("data1");
-	var portletId = $(".photo_board").parent().parent().attr("id");
+	var boardId = $(".photo_portlet").find(".portletText").attr("data1");
+	var portletId = $(".photo_portlet").parent().attr("id");
 	portletId = portletId.substring(0, portletId.indexOf("P"));
 
 	$.ajax({

@@ -36,12 +36,12 @@ function ptlAttiClock() {
     var s;
     var ptlTime = " ";
     
-    nowAttiTime.setMinutes(nowAttiTime.getMinutes() + 1);
-    ptlTime = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2);
+    ptlNowAttiTime.setMinutes(ptlNowAttiTime.getMinutes() + 1);
+    ptlTime = leadingZeros(ptlNowAttiTime.getHours(), 2) + ':' + leadingZeros(ptlNowAttiTime.getMinutes(), 2);
     document.getElementById("ptlTimeFlow").innerHTML = ptlTime;
 
     if (ptlTime == "00:00" || ptlTime == "12:00") {
-    	ptlAmPmCheck(nowAttiTime.getHours());
+    	ptlAmPmCheck(ptlNowAttiTime.getHours());
     }
     
     gizmo = setTimeout("ptlAttiClock()", 1000 * 60);
@@ -59,12 +59,12 @@ function ptlAmPmCheck(hours) {
 
 //휴일 체크
 function ptlCheckHoliday(obj) {
-	var todayLunar = lunarCalc(nowAttiTime.getFullYear(), nowAttiTime.getMonth() + 1, nowAttiTime.getDate(), 1);
-	var todayMemorialDayList = memorialDayCheck(nowAttiTime, todayLunar);
-	var todayYearMemorialDayList = yearmemorialDayCheck(nowAttiTime, todayLunar);
+	var todayLunar = lunarCalc(ptlNowAttiTime.getFullYear(), ptlNowAttiTime.getMonth() + 1, ptlNowAttiTime.getDate(), 1);
+	var todayMemorialDayList = memorialDayCheck(ptlNowAttiTime, todayLunar);
+	var todayYearMemorialDayList = yearmemorialDayCheck(ptlNowAttiTime, todayLunar);
 	var addAttitude = true; // true 등록 가능
 	
-	if (closedDay[nowAttiTime.getDay()] == "1"){ //회사지정 휴일인지 체크
+	if (closedDay[ptlNowAttiTime.getDay()] == "1"){ //회사지정 휴일인지 체크
 		addAttitude = false;				
 	} else if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) { //기념일체크
 		if (todayMemorialDayList.length != 0 ) {
@@ -118,12 +118,12 @@ function ptlAddAttitude(obj) {
 	}
 	
 	beforeAlertDate = new Date();
-	var dateAlert = nowAttiTime.getFullYear() + messages.strLang4 + (nowAttiTime.getMonth() + 1) + messages.strLang5 + (nowAttiTime.getDate()) + messages.strLang6 + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
+	var dateAlert = ptlNowAttiTime.getFullYear() + messages.strLang4 + (ptlNowAttiTime.getMonth() + 1) + messages.strLang5 + (ptlNowAttiTime.getDate()) + messages.strLang6 + leadingZeros(ptlNowAttiTime.getHours(), 2) + ":" + leadingZeros(ptlNowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(ptlNowAttiTime.getSeconds(), 2);
 	var saveFlag = confirm(messages.strLang7 + dateAlert + messages.strLang8);
 	if (!saveFlag) {
 		afterAlertDate = new Date();
 		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
-		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
+		ptlNowAttiTime.setMilliseconds(ptlNowAttiTime.getMilliseconds() + overTime);
 		return;
 	} 
 	$.ajax({
@@ -141,7 +141,7 @@ function ptlAddAttitude(obj) {
 		complete : function() {
 			afterAlertDate = new Date();
     		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
-    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
+    		ptlNowAttiTime.setMilliseconds(ptlNowAttiTime.getMilliseconds() + overTime);
 		}
 	})
 }
@@ -151,4 +151,28 @@ function infoSetClick() {
 }
 function infoLogoutClick () {
 	window.open("/user/login/actionLogout.do", "top", "");
+}
+
+function ptlParseDate() {
+	var _strDate = "";
+	ptlNowAttiTime = new Date(serverTime);
+	
+	if (ptlNowAttiTime.toString() == 'Invalid Date') {
+	    var _parts = serverTime.split(' ');
+	
+	    var _dateParts = _parts[0];
+	    ptlNowAttiTime = new Date(_dateParts);
+	
+	    if (_parts.length > 1) {
+	        var _timeParts = _parts[1].split(':');
+	        ptlNowAttiTime.setHours(_timeParts[0]);
+	        ptlNowAttiTime.setMinutes(_timeParts[1]);
+	        if (_timeParts.length > 2) {
+	        	ptlNowAttiTime.setSeconds(_timeParts[2]);
+	        }
+	    }
+	}
+	
+	//$("#todayTime").html(nowAttiTime.getFullYear() + "."  + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "." + leadingZeros(nowAttiTime.getDate(), 2));
+	
 }

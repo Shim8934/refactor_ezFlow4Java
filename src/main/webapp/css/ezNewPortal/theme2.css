@@ -39,7 +39,7 @@ body{margin:0px; padding:0px;}
 .scrollbox-play-light .scrollbox{position:relative;}
 .scrollbox-play-light .scrollbox .content{position:relative; overflow:hidden;}
 .schedule_list{list-style:none; margin:0px 0px 0px 10px; padding:0px; font-size:13px; color:#444444;}
-.schedule_list li{width:330px; height:34px; line-height:34px; margin:0px; padding:0px 0px 0px 10px; background:url(/images/ezNewPortal/theme2Img/list_point.png) no-repeat 0px 16px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.schedule_list li{width:330px; height:34px; line-height:34px; margin:0px; padding:0px 0px 0px 10px; background:url(/images/ezNewPortal/theme2Img/list_point.png) no-repeat 0px 16px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; cursor:pointer;;}
 .scrollbox-play-light .scrollbox .scrollbar-v{position:absolute; top:0; right:0; width:11px; /* background:url(http://siteweb.co.kr/script/img/view_scrollbar_bg.gif) repeat-y top center; */ cursor:pointer;}
 
 .schedule .calender{float:right; width:220px;}
@@ -86,6 +86,18 @@ body{margin:0px; padding:0px;}
 .event dl{overflow:hidden; width:275px; height:174px; margin:0px; padding:0px; background:#d2e8f3; border:1px solid #cddee6; border-radiue:3px;-webkit-border-radius:3px;-moz-border-radius:3px;}
 .event dl dt{margin:0px; padding:0px;}
 .event dl dd{margin:0px; padding:0px;}
+
+/* 근태관련 */
+.info_left{float:left; width:181px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
+.info_right{width:calc(100% - 194px); background:#ffffff;}
+.infoImg img {width:60px; height:60px;}
+.attitudePtl {border:none;}
+
+/* 전체 적으로 sortable 할 수 있는 영역 cursor : move*/
+.sortablePortlet {cursor : move;}
+	
+/* 날씨추가 */
+.weather_icon {width:60%; height:60%;}
 
 /* 미디어쿼리 적용 */
 @media only screen and (max-width: 1920px){
@@ -190,7 +202,8 @@ body{margin:0px; padding:0px;}
 	}
 @media only screen and (max-width: 1560px){
 	.personal{width:344px; margin:20px 2%;}
-	.schedule{width:46%; margin:22px 2%;}
+	/* .schedule{width:46%; margin:22px 2%;} */
+	.schedule{width:42%; margin:22px 2%;}
 	.schedule .list{width:400px;}
 	.maintab01{width:400px;}
 	.maintab01 p{width:200px;}
