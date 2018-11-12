@@ -540,7 +540,7 @@ AND
 		AND TENANT_ID = #tenantId#
 		AND USER_ID = #deptId#
 		AND ACCESS_YN = 0
-		AND USER_TYPE = 2 ) AS Z  
+		AND USER_TYPE = 0 ) AS Z  
     )
 ORDER BY
 	A.PORTLET_ORDER

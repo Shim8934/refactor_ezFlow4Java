@@ -105,6 +105,7 @@
 	var photoBoardPage = 1;
 	var photoCount = 4;
  	var nowAttiTime = "";
+ 	var ptlNowAttiTime = "";
  	var beforeAlertDate = "";
 	var afterAlertDate = "";
 	var overTime = "";

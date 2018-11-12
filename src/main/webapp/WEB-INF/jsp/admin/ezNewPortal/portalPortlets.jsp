@@ -306,8 +306,14 @@
 		var portletNameList = document.getElementById("portlet" + portletId).querySelectorAll(".portletName");
 		var portletNameListCount = portletNameList.length;
 		var nameList = [];
+		var portletNameEmptyNum = 0;
 		
 		for (var i = 0; i < portletNameListCount; i++) {
+
+			if (portletNameList[i].value == "") {
+				portletNameEmptyNum++;
+			}
+			
 			nameList.push({"portletId" : portletId, "portletName" : portletNameList[i].value, "portletLang" : portletNameList[i].getAttribute("data1")});
 		}
 		

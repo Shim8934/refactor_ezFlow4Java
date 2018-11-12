@@ -33,8 +33,13 @@
 	.right_float {float:right;}
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
-	.box_shadow {width:100%;margin:0px;}
+	.box_shadow {width:100%; margin:0px;}
+	.info_left{float:left; width:160px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
+	.info_right{width:calc(100% - 167px); background:#ffffff;}
 	.portlet {height:250px; margin:20px 0px 0px 16px;background-color:#ffffff;}
+	.infoImg img {width:60px; height:60px;}
+	.info .infoImg {margin:0px 24px 0px 0px;}
+	.attitudePtl {border:none;}
 </style>
 </head>
 <body class="mainbg">
@@ -74,20 +79,20 @@
                 	<dd class="infoTeam">${deptName}</dd>
                 	<%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
                 	<dd class="infoSet" id="personalEnv"><img src="/images/kr/main/info_set.png"></dd>
-                	<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;">포틀릿/프레임 설정</dd><!-- 임시용 -->
+                	<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;margin-top:5px;">포틀릿/프레임 설정</dd><!-- 임시용 -->
            		</dl>
 			</article>
-			<article class="time_check">
-				<div id="timeinput" class="presentTime">
-	               	<p class="timeTit" id="todayTime">현재시간</p>
-					<div id="timeFlow" class="timeText"></div>
+			<article class="main_time_check">
+				<div id="timeinput" class="main_presentTime">
+	               	<p class="main_timeTit" id="todayTime">현재시간</p>
+					<div id="timeFlow" class="main_timeText"></div>
 			    </div>
-			    <div id="atti_area" class="main_time">
-	            	<dl class="timeCheckIn">
-	                	<dd id="inAttiBtn" class="out" type="A01" datetype="2" onclick="checkHoliday(this)">출근</dd>
+			    <div id="atti_area" class="main_main_time">
+	            	<dl class="main_timeCheckIn">
+	                	<dd id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this)">출근</dd>
 	                </dl>
-	                <dl class="timeCheckOut">
-	                   	<dd id="outAttiBtn" class="out" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</dd>
+	                <dl class="main_timeCheckOut">
+	                   	<dd id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</dd>
 	                </dl>
 		    	</div>
 				</article>
@@ -210,6 +215,7 @@
 	var photoBoardPage = 1;
 	var photoCount = 4;
  	var nowAttiTime = "";
+ 	var ptlNowAttiTime = "";
  	var beforeAlertDate = "";
 	var afterAlertDate = "";
 	var overTime = "";

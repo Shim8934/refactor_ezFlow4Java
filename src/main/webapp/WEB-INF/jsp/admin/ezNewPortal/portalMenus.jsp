@@ -388,12 +388,18 @@
 			var menuNames = $(".menuNameInput");
 			var menuNamesCount = menuNames.length;
 			var menuType = event.data.menuType;
+			var menuNameEmptyNum = 0;
 			
 			//메뉴 사용 유무
 			var menuUsed = $(".menuSwitch").find("input[type='checkbox']").prop("checked");
 			
 			//연결 url
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
+			
+			if (menuUrl == "" || menuUrl == null) {
+				alert("메뉴 URL을 입력해 주세요.");
+				return;
+			}
 			
 			//아이콘
 			var iconUrl = $(".menuIcon").find("span").attr("class");
@@ -411,12 +417,15 @@
 				var menuLang = menuName.id;
 				menuLang = menuLang.substring(4);
 				
+				if (portletNameList[i].value == "") {
+					portletNameEmptyNum++;
+				}
+				
 				menuNameList.push({"menuLang" : menuLang, "menuId" : menuId, "menuName" : menuName.value});
 			}
 			
 			var companiesObj = document.getElementById("ListCompany");
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
-			console.log(menuAuths);
 			
 			var request = new XMLHttpRequest();
 			request.open('POST', '/admin/ezNewPortal/updateMenu.do', true);
@@ -424,6 +433,7 @@
 			
 			request.onload = function() { 
 				getMenus();
+				menuAuths = [];
 			}
 			
 			request.onerror = function() {}
@@ -440,6 +450,8 @@
 		}
 		
 		var openMenuAdd = function() {
+			menuAuths = [];
+			
 			var menusHTML = "<li class='menuDetails'>";
 			menusHTML += "<div id='menuDetailsNew'>";
 			menusHTML += "<div class='menuTitle'>";
@@ -526,12 +538,18 @@
 			var menuNameList = [];
 			var menuNames = $(".menuNameInput");
 			var menuNamesCount = menuNames.length;
+			var menuNameEmptyNum = 0;
 			
 			//메뉴 사용 유무
 			var menuUsed = $(".menuSwitch").find("input[type='checkbox']").prop("checked");
 			
 			//연결 url
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
+			
+			if (menuUrl == "" || menuUrl == null) {
+				alert("메뉴 URL을 입력해 주세요.");
+				return;
+			}
 			
 			//아이콘
 			var iconUrl = $(".menuIcon").find("span").attr("class");
@@ -548,7 +566,21 @@
 				var menuLang = menuName.id;
 				menuLang = menuLang.substring(4);
 				
+				if (portletNameList[i].value == "") {
+					portletNameEmptyNum++;
+				}
+				
 				menuNameList.push({"menuLang" : menuLang, "menuName" : menuName.value});
+			}
+			
+			if (menuNameEmptyNum >= menuNamesCount) {
+				alert("하나 이상의 메뉴 이름을 입력해주세요.");
+				return;
+			}
+			
+			if (menuAuths.length == 0 || menuAuths == null) {
+				alert("메뉴 접근 권한을 설정해 주세요.");
+				return;
 			}
 			
 			var companiesObj = document.getElementById("ListCompany");
