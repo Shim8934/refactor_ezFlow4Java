@@ -282,10 +282,10 @@ function MakeListInfoHTML(ConentObject) {
                 XmlHeaderRows = SelectNodes(XmlHeader, "view/column");
                 
                 // 수신확인 중 수신자가 여러명일 경우
-            	if (useReceivingChk) {
+            	//if (useReceivingChk) {
             		recipients = p_Msgto.split(',');
             		recipientsLen = recipients.length;
-            	}
+            	//}
             	
                 for (var HRows = 0; HRows < XmlHeaderRows.length; HRows++) {
 
@@ -338,6 +338,7 @@ function MakeListInfoHTML(ConentObject) {
                             
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             // 수아 수정 (보낸사람 클릭 -> 보낸 사람에게 메일 전송창)
+                            _TDColum.setAttribute("data-msgtoLen", recipientsLen);
                             _TDColum.setAttribute("data-msgto", p_Msgto);
                             // 재원 수정
                             _TDColum.setAttribute("data-name", p_Sender);
@@ -1905,8 +1906,14 @@ function event_senderNameClick(thisParent, event){
 		return; 
 	} else {
 		setTimeout(function(){
-			new_mail_onclick(thisParent); // 메일쓰기
+			var msgToLen = $(thisParent).attr("data-msgtoLen");
 			
+			if (msgToLen > 20) { // 보낸편지함 > 받는 사람 클릭시 받는사람이 20명 이상일 경우 빈 메일창 띄우기 (메일쓰기 get방식으로 변경하면서 수정)
+				new_mail_onclick();
+			} else {
+				new_mail_onclick(thisParent); // 메일쓰기		
+			}
+
 			mailWriteSenderChk = true;
 		}, 200);
 		

@@ -1352,4 +1352,19 @@
 				WHERE folder.FOLDER_ID = #fldFileId# and folder.TENANT_ID =#tenantId# 
 		]]>
 	</select>
+	<update id="EzWebFolderDAO_y.updateFileRealData" parameterClass="Map" >
+		<![CDATA[	
+			UPDATE
+				TBL_WEBFOLDER_FILE
+			SET
+				FILE_PATH = #filePath#,
+				UPDATE_DATE = #timeUTC#,
+				UPDATE_ID = #userId#,
+				FILE_SIZE = #fileSize#
+			WHERE
+				FILE_ID   = #fileId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
 </sqlMap>

@@ -255,5 +255,8 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 		delete("EzScheduleDAO.deleteScheduleRepe", map);
 	}
 
+	public void updateDragSchedule(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.updateDragSchedule", map);
+	}
 }
 

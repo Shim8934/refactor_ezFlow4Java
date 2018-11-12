@@ -1400,7 +1400,10 @@ function getCurApproverAprLine(type) {
         var pCurrentAprState = getNodeText(dataNodes[12]);
         if ((getNodeText(dataNodes[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5) || (pCurrentAprState == strAprState0))) {
             pAprLineType = getNodeText(dataNodes[11]);
-
+            if (ext == "mht") {
+            	wAprMemberSN = getNodeText(dataNodes[19]);
+            }
+            
             if (approvalFlag == "S") {
             	if (pAprLineType == strAprType4)
                     var pTmpAprLineType = strAprType1;
@@ -3722,6 +3725,7 @@ function getNextDocInfo() {
             pCompanyID = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "COMPANYID"));
             docNumZeroCnt = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "DOCNUMZEROCNT"));
             orgCompanyID = pCompanyID;
+            wAprMemberSN = getNodeText(SelectSingleNode(GetChildNodesByNodeName(objNodes, "NEXTDOCINFO")[0], "APRMEMBERSN"));
         }
     } catch (e) { }
 }

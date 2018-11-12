@@ -15,6 +15,8 @@ public class MApprovalGLeftVO {
 	private int aprEndCount;
 	/** 기안한문서갯수*/
 	private int aprDraftCount;
+	/** 공유결재문서갯수*/
+	private int aprShareCount;
 	
 	public String getCompanyId() {
 		return companyId;
@@ -58,4 +60,11 @@ public class MApprovalGLeftVO {
 	public void setAprDraftCount(int aprDraftCount) {
 		this.aprDraftCount = aprDraftCount;
 	}
+	public int getAprShareCount() {
+		return aprShareCount;
+	}
+	public void setAprShareCount(int aprShareCount) {
+		this.aprShareCount = aprShareCount;
+	}
+	
 }

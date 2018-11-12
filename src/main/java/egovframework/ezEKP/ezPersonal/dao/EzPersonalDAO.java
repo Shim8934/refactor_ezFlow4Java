@@ -155,7 +155,11 @@ public class EzPersonalDAO extends EgovAbstractDAO {
 	public int getPollCount(Map<String, Object> map) {
 		return (int) select("EzPersonalDAO.getPollCount", map);
 	}
-
+	
+	public int getCheckDuplShareUser(Map<String, Object> map) throws Exception{
+		return (int) select("EzPersonalDAO.getCheckDuplShareUser", map);
+	}
+	
 	public void setApprovalPwd(Map<String, Object> map) throws Exception{
 		insert("EzPersonalDAO.setApprovalPwd", map);
 	}
