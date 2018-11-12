@@ -273,6 +273,8 @@
 	            	content LIKE '%' ||#v_KEYWORD#|| '%'
 	            AND
 	            	tenant_id = #tenantID#
+	            AND
+	            	COMPANYID = #companyID#
 			]]>
 		</isEqual>
 		<isNotEqual property="v_S_RADIO" compareValue="TITLECONTENT">
@@ -286,6 +288,8 @@
 						title LIKE '%'||#v_KEYWORD#||'%'
 					AND
 	            		tenant_id = #tenantID#
+	            	AND
+	            		COMPANYID = #companyID#
 				]]>
 			</isEqual>
 			
@@ -300,6 +304,8 @@
 							CASE WHEN #primary# = '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
 						AND
 	            			tenant_id = #tenantID#
+	            		AND
+	            			COMPANYID = #companyID#
 					]]>
 				</isEqual>
 				<isNotEqual property="v_S_RADIO" compareValue="WRITER">
@@ -310,6 +316,8 @@
 	                    	$v_BNAME$
 	                    WHERE
             				tenant_id = #tenantID#
+            			AND
+	            			COMPANYID = #companyID#
 					]]>
 				</isNotEqual>
 			</isNotEqual>
