@@ -42,7 +42,7 @@ function deleteUserThemeSetting() {
 		type : "POST",
 		url : "/ezNewPortal/deleteUserThemeSetting.do",
 		success : function() {
-			window.location.reload();
+			parent.parent.location.reload();
 		},
 		fail : function() {
 			alert("오류가 발생하였습니다.");
@@ -59,13 +59,7 @@ function updateUserThemeSetting(event) {
 		url : "/ezNewPortal/updateUserThemeSetting.do",
 		data : {"themeId" : themeId, "frameDefault" : frameDefault},
 		success : function() {
-			var btnHTML = "<div class='btnpositionJsp'><a class='imgbtn'><span>기본 테마 선택</span></a></div>";
-			$("#usedTheme").html(btnHTML);
-			$("#usedTheme").removeAttr("id");
-			$("#T" + themeId).find(".btnpositionJsp").html("<span>\"적용 중인 테마\"</span>");
-			$("#T" + themeId).find(".btnpositionJsp").attr("id", "usedTheme");
-			$("#T" + themeId).removeClass("btnpositionJsp");
-			//window.location.reload();
+			parent.parent.location.reload();
 		},
 		fail : function() {
 			alert("오류가 발생하였습니다.");

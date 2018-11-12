@@ -17,36 +17,39 @@
 				<dt class="portletText"><c:out value = "${portletName}" /></dt>
 				<dd class="portletPlus" id="fraviteFormsPlus"><img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png"></dd>
 			</dl>
-			
-			<ul class="bookmark">
-				<li class='bookmarkLi_none'></li>
-				<li class='bookmarkLi_none'></li>
-				<li class='bookmarkLi_none'></li>
-				<li class='bookmarkLi_none'></li>
-				<li class='bookmarkLi_none'></li>
-			</ul>
-			<div class="apprgraph">
-				<div class="apprgraph_area">
-					<dl class="bookmarkG01">
-						<dt><spring:message code='main.t00006' /></dt>
-						<dd>(<span id="SIXHGAP">0</span>)</dd>
-					</dl>
-					<dl class="bookmarkG02">
-						<dt><spring:message code='main.t00007' /></dt>
-						<dd>(<span id="ONEDGAP">0</span>)</dd>
-					</dl>
-					<dl class="bookmarkG03">
-						<dt><spring:message code='main.t00008' /></dt>
-						<dd>(<span id="SEVENDGAP">0</span>)</dd>
-					</dl>
-					<dl class="bookmarkG04">
-						<dt><spring:message code='main.t00009' /></dt>
-						<dd>(<span id="ONEMGAP">0</span>)</dd>
-					</dl>
-					<dl class="bookmarkG05">
-						<dt><spring:message code='main.t00010' /></dt>
-						<dd>(<span id="OTHER">0</span>)</dd>
-					</dl>
+			<div class = "bookmark_content">
+				<ul class="bookmark">
+					<li class='bookmarkLi_none'></li>
+					<li class='bookmarkLi_none'></li>
+					<li class='bookmarkLi_none'></li>
+					<li class='bookmarkLi_none'></li>
+					<li class='bookmarkLi_none'></li>
+				</ul>
+			</div>
+			<div class ="apprgraph_div">
+				<div class="apprgraph">
+					<div class="apprgraph_area">
+						<dl class="bookmarkG01">
+							<dt><spring:message code='main.t00006' /></dt>
+							<dd>(<span id="SIXHGAP">0</span>)</dd>
+						</dl>
+						<dl class="bookmarkG02">
+							<dt><spring:message code='main.t00007' /></dt>
+							<dd>(<span id="ONEDGAP">0</span>)</dd>
+						</dl>
+						<dl class="bookmarkG03">
+							<dt><spring:message code='main.t00008' /></dt>
+							<dd>(<span id="SEVENDGAP">0</span>)</dd>
+						</dl>
+						<dl class="bookmarkG04">
+							<dt><spring:message code='main.t00009' /></dt>
+							<dd>(<span id="ONEMGAP">0</span>)</dd>
+						</dl>
+						<dl class="bookmarkG05">
+							<dt><spring:message code='main.t00010' /></dt>
+							<dd>(<span id="OTHER">0</span>)</dd>
+						</dl>
+					</div>
 				</div>
 			</div>
 		</div>

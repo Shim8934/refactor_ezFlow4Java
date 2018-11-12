@@ -6,7 +6,7 @@
 <head>
 </head>
 <body>
-<div class="layDIV">
+<div class="layDIV box_shadow attitudePtl">
 	<input type="hidden" id="useAttitude" value="${useAttitude}">
 	<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 1000; border-bottom:none; background:none;"></dl>
 	<div style="position:relative; bottom:46px; overflow:hidden;">
@@ -15,7 +15,7 @@
 		</div>
 	    <div class="box_shadow info_right" style="margin:0px; margin-left:7px">
 	        <dl class="info">
-	        	<dt class="infoImg" <c:if test="${userPhoto ne null && userPhoto ne ''}">style="margin:0px"</c:if>>
+	        	<dt class="infoImg">
 	        		<c:if test="${userPhoto eq null || userPhoto eq ''}">
 		        		<img src="/images/ezNewPortal/theme3Img/my_pic.png">
 	        		</c:if>
@@ -27,7 +27,9 @@
 	            <dd class="infoTeam">${deptName }</dd>
 	            <dd class="infoMail">${userEmail }</dd>
 	            <dd class="infoTime"><spring:message code="main.t00016" /><spring:message code="ezPersonal.t27" />&nbsp;&nbsp;${lastLogin }</dd>
-	            <dd class="infoSet" onclick="infoSetClick()" style="z-index: 1001;"><img src="/images/ezNewPortal/theme3Img/infoSet_btn.png"></dd>
+	            <!-- 임시 -->
+	            <dd id="portletEnv" class="infoSet" onclick="viewPortletEnv()" style="z-index: 1001;"><img src="/images/ezNewPortal/theme3Img/infoSet_btn.png"></dd>
+	            <!-- <dd id="portletEnv" class="infoSet" onclick="infoSetClick()" style="z-index: 1001;"><img src="/images/ezNewPortal/theme3Img/infoSet_btn.png"></dd> -->
 	            <dd class="infoLogout" onclick="infoLogoutClick()" style="z-index: 1001;"><img src="/images/ezNewPortal/theme3Img/infoLogout_btn.png"></dd>
 	        </dl>
 	        <div class="time_check">

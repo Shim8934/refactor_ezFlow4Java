@@ -228,21 +228,21 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .rolling_info .info dd{font-size:12px; font-family:Gulim; color:#fff; overflow:hidden;}
 .rolling_info .info .infoName{font-weight:bold; padding:11px 0px 2px 10px; margin:0px;}
 .rolling_info .info .infoTeam{font-weight:normal; padding:0px 0px 0px 10px; margin:0px;}
-.rolling_info .info .infoSet{ margin:0px; padding:0px; position:absolute; right:10px; top:10px; cursor:pointer;}
+.rolling_info .info .infoSet{-webkit-border-radius:0px; border-radius:0px; width:auto; margin:0px; padding:0px; position:absolute; right:10px; top:10px; cursor:pointer;}
 
 /* time_check */
-.time_check{ height:66px; border-bottom:1px solid #e7e7e7; box-sizing:border-box; background:#f2f4f7; overflow:hidden; margin:0px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
-.presentTime{ text-align:center; width:116px; height:66px; border-right:1px solid #e7e7e7; float:left; overflow:hidden;}
-.presentTime .timeTit{ font-size:12px; color:#333; margin:0px; padding:10px 0px 0px 0px;}
-.presentTime .timeText{font-size: 20px;letter-spacing: 0px;}
-.main_time{ margin:0 auto; padding:13px 0px 0px 0px; overflow:hidden; width:132px;}
-.main_time .timeCheckIn{ margin:0px; padding:0px; float:left;}
-.main_time .timeCheckIn .in{margin:0px; padding:0px;  background:url(/images/ezNewPortal/maincheckIn_bg.png) no-repeat left center; font-size:14px; color:#0470e4; width:63px; height:39px; line-height:39px; text-align:center; cursor:pointer;}
-.main_time .timeCheckIn .lateIn{margin:0px; padding:0px;  background:url(/images/ezNewPortal/maincheckIn_bg.png) no-repeat left center; font-size:14px; color:#0470e4; width:63px; height:39px; line-height:39px; text-align:center; cursor:pointer;} /* 장진혁 */
-.main_time .timeCheckIn .out{margin:0px; padding:0px;  background:url(/images/ezNewPortal/maincheckOut_bg.png) no-repeat left center; font-size:12px; font-weight:bold; color:#333; width:63px; height:39px; line-height:39px; text-align:center; cursor:pointer;} /* 장진혁 */
-.main_time .timeCheckOut{ margin:0px; padding:0px; float:right;}
-.main_time .timeCheckOut .in{margin:0px; padding:0px;  background:url(/images/ezNewPortal/maincheckIn_bg.png) no-repeat left center; font-size:14px; color:#0470e4; width:63px; height:39px; line-height:39px; text-align:center; cursor:pointer;} /* 장진혁 */
-.main_time .timeCheckOut .out{margin:0px; padding:0px;  background:url(/images/ezNewPortal/maincheckOut_bg.png) no-repeat left center; font-size:12px; font-weight:bold; color:#333; width:63px; height:39px; line-height:39px; text-align:center; cursor:pointer;}
+.main_time_check{ height:66px; border-bottom:1px solid #e7e7e7; box-sizing:border-box; background:#f2f4f7; overflow:hidden; margin:0px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
+.main_presentTime{ text-align:center; width:116px; height:66px; border-right:1px solid #e7e7e7; float:left; overflow:hidden;}
+.main_presentTime .main_timeTit{ font-size:12px; color:#333; margin:0px; padding:10px 0px 0px 0px;}
+.main_presentTime .main_timeText{font-size: 20px;letter-spacing: 0px;}
+.main_main_time{ margin:0 auto; padding:13px 0px 0px 0px; overflow:hidden; width:132px;}
+.main_main_time .main_timeCheckIn{ margin:0px; padding:0px; float:left;}
+.main_main_time .main_timeCheckIn .main_in{margin:0px; padding:0px;  background:url(/images/ezNewPortal/maincheckIn_bg.png) no-repeat left center; font-size:14px; color:#0470e4; width:63px; height:39px; line-height:39px; text-align:center; cursor:pointer;}
+.main_main_time .main_timeCheckIn .main_lateIn{margin:0px; padding:0px;  background:url(/images/ezNewPortal/maincheckIn_bg.png) no-repeat left center; font-size:14px; color:#0470e4; width:63px; height:39px; line-height:39px; text-align:center; cursor:pointer;} /* 장진혁 */
+.main_main_time .main_timeCheckIn .main_out{margin:0px; padding:0px;  background:url(/images/ezNewPortal/maincheckOut_bg.png) no-repeat left center; font-size:12px; font-weight:bold; color:#333; width:63px; height:39px; line-height:39px; text-align:center; cursor:pointer;} /* 장진혁 */
+.main_main_time .main_timeCheckOut{ margin:0px; padding:0px; float:right;}
+.main_main_time .main_timeCheckOut .main_in{margin:0px; padding:0px;  background:url(/images/ezNewPortal/maincheckIn_bg.png) no-repeat left center; font-size:14px; color:#0470e4; width:63px; height:39px; line-height:39px; text-align:center; cursor:pointer;} /* 장진혁 */
+.main_main_time .main_timeCheckOut .main_out{margin:0px; padding:0px;  background:url(/images/ezNewPortal/maincheckOut_bg.png) no-repeat left center; font-size:12px; font-weight:bold; color:#333; width:63px; height:39px; line-height:39px; text-align:center; cursor:pointer;}
 
 /* countingIcon */
 .countingIcon{ margin:0px; padding:30px 0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; background-color: white;} /* 장진혁 추가 */
@@ -544,6 +544,51 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 /* layer */
 .layerpopup {background : #ffffff; border-radius : 4px;}
 
+/* personal info*/
+/* 20181105 theme02 추가 */
+.info_left{float:left; width:187px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
+.info_right{width:calc(100% - 194px); background:#ffffff;}
+
+.info{position:relative; margin:34px 0px 0px 30px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
+.info .infoImg{float:left; margin:0px 24px 52px 0px; padding:0px;}
+.info .infoName{margin:0px; padding:0px; color:#444445; font-size:18px; font-weight:bold;}
+.info .infoTeam{margin:10px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
+.info .infoMail{margin:17px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
+.info .infoTime{margin:12px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
+.info .infoSet{position:absolute; top:-20px; right:48px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
+.info .infoSet img{margin:5px 0px 0px 0px;}
+.info .infoLogout{position:absolute; top:-20px; right:16px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
+.info .infoLogout img{margin:5px 0px 0px 0px;}
+
+/* time_check */
+.time_check{height:76px; margin:23px 0px 0px 0px; padding:0px; background:url(/images/ezNewPortal/theme3Img/time_check_bg.png) left center repeat-x; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
+.presentTime{float:left; width:calc(100% - 150px); height:76px; margin:0px; padding:0px;}
+.presentTime .timeTxt{margin:9px 0px; padding:0px; text-align:center;}
+.presentTime .timeTxt span{vertical-align:middle; color:#ffffff; font-size:40px; font-weight:bold; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
+.presentTime .timeTxt span.timeAM{margin:0px 0px 0px 10px; padding:0px; font-size:12px; font-weight:normal;}
+.presentTime .timeTxt span.timePM{margin:0px 0px 0px 10px; padding:0px; font-size:12px; font-weight:normal;}
+
+.presentTime_commuteNone{width:100%;}
+
+.main_time{float:right; width:150px; height:76px; margin:0px; padding:0px;}
+.main_time .timeCheckIn{float:left; width:calc(50% - 1px); height:76px; margin:0px; padding:0px; color:#ffffff; font-size:13px; border-left:1px solid #ffffff; text-align:center; background:#45a8fb; cursor:pointer;}
+.main_time .timeCheckIn.lateIn{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
+.main_time .timeCheckIn.lateIn dd{margin:-4px 0px 0px 0px;}
+.main_time .timeCheckIn dt{margin:15px 0px 12px 0px; padding:0px;}
+.main_time .timeCheckIn dd{margin:0px; padding:0px;}
+.main_time .timeCheckOut{float:left; width:calc(50% - 1px); height:76px; margin:0px; padding:0px; color:#ffffff; font-size:13px; border-left:1px solid #ffffff; text-align:center; background:#45a8fb; cursor:pointer;}
+.main_time .timeCheckOut.in{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
+.main_time .timeCheckOut.in dd{margin:-4px 0px 0px 0px;}
+.main_time .timeCheckOut dt{margin:15px 0px 12px 0px; padding:0px;}
+.main_time .timeCheckOut dd{margin:0px; padding:0px;}
+
+/* 날씨추가 */
+.weather_icon {width:60%; height:60%;}
+
+@media only screen and (max-width :1730px) and (min-width :1280px) {
+	.info .infoImg{margin:0px 24px 34px 0px;}
+	.info .infoTime{margin:12px 0px 0px 13px;}
+}
 /* main media query */
 @media only screen and (min-width :1921px) {
 	.portlet{ width:483px; float:left;}

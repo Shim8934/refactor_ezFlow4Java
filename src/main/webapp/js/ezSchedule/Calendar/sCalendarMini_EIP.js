@@ -43,6 +43,9 @@ function CalendarMiniView(pTagetID) {
 
         var mTd = document.createElement("TD");
         mTd.className = "btn_prev"
+    	if (usedTheme == 3) {
+    		mTd.setAttribute("style","position: relative; z-index: 1001;");
+    	}
         var mSpan = document.createElement("SPAN");
         mSpan.style.cursor = "pointer";
         //mSpan.style.marginLeft = "6px";
@@ -130,7 +133,10 @@ function CalendarMiniView(pTagetID) {
         mTr.appendChild(mTd);
 
         var mTd = document.createElement("TD");
-        mTd.className = "btn_next"
+        mTd.className = "btn_next";
+    	if (usedTheme == 3) {
+    		mTd.setAttribute("style","position: relative; z-index: 1001;");
+    	}
         var mSpan = document.createElement("SPAN");
         mSpan.style.cursor = "pointer";
         //mSpan.style.marginRight = "6px";

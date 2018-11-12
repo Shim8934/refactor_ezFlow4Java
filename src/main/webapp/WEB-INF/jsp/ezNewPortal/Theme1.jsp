@@ -33,8 +33,13 @@
 	.right_float {float:right;}
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
-	.box_shadow {width:100%;margin:0px;}
+	.box_shadow {width:100%; margin:0px;}
+	.info_left{float:left; width:160px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
+	.info_right{width:calc(100% - 167px); background:#ffffff;}
 	.portlet {height:250px; margin:20px 0px 0px 16px;background-color:#ffffff;}
+	.infoImg img {width:60px; height:60px;}
+	.info .infoImg {margin:0px 24px 0px 0px;}
+	.attitudePtl {border:none;}
 </style>
 </head>
 <body class="mainbg">
@@ -74,20 +79,20 @@
                 	<dd class="infoTeam">${deptName}</dd>
                 	<%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
                 	<dd class="infoSet" id="personalEnv"><img src="/images/kr/main/info_set.png"></dd>
-                	<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;">포틀릿/프레임 설정</dd><!-- 임시용 -->
+                	<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;margin-top:5px;">포틀릿/프레임 설정</dd><!-- 임시용 -->
            		</dl>
 			</article>
-			<article class="time_check">
-				<div id="timeinput" class="presentTime">
-	               	<p class="timeTit" id="todayTime">현재시간</p>
-					<div id="timeFlow" class="timeText"></div>
+			<article class="main_time_check">
+				<div id="timeinput" class="main_presentTime">
+	               	<p class="main_timeTit" id="todayTime">현재시간</p>
+					<div id="timeFlow" class="main_timeText"></div>
 			    </div>
-			    <div id="atti_area" class="main_time">
-	            	<dl class="timeCheckIn">
-	                	<dd id="inAttiBtn" class="out" type="A01" datetype="2" onclick="checkHoliday(this)">출근</dd>
+			    <div id="atti_area" class="main_main_time">
+	            	<dl class="main_timeCheckIn">
+	                	<dd id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this)">출근</dd>
 	                </dl>
-	                <dl class="timeCheckOut">
-	                   	<dd id="outAttiBtn" class="out" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</dd>
+	                <dl class="main_timeCheckOut">
+	                   	<dd id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</dd>
 	                </dl>
 		    	</div>
 				</article>
@@ -149,7 +154,7 @@
 				</article>
 			</section>
 		</div>
-		<aside id="quickSide">
+		<aside id="quickSide">	
 			<p class="linkBtn_open" id="linkBtn_open"><img src="/images/ezNewPortal/linkBtn_open.png"></p>
 			<div class="aside_quick">
 				<p class="quickmenu_title">Quick</p>
@@ -210,6 +215,7 @@
 	var photoBoardPage = 1;
 	var photoCount = 4;
  	var nowAttiTime = "";
+ 	var ptlNowAttiTime = "";
  	var beforeAlertDate = "";
 	var afterAlertDate = "";
 	var overTime = "";
@@ -234,8 +240,10 @@
  	var leftResize = function() {
 		var wwh = $('.section_main').prop("scrollHeight") + 30;
 		$(".section_left").css("height", wwh +"px");
+		$(".section_left").css("min-height", "1133px");
 	}
  	
+ 	// 퀵링크 셋팅
  	var setQuickLinkList = function (data) {
  		var quickList = data.quickLinkList;
  		var totalCnt = data.totalPageCnt;
@@ -363,10 +371,6 @@
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
 			
-			console.log('id',portletId);
-			console.log('url',portletUrl);
-			console.log('name',portletName);
-			
   			(function (portletId, portletUrl, portletName) {
 				$.ajax({
 					type : "POST",
@@ -452,6 +456,16 @@
 		$("#quickSchedulewrite").on('click', {'menu' : 'schedule'}, quickMenuOpenRight);
 		$("#quickOrgan").on('click', {'menu' : 'organ'}, quickMenuOpenRight);
 
+		// 프레임에 따라 퀵링크 위치 변경
+		if(frameId === 'Frame2' || frameId === 'Frame4' ) {
+			var quickSide = document.getElementById('quickSide');
+			quickSide.style.cssFloat = 'left';
+			
+			var linkBtnOpen = document.getElementById('linkBtn_open');
+			linkBtnOpen.style.right = '';
+			linkBtnOpen.style.left = '82px';
+			
+		}
 		// 퀵링크 호출
 		getQuickLink();		
 		
@@ -475,7 +489,6 @@
 	});
 	
 	var frameSetting = function (frameSetId) {
-		console.log(frameSetId);
 		frameId = frameSetId;
 		
 		if (frameSetId == "Frame3" || frameSetId == "Frame4") {
