@@ -823,14 +823,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		// 트리뷰순서값이 null일 경우 현재 추가한 부서가 제일 위에 오도록
 		// 나머지 부서들의 트리뷰순서값들을 1씩 증가
-		if (checkExtrattrIsNull(vo.getExtensionAttribute15())) {
-			vo.setExtensionAttribute15("0");
-			ezOrganAdminDao.updateDBData_deptOrderIsNull(map);		
+		if (vo.getManualFlag().equals("Y")) {
+			if (checkExtrattrIsNull(vo.getExtensionAttribute15())) {
+				vo.setExtensionAttribute15("0");
+				ezOrganAdminDao.updateDBData_deptOrderIsNull(map);		
+			}
+			
+			map.put("v_EXTATTR15", vo.getExtensionAttribute15());
+			
+			ezOrganAdminDao.updateDBData_deptOrder(map); // 부서 트리뷰순서값 1씩 증가
 		}
 		
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15());
-		
-		ezOrganAdminDao.updateDBData_deptOrder(map); // 부서 트리뷰순서값 1씩 증가
 		ezOrganAdminDao.insertDBData_dept(map);
 		
 		logger.debug("insertDBData_dept ended");
@@ -906,15 +910,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		// 트리뷰순서값이 null일 경우 현재 추가한 사원이 제일 위에 오도록
 		// 나머지 사원들의 트리뷰순서값들을 1씩 증가
-		if (checkExtrattrIsNull(vo.getExtensionAttribute15())) {
-			vo.setExtensionAttribute15("0");
-			ezOrganAdminDao.updateDBData_userOrderIsNull(map);		
+		if (vo.getManualFlag().equals("Y")) {
+			if (checkExtrattrIsNull(vo.getExtensionAttribute15())) {
+				vo.setExtensionAttribute15("0");
+				ezOrganAdminDao.updateDBData_userOrderIsNull(map);		
+			}
+			
+			map.put("v_EXTATTR15", vo.getExtensionAttribute15());
+			
+			ezOrganAdminDao.updateDBData_addjobmasterOrder(map); // 겸직되어있는 사용자 트리뷰순서값 1씩 증가
+			ezOrganAdminDao.updateDBData_userOrder(map); // 원부서 사용자 트리뷰순서값 1씩 증가
 		}
 		
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15());
-		
-		ezOrganAdminDao.updateDBData_addjobmasterOrder(map); // 겸직되어있는 사용자 트리뷰순서값 1씩 증가
-		ezOrganAdminDao.updateDBData_userOrder(map); // 원부서 사용자 트리뷰순서값 1씩 증가
 		ezOrganAdminDao.insertDBData_user(map);
 				
 		logger.debug("insertDBData_user ended");
