@@ -5076,6 +5076,38 @@
 		]]>
 	</update>
 	
+	<update id="EzOrganAdminDAO.updateDBData_deptOrderIsNull" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_DEPTMASTER
+			SET
+				EXTENSIONATTRIBUTE15 = 1
+			WHERE
+				EXTENSIONATTRIBUTE2 = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#)
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				EXTENSIONATTRIBUTE15 IS NULL
+		]]>
+	</update>
+	
+	<update id="EzOrganAdminDAO.updateDBData_deptOrder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_DEPTMASTER
+			SET
+				EXTENSIONATTRIBUTE15 = EXTENSIONATTRIBUTE15 + 1
+			WHERE
+				EXTENSIONATTRIBUTE2 = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#)
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				EXTENSIONATTRIBUTE15 IS NOT NULL
+			AND 
+				EXTENSIONATTRIBUTE15 >= #v_EXTATTR15#
+		]]>
+	</update>
+	
  	 <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}
      </procedure>
