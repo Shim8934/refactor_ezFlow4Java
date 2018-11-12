@@ -81,6 +81,8 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 	<script type="text/javascript">
+		var menuAuths = [];
+		
 		$(function(){
 			getCompanies();
 			getMenus();
@@ -214,6 +216,9 @@
 					var menuNames = result.menuNames;
 					var menuAuthsY = result.menuAuths.menuAuthsY;
 					var menuAuthsN = result.menuAuths.menuAuthsN;
+					
+					menuAuths = menuAuthsY;
+					menuAuths = menuAuths.concat(menuAuthsN);
 					
 					var menusHTML = "<li class='menuDetails'>";
 					menusHTML += "<div id='menuDetails" + menuInfo.menuId + "'>";
@@ -411,12 +416,15 @@
 			
 			var companiesObj = document.getElementById("ListCompany");
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+			console.log(menuAuths);
 			
 			var request = new XMLHttpRequest();
 			request.open('POST', '/admin/ezNewPortal/updateMenu.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
-			request.onload = function() { getMenus();}
+			request.onload = function() { 
+				//getMenus();
+			}
 			
 			request.onerror = function() {}
 			
@@ -424,7 +432,8 @@
 				menuId : menuId,
 				companyId : companyValue,
 				menuNames : menuNameList,
-				menuInfo : menuInfo
+				menuInfo : menuInfo,
+				menuAuths : menuAuths
 			});
 			 
 			request.send(data);
