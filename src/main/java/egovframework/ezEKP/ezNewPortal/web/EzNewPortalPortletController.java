@@ -879,7 +879,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("startRow", 0);
-		param.put("photoCount", 2);
+		param.put("photoCount", 1);
 		param.put("portletId", portletId);
 		String url = "/rest/ezPortal/portlets/photoBoard";
 		

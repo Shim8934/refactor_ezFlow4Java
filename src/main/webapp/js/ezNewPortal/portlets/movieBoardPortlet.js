@@ -85,3 +85,28 @@ function moviePreStop(elem) {
 	elem.pause();
 	elem.currentTime = 0;
 }
+
+// 동영상 하나만 띄워줄 경우의 이벤트 핸들러
+var video = document.getElementById("mainVideo");
+var playButton = document.getElementById("playButton");
+var titleDiv = document.getElementById("titleDiv");
+function videoHandler(e) {
+	if (e.type == 'playing') {
+		// 재생 중 컨트롤 활성화, 버튼이미지+제목 안보임
+		video.setAttribute("controls","controls");
+		playButton.style.display = "none";
+		titleDiv.style.display = "none";
+	} else if (e.type == 'pause') {
+		// 정지 시 컨트롤 비활성화, 버튼이미지+제목 보임
+		video.removeAttribute("controls");
+		playButton.style.display = "block";
+		titleDiv.style.display = "inline-block";
+	}
+}
+//Add event listeners
+video.addEventListener('playing', videoHandler, false);
+video.addEventListener('pause', videoHandler, false);
+
+function moviePlay() {
+	video.play();
+}
