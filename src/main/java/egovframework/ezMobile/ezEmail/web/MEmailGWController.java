@@ -212,6 +212,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				subMailFolder = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);
 			}
+			LOGGER.debug("subMailFolder size = " + subMailFolder.size());
 			
 			JSONObject folder = null;
 			
