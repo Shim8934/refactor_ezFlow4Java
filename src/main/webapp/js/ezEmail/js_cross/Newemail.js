@@ -1474,27 +1474,25 @@ function callMsgDlg(szContentClass, Href) {
         }
     }
     else {
-    	
-    	var pURI = "/ezEmail/mailWrite.do?cmd=EDIT&URL=" + encodeURIComponent(Href);
-    	
     	if (typeof(shareId) != "undefined" && shareId != "") {
-    		pURI += "&shareId=" + encodeURIComponent(shareId);
+    		if (sendPermission == "Y") {
+    			var pURI = "/ezEmail/mailWrite.do?cmd=EDIT&URL=" + encodeURIComponent(Href) + "&shareId=" + encodeURIComponent(shareId);
+            	
+            	ReadMailOpenNewWin = window.open(pURI, "", feature);
+            	
+            	if (ReadMailOpenNewWin != null) {
+                	ReadMailOpenNewWin.focus();
+                }
+    		}
+    	} else {
+    		var pURI = "/ezEmail/mailWrite.do?cmd=EDIT&URL=" + encodeURIComponent(Href);
+        	
+        	ReadMailOpenNewWin = window.open(pURI, "", feature);
+        	
+        	if (ReadMailOpenNewWin != null) {
+            	ReadMailOpenNewWin.focus();
+            }
     	}
-    	
-    	ReadMailOpenNewWin = window.open(pURI, "", feature);
-        /*if (CrossYN() || pNoneActiveX == "YES")
-            ReadMailOpenNewWin = window.open("mail_write_Cross.aspx?cmd=EDIT&URL=" + encodeURIComponent(Href), "", feature);
-        else
-        {
-            if(pUse_Editor == "")
-                ReadMailOpenNewWin = window.open("mail_write_Cross.aspx?cmd=EDIT&URL=" + encodeURIComponent(Href), "", feature);
-            else
-                ReadMailOpenNewWin = window.open("mail_write_Cross.aspx?cmd=EDIT&URL=" + encodeURIComponent(Href), "", feature);
-        }*/
-    	
-    	if (ReadMailOpenNewWin != null) {
-        	ReadMailOpenNewWin.focus();
-        }
     }
 }
 
