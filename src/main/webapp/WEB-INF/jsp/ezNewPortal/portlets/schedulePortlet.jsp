@@ -23,7 +23,7 @@
 				<article class="schedule_small box_shadow schedule_scheduleList">
 					<div class="layDIV">
 						<div class="sCalendarArea">
-							<dl class="portlet_title portlet_schedule">
+							<dl class="portlet_title portlet_schedule sortablePortlet">
 								<dt class="portletText">
 									<spring:message code='main.t203' />
 								</dt>
@@ -33,6 +33,7 @@
 							</dl>
 							<div id="scheduleList" class="sschedule_list">
 							</div>
+
 						</div>
 					</div>
 				</article>
