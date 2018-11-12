@@ -2468,7 +2468,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 /* left mail 용량 */
 .mail_space{height:39px; line-height:39px; background:#bbbfc3; position:absolute; bottom:0px; width:220px;}
 .mail_space .mail_spaceText{font-family:Malgun Gothic, malgun gothic; font-size:14px; color:#fff; display:inline-block; margin:0px; padding:0px 0px 0px 20px; position:absolute;}
-.mail_space .mailBar{ display:inline-block; width:30%; height:39px; background:#82b9f6; margin:0px; padding:0px;}
+.mail_space .mailBar{ display:inline-block; width:0%; height:39px; background:#82b9f6; margin:0px; padding:0px;}
 
 /* left community */
 .lnb_comIng{ margin:30px 0px 15px 0px; padding:0px; text-align:center;}
@@ -2633,3 +2633,19 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 	.contents_noticeCommunity{clear:both; width:100%; margin:0px 0px 20px 0px;}
 	.contents_boardCommunity{clear:both; width:100%;}
 }
+
+.nodata_sIcon{margin:0px; padding:0px; text-align:center;}
+.nodata_sIcon dt{margin:0px; padding:20px 0px 20px 0px;}
+.nodata_sIcon dd{margin:0px; padding:0px; font-size:14px; color:#333; letter-spacing:-0.5px;}
+
+.nodata_sIconLeft{margin:0px; padding:0px; text-align:center;}
+.nodata_sIconLeft span{display:inline-block; margin:0px; padding:0px;}
+.nodata_sIconLeft span.icon{margin:0px 16px 0px 0px;}
+.nodata_sIconLeft span.icon img{vertical-align:middle;}
+.nodata_sIconLeft span.text{font-size:14px; color:#333; letter-spacing:-0.5px;}
+
+.nodata_bIcon{margin:0px; padding:0px; text-align:center;}
+.nodata_bIcon dt{margin:0px; padding:20px 0px 20px 0px;}
+.nodata_bIcon dd{margin:0px; padding:0px; font-size:18px; color:#333; letter-spacing:-0.5px;}
+
+.nodata_bIconGray{background:#ebeef1;}

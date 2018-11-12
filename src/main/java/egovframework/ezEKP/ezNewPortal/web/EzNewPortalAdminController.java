@@ -458,7 +458,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		//메뉴권한수정
 		jsonParam = new JSONObject();
-		jsonParam.put("menuAuths", param.get("menuAuths"));
+		jsonParam.put("menuAuths", paramMap.get("menuAuths"));
+		System.out.println(paramMap.get("menuAuths"));
 		
 		url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/authorities/companies/" + paramMap.get("companyId");
 		

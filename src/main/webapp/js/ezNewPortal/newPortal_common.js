@@ -821,27 +821,39 @@ function quickMenuOpen(event) {
 }
 
 function viewQuick() {
+	
+	var openPx;
+	var closePx;
+	
+	if(usedTheme === 3) {
+		openPx = '100px';
+		closePx = '0px';
+	} else {
+		openPx = '82px';
+		closePx = '3px';
+	}
+
 	if (document.getElementById("quickSide").style.width == "0px") {
 		$(document.getElementById("quickSide")).animate({width: '100px'});
 		if(usedTheme == '1' && frameId === 'Frame2') {
-			$(".linkBtn_close").animate({left: '82px'}, function(){
+			$(".linkBtn_close").animate({left: openPx}, function(){
 				$(".linkBtn_close").attr("class", "linkBtn_open");
 			});			
 		} else {
-			$(".linkBtn_close").animate({right: '82px'}, function(){
+			$(".linkBtn_close").animate({right: openPx}, function(){
 				$(".linkBtn_close").attr("class", "linkBtn_open");
 			});			
 		}
 	} else {
 		$(document.getElementById("quickSide")).animate({width: '0px'});
 		if(usedTheme == '1' && frameId === 'Frame2') {
-			$(".linkBtn_open").animate({left: '3px'}, function(){
+			$(".linkBtn_open").animate({left: closePx}, function(){
 				$(".linkBtn_open").attr("class", "linkBtn_close");
 			});					
 		} else {
-			$(".linkBtn_open").animate({right: '3px'}, function(){
+			$(".linkBtn_open").animate({right: closePx}, function(){
 				$(".linkBtn_open").attr("class", "linkBtn_close");
-			});			
+			});	
 		}
 	}
 }

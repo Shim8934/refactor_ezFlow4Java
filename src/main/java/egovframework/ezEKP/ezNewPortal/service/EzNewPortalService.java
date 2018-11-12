@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezNewPortal.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -21,6 +23,7 @@ import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
+import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
@@ -123,7 +126,7 @@ public interface EzNewPortalService {
 	/**
 	 * 관리자 메뉴별 권한목록 수정
 	 */
-	public void updateMenuAuth(JSONObject menuAuths, int menuId, String companyId, int tenantId) throws Exception;
+	public void updateMenuAuth(JSONArray menuAuths, int menuId, String companyId, int tenantId) throws Exception;
 	/**
 	 * 관리자 메뉴추가
 	 */
@@ -158,4 +161,9 @@ public interface EzNewPortalService {
 	 */
 	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang);
 	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId);
+	public void setWeather() throws Exception;
+	public Map<String, Object> getWeather(String cityCode, String primary);
+	public List<WeatherVO> getCityList(String primaryLang);
+	public String getUserCityCode(String id, int tenantId) throws Exception;
+	public void setUserCityCode(String id, int tenantId, String cityCode);
 }

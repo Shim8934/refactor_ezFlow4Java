@@ -23,6 +23,7 @@ import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
+import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
@@ -433,6 +434,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void updateThemeDefault (Map<String, Object> map) {
 		update("ezNewPortal.updateThemeDefault", map);
 	}
+	
+	public void insertMenuAuth (Map<String, Object> map) {
+		insert("ezNewPortal.insertMenuAuth", map);
+	}
+	
 	/**
 	 * 구해안
 	 */
@@ -470,5 +476,49 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<PortletNameInfoVO> getPortletNameList(Map<String, Object> map) {
 		return (List<PortletNameInfoVO>) list("ezNewPortal.getPortletNameList", map);
 	}
+	
+	//tenant_config 에서 사용하는 모든 primaryLang 리스트 가져오기
+	@SuppressWarnings("unchecked")
+	public List<String> getPrimaryLangList() {
+		return (List<String>) list("ezNewPortal.getPrimaryLangList");
+	}
 
+	@SuppressWarnings("unchecked")
+	public List<String> getWeatherKeyList(int size) {
+		return (List<String>) list("ezNewPortal.getWeatherKeyList", size);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getCityCodeList(String primaryLang) {
+		// TODO Auto-generated method stub
+		return (List<String>) list("ezNewPortal.getCityCodeList", primaryLang);
+	}
+
+	public void setCurrentWeather(Map<String, Object> map) {
+		update("ezNewPortal.setCurrentWeather", map);
+	}
+
+	public void setTodayWeather(Map<String, Object> map) {
+		update("ezNewPortal.setTodayWeather", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getWeather(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return (Map<String, Object>) select("ezNewPortal.getWeather", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<WeatherVO> getCityList(String primaryLang) {
+		return (List<WeatherVO>) list("ezNewPortal.getCityList", primaryLang);
+	}
+
+	public String getUserCityCode(Map<String, Object> map) {
+		return (String) select("ezNewPortal.getUserCityCode", map);
+	}
+
+	public void setUserCityCode(Map<String, Object> map) {
+		update("ezNewPortal.setUserCityCode", map);
+		
+	}
 }
