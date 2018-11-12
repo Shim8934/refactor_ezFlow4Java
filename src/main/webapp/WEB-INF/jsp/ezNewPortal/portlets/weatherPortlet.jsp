@@ -236,6 +236,7 @@ $(function(){
 </script>
 </head>
 <body>
+<article class="notice box_shadow">
 <div class="layDiv">
 	<dl class="portlet_title sortablePortlet">
 		<dt class="portletText">오늘의날씨 </dt> <!-- <span id="cityName">${displayName}</span> -->
@@ -245,7 +246,6 @@ $(function(){
 			</select>
 		</dd>
 	</dl>
-</div>
 <div style="heigth:100%">
 	<div style="float:left;width:34%;height:90px;display: inline-block;text-align:center">
 		<img id="currentIcon" src="" style="width:80%;height:80%;margin-top:5%"/>
@@ -263,7 +263,7 @@ $(function(){
 		<div style="float:left;width:20%;height:90px;display: inline-block;">
 			<div style="text-align:center"><span id="date1"></span><span>시</span></div>
 			<div id="weather1" style="text-align:center">
-				<img id="icon1" src="" style="width:60%;height:60%; "/>
+				<img class="weather_icon" id="icon1" src=""/>
 			</div>
 			<div style="text-align:center">
 				<span style="display:block"><span id="temp1">0</span><span>˚C</span></span>
@@ -272,7 +272,7 @@ $(function(){
 		<div style="float:left;width:20%;height:90px;display: inline-block;">
 			<div style="text-align:center"><span id="date2"></span><span>시</span></div>
 			<div id="weather2" style="text-align:center">
-				<img id="icon2" src="" style="width:60%;height:60%; "/>
+				<img class="weather_icon" id="icon2" src=""/>
 			</div>
 			<div style="text-align:center">
 				<span style="display:block"><span id="temp2">0</span><span>˚C</span></span>
@@ -281,7 +281,7 @@ $(function(){
 		<div style="float:left;width:20%;height:90px;display: inline-block;">
 			<div style="text-align:center"><span id="date3"></span><span>시</span></div>
 			<div id="weather3" style="text-align:center">
-				<img id="icon3" src="" style="width:60%;height:60%; "/>
+				<img class="weather_icon" id="icon3" src=""/>
 			</div>
 			<div style="text-align:center">
 				<span style="display:block"><span id="temp3">0</span><span>˚C</span></span>
@@ -290,7 +290,7 @@ $(function(){
 		<div style="float:left;width:20%;height:90px;display: inline-block;">
 			<div style="text-align:center"><span id="date4"></span><span>시</span></div>
 			<div id="weather4" style="text-align:center">
-				<img id="icon4" src="" style="width:60%;height:60%; "/>
+				<img class="weather_icon" id="icon4" src=""/>
 			</div>
 			<div style="text-align:center">
 				<span style="display:block"><span id="temp4">0</span><span>˚C</span></span>
@@ -299,7 +299,7 @@ $(function(){
 		<div style="float:left;width:20%;height:90px;display: inline-block;">
 			<div style="text-align:center"><span id="date5"></span><span>시</span></div>
 			<div id="weather5" style="text-align:center">
-				<img id="icon5" src="" style="width:60%;height:60%; "/>
+				<img class="weather_icon" id="icon5" src=""/>
 			</div>
 			<div style="text-align:center">
 				<span style="display:block"><span id="temp5">0</span><span>˚C</span></span>
@@ -310,5 +310,7 @@ $(function(){
 		<span style="font-size:9px;margin-right:3px;margin-top:3px;width:100%">Weather from OpenWeatherMap </span>
 	</div>
 </div>
+</div>
+</article>
 </body>
 </html>

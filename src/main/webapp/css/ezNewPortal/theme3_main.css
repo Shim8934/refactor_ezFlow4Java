@@ -541,6 +541,9 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .nodata dt{ margin:0px; padding:40px 0px 20px 0px;}
 .nodata dd{ margin:0px; padding:0px; font-size:13px; color:#c0c0c0; font-weight: bold;}
 
+/* wather */
+.weather_icon{width:47%; height:47%}
+
 
 .dataHave {position:absolute; top:2px; left:45%; font-weight: bold; font-size: 18px; }
 /* layer */
