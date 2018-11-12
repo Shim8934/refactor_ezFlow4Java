@@ -15,11 +15,32 @@
 </head>
 
 <body class="mainbg">
+	<aside id="quickSide">
+		<p class="linkBtn_open" id="linkBtn_open"><img src="/images/ezNewPortal/linkBtn_open.png"></p>
+		<div class="aside_quick">
+			<p class="quickmenu_title">Quick</p>
+			<ul class="quickmenu">
+				<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt">메일작성</span></li>
+				<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt">결재작성</span></li>
+				<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt">일정작성</span></li>
+				<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt">조직도</span></li>
+			</ul>
+		</div>
+		<div class="aside_link">
+			<p class="linkmenu_title">Link</p>
+			<ul class="linkmenu" id="QuickUl">
+			</ul>
+			<div class="linkBtn">
+				<p class="btnLay" id="btnLay">
+				</p>
+			</div>
+		</div>
+	</aside>   
 <div class="section1_bg">
 	<section class="section1">
     	<article class="personal">
         	<p>
-            	<span class="info_set"></span>
+            	<span class="info_set" id="personalEnv"></span>
                 <span>${userEmail}</span>
             </p>
             <div class="info">
@@ -79,103 +100,8 @@
                 </div>
             </article>
             <article class="calender">
-            	<div id="CalendarMini">
-                <table class="calendar_mini_title" id="MiniCalendar" cellpadding="0" cellspacing="0" border="0" width="100%">
-                    <tr>
-                        <td class="btn_prev"><img src="/images/ezNewPortal/theme2Img/btn_calendar_prev.png" border="0" onclick="preMonth()"></td>
-                        <td class="calendar_mini_day"><span>2018.10</span> <!--<select name="iYear" id="iYear" onchange="changeYear()">
-                                <option value="2021">2021</option>
-                                <option value="2020">2020</option>
-                                <option value="2019">2019</option>
-                                <option value="2018" selected="">2018</option>
-                                <option value="2017">2017</option>
-                                <option value="2016">2016</option>
-                                <option value="2015">2015</option>
-                                </select>
-                                <select name="iMon" id="iMon" onchange="changeMonth()" style="margin-left: 10px;">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8</option>
-                                <option value="9">9</option>
-                                <option value="10" selected="">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
-                            </select>--></td>
-                        <td class="btn_next"><img src="/images/ezNewPortal/theme2Img/btn_calendar_next.png" border="0" onclick="nextMonth()"></td>
-                    </tr>
-                </table>
-                <table id="" cellpadding="0" cellspacing="0" border="0" width="100%" class="calendar_mini">
-                    <tbody>
-                        <tr>
-                            <th scope="col" class="sun">일</th>
-                            <th scope="col">월</th>
-                            <th scope="col">화</th>
-                            <th scope="col">수</th>
-                            <th scope="col">목</th>
-                            <th scope="col">금</th>
-                            <th scope="col" class="sat">토</th>
-                        </tr>
-                        <tr id="TR_9_0">
-                            <td class=" gray"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-09-30_Day" dispdate="2018-09-30">30</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-01_Day" dispdate="2018-10-01">1</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-02_Day" dispdate="2018-10-02">2</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-03_Day" dispdate="2018-10-03">3</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-04_Day" dispdate="2018-10-04">4</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-05_Day" dispdate="2018-10-05">5</div></td>
-                            <td class=" sat"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-06_Day" dispdate="2018-10-06">6</div></td>
-                        </tr>
-                        <tr id="TR_9_1">
-                            <td class=" sun"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-07_Day" dispdate="2018-10-07">7</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-08_Day" dispdate="2018-10-08">8</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-09_Day" dispdate="2018-10-09">9</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-10_Day" dispdate="2018-10-10">10</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-11_Day" dispdate="2018-10-11">11</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-12_Day" dispdate="2018-10-12">12</div></td>
-                            <td class=" sat"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-13_Day" dispdate="2018-10-13">13</div></td>
-                        </tr>
-                        <tr id="TR_9_2">
-                            <td class=" sun"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-14_Day" dispdate="2018-10-14">14</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-15_Day" dispdate="2018-10-15">15</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-16_Day" dispdate="2018-10-16">16</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-17_Day" dispdate="2018-10-17">17</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-18_Day" dispdate="2018-10-18">18</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-19_Day" dispdate="2018-10-19">19</div></td>
-                            <td class=" sat"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-20_Day" dispdate="2018-10-20">20</div></td>
-                        </tr>
-                        <tr id="TR_9_3">
-                            <td class=" sun"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-21_Day" dispdate="2018-10-21">21</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-22_Day" dispdate="2018-10-22">22</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-23_Day" dispdate="2018-10-23">23</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-24_Day" dispdate="2018-10-24">24</div></td>
-                            <td class="today"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-25_Day" dispdate="2018-10-25">25</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-26_Day" dispdate="2018-10-26">26</div></td>
-                            <td class=" sat"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-27_Day" dispdate="2018-10-27">27</div></td>
-                        </tr>
-                        <tr id="TR_9_4">
-                            <td class=" sun"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-28_Day" dispdate="2018-10-28">28</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-29_Day" dispdate="2018-10-29">29</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-30_Day" dispdate="2018-10-30">30</div></td>
-                            <td class=""><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-10-31_Day" dispdate="2018-10-31">31</div></td>
-                            <td class=" gray"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-11-01_Day" dispdate="2018-11-01">1</div></td>
-                            <td class=" gray"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-11-02_Day" dispdate="2018-11-02">2</div></td>
-                            <td class=" gray"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-11-03_Day" dispdate="2018-11-03">3</div></td>
-                        </tr>
-                        <tr id="TR_9_5">
-                            <td class=" gray"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-11-04_Day" dispdate="2018-11-04">4</div></td>
-                            <td class=" gray"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-11-05_Day" dispdate="2018-11-05">5</div></td>
-                            <td class=" gray"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-11-06_Day" dispdate="2018-11-06">6</div></td>
-                            <td class=" gray"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-11-07_Day" dispdate="2018-11-07">7</div></td>
-                            <td class=" gray"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-11-08_Day" dispdate="2018-11-08">8</div></td>
-                            <td class=" gray"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-11-09_Day" dispdate="2018-11-09">9</div></td>
-                            <td class=" gray"><div onclick="DayOnMouseClick(this);" ondblclick="MonthMiniDbClick()" id="TDMINI_2018-11-10_Day" dispdate="2018-11-10">10</div></td>
-                        </tr>
-                    </tbody>
-                </table>
+            	<div id="CalendarMini_Top">
+            	
                 </div>
             </article>
         </div>
@@ -218,11 +144,11 @@
                         </dl>
                     </li>
                     <li>
-                        <dl class="writebannerDL">
+<!--                         <dl class="writebannerDL">
                             <dt><img src="/images/ezNewPortal/theme2Img/writebanner06.png" alt="협업"></dt>
                             <dt>협업</dt>
                             <dd>9</dd>
-                        </dl>
+                        </dl> -->
                     </li>
                 </ul>
             </article>
@@ -237,38 +163,17 @@
                 <!-- <p class="name"><span>UI/UX팀</span><span>홍길동</span></p> -->
             </div>
         </article>
-        <article class="event">
+<!--          <article class="event">
         	<p><span>이달의</span><span class="blue">행사</span></p>
             <dl>
             	<dt><img src="/images/ezNewPortal/theme2Img/event_pic.png"></dt>
             </dl>
-        </article>
+        </article> -->
     </section>
-	<aside id="quickSide">
-		<p class="linkBtn_open" id="linkBtn_open"><img src="/images/ezNewPortal/linkBtn_open.png"></p>
-		<div class="aside_quick">
-			<p class="quickmenu_title">Quick</p>
-			<ul class="quickmenu">
-				<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt">메일작성</span></li>
-				<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt">결재작성</span></li>
-				<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt">일정작성</span></li>
-				<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt">조직도</span></li>
-			</ul>
-		</div>
-		<div class="aside_link">
-			<p class="linkmenu_title">Link</p>
-			<ul class="linkmenu" id="QuickUl">
-			</ul>
-			<div class="linkBtn">
-				<p class="btnLay" id="btnLay">
-				</p>
-			</div>
-		</div>
-	</aside>    
 	<section class="section_main">
 		<div class="portlet_area">
 		</div>
-	</section>    
+	</section>
 </div>
 <%-- script line --%>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
@@ -289,12 +194,20 @@
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/schedulePortlet.js')}"></script>		
 <c:choose>
 	<c:when test="${checkBrowser == true}">
-		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_IEEIP.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_Portal_IEEIP.js')}"></script>
 	</c:when>
 	<c:otherwise>
-		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_EIP.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_Portal_EIP.js')}"></script>
 	</c:otherwise>
 </c:choose>
+<%-- <c:choose>
+	<c:when test="${checkBrowser == true}">
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_Top_IEEIP.js')}"></script>
+	</c:when>
+	<c:otherwise>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_Top_EIP.js')}"></script>
+	</c:otherwise>
+</c:choose> --%>
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
 	var photoBoardPage = 1;
@@ -309,6 +222,7 @@
  	var birthdayTotalCount = 0;
  	var timer;
  	var frameId = "<c:out value='${usedFrame}'/>";
+ 	var theme2 = true;
  	
  	var quickLinkPage = {
  		current: 1,
