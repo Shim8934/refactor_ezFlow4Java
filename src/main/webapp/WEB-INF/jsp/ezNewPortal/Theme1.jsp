@@ -240,6 +240,7 @@
  	var leftResize = function() {
 		var wwh = $('.section_main').prop("scrollHeight") + 30;
 		$(".section_left").css("height", wwh +"px");
+		$(".section_left").css("min-height", "1133px");
 	}
  	
  	// 퀵링크 셋팅
