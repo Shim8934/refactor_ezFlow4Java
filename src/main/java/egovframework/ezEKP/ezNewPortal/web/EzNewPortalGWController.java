@@ -177,6 +177,8 @@ public class EzNewPortalGWController {
 			String userTitle = "";
 			String deptName = "";
 			String userPhoto = "";
+			String lastLogin = commonUtil.getDateStringInUTC(info.getLastLogin(), info.getOffSet(), false);
+			//String lastLogin = info.getLastLogin();
 
 			// 회원정보 불러오기
 			if (portletLang.equals("1")) {
@@ -246,6 +248,8 @@ public class EzNewPortalGWController {
 			data.put("useMail", useMail);
 			data.put("useApproval", useApproval);
 			data.put("useSchedule", useSchedule);
+			data.put("lastLogin", lastLogin);
+			data.put("userEmail", info.getEmail());
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1730,6 +1734,8 @@ public class EzNewPortalGWController {
 
 			String loginLogoUrl = "";
 			String portalLogoUrl = "";
+			boolean loginLogoUrlDefault = true;
+			boolean portalLogoUrlDefault = true;
 			
 			//로그인 가져오기
 			if (companyId != null) {
@@ -1739,14 +1745,18 @@ public class EzNewPortalGWController {
 			
 			if (loginLogoUrl == null || loginLogoUrl == "") {
 				loginLogoUrl = "/images/kr/login/logo.gif";
+				loginLogoUrlDefault = true;
 			} else {
 				loginLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + loginLogoUrl;
+				loginLogoUrlDefault = false;
 			}
 			
 			if (portalLogoUrl == null || portalLogoUrl == "") {
 				portalLogoUrl = "/files/upload_portal/Top/Logo/logo.gif";
+				portalLogoUrlDefault = true;
 			} else {
 				portalLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + portalLogoUrl;
+				portalLogoUrlDefault = false;
 			}
 			
 			List<PortalLogoVO> logoList = new ArrayList<PortalLogoVO>();
@@ -1754,12 +1764,14 @@ public class EzNewPortalGWController {
 			PortalLogoVO loginLogo = new PortalLogoVO();
 			loginLogo.setLogoType("L");
 			loginLogo.setLogoUrl(loginLogoUrl);
+			loginLogo.setLogoDefault(loginLogoUrlDefault);
 			
 			logoList.add(loginLogo);
 			
 			PortalLogoVO portalLogo = new PortalLogoVO();
 			portalLogo.setLogoType("P");
 			portalLogo.setLogoUrl(portalLogoUrl);
+			portalLogo.setLogoDefault(portalLogoUrlDefault);
 			
 			logoList.add(portalLogo);
 			

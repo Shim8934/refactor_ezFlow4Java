@@ -382,7 +382,7 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	}
 	
 	public void updateCompanyPortletNameInfo(Map<String, Object> map) {
-		insert("ezNewPortal.updateCompanyPortletNameInfo", map);
+		update("ezNewPortal.updateCompanyPortletNameInfo", map);
 	}
 	
 	public void updateCompanyPortletInfo(Map<String, Object> map) {
@@ -423,6 +423,15 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	
 	public void deleteCompanyLogo(Map<String, Object> map) {
 		delete("ezNewPortal.deleteCompanyLogo", map);
+	}
+	
+	public void insertCompanyPortletNameInfo(Map<String, Object> map) {
+		insert("ezNewPortal.insertCompanyPortletNameInfo", map);
+	}
+	
+	//default 테마가 바뀔 때 사용
+	public void updateThemeDefault (Map<String, Object> map) {
+		update("ezNewPortal.updateThemeDefault", map);
 	}
 	/**
 	 * 구해안

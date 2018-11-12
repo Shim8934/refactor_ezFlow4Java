@@ -444,13 +444,31 @@
 	]]>
 	</insert>
 	
-	<insert id="ezNewPortal.updateCompanyPortletNameInfo" parameterClass="Map">
+	<update id="ezNewPortal.updateCompanyPortletNameInfo" parameterClass="Map">
 	<![CDATA[
-		INSERT INTO TBL_PORTAL_PORTLET_NAME
-			(portlet_id,	menu_id,	portlet_lang,	tenant_id,	company_id,	portlet_name)
-		VALUES
-			(#portletId#,	#menuId#,	#portletLang#,	#tenantId#,	#companyId#,	#portletName#)
-		ON DUPLICATE KEY UPDATE portlet_name=#portletName#
+		UPDATE
+			TBL_PORTAL_PORTLET_NAME
+		SET
+			menu_id = #menuId#,
+			portlet_name = #portletName#
+		WHERE
+			portlet_id = #portletId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			company_id = #companyId#
+		AND
+			portlet_lang = #portletLang#
+	]]>
+	</update>
+	
+	<insert id="ezNewPortal.insertCompanyPortletNameInfo" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO
+			TBL_PORTAL_PORTLET_NAME
+			(portlet_id, menu_id, portlet_lang, tenant_id, company_id, portlet_name)
+		VALUES 
+			(#portletId#, #menuId#, #portletLang#, #tenantId#, #companyId#, #portletName#)
 	]]>
 	</insert>
 	
@@ -464,16 +482,21 @@
 			A.portlet_id = B.portlet_id
 		SET
 			A.menu_id = #menuId#,
-			A.portlet_used = #portletUsed#,
+			A.portlet_used = #portletUsed#
 	]]>
 	<isNotNull property="connectionUrl">
 	<![CDATA[
-			B.portlet_url = #connectionUrl#,
-			B.menu_id = #menuId#,	
+			,B.portlet_url = #connectionUrl#
+			,A.connection_url = #connectionUrl#
+			,B.menu_id = #menuId#
 	]]>
 	</isNotNull>
+	<isNotEmpty property="boardId">
 	<![CDATA[
-			A.board_id = #boardId#
+			,A.board_id = #boardId#
+	]]>
+	</isNotEmpty>
+	<![CDATA[
 		WHERE
 			A.tenant_id = #tenantId#
 		AND
@@ -638,6 +661,19 @@
 		AND
 			tenant_id = #tenantId#
 	]]>
+	</update>
+	
+	<update id="ezNewPortal.updateThemeDefault" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PORTAL_THEME_COMP
+			SET
+				theme_default = CASE WHEN theme_id = #themeId# THEN 1 ELSE 0 END
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+		]]>
 	</update>
 	
 	<delete id="ezNewPortal.deleteCompanyLogo" parameterClass="Map">

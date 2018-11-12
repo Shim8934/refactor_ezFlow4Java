@@ -17,6 +17,7 @@
 			.btnpositionJsp {display : inline-block;}
 			.logoContent ul {margin-top:5px;padding-left:7px;}
 			.logoContent ul li {font-size:14px; display:block;padding:5px 0px;}
+			.deleteLogoBtn {display : none;}
 		</style>
 	</head>
 	<body class="mainbody">
@@ -129,11 +130,29 @@
 					for (var i = 0; i < logoCount; i++) {
 						var logoType = result[i].logoType;
 						var logoUrl = result[i].logoUrl;
-			
+						var logoDefault = result[i].logoDefault;
+						
 						if (logoType == "L") {
 							$(".loginLogo").find(".logoIcon").find("img").attr("src", logoUrl);
+							
+							if (!logoDefault) {
+								$("#imgLogin").find(".updateLogoBtn").find("span").text("수정");
+								$("#imgLogin").find(".deleteLogoBtn").css("display", "inline-block");
+							} else {
+								$("#imgLogin").find(".updateLogoBtn").find("span").text("등록");
+								$("#imgLogin").find(".deleteLogoBtn").css("display", "none");
+							}
+							
 						} else if (logoType == "P") {
 							$(".portalLogo").find(".logoIcon").find("img").attr("src", logoUrl);
+							
+							if (!logoDefault) {
+								$("#imgTop").find(".updateLogoBtn").find("span").text("수정");
+								$("#imgTop").find(".deleteLogoBtn").css("display", "inline-block");
+							} else {
+								$("#imgTop").find(".updateLogoBtn").find("span").text("등록");
+								$("#imgTop").find(".deleteLogoBtn").css("display", "none");
+							}
 						}
 					}
 		
@@ -192,11 +211,15 @@
 	    					alert("로그인 이미지는 전체관리자만 변경가능합니다.");
 	    					return;
 	    				}
-	    	
+	    				
 	    				if (logoType == "L") {
 	    					$(".loginLogo").find(".logoIcon").find("img").attr("src", result);
+							$("#imgLogin").find(".updateLogoBtn").find("span").text("수정");
+							$("#imgLogin").find(".deleteLogoBtn").css("display", "inline-block");
 	    				} else if (logoType == "P") {
 	    					$(".portalLogo").find(".logoIcon").find("img").attr("src", result);
+							$("#imgTop").find(".updateLogoBtn").find("span").text("수정");
+							$("#imgTop").find(".deleteLogoBtn").css("display", "inline-block");
 	    				}
 	    	
 	    			}
@@ -228,14 +251,19 @@
 						var logoUrl = "";
 	    	
 						if (logoType == "L") {
+							$("#imgLogin").find(".updateLogoBtn").find("span").text("등록");
+							$("#imgLogin").find(".deleteLogoBtn").css("display", "none");
 							logoUrl = "/images/kr/login/logo.gif";
 							document.getElementsByClassName("loginLogo")[0].querySelector(".logoIcon").querySelector("img").setAttribute("src", logoUrl);
+							
 						} else if (logoType == "P") {
+							$("#imgTop").find(".deleteLogoBtn").css("display", "none");
+							$("#imgTop").find(".updateLogoBtn").find("span").text("등록");
 	    					logoUrl = "/files/upload_portal/Top/Logo/logo.gif";
 	    					document.getElementsByClassName("portalLogo")[0].querySelector(".logoIcon").querySelector("img").setAttribute("src", logoUrl);
+							
 	    				}
 	    			}
-	    
 					var data = JSON.stringify({
 						companyId : companyValue,
 						logoType : logoType

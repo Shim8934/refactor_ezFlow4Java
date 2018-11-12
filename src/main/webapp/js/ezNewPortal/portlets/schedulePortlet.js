@@ -4,6 +4,11 @@
 var pMode = "P";
 var openerCalendarMiniView, openerCalendarMiniDataSource;
 
+var newDate;
+var nDate;
+var str4;
+var nDay;
+
 function getScheduleList(date, mode) {
 	selDate = date;			    
 	
@@ -27,7 +32,7 @@ function getScheduleList_after(resultList, mode, date) {
 		var pageFrom = 'Portal';
 		
 		var listHTML = "";
-		listHTML += "<ul class='sscheduleUL'>";
+		listHTML += "<div><ul class='sscheduleUL'>";
 		for (var i = 0; i < 3; i++) {
 			if (resultList[i] != null && resultList[i] != "") {
 				var SCHEDULETYPE = resultList[i].scheduleType;
@@ -68,7 +73,15 @@ function getScheduleList_after(resultList, mode, date) {
 				listHTML += "<p class='sNodataPlus' onclick='scheduleWrite()'><img src='/images/kr/main/schedule_plus.png'></p></li>";
 			}
 		}
-		listHTML += "</ul'>";
+		listHTML += "</ul'></div>";
+		
+		if (Number($("#schedule_usedTheme").val()) === 3) {
+			listHTML += "<dl id='scheduleDate' class='scheduleDate'>";
+			listHTML += "<dt class='dayT'>" + str4[nDay] + "</dt>";//요일
+			listHTML += "<dd class='dayN'>" + nDate + "</dd>";//일
+			listHTML += "</dl>";
+		}
+		
 		document.getElementById("scheduleList").innerHTML = listHTML;
 		
 	} catch (e) {}
@@ -110,4 +123,12 @@ function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date, pa
 
 function goSchedule() {
 	window.open("/ezSchedule/scheduleIndex.do?funCode=2", "main", "");
+}
+
+function today() {
+	newDate = new Date();
+	nDate = (newDate.getDate().length > 1 ? '0'+newDate.getDate() : newDate.getDate());
+	
+	str4 = strLang4_1.split(";");
+	nDay = newDate.getDay();
 }

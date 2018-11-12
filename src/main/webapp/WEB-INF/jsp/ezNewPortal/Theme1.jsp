@@ -228,7 +228,13 @@
 	
  	window.onresize = function(event) {
  		frameSetting(frameId);
+		leftResize();
  	}
+ 	
+ 	var leftResize = function() {
+		var wwh = $('.section_main').prop("scrollHeight") + 30;
+		$(".section_left").css("height", wwh +"px");
+	}
  	
  	var setQuickLinkList = function (data) {
  		var quickList = data.quickLinkList;
@@ -357,7 +363,11 @@
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
 			
-			(function (portletId, portletUrl, portletName) {
+			console.log('id',portletId);
+			console.log('url',portletUrl);
+			console.log('name',portletName);
+			
+  			(function (portletId, portletUrl, portletName) {
 				$.ajax({
 					type : "POST",
 					dataType : "html",
@@ -460,7 +470,8 @@
 		});
 		
 		$(".portlet_area").disableSelection();
-		
+
+		leftResize();
 	});
 	
 	var frameSetting = function (frameSetId) {

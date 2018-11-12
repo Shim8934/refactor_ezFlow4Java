@@ -293,6 +293,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezNewPortal/updateThemeInfo.do")
+	@ResponseBody
 	public void updateThemeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("updateThemeInfo started.");
 		

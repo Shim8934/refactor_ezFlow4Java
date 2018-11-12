@@ -370,6 +370,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("useMail", data.get("useMail"));
 			model.addAttribute("useApproval", data.get("useApproval"));
 			model.addAttribute("useSchedule", data.get("useSchedule"));
+			model.addAttribute("lastLogin", data.get("lastLogin"));
+			model.addAttribute("userEmail", data.get("userEmail"));
 			
 			String usedTheme = data.get("usedTheme").toString();
 			returnUrl += "Theme" + usedTheme;

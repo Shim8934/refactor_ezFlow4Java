@@ -846,7 +846,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
 				
-				ezNewPortalDAO.updateCompanyPortletNameInfo(map);
+				ezNewPortalDAO.insertCompanyPortletNameInfo(map);
 			}
 		}
 		LOGGER.debug("insertPortlet ended.");
@@ -1011,7 +1011,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			list = ezNewPortalDAO.getApprovalDoingList(map);
 			result.put("list", list);
 			
-			if (list != null) {
+			if (list.size() > 0) {
 				if (approvalFlag.equalsIgnoreCase("G")) {
 					map.put("code1", "A04");
 				} else {
@@ -1151,6 +1151,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map = new ObjectMapper().readValue(themeInfo.toJSONString(), Map.class);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		
+		if ((boolean)map.get("themeDefault")) {
+			ezNewPortalDAO.updateThemeDefault(map);
+		}
 		
 		ezNewPortalDAO.updateThemeInfo(map);
 		
