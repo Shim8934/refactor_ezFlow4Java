@@ -1326,7 +1326,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public void insertMenu(JSONObject menuInfo, JSONArray menuNames, JSONObject menuAuths, String companyId, int tenantId) throws Exception {
+	public void insertMenu(JSONObject menuInfo, JSONArray menuNames, JSONArray menuAuths, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("insertMenu started.");
 		
 		Map<String, Object> map = new HashMap<>();
@@ -1361,35 +1361,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		//권한은 셀렉트키로 받아서 ezNewPortal.updateCompanyMenuNameInfo
 		//지금 권한 안들어오지 조직도없지 선택못하지
-		if (menuAuths != null) {
-			for (Object item : (JSONArray) menuAuths.get("menuAuthsY")) {
-				if (item instanceof JSONObject) {
-					JSONObject menuAuthsY = (JSONObject) item;
-					
-					map = new ObjectMapper().readValue(menuAuthsY.toJSONString(), Map.class);
-					map.put("menuId", menuId);
-					map.put("accessYN", true);
-					map.put("companyId", companyId);
-					map.put("tenantId", tenantId);
-					
-					ezNewPortalDAO.updateMenuAuth(map);
-				}
-			}
-			
-			for (Object item : (JSONArray) menuAuths.get("menuAuthsN")) {
-				if (item instanceof JSONObject) {
-					JSONObject menuAuthsY = (JSONObject) item;
-					
-					map = new ObjectMapper().readValue(menuAuthsY.toJSONString(), Map.class);
-					map.put("menuId", menuId);
-					map.put("accessYN", false);
-					map.put("companyId", companyId);
-					map.put("tenantId", tenantId);
-					
-					ezNewPortalDAO.updateMenuAuth(map);
-				}
-			}
-		}
+		updateMenuAuth(menuAuths, menuId, companyId, tenantId);
 		
 		LOGGER.debug("insertMenu ended.");
 	}

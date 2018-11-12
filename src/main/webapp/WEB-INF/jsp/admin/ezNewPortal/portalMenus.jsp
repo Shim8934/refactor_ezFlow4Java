@@ -423,7 +423,7 @@
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 
-				//getMenus();
+				getMenus();
 			}
 			
 			request.onerror = function() {}
@@ -478,8 +478,8 @@
 			menusHTML += "<li class='conUrl'>[연결 URL]<input type='text' maxlength='100'></li>"
 			menusHTML += "</ul></div>";
 			menusHTML += "<div class='menuAuth'><div class='btnpositionJsp menuAuthBtn'><a class='imgbtn'><span>권한 설정</span></a></div>";
-			menusHTML += "<div class='accessOK'>[접근 허용]</div>";
-			menusHTML += "<div class='accessNO'>[접근 불가]</div>";  /////권한 가져오기
+			menusHTML += "<div class='accessOK'>[접근 허용]<div></div></div>";
+			menusHTML += "<div class='accessNO'>[접근 불가]<div></div></div>";
 			menusHTML += "</div>";
 			menusHTML += "</div>";
 			menusHTML += "</li>";
@@ -512,9 +512,11 @@
 			
 			//아이콘등록 버튼 설정
 			$(".iconBtn").on("click", uploadIconImg);
-			
+
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			//권한설정 기능
-			$(".menuAuthBtn").on("click", {"mode" : "new"}, openMenuAuth);
+			$(".menuAuthBtn").on("click", {"menuId" : null, "companyId" : companyValue, "mode" : "new"}, openMenuAuth);
 			
 			//저장기능
 			$(".addMenuBtn").on("click", insertMenu);
@@ -556,14 +558,17 @@
 			request.open('POST', '/admin/ezNewPortal/insertMenu.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
-			request.onload = function() { getMenus();}
+			request.onload = function() { 
+				getMenus();
+			}
 			
 			request.onerror = function() {}
 			
 			var data = JSON.stringify({
 				companyId : companyValue,
 				menuNames : menuNameList,
-				menuInfo : menuInfo
+				menuInfo : menuInfo,
+				menuAuths : menuAuths
 			});
 			 
 			request.send(data);
@@ -643,12 +648,10 @@
 		
 		var openMenuAuth = function(event) {
 			var mode = event.data.mode;
-			
-			if (mode == "view") {
-				var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId;
-				var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
-		    		try { OpenWin.focus(); } catch (e) { }
-			}
+
+			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId;
+			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
+		    	try { OpenWin.focus(); } catch (e) { }
 		}
 
 	</script>
