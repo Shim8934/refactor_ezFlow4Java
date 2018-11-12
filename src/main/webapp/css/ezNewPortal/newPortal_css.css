@@ -588,10 +588,14 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 @media only screen and (max-width :1730px) and (min-width :1280px) {
 	.info .infoImg{margin:0px 24px 34px 0px;}
 	.info .infoTime{margin:12px 0px 0px 13px;}
+	.info_left {width:103px;}
+	.info_right {width : calc(100% - 111px);}
 }
 /* main media query */
 @media only screen and (min-width :1921px) {
 	.portlet{ width:483px; float:left;}
+	.info_left {width:103px;}
+	.info_right {width : calc(100% - 111px);}
 }
 
 @media only screen and (max-width :1920px) and (min-width :1686px) { 
@@ -601,6 +605,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_middle{ width:33.3%;}
 	.portlet{ width:32%; float:left;}
 	.bannerText{ padding:73px 18px 0px 0px;}
+	.info_left {width:103px;}
+	.info_right {width : calc(100% - 111px);}
 }
 
 @media only screen and (max-width :1685px) and (min-width :1280px) {
@@ -611,7 +617,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.portlet{width:48%; float:left;}
 	.vote{ margin:0px 2px; float:left; overflow:hidden;}
 	.stats_graph{ float:left; overflow:hidden;}
-	.groupware_banner{ float:left; margin-top:0px}
+	.groupware_banner{ float:left; margin-top:0px;}
 	
 }
 
