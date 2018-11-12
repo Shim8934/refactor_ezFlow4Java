@@ -33,6 +33,8 @@
 	.portlet {
 		 margin:20px 0px 0px 16px;
 		 height:250px;
+		 background:#fff;
+		 border-radius: 5px;
 	}
 	.slider_section {height:515px; width:280px;}
 	.right_float {float:right;}
@@ -310,6 +312,10 @@
 		
 		//구해안 - 임시로 넣어둠
 		$("#portletEnv").on("click", viewPortletEnv);
+		
+		//구해안 - 테마3일때 일정포틀릿이랑 나의정보 포틀릿은 background 지워버리기
+		$("#36portlet").css("background-color","none");
+		$("#6portlet").css("background-color","none");
 
 		// 퀵링크 호출
 		getQuickLink();		

@@ -141,7 +141,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 /* layout */
 #Center {min-height:600px; margin:0px; min-width:1260px; background:url(/images/ezNewPortal/theme3Img/main_background.png) center top no-repeat; background-size:cover;}
 .section_left{  margin:0px; padding:0px; float:left; overflow:hidden; border-right:0px solid #cdcdcd; width:0px; box-sizing:border-box; background:#fff;}
-.section_main{ overflow:hidden; padding:0px 0px 20px 8px; float:none; min-width:880px; max-width:1920px; box-sizing:border-box; min-height:1000px;}
+.section_main{ overflow:hidden; padding:0px 0px 20px 3px; float:none; min-width:880px; max-width:1920px; box-sizing:border-box; min-height:1000px;}
 .section_main .mainLayout_left{ overflow:hidden; float:left; padding:0px 0px 0px 18px; box-sizing:border-box; }
 .section_main .mainLayout_middle{ overflow:hidden;  padding:0px 0px 0px 16px; float:left; box-sizing:border-box; }
 .section_main .mainLayout_right{ float:left; padding:0px 0px 0px 16px; box-sizing:border-box; overflow:hidden; }
@@ -151,10 +151,10 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .layDIV02{ height:520px; background:#fff; overflow:hidden; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} /* 장진혁 */
 
 /* box_shadow */
-.box_shadow{/* background: #fff */; padding:0px; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); width:auto; height:250px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow: hidden; border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;} /*장진혁 */
+.box_shadow{ /* background: #fff */ ; padding:0px; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); width:auto; height:250px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow: hidden; border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;} /*장진혁 */
 
 /* portlet_title */
-.portlet_title{ margin:0px; padding:0px; height:46px; line-height:44px; box-sizing:border-box; overflow:hidden; background:rgba(255,255,255,0.7);}
+.portlet_title{ margin:0px; padding:0px; height:46px; line-height:44px; box-sizing:border-box; overflow:hidden; background:rgba(70,110,110,0.2);}
 .portlet_title .portletText{ margin:0px; padding:0px 0px 0px 20px; font-size:16px; color:#333; font-weight:bold; letter-spacing:-1px; float:left; overflow:hidden;}
 .portlet_title .portletPlus{ margin:0px; padding:0px; float:right; overflow:hidden; cursor:pointer;}
 .sortablePortlet:hover {cursor : move;}
@@ -207,7 +207,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .first_approval .appr_arrow{ float:left; overflow:hidden; width:5%; text-align:center;}
 
 /* portlet_tab */
-.portlet_tab{height:45px; margin:0px 00px 0px 0px; overflow:hidden;white-space:nowrap; font-size:14px; border-bottom:1px solid #e7e7e7; box-sizing:border-box; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; background:rgba(255,255,255,0.7);}
+.portlet_tab{height:45px; margin:0px 00px 0px 0px; overflow:hidden;white-space:nowrap; font-size:14px; border-bottom:1px solid #e7e7e7; box-sizing:border-box; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; background:rgba(70,110,110,0.2);}
 .portlet_tab dt{float:left; height:45px; line-height:43px; margin:-1px 0px 0px -1px;  color:#333; cursor:pointer; font-weight:bold; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; max-width:170px; background:url(/images/ezNewPortal/theme3Img/portlet_tabDT_bg.png) right center no-repeat;}
 .portlet_tab dt span{ display:inline-block; height:45px; padding:0px 15px;}
 .portlet_tab dt.on{float:left; height:43px; line-height:43px; border-bottom:2px solid #0470e4; margin:-1px 0px 0px -1px; color:#005fc5; font-weight:bold; cursor:pointer;}
@@ -518,8 +518,8 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* aside */
 aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index:9; overflow:visible; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
-.linkBtn_open{ margin:0px; padding:0px; position:absolute; right:100px; top:30px; cursor:pointer; z-index: 1000;}
-.linkBtn_close{margin:0px; padding:0px; position:absolute; right:100px; top:30px; cursor:pointer; z-index: 1000;}
+.linkBtn_open{ margin:0px; padding:0px; position:absolute; right:100px; top:30px; cursor:pointer; z-index: 1002;}
+.linkBtn_close{margin:0px; padding:0px; position:absolute; right:100px; top:30px; cursor:pointer; z-index: 1002;}
 .aside_quick{ margin:0px; padding:0px; overflow:hidden; border-top-left-radius:5px;-webkit-border-top-left-radius:5px;-moz-border-top-left-radius:5px;border-top-right-radius:5px;-webkit-border-top-right-radius:5px;-moz-border-top-right-radius:5px;}
 .aside_quick .quickmenu_title{ margin:0px; padding:0px; width:100px; height:48px; background:#404b50; line-height:44px; text-align:center; color:#fff; font-size:13px; font-weight:bold;}
 .aside_quick .quickmenu {width:100px; margin:0px; padding:0px; list-style:none; background:#fff; height:292px; box-sizing:border-box;}
@@ -546,7 +546,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .nodata dd{ margin:0px; padding:0px; font-size:13px; color:#c0c0c0; font-weight: bold;}
 
 /* wather */
-.weather_icon{width:47%; height:47%}
+.weather_icon{ height:47%}
 .weather_content{background:#fff;}
 
 .dataHave {position:absolute; top:2px; left:45%; font-weight: bold; font-size: 18px; }
@@ -563,7 +563,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_right{  width:33.3%;}
 	.section_main .mainLayout_left{ width:33.3%;}
 	.section_main .mainLayout_middle{ width:33.3%;}
-	.portlet{ width:32%; float:left;}
+	.portlet{ width:32.1%; float:left;}
 	/* .bannerText{ padding:73px 18px 0px 0px;} */
 }
 
@@ -573,9 +573,9 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_left{ width:50%;}
 	.section_main .mainLayout_middle{ width:50%;}
 	.portlet{width:48%; float:left;}
-	.vote{ margin:0px 2px; float:left; overflow:hidden;}
+	/* .vote{ margin:0px 2px; float:left; overflow:hidden;} */
 	.stats_graph{ float:left; overflow:hidden;}
-	.groupware_banner{ float:left; margin-top:0px}
+	/* .groupware_banner{ float:left; margin-top:0px} */
 	
 }
 
