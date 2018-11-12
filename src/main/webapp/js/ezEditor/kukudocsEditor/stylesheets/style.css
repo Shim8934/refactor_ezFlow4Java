@@ -159,6 +159,10 @@ body{ font-family:'Arial, MalgunGothic, AppleSDGothic'; font-size:12px; /*margin
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_merge { background-position: -180px -90px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_split_col { background-position: -210px -90px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_split_row { background-position: -240px -90px; }
+
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_cell_horizontal_size { background-position: -331px -211px; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_cell_vertical_size { background-position: -360px -211px; }
+
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_fullscreen { background-position: -360px -150px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_video { background-position: -240px -181px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_file { background-position: -272px -123px; }
@@ -1490,6 +1494,11 @@ body{ font-family:'Arial, MalgunGothic, AppleSDGothic'; font-size:12px; /*margin
 .kk_context_menu .context-menu-icon-vertical_align_middle:before { background-position: -180px -180px;}
 .kk_context_menu .context-menu-icon-vertical_align_bottom:before { background-position: -210px -180px;}
 .kk_context_menu .context-menu-icon-vertical_align_baseline:before { background-position: -150px -180px;}
+
+.kk_context_menu .context-menu-icon-calculate_horizontal_sum:before { background-position: -210px -211px; }
+.kk_context_menu .context-menu-icon-calculate_vertical_sum:before { background-position: -240px -211px;}
+.kk_context_menu .context-menu-icon-calculate_horizontal_avg:before { background-position: -271px -211px;}
+.kk_context_menu .context-menu-icon-calculate_vertical_avg:before { background-position: -302px -211px;}
 
 
 
