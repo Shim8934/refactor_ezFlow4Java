@@ -272,8 +272,6 @@
 				
 				var saveBtn = document.getElementById('saveBtn');
 				saveBtn.addEventListener('click', function (){
-					if(!confirm('변경된 내용을 저장하시겠습니까?')) return;
-			
 					var portletList = [];
 					var classList = document.getElementsByClassName('ui-portlet-span');
 					HTMLCollection.prototype.forEach = Array.prototype.forEach;

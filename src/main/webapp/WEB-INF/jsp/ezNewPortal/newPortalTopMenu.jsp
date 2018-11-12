@@ -18,7 +18,7 @@
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 	</head>
 	<body>
-	<header id="header">
+	<header id="top">
 	</header>
 		<style type="text/css">
 		#editBtn {
@@ -152,7 +152,7 @@
 				str += '	</li>';
 				str += '</ul>';		
 			
-			document.getElementById('header').innerHTML = str;
+			document.getElementById('top').innerHTML = str;
 		}
 		
 		// window.open 이벤트 처리하기
@@ -311,7 +311,6 @@
 			// 저장버튼
 			var editMenuSave = document.getElementById('editMenuSave');
 			editMenuSave.addEventListener('click', function() {
-				alert('저장하였습니다.');		
 				
 				document.getElementById('editMenuBtn').style = 'none';
 				document.getElementById('editBtn').style = 'block';
@@ -342,6 +341,7 @@
 						// 메뉴 리스트 다시 덮어씌우기
 						setMainMenuList(result.menuList);
 						setExpandMenuList(result.menuList); 
+						subMenuClickEvent('off');
 					} else {
 						console.error(xhr.responseText);
 					}

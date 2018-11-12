@@ -9,24 +9,6 @@
 <body>
 <input id="schedule_usedTheme" type="hidden" value="${usedTheme}">
 	<c:choose>
-		<c:when test="${usedTheme eq 1}">
-			<article class="box_shadow">
-			<div class="layDIV">
-				<dl class="portlet_title sortablePortlet">
-					<dt class="portletText">
-						<spring:message code='main.t203' />
-					</dt>
-					<dd class="portletPlus" onclick="goSchedule();">
-						<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
-					</dd>
-				</dl>
-				<div class="sCalendarArea">
-					<div id="CalendarMini" class="scalender"></div>
-					<div id="scheduleList" class="sschedule_list"></div>
-				</div>
-			</div>
-			</article>
-		</c:when>
 		<c:when test="${usedTheme eq 3}">
 			<article class="schedule_small box_shadow schedule_calendar">
 				<div class="layDIV">
@@ -54,7 +36,22 @@
 			</article>
 		</c:when>
 		<c:otherwise>
-			
+			<article class="box_shadow">
+			<div class="layDIV">
+				<dl class="portlet_title sortablePortlet">
+					<dt class="portletText">
+						<spring:message code='main.t203' />
+					</dt>
+					<dd class="portletPlus" onclick="goSchedule();">
+						<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+					</dd>
+				</dl>
+				<div class="sCalendarArea">
+					<div id="CalendarMini" class="scalender"></div>
+					<div id="scheduleList" class="sschedule_list"></div>
+				</div>
+			</div>
+			</article>			
 		</c:otherwise>
 	</c:choose>
 </body>
