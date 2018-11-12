@@ -92,6 +92,12 @@ var selectBoard = function(event) {
 				DivPopUpShow(330, 205, url);
 				return;
 			}
+			/* 2018-11-09 홍승비 - 동영상게시판 게시판선택 분기 임시 추가 */
+			else if (portletId == 47 && (gubun != 7)) {
+		    	var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("선택된 게시판은 동영상 게시판이 아닙니다.") + "&MESSAGE=" + encodeURIComponent("선택된 게시판은 동영상 게시판이 아닙니다.") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+				DivPopUpShow(330, 205, url);
+				return;
+			}
 			
 			var boardName = selBoard.find(".jstree-clicked").text();
 			selBoard = selBoard.attr("id");
