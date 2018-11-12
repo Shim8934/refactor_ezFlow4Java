@@ -254,69 +254,75 @@ AND
 
 <!-- 사용자 접근 가능 메뉴 리스트 -->
 <select id="ezNewPortal.getUserMenuList" parameterClass="Map" resultClass="MenuInfoVO">
-SELECT a.* FROM
-				(
-				SELECT
-					comp.MENU_ID          AS MENUID,
-				    name.MENU_NAME        AS MENUNAME,
-				    comp.MENU_USED        AS MENUUSED,
-					comp.COMPANY_LANG     AS COMPANYLANG,
-					main.MENU_URL         AS MENUURL,
-				    main.ICON_URL         AS ICONURL,
-				    comp.company_order    AS COMPANYORDER,
-				    user.menu_order       AS MENUORDER
-				FROM 
-					tbl_portal_menu_comp as comp
-				JOIN 
-					tbl_portal_menu as main
-				ON 
-					comp.MENU_ID = main.MENU_ID
-				JOIN 
-					tbl_portal_menu_name as name
-				ON 
-					comp.MENU_ID = name.MENU_ID
-				AND 
-					comp.COMPANY_ID = name.COMPANY_ID
-				AND 
-					comp.TENANT_ID = name.TENANT_ID
-				AND 
-					comp.COMPANY_LANG = name.MENU_LANG
-				LEFT OUTER JOIN
-					tbl_portal_menu_user as user
-				ON
-					comp.company_id = user.company_id
-				AND
-					comp.tenant_id = user.tenant_id
-				AND
-					comp.menu_id = user.menu_id
-				WHERE 
-					comp.MENU_USED = 1
-				AND 
-					comp.COMPANY_ID = #companyId#
-				AND
-					comp.COMPANY_LANG = #langType#
-				AND
-					comp.TENANT_ID = #tenantId#
-				AND
-					user.user_id = #userId#
-				) a
-		WHERE
-		  NOT EXISTS (
-		  			  SELECT b.MENU_ID 
-		  			    FROM TBL_PORTAL_MENU_AUTH B
-		  			   WHERE TENANT_ID= #tenantId# 
-		  			     AND COMPANY_ID= #companyId# 
-		  			     AND ACCESS_YN = 0 
-		  			     AND 
-		  			     <isEqual property="user_type" compareValue="1">
-		  			     	
-						 </isEqual>
-
-
-		  			     AND a.MENUID=B.MENU_ID
-		  			  )
-		ORDER BY 
-			a.MENUORDER asc, a.COMPANYORDER asc
+SELECT
+	comp.MENU_ID          AS MENUID,
+    name.MENU_NAME        AS MENUNAME,
+    comp.MENU_USED        AS MENUUSED,
+	comp.COMPANY_LANG     AS COMPANYLANG,
+	main.MENU_URL         AS MENUURL,
+    main.ICON_URL         AS ICONURL,
+    comp.company_order    AS COMPANYORDER,
+    user.menu_order       AS MENUORDER
+FROM 
+	tbl_portal_menu_comp as comp
+JOIN 
+	tbl_portal_menu as main
+ON 
+	comp.MENU_ID = main.MENU_ID
+JOIN 
+	tbl_portal_menu_name as name
+ON 
+	comp.MENU_ID = name.MENU_ID
+AND 
+	comp.COMPANY_ID = name.COMPANY_ID
+AND 
+	comp.TENANT_ID = name.TENANT_ID
+AND 
+	comp.COMPANY_LANG = name.MENU_LANG		
+LEFT OUTER JOIN
+	(
+       SELECT * FROM tbl_portal_menu_auth
+       WHERE tenant_id = #tenantId#
+       AND company_id = #companyId#
+       AND access_YN = 0
+       AND user_id = #userId#
+       AND user_type = '1'
+       
+       UNION
+       
+       SELECT * FROM tbl_portal_menu_auth
+       WHERE tenant_id = #tenantId#
+       AND company_id = #companyId#
+       AND access_YN = 0
+       AND user_id = #deptId#
+       AND user_type = '2'     	
+	) as auth
+ON
+	comp.COMPANY_ID = auth.COMPANY_ID
+AND
+	comp.TENANT_ID = auth.TENANT_ID
+AND
+	comp.MENU_ID = auth.MENU_ID
+LEFT OUTER JOIN
+	tbl_portal_menu_user as user
+ON
+	comp.company_id = user.company_id
+AND
+	comp.tenant_id = user.tenant_id
+AND
+	comp.menu_id = user.menu_id
+WHERE 
+	comp.MENU_USED = 1
+AND 
+	comp.COMPANY_ID = #companyId#
+AND
+	comp.COMPANY_LANG = #langType#
+AND
+	comp.TENANT_ID = #tenantId#
+AND
+	user.user_id = #userId#
+ORDER BY 
+	menu_order asc, company_order asc	
 </select>
 
 <!-- 회사 접근 가능한 메뉴 리스트 -->
