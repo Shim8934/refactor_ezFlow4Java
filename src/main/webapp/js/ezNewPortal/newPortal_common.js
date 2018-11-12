@@ -69,10 +69,17 @@ function attiClock() {
     
     nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
     time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2) + ':' + leadingZeros(nowAttiTime.getSeconds(), 2);
+    portletTime = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2);
     document.getElementById("timeFlow").innerHTML = time;
-    if (time == "00:00:00") {
-    	//$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
+    
+    if (document.getElementById("ptlTimeFlow") != null) {
+    	document.getElementById("ptlTimeFlow").innerHTML = portletTime;
     }
+    
+    if (portletTime == "00:00" || portletTime == "12:00") {
+    	ptlAmPmCheck(nowAttiTime.getHours());
+    }
+    
     gizmo = setTimeout("attiClock()", 1000);
     
 }
@@ -329,8 +336,8 @@ function eventSetting(portletId) { //포틀릿 아이디별로 자바스크립�
 				var useAttitude = $("#useAttitude").val();
 				
 				if (useAttitude === "YES") {
-					parseDate();
-					nowAttiTime.setMinutes(nowAttiTime.getMinutes() - 1); //시간을 더해주기 때문에 처음 시작할때는 1을 빼준다.
+					ptlParseDate();
+					ptlNowAttiTime.setMinutes(ptlNowAttiTime.getMinutes() - 1); //시간을 더해주기 때문에 처음 시작할때는 1을 빼준다.
 					ptlAttiClock();
 					ptlGetAttitudeList();
 					getHolidayList();
@@ -338,7 +345,7 @@ function eventSetting(portletId) { //포틀릿 아이디별로 자바스크립�
 					$(".time_check .main_time").css("display", "none");
 				}
 				
-				ptlAmPmCheck(nowAttiTime.getHours());
+				ptlAmPmCheck(ptlNowAttiTime.getHours());
 			} catch(err) {
 				console.log(err);
 				alert(messages.strLang2);
@@ -622,18 +629,19 @@ function getAttitudeList() {
 		url : "/ezAttitude/getAttitudeList.do",
 		data : {},
 		success : function(result) {
+			console.log(result);
 			for (var i = 0; i < result.length; i++) {
 				if (result[i].typeId == "A01") {
  					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
-					$("#inAttiBtn").removeClass("out").addClass("in");
+					$("#inAttiBtn").removeClass("main_out").addClass("main_in");
 					$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 				} else if (result[i].typeId == "A02") {
 					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
-					$("#inAttiBtn").removeClass("out").addClass("lateIn");
+					$("#inAttiBtn").removeClass("main_out").addClass("main_lateIn");
 					$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 				} else if (result[i].typeId == "A03") {
 					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
-					$("#outAttiBtn").removeClass("out").addClass("in");
+					$("#outAttiBtn").removeClass("main_out").addClass("main_in");
 					$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 				}
 			}

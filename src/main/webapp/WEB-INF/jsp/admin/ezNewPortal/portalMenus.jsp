@@ -393,12 +393,18 @@
 			var menuNames = $(".menuNameInput");
 			var menuNamesCount = menuNames.length;
 			var menuType = event.data.menuType;
+			var menuNameEmptyNum = 0;
 			
 			//메뉴 사용 유무
 			var menuUsed = $(".menuSwitch").find("input[type='checkbox']").prop("checked");
 			
 			//연결 url
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
+			
+			if (menuUrl == "" || menuUrl == null) {
+				alert("메뉴 URL을 입력해 주세요.");
+				return;
+			}
 			
 			//아이콘
 			var iconUrl = $(".menuIcon").find("span").attr("class");
@@ -416,19 +422,23 @@
 				var menuLang = menuName.id;
 				menuLang = menuLang.substring(4);
 				
+				if (portletNameList[i].value == "") {
+					portletNameEmptyNum++;
+				}
+				
 				menuNameList.push({"menuLang" : menuLang, "menuId" : menuId, "menuName" : menuName.value});
 			}
 			
 			var companiesObj = document.getElementById("ListCompany");
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
-			console.log(menuAuths);
 			
 			var request = new XMLHttpRequest();
 			request.open('POST', '/admin/ezNewPortal/updateMenu.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 
-				//getMenus();
+				getMenus();
+				menuAuths = [];
 			}
 			
 			request.onerror = function() {}
@@ -445,6 +455,8 @@
 		}
 		
 		var openMenuAdd = function() {
+			menuAuths = [];
+			
 			var menusHTML = "<li class='menuDetails'>";
 			menusHTML += "<div id='menuDetailsNew'>";
 			menusHTML += "<div class='menuTitle'>";
@@ -483,8 +495,8 @@
 			menusHTML += "<li class='conUrl'>[연결 URL]<input type='text' maxlength='100'></li>"
 			menusHTML += "</ul></div>";
 			menusHTML += "<div class='menuAuth'><div class='btnpositionJsp menuAuthBtn'><a class='imgbtn'><span>권한 설정</span></a></div>";
-			menusHTML += "<div class='accessOK'>[접근 허용]</div>";
-			menusHTML += "<div class='accessNO'>[접근 불가]</div>";  /////권한 가져오기
+			menusHTML += "<div class='accessOK'>[접근 허용]<div></div></div>";
+			menusHTML += "<div class='accessNO'>[접근 불가]<div></div></div>";
 			menusHTML += "</div>";
 			menusHTML += "</div>";
 			menusHTML += "</li>";
@@ -517,9 +529,11 @@
 			
 			//아이콘등록 버튼 설정
 			$(".iconBtn").on("click", uploadIconImg);
-			
+
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			//권한설정 기능
-			$(".menuAuthBtn").on("click", {"mode" : "new"}, openMenuAuth);
+			$(".menuAuthBtn").on("click", {"menuId" : null, "companyId" : companyValue, "mode" : "new"}, openMenuAuth);
 			
 			//저장기능
 			$(".addMenuBtn").on("click", insertMenu);
@@ -529,12 +543,18 @@
 			var menuNameList = [];
 			var menuNames = $(".menuNameInput");
 			var menuNamesCount = menuNames.length;
+			var menuNameEmptyNum = 0;
 			
 			//메뉴 사용 유무
 			var menuUsed = $(".menuSwitch").find("input[type='checkbox']").prop("checked");
 			
 			//연결 url
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
+			
+			if (menuUrl == "" || menuUrl == null) {
+				alert("메뉴 URL을 입력해 주세요.");
+				return;
+			}
 			
 			//아이콘
 			var iconUrl = $(".menuIcon").find("span").attr("class");
@@ -551,7 +571,21 @@
 				var menuLang = menuName.id;
 				menuLang = menuLang.substring(4);
 				
+				if (portletNameList[i].value == "") {
+					portletNameEmptyNum++;
+				}
+				
 				menuNameList.push({"menuLang" : menuLang, "menuName" : menuName.value});
+			}
+			
+			if (menuNameEmptyNum >= menuNamesCount) {
+				alert("하나 이상의 메뉴 이름을 입력해주세요.");
+				return;
+			}
+			
+			if (menuAuths.length == 0 || menuAuths == null) {
+				alert("메뉴 접근 권한을 설정해 주세요.");
+				return;
 			}
 			
 			var companiesObj = document.getElementById("ListCompany");
@@ -561,14 +595,17 @@
 			request.open('POST', '/admin/ezNewPortal/insertMenu.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
-			request.onload = function() { getMenus();}
+			request.onload = function() { 
+				getMenus();
+			}
 			
 			request.onerror = function() {}
 			
 			var data = JSON.stringify({
 				companyId : companyValue,
 				menuNames : menuNameList,
-				menuInfo : menuInfo
+				menuInfo : menuInfo,
+				menuAuths : menuAuths
 			});
 			 
 			request.send(data);
@@ -648,12 +685,10 @@
 		
 		var openMenuAuth = function(event) {
 			var mode = event.data.mode;
-			
-			if (mode == "view") {
-				var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId;
-				var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
-		    		try { OpenWin.focus(); } catch (e) { }
-			}
+
+			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId;
+			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
+		    	try { OpenWin.focus(); } catch (e) { }
 		}
 
 	</script>

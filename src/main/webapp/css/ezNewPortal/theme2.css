@@ -87,6 +87,18 @@ body{margin:0px; padding:0px;}
 .event dl dt{margin:0px; padding:0px;}
 .event dl dd{margin:0px; padding:0px;}
 
+/* 근태관련 */
+.info_left{float:left; width:181px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
+.info_right{width:calc(100% - 194px); background:#ffffff;}
+.infoImg img {width:60px; height:60px;}
+.attitudePtl {border:none;}
+
+/* 전체 적으로 sortable 할 수 있는 영역 cursor : move*/
+.sortablePortlet {cursor : move;}
+	
+/* 날씨추가 */
+.weather_icon {width:60%; height:60%;}
+
 /* 미디어쿼리 적용 */
 @media only screen and (max-width: 1920px){
 	.personal{width:344px;}
