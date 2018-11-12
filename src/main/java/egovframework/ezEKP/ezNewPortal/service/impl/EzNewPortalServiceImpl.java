@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezNewPortal.service.impl;
 
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,12 +10,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +47,7 @@ import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
+import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
@@ -57,6 +62,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private Properties config;
 	
 	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1587,5 +1595,148 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getPortletList started");
 		return portetList;
 	}
-
+	
+	@Override
+	public void setWeather() throws Exception {
+		//weather가 current일 때 현재 날씨 today일 때 시간당 날씨
+		LOGGER.debug("setWeather started");
+		List<String> cityCodeList;
+		List<String> primaryLangList = ezNewPortalDAO.getPrimaryLangList();
+		List<String> weatherKeyList = ezNewPortalDAO.getWeatherKeyList(primaryLangList.size());
+		String cityCode = "";
+		URL url;
+		URL todayUrl;
+		InputStreamReader isr;
+		
+		JSONObject jsonTemp;
+		
+		for (int i = 0; i < weatherKeyList.size(); i++) {
+			if (primaryLangList.get(i) == null) {
+				LOGGER.debug("not enough weatherKey!!");
+				break;
+			}
+			String primaryLang = primaryLangList.get(i);
+			
+			cityCodeList = ezNewPortalDAO.getCityCodeList(primaryLang);
+			
+			for (String str : cityCodeList) {
+				cityCode += str + ",";
+			}
+			
+			cityCode = cityCode.substring(0, cityCode.length() - 1);
+			
+			url = new URL("http://api.openweathermap.org/data/2.5/group?" + "id=" + cityCode + "&units=metric" + "&appid=" + weatherKeyList.get(i));
+			
+			isr = new InputStreamReader(url.openConnection().getInputStream(),"UTF-8");
+			
+			JSONObject items = (JSONObject) JSONValue.parseWithException(isr); 
+			
+			JSONArray jsonCurrentWeatherArr = (JSONArray)items.get("list");
+			
+			for (int j = 0; j < jsonCurrentWeatherArr.size(); j++) {
+				String currentWeather = "";
+				JSONObject jsonCurrentWeather = (JSONObject)jsonCurrentWeatherArr.get(j);
+				JSONArray jsonTempArr = (JSONArray)jsonCurrentWeather.get("weather");
+				jsonTemp = (JSONObject)jsonTempArr.get(0);
+				currentWeather += jsonTemp.get("icon").toString() + ";" + jsonTemp.get("main").toString() + ";";
+				
+				jsonTemp = (JSONObject)jsonCurrentWeather.get("main");
+				currentWeather += jsonTemp.get("temp").toString() + ";" + jsonTemp.get("humidity").toString() + ";";
+				
+				jsonTemp = (JSONObject)jsonCurrentWeather.get("clouds");
+				currentWeather += jsonTemp.get("all").toString() + ";";
+				
+				jsonTemp = (JSONObject)jsonCurrentWeather.get("wind");
+				currentWeather += jsonTemp.get("speed").toString();
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("cityCode", cityCodeList.get(j));
+				map.put("currentWeather", currentWeather);
+				ezNewPortalDAO.setCurrentWeather(map);
+			}
+			
+			//3시간당 오늘의 날씨
+			//이거는 다른 스케줄러로 뺴서 매일 00시에서 3시 사이에 돌려줘야함
+			String todayWeather;
+			
+			for (String tempCityCode : cityCodeList) {
+				todayWeather = "";
+				todayUrl = new URL("http://api.openweathermap.org/data/2.5/forecast?" + "id=" + tempCityCode + "&cnt=5&units=metric" + "&appid=" + weatherKeyList.get(i));
+				
+				isr = new InputStreamReader(todayUrl.openConnection().getInputStream(),"UTF-8");
+				items = (JSONObject) JSONValue.parseWithException(isr);
+				
+				JSONArray todayArr = (JSONArray)items.get("list");
+				
+				for (int j = 0; j < todayArr.size(); j++) {
+					JSONObject jsonToday = (JSONObject)todayArr.get(j);
+					JSONObject jsonTodayWeather = (JSONObject)((JSONArray)jsonToday.get("weather")).get(0);
+					
+					todayWeather += jsonTodayWeather.get("icon") + ";";
+					todayWeather += ((JSONObject)jsonToday.get("main")).get("temp") + ";";
+					//dt_txt 는 yyyy-mm-dd hh:mm:ss 형식의 데이터
+					todayWeather += jsonToday.get("dt_txt") + "!";
+				}
+				
+				todayWeather = todayWeather.substring(0, todayWeather.length() - 1);
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("cityCode", tempCityCode);
+				map.put("todayWeather", todayWeather);
+				
+				ezNewPortalDAO.setTodayWeather(map);
+			}
+		}
+		LOGGER.debug("setWeather ended");
+	}
+	
+	@Override
+	public Map<String, Object> getWeather(String cityCode, String primary) {
+		LOGGER.debug("getWeather started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cityCode", cityCode);
+		map.put("primaryLang", primary);
+		
+		Map<String, Object> result = ezNewPortalDAO.getWeather(map);
+		
+		LOGGER.debug("getWeather ended.");
+		
+		return result;
+	}
+	
+	@Override
+	public List<WeatherVO> getCityList(String primaryLang) {
+		LOGGER.debug("getCityList started.");
+		
+		List<WeatherVO> result = ezNewPortalDAO.getCityList(primaryLang);
+		
+		LOGGER.debug("getCityList ended.");
+		
+		return result;
+	}
+	
+	@Override
+	public String getUserCityCode(String id, int tenantId) throws Exception {
+		LOGGER.debug("getUserCityCode started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("userId", id);
+		LOGGER.debug("getUserCityCode started.");
+		
+		return ezNewPortalDAO.getUserCityCode(map);
+		
+	}
+	@Override
+	public void setUserCityCode(String id, int tenantId, String cityCode) {
+		LOGGER.debug("setUserCityCode started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", id);
+		map.put("tenantId", tenantId);
+		map.put("cityCode", cityCode);
+		
+		ezNewPortalDAO.setUserCityCode(map);
+		LOGGER.debug("setUserCityCode started.");
+	}
 }

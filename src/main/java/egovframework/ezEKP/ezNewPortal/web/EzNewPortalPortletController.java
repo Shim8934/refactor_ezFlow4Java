@@ -682,7 +682,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	}
 	
 	/**
-	 * 포틀릿 - 공지사항
+	 * 포틀릿 - 날씨
 	 */
 	@RequestMapping(value = "/ezNewPortal/weatherPortlet.do")
 	public String portalWeatherePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
@@ -692,7 +692,61 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		model.addAttribute("usedTheme", usedTheme);
 		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("tenantId", userInfo.getTenantId());
+		String url = "/rest/ezPortal/portlets/weather";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		String result = resultBody.get("status").toString();
+		
+		if (result.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			model.addAttribute("cityList", data.get("cityList"));
+			//sn이 아니라 cityCode 가 와야함
+			model.addAttribute("cityCode", data.get("cityCode"));
+			model.addAttribute("displayName", data.get("displayName"));
+			model.addAttribute("currentWeather", data.get("currentWeather"));
+			model.addAttribute("todayWeather", data.get("todayWeather"));
+			model.addAttribute("todayHours", data.get("todayHours"));
+		}
+		model.addAttribute("portletName", req.getParameter("portletName"));
+		model.addAttribute("userInfo", userInfo);
+		
+		
+		logger.debug("portalWeatherePortlet End");
+		
 		return "/ezNewPortal/portlets/weatherPortlet";
+	}
+	
+	/**
+	 * 포틀릿 - 날씨 변경
+	 */
+	@RequestMapping(value = "/ezNewPortal/weatherPortletChange.do")
+	@ResponseBody
+	public JSONObject portalWeatherePortletChange(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portalWeatherePortletChange Start");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		String cityCode = req.getParameter("cityCode");
+		
+		param.put("userId", userInfo.getId());
+		param.put("tenantId", userInfo.getTenantId());
+		param.put("cityCode", cityCode);
+		String url = "/rest/ezPortal/portlets/weather";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		
+		JSONObject data = (JSONObject) resultBody.get("data");
+		
+		logger.debug("portalWeatherePortletChange End");
+		
+		return data;
 	}
 	
 	/////포틀릿 정보만 가져오기

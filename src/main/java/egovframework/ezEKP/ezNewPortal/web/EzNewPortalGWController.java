@@ -56,6 +56,7 @@ import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
+import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -2649,6 +2650,70 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("ezNewPortal G/W getSchedulePortlet ended.");
+		return result;
+	}
+	
+	/**
+	 * 포탈개인화 G/W [GET] 포틀릿 - 날씨
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPortal/portlets/weather", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getWeatherPortlet(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getWeatherPortlet started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+			
+			String primaryLang = ezCommonService.getTenantConfig("primaryLang", info.getTenantId());
+			
+			
+			String cityCode = request.getParameter("cityCode");
+			
+			if (cityCode == null || cityCode.equals("")) {
+				cityCode = ezNewPortalService.getUserCityCode(info.getId(), info.getTenantId());
+				if (cityCode == null || cityCode.equals("")) {
+					cityCode = "none";
+				}
+			} else {
+				ezNewPortalService.setUserCityCode(info.getId(), info.getTenantId(), cityCode);
+			}
+			
+			JSONObject data = new JSONObject();
+			
+			Map<String, Object> resultMap = ezNewPortalService.getWeather(cityCode, primaryLang);
+			List<WeatherVO> cityList = ezNewPortalService.getCityList(primaryLang);
+			data.put("cityList", cityList);
+			data.put("displayName", resultMap.get("DISPLAYCITYNAME"));
+			data.put("currentWeather", resultMap.get("CURRENTWEATHER"));
+			data.put("todayWeather", resultMap.get("TODAYWEATHER"));
+			data.put("cityCode", resultMap.get("CITYCODE"));
+			
+			String[] todayArr = resultMap.get("TODAYWEATHER").toString().split("!");
+			
+			String todayHours = "";
+			
+			
+			for (int i = 0; i < todayArr.length; i++) {
+				String TodayDate = todayArr[i].split(";")[2];
+				String TodayDateUTC = commonUtil.getDateStringInUTC(TodayDate, info.getOffset(), false);
+				
+				todayHours += TodayDateUTC.substring(11, 13) + ";";
+			}
+			
+			data.put("todayHours", todayHours.substring(0, todayHours.length() - 1));
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getWeatherPortlet ended.");
 		return result;
 	}
 
