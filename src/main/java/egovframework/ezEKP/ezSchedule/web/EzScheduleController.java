@@ -2076,7 +2076,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         		Date realEndDate = sdf.parse(vo.getEndDate().substring(0,10));
         		Calendar cal = Calendar.getInstance();
         		cal.setTime(realEndDate);
-        		cal.add(Calendar.DATE, 1);
+        		cal.add(Calendar.DATE, -1);
         		realEndDate = cal.getTime();
         		realEndDateFormat = sdf.format(realEndDate);
         	}

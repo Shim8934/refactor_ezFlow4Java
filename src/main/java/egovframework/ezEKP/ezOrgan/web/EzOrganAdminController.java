@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,7 +23,6 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
-import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
@@ -54,6 +52,7 @@ import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -910,7 +909,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String checkID = config.getProperty("config.USE_CHECKUPSTR");
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());
-		String useCloud = ezCommonService.getTenantConfig("useCloud", userInfo.getTenantId());
 		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
 		
 		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
@@ -925,7 +923,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("birthDay", "");
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("primaryLang", primaryLang);
-		model.addAttribute("useCloud", useCloud);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 		model.addAttribute("locale", userInfo.getLocale());
@@ -1584,49 +1581,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					} catch (Exception e) {
 						logger.error("setInitInboxRule error.");
 						e.printStackTrace();
-					}
-				}
-				
-				// 클라우드 서비스 관리자 및 고객 관리자에게 메일 발송
-				if (ezCommonService.getTenantConfig("useCloud", tenantID).equals("YES")) {
-					try {
-						String subject = //"[클라우드] 새로운 유저가 추가되었습니다";
-								ezCommonService.getTenantConfig("cloudAddUserMailSubject", tenantID);
-						String contentStr = //"<html><head><meta charset=\"utf-8\"></head><body><div style=\"width: 80%;margin: 0px auto;\"><p style=\"font-weight: bold;\">클라우드에 유저가 추가되었습니다. 해당 내용은 아래와 같습니다.</p><ul><ol>서버 메일 주소: %s</ol><ol>추가한 관리자명: %s</ol><ol>추가된 유저명: %s</ol><ol>일자: %s</ol></ul><div id=\"cloud-message\" style=\"margin: 0px auto;margin-top: 20px;padding: 10px;background: rgb(238, 238, 238);height: 100px;\"><h3 style=\"margin: 0px;\">* 추가된 유저 요금은 일할계산되어 자동 익월 청구됩니다.<br>* 문의: 고객지원센터 080-258-0007</h3></div></div></body></html>";
-								ezCommonService.getTenantConfig("cloudAddUserMailContent", tenantID);
-						
-						String recipientsStr = ezCommonService.getTenantConfig("cloudAddUserMailTo", tenantID);
-						
-						InternetAddress from = InternetAddress.parse(userInfo.getEmail())[0];
-						InternetAddress[] recipients = InternetAddress.parse(recipientsStr);
-						
-						StringBuilder contentBuilder = new StringBuilder();
-						
-						String[] contentFragments = contentStr.split("%s");
-						String[] args = { domain, userInfo.getDisplayName(), vo.getDisplayName(), LocalDateTime.now().toString() };
-
-						int fragmentSize = contentFragments.length;
-
-						for (int i = 0; i < fragmentSize; i++) {
-							contentBuilder.append(contentFragments[i]);
-
-							if (i != fragmentSize - 1) {
-								contentBuilder.append(args[i]);
-							}
-						}
-						
-						final String content = contentBuilder.toString();
-						
-						for (InternetAddress recipient : recipients) {
-							try {
-								ezEmailService.sendMailWithExplicitRecipients(new InternetAddress[] {recipient}, loginCookie, from, recipients, null, null, subject, content, false);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					} catch (Exception ex) {
-						logger.error("sendEmailToCloudAdmins error.");
-						ex.printStackTrace();
 					}
 				}
 	        }

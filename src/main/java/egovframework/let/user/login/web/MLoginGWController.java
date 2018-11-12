@@ -368,6 +368,8 @@ public class MLoginGWController {
         					
         					/* 2018-01-08 장진혁 - 모바일에서 메일만 사용할 경우 YES or NO */
         					String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", tenantId);
+        					/* 2018-11-02 배현상 - 공유결재문서 사용 유무 YES or NO */
+        					String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", tenantId);
         					
         					Map<String, Object> map = new HashMap<String, Object>();
         					map.put("uid", uid);
@@ -390,6 +392,7 @@ public class MLoginGWController {
         					}
         					
         					map.put("useMobileMailOnly", useMobileMailOnly);
+        					map.put("useShareApproval", useShareApproval);
         					
         					result.put("status", "ok");
         					result.put("code", "0");
