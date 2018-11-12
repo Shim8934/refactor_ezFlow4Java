@@ -243,7 +243,7 @@
 	var frameSetting = function (frameSetId) {
 		frameId = frameSetId;
 		
-		if (frameSetId == "Frame3" || frameSetId == "Frame4") {
+		if (frameSetId == "Frame2") {
 			var media1921 = window.matchMedia("only screen and (min-width: 1921px)");
 			var media1686 = window.matchMedia("only screen and (max-width :1920px) and (min-width :1686px)");
 			var media1280 = window.matchMedia("only screen and (max-width :1685px) and (min-width :1280px)");
