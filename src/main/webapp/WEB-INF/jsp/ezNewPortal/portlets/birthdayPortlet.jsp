@@ -23,10 +23,10 @@
 				<img src="/images/ezNewPortal/photo_pre.png">
 			</dd>
 		</dl>
-		<div id="birthcount" style="display: none;">
+		<div class="birthdayList" id="birthcount" style="display: none;">
 			<ul class="birthList" id="birthdayList"></ul>
 		</div>
-		<div id="nodata_NewBirthday" style="padding-top: 15px;">
+		<div id="nodata_NewBirthday" class="nodata_newBirthday" style="padding-top: 15px;">
 			<dl class='nodata'>
 				<dt><img src='/images/kr/main/nodata.png'></dt>
 				<dd>"<spring:message code='main.t00026' />"</dd>

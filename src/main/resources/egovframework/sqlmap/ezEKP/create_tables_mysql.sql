@@ -11029,6 +11029,42 @@ CREATE TABLE `tbl_webfolder_user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_weather`
+--
+
+DROP TABLE IF EXISTS `tbl_weather`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_weather` (
+  `SN` varchar(3) NOT NULL,
+  `CITYCODE` varchar(20) CHARACTER SET utf8mb4 NOT NULL,
+  `CITYNAME` varchar(50) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DISPLAYCITYNAME` varchar(50) CHARACTER SET utf8mb4 NOT NULL,
+  `PRIMARYLANG` varchar(10) CHARACTER SET utf8mb4 NOT NULL,
+  `CURRENTWEATHER` varchar(200) DEFAULT NULL,
+  `TODAYWEATHER` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`CITYCODE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `tbl_weather_user`
+--
+
+DROP TABLE IF EXISTS `tbl_weather_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_weather_user` (
+  `USERID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `CITYCODE` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`USERID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
 -- Temporary view structure for view `vaprdoingdoclist`
 --
 

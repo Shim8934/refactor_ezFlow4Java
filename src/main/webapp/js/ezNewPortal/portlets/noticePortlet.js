@@ -14,7 +14,13 @@ var assembleNoticeList = function(noticeList) {
 		
 		if(this.getAttribute('data3') === "3" || this.getAttribute('data3') === "4") {
 			window.open('/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID='+ this.getAttribute('data1')+'&boardID='+ this.getAttribute('data2'), "", option, "");
-		} else {
+		} else if (this.getAttribute('data3') == "7") {
+			 top = (height - 679) / 2;
+			 left = (width - 765) / 2;
+			 
+			 option = 'toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=765,top='+top+',left='+left;
+			 window.open('/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID='+ this.getAttribute('data1')+'&boardID='+ this.getAttribute('data2'), "", option, "");
+		   } else {
 			window.open('/ezBoard/boardItemView.do?showAdjacent=&itemID='+ this.getAttribute('data1')+'&boardID='+ this.getAttribute('data2'), "", option, "");
 		}
 	}

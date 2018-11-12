@@ -69,10 +69,17 @@ function attiClock() {
     
     nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
     time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2) + ':' + leadingZeros(nowAttiTime.getSeconds(), 2);
+    portletTime = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2);
     document.getElementById("timeFlow").innerHTML = time;
-    if (time == "00:00:00") {
-    	//$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
+    
+    if (document.getElementById("ptlTimeFlow") != null) {
+    	document.getElementById("ptlTimeFlow").innerHTML = portletTime;
     }
+    
+    if (portletTime == "00:00" || portletTime == "12:00") {
+    	ptlAmPmCheck(nowAttiTime.getHours());
+    }
+    
     gizmo = setTimeout("attiClock()", 1000);
     
 }
@@ -329,8 +336,8 @@ function eventSetting(portletId) { //포틀릿 아이디별로 자바스크립�
 				var useAttitude = $("#useAttitude").val();
 				
 				if (useAttitude === "YES") {
-					parseDate();
-					nowAttiTime.setMinutes(nowAttiTime.getMinutes() - 1); //시간을 더해주기 때문에 처음 시작할때는 1을 빼준다.
+					ptlParseDate();
+					ptlNowAttiTime.setMinutes(ptlNowAttiTime.getMinutes() - 1); //시간을 더해주기 때문에 처음 시작할때는 1을 빼준다.
 					ptlAttiClock();
 					ptlGetAttitudeList();
 					getHolidayList();
@@ -338,7 +345,7 @@ function eventSetting(portletId) { //포틀릿 아이디별로 자바스크립�
 					$(".time_check .main_time").css("display", "none");
 				}
 				
-				ptlAmPmCheck(nowAttiTime.getHours());
+				ptlAmPmCheck(ptlNowAttiTime.getHours());
 			} catch(err) {
 				console.log(err);
 				alert(messages.strLang2);
@@ -350,7 +357,27 @@ function eventSetting(portletId) { //포틀릿 아이디별로 자바스크립�
 			alert(messages.strLang2);
 		});
 		
-		break;	
+		break;
+	case 47 : //동영상게시판
+		url = "/js/ezNewPortal/portlets/movieBoardPortlet.js";
+	
+		$.getScript(url)
+		.done(function(script, textStatus) {
+			try {
+				$("#" + portletId + "Portlet").find(".nextBtn").on("click", {isNext : true}, photoBoardMovePage);
+				$("#" + portletId + "Portlet").find(".preBtn").on("click", {isNext : false}, photoBoardMovePage);
+				$("#" + portletId + "Portlet").find("#movieBoardPlus").on("click", viewMovieBoardList);
+			} catch(err) {
+				console.log(err);
+				alert(messages.strLang2);
+			}
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+			alert(messages.strLang2);
+		});
+		
+		break;
 	}
 }
 
@@ -604,7 +631,7 @@ function getMonthlyBestEmployee() {
 
 //포틀릿 및 프레임 환경설정 열기
 function viewPortletEnv() {
-
+	
 	var feature = GetOpenPosition(760, 645);
 	
 //	DivPopUpShow($('body').prop('scrollWidth') * 0.9, 435, "/ezNewPortal/portletSetting.do", "",
@@ -622,18 +649,19 @@ function getAttitudeList() {
 		url : "/ezAttitude/getAttitudeList.do",
 		data : {},
 		success : function(result) {
+			console.log(result);
 			for (var i = 0; i < result.length; i++) {
 				if (result[i].typeId == "A01") {
  					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
-					$("#inAttiBtn").removeClass("out").addClass("in");
+					$("#inAttiBtn").removeClass("main_out").addClass("main_in");
 					$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 				} else if (result[i].typeId == "A02") {
 					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
-					$("#inAttiBtn").removeClass("out").addClass("lateIn");
+					$("#inAttiBtn").removeClass("main_out").addClass("main_lateIn");
 					$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 				} else if (result[i].typeId == "A03") {
 					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
-					$("#outAttiBtn").removeClass("out").addClass("in");
+					$("#outAttiBtn").removeClass("main_out").addClass("main_in");
 					$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 				}
 			}
@@ -822,29 +850,44 @@ function quickMenuOpen(event) {
 
 function viewQuick() {
 	
-	if (usedTheme == 3) {
-		if (document.getElementById("quickSide").style.width == "0px") {
-			$(document.getElementById("quickSide")).animate({width: '100px'});
-			$(".linkBtn_close").animate({right: '100px'}, function(){
+	var openPx;
+	var closePx;
+	var leftSide = false;
+	
+	if(usedTheme === 3) {
+		openPx = '100px';
+		closePx = '0px';
+	} else {
+		openPx = '82px';
+		closePx = '3px';
+	}
+	
+	// 프레임에 퀵링크가 좌측에 위치한 경우
+	if(usedTheme == '1' && (frameId === 'Frame2' || frameId === 'Frame4')) {
+		leftSide = true;
+	}
+
+	if (document.getElementById("quickSide").style.width == "0px") {
+		$(document.getElementById("quickSide")).animate({width: '100px'});
+		if(leftSide) {
+			$(".linkBtn_close").animate({left: openPx}, function(){
 				$(".linkBtn_close").attr("class", "linkBtn_open");
-			});
+			});			
 		} else {
-			$(document.getElementById("quickSide")).animate({width: '0px'});
-			$(".linkBtn_open").animate({right: '0px'}, function(){
-				$(".linkBtn_open").attr("class", "linkBtn_close");
-			});
+			$(".linkBtn_close").animate({right: openPx}, function(){
+				$(".linkBtn_close").attr("class", "linkBtn_open");
+			});			
 		}
 	} else {
-		if (document.getElementById("quickSide").style.width == "0px") {
-			$(document.getElementById("quickSide")).animate({width: '100px'});
-			$(".linkBtn_close").animate({right: '82px'}, function(){
-				$(".linkBtn_close").attr("class", "linkBtn_open");
-			});
-		} else {
-			$(document.getElementById("quickSide")).animate({width: '0px'});
-			$(".linkBtn_open").animate({right: '3px'}, function(){
+		$(document.getElementById("quickSide")).animate({width: '0px'});
+		if(leftSide) {
+			$(".linkBtn_open").animate({left: closePx}, function(){
 				$(".linkBtn_open").attr("class", "linkBtn_close");
-			});
+			});					
+		} else {
+			$(".linkBtn_open").animate({right: closePx}, function(){
+				$(".linkBtn_open").attr("class", "linkBtn_close");
+			});	
 		}
 	}
 }

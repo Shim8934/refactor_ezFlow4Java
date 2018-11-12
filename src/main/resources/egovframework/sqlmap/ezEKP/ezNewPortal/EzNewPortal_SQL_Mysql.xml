@@ -18,6 +18,7 @@
 <typeAlias alias="MenuAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO"/>
 <typeAlias alias="MenuNameVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuNameVO"/>
 <typeAlias alias="FrameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO"/>
+<typeAlias alias="WeatherVO" type="egovframework.ezEKP.ezNewPortal.vo.WeatherVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -131,6 +132,15 @@
 <result property="portletId" 				column="PORTLET_ID" />
 <result property="portletLang" 				column="PORTLET_LANG" />
 <result property="portletName" 				column="PORTLET_NAME" />
+</resultMap>
+<resultMap class="WeatherVO" id="WeatherVO">
+<result property="sn" 				column="SN" />
+<result property="cityCode" 				column="CITYCODE" />
+<result property="cityName" 				column="CITYNAME" />
+<result property="displayName" 				column="DISPLAYCITYNAME" />
+<result property="primaryLang" 				column="PRIMARYLANG" />
+<result property="currentWeather" 				column="CURRENTWEATHER" />
+<result property="todayWeather" 				column="TODAYWEATHER" />
 </resultMap>
 
 <!-- 공지사항 포틀릿 가져오기 -->
@@ -540,7 +550,7 @@ AND
 		AND TENANT_ID = #tenantId#
 		AND USER_ID = #deptId#
 		AND ACCESS_YN = 0
-		AND USER_TYPE = 2 ) AS Z  
+		AND USER_TYPE = 0 ) AS Z  
     )
 ORDER BY
 	A.PORTLET_ORDER
@@ -1632,6 +1642,106 @@ SELECT A.PORTLET_ID,
  WHERE A.COMPANY_ID = #companyId#
    AND A.TENANT_ID = #tenantId#
    AND A.PORTLET_ID = #portletId#;
-</select>   
+</select>
 
+<select id="ezNewPortal.getPrimaryLangList" resultClass="String">
+<![CDATA[
+SELECT distinct PROPERTY_VALUE  
+  FROM tbl_tenant_config 
+ WHERE PROPERTY_NAME = 'PrimaryLang' 
+   AND PROPERTY_VALUE <> '';
+]]>
+</select>
+
+<select id="ezNewPortal.getWeatherKeyList" parameterClass="Integer" resultClass="String">
+<![CDATA[
+SELECT PROPERTY_VALUE  
+  FROM tbl_tenant_config 
+ WHERE PROPERTY_NAME = 'weatherKey'
+ LIMIT 0,#size# 
+]]>
+</select>
+
+<select id="ezNewPortal.getCityCodeList" parameterClass="String" resultClass="String">
+<![CDATA[
+SELECT CITYCODE
+  FROM TBL_WEATHER
+ WHERE PRIMARYLANG = #primaryLang#
+]]>
+</select>
+
+<update id="ezNewPortal.setCurrentWeather" parameterClass="Map">
+<![CDATA[
+UPDATE 
+	TBL_WEATHER
+SET 
+	CURRENTWEATHER = #currentWeather#
+WHERE 
+	CITYCODE = #cityCode#
+]]>	
+</update>
+
+<update id="ezNewPortal.setTodayWeather" parameterClass="Map">
+<![CDATA[
+UPDATE 
+	TBL_WEATHER
+SET 
+	TODAYWEATHER = #todayWeather#
+WHERE 
+	CITYCODE = #cityCode#
+]]>	
+</update>
+
+<select id="ezNewPortal.getWeather" parameterClass="Map" resultClass="HashMap">
+SELECT
+	* 
+FROM
+	TBL_WEATHER
+WHERE
+	PRIMARYLANG = #primaryLang#
+<isEqual property="cityCode" compareValue="none">
+	AND
+		SN = "1"
+</isEqual>
+<isNotEqual property="cityCode" compareValue="none">
+	AND 
+		CITYCODE = #cityCode#
+</isNotEqual>	
+</select>
+
+<select id="ezNewPortal.getCityList" parameterClass="String" resultMap="WeatherVO">
+<![CDATA[
+SELECT
+	* 
+FROM
+	TBL_WEATHER
+WHERE
+	PRIMARYLANG = #primaryLang#
+ORDER BY
+	SN asc
+]]>
+</select>
+
+<select id="ezNewPortal.getUserCityCode" parameterClass="Map" resultClass="String">
+SELECT
+	CITYCODE 
+FROM
+	TBL_WEATHER_USER
+WHERE
+	USERID = #userId#
+AND
+	TENANT_ID = #tenantId#
+</select>
+
+<update id="ezNewPortal.setUserCityCode" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_WEATHER_USER
+			(USERID, TENANT_ID, CITYCODE)
+		VALUES
+			(#userId#, #tenantId#, #cityCode#)
+		ON DUPLICATE KEY UPDATE
+			CITYCODE = #cityCode#
+			
+	]]>
+</update>
 </sqlMap>
