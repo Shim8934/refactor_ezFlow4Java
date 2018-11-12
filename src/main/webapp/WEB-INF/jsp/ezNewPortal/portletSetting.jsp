@@ -304,6 +304,12 @@
 						themeId: portletSetting.usedTheme,
 						portletList: portletList,
 					}
+					console.log('param', param.portletList);
+					
+					if(param.portletList.length < 1) {
+						alert('한 개 이상의 포틀릿을 설정해 주세요.');	
+						return;
+					}
 					
 					var xhr = new XMLHttpRequest();
 					xhr.onload = function () {

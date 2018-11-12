@@ -141,7 +141,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 /* layout */
 #Center {min-height:600px; margin:0px;  background:#e0e3e4; min-width:1260px;}
 .section_left{  margin:0px; padding:0px; float:left; overflow:hidden; border-right:1px solid #cdcdcd; width:280px; box-sizing:border-box; background:#fff;}
-.section_main{ overflow:hidden; padding:0px 16px 0px 0px; float:none; min-width:1400px; max-width:1920px; box-sizing:border-box;}
+.section_main{ overflow:hidden; padding:0px 16px 40px 0px; float:none; min-width:1400px; max-width:1920px; box-sizing:border-box;}
 .section_main .mainLayout_left{ overflow:hidden; float:left; padding:0px 0px 0px 18px; box-sizing:border-box; }
 .section_main .mainLayout_middle{ overflow:hidden;  padding:0px 0px 0px 16px; float:left; box-sizing:border-box; }
 .section_main .mainLayout_right{ float:left; padding:0px 0px 0px 16px; box-sizing:border-box; overflow:hidden; }
