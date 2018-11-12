@@ -263,6 +263,11 @@
 					url : portletUrl,
 					success : function(result) {
 						$("#" + portletId + "Portlet").append(result);
+						
+						if(portletId != "34") {
+							$("#" + portletId + "Portlet").css("background", "none");
+						}
+						
 						eventSetting(portletId);
 					},
 					error : function() {
