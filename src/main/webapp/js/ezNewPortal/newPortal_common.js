@@ -841,16 +841,31 @@ function quickMenuOpen(event) {
 }
 
 function viewQuick() {
-	if (document.getElementById("quickSide").style.width == "0px") {
-		$(document.getElementById("quickSide")).animate({width: '100px'});
-		$(".linkBtn_close").animate({right: '82px'}, function(){
-			$(".linkBtn_close").attr("class", "linkBtn_open");
-		});
+	
+	if (usedTheme == 3) {
+		if (document.getElementById("quickSide").style.width == "0px") {
+			$(document.getElementById("quickSide")).animate({width: '100px'});
+			$(".linkBtn_close").animate({right: '100px'}, function(){
+				$(".linkBtn_close").attr("class", "linkBtn_open");
+			});
+		} else {
+			$(document.getElementById("quickSide")).animate({width: '0px'});
+			$(".linkBtn_open").animate({right: '0px'}, function(){
+				$(".linkBtn_open").attr("class", "linkBtn_close");
+			});
+		}
 	} else {
-		$(document.getElementById("quickSide")).animate({width: '0px'});
-		$(".linkBtn_open").animate({right: '3px'}, function(){
-			$(".linkBtn_open").attr("class", "linkBtn_close");
-		});
+		if (document.getElementById("quickSide").style.width == "0px") {
+			$(document.getElementById("quickSide")).animate({width: '100px'});
+			$(".linkBtn_close").animate({right: '82px'}, function(){
+				$(".linkBtn_close").attr("class", "linkBtn_open");
+			});
+		} else {
+			$(document.getElementById("quickSide")).animate({width: '0px'});
+			$(".linkBtn_open").animate({right: '3px'}, function(){
+				$(".linkBtn_open").attr("class", "linkBtn_close");
+			});
+		}
 	}
 }
 

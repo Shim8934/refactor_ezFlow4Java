@@ -287,7 +287,11 @@ function DayOnMouseClick(event) {
         document.getElementById(g_selTRID).style.backgroundColor = "";*/   
  
     //document.getElementById(event.getAttribute("id")).style.backgroundColor = "#f0f6ff";
-	$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    if (usedTheme == 3) {
+    	$("#"+event.getAttribute("id")).parent().addClass('schedule');
+    } else {
+    	$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    }
 	//$("#"+event.getAttribute("id")).parent().css("border-radius","20px");
 	
     g_selTRID = event.parentNode.parentNode.getAttribute("id");

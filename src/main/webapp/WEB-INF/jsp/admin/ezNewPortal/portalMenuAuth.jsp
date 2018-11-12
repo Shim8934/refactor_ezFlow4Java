@@ -80,6 +80,7 @@
 				                                </td>
 				                                <td>
 				                                    <div style="float: right; margin-right: 5px; position: relative;">
+				                                    	<a href="#" class="imgbtn"><span onclick="setAuthorViewUser('dept')">부서 추가</span></a>
 				                                    	<a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezCircular.t161' /></span></a>  
 				                                    </div>
 				                                </td> 
@@ -165,6 +166,7 @@
 	    	var td_Create1 = function(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
 	    	}
+	    	
 	    	var makePageSelPage = function() {
 		        var strtext;
 	        	var PagingHTML = "";
@@ -434,32 +436,43 @@
 	   		}
 	   		
 	   		// 선택한 사람을 수신자에 추가
-	   		function setAuthorViewUser() {
-	   			console.log(selUserId);
-	   			if (selUserId != "" && selUserId != undefined) {
-		   			var receiverId = selUserId;
-		   			var chkFlag = true;
-		   			userName = selUserName;
-	   				var userDeptName = $(".jstree-clicked").text();
-	   				var menuId = "<c:out value='${menuId}'/>";
-	   				var userType = true;
-	   				
-		   			for(var i = 0; i < menuAuths.length; i++) {
-		   				if (menuAuths[i].userId == receiverId) {
-		   					chkFlag = false;
-		   				}
-		   			}
-		   			
-		   			if (chkFlag) {
-		   				menuAuths.push({"userName" : userName, "userId" : receiverId, "userDeptName" : userDeptName, "menuId" : menuId, "userType" : userType});
-		   			} else {
-		   				alert("<spring:message code='ezJournal.t127'/>");
-		   			}
-		   			
-		   			drawAuths();
-	   			} else {
-	   				alert("<spring:message code='ezJournal.t136'/>");
+	   		function setAuthorViewUser(isUser) {
+	   			
+	   			var receiverId = "";
+	   			var userType = true;
+	   			
+	   			if (isUser == undefined) {
+	   				isUser = "user";
 	   			}
+	   			
+	   			if (isUser == "user") {
+	   				receiverId = selUserId;
+		   			userType = true;
+			   		userName = selUserName;
+	   			} else {
+	   				receiverId = $(".jstree-clicked").attr("id");
+	   				receiverId = receiverId.substring(0, receiverId.lastIndexOf("_anchor"));
+	   				userType = false;
+	   				userName = $(".jstree-clicked").text();
+	   			}
+		   		
+		   		var chkFlag = true;
+	   			var userDeptName = $(".jstree-clicked").text();
+	   			var menuId = Number("<c:out value='${menuId}'/>");
+	   				
+		   		for(var i = 0; i < menuAuths.length; i++) {
+		   			if (menuAuths[i].userId == receiverId) {
+		   				chkFlag = false;
+		   			}
+		   		}
+		   		
+		   		if (chkFlag) {
+		   			menuAuths.push({"userName" : userName, "userId" : receiverId, "userDeptName" : userDeptName, "menuId" : menuId, "userType" : userType, "accessYN" : false});
+		   		} else {
+		   			alert("<spring:message code='ezJournal.t127'/>");
+		   		}
+		   		console.log(menuAuths);
+		   		drawAuths();
 	   		}
 	   		
 	   		// 권한목록배열에서 삭제
@@ -517,16 +530,32 @@
 	   				var isChecked = $(this).is(":checked");
 	   				var userId = $("#authList").find(".selectTR").attr("data-id");
 	   				
+	   				var menuAuthCount = menuAuths.length;
+	   				
+	   				menuAuths.forEach(function(item, index) { 
+	   					if (item.userId == userId) {
+	   						menuAuths[index].accessYN = isChecked;
+	   					}
+	   				});
 	   			});
 		    }
 	   		
 	   		function applyReceiver() {
-	   			if (true) {
+	   			var selId = $("#txtlist_Layer").find(".selectTR");
+	   			var isUser = true;
+	   			
+	   			if (selId.length == 0) {
+	   				isUser = false;
+	   			}
+	   			
+	   			if (isUser) {
+	   				console.log("???/");
 	   				//사람추가 조건은 음 사람셀렉트안됫을떄?
-	   				setAuthorViewUser();
+	   				setAuthorViewUser("user");
 	   				
 	   			} else {
 	   				//부서추가
+	   				setAuthorViewUser("dept");
 	   			}
   				
 	   		}
@@ -548,6 +577,53 @@
 	   			/* opener.selReceiver = JSON.stringify(receiverList);
 	   			opener.showReceiver(); */
 	   			/* 내 데이터로 바꿔야 */
+	   			window.opener.menuAuths = menuAuths;
+	   			
+	   			var menuAuthsY = [];
+	   			var menuAuthsN = [];
+	   			var menuAuthsCount = menuAuths.length;
+	   			
+	   			menuAuths.forEach(function(item, index) {
+	   				if (item.accessYN) {
+	   					menuAuthsY.push(item);
+	   				} else {
+	   					menuAuthsN.push(item);
+	   				}
+	   			});
+	   			
+	   			console.log(menuAuthsY);
+	   			console.log(menuAuthsN);
+	   			
+	   			if (menuAuthsY != null && menuAuthsY.length != 0) {
+					var menuAuthsYList = "";
+					
+					menuAuthsY.forEach(function(item, index) {
+						if (item.userType) {
+							menuAuthsYList += ", " + item.userName;
+							menuAuthsYList += "(" + item.userDeptName + ")";
+						} else {
+							menuAuthsYList += ", " + item.userDeptName;
+						}
+					});
+					
+					window.opener.$(".accessOK").find("div").text(menuAuthsYList.substring(1));
+				}
+	   			
+	   			if (menuAuthsN != null && menuAuthsN.length != 0) {
+					var menuAuthsNList = "";
+					
+					menuAuthsN.forEach(function(item, index) {
+						if (item.userType) {
+							menuAuthsNList += "," + item.userName;
+							menuAuthsNList += "(" + item.userDeptName + ")";
+						} else {
+							menuAuthsNList += "," + item.userDeptName;
+						}
+					});
+					
+					window.opener.$(".accessNO").find("div").text(menuAuthsNList.substring(1));
+				}
+	   			
 	   			window.close();
 	   		}
 	   		

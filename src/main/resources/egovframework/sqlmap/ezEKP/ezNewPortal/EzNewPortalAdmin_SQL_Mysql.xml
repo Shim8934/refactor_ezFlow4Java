@@ -698,4 +698,15 @@
 	]]>
 	</isNotEqual>
 	</delete>
+	
+	<!-- 권한 관련 추가/삭제 -->
+	<insert id="ezNewPortal.insertMenuAuth">
+	<![CDATA[
+	INSERT INTO TBL_PORTAL_MENU_AUTH (
+		menu_id, company_id, tenant_id, user_id, access_YN, user_type
+	) VALUES (
+		#menuId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#
+	)
+	]]>
+	</insert>
 </sqlMap>
