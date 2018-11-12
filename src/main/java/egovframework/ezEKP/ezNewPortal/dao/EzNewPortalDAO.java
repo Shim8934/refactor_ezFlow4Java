@@ -434,6 +434,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void updateThemeDefault (Map<String, Object> map) {
 		update("ezNewPortal.updateThemeDefault", map);
 	}
+	
+	public void insertMenuAuth (Map<String, Object> map) {
+		insert("ezNewPortal.insertMenuAuth", map);
+	}
+	
 	/**
 	 * 구해안
 	 */

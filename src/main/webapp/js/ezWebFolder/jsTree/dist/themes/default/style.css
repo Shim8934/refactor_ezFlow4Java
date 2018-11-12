@@ -383,7 +383,7 @@
 .jstree-default .jstree-node {
   min-height: 24px;
   line-height: 24px;
-  margin-left: 10px;
+  /* margin-left: 10px; */
 /*   min-width: 24px; */
 }
 .jstree-default .jstree-anchor {
@@ -568,11 +568,11 @@
 .jstree-default-small .jstree-node {
   min-height: 18px;
   line-height: 18px;
-  margin-left: 10px;
+  /* margin-left: 10px; */
 /*   min-width: 18px; */
 }
 .jstree-default-small .jstree-anchor {
-  line-height: 21px;
+  line-height: 18px;
   height: 18px;
 }
 .jstree-default-small .jstree-icon {

@@ -1375,12 +1375,14 @@ public class EzNewPortalGWController {
 			
 			JSONParser jp = new JSONParser();
 			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			JSONArray menuAuths = (JSONArray) jsonParam.get("menuAuths");
 			
-			ezNewPortalService.updateMenuAuth(jsonParam, menuId, companyId, userInfo.getTenantId());
+			ezNewPortalService.updateMenuAuth(menuAuths, menuId, companyId, userInfo.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

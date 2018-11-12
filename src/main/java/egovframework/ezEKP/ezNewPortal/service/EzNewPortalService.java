@@ -126,7 +126,7 @@ public interface EzNewPortalService {
 	/**
 	 * 관리자 메뉴별 권한목록 수정
 	 */
-	public void updateMenuAuth(JSONObject menuAuths, int menuId, String companyId, int tenantId) throws Exception;
+	public void updateMenuAuth(JSONArray menuAuths, int menuId, String companyId, int tenantId) throws Exception;
 	/**
 	 * 관리자 메뉴추가
 	 */
