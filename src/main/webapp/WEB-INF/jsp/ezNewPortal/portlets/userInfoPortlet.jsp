@@ -27,7 +27,9 @@
 	            <dd class="infoTeam">${deptName }</dd>
 	            <dd class="infoMail">${userEmail }</dd>
 	            <dd class="infoTime"><spring:message code="main.t00016" /><spring:message code="ezPersonal.t27" />&nbsp;&nbsp;${lastLogin }</dd>
-	            <dd class="infoSet" onclick="infoSetClick()" style="z-index: 1001;"><img src="/images/ezNewPortal/theme3Img/infoSet_btn.png"></dd>
+	            <!-- 임시 -->
+	            <dd id="portletEnv" class="infoSet" onclick="viewPortletEnv()" style="z-index: 1001;"><img src="/images/ezNewPortal/theme3Img/infoSet_btn.png"></dd>
+	            <!-- <dd id="portletEnv" class="infoSet" onclick="infoSetClick()" style="z-index: 1001;"><img src="/images/ezNewPortal/theme3Img/infoSet_btn.png"></dd> -->
 	            <dd class="infoLogout" onclick="infoLogoutClick()" style="z-index: 1001;"><img src="/images/ezNewPortal/theme3Img/infoLogout_btn.png"></dd>
 	        </dl>
 	        <div class="time_check">

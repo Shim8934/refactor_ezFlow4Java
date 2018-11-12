@@ -246,7 +246,7 @@ $(function(){
 			</select>
 		</dd>
 	</dl>
-<div style="heigth:100%">
+<div class= "weather_content" style="heigth:100%">
 	<div style="float:left;width:34%;height:90px;display: inline-block;text-align:center">
 		<img id="currentIcon" src="" style="width:80%;height:80%;margin-top:5%"/>
 	</div>

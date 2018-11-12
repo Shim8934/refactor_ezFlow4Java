@@ -262,6 +262,10 @@
 					success : function(result) {
 						$("#" + portletId + "Portlet").append(result);
 						eventSetting(portletId);
+					},
+					error : function() {
+						var nonePage = "<article class='box_shadow'></article>"
+						$("#" + portletId + "Portlet").append(nonePage);
 					}
 				});
 			}(portletId, portletUrl, portletName));
@@ -303,6 +307,9 @@
 		$("#quickApprovalwrite").on('click', {'menu' : 'appr'}, quickMenuOpenRight);
 		$("#quickSchedulewrite").on('click', {'menu' : 'schedule'}, quickMenuOpenRight);
 		$("#quickOrgan").on('click', {'menu' : 'organ'}, quickMenuOpenRight);
+		
+		//구해안 - 임시로 넣어둠
+		$("#portletEnv").on("click", viewPortletEnv);
 
 		// 퀵링크 호출
 		getQuickLink();		
