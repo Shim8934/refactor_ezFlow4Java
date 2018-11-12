@@ -34,6 +34,8 @@
 	      	var useMailReceiveScreen = "${useMailReceiveScreen}";
 	      	var operatorMailAddress = "${operatorMailAddress}";
 	      	var shareId = "";
+	      	var deletePermission = "";
+	      	var sendPermission = "";
 	      	var treeviewStr = "PostTreeView";
 	      	
 	        document.onselectstart = function () { return false; };
@@ -545,7 +547,9 @@
 	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do";
 	        }
 	        function Address_Menu_Click() {
+	        	HiddenFolderMenu();
 	            LoadAddressTree(true);
+	            
 	            if (AddressTreeView.selectedIndex() == -1)
 	                AddressTreeView.select(1);
 	            else
@@ -632,7 +636,18 @@
 	        }
 	        function Email_Menu_Click() {
 	        	shareId = "";
+	        	deletePermission = "";
+	        	sendPermission = "";
 	        	treeviewStr = "PostTreeView";
+	        	
+	        	HiddenFolderMenu();
+	        	
+		    	if (useMailBoxBackUp == "YES") {
+			    	document.getElementById("mailbox_import").style.display = "";
+		    	}
+		    	
+			    document.getElementById("mailbox_delete").style.display = "";
+	        	
 	        	detailView();
 	            eval(treeviewStr).select(1);
 	        }
@@ -1022,8 +1037,10 @@
 		    }
 			
 			// 2018-10-16 공유사서함 관련 함수 추가
-			function Share_Menu_Click(_shareId) {
+			function Share_Menu_Click(_shareId, _deletePermission, _sendPermission) {
 				shareId = _shareId;
+				deletePermission = _deletePermission;
+				sendPermission = _sendPermission;
 				treeviewStr = 'shareTreeView_' + shareId;
 			    
 			    if (document.getElementById(treeviewStr).innerHTML === "") {
@@ -1044,6 +1061,19 @@
 			    	eval(treeviewStr).select(1);
 			    }
 			    
+			    HiddenFolderMenu();
+			    
+			    if (deletePermission == "Y") {
+			    	if (useMailBoxBackUp == "YES") {
+				    	document.getElementById("mailbox_import").style.display = "";
+			    	}
+			    	
+				    document.getElementById("mailbox_delete").style.display = "";
+			    } else {
+				    document.getElementById("mailbox_import").style.display = "none";
+				    document.getElementById("mailbox_delete").style.display = "none";
+			    }
+			    
 			    detailView(shareId);
 			}
 			
@@ -1056,8 +1086,11 @@
 			    shareTreeView.attachEvent('requestdata', requestdata);
 			    shareTreeView.attachEvent('nodeselect', selectnode);
 			    shareTreeView.attachEvent('nodedblclick', function () { shareTreeView.toggle(shareTreeView.selectedIndex()) });
-			    shareTreeView.attachEvent('dragdrop', email_dragdrop);
-			    shareTreeView.dragdrop(true);
+			    
+			    if (deletePermission == "Y") {
+			    	shareTreeView.attachEvent('dragdrop', email_dragdrop);
+			    	shareTreeView.dragdrop(true);
+			    }
 			    
 			    var xmlHTTP = createXMLHttpRequest();
 			    xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
@@ -1159,7 +1192,7 @@
 	        </ul>
 	        
 	        <c:forEach items="${shareInfoList}" var="shareInfo">
-	        	<h2><span onclick="Share_Menu_Click('${shareInfo.shareId}');" style="width: 100%; display: inline-block;">${shareInfo.shareName}</span></h2>
+	        	<h2><span onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');" style="width: 100%; display: inline-block;">${shareInfo.shareName}</span></h2>
 	        	<ul>
 	            	<div id="shareTreeView_${shareInfo.shareId}" class="tree" value="${shareInfo.shareId}" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 	        	</ul>
@@ -1253,7 +1286,7 @@
 		    <tr id="mailbox_import" <c:if test="${useMailBoxBackUp ne 'YES'}">style="display:none"</c:if>>
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_import();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_fw.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.lhm32" /></span></td>
 		    </tr>
-		    <tr>
+		    <tr id="mailbox_delete">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_delete();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/deleted.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.t483" /></span></td>
 		    </tr>
 		    </table>
