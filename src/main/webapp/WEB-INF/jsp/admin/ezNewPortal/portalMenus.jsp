@@ -422,8 +422,8 @@
 				var menuLang = menuName.id;
 				menuLang = menuLang.substring(4);
 				
-				if (portletNameList[i].value == "") {
-					portletNameEmptyNum++;
+				if (menuName.value == "") {
+					menuNameEmptyNum++;
 				}
 				
 				menuNameList.push({"menuLang" : menuLang, "menuId" : menuId, "menuName" : menuName.value});
@@ -571,8 +571,8 @@
 				var menuLang = menuName.id;
 				menuLang = menuLang.substring(4);
 				
-				if (portletNameList[i].value == "") {
-					portletNameEmptyNum++;
+				if (menuName.value == "") {
+					menuNameEmptyNum++;
 				}
 				
 				menuNameList.push({"menuLang" : menuLang, "menuName" : menuName.value});
