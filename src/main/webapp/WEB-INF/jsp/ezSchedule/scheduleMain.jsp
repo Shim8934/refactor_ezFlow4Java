@@ -511,11 +511,22 @@
 
 		        var sdate, edate, datetype;
 
+		        // 2018-11-09 김민성 - 일보기/주보기일 때 종일일정 클릭시 시간 종일로 변경
+		        // 일보기, 주보기의 시간대 클릭
 		        if (GetAttribute(srcEl, "dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
 		            datetype = "1";
 		            sdate = GetAttribute(srcEl, "dispTime");
 		            edate = sdate.replace(":00:", ":30:");
-		        } else {
+		        } 
+		        // 월보기 클릭
+		        else if(GetAttribute(srcEl, "id").indexOf("ALL") < 0) {
+		        	datetype = "1";
+		        	// 시간데이터가 없는 경우 임의 시간
+		        	sdate = GetAttribute(srcEl, "dispDate") + " 00:00:00";
+		            edate = GetAttribute(srcEl, "dispDate") + " 23:59:00";
+		        }
+		        // 일보기, 주보기의 종일일정 클릭
+		        else {
 		            datetype = "2";
 		            sdate = GetAttribute(srcEl, "dispDate") + " 00:00:00";
 		            edate = GetAttribute(srcEl, "dispDate") + " 23:59:00";
