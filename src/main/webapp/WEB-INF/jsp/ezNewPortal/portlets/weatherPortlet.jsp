@@ -236,7 +236,6 @@ $(function(){
 </script>
 </head>
 <body>
-<<<<<<< HEAD
 <div class="layDiv">
 	<dl class="portlet_title sortablePortlet">
 		<dt class="portletText">오늘의날씨 </dt> <!-- <span id="cityName">${displayName}</span> -->
