@@ -62,7 +62,7 @@ $(document).ready(function(){
 	if (currentTemp.indexOf(".") == -1) {
 		$("#currentTemp").text(currentTemp);
 	} else {
-		$("#currentTemp").text(currentTemp.substring(0,currentTemp.indexOf(".")));
+		$("#currentTemp").text(currentTemp.substring(0,currentTemp.indexOf(".") + 2));
 	}
 	$("#currentHumidity").text(currentHumidity);
 	$("#currentClouds").text(currentClouds);
@@ -77,31 +77,31 @@ $(document).ready(function(){
 	if (today1Temp.indexOf(".") == -1) {
 		$("#temp1").text(today1Temp);
 	} else {
-		$("#temp1").text(today1Temp.substring(0,today1Temp.indexOf(".")));
+		$("#temp1").text(today1Temp.substring(0,today1Temp.indexOf(".") + 2));
 	}
 	
 	if (today2Temp.indexOf(".") == -1) {
 		$("#temp2").text(today2Temp);
 	} else {
-		$("#temp2").text(today2Temp.substring(0,today2Temp.indexOf(".")));
+		$("#temp2").text(today2Temp.substring(0,today2Temp.indexOf(".") + 2));
 	}
 	
 	if (today3Temp.indexOf(".") == -1) {
 		$("#temp3").text(today3Temp);
 	} else {
-		$("#temp3").text(today3Temp.substring(0,today3Temp.indexOf(".")));
+		$("#temp3").text(today3Temp.substring(0,today3Temp.indexOf(".") + 2));
 	}
 	
 	if (today4Temp.indexOf(".") == -1) {
 		$("#temp4").text(today4Temp);
 	} else {
-		$("#temp4").text(today4Temp.substring(0,today4Temp.indexOf(".")));
+		$("#temp4").text(today4Temp.substring(0,today4Temp.indexOf(".") + 2));
 	}
 	
 	if (today5Temp.indexOf(".") == -1) {
 		$("#temp5").text(today5Temp);
 	} else {
-		$("#temp5").text(today5Temp.substring(0,today5Temp.indexOf(".")));
+		$("#temp5").text(today5Temp.substring(0,today5Temp.indexOf(".") + 2));
 	}
 	
 	$("#date1").text(today1Time);
@@ -150,7 +150,7 @@ $(function(){
     			if (currentTemp.indexOf(".") == -1) {
     				$("#currentTemp").text(currentTemp);
     			} else {
-    				$("#currentTemp").text(currentTemp.substring(0,currentTemp.indexOf(".")));
+    				$("#currentTemp").text(currentTemp.substring(0,currentTemp.indexOf(".") + 2));
     			}
     			
     			$("#currentHumidity").text(currentHumidity);
@@ -194,31 +194,32 @@ $(function(){
     			if (today1Temp.indexOf(".") == -1) {
     				$("#temp1").text(today1Temp);
     			} else {
-    				$("#temp1").text(today1Temp.substring(0,today1Temp.indexOf(".")));
+    				
+    				$("#temp1").text(today1Temp.substring(0,today1Temp.indexOf(".") + 2));
     			}
     			
     			if (today2Temp.indexOf(".") == -1) {
     				$("#temp2").text(today2Temp);
     			} else {
-    				$("#temp2").text(today2Temp.substring(0,today2Temp.indexOf(".")));
+    				$("#temp2").text(today2Temp.substring(0,today2Temp.indexOf(".") + 2));
     			}
     			
     			if (today3Temp.indexOf(".") == -1) {
     				$("#temp3").text(today3Temp);
     			} else {
-    				$("#temp3").text(today3Temp.substring(0,today3Temp.indexOf(".")));
+    				$("#temp3").text(today3Temp.substring(0,today3Temp.indexOf(".") + 2));
     			}
     			
     			if (today4Temp.indexOf(".") == -1) {
     				$("#temp4").text(today4Temp);
     			} else {
-    				$("#temp4").text(today4Temp.substring(0,today4Temp.indexOf(".")));
+    				$("#temp4").text(today4Temp.substring(0,today4Temp.indexOf(".") + 2));
     			}
     			
     			if (today5Temp.indexOf(".") == -1) {
     				$("#temp5").text(today5Temp);
     			} else {
-    				$("#temp5").text(today5Temp.substring(0,today5Temp.indexOf(".")));
+    				$("#temp5").text(today5Temp.substring(0,today5Temp.indexOf(".") + 2));
     			}
     			
     			$("#date1").text(today1Time);
