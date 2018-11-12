@@ -2144,7 +2144,7 @@ function updateDragSchedule(typeCal, dragId, dragDay, dropDay) {
 		},
 		success: function(text){
 			if (text == "1") { //권한 없음
-				setTimeout(function() { alert("권한이 없습니다."); }, 10)
+				setTimeout(function() { alert(strLangKHJ8); }, 10)
 				rtv = false;
 			}else if (text == "2") { //이전날짜사용하는데 종료일이 현재날짜보다 큰 경우
 				setTimeout(function() { alert(strLang272); }, 10)
