@@ -25,12 +25,6 @@
 	    	#mCSB_1_container {
 				margin-right: 0px;
 			}
-			.mCSB_scrollTools {
-				opacity: 0.3;
-				width: 6px;
-				margin-Top: 5px;
-				margin-bottom: 5px;
-			}
 	    </style>
 	    <script type="text/javascript">
 	        var pUse_Editor = "${useEditor}";

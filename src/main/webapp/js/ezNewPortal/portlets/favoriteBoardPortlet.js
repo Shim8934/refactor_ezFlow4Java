@@ -1,12 +1,12 @@
 /**
  * 
  */
-
 var strLang1_NewBoardSTD = messages.strLang1;
 var ParentBoardName = "";
 var BoardType = "";
 var favoriteBoardId = "";
 var tabCnt = 0;
+var usedTheme = $('#usedTheme').val();
 
 function getTabList() {
 	var resultList;	
@@ -47,7 +47,7 @@ function getTabList() {
     		            listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "' data2='" + guBun + "'><span> " + BoardName + " </span></dt>";
     		        }
     		    }
-    		        listHTML += "<dd class='portletPlus' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/kr/main/portlet_Plus.png'></dd>";		                
+    		        listHTML += "<dd class='portletPlus' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/ezNewPortal/portlet_Plus"+usedTheme+".png'></dd>";		                
     		
     		        document.getElementById("BoardTab").innerHTML = listHTML;
     		        favoriteBoardId = $('#Board0').attr('data1');

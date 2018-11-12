@@ -12,8 +12,8 @@ if(request.getHeader("referer").length() > 0){
 	requestURL = requestURL.replaceAll("http://","");
 	requestURL = requestURL.replaceAll("https://","");
 	requestURL = requestURL.substring(0, requestURL.indexOf("/"));
-	System.out.println("new referer: " + referer);
-	System.out.println("new requestURL: " + requestURL);
+	//System.out.println("new referer: " + referer);
+	//System.out.println("new requestURL: " + requestURL);
 
 	if(!referer.equalsIgnoreCase(requestURL)){
 		response.sendRedirect("../index.html");

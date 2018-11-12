@@ -5377,20 +5377,6 @@ CREATE TABLE `tbl_expendaprline` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_ezoms_usercount`
---
-
-DROP TABLE IF EXISTS `tbl_ezoms_usercount`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ezoms_usercount` (
-  `SERVERNAME` varchar(50) NOT NULL,
-  `USERCOUNT` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`SERVERNAME`)
-) ENGINE=FEDERATED DEFAULT CHARSET=utf8 CONNECTION='ezoms_link/customer_usercount';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_form_autorule`
 --
 
@@ -10303,7 +10289,7 @@ DROP TABLE IF EXISTS `tbl_user_jobmaster`;
 CREATE TABLE `tbl_user_jobmaster` (
   `JOBID` bigint(20) NOT NULL AUTO_INCREMENT,
   `TYPE` varchar(50) NOT NULL,
-  `CN` varchar(100) NOT NULL,
+  `CN` varchar(100) DEFAULT NULL,
   `DISPLAYNAME` varchar(200) DEFAULT NULL,
   `DISPLAYNAME2` varchar(200) DEFAULT NULL,
   `USEFLAG` varchar(2) DEFAULT NULL,

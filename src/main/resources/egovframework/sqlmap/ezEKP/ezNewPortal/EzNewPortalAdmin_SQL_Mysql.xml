@@ -3,7 +3,7 @@
 <sqlMap namespace="ezNewPortalAdmin">
 	<typeAlias alias="FrameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO"/>
 	<typeAlias alias="PortalBoardTreeVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO"/>
-	
+	<typeAlias alias="PortalLogoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalLogoVO"/>
 	<select id="ezNewPortal.getThemeInfo" parameterClass="Map" resultClass="ThemeInfoVO">
 		<![CDATA[
 			SELECT
@@ -444,13 +444,31 @@
 	]]>
 	</insert>
 	
-	<insert id="ezNewPortal.updateCompanyPortletNameInfo" parameterClass="Map">
+	<update id="ezNewPortal.updateCompanyPortletNameInfo" parameterClass="Map">
 	<![CDATA[
-		INSERT INTO TBL_PORTAL_PORTLET_NAME
-			(portlet_id,	menu_id,	portlet_lang,	tenant_id,	company_id,	portlet_name)
-		VALUES
-			(#portletId#,	#menuId#,	#portletLang#,	#tenantId#,	#companyId#,	#portletName#)
-		ON DUPLICATE KEY UPDATE portlet_name=#portletName#
+		UPDATE
+			TBL_PORTAL_PORTLET_NAME
+		SET
+			menu_id = #menuId#,
+			portlet_name = #portletName#
+		WHERE
+			portlet_id = #portletId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			company_id = #companyId#
+		AND
+			portlet_lang = #portletLang#
+	]]>
+	</update>
+	
+	<insert id="ezNewPortal.insertCompanyPortletNameInfo" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO
+			TBL_PORTAL_PORTLET_NAME
+			(portlet_id, menu_id, portlet_lang, tenant_id, company_id, portlet_name)
+		VALUES 
+			(#portletId#, #menuId#, #portletLang#, #tenantId#, #companyId#, #portletName#)
 	]]>
 	</insert>
 	
@@ -464,16 +482,21 @@
 			A.portlet_id = B.portlet_id
 		SET
 			A.menu_id = #menuId#,
-			A.portlet_used = #portletUsed#,
+			A.portlet_used = #portletUsed#
 	]]>
 	<isNotNull property="connectionUrl">
 	<![CDATA[
-			B.portlet_url = #connectionUrl#,
-			B.menu_id = #menuId#,	
+			,B.portlet_url = #connectionUrl#
+			,A.connection_url = #connectionUrl#
+			,B.menu_id = #menuId#
 	]]>
 	</isNotNull>
+	<isNotEmpty property="boardId">
 	<![CDATA[
-			A.board_id = #boardId#
+			,A.board_id = #boardId#
+	]]>
+	</isNotEmpty>
+	<![CDATA[
 		WHERE
 			A.tenant_id = #tenantId#
 		AND
@@ -515,6 +538,8 @@
 			TBL_PORTAL_PORTLET
 		WHERE
 			portlet_id = #portletId#
+		AND
+			menu_id = #menuId#
 	]]>
 	</delete>
 	
@@ -532,4 +557,145 @@
 			portlet_id = #portletId#
 	]]>
 	</update>
+	
+	<update id="ezNewPortal.updateCompanyLogo" parameterClass="Map">
+		<isEqual property="logoType" compareValue="P">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_LOGO
+				(company_id, tenant_id, logo_type, logo_url)
+			VALUES
+				(#companyId#, #tenantId#, #logoType#, #logoUrl#)
+			ON DUPLICATE KEY UPDATE
+				logo_url = #logoUrl#
+		]]>
+		</isEqual>
+		<isEqual property="logoType" compareValue="L">
+		<![CDATA[
+			INSERT INTO TBL_PORTAL_LOGO
+				(company_id, tenant_id, logo_type, logo_url)
+			VALUES
+				(#tenantId#, #tenantId#, #logoType#, #logoUrl#)
+			ON DUPLICATE KEY UPDATE
+				logo_url = #logoUrl#
+		]]>
+		</isEqual>
+	</update>
+	
+	<select id="ezNewPortal.getCompanyLogoList" parameterClass="Map" resultClass="PortalLogoVO">
+	<![CDATA[
+		SELECT
+			logo_url as logourl,
+			logo_type as logotype
+		FROM
+			TBL_PORTAL_LOGO
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+	]]>
+	</select>
+	
+	<select id="ezNewPortal.getTenantIdByServerName" parameterClass="Map" resultClass="Integer">
+	<![CDATA[
+		SELECT	
+			tenant_id
+		FROM
+			TBL_TENANT_SERVERNAME
+		WHERE
+			server_name = #serverName#
+	]]>
+	</select>
+	
+	<select id="ezNewPortal.getPortletIdsByMenuId" parameterClass="Map" resultClass="Integer">
+	<![CDATA[
+		SELECT	
+			portlet_id
+		FROM
+			TBL_PORTAL_PORTLET_COMP
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			menu_id = #menuId#
+	]]>
+	</select>
+	
+	<delete id="ezNewPortal.deleteMenuUser" parameterClass="Map">
+	<![CDATA[
+		DELETE FROM
+			TBL_PORTAL_MENU_USER
+		WHERE
+			menu_id = #menuId#
+		AND
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+	]]>
+	</delete>
+	
+	<delete id="ezNewPortal.deletePortletUser" parameterClass="Map">
+	<![CDATA[
+		DELETE FROM
+			TBL_PORTAL_PORTLET_USER
+		WHERE
+			portlet_id = #portletId#
+		AND
+			menu_id = #menuId#
+		AND
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+	]]>
+	</delete>
+	
+	<update id="ezNewPortal.updateCompanyDefaultTheme" parameterClass="Map">
+	<![CDATA[
+		UPDATE
+			tbl_portal_theme_comp
+		SET
+			theme_default = CASE WHEN theme_id = #themeId# THEN 1 ELSE 0 END,
+			theme_used = CASE WHEN theme_id = #themeId# THEN 1 ELSE theme_used END
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+	]]>
+	</update>
+	
+	<update id="ezNewPortal.updateThemeDefault" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PORTAL_THEME_COMP
+			SET
+				theme_default = CASE WHEN theme_id = #themeId# THEN 1 ELSE 0 END
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+		]]>
+	</update>
+	
+	<delete id="ezNewPortal.deleteCompanyLogo" parameterClass="Map">
+	<![CDATA[
+		DELETE FROM
+			TBL_PORTAL_LOGO
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			logo_type = #logoType#
+	]]>
+	<isEqual property="logoType" compareValue="L">
+	<![CDATA[
+		AND
+			company_id = #tenantId#
+	]]>
+	</isEqual>
+	<isNotEqual property="logoType" compareValue="L">
+	<![CDATA[
+		AND
+			company_id = #companyId#
+	]]>
+	</isNotEqual>
+	</delete>
 </sqlMap>

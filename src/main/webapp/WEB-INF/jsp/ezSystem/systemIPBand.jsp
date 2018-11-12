@@ -357,9 +357,9 @@
 	</div> 
 	<div id="mainmenu">
 	    <ul class="on">
-	        <li><span id="btn3" onclick="ipBandEidtPopUp('add')"><spring:message code='ezBoard.t602'/></span></li>
+	        <li class="important"><span id="btn3" onclick="ipBandEidtPopUp('add')"><spring:message code='ezBoard.t602'/></span></li>
 	        <li><span id="btn4" onclick="ipBandEidtPopUp('modify')"><spring:message code='ezQuestion.t480'/></span></li>
-	        <li><span id="btn5" onclick="deleteIPBand()"><spring:message code='ezEmail.t95'/></span></li>
+	        <li><span class="icon16 icon16_delete" id="btn5" onclick="deleteIPBand()"></span></li>
 	    </ul>
 	</div>
 	

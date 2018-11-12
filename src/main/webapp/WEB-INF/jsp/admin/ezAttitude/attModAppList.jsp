@@ -32,10 +32,8 @@
     	tr.hover:hover {background:#eee; color:#fff;}
 		.selectTR {background-color: #e4e8ec;}
 		#searchTable {
-			border-top: 1px solid #e8e8e8;
-			border-left: 1px solid #e8e8e8;
-			border-right: 1px solid #e8e8e8;
-			background-color: #fcfcfc;
+			border: 1px solid #e8e8e8;
+			background-color: #f8f8fa;
 		}
 		#searchTable td {padding: 8px 5px;}
 		<%-- 2018-07-19 홍승비 - 관리자 > 근태관리 헤더 겹치는 부분 수정, datePicker 스타일 추가 --%>
@@ -1125,15 +1123,15 @@
 		</script>
 </head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
-		<h1><spring:message code = 'ezAttitude.t7' /> - <span id="mailBoxInfo"></span></h1>
-        <div id="mainmenu">
-	        <span style="border: none;"><b><spring:message code='ezAttitude.t15' /> : </b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
+		<h1>
+			<spring:message code = 'ezAttitude.t7' /> - <span id="mailBoxInfo"></span>
+			<select class="companySelect" name="ListCompany" id="ListCompany" onchange="company_change()">
 				<c:forEach var = "companyItem" items="${list }">
 					<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
 				</c:forEach>
       		</select>
-        </div>
+		</h1>
+        <div id="mainmenu"></div>
         <table id="searchTable" style="width:100%;">
 			<tbody>
 				<tr>
@@ -1166,7 +1164,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<div id="contentlist" name="contentlist" style="border:0px solid blue;height:600px;width:100%;overflow-y:auto;" onblur>
+		<div id="contentlist" name="contentlist" style="border:0px solid blue;height:600px;width:100%;overflow-y:auto;margin-top:5px" onblur>
 			<table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
 				<tr id="headerList">
 					<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
@@ -1191,7 +1189,6 @@
 		        </c:if>
 			</table>
 		</div>
-		<div style="color: #666; padding-top: 10px"></div>
 		<div id="tblPageRayer"></div>
         <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="attPanel" onclick="ContextMenuHidden();" ></div>
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="AttProgress">

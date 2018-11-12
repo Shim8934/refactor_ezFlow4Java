@@ -1056,7 +1056,7 @@
 				</table>
 			</tr>
 		</table>  -->
-		<table style="width:100%; background-color: #fcfcfc; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8; border-bottom:1px solid #e8e8e8">
+		<table style="width:100%; background-color: #f8f8fa; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8; border-bottom:1px solid #e8e8e8">
 			<tr>
 				<td style="width:6%;">
 					<spring:message code='ezApproval.t434'/> 
@@ -1110,7 +1110,7 @@
 			</tr>
 		</table>
 		
-		<div id="contentlist" style="width: 100%; overflow: auto;">
+		<div id="contentlist" style="width: 100%; overflow: auto; margin-top:5px">
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr id ="doclist">
@@ -1131,7 +1131,7 @@
 			</table>
 		</div>
 		
-		<div id="tblPageRayer" style="padding-top: 10px;"></div>
+		<div id="tblPageRayer"></div>
 	</body>
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");

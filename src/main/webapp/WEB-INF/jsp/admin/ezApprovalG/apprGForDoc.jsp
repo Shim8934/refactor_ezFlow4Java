@@ -868,7 +868,7 @@
 	        <ul>
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
 	            <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>	            
-	            <li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
+	            <li id="SearchCondi"><span class="icon16 icon16_search" onclick="return SearchCondi_onclick()"></span></li>
 	        </ul>
 	    </div>
 	

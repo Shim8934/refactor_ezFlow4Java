@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -295,6 +296,38 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		logger.debug("getUserPortletList End");
 		return resultObj;
 	}	
+	
+	/**
+	 * 사용자 프레임 변경 & 포틀릿 설정 변경 
+	 */
+	@RequestMapping(value = "/ezNewPortal/updateUserFrameAndPortelt.do")
+	@ResponseBody
+	public String updateUserFrameAndPortlet(HttpServletRequest req, @RequestBody JSONObject jObj ,Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("updateUserFrameAndPortlet Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();		
+		String result = "success";
+		
+		/* 사용자 프레임 변경 */
+		String url = "/rest/ezPortal/frames/users/" + userId;
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
+		String status = resultBody.get("status").toString();
+		
+		
+		/* 사용자 포틀릿 사용 변경 */
+		url = "/rest/ezPortal/portlets/users/" + userId;
+		resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
+		status = resultBody.get("status").toString();
+		
+		logger.debug("status" + status);
+		
+		if(status.equals("error")) {
+			result = "failure";
+		}
+		
+		logger.debug("updateUserFrameAndPortlet End");
+		return result;
+	}
 	// 종균 끝
 	
 	
@@ -337,12 +370,23 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("useMail", data.get("useMail"));
 			model.addAttribute("useApproval", data.get("useApproval"));
 			model.addAttribute("useSchedule", data.get("useSchedule"));
+			model.addAttribute("lastLogin", data.get("lastLogin"));
+			model.addAttribute("userEmail", data.get("userEmail"));
 			
 			String usedTheme = data.get("usedTheme").toString();
-			String usedFrame = data.get("usedFrame").toString();
-			returnUrl += "Theme" + usedTheme + "_" + usedFrame;
+			returnUrl += "Theme" + usedTheme;
 			logger.debug("returnUrl : " + returnUrl);
 		}
+		
+		//김보미 추가 - calenderMini는 ie와 크롬일 때랑 파일이 틀려서 구분값 필요함.
+		boolean checkBrowser;
+		if (req.getHeader("User-Agent").indexOf("Trident") > 0 || req.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+			checkBrowser = true;
+		} else {
+			checkBrowser = false;
+		}
+		
+		model.addAttribute("checkBrowser", checkBrowser);
 		
 		logger.debug("portalMainPage End");
 		return returnUrl;
@@ -476,6 +520,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	}
 	
 	//테마 설정 화면 호출
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/userThemeSetting.do")
 	public String userThemeSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("userThemeSetting Start");
@@ -486,9 +531,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String settingUrl = "/rest/ezPortal/settingInfo/users/" + userId;
 		JSONObject settingResultBody = commonUtil.getJsonFromRestApi(settingUrl, null, req, "get", null);
 		String settingStatus = settingResultBody.get("status").toString();
-
+		String usedTheme = "";
+		
 		if (settingStatus.equals("ok")) {
 			JSONObject settingData = (JSONObject) settingResultBody.get("data");
+			usedTheme = settingData.get("usedTheme").toString();
 			model.addAttribute("usedTheme", settingData.get("usedTheme"));
 		}
 		
@@ -498,6 +545,20 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String themeStatus = themeResultBody.get("status").toString();
 		
 		if (themeStatus.equals("ok")) {
+			JSONArray themeList = (JSONArray) themeResultBody.get("data");
+			int themeListCount = themeList.size();
+			int userThemeMiddleIndex = themeListCount / 2;
+			
+			for (int i = 0; i < themeListCount; i++) {
+				JSONObject theme = (JSONObject) themeList.get(i);
+				String themeId = theme.get("themeId").toString();
+				
+				if (themeId.equals(usedTheme)) {
+					themeList.remove(i);
+					themeList.add(userThemeMiddleIndex, theme);
+				}
+			}
+			
 			model.addAttribute("themeList", themeResultBody.get("data"));
 		}
 		

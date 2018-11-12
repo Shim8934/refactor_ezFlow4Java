@@ -41,6 +41,7 @@ import egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalLogoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -266,8 +267,59 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return frameList;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void updateUserUsedFrame(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception {
+		LOGGER.debug("[Serivce] updateUserUsedFrame Started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> param = (Map<String, Object>) jObj.get("param");
+		
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("frameId", param.get("frameId"));
+		map.put("themeId", param.get("themeId"));
+		
+		LOGGER.debug("map.toString() : " + map.toString());
+		
+		ezNewPortalDAO.updateUserUsedFrame(map);
+		
+		LOGGER.debug("[Serivce] updateUserUsedFrame Ended");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void updateUserUsedPortlet(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception {
+		LOGGER.debug("[Serivce] updateUserUsedPortlet Started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> param = (Map<String, Object>) jObj.get("param");
+		// 유저 포틀릿은 delete & insert로 진행
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);		
+		
+		// 삭제할 때 
+		ezNewPortalDAO.deleteUserUsedPortlet(map);
+		
+		List<Map<String, Object>> portletList = (List<Map<String, Object>>) param.get("portletList");
+		for (int i=0; i<portletList.size(); i++) {
+			LOGGER.debug(portletList.get(i).toString());
+			Map<String, Object> portletMap = new HashMap<String, Object>();
+			portletMap.put("userId", userId);
+			portletMap.put("tenantId", tenantId);
+			portletMap.put("companyId", companyId);				
+			portletMap.put("portletId", portletList.get(i).get("portletId"));
+			portletMap.put("portletOrder", portletList.get(i).get("portletOrder"));
+			portletMap.put("menuId", portletList.get(i).get("menuId"));
+			
+			LOGGER.debug("portletMap:" + portletMap.toString());
+			ezNewPortalDAO.insertUserUsedPortlet(portletMap);
+		}
+		
+		
+		LOGGER.debug("[Serivce] updateUserUsedPortlet Ended");
+	}
+	
 	public List<PortletInfoVO> getPortletOrderCompForUser(String portletLang, int tenantId, String companyId, String deptId, String userId) throws Exception {
-		LOGGER.debug("[Serivce] getPortletOrderCompForUse Started");
+		LOGGER.debug("[Serivce] getPortletOrderCompForUser Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("portletLang", portletLang);
 		map.put("tenantId", tenantId);
@@ -277,7 +329,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<PortletInfoVO> portletOrderComp = ezNewPortalDAO.getPortletOrderCompForUser(map);
 
-		LOGGER.debug("[Serivce] getPortletOrderCompForUse Ended");
+		LOGGER.debug("[Serivce] getPortletOrderCompForUser Ended");
 		return portletOrderComp;		
 	}
 	
@@ -802,7 +854,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
 				
-				ezNewPortalDAO.updateCompanyPortletNameInfo(map);
+				ezNewPortalDAO.insertCompanyPortletNameInfo(map);
 			}
 		}
 		LOGGER.debug("insertPortlet ended.");
@@ -861,12 +913,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 	}
 	@Override
-	public void deletePortlet(int portletId, String companyId, int tenantId) {
+	public void deletePortlet(int portletId, int menuId, String companyId, int tenantId) {
 		LOGGER.debug("deletePortlet started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("portletId", portletId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("menuId", menuId);
+		
+		//tbl_portal_portlet_user 지우기
+		ezNewPortalDAO.deletePortletUser(map);
+		
 		//tbl_portal_portlet_name 지우기
 		ezNewPortalDAO.deletePortletName(map);
 		
@@ -877,6 +934,66 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		ezNewPortalDAO.deletePortlet(map);
 		
 		LOGGER.debug("deletePortlet ended.");
+	}
+	
+	@Override
+	public void updateCompanyLogo(String companyId, int tenantId, String logoType, String logoUrl) {
+		LOGGER.debug("updateCompanyLogo started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("logoType", logoType);
+		map.put("logoUrl", logoUrl);
+		
+		ezNewPortalDAO.updateCompanyLogo(map);
+		LOGGER.debug("updateCompanyLogo ended.");
+	}
+	
+	@Override
+	public List<PortalLogoVO> getCompanyLogoList(String companyId, int tenantId) {
+		LOGGER.debug("getCompanyLogoList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		List<PortalLogoVO> companyLogoList = ezNewPortalDAO.getCompanyLogoList(map);
+		LOGGER.debug("getCompanyLogoList ended.");
+		return companyLogoList;
+	}
+	
+	@Override
+	public int getTnenantIdByServerName(String serverName) {
+		LOGGER.debug("getTnenantIdByServerName started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("serverName", serverName);
+		
+		int tenantId = ezNewPortalDAO.getTenantIdByServerName(map);
+		LOGGER.debug("getTnenantIdByServerName ended.");
+		return tenantId;
+	}
+	
+	@Override
+	public void updateCompanyDefaultTheme(int themeId, String companyId, int tenantId) {
+		LOGGER.debug("updateCompanyDefaultTheme started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("themeId", themeId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezNewPortalDAO.updateCompanyDefaultTheme(map);
+		LOGGER.debug("updateCompanyDefaultTheme ended.");
+	}
+	
+	@Override
+	public void deleteCompanyLogo(String companyId, int tenantId, String logoType) {
+		LOGGER.debug("deleteCompanyLogo started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("logoType", logoType);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezNewPortalDAO.deleteCompanyLogo(map);
+		LOGGER.debug("deleteCompanyLogo ended.");
 	}
 	/**
 	 * 이효진
@@ -902,7 +1019,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			list = ezNewPortalDAO.getApprovalDoingList(map);
 			result.put("list", list);
 			
-			if (list != null) {
+			if (list.size() > 0) {
 				if (approvalFlag.equalsIgnoreCase("G")) {
 					map.put("code1", "A04");
 				} else {
@@ -1043,6 +1160,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
+		if ((boolean)map.get("themeDefault")) {
+			ezNewPortalDAO.updateThemeDefault(map);
+		}
+		
 		ezNewPortalDAO.updateThemeInfo(map);
 		
 		for (Object item : frameInfos) {
@@ -1124,7 +1245,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("menuAuthsY", menuAuthsY);
-		resultMap.put("menuAuthsY", menuAuthsN);
+		resultMap.put("menuAuthsN", menuAuthsN);
 		
 		LOGGER.debug("getMenuAuth ended.");
 		
@@ -1306,6 +1427,23 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
+		//TODO 2018-11-06 이효진 포틀릿 삭제로직 포함시켜라
+		//deletePortlet ---- 2018-11-07 유은정 개발
+		//메뉴아이디에 포함되어있는 포틀릿 아이디 목록 가져오기
+		List<Integer> portletList = ezNewPortalDAO.getPortletIdsByMenuId(map);
+		int portletListCount = portletList.size();
+		
+		for (int i = 0; i < portletListCount; i++) {
+			int portletId = portletList.get(i);
+			map.put("portletId", portletId);
+			
+			ezNewPortalDAO.deletePortletUser(map);
+			ezNewPortalDAO.deletePortletName(map);
+			ezNewPortalDAO.deletePortletComp(map);
+			ezNewPortalDAO.deletePortlet(map);
+		}
+		
+		ezNewPortalDAO.deleteMenuUser(map);
 		ezNewPortalDAO.deleteMenuAuth(map);
 		ezNewPortalDAO.deleteMenuNames(map);
 		ezNewPortalDAO.deleteMenuComp(map);

@@ -20,12 +20,6 @@
 			#mCSB_1_container {
 				margin-right: 0px;
 			}
-			.mCSB_scrollTools {
-				opacity: 0.3;
-				width: 6px;
-				margin-Top: 5px;
-				margin-bottom: 5px;
-			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -155,8 +149,7 @@
 		        pObjSpan.parentElement.onclick();
 		        var TreeCtrl = getFirstChild(pObjSpan.parentElement);
 		        TreeCtrl.onclick();
-		
-		        TreeCtrl.onclick();
+		        
 		        var selectItem;
 		
 		        var totalboard = "";
@@ -168,67 +161,92 @@
 		        }
 		
 		        var cnt = totalboard.children[0].getElementsByTagName("div").length;
-		
+		        
+		        /* 2018-11-01 홍승비 - 접근권한 없는 게시판에 포탈 포틀릿 등으로 접근 시, 오류메세지 표출하도록 수정 */
+		        var accessCheck = "";
 		        for (var i = 0; i < cnt; i++) {
-		            if (RedirectBoardID == totalboard.children[0].getElementsByTagName("div")[i].getAttribute("data1")) {
-		                selectItem = totalboard.children[0].getElementsByTagName("div")[i];
-		                break;
-		            }
-		            else {
-		                var parentNodeid = totalboard.children[0].getElementsByTagName("div")[i].id;
-		                var imgtag = "imgNode_" + totalboard.children[0].getElementsByTagName("div")[i].id;
-		                if (imgtag.indexOf("sub") > -1) {
-		                    var treecnt = document.getElementById(parentNodeid).childNodes.length;
-		                    cnt += treecnt;
-		                }
-		
-		                var rtnval = SearchTreeViewByPath(imgtag, parentNodeid);
-		                cnt += rtnval;
-		            }
+		        	if (typeof(totalboard.children[0].getElementsByTagName("div")[i]) == "undefined") {
+		        		accessCheck = "NO";
+			        	break;
+			        }
+		        	else {
+			        	if (RedirectBoardID == totalboard.children[0].getElementsByTagName("div")[i].getAttribute("data1")) {
+			                selectItem = totalboard.children[0].getElementsByTagName("div")[i];
+			                break;
+			            }
+			            else {
+			                var parentNodeid = totalboard.children[0].getElementsByTagName("div")[i].id;
+			                var imgtag = "imgNode_" + totalboard.children[0].getElementsByTagName("div")[i].id;
+			                if (imgtag.indexOf("sub") > -1) {
+			                    var treecnt = document.getElementById(parentNodeid).childNodes.length;
+			                    cnt += treecnt;
+			                }
+			
+			                var rtnval = SearchTreeViewByPath(imgtag, parentNodeid);
+			                cnt += rtnval;
+			            }
+			        }
 		        }
-		        selectItem.getElementsByTagName("span")[0].onclick();
-		        var tempid = selectItem.id.split("_");
-		        var tempidlength = tempid.length;
-		        var clicknode = new Array();
-		        if (CrossYN()) {
-		            for (var i = 0; i < tempidlength; i++) {
-		                if (selectItem.getAttribute("DATA3") != pBoardGroupID) {
-		                    if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1)
-		                        clicknode[i] = selectItem.id;
-		                    else
-		                        i--;
-		                    selectItem = selectItem.parentElement;
-		                }
-		                else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
-		                    selectItem.childNodes[0].click();
-		                    var j = clicknode.length;
-		                    for (var k = j; k > 0; k--) {
-		                        document.getElementById(clicknode[k - 1]).childNodes[k - 1].onclick();
-		                    }
-		                    return;
-		                }
-		            }
+		        
+		        if (accessCheck != "NO") {
+			        selectItem.getElementsByTagName("span")[0].onclick();
+			        var tempid = selectItem.id.split("_");
+			        var tempidlength = tempid.length;
+			        var clicknode = new Array();
+			        if (CrossYN()) {
+			            for (var i = 0; i < tempidlength; i++) {
+			                if (selectItem.getAttribute("DATA3") != pBoardGroupID) {
+			                    if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1)
+			                        clicknode[i] = selectItem.id;
+			                    else
+			                        i--;
+			                    selectItem = selectItem.parentElement;
+			                }
+			                else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
+			                    selectItem.childNodes[0].click();
+			                    var j = clicknode.length;
+			                    for (var k = j; k > 0; k--) {
+			                        document.getElementById(clicknode[k - 1]).childNodes[k - 1].onclick();
+			                    }
+			                    return;
+			                }
+			            }
+			        }
+			        else {
+			            for (var i = 0; i < tempidlength; i++) {
+			                if (selectItem.getAttribute("DATA3") != pBoardGroupID) {
+			                    if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1)
+			                        clicknode[i] = selectItem.id;
+			                    else
+			                        i--;
+			                    selectItem = selectItem.parentElement;
+			                }
+			                else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
+			                    selectItem.childNodes[0].click();
+			                    var j = clicknode.length;
+			                    for (var k = j; k > 0; k--) {
+			                        document.getElementById(clicknode[k - 1]).childNodes[k - 1].click();
+			                    }
+			                    return;
+			                }
+			            }
+			        }
 		        }
+		        // 리다이렉트된 게시판에 접근권한이 없다면 우측프레임에 메세지 표출함 
 		        else {
-		            for (var i = 0; i < tempidlength; i++) {
-		                if (selectItem.getAttribute("DATA3") != pBoardGroupID) {
-		                    if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1)
-		                        clicknode[i] = selectItem.id;
-		                    else
-		                        i--;
-		                    selectItem = selectItem.parentElement;
-		                }
-		                else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
-		                    selectItem.childNodes[0].click();
-		                    var j = clicknode.length;
-		                    for (var k = j; k > 0; k--) {
-		                        document.getElementById(clicknode[k - 1]).childNodes[k - 1].click();
-		                    }
-		                    return;
-		                }
-		            }
+		        	var rightFrameDoc = "";
+		        	if (typeof window.parent.frames["right"] == "undefined") {
+		        		rightFrameDoc = rightFrame.document;
+		        	} else {
+		        		rightFrameDoc = window.parent.frames["right"].document;
+		        	}
+		        	
+		        	rightFrameDoc.head.innerHTML = "<link rel='stylesheet' href='${util.addVer('ezBoard.i1', 'msg')}' type='text/css'>";
+		        	rightFrameDoc.body.className = "mainbody";
+		        	rightFrameDoc.body.innerHTML = "<div style='margin-top:100px;text-align:center'><spring:message code='ezBoard.t272'/></div>";
 		        }
 		    }
+		    
 		    function SearchTreeViewByPath(imgtag, parentNodeid) {
 		        if (imgtag.indexOf("sub") == -1 && document.getElementById(imgtag).src.indexOf("plus") > -1) {
 		            document.getElementById(imgtag).onclick();
@@ -856,6 +874,19 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 		    
+		    function boardWrite(){
+		    	var wWeight = "355";
+                var wHeight = "600";
+
+                var heigth = window.screen.availHeight;
+                var width = window.screen.availWidth;
+
+                var left = (width - wWeight) / 2;
+                var top = (heigth - wHeight) / 2;
+                window.open("/ezBoard/writeBoardSelect.do", "",
+                    "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		    }
+		    
 		    function leftResize(){
 	        	$(".boardListBox").height(window.innerHeight-105);
 	        }
@@ -876,7 +907,7 @@
 	        	<span onclick="boardConfig()" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezBoard.t0005" />"></span>
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span>게시글 등록</p>
+	        	<p class="btn_write01" onclick="boardWrite();"><span class="sub_iconLNB tree_write"></span>게시글 등록</p>
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
 		        <div class="lnb_lay">

@@ -289,10 +289,10 @@
 		<h1>Quick Link</h1>
 		<div id="mainmenu">
 			<ul>
-		    	<li><span onclick="btn_Select()"><spring:message code = 'ezPersonal.t105' /></span></li>
+		    	<li class="important"><span onclick="btn_Select()"><spring:message code = 'ezPersonal.t105' /></span></li>
 		    	<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li><span onclick="QuickList_onDblclick()"><spring:message code = 'ezPersonal.t169' /></span></li>
-		        <li><span onclick="btn_Del()"><spring:message code = 'ezPersonal.t99' /></span></li>
+		        <li><span class="icon16 icon16_delete" onclick="btn_Del()"></span></li>
 			</ul>
 		</div>
 		<script type="text/javascript">

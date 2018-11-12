@@ -29,12 +29,24 @@
 		cursor : pointer;
 		display: block;
 	}
+	.slider_section {height:515px; width:280px;}
+	.right_float {float:right;}
+	#nodata_NewBirth {display:none;}
+	#featured {background : none;}
+	.box_shadow {width:auto;margin:0px;}
+	.portlet {height:250px; margin:20px 0px 0px 16px;background-color:#ffffff;}
 </style>
 </head>
 <body class="mainbg">
 	<div id="center">
+	<c:if test="${usedFrame eq 'Frame2'  || usedFrame eq 'Frame4'}">
+		<section class="section_left right_float" style="height:1130px;">
+	</c:if>
+	<c:if test="${usedFrame eq 'Frame1'  || usedFrame eq 'Frame3'}">
 		<section class="section_left" style="height:1130px;">
+	</c:if>
 			<article class="rolling_info">
+			<div class="slider_section">
 				<div class="rolling" id="featured">
             	<c:choose>
 	            	<c:when test="${not empty sliderList}">
@@ -55,6 +67,7 @@
 	            	</c:otherwise>
 	            </c:choose>
            	 	</div>
+			</div>
            	 	<dl class="info">
             		<dt class="infoImg"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="36px" height="36px" /></c:if><c:if test='${userPhoto != ""}'><img id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></dt>
                		<dd class="infoName">${userName} ${userTitle}</dd>
@@ -181,6 +194,17 @@
 <script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/newPortal_common.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+<!-- 일정관리 -->
+<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+<c:choose>
+	<c:when test="${checkBrowser == true}">
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_IEEIP.js')}"></script>
+	</c:when>
+	<c:otherwise>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_EIP.js')}"></script>
+	</c:otherwise>
+</c:choose>
+<!-- 일정관리 끝 -->
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
 	var photoBoardPage = 1;
@@ -194,11 +218,23 @@
  	var birthdayCurPage = 0;
  	var birthdayTotalCount = 0;
  	var timer;
+ 	var frameId = "<c:out value='${usedFrame}'/>";
+ 	var usedTheme = "<c:out value='${usedTheme}'/>";
  	
  	var quickLinkPage = {
  		current: 1,
  		total: 1,
  	};
+	
+ 	window.onresize = function(event) {
+ 		frameSetting(frameId);
+		leftResize();
+ 	}
+ 	
+ 	var leftResize = function() {
+		var wwh = $('.section_main').prop("scrollHeight") + 30;
+		$(".section_left").css("height", wwh +"px");
+	}
  	
  	var setQuickLinkList = function (data) {
  		var quickList = data.quickLinkList;
@@ -311,28 +347,31 @@
  	
 	$(function() {
 		$("#featured").orbit();
-	 	
+		
 		var portletCount = portletOrder.length;
+		var portletHTML = "";
 		
 		for (var i = 0; i < portletCount; i++) {
-			var strHTML = "";
-			strHTML += "<div class='box_shadow' id='";
-			strHTML += portletOrder[i].portletId + "Portlet'>";
-			strHTML += "</div>";
-			
-			$(".portlet_area").append(strHTML);
+			portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
 		}
+		
+		$(".portlet_area").html(portletHTML);
+ 		frameSetting(frameId);
 		
 		for (var i = 0; i < portletCount; i++) {
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
 			
-			(function (portletId, portletUrl, portletName) {
+			console.log('id',portletId);
+			console.log('url',portletUrl);
+			console.log('name',portletName);
+			
+  			(function (portletId, portletUrl, portletName) {
 				$.ajax({
 					type : "POST",
 					dataType : "html",
-					data : {"portletId" : portletId, "portletName" : portletName},
+					data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
 					url : portletUrl,
 					success : function(result) {
 						$("#" + portletId + "Portlet").append(result);
@@ -419,14 +458,40 @@
 		//포틀릿 드래그 앤 드롭
 		$(".portlet_area").sortable({
 			handle : ".sortablePortlet",
+			start : function (event, block) {
+				$(".ui-sortable-helper").css({
+					'width' : $(".box_shadow").outerWidth(),
+					'height' : $(".box_shadow").outerHeight()
+				});
+			},
 			update : function(event, ui) {
 				updatePortletOrderUser();
 			}
 		});
 		
 		$(".portlet_area").disableSelection();
-		
+
+		leftResize();
 	});
+	
+	var frameSetting = function (frameSetId) {
+		console.log(frameSetId);
+		frameId = frameSetId;
+		
+		if (frameSetId == "Frame3" || frameSetId == "Frame4") {
+			var media1921 = window.matchMedia("only screen and (min-width: 1921px)");
+			var media1686 = window.matchMedia("only screen and (max-width :1920px) and (min-width :1686px)");
+			var media1280 = window.matchMedia("only screen and (max-width :1685px) and (min-width :1280px)");
+			
+			if (media1921.matches) {
+				$(".portlet").css("width", "483px");
+			} else if (media1686.matches) {
+				$(".portlet").css("width", "48%");
+			} else if (media1280.matches) {
+				$(".portlet").css("width", "48%");
+			}
+		}
+	}
 	</script>
 	</body>
 </html>

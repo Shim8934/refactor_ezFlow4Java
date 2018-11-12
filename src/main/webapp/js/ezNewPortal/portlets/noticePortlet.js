@@ -20,10 +20,11 @@ var assembleNoticeList = function(noticeList) {
 	}
 	
 	var noticePlus = function() {
+		//console.log('boardId', boardId);
 		window.open("/ezBoard/boardMainRedirect.do?boardID=" + boardId, "main", "");
 	}
 	
-	var dataAssembler = function(data, index) {
+	var dataAssembler = function(data, index) {	
 		index = (index*1 + 1); // 혹시 모르니 int형태로 변환
 		boardId = data.boardID;
 		return '<li class="notiLI" data1="'+data.itemID+'" data2="'+data.boardID+'" data3="'+data.guBun+'"><dl class="notiDL0'+index+'"><dt class="noti_num">'+index+'</dt><dt class="N"></dt><dd class="noti_text">'+data.title+'</dd></dl></li>';

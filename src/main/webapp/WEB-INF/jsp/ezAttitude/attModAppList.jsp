@@ -935,11 +935,11 @@
 		</script>
 </head>
 	<body id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
-		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.t166' /><span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code='ezAttitude.t166' /><span id="mailBoxInfo"></span></h1>
         <div id="mainmenu">
         <ul id="tb_Parent">
-        	<li id="search"><span onClick="search_popup()"><spring:message code='ezAttitude.t121'/></span></li>
 		    <li id="reply"><span onClick="get_excelAtt_list()"><spring:message code='ezAttitude.t145'/></span></li>
+		    <li id="search"><span class="icon16 icon16_search" onClick="search_popup()"></span></li>
 		    <li onClick="attList_del()"><span class="icon16 icon16_delete"></span></li>
 	        <li onClick="att_search('refresh')"><span class="icon16 icon16_refresh"></span></li>
 			<li id="right" style="margin-right:5px">

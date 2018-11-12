@@ -359,7 +359,7 @@
 		        
 			    AddOption(sel_status, '<spring:message code="ezPoll.t104"/>', "ALL");
 			    
-			    $('#sel_status_div').show();
+			    $('#sel_status_div').closest("li").show();
 			    
 		        if (pListTypeValue == "1") {
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1422"/>', "002");
@@ -384,7 +384,7 @@
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t155"/>', "S");
 		        	AddOption(sel_status, strLangAprState21, "V");
 		        } else {
-		        	$('#sel_status_div').hide();
+		        	$('#sel_status_div').closest("li").hide();
 		        }
 		        
 		    }
@@ -1448,6 +1448,12 @@
 		        createNodeAndInsertText(xmlpara, objNode, "ORDEROPTION", OrderOption);
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
 		        createNodeAndInsertText(xmlpara, objNode, "APPROVALFLAG", approvalFlag);
+		        
+		        var searchCompanyID = $("#selectCompany option:selected").val();
+		        if(searchCompanyID == undefined) {
+		        	searchCompanyID = "";
+		        }
+		        createNodeAndInsertText(xmlpara, objNode, "searchCompanyID", searchCompanyID);
 
 		        var wWeigth = 700;
 		        var wHeigth = 480;
@@ -1979,15 +1985,15 @@
 				<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
 				<li id="tbtncallback" style="DISPLAY:none"><span id="btncallback" onclick="return btncallback_onclick('CALLBACK')" ><spring:message code='ezApprovalG.t66'/></span></li>
 		        <li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
-				<li id="tbtnViewDoc" style="DISPLAY:none"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
 				<c:if test="${approvalFlag == 'G'}">
 					<li id="tbtnGongRam"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t1442'/></span></li>
 				</c:if>
 				<c:if test="${approvalFlag != 'G'}">
 					<li id="tbtnGongRam" style="DISPLAY:none"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.hyj21'/></span></li>
 				</c:if>
-		        <li id="tSearchCondi" style="DISPLAY:none"><span id="SearchCondi" onclick="return SearchCondi_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
+				<li id="tbtnViewDoc" style="DISPLAY:none"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
 		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+		        <li id="tSearchCondi" style="DISPLAY:none"><span class="icon16 icon16_search" id="SearchCondi" onclick="return SearchCondi_onclick()"></span></li>
 		        <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li>
 		        <li id="tbtnRemoveDoc" style="DISPLAY:none"><span class="icon16 icon16_delete" id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"></span></li>
 		        <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
@@ -1995,6 +2001,13 @@
 		        	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">    
 		            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
 		        	</select>
+		        </li>
+		        <li style="vertical-align: middle;">
+		        	<div id="sel_status_div" style="display:inline;">
+						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
+			            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
+			        	</select>  
+		        	</div>
 		        </li>
 		        <c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21'}">
 			        <li style="vertical-align: middle;">		        	

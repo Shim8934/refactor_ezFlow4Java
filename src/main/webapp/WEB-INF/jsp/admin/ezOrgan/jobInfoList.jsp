@@ -464,21 +464,19 @@
 	</script>
 </head>
 <body class="mainbody">
-	<h1><spring:message code='ezOrgan.csj01' /></h1>
+	<h1>
+		<spring:message code='ezOrgan.csj01' />
+		<select class="companySelect" id="ListCompany" onChange="compChange()">
+			<c:forEach var="item" items="${list}">
+				<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+			</c:forEach>
+		</select>
+	</h1>
 	<div id="mainmenu">
-		<span>
-			<b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			<select id="ListCompany" onChange="compChange()">
-				<c:forEach var="item" items="${list}">
-					<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-				</c:forEach>
-			</select>
-			<br/><br/>
-		</span>
 		<ul>
-			<li><span onClick="BtnAction('Add')"><spring:message code = 'ezAddress.t173'/></span></li>
+			<li class="important"><span onClick="BtnAction('Add')"><spring:message code = 'ezAddress.t173'/></span></li>
 			<li><span onClick="BtnAction('Mod')"><spring:message code = 'ezAddress.t174'/></span></li>
-			<li><span onClick="BtnAction('Del')"><spring:message code = 'ezAddress.t175'/></span></li>
+			<li><span class="icon16 icon16_delete" onClick="BtnAction('Del')"><spring:message code = 'ezAddress.t175'/></span></li>
 		</ul>
 	</div>
 	<script type="text/javascript">

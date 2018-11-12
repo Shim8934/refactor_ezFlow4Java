@@ -492,20 +492,20 @@
 		</xml>
 	
 	    <form id="Form1" method="post">
-		    <h1><spring:message code='ezOrgan.t00005' /><span id="mailBoxInfo"></span></h1>
-		    <div id="mainmenu">
-			    <span><b><spring:message code='ezOrgan.t00006' /> : </b></span>    		           
-	            <select id="ListCompany" onchange="company_change()">
+		    <h1>
+		    	<spring:message code='ezOrgan.t00005' /><span id="mailBoxInfo"></span>
+		    	<select class="companySelect" id="ListCompany" onchange="company_change()">
 	            	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 	            </select>
-	            
+		    </h1>
+		    <div id="mainmenu">
 		        <ul style="margin-top:15px;">
-		            <li><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
+		            <li class="important"><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		            <li><span onClick="Permissions_Del('MOD')"><spring:message code='ezOrgan.t00008' /></span></li>
 		            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
+		            <li><span class="icon16 icon16_delete" onClick="Permissions_Del('MOD')"></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="email_onclick()"><spring:message code='ezOrgan.t00010' /></span></li>
 		            
@@ -557,7 +557,7 @@
 			        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div>
 			    </div>
 			</div>
-		    <div id="tblPageRayer" style="Width:100%;text-align:center;margin-top:10px"></div>
+		    <div id="tblPageRayer" style="Width:100%;text-align:center;"></div>
 		</form>         
 	</body>
 	<script type="text/javascript">

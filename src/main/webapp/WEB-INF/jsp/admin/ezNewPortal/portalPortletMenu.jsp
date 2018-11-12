@@ -15,6 +15,9 @@
 <style type="text/css">
 .full_menu_toggleUL > li.select_li { background: #e5efff; border-right: 1px solid #c6cfdf; border-bottom: 1px solid #c6cfdf; box-sizing: border-box; }
 .not_select { background: #ffffff; border-right: 1px solid #c6cfdf; border-bottom: 1px solid #c6cfdf; box-sizing: border-box; }
+.full_menu_toggleUL > li {border:1px solid #d9d9d9;}
+.popup {height:96%;}
+.full_menu_toggle {margin-top:4%;}
 </style>
 </head>
 <body class='popup'>
@@ -33,7 +36,7 @@
 		<li id="menu0" class="menuList">
 			<dl class="full_menu_toggleDL">
 				<dt><span>X</span></dt>
-				<dd>관련 메뉴 없음</dd>
+				<dd>관련 메뉴<br/>없음</dd>
 			</dl>
 		</li>
 </ul>
@@ -44,6 +47,9 @@
 $(function(){
 	$(".menuList").on("click", selectLi);
 	$("#selMenu").on("click", selectMenu);
+	$("#close").on("click", function(){
+		window.close();
+	});
 });
 
 var selectLi = function() {
@@ -53,26 +59,52 @@ var selectLi = function() {
 
 var selectMenu = function() {
 	var menuId = $(".select_li").attr("id");
+	
+	if (menuId == undefined) {
+		alert("메뉴를 선택해 주세요.");
+		return;
+	}
+	
 	menuId = menuId.substring(4);
 	var portletId = "<c:out value='${portletId}'/>";
 	var menuName = $(".select_li").find("dd")[0].innerText;
-	console.log(portletId);
+	
 	if (portletId == "null") {
 		window.opener.document.getElementById("newPortletMenu").value = menuName;
 		window.opener.document.getElementById("newPortletMenu").setAttribute("value", menuName);
-		window.opener.document.getElementById("newPortletMenu").setAttribute("data1", menuId);
+		window.opener.document.getElementById("newPortletMenu").setAttribute("data2", menuId);
 
 		if (menuId == 4) {
-			window.opener.document.getElementById("newPortlet").querySelector(".setBoard").style.display = "table-row";
+			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "table-row";
+			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "none";
+			window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
+		} else {
+			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "none";
+			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "table-row";
+			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").value = "";
+			window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "";
+			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").setAttribute("data1", "");
+			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").setAttribute("value", "");
 		}
 		 
 	} else {
 		window.opener.document.getElementById("portletMenu" + portletId).value =  menuName;
 		window.opener.document.getElementById("portletMenu" + portletId).setAttribute("value", menuName);
-		window.opener.document.getElementById("portletMenu" + portletId).setAttribute("data1", menuId);
+		window.opener.document.getElementById("portlet" + portletId).setAttribute("data2", menuId);
 		
 		if (menuId == 4) {
-			window.opener.document.getElementById("portlet" + portletId).querySelector(".setBoard").style.display = "table-row";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").style.display = "table-row";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionTR").style.display = "none";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "/ezNewPortal/boardPortlet.do");
+		} else {
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").style.display = "none";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionTR").style.display = "table-row";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "";
+			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "");
+			window.opener.document.getElementById("portletBoard" + portletId).value = "";
+			window.opener.document.getElementById("portletBoard" + portletId).setAttribute("data1", "");
+			window.opener.document.getElementById("portletBoard" + portletId).setAttribute("value", "");
 		}
 	}
 	

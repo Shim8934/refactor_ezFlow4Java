@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -236,6 +236,7 @@ $(function(){
 </script>
 </head>
 <body>
+<<<<<<< HEAD
 <div class="layDiv">
 	<dl class="portlet_title sortablePortlet">
 		<dt class="portletText">오늘의날씨 </dt> <!-- <span id="cityName">${displayName}</span> -->

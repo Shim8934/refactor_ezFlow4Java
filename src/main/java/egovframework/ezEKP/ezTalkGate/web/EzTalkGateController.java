@@ -73,6 +73,7 @@ public class EzTalkGateController {
 	public String ezTalkLogin(
 					@RequestParam String ezTalkId,
 					@RequestParam String ezTalkPw,
+					@RequestParam(required=false) String type,
 					HttpServletRequest request,
 					HttpServletResponse response
 					) throws Exception {
@@ -87,6 +88,8 @@ public class EzTalkGateController {
 			
 			String orgId = ezTalkGateUtil.decryptEzTalkAES(ezTalkId);
 			String orgPw = ezTalkGateUtil.decryptEzTalkAES(ezTalkPw);
+			type = (type == null) ? "" : type;
+			logger.debug("type=" + type);
 			logger.debug("orgId=" + orgId);
 			
 			boolean isUserExists = checkIfUserExists(orgId, orgPw, tenantId);
@@ -95,32 +98,35 @@ public class EzTalkGateController {
 			if (isUserExists) {
 				result = "OK";
 				// 2018.10.25 yjks - 모바일 사용 설정 확인 추가 
-    			String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", tenantId);
-    			
-    			if (useMobileManagemant.equals("YES")) {
-    				String notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, orgId, "notUseMobileLogin");
-    				String adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, orgId, "adminOrderNotUsedMobileLogin");
-    				
-    				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
-    					logger.debug("cannot use mobile login. userId=" + orgId);
-    					result = "NOTUSE";
-    				} else {
-    					String inputParams = "userId=" + orgId + "&deviceId=";
-    					logger.debug("userId=" + orgId + ",deviceId=");
-    					
-    					String requestURL = "/ezTalkGate/getUserMobileDeviceInfo";
-    					String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
-    					logger.debug("getResult=" + getResult);
-    					
-    					JSONParser parser = new JSONParser();
-    					JSONObject resultObj = (JSONObject) parser.parse(getResult);
-    					
-    					if (resultObj.get("data").equals("1")) {
-    						logger.debug("this device cannot use. userId=" + orgId);
-    						result = "NOTUSE";
-    					}
-    				}
-    			}
+				// type이 M이면 모바일 로그인
+				if (type.equals("M")) {
+					String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", tenantId);
+					
+					if (useMobileManagemant.equals("YES")) {
+						String notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, orgId, "notUseMobileLogin");
+						String adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, orgId, "adminOrderNotUsedMobileLogin");
+						
+						if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
+							logger.debug("cannot use mobile login. userId=" + orgId);
+							result = "NOTUSE";
+						} else {
+							String inputParams = "userId=" + orgId + "&deviceId=";
+							logger.debug("userId=" + orgId + ",deviceId=");
+							
+							String requestURL = "/ezTalkGate/getUserMobileDeviceInfo";
+							String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+							logger.debug("getResult=" + getResult);
+							
+							JSONParser parser = new JSONParser();
+							JSONObject resultObj = (JSONObject) parser.parse(getResult);
+							
+							if (resultObj.get("data").equals("1")) {
+								logger.debug("this device cannot use. userId=" + orgId);
+								result = "NOTUSE";
+							}
+						}
+					}
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

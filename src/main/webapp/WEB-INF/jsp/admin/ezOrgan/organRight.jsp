@@ -1386,9 +1386,9 @@
 		    	var agent = navigator.userAgent.toLowerCase();
 		    	
 		    	if (agent.indexOf("chrome") != -1) {
-		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(450, 200));
+		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 200));
 		    	} else {
-			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(330, 200));
+			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 200));
 		    	}
 		    } 
 		   
@@ -1518,7 +1518,7 @@
 		</xml>
 		<h1>
 		<c:if test="${dotNetIntegration != 'YES'}">
-		<spring:message code='ezOrgan.t72' />
+		<spring:message code='main.t56' />
 		</c:if>
 		<c:if test="${dotNetIntegration == 'YES'}">
 		<spring:message code='main.t24' />

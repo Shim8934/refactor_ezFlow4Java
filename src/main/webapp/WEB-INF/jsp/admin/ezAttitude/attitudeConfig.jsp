@@ -185,18 +185,16 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code='ezAttitude.t2' /></h1>
-	  	<div id="mainmenu">
-			<span style="border: none;"><b><spring:message code='ezAttitude.t15' /> : </b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
+	    <h1>
+	    	<spring:message code='ezAttitude.t2' />
+	    	<select class="companySelect" name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
 				<c:forEach var="item" items="${list}">
 				<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
 				</c:forEach>
       		</select>
-      		<br>
-	  	</div>
-	  	<h2 style="font-weight: normal">▒&nbsp;휴무요일 외 휴일은 일정관리메뉴의 기념일관리에서 추가하실 수 있습니다.</h2>
-		<table class="content" style="width:500px">
+	    </h1>
+	  	<h2 style="font-weight: normal;font-size:12px;margin-top:30px">▒&nbsp;휴무요일 외 휴일은 일정관리메뉴의 기념일관리에서 추가하실 수 있습니다.</h2>
+		<table class="content" style="width:500px;margin-top:5px">
 			<tr style="height:30px;">
 	        	<th style="width: 70px; text-align:center">
 					<spring:message code='ezAttitude.t12' />

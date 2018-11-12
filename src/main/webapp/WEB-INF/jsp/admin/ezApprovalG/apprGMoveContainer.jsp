@@ -27,17 +27,17 @@
 			 border-top: 1px solid #e8e8e8;
 			 border-left: 1px solid #e8e8e8;
 			 border-right: 1px solid #e8e8e8;
-			 background-color: #fcfcfc;
+			 background-color: #f8f8fa;
 		}
 		#t2 {
 			 border-left: 1px solid #e8e8e8;
 			 border-right: 1px solid #e8e8e8;
-			 background-color: #fcfcfc;
+			 background-color: #f8f8fa;
 		}
 		#t3 {
 			 border: 1px solid #e8e8e8;
 			 border-top: 1px dotted #eee;
-			 background-color: #fcfcfc;
+			 background-color: #f8f8fa;
 		}
 		.mainlist tr th {border-top:0px}
 	    </style>
@@ -967,7 +967,7 @@
 			</tr>
 		</table>
 		
-		<div id="contentlist" style="width: 100%; height: 610px; overflow: auto;">
+		<div id="contentlist" style="width: 100%; height: 610px; overflow: auto; margin-top:5px">
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr id = "doclist">
@@ -989,7 +989,7 @@
 			</table>
 		</div>
 		
-		<div id="tblPageRayer" style="padding-top: 10px;"></div>
+		<div id="tblPageRayer"></div>
 		
 	    <!-- 2018-10-16 김보미 - 프로그레스바 -->
 	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" >&nbsp;</div>

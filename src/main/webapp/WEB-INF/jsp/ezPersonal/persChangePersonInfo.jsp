@@ -323,7 +323,7 @@
     		<h1><spring:message code='ezPersonal.t172'/></h1>
     		<h2><spring:message code='ezPersonal.t173'/></h2>
     		<span class="txt">▒&nbsp;<spring:message code='ezPersonal.t174'/></span>
-    		<table class="popuplist" width="100%" style="margin-top:5px;">
+    		<table class="popuplist" width="50%" style="margin-top:5px;">
         		<tr> 
             		<td width="130" rowspan="6" align="center">
                 		<div> 
@@ -368,18 +368,18 @@
             		</td> 
         		</tr> 
     		</table> 
-    		<table class="content" width="100%" style="margin-top:10px;"> 
+    		<table class="content" width="50%" style="margin-top:10px;"> 
         		<tr>
             		<th><spring:message code='ezPersonal.t177'/></th>
-            		<td width="230" style="width:50%"><input type="text" id="txtTelePhone" size="22" value="${txtTelePhone}" maxlength="20"></td>
+            		<td width="230" style="width:50%"><input type="text" id="txtTelePhone" size="22" value="${txtTelePhone}" maxlength="20" style="width:100%"></td>
             		<th><spring:message code='ezPersonal.t178'/></th>
-            		<td><input type="text" id="txtMobilePhone" size="22" value="${txtMobilePhone}" maxlength="20"> </td> 
+            		<td><input type="text" id="txtMobilePhone" size="22" value="${txtMobilePhone}" maxlength="20" style="width:100%"> </td> 
         		</tr> 
         		<tr> 
             		<th><spring:message code='ezPersonal.t70'/></th> 
-            		<td style="width:50%"> <input type="text" id="txtHomePhone" size="22" value="${txtHomePhone}" maxlength="20"> </td> 
+            		<td style="width:50%"> <input type="text" id="txtHomePhone" size="22" value="${txtHomePhone}" maxlength="20" style="width:100%"> </td> 
             		<th><spring:message code='ezPersonal.t179'/></th> 
-            		<td> <input type="text" id="txtFax" size="22" value="${txtFax}" maxlength="20"> </td> 
+            		<td> <input type="text" id="txtFax" size="22" value="${txtFax}" maxlength="20" style="width:100%"> </td> 
         		</tr> 
         		<tr> 
             		<th rowspan="2"><spring:message code='ezPersonal.t180'/></th> 
@@ -401,7 +401,7 @@
             		</td> 
         		</tr> 
         		<tr> 
-            		<td colspan="3"> <input type="text" id="txtAddress" size="72" value="${txtAddress}"> </td> 
+            		<td colspan="3"> <input type="text" id="txtAddress" size="72" value="${txtAddress}" style="width:100%"> </td> 
         		</tr> 
         		<tr>
             		<th><spring:message code='ezPersonal.t2003'/></th>
@@ -423,10 +423,10 @@
 		        </tr>
         		<tr> 
             		<th><spring:message code='ezPersonal.t1820'/><br><spring:message code='ezPersonal.t182'/></th> 
-            		<td colspan="3"><textarea id="txtInfo" style="WIDTH:99.3%;HEIGHT:80px;margin-top:3px;margin-bottom:3px; resize:none;" maxlength="450">${txtInfo}</textarea></td> 
+            		<td colspan="3"><textarea id="txtInfo" style="WIDTH:98.3%;HEIGHT:80px;margin-top:3px;margin-bottom:3px; resize:none;" maxlength="450">${txtInfo}</textarea></td> 
         		</tr> 
     		</table> 
-    		<div class="btnpositionJsp">
+    		<div class="btnpositionJsp" style="width:50%">
     			<c:if test="${userMobileManaged == 'YES' }">
        				<a class="imgbtn" onClick="SettingMobile()"><span><spring:message code='ezPersonal.t998'/></span></a>
        			</c:if>
@@ -438,22 +438,22 @@
     		<h2><spring:message code='ezPersonal.t185'/></h2>
     		<div>▒ <spring:message code='ezPersonal.t186'/></div>    		
 			<div style="margin-top:3px">▒ <spring:message code='main.jjh04'/></div>  
-    		<table class="content" style="margin-top:5px">
+    		<table class="content" style="margin-top:5px;width:50%">
         		<!-- 표준모듈 (2007.02.21) 수정 -->
         		<tr>
             		<th><spring:message code='ezPersonal.t187'/></th> 
-            		<td> <input type="password" id="txtOldPassword" size="25" value="" onkeypress="change_press()"> </td> 
+            		<td> <input type="password" id="txtOldPassword" size="25" value="" onkeypress="change_press()" style="width:100%"> </td> 
         		</tr> 
         		<tr> 
             		<th><spring:message code='ezPersonal.t188'/></th> 
-            		<td> <input type="password" id="txtNewPassword" size="25" value="" onkeypress="change_press()"> </td> 
+            		<td> <input type="password" id="txtNewPassword" size="25" value="" onkeypress="change_press()" style="width:100%"> </td> 
         		</tr> 
         		<tr> 
             		<th><spring:message code='ezPersonal.t189'/></th> 
-            		<td> <input type="password" id="txtNewPasswordConfirm" size="25" value="" onkeypress="change_press()"> </td> 
+            		<td> <input type="password" id="txtNewPasswordConfirm" size="25" value="" onkeypress="change_press()" style="width:100%"> </td> 
         		</tr>
     		</table> 
-    		<div class="btnpositionJsp">
+    		<div class="btnpositionJsp" style="width:50%">
         		<a class="imgbtn" onclick="return PassWordChange()"><span><spring:message code='ezPersonal.t34'/></span></a>
         		<a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
     		</div>

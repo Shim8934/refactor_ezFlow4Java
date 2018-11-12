@@ -1,7 +1,10 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -42,6 +45,7 @@ import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -99,7 +103,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/noticePortlet.do")
 	public String portalNoticePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalNoticePortlet Start");
+		String usedTheme = req.getParameter("usedTheme");
 		
+		model.addAttribute("usedTheme", usedTheme);
 		return "/ezNewPortal/portlets/noticePortlet";
 	}
 	
@@ -133,6 +139,21 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/receivedMailPortlet.do")
 	public String portalReceivedMailPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalReceivedMailPortlet Start");
+		
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
+		
+		logger.debug("portalReceivedMailPortlet End");
+		return "/ezNewPortal/portlets/receivedMailPortlet";
+	}
+	
+	/**
+	 * 포틀릿 - 받은메일
+	 */
+	@RequestMapping(value = "/ezNewPortal/receivedMailPortletList.do")
+	public String portalReceivedMailPortletList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portalReceivedMailPortlet Start");
 		userInfo = commonUtil.userInfo(loginCookie);
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String password = userIdAndPassword.get(1);	
@@ -159,7 +180,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("portalReceivedMailPortlet End");
-		return "/ezNewPortal/portlets/receivedMailPortlet";
+		return "json";
 	}
 	
 	
@@ -169,6 +190,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/votePortlet.do")
 	public String portalVotePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalVotePortlet Start");
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -201,6 +226,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalPollPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalNoticePortlet Start");
 		
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
+		
 		return "/ezNewPortal/portlets/pollPortlet";
 	}
 	
@@ -223,24 +252,63 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		return "json";
 	}
 	/**
-	 * 포틀릿 - 공지사항
+	 * 포틀릿 - 일정관리 
 	 */
 	@RequestMapping(value = "/ezNewPortal/schedulePortlet.do")
 	public String portalSchedulePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalSchedulePortlet Start");
 		
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
+		
+		logger.debug("portalSchedulePortlet End");
 		return "/ezNewPortal/portlets/schedulePortlet";
 	}
+	
+	/**
+	 * 포틀릿 - 일정관리 목록 조회
+	 */
+	@RequestMapping(value = "/ezNewPortal/getScheduleList.do")
+	public String getScheduleList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getScheduleList Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("selectDate", request.getParameter("selectDate"));
+		param.put("STARTDATE", request.getParameter("STARTDATE"));
+		param.put("ENDDATE", request.getParameter("ENDDATE"));
+		
+		String url = "/rest/ezportal/portlets/schedulelist";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONArray resultList = (JSONArray) resultBody.get("data");
+			
+			model.addAttribute("resultList", resultList);
+		}
+		
+		logger.debug("getScheduleList End");
+		return "json";
+	} 
+	
 	
 	/**
 	 * 포틀릿 - 전자결재 목록 포틀릿
 	 */
 	@RequestMapping(value = "/ezNewPortal/approvalListPortlet.do")
-	public String portalApprovalListPortlet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public String portalApprovalListPortlet(HttpServletRequest req, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("portalApprovalListPortlet started.");
 		
+		String usedTheme = req.getParameter("usedTheme");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		model.addAttribute("usedTheme", usedTheme);
 		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("portalApprovalListPortlet ended.");
@@ -291,8 +359,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	 * 포틀릿 - 양식즐겨찾기 포틀릿
 	 */
 	@RequestMapping(value = "/ezNewPortal/favoriteFormsPortlet.do")
-	public String portalFavoriteFormsPortlet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public String portalFavoriteFormsPortlet(HttpServletRequest req, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("favoriteFormsPortlet started.");
+		
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = request.getParameter("portletId");
@@ -375,6 +447,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/photoBoardPortlet.do")
 	public String portalPhotoBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie,HttpServletResponse resp) throws Exception {
 		logger.debug("portalPhotoBoardPortlet Start");
+		
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = req.getParameter("portletId");
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -410,6 +487,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/favoriteBoardPortlet.do")
 	public String portalFavoriteBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalFavoriteBoardPortlet Start");
+		
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -498,6 +579,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalCommunityPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalCommunityPortlet Start");
 		
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -562,6 +647,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalHelpPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalHelpPortlet Start");
 		
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
+		
 		return "/ezNewPortal/portlets/helpPortlet";
 	}
 	
@@ -572,6 +661,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/currencyPortlet.do")
 	public String portalCurrencyPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalCurrencyPortlet Start");
+		
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -594,6 +687,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/weatherPortlet.do")
 	public String portalWeatherePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalWeatherePortlet Start");
+		
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -689,5 +786,80 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		logger.debug("portalPhotoItemList Ended");
 		return json;
+	}
+	
+	/**
+	 * 포틀릿 - 생일자
+	 */
+	@RequestMapping(value = "/ezNewPortal/birthdayPortlet.do")
+	public String portalBirthdayPortlet(HttpServletRequest req, Model model) throws Exception {
+		logger.debug("portalBirthdayPortlet Start");
+		
+		Calendar cal = Calendar.getInstance();
+		String nowMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
+		model.addAttribute("nowMonth", nowMonth);
+		
+		logger.debug("portalBirthdayPortlet End");
+		return "/ezNewPortal/portlets/birthdayPortlet";
+	}
+	
+	/**
+	 * 포틀릿 - 슬라이드 이미지
+	 */
+	@RequestMapping(value = "/ezNewPortal/slideImagePortlet.do")
+	public String portalSlideImagePortlet(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("portalSlideImagePortlet Start");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/ezportal/portlets/slideimages";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("sliderList", resultBody.get("data"));
+		}
+		
+		logger.debug("portalSlideImagePortlet End");
+		return "/ezNewPortal/portlets/slideImagePortlet";
+	}
+	
+	/**
+	 * 포틀릿 - 유저정보
+	 */
+	@RequestMapping(value = "/ezNewPortal/userInfoPortlet.do")
+	public String portalUserInfoPortlet(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("portalUserInfoPortlet Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/ezportal/portlets/userinfomations";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			
+			model.addAttribute("useAttitude", data.get("useAttitude"));
+			model.addAttribute("userName", data.get("userName"));
+			model.addAttribute("userTitle", data.get("userTitle"));
+			model.addAttribute("deptName", data.get("deptName"));
+			model.addAttribute("userPhoto", data.get("userPhoto"));
+			model.addAttribute("userEmail", data.get("userEmail"));
+			model.addAttribute("lastLogin", data.get("lastLogin"));
+		}
+		
+		logger.debug("portalUserInfoPortlet End");
+		return "/ezNewPortal/portlets/userInfoPortlet";
 	}
 }

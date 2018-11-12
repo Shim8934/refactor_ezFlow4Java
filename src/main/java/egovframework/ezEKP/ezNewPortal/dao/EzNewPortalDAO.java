@@ -17,6 +17,7 @@ import egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalLogoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
@@ -110,6 +111,18 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<FrameInfoVO> getCompUsableFrameList(Map<String, Object> map) throws Exception {
 		return (List<FrameInfoVO>) list("ezNewPortal.getCompUsableFrameList", map); 
+	}
+	
+	public void updateUserUsedFrame(Map<String, Object> map) throws Exception {
+		update("ezNewPortal.updateUserUsedFrame", map);
+	}
+	
+	public void deleteUserUsedPortlet(Map<String, Object> map) throws Exception {
+		delete("ezNewPortal.deleteUserUsedPortlet", map);
+	}
+	
+	public void insertUserUsedPortlet(Map<String, Object> map) throws Exception {
+		insert("ezNewPortal.insertUserUsedPortlet", map);
 	}
 	
 	/* 박종균 끝 */
@@ -215,6 +228,27 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	
 	public void insertUserThemeSetting(Map<String, Object> map) {
 		insert("ezNewPortal.insertUserThemeSetting", map);
+	}
+	
+	public int getTenantIdByServerName(Map<String, Object> map) {
+		return (int) select("ezNewPortal.getTenantIdByServerName", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Integer> getPortletIdsByMenuId (Map<String, Object> map) {
+		return (List<Integer>) list("ezNewPortal.getPortletIdsByMenuId", map);
+	}
+	
+	public void deleteMenuUser (Map<String, Object> map) {
+		delete("ezNewPortal.deleteMenuUser", map);
+	}
+	
+	public void deletePortletUser (Map<String, Object> map) {
+		delete("ezNewPortal.deletePortletUser", map);
+	}
+	
+	public void updateCompanyDefaultTheme (Map<String, Object> map) {
+		update("ezNewPortal.updateCompanyDefaultTheme", map);
 	}
 	/**
 	 * 이효진
@@ -349,7 +383,7 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	}
 	
 	public void updateCompanyPortletNameInfo(Map<String, Object> map) {
-		insert("ezNewPortal.updateCompanyPortletNameInfo", map);
+		update("ezNewPortal.updateCompanyPortletNameInfo", map);
 	}
 	
 	public void updateCompanyPortletInfo(Map<String, Object> map) {
@@ -370,6 +404,35 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	
 	public void deletePortletName (Map<String, Object> map) {
 		delete("ezNewPortal.deletePortletName", map);
+	}
+	
+	//회사 로고 업데이트
+	public void updateCompanyLogo (Map<String, Object> map) {
+		update ("ezNewPortal.updateCompanyLogo", map);
+	}
+	
+	//회사 로고 url 하나 가져오기
+	public String getCompanyLogo (Map<String, Object> map) {
+		return (String) select ("ezNewPortal.getCompanyLogo", map);
+	}
+	
+	//회사 로고 리스트 가져오기
+	@SuppressWarnings("unchecked")
+	public List<PortalLogoVO> getCompanyLogoList (Map<String, Object> map) {
+		return (List<PortalLogoVO>) list("ezNewPortal.getCompanyLogoList", map);
+	}
+	
+	public void deleteCompanyLogo(Map<String, Object> map) {
+		delete("ezNewPortal.deleteCompanyLogo", map);
+	}
+	
+	public void insertCompanyPortletNameInfo(Map<String, Object> map) {
+		insert("ezNewPortal.insertCompanyPortletNameInfo", map);
+	}
+	
+	//default 테마가 바뀔 때 사용
+	public void updateThemeDefault (Map<String, Object> map) {
+		update("ezNewPortal.updateThemeDefault", map);
 	}
 	/**
 	 * 구해안

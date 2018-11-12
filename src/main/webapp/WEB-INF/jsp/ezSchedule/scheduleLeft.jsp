@@ -86,12 +86,6 @@
 			#mCSB_1_container {
 				margin-right: 0px;
 			}
-			.mCSB_scrollTools {
-				opacity: 0.3;
-				width: 6px;
-				margin-Top: 5px;
-				margin-bottom: 5px;
-			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
@@ -313,6 +307,9 @@
 	                	//document.getElementById('Schedule_Config').parentElement.onclick();
 	                    document.getElementById('Schedule_Config').onclick();
 	                }
+	                else if ("5" == _funCode) {
+	                	Function_Flag(5);
+	                }
 	            }
 	            else {	                
 	                if ("2" == _funCode) {
@@ -333,6 +330,9 @@
 	                }	            	               
 	                else if ("11" == _funCode) {
 	                    document.getElementById('Schedule_Config').click();	                    
+	                }
+	                else if ("5" == _funCode) {
+	                	Function_Flag(5);
 	                }
 	            }
 	            $(".scheduleListBox").mCustomScrollbar({
@@ -596,6 +596,5 @@
 	    <script type="text/javascript">
 		    initToggleList(document.getElementById("left"), "h2", "ul", "li");
 	    </script> --%>
-	    
 	</body>
 </html>

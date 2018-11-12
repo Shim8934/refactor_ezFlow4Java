@@ -182,7 +182,7 @@
 		        <li><span onClick="memoMove()"><spring:message code='ezMemo.t0022'/></span></li>
 		        <li><span onClick="memoDisplayChange()"><spring:message code='ezMemo.t0017'/></span></li>
 		        <li><span onClick="memoDisplayChange2()"><spring:message code='ezMemo.t0024'/></span></li>
-		        <li><span onClick="doLayerPopup(this);"><spring:message code='ezMemo.t0016'/></span></li>
+		        <li><span class="icon16 icon16_search" onClick="doLayerPopup(this);"></span></li>
 		        <li onClick="DeleteItem_onclick()"><span class="icon16 icon16_delete"></span></li>
 		        <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh"></span></li> 
 		        <li><select id="memoType" style="height: 20px; width:175px;" onchange="getMemoList('folder')"></select></li>

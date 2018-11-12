@@ -502,19 +502,20 @@
 		</xml>
 	
 	    <form id="Form1" method="post">
-		    <h1><spring:message code='ezOrgan.t00013' /></h1>
-		    <div id="mainmenu">
-		    	<span><b><spring:message code='ezOrgan.t00006' /> : </b></span>
-	            <select id="ListCompany" onchange="company_change()">
+		    <h1>
+		    	<spring:message code='ezOrgan.t00013' />
+		    	<select class="companySelect" id="ListCompany" onchange="company_change()">
 	            	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 	            </select>
+		    </h1>
+		    <div id="mainmenu">
 		        <ul style="margin-top:15px">		            
-		            <li><span onClick="AddJob_Add()"><spring:message code='ezOrgan.t00014' /></span></li>
+		            <li class="important"><span onClick="AddJob_Add()"><spring:message code='ezOrgan.t00014' /></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		            <li><span onClick="AddJob_Del('DEL', '')"><spring:message code='ezOrgan.t00015' /></span></li>
 		            <li><span onClick="AddJob_Del('ALL', '')"><spring:message code='ezOrgan.t00016' /></span></li>
+		            <li><span class="icon16 icon16_delete" onClick="AddJob_Del('DEL', '')"></span></li>
 					<!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="email_onclick()"><spring:message code='ezOrgan.t00010' /></span></li>
 		        </ul>

@@ -182,28 +182,29 @@
 		    }		    
 		    
 		    function schedule_get_lunaruse() {
-			    /* $.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/ezSchedule/scheduleGetLunarUse.do",
-		    		data : {
-		    			COMPANYID  : "${userInfo.companyID}"		    			
-		    		},
-		    		success: function(text) {		    			
-		    			if (text == "0") {
-		    				LunarUse = true;
-		    			} else if(text == "1") {
-		    				LunarUse = true;
-		    			} else {
-		    				LunarUse = false;
-		    			}
-		    			schedule_get_holiday();
-		    		}
-		        }); */
-		        
-		        // #13470 일본은 음력사용 안함
-		    	schedule_get_holiday();
+		    	if (uselang != 3) {
+				    $.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezSchedule/scheduleGetLunarUse.do",
+			    		data : {
+			    			COMPANYID  : "${userInfo.companyID}"		    			
+			    		},
+			    		success: function(text) {		    			
+			    			if (text == "0") {
+			    				LunarUse = true;
+			    			} else if(text == "1") {
+			    				LunarUse = true;
+			    			} else {
+			    				LunarUse = false;
+			    			}
+			    			schedule_get_holiday();
+			    		}
+			        }); 
+		    	} else {
+		    		schedule_get_holiday();
+		    	}
 			}
 
 		    var schedule_receive_attendant_cross_dialogArguments = new Array();
@@ -220,18 +221,12 @@
 		            typeCal = 0;
 		            // 2018-06-07 구해안 미니 호출 부분 주석처리
 		            parent.frames["left"].typeCal = 0;
-		            $(".calendar_pagenav").css("width","180px");
-		            $(".calendar_pagenav").css("margin-left","-89px");
 		        } else if (pDefaultview == 1) {
 		            typeCal = 1;
 		            parent.frames["left"].typeCal = 1;
-		            $(".calendar_pagenav").css("width","269px");
-		            $(".calendar_pagenav").css("margin-left","-134px");
 		        } else if (pDefaultview == 0) {
 		            typeCal = 2;
 		            parent.frames["left"].typeCal = 2;
-		            $(".calendar_pagenav").css("width","269px");
-		            $(".calendar_pagenav").css("margin-left","-134px");
 		        }
 
 		        if (pStartday == 1)
@@ -628,9 +623,6 @@
 		                $("#monView").attr("class","off");
 		                $("#weekView").attr("class","off");
 		                $("#dayView").attr("class","on");
-		                
-		                $(".calendar_pagenav").css("width","269px");
-			            $(".calendar_pagenav").css("margin-left","-134px");
 
 		                if (g_selTDID != null && g_selTDID != "") {
 		                    sDate = new Date(g_selTDID.substring(7, 11), parseInt(g_selTDID.substring(12, 14)) - 1, parseInt(g_selTDID.substring(15, 17)));
@@ -654,9 +646,6 @@
 		                $("#monView").attr("class","off");
 		                $("#weekView").attr("class","on");
 		                $("#dayView").attr("class","off");
-		                
-		                $(".calendar_pagenav").css("width","269px");
-			            $(".calendar_pagenav").css("margin-left","-134px");
 
 		                if (g_selTDID != null && g_selTDID != "") {
 		                    sDate = new Date(g_selTDID.substring(7, 11), parseInt(g_selTDID.substring(12, 14)) - 1, parseInt(g_selTDID.substring(15, 17)));
@@ -680,9 +669,6 @@
 		                $("#monView").attr("class","on");
 		                $("#weekView").attr("class","off");
 		                $("#dayView").attr("class","off");
-		                
-		                $(".calendar_pagenav").css("width","180px");
-			            $(".calendar_pagenav").css("margin-left","-89px");
 			            
 		                /* var ItemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
 

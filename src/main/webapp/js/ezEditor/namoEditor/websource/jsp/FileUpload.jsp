@@ -1,28 +1,18 @@
 <%@page contentType="text/html;charset=utf-8" %>
-<%@page import="java.util.*"%>
 <%@page import="java.io.*"%>
 <%@page import="java.util.regex.PatternSyntaxException"%>
 <%@page import="java.net.*"%>
-<%@page import="java.awt.*"%>
-<%@page import="java.awt.Image"%>
-<%@page import="java.awt.image.BufferedImage"%>
-<%@page import="javax.imageio.ImageIO"%>
-<%@page import="javax.swing.ImageIcon"%>
-<%@page import="java.io.File"%>
-<%@page import="java.io.IOException"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="org.apache.commons.fileupload.servlet.ServletFileUpload"%>
 <%@page import="org.apache.commons.fileupload.disk.DiskFileItemFactory"%>
 <%@page import="org.apache.commons.fileupload.FileItem"%>
-<%@page import="org.apache.commons.fileupload.FileUploadException"%>
 <%@page import="org.apache.commons.fileupload.FileUploadBase"%>
 <%@page import="org.apache.commons.codec.binary.Base64"%>
 <%@include file="Util.jsp"%>
 <%@include file="SecurityTool.jsp"%>
 <%@include file="Vaccine.jsp"%>
 <%
-	String encType = "utf-8"; 
 	
 	/*
 	if(detectXSSEx(request.getParameter("licenseCheck")) != null){
@@ -65,15 +55,12 @@
 		useExternalServer =  detectXSSEx(request.getParameter("useExternalServer"));
 */
 	String checkPlugin = "false";
-	
 	String fileTemp = "";
 	String scriptValue = "";
-	String fileRealPath = "";
 	String saveFolder = "";
 	String returnParam ="";
-	String scriptTag = "";
 	String ContextPath = request.getContextPath();
-	String ServerName = request.getServerName();
+	String fileSize = "";
 	
 	ServletContext context = getServletConfig().getServletContext();
 
@@ -132,7 +119,7 @@
 		imageUPath = imageUPath + "/";
 
 	if (imagePhysicalPath.equalsIgnoreCase("")) {
-		String DompaserValue = Dompaser(imageUPath);
+		String DompaserValue = dompaser(imageUPath);
 		if (DompaserValue.equalsIgnoreCase("")) {
 			imagePhysicalPath = context.getRealPath(imageUPath);
 
@@ -170,8 +157,13 @@
 
 	String filePhysicalPathsubFolder = imagePhysicalPath;
 	File SaveSubFolder = new File(filePhysicalPathsubFolder + "upload");
-	if(!SaveSubFolder.exists())
+	if(!SaveSubFolder.exists()){
+		SaveSubFolder.setExecutable(false, true);
+		SaveSubFolder.setReadable(true);
+		SaveSubFolder.setWritable(false, true);
+
 		SaveSubFolder.mkdir();
+	}
 	filePhysicalPathsubFolder += "upload" + File.separator;
 	File DeleteTempFolder = null;
 	
@@ -220,6 +212,7 @@
 													
 				} else { 
 					if(fileItem.getSize()>0) {   
+						fileSize = Long.toString(fileItem.getSize());
 						if(fileItem.getSize() > maxSize){
 							scriptValue = executeFileScript(response, "invalid_size", Integer.toString(maxSize), useExternalServer, fileDomain, fileEditorFlag, checkPlugin);
 		
@@ -233,7 +226,7 @@
 						type = fileItem.getContentType();
 						
 						
-						if (filename.endsWith(".jsp") || filename.endsWith(".jspx") || filename.endsWith(".js") || filename.endsWith(".html") || filename.endsWith(".htm")) {
+						if (filename.toLowerCase().endsWith(".jsp") || filename.toLowerCase().endsWith(".jspx") || filename.toLowerCase().endsWith(".js") || filename.toLowerCase().endsWith(".html") || filename.toLowerCase().endsWith(".htm")) {
 							//scriptValue = executeFileScript(response, "fail_image", "", useExternalServer, fileDomain, fileEditorFlag, checkPlugin);
 							//scriptValue = executeFileScript(response, "invalid_file", "prohibited : jsp, js, html, htm", useExternalServer, fileDomain, fileEditorFlag, checkPlugin);
 							// [4.0.0.22] [한국인터넷진흥원 보안 취약점] 제한된 확장자 목록 alert에 보이지 않도록 처리
@@ -249,7 +242,7 @@
 							fileItem.delete(); 
 							DeleteTempFolder = uploadedFile;
 						}catch(IOException ex) {
-							System.out.println("An internal exception occured!");
+							//System.out.println("An internal exception occured!");
 						} 
 					}
 				}
@@ -278,7 +271,7 @@
 			String realFileName = fileTempName.replace(' ', '_');
 			String fileCheck =filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
 			fileCheck = detectXSSEx(fileCheck);
-			String typeCheck = type.substring(0,type.indexOf("/")); 
+			 
 /*
 			if (!isImageValid("file", fileCheck)) {
 				if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase(""))
@@ -292,14 +285,24 @@
 			if(uploadFileSubDir.equalsIgnoreCase("false")) { 
 				if(imageUPath.equalsIgnoreCase("")) {
 					File fileSaveSubFolder = new File(imagePhysicalPath + fileKindSubFolder);
-					if(!fileSaveSubFolder.exists())
+					if(!fileSaveSubFolder.exists()){
+						fileSaveSubFolder.setExecutable(false, true);
+						fileSaveSubFolder.setReadable(true);
+						fileSaveSubFolder.setWritable(false, true);
+
 						fileSaveSubFolder.mkdir();
+					}
 					imagePhysicalPath += fileKindSubFolder + File.separator;
 				}
 			} else {
 				File fileSaveSubFolder = new File(imagePhysicalPath + fileKindSubFolder);
-				if(!fileSaveSubFolder.exists())
+				if(!fileSaveSubFolder.exists()){
+					fileSaveSubFolder.setExecutable(false, true);
+					fileSaveSubFolder.setReadable(true);
+					fileSaveSubFolder.setWritable(false, true);
+
 					fileSaveSubFolder.mkdir();
+				}
 				imagePhysicalPath += fileKindSubFolder + File.separator;
 
 				saveFolder = getChildDirectory(imagePhysicalPath, fileMaxCount); 
@@ -338,8 +341,10 @@
 			if (fileClass == null)
 				fileClass = "";
 			if (editorFrame == null)
-				editorFrame ="";
+				editorFrame = "";
 
+			if (fileSize == null)
+				fileSize = "";
 
 			returnParam = "{";
 			//returnParam += "\"fileURL\":\"" + urlFilePath.replaceAll("'", "\\\\\"") + "\",";
@@ -349,6 +354,7 @@
 			returnParam += "\"fileClass\":\"" + fileClass + "\",";
 			returnParam += "\"fileKind\":\"" + fileKind + "\",";
 			returnParam += "\"fileType\":\"" + fileCheck + "\",";
+			returnParam += "\"fileSize\":\"" + fileSize + "\",";
 			if (fileModify.equalsIgnoreCase("true"))
 				returnParam += "\"fileModify\":\"true\",";
 			returnParam += "\"editorFrame\":\"" + editorFrame + "\"";

@@ -68,10 +68,12 @@
 		
 		// 기기 삭제 버튼 
 	    function deleteDevice(devid) {
-	    	xhttp = createXMLHttpRequest();
-	    	xhttp.onreadystatechange = loader;
-			xhttp.open("POST", "/ezPersonal/deleteMobileDeviceManaged.do?pDevId=" + devid);
-			xhttp.send();
+			if (confirm("<spring:message code='ezPortal.t54' />")) {
+		    	xhttp = createXMLHttpRequest();
+		    	xhttp.onreadystatechange = loader;
+				xhttp.open("POST", "/ezPersonal/deleteMobileDeviceManaged.do?pDevId=" + devid);
+				xhttp.send();
+			}
 	    }
 		
 	    function loader() {
@@ -113,7 +115,7 @@
 			</tr>
     	</table>
     	<div class="btnposition">
-    		<input type="submit" name="btnMobilManaged" value="저장" id="btnMobilManaged" class="ftbt" onclick="setNotUsedStatus();">
+    		<input type="submit" name="btnMobilManaged" value="<spring:message code="ezPersonal.t34" />" id="btnMobilManaged" class="ftbt" onclick="setNotUsedStatus();">
     	</div>
     	<br/>
     	<table class="mainlist" style="white-space: nowrap; width:100%; overflow-x: hidden; overflow-y: scroll;">
@@ -136,7 +138,7 @@
 						</td>
 						<td>${list.regDate}</td>
 						<td class='btnposition' style="text-align:left;">
-							<input class='ftbt' type='button' value='삭제' style='cursor:pointer;' onclick="deleteDevice('${list.devId}')" />
+							<input class='ftbt' type='button' value='<spring:message code="ezPersonal.t99" />' style='cursor:pointer;' onclick="deleteDevice('${list.devId}')" />
 						</td>
 					</tr>
 	    		</c:forEach>

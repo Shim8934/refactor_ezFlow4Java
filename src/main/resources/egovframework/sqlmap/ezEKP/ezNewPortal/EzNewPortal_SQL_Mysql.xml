@@ -250,12 +250,16 @@ SELECT
 FROM 
 	TBL_PORTAL_LOGO
 WHERE 
-	COMPANY_ID = #companyId#
-AND 
 	TENANT_ID = #tenantId#
 AND 
 	LOGO_TYPE = #logoType#
 ]]>	
+<isNotNull property="companyId">
+<![CDATA[
+AND
+	company_id = #companyId#
+]]>
+</isNotNull>
 </select>
 
 <!-- 사용자 접근 가능 메뉴 리스트 -->
@@ -505,7 +509,8 @@ SELECT
 	A.PORTLET_ID AS PORTLETID, 
 	A.PORTLET_ORDER AS PORTLETORDER, 
 	B.PORTLET_NAME AS PORTLETNAME, 
-	C.PORTLET_URL AS PORTLETURL
+	C.PORTLET_URL AS PORTLETURL,
+	B.MENU_ID AS MENUID
 FROM	
 	TBL_PORTAL_PORTLET_COMP as A
 JOIN
@@ -554,6 +559,7 @@ ORDER BY
 
 <!-- 유저가 사용 가능한 프레임 리스트 -->
 <select id="ezNewPortal.getUserUsableFrameList" parameterClass="Map" resultClass="FrameInfoVO">
+<![CDATA[
 SELECT 
 	theme_id as themeId,
     frame_id as frameId,
@@ -576,10 +582,12 @@ AND
 	fcomp.tenant_id = #tenantId#
 AND 
 	tuser.user_id = #userId#
+]]>	
 </select>
 
 <!-- 회사가 설정한 테마에서 사용가능한 프레임 리스트 -->
 <select id="ezNewPortal.getCompUsableFrameList" parameterClass="Map" resultClass="FrameInfoVO">
+<![CDATA[
 SELECT 
 	fcomp.theme_id as themeId,
     fcomp.frame_id as frameId,
@@ -601,7 +609,41 @@ AND
 	fcomp.tenant_id = #tenantId#
 AND 
 	tcomp.theme_default = '1'  
+]]>		
 </select>
+
+<update id="ezNewPortal.updateUserUsedFrame" parameterClass="Map">
+<![CDATA[
+INSERT INTO 
+	tbl_portal_theme_user(USER_ID, COMPANY_ID, TENANT_ID, USED_THEME, USED_FRAME)
+VALUES 
+	(#userId#, #companyId#, #tenantId#, #themeId#, #frameId#)
+ON DUPLICATE KEY 
+	UPDATE USED_FRAME = #frameId#
+]]>	
+</update>
+
+<delete id="ezNewPortal.deleteUserUsedPortlet" parameterClass="Map">
+<![CDATA[
+DELETE FROM 
+	tbl_portal_portlet_user
+WHERE 
+	user_id = #userId#
+AND 
+	tenant_id = #tenantId#
+AND 
+	company_id = #companyId#
+]]>		
+</delete>
+
+<insert id="ezNewPortal.insertUserUsedPortlet" parameterClass="Map">
+<![CDATA[
+INSERT INTO 
+	tbl_portal_portlet_user(user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id)
+values
+	 (#userId#, #tenantId#, #companyId#, #portletId#, #portletOrder#, #menuId#)
+]]>		
+</insert>
 
 <!-- 현재 진행중이면서 참여하고 있는 투표 개수  -->
 <select id="ezNewPortal.getVotePortletCount" parameterClass="Map" resultClass="Integer">
@@ -1110,6 +1152,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			    DOCINFO.writername,
 			    DOCINFO.writername2,
 			    DOCINFO.href,
+			    DOCINFO.companyid,
 	            LINEINFO.aprmemberdeptid,
 	            LINEINFO.aprmemberdeptname,
 	            LINEINFO.aprmemberid,
@@ -1121,13 +1164,36 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			ON
 				DOCINFO.tenant_id = LINEINFO.tenant_id
 			AND
-				DOCINFO.companyid = LINEINFO.companid
+				DOCINFO.companyid = LINEINFO.companyid
 			AND
 				DOCINFO.docid = LINEINFO.docid
 			WHERE
 				DOCINFO.tenant_id = #tenantId#
 			AND
-				DOCINFO.companyid = #companyId#
+				DOCINFO.companyid IN (SELECT
+										extensionattribute2
+									FROM
+										TBL_DEPTMASTER
+									JOIN
+										TBL_ADDJOBMASTER
+									ON
+										TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+									AND
+										TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid
+									WHERE
+										TBL_ADDJOBMASTER.tenant_id = #tenantId#
+									AND
+										TBL_ADDJOBMASTER.cn = #userId#
+									UNION ALL
+									SELECT
+										physicaldeliveryofficename
+									FROM
+										TBL_USERMASTER
+									WHERE
+										cn = #userId#
+									AND
+										tenant_id = #tenantId#
+									)
 			AND
 				LINEINFO.aprmemberid = #userId#
 			AND
@@ -1143,6 +1209,48 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		]]>
 	</select>
 	
+	<select id="ezNewPortal.getApprovalDoingLines" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		<![CDATA[
+			SELECT
+		        LINEINFO.aprmembersn AS aprmembersn,
+		        LINEINFO.aprstate AS aprstate,
+		        CODEINFO.name$lang$ AS ext1,
+		        CODEINFO.name2 AS name2,
+		        CODEINFO.name3 AS name3,
+		        CODEINFO.name4 AS name4,
+		        LINEINFO.aprmemberid AS aprmemberid,
+		        LINEINFO.aprmembername AS aprmembername,
+		        LINEINFO.aprmembername2 AS aprmembername2,
+		        USER.extensionattribute2 AS ext2
+		    FROM 
+		        TBL_APRLINEINFO AS LINEINFO
+		    JOIN 
+		        TBL_CODELIST AS CODEINFO
+		    ON 
+		        LINEINFO.tenant_id = CODEINFO.tenant_id
+		    AND 
+		        LINEINFO.companyid = CODEINFO.companyid
+		    AND 
+		        LINEINFO.aprstate = CODEINFO.code2
+		    JOIN
+		        TBL_USERMASTER AS USER
+		    ON
+		        LINEINFO.tenant_id = USER.tenant_id
+		    AND
+		        LINEINFO.companyid = USER.physicaldeliveryofficename
+		    AND
+		        LINEINFO.aprmemberid = USER.cn
+		    WHERE 
+		        LINEINFO.docid = #docId#
+		    AND 
+		        LINEINFO.tenant_id = #tenantId#
+		    AND 
+		        LINEINFO.companyid = #companyId#
+		    AND 
+		        CODEINFO.code1 = #code1#
+		]]>
+	</select>
+	
 	<select id="ezNewPortal.getApprovalRejectList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
 			SELECT
@@ -1154,13 +1262,37 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			    writerid,
 			    writername,
 			    writername2,
-			    href
+			    href,
+			    companyid
 			FROM
 				TBL_APRDOCINFO
 			WHERE
 				tenant_id = #tenantId#
 			AND
-				companyid = #companyId#
+				companyid IN (SELECT
+									extensionattribute2
+								FROM
+									TBL_DEPTMASTER
+								JOIN
+									TBL_ADDJOBMASTER
+								ON
+									TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+								AND
+									TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid
+								WHERE
+									TBL_ADDJOBMASTER.tenant_id = #tenantId#
+								AND
+									TBL_ADDJOBMASTER.cn = #userId#
+								UNION ALL
+								SELECT
+									physicaldeliveryofficename
+								FROM
+									TBL_USERMASTER
+								WHERE
+									cn = #userId#
+								AND
+									tenant_id = #tenantId#
+								)
 			AND
 				writerid = #userId#
 			AND
@@ -1183,7 +1315,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			    DOCINFO.writerid,
 			    DOCINFO.writername,
 			    DOCINFO.writername2,
-			    DOCINFO.href
+			    DOCINFO.href,
+			    DOCINFO.companyid
 			FROM
 				TBL_APRDOCINFO AS DOCINFO
 			JOIN
@@ -1197,7 +1330,30 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			WHERE
 				DOCINFO.tenant_id = #tenantId#
 			AND
-				DOCINFO.companyid = #companyId#
+				DOCINFO.companyid IN (SELECT
+										extensionattribute2
+									FROM
+										TBL_DEPTMASTER
+									JOIN
+										TBL_ADDJOBMASTER
+									ON
+										TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+									AND
+										TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid
+									WHERE
+										TBL_ADDJOBMASTER.tenant_id = #tenantId#
+									AND
+										TBL_ADDJOBMASTER.cn = #userId#
+									UNION ALL
+									SELECT
+										physicaldeliveryofficename
+									FROM
+										TBL_USERMASTER
+									WHERE
+										cn = #userId#
+									AND
+										tenant_id = #tenantId#
+									)
 			AND
 				LINEINFO.aprmemberid = #userId#
 			AND
@@ -1333,7 +1489,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 	AND
 		THEME_DEFAULT = 1
 	LIMIT
-		1;
+		1
 ]]>
 </select>
 
@@ -1446,7 +1602,7 @@ SELECT c_id,
 SELECT A.PORTLET_ID,
 	   A.PORTLET_CATEGORY,
 	   IF(C.PORTLET_TYPE = 'G', 1, 0) AS IS_GENERAL,
-	   A.CONNECTION_URL,
+	   C.portlet_url as connection_url,
 	   A.PORTLET_ORDER,
        A.PORTLET_USED AS PORTLET_USED,
        C.MENU_ID,
