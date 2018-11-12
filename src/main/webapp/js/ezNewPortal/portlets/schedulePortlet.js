@@ -8,6 +8,7 @@ var newDate;
 var nDate;
 var str4;
 var nDay;
+var usedTheme = Number($("#schedule_usedTheme").val());
 
 function getScheduleList(date, mode) {
 	selDate = date;			    
@@ -75,7 +76,7 @@ function getScheduleList_after(resultList, mode, date) {
 		}
 		listHTML += "</ul'></div>";
 		
-		if (Number($("#schedule_usedTheme").val()) === 3) {
+		if (usedTheme === 3) {
 			listHTML += "<dl id='scheduleDate' class='scheduleDate'>";
 			listHTML += "<dt class='dayT'>" + str4[nDay] + "</dt>";//요일
 			listHTML += "<dd class='dayN'>" + nDate + "</dd>";//일

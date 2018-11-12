@@ -15,9 +15,8 @@ var typeCal = 0;
 
 var idtype = "T";
 var idlist = "";
-var groupid = "";
 var firstYN = false;
-
+var groupid = "";
 var nowDate = new Date();
 
 if (typeof UserOffset !== 'undefined' && UserOffset) {
@@ -27,148 +26,137 @@ if (typeof UserOffset !== 'undefined' && UserOffset) {
 
 var nowDay = (nowDate.getFullYear()) + "-" + leadingZeros((nowDate.getMonth() + 1), 2) + "-" + leadingZeros(nowDate.getDate(), 2);
 
-function CalendarMiniView(pTagetID) {	
-    document.getElementById(pTagetID).innerHTML = "";
-
-    var objElm = document.getElementById(pTagetID);
-    if (objElm) {
-        var mTable = document.createElement("TABLE");
-        mTable.className = "scalendar_mini_title";///
-        mTable.setAttribute("id", "MiniCalendar")
-        mTable.setAttribute("cellpadding", "0");
-        mTable.setAttribute("cellspacing", "0");
-        mTable.setAttribute("border", "0");
-        mTable.setAttribute("width", "100%");
-        var mTr = document.createElement("TR");
-
-        var mTd = document.createElement("TD");
-        mTd.className = "btn_prev"
-        var mSpan = document.createElement("SPAN");
-        mSpan.style.cursor = "pointer";
-        //mSpan.style.marginLeft = "6px";
-        //mSpan.style.marginTop = "4px";
-        var mImg = document.createElement("IMG");
-        
-        if (Number($("#schedule_usedTheme").val()) === 3) {
-        	mImg.setAttribute("src", "/images/ezNewPortal/theme3Img/calender_pre.png");
-        } else {
-        	mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
-        }
-        
-        mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "preMonth()");
-        mSpan.appendChild(mImg);
-        mTd.appendChild(mSpan);
-        mTr.appendChild(mTd);
-
-        var mTd = document.createElement("TD");
-        mTd.className = "calendar_mini_day"
-        
-        var mSel = document.createElement("SELECT");
- 		mSel.style.display = "none";///
-        mSel.setAttribute("name", "iYear");
-        mSel.setAttribute("id", "iYear");
-        mSel.setAttribute("onchange", "changeYear()");
-
-        var curYear = sDate.getFullYear() + 3;
-        for (var i = curYear; i >= curYear - 6; i--) {
-            var mOpt = document.createElement("OPTION");
-            mOpt.setAttribute("Value", i);
-
-            if ((curYear - 3) == i)
-                mOpt.setAttribute("selected", "");
-
-            var mText = document.createTextNode(i);
-            mOpt.appendChild(mText);
-            mSel.appendChild(mOpt);
-        }
-
-        mTd.appendChild(mSel);
-
-        var mSel = document.createElement("SELECT");
-        mSel.style.marginLeft = "10px";
-        mSel.style.display = "none";///
-        mSel.setAttribute("name", "iMon");
-        mSel.setAttribute("id", "iMon");
-        mSel.setAttribute("onchange", "changeMonth()");
-
-        var curMonth = sDate.getMonth() + 1;
-        for (var j = 1; j <= 12; j++) {
-
-            var mOpt = document.createElement("OPTION");
-            mOpt.setAttribute("Value", j);
-
-            if (curMonth == j)
-                mOpt.setAttribute("selected", "");
-
-            var mText = document.createTextNode(j);
-            mOpt.appendChild(mText);
-            mSel.appendChild(mOpt);
-        }       
-        mTd.appendChild(mSel);
-        
-        var iySpan = document.createElement("SPAN");
-        iySpan.setAttribute("id", "iYear");
-
-        var curYear = sDate.getFullYear();
-        var yText = document.createTextNode(curYear);
-        iySpan.appendChild(yText);
-
-        mTd.appendChild(iySpan);
-
-        var dotText = document.createTextNode(".");
-        mTd.appendChild(dotText);
-
-        var imSpan = document.createElement("SPAN");//년 월 select박스인것 바꿔야할듯
-        imSpan.setAttribute("id", "iMon");
-
-        var curMonth = sDate.getMonth() + 1;
-        var mText = document.createTextNode(curMonth);
-        imSpan.appendChild(mText);
-        
-        mTd.appendChild(imSpan);
-        mTr.appendChild(mTd);
-
-        var mTd = document.createElement("TD");
-        mTd.className = "btn_next"
-        var mSpan = document.createElement("SPAN");
-        mSpan.style.cursor = "pointer";
-        //mSpan.style.marginRight = "6px";
-        //mSpan.style.marginTop = "4px";
-        var mImg = document.createElement("IMG");
-        if (Number($("#schedule_usedTheme").val()) === 3) {
-        	mImg.setAttribute("src", "/images/ezNewPortal/theme3Img/calender_next.png");
-        } else {
-        	mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
-        }
-        mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "nextMonth()");
-        mSpan.appendChild(mImg);
-        mTd.appendChild(mSpan);
-        mTr.appendChild(mTd);
-
-
-        mTable.appendChild(mTr);
-        objElm.appendChild(mTable);
-
-        var oTable = document.createElement("TABLE");
-
-        oTable.setAttribute("id", "");
-        oTable.setAttribute("cellpadding", "0");
-        oTable.setAttribute("cellspacing", "0");
-        oTable.setAttribute("border", "0");
-        oTable.setAttribute("width", "100%");
-        oTable.className = "scalendar_mini";
-
-        var oTBody = GetTableMiniBodyObj();
-        oTable.appendChild(oTBody);
-        objElm.appendChild(oTable);
-    }
+function CalendarMiniView(pTagetID) {
+	if (document.getElementById(pTagetID)) {
+		document.getElementById(pTagetID).innerHTML = "";
+		
+		var objElm = document.getElementById(pTagetID);
+		if (objElm) {
+			var mTable = document.createElement("TABLE");
+			mTable.className = "scalendar_mini_title";///
+			mTable.setAttribute("id", "MiniCalendar")
+			mTable.setAttribute("cellpadding", "0");
+			mTable.setAttribute("cellspacing", "0");
+			mTable.setAttribute("border", "0");
+			mTable.setAttribute("width", "100%");
+			var mTr = document.createElement("TR");
+			
+			var mTd = document.createElement("TD");
+			mTd.className = "btn_prev"
+				var mSpan = document.createElement("SPAN");
+			mSpan.style.marginLeft = "6px";
+			mSpan.style.cursor = "pointer";
+			var mImg = document.createElement("IMG");
+			mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
+			mImg.setAttribute("border", "0");
+			mImg.setAttribute("onclick", "preMonth()");
+			mSpan.appendChild(mImg);
+			mTd.appendChild(mSpan);
+			mTr.appendChild(mTd);
+			
+			var mTd = document.createElement("TD");
+			mTd.className = "calendar_mini_day"
+				var mSel = document.createElement("SELECT");
+			mSel.style.display = "none";///
+			mSel.setAttribute("name", "iYear");
+			mSel.setAttribute("id", "iYear");
+			mSel.setAttribute("onchange", "changeYear()");
+			
+			var curYear = sDate.getFullYear() + 3;
+			for (var i = curYear; i >= curYear - 6; i--) {
+				var mOpt = document.createElement("OPTION");
+				mOpt.setAttribute("Value", i);
+				
+				if ((curYear - 3) == i)
+					mOpt.setAttribute("selected", "");
+				
+				var mText = document.createTextNode(i);
+				mOpt.appendChild(mText);
+				mSel.appendChild(mOpt);
+			}
+			
+			mTd.appendChild(mSel);
+			
+			var mSel = document.createElement("SELECT");
+			mSel.style.display = "none";///
+			mSel.style.marginLeft = "10px";
+			mSel.setAttribute("name", "iMon");
+			mSel.setAttribute("id", "iMon");
+			mSel.setAttribute("onchange", "changeMonth()");
+			
+			var curMonth = sDate.getMonth() + 1;
+			for (var j = 1; j <= 12; j++) {
+				
+				var mOpt = document.createElement("OPTION");
+				mOpt.setAttribute("Value", j);
+				
+				if (curMonth == j)
+					mOpt.setAttribute("selected", "");
+				
+				var mText = document.createTextNode(j);
+				mOpt.appendChild(mText);
+				mSel.appendChild(mOpt);
+			}
+			mTd.appendChild(mSel);
+			
+			var iySpan = document.createElement("SPAN");
+			iySpan.setAttribute("id", "iYear");
+			
+			var curYear = sDate.getFullYear();
+			var yText = document.createTextNode(curYear);
+			iySpan.appendChild(yText);
+			
+			mTd.appendChild(iySpan);
+			
+			var dotText = document.createTextNode(".");
+			mTd.appendChild(dotText);
+			
+			var imSpan = document.createElement("SPAN");//년 월 select박스인것 바꿔야할듯
+			imSpan.setAttribute("id", "iMon");
+			
+			var curMonth = sDate.getMonth() + 1;
+			var mText = document.createTextNode(curMonth);
+			imSpan.appendChild(mText);
+			
+			mTd.appendChild(imSpan);
+			mTr.appendChild(mTd);
+			
+			var mTd = document.createElement("TD");
+			mTd.className = "btn_next"
+				var mSpan = document.createElement("SPAN");
+			mSpan.style.marginRight = "15px";
+			mSpan.style.cursor = "pointer";
+			var mImg = document.createElement("IMG");
+			mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
+			mImg.setAttribute("border", "0");
+			mImg.setAttribute("onclick", "nextMonth()");
+			mSpan.appendChild(mImg);
+			mTd.appendChild(mSpan);
+			mTr.appendChild(mTd);
+			
+			
+			mTable.appendChild(mTr);
+			objElm.appendChild(mTable);
+			
+			var oTable = document.createElement("TABLE");
+			
+			oTable.setAttribute("id", "");
+			oTable.setAttribute("cellpadding", "0");
+			oTable.setAttribute("cellspacing", "0");
+			oTable.setAttribute("border", "0");
+			oTable.setAttribute("width", "100%");
+			oTable.className = "scalendar_mini";///
+			
+			var oTBody = GetTableMiniBodyObj();
+			oTable.appendChild(oTBody);
+			objElm.appendChild(oTable);
+		}
+	}
 }
 
 function GetTableMiniBodyObj() {
     var year = document.getElementById("iYear").value;
-    var month = parseInt(document.getElementById("iMon").value);
+    var month = parseInt(document.getElementById("iMon").value, 10);
 
     if (DefaultView == 0)
         dayOfWeeks = strLang5_1; // 일>토
@@ -233,7 +221,7 @@ function GetTableMiniBodyObj() {
         oTbody.appendChild(objTr);
     }
     //Month End
-    oThisDate.setDate(oThisDate.getDate() - 1);
+    oThisDate.setDate(oThisDate.getDate() -1);
     sEndDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
     objTr = null;
 
@@ -246,7 +234,7 @@ function MonthMiniData(oThisDate) {
     var objTd = document.createElement("TD");
 
     var divID = (oThisDate.getFullYear()) + "-" + leadingZeros((oThisDate.getMonth() + 1), 2) + "-" + leadingZeros(oThisDate.getDate(), 2);
-
+    
     var className = "";
     if (divID == nowDay) {
         className = "today";  // 현재일
@@ -256,9 +244,9 @@ function MonthMiniData(oThisDate) {
     oDiv.setAttribute("onclick", "DayOnMouseClick(this);");
 //    oDiv.setAttribute("ondblclick", "MonthMiniDbClick()");
 
-    var pDateData = oThisDate.getDate()
+    var pDateData = oThisDate.getDate();
 
-
+    
     if (oThisMonth != oThisDate.getMonth()) // 현재월 이외의 날
     {
         objTd.className = "gray";
@@ -270,11 +258,13 @@ function MonthMiniData(oThisDate) {
         className += " sat";
 
     objTd.className = className;
-    oDiv.innerHTML = pDateData;
 
+    var oText = document.createTextNode(pDateData);
+    oDiv.appendChild(oText);
+    
     oDiv.setAttribute("id", "TDMINI_" + divID + "_Day");
     oDiv.setAttribute("dispDate", divID);
-    objTd.innerHTML = oDiv.outerHTML;
+    objTd.appendChild(oDiv);
     oThisDate.setDate(oThisDate.getDate() + 1);
     return objTd;
 }// 선택한 월의 날짜 입력 완료
@@ -282,44 +272,35 @@ function MonthMiniData(oThisDate) {
 //자원데이터에 마우스 클릭시
 function DayOnMouseClick(event) {
     if (!event) event = window.event;
-    
-    if (usedTheme == 3) {
-    	$("#"+g_selTDID).parent().removeClass('schedule');
-    	$("#"+g_selTRID).parent().removeClass('schedule');
-    } else {
-    	if ($("#"+g_selTDID)) {
-    		$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
-    	}
-    	
-    	if ($("#"+g_selTRID)) {
-    		$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
-    	}
+
+    if ($("#"+g_selTDID)) {
+    	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
     }
     
+    if ($("#"+g_selTRID)) {
+    	$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    }
+
     /*if (document.getElementById(g_selTDID))
         document.getElementById(g_selTDID).style.backgroundColor = "";
     if (document.getElementById(g_selTRID))
-        document.getElementById(g_selTRID).style.backgroundColor = "";*/   
+        document.getElementById(g_selTRID).style.backgroundColor = "";*/
+
+   
  
-    //document.getElementById(event.getAttribute("id")).style.backgroundColor = "#f0f6ff";
-    if (usedTheme == 3) {
-    	$("#"+event.getAttribute("id")).parent().addClass('schedule');
-    } else {
-    	$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
-    }
-	//$("#"+event.getAttribute("id")).parent().css("border-radius","20px");
-	
+        //document.getElementById(event.getAttribute("id")).style.backgroundColor = "#f0f6ff";
+    $("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    
     g_selTRID = event.parentNode.parentNode.getAttribute("id");
     g_selTDID = event.getAttribute("id");
 
     var sDate = event.getAttribute("id").substring(7, 17);
     date = sDate;
-    getScheduleList(date, pMode);
-        
+    getScheduleList(date, pMode);  
 }
 
+var MiniHttp;
 var delFlag = false;
-
 function CalendarMiniDataSource() {
     if (!document.getElementById("MiniCalendar"))
         return;
@@ -334,59 +315,71 @@ function CalendarMiniDataSource() {
 			ENDDATE : sEndDate,
 			APP : "0",
 			GROUPID : groupid,
-			IDLIST : (idlist == "") ? 'T' : idlist
+			IDLIST : (idlist == "") ? idtype : idlist
 		},
 		success: function(json){
-			getCalendarMiniDataSource_after(json.resultList);
+			getCalendarMiniDataSource_after(json.resultList)
 			delFlag = false;
 		}
     }); 
+    
 }
 
 function sTempData() {
 }
 
-function getCalendarMiniDataSource_after(resultList) {
+
+//function getCalendarMiniDataSource_after(xmlhttp) {
+function getCalendarMiniDataSource_after(resultList){
     var tempData = new Array();
-    var k = 0;
     
-    $.each(resultList, function(idx, item) {
-    	var _Dtstart = item.startDate;
-    	var _Dtend = item.endDate;
-    	var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7)) - 1, parseInt(_Dtstart.substring(8, 10)), parseInt(_Dtstart.substring(11, 13)), parseInt(_Dtstart.substring(14, 16)));
-    	var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7)) - 1, parseInt(_Dtend.substring(8, 10)), parseInt(_Dtend.substring(11, 13)), parseInt(_Dtend.substring(14, 16)));
-    	
-    	if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
+    try {
+//        if (MiniHttp.responseText == "") return;
+        
+        var k = 0;
+    	$.each(resultList, function(idx, item) {
+    		var _Dtstart = item.startDate;
+    		var _Dtend = item.endDate;
+    		var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10), parseInt(_Dtstart.substring(11, 13), 10), parseInt(_Dtstart.substring(14, 16), 10));
+    		var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10), parseInt(_Dtend.substring(11, 13), 10), parseInt(_Dtend.substring(14, 16), 10));
     		
-    		var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
-    		var day = 1000 * 60 * 60 * 24;
-    		betweenDay = parseInt(betweenDay / day, 10);
-    		
-    		for (var j = 0; j <= betweenDay; j++) {
+    		if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
     			
+    			var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
+    			var day = 1000 * 60 * 60 * 24;
+    			betweenDay = parseInt(betweenDay / day, 10);
+    			
+    			for (var j = 0; j <= betweenDay; j++) {
+    				
+    				var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
+    				tempData[k] = new sTempData();
+    				tempData[k].trID = trID;
+    				
+    				MiniDataBind(tempData[k]);
+    				DataSDT.setDate(DataSDT.getDate() + 1);
+    				k += 1;
+    			}
+    		} else {
     			var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
     			tempData[k] = new sTempData();
     			tempData[k].trID = trID;
     			
     			MiniDataBind(tempData[k]);
-    			DataSDT.setDate(DataSDT.getDate() + 1);
     			k += 1;
     		}
-    	} else {
-    		var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
-    		tempData[k] = new sTempData();
-    		tempData[k].trID = trID;
-    		
-    		MiniDataBind(tempData[k]);
-    		k += 1;
-    	}
-    	DataSDT = null;
-    	DataEDT = null;
-    })
-    tempData = null;
+    		DataSDT = null;
+    		DataEDT = null;
+    	})
+        
+        tempData = null;
+    }
+    catch (e) {
+        alert("getCalendarMiniDataSource_after : " + e.description);
+    }
 }
 
 function MiniDataBind(oAppointment) {
+
     var objElm = document.getElementById("TDMINI_" + oAppointment.trID + "_Day");
     if (objElm) {
 //        objElm.style.fontWeight = "bold"
@@ -399,25 +392,15 @@ function MiniDataBind(oAppointment) {
 }
 
 function clickDay(val01) {
-	
-	 if (usedTheme == 3) {
-	    	$("#"+g_selTDID).parent().removeClass('schedule');
-	    	$("#"+g_selTRID).parent().removeClass('schedule');
-    } else {
-    	if ($("#"+g_selTDID)) {
-    		$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
-    	}
-    	
-    	if ($("#"+g_selTRID)) {
-    		$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
-    	}
+    if ($("#"+g_selTDID)) {
+    	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
     }
-	 
-	if (usedTheme == 3) {
-		$("#"+val01).parent().addClass('schedule');
-    } else {
-    	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
-    } 
+    
+    if ($("#"+g_selTRID)) {
+    	$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    }
+    
+	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
 	
     g_selTRID = $("#"+val01).parent().parent().attr("id");
     g_selTDID = val01;
@@ -563,9 +546,7 @@ function preYear() {
 
     sDate.setFullYear(iYear, iMonth - 1, 14);
 
-   
     CalendarMiniView("CalendarMini");
-    CalendarMiniDataSource();
 
    
 }
@@ -582,17 +563,17 @@ function nextYear() {
 
   
     CalendarMiniView("CalendarMini");
-    CalendarMiniDataSource();
 
     
 }
+
 
 //선택한 년도 이동
 function changeYear() {
     var iMonth = document.getElementById("iMon").value;
     var iYear = document.getElementById("iYear").value;
 
-
+    
     document.getElementById("iYear").value = iYear;
     document.getElementById("iMon").value = iMonth;
     sDate.setFullYear(iYear, iMonth - 1, 14);
@@ -626,12 +607,12 @@ function preWeek() {
     var itemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
     var DayItem = document.getElementById(itemID);
     if (DayItem)
-        DayItem.onclick();
+        DayItem.click();
     else {
         preWeekMonth();
         var DayItem = document.getElementById(itemID);
         if (DayItem) {
-            DayItem.onclick();
+            DayItem.click();
             CalendarMiniDataSource();
         }
     }
@@ -644,13 +625,13 @@ function nextWeek() {
     var itemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
     var DayItem = document.getElementById(itemID);
     if (DayItem)
-        DayItem.onclick();
+        DayItem.click();
     else {
         nextWeekMonth();
 
         var DayItem = document.getElementById(itemID);
         if (DayItem) {
-            DayItem.onclick();
+            DayItem.click();
             CalendarMiniDataSource();
         }
     }
@@ -663,12 +644,12 @@ function preDay() {
     var itemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
     var DayItem = document.getElementById(itemID);
     if (DayItem)
-        DayItem.onclick();
+        DayItem.click();
     else {
         preWeekMonth();
         var DayItem = document.getElementById(itemID);
         if (DayItem) {
-            DayItem.onclick();
+            DayItem.click();
             CalendarMiniDataSource();
         }
     }
@@ -681,13 +662,13 @@ function nextDay() {
     var itemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
     var DayItem = document.getElementById(itemID);
     if (DayItem)
-        DayItem.onclick();
+        DayItem.click();
     else {
         nextWeekMonth();
 
         var DayItem = document.getElementById(itemID);
         if (DayItem) {
-            DayItem.onclick();
+            DayItem.click();
             CalendarMiniDataSource();
         }
     }
