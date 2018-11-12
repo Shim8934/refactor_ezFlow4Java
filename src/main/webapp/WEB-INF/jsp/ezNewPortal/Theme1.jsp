@@ -457,7 +457,7 @@
 		$("#quickOrgan").on('click', {'menu' : 'organ'}, quickMenuOpenRight);
 
 		// 프레임에 따라 퀵링크 위치 변경
-		if(frameId === 'Frame2') {
+		if(frameId === 'Frame2' || frameId === 'Frame4' ) {
 			var quickSide = document.getElementById('quickSide');
 			quickSide.style.cssFloat = 'left';
 			

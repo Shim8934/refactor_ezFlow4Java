@@ -832,6 +832,7 @@ function viewQuick() {
 	
 	var openPx;
 	var closePx;
+	var leftSide = false;
 	
 	if(usedTheme === 3) {
 		openPx = '100px';
@@ -840,10 +841,15 @@ function viewQuick() {
 		openPx = '82px';
 		closePx = '3px';
 	}
+	
+	// 프레임에 퀵링크가 좌측에 위치한 경우
+	if(usedTheme == '1' && (frameId === 'Frame2' || frameId === 'Frame4')) {
+		leftSide = true;
+	}
 
 	if (document.getElementById("quickSide").style.width == "0px") {
 		$(document.getElementById("quickSide")).animate({width: '100px'});
-		if(usedTheme == '1' && frameId === 'Frame2') {
+		if(leftSide) {
 			$(".linkBtn_close").animate({left: openPx}, function(){
 				$(".linkBtn_close").attr("class", "linkBtn_open");
 			});			
@@ -854,7 +860,7 @@ function viewQuick() {
 		}
 	} else {
 		$(document.getElementById("quickSide")).animate({width: '0px'});
-		if(usedTheme == '1' && frameId === 'Frame2') {
+		if(leftSide) {
 			$(".linkBtn_open").animate({left: closePx}, function(){
 				$(".linkBtn_open").attr("class", "linkBtn_close");
 			});					
