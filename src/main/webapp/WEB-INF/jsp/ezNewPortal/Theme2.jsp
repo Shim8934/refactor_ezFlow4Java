@@ -14,7 +14,7 @@
 <link href="${util.addVer('/css/ezNewPortal/theme2.css')}" rel="stylesheet" type="text/css">
 </head>
 
-<body class="mainbg">
+<body class="mainbg" style="min-width:1600px;">
 	<aside id="quickSide">
 		<p class="linkBtn_open" id="linkBtn_open"><img src="/images/ezNewPortal/linkBtn_open.png"></p>
 		<div class="aside_quick">
@@ -39,9 +39,10 @@
 <div class="section1_bg">
 	<section class="section1">
     	<article class="personal">
-        	<p>
+        	<p>	
             	<span class="info_set" id="personalEnv"></span>
-                <span>${userEmail}</span>
+                <span style="float:left; width:80%;">${userEmail}</span>
+				<span class="" id="portletEnv" style="float:left;">설정</span>                
             </p>
             <div class="info">
             	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
@@ -77,18 +78,13 @@
         <div class="schedule">
         	<article class="list">
             	<div class="maintab01">
-                	<p class="left_on">개인일정</p>
-                    <p class="right">부서일정</p>
+                	<p class="left_on" id="pSchedule">개인일정</p>
+                    <p class="right" id="dSchedule">부서일정</p>
                 </div>
                 <div class="scrollbox-play-light">
                 	<div class="scrollbox">
                     	<div class="content">
-                        	<ul class="schedule_list">
-                            	<li>[13:30 ~ 15:00] 개인업무 정비 및 진행을 검토 개인업무 정비 및 진행을 검토</li>
-                                <li>[13:30 ~ 15:00] 개인업무 정비 및 진행을 검토</li>
-                                <li>[13:30 ~ 15:00] 개인업무 정비 및 진행을 검토</li>
-                                <li>[13:30 ~ 15:00] 개인업무 정비 및 진행을 검토</li>
-                                <li>[13:30 ~ 15:00] 개인업무 정비 및 진행을 검토</li>
+                        	<ul class="schedule_list" id="schedule_list">
                             </ul>
                         </div>
                         <div class="scrollbar-v scrollbar-v-disabled">
@@ -109,35 +105,35 @@
         	<article class="writebanner">
                 <ul class="writebannerUL">
                     <li>
-                        <dl class="writebannerDL">
+                        <dl class="writebannerDL" id="NewMail">
                             <dt><img src="/images/ezNewPortal/theme2Img/writebanner01.png" alt="새메일"></dt>
                             <dt>새메일</dt>
                             <dd id="unreadMailCount">0</dd>
                         </dl>
                     </li>
                     <li>
-                        <dl class="writebannerDL">
+                        <dl class="writebannerDL" id="AprSign">
                             <dt><img src="/images/ezNewPortal/theme2Img/writebanner02.png" alt="결재문서"></dt>
                             <dt>결재문서</dt>
                             <dd id="approvalCount">0</dd>
                         </dl>
                     </li>
                     <li>
-                        <dl class="writebannerDL">
+                        <dl class="writebannerDL" id="Schedule">
                             <dt><img src="/images/ezNewPortal/theme2Img/writebanner03.png" alt="오늘일정"></dt>
                             <dt>오늘일정</dt>
                             <dd id="scheduleCount">0</dd>
                         </dl>
                     </li>
                     <li>
-                        <dl class="writebannerDL">
+                        <dl class="writebannerDL" id="Poll">
                             <dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="전자설문"></dt>
                             <dt>전자설문</dt>
                             <dd id="pollCount">0</dd>
                         </dl>
                     </li>
                     <li>
-                        <dl class="writebannerDL">
+                        <dl class="writebannerDL" id="Circular">
                             <dt><img src="/images/ezNewPortal/theme2Img/writebanner05.png" alt="회람판"></dt>
                             <dt>회람판</dt>
                             <dd id="circularCount">0</dd>
@@ -174,6 +170,12 @@
 		<div class="portlet_area">
 		</div>
 	</section>
+
+	<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
+			
+	<div class="layerpopup"  style="z-index: 2000; position: fixed;display: none;" id="iFramePanel">
+		<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+	</div>	
 </div>
 <%-- script line --%>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
@@ -223,6 +225,7 @@
  	var birthdayTotalCount = 0;
  	var timer;
  	var frameId = "<c:out value='${usedFrame}'/>";
+ 	var usedTheme = "<c:out value='${usedTheme}'/>";
  	var theme2 = true;
  	
  	var quickLinkPage = {
@@ -230,12 +233,14 @@
  		total: 1,
  	}; 	
  	
+	var pScheduleList = [];
+	var dScheduleList = [];
+ 	
  	window.onresize = function(event) {
  		frameSetting(frameId);
  	}
 
 	var frameSetting = function (frameSetId) {
-		console.log(frameSetId);
 		frameId = frameSetId;
 		
 		if (frameSetId == "Frame3" || frameSetId == "Frame4") {
@@ -418,6 +423,59 @@
 			}
 		});
 	}
+	
+	var getScheduleList_after_Theme2 = function (list) {
+		// 개인일정, 부서일정 나누기 scheduleType 1 or 2
+		list.forEach(function(item, index) {
+			if(item.scheduleType === '1') {
+				pScheduleList.push(item);	
+			} else if (item.scheduleType === '2') {
+				dScheduleList.push(item);
+			}
+		});
+	}
+	
+	var getScheduleList_Top = function (date, mode) {
+		selDate = date;			    
+		
+		$.ajax({
+			type : "POST",
+			dataType : "json",
+			async : false,
+			url : "/ezNewPortal/getScheduleList.do",
+			data : {
+				selectDate  : date		    			
+			},
+			success: function(json){
+				getScheduleList_after_Theme2(json.resultList);
+			}
+		});
+	}
+	
+	var assembleScheduleList = function (data) {
+        var schList = document.getElementById('schedule_list');
+        
+		while(schList.hasChildNodes()) {
+			schList.removeChild(schList.firstChild);	
+		}
+        data.forEach(function(item, index) {
+        	if(index > 5) return;
+        	var li = document.createElement('li');
+        	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
+        	li.addEventListener('click', function() {
+			    var wWeight = "760";
+			    var wHeight = "670";
+			    var heigth = window.screen.availHeight;
+			    var width = window.screen.availWidth;
+			    var left = (width - wWeight) / 2;
+			    var top = (heigth - wHeight) / 2;
+			
+		        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(item.scheduleId) + "&type=" + item.scheduleType + "&datetype=" + item.dateType + "&repeatcount=" + item.repeatCount + "&date=" + item.startDate.substr(0, 10) + "&pattern=0","",
+			        "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");        		
+        	});
+        	schList.appendChild(li);
+        });
+	}
  	
 	$(function() {
 		$("#featured").orbit();
@@ -542,6 +600,39 @@
 		
 		$(".portlet_area").disableSelection();
 		
+		//CalendarMiniView_Top("CalendarMini_Top");
+		getScheduleList_Top(nowDay, "P");
+		
+		var pSchedule = document.getElementById('pSchedule');
+		var dSchedule = document.getElementById('dSchedule');
+		
+		pSchedule.addEventListener('click', function() {
+			if(!pSchedule.classList.contains('left_on')) {
+				// 개인일정이 선택되면 부서일정off
+				pSchedule.classList.remove('left');
+				pSchedule.classList.add('left_on');
+
+				dSchedule.classList.remove('right_on');
+				dSchedule.classList.add('right');
+				
+				assembleScheduleList(pScheduleList);
+			}
+		});
+		
+		dSchedule.addEventListener('click', function() {
+			if(!dSchedule.classList.contains('right_on')) {
+				// 부서일정이 선택되면 개인일정off
+				dSchedule.classList.remove('right');
+				dSchedule.classList.add('right_on');
+				
+				pSchedule.classList.remove('left_on');
+				pSchedule.classList.add('left');
+				
+				assembleScheduleList(dScheduleList);
+			}
+		});
+		
+		assembleScheduleList(pScheduleList);
 	});
 </script>
 </body>	

@@ -20,16 +20,16 @@
 	.ui-widget-content {background : none;}
 	.ui-widget-header {background : none;}
   	.column {width: 1820px; padding-bottom: 100px;}
-  	.portlet, .newPortlet {margin:0px 15px 15px 0px;display : inline-block;vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);float:none;}
-  	.portlet-header {background:rgb(189,194,198); padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#fff;}
+  	.portlet, .newPortlet {margin:0px 15px 15px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+  	.portlet-header {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; border:1px solid #2196f3;}
   	.portlet-toggle {top: 50%;right: 0;float:right;}
-  	.portlet-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box;}
+  	.portlet-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:215px;}
   	.portlet-placeholder {border: 1px dotted black; margin: 0 1em 1em 0; height: 50px;}
 	.col, .newPortlet {padding:0px;}
 	.addPortlet:hover {cursor:pointer;}
 	.updatePortlet, .addNewPortlet {float :right;margin :0px; padding :0px;}
-	.updatePortletBtn span{float:right; height:28px; /* background: #5d656c; */ padding: 0px 9px; line-height: 25px; display: inline-block; border: 1px solid white; margin:6px 5px 0px 0px; color: #fff; box-sizing: border-box;}
-	.deletePortletBtn span{float:right; height:28px; /* background: #5d656c; */ padding: 0px 9px; line-height: 25px; display: inline-block; border: 1px solid white; margin:6px 5px 0px 0px; color: #fff; box-sizing: border-box;}
+	.updatePortletBtn span{height:25px; float:right; background: #2196f3; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
+	.deletePortletBtn span{height:25px; float:right; background: #2196f3; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}	
 	.boardSetting, .menuSetting {float:right; position:relative; margin-top:-20px; margin-right:5px; padding:0px;text-align:left;display:inline-block;vertical-align:top;cursor:pointer;}
 	.portletInfo {display:inline-block;marging-top:8px;}
 	.portletInfoTH {background-color :white;border:0px; padding:0px 15px 0px 0px; color:#393939; font-weight:bold; letter-spacing:-1px; line-height:34px;}
@@ -38,14 +38,16 @@
 	.portletInfo {width : 100%;}
 	.portletInfoTD {width:100%;}
 	.portletInfoTD input[type='text'] {width:100%; height:27px; font-size:12px; padding:0px 0px 0px 5px; color:#393939;}
-	.addPortlet {border:1px dashed #aab2ba; text-align:center;height:18.3em; border-radius:0px;}
+	.addPortlet {border:1px dashed #aab2ba; text-align:center;height:19.3em; border-radius:0px;}
 	.addPortlet dl {margin:87px;}
 	.portlet-toggle {cursor:pointer;}
 	.newPortlet .portlet-header {cursor:default;}
 	.notUsedTR {display : none;}
 	.usedTR {display:table-row;}
-	.cancelNewPortletBtn span{float:right; height:28px; background: #5d656c; padding: 0px 9px; line-height: 25px; display: inline-block; border: 1px solid #535c63; margin:6px 5px 0px 0px; color: #fff; box-sizing: border-box;}
-	.addNewPortletBtn span{float:right; height:28px; background: #5d656c; padding: 0px 9px; line-height: 25px; display: inline-block; border: 1px solid #535c63; margin:6px 5px 0px 0px; color: #fff; box-sizing: border-box;}
+	.cancelNewPortletBtn span{height:25px; float:right; background: #2196f3; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
+	.addNewPortletBtn span{height:25px; float:right; background: #2196f3; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
+	span.spanOff{ background:#959595;}
+	span.addCancel{ background:#6c6c6c;}
 	/* switch */
 	.switch {position: absolute;display: inline-block;width: 60px;height: 22px;margin-top:-10px;}
 	.switch input {opacity: 0;width: 0;height: 0;}
@@ -57,7 +59,7 @@
 	.toastArea { padding : 10px; position : absolute; background : rgba(0, 0, 0, 0.33); display : block; color : #ffffff; font-size: 12px; border-radius: 3px;}
 	/* Rounded sliders */
 	.slider.round {border-radius: 15px;}
-	.slider.round:before {border-radius: 50%;}
+	.slider.round:before {border-radius: 50%;}	
 	
 	/* portlet media query */
 	@media only screen and (min-width :1921px) {
@@ -476,17 +478,21 @@
 					listHTML += "</li>";
 				}
 				
-				listHTML += "<li class='portlet addPortlet'><div style='margin-top:90px'><img src='/images/admin/admin_portlet_plus.png' /></div></li>";
+				listHTML += "<li class='portlet addPortlet'><div style='margin-top:97px'><img src='/images/admin/admin_portlet_plus.png' /></div></li>";
 				document.getElementById("portletListContainer").innerHTML = listHTML;
 				
 				for (var i = 0; i < portletCnt; i++) { //포틀릿 사용여부에 따라 title 변경
 					if (result[i].portletUsed) {
 						//$("#portlet" + result[i].portletId).find(".portlet-header").css("background-color", "#687077");
-						$("#portlet" + result[i].portletId).find(".portlet-header").css("background-color", "steelblue");
+						$("#portlet" + result[i].portletId).find(".portlet-header").css("background-color", "##edf7ff");
 						$("#portlet" + result[i].portletId).find(".switch").find("input").prop("checked", true);
+						$("#portlet" + result[i].portletId + " .updatePortletBtn span").attr("class", "spanOn");
+						$("#portlet" + result[i].portletId + " .deletePortletBtn span").attr("class", "spanOn");
 					} else {
-						$("#portlet" + result[i].portletId).find(".portlet-header").css("background-color", "#bdc2c6");
+						$("#portlet" + result[i].portletId).find(".portlet-header").css("background-color", "#f4f4f4").css("border", "1px solid #e7e7e7").css("color", "#b1b1b1");
 						$("#portlet" + result[i].portletId).find(".switch").find("input").prop("checked", false);
+						$("#portlet" + result[i].portletId + " .updatePortletBtn span").attr("class", "spanOff");
+						$("#portlet" + result[i].portletId + " .deletePortletBtn span").attr("class", "spanOff");
 					}
 					
 					//포틀릿 게시판 설정이 있으면 설정 버튼 활성화
@@ -547,11 +553,11 @@
 		
 		var listHTML = "";
 		listHTML += "<li id='newPortlet' class='newPortlet'>";
-		listHTML += "<div class='portlet-header'>포틀릿 추가";
+		listHTML += "<div class='portlet-header' style='background-color:#f4f4f4;border:1px solid #e7e7e7;color:#b1b1b1'>포틀릿 추가";
 		listHTML += "<a class='cancelNewPortletBtn'>";
-		listHTML += "<span>취소</span></a>";
+		listHTML += "<span class='addCancel'>취소</span></a>";
 		listHTML += "<a class='addNewPortletBtn'>";
-		listHTML += "<span>추가</span></a>";
+		listHTML += "<span class='addCancel'>추가</span></a>";
 		listHTML += "</div>";
 		listHTML += "<div class='portlet-content'>";
 		listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'>포틀릿 사용 </th>"

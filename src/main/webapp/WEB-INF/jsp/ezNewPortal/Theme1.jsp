@@ -154,7 +154,7 @@
 				</article>
 			</section>
 		</div>
-		<aside id="quickSide">
+		<aside id="quickSide">	
 			<p class="linkBtn_open" id="linkBtn_open"><img src="/images/ezNewPortal/linkBtn_open.png"></p>
 			<div class="aside_quick">
 				<p class="quickmenu_title">Quick</p>
@@ -242,6 +242,7 @@
 		$(".section_left").css("height", wwh +"px");
 	}
  	
+ 	// 퀵링크 셋팅
  	var setQuickLinkList = function (data) {
  		var quickList = data.quickLinkList;
  		var totalCnt = data.totalPageCnt;
@@ -369,10 +370,6 @@
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
 			
-			console.log('id',portletId);
-			console.log('url',portletUrl);
-			console.log('name',portletName);
-			
   			(function (portletId, portletUrl, portletName) {
 				$.ajax({
 					type : "POST",
@@ -458,6 +455,16 @@
 		$("#quickSchedulewrite").on('click', {'menu' : 'schedule'}, quickMenuOpenRight);
 		$("#quickOrgan").on('click', {'menu' : 'organ'}, quickMenuOpenRight);
 
+		// 프레임에 따라 퀵링크 위치 변경
+		if(frameId === 'Frame2') {
+			var quickSide = document.getElementById('quickSide');
+			quickSide.style.cssFloat = 'left';
+			
+			var linkBtnOpen = document.getElementById('linkBtn_open');
+			linkBtnOpen.style.right = '';
+			linkBtnOpen.style.left = '82px';
+			
+		}
 		// 퀵링크 호출
 		getQuickLink();		
 		
@@ -481,7 +488,6 @@
 	});
 	
 	var frameSetting = function (frameSetId) {
-		console.log(frameSetId);
 		frameId = frameSetId;
 		
 		if (frameSetId == "Frame3" || frameSetId == "Frame4") {

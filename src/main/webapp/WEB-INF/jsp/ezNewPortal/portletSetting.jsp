@@ -122,9 +122,8 @@
 						if (xhr.status >= 200 && xhr.status < 300) {
 							var ul = document.getElementById('frameUl');
 							var frameList = JSON.parse(xhr.responseText).data.frameList;
-			
+						
 							frameList.forEach(function (item, index) {
-								
 								var li = document.createElement('li');
 								var div = document.createElement('div');
 								div.className = 'flipsterLi';
@@ -153,11 +152,12 @@
 								// 프레임 이미지 나오면 변경하자!!
 								var img = document.createElement('img');
 								img.src = 'https://fakeimg.pl/330x240/FFFFFF';
+								img.style.width = '100%';
 								div.appendChild(img);
 								li.appendChild(div);
 								ul.appendChild(li);
 							});
-			
+							
 							// jquey flipster 적용
 							$(".frameList").flipster({
 								style: 'carousel',
@@ -166,7 +166,15 @@
 							    buttons: true,
 							    start: (portletSetting.selectedFrame*1) - 1,
 							    fadeIn : 0,
-							});
+							});							
+
+							// 프레임이 한 개인 경우 별도 처리
+							var listCnt = frameList.length; 
+							if(listCnt === 1) {
+								var onlyOneFrame = document.getElementById('frameList');
+								onlyOneFrame.style.display = 'flex';
+								onlyOneFrame.style.justifyContent = 'center';
+							}
 							
 							// 배경색은 리스트 화면에 출력할 때 설정하는 걸로!
 							var frameList = document.getElementById('frameList').style.backgroundColor = '#e0e3e4';
@@ -174,15 +182,18 @@
 							// flipsterBtn 위치 고정
 							var flipsterBtnPrev = document.getElementsByClassName('flipster__button--prev')[0];
 							var flipsterBtnNext = document.getElementsByClassName('flipster__button--next')[0];
-							flipsterBtnPrev.style.top = '9%';
-							flipsterBtnNext.style.top = '9%';
+							if(flipsterBtnPrev !== undefined && flipsterBtnNext !== undefined) {
+								flipsterBtnPrev.style.top = '9%';
+								flipsterBtnNext.style.top = '9%';								
+							}
 							
-							var frameUl = document.getElementById('frameUl');
-							HTMLCollection.prototype.forEach = Array.prototype.forEach;
-							frameUl.children.forEach(function(item, index) {
-								item.addEventListener('click', selectFrame);
-							});				
-							
+							if(listCnt !== 1) {
+								var frameUl = document.getElementById('frameUl');
+								HTMLCollection.prototype.forEach = Array.prototype.forEach;
+								frameUl.children.forEach(function(item, index) {
+									item.addEventListener('click', selectFrame);
+								});								
+							}
 						} else {
 							console.error(xhr.responseText);	
 						}

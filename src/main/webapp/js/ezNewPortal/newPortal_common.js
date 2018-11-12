@@ -611,7 +611,7 @@ function getMonthlyBestEmployee() {
 
 //포틀릿 및 프레임 환경설정 열기
 function viewPortletEnv() {
-
+	
 	var feature = GetOpenPosition(760, 645);
 	
 //	DivPopUpShow($('body').prop('scrollWidth') * 0.9, 435, "/ezNewPortal/portletSetting.do", "",
@@ -830,29 +830,38 @@ function quickMenuOpen(event) {
 
 function viewQuick() {
 	
-	if (usedTheme == 3) {
-		if (document.getElementById("quickSide").style.width == "0px") {
-			$(document.getElementById("quickSide")).animate({width: '100px'});
-			$(".linkBtn_close").animate({right: '100px'}, function(){
+	var openPx;
+	var closePx;
+	
+	if(usedTheme === 3) {
+		openPx = '100px';
+		closePx = '0px';
+	} else {
+		openPx = '82px';
+		closePx = '3px';
+	}
+
+	if (document.getElementById("quickSide").style.width == "0px") {
+		$(document.getElementById("quickSide")).animate({width: '100px'});
+		if(usedTheme == '1' && frameId === 'Frame2') {
+			$(".linkBtn_close").animate({left: openPx}, function(){
 				$(".linkBtn_close").attr("class", "linkBtn_open");
-			});
+			});			
 		} else {
-			$(document.getElementById("quickSide")).animate({width: '0px'});
-			$(".linkBtn_open").animate({right: '0px'}, function(){
-				$(".linkBtn_open").attr("class", "linkBtn_close");
-			});
+			$(".linkBtn_close").animate({right: openPx}, function(){
+				$(".linkBtn_close").attr("class", "linkBtn_open");
+			});			
 		}
 	} else {
-		if (document.getElementById("quickSide").style.width == "0px") {
-			$(document.getElementById("quickSide")).animate({width: '100px'});
-			$(".linkBtn_close").animate({right: '82px'}, function(){
-				$(".linkBtn_close").attr("class", "linkBtn_open");
-			});
-		} else {
-			$(document.getElementById("quickSide")).animate({width: '0px'});
-			$(".linkBtn_open").animate({right: '3px'}, function(){
+		$(document.getElementById("quickSide")).animate({width: '0px'});
+		if(usedTheme == '1' && frameId === 'Frame2') {
+			$(".linkBtn_open").animate({left: closePx}, function(){
 				$(".linkBtn_open").attr("class", "linkBtn_close");
-			});
+			});					
+		} else {
+			$(".linkBtn_open").animate({right: closePx}, function(){
+				$(".linkBtn_open").attr("class", "linkBtn_close");
+			});	
 		}
 	}
 }

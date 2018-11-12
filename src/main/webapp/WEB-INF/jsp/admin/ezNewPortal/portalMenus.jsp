@@ -11,11 +11,14 @@
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<style type="text/css">
 			body {background-color : white;}
-			.menu, .menuAdd {cursor:pointer; vertical-align:top;display : inline-block;width : 100px; border : 1px solid #000000; margin : 10px;}
+			.ui-sortable{ margin:0px; padding:0px;}
+			.menu, .menuAdd {cursor:pointer; vertical-align:top;display : inline-block;width : 100px; border : 1px solid #d9d9d9; margin :10px 5px 0px 0px; height:122px}
+			#menuAdd {border : 1px dashed #aaaaaa;}
 			.menu dl dt, .menuAdd dl dt {text-align : center;display : block;height : 42px;margin : 0px;	padding : 0px;}
 			.menu dl dd, .menuAdd dl dd {display:table-cell; width : 98px; height:56px; margin:0px; padding:0px 5px; text-align:center; vertical-align:middle; font-size:15px; font-weight:bold; letter-spacing:-1px;}
 			span.icon_topmenu {margin-top : 20px;}
-			.menuUsed {background-color : #b0e4ff;}
+			.menuUsed {background-color : #fff;}
+			.menuUsed_on{color: #0470e3; border-color: #b9d7f6; background: #f1f8ff;}
 			.menuNotUsed {background-color : #cbcbcb;}
 			.menuDetails {list-style:none;display : none; float:left; width:98%; border:1px solid black;position : relative;}
 			.menuTitle {margin : 10px;}
@@ -43,21 +46,20 @@
 			dt img {width:21px;height:21px;margin-top:20px;}
 			.menuIcon img {width:21px;height:21px;}
 			.deleteMenu {display:inline-block;margin-left:50px;vertical-align:top;margin-top:-3px;}
-			#menuAdd {border : 2px dashed black;}
 			.accessOK div, .accessNO div {margin-left:15px;display:inline-block;}
+			.menuChoice {background: #edf7ff; border: 1px solid #2196f3; color: #0470e3;}
 			
 			/* switch */
-			.switch {position: absolute;display: inline-block;width: 60px;height: 25px;margin-left:26px; margin-top:-3px;}
+			.switch {position: absolute;display: inline-block;width: 60px;height: 23px;margin-left:26px; margin-top:-3px;}
 			.switch input {opacity: 0;width: 0;height: 0;}
 			.slider {  position: absolute;  cursor: pointer;  top: 0;  left: 0;  right: 0;  bottom: 0;  background-color: #ccc;  -webkit-transition: .4s;  transition: .4s;}
-			.slider:before {  position: absolute;  content: "";  height: 17px;  width: 18px;  left: 4px;  bottom: 4px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
+			.slider:before {  position: absolute;  content: "";  height: 13px;  width: 13px;  left: 8px;  bottom: 5px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
 			input:checked + .slider {  background-color: #2196F3;}
 			input:focus + .slider { box-shadow: 0 0 1px #2196F3;}
 			input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transform: translateX(26px);transform: translateX(26px);}
 			/* Rounded sliders */
 			.slider.round {border-radius: 15px;}
 			.slider.round:before {border-radius: 50%;}
-			.mainbody {height:97%;}
 		</style>
 	</head>
 	
@@ -150,7 +152,7 @@
 					});
 					
 					//메뉴 추가 관련
-					menusHTML += "<li class='menuAdd' id='menuAdd'><dl><dt><span class='icon_topmenu' style='background:none; font-size:20px; font-weight:bold'>+</span></dt><dd>메뉴추가</dd></dl></li>";
+					menusHTML += "<li class='menuAdd' id='menuAdd'><div><img src='/images/admin/menuAdd.png' style='margin:49px 38px' /></div></li>";
 					
 					$("#menuList").html(menusHTML);
 					
@@ -197,6 +199,9 @@
 		
 		var openMenuDetail = function(event) {
 			var menuId = event.data.menuId;
+			
+			$(".menuChoice").removeClass("menuChoice");
+			$("#menu" + menuId).addClass("menuChoice");
 			
 			getMenuDetail(menuId);
 		}
