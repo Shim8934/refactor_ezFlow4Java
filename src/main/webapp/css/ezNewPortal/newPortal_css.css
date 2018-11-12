@@ -583,7 +583,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .main_time .timeCheckOut dd{margin:0px; padding:0px;}
 
 /* 날씨추가 */
-.weather_icon {}
+.weather_icon {width:60%; height:60%;}
 
 @media only screen and (max-width :1730px) and (min-width :1280px) {
 	.info .infoImg{margin:0px 24px 34px 0px;}

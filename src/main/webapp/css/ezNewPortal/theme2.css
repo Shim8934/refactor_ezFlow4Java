@@ -96,6 +96,9 @@ body{margin:0px; padding:0px;}
 /* 전체 적으로 sortable 할 수 있는 영역 cursor : move*/
 .sortablePortlet {cursor : move;}
 	
+/* 날씨추가 */
+.weather_icon {width:60%; height:60%;}
+
 /* 미디어쿼리 적용 */
 @media only screen and (max-width: 1920px){
 	.personal{width:344px;}
