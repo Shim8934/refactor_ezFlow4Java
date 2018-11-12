@@ -141,7 +141,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 /* layout */
 #Center {min-height:600px; margin:0px; min-width:1260px; background:url(/images/ezNewPortal/theme3Img/main_background.png) center top no-repeat; background-size:cover;}
 .section_left{  margin:0px; padding:0px; float:left; overflow:hidden; border-right:0px solid #cdcdcd; width:0px; box-sizing:border-box; background:#fff;}
-.section_main{ overflow:hidden; padding:0px 0px 20px 0px; float:none; min-width:880px; max-width:1920px; box-sizing:border-box;}
+.section_main{ overflow:hidden; padding:0px 0px 20px 5px; float:none; min-width:880px; max-width:1920px; box-sizing:border-box;}
 .section_main .mainLayout_left{ overflow:hidden; float:left; padding:0px 0px 0px 18px; box-sizing:border-box; }
 .section_main .mainLayout_middle{ overflow:hidden;  padding:0px 0px 0px 16px; float:left; box-sizing:border-box; }
 .section_main .mainLayout_right{ float:left; padding:0px 0px 0px 16px; box-sizing:border-box; overflow:hidden; }
@@ -354,7 +354,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .scheduleDate{height:191px; margin:0px;padding: 12px 15px 0px 0px;float: none; background:#ffffff; text-align:center;}
 .scheduleDate .dayT{margin:0px; padding:5px 0px 0px 0px; font-size:13px; color:#333;}
 .scheduleDate .dayN{margin:0px; padding:0px; font-size:30px; font-weight:bold; color:#0470e4;}
-.sscheduleUL{margin:0px;padding: 0px 0px 0px 7px;list-style:none;float: right;overflow:hidden; background: url(/images/ezNewPortal/schedule_timeline.png) #ffffff no-repeat left top;width:80%;height: 214px;box-sizing: border-box;}
+.sscheduleUL{margin:0px;padding: 0px 0px 0px 7px;list-style:none;float: right;overflow:hidden; background: url(/images/ezNewPortal/theme3Img/schedule_timeline.png) #ffffff no-repeat left top;width:80%;height: 214px;box-sizing: border-box;}
 .sscheduleUL .scheduleLi{margin:0px;padding: 6px 0px 12px 14px;border-bottom: 1px dashed #e7e7e7;height:35px; cursor: pointer;}
 .sscheduleUL .scheduleLi .scheduleTime{margin:0px; padding:0px 0px 1px 0px;}
 .sscheduleUL .scheduleLi .scheduleTime .Tgroup{margin:0px; padding:1px 3px; font-size:12px; color:#fff; background:#f4dd0e; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
