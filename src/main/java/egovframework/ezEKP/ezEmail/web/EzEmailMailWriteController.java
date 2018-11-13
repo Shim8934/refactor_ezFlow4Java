@@ -3709,7 +3709,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		if (isEachMailB) {
 	                	message.setHeader("X-JMocha-Each-Mail", "true");
                     }
-		    		if (delaySendTime != ""){
+		    		if (!delaySendTime.equals("")){
 		    			message.setHeader("Delivery-Date", delaySendTime);
 		    		}
 		    		if (useSecureMail.equals("YES") && isSecureMail) {
@@ -5321,8 +5321,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				Element row = (Element) organRow.item(i);
 				NodeList organList = row.getElementsByTagName("CELL");
 				Element organCell = (Element) organList.item(0);
-				if (organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim() != null 
-						|| !organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim().equals("")) {
+				if (organCell.getElementsByTagName("DATA6").item(0) != null 
+						&& !organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim().equals("")) {
 					jsonObject = new HashMap<String, Object>();
 					jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
 					jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
@@ -5339,8 +5339,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				Element row = (Element) dlRow.item(i);
 				NodeList dlList = row.getElementsByTagName("CELL");
 				Element dlCell = (Element) dlList.item(0);
-				if (dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim() != null 
-						|| !dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
+				if (dlCell.getElementsByTagName("DATA3").item(0) != null 
+						&& !dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
 					jsonObject = new HashMap<String, Object>();
 					jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
 					jsonObject.put("title", "");
@@ -5355,8 +5355,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			NodeList addressRow = addressXML.getElementsByTagName("ROW");
 			for (int i = 0; i < addressRow.getLength(); i++) {
 				Element row = (Element) addressRow.item(i);
-				if (row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim() != null 
-						|| row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim().equals("")) {
+				if (row.getElementsByTagName("SEMAIL").item(0) != null 
+						&& !row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim().equals("")) {
 					jsonObject = new HashMap<String, Object>();
 					jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
 					jsonObject.put("title", "");
