@@ -300,6 +300,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		ezNewPortalDAO.deleteUserUsedPortlet(map);
 		
 		List<Map<String, Object>> portletList = (List<Map<String, Object>>) param.get("portletList");
+		LOGGER.debug("portletList: " + portletList.toString());
 		for (int i=0; i<portletList.size(); i++) {
 			LOGGER.debug(portletList.get(i).toString());
 			Map<String, Object> portletMap = new HashMap<String, Object>();
@@ -345,7 +346,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		*/
 		List<PortletInfoVO> compPortletList = getPortletOrderCompForUser(portletLang, tenantId, companyId, deptId, userId);
 		List<PortletInfoVO> userPortletList = getPortletOrderUser(portletLang, userId, tenantId, companyId);		
-
 		if(userPortletList.size() < 1) {
 			Iterator<PortletInfoVO> it = compPortletList.iterator();
 			while (it.hasNext()) {
@@ -356,15 +356,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		} else {
 			Iterator<PortletInfoVO> comp = compPortletList.iterator();
 			while (comp.hasNext()) {
-				PortletInfoVO compVO = comp.next();
+				PortletInfoVO compVO = comp.next(); 
 				Map<String, Object> map = commonUtil.transBean2Map(compVO);
 				Iterator<PortletInfoVO> user = userPortletList.iterator();
 				while (user.hasNext()) {
 					PortletInfoVO userVO = user.next();
 					if(compVO.getPortletId() == userVO.getPortletId()) {
+						map.put("portletOrder", userVO.getPortletOrder());
 						map.put("use", "on");
 						break;
 					} else {
+						map.put("portletOrder", 0);
 						map.put("use", "off");
 					}
 				}
@@ -994,6 +996,20 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		ezNewPortalDAO.deleteCompanyLogo(map);
 		LOGGER.debug("deleteCompanyLogo ended.");
+	}
+	
+	@Override
+	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String companyId) {
+		LOGGER.debug("deleteCompanyLogo started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardId", boardId);
+		map.put("itemCount", itemCount);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		LOGGER.debug("deleteCompanyLogo ended.");
+		return ezNewPortalDAO.getBoardPortletInfo(map);
+		
 	}
 	/**
 	 * 이효진

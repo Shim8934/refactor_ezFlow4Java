@@ -16,51 +16,42 @@
 		<style type="text/css">
 			html { height: 100%; }
 			#set-body { background-color: white; }
-			h3 { padding-left: 20px; margin-top: 10px; margin-bottom: 5px; }
-			
-			.set-head { background-color: #E5EFFF; height: 5%; display: flex; align-items: center; padding-top: 5px; padding-bottom: 5px;}
-			.set-head h1 { font-size: 20px; margin-left: 20px;}
-			.set-action { height: 10%; display: flex; justify-content: center; align-items: center;} 
-			.ui-portlet { position:relative; border: 1px solid #aaaaaa; width: 272px; height: 40px; /* background-color: rgb(176, 228, 255); */ border-radius: 5px; padding-left: 10px; margin: 10px; line-height: 40px;}
-			.ui-portlet-on { background-color: #E5EFFF; }
-			.ui-portlet-off { background-color: #E0E3E4; }
+			h3 { padding-left: 20px; margin-top: 25px; margin-bottom: 10px; font-size:14px; }
+			.set-head { background-color: #687077; height:44px; line-height:42px; display: flex; align-items: center; margin:0px; padding:0px;}
+			.set-head h1 { font-size: 16px; margin-left: 20px; color:#fff;}
+			.set-action { height: 9%; display: flex; justify-content: center; align-items: center;} 
+			.ui-portlet { position:relative;  width: 230px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 45px;}
+			.ui-portlet-on { background-color: #f0f0f0; }
+			.ui-portlet-off { background-color: #f0f0f0; }
+			.ui-portlet-off .ui-portlet-span{ color:#999;}
 			.ui-portlet-content { font-weight: bold; display: inline-block;}
 			.ui-portlet-list { padding-left: 20px; height: 335px; width: 97%;}
-			.ui-portlet-span { display: inline-block; width: 70%;}
-			.flipsterLi { width:152px; height: 114px; margin-top:20px; margin-left:20px}
-			
+			.ui-portlet-span { display: inline-block; width: 70%; font-size:13px; color:#333; font-weight:normal;}
+			.flipsterLi { width:95px; height: 64px; margin-top:20px; margin-left:20px; padding:20px; background:#fff;}
 			.frameList { height: 151px; /* background-color: #e0e3e4; */ margin-left: 20px; margin-right: 20px;}
-			.select-flipster img{ border:3px solid #0088CC; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
 			
+			.select-flipster {border:1px solid #2196f3;}
 			.paginationBtn { border: 1px solid black; width: 100px; height: 30px; margin-left:20px; margin-right:20px;}
 			
-			/* switch */
-			.switch {position: absolute; display: inline-block; width: 60px; height: 25px; /* margin-left: 150px;  */margin-top: 6px;}
-			.switch input {opacity: 0;width: 0;height: 0;}
-			.slider {  position: absolute;  cursor: pointer;  top: 0;  left: 0;  right: 0;  bottom: 0;  background-color: #ccc;  -webkit-transition: .4s;  transition: .4s;}
-			.slider:before {  position: absolute;  content: "";  height: 17px;  width: 18px;  left: 4px;  bottom: 4px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
-			input:checked + .slider {  background-color: #2196F3;}
-			input:focus + .slider { box-shadow: 0 0 1px #2196F3;}
-			input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transform: translateX(26px);transform: translateX(26px);}
-			/* Rounded sliders */
-			.slider.round {border-radius: 15px;}
-			.slider.round:before {border-radius: 50%;}
+			.switch {margin-top:15px;}
 			.flipster__container {margin-left:-20px;}
+			.mCSB_container {margin-right:10px !important;}
+			.flipster__button {height:65px;}
 		</style>
 	</head>
 	<body id="set-body">
 		<section class="set-head">
-			<h1>▒&nbsp;포틀릿 설정</h1>
+			<h1>포틀릿 설정</h1>
 		</section>
 		<section class="set-frame">
-			<h3>⊙&nbsp;화면 프레임 설정</h3>
+			<h3>화면 프레임 설정</h3>
 			<div class="frameList" id="frameList">
 				<ul id="frameUl">
 				</ul>
 			</div>
 		</section>
 		<section class="set-portlet">
-			<h3>⊙&nbsp;포틀릿 설정</h3>
+			<h3>포틀릿 설정</h3>
 			<div class="ui-portlet-list" id="portletList"></div>
 		</section>
 		<section class="set-action">
@@ -151,13 +142,13 @@
 								
 								// 프레임 이미지 나오면 변경하자!!
 								var img = document.createElement('img');
-								img.src = 'https://fakeimg.pl/330x240/FFFFFF';
-								img.style.width = '100%';
+								img.src = '/images/admin/theme'+item.themeId+"_frame"+index+".png";
+								
 								div.appendChild(img);
 								li.appendChild(div);
 								ul.appendChild(li);
 							});
-							console.log('start frame', portletSetting.selectedFrame);
+
 							// jquey flipster 적용
  							$(".frameList").flipster({
 								style: 'carousel',
@@ -183,8 +174,8 @@
 							var flipsterBtnPrev = document.getElementsByClassName('flipster__button--prev')[0];
 							var flipsterBtnNext = document.getElementsByClassName('flipster__button--next')[0];
 							if(flipsterBtnPrev !== undefined && flipsterBtnNext !== undefined) {
-								flipsterBtnPrev.style.top = '9%';
-								flipsterBtnNext.style.top = '9%';								
+								//flipsterBtnPrev.style.top = '9%';
+								//flipsterBtnNext.style.top = '9%';								
 							}
 							
 							if(listCnt !== 1) {
@@ -209,7 +200,9 @@
 						if (xhr.status >= 200 && xhr.status < 300) {
 							var portletList = document.getElementById('portletList'); 
 							var list = JSON.parse(xhr.responseText).data.portletList;
+
 							list.forEach(function (item, index) {
+						
 				 				var div = document.createElement('div');
 				 				div.classList.add('ui-portlet');
 				 				// 사용중인 포틀릿
@@ -285,9 +278,9 @@
 				saveBtn.addEventListener('click', function (){
 					var portletList = [];
 					var classList = document.getElementsByClassName('ui-portlet-span');
+					// 반복문 돌면서 데이터 쌓기
 					HTMLCollection.prototype.forEach = Array.prototype.forEach;
-					classList.forEach(function (item, index) {
-						
+ 					classList.forEach(function (item, index) {			
 						var switchBtn = document.getElementById('portletid_' + item.dataset.portletid);
 						if (switchBtn.getAttribute('checked')) {
 							var obj = {
@@ -298,13 +291,45 @@
 							portletList.push(obj);				
 						}
 					});
+ 					
+					// 유저 포틀릿 순서로 재정의
+					var temp = [];
+					for(var i=0; i<portletList.length; i++) {
+						for(var j=i; j<portletList.length; j++) {
+							if(portletList[i].portletOrder*1 > portletList[j].portletOrder*1) {
+								temp = portletList[i];
+								portletList[i] = portletList[j];
+								portletList[j] = temp;
+							}
+						}
+					}
+
+					// var reAssemble = [];
+					// 순서 재정렬 시작
+					var arrIndex = 1;
+					portletList.forEach(function (item, index) {
+						if(item.portletOrder*1 !== 0 ) {
+							item.portletOrder = arrIndex;
+							arrIndex++;
+						}
+					});
+					
+					portletList.forEach(function (item, index) {
+						if(item.portletOrder*1 === 0) {
+							item.portletOrder = arrIndex;
+							arrIndex++;
+						}
+					});
+					// 순서 재정렬 끝
+					console.log('portletList ', portletList);
 					
 					var param = {
 						frameId: portletSetting.selectedFrame,
 						themeId: portletSetting.usedTheme,
 						portletList: portletList,
-					}
-					console.log('param', param.portletList);
+					}					
+					
+					console.log('param', param.portletList);					
 					
 					if(param.portletList.length < 1) {
 						alert('한 개 이상의 포틀릿을 설정해 주세요.');	

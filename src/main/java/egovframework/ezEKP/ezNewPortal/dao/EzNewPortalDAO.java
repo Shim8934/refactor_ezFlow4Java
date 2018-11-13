@@ -250,6 +250,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void updateCompanyDefaultTheme (Map<String, Object> map) {
 		update("ezNewPortal.updateCompanyDefaultTheme", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getBoardPortletInfo (Map<String, Object> map) {
+		return (List<BoardListVO>) list("ezNewPortal.getBoardPortletInfo", map);
+	}
 	/**
 	 * 이효진
 	 */

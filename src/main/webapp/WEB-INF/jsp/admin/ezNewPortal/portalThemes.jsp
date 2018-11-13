@@ -9,28 +9,20 @@
 		<title>portalThemes</title>
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<style type="text/css">
-			.themeThumbnails {width : 350px; height : 200px; border : 3px solid #7d7d7d; margin-top : 15px;}
+			.themeThumbnails {width : 350px; height : 200px; border : 1px solid #cecece; margin-top : 15px;}
 			.themesImgDetails {width : 500px; height : 350px; border : 3px solid #898989;margin:15px; float:left;}
-			#themeList li {margin : 10px; display : inline-block;}
-			.theme {position:relative;background-color : white; width : 375px; height : 270px; text-align : center; border: 2px solid #949292;}
+			#themeList{ padding:0px;}
+			#themeList li {margin : 10px 10px 10px 0px; display : inline-block;}
+			.isDefault{position:absolute;background: rgba(0,0,0,0.3);width: 352px;height: 202px;top: 15px;left: 12px;}
+			.selectTheme {background-color:#edf7ff !important; border:1px solid #2196f3 !important; width : 375px; height : 270px; text-align:center; }
+         	.theme {position:relative;background-color : white; width : 375px; height : 270px; text-align : center; border: 1px solid #cecece; cursor: pointer;}
 			.themeHr {margin-top : 10px;width : 85%;margin-left : 30px;}
 			.themeTitle {margin-top : 9px;}
 			.themeNotUsed {display:none;width:100%; height:87%;background-color:#e1e1e180; z-index:99;position:absolute; right:0; top:0;}
-			.themeName {font-size : 14px;font-weight : bold;}
-			.themeDetails {display : none; float:left; width:98%; border:1px solid black;position : relative;margin-left:10px;}
-			.themeSetting {float : right;margin-right : 27px;cursor:pointer;}
-			.themeSetting img {width : 17px;height : 17px;}
-			.switch {position: absolute;display: inline-block;width: 60px;height: 25px;margin-left:26px; margin-top:-3px;}
-			.switch input {opacity: 0;width: 0;height: 0;}
-			.slider {  position: absolute;  cursor: pointer;  top: 0;  left: 0;  right: 0;  bottom: 0;  background-color: #ccc;  -webkit-transition: .4s;  transition: .4s;}
-			.slider:before {  position: absolute;  content: "";  height: 17px;  width: 18px;  left: 4px;  bottom: 4px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
-			input:checked + .slider {  background-color: #2196F3;}
-			input:focus + .slider { box-shadow: 0 0 1px #2196F3;}
-			input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transform: translateX(26px);transform: translateX(26px);}
-			/* Rounded sliders */
-			.slider.round {border-radius: 15px;}
-			.slider.round:before {border-radius: 50%;}
-			
+			.themeName {margin-left : 40px;font-size : 14px;font-weight : bold;}
+			.themeDetails {display : none; float:left; width:98%; position : relative;margin-left:0px; padding:0px;}
+			.themeSetting {float : right;margin-right : 27px; margin-top:3px; cursor:pointer;}
+			.themeSetting img {width : 13px;height : 13px;}
 			.hideDetails {display : none;}
 			.showDetails {display : block;}
 			.themeInfo {margin : 15px;}
@@ -40,8 +32,7 @@
 			.close {margin-top : 6px;}
 			.btnpositionJsp a {margin-left : 5px;}
 			.themeDefault {font-size : 15px; font-weight:bold; margin-top : 20px;}
-			.themeContent{margin-top:20px; overflow-y:auto; width:98%; height : 60px; display:inline-block; border : 1px solid #928686; padding : 10px;}
-
+			
 			.frameInfo {margin : 15px;}
 			.frameInfo p {font-size : 15px; font-weight : bold;}
 			.frameList {clear : none !important; width:100%; margin-bottom:20px;}
@@ -49,9 +40,6 @@
 			.frameList tr:first-child {height : 78px;}
 			.frameList td {text-align : center; border:1px solid #e1e1e1;}
 			.frameList th {width:61px;}
-			
-			.defaultTheme {background-color:rgb(182, 226, 255);}
-			.setDefault {float : left; margin-left:18px; cursor : pointer;}
 		</style>
 	</head>
 	
@@ -74,6 +62,11 @@
 			getThemes();
 		});
 		
+		function selectTheme(val01) {
+			$(".selectTheme").removeClass("selectTheme");
+			$("#"+val01.id).addClass("selectTheme");
+		}
+		
 		var openThemeDetail = function (event) {
 			var themeId = event.data.themeId;
 			getThemeDetail(themeId);
@@ -82,11 +75,8 @@
 			
 			if (nowShowDetails == "themeDetails" + themeId) { 
 				$(".themeDetails").slideUp();
-				$('.theme').css('border', '2px solid #949292');
 			} else {
 				$(".themeDetails").hide();
-				$('.theme').css('border', '2px solid #949292');
-				$('#theme' + this.id).css('border', '2px solid #0088CC');				
 			}
 			
 			$(".themeDetails").attr("class", "themeDetails hideDetails");
@@ -152,11 +142,10 @@
 					console.log(result);
 					themes.forEach(function (item, index) {
 						themesHTML += "<li>";
-						themesHTML += "<div class='theme' id='theme" + item.themeId + "'>";
+						themesHTML += "<div class='theme' id='theme" + item.themeId + "' onclick='selectTheme(this)'>";
 						themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
 						themesHTML += "<div class='themeNotUsed'>&nbsp;</div>";
 						themesHTML += "</div><div>";
-						themesHTML += "<hr class='themeHr'/>";
 						themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
 						themesHTML += "<span class='setDefault'><img src='/images/arr_down.gif'/></span>"
 						themesHTML += "<span class='themeName'>" + item.themeName + "</span>";
@@ -165,6 +154,20 @@
 						themesHTML += "</li>";
 						
 						themesHTML += "<div class='themeDetails' id='themeDetails" + item.themeId + "'>";
+						themesHTML += "<div class='admin_thema'><dl class='admin_menuDL'><dt class='admin_menuTit'>Theme1</dt><dd class='admin_menuX'></dd></dl>";
+						themesHTML += "<div class='admin_menu_content'>";
+						themesHTML += "<table class='themaTable' border='0' cellpadding='0' cellspacing='0' width='100%'>";
+						themesHTML += "<tr><th class='menuIconTH'>테마 활성화</th>";
+						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td>";
+						themesHTML += "<th class='menuIconTH'>기본 테마 설정</th>";
+						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
+						themesHTML += "<tr><th class='menuIconTH'>테마설명</th><td colspan='4' class='menuIconTD'><input type='text' class='admin_input themeContent'></td></tr>";						
+						themesHTML += "</table>";
+						themesHTML += "<table class='themaTable frameList' border='0' cellpadding='0' cellspacing='0' width='100%' style='margin:20px 0px 0px 0px;'></table>";
+						themesHTML += "<div class='bottomBtn'><a class='btnA'>저장</a><a class='btnA'>미리 보기</a></div>";
+						themesHTML += "</div></div></div>";
+						
+						/* themesHTML += "<div class='themeDetails' id='themeDetails" + item.themeId + "'>";
 						themesHTML += "<div class='themeInfo'>";
 						themesHTML += "<div class='themeActive'><div>[테마 활성화] </div><label class='switch'><input type='checkbox' name='usedTheme'><span class='slider round'></span></label></div>";
 						themesHTML += "<div class='btnpositionJsp'><a class='imgbtn previewBtn'><span>미리보기</span></a><a class='imgbtn updateThemeBtn'><span>저장</span></a><div id='close' class='close'><ul><li><span></li></ul></div></div>";
@@ -175,7 +178,7 @@
 						themesHTML += "<p>[프레임 설정]</p>";
 						themesHTML += "<table class='frameList'></table>";
 						themesHTML += "</div>";
-						themesHTML += "</div>";
+						themesHTML += "</div>"; */
 					});
 					
 					document.getElementById("themeList").innerHTML = themesHTML;
@@ -195,6 +198,7 @@
 						
 						if (item.themeDefault) {
 							$("#theme" + item.themeId).addClass("defaultTheme");
+							$("#theme" + item.themeId).append("<div class='isDefault'><img src='/images/admin/themeDefault.png' style='margin-top:70px' /></div>");
 							$("#themeDetails" + item.themeId).find("input[name='defaultTheme']").prop("checked", true);
 						}
 					});
@@ -246,33 +250,33 @@
 					$("#themeDetails" + theme.themeId).find(".themeContent").text(theme.themeContent);
 					
 					var frameHTML = "";
-					frameHTML += "<tr class='frameImg'>";
-					frameHTML += "<th></th>";
+					frameHTML += "<tr>";
+					frameHTML += "<th class='menuIconTH'></th>";
 					
 					frameList.forEach(function (item, index) {
-						frameHTML += "<td>그림" + (index + 1) + "</td>"; //사진 url 필요
+						frameHTML += "<td class='menuIconTD_img'><img src='/images/admin/theme"+theme.themeId+"_frame"+index+".png' /></td>"; //사진 url 필요
 					});
 					
 					frameHTML += "</tr>";
-					frameHTML += "<tr><th>기본 프레임 설정</th>";
+					frameHTML += "<tr><th class='menuIconTH'>기본 프레임 설정</th>";
 					
 					frameList.forEach(function (item, index) {
 						if (item.frameDefault) {
-							frameHTML += "<td><input type='radio' value='F" + item.frameId + "' name='frameDefault' checked></td>";
+							frameHTML += "<td class='menuIconTD_input'><input type='radio' value='F" + item.frameId + "' name='frameDefault' checked></td>";
 						} else {
-							frameHTML += "<td><input type='radio' value='F" + item.frameId + "' name='frameDefault'></td>";
+							frameHTML += "<td class='menuIconTD_input'><input type='radio' value='F" + item.frameId + "' name='frameDefault'></td>";
 						}
 						
 					});
 
 					frameHTML += "</tr>";
-					frameHTML += "<tr><th>사용자 프레임 설정</th>";
+					frameHTML += "<tr><th class='menuIconTH'>사용자 프레임 설정</th>";
 					
 					frameList.forEach(function (item, index) {
 						if (item.frameUsed) {
-							frameHTML += "<td><input value='frameUsed" + item.frameId + "' type='checkbox' name='frameUsed' checked></td>";
+							frameHTML += "<td class='menuIconTD_input'><input value='frameUsed" + item.frameId + "' type='checkbox' name='frameUsed' checked></td>";
 						} else {
-							frameHTML += "<td><input value='frameUsed" + item.frameId + "' type='checkbox' name='frameUsed'></td>";
+							frameHTML += "<td class='menuIconTD_input'><input value='frameUsed" + item.frameId + "' type='checkbox' name='frameUsed'></td>";
 						}
 						
 					});

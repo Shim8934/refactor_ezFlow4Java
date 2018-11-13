@@ -585,12 +585,12 @@ function getBirthdayEmployeesList() {
 				$("#birthcont").css("display", "none");
 			}
 			// 프로젝트 종료 시 주석 해제
-/*			timer = window.setInterval(function() {
+			timer = window.setInterval(function() {
 				if (birthdayTotalCount > 6) {
 					birthdayCurPage++;
 					getBirthdayEmployeesList();
 				}
-			}, 5000);*/
+			}, 5000);
 		},
 		error : function() {
 			alert(messages.strLang2);
