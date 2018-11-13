@@ -471,6 +471,11 @@
 				return;
 			}
 			
+			if (menuAuths.length == 0 || menuAuths == null) {
+				alert("메뉴 접근 권한을 설정해 주세요.");
+				return;
+			}
+			
 			//아이콘
 			var iconUrl = $(".menuIcon").find("span").attr("class");
 			
@@ -673,10 +678,10 @@
 				return;
 			}
 			
-			/* if (menuAuths.length == 0 || menuAuths == null) {
+			if (menuAuths.length == 0 || menuAuths == null) {
 				alert("메뉴 접근 권한을 설정해 주세요.");
 				return;
-			} */
+			}
 			
 			var companiesObj = document.getElementById("ListCompany");
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
