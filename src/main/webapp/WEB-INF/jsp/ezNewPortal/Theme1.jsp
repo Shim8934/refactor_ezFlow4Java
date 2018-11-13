@@ -156,7 +156,7 @@
 			</section>
 		</div>
 		<aside id="quickSide">	
-			<p class="linkBtn_open" id="linkBtn_open"><img src="/images/ezNewPortal/linkBtn_open.png"></p>
+			<p class="linkBtn_open" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>
 			<div class="aside_quick">
 				<p class="quickmenu_title">Quick</p>
 				<ul class="quickmenu">
@@ -450,7 +450,7 @@
 		$("#AprSign").on("click", {"menu" : "ApprG"}, quickMenuOpen);
 		
 		//퀵메뉴 on/off 버튼
-		$("#linkBtn_open").on('click', viewQuick);
+		$("#quicklinkBtn").on('click', viewQuick);
 		//퀵메뉴 이동(오른쪽)
 		$("#quickMailwrite").on('click', {'menu' : 'mail'}, quickMenuOpenRight);
 		$("#quickApprovalwrite").on('click', {'menu' : 'appr'}, quickMenuOpenRight);
