@@ -48,6 +48,11 @@
 			테마관리
 			<select class="companySelect" id="ListCompany"></select>
 		</h1>
+		<div id="mainmenu">
+			<ul style="margin-top: 15px;">
+				<li id="setDefaultTheme"><span>기본 테마 설정</span></li>
+			</ul>
+		</div>
 		<ul id="themeList" style="margin-top:30px">
 		</ul>
 	</body>
@@ -60,6 +65,8 @@
 		$(function() {
 			getCompanies();
 			getThemes();
+			
+			$("#setDefaultTheme").on("click", updateDefaultTheme);
 		});
 		
 		function selectTheme(val01) {
@@ -71,24 +78,6 @@
 			var themeId = event.data.themeId;
 			getThemeDetail(themeId);
 			
-			var nowShowDetails = $(".showDetails").attr("id");
-			
-			if (nowShowDetails == "themeDetails" + themeId) { 
-				$(".themeDetails").slideUp();
-			} else {
-				$(".themeDetails").hide();
-			}
-			
-			$(".themeDetails").attr("class", "themeDetails hideDetails");
-			if (nowShowDetails != "themeDetails" + themeId) {
-				if (nowShowDetails == undefined) {
-					$("#themeDetails" + themeId).slideDown();
-				} else {
-					$("#themeDetails" + themeId).show();
-				}
-				
-				$("#themeDetails" + themeId).attr("class", "themeDetails showDetails");
-			}
 		}
 		
 		var getCompanies = function() {
@@ -126,6 +115,8 @@
 		}
 		
 		var getThemes = function () {
+			$(".themeDetails").remove(); 
+			
 			var companiesObj = document.getElementById("ListCompany");
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			
@@ -138,8 +129,7 @@
 					var result = JSON.parse(request.responseText);
 					var themes = result.list;
 					var themesHTML = "";
-					console.log(themes);
-					console.log(result);
+					
 					themes.forEach(function (item, index) {
 						themesHTML += "<li>";
 						themesHTML += "<div class='theme' id='theme" + item.themeId + "' onclick='selectTheme(this)'>";
@@ -147,25 +137,10 @@
 						themesHTML += "<div class='themeNotUsed'>&nbsp;</div>";
 						themesHTML += "</div><div>";
 						themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
-						themesHTML += "<span class='setDefault'><img src='/images/arr_down.gif'/></span>"
 						themesHTML += "<span class='themeName'>" + item.themeName + "</span>";
 						themesHTML += "<span class='themeSetting' id='"+item.themeId+"'><img src='/images/kr/left/icon_setup.gif'/></span>";
 						themesHTML += "</div>";
 						themesHTML += "</li>";
-						
-						themesHTML += "<div class='themeDetails' id='themeDetails" + item.themeId + "'>";
-						themesHTML += "<div class='admin_thema'><dl class='admin_menuDL'><dt class='admin_menuTit'>Theme1</dt><dd class='admin_menuX'></dd></dl>";
-						themesHTML += "<div class='admin_menu_content'>";
-						themesHTML += "<table class='themaTable' border='0' cellpadding='0' cellspacing='0' width='100%'>";
-						themesHTML += "<tr><th class='menuIconTH'>테마 활성화</th>";
-						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td>";
-						themesHTML += "<th class='menuIconTH'>기본 테마 설정</th>";
-						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
-						themesHTML += "<tr><th class='menuIconTH'>테마설명</th><td colspan='4' class='menuIconTD'><input type='text' class='admin_input themeContent'></td></tr>";						
-						themesHTML += "</table>";
-						themesHTML += "<table class='themaTable frameList' border='0' cellpadding='0' cellspacing='0' width='100%' style='margin:20px 0px 0px 0px;'></table>";
-						themesHTML += "<div class='bottomBtn'><a class='btnA'>저장</a><a class='btnA'>미리 보기</a></div>";
-						themesHTML += "</div></div></div>";
 						
 						/* themesHTML += "<div class='themeDetails' id='themeDetails" + item.themeId + "'>";
 						themesHTML += "<div class='themeInfo'>";
@@ -181,25 +156,19 @@
 						themesHTML += "</div>"; */
 					});
 					
-					document.getElementById("themeList").innerHTML = themesHTML;
+					$("#themeList").html(themesHTML);
 					
 					//event setting
 					themes.forEach(function (item, index) {
 						$("#themeTitle" + item.themeId).find(".themeSetting").on("click", {"themeId" : item.themeId}, openThemeDetail);
-						$("#themeDetails" + item.themeId).find(".updateThemeBtn").on("click", {"themeId" : item.themeId}, updateTheme);
-						$("#themeDetails" + item.themeId).find(".previewBtn").on("click", {"themeId" : item.themeId}, openThemePreview);
-						$("#theme" + item.themeId).find(".setDefault").on("click", {"themeId" : item.themeId}, updateDefaultTheme);
 						
 						if (!item.themeUsed) {
 							$("#theme" + item.themeId).find(".themeNotUsed").css("display", "");
-						} else {
-							$("#themeDetails" + item.themeId).find("input[name='usedTheme']").prop("checked", true);
 						}
 						
 						if (item.themeDefault) {
 							$("#theme" + item.themeId).addClass("defaultTheme");
 							$("#theme" + item.themeId).append("<div class='isDefault'><img src='/images/admin/themeDefault.png' style='margin-top:70px' /></div>");
-							$("#themeDetails" + item.themeId).find("input[name='defaultTheme']").prop("checked", true);
 						}
 					});
 					
@@ -213,10 +182,6 @@
 						}
 					});
 					
-					$(".close").on("click", function(){
-						$(".themeDetails").slideUp();
-						$(".themeDetails").attr("class", "themeDetails hideDetails");
-					});
 				} else {
 					// We reached our target server, but it returned an error
 				}
@@ -247,7 +212,66 @@
 					var theme = result.themeInfo;
 					var frameList = result.frameInfos;
 					
-					$("#themeDetails" + theme.themeId).find(".themeContent").text(theme.themeContent);
+					var themesHTML = "<div id='themeDetails" + theme.themeId + "' class='themeDetails'>";
+					themesHTML += "<div class='admin_thema'><dl class='admin_menuDL'><dt class='admin_menuTit'>" + theme.themeName + "</dt><dd class='admin_menuX'></dd></dl>";
+					themesHTML += "<div class='admin_menu_content'>";
+					themesHTML += "<table class='themaTable' border='0' cellpadding='0' cellspacing='0' width='100%'>";
+					themesHTML += "<tr><th class='menuIconTH'>테마 활성화</th>";
+					
+					if (theme.themeUsed) {
+						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='usedTheme' checked><span class='slider round'></span></label></td>";
+					} else {
+						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='usedTheme'><span class='slider round'></span></label></td>";
+					}
+					
+					themesHTML += "<th class='menuIconTH'>기본 테마 설정</th>";
+					
+					if (theme.themeDefault) {
+						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='defaultTheme' checked><span class='slider round'></span></label></td></tr>";
+					} else {
+						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='defaultTheme'><span class='slider round'></span></label></td></tr>";
+					}
+					
+					themesHTML += "<tr><th class='menuIconTH'>테마설명</th><td colspan='4' class='menuIconTD'><input type='text' class='admin_input themeContent'></td></tr>";						
+					themesHTML += "</table>";
+					themesHTML += "<table class='themaTable frameList' border='0' cellpadding='0' cellspacing='0' width='100%' style='margin:20px 0px 0px 0px;'></table>";
+					themesHTML += "<div class='bottomBtn'><a class='btnA updateThemeBtn'>저장</a><a class='btnA previewBtn' >미리 보기</a></div>";
+					themesHTML += "</div></div></div>";
+					
+
+					var nowShowDetails = $(".themeDetails").attr("id");
+					
+					if (nowShowDetails == "themeDetails" + themeId) { 
+						$(".themeDetails").slideUp(function(){
+							$(".themeDetails").remove();
+						});
+					} else {
+						$(".themeDetails").slideUp(function(){
+							$(".themeDetails").not("#themeDetails" + theme.themeId).remove();
+						});
+					}
+					
+					if (nowShowDetails != "themeDetails" + themeId) {
+						if (nowShowDetails == undefined) {
+							$("#themeList").after(themesHTML);
+							
+							$(".themeDetails").slideDown();
+						} else {
+							$("#themeList").after(themesHTML);
+							
+							$(".themeDetails").slideDown();
+						}
+					}
+					
+					$("#themeDetails" + theme.themeId).find(".themeContent").val(theme.themeContent);
+
+					$("#themeDetails" + theme.themeId).find(".updateThemeBtn").on("click", {"themeId" : theme.themeId}, updateTheme);
+					$("#themeDetails" + theme.themeId).find(".previewBtn").on("click", {"themeId" : theme.themeId}, openThemePreview);
+					
+					$(".close").on("click", function(){
+						$(".themeDetails").slideUp();
+						$(".themeDetails").attr("class", "themeDetails hideDetails");
+					});
 					
 					var frameHTML = "";
 					frameHTML += "<tr>";
@@ -308,15 +332,15 @@
 			if (result) {
 				var themeId = event.data.themeId;
 				//테마 사용여부, 테마  디폴트
-				var themeUsed = $("#themeDetails" + themeId).find(".switch").find("input").prop("checked");
-				var themeDefault = $("#themeDetails" + themeId).find(".themeDefault").find("input").prop("checked");
+				var themeUsed = $("#themeDetails" + themeId).find("input[name='usedTheme']").prop("checked");
+				var themeDefault = $("#themeDetails" + themeId).find("input[name='defaultTheme']").prop("checked");
 				var themeInfo = {"themeUsed" : themeUsed, "themeDefault" : themeDefault, "themeId" : themeId};
 				
 				//현재 전체적으로 기본테마가 있는지 확인
-				if (!$("input[name='themeDefault']").is(":checked")) {
+				/* if (!$("input[name='defaultTheme']").is(":checked")) {
 					alert("설정된 기본 테마가 없습니다.");
 					return;
-				}
+				} */
 				
 				//프레임 사용여부
 				var frameList = $("#themeDetails" + themeId).find("input:checkbox[name=frameUsed]");
@@ -347,6 +371,7 @@
 				var request = new XMLHttpRequest();
 				request.open('POST', '/admin/ezNewPortal/updateThemeInfo.do', true);
 				request.setRequestHeader('Content-Type', 'application/json');
+				
 				request.onload = function() {
 					getThemes();
 				}
@@ -389,18 +414,25 @@
 		}
 		
 		//기본 테마 선택 (기본 테마만 선택)
-		var updateDefaultTheme = function(event) {
-			var themeId = event.data.themeId;
+		var updateDefaultTheme = function() {
 	 		var companiesObj = document.getElementById("ListCompany");
 			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
+			
+			var themeId = $(".selectTheme").attr("id");
+			
+			if (themeId == undefined) {
+				alert("테마를 선택해주세요.");
+				return;
+			} else {
+				themeId = themeId.substring(5);
+			}
+			
 			
 			var request = new XMLHttpRequest();
 			request.open('POST', '/admin/ezNewPortal/updateCompanyDefaultTheme.do', true);
 			request.setRequestHeader('Content-Type', 'application/json');
 			request.onload = function() {
-				$(".theme").removeClass("defaultTheme");
-				$("#theme" + themeId).addClass("defaultTheme");
-				$("#themeDetails" + themeId).find(".themeDefault").find("input").prop("checked", true);
+				getThemes();
 			}
 			
 			var data = JSON.stringify({
