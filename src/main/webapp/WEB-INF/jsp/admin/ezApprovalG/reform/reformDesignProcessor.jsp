@@ -531,11 +531,14 @@
 				
 				// kukudocsEditor.setKeyEvent(onKeyEvent);
 				// kukudocsEditor.setMouseEvent(onMouseEvent);
-				onFormDocumentLoadHandlerForKukudocs();
 				
-				webEditorDocument.addEventListener("keyup", keyUp);
-				webEditorDocument.addEventListener("mousedown", mouseDown);
-				webEditorDocument.addEventListener("mouseup", mouseUp);
+				setTimeout(function() {
+					onFormDocumentLoadHandlerForKukudocs();
+					
+					webEditorDocument.addEventListener("keyup", keyUp);
+					webEditorDocument.addEventListener("mousedown", mouseDown);
+					webEditorDocument.addEventListener("mouseup", mouseUp);
+				}, 1000);
 			}
 
 			function keyUp(event) {
