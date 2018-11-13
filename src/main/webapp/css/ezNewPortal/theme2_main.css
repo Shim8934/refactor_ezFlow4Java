@@ -630,6 +630,42 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .collaborate_list .listtype_txt span.name{float:right; margin:0px 0px 0px 10px;}
 /* //20181002 collaborate */
 
+/* count */
+
+.writebanner_leftContents{float:left; width:145px; margin:0px; padding:0px; background:#ffffff;}
+.writebanner_leftContents dl{position:relative; width:145px; height:calc(50% - 22px); margin:0px; padding:19px 0px 20px 0px; text-align:center; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; cursor:pointer;}
+.writebanner_leftContents dl.mail{background:#5f5adc;}
+.writebanner_leftContents dl.work{background:#a1a1a1;}
+.writebanner_leftContents dl dt{margin:0px 0px 0px 0px; padding:0px;}
+.writebanner_leftContents dl dt.icon{width:58px; height:58px; margin:0px auto 10px; background:#ffffff; border-radius:58px;-webkit-border-radius:58px;-moz-border-radius:58px;}
+.writebanner_leftContents dl dt span{display:block; width:30px; height:30px; background:url(/images/ezNewPortal/topmenu_icon_v1.001.png) #ffffff left top no-repeat;}
+.writebanner_leftContents dl dt span.icon_mail{display:inline-block; verticla-align:top; margin:17px 0px 0px 8px; background-position:0px -60px;}
+.writebanner_leftContents dl dt span.icon_approval{display:inline-block; verticla-align:top; margin:17px 0px 0px 8px; background-position:-62px -60px;}
+.writebanner_leftContents dl dt.txt{color:#ffffff; font-size:14px;}
+.writebanner_leftContents dl dd{position:absolute; top:22px; left:82px; margin:0px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(0,0,0,0.8); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
+.writebanner_rightContents{float:left; width:calc(100% - 145px); background:#ffffff;}
+.writebannerTop{overflow:hidden; list-style:none; margin:0px; padding:19px 0px; border-bottom:1px solid #ececec;}
+.writebannerTop li{float:left; width:33.3%; cursor:pointer;}
+.writebannerBottom{overflow:hidden; list-style:none; margin:0px; padding:20px 0px;}
+.writebannerBottom li{float:left; width:33.3%; cursor:pointer;}
+.writebannerIcon{position:relative; margin:0px; padding:0px; text-align:center;}
+.writebannerIcon .iconCircle{width:58px; height:58px; margin:0px auto; padding:0px; background:#f8f8f8; border-radius:58px;-webkit-border-radius:58px;-moz-border-radius:58px;}
+.writebannerIcon .iconcSchedule{background:#0abeb8;}
+.writebannerIcon .iconcVote{background:#f7cc04;}
+.writebannerIcon .iconcBoard{background:#fe7f77;}
+.writebannerIcon .iconcToward{background:#6ea4e6;}
+.writebannerIcon .iconcReturn{background:#c86ee6;}
+.writebannerIcon .iconcReceive{background:#e6986e;}
+.writebannerIcon .iconCircle .iconCommon{display:inline-block; vertical-align:middle; width:25px; height:25px; margin:16px auto; background:url(/images/ezNewPortal/theme3Img/writebanner_icon_v1.001.png) left top no-repeat; background-position:2px 2px;}
+.writebannerIcon .iconCircle .iconSchedule{background-position:-24px 1px;}
+.writebannerIcon .iconCircle .iconVote{background-position:-48px 1px;}
+.writebannerIcon .iconCircle .iconBoard{background-position:-75px 2px;}
+.writebannerIcon .iconCircle .iconToward{background-position:2px -24px;}
+.writebannerIcon .iconCircle .iconReturn{background-position:-23px -23px;}
+.writebannerIcon .iconCircle .iconReceive{background-position:-50px -24px;}
+.writebannerIcon .iconText{margin:10px 0px 0px 0px; padding:0px; color:#333; font-size:14px;}
+.writebannerIcon .count{position:absolute; top:-2px; left:50%; margin:0px 0px 0px 12px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(0,0,0,0.8); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
+.writebannerIcon .countZero{background:rgba(0,0,0,0.2);}
 /* 날씨 포틀릿 여기서부터  하단에 추가해주시면 됩니다. */
 /* .box_shadow{overflow:hidden; height:250px; margin:20px 0px 0px 16px; padding0px; background:#fff; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20); font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} */
 .portlet_title{overflow:hidden; height:46px; margin:0px; padding:0px; line-height:44px;  border-bottom:1px solid #e7e7e7; box-sizing:border-box;}

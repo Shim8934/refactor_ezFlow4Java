@@ -524,6 +524,23 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 
 	public void setUserCityCode(Map<String, Object> map) {
 		update("ezNewPortal.setUserCityCode", map);
-		
+	}
+	
+	//권한 체크
+	public MenuAuthVO getCheckUserAuth(Map<String, Object> map) {
+		return (MenuAuthVO) select("ezNewPortal.getCheckUserAuth", map);
+	}
+	
+	public MenuAuthVO getCheckDeptAuth(Map<String, Object> map) {
+		return (MenuAuthVO) select("ezNewPortal.getCheckDeptAuth", map);
+	}
+	
+	public MenuAuthVO getCheckcomAuth(Map<String, Object> map) {
+		return (MenuAuthVO) select("ezNewPortal.getCheckcomAuth", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MenuInfoVO> getAllCompanyMenus(Map<String, Object> map) throws Exception {
+		return (List<MenuInfoVO>) list("ezNewPortal.getAllCompanyMenus", map);
 	}
 }
