@@ -19,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,6 +102,8 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 							cookie.setMaxAge(0);
 							cookie.setPath("/");
 							response.addCookie(cookie);
+							// 2018.10.22 이석화 추가 - 세션 제거 
+							request.getSession().invalidate();
 						}
 					}
 				}

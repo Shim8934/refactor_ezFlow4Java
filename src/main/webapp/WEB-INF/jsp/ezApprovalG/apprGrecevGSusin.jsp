@@ -1480,6 +1480,9 @@
 		            catch (e) {
 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
 		            }
+		        } else if (ret != undefined && ret[0] == "DUPL") {
+		        	window.returnValue = "CLOSE";
+	    			window.close();
 		        }
 		    }
 		    
@@ -1491,22 +1494,24 @@
 		    function checkAprState() {
 		    	var result = "";
 		    	
-		    	$.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/ezApprovalG/checkAprState.do",
-		    		data : {
-		    			docID : pDocID,
-		    			docState : pDocState,
-		    			userID : '',
-		    			aprMemberSN : wAprMemberSN,
-		    			orgCompanyID : orgCompanyID
-		    		},
-		    		success : function(text) {
-		    			result = text;
-		    		}
-		    	});
+		    	if (approvalFlag == "S") {
+			    	$.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/checkAprState.do",
+			    		data : {
+			    			docID : pDocID,
+			    			docState : pDocState,
+			    			userID : '',
+			    			aprMemberSN : wAprMemberSN,
+			    			orgCompanyID : orgCompanyID
+			    		},
+			    		success : function(text) {
+			    			result = text;
+			    		}
+			    	});
+		    	}
 		    	
 		    	return result == "FALSE" ? true : false;
 		    }
