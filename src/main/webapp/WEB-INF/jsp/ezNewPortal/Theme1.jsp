@@ -386,7 +386,7 @@
 				}(portletId, portletUrl, portletName));
 			}
 		}
-		
+
 		var useQuestion = "<c:out value='${useQuestion}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";
 		var useMail = "<c:out value='${useMail}'/>";
@@ -496,14 +496,47 @@
 		if (frameSetId == "Frame3" || frameSetId == "Frame4") {
 			var media1921 = window.matchMedia("only screen and (min-width: 1921px)");
 			var media1686 = window.matchMedia("only screen and (max-width :1920px) and (min-width :1686px)");
-			var media1280 = window.matchMedia("only screen and (max-width :1685px) and (min-width :1280px)");
+			var media1685 = window.matchMedia("only screen and (max-width :1685px) and (min-width :1590px)");
+			var media1589 = window.matchMedia("only screen and (max-width :1589px) and (min-width :1280px)");
+			var media1279 = window.matchMedia("only screen and (max-width :1279px)");
 			
 			if (media1921.matches) {
-				$(".portlet").css("width", "483px");
+				$(".portlet").css("width", "48%");
+				$(".info_left").css("display", "inline-block");
+				$(".info_left").css("float", "left");
+				$(".info_left").css("width", "189px");
+				$(".info_left").css("margin-right", "5px");
+				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
+				$(".info_right").css("width", "calc(100% - 194px)");
+				$(".info_right").css("background", "#ffffff");
 			} else if (media1686.matches) {
 				$(".portlet").css("width", "48%");
-			} else if (media1280.matches) {
+				$(".info_left").css("display", "inline-block");
+				$(".info_left").css("float", "left");
+				$(".info_left").css("width", "189px");
+				$(".info_left").css("margin-right", "5px");
+				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
+				$(".info_right").css("width", "calc(100% - 194px)");
+				$(".info_right").css("background", "#ffffff");
+			} else if (media1685.matches) {
 				$(".portlet").css("width", "48%");
+				$(".info_left").css("display", "inline-block");
+				$(".info_left").css("float", "left");
+				$(".info_left").css("width", "189px");
+				$(".info_left").css("margin-right", "5px");
+				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
+				$(".info_right").css("width", "calc(100% - 194px)");
+				$(".info_right").css("background", "#ffffff");
+			} else if (media1589.matches) {
+				$(".portlet").css("width", "48%");
+				$(".info_left").css("display", "none");
+				$(".info_right").css("width", "100%");
+				$(".info_right").css("margin-left", "0px !important");
+			} else if (media1279.matches) {
+				$(".portlet").css("width", "410px");
+				$(".box_shadow.info_left").css("display", "none");
+				$(".box_shadow.info_right").css("width", "100%");
+				$(".box_shadow.info_right").css("margin-left", "0px !important");
 			}
 		}
 	}
