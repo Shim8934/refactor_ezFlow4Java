@@ -3472,6 +3472,11 @@ function showPreview() {
 		
 		var messageFrame = parent.document.getElementById("message");
 		mainHtml = messageFrame.contentWindow.GetEditorContent();
+	} else if (isKukudocs) {
+		restoreAfterHTMLSourceEditInNamo();
+		
+		var messageFrame = parent.document.getElementById("message");
+		mainHtml = messageFrame.contentWindow.GetEditorContent();
 	} else {
 		mainHtml = parent.pzFormProc.editor.DOM.body.innerHTML;
 	}
