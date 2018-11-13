@@ -34,33 +34,13 @@
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
 	.box_shadow {width:100%; margin:0px;}
-	.info_left{float:left; width:160px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
-	.info_right{width:calc(100% - 167px); background:#ffffff;}
+	.info_left{float:left; width:103px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
+	.info_right{width:calc(100% - 111px); background:#ffffff;}
 	.portlet {height:250px; margin:20px 0px 0px 16px;background-color:#ffffff;}
 	.infoImg img {width:60px; height:60px;}
 	.info .infoImg {margin:0px 24px 0px 0px;}
 	.attitudePtl {border:none;}
 	
-	@media only screen and (max-width :1730px) and (min-width :1280px) {
-		.info_left {width:180px;}
-		.info_right {width : calc(100% - 188px);}
-		.info .infoImg {margin:0px 24px 50px 0px;}
-	}
-	/* main media query */
-	@media only screen and (min-width :1921px) {
-		.info_left {width:180px;}
-		.info_right {width : calc(100% - 188px);}
-		.info .infoImg {margin:0px 24px 50px 0px;}
-	}
-
-	@media only screen and (max-width :1920px) and (min-width :1686px) { 
-		.info_left {width:103px;}
-		.info_right {width : calc(100% - 111px);}
-	}
-
-	@media only screen and (max-width : 1279px) {
-		.portlet {width:410px; float:left;}
-	}
 </style>
 </head>
 <body class="mainbg">
