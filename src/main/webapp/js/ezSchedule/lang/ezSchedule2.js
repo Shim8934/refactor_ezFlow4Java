@@ -178,3 +178,5 @@ var strLangKHJ4 = "시작일을 종료일보다 빠르게 지정하세요.";
 var strLangKHJ5 = "ICS파일을 가져오기를 완료했습니다.";
 var strLangKHJ6 = "ICS파일 형식에 맞지 않습니다.";
 var strLangKHJ7 = "ICS파일을 저장하는중 에러발생";
+//2018-11-12
+var strLangKHJ8 = "No right.";

@@ -1682,6 +1682,7 @@
 		            message.Set_EditorInputBodyHTML(modifiOrgBody);
 		            message.Set_HtmlDocument();
 		            noFieldsAvailable = true;
+			        btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t44'/>";
 		        }
 		        message.SetEditable(false);
 		        chkBtnConfirm("2");

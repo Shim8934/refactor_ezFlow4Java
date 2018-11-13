@@ -215,7 +215,7 @@
 	                else if (pGubun == "READ" && ReadDate != "UNREAD") {
 	                    GetListInfo_ContentObject.appendChild(TR);
 	                }
-	                else if (pGubun == "UNREAD" && ReadDate == "UNREAD" && CancelStatus == "") {
+	                else if (pGubun == "UNREAD" && ReadDate == "UNREAD") {
 	                    GetListInfo_ContentObject.appendChild(TR);
 	                }
 	                else if (pGubun == "CANCEL" && CancelStatus != "") {
