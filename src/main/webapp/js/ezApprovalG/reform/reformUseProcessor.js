@@ -1856,7 +1856,5 @@ reformUseProc.resizeFrame = function() {
 	
 	var scrollHeight = iframeContent.contentWindow.document.body.scrollHeight;
 	
-	if (parentElement.scrollHeight < scrollHeight) {
-		iframeContent.style.height = (scrollHeight + 20) + "px";
-	}
+	iframeContent.style.height = scrollHeight + "px";
 };

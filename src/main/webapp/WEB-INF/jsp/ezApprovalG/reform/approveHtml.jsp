@@ -19,21 +19,44 @@
 <!-- time picker-->
 <link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 <script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
-<c:if test="${!empty reformFunctionUrl}">
-	<script type="text/javascript" src="${util.addVer(reformFunctionUrl)}"></script>
-</c:if>
 <script type="text/javascript">
+	var reformEditorContent = "";
+	
 	window.onload = function() {
 		document.body.innerHTML = window.parent.bodyInnerHtml;
 		parent.BodyTagsEnabled(document.body);
+		
+		var reformEditorWrapper = document.getElementById("reform-editor");
+		
+		if (reformEditorWrapper) {
+			var editorHeight = reformEditorWrapper.scrollHeight;
+			
+			reformEditorContent = reformEditorWrapper.innerHTML;
+			reformEditorWrapper.innerHTML = "<iframe id='iframe_content_reform' name='iframe_content_reform' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + editorHeight + "px;' scrolling='no' src='/ezEditor/selectEditor.do?height=" + editorHeight
+					+ "&id=reformeditor' frameborder='0'></iframe>";
+		}
 		
 		reformUseProc.onLoadHandler();
 	}
 
 	function editComplete() {
+		// reform inner editor
+		if (iframe_content_reform) {
+			// set editor content to innerHTML
+			document.getElementById("reform-editor").innerHTML = iframe_content_reform.GetEditorContent();
+		}
+		
 		reformUseProc.onUnloadHandler();
 	}
+
+	// inner editor callback
+	function Editor_Complete() {
+		iframe_content_reform.SetEditorContent(reformEditorContent);
+	}
 </script>
+<c:if test="${!empty reformFunctionUrl}">
+	<script type="text/javascript" src="${util.addVer(reformFunctionUrl)}"></script>
+</c:if>
 </head>
 <body></body>
 </html>

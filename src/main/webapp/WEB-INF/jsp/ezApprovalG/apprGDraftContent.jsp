@@ -688,6 +688,14 @@
 	            			datepickerDivElement.parentNode.removeChild(datepickerDivElement);
 	            		}
 	            		
+	            		// reform inner editor
+	            		var reformEditor = iframe_content.iframe_content_reform;
+	            		
+	            		if (reformEditor) {
+		            		// set editor content to innerHTML
+		            		documentCloneNode.getElementById("reform-editor").innerHTML = reformEditor.GetEditorContent();	
+	            		}
+	            		
 	            		return documentCloneNode.body.innerHTML;
 	            	}
 	            	
@@ -758,7 +766,10 @@
 	            try {
 	            	if (!isReform) {
 	            		iframe_content.SetEditorContent(div_BODY.innerHTML);
+	            	} else if (parent.pDraftFlag == "REDRAFT") {
+	            		iframe_content.document.body.innerHTML = div_BODY.innerHTML;
 	            	}
+
 	                
 	                if (isConDoc) {
 	                    parent.Conn_Initial();
