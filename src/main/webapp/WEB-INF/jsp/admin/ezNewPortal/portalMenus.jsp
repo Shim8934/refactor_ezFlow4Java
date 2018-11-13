@@ -512,7 +512,7 @@
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 
-				getMenus();
+				//getMenus();
 				//menuAuths = [];
 			}
 			
@@ -523,7 +523,7 @@
 				companyId : companyValue,
 				menuNames : menuNameList,
 				menuInfo : menuInfo, 
-				menuAuths : menuAuths
+				menuAuths : JSON.parse(menuAuths)
 			});
 			 
 			request.send(data);
@@ -700,7 +700,7 @@
 				companyId : companyValue,
 				menuNames : menuNameList,
 				menuInfo : menuInfo,
-				menuAuths : menuAuths
+				menuAuths : JSON.parse(menuAuths)
 			});
 			 
 			request.send(data);
