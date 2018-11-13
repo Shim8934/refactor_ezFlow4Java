@@ -492,30 +492,47 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			PersonalLightPollVO vo = list.get(i);
 			result.append("<ROW>");
 			result.append("<CELL>"); 
-			result.append("<VALUE>" + (totalCount - (pageSize * (currentPage-1)+i)) + "</VALUE>");
-			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
+			result.append("<VALUE>" + vo.getItemSeq() +"</VALUE>");
+			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");								// itemSeq
+			result.append("</CELL>");
+			result.append("<CELL>"); 
+			result.append("<VALUE>" + (totalCount - (pageSize * (currentPage-1)+i)) + "</VALUE>");	// number
 			result.append("</CELL>");
 			result.append("<CELL>");
-			result.append("<VALUE>" + commonUtil.cleanValue(vo.getPollTitle()) + "</VALUE>");
+			result.append("<VALUE>" + commonUtil.cleanValue(vo.getPollTitle()) + "</VALUE>");		// title
 			result.append("</CELL>");
 			result.append("<CELL>");
-			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
+			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");	// startDate
 			result.append("</CELL>");
 			result.append("<CELL>");
 			
+			// 진행여부 헤더 임시
+			boolean jinhang = false;
+			// endDate
 			if (commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).indexOf("1900-01-01") > -1) {
-				result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t244", userInfo.getLocale()) + "</VALUE>");
+				result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t244", userInfo.getLocale()) + "</VALUE>");	// 진행중
 				progressPollFlag = "true";
+				jinhang = true;
 			} else {
 				result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
 			}
 			
+			// 진행여부
 			result.append("</CELL>");
 			result.append("<CELL>");
-			result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t99", userInfo.getLocale()) + "</VALUE>");
-			result.append("<TYPE>" + "BTN" + "</TYPE>");
-			result.append("<FUNC>" + "del_poll" + "</FUNC>");
-			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
+			if(jinhang) {
+				result.append("<VALUE>" + "진행중" + "</VALUE>");	// 삭제
+				result.append("<TYPE>" + "BTN" + "</TYPE>");
+				result.append("<FUNC>" + "del_poll" + "</FUNC>");
+				result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
+			} else {
+				result.append("<VALUE>" + "종료" + "</VALUE>");	// 삭제
+				result.append("<TYPE>" + "BTN" + "</TYPE>");
+				result.append("<FUNC>" + "del_poll" + "</FUNC>");
+				result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
+			}
+			
+			
 			result.append("</CELL>");
 			result.append("</ROW>");
 		}
