@@ -44,6 +44,7 @@
 </head>
 <body class="mainbg">	
 	<div id="Center">
+	<div style="position:relative;">
 		<aside id="quickSide">
 			<p class="linkBtn_open" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/theme3Img/linkBtn_open.png"></p>
 			<div class="aside_quick">
@@ -65,6 +66,7 @@
 				</div>
 			</div>
 		</aside>
+	</div>	
 		<section class="section_main">
 			<div class="portlet_area">
 			</div>
