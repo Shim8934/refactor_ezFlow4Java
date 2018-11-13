@@ -995,6 +995,20 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		ezNewPortalDAO.deleteCompanyLogo(map);
 		LOGGER.debug("deleteCompanyLogo ended.");
 	}
+	
+	@Override
+	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String companyId) {
+		LOGGER.debug("deleteCompanyLogo started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardId", boardId);
+		map.put("itemCount", itemCount);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		LOGGER.debug("deleteCompanyLogo ended.");
+		return ezNewPortalDAO.getBoardPortletInfo(map);
+		
+	}
 	/**
 	 * 이효진
 	 */

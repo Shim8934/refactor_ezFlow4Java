@@ -79,6 +79,22 @@
 		});
 		
 		var resetMenuOrder = function() {
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+			
+			var request = new XMLHttpRequest();
+			request.open('POST', '/admin/ezNewPortal/resetMenuOrder.do', true);
+			request.setRequestHeader('Content-Type', 'application/json');
+			
+			request.onload = function() {
+				getMenus();
+			}
+			
+			var data = JSON.stringify({
+				companyId : companyValue
+			});
+			 
+			request.send(data);
 		}
 		
 		var getCompanies = function() {

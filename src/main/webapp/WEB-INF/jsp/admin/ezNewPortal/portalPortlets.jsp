@@ -225,7 +225,7 @@
 			
 			portletOrderList.push({"portletOrder" : order, "portletId" : portletId});
 		}
-		console.log(portletOrderList);
+		
  		var request = new XMLHttpRequest();
 		
 		request.open('POST', '/admin/ezNewPortal/updatePortletOrder.do', true);
@@ -457,7 +457,11 @@
 						if (menuId != 4) {
 							listHTML += "<tr class='connectionTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"' maxlength='100'></td></tr>";
 						} else {
-							listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='' maxlength='100'></td></tr>";
+							if (!result[i].general) {
+								listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"' maxlength='100'></td></tr>";
+							} else {
+								listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='' maxlength='100'></td></tr>";
+							}	
 						}
 						
 					}

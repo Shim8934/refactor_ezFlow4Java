@@ -2861,4 +2861,61 @@ public class EzNewPortalGWController {
 		LOGGER.debug("ezNewPortal G/W getuserInfomationsPortlet ended.");
 		return result;
 	}
+	
+	/**
+	 * 포탈개인화 G/W [GET] 포틀릿 - 포토게시판 포틀릿 조회
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPortal/portlets/board", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getBoardPortlet(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getBoardPortlet started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+			String companyId = info.getCompanyID();
+			String deptId = info.getDeptID();
+			String rollInfo = info.getRollInfo();
+			int tenantId = info.getTenantId();
+			int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의
+		
+			int itemCount = Integer.parseInt(request.getParameter("photoCount"));
+			String portletLang = info.getLang();
+			String deptPath = info.getDeptPathCode();
+			deptPath += "everyone," + deptPath + "," + userId;
+			JSONObject data = new JSONObject();
+
+			// 회사의 포토게시판의 포틀릿 정보 가져오기
+			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
+			String boardId = portlet.getPortletBoardId();
+			data.put("boardId", boardId);
+			data.put("portletName", portlet.getPortletName());
+
+			// 게시판 권한 체크
+			boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+
+			if (!accessCheck) {
+				data.put("access", "false");
+			} else {
+				// 권한이 true이면 boardList불러오기
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(tenantId, boardId, itemCount, companyId);
+
+				data.put("access", "true");
+				data.put("boardList", boardList);
+			}
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getBoardPortlet ended.");
+		return result;
+	}
 }

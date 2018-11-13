@@ -554,8 +554,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .info .infoImg{float:left; margin:0px 24px 52px 0px; padding:0px;}
 .info .infoName{margin:0px; padding:0px; color:#444445; font-size:18px; font-weight:bold;}
 .info .infoTeam{margin:10px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
-.info .infoMail{margin:17px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
-.info .infoTime{margin:12px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
+.info .infoMail{margin:17px 0px 0px 0px; padding:0px; color:#444445; font-size:14px; text-align:right;margin-right:14%;}
+.info .infoTime{margin:12px 20px 0px 0px; padding:0px; color:#444445; font-size:14px; text-align:right;margin-right:14%;}
 .info .infoSet{position:absolute; top:-20px; right:48px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
 .info .infoSet img{margin:5px 0px 0px 0px;}
 .info .infoLogout{position:absolute; top:-20px; right:16px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
@@ -595,7 +595,6 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .birthList li .birthListDL .birthTeam{margin:0px; padding:0px; font-size:12px; color:#888888; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
 .birthList hr {display:block; margin-block-start:0.7em; margin-block-end:0.7em;}
 @media only screen and (max-width :1730px) and (min-width :1680px) {
-	.info .infoImg{margin:0px 24px 0px 0px;}
 	.info_left {width:103px;}
 	.info_right {width : calc(100% - 111px);}
 }
@@ -613,6 +612,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_middle{ width:33.3%;}
 	.portlet{ width:32%; float:left;}
 	.bannerText{ padding:73px 18px 0px 0px;}
+	
 	.info_left {width:103px;}
 	.info_right {width : calc(100% - 111px);}
 }
@@ -627,7 +627,6 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.stats_graph{ float:left; overflow:hidden;}
 	.groupware_banner{ float:left; margin-top:0px;}
 	
-	.info .infoImg{margin:0px 24px 34px 0px;}
 	.info .infoTime{margin:12px 0px 0px 13px;}
 	.info_left {width:103px;}
 	.info_right {width : calc(100% - 111px);}
