@@ -16,7 +16,7 @@
 
 <body class="mainbg" style="min-width:1600px;">
 	<aside id="quickSide">
-		<p class="linkBtn_open" id="linkBtn_open"><img src="/images/ezNewPortal/linkBtn_open.png"></p>
+		<p class="linkBtn_open" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>
 		<div class="aside_quick">
 			<p class="quickmenu_title">Quick</p>
 			<ul class="quickmenu">
@@ -45,7 +45,7 @@
 				<span class="" id="portletEnv" style="float:left;">설정</span>                
             </p>
             <div class="info">
-            	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
+            	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" style="border-radius:100px;"id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
                 <dl class="info_txt">
                 	<dt>${deptName}</dt>
                     <dt>${userName} ${userTitle}</dt>
@@ -60,10 +60,10 @@
 	                    <dd id="timeFlow"></dd>
 	                </dl>
 	                <dl class="commute">
-	                	<dt id="inAttiBtn" class="out" type="A01" datetype="2" onclick="checkHoliday(this)">출근</dt>
+	                	<dt id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this)">출근</dt>
 	                </dl>
 	                <dl class="commute">
-	                	<dt id="outAttiBtn" class="out" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</dt>
+	                	<dt id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</dt>
 	                </dl>            	
             	</c:when>
             	<c:otherwise>
@@ -458,6 +458,26 @@
 		while(schList.hasChildNodes()) {
 			schList.removeChild(schList.firstChild);	
 		}
+		
+		if(data.length === 0) {
+			var dl = document.createElement('dl');
+			dl.className = 'nodata';
+			
+			var dt = document.createElement('dt');
+			var img = document.createElement('img');
+			img.src = '/images/kr/main/nodata.png';
+			
+			dt.appendChild(img);
+			var dd = document.createElement('dd');
+			dd.textContent = '\"데이터가 없습니다.\"';
+			
+			dl.appendChild(dt);
+			dl.appendChild(dd);
+			
+			schList.appendChild(dl);
+			return;
+		}
+		
         data.forEach(function(item, index) {
         	if(index > 5) return;
         	var li = document.createElement('li');
@@ -574,7 +594,7 @@
 		$("#AprSign").on("click", {"menu" : "ApprG"}, quickMenuOpen);
 		
 		//퀵메뉴 on/off 버튼
-		$("#linkBtn_open").on('click', viewQuick);
+		$("#quicklinkBtn").on('click', viewQuick);
 		//퀵메뉴 이동(오른쪽)
 		$("#quickMailwrite").on('click', {'menu' : 'mail'}, quickMenuOpenRight);
 		$("#quickApprovalwrite").on('click', {'menu' : 'appr'}, quickMenuOpenRight);

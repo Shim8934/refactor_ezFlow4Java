@@ -471,6 +471,11 @@
 				return;
 			}
 			
+			if (menuAuths.length == 0 || menuAuths == null) {
+				alert("메뉴 접근 권한을 설정해 주세요.");
+				return;
+			}
+			
 			//아이콘
 			var iconUrl = $(".menuIcon").find("span").attr("class");
 			
@@ -494,6 +499,11 @@
 				menuNameList.push({"menuLang" : menuLang, "menuId" : menuId, "menuName" : menuName.value});
 			}
 			
+			if (menuNameEmptyNum >= menuNamesCount) {
+				alert("하나 이상의 메뉴 이름을 입력해주세요.");
+				return;
+			}
+			
 			var companiesObj = document.getElementById("ListCompany");
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			
@@ -512,8 +522,8 @@
 				menuId : menuId,
 				companyId : companyValue,
 				menuNames : menuNameList,
-				menuInfo : menuInfo
-				/* , menuAuths : menuAuths */
+				menuInfo : menuInfo, 
+				menuAuths : menuAuths
 			});
 			 
 			request.send(data);
@@ -668,10 +678,10 @@
 				return;
 			}
 			
-			/* if (menuAuths.length == 0 || menuAuths == null) {
+			if (menuAuths.length == 0 || menuAuths == null) {
 				alert("메뉴 접근 권한을 설정해 주세요.");
 				return;
-			} */
+			}
 			
 			var companiesObj = document.getElementById("ListCompany");
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;

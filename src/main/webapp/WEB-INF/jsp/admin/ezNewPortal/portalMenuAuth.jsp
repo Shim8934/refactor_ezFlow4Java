@@ -420,7 +420,6 @@
 	   			selUserId = $(elem).attr("id");
 	   			selUserName = $(elem).attr("name");
 	   			selDeptId = $(elem).attr("deptId");
-	   			console.log(selUserId);
 	   			//user / dept 구분
 	   		}
 	   		
@@ -460,7 +459,7 @@
 		   		} else {
 		   			alert("<spring:message code='ezJournal.t127'/>");
 		   		}
-		   		console.log(menuAuths);
+		   		
 		   		drawAuths();
 	   		}
 	   		
@@ -538,7 +537,6 @@
 	   			}
 	   			
 	   			if (isUser) {
-	   				console.log("???/");
 	   				//사람추가 조건은 음 사람셀렉트안됫을떄?
 	   				setAuthorViewUser("user");
 	   				
@@ -580,71 +578,41 @@
 	   				}
 	   			});
 	   			
-	   			if (menuAuthsY != null && menuAuthsY.length != 0) {
-					var menuAuthsYList = "";
+				var menuAuthsYList = "";
+				
+				menuAuthsY.forEach(function(item, index) {
+					if (item.userType) {
+						menuAuthsYList += ", " + item.userName;
+						menuAuthsYList += "(" + item.userDeptName + ")";
+					} else {
+						menuAuthsYList += ", " + item.userDeptName;
+					}
+				});
 					
-					menuAuthsY.forEach(function(item, index) {
-						if (item.userType) {
-							menuAuthsYList += ", " + item.userName;
-							menuAuthsYList += "(" + item.userDeptName + ")";
-						} else {
-							menuAuthsYList += ", " + item.userDeptName;
-						}
-					});
-					
-					window.opener.$(".accessOK").text(menuAuthsYList.substring(1));
-				}
+				window.opener.$(".accessOK").text(menuAuthsYList.substring(1));
 	   			
-	   			if (menuAuthsN != null && menuAuthsN.length != 0) {
-					var menuAuthsNList = "";
+				var menuAuthsNList = "";
+				
+				menuAuthsN.forEach(function(item, index) {
+					if (item.userType) {
+						menuAuthsNList += ", " + item.userName;
+						menuAuthsNList += "(" + item.userDeptName + ")";
+					} else {
+						menuAuthsNList += ", " + item.userDeptName;
+					}
+				});
 					
-					menuAuthsN.forEach(function(item, index) {
-						if (item.userType) {
-							menuAuthsNList += ", " + item.userName;
-							menuAuthsNList += "(" + item.userDeptName + ")";
-						} else {
-							menuAuthsNList += ", " + item.userDeptName;
-						}
-					});
-					
-					window.opener.$(".accessNO").text(menuAuthsNList.substring(1));
-				}
+				window.opener.$(".accessNO").text(menuAuthsNList.substring(1));
+
 	   			
 	   			window.close();
 	   		}
 	   		
 	   		/** get MenuAuth data */
 	   		var getMenuAuths = function() {
-	   			var menuId = "${menuId}";
-				var companyValue = "${companyId}";
-				
-				var request = new XMLHttpRequest();
-				request.open('POST', '/admin/ezNewPortal/getMenuAuths.do', true);
-				request.setRequestHeader('content-type', 'application/json');
-				
-				request.onload = function(result) {
-					if (request.status >= 200 && request.status < 400) {
-						var result = JSON.parse(request.responseText);
-						var menuAuthsY = result.menuAuths.menuAuthsY;
-						var menuAuthsN = result.menuAuths.menuAuthsN;
-						
-						menuAuths = new Array();
-						
-						Array.prototype.push.apply(menuAuths, menuAuthsY);
-						Array.prototype.push.apply(menuAuths, menuAuthsN);
-						
-						drawAuths();
-					}
-				}
-				
-				request.onerror = function() {}
-				
-				var data = JSON.stringify({
-					menuId : menuId,
-					companyId : companyValue,
-				});
-				
-				request.send(data);
+					menuAuths = window.opener.menuAuths;
+					
+					drawAuths();
 	   		};
 	   		
 	   		//onload

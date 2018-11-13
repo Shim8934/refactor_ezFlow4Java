@@ -174,9 +174,7 @@
 		        var spans = document.getElementById("TreeView" + tId).getElementsByClassName("h2_text");//게시판들
 		 
 		        var cnt = spans.length;
-		        
 		        var accessCheck = "";
-		        
 		        var checkCnt = 0;
 		        for (var i = 0; i < cnt; i++) {
 	                var parentNodeid = spans[i].parentNode.getAttribute("data1");
@@ -202,7 +200,7 @@
 		        if (accessCheck != "NO") {
 			        selectItem.onclick();
 			        
-			        var tempid = selectItem.id.split("_");//"spn", "TreeViewTreeCtrl3", "0", "0"
+			        var tempid = selectItem.id.split("_");
 			        var tempidlength = tempid.length;
 			        var clicknode = new Array();
 					var tempSpanid = "imgNode_" + tempid[1]; 

@@ -20,7 +20,7 @@
 	.ui-widget-content {background : none;}
 	.ui-widget-header {background : none;}
   	.column {width: 1820px; padding-bottom: 100px;}
-  	.portlet, .newPortlet {margin:0px 15px 15px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+  	.portlet, .newPortlet {margin:0px 15px 15px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
   	.portlet-header {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; border:1px solid #2196f3;}
   	.portlet-toggle {top: 50%;right: 0;float:right;}
   	.portlet-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:215px;}
@@ -354,7 +354,6 @@
 		
 		request.onload = function() { 
 			showToastMessage(portletId);
-			getPortletList(); 
 		};
 		
 		request.onerror = function() {}
@@ -648,7 +647,7 @@
 		toastArea.innerHTML = alertMessage;
 		toastArea.setAttribute("class", "toastArea");
 		toastArea.style.top = "115px";
-		toastArea.style.left = "185px";
+		toastArea.style.left = "115px";
 		toastArea.style.display = "block";
 		toastArea.id = "toast" + portletId;
 		
@@ -656,10 +655,12 @@
 		
 		setTimeout(function() {
 			$("#toast" + portletId).fadeOut(1000, function() {
+				getPortletList(); 
+				
 				var parent = doc.getElementById("portlet" + portletId);
 				parent.removeChild(toastArea);
-			})
-		}, 500);
+			});
+		}, 1000);
 	}
 	</script>
 </head>
