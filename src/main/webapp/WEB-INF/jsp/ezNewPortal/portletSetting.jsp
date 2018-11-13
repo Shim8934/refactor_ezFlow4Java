@@ -16,29 +16,29 @@
 		<style type="text/css">
 			html { height: 100%; }
 			#set-body { background-color: white; }
-			h3 { padding-left: 20px; margin-top: 10px; margin-bottom: 5px; }
-			
-			.set-head { background-color: #E5EFFF; height: 5%; display: flex; align-items: center; padding-top: 5px; padding-bottom: 5px;}
-			.set-head h1 { font-size: 20px; margin-left: 20px;}
+			h3 { padding-left: 20px; margin-top: 25px; margin-bottom: 10px; font-size:14px; }
+			.set-head { background-color: #687077; height:44px; line-height:42px; display: flex; align-items: center; margin:0px; padding:0px;}
+			.set-head h1 { font-size: 16px; margin-left: 20px; color:#fff;}
 			.set-action { height: 10%; display: flex; justify-content: center; align-items: center;} 
-			.ui-portlet { position:relative; border: 1px solid #aaaaaa; width: 272px; height: 40px; /* background-color: rgb(176, 228, 255); */ border-radius: 5px; padding-left: 10px; margin: 10px; line-height: 40px;}
-			.ui-portlet-on { background-color: #E5EFFF; }
-			.ui-portlet-off { background-color: #E0E3E4; }
+			.ui-portlet { position:relative;  width: 222px; height: 50px; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 48px;}
+			.ui-portlet-on { background-color: #f0f0f0; }
+			.ui-portlet-off { background-color: #f0f0f0; }
+			.ui-portlet-off .ui-portlet-span{ color:#999;}
 			.ui-portlet-content { font-weight: bold; display: inline-block;}
 			.ui-portlet-list { padding-left: 20px; height: 335px; width: 97%;}
-			.ui-portlet-span { display: inline-block; width: 70%;}
+			.ui-portlet-span { display: inline-block; width: 70%; font-size:14px; color:#333; font-weight:normal;}
 			.flipsterLi { width:152px; height: 114px; margin-top:20px; margin-left:20px}
 			
 			.frameList { height: 151px; /* background-color: #e0e3e4; */ margin-left: 20px; margin-right: 20px;}
-			.select-flipster img{ border:3px solid #0088CC; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
+			.select-flipster img{ border:1px solid #2196f3; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
 			
 			.paginationBtn { border: 1px solid black; width: 100px; height: 30px; margin-left:20px; margin-right:20px;}
 			
 			/* switch */
-			.switch {position: absolute; display: inline-block; width: 60px; height: 25px; /* margin-left: 150px;  */margin-top: 6px;}
+			.switch {position: absolute; display: inline-block; width:55px; height: 23px; margin-top: 13px;}
 			.switch input {opacity: 0;width: 0;height: 0;}
 			.slider {  position: absolute;  cursor: pointer;  top: 0;  left: 0;  right: 0;  bottom: 0;  background-color: #ccc;  -webkit-transition: .4s;  transition: .4s;}
-			.slider:before {  position: absolute;  content: "";  height: 17px;  width: 18px;  left: 4px;  bottom: 4px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
+			.slider:before {  position: absolute;  content: "";  height: 13px;  width: 13px;  left: 8px;  bottom: 5px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
 			input:checked + .slider {  background-color: #2196F3;}
 			input:focus + .slider { box-shadow: 0 0 1px #2196F3;}
 			input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transform: translateX(26px);transform: translateX(26px);}
@@ -50,17 +50,17 @@
 	</head>
 	<body id="set-body">
 		<section class="set-head">
-			<h1>▒&nbsp;포틀릿 설정</h1>
+			<h1>포틀릿 설정</h1>
 		</section>
 		<section class="set-frame">
-			<h3>⊙&nbsp;화면 프레임 설정</h3>
+			<h3>화면 프레임 설정</h3>
 			<div class="frameList" id="frameList">
 				<ul id="frameUl">
 				</ul>
 			</div>
 		</section>
 		<section class="set-portlet">
-			<h3>⊙&nbsp;포틀릿 설정</h3>
+			<h3>포틀릿 설정</h3>
 			<div class="ui-portlet-list" id="portletList"></div>
 		</section>
 		<section class="set-action">

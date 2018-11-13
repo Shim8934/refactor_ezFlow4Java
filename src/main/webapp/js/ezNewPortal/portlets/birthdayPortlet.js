@@ -76,6 +76,11 @@ function getBirthdayList() {
 					strHTML += "<dd class='birthTeam'>" + birthdayList[i].userDeptName + "</dd>";
 					strHTML += "</dl>";
 					strHTML += "</li>";
+					
+					console.log(i%3); 
+					if (i != 0 && ((i % 3) == 2) && i != resultCount - 1) {
+						strHTML += "<hr/>";
+					}
 				}
 				
 				$("#birthdayList").html(strHTML);

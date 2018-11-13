@@ -564,7 +564,7 @@
 	   			/* opener.selReceiver = JSON.stringify(receiverList);
 	   			opener.showReceiver(); */
 	   			/* 내 데이터로 바꿔야 */
-	   			window.opener.menuAuths = menuAuths;
+	   			window.opener.menuAuths = JSON.stringify(menuAuths);
 	   			
 	   			var menuAuthsY = [];
 	   			var menuAuthsN = [];
@@ -604,13 +604,14 @@
 					
 				window.opener.$(".accessNO").text(menuAuthsNList.substring(1));
 
-	   			
+	   			console.log(menuAuths);
+	   			console.log(window.opener.menuAuths);
 	   			window.close();
 	   		}
 	   		
 	   		/** get MenuAuth data */
 	   		var getMenuAuths = function() {
-					menuAuths = window.opener.menuAuths;
+					menuAuths = JSON.parse(JSON.stringify(window.opener.menuAuths));
 					
 					drawAuths();
 	   		};

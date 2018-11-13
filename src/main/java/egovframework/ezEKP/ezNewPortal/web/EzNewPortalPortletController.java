@@ -903,4 +903,44 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		return "/ezNewPortal/portlets/movieBoardPortlet";
 	}
 	
+	/**
+	 * 포틀릿 - 게시판 포틀릿
+	 */
+	@RequestMapping(value = "/ezNewPortal/boardPortlet.do")
+	public String portalBoardPortlet(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("portalBoardPortlet Start");
+		
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = req.getParameter("portletId");
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("startRow", 0);
+		param.put("photoCount", 5);
+		param.put("portletId", portletId);
+		String url = "/rest/ezPortal/portlets/board";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		String result = resultBody.get("status").toString();
+		
+		if (result.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			String access = data.get("access").toString();
+			model.addAttribute("access", access);
+			model.addAttribute("boardId", data.get("boardId"));
+			model.addAttribute("portletName", data.get("portletName"));
+			
+			if (access.equals("true")) {
+				model.addAttribute("boardList", data.get("boardList"));
+			}
+		}
+		
+		model.addAttribute("portletId", portletId);
+		logger.debug("portalBoardPortlet End");
+		
+		return "/ezNewPortal/portlets/boardPortlet";
+	}
 }

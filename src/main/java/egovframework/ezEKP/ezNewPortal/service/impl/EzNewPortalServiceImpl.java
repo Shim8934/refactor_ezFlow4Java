@@ -997,6 +997,20 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		ezNewPortalDAO.deleteCompanyLogo(map);
 		LOGGER.debug("deleteCompanyLogo ended.");
 	}
+	
+	@Override
+	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String companyId) {
+		LOGGER.debug("deleteCompanyLogo started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardId", boardId);
+		map.put("itemCount", itemCount);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		LOGGER.debug("deleteCompanyLogo ended.");
+		return ezNewPortalDAO.getBoardPortletInfo(map);
+		
+	}
 	/**
 	 * 이효진
 	 */
@@ -1317,6 +1331,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("menuAuths = " + menuAuths.toString());
 		
 		Map<String, Object> map = new HashMap<>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("menuId", menuId);
+		
+		//update 시 기존에 있던 메뉴 권한 삭제 후 insert
+		ezNewPortalDAO.deleteMenuAuth(map);
 		
 		for (Object item : menuAuths) {
 			if (item instanceof JSONObject) {
