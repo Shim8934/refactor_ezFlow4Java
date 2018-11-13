@@ -34,11 +34,8 @@
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
 	.box_shadow {width:100%; margin:0px;}
-	.info_left{float:left; width:103px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
-	.info_right{width:calc(100% - 111px); background:#ffffff;}
-	.portlet {height:250px; margin:20px 0px 0px 16px;background-color:#ffffff;}
+	.portlet {height:250px; margin:20px 0px 0px 16px;}
 	.infoImg img {width:60px; height:60px;}
-	.info .infoImg {margin:0px 24px 0px 0px;}
 	.attitudePtl {border:none;}
 	
 </style>
