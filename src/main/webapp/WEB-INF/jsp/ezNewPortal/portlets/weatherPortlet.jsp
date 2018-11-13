@@ -251,37 +251,37 @@ $(function(){
         	<div class="weather_title">
             	<dl class="weatherPresent">
                 	<dt><img id="currentIcon" src="/images/ezNewPortal/weather/weatherIcon02.png"></dt>
-                    <dd><span id="mainWeather">cloud and sunny</span> <span id="currentTemp">12℃</span></dd>
+                    <dd><span id="mainWeather"></span> <span id="currentTemp"></span></dd>
                 </dl>
                 <ul class="weatherPer">
                 	<li><span class="icon iconbg01"><img src="/images/ezNewPortal/weather/weatherIcon_add01.png"></span>
-                	<span class="text">습도 <span id="currentHumidity">0</span><span class="text">%</span></span></li>
+                	<span class="text">습도 <span id="currentHumidity"></span><span class="text">%</span></span></li>
                     <li><span class="icon iconbg02"><img src="/images/ezNewPortal/weather/weatherIcon_add02.png"></span>
-                    <span class="text">구름 <span id="currentClouds">0</span><span class="text">%</span></span></li>
+                    <span class="text">구름 <span id="currentClouds"></span><span class="text">%</span></span></li>
                     <li><span class="icon iconbg03"><img src="/images/ezNewPortal/weather/weatherIcon_add03.png"></span>
-                    <span class="text">바람 <span id="currentWind">0</span><span class="text">m/s</span></span></li>
+                    <span class="text">바람 <span id="currentWind"></span><span class="text">m/s</span></span></li>
                 </ul>
             </div>
             <div class="weather_mini">
             	<dl>
                 	<dt><img id="icon1" src="/images/ezNewPortal/weather/weatherIcon_mini01.png"></dt>
-                    <dd><span id="date1">15시</span><span id="temp1">14℃</span></dd>
+                    <dd><span id="date1"></span><span id="temp1"></span></dd>
                 </dl>
                 <dl>
                 	<dt><img id="icon2" src="/images/ezNewPortal/weather/weatherIcon_mini02.png"></dt>
-                    <dd><span id="date2">18시</span><span id="temp2">14℃</span></dd>
+                    <dd><span id="date2"></span><span id="temp2"></span></dd>
                 </dl>
                 <dl>
                 	<dt><img id="icon3" src="/images/ezNewPortal/weather/weatherIcon_mini03.png"></dt>
-                    <dd><span id="date3">21시</span><span id="temp3">14℃</span></dd>
+                    <dd><span id="date3"></span><span id="temp3"></span></dd>
                 </dl>
                 <dl>
                 	<dt><img id="icon4" src="/images/ezNewPortal/weather/weatherIcon_mini04.png"></dt>
-                    <dd><span id="date4">24시</span><span id="temp4">14℃</span></dd>
+                    <dd><span id="date4"></span><span id="temp4"></span></dd>
                 </dl>
                 <dl>
                 	<dt><img id="icon5" src="/images/ezNewPortal/weather/weatherIcon_mini05.png"></dt>
-                    <dd><span id="date5">03시</span><span id="temp5">14℃</span></dd>
+                    <dd><span id="date5"></span><span id="temp5"></span></dd>
                 </dl>
             </div>
         </div>
