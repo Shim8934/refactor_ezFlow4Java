@@ -1105,20 +1105,26 @@
 			    	for (i = 0; i < oRows.length; i++) {
 			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
 				    		if (flag) {
-					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
-					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
-					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE");
+// 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
+// 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
+// 					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE");
+					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1");
+					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
+					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
 					    		flag = false;
 				    		}
 				    		
-				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE"))
-				    				+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE"))
-		    						+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE")) + "'>";
-		    						
+// 				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
+// 						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) 
+// 						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE")) + "'>";
+				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1")) 
+						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
+						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) + "'>";
+					    		
 				    		if ("${userInfo.primary}" == "1") {
-					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE"));
+					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE"));
 				    		} else {
-					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE"));
+					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE"));
 				    		}
 				    		
 				    		rtnVal += "</option>";
@@ -1126,10 +1132,8 @@
 			    	}
 			    	rtnVal += "</select>";
 			    } else {
-			    	jobID = "";
-			    	jobTitle = "";
-			    	jobTitle2 = "";
 			    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;'></select>";
+			    	jobID = ""; jobTitle = ""; jobTitle2 = "";
 			    }
 			    
 		    	document.getElementById("JobTitleOption").innerHTML = rtnVal;

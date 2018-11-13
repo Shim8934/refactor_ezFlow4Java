@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezOrgan.vo;
 
 public class OrganJobVO {
+	private String jobID;
 	private String type;
 	private String cn;
 	private String displayName;
@@ -11,6 +12,12 @@ public class OrganJobVO {
 	private String companyID;
 	private int tenantID;
 	
+	public String getJobID() {
+		return jobID;
+	}
+	public void setJobID(String jobID) {
+		this.jobID = jobID;
+	}
 	public String getType() {
 		return type;
 	}

@@ -128,20 +128,28 @@ function getCalMonthViewSource_after(text) {
                 var betweenDay = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7), 10) - 1, parseInt(_Dtend.substring(8, 10), 10)) - new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7), 10) - 1, parseInt(_Dtstart.substring(8, 10), 10));
                 var day = 1000 * 60 * 60 * 24;
                 betweenDay = parseInt(betweenDay / day, 10);
+                if (_Dtend.substring(10) == " 00:00:00.0") {
+                	betweenDay = betweenDay - 1;
+                }
                 
                 for (var j = 0; j <= betweenDay; j++) {
                     tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                     CalMonthDataBind(tempData[k]);
                     DataSDT.setDate(DataSDT.getDate() + 1);
-                    if (dateDiff(DataSDT, DataEDT) < 1 && _Dtend.substring(10) == " 00:00:00.0") {
-                    	break;
-                    }
+//                    if (dateDiff(DataSDT, DataEDT) < 1 && _Dtend.substring(10) == " 00:00:00.0") {
+//                    	break;
+//                    }
                     k += 1;
                 }
-            } else {
+            } else {            	
                 tempData[k] = tempInsert(objNodes, DataSDT, DataEDT);
                 CalMonthDataBind(tempData[k]);
                 k += 1;
+//                if (k+1 == nlength) {
+//                	DataSDT = null;
+//                    DataEDT = null;
+//                    break;
+//                }
             }
             DataSDT = null;
             DataEDT = null;
@@ -244,6 +252,28 @@ function getCalWeekViewSource_after(text) {
         }
         tempData = null;
         chk_scheduleCSS();
+        
+        //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 하루종일
+        $("div[id$='ALL'").children().draggable({
+        	addClasses: false,
+        	revert : "invalid",
+        	helper : function(event) {
+        		return $(event.target).clone().css({
+        			width: $(event.target).width()
+        		});
+        	},
+        	appendTo: "body",
+        	containment: "#calTR"
+        });
+        
+      //2018-11-05 김혜정  주보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
+      $("#dayDiv").find("div[id^='div_']").draggable({
+        	addClasses: false,
+        	cursorAt: { top: 1, left: 1 },
+        	scroll: false,
+        	handle: "td", 
+        	helper: "clone"
+        });
     }
     catch (e) {
         alert("getCalWeekViewSource_after : " + e.description);
@@ -346,6 +376,13 @@ function getCalDayViewSource_after(text) {
         }        
         tempData = null;
         chk_scheduleCSS();
+        //2018-11-05 김혜정  일보기화면에서 드래그앤드롭을 위해 추가 - 시간지정
+        $("#CalDiv").find("div[id^='div_']").draggable({
+        	addClasses: false,
+        	scroll: true,
+        	helper : "clone",
+        	cursorAt: { top: 1, left: 1 }
+        });
     }
     catch (e) {
         alert("getCalDayViewSource_after : " + e.description);
@@ -704,8 +741,6 @@ function CalMonthDataBind(oAppointment) {
             oSpan.className = "icon_h";
             oTd.appendChild(oSpan);
         }
- 
-
         oTd.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID);
         oTd.setAttribute("ScheduleID", oAppointment.ScheduleID);
         oTd.setAttribute("ScheduleChangeKey", oAppointment.ScheduleChangeKey);
@@ -749,6 +784,19 @@ function CalMonthDataBind(oAppointment) {
         
         oTr.appendChild(oTd);
         objElm.appendChild(oTr);
+        
+        //2018-11-05 김혜정 월보기
+        $("#" + "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID).parent("tr").draggable({
+        	addClasses: false,
+        	containment: $("#dayDiv"),
+        	revert : "invalid",
+        	helper : function(event) {
+        		return $(event.target).clone().css({
+        			width: $(event.target).width()
+        		});
+        	},
+        	scroll : false
+        });
     }
     objElm = null;
     oAppointment = null;
@@ -835,11 +883,10 @@ function CalWeekDataBind(oAppointment, order) {
         
         oTr.appendChild(oTd);
         oTable.appendChild(oTr);
-
         oDiv.appendChild(oTable);
+        
         var oText = document.createTextNode(pTime);
         oDiv.appendChild(oText);
-
         oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID);
         oDiv.setAttribute("ScheduleID", oAppointment.ScheduleID);
         oDiv.setAttribute("ScheduleChangeKey", oAppointment.ScheduleChangeKey);
@@ -968,7 +1015,6 @@ function CalWeekAllDataBind(oAppointment, order) {
         
         //oDiv.innerHTML += pSubject;
         oDiv.appendChild(oText);
-
         oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID);
         oDiv.setAttribute("ScheduleID", oAppointment.ScheduleID);
         oDiv.setAttribute("ScheduleChangeKey", oAppointment.ScheduleChangeKey);
@@ -1225,7 +1271,7 @@ function CalDayAllDataBind(oAppointment, order) {
         
         //oDiv.innerHTML += pSubject;
         oDiv.appendChild(oText);
-
+       
         oDiv.setAttribute("ID", "div_" + oAppointment.trID + "_" + oAppointment.ScheduleID);
         oDiv.setAttribute("ScheduleID", oAppointment.ScheduleID);
         oDiv.setAttribute("ScheduleChangeKey", oAppointment.ScheduleChangeKey);

@@ -122,6 +122,8 @@ public class EzEmailMailListController {
 		String useSearchContent = ezCommonService.getTenantConfig("useSearchContent", userInfo.getTenantId());
 		String useMailNewWindow = ezCommonService.getTenantConfig("useMailNewWindow", userInfo.getTenantId()); 
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
+		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", userInfo.getTenantId());
 
 		if (useEncryptZipForEmail.equals("")) {
 			useEncryptZipForEmail = "NO";
@@ -191,6 +193,8 @@ public class EzEmailMailListController {
 		model.addAttribute("useMailNewWindow", useMailNewWindow); 
 		model.addAttribute("sentFolderId", ezEmailUtil.getSentFolderId(locale));
 		model.addAttribute("useCountryIP", useCountryIP);
+		model.addAttribute("systemCountryCode", systemCountryCode);
+		model.addAttribute("useShowSystemCountry", useShowSystemCountry);
 
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
@@ -429,15 +433,23 @@ public class EzEmailMailListController {
 						
 						if (email != null) {
 							
-							if (aliasAddressList.containsKey(email)) { //Alias주소인 경우
+							// 메일 수신자의 주소가 alias 주소인 경우 real(account) 주소로 바꾼다.
+							if (aliasAddressList.containsKey(email)) {
 								email = aliasAddressList.get(email);
 							}
 							
 							for (MailReadVO vo : readList) {
-								if (vo.getReaderEmail().equals(email)) {
-									readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffset(), false);
-									readCount++;
-									//break;
+								// readList의 reader 주소가 alias 주소인 경우 real(account) 주소로 바꾸어 비교한다.
+								if (aliasAddressList.containsKey(vo.getReaderEmail())) {
+									if (aliasAddressList.get(vo.getReaderEmail()).equals(email)) {
+										readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffset(), false);
+										readCount++;
+									}
+								} else {								
+									if (vo.getReaderEmail().equals(email)) {
+										readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffset(), false);
+										readCount++;
+									}
 								}
 							}
 							
@@ -486,6 +498,7 @@ public class EzEmailMailListController {
 				sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
 				sb.append(String.format("<readdt><![CDATA[%s]]></readdt>", readDate));
 				sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));
+				sb.append(String.format("<recipientCount><![CDATA[%d]]></recipientCount>", addresses1.length));
 				
 				// subject
 				String subject = ezEmailUtil.getSubject(message);								
@@ -1561,7 +1574,7 @@ public class EzEmailMailListController {
 				subject = (subject != null) ? subject : "";
 				
 				if (ezEmailUtil.hasSecureMailFlag(message)) {
-					subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
+					subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"12\" />" + subject;
 				}
 				
 				sb.append("<NODE>");

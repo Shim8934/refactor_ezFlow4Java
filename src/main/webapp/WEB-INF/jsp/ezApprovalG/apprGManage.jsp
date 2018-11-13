@@ -439,6 +439,9 @@
 		        else if (pListTypeValue == "21") {
 		            getDocList();
 		        }
+		        else if (pListTypeValue == "11") {
+		        	getDocList();
+		        }
 		    }
 		    
 		    function onSelect_Status() {
@@ -511,11 +514,17 @@
 		        if (pCurSelRow != null && oArrRows.length > 0) {
 		            if (GetBujaeFlag())
 		                return;
-		            if (pListTypeValue == "1") {
+		            if (pListTypeValue == "1" || pListTypeValue == "11") { //listTypeValue = 11(공유결재문서)
+						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+							alert("<spring:message code='ezApprovalG.bhs23'/>");
+							getDocList();
+							return;
+	                	}
 		                if (pCurSelRow.getAttribute("DATA12") == "015")
 		                    openViewDocInfo();
-		                else if (document.getElementById("tbtnRedraft").style.display == "none" && document.getElementById("tbtnApprove").style.display == "")
+		                else if (document.getElementById("tbtnRedraft").style.display == "none" && document.getElementById("tbtnApprove").style.display == ""){
 		                    openApprovUI();
+		                }
 		                else
 		                    btnRedraft_onclick();
 		            } else if (pListTypeValue == "4") {
@@ -698,6 +707,15 @@
 		                }
 		                selectedDocIDS = selectedDocIDS + "</DOCIDS>";
 		            }
+		            //2018-10-31 배현상, 공유결재자 중복 결재 방지 처리
+		            if (tempFlag == 0 || tempFlag == 1) {
+		            	//첫번째 문서가 모두결재인 경우에는 결재창을 열지 않도록 변경
+						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+							alert("<spring:message code='ezApprovalG.bhs23'/>");
+							getDocList();
+							return;
+						}
+                	}
 		            openApprovUI(tempFlag);
 		        }
 		    }
@@ -780,6 +798,13 @@
 		                return;
 		            }
 		        }
+		        
+		        if ((pListTypeValue == "1" || pListTypeValue == "11") && checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+		        	alert("<spring:message code='ezApprovalG.bhs23'/>");
+					getDocList();
+					return;
+				}
+		        
 		        formURL = pCurSelRow.getAttribute("DATA3");
 		        var docState = pCurSelRow.getAttribute("DATA12");
 		        if (docState == "012" || docState == "014" || docState == "018") {
@@ -823,10 +848,17 @@
 		            alert(pAlertContent);
 		            return;
 		        }
-		
+		        
 		        var Ans = confirm("<spring:message code='ezApprovalG.t1728'/>");
 		        if (Ans) {
-		            var pCurSelRow = oArrRows[0];
+			        var pCurSelRow = oArrRows[0];
+			        if (pListTypeValue == "1" || pListTypeValue == "11" || pListTypeValue == "2") {
+						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+							alert("<spring:message code='ezApprovalG.bhs23'/>");
+							getDocList();
+							return;
+						}
+					}
 		            if (pListTypeValue == "21")  //[한양대] 추가 사항 (서버 임시저장하기)
 		                RemoveTmpDoc(pCurSelRow.getAttribute("DATA1"));
 		            else
@@ -942,7 +974,7 @@
 				                    return;
 				                }
 				            }
-				            if (pListTypeValue == "1") {
+				            if (pListTypeValue == "1" || pListTypeValue == "11") {
 				                g_selReturn = "Y";
 				                OpenReceiveENDDraftUI(pCurSelRow, "REDRAFT");
 				            }
@@ -953,6 +985,11 @@
 			    } else {
 			    	if (oArrRows != 0) {
 		                var pCurSelRow = oArrRows[0];
+		                if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+							alert("<spring:message code='ezApprovalG.bhs23'/>");
+							getDocList();
+							return;
+	                	}
 		                OpenOpinionUI(pCurSelRow, "HeSong");
 		            }
 			    }
@@ -1448,6 +1485,12 @@
 		        createNodeAndInsertText(xmlpara, objNode, "ORDEROPTION", OrderOption);
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
 		        createNodeAndInsertText(xmlpara, objNode, "APPROVALFLAG", approvalFlag);
+		        
+		        var searchCompanyID = $("#selectCompany option:selected").val();
+		        if(searchCompanyID == undefined) {
+		        	searchCompanyID = "";
+		        }
+		        createNodeAndInsertText(xmlpara, objNode, "searchCompanyID", searchCompanyID);
 
 		        var wWeigth = 700;
 		        var wHeigth = 480;
@@ -1570,6 +1613,9 @@
 		            }
 		            else if (pListTypeValue == "21") {
 		                getDocList();
+		            }
+		            else if (pListTypeValue == "11") {
+		            	getDocList();
 		            }
 		            else {
 		                getDocList();
@@ -1787,6 +1833,9 @@
 		        else if (pListTypeValue == "21") {
 		            getDocList();
 		        }
+		        else if (pListTypeValue == "11") {
+		        	getDocList();
+		        }
 		        else {
 		            getDocList();
 		        }
@@ -1944,6 +1993,29 @@
 	    			div_scroll[0].style.visibility = "hidden";
 	    			title_h1[0].style.visibility = "hidden";
     			}
+		    }
+			
+			function checkAprState(pDocID, docState, OrgAprUserID, aprMemberSN) {
+		    	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/checkAprState.do",
+		    		data : {
+		    			docID : pDocID,
+		    			docState : docState,
+		    			userID : OrgAprUserID,
+		    			aprMemberSN : aprMemberSN,
+		    			orgCompanyID : orgCompanyID
+		    		},
+		    		success : function(text) {
+		    			result = text;
+		    		}
+		    	});
+		    	
+		    	return result == "FALSE" ? true : false;
 		    }
 		</script>
 	</head>

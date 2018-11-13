@@ -30,6 +30,7 @@
 				<th id="BoardList_TH_3" onclick="setListOrder(this)" order="2" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:35%;" class="h5_center">
 					<spring:message code='ezJournal.t56'/>
 				</th>
+				<th style="width:20px;"></th>
 				<th id="BoardList_TH_4" onclick="setListOrder(this)" order="6" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:10%;" class="h5_center">
 					<spring:message code='ezJournal.t40'/>
 				</th>
@@ -94,19 +95,22 @@
 						<spring:message code='${journal.typeId}'/>
 					</td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:35%;">
-					<jsp:useBean id="toDay" class="java.util.Date" />
-					<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
-					<fmt:parseDate value="${journal.journalDate}" pattern="yyyy-MM-dd"  var="jDay"/>
-					<fmt:formatDate value="${jDay}" pattern="yyyy-MM-dd" var="jDay"/>
-					<c:if test="${nowDay <= jDay }">
-						<img src="/images/i_new.gif">
-					</c:if>
-						<c:out value='${journal.journalTitle}'/>
+						<div style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>
+							<jsp:useBean id="toDay" class="java.util.Date" />
+							<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
+							<fmt:parseDate value="${journal.journalDate}" pattern="yyyy-MM-dd"  var="jDay"/>
+							<fmt:formatDate value="${jDay}" pattern="yyyy-MM-dd" var="jDay"/>
+							<c:if test="${nowDay <= jDay }">
+								<img src="/images/i_new.gif">
+							</c:if>
+							<c:out value='${journal.journalTitle}'/>
+						</div>
 						<c:if test="${journal.replyCount gt 0}">
 							<!-- <a onclick=""><span onclick="quickReply('${journal.journalId }','${journal.journalTitle }');" style="color: #c64200">[${journal.replyCount }]</span></a> -->
-							<a onclick=""><span style="color: #c64200">[<c:out value='${journal.replyCount }'/>]</span></a>
+							<a style="position: absolute;" onclick=""><span style="color: #c64200">[<c:out value='${journal.replyCount }'/>]</span></a>
 						</c:if>
 					</td>
+					<td style="width:20px; "></td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:10%;">
 						<c:out value='${journal.deptName}'/>
 					</td>

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>공유결재자 지정</title>
+		<title><spring:message code='ezApprovalG.bhs20'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
@@ -30,7 +30,6 @@
 		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
 		                var input = document.getElementsByTagName("input");
 		                for (var i = 0; i < input.length; i++) {
-		                	//??
 		                    if (input[i].getAttribute("type") == "text")
 		                        KeEventControl(input[i]);
 		                }
@@ -327,27 +326,57 @@
 		        listview.LoadFromID("Organ");
 		        var tr = listview.GetSelectedRows();
 		        var length = tr.length;
+		        var checkDupl = true;
 		        if (length == 0) {
-		            alert("공유결재자를 선택해주세요.");
+		            alert("<spring:message code='ezApprovalG.bhs16'/>");
 		            return;
 		        }
+		        
 		        if (length > 1) {
 		        	//한명만 지정해달라고 근데 나는 여러명 지정하는게 맞을 듯 한뎅..
-		            alert("<spring:message code='ezPersonal.t66'/>");
+		            alert("<spring:message code='ezApprovalG.bhs21'/>");
 		            return;
 		        }
+		        
 		        var selRow = tr[0];
 		        if ("${userInfo.id}" == selRow.getAttribute("DATA2")) {
-					alert("공유결재자로 자기 자신을 지정할 수 없습니다.");
+					alert("<spring:message code='ezApprovalG.bhs17'/>");
 					return;
-		        }		        
+		        }
+		        
+		        //ajax태워서 공유결재자로 이미 지정되 있는지 체크하고 가자
+				if (checkDuplShareUser(selRow.getAttribute("DATA2"))) {
+					alert("<spring:message code='ezApprovalG.bhs18'/>");
+					return;
+				}
+		        
 		        if (ReturnFunction != null) {
-	                ReturnFunction(selRow.getAttribute("DATA2"));
+	                ReturnFunction(selRow.getAttribute("DATA2"), selRow.getAttribute("DATA3"));
 		        }
 		        else {
 	                window.returnValue = selRow.getAttribute("DATA2");
 		        }
 		        window.close();
+		    }
+		    
+		    function checkDuplShareUser(shareUserId) {
+		    	var result = false;
+		        $.ajax({
+		        	type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezPersonal/checkDuplShareUser.do",
+		    		data : {
+		    			shareUserId : shareUserId
+		    		},
+		    		success: function(text){
+		    			if (text == "Dupl") {
+		    				result = true;
+		    			}
+		    		}
+		        });
+		        
+		        return result;
 		    }
 		</script>
 		<style>
@@ -382,7 +411,7 @@
 		  </LISTVIEWDATA>
 		</xml>
 		<h1>
-			공유결재자 지정
+			<spring:message code='ezApprovalG.bhs20'/>
 		</h1>
 		<div id="close">
 			<ul>

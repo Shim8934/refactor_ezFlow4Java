@@ -244,22 +244,22 @@
 				
 				//개인근태현황에서만 근태 등록 가능
 				if (deptFlag != "true") {
-					$(document).on('dblclick', '.td_day td', function(){
+					$(document).on('dblclick', '.td_day td', function() {
 						pMode = "new";
 						attitudeNewItem(this);
 					});
 				} else { //부서근태현황에서는 당일의 근태를 조회.
-					$(document).on('click', '.td_day td', function(){
+					$(document).on('click', '.td_day td', function() {
 						pMode = "new";
 						searchByDay(this);
 					});
 				}
 				
-				$('#attiCalendar').on('dblclick', 'tr td[typeid]:not(td[typeid=A01], td[typeid=A02], td[typeid=A03])', function(){
+				$('#attiCalendar').on('dblclick', 'tr td[typeid]:not(td[typeid=A01], td[typeid=A02], td[typeid=A03])', function() {
 					attitudeItemView(this);
 				});
 				
-				$(window).on("resize", function(){
+				$(window).on("resize", function() {
 					var popupX = parent.document.body.clientWidth/2 - (883/2) - 220;
 					var popupDayX = parent.document.body.clientWidth/2 - (883/2) - 220;
 					
@@ -342,25 +342,29 @@
 			});
 			
 			function scheduleGetLunarUse() {
-			    $.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/ezSchedule/scheduleGetLunarUse.do",
-		    		data : {
-		    			COMPANYID  : "${userInfo.companyID}"		    			
-		    		},
-		    		success: function(result) {		    			
-		    			if (result == "0") {
-		    				LunarUse = true;
-		    			} else if(result == "1") {
-		    				LunarUse = true;
-		    			} else {
-		    				LunarUse = false;
-		    			}		    			
-		    			getHolidayList();
-		    		}
-		        });
+				if (uselang != 3) {
+				    $.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezSchedule/scheduleGetLunarUse.do",
+			    		data : {
+			    			COMPANYID  : "${userInfo.companyID}"		    			
+			    		},
+			    		success: function(result) {		    			
+			    			if (result == "0") {
+			    				LunarUse = true;
+			    			} else if(result == "1") {
+			    				LunarUse = true;
+			    			} else {
+			    				LunarUse = false;
+			    			}		    			
+			    			getHolidayList();
+			    		}
+			        });
+				} else {
+					getHolidayList();
+				}
 			}
 			
 			/**
@@ -617,7 +621,9 @@
 							}	
 						}
 					}
-					$("td[typeid=A02][modappl=0]").css('cursor','default');
+					if ($("#authDeptList option:selected").attr("authtype") != "M") {
+						$("td[typeid=A02][modappl=0]").css('cursor','default');
+					}
 					checkAttiModAppl();
 				}
 			}
@@ -704,6 +710,23 @@
 					try { OpenWin.focus(); } catch (e) { }
 				} else {
 					rtnValue = window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", 
+					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+				}
+			}
+			
+			/**
+			* [개인근태현황, 부서근태현황] 지각 수정 위한 상세보기
+			*/
+			function attitudeItemDetail(obj) {
+				var pAttitudeId = obj.getAttribute("attitudeId"); 
+				var pTypeId = obj.getAttribute("typeId")
+				;
+				if (CrossYN()) {
+					var OpenWin = window.open("/ezAttitude/attitudeItemDetail.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(672, 640));
+					
+					try { OpenWin.focus(); } catch (e) { }
+				} else {
+					rtnValue = window.showModalDialog("/ezAttitude/attitudeItemDetail.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", 
 					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
 				}
 			}
@@ -1363,14 +1386,14 @@
 				var endTimeList = []; //퇴근시간 배열
 				
 		    	result.forEach(function(vo, index) {
-		    		if (vo.typeId == "A01" || vo.typeId == "A03" || vo.typeId == "A02" || vo.typeId == "A07") { //출근, 퇴근, 지각, 휴근 
+		    		if (vo.typeId == "A01" || vo.typeId == "A03" || vo.typeId == "A02" || vo.typeId == "A07") { //출근, 퇴근, 지각, 휴근
 			    		//no, 이름, 출근, 퇴근, 근태유형, 일시, 근무지 및 내용
 		    			if (vo.typeId == "A01") { //출근리스트
 				    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
 			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(11,16))));
 			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
-				    		objTr.append($("<td style='max-width:8%; width:8%;' title ='" + "출/퇴근" + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text("출/퇴근")));
+				    		objTr.append($("<td style='max-width:8%; width:8%;' title ='" + "<spring:message code='ezAttitude.t231'/>" + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text("<spring:message code='ezAttitude.t231'/>")));
 			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    			} else if (vo.typeId == "A03") { //퇴근
@@ -1392,8 +1415,11 @@
 			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    			}
-		    		}		
-		    		$("#addpopupDay_list tbody").append(objTr);
+		    		}
+		    		
+		    		if (objTr) {
+			    		$("#addpopupDay_list tbody").append(objTr);
+		    		}
 	    		});
 		    	
 		    	//퇴근 리스트
@@ -1627,8 +1653,15 @@
 						}
 					} else {
 						if (modappl == 0 && typeid == 'A02') {
-						} else if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4){
-							mod_detail(attitudeid);
+		 					if ($("#authDeptList option:selected").attr("authtype") == "M") { //관리자의 경우 지각인 근태는 수정할 수 있도록
+	 							attitudeItemDetail(this);
+	 						}	
+						} else if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4) {
+		 					if ($("#authDeptList option:selected").attr("authtype") == "M") { //관리자의 경우 지각인 근태는 수정할 수 있도록
+	 							attitudeItemDetail(this);
+	 						} else {
+								mod_detail(attitudeid);
+	 						}
 						}
 					}
 				});

@@ -383,4 +383,61 @@
 			MANUAL_FLAG NVARCHAR2(2) DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkJMochaMailSignatureTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				sign_no
+			FROM 
+				JMOCHA_MAIL_SIGNATURE_TEMPLATE
+			WHERE
+				rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createJMochaMailSignatureTemplate"> 
+	 	CREATE TABLE JMOCHA_MAIL_SIGNATURE_TEMPLATE 
+		(
+		  SIGN_NO NUMBER NOT NULL 
+		, CONTENT LONG VARCHAR 
+		, DISPLAYNAME VARCHAR2(45) 
+		, DISPLAYNAME2 VARCHAR2(45) 
+		, TENANT_ID NUMBER DEFAULT 0 NOT NULL 
+		, COMPANY_ID VARCHAR2(45) 
+		, CONSTRAINT JMOCHA_MAIL_SIGNATURE_TEMPLATE_PK PRIMARY KEY 
+		  (
+		    SIGN_NO 
+		  )
+		  ENABLE 
+		)
+		
+	</statement>
+		
+	<select id="EzCommonDAO.checkTblUserJobMaster" resultClass="String">
+		<![CDATA[
+			SELECT 
+				JOBID
+			FROM 
+				TBL_USER_JOBMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserJobMaster"> 
+		CREATE TABLE "TBL_USER_JOBMASTER" 
+		(	
+		"JOBID" NUMBER(10,0) NOT NULL ENABLE,
+		"TYPE" NVARCHAR2(50) NOT NULL ENABLE, 
+		"CN" NVARCHAR2(100), 
+		"DISPLAYNAME" NVARCHAR2(200), 
+		"DISPLAYNAME2" NVARCHAR2(200), 
+		"USEFLAG" NVARCHAR2(2), 
+		"SORT" NUMBER(10,0), 
+		"CREATEDATE" DATE, 
+		"COMPANYID" VARCHAR2(40 BYTE) NOT NULL ENABLE, 
+		"TENANT_ID" NUMBER(5,0) DEFAULT 0 NOT NULL ENABLE, 
+		 CONSTRAINT "TBL_USER_JOBMASTER_PK" PRIMARY KEY ("JOBID", "TYPE", "COMPANYID", "TENANT_ID")
+		 )
+	</statement>
+	
 </sqlMap>

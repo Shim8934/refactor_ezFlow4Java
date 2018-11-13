@@ -105,17 +105,17 @@ public interface EzOrganAdminService {
 	
 	public String getTitleList(String type, String companyID, int tenantID) throws Exception;
 	
-	public String getTitleInfo(String type, String cn, String companyID, int tenantID) throws Exception;
+	public String getTitleInfo(String type, String jobID, String companyID, int tenantID) throws Exception;
 
-	public String updateTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception;
+	public String updateTitle(String type, String jobID, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception;
 	
-	public String deleteTitle(String type, String cn, String companyID, int tenantID) throws Exception;
+	public String deleteTitle(String type, String jobID, String companyID, int tenantID) throws Exception;
 	
-	public String getTitleUserList(String type, String cn, String primary, String companyID, int tenantID) throws Exception;
+	public String getTitleUserList(String type, String jobID, String primary, String companyID, int tenantID) throws Exception;
 	
 	public int getTitleListCnt(String type, String companyID, int tenantID) throws Exception;
 	
-	public int getTitleUserListCnt(String type, String cn, String companyID, int tenantID) throws Exception;
+	public int getTitleUserListCnt(String type, String jobID, String companyID, int tenantID) throws Exception;
 
-	public int getTitleCnt(String type, String cn, String companyID, int tenantID) throws Exception;
+	public int getTitleCnt(String type, String jobID, String mode, String displayName, String displayName2, String companyID, int tenantID) throws Exception;
 }

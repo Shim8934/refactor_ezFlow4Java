@@ -332,6 +332,7 @@ function CalendarView(pTagetID,chk_str) {
             oDiv.style.borderBottomStyle = "solid";
             oDiv.style.borderBottomWidth = "1px";
             oDiv.style.overflowY = "auto";
+            oDiv.style.position = "relative"; //2018-11-09 김혜정
             oDiv.appendChild(oTable);
             objElm.appendChild(oDiv);
         }
@@ -466,10 +467,70 @@ function CalendarView(pTagetID,chk_str) {
             });               
  
     }
+    //2018-11-05 김혜정 월보기화면에서 드래그앤드롭을 위해 추가
+    $("td[id^='index_']").droppable({
+    	tolerance: "pointer",
+    	drop: function(event, ui) {
+    		var typeCal = 0;
+    		var dragId  = ui.draggable.children().attr("scheduleid");
+    		var dragDay = ui.draggable.children().attr("id");
+    		var dropDay = $(this).attr("day");
+    		
+    		if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
+    			RefreshView();
+    		}
+    	}
+    });
+    //2018-11-05 김혜정 주보기화면에서 드래그앤드롭을 위해 추가 - 하루종일
+    $("div[id$='ALL'").droppable({
+    	tolerance: "pointer",
+    	addClasses: false,
+    	drop: function(event, ui) {
+    		var dataType = ui.draggable.attr("datetype");
+    		
+    		if (dataType == "1") {
+    			ui.draggable.draggable("option", "revert", true);
+    		}
+    		else {
+    			var typeCal = 1;
+    			var dragId  = ui.draggable.attr("scheduleid");
+    			var dropDay = $(this).attr("id");
+    			var dragDay = ui.draggable.attr("id");
+    			dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));	
+    			dragDay = changeDateFormat(dragDay);
+    			
+    			if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
+    				RefreshView();
+    			}
+    		}
+    	}
+    });
+    //2018-11-06 김혜정 주보기/일보기 화면에서 드래그앤드롭을 위해 추가 - 시간지정
+    $("td[id^='TD_'][id$='_Value']").droppable({ //뒤에가 Value로 끝나는
+    	tolerance: "pointer",
+    	drop: function(event, ui) {
+    		var dataType = ui.draggable.attr("datetype");
+    		
+    		if (dataType == "2") {
+    			ui.draggable.draggable("option", "revert", true);
+    		}
+    		else {
+    			var typeCal = 1;
+    			var dragId  = ui.draggable.attr("scheduleid");
+    			var dropId  = $(this).attr("Id");
+    			var dropDay = dropId.substring(3, dropId.indexOf("_Value"));
+    			var dragDay = ui.draggable.attr("id");
+    			dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));
+    			dragDay = changeDateFormat(dragDay);
+    			dropDay = changeDateFormat(dropDay);
+    			
+    			if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
+    				RefreshView();
+    			}
+    		}
+    	}
+    });
 }
-
-
-
 function GetMonthBodyObj() {
 	// 2018-06-08 구해안 mini에서 호출하는 부분 삭제
     /*var year = parent.frames["left"].document.getElementById("iYear").value;
@@ -652,8 +713,6 @@ function MonthData(oThisDate, TDIndex) {
     objTd.onmousedown = function (event) { MultiSelectStart(this, event); };
     objTd.onmouseup = function (event) { MultiSelectEnd(this, event); };
     //objTd.onmouseover = function (event) { MultiSelectItems(this, event); };
-
-    
     var subTable = document.createElement("TABLE")
     var subTr = document.createElement("TR")
     var subTd = document.createElement("TD")
@@ -2068,4 +2127,44 @@ function myDate(year, month, day, leapMonth) {
     this.month = month;
     this.day = day;
     this.leapMonth = leapMonth;
+}
+function updateDragSchedule(typeCal, dragId, dragDay, dropDay) {
+	var rtv = true;
+	
+	$.ajax({
+		type : "POST",
+		async : false,
+		dataType : "text",
+		url : "/ezSchedule/scheduleDragSave.do",
+		data : {
+			typeCal: typeCal,
+			dragId : dragId,
+			dragDay: dragDay,
+			dropDay: dropDay
+		},
+		success: function(text){
+			if (text == "1") { //권한 없음
+				setTimeout(function() { alert(strLangKHJ8); }, 10)
+				rtv = false;
+			}else if (text == "2") { //이전날짜사용하는데 종료일이 현재날짜보다 큰 경우
+				setTimeout(function() { alert(strLang272); }, 10)
+				rtv = false;
+			}
+		},
+		error: function(error) {
+			console.log("error");
+		}
+	});
+	
+	return rtv;
+}
+function changeDateFormat(date) {
+	var day  = date.substring(0, 10);
+	var hour = date.substring(11, date.indexOf(":"));
+	var Minu = date.substring(date.indexOf(":") + 1);
+	
+	hour = (hour.length == 1) ?  "0" + hour : hour;
+	day  = day + " " + hour + ":" + Minu + "0:00";
+	
+	return day;
 }

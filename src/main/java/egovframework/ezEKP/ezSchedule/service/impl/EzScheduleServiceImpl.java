@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezSchedule.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -19,6 +20,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -523,7 +525,62 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		if (tempResultList != null) {
 			resultList = realList(resultList, tempResultList, orgStartDate, orgEndDate);
 		}
-
+		
+//		String realEndDate = resultList.get(resultList.size()-1).getEndDate();
+//		
+//		if (realEndDate.substring(10).equals("00:00:00.0")) {
+//			resultList.remove(resultList.size()-1);
+//		}
+		int resultCount = resultList.size();
+		ScheduleInfoVO svo = null;
+		ScheduleInfoVO svoAfter = null;
+		String svoId = "";
+		String svoIdAfter = "";
+		List<Integer> svoIndex = new ArrayList<Integer>();
+		String svoRepetition = null;
+		String[] info = null;
+		if (resultCount > 0) {
+			for (int i = 0; i < resultCount; i++) {
+				svo = resultList.get(i);
+				svoId = svo.getScheduleId();
+				svoRepetition = svo.getRepetition();
+				if (svoRepetition.equals("") || svoRepetition == null) {
+					continue;
+				} else {
+					info = svo.getRepetition().split("\\|");
+					
+					if (i+1 == resultCount && Integer.parseInt(info[0]) < 1){
+						if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+							svoIndex.add(i);
+						}
+						break;
+					} else if (i+1 == resultCount) {
+						break;
+					}
+					svoAfter = resultList.get(i+1);
+					svoIdAfter = svoAfter.getScheduleId();
+					
+					if (!svoId.equals(svoIdAfter) && Integer.parseInt(info[0]) < 1) {
+						if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+							svoIndex.add(i);
+						}
+					}
+				}
+			}
+		}
+		
+		int svoIndexCount = svoIndex.size();
+		
+		if (svoIndexCount > 0) {
+			for (int i = svoIndexCount-1; i >= 0; i--) {
+				resultList.remove(svoIndex.get(i).intValue());
+			}
+		}
+		
+		for (ScheduleInfoVO svo5 : resultList) {
+			logger.debug(svo5.getScheduleId()+"  :  "+svo5.getStartDate()+"  ,  "+svo5.getEndDate()+"  ,  "+svo5.getRepetition());
+		}
+		
 		return resultList;
 	}
 	
@@ -1188,6 +1245,138 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_TENANTID", tenantId);		
 		
 		ezScheduleDAO.deleteScheduleRepe(map);
+	}
+
+	@Override
+	public void updateDragSchedule(String scheduleid, String userId, String displayName1, String displayName2, String utcStartTime, String utcEndTime,int tenantId, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SCHEDULEID", scheduleid);
+		map.put("v_MODIFIERID", userId);
+		map.put("v_MODIFIERNAME", displayName1);
+		map.put("v_MODIFIERNAME2", displayName2);
+		map.put("v_STARTDATE", utcStartTime);
+		map.put("v_ENDDATE", utcEndTime);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
+
+		ezScheduleDAO.updateDragSchedule(map);
+		
+	}
+
+	@Override
+	public void copySchedule(String dragId, String startDate, String endDate, String defaultPath, String offset,int tenantId, String companyId) throws Exception {
+		
+		ScheduleInfoVO info = getScheduleInfo(dragId, offset, tenantId, companyId);
+		
+		String[] Repetition = info.getRepetition().split("\\|");
+		String dateType = Repetition[1].equals("0") ? "1" : "2"; //info[0]이면시간지정
+		logger.debug("Repetition[1]: " + Repetition[1]);
+		logger.debug("dateType: " + dateType);
+		
+		String mhtPath      = commonUtil.separator + "doc";
+		String attachPath   = commonUtil.separator + "uploadFile";
+		String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
+		String resultPath   = mhtPath + schedulePath;
+		copyMhtFile(defaultPath, mhtPath, info.getContentPath(), resultPath);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_OWNERID", info.getOwnerId());
+		map.put("v_OWNERNAME", info.getOwnerName());
+		map.put("v_OWNERNAME2", info.getOwnerName2());
+		map.put("v_CREATORID", info.getCreatorId());
+		map.put("v_CREATORNAME", info.getCreatorName());
+		map.put("v_CREATORNAME2", info.getCreatorName2());
+		map.put("v_SCHEDULETYPE", info.getScheduleType());
+		map.put("v_IMPORTANCE", info.getImportance());
+		map.put("v_HASATTENDANT", info.getHasAttendant());
+		map.put("v_HASATTACH", info.getHasAttach());
+		map.put("v_ISPUBLIC", info.getIsPublic());
+		map.put("v_DATETYPE", dateType);
+		map.put("v_STARTDATE", startDate);
+		map.put("v_ENDDATE", endDate);
+		map.put("v_REPETITION", null);
+		map.put("v_TITLE", info.getTitle());
+		map.put("v_LOCATION", info.getLocation());
+		map.put("v_CONTENTPATH", resultPath);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyId);
+		
+		ezScheduleDAO.insertSchedule(map);
+		int scheduleId = ezScheduleDAO.getCurScheduleId(null);
+		
+		//Save attach
+		List<AttachListVO> attachList = getAttachList(dragId, tenantId);
+		copyAttach(scheduleId, defaultPath, attachPath, attachList, tenantId);
+		
+		//Save attendList
+		List<AttendantListVO> attendList = getAttendantList(dragId, offset, tenantId, companyId);
+		for (int i = 0; i < attendList.size(); i++) {
+			String attendantId = attendList.get(i).getAttendantId();
+			String attendantName = attendList.get(i).getAttendantName();
+			String attendantName2 = attendList.get(i).getAttendantName2();
+			String attendantDeptName = attendList.get(i).getAttendantDeptName();
+			String attendantDeptName2 = attendList.get(i).getAttendantDeptName2();
+			
+			insertScheduleAttendant(Integer.toString(scheduleId), attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, tenantId, companyId);
+		}
+	}
+	
+	private String copyMhtFile(String defaultPath, String mhtPath, String contentPath, String resultPath) {
+		logger.debug("copyMhtFile start");
+		logger.debug(defaultPath);
+		
+		File file = new File(defaultPath + mhtPath);
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		
+		String newContentPath  = defaultPath + resultPath;
+		String orgContentPath  = defaultPath + contentPath;
+		
+		try {
+			FileUtils.copyFile(new File(orgContentPath), new File(newContentPath));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("copyMhtFile ended");
+		
+		return resultPath;
+	}
+	
+	private void copyAttach(int scheduleId, String defaultPath, String attachPath, List<AttachListVO> attachList, int tenantId) throws Exception {
+		logger.debug("copyAttach start");
+		
+		File file = new File(defaultPath + attachPath);
+		if (!file.exists()) {
+			file.mkdir();
+		}
+
+		String orgFileName;
+		int orgFileDot;
+		String orgFilePath;
+		String destFilePath;
+		
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+		for (int i = 0; i < attachList.size(); i++) {
+			
+			orgFileName  = attachList.get(i).getFileName();
+			orgFilePath  = attachList.get(i).getFilePath();
+			orgFileDot   = orgFileName.indexOf(".");
+			destFilePath = commonUtil.separator + "{" + UUID.randomUUID() + "}_" + orgFileName.substring(orgFileDot);
+			
+			attachMap.put("v_SCHEDULEID", scheduleId);
+			attachMap.put("v_FILENAME", attachList.get(i).getFileName());
+			attachMap.put("v_FILEPATH", destFilePath);
+			attachMap.put("v_FILESIZE", attachList.get(i).getFileSize());
+			attachMap.put("v_TENANTID", tenantId);
+			
+			ezScheduleDAO.insertScheduleAttach(attachMap);
+			FileUtils.copyFile(new File(defaultPath + orgFilePath), new File(defaultPath + destFilePath));
+		}
+		logger.debug("copyAttach ended");
 	}
 }
 

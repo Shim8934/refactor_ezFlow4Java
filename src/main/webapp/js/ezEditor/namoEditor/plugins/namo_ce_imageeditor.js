@@ -19,9 +19,9 @@ var ce_ImageEditorPlugin = {
 	photoFlashVer : 0,
 
 	start : function() {
-		console.log('start plugin')
-		console.log('start plugin')
-		console.log('start plugin')
+		//console.log('start plugin')
+		//console.log('start plugin')
+		//console.log('start plugin')
 
 		t = this;
 		t._iCmd = t._oThis.pCmd;
@@ -63,7 +63,7 @@ var ce_ImageEditorPlugin = {
 			range = _selection.range = _selection.getRange();
 		}
 
-		console.log('selected item : ',CE_ItemManager.status.SELECTED_ITEM )
+		//console.log('selected item : ',CE_ItemManager.status.SELECTED_ITEM )
 		if(CE_ItemManager.status.SELECTED_ITEM) {
 			var item = CE_ItemManager.status.SELECTED_ITEM;
 			if (item.type !== 'image') {
@@ -75,10 +75,10 @@ var ce_ImageEditorPlugin = {
 
 		var divImageinsert = this.create();
 		if (!divImageinsert) {
-			console.log('--failed to open popup')
+			//console.log('--failed to open popup')
 			return null;
 		}
-		console.log('--load image editor..')
+		//console.log('--load image editor..')
 		t.openImageEditor();
 
 		return divImageinsert;
@@ -86,7 +86,7 @@ var ce_ImageEditorPlugin = {
 	openImageEditor: function() {
 		t.maskParent();
 		var basePath = this._oThis.baseURL + t._oThis.config.AddPluginPath;
-		console.log(basePath);
+		//console.log(basePath);
 		var params = t.getEditorSetParameter();
 		//window.open('../../plugins/ce_ImageEditor/www/')
 		//t._phWin.location.href='../../plugins/ce_ImageEditor/www/?'+params;
@@ -124,18 +124,18 @@ var ce_ImageEditorPlugin = {
 		$(t._oThis.getParentDocument()).find('.__namose_window_mask').remove();
 	},
 	create : function() {
-		console.log('create plugin - start')
+		//console.log('create plugin - start')
 
 		var t = this;
-		console.log('create plugin - open popup')
+		//console.log('create plugin - open popup')
 		t._phWin = t._oPlugins.popupOpen(t._oThis.pCmd, t.photoWidth, t.photoHeight, t.defaulTitle);
 		var newPluginHolder = t._phDoc = t._oThis.createPopupPluginSpace(t._phWin);
 		if (!newPluginHolder) {
-			console.log('create plugin - open popup failed..')
+			//console.log('create plugin - open popup failed..')
 			return null;
 		}
 
-		console.log('create plugin - set up events..')
+		//console.log('create plugin - set up events..')
 		NamoSE.Util.addEvent(t._phDoc, 'contextmenu', function(e) {
 			NamoSE.Util.stop(e);
 			return false;
@@ -310,7 +310,7 @@ var ce_ImageEditorPlugin = {
 			+ "&imagemodify=true";
 		}
 
-		console.log(' req params : defaultImageURL - ', iSrc)
+		//console.log(' req params : defaultImageURL - ', iSrc)
 
 		return imageEditorFlashVars;
 
@@ -504,6 +504,24 @@ var ce_ImageEditorPlugin = {
 		var $ = this._oThis.$;
 		obj = dataURItoBlob(obj);
 		var saveFileSizeLimit =  t._oThis.getUploadFileSizeLimit();
+
+		var objType = null;
+		if(obj.type && obj.type.indexOf("image") != -1){
+			objType = "image";
+		}else if(obj.type && obj.type.indexOf("video") != -1){
+			objType = "movie";
+		}else{
+			return false;
+		}
+
+		if(objType == "image" && obj.size > saveFileSizeLimit.image){
+			setInsertImageFile("invalid_size", saveFileSizeLimit.image);
+			return false;
+		}else if(objType == "movie" && obj.size > saveFileSizeLimit.movie){
+			setInsertImageFile("invalid_size", saveFileSizeLimit.movie);
+			return false;
+		}
+
 		var imageDomain = (t._oThis.params.UserDomain && t._oThis.params.UserDomain.Trim() != "") ? t._oThis.params.UserDomain : "";
 		//var filename = obj[0].name || "";//(obj[0].type.indexOf('/') > 0)?"copyImage." + obj[0].type.substring(obj[0].type.indexOf('/')+1):"copyImage.png";
 		var filename = "pasteimage";
@@ -537,7 +555,11 @@ var ce_ImageEditorPlugin = {
 		formData.append('imageSizeLimit', saveFileSizeLimit.image); //ok
 		formData.append('imagemodify', '');	//없음
 		formData.append('imageEditorFlag', '');//없음
-		formData.append('uploadFileSubDir', true);//직접입력값
+
+		//formData.append('uploadFileSubDir', true);//직접입력값
+		var uploadFileSubDir = (t._oThis.params.UploadFileSubDir == null) ? "true" : t._oThis.params.UploadFileSubDir;
+		formData.append('uploadFileSubDir', uploadFileSubDir);
+
 		formData.append('imageDomain', imageDomain);	//ok
 		formData.append('imageInsertFlag1', '1');
 //		formData.append('imageFile_Text', 'C:\\fakepath\\' + filename);//test 필요
@@ -546,7 +568,7 @@ var ce_ImageEditorPlugin = {
 		if(t._oThis.params.InputFileName){
 			inputFileName = t._oThis.params.InputFileName;
 		}
-		console.log(obj);
+		//console.log(obj);
 //		if (filename) {
 //			formData.append('imageFile_Text', 'C:\\fakepath\\' + filename);//test 필요
 //		}
@@ -608,7 +630,7 @@ var ce_ImageEditorPlugin = {
 		//if (['jsp', 'servlet'].InArray(savePathURLExt)) {
 		if(savePathURL.substr(savePathURL.lastIndexOf(".")).toLowerCase() == ".jsp"){
 			var paramConnector = t._oThis.getWebSourceConnertor();
-			saveActionParam = paramConnector + "imageSizeLimit=" + saveFileSizeLimit.image + "&imageUPath=" + imageUPath + "&defaultUPath=" + defaultUPath + "&imageViewerPlay=false&imageDomain=" + imageDomain + "&uploadFileSubDir=true&useExternalServer=" + useExternalServer + "&checkPlugin=false&fileType=" + fileType;
+			saveActionParam = paramConnector + "imageSizeLimit=" + saveFileSizeLimit.image + "&imageUPath=" + imageUPath + "&defaultUPath=" + defaultUPath + "&imageViewerPlay=false&imageDomain=" + imageDomain + "&uploadFileSubDir=" + uploadFileSubDir + "&useExternalServer=" + useExternalServer + "&checkPlugin=false&fileType=" + fileType;
 		}
 
 		var deferred = $.Deferred();
@@ -616,9 +638,9 @@ var ce_ImageEditorPlugin = {
 		xhr.open('POST', savePathURL + saveActionParam);	//savePathURL
 
 		xhr.onload = function (res) {
-			console.log(arguments)
+			//console.log(arguments)
 		  if (xhr.status === 200) {
-			  console.log('upload result : ' , xhr.responseText)
+			  //console.log('upload result : ' , xhr.responseText)
 				try{
 					deferred.resolve(xhr.responseText);
 					/*
@@ -636,7 +658,7 @@ var ce_ImageEditorPlugin = {
 					*/
 
 				} catch(e) {
-					console.error(e);
+					//console.error(e);
 					deferred.resolve(xhr.responseText);
 				}
 
@@ -654,9 +676,9 @@ var ce_ImageEditorPlugin = {
 		t = t || this;
 
 		var $ = t._oThis.$;
-		console.log('execute plugin')
-		console.log('execute plugin')
-		console.log('execute plugin')
+		//console.log('execute plugin')
+		//console.log('execute plugin')
+		//console.log('execute plugin')
 		//imageEditorAction() ;
 		//imageEditorAction(t._oThis.getPluginHolderDocument()) ;
 		var val = '';
@@ -671,7 +693,7 @@ var ce_ImageEditorPlugin = {
 						_selection.setRangeSelect();
 				}
 			} catch(e) {
-				console.error(e);
+				//console.error(e);
 			}
 		} else {
 			_selection.setRangeSelect();
@@ -688,7 +710,7 @@ var ce_ImageEditorPlugin = {
 		try{
 			var item = CE_ItemManager.status.SELECTED_ITEM;
 			if(item && data.mode==='ITEM') {
-				console.log('INSERT_IMAGE with selected item', data)
+				//console.log('INSERT_IMAGE with selected item', data)
 				var img = item.dom;
 				var $img = $(img);
 				$img.attr('src', data.src);
@@ -700,7 +722,7 @@ var ce_ImageEditorPlugin = {
 				}
 				item.select();
 			} else {
-				console.log('INSERT_IMAGE on text', data);
+				//console.log('INSERT_IMAGE on text', data);
 				data.alt = data.alt || '';
 				var img = '<img alt="'+data.alt+'" src="'+data.src+'" style="width:'+data.width+'px;height:'+data.height+'px;" namose_imgsetuptemp="True"/>';
 				var idoc = t._oThis.editorFrame.contentWindow.document;
@@ -720,27 +742,36 @@ var ce_ImageEditorPlugin = {
 						$(pNode).html('&nbsp;');
 					}
 					_selection.sel.collapse(pNode.firstChild, 0);
-					console.log(t)
+					//console.log(t)
 					idoc.execCommand("InsertHTML", false, img||null);
 				}
 				CE_ItemManager.insertItem();
 			}
-			if(t._oThis.params.event.CBInsertedImage){
+			if(t._oThis.params.event.CBInsertedImage || t._oThis.params.event.CBInsertedImageEx){
 				var idoc = t._oThis.editorFrame.contentWindow.document;
 				var insertImg = null;
 				var x =  NamoSE.Util.getElementNodeList(idoc, "img");
 				for (i = 0; i < x.length; i++) {
 					if (x[i].getAttribute('namose_imgsetuptemp') && x[i].getAttribute('namose_imgsetuptemp') == "True") {
 						insertImg = x[i];
+						x[i].removeAttribute('namose_imgsetuptemp');
 						break;
 					}
 				}
-				if(insertImg){
+				if(insertImg && t._oThis.params.event.CBInsertedImage){
 					t._oThis.params.event.CBInsertedImage(insertImg, "0");
+				}
+				if(insertImg && t._oThis.params.event.CBInsertedImageEx){
+					var obj = {};
+					obj.element = insertImg;
+					obj.type = "0";
+					obj.size = data.size;
+					obj.path = insertImg.src;
+					t._oThis.params.event.CBInsertedImageEx(obj);
 				}
 			}
 		} catch(e) {
-			console.log(e);
+			//console.log(e);
 		}
 
 		t.unmaskParent();

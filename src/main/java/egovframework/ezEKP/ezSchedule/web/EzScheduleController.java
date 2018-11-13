@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +44,7 @@ import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.util.MapTimeZoneCache;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -375,7 +377,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 					}			
 					ScheduleSecretaryVO data = tList.get(i);			
 					indiListSub += "\'" + data.getSecId()+ "\',";			
-					System.out.println("비서가 있다고??? 회장인데?? : " + data.getSecId() + " , 이름 : " + data.getSecName());
 				}				
 			}
 			
@@ -624,7 +625,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("useEditor",		useEditor);
         model.addAttribute("defaultTitle",	defaultTitle);
         model.addAttribute("shareList",		sb.toString());
-        model.addAttribute("useScheduleIcs", useScheduleIcs);
+        model.addAttribute("useScheduleIcs",useScheduleIcs);
         
 		return "/ezSchedule/scheduleMain";
 	}
@@ -1260,6 +1261,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String cID = request.getParameter("COMPANYID");
+		
+		//2018-11-01 김혜정 일정드래그앤드랍을 위해 추가
+		if (cID == null) {
+			cID = loginSimpleVO.getCompanyID();
+		}
 		
 		String result = ezScheduleService.scheduleGetRegi(cID, loginSimpleVO.getTenantId());
 		
@@ -2044,10 +2050,11 @@ public class EzScheduleController extends EgovFileMngUtil {
         String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
         int tenantId = loginVO.getTenantId();
         String companyID = loginVO.getCompanyID();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         
         //일정 상세정보
         ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, tenantId, companyID);
-         
+        
         //일정기간 계산        
         if (vo.getDateType().equals("3")){        	
         	_repeatcount = request.getParameter("repeatcount");
@@ -2060,7 +2067,18 @@ public class EzScheduleController extends EgovFileMngUtil {
         					+ vo.getStartDate().substring(11, 16) + " ~ " + vo.getEndDate().substring(11, 16);        		
         	}        	
         } else if (vo.getDateType().equals("2")){
-        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);        	
+        	//하루종일 일때 endDate 수정
+        	String realEndDateFormat = "";
+        	if (vo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+        		Date realEndDate = sdf.parse(vo.getEndDate().substring(0,10));
+        		Calendar cal = Calendar.getInstance();
+        		cal.setTime(realEndDate);
+        		cal.add(Calendar.DATE, -1);
+        		realEndDate = cal.getTime();
+        		realEndDateFormat = sdf.format(realEndDate);
+        	}
+        	
+        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + realEndDateFormat + " (" + msg.getMessage("ezSchedule.t280", locale);        	
         } else {
         	dateString = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16);
         }
@@ -2091,7 +2109,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         	}
         	
         	model.addAttribute("attachList", aList);
-        }       
+        }
         
         //참석자 관련 권한부여
         String _admin = "Y";
@@ -2108,6 +2126,15 @@ public class EzScheduleController extends EgovFileMngUtil {
         ) {
         	_admin = "N";
         	_editPosible = "N";
+        }
+        //비서 권한 부여
+        List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(loginVO.getId(), loginVO.getLang(), tenantId ,companyID);
+        
+        for (ScheduleSecretaryVO ssvo : tList) {
+        	if (ssvo.getSecId().equals(vo.getOwnerId())) {
+        		_admin = "Y";
+        		_editPosible = "Y";
+        	}
         }
         
         model.addAttribute("scheduleInfo", vo);        
@@ -2787,7 +2814,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 					String edate      = "";
 					
 					//content를 mht로 바꾸기 위해서
-					content = "<HTML><HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><style>P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }</style></HEAD><BODY>" + contentSplit(content) + "</BODY>" + "</HTML>";
+					content = "<html><head><meta content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><style type=\"text/css\">P { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } DIV { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }TD { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } UL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } OL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } LI { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; } BODY { MARGIN-RIGHT: 10px; FONT-SIZE:10PT; LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic } TABLE TD { text-indent: 0px } BLOCKQUOTE { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}</style></head><body><div>" + contentSplit(content)  + "</div></body></html>";
 					content = contentToMHT(content, scheme, realPath, loginVO.getLocale());
 					
 					DtStart dtStart  = vEvent.getStartDate();
@@ -3028,6 +3055,235 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		logger.debug("icsImport end");
 		return "/ezSchedule/scheduleImportComplete";
+	}
+	
+	@RequestMapping(value = "/ezSchedule/scheduleDragSave.do")
+	@ResponseBody
+	public String scheduleDragSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		logger.debug("scheduleDragSave started.");
+		
+		String returnValue = "0";
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		String offset    = loginVO.getOffset();
+		String companyId = loginVO.getCompanyID();
+		int tenantId     = loginVO.getTenantId();
+		
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
+		
+		String offSetMin = commonUtil.getMinuteUTC(offset);
+		String typeCal   = request.getParameter("typeCal");
+		String dragId    = request.getParameter("dragId");
+		String dragDay   = request.getParameter("dragDay");
+		String dropDay   = request.getParameter("dropDay");
+		
+		ScheduleInfoVO info  = ezScheduleService.getScheduleInfo(dragId, offSetMin, tenantId, companyId);
+		String infoStartTime = info.getStartDate().substring(10, 19);
+		String infoEndTime   = info.getEndDate().substring(10, 19);
+		
+		//Check Permission
+		List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(loginVO.getId(), loginVO.getLang(), tenantId, companyId);
+		
+		if (getEditPosible(loginVO, info, tList).equals("N")) {
+			logger.debug("Not Permission");
+			returnValue = "1";
+			return returnValue;
+		}
+		
+		//Check PreviousDay 
+		String usePreday = ezScheduleService.scheduleGetRegi(companyId, tenantId);
+		Calendar cal     = Calendar.getInstance();
+		String today     = sdf2.format(cal.getTime());
+		String utcToday  = commonUtil.getDateStringInUTC(today, offset, true);
+
+		String startDate;
+		String endDate;
+		String utcStartTime;
+		String utcEndTime;
+		
+		//반복일정
+		if (info.getDateType().equals("3")) {
+			String defaultPath  = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", tenantId);
+			String delStartDate;
+			
+			if (typeCal.equals("0")) { 
+				startDate    = dropDay + infoStartTime;
+				endDate      = dropDay + infoEndTime;
+				delStartDate = dragDay.substring(4, 14) + infoStartTime;
+			}
+			else {
+				if (dropDay.contains("ALL")) {
+					startDate = dropDay.substring(0, 10) + infoStartTime;
+					endDate   = getDropEndDate(sdf1, dropDay.substring(0, 10), info) + infoEndTime;
+				}
+				else {
+					startDate = getDropStartEnd(sdf2, dropDay, info).get(0);
+					endDate   = getDropStartEnd(sdf2, dropDay, info).get(1);
+				}
+				
+				delStartDate = dragDay.substring(0, 10) + infoStartTime;
+			}
+			
+			String utcDelTime   = commonUtil.getDateStringInUTC(delStartDate, offset, true);
+			utcStartTime = commonUtil.getDateStringInUTC(startDate, offset, true);
+			utcEndTime   = commonUtil.getDateStringInUTC(endDate, offset, true);
+			
+			if (usePreday.equals("2") && CompareDate(utcEndTime.substring(0, 10), utcToday.substring(0, 10))) { //둘다true이면 저장안함
+				returnValue = "2";
+				return returnValue;
+			}
+			else {
+				//일정데이터 삭제 
+				ezScheduleService.insertScheduleRepeDel(dragId, utcDelTime, tenantId, companyId);
+					
+				//일정데이터 복사
+				ezScheduleService.copySchedule(dragId, utcStartTime, utcEndTime, defaultPath, offset, tenantId, companyId);
+			}
+		}
+		else {
+			if (typeCal.equals("0")) {
+				startDate = dropDay + infoStartTime;
+				endDate   = getDropEndDate(sdf1, dropDay.substring(0, 10), info) + infoEndTime;
+			}
+			else {
+				if (dropDay.contains("ALL")) {
+					startDate = dropDay.substring(0, 10) + infoStartTime;
+					endDate   = getDropEndDate(sdf1, dropDay, info) + infoEndTime;
+				}
+				else {
+					startDate = getDropStartEnd(sdf2, dropDay, info).get(0);
+					endDate   = getDropStartEnd(sdf2, dropDay, info).get(1);
+				}
+			}
+			
+			utcStartTime = commonUtil.getDateStringInUTC(startDate, offset, true);
+			utcEndTime = commonUtil.getDateStringInUTC(endDate, offset, true);
+			
+			if (usePreday.equals("2") && CompareDate(utcEndTime.substring(0, 10), utcToday.substring(0, 10))) { //둘다true이면 저장안함
+				returnValue = "2";
+				return returnValue;
+			}
+			else {
+				//일정데이터 수정
+				ezScheduleService.updateDragSchedule(dragId, loginVO.getId(), loginVO.getDisplayName1(), loginVO.getDisplayName2(), utcStartTime, utcEndTime, tenantId, companyId);
+			}
+		}
+		
+		returnValue = utcEndTime.substring(0, 10);
+		
+		logger.debug("scheduleDragSave ended.");
+		return returnValue;
+	}
+	/**
+	 * startDate 와 endDate 차이 구하는 함수
+	 */
+	private Integer getDateDiff(ScheduleInfoVO info) throws Exception {
+		logger.debug("getDateDiff start");
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
+		
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(sdf.parse(info.getStartDate().substring(0, 19)));
+		
+		Calendar endCal = Calendar.getInstance();
+		endCal.setTime(sdf.parse(info.getEndDate().substring(0, 19)));
+		
+		long diff = endCal.getTimeInMillis() - startCal.getTimeInMillis();
+		long diffMinu = diff / (60 * 1000);
+		
+		logger.debug("diffMinu: " + diffMinu);
+		logger.debug("getDateDiff ended");
+		
+		return (int) diffMinu;
+	}
+	/**
+	 * 종일일정 dropDay 에서 endDate 구하는 함수
+	 */
+	private String getDropEndDate(SimpleDateFormat sdf, String dropDay, ScheduleInfoVO info) {
+		logger.debug("getDropEndDate start");
+		
+		String endDate = "";
+		
+		try {
+			Calendar dropCal = Calendar.getInstance();
+			dropCal.setTime(sdf.parse(dropDay));
+			dropCal.add(Calendar.MINUTE, getDateDiff(info));
+			endDate = sdf.format(dropCal.getTime());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("getDropEndDate ended");
+		return endDate;
+	}
+	/**
+	 * 시간일정 dropDay 에서 startDate 와  endDate 구하는 함수
+	 */
+	private ArrayList<String> getDropStartEnd (SimpleDateFormat sdf, String dropDay, ScheduleInfoVO info) {
+		
+		ArrayList<String> date = new ArrayList<String>();
+		
+		try {
+			Calendar dropCal = Calendar.getInstance();
+			dropCal.setTime(sdf.parse(dropDay));
+		
+			date.add(sdf.format(dropCal.getTime())); //startDate
+			dropCal.add(Calendar.MINUTE, getDateDiff(info));
+			date.add(sdf.format(dropCal.getTime())); //endDate
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		return date;
+	}
+	/**
+	 * 드래그앤드롭시 종료일과 오늘날짜 비교하는 함수
+	 */
+	private boolean CompareDate(String endDate, String today) {
+		boolean returnValue = false;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		try {
+			Calendar cal1 = Calendar.getInstance();
+			cal1.setTime(sdf.parse(endDate));
+			Calendar cal2 = Calendar.getInstance();
+			cal2.setTime(sdf.parse(today));
+			
+			if (cal1.compareTo(cal2) == -1) { //종료일이 오늘날짜보다 큰경우 저장안함
+				returnValue = true;
+			}
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return returnValue;
+	}
+	/**
+	 * 일정 수정권한 구하는 함수
+	 */
+	private String getEditPosible(LoginVO loginVO, ScheduleInfoVO info, List<ScheduleSecretaryVO> tList)  {
+		//참석자관련권한부여
+		String _editPosible = "Y";
+		String userId = loginVO.getId();
+		String rollInfo = loginVO.getRollInfo();
+		String ownerId = info.getOwnerId();
+		String scheduleType = info.getScheduleType();
+						
+		if (!ownerId.equals(userId) && !info.getCreatorId().equals(userId) && !info.getModifierId().equals(userId)	 
+			&& (!scheduleType.equals("2") || !ownerId.equals(loginVO.getDeptID()) || (rollInfo.indexOf("c=1") == -1 && rollInfo.indexOf("k=1") == -1 && rollInfo.indexOf("g=1") == -1))
+			&& (!scheduleType.equals("3") && !scheduleType.equals("2") || (rollInfo.indexOf("c=1") == -1 && rollInfo.indexOf("k=1") == -1)) 
+			|| info.getIsReadOnly().equals("Y")
+		) {
+			_editPosible = "N";
+		}
+		for (ScheduleSecretaryVO ssvo : tList) {
+			if (ssvo.getSecId().equals(info.getOwnerId())) {
+				_editPosible = "Y";
+			}
+		}
+		return _editPosible;
 	}
 	/**
 	 * ics 파일에서 가져온 데이터의 문자열을 자르는 함수

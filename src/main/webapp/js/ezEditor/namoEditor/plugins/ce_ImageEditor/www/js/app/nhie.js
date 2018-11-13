@@ -503,6 +503,13 @@ define([
 					width: 400,
 					modal: true,
 				}),
+				alert_dialog_imagesizeinvalid: new Dialog({
+					title: 'Image Editor',
+					type: 'alert',
+					content: "<p><%=NHIE_Lang['PluginImageSizeInvalid']%> (" + opener.ce_ImageEditorPlugin._oThis.getUploadFileSizeLimit().image + "bytes " + NHIE.Lang.SupportLowVersion + ")</p>",
+					width: 400,
+					modal: true,
+				}),
 				alert_dialog_bigimage: new Dialog({
 					title: 'Image Editor',
 					type: 'alert',

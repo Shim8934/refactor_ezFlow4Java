@@ -139,8 +139,7 @@
 		        pObjSpan.parentElement.onclick();
 		        var TreeCtrl = getFirstChild(pObjSpan.parentElement);
 		        TreeCtrl.onclick();
-		
-		        TreeCtrl.onclick();
+		        
 		        var selectItem;
 		
 		        var totalboard = "";
@@ -152,67 +151,92 @@
 		        }
 		
 		        var cnt = totalboard.children[0].getElementsByTagName("div").length;
-		
+		        
+		        /* 2018-11-01 홍승비 - 접근권한 없는 게시판에 포탈 포틀릿 등으로 접근 시, 오류메세지 표출하도록 수정 */
+		        var accessCheck = "";
 		        for (var i = 0; i < cnt; i++) {
-		            if (RedirectBoardID == totalboard.children[0].getElementsByTagName("div")[i].getAttribute("data1")) {
-		                selectItem = totalboard.children[0].getElementsByTagName("div")[i];
-		                break;
-		            }
-		            else {
-		                var parentNodeid = totalboard.children[0].getElementsByTagName("div")[i].id;
-		                var imgtag = "imgNode_" + totalboard.children[0].getElementsByTagName("div")[i].id;
-		                if (imgtag.indexOf("sub") > -1) {
-		                    var treecnt = document.getElementById(parentNodeid).childNodes.length;
-		                    cnt += treecnt;
-		                }
-		
-		                var rtnval = SearchTreeViewByPath(imgtag, parentNodeid);
-		                cnt += rtnval;
-		            }
+		        	if (typeof(totalboard.children[0].getElementsByTagName("div")[i]) == "undefined") {
+		        		accessCheck = "NO";
+			        	break;
+			        }
+		        	else {
+			        	if (RedirectBoardID == totalboard.children[0].getElementsByTagName("div")[i].getAttribute("data1")) {
+			                selectItem = totalboard.children[0].getElementsByTagName("div")[i];
+			                break;
+			            }
+			            else {
+			                var parentNodeid = totalboard.children[0].getElementsByTagName("div")[i].id;
+			                var imgtag = "imgNode_" + totalboard.children[0].getElementsByTagName("div")[i].id;
+			                if (imgtag.indexOf("sub") > -1) {
+			                    var treecnt = document.getElementById(parentNodeid).childNodes.length;
+			                    cnt += treecnt;
+			                }
+			
+			                var rtnval = SearchTreeViewByPath(imgtag, parentNodeid);
+			                cnt += rtnval;
+			            }
+			        }
 		        }
-		        selectItem.getElementsByTagName("span")[0].onclick();
-		        var tempid = selectItem.id.split("_");
-		        var tempidlength = tempid.length;
-		        var clicknode = new Array();
-		        if (CrossYN()) {
-		            for (var i = 0; i < tempidlength; i++) {
-		                if (selectItem.getAttribute("DATA3") != pBoardGroupID) {
-		                    if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1)
-		                        clicknode[i] = selectItem.id;
-		                    else
-		                        i--;
-		                    selectItem = selectItem.parentElement;
-		                }
-		                else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
-		                    selectItem.childNodes[0].click();
-		                    var j = clicknode.length;
-		                    for (var k = j; k > 0; k--) {
-		                        document.getElementById(clicknode[k - 1]).childNodes[k - 1].onclick();
-		                    }
-		                    return;
-		                }
-		            }
+		        
+		        if (accessCheck != "NO") {
+			        selectItem.getElementsByTagName("span")[0].onclick();
+			        var tempid = selectItem.id.split("_");
+			        var tempidlength = tempid.length;
+			        var clicknode = new Array();
+			        if (CrossYN()) {
+			            for (var i = 0; i < tempidlength; i++) {
+			                if (selectItem.getAttribute("DATA3") != pBoardGroupID) {
+			                    if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1)
+			                        clicknode[i] = selectItem.id;
+			                    else
+			                        i--;
+			                    selectItem = selectItem.parentElement;
+			                }
+			                else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
+			                    selectItem.childNodes[0].click();
+			                    var j = clicknode.length;
+			                    for (var k = j; k > 0; k--) {
+			                        document.getElementById(clicknode[k - 1]).childNodes[k - 1].onclick();
+			                    }
+			                    return;
+			                }
+			            }
+			        }
+			        else {
+			            for (var i = 0; i < tempidlength; i++) {
+			                if (selectItem.getAttribute("DATA3") != pBoardGroupID) {
+			                    if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1)
+			                        clicknode[i] = selectItem.id;
+			                    else
+			                        i--;
+			                    selectItem = selectItem.parentElement;
+			                }
+			                else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
+			                    selectItem.childNodes[0].click();
+			                    var j = clicknode.length;
+			                    for (var k = j; k > 0; k--) {
+			                        document.getElementById(clicknode[k - 1]).childNodes[k - 1].click();
+			                    }
+			                    return;
+			                }
+			            }
+			        }
 		        }
+		        // 리다이렉트된 게시판에 접근권한이 없다면 우측프레임에 메세지 표출함 
 		        else {
-		            for (var i = 0; i < tempidlength; i++) {
-		                if (selectItem.getAttribute("DATA3") != pBoardGroupID) {
-		                    if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1)
-		                        clicknode[i] = selectItem.id;
-		                    else
-		                        i--;
-		                    selectItem = selectItem.parentElement;
-		                }
-		                else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
-		                    selectItem.childNodes[0].click();
-		                    var j = clicknode.length;
-		                    for (var k = j; k > 0; k--) {
-		                        document.getElementById(clicknode[k - 1]).childNodes[k - 1].click();
-		                    }
-		                    return;
-		                }
-		            }
+		        	var rightFrameDoc = "";
+		        	if (typeof window.parent.frames["right"] == "undefined") {
+		        		rightFrameDoc = rightFrame.document;
+		        	} else {
+		        		rightFrameDoc = window.parent.frames["right"].document;
+		        	}
+		        	
+		        	rightFrameDoc.head.innerHTML = "<link rel='stylesheet' href='${util.addVer('ezBoard.i1', 'msg')}' type='text/css'>";
+		        	rightFrameDoc.body.className = "mainbody";
+		        	rightFrameDoc.body.innerHTML = "<div style='margin-top:100px;text-align:center'><spring:message code='ezBoard.t272'/></div>";
 		        }
 		    }
+		    
 		    function SearchTreeViewByPath(imgtag, parentNodeid) {
 		        if (imgtag.indexOf("sub") == -1 && document.getElementById(imgtag).src.indexOf("plus") > -1) {
 		            document.getElementById(imgtag).onclick();

@@ -711,7 +711,7 @@
 					return;
 				}
 
-			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=430px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(430, 315));
+			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
 			}
 		    
 			function Change_List(){
@@ -878,7 +878,7 @@
 				//if (CrossYN()) {
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = add_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 620));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
 			    try { OpenWin.focus(); } catch (e) { }
 				/* }else{
 				    var rtnValue;
@@ -934,7 +934,7 @@
 			    userinfo_dialogArguments = new Array();
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = info_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 510));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
 			    try { OpenWin.focus(); } catch (e) { }
 				/* }else{
 				    var rtnValue;
@@ -1357,6 +1357,41 @@
 	            });		        
 		    }
 		    
+		    // 모바일 설정 함수 
+		    function mobile_managed() {
+		    	var data = "";
+				var mobileOwner = "";
+		    	var listview = new ListView();
+		    	listview.LoadFromID("lvUserList");
+		    	
+		    	var length = listview.GetSelectedRows().length;
+		    	
+		    	if (length == 0) {
+		    		alert("<spring:message code='ezOrgan.kyj05' />");
+		    		return;
+		    	} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
+				} else if (length > 1) {
+	    			alert("<spring:message code='ezOrgan.kyj06' />");
+		    		return;
+	    		}
+		    	
+	    		var trIdx = listview.GetSelectedRows()[0];
+	    		mobileOwner = $(trIdx).children().eq(0).text();
+	    		data = listview.GetSelectedRows()[0].getAttribute("DATA2");
+		    	
+		    	document.getElementById("userSend").value = data;
+		    	
+		    	var agent = navigator.userAgent.toLowerCase();
+		    	
+		    	if (agent.indexOf("chrome") != -1) {
+		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 200));
+		    	} else {
+			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 200));
+		    	}
+		    } 
+		   
 		    // POP3/IMAP 설정 함수
 		    var serUseDisablePopImap_dialogArguments = new Array();
 		    
@@ -1570,6 +1605,11 @@
 			                	<td><a class="imgbtn" id="usermenu22"><span onClick="mod_pop3Imap()">POP3/IMAP</span></a></td>
 			                </tr>
 		                </c:if>
+		                <c:if test="${useMobileManagemant == 'YES' }">
+		                	<tr>
+			                	<td><a class="imgbtn" id="usermenu23"><span onClick="mobile_managed()"><spring:message code='ezPersonal.t998' /></pan></a></td>
+			                </tr>
+			            </c:if>
 					</table>
 				</th>
 			</tr>

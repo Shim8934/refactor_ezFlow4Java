@@ -1339,7 +1339,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addDeptMasterManualFlag() throws Exception {
 		ezCommonDAO.addDeptMasterManualFlag();
 	}
-
+	
+	@Override
+	public void createJMochaMailSignatureTemplate() throws Exception {
+		ezCommonDAO.createJmochaMailSignatureTemplate();
+	}
+	
+	public void createJobMasterTable() throws Exception {
+		ezCommonDAO.createJobMasterTable();
+	}
+	
 	@Override
 	public String getUseSession(Map<String, Object> map) {
 		return ezCommonDAO.getUseSession(map);
