@@ -351,7 +351,7 @@
 	                        if (BODYTag.getAttribute("tagfreeheight")) {
 	                            EditorHeight = BODYTag.getAttribute("tagfreeheight");
 	                        }
-	                        if (BODYTag.childNodes.length >= 1) {
+	                        if (BODYTag.children.length >= 1) {
 	                            if (BODYTag.children[0].id != "bodyblock") {
 	                                BODYTag.innerHTML = "<div id='bodyblock' style='height: 100%;'>" + BODYTag.innerHTML + "</div>";
 	                            }
