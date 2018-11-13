@@ -151,7 +151,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .layDIV02{ height:520px; background:#fff; overflow:hidden; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} /* 장진혁 */
 
 /* box_shadow */
-.box_shadow{background: #fff; padding:0px; /* margin:20px 2px; */ /* box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); */ border:1px solid #e7e7e7; width:410px; height:280px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow: hidden;} /*장진혁 */
+.box_shadow{background: #fff; padding:0px; /* margin:20px 2px; */ /* box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); */ border:1px solid #e7e7e7; width:410px; height:250px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow: hidden;} /*장진혁 */
 
 
 /* portlet_title */
@@ -589,7 +589,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_middle{ width:33.3%;}
 	.box_shadow{ width:auto;}
 	.portlet{width:auto;}
-	.portlet{ width:32%; float:left; margin:30px 2px -8px 16px; height: 280px;}
+	.portlet{ width:32%; float:left; margin:30px 2px -8px 16px; height: 252px;}
 	.bannerText{ padding:73px 18px 0px 0px;}
 }
 
@@ -601,7 +601,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_middle{ width:50%;}
 	.box_shadow{width:100%}
 	.portlet{width:100%;}
-	.portlet{width:48%; float:left; margin:5px 5px 15px 16px; height: 280px;}
+	.portlet{width:48%; float:left; margin:5px 5px 15px 16px; height: 252px;}
 	.stats_graph{ float:left; overflow:hidden;}
 	.groupware_banner{ float:left; margin-top:0px}
 	

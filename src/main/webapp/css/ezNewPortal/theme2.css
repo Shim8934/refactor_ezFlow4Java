@@ -79,8 +79,8 @@ body{margin:0px; padding:0px;}
 .excellentcontent p.name{height:20px; line-height:20px; margin:0px; padding:0px; text-align:center; color:#212121; font-size:14px; font-weight:bold;}
 .excellentcontent p.name span{display:block; margin:0px; padding:0px;}
 
-.event{float:left; width:275px; height:210px; margin:12px 20px 0px 20px; padding:0px;}
-.event p{height:36px; line-height:36px; margin:0px; padding:0px;}
+.event{float:left; width:273px; height:210px; margin:12px 20px 0px 20px; padding:0px; border:1px solid #cddee6; border-radiue:3px;-webkit-border-radius:3px;-moz-border-radius:3px;}
+.event p{width:100%; height:100%; margin:0px; padding:0px; background:url(/images/ezNewPortal/theme2Img/event_pic01.png) #d2e8f3 center center no-repeat;}
 .event p span{display:inline-block; margin:0px 5px 0px 0px; padding:0px; color:#555555; font-size:14px; font-weight:bold;}
 .event p span.blue{color:#0470e4; font-size:16px;}
 .event dl{overflow:hidden; width:275px; height:174px; margin:0px; padding:0px; background:#d2e8f3; border:1px solid #cddee6; border-radiue:3px;-webkit-border-radius:3px;-moz-border-radius:3px;}

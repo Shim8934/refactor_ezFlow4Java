@@ -1,4 +1,4 @@
-﻿@charset "utf-8";
+﻿﻿@charset "utf-8";
 /* CSS Document */
 
 /* base */
@@ -195,15 +195,15 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .portlet_list li.notiLI03{width:144px; height:169px; background:url(/images/ezNewPortal/notiImg01.png) no-repeat; }
 
 /* portlet_list approval */
-.approval .portlet_list li{ margin:0px; padding:0px 10px 0px 23px; background:url(/images/ezNewPortal/list_bul.png) no-repeat 15px 13px; font-size:13px; color:#555555; height:30px; line-height:28px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
-.portlet_list li.first_approval{margin:0px 10px 7px 10px; padding:0px; background:#fff; border:1px solid #e7e7e7; height:117px; box-sizing:border-box;}
-.first_approval .approval_tit{ margin:0px; padding:0px 0px 0px 10px; height:27px; border-bottom:1px solid #e7e7e7; background:#f8f8f8; line-height:25px;}
+.approval .portlet_list li{ margin:0px; padding:0px 10px 0px 23px; background:url(/images/ezNewPortal/list_bul.png) no-repeat 15px 17px; font-size:13px; color:#555555; height:36px; line-height:34px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+.portlet_list li.first_approval{margin:0px; padding:0px; background:#f4f4f4; border:1px solid #e7e7e7; height:113px; box-sizing:border-box;}
+.first_approval .approval_tit{ margin:0px; padding:0px 0px 0px 10px; height:27px; background:#f4f4f4; line-height:25px;}
 .first_approval .approval_tit span.txt{ font-weight:bold;}
-.first_approval .approval_content{margin:15px 0px; padding:0px; overflow:hidden;}
+.first_approval .approval_content{margin:10px 0px 15px 0px; padding:0px; overflow:hidden; background: #f4f4f4;}
 .first_approval .approval_content .apprDL{margin:0px; padding:0px 0px 0px 10px; float:left; overflow:hidden; width:30%; box-sizing:border-box;}
 .first_approval .approval_content .apprDL .apprPic{margin:0px; padding:0px; width:53px; height:53px; border:1px solid #e7e7e7; border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; float:left;}
 .first_approval .approval_content .apprDL .apprPic img{border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; width:53px; height:53px;}
-.first_approval .approval_content .apprDL .apprName{margin:0px; padding:0px 0px 0px 0px; font-size:12px; color:#555; overflow:hidden; white-space: nowrap; text-overflow: ellipsis; text-align:center;}
+.first_approval .approval_content .apprDL .apprName{line-height:27px; margin:0px; padding:0px 0px 0px 0px; font-size:12px; color:#555; overflow:hidden; white-space: nowrap; text-overflow: ellipsis; text-align:center;}
 .first_approval .approval_content .apprDL .apprText_blue{ margin:0px; padding:0px; overflow:hidden; text-align:center;}
 .first_approval .approval_content .apprDL .apprText_blue span{margin:0px 0px 0px 0px; padding:0px 5px; height:19px; line-height:18px; background:#0470e4; font-size:12px; color:#fff; border-radius:3px; overflow:hidden; display:inline-block;}
 .first_approval .approval_content .apprDL .apprText_green{margin:0px; padding:0px; overflow:hidden; text-align:center;}
@@ -628,11 +628,11 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.info_right {width : calc(100% - 111px);}
 }
 /* 생일자 포틀릿*/
-.box_shadow .birthList li {width:33%;float:none; display:inline-block; padding:7px 0px 12px 0px;} 
+.box_shadow .birthList li {width:33.33%;float:none; display:inline-block; padding:15px 0px 15px 0px;} 
 .birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;}
-.birthList li .birthListDL .birthPic{margin:0px; padding:0px 4px 0px 0px; float:left;}
+.birthList li .birthListDL .birthPic{margin:0px; padding:0px 7px 0px 0px; float:left;}
 .birthList li .birthListDL .birthPic img{width:50px; height:50px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; border:1px solid #e7e7e7;}
-.birthList li .birthListDL .birthName{margin:11px 0px 0px 0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
+.birthList li .birthListDL .birthName{margin:10px 0px 0px 0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
 .birthList li .birthListDL .birthTeam{margin:0px; padding:0px; font-size:12px; color:#888888; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
 .birthList hr {display:block; margin-block-start:0.7em; margin-block-end:0.7em;}
 
@@ -710,5 +710,5 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .weather_mini dl{float:left; width:calc(20% - 12px); margin:0px 5px; padding:11px 0px; border:1px solid #e2e2e2;}
 .weather_mini dl dt{float:left; width:calc(50% - 12px); margin:8px 3px; padding:0px; text-align:center;}
 .weather_mini dl dt img{vertical-align:middle;}
-.weather_mini dl dd{float:left; width:50%; margin:0px; padding:0px; color:#000; font-size:15px; text-align:left;}
+.weather_mini dl dd{float:left; width:50%; margin:0px; padding:0px; color:#000; font-size:13px; text-align:left;}
 .weather_mini dl dd span{display:block; line-height:22px;}

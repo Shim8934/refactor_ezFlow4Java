@@ -53,7 +53,7 @@
 				<li id="setDefaultTheme"><span>기본 테마 설정</span></li>
 			</ul>
 		</div>
-		<ul id="themeList" style="margin-top:30px">
+		<ul id="themeList" style="margin-top:10px">
 		</ul>
 	</body>
 	
