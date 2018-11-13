@@ -45,6 +45,7 @@ function photoBoardMovePage(event) {
 
 function viewPhotoBoardList() {
 	var boardId = $(".photo_board").find(".portletText").attr("data1");
+	console.log(boardId);
 	window.open("/ezBoard/boardMainRedirect.do?boardID=" + boardId, "main", "");
 }
 
