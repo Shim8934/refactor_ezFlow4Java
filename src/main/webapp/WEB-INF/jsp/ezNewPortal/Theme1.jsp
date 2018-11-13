@@ -34,11 +34,8 @@
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
 	.box_shadow {width:100%; margin:0px;}
-	.info_left{float:left; width:103px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
-	.info_right{width:calc(100% - 111px); background:#ffffff;}
-	.portlet {height:250px; margin:20px 0px 0px 16px;background-color:#ffffff;}
+	.portlet {height:250px; margin:20px 0px 0px 16px;}
 	.infoImg img {width:60px; height:60px;}
-	.info .infoImg {margin:0px 24px 0px 0px;}
 	.attitudePtl {border:none;}
 	
 </style>
@@ -80,7 +77,7 @@
                 	<dd class="infoTeam">${deptName}</dd>
                 	<%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
                 	<dd class="infoSet" id="personalEnv"><img src="/images/kr/main/info_set.png"></dd>
-                	<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;margin-top:5px;">포틀릿/프레임 설정</dd><!-- 임시용 -->
+                	<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;"><img src="/images/admin/frameSetting.png" /></dd><!-- 임시용 -->
            		</dl>
 			</article>
 			<article class="main_time_check">
