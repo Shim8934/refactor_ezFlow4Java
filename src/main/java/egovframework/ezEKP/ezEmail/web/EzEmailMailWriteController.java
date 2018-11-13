@@ -5654,7 +5654,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				Element row = (Element) sharedMailboxRow.item(i);
 				NodeList sharedMailboxList = row.getElementsByTagName("CELL");
 				Element sharedMailboxCell = (Element) sharedMailboxList.item(0);
-				if (sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent().trim() != null || !sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
+				if (sharedMailboxCell.getElementsByTagName("DATA3").item(0) != null
+						&& !sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
 					jsonObject = new HashMap<String, Object>();
 					jsonObject.put("name", sharedMailboxCell.getElementsByTagName("VALUE").item(0).getTextContent());
 					jsonObject.put("title", "");
