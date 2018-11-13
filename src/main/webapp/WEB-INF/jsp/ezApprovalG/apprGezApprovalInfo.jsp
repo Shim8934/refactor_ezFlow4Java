@@ -949,6 +949,32 @@
 			                ret[0] = "OK";
 			                ret[1] = SaveAprLineList(); //결재선 저장 XML
 		                } else {
+		                	var checkAprCheckFN;
+		                	try {
+		                		checkAprCheckFN = parent.checkAprState(); 
+		                	} catch (e) {
+		                		try {
+			                		checkAprCheckFN = opener.checkAprState();
+		                		} catch (e) {
+		                			
+		                		}
+		                	}
+		                	
+		                	if (checkAprCheckFN != null && checkAprCheckFN && (pReDraftAprLineFlag || pReDraftFlag == "REDRAFT")) {
+		                		alert("<spring:message code='ezApprovalG.bhs23'/>");
+		                		
+		                		ret[0] = "DUPL";
+		                		if (ReturnFunction != null) {
+				                    ReturnFunction(ret);
+				                }
+				                else {
+				                    window.returnValue = ret;
+				                }
+				                
+				                window.close();
+		                		return;
+		                	}
+		                	
 		                    var lineArea = CheckLineArea();
 
 		                    if (!lineArea)
