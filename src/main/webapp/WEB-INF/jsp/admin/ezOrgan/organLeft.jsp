@@ -148,10 +148,12 @@
     			<ul></ul>    			
   			</h2>
   			
+  			<c:if test="${useSharedMailbox == 'YES'}">
   			<h2>
   				<span onClick="goPage(33)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.sharedMailbox01' /></span>
     			<ul></ul>
   			</h2>
+  			</c:if>
   			
   			<!--
   			<h2>

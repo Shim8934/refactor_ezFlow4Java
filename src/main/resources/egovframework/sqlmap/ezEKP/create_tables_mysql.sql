@@ -954,7 +954,7 @@ CREATE TABLE `jmocha_shared_mailbox` (
   `SEND_PERMISSION` varchar(4) DEFAULT NULL,
   `ORDERBY` int(11) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`SHARE_ID`,`USER_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

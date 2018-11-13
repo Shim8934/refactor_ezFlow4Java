@@ -1191,13 +1191,14 @@
                 </c:if>
 	        </ul>
 	        
-	        <c:forEach items="${shareInfoList}" var="shareInfo">
-	        	<h2><span onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');" style="width: 100%; display: inline-block;">${shareInfo.shareName}</span></h2>
-	        	<ul>
-	            	<div id="shareTreeView_${shareInfo.shareId}" class="tree" value="${shareInfo.shareId}" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
-	        	</ul>
-	        </c:forEach>
-	        
+	        <c:if test="${useSharedMailbox == 'YES'}">
+		        <c:forEach items="${shareInfoList}" var="shareInfo">
+		        	<h2><span onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');" style="width: 100%; display: inline-block;">${shareInfo.shareName}</span></h2>
+		        	<ul>
+		            	<div id="shareTreeView_${shareInfo.shareId}" class="tree" value="${shareInfo.shareId}" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
+		        	</ul>
+		        </c:forEach>
+	        </c:if>
 	        <h2><span onclick="Address_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000041" /></span></h2>
 	        <ul>
 	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow-x:hidden; overflow-y: auto; padding-left: 20px;" id="AddressTreeView"></div>

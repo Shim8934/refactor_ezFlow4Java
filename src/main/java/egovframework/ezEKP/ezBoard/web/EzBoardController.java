@@ -3809,7 +3809,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (mode.equals("temp")) {
 			ezBoardService.setAsRead(userInfo, boardID, itemID);
 		}
-
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			model.addAttribute("mailShareId", request.getParameter("mailShareId"));
+		}
+		
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardListVO", boardListVO);
 		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
@@ -3840,7 +3846,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("orgCompanyID", orgCompanyID);
-		model.addAttribute("mailShareId", request.getParameter("mailShareId"));
 		
 		logger.debug("newBoardItem ended");
 		return requestURL;

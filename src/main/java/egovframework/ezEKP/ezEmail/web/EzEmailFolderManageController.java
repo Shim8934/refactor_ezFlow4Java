@@ -98,11 +98,17 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezEmail/mailMoveCopy.do")
 	public String mailMoveCopy(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
+		logger.debug("mailMoveCopy started.");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		
-		if (shareId != null) {
-			model.addAttribute("shareId", shareId);
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				model.addAttribute("shareId", shareId);
+			}
 		}
 		
 		if (request.getParameter("fm") != null) {
@@ -111,6 +117,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 			model.addAttribute("isFolderManager", "0");
 		}
 		
+		logger.debug("mailMoveCopy ended.");
 		return "ezEmail/mailMoveCopy";
 	}
 	
@@ -152,22 +159,25 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userAccount = userInfo.getId() + "@" + domainName;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		
-		String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
-		
-		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-				logger.debug("mailMakeFolder ended.");
-				
-				return "";
-			}
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
 			
-			userAccount = shareId + "@" + domainName;
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailMakeFolder ended.");
+					
+					return "";
+				}
+				
+				userAccount = shareId + "@" + domainName;
+			}
 		}
 		
-		logger.debug("userAccount=" + userAccount);
+		logger.debug("userId=" + userInfo.getId() + ",userAccount=" + userAccount);
 		
 		IMAPAccess ia = null;
         boolean isNewUserQuotaNeeded = false;	

@@ -105,20 +105,9 @@ public class EzEmailMailListController {
 		String dispname = request.getParameter("dispname");
 		String url = request.getParameter("url");
 		url = (url != null) ? url : "INBOX";
-		
 		logger.debug("dispname=" + dispname + ",url=" + url);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
-		
-		if (shareId != null) {
-			MailSharedMailboxUserVO shareVO = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
-			model.addAttribute("shareId", shareId);
-			model.addAttribute("deletePermission", shareVO.getDeletePermission());
-			model.addAttribute("sendPermission", shareVO.getSendPermission());
-		}
 		
 		String folderName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		String folderType = "";
@@ -135,7 +124,20 @@ public class EzEmailMailListController {
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
 		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
 		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", userInfo.getTenantId());
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				MailSharedMailboxUserVO shareVO = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
+				model.addAttribute("shareId", shareId);
+				model.addAttribute("deletePermission", shareVO.getDeletePermission());
+				model.addAttribute("sendPermission", shareVO.getSendPermission());
+			}
+		}
+		
 		if (useEncryptZipForEmail.equals("")) {
 			useEncryptZipForEmail = "NO";
 		}
@@ -210,7 +212,7 @@ public class EzEmailMailListController {
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
 				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEmail=" + useEncryptZipForEmail
-				 + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useCountryIP=" + useCountryIP + ",shareId=" + shareId);
+				 + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useCountryIP=" + useCountryIP);
 		logger.debug("mailGeneral=" + mailGeneral);
 		logger.debug("showMailList ended.");
 		
@@ -621,18 +623,22 @@ public class EzEmailMailListController {
 		String search = doc.getElementsByTagName("SEARCH").item(0).getTextContent();
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
-		String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		
-		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-				logger.debug("getMailList ended.");
-				
-				return "";
-			}
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
 			
-			userEmail = shareId + "@" + domainName;
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("getMailList ended.");
+					
+					return "";
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
 		}
 		
 		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
@@ -999,21 +1005,26 @@ public class EzEmailMailListController {
 		try {
 	        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 	        userEmail = userInfo.getId() + "@" + domainName;
-	        String shareId = request.getParameter("shareId");
-			logger.debug("shareId=" + shareId);
 	        
-	        if (shareId != null) {
-				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
-					logger.debug("the user cannot access the shareId.");
-					logger.debug("mailDelete ended.");
+	        String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+	        
+	        if (useSharedMailbox.equals("YES")) {
+	        	String shareId = request.getParameter("shareId");
+				logger.debug("shareId=" + shareId);
+		        
+		        if (shareId != null) {
+					if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
+						logger.debug("the user cannot access the shareId.");
+						logger.debug("mailDelete ended.");
+						
+						return "";
+					}
 					
-					return "";
+					userEmail = shareId + "@" + domainName;
 				}
-				
-				userEmail = shareId + "@" + domainName;
-			}
+	        }
 	        
-	        logger.debug("userEmail=" + userEmail);
+	        logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
 	        
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
@@ -1145,21 +1156,25 @@ public class EzEmailMailListController {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 	        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 	        userEmail = userInfo.getId() + "@" + domainName;
-	        String shareId = request.getParameter("shareId");
-			logger.debug("shareId=" + shareId);
+	        String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 	        
-	        if (shareId != null) {
-				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
-					logger.debug("the user cannot access the shareId.");
-					logger.debug("mailMoveCopyMessage ended.");
+	        if (useSharedMailbox.equals("YES")) {
+	        	String shareId = request.getParameter("shareId");
+				logger.debug("shareId=" + shareId);
+		        
+		        if (shareId != null) {
+					if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
+						logger.debug("the user cannot access the shareId.");
+						logger.debug("mailMoveCopyMessage ended.");
+						
+						return "";
+					}
 					
-					return "";
+					userEmail = shareId + "@" + domainName;
 				}
-				
-				userEmail = shareId + "@" + domainName;
-			}
+	        }
 	        
-	        logger.debug("userEmail=" + userEmail);
+	        logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
 	        
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
@@ -1249,22 +1264,25 @@ public class EzEmailMailListController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
         String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
         String userEmail = userInfo.getId() + "@" + domainName;
-		
-        String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
+        String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+        if (useSharedMailbox.equals("YES")) {
+        	String shareId = request.getParameter("shareId");
+    		logger.debug("shareId=" + shareId);
+            
+            if (shareId != null) {
+    			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+    				logger.debug("the user cannot access the shareId.");
+    				logger.debug("mailSetFlag ended.");
+    				
+    				return "";
+    			}
+    			
+    			userEmail = shareId + "@" + domainName;
+    		}
+        }
         
-        if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-				logger.debug("mailSetFlag ended.");
-				
-				return "";
-			}
-			
-			userEmail = shareId + "@" + domainName;
-		}
-        
-        logger.debug("userEmail=" + userEmail);
+        logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
         
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String uniqueId = doc.getElementsByTagName("ITEMID").item(0).getTextContent();	
@@ -1347,22 +1365,25 @@ public class EzEmailMailListController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
         String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
         String userEmail = userInfo.getId() + "@" + domainName;
-		
-        String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
+        String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+        if (useSharedMailbox.equals("YES")) {
+        	String shareId = request.getParameter("shareId");
+    		logger.debug("shareId=" + shareId);
+            
+            if (shareId != null) {
+    			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+    				logger.debug("the user cannot access the shareId.");
+    				logger.debug("mailSetReadChange ended.");
+    				
+    				return "";
+    			}
+    			
+    			userEmail = shareId + "@" + domainName;
+    		}
+        }
         
-        if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-				logger.debug("mailSetReadChange ended.");
-				
-				return "";
-			}
-			
-			userEmail = shareId + "@" + domainName;
-		}
-        
-        logger.debug("userEmail=" + userEmail);
+        logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
         
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String isRead = doc.getElementsByTagName("ISREAD").item(0).getTextContent();
@@ -1449,22 +1470,25 @@ public class EzEmailMailListController {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
         String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
         String userEmail = loginInfo.getId() + "@" + domainName;
-		
-        String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
+        String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+        if (useSharedMailbox.equals("YES")) {
+        	String shareId = request.getParameter("shareId");
+    		logger.debug("shareId=" + shareId);
+            
+            if (shareId != null) {
+    			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+    				logger.debug("the user cannot access the shareId.");
+    				logger.debug("mailGetFromEmail ended.");
+    				
+    				return "";
+    			}
+    			
+    			userEmail = shareId + "@" + domainName;
+    		}
+        }
         
-        if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-				logger.debug("mailGetFromEmail ended.");
-				
-				return "";
-			}
-			
-			userEmail = shareId + "@" + domainName;
-		}
-        
-        logger.debug("userEmail=" + userEmail);
+        logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
         
 		IMAPAccess ia = null;
 		String resultData = "ERROR";

@@ -266,26 +266,27 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userAccount = loginInfo.getId() + "@" + domainName;
         String mailId = loginInfo.getId();
+        Map<String, Object> extraMap = new HashMap<>();
+        String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+        if (useSharedMailbox.equals("YES")) {
+        	String shareId = request.getParameter("shareId");
+    		logger.debug("shareId=" + shareId);
+    		
+    		if (shareId != null) {
+    			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
+    				logger.debug("the user cannot access the shareId.");
+    			} else {
+    				mailId = shareId;
+    				userAccount = shareId + "@" + domainName;
+    				model.addAttribute("shareId", shareId);
+    				extraMap.put("shareId", shareId);
+    			}
+    		}
+        }
+		
+        logger.debug("userId=" + loginInfo.getId() + ",userAccount=" + userAccount);
         
-		String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
-		
-		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-				shareId = null;
-			} else {
-				mailId = shareId;
-				userAccount = shareId + "@" + domainName;
-				model.addAttribute("shareId", shareId);
-			}
-		}
-		
-		logger.debug("userAccount=" + userAccount);
-		
-		Map<String, Object> extraMap = new HashMap<>();
-		extraMap.put("shareId", shareId);
-		
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(mailId, loginInfo.getPrimary(), loginInfo.getTenantId());
 		
 		// set replyReadTime
@@ -1289,14 +1290,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			attachFileNameMaxLength = "100";
 		}
 		
-		String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
-		
-		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 2, userInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-			} else {
-				model.addAttribute("shareId", shareId);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 2, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+				} else {
+					model.addAttribute("shareId", shareId);
+				}
 			}
 		}
 		
@@ -2551,22 +2556,25 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String pDirTempPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", loginInfo.getTenantId()) + commonUtil.separator + "tempFileUpload";
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
-		
-		String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
-		
-		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-				logger.debug("mailInterAttach ended.");
-				
-				return "";
-			}
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
 			
-			userEmail = shareId + "@" + domainName;
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailInterAttach ended.");
+					
+					return "";
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
 		}
 		
-		logger.debug("userEmail=" + userEmail);
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
 		
 		MimeMessage newMessage = null;
 		IMAPAccess ia = null;
@@ -2809,22 +2817,26 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userAccount = userId + "@" + domainName;
 		String mailId = userId;
-		String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
-		
-		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 2, userInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-				logger.debug("mailInterSend ended.");
-				
-				return "";
-			}
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
 			
-			mailId = shareId;
-			userAccount = shareId + "@" + domainName;
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 2, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailInterSend ended.");
+					
+					return "";
+				}
+				
+				mailId = shareId;
+				userAccount = shareId + "@" + domainName;
+			}
 		}
 		
-		logger.debug("userAccount=" + userAccount);
+		logger.debug("userId=" + userInfo.getId() + ",userAccount=" + userAccount);
 		
 		//변수들은 메일발송 실패 시 다시 사용되므로 메일발송 로직 도중 값이 바뀌면 안된다.
 		String url = "";
@@ -4326,22 +4338,25 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (uid != 0) {
     		String domainName = ezCommonService.getTenantConfig("domainName", loginInfo.getTenantId());
     		String userEmail = loginInfo.getId() + "@" + domainName;
-    		
-    		String shareId = request.getParameter("shareId");
-    		logger.debug("shareId=" + shareId);
-    		
-    		if (shareId != null) {
-    			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
-    				logger.debug("the user cannot access the shareId.");
-    				logger.debug("delDrafts ended.");
-    				
-    				return "";
-    			}
-    			
-    			userEmail = shareId + "@" + domainName;
+    		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+    		if (useSharedMailbox.equals("YES")) {
+    			String shareId = request.getParameter("shareId");
+        		logger.debug("shareId=" + shareId);
+        		
+        		if (shareId != null) {
+        			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+        				logger.debug("the user cannot access the shareId.");
+        				logger.debug("delDrafts ended.");
+        				
+        				return "";
+        			}
+        			
+        			userEmail = shareId + "@" + domainName;
+        		}
     		}
     		
-    		logger.debug("userEmail=" + userEmail);
+    		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
     		
     		IMAPAccess ia = null;
     		try {
@@ -4489,22 +4504,25 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
-		
-		String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
-		
-		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-				logger.debug("mailDelInterAttach ended.");
-				
-				return "";
-			}
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
 			
-			userEmail = shareId + "@" + domainName;
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailDelInterAttach ended.");
+					
+					return "";
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
 		}
 		
-		logger.debug("userEmail=" + userEmail);
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
 		
 		if (uid != 0) {
 			NodeList rows = root.getElementsByTagName("ROW");
@@ -4855,15 +4873,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", tenantId);
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		String useReceiptExternal = ezCommonService.getTenantConfig("useReceiptExternal", tenantId);
-		
-		String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
-		
-		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-			} else {
-				model.addAttribute("shareId", shareId);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+				} else {
+					model.addAttribute("shareId", shareId);
+				}
 			}
 		}
 		
@@ -5614,22 +5635,25 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
-		
-		String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
-		
-		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-				logger.debug("downloadAttachInWriter ended.");
-				
-				return;
-			}
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
 			
-			userEmail = shareId + "@" + domainName;
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("downloadAttachInWriter ended.");
+					
+					return;
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
 		}
 		
-		logger.debug("userEmail=" + userEmail);
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
 		
 		String folderPath = request.getParameter("folderPath");
 		String fileName = request.getParameter("filename");

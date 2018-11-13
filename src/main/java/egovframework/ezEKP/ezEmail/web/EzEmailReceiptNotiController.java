@@ -103,15 +103,18 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		String url = request.getParameter("url") == null ? "" : request.getParameter("url");
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String isReadDelete = ezCommonService.getTenantConfig("IS_READ_DELETE", loginInfo.getTenantId());
-		
-		String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
-		
-		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-			} else {
-				model.addAttribute("shareId", shareId);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+				} else {
+					model.addAttribute("shareId", shareId);
+				}
 			}
 		}
 		
@@ -143,22 +146,26 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
 		String mailId = loginInfo.getId();
-		String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
-		
-		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-				logger.debug("mailGetReceiveList ended.");
-				
-				return "";
-			}
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
 			
-			mailId = shareId;
-			userEmail = shareId + "@" + domainName;
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailGetReceiveList ended.");
+					
+					return "";
+				}
+				
+				mailId = shareId;
+				userEmail = shareId + "@" + domainName;
+			}
 		}
 		
-		logger.debug("userEmail=" + userEmail);
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
 		
 		String returnValue = "";
 		
@@ -409,24 +416,27 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userAccount = loginInfo.getId() + "@" + domainName;
-		
 		String mailId = loginInfo.getId();
-		String shareId = request.getParameter("shareId");
-		logger.debug("shareId=" + shareId);
-		
-		if (shareId != null) {
-			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
-				logger.debug("the user cannot access the shareId.");
-				logger.debug("mailCancelSend ended.");
-				
-				return "";
-			}
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
 			
-			mailId = shareId;
-			userAccount = shareId + "@" + domainName;
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailCancelSend ended.");
+					
+					return "";
+				}
+				
+				mailId = shareId;
+				userAccount = shareId + "@" + domainName;
+			}
 		}
 		
-		logger.debug("userAccount=" + userAccount);
+		logger.debug("userId=" + loginInfo.getId() + ",userAccount=" + userAccount);
 		
 		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
