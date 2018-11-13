@@ -47,6 +47,7 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
 import egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
@@ -155,6 +156,7 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
+			String deptId = info.getDeptId();
 			int tenantId = info.getTenantId();
 			String portletLang = info.getPrimary();
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
@@ -165,10 +167,24 @@ public class EzNewPortalGWController {
 			
 			// 사용자 포틀릿 순서 가져오기
 			List<PortletInfoVO> portletOrder = ezNewPortalService.getPortletOrderUser(portletLang, userId, tenantId, companyId);
-
+			// 권한체크가 끝난 포틀릿 리스트를 담을 리스트선언
+			List<PortletInfoVO> resultPortletList = new ArrayList<PortletInfoVO>();
+			
+			JSONObject data = new JSONObject();
 			// 사용자 설정 포틀릿 순서가 없으면 회사의 포틀릿 순서를 따름
 			if (portletOrder.isEmpty()) {
 				portletOrder = ezNewPortalService.getPortletOrderComp(portletLang, tenantId, companyId);
+				data.put("portletOrder", portletOrder);
+			} else {
+				//개인별 포틀릿 에서 메뉴아이디 가져와서 권한체크 들어간다
+				for (PortletInfoVO pVO : portletOrder) {
+					boolean resultAuth = ezNewPortalService.getCheckAuth(pVO.getMenuId(), userId, deptId, companyId, tenantId);
+						LOGGER.debug(pVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
+						if (resultAuth) {
+							resultPortletList.add(pVO);
+						}
+				}
+				data.put("portletOrder", resultPortletList);
 			}
 
 			// 회사의 슬라이더 이미지 가져오기
@@ -234,10 +250,9 @@ public class EzNewPortalGWController {
 			LOGGER.debug("useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
 			// =================================== 여기까지 end
 
-			JSONObject data = new JSONObject();
 			data.put("usedTheme", userThemeSetting.getUsedTheme());
 			data.put("usedFrame", userThemeSetting.getUsedFrame());
-			data.put("portletOrder", portletOrder);
+//			data.put("portletOrder", portletOrder);
 			data.put("sliderList", sliderList);
 			data.put("userName", userName);
 			data.put("userTitle", userTitle);
@@ -451,13 +466,29 @@ public class EzNewPortalGWController {
 			 */
 			List<MenuInfoVO> userMenuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
 			List<MenuInfoVO> compMenuList = new ArrayList<MenuInfoVO>();
+			List<MenuInfoVO> resultMenuList = new ArrayList<MenuInfoVO>();
 			LOGGER.debug("list.toString() : " + userMenuList.toString());
 			if (userMenuList.size() == 0) {
 				compMenuList = ezNewPortalService.getCompanyMenuList(companyId, tenantId, langType, userId, deptId);
 				data.put("menuList", compMenuList);
 			} else {
-				data.put("menuList", userMenuList);
+				for (MenuInfoVO mVO : userMenuList) {
+					boolean resultAuth = ezNewPortalService.getCheckAuth(mVO.getMenuId(), userId, deptId, companyId, tenantId);
+					LOGGER.debug(mVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
+					if (resultAuth) {
+						resultMenuList.add(mVO);
+					}
+				}
+				
+				data.put("menuList", resultMenuList);
 			}
+			/**
+			 * 구해안 - 권한체크 
+			 */
+			//회사 메뉴 다 출력하는 함수
+			List<MenuInfoVO> companymenus = ezNewPortalService.getAllCompanyMenus(companyId, tenantId, langType);
+			//결과 보낼 리스트 제작
+			
 			/**
 			 * 3) 유틸메뉴 - 관리자 권한의 유무 - DB에서 가져오지 말고 그냥 다 출력
 			 */
@@ -512,9 +543,16 @@ public class EzNewPortalGWController {
 			// 리스트 다시 받아서 출력
 			List<MenuInfoVO> userMenuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
 			// List<MenuInfoVO> compMenuList = new ArrayList<MenuInfoVO>();
+			List<MenuInfoVO> resultMenuList = new ArrayList<MenuInfoVO>();
+			for (MenuInfoVO mVO : userMenuList) {
+				boolean resultAuth = ezNewPortalService.getCheckAuth(mVO.getMenuId(), userId, deptId, companyId, tenantId);
+				LOGGER.debug(mVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
+				if (resultAuth) {
+					resultMenuList.add(mVO);
+				}
+			}
+			data.put("menuList", resultMenuList);
 
-			data.put("menuList", userMenuList);
-			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
@@ -675,6 +713,7 @@ public class EzNewPortalGWController {
 			JSONObject data = new JSONObject();
 			
 			List<?> portletList = ezNewPortalService.getUserPortletList(portletLang, userId, tenantId, companyId, deptId);
+			
 			data.put("portletList", portletList);
 			
 			result.put("status", "ok");
@@ -926,7 +965,7 @@ public class EzNewPortalGWController {
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					unreadMailCount = ia.getUnreadCount(folderName);
 				} catch (Exception e) {
-
+					e.printStackTrace();
 				} finally {
 					if (ia != null) {
 						ia.close();
@@ -2859,6 +2898,214 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("ezNewPortal G/W getuserInfomationsPortlet ended.");
+		return result;
+	}
+	
+	/**
+	 * 포탈개인화 G/W [GET] 포틀릿 - 카운트
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezportal/portlets/count/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getCountPortlet(HttpServletRequest request, @PathVariable String userId, Locale locale) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getslideimagesPortlet started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+
+			String useQuestion = "";
+			String useCircular = "";
+			String useMail = "";
+			String useApproval = "";
+			String useSchedule = "";
+
+			// 1. tenantConfig가 YES인지 -- 회람판(USE_CIRCULAR), 근태관리(USE_ATTITUDE),
+			// 전자설문(useQuestion)
+			useQuestion = ezCommonService.getTenantConfig("useQuestion", info.getTenantId());
+			useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", info.getTenantId());
+			
+			// 2. 메뉴에 권한이 있는지 ================ 수정하기 start
+
+			if (useQuestion.equals("NO")) {
+				useQuestion = "NO";
+			}
+
+			if (useCircular.equals("NO")) {
+				useCircular = "NO";
+			}
+
+			useMail = "YES";
+			useApproval = "YES";
+			useSchedule = "YES";
+			
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			String portletLang = info.getLang();
+			String offset = info.getOffSet();
+			String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			String idList = "T";
+			String deptId = info.getDeptId();
+			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
+			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
+			String password = jspw;
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			
+			JSONObject data = new JSONObject();
+
+			LOGGER.debug("useQuestion : " + useQuestion + ", useCircular : " + useCircular + ", useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
+
+			// 전자 설문 개수 불러오기
+			if (useQuestion.equals("YES")) {
+				int pollCount = ezQuestionService.wpCountPollCount(userId, tenantId, offset, companyId);
+
+				data.put("pollCount", pollCount);
+			}
+
+			// 오늘 일정 개수 불러오기
+			if (useSchedule.equals("YES")) {
+				String startDate = nowDate + " 00:00:00";
+				String endDate = nowDate + " 23:59:59";
+				String startTime = commonUtil.getDateStringInUTC(nowDate + " 00:00:00", offset, true);
+				String endTime = commonUtil.getDateStringInUTC(nowDate + " 23:59:59", offset, true);
+				String indiList = "";
+				String pidList = "";
+				String pidListSub = "";
+				String indiListSub = "";
+
+				List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(userId, portletLang, tenantId, companyId);
+				List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(userId, portletLang, tenantId, companyId);
+				List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userId, portletLang, tenantId, companyId);
+				List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, tenantId, companyId);
+
+				indiList = "'" + userId + "'";
+
+				if (tList != null && tList.size() > 0) {
+					for (int i = 0; i < tList.size(); i++) {
+						if (i == 0) {
+							indiListSub += ",";
+						}
+						ScheduleSecretaryVO schedule = tList.get(i);
+						indiListSub += "\'" + schedule.getSecId() + "\',";
+					}
+				}
+
+				pidList = "'" + deptId + "'," + "'" + companyId + "'";
+
+				if (dList != null && dList.size() > 0) {
+					for (int i = 0; i < dList.size(); i++) {
+						if (tList == null || tList.size() <= 0) {
+							if (i == 0) {
+								pidListSub += ",";
+							}
+						}
+						ScheduleDeptVO schedule = dList.get(i);
+						pidListSub += "\'" + schedule.getDeptId() + "\',";
+					}
+				}
+
+				if (cList != null && cList.size() > 0) {
+					for (int i = 0; i < cList.size(); i++) {
+						if (dList == null || dList.size() <= 0) {
+							if (i == 0) {
+								pidListSub += ",";
+							}
+						}
+						ScheduleCumulerVO schedule = cList.get(i);
+						pidListSub += "\'" + schedule.getDeptId() + "\',";
+					}
+				}
+
+				if (gList != null && gList.size() > 0) {
+					for (int i = 0; i < gList.size(); i++) {
+						if ((dList == null || dList.size() <= 0) && (cList == null || cList.size() <= 0)) {
+							if (i == 0) {
+								pidListSub += ",";
+							}
+						}
+						ScheduleGroupListVO schedule = gList.get(i);
+						pidListSub += "\'" + schedule.getGroupId() + "\',";
+					}
+				}
+
+				if (indiListSub.equals("") || indiListSub == null) {
+					indiListSub = ",\'\'";
+				} else {
+					indiListSub = indiListSub.substring(0, indiListSub.length() - 1);
+				}
+
+				indiList += indiListSub;
+
+				if (pidListSub.equals("") || pidListSub == null) {
+					pidListSub = ",\'\'";
+				} else {
+					pidListSub = pidListSub.substring(0, pidListSub.length() - 1);
+				}
+
+				pidList += pidListSub;
+				List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(indiList, pidList, "", startTime, endTime, startDate, endDate, "", offsetMin, "", tenantId, companyId, userId);
+				int scheduleCount = sList.size();
+				data.put("scheduleCount", scheduleCount);
+			}
+
+			// 회람판 개수 불러오기
+			if (useCircular.equals("YES")) {
+				int circularCount = ezCircularSerivce.getListCount("newCircular", userId, tenantId, companyId);
+				data.put("circularCount", circularCount);
+			}
+
+			// 결재할 문서 개수 불러오기
+			if (useApproval.equals("YES")) {
+				int approvalCount = ezApprovalGSerivce.getWebPartListCount("1", userId, deptId, "", "COUNT", "", companyId, portletLang, tenantId, offsetMin);
+				String approvalTotalCount = ezApprovalGSerivce.getWebPartList("2", userId, deptId, "", "LEFT", "", companyId, portletLang, tenantId, offsetMin);
+				LOGGER.debug("approvalTotalCount : " + approvalTotalCount);
+				
+				//기존 webPartListCount가 제대로 나오지 않아 전체 리스트에서 count 가져오기
+				String[] approvalCounts = approvalTotalCount.split("<COUNT>");
+				String appr2 = approvalCounts[2].substring(0,1);
+				String appr3 = approvalCounts[3].substring(0,1);
+				
+				int approvalProgressingCount = Integer.parseInt(appr2);
+				int approvalDraftCount = Integer.parseInt(appr3);
+				
+				int approvalDeptSusinCount = ezApprovalGSerivce.getWebPartListCount("4", userId, deptId, "", "COUNT", "", companyId, portletLang, tenantId, offsetMin);
+				data.put("approvalProgressingCount", approvalProgressingCount);
+				data.put("approvalDraftCount", approvalDraftCount);
+				data.put("approvalCount", approvalCount);
+				data.put("approvalDeptSusinCount", approvalDeptSusinCount);
+			}
+
+			// 읽지 않은 메일 가져오기
+			if (useMail.equals("YES")) {
+				IMAPAccess ia = null;
+				String folderName = "INBOX";
+				int unreadMailCount = 0;
+
+				try {
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
+					unreadMailCount = ia.getUnreadCount(folderName);
+				} catch (Exception e) {
+
+				} finally {
+					if (ia != null) {
+						ia.close();
+					}
+				}
+				data.put("unreadMailCount", unreadMailCount);
+			}
+			
+			data.put("useCircular", useCircular);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+		LOGGER.debug("ezNewPortal G/W getslideimagesPortlet ended.");
 		return result;
 	}
 }

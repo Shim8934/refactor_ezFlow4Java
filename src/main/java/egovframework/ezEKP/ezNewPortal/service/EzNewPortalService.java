@@ -48,6 +48,8 @@ public interface EzNewPortalService {
 	public List<?> getUserFrameListAndSelectedFrame(String companyId, int tenantId, String userId) throws Exception;
 	public void updateUserUsedFrame(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
 	public void updateUserUsedPortlet(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
+	public boolean getCheckAuth(int menuId, String userId, String deptId, String companyId, int tenantId) throws Exception;
+	public List<MenuInfoVO> getAllCompanyMenus(String companyId, int tenantId, String companyLang) throws Exception;
 	/**
 	 * 유은정
 	 */

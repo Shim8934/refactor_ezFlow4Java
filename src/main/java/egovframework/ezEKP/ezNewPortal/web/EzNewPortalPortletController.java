@@ -903,4 +903,39 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		return "/ezNewPortal/portlets/movieBoardPortlet";
 	}
 	
+	/**
+	 * 포틀릿 - 카운트
+	 */
+	@RequestMapping(value = "/ezNewPortal/countPortlet.do")
+	public String portalCountPortlet(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("portalCountPortlet Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/ezportal/portlets/count/"+ userId;
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			model.addAttribute("pollCount", data.get("pollCount"));
+			model.addAttribute("circularCount", data.get("circularCount"));
+			model.addAttribute("scheduleCount", data.get("scheduleCount"));
+			model.addAttribute("approvalCount", data.get("approvalCount"));
+			model.addAttribute("approvalProgressingCount", data.get("approvalProgressingCount"));
+			model.addAttribute("approvalDraftCount", data.get("approvalDraftCount"));
+			model.addAttribute("approvalDeptSusinCount", data.get("approvalDeptSusinCount"));
+			model.addAttribute("unreadMailCount", data.get("unreadMailCount"));
+			model.addAttribute("useCircular", data.get("useCircular"));
+		}
+		
+		logger.debug("portalCountPortlet End");
+		return "/ezNewPortal/portlets/cntPortlet";
+	}
 }

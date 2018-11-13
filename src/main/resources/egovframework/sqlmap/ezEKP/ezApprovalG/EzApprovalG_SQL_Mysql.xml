@@ -14700,7 +14700,7 @@
                 AND
                 	TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
                 WHERE 
-                	TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> ''Y''
+                	TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
                 AND 
                 	(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#
                 AND 
