@@ -494,6 +494,11 @@
 				menuNameList.push({"menuLang" : menuLang, "menuId" : menuId, "menuName" : menuName.value});
 			}
 			
+			if (menuNameEmptyNum >= menuNamesCount) {
+				alert("하나 이상의 메뉴 이름을 입력해주세요.");
+				return;
+			}
+			
 			var companiesObj = document.getElementById("ListCompany");
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			
@@ -512,8 +517,8 @@
 				menuId : menuId,
 				companyId : companyValue,
 				menuNames : menuNameList,
-				menuInfo : menuInfo
-				/* , menuAuths : menuAuths */
+				menuInfo : menuInfo, 
+				menuAuths : menuAuths
 			});
 			 
 			request.send(data);
