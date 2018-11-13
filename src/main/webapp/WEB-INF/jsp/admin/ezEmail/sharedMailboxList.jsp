@@ -196,8 +196,8 @@
 		        	var shareName = listview.GetSelectedRows()[0].innerText;
 		        	var shareId = listview.GetSelectedRows()[0].getAttribute("DATA1");
 		        	
-			        if (confirm("'" + shareName + "' 공유사서함을 삭제하시겠습니까?")) {
-			        	if (confirm("공유사서함 삭제 시 공유사서함의 모든 메일이 삭제되며 복구할 수 없습니다.\n정말로 삭제하시겠습니까?")) {
+			        if (confirm("'" + shareName + "' <spring:message code='ezEmail.sharedMailbox22' />")) {
+			        	if (confirm("<spring:message code='ezEmail.sharedMailbox23' />")) {
 			        		$.ajax({
 				    			url: "/admin/ezEmail/delSharedMailbox.do",
 				    			type: "POST",
@@ -206,7 +206,7 @@
 				    			data: {'shareId' : shareId},
 				    			success: function(result) {
 				    				if (result.resultCode === "OK") {
-				    					alert("공유사서함을 삭제했습니다.");
+				    					alert("<spring:message code='ezEmail.sharedMailbox24' />");
 				    				} else if (result.resultCode === "NO_PERMISSION") {
 				    					alert("<spring:message code='ezOrgan.t302' />");
 				    				} else {
