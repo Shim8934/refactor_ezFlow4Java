@@ -18,6 +18,9 @@
 	                 	<c:when test="${unreadMailCount eq 0}">
 	                 		<dd class="count countZero">0</dd>
 	                 	</c:when>
+	                 	<c:when test="${unreadMailCount > 999}">
+	                 		<dd class="count">999+</dd>
+	                 	</c:when>
 	                 	<c:otherwise>
 			            	<dd class="count">${unreadMailCount }</dd>
 	                 	</c:otherwise>
@@ -29,6 +32,9 @@
 	                 <c:choose>
 	                 	<c:when test="${approvalCount eq 0}">
 	                 		<dd class="count countZero">0</dd>
+	                 	</c:when>
+	                 	<c:when test="${approvalCount > 999}">
+	                 		<dd class="count">999+</dd>
 	                 	</c:when>
 	                 	<c:otherwise>
 			            	<dd class="count">${approvalCount }</dd>
@@ -46,8 +52,8 @@
 			                 	<c:when test="${scheduleCount eq 0}">
 			                 		<dd class="count countZero">0</dd>
 			                 	</c:when>
-			                 	<c:when test="${scheduleCount >= 99}">
-			                 		<dd class="count">${scheduleCount }+</dd>
+			                 	<c:when test="${scheduleCount > 999}">
+			                 		<dd class="count">999+</dd>
 			                 	</c:when>
 			                 	<c:otherwise>
 					            	<dd class="count">${scheduleCount }</dd>
@@ -63,8 +69,8 @@
 			                 	<c:when test="${pollCount eq 0}">
 			                 		<dd class="count countZero">0</dd>
 			                 	</c:when>
-			                 	<c:when test="${pollCount >= 99}">
-			                 		<dd class="count">${pollCount }+</dd>
+			                 	<c:when test="${pollCount > 999}">
+			                 		<dd class="count">999+</dd>
 			                 	</c:when>
 			                 	<c:otherwise>
 					            	<dd class="count">${pollCount }</dd>
@@ -77,7 +83,7 @@
 	                     	<c:choose>
 	                     		<c:when test="${useCircular eq 'NO'}">
 	                     			<dt class="iconCircle"><span class="iconCommon"></span></dt>
-	                        		<dt class="iconText">회람판</dt>
+	                        		<dt class="iconText"></dt>
 	                     		</c:when>
 	                     		<c:otherwise>
 			                     	 <dt class="iconCircle iconcBoard"><span class="iconCommon iconBoard"></span></dt>
@@ -86,8 +92,8 @@
 					                 	<c:when test="${circularCount eq 0}">
 					                 		<dd class="count countZero">0</dd>
 					                 	</c:when>
-					                 	<c:when test="${circularCount >= 99}">
-					                 		<dd class="count">${circularCount }+</dd>
+					                 	<c:when test="${circularCount > 999}">
+					                 		<dd class="count">999+</dd>
 					                 	</c:when>
 					                 	<c:otherwise>
 							            	<dd class="count">${circularCount }</dd>
@@ -107,8 +113,8 @@
 			                 	<c:when test="${approvalProgressingCount eq 0}">
 			                 		<dd class="count countZero">0</dd>
 			                 	</c:when>
-			                 	<c:when test="${approvalProgressingCount >= 99}">
-			                 		<dd class="count">${approvalProgressingCount }+</dd>
+			                 	<c:when test="${approvalProgressingCount > 999}">
+			                 		<dd class="count">999+</dd>
 			                 	</c:when>
 			                 	<c:otherwise>
 					            	<dd class="count">${approvalProgressingCount }</dd>
@@ -124,8 +130,8 @@
 			                 	<c:when test="${approvalDraftCount eq 0}">
 			                 		<dd class="count countZero">0</dd>
 			                 	</c:when>
-			                 	<c:when test="${approvalDraftCount >= 99}">
-			                 		<dd class="count">${approvalDraftCount }+</dd>
+			                 	<c:when test="${approvalDraftCount > 999}">
+			                 		<dd class="count">999+</dd>
 			                 	</c:when>
 			                 	<c:otherwise>
 					            	<dd class="count">${approvalDraftCount }</dd>
@@ -141,8 +147,8 @@
 			                 	<c:when test="${approvalDeptSusinCount eq 0}">
 			                 		<dd class="count countZero">0</dd>
 			                 	</c:when>
-			                 	<c:when test="${approvalDeptSusinCount >= 99}">
-			                 		<dd class="count">${approvalDeptSusinCount }+</dd>
+			                 	<c:when test="${approvalDeptSusinCount >= 999}">
+			                 		<dd class="count">999+</dd>
 			                 	</c:when>
 			                 	<c:otherwise>
 					            	<dd class="count">${approvalDeptSusinCount }</dd>
