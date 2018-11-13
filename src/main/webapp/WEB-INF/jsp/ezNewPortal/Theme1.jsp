@@ -386,7 +386,7 @@
 				}(portletId, portletUrl, portletName));
 			}
 		}
-		
+
 		var useQuestion = "<c:out value='${useQuestion}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";
 		var useMail = "<c:out value='${useMail}'/>";
@@ -501,7 +501,7 @@
 			var media1279 = window.matchMedia("only screen and (max-width :1279px)");
 			
 			if (media1921.matches) {
-				$(".portlet").css("width", "483px");
+				$(".portlet").css("width", "48%");
 				$(".info_left").css("display", "inline-block");
 				$(".info_left").css("float", "left");
 				$(".info_left").css("width", "189px");
