@@ -34,7 +34,7 @@
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
 	.box_shadow {width:100%; margin:0px;}
-	.portlet {height:250px; margin:20px 0px 0px 16px;}
+	.portlet {height:250px; margin:20px 0px 0px 16px;background-color:#ffffff;}
 	.infoImg img {width:60px; height:60px;}
 	.attitudePtl {border:none;}
 	
