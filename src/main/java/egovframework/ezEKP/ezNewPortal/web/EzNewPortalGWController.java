@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -3062,14 +3063,29 @@ public class EzNewPortalGWController {
 				LOGGER.debug("approvalTotalCount : " + approvalTotalCount);
 				
 				//기존 webPartListCount가 제대로 나오지 않아 전체 리스트에서 count 가져오기
-				String[] approvalCounts = approvalTotalCount.split("<COUNT>");
-				String appr2 = approvalCounts[2].substring(0,1);
-				String appr3 = approvalCounts[3].substring(0,1);
+//				String[] approvalCounts = approvalTotalCount.split("<COUNT>");
+				String appr2 = "";
+				String appr3 = "";
+				String appr4 = "";
 				
+				Document docXML = commonUtil.convertStringToDocument(approvalTotalCount);
+				
+				for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
+					if (k==1) {
+						appr2 = docXML.getElementsByTagName("COUNT").item(k).getTextContent();
+					} else if (k==2) {
+						appr3 = docXML.getElementsByTagName("COUNT").item(k).getTextContent();
+					} else if (k==3) {
+						appr4 = docXML.getElementsByTagName("COUNT").item(k).getTextContent();
+					} else if (k>3) {
+						break;
+					}
+				}
 				int approvalProgressingCount = Integer.parseInt(appr2);
 				int approvalDraftCount = Integer.parseInt(appr3);
+				int approvalDeptSusinCount = Integer.parseInt(appr4);
 				
-				int approvalDeptSusinCount = ezApprovalGSerivce.getWebPartListCount("4", userId, deptId, "", "COUNT", "", companyId, portletLang, tenantId, offsetMin);
+//				int approvalDeptSusinCount = ezApprovalGSerivce.getWebPartListCount("4", userId, deptId, "", "COUNT", "", companyId, portletLang, tenantId, offsetMin);
 				data.put("approvalProgressingCount", approvalProgressingCount);
 				data.put("approvalDraftCount", approvalDraftCount);
 				data.put("approvalCount", approvalCount);
