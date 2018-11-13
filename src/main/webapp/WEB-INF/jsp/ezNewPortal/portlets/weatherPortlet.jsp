@@ -59,6 +59,14 @@ $(document).ready(function(){
 	$("#currentIcon").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon" +  currentIcon.substring(0,2) + ".png");
 	$("#mainWeather").text(currentMain);
 	
+	$("#humidity").text("습도 ");
+	$("#clouds").text("구름 ");
+	$("#wind").text("바람 ");
+	
+	$("#humidityPer").text("%");
+	$("#cloudsPer").text("%");
+	$("#windPer").text("m/s");
+	
 	//온도가 소수점단위로 들어오므로 소수점 아래는 잘라줌
 	if (currentTemp.indexOf(".") == -1) {
 		$("#currentTemp").text(currentTemp + "℃");
@@ -250,37 +258,37 @@ $(function(){
         <div class="weather_content">
         	<div class="weather_title">
             	<dl class="weatherPresent">
-                	<dt><img id="currentIcon" src="/images/ezNewPortal/weather/weatherIcon02.png"></dt>
+                	<dt><img id="currentIcon" src=""></dt>
                     <dd><span id="mainWeather"></span> <span id="currentTemp"></span></dd>
                 </dl>
                 <ul class="weatherPer">
-                	<li><span class="icon iconbg01"><img src="/images/ezNewPortal/weather/weatherIcon_add01.png"></span>
-                	<span class="text">습도 <span id="currentHumidity"></span><span class="text">%</span></span></li>
-                    <li><span class="icon iconbg02"><img src="/images/ezNewPortal/weather/weatherIcon_add02.png"></span>
-                    <span class="text">구름 <span id="currentClouds"></span><span class="text">%</span></span></li>
-                    <li><span class="icon iconbg03"><img src="/images/ezNewPortal/weather/weatherIcon_add03.png"></span>
-                    <span class="text">바람 <span id="currentWind"></span><span class="text">m/s</span></span></li>
+                	<li><span class="icon iconbg01"><img src=""></span>
+                	<span class="text"><span class="text" id="humidity"></span><span id="currentHumidity"></span><span class="text" id="humidityPer"></span></span></li>
+                    <li><span class="icon iconbg02"><img src=""></span>
+                    <span class="text"><span class="text" id="clouds"></span><span id="currentClouds"></span><span class="text" id="cloudsPer"></span></span></li>
+                    <li><span class="icon iconbg03"><img src=""></span>
+                    <span class="text"><span class="text" id="wind"></span><span id="currentWind"></span><span class="text" id="windPer"></span></span></li>
                 </ul>
             </div>
             <div class="weather_mini">
             	<dl>
-                	<dt><img id="icon1" src="/images/ezNewPortal/weather/weatherIcon_mini01.png"></dt>
+                	<dt><img id="icon1" src=""></dt>
                     <dd><span id="date1"></span><span id="temp1"></span></dd>
                 </dl>
                 <dl>
-                	<dt><img id="icon2" src="/images/ezNewPortal/weather/weatherIcon_mini02.png"></dt>
+                	<dt><img id="icon2" src=""></dt>
                     <dd><span id="date2"></span><span id="temp2"></span></dd>
                 </dl>
                 <dl>
-                	<dt><img id="icon3" src="/images/ezNewPortal/weather/weatherIcon_mini03.png"></dt>
+                	<dt><img id="icon3" src=""></dt>
                     <dd><span id="date3"></span><span id="temp3"></span></dd>
                 </dl>
                 <dl>
-                	<dt><img id="icon4" src="/images/ezNewPortal/weather/weatherIcon_mini04.png"></dt>
+                	<dt><img id="icon4" src=""></dt>
                     <dd><span id="date4"></span><span id="temp4"></span></dd>
                 </dl>
                 <dl>
-                	<dt><img id="icon5" src="/images/ezNewPortal/weather/weatherIcon_mini05.png"></dt>
+                	<dt><img id="icon5" src=""></dt>
                     <dd><span id="date5"></span><span id="temp5"></span></dd>
                 </dl>
             </div>

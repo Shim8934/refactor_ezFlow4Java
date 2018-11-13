@@ -703,7 +703,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 .weather_mini{overflow:hidden;}
 .weather_mini dl{float:left; width:calc(20% - 12px); margin:0px 5px; padding:11px 0px; border:1px solid #e2e2e2;}
-.weather_mini dl dt{float:left; width:calc(50% - 12px); margin:8px 3	px; padding:0px; text-align:center;}
+.weather_mini dl dt{float:left; width:calc(50% - 12px); margin:8px 3px; padding:0px; text-align:center;}
 .weather_mini dl dt img{vertical-align:middle;}
 .weather_mini dl dd{float:left; width:50%; margin:0px; padding:0px; color:#000; font-size:15px; text-align:left;}
 .weather_mini dl dd span{display:block; line-height:22px;}
