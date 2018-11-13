@@ -3058,20 +3058,27 @@ public class EzNewPortalGWController {
 
 			// 결재할 문서 개수 불러오기
 			if (useApproval.equals("YES")) {
-				int approvalCount = ezApprovalGSerivce.getWebPartListCount("1", userId, deptId, "", "COUNT", "", companyId, portletLang, tenantId, offsetMin);
-				String approvalTotalCount = ezApprovalGSerivce.getWebPartList("2", userId, deptId, "", "LEFT", "", companyId, portletLang, tenantId, offsetMin);
-				LOGGER.debug("approvalTotalCount : " + approvalTotalCount);
-				
 				//기존 webPartListCount가 제대로 나오지 않아 전체 리스트에서 count 가져오기
-//				String[] approvalCounts = approvalTotalCount.split("<COUNT>");
+				String appr1 = "";
 				String appr2 = "";
 				String appr3 = "";
 				String appr4 = "";
 				
+				String susinAdmin = "user";
+				String nowDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, true);
+				
+				if (info.getRollInfo() != null && info.getRollInfo().indexOf("a=1") > -1 || ezOrganService.isProxyUser(info.getTenantId(), userId, nowDateTime).equals("1")) {
+					susinAdmin = "admin";
+				}
+				String approvalTotalCount = ezApprovalGSerivce.getWebPartList("4", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offsetMin);
+				LOGGER.debug("approvalTotalCount : " + approvalTotalCount);
+				
 				Document docXML = commonUtil.convertStringToDocument(approvalTotalCount);
 				
 				for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
-					if (k==1) {
+					if (k==0) {
+						appr1 = docXML.getElementsByTagName("COUNT").item(k).getTextContent();
+					} else if (k==1) {
 						appr2 = docXML.getElementsByTagName("COUNT").item(k).getTextContent();
 					} else if (k==2) {
 						appr3 = docXML.getElementsByTagName("COUNT").item(k).getTextContent();
@@ -3081,11 +3088,11 @@ public class EzNewPortalGWController {
 						break;
 					}
 				}
+				int approvalCount = Integer.parseInt(appr1);
 				int approvalProgressingCount = Integer.parseInt(appr2);
 				int approvalDraftCount = Integer.parseInt(appr3);
 				int approvalDeptSusinCount = Integer.parseInt(appr4);
 				
-//				int approvalDeptSusinCount = ezApprovalGSerivce.getWebPartListCount("4", userId, deptId, "", "COUNT", "", companyId, portletLang, tenantId, offsetMin);
 				data.put("approvalProgressingCount", approvalProgressingCount);
 				data.put("approvalDraftCount", approvalDraftCount);
 				data.put("approvalCount", approvalCount);
