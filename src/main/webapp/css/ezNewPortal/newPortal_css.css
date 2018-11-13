@@ -649,7 +649,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .weather_title .weatherPresent dt{float:left; width:calc(40% - 20px); margin:0px 10px; padding:0px; text-align:center;}
 .weather_title .weatherPresent dd{float:left; width:calc(60% - 20px); margin:0px 10px; padding:0px; color:#000; font-size:22px; line-height:34px; letter-spacing:-1px;}
 .weather_title .weatherPer{float:right; list-style:none; width:calc(40% - 10px); margin:10px 0px; padding:0px;}
-.weather_title .weatherPer li{margin:2px 0px; padding:0px; color:#000; font-size:14px; line-height:26px;}
+.weather_title .weatherPer li{margin:2px 0px; padding:0px; color:#000; font-size:14px; line-height:26px;display:none;}
 .weather_title .weatherPer li span{display:inline-block;}
 .weather_title .weatherPer li span.icon{width:24px; height:24px; margin:0px 10px 0px 0px; padding:0px; text-align:center; background:#45aaff; border-radius:24px;-webkit-border-radius:24px;-moz-border-radius:24px;}
 .weather_title .weatherPer li span.icon img{vertical-align:middle; margin:-6px 0px 0px 0px;}
