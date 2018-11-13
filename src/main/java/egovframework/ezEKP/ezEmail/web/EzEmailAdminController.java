@@ -1818,13 +1818,10 @@ public class EzEmailAdminController {
 						vo.setCn(shareId);
 						vo.setDisplayName(shareName);
 						vo.setParentCn(deptId);
+						vo.setMail(mailAddr);
 						
 						// 인사연동 시 공유사서함 계정을 퇴직처리 시키지 않기 위해 manualFlag를 Y로 설정한다.
 						vo.setManualFlag("Y");
-						
-						// 공유사서함 계정의 alias 메일주소는 jmocha_alias 테이블에 저장하지 않음
-						String newMailAddr = getEmailAddressBasedOnCompanyDomainName(mailAddr, shareId, compId, tenantId);
-						vo.setMail(newMailAddr);
 						
 						String userPrincipalName = shareId + "@" + domain;
 						vo.setUpnName(userPrincipalName);
@@ -1872,9 +1869,32 @@ public class EzEmailAdminController {
 				return "json";
 			}
 			
+			// 회사별 이메일 도메인명이 설정되어 있으면 tbl_tenant_config에 있는 DomainName 대신에
+			// 해당 도메인명을 사용해 이메일 주소를 생성한다.
+			String companyDomainName = ezCommonService.getCompanyConfig(tenantId, compId, "DomainName");
+			logger.debug("companyDomainName=" + companyDomainName);
+
+			if (!companyDomainName.isEmpty()) {
+				String newMailAddr = shareId + "@" + companyDomainName;
+				
+				List<String> mailList = new ArrayList<>();
+				mailList.add(newMailAddr);
+				
+				String setAliasResult = ezEmailService.setIndividualAlias(shareId, tenantId, newMailAddr, mailList);
+				
+				if (!setAliasResult.equals("OK")) {
+					logger.debug("set SharedMailbox Alias address failed.");
+					
+					resultCode = "ERROR";
+					model.addAttribute("resultCode", resultCode);
+					logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
+					return "json";
+				}
+			}
+			
 			// 공유자가 있을 경우 공유자 등록
 			if (userListSize > 0) {
-				String setUsersResult = resultCode = ezEmailService.setSharedMailboxUsers(shareId, userList, tenantId);
+				String setUsersResult = ezEmailService.setSharedMailboxUsers(shareId, userList, tenantId);
 				
 				if (!setUsersResult.equals("OK")) {
 					logger.debug("setSharedMailboxUsers failed.");
@@ -1972,44 +1992,6 @@ public class EzEmailAdminController {
 		
 		logger.debug("modSharedMailbox ended. resultCode=" + resultCode);
 		return "json";
-	}
-	
-	private String getEmailAddressBasedOnCompanyDomainName(String originalMailAddr, String cn, String compId, int tenantId) {
-		try {
-			String companyDomainName = ezCommonService.getCompanyConfig(tenantId, compId, "DomainName");
-			logger.debug("companyDomainName=" + companyDomainName);
-
-			// 회사별 이메일 도메인명이 설정되어 있으면 tbl_tenant_config에 있는 DomainName 대신에
-			// 해당 도메인명을 사용해 이메일 주소를 생성한다.
-			if (!companyDomainName.isEmpty()) {
-				logger.debug("Setting originalMailAddr based on companyDomainName...");
-				
-				String newMailAddr = cn + "@" + companyDomainName;
-				
-				// 해당 주소를 Alias 주소로 등록한다.
-				int rc = ezEmailUserAdminService.addGroup(newMailAddr);
-				logger.debug("addGroup rc=" + rc);
-				
-				if (rc == 0) {
-					// 해당 주소의 멤버로 원 이메일 주소를 등록한다.
-					rc = ezEmailUserAdminService.updateGroupAdd(newMailAddr, originalMailAddr);
-					logger.debug("updateGroupAdd rc=" + rc);
-					
-					if (rc == 0) {
-						// 해당 주소로 원 이메일 주소를 교체한다.
-						originalMailAddr = newMailAddr;
-						
-						logger.debug("newMailAddr=" + newMailAddr);
-					} else {
-						ezEmailUserAdminService.removeGroup(newMailAddr);
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return originalMailAddr;		
 	}
 	
 	private void removeEmailAddressBasedOnCompanyDomainName(String cn, String compId, int tenantId) {
