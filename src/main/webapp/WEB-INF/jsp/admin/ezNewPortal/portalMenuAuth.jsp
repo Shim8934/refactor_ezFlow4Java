@@ -611,7 +611,7 @@
 	   		
 	   		/** get MenuAuth data */
 	   		var getMenuAuths = function() {
-					menuAuths = window.opener.menuAuths;
+					menuAuths = JSON.parse(JSON.stringify(window.opener.menuAuths));
 					
 					drawAuths();
 	   		};

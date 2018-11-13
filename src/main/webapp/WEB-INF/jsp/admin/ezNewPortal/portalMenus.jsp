@@ -512,7 +512,7 @@
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 
-				//getMenus();
+				getMenus();
 				//menuAuths = [];
 			}
 			
