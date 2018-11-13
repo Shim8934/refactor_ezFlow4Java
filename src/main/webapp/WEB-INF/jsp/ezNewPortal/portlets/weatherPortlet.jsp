@@ -5,6 +5,7 @@
 <head>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.orbit-1.2.3.min.js')}"></script>
+<link href="css/default_kr.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
 var currentWeather = "${currentWeather}";
 var todayWeather = "${todayWeather}";
@@ -55,60 +56,60 @@ var today5Time = todayHoursArr[4];
 
 $(document).ready(function(){
 	console.log(todayHoursArr)
-	$("#currentIcon").attr("src", "/images/ezNewPortal/weather/" + currentIcon + ".png");
+	$("#currentIcon").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon" +  currentIcon.substring(0,2) + ".png");
 	$("#mainWeather").text(currentMain);
 	
 	//온도가 소수점단위로 들어오므로 소수점 아래는 잘라줌
 	if (currentTemp.indexOf(".") == -1) {
-		$("#currentTemp").text(currentTemp);
+		$("#currentTemp").text(currentTemp + "℃");
 	} else {
-		$("#currentTemp").text(currentTemp.substring(0,currentTemp.indexOf(".") + 2));
+		$("#currentTemp").text(currentTemp.substring(0,currentTemp.indexOf(".") + 2) + "℃");
 	}
 	$("#currentHumidity").text(currentHumidity);
 	$("#currentClouds").text(currentClouds);
 	$("#currentWind").text(currentWind);
 	
-	$("#icon1").attr("src", "/images/ezNewPortal/weather/" + today1Icon + ".png");
-	$("#icon2").attr("src", "/images/ezNewPortal/weather/" + today2Icon + ".png");
-	$("#icon3").attr("src", "/images/ezNewPortal/weather/" + today3Icon + ".png");
-	$("#icon4").attr("src", "/images/ezNewPortal/weather/" + today4Icon + ".png");
-	$("#icon5").attr("src", "/images/ezNewPortal/weather/" + today5Icon + ".png");
+	$("#icon1").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today1Icon.substring(0,2) + ".png");
+	$("#icon2").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today2Icon.substring(0,2) + ".png");
+	$("#icon3").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today3Icon.substring(0,2) + ".png");
+	$("#icon4").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today4Icon.substring(0,2) + ".png");
+	$("#icon5").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today5Icon.substring(0,2) + ".png");
 	
 	if (today1Temp.indexOf(".") == -1) {
-		$("#temp1").text(today1Temp);
+		$("#temp1").text(today1Temp + "℃");
 	} else {
-		$("#temp1").text(today1Temp.substring(0,today1Temp.indexOf(".") + 2));
+		$("#temp1").text(today1Temp.substring(0,today1Temp.indexOf(".") + 2) + "℃");
 	}
 	
 	if (today2Temp.indexOf(".") == -1) {
-		$("#temp2").text(today2Temp);
+		$("#temp2").text(today2Temp + "℃");
 	} else {
-		$("#temp2").text(today2Temp.substring(0,today2Temp.indexOf(".") + 2));
+		$("#temp2").text(today2Temp.substring(0,today2Temp.indexOf(".") + 2) + "℃");
 	}
 	
 	if (today3Temp.indexOf(".") == -1) {
-		$("#temp3").text(today3Temp);
+		$("#temp3").text(today3Temp + "℃");
 	} else {
-		$("#temp3").text(today3Temp.substring(0,today3Temp.indexOf(".") + 2));
+		$("#temp3").text(today3Temp.substring(0,today3Temp.indexOf(".") + 2) + "℃");
 	}
 	
 	if (today4Temp.indexOf(".") == -1) {
-		$("#temp4").text(today4Temp);
+		$("#temp4").text(today4Temp + "℃");
 	} else {
-		$("#temp4").text(today4Temp.substring(0,today4Temp.indexOf(".") + 2));
+		$("#temp4").text(today4Temp.substring(0,today4Temp.indexOf(".") + 2) + "℃");
 	}
 	
 	if (today5Temp.indexOf(".") == -1) {
-		$("#temp5").text(today5Temp);
+		$("#temp5").text(today5Temp + "℃");
 	} else {
-		$("#temp5").text(today5Temp.substring(0,today5Temp.indexOf(".") + 2));
+		$("#temp5").text(today5Temp.substring(0,today5Temp.indexOf(".") + 2) + "℃");
 	}
 	
-	$("#date1").text(today1Time);
-	$("#date2").text(today2Time);
-	$("#date3").text(today3Time);
-	$("#date4").text(today4Time);
-	$("#date5").text(today5Time);
+	$("#date1").text(today1Time + "시");
+	$("#date2").text(today2Time + "시");
+	$("#date3").text(today3Time + "시");
+	$("#date4").text(today4Time + "시");
+	$("#date5").text(today5Time + "시");
 	
 	//도시목록을 셀렉트박스로 만들어줌
 	for (var i = 0; i < cityList.length; i++) {
@@ -145,12 +146,12 @@ $(function(){
     			
     			todayHoursArr = data.todayHours.split(";");
     			
-    			$("#currentIcon").attr("src", "/images/ezNewPortal/weather/" + currentIcon + ".png");
+    			$("#currentIcon").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon" +  currentIcon.substring(0,2) + ".png");
     			$("#mainWeather").text(currentMain);
     			if (currentTemp.indexOf(".") == -1) {
-    				$("#currentTemp").text(currentTemp);
+    				$("#currentTemp").text(currentTemp + "℃");
     			} else {
-    				$("#currentTemp").text(currentTemp.substring(0,currentTemp.indexOf(".") + 2));
+    				$("#currentTemp").text(currentTemp.substring(0,currentTemp.indexOf(".") + 2) + "℃");
     			}
     			
     			$("#currentHumidity").text(currentHumidity);
@@ -185,48 +186,48 @@ $(function(){
     			today5Temp = today5Arr[1];
     			today5Time = todayHoursArr[4];
     			
-    			$("#icon1").attr("src", "/images/ezNewPortal/weather/" + today1Icon + ".png");
-    			$("#icon2").attr("src", "/images/ezNewPortal/weather/" + today2Icon + ".png");
-    			$("#icon3").attr("src", "/images/ezNewPortal/weather/" + today3Icon + ".png");
-    			$("#icon4").attr("src", "/images/ezNewPortal/weather/" + today4Icon + ".png");
-    			$("#icon5").attr("src", "/images/ezNewPortal/weather/" + today5Icon + ".png");
+    			$("#icon1").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today1Icon.substring(0,2) + ".png");
+    			$("#icon2").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today2Icon.substring(0,2) + ".png");
+    			$("#icon3").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today3Icon.substring(0,2) + ".png");
+    			$("#icon4").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today4Icon.substring(0,2) + ".png");
+    			$("#icon5").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today5Icon.substring(0,2) + ".png");
     			
     			if (today1Temp.indexOf(".") == -1) {
-    				$("#temp1").text(today1Temp);
+    				$("#temp1").text(today1Temp + "℃");
     			} else {
     				
-    				$("#temp1").text(today1Temp.substring(0,today1Temp.indexOf(".") + 2));
+    				$("#temp1").text(today1Temp.substring(0,today1Temp.indexOf(".") + 2) + "℃");
     			}
     			
     			if (today2Temp.indexOf(".") == -1) {
-    				$("#temp2").text(today2Temp);
+    				$("#temp2").text(today2Temp + "℃");
     			} else {
-    				$("#temp2").text(today2Temp.substring(0,today2Temp.indexOf(".") + 2));
+    				$("#temp2").text(today2Temp.substring(0,today2Temp.indexOf(".") + 2) + "℃");
     			}
     			
     			if (today3Temp.indexOf(".") == -1) {
-    				$("#temp3").text(today3Temp);
+    				$("#temp3").text(today3Temp + "℃");
     			} else {
-    				$("#temp3").text(today3Temp.substring(0,today3Temp.indexOf(".") + 2));
+    				$("#temp3").text(today3Temp.substring(0,today3Temp.indexOf(".") + 2) + "℃");
     			}
     			
     			if (today4Temp.indexOf(".") == -1) {
-    				$("#temp4").text(today4Temp);
+    				$("#temp4").text(today4Temp + "℃");
     			} else {
-    				$("#temp4").text(today4Temp.substring(0,today4Temp.indexOf(".") + 2));
+    				$("#temp4").text(today4Temp.substring(0,today4Temp.indexOf(".") + 2) + "℃");
     			}
     			
     			if (today5Temp.indexOf(".") == -1) {
-    				$("#temp5").text(today5Temp);
+    				$("#temp5").text(today5Temp + "℃");
     			} else {
-    				$("#temp5").text(today5Temp.substring(0,today5Temp.indexOf(".") + 2));
+    				$("#temp5").text(today5Temp.substring(0,today5Temp.indexOf(".") + 2) + "℃");
     			}
     			
-    			$("#date1").text(today1Time);
-    			$("#date2").text(today2Time);
-    			$("#date3").text(today3Time);
-    			$("#date4").text(today4Time);
-    			$("#date5").text(today5Time);
+    			$("#date1").text(today1Time + "시");
+    			$("#date2").text(today2Time + "시");
+    			$("#date3").text(today3Time + "시");
+    			$("#date4").text(today4Time + "시");
+    			$("#date5").text(today5Time + "시");
 	        },
 	        error: function(error) {
 	        	alert(error);
@@ -237,81 +238,54 @@ $(function(){
 </script>
 </head>
 <body>
-<article class="notice box_shadow">
-<div class="layDiv">
-	<dl class="portlet_title sortablePortlet">
-		<dt class="portletText">오늘의날씨 </dt> <!-- <span id="cityName">${displayName}</span> -->
-
-		<dd class="portletPlus" style="margin-right:10px">
-			<select id="cityList">
-			</select>
-		</dd>
-	</dl>
-<div class= "weather_content" style="heigth:100%">
-	<div style="float:left;width:34%;height:90px;display: inline-block;text-align:center">
-		<img id="currentIcon" src="" style="width:80%;height:80%;margin-top:5%"/>
-	</div>
-	<div style="float:left;width:33%;height:90px;display: inline-block;text-align:center" >
-		<span style="display:block;margin-top:15%" id="mainWeather">없음</span>
-		<span style="display:block"><span id="currentTemp">0</span><span>˚C</span></span>
-	</div>
-	<div style="float:left;width:33%;height:90px;display: inline-block;text-align:center">
-		<span style="display:block;margin-top:10%">습도 <span id="currentHumidity">0</span><span> %</span></span>
-		<span style="display:block">구름 <span id="currentClouds">0</span><span> %</span></span>
-		<span style="display:block">바람 <span id="currentWind">0</span><span> m/s</span></span>
-	</div>
-	<div style="float:left;width:100%;display: inline-block;">
-		<div style="float:left;width:20%;height:90px;display: inline-block;">
-			<div style="text-align:center"><span id="date1"></span><span>시</span></div>
-			<div id="weather1" style="text-align:center">
-				<img class="weather_icon" id="icon1" src=""/>
-			</div>
-			<div style="text-align:center">
-				<span style="display:block"><span id="temp1">0</span><span>˚C</span></span>
-			</div>
-		</div>
-		<div style="float:left;width:20%;height:90px;display: inline-block;">
-			<div style="text-align:center"><span id="date2"></span><span>시</span></div>
-			<div id="weather2" style="text-align:center">
-				<img class="weather_icon" id="icon2" src=""/>
-			</div>
-			<div style="text-align:center">
-				<span style="display:block"><span id="temp2">0</span><span>˚C</span></span>
-			</div>
-		</div>
-		<div style="float:left;width:20%;height:90px;display: inline-block;">
-			<div style="text-align:center"><span id="date3"></span><span>시</span></div>
-			<div id="weather3" style="text-align:center">
-				<img class="weather_icon" id="icon3" src=""/>
-			</div>
-			<div style="text-align:center">
-				<span style="display:block"><span id="temp3">0</span><span>˚C</span></span>
-			</div>
-		</div>
-		<div style="float:left;width:20%;height:90px;display: inline-block;">
-			<div style="text-align:center"><span id="date4"></span><span>시</span></div>
-			<div id="weather4" style="text-align:center">
-				<img class="weather_icon" id="icon4" src=""/>
-			</div>
-			<div style="text-align:center">
-				<span style="display:block"><span id="temp4">0</span><span>˚C</span></span>
-			</div>
-		</div>
-		<div style="float:left;width:20%;height:90px;display: inline-block;">
-			<div style="text-align:center"><span id="date5"></span><span>시</span></div>
-			<div id="weather5" style="text-align:center">
-				<img class="weather_icon" id="icon5" src=""/>
-			</div>
-			<div style="text-align:center">
-				<span style="display:block"><span id="temp5">0</span><span>˚C</span></span>
-			</div>
-		</div>
-	</div>
-	<div style="text-align:right;width:100%;height:15px;display:inline-block;margin-top:5px">
-		<span style="font-size:9px;margin-right:3px;margin-top:3px;width:100%">Weather from OpenWeatherMap </span>
-	</div>
-</div>
-</div>
+<article class="weather box_shadow" style="background-color:#ffffff">
+	<div class="layDiv">
+    	<dl class="portlet_title sortablePortlet">
+        	<dt class="portletText">오늘의날씨</dt>
+            <dd class="portletPlus">
+            	<select id="cityList" class="weatherSelect">
+                </select>
+            </dd>
+        </dl>
+        <div class="weather_content">
+        	<div class="weather_title">
+            	<dl class="weatherPresent">
+                	<dt><img id="currentIcon" src="/images/ezNewPortal/weather/weatherIcon02.png"></dt>
+                    <dd><span id="mainWeather">cloud and sunny</span> <span id="currentTemp">12℃</span></dd>
+                </dl>
+                <ul class="weatherPer">
+                	<li><span class="icon iconbg01"><img src="/images/ezNewPortal/weather/weatherIcon_add01.png"></span>
+                	<span class="text">습도 <span id="currentHumidity">0</span><span class="text">%</span></span></li>
+                    <li><span class="icon iconbg02"><img src="/images/ezNewPortal/weather/weatherIcon_add02.png"></span>
+                    <span class="text">구름 <span id="currentClouds">0</span><span class="text">%</span></span></li>
+                    <li><span class="icon iconbg03"><img src="/images/ezNewPortal/weather/weatherIcon_add03.png"></span>
+                    <span class="text">바람 <span id="currentWind">0</span><span class="text">m/s</span></span></li>
+                </ul>
+            </div>
+            <div class="weather_mini">
+            	<dl>
+                	<dt><img id="icon1" src="/images/ezNewPortal/weather/weatherIcon_mini01.png"></dt>
+                    <dd><span id="date1">15시</span><span id="temp1">14℃</span></dd>
+                </dl>
+                <dl>
+                	<dt><img id="icon2" src="/images/ezNewPortal/weather/weatherIcon_mini02.png"></dt>
+                    <dd><span id="date2">18시</span><span id="temp2">14℃</span></dd>
+                </dl>
+                <dl>
+                	<dt><img id="icon3" src="/images/ezNewPortal/weather/weatherIcon_mini03.png"></dt>
+                    <dd><span id="date3">21시</span><span id="temp3">14℃</span></dd>
+                </dl>
+                <dl>
+                	<dt><img id="icon4" src="/images/ezNewPortal/weather/weatherIcon_mini04.png"></dt>
+                    <dd><span id="date4">24시</span><span id="temp4">14℃</span></dd>
+                </dl>
+                <dl>
+                	<dt><img id="icon5" src="/images/ezNewPortal/weather/weatherIcon_mini05.png"></dt>
+                    <dd><span id="date5">03시</span><span id="temp5">14℃</span></dd>
+                </dl>
+            </div>
+        </div>
+    </div>
 </article>
 </body>
 </html>
