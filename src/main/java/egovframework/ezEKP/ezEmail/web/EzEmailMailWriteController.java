@@ -4730,6 +4730,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String pDLPropList = "mail";
 		String pDLListType = "group";
 		String pAddressFilter = "";
+		String pSharedMailboxSearchList = "";
 		
 		Document xmlDoc = commonUtil.convertRequestToDocument(request);
 		Element root = xmlDoc.getDocumentElement();
@@ -4745,6 +4746,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			tempNode = root.getElementsByTagName("DLGSEARCH").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pDLSearchList = tempNode.getTextContent();
+			}
+		}
+		if (root.getElementsByTagName("SHAREDMAILBOXSEARCH") != null) {
+			tempNode = root.getElementsByTagName("SHAREDMAILBOXSEARCH").item(0);
+			if (tempNode != null && !tempNode.getTextContent().equals("")) {
+				pSharedMailboxSearchList = tempNode.getTextContent();
 			}
 		}
 		if (root.getElementsByTagName("CELL") != null) {
@@ -4788,9 +4795,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo);
         String dlXML = getOrganDLSearch(pDLSearchList, userInfo);
         String addressXML = getAddressSearch(pAddressFilter, userInfo);
-        
+        String sharedMailboxXML = getSharedMailboxSearch(pSharedMailboxSearchList, userInfo);
+
         logger.debug("mailNameCheck ended.");
-        return String.format("<RESULT><ORGAN>%s</ORGAN><DL>%s</DL><ADDRESS>%s</ADDRESS></RESULT>", organXML, dlXML, addressXML);
+        return String.format("<RESULT><ORGAN>%s</ORGAN><DL>%s</DL><ADDRESS>%s</ADDRESS><SHAREDMAILBOX>%s</SHAREDMAILBOX></RESULT>", organXML, dlXML, addressXML, sharedMailboxXML);
 	}
 	
 	/**
@@ -5382,6 +5390,52 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         return returnValue;
     }
 	
+	/**
+	 * 공유사서함 정보 호출 함수
+	 */
+	private String getSharedMailboxSearch(String pSearchList, LoginVO userInfo) {
+        String returnData = "";
+        
+        try {
+        	String searchValue = pSearchList.split("::")[1];
+        	
+			List<MailSharedMailboxVO> sharedMailboxList = ezEmailService.getSharedMailboxSearchList(userInfo.getCompanyID(), userInfo.getTenantId(), searchValue);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (MailSharedMailboxVO vo : sharedMailboxList) {
+				sb.append("<ROW><CELL>");
+				
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getShareName()));
+				sb.append("</VALUE>");
+				
+				sb.append("<DATA1>group</DATA1>");
+				
+				sb.append("<DATA2>");
+				sb.append(commonUtil.cleanValue(vo.getShareId()));
+				sb.append("</DATA2>");
+				
+				sb.append("<DATA3>");
+				sb.append(commonUtil.cleanValue(vo.getShareMail()));
+				sb.append("</DATA3>");
+				
+				sb.append("</CELL></ROW>");
+			}
+			
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "EXCEPTION";
+			e.printStackTrace();
+		}
+        
+        return returnData;
+    }
+	
 	private String convertDownloadInlineImageURLtoCid(String htmlStr) {
 		Pattern pat = Pattern.compile("src=\"/ezEmail/downloadInline\\.do.*?contentId=%3C(.*?)%3E\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher mat = pat.matcher(htmlStr);
@@ -5531,12 +5585,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String pOrganListType = "all";
 		String pDLSearchList = "displayname::" + searchValue;
 		String pAddressFilter = searchValue;
+		String pSharedMailboxSearchList = "displayname::" + searchValue;
 
 		try {
 			Document organXML = commonUtil.convertStringToDocument(
 					getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo));
 			Document dlXML = commonUtil.convertStringToDocument(getOrganDLSearch(pDLSearchList, userInfo));
 			Document addressXML = commonUtil.convertStringToDocument(getAddressSearch(pAddressFilter, userInfo));
+			Document sharedMailboxXML = commonUtil.convertStringToDocument(getSharedMailboxSearch(pSharedMailboxSearchList, userInfo));
 
 			HashMap<String, Object> jsonObject = null;
 			List<Object> jsonList = new ArrayList<Object>();
@@ -5589,6 +5645,24 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					jsonList.add(jsonObject);
 				}
 			}
+			
+			NodeList sharedMailboxRow = sharedMailboxXML.getElementsByTagName("ROW");
+			for (int i = 0; i < sharedMailboxRow.getLength(); i++) {
+				Element row = (Element) sharedMailboxRow.item(i);
+				NodeList sharedMailboxList = row.getElementsByTagName("CELL");
+				Element sharedMailboxCell = (Element) sharedMailboxList.item(0);
+				if (sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent().trim() != null || !sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
+					jsonObject = new HashMap<String, Object>();
+					jsonObject.put("name", sharedMailboxCell.getElementsByTagName("VALUE").item(0).getTextContent());
+					jsonObject.put("title", "");
+					jsonObject.put("description", egovMessageSource.getMessage("ezEmail.sharedMailbox02", locale));
+					jsonObject.put("mail", sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent());
+					jsonObject.put("type", "");
+					jsonObject.put("href", "");
+					jsonList.add(jsonObject);
+				}
+			}
+			
 			model.addAttribute("susinList", jsonList);
 		} catch (Exception e) {
 

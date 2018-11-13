@@ -1330,9 +1330,9 @@ function GetMailAddresses(name) {
     createNodeAndInsertText(xmlDOM, objNode, "DLTYPE", "group");
     createNodeAndInsertText(xmlDOM, objNode, "FIELD", "AddressID,SNAME,SEMAIL,STYPE");
     createNodeAndInsertText(xmlDOM, objNode, "ADDFILTER", name);
+    createNodeAndInsertText(xmlDOM, objNode, "SHAREDMAILBOXSEARCH", "displayname::" + name);
     xmlHTTP.open("POST", "/ezEmail/mailNameCheck.do", false);
     xmlHTTP.send(xmlDOM);
-
 
     xmlDOM = loadXMLString(xmlHTTP.responseText);
     var rows = SelectNodes(xmlDOM, "RESULT/ORGAN/ROW");
@@ -1397,6 +1397,19 @@ function GetMailAddresses(name) {
         m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
         m_addrBook["href"][count + adCount] = "";
         m_addrBook["company"][count + adCount] = strLang114;
+        m_addrBook["dept"][count + adCount] = "";
+        m_addrBook["title"][count + adCount] = "";
+    }
+    
+    adCount += rows.length;
+    rows = SelectNodes(xmlDOM, "RESULT/SHAREDMAILBOX/ROW");
+    
+    for (var count = 0 ; count < rows.length ; count++) {
+        m_addrBook["type"][count + adCount] = "email";
+        m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
+        m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
+        m_addrBook["href"][count + adCount] = "";
+        m_addrBook["company"][count + adCount] = strLangSharedMailbox01;
         m_addrBook["dept"][count + adCount] = "";
         m_addrBook["title"][count + adCount] = "";
     }

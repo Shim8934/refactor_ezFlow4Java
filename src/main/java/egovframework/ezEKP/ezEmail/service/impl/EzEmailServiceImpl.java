@@ -62,6 +62,8 @@ import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -85,6 +87,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Autowired
 	private EzOrganAdminDAO ezOrganAdminDao;
+	
+	@Autowired
+	private EzOrganDAO ezOrganDao;
 	
 	@Autowired
 	private EzEmailAsync ezEmailAsync;
@@ -2509,6 +2514,34 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		logger.debug("setSharedMailboxUsers ended.");
 		return result;
+	}
+	
+	@Override
+	public List<MailSharedMailboxVO> getSharedMailboxSearchList(String companyId, int tenantId, String searchValue) throws Exception {
+		logger.debug("getSharedMailboxSearchList started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchValue=" + searchValue);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("tenantId", tenantId);
+		map.put("deptId", "shared_mailbox_" + companyId);
+		map.put("searchValue", "%" + searchValue + "%");
+		
+		List<OrganUserVO> userList = ezOrganDao.getSharedMailboxSearchList(map);
+		List<MailSharedMailboxVO> list = new ArrayList<>();
+		MailSharedMailboxVO vo = null;
+		
+		for (OrganUserVO user : userList) {
+			vo = new MailSharedMailboxVO();
+			
+			vo.setShareName(user.getDisplayName());
+			vo.setShareId(user.getCn());
+			vo.setShareMail(user.getMail());
+			
+			list.add(vo);
+		}
+		
+		logger.debug("getSharedMailboxSearchList ended. listSize=" + list.size());
+		return list;
 	}
 	
 	@Override
