@@ -85,6 +85,7 @@
 		            listview.DataBind("AccessList");
 		            //listview.DataSource(xmldom);
 		            listview.RowDataBind();
+		            checkbox_header();
 		            xmldomNode = null;
 		
 		            if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
@@ -117,6 +118,22 @@
 		        } catch (e) {
 		
 		        }
+		    }
+		    
+		    // xml data -> input checkbox
+		    function checkbox_header() {
+		    	var doc = window.document;
+		    	var th = doc.getElementById("AccessListView_TH_0");
+		    	var acList = doc.getElementById("AccessListView");
+		    	th.innerHTML = "<input type='checkbox' id = 'checkAll'></input>";
+		    	
+		    	var cnt = acList.children[1].childElementCount;
+		    	
+		    	var i = 0;
+		    	for(i;i<cnt;i++) {
+		    		var seq = acList.children[1].children[i].children[0].innerHTML;
+		    		acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' id='" + seq + "'></input>";
+		    	}
 		    }
 		    
 		    function PollList_onDblclick(obj) {
@@ -354,6 +371,9 @@
 		<xml id="listviewheader" style="display: none">
 			<LISTVIEWDATA>
 	    		<HEADERS>
+	    			<HEADER>
+	        			<WIDTH>40</WIDTH>
+	      			</HEADER>
 	      			<HEADER>
 	        			<NAME><spring:message code = 'ezPersonal.t166' /></NAME>
 	        			<WIDTH>40</WIDTH>
@@ -371,7 +391,7 @@
 	        			<WIDTH>100</WIDTH>
 	      			</HEADER>
 	     			<HEADER>
-	        			<NAME><spring:message code = 'ezPersonal.t99' /></NAME>
+	        			<NAME>진행여부</NAME>
 	        			<WIDTH>60</WIDTH>
 	      			</HEADER>
     			</HEADERS>
