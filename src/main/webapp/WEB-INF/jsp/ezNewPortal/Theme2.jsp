@@ -15,27 +15,29 @@
 </head>
 
 <body class="mainbg" style="min-width:1600px;">
-	<aside id="quickSide">
-		<p class="linkBtn_open" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>
-		<div class="aside_quick">
-			<p class="quickmenu_title">Quick</p>
-			<ul class="quickmenu">
-				<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt">메일작성</span></li>
-				<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt">결재작성</span></li>
-				<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt">일정작성</span></li>
-				<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt">조직도</span></li>
-			</ul>
-		</div>
-		<div class="aside_link">
-			<p class="linkmenu_title">Link</p>
-			<ul class="linkmenu" id="QuickUl">
-			</ul>
-			<div class="linkBtn">
-				<p class="btnLay" id="btnLay">
-				</p>
+	<div style="position:relative;">
+		<aside id="quickSide">
+			<p class="linkBtn_open" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>
+			<div class="aside_quick">
+				<p class="quickmenu_title">Quick</p>
+				<ul class="quickmenu">
+					<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt">메일작성</span></li>
+					<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt">결재작성</span></li>
+					<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt">일정작성</span></li>
+					<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt">조직도</span></li>
+				</ul>
 			</div>
-		</div>
-	</aside>   
+			<div class="aside_link">
+				<p class="linkmenu_title">Link</p>
+				<ul class="linkmenu" id="QuickUl">
+				</ul>
+				<div class="linkBtn">
+					<p class="btnLay" id="btnLay">
+					</p>
+				</div>
+			</div>
+		</aside>
+	</div>   
 <div class="section1_bg">
 	<section class="section1">
     	<article class="personal">
@@ -45,7 +47,7 @@
 				<span class="" id="portletEnv" style="float:left;">설정</span>                
             </p>
             <div class="info">
-            	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" style="border-radius:100px;"id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
+            	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png" style="border-radius:100px;" width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" style="border-radius:100px;"id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
                 <dl class="info_txt">
                 	<dt>${deptName}</dt>
                     <dt>${userName} ${userTitle}</dt>
@@ -462,6 +464,7 @@
 		if(data.length === 0) {
 			var dl = document.createElement('dl');
 			dl.className = 'nodata';
+			dl.style.marginLeft = '-18px';
 			
 			var dt = document.createElement('dt');
 			var img = document.createElement('img');
