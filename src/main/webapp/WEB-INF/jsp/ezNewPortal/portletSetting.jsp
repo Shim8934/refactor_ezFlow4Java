@@ -157,7 +157,7 @@
 								li.appendChild(div);
 								ul.appendChild(li);
 							});
-							console.log('start frame', portletSetting.selectedFrame);
+
 							// jquey flipster 적용
  							$(".frameList").flipster({
 								style: 'carousel',
@@ -209,7 +209,9 @@
 						if (xhr.status >= 200 && xhr.status < 300) {
 							var portletList = document.getElementById('portletList'); 
 							var list = JSON.parse(xhr.responseText).data.portletList;
+console.log('portletList', list);							
 							list.forEach(function (item, index) {
+						
 				 				var div = document.createElement('div');
 				 				div.classList.add('ui-portlet');
 				 				// 사용중인 포틀릿
@@ -285,9 +287,9 @@
 				saveBtn.addEventListener('click', function (){
 					var portletList = [];
 					var classList = document.getElementsByClassName('ui-portlet-span');
+					// 반복문 돌면서 데이터 쌓기
 					HTMLCollection.prototype.forEach = Array.prototype.forEach;
-					classList.forEach(function (item, index) {
-						
+ 					classList.forEach(function (item, index) {			
 						var switchBtn = document.getElementById('portletid_' + item.dataset.portletid);
 						if (switchBtn.getAttribute('checked')) {
 							var obj = {
@@ -298,13 +300,45 @@
 							portletList.push(obj);				
 						}
 					});
+ 					
+					// 유저 포틀릿 순서로 재정의
+					var temp = [];
+					for(var i=0; i<portletList.length; i++) {
+						for(var j=i; j<portletList.length; j++) {
+							if(portletList[i].portletOrder*1 > portletList[j].portletOrder*1) {
+								temp = portletList[i];
+								portletList[i] = portletList[j];
+								portletList[j] = temp;
+							}
+						}
+					}
+
+					// var reAssemble = [];
+					// 순서 재정렬 시작
+					var arrIndex = 1;
+					portletList.forEach(function (item, index) {
+						if(item.portletOrder*1 !== 0 ) {
+							item.portletOrder = arrIndex;
+							arrIndex++;
+						}
+					});
+					
+					portletList.forEach(function (item, index) {
+						if(item.portletOrder*1 === 0) {
+							item.portletOrder = arrIndex;
+							arrIndex++;
+						}
+					});
+					// 순서 재정렬 끝
+					console.log('portletList ', portletList);
 					
 					var param = {
 						frameId: portletSetting.selectedFrame,
 						themeId: portletSetting.usedTheme,
 						portletList: portletList,
-					}
-					console.log('param', param.portletList);
+					}					
+					
+					console.log('param', param.portletList);					
 					
 					if(param.portletList.length < 1) {
 						alert('한 개 이상의 포틀릿을 설정해 주세요.');	
