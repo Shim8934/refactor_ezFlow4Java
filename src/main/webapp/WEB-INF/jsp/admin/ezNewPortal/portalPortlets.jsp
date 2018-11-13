@@ -140,6 +140,11 @@
 			return;
 		}
 		
+		if (connectionUrl.indexOf("#_self") != -1 && portletMenuId != 4) {
+			alert("#이나 _self 등은 입력할 수 없습니다.");
+			return;
+		}
+		
 		if (portletMenuId == null) {
 			alert("추가할 포틀릿과 관련된 메뉴를 설정해주세요.");
 			return;

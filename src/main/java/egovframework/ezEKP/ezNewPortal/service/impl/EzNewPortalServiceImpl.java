@@ -1315,6 +1315,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("menuAuths = " + menuAuths.toString());
 		
 		Map<String, Object> map = new HashMap<>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("menuId", menuId);
+		
+		//update 시 기존에 있던 메뉴 권한 삭제 후 insert
+		ezNewPortalDAO.deleteMenuAuth(map);
 		
 		for (Object item : menuAuths) {
 			if (item instanceof JSONObject) {

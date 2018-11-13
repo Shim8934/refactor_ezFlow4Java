@@ -228,7 +228,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .rolling_info .info dd{font-size:12px; font-family:Gulim; color:#fff; overflow:hidden;}
 .rolling_info .info .infoName{font-weight:bold; padding:11px 0px 2px 10px; margin:0px;}
 .rolling_info .info .infoTeam{font-weight:normal; padding:0px 0px 0px 10px; margin:0px;}
-.rolling_info .info .infoSet{-webkit-border-radius:0px; border-radius:0px; width:auto; margin:0px; padding:0px; position:absolute; right:10px; top:10px; cursor:pointer;}
+.rolling_info .info .infoSet{-webkit-border-radius:0px; border-radius:0px; width:auto; margin:0px; padding:0px; position:absolute; right:10px; top:10px; cursor:pointer; border:none;}
 
 /* time_check */
 .main_time_check{ height:66px; border-bottom:1px solid #e7e7e7; box-sizing:border-box; background:#f2f4f7; overflow:hidden; margin:0px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
@@ -263,11 +263,11 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .birthTit .birthRighttbtn{ display:inline-block; margin:0px; padding:0px; overflow:hidden; float:right; cursor:pointer;}
 .birthList{ margin:0px; padding:15px 10px; list-style:none; overflow:hidden;}
 .birthList li{float:left; overflow:hidden; width:129px; padding:0px 0px 12px 0px;}
-.birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;}
-.birthList li .birthListDL .birthPic{margin:0px; padding:0px 4px 0px 0px; float:left;}
-.birthList li .birthListDL .birthPic img{border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; border:1px solid #e7e7e7;}
-.birthList li .birthListDL .birthName{margin:0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
-.birthList li .birthListDL .birthTeam{margin:0px; padding:0px; font-size:12px; color:#888888; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
+.birthList li .theme1_birthListDL{ margin:0px; padding:0px;  overflow:hidden;}
+.birthList li .theme1_birthListDL .theme1_birthPic{margin:0px; padding:0px 4px 0px 0px; float:left;}
+.birthList li .theme1_birthListDL .theme1_birthPic img{border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; border:1px solid #e7e7e7;}
+.birthList li .theme1_birthListDL .theme1_birthName{margin:0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
+.birthList li .theme1_birthListDL .theme1_birthTeam{margin:0px; padding:0px; font-size:12px; color:#888888; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
 
 /* bestEmployee */
 .bestEmployee{ overflow:hidden; margin:0px; padding:0px; height:112px; border-top:1px solid #e7e7e7; border-bottom:1px solid #e7e7e7; box-sizing:border-box; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; background:url(/images/ezNewPortal/bestEmployee_bg.png) no-repeat left top;}
@@ -586,6 +586,14 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 /* 날씨추가 */
 .weather_icon {width:60%; height:60%;}
 
+/* 생일자 포틀릿*/
+.box_shadow .birthList li {width:33%;float:none; display:inline-block; padding:7px 0px 12px 0px;} 
+.birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;}
+.birthList li .birthListDL .birthPic{margin:0px; padding:0px 4px 0px 0px; float:left;}
+.birthList li .birthListDL .birthPic img{width:50px; height:50px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; border:1px solid #e7e7e7;}
+.birthList li .birthListDL .birthName{margin:11px 0px 0px 0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
+.birthList li .birthListDL .birthTeam{margin:0px; padding:0px; font-size:12px; color:#888888; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
+.birthList hr {display:block; margin-block-start:0.7em; margin-block-end:0.7em;}
 @media only screen and (max-width :1730px) and (min-width :1680px) {
 	.info .infoImg{margin:0px 24px 0px 0px;}
 	.info_left {width:103px;}
