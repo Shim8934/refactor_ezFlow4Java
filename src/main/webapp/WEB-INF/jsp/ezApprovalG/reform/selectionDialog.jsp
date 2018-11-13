@@ -93,10 +93,12 @@
 	</div>
 	<table style="width: 100%; margin-top: 5px">
 		<tr>
-			<div style="width: 100%; height: 188px; overflow: auto">
-				<table id="grid">
-				</table>
-			</div>
+			<td>
+				<div style="width: 100%; height: 188px; overflow: auto">
+					<table id="grid">
+					</table>
+				</div>
+			</td>
 		</tr>
 	</table>
 	<div class="btnposition btnpositionNew">
