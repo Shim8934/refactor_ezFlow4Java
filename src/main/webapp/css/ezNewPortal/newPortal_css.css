@@ -228,7 +228,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .rolling_info .info dd{font-size:12px; font-family:Gulim; color:#fff; overflow:hidden;}
 .rolling_info .info .infoName{font-weight:bold; padding:11px 0px 2px 10px; margin:0px;}
 .rolling_info .info .infoTeam{font-weight:normal; padding:0px 0px 0px 10px; margin:0px;}
-.rolling_info .info .infoSet{-webkit-border-radius:0px; border-radius:0px; width:auto; margin:0px; padding:0px; position:absolute; right:10px; top:10px; cursor:pointer;}
+.rolling_info .info .infoSet{-webkit-border-radius:0px; border-radius:0px; width:auto; margin:0px; padding:0px; position:absolute; right:10px; top:10px; cursor:pointer; border:none;}
 
 /* time_check */
 .main_time_check{ height:66px; border-bottom:1px solid #e7e7e7; box-sizing:border-box; background:#f2f4f7; overflow:hidden; margin:0px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
@@ -263,11 +263,11 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .birthTit .birthRighttbtn{ display:inline-block; margin:0px; padding:0px; overflow:hidden; float:right; cursor:pointer;}
 .birthList{ margin:0px; padding:15px 10px; list-style:none; overflow:hidden;}
 .birthList li{float:left; overflow:hidden; width:129px; padding:0px 0px 12px 0px;}
-.birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;}
-.birthList li .birthListDL .birthPic{margin:0px; padding:0px 4px 0px 0px; float:left;}
-.birthList li .birthListDL .birthPic img{border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; border:1px solid #e7e7e7;}
-.birthList li .birthListDL .birthName{margin:0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
-.birthList li .birthListDL .birthTeam{margin:0px; padding:0px; font-size:12px; color:#888888; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
+.birthList li .theme1_birthListDL{ margin:0px; padding:0px;  overflow:hidden;}
+.birthList li .theme1_birthListDL .theme1_birthPic{margin:0px; padding:0px 4px 0px 0px; float:left;}
+.birthList li .theme1_birthListDL .theme1_birthPic img{border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; border:1px solid #e7e7e7;}
+.birthList li .theme1_birthListDL .theme1_birthName{margin:0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
+.birthList li .theme1_birthListDL .theme1_birthTeam{margin:0px; padding:0px; font-size:12px; color:#888888; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
 
 /* bestEmployee */
 .bestEmployee{ overflow:hidden; margin:0px; padding:0px; height:112px; border-top:1px solid #e7e7e7; border-bottom:1px solid #e7e7e7; box-sizing:border-box; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; background:url(/images/ezNewPortal/bestEmployee_bg.png) no-repeat left top;}
@@ -555,7 +555,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .info .infoName{margin:0px; padding:0px; color:#444445; font-size:18px; font-weight:bold;}
 .info .infoTeam{margin:10px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
 .info .infoMail{margin:17px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
-.info .infoTime{margin:12px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
+.info .infoTime{margin:12px 20px 0px 0px; padding:0px; color:#444445; font-size:14px;}
 .info .infoSet{position:absolute; top:-20px; right:48px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
 .info .infoSet img{margin:5px 0px 0px 0px;}
 .info .infoLogout{position:absolute; top:-20px; right:16px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
@@ -627,11 +627,21 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.info_left {width:103px;}
 	.info_right {width : calc(100% - 111px);}
 }
+/* 생일자 포틀릿*/
+.box_shadow .birthList li {width:33%;float:none; display:inline-block; padding:7px 0px 12px 0px;} 
+.birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;}
+.birthList li .birthListDL .birthPic{margin:0px; padding:0px 4px 0px 0px; float:left;}
+.birthList li .birthListDL .birthPic img{width:50px; height:50px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; border:1px solid #e7e7e7;}
+.birthList li .birthListDL .birthName{margin:11px 0px 0px 0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
+.birthList li .birthListDL .birthTeam{margin:0px; padding:0px; font-size:12px; color:#888888; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
+.birthList hr {display:block; margin-block-start:0.7em; margin-block-end:0.7em;}
+
+
 /* main media query */
 @media only screen and (min-width :1921px) {
 	.portlet{ width:483px; float:left;}
-	.info_left {width:103px;}
-	.info_right {width : calc(100% - 111px);}
+	.box_shadow.info_left{display:inline-block;float:left; width:187px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
+	.box_shadow.info_right{width:calc(100% - 194px); background:#ffffff;}
 }
 
 @media only screen and (max-width :1920px) and (min-width :1686px) { 
@@ -641,8 +651,19 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_middle{ width:33.3%;}
 	.portlet{ width:32%; float:left;}
 	.bannerText{ padding:73px 18px 0px 0px;}
-	.info_left {width:103px;}
-	.info_right {width : calc(100% - 111px);}
+	
+	.box_shadow.info_left {display:none;}
+	.box_shadow.info_right {width:100%; margin-left:0px !important;}
+}
+
+@media only screen and (max-width :1685px) and (min-width :1590px) {
+	.box_shadow.info_left{display:inline-block;float:left; width:187px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
+	.box_shadow.info_right{width:calc(100% - 194px); background:#ffffff;}
+}
+
+@media only screen and (max-width :1589px){ 
+	.box_shadow.info_left {display:none;}
+	.box_shadow.info_right {width:100%; margin-left:0px !important;}
 }
 
 @media only screen and (max-width :1685px) and (min-width :1280px) {
@@ -654,13 +675,40 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.vote{ margin:0px 2px; float:left; overflow:hidden;}
 	.stats_graph{ float:left; overflow:hidden;}
 	.groupware_banner{ float:left; margin-top:0px;}
-	
-	.info .infoImg{margin:0px 24px 34px 0px;}
-	.info .infoTime{margin:12px 0px 0px 13px;}
-	.info_left {width:103px;}
-	.info_right {width : calc(100% - 111px);}
 }
 
 @media only screen and (max-width : 1279px) {
 	.portlet {width:410px; float:left;}
+	.box_shadow.info_left {display:none;}
+	.box_shadow.info_right {width:100%; margin-left:0px !important;}
 }
+
+/* 날씨 포틀릿 여기서부터  하단에 추가해주시면 됩니다. */
+/* .box_shadow{overflow:hidden; height:250px; margin:20px 0px 0px 16px; padding0px; background:#fff; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20); font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} */
+.portlet_title{overflow:hidden; height:46px; margin:0px; padding:0px; line-height:44px;  border-bottom:1px solid #e7e7e7; box-sizing:border-box;}
+.portlet_title .portletText{float:left; overflow:hidden; margin:0px; padding:0px 0px 0px 10px; color:#333; font-size:16px; font-weight:bold; letter-spacing:-1px;}
+.portlet_title .portletPlus{float:right; overflow:hidden; margin:0px; padding:0px; cursor:pointer;}
+
+.portlet_title .portletPlus .weatherSelect{width:78px; height:28px; margin:0px 10px 0px 0px; padding:0px; border:1px solid #c0c0c0; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px;}
+.weather_content{height:110px; margin:10px;}
+.weather_title{overflow:hidden; margin:0px 5px 5px 5px;}
+.weather_title .weatherPresent{float:left; width:calc(60% - 10px); margin:0px 20px 0px 0px; padding:16px 0px;}
+.weather_title .weatherPresent dt{float:left; width:calc(40% - 20px); margin:0px 10px; padding:0px; text-align:center;}
+.weather_title .weatherPresent dd{float:left; width:calc(60% - 20px); margin:0px 10px; padding:0px; color:#000; font-size:22px; line-height:34px; letter-spacing:-1px;}
+.weather_title .weatherPer{float:right; list-style:none; width:calc(40% - 10px); margin:10px 0px; padding:0px;}
+.weather_title .weatherPer li{margin:2px 0px; padding:0px; color:#000; font-size:14px; line-height:26px;display:none;}
+.weather_title .weatherPer li span{display:inline-block;}
+.weather_title .weatherPer li span.icon{width:24px; height:24px; margin:0px 10px 0px 0px; padding:0px; text-align:center; background:#45aaff; border-radius:24px;-webkit-border-radius:24px;-moz-border-radius:24px;}
+.weather_title .weatherPer li span.icon img{vertical-align:middle; margin:-6px 0px 0px 0px;}
+.weather_title .weatherPer li span.iconbg01{background:#45aaff;}
+.weather_title .weatherPer li span.iconbg02{background:#88bb8b;}
+.weather_title .weatherPer li span.iconbg03{background:#b896c3;}
+.weather_title .weatherPer li span.text{color:#000; font-size:15px;}
+.weather_title .weatherPer li span.text span{font-weight:bold;}
+
+.weather_mini{overflow:hidden;}
+.weather_mini dl{float:left; width:calc(20% - 12px); margin:0px 5px; padding:11px 0px; border:1px solid #e2e2e2;}
+.weather_mini dl dt{float:left; width:calc(50% - 12px); margin:8px 3px; padding:0px; text-align:center;}
+.weather_mini dl dt img{vertical-align:middle;}
+.weather_mini dl dd{float:left; width:50%; margin:0px; padding:0px; color:#000; font-size:15px; text-align:left;}
+.weather_mini dl dd span{display:block; line-height:22px;}

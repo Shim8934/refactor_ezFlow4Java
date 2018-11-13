@@ -6,7 +6,7 @@
 <head>
 </head>
 <body>
-<div class="layDIV box_shadow attitudePtl">
+<div class="attitudePtl">
 	<input type="hidden" id="useAttitude" value="${useAttitude}">
 	<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 1000; border-bottom:none; background:none;"></dl>
 	<div style="position:relative; bottom:46px; overflow:hidden;">

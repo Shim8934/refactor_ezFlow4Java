@@ -140,6 +140,11 @@
 			return;
 		}
 		
+		if (connectionUrl.indexOf("#_self") != -1 && portletMenuId != 4) {
+			alert("#이나 _self 등은 입력할 수 없습니다.");
+			return;
+		}
+		
 		if (portletMenuId == null) {
 			alert("추가할 포틀릿과 관련된 메뉴를 설정해주세요.");
 			return;
@@ -220,7 +225,7 @@
 			
 			portletOrderList.push({"portletOrder" : order, "portletId" : portletId});
 		}
-		console.log(portletOrderList);
+		
  		var request = new XMLHttpRequest();
 		
 		request.open('POST', '/admin/ezNewPortal/updatePortletOrder.do', true);
@@ -452,14 +457,18 @@
 						if (menuId != 4) {
 							listHTML += "<tr class='connectionTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"' maxlength='100'></td></tr>";
 						} else {
-							listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='' maxlength='100'></td></tr>";
+							if (!result[i].general) {
+								listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"' maxlength='100'></td></tr>";
+							} else {
+								listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='' maxlength='100'></td></tr>";
+							}	
 						}
 						
 					}
 					
 					if (menuId == 4 && portletId != 10) {
 						listHTML += "<tr class='boardTR'><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
-						listHTML += "<input id='portletBoard" + portletId + "' class='boardName' type='text' value='" + result[i].boardName1 + "' data1='" + result[i].portletBoardId + "' readonly>";
+						listHTML += "<input id='portletBoard" + portletId + "' class='boardName' type='text' value='" + ReplaceText(ReplaceText(result[i].boardName1, '\"', "&#39;"), "\'", "&#34;") + "' data1='" + result[i].portletBoardId + "' readonly>";
 						listHTML += "<div class='boardSetting'>";
 						listHTML += "<a class='boardSettingtBtn'>";
 						listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";

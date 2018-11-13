@@ -19,6 +19,7 @@
 <typeAlias alias="MenuNameVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuNameVO"/>
 <typeAlias alias="FrameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO"/>
 <typeAlias alias="WeatherVO" type="egovframework.ezEKP.ezNewPortal.vo.WeatherVO"/>
+<typeAlias alias="BoardListVO" type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -1116,6 +1117,44 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 )
 ]]>
 </insert>
+
+<select id="ezNewPortal.getBoardPortletInfo" parameterClass="Map" resultClass="BoardListVO">
+<![CDATA[
+SELECT	
+	A.BOARDID,
+	A.ITEMID,
+	A.TITLE,
+	A.WRITERID,
+	A.WRITERNAME,
+	A.WRITERNAME2,
+	A.WRITERDEPTID,
+	A.WRITERDEPTNAME,
+	A.WRITERDEPTNAME2,
+	C.GUBUN
+FROM
+	TBL_BOARD_ITEM A
+JOIN 
+	TBL_BOARD_BOARDINFO C
+ON 
+	A.BOARDID = C.BOARDID
+AND 
+	A.TENANT_ID = C.TENANT_ID
+AND 
+	A.WRITERCOMPANYID = C.COMPANYID
+WHERE
+	A.TENANT_ID = #tenantId#
+AND
+	A.BOARDID = #boardId#
+AND
+	A.WRITERCOMPANYID = #companyId#
+ORDER BY
+	A.WRITEDATE DESC
+LIMIT
+	0, #itemCount#
+]]>
+</select>
+
+
 <!-- 이효진--> 
 	<select id="ezNewPortal.getApprovalDoingList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
