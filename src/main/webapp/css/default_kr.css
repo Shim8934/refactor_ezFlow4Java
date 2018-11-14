@@ -2561,17 +2561,17 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .adminMenu_icon .admenuIcon_up:hover{border:1px solid #0470e4; color:#0470e4; background:#f1f8ff;}
 .iconTable01{ margin:0px -1px 0px 0px; padding:0px; float:left; width:383px; height:171px; border:1px solid #dfdfdf; border-right:none; border-collapse:collapse;}
 .iconTable02{ height:171px; width:381px; margin:0px -1px 0px 0px; border:1px solid #dfdfdf; border-left:none;}
-.admin_menu .menuIconTH{ margin:0px; padding:0px; width:90px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px;}
+.admin_menu .menuIconTH{ margin:0px; padding:0px; width:90px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:center;}
 .admin_menu .menuIconTD{ margin:0px; padding:0px 5px 0px 5px; border:1px solid #dfdfdf; border-right:none; color:#393939; letter-spacing:-1px;}
 .menuInput{ border-bottom:1px solid #dfdfdf; padding:0px 5px; text-align:right;}
 .admin_input{ width:100%; height:27px !important; line-height:25px; color:#393939; border:1px solid #dfdfdf; padding:0px 0px 0px 5px;}
-.bottomBtn{ margin:15px auto 0px auto; padding:0px; float:right}
-.bottomBtn .btnA{display: block; float: left; margin: 0px 3px 0px 2px; padding: 0px 4px; cursor: pointer;line-height: 27px; height: 29px; color: #393939; border-top: 1px solid #c7c7c7; border-left: 1px solid #c7c7c7;border-right: 1px solid #c7c7c7; border-bottom: 1px solid #909193; font-size:12px;}
+.bottomBtn{ margin:15px auto 0px auto; padding:0px; text-align:center;}
+.bottomBtn .btnA{margin: 0px 3px 0px 2px; padding: 5px 4px; cursor: pointer; color: #393939; border-top: 1px solid #c7c7c7; border-left: 1px solid #c7c7c7;border-right: 1px solid #c7c7c7; border-bottom: 1px solid #909193; font-size:12px;}
 .bottomBtn .btnA:hover{border:1px solid #0470e4; color:#0470e4; background:#f1f8ff;}
 
 /* admin thema */
 .admin_thema{ margin:20px 0px 0px 0px; padding:0px; width:797px; height:398px; font-family:Malgun Gothic;}
-.admin_thema .menuIconTH{ margin:0px; padding:0px; width:161px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px;}
+.admin_thema .menuIconTH{ margin:0px; padding:0px; width:161px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:center;}
 .admin_thema .menuIconTD{ margin:0px; padding:0px 5px 0px 5px; border:1px solid #dfdfdf; color:#393939; letter-spacing:-1px;}
 .admin_thema .menuIconTD_img{margin:0px; padding:20px 5px 20px 5px; border:1px solid #dfdfdf; color:#393939; text-align:center;}
 .admin_thema .menuIconTD_img img{ cursor:pointer;}

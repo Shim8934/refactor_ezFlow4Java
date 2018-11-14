@@ -513,7 +513,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index:9; overflow:visible; background: #fff; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
 .linkBtn_open{ margin:0px; padding:0px; position:absolute; right:82px; top:-10px; cursor:pointer;}
 #linkBtn_open img{margin-top: 18px; position: relative; z-index: 1000;}
-.linkBtn_close{margin:0px; padding:0px; position:absolute; right:82px; top:-10px; cursor:pointer;}
+.linkBtn_close{margin:0px; padding:0px; position:absolute; right:0px; top:-10px; cursor:pointer;}
 .aside_quick{ margin:0px; padding:0px; overflow:hidden;}
 .aside_quick .quickmenu_title{ margin:0px; padding:0px; width:100px; height:46px; background:#0470e4; line-height:44px; text-align:center; color:#fff; font-size:13px; font-weight:bold;}
 .aside_quick .quickmenu {width:100px; margin:0px; padding:0px; list-style:none; background:#fff; height:292px; box-sizing:border-box;}

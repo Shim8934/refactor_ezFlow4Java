@@ -54,12 +54,14 @@
 			<h3>포틀릿 설정</h3>
 			<div class="ui-portlet-list" id="portletList"></div>
 		</section>
-		<section class="set-action">
-			<div class="button-location">
-				<p class="pollBtn" id="cancelBtn">취소</p>
-				<p class="pollBtn" id="saveBtn">저장</p>
-			</div>
-		</section>
+		<div class="btnpositionLayer" style="margin:20px 0px 0px">
+			<a class="imgbtn">
+				<span id="saveBtn">저장</span>
+			</a>
+			<a class="imgbtn">
+				<span id="cancelBtn">취소</span>
+			</a>
+		</div>
 		<div id="close">
 			<ul>
 				<li><span id="closeBtn"></span></li>

@@ -27,133 +27,265 @@ if (typeof UserOffset !== 'undefined' && UserOffset) {
 
 var nowDay = (nowDate.getFullYear()) + "-" + leadingZeros((nowDate.getMonth() + 1), 2) + "-" + leadingZeros(nowDate.getDate(), 2);
 
-function CalendarMiniView(pTagetID) {	
-    document.getElementById(pTagetID).innerHTML = "";
+function CalendarMiniView(pTagetID) {
+	
+	document.getElementById(pTagetID).innerHTML = "";
+	var objElm = document.getElementById(pTagetID);
+	
+	if (pTagetID == "CalendarMini") {
+		//Portlet
+		
+		if (objElm) {
+	        var mTable = document.createElement("TABLE");
+	        mTable.className = "scalendar_mini_title";///
+	        mTable.setAttribute("id", "MiniCalendar")
+	        mTable.setAttribute("cellpadding", "0");
+	        mTable.setAttribute("cellspacing", "0");
+	        mTable.setAttribute("border", "0");
+	        mTable.setAttribute("width", "100%");
+	        var mTr = document.createElement("TR");
 
-    var objElm = document.getElementById(pTagetID);
-    if (objElm) {
-        var mTable = document.createElement("TABLE");
-        mTable.className = "scalendar_mini_title";///
-        mTable.setAttribute("id", "MiniCalendar")
-        mTable.setAttribute("cellpadding", "0");
-        mTable.setAttribute("cellspacing", "0");
-        mTable.setAttribute("border", "0");
-        mTable.setAttribute("width", "100%");
-        var mTr = document.createElement("TR");
+	        var mTd = document.createElement("TD");
+	        mTd.className = "btn_prev"
+	        var mSpan = document.createElement("SPAN");
+	        mSpan.style.cursor = "pointer";
+	        //mSpan.style.marginLeft = "6px";
+	        //mSpan.style.marginTop = "4px";
+	        var mImg = document.createElement("IMG");
+	        mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
+	        mImg.setAttribute("border", "0");
+	        mImg.setAttribute("onclick", "preMonth()");
+	        mSpan.appendChild(mImg);
+	        mTd.appendChild(mSpan);
+	        mTr.appendChild(mTd);
 
-        var mTd = document.createElement("TD");
-        mTd.className = "btn_prev"
-        var mSpan = document.createElement("SPAN");
-        mSpan.style.cursor = "pointer";
-        //mSpan.style.marginLeft = "6px";
-        //mSpan.style.marginTop = "4px";
-        var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
-        mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "preMonth()");
-        mSpan.appendChild(mImg);
-        mTd.appendChild(mSpan);
-        mTr.appendChild(mTd);
+	        var mTd = document.createElement("TD");
+	        mTd.className = "calendar_mini_day"
+	        
+	        var mSel = document.createElement("SELECT");
+	 		mSel.style.display = "none";///
+	        mSel.setAttribute("name", "iYear");
+	        mSel.setAttribute("id", "iYear");
+	        mSel.setAttribute("onchange", "changeYear()");
 
-        var mTd = document.createElement("TD");
-        mTd.className = "calendar_mini_day"
-        
-        var mSel = document.createElement("SELECT");
- 		mSel.style.display = "none";///
-        mSel.setAttribute("name", "iYear");
-        mSel.setAttribute("id", "iYear");
-        mSel.setAttribute("onchange", "changeYear()");
+	        var curYear = sDate.getFullYear() + 3;
+	        for (var i = curYear; i >= curYear - 6; i--) {
+	            var mOpt = document.createElement("OPTION");
+	            mOpt.setAttribute("Value", i);
 
-        var curYear = sDate.getFullYear() + 3;
-        for (var i = curYear; i >= curYear - 6; i--) {
-            var mOpt = document.createElement("OPTION");
-            mOpt.setAttribute("Value", i);
+	            if ((curYear - 3) == i)
+	                mOpt.setAttribute("selected", "");
 
-            if ((curYear - 3) == i)
-                mOpt.setAttribute("selected", "");
+	            var mText = document.createTextNode(i);
+	            mOpt.appendChild(mText);
+	            mSel.appendChild(mOpt);
+	        }
 
-            var mText = document.createTextNode(i);
-            mOpt.appendChild(mText);
-            mSel.appendChild(mOpt);
-        }
+	        mTd.appendChild(mSel);
 
-        mTd.appendChild(mSel);
+	        var mSel = document.createElement("SELECT");
+	        mSel.style.marginLeft = "10px";
+	        mSel.style.display = "none";///
+	        mSel.setAttribute("name", "iMon");
+	        mSel.setAttribute("id", "iMon");
+	        mSel.setAttribute("onchange", "changeMonth()");
 
-        var mSel = document.createElement("SELECT");
-        mSel.style.marginLeft = "10px";
-        mSel.style.display = "none";///
-        mSel.setAttribute("name", "iMon");
-        mSel.setAttribute("id", "iMon");
-        mSel.setAttribute("onchange", "changeMonth()");
+	        var curMonth = sDate.getMonth() + 1;
+	        for (var j = 1; j <= 12; j++) {
 
-        var curMonth = sDate.getMonth() + 1;
-        for (var j = 1; j <= 12; j++) {
+	            var mOpt = document.createElement("OPTION");
+	            mOpt.setAttribute("Value", j);
 
-            var mOpt = document.createElement("OPTION");
-            mOpt.setAttribute("Value", j);
+	            if (curMonth == j)
+	                mOpt.setAttribute("selected", "");
 
-            if (curMonth == j)
-                mOpt.setAttribute("selected", "");
+	            var mText = document.createTextNode(j);
+	            mOpt.appendChild(mText);
+	            mSel.appendChild(mOpt);
+	        }       
+	        mTd.appendChild(mSel);
+	        
+	        var iySpan = document.createElement("SPAN");
+	        iySpan.setAttribute("id", "iYear");
 
-            var mText = document.createTextNode(j);
-            mOpt.appendChild(mText);
-            mSel.appendChild(mOpt);
-        }       
-        mTd.appendChild(mSel);
-        
-        var iySpan = document.createElement("SPAN");
-        iySpan.setAttribute("id", "iYear");
+	        var curYear = sDate.getFullYear();
+	        var yText = document.createTextNode(curYear);
+	        iySpan.appendChild(yText);
 
-        var curYear = sDate.getFullYear();
-        var yText = document.createTextNode(curYear);
-        iySpan.appendChild(yText);
+	        mTd.appendChild(iySpan);
 
-        mTd.appendChild(iySpan);
+	        var dotText = document.createTextNode(".");
+	        mTd.appendChild(dotText);
 
-        var dotText = document.createTextNode(".");
-        mTd.appendChild(dotText);
+	        var imSpan = document.createElement("SPAN");//년 월 select박스인것 바꿔야할듯
+	        imSpan.setAttribute("id", "iMon");
 
-        var imSpan = document.createElement("SPAN");//년 월 select박스인것 바꿔야할듯
-        imSpan.setAttribute("id", "iMon");
+	        var curMonth = sDate.getMonth() + 1;
+	        var mText = document.createTextNode(curMonth);
+	        imSpan.appendChild(mText);
+	        
+	        mTd.appendChild(imSpan);
+	        mTr.appendChild(mTd);
 
-        var curMonth = sDate.getMonth() + 1;
-        var mText = document.createTextNode(curMonth);
-        imSpan.appendChild(mText);
-        
-        mTd.appendChild(imSpan);
-        mTr.appendChild(mTd);
-
-        var mTd = document.createElement("TD");
-        mTd.className = "btn_next"
-        var mSpan = document.createElement("SPAN");
-        mSpan.style.cursor = "pointer";
-        //mSpan.style.marginRight = "6px";
-        //mSpan.style.marginTop = "4px";
-        var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
-        mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "nextMonth()");
-        mSpan.appendChild(mImg);
-        mTd.appendChild(mSpan);
-        mTr.appendChild(mTd);
+	        var mTd = document.createElement("TD");
+	        mTd.className = "btn_next"
+	        var mSpan = document.createElement("SPAN");
+	        mSpan.style.cursor = "pointer";
+	        //mSpan.style.marginRight = "6px";
+	        //mSpan.style.marginTop = "4px";
+	        var mImg = document.createElement("IMG");
+	        mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
+	        mImg.setAttribute("border", "0");
+	        mImg.setAttribute("onclick", "nextMonth()");
+	        mSpan.appendChild(mImg);
+	        mTd.appendChild(mSpan);
+	        mTr.appendChild(mTd);
 
 
-        mTable.appendChild(mTr);
-        objElm.appendChild(mTable);
+	        mTable.appendChild(mTr);
+	        objElm.appendChild(mTable);
 
-        var oTable = document.createElement("TABLE");
+	        var oTable = document.createElement("TABLE");
 
-        oTable.setAttribute("id", "");
-        oTable.setAttribute("cellpadding", "0");
-        oTable.setAttribute("cellspacing", "0");
-        oTable.setAttribute("border", "0");
-        oTable.setAttribute("width", "100%");
-        oTable.className = "scalendar_mini";
+	        oTable.setAttribute("id", "");
+	        oTable.setAttribute("cellpadding", "0");
+	        oTable.setAttribute("cellspacing", "0");
+	        oTable.setAttribute("border", "0");
+	        oTable.setAttribute("width", "100%");
+	        oTable.className = "scalendar_mini";
 
-        var oTBody = GetTableMiniBodyObj();
-        oTable.appendChild(oTBody);
-        objElm.appendChild(oTable);
-    }
+	        var oTBody = GetTableMiniBodyObj();
+	        oTable.appendChild(oTBody);
+	        objElm.appendChild(oTable);
+	    }
+		
+	} else if (pTagetID == "CalendarMini_Top") {
+		//Top
+		
+		if (objElm) {
+	        var mTable = document.createElement("TABLE");
+	        mTable.className = "scalendar_mini_title";///
+	        mTable.setAttribute("id", "MiniCalendar_Top")
+	        mTable.setAttribute("cellpadding", "0");
+	        mTable.setAttribute("cellspacing", "0");
+	        mTable.setAttribute("border", "0");
+	        mTable.setAttribute("width", "100%");
+	        var mTr = document.createElement("TR");
+
+	        var mTd = document.createElement("TD");
+	        mTd.className = "btn_prev"
+	        var mSpan = document.createElement("SPAN");
+	        mSpan.style.cursor = "pointer";
+	        //mSpan.style.marginLeft = "6px";
+	        //mSpan.style.marginTop = "4px";
+	        var mImg = document.createElement("IMG");
+	        mImg.setAttribute("src", "/images/ezNewPortal/calender_pre.png");///
+	        mImg.setAttribute("border", "0");
+	        mImg.setAttribute("onclick", "preMonthTop()");
+	        mSpan.appendChild(mImg);
+	        mTd.appendChild(mSpan);
+	        mTr.appendChild(mTd);
+
+	        var mTd = document.createElement("TD");
+	        mTd.className = "calendar_mini_day"
+	        
+	        var mSel = document.createElement("SELECT");
+	 		mSel.style.display = "none";///
+	        mSel.setAttribute("name", "iYear");
+	        mSel.setAttribute("id", "iYearTop");
+	        mSel.setAttribute("onchange", "changeYearTop()");
+
+	        var curYear = sDate.getFullYear() + 3;
+	        for (var i = curYear; i >= curYear - 6; i--) {
+	            var mOpt = document.createElement("OPTION");
+	            mOpt.setAttribute("Value", i);
+
+	            if ((curYear - 3) == i)
+	                mOpt.setAttribute("selected", "");
+
+	            var mText = document.createTextNode(i);
+	            mOpt.appendChild(mText);
+	            mSel.appendChild(mOpt);
+	        }
+
+	        mTd.appendChild(mSel);
+
+	        var mSel = document.createElement("SELECT");
+	        mSel.style.marginLeft = "10px";
+	        mSel.style.display = "none";///
+	        mSel.setAttribute("name", "iMon");
+	        mSel.setAttribute("id", "iMonTop");
+	        mSel.setAttribute("onchange", "changeMonthTop()");
+
+	        var curMonth = sDate.getMonth() + 1;
+	        for (var j = 1; j <= 12; j++) {
+
+	            var mOpt = document.createElement("OPTION");
+	            mOpt.setAttribute("Value", j);
+
+	            if (curMonth == j)
+	                mOpt.setAttribute("selected", "");
+
+	            var mText = document.createTextNode(j);
+	            mOpt.appendChild(mText);
+	            mSel.appendChild(mOpt);
+	        }       
+	        mTd.appendChild(mSel);
+	        
+	        var iySpan = document.createElement("SPAN");
+	        iySpan.setAttribute("id", "iYearTop");
+
+	        var curYear = sDate.getFullYear();
+	        var yText = document.createTextNode(curYear);
+	        iySpan.appendChild(yText);
+
+	        mTd.appendChild(iySpan);
+
+	        var dotText = document.createTextNode(".");
+	        mTd.appendChild(dotText);
+
+	        var imSpan = document.createElement("SPAN");//년 월 select박스인것 바꿔야할듯
+	        imSpan.setAttribute("id", "iMonTop");
+
+	        var curMonth = sDate.getMonth() + 1;
+	        var mText = document.createTextNode(curMonth);
+	        imSpan.appendChild(mText);
+	        
+	        mTd.appendChild(imSpan);
+	        mTr.appendChild(mTd);
+
+	        var mTd = document.createElement("TD");
+	        mTd.className = "btn_next"
+	        var mSpan = document.createElement("SPAN");
+	        mSpan.style.cursor = "pointer";
+	        //mSpan.style.marginRight = "6px";
+	        //mSpan.style.marginTop = "4px";
+	        var mImg = document.createElement("IMG");
+	        mImg.setAttribute("src", "/images/ezNewPortal/calender_next.png");///
+	        mImg.setAttribute("border", "0");
+	        mImg.setAttribute("onclick", "nextMonthTop()");
+	        mSpan.appendChild(mImg);
+	        mTd.appendChild(mSpan);
+	        mTr.appendChild(mTd);
+
+
+	        mTable.appendChild(mTr);
+	        objElm.appendChild(mTable);
+
+	        var oTable = document.createElement("TABLE");
+
+	        oTable.setAttribute("id", "");
+	        oTable.setAttribute("cellpadding", "0");
+	        oTable.setAttribute("cellspacing", "0");
+	        oTable.setAttribute("border", "0");
+	        oTable.setAttribute("width", "100%");
+	        oTable.className = "scalendar_mini";
+
+	        var oTBody = GetTableMiniBodyObjTop();
+	        oTable.appendChild(oTBody);
+	        objElm.appendChild(oTable);
+	    }
+	}
 }
 
 function GetTableMiniBodyObj() {
@@ -230,6 +362,83 @@ function GetTableMiniBodyObj() {
     return oTbody;
 }
 
+// 그냥 Top 전용함수 똑같은거 하나 더 만듬
+function GetTableMiniBodyObjTop() {
+    var year = document.getElementById("iYearTop").value;
+    var month = parseInt(document.getElementById("iMonTop").value);
+
+    if (DefaultView == 0)
+        dayOfWeeks = strLang5_1; // 일>토
+    else if (DefaultView == 1)
+        dayOfWeeks = strLang6_1; // 월>일
+
+    oBeforeDate = new Date(new Date(year, month - 1, 1) - 86400000);  // 이전달
+    oThisDate = new Date(year, month - 1, 1); // 현재달
+    oBeforeDate.setTime(oBeforeDate.getTime() + (oBeforeDate.getTimezoneOffset() + (oBeforeDate.getHours() * 60) + oBeforeDate.getMinutes()) * 60 * 1000);
+    oThisDate.setTime(oThisDate.getTime() + (oThisDate.getTimezoneOffset() + (oThisDate.getHours() * 60) + oThisDate.getMinutes()) * 60 * 1000);
+
+    var oBeforeMaxDay = oBeforeDate.getDate();
+    var startThisDay = oThisDate.getDay();
+    oThisMonth = oThisDate.getMonth() + 1;
+
+    if (oThisMonth == 12) {
+        oThisMonth = 0;
+    }
+
+    oBeforeDate.setDate(oBeforeMaxDay - startThisDay + 1 + DefaultView); // 월의 시작일 지정
+
+    var oTbody = document.createElement("TBODY");
+    var objTr = document.createElement("TR");
+
+    // day of the week Start
+    for (var j = 0; j < 7; j++) {
+        var objTD = document.createElement("TH");
+        objTD.setAttribute("scope", "col");
+
+        if (DefaultView == 0 && j == 0)
+            objTD.className = "sun";
+        else if (DefaultView == 0 && j == 6)
+            objTD.className = "sat";
+
+        if (DefaultView == 1 && j == 6)
+            objTD.className = "sun";
+        else if (DefaultView == 1 && j == 5)
+            objTD.className = "sat";
+
+        var oText = document.createTextNode(dayOfWeeks.split(";")[j]);
+        objTD.appendChild(oText);
+        objTr.appendChild(objTD);
+        objTD = null;
+    }
+    oTbody.appendChild(objTr);
+    // day of the week End
+    if (oBeforeMaxDay != 0) {
+        oThisDate = oBeforeDate;
+    }
+    sStartDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
+
+    //Month Start
+    for (var i = 0; i < 5; i++) {
+        var objTr = document.createElement("TR");
+        //이거 그냥 이름정해놓고 그대로 갖다 쓰는거 같은데 TR뒤에 TOP만 붙여봄
+        objTr.setAttribute("id", "TR_TOP" + oThisMonth + "_" + i);
+
+        for (var j = 0; j < 7; j++) {
+            var objTD = MonthMiniDataTop(oThisDate);
+            objTr.appendChild(objTD);
+            objTD = null;
+        }
+        oTbody.appendChild(objTr);
+    }
+    //Month End
+    oThisDate.setDate(oThisDate.getDate() - 1);
+    sEndDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
+    objTr = null;
+
+    return oTbody;
+}
+
+
 // 선택한 월의 날짜 입력 시작
 function MonthMiniData(oThisDate) {
 
@@ -243,6 +452,7 @@ function MonthMiniData(oThisDate) {
     }
 
     var oDiv = document.createElement("DIV");
+    //이건 This라서 그대로 써도 될것같다
     oDiv.setAttribute("onclick", "DayOnMouseClick(this);");
 //    oDiv.setAttribute("ondblclick", "MonthMiniDbClick()");
 
@@ -261,8 +471,46 @@ function MonthMiniData(oThisDate) {
 
     objTd.className = className;
     oDiv.innerHTML = pDateData;
-
     oDiv.setAttribute("id", "TDMINI_" + divID + "_Day");
+    oDiv.setAttribute("dispDate", divID);
+    objTd.innerHTML = oDiv.outerHTML;
+    oThisDate.setDate(oThisDate.getDate() + 1);
+    return objTd;
+}// 선택한 월의 날짜 입력 완료
+
+//선택한 월의 날짜 입력 시작
+function MonthMiniDataTop(oThisDate) {
+
+    var objTd = document.createElement("TD");
+
+    var divID = (oThisDate.getFullYear()) + "-" + leadingZeros((oThisDate.getMonth() + 1), 2) + "-" + leadingZeros(oThisDate.getDate(), 2);
+
+    var className = "";
+    if (divID == nowDay) {
+        className = "today";  // 현재일
+    }
+
+    var oDiv = document.createElement("DIV");
+    oDiv.setAttribute("onclick", "DayOnMouseClickTop(this);");
+//    oDiv.setAttribute("ondblclick", "MonthMiniDbClick()");
+
+    var pDateData = oThisDate.getDate()
+
+
+    if (oThisMonth != oThisDate.getMonth()) // 현재월 이외의 날
+    {
+        objTd.className = "gray";
+        className += " gray";
+    }
+    else if (oThisDate.getDay() == 0)  // 일요일
+        className += " sun";
+    else if (oThisDate.getDay() == 6)  // 토요일
+        className += " sat";
+
+    objTd.className = className;
+    oDiv.innerHTML = pDateData;
+    //이거 그냥 이름정해놓고 그대로 갖다 쓰는거 같은데 TDMINI뒤에 TOP만 붙여봄
+    oDiv.setAttribute("id", "TDMINITOP_" + divID + "_Day");
     oDiv.setAttribute("dispDate", divID);
     objTd.innerHTML = oDiv.outerHTML;
     oThisDate.setDate(oThisDate.getDate() + 1);
@@ -272,14 +520,19 @@ function MonthMiniData(oThisDate) {
 //자원데이터에 마우스 클릭시
 function DayOnMouseClick(event) {
     if (!event) event = window.event;
-
-    if ($("#"+g_selTDID)) {
-    	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
-    }
     
-    if ($("#"+g_selTRID)) {
-    	$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
-    }
+    var beforeId = $("#"+g_selTDID).parent().parent().attr("id"); 
+	if (beforeId) {
+		if (beforeId.indexOf('TOP') == -1) {
+			if ($("#"+g_selTDID)) {
+				$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+			}
+			
+			if ($("#"+g_selTRID)) {
+				$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+			}
+		}
+	}
     
     /*if (document.getElementById(g_selTDID))
         document.getElementById(g_selTDID).style.backgroundColor = "";
@@ -303,11 +556,58 @@ function DayOnMouseClick(event) {
         
 }
 
+//자원데이터에 마우스 클릭시
+function DayOnMouseClickTop(event) {
+    if (!event) event = window.event;
+    
+	var beforeId = $("#"+g_selTDID).parent().parent().attr("id"); 
+	if (beforeId) {
+		if (beforeId.indexOf('TOP') > -1) {
+			if ($("#"+g_selTDID)) {
+				$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+			}
+			
+			if ($("#"+g_selTRID)) {
+				$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+			}
+			
+		}
+	}	
+
+    
+    /*if (document.getElementById(g_selTDID))
+        document.getElementById(g_selTDID).style.backgroundColor = "";
+    if (document.getElementById(g_selTRID))
+        document.getElementById(g_selTRID).style.backgroundColor = "";*/   
+ 
+    //document.getElementById(event.getAttribute("id")).style.backgroundColor = "#f0f6ff";
+    if (usedTheme == 3) {
+    	$("#"+event.getAttribute("id")).parent().addClass('schedule');
+    } else {
+    	$("#"+event.getAttribute("id")).parent().css("background","lightgray").css("border-radius","20px").css("color","black");
+    }
+	//$("#"+event.getAttribute("id")).parent().css("border-radius","20px");
+	
+    g_selTRID = event.parentNode.parentNode.getAttribute("id");
+    g_selTDID = event.getAttribute("id");
+    var sDate = event.getAttribute("id").substring(10, 20);
+    date = sDate;
+    getScheduleList_Top(date, pMode);
+        
+}
+
 var delFlag = false;
 
-function CalendarMiniDataSource() {
-    if (!document.getElementById("MiniCalendar"))
-        return;
+function CalendarMiniDataSource(Type) {
+	if (Type == null || Type == "") {
+		if (!document.getElementById("MiniCalendar")) {
+			return;
+		}
+	} else if (Type == "Top") {
+		if (!document.getElementById("MiniCalendar_Top")) {
+			return;
+		}
+    }
     
     $.ajax({
 		type : "POST",
@@ -322,8 +622,13 @@ function CalendarMiniDataSource() {
 			IDLIST : (idlist == "") ? 'T' : idlist
 		},
 		success: function(json){
-			getCalendarMiniDataSource_after(json.resultList);
-			delFlag = false;
+			if (Type == null || Type == "") {
+				getCalendarMiniDataSource_after(json.resultList);
+				delFlag = false;
+			} else if (Type == "Top") {
+				getCalendarMiniDataSourceTop_after(json.resultList);
+				delFlag = false;
+		    }
 		}
     }); 
 }
@@ -371,6 +676,46 @@ function getCalendarMiniDataSource_after(resultList) {
     tempData = null;
 }
 
+function getCalendarMiniDataSourceTop_after(resultList) {
+    var tempData = new Array();
+    var k = 0;
+    
+    $.each(resultList, function(idx, item) {
+    	var _Dtstart = item.startDate;
+    	var _Dtend = item.endDate;
+    	var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7)) - 1, parseInt(_Dtstart.substring(8, 10)), parseInt(_Dtstart.substring(11, 13)), parseInt(_Dtstart.substring(14, 16)));
+    	var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7)) - 1, parseInt(_Dtend.substring(8, 10)), parseInt(_Dtend.substring(11, 13)), parseInt(_Dtend.substring(14, 16)));
+    	
+    	if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
+    		
+    		var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
+    		var day = 1000 * 60 * 60 * 24;
+    		betweenDay = parseInt(betweenDay / day, 10);
+    		
+    		for (var j = 0; j <= betweenDay; j++) {
+    			
+    			var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
+    			tempData[k] = new sTempData();
+    			tempData[k].trID = trID;
+    			
+    			MiniDataBindTop(tempData[k]);
+    			DataSDT.setDate(DataSDT.getDate() + 1);
+    			k += 1;
+    		}
+    	} else {
+    		var trID = DataSDT.getFullYear() + "-" + leadingZeros(parseInt(DataSDT.getMonth() + 1), 2, 10) + "-" + leadingZeros(DataSDT.getDate(), 2);
+    		tempData[k] = new sTempData();
+    		tempData[k].trID = trID;
+    		
+    		MiniDataBindTop(tempData[k]);
+    		k += 1;
+    	}
+    	DataSDT = null;
+    	DataEDT = null;
+    })
+    tempData = null;
+}
+
 function MiniDataBind(oAppointment) {
     var objElm = document.getElementById("TDMINI_" + oAppointment.trID + "_Day");
     if (objElm) {
@@ -383,7 +728,20 @@ function MiniDataBind(oAppointment) {
     }
 }
 
+function MiniDataBindTop(oAppointment) {
+    var objElm = document.getElementById("TDMINITOP_" + oAppointment.trID + "_Day");
+    if (objElm) {
+//        objElm.style.fontWeight = "bold"
+    	if ($("#"+"TDMINITOP_" + oAppointment.trID + "_Day").parent().children(".dataHave").length > 0) {
+    		return;
+    	} else {
+    		$("#"+"TDMINITOP_" + oAppointment.trID + "_Day").parent().append("<div class='dataHave' style='height:1px;line-height:1px'>·</div>");
+    	}
+    }
+}
+
 function clickDay(val01) {
+	
     if ($("#"+g_selTDID)) {
     	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
     }
@@ -402,6 +760,31 @@ function clickDay(val01) {
     date = sDate;
     getScheduleList(date, pMode);
 }
+
+//function clickDayTop(val01) {
+//	var beforeId = $("#"+g_selTDID).parent().parent().attr("id"); 
+//	if (beforeId) {
+//		if (beforeId.indexOf('TOP') > -1) {
+//			if ($("#"+g_selTDID)) {
+//				$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+//			}
+//			
+//			if ($("#"+g_selTRID)) {
+//				$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+//			}
+//		}
+//	}	
+//    
+//	$("#"+val01).parent().css("background","lightgray").css("border-radius","20px").css("color","black");
+//	
+//    g_selTRID = $("#"+val01).parent().parent().attr("id");
+//    g_selTDID = val01;
+//
+//    var sDate = val01.substring(10, 20);
+//
+//    date = sDate;
+//    getScheduleList_Top(date, pMode);
+//}
 
 function mfGetUTFIsoDate(iYr, iMon, iDate, iHr, iMin) {
     var oDate = new Date();
@@ -525,6 +908,57 @@ function nextMonth() {
     CalendarMiniDataSource();
 
    
+}
+
+
+//이전월 이동
+function preMonthTop() {
+  var iMonth = parseInt(document.getElementById("iMonTop").value, 10) - 1;
+  var iYear = document.getElementById("iYearTop").value;
+
+  if (iMonth < 1) {
+      iYear--;
+      iMonth = 12;
+  }
+  else if (iMonth > 12) {
+      iYear++;
+      iMonth = 1;
+  }
+
+  document.getElementById("iYearTop").value = iYear;
+  document.getElementById("iMonTop").value = iMonth;
+  sDate.setFullYear(iYear, iMonth - 1, 14);
+      
+
+  CalendarMiniView("CalendarMini_Top");
+  CalendarMiniDataSource("Top");
+
+ 
+}
+
+//다음월 이동
+function nextMonthTop() {
+  var iMonth = parseInt(document.getElementById("iMonTop").value, 10) + 1;
+  var iYear = document.getElementById("iYearTop").value;
+
+  if (iMonth < 1) {
+      iYear--;
+      iMonth = 12;
+  }
+  else if (iMonth > 12) {
+      iYear++;
+      iMonth = 1;
+  }
+
+  sDate.setFullYear(iYear, iMonth - 1, 14);
+  document.getElementById("iYearTop").value = iYear;
+  document.getElementById("iMonTop").value = iMonth;
+
+ 
+  CalendarMiniView("CalendarMini_Top");
+  CalendarMiniDataSource("Top");
+
+ 
 }
 
 //이전년도 이동

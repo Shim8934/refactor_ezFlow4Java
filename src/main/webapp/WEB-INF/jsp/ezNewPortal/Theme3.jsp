@@ -46,8 +46,8 @@
 <body class="mainbg">	
 	<div id="Center">
 	<div style="position:relative;">
-		<aside id="quickSide">
-			<p class="linkBtn_open" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/theme3Img/linkBtn_open.png"></p>
+		<aside id="quickSide" style="width:0px">
+			<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/theme3Img/linkBtn_open.png"></p>
 			<div class="aside_quick">
 				<p class="quickmenu_title">Quick</p>
 				<ul class="quickmenu">

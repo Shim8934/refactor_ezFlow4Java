@@ -15,7 +15,7 @@
 <style type="text/css">
 .full_menu_toggleUL > li.select_li { background: #e5efff; border-right: 1px solid #c6cfdf; border-bottom: 1px solid #c6cfdf; box-sizing: border-box; }
 .not_select { background: #ffffff; border-right: 1px solid #c6cfdf; border-bottom: 1px solid #c6cfdf; box-sizing: border-box; }
-.full_menu_toggleUL > li {border:1px solid #d9d9d9;}
+.full_menu_toggleUL > li {border:1px solid #d9d9d9; margin:2px;}
 .popup {height:96%;}
 .full_menu_toggle {margin-top:4%;}
 </style>
@@ -35,8 +35,8 @@
 	</c:forEach>
 		<li id="menu0" class="menuList">
 			<dl class="full_menu_toggleDL">
-				<dt><span>X</span></dt>
-				<dd>관련 메뉴<br/>없음</dd>
+				<dt><span style="display:inline-block"><img src="/images/admin/noMenu.png" /></span></dt>
+				<dd>없음</dd>
 			</dl>
 		</li>
 </ul>
