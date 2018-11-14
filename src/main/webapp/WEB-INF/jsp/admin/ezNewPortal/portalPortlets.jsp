@@ -457,7 +457,7 @@
 						var menuName = result[i].menuName;
 						
 						if (menuName == null || menuName == "null") {
-							menuName = "관련 메뉴 없음";
+							menuName = "없음";
 						}
 
 						listHTML += "<input id='portletMenu" + portletId + "' type='text' value='" + menuName + "'readonly>";
@@ -652,7 +652,7 @@
 		var portletId = event.data.portletId;
  		var companiesObj = document.getElementById("ListCompany");
 		var companyId = companiesObj.options[companiesObj.selectedIndex].value;
-        var wWeight = "639";
+        var wWeight = "662";
         var wHeight = "445";
 
         var heigth = window.screen.availHeight;
