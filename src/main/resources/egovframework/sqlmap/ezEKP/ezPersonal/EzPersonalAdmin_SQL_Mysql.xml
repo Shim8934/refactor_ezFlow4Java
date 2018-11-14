@@ -559,9 +559,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_LIGHTPOLL
-        		( COMPANYID, STARTDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
+        		( COMPANYID, STARTDATE, ENDDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
         	VALUES
-        		( #v_pCompanyID#, DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
+        		( #v_pCompanyID#, DATE_FORMAT(#startDate#, '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(#endDate#, '%Y-%m-%d %H:%i:%s'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -569,9 +569,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_LIGHTPOLL
-        		( COMPANYID, STARTDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
+        		( COMPANYID, STARTDATE, ENDDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
         	VALUES
-        		( UPPER(#v_pCompanyID#), DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
+        		( UPPER(#v_pCompanyID#), DATE_FORMAT(#startDate#, '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(#endDate#, '%Y-%m-%d %H:%i:%s'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
 		]]>
 	</insert>
 	
