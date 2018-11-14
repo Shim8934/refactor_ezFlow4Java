@@ -102,10 +102,10 @@
 		                    }
 
 		                    if (typeof window.parent.frames["right"] == "undefined") {
-								rightFrame.src = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(RedirectBoardID);
+								rightFrame.src = "/ezBoard/boardItemList.do?boardID=" + RedirectBoardID;
 		                    }
 		                    else {
-		                    	window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(RedirectBoardID);
+		                    	window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + RedirectBoardID;
 		                	}
 						}
 		
@@ -307,31 +307,31 @@
 		                /* 2018-08-07 홍승비 - url게시판 접근 후 window.parent.frames["right"]이 undefined인 경우, 다른 방법으로 게시판 접근 */
 						  if (typeof window.parent.frames["right"] == "undefined") {
 							if (gubun == 3) {
-								rightFrame.src = "/ezBoard/boardItemListPhoto.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+								rightFrame.src = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 							} else if (gubun == 4) {
-								rightFrame.src = "/ezBoard/boardItemListThumbnail.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+								rightFrame.src = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 				            } else {
 				                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-									rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
+									rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
 				                }
 				                else {
-				                	rightFrame.src = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+				                	rightFrame.src = "/ezBoard/boardItemList.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 				                }
 				            }
 						}
 						else {
 			                if (gubun == 3) {
-			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemListPhoto.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 			                }
 			                else if (gubun == 4) {
-			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 			                }
 			                else {
 			                    if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-			                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
+			                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=N";
 			                    }
 			                    else {
-			                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
+			                        window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + gubun;
 			                    }
 			                }
 			            }
@@ -416,29 +416,29 @@
 		            /* 2018-08-07 홍승비 - url게시판 접근 후 window.parent.frames["right"]이 undefined인 경우, 다른 방법으로 게시판 접근 */
 				  	if (typeof window.parent.frames["right"] == "undefined") {
 						if (chkPhotoBrd == 3) {
-							rightFrame.src = "/ezBoard/boardItemListPhoto.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+							rightFrame.src = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 						} else if (chkPhotoBrd == 4) {
-							rightFrame.src = "/ezBoard/boardItemListThumbnail.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+							rightFrame.src = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			            } else {
 			                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-								rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
+								rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
 			                }
 			                else {
-			                	rightFrame.src = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+			                	rightFrame.src = "/ezBoard/boardItemList.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			                }
 			            }
 					}
 					else {
 			            if (chkPhotoBrd == 3) {
-			                window.parent.frames["right"].location.href = "/ezBoard/boardItemListPhoto.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+			                window.parent.frames["right"].location.href = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			            } else if (chkPhotoBrd == 4) {
-			                window.parent.frames["right"].location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+			                window.parent.frames["right"].location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			            } else {
 			                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
+			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
 			                }
 			                else{
-			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
+			                    window.parent.frames["right"].location.href = "/ezBoard/boardItemList.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd;
 			                }
 			           }
 					}

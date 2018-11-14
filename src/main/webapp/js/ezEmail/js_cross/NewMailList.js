@@ -593,7 +593,7 @@ function getReaderCount(parentId) {
 
 function makeReceiverList(parentId) {
 	var XmlRows = SelectNodes(MailReceiverListXML, "DATA/ROW");
-	XmlRows = sortNode(XmlRows, "READDATE"); // READDATE 컬럼 기준으로 정렬
+	XmlRows = sortNode(XmlRows, "READDATE", "UNREAD", "DESC"); // READDATE 컬럼 기준 UNREAD가 아닌것 정렬 (내림차순으로)
 	
 	for (var i = XmlRows.length - 1; i >= 0; i--) {
 		var readDate = SelectSingleNodeValue(XmlRows[i], "READDATE");

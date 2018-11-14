@@ -44,6 +44,11 @@
 	        var pUserID = arr_userinfo[1];
 	        var RetValue;
 	        var ReturnFunction;
+	        var pDocState;
+	        var isReDraft;
+	        var approvalFlag = "${approvalFlag}";
+	        var orgCompanyID;
+	        
 	        window.onload = function () {
 	            try {
 	                var ua = navigator.userAgent;
@@ -65,6 +70,10 @@
 	                pDocID = RetValue[0];
 	                pReceiveSN = RetValue[1];
 	                pAprSate = RetValue[2];
+					pDocState = RetValue[3];
+					isReDraft = RetValue[4];
+					orgCompanyID = RetValue[5];
+						
 	                if (pReceiveSN == "s")
 	                    pReceiveSN = "1";
 	                else
@@ -107,6 +116,35 @@
 	    }
 	    function btnAssign_onclick() {
 	        try {
+	        	var result = "";
+	        	if (approvalFlag == "S" && isReDraft != undefined && isReDraft == "Y") {
+	        		$.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/checkAprState.do",
+			    		data : {
+			    			docID : pDocID,
+			    			docState : pDocState,
+			    			userID : '',
+			    			aprMemberSN : pReceiveSN,
+			    			orgCompanyID : orgCompanyID
+			    		},
+			    		success : function(text) {
+			    			result = text;
+			    		}
+			    	});
+	        		if (result == "FALSE") {
+	        			if (ReturnFunction != null) {
+                            ReturnFunction("DUPL");
+                        }
+                        else {
+                            window.returnValue = "DUPL";
+                            window.close();
+                        }
+		    			return;
+	        		}
+	        	}
 	            var listview = new ListView();
 	            listview.LoadFromID("OrganList");
 	            var pCurSelRow = listview.GetSelectedRows();
