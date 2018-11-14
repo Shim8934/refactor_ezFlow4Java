@@ -48,7 +48,7 @@
         	<p>	
             	<span class="info_set" id="main_personalEnv"></span>
                 <span style="float:left; width:80%;">${userEmail}</span>
-				<span class="" id="main_portletEnv" style="float:left;"><img src="/images/admin/frameSetting.png" style="margin-top:12px;margin-left:17px;cursor:pointer"/></span>                
+				<span class="" id="main_portletEnv" style="float:left;"><img src="/images/admin/frameSetting.png" style="margin-top:11px;margin-left:21px;cursor:pointer;background-color:#b9b9b9; border:1px solid #b9b9b9;"/></span>                
             </p>
             <div class="info">
             	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png" style="border-radius:100px;" width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" style="border-radius:100px;"id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
