@@ -25,6 +25,7 @@
 		var displayname = "${displayname}";
 		var displayname2 = "${displayname2}";
 		var defaultFontAndSize = "${defaultFontAndSize}";
+		var editor = "${editor}";
 		var m_strColorSelect = "#edf4fd";
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
@@ -63,7 +64,14 @@
 			
 			for (var i = 0; i < infoBodyChild.length; i++) {
 				infoBodyChild[i].onclick = function() { event_listclick(this); };
-				infoBodyChild[i].onmouseover = function() { event_listMover(this); };
+				infoBodyChild[i].onmouseover = function() { 
+					event_listMover(this); 
+					
+					if (editor == "TAGFREE") {
+						window.message.xfe.saveRange();
+					}
+					
+				};
 				infoBodyChild[i].onmouseout = function() { event_listMout(this); };
 				infoBodyChild[i].ondblclick = function() { applyInfo(); };
 			}
