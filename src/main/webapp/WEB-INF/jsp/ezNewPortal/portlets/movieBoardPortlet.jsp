@@ -9,7 +9,7 @@
 </head>
 <body>
 	<article id="movieArticle" class="photo_board box_shadow">
-		<div id="layDIV"  class="layDIV">
+		<div id="layDIV"  class="layDIV sortablePortlet">
 		
 		<%-- 기존 포토게시판 썸네일처럼 동영상 2개 띄워주는 디자인 주석처리 --%>
 <%--		
@@ -70,16 +70,32 @@
 			</c:if> --%>
 			
 			<%-- 비디오 하나만 크게 띄워주는 디자인 --%>
-			<c:forEach items="${movieBoardList}" var="movie" varStatus="status">
-				<li id="li_${status.index}" style="width:100%; height:100%; padding:0px; display:inline-flex; background-color:black;">
-					<video style="width:100%; height:100%;" id="mainVideo" src="${movie.filePath}" data1="${movie.boardID}" data2="${movie.itemID}" preload="metadata"/>
-					<img id="playButton" src="/images/playButton.png" style="position:absolute; width:64px; left:43%; top:34%; cursor:pointer; opacity:0.7;" onclick="moviePlay()"/>
-					<div id="titleDiv" class="noti_portlet_list" style="position:absolute; width:100%; height:55px; margin:195px 0px 0px 0px; padding:0px;
-					 text-align:center; line-height:58px; color:white; background-color:rgba(0, 0, 0, 0.5);">
-					 	<span style="width:90%; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; display:inline-block;">${movie.title}</span>
-					 </div>
-				</li>
-			</c:forEach>
+			<c:choose>
+				<c:when test="${not empty movieBoardList}">
+					<c:forEach items="${movieBoardList}" var="movie" varStatus="status">
+						<li id="li_${status.index}" style="width:100%; height:100%; padding:0px; display:inline-flex; background-color:black;">
+							<div style="position:relative;">
+								<video style="width:100%; height:100%;" id="mainVideo" src="${movie.filePath}" data1="${movie.boardID}" data2="${movie.itemID}" preload="metadata"/>
+								<img id="playButton" src="/images/playButton.png" style="position:absolute; width:64px; left:43%; top:34%; cursor:pointer; opacity:0.7;" onclick="moviePlay()"/>
+								<div id="titleDiv" class="noti_portlet_list" style="position:absolute; width:100%; height:55px; margin:-57px 0px 0px 0px; padding:0px;
+								 text-align:center; line-height:58px; color:white; background-color:rgba(0, 0, 0, 0.5);">
+								 	<span style="width:90%; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; display:inline-block;">${movie.title}</span>
+								 </div>
+							 </div>
+						</li>
+					</c:forEach>
+				</c:when>
+				<c:otherwise>
+					<ul class="portlet_list">
+						<dl class="nodata">
+							<dt style="padding-top:60px;">
+								<img src="/images/ezNewPortal/nodata.png">
+							</dt>
+							<dd>데이터가 없습니다.</dd>
+						</dl>
+					</ul>
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</article>
 </body>

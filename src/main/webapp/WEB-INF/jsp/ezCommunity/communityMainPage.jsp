@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -10,7 +11,7 @@
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<!-- 18-04-27 김민성 - 카테고리별 커뮤니티 클릭시 bold 지정 -->
 		<style>
-			.category_select span {
+			/*  .category_select span {
 				color : rgb(4, 112, 228);
 			}
 			.category_select {
@@ -23,6 +24,9 @@
     			overflow: hidden;
    				width: 60px;
    				padding-right:5px;
+			}  */
+			.txt {
+				clear : none;
 			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -51,6 +55,11 @@
 	        var strLang7 = "<spring:message code = 'ezCommunity.t1102' />";
 	        var strLang8 = "<spring:message code = 'ezCommunity.t2002' />";
 	        
+	        var categoryColors = ["#ff6868", "#ff68c4", "#d668ff", "#a868ff", "#6f68ff", "#3d78ff", 
+				                              "#4d8fcc", "#0dbeff", "#6dabad", "#4dc689", 
+				                              "#81bc3d", "#ffc71e", "#ff8f1e", "#bd6438"];
+	        var categoryColor = "";
+	        
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
@@ -59,11 +68,13 @@
 		        }
 			};
 			window.onload = function () {
-		    	get_todaycop();
+		    	//get_todaycop();
 		        get_bestCommunity();
+		        get_newCommunity();
+		       // makePageSelPage();   
+		        get_categoryCommunity("A");
 		        get_myCommunity();
-		        makePageSelPage();   
-		    }
+			}
 	        function change_tab(val) {
 	            if (val == "best") {
 	                document.getElementById("best").className = "on";
@@ -143,11 +154,60 @@
 				});
 	        }
 
+	        /* 신규 커뮤니티 표출 */
 	        function event_get_newCommunity(result) {
                 var xmldom = loadXMLString(result);
                 var bestcoummunity = SelectNodes(xmldom, "DATA/ROW");
                 
-                for (var i = 0; i < bestcoummunity.length; i++) {
+                document.getElementById("newcomm").innerHTML = "";
+                if(bestcoummunity.length>0) {
+	                var dt = document.createElement("DT");
+	                
+	                var img = document.createElement("IMG");
+	                
+	                if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_") <= -1) {
+	                	img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL");
+	                }
+	                
+	                var dd = document.createElement("DD");
+	                
+	                var span = document.createElement("SPAN");
+	                span.className = "title";
+	                span.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNAME");
+	                span.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNO").trim());
+                    span.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE"));
+                    span.style.cursor = "pointer";
+                    span.onclick = function () { move_cop(this); };
+	                
+	                var span2 = document.createElement("SPAN");
+	                span2.className = "text";
+	                span2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBDESC");
+	                
+	                dd.appendChild(span);
+	                dd.appendChild(span2);
+	                dt.appendChild(img);
+	                document.getElementById("newcomm").appendChild(dt);
+	                document.getElementById("newcomm").appendChild(dd);
+                }
+                else {
+                	 var dl = document.getElementById("newcomm");
+					 dl.className = "nodata_sIcon";
+					 dl.style.paddingTop = "50px";
+					 
+					 var dt = document.createElement("DT");
+					 
+		             var img = document.createElement("IMG");
+		             img.src = "../images/kr/main/noData_sIcon.png";
+		             
+		             var dd = document.createElement("DD");
+		             dd.innerHTML = strLang535;
+		             
+		             dt.appendChild(img);
+		             dl.appendChild(dt);
+		             dl.appendChild(dd);
+                }
+                
+               /*  for (var i = 0; i < bestcoummunity.length; i++) {
                     var dl = document.createElement("DL");
                     dl.className = "newCommunity_list";
 
@@ -169,7 +229,7 @@
 
                     var img2 = document.createElement("IMG");
 
-                    img2.src = "/images/kr/community/icon_newCommunity04.png";
+                    img2.src = "/../images/kr/community/icon_newCommunity04.png";
 
                     var dd = document.createElement("DD");
 
@@ -197,15 +257,64 @@
                     dl.appendChild(dd2);
 
                     document.getElementById("newcomm").appendChild(dl);
-                }
+                } */
 	        }
 
+	        /* 인기 커뮤니티 표출 */
 	        function event_get_bestCommunity(result) {
                 var xmldom = loadXMLString(result);
 
                 var bestcoummunity = SelectNodes(xmldom, "DATA/ROW");
                 
-                for (var i = 0; i < bestcoummunity.length; i++) {
+                if(bestcoummunity.length>0) {
+                	document.getElementById("bestcomm").innerHTML = "";
+                	
+	                var dt = document.createElement("DT");
+	                
+	                var img = document.createElement("IMG");
+	                
+	                if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_") <= -1) {
+	                	img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL");
+	                }
+	                
+	                var dd = document.createElement("DD");
+	                
+	                var span = document.createElement("SPAN");
+	                span.className = "title";
+	                span.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNAME");
+	                span.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNO").trim());
+                    span.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE"));
+                    span.style.cursor = "pointer";
+                    span.onclick = function () { move_cop(this); };
+	                
+	                var span2 = document.createElement("SPAN");
+	                span2.className = "text";
+	                span2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBDESC");
+	                
+	                dd.appendChild(span);
+	                dd.appendChild(span2);
+	                dt.appendChild(img);
+	                document.getElementById("bestcomm").appendChild(dt);
+	                document.getElementById("bestcomm").appendChild(dd);
+                }
+                else {
+               	     var dl = document.getElementById("bestcomm");
+					 dl.className = "nodata_sIcon";
+					 dl.style.paddingTop = "50px";
+					 
+					 var dt = document.createElement("DT");
+					 
+		             var img = document.createElement("IMG");
+		             img.src = "../images/kr/main/noData_sIcon.png";
+		             
+		             var dd = document.createElement("DD");
+		             dd.innerHTML = strLang535;
+		             
+		             dt.appendChild(img);
+		             dl.appendChild(dt);
+		             dl.appendChild(dd);
+               }
+                /* for (var i = 0; i < bestcoummunity.length; i++) {
                     var dl = document.createElement("DL");
                     dl.className = "newCommunity_list";
 
@@ -228,7 +337,7 @@
                     var img2 = document.createElement("IMG");
 
                     var order = i + 1;
-                    img2.src = "/images/kr/community/icon_newCommunity0" + order + ".png";
+                    img2.src = "/../images/kr/community/icon_newCommunity0" + order + ".png";
 
                     var dd = document.createElement("DD");
 
@@ -256,7 +365,7 @@
                     dl.appendChild(dd2);
 
                     document.getElementById("bestcomm").appendChild(dl);
-                }
+                } */
 
 	        }
 
@@ -270,22 +379,99 @@
 						},
 						success: function(result){
 							event_get_myCommunity(result);
-							commuTitleWidth(); //타이틀 너비 조정
+							//commuTitleWidth(); //타이틀 너비 조정
 						}
 				});
 	        }
-
+	        
+	        // 커뮤니티 새글
 	        function event_get_myCommunity(result) {
-                document.getElementById("mycommunity").innerHTML = "";
                 var xmldom = loadXMLString(result);
                 var table;
                 
                 if (SelectNodes(xmldom, "ITEM/DATA").length <= 0) {
+                	
+                	var ul = document.getElementById("listCommunity2");
+                	
+                	var dl = document.createElement("DL");
+                	dl.className = "nodate_slcon";
+                	
+					var dt = document.createElement("DT");
+					 
+		            var img = document.createElement("IMG");
+		            img.src = "../images/kr/main/noData_sIcon.png";
+		             
+		            var dd = document.createElement("DD");
+		            dd.innerHTML = strLang535;
+		             
+		             dt.appendChild(img);
+		             dl.appendChild(dt);
+		             dl.appendChild(dd);
+
+		             ul.appendChild(dl);
+		             
                 	return;
                 }
                 
                 var j = 0;
                 
+                document.getElementById("listCommunity2").innerHTML = "";
+                
+                for(var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length; i++) {
+	                var li = document.createElement("LI");
+	                
+                    var boardid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDID");
+                    var itemid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ITEMID");
+                    var copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim();
+                    var gubun = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "GUBUN");
+                    var writeDate = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITEDATE");
+                    li.style.cursor = "pointer";
+                    li.setAttribute("boardid", boardid);
+                    li.setAttribute("itemid", itemid);
+                    li.setAttribute("gubun", gubun);
+                    li.setAttribute("code", copno);
+                    li.onclick = function () { ItemRead_onclick(this); }; 
+	                
+	                var span = document.createElement("SPAN");
+	                span.className = "icon_new";
+	                
+	                var img = document.createElement("IMG");
+	                img.src = "/images/kr/community/communityPortlet_iconnew.gif" 
+	                
+	                span.appendChild(img);
+	                
+	                var span2 = document.createElement("SPAN");
+	                span2.className = "kind";
+	                var clubname = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME");
+	                if(clubname.length > 9) {
+	                	clubname = clubname.substring(0,8) + "...";
+	                }
+	                span2.innerHTML = "[" +clubname + "]";
+	                
+	                var span3 = document.createElement("SPAN");
+	                span3.className = "txt";
+	                span3.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
+	                
+	                var span4 = document.createElement("SPAN");
+	                span4.className = "date";
+	                var writeDate = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITEDATE");
+					span4.innerHTML = writeDate.substring(0, 10);
+					
+	                if (pastDate <= writeDate ) {
+	                	li.appendChild(span);
+	                } 
+	                li.appendChild(span2);
+	                li.appendChild(span3);
+	                li.appendChild(span4);
+	                
+	                document.getElementById("listCommunity2").appendChild(li);
+					
+                }
+	        }
+                
+                // 사용 안함
+                function event_get_myCommunity2(result) {
+              
                 for (var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length; i++) {
                     var copno;
 
@@ -342,7 +528,7 @@
 
                         div.appendChild(dl);
 
-                        document.getElementById("mycommunity").appendChild(div);
+                        document.getElementById("listCommunity2").appendChild(div);
 
                         div = null;
 
@@ -382,17 +568,17 @@
                     td.setAttribute("itemid", itemid);
                     td.setAttribute("gubun", gubun);
                     td.setAttribute("code", copno);
-                    td.onclick = function () { ItemRead_onclick(this); };
-                    
+                    td.onclick = function () { ItemRead_onclick(this); }; 
+                     
                     /* 2018-05-17 홍승비 - 새 게시물의 제목 앞에 new 표시 추가 */
-                    if (pastDate <= writeDate ) {
+                     if (pastDate <= writeDate ) {
                     	td.innerHTML = "<img src='/images/i_new.gif'>&nbsp;";
                     }
                     
                     if (primary == "1") {
                         td.innerHTML += "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE") + "</div>";
-                        /* 2018-05-07 홍승비 - 커뮤니티 메인 MY커뮤니티 새글에서 댓글 표시하기 */
-                        if (SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") > 0) {
+                         /* 2018-05-07 홍승비 - 커뮤니티 메인 MY커뮤니티 새글에서 댓글 표시하기 */
+                         if (SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") > 0) {
                         	td.innerHTML += " <SPAN style='color:#c64200'; position: absolute;> [" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") + "]</SPAN><td style='width:20px;'></td>";
                         }
                         td2.className = "team";
@@ -401,8 +587,8 @@
                         td3.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERNAME");
                     } else {
                         td.innerHTML += "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE") + "</div>";
-                        /* 2018-05-07 홍승비 - 커뮤니티 메인 MY커뮤니티 새글에서 댓글 표시하기 */
-                        if (SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") > 0) {
+                         /* 2018-05-07 홍승비 - 커뮤니티 메인 MY커뮤니티 새글에서 댓글 표시하기 */
+                         if (SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") > 0) {
 							td.innerHTML += " <SPAN style='color:#c64200'; position: absolute;> [" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") + "]</SPAN><td style='width:20px;'></td>";
 			          	}                   
                         td2.className = "team";
@@ -413,7 +599,7 @@
                     
                     td4.className = "day";
                     td4.innerHTML = writeDate.substring(0, 10);
-                    
+                     
                     /* 2018-05-18 홍승비 - 커뮤니티 메인 페이지에서 게시물 조회수 표시 */
                     td5.className = "read";
                     td5.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "READCOUNT");
@@ -426,13 +612,14 @@
                     table.appendChild(tr);
                     
                     j++;
-                }
+                }  
                 
-                if (SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length == 0) {
+                /* if (SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length == 0) {
                 	var str = "<spring:message code = 'ezCommunity.t926' />";
                 	document.getElementById("mycommunity").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='height:430px;text-align:center;'><img style='margin-top:160px' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>" + str + "</div></div>";
-                }
+                } */
                 //document.getElementById("tblPageRayer").style.display = "none";
+                
 	        }
 
 	        var BlockSize = 10;
@@ -624,7 +811,46 @@
 
             /* 18-04-27 김민성 - 카테고리별 커뮤니티 클릭시 bold 지정 */
 	        function event_get_categoryCommunity(list) {
-                document.getElementById("categorytab").innerHTML = "";
+	        	 document.getElementById("listCategory").innerHTML = "";
+	        	 
+	        	 list.forEach(function(categoryVO, index) {
+	        	 	var li = document.createElement("LI");
+	        	 	
+	        	 	var span = document.createElement("SPAN");
+	        	 	span.className = "icon";
+	        	 	
+	        	 	var img = document.createElement("IMG");
+	        	 	img.src = "../images/kr/community/categoryList_icon.gif";
+	        	 	
+	        	 	var span2 = document.createElement("SPAN");
+	        	 	span2.className = "txt";
+	        	 	span2.innerHTML = getcategoryname(categoryVO.c_Name);
+	        	 	span2.setAttribute("type", categoryVO.cate);
+	        	 	span2.onclick = function () { 
+	        	 		$("#listCategory .txt").removeClass("bold");
+                    	$(this).addClass("bold"); 
+                    	$("#keyword").val('');
+                    	select_category(this); 
+                    };
+                    
+                    if (index == 0) {
+                        span2.onclick();
+                    }
+	        	 	
+	        	 	var span3 = document.createElement("SPAN");
+	        	 	span3.className = "count";
+	        	 	span3.innerHTML = "(" + categoryVO.cnt + ")";
+	        	 	
+	        	 	span.appendChild(img);
+	        	 	
+	        	 	li.appendChild(span);
+                    li.appendChild(span2);
+                    li.appendChild(span3);
+                    
+                    document.getElementById("listCategory").appendChild(li);
+	        	 });
+	        	 
+                /* document.getElementById("categorytab").innerHTML = "";
 
                 var ul = document.createElement("UL");
                 ul.className = "left_tabpartLis";
@@ -658,51 +884,64 @@
                 
                 document.getElementById("categorytab").appendChild(ul);
                 
-                //document.getElementById("tblPageRayer").style.display = "";
+                //document.getElementById("tblPageRayer").style.display = ""; */
 	        }
-	        
+            
 	        function getcategoryname(val) {
 	            var retval = "";
 	            
 	            switch(val){
 	                case "t1496":
 	                    retval = "<spring:message code = 'ezCommunity.t1496' />";
+	                    categoryColor = categoryColors[0];
 	                    break;
 	                case "t1497":
 	                    retval = "<spring:message code = 'ezCommunity.t1497' />";
+	                    categoryColor = categoryColors[1];
 	                    break;
 	                case "t1498":
 	                    retval = "<spring:message code = 'ezCommunity.t1498' />";
+	                    categoryColor = categoryColors[2];
 	                    break;
 	                case "t1499":
 	                    retval = "<spring:message code = 'ezCommunity.t1499' />";
+	                    categoryColor = categoryColors[3];
 	                    break;
 	                case "t1500":
 	                    retval = "<spring:message code = 'ezCommunity.t1500' />";
+	                    categoryColor = categoryColors[4];
 	                    break;
 	                case "t1501":
 	                    retval = "<spring:message code = 'ezCommunity.t1501' />";
+	                    categoryColor = categoryColors[5];
 	                    break;
 	                case "t1502":
 	                    retval = "<spring:message code = 'ezCommunity.t1502' />";
+	                    categoryColor = categoryColors[6];
 	                    break;
 	                case "t1503":
 	                    retval = "<spring:message code = 'ezCommunity.t1503' />";
+	                    categoryColor = categoryColors[7];
 	                    break;
 	                case "t1504":
 	                    retval = "<spring:message code = 'ezCommunity.t1504' />";
+	                    categoryColor = categoryColors[8];
 	                    break;
 	                case "t1505":
 	                    retval = "<spring:message code = 'ezCommunity.t1505' />";
+	                    categoryColor = categoryColors[9];
 	                    break;
 	                case "t1506":
 	                    retval = "<spring:message code = 'ezCommunity.t1506' />";
+	                    categoryColor = categoryColors[10];
 	                    break;
 	                case "t1507":
 	                    retval = "<spring:message code = 'ezCommunity.t1507' />";
+	                    categoryColor = categoryColors[11];
 	                    break;
 	                case "t1508":
 	                    retval = "<spring:message code = 'ezCommunity.t1508' />";
+	                    categoryColor = categoryColors[12];
 	                    break;
 	                case "t1509":
 	                    retval = "<spring:message code = 'ezCommunity.t1509' />";
@@ -733,6 +972,7 @@
 	                    break;
 	                case "t1518":
 	                    retval = "<spring:message code = 'ezCommunity.t1518' />";
+	                    categoryColor = categoryColors[13];
 	                    break;
 	                case "t1519":
 	                    retval = "<spring:message code = 'ezCommunity.t1519' />";
@@ -757,13 +997,14 @@
 	            }
 	            
 	            search = false;
-	            var mode = "";
-     
-	            if(document.getElementById("work").className == "on") {
+	            var mode = "A";
+     			
+	            // 2018-11-13 김민성 - 종류별 / 업무별 -> 종류별 
+	            /* if(document.getElementById("work").className == "on") {
 					mode = "A";
 	            } else {
 	                mode = "B";
-	            }
+	            } */
 	            
 	            $.ajax({
 					type : "POST",
@@ -781,18 +1022,123 @@
 	        }
 	        
 	        function event_select_category(list) {
+	        	
+	        	document.getElementById("categoryViewList").innerHTML = "";
+	        	
+	        	// 2018-11-14 김민성 - 데이터 없을 때 alert -> 이미지로 변경
 	        	if (list.length == 0) {
-                    alert(strLang1);
+                    //alert(strLang1);
+                    var div = document.getElementById("categoryViewList");
+                	
+                	var dl = document.createElement("DL");
+                	dl.className = "nodata_bIcon";
+                	dl.style.paddingTop = "70px";
+                	
+					var dt = document.createElement("DT");
+					 
+		            var img = document.createElement("IMG");
+		            img.src = "../images/kr/main/noData_bIcon.png";
+		             
+		            var dd = document.createElement("DD");
+		            dd.innerHTML = strLang535;
+		             
+		             dt.appendChild(img);
+		             dl.appendChild(dt);
+		             dl.appendChild(dd);
+
+		             div.appendChild(dl);
+		             
+		             
                     return;
                 }
                 
-                document.getElementById("categorylist").innerHTML = "";
-                var table = document.createElement("TABLE");
-                table.className = "right_tabpartListLayout";
-                table.style.width = "100%";
-                table.style.border = "0";
-
                 list.forEach(function(clubVO, index) {
+                	/* if (index == 0 && clubVO.copCnt != 0) {
+                        var total = clubVO.copCnt;
+                        
+                        if (total % 5 == 0) {
+                            totalPage = total / 5;
+                        } else {
+                            totalPage = parseInt(total / 5) + 1;
+                        }
+                    } */
+                	
+                	var div = document.createElement("DIV");
+                	div.className = "categoryBox";
+                	div.setAttribute("code", clubVO.c_ClubNo.trim());
+                	div.setAttribute("type", clubVO.c_ClubConfirmType);
+                	div.onclick = function () { move_cop(this); };
+                	
+                	var p = document.createElement("P");
+                	p.className = "categoryPic";
+                	
+                	var img = document.createElement("IMG");
+                	if (clubVO.c_Logo_Thumbnail.indexOf("default_logo_") > -1) {
+                        img.src = "/images/ezCommunity/logo/default_logo_empty.png";
+                    } else {
+                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + clubVO.c_Logo_Thumbnail;
+                    }
+                	img.style.width = "91px";
+                	img.style.height = "64px";
+                	
+                	var dl = document.createElement("DL");
+                	dl.className = "categoryInfo";
+                	
+                	var dt = document.createElement("DT");
+                	dt.className = "sort";
+                	dt.innerHTML = getcategoryname(clubVO.c_name);
+                	dt.style.backgroundColor =  categoryColor;
+                	
+                	var dd = document.createElement("DD");
+                	dd.className = "title";
+                	dd.innerHTML = clubVO.c_ClubName;
+                	
+                	var dd2 = document.createElement("DD");
+                	dd2.className = "categoryInfo_count";
+                	
+                	var span = document.createElement("SPAN");
+                	span.className = "icon";
+                	
+                	var img2 = document.createElement("IMG");
+                	img2.src = "../images/kr/community/categoryBox_iconLineup.gif";
+                	
+                	var span2 = document.createElement("SPAN");
+                	span2.className = "count";
+                	span2.innerHTML = clubVO.c_MemberCnt;
+                	
+                	var span3 = document.createElement("SPAN");
+                	span3.className = "icon";
+                	
+                	var img3 = document.createElement("IMG");
+                	img3.src = "../images/kr/community/categoryBox_iconPost.gif";
+                	
+                	var span4 = document.createElement("SPAN");
+                	span4.className = "count";
+                	span4.innerHTML = clubVO.itemCnt;
+                	
+                	
+                    p.appendChild(img);
+                    dl.appendChild(dt);
+                    
+                    dl.appendChild(dd);
+                    
+                    span.appendChild(img2);
+                    dd2.appendChild(span);
+                    dd2.appendChild(span2);
+                    span3.appendChild(img3);
+                    dd2.appendChild(span3);
+                    dd2.appendChild(span4);
+                    
+                    dl.appendChild(dd2);
+                    
+                    div.appendChild(p);
+                    div.appendChild(dl);
+                    
+                    document.getElementById("categoryViewList").appendChild(div);
+                   
+                });
+                
+               /*  list.forEach(function(clubVO, index) {
                 	if (index == 0 && clubVO.copCnt != 0) {
                         var total = clubVO.copCnt;
                         
@@ -906,10 +1252,10 @@
                     tr.appendChild(td);
 
                     table.appendChild(tr);
-                });
+                }); */
                 
-                document.getElementById("categorylist").appendChild(table);
-                makePageSelPage();
+                //document.getElementById("categoryViewList").appendChild(table);
+                //makePageSelPage();
 	        }
 
 	        function get_todaycop() {
@@ -930,7 +1276,7 @@
 			                if ('${userInfo.lang}' == '3') {
 			                	img.src = "/images/jp/community/title_todayCommunity_jp.png";
 			                } else {
-			                	img.src = "/images/kr/community/title_todayCommunity.png";
+			                	img.src = "/../images/kr/community/title_todayCommunity.png";
 			                }
 			                img.alt = "today Community";
 
@@ -942,7 +1288,7 @@
 			                var div2 = document.createElement("DIV");
 			                div2.className = "todayCommunityLayout";
 			                
-			                var strHtml = "<p class='btn_CommunityMore' type='2' code='C_48'><img src='/images/kr/community/btn_todayCommunity.png' /></p>";
+			                var strHtml = "<p class='btn_CommunityMore' type='2' code='C_48'><img src='/../images/kr/community/btn_todayCommunity.png' /></p>";
 			                strHtml += "<p class='todayCommunity_img'><img src='/images/ezCommunity/logo/default_logo_empty.png' /></p>";
 			                strHtml += "<dl class='todayCommunity_list'><div style='text-align:center'><img style='margin-top:13px;' src='/images/kr/main/nodata_plan.png' />&nbsp;<div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></dl>";
 			                
@@ -967,7 +1313,7 @@
                 if ('${userInfo.lang}' == '3') {
                 	img.src = "/images/jp/community/title_todayCommunity_jp.png";
                 } else {
-                	img.src = "/images/kr/community/title_todayCommunity.png";
+                	img.src = "/../images/kr/community/title_todayCommunity.png";
                 }
                 img.alt = "today Community";
 
@@ -988,7 +1334,7 @@
                 p.onclick = function () { move_cop(this); };
 
                 var img2 = document.createElement("IMG");
-                img2.src = "/images/kr/community/btn_todayCommunity.png";
+                img2.src = "/../images/kr/community/btn_todayCommunity.png";
 
                 p.appendChild(img2);
 
@@ -1111,6 +1457,7 @@
 	        var searchvalue;
 	        
 	        function copsearch() {
+	        	
 	            var sel = document.getElementById("search").selectedIndex;
 	            searchoption = document.getElementById("search")[sel].value;
 	            searchvalue = document.getElementById("keyword").value;
@@ -1119,6 +1466,7 @@
 	                alert(strLang4);
 	                return;
 	            }
+	        	$("#listCategory .txt").removeClass("bold");
 	            search = true;
 
 	            CurPage = "1";
@@ -1348,7 +1696,7 @@
 	        
 	        //2018-08-27 김보미 - 커뮤니티 타이틀 너비 조정
 	        window.onresize = function () {   	
-	        	commuTitleWidth();
+	        	//commuTitleWidth();
 		    }
 	        
 			function commuTitleWidth() {
@@ -1369,9 +1717,136 @@
 			function refresh_onclick() {
 				window.location.reload(false);	
 			}
+			
+			/* 2018-11-12 김민성 - 커뮤니티 공지사항 조회 */
+			function btn_bbsView(sURL, ttt) {
+			    var pheigth = window.screen.availHeight;
+	            var pwidth = window.screen.availWidth;
+	            pheigth = parseInt(pheigth) / 2;
+	            pwidth = parseInt(pwidth) / 2;
+	            pheigth = pheigth - 200;
+	            pwidth = pwidth - 127;
+	
+	            var feature = "width=760,height=720";
+	            feature = feature + GetOpenPosition(760, 720);
+	            window.open("/ezCommunity/board/bbsViewNew.do?mode=content&no=" + sURL + "&bName=" + ttt, "", feature);
+			}
 		</script>
 	</head>
-	<body>
+	<body class="mainbody" style="margin-top:10px">
+		<div class="main_community_center">
+			<!-- communitySection01 : banner -->
+		    <div class="community_section01">
+		    	<div class="contents_bannerCommunity">
+		        	<p>
+		        		<c:choose>
+			        		<c:when test ="${userInfo.lang == 1}"> 
+				                	<img src="../images/kr/community/bannertxt.png">
+				            </c:when>
+				            <c:when test ="${userInfo.lang == 2}"> 
+				                	<img src="../images/jp/community/bannertxt.png">
+				            </c:when>
+				            <c:otherwise>
+				            		<img src="../images/us/community/bannertxt.png">
+				            </c:otherwise>
+				         </c:choose>
+		        	</p>
+		        </div>
+		    </div>
+		    <!-- //communitySection01 : banner -->
+		    <!-- communitySection02 : notice + board -->
+		    <div class="community_section02">
+		    	<div class="contents_noticeCommunity">
+		        	<dl class="contents_tabCommunity">
+		                <dt><spring:message code='main.t272'/>&nbsp;<spring:message code='ezCommunity.t863'/></dt>
+		                <dd class="btn_more"></dd>
+		            </dl>
+		            <ul id="listCommunity" class="contents_listCommunity">
+		            	<c:choose>
+		            		<c:when test="${fn:length(cNoticeList) eq 0 }"> 
+		            			<dl class="nodata_sIcon">
+									<dt style="padding-top: 10px;"><img src="../images/kr/main/noData_sIcon.png"></dt>
+								    <dd><spring:message code='ezCommunity.kmsc01'/></dd>
+								</dl>
+		            		</c:when>
+		            		<c:when test="${fn:length(cNoticeList) ne 0 }">
+		            			<c:forEach items="${cNoticeList }" var="list" begin="0" end="2" >
+		            				<li>
+		            					<c:if test="${list.writeDay >= pastDate}">
+		            						<span class="icon_new"><img src="../images/kr/community/communityPortlet_iconnew.gif"></span>
+		            					</c:if>
+		            					<span class="txt" onclick="btn_bbsView('${list.no}','tbl_c_board')">${list.title }</span><span class="date">${fn:substring(list.writeDay, 0, 10) }</span>
+					               </li>
+					            </c:forEach>
+					        </c:when>
+		            	</c:choose>
+		            </ul>
+		        </div>
+		        <div class="contents_boardCommunity">
+		        	<dl class="contents_tabCommunity">
+		                <dt><spring:message code='ezCommunity.kmsc02'/></dt>
+		            </dl>
+		            <ul id="listCommunity2" class="contents_listCommunity">
+		            </ul>
+		        </div>
+		    </div>
+		    <!-- //communitySection02 : notice + board -->
+		    <!-- communitySection02 : category -->
+		    <div class="community_section03">
+		    	<div class="contents_category">
+		            <div class="contents_categoryTab">
+		                <dl class="contents_tabCategory">
+		                    <dt><spring:message code='ezCommunity.t2006'/></dt>
+		                </dl>
+		                <ul id="listCategory" class="contents_listCategory"></ul>
+		            </div>
+		            <div class="contents_categoryView">
+		                <div class="contents_searchCategory">
+		                    <dl>
+		                        <dt class="selectbox">
+		                            <select id="search" name="select" style="padding-left: 3px;">
+			                                <option value ="NAME"><spring:message code = 'ezCommunity.t2007' /></option>
+			                                <option value ="DESC"><spring:message code = 'ezCommunity.t2008' /></option>
+			                         </select>
+		                        </dt>
+		                        <dt class="searchinput"><input id="keyword" name="keyword" onkeydown="key_down(event)" type="text"></dt>
+		                        <dd onclick="copsearch()" class="btn_searh"><spring:message code='ezCommunity.t31'/></dd>
+		                    </dl>
+		                </div>
+		                <div id="categoryViewList" class="contents_categoryViewList"></div>
+		            </div>
+		        </div>
+		    </div>
+		    <!-- //communitySection02 : category -->
+		</div>
+		<!-- main_community_right -->
+		<div class="main_community_right">
+			<!-- contents_newCommunity -->
+		    <div class="contents_newCommunity">
+		        <dl class="contents_tabCommunity">
+		            <dt><spring:message code='ezCommunity.kmsc04'/></dt>
+		            <dd class="btn_more"></dd>
+		        </dl>
+		        <dl id="newcomm" class="contents_rightCommunity">
+		        </dl>
+		    </div>
+		    <!-- //contents_newCommunity -->
+		    <!-- contents_popularCommunity -->
+		    <div class="contents_popularCommunity">
+		        <dl class="contents_tabCommunity">
+		            <dt><spring:message code='ezCommunity.kmsc03'/></dt>
+		            <dd class="btn_more"></dd>
+		        </dl>
+		        <dl id="bestcomm" class="contents_rightCommunity">
+		        	<dl class="contents_rightCommunity nodata_sIcon">
+					</dl>
+		        </dl>
+		    </div>
+		    <!-- //contents_popularCommunity -->
+		</div>
+		<!-- //main_community_right -->
+		</body> 
+	<%-- <body>
 		<div class="main_community">
 			<table style="width:100%" border="0" class="main_communityTop">
 				<tr>
@@ -1396,12 +1871,12 @@
 			<table style="width:100%" border="0" class="main_communityContent">
 				<tr>
 			    	<td>
-			            <%-- <div class="contents_tabpartTitle">
+			            <div class="contents_tabpartTitle">
 			                <ul class="tabpartTitle">
 			                    <li id="mycop" class="on" onclick ="change_tab('mycop')"><span><span class="icon_tabpart"></span><spring:message code = 'ezCommunity.t2005' /></span></li>
 			                    <li id="categorycop" class="icon_tabpartBorder" onclick ="change_tab('categorycop')"><span><span class="icon_tabpart"></span><spring:message code = 'ezCommunity.t2006' /></span></li>
 			                </ul>
-			            </div> --%>
+			            </div>
 			            <div id="tabnav" class="portlet_tabpart01" style="width:100%;margin-top:5px">
 							<div class="portlet_tabpart01_top" id="tab1">
 							    <p><span id="tagsub1"><spring:message code = 'ezCommunity.t2005' /></span></p>
@@ -1445,5 +1920,5 @@
 			</table>
 			<div id="tblPageRayer" style="text-align:center;margin-top:3px;"></div>
 		</div>
-	</body>
+	</body> --%>
 </html>

@@ -425,17 +425,19 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public String deletePoll(String itemSeq, int tenantID) throws Exception {
+	public String deletePoll(String pollList, int tenantID) throws Exception {
 		logger.debug("deletePoll started");
-
+		
 		try {
-			Map<String, Object> map = new HashMap<String, Object>();
-			
-			map.put("v_pItemSeq", itemSeq);
-			map.put("tenantID", tenantID);
-			
-			ezPersonalAdminDAO.deletePoll_D(map);
-			ezPersonalAdminDAO.deletePoll(map);
+			for (String itemSeq : pollList.split(";")) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("v_pItemSeq", itemSeq);
+				map.put("tenantID", tenantID);
+				
+				ezPersonalAdminDAO.deletePoll_D(map);
+				ezPersonalAdminDAO.deletePoll(map);
+			}
 			
 			logger.debug("deletePoll ended");
 			return "OK";

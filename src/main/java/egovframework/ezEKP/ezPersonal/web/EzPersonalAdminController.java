@@ -592,9 +592,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("delPoll started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String itemSeq = request.getParameter("itemSeq");
+		String pollList = request.getParameter("pollList");
 		
-		String result = ezPersonalAdminService.deletePoll(itemSeq, userInfo.getTenantId());
+		String result = ezPersonalAdminService.deletePoll(pollList, userInfo.getTenantId());
 
 		logger.debug("delPoll ended");
 		return result;

@@ -138,31 +138,45 @@
 	        	});	
 		    };
 		    function BoardRedirect() {
-		        var spans = document.getElementById("TopBoardsList").getElementsByTagName("div");
+		        var spans = document.getElementById("TopBoardsList").getElementsByTagName("span");
+		        var cnt = 0;
 		        for (var i = 0 ; i < spans.length ; i++) {
 		            if (spans[i].getAttribute("value") == RedirectBoardGroupID) {
 		                LoadTreeViewByPath(spans[i], RedirectBoardID, RedirectBoardGroupID);
+		                cnt++;
 		            }
 		        }
+		        if (cnt == 0) { //권한이 없을 경우
+		        	var rightFrameDoc = "";
+		        	if (typeof window.parent.frames["right"] == "undefined") {
+		        		rightFrameDoc = rightFrame.document;
+		        	} else {
+		        		rightFrameDoc = window.parent.frames["right"].document;
+		        	}
+		        	
+		        	rightFrameDoc.head.innerHTML = "<link rel='stylesheet' href='${util.addVer('ezBoard.i1', 'msg')}' type='text/css'>";
+		        	rightFrameDoc.body.className = "mainbody";
+		        	rightFrameDoc.body.innerHTML = "<div style='margin-top:100px;text-align:center'><spring:message code='ezBoard.t272'/></div>";
+		        }
 		    }
+		    
 		    function LoadTreeViewByPath(pObjSpan, pBoardID, pBoardGroupID) {
-		        pObjSpan.parentElement.onclick();
-		        var TreeCtrl = getFirstChild(pObjSpan.parentElement);
-		        TreeCtrl.onclick();
+		        pObjSpan.onclick();
 		        
 		        var selectItem;
-		
+
+		        /*
 		        var totalboard = "";
-		        if (pObjSpan.parentElement.nextSibling.nodeType == 1) {
-		            totalboard = getFirstChild(pObjSpan.parentElement.nextSibling);
+		        if (pObjSpan.parentElement.parentElement.nextSibling.nodeType == 1) {
+		            totalboard = getFirstChild(pObjSpan.parentElement.parentElement.nextSibling);
 		        }
 		        else {
-		            totalboard = getFirstChild(pObjSpan.parentElement.nextSibling.nextSibling);
+		            totalboard = getFirstChild(pObjSpan.parentElement.parentElement.nextSibling.nextSibling);
 		        }
 		
 		        var cnt = totalboard.children[0].getElementsByTagName("div").length;
 		        
-		        /* 2018-11-01 홍승비 - 접근권한 없는 게시판에 포탈 포틀릿 등으로 접근 시, 오류메세지 표출하도록 수정 */
+		        // 2018-11-01 홍승비 - 접근권한 없는 게시판에 포탈 포틀릿 등으로 접근 시, 오류메세지 표출하도록 수정 
 		        var accessCheck = "";
 		        for (var i = 0; i < cnt; i++) {
 		        	if (typeof(totalboard.children[0].getElementsByTagName("div")[i]) == "undefined") {
@@ -189,7 +203,7 @@
 		        }
 		        
 		        if (accessCheck != "NO") {
-			        selectItem.getElementsByTagName("span")[0].onclick();
+			        selectItem.getElementsByTagName("span")[2].onclick();
 			        var tempid = selectItem.id.split("_");
 			        var tempidlength = tempid.length;
 			        var clicknode = new Array();
@@ -231,6 +245,47 @@
 			                }
 			            }
 			        }
+		        }
+		        */
+				tId = pObjSpan.getAttribute("id").replace("TreeCtr", "TreeCtrl");
+		        var spans = document.getElementById("TreeView" + tId).getElementsByClassName("h2_text");//게시판들
+		 
+		        var cnt = spans.length;
+		        var accessCheck = "";
+		        var checkCnt = 0;
+		        for (var i = 0; i < cnt; i++) {
+	                var parentNodeid = spans[i].parentNode.getAttribute("data1");
+		        	if (RedirectBoardID == parentNodeid) {
+		                selectItem = spans[i];
+		                break;
+		            }
+		            else {
+	                    var nodeDiv = spans[i].parentNode;
+	                    if (nodeDiv.getAttribute("isleaf") != "TRUE") { //하위 존재
+	                    	document.getElementById("imgNode_" + nodeDiv.getAttribute("id")).onclick(); //클릭해야 하위 폴더트리 생성되므로 클릭
+	                    	cnt += document.getElementById(nodeDiv.getAttribute("id") + "_sub").childNodes.length;
+	                    	document.getElementById("imgNode_" + nodeDiv.getAttribute("id")).onclick();
+	                    }
+		            }
+		        	checkCnt++;
+		        }
+		        
+		        if (cnt == 0 || checkCnt == cnt) { //권한이 없으면 리스트에 해당 게시판 존재하지 않음
+		        	accessCheck = "NO";
+		        }
+		        
+		        if (accessCheck != "NO") {
+			        selectItem.onclick();
+			        
+			        var tempid = selectItem.id.split("_");
+			        var tempidlength = tempid.length;
+			        var clicknode = new Array();
+					var tempSpanid = "imgNode_" + tempid[1]; 
+
+		            for (var i = 2; i < tempidlength; i++) {
+		            	tempSpanid += "_" + tempid[i];
+                        document.getElementById(tempSpanid).click();
+		            }
 		        }
 		        // 리다이렉트된 게시판에 접근권한이 없다면 우측프레임에 메세지 표출함 
 		        else {

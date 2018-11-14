@@ -37,7 +37,7 @@
 	<script type="text/javascript">
 		$(function() {
 			var beforeClass = $(opener.document).find(".menuIcon").find("span").attr("class");
-			console.log(beforeClass);
+			
 			if (beforeClass == undefined) {
 				$(".icon_nav_webfolder").parent().siblings().prop("checked", true);
 			} else {

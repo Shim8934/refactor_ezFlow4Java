@@ -19,6 +19,8 @@
 <typeAlias alias="MenuNameVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuNameVO"/>
 <typeAlias alias="FrameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO"/>
 <typeAlias alias="WeatherVO" type="egovframework.ezEKP.ezNewPortal.vo.WeatherVO"/>
+<typeAlias alias="BoardListVO" type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
+<typeAlias alias="PortalPortletSliderImageVO" type="egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -41,6 +43,7 @@
 <result property="portletName" 				column="PORTLET_NAME" />
 <result property="portletUrl" 				column="PORTLET_URL" />
 <result property="portletBoardId" 			column="BOARD_ID" />
+<result property="menuId" 					column="MENU_ID" />
 </resultMap>
 <resultMap class="PortletInfoVO" id="PortletInfoVO">
 <result property="portletId" 				column="PORTLET_ID" />
@@ -289,30 +292,6 @@ AND
 	comp.TENANT_ID = name.TENANT_ID
 AND 
 	comp.COMPANY_LANG = name.MENU_LANG		
-LEFT OUTER JOIN
-	(
-       SELECT * FROM tbl_portal_menu_auth
-       WHERE tenant_id = #tenantId#
-       AND company_id = #companyId#
-       AND access_YN = 0
-       AND user_id = #userId#
-       AND user_type = '1'
-       
-       UNION
-       
-       SELECT * FROM tbl_portal_menu_auth
-       WHERE tenant_id = #tenantId#
-       AND company_id = #companyId#
-       AND access_YN = 0
-       AND user_id = #deptId#
-       AND user_type = '2'     	
-	) as auth
-ON
-	comp.COMPANY_ID = auth.COMPANY_ID
-AND
-	comp.TENANT_ID = auth.TENANT_ID
-AND
-	comp.MENU_ID = auth.MENU_ID
 LEFT OUTER JOIN
 	tbl_portal_menu_user as user
 ON
@@ -815,7 +794,7 @@ AND
 <select id="ezNewPortal.getPortletOrderUser" parameterClass="Map" resultMap="PortletOrderVO">
 <![CDATA[
 SELECT
-	A.PORTLET_ID, A.PORTLET_ORDER, B.PORTLET_NAME, C.PORTLET_URL, D.BOARD_ID
+	A.PORTLET_ID, A.PORTLET_ORDER, B.PORTLET_NAME, C.PORTLET_URL, D.BOARD_ID, A.MENU_ID
 FROM	
 	TBL_PORTAL_PORTLET_USER A
 JOIN
@@ -1032,7 +1011,7 @@ SELECT
 	A.theme_id,
 	A.theme_name,
     A.theme_content,
-    B.theme_used,
+    if(isnull(D.used_theme),  0, 1) as theme_used,
     B.theme_default,
     C.frame_id as frame_default
 FROM
@@ -1045,6 +1024,12 @@ JOIN
 	TBL_PORTAL_FRAME_COMP C
 ON
 	B.theme_id = C.theme_id
+LEFT OUTER JOIN
+	TBL_PORTAL_THEME_USER D
+ON
+	A.theme_id = D.used_theme
+AND
+	D.user_id = #userId#
 WHERE
 	B.company_id = #companyId#
 AND
@@ -1139,6 +1124,44 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 )
 ]]>
 </insert>
+
+<select id="ezNewPortal.getBoardPortletInfo" parameterClass="Map" resultClass="BoardListVO">
+<![CDATA[
+SELECT	
+	A.BOARDID,
+	A.ITEMID,
+	A.TITLE,
+	A.WRITERID,
+	A.WRITERNAME,
+	A.WRITERNAME2,
+	A.WRITERDEPTID,
+	A.WRITERDEPTNAME,
+	A.WRITERDEPTNAME2,
+	C.GUBUN
+FROM
+	TBL_BOARD_ITEM A
+JOIN 
+	TBL_BOARD_BOARDINFO C
+ON 
+	A.BOARDID = C.BOARDID
+AND 
+	A.TENANT_ID = C.TENANT_ID
+AND 
+	A.WRITERCOMPANYID = C.COMPANYID
+WHERE
+	A.TENANT_ID = #tenantId#
+AND
+	A.BOARDID = #boardId#
+AND
+	A.WRITERCOMPANYID = #companyId#
+ORDER BY
+	A.WRITEDATE DESC
+LIMIT
+	0, #itemCount#
+]]>
+</select>
+
+
 <!-- 이효진--> 
 	<select id="ezNewPortal.getApprovalDoingList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
@@ -1744,4 +1767,103 @@ AND
 			
 	]]>
 </update>
+
+<select id="ezNewPortal.getCheckUserAuth" parameterClass="Map" resultClass="MenuAuthVO">
+<![CDATA[
+SELECT ACCESS_YN as accessYN
+  FROM TBL_PORTAL_MENU_AUTH
+ WHERE MENU_ID = #menuId#
+   AND USER_ID = #userId#
+   AND USER_TYPE = #userType#
+   AND TENANT_ID = #tenantId#
+   AND COMPANY_ID = #companyId#
+]]>
+</select>
+
+<select id="ezNewPortal.getCheckDeptAuth" parameterClass="Map" resultClass="MenuAuthVO">
+<![CDATA[
+SELECT ACCESS_YN as accessYN
+  FROM TBL_PORTAL_MENU_AUTH
+ WHERE MENU_ID = #menuId#
+   AND USER_ID = #userId#
+   AND USER_TYPE = #userType#
+   AND TENANT_ID = #tenantId#
+   AND COMPANY_ID = #companyId#
+]]>
+</select>
+
+<select id="ezNewPortal.getCheckcomAuth" parameterClass="Map" resultClass="MenuAuthVO">
+<![CDATA[
+SELECT ACCESS_YN as accessYN
+  FROM TBL_PORTAL_MENU_AUTH
+ WHERE MENU_ID = #menuId#
+   AND USER_ID = #userId#
+   AND USER_TYPE = #userType#
+   AND TENANT_ID = #tenantId#
+   AND COMPANY_ID = #companyId#
+   AND USER_ID=COMPANY_ID
+]]>
+</select>
+
+<select id="ezNewPortal.getAllCompanyMenus" parameterClass="Map" resultClass="MenuInfoVO">
+SELECT
+	comp.MENU_ID          AS MENUID,
+    name.MENU_NAME        AS MENUNAME,
+    comp.MENU_USED        AS MENUUSED,
+	comp.COMPANY_LANG     AS COMPANYLANG,
+	main.MENU_URL         AS MENUURL,
+    main.ICON_URL         AS ICONURL,
+    comp.company_order    AS COMPANYORDER
+FROM 
+	tbl_portal_menu_comp as comp
+JOIN 
+	tbl_portal_menu as main
+ON 
+	comp.MENU_ID = main.MENU_ID
+JOIN 
+	tbl_portal_menu_name as name
+ON 
+	comp.MENU_ID = name.MENU_ID
+AND 
+	comp.COMPANY_ID = name.COMPANY_ID
+AND 
+	comp.TENANT_ID = name.TENANT_ID
+AND 
+	comp.COMPANY_LANG = name.MENU_LANG
+WHERE 
+	comp.MENU_USED = 1
+AND 
+	comp.COMPANY_ID = #companyId#
+AND
+	comp.COMPANY_LANG = #langType#
+AND
+	comp.TENANT_ID = #tenantId#
+ORDER BY
+	company_order asc	
+</select>
+
+<select id="ezNewPortal.getSliderList" parameterClass="Map"  resultClass="PortalPortletSliderImageVO">
+<![CDATA[
+SELECT
+	SLIDERID ,
+	SLIDERNAME ,
+	SLIDERNAME2 ,
+	IMAGEPATH ,
+	REGUSERID ,
+	REGDATE ,
+	SN ,
+	ISUSE ,
+ 	URL
+FROM
+	TBL_PS_SLIDERIMAGE 
+WHERE
+	COMPANYID = #v_COMPANYID#
+AND
+	TENANT_ID = #tenantID#
+AND
+	IMAGEPATH like '%upload_portal_portlet%'	
+ORDER BY
+	SN
+]]>
+</select>
 </sqlMap>

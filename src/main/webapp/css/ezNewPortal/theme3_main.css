@@ -141,7 +141,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 /* layout */
 #Center {min-height:600px; margin:0px; min-width:1260px; background:url(/images/ezNewPortal/theme3Img/main_background.png) center top no-repeat; background-size:cover;}
 .section_left{  margin:0px; padding:0px; float:left; overflow:hidden; border-right:0px solid #cdcdcd; width:0px; box-sizing:border-box; background:#fff;}
-.section_main{ overflow:hidden; padding:0px 0px 20px 8px; float:none; min-width:880px; max-width:1920px; box-sizing:border-box; min-height:1000px;}
+.section_main{ overflow:hidden; padding:0px 0px 20px 3px; float:none; min-width:880px; max-width:1920px; box-sizing:border-box; min-height:1000px;}
 .section_main .mainLayout_left{ overflow:hidden; float:left; padding:0px 0px 0px 18px; box-sizing:border-box; }
 .section_main .mainLayout_middle{ overflow:hidden;  padding:0px 0px 0px 16px; float:left; box-sizing:border-box; }
 .section_main .mainLayout_right{ float:left; padding:0px 0px 0px 16px; box-sizing:border-box; overflow:hidden; }
@@ -151,7 +151,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .layDIV02{ height:520px; background:#fff; overflow:hidden; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} /* 장진혁 */
 
 /* box_shadow */
-.box_shadow{/* background: #fff */; padding:0px; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); width:auto; height:250px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow: hidden; border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;} /*장진혁 */
+.box_shadow{ /* background: #fff */ ; padding:0px; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); width:auto; height:250px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow: hidden; border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;} /*장진혁 */
 
 /* portlet_title */
 .portlet_title{ margin:0px; padding:0px; height:46px; line-height:44px; box-sizing:border-box; overflow:hidden; background:rgba(255,255,255,0.7);}
@@ -189,15 +189,15 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .portlet_list li.notiLI03{width:144px; height:169px; background:url(/images/ezNewPortal/notiImg01.png) no-repeat; }
 
 /* portlet_list approval */
-.approval .portlet_list li{ margin:0px; padding:0px 10px 0px 23px; background:url(/images/ezNewPortal/list_bul.png) no-repeat 15px 13px; font-size:13px; color:#555555; height:30px; line-height:28px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
-.portlet_list li.first_approval{margin:0px 10px 7px 10px; padding:0px; background:#fff; border:1px solid #e7e7e7; height:117px; box-sizing:border-box;}
-.first_approval .approval_tit{ margin:0px; padding:0px 0px 0px 10px; height:27px; border-bottom:1px solid #e7e7e7; background:#f8f8f8; line-height:25px;}
+.approval .portlet_list li{ margin:0px; padding:0px 10px 0px 23px; background:url(/images/ezNewPortal/list_bul.png) no-repeat 15px 17px; font-size:13px; color:#555555; height:36px; line-height:34px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+.portlet_list li.first_approval{margin:0px; padding:0px; background:#f4f4f4; border:1px solid #e7e7e7; height:113px; box-sizing:border-box;}
+.first_approval .approval_tit{ margin:0px; padding:0px 0px 0px 10px; height:27px; background:#f4f4f4; line-height:25px;}
 .first_approval .approval_tit span.txt{ font-weight:bold;}
-.first_approval .approval_content{margin:15px 0px; padding:0px; overflow:hidden;}
+.first_approval .approval_content{margin:10px 0px 15px 0px; padding:0px; overflow:hidden; background: #f4f4f4;}
 .first_approval .approval_content .apprDL{margin:0px; padding:0px 0px 0px 10px; float:left; overflow:hidden; width:30%; box-sizing:border-box;}
 .first_approval .approval_content .apprDL .apprPic{margin:0px; padding:0px; width:53px; height:53px; border:1px solid #e7e7e7; border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; float:left;}
 .first_approval .approval_content .apprDL .apprPic img{border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; width:53px; height:53px;}
-.first_approval .approval_content .apprDL .apprName{margin:0px; padding:0px 0px 0px 0px; font-size:12px; color:#555; overflow:hidden; white-space: nowrap; text-overflow: ellipsis; text-align:center;}
+.first_approval .approval_content .apprDL .apprName{line-height:27px; margin:0px; padding:0px 0px 0px 0px; font-size:12px; color:#555; overflow:hidden; white-space: nowrap; text-overflow: ellipsis; text-align:center;}
 .first_approval .approval_content .apprDL .apprText_blue{ margin:0px; padding:0px; overflow:hidden; text-align:center;}
 .first_approval .approval_content .apprDL .apprText_blue span{margin:0px 0px 0px 0px; padding:0px 5px; height:19px; line-height:18px; background:#0470e4; font-size:12px; color:#fff; border-radius:3px; overflow:hidden; display:inline-block;}
 .first_approval .approval_content .apprDL .apprText_green{margin:0px; padding:0px; overflow:hidden; text-align:center;}
@@ -274,6 +274,15 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .nodata_newBirthday{height:100%; background:#fff;}
 .birthdayList{height: 100%; background: #fff;}
 
+/* birthday portlet */
+/* 생일자 포틀릿*/
+.box_shadow .birthList li {width:33%;float:none; display:inline-block; padding:7px 0px 12px 0px;} 
+.birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;}
+.birthList li .birthListDL .birthPic{margin:0px; padding:0px 4px 0px 0px; float:left;}
+.birthList li .birthListDL .birthPic img{width:50px; height:50px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; border:1px solid #e7e7e7;}
+.birthList li .birthListDL .birthName{margin:11px 0px 0px 0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
+.birthList li .birthListDL .birthTeam{margin:0px; padding:0px; font-size:12px; color:#888888; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
+.birthList hr {display:block; margin-block-start:0.7em; margin-block-end:0.7em;}
 /* bestEmployee */
 .bestEmployee{ overflow:hidden; margin:0px; padding:0px; height:112px; border-top:1px solid #e7e7e7; border-bottom:1px solid #e7e7e7; box-sizing:border-box; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; background:url(/images/ezNewPortal/bestEmployee_bg.png) no-repeat left top;}
 .bestEmployee .emPic{ margin:0px; padding:13px 0px 0px 27px; width:48px; height:48px; float:left;}
@@ -350,7 +359,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .scalendar_mini td.today{color:#333333; background:url(/images/ezNewPortal/theme3Img/scalendar_today_bg.png) center center no-repeat; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 .scalendar_mini td.schedule{color:#333333; background:url(/images/ezNewPortal/theme3Img/scalendar_schedule_bg.png) center center no-repeat; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 .scalendar_mini td div {height:28px;line-height:28px; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
-.sschedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px; overflow:hidden;}
+.sschedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px; overflow:hidden; height:203px; background: white}
 
 .sschedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px;clear:both;overflow:hidden;border-top:1px solid #e7e7e7;}
 .scheduleDate{height:191px; margin:0px;padding: 12px 15px 0px 0px;float: none; background:#ffffff; text-align:center;}
@@ -518,8 +527,8 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* aside */
 aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index:9; overflow:visible; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
-.linkBtn_open{ margin:0px; padding:0px; position:absolute; right:100px; top:30px; cursor:pointer; z-index: 1000;}
-.linkBtn_close{margin:0px; padding:0px; position:absolute; right:100px; top:30px; cursor:pointer; z-index: 1000;}
+.linkBtn_open{ margin:0px; padding:0px; position:absolute; right:100px; top:30px; cursor:pointer; z-index: 1002;}
+.linkBtn_close{margin:0px; padding:0px; position:absolute; right:0px; top:30px; cursor:pointer; z-index: 1002;}
 .aside_quick{ margin:0px; padding:0px; overflow:hidden; border-top-left-radius:5px;-webkit-border-top-left-radius:5px;-moz-border-top-left-radius:5px;border-top-right-radius:5px;-webkit-border-top-right-radius:5px;-moz-border-top-right-radius:5px;}
 .aside_quick .quickmenu_title{ margin:0px; padding:0px; width:100px; height:48px; background:#404b50; line-height:44px; text-align:center; color:#fff; font-size:13px; font-weight:bold;}
 .aside_quick .quickmenu {width:100px; margin:0px; padding:0px; list-style:none; background:#fff; height:292px; box-sizing:border-box;}
@@ -546,7 +555,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .nodata dd{ margin:0px; padding:0px; font-size:13px; color:#c0c0c0; font-weight: bold;}
 
 /* wather */
-.weather_icon{width:47%; height:47%}
+.weather_icon{ height:47%}
 .weather_content{background:#fff;}
 
 .dataHave {position:absolute; top:2px; left:45%; font-weight: bold; font-size: 18px; }
@@ -563,7 +572,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_right{  width:33.3%;}
 	.section_main .mainLayout_left{ width:33.3%;}
 	.section_main .mainLayout_middle{ width:33.3%;}
-	.portlet{ width:32%; float:left;}
+	.portlet{ width:32.1%; float:left;}
 	/* .bannerText{ padding:73px 18px 0px 0px;} */
 }
 
@@ -573,14 +582,14 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_left{ width:50%;}
 	.section_main .mainLayout_middle{ width:50%;}
 	.portlet{width:48%; float:left;}
-	.vote{ margin:0px 2px; float:left; overflow:hidden;}
+	/* .vote{ margin:0px 2px; float:left; overflow:hidden;} */
 	.stats_graph{ float:left; overflow:hidden;}
-	.groupware_banner{ float:left; margin-top:0px}
+	/* .groupware_banner{ float:left; margin-top:0px} */
 	
 }
 
 @media only screen and (max-width : 1279px) {
-	.portlet {width:410px; float:left;}
+	.portlet {width:565px; float:left;}
 }
 
 /* collaborate */
@@ -627,14 +636,14 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 }
 
 .writebanner_leftContents{float:left; width:145px; margin:0px; padding:0px; background:#ffffff;}
-.writebanner_leftContents dl{position:relative; width:145px; height:calc(50% - 22px); margin:0px; padding:22px 0px 0px 0px; text-align:center; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; cursor:pointer;}
+.writebanner_leftContents dl{position:relative; width:145px; height:calc(50% - 22px); margin:0px; padding:19px 0px 20px 0px; text-align:center; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; cursor:pointer;}
 .writebanner_leftContents dl.mail{background:#5f5adc;}
 .writebanner_leftContents dl.work{background:#a1a1a1;}
 .writebanner_leftContents dl dt{margin:0px 0px 0px 0px; padding:0px;}
 .writebanner_leftContents dl dt.icon{width:58px; height:58px; margin:0px auto 10px; background:#ffffff; border-radius:58px;-webkit-border-radius:58px;-moz-border-radius:58px;}
 .writebanner_leftContents dl dt span{display:block; width:30px; height:30px; background:url(/images/ezNewPortal/topmenu_icon_v1.001.png) #ffffff left top no-repeat;}
 .writebanner_leftContents dl dt span.icon_mail{display:inline-block; verticla-align:top; margin:17px 0px 0px 8px; background-position:0px -60px;}
-.writebanner_leftContents dl dt span.icon_work{display:inline-block; verticla-align:top; margin:17px 0px 0px 8px; background-position:-124px -60px;}
+.writebanner_leftContents dl dt span.icon_approval{display:inline-block; verticla-align:top; margin:17px 0px 0px 8px; background-position:-62px -60px;}
 .writebanner_leftContents dl dt.txt{color:#ffffff; font-size:14px;}
 .writebanner_leftContents dl dd{position:absolute; top:22px; left:82px; margin:0px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(0,0,0,0.8); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
 .writebanner_rightContents{float:left; width:calc(100% - 145px); background:#ffffff;}
@@ -644,19 +653,19 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .writebannerBottom li{float:left; width:33.3%; cursor:pointer;}
 .writebannerIcon{position:relative; margin:0px; padding:0px; text-align:center;}
 .writebannerIcon .iconCircle{width:58px; height:58px; margin:0px auto; padding:0px; background:#f8f8f8; border-radius:58px;-webkit-border-radius:58px;-moz-border-radius:58px;}
-.writebannerIcon .iconcNotice{background:#0abeb8;}
-.writebannerIcon .iconcSchedule{background:#f7cc04;}
-.writebannerIcon .iconcCollabo{background:#fe7f77;}
-.writebannerIcon .iconcBoard{background:#6ea4e6;}
-.writebannerIcon .iconcVote{background:#c86ee6;}
-.writebannerIcon .iconcWork{background:#e6986e;}
-.writebannerIcon .iconCircle .iconCommon{display:inline-block; vertical-align:middle; width:25px; height:25px; margin:16px auto; background:url(/images/ezNewPortal/theme3Img/writebanner_icon_v1.001.png) left top no-repeat;}
-.writebannerIcon .iconCircle .iconNotice{background-position:-23px 0px;}
-.writebannerIcon .iconCircle .iconSchedule{background-position:-50px 0px;}
-.writebannerIcon .iconCircle .iconCollabo{background-position:-76px 2px;}
-.writebannerIcon .iconCircle .iconBoard{background-position:0px -25px;}
-.writebannerIcon .iconCircle .iconVote{background-position:-25px -25px;}
-.writebannerIcon .iconCircle .iconWork{background-position:-50px -25px;}
+.writebannerIcon .iconcSchedule{background:#0abeb8;}
+.writebannerIcon .iconcVote{background:#f7cc04;}
+.writebannerIcon .iconcBoard{background:#fe7f77;}
+.writebannerIcon .iconcToward{background:#6ea4e6;}
+.writebannerIcon .iconcReturn{background:#c86ee6;}
+.writebannerIcon .iconcReceive{background:#e6986e;}
+.writebannerIcon .iconCircle .iconCommon{display:inline-block; vertical-align:middle; width:25px; height:25px; margin:16px auto; background:url(/images/ezNewPortal/theme3Img/writebanner_icon_v1.001.png) left top no-repeat; background-position:2px 2px;}
+.writebannerIcon .iconCircle .iconSchedule{background-position:-24px 1px;}
+.writebannerIcon .iconCircle .iconVote{background-position:-48px 1px;}
+.writebannerIcon .iconCircle .iconBoard{background-position:-75px 2px;}
+.writebannerIcon .iconCircle .iconToward{background-position:2px -24px;}
+.writebannerIcon .iconCircle .iconReturn{background-position:-23px -23px;}
+.writebannerIcon .iconCircle .iconReceive{background-position:-50px -24px;}
 .writebannerIcon .iconText{margin:10px 0px 0px 0px; padding:0px; color:#333; font-size:14px;}
 .writebannerIcon .count{position:absolute; top:-2px; left:50%; margin:0px 0px 0px 12px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(0,0,0,0.8); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
 .writebannerIcon .countZero{background:rgba(0,0,0,0.2);}
@@ -667,3 +676,34 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 .groupware_bannerWrap{float:right; width:calc(100% - 237px); height:250px; margin:0px; padding:0px; background:#ffffff;}
 .collaborate{clear:both;}
+
+/* 날씨 포틀릿 여기서부터  하단에 추가해주시면 됩니다. */
+/* .box_shadow{overflow:hidden; height:250px; margin:20px 0px 0px 16px; padding0px; background:#fff; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20); font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} */
+.weather{overflow:hidden}
+.portlet_title{overflow:hidden; height:46px; margin:0px; padding:0px; line-height:44px; box-sizing:border-box;}
+.portlet_title .portletText{float:left; overflow:hidden; margin:0px; padding:0px 0px 0px 10px; color:#333; font-size:16px; font-weight:bold; letter-spacing:-1px;}
+.portlet_title .portletPlus{float:right; overflow:hidden; margin:0px; padding:0px; cursor:pointer;}
+
+.portlet_title .portletPlus .weatherSelect{width:78px; height:28px; margin:0px 10px 0px 0px; padding:0px; border:1px solid #c0c0c0; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px;}
+.weather_content{height:110px; margin:10px;}
+.weather_title{overflow:hidden; margin:0px 5px 5px 5px;}
+.weather_title .weatherPresent{float:left; width:calc(60% - 10px); margin:0px 20px 0px 0px; padding:16px 0px;}
+.weather_title .weatherPresent dt{float:left; width:calc(40% - 20px); margin:0px 10px; padding:0px; text-align:center;}
+.weather_title .weatherPresent dd{float:left; width:calc(60% - 20px); margin:0px 10px; padding:0px; color:#000; font-size:22px; line-height:34px; letter-spacing:-1px;}
+.weather_title .weatherPer{float:right; list-style:none; width:calc(40% - 10px); margin:10px 0px; padding:0px;}
+.weather_title .weatherPer li{margin:2px 0px; padding:0px; color:#000; font-size:14px; line-height:26px;display:none;}
+.weather_title .weatherPer li span{display:inline-block;}
+.weather_title .weatherPer li span.icon{width:24px; height:24px; margin:0px 10px 0px 0px; padding:0px; text-align:center; background:#45aaff; border-radius:24px;-webkit-border-radius:24px;-moz-border-radius:24px;}
+.weather_title .weatherPer li span.icon img{vertical-align:middle; margin:-6px 0px 0px 0px;}
+.weather_title .weatherPer li span.iconbg01{background:#45aaff;}
+.weather_title .weatherPer li span.iconbg02{background:#88bb8b;}
+.weather_title .weatherPer li span.iconbg03{background:#b896c3;}
+.weather_title .weatherPer li span.text{color:#000; font-size:15px;}
+.weather_title .weatherPer li span.text span{font-weight:bold;}
+
+.weather_mini{overflow:hidden;}
+.weather_mini dl{float:left; width:calc(20% - 12px); margin:0px 5px; padding:11px 0px; border:1px solid #e2e2e2;}
+.weather_mini dl dt{float:left; width:calc(50% - 12px); margin:8px 3px; padding:0px; text-align:center;}
+.weather_mini dl dt img{vertical-align:middle;}
+.weather_mini dl dd{float:left; width:50%; margin:0px; padding:0px; color:#000; font-size:15px; text-align:left;}
+.weather_mini dl dd span{display:block; line-height:22px;}
