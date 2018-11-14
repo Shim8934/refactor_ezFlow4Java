@@ -153,20 +153,18 @@
 				});
 			}
 			
-			var pollList = "";
+			
 			function PollList_onClick(obj) {
 				var itemseq = document.getElementById(obj).getAttribute("DATA1");
 				if(itemseq == "0") {
 					return;
 				}
-				//pollList += itemseq + ";"
 				
 				if(checkFlag) {
-					$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
-					if($("#" + itemseq).is(":checked")) {
+					var color = $("#" + obj + " td").css("background-color");
+					if(color === "rgb(228, 232, 236)") {
 						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
 						$("#" + itemseq).prop("checked", false);
-						
 					} else {
 						$("#" + obj + " td").css("background-color", "rgb(228, 232, 236)");
 						$("#" + itemseq).prop("checked", true);
@@ -263,6 +261,8 @@
 	            });
 	        }
 	        
+
+			
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
 		    }
