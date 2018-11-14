@@ -46,9 +46,9 @@
 	<section class="section1">
     	<article class="personal">
         	<p>	
-            	<span class="info_set" id="personalEnv"></span>
+            	<span class="info_set" id="main_personalEnv"></span>
                 <span style="float:left; width:80%;">${userEmail}</span>
-				<span class="" id="portletEnv" style="float:left;"><img src="/images/admin/frameSetting.png" style="margin-top:12px;margin-left:17px;cursor:pointer"/></span>                
+				<span class="" id="main_portletEnv" style="float:left;"><img src="/images/admin/frameSetting.png" style="margin-top:12px;margin-left:17px;cursor:pointer"/></span>                
             </p>
             <div class="info">
             	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png" style="border-radius:100px;" width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" style="border-radius:100px;"id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
@@ -175,7 +175,9 @@
             </dl>
         </article> -->
     </section>
-	<section class="section_main">
+</div>
+<div class="section_main">
+	<section>
 		<div class="portlet_area">
 		</div>
 	</section>
@@ -377,7 +379,7 @@
  	}	
 	
 	//월별 우수사원 정보 호출
-	var getMonthlyBestEmployeeTheme2 = function () {
+	/* var getMonthlyBestEmployeeTheme2 = function () {
 		$.ajax({
 			type : "POST",
 			url : "/ezNewPortal/getMonthlyBestEmployee.do",
@@ -431,7 +433,7 @@
 				$(".emDL").append(strHTML);
 			}
 		});
-	}
+	} */
 	
 	var getScheduleList_after_Theme2 = function (list) {
 		// 개인일정, 부서일정 나누기 scheduleType 1 or 2
@@ -591,11 +593,11 @@
 		
 		//이달의 우수사원 불러오기
 		//getMonthlyBestEmployee();
-		getMonthlyBestEmployeeTheme2();
+		//getMonthlyBestEmployeeTheme2();
 		
 		//개인환경설정으로 이동 동작 연결
-		$("#personalEnv").on("click", viewPersonalEnv);
-		$("#portletEnv").on("click", viewPortletEnv);
+		$("#main_personalEnv").on("click", viewPersonalEnv);
+		$("#main_portletEnv").on("click", viewPortletEnv);
 		//메뉴 이동(왼쪽)
 		$("#NewMail").on("click", {"menu" : "NewMail"}, quickMenuOpen);
 		$("#Schedule").on("click", {"menu" : "Schedule"}, quickMenuOpen);

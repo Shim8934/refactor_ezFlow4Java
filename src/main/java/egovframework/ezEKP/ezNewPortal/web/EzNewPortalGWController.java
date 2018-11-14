@@ -416,7 +416,7 @@ public class EzNewPortalGWController {
 			
 			// List<ThemeInfoVO> userThemeList =
 			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
-			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId);
+			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId, userId);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1116,7 +1116,7 @@ public class EzNewPortalGWController {
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 
-			List<ThemeInfoVO> themeList = ezNewPortalService.getThemes(true, companyId, userInfo.getTenantId());
+			List<ThemeInfoVO> themeList = ezNewPortalService.getThemes(true, companyId, userInfo.getTenantId(), userId);
 
 			result.put("status", "ok");
 			result.put("code", 0);

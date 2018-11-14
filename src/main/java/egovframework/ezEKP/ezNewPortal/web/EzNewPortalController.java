@@ -526,23 +526,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		logger.debug("userThemeSetting Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
-
-		//현재 사용하고 있는 테마 정보 불러오기
-		String settingUrl = "/rest/ezPortal/settingInfo/users/" + userId;
-		JSONObject settingResultBody = commonUtil.getJsonFromRestApi(settingUrl, null, req, "get", null);
-		String settingStatus = settingResultBody.get("status").toString();
-		String usedTheme = "";
-		
-		if (settingStatus.equals("ok")) {
-			JSONObject settingData = (JSONObject) settingResultBody.get("data");
-			usedTheme = settingData.get("usedTheme").toString();
-			model.addAttribute("usedTheme", settingData.get("usedTheme"));
-		}
 		
 		//사용자가 선택 가능한 테마 목록 불러오기
 		String themeUrl = "/rest/ezPortal/themes/users/" + userId;
 		JSONObject themeResultBody = commonUtil.getJsonFromRestApi(themeUrl, null, req, "get", null);
 		String themeStatus = themeResultBody.get("status").toString();
+		String usedTheme = "";
 		
 		if (themeStatus.equals("ok")) {
 			JSONArray themeList = (JSONArray) themeResultBody.get("data");
@@ -552,14 +541,16 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			for (int i = 0; i < themeListCount; i++) {
 				JSONObject theme = (JSONObject) themeList.get(i);
 				String themeId = theme.get("themeId").toString();
-				
-				if (themeId.equals(usedTheme)) {
+				System.out.println((boolean)theme.get("themeUsed"));
+				if ((boolean)theme.get("themeUsed")) {
+					usedTheme = themeId;
 					themeList.remove(i);
 					themeList.add(userThemeMiddleIndex, theme);
 				}
 			}
 			
-			model.addAttribute("themeList", themeResultBody.get("data"));
+			model.addAttribute("usedTheme", usedTheme);
+			model.addAttribute("themeList", themeList);
 		}
 		
 		logger.debug("userThemeSetting End");
