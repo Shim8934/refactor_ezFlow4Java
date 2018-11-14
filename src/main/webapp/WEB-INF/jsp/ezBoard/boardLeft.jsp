@@ -284,7 +284,7 @@
 
 		            for (var i = 2; i < tempidlength; i++) {
 		            	tempSpanid += "_" + tempid[i];
-                        document.getElementById(tempSpanid).onclick();
+                        document.getElementById(tempSpanid).click();
 		            }
 		        }
 		        // 리다이렉트된 게시판에 접근권한이 없다면 우측프레임에 메세지 표출함 
