@@ -90,7 +90,7 @@
                 <div class="scrollbox-play-light">
                 	<div class="scrollbox">
                     	<div class="content">
-                        	<ul class="schedule_list" id="schedule_list">
+                        	<ul class="schedule_list" id="schedule_list_Top">
                             </ul>
                         </div>
                         <div class="scrollbar-v scrollbar-v-disabled">
@@ -437,13 +437,24 @@
 	
 	var getScheduleList_after_Theme2 = function (list) {
 		// 개인일정, 부서일정 나누기 scheduleType 1 or 2
+		pScheduleList = [];
+		dScheduleList = [];
 		list.forEach(function(item, index) {
 			if(item.scheduleType === '1') {
 				pScheduleList.push(item);	
-			} else if (item.scheduleType === '2') {
+			} else if (item.scheduleType === '2' || item.scheduleType === '3') {
 				dScheduleList.push(item);
 			}
 		});
+		
+		//개인에 탭이 되어있으면
+		if (pSchedule.classList.contains('left_on')) {
+			assembleScheduleList(pScheduleList);
+		}
+		//부서에 탭이 되어있으면
+		if (dSchedule.classList.contains('right_on')) {
+			assembleScheduleList(dScheduleList);
+		}
 	}
 	
 	var getScheduleList_Top = function (date, mode) {
@@ -462,9 +473,9 @@
 			}
 		});
 	}
-	
+
 	var assembleScheduleList = function (data) {
-        var schList = document.getElementById('schedule_list');
+        var schList = document.getElementById('schedule_list_Top');
         
 		while(schList.hasChildNodes()) {
 			schList.removeChild(schList.firstChild);	
@@ -668,6 +679,9 @@
 		});
 		
 		assembleScheduleList(pScheduleList);
+		
+		CalendarMiniView("CalendarMini_Top");
+		CalendarMiniDataSource("Top");
 	});
 </script>
 </body>	
