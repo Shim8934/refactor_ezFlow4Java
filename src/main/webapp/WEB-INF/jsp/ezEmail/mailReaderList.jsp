@@ -142,6 +142,7 @@
 	                }
 	            }
 	        }
+	        
 	        function MakeListInfoHTML(pGubun) {
 	            document.getElementById("HeaderAllCheckBox").checked = false;
 	            var GetListInfo_ContentObject = document.getElementById("MailList");
@@ -149,6 +150,8 @@
 	                GetListInfo_ContentObject.removeChild(GetListInfo_ContentObject.childNodes.item(0));
 	            }
 	            var XmlRows = SelectNodes(MailReceiverListXML, "DATA/ROW");
+	            XmlRows = sortNode(XmlRows, "READDATE"); // READDATE 컬럼 기준으로 정렬
+	            
 	            var Subject = getNodeText(SelectNodes(MailReceiverListXML, "DATA/SUBJECT")[0]);
 	            document.title = "<spring:message code='ezEmail.t566' />" + "( " + Subject + " )";
 	

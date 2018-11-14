@@ -593,8 +593,9 @@ function getReaderCount(parentId) {
 
 function makeReceiverList(parentId) {
 	var XmlRows = SelectNodes(MailReceiverListXML, "DATA/ROW");
+	XmlRows = sortNode(XmlRows, "READDATE"); // READDATE 컬럼 기준으로 정렬
 	
-	for (var i = 0; i < XmlRows.length; i++) {
+	for (var i = XmlRows.length - 1; i >= 0; i--) {
 		var readDate = SelectSingleNodeValue(XmlRows[i], "READDATE");
         var readerEmail = SelectSingleNodeValue(XmlRows[i], "READEREMAIL");
         var cancel = trim_Cross(SelectSingleNodeValue(XmlRows[i], "CANCEL"));

@@ -1802,3 +1802,37 @@ function BroswerAndNonActiveXCheck() {
         }
     }    
 }
+
+//특정 컬럼명 기준으로 xml 정렬하는 함수 (정렬할 xml, 정렬할 컬럼명) -> 오름차순
+function sortNode(xmlRows, colName) {
+	var least = '';
+	var i = 0;
+	var j = 0;
+	
+	if (xmlRows != null && colName != null) {
+		for (i = 0; i < xmlRows.length - 1; i++) {
+     		least = i;
+    		
+    		for (j = i + 1; j < xmlRows.length; j++) {
+    			if (SelectSingleNodeValue(xmlRows[j], colName) < SelectSingleNodeValue(xmlRows[least], colName)) {
+    				least = j;
+    			}
+    		}
+    		
+    		if (i != least) {
+    			var temp = '';
+    			
+    			for (var t = 0; t < xmlRows[0].childNodes.length; t++) {
+    				temp = SelectSingleNodeValue(xmlRows[i], xmlRows[i].childNodes[t].nodeName);
+    				setNodeText(xmlRows[i].childNodes[t], SelectSingleNodeValue(xmlRows[least], xmlRows[i].childNodes[t].nodeName));
+    				setNodeText(xmlRows[least].childNodes[t], temp);
+    			}
+    			
+    		}
+    		
+    	}
+    	return xmlRows;
+		
+	}
+	
+}
