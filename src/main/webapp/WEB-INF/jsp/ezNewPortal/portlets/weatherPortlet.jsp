@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -55,9 +56,31 @@ var today5Temp = today5Arr[1];
 var today5Time = todayHoursArr[4];
 
 $(document).ready(function(){
-	console.log(todayHoursArr)
+	
 	$("#currentIcon").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon" +  currentIcon.substring(0,2) + ".png");
-	$("#mainWeather").text(currentMain);
+	
+	switch (currentMain) {
+	case "Clear" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm01'/>");
+				   break;
+
+	case "Clouds" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm02'/>");
+				   break;
+	
+	case "Haze" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm03'/>");
+				   break;
+	
+	case "Rain" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm04'/>");
+				   break;
+	
+	case "Snow" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm05'/>");
+				   break;
+	
+	case "Thunderstrom" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm06'/>");
+				   break;
+	
+	default : $("#mainWeather").text(currentMain);
+				   break;
+	}
 	
 	$("#humidity").text("습도 ");
 	$("#clouds").text("구름 ");
@@ -158,7 +181,30 @@ $(function(){
     			todayHoursArr = data.todayHours.split(";");
     			
     			$("#currentIcon").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon" +  currentIcon.substring(0,2) + ".png");
-    			$("#mainWeather").text(currentMain);
+
+    			switch (currentMain) {
+    			case "Clear" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm01'/>");
+    						   break;
+
+    			case "Clouds" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm02'/>");
+    						   break;
+    			
+    			case "Haze" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm03'/>");
+    						   break;
+    			
+    			case "Rain" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm04'/>");
+    						   break;
+    			
+    			case "Snow" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm05'/>");
+    						   break;
+    			
+    			case "Thunderstrom" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm06'/>");
+    						   break;
+    			
+    			default : $("#mainWeather").text(currentMain);
+    						   break;
+    			}
+    			
     			if (currentTemp.indexOf(".") == -1) {
     				$("#currentTemp").text(currentTemp + "℃");
     			} else {

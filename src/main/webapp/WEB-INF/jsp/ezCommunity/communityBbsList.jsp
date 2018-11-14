@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezCommunity.t2001' /></title>
+		<title><spring:message code='main.t272'/>&nbsp;<spring:message code='ezCommunity.t863'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
@@ -233,7 +233,7 @@
 				<h1><spring:message code = "ezCommunity.t73"/><span id="mailBoxInfo"></span></h1>
 			</c:when>
 			<c:when test="${bName == 'tbl_c_board'}">
-				<h1><spring:message code = "ezCommunity.t2001"/><span id="mailBoxInfo"></span></h1>
+				<h1><spring:message code='main.t272'/>&nbsp;<spring:message code='ezCommunity.t863'/><span id="mailBoxInfo"></span></h1>
 			</c:when>
 			<c:otherwise>
 				<h1>${titleName }<span id="mailBoxInfo"></span></h1>
