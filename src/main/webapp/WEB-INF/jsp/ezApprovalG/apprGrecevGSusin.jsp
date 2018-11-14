@@ -943,6 +943,11 @@
 		    }
 		    function btnReturn_onclick_Complete(ret) {
 		        DivPopUpHidden();
+		        if (isReDraft == "Y" && checkAprState()) {
+		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+	    			window.close();
+	    			return;
+		    	}
 		        var hesongok = true;
 		        if (ret != "cancel") {
 		            setButtonReceiveTrue();
