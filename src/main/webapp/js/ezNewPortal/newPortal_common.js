@@ -674,18 +674,32 @@ function getAttitudeList() {
 		url : "/ezAttitude/getAttitudeList.do",
 		data : {},
 		success : function(result) {
-			console.log(result);
 			for (var i = 0; i < result.length; i++) {
 				if (result[i].typeId == "A01") {
  					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+ 					
+ 					if (usedTheme == 2) {
+ 						$("#inAttiBtn").parent().addClass("commute_on");
+ 					}
+ 					
 					$("#inAttiBtn").removeClass("main_out").addClass("main_in");
 					$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 				} else if (result[i].typeId == "A02") {
 					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+					
+					if (usedTheme == 2) {
+ 						$("#inAttiBtn").parent().addClass("commute_on");
+ 					}
+					
 					$("#inAttiBtn").removeClass("main_out").addClass("main_lateIn");
 					$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 				} else if (result[i].typeId == "A03") {
 					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
+					
+					if (usedTheme == 2) {
+ 						$("#outAttiBtn").parent().addClass("commute_on");
+ 					}
+					
 					$("#outAttiBtn").removeClass("main_out").addClass("main_in");
 					$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 				}

@@ -9,15 +9,15 @@
 		<title>Portal Logos</title>
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<style type="text/css">
-			.logoTitle {padding:0px; font-size:14px;font-weight:bold;}
-			.logoIconInfo {display:inline-block;vertical-align:top;margin:10px 10px 20px 0px;}
-			.logoIcon {width:250px;height:135px;border:1px solid #d9d9d9;margin-bottom:10px;text-align:center;vertical-align:middle;}
-			.logoIcon span, .logoIcon img {margin:48px;}
-			.logoContent {display:inline-block; }
-			.btnpositionJsp {display : inline-block;}
-			.logoContent ul {margin-top:5px;padding-left:7px;}
-			.logoContent ul li {font-size:14px; display:block;padding:5px 0px;}
-			.deleteLogoBtn {display : none;}
+			.logoTitle {padding:0px;font-size: 14px !important;font-weight:bold;margin: 0px 0px 5px 0px;}
+	         .logoIconInfo {display:inline-block;vertical-align:top;margin:10px 10px 20px 0px;}
+	         .logoIcon {width:250px;height:135px;border:1px solid #d9d9d9;margin-bottom:10px;text-align:center;vertical-align:middle;}
+	         .logoIcon span, .logoIcon img {margin:48px;}
+	         .logoContent {display:inline-block; }
+	         .btnpositionJsp {display : inline-block;}
+	         .logoContent ul {margin-top:5px;padding-left:7px;}
+	         .logoContent ul li {font-size: 12px;display:block;padding: 2px 0px;}
+	         .deleteLogoBtn {display : none;}
 		</style>
 	</head>
 	<body class="mainbody">
