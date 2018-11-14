@@ -3191,4 +3191,33 @@ public class EzNewPortalGWController {
 
 		return result;
 	}
+	/**
+	 * 포탈개인화 G/W [GET] 회사별 슬라이드 이미지 목록 조회
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezportal/slideimages/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getSlideImages(HttpServletRequest request, @PathVariable String companyId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getSlideImages started.");
+		JSONObject result = new JSONObject();
+							
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+					
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			List<PersonalSliderImageVO> sliderList = ezNewPortalService.getSilderImages(userInfo.getCompanyID(), userInfo.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", sliderList);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezNewPortal G/W getSlideImages ended.");
+		return result;
+	}
 }

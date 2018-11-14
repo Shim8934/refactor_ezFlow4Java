@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 
@@ -169,4 +170,13 @@ public interface EzNewPortalService {
 	public List<WeatherVO> getCityList(String primaryLang);
 	public String getUserCityCode(String id, int tenantId) throws Exception;
 	public void setUserCityCode(String id, int tenantId, String cityCode);
+	
+	/**
+	 * 김보미
+	 * @param companyID
+	 * @param tenantId
+	 * @return
+	 */
+	//관리자 슬라이드 이미지 포틀릿의 슬라이드 이미지 목록 가져오기
+	public List<PersonalSliderImageVO> getSilderImages(String companyId, int tenantId);
 }
