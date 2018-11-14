@@ -104,11 +104,11 @@
 		        document.getElementById("ContentDescription").innerHTML = "<IMG src = '"+filepath+"' style='width:280px;height:515px' />";
 		    }
 	
-		    function Reload() {
+		    /* function Reload() {
 		        window.location.reload(false);
-		    }
+		    } */
 		    
-		    function Priority_UP() {
+		    /* function Priority_UP() {
 		    	if (CrossYN()) {
 		            if (_RowObject == null) {
 		                alert("<spring:message code = 'ezPersonal.t1022' />");
@@ -146,9 +146,9 @@
 		                }
 		            }
 		    	}
-		    }
+		    } */
 		    
-		    function Priority_DOWN() {
+		    /* function Priority_DOWN() {
 		        if (_RowObject == null) {
 		            alert("<spring:message code = 'ezPersonal.t1022' />");
 		            return;
@@ -169,9 +169,9 @@
 		                break;
 		            }
 		        }
-		    }
+		    } */
 		    
-		    function event_ChangePriority(A_itemid, A_priority, B_itemid, B_priority) {
+		    /* function event_ChangePriority(A_itemid, A_priority, B_itemid, B_priority) {
 		        var ret = null;
 		        $.ajax({
 		        	type : "POST",
@@ -191,9 +191,9 @@
 		        });
 		        
 		        return ret;
-		    }
+		    } */
 		    
-		    function swapNodes(item1, item2) {
+		    /* function swapNodes(item1, item2) {
 		        var itemtmp = item1.cloneNode(1);
 		        var parent = item1.parentNode;
 		        item2 = parent.replaceChild(itemtmp, item2);
@@ -202,7 +202,7 @@
 		        parent.replaceChild(item2, item1);
 		        parent.replaceChild(item1, itemtmp);
 		        itemtmp = null;
-		    }
+		    } */
 	
 		    function event_statuschange(check) {
 		        var isUse = "";
@@ -263,9 +263,9 @@
 	    	<ul>
 	        	<li class="important"><span id ="NEW" onClick="btn_Select(this)"><spring:message code = 'ezPersonal.t105' /></span></li>
 				<li><span onclick="sliderdelete();"><spring:message code = 'ezPersonal.t99' /></span></li>
-				<li><span class="icon16 icon16_refresh" onclick="Reload();"></span></li>
+				<%-- <li><span class="icon16 icon16_refresh" onclick="Reload();"></span></li>
 				<li><span onclick="Priority_UP();"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code = 'ezPersonal.t366' />"/></span></li>
-				<li><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code = 'ezPersonal.t367' />" /></span></li>
+				<li><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code = 'ezPersonal.t367' />" /></span></li> --%>
 			</ul>
 	    </div>
 	    
@@ -285,12 +285,12 @@
 		                </table>--%>
 					</div>
 	            </td>
-	            <td style="vertical-align:top">
+	            <!-- <td style="vertical-align:top">
 	            	<div style="border:1px solid #dbdbda;width:295px;height:530px;overflow-y:auto;margin:0px 5px 0px 5px;">
 	                	<div id="ContentDescription" style="margin-top:1px;margin:5px 5px 5px 5px;">
 	                	</div>
 	            	</div>
-	            </td>
+	            </td> -->
 	        </tr>
 		</table>
 		<script>
