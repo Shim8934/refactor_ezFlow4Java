@@ -40,13 +40,14 @@
 	.right_float {float:right;}
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
+	.two_column {width:48%;}
 </style>
 </head>
 <body class="mainbg">	
 	<div id="Center">
 	<div style="position:relative;">
-		<aside id="quickSide">
-			<p class="linkBtn_open" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/theme3Img/linkBtn_open.png"></p>
+		<aside id="quickSide" style="width:0px">
+			<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/theme3Img/linkBtn_open.png"></p>
 			<div class="aside_quick">
 				<p class="quickmenu_title">Quick</p>
 				<ul class="quickmenu">
@@ -330,6 +331,15 @@
 		//포틀릿 드래그 앤 드롭
 		$(".portlet_area").sortable({
 			handle : ".sortablePortlet",
+			start : function (event, block) {
+				
+				$(".portlet.ui-sortable-helper").css("width", $(".portlet").not(block.item).not(block.placeholder).outerWidth());
+				
+				$(".ui-sortable-placeholder").css({
+					'width' : $(".portlet").not(block.item).not(block.placeholder).outerWidth(),
+					'height' : $(".portlet").not(".ui-sortable-helper").outerHeight()
+				});
+			},
 			update : function(event, ui) {
 				updatePortletOrderUser();
 			}
@@ -350,7 +360,7 @@
 			var media1279 = window.matchMedia("only screen and (max-width :1279px)");
 			
 			if (media1921.matches) {
-				$(".portlet").css("width", "48%");
+				$(".portlet").addClass("two_column");
 				$(".info_left").css("display", "inline-block");
 				$(".info_left").css("float", "left");
 				$(".info_left").css("width", "189px");
@@ -359,7 +369,7 @@
 				$(".info_right").css("width", "calc(100% - 194px)");
 				$(".info_right").css("background", "#ffffff");
 			} else if (media1686.matches) {
-				$(".portlet").css("width", "48%");
+				$(".portlet").addClass("two_column");
 				$(".info_left").css("display", "inline-block");
 				$(".info_left").css("float", "left");
 				$(".info_left").css("width", "189px");
@@ -368,7 +378,7 @@
 				$(".info_right").css("width", "calc(100% - 194px)");
 				$(".info_right").css("background", "#ffffff");
 			} else if (media1685.matches) {
-				$(".portlet").css("width", "48%");
+				$(".portlet").addClass("two_column");
 				$(".info_left").css("display", "inline-block");
 				$(".info_left").css("float", "left");
 				$(".info_left").css("width", "189px");
@@ -377,12 +387,12 @@
 				$(".info_right").css("width", "calc(100% - 194px)");
 				$(".info_right").css("background", "#ffffff");
 			} else if (media1589.matches) {
-				$(".portlet").css("width", "48%");
+				$(".portlet").addClass("two_column");
 				$(".info_left").css("display", "none");
 				$(".info_right").css("width", "100%");
 				$(".info_right").css("margin-left", "0px !important");
 			} else if (media1279.matches) {
-				$(".portlet").css("width", "565px");
+				$(".portlet").addClass("two_column");
 				$(".box_shadow.info_left").css("display", "none");
 				$(".box_shadow.info_right").css("width", "100%");
 				$(".box_shadow.info_right").css("margin-left", "0px !important");
