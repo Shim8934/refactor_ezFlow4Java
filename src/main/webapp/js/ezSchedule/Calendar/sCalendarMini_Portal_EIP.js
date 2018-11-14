@@ -9,6 +9,8 @@ var oThisMonth;
 var g_selDivID = null;
 var g_selTRID = null;
 var g_selTDID = null;
+var g_selTRIDTOP = null;
+var g_selTDIDTOP = null;
 var dayOfWeeks;
 var typeCal = 0;
 
@@ -520,19 +522,14 @@ function MonthMiniDataTop(oThisDate) {
 //자원데이터에 마우스 클릭시
 function DayOnMouseClick(event) {
     if (!event) event = window.event;
+
+    if ($("#"+g_selTDID)) {
+    	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+    }
     
-    var beforeId = $("#"+g_selTDID).parent().parent().attr("id"); 
-	if (beforeId) {
-		if (beforeId.indexOf('TOP') == -1) {
-			if ($("#"+g_selTDID)) {
-				$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
-			}
-			
-			if ($("#"+g_selTRID)) {
-				$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
-			}
-		}
-	}
+    if ($("#"+g_selTRID)) {
+    	$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+    }
     
     /*if (document.getElementById(g_selTDID))
         document.getElementById(g_selTDID).style.backgroundColor = "";
@@ -559,21 +556,14 @@ function DayOnMouseClick(event) {
 //자원데이터에 마우스 클릭시
 function DayOnMouseClickTop(event) {
     if (!event) event = window.event;
-    
-	var beforeId = $("#"+g_selTDID).parent().parent().attr("id"); 
-	if (beforeId) {
-		if (beforeId.indexOf('TOP') > -1) {
-			if ($("#"+g_selTDID)) {
-				$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
-			}
-			
-			if ($("#"+g_selTRID)) {
-				$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
-			}
-			
-		}
-	}	
 
+    if ($("#"+g_selTDIDTOP)) {
+    	$("#"+g_selTDIDTOP).parent().css("background-color", "").css("color", "");
+    }
+    
+    if ($("#"+g_selTRIDTOP)) {
+    	$("#"+g_selTRIDTOP).parent().css("background-color", "").css("color", "");
+    }
     
     /*if (document.getElementById(g_selTDID))
         document.getElementById(g_selTDID).style.backgroundColor = "";
@@ -588,8 +578,8 @@ function DayOnMouseClickTop(event) {
     }
 	//$("#"+event.getAttribute("id")).parent().css("border-radius","20px");
 	
-    g_selTRID = event.parentNode.parentNode.getAttribute("id");
-    g_selTDID = event.getAttribute("id");
+    g_selTRIDTOP = event.parentNode.parentNode.getAttribute("id");
+    g_selTDIDTOP = event.getAttribute("id");
     var sDate = event.getAttribute("id").substring(10, 20);
     date = sDate;
     getScheduleList_Top(date, pMode);
@@ -735,7 +725,7 @@ function MiniDataBindTop(oAppointment) {
     	if ($("#"+"TDMINITOP_" + oAppointment.trID + "_Day").parent().children(".dataHave").length > 0) {
     		return;
     	} else {
-    		$("#"+"TDMINITOP_" + oAppointment.trID + "_Day").parent().append("<div class='dataHave' style='height:1px;line-height:1px'>·</div>");
+    		$("#"+"TDMINITOP_" + oAppointment.trID + "_Day").parent().append("<div class='dataHave' style='height:1px;line-height:1px' onclick='clickDayTop(\"TDMINITOP_" + oAppointment.trID + "_Day\")'>·</div>");
     	}
     }
 }
@@ -761,30 +751,27 @@ function clickDay(val01) {
     getScheduleList(date, pMode);
 }
 
-//function clickDayTop(val01) {
-//	var beforeId = $("#"+g_selTDID).parent().parent().attr("id"); 
-//	if (beforeId) {
-//		if (beforeId.indexOf('TOP') > -1) {
-//			if ($("#"+g_selTDID)) {
-//				$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
-//			}
-//			
-//			if ($("#"+g_selTRID)) {
-//				$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
-//			}
-//		}
-//	}	
-//    
-//	$("#"+val01).parent().css("background","lightgray").css("border-radius","20px").css("color","black");
-//	
-//    g_selTRID = $("#"+val01).parent().parent().attr("id");
-//    g_selTDID = val01;
-//
-//    var sDate = val01.substring(10, 20);
-//
-//    date = sDate;
-//    getScheduleList_Top(date, pMode);
-//}
+function clickDayTop(val01) {
+	
+	if ($("#"+g_selTDIDTOP)) {
+		$("#"+g_selTDIDTOP).parent().css("background-color", "").css("color", "");
+	}
+	
+	if ($("#"+g_selTRIDTOP)) {
+		$("#"+g_selTRIDTOP).parent().css("background-color", "").css("color", "");
+	}
+	
+    
+	$("#"+val01).parent().css("background","lightgray").css("border-radius","20px").css("color","black");
+	
+	g_selTRIDTOP = $("#"+val01).parent().parent().attr("id");
+	g_selTDIDTOP = val01;
+
+    var sDate = val01.substring(10, 20);
+
+    date = sDate;
+    getScheduleList_Top(date, pMode);
+}
 
 function mfGetUTFIsoDate(iYr, iMon, iDate, iHr, iMin) {
     var oDate = new Date();
