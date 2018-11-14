@@ -58,6 +58,7 @@
 	            		event_PollList(loadXMLString(result));
 	            	}
 	            });
+	            checkFlag = false;
 	        }
 	        
 		    function event_PollList(result) {
@@ -122,18 +123,19 @@
 		    }
 		    
 			// xml data -> input checkbox
+			var cnt;
 			function checkbox_header() {
 				var doc = window.document;
 				var th = doc.getElementById("AccessListView_TH_0");
 				var acList = doc.getElementById("AccessListView");
 				th.innerHTML = "<input type='checkbox' id = 'checkAll'></input>";
 				
-				var cnt = acList.children[1].childElementCount;
+				cnt = acList.children[1].childElementCount;
 				
 				var i = 0;
 				for(i;i<cnt;i++) {
 					var seq = acList.children[1].children[i].children[0].innerHTML;
-					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' class='checks' id='" + seq + "' value='" + seq +"'></input>";
+					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq +"'></input>";
 				}
 				checkboxHeaderClick();
 			}
@@ -261,8 +263,46 @@
 	            });
 	        }
 	        
+			var pollList = "";
+			function delete_poll() {
+				var delCnt = 0;
+				$("input:checkbox[name='checks']").each(function(){
+					if($(this).is(":checked")) {
+						pollList += this.value + ";"
+						delCnt = delCnt + 1;
+					}
+				});
+				
+				if(!pollList) {
+					alert("선택된 설문이 없습니다.");
+					return;
+				}
+				 
+				/*	if() {	// 진행중인 설문 삭제 할지 check // return; 	} 	*/
+				
+				// TotalCount
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezPersonal/delPoll.do",
+					async : false,
+					data : {"pollList" : pollList},
+					dataType : "text",
+					success : function(result) {
+						if (result == "OK") {
+							alert("<spring:message code = 'ezPersonal.t238' />");
+							// 페이지가 1보다 크고, data가 없을 경우
+							if((cnt - delCnt == 0) && pageNum > 1) {
+								pageNum = pageNum -1 ;
+							}
+							makelist();
+						} else {
+							alert("<spring:message code = 'ezPersonal.t237' />");
+						}
+					}
+				});
+				pollList = "";
+			}
 
-			
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
 		    }
@@ -458,7 +498,7 @@
 	        <div id="mainmenu">
 				<ul style="margin-top:15px">	            	
 	                <li class="important"><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
-	                <li><span onclick="alert('삭제')">삭제</span></li>
+	                <li><span onclick="delete_poll()">삭제</span></li>
 	            </ul>
 		  	</div>
 	        
