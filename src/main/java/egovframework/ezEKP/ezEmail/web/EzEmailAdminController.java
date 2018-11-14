@@ -2281,6 +2281,8 @@ public class EzEmailAdminController {
         logger.debug("defaultFontAndSize=" + defaultFontAndSize);
         
 		// 관리자 권한체크
+        
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		if (auth == null) {
 			return "cmm/error/adminDenied";
@@ -2303,6 +2305,7 @@ public class EzEmailAdminController {
 				// e.printStackTrace();
 			}
 		} 
+		model.addAttribute("editor", ezCommonService.getTenantConfig("EDITOR",userInfo.getTenantId()));
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("signNo", signNo);
 		model.addAttribute("content", content);
