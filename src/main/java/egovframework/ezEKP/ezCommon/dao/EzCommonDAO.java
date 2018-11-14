@@ -319,8 +319,6 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		}
 	}
 		
-		
-		
 	public void createJobMasterTable() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblUserJobMaster");
@@ -329,5 +327,15 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			
 			update("EzCommonDAO.createTblUserJobMaster");
 		}
+	}
+	
+	/*세션 사용 시간 get*/
+	public String getUseSession(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.getUseSession", map);
+	}
+	
+	/*세션 사용 row가 없을 시 생성*/
+	public void insertUseSession(Map<String, Object> map) {
+		insert ("EzCommonDAO.insertUseSession", map);
 	}
 }

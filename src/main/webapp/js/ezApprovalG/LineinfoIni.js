@@ -439,7 +439,7 @@ function InitListView() {
         	        var IniListData16 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA16").trim();
         	        var IniListData17 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA17").trim();
         	        var IniListData18 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA18").trim();
-        	        if(IniListData6!=null && IniListData6 != "" && IniListData6 != arr_userinfo[4] && orgCompanyID != "") { //2018-10-25 배현상, 사간겸직 조건 추가
+        	        if(IniListData6!=null && IniListData6 != "" && IniListData6 != arr_userinfo[4] && orgCompanyID != "" && pReDraftFlag != "REDRAFT") { //2018-10-25 배현상, 사간겸직 조건 추가
             	    	arr_userinfo[4] = IniListData6;
             	    }
         	        var curaprline = "";

@@ -2570,7 +2570,7 @@ function SaveDraftDocInfo()
                 createNodeAndAppandNodeText(xmlpara,  objSub, objSub2 , "SIGNTYPE", SignType[i]);
                 createNodeAndAppandNodeText(xmlpara,  objSub, objSub2 , "SIGNNAME", SignName[i]);
                 createNodeAndAppandNodeText(xmlpara,  objSub, objSub2 , "CONTENT", SignContent[i]);
-                createNodeAndAppandNodeText(xmlpara, objNode, subNode, "ORGCOMPANYID", orgCompanyID);
+                createNodeAndAppandNodeText(xmlpara, objSub, objSub2, "ORGCOMPANYID", orgCompanyID);
 			
             }  		
             xmlhttp.open ("Post","/ezApprovalG/setSignInfo.do",false);
