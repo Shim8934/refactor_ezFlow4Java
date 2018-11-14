@@ -1941,17 +1941,16 @@ function SReAprLineSingMapping(ret) {
     var OrderStatName = new Array();
     var OrderJobtitle = new Array();
     var OrderReason = new Array();
-
-//    if (ret[5] == undefined) {
-//        xmlKuljea = ret[0];
-//        xmlReDraft = ret[2];
-//        DrawAutoAprLine(ret[0], pDraftFlag);
-//    }
-//    else {
-    xmlKuljea = ret[1];
-    xmlReDraft = ret[5];
-    DrawAutoAprLine(ret[1], pDraftFlag);
-//    }
+    var reMappingSign = false;
+    
+    if (typeof ret == "object") {
+    	xmlKuljea = ret[1];
+    	xmlReDraft = ret[5];
+    	DrawAutoAprLine(ret[1], pDraftFlag);
+    } else {
+    	reMappingSign = true;
+    	xmlKuljea = ret;
+    }
 
     var xmldom = createXmlDom();
     xmldom = loadXMLString(xmlKuljea);
@@ -1977,26 +1976,40 @@ function SReAprLineSingMapping(ret) {
     }
 
     for (i = 0; i < count; i++) {
-        var dataNodes = GetChildNodes(objNodes[i]);
-        var KyljeaOrder = getNodeText(dataNodes[0]);
-        var KyljeaName = getNodeText(dataNodes[1]);
-        var KyljeaDeptName = getNodeText(dataNodes[3]);
-        var KyljeaType = getNodeText(dataNodes[16]);
-        var KyljeaTypeName = getNodeText(dataNodes[4]);
-        var KyljeaStat = getNodeText(dataNodes[17]);
-        var KyljeaStatName = getNodeText(dataNodes[5]);
-        var KyljeaJobtitle = getNodeText(dataNodes[2]);
-        var ReasonDoNotApprov = getNodeText(dataNodes[12]);
-        
-        OrderType[KyljeaOrder] = KyljeaType;
-        OrderTypeName[KyljeaOrder] = KyljeaTypeName;
-        OrderName[KyljeaOrder] = KyljeaName;
-        OrderDept[KyljeaOrder] = KyljeaDeptName;
-        OrderStat[KyljeaOrder] = KyljeaStat;
-        OrderStatName[KyljeaOrder] = KyljeaStatName;
-        OrderJobtitle[KyljeaOrder] = KyljeaJobtitle;
-        OrderReason[KyljeaOrder] = ReasonDoNotApprov;
-        lastno = i;
+    	var dataNodes = GetChildNodes(objNodes[i]);
+    	if (reMappingSign) {
+    		var KyljeaOrder = SelectSingleNodeValue(dataNodes[0], "VALUE").trim();
+    		
+    		OrderType[KyljeaOrder] = SelectSingleNodeValue(dataNodes[0], "DATA11").trim();
+    		OrderTypeName[KyljeaOrder] = SelectSingleNodeValue(dataNodes[4], "VALUE").trim();
+    		OrderName[KyljeaOrder] = SelectSingleNodeValue(dataNodes[1], "VALUE").trim();
+    		OrderDept[KyljeaOrder] = SelectSingleNodeValue(dataNodes[3], "VALUE").trim();
+    		OrderStat[KyljeaOrder] = SelectSingleNodeValue(dataNodes[0], "DATA12").trim();
+    		OrderStatName[KyljeaOrder] = SelectSingleNodeValue(dataNodes[5], "VALUE").trim();
+    		OrderJobtitle[KyljeaOrder] = SelectSingleNodeValue(dataNodes[2], "VALUE").trim();
+    		OrderReason[KyljeaOrder] = SelectSingleNodeValue(dataNodes[0], "DATA7").trim();
+    		lastno = i;
+    	} else {
+    		var KyljeaOrder = getNodeText(dataNodes[0]);
+    		var KyljeaName = getNodeText(dataNodes[1]);
+    		var KyljeaDeptName = getNodeText(dataNodes[3]);
+    		var KyljeaType = getNodeText(dataNodes[16]);
+    		var KyljeaTypeName = getNodeText(dataNodes[4]);
+    		var KyljeaStat = getNodeText(dataNodes[17]);
+    		var KyljeaStatName = getNodeText(dataNodes[5]);
+    		var KyljeaJobtitle = getNodeText(dataNodes[2]);
+    		var ReasonDoNotApprov = getNodeText(dataNodes[12]);
+    		
+    		OrderType[KyljeaOrder] = KyljeaType;
+    		OrderTypeName[KyljeaOrder] = KyljeaTypeName;
+    		OrderName[KyljeaOrder] = KyljeaName;
+    		OrderDept[KyljeaOrder] = KyljeaDeptName;
+    		OrderStat[KyljeaOrder] = KyljeaStat;
+    		OrderStatName[KyljeaOrder] = KyljeaStatName;
+    		OrderJobtitle[KyljeaOrder] = KyljeaJobtitle;
+    		OrderReason[KyljeaOrder] = ReasonDoNotApprov;
+    		lastno = i;
+    	}
     }
 
     if (pDraftFlag != "SUSIN") {

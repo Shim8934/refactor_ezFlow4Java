@@ -656,6 +656,8 @@
 	    			}
 	    			return;
 	    		}
+		        
+		        redrawMappingSign();
 		        UpdateLineHistory();
 		        if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
@@ -1014,6 +1016,8 @@
 		    			return;
 		    		}
 		            
+		            redrawMappingSign();
+		            
 		            signInfo = putBansongSign(); // '서명' 관련 정보 출력
 
 		            var RtnVal = SaveApproveInfo("2");
@@ -1099,6 +1103,8 @@
 		    			}
 		    			return;
 		    		}
+		        	
+		        	redrawMappingSign();
 		        	
 		            UpdateLineHistory();
 		            var RtnVal = SaveApproveInfo("3");
@@ -1621,6 +1627,9 @@
 		            catch (e) {
 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
 		            }
+		        } else if (ret != undefined && ret[0] == "DUPL") {
+		        	window.returnValue = "CLOSE";
+	    			btnClose_onclick();
 		        }
 		    }
 		
@@ -1682,6 +1691,7 @@
 		            message.Set_EditorInputBodyHTML(modifiOrgBody);
 		            message.Set_HtmlDocument();
 		            noFieldsAvailable = true;
+			        btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t44'/>";
 		        }
 		        message.SetEditable(false);
 		        chkBtnConfirm("2");
@@ -1757,24 +1767,126 @@
 		    function checkAprState() {
 		    	var result = "";
 		    	
-		    	$.ajax({
+		    	if (approvalFlag == "S") {
+			    	$.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/checkAprState.do",
+			    		data : {
+			    			docID : pDocID,
+			    			docState : docState,
+			    			userID : OrgAprUserID,
+			    			aprMemberSN : wAprMemberSN,
+			    			orgCompanyID : orgCompanyID
+			    		},
+			    		success : function(text) {
+			    			result = text;
+			    		}
+			    	});
+		    	}
+		    	
+		    	return result == "FALSE" ? true : false;
+		    }
+		    
+		    function getAprLineList(type) {
+		    	var result = "";
+		        var pMode = "";
+		    	if (docState == "017") {
+		    		  $.ajax({
+		    	 			type : "POST",
+		    	 			dataType : "text",
+		    	 			async : false,
+		    	 			url : "/ezApprovalG/getLineMode.do",
+		    	 			data : {
+		    	 					docID : pDocID
+		    	 					},
+		    	 			success: function(xml){
+		    	 					pMode = xml;
+		    	 			}        			
+		    		  });
+		    	}
+		    	
+		    	if (pMode != "END") {
+			        $.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/aprLineRequest.do",
+			    		data : {
+			    				docID    : pDocID, 
+			    				userID 	 : "",
+			    				formID   : "",
+			    				orgCompanyID : orgCompanyID,
+			    				isUsed   : type,
+			    				mode     : pMode
+			    				},
+			    		success: function(xml){
+			    			result = xml;
+			    		}        			
+			    	});
+		    	} else {
+		    		return pMode;
+		    	}
+		        return result;
+		    }
+		    
+		    function getReceiptList() {
+		    	var result = "";
+		        
+		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
-		    		url : "/ezApprovalG/checkAprState.do",
+		    		url : "/ezApprovalG/aprDeptRequest.do",
 		    		data : {
 		    			docID : pDocID,
-		    			docState : docState,
-		    			userID : OrgAprUserID,
-		    			aprMemberSN : wAprMemberSN,
 		    			orgCompanyID : orgCompanyID
 		    		},
-		    		success : function(text) {
-		    			result = text;
-		    		}
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		}	
 		    	});
-		    	
-		    	return result == "FALSE" ? true : false;
+		        
+		        var rows = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
+		        
+		        var xmlpara = createXmlDom();
+		        var objRoot, objRow, objDocinfoNode;
+		        objRoot = createNodeInsert(xmlpara, objRoot, "ROWS");
+		        
+		        for (var i = 0; i < rows.length; i++) {
+		        	var dataNodes = GetChildNodes(rows[i]);
+			        objRow = createNodeAndAppandNode(xmlpara, objRoot, objRow, "ROW");
+					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[0], "VALUE").trim());
+					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTID", SelectSingleNodeValue(dataNodes[0], "DATA1").trim());
+					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTNAME", SelectSingleNodeValue(dataNodes[0], "DATA2").trim());
+					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "EXTRECEPTYN", SelectSingleNodeValue(dataNodes[0], "DATA3").trim());
+					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "PROCESSYN", SelectSingleNodeValue(dataNodes[0], "DATA4").trim());
+					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "CANEDITYN", SelectSingleNodeValue(dataNodes[0], "DATA5").trim());
+					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "EMAIL", SelectSingleNodeValue(dataNodes[0], "DATA6").trim());
+					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "JOBTITLE", SelectSingleNodeValue(dataNodes[0], "DATA9").trim());
+					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTNAME1", SelectSingleNodeValue(dataNodes[0], "DATA10").trim());
+					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTNAME2", SelectSingleNodeValue(dataNodes[0], "DATA11").trim());
+		        }
+				
+		        return getXmlString(xmlpara);
+		    }
+		    
+		    function redrawMappingSign() {
+		    	if (approvalFlag == "S") {
+			        var reMappingAprLine = getAprLineList("${isUsed}");
+			        
+			        //참조가 END인 경우 종료된 문서임으로 굳이 sign이나 수신처를 remap할 필요가 없다.
+			        if (reMappingAprLine != "END") {
+				        SReAprLineSingMapping(reMappingAprLine);
+				        
+				        if (pSuSinFlag == "Y") {
+					        var reMappingReceipt = getReceiptList();
+					        
+					        setRecevInfo(reMappingReceipt);
+				        }
+			        }
+		        }
 		    }
 		</script>
 	</head>

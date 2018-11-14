@@ -1088,6 +1088,23 @@
 				TENANT_ID = #v_TENANTID#
 	   	]]>
 	</delete>
+	<update id="EzScheduleDAO.updateDragSchedule" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_schedule
+			set
+				modifierid = #v_MODIFIERID#,
+				modifiername = #v_MODIFIERNAME#,
+				modifiername2 = #v_MODIFIERNAME2#,
+				modifydate = utc_timestamp(),
+				startdate = #v_STARTDATE#,
+				enddate = #v_ENDDATE#
+			where
+				(scheduleid = #v_SCHEDULEID# or parentid = #v_SCHEDULEID#)
+			and
+				tenant_id = #v_TENANTID#
+		]]>
+	</update>
 
 </sqlMap>
 

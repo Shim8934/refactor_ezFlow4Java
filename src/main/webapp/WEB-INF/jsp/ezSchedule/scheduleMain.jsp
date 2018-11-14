@@ -14,15 +14,18 @@
         	var UserOffset = "<c:out value='${pOffset}'/>";
         </script>      
         <script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>        
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
-        <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<!-- 2018-11-05 김혜정 -->
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarDataPro_Cross.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarView_Cross.js')}"></script>
 	    <!-- data picker-->
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<%-- <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script> --%>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<!-- 2018-06-12 구해안 -->
@@ -511,11 +514,22 @@
 
 		        var sdate, edate, datetype;
 
+		        // 2018-11-09 김민성 - 일보기/주보기일 때 종일일정 클릭시 시간 종일로 변경
+		        // 일보기, 주보기의 시간대 클릭
 		        if (GetAttribute(srcEl, "dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
 		            datetype = "1";
 		            sdate = GetAttribute(srcEl, "dispTime");
 		            edate = sdate.replace(":00:", ":30:");
-		        } else {
+		        } 
+		        // 월보기 클릭
+		        else if(GetAttribute(srcEl, "id").indexOf("ALL") < 0) {
+		        	datetype = "1";
+		        	// 시간데이터가 없는 경우 임의 시간
+		        	sdate = GetAttribute(srcEl, "dispDate") + " 00:00:00";
+		            edate = GetAttribute(srcEl, "dispDate") + " 23:59:00";
+		        }
+		        // 일보기, 주보기의 종일일정 클릭
+		        else {
 		            datetype = "2";
 		            sdate = GetAttribute(srcEl, "dispDate") + " 00:00:00";
 		            edate = GetAttribute(srcEl, "dispDate") + " 23:59:00";
