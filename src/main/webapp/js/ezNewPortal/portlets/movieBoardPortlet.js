@@ -1,5 +1,5 @@
 /* 2018-11-12 홍승비 - 동영상게시판 js 작성(포토게시판 js 카피 후 수정) */
-
+/*
 function photoBoardMovePage(event) {
 	var isNext = event.data.isNext;
 	
@@ -85,6 +85,7 @@ function moviePreStop(elem) {
 	elem.pause();
 	elem.currentTime = 0;
 }
+*/
 
 // 동영상 하나만 띄워줄 경우의 이벤트 핸들러
 var video = document.getElementById("mainVideo");
@@ -106,9 +107,11 @@ function videoHandler(e) {
 		layDiv.classList.add("sortablePortlet");
 	}
 }
-//Add event listeners
-video.addEventListener('playing', videoHandler, false);
-video.addEventListener('pause', videoHandler, false);
+//동영상이 있는 경우에만 이벤트 리스너/핸들러 추가
+if (video != null) {
+	video.addEventListener('playing', videoHandler, false);
+	video.addEventListener('pause', videoHandler, false);
+}
 
 function moviePlay() {
 	video.play();
