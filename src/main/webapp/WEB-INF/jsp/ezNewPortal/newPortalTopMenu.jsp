@@ -16,27 +16,33 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>		
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+		<style type="text/css">
+			#editBtn {
+				float: right;
+			}
+			
+			#editBtn img {
+				width: 19px;
+				height: 19px;
+				margin-right: 10px;
+				margin-top: 8px;
+				cursor: pointer;
+			}
+			
+			#editMenuBtn {
+				display: none;
+			}
+			
+			.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
+			
+			#logoUrl {width:106px; height:42px;}
+			
+			.icon_topmenu frame_set {}
+		</style>
 	</head>
 	<body>
-	<header id="top">
-	</header>
-		<style type="text/css">
-		#editBtn {
-			float: right;
-		}
-		#editBtn img {
-			width: 19px;
-			height: 19px;
-			margin-right: 10px;
-			margin-top: 8px;
-			cursor: pointer;
-		}
-		#editMenuBtn {
-			display: none;
-		}
-		.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
-		#logoUrl {width:106px; height:42px;}
-		</style>
+		<header id="top"></header>
+		
 		<script type="text/javascript">
 		
 		var newPortalTopMenu = {
@@ -170,6 +176,7 @@
 				str += '<ul class="util">';
 				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="관리자"></span></li>';
 				str += '<li><span class="icon_topmenu util_employee_search" id="util_employee_search" title="직원조회"></span></li>';
+				str += '<li><span class="icon_topmenu frame_set" id="frame_set" title="프레임설정"></span></li>';
 				str += '<li><span class="icon_topmenu util_set" id="util_set" title="환경설정"></span></li>';
 				str += '<li><span class="icon_topmenu util_help" id="util_help" title="도움말"></span></li>';
 				str += '<li><span class="icon_topmenu util_logout" id="util_logout" title="로그아웃"></span></li>';
