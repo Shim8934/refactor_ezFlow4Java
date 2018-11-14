@@ -929,7 +929,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	public boolean checkExtrattrIsNull(String str) {
-		if (str.equals("") || str == null) {
+		if (str == null || str.equals("")) {
 			return true;
 		} else {
 			return false;
