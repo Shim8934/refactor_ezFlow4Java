@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -138,6 +139,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	/**
 	 * 포탈 탑메뉴 호출 함수
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/newPortalTopMenu.do")
 	public String portalTopMenu(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalTopMenu Start");
@@ -152,10 +154,37 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			
 			logger.debug("TopMenu : " + data.toJSONString());
 			
+			JSONArray popupNotiList = (JSONArray) data.get("popupNotiList");
+			int popupNotiListCount = popupNotiList.size();
+			JSONArray popupNotiListAfter = new JSONArray();
+			popupNotiListAfter.addAll(popupNotiList);
+			
+			String cookieValue = "";
+			
+			for (int i = 0; i < popupNotiListCount; i++) {
+				JSONObject popupNoti = (JSONObject) popupNotiList.get(i);
+				
+				int itemSeq = Integer.parseInt(popupNoti.get("itemSeq").toString());
+				Cookie[] cookies = req.getCookies();
+				
+				if (cookies != null) {
+					for (int j=0; j<cookies.length; j++) {
+						if (cookies[j].getName().equals("POPUP_" + itemSeq + "_" + userId)) {
+							cookieValue = cookies[j].getValue();
+						}
+					}
+					if (cookieValue != null && !cookieValue.equals("")) {
+						popupNotiListAfter.remove(popupNoti);
+					}
+				}
+			}
+			
+			
+			
 			model.addAttribute("logoUrl", data.get("logoUrl"));
 			model.addAttribute("roleInfo", data.get("roleInfo"));
 			model.addAttribute("menuList", data.get("menuList"));
-			model.addAttribute("popupNotiList", data.get("popupNotiList"));
+			model.addAttribute("popupNotiList", popupNotiListAfter);
 			if (data.get("roleInfo").toString().equalsIgnoreCase("admin")) {
 				model.addAttribute("utilAdminUrl", data.get("utilAdminUrl"));
 			}
@@ -541,7 +570,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			for (int i = 0; i < themeListCount; i++) {
 				JSONObject theme = (JSONObject) themeList.get(i);
 				String themeId = theme.get("themeId").toString();
-				System.out.println((boolean)theme.get("themeUsed"));
+				
 				if ((boolean)theme.get("themeUsed")) {
 					usedTheme = themeId;
 					themeList.remove(i);
