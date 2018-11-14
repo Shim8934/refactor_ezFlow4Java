@@ -186,19 +186,15 @@ function MailPreviewResize(e) {
 // 수아 수정 (매개변수 fromE추가)
 function new_mail_onclick(fromE) {
 	// 수아 수정
-	//var MsgTo = "";
 	var msgto = "";
-	
-
 	if (useMailWriteSenderClick == "YES" && typeof fromE != "undefined" && $(fromE).attr("data-msgto") != "" && fromE.innerHTML != "") {
 		msgto = $(fromE).attr("data-msgto");
 	}
 	
-	var msgStr = msgto !== "" ? msgto : "" ;
-	//pUrl = "/ezEmail/mailWrite.do?cmd=NEW" + msgStr;
-	var myForm = document.mailWriteSenderClick;
-	
+	var msgStr = msgto !== "" ? "&msgto=" + msgto : "" ;
+	pUrl = "/ezEmail/mailWrite.do?cmd=NEW" + msgStr;
 	//pUrl = "/ezEmail/mailWrite.do?cmd=NEW"
+	
 	/*if (CrossYN() || pNoneActiveX == "YES") {
         pUrl = "/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW";
     }
@@ -208,13 +204,20 @@ function new_mail_onclick(fromE) {
         else
             pUrl = "/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW";
     }*/
+	
+	var newwin = GetOpenWindow(pUrl, "", 890, 840, "yes");
+    newwin.focus();
+	
+	/* post 방식        mailWriteSender -> mailList.jsp
+	 * var myForm = document.mailWriteSenderClick;
+	
     var newwin = GetOpenWindow("", "mailWriteSender", 890, 840, "yes");
-    myForm.target = "mailWriteSender";
+    myForm.target = "mailWriteSender"; 
     myForm.msgto.value = msgStr;
     myForm.submit();
     
     newwin.focus();
-    newwin.name = "";
+    newwin.name = "";*/
 }
 function ReSend(pURL, pEmail) {
     var pheight = window.screen.availHeight;

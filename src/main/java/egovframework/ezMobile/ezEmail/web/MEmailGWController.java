@@ -187,6 +187,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", info.getTenantId());
 			
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 			Locale locale = new Locale(ld);
@@ -208,6 +209,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				subMailFolder = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);
 			}
+			LOGGER.debug("subMailFolder size = " + subMailFolder.size());
 			
 			JSONObject folder = null;
 			
@@ -230,10 +232,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				mailFolderList.add(folder);
 			}
+			JSONObject data = new JSONObject();
+			data.put("mailFolderList", mailFolderList);
+			data.put("useSharedMailbox", useSharedMailbox);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", mailFolderList);			
+			result.put("data", data);			
 		} catch (Exception e) {
 			e.printStackTrace();
 			
@@ -250,6 +255,145 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		return result;
 	}
+	
+	/**
+	 * 모바일 G/W 이메일 [GET] 왼쪽 슬라이드 메뉴에 공유 편지함 목록 조회
+	 */
+	/*@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/shared-folders-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object mMailSharedFolderList(HttpServletRequest request, @PathVariable String userId) {
+		LOGGER.debug("MOBILE G/W MAIL mMailSharedFolderList started.");		
+		LOGGER.debug("userId=" + userId);
+		
+		JSONObject result = new JSONObject();
+		IMAPAccess ia = null;
+		
+		try {
+			JSONObject data = new JSONObject();
+			JSONArray shareMailInfoList = new JSONArray();
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			
+			List<Map<String, String>> sharedMailBoxList = ezEmailService.getUserSharedMailboxList(userId, info.getTenantId());
+			
+			for (int i = 0; i < sharedMailBoxList.size(); i++) {
+				JSONObject shareMailInfo = new JSONObject();
+				JSONArray mailFolderList = new JSONArray();
+				String shareId = sharedMailBoxList.get(i).get("shareId");
+				String deletePermission = sharedMailBoxList.get(i).get("deletePermission");
+				String sendPermission = sharedMailBoxList.get(i).get("sendPermission");
+				String shareName = sharedMailBoxList.get(i).get("shareName");
+				String mail = sharedMailBoxList.get(i).get("mail");
+				String compId = sharedMailBoxList.get(i).get("compId");
+				String userEmail = shareId + "@" + domainName;
+				String password = jspw;
+
+				String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+				Locale locale = new Locale(ld);
+
+				LOGGER.debug("locale : ," + locale.getDisplayLanguage());
+
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+				List<Folder> subMailFolder = null;
+
+				LOGGER.debug("getTopLevelFolders");
+
+				String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", info.getTenantId());
+				boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
+
+				subMailFolder = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);
+
+				JSONObject folder = null;
+				for (int j = 0; j < subMailFolder.size(); j++) {
+					Folder f = subMailFolder.get(j);
+
+					String displayName = ezEmailUtil.getDisplayNameFromFolderId(f.getName(), locale);
+
+					folder = new JSONObject();
+
+					folder.put("name", displayName);
+					folder.put("fullName", f.getFullName());
+					folder.put("unReadCount", f.getUnreadMessageCount());
+
+					if (f.list().length > 0) {
+						folder.put("hasSub", true);
+					} else {
+						folder.put("hasSub", false);
+					}
+					mailFolderList.add(folder);
+				}
+
+				shareMailInfo.put("mailFolderList", mailFolderList);
+				shareMailInfo.put("shareId", shareId);
+				shareMailInfo.put("deletePermission", deletePermission);
+				shareMailInfo.put("sendPermission", sendPermission);
+				shareMailInfo.put("shareName", shareName);
+				shareMailInfo.put("mail", mail);
+				shareMailInfo.put("compId", compId);
+				shareMailInfoList.add(shareMailInfo);
+			}
+			data.put("shareMailInfoList", shareMailInfoList);
+
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");			
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		LOGGER.debug("MOBILE G/W MAIL mMailSharedFolderList ended.");
+		
+		return result;
+	}*/
+	
+	/**
+	 * 유저의 공유 사서함 권한 가져오기
+	 */
+	/*@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/share/{shareId:.+}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getShareMailBoxPermissionInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable String shareId) {		
+		LOGGER.debug("MOBILE G/W MAIL getShareMailBoxPermissionInfo started.");
+		LOGGER.debug("userId=" + userId + "shareId=" + shareId);
+		
+		JSONObject result = new JSONObject();
+        try {
+        	String serverName = request.getHeader("x-user-host");
+    		MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+    		MailSharedMailboxUserVO shareMailBoxPermissionInfo = ezEmailService.getSharedMailboxPermissionInfo(shareId, info.getTenantId(), userId);
+			
+        	JSONObject permissionInfo = new JSONObject();;
+        	permissionInfo.put("shareId", shareMailBoxPermissionInfo.getShareId());
+        	permissionInfo.put("deletePermission", shareMailBoxPermissionInfo.getDeletePermission());
+        	permissionInfo.put("sendPermission", shareMailBoxPermissionInfo.getSendPermission());
+        	permissionInfo.put("shareName", shareMailBoxPermissionInfo.getShareName());
+            
+            result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", permissionInfo);	
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");	
+		
+		}
+        
+		LOGGER.debug("MOBILE G/W MAIL getShareMailBoxPermissionInfo ended.");
+		
+		return result;
+	}*/
 	
 	/**
 	 * 모바일 G/W 이메일 [GET] (받은,보낸,임시,지운,개인,기타) 편지함 메일 리스트
@@ -385,7 +529,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
         	startNo = Integer.parseInt(start);
 			endNo = Integer.parseInt(end);
-			int listCount = endNo - startNo + 1;
+			int listCount = endNo - startNo;
 			
 			if (listCount < 0) {
 				listCount = 0;
@@ -728,9 +872,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						subject = ezEmailUtil.getSubject(orgMessage);
 						subject = (subject != null) ? subject : "";
 						
+						Map<String, Object> extraMap = new HashMap<String, Object>();
+						extraMap.put("shareId", userId);
+						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);					
 						tempBody = bodyInfoList.get(0);
 						
 						if (attachedFileList.size() > 0) {
@@ -807,9 +954,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        		
 		        		subject = orgMessage.getSubject();
 						subject = (subject != null) ? subject : "";
-		        		
+						
+						Map<String, Object> extraMap = new HashMap<String, Object>();
+						extraMap.put("shareId", userId);
+						
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);					
 						bodyValue = bodyInfoList.get(0);
 		        		
 		        		if (attachedFileList.size() > 0) {
@@ -1004,9 +1154,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						
 						sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p><br/><br/>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
 						
+						Map<String, Object> extraMap = new HashMap<String, Object>();
+						extraMap.put("shareId", userId);
+						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);					
 						String tmphtmlbody = bodyInfoList.get(0);
 			            
 			            bodyValue = sb.toString() + tmphtmlbody;
@@ -3147,8 +3300,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					
 					mail.put("flag", flagged);
 					mail.put("folderName", f.getName());
-															
-					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, attachedFileList, false, true, locale, null, null);
+					
+					Map<String, Object> extraMap = new HashMap<String, Object>();
+					extraMap.put("mobile", true);
+					extraMap.put("shareId", userId);
+					
+					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, attachedFileList, locale, extraMap);
 
 					double size = Double.parseDouble(bodyInfoList.get(2));
 					String strSize = ezEmailUtil.getSizeWithUnit(size);
@@ -5364,7 +5521,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				Element row = (Element) organRow.item(i);
 				NodeList organList = row.getElementsByTagName("CELL");
 				Element organCell = (Element) organList.item(0);
-				if(organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim() != "" || organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim() != null){
+				if (organCell.getElementsByTagName("DATA6").item(0) != null 
+						&& !organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim().equals("")) {
 					jsonObject = new HashMap<String, Object>();
 					jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
 					jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
@@ -5381,7 +5539,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				Element row = (Element) dlRow.item(i);
 				NodeList dlList = row.getElementsByTagName("CELL");
 				Element dlCell = (Element) dlList.item(0);
-				if(dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim() != "" || dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim() != null){
+				if (dlCell.getElementsByTagName("DATA3").item(0) != null 
+						&& !dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
 					jsonObject = new HashMap<String, Object>();
 					jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
 					jsonObject.put("title", "");
@@ -5396,7 +5555,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			NodeList addressRow = addressXML.getElementsByTagName("ROW");
 			for (int i = 0; i < addressRow.getLength(); i++) {
 				Element row = (Element) addressRow.item(i);
-				if(row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim() != "" || row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim() != null){
+				if(row.getElementsByTagName("SEMAIL").item(0) != null
+						&& !row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim().equals("")){
 					jsonObject = new HashMap<String, Object>();
 					jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
 					jsonObject.put("title", "");
