@@ -1011,7 +1011,7 @@ SELECT
 	A.theme_id,
 	A.theme_name,
     A.theme_content,
-    B.theme_used,
+    if(isnull(D.used_theme),  0, 1) as theme_used,
     B.theme_default,
     C.frame_id as frame_default
 FROM
@@ -1024,6 +1024,12 @@ JOIN
 	TBL_PORTAL_FRAME_COMP C
 ON
 	B.theme_id = C.theme_id
+LEFT OUTER JOIN
+	TBL_PORTAL_THEME_USER D
+ON
+	A.theme_id = D.used_theme
+AND
+	D.user_id = #userId#
 WHERE
 	B.company_id = #companyId#
 AND

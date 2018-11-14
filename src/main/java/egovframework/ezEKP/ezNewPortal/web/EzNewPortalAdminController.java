@@ -1078,6 +1078,39 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezNewPortal/resetMenuOrder.do")
+	@ResponseBody
+	public void resetMenuOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("resetMenuOrder started.");
+
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+		
+		if (user == null) {
+			LOGGER.debug("resetMenuOrder accessDenied.");
+			
+		} else {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String userId = userInfo.getId();
+			String companyId = paramMap.get("companyId").toString();
+			
+			//default order가져오기 (mode가 reset인 경우 default order로 초기화)			
+			paramMap.put("mode", "reset");
+			paramMap.put("userId", userId);
+			
+			JSONObject jsonParam = new JSONObject();
+			jsonParam.put("userId", userId);
+			jsonParam.put("mode", "reset");
+			
+			String url = "/rest/admin/ezPortal/menus/order/companies/" + companyId;
+			
+			commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, request, "patch", jsonParam);
+			
+			
+			LOGGER.debug("resetMenuOrder ended.");
+		}
+	}
+		
 	/**
 	 * 슬라이드 이미지 설정 화면
 	 * @param loginCookie

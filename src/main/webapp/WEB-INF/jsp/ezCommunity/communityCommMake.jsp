@@ -51,7 +51,8 @@
 	            selB = parseInt(document.make.cCateB[document.make.cCateB.selectedIndex].value);
 	            selC = parseInt(document.make.cCateC[document.make.cCateC.selectedIndex].value);
 
-	            if (selA == 0 && selB == 0 && selC == 0) {
+	            //if (selA == 0 && selB == 0 && selC == 0) {
+	            if (selA == 0) {
 	                alert("<spring:message code='ezCommunity.t4' />");
 	                make.cCateA.focus();
 	                return;
@@ -231,8 +232,8 @@
 	                <th style="height:40px;"><spring:message code='ezCommunity.t11' /></th>
 	                <td style="white-space:nowrap;border-right:0px"><span id="idSpan">${idSpanValue }</span></td>
 	                <td style="padding: 5px;padding-right:25px;white-space:nowrap;border-left:0px">
-	                	<div><spring:message code='ezCommunity.t1013' /></div>
-	                	<div style="margin-top:7px"><spring:message code='ezCommunity.t1014' /></div>
+	                	<%-- <div><spring:message code='ezCommunity.t1013' /></div> --%>
+	                	<div><spring:message code='ezCommunity.t1014' /></div>
 	                </td>
 	            </tr>
 	            <tr style="height:60px">

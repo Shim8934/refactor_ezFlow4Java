@@ -534,12 +534,16 @@
 			
 			request.onerror = function() {}
 			
+			if (typeof menuAuths == "string") {
+				menuAuths = JSON.parse(menuAuths);
+			}
+			
 			var data = JSON.stringify({
 				menuId : menuId,
 				companyId : companyValue,
 				menuNames : menuNameList,
 				menuInfo : menuInfo, 
-				menuAuths : JSON.parse(menuAuths)
+				menuAuths : menuAuths
 			});
 			 
 			request.send(data);
@@ -710,13 +714,17 @@
 				getMenus();
 			}
 			
+			if (typeof menuAuths == "string") {
+				menuAuths = JSON.parse(menuAuths);
+			}
+			
 			request.onerror = function() {}
 			
 			var data = JSON.stringify({
 				companyId : companyValue,
 				menuNames : menuNameList,
 				menuInfo : menuInfo,
-				menuAuths : JSON.parse(menuAuths)
+				menuAuths : menuAuths
 			});
 			 
 			request.send(data);
@@ -782,7 +790,7 @@
 			request.open('POST', '/admin/ezNewPortal/updateMenuOrder.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
-			request.onload = function() { getMenus(); }
+			request.onload = function() { }
 			
 			request.onerror = function() {}
 			

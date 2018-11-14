@@ -67,7 +67,7 @@ public interface EzNewPortalService {
 	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow);
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month);
 	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId);
-	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId);
+	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId);
 	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId);
 	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId);
 	public void deleteUserThemeSetting(String userId, int tenantId, String companyId);
@@ -84,7 +84,7 @@ public interface EzNewPortalService {
 	public int getTnenantIdByServerName(String serverName);
 	public void updateCompanyDefaultTheme(int themeId, String companyId, int tenantId);
 	public void deleteCompanyLogo(String companyId, int tenantId, String logoType);
-	
+	public void resetCompanyMenuOrder(String companyId, int tenantId);
 	/**
 	 * 이효진
 	 */
@@ -94,7 +94,7 @@ public interface EzNewPortalService {
 	 * 테마목록조회
 	 * @param admin true(admin) false(user)
 	 */
-	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId) throws Exception;
+	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId) throws Exception;
 	/**
 	 * 관리자 테마상세정보조회
 	 */

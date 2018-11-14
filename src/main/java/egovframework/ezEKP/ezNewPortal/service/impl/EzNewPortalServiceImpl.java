@@ -749,11 +749,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 
 	@Override
-	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId) {
+	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId) {
 		LOGGER.debug("getUserThemeList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
+		map.put("userId", userId);
 		
 		LOGGER.debug("getUserThemeList ended.");
 		return ezNewPortalDAO.getUserThemeList(map);
@@ -1028,6 +1029,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getBoardPortletInfo(map);
 		
 	}
+	
+	@Override
+	public void resetCompanyMenuOrder(String companyId, int tenantId) {
+		LOGGER.debug("resetCompanyMenuOrder started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezNewPortalDAO.resetCompanyMenuOrder(map);
+		LOGGER.debug("resetCompanyMenuOrder ended.");
+	}
 	/**
 	 * 이효진
 	 */
@@ -1121,7 +1133,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId) throws Exception {
+	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId) throws Exception {
 		LOGGER.debug("getThemes started. admin = " + admin + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		List<ThemeInfoVO> list = null;
@@ -1129,7 +1141,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		if (admin) {
 			list = getCompanyThemes(companyId, tenantId);
 		} else {
-			list = getUserThemeList(companyId, tenantId);
+			list = getUserThemeList(companyId, tenantId, userId);
 		}
 		
 		LOGGER.debug("getThemes ended.");
