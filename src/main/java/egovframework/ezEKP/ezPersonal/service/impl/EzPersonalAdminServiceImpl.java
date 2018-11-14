@@ -11,6 +11,7 @@ import java.util.TimeZone;
 
 import javax.annotation.Resource;
 
+import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -594,8 +595,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		List<PersonalSliderImageVO> list = ezPersonalAdminDAO.getSliderList(map);
 		
 		StringBuilder result = new StringBuilder();
-		
-		// 18-05-10 김민성 - 관리자 > 슬라이드 이미지 url 추가
+		/*// 18-05-10 김민성 - 관리자 > 슬라이드 이미지 url 추가
 		if (sliderID.equals(" ")) {
 			result.append("<LISTVIEWDATA>");
 			result.append("<HEADERS>");
@@ -617,6 +617,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				result.append("<DATA5>" + vo.getSn() + "</DATA5>");
 				result.append("</CELL>");
 				
+				logger.debug("resulttest: "+commonUtil.cleanValue(vo.getSliderID())+"||"+commonUtil.cleanValue(vo.getImagePath().trim())+"||"+commonUtil.cleanValue(vo.getRegUserID())+"||"+commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false)+"||"+vo.getSn());
 				if (userInfo.getPrimary().equals("1")) {
 					result.append("<CELL>");
 					result.append("<VALUE>" + commonUtil.cleanValue(vo.getSliderName()) + "</VALUE>");
@@ -626,7 +627,6 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 					result.append("<VALUE>" + commonUtil.cleanValue(vo.getSliderName2()) + "</VALUE>");
 					result.append("</CELL>");
 				}
-				
 				result.append("<CELL>");
 				result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false) + "</VALUE>");
 				result.append("</CELL>");
@@ -635,6 +635,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				result.append("<VALUE>" + commonUtil.cleanValue(vo.getUrl()) + "</VALUE>");
 				result.append("</CELL>");
 				result.append("</ROW>");
+				logger.debug("resulttest2: "+commonUtil.cleanValue(vo.getSliderName())+"||"+commonUtil.cleanValue(vo.getSliderName2())+"||"+commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false)+"||"+commonUtil.cleanValue(vo.getUrl()));
 			}
 			
 			result.append("</ROWS>");
@@ -648,9 +649,33 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 					result.append("</DATA>");
 				}
 			}
+		}*/
+		// 2018-11-14 문성업 - 데이터 그대로 전달 가능하게 수정
+		if (sliderID.equals(" ")) {
+			
+			for (PersonalSliderImageVO vo : list) {
+				result.append(vo.getIsUse());
+				result.append(commonUtil.cleanValue(vo.getSliderID()));
+				result.append(commonUtil.cleanValue(vo.getImagePath().trim()));
+				result.append(commonUtil.cleanValue(vo.getRegUserID()));
+				result.append(commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false));
+				result.append(vo.getSn());
+			
+				if (userInfo.getPrimary().equals("1")) {
+				result.append(commonUtil.cleanValue(vo.getSliderName()));
+				} else {
+				result.append(commonUtil.cleanValue(vo.getSliderName()));
+				}
+				logger.debug("resulttest: "+commonUtil.cleanValue(vo.getSliderID())+"||"+commonUtil.cleanValue(vo.getImagePath().trim())+"||"+commonUtil.cleanValue(vo.getRegUserID())+"||"+commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false)+"||"+vo.getSn());
+			}
+		} else {
+			for (PersonalSliderImageVO vo : list) {
+				vo.setImagePath(vo.getImagePath());
+				result.append(commonUtil.getQueryResult(vo));
+			}
 		}
 		
-		logger.debug("result="+result.toString());
+		logger.debug("result="+result);
 		logger.debug("getSlider ended");
 		return result.toString();
 	}

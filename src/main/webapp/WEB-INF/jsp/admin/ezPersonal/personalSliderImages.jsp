@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
+			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
@@ -28,14 +29,25 @@
 		        	url : "/admin/ezPersonal/getSlider.do",
 		        	async : false,
 		        	success : function (result) {
-		        		MakeSliderList(loadXMLString(result));
+		        		//MakeSliderList(loadXMLString(result));
+		        		MakeSliderList(result);
 		        	}
 		        });
-		    });
+		    }); 
 	
 		    function MakeSliderList(result) {
-		        XmlNode = result;
-		        
+		    	console.log(result+"||");
+		    		var slideSn = "";
+		    		var slideID = "";
+		    		var slideImagePath = "";
+		    		var slideDate = "";
+		    		var slideTilte = "";
+		    		var slideCnt = result.length;
+		    		
+		    		for(var i = 0; i < slideCnt; i++){
+		    			
+		    		}
+		        /* XmlNode = result;
 		        var DocList = new ListView();
 		        DocList.SetID("DocList");
 		        DocList.SetMulSelectable(false);
@@ -44,8 +56,8 @@
 		        DocList.SetRowOnDblClick("event_dbclick");
 		        DocList.DataSource(XmlNode);
 		        DocList.DataBind("lvDocList");
-		        DocList = null;
-		    }
+		        DocList = null; */
+		    } 
 	
 		    var tempid = "";
 		    var _RowObject = null;
@@ -71,12 +83,12 @@
 		            window.location.reload(false);
 		        }
 		    }
-		    
+		     
 		    function btn_Select_Complete() {
 		        window.location.reload(false);
-		    }
+		    } 
 	
-		    function sliderdelete() {
+		    /* function sliderdelete() {
 		        if (tempid == "") {
 		            alert("<spring:message code = 'ezPersonal.t1022' />");
 		            return;
@@ -98,11 +110,11 @@
 		        		}
 		        	}
 		        });
-		    }
+		    } */
 	
-		    function MakeDescription(filepath) {
+		    /* function MakeDescription(filepath) {
 		        document.getElementById("ContentDescription").innerHTML = "<IMG src = '"+filepath+"' style='width:280px;height:515px' />";
-		    }
+		    } */
 	
 		    /* function Reload() {
 		        window.location.reload(false);
@@ -225,9 +237,9 @@
 		        		}
 		        	}
 		        });
-		    }
+		    } 
 	
-		    function event_dbclick(clickitem) {
+		    /* function event_dbclick(clickitem) {
 		        if (CrossYN()) {
 		            selectimage_dialogArguments[1] = btn_Select_Complete;
 		            
@@ -244,7 +256,7 @@
 	
 		            window.location.reload(false);
 		        }
-		    }
+		    } */
 		</script>
 	</head>
 	<body class = "mainbody">
@@ -269,20 +281,20 @@
 			</ul>
 	    </div>
 	    
-		<table style="width:750px;height:215px;">
+		<%-- <table style="width:750px;height:215px;">
 	    	<tr>
 	            <td>
 	            <!-- 18-05-10 김민성 - 관리자 > 슬라이드 이미지 테이블 크기 수정 -->
 	            	<div style="border:1px solid #dbdbda;width:560px;height:530px;border-top:0px;overflow-y:auto;overflow-x:hidden">
 					<!-- <div style="border:1px solid #dbdbda;width:435px;height:215px;border-top:0px;overflow-y:auto;overflow-x:hidden"> -->
-	                	<div id="lvDocList"></div>
-	<%--                <table class="mainlist" style="width:100%;">
+	                	<%--<div id="lvDocList"></div>
+	                <table class="mainlist" style="width:100%;">
 		                    <tr>
 		                        <td style="width:8%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;"><span><spring:message code = 'ezPersonal.t937' /></span></td>
 		                        <td style="width:60%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;"><span style="padding-left:10px;"><spring:message code = 'ezPersonal.t9' /></span></td>
 		                        <td style="width:32%;background-color:#f8f8f8;text-align:center;border-bottom:2px solid #dbdbda;"><span><spring:message code = 'ezPersonal.t1024' /></span></td>
 		                    </tr>
-		                </table>--%>
+		                </table>
 					</div>
 	            </td>
 	            <!-- <td style="vertical-align:top">
@@ -292,7 +304,7 @@
 	            	</div>
 	            </td> -->
 	        </tr>
-		</table>
+		</table> --%>
 		<script>
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>		
