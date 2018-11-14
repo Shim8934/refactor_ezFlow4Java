@@ -84,7 +84,7 @@ public interface EzNewPortalService {
 	public int getTnenantIdByServerName(String serverName);
 	public void updateCompanyDefaultTheme(int themeId, String companyId, int tenantId);
 	public void deleteCompanyLogo(String companyId, int tenantId, String logoType);
-	
+	public void resetCompanyMenuOrder(String companyId, int tenantId);
 	/**
 	 * 이효진
 	 */

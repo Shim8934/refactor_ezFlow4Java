@@ -1028,6 +1028,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getBoardPortletInfo(map);
 		
 	}
+	
+	@Override
+	public void resetCompanyMenuOrder(String companyId, int tenantId) {
+		LOGGER.debug("resetCompanyMenuOrder started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezNewPortalDAO.resetCompanyMenuOrder(map);
+		LOGGER.debug("resetCompanyMenuOrder ended.");
+	}
 	/**
 	 * 이효진
 	 */

@@ -1273,19 +1273,24 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-
+			String mode = request.getParameter("mode");
+			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
-			JSONParser jp = new JSONParser();
-			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
-			
-			JSONArray menus = (JSONArray) jsonParam.get("menus");
-			
-			ezNewPortalService.udpateMenuOrder(menus, companyId, userInfo.getTenantId());
+			if (mode != null && mode.equals("reset")) {
+				ezNewPortalService.resetCompanyMenuOrder(companyId, userInfo.getTenantId());
+			} else {
+				JSONParser jp = new JSONParser();
+				jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+				
+				JSONArray menus = (JSONArray) jsonParam.get("menus");
+				ezNewPortalService.udpateMenuOrder(menus, companyId, userInfo.getTenantId());
+			}
 
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
