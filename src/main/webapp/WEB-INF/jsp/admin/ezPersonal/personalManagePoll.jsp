@@ -37,16 +37,16 @@
 			};
 			
 			$(document).ready(function() {
-	            if (document.getElementById("ListCompany").length == 0) {
+				if (document.getElementById("ListCompany").length == 0) {
 					alert("<spring:message code = 'ezPersonal.t106' />");
-	            }
-	            else {
-// 	                document.getElementById("ListCompany").selectedIndex = 0;
-	            }
-	            makelist();
-	            //2018-08-06 김보미 - 페이지 위치 고정
-	            windowResize();
-	        });
+				}
+				else {
+				//    document.getElementById("ListCompany").selectedIndex = 0;
+				}
+				makelist();
+				//2018-08-06 김보미 - 페이지 위치 고정
+				windowResize();
+			});
 			
 	        function makelist() {
 	            $.ajax({
@@ -80,6 +80,7 @@
 		            listview.SetID("AccessListView");
 		            listview.SetSelectFlag(false);
 		            listview.SetMulSelectable(true);
+		            listview.SetRowOnClick("PollList_onClick");
 		            listview.SetRowOnDblClick("PollList_onDblclick");
 		            listview.DataSource(headerData);
 		            listview.DataBind("AccessList");
@@ -120,21 +121,66 @@
 		        }
 		    }
 		    
-		    // xml data -> input checkbox
-		    function checkbox_header() {
-		    	var doc = window.document;
-		    	var th = doc.getElementById("AccessListView_TH_0");
-		    	var acList = doc.getElementById("AccessListView");
-		    	th.innerHTML = "<input type='checkbox' id = 'checkAll'></input>";
-		    	
-		    	var cnt = acList.children[1].childElementCount;
-		    	
-		    	var i = 0;
-		    	for(i;i<cnt;i++) {
-		    		var seq = acList.children[1].children[i].children[0].innerHTML;
-		    		acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' id='" + seq + "'></input>";
-		    	}
-		    }
+			// xml data -> input checkbox
+			function checkbox_header() {
+				var doc = window.document;
+				var th = doc.getElementById("AccessListView_TH_0");
+				var acList = doc.getElementById("AccessListView");
+				th.innerHTML = "<input type='checkbox' id = 'checkAll'></input>";
+				
+				var cnt = acList.children[1].childElementCount;
+				
+				var i = 0;
+				for(i;i<cnt;i++) {
+					var seq = acList.children[1].children[i].children[0].innerHTML;
+					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' class='checks' id='" + seq + "' value='" + seq +"'></input>";
+				}
+				checkboxHeaderClick();
+			}
+			
+			var checkFlag = false;
+			function checkboxHeaderClick() {
+				$("#checkAll").click(function(){
+					if(checkFlag){
+						checkFlag = false;
+						$(".checks").prop("checked",false);
+						$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+					}else {
+						checkFlag = true;
+						$(".checks").prop("checked",true);
+						$("#contentlist tr td").css("background-color", "rgb(228, 232, 236)");
+					}
+				});
+			}
+			
+			
+			function PollList_onClick(obj) {
+				var itemseq = document.getElementById(obj).getAttribute("DATA1");
+				if(itemseq == "0") {
+					return;
+				}
+				
+				if(checkFlag) {
+					var color = $("#" + obj + " td").css("background-color");
+					if(color === "rgb(228, 232, 236)") {
+						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + obj + " td").css("background-color", "rgb(228, 232, 236)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				} else {
+					$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+					$(".checks").prop("checked",false);
+					if($("#" + itemseq).is(":checked")) {
+						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + obj + " td").css("background-color", "rgb(228, 232, 236)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				}
+			}
 		    
 		    function PollList_onDblclick(obj) {
 		        var itemseq = document.getElementById(obj).getAttribute("DATA1");
@@ -165,11 +211,11 @@
 		        if (CrossYN()) {
 		            addpoll_cross_dialogArguments[0] = document.getElementById("ListCompany").value;
 		            addpoll_cross_dialogArguments[1] = add_poll_Complete;
-		            var AddPoll_Cross = window.open("/admin/ezPersonal/addPoll.do", "AddPoll_Cross", GetOpenWindowfeature(450, 500));
+		            var AddPoll_Cross = window.open("/admin/ezPersonal/addPoll.do", "AddPoll_Cross", GetOpenWindowfeature(450, 550));
 		            try { AddPoll_Cross.focus(); } catch (e) {
 		            }
 		        } else {
-		            rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do", document.getElementById("ListCompany").value, "dialogHeight:500px;dialogwidth:430px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 500));
+		            rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do", document.getElementById("ListCompany").value, "dialogHeight:500px;dialogwidth:430px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 550));
 		
 		            if (typeof (rtnValue) != "undefined") {
 		                company_change();
@@ -215,6 +261,8 @@
 	            });
 	        }
 	        
+
+			
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
 		    }
@@ -410,6 +458,7 @@
 	        <div id="mainmenu">
 				<ul style="margin-top:15px">	            	
 	                <li class="important"><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
+	                <li><span onclick="alert('삭제')">삭제</span></li>
 	            </ul>
 		  	</div>
 	        
