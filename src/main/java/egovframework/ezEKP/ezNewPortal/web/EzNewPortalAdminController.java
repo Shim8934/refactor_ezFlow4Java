@@ -1077,4 +1077,26 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			LOGGER.debug("deleteLogo ended.");
 		}
 	}
+	
+	@RequestMapping(value = "/admin/ezNewPortal/resetMenuOrder.do")
+	@ResponseBody
+	public void resetMenuOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("resetMenuOrder started.");
+
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+		
+		if (user == null) {
+			LOGGER.debug("resetMenuOrder accessDenied.");
+			
+		} else {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String userId = userInfo.getId();
+			String companyId = paramMap.get("companyId").toString();
+			
+			//default order가져오기
+			
+			
+			LOGGER.debug("resetMenuOrder ended.");
+		}
+	}
 }
