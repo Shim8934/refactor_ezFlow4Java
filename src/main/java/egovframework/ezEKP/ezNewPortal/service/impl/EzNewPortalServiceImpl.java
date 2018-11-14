@@ -49,6 +49,7 @@ import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -1848,4 +1849,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getAllCompanyMenus ended.");
 		return comMenuList;
 	};
+
+	@Override
+	public List<PersonalSliderImageVO> getSilderImages(String companyId,
+			int tenantId) {
+		LOGGER.debug("getSilderImages started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		LOGGER.debug("getSilderImages ended.");
+		return ezNewPortalDAO.getSilderImages(map);
+	}
 }

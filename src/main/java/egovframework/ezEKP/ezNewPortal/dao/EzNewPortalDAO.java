@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -542,5 +543,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<MenuInfoVO> getAllCompanyMenus(Map<String, Object> map) throws Exception {
 		return (List<MenuInfoVO>) list("ezNewPortal.getAllCompanyMenus", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<PersonalSliderImageVO> getSilderImages(Map<String, Object> map) {
+		return (List<PersonalSliderImageVO>) list("ezNewPortal.getSilderImages", map);
 	}
 }
