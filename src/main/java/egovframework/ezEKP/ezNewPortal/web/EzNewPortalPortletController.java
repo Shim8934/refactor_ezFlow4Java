@@ -903,4 +903,80 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		return "/ezNewPortal/portlets/movieBoardPortlet";
 	}
 	
+	/**
+	 * 포틀릿 - 게시판 포틀릿
+	 */
+	@RequestMapping(value = "/ezNewPortal/boardPortlet.do")
+	public String portalBoardPortlet(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("portalBoardPortlet Start");
+		
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = req.getParameter("portletId");
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("startRow", 0);
+		param.put("photoCount", 5);
+		param.put("portletId", portletId);
+		String url = "/rest/ezPortal/portlets/board";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		String result = resultBody.get("status").toString();
+		
+		if (result.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			String access = data.get("access").toString();
+			model.addAttribute("access", access);
+			model.addAttribute("boardId", data.get("boardId"));
+			model.addAttribute("portletName", data.get("portletName"));
+			
+			if (access.equals("true")) {
+				model.addAttribute("boardList", data.get("boardList"));
+			}
+		}
+		
+		model.addAttribute("portletId", portletId);
+		logger.debug("portalBoardPortlet End");
+		
+		return "/ezNewPortal/portlets/boardPortlet";
+	}
+	
+	/**
+	 * 포틀릿 - 카운트
+	 */
+	@RequestMapping(value = "/ezNewPortal/countPortlet.do")
+	public String portalCountPortlet(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("portalCountPortlet Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/ezportal/portlets/count/"+ userId;
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			model.addAttribute("pollCount", data.get("pollCount"));
+			model.addAttribute("circularCount", data.get("circularCount"));
+			model.addAttribute("scheduleCount", data.get("scheduleCount"));
+			model.addAttribute("approvalCount", data.get("approvalCount"));
+			model.addAttribute("approvalProgressingCount", data.get("approvalProgressingCount"));
+			model.addAttribute("approvalDraftCount", data.get("approvalDraftCount"));
+			model.addAttribute("approvalDeptSusinCount", data.get("approvalDeptSusinCount"));
+			model.addAttribute("unreadMailCount", data.get("unreadMailCount"));
+			model.addAttribute("useCircular", data.get("useCircular"));
+		}
+		
+		logger.debug("portalCountPortlet End");
+		return "/ezNewPortal/portlets/cntPortlet"; 
+	}
 }

@@ -20,13 +20,13 @@
 			.menuUsed {background-color : #fff;}
 			.menuUsed_on{color: #0470e3; border-color: #b9d7f6; background: #f1f8ff;}
 			.menuNotUsed {background-color : #cbcbcb;}
-			.menuDetails {list-style:none;display : none; float:left; width:98%; border:1px solid black;position : relative;}
+			.menuDetails {list-style:none;display : none; float:left; width:98%; position : relative;}
 			.menuTitle {margin : 10px;}
 			.menuTitle span {font-size : 18px; font-weight:bold;}
 			.menuDetails hr {display:block; width:99%;}
 			.menuIconInfo {display:inline-block; margin:43px 23px 23px 23px;}
 			.menuIcon {width:100px;height:100px;border:1px solid black;margin-bottom:10px;text-align:center;vertical-align:middle;}
-			.menuIcon span, .menuIcon img {margin:36px;}
+			.menuIcon span, .menuIcon img {margin:23px 26px;}
 			.menuInfo {display:inline-block; vertical-align:top; margin-top:23px;}
 			.menuInfo ul {padding:0px;}
 			.menuInfo ul li {font-size:15px; font-weight:bold; display:block;margin-bottom:12px;}
@@ -34,11 +34,10 @@
 			.menuName table {margin-top:5px;}
 			.menuName table tr {height : 34px;}
 			.menuName table tr td input {width:300px; margin-left:10px;}
-			.conUrl input {width:300px; margin-left:10px;}
+			.conUrl input {width:300px;}
 			.menuName table th {border:none;background-color:white;font-size:13px;color:black;}
 			.menuAuth {vertical-align:top;margin-top:23px;margin-left:150px;}
 			.menuAuthBtn {display:inline-block}
-			.accessOK, .accessNO {font-size:15px; font-weight:bold; margin-top:10px;}
 			.updateMenu, .addMenu {float : right; margin-right:20px;}
 			.btnpositionJsp {margin-top : 0px;padding:0px;}
 			.hideDetails {display : none;}
@@ -48,18 +47,6 @@
 			.deleteMenu {display:inline-block;margin-left:50px;vertical-align:top;margin-top:-3px;}
 			.accessOK div, .accessNO div {margin-left:15px;display:inline-block;}
 			.menuChoice {background: #edf7ff; border: 1px solid #2196f3; color: #0470e3;}
-			
-			/* switch */
-			.switch {position: absolute;display: inline-block;width: 60px;height: 23px;margin-left:26px; margin-top:-3px;}
-			.switch input {opacity: 0;width: 0;height: 0;}
-			.slider {  position: absolute;  cursor: pointer;  top: 0;  left: 0;  right: 0;  bottom: 0;  background-color: #ccc;  -webkit-transition: .4s;  transition: .4s;}
-			.slider:before {  position: absolute;  content: "";  height: 13px;  width: 13px;  left: 8px;  bottom: 5px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
-			input:checked + .slider {  background-color: #2196F3;}
-			input:focus + .slider { box-shadow: 0 0 1px #2196F3;}
-			input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transform: translateX(26px);transform: translateX(26px);}
-			/* Rounded sliders */
-			.slider.round {border-radius: 15px;}
-			.slider.round:before {border-radius: 50%;}
 		</style>
 	</head>
 	
@@ -92,6 +79,22 @@
 		});
 		
 		var resetMenuOrder = function() {
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+			
+			var request = new XMLHttpRequest();
+			request.open('POST', '/admin/ezNewPortal/resetMenuOrder.do', true);
+			request.setRequestHeader('Content-Type', 'application/json');
+			
+			request.onload = function() {
+				getMenus();
+			}
+			
+			var data = JSON.stringify({
+				companyId : companyValue
+			});
+			 
+			request.send(data);
 		}
 		
 		var getCompanies = function() {
@@ -225,16 +228,92 @@
 					menuAuths = menuAuthsY;
 					menuAuths = menuAuths.concat(menuAuthsN);
 					
-					var menusHTML = "<li class='menuDetails'>";
-					menusHTML += "<div id='menuDetails" + menuInfo.menuId + "'>";
-					menusHTML += "<div class='menuTitle'>";
-					menusHTML += "<span>" + menuInfo.menuName + "</span>";
+					var menusHTML = "<li class='menuDetails' id='menuLi" + menuInfo.menuId + "'>";
+					menusHTML += "<div class='admin_menu' id='menuDetails" + menuInfo.menuId + "'>";
+					menusHTML += "<dl class='admin_menuDL'>";
+					menusHTML += "<dt class='admin_menuTit'>" + menuInfo.menuName + "</dt><dd class='admin_menuX'></dd></dl>";
 					
-					if (menuInfo.menuType == "A") {
-						menusHTML += "<div class='btnpositionJsp deleteMenu'><a class='imgbtn deleteMenuBtn'><span>메뉴 삭제</span></a></div>";
+					menusHTML += "<div class='admin_menu_content'>";
+					menusHTML += "<dl class='adminMenu_icon'><dt class='admenuIcon menuIcon'><span class='" + menuInfo.iconUrl + "'></span></dt>";
+					
+					if (menuInfo.menuType != "G") { //기본 메뉴는 아이콘 변경이 불가능함					
+						menusHTML += "<dd class='admenuIcon_up iconBtn'>아이콘 등록</dd>";
 					}
 					
-					menusHTML += "<div id='close' class='close'><ul><li><span></li></ul></div>";
+					menusHTML += "</dl><table class='iconTable01' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
+					menusHTML += "<tr><th class='menuIconTH'>메뉴 사용</th><td colspan='2' class='menuIconTD'><label class='switch menuSwitch'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
+					menusHTML += "<tr><th rowspan='3' class='menuIconTH'>메뉴명</th>";
+					
+					menuNames.forEach(function(item, index) {
+						if (index != 0) {
+							menusHTML += "<tr>";
+						}
+						menusHTML += "<td class='menuIconTD'>";
+						menusHTML += "메뉴명 ("; 
+						
+						var country = "";
+						if (item.menuLang == 1) {
+							country = "한국어";
+						} else if (item.menuLang == 2) {
+							country = "영어";
+						} else if (item.menuLang == 3) {
+							country = "일본어";
+						}
+						
+						menusHTML += country + ")</td>";
+						menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu" +  item.menuLang + "' type='text' value='" + item.menuName + "' maxlength='50'></td>";
+						menusHTML += "</tr>";
+					});
+					
+					menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' value='" + menuInfo.menuUrl + "' maxlength='100'></td></tr></table>";
+					menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
+					menusHTML += "<tr><th class='menuIconTH'>접근허용</th><td class='menuIconTD accessOK'>";
+					
+					if (menuAuthsY != null && menuAuthsY.length != 0) {
+						var menuAuthsYList = "";
+						
+						menuAuthsY.forEach(function(item, index) {
+							if (item.userType) {
+								menuAuthsYList += ", " + item.userName;
+								menuAuthsYList += "(" + item.userDeptName + ")";
+							} else {
+								menuAuthsYList += ", " + item.userDeptName;
+							}
+						});
+						
+						menusHTML += menuAuthsYList.substring(1) + "</td></tr>";
+					}
+					
+					menusHTML += "<tr><th class='menuIconTH'>접근불가</th><td class='menuIconTD accessNO'>";
+					
+					if (menuAuthsN != null && menuAuthsN.length != 0) {
+						var menuAuthsNList = "";
+						
+						menuAuthsN.forEach(function(item, index) {
+							if (item.userType) {
+								menuAuthsNList += ", " + item.userName;
+								menuAuthsNList += "(" + item.userDeptName + ")";
+							} else {
+								menuAuthsNList += ", " + item.userDeptName;
+							}
+						});
+						
+						menusHTML += menuAuthsNList.substring(1) + "</td></tr>";
+					}
+					
+					menusHTML += "</table>";
+					menusHTML += "<div class='bottomBtn'><a class='btnA updateMenu'>저장</a><a class='btnA menuAuthBtn'>권한 설정</a>";
+					
+					if (menuInfo.menuType == "A") {
+						menusHTML += "<a class='btnA deleteMenu'>메뉴 삭제</a>";
+					}
+					menusHTML += "</div></div></div></li>"
+					
+					/* if (menuInfo.menuType == "A") {
+						menusHTML += "<div class='btnpositionJsp deleteMenu'><a class='imgbtn deleteMenuBtn'><span>메뉴 삭제</span></a></div>";
+					} */
+					
+					/* menusHTML += "<div id='close' class='close'><ul><li><span></li></ul></div>";
 					menusHTML += "</div>";
 					menusHTML += "<hr/>";
 					menusHTML += "<div class='btnpositionJsp updateMenu'><a class='imgbtn updateMenuBtn'><span>저장</span></a></div>";
@@ -296,9 +375,9 @@
 					menusHTML += "</div>";
 					menusHTML += "</div>";
 					menusHTML += "<div class='accessNO'>[접근 불가]"
-					menusHTML += "<div>";
+					menusHTML += "<div>"; */
 					
-					if (menuAuthsN != null && menuAuthsN.length != 0) {
+					/* if (menuAuthsN != null && menuAuthsN.length != 0) {
 						var menuAuthsNList = "";
 						
 						menuAuthsN.forEach(function(item, index) {
@@ -317,16 +396,18 @@
 					menusHTML += "</div>";
 					menusHTML += "</div>";
 					menusHTML += "</div>";
-					menusHTML += "</li>";
+					menusHTML += "</li>"; */
 					
 					var nowShowDetails = $(".menuDetails").children().attr("id");
-					
+		
 					if (nowShowDetails == "menuDetails" + menuId) { 
 						$(".menuDetails").slideUp(function(){
 							$(".menuDetails").remove();
 						});
 					} else {
-						$(".menuDetails").remove();
+						$(".menuDetails").slideUp(function(){
+							$(".menuDetails").not("#menuLi" + menuId).remove();
+						});
 					}
 					
 					if (nowShowDetails != "menuDetails" + menuId) {
@@ -347,7 +428,7 @@
 								$("#menuDetails" + menuInfo.menuId).find(".menuSwitch").find("input[type='checkbox']").prop("checked", true);
 							}
 							
-							$(".menuDetails").show();
+							$(".menuDetails").slideDown();
 						}
 					}
 					
@@ -406,6 +487,11 @@
 				return;
 			}
 			
+			if (menuAuths.length == 0 || menuAuths == null) {
+				alert("메뉴 접근 권한을 설정해 주세요.");
+				return;
+			}
+			
 			//아이콘
 			var iconUrl = $(".menuIcon").find("span").attr("class");
 			
@@ -422,11 +508,16 @@
 				var menuLang = menuName.id;
 				menuLang = menuLang.substring(4);
 				
-				if (portletNameList[i].value == "") {
-					portletNameEmptyNum++;
+				if (menuName.value == "") {
+					menuNameEmptyNum++;
 				}
 				
 				menuNameList.push({"menuLang" : menuLang, "menuId" : menuId, "menuName" : menuName.value});
+			}
+			
+			if (menuNameEmptyNum >= menuNamesCount) {
+				alert("하나 이상의 메뉴 이름을 입력해주세요.");
+				return;
 			}
 			
 			var companiesObj = document.getElementById("ListCompany");
@@ -438,16 +529,20 @@
 			
 			request.onload = function() { 
 				getMenus();
-				menuAuths = [];
+				//menuAuths = [];
 			}
 			
 			request.onerror = function() {}
+			
+			if (typeof menuAuths == "string") {
+				menuAuths = JSON.parse(menuAuths);
+			}
 			
 			var data = JSON.stringify({
 				menuId : menuId,
 				companyId : companyValue,
 				menuNames : menuNameList,
-				menuInfo : menuInfo,
+				menuInfo : menuInfo, 
 				menuAuths : menuAuths
 			});
 			 
@@ -457,14 +552,32 @@
 		var openMenuAdd = function() {
 			menuAuths = [];
 			
-			var menusHTML = "<li class='menuDetails'>";
-			menusHTML += "<div id='menuDetailsNew'>";
-			menusHTML += "<div class='menuTitle'>";
-			menusHTML += "<span>&nbsp</span>";
-			menusHTML += "<div id='close' class='close'><ul><li><span></li></ul></div>";
-			menusHTML += "</div>";
-			menusHTML += "<hr/>";
-			menusHTML += "<div class='btnpositionJsp addMenu'><a class='imgbtn addMenuBtn'><span>저장</span></a></div>";
+			var menusHTML = "<li class='menuDetails' id='menuLiNew'>";
+			menusHTML += "<div class='admin_menu' id='menuDetailsNew'>";
+			menusHTML += "<dl class='admin_menuDL'><dt class='admin_menuTit'>&nbsp;</dt><dd class='admin_menuX'></dd></dl>";
+			menusHTML += "<div class='admin_menu_content'>";
+			menusHTML += "<dl class='adminMenu_icon'><dt class='admenuIcon menuIcon'><span></span></dt>";
+			menusHTML += "<dd class='admenuIcon_up iconBtn'>아이콘 등록</dd></dl>";
+			menusHTML += "<table class='iconTable01' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
+			menusHTML += "<tr><th class='menuIconTH'>메뉴 사용</th><td colspan='2' class='menuIconTD'><label class='switch menuSwitch'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
+			menusHTML += "<tr><th rowspan='3' class='menuIconTH'>메뉴명</th>";
+			menusHTML += "<td class='menuIconTD'>메뉴명(한국어)</td>";
+			menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
+			menusHTML += "</tr>";
+			menusHTML += "<tr><td class='menuIconTD'>메뉴명(영어)</td>";
+			menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu2' type='text' maxlength='50'></td>";
+			menusHTML += "</tr>";
+			menusHTML += "<tr><td class='menuIconTD'>메뉴명(일본어)</td>";
+			menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu3' type='text' maxlength='50'></td>";
+			menusHTML += "</tr>";
+			menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' maxlength='100'></td></tr></table>";
+			menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
+			menusHTML += "<tr><th class='menuIconTH'>접근허용</th><td class='menuIconTD accessOK'></td></tr>";
+			menusHTML += "<tr><th class='menuIconTH'>접근불가</th><td class='menuIconTD accessNO'></td></tr></table>";
+			menusHTML += "<div class='bottomBtn'><a class='btnA addMenuBtn'>저장</a><a class='btnA menuAuthBtn'>권한 설정</a>";
+			menusHTML += "</div></div></div></li>"
+			
+			/* menusHTML += "<div class='btnpositionJsp addMenu'><a class='imgbtn addMenuBtn'><span>저장</span></a></div>";
 			menusHTML += "<div class='menuIconInfo'>";
 			menusHTML += "<div class='menuIcon'>";
 			menusHTML += "<span></span>";
@@ -499,7 +612,7 @@
 			menusHTML += "<div class='accessNO'>[접근 불가]<div></div></div>";
 			menusHTML += "</div>";
 			menusHTML += "</div>";
-			menusHTML += "</li>";
+			menusHTML += "</li>"; */
 			
 			var nowShowDetails = $(".menuDetails").children().attr("id");
 			
@@ -508,7 +621,9 @@
 					$(".menuDetails").remove();
 				});
 			} else {
-				$(".menuDetails").remove();
+				$(".menuDetails").slideUp(function(){
+					$(".menuDetails").not("#menuLiNew").remove();
+				});
 			}
 			
 			if (nowShowDetails != "menuDetailsNew") {
@@ -517,7 +632,7 @@
 					$(".menuDetails").slideDown();
 				} else {
 					$("#menuAdd").after(menusHTML);
-					$(".menuDetails").show();
+					$(".menuDetails").slideDown();
 				}
 			}
 			
@@ -571,8 +686,8 @@
 				var menuLang = menuName.id;
 				menuLang = menuLang.substring(4);
 				
-				if (portletNameList[i].value == "") {
-					portletNameEmptyNum++;
+				if (menuName.value == "") {
+					menuNameEmptyNum++;
 				}
 				
 				menuNameList.push({"menuLang" : menuLang, "menuName" : menuName.value});
@@ -597,6 +712,10 @@
 			
 			request.onload = function() { 
 				getMenus();
+			}
+			
+			if (typeof menuAuths == "string") {
+				menuAuths = JSON.parse(menuAuths);
 			}
 			
 			request.onerror = function() {}
@@ -671,7 +790,7 @@
 			request.open('POST', '/admin/ezNewPortal/updateMenuOrder.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
-			request.onload = function() { getMenus(); }
+			request.onload = function() { }
 			
 			request.onerror = function() {}
 			

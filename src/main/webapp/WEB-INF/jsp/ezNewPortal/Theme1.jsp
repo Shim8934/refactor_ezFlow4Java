@@ -34,33 +34,10 @@
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
 	.box_shadow {width:100%; margin:0px;}
-	.info_left{float:left; width:160px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
-	.info_right{width:calc(100% - 167px); background:#ffffff;}
 	.portlet {height:250px; margin:20px 0px 0px 16px;background-color:#ffffff;}
 	.infoImg img {width:60px; height:60px;}
-	.info .infoImg {margin:0px 24px 0px 0px;}
 	.attitudePtl {border:none;}
-	
-	@media only screen and (max-width :1730px) and (min-width :1280px) {
-		.info_left {width:180px;}
-		.info_right {width : calc(100% - 188px);}
-		.info .infoImg {margin:0px 24px 50px 0px;}
-	}
-	/* main media query */
-	@media only screen and (min-width :1921px) {
-		.info_left {width:180px;}
-		.info_right {width : calc(100% - 188px);}
-		.info .infoImg {margin:0px 24px 50px 0px;}
-	}
-
-	@media only screen and (max-width :1920px) and (min-width :1686px) { 
-		.info_left {width:103px;}
-		.info_right {width : calc(100% - 111px);}
-	}
-
-	@media only screen and (max-width : 1279px) {
-		.portlet {width:410px; float:left;}
-	}
+	.two_column{width:48%;}
 </style>
 </head>
 <body class="mainbg">
@@ -100,7 +77,7 @@
                 	<dd class="infoTeam">${deptName}</dd>
                 	<%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
                 	<dd class="infoSet" id="personalEnv"><img src="/images/kr/main/info_set.png"></dd>
-                	<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;margin-top:5px;">포틀릿/프레임 설정</dd><!-- 임시용 -->
+                	<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;"><img src="/images/admin/frameSetting.png" /></dd><!-- 임시용 -->
            		</dl>
 			</article>
 			<article class="main_time_check">
@@ -175,33 +152,35 @@
 				</article>
 			</section>
 		</div>
-		<aside id="quickSide">	
-			<p class="linkBtn_open" id="linkBtn_open"><img src="/images/ezNewPortal/linkBtn_open.png"></p>
-			<div class="aside_quick">
-				<p class="quickmenu_title">Quick</p>
-				<ul class="quickmenu">
-					<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt">메일작성</span></li>
-					<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt">결재작성</span></li>
-					<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt">일정작성</span></li>
-					<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt">조직도</span></li>
-				</ul>
-			</div>
-			<div class="aside_link">
-				<p class="linkmenu_title">Link</p>
-				<ul class="linkmenu" id="QuickUl">
-				</ul>
-				<div class="linkBtn">
-					<p class="btnLay" id="btnLay">
-					</p>
+		<div style="position:relative;">
+			<aside id="quickSide">	
+				<p class="linkBtn_open" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>
+				<div class="aside_quick">
+					<p class="quickmenu_title">Quick</p>
+					<ul class="quickmenu">
+						<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt">메일작성</span></li>
+						<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt">결재작성</span></li>
+						<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt">일정작성</span></li>
+						<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt">조직도</span></li>
+					</ul>
 				</div>
-			</div>
-		</aside>
+				<div class="aside_link">
+					<p class="linkmenu_title">Link</p>
+					<ul class="linkmenu" id="QuickUl">
+					</ul>
+					<div class="linkBtn">
+						<p class="btnLay" id="btnLay">
+						</p>
+					</div>
+				</div>
+			</aside>
+		</div>
 		<section class="section_main">
 			<div class="portlet_area">
 			</div>
 		</section>
 		
-		<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
+		<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 			
 		<div class="layerpopup"  style="z-index: 2000; position: fixed;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -391,21 +370,23 @@
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
-			
-  			(function (portletId, portletUrl, portletName) {
-				$.ajax({
-					type : "POST",
-					dataType : "html",
-					data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
-					url : portletUrl,
-					success : function(result) {
-						$("#" + portletId + "Portlet").append(result);
-						eventSetting(portletId);
-					}
-				});
-			}(portletId, portletUrl, portletName));
+
+			if (portletUrl.indexOf("ezNewPortal") != -1) {
+		  		(function (portletId, portletUrl, portletName) {
+					$.ajax({
+						type : "POST",
+						dataType : "html",
+						data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
+						url : portletUrl,
+						success : function(result) {
+							$("#" + portletId + "Portlet").append(result);
+							eventSetting(portletId);
+						}
+					});
+				}(portletId, portletUrl, portletName));
+			}
 		}
-		
+
 		var useQuestion = "<c:out value='${useQuestion}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";
 		var useMail = "<c:out value='${useMail}'/>";
@@ -470,7 +451,7 @@
 		$("#AprSign").on("click", {"menu" : "ApprG"}, quickMenuOpen);
 		
 		//퀵메뉴 on/off 버튼
-		$("#linkBtn_open").on('click', viewQuick);
+		$("#quicklinkBtn").on('click', viewQuick);
 		//퀵메뉴 이동(오른쪽)
 		$("#quickMailwrite").on('click', {'menu' : 'mail'}, quickMenuOpenRight);
 		$("#quickApprovalwrite").on('click', {'menu' : 'appr'}, quickMenuOpenRight);
@@ -494,9 +475,12 @@
 		$(".portlet_area").sortable({
 			handle : ".sortablePortlet",
 			start : function (event, block) {
-				$(".ui-sortable-helper").css({
-					'width' : $(".box_shadow").outerWidth(),
-					'height' : $(".box_shadow").outerHeight()
+				
+				$(".portlet.ui-sortable-helper").css("width", $(".portlet").not(block.item).not(block.placeholder).outerWidth());
+				
+				$(".ui-sortable-placeholder").css({
+					'width' : $(".portlet").not(block.item).not(block.placeholder).outerWidth(),
+					'height' : $(".portlet").not(".ui-sortable-helper").outerHeight()
 				});
 			},
 			update : function(event, ui) {
@@ -515,14 +499,47 @@
 		if (frameSetId == "Frame3" || frameSetId == "Frame4") {
 			var media1921 = window.matchMedia("only screen and (min-width: 1921px)");
 			var media1686 = window.matchMedia("only screen and (max-width :1920px) and (min-width :1686px)");
-			var media1280 = window.matchMedia("only screen and (max-width :1685px) and (min-width :1280px)");
+			var media1685 = window.matchMedia("only screen and (max-width :1685px) and (min-width :1590px)");
+			var media1589 = window.matchMedia("only screen and (max-width :1589px) and (min-width :1280px)");
+			var media1279 = window.matchMedia("only screen and (max-width :1279px)");
 			
 			if (media1921.matches) {
-				$(".portlet").css("width", "483px");
+				$(".portlet").addClass("two_column");
+				$(".info_left").css("display", "inline-block");
+				$(".info_left").css("float", "left");
+				$(".info_left").css("width", "189px");
+				$(".info_left").css("margin-right", "5px");
+				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
+				$(".info_right").css("width", "calc(100% - 194px)");
+				$(".info_right").css("background", "#ffffff");
 			} else if (media1686.matches) {
-				$(".portlet").css("width", "48%");
-			} else if (media1280.matches) {
-				$(".portlet").css("width", "48%");
+				$(".portlet").addClass("two_column");
+				$(".info_left").css("display", "inline-block");
+				$(".info_left").css("float", "left");
+				$(".info_left").css("width", "189px");
+				$(".info_left").css("margin-right", "5px");
+				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
+				$(".info_right").css("width", "calc(100% - 194px)");
+				$(".info_right").css("background", "#ffffff");
+			} else if (media1685.matches) {
+				$(".portlet").addClass("two_column");
+				$(".info_left").css("display", "inline-block");
+				$(".info_left").css("float", "left");
+				$(".info_left").css("width", "189px");
+				$(".info_left").css("margin-right", "5px");
+				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
+				$(".info_right").css("width", "calc(100% - 194px)");
+				$(".info_right").css("background", "#ffffff");
+			} else if (media1589.matches) {
+				$(".portlet").addClass("two_column");
+				$(".info_left").css("display", "none");
+				$(".info_right").css("width", "100%");
+				$(".info_right").css("margin-left", "0px !important");
+			} else if (media1279.matches) {
+				$(".portlet").addClass("two_column");
+				$(".box_shadow.info_left").css("display", "none");
+				$(".box_shadow.info_right").css("width", "100%");
+				$(".box_shadow.info_right").css("margin-left", "0px !important");
 			}
 		}
 	}

@@ -100,8 +100,8 @@ function updateUserThemeSetting(event) {
     font-weight: bold;
     color: #000;
 }
-
-.usedThemeBorder {border : 2px solid #2710ff;}
+.flipster__item img {border:1px solid #ccc}
+.usedThemeBorder {border : 1px solid #2196f3; background: #edf7ff}
 </style>
 </head>
 <body class="mainbody">
