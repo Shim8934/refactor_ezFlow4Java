@@ -589,7 +589,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 }
 
 @media only screen and (max-width : 1279px) {
-	.portlet {width:410px; float:left;}
+	.portlet {width:565px; float:left;}
 }
 
 /* collaborate */
