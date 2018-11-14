@@ -9,7 +9,7 @@
 	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/jquery.ui.all.css')}" type="text/css" />
-		<c:if test="${useFromAddress == 'YES'}">
+		<c:if test="${shareId == null and useFromAddress == 'YES'}">
 		<style>
 			.selectbox { position: relative; width: 100%; /* 너비설정 */ border: 0px; /* 테두리 설정 */ z-index: 1; } 
 			.selectbox:before { /* 화살표 대체 */ content: ""; position: absolute; top: 50%; right: 15px; width: 0; height: 0; margin-top: -1px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #333; } 
@@ -286,7 +286,7 @@
 				alert(strLang241);
             </c:if>
             
-            <c:if test="${useFromAddress == 'YES'}">
+            <c:if test="${shareId == null and useFromAddress == 'YES'}">
 	            var selectTarget = $('.selectbox select'); 
 	            selectTarget.change(function(){ 
 	            	var select_name = $(this).children('option:selected').text(); 
@@ -2050,7 +2050,7 @@
 	        <tr>
 	            <td>
 	                <table id="infoTable" class="popuplist" style="width:100%">
-	                	<c:if test="${useFromAddress == 'YES'}">
+	                	<c:if test="${shareId == null and useFromAddress == 'YES'}">
 		                	<tr id="MsgFrom_TR">
 		                		<th style="text-align: center;">
 		                        	<span style="width: 50px;"><spring:message code='ezEmail.lhm30' /></span>
@@ -2059,6 +2059,16 @@
 		                        	<div class="selectbox">
 		                        		${fromAddressHtml}
 		                        	</div>
+		                        </td>
+		                	</tr>
+	                	</c:if>
+	                	<c:if test="${shareId != null}">
+		                	<tr id="MsgFrom_TR">
+		                		<th style="text-align: center;">
+		                        	<span style="width: 50px;"><spring:message code='ezEmail.lhm30' /></span>
+		                        </th>
+		                        <td colspan="3" style="padding-left:10px;">
+		                        	<span><c:out value="${shareName} <${shareMail}>" /></span>
 		                        </td>
 		                	</tr>
 	                	</c:if>

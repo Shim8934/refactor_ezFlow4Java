@@ -277,10 +277,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
     				logger.debug("the user cannot access the shareId.");
     			} else {
+    				MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(shareId, loginInfo.getTenantId());
+    				
     				mailId = shareId;
     				userAccount = shareId + "@" + domainName;
-    				model.addAttribute("shareId", shareId);
     				extraMap.put("shareId", shareId);
+    				
+    				model.addAttribute("shareId", shareId);
+    				model.addAttribute("shareName", sharedMailboxInfo.getShareName());
+    				model.addAttribute("shareMail", sharedMailboxInfo.getShareMail());
     			}
     		}
         }
