@@ -1099,4 +1099,70 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			LOGGER.debug("resetMenuOrder ended.");
 		}
 	}
+		
+	/**
+	 * 슬라이드 이미지 설정 화면
+	 * @param loginCookie
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/openSlideImageSetting.do")
+	public String openSlideImageSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("openSlideImageSetting started.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			LOGGER.debug("openBoardTree accessDenied.");
+			
+			return "cmm/error/adminDenied";
+		} else {
+			LOGGER.debug("openBoardTree ended.");
+			//게시판이 top인 목록 가져오기
+			String userId = userInfo.getId();
+			String companyId = request.getParameter("companyId");
+			
+//			Map<String, Object> param = new HashMap<String, Object>();
+//			param.put("userId", userId);
+//			
+//			String url = "/rest/admin/ezPortal//companies/" + companyId;
+//			
+//			JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+//			String result = resultBody.get("status").toString();
+//			
+//			if (result.equals("ok")) {
+//				model.addAttribute("List", resultBody.get("data"));
+//			}
+			model.addAttribute("companyId", companyId);
+			model.addAttribute("portletId", request.getParameter("portletId"));
+			
+			LOGGER.debug("openSlideImageSetting ended.");
+			return "/admin/ezNewPortal/portalSlideImageSetting";
+		}
+	}
+	@RequestMapping(value = "/admin/ezNewPortal/getSlideImages.do")
+	public String getSlideImages(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("getSlideImages started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/admin/ezportal/slideimages/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+				
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("list", resultBody.get("data"));
+		}
+		
+		LOGGER.debug("getSlideImages ended.");
+		
+		return "json";
+	}
 }

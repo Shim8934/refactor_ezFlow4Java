@@ -122,7 +122,7 @@
 								// 최초 회사 frame 설정
 								if(item.frameDefault) {
 									div.classList.add('select-flipster');
-									portletSetting.selectedFrame = item.frameId;
+									portletSetting.selectedFrame = index;
 									portletSetting.usedTheme = item.themeId;						
 								}
 								
