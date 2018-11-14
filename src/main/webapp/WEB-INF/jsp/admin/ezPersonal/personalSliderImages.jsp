@@ -25,7 +25,7 @@
 		    $(document).ready(function () {
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "text",
+		        	dataType : "JSON",
 		        	url : "/admin/ezPersonal/getSlider.do",
 		        	async : false,
 		        	success : function (result) {
@@ -36,15 +36,19 @@
 		    }); 
 	
 		    function MakeSliderList(result) {
-		    	console.log(result+"||");
+		    	console.log(result);
 		    		var slideSn = "";
 		    		var slideID = "";
 		    		var slideImagePath = "";
 		    		var slideDate = "";
-		    		var slideTilte = "";
+		    		var slideTitle = "";
 		    		var slideCnt = result.length;
 		    		
 		    		for(var i = 0; i < slideCnt; i++){
+		    			slideSn = result[i].slideSn;
+		    			slideID = result[i].slideID;
+		    			slideImagePath = result[i].slideImagePath;
+		    			slideTitle = result[i].slideTitle;
 		    			
 		    		}
 		        /* XmlNode = result;
@@ -280,7 +284,9 @@
 				<li><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code = 'ezPersonal.t367' />" /></span></li> --%>
 			</ul>
 	    </div>
+	    <ul id="slideListContainer" class="col-container">
 	    
+	    </ul>
 		<%-- <table style="width:750px;height:215px;">
 	    	<tr>
 	            <td>
