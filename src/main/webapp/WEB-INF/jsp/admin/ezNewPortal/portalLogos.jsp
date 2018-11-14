@@ -9,15 +9,15 @@
 		<title>Portal Logos</title>
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<style type="text/css">
-			.logoTitle {width:98%; padding:0px; font-size:14px;font-weight:bold;}
-			.logoIconInfo {display:inline-block;vertical-align:top;margin:10px 10px 20px 0px;}
-			.logoIcon {width:250px;height:135px;border:1px solid #d9d9d9;margin-bottom:10px;text-align:center;vertical-align:middle;}
-			.logoIcon span, .logoIcon img {margin:48px;}
-			.logoContent {display:inline-block; }
-			.btnpositionJsp {display : inline-block;}
-			.logoContent ul {margin-top:5px;padding-left:7px;}
-			.logoContent ul li {font-size:14px; display:block;padding:5px 0px;}
-			.deleteLogoBtn {display : none;}
+			.logoTitle {padding:0px;font-size: 14px !important;font-weight:bold;margin: 0px 0px 5px 0px;}
+	         .logoIconInfo {display:inline-block;vertical-align:top;margin:10px 10px 20px 0px;}
+	         .logoIcon {width:250px;height:135px;border:1px solid #d9d9d9;margin-bottom:10px;text-align:center;vertical-align:middle;}
+	         .logoIcon span, .logoIcon img {margin:48px;}
+	         .logoContent {display:inline-block; }
+	         .btnpositionJsp {display : inline-block;}
+	         .logoContent ul {margin-top:5px;padding-left:7px;}
+	         .logoContent ul li {font-size: 12px;display:block;padding: 2px 0px;}
+	         .deleteLogoBtn {display : none;}
 		</style>
 	</head>
 	<body class="mainbody">
@@ -26,7 +26,6 @@
 			<select class="companySelect" id="ListCompany"></select>
 		</h1>
 		<div class="loginLogo" style="margin-top:30px">
-			<div class="logoTitle">로그인 페이지 로고 설정</div>
 			<div class="logoInfo">
 				<div class='logoIconInfo'>
 					<div class='logoIcon'><img></img></div>
@@ -36,6 +35,7 @@
 						<div id = "imgLogin" class='btnpositionJsp'><a class='imgbtn updateLogoBtn'><span>등록</span></a> <a class='imgbtn deleteLogoBtn'><span>삭제</span></a></div>
 					</c:if>
 					<ul>
+						<li class="logoTitle">로그인 페이지 로고 설정</li>
 						<li>로그인 로고의 이미지를 변경합니다.</li>
 						<li>가로 x 세로의 크기는 137(px) x 38(px) 입니다.</li>
 						<li>로그인 로고의 이미지는 전체관리자만 변경 가능합니다.</li>
@@ -44,7 +44,6 @@
 			</div>
 		</div>
 		<div class="portalLogo">
-			<div class="logoTitle">상단 메뉴 로고 설정</div>
 			<div class="logoInfo">
 				<div class="logoInfo">
 					<div class='logoIconInfo'>
@@ -54,6 +53,7 @@
 					<div class="logoContent">
 						<div id="imgTop" class='btnpositionJsp'><a class='imgbtn updateLogoBtn'><span>등록</span></a> <a class='imgbtn deleteLogoBtn'><span>삭제</span></a></div>
 						<ul>
+							<li class="logoTitle">상단 메뉴 로고 설정</li>
 							<li>홈페이지 접속 후, 상단의 로고의 이미지를 변경합니다.</li>
 							<li>가로 x 세로의 크기는 106(px) x 42(px) 입니다.</li>
 						</ul>

@@ -189,6 +189,10 @@ function eventSetting(portletId) { //포틀릿 아이디별로 자바스크립�
 			    	document.body.style.oUserSelect = 'none';
 			    	document.body.style.UserSelect = 'none';
 			    }
+			    
+			    if (usedTheme == 3) {
+			    	$("#6portlet").css("background","");
+			    }
 			} catch(err) {
 				console.log(err);
 				alert(messages.strLang2);
@@ -337,7 +341,6 @@ function eventSetting(portletId) { //포틀릿 아이디별로 자바스크립�
 				
 				if (useAttitude === "YES") {
 					ptlParseDate();
-					ptlNowAttiTime.setMinutes(ptlNowAttiTime.getMinutes() - 1); //시간을 더해주기 때문에 처음 시작할때는 1을 빼준다.
 					ptlAttiClock();
 					ptlGetAttitudeList();
 					getHolidayList();
@@ -345,7 +348,11 @@ function eventSetting(portletId) { //포틀릿 아이디별로 자바스크립�
 					$(".time_check .main_time").css("display", "none");
 				}
 				
+				if (usedTheme == 3) {
+					$("#36portlet").css("background","");
+				}
 				ptlAmPmCheck(ptlNowAttiTime.getHours());
+		 		frameSetting(frameId);
 			} catch(err) {
 				console.log(err);
 				alert(messages.strLang2);
@@ -358,19 +365,37 @@ function eventSetting(portletId) { //포틀릿 아이디별로 자바스크립�
 		});
 		
 		break;
+	case 49 : //동영상게시판
+		url = "/js/ezNewPortal/portlets/cntPortlet.js";
+	
+		$.getScript(url)
+		.done(function(script, textStatus) {
+			try {
+				
+			} catch(err) {
+				console.log(err);
+				alert(messages.strLang2);
+			}
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+			alert(messages.strLang2);
+		});
+		
+		break;
 	case 47 : //동영상게시판
 		url = "/js/ezNewPortal/portlets/movieBoardPortlet.js";
 	
 		$.getScript(url)
 		.done(function(script, textStatus) {
-			try {
+			/*try {
 				$("#" + portletId + "Portlet").find(".nextBtn").on("click", {isNext : true}, photoBoardMovePage);
 				$("#" + portletId + "Portlet").find(".preBtn").on("click", {isNext : false}, photoBoardMovePage);
 				$("#" + portletId + "Portlet").find("#movieBoardPlus").on("click", viewMovieBoardList);
 			} catch(err) {
 				console.log(err);
 				alert(messages.strLang2);
-			}
+			}*/
 		})
 		.fail(function(jqxhr, settings, exception) {
 			console.log(exception);
@@ -558,12 +583,12 @@ function getBirthdayEmployeesList() {
 					var userBirthday = birthdayList[i].userBirthday.substring(5);
 					
 					strHTML += "<li id='B" + birthdayList[i].userId + "'>";
-					strHTML += "<dl class='birthListDL'>";
-					strHTML += "<dt class='birthPic'>";
+					strHTML += "<dl class='theme1_birthListDL'>";
+					strHTML += "<dt class='theme1_birthPic'>";
 					strHTML += "<img src='" + birthdayList[i].userImg + "' width = '32' height='32'>";
 					strHTML += "</dt>";
-					strHTML += "<dd class='birthName'>[" + userBirthday + "] " + birthdayList[i].userName + "</dd>";
-					strHTML += "<dd class='birthTeam'>" + birthdayList[i].userDeptName + "</dd>";
+					strHTML += "<dd class='theme1_birthName'>[" + userBirthday + "] " + birthdayList[i].userName + "</dd>";
+					strHTML += "<dd class='theme1_birthTeam'>" + birthdayList[i].userDeptName + "</dd>";
 					strHTML += "</dl>";
 					strHTML += "</li>";
 				}
@@ -579,12 +604,12 @@ function getBirthdayEmployeesList() {
 				$("#birthcont").css("display", "none");
 			}
 			// 프로젝트 종료 시 주석 해제
-/*			timer = window.setInterval(function() {
+			timer = window.setInterval(function() {
 				if (birthdayTotalCount > 6) {
 					birthdayCurPage++;
 					getBirthdayEmployeesList();
 				}
-			}, 5000);*/
+			}, 5000);
 		},
 		error : function() {
 			alert(messages.strLang2);
@@ -831,6 +856,21 @@ function quickMenuOpen(event) {
 			url = "/ezApprovalG/apprGMain.do?listType=" + listType;
 			location = "main";
 			break;
+		case "AprDraft" : 	
+			var listType = 2;
+			url = "/ezApprovalG/apprGMain.do?listType=" + listType;
+			location = "main";
+			break;
+		case "AprProcessing" : 	
+			var listType = 3;
+			url = "/ezApprovalG/apprGMain.do?listType=" + listType;
+			location = "main";
+			break;
+		case "AprDeptSusin" : 	
+			var listType = 4;
+			url = "/ezApprovalG/apprGMain.do?listType=" + listType;
+			location = "main";
+			break;
 		case "Schedule" :
 			url = "/ezSchedule/scheduleIndex.do?funCode=2";
 			location = "main";
@@ -854,7 +894,7 @@ function viewQuick() {
 	var closePx;
 	var leftSide = false;
 	
-	if(usedTheme === 3) {
+	if(usedTheme == 3) {
 		openPx = '100px';
 		closePx = '0px';
 	} else {

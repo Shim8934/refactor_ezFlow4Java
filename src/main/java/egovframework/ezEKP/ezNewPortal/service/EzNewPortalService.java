@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 
@@ -48,6 +49,8 @@ public interface EzNewPortalService {
 	public List<?> getUserFrameListAndSelectedFrame(String companyId, int tenantId, String userId) throws Exception;
 	public void updateUserUsedFrame(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
 	public void updateUserUsedPortlet(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
+	public boolean getCheckAuth(int menuId, String userId, String deptId, String companyId, int tenantId) throws Exception;
+	public List<MenuInfoVO> getAllCompanyMenus(String companyId, int tenantId, String companyLang) throws Exception;
 	/**
 	 * 유은정
 	 */
@@ -64,11 +67,12 @@ public interface EzNewPortalService {
 	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow);
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month);
 	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId);
-	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId);
+	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId);
 	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId);
 	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId);
 	public void deleteUserThemeSetting(String userId, int tenantId, String companyId);
 	public void updateUserThemeSetting(int usedTheme, int usedFrame, String userId, int tenantId, String companyId);
+	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String compnyId);
 	//관리자부분
 	public List<PortalBoardTreeVO> getBoardTree(String parentBoardId, String companyId, int tenantId) throws Exception;
 	public void insertPortlet(JSONObject portletInfo, JSONArray portletNames,  String companyId, int tenantId) throws Exception;
@@ -80,7 +84,7 @@ public interface EzNewPortalService {
 	public int getTnenantIdByServerName(String serverName);
 	public void updateCompanyDefaultTheme(int themeId, String companyId, int tenantId);
 	public void deleteCompanyLogo(String companyId, int tenantId, String logoType);
-	
+	public void resetCompanyMenuOrder(String companyId, int tenantId);
 	/**
 	 * 이효진
 	 */
@@ -90,7 +94,7 @@ public interface EzNewPortalService {
 	 * 테마목록조회
 	 * @param admin true(admin) false(user)
 	 */
-	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId) throws Exception;
+	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId) throws Exception;
 	/**
 	 * 관리자 테마상세정보조회
 	 */
@@ -166,4 +170,13 @@ public interface EzNewPortalService {
 	public List<WeatherVO> getCityList(String primaryLang);
 	public String getUserCityCode(String id, int tenantId) throws Exception;
 	public void setUserCityCode(String id, int tenantId, String cityCode);
+	
+	/**
+	 * 김보미
+	 * @param companyID
+	 * @param tenantId
+	 * @return
+	 */
+	//관리자 슬라이드 이미지 포틀릿의 슬라이드 이미지 목록 가져오기
+	public List<PersonalSliderImageVO> getSilderImages(String companyId, int tenantId);
 }

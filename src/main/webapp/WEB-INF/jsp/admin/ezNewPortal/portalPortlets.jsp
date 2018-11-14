@@ -20,7 +20,7 @@
 	.ui-widget-content {background : none;}
 	.ui-widget-header {background : none;}
   	.column {width: 1820px; padding-bottom: 100px;}
-  	.portlet, .newPortlet {margin:0px 15px 15px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+  	.portlet, .newPortlet {margin:0px 15px 15px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
   	.portlet-header {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; border:1px solid #2196f3;}
   	.portlet-toggle {top: 50%;right: 0;float:right;}
   	.portlet-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:215px;}
@@ -76,6 +76,13 @@
 
 	@media only screen and (max-width : 1279px) {
 		.portlet, .newPortlet {width:460px;}
+	}
+	.slideImageSetting {
+		position: absolute;
+	    right: 20px;
+	    top: 55px;
+        cursor: pointer;
+        display: inline-block;
 	}
 	</style>
 	<script type="text/javascript">	
@@ -137,6 +144,11 @@
 
 		if (connectionUrl == "" && portletMenuId != 4) {
 			alert("연결 URL을 입력해주세요.");
+			return;
+		}
+		
+		if (connectionUrl.indexOf("#_self") != -1 && portletMenuId != 4) {
+			alert("#이나 _self 등은 입력할 수 없습니다.");
 			return;
 		}
 		
@@ -220,7 +232,7 @@
 			
 			portletOrderList.push({"portletOrder" : order, "portletId" : portletId});
 		}
-		console.log(portletOrderList);
+		
  		var request = new XMLHttpRequest();
 		
 		request.open('POST', '/admin/ezNewPortal/updatePortletOrder.do', true);
@@ -354,7 +366,6 @@
 		
 		request.onload = function() { 
 			showToastMessage(portletId);
-			getPortletList(); 
 		};
 		
 		request.onerror = function() {}
@@ -416,8 +427,13 @@
 					listHTML += "<span>저장</span></a>";
 					listHTML += "</div>";
 					listHTML += "<div class='portlet-content'>";
-					listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'>포틀릿 사용  : </th>"
-					listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td>";
+					listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'>포틀릿 사용  : </th>";
+// 					if (portletId == 34) { //슬라이드 이미지의 경우 - 개발 진행중! ~2018.11.16
+// 						listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
+// 						listHTML += "<div class='slideImageSetting'><a><img src='/images/admin/admin_portlet_set.png'></a></div></td>";
+// 					} else {
+						listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td>";
+// 					}
 					listHTML += "</tr>";
 					
 					for (var j = 0; j < portletNameListCnt; j++) {
@@ -441,7 +457,7 @@
 						var menuName = result[i].menuName;
 						
 						if (menuName == null || menuName == "null") {
-							menuName = "관련 메뉴 없음";
+							menuName = "없음";
 						}
 
 						listHTML += "<input id='portletMenu" + portletId + "' type='text' value='" + menuName + "'readonly>";
@@ -453,14 +469,18 @@
 						if (menuId != 4) {
 							listHTML += "<tr class='connectionTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"' maxlength='100'></td></tr>";
 						} else {
-							listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='' maxlength='100'></td></tr>";
+							if (!result[i].general) {
+								listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"' maxlength='100'></td></tr>";
+							} else {
+								listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='' maxlength='100'></td></tr>";
+							}	
 						}
 						
 					}
 					
 					if (menuId == 4 && portletId != 10) {
 						listHTML += "<tr class='boardTR'><th class='portletInfoTH'>게시판 설정 :</th><td class='portletInfoTD'>";
-						listHTML += "<input id='portletBoard" + portletId + "' class='boardName' type='text' value='" + result[i].boardName1 + "' data1='" + result[i].portletBoardId + "' readonly>";
+						listHTML += "<input id='portletBoard" + portletId + "' class='boardName' type='text' value='" + ReplaceText(ReplaceText(result[i].boardName1, '\"', "&#39;"), "\'", "&#34;") + "' data1='" + result[i].portletBoardId + "' readonly>";
 						listHTML += "<div class='boardSetting'>";
 						listHTML += "<a class='boardSettingtBtn'>";
 						listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
@@ -506,6 +526,11 @@
 						$("#portletMenu" + result[i].portletId).parent().find(".menuSetting").on("click", {"portletId" : result[i].portletId}, openMenuList);
 						$("#portlet" + result[i].portletId).find(".deletePortletBtn").on("click", {"portletId" : result[i].portletId, "menuId" : result[i].menuId}, portletDelete);
 						
+					}
+					
+					//슬라이드 이미지 버튼 활성화
+					if (result[i].portletId == 34) {
+						$("#portlet" + result[i].portletId).find(".slideImageSetting").on("click", {"portletId" : result[i].portletId}, openSlideImageSetting);
 					}
 				}
 				
@@ -627,7 +652,7 @@
 		var portletId = event.data.portletId;
  		var companiesObj = document.getElementById("ListCompany");
 		var companyId = companiesObj.options[companiesObj.selectedIndex].value;
-        var wWeight = "639";
+        var wWeight = "662";
         var wHeight = "445";
 
         var heigth = window.screen.availHeight;
@@ -648,7 +673,7 @@
 		toastArea.innerHTML = alertMessage;
 		toastArea.setAttribute("class", "toastArea");
 		toastArea.style.top = "115px";
-		toastArea.style.left = "185px";
+		toastArea.style.left = "115px";
 		toastArea.style.display = "block";
 		toastArea.id = "toast" + portletId;
 		
@@ -656,10 +681,30 @@
 		
 		setTimeout(function() {
 			$("#toast" + portletId).fadeOut(1000, function() {
+				getPortletList(); 
+				
 				var parent = doc.getElementById("portlet" + portletId);
 				parent.removeChild(toastArea);
-			})
-		}, 500);
+			});
+		}, 1000);
+	}
+	
+	var openSlideImageSetting = function(event) {
+		var portletId = event.data.portletId;
+ 		var companiesObj = document.getElementById("ListCompany");
+		var companyId = companiesObj.options[companiesObj.selectedIndex].value;
+		
+        var wWeight = "1200";
+        var wHeight = "720";
+
+        var heigth = window.screen.availHeight;
+        var width = window.screen.availWidth;
+
+        var left = (width - wWeight) / 2;
+        var top = (heigth - wHeight) / 2;
+        
+        window.open("/admin/ezNewPortal/openSlideImageSetting.do?portletId=" + portletId + "&companyId=" + companyId, "",
+            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 	}
 	</script>
 </head>

@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -250,6 +251,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void updateCompanyDefaultTheme (Map<String, Object> map) {
 		update("ezNewPortal.updateCompanyDefaultTheme", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getBoardPortletInfo (Map<String, Object> map) {
+		return (List<BoardListVO>) list("ezNewPortal.getBoardPortletInfo", map);
+	}
 	/**
 	 * 이효진
 	 */
@@ -439,6 +445,9 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		insert("ezNewPortal.insertMenuAuth", map);
 	}
 	
+	public void resetCompanyMenuOrder (Map<String, Object> map) {
+		update("ezNewPortal.resetCompanyMenuOrder", map);
+	}
 	/**
 	 * 구해안
 	 */
@@ -519,6 +528,28 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 
 	public void setUserCityCode(Map<String, Object> map) {
 		update("ezNewPortal.setUserCityCode", map);
-		
+	}
+	
+	//권한 체크
+	public MenuAuthVO getCheckUserAuth(Map<String, Object> map) {
+		return (MenuAuthVO) select("ezNewPortal.getCheckUserAuth", map);
+	}
+	
+	public MenuAuthVO getCheckDeptAuth(Map<String, Object> map) {
+		return (MenuAuthVO) select("ezNewPortal.getCheckDeptAuth", map);
+	}
+	
+	public MenuAuthVO getCheckcomAuth(Map<String, Object> map) {
+		return (MenuAuthVO) select("ezNewPortal.getCheckcomAuth", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MenuInfoVO> getAllCompanyMenus(Map<String, Object> map) throws Exception {
+		return (List<MenuInfoVO>) list("ezNewPortal.getAllCompanyMenus", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<PersonalSliderImageVO> getSilderImages(Map<String, Object> map) {
+		return (List<PersonalSliderImageVO>) list("ezNewPortal.getSilderImages", map);
 	}
 }

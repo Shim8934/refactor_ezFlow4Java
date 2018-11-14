@@ -33,17 +33,21 @@
 	.portlet {
 		 margin:20px 0px 0px 16px;
 		 height:250px;
+		 background:#fff;
+		 border-radius: 5px;
 	}
 	.slider_section {height:515px; width:280px;}
 	.right_float {float:right;}
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
+	.two_column {width:48%;}
 </style>
 </head>
 <body class="mainbg">	
 	<div id="Center">
-		<aside id="quickSide">
-			<p class="linkBtn_open" id="linkBtn_open"><img src="/images/ezNewPortal/theme3Img/linkBtn_open.png"></p>
+	<div style="position:relative;">
+		<aside id="quickSide" style="width:0px">
+			<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/theme3Img/linkBtn_open.png"></p>
 			<div class="aside_quick">
 				<p class="quickmenu_title">Quick</p>
 				<ul class="quickmenu">
@@ -63,12 +67,13 @@
 				</div>
 			</div>
 		</aside>
+	</div>	
 		<section class="section_main">
 			<div class="portlet_area">
 			</div>
 		</section>
 		
-		<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
+		<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 			
 		<div class="layerpopup"  style="z-index: 2000; position: fixed;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -261,6 +266,11 @@
 					url : portletUrl,
 					success : function(result) {
 						$("#" + portletId + "Portlet").append(result);
+						
+						if(portletId != "34") {
+							$("#" + portletId + "Portlet").css("background", "none");
+						}
+						
 						eventSetting(portletId);
 					},
 					error : function() {
@@ -301,7 +311,7 @@
 		$("#helpDiv").css("display", "none");
 		
 		//퀵메뉴 on/off 버튼
-		$("#linkBtn_open").on('click', viewQuick);
+		$("#quicklinkBtn").on('click', viewQuick);
 		//퀵메뉴 이동(오른쪽)
 		$("#quickMailwrite").on('click', {'menu' : 'mail'}, quickMenuOpenRight);
 		$("#quickApprovalwrite").on('click', {'menu' : 'appr'}, quickMenuOpenRight);
@@ -310,6 +320,10 @@
 		
 		//구해안 - 임시로 넣어둠
 		$("#portletEnv").on("click", viewPortletEnv);
+		
+		//구해안 - 테마3일때 일정포틀릿이랑 나의정보 포틀릿은 background 지워버리기
+		$("#36portlet").css("background-color","none");
+		$("#6portlet").css("background-color","none");
 
 		// 퀵링크 호출
 		getQuickLink();		
@@ -317,6 +331,15 @@
 		//포틀릿 드래그 앤 드롭
 		$(".portlet_area").sortable({
 			handle : ".sortablePortlet",
+			start : function (event, block) {
+				
+				$(".portlet.ui-sortable-helper").css("width", $(".portlet").not(block.item).not(block.placeholder).outerWidth());
+				
+				$(".ui-sortable-placeholder").css({
+					'width' : $(".portlet").not(block.item).not(block.placeholder).outerWidth(),
+					'height' : $(".portlet").not(".ui-sortable-helper").outerHeight()
+				});
+			},
 			update : function(event, ui) {
 				updatePortletOrderUser();
 			}
@@ -327,20 +350,52 @@
 	});
 	
 	var frameSetting = function (frameSetId) {
-		console.log(frameSetId);
 		frameId = frameSetId;
 		
-		if (frameSetId == "Frame3" || frameSetId == "Frame4") {
+		if (frameSetId == "Frame2") {
 			var media1921 = window.matchMedia("only screen and (min-width: 1921px)");
 			var media1686 = window.matchMedia("only screen and (max-width :1920px) and (min-width :1686px)");
-			var media1280 = window.matchMedia("only screen and (max-width :1685px) and (min-width :1280px)");
+			var media1685 = window.matchMedia("only screen and (max-width :1685px) and (min-width :1590px)");
+			var media1589 = window.matchMedia("only screen and (max-width :1589px) and (min-width :1280px)");
+			var media1279 = window.matchMedia("only screen and (max-width :1279px)");
 			
 			if (media1921.matches) {
-				$(".box_shadow").css("width", "483px");
+				$(".portlet").addClass("two_column");
+				$(".info_left").css("display", "inline-block");
+				$(".info_left").css("float", "left");
+				$(".info_left").css("width", "189px");
+				$(".info_left").css("margin-right", "5px");
+				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
+				$(".info_right").css("width", "calc(100% - 194px)");
+				$(".info_right").css("background", "#ffffff");
 			} else if (media1686.matches) {
-				$(".box_shadow").css("width", "48%");
-			} else if (media1280.matches) {
-				$(".box_shadow").css("width", "48%");
+				$(".portlet").addClass("two_column");
+				$(".info_left").css("display", "inline-block");
+				$(".info_left").css("float", "left");
+				$(".info_left").css("width", "189px");
+				$(".info_left").css("margin-right", "5px");
+				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
+				$(".info_right").css("width", "calc(100% - 194px)");
+				$(".info_right").css("background", "#ffffff");
+			} else if (media1685.matches) {
+				$(".portlet").addClass("two_column");
+				$(".info_left").css("display", "inline-block");
+				$(".info_left").css("float", "left");
+				$(".info_left").css("width", "189px");
+				$(".info_left").css("margin-right", "5px");
+				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
+				$(".info_right").css("width", "calc(100% - 194px)");
+				$(".info_right").css("background", "#ffffff");
+			} else if (media1589.matches) {
+				$(".portlet").addClass("two_column");
+				$(".info_left").css("display", "none");
+				$(".info_right").css("width", "100%");
+				$(".info_right").css("margin-left", "0px !important");
+			} else if (media1279.matches) {
+				$(".portlet").addClass("two_column");
+				$(".box_shadow.info_left").css("display", "none");
+				$(".box_shadow.info_right").css("width", "100%");
+				$(".box_shadow.info_right").css("margin-left", "0px !important");
 			}
 		}
 	}

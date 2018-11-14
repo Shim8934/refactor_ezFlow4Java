@@ -375,6 +375,20 @@ function MiniDataBind(oAppointment) {
 }
 
 function clickDay(val01) {
+	debugger
+	var beforeId = $("#"+g_selTDID).parent().parent().attr("id"); 
+	if (beforeId) {
+		if (beforeId.indexOf('TOP') == -1) {
+			if ($("#"+g_selTDID)) {
+				$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
+			}
+			
+			if ($("#"+g_selTRID)) {
+				$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
+			}
+		}	
+	}
+	
     if ($("#"+g_selTDID)) {
     	$("#"+g_selTDID).parent().css("background-color", "").css("color", "");
     }
@@ -496,6 +510,29 @@ function preMonth() {
    
 }
 
+//이전월 이동
+function preMonthTop() {
+	var iMonth = parseInt(document.getElementById("iMonTop").innerHTML, 10) - 1;
+    var iYear = document.getElementById("iYearTop").innerHTML;
+
+    if (iMonth < 1) {
+        iYear--;
+        iMonth = 12;
+    }
+    else if (iMonth > 12) {
+        iYear++;
+        iMonth = 1;
+    }
+
+    document.getElementById("iYearTop").innerHTML = iYear;
+    document.getElementById("iMonTop").innerHTML = iMonth;
+    sDate.setFullYear(iYear, iMonth - 1, 14);
+        
+
+    CalendarMiniView("CalendarMini_Top");
+    CalendarMiniDataSource();
+}
+
 //다음월 이동
 function nextMonth() {
     var iMonth = parseInt(document.getElementById("iMon").innerHTML, 10) + 1;
@@ -516,6 +553,31 @@ function nextMonth() {
 
    
     CalendarMiniView("CalendarMini");
+    CalendarMiniDataSource();
+
+   
+}
+
+//다음월 이동
+function nextMonthTop() {
+    var iMonth = parseInt(document.getElementById("iMonTop").innerHTML, 10) + 1;
+    var iYear = document.getElementById("iYearTop").innerHTML;
+
+    if (iMonth < 1) {
+        iYear--;
+        iMonth = 12;
+    }
+    else if (iMonth > 12) {
+        iYear++;
+        iMonth = 1;
+    }
+
+    sDate.setFullYear(iYear, iMonth - 1, 14);
+    document.getElementById("iYearTop").innerHTML = iYear;
+    document.getElementById("iMonTop").innerHTML = iMonth;
+
+   
+    CalendarMiniView("CalendarMini_Top");
     CalendarMiniDataSource();
 
    

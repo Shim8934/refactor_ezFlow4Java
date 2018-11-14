@@ -22,17 +22,6 @@
 			.selectTR{
 				background-color: rgb(237, 244, 253);
 			}
-			/* switch */
-			.switch {position: absolute;display: inline-block;width: 60px;height: 22px;margin-top:-10px;}
-			.switch input {opacity: 0;width: 0;height: 0;}
-			.slider {  position: absolute;  cursor: pointer;  top: 0;  left: 0;  right: 0;  bottom: 0;  background-color: #ccc;  -webkit-transition: .4s;  transition: .4s;}
-			.slider:before {  position: absolute;  content: "";  height: 13px;  width: 13px;  left: 8px;  bottom: 5px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
-			input:checked + .slider {  background-color: #2196F3;}
-			input:focus + .slider { box-shadow: 0 0 1px #2196F3;}
-			input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transform: translateX(26px);transform: translateX(26px);}
-			/* Rounded sliders */
-			.slider.round {border-radius: 15px;}
-			.slider.round:before {border-radius: 50%;}
 			
 			.nameTD {width:70%;}
 			.authTD {position:relative;}
@@ -431,7 +420,6 @@
 	   			selUserId = $(elem).attr("id");
 	   			selUserName = $(elem).attr("name");
 	   			selDeptId = $(elem).attr("deptId");
-	   			console.log(selUserId);
 	   			//user / dept 구분
 	   		}
 	   		
@@ -471,7 +459,7 @@
 		   		} else {
 		   			alert("<spring:message code='ezJournal.t127'/>");
 		   		}
-		   		console.log(menuAuths);
+		   		
 		   		drawAuths();
 	   		}
 	   		
@@ -549,7 +537,6 @@
 	   			}
 	   			
 	   			if (isUser) {
-	   				console.log("???/");
 	   				//사람추가 조건은 음 사람셀렉트안됫을떄?
 	   				setAuthorViewUser("user");
 	   				
@@ -577,7 +564,7 @@
 	   			/* opener.selReceiver = JSON.stringify(receiverList);
 	   			opener.showReceiver(); */
 	   			/* 내 데이터로 바꿔야 */
-	   			window.opener.menuAuths = menuAuths;
+	   			window.opener.menuAuths = JSON.stringify(menuAuths);
 	   			
 	   			var menuAuthsY = [];
 	   			var menuAuthsN = [];
@@ -591,74 +578,42 @@
 	   				}
 	   			});
 	   			
-	   			console.log(menuAuthsY);
-	   			console.log(menuAuthsN);
+				var menuAuthsYList = "";
+				
+				menuAuthsY.forEach(function(item, index) {
+					if (item.userType) {
+						menuAuthsYList += ", " + item.userName;
+						menuAuthsYList += "(" + item.userDeptName + ")";
+					} else {
+						menuAuthsYList += ", " + item.userDeptName;
+					}
+				});
+					
+				window.opener.$(".accessOK").text(menuAuthsYList.substring(1));
 	   			
-	   			if (menuAuthsY != null && menuAuthsY.length != 0) {
-					var menuAuthsYList = "";
+				var menuAuthsNList = "";
+				
+				menuAuthsN.forEach(function(item, index) {
+					if (item.userType) {
+						menuAuthsNList += ", " + item.userName;
+						menuAuthsNList += "(" + item.userDeptName + ")";
+					} else {
+						menuAuthsNList += ", " + item.userDeptName;
+					}
+				});
 					
-					menuAuthsY.forEach(function(item, index) {
-						if (item.userType) {
-							menuAuthsYList += ", " + item.userName;
-							menuAuthsYList += "(" + item.userDeptName + ")";
-						} else {
-							menuAuthsYList += ", " + item.userDeptName;
-						}
-					});
-					
-					window.opener.$(".accessOK").find("div").text(menuAuthsYList.substring(1));
-				}
-	   			
-	   			if (menuAuthsN != null && menuAuthsN.length != 0) {
-					var menuAuthsNList = "";
-					
-					menuAuthsN.forEach(function(item, index) {
-						if (item.userType) {
-							menuAuthsNList += "," + item.userName;
-							menuAuthsNList += "(" + item.userDeptName + ")";
-						} else {
-							menuAuthsNList += "," + item.userDeptName;
-						}
-					});
-					
-					window.opener.$(".accessNO").find("div").text(menuAuthsNList.substring(1));
-				}
-	   			
+				window.opener.$(".accessNO").text(menuAuthsNList.substring(1));
+
+	   			console.log(menuAuths);
+	   			console.log(window.opener.menuAuths);
 	   			window.close();
 	   		}
 	   		
 	   		/** get MenuAuth data */
 	   		var getMenuAuths = function() {
-	   			var menuId = "${menuId}";
-				var companyValue = "${companyId}";
-				
-				var request = new XMLHttpRequest();
-				request.open('POST', '/admin/ezNewPortal/getMenuAuths.do', true);
-				request.setRequestHeader('content-type', 'application/json');
-				
-				request.onload = function(result) {
-					if (request.status >= 200 && request.status < 400) {
-						var result = JSON.parse(request.responseText);
-						var menuAuthsY = result.menuAuths.menuAuthsY;
-						var menuAuthsN = result.menuAuths.menuAuthsN;
-						
-						menuAuths = new Array();
-						
-						Array.prototype.push.apply(menuAuths, menuAuthsY);
-						Array.prototype.push.apply(menuAuths, menuAuthsN);
-						
-						drawAuths();
-					}
-				}
-				
-				request.onerror = function() {}
-				
-				var data = JSON.stringify({
-					menuId : menuId,
-					companyId : companyValue,
-				});
-				
-				request.send(data);
+					menuAuths = JSON.parse(JSON.stringify(window.opener.menuAuths));
+					
+					drawAuths();
 	   		};
 	   		
 	   		//onload

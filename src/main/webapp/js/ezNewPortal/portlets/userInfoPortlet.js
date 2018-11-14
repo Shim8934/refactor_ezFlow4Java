@@ -36,7 +36,7 @@ function ptlAttiClock() {
     var s;
     var ptlTime = " ";
     
-    ptlNowAttiTime.setMinutes(ptlNowAttiTime.getMinutes() + 1);
+    ptlNowAttiTime.setSeconds(ptlNowAttiTime.getSeconds() + 1);
     ptlTime = leadingZeros(ptlNowAttiTime.getHours(), 2) + ':' + leadingZeros(ptlNowAttiTime.getMinutes(), 2);
     document.getElementById("ptlTimeFlow").innerHTML = ptlTime;
 
@@ -44,7 +44,7 @@ function ptlAttiClock() {
     	ptlAmPmCheck(ptlNowAttiTime.getHours());
     }
     
-    gizmo = setTimeout("ptlAttiClock()", 1000 * 60);
+    gizmo = setTimeout("ptlAttiClock()", 1000);
 }
 
 function ptlAmPmCheck(hours) {

@@ -12,40 +12,46 @@
 <%-- <link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">  --%>
 <link href="${util.addVer('/css/ezNewPortal/theme2_main.css')}" rel="stylesheet" type="text/css">
 <link href="${util.addVer('/css/ezNewPortal/theme2.css')}" rel="stylesheet" type="text/css">
+<style type="text/css">
+	.two_column{width:48%;}
+	.mainbg {min-width:1280px;}
+</style>
 </head>
 
-<body class="mainbg" style="min-width:1600px;">
-	<aside id="quickSide">
-		<p class="linkBtn_open" id="linkBtn_open"><img src="/images/ezNewPortal/linkBtn_open.png"></p>
-		<div class="aside_quick">
-			<p class="quickmenu_title">Quick</p>
-			<ul class="quickmenu">
-				<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt">메일작성</span></li>
-				<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt">결재작성</span></li>
-				<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt">일정작성</span></li>
-				<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt">조직도</span></li>
-			</ul>
-		</div>
-		<div class="aside_link">
-			<p class="linkmenu_title">Link</p>
-			<ul class="linkmenu" id="QuickUl">
-			</ul>
-			<div class="linkBtn">
-				<p class="btnLay" id="btnLay">
-				</p>
+<body class="mainbg"">
+	<div style="position:relative;">
+		<aside id="quickSide" style="width:0px">
+			<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>
+			<div class="aside_quick">
+				<p class="quickmenu_title">Quick</p>
+				<ul class="quickmenu">
+					<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt">메일작성</span></li>
+					<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt">결재작성</span></li>
+					<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt">일정작성</span></li>
+					<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt">조직도</span></li>
+				</ul>
 			</div>
-		</div>
-	</aside>   
+			<div class="aside_link">
+				<p class="linkmenu_title">Link</p>
+				<ul class="linkmenu" id="QuickUl">
+				</ul>
+				<div class="linkBtn">
+					<p class="btnLay" id="btnLay">
+					</p>
+				</div>
+			</div>
+		</aside>
+	</div>   
 <div class="section1_bg">
 	<section class="section1">
     	<article class="personal">
         	<p>	
-            	<span class="info_set" id="personalEnv"></span>
+            	<span class="info_set" id="main_personalEnv"></span>
                 <span style="float:left; width:80%;">${userEmail}</span>
-				<span class="" id="portletEnv" style="float:left;">설정</span>                
+				<span class="" id="main_portletEnv" style="float:left;"><img src="/images/admin/frameSetting.png" style="margin-top:11px;margin-left:21px;cursor:pointer;background-color:#b9b9b9; border:1px solid #b9b9b9;"/></span>                
             </p>
             <div class="info">
-            	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
+            	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png" style="border-radius:100px;" width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" style="border-radius:100px;"id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
                 <dl class="info_txt">
                 	<dt>${deptName}</dt>
                     <dt>${userName} ${userTitle}</dt>
@@ -60,10 +66,10 @@
 	                    <dd id="timeFlow"></dd>
 	                </dl>
 	                <dl class="commute">
-	                	<dt id="inAttiBtn" class="out" type="A01" datetype="2" onclick="checkHoliday(this)">출근</dt>
+	                	<dt id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this)">출근</dt>
 	                </dl>
 	                <dl class="commute">
-	                	<dt id="outAttiBtn" class="out" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</dt>
+	                	<dt id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</dt>
 	                </dl>            	
             	</c:when>
             	<c:otherwise>
@@ -75,7 +81,7 @@
             </c:choose>
             </div>
         </article>
-        <div class="schedule">
+        <div class="main_schedule">
         	<article class="list">
             	<div class="maintab01">
                 	<p class="left_on" id="pSchedule">개인일정</p>
@@ -84,7 +90,7 @@
                 <div class="scrollbox-play-light">
                 	<div class="scrollbox">
                     	<div class="content">
-                        	<ul class="schedule_list" id="schedule_list">
+                        	<ul class="schedule_list" id="schedule_list_Top">
                             </ul>
                         </div>
                         <div class="scrollbar-v scrollbar-v-disabled">
@@ -149,15 +155,18 @@
                 </ul>
             </article>
         </div>
-        <article class="excellentemployee">
+        <!-- <article class="excellentemployee">
         	<p><span>이달의</span><span class="blue">우수사원</span></p>
             <div class="excellentcontent" id="excellentcontent">
                 <dl>
                     <dt id="emPic"></dt>
                     <dd><img src="/images/ezNewPortal/theme2Img/icon_excellent.png"></dd>
                 </dl>
-                <!-- <p class="name"><span>UI/UX팀</span><span>홍길동</span></p> -->
+                <p class="name"><span>UI/UX팀</span><span>홍길동</span></p>
             </div>
+        </article> -->
+        <article class="event">
+            <p></p>
         </article>
 <!--          <article class="event">
         	<p><span>이달의</span><span class="blue">행사</span></p>
@@ -166,17 +175,19 @@
             </dl>
         </article> -->
     </section>
-	<section class="section_main">
+</div>
+<div class="section_main">
+	<section>
 		<div class="portlet_area">
 		</div>
 	</section>
+</div>
 
-	<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
+	<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 			
 	<div class="layerpopup"  style="z-index: 2000; position: fixed;display: none;" id="iFramePanel">
 		<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 	</div>	
-</div>
 <%-- script line --%>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>
@@ -243,17 +254,17 @@
 	var frameSetting = function (frameSetId) {
 		frameId = frameSetId;
 		
-		if (frameSetId == "Frame3" || frameSetId == "Frame4") {
+		if (frameSetId == "Frame2") {
 			var media1921 = window.matchMedia("only screen and (min-width: 1921px)");
 			var media1686 = window.matchMedia("only screen and (max-width :1920px) and (min-width :1686px)");
 			var media1280 = window.matchMedia("only screen and (max-width :1685px) and (min-width :1280px)");
 			
 			if (media1921.matches) {
-				$(".portlet").css("width", "483px");
+				$(".portlet").addClass("two_column");
 			} else if (media1686.matches) {
-				$(".portlet").css("width", "48%");
+				$(".portlet").addClass("two_column");
 			} else if (media1280.matches) {
-				$(".portlet").css("width", "48%");
+				$(".portlet").addClass("two_column");
 			}
 		}
 	} 	
@@ -368,7 +379,7 @@
  	}	
 	
 	//월별 우수사원 정보 호출
-	var getMonthlyBestEmployeeTheme2 = function () {
+	/* var getMonthlyBestEmployeeTheme2 = function () {
 		$.ajax({
 			type : "POST",
 			url : "/ezNewPortal/getMonthlyBestEmployee.do",
@@ -422,17 +433,28 @@
 				$(".emDL").append(strHTML);
 			}
 		});
-	}
+	} */
 	
 	var getScheduleList_after_Theme2 = function (list) {
 		// 개인일정, 부서일정 나누기 scheduleType 1 or 2
+		pScheduleList = [];
+		dScheduleList = [];
 		list.forEach(function(item, index) {
 			if(item.scheduleType === '1') {
 				pScheduleList.push(item);	
-			} else if (item.scheduleType === '2') {
+			} else if (item.scheduleType === '2' || item.scheduleType === '3') {
 				dScheduleList.push(item);
 			}
 		});
+		
+		//개인에 탭이 되어있으면
+		if (pSchedule.classList.contains('left_on')) {
+			assembleScheduleList(pScheduleList);
+		}
+		//부서에 탭이 되어있으면
+		if (dSchedule.classList.contains('right_on')) {
+			assembleScheduleList(dScheduleList);
+		}
 	}
 	
 	var getScheduleList_Top = function (date, mode) {
@@ -451,13 +473,34 @@
 			}
 		});
 	}
-	
+
 	var assembleScheduleList = function (data) {
-        var schList = document.getElementById('schedule_list');
+        var schList = document.getElementById('schedule_list_Top');
         
 		while(schList.hasChildNodes()) {
 			schList.removeChild(schList.firstChild);	
 		}
+		
+		if(data.length === 0) {
+			var dl = document.createElement('dl');
+			dl.className = 'nodata';
+			dl.style.marginLeft = '-18px';
+			
+			var dt = document.createElement('dt');
+			var img = document.createElement('img');
+			img.src = '/images/kr/main/nodata.png';
+			
+			dt.appendChild(img);
+			var dd = document.createElement('dd');
+			dd.textContent = '\"데이터가 없습니다.\"';
+			
+			dl.appendChild(dt);
+			dl.appendChild(dd);
+			
+			schList.appendChild(dl);
+			return;
+		}
+		
         data.forEach(function(item, index) {
         	if(index > 5) return;
         	var li = document.createElement('li');
@@ -561,11 +604,11 @@
 		
 		//이달의 우수사원 불러오기
 		//getMonthlyBestEmployee();
-		getMonthlyBestEmployeeTheme2();
+		//getMonthlyBestEmployeeTheme2();
 		
 		//개인환경설정으로 이동 동작 연결
-		$("#personalEnv").on("click", viewPersonalEnv);
-		$("#portletEnv").on("click", viewPortletEnv);
+		$("#main_personalEnv").on("click", viewPersonalEnv);
+		$("#main_portletEnv").on("click", viewPortletEnv);
 		//메뉴 이동(왼쪽)
 		$("#NewMail").on("click", {"menu" : "NewMail"}, quickMenuOpen);
 		$("#Schedule").on("click", {"menu" : "Schedule"}, quickMenuOpen);
@@ -574,7 +617,7 @@
 		$("#AprSign").on("click", {"menu" : "ApprG"}, quickMenuOpen);
 		
 		//퀵메뉴 on/off 버튼
-		$("#linkBtn_open").on('click', viewQuick);
+		$("#quicklinkBtn").on('click', viewQuick);
 		//퀵메뉴 이동(오른쪽)
 		$("#quickMailwrite").on('click', {'menu' : 'mail'}, quickMenuOpenRight);
 		$("#quickApprovalwrite").on('click', {'menu' : 'appr'}, quickMenuOpenRight);
@@ -588,9 +631,12 @@
 		$(".portlet_area").sortable({
 			handle : ".sortablePortlet",
 			start : function (event, block) {
-				$(".ui-sortable-helper").css({
-					'width' : $(".box_shadow").outerWidth(),
-					'height' : $(".box_shadow").outerHeight()
+				
+				$(".portlet.ui-sortable-helper").css("width", $(".portlet").not(block.item).not(block.placeholder).outerWidth());
+				
+				$(".ui-sortable-placeholder").css({
+					'width' : $(".portlet").not(block.item).not(block.placeholder).outerWidth(),
+					'height' : $(".portlet").not(".ui-sortable-helper").outerHeight()
 				});
 			},
 			update : function(event, ui) {
@@ -633,6 +679,9 @@
 		});
 		
 		assembleScheduleList(pScheduleList);
+		
+		CalendarMiniView("CalendarMini_Top");
+		CalendarMiniDataSource("Top");
 	});
 </script>
 </body>	
