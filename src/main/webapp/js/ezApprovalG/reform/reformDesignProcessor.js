@@ -2829,8 +2829,7 @@ function showControlProperties(controlElement) {
 		valueElement.checked = (attValue != null && attValue != "");
 		
 		valueElement = document.getElementById("prop_checked_state");
-		attValue = controlElement.getAttribute("checked");
-		valueElement.checked = attValue == "checked";
+		valueElement.checked = controlElement.hasAttribute("checked");
 		
 		valueElement = document.getElementById("prop_data_bind_source");
 		attValue = controlElement.getAttribute("data-reform_data_bind_source");
@@ -2893,8 +2892,7 @@ function showControlProperties(controlElement) {
 		valueElement.checked = (attValue != null && attValue != "");
 		
 		valueElement = document.getElementById("prop_checked_state");
-		attValue = controlElement.getAttribute("checked");
-		valueElement.checked = attValue == "checked";
+		valueElement.checked = controlElement.hasAttribute("checked");
 		
 		valueElement = document.getElementById("prop_data_bind_source");
 		attValue = controlElement.getAttribute("data-reform_data_bind_source");
