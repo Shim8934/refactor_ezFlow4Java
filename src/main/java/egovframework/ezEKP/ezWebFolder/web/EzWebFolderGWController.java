@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +45,7 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
@@ -712,11 +714,12 @@ public class EzWebFolderGWController {
 		String userId       = request.getParameter("userId")   != null ? request.getParameter("userId")  : "";
 		String serverName   = request.getHeader("x-user-host")   != null ? request.getHeader("x-user-host")  : "";
 		String newName      = request.getParameter("newName")  != null ? request.getParameter("newName") : "";
+		String fileExt      = request.getParameter("fileExt")  != null ? request.getParameter("fileExt") : "";
 		JSONObject result   = new JSONObject();
 		
 		logger.debug("UserId: " + userId + " || Servername: " + serverName + " || Newname: " + newName + " || FileId: " + fileId);
 		
-		if (fileId.equals("") || newName.equals("") || serverName.equals("") || userId.equals("")) {
+		if (fileId.equals("") || (fileExt.equals("") && newName.equals("")) || serverName.equals("") || userId.equals("") ) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -730,10 +733,16 @@ public class EzWebFolderGWController {
 			String companyId = userInfo.getCompanyID();
 			int tenantId     = userInfo.getTenantId();
 			String offset    = userInfo.getOffset();
+			String realPath  = request.getServletContext().getRealPath("");
+			realPath = realPath.substring(0, realPath.length()-1);
+			String realFileExt = "";
+
+			String path = commonUtil.getUploadPath("upload_webfolder.ROOT", tenantId) + commonUtil.separator;
+			path = path.substring(0, path.length()-1);
 			
 			if (!isWebfolderAdmin(userInfo)){
 				JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), null, fileId, userInfo.getTenantId());
-				
+
 				if ("error".equals(permissionResult.get("status"))) {
 					return permissionResult;
 				}
@@ -744,14 +753,56 @@ public class EzWebFolderGWController {
 			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
 			
 			FileVO fileVO    = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
-			String fileExt   = fileVO.getFileExt();
-			ezWebFolderService.updateFileName(fileId, newName + "." + fileExt, timeUTC, tenantId);
+			if (newName == "") {
+				// newName이 비어있다는 말은 확장자를 수정
+				newName = fileVO.getFileName();
+				String[] arryStrings = newName.split("\\.");
+				String oldFileName = arryStrings[0];
+				newName = oldFileName;
+			}
+			
+			if (fileExt == "") {
+				// 확장자가 비어있다는 말 : 이름을 수정
+				fileExt   = fileVO.getFileExt();
+				realFileExt   = fileVO.getFileExt();
+			} else {
+				// 확장자를 수정하겠다 -> updateDate, filePath, fileExt, fileTypeId를 수정해야함
+				String filePath = fileVO.getFilePath();
+				String[] arryStrings = filePath.split("\\.");
+				String oldFilePath = arryStrings[0];
+				String newFilePath = oldFilePath + "." + fileExt;
+				realFileExt = fileExt;
+				
+				// file의 이름을 바꿔주는것에 사용
+				File file = new File(realPath +  filePath);
+				File fileToMove = new File(realPath + newFilePath);
+				
+				if (fileExt.length() >= 10) {
+					fileExt = "unknown";
+				}
+				
+				FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(realFileExt.toLowerCase().toString(), tenantId);
+					
+				if (fileType == null) {
+					fileExt = "unknown";
+				}
+				
+				ezWebFolderService.updateFileExt(fileId, newFilePath, fileExt, realFileExt, timeUTC, tenantId);
+				
+				// file의 폴더경로-> fileToMove로 경로 바꿈
+				boolean isMoved = file.renameTo(fileToMove);
+				
+				if (isMoved == true) {
+					logger.debug("isMoved" + isMoved);
+				}
+				
+			}
+			ezWebFolderService.updateFileName(fileId, newName + "." + realFileExt, timeUTC, tenantId);
 			ezWebFolderService.saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 2);

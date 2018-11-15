@@ -12,6 +12,7 @@ import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
@@ -77,4 +78,6 @@ public interface EzWebFolderService {
 	String getWebFolderDirPath(int tenantId);
 	double getTotalFilesSize(String fileList, int tenantId) throws Exception;
 	List<FolderSimpleVO> getAllSimpleShareFolder(String userId, String deptId, String compId, int tenantId) throws Exception;
+	void updateFileExt(String fileId, String oldFilePath, String fileExt,String realFileExt, String timeUTC, int tenantId) throws Exception;
+	FileTypeVO getFileTypeByFileExt(String string, int tenantId) throws Exception;
 }

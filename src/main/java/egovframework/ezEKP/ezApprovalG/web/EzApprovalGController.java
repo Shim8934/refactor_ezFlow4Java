@@ -4911,6 +4911,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String susinAdmin = "";
 		String serverName = userInfo.getServerName();
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -4921,6 +4922,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("serverName", serverName);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("ezReceiveAssignUI ended.");
 		

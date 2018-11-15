@@ -205,6 +205,26 @@
 		            DivPopUpShow(300, 205, url);
 		        }
 		    }
+		    
+			var mail_newreceiverchoose_dialogArguments = new Array();
+	        
+	        function SelectReceiver_onClick() {
+	            var type = "auto";
+	            var receiverData = new Array();
+	            
+	            receiverData["addReceiver"] = addReceiver;
+	            receiverData["window"] = this;
+	            mail_newreceiverchoose_dialogArguments[0] = receiverData;
+	            mail_newreceiverchoose_dialogArguments[1] = addReceiver;
+	            
+	            var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&ruleKind=MANAGER", "mail_foldermanage_Cross", GetOpenWindowfeature(690, 650));
+	            try { OpenWin.focus(); } catch (e) { }
+	        }
+	
+	        function addReceiver(strEmail) {
+	            document.getElementById("Manager").value = strEmail;
+	        }
+		    
 		    function OpenAlertUI_Complete() {
 		        DivPopUpHidden();
 		    }
@@ -260,7 +280,10 @@
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t225' /></th> 
-		    	<td><input type="text" id=Manager style="width:97%" maxlength="50"></td> 
+		    	<td>
+		    		<input type="text" id=Manager style="width:75%" maxlength="50">
+		    		<a id="ReceiverSelect" class="imgbtn imgbck" style="width:16%; padding-left: 10px;" onClick="SelectReceiver_onClick()"><span style="width:80%;text-align:center;"><spring:message code='ezEmail.t488' /></span></a>
+		    	</td> 
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t226' /></th> 
