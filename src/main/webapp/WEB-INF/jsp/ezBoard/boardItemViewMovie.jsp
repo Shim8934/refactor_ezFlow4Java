@@ -115,10 +115,6 @@
 	                movieID = getNodeText(xmldom.getElementsByTagName("IMAGEID")[0]);
 	                movieName = getNodeText(xmldom.getElementsByTagName("IMAGENAME")[0]);
 	                
-	                console.log("moviePath      ::     " + moviePath);
-	                console.log("movieID      ::     " + movieID);
-	                console.log("movieName      ::     " + movieName);
-	                
 					movieMain(movieID, moviePath, movieName);
 		        }
 		        
