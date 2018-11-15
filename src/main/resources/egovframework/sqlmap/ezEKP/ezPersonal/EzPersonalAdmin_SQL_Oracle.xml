@@ -8,6 +8,7 @@
 	<typeAlias  alias="PersonalPopupVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO"/>
 	<typeAlias  alias="PersonalEmpMonthVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO"/>
 	<typeAlias  alias="PersonalSliderImageVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO"/>
+	<typeAlias  alias="PersonalLightPollConfigVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO"/>
 	
 	<resultMap class="PersonalNoticeVO" id="personalNoticeVO">
 		<result property="title"						column="TITLE"					columnIndex="1"/>
@@ -882,4 +883,47 @@
 		]]>
 	</delete>
 	
+	<select id="EzPersonalAdmin.EZSP_getLightPollConfig" parameterClass="Map"	resultClass="PersonalLightPollConfigVO">
+		<![CDATA[
+			SELECT
+				LIGHTPOLLOPTIONID, USERID, ISPREVIEW, TENANTID
+			FROM
+				TBL_PS_LIGHTPOLL_OPTION
+			WHERE
+				USERID = #userId#
+			AND
+				TENANTID = #tenantId#
+		]]>
+	</select>
+	
+	<insert id="EzPersonalAdmin.EZSP_insertLightPollConfig" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PS_LIGHTPOLL_OPTION
+				(LIGHTPOLLOPTIONID, USERID, ISPREVIEW, TENANTID)
+			VALUES
+				(#lightpollOptionId# ,#userId#, 0, #tenantId# )
+		]]>
+		<selectKey keyProperty="lightpollOptionId" resultClass="Integer" type="pre">
+			<![CDATA[
+				SELECT 
+					MAX(LIGHTPOLLOPTIONID) + 1 
+				FROM 
+					TBL_PS_LIGHTPOLL_OPTION
+			]]>	
+		</selectKey>
+	</insert>
+	
+	<update id="EzPersonalAdmin.EZSP_setLightPollConfig" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_LIGHTPOLL_OPTION
+			SET
+				ISPREVIEW = #isPreview#
+			WHERE
+				USERID = #userId#
+			AND
+				TENANTID = #tenantId#	
+		]]>
+	</update>
 </sqlMap>

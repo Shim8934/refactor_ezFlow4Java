@@ -5,6 +5,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
@@ -72,4 +73,7 @@ public interface EzPersonalAdminService {
 
 	void delQuickLink(String quickLinkID, int tenantID) throws Exception;
 
+	PersonalLightPollConfigVO getLightPollConfig(String userId, int tenantId) throws Exception;
+	
+	void setLightPollConfigVO(String userId, String isPreview, int tenantId) throws Exception;
 }

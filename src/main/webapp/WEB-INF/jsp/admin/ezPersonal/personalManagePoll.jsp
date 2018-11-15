@@ -43,6 +43,7 @@
 				else {
 				//    document.getElementById("ListCompany").selectedIndex = 0;
 				}
+				getLightPollConfig();
 				makelist();
 				//2018-08-06 김보미 - 페이지 위치 고정
 				windowResize();
@@ -453,6 +454,81 @@
 	        	document.getElementById("contentlist").style.height = height + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
+		    
+		    // 빠른 설문 config 조회
+		    var isPreview = 0;
+			function getLightPollConfig() {
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					aysnc : false,
+					url : "/admin/ezPersonal/getLightPollConfig.do",
+					success : function(result) {
+						isPreview = result["configVO"].isPreview;
+						changeImg(isPreview);
+					}, error: function(xhr, option, error){
+						isPreview = 0;
+					}
+				});
+			}
+			
+			
+			// 빠른 설문 config 업데이트
+		    var isPreview = 0;
+			function PreviewRayerChange(direction) {
+				var temp = isPreview;
+				switch(direction)
+				{
+					case "NONE" : 
+						isPreview = 0;
+						break;
+					case "W" :
+						isPreview = 1;
+						break;
+					case "H" :
+						isPreview = 2;
+						break;
+				}
+							  
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					data : {isPreview : isPreview},
+					aysnc : false,
+					url : "/admin/ezPersonal/setLightPollConfig.do",
+					success : function(result) {
+						changeImg(isPreview)
+					}, error: function(xhr, option, error){
+						isPreview = temp;
+					}
+				});
+			}
+			
+			// 미리보기 버튼 교체
+			function changeImg(previewNum) {
+				var doc = window.document;
+				var noneImage = doc.getElementById("PreViewNone");
+				var botImage = doc.getElementById("PreViewBottom");
+				var leftImage = doc.getElementById("PreViewleft");
+				
+				noneImage.src = "/images/kr/cm/btn_noframe.gif";
+				botImage.src = "/images/kr/cm/btn_bottomframe.gif";
+				leftImage.src = "/images/kr/cm/btn_leftframe.gif";
+				
+				switch(previewNum) {
+					case 0 :
+						noneImage.src = "/images/kr/cm/btn_onnoframe.gif";
+						break;
+					case 1 :
+						botImage.src = "/images/kr/cm/btn_onbottomframe.gif";
+						break;
+					case 2 :
+						leftImage.src = "/images/kr/cm/btn_onleftframe.gif";
+						break;
+				}
+			}
+			
+			
 		</script>
 	</head>
 	<body class = "mainbody">
@@ -499,6 +575,11 @@
 				<ul style="margin-top:15px">	            	
 	                <li class="important"><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
 	                <li><span onclick="delete_poll()">삭제</span></li>
+					<li id="right">
+						<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
+						<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
+						<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
+					</li>
 	            </ul>
 		  	</div>
 	        
