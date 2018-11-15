@@ -214,14 +214,15 @@
 				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
 				$("#menu_toggle").slideDown(200);
 			} else if (type === 'off'){
+				$("#menu_toggle").css('display', 'none');
+				
 				$("#topMenuFull").fadeOut(100, function() {
 					$("#topMenuFull").attr("class", "full_nav off");
 					$("#topMenuFull").fadeIn(100);
 				});
-				console.log(menuUrl);
+				
 				$("#menu_toggle").slideUp(200, function() {
 					topFrame.style.position = '';	
-					topFrame.style.backgroundColor = "rgba(0,0,0,0)";
 					if (menuUrl != null) {
 						window.open(menuUrl, 'main', '');
 					}
