@@ -103,7 +103,112 @@
 					subMenuClickEvent('off');
 				});
 			});
+			
+			/* $("#util_frame").on("click", ParentViewPortletEnv); */
 		}		
+		
+		/* //포틀릿 및 프레임 환경설정 열기
+		function ParentViewPortletEnv() {
+			
+			var feature = GetOpenPosition(760, 645);
+			
+//			DivPopUpShow($('body').prop('scrollWidth') * 0.9, 435, "/ezNewPortal/portletSetting.do", "",
+//				"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+			ParentDivPopUpShow(1000, 700, "/ezNewPortal/portletSetting.do", "",
+				"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);	
+		}
+		
+		function ParentDivPopUpShow(popUpW, popUpH, URL) {
+			//탑메뉴 이동 동작 연결
+			var agent = navigator.userAgent.toLowerCase();
+
+		    console.log("HI");
+			if (agent.indexOf("msie") > -1 || agent.indexOf("trident") > -1) {
+				// 익스플로러임
+		        var Position = ParentDivPopUpPosition(popUpW, popUpH);
+		        parent.frames["mainFrame"].document.getElementById("iFrameLayer").src = URL;
+		        parent.frames["mainFrame"].document.getElementById("iFramePanel").style.top = Position[0] + "px";
+		        parent.frames["mainFrame"].document.getElementById("iFramePanel").style.left = Position[1] + "px";
+		        parent.frames["mainFrame"].document.getElementById("iFramePanel").style.height = popUpH + "px";
+		        parent.frames["mainFrame"].document.getElementById("iFrameLayer").style.width = popUpW + "px";
+		        parent.frames["mainFrame"].document.getElementById("iFrameLayer").style.height = popUpH + "px";
+		        parent.frames["mainFrame"].document.getElementById("mailPanel").style.display = "";
+		        parent.frames["mainFrame"].document.getElementById("iFramePanel").style.display = "";
+		        
+			} else {
+				// 익스플로러 아님
+		        var Position = ParentDivPopUpPosition(popUpW, popUpH);
+		        parent.frames["mainFrame"].contentDocument.getElementById("iFrameLayer").src = URL;
+		        parent.frames["mainFrame"].contentDocument.getElementById("iFramePanel").style.top = Position[0] + "px";
+		        parent.frames["mainFrame"].contentDocument.getElementById("iFramePanel").style.left = Position[1] + "px";
+		        parent.frames["mainFrame"].contentDocument.getElementById("iFramePanel").style.height = popUpH + "px";
+		        parent.frames["mainFrame"].contentDocument.getElementById("iFrameLayer").style.width = popUpW + "px";
+		        parent.frames["mainFrame"].contentDocument.getElementById("iFrameLayer").style.height = popUpH + "px";
+		        parent.frames["mainFrame"].contentDocument.getElementById("mailPanel").style.display = "";
+		        parent.frames["mainFrame"].contentDocument.getElementById("iFramePanel").style.display = "";
+			}
+		}
+		
+		function ParentDivPopUpPosition(popUpW, popUpH) {
+		    var ReturnValue = new Array();
+		    console.log("HI");
+		    var agent = navigator.userAgent.toLowerCase();
+
+			if (agent.indexOf("msie") > -1 || agent.indexOf("trident") > -1) {
+				// 익스플로러임
+			    var heigth = parent.frames["mainFrame"].document.documentElement.clientHeight;
+				
+			    if (heigth == 0) {
+			    	heigth = parent.frames["mainFrame"].document.body.clientHeight;
+			    }
+			        
+
+			    var width = parent.frames["mainFrame"].document.documentElement.clientWidth;
+			    if (width == 0) {
+			    	width = parent.frames["mainFrame"].document.body.clientWidth;
+			    }
+
+			    var left = 0;
+			    var top = 0;
+			    var pleftpos = parseInt(width) - popUpW;
+			    heigth = parseInt(heigth) - popUpH;
+			    width = parseInt(width) - pleftpos;
+			    
+			    if (heigth < (popUpH + 50)) {
+			    	ReturnValue[0] = (heigth / 2);
+			    } else {
+			    	ReturnValue[0] = (heigth / 2) - 50;
+			    }
+			    
+			    ReturnValue[1] = pleftpos / 2;
+			} else {
+				// 익스플로러 아님
+			    var heigth = parent.frames["mainFrame"].contentDocument.documentElement.clientHeight;
+				
+			    if (heigth == 0) {
+			    	heigth = document.body.clientHeight;
+			    }
+			    
+			    var width = parent.frames["mainFrame"].contentDocument.documentElement.clientWidth;
+			    
+			    if (width == 0) {
+			    	width = parent.frames["mainFrame"].contentDocument.body.clientWidth;
+			    }
+
+			    var left = 0;
+			    var top = 0;
+			    var pleftpos;
+			    pleftpos = parseInt(width) - popUpW;
+			    heigth = parseInt(heigth) - popUpH;
+			    width = parseInt(width) - pleftpos;
+			    if (heigth < (popUpH + 50))
+			        ReturnValue[0] = (heigth / 2);
+			    else
+			        ReturnValue[0] = (heigth / 2) - 50;
+			    ReturnValue[1] = pleftpos / 2;
+			}
+		    return ReturnValue
+		} */
 		
 		// 메인메뉴 설정
 		var setMainMenu = function () {
@@ -179,7 +284,7 @@
 				str += '<ul class="util">';
 				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="관리자"></span></li>';
 				str += '<li><span class="icon_topmenu util_employee_search" id="util_employee_search" title="직원조회"></span></li>';
-				str += '<li><span class="icon_topmenu util_frame" id="util_frame" title="프레임설정"></span></li>';
+				/* str += '<li><span class="icon_topmenu util_frame" id="util_frame" title="프레임설정"></span></li>'; */
 				str += '<li><span class="icon_topmenu util_set" id="util_set" title="환경설정"></span></li>';
 				str += '<li><span class="icon_topmenu util_help" id="util_help" title="도움말"></span></li>';
 				str += '<li><span class="icon_topmenu util_logout" id="util_logout" title="로그아웃"></span></li>';
@@ -197,8 +302,31 @@
 			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0');
 			setEvent('util_set', '/ezPortal/environmentMain.do', 'main' ,'');
 			setEvent('util_help', '/ezPortal/help/help.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
-			setEvent('util_logout', '/user/login/actionLogout.do', 'top', '');	
+			setEvent('util_logout', '/user/login/actionLogout.do', 'top', '');
+			
+			/* document.getElementById("util_frmae").addEventListener("click", viewPortletEnv); */
 		}
+		
+		/* //포틀릿 및 프레임 환경설정 열기
+		function viewPortletEnv() {
+			
+			var feature = GetOpenPosition(760, 645);
+			
+			
+			//탑메뉴 이동 동작 연결
+			var agent = navigator.userAgent.toLowerCase();
+
+			if (agent.indexOf("msie") > -1 || agent.indexOf("trident") > -1) {
+				// 익스플로러임
+				parent.frames["topFrame"].document.getElementById("iFrameLayer").addEventListener("click", viewPortletEnv);
+			} else {
+				// 익스플로러 아님
+				parent.frames["topFrame"].contentDocument.getElementById("util_frame").addEventListener("click", viewPortletEnv);
+			}
+			
+			DivPopUpShow(1000, 700, "/ezNewPortal/portletSetting.do", "",
+				"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);	
+		} */
 		
 		// 확장버튼 UI 이벤트 함수
 		var subMenuClickEvent = function (type, menuUrl) {
@@ -207,6 +335,7 @@
 			var bodyTag = document.getElementsByTagName('Body')[0];				
 			if(type === 'on') {
 				$("#menu_toggle").css('display', 'none');
+				
 				$("#topMenuFull").fadeOut(0, function() {
 					$("#topMenuFull").attr("class", "full_nav on");
 					$("#topMenuFull").fadeIn(100);
@@ -217,15 +346,21 @@
 				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
 				$("#menu_toggle").slideDown(200);
 			} else if (type === 'off'){
-				$("#menu_toggle").css('display', 'none');
 				
 				$("#topMenuFull").fadeOut(100, function() {
 					$("#topMenuFull").attr("class", "full_nav off");
 					$("#topMenuFull").fadeIn(100);
 				});
 				
+				$(".full_menu_toggleDL").attr("class", "full_menu_toggleDL");
+				
 				$("#menu_toggle").slideUp(200, function() {
 					topFrame.style.position = '';	
+					bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+					
+					$(".full_menu_toggleDL").clearQueue();
+					$(".full_menu_toggleDL").stop();
+					
 					if (menuUrl != null) {
 						window.open(menuUrl, 'main', '');
 					}

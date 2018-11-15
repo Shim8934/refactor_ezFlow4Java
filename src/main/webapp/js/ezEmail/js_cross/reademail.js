@@ -907,7 +907,7 @@ function Item_View(vItem, pCItemID, vWriter, pBrdid, vGbnBoard, pBrdnm, brd_Gubu
 
 /* 2018-07-19 홍승비 - 답변메일, 새 게시 메일로 알리는 기능 -> 사간겸직 시 현재 회사가 아닌 곳에서 보내진 승인메일은 alert 처리 */
 function Item_View_New(pBoardID, pItemID, pBoardType) {
-    if (pBoardType == "3" || pBoardType == "4") {
+    if (pBoardType == "3" || pBoardType == "4" || pBoardType == "7") {
         var pheight = window.screen.availHeight;
         var pwidth = window.screen.availWidth;
         var pTop = (pheight - 720) / 2;
@@ -928,10 +928,13 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
         if (getNodeText(xmlDoc.getElementsByTagName("DATA1")[0]) == "FAIL") {
         	 alert(strLangHSB01 + xmlDoc.getElementsByTagName("DATA2")[0].childNodes[0].nodeValue + strLangHSB02);
         }
-        /* 2018-04-26 홍승비 - 포토, 썸네일게시물 메일 내부에서 접근 시 .aspx->.do로 수정 */
-        else if (getNodeText(xmlDoc.documentElement) != "0") {
+        /* 2018-11-06 홍승비 - 포토, 썸네일게시물 메일 내부에서 접근 시 .aspx->.do로 수정, 동영상게시판 구분 추가 */
+        else if (getNodeText(xmlDoc.documentElement) != "0" && pBoardType != "7") {
           //  window.open("/myoffice/ezBoardSTD/BoardItemView_Photo.aspx?&ItemID=" + pItemID + "&BoardID=" + pBoardID + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
             window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=793,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");   
+        } else if (getNodeText(xmlDoc.documentElement) != "0" && pBoardType == "7") {
+          //  window.open("/myoffice/ezBoardSTD/BoardItemView_Photo.aspx?&ItemID=" + pItemID + "&BoardID=" + pBoardID + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
+            window.open("/ezBoard/boardItemViewMovie.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=679,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");   
         }
         else {
             alert(strLang166);
@@ -1009,10 +1012,12 @@ function Item_View_APPR(pBoardID, pItemID, pgubun) {
     if (getNodeText(xmlDoc.getElementsByTagName("DATA1")[0]) == "FAIL") {
     	 alert(strLangHSB01 + xmlDoc.getElementsByTagName("DATA2")[0].childNodes[0].nodeValue + strLangHSB02);
     }
-    /* 2018-04-26 홍승비 - 포토, 썸네일게시물 승인을 위해 .aspx->.do로 수정 */
+    /* 2018-11-06 홍승비 - 포토, 썸네일게시물 승인을 위해 .aspx->.do로 수정, 동영상게시판 구분 추가 */
     else if (getNodeText(xmlDoc.documentElement) != "0") {
         if (pgubun == "3" || pgubun == "4") {
             window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=793,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+        } else if (pgubun == "7") {
+        	 window.open("/ezBoard/boardItemViewMovie.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=679,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
         }
         else {
             window.open("/ezBoard/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=720,width=765, status = no, scrollbars=1, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");

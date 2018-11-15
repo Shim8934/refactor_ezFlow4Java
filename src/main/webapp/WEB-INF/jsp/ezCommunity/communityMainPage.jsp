@@ -54,6 +54,7 @@
 	        var strLang6 = "<spring:message code = 'ezCommunity.t1079' />";
 	        var strLang7 = "<spring:message code = 'ezCommunity.t1102' />";
 	        var strLang8 = "<spring:message code = 'ezCommunity.t2002' />";
+	        var strLang9 = "<spring:message code = 'ezSchedule.t267' />";
 	        
 	        var categoryColors = ["#ff6868", "#ff68c4", "#d668ff", "#a868ff", "#6f68ff", "#3d78ff", 
 				                              "#4d8fcc", "#0dbeff", "#6dabad", "#4dc689", 
@@ -186,11 +187,11 @@
 	                
 	                var span = document.createElement("SPAN");
 	                span.className = "title";
-	                span.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNAME");
+	                span.innerHTML = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNAME"));
 	                
 	                var span2 = document.createElement("SPAN");
 	                span2.className = "text";
-	                span2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBDESC");
+	                span2.innerHTML = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBDESC"));
 	                
 	                dd.appendChild(span);
 	                dd.appendChild(span2);
@@ -301,11 +302,11 @@
 	                
 	                var span = document.createElement("SPAN");
 	                span.className = "title";
-	                span.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNAME");
+	                span.innerHTML = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNAME"));
 	                
 	                var span2 = document.createElement("SPAN");
 	                span2.className = "text";
-	                span2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBDESC");
+	                span2.innerHTML = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBDESC"));
 	                
 	                dd.appendChild(span);
 	                dd.appendChild(span2);
@@ -462,11 +463,11 @@
 	                if(clubname.length > 9) {
 	                	clubname = clubname.substring(0,8) + "...";
 	                }
-	                span2.innerHTML = "[" +clubname + "]";
+	                span2.innerHTML = MakeXMLString("[" + clubname + "]");
 	                
 	                var span3 = document.createElement("SPAN");
 	                span3.className = "txt";
-	                span3.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
+	                span3.innerHTML = MakeXMLString(SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE"));
 	                
 	                var span4 = document.createElement("SPAN");
 	                span4.className = "date";
@@ -827,7 +828,41 @@
 
             /* 18-04-27 김민성 - 카테고리별 커뮤니티 클릭시 bold 지정 */
 	        function event_get_categoryCommunity(list) {
-	        	 document.getElementById("listCategory").innerHTML = "";
+	        	document.getElementById("listCategory").innerHTML = "";
+	        	
+	        	var totalCnt = 0;
+	        	
+	        	var li = document.createElement("LI");
+	        	 	
+        	 	var span = document.createElement("SPAN");
+        	 	span.className = "icon";
+        	 	
+        	 	var img = document.createElement("IMG");
+        	 	img.src = "../images/kr/community/categoryList_icon.gif";
+        	 	
+        	 	var span2 = document.createElement("SPAN");
+        	 	span2.className = "txt";
+        	 	span2.innerHTML = strLang9;	
+        	 	span2.setAttribute("type", "ALL");							
+        	 	span2.onclick = function () { 
+        	 		$("#listCategory .txt").removeClass("bold");
+                	$("#keyword").val('');
+                	copsearch();
+                	$(this).addClass("bold"); 
+                };
+                span2.onclick();					
+        	 	
+        	 	var span3 = document.createElement("SPAN");
+                span3.id = "totalCnt";
+        	 	span3.className = "count";
+        	 	
+        	 	span.appendChild(img);
+        	 	
+        	 	li.appendChild(span);
+                li.appendChild(span2);
+                li.appendChild(span3);
+	        	 
+	        	document.getElementById("listCategory").appendChild(li);
 	        	 
 	        	 list.forEach(function(categoryVO, index) {
 	        	 	var li = document.createElement("LI");
@@ -848,14 +883,11 @@
                     	$("#keyword").val('');
                     	select_category(this); 
                     };
-                    
-                    if (index == 0) {
-                        span2.onclick();
-                    }
 	        	 	
 	        	 	var span3 = document.createElement("SPAN");
 	        	 	span3.className = "count";
 	        	 	span3.innerHTML = "(" + categoryVO.cnt + ")";
+	        	 	totalCnt +=  categoryVO.cnt;
 	        	 	
 	        	 	span.appendChild(img);
 	        	 	
@@ -865,6 +897,8 @@
                     
                     document.getElementById("listCategory").appendChild(li);
 	        	 });
+	        	 
+	        	 document.getElementById("totalCnt").innerHTML = "(" + totalCnt + ")";
 	        	 
                 /* document.getElementById("categorytab").innerHTML = "";
 
@@ -1117,7 +1151,7 @@
                 	
                 	var dd = document.createElement("DD");
                 	dd.className = "title";
-                	dd.innerHTML = clubVO.c_ClubName;
+                	dd.innerHTML = MakeXMLString(clubVO.c_ClubName);
                 	
                 	var dd2 = document.createElement("DD");
                 	dd2.className = "categoryInfo_count";
@@ -1488,10 +1522,10 @@
 	            searchoption = document.getElementById("search")[sel].value;
 	            searchvalue = document.getElementById("keyword").value;
 
-	            if (searchvalue == "") {
+	            /* if (searchvalue == "") {
 	                alert(strLang4);
 	                return;
-	            }
+	            } */
 	        	$("#listCategory .txt").removeClass("bold");
 	            search = true;
 
