@@ -1997,12 +1997,12 @@
 		        <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li>
 		        <li id="tbtnRemoveDoc" style="DISPLAY:none"><span class="icon16 icon16_delete" id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"></span></li>
 		        <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
-		        <li style="vertical-align: middle;">
+		        <li style="vertical-align: middle; float:right">
 		        	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">    
 		            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
 		        	</select>
 		        </li>
-		        <li style="vertical-align: middle;">
+		        <li style="vertical-align: middle; float:right">
 		        	<div id="sel_status_div" style="display:inline;">
 						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
 			            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
@@ -2010,7 +2010,7 @@
 		        	</div>
 		        </li>
 		        <c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21'}">
-			        <li style="vertical-align: middle;">		        	
+			        <li style="vertical-align: middle; float:right">		        	
 						<select id="selectCompany" onchange="getDocListByCompany();">
 							<option value="">
 								<spring:message code='main.t74'/>
