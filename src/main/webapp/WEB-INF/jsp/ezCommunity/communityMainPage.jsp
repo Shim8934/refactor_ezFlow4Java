@@ -406,7 +406,7 @@
                 var xmldom = loadXMLString(result);
                 var table;
                 
-                if (SelectNodes(xmldom, "ITEM/DATA").length <= 0) {
+                if (SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length == 0) {
                 	
                 	var ul = document.getElementById("listCommunity2");
                 	
