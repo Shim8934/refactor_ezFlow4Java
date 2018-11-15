@@ -14,20 +14,25 @@
 		
 		<script type="text/javascript">
 			var totalCount = "";
-	        var progressPollFlag = "";
-	        var TotalCount;
-	        var totalPage = "";
-	        var BlockSize = 10;
-	        var pageNum = 1;
-	        var PageSize = 15;
-	        var progressPollFlag = "false";
+			var progressPollFlag = "";
+			var TotalCount;
+			var totalPage = "";
+			var BlockSize = 10;
+			var pageNum = 1;
+			var PageSize = 15;
+			var progressPollFlag = "false";
+			
+			var strLang1 = "<spring:message code = 'ezPersonal.t10002' />";
+			var strLang2 = "<spring:message code = 'ezPersonal.t10000' />";
+			var strLang3 = "<spring:message code = 'ezPersonal.t10001' />";
+			var strLang4 = "<spring:message code = 'ezPersonal.t223' />";
+			var strLang5 = "<spring:message code = 'ezQuestion.t312' />";
 	
-	        var strLang1 = "<spring:message code = 'ezPersonal.t10002' />";
-	        var strLang2 = "<spring:message code = 'ezPersonal.t10000' />";
-	        var strLang3 = "<spring:message code = 'ezPersonal.t10001' />";
-	        var strLang4 = "<spring:message code = 'ezPersonal.t223' />";
-	        var strLang5 = "<spring:message code = 'ezQuestion.t312' />";
-	
+			window.onload = function () {
+				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "선택된 설문이 없습니다.";
+				ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "선택된 설문이 없습니다.";
+			}
+			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
@@ -446,11 +451,13 @@
 	            windowResize();
 	        });
 		    
+			var conH;
 		    function windowResize() {
 	        	var height = document.documentElement.clientHeight - 122 - document.getElementById("mainmenu").clientHeight;
 	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 	        		height = height - 30;
 	        	}
+	        	conH = height;
 	        	document.getElementById("contentlist").style.height = height + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
@@ -466,6 +473,7 @@
 					success : function(result) {
 						isPreview = result["configVO"].isPreview;
 						changeImg(isPreview);
+						setPreview(isPreview);
 					}, error: function(xhr, option, error){
 						isPreview = 0;
 					}
@@ -474,7 +482,7 @@
 			
 			
 			// 빠른 설문 config 업데이트
-		    var isPreview = 0;
+			var isPreview = 0;
 			function PreviewRayerChange(direction) {
 				var temp = isPreview;
 				switch(direction)
@@ -497,12 +505,14 @@
 					aysnc : false,
 					url : "/admin/ezPersonal/setLightPollConfig.do",
 					success : function(result) {
-						changeImg(isPreview)
+						changeImg(isPreview);
+						setPreview(isPreview);
 					}, error: function(xhr, option, error){
 						isPreview = temp;
 					}
 				});
 			}
+			
 			
 			// 미리보기 버튼 교체
 			function changeImg(previewNum) {
@@ -529,69 +539,153 @@
 			}
 			
 			
+			// 미리보기창 show
+			function setPreview(previewNum) {
+				var conlistH = conH
+				var doc = window.document;
+				var mainView = doc.getElementById("mainView");
+				var previewH = doc.getElementById("previewH");
+				var previewW = doc.getElementById("previewW");
+				var PreviewRayerH = doc.getElementById("PreviewRayerH");
+				var PreviewRayerW = doc.getElementById("PreviewRayerW");
+				var contentlistH = doc.getElementById("contentlist");
+				
+				switch(previewNum) {
+				case 0 :
+					previewH.style.display = "none";
+					previewW.style.display = "none";
+					mainView.style.width = "100%";
+					doc.getElementById("contentlist").style.height = conlistH + "px";
+					break;
+				case 1 :
+					previewW.style.display = "none";
+					doc.getElementById("contentlist").style.height = conlistH + "px";
+					mainView.style.width = "70%";
+					previewH.style.width = "29%";
+					previewH.style.display = "";
+					PreviewRayerH.style.display = "";
+					break;
+				case 2 :
+					previewH.style.display = "none";
+					mainView.style.width = "100%";
+					doc.getElementById("contentlist").style.height = conlistH/2 + "px";
+					previewW.style.height = "50%";
+					previewW.style.display = "";
+					PreviewRayerW.style.display = "";
+					break;
+			}
+			}
+			
 		</script>
 	</head>
 	<body class = "mainbody">
 		<xml id="listviewheader" style="display: none">
 			<LISTVIEWDATA>
-	    		<HEADERS>
-	    			<HEADER>
-	        			<WIDTH>40</WIDTH>
-	      			</HEADER>
-	      			<HEADER>
-	        			<NAME><spring:message code = 'ezPersonal.t166' /></NAME>
-	        			<WIDTH>40</WIDTH>
-	      			</HEADER>
-	      			<HEADER>
-	        			<NAME><spring:message code = 'ezPersonal.t240' /></NAME>
-	        			<WIDTH></WIDTH>
-	      			</HEADER>
-	      			<HEADER>
-	        			<NAME><spring:message code = 'ezPersonal.t241' /></NAME>
-	        			<WIDTH>100</WIDTH>
-	      			</HEADER>
-	      			<HEADER>
-	        			<NAME><spring:message code = 'ezPersonal.t242' /></NAME>
-	        			<WIDTH>100</WIDTH>
-	      			</HEADER>
-	     			<HEADER>
-	        			<NAME>진행여부</NAME>
-	        			<WIDTH>60</WIDTH>
-	      			</HEADER>
-    			</HEADERS>
-  			</LISTVIEWDATA>
+				<HEADERS>
+					<HEADER>
+						<WIDTH>40</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME><spring:message code = 'ezPersonal.t166' /></NAME>
+						<WIDTH>40</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME><spring:message code = 'ezPersonal.t240' /></NAME>
+						<WIDTH></WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME><spring:message code = 'ezPersonal.t241' /></NAME>
+						<WIDTH>100</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME><spring:message code = 'ezPersonal.t242' /></NAME>
+						<WIDTH>100</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME>진행여부</NAME>
+						<WIDTH>60</WIDTH>
+					</HEADER>
+				</HEADERS>
+			</LISTVIEWDATA>
 		</xml>
 		
-	    <form method="post">
-	        <h1>
-	        	Quick Poll<span id="mailBoxInfo"></span>
-	        	<select class="companySelect" id="ListCompany" onChange="company_change()">
-		        	<c:forEach var="item" items="${list}">
+		<form method="post">
+			<h1>Quick Poll<span id="mailBoxInfo"></span>
+				<select class="companySelect" id="ListCompany" onChange="company_change()">
+					<c:forEach var="item" items="${list}">
 						<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-			    </select>
-	        </h1>
-	        <div id="mainmenu">
+					</c:forEach>
+				</select>
+			</h1>
+			<div id="mainmenu">
 				<ul style="margin-top:15px">	            	
-	                <li class="important"><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
-	                <li><span onclick="delete_poll()">삭제</span></li>
+					<li class="important"><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
+					<li><span onclick="delete_poll()">삭제</span></li>
 					<li id="right">
 						<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 						<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
 						<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					</li>
-	            </ul>
-		  	</div>
-	        
-	        <script type="text/javascript">
-	            selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-	        </script>
-	        <div id="contentlist" style="width:100%; overflow: auto;">
-		        <table class="mainlist" style="width: 100%;">
-		            <div id="AccessList" style="BORDER: 0; WIDTH: 100%"></div>
-		        </table>
-		    </div>
-	        <div id="tblPageRayer"></div>
-	    </form>
+				</ul>
+			</div>
+			
+			<script type="text/javascript">
+				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+			</script>
+			<div class="mainView" id="mainView" style="width:100%;float:left">
+				<div id="contentlist" style="width:100%; overflow: auto;">
+					<table class="mainlist" style="width: 100%;">
+						<div id="AccessList" style="BORDER: 0; WIDTH: 100%"></div>
+					</table>
+				</div>
+				<div id="tblPageRayer"></div>
+			</div>
+			
+			<div class="previewH" id="previewH" style="width:29%; float:right;">
+				<span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top;  margin-left:-5px;">
+					<span id="previewmail_bar_h" class="previewmail_bar_h" style="display: inline-block;">
+						<p class="hbar_dotted">
+							<img src="/images/prevview_hbar_dotted.gif" draggable="false">
+						</p>
+					</span>
+					<span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
+						<span style="width: 100%; height: 100px; display: block;">
+							<span class="previewmail_info" style="display: block; width: 100%;">
+								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
+									<p class="mail_title" style="margin-left: 0px;">
+										<span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
+											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
+									</p>
+									<span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
+								</div>
+							</span>
+							<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+						</span>
+					</span>
+				</span>
+			</div>
+			
+			<div class="previewW" id="previewW" style="width:100%;">
+				<span id="PreviewRayerW" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top; margin-left:-5px;">
+					<span style="width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
+						<img src="/images/prevview_bar_dotted.gif" draggable="false">
+					</span>
+					<span id="PreContent_RayerW" style="position: absolute; border: 0px solid blue;">
+						<span style="width: 100%; height: 100px; display: block;">
+							<span class="previewmail_info" style="display: block; width: 100%;">
+								<div id="Preview_WeaderW" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
+									<p class="mail_title" style="margin-left: 0px;">
+										<span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
+											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
+									</p>
+									<span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date" style="display: none;"></span></span></span>
+								</div>
+							</span>
+							<iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+						</span>
+					</span>
+				</span>
+			</div>
+		</form>
 	</body>
 </html>
