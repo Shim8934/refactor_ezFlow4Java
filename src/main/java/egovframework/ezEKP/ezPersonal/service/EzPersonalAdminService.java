@@ -8,6 +8,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzPersonalAdminService {
@@ -44,7 +45,7 @@ public interface EzPersonalAdminService {
 	
 	String deletePoll(String itemSeq, int tenantID) throws Exception;
 	
-	String getSlider(String sliderID, LoginVO userInfo) throws Exception;
+	List<PersonalSliderImageVO> getSlider(String sliderID, LoginVO userInfo) throws Exception;
 	
 	String statusChangeSlider1(String sliderID, String isUse, String mode, int tenantID) throws Exception;
 

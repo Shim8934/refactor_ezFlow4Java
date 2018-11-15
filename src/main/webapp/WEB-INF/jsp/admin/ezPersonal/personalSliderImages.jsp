@@ -11,21 +11,27 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		
+		<style type="text/css">
+		body {background-color : white;}
+		.ui-sortable{ margin:0px; padding:0px;}
+		.slider, .sliderAdd {cursor:pointer; vertical-align:top;display : inline-block;width : 100px; border : 1px solid #d9d9d9; margin :10px 5px 0px 0px; height:122px}
+		.slider dl dt, .sliderAdd dl dt {text-align : center;display : block;height : 42px;margin : 0px;	padding : 0px;}
+		.slider dl dd, .sliderAdd dl dd {display:table-cell; width : 98px; height:56px; margin:0px; padding:0px 5px; text-align:center; vertical-align:middle; font-size:15px; font-weight:bold; letter-spacing:-1px;}
+		</style>
 		<script type="text/javascript">
 			
-			document.onselectstart = function () {
+			 document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
 		        } else {
 		            return true;
 		        }
-		    };
+		    }; 
 			
 		    $(document).ready(function () {
 		        $.ajax({
 		        	type : "POST",
-		        	dataType : "JSON",
+		        	dataType : "json",
 		        	url : "/admin/ezPersonal/getSlider.do",
 		        	async : false,
 		        	success : function (result) {
@@ -37,20 +43,36 @@
 	
 		    function MakeSliderList(result) {
 		    	console.log(result);
-		    		var slideSn = "";
-		    		var slideID = "";
-		    		var slideImagePath = "";
-		    		var slideDate = "";
-		    		var slideTitle = "";
-		    		var slideCnt = result.length;
+		    if (result.status >=200 && result.status < 400){
+		    	var obj = JSON.parse(result);
+		    	var sliderSn = "";
+		    	var sliderID = "";
+		    	var sliderImagePath = "";
+		    	var sliderName = "";
+		    	var sliderName2 = "";
+		    	var sliderRegDate = "";
+		    	var sliderURL = "";
+		    	var sliderIsUse = "";
+		    	var sliderHTML = "";
+		    	var sliderCnt = obj.length;
+		    	
+		    	for(var i = 0; i < sliderCnt; i++){
+		    		sliderSn = obj[i].sn;
+		    		sliderID = obj[i].sliderID;
+		    		sliderImagePath = obj[i].imagePath;
+		    		sliderName = obj[i].sliderName;
+		    		sliderName2 = obj[i].sliderName2;
+		    		sliderRegDate = obj[i].RegDate;
+		    		sliderURL = obj[i].url;
+		    		sliderIsUser = obj[i].isUse;
 		    		
-		    		for(var i = 0; i < slideCnt; i++){
-		    			slideSn = result[i].slideSn;
-		    			slideID = result[i].slideID;
-		    			slideImagePath = result[i].slideImagePath;
-		    			slideTitle = result[i].slideTitle;
-		    			
-		    		}
+		    		
+		    	}
+		    	
+		    	document.getElementById("slideListContainer").innerHTML = sliderHTML;
+		    }
+		    
+		    	
 		        /* XmlNode = result;
 		        var DocList = new ListView();
 		        DocList.SetID("DocList");
@@ -63,7 +85,7 @@
 		        DocList = null; */
 		    } 
 	
-		    var tempid = "";
+		   /*  var tempid = "";
 		    var _RowObject = null;
 		    function event_click(obj) {
 		        tempid = document.getElementById(obj).getAttribute("DATA1");
@@ -86,7 +108,7 @@
 		            window.showModalDialog(url, "", feature);
 		            window.location.reload(false);
 		        }
-		    }
+		    } */
 		     
 		    function btn_Select_Complete() {
 		        window.location.reload(false);

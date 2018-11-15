@@ -44,6 +44,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -976,9 +977,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 슬라이드이미지 목록 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/getSlider.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/getSlider.do", produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public String getSlider(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public List<PersonalSliderImageVO> getSlider(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getSlider started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -989,8 +990,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		logger.debug("sliderID="+sliderID);
 		
-		String result = ezPersonalAdminService.getSlider(sliderID, userInfo);
-
+		List<PersonalSliderImageVO> result = ezPersonalAdminService.getSlider(sliderID, userInfo);
+		
 		logger.debug("getSlider ended");
 		return result;
 	}

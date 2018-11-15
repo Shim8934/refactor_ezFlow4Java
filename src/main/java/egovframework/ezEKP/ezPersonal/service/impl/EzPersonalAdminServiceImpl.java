@@ -589,7 +589,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public String getSlider(String sliderID, LoginVO userInfo) throws Exception {
+	public List<PersonalSliderImageVO> getSlider(String sliderID, LoginVO userInfo) throws Exception {
 		logger.debug("getSlider started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -667,7 +667,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			}
 		logger.debug("Objects"+list);
 		logger.debug("getSlider ended");
-		return list.toString();
+		return list;
 	}
 
 	// 18-05-10 김민성 - 슬라이드 이미지 등록 URL 컬럼 추가
