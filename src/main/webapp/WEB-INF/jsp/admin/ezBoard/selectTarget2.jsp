@@ -31,10 +31,12 @@
 		    var bSearch = false;		    
 		    var topid = "<c:out value='${topid}'/>";
 		    var primary = "<c:out value='${primary}'/>";
+		    var deptTreeTopId = "${deptTreeTopId}";
+		    var isAllGroupBoard = "${isAllGroupBoard}";
 		    var ReturnFunction;
 		    var RetValue;
 		    
-			$(document).ready(function(){			
+			$(document).ready(function(){
 				try {
 		            RetValue = parent.selecttarget_cross_dialogArguments[0];
 		            ReturnFunction = parent.selecttarget_cross_dialogArguments[1];
@@ -80,7 +82,7 @@
 		        applyCurrentData();
 
 		        g_xmlHTTP = createXMLHttpRequest();
-		        var strQuery = "<DATA><DEPTID><c:out value='${deptID}'/></DEPTID><TOPID>" + topid + "</TOPID><PROP>mail;displayName</PROP></DATA>";
+		        var strQuery = "<DATA><DEPTID><c:out value='${deptID}'/></DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>mail;displayName</PROP></DATA>";
 		        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		        g_xmlHTTP.send(strQuery);
@@ -89,14 +91,14 @@
 		        SelectReceiverWindow(ToTitle, ListViewMsgTo);
 			});
 			
-			function TreeViewNodeClick(pNodeID, pTreeID) {						        	
+			function TreeViewNodeClick(pNodeID, pTreeID) {
 	            var treenode = new TreeNode();
 	            treenode.LoadFromID(pNodeID);
 	            nodeIdx = treenode.GetNodeData("CN");
 	            displayUserList(nodeIdx);
 	        }
 		        
-		    function displayUserList(DeptID) {            
+		    function displayUserList(DeptID) {
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
@@ -455,7 +457,11 @@
 		        }
 		        adCount = 0;		        
 		        var xmlDOM = createXmlDom();
-
+				var adminOrgan = "";
+				if (isAllGroupBoard == "Y") {
+					adminOrgan = "y";
+				}
+				
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
@@ -465,7 +471,8 @@
 		        		search : pMode + "::" + cnkeyword.value,
 		        		cell : 'company;description;title;displayName;mail',
 		        		prop : 'department',
-		        		type : 'user'
+		        		type : 'user',
+		        		adminOrgan : adminOrgan
 		        	},
 		        	success : function(result){	
 		        		xmlDOM = loadXMLString(result);
@@ -503,7 +510,7 @@
 		                if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 		                    g_xmlHTTP = createXMLHttpRequest();
-		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail;displayName</PROP></DATA>";
+		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>mail;displayName</PROP></DATA>";
 		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		                    g_xmlHTTP.send(strQuery);

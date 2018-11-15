@@ -82,7 +82,9 @@
 	    var pUse_Editor = "${useEditor}";
 	    var pNoneActiveX = "${nonActiveX}";
 	    var pStartday = "${startDay}";
+	    var lunarUseFlag = "${lunarUseFlag}";
 	    var LunarUse = false;
+	    var dayView = 0;
 	    
 	    document.onselectstart = function () { return false; };
 	    
@@ -181,19 +183,22 @@
 	    }
 
 	    function event_schedule_get_lunaruse() {
-	       /*  if (xmlhttp == null || xmlhttp.readyState != 4)
-	            return;
-
-	        if (xmlhttp.responseText == "0")
-	            LunarUse = true;
-	        else if (xmlhttp.responseText == "1")
-	            LunarUse = true;
-	        else */
-	        
-	        // #13470 일본은 음력사용 안함
-	        LunarUse = false;
-
-	        schedule_get_holiday();
+	       if (getLang == 3) {
+	    	   schedule_get_holiday();
+	       } else {
+		       if (xmlhttp == null || xmlhttp.readyState != 4)
+		            return;
+	
+		       if (xmlhttp.responseText == "0")
+		            LunarUse = true;
+		       else if (xmlhttp.responseText == "1")
+		            LunarUse = true;
+		       else 
+		        
+		       LunarUse = false;
+		    	   
+		       schedule_get_holiday();
+	       }
 	    }
 	    
 	    var agent = navigator.userAgent.toLowerCase(); 
@@ -360,9 +365,9 @@
 	       
 	        var feature = GetOpenPosition(820, 700);
 	        if (CrossYN() || pNoneActiveX == "YES") {
-	        	window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}", "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	        	window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView="+ dayView +"&ownerID=${resID}", "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        } else {
-                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView="+ dayView +"&ownerID=${resID}", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        }
 	    }
 
@@ -461,15 +466,35 @@
 					resourceId   : val01						
 				},
 				success: function(result){
+					// 2018-10-29 김민성 - 자원 정보 레이어 팝업 관리자 리스트, 관리자 정보 조회, 등록일 정보 추가
+					var ownerID = result.resBrd.ownerID;
+					var subOwner = result.ownerList;
+					var strOwnerList = "";
+					var subOwner1 = "";
+					
+					for(var i=0; i<subOwner.length; i++) {
+						strOwnerList += "<span onclick=\"OpenUserInfo('" + subOwner[i].cn + "','" + subOwner[i].department + "')\">"+subOwner[i].displayName+"</span>";
+						if(i != subOwner.length-1) {
+							strOwnerList += ", ";
+						}
+					}
+					//$("#ownerDept").html(subOwner1);
+					$("#ownerInfo").html(strOwnerList);
+					
 					if (result.primary == "1") {						
-						$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
-						$("#ownerDept").html(result.resBrd.ownDeptNm);
+						//$("#ownerInfo").html(result.resBrd.ownerNm);
+						//$("#ownerInfo").attr("onclick", "OpenUserInfo('"+subOwner[0].cn +"','" + subOwner[0].department+ "')");
+						$("#ownerNm").attr("ownerID", ownerID);
+						//$("#ownerDept").html(result.resBrd.ownDeptNm);
 						$("#brdNm").html(result.resBrd.brdNm);
 					} else {
-						$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
-						$("#ownerDept").html(result.resBrd.ownDeptNm2);
+						//$("#ownerInfo").html(result.resBrd.ownerNm2);
+						//$("#ownerInfo").attr("onclick", "OpenUserInfo('"+subOwner[0].cn +"','" + subOwner[0].department+ "')");
+						$("#ownerNm").attr("ownerID", ownerID);
+						//$("#ownerDept").html(result.resBrd.ownDeptNm2);
 						$("#brdNm").html(result.resBrd.brdNm2);
 					}
+					
 					
 					$("#ownerCall").html(result.resBrd.ownerCall);
 					$("#resLocation").html(result.resBrd.resLocation);						
@@ -481,6 +506,8 @@
 					} else {
 						$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
 					}
+					
+					$("#resDate").html(result.resBrd.makeDate);
 					
 					var resbrdExc = "";
 					if (result.resBrd.brdExplain != null) {
@@ -507,6 +534,13 @@
 		
 		function SearchOptionHidden() {
         	$.modal.close();
+        }
+		
+		// 18-10-19 김민성 - 작성자 이름 클릭 시 사원정보보기 팝업
+		function OpenUserInfo(userID, deptID) {
+        	var feature = "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+            feature = feature + GetOpenPosition(420, 438);
+            window.open("/ezCommon/showPersonInfo.do?id=" + userID + "&dept=" + deptID, "", feature);
         }
     </script>
 	
@@ -563,12 +597,12 @@
 	        	<table id="resourceDataTable" style="width:478px; margin-top:10px;">
 					<tr>
 						<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
-						<td><span id="ownerNm"></span></td>
+						<td><span id="ownerNm"><span id="ownerInfo" style="cursor:pointer"></span></span></td>
 					</tr>
-					<tr>
-						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t151'/></th>
-						<td><span id="ownerDept"></span></td>
-					</tr>
+					<%-- <tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.rkms01'/></th>
+						<td><span id="ownerDept" style="cursor:pointer"></span></td>
+					</tr> --%>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
 						<td><span id="ownerCall"></span></td>
@@ -580,6 +614,10 @@
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
 						<td id="approveFlag"></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezBoard.t5007'/></th>
+						<td><span id="resDate"></span></td>
 					</tr>
 					<tr>
 						<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>

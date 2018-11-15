@@ -289,6 +289,11 @@ function save_schedule(pageFrom)
     strBody = HTMLtoMHT_MakeTag(Doc_ContentHtml);
 
     createNodeAndInsertText(xmlDom, objNode, "CONTENT", pidCryptUtil.encodeBase64(ConvertHTMLtoMHT(Signature_ImagePathConvert(strBody)), 64));
+    
+    var realEndDate = new Date(parseInt($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val().substring(0,4),10), 
+    						   parseInt($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val().substring(5,7),10)-1, 
+    						   parseInt($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val().substring(8),10)+1);
+    var realEndDateRealFormat = realEndDate.getFullYear() + "-" + leadingZeros((realEndDate.getMonth() + 1), 2) + "-" + leadingZeros((realEndDate.getDate()), 2);
 
 	if ($.trim(repetition) == "")
 	{		
@@ -296,7 +301,7 @@ function save_schedule(pageFrom)
 		{
 			createNodeAndInsertText(xmlDom, objNode, "DATETYPE", "2");
 			createNodeAndInsertText(xmlDom, objNode, "STARTDATE", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00");
-			createNodeAndInsertText(xmlDom, objNode, "ENDDATE", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59");
+			createNodeAndInsertText(xmlDom, objNode, "ENDDATE", realEndDateRealFormat + " 00:00");
 		}
 		else
 		{
@@ -678,6 +683,9 @@ function attach_Delete()
 	}
 }		
 
+/* 2018-11-09 김민성 - 일정관리의 일보기, 주보기의 종일일정 선택시 하루종일,
+								월보기, 일정작성 선택시 현재 시간,
+								일보기, 주보기의 시간 선택시 선택 시간 으로 설정 되도록 수정 */
 function allday_change()
 {
     if (document.getElementById("alldaycheck").checked == true)
@@ -689,37 +697,44 @@ function allday_change()
 	{
         document.getElementById("Stimepicker").style.display = "";
         document.getElementById("Etimepicker").style.display = "";
-       
-        if (!timeSelect && datetype == "2") { //하루종일 일정일 때 시간
+        if ((!timeSelect && datetype == "1") || datetype == "") { //하루종일 일정일 때 시간
         	//2018-08-28 김보미 - 현재시간으로 설정
-        	var now = new Date();
-        	
-        	//시작시간
-        	var startTime;
-        	var hour = now.getHours();
-        	var time = now.getMinutes();
-        	
-        	if (parseInt(time) < 30) {
-        		startTime = hour + ":00:00";
-        	} else {
-        		startTime = hour + ":30:00";
+        	if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "23:59") {
+	        	var now = new Date();
+	        	
+	        	//시작시간
+	        	var startTime;
+	        	var hour = now.getHours();
+	        	var time = now.getMinutes();
+	        	
+	        	if (parseInt(time) < 30) {
+	        		startTime = hour + ":00:00";
+	        	} else {
+	        		startTime = hour + ":30:00";
+	        	}
+	        	
+	        	//종료시간
+	        	var endTime;
+	        	now.setMinutes(now.getMinutes() + 30);
+	        	
+	        	hour = now.getHours();
+	        	time = now.getMinutes();
+	        	
+	        	if (parseInt(time) < 30) {
+	        		endTime = hour + ":00:00";
+	        	} else {
+	        		endTime = hour + ":30:00";
+	        	}
+	        	
+	        	$('#Stimepicker').timepicker('setTime', startTime);
+	        	$('#Etimepicker').timepicker('setTime', endTime);
         	}
+        }
+        else {
+        	document.getElementById("alldaycheck").checked = true;
         	
-        	//종료시간
-        	var endTime;
-        	now.setMinutes(now.getMinutes() + 30);
-        	
-        	hour = now.getHours();
-        	time = now.getMinutes();
-        	
-        	if (parseInt(time) < 30) {
-        		endTime = hour + ":00:00";
-        	} else {
-        		endTime = hour + ":30:00";
-        	}
-        	
-        	$('#Stimepicker').timepicker('setTime', startTime);
-        	$('#Etimepicker').timepicker('setTime', endTime);
+            document.getElementById("Stimepicker").style.display = "none";
+            document.getElementById("Etimepicker").style.display = "none";
         }
 	}
 }
@@ -2060,4 +2075,16 @@ function makeResRepetition(startDate, endDate) {
 	createNodeAndInsertText(recurrenceDom, objNode, "endDateTime", endDate);
 	
 	g_data["recurrence"] = getXmlString(recurrenceDom);
+}
+
+//leading zero 함수 추가
+function leadingZeros(n, digits) {
+    var zero = '';
+    n = n.toString();
+
+    if (n.length < digits) {
+        for (var i = 0; i < digits - n.length; i++)
+            zero = '0' + zero;
+    }
+    return zero + n;
 }

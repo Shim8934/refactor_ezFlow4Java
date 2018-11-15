@@ -20,7 +20,6 @@
 			    document.getElementById("TimeZone").value = TimeZone;
 			}
 			if (Lang != "") {
-			    document.getElementsByName('rad_flag')[Lang - 1].checked = true;
 			    //flagValue = Lang;			   
 				flagValue = $("input:radio[name=rad_flag]:checked").attr("id");
 			}
@@ -51,7 +50,7 @@
 		}            
         function flag_onClick(obj, type) {
             if (type == "img") {
-                document.getElementsByName('rad_flag')[obj.name - 1].checked = true;
+            	$("input:radio[id=" + obj.name + "]").prop('checked', true);
                 flagValue = obj.name;
             }
             else {

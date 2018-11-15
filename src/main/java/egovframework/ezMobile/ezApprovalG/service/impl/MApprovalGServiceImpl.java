@@ -60,7 +60,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		String mainViewYN = ezCommonService.getTenantConfig("MineViewYN", userInfo.getTenantId());
 		String userIDS = "'" + userInfo.getUserId() + "'";
 		String proxyOption = ezApprovalGService.getIsUse("A23", "001", userInfo.getCompanyId(), userInfo.getLang(), userInfo.getTenantId());
-		
+		//2018-11-01 배현상, mobile 공유결재기능 추가
+		String shareApprovalFlag = ezCommonService.getTenantConfig("useShareApproval", userInfo.getTenantId());
+				
 		if (proxyOption.equals("1")) {
 			userIDS = ezApprovalGService.getProxyUser(userInfo.getUserId(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffSet());
 		}
@@ -78,6 +80,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("userId", userInfo.getUserId());
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("mainViewYN", mainViewYN);
+		map.put("shareApprovalFlag", shareApprovalFlag);
 		
 		List<MApprovalGDocInfoVO> approvalGDocInfoVOs = mApprovalGDAO.getDoApproveList(map);
 
@@ -94,6 +97,8 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		String mainViewYN = ezCommonService.getTenantConfig("MineViewYN", userInfo.getTenantId());
 		String userIDS = "'" + userInfo.getUserId() + "'";
 		String proxyOption = ezApprovalGService.getIsUse("A23", "001", userInfo.getCompanyId(), userInfo.getLang(), userInfo.getTenantId());
+		//2018-11-01 배현상, mobile 공유결재기능 추가
+		String shareApprovalFlag = ezCommonService.getTenantConfig("useShareApproval", userInfo.getTenantId());
 		
 		if (proxyOption.equals("1")) {
 			userIDS = ezApprovalGService.getProxyUser(userInfo.getUserId(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffSet());
@@ -109,6 +114,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("approvalFlag", approvalFlag);
 		map.put("mainViewYN", mainViewYN);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("shareApprovalFlag", shareApprovalFlag);
 
 		int listCount = mApprovalGDAO.getDoApproveListCount(map);
 		
@@ -401,6 +407,8 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		String mainViewYN = ezCommonService.getTenantConfig("MineViewYN", userInfo.getTenantId());
 		String userIDS = "'" + userInfo.getUserId() + "'";
 		String proxyOption = ezApprovalGService.getIsUse("A23", "001", userInfo.getCompanyId(), userInfo.getLang(), userInfo.getTenantId());
+		//2018-11-01 배현상, mobile 공유결재기능 추가
+		String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", userInfo.getTenantId());
 		
 		if (proxyOption.equals("1")) {
 			userIDS = ezApprovalGService.getProxyUser(userInfo.getUserId(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffSet());
@@ -414,6 +422,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("approvalFlag", approvalFlag);
 		map.put("mainViewYN", mainViewYN);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("useShareApproval", useShareApproval);
 		
 		MApprovalGLeftVO approvalGLeftVO = mApprovalGDAO.getLeftCount(map);
 
@@ -433,6 +442,27 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		int result = mApprovalGDAO.delAbsenteeInfo(map);
 
 		LOGGER.debug("delAbsenteeInfo ended");
+		
+		return result;
+	}
+
+	@Override
+	public int getCheckAprState(String docId, String userId,
+			String aprMemberSN, String mode, String companyId, int tenantId)
+			throws Exception {
+		LOGGER.debug("getCheckAprState started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docId", docId);
+		map.put("userId", userId);
+		map.put("aprMemberSN", aprMemberSN);
+		map.put("mode", mode);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		int result = mApprovalGDAO.getCheckAprState(map);
+		
+		LOGGER.debug("getCheckAprState ended.");
 		
 		return result;
 	}

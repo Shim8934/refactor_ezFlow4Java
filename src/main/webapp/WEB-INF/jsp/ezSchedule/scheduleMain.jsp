@@ -14,20 +14,23 @@
         	var UserOffset = "<c:out value='${pOffset}'/>";
         </script>      
         <script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>        
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
-        <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<!-- 2018-11-05 김혜정 -->
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarDataPro_Cross.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarView_Cross.js')}"></script>   
-	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarView_Cross.js')}"></script>
 	    <!-- data picker-->
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<%-- <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script> --%>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<!-- 2018-06-12 구해안 -->
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/monthpicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 		<style type="text/css">
  		.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-year{ 
@@ -182,28 +185,29 @@
 		    }		    
 		    
 		    function schedule_get_lunaruse() {
-			    /* $.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/ezSchedule/scheduleGetLunarUse.do",
-		    		data : {
-		    			COMPANYID  : "${userInfo.companyID}"		    			
-		    		},
-		    		success: function(text) {		    			
-		    			if (text == "0") {
-		    				LunarUse = true;
-		    			} else if(text == "1") {
-		    				LunarUse = true;
-		    			} else {
-		    				LunarUse = false;
-		    			}
-		    			schedule_get_holiday();
-		    		}
-		        }); */
-		        
-		        // #13470 일본은 음력사용 안함
-		    	schedule_get_holiday();
+		    	if (uselang != 3) {
+				    $.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezSchedule/scheduleGetLunarUse.do",
+			    		data : {
+			    			COMPANYID  : "${userInfo.companyID}"		    			
+			    		},
+			    		success: function(text) {		    			
+			    			if (text == "0") {
+			    				LunarUse = true;
+			    			} else if(text == "1") {
+			    				LunarUse = true;
+			    			} else {
+			    				LunarUse = false;
+			    			}
+			    			schedule_get_holiday();
+			    		}
+			        }); 
+		    	} else {
+		    		schedule_get_holiday();
+		    	}
 			}
 
 		    var schedule_receive_attendant_cross_dialogArguments = new Array();
@@ -348,7 +352,60 @@
                 }       */          
                 resize();
 		    }
-
+			
+			//2018-10-18 김혜정 ics 파일 기간 설정을 위해 추가
+			$(function () { 
+				$("#Sdatepicker").datepicker({
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.gif",
+					buttonImageOnly: true
+				});
+				
+				$("#Edatepicker").datepicker({
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.gif",
+					buttonImageOnly: true
+				});
+				
+				$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#Sdatepicker").datepicker('setDate', "");
+			
+				$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#Edatepicker").datepicker('setDate', "");
+				
+				var monthMsg = "<spring:message code='ezSchedule.t110' />";
+				var monthStr = monthMsg.split(";");
+				var dayMsg = "<spring:message code='ezSchedule.t108' />";
+				var dayStr = dayMsg.split(";");
+				
+				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+					closeText: "<spring:message code='main.t3' />",
+					prevText: "<spring:message code='main.t0604' />",
+					nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+					monthNames: monthStr,
+					monthNamesShort: monthStr,
+					dayNames: dayStr,
+					dayNamesShort: dayStr,
+					dayNamesMin: dayStr,
+					weekHeader: 'Wk',
+					dateFormat: 'yy-mm-dd',
+					firstDay: 0,
+					isRTL: false,
+					duration: 200,
+					showAnim: 'show',
+					showMonthAfterYear: true
+				};
+				
+				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+			});
+			
 		    var schedule_read_confirm_cross_dialogArguments = new Array();
 		    var srcEl;
 		    function ReadSchedule(e) {
@@ -457,11 +514,22 @@
 
 		        var sdate, edate, datetype;
 
+		        // 2018-11-09 김민성 - 일보기/주보기일 때 종일일정 클릭시 시간 종일로 변경
+		        // 일보기, 주보기의 시간대 클릭
 		        if (GetAttribute(srcEl, "dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
 		            datetype = "1";
 		            sdate = GetAttribute(srcEl, "dispTime");
 		            edate = sdate.replace(":00:", ":30:");
-		        } else {
+		        } 
+		        // 월보기 클릭
+		        else if(GetAttribute(srcEl, "id").indexOf("ALL") < 0) {
+		        	datetype = "1";
+		        	// 시간데이터가 없는 경우 임의 시간
+		        	sdate = GetAttribute(srcEl, "dispDate") + " 00:00:00";
+		            edate = GetAttribute(srcEl, "dispDate") + " 23:59:00";
+		        }
+		        // 일보기, 주보기의 종일일정 클릭
+		        else {
 		            datetype = "2";
 		            sdate = GetAttribute(srcEl, "dispDate") + " 00:00:00";
 		            edate = GetAttribute(srcEl, "dispDate") + " 23:59:00";
@@ -640,7 +708,7 @@
 			
 		    function RefreshView() {
 		    	var chk_str = parent.frames["left"].document.getElementById('chk_str').value;
-		        CalendarView('Calendar',chk_str);
+		    	CalendarView('Calendar',chk_str);
 		        /* if (parent.frames["left"].document.getElementById("iYear")) {
 		            parent.frames["left"].CalendarMiniView("CalendarMini");
 		            parent.frames["left"].CalendarMiniDataSource();
@@ -1067,8 +1135,107 @@
 		    $('.ui-datepicker-trigger').click(function(){
 		    	$('.ui-datepicker-month').css('display','none');
 		    });
-		    
-	    </script>				
+			
+			function doLayerPopup(obj) {
+				//Clear data
+				document.getElementById("Sdatepicker").value = "";
+				document.getElementById("Edatepicker").value = "";
+				
+				$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
+				var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+				$("#importPopup").css("left", popupX);
+				$("#importPopup").modal();
+			}
+			
+			function crossImport() {
+				var sDate = document.getElementById("Sdatepicker").value;
+				var eDate = document.getElementById("Edatepicker").value;
+				
+				if ((!sDate && !eDate)) {alert(strLangKHJ1); return;}
+				if ((!sDate && eDate))  {alert(strLangKHJ2); return;}
+				if ((sDate && !eDate))  {alert(strLangKHJ3); return;}
+				if (sDate && eDate)     {if (sDate > eDate) {alert(strLangKHJ4); return;}}
+				
+				document.getElementById("file1").click();
+			}
+			
+			function btn_AttachAdd_onclick() {
+				var tempname = document.form.file1.value;
+				if (tempname == "") {
+					return;
+				}
+				
+				var last = tempname.split(".").length;
+				var extension = tempname.split(".")[last - 1];
+				
+				if (extension.toUpperCase() != "ICS") {
+					alert("<spring:message code='ezAddress.t179' />");
+					return;
+				}
+				
+				//setNodeText(document.getElementById("loadtxt"), "<spring:message code='ezAddress.t5000' />");
+				document.getElementById("loadingLayer").style.display = "";
+				document.getElementById("loadingLayer").style.top = (document.documentElement.clientHeight / 2) - 90 + "px";
+				document.getElementById("loadingLayer").style.left = (document.documentElement.clientWidth / 2) - 160 + "px";
+				
+				var format = "";
+				var formatRadio = document.getElementsByName('importFormat');
+				
+				for (var i = 0; i < formatRadio.length; i++) {
+					if (formatRadio[i].checked) {
+						format = formatRadio[i].value;
+						break;
+					}
+				}
+				
+				//startDate, endDate
+				var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+				var endDate   = $('#Edatepicker').datepicker({ dateFormat: 'yy-mm-dd' }).val();
+				
+				var frm = document.getElementById('form');
+				frm.action = "/ezSchedule/icsImport.do?format=" + encodeURIComponent(format) + "&startDate=" + encodeURIComponent(startDate) + "&endDate=" + encodeURIComponent(endDate);
+				frm.submit();
+				SearchOptionHidden();
+			}
+			function SearchOptionHidden() {
+				$.modal.close();
+			}
+			
+			function selectLastYear() {
+				$("#Sdatepicker").datepicker('setDate', "-1Y");
+				$('#Edatepicker').datepicker('setDate', new Date());
+			}
+			
+			function selectLastSixMonths() {
+				$("#Sdatepicker").datepicker('setDate', "-6M");
+				$('#Edatepicker').datepicker('setDate', new Date());
+			}
+			
+			function selectLastMonths() {
+				$("#Sdatepicker").datepicker('setDate', "-1M");
+				$('#Edatepicker').datepicker('setDate', new Date());
+			}
+			
+			function selectThisYear(){
+				var now = new Date();
+				$("#Sdatepicker").datepicker('setDate', new Date(now.getFullYear(), 0, 1));
+				$('#Edatepicker').datepicker('setDate', new Date(now.getFullYear(), 12, 0));
+			}
+			
+			function UploadComplete(result) {
+				document.form.file1.value = "";
+				document.getElementById("loadingLayer").style.display = "none";
+				
+				if (result == "OK") {
+					alert(strLangKHJ5);
+				} else if (result == "ERROR") {
+					alert(strLangKHJ6);
+				} else {
+					alert(strLangKHJ7);
+				}
+				RefreshView();
+			}
+	    </script>
 	</head>
 	<body class="mainbody" style="overflow: auto; margin-bottom:0px">
         <h1 id="titleimg">${defaultTitle}</h1>
@@ -1103,6 +1270,10 @@
 	            <li onClick="IDClick('C')" style="background:none;cursor:pointer"><span style="display:inline-block; width:11px; height:11px; border:1px solid #e01662; background:#ff1c71; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezSchedule.t223'/></li>
                 <li style="background:none;cursor:text"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='main.t00022'/></li>
                  --%>
+                 <!-- 2018-10-17 김혜정  ics 파일 가져오기 기능 구현을 위해 임시로 가져오기 버튼 추가 -->
+                <c:if test="${useScheduleIcs == 'YES'}">
+                	<li><span onclick="doLayerPopup(this)">가져오기</span></li>
+                </c:if>
             </ul>
         </div>
 
@@ -1143,5 +1314,50 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<div id="importPopup" class="popupwrap1" style="display:none;margin-bottom:70px;vertical-align:middle">
+			<div class="popupJQLayer">
+				<div class="title">iCalendar <spring:message code='ezEmail.t407' /></div>
+				<div id="close">
+					<ul>
+						<li><a rel="modal:close"><span onclick="SearchOptionHidden()"></span></a></li>
+					</ul>
+				</div>
+				<h2 style="font-weight: normal;margin-top:5px">▒&nbsp;<spring:message code='ezSchedule.khj01' /></h2>
+				<table class="content" style="width:100%;margin-top:5px;">
+					<tr>
+						<th style="text-align:center"><spring:message code='ezSchedule.khj02' /></th>
+						<td>
+							<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+							~
+							<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"> 
+						</td>
+					</tr>
+					<tr>
+						<th style="text-align:center"><spring:message code='ezSchedule.khj03' /></th>
+						<td>
+							<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="selectLastYear()"><spring:message code='ezSchedule.khj04' /></span></a>
+							<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="selectLastSixMonths()"><spring:message code='ezSchedule.khj05' /></span></a>
+							<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="selectLastMonths()"><spring:message code='ezSchedule.khj06' /></span></a>
+							<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="selectThisYear()"><spring:message code='ezSchedule.khj07' /></span></a>
+						</td>
+					</tr>
+				</table>
+				<br />
+				<table style="width:100%">
+					<tr>
+						<td style="text-align:center;">
+							<div class="btnpositionLayer">
+								<a class="imgbtn"><span onClick="crossImport()"><spring:message code='main.t4004' /></span></a>
+							</div>	
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<span class="loading_layer" style="z-index:6000;position:absolute;top:300px;left:200px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><span id="loadtxt"><spring:message code='ezOrgan.t1000' /></span></span></span>
+		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
+		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
+			<input type="file" name="file1" id="file1" accept=".ics" onchange="btn_AttachAdd_onclick()" style="display: none"/>
+		</form>
 	</body>
 </HTML>

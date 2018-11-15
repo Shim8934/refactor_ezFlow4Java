@@ -133,6 +133,8 @@ public class BoardPropertyVO {
 	private String displayName;
 	/** 2018-06-25 홍승비 - 게시판 그룹에 companyID 추가 */
 	private String companyID;
+	/** 2018-10-15 홍승비 - 그룹사게시판 체크용 isAllGroupBoard 추가*/
+	private String isAllGroupBoard;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -513,6 +515,13 @@ public class BoardPropertyVO {
 	}
 	public void setCompanyID(String companyID) {
 		this.companyID = companyID;
+	}
+	
+	public String getIsAllGroupBoard() {
+		return isAllGroupBoard;
+	}
+	public void setIsAllGroupBoard(String isAllGroupBoard) {
+		this.isAllGroupBoard = isAllGroupBoard;
 	}
 	
 }

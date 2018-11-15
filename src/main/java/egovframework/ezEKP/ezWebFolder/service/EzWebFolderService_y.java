@@ -3,7 +3,9 @@ package egovframework.ezEKP.ezWebFolder.service;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
@@ -18,9 +20,19 @@ public interface EzWebFolderService_y {
 	List<FileVO> getFileList(String folderId, String userId, String deptId, int tenantId, String comId, String searchExt, String searchFileName, 
 			String searchStartDate, String searchEndDate, String searchCreateName, String searchFileType, String searchPageCount, 
 			int pStart, int pEnd, String offset, String primary) throws Exception;
+
+	// 파일리스트2  root가 모든 파일들이 나오지 않는 메서드 
+	List<FileVO> getFileList2(String folderId, String userId, String deptId, int tenantId, String comId, String searchExt, String searchFileName, 
+			String searchStartDate, String searchEndDate, String searchCreateName, String searchFileType, String searchPageCount, 
+			int pStart, int pEnd, String offset, String primary) throws Exception;
 	
 	// 파일리스트의 총 개수 가져오는 메서드
 	Map<String, Integer> getFileToTalCount(String folderId, String userId, String deptId, int tenantId, String parameter,
+			String searchExt, String searchFileName, String searchStartDate, String searchEndDate, String searchCreateName,
+			String searchFileType, String searchPageCount, int pStart, int pEnd, String offset, String primary) throws Exception;
+
+	// 파일리스트의 총 개수 가져오는 메서드
+	Map<String, Integer> getFileToTalCount2(String folderId, String userId, String deptId, int tenantId, String parameter,
 			String searchExt, String searchFileName, String searchStartDate, String searchEndDate, String searchCreateName,
 			String searchFileType, String searchPageCount, int pStart, int pEnd, String offset, String primary) throws Exception;
 
@@ -68,4 +80,10 @@ public interface EzWebFolderService_y {
 	 * </pre>
 	 * **/
 	JSONObject checkPermissions(String userId, String deptId, String comId, String folders, String files, int tenantId) throws Exception;
+	
+	// file, folder 탐색기 연동위한 explorer 
+	FileVO getFolderFileDetailForExplorer(String fldFile, String fldFileId, String userId, int tenantId ,String comId ,String offset, String primary) throws Exception;
+	
+	JSONObject fileUpdateOverwrite (List<MultipartFile> multiFileLists, JSONArray nameArray, LoginVO userInfo, String folderId ,JSONArray fileIdArray, String realPath, int tenantId) throws Exception;
+	
 }

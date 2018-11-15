@@ -101,8 +101,9 @@
 		    var condition = new Array();
 		    var nowDate = "${nowDateUTC}";
 		    var ext;
-		   
 		    var currentpage = 1;
+		    var selRowChangeFlag = false;
+		    var orgCompanyID = "";
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -111,6 +112,10 @@
 		            return true;
 		    };
 		    function checkBujaeInfo() {
+		    	if (pListTypeValue == "10") {
+		    		checkBujaeInfo_Complete(true);
+		    		return;
+	            }
 		        var BString = arr_userinfo[7];
 		        if (BString != "") {
 		            var BDim = new Array("");
@@ -161,9 +166,11 @@
 		    function checkBujaeInfo_Complete(Rtnval) {
 	            if (Rtnval == true) {
 	                setBujaeOff();
+	                btnVisible('ok');
 	            }
 	            else if (Rtnval == "ING") { }
 	            else {
+	            	btnVisible('false');
 	                setbuttonenable();
 	                return;
 	            }
@@ -213,6 +220,21 @@
 		        }
 		        else if (pListTypeValue == "10") {
 		            getDocList();
+		            var result = "";
+			    	
+			        $.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezPersonal/saveBujae.do",
+			    		data : {
+			    				buJae  : bujaeVal,
+			    				proxy  : ""
+			    				},
+			    		success: function(xml){
+			    			result = xml;
+			    		}        			
+			    	});
 		        }
 		        else if (pListTypeValue == "21") {
 		            getDocList();
@@ -220,24 +242,31 @@
 		        else if (pListTypeValue == "99") {
 		            getDocList();
 		        }
-		
+		        else if (pListTypeValue == "11") {
+		        	getDocList();
+		        }
+		        
+		        
 		        try {
 		            parent.frames["left"].getAprCount();
 		            parent.frames["left"].setPresentValue("");
 		        } catch (e) { }
 	        }
 		    
-		        
+		  	var bujaeVal="";
 		    function setBujaeOff() {
 		    	var result = "";
 		    	
+		    	if(pListTypeValue != "10") {
+		    		bujaeVal = "";
+		    	}
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezPersonal/saveBujae.do",
 		    		data : {
-		    				buJae  : "",
+		    				buJae  : bujaeVal,
 		    				proxy  : ""
 		    				},
 		    		success: function(xml){
@@ -245,6 +274,7 @@
 		    		}        			
 		    	});
 		        
+		        bujaeVal = arr_userinfo[7];
 		        arr_userinfo[7] = "";
 		    }
 		
@@ -312,8 +342,53 @@
 		        } catch (e) {
 		            hideProgress();
 		        }
+		        
+		        var selectedStatusCell = $("#sel_status option:selected").val();
+		        if (selectedStatusCell == undefined) {
+		        	change_statusCell();
+		        }
+		        
 		    }
-		
+			
+		    function change_statusCell() {
+		        var statusCell = document.getElementById("sel_status");
+		        
+		        while(statusCell.hasChildNodes()) {
+		        	statusCell.removeChild(statusCell.firstChild);	
+		        }
+		        
+			    AddOption(sel_status, '<spring:message code="ezPoll.t104"/>', "ALL");
+			    
+			    $('#sel_status_div').show();
+			    
+		        if (pListTypeValue == "1") {
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1422"/>', "002");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t50"/>', "005");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
+		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
+		        } else if (pListTypeValue == "2" || pListTypeValue == "3") {
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1422"/>', "002");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t50"/>', "005");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
+		        } else if (pListTypeValue == "4") {
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.garm06"/>', "011");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1432"/>', "014");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1430"/>', "012");
+		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
+		        } else if (pListTypeValue == "9") {
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1308"/>', "I");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t239"/>', "Y");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.F0031"/>', "R");
+		        	AddOption(sel_status, '<spring:message code="ezApproval.t155"/>', "S");
+		        	AddOption(sel_status, strLangAprState21, "V");
+		        } else {
+		        	$('#sel_status_div').hide();
+		        }
+		        
+		    }
+		    
 		    var SelYearFlag = false;
 		    function onSelect_Year() {
 		        SelYearFlag = true;
@@ -363,6 +438,20 @@
 		        }
 		        else if (pListTypeValue == "21") {
 		            getDocList();
+		        }
+		        else if (pListTypeValue == "11") {
+		        	getDocList();
+		        }
+		    }
+		    
+		    function onSelect_Status() {
+		    	pageNum = 1;
+		        if (pListTypeValue == "1" || pListTypeValue == "2" || pListTypeValue == "3") {
+		            getDocList();
+		        } else if (pListTypeValue == "4") {
+		        	getReceivedDocList();
+		        } else if (pListTypeValue == "9") {
+		        	getSendOutDocList();
 		        }
 		    }
 		
@@ -425,11 +514,17 @@
 		        if (pCurSelRow != null && oArrRows.length > 0) {
 		            if (GetBujaeFlag())
 		                return;
-		            if (pListTypeValue == "1") {
+		            if (pListTypeValue == "1" || pListTypeValue == "11") { //listTypeValue = 11(공유결재문서)
+						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
+							alert("<spring:message code='ezApprovalG.bhs23'/>");
+							getDocList();
+							return;
+	                	}
 		                if (pCurSelRow.getAttribute("DATA12") == "015")
 		                    openViewDocInfo();
-		                else if (document.getElementById("tbtnRedraft").style.display == "none" && document.getElementById("tbtnApprove").style.display == "")
+		                else if (document.getElementById("tbtnRedraft").style.display == "none" && document.getElementById("tbtnApprove").style.display == ""){
 		                    openApprovUI();
+		                }
 		                else
 		                    btnRedraft_onclick();
 		            } else if (pListTypeValue == "4") {
@@ -585,6 +680,9 @@
                             }
                         }
 		            	break;
+		            case "5" :
+		            	openUserInfo();
+		            	break;
 		            default:
 		        }
 		    }
@@ -609,6 +707,15 @@
 		                }
 		                selectedDocIDS = selectedDocIDS + "</DOCIDS>";
 		            }
+		            //2018-10-31 배현상, 공유결재자 중복 결재 방지 처리
+		            if (tempFlag == 0 || tempFlag == 1) {
+		            	//첫번째 문서가 모두결재인 경우에는 결재창을 열지 않도록 변경
+						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
+							alert("<spring:message code='ezApprovalG.bhs23'/>");
+							getDocList();
+							return;
+						}
+                	}
 		            openApprovUI(tempFlag);
 		        }
 		    }
@@ -669,6 +776,12 @@
 		        }
 		        
 		        var pCurSelRow = oArrRows[0];
+		        if (pCurSelRow.getAttribute("orgcompanyid") != "" && pCurSelRow.getAttribute("orgcompanyid") != companyID) {
+		        	var pAlertContent = "<spring:message code='ezApprovalG.csj01'/>";
+		        	alert(pAlertContent);
+		            return;
+		        }
+		        
 		        if (CheckFormConnFlag(pCurSelRow.getAttribute("DATA1"))) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1726'/>";
 		            //OpenAlertUI(pAlertContent);
@@ -685,6 +798,13 @@
 		                return;
 		            }
 		        }
+		        
+		        if ((pListTypeValue == "1" || pListTypeValue == "11") && checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
+		        	alert("<spring:message code='ezApprovalG.bhs23'/>");
+					getDocList();
+					return;
+				}
+		        
 		        formURL = pCurSelRow.getAttribute("DATA3");
 		        var docState = pCurSelRow.getAttribute("DATA12");
 		        if (docState == "012" || docState == "014" || docState == "018") {
@@ -728,14 +848,21 @@
 		            alert(pAlertContent);
 		            return;
 		        }
-		
+		        
 		        var Ans = confirm("<spring:message code='ezApprovalG.t1728'/>");
 		        if (Ans) {
-		            var pCurSelRow = oArrRows[0];
+			        var pCurSelRow = oArrRows[0];
+			        if (pListTypeValue == "1" || pListTypeValue == "11" || pListTypeValue == "2") {
+						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
+							alert("<spring:message code='ezApprovalG.bhs23'/>");
+							getDocList();
+							return;
+						}
+					}
 		            if (pListTypeValue == "21")  //[한양대] 추가 사항 (서버 임시저장하기)
 		                RemoveTmpDoc(pCurSelRow.getAttribute("DATA1"));
 		            else
-		                RemoveDoc(pCurSelRow.getAttribute("DATA1"));
+		                RemoveDoc(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("orgcompanyid"));
 		            if (pListTypeValue == "4")
 		                getReceivedDocList();
 		            else if (pListTypeValue == "6")
@@ -847,7 +974,7 @@
 				                    return;
 				                }
 				            }
-				            if (pListTypeValue == "1") {
+				            if (pListTypeValue == "1" || pListTypeValue == "11") {
 				                g_selReturn = "Y";
 				                OpenReceiveENDDraftUI(pCurSelRow, "REDRAFT");
 				            }
@@ -858,6 +985,11 @@
 			    } else {
 			    	if (oArrRows != 0) {
 		                var pCurSelRow = oArrRows[0];
+		                if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"),pCurSelRow.getAttribute("ORGCOMPANYID"))){
+							alert("<spring:message code='ezApprovalG.bhs23'/>");
+							getDocList();
+							return;
+	                	}
 		                OpenOpinionUI(pCurSelRow, "HeSong");
 		            }
 			    }
@@ -872,6 +1004,7 @@
 		            var pCurSelRow = oArrRows[0];
 		            var DocID = pCurSelRow.getAttribute("DATA1");
 		            DocID_Complete = DocID;
+		            orgCompanyID = pCurSelRow.getAttribute("orgCompanyID");
 		            if (pListTypeValue == "3") {
 		                var pMsg = "<spring:message code='ezApprovalG.t67'/>";
 		                var Ans = OpenInformationUI(pMsg, btncallback_onclick_Complete, "open");
@@ -1089,6 +1222,8 @@
 		    function passValLeftMenu(strVal) {
 		        pageNum = 1;
 		        SQLPARADATA = "";
+		        //2018-10-11 배현상, 검색조건인 SearchCont 초기화 작업이 미처리되있어 상단에 다른탭에서 검색한 날짜가 적용되있는 오류 수정
+		        SearchCond = new Array();
 		        pListTypeValue = strVal;
 		        window.parent.frames["left"].pListTypeValue = strVal;
 		        if (pListTypeValue == "7")
@@ -1350,6 +1485,12 @@
 		        createNodeAndInsertText(xmlpara, objNode, "ORDEROPTION", OrderOption);
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
 		        createNodeAndInsertText(xmlpara, objNode, "APPROVALFLAG", approvalFlag);
+		        
+		        var searchCompanyID = $("#selectCompany option:selected").val();
+		        if(searchCompanyID == undefined) {
+		        	searchCompanyID = "";
+		        }
+		        createNodeAndInsertText(xmlpara, objNode, "searchCompanyID", searchCompanyID);
 
 		        var wWeigth = 700;
 		        var wHeigth = 480;
@@ -1389,7 +1530,6 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
-		        var orgCompanyID = "";
 		
 		        if (tr.length == 0) {
 		        	//팝업창에서 알럿창으로 변경
@@ -1473,6 +1613,9 @@
 		            }
 		            else if (pListTypeValue == "21") {
 		                getDocList();
+		            }
+		            else if (pListTypeValue == "11") {
+		            	getDocList();
 		            }
 		            else {
 		                getDocList();
@@ -1690,6 +1833,9 @@
 		        else if (pListTypeValue == "21") {
 		            getDocList();
 		        }
+		        else if (pListTypeValue == "11") {
+		        	getDocList();
+		        }
 		        else {
 		            getDocList();
 		        }
@@ -1819,10 +1965,62 @@
                 }
 			}
 		    
+			
+			// 부재자설정에 따른 버튼 활성화 
+			function btnVisible(val) {
+				var scopeDoc = window.document;
+				// 메인버튼
+    			var mainmenu = scopeDoc.getElementById('mainmenu');
+				// 페이지레이어
+    			var tblPageRayer = scopeDoc.getElementById('tblPageRayer');
+				// 결재리스트
+    			var div_scroll = scopeDoc.getElementsByClassName('div_scroll');
+				// 타이틀
+    			var title_h1 = scopeDoc.getElementsByClassName('title_h1');
+				// 결재선
+				var div_AprLine = scopeDoc.getElementById('div_AprLine');
+				
+    			if(val === "ok") {
+	    			mainmenu.style.visibility = "visible";
+	    			tblPageRayer.style.visibility = "visible";
+	    			div_AprLine.style.visibility = "visible";
+	    			div_scroll[0].style.visibility = "visible";
+	    			title_h1[0].style.visibility = "visible";
+    			} else if(val === "false"){
+    				mainmenu.style.visibility = "hidden";
+	    			tblPageRayer.style.visibility = "hidden";
+	    			div_AprLine.style.visibility = "hidden";
+	    			div_scroll[0].style.visibility = "hidden";
+	    			title_h1[0].style.visibility = "hidden";
+    			}
+		    }
+			
+			function checkAprState(pDocID, docState, OrgAprUserID, aprMemberSN, pOrgCompanyID) {
+		    	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/checkAprState.do",
+		    		data : {
+		    			docID : pDocID,
+		    			docState : docState,
+		    			userID : OrgAprUserID,
+		    			aprMemberSN : aprMemberSN,
+		    			orgCompanyID : pOrgCompanyID
+		    		},
+		    		success : function(text) {
+		    			result = text;
+		    		}
+		    	});
+		    	
+		    	return result == "FALSE" ? true : false;
+		    }
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px;">	
-		<h1>
+		<h1 class="title_h1">
 			<span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
 		    	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
@@ -1871,10 +2069,15 @@
 		        	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">    
 		            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
 		        	</select>  
+		        	<div id="sel_status_div" style="display:inline;">
+						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
+			            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
+			        	</select>  
+		        	</div>
 		        	<c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21'}">
 						<select id="selectCompany" onchange="getDocListByCompany();">
 							<option value="">
-								<spring:message code='ezPoll.t237'/>
+								<spring:message code='main.t74'/>
 							</option>
 							<c:forEach items="${companyList }" var="company">
 								<option value="${company.companyID }">

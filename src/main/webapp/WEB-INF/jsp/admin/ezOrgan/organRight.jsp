@@ -473,10 +473,15 @@
 			    
 		        selectdept_cross_dialogArguments = new Array();
 		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t19' />";
-		        selectdept_cross_dialogArguments[1] = mov_dept_Complete;
+		        selectdept_cross_dialogArguments[1] = mov_dept_CompleteWithTimeout;
 		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));		        
 		        try { OpenWin.focus(); } catch (e) { }			    
 			}
+		    function mov_dept_CompleteWithTimeout(rtnValue) {
+		    	 setTimeout(function() {
+		    		 mov_dept_Complete(rtnValue);
+	                }, 10);
+		    }
 		    
 		    function GetDeptFullPath(DeptID, topid){
 		    	var data;
@@ -706,7 +711,7 @@
 					return;
 				}
 
-			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=430px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(430, 315));
+			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
 			}
 		    
 			function Change_List(){
@@ -866,6 +871,8 @@
 				args[1] = treeNode.GetNodeData("DISPLAYNAME1");
 				args[2] = "";
 				args[3] = treeNode.GetNodeData("DISPLAYNAME2");
+				args[4] = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+				args[5] = "";
 				
 				//2016-04-19 장진혁과장 -- Cross 버전 사용으로 주석 처리
 				//if (CrossYN()) {
@@ -919,6 +926,8 @@
 				args[1] = treeNode.GetNodeData("DISPLAYNAME1");
 				args[2] = listview.GetSelectedRows()[0].getAttribute("DATA2");
 				args[3] = treeNode.GetNodeData("DISPLAYNAME2");
+				args[4] = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+				args[5] = listview.GetSelectedRows()[0].getAttribute("DATA3");
 				
 				//2016-04-18 장진혁과장 -- Cross 버전 사용으로 인한 주석처리
 				//if (CrossYN()) {
@@ -1029,7 +1038,7 @@
 		      //크롬일때 alert창 크기때문에 크롬일때 구별
 	            var agent = navigator.userAgent.toLowerCase();
 	            if (agent.indexOf("chrome") != -1) {
-	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(450, 185));	
+	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));	
 	            } else {
 	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));	
 	            }
@@ -1130,6 +1139,13 @@
 		    var selectdept_cross_dialogArguments = new Array();
 		    
 			function mov_user(){
+			 	var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+			        
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
 
@@ -1145,8 +1161,10 @@
 		        
 		        //2016-04-18 장진혁 과장 -- Cross 버전 사용으로 인한 주석 처리
 			    //if (CrossYN()) {
+		    	document.getElementById("selectedCN").value = treeNode.GetNodeData("CN");
+		    	
 		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t13' />";
-		        selectdept_cross_dialogArguments[1] = mov_user_Complete;
+		        selectdept_cross_dialogArguments[1] = move_user_CompleteWithTimeout;
 		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
 		        try { OpenWin.focus(); } catch (e) { }
 			    <%-- }else {
@@ -1186,15 +1204,28 @@
 			    } --%>
 			}
 			
+            function move_user_CompleteWithTimeout(rtnValue) {
+                setTimeout(function() {
+                    mov_user_Complete(rtnValue);
+                }, 10);
+            }
+            
 		    function mov_user_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		        	var listview = new ListView();
 			        listview.LoadFromID("lvUserList");
 			        
+		            var selectedCN = document.getElementById("selectedCN").value;
+		            if (rtnValue.toLowerCase() == selectedCN.toLowerCase()) {
+		                alert("<spring:message code='ezOrgan.t21' />");
+		                return;
+		            }
+		            
 		            var length = listview.GetSelectedRows().length;
 		            if (!confirm(length + "<spring:message code='ezOrgan.t14' />")){
 		                return;
 		            }
+		            
 		            var data = "";
 		            for (var i = 0; i < length; i++) {
 		            	data += listview.GetSelectedRows()[i].getAttribute("DATA2");
@@ -1326,6 +1357,41 @@
 	            });		        
 		    }
 		    
+		    // 모바일 설정 함수 
+		    function mobile_managed() {
+		    	var data = "";
+				var mobileOwner = "";
+		    	var listview = new ListView();
+		    	listview.LoadFromID("lvUserList");
+		    	
+		    	var length = listview.GetSelectedRows().length;
+		    	
+		    	if (length == 0) {
+		    		alert("<spring:message code='ezOrgan.kyj05' />");
+		    		return;
+		    	} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
+				} else if (length > 1) {
+	    			alert("<spring:message code='ezOrgan.kyj06' />");
+		    		return;
+	    		}
+		    	
+	    		var trIdx = listview.GetSelectedRows()[0];
+	    		mobileOwner = $(trIdx).children().eq(0).text();
+	    		data = listview.GetSelectedRows()[0].getAttribute("DATA2");
+		    	
+		    	document.getElementById("userSend").value = data;
+		    	
+		    	var agent = navigator.userAgent.toLowerCase();
+		    	
+		    	if (agent.indexOf("chrome") != -1) {
+		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 200));
+		    	} else {
+			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 200));
+		    	}
+		    } 
+		   
 		    // POP3/IMAP 설정 함수
 		    var serUseDisablePopImap_dialogArguments = new Array();
 		    
@@ -1539,6 +1605,11 @@
 			                	<td><a class="imgbtn" id="usermenu22"><span onClick="mod_pop3Imap()">POP3/IMAP</span></a></td>
 			                </tr>
 		                </c:if>
+		                <c:if test="${useMobileManagemant == 'YES' }">
+		                	<tr>
+			                	<td><a class="imgbtn" id="usermenu23"><span onClick="mobile_managed()"><spring:message code='ezPersonal.t998' /></pan></a></td>
+			                </tr>
+			            </c:if>
 					</table>
 				</th>
 			</tr>

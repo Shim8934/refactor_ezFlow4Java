@@ -80,11 +80,6 @@ public class EzAttitudeController {
 	@Autowired
 	private EzCommonService ezCommonService;
 	
-	//내꺼
-	
-	/////////////////////////////////////////
-	//니꺼
-	
 	/**
 	 * 사용자 좌측메뉴
 	 * 근태정보관리
@@ -141,6 +136,26 @@ public class EzAttitudeController {
 			return "cmm/error/accessDenied";
 		}
 		
+		//근태유형
+		url = gwServerUrl + " /rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudetypes";
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("isuse", "1");
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		JSONArray typeList = new JSONArray();
+		
+		if(status.equals("ok")){
+			typeList = (JSONArray) resultBody.get("data");
+		}
+		
+		model.addAttribute("typeList", typeList);
 		model.addAttribute("deptList", deptList);		
 		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("selectedDeptID", userInfo.getDeptID());
@@ -1579,7 +1594,7 @@ public class EzAttitudeController {
 		      
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
-		pFileName = strDate+"_Report.xls";
+		pFileName = strDate+"_Report";
 		  
 		String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
 		Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
@@ -2098,7 +2113,7 @@ public class EzAttitudeController {
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
 		
-		//전체관리자(c), 회사관리자(k), 부서관리자(g), 근태관리자(wa) 면 모든부서..
+		//전체관리자(c), 회사관리자(k), 근태관리자(wa) 면 모든부서..
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
 			adminFlag = "true";
 			isAllDept = "Y";
@@ -2106,7 +2121,7 @@ public class EzAttitudeController {
 			adminFlag = "true";
 		}
 		
-		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth/hyo";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -2115,8 +2130,11 @@ public class EzAttitudeController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+//				.queryParam("companyId", userInfo.getCompanyID())
+//				.queryParam("isAllDept", isAllDept)
+//				.queryParam("userId", userInfo.getId());
 				.queryParam("companyId", userInfo.getCompanyID())
-				.queryParam("isAllDept", isAllDept)
+				.queryParam("listAuthType", "R")
 				.queryParam("userId", userInfo.getId());
 		
 		RestTemplate rest = new RestTemplate();
@@ -2286,7 +2304,7 @@ public class EzAttitudeController {
 		}
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/check"; // 부서근태조회는 따로 빼두는것이 좋지 않을까...아닌가 쿼리를 잘짜면 되려나
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/check";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -2397,7 +2415,8 @@ public class EzAttitudeController {
 				attitudeVO = (JSONObject) resultBody.get("data");
 				model.addAttribute("attitudeInfo", attitudeVO);
 			}
-		} 
+		}
+		//해당 근태에 대한 부서
 		deptId = (String) attitudeVO.get("deptId") == null ? "null" : (String) attitudeVO.get("deptId");
 		
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
@@ -2407,7 +2426,7 @@ public class EzAttitudeController {
 			adminFlag = "true";
 		}
 		
-		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth/hyo";
 		
 		headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -2417,7 +2436,7 @@ public class EzAttitudeController {
 		
 		builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyID)
-				.queryParam("isAllDept", isAllDept)
+				.queryParam("listAuthType", "M")
 				.queryParam("userId", userInfo.getId());
 		
 		rest = new RestTemplate();
@@ -2434,22 +2453,6 @@ public class EzAttitudeController {
 		
 		if(status.equals("ok")){
 			deptList = (JSONArray) resultBody.get("data");
-		}
-		
-		int myDeptCount = 0;
-		
-		for(int i = 0; i < deptList.size(); i++) {
-			JSONObject dept = (JSONObject) deptList.get(i);
-			if (dept.get("deptId").equals(userInfo.getDeptID())) {
-				myDeptCount++;
-			}
-		}
-		
-		for(int i = 0; i < deptList.size(); i++) {
-			JSONObject dept = (JSONObject) deptList.get(i);
-			if (dept.get("mine") != null && dept.get("mine").equals("yes")) {
-				dept.put("authType", "R");
-			}
 		}
 		
 		//권한 부서 목록에서 부서의 권한을 읽음
@@ -3021,16 +3024,16 @@ public class EzAttitudeController {
 			
 			//header
 			row.createCell(0).setCellValue("NO");
-			row.getCell(0).setCellStyle(headerStyle);
-			row.createCell(1).setCellValue("이름");
-			row.getCell(1).setCellStyle(headerStyle);
-			row.createCell(2).setCellValue("직위");
-			row.getCell(2).setCellStyle(headerStyle);
-			row.createCell(3).setCellValue("부서");
-			row.getCell(3).setCellStyle(headerStyle);
-			row.createCell(4).setCellValue("날짜");
-			row.getCell(4).setCellStyle(headerStyle);
+			row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
+			row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
+			row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
+			row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t133", locale));
 			row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t134", locale));
+			row.getCell(0).setCellStyle(headerStyle);
+			row.getCell(1).setCellStyle(headerStyle);
+			row.getCell(2).setCellStyle(headerStyle);
+			row.getCell(3).setCellStyle(headerStyle);
+			row.getCell(4).setCellStyle(headerStyle);
 			row.getCell(5).setCellStyle(headerStyle);
 			
 			//body
@@ -3058,7 +3061,6 @@ public class EzAttitudeController {
 				row.getCell(4).setCellStyle(bodyStyle);
 				row.getCell(5).setCellStyle(bodyStyle);
 			}
-			
 			//width 조정
 			sheet.autoSizeColumn(0);
 			sheet.autoSizeColumn(1);
@@ -3066,21 +3068,27 @@ public class EzAttitudeController {
 			sheet.autoSizeColumn(3);
 			sheet.autoSizeColumn(4);
 			sheet.autoSizeColumn(5);
-			sheet.autoSizeColumn(6);
+			sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
+			sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
+			sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
+			sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
+			sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
+			sheet.setColumnWidth(5, (sheet.getColumnWidth(5)) + 512);
+			
 		} else if (reqType.equals("absent")){
 //			미입력자조회엑셀
 			pFileName = EgovDateUtil.getToday("-") +"_absentedReport.xls";
 			
 			//header
 			row.createCell(0).setCellValue("NO");
+			row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t133", locale));
+			row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
+			row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
+			row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
 			row.getCell(0).setCellStyle(headerStyle);
-			row.createCell(1).setCellValue("날짜");
 			row.getCell(1).setCellStyle(headerStyle);
-			row.createCell(2).setCellValue("이름");
 			row.getCell(2).setCellStyle(headerStyle);
-			row.createCell(3).setCellValue("직위");
 			row.getCell(3).setCellStyle(headerStyle);
-			row.createCell(4).setCellValue("부서");
 			row.getCell(4).setCellStyle(headerStyle);
 			
 			//body
@@ -3099,34 +3107,40 @@ public class EzAttitudeController {
 				row.getCell(2).setCellStyle(bodyStyle);
 				row.getCell(3).setCellStyle(bodyStyle);
 				row.getCell(4).setCellStyle(bodyStyle);
+
 			}
-			
 			//width 조정
 			sheet.autoSizeColumn(0);
 			sheet.autoSizeColumn(1);
 			sheet.autoSizeColumn(2);
 			sheet.autoSizeColumn(3);
 			sheet.autoSizeColumn(4);
+			sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
+			sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
+			sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
+			sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
+			sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
+			
 		} else if (reqType.equals("history")){
 //			관리내역조회엑셀
 			pFileName = EgovDateUtil.getToday("-") +"_historyReport.xls";
 			
 			//header
 			row.createCell(0).setCellValue("NO");
+			row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
+			row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
+			row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
+			row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t149", locale));
+			row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t134", locale));
+			row.createCell(6).setCellValue(egovMessageSource.getMessage("ezAttitude.t62", locale));
+			row.createCell(7).setCellValue(egovMessageSource.getMessage("ezAttitude.t63", locale));
 			row.getCell(0).setCellStyle(headerStyle);
-			row.createCell(1).setCellValue("이름");
 			row.getCell(1).setCellStyle(headerStyle);
-			row.createCell(2).setCellValue("직위");
 			row.getCell(2).setCellStyle(headerStyle);
-			row.createCell(3).setCellValue("부서");
-			row.getCell(3).setCellStyle(headerStyle);
-			row.createCell(4).setCellValue("일시");
+			row.getCell(3).setCellStyle(headerStyle); 
 			row.getCell(4).setCellStyle(headerStyle);
-			row.createCell(5).setCellValue("근태유형");
 			row.getCell(5).setCellStyle(headerStyle);
-			row.createCell(6).setCellValue("수정자");
 			row.getCell(6).setCellStyle(headerStyle);
-			row.createCell(7).setCellValue("수정일시");
 			row.getCell(7).setCellStyle(headerStyle);
 			
 			//body
@@ -3194,6 +3208,14 @@ public class EzAttitudeController {
 			sheet.autoSizeColumn(5);
 			sheet.autoSizeColumn(6);
 			sheet.autoSizeColumn(7);
+			sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
+			sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
+			sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
+			sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
+			sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
+			sheet.setColumnWidth(5, (sheet.getColumnWidth(5)) + 512);
+			sheet.setColumnWidth(6, (sheet.getColumnWidth(6)) + 512);
+			sheet.setColumnWidth(7, (sheet.getColumnWidth(7)) + 512);
 		}
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");

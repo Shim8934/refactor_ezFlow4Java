@@ -27,6 +27,7 @@
 			var strListInfo = "";
 			var CheckBoxArr = new Array();
 			var companyId = "${companyId}";
+			var changePassLength = 0;
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -231,6 +232,8 @@
 			        	success : function(result) {			        	    
 			        	    if (result == "OK") {
 			        			alert(strLang9);
+			        	    } else if (result == "DIFF_COMPANY") {
+			        	    	alert(strLangLHM01);
 			        	    } else {
 			        	        alert(strLang10);
 			        	    }
@@ -252,20 +255,18 @@
 			    if (CheckBoxArr.length == 0) {
 			        alert("<spring:message code='ezOrgan.t39' />"); 
 			        return;
+			    } else {
+				    changePassLength = CheckBoxArr.length; 
 			    }
 			    
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
-		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));
+		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));
 		        try { OpenWin.focus(); } catch (e) { }			    
 			}
 			
 		    function mod_password_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		            var length = CheckBoxArr.length;
-		            if (!confirm(length + "<spring:message code='ezOrgan.t40' />")){
-			        	return;
-		            }		            
-		            
 			    	var data = "";
 			    	
 			        for (var i = 0 ; i < length ; i++) {

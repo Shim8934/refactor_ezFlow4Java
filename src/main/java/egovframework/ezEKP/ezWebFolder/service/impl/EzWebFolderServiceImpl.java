@@ -123,7 +123,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		return ezWebFolderDAO.getFileByFileId(map);
 	}
 
-	private FileTypeVO getFileTypeByFileExt(String extend, int tenantId) throws Exception {
+	@Override
+	public FileTypeVO getFileTypeByFileExt(String extend, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("extension", extend);
 		map.put("tenantId",  tenantId);
@@ -1236,4 +1237,20 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		
 		return ezWebFolderDAO.getAllSimpleShareFolder(map);
 	}
+
+	@Override
+	public void updateFileExt(String fileId, String newFilePath, String fileExt, String realFileExt, String timeUTC, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fileId",   fileId);
+		map.put("filePath",   newFilePath);
+		map.put("fileExt",     fileExt);
+		map.put("realFileExt", realFileExt);
+		map.put("tenantId", tenantId);
+		map.put("timeUTC", timeUTC);
+		
+		ezWebFolderDAO.updateFileExt(map);
+		
+	}
+	
+	
 }

@@ -109,6 +109,15 @@
 				    case 30:
 					 	url = "/admin/ezEmail/letterMain.do";
 					 	break;
+				    case 31:
+				    	url = "/admin/ezOrgan/jobInfoList.do";
+				    	break;
+				    case 32:
+				    	url = "/admin/ezEmail/signatureMain.do";
+					 	break;
+				    case 33:
+					 	url = "/admin/ezEmail/showSharedMailboxList.do";
+				    	break;
 				}
 				window.open(url,"right");
 			}
@@ -118,7 +127,7 @@
 		<div id="left">
   			<div class="left_admin" title="<spring:message code='main.t23' />"><img src="/images/admin/first.png" width="13px" height="13px"/>
 	  			<c:if test="${dotNetIntegration != 'YES'}"><spring:message code='main.t23' /></c:if>
-	  			<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.t24' /></c:if>
+	  			<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.turl = "/admin/ezEmail/signatureMain.do";24' /></c:if>
   			</div>   
   			<h2>
   				<span onClick="goPage(1)" style="display:inline-block;width:100%;">
@@ -131,12 +140,21 @@
 		        <li><span id="Organ" style="width: 100%; display: inline-block;" onClick="goPage(1)" ><spring:message code='main.t56' /></span></li>
 		        <li><span id="CheckAdmin" style="width: 100%; display: inline-block;" onClick="goPage(12)" ><spring:message code='main.t00062' /></span></li>
 		        <li><span id="Addjob" style="width: 100%; display: inline-block;" onClick="goPage(13)" ><spring:message code='main.t00063' /></span></li>
+		        <li><span id="JobInfo" style="width: 100%; display: inline-block;" onClick="goPage(31)"><spring:message code='ezOrgan.csj01' /></span></li>
 		    </ul>   
 		    </c:if>
   			<h2>
   				<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
     			<ul></ul>    			
-  			</h2>  
+  			</h2>
+  			
+  			<c:if test="${useSharedMailbox == 'YES'}">
+  			<h2>
+  				<span onClick="goPage(33)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.sharedMailbox01' /></span>
+    			<ul></ul>
+  			</h2>
+  			</c:if>
+  			
   			<!--
   			<h2>
   				<span onClick="goPage(20)" style="display:inline-block;width:100%;"><spring:message code='main.t1000' /></span>
@@ -175,6 +193,12 @@
   				<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
     			<ul></ul>
   			</h2>
+  			<c:if test="${useSignatureTemplate == 'YES'}">
+  			<h2>
+				<span onClick="goPage(32)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.jje05'/></span>
+			    <ul></ul>
+			</h2>
+			</c:if>
   			<c:if test="${cChk == '1'}">
 			<h2>
 				<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>

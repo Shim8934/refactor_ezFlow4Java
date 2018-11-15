@@ -67,6 +67,7 @@
         <result property="fileShareStatus"      column="FILESHARE_STATUS"		 columnIndex="21"/>        
         <result property="folderSort"      		column="FOLDER_SORT"			 columnIndex="22"/>        
         <result property="fileTypeName"         column="TYPE_NAME"          	 columnIndex="23"/>            
+        <result property="ownerId"		        column="OWNER_ID"          		 columnIndex="24"/>            
                                                                                                                                                                          
                                                                                                                                                                                 
                                                                                                                                                                                   
@@ -140,7 +141,8 @@
 					ELSE 'N'
 				END AS FILESHARE_STATUS,
 				if (f.FILE_EXT = 'folder',0,1) as FOLDER_SORT,
-				type.TYPE_NAME 	AS TYPE_NAME 		
+				type.TYPE_NAME 	AS TYPE_NAME,
+				f.CREATE_ID 	AS OWNER_ID 		
 		]]>	
     </sql>
     <sql id="fldSelect">
@@ -172,7 +174,8 @@
 					ELSE 'N'
 				END AS FILESHARE_STATUS,
 				if (FILE_EXT ='folder',0,1) as FOLDER_SORT,
-				type.TYPE_NAME 	AS TYPE_NAME    
+				type.TYPE_NAME 	AS TYPE_NAME,
+				folder.OWNER_ID 	AS OWNER_ID 	    
 		]]>			      
     </sql>
     
@@ -202,8 +205,8 @@
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+				 (t.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND t.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))	
+					
 			]]>
 		</isNotEqual>	
     </sql>
@@ -279,8 +282,8 @@
 			        ELSE 0
 			    END SELECTED,
 			    CASE WHEN #primary# = '1'
-			        THEN FOLDER_NAME1
-			        ELSE FOLDER_NAME2
+			        THEN REPLACE(FOLDER_NAME1, '&', '&amp')
+			        ELSE REPLACE(FOLDER_NAME2, '&', '&amp')
 			    END TEXT,
 			    CREATE_ID AS CREATEID,
 			    FOLDER_NAME1 AS FOLDERNAME1, 
@@ -308,8 +311,8 @@
 	        		ELSE 0
 	        	END SELECTED,
 	        	CASE WHEN #primary# = '1'
-	        		THEN FOLDER_NAME1
-	        		ELSE FOLDER_NAME2
+	        		THEN REPLACE(FOLDER_NAME1, '&', '&amp')
+			        ELSE REPLACE(FOLDER_NAME2, '&', '&amp')
 	        	END TEXT,
 	        	CREATE_ID AS CREATEID,
 			    FOLDER_NAME1 AS FOLDERNAME1, 
@@ -340,8 +343,8 @@
 	        		ELSE 0
 	        	END SELECTED,
 	        	CASE WHEN #primary# = '1'
-	        		THEN F.FOLDER_NAME1
-	        		ELSE F.FOLDER_NAME2
+	        		THEN REPLACE(FOLDER_NAME1, '&', '&amp')
+			        ELSE REPLACE(FOLDER_NAME2, '&', '&amp')
 	        	END TEXT,
 	        	F.CREATE_ID AS CREATEID,
 			    F.FOLDER_NAME1 AS FOLDERNAME1, 
@@ -371,8 +374,8 @@
 	        	'##' AS PARENT,
 	        	1  AS SELECTED,
 	        	CASE WHEN #primary# = '1'
-	        		THEN FOLDER_NAME1
-	        		ELSE FOLDER_NAME2
+	        		THEN REPLACE(FOLDER_NAME1, '&', '&amp')
+			        ELSE REPLACE(FOLDER_NAME2, '&', '&amp')
 	        	END TEXT,
 	        	CREATE_ID AS CREATEID,
 			    FOLDER_NAME1 AS FOLDERNAME1,
@@ -431,8 +434,77 @@
    		]]>	
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+				 (t.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND t.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))						
+			]]>
+		</isNotEqual>
+		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
+			]]>
+		</isNotEqual>
+			
+		<![CDATA[
+			ORDER BY FOLDER_SORT, CREATE_DATE DESC
+			LIMIT #pStart#, #pEnd#
+		]]>	
+	</select>
+	
+	<select id="EzWebFolderDAO_y.getFileList2" resultMap="fileVO" parameterClass="Map">   
+   		<![CDATA[
+	        	select *
+	        	from (
+    	]]>
+ 		<include refid="fileListSelect"/>
+		<![CDATA[
+			from tbl_webfolder_file f inner join (
+				select *
+				from tbl_webfolder_folder  
+				where 	folder_id = #folderId# 
+					and tenant_id = #tenantId# 
+					and folder_type = #folderType# 
+				) folder 
+					on folder.folder_id  = f.folder_id
+			inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id  = #tenantId# 
+			left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+				and s.tenant_id = #tenantId# and s.target_type ='F'
+			where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'  
+			
+		]]>
+        <include refid="fldSelect"/>
+        	<![CDATA[
+	            from 
+		            tbl_webfolder_filetype type LEFT OUTER JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder'
+		            left outer join tbl_webfolder_favor s on folder.folder_id = s.target_id and s.user_id = #userId# 
+		            	and s.tenant_id = #tenantId# and s.target_type ='D' 
+	            	left outer join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
+	            where 
+						folder.tenant_id = #tenantId#	 
+					and 
+						folder.FOLDER_TYPE = #folderType#
+	                and 
+	                	folder.USE_STATUS = 'Y'
+	                and 
+	                	folder.folder_upper = #folderId#
+	                and 
+	                	folder.company_id = #comId#
+             ]]>	
+	         <isEqual property="parentId" compareValue="root" > 
+	      	 	<isEqual property="folderType" compareValue="C" >
+                	AND 
+                		u.user_id IN
+   		
+					<iterate property="idList" open="(" close=")" conjunction=",">
+						#idList[].id#
+					</iterate>
+	      	   </isEqual>  
+	         </isEqual>  
+	         <![CDATA[
+	            ) t
+	            where 1=1
+	         ]]>   
+		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
+			<![CDATA[
+			 	(t.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND t.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))	
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
@@ -494,8 +566,7 @@
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+			 	(t.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND t.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))	
 			]]>
 		</isNotEqual>
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
@@ -675,8 +746,7 @@
 			</isNotEqual>
 			<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 				<![CDATA[
-					(DATE_FORMAT(folder.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(folder.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)	
+					 (folder.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND folder.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))	
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -685,6 +755,72 @@
 			from dual 
 			where 1=0
 		</isEqual>
+	</select>
+	
+	<select id="EzWebFolderDAO_y.getFldToTalCount2" resultClass="Integer" parameterClass="Map">   
+			<![CDATA[
+	           	SELECT count(folder.folder_id) as cnt
+	            from 
+		            tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder' 
+		            left outer join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
+	            where 
+						folder.tenant_id = #tenantId#	 
+					and folder.FOLDER_TYPE = #folderType#
+	                and folder.USE_STATUS = 'Y'
+	                and folder.company_id = #comId#
+	                and type.tenant_id = #tenantId#
+	                and folder_path <> #folderPath#	
+			]]>
+			<isEqual property="parentId" compareValue="root" > 
+	      	 	<isEqual property="folderType" compareValue="C" >
+                	AND 
+                		u.user_id IN
+   		
+					<iterate property="idList" open="(" close=")" conjunction=",">
+						#idList[].id#
+					</iterate>
+	      	   </isEqual>  
+	         </isEqual>  
+			<isEqual property = "flag" compareValue="1" prepend="AND">
+				<![CDATA[
+					folder.folder_path like concat('%', #folderPath#, '%') 
+				]]>
+			</isEqual>
+			<isEqual property= "flag" compareValue="0" prepend="AND">
+				<![CDATA[
+					folder.folder_upper = #folderId#
+				]]>
+			</isEqual>
+	         
+			<isNotEqual property="searchExt" compareValue="" prepend="AND">
+				<![CDATA[
+					type.FILE_EXT LIKE CONCAT('%', #searchExt#, '%')
+	       		]]> 
+			</isNotEqual>		
+			<isNotEqual property="searchCreateName" compareValue="" prepend="AND">
+				<![CDATA[
+					(folder.CREATE_NAME1 LIKE CONCAT('%', #searchCreateName#, '%')
+					or
+					folder.CREATE_NAME2 LIKE CONCAT('%', #searchCreateName#, '%'))
+	       		]]> 
+			</isNotEqual>		
+			<isNotEqual property="searchFileType" compareValue="" prepend="AND">
+				<![CDATA[
+					type.TYPE_NAME LIKE CONCAT('%', #searchFileType#, '%')
+	       		]]> 
+			</isNotEqual>	
+			<isNotEqual property="searchFileName" compareValue="" prepend="AND">
+				<![CDATA[
+					(folder.folder_name1 LIKE CONCAT('%', #searchFileName#, '%')
+					or
+					folder.folder_name2 LIKE CONCAT('%', #searchFileName#, '%'))
+	       		]]> 
+			</isNotEqual>
+			<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
+				<![CDATA[
+					 (folder.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND folder.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))	
+				]]>
+			</isNotEqual>
 	</select>
 	<select id="EzWebFolderDAO_y.searchFileToTalCount" resultClass="Integer" parameterClass="Map">   
    		<![CDATA[
@@ -812,8 +948,7 @@
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+				 (t.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND t.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))	
 			]]>
 		</isNotEqual>	
 		) totalCount
@@ -869,8 +1004,7 @@
 		</isNotEqual>
 		<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
 			<![CDATA[
-				(DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') >= #searchStartDate# 
-					AND DATE_FORMAT(t.CREATE_DATE,'YYYY-MM-DD') <= #searchEndDate#)
+				 (t.CREATE_DATE >= STR_TO_DATE(#searchStartDate#, '%Y-%m-%d %H:%i:%s') AND t.CREATE_DATE <= STR_TO_DATE(#searchEndDate#, '%Y-%m-%d %H:%i:%s'))
 			]]>
 		</isNotEqual>	
 		<![CDATA[
@@ -1083,7 +1217,7 @@
 		    and 
 		        folder.FOLDER_ID != #folderId#
 			and 
-				folder.FOLDER_ID like (			
+				folder.FOLDER_PATH like (			
 					select path 
 			        from (
 						select concat(df.folder_path ,'%') as path
@@ -1155,4 +1289,82 @@
 		</iterate>
 		AND FU.TENANT_ID = #tenantId#
 	</select>
+	
+	<select id="EzWebFolderDAO_y.getFileDetailForExplorer"  parameterClass="Map" resultMap="fileVO">
+		<![CDATA[
+			SELECT DISTINCT
+				f.FILE_ID 	 			AS FILE_ID ,
+				f.FILE_NAME  			AS FILE_NAME	,
+				f.FILE_PATH	  			AS FILE_PATH	, 
+                f.FILE_SIZE   			AS FILE_SIZE	,
+				f.TYPE_ID	    		AS TYPE_ID		,
+				f.DOWN_COUNT   			AS DOWN_COUNT   ,
+				f.FILE_EXT	  			AS FILE_EXT     ,
+				f.FOLDER_ID	    		AS FOLDER_ID    ,
+				f.USE_STATUS     		AS USE_STATUS   ,
+				f.CREATE_ID	    		AS CREATE_ID    ,
+				if ( #primary# = '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
+				f.CREATE_NAME2 as CREATE_NAME2,
+				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				f.UPDATE_ID	  			as UPDATE_ID,
+				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,    
+				f.TENANT_ID    			as TENANT_ID,
+				"" 				  		as TYPE_ICON ,
+				folder.FOLDER_PATH	  	as FOLDER_PATH,
+				folder.FOLDER_NAME1    	as FOLDER_NAME1,
+				"" 						AS FAVORITE_STATUS,
+				"" 						AS FILESHARE_STATUS,
+				if (f.FILE_EXT = 'folder',0,1) as FOLDER_SORT,
+				"" 						AS TYPE_NAME,
+				f.CREATE_ID 	AS OWNER_ID 		
+			FROM TBL_WEBFOLDER_FILE f LEFT OUTER JOIN TBL_WEBFOLDER_FOLDER folder on folder.FOLDER_ID = f.FOLDER_ID and f.TENANT_ID = folder.TENANT_ID
+			WHERE f.FILE_ID = #fldFileId# AND f.TENANT_ID = #tenantId#
+		]]>
+	</select>
+	<select id="EzWebFolderDAO_y.getFolderDetailForExplorer"  parameterClass="Map" resultMap="fileVO">
+		<![CDATA[
+			SELECT DISTINCT
+				folder.FOLDER_ID    AS FILE_ID 	    ,     
+				folder.FOLDER_NAME1 AS FILE_NAME	,     
+				folder.FOLDER_PATH  AS FILE_PATH	,     
+				0					AS FILE_SIZE	,     
+				'folder'			AS TYPE_ID		, 	  
+				0 					AS DOWN_COUNT   ,     
+				'folder'            AS FILE_EXT     ,     
+				folder.FOLDER_ID	AS FOLDER_ID    ,     
+				folder.USE_STATUS   AS USE_STATUS   ,     
+				folder.CREATE_ID	AS CREATE_ID    ,     
+				if ( #primary# = '1' , folder.CREATE_NAME1, folder.CREATE_NAME2) as CREATE_NAME1,
+				folder.CREATE_NAME2 as CREATE_NAME2,
+				DATE_ADD(folder.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				folder.UPDATE_ID	AS UPDATE_ID,  
+				DATE_ADD(folder.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				folder.TENANT_ID	AS TENANT_ID    ,   
+				"" 				  		as TYPE_ICON ,
+				folder.FOLDER_PATH  AS FOLDER_PATH  ,     
+				folder.FOLDER_NAME1 AS FOLDER_NAME1 ,  
+				"" 					AS FAVORITE_STATUS,
+				"" 					AS FILESHARE_STATUS,  
+				if (type.FILE_EXT ='folder',0,1) as FOLDER_SORT,
+				"" 	AS TYPE_NAME,
+				folder.OWNER_ID 	AS OWNER_ID 	
+			FROM TBL_WEBFOLDER_FOLDER folder left outer join tbl_webfolder_filetype type on  "folder" = type.FILE_EXT and folder.TENANT_ID = type.TENANT_ID
+				WHERE folder.FOLDER_ID = #fldFileId# and folder.TENANT_ID =#tenantId# 
+		]]>
+	</select>
+	<update id="EzWebFolderDAO_y.updateFileRealData" parameterClass="Map" >
+		<![CDATA[	
+			UPDATE
+				TBL_WEBFOLDER_FILE
+			SET
+				FILE_PATH = #filePath#,
+				UPDATE_DATE = #timeUTC#,
+				UPDATE_ID = #userId#,
+				FILE_SIZE = #fileSize#
+			WHERE
+				FILE_ID   = #fileId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
 </sqlMap>

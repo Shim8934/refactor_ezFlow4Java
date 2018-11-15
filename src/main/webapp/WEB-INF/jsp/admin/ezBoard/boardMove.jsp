@@ -74,13 +74,17 @@
 		    		data : "POST",
 		    		dataType : "text",
 		    		url : "/admin/ezBoard/moveBoard.do",
-		    		data : { orgBoardID : OrgBoardID, newParentBoardID : SelectedBoardID, newBoardGroupID : selectedBoardGroupID },
+		    		data : {
+		    			orgBoardID : OrgBoardID,
+		    			newParentBoardID : SelectedBoardID,
+		    			newBoardGroupID : selectedBoardGroupID
+		    		},
 		    		success : function(){
 		    			alert("<spring:message code='ezBoard.t126'/>");
 			    		parent.window.location.reload();
 		    		},
-		    		error : function(){
-		    			alert("<spring:message code='ezBoard.t127'/>");
+		    		error : function(request, status, error){
+						alert("<spring:message code='ezBoard.t127'/>");
 		    		}
 		    	});		    	
 		    }

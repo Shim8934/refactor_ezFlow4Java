@@ -32,6 +32,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
+import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -217,15 +218,40 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String userDept = info.getDeptId();
 			String langStr = request.getParameter("langStr");
 			String authYn = "N";
+			// 2018-10-31 김민성 - 자원관리 개별 자원 관리자 flag 추가
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+			String adminYn = "N";
 			
-			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
+			/*if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
 				authYn = "A";
+			}*/
+			
+			// 2018-11-07 김민성 - 자원 관리자 권한 가진 자원 체크
+			List<MResourceGetAdmSubClsTreeVO> adminCheckList = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
+
+			if(adminCheckList.size() > 0) {
+				authYn = "Y";
 			}
+			LOGGER.debug("authYn : " + authYn);
+			
+			// 자원 관리자 권한 가진 자원이 있는지 체크해서 adminYn 값 Y로
+			List<String> adminResList = mResourceService.getResAdminAuth(userId, tenantId, brdCompany);
+			
+			if(adminResList.size() > 0) {
+				adminYn = "Y";
+			}
+			LOGGER.debug("adminYn : " + adminYn);
+			
+			resultMap.put("authYn", authYn);
+			resultMap.put("adminYn", adminYn);
 			
 			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResBrdList(brdId, brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
+			
+			resultMap.put("list", list);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data",list);
+			result.put("data", resultMap);
 			
 		} catch (Exception e) {
 			
@@ -329,9 +355,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 
 			String authYn = "N";
 			
-			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
+			/*if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
 				authYn = "A";
-			}
+			}*/
 			
 			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdList(companyId, userId, companyId, dept , tenantId, langStr, authYn);
 			
@@ -729,9 +755,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	
 			String authYn = "N";
 			
-			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
+			/*if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
 				authYn = "A";
-			}
+			}*/
 	    	
 	    	LOGGER.debug("serverName: " + serverName);
 	    	LOGGER.debug("tenantId: " + tenantId);
@@ -786,9 +812,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	
 			String authYn = "N";
 			
-			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
+			/*if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
 				authYn = "A";
-			}
+			}*/
 	    	
 	    	Map<String, Object> resultMap = mResourceService.getScheduleApprList(resourceId, companyId, startDate, endDate, userId, deptId, "", "1", tenantId, offset, "Y", "", sDate, eDate, info.getLang(), authYn);
 			
@@ -881,7 +907,11 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			LOGGER.debug("ownerID=" + ownerID + ",title=" + title + ",startDateTime=" + startDateTime + ",endDateTime=" + endDateTime);
 			
-			ResAdminVO resInfo = ezResourceService.getResourceAdminInfo(ownerID, userInfo.getTenantId());
+			// 2018-10-29 김민성 - 모바일 자원관리 예약시 관리자들에게 메일 발송 처리
+			ResBrdVO resbrd = ezResourceService.getBrd(Integer.parseInt(ownerID), userInfo.getCompanyID(), userInfo.getTenantId());
+			String[] ownerList = resbrd.getOwnerID().split(",");
+			
+			List<ResAdminVO> resInfo = ezResourceService.getResourceAdminInfo(ownerID, userInfo.getTenantId(), ownerList);
 	        
 	        StringBuilder bodyContent = new StringBuilder();
 
@@ -893,31 +923,32 @@ public class MResourceGWController extends EgovFileMngUtil {
 	        	bodyContent.append(userInfo.getDisplayName2() +"[" + userInfo.getDeptName2() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
 	        }
 	        
-	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900003", userInfo.getLocale()) + " : " +resInfo.getBrdNm()); 
+	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900003", userInfo.getLocale()) + " : " +resInfo.get(0).getBrdNm()); 
 	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " +startDateTime + "&nbsp;~&nbsp;" + endDateTime);
 	        bodyContent.append("</DIV>");
 	        
-	        String subject = "[" + egovMessageSource.getMessage("ezResource.t171", userInfo.getLocale()) + resInfo.getBrdNm() + "] " + title;
+	        String subject = "[" + egovMessageSource.getMessage("ezResource.t171", userInfo.getLocale()) + resInfo.get(0).getBrdNm() + "] " + title;
 	        
 	        
 	    	InternetAddress from = new InternetAddress();
 	    	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
 	    	from.setAddress(userInfo.getEmail());
 	    	
-	    	String emailAddress = resInfo.getMailAddress();
-	    	String accessName = resInfo.getOwnerNm();
-	    	
-	    	if (accessName.indexOf("(") > -1) {
-	    		accessName = accessName.split("(")[0];
-	    	}
-	    	
-	    	InternetAddress to = new InternetAddress();
-	    	to.setPersonal(accessName, "UTF-8");
-	    	to.setAddress(emailAddress);
-	        	
-	        
-	        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
-	       
+	    	for(int i=0; i<resInfo.size(); i++) {
+		    	String emailAddress = resInfo.get(i).getMailAddress();
+		    	String accessName = resInfo.get(i).getOwnerNm();
+		    	
+		    	if (accessName.indexOf("(") > -1) {
+		    		accessName = accessName.split("(")[0];
+		    	}
+		    	
+		    	InternetAddress to = new InternetAddress();
+		    	to.setPersonal(accessName, "UTF-8");
+		    	to.setAddress(emailAddress);
+		        	
+		        
+		        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+		    }
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");
@@ -954,9 +985,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String langStr = request.getParameter("langStr");
 			String authYn = "N";
 			
-			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
+			/*if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
 				authYn = "A";
-			}
+			}*/
 			
 			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdList(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
 			result.put("status", "ok");
@@ -993,6 +1024,12 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String userDept = info.getDeptId();
 			String langStr = request.getParameter("langStr");
 			String authYn = "N";
+			// 2018-10-31 김민성 - 자원관리 개별 자원 관리자 flag 추가
+			String adminYn = "N";
+			String ownerId = "";
+			if(request.getParameter("ownerId") != null) {
+				ownerId = request.getParameter("ownerId");
+			}
 			
 			LOGGER.debug("tenantId: " + tenantId);
 			LOGGER.debug("userDept: " + userDept);
@@ -1002,25 +1039,50 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			String authCheck = "N";
 			
-			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
+			/*if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
 				authYn = "A";
 				authCheck = "Y";
-			}
+			}*/
 			LOGGER.debug("authYn: " + authYn);
-			
 			if(!authYn.equals("A")) {
 				
 				List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
-				
-				if(list.size() > 0) {
-					authCheck = "Y";
+				if(ownerId != "" || !ownerId.equals("1")) {
+					for(int i=0; i<list.size(); i++) {
+						if(list.get(i).getBrdId().equals(ownerId)) {
+							authCheck = "Y";
+						}
+					}
+				}
+				else {
+					if(list.size() > 0) {
+						authCheck = "Y";
+					}
 				}
 			}
 
 			LOGGER.debug("authCheck: " + authCheck);
 			
+			// 2018-10-31 김민성 - 자원 관리자 권한 가진 자원이 있는지 체크
+			List<String> adminResList = mResourceService.getResAdminAuth(userId, tenantId, brdCompany);
+			if(ownerId != "") {
+				for(int i=0; i<adminResList.size(); i++) {
+					if(adminResList.get(i).equals(ownerId)) {
+						adminYn = "Y";
+					}
+				}
+			}
+			else {
+				if(adminResList.size() > 0) {
+					adminYn = "Y";
+				}
+			}
+						
+			LOGGER.debug("adminYn: " + adminYn);
+			
 			Map<String, String> resultMap = new HashMap<String, String>();
 			resultMap.put("authCheck", authCheck);
+			resultMap.put("adminYn", adminYn);
 			
 			String obj = "";
 			

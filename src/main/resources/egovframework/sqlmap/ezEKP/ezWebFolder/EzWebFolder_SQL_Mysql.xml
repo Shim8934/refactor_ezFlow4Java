@@ -786,7 +786,7 @@
 			SET
 				f.USE_STATUS = 'N',
 				f.DELETER_ID = #userId#,
-				UPDATE_DATE = #timeUTC#
+				f.UPDATE_DATE = #timeUTC#
 			WHERE
 				f.TENANT_ID = #tenantId#
 			AND
@@ -1534,4 +1534,15 @@
 		AND D.USE_STATUS = 'Y'
 		ORDER BY FOLDER_NAME1
 	</select>
+	
+	<update id="EzWebFolderDAO.updateFileExt" parameterClass="Map">
+		UPDATE tbl_webfolder_file 
+		SET 	TYPE_ID = (select type_id from tbl_webfolder_filetype where FILE_EXT = #fileExt# and TENANT_ID = #tenantId#)
+			, FILE_EXT 	= #realFileExt# 
+		    , file_path = #filePath#
+		    , UPDATE_DATE = #timeUTC#
+		WHERE 
+				FILE_ID = #fileId# 
+			and TENANT_ID = #tenantId#
+	</update>
 </sqlMap>

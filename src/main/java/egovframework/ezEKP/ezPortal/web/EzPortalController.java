@@ -178,13 +178,6 @@ public class EzPortalController extends EgovFileMngUtil {
 	    	resp.addCookie(cookieID7);
 		}
 		
-		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
-		
-        if (packageType.equals(CommonUtil.PT_BASIC)
-        		|| packageType.equals(CommonUtil.PT_MAIL)) {
-            return "redirect:/ezEmail/mailAloneMain.do";
-        }
-		
 		String pageID = "";
 		String skinID = "1";
 		String mainUrl = "";
@@ -375,10 +368,19 @@ public class EzPortalController extends EgovFileMngUtil {
 		} else if (userInfo.getLang().equals("4")) {
 			
 		}
+		
+		// 2018-08-03 황윤호 추가
+        String memoFlag = "";
+        if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+        	memoFlag = "YES";
+        } else {
+        	memoFlag = "NO";
+        }
 
 		model.addAttribute("mainUrl", mainUrl);
 		model.addAttribute("topUrl", topUrl);
 		model.addAttribute("topHeight", topHeight);
+		model.addAttribute("memoFlag", memoFlag);
 		
 		return "/ezPortal/portalMain";
 	}
@@ -1173,7 +1175,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		//전자설문
-		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset()));
+		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset(), userInfo.getCompanyID()));
 		
 		//유저이미지
 		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
@@ -2071,7 +2073,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
 		
 		//전자설문
-		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset()));
+		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset(), userInfo.getCompanyID()));
 		
 		//유저이미지
 		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());

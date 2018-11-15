@@ -24,6 +24,14 @@
 		<Template></Template>
 		<ServerUrl></ServerUrl>
 		<ResizeBar>false</ResizeBar>
+		<MenuInEditor></MenuInEditor>
+		<AutoSavePeriod></AutoSavePeriod>
+		<HideAddImageCheckbox></HideAddImageCheckbox>
+		<RemoveScriptBlock></RemoveScriptBlock>
+		<ClipBoardFontFamily></ClipBoardFontFamily>
+		<ClipBoardFontSize></ClipBoardFontSize>
+		<ContextMenuPasteText></ContextMenuPasteText>
+		
 	</General>
 	<Editor>
 		<SetFocus>false</SetFocus>
@@ -46,6 +54,7 @@
 		<Placeholder></Placeholder>
 		<Csslist></Csslist>
 		<ProfanityStr></ProfanityStr>
+		<LimitClipboardNodeCount></LimitClipboardNodeCount>
 	</Editor>
 	<Document>
 		<CharSet>auto</CharSet>
@@ -54,6 +63,7 @@
 		<AllowContentScript>true</AllowContentScript>
 		<AllowContentIframe>true</AllowContentIframe>
 		<MSOfficeTranON></MSOfficeTranON>
+		<DefaultDocType></DefaultDocType>
 	</Document>
 	<UI>
 		<Skin>default</Skin>
@@ -67,6 +77,7 @@
 		<Menu>false</Menu>
 		<QuickMenu>false</QuickMenu>
 		<DisplayLoadingBar>true</DisplayLoadingBar>
+		<ShowRuler>false</ShowRuler>
 	</UI>
 	<ImageEditor>
 		<CanvasWidth>1600</CanvasWidth>

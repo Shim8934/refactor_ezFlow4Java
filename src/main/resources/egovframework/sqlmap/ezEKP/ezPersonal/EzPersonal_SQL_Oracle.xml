@@ -11,6 +11,7 @@
 	<typeAlias  alias="PersonalGetWebPartGroupVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
 	<typeAlias  alias="PersonalGetWebPartVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/>
     <typeAlias  alias="PersonalNoticeVO"					type="egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO"/>
+	<typeAlias  alias="PersonalShareApprovalVO"				type="egovframework.ezEKP.ezPersonal.vo.PersonalShareApprovalVO"/>
 	
 	<select id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PersonalSliderImageVO">
 		<isEqual property="v_MODE" compareValue="ADMIN">
@@ -854,6 +855,89 @@
                   ]]>
               </isEmpty>              
           </isNotEqual>
+     </select>
+     
+     <select id="EzPersonalDAO.getShareApprovalList" parameterClass="Map" resultClass="PersonalShareApprovalVO">
+	     <![CDATA[
+	     	SELECT
+				A.OWNERID      		 AS OWNERID,
+			    A.SHAREUSERID  		 AS SHAREUSERID,
+			    B.DISPLAYNAME$lang$  AS SHAREUSERNAME,
+			    A.SHAREDATE 		 AS SHAREDATE,
+			    B.TITLE$lang$        AS SHAREUSERTITLE,
+			    B.DEPARTMENT   		 AS SHAREUSERDEPTID,
+			    B.DESCRIPTION$lang$  AS SHAREUSERDEPTNAME,
+			    A.TENANTID     		 AS TENANTID
+			FROM
+				TBL_PS_SHAREAPPROVAL A
+			JOIN
+				tbl_usermaster B
+			ON
+				A.TENANTID = B.TENANT_ID
+			AND
+				A.COMPANYID = B.PHYSICALDELIVERYOFFICENAME
+			AND
+				A.SHAREUSERID = B.CN
+			WHERE
+				TENANTID = #tenantID#
+			AND
+				OWNERID = #userID#
+			AND
+				COMPANYID = #companyID#
+			ORDER BY
+				SHAREDATE
+	     ]]>
+     </select>
+     
+     <insert id="EzPersonalDAO.insertShareApproval" parameterClass="Map">
+     	<![CDATA[
+	   		INSERT INTO 
+	   			TBL_PS_SHAREAPPROVAL
+	   		SELECT
+	   			#userID#,
+	   			CN,
+	   			#shareDate#,
+	   			DEPARTMENT,
+	   			#tenantID#,
+	   			PHYSICALDELIVERYOFFICENAME
+	   		FROM
+	   			TBL_USERMASTER
+	   		WHERE
+	   			TENANT_ID = #tenantID#
+	   		AND
+	   			CN = #shareUserID#
+		]]>
+     </insert>
+     
+     <delete id="EzPersonalDAO.deleteShareApproval" parameterClass="Map">
+     	<![CDATA[
+     		DELETE FROM
+     			TBL_PS_SHAREAPPROVAL
+     		WHERE
+     			TENANTID = #tenantID#
+     		AND
+     			OWNERID = #userID#
+     		AND
+     			COMPANYID = #companyID#
+     	]]>
+   		<iterate prepend="AND SHAREUSERID IN" property="shareUserID" open="(" close=")" conjunction=",">
+   			#shareUserID[]#
+   		</iterate>
+     </delete>
+     
+     <select id="EzPersonalDAO.getCheckDuplShareUser" parameterClass="Map" resultClass="Integer">
+     	SELECT
+     		COUNT(SHAREUSERID)
+     	FROM
+     		TBL_PS_SHAREAPPROVAL
+     	WHERE
+     		TENANTID = #tenantID#
+     	AND
+     		OWNERID = #userID#
+     	AND
+     		SHAREUSERID = #shareUserID#
+     	AND
+     		COMPANYID = #companyID#
      </select>
 </sqlMap>
 

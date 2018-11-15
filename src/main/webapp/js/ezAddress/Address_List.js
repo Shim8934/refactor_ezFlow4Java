@@ -8,9 +8,9 @@ function View_Change() {
         document.getElementById("DetailList_header").style.display = "";
     }
     else {
-        document.getElementById("DetailList_header").style.display = "none";
         document.getElementById("MailList").style.display = "none";
         document.getElementById("MailListCard").style.display = "";
+        document.getElementById("DetailList_header").style.display = "none";
     }
     if (ListXML != null)
         MakeAddressList();

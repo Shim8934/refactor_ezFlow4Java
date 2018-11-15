@@ -305,6 +305,7 @@ public class MScheduleController extends EgovFileMngUtil {
 		
 		//Gson gson = new Gson();
 
+		modelMap.addAttribute("isPublic", resultBody.get("isPublic").toString());
 		modelMap.addAttribute("scheduleType", resultBody.get("data").toString());
 		
 		LOGGER.debug("mScheduleInsertForm ended.");

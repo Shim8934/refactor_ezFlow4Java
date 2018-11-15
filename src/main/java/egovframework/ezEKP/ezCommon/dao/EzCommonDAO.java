@@ -279,6 +279,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		}
 	}
 	
+	public void createJMochaDistributionSub() throws Exception {
+		try {
+			select("EzCommonDAO.checkJmochaDistributionSub");
+		} catch (Exception e) {
+			logger.debug("jmocha_distribution_sub doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createJmochaDistributionSub");
+		}
+	}
+
 	public void addUserMasterManualFlag() throws Exception {
 		try {
 			select("EzCommonDAO.checkUserMasterManualFlag");
@@ -297,5 +307,35 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			
 			update("EzCommonDAO.addDeptMasterManualFlag");
 		}
+	}
+	
+	public void createJmochaMailSignatureTemplate() throws Exception {
+		try {
+			select("EzCommonDAO.checkJMochaMailSignatureTemplate");
+		} catch (Exception e) {
+			logger.debug("tbl_access_id doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createJMochaMailSignatureTemplate");
+		}
+	}
+		
+	public void createJobMasterTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblUserJobMaster");
+		} catch (Exception e) {
+			logger.debug("tbl_user_jobmaster doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblUserJobMaster");
+		}
+	}
+	
+	/*세션 사용 시간 get*/
+	public String getUseSession(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.getUseSession", map);
+	}
+	
+	/*세션 사용 row가 없을 시 생성*/
+	public void insertUseSession(Map<String, Object> map) {
+		insert ("EzCommonDAO.insertUseSession", map);
 	}
 }

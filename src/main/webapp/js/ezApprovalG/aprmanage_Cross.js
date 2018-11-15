@@ -28,6 +28,7 @@ function getDocList() {
     }
     
     var searchCompanyID = $("#selectCompany option:selected").val();
+    var searchStatus = $("#sel_status option:selected").val();
     
     $.ajax({
 		type : "POST",
@@ -46,7 +47,8 @@ function getDocList() {
 				orderOption  : OrderOption,
 				searchQuery  : SQLPARADATA,
 				subQuery     : SubQuery,
-				searchCompanyID : searchCompanyID
+				searchCompanyID : searchCompanyID,
+				searchStatus : searchStatus
 				},
 		success: function(xml){
 			getDocList_after(loadXMLString(xml));
@@ -112,8 +114,6 @@ function getDocList_after(xml) {
     var preDocList = new ListView();
    	preDocList.LoadFromID('DocList');
    	var preSelectedRow = preDocList.GetSelectedRows();
-   	
-   	console.log('preSelectedRow', preSelectedRow);
 
     makePageSelPage();
 
@@ -150,10 +150,18 @@ function getDocList_after(xml) {
     DocList.SetUrgentFlag(false);
     DocList.DataSource(xmlDoc);
     DocList.DataBind("lvDocList");
+    
     // 리스트를 닫기 전에 미리 선택한 row로 재선택
-    if (preSelectedRow.length > 0) {
-    	console.log(preSelectedRow[0].getAttribute('id'));
-    	DocList.SetSelectedID(preSelectedRow[0].getAttribute('id'));	
+    if (selRowChangeFlag && preSelectedRow.length > 0) {
+    	// 탭 이동 시에도 전 탭에서 선택된 row를 선택되는 오류 개선
+    	selRowChangeFlag = false;
+    	var docListLength = DocList.GetRowCount() - 1;
+    	// 마지막 row의 결재가 완료된 후 리스트로 돌아오면 로우가 선택되어 있지 않는 오류 개선
+    	if (docListLength < preSelectedRow[0].getAttribute('id').split("_")[2]) {
+    		DocList.SetSelectedIndex(docListLength);
+    	} else {
+    		DocList.SetSelectedID(preSelectedRow[0].getAttribute('id'));
+    	}
     }    
     DocList = null;
     
@@ -258,6 +266,8 @@ function getReceivedDocList(p_FormCd) {
 
     CurrentDocList = "Receive";
     
+    var searchStatus = $("#sel_status option:selected").val();
+    
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -272,7 +282,8 @@ function getReceivedDocList(p_FormCd) {
 				pageNum : pageNum,
 				orderCell : OrderCell,
 				orderOption : OrderOption,
-				searchQuery : SQLPARADATA
+				searchQuery : SQLPARADATA,
+				searchStatus : searchStatus
 				},
 		success: function(xml){
 			getReceivedDocList_after(loadXMLString(xml));
@@ -392,6 +403,8 @@ function getSendOutDocList() {
         OrderOption = "";
         OrderCell = "";
     }
+    
+    var searchStatus = $("#sel_status option:selected").val();
 
     $.ajax({
 		type : "POST",
@@ -407,7 +420,8 @@ function getSendOutDocList() {
 				orderCell : OrderCell,
 				orderOption : OrderOption,
 				listType : pListTypeValue,
-				searchQuery  : SQLPARADATA
+				searchQuery  : SQLPARADATA,
+				searchStatus : searchStatus
 				},
 		success: function(xml){
 			getSendOutDocList_after(loadXMLString(xml));
@@ -810,7 +824,8 @@ function openApprovUI(allFlag) {
         pArgument[0] = GetAttribute(tr[0], "DATA1");      
         pArgument[1] = GetAttribute(tr[0], "DATA4");		
         pArgument[2] = GetAttribute(tr[0], "DATA5");		
-        pArgument[3] = GetAttribute(tr[0], "DATA7");	
+        pArgument[3] = GetAttribute(tr[0], "DATA7");
+        pArgument[4] = GetAttribute(tr[0], "APRMEMBERSN")
         var orgCompanyID = GetAttribute(tr[0], "orgCompanyID");
 
         if (GetAttribute(tr[0], "DATA12") == "017") {
@@ -848,7 +863,7 @@ function openApprovUI(allFlag) {
             openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2")) + "&aprMemberSN=" + pArgument[4];
         }
         openwindow(openLocation, "ApprovUI", 880, 550);
     }
@@ -866,7 +881,7 @@ function InitlvAprLine() {
     if (oArrRows.length != 0) {
         var tr = oArrRows[0];
 
-        if (pListTypeValue == "1") {
+        if (pListTypeValue == "1" || pListTypeValue == "11") {
             document.getElementById("tbtnforcecallback").style.display = "none";
         }
 
@@ -912,7 +927,7 @@ function InitlvAprLine() {
     }
 }
 
-function RemoveDoc(pDocID) {
+function RemoveDoc(pDocID, orgCompanyID) {
 	var result = "";
 	
     $.ajax({
@@ -922,7 +937,8 @@ function RemoveDoc(pDocID) {
 		url : "/ezApprovalG/delDocInfo.do",
 		data : {
 				docID : pDocID,
-				field  : "MUST"
+				field  : "MUST",
+				orgCompanyID : orgCompanyID 
 				},
 		success: function(xml){
 			result = xml;
@@ -1138,7 +1154,7 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
             openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
         }
 
-        if (g_selReturn == "Y" && pListTypeValue == "1") {
+        if (g_selReturn == "Y" && (pListTypeValue == "1" || pListTypeValue == "11")) {
             openLocation = openLocation + "&RetFlag=" + g_selReturn;
             g_selReturn = "N";
         }
@@ -1620,6 +1636,8 @@ function openergetDocInfo() {
     if (CallPage == "Left") return;
 
     try {
+    	//이전에 선택된 row를 유지하기 위한 Flag
+    	selRowChangeFlag = true;
         if (pListTypeValue == "6")
             getSimsaDocList();
         else if (pListTypeValue == "4")
@@ -1684,7 +1702,7 @@ function makePageSelPage() {
     document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
 
     try {
-    	if (ViewLeftCount == "YES") {
+    	if (ViewLeftCount == "YES" && ($("#sel_status option:selected").val() == "ALL" || $("#sel_status option:selected").val() == undefined)) {
     		switch (pListTypeValue) {
     		case "1":
     			parent.frames["left"].document.getElementById("count1").innerHTML = "(" + pTotalCnt + ")";
@@ -1709,6 +1727,9 @@ function makePageSelPage() {
     			break;
     		case "99":
     			parent.frames["left"].document.getElementById("count99").innerHTML = "(" + pTotalCnt + ")";
+    			break;
+    		case "11":
+    			parent.frames["left"].document.getElementById("count11").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		}
     	}
@@ -1851,7 +1872,7 @@ function setbuttonenable() {
     else
         document.getElementById("tbar1").style.display = "";*/
 
-    if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 10 && pListTypeValue != 99) {
+    if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 10 && pListTypeValue != 99 && pListTypeValue != 11) {
     	document.getElementById("tbtnRedraft").style.display = "none";		
         //SwapImage(document.getElementById("btnRedraft"), "dis");
         document.getElementById("tbtnRemoveDoc").style.display = "none";
@@ -1915,7 +1936,7 @@ function setbuttonenable() {
                 document.getElementById("tbtnRemoveDoc").style.display = "none";
             }
         }
-    } else if (pListTypeValue == 1 || pListTypeValue == 10 || pListTypeValue == 99) {
+    } else if (pListTypeValue == 1 || pListTypeValue == 10 || pListTypeValue == 99 || pListTypeValue == 11) {
         document.getElementById("tbtnTotalSave").style.display = "";
         document.getElementById("tbtnSimsa").style.display = "none";
         //document.getElementById("tbtnGongRam").style.display = "";
@@ -2005,7 +2026,11 @@ function setbuttonenable() {
                 //SwapImage(document.getElementById("btnRedraft"), "dis");
                 document.getElementById("tbtnRemoveDoc").style.display = "none";
                 document.getElementById("tbtnApprove").style.display = "";
-                document.getElementById("tbtnApprove1").style.display = "";
+                if (pListTypeValue == "11") {
+                	document.getElementById("tbtnApprove1").style.display = "none";
+                } else {
+                	document.getElementById("tbtnApprove1").style.display = "";
+                }
                 //document.getElementById("tbtnApproveALL").style.display = "";
 
                 document.getElementById("tbtnReceipt").style.display = "none";
@@ -2149,7 +2174,7 @@ function setbuttonenable() {
         } catch (e) { }
     }
 
-    if (pListTypeValue != "4" && pListTypeValue != "1") {
+    if (pListTypeValue != "4" && pListTypeValue != "1" && pListTypeValue != "11") {
         document.getElementById("tbtnReturn").style.display = "none";
     }
     

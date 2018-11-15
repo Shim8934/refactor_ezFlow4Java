@@ -1098,9 +1098,14 @@ public class EzCircularController extends EgovFileMngUtil {
 		String userMyName = "";
 		String userMyName2 = "";
 		String mode = req.getParameter("mode");
+		
+		// 2018-10-15 김민성 - mode값 없는 경우 write로 지정
+		if(req.getParameter("mode") == null) {
+			mode = "write";
+		}
 		CircularListVO result = new CircularListVO();
 
-		if (user.get(0).getMemberID() != "") {	
+		if (user.get(0).getMemberID().equals("")) {	
 			userMyID = user.get(0).getMemberID();
 			userMyName = user.get(0).getMemberName();
 			userMyName2 = user.get(0).getMemberName2();
@@ -1580,9 +1585,12 @@ public class EzCircularController extends EgovFileMngUtil {
         }
         File file = new File(pDirPath + "uploadFile");
         File tempFile = new File(pDirPath + "tempUploadFile");
-
+        
+        logger.debug("pDirPath : " + pDirPath);
+        
+        // 2018-11-01 김민성 - uploadFile 폴더 생성안되는 문제 수정
         if (!file.exists()) {
-        	file.mkdir();
+        	file.mkdirs();
         }
         
         if (!tempFile.exists()) {
@@ -2717,7 +2725,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			JSONArray fileNamesArr = (JSONArray)jp.parse(fileNames);
 			JSONArray fileNamesArr2 = (JSONArray)jp.parse(fileNames2);
 
-			downFileName = fileNamesArr2.get(0).toString() + " 외 " + (fileNamesArr2.size() - 1) + "개.zip";//zip파일명
+			downFileName = fileNamesArr2.get(0).toString() + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr2.size() - 1) + egovMessageSource.getMessage("ezCircular.t104", userInfo.getLocale()) +".zip";//zip파일명
 			
 			if (fileNamesArr.size() != 0) {// 파일이 있으면
 				for (int i = 0; i < fileNamesArr.size(); i++) { //파일 길이만큼

@@ -322,6 +322,31 @@
 		
 	</statement>
 	
+	<select id="EzCommonDAO.checkJmochaDistributionSub" resultClass="String">
+		<![CDATA[
+			SELECT 
+				domain_name
+			FROM 
+				JMOCHA_DISTRIBUTION_SUB
+			WHERE
+				rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createJmochaDistributionSub"> 
+	  CREATE TABLE "JMOCHA_DISTRIBUTION_SUB" 
+	   (
+	   	"DOMAIN_NAME" NVARCHAR2(100), 
+		"USER_NAME" NVARCHAR2(100), 
+		"COMPANY_ID" NVARCHAR2(100), 
+		"SUB_MAIL" NVARCHAR2(100), 
+		"SUB_NAME" NVARCHAR2(100), 
+		 CONSTRAINT "JMOCHA_DISTRIBUTION_SUB_PK" PRIMARY KEY ("DOMAIN_NAME", "USER_NAME", "SUB_MAIL"),
+		 CONSTRAINT "FK_DISTRIBUTION_SUB" FOREIGN KEY ("DOMAIN_NAME", "USER_NAME")
+		  REFERENCES "JMOCHA_DISTRIBUTION" ("DOMAIN_NAME", "USER_NAME") ON DELETE CASCADE ENABLE
+	   )
+	</statement>
+
 	<select id="EzCommonDAO.checkUserMasterManualFlag" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -356,6 +381,63 @@
 			TBL_DEPTMASTER
 		ADD 
 			MANUAL_FLAG NVARCHAR2(2) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkJMochaMailSignatureTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				sign_no
+			FROM 
+				JMOCHA_MAIL_SIGNATURE_TEMPLATE
+			WHERE
+				rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createJMochaMailSignatureTemplate"> 
+	 	CREATE TABLE JMOCHA_MAIL_SIGNATURE_TEMPLATE 
+		(
+		  SIGN_NO NUMBER NOT NULL 
+		, CONTENT LONG 
+		, DISPLAYNAME VARCHAR2(45) 
+		, DISPLAYNAME2 VARCHAR2(45) 
+		, TENANT_ID NUMBER DEFAULT 0 NOT NULL 
+		, COMPANY_ID VARCHAR2(45) 
+		, CONSTRAINT SIGNATURE_TEMPLATE_PK PRIMARY KEY 
+		  (
+		    SIGN_NO 
+		  )
+		  ENABLE 
+		)
+		
+	</statement>
+		
+	<select id="EzCommonDAO.checkTblUserJobMaster" resultClass="String">
+		<![CDATA[
+			SELECT 
+				JOBID
+			FROM 
+				TBL_USER_JOBMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserJobMaster"> 
+		CREATE TABLE "TBL_USER_JOBMASTER" 
+		(	
+		"JOBID" NUMBER(10,0) NOT NULL ENABLE,
+		"TYPE" NVARCHAR2(50) NOT NULL ENABLE, 
+		"CN" NVARCHAR2(100), 
+		"DISPLAYNAME" NVARCHAR2(200), 
+		"DISPLAYNAME2" NVARCHAR2(200), 
+		"USEFLAG" NVARCHAR2(2), 
+		"SORT" NUMBER(10,0), 
+		"CREATEDATE" DATE, 
+		"COMPANYID" VARCHAR2(40 BYTE) NOT NULL ENABLE, 
+		"TENANT_ID" NUMBER(5,0) DEFAULT 0 NOT NULL ENABLE, 
+		 CONSTRAINT "TBL_USER_JOBMASTER_PK" PRIMARY KEY ("JOBID", "TYPE", "COMPANYID", "TENANT_ID")
+		 )
 	</statement>
 	
 </sqlMap>

@@ -269,6 +269,7 @@
 	            var strContent = "<html><head>";
 	            strContent = strContent + "<title>" + strLangLHM02 + "</title>";
 	            strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/" + strLangLHM01 + ".css\" type=\"text/css\" />";
+	            strContent = strContent + '<style type="text/css">p {margin-top: 0px;margin-bottom: 0px;}</style>';
 	            strContent = strContent + "</head><body style='padding:10px;'onload='window.print();' >";
 	            strContent = strContent + "<div style='width:100%'>";
 	            strContent = strContent + "<table id='printScreen' class='layout'>";

@@ -571,7 +571,7 @@
 
 	        function CircularWrite_onclick() {
 	        	var feature = GetOpenPosition(820, 700);
-	        	url = "/ezCircular/circularWrite.do";
+	        	url = "/ezCircular/circularWrite.do?mode=write";		// 2018-10-15 김민성 - 회람판 회람문서함에서 작성시 mode값 추가
 	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
                 OpenWin.focus();     
 	        }
@@ -607,9 +607,9 @@
 	        		return;
 	        	}
 	        	
-	        	var feature = GetOpenPosition(420, 375);
+	        	var feature = GetOpenPosition(500, 375);
 	        	url = "/ezCircular/circularMove.do?circularIdList=" + strListInfo + "&folderId=" + folderId;
-	        	var OpenWin = window.open(url, "", "width=420, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+	        	var OpenWin = window.open(url, "", "width=500, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
 	        
 	        function CircularReturn_onclick() {

@@ -7,6 +7,7 @@
 		<title><spring:message code='ezCommunity.t553' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
@@ -21,6 +22,8 @@
 				var titleStr	= document.mail.subject.value.trim();
 				var contentStr	= document.mail.memo.value.trim();
 				
+				/* 2018-10-23 홍승비 - 커뮤니티 전체메일 발송 시 특수문자 처리 */
+				contentStr = MakeXMLString(contentStr);
 				// 2018-02-13 천성준
 				contentStr = contentStr.replace(/(\n|\r\n)/g, '<br>').replace(/ /g, '&nbsp;');
 				

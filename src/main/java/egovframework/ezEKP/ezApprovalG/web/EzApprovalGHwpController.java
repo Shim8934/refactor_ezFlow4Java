@@ -328,6 +328,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
 
 		if (userInfo.getRollInfo().indexOf("a=1") > -1 ) {
 			susinAdmin = "YES";
@@ -388,6 +393,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("hwpToolbar", hwpToolbar);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		LOGGER.debug("ezviewAprHWP ended");
 		

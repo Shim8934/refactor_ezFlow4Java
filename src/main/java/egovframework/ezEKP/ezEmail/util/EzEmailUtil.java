@@ -671,15 +671,23 @@ public class EzEmailUtil {
 	public List<String> getBodyInfo(Part part, String folderPath, long uid, 
 			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint, boolean mobile, Locale locale, 
 			String secureKey, String securePassword) throws Exception {
-		return this.getBodyInfo(part, folderPath, uid, bodyPartIndex, attachedFileList, forPrint, mobile, locale, secureKey, securePassword, false);
+		
+		Map<String, Object> extraMap = new HashMap<String, Object>();
+		
+		extraMap.put("forPrint", forPrint);
+		extraMap.put("mobile", mobile);
+		extraMap.put("secureKey", secureKey);
+		extraMap.put("securePassword", securePassword);
+		extraMap.put("includeInlineAsAttachment", false);
+		
+		return this.getBodyInfo(part, folderPath, uid, bodyPartIndex, attachedFileList, locale, extraMap);
 	}
 	
 	/**
 	 * 메일 Multipart 정보 반환 함수
 	 */
 	public List<String> getBodyInfo(Part part, String folderPath, long uid, 
-			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint, boolean mobile, Locale locale, 
-			String secureKey, String securePassword, boolean includeInlineAsAttachment) throws Exception {
+			int bodyPartIndex, List<Map<String, String>> attachedFileList, Locale locale, Map<String, Object> extraMap) throws Exception {
 		List<String> resultList = new ArrayList<String>();
 		
 		String htmlBody = "";
@@ -690,6 +698,22 @@ public class EzEmailUtil {
 		
 		logger.debug("contentType=" + part.getContentType());
 		logger.debug("disposition=" + part.getDisposition());
+		
+		boolean forPrint = false;
+		boolean mobile = false;
+		String secureKey = null;
+		String securePassword = null;
+		boolean includeInlineAsAttachment = false;
+		String shareId = null;
+		
+		if (extraMap != null) {
+			if (extraMap.get("forPrint") != null) forPrint = (boolean)extraMap.get("forPrint");
+			if (extraMap.get("mobile") != null) mobile = (boolean)extraMap.get("mobile");
+			if (extraMap.get("secureKey") != null) secureKey = (String)extraMap.get("secureKey");
+			if (extraMap.get("securePassword") != null) securePassword = (String)extraMap.get("securePassword");
+			if (extraMap.get("includeInlineAsAttachment") != null) includeInlineAsAttachment = (boolean)extraMap.get("includeInlineAsAttachment");
+			if (extraMap.get("shareId") != null) shareId = (String)extraMap.get("shareId");
+		}
 		
 		// 아래 if문 조건에 disposition이 attachment인지 체크했는데
 		// iphone에서 inline-image를 보냈을 때 inline-image가 mulitpart/related에 들어있지 않고 mulitpart/mixed에 들어있어서
@@ -865,11 +889,21 @@ public class EzEmailUtil {
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span></li>";
 			} else if (mobile) {
 				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
+				
+				if (shareId != null) {
+					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+				}
+				
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' \"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
 				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " </p>";
 			} else {
 				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
+				
+				if (shareId != null) {
+					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+				}
+				
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
@@ -984,6 +1018,8 @@ public class EzEmailUtil {
 				
 				if (secureKey != null) {
 					strContent = strContent.replace(orgSrc, "src=\"/ezEmail/downloadSecureInline.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&contentId=" + URLEncoder.encode(contentId, "UTF-8") + "\"");						
+				} else if (shareId != null) {
+					strContent = strContent.replace(orgSrc, "src=\"/ezEmail/downloadInline.do?mode=inlineimage&folderPath=" + URLEncoder.encode(folderPath, "UTF-8") + "&uid=" + uid + "&contentId=" + URLEncoder.encode(contentId, "UTF-8") + "&shareId=" + URLEncoder.encode(shareId, "UTF-8") + "\"");						
 				} else {
 					strContent = strContent.replace(orgSrc, "src=\"/ezEmail/downloadInline.do?mode=inlineimage&folderPath=" + URLEncoder.encode(folderPath, "UTF-8") + "&uid=" + uid + "&contentId=" + URLEncoder.encode(contentId, "UTF-8") + "\"");						
 				}
@@ -1085,7 +1121,7 @@ public class EzEmailUtil {
 					logger.debug("disposition=" + p.getDisposition());
 				// text/html 파트가 나오거나 multipart/related or mixed 파트가 나올 수도 있다.	
 				} else {
-					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, locale, extraMap);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -1126,7 +1162,7 @@ public class EzEmailUtil {
 					logger.debug("contentType=" + p.getContentType());
 					logger.debug("disposition=" + p.getDisposition());	
 				} else {				
-					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -1150,7 +1186,7 @@ public class EzEmailUtil {
 					isHtmlOrAlternativeFound = true;
 					
 					// 코린도에서 수신된 메일 중 multipart/related 안에 첨부파일이 있는 경우가 있어 패러메터값을 -1 대신 i로 변경함
-					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -1176,10 +1212,12 @@ public class EzEmailUtil {
 					Part p = mp.getBodyPart(i);
 					
 					if (p.isMimeType("text/plain")) {
-						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
+						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 						htmlBody += tempList.get(0);						
 					} else if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)) {
-						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword, true);
+						
+						extraMap.put("includeInlineAsAttachment", true);
+						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 						htmlBody += tempList.get(0);
 						pAttachListHtml += tempList.get(1);
 						filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -1197,7 +1235,7 @@ public class EzEmailUtil {
 			
 			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
-				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, mobile, locale, secureKey, securePassword);
+				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 				htmlBody += tempList.get(0);
 				pAttachListHtml += tempList.get(1);
 				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -1238,11 +1276,21 @@ public class EzEmailUtil {
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span></li>";
 			} else if (mobile) {
 				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
+				
+				if (shareId != null) {
+					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+				}
+				
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' onclick=\"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
 				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " </p>";
 			} else {
 				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
+				
+				if (shareId != null) {
+					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+				}
+				
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
@@ -1429,13 +1477,6 @@ public class EzEmailUtil {
     	Message[] messages = null;
     	
     	if (useAdvancedMailSearch.equals("YES")) {
-    		String useCIAdvancedMailSearch = ezCommonService.getTenantConfig("useCIAdvancedMailSearch", tenantId);
-    		boolean isCaseInsensitive = false;
-    		
-    		if (useCIAdvancedMailSearch.equals("YES")) {
-    			isCaseInsensitive = true;
-    		}
-    		
     		String folderPath = "";
     		
     		// folder is null when searching all folder
@@ -1446,7 +1487,7 @@ public class EzEmailUtil {
     		logger.debug("folderPath=" + folderPath);
     		
     		messages = advancedSearchFolder(ia, userAccount, folderPath, searchField, searchValue, startDate, endDate, 
-    				searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, extraMap, isCaseInsensitive);
+    				searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, extraMap);
     		
     		// pre-fetch
     		if (messages.length > 0) {
@@ -1952,17 +1993,16 @@ public class EzEmailUtil {
 			boolean isAscending,
 			int startIndex,
 			int listCount,
-			Map<String, Object> extraMap,
-			boolean isCaseInsensitive
+			Map<String, Object> extraMap
 			) throws Exception {
 		logger.debug("advancedSearchFolder started.");
 		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField + "searchValue=" + searchValue 
 				+ ",startDate=" + startDate + ",endDate=" + endDate + ",searchSubFolder=" + searchSubFolder + ",isUnreadOnly=" + isUnreadOnly 
 				+ ",isImportantOnly=" + isImportantOnly + ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex
-				+ ",listCount=" + listCount + ",isCaseInsensitive=" + isCaseInsensitive);
+				+ ",listCount=" + listCount);
 		
 		Map<String, Object> resultMap = getMailListFromJGw(userAccount, folderPath, searchField, searchValue, startDate, endDate, 
-				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount, isCaseInsensitive);
+				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount);
 		
 		List<String> mailList = (List<String>)resultMap.get("mailList");
 		
@@ -2017,15 +2057,13 @@ public class EzEmailUtil {
 			String sortType,
 			boolean isAscending,
 			int startIndex,
-			int listCount,
-			boolean isCaseInsensitive
+			int listCount
 			) throws Exception {
 		logger.debug("getMailUidListFromJGw started.");
 		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField 
 				+ ",searchValue=" + searchValue + ",startDate=" + startDate + ",endDate=" + endDate 
 				+ ",isUnreadOnly=" + isUnreadOnly + ",isImportantOnly=" + isImportantOnly + ",searchSubFolder=" + searchSubFolder
-				+ ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex + ",listCount=" + listCount
-				+ ",isCaseInsensitive=" + isCaseInsensitive);
+				+ ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex + ",listCount=" + listCount);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
@@ -2043,13 +2081,11 @@ public class EzEmailUtil {
 		String isAscendingParam = "isAscending=" + isAscending;
 		String startIndexParam = "startIndex=" + startIndex;
 		String listCountParam = "listCount=" + listCount;
-		String isCaseInsensitiveParam = "isCaseInsensitive=" + isCaseInsensitive;
 		
 		String inputParams = userAccountParam + "&" + folderPathParam + "&" + searchFieldParam 
 				+ "&" + searchValueParam + "&" + startDateParam + "&" + endDateParam 
 				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
-				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam
-				+ "&" + isCaseInsensitiveParam;
+				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam;
 		
 		logger.debug("inputParams=" + inputParams);
 

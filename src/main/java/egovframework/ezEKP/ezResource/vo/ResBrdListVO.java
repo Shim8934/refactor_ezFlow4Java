@@ -49,6 +49,8 @@ public class ResBrdListVO {
 	private int replyMailFg;
 	/** 자원위치*/
 	private String resLocation;
+	/** 승인여부*/
+	private String approveFlag;
 	
 	public int getAttachSize() {
 		return attachSize;
@@ -194,4 +196,11 @@ public class ResBrdListVO {
 	public void setResLocation(String resLocation) {
 		this.resLocation = resLocation;
 	}
+	public String getApproveFlag() {
+		return approveFlag;
+	}
+	public void setApproveFlag(String approveFlag) {
+		this.approveFlag = approveFlag;
+	}
+	
 }

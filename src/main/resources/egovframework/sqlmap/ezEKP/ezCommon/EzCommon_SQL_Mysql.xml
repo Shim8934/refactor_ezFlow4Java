@@ -317,6 +317,29 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	</statement>
 	
+	<select id="EzCommonDAO.checkJmochaDistributionSub" resultClass="String">
+	<![CDATA[
+		SELECT 
+			domain_name
+		FROM 
+			jmocha_distribution_sub
+		LIMIT 1
+	]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createJmochaDistributionSub"> 
+		CREATE TABLE `jmocha_distribution_sub` (
+		  `DOMAIN_NAME` varchar(100) NOT NULL,
+		  `USER_NAME` varchar(100) NOT NULL,
+		  `COMPANY_ID` varchar(100) NOT NULL,
+		  `SUB_MAIL` varchar(100) NOT NULL,
+		  `SUB_NAME` varchar(100) NOT NULL,
+		  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`SUB_MAIL`),
+		  KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`),
+		  CONSTRAINT `FK_distribution_sub` FOREIGN KEY (`DOMAIN_NAME`, `USER_NAME`) REFERENCES `jmocha_distribution` (`DOMAIN_NAME`, `USER_NAME`) ON DELETE CASCADE ON UPDATE CASCADE
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+
 	<select id="EzCommonDAO.checkUserMasterManualFlag" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -351,4 +374,71 @@
 			MANUAL_FLAG VARCHAR(4) DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkJMochaMailSignatureTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				sign_no
+			FROM 
+				JMOCHA_MAIL_SIGNATURE_TEMPLATE
+			LIMIT 1
+		]]>
+	</select>
+				
+	
+	<select id="EzCommonDAO.checkTblUserJobMaster" resultClass="String">
+		<![CDATA[
+			SELECT 
+				JOBID
+			FROM 
+				TBL_USER_JOBMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createJMochaMailSignatureTemplate"> 
+		CREATE TABLE `jmocha`.`jmocha_mail_signature_template` (
+			  `sign_no` INT(11) NOT NULL AUTO_INCREMENT,
+			  `content` LONGTEXT NULL,
+			  `displayname` VARCHAR(45) NULL,
+			  `displayname2` VARCHAR(45) NULL,
+			  `tenant_id` MEDIUMINT(5) NULL,
+			  `company_id` VARCHAR(45) NULL,
+			  PRIMARY KEY (`sign_no`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<statement id="EzCommonDAO.createTblUserJobMaster"> 
+		CREATE TABLE `tbl_user_jobmaster` (
+		  `JOBID` bigint(20) NOT NULL AUTO_INCREMENT,
+		  `TYPE` varchar(50) NOT NULL,
+		  `CN` varchar(100) DEFAULT NULL,
+		  `DISPLAYNAME` varchar(200) DEFAULT NULL,
+		  `DISPLAYNAME2` varchar(200) DEFAULT NULL,
+		  `USEFLAG` varchar(2) DEFAULT NULL,
+		  `SORT` int(11) DEFAULT NULL,
+		  `CREATEDATE` datetime DEFAULT NULL,
+		  `COMPANYID` varchar(40) NOT NULL,
+		  `TENANT_ID` int(11) NOT NULL DEFAULT '0',
+		  PRIMARY KEY (`JOBID`,`TYPE`,`COMPANYID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+
+	<select id="EzCommonDAO.getUseSession" parameterClass="Map" resultClass="String">
+		SELECT 
+			PROPERTY_VALUE value
+		FROM 
+			TBL_TENANT_CONFIG
+		WHERE 
+			TENANT_ID=#tenantID#
+		AND
+			PROPERTY_NAME = #confName#
+	</select>
+	
+	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
+		INSERT INTO jmocha.tbl_tenant_config
+		(tenant_id, property_name, property_value, description, config_name, regdate, config_type)
+		VALUES
+		(#tenantID#, #confName#, #property_value#, #description#, #config_name#, #regdate#, #config_type#)
+	</insert>
+
 </sqlMap>

@@ -14,6 +14,10 @@
 				background-color:#fff;
 				border-collapse:collapse
 			}
+			
+			#div_Content table {
+		     	word-break : break-word;   
+		    }
     	</style>
 	    <script  language="javascript" type="text/javascript">
 	        document.onselectstart = function () {
@@ -60,6 +64,7 @@
 	        window.onload = function () {
 	            try {
 	                parent.DocumentComplete();
+	                document.execCommand("AutoUrlDetect", false, false);
 	            }
 	            catch (e)
 	            {}
@@ -324,9 +329,9 @@
 	                        if (BODYTag.getAttribute("tagfreeheight")) {
 	                            EditorHeight = BODYTag.getAttribute("tagfreeheight");
 	                        }
-	                        if (BODYTag.childNodes.length >= 1) {
+	                        if (BODYTag.children.length >= 1) {
 	                            if (BODYTag.children[0].id != "bodyblock") {
-	                                BODYTag.innerHTML = "<div id='bodyblock' style='margin-top:5px;TEXT-ALIGN:left;'>" + BODYTag.innerHTML + "</div>";
+	                                BODYTag.innerHTML = "<div id='bodyblock' style='height: 100%;'>" + BODYTag.innerHTML + "</div>";
 	                            }
 	                        }
 	                        div_BODY.innerHTML = BODYTag.innerHTML;
@@ -639,6 +644,36 @@
 	
 	        function Conn_BodyFieldWrite(FieldName, FieldValue) {
 	            document.getElementById(FieldName).textContent = FieldValue;
+	        }
+	        function getMustFieldsInsert(lang) {
+	        	try {
+	        		var mustFields = $(".FIELD#doctitle, [must]");
+	        		var returnval = new Array();
+	        		var resStr = "";
+	        		for (var i = 0; i < mustFields.length; i++) {
+	        			var mustField = mustFields[i];
+	        			var val = $(mustField).text().trim();
+	        			if (val == "") {
+							if ($(mustField).attr('id') == "doctitle"){
+								returnval.push("<spring:message code='ezApprovalG.t1330'/>");
+							} else {
+								returnval.push($(mustField).attr('must'));
+							}
+						}
+	        		}
+	        		for (var i = 0; i < returnval.length; i++) {
+	        			if ( i != 0 ) {
+							if(lang == "3"){
+								resStr += "、";
+							} else {
+								resStr += ",";
+							}
+	        			}
+						resStr += returnval[i];
+					}
+	        		return resStr;
+	            } catch (e)
+	            { return ""; }
 	        }
 	    </script>
 	</head>

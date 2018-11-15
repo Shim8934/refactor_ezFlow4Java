@@ -105,6 +105,8 @@
 		<item name="fontname" type="select" src=""/>
 		<item name="fontsize" type="select" src=""/>
 		<item name="lineheight" type="select" src=""/>
+		<!-- <item name="showruler" type="image" src="showruler.gif"/> -->
+		<!-- <item name="fixedwidth" type="image" src="fixedwidth.gif"/> -->
 		<!-- <item name="spacebar" type="image" src="spacebar.gif"/> -->
 		<!-- <item name="fullscreen" type="image" src="fullscreen.gif"/> -->
 		<!-- <item name="setup" type="image" src="setup.gif"/> -->

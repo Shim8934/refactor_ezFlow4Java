@@ -104,7 +104,6 @@
 		    	}	    	
 		    	
 		    	clickOutside.mouseup(function (e) {
-		    		console.log("1")
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    	
@@ -113,12 +112,10 @@
 		    	});
 		    	
 		    	$(parent.document).mouseup(function (e) {
-		    		console.log("2")
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    	
 		    	$(document).mouseup(function (e) {
-		    		console.log("3")
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    	
@@ -658,9 +655,9 @@
 	        		return;
 	        	}
 
-	        	var feature = GetOpenPosition(420, 375);
+	        	var feature = GetOpenPosition(500, 375);
 				url = "/ezCircular/circularMove.do?circularIdList=" + strListInfo;
-	        	var OpenWin = window.open(url, "", "width=420, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+	        	var OpenWin = window.open(url, "", "width=500, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
 
 	        function keyword_Clear() {

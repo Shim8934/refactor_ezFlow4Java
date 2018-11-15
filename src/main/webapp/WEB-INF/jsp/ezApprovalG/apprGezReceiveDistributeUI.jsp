@@ -79,7 +79,11 @@
 	        var Docalt3 = "<spring:message code='ezApprovalG.t289'/>";
 	        var Docalt4 = "<spring:message code='ezApprovalG.t10030'/>";
 	        var CompanyID = "${userInfo.companyID}";
-	
+			var approvalFlag = "${approvalFlag}";
+			var isReDraft;
+			var pDocState;
+			var orgCompanyID;
+			
 	        window.onload = function () {
 	            try {
 	                try {
@@ -99,6 +103,10 @@
 	                psentDeptID = RetValue[2];
 	                pAprSate = RetValue[3];
 	                pReceivedDeptID = RetValue[4];
+	                pDocState = RetValue[5];
+	                isReDraft = RetValue[6];
+	                orgCompanyID = RetValue[7];
+	                
 	                if (pReceiveSN == "s")
 	                    pReceiveSN = "1";
 	                else
@@ -165,6 +173,35 @@
 	    }
 	    function btnAssign_onclick() {
 	        try {
+	        	var result = "";
+	        	if (approvalFlag == "S" && isReDraft != undefined && isReDraft == "Y") {
+	        		$.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/checkAprState.do",
+			    		data : {
+			    			docID : pDocID,
+			    			docState : pDocState,
+			    			userID : '',
+			    			aprMemberSN : pReceiveSN,
+			    			orgCompanyID : orgCompanyID
+			    		},
+			    		success : function(text) {
+			    			result = text;
+			    		}
+			    	});
+	        		if (result == "FALSE") {
+	        			if (ReturnFunction != null) {
+                            ReturnFunction("DUPL");
+                        }
+                        else {
+                            window.returnValue = "DUPL";
+                            window.close();
+                        }
+		    			return;
+	        		}
+	        	}
 	            var listview = new ListView();
 	            listview.LoadFromID("listAPRLINE1");
 	            var oArrRows = listview.GetDataRows();
@@ -374,6 +411,11 @@
 	        if (selRow) {
 	            listview.DeleteRow(listview.GetSelectedRowID(listview.GetSelectedIndexes()));
 	        }
+	        /* 2018-10-15 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
+	        var totalRows = listview.GetDataRows();
+		    if(totalRows.length == 0) {
+		    	setDeleteRow("listAPRLINE1");
+		    }
 	    }
 	    function btn_searchDept_onclick() {
 	        try {
@@ -787,6 +829,11 @@
 	                alert(e.description);
 	            }
 	        }
+	        /* 2018-10-15 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
+	        var totalRows = listview.GetDataRows();
+		    if(totalRows.length == 0) {
+		    	setDeleteRow("listAPRLINE1");
+		    }
 	    }
 	    function DeptRowDelelte(SelectIndex, ColRow) {
 	        var RowDelCheck;

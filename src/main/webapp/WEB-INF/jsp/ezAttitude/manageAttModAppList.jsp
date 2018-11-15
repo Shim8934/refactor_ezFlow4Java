@@ -88,8 +88,13 @@
 	    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
 	    			
 	    			get_att_list();
+	    			
 				}
 			});
+			
+			if ($('#writerDept_search option').length == 2) { //권한 있는 부서가 한개밖에 없으면 "전체" 옵션을 지운다.
+				$('#writerDept_search option').eq(0).remove();
+			}
 		})
 		
 		$(function () {
@@ -1061,7 +1066,7 @@
 		</script>
 </head>
 	<body id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
-		<h1><spring:message code = 'ezAttitude.t7' /> - <spring:message code='ezAttitude.t7' /><span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code='ezAttitude.t7' /><span id="mailBoxInfo"></span></h1>
         <div id="mainmenu">
         <ul id="tb_Parent">
 			<li id="appr"><span onClick="modApprove()"><spring:message code='ezAttitude.t210'/></span></li>
@@ -1079,7 +1084,14 @@
 					</c:forEach>
 				</select>
 			</li>
-
+			<li id="right">
+				<span style="float:right;font-weight:normal;color:black;border: none; box-shadow:none;">
+					<input name="searchCheck" id="Radio1" type="radio" value="all" <c:if test="${adminFlag != 'true'}">checked</c:if> style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t124'/></label>
+					<input name="searchCheck" id="Radio2" type="radio" value="0" <c:if test="${adminFlag == 'true'}">checked</c:if> style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.t209'/></label>
+					<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;<spring:message code='ezAttitude.t210'/></label>
+					<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;<spring:message code='ezAttitude.t211'/></label>
+				</span>
+			</li> 
         </ul>
         </div>
         

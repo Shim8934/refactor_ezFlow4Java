@@ -100,22 +100,27 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailReaderList.do")
 	public String mailConfig(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		
 		String url = request.getParameter("url") == null ? "" : request.getParameter("url");
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-		List<SysParamVO> configList = ezSystemAdminService.getSysParam(loginInfo.getTenantId());
-		Map<String, String> configMap = new HashMap<String, String>();
+		String isReadDelete = ezCommonService.getTenantConfig("IS_READ_DELETE", loginInfo.getTenantId());
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
 
-		for (SysParamVO param : configList) {
-			configMap.put(param.getName(), param.getValue());
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
 			
-			if (param.getName().equals("IS_READ_DELETE")) {
-				String isReadDelete = param.getValue();
-				model.addAttribute("isReadDelete", isReadDelete);
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+				} else {
+					model.addAttribute("shareId", shareId);
+				}
 			}
 		}
 		
+		model.addAttribute("isReadDelete", isReadDelete);
 		model.addAttribute("url", url);
+		
 		return "ezEmail/mailReaderList";
 	}
 	
@@ -124,7 +129,12 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailGetReceiveList.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailGetReceiveList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+	public String mailGetReceiveList(
+			@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request,
+			Locale locale, 
+			Model model, 
+			@RequestBody String bodyData) throws Exception{
 		logger.debug("mailGetReceiveList started.");
 		logger.debug("bodyData=" + bodyData);
 		
@@ -135,7 +145,27 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
-		logger.debug("userEmail=" + userEmail);
+		String mailId = loginInfo.getId();
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailGetReceiveList ended.");
+					
+					return "";
+				}
+				
+				mailId = shareId;
+				userEmail = shareId + "@" + domainName;
+			}
+		}
+		
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
 		
 		String returnValue = "";
 		
@@ -166,7 +196,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				
 				// get readList(수신확인)
 				// readList의 reader 주소에는 alias 주소가 들어올 수 있다.
-				List<MailReadVO> readList = ezEmailService.getMailReadList(loginInfo.getTenantId(), loginInfo.getId(), messageId);
+				List<MailReadVO> readList = ezEmailService.getMailReadList(loginInfo.getTenantId(), mailId, messageId);
 				
 				// get cancelList(회수)
 				//cancelList의 reader 주소에는 real(account) 주소만 들어온다.
@@ -371,7 +401,12 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailCancelSend.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailCancelSend(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+	public String mailCancelSend(
+			@CookieValue("loginCookie") String loginCookie, 
+			HttpServletRequest request,
+			Locale locale, 
+			Model model, 
+			@RequestBody String bodyData) throws Exception{
 		logger.debug("mailCancelSend started.");
 		logger.debug("bodyData=" + bodyData);
 		
@@ -381,7 +416,27 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userAccount = loginInfo.getId() + "@" + domainName;
-		logger.debug("userEmail=" + userAccount);
+		String mailId = loginInfo.getId();
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailCancelSend ended.");
+					
+					return "";
+				}
+				
+				mailId = shareId;
+				userAccount = shareId + "@" + domainName;
+			}
+		}
+		
+		logger.debug("userId=" + loginInfo.getId() + ",userAccount=" + userAccount);
 		
 		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
@@ -422,7 +477,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
 			logger.debug("from=" + from);
 			
-			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
+			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, loginInfo.getTenantId());
 			
 			boolean isUserFrom = false;
 			for (String[] address : aliasAddressList) {
@@ -486,7 +541,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			String messageId = ((MimeMessage)message).getMessageID();
 			String subject = message.getSubject();
 			
-			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), loginInfo.getPrimary(), messageId, loginInfo.getId(), subject, innerAddresses);
+			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), loginInfo.getPrimary(), messageId, mailId, subject, innerAddresses);
 			
 			folder.close(true);
 			

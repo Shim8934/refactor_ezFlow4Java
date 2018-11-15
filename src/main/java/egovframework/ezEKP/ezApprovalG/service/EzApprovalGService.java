@@ -347,7 +347,7 @@ public interface EzApprovalGService {
 
 	public String moveRecord(Document xmlDom, String lang, int tenantID) throws Exception;
 
-	public String getRecordSimpleInfo(Document xmlDom, String lang, int tenantID) throws Exception;
+	public String getRecordSimpleInfo(Document xmlDom, String lang, int tenantID, String offset) throws Exception;
 
 	public String changeRecordInfo(Document xmlDom, String lang, int tenantID) throws Exception;
 
@@ -359,7 +359,7 @@ public interface EzApprovalGService {
 
 	public String getCabinetList(Document xmlDom, LoginVO userInfo)throws Exception;
 
-	public String getCabinetDetailInfo(Document xmlDom, int tenantID) throws Exception;
+	public String getCabinetDetailInfo(Document xmlDom, int tenantID, String offset) throws Exception;
 
 	public String getCabScInfo(Document xmlDom, int tenantID) throws Exception;
 
@@ -434,7 +434,7 @@ public interface EzApprovalGService {
 	public String deleteUserContDoc(String docID, String contID, String companyID, String lang, int tenantId) throws Exception;
 
 	public String getSearchDocListS(String containerID, String userID, 	String subQuery, String docNumber, String docTitle, String drafter,	String formID, String draftfrom, String draftto, String apprfrom, String papprto, String mypapprfrom, String mypapprto,
-			String draftDeptName, String docState, String string, String pageSize, String pageNum, String orderCell,	String orderOption, String companyID, String lang, String string2,	int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception;
+			String draftDeptName, String docState, String string, String pageSize, String pageNum, String orderCell,	String orderOption, String searchStatus, String companyID, String lang, String string2,	int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception;
 
 	public List<ApprGContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception;
 
@@ -527,7 +527,7 @@ public interface EzApprovalGService {
 
 	public String getOrgDraftDeptID(String docID, int tenantId, String companyID) throws Exception;
 
-	public String getLineModeFlag(String docID, String companyID, int tenantId) throws Exception;
+	public String getLineModeFlag(String docID, String userID, String companyID, int tenantId) throws Exception;
 
 	public String updateSusinState(String docID, String mode, String deptID, String companyID, int tenantID) throws Exception;
 
@@ -576,4 +576,11 @@ public interface EzApprovalGService {
 	
 	public ApprGDocInfoWebSrvVO getHWPdownload(String docID, int tenantID, String companyID) throws Exception;
 
+	public String getDocNumZeroCnt(String companyID, int tenantID) throws Exception;
+	
+	public String setDocNumZeroCnt(String docNumZeroCnt, String companyID, int tenantID) throws Exception;
+	
+	public List<String> getShareOwnerId(String userID, int tenantID) throws Exception;
+	
+	public int getCheckAprState(String docID, String userID, String docState, String aprMemberSN, String companyID, int tenantID) throws Exception;
 }

@@ -120,6 +120,8 @@
 		    var FirstFlag = false;
 		    var rsa = new RSAKey();
 		    var orgCompanyID = "${orgCompanyID}";
+		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+		    var mailShareId = "${mailShareId}";
 		    
 		    window.onload = function () {		    	
 		        if (pUseBackGround == "TRUE") {
@@ -624,7 +626,7 @@
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", "");
 		            }
 		        } else {
-	            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", MakeXMLString(AttachFileList2()));
+	            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", AttachFileList2());
 		        }
 
 		        if (pMode == "new" || pMode == "new1" || pMode == "boardContent" || pMode == "boardAttach" || pUrl != "" || orgMode == "temp") {
@@ -1005,9 +1007,15 @@
 		        var FileName = "";
 		        var FileURL = "";
 		        var ItemID = "";
-		        MailxmlHTTP.open("POST", "/ezEmail/mailReadBoard.do", false);
-		
+		        var requestUrl = "/ezEmail/mailReadBoard.do";
+		        
+		        if (typeof(mailShareId) != "undefined" && mailShareId != "") {
+            		requestUrl += "?shareId=" + encodeURIComponent(mailShareId);
+				}
+		        
+		        MailxmlHTTP.open("POST", requestUrl, false);
 		        MailxmlHTTP.send(strQuery);
+		        
 		        if (MailxmlHTTP.status == 200) {
 		            var mailXml = loadXMLString(MailxmlHTTP.responseText);
 		            document.getElementById('txtTitle').value = "<spring:message code='ezBoard.t409' />" + getNodeText(mailXml.getElementsByTagName("SUBJECT").item(0));
@@ -1710,9 +1718,11 @@
 					dataType : "text",
 					async : true,
 					url : "/admin/ezBoard/getBackGroundImage.do",	        			
-					data : { type : "USE", 
-							 backGroundID: ""
-						   },
+					data : {
+						type : "USE",
+						backGroundID : "",
+						isAllGroupBoard : isAllGroupBoard
+					},
 					success: function(resultXml){
 						event_Get_listComplite(resultXml);
 					}        			

@@ -129,29 +129,31 @@
                         	
                         /*  2018-05-18 홍승비 - 커뮤니티 일반/그룹/익명게시판 리스트에서 new 표시하기 */
                        	if (pastDate <= writeDate) {
-                       		listXML += "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
+                       		listXML += "<div style='float: left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'><img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
                        	}
                        	listXML += strEmergent + strSpace + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title");
+                       	listXML += "</div>";
                        	
                        	/* 2018-05-04 홍승비 - 댓글 표시하기 */
                        	if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
-                       		listXML += "<SPAN class= '" + bClass + "' style='color:#c64200'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                       		listXML += "<SPAN class= '" + bClass + "' style='color:#c64200; position: absolute;'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
                        	}
-                        listXML += "</TD>";
+                        listXML += "</TD><TD></TD>";
 					}
 					else {
 						listXML += "<TD class='"+ urgency + " " + bClass + "' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
 							+ pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Writer") + "\", event)'>";
 							
 	                    if (pastDate <= writeDate) {
-	                   		listXML += "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
-	                   	}			
+	                   		listXML += "<div style='float: left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'><img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
+	                   	}
 	                    listXML += strEmergent + strSpace + Replace2HTML(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title"));
+                       	listXML += "</div>";
 	                    
 						if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
-                       		listXML += "<SPAN class ='" + bClass + "' style='color:#c64200'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                       		listXML += "<SPAN class ='" + bClass + "' style='color:#c64200; position: absolute;'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
                        	}
-                    	listXML += "</TD>";
+                    	listXML += "</TD><TD></TD>";
 					}				
 					
 					if (gubun == '1') {
@@ -376,7 +378,7 @@
     			arrList = strListInfo.split(";");
     			
     			for(i=0;i<arrList.length-1;i++)  {
-    				if(arrList[i].split(",")[1].indexOf(SSUserID) == -1) {
+    				if(arrList[i].split(",")[1] != SSUserID) {
     					arrList = null;	
     					return false;
     				}		
@@ -725,7 +727,7 @@
 								<th style="cursor:pointer"  onClick="SortPage('A.Title')" width="60%"><spring:message code='ezCommunity.t124' /></th>
 							</c:otherwise>
 						</c:choose>
-						
+						<th style="width:20px; "></th>
 						<c:if test="${boardInfo.gubun == '1'}">
 							<c:choose>
 								<c:when test="${pSortBy == 'A.WriterCompanyName'}">

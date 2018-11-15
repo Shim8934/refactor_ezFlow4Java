@@ -14,6 +14,10 @@
 	        .viewbox {
 				line-height:20px;
 			}
+			p {
+				margin-top: 0px;
+				margin-bottom: 0px;
+			}
     	</style>
 		<script>
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -142,7 +146,7 @@
 		    }
 		    function getOneLineReply() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+		        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&gubun=" + gubun, false);
 		        xmlhttp.send();
 		        var xmldom = createXmlDom();
 		        xmldom = loadXMLString(xmlhttp.responseText);

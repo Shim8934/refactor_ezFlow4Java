@@ -77,8 +77,9 @@ public interface MBoardService {
 	
 	void deleteItem(String itemID, String boardID, int tenantID) throws Exception;
 	
+	/* 2018-10-25 홍승비 - 모바일 그룹사게시판 즐겨찾기 분기 추가 */
 	/* 2018-07-04 홍승비 - 모바일 게시판 즐겨찾기 추가 시 companyID 삽입 */
-	void insertFavorite(String userID, String boardID, String companyID, int tenantID) throws Exception;
+	void insertFavorite(String userID, String boardID, String companyID, int tenantID, String isAllGroupBoard) throws Exception;
 	
 	void deleteFavorite(String userID, String boardID, int tenantID) throws Exception;
 	

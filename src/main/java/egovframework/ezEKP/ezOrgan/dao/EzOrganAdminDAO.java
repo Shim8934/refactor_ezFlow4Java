@@ -32,6 +32,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -350,7 +351,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         String ldapPath = (String)map.get("v_LDAPPATH");
         
         logger.debug("insertDBData_deptForJMocha started. tenantId=" + tenantId + ",deptId=" + deptId + ",parentCn=" + parentCn);
-
+        
         String param1 = "tenantId=" + tenantId;
         String param2 = "deptId=" + URLEncoder.encode(deptId, "UTF-8");
         String param3 = "displayName=" + URLEncoder.encode(displayName, "UTF-8");
@@ -427,6 +428,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             throw e;	            
         }
 	}
+	
+	public void updateDBData_deptOrder(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateDBData_deptOrder", map);
+	}
+	
+	public void updateDBData_deptOrderIsNull(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateDBData_deptOrderIsNull", map);
+	}
 
     private void insertDBData_userForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
@@ -446,6 +455,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         String postalCode = (String)map.get("v_POSTALCODE");
         String streetAddress = (String)map.get("v_ADDRESS");
         String extensionAttribute6 = (String)map.get("v_EXTATTR6");
+        String extensionAttribute7 = (String)map.get("v_EXTATTR7");
+        String extensionAttribute8 = (String)map.get("v_EXTATTR8");
         String extensionAttribute10 = (String)map.get("v_EXTATTR10");
         String extensionAttribute102 = (String)map.get("v_EXTATTR102");
         String extensionAttribute14 = (String)map.get("v_EXTATTR14");
@@ -482,11 +493,13 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         String param23 = "birth=" + URLEncoder.encode(birth, "UTF-8");
         String param24 = "birthType=" + URLEncoder.encode(birthType, "UTF-8");
         String param25 = "password=" + URLEncoder.encode(password, "UTF-8");
+        String param26 = "extensionAttribute7=" + URLEncoder.encode(extensionAttribute7, "UTF-8");
+        String param27 = "extensionAttribute8=" + URLEncoder.encode(extensionAttribute8, "UTF-8");
         String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5 + "&" + param6
                     + "&" + param7 + "&" + param8 + "&" + param9 + "&" + param10 + "&" + param11 + "&" + param12
                     + "&" + param13 + "&" + param14 + "&" + param15 + "&" + param16 + "&" + param17 + "&" + param18
                     + "&" + param19 + "&" + param20 + "&" + param21 + "&" + param22 + "&" + param23 + "&" + param24
-                    + "&" + param25;
+                    + "&" + param25 + "&" + param26 + "&" + param27;
 
         String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/addUser";
         String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
@@ -537,6 +550,18 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             
             throw e;                
         }            
+	}
+	
+	public void updateDBData_userOrder(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateDBData_userOrder", map);
+	}
+	
+	public void updateDBData_addjobmasterOrder(Map<String, Object> map) throws Exception {
+		update ("EzOrganAdminDAO.updateDBData_addjobmasterOrder", map);
+	}
+	
+	public void updateDBData_userOrderIsNull(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateDBData_userOrderIsNull", map);
 	}
 	
     private void updateDBData_companyForJMocha(Map<String, Object> map) throws Exception {
@@ -711,6 +736,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             String param = "extensionAttribute6=" + URLEncoder.encode(vo.getExtensionAttribute6(), "UTF-8");
             inputParams += "&" + param;
         }
+        if (vo.getExtensionAttribute7() != null) {
+        	String param = "extensionAttribute7=" + URLEncoder.encode(vo.getExtensionAttribute7(), "UTF-8");
+        	inputParams += "&" + param;
+        }
+        if (vo.getExtensionAttribute8() != null) {
+        	String param = "extensionAttribute8=" + URLEncoder.encode(vo.getExtensionAttribute8(), "UTF-8");
+        	inputParams += "&" + param;
+        }
         if (vo.getExtensionAttribute10() != null) {
             String param = "extensionAttribute10=" + URLEncoder.encode(vo.getExtensionAttribute10(), "UTF-8");
             inputParams += "&" + param;
@@ -737,6 +770,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         }
         if (vo.getInfo() != null) {
             String param = "info=" + URLEncoder.encode(vo.getInfo(), "UTF-8");
+            inputParams += "&" + param;
+        }
+        if (vo.getExtensionAttribute7() != null) {
+            String param = "extensionAttribute7=" + URLEncoder.encode(vo.getExtensionAttribute7(), "UTF-8");
             inputParams += "&" + param;
         }
 
@@ -1648,7 +1685,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
      * Active Directory
      * - 부서의 부서 이동
      * */
-    @SuppressWarnings("static-access")
 	public void moveDeptInAD(DirContext ctx, Map<String, Object> map, String dept) throws Exception {
     	logger.debug("moveDeptInAD started.");
     	
@@ -1679,14 +1715,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	// 부모 부서의 dn이 있다는 것 -> 하위 부서에서 이동한다는 뜻.    	
     	if (!parDept.equalsIgnoreCase("NOTHING")) {
         	ModificationItem[] delDept = new ModificationItem[1];
-        	delDept[0] = new ModificationItem(ctx.REMOVE_ATTRIBUTE, new BasicAttribute("member", curDept));
+        	delDept[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, new BasicAttribute("member", curDept));
         	ctx.modifyAttributes(parDept, delDept);
     	}
     	
     	// movDept의 dn이 존재하는 경우, 이동할 부서의 member에 현재 부서 dn 추가
     	if (!movDept.equalsIgnoreCase("NOTHING")) {
         	ModificationItem[] addDept = new ModificationItem[1];
-        	addDept[0] = new ModificationItem(ctx.ADD_ATTRIBUTE, new BasicAttribute("member", curDept));
+        	addDept[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute("member", curDept));
         	ctx.modifyAttributes(movDept, addDept);            	
     	} 
     	
@@ -1895,7 +1931,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
      * attr : 변경될 attribute
      * value : 새로 변경되는 내용
      * */
-    @SuppressWarnings("static-access")
 	public ModificationItem chkADAttribute(DirContext ctx, String dn, String attr, String value) throws Exception {
 	
 		ModificationItem mod;
@@ -1910,7 +1945,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		if (container.size() == 0) {
 			//현재 attribute가 존재하지 않음 && value값이 존재함
 			if (value != null && !value.equalsIgnoreCase("")) {
-				mod = new ModificationItem(ctx.ADD_ATTRIBUTE, new BasicAttribute(attr, value));
+				mod = new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute(attr, value));
 			//현재 attribute가 존재하지 않음 && value값이 존재하지 않음. 또다시 빈값이 들어온 경우
 			} else {
 				mod = null;
@@ -1919,10 +1954,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 			//현재 attribute가 존재하는 경우 && value값이 존재하지 않는 경우.
 	    	if ( value == null || value.equalsIgnoreCase("") ) {
 	    		//mod = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute(attr, "empty"));
-	    		mod = new ModificationItem(ctx.REMOVE_ATTRIBUTE, new BasicAttribute(attr));
+	    		mod = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, new BasicAttribute(attr));
 	    	//현재 attribute가 존재하는 경우 && value값지 존재하는 경우
 	    	} else {    		
-	    		mod = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute(attr, value));
+	    		mod = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute(attr, value));
 	    	}    
 		}		
     	return mod;
@@ -1933,7 +1968,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
      * - 유저의 부서이동
      * dept : 변경될 부서ID
      * */
-    @SuppressWarnings("static-access")
 	public void moveUserInAD(DirContext ctx, Map<String, Object> map, String dept) throws Exception {
     	logger.debug("moveUserInAD started.");
     	// 현재 유저 dn
@@ -1960,8 +1994,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	 * */
     	ModificationItem[] mods = new ModificationItem[2];
     	
-    	mods[0] = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute("department", dept.trim() ));
-    	mods[1] = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute("description", movDisplay.trim() ));
+    	mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("department", dept.trim() ));
+    	mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("description", movDisplay.trim() ));
     	ctx.modifyAttributes(curUser, mods);
     	
     	/**
@@ -1969,7 +2003,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	 * 2. 변경 부서에 유저 추가 
     	 * */    	
     	ModificationItem[] delUser = new  ModificationItem[1];    	
-    	delUser[0] = new ModificationItem(ctx.REMOVE_ATTRIBUTE, new BasicAttribute("member", curUser));
+    	delUser[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, new BasicAttribute("member", curUser));
     	ctx.modifyAttributes(curDept, delUser);
     	
     	String newDN = getADdata(ctx, map.get("v_CN").toString(), "user", "dn");
@@ -1977,7 +2011,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	logger.debug("newDN : " + newDN);
     	
     	ModificationItem[] addUser = new ModificationItem[1];
-    	addUser[0] = new ModificationItem(ctx.ADD_ATTRIBUTE, new BasicAttribute("member", newDN));
+    	addUser[0] = new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute("member", newDN));
     	ctx.modifyAttributes(movDept, addUser);
     	
     	logger.debug("moveUserInAD ended.");
@@ -2020,7 +2054,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
      * Active Directory
      * - 유저 패스워드 변경
      * */
-    @SuppressWarnings( "static-access" )  
     public void changePasswordInAD(DirContext ctx, LoginVO vo) throws Exception {
     	logger.debug("changePasswordInAD started.");   
     	
@@ -2034,8 +2067,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	
     	ModificationItem[] mods = new ModificationItem[2];
 
-    	mods[0] = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute("unicodePwd", pwdArray));
-    	mods[1] = new ModificationItem(ctx.REPLACE_ATTRIBUTE, new BasicAttribute("userAccountControl", Integer.toString( UF_NORMAL_ACCOUNT + UF_DONT_EXPIRE_PASSWD ) ));
+    	mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("unicodePwd", pwdArray));
+    	mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userAccountControl", Integer.toString( UF_NORMAL_ACCOUNT + UF_DONT_EXPIRE_PASSWD ) ));
 
     	ctx.modifyAttributes(getDN, mods);
     	// 한 번만 실행하면 직전 패스워드로도 로그인이 되어 두 번 수행함
@@ -2064,4 +2097,46 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public void deleteDelUserDBData_I (Map<String, Object> map) throws Exception {
     	delete("EzOrganAdminDAO.deleteDelUserDBData_I", map);
     }
+    
+    public void setTitle(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertTitle", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+	public List<OrganJobVO> getTitleList(Map<String, Object> map) throws Exception {
+		return (List<OrganJobVO>) list("EzOrganAdminDAO.selectTitleList", map);
+	}
+    
+    public OrganJobVO getTitleInfo(Map<String, Object> map) throws Exception {
+		return (OrganJobVO) select("EzOrganAdminDAO.selectTitleInfo", map);
+	}
+	
+	public void updateTitle(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateTitle", map);
+	}
+	
+	public void updateTitle2(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateTitle2", map);
+	}
+	
+	public void deleteTitle(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteTitle", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getTitleUserList(Map<String, Object> map) throws Exception {
+		return (List<OrganUserVO>) list("EzOrganAdminDAO.selectTitleUserList", map);
+	}
+	
+	public int getTitleListCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganAdminDAO.selectTitleListCnt", map);
+	}
+	
+	public int getTitleUserListCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganAdminDAO.selectTitleUserListCnt", map);
+	}
+	
+	public int getTitleCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganAdminDAO.selectTitleCnt", map);
+	}
 }

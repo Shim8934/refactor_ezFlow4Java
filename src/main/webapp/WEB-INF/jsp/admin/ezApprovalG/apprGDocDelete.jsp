@@ -68,6 +68,9 @@
 			var pSelectTab = "completedoclist";
 			var Tab1_SelectID = "";
 		    var Tab1_flag = true;
+			//2018-07-17 김보미 - 프로그래스바
+			var startTime = "";
+			var endTime = "";
 			
 			var selectelem = null;
 			
@@ -361,11 +364,11 @@
 		    		$(".row_body").css("background", "");
 		    	}
 				
-				strListIDInfo = "";
-				strListWriterNameInfo = "";
-				strListDocNoInfo = "";
-				strListDocTitleInfo = "";
-				strListDeptNameInfo = "";
+// 				strListIDInfo = "";
+// 				strListWriterNameInfo = "";
+// 				strListDocNoInfo = "";
+// 				strListDocTitleInfo = "";
+// 				strListDeptNameInfo = "";
 				
 				CurPage = Value;
 				makePageSelPage();
@@ -575,44 +578,22 @@
 			
 			function chk_onselect(obj) {
 				if (obj.checked) {
-		            strListIDInfo += $(obj).attr("id") + ";";
-		            strListWriterNameInfo += $(obj).attr("writerName") + ";";
-		            strListDocNoInfo += $(obj).attr("DocNo") + ";";
-		            strListDocTitleInfo += $(obj).attr("DocTitle") + ";";
-		            strListDeptNameInfo += $(obj).attr("DeptName") + ";";
-		            
 		            selectelem = null;
 		        } else {
-		            strListIDInfo = ReplaceText(strListIDInfo, $(obj).attr("id") + ";", "");
-		            strListWriterNameInfo = ReplaceText(strListWriterNameInfo, $(obj).attr("writerName") + ";", "");
-		            strListDocNoInfo = ReplaceText(strListDocNoInfo, $(obj).attr("DocNo") + ";", "");
-		            strListDocTitleInfo = ReplaceText(strListDocTitleInfo, $(obj).attr("DocTitle") + ";", "");
-		            strListDeptNameInfo = ReplaceText(strListDeptNameInfo, $(obj).attr("DeptName") + ";", "");
 		            selectelem = obj.parentNode.parentNode;
 		        }
 		    }
 			
 			function select_row(elem) {		    	
-				if ($("#checkboxAll").is(":checked")) {					
+				if ($("#checkboxAll").is(":checked")) {
 					if ($("input[id='" + $(elem).attr("id") + "']").prop("checked") == true && selectelem != null) {//전체 선택 후 개별 선택 시 선택한것 해제
 						$("input[id='" + $(elem).attr("id") + "']").prop("checked", false);
 						$(".row_body[id='" + $(elem).attr("id") + "']").css("background", "#ffffff");
-						strListIDInfo = ReplaceText(strListIDInfo, $(elem).attr("id") + ";", "");
-			            strListWriterNameInfo = ReplaceText(strListWriterNameInfo, $("input[id='" + $(elem).attr("id") + "']").attr("writerName") + ";", "");
-			            strListDocNoInfo = ReplaceText(strListDocNoInfo, $("input[id='" + $(elem).attr("id") + "']").attr("DocNo") + ";", "");
-			            strListDocTitleInfo = ReplaceText(strListDocTitleInfo, $("input[id='" + $(elem).attr("id") + "']").attr("DocTitle") + ";", "");
-			            strListDeptNameInfo = ReplaceText(strListDeptNameInfo, $("input[id='" + $(elem).attr("id") + "']").attr("DeptName") + ";", "");
 			    		return;
 					}
 					
 					// 목록에서 하나씩 다른거 선택할 때
 					if ((selectelem != null && selectelem != elem)) {
-						strListIDInfo += $(elem).attr("id") + ";";
-			            strListWriterNameInfo += $(elem).find("input").attr("writerName") + ";";
-			            strListDocNoInfo += $(elem).find("input").attr("DocNo") + ";";
-			            strListDocTitleInfo += $(elem).find("input").attr("DocTitle") + ";";
-			            strListDeptNameInfo += $(elem).find("input").attr("DeptName") + ";";
-			            
 			        	selectelem = null;
 			    	}
 				} else {					
@@ -620,11 +601,6 @@
 			    	if ((selectelem != null && selectelem != elem)) {
 	 					$("input[name=myCheckbox]").prop("checked", false);
 	 					$(".row_body").css("background", "#ffffff");	 					
-						strListIDInfo = $(elem).attr("id") + ";";
-			            strListWriterNameInfo = $(elem).find("input").attr("writerName") + ";";			            
-			            strListDocNoInfo = $(elem).find("input").attr("DocNo") + ";";			            
-			            strListDocTitleInfo = $(elem).find("input").attr("DocTitle") + ";";			            
-			            strListDeptNameInfo = $(elem).find("input").attr("DeptName") + ";";			            
 			        	selectelem = null;
 			    	}
 				}
@@ -646,58 +622,16 @@
 		        selectelem = elem;
 		        elem.style.backgroundColor = "#edf4fd";
 		        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
-
-		        // 목록화면 나오고 처음 선택할 때 strListIDInfo 값 셋팅
-		        if (strListIDInfo == "") {
-		        	strListIDInfo = $(elem).attr("id") + ";";
-		        	strListWriterNameInfo = $(elem).find("input").attr("writerName") + ";";
-		        	strListDocNoInfo = $(elem).find("input").attr("DocNo") + ";";
-		        	strListDocTitleInfo = $(elem).find("input").attr("DocTitle") + ";";
-		        	strListDeptNameInfo = $(elem).find("input").attr("DeptName") + ";";
-		        	
-		        }
 		    }
 			
 			  function selectAll() {
 					$(selectelem).css("background", "#ffffff");
 
-					var deleteListID = [];
-					var deleteListWriterName = [];
-					var deleteListDocNo = [];
-					var deleteListDocTitle = [];
-					var deleteListDeptName = [];
 					console.log('$("#checkboxAll").is(":checked") : '+$("#checkboxAll").is(":checked"));
 					if ($("#checkboxAll").is(":checked")) {
-						strListIDInfo = "";
-						strListWriterNameInfo = "";
-						strListDocNoInfo = "";
-						strListDocTitleInfo = "";
-						strListDeptNameInfo = "";
-
 						$(":checkbox[name=myCheckbox]").prop("checked", true);
 						$(".row_body").css("background", "#edf4fd");
-
-						$(":checkbox[name=myCheckbox]:checked").each(function(){
-							deleteListWriterName.push($(this).attr("writerName") + ";");
-							deleteListID.push($(this).attr("id") + ";")
-							deleteListDocNo.push($(this).attr("DocNo") + ";");
-							deleteListDocTitle.push($(this).attr("DocTitle") + ";");
-							deleteListDeptName.push($(this).attr("DeptName") + ";");
-						});
-
-						for (var i = 0; i < deleteListID.length; i++) {
-							strListWriterNameInfo += deleteListWriterName[i];
-							strListDocNoInfo += deleteListDocNo[i];
-							strListDocTitleInfo += deleteListDocTitle[i];
-							strListDeptNameInfo += deleteListDeptName[i];
-							strListIDInfo += deleteListID[i];
-						}
 					} else {
-						strListIDInfo = "";
-						strListWriterNameInfo = "";
-						strListDocNoInfo = "";
-						strListDocTitleInfo = "";
-						strListDeptNameInfo = "";
 						selectelem = null;
 
 						$(":checkbox[name=myCheckbox]").prop("checked", false);
@@ -743,43 +677,78 @@
 		    }
 			
 			 function DeleteDoc() {
-			        if (strListWriterNameInfo == null || strListWriterNameInfo == "") {
-			            alert("<spring:message code='ezApproval.t232' />");
-			            return;
-			        }
-					var now = new Date();
-					var DeleteDay = now.getFullYear();
-					DeleteDay += '-'+(now.getMonth()+1);
-					DeleteDay += '-'+now.getDate();
-					DeleteDay += ' '+now.getHours();
-					DeleteDay += ':'+now.getMinutes();
-					DeleteDay += ':'+now.getSeconds();
+				//2018-11-07 김보미
+				strListIDInfo = "";
+				strListDocNoInfo = "";
+				strListDocTitleInfo = "";
+				strListWriterNameInfo = "";
+				strListDeptNameInfo = "";
+				
+				$(":checkbox[name=myCheckbox]:checked").each(function() {
+					strListIDInfo += $(this).attr("id") + ";";
+					strListDocNoInfo += $(this).attr("DocNo") + ";";
+					strListDocTitleInfo += $(this).attr("DocTitle") + ";";
+					strListWriterNameInfo += $(this).attr("writerName") + ";";
+					strListDeptNameInfo += $(this).attr("DeptName") + ";";
+				});
+				 
+				if (strListWriterNameInfo == null || strListWriterNameInfo == "") {
+				    alert("<spring:message code='ezApproval.t232' />");
+				    return;
+				}
+				
+				var now = new Date();
+				var DeleteDay = now.getFullYear();
+				DeleteDay += '-'+(now.getMonth()+1);
+				DeleteDay += '-'+now.getDate();
+				DeleteDay += ' '+now.getHours();
+				DeleteDay += ':'+now.getMinutes();
+				DeleteDay += ':'+now.getSeconds();
+				
+				if (confirm("<spring:message code='ezApprovalG.t1728' />")) {
+					//2018-10-26 김보미 - 프로그레스바
+					ShowMailProgress();
 					
-					if (confirm("<spring:message code='ezApprovalG.t1728' />")) {
-						$.ajax({
-							type : "POST",
-							dataType : "text",
-							url : "/admin/ezApprovalG/delDocListjson.do",
-							data : {
-								docIDList      : strListIDInfo,
-								docNoList      : strListDocNoInfo,
-								docTitleList   : strListDocTitleInfo,
-								WriterNameList : strListWriterNameInfo,
-								DeptNameList   : strListDeptNameInfo,
-								deleteDay      : DeleteDay,
-								companyID      : P_CompanyID
-							},
-							success : function() {
-								RefreshView();
-								$("#checkboxAll").prop("checked", false);
-
-							},
-							error : function() {
-								alert("<spring:message code='ezApproval.t131' />");
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						url : "/admin/ezApprovalG/delDocListjson.do",
+						data : {
+							docIDList      : strListIDInfo,
+							docNoList      : strListDocNoInfo,
+							docTitleList   : strListDocTitleInfo,
+							WriterNameList : strListWriterNameInfo,
+							DeptNameList   : strListDeptNameInfo,
+							deleteDay      : DeleteDay,
+							companyID      : P_CompanyID
+						},
+						success : function() {
+							RefreshView();
+							$("#checkboxAll").prop("checked", false);
+				
+						},
+						error : function() {
+							alert("<spring:message code='ezApproval.t131' />");
+						},
+						complete: function() {
+					        //2018-10-26 김보미 - 프로그레스바
+					        endTime = new Date();//프로그래스바 종료시간
+							var timeDiff = endTime - startTime;
+							timeDiff /= 1000;
+							var seconds = (timeDiff % 60).toFixed(1);
+							
+							if (seconds <= 0.3) { //0.3초보다 적으면
+								seconds = 300 - (timeDiff * 1000);
+								setTimeout(function() {
+									HiddenMailProgress();
+								}, seconds);
+							} else {
+						        HiddenMailProgress();
 							}
-						})
-					}
-			    }
+						}
+					})
+				}
+			}
 			 
 			 function RefreshView(){
 			 
@@ -948,6 +917,21 @@
 		        	document.getElementById("contentlist").style.height = height + "px";
 		        	document.getElementById("contentlist").style.overflow = "auto";
 		        }
+			    
+		        //2018-10-26 김보미 - 프로그래스바		
+				function ShowMailProgress() {
+		        	startTime = new Date();//프로그래스바 시작시간
+					CurrenWidth = document.body.clientWidth;
+		        	
+				    document.getElementById("mailPanel").style.display = "";
+				    document.getElementById("MailProgress").style.top = "400px";
+				    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+				    document.getElementById("MailProgress").style.display = "";
+				}
+				function HiddenMailProgress() {
+				    document.getElementById("mailPanel").style.display = "none";
+				    document.getElementById("MailProgress").style.display = "none";
+				}
 		</script>
 	</head>
 	
@@ -1099,4 +1083,10 @@
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");
 	</script>
+	
+    <!-- 2018-10-26 김보미 - 프로그레스바 -->
+    <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" >&nbsp;</div>
+    <div style="width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;" id="MailProgress">
+    <img src="/images/email/progress_img.gif" style="padding-top:20px;">
+    <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>	
 </HTML>

@@ -21,7 +21,9 @@
 	        var APPRFLAG = $.trim("<c:out value='${model.apprFlag}'/>");
 	        var APPRMAILFLAG = $.trim("<c:out value='${model.apprMailFlag}'/>");
 	        var orgAPPRFLAG = $.trim("<c:out value='${model.apprFlag}'/>");
+	        var parentBoardID =  "<c:out value='${model.parentBoardID}'/>";
 	        var primary = "<c:out value='${primary}'/>";
+	        var isAllGroupBoard = "<c:out value='${isAllGroupBoard}'/>";
 	        var xmlhttp = createXMLHttpRequest();
 	        var ApprUserList = "";
 	        var selectTargetListXML = "";
@@ -148,9 +150,9 @@
 	                replynotify = "0";
 	            }
 
-	            if ($("#chkGroupBoard").is(":checked")) {
+	           /*  if ($("#chkGroupBoard").is(":checked")) {
 	                gubun = "1"
-	            } else if ($("#chkAnonyBoard").is(":checked")) {
+	            } else */ if ($("#chkAnonyBoard").is(":checked")) {
 	                gubun = "2";
 	            } else if ($("#chkPhotoBoard").is(":checked")) {
 	                gubun = "3";
@@ -238,19 +240,25 @@
 	            	oneLineReply = 1;
 	            }
 	            
+	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
 	            	type : "POST",
 	            	dataType : "text",
 	            	url : "/admin/ezBoard/saveBoardProperty.do",
 	            	async : false,
-	            	data : { boardName:$("#txtBoardName").val(), boardName2:$("#txtBoardName2").val(), boardID:BoardID, attachSizeLimit:AttachMax, boardDescription:Description,
-	            		     itemExpires:Expires, url:url, guBun:gubun, replyNotify:replynotify, deleteAfter:iDeleteAfter, boardColor:brd_color, portlet:portlet, backGround:background,
-	            		     formFlag:FormFlag, oneLineReply:oneLineReply, apprFlag:APPRFLAG, orgApprFlag:orgAPPRFLAG, apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG},
+	            	data : {
+	            		boardName:$("#txtBoardName").val(), boardName2:$("#txtBoardName2").val(),
+	            		boardID:BoardID, attachSizeLimit:AttachMax, boardDescription:Description,
+	            		itemExpires:Expires, url:url, guBun:gubun, replyNotify:replynotify, deleteAfter:iDeleteAfter,
+	            		boardColor:brd_color, portlet:portlet, backGround:background,
+	            		formFlag:FormFlag, oneLineReply:oneLineReply, apprFlag:APPRFLAG, orgApprFlag:orgAPPRFLAG,
+	            		apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG, parentBoardID : parentBoardID
+	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
 	            		
 	            		if ("${adminType}" == "y") {
-	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + BoardID;	            			
+	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + BoardID;
 	            			return;	            			
 	            		} else {
 	            			parent.frames.location = parent.frames.location;
@@ -281,24 +289,24 @@
 			
 			function checkboardtype() {
 	        	if (event.srcElement.id == "chkGeneralBoard" && event.srcElement.checked) {
-	                chkGroupBoard.checked = false;
+	             //   chkGroupBoard.checked = false;
 	                chkAnonyBoard.checked = false;
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
 	            }
-	            if (event.srcElement.id == "chkGroupBoard" && event.srcElement.checked) {
+	        /*     if (event.srcElement.id == "chkGroupBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
 	                chkAnonyBoard.checked = false;
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
-	            }
+	            } */
 	            if (event.srcElement.id == "chkAnonyBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
-	                chkGroupBoard.checked = false;
+	             //   chkGroupBoard.checked = false;
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
@@ -320,7 +328,7 @@
 	            }
 	            if (event.srcElement.id == "chkPhotoBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
-	                chkGroupBoard.checked = false;
+	              //  chkGroupBoard.checked = false;
 	                chkAnonyBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
@@ -328,7 +336,7 @@
 	            }
 	            if (event.srcElement.id == "chkThumbBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
-	                chkGroupBoard.checked = false;
+	            //    chkGroupBoard.checked = false;
 	                chkAnonyBoard.checked = false;
 	                chkPhotoBoard.checked = false;
 	                chkQnABoard.checked = false;
@@ -336,7 +344,7 @@
 	            }
 	            if (event.srcElement.id == "chkQnABoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
-	                chkGroupBoard.checked = false;
+	           //     chkGroupBoard.checked = false;
 	                chkAnonyBoard.checked = false;
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
@@ -360,7 +368,7 @@
 	            /* 2018-07-13 홍승비 - URL게시판 구분 추가 */
                 if (event.srcElement.id == "chkURLBoard" && event.srcElement.checked) {
                 	chkGeneralBoard.checked = false;
-	                chkGroupBoard.checked = false;
+	            //    chkGroupBoard.checked = false;
 	                chkAnonyBoard.checked = false;
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
@@ -474,7 +482,7 @@
 			    
 			    selecttarget_cross_dialogArguments[0] = receiverData;
 			    selecttarget_cross_dialogArguments[1] = SelectTarget_Complete;
-			    var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget2.do", "SelectTarget_Cross2", GetOpenWindowfeature(1144, 590));
+			    var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget2.do?isAllGroupBoard=" + isAllGroupBoard, "SelectTarget_Cross2", GetOpenWindowfeature(1144, 590));
 			    try { SelectTarget_Cross.focus(); } catch (e) {}
 			}
 			
@@ -603,9 +611,9 @@
 			    }
 			}			
 		    function ExtensionAttribute_onClick() {
-		        if (chkGroupBoard.checked) {
+		     /*    if (chkGroupBoard.checked) {
 		            gubun = "1"
-		        } else if (chkAnonyBoard.checked) {
+		        } else */ if (chkAnonyBoard.checked) {
 		            gubun = "2";
 		        } else if (chkPhotoBoard.checked) {
 		            gubun = "3";
@@ -776,14 +784,17 @@
 	        <tr style="${style}">
 	            <th><spring:message code="ezBoard.t163"/></th>
 	            <td>
-	            	<c:if test="${model.guBun == '0'}">
+	            	<c:if test="${model.guBun == '0' || model.guBun == '1'}">
 	                	<input type="checkbox" id="chkGeneralBoard" onclick="checkboardtype()" checked />
 	                	<spring:message code="ezBoard.t00053" />
 	                </c:if>
-	                <c:if test="${model.guBun != '0'}">
+	                <c:if test="${model.guBun != '0' && model.guBun != '1'}">
 	                	<input type="checkbox" id="chkGeneralBoard" onclick="checkboardtype()" />
 	                	<spring:message code="ezBoard.t00053"/>
 	                </c:if>
+	                
+<%-- 2018-10-15 홍승비 - 그룹게시판 구분 사용하지 않도록 수정(임시로 일반게시판과 그룹게시판 구분 함침) --%>
+<%-- 
 	                <c:if test="${model.guBun == '1'}">	                   
 	                	<input type="checkbox" id="chkGroupBoard" onclick="checkboardtype()" checked />
 	                	<spring:message code="ezBoard.t164"/>
@@ -792,6 +803,7 @@
 	                	<input type="checkbox" id="chkGroupBoard" onclick="checkboardtype()" />
 	                	<spring:message code="ezBoard.t164"/>
 	                </c:if>
+--%>
 	                <c:if test="${model.guBun == '2'}">	                   
 	                	<input type="checkbox" id="chkAnonyBoard" onclick="checkboardtype()" checked />
 	                	<spring:message code="ezBoard.t165"/>

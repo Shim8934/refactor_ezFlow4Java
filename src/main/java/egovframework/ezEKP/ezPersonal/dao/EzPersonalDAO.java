@@ -1,13 +1,10 @@
 package egovframework.ezEKP.ezPersonal.dao;
 
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +19,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalShareApprovalVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -106,6 +104,11 @@ public class EzPersonalDAO extends EgovAbstractDAO {
 		return (List<PersonalNoticeVO>) list("EzPersonalDAO.getNoticeListUser", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PersonalShareApprovalVO> getShareApprovalList (Map<String, Object> map) throws Exception {
+		return (List<PersonalShareApprovalVO>) list("EzPersonalDAO.getShareApprovalList", map);
+	}
+	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (Map<String, Object> map) {
 		return (PersonalGetEmpOfMonthVO) select("EzPersonalDAO.getEmpOfMonth", map);
 	}
@@ -152,7 +155,11 @@ public class EzPersonalDAO extends EgovAbstractDAO {
 	public int getPollCount(Map<String, Object> map) {
 		return (int) select("EzPersonalDAO.getPollCount", map);
 	}
-
+	
+	public int getCheckDuplShareUser(Map<String, Object> map) throws Exception{
+		return (int) select("EzPersonalDAO.getCheckDuplShareUser", map);
+	}
+	
 	public void setApprovalPwd(Map<String, Object> map) throws Exception{
 		insert("EzPersonalDAO.setApprovalPwd", map);
 	}
@@ -173,6 +180,10 @@ public class EzPersonalDAO extends EgovAbstractDAO {
 		insert("EzPersonalDAO.setApprovNotiMail_I", map);
 	}
 	
+	public void insertShareApproval(Map<String, Object> map) throws Exception {
+		insert("EzPersonalDAO.insertShareApproval", map);
+	}
+	
 	public void setApprovalPwd_U(Map<String, Object> map) throws Exception{
 		update("EzPersonalDAO.setApprovalPwd_U", map);
 	}
@@ -185,4 +196,7 @@ public class EzPersonalDAO extends EgovAbstractDAO {
 		update("EzPersonalDAO.setApprovNotiMail_U", map);
 	}
 	
+	public void deleteShareApproval(Map<String, Object> map) throws Exception {
+		delete("EzPersonalDAO.deleteShareApproval", map);
+	}
 }

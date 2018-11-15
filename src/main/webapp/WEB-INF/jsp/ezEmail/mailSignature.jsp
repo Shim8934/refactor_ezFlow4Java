@@ -12,6 +12,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js/dhtml.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 		    var pUserID = "${userId}";
 		    var pSigState = "0";
@@ -27,6 +28,7 @@
 		        
 		        document.getElementById("1tab1").setAttribute("class", "tabon");
 		        Tab1_SelectID = "1tab1";
+		        
 		    }
 		
 		    function Editor_Complete() {
@@ -251,6 +253,29 @@
 		                break;
 		        }
 		    }
+		    
+		    function selectSignTemplate(obj) {
+		    	var content = " ";
+		    	if (obj === undefined) {
+		    		return;
+		    	} else if (obj !== "none") {
+		    		$.ajax({
+		        		type : "POST",
+		        		url : "/admin/ezEmail/signaturePreview.do?signNo=" + obj,
+		        		datatype : 'json',
+		        		error : function(data) {
+		        			alert("error");
+		        			console.log(data);
+		        		},
+		        		complete : function(data) {
+		        			tbContentElement.SetEditorContent(data.responseJSON[0].content);
+		        	    }
+		        	});
+		    	}
+		    	
+		    	tbContentElement.SetEditorContent(content);
+		    	
+		    }
 		
 		</script>
 	</head>
@@ -264,12 +289,35 @@
 		    <span style="padding-left:3px;"> <input style="margin:0px;padding:0px;" <c:if test="${signState == '2'}">checked</c:if> type="radio" name="SigState" value="2" onclick="pSigState = 2"  id="SigState2">&nbsp;<spring:message code='ezEmail.t827' /></span>
 		    <span style="padding-left:3px;"> <input style="margin:0px;padding:0px;" <c:if test="${signState == '3'}">checked</c:if> type="radio" name="SigState" value="3"  onclick="pSigState = 3" id="SigState3">&nbsp;<spring:message code='ezEmail.t828' /></span>
 		</span> 
-	    <div class="portlet_tabpart01" style="width:820px;margin-top:15px">
-		    <div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px">
+	    <div class="portlet_tabpart01" style="width:781px;margin-top:15px">
+		    <div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px; float:left">
 				<p id = "MailEnv_sub6"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezEmail.t826' /></span></p>
 	            <p id = "MailEnv_sub7"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezEmail.t827' /></span></p>
 	            <p id = "MailEnv_sub8"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezEmail.t828' /></span></p>
 		    </div>
+		   <!-- 서명 템플릿 선택 기능 -->
+		   <c:if test="${useSignatureTemplate == 'YES'}"> 
+			    <div style="float:right; margin-right:5px;">
+			    	<span><b><spring:message code='ezEmail.jje16'/> : </b></span>
+			    	<select id="signatureSelect" onchange="selectSignTemplate(this.value)">
+			    		<option value="none"><spring:message code='ezEmail.jje15'/></option>
+	            		<c:set var="userLang" value="${userLang}"/>
+	            		<c:choose>
+	            			<c:when test="${userLang eq '1'}">
+	            				<c:forEach var="item" items="${list}">
+			        				<option value="<c:out value='${item.signNo}'/>"><c:out value='${item.displayname}'/></option>
+		            			</c:forEach>
+	            			</c:when>
+	            			<c:otherwise>
+		            			<c:forEach var="item" items="${list}">
+				        			<option value="<c:out value='${item.signNo}'/>"><c:out value='${item.displayname2}'/></option>
+			            		</c:forEach>
+	            			</c:otherwise>
+	            		</c:choose>
+			    	</select>
+			    </div>
+			</c:if>
+			
 	    </div>
 		<table id="signtable1" class="content" style="width:780px;height:510px;border:0;"> 
 		  <TR> 

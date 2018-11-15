@@ -24,9 +24,16 @@
 				}
 				return false;			
 			}
+			
 			function Save(){
 				var name1 = $.trim($("#txtNewGroupName").val());
 				var name2 = $.trim($("#txtNewGroupName2").val());
+				
+				if (document.getElementById("allGroupBoard") != null) {
+					var isAllGroupBoard = document.getElementById("allGroupBoard").checked;
+				}
+				
+				var guBun = 0;
 				
 				if (name1 == ""){
 					alert("<spring:message code='ezBoard.t119'/>");
@@ -40,13 +47,21 @@
 					alert("<spring:message code='ezBoard.t120'/>");
 					return;
 				}
-			
+				if (isAllGroupBoard != null && isAllGroupBoard == true) {
+					guBun = 99;
+				}
+				
 				var newID = "{" + GetGUID() + "}";
 
 				$.ajax({
 					type : "POST",
 					url : "/admin/ezBoard/createBoardGroup.do",
-					data : { boardGroupID : newID, boardGroupName : encodeURIComponent(name1), boardGroupName2 : encodeURIComponent(name2) },
+					data : {
+						boardGroupID : newID,
+						boardGroupName : encodeURIComponent(name1),
+						boardGroupName2 : encodeURIComponent(name2),
+						guBun : guBun
+					},
 					success: function(result){						
 						alert("<spring:message code='ezBoard.t121'/>");	
 						window.location.reload(true);
@@ -81,6 +96,13 @@
 			    		</c:if>
 		        	</table>
 		    	</td>
+		    <%-- 2018-10-15 홍승비 - 그룹사게시판 선택 옵션 추가 --%>
+    		<c:if test="${isCompanyAdmin == true}">
+	    		<tr>
+	    			<th style="border-left:none; border-bottom:none;"><spring:message code ="ezCircular.t118" /></th>
+	    			<td style="border-top:1px solid #dedede; vertical-align: bottom;"><input type="checkbox" name="allGroupBoard" id="allGroupBoard"><spring:message code ="ezBoard.hsb03" /> <spring:message code ="ezBoard.hsb04" /></td>
+	    		</tr>
+    		</c:if>
 		  	</tr>
 		</table>
 		<div class="btnpositionJsp"><a class="imgbtn"><span onclick="Save()"><spring:message code="ezBoard.t98" /></span></a></div>	

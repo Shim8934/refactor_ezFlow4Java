@@ -160,7 +160,14 @@
 		        
 		        mail_movecopy_cross_dialogArguments[1] = move_onclick_Complete;
 		        mail_movecopy_cross_dialogArguments[2] = DivPopUpHidden;
-		        DivPopUpShow(320, 375,"/ezEmail/mailMoveCopy.do?fm=1");
+		        
+				var requestUrl = "/ezEmail/mailMoveCopy.do?fm=1";
+		        
+				if (typeof(shareId) != "undefined" && shareId != "") {
+					requestUrl += "&shareId=" + encodeURIComponent(shareId);
+				}
+		        
+		        DivPopUpShow(320, 375, requestUrl);
 		    }
 		    function move_onclick_Complete(moveUrl) {
 		        DivPopUpHidden();
@@ -461,7 +468,6 @@
 			}
 			
 			function manageClose() {
-				window.opener.detailView();
 				window.close();
 			}
 			

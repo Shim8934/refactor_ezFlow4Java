@@ -108,7 +108,7 @@ public class MApprovalGGWController {
 	}
 	
 	/**
-	 * 모바일 G/W 전자결재 [GET] 결재문서 리스트 (결재할(DO), 결재한(END), 결재진행(ING), 기안한(DRAFT))
+	 * 모바일 G/W 전자결재 [GET] 결재문서 리스트 (결재할(DO), 결재한(END), 결재진행(ING), 기안한(DRAFT), 공유결재(SHARE))
 	 */
 	@RequestMapping(value = "/mobile/ezapproval/{type}/list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalList(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) {
@@ -165,7 +165,7 @@ public class MApprovalGGWController {
 	}
 	
 	/**
-	 * 모바일 G/W 전자결재 [GET] 결재문서 카운트 (결재할(DO), 결재한(END), 결재진행(ING), 기안한(DRAFT))
+	 * 모바일 G/W 전자결재 [GET] 결재문서 카운트 (결재할(DO), 결재한(END), 결재진행(ING), 기안한(DRAFT), 공유결재(SHARE))
 	 */
 	@RequestMapping(value = "/mobile/ezapproval/{type}/list-count/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalListCount(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) {
@@ -791,7 +791,7 @@ public class MApprovalGGWController {
 			loginVO.setDeptName(userInfo.getDeptName());
 			
 			if (type.equals("APR")) {
-				String lineMode = ezApprovalGService.getLineModeFlag(docId, userInfo.getCompanyId(), userInfo.getTenantId());
+				String lineMode = ezApprovalGService.getLineModeFlag(docId, userInfo.getUserId(), userInfo.getCompanyId(), userInfo.getTenantId());
 				
 				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, lineMode);
 				
@@ -829,7 +829,7 @@ public class MApprovalGGWController {
 					result.put("data", "FAIL");
 				}
 			} else if (type.equals("HWE")) {
-				rtnVal = ezApprovalGService.doCallBack(docId, approvalGDocInfoVO.getAprMemberID(), userInfo.getCompanyId(), userInfo.getTenantId());
+				rtnVal = ezApprovalGService.doCallBack(docId, userId, userInfo.getCompanyId(), userInfo.getTenantId());
 				
 				if (rtnVal != null && !rtnVal.equals("<RESULT>FALSE</RESULT>")) {
 					result.put("status", "ok");
@@ -945,4 +945,40 @@ public class MApprovalGGWController {
 		return result;
 	}
 
+	//결재가 처리 됬는지의 유무 확인
+	@RequestMapping(value = "/mobile/ezapproval/AprMemberSN/{docId}/checkAprState", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getCheckAprState(@PathVariable String docId, HttpServletRequest request, Locale locale) {
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "/checkAprState] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String userId = request.getParameter("userId");
+			String aprMemberSN = request.getParameter("aprMemberSN");
+			String mode = request.getParameter("mode");
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			
+			String companyID = request.getParameter("companyID");
+			if (companyID != null && !companyID.equals("") && !companyID.equals(userInfo.getCompanyId())) {
+				userInfo.setCompanyId(companyID);
+			}
+			
+			if (mode == null || mode.equals("")) {
+				mode = "APR";
+			}
+			
+			int rtnValue = mApprovalGService.getCheckAprState(docId, userId, aprMemberSN, mode, userInfo.getCompanyId(), userInfo.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", rtnValue == 0 ? "FALSE" : "TRUE");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "/checkAprState] ended.");
+		return result;
+	}
 }

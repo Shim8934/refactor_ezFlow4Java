@@ -96,7 +96,7 @@
 			    var personpicture_cross_dialogArguments = new Array();
 			    
 			    function btnPhoto_onclick() {
-			        var wWeight = "400";
+			        var wWeight = "474";
 			        var wHeight = "280";
 	
 			        var heigth = window.screen.availHeight;
@@ -107,12 +107,12 @@
 	
 			        if (CrossYN()) {
 			            personpicture_cross_dialogArguments[1] = btnPhoto_onclick_Complete;
-			            var OpenWin = window.open("/ezPersonal/personPicture.do", "PersonPicture_Cross", GetOpenWindowfeature(405, 280));
+			            var OpenWin = window.open("/ezPersonal/personPicture.do", "PersonPicture_Cross", GetOpenWindowfeature(474, 280));
 			            try { OpenWin.focus(); } catch (e) { }
 			        }
 			        else {
 			            var ret;
-			            ret = window.showModalDialog("/ezPersonal/personPicture.do", "", "dialogWidth:405px;dialogHeight:280px;dialogleft:" + left + "px;dialogtop:" + top + "px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no");
+			            ret = window.showModalDialog("/ezPersonal/personPicture.do", "", "dialogWidth:474px;dialogHeight:280px;dialogleft:" + left + "px;dialogtop:" + top + "px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no");
 			            window.location.reload(true);
 			        }
 			    }
@@ -164,12 +164,26 @@
 					}
 				}
 						
-				//MobileSetting
+				// 2018-10-22 모바일설정 기능 추가 (yjks)
 				function SettingMobile() {
-					 //20120726 모바일 푸시 수정 start
-					 		     window.open("UserSetting.aspx", "User_Setting", "height=130px,width=460px,status=no,toolbar=no,menubar=no,location=no,resizable=0" + GetOpenPosition(460, 130));
-					 
-					 //20120726 모바일 푸시 수정 start
+					var wWeight = "660";
+			        var wHeight = "370";
+	
+			        var heigth = window.screen.availHeight;
+			        var width = window.screen.availWidth;
+	
+			        var left = (width - wWeight) / 2;
+			        var top = (heigth - wHeight) / 2;
+	
+			        if (CrossYN()) {
+			            var OpenWin = window.open("/ezPersonal/mobileManaged.do", "PersonPicture_Cross", GetOpenWindowfeature(wWeight, wHeight));
+			            try { OpenWin.focus(); } catch (e) { }
+			        } else {
+			            var ret;
+			            ret = window.showModalDialog("/ezPersonal/mobileManaged.do", "", "dialogWidth:405px;dialogHeight:280px;dialogleft:" + left + "px;dialogtop:" 
+			            			+ top + "px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no");
+			            window.location.reload(true);
+			        }
 				}
 				
 			    function checkKey() {
@@ -413,8 +427,9 @@
         		</tr> 
     		</table> 
     		<div class="btnpositionJsp">
-    			<%--2016-10-25 모바일 설정 주석처리  --%>
-       			<%-- <a class="imgbtn" onClick="SettingMobile()"><span><spring:message code='ezPersonal.t998'/></span></a> --%>
+    			<c:if test="${userMobileManaged == 'YES' }">
+       				<a class="imgbtn" onClick="SettingMobile()"><span><spring:message code='ezPersonal.t998'/></span></a>
+       			</c:if>
        			<a class="imgbtn" name="Submit" onClick="return btnPhoto_onclick()"><span><spring:message code='ezPersonal.t183'/></span></a>
        			<a class ="imgbtn"  onClick="ButtonDeleteClick()" name="ButtonDelete"  id="ButtonDelete" ><span><spring:message code='ezPersonal.t184'/></span></a>
        			<a class ="imgbtn"  onClick="ButtonChangeClick()" name="ButtonChange"  id="ButtonChange" ><span><spring:message code='ezPersonal.t34'/></span></a>

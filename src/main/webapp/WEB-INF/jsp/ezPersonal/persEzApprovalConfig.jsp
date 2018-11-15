@@ -78,6 +78,7 @@
 		            case "bujaeGTab": ManageBujaeG_ini(); break;
 		            case "noticeTab": SetApprovNoticeMail_ini(); break;
 		            case "signTab": sign_ini(); break;
+		            case "shareTab": ManageShare_ini(); break;
 		        }
 		    }
 		    
@@ -100,6 +101,10 @@
 		    function sign_ini() {
 		    	document.getElementById("mainframe").src = "/ezPersonal/signimageConfig.do";
 		    }
+		    
+		    function ManageShare_ini() {
+		    	document.getElementById("mainframe").src = "/ezPersonal/manageShare.do";
+		    }
 		</script>
 	    <title><spring:message code='ezPersonal.t999900008'/></title>
 	</head>
@@ -111,6 +116,9 @@
 		        <p><span id="1tab3" divname="bujaeGTab"><spring:message code='ezPersonal.t999900025'/></span></p>
 		        <p><span id="1tab4" divname="noticeTab"><spring:message code='ezPersonal.t999900027'/></span></p>
 	            <p><span id="1tab5" divname="signTab"><spring:message code='ezPersonal.t3000'/></span></p>
+	            <c:if test="${useShareApproval == 'YES' && approvalFlag == 'S'}">
+		            <p><span id="1tab6" divname="shareTab"><spring:message code='ezApprovalG.bhs19'/></span></p>
+	            </c:if>
 	        </div>
 	    </div>
 	    <div>

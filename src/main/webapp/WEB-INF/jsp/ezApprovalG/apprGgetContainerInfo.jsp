@@ -60,6 +60,7 @@
 	        arr_userinfo[4] = "${userInfo.deptID}";
 	        arr_userinfo[5] = "${userInfo.deptName}";
 	        arr_userinfo[6] = "${userInfo.jikChek}";
+	        arr_userinfo[7] = "${buJaeInfo}";
 	        arr_userinfo[8] = "${userInfo.email}";
 	        arr_userinfo[9] = "";
 	        arr_userinfo[10] = "${susinAdmin}";
@@ -89,6 +90,8 @@
  	        var pDocInfoValue = "1";
  	       	var nowDate = "${nowDateUTC}";
  	        var orgCompanyID = "";
+ 	       	var ext;
+ 	        var pListTypeValue;
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -189,11 +192,12 @@
 
                     SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
 
+                    // 개인문서함
 	                if (LoadSquery == "usercontlist") {
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
 	                    GetUserContList();
-	                }
+	                } // 부서문서함
 	                else if (LoadSquery == "deptcontlist") {
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
@@ -221,6 +225,12 @@
 		                    Init_Flag = "False";
 		                    GetDocSearch();
 	                	} else if (LoadSquery != ""){
+	                		// 후결문서함
+	                		//2018-10-30 김보미 - ie에서 includes() 지원하지 않는 문제
+ 	                		//if(LoadSquery.includes('AprType')) {
+	                		if(LoadSquery.indexOf('AprType') >= 0) {
+	                			checkBujaeInfo();
+	                		}
 	                		 for (i = 0; i <= 13; i++) {
 	                             condition[i] = "";
 	                         }
@@ -252,15 +262,155 @@
 	                    subCondition = "";
 	                    GetDocSearch();
 	                }
-	
+					
+                    // 대리결재자 설정에 따른, 버튼 활성화
+	                var btnView = "";
+	                if(arr_userinfo[7] !== "" && LoadSquery.includes('AprType')) {
+		        		btnView = "false";
+		        	}
+	                btnVisible(btnView);
 	                try {
 	                    parent.frames["left"].setPresentValue("");
 	                } catch (e) { }
-	
 	            } catch (e) {
 	            }
+	            
+	            if (approvalFlag != 'G') {
+		            AddOption(sel_status, '<spring:message code="ezApprovalG.t1434"/>', 'H');
+		            AddOption(sel_status,'<spring:message code="ezApprovalG.t1422"/>', 'I');
+		            AddOption(sel_status, '<spring:message code="ezApprovalG.t1687"/>', 'N');
+		            AddOption(sel_status, '<spring:message code="ezApproval.t854"/>', 'Y');
+	            }
 	        };
-	
+			
+	        // 부재자정보 체크
+	        function checkBujaeInfo() {
+		        var BString = arr_userinfo[7];
+		        if (BString != "") {
+		            var BDim = new Array("");
+		            BDim = BString.split(":");
+		            var tmpStartDate = (BDim[3] + ":" + BDim[4]).substring(0, 16);
+		            var tmpEndDate = (BDim[5] + ":" + BDim[6]).substring(0, 16);
+		
+		            tmpStartDate = tmpStartDate.replace("/", ":");
+		            tmpEndDate = tmpEndDate.replace("/", ":");
+		            
+		            if (tmpEndDate < nowDate) {
+		                setBujaeOff();
+		                checkBujaeInfo_Complete(true);
+		                return true;
+
+		            } else if (tmpStartDate > nowDate) {
+		            	checkBujaeInfo_Complete("ING");
+		                return true;
+		            }
+		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+
+		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
+		            if (Rtnval) {
+		                checkBujaeInfo_Complete(true);
+		            }
+		            else {
+		                checkBujaeInfo_Complete(false);
+		            }
+		        } else if(GetBujaeFlag()){
+		        	
+		        		tmpStartDate = proxyStartDate;
+		        		tmpEndDate = proxyEndDate;
+		        		
+		        		var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+
+			            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
+			            if (Rtnval) {
+			                checkBujaeInfo_Complete(true);
+			            }
+			            else {
+			                checkBujaeInfo_Complete(false);
+			            }		            	
+		        } else {
+		            checkBujaeInfo_Complete("ING");
+		        }
+		    }
+		
+	        // 부재자정보 return function
+		    function checkBujaeInfo_Complete(Rtnval) {
+	            if (Rtnval == true) {
+	                setBujaeOff();
+	                btnVisible("ok");
+	            }
+	            else if (Rtnval == "ING") { }
+	            else {
+	                return;
+	            }
+	        }
+		    
+			// 부재자설정 off		        
+		    function setBujaeOff() {
+		    	var result = "";
+		    	
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezPersonal/saveBujae.do",
+		    		data : {
+		    				buJae  : "",
+		    				proxy  : ""
+		    				},
+		    		success: function(xml){
+		    			result = xml;
+		    		}        			
+		    	});
+		        
+		        arr_userinfo[7] = "";
+		    }
+		    
+		 	// 부재자설정에 따른 버튼 활성화 
+			function btnVisible(val) {
+				var scopeDoc = window.document;
+				// 메인버튼
+    			var mainmenu = scopeDoc.getElementById('mainmenu');
+				// 페이지레이어
+    			var tblPageRayer = scopeDoc.getElementById('tblPageRayer');
+				// 결재리스트
+    			var div_scroll = scopeDoc.getElementsByClassName('div_scroll');
+				// 타이틀
+    			var title_h1 = scopeDoc.getElementsByClassName('title_h1');
+				// 결재선
+				var div_AprLine = scopeDoc.getElementById('div_AprLine');
+				
+    			if(val === "ok") {
+	    			mainmenu.style.visibility = "visible";
+	    			tblPageRayer.style.visibility = "visible";
+	    			div_AprLine.style.visibility = "visible";
+	    			div_scroll[0].style.visibility = "visible";
+	    			title_h1[0].style.visibility = "visible";
+    			} else if(val === "false"){
+    				mainmenu.style.visibility = "hidden";
+	    			tblPageRayer.style.visibility = "hidden";
+	    			div_AprLine.style.visibility = "hidden";
+	    			div_scroll[0].style.visibility = "hidden";
+	    			title_h1[0].style.visibility = "hidden";
+    			}
+		    }
+		    
+		    
+		    function GetBujaeFlag() {
+		        var BString = arr_userinfo[7];
+		        if (BString != "") {
+		            var BDim = new Array("");
+		            BDim = BString.split(":");
+		            var tmpStartDate = (BDim[3] + ":" + BDim[4]).substring(0, 16);
+		            var tmpEndDate = (BDim[5] + ":" + BDim[6]).substring(0, 16);
+					
+		            if (tmpStartDate <= "${nowDate}" && tmpEndDate >= "${nowDate}") {
+		                return true;
+		            }
+		        } 
+		        setBujaeOff();
+		        return false;
+		    }
+		    
 	        var SelYearFlag = false;
 	        function onSelect_Year() {
 	            SelYearFlag = true;
@@ -482,7 +632,7 @@
 		        var selRow = DocList.GetSelectedRows();
 		        var tr = selRow[0];
 		        if (tr != null && typeof (selRow.length) != "undefined" && selRow.length > 0) {
-		            if (jobState == "APPROVAL") {
+		            if (jobState == "APPROVAL" || jobState == "CIRCUL") {
 		                if (tr.getAttribute("DATA5") == "Y") {
 		                    var heigth = window.screen.availHeight;
 		                    var width = window.screen.availWidth;
@@ -600,7 +750,7 @@
 		                }
 		            }
 		            else {
-		                OpenAlertUI("<spring:message code='ezApprovalG.t1518'/>","OPEN");
+		                OpenAlertUI("<spring:message code='ezApprovalG.t1518'/>","OPEN","");
 		                return "";
 		            }
 		        }
@@ -1405,11 +1555,15 @@
 		    function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
 		    	return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 		    }
+		    
+		    function onSelect_Status() {
+		    	GetDocSearch();
+		    }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
 	    <div id="MOC_Div" style="display: none"></div>
-	    <h1><span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
+	    <h1 class="title_h1"><span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 	        	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
@@ -1458,7 +1612,14 @@
 	            <li style="vertical-align: middle;">
 	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
-		        	</select>  
+		        	</select>
+		        	<c:if test = "${approvalFlag != 'G'}">
+		        		<div id="sel_status_div" style="display:inline;">
+						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
+							<option value="ALL"><spring:message code='ezPoll.t104'/></option>
+			        	</select>  
+		        	</div>
+		        	</c:if>  
 		        </li>
 	        </ul>
 	        <!-- 	        후결 문서함 -->
@@ -1474,7 +1635,7 @@
 		        </li>
       		</ul>
 	    </div>
-	    <div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
+	    <div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO;" id="divList">
 	        <div id="lvtDoclist"></div>
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="loadingPanel" onclick="ContextMenuHidden();"></div>

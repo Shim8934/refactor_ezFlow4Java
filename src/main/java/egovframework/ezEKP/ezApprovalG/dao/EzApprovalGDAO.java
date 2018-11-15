@@ -3093,4 +3093,25 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getDocSendType(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getDocSendType", map);
 	}
+	
+	public String getDocNumZeroCnt(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getDocNumZeroCnt", map);
+	}
+	
+	public void setDocNumZeroCnt(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.setDocNumZeroCnt", map);
+	}
+
+	public void updateOpinionInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateOpinionInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getShareOwnerId(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzApprovalG.getShareOwnerId", map);
+	}
+	
+	public int getCheckAprState(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getCheckAprState", map);
+	}
 }

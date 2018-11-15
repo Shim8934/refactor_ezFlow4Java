@@ -168,3 +168,13 @@ var strLang1001 = "Can not insert department schedule.";
 var strLang1003 = "이미 등록된 일정공유정보가 있습니다.";
 //2018.02.22
 var strLangKMS1 = "100회 이하만 반복가능합니다.";
+//2018.10.24
+var strLangKHJ1 = "날짜를 지정해 주세요.";
+var strLangKHJ2 = "시작일을 지정해 주세요.";
+var strLangKHJ3 = "종료일을 지정해 주세요.";
+var strLangKHJ4 = "시작일을 종료일보다 빠르게 지정하세요.";
+var strLangKHJ5 = "ICS파일을 가져오기를 완료했습니다.";
+var strLangKHJ6 = "ICS파일 형식에 맞지 않습니다.";
+var strLangKHJ7 = "ICS파일을 저장하는중 에러발생";
+//2018-11-12
+var strLangKHJ8 = "권한이 없습니다.";

@@ -170,3 +170,13 @@ var strLang275 = "開始日の指定が正しくありません。";
 var strLangKMS1 = "繰り返し設定は100回まで可能です。";
 /*2018-07-16 구해안 리소스 추가 요청 메일 발송함.*/
 var strLang276 = "日程グループを一つだけ選択してください。";
+//2018.10.24
+var strLangKHJ1 = "날짜를 지정해 주세요.";
+var strLangKHJ2 = "시작일을 지정해 주세요.";
+var strLangKHJ3 = "종료일을 지정해 주세요.";
+var strLangKHJ4 = "시작일을 종료일보다 빠르게 지정하세요.";
+var strLangKHJ5 = "ICS파일을 가져오기를 완료했습니다.";
+var strLangKHJ6 = "ICS파일 형식에 맞지 않습니다.";
+var strLangKHJ7 = "ICS파일을 저장하는중 에러발생";
+//2018-11-12
+var strLangKHJ8 = "権限がありません。";

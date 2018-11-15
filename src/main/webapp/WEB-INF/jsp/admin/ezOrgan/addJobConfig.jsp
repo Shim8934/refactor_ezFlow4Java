@@ -661,8 +661,8 @@
 		    
 		    function btn_cancel_onclick() {
 		        document.getElementById('layer_popup').style.display = "none";
-		        document.getElementById("txt_TitleName").value = "";
-		        document.getElementById("txt_TitleName2").value = "";
+// 		        document.getElementById("txt_TitleName").value = "";
+// 		        document.getElementById("txt_TitleName2").value = "";
 		    }
 		    
 		    function closeWindow() {
@@ -721,10 +721,10 @@
 		                return;
 		            }
 		            
-		            var titleName = document.getElementById("txt_TitleName").value.trim();
+// 		            var titleName = document.getElementById("txt_TitleName").value.trim();
 		            
-					if (titleName == "") {
-						document.getElementById("txt_TitleName").focus();
+ 					if (jobTitle.trim() == "") {
+// 						document.getElementById("txt_TitleName").focus();
 						alert("<spring:message code='ezOrgan.kyj07' />");
 						return;
 					}
@@ -749,11 +749,14 @@
 		                pparsingXML = "";
 		                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 		                pparsingXML = pparsingXML + "<ROW><CELL>";
-		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(dept[1]) + " (" + MakeXMLString(document.getElementById("txt_TitleName").value) + " : " + MakeXMLString(document.getElementById("txt_TitleName2").value) + ")</VALUE>";
+// 		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(dept[1]) + " (" + MakeXMLString(document.getElementById("txt_TitleName").value) + " : " + MakeXMLString(document.getElementById("txt_TitleName2").value) + ")</VALUE>";
+ 		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(dept[1]) + " (" + MakeXMLString(jobTitle) + " : " + MakeXMLString(jobTitle2) + ")</VALUE>";
 		                pparsingXML = pparsingXML + "<DATA1>" + MakeXMLString(dept[0]) + "</DATA1>";
 		                pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(GetAttribute(p_ListOrderObject, "_data2")) + "</DATA2>";
-		                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(document.getElementById("txt_TitleName").value) + "</DATA3>";
-		                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(document.getElementById("txt_TitleName2").value) + "</DATA4>";
+// 		                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(document.getElementById("txt_TitleName").value) + "</DATA3>";
+// 		                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(document.getElementById("txt_TitleName2").value) + "</DATA4>";
+		                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(jobTitle) + "</DATA3>";
+		                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(jobTitle2) + "</DATA4>";
 		                pparsingXML = pparsingXML + "<DATA5>" + MakeXMLString(dept[1]) + "</DATA5>";
 		                pparsingXML = pparsingXML + "</CELL></ROW>";
 		                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -789,8 +792,8 @@
 		            }
 		        }
 		        document.getElementById('layer_popup').style.display = "none";
-		        document.getElementById("txt_TitleName").value = "";
-		        document.getElementById("txt_TitleName2").value = "";
+// 		        document.getElementById("txt_TitleName").value = "";
+// 		        document.getElementById("txt_TitleName2").value = "";
 		    }
 		    
 		    function OK_Click() {
@@ -1073,7 +1076,75 @@
 	          	}
 	        	
 	        	$("#spn_deptName").css("width", deptNameWidth);
-	        }		        
+	        }
+		    
+	        var jobTitle, jobTitle2, jobID;
+		    function getTitleOption(companyID) {
+		    	var xmldom, rtnVal, flag, i;
+		    	
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezOrgan/jobTitleListView.do",
+					data : {
+						type : "001",
+						companyID : companyID
+					},
+					async : false,
+					success : function(result){
+						xmldom = loadXMLString(result);
+					},
+					error : function(){
+					}
+				});
+		    	
+		    	var oRows = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
+			    if (oRows.length > 0) {
+			    	flag = true;
+			    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;' onchange='jobChange()'>";
+			    	for (i = 0; i < oRows.length; i++) {
+			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
+				    		if (flag) {
+// 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
+// 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
+// 					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE");
+					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1");
+					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
+					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
+					    		flag = false;
+				    		}
+				    		
+// 				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
+// 						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) 
+// 						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE")) + "'>";
+				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1")) 
+						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
+						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) + "'>";
+					    		
+				    		if ("${userInfo.primary}" == "1") {
+					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE"));
+				    		} else {
+					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE"));
+				    		}
+				    		
+				    		rtnVal += "</option>";
+			    		}
+			    	}
+			    	rtnVal += "</select>";
+			    } else {
+			    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;'></select>";
+			    	jobID = ""; jobTitle = ""; jobTitle2 = "";
+			    }
+			    
+		    	document.getElementById("JobTitleOption").innerHTML = rtnVal;
+		    }
+		    function jobChange() {
+		    	var target = document.getElementById("titleSelector");
+		    	var option = target.options[target.options.selectedIndex];
+		    	jobID = option.id;
+		    	jobTitle = option.getAttribute("nmval");
+		    	jobTitle2 = option.getAttribute("nmval2");
+		    }
 	    </script>
 	</head>
 	<body class="popup">
@@ -1214,14 +1285,22 @@
 	                            <iframe id="TreeFrame" style="border:0px; height: 300px;" src="/admin/ezOrgan/addjobAdd.do" scrolling="auto"></iframe>
 	                        </td>
 	                    </tr>
-	                    <tr class="primary">
+	                    <tr>
+	                    	<th style="text-align:center">
+	                    		<spring:message code='ezOrgan.csj04' />
+	                    	</th>
+	                    	<td>
+	                    		<div id="JobTitleOption" style="width:225px;"></div>
+	                    	</td>
+	                    </tr>
+	                   <%--  <tr class="primary">
 	                        <th style="text-align:center"><c:out value='${primary}'/></th>
 	                        <td style="padding-left:1px;"><input id="txt_TitleName" type="text" style="width:98%" maxlength="50"></td>
 	                    </tr>
 	                    <tr class="secondary">
 	                        <th style="text-align:center"><c:out value='${secondary}'/></th>
 	                        <td style="padding-left:1px;"><input id="txt_TitleName2" type="text" style="width:98%" maxlength="50"></td>
-	                    </tr>
+	                    </tr> --%>
 	                </table>
 	                <div class="btnposition" style="width:300px">
 	                <a id="btn_ok" class="imgbtn" onClick="btn_Add_onclick()"><span><spring:message code='ezOrgan.t110' /></span></a>

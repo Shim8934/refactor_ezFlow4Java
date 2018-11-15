@@ -255,7 +255,7 @@
 			    var compDeptid = "";
 
 			    Tree_setconfig();
-			    TreeViewinitialize("", "<c:out value = '${topID}' />", "extensionAttribute2;extensionAttribute3", "<c:out value = '${serverName}' />");
+			    TreeViewinitialize("", "<c:out value = '${topID}' />/other", "extensionAttribute2;extensionAttribute3", "<c:out value = '${serverName}' />");
 			}
 			
 			function Tree_setconfig() {

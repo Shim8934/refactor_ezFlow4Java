@@ -1,4 +1,4 @@
-﻿﻿//오늘의 날짜 (년도, 월, 일, 오늘의 요일)
+﻿﻿﻿//오늘의 날짜 (년도, 월, 일, 오늘의 요일)
 var weektodate = new Date();
 
 //전역변수 (년도, 월, 일, 요일)
@@ -268,6 +268,8 @@ function datanameweek(year, month, day, contral)
 //주보기시...
 function tableListControl_Week()
 {
+	// 2018-10-17 김민성 - 자원관리 주보기 오늘 날짜 표시 위한 today 정보 추가
+	var today = datanameweek(weektodate.getFullYear(), weektodate.getMonth()+1, weektodate.getDate(), "ADD");		// 오늘 날짜
 	var dayname = new Array(strLang270, strLang271, strLang272, strLang273, strLang274, strLang275, strLang276);
 	if (DefaultView == 0) { //일요일시작
 		dayname = new Array(strLang276, strLang270, strLang271, strLang272, strLang273, strLang274, strLang275);
@@ -522,7 +524,12 @@ function tableListControl_Week()
 
                     var _mtd2 = document.createElement("TD");
                     _mtd2.style.width = "14.2%";
-                    _mtd2.setAttribute("class", "weektd_02");
+                    if(weekdatename[i] == today) {								// 날짜가 오늘이면
+                    	_mtd2.setAttribute("class", "weektd_02 today");
+                    }
+                    else {
+                    	_mtd2.setAttribute("class", "weektd_02");
+                    }
                     _mtd2.verticalAlign = "top";
                     _mtd2.setAttribute("id", "Week_" + title_name[k].split("/")[0] + "_" + y);
                     _mtr2.appendChild(_mtd2);
@@ -535,7 +542,12 @@ function tableListControl_Week()
 
                     var _mtd2 = document.createElement("TD");
                     _mtd2.style.width = "14.2%";
-                    _mtd2.setAttribute("class", "weektd_02");
+                    if(weekdatename[i] == today) { 							// 날짜가 오늘이면
+                    	_mtd2.setAttribute("class", "weektd_02 today");
+                    }
+                    else {
+                    	_mtd2.setAttribute("class", "weektd_02");
+                    }
                     _mtd2.verticalAlign = "top";
                     _mtd2.setAttribute("id", "Week_" + title_name[k].split("/")[0] + "_" + y);
                     _mtr2.appendChild(_mtd2);
@@ -822,10 +834,10 @@ function newSchedule_onclick(e) {
     
     if (CrossYN() || pNoneActiveX == "YES") {
         var feature = GetOpenPosition(820, 700);
-        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + GetAttribute(srcEl,"DATA1") + "&brdName=" + encodeURIComponent(GetAttribute(srcEl,"DATA2")), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView="+ dayView +"&ownerID=" + GetAttribute(srcEl,"DATA1") + "&brdName=" + encodeURIComponent(GetAttribute(srcEl,"DATA2")), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     } else {
         var feature = GetOpenPosition(770, 700);
-        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + GetAttribute(srcEl,"DATA1") + "&brdName=" + encodeURIComponent(GetAttribute(srcEl,"DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView="+ dayView +"&ownerID=" + GetAttribute(srcEl,"DATA1") + "&brdName=" + encodeURIComponent(GetAttribute(srcEl,"DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     }
 }
 
@@ -1287,7 +1299,7 @@ function tableListControl_today() {
                             _TD.title_name = strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "&#13;" + strLang268 + " : " + getNodeText(xmldom.getElementsByTagName("dept_name")[j]);
                             _TD.align = "center";
                             _TD.style.backgroundColor = "rgba(237, 244, 253, 1)";
-                            _TD.style.border = "1px solid #b5c8e3";//일보기>허가요청중인 자원 td border
+                            //_TD.style.border = "1px solid #b5c8e3";//일보기>허가요청중인 자원 td border
                             /*_TD.style.borderTopWidth = "0px";
                             _TD.style.borderLeftWidth = "0px";*/
                             _TD.style.width = 100 + "%";
@@ -1358,9 +1370,9 @@ function idCalendarViewer_OnDoubleClickAppointment2(sz_Num, sz_OwnerID, sz_Start
     } else if (p_Type != "MAIN") {
 
         if (CrossYN() || pNoneActiveX == "YES") {
-            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&dayView=&ownerID=" + sz_OwnerID + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&dayView="+ dayView +"&ownerID=" + sz_OwnerID + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
         } else {
-            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&dayView=&ownerID=" + sz_OwnerID + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + sz_Start + "&seled=" + sz_End + "&dayView="+ dayView +"&ownerID=" + sz_OwnerID + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
         }
     }
 }
