@@ -11,21 +11,32 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		
+		<style type="text/css">
+		body {background-color : white;}
+		.ui-sortable{ margin:0px; padding:0px;}
+		ul .sliderList {margin:0px 15px 15px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
+		ul .slider-header {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; border:1px solid #2196f3;}
+		ul .slider-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:215px;}
+	}
+		</style>
 		<script type="text/javascript">
 			
-			document.onselectstart = function () {
+			/*  document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
 		        } else {
 		            return true;
 		        }
-		    };
+		    };  */
 			
-		    $(document).ready(function () {
-		        $.ajax({
+		    $( function() {
+		    	getSliderList();
+		    })
+		    
+		    var getSliderList = function() {
+		    	$.ajax({
 		        	type : "POST",
-		        	dataType : "JSON",
+		        	dataType : "json",
 		        	url : "/admin/ezPersonal/getSlider.do",
 		        	async : false,
 		        	success : function (result) {
@@ -33,24 +44,42 @@
 		        		MakeSliderList(result);
 		        	}
 		        });
-		    }); 
-	
+		    }
+		    
 		    function MakeSliderList(result) {
 		    	console.log(result);
-		    		var slideSn = "";
-		    		var slideID = "";
-		    		var slideImagePath = "";
-		    		var slideDate = "";
-		    		var slideTitle = "";
-		    		var slideCnt = result.length;
-		    		
-		    		for(var i = 0; i < slideCnt; i++){
-		    			slideSn = result[i].slideSn;
-		    			slideID = result[i].slideID;
-		    			slideImagePath = result[i].slideImagePath;
-		    			slideTitle = result[i].slideTitle;
-		    			
-		    		}
+		    
+		    if (result.status >= 200 && result.status < 400){
+		    	var sliderSn = "";
+		    	var sliderID = "";
+		    	var sliderImagePath = "";
+		    	var sliderName = "";
+		    	var sliderName2 = "";
+		    	var sliderRegDate = "";
+		    	var sliderURL = "";
+		    	var sliderIsUse = "";
+		    	var sliderHTML = "";
+		    	var sliderFileName = "";
+		    	
+		    	result.forEach( function(item, value) {
+		    		sliderHTML += "<li class = 'sliderList' id = 'sliderList'>";
+		    		sliderHTML += "<div class = 'slider-header'>";
+		    		sliderHTML += "<dt><span class='imagePage" + item.imagePage + "'>";
+		    		sliderHTML += "<div class = 'slider-content'>";
+		    		sliderHTML += "</span></dt>";
+		    		sliderHTML += "</div>";
+		    		sliderHTML += "</div>";
+		    		sliderHTML += "</li>";
+		    	});
+		    	
+		    	$(".sliderContainer").html(sliderHTML);
+		    	console.log(sliderHTML);
+		    	
+		    }
+		    
+		    
+		    
+		    	
 		        /* XmlNode = result;
 		        var DocList = new ListView();
 		        DocList.SetID("DocList");
@@ -63,7 +92,7 @@
 		        DocList = null; */
 		    } 
 	
-		    var tempid = "";
+		   /*  var tempid = "";
 		    var _RowObject = null;
 		    function event_click(obj) {
 		        tempid = document.getElementById(obj).getAttribute("DATA1");
@@ -86,7 +115,7 @@
 		            window.showModalDialog(url, "", feature);
 		            window.location.reload(false);
 		        }
-		    }
+		    } */
 		     
 		    function btn_Select_Complete() {
 		        window.location.reload(false);
@@ -284,9 +313,10 @@
 				<li><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code = 'ezPersonal.t367' />" /></span></li> --%>
 			</ul>
 	    </div>
-	    <ul id="slideListContainer" class="col-container">
+	    <ul id="sliderContainer" class="sliderContainer">
 	    
 	    </ul>
+	   
 		<%-- <table style="width:750px;height:215px;">
 	    	<tr>
 	            <td>
