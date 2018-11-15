@@ -191,7 +191,8 @@
  	                loginCnt, 
  	                extensionattribute4 as gyumJik, 
  	                extensionattribute2 as userFileUrl, 
- 	                extensionattribute14 as sabun 
+ 	                extensionattribute14 as sabun, 
+ 	                password_updatedt
  	            FROM  
  	                TBL_USERMASTER a 
  	            WHERE  
@@ -244,7 +245,8 @@
 					u.loginCnt,
 					u.extensionattribute4 as gyumJik,
 					u.extensionattribute2 as userFileUrl,
-					u.extensionattribute14 as sabun
+					u.extensionattribute14 as sabun,
+					password_updatedt
 				FROM 
 					TBL_USERMASTER u
 				inner join
@@ -288,7 +290,8 @@
 	                loginCnt, 
 	                extensionattribute4 as gyumJik, 
 	                extensionattribute2 as userFileUrl, 
-	                extensionattribute14 as sabun 
+	                extensionattribute14 as sabun,
+	                password_updatedt 
 	            FROM  
 	                TBL_USERMASTER a 
 	            WHERE  
@@ -341,7 +344,8 @@
 					u.loginCnt,
 					u.extensionattribute4 as gyumJik,
 					u.extensionattribute2 as userFileUrl,
-					u.extensionattribute14 as sabun
+					u.extensionattribute14 as sabun,
+					password_updatedt
 				FROM 
 					TBL_USERMASTER u
 				inner join
@@ -402,7 +406,8 @@
             UPDATE TBL_USERMASTER
             SET
                 password = #password#,
-                updatedt = utc_timestamp()
+                updatedt = utc_timestamp(),
+                password_updatedt = utc_timestamp()
             WHERE
                 cn = #id# AND tenant_id = #tenantId#                                  
         ]]>
