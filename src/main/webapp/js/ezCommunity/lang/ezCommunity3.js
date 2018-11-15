@@ -38,7 +38,7 @@ var strLang80 = "前へ"
 var strLang81 = "次へ"
 var strLang82 = "総 "
 var strLang83 = "件"
-var strLang535 = "データが存在しません。";
+var strLang535 = "\"データが存在しません\"";
 var strLang5351 = "人";
 
 /* 2017-11-01 장진혁 */
