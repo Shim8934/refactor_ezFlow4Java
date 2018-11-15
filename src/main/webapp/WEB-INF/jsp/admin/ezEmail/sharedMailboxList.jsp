@@ -196,7 +196,7 @@
 		        	var shareName = listview.GetSelectedRows()[0].innerText;
 		        	var shareId = listview.GetSelectedRows()[0].getAttribute("DATA1");
 		        	
-			        if (confirm("'" + shareName + "' <spring:message code='ezEmail.sharedMailbox22' />")) {
+			        if (confirm("[" + shareName + "] <spring:message code='ezEmail.sharedMailbox22' />")) {
 			        	if (confirm("<spring:message code='ezEmail.sharedMailbox23' />")) {
 			        		$.ajax({
 				    			url: "/admin/ezEmail/delSharedMailbox.do",
