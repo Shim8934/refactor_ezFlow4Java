@@ -2673,7 +2673,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 	.categoryBox{width:calc(33.33% - 42px);}
 }
 @media only screen and (max-width: 1400px){
-	.community_section02{height:442px;}
+	.community_section02{height:500px;}
 	.contents_noticeCommunity{clear:both; width:100%; margin:0px 0px 20px 0px;}
 	.contents_boardCommunity{clear:both; width:100%;}
 }
