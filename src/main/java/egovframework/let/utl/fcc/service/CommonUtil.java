@@ -35,6 +35,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -47,6 +48,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 //import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -420,40 +422,81 @@ public class CommonUtil {
 	public boolean isLoginCookieExists(HttpServletRequest request, HttpServletResponse response) {
         boolean isCookie = false;     
         Cookie[] cookies = request.getCookies();
-        /* session time을 위한 처리 주석 */
-        //HttpSession session = request.getSession(false);
         
-        //if (session != null) {
-	        if (cookies != null) {
-	            for (Cookie cookie : cookies) {
-	                if("loginCookie".equals(cookie.getName())){
-	                    //접속한 클라이언트 IP
-	                    String ip = ClientUtil.getClientIP(request);
-	                    String cValue = "";
-	                    try {
-	                        //쿠기에 저장되어 있는 IP
-	                        cValue = egovFileScrty.decryptAES(cookie.getValue());
-	
-	                        if(cValue.split("///")[3].equals(ip)){                  
-	                            isCookie = true;
-	                        }
-	                    } catch (Exception e) {
-	                        //e.printStackTrace();
-	                    }
-	                }
-	            }
-	        }
-        /*} else {
-        	if (cookies != null) {
-        		for (Cookie cookie : cookies) {
-        			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
-        				cookie.setMaxAge(0);
-        				cookie.setPath("/");
-        				response.addCookie(cookie);
-        			}
-        	    }
-        	}
-        }     */   
+        Map<String, Object> sessionParam = new HashMap<String, Object>();
+        String serverName = request.getServerName();
+        int tenantID;
+		try {
+			tenantID = loginService.getTenantId(serverName);
+			
+			String confName = "useSession"; 
+    		sessionParam.put("confName", confName);
+			sessionParam.put("tenantID", tenantID);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String useSession = ezCommonService.getUseSession(sessionParam);
+		// 2018.10.22 이석화 변경 - 세션 0이면 세션 사용 안 함
+		if (useSession != null && !useSession.equals("0")) {
+			/* session time을 위한 처리 주석 */	
+			/* 세션 사용 위해 주석 해제*/
+			HttpSession session = request.getSession(false);
+			if (session != null) {
+		        if (cookies != null) {
+		            for (Cookie cookie : cookies) {
+		                if("loginCookie".equals(cookie.getName())){
+		                    //접속한 클라이언트 IP
+		                    String ip = ClientUtil.getClientIP(request);
+		                    String cValue = "";
+		                    try {
+		                        //쿠기에 저장되어 있는 IP
+		                        cValue = egovFileScrty.decryptAES(cookie.getValue());
+		
+		                        if(cValue.split("///")[3].equals(ip)){                  
+		                            isCookie = true;
+		                        }
+		                    } catch (Exception e) {
+		                        //e.printStackTrace();
+		                    }
+		                }
+		            }
+		        }
+	        } else {
+	        	if (cookies != null) {
+	        		for (Cookie cookie : cookies) {
+	        			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
+	        				cookie.setMaxAge(0);
+	        				cookie.setPath("/");
+	        				response.addCookie(cookie);
+	        				
+	        				request.getSession().invalidate();
+	        			}
+	        	    }
+	        	}
+	        } 
+		} else {
+			
+			if (cookies != null) {
+				for (Cookie cookie : cookies) {
+					if("loginCookie".equals(cookie.getName())){
+						//접속한 클라이언트 IP
+						String ip = ClientUtil.getClientIP(request);
+						String cValue = "";
+						try {
+							//쿠기에 저장되어 있는 IP
+							cValue = egovFileScrty.decryptAES(cookie.getValue());
+							
+							if(cValue.split("///")[3].equals(ip)){                  
+								isCookie = true;
+							}
+						} catch (Exception e) {
+							//e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
         return isCookie;
 	}
 	
