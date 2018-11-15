@@ -230,12 +230,12 @@
 		    var sharedMailboxDialogArguments = new Array();
 		    
 		    function addSharedMailbox() {
-		        var feature = "dialogHeight:670px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
-		        feature = feature + GetShowModalPosition(970, 670);
+		        var feature = "dialogHeight:670px; dialogWidth:990px; scroll:no;status:no; help:no; edge:sunken";
+		        feature = feature + GetShowModalPosition(990, 670);
 		        
 		        if (CrossYN()) {
 		            sharedMailboxDialogArguments[0] = addSharedMailboxComplete;
-		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, "", GetOpenWindowfeature(970, 670));
+		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, "", GetOpenWindowfeature(990, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, feature);
@@ -263,12 +263,12 @@
 		        }
 		        
 		        var shareId = selnode[0].getAttribute("DATA1");
-		        var feature = "dialogHeight:670px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
-		        feature = feature + GetShowModalPosition(970, 670);
+		        var feature = "dialogHeight:670px; dialogWidth:990px; scroll:no;status:no; help:no; edge:sunken";
+		        feature = feature + GetShowModalPosition(990, 670);
 		        
 		        if (CrossYN()) {
 		        	sharedMailboxDialogArguments[0] = addSharedMailboxComplete;
-		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + shareId + "&compId=" + companyId, "", GetOpenWindowfeature(970, 670));
+		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + shareId + "&compId=" + companyId, "", GetOpenWindowfeature(990, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + shareId + "&compId=" + companyId, feature);

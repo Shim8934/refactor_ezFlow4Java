@@ -161,7 +161,7 @@
                 for (var i = 0; i < listview.GetRowCount() ; i++) {
                 	var row = listview.GetDataRows()[i];
                 	
-                	row.style.whiteSpace = "nowrap";
+//                 	row.style.whiteSpace = "nowrap";
                 	row.childNodes[0].style.whiteSpace = "";
                 	row.childNodes[0].style.overflow = "";
                 	row.childNodes[0].style.textOverflow = "";
@@ -1366,11 +1366,11 @@
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 	                        </td>
 	                        <td style="vertical-align: top;">
-	                            <h2 id="ToTitle" class="receiver_tltype01">
+	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:1px;">
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezEmail.sharedMailbox06' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 501px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 270px; Height: 502px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
