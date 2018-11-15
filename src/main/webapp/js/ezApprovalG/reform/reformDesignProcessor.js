@@ -168,6 +168,73 @@ function onFormDocumentLoadHandler() {
 		}
 	}
 	
+	// label 콘트롤 엔터 처리 (줄바꿈이 되어 초록색 점선 보더가 같이 내려가는 현상)
+	webEditorDocument.addEventListener("keydown", function(event) {
+		if (event.keyCode === 13 || event.keyCode === 8) {
+			var selection = webEditorDocument.getSelection();
+			var targetElement = selection.anchorNode;
+			
+			if (targetElement == null) {
+				return;
+			}
+			
+			if (targetElement.nodeType === 3) {
+				targetElement = targetElement.parentElement;
+			} else {
+				var selectionChildNode = targetElement.childNodes.item(selection.anchorOffset - 1);
+				
+				if (selectionChildNode && selectionChildNode.getAttribute && selectionChildNode.getAttribute("data-type") === "label") {
+					targetElement = selectionChildNode;
+				}
+			}
+			
+			if (targetElement.getAttribute("data-type") !== "label") {
+				return;
+			}
+			
+			if (event.keyCode === 8) {
+				if (selection.anchorOffset === 0) {
+					var dummySibling = webEditorDocument.createElement("img");
+					var cloneTargetElement = targetElement.cloneNode(true);
+					
+					dummySibling.id = "__reform-dummy-sibling";
+					
+					targetElement.parentElement.insertBefore(dummySibling, targetElement.nextSibling);
+					// selection.collapse(targetElement.parentElement, 0);
+					targetElement.remove();
+					
+					setTimeout(function() {
+						dummySibling = webEditorDocument.getElementById("__reform-dummy-sibling");
+						dummySibling.parentElement.insertBefore(cloneTargetElement, dummySibling);
+						dummySibling.remove();
+						//						
+						parentElement = cloneTargetElement.parentElement;
+						var selectionIndex = Array.prototype.indexOf.call(parentElement.childNodes, cloneTargetElement);
+						
+						selection.collapse(parentElement, Math.max(selectionIndex, 0));
+					}, 1);
+					
+					// event.stopPropagation();
+				}
+			} else {
+				var focusElement = webEditorDocument.createTextNode("\u00A0");
+				
+				if (selection.anchorOffset === 0) {
+					targetElement.parentElement.insertBefore(focusElement, targetElement);
+				} else {
+					targetElement.parentElement.insertBefore(focusElement, targetElement.nextSibling);
+					
+					setTimeout(function() {
+						focusElement.remove();
+					}, 1);
+				}
+				
+				moveCursorToElement(focusElement);
+				event.stopPropagation();
+			}
+		}
+	}, true);
+	
 	if (webEditorDocument.addEventListener) {
 		isIE11Mode = true;
 		
@@ -871,7 +938,10 @@ function insertElementToDocument(element) {
 		}
 		
 		if (containerNode.nodeType == 3) {
-			// test node head
+			if (containerNode.parentNode.getAttribute("data-type") === "label") {
+				containerNode = containerNode.parentNode;
+			}
+			
 			if (webEditorDocument.getSelection().anchorOffset == 0) {
 				containerNode.parentNode.insertBefore(element, containerNode);
 			} else {
@@ -916,7 +986,10 @@ function insertElementToDocument(element) {
 		}
 		
 		if (containerNode.nodeType == 3) {
-			// test node head
+			if (containerNode.parentNode.getAttribute("data-type") === "label") {
+				containerNode = containerNode.parentNode;
+			}
+			
 			if (webEditorDocument.getSelection().anchorOffset == 0) {
 				containerNode.parentNode.insertBefore(element, containerNode);
 			} else {
@@ -961,7 +1034,10 @@ function insertElementToDocument(element) {
 		}
 		
 		if (containerNode.nodeType == 3) {
-			// test node head
+			if (containerNode.parentNode.getAttribute("data-type") === "label") {
+				containerNode = containerNode.parentNode;
+			}
+			
 			if (webEditorDocument.getSelection().anchorOffset == 0) {
 				containerNode.parentNode.insertBefore(element, containerNode);
 			} else {
