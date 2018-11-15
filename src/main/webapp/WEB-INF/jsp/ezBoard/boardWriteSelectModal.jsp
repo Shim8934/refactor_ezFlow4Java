@@ -37,6 +37,7 @@
 			var	selectedBoardGroupID = "";	
 			var SelectedBoardName = "";
 			var SelectedBoardType = "";
+			var SelectedBoardUrl = "";
 			var ret = new Array();
 			
 			var xmlDom_treeview = createXmlDom();
@@ -65,6 +66,7 @@
 			    ret[0] = SelectedBoardID;
 			    ret[1] = SelectedBoardName;
 			    ret[2] = SelectedBoardType;
+			    ret[3] = SelectedBoardUrl;
 			
 			    rtnVal = ret;
 			    window.close();
@@ -153,6 +155,7 @@
 		        }
 			}
 			
+			/* 2018-11-08 홍승비 - URL게시판의 URL값 전달 추가 */
 			function TreeCtrl_onNodeClick(pNodeID,pTreeID)  
 			{
 				var treeNode = new TreeNode();
@@ -160,6 +163,7 @@
 			    SelectedBoardID = treeNode.GetNodeData("DATA1");	
 			    SelectedBoardName = treeNode.GetNodeData("DATA2");
 			    SelectedBoardType = treeNode.GetNodeData("DATA5");
+			    SelectedBoardUrl = treeNode.GetNodeData("DATA6");
 			}
 			
 			function DisplayTopBoard()
