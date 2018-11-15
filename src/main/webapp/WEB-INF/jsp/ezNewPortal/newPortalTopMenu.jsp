@@ -105,6 +105,16 @@
 			});
 		}		
 		
+		//포틀릿 및 프레임 환경설정 열기
+		function viewPortletEnv() {
+			
+			var feature = GetOpenPosition(760, 645);
+			
+//			DivPopUpShow($('body').prop('scrollWidth') * 0.9, 435, "/ezNewPortal/portletSetting.do", "",
+//				"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+			DivPopUpShow(1000, 700, "/ezNewPortal/portletSetting.do", "",
+				"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);	
+		}
 		// 메인메뉴 설정
 		var setMainMenu = function () {
 			
@@ -194,8 +204,31 @@
 			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0');
 			setEvent('util_set', '/ezPortal/environmentMain.do', 'main' ,'');
 			setEvent('util_help', '/ezPortal/help/help.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
-			setEvent('util_logout', '/user/login/actionLogout.do', 'top', '');	
+			setEvent('util_logout', '/user/login/actionLogout.do', 'top', '');
+			
+			/* document.getElementById("util_frmae").addEventListener("click", viewPortletEnv); */
 		}
+		
+		/* //포틀릿 및 프레임 환경설정 열기
+		function viewPortletEnv() {
+			
+			var feature = GetOpenPosition(760, 645);
+			
+			
+			//탑메뉴 이동 동작 연결
+			var agent = navigator.userAgent.toLowerCase();
+
+			if (agent.indexOf("msie") > -1 || agent.indexOf("trident") > -1) {
+				// 익스플로러임
+				parent.frames["topFrame"].document.getElementById("iFrameLayer").addEventListener("click", viewPortletEnv);
+			} else {
+				// 익스플로러 아님
+				parent.frames["topFrame"].contentDocument.getElementById("util_frame").addEventListener("click", viewPortletEnv);
+			}
+			
+			DivPopUpShow(1000, 700, "/ezNewPortal/portletSetting.do", "",
+				"height = 435px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);	
+		} */
 		
 		// 확장버튼 UI 이벤트 함수
 		var subMenuClickEvent = function (type, menuUrl) {
@@ -204,6 +237,7 @@
 			var bodyTag = document.getElementsByTagName('Body')[0];				
 			if(type === 'on') {
 				$("#menu_toggle").css('display', 'none');
+				
 				$("#topMenuFull").fadeOut(0, function() {
 					$("#topMenuFull").attr("class", "full_nav on");
 					$("#topMenuFull").fadeIn(100);
@@ -214,15 +248,21 @@
 				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
 				$("#menu_toggle").slideDown(200);
 			} else if (type === 'off'){
-				$("#menu_toggle").css('display', 'none');
 				
 				$("#topMenuFull").fadeOut(100, function() {
 					$("#topMenuFull").attr("class", "full_nav off");
 					$("#topMenuFull").fadeIn(100);
 				});
 				
+				$(".full_menu_toggleDL").attr("class", "full_menu_toggleDL");
+				
 				$("#menu_toggle").slideUp(200, function() {
 					topFrame.style.position = '';	
+					bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+					
+					$(".full_menu_toggleDL").clearQueue();
+					$(".full_menu_toggleDL").stop();
+					
 					if (menuUrl != null) {
 						window.open(menuUrl, 'main', '');
 					}

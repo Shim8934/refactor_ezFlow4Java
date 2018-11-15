@@ -138,6 +138,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 /* .full_menu_toggleUL > li { float: left; width: 100px; height: 100px; background:#fff; border: 1px solid #d9d9d9; box-sizing: border-box; cursor:pointer;} */ 
 .full_menu_toggleUL > li.subMenu{ background:#f6f6f6;}
 .full_menu_toggleUL > li:hover { background: #e5efff; border-right: 1px solid #c6cfdf; border-bottom: 1px solid #c6cfdf; box-sizing: border-box; }
+.full_menu_toggleUL > li:active { background: #ffffff; }
 .full_menu_toggleDL { margin: 0px; padding: 0px; }
 .full_menu_toggleDL > dt {display:block; height:42px; margin: 0px; padding: 0px; text-align:center;}
 .full_menu_toggleDL > dt > span {margin-top:20px;}
