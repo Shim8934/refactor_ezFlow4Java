@@ -611,9 +611,14 @@
 	   		
 	   		/** get MenuAuth data */
 	   		var getMenuAuths = function() {
-					menuAuths = JSON.parse(JSON.stringify(window.opener.menuAuths));
-					
-					drawAuths();
+	   			
+	   			if (typeof window.opener.menuAuths == "string") {
+	   				menuAuths = JSON.parse(window.opener.menuAuths);
+	   			} else {
+	   				menuAuths = JSON.parse(JSON.stringify(window.opener.menuAuths));
+	   			}
+				
+				drawAuths();
 	   		};
 	   		
 	   		//onload
