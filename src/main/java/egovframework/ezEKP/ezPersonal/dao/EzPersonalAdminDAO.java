@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
@@ -216,4 +217,15 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO {
 		delete("EzPersonalAdmin.EZSP_SETEMPLOYEEMONTH_D", map);
 	}
 	
+	public PersonalLightPollConfigVO getLightPollConfig(Map<String, Object> map) throws Exception {
+		return (PersonalLightPollConfigVO) select("EzPersonalAdmin.EZSP_getLightPollConfig", map);
+	}
+	
+	public void insertLightPollConfig(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_insertLightPollConfig", map);
+	}
+	
+	public void setLightPollConfig(Map<String, Object> map) throws Exception {
+		update("EzPersonalAdmin.EZSP_setLightPollConfig", map);
+	}
 }

@@ -18,7 +18,6 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +28,8 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -41,11 +42,13 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -1282,5 +1285,36 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("strXML", strXML);
 
 		return "/admin/ezPortal/portalPortletImageUpload";
+	}
+	
+	
+	/** 
+	 * 빠른설문 config 조회 함수  
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/getLightPollConfig.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject getLightPollConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getLightPollConfig started");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		PersonalLightPollConfigVO configVO = ezPersonalAdminService.getLightPollConfig(userInfo.getId(), userInfo.getTenantId());
+		JSONObject json = new JSONObject();
+		json.put("configVO", configVO);
+		logger.debug("getLightPollConfig ended");
+		return json;
+	}
+	
+	/**
+	 * 빠른설문 config 저장 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/setLightPollConfig.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public String setLightPollConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam String isPreview) throws Exception {
+		logger.debug("setLightPollConfig started");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		ezPersonalAdminService.setLightPollConfigVO(userInfo.getId(), isPreview, userInfo.getTenantId());
+		logger.debug("setLightPollConfig ended");
+		return null;
 	}
 }

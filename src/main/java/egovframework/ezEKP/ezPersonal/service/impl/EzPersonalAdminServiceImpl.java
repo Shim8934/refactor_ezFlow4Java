@@ -11,8 +11,6 @@ import java.util.TimeZone;
 
 import javax.annotation.Resource;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +23,7 @@ import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalAdminDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
@@ -861,5 +860,38 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		}
 
 		logger.debug("setQuickLinkACL ended");
+	}
+
+	@Override
+	public PersonalLightPollConfigVO getLightPollConfig(String userId, int tenantId) throws Exception {
+		logger.debug("getLightPollConfig started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		
+		PersonalLightPollConfigVO configVO = ezPersonalAdminDAO.getLightPollConfig(map);
+		if(configVO == null) {
+			// insert 후 다시 조회
+			logger.debug("insertLightPollConfig started");
+			ezPersonalAdminDAO.insertLightPollConfig(map);
+			configVO = ezPersonalAdminDAO.getLightPollConfig(map);
+			logger.debug("insertLightPollConfig ended");
+		}		
+		logger.debug("getLightPollConfig ended");
+		return configVO;
+	}
+	
+	@Override
+	public void setLightPollConfigVO(String userId, String isPreview, int tenantId)throws Exception {
+		logger.debug("setLightPollConfig started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("isPreview", isPreview);
+		map.put("tenantId", tenantId);
+		
+		ezPersonalAdminDAO.setLightPollConfig(map);
+		logger.debug("setLightPollConfig ended");
 	}
 }
