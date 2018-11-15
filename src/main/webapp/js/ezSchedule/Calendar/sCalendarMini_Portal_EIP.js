@@ -420,7 +420,7 @@ function GetTableMiniBodyObjTop() {
     sStartDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
 
     //Month Start
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 6; i++) {
         var objTr = document.createElement("TR");
         //이거 그냥 이름정해놓고 그대로 갖다 쓰는거 같은데 TR뒤에 TOP만 붙여봄
         objTr.setAttribute("id", "TR_TOP" + oThisMonth + "_" + i);
