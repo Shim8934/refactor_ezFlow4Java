@@ -2345,8 +2345,8 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .lnb_lay{ height:auto; overflow:auto;}
 
 /* left LNB title */
-.lnb h2{margin: 0px 0px 0px 0px !important; padding:10px 10px 10px 20px !important; cursor: pointer; height:30px !important; line-height:28px !important; word-break:keep-all; white-space:nowrap; z-index:10; border-bottom:1px solid #cdd2d9 !important; background:none !important;} /* 장진혁 */
-.lnb h2.on{margin: 0px 0px -10px 0px !important; padding:10px 10px 0px 4px !important; cursor: pointer; height:30px !important; line-height:28px !important; word-break:keep-all; white-space:nowrap; z-index:10; border-bottom:none !important; background:none !important;}
+.lnb h2{margin: 0px 0px 0px 0px !important; padding:7px 10px 7px 20px !important; cursor: pointer; height:30px !important; line-height:28px !important; word-break:keep-all; white-space:nowrap; z-index:10; border-bottom:1px solid #cdd2d9 !important; background:none !important;} /* 장진혁 */
+.lnb h2.on{margin: 0px 0px -10px 0px !important; padding:7px 10px 0px 4px !important; cursor: pointer; height:30px !important; line-height:28px !important; word-break:keep-all; white-space:nowrap; z-index:10; border-bottom:none !important; background:none !important;}
 .left_title{ position:relative; height:52px; background:#3d8fea; font-family:Malgun Gothic, malgun gothic; line-height:52px; font-size:20px; font-weight:bold; color:#fff; padding: 0px 0px 0px 20px;} /* 타이틀 텍스트 공통영역 */
 .tree_leftconfig{ width:16px; height:16px; display:inline-block; background-position:0px 0px; position:absolute; right:20px; top:20px; cursor:pointer;}  /* 환경설정 */
 .btn_writeBox{ height:50px; background:#3d8fea; margin:0px; padding:10px; box-sizing:border-box;} /* 작성버튼 */
@@ -2367,7 +2367,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 
 /* left LNB tree list */
 .lnbUL{ margin:0px; padding:0px; overflow:hidden; list-style:none;background-color: #e4e8ec; border-bottom:1px solid #cdd2d9;}
-.tree{padding:10px 10px 10px 4px; font-family:Malgun Gothic, malgun gothic; overflow:auto;}
+.tree{padding:10px 10px 10px 7px; font-family:Malgun Gothic, malgun gothic; overflow:auto;}
 
 /* left LNB tree icon */
 .sub_iconLNB{ background:url(../images/kr/left/sub_iconLNB.png) no-repeat; background-color: transparent !important; vertical-align: top !important; overflow: hidden; } /* LNB 통합 icon */
@@ -2673,7 +2673,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 	.categoryBox{width:calc(33.33% - 42px);}
 }
 @media only screen and (max-width: 1400px){
-	.community_section02{height:442px;}
+	.community_section02{height:500px;}
 	.contents_noticeCommunity{clear:both; width:100%; margin:0px 0px 20px 0px;}
 	.contents_boardCommunity{clear:both; width:100%;}
 }
