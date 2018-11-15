@@ -23,6 +23,10 @@ function getMailList() {
 			var sender = "";
 			var listHTML = "";
 			var listHTML2 = "";
+			var mailListCount = mailList.length;
+			if (mailListCount > 5) {
+				mailListCount = 5;
+			}
 			
 			listHTML += "<p class='mGraph'><span id='mGraphSpan'></span></p>";
 			listHTML += "<span class='mGraph_text' id='UseMailBox'>";
@@ -38,7 +42,7 @@ function getMailList() {
 				listHTML2 += "</dl>";
 				
 			} else {
-				for (var i = 0; i < 5; i++) {
+				for (var i = 0; i < mailListCount; i++) {
 					readClass = mailList[i].readClass;
 					href = mailList[i].href;
 					subject = mailList[i].subject;
