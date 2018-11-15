@@ -104,7 +104,15 @@
 			</ul>
 		</div>
 		
-		<div style='height:570px;overflow-y:auto;'>
+	<%-- 2018-11-07 홍승비 - 동영상게시판 구분 추가 --%>
+	<c:choose>
+		<c:when test="${gubun == 7}">
+			<div id="replyDiv" style='height:540px;overflow-y:auto;'>
+		</c:when>
+		<c:otherwise>
+			<div id="replyDiv" style='height:570px;overflow-y:auto;'>
+		</c:otherwise>
+	</c:choose>
 			<table class="mainlist" style="width:99.5%" >
 				<c:choose>
 					<c:when test="${gubun == 2}">

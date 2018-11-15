@@ -83,6 +83,10 @@
 						DivPopUpShow(330, 205, pUrl);
 			            return;
 		            	break;
+		            case "7":
+		                feature = GetOpenWindowfeature(765, 700);
+		                window.open("/ezBoard/newBoardItemMovie.do?boardID=" + SelectedBoardID + "&mode=new", "", feature, "");
+		                break;
 		            default:
 		                var feature = GetOpenWindowfeature(765, 820);
 		                if (CrossYN() || pNoneActiveX == "YES") {
