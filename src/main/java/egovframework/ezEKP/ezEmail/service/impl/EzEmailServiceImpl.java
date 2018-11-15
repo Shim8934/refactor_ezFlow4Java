@@ -2521,23 +2521,27 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getSharedMailboxSearchList started.");
 		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchValue=" + searchValue);
 		
-		Map<String, Object> map = new HashMap<>();
-		map.put("tenantId", tenantId);
-		map.put("deptId", "shared_mailbox_" + companyId);
-		map.put("searchValue", "%" + searchValue + "%");
-		
-		List<OrganUserVO> userList = ezOrganDao.getSharedMailboxSearchList(map);
 		List<MailSharedMailboxVO> list = new ArrayList<>();
-		MailSharedMailboxVO vo = null;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
 		
-		for (OrganUserVO user : userList) {
-			vo = new MailSharedMailboxVO();
+		if (useSharedMailbox.equals("YES")) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("tenantId", tenantId);
+			map.put("deptId", "shared_mailbox_" + companyId);
+			map.put("searchValue", "%" + searchValue + "%");
 			
-			vo.setShareName(user.getDisplayName());
-			vo.setShareId(user.getCn());
-			vo.setShareMail(user.getMail());
+			List<OrganUserVO> userList = ezOrganDao.getSharedMailboxSearchList(map);
+			MailSharedMailboxVO vo = null;
 			
-			list.add(vo);
+			for (OrganUserVO user : userList) {
+				vo = new MailSharedMailboxVO();
+				
+				vo.setShareName(user.getDisplayName());
+				vo.setShareId(user.getCn());
+				vo.setShareMail(user.getMail());
+				
+				list.add(vo);
+			}
 		}
 		
 		logger.debug("getSharedMailboxSearchList ended. listSize=" + list.size());

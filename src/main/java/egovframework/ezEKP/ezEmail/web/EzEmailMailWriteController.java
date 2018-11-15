@@ -4954,12 +4954,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String type = request.getParameter("type") == null ? "" : request.getParameter("type").trim();
 		String ruleKind = request.getParameter("ruleKind") == null ? "" : request.getParameter("ruleKind").trim();
 		String useOcs = config.getProperty("config.USE_OCS") == null ? "" : config.getProperty("config.USE_OCS");
-		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
 		model.addAttribute("defaultWin", defaultWin);
 		model.addAttribute("type", type);
 		model.addAttribute("ruleKind", ruleKind);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useSharedMailbox", useSharedMailbox);
 		
 		logger.debug("mailNewReceiverChoose ended.");
 		return "ezEmail/mailNewReceiverChoose";

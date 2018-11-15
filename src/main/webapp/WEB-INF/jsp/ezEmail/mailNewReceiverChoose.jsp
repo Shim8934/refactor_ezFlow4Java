@@ -263,6 +263,10 @@
 	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
 	            }
 	            
+	            if ("${useSharedMailbox}" == "YES") {
+	            	document.getElementById("sharedMailboxTabButton").style.display = "";
+	            }
+	            
 	            // (수신자 설정 시 drag, drop으로 순서 조정)
 	            $("#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC").multipleSortable({
                   connectWith: "#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC",
@@ -3705,7 +3709,7 @@
 	            			<p id="dlTabButton">
 	            				<span id="dlSpan" onclick="dlTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t593' /></span>
 	            			</p>
-	            			<p id="sharedMailboxTabButton">
+	            			<p id="sharedMailboxTabButton" style="display: none;">
 	            				<span id="sharedMailboxSpan" onclick="sharedMailboxTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.sharedMailbox02' /></span>
 	            			</p>
 	            			<p id="inputTabButton" style="display: none;">
