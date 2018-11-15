@@ -609,6 +609,7 @@
 		//개인환경설정으로 이동 동작 연결
 		$("#main_personalEnv").on("click", viewPersonalEnv);
 		$("#main_portletEnv").on("click", viewPortletEnv);
+
 		//메뉴 이동(왼쪽)
 		$("#NewMail").on("click", {"menu" : "NewMail"}, quickMenuOpen);
 		$("#Schedule").on("click", {"menu" : "Schedule"}, quickMenuOpen);

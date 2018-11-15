@@ -713,6 +713,9 @@ function ListView() {
                          NewCell.appendChild(NewElement);
                     }*/
                     
+                    var ImgDiv = document.createElement("DIV");
+                    ImgDiv.style.position = "relative";
+                    
                     var ImgElement = document.createElement("IMG");
                     //ImgElement.src = "/Upload_BoardSTD/" + getNodeText(oDatas[4]);
                     // {1e342793-61f7-9538-1906-1e213e7408f1}/UploadFile/s_{8fe616a9-dcf7-47d7-8624-73bd96043a70}.jpg
@@ -720,10 +723,35 @@ function ListView() {
                     ImgElement.src = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(getNodeText(oDatas[0])) + "&fileName=" + encodeURI(Filename);
                     ImgElement.style.height = "50px";
                     ImgElement.style.width = "71.4px";
-
-                    var imgCell = document.createElement("TD");
-                    imgCell.style.borderBottom = "0px";
-                    imgCell.appendChild(ImgElement);
+                    
+                    /* 2018-11-06 홍승비 - 동영상게시판인 경우, 썸네일 경로에 s_붙이고 플레이버튼 표시 */
+                    if (gubun == 7) {
+                    	ImgElement.src = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(getNodeText(oDatas[0])) +
+                    	"&fileName=s_" + encodeURI(Filename.substring(0, Filename.lastIndexOf(".") + 1) + "png");              	
+                    	ImgElement.style.filter = "brightness(75%)";
+                    	
+	                    var ImgElementPlay = document.createElement("IMG");
+	                    ImgElementPlay.src = "/images/ezLadder/btn_play.png";
+	                    ImgElementPlay.style.height = "30px";
+	                    ImgElementPlay.style.width = "30px";
+	                    ImgElementPlay.style.position = "absolute";
+	                    ImgElementPlay.style.left = "21px";
+	                    ImgElementPlay.style.top = "11px";
+	                    
+	                    var imgCell = document.createElement("TD");
+	                    imgCell.style.borderBottom = "0px";
+	                    
+	                    ImgDiv.appendChild(ImgElement);
+	                    ImgDiv.appendChild(ImgElementPlay);
+	                    imgCell.appendChild(ImgDiv);
+                    }
+                    else {
+                    	var imgCell = document.createElement("TD");
+   	                    imgCell.style.borderBottom = "0px";
+   	                    
+   	                    ImgDiv.appendChild(ImgElement);
+   	                    imgCell.appendChild(ImgDiv);
+                    }
                     
                     var ContentTable = document.createElement("TABLE");
                     ContentTable.setAttribute("style", "table-layout:fixed; width:100%");

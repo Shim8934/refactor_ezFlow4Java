@@ -47,6 +47,8 @@
 	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListPhoto.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    } else if (pBoardType == 4) {
 	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListThumbnail.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
+	                    } else if (pBoardType == 7) {
+	                    	document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListMovie.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    } else {	      
 	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemList.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    }
