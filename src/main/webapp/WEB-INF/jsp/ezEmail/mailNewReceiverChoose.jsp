@@ -69,6 +69,7 @@
 	        var userid = "${userInfo.id}";
 	        var deptid = "${userInfo.deptID}";
 	        var companyid = "${userInfo.companyID}";
+	        var userRollInfo = "${userInfo.rollInfo}";
 	        var susinTo = 0;
 	        var AddressTreeView = null;
 	        var UserAgentState = navigator.userAgent.toLowerCase();
@@ -179,7 +180,13 @@
 	                var objNode;
 	                createNodeInsert(xmlpara, objNode, "DATA");
 	                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
-	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	                
+	                if (userRollInfo.indexOf("c=1") != -1 && rulekind == "MANAGER") {
+	                	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
+	                } else {
+	                	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	                }
+	                
 	                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
 	                xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	                xmlHTTP.send(xmlpara);
@@ -261,6 +268,15 @@
 					remove_key_event();
 	
 	                document.getElementById("dept_select").style.display = "none";
+	                
+	                // 관리자>조직도 관리>부서추가>부서장 아이디 선택
+	                if (rulekind == "MANAGER") { 
+	                	document.title = "부서장 선택";
+	                	document.getElementById("h1Title").innerHTML = "부서장 선택";
+	                	document.getElementById("contactTabButton").style.display = "none";
+	                	document.getElementById("dlTabButton").style.display = "none";
+	                	
+	                }
 	            }
 	            else {
 	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
