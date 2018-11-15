@@ -1359,4 +1359,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.insertUseSession(map);
 	}
 	
+	@Override
+	public void addUserMasterPasswordUpdateDT() throws Exception {
+		ezCommonDAO.addUserMasterPasswordUpdateDT();
+	}
+	
 }

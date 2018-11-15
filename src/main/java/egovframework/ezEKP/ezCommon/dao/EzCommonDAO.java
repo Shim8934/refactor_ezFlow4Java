@@ -338,4 +338,14 @@ public class EzCommonDAO extends EgovAbstractDAO{
 	public void insertUseSession(Map<String, Object> map) {
 		insert ("EzCommonDAO.insertUseSession", map);
 	}
+	
+	public void addUserMasterPasswordUpdateDT() throws Exception {
+		try {
+			select("EzCommonDAO.checkUserMasterPasswordUpdateDT");
+		} catch (Exception e) {
+			logger.debug("tbl_usermaster PASSWORD_UPDATEDT column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addUserMasterPasswordUpdateDT");
+		}
+	}
 }

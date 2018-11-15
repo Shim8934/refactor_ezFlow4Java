@@ -130,6 +130,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addDeptMasterManualFlag();
     	ezCommonService.createJMochaMailSignatureTemplate();
     	ezCommonService.createJobMasterTable();
+    	ezCommonService.addUserMasterPasswordUpdateDT();
     	
     	logger.debug("init ended.");
     }

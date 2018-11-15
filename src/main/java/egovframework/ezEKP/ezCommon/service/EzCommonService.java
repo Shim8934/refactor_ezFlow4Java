@@ -82,5 +82,7 @@ public interface EzCommonService {
 
 	public void insertUseSession(Map<String, Object> map);
 
+	public void addUserMasterPasswordUpdateDT() throws Exception;
+
 }
 

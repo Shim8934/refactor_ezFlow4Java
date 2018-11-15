@@ -440,5 +440,22 @@
 		VALUES
 		(#tenantID#, #confName#, #property_value#, #description#, #config_name#, #regdate#, #config_type#)
 	</insert>
-
+	
+	<select id="EzCommonDAO.checkUserMasterPasswordUpdateDT" resultClass="String">
+		<![CDATA[
+			SELECT 
+				PASSWORD_UPDATEDT
+			FROM 
+				TBL_USERMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addUserMasterPasswordUpdateDT"> 
+		ALTER TABLE 
+			TBL_USERMASTER
+		ADD 
+			PASSWORD_UPDATEDT DATETIME DEFAULT NULL
+	</statement>
+	
 </sqlMap>
