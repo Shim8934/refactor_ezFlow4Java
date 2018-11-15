@@ -251,9 +251,18 @@ public class MLoginGWController {
         						cal.add(Calendar.DATE, realPeriod);
         						
         						baseDT = cal.getTime();
-        						Date lastDT = resultVO.getUpdateDT();
+        						Date passwordUpdateDT = resultVO.getPassword_updatedt();
+        						
+    							if (passwordUpdateDT == null) {
+    								passwordUpdateDT = resultVO.getUpdateDT();
+    							}
+    		            	
+    							LOGGER.debug("passwordUpdateDT=" + passwordUpdateDT);
+    							LOGGER.debug("baseDT=" + baseDT);
+        						
         						//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
-        						diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
+        						diff = EgovDateUtil.getDaysDiff(baseDT, passwordUpdateDT);	    			
+    							LOGGER.debug("diff=" + diff);
         					}	        	
         				}        	        	
         				//0보다 작아지면 패스워드 변경기한 Expired
