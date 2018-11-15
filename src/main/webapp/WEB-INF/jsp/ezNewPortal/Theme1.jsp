@@ -380,6 +380,11 @@
 						url : portletUrl,
 						success : function(result) {
 							$("#" + portletId + "Portlet").append(result);
+							
+							if (portletId == 6) {
+								$("#" + portletId + "Portlet").css("background","none");
+							}
+							
 							eventSetting(portletId);
 						}
 					});

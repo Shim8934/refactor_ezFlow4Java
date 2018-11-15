@@ -40,7 +40,7 @@
 			</div>
 		</c:when>
 		<c:otherwise>
-			<article class="box_shadow">
+			<%-- <article class="box_shadow">
 			<div class="layDIV">
 				<dl class="portlet_title sortablePortlet">
 					<dt class="portletText">
@@ -55,7 +55,35 @@
 					<div id="scheduleList" class="sschedule_list"></div>
 				</div>
 			</div>
-			</article>			
+			</article>			 --%>
+			<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 1000; border-bottom:none; background:none;"></dl>
+			<div style="position:relative; bottom:46px; overflow:hidden;">
+				<article class="schedule_small box_shadow schedule_calendar" style="width: calc(46% - 11px);">
+					<div class="layDIV">
+						<div class="sCalendarArea">
+							<div id="CalendarMini" class="scalendar"></div>
+						</div>
+					</div>
+				</article>
+	
+				<article class="schedule_small box_shadow schedule_scheduleList" style="width: 54%">
+					<div class="layDIV">
+						<div class="sCalendarArea">
+							<dl class="portlet_title portlet_schedule sortablePortlet">
+								<dt class="portletText">
+									<spring:message code='main.t203' />
+								</dt>
+								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 1001;">
+									<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+								</dd>
+							</dl>
+							<div id="scheduleList" class="sschedule_list">
+							</div>
+
+						</div>
+					</div>
+				</article>
+			</div>
 		</c:otherwise>
 	</c:choose>
 </body>

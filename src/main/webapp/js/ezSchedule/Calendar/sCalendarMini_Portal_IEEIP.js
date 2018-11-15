@@ -44,11 +44,13 @@ function CalendarMiniView(pTagetID) {
 	        mTable.setAttribute("cellpadding", "0");
 	        mTable.setAttribute("cellspacing", "0");
 	        mTable.setAttribute("border", "0");
+	        mTable.setAttribute("style", "margin: 10px 10px; padding: 0px 25px 0px 3px;");
 	        mTable.setAttribute("width", "100%");
 	        var mTr = document.createElement("TR");
 
 	        var mTd = document.createElement("TD");
 	        mTd.className = "btn_prev"
+        	mTd.setAttribute("style","position: relative; z-index: 1001;");
 	        var mSpan = document.createElement("SPAN");
 	        mSpan.style.cursor = "pointer";
 	        //mSpan.style.marginLeft = "6px";
@@ -131,6 +133,7 @@ function CalendarMiniView(pTagetID) {
 
 	        var mTd = document.createElement("TD");
 	        mTd.className = "btn_next"
+        	mTd.setAttribute("style","position: relative; z-index: 1001;");
 	        var mSpan = document.createElement("SPAN");
 	        mSpan.style.cursor = "pointer";
 	        //mSpan.style.marginRight = "6px";
@@ -345,7 +348,7 @@ function GetTableMiniBodyObj() {
     sStartDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
 
     //Month Start
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 6; i++) {
         var objTr = document.createElement("TR");
         objTr.setAttribute("id", "TR_" + oThisMonth + "_" + i);
 

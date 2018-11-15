@@ -76,12 +76,10 @@ function getScheduleList_after(resultList, mode, date) {
 		}
 		listHTML += "</ul'></div>";
 		
-		if (Number($("#schedule_usedTheme").val()) === 3) {
-			listHTML += "<dl id='scheduleDate' class='scheduleDate'>";
-			listHTML += "<dt class='dayT'>" + str4[nDay] + "</dt>";//요일
-			listHTML += "<dd class='dayN'>" + nDate + "</dd>";//일
-			listHTML += "</dl>";
-		}
+		listHTML += "<dl id='scheduleDate' class='scheduleDate'>";
+		listHTML += "<dt class='dayT'>" + str4[nDay] + "</dt>";//요일
+		listHTML += "<dd class='dayN'>" + nDate + "</dd>";//일
+		listHTML += "</dl>";
 		
 		document.getElementById("scheduleList").innerHTML = listHTML;
 		
