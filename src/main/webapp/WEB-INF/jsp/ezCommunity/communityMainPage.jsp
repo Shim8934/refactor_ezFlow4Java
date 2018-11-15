@@ -186,11 +186,11 @@
 	                
 	                var span = document.createElement("SPAN");
 	                span.className = "title";
-	                span.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNAME");
+	                span.innerHTML = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNAME"));
 	                
 	                var span2 = document.createElement("SPAN");
 	                span2.className = "text";
-	                span2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBDESC");
+	                span2.innerHTML = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBDESC"));
 	                
 	                dd.appendChild(span);
 	                dd.appendChild(span2);
@@ -301,11 +301,11 @@
 	                
 	                var span = document.createElement("SPAN");
 	                span.className = "title";
-	                span.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNAME");
+	                span.innerHTML = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNAME"));
 	                
 	                var span2 = document.createElement("SPAN");
 	                span2.className = "text";
-	                span2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBDESC");
+	                span2.innerHTML = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBDESC"));
 	                
 	                dd.appendChild(span);
 	                dd.appendChild(span2);
@@ -462,11 +462,11 @@
 	                if(clubname.length > 9) {
 	                	clubname = clubname.substring(0,8) + "...";
 	                }
-	                span2.innerHTML = "[" +clubname + "]";
+	                span2.innerHTML = MakeXMLString("[" + clubname + "]");
 	                
 	                var span3 = document.createElement("SPAN");
 	                span3.className = "txt";
-	                span3.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
+	                span3.innerHTML = MakeXMLString(SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE"));
 	                
 	                var span4 = document.createElement("SPAN");
 	                span4.className = "date";
@@ -1117,7 +1117,7 @@
                 	
                 	var dd = document.createElement("DD");
                 	dd.className = "title";
-                	dd.innerHTML = clubVO.c_ClubName;
+                	dd.innerHTML = MakeXMLString(clubVO.c_ClubName);
                 	
                 	var dd2 = document.createElement("DD");
                 	dd2.className = "categoryInfo_count";
