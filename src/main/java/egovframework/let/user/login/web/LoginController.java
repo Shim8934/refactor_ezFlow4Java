@@ -214,8 +214,8 @@ public class LoginController {
     		sessionParam.put("confName", confName);
         	
     		useSession = ezCommonService.getUseSession(sessionParam);
-    		// useSession row 없으면 추가
-    		if (useSession == null || useSession == "") {
+    		// tenant_config 테이블에 useSession row 없으면 추가
+    		if (useSession == null || "".equals(useSession)) {
     			String regdate = commonUtil.getTodayUTCTime("");
         		sessionParam.put("property_value", "0");
     			sessionParam.put("description", "세션 유지 시간. 단, 0이면 세션 사용 안함");
