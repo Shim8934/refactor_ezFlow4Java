@@ -176,7 +176,7 @@
 				str += '<ul class="util">';
 				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="관리자"></span></li>';
 				str += '<li><span class="icon_topmenu util_employee_search" id="util_employee_search" title="직원조회"></span></li>';
-				/* str += '<li><span class="icon_topmenu frame_set" id="frame_set" title="프레임설정"></span></li>'; */
+				str += '<li><span class="icon_topmenu frame_set" id="frame_set" title="프레임설정"></span></li>';
 				str += '<li><span class="icon_topmenu util_set" id="util_set" title="환경설정"></span></li>';
 				str += '<li><span class="icon_topmenu util_help" id="util_help" title="도움말"></span></li>';
 				str += '<li><span class="icon_topmenu util_logout" id="util_logout" title="로그아웃"></span></li>';
@@ -198,7 +198,7 @@
 		}
 		
 		// 확장버튼 UI 이벤트 함수
-		var subMenuClickEvent = function (type) {
+		var subMenuClickEvent = function (type, menuUrl) {
 			var topMenuFull = document.getElementById('topMenuFull');
 			var topFrame = parent.document.getElementById('topFrame');
 			var bodyTag = document.getElementsByTagName('Body')[0];				
@@ -218,13 +218,17 @@
 					$("#topMenuFull").attr("class", "full_nav off");
 					$("#topMenuFull").fadeIn(100);
 				});
-				
+				console.log(menuUrl);
 				$("#menu_toggle").slideUp(200, function() {
 					topFrame.style.position = '';	
+					topFrame.style.backgroundColor = "rgba(0,0,0,0)";
+					if (menuUrl != null) {
+						window.open(menuUrl, 'main', '');
+					}
 				});
 				// 취소버튼과 같은 역할
 				var editMenuCancel = document.getElementById('editMenuCancel');
-				editMenuCancel.click();			
+				editMenuCancel.click();	
 			}
 		}				
 		
@@ -253,8 +257,8 @@
 			toggleMenu.forEach(function (item, index) {
 				var menuUrl = newPortalTopMenu.menuListObj['menu_' + item.id].menuUrl;
 				item.addEventListener('click', function () {
-					window.open(menuUrl, 'main', '');
-					subMenuClickEvent('off');
+					subMenuClickEvent('off', menuUrl);
+					//window.open(menuUrl, 'main', '');
 				});
 			});				
 		}
