@@ -462,7 +462,7 @@
 	                    break;
 	                case 2:
 	                    LoadEmailTree();
-	                    WebPartToggle(level1El.item(1));
+	                    WebPartToggle(level1El.item(level1El.length - 1));
 	                    break;
 	            }
 	        }
