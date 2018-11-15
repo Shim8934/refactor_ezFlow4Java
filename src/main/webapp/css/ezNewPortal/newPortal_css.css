@@ -67,6 +67,8 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 .util_help { background-position: -61px -0px; width: 21px; height: 21px; }/* 도움말 */
 .util_logout { background-position: -91px -0px; width: 21px; height: 21px; }/* 로그아웃 */
 .util_systemlink { background-position: -84px -0px; width: 21px; height: 21px; }/* 시스템링크 */
+.util_frame{background-position: -155px -124px; width: 21px; height: 21px;}/* 프레임아이콘 */
+
 .full_menu { background-position: -35px -155px; width: 25px; height: 24px; }/* 전체메뉴 */
 .icon_count_arrow { background-position: -187px -0px; width: 21px; height: 21px; }/* 대메뉴 카운트 화살표 */
 .icon_nav_mail{ background-position: 0px -61px; width: 21px; height: 21px; }/* 메일 */
@@ -107,6 +109,7 @@ header {height:56px; background-color:#ffffff; border-top:1px solid #cecece; bor
 .util li:hover .util_help { background-position: -61px -31px; }/* 도움말 */
 .util li:hover .util_logout { background-position: -91px -31px; }/* 로그아웃 */
 .util li:hover .util_systemlink { background-position: -84px -21px; }/* 시스템링크 */
+.util li:hover .util_frame{background-position: -186px -124px; }/* 프레임아이콘 */
 .util li span {margin-top:17px;}
 
 .topmenulayout { min-width: 1300px; }
@@ -196,10 +199,10 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* portlet_list approval */
 .approval .portlet_list li{ margin:0px; padding:0px 10px 0px 23px; background:url(/images/ezNewPortal/list_bul.png) no-repeat 15px 17px; font-size:13px; color:#555555; height:36px; line-height:34px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
-.portlet_list li.first_approval{margin:0px; padding:0px; background:#f4f4f4; border:1px solid #e7e7e7; height:113px; box-sizing:border-box;}
-.first_approval .approval_tit{ margin:0px; padding:0px 0px 0px 10px; height:27px; background:#f4f4f4; line-height:25px;}
+.portlet_list li.first_approval{margin:0px; padding:0px; border:1px solid #e7e7e7; height:113px; box-sizing:border-box; border-left:0px; border-right:0px}
+.first_approval .approval_tit{ margin:0px; padding:0px 0px 0px 10px; height:27px; background:#f4f4f4; line-height:25px; border-bottom: 1px solid #e5e5e5}
 .first_approval .approval_tit span.txt{ font-weight:bold;}
-.first_approval .approval_content{margin:10px 0px 15px 0px; padding:0px; overflow:hidden; background: #f4f4f4;}
+.first_approval .approval_content{margin:13px 0px 12px 0px; padding:0px; overflow:hidden;}
 .first_approval .approval_content .apprDL{margin:0px; padding:0px 0px 0px 10px; float:left; overflow:hidden; width:30%; box-sizing:border-box;}
 .first_approval .approval_content .apprDL .apprPic{margin:0px; padding:0px; width:53px; height:53px; border:1px solid #e7e7e7; border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; float:left;}
 .first_approval .approval_content .apprDL .apprPic img{border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; width:53px; height:53px;}

@@ -1610,13 +1610,13 @@
 		            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
 	            </c:if>
 	            <!-- <img src="/images/i_bar.gif"> -->
-	            <li style="vertical-align: middle;">
+	            <li style="vertical-align: middle; float:right">
 	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>
 		        </li>
 		        	<c:if test = "${approvalFlag != 'G'}">
-		        		<li style="vertical-align: middle;">
+		        		<li style="vertical-align: middle; float:right">
 		        			<div id="sel_status_div" style="display:inline;">
 							<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
 								<option value="ALL"><spring:message code='ezPoll.t104'/></option>
@@ -1631,7 +1631,7 @@
 		        <li id="tViewDocApr"><span id="ViewDocApr" onClick="return ViewDoc_onclick()" ><spring:message code='ezApproval.pjj35'/></span></li>
 		        <li id="Li1"><span id="Span1" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="tSearchCondiApr"><span class="icon16 icon16_search" id="SearchCondiApr" onClick="return SearchCondi_onclick()" ></span></li>
-		        <li style="vertical-align: middle;">
+		        <li style="vertical-align: middle; float:right">
 		        	<select id="who_year" name="who_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>  

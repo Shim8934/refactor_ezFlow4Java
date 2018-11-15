@@ -19,7 +19,7 @@
 			span.icon_topmenu {margin-top : 20px;}
 			.menuUsed {background-color : #fff;}
 			.menuUsed_on{color: #0470e3; border-color: #b9d7f6; background: #f1f8ff;}
-			.menuNotUsed {background-color : #cbcbcb;}
+			.menuNotUsed {background-color : #efefef; border:1px solid #d9d9d9; color:#b9b9be;}
 			.menuDetails {list-style:none;display : none; float:left; width:98%; position : relative;}
 			.menuTitle {margin : 10px;}
 			.menuTitle span {font-size : 18px; font-weight:bold;}
@@ -38,7 +38,7 @@
 			.menuName table th {border:none;background-color:white;font-size:13px;color:black;}
 			.menuAuth {vertical-align:top;margin-top:23px;margin-left:150px;}
 			.menuAuthBtn {display:inline-block}
-			.updateMenu, .addMenu {float : right; margin-right:20px;}
+			.updateMenu, .addMenu {margin-right:20px;}
 			.btnpositionJsp {margin-top : 0px;padding:0px;}
 			.hideDetails {display : none;}
 			.menuSortable {display : inline-block;}
