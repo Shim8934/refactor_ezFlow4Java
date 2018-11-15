@@ -3511,6 +3511,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		/* 2018-11-12 김민성 - 커뮤니티 공지사항 추가 */
 		List<CommunityCBoardVO> cNoticeList = ezCommunityService.bbsListGet2(bName, userInfo.getPrimary(), "", "", userInfo.getTenantId(), userInfo.getCompanyID());
 		
+		for(CommunityCBoardVO noticeList : cNoticeList) {
+			noticeList.setTitle(commonUtil.cleanValue(noticeList.getTitle()));
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("primary", userInfo.getPrimary());

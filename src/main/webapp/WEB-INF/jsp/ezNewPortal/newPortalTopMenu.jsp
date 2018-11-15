@@ -176,6 +176,9 @@
 			var element = document.getElementById(id);
 			element.addEventListener('click', function () {
 				window.open(url, location, option);
+				if (id === 'logoUrl') {
+					subMenuClickEvent('off');
+				}				
 			});				
 		}
 		
