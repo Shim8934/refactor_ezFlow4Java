@@ -2081,10 +2081,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("v_copNo : " + clubNoList);
 		
-		List<CommunityMyCommunityVO> myCommunityList = ezCommunityDAO.myCommunityItemGet(map);
-		
-		for(CommunityMyCommunityVO myCommunity : myCommunityList) {
-			rtnVal.append(commonUtil.getQueryResult(myCommunity));
+		if(clubNoList.size() > 0) {
+			List<CommunityMyCommunityVO> myCommunityList = ezCommunityDAO.myCommunityItemGet(map);
+			
+			for(CommunityMyCommunityVO myCommunity : myCommunityList) {
+				rtnVal.append(commonUtil.getQueryResult(myCommunity));
+			}
 		}
 		// 이미 companyID로 걸러진 커뮤니티(동일 테넌트 내에서 CLUBNO로 구분 가능)를 가지고 후작업한다.
 		/*for (String clubNo : clubNoList) {
