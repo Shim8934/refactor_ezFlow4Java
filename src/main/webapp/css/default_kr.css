@@ -2596,9 +2596,9 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_bannerCommunity{height:82px; margin:0px; padding:0px; background:url(../images/kr/community/bannerbgright.png) right top no-repeat; text-align:center;}
 .contents_bannerCommunity p{margin:0px; padding:0px; text-align:center;}
 
-.community_section02{height:180px; margin:0px 0px 20px 0px; padding:0px;}
-.contents_noticeCommunity{float:left; width:calc(50% - 10px); height:178px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
-.contents_boardCommunity{float:right; width:calc(50% - 10px); height:178px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.community_section02{height:242px; margin:0px 0px 20px 0px; padding:0px;}
+.contents_noticeCommunity{float:left; width:calc(50% - 10px); height:240px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.contents_boardCommunity{float:right; width:calc(50% - 10px); height:240px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
 .contents_tabCommunity{height:44px; margin:0px; padding:0px; color:#333333; font-size:14px; font-weight:bold; border-bottom:1px solid #e7e7e7;}
 .contents_tabCommunity dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
 .contents_tabCommunity dd{float:right; height:44px; margin:0px; padding:0px;}
@@ -2627,7 +2627,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_tabCategory{height:44px; margin:0px; padding:0px; color:#333333; font-size:14px; font-weight:bold; border-bottom:1px solid #e7e7e7;}
 .contents_tabCategory dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
 .contents_listCategory{overflow:hidden; list-style:none; margin:0px; padding:14px 23px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
-.contents_listCategory li{margin:0px; padding:0px; line-height:27px; color:#555555; font-size:13px; cursor:pointer;}
+.contents_listCategory li{margin:0px; padding:0px; line-height:26px; color:#555555; font-size:13px; cursor:pointer;}
 .contents_listCategory li span{display:inline-block; margin:0px; padding:0px;}
 .contents_listCategory li span.icon{}
 .contents_listCategory li span.icon img{vertical-align:middle; margin:-3px 6px 0px 0px;}
@@ -2673,7 +2673,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 	.categoryBox{width:calc(33.33% - 42px);}
 }
 @media only screen and (max-width: 1400px){
-	.community_section02{height:380px;}
+	.community_section02{height:442px;}
 	.contents_noticeCommunity{clear:both; width:100%; margin:0px 0px 20px 0px;}
 	.contents_boardCommunity{clear:both; width:100%;}
 }
@@ -2683,7 +2683,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 
 .nodata_sIcon{margin:0px; padding:0px; text-align:center;}
 .nodata_sIcon dt{margin:0px; padding:20px 0px 20px 0px;}
-.nodata_sIcon dd{margin:0px; padding:0px; font-size:14px; color:#333; letter-spacing:-0.5px;}
+.nodata_sIcon dd{margin:0px; padding:0px; font-size:13px; color:#c0c0c0; font-weight: bold;}
 
 .nodata_sIconLeft{margin:0px; padding:0px; text-align:center;}
 .nodata_sIconLeft span{display:inline-block; margin:0px; padding:0px;}
@@ -2693,6 +2693,6 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 
 .nodata_bIcon{margin:0px; padding:0px; text-align:center;}
 .nodata_bIcon dt{margin:0px; padding:20px 0px 20px 0px;}
-.nodata_bIcon dd{margin:0px; padding:0px; font-size:18px; color:#333; letter-spacing:-0.5px;}
+.nodata_bIcon dd{margin:0px; padding:0px; font-size:17px; color:#c0c0c0; font-weight: bold;}
 
 .nodata_bIconGray{background:#ebeef1;}
