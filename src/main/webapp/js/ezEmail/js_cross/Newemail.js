@@ -1743,7 +1743,7 @@ function HiddenMailProgress() {
     document.getElementById("MailProgress").style.display = "none";
 }
 function PreviewMode_ChangeBtn() {
-    document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_noframe.gif");
+    /*document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_noframe.gif");
     document.getElementById("PreViewBottom").setAttribute("src", "/images/kr/cm/btn_bottomframe.gif");
     document.getElementById("PreViewleft").setAttribute("src", "/images/kr/cm/btn_leftframe.gif");
     if (pPreviewShow_HOW == "H")
@@ -1751,7 +1751,29 @@ function PreviewMode_ChangeBtn() {
     else if (pPreviewShow_HOW == "W")
         document.getElementById("PreViewBottom").setAttribute("src", "/images/kr/cm/btn_onbottomframe.gif");
     else
-        document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_onnoframe.gif");
+        document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_onnoframe.gif");*/
+	
+	document.getElementById("PreViewNone").className = "icon16 btn_noframe";
+	
+	if (document.getElementById("PreViewBottom")) {
+		document.getElementById("PreViewBottom").className = "icon16 btn_bottomframe";
+	}
+	
+	if (document.getElementById("PreViewleft")) {
+		document.getElementById("PreViewleft").className = "icon16 btn_leftframe";
+	}
+	
+	if (pPreviewShow_HOW == "H") {
+		if (document.getElementById("PreViewleft")) {
+			document.getElementById("PreViewleft").className = "icon16 btn_onleftframe";
+		}
+	} else if (pPreviewShow_HOW == "W") {
+		if (document.getElementById("PreViewBottom")) {
+			document.getElementById("PreViewBottom").className = "icon16 btn_onbottomframe";
+		}
+	} else {
+        document.getElementById("PreViewNone").className = "icon16 btn_onnoframe";
+	}
 
 }
 function MailOptionView(obj) {
@@ -1759,7 +1781,8 @@ function MailOptionView(obj) {
         document.getElementById("layer_popup").style.left = document.documentElement.clientWidth - 260 + "px";
         document.getElementById("layer_popup").style.top = "100px";
         document.getElementById("layer_popup").style.display = "";
-        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+        //obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+        obj.setAttribute("class", "icon16 btn_onarrow_down");
         obj.setAttribute("mode", "on");
     }
     else {
@@ -1769,7 +1792,8 @@ function MailOptionView(obj) {
 function MailOptionHidden() {
     document.getElementById("layer_popup").style.display = "none";
     document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
-    document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+    //document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+    document.getElementById("maillistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
     ContextMenuHidden();
 }
 //레이어팝업 바깥쪽 클릭시 레이어팝업 꺼지게 2018-02-22 강민수92
