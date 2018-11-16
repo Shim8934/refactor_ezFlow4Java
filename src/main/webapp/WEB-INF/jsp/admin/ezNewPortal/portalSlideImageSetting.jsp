@@ -294,7 +294,7 @@ var imgdisplay = function () {
 
 //저장버튼
 var btnSave_click = function () {
-    if (document.getElementById("UploadSliderImage").src == -1) {	
+    if ($("#UploadSliderImage").attr("src") == "") {	
         alert("<spring:message code = 'ezPersonal.t20000' /> ");
         return;
     }
