@@ -47,6 +47,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -327,16 +328,16 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickLink 목록 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkList.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkList.do", produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public String getQuickLinkList(@CookieValue("loginCookie") String loginCookie) throws Exception {
+	public List<PersonalQuickLinkVO> getQuickLinkList(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getQuickLinkList started");
-
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String result = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang());
-
+		List<PersonalQuickLinkVO> list = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang());
+		
 		logger.debug("getQuickLinkList ended");
-		return result;
+		return list;
 	}
 	
 	/**

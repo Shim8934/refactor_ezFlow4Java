@@ -363,10 +363,13 @@
 		<![CDATA[
 			SELECT
 				QUICKLINKID ,
-             	QUICKLINKNAME ,
-             	QUICKLINKNAME2 ,
-	            QUICKLINKNAME3 ,
+				CASE
+					WHEN #lang# = '1' THEN QUICKLINKNAME
+					WHEN #lang# = '2' THEN QUICKLINKNAME2
+					ELSE QUICKLINKNAME3
+				END AS QUICKLINKNAME ,
 	            LINKTYPE ,
+	            LINKTYPEURL ,
 	            URL ,
 	            REGDATE ,
 	            MODIDATE ,

@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzPersonalAdminService {
@@ -36,7 +37,7 @@ public interface EzPersonalAdminService {
 	
 	String updateNotice(String companyID, String title, String title2, String content, Integer itemSeq, int tenantID) throws Exception;
 	
-	String getQuickLinkList(LoginVO loginVO, String lang) throws Exception;
+	List<PersonalQuickLinkVO> getQuickLinkList(LoginVO loginVO, String lang) throws Exception;
 	
 	String getQuickLink(String quickLinkID, int tenantID) throws Exception;
 	
