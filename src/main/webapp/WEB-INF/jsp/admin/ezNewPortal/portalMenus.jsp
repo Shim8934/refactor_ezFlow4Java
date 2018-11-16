@@ -58,7 +58,7 @@
 		
 		<div id="mainmenu">
 			<ul style="margin-top: 15px;">
-				<li id="menuOrderReset"><span>메뉴 순서 초기화</span></li>
+				<li class="menuOrderResetButton" id="menuOrderReset"><span>메뉴 순서 초기화</span></li>
 			</ul>
 		</div>
 		<ul id="menuList">
@@ -400,11 +400,12 @@
 					
 					var nowShowDetails = $(".menuDetails").children().attr("id");
 		
-					if (nowShowDetails == "menuDetails" + menuId) { 
+					if (nowShowDetails == "menuDetails" + menuId) {
 						$(".menuDetails").slideUp(function(){
 							$(".menuDetails").remove();
 						});
 					} else {
+						//나와있는 menuDetails를 제외하곤 다 지운다
 						$(".menuDetails").slideUp(function(){
 							$(".menuDetails").not("#menuLi" + menuId).remove();
 						});
@@ -468,6 +469,30 @@
 			request.send(data);
 		}
 		
+		var closeMenuDetail = function(event) {
+			//그냥 모든 메뉴디테일을 닫아버린다
+			$(".menuDetails").slideUp();
+		}
+		
+		$('html').click(function(e) {
+			//영역 외 삭제
+			var obj = e.target;
+			var flag = false;
+			var elemArr = ["menu", "admin_menuDL", "admin_menu_content", "menuOrderResetButton", "companySelect"];
+			if (obj.tagName == "HTML") {
+				closeMenuDetail();
+				return false;
+			}
+			
+			while(elemArr.indexOf(obj.className) == -1){
+				obj = obj.parentElement;
+				if(obj.tagName == "HTML"){
+					closeMenuDetail();
+					break;
+				}
+			}
+		}); 
+
 		var updateMenu = function(event) {
 			var menuId = event.data.menuId;
 			var menuNameList = [];
