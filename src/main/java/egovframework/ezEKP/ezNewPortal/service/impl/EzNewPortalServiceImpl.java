@@ -149,7 +149,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("langType", langType);
 		map.put("userId", userId);
 		map.put("deptId", deptId);
-		return ezNewPortalDAO.getUserMenuList(map);
+		
+		List<MenuInfoVO> menuList = ezNewPortalDAO.getUserMenuList(map);
+		
+		return menuList;
 	}
 	
 	public List<MenuInfoVO> getCompanyMenuList(String companyId, int tenantId, String langType, String userId, String deptId) throws Exception {
@@ -182,9 +185,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			map.put("companyId", companyId);
 			map.put("tenantId", tenantId);
 			map.put("userId", userId);			
-				map.put("menuId", list.get(i).get("menuId"));
+			map.put("menuId", list.get(i).get("menuId"));
 			map.put("order", list.get(i).get("order"));
-			
+			System.out.println(list.toString());
 			if (cnt < 1) {
 				ezNewPortalDAO.insertUserMenuOrder(map);
 			} else {

@@ -150,7 +150,7 @@
 						menusHTML += "<dl>";
 						menusHTML += "<dt><span class='" + item.iconUrl + "'>";
 						menusHTML += "</span></dt>";
-						menusHTML += "<dd>" + item.menuName + "</dd>";
+						menusHTML += "<dd>" + ConvertCharToEntityReference(item.menuName) + "</dd>" ;
 						menusHTML += "</li>";
 					});
 					
@@ -231,7 +231,7 @@
 					var menusHTML = "<li class='menuDetails' id='menuLi" + menuInfo.menuId + "'>";
 					menusHTML += "<div class='admin_menu' id='menuDetails" + menuInfo.menuId + "'>";
 					menusHTML += "<dl class='admin_menuDL'>";
-					menusHTML += "<dt class='admin_menuTit'>" + menuInfo.menuName + "</dt><dd class='admin_menuX'></dd></dl>";
+					menusHTML += "<dt class='admin_menuTit'>" + ConvertCharToEntityReference(menuInfo.menuName) + "</dt><dd class='admin_menuX'></dd></dl>";
 					
 					menusHTML += "<div class='admin_menu_content'>";
 					menusHTML += "<dl class='adminMenu_icon'><dt class='admenuIcon menuIcon'><span class='" + menuInfo.iconUrl + "'></span></dt>";
@@ -261,11 +261,11 @@
 						}
 						
 						menusHTML += country + ")</td>";
-						menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu" +  item.menuLang + "' type='text' value='" + item.menuName + "' maxlength='50'></td>";
+						menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu" +  item.menuLang + "' type='text' value='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(item.menuName), '\"', "&#39;"), "\'", "&#34;") + "' maxlength='50'></td>";
 						menusHTML += "</tr>";
 					});
 					
-					menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' value='" + menuInfo.menuUrl + "' maxlength='100'></td></tr></table>";
+					menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' value='" +ReplaceText(ReplaceText(ConvertCharToEntityReference(menuInfo.menuUrl), '\"', "&#39;"), "\'", "&#34;") + "' maxlength='100'></td></tr></table>";
 					menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
 					menusHTML += "<tr><th class='menuIconTH'>접근허용</th><td class='menuIconTD accessOK'>";
 					

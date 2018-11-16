@@ -67,7 +67,7 @@ function getScheduleList_after(resultList, mode, date) {
 				
 				listHTML += "<span class='" + timeClass + "_timeText'>" + startTime + " ~ " + endTime + "</span></p>";
 				listHTML += "<p class='scheduleText'>";
-				listHTML += TITLE+"</p></li>";
+				listHTML += ConvertCharToEntityReference(TITLE)+"</p></li>";
 			} else {
 				listHTML += "<li class='scheduleLi_nodata'>";
 				listHTML += "<p class='sNodataText'>" + strLang277 + "</p>";	

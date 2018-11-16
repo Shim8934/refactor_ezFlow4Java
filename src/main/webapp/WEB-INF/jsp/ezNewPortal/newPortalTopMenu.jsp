@@ -78,7 +78,7 @@
 			
  			var str = '';
 			menuList.forEach(function (item, index) {
-				str += '<li id="menu_' + item.menuId + '">' + item.menuName + '</li>';
+				str += '<li id="menu_' + item.menuId + '">' + ConvertCharToEntityReference(item.menuName) + '</li>';
 				
 				// 메뉴리스트 객체 생성
 				newPortalTopMenu.menuListObj['menu_'+ item.menuId] = {
@@ -386,7 +386,7 @@
 			toggleMenu.innerHTML = '';
 
 			menuList.forEach(function (item, index) {				
-				str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ item.menuName +'</dd></dl></li>';
+				str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ ConvertCharToEntityReference(item.menuName) +'</dd></dl></li>';
 			});
 
 			toggleMenu.innerHTML = str;

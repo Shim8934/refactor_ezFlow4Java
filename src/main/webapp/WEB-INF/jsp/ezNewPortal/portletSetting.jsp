@@ -20,7 +20,7 @@
 			.set-head { background-color: #687077; height:44px; line-height:42px; display: flex; align-items: center; margin:0px; padding:0px;}
 			.set-head h1 { font-size: 16px; margin-left: 20px; color:#fff;}
 			.set-action { height: 9%; display: flex; justify-content: center; align-items: center;} 
-			.ui-portlet { position:relative;  width: 230px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 45px;}
+			.ui-portlet { position:relative;  width: 230px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
 			.ui-portlet-on { background-color: #f0f0f0; }
 			.ui-portlet-off { background-color: #f0f0f0; }
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
