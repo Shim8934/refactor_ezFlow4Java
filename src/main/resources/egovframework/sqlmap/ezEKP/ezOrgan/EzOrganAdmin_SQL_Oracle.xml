@@ -546,6 +546,14 @@
 				TBL_USERMASTER
 			SET 
 			    $v_PROPNAME$ = #v_PROPVALUE#
+			    
+			]]>
+			<isEqual property="v_PROPNAME" compareValue="EXTENSIONATTRIBUTE15">
+				<![CDATA[
+					, UPDATEDT = TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
+				]]>
+			</isEqual>
+			<![CDATA[
 			WHERE
 				CN = #v_CN#
 			AND
