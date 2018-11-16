@@ -3820,7 +3820,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (mode.equals("temp")) {
 			ezBoardService.setAsRead(userInfo, boardID, itemID);
 		}
-
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			model.addAttribute("mailShareId", request.getParameter("mailShareId"));
+		}
+		
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardListVO", boardListVO);
 		model.addAttribute("boardAttributeListVO", boardAttributeListVO);

@@ -24,9 +24,20 @@
 	        var pNoneActiveX = "${NoneActiveX}";
 		    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간
 		    var memoFlag = "<c:out value='${memoFlag}' />";
+		    var shareId = "${shareId}";
+		    var deletePermission = "${deletePermission}";
+		    var sendPermission = "${sendPermission}";
 		    var mouseTop;
 		    
 	        function window_onload() {
+	        	if (shareId != "" && deletePermission != "Y") {
+					var divsToHide = document.getElementsByClassName("icon_rbtn");
+					
+				    for(var i = 0; i < divsToHide.length; i++){
+				        divsToHide[i].style.display = "none";
+				    }
+				}
+	        	
 	        	if(memoFlag === "YES") {
 		        	/* 마우스 오른쪽 메뉴 변수 */
 					var conObject = document.getElementById("context-menus");
@@ -203,6 +214,11 @@
 		    function AttachAllDownload() {
 		    	
 		    	var url = "/ezEmail/downloadAttachAll.do";
+		    	
+		    	if (typeof(shareId) != "undefined" && shareId != "") {
+		    		url += "?shareId=" + encodeURIComponent(shareId);
+		    	}
+		    	
 		    	var fileLen = document.getElementsByName("MailAttachDownloadItems").length;
 		    	var params = "";
 		    	var folderPath = "";
@@ -291,9 +307,15 @@
 		        xml += "<NAME><![CDATA[" + obj.getAttribute("fileid") + "]]></NAME>";
 		        xml += "</ROW>";
 		        xml += "<ITEMID><![CDATA[" + g_paramURL + "]]></ITEMID></FILE>";
-	
+				
+				var requestUrl = "/ezEmail/mailDelReadInterAttach.do";
+		        
+				if (typeof(shareId) != "undefined" && shareId != "") {
+					requestUrl += "?shareId=" + encodeURIComponent(shareId);
+				}
+		        
 		        var xmlHTTP = new XMLHttpRequest();
-		        xmlHTTP.open("POST", "/ezEmail/mailDelReadInterAttach.do", false);
+		        xmlHTTP.open("POST", requestUrl, false);
 		        xmlHTTP.send(xml);
 	
 		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
@@ -388,22 +410,23 @@
 	            oForm.appendChild(oInputHidden);
 	            window.document.body.appendChild(oForm);
 	            
+	            var pURI = "";
+	            
 	            if (Division == "ALLRE") {
-	                var pURI = "/ezEmail/mailWrite.do?cmd=REPLYALL&URL=" + encodeURIComponent(g_paramURL);
-	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() 
-	                		+ ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                newwin.focus();	            	
+	                pURI = "/ezEmail/mailWrite.do?cmd=REPLYALL&URL=" + encodeURIComponent(g_paramURL);
 	            } else if (Division == "RE") {
-	                var pURI = "/ezEmail/mailWrite.do?cmd=REPLY&URL=" + encodeURIComponent(g_paramURL);
-	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() 
-	                		+ ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                newwin.focus();
+	                pURI = "/ezEmail/mailWrite.do?cmd=REPLY&URL=" + encodeURIComponent(g_paramURL);
 	            } else if (Division = "FW") {
-	            	var pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(g_paramURL);
-	                var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() 
-	                		+ ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                newwin.focus();
+	            	pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(g_paramURL);
 	            }
+	            
+	            if (typeof(shareId) != "undefined" && shareId != "") {
+	            	pURI += "&shareId=" + encodeURIComponent(shareId);
+	        	}
+	            
+	            var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() 
+                		+ ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+                newwin.focus();
 	        }
 	        
 	        //업무일지 상세보기
@@ -467,16 +490,19 @@
 	<body style="margin:10px 13px" onload="javascript:window_onload()" onclick="frameClick();">
 		<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' onclick='Smaller()' style='cursor:pointer;' />
 		<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; margin-left: -4px;' />
-		<span style="float:right;">
-		<img src="/images/ImgIcon/PrereplyAll.gif" title="<spring:message code='ezEmail.t512' />" style='cursor:pointer;' onclick="Mail_Acton('ALLRE');" /><img src="/images/ImgIcon/Prereply.gif" title="<spring:message code='ezEmail.t511' />"  style='cursor:pointer;' onclick="Mail_Acton('RE');"/><img src="/images/ImgIcon/Preforward.gif" title="<spring:message code='ezEmail.t513' />"  style='cursor:pointer;' onclick="Mail_Acton('FW');"/>
-		</span>
-			<div class="previewmail_addfile" id="ifrmPreViewRayer" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;font-family:<spring:message code='main.t246' />">
-				<p class="title"><spring:message code='ezEmail.t99000003' /><span>${pAttachListHtmlSub}</span><span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span>
-		    	<span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span></p>
-				<ul class="list" id="PreviewAttachList">
-		            ${pAttachListHtml}
-				</ul>
-			</div>
+		<c:if test="${shareId == null or (shareId != '' and sendPermission == 'Y')}">
+			<span style="float:right;">
+				<img src="/images/ImgIcon/PrereplyAll.gif" title="<spring:message code='ezEmail.t512' />" style='cursor:pointer;' onclick="Mail_Acton('ALLRE');" /><img src="/images/ImgIcon/Prereply.gif" title="<spring:message code='ezEmail.t511' />"  style='cursor:pointer;' onclick="Mail_Acton('RE');"/><img src="/images/ImgIcon/Preforward.gif" title="<spring:message code='ezEmail.t513' />"  style='cursor:pointer;' onclick="Mail_Acton('FW');"/>
+			</span>
+		</c:if>
+		
+		<div class="previewmail_addfile" id="ifrmPreViewRayer" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;font-family:<spring:message code='main.t246' />">
+			<p class="title"><spring:message code='ezEmail.t99000003' /><span>${pAttachListHtmlSub}</span><span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span>
+	    	<span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span></p>
+			<ul class="list" id="PreviewAttachList">
+	            ${pAttachListHtml}
+			</ul>
+		</div>
 		<div id="MailBigAttachRayer" class="previewmail_addfile">
 		</div>
 		<div id="normalScreen" style="margin-top:5px; word-wrap:break-word;">

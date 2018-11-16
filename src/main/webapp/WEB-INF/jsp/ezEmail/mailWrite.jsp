@@ -9,7 +9,7 @@
 	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/jquery.ui.all.css')}" type="text/css" />
-		<c:if test="${useFromAddress == 'YES'}">
+		<c:if test="${shareId == null and useFromAddress == 'YES'}">
 		<style>
 			.selectbox { position: relative; width: 100%; /* 너비설정 */ border: 0px; /* 테두리 설정 */ z-index: 1; } 
 			.selectbox:before { /* 화살표 대체 */ content: ""; position: absolute; top: 50%; right: 15px; width: 0; height: 0; margin-top: -1px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #333; } 
@@ -167,6 +167,7 @@
 	    var attitudeIncludeMe = false; 
 	    var searchStartDate = "${searchStartDate}";
 	    var searchEndDate = "${searchEndDate}";
+	    var shareId = "${shareId}";
 	    
 	    // ezPMS 프로젝트 아이디
 	    var ezPMSProjectId = "${ezPMSProjectId}";
@@ -299,7 +300,7 @@
 				alert(strLang241);
             </c:if>
             
-            <c:if test="${useFromAddress == 'YES'}">
+            <c:if test="${shareId == null and useFromAddress == 'YES'}">
 	            var selectTarget = $('.selectbox select'); 
 	            selectTarget.change(function(){ 
 	            	var select_name = $(this).children('option:selected').text(); 
@@ -471,7 +472,13 @@
 	    var isDelted = false;
 	    function delDrafts() {
 	        var xmlhttp = createXMLHttpRequest();
-	        xmlhttp.open("GET", "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url) + "&delid=" + filedate, false);
+	        var requestUrl = "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url) + "&delid=" + filedate;
+	        
+	    	if (typeof(shareId) != "undefined" && shareId != "") {
+	    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	    	}
+	        
+	        xmlhttp.open("GET", requestUrl, false);
 	        xmlhttp.send();
 	        xmlhttp = null;
 	        isDelted = true;
@@ -862,8 +869,15 @@
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "ITEMID", "Y");
 	            }
 	        }
+	        
+	        var requestUrl = "/ezEmail/mailInterAttachCK.do";
+	        
+	    	if (typeof(shareId) != "undefined" && shareId != "") {
+	    		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	    	}
+	        
 	        xmlhttp = createXMLHttpRequest();
-	        xmlhttp.open("POST", "/ezEmail/mailInterAttachCK.do", false);
+	        xmlhttp.open("POST", requestUrl, false);
 	        xmlhttp.send(xmlDoc);
 	        var aitem;
 	        var xmlReturnValue = createXmlDom();
@@ -913,6 +927,10 @@
 			                				+ "mode=Attach"
 			                				+ "&folderPath=" + encodeURIComponent(folderPath)
 			                				+ "&filename=" + encodeURIComponent(filename);
+			                
+			                if (typeof(shareId) != "undefined" && shareId != "") {
+			                	aitem += "&shareId=" + encodeURIComponent(shareId);
+					    	}
 		                }
 		                
 		                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");
@@ -2153,7 +2171,7 @@
 	                            	<option value="1">PlainText</option>
 	                            </select>
 	                        </li>
-	                        <c:if test="${useOnlyInnerMail != 'YES'}">
+	                        <c:if test="${useOnlyInnerMail != 'YES' && shareId == null}">
 	                        	<li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default; display:none;"><img src="/images/pbar.gif"></li>
 	                        	<li class="sel" style="background:none; border:none; padding:0px;">
 		                            <select style="vertical-align:top;" onchange="ChangeSenderName(this);">
@@ -2185,7 +2203,7 @@
 	        <tr>
 	            <td>
 	                <table id="infoTable" class="popuplist" style="width:100%">
-	                	<c:if test="${useFromAddress == 'YES'}">
+	                	<c:if test="${shareId == null and useFromAddress == 'YES'}">
 		                	<tr id="MsgFrom_TR">
 		                		<th style="text-align: center;">
 		                        	<span style="width: 50px;"><spring:message code='ezEmail.lhm30' /></span>
@@ -2194,6 +2212,16 @@
 		                        	<div class="selectbox">
 		                        		${fromAddressHtml}
 		                        	</div>
+		                        </td>
+		                	</tr>
+	                	</c:if>
+	                	<c:if test="${shareId != null}">
+		                	<tr id="MsgFrom_TR">
+		                		<th style="text-align: center;">
+		                        	<span style="width: 50px;"><spring:message code='ezEmail.lhm30' /></span>
+		                        </th>
+		                        <td colspan="3" style="padding-left:10px;">
+		                        	<span><c:out value="${shareName} <${shareMail}>" /></span>
 		                        </td>
 		                	</tr>
 	                	</c:if>
@@ -2333,7 +2361,14 @@
 	        <tr>
 	            <td style="padding-top: 5px;height:20px;vertical-align:middle;">
 	                <img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px" /><span style="color:#3a76c3;height:18px;display:inline-block;margin-left:5px">${pAttachWarning}</span>
-	                <iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do"></iframe>
+	                <c:choose>
+	                	<c:when test="${shareId != null and shareId != ''}">
+	                		<iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do?shareId=${shareId}"></iframe>
+	                	</c:when>
+	                	<c:otherwise>
+	                		<iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do"></iframe>
+	                	</c:otherwise>
+	                </c:choose>
 	            </td>
 	        </tr>
             </c:if>

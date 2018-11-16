@@ -51,6 +51,10 @@
 		    var isSecureMail = "${isSecureMail}";
 		    var useReSend = "${useReSend}";
 		    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간
+		    var dotNetIntegration = "${dotNetIntegration}";
+		    var shareId = "${shareId}";
+		    var deletePermission = "${deletePermission}";
+		    var sendPermission = "${sendPermission}";
 		    
 		    window.onresize = window_onresize;
 		    
@@ -98,7 +102,20 @@
 		        	document.getElementById("HolderSent").style.display = "none";
 		            document.getElementById("HolderElse").style.display = "";
 		        }
-		        		        
+		        
+		        if (shareId != "" && sendPermission != "Y") {
+		        	btnReply.style.display = "none";
+		        	btnAllReply.style.display = "none";
+		        	btnForward.style.display = "none";
+		        	liReSend.style.display = "none";
+		        	HolderSent.style.display = "none";
+		        }
+		        
+		        if (shareId != "" && deletePermission != "Y") {
+		        	btnMove.style.display = "none";
+		        	btnDelete.style.display = "none";
+		        }
+		        
 		        try{
 		            if(ReadCountCheck=="N")
 		            {
@@ -118,8 +135,13 @@
 		            conWidth = 890;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
-		
-		        window.open("/ezEmail/mailPrint.do?URL=" + encodeURIComponent(g_paramURL), "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1, scrollbars=1");
+				var url = "/ezEmail/mailPrint.do?URL=" + encodeURIComponent(g_paramURL);
+		        
+				if (typeof(shareId) != "undefined" && shareId != "") {
+					url += "&shareId=" + encodeURIComponent(shareId);
+				}
+				
+		        window.open(url, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1, scrollbars=1");
 		    }
 			function window_onresize()
 		    {
@@ -303,32 +325,30 @@
 		    
             // 닷넷 게시판 선택 모듈을 호출하는 경우엔 Cross Origin(서로 도메인이 다름)으로 인해 opener를 통한 NewItem_onclick_Complete에
             // 직접적 접근이 허용되지 않아 window.postMessage와 Message Event Listener를 사용함
-            <c:if test="${dotNetIntegration == 'YES'}">
-            window.addEventListener("message", function(e) {
-                var ret = new Array();
+            if (dotNetIntegration == "YES") {
+            	window.addEventListener("message", function(e) {
+                    var ret = new Array();
 
-                // 사용자가 선택한 게시판의 ID가 리턴됨
-                ret = e.data;
-                
-                NewItem_onclick_Complete(ret);
-            });
-            </c:if>
+                    // 사용자가 선택한 게시판의 ID가 리턴됨
+                    ret = e.data;
+                    
+                    NewItem_onclick_Complete(ret);
+                });
+            }
 		    
 		    // 메일읽기창에서 '게시' 버튼을 누를 때 호출됨		    
 		    function NewItem_onclick() {
 		        if (CrossYN()) {
 		            writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		            		            		           
-		            <c:if test="${dotNetIntegration == 'YES'}">
-		            // IE가 window.postMessage를 Cross Origin에서 지원하지 않는 관계로 동일 사이트의 윈도우를
-		            // 띄운 후 그 안에서 iframe으로 처리해야 한다.
-		            var OpenWin = window.open("/ezBoard/writeBoardSelectModalDotNet.do", "WriteBoardSelect_Modal", GetOpenWindowfeatureNoScrollbar(355, 660));		            
-		            </c:if>
 		            
-		            <c:if test="${dotNetIntegration != 'YES'}">
-		            // 자체 게시판 선택 모듈을 호출하는 경우
-		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
-		            </c:if>
+		            if (dotNetIntegration == "YES") {
+		            	// IE가 window.postMessage를 Cross Origin에서 지원하지 않는 관계로 동일 사이트의 윈도우를
+			            // 띄운 후 그 안에서 iframe으로 처리해야 한다.
+			            var OpenWin = window.open("/ezBoard/writeBoardSelectModalDotNet.do", "WriteBoardSelect_Modal", GetOpenWindowfeatureNoScrollbar(355, 660));
+		            } else {
+		            	// 자체 게시판 선택 모듈을 호출하는 경우
+			            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+		            }
 		            
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
@@ -361,12 +381,13 @@
 		                    alert(strLang337);
 		                }
 		                else {
-		                    if (CrossYN() || pNoneActiveX == "YES") {
-		                        window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		                    }
-		                    else {
-		                    	window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		                    }
+		                	var requestUrl = "/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL);
+		                	
+		                	if (typeof(shareId) != "undefined" && shareId != "") {
+		                		requestUrl += "&mailShareId=" + encodeURIComponent(shareId);
+		    				}
+		                	
+		                    window.open(requestUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		                }
 		            }
 		        }
@@ -389,17 +410,19 @@
 		                alert(strLang337);
 		            }
 		            else {
-		                if (CrossYN() || pNoneActiveX == "YES")
-		                    <c:if test="${dotNetIntegration == 'YES'}">
-		                    window.open("${dotNetUrl}/myoffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		                    </c:if>
-				            <c:if test="${dotNetIntegration != 'YES'}">		                    
-		                    window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		                    </c:if>
-		                else {
-	                        window.open("/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		                }
-		
+		            	var requestUrl; 
+		            	
+		            	if (dotNetIntegration == "YES") {
+		            		requestUrl = "${dotNetUrl}/myoffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL);
+		            	} else {
+		            		requestUrl = "/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL);
+		            	}
+	                	
+	                	if (typeof(shareId) != "undefined" && shareId != "") {
+	                		requestUrl += "&mailShareId=" + encodeURIComponent(shareId);
+	    				}
+		            	
+	                	window.open(requestUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		        }
 		    }
@@ -418,11 +441,22 @@
 		    }
 		    
 		    function secureInfo_onClick() {
-		    	DivPopUpShow(550, 500, "/ezEmail/secureMailInfo.do?url=" + encodeURIComponent(g_paramURL));
+		    	var url = "/ezEmail/secureMailInfo.do?url=" + encodeURIComponent(g_paramURL);
+		    	
+		    	if (typeof(shareId) != "undefined" && shareId != "") {
+		    		url += "&shareId=" + encodeURIComponent(shareId);
+		    	}
+		    	
+		    	DivPopUpShow(550, 500, url);
 		    }
 		    
 		    function reSend_onClick() {
 		        var pURI = "/ezEmail/mailWrite.do?cmd=RESEND&URL=" + encodeURIComponent(g_paramURL);
+		        
+		        if (typeof(shareId) != "undefined" && shareId != "") {
+		        	pURI += "&shareId=" + encodeURIComponent(shareId);
+		    	}
+		        
 		        var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
 		        newwin.focus();
 		    }
@@ -519,7 +553,9 @@
 		                    </td>
 		                    <td nowrap class="pos2" id="btnInsertAddr">
 		                    	<a href="#" style="margin-right:5px;"><span onClick="func_addaddr()" id="btn_addaddr"><img title="<spring:message code='ezEmail.t554' />" src="/images/email/icon_address_add.png" style="border:0px" /></span></a>
-		                    	<a href="#" style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img title="<spring:message code='ezEmail.t270' />" src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
+		                    	<c:if test="${shareId == null or shareId == ''}">
+		                    		<a href="#" style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img title="<spring:message code='ezEmail.t270' />" src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
+		                    	</c:if>
 		                    </td>
 		                </tr>
 		                <tr>
@@ -586,6 +622,9 @@
 			<input  type="hidden" id="iptFolderPath"  name="iptFolderPath" value="">
 		    <input  type="hidden" id="iptURL"  name="iptURL" value="">
 		    <input  type="hidden" id="iSecurity"  name="iSecurity" value="">
+		    <c:if test="${shareId != null && shareId != ''}">
+		    	<input  type="hidden" id="shareId"  name="shareId" value="${shareId}">
+		    </c:if>
 		</form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

@@ -705,7 +705,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		strBrdID = resBrd.getBrdID();
 		strBrdExplain = resBrd.getBrdExplain();
-		strResLocation = resBrd.getResLocation();
+		strResLocation = commonUtil.cleanValue(resBrd.getResLocation());		// 2018-11-16 김민성 - 자원위치 특수문자, 태그 처리
 		strOwnDeptID = resBrd.getOwnDeptID();
 		strOwnerID = ownerList[0];
 		ownerCall = resBrd.getOwnerCall();

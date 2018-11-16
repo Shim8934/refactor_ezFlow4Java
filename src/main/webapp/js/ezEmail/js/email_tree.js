@@ -14,12 +14,19 @@
     objNode.text = bcount;
     objRoot.appendChild(objNode);
     
+    var requestUrl = "/ezEmail/getFolderList.do";
+    
     if (isFolderManager) {
-    	xmlHTTP.open("POST", "/ezEmail/getFolderList.do?fm=1", false);
+    	requestUrl += "?fm=1";
     } else {
-    	xmlHTTP.open("POST", "/ezEmail/getFolderList.do", false);
+    	requestUrl += "?fm=0";
     }
     
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	}
+    
+    xmlHTTP.open("POST", requestUrl, false);
 	xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	xmlHTTP.send(xmlDOM.xml);
 	

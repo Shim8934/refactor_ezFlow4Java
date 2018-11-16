@@ -194,36 +194,45 @@
 // 		                }
 // 		            }
 		
+					/* 2018-11-15 홍승비 - 익명게시판 게시자 클릭 시 사원정보 표출되던 부분 수정 */
 		            var Div = document.createElement("DIV");
 		            var Span = document.createElement("SPAN");
-		            if ("${useOcs}" == "YES" && gubun != 2) {
-		                var pSIPUriList = getSIPUri(strWriterID + ";", "").split(';');
-		             
-		                var Img = document.createElement("IMG");            
-		                Img.style.verticalAlign = "middle";
-		                Img.src = "/images/Presence/unknown.gif";
-		                Img.type = "smtp";
-		                Img.onload = "PresenceControl(\"" + pSIPUriList[0] + "\", this)";
-		                Img.id = GetGUID();
-		                Div.appendChild(Img);
-		                var Span = document.createElement("SPAN");
+		            if (gubun != 2) {
+			            if ("${useOcs}" == "YES") {
+			                var pSIPUriList = getSIPUri(strWriterID + ";", "").split(';');
+			                var Img = document.createElement("IMG");
+			                Img.style.verticalAlign = "middle";
+			                Img.src = "/images/Presence/unknown.gif";
+			                Img.type = "smtp";
+			                Img.onload = "PresenceControl(\"" + pSIPUriList[0] + "\", this)";
+			                Img.id = GetGUID();
+			                Div.appendChild(Img);
+			                var Span = document.createElement("SPAN");
+			                Span.style.verticalAlign = "middle";
+			                Span.style.cursor = "pointer";
+			                Span.setAttribute("onclick", "OpenUserInfo('" + strWriterID + "', '" + strWriterDeptID + "')");
+			                Span.innerText = strWriterName;
+			                Div.appendChild(Span);
+			                document.getElementById("WriteUserNM").innerHTML = Div.outerHTML;
+			                pSIPUriList = null;
+			            }
+			            else {
+			                Span = document.createElement("SPAN");
+			                Span.style.verticalAlign = "middle";
+			                Span.style.cursor = "pointer";
+			                Span.setAttribute("onclick", "OpenUserInfo('" + strWriterID + "', '" + strWriterDeptID + "')");
+			                Span.innerText = strWriterName;
+			                Div.appendChild(Span);
+			                document.getElementById("WriteUserNM").innerHTML = Div.outerHTML;
+			            }
+		            } else {
+						Span = document.createElement("SPAN");
 		                Span.style.verticalAlign = "middle";
-		                Span.style.cursor = "pointer";
-		                Span.setAttribute("onclick", "OpenUserInfo('" + strWriterID + "', '" + strWriterDeptID + "')");
-		                Span.innerText = strWriterName;
-		                Div.appendChild(Span);
-		                document.getElementById("WriteUserNM").innerHTML = Div.outerHTML;     
-		                pSIPUriList = null;
-		            }
-		            else {
-		                Span = document.createElement("SPAN");
-		                Span.style.verticalAlign = "middle";
-		                Span.style.cursor = "pointer";
-		                Span.setAttribute("onclick", "OpenUserInfo('" + strWriterID + "', '" + strWriterDeptID + "')");
 		                Span.innerText = strWriterName;
 		                Div.appendChild(Span);
 		                document.getElementById("WriteUserNM").innerHTML = Div.outerHTML;
 		            }
+		            
 		            if (g_progresswin) g_progresswin.close();
 		        }
 		        catch (e) {

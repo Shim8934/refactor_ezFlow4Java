@@ -96,8 +96,14 @@ function DelAttachFileAtList3(xmlStr) {
 
 function DelList(resultXML) {
     var xml = loadXMLString(resultXML);
+    var requestUrl = "/ezEmail/mailDelInterAttach.do";
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	}
+    
     xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "/ezEmail/mailDelInterAttach.do", false);
+    xmlhttp.open("POST", requestUrl, false);
     xmlhttp.send(xml);
     
     var xmlDoc = loadXMLString(xmlhttp.responseText);	
