@@ -152,7 +152,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("langType", langType);
 		map.put("userId", userId);
 		map.put("deptId", deptId);
-		return ezNewPortalDAO.getUserMenuList(map);
+		
+		List<MenuInfoVO> menuList = ezNewPortalDAO.getUserMenuList(map);
+		
+		return menuList;
 	}
 	
 	public List<MenuInfoVO> getCompanyMenuList(String companyId, int tenantId, String langType, String userId, String deptId) throws Exception {
@@ -185,9 +188,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			map.put("companyId", companyId);
 			map.put("tenantId", tenantId);
 			map.put("userId", userId);			
-				map.put("menuId", list.get(i).get("menuId"));
+			map.put("menuId", list.get(i).get("menuId"));
 			map.put("order", list.get(i).get("order"));
-			
+			System.out.println(list.toString());
 			if (cnt < 1) {
 				ezNewPortalDAO.insertUserMenuOrder(map);
 			} else {
@@ -349,7 +352,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		 * -> 그 안에 있는 포틀릿만 쓰는 것으로 판단
 		*/
 		List<PortletInfoVO> compPortletList = getPortletOrderCompForUser(portletLang, tenantId, companyId, deptId, userId);
-		List<PortletInfoVO> userPortletList = getPortletOrderUser(portletLang, userId, tenantId, companyId);		
+		List<PortletInfoVO> userPortletList = getPortletOrderUser(portletLang, userId, tenantId, companyId, deptId);		
 		if(userPortletList.size() < 1) {
 			Iterator<PortletInfoVO> it = compPortletList.iterator();
 			while (it.hasNext()) {
@@ -363,12 +366,36 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			while (comp.hasNext()) {
 				PortletInfoVO compVO = comp.next(); 
 				Map<String, Object> map = commonUtil.transBean2Map(compVO);
+				String userAuth = "";
+				String deptAuth = "";
+				String comAuth = "";
 				for (PortletInfoVO pVO : userPortletList) {
-					boolean resultAuth = getCheckAuth(pVO.getMenuId(), userId, deptId, companyId, tenantId);
-					LOGGER.debug(pVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
-					if (resultAuth) {
-						resultPortletList.add(pVO);
-					}
+//					boolean resultAuth = getCheckAuth(pVO.getMenuId(), userId, deptId, companyId, tenantId);
+//					LOGGER.debug(pVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
+//					if (resultAuth) {
+//						resultPortletList.add(pVO);
+//					}
+					userAuth = pVO.getUserAuth();
+					deptAuth = pVO.getDeptAuth();
+					comAuth = pVO.getComAuth();
+					
+					if (userAuth != null && userAuth != "") {
+						if (userAuth.equals("1")) {
+							resultPortletList.add(pVO);
+						} 
+					} else {
+						if (deptAuth != null && deptAuth != "") {
+							if (deptAuth.equals("1")) {
+								resultPortletList.add(pVO);
+							}
+						} else {
+							if (comAuth != null && comAuth != "") {
+								if (comAuth.equals("1")) {
+									resultPortletList.add(pVO);
+								}
+							}
+						}
+					} 
 				}
 				
 				Iterator<PortletInfoVO> user = resultPortletList.iterator();
@@ -474,13 +501,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 
 	@Override
-	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId) {
+	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId, String deptPath) {
 		LOGGER.debug("[Serivce] getPortletOrderUser Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("portletLang", portletLang);
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
+		map.put("deptId", deptPath);
 
 		LOGGER.debug("[Serivce] getPortletOrderUser Ended");
 		return ezNewPortalDAO.getPortletOrderUser(map);
@@ -752,11 +780,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 
 	@Override
-	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId) {
+	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId) {
 		LOGGER.debug("getUserThemeList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
+		map.put("userId", userId);
 		
 		LOGGER.debug("getUserThemeList ended.");
 		return ezNewPortalDAO.getUserThemeList(map);
@@ -1031,6 +1060,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getBoardPortletInfo(map);
 		
 	}
+	
+	@Override
+	public void resetCompanyMenuOrder(String companyId, int tenantId) {
+		LOGGER.debug("resetCompanyMenuOrder started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezNewPortalDAO.resetCompanyMenuOrder(map);
+		LOGGER.debug("resetCompanyMenuOrder ended.");
+	}
 	/**
 	 * 이효진
 	 */
@@ -1124,7 +1164,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId) throws Exception {
+	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId) throws Exception {
 		LOGGER.debug("getThemes started. admin = " + admin + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		List<ThemeInfoVO> list = null;
@@ -1132,7 +1172,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		if (admin) {
 			list = getCompanyThemes(companyId, tenantId);
 		} else {
-			list = getUserThemeList(companyId, tenantId);
+			list = getUserThemeList(companyId, tenantId, userId);
 		}
 		
 		LOGGER.debug("getThemes ended.");

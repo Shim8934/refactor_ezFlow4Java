@@ -2495,16 +2495,17 @@ public class EzCommunityController extends EgovFileMngUtil{
 			name1 = member.getUserName();
 		}
 
+		// 2018-11-12 김민성 - 안쓰는 카테고리 주석처리
 		int pPermitCount = ezCommunityService.adminMemPermitGet1(code, userInfo.getTenantId());
 		String cCateA = ezCommunityService.adminBasicGet1(code, userInfo.getTenantId());
-		String cCateB = ezCommunityService.adminBasicGet2(code, userInfo.getTenantId());
+		//String cCateB = ezCommunityService.adminBasicGet2(code, userInfo.getTenantId());
 		
 		model.addAttribute("code", code);
 		model.addAttribute("club", club);
 		model.addAttribute("name1", name1);
 		model.addAttribute("pPermitCount", pPermitCount);
 		model.addAttribute("c_cate_a", (cCateA == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateA, userInfo.getLocale()));
-		model.addAttribute("c_cate_b", (cCateB == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateB, userInfo.getLocale()));
+		//model.addAttribute("c_cate_b", (cCateB == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateB, userInfo.getLocale()));
 		model.addAttribute("lang_Primary", langPrimary);
 		model.addAttribute("lang_Secondary", langSecondary);
 		
@@ -3509,6 +3510,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		/* 2018-11-12 김민성 - 커뮤니티 공지사항 추가 */
 		List<CommunityCBoardVO> cNoticeList = ezCommunityService.bbsListGet2(bName, userInfo.getPrimary(), "", "", userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		for(CommunityCBoardVO noticeList : cNoticeList) {
+			noticeList.setTitle(commonUtil.cleanValue(noticeList.getTitle()));
+		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("totalPage", totalPage);

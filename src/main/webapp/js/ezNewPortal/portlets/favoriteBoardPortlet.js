@@ -100,7 +100,7 @@ function getBoardList_NewBoardSTD() {
             	
              listHTML += "<li onclick=\"openDoc_section4_Type('" + itemId + "','" + boardType + "', '" + boardId + "')\" >";			                        
              
-             listHTML += "<span class='txt'>" + title + "</span>";
+             listHTML += "<span class='txt'>" + ConvertCharToEntityReference(title) + "</span>";
              listHTML += "<span class='date'>" + startDate.substring(5,16) + "</span>";
              listHTML += "<span class='name'>" + writerName + "</span>";
              listHTML += "</li>";

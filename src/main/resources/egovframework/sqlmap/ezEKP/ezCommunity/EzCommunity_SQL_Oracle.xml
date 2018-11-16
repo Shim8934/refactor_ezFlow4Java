@@ -1929,6 +1929,7 @@
 						c_membercnt,
 						description,
 						description2,
+						TBL_C_CATEGORY.C_NAME,
 						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_regdate ) ROWNUM_
 					FROM
 						TBL_C_CLUB
@@ -1953,10 +1954,7 @@
 					AND
 						TBL_C_CLUB.tenant_id = #tenantID#
 					) T1
-				WHERE
-					ROWNUM_ <= #v_pEnd#) X
-			WHERE 
-				X.ROWNUM_ >= #v_pStart#
+				) X
 			]]>
 		</isEqual>
 		
@@ -1980,6 +1978,7 @@
 						c_membercnt,
 						description,
 						description2,
+						TBL_C_CATEGORY.C_NAME,
 						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_regdate  ) ROWNUM_
 					FROM
 						TBL_C_CLUB 
@@ -2004,10 +2003,7 @@
 					AND
 						TBL_C_CLUB.tenant_id = #tenantID#
 					) T1
-				WHERE
-					ROWNUM_ <= #v_pEnd#) X
-			WHERE 
-				ROWNUM_ >= #v_pStart#
+				) X
 			]]>
 		</isNotEqual>
 	</select>
@@ -2036,6 +2032,7 @@
 						c_clubconfirmtype,
 						description,
 						description2,
+						T3.C_NAME,
 						ROW_NUMBER() OVER (ORDER BY T1.c_regdate) AS ROWNUM_
 					FROM
 						TBL_C_CLUB T1
@@ -2045,15 +2042,20 @@
 						RTRIM(T1.c_sysopid) = RTRIM(T2.cn)
 					AND
 						T1.tenant_id = T2.tenant_id
+					LEFT JOIN
+						tbl_c_category T3
+					on
+						T1.C_CATE_A = T3.C_CODE
+					AND
+						T1.tenant_id = T3.tenant_id
+					AND
+						T3.C_CAT = 'a'
 					WHERE
 						$v_searchName$ LIKE '%' || #v_searchValue# || '%'
 					AND
 						T1.tenant_id = #tenantID#
 					)
-				WHERE
-					ROWNUM_ <= #v_pEnd#) X
-			WHERE 
-				ROWNUM_ >= #v_pStart#
+				) X
 			]]>
 		</isEqual>
 		
@@ -2073,6 +2075,7 @@
 						displayname2,
 						description,
 						description2,
+						c_Cate_A,
 						ROW_NUMBER() OVER (ORDER BY T1.c_regdate) AS ROWNUM_
 					FROM
 						TBL_C_CLUB T1
@@ -2680,7 +2683,7 @@
 				* 
 	        FROM
 	        	(SELECT
-        			c_clubno,
+        			a.c_clubno,
                     boardname,
                     boardname2,
                     itemid,
@@ -2724,8 +2727,11 @@
 						A.boardid = B.boardid
 					AND
                 		A.tenant_id = B.tenant_id
-					WHERE
-						RTRIM(A.c_clubno) = #v_copNo#
+					]]>
+					<iterate prepend="WHERE RTRIM(A.c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+						            #v_copNo[]#
+				    </iterate>
+				    <![CDATA[
 					AND
 						A.parentboardid != 'top'
 					AND
@@ -2733,18 +2739,27 @@
 					) T1
 				CROSS JOIN
 					(SELECT
+						c_clubno,
 						c_clubname,
 						c_clubname2,
 						c_membercnt
                    	FROM
                    		TBL_C_CLUB
-                   	WHERE
-                   		RTRIM(c_clubno) = #v_copNo#
+                   	]]>
+					<iterate prepend="WHERE RTRIM(c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+						            #v_copNo[]#
+				    </iterate>
+			    <![CDATA[
                    	AND
 						TBL_C_CLUB.tenant_id = #tenantID#
                    	) T3
-        		WHERE
-        			RTRIM(A.c_clubno) = #v_copNo#
+        		]]>
+					<iterate prepend="WHERE RTRIM(A.c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+						            #v_copNo[]#
+				    </iterate>
+			    <![CDATA[
+			    AND
+					T3.c_clubno = A.c_clubno
         		AND
         			A.parentboardid != 'top'
         		AND
@@ -3852,10 +3867,7 @@
 					) T2
 				WHERE
 					T2.tenant_id = #tenantID# 
-				AND
-					ROWNUM_ <= #v_PEND#) X
-			WHERE 
-				X.ROWNUM_ >= #v_PSTART#
+				) X
 		]]>
 		</isEqual>
 		<isNotEqual property="v_MODE" compareValue="LIST">

@@ -88,7 +88,8 @@
 				<tr>
 					<th><spring:message code ='ezCommunity.t11' /></th>
 					<td>
-						<c:choose>
+						<c:out value = '${c_cate_a}' />
+						<%-- <c:choose>
 							<c:when test="${c_cate_a != '' && c_cate_b != '' }">
 								<c:out value = '${c_cate_a}' />, &nbsp; <c:out value = '${c_cate_b}' />
 							</c:when>
@@ -96,7 +97,7 @@
 								<c:out value = '${c_cate_a}' />
 								<c:out value = '${c_cate_b}' />
 							</c:otherwise>
-						</c:choose>
+						</c:choose> --%>
 					</td>
 				</tr>
 				<tr>

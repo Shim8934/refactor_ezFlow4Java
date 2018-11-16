@@ -19,8 +19,28 @@ public class PortletInfoVO {
 	private String boardName1;
 	private String boardName2;
 	private String menuName;
+	private String userAuth;
+	private String deptAuth;
+	private String comAuth;
 	
-	
+	public String getUserAuth() {
+		return userAuth;
+	}
+	public void setUserAuth(String userAuth) {
+		this.userAuth = userAuth;
+	}
+	public String getDeptAuth() {
+		return deptAuth;
+	}
+	public void setDeptAuth(String deptAuth) {
+		this.deptAuth = deptAuth;
+	}
+	public String getComAuth() {
+		return comAuth;
+	}
+	public void setComAuth(String comAuth) {
+		this.comAuth = comAuth;
+	}
 	public List<PortletNameInfoVO> getPortletNameList() {
 		return portletNameList;
 	}
@@ -114,13 +134,16 @@ public class PortletInfoVO {
 	}
 	@Override
 	public String toString() {
-		return "PortletInfoVO [portletId=" + portletId + ", portletOrder=" + portletOrder + ", portletName="
-				+ portletName + ", menuId=" + menuId + ", portletUrl=" + portletUrl + ", isGeneral=" + isGeneral
-				+ ", defaultOrder=" + defaultOrder + ", portletCategory=" + portletCategory + ", connectionUrl="
-				+ connectionUrl + ", portletUsed=" + portletUsed + ", portletBoardId=" + portletBoardId
-				+ ", portletNameList=" + portletNameList + ", boardName1=" + boardName1 + ", boardName2=" + boardName2
-				+ ", menuName=" + menuName + "]";
+		return "PortletInfoVO [portletId=" + portletId + ", portletOrder="
+				+ portletOrder + ", portletName=" + portletName + ", menuId="
+				+ menuId + ", portletUrl=" + portletUrl + ", isGeneral="
+				+ isGeneral + ", defaultOrder=" + defaultOrder
+				+ ", portletCategory=" + portletCategory + ", connectionUrl="
+				+ connectionUrl + ", portletUsed=" + portletUsed
+				+ ", portletBoardId=" + portletBoardId + ", portletNameList="
+				+ portletNameList + ", boardName1=" + boardName1
+				+ ", boardName2=" + boardName2 + ", menuName=" + menuName
+				+ ", userAuth=" + userAuth + ", deptAuth=" + deptAuth
+				+ ", comAuth=" + comAuth + "]";
 	}
-	
-
 }

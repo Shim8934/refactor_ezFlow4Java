@@ -18,7 +18,7 @@
          	.theme {position:relative;background-color : white; width : 375px; height : 270px; text-align : center; border: 1px solid #cecece; cursor: pointer;}
 			.themeHr {margin-top : 10px;width : 85%;margin-left : 30px;}
 			.themeTitle {margin-top : 9px;}
-			.themeNotUsed {display:none;width:100%; height:87%;background-color:#e1e1e180; z-index:99;position:absolute; right:0; top:0;}
+			.themeNotUsed {background-color : #eee}
 			.themeName {margin-left : 40px;font-size : 14px;font-weight : bold;}
 			.themeDetails {display : none; float:left; width:98%; position : relative;margin-left:0px; padding:0px;}
 			.themeSetting {float : right;margin-right : 27px; margin-top:3px; cursor:pointer;}
@@ -134,7 +134,6 @@
 						themesHTML += "<li>";
 						themesHTML += "<div class='theme' id='theme" + item.themeId + "' onclick='selectTheme(this)'>";
 						themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
-						themesHTML += "<div class='themeNotUsed'>&nbsp;</div>";
 						themesHTML += "</div><div>";
 						themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
 						themesHTML += "<span class='themeName'>" + item.themeName + "</span>";
@@ -163,7 +162,7 @@
 						$("#themeTitle" + item.themeId).find(".themeSetting").on("click", {"themeId" : item.themeId}, openThemeDetail);
 						
 						if (!item.themeUsed) {
-							$("#theme" + item.themeId).find(".themeNotUsed").css("display", "");
+							$("#theme" + item.themeId).attr("class", "theme themeNotUsed");
 						}
 						
 						if (item.themeDefault) {

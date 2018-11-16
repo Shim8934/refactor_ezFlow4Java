@@ -15,16 +15,40 @@ function ptlGetAttitudeList() {
 					$("#ptlInAttiBtn").removeClass("out").addClass("in");
 					$("#ptlInAttiBtn dt").css("margin-bottom","5px");
 					$("#ptlInAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
+					
+					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+ 					
+ 					if (usedTheme == 2) {
+ 						$("#inAttiBtn").parent().addClass("commute_on");
+ 					}
 				} else if (result[i].typeId == "A02") { //지각
+					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+					
+					if (usedTheme == 2) {
+ 						$("#inAttiBtn").parent().addClass("commute_on");
+ 					}
+					
 					$("#ptlInAttiBtn").attr("onclick", "").unbind("mouseenter");
 					$("#ptlInAttiBtn").removeClass("out").addClass("lateIn");
 					$("#ptlInAttiBtn dt").css("margin-bottom","5px");
 					$("#ptlInAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
+					
+					$("#inAttiBtn").removeClass("main_out").addClass("main_lateIn");
+					$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 				} else if (result[i].typeId == "A03") { //퇴근
+					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
+					
+					if (usedTheme == 2) {
+ 						$("#outAttiBtn").parent().addClass("commute_on");
+ 					}
+					
 					$("#ptlOutAttiBtn").attr("onclick", "").unbind("mouseenter");
 					$("#ptlOutAttiBtn").removeClass("out").addClass("in");
 					$("#ptlOutAttiBtn dt").css("margin-bottom","5px");
 					$("#ptlOutAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
+					
+					$("#outAttiBtn").removeClass("main_out").addClass("main_in");
+					$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 				}
 			}
 		}

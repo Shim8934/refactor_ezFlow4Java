@@ -702,7 +702,7 @@
 	</delete>
 	
 	<!-- 권한 관련 추가/삭제 -->
-	<insert id="ezNewPortal.insertMenuAuth">
+	<insert id="ezNewPortal.insertMenuAuth" parameterClass="Map">
 	<![CDATA[
 	INSERT INTO TBL_PORTAL_MENU_AUTH (
 		menu_id, company_id, tenant_id, user_id, access_YN, user_type
@@ -711,6 +711,21 @@
 	)
 	]]>
 	</insert>
+	
+	<update id="ezNewPortal.resetCompanyMenuOrder" parameterClass="Map">
+	<![CDATA[
+		UPDATE 
+			TBL_PORTAL_MENU_COMP A, TBL_PORTAL_MENU B
+		SET
+			A.company_order = B.default_order
+		WHERE
+			A.menu_id = B.menu_id
+		AND
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+	]]>
+	</update>
 	
 	<select id="ezNewPortal.getSilderImages" parameterClass="Map"  resultClass="PortalPortletSliderImageVO">
 	<![CDATA[
@@ -832,4 +847,5 @@
 			SLIDERID = #slideId#
 	]]>
 	</update>
+	
 </sqlMap>

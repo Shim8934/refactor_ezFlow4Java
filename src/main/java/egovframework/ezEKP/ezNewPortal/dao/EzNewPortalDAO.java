@@ -445,6 +445,9 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		insert("ezNewPortal.insertMenuAuth", map);
 	}
 	
+	public void resetCompanyMenuOrder (Map<String, Object> map) {
+		update("ezNewPortal.resetCompanyMenuOrder", map);
+	}
 	/**
 	 * 구해안
 	 */

@@ -141,7 +141,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 /* layout */
 #Center {min-height:600px; margin:0px;  background:#e0e3e4; min-width:1260px;}
 .section_left{  margin:0px; padding:0px; float:left; overflow:hidden; border-right:1px solid #cdcdcd; width:280px; box-sizing:border-box; background:#fff;}
-.section_main{ overflow:hidden; padding-bottom:20px; float:none; min-width:1400px; max-width:1920px; box-sizing:border-box;}
+.section_main{ overflow:hidden; padding-bottom:20px; float:none; min-width:1170px; max-width:1920px; box-sizing:border-box;}
 .section_main .mainLayout_left{ overflow:hidden; float:left; padding:0px 0px 0px 18px; box-sizing:border-box; }
 .section_main .mainLayout_middle{ overflow:hidden;  padding:0px 0px 0px 16px; float:left; box-sizing:border-box; }
 .section_main .mainLayout_right{ float:left; padding:0px 0px 0px 16px; box-sizing:border-box; overflow:hidden; }
@@ -190,15 +190,15 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .portlet_list li.notiLI03{width:144px; height:169px; background:url(/images/ezNewPortal/notiImg01.png) no-repeat; }
 
 /* portlet_list approval */
-.approval .portlet_list li{ margin:0px; padding:0px 10px 0px 23px; background:url(/images/ezNewPortal/list_bul.png) no-repeat 15px 13px; font-size:13px; color:#555555; height:30px; line-height:28px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
-.portlet_list li.first_approval{margin:0px 10px 7px 10px; padding:0px; background:#fff; border:1px solid #e7e7e7; height:117px; box-sizing:border-box;}
-.first_approval .approval_tit{ margin:0px; padding:0px 0px 0px 10px; height:27px; border-bottom:1px solid #e7e7e7; background:#f8f8f8; line-height:25px;}
+.approval .portlet_list li{ margin:0px; padding:0px 10px 0px 23px; background:url(/images/ezNewPortal/list_bul.png) no-repeat 15px 17px; font-size:13px; color:#555555; height:36px; line-height:34px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+.portlet_list li.first_approval{margin:0px; padding:0px; border:1px solid #e7e7e7; height:113px; box-sizing:border-box; border-left:0px; border-right:0px}
+.first_approval .approval_tit{ margin:0px; padding:0px 0px 0px 10px; height:27px; background:#f4f4f4; line-height:25px; border-bottom: 1px solid #e5e5e5}
 .first_approval .approval_tit span.txt{ font-weight:bold;}
-.first_approval .approval_content{margin:15px 0px; padding:0px; overflow:hidden;}
+.first_approval .approval_content{margin:13px 0px 12px 0px; padding:0px; overflow:hidden;}
 .first_approval .approval_content .apprDL{margin:0px; padding:0px 0px 0px 10px; float:left; overflow:hidden; width:30%; box-sizing:border-box;}
 .first_approval .approval_content .apprDL .apprPic{margin:0px; padding:0px; width:53px; height:53px; border:1px solid #e7e7e7; border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; float:left;}
 .first_approval .approval_content .apprDL .apprPic img{border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; width:53px; height:53px;}
-.first_approval .approval_content .apprDL .apprName{margin:0px; padding:0px 0px 0px 0px; font-size:12px; color:#555; overflow:hidden; white-space: nowrap; text-overflow: ellipsis; text-align:center;}
+.first_approval .approval_content .apprDL .apprName{line-height:27px; margin:0px; padding:0px 0px 0px 0px; font-size:12px; color:#555; overflow:hidden; white-space: nowrap; text-overflow: ellipsis; text-align:center;}
 .first_approval .approval_content .apprDL .apprText_blue{ margin:0px; padding:0px; overflow:hidden; text-align:center;}
 .first_approval .approval_content .apprDL .apprText_blue span{margin:0px 0px 0px 0px; padding:0px 5px; height:19px; line-height:18px; background:#0470e4; font-size:12px; color:#fff; border-radius:3px; overflow:hidden; display:inline-block;}
 .first_approval .approval_content .apprDL .apprText_green{margin:0px; padding:0px; overflow:hidden; text-align:center;}
@@ -294,7 +294,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .mailGraph .mGraph_text span{ color:#999;}
 
 /* schedule */
-.schedule{padding:0px; overflow:hidden; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; height:220px;}
+.schedule{padding:0px; overflow:hidden; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; height:520px;}
 .CalendarArea{ overflow:hidden;}
 .CalendarArea .calender {width:75%; overflow:hidden; float:left; padding:14px 22px 0px 22px; box-sizing:border-box;}
 .calendar_mini_title{table-layout:fixed; text-align:center; height:25px; margin:0px 0px 4px 0px; padding:0px 8px;}
@@ -315,7 +315,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .CalendarArea .todayDate .Dgray{ font-size:12px; color:#b7b7b7; font-weight:bold; margin:0px; padding:30px 0px 60px 0px;}
 .CalendarArea .todayDate .dayText{font-size:14px; color:#333333; font-weight:bold; margin:0px; padding:0px;}
 .CalendarArea .todayDate .dayNum{font-size:42px; color:#333333; font-weight:bold; margin:0px; padding:0px;}
-.schedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px;clear:both;overflow:hidden;/* border-top:1px solid #e7e7e7; */}
+.schedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px;clear:both;overflow:hidden;border-top:1px solid #e7e7e7;}
 .scheduleDate{margin:0px;padding: 12px 15px 0px 0px;float: none;}
 .scheduleDate .dayT{margin:0px; padding:5px 0px 0px 0px; font-size:13px; color:#333;}
 .scheduleDate .dayN{margin:0px; padding:0px; font-size:30px; font-weight:bold; color:#0470e4;}
@@ -334,8 +334,8 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* schedule_small */
 .sCalendarArea{ overflow:hidden;}
-.sCalendarArea .scalender {width:54%; overflow:hidden; float:left; padding:10px 10px 10px 10px; box-sizing:border-box; border-right:1px solid #e7e7e7;}
-.scalendar_mini_title{table-layout:fixed; text-align:center; height:25px; margin:0px 0px 4px 0px; padding:0px 10px 0px 3px;}
+.sCalendarArea .scalender {overflow:hidden; float:left; width:96%; margin:4px 5px; padding:10px 10px 10px 10px; box-sizing:border-box; /*border-right:1px solid #e7e7e7;*/}
+.scalendar_mini_title{table-layout:fixed; text-align:center; height:25px; margin:2px 0px 10px 0px;; padding:0px 10px 0px 3px;}
 .scalendar_mini_title .btn_prev{width:14.2%;  padding:0px 1px; cursor:pointer;}
 .scalendar_mini_title .calendar_mini_day{width:100%; text-align:center; color:#333; font-size:16px; font-weight:bold;}
 .scalendar_mini_title .btn_next{width:14.2%; padding:0px 1px; cursor:pointer;}
@@ -343,29 +343,36 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .scalendar_mini th{color:#000; margin:0; padding:4px 0px 4px 0px; border-top:0 none; font-size:13px; border-left:0 none; font-weight:bold; }
 .scalendar_mini th.sun{color:#cd3b3b;}
 .scalendar_mini th.sat{color:#0470e4;}
-.scalendar_mini td {height:26px; text-align:center; cursor:pointer; color:#oaoaoa; position: relative; font-size:12px;}
+.scalendar_mini td {height:26px; text-align:center; cursor:pointer; color:#333333; position: relative; font-size:12px;}
 .scalendar_mini td.sun{color:#fc4a4a;}
 .scalendar_mini td.sat{color:#46abfc;}
 .scalendar_mini td.gray{color:#8a8e9b;}
-.scalendar_mini td.today{ color:#ffffff; background:#0470e4; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
-.scalendar_mini td div {height:26px;line-height:26px; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
-.sschedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px; overflow:hidden;}
-.sscheduleUL{margin:0px;padding: 0px 0px 0px 0px;list-style:none; overflow:hidden; height:204px; box-sizing: border-box;}
-.sscheduleUL .scheduleLi{margin:0px;padding: 6px 0px 0px 7px; height:68px; cursor: pointer; box-sizing:border-box; border-bottom:1px dashed #e7e7e7;}
+.scalendar_mini td.today{color:#333333; background:lightblue; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
+.scalendar_mini td.schedule{color:#333333; background:url(/images/ezNewPortal/theme3Img/scalendar_schedule_bg.png) center center no-repeat; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
+.scalendar_mini td div {height:28px;line-height:28px; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
+.sschedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px; overflow:hidden; height:203px; background: white}
+
+.sschedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px;clear:both;overflow:hidden;border-top:1px solid #e7e7e7;}
+.scheduleDate{height:191px; margin:0px;padding: 12px 15px 0px 0px;float: none; background:#ffffff; text-align:center;}
+.scheduleDate .dayT{margin:0px; padding:5px 0px 0px 0px; font-size:13px; color:#333;}
+.scheduleDate .dayN{margin:0px; padding:0px; font-size:30px; font-weight:bold; color:#0470e4;}
+.sscheduleUL{margin:0px;padding: 0px 0px 0px 7px;list-style:none;float: right;overflow:hidden; background: url(/images/ezNewPortal/theme3Img/schedule_timeline.png) #ffffff no-repeat left top;width:80%;height: 214px;box-sizing: border-box;}
+.sscheduleUL .scheduleLi{margin:0px;padding: 6px 0px 12px 14px;border-bottom: 1px dashed #e7e7e7;height:35px; cursor: pointer;}
 .sscheduleUL .scheduleLi .scheduleTime{margin:0px; padding:0px 0px 1px 0px;}
 .sscheduleUL .scheduleLi .scheduleTime .Tgroup{margin:0px; padding:1px 3px; font-size:12px; color:#fff; background:#f4dd0e; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
 .sscheduleUL .scheduleLi .scheduleTime .Tindividual{margin:0px; padding:1px 3px; font-size:12px; color:#fff; background:#018bfa; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
 .sscheduleUL .scheduleLi .scheduleTime .Tdept{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:#81bc3d; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
 .sscheduleUL .scheduleLi .scheduleTime .Tcompany{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:#ff1c71; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
-.sscheduleUL .scheduleLi .scheduleTime .Tgroup_timeText{margin:0px; padding:3px 0px 0px 0px; font-size:12px; color:#d2bd02; display:block;}
-.sscheduleUL .scheduleLi .scheduleTime .Tindividual_timeText{margin:0px; padding:3px 0px 0px 0px; font-size:12px; color:#018bfa; display:block;}
-.sscheduleUL .scheduleLi .scheduleTime .Tdept_timeText{margin:0px; padding:3px 0px 0px 0px; font-size:12px; color:#81bc3d; display:block;}
-.sscheduleUL .scheduleLi .scheduleTime .Tcompany_timeText{margin:0px; padding:3px 0px 0px 0px; font-size:12px; color:#ff1c71; display:block;}
-.sscheduleUL .scheduleLi .scheduleText{margin:0px; padding:0px; font-size:12px; color:#333; width:97%; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;}
-.sscheduleUL .scheduleLi_nodata{margin:0px;padding: 0px 0px 0px 7px; height:68px; line-height:66px; box-sizing:border-box; border-bottom:1px dashed #e7e7e7;}
-.sscheduleUL .scheduleLi_nodata .sNodataText{ margin:0px; padding:0px 0px 0px 30px; float:left; font-size:12px; color:#b2b2b2; background:url(/images/ezNewPortal/schedule_nodataIcon.png) no-repeat left center;}
-.sscheduleUL .scheduleLi_nodata .sNodataPlus{ margin:26px 10px 0px 0px; padding:0px; float:right; cursor:pointer; line-height:0px;}
-.sscheduleUL li:last-child{ border:none;}
+.sscheduleUL .scheduleLi .scheduleTime .timeText{margin:0px; padding:0px 0px 0px 5px; font-size:13px; color:#333;}
+.sscheduleUL .scheduleLi .scheduleTime .Tcompany_timeText{color:#333333; font-size:13px; margin:0px 0px 0px 8px;}
+.sscheduleUL .scheduleLi .scheduleTime .Tindividual_timeText{color:#333333; font-size:13px; margin:0px 0px 0px 8px;}
+.sscheduleUL .scheduleLi .scheduleText{margin:0px; padding:0px; font-size:13px; color:#333; width:97%; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;}
+.sscheduleUL .scheduleLi_nodata{margin:0px;padding: 8px 0px 10px 14px;border-bottom: 1px dashed #e7e7e7; height:35px; line-height:34px;}
+.sscheduleUL .scheduleLi_nodata .sNodataText{ margin:0px; padding:0px 0px 0px 35px; float:left; font-size:12px; color:#b2b2b2; background:url(/images/ezNewPortal/schedule_nodataIcon.png) no-repeat left center;}
+.sscheduleUL .scheduleLi_nodata .sNodataPlus{ margin:10px 17px 0px 0px; padding:0px; float:right; cursor:pointer;}
+.schedule_calendar{float:left; width:calc(46% - 11px); margin-right:5px; background:#f0c80a;}
+.schedule_scheduleList{float:right; width:54%;}
+.portlet_schedule{background:#ffffff;}
 
 /* approval */
 
@@ -481,7 +488,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .photo_board .preBtn{ margin:0px; padding:0px; float:right; cursor:pointer;}
 .photoList{ margin:33px 0px; padding:0px 10px; list-style:none; overflow:hidden; height:136px; border-top:1px solid #e7e7e7; border-bottom:1px solid #e7e7e7; background:#f4f4f4;}
 .photoList li{ margin:0px; padding:17px 3px; float:left; box-sizing:border-box; width:25%; text-align:center; overflow:hidden; height:136px;}
-.photoList li img{ width:100%; height:102px; cursor:pointer;}
+.photoList li img{ width:100%; height:102px; cursor:pointer;border:1px solid #d9d9d9;}
 .photoList li.none img{ cursor:default;}
 
 /* stats_graph */
@@ -511,7 +518,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index:9; overflow:visible; background: #fff; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
 .linkBtn_open{ margin:0px; padding:0px; position:absolute; right:82px; top:-10px; cursor:pointer; z-index:1000;}
 #linkBtn_open img{margin-top: 18px; position: relative; z-index: 1000;}
-.linkBtn_close{margin:0px; padding:0px; position:absolute; right:82px; top:-10px; cursor:pointer; z-index:1000;}
+.linkBtn_close{margin:0px; padding:0px; position:absolute; right:0px; top:-10px; cursor:pointer; z-index:1000;}
 .aside_quick{ margin:0px; padding:0px; overflow:hidden;}
 .aside_quick .quickmenu_title{ margin:0px; padding:0px; width:100px; height:46px; background:#0470e4; line-height:44px; text-align:center; color:#fff; font-size:13px; font-weight:bold;}
 .aside_quick .quickmenu {width:100px; margin:0px; padding:0px; list-style:none; background:#fff; height:292px; box-sizing:border-box;}
@@ -579,7 +586,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 /* main media query */
 @media only screen and (min-width :1921px) {
-	.portlet{ width:483px; float:left;}
+	.portlet{ width:609px; float:left; margin:30px 2px -8px 16px; height: 252px;}
+	.box_shadow{ width:auto;}
 }
 
 @media only screen and (max-width :1920px) and (min-width :1686px) { 
@@ -588,7 +596,6 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_left{ width:33.3%;}
 	.section_main .mainLayout_middle{ width:33.3%;}
 	.box_shadow{ width:auto;}
-	.portlet{width:auto;}
 	.portlet{ width:32%; float:left; margin:30px 2px -8px 16px; height: 252px;}
 	.bannerText{ padding:73px 18px 0px 0px;}
 }

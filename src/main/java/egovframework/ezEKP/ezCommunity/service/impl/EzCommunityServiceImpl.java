@@ -2071,17 +2071,25 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		rtnVal.append("<ITEM><DATA>");
 		
-		// 이미 companyID로 걸러진 커뮤니티(동일 테넌트 내에서 CLUBNO로 구분 가능)를 가지고 후작업한다.
-		for (String clubNo : clubNoList) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_copNo", clubNo.trim());
-			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
-			map.put("tenantID", userInfo.getTenantId());
-			map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
-			
-			logger.debug("v_copNo : " + clubNo.trim());
-			
+		// 2018-11-14 김민성 - 커뮤니티 개선 작업 새글 정보만 조회하도록 변경
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_copNo", clubNoList);
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
+		
+		logger.debug("v_copNo : " + clubNoList);
+		
+		if(clubNoList.size() > 0) {
 			List<CommunityMyCommunityVO> myCommunityList = ezCommunityDAO.myCommunityItemGet(map);
+			
+			for(CommunityMyCommunityVO myCommunity : myCommunityList) {
+				rtnVal.append(commonUtil.getQueryResult(myCommunity));
+			}
+		}
+		// 이미 companyID로 걸러진 커뮤니티(동일 테넌트 내에서 CLUBNO로 구분 가능)를 가지고 후작업한다.
+		/*for (String clubNo : clubNoList) {
 			
 			logger.debug("myCommunityList.size() : " + myCommunityList.size());
 			
@@ -2091,7 +2099,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				myCommunity.setC_memberCnt(String.valueOf(cnt));
 				rtnVal.append(commonUtil.getQueryResult(myCommunity));
 			}
-		}
+		}*/
 		
 		rtnVal.append("</DATA></ITEM>");
 		
@@ -2745,7 +2753,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t80", userInfo.getLocale()) + "</Option>");
 		strHTML.append(getCategoryValueA(strSelCateA, userInfo));
 		strHTML.append("</Select>&nbsp;");
-		strHTML.append("<Select name=\"cCateB\" class=\"text\">");
+		strHTML.append("<Select name=\"cCateB\" class=\"text\" style=\"display:none;\">");
 		strHTML.append("<Option Value=\"0\">" + egovMessageSource.getMessage("ezCommunity.t81", userInfo.getLocale()) + "</Option>");
 		strHTML.append(getCategoryValueB(strSelCateB, userInfo));
 		strHTML.append("</Select>&nbsp;");
@@ -4253,7 +4261,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			cateA = ezCommunityDAO.ezCommunityBaseGet3(map);
 		}
 		
-		if (!c_Cate_B.equals("0")) {
+		// 2018-11-12 김민성 - 안쓰는 부분 주석처리
+		/*if (!c_Cate_B.equals("0")) {
 			map = new HashMap<String, Object>();
 			map.put("v_C_CODE", c_Cate_B);
 			map.put("v_C_CAT", "b");
@@ -4269,14 +4278,14 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			map.put("tenantID", userInfo.getTenantId());
 			
 			cateC = ezCommunityDAO.ezCommunityBaseGet3(map);
-		}
+		}*/
 		
 		if (!cateA.equals("0")) {
 			sb.append(egovMessageSource.getMessage("ezCommunity."+cateA, userInfo.getLocale()));
 			caca = 1;
 		}
 		
-		if (!cateB.equals("0")) {
+		/*if (!cateB.equals("0")) {
 			if (caca == 1) {
 				sb.append(", ");
 			}
@@ -4291,7 +4300,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			}
 			
 			sb.append(egovMessageSource.getMessage("ezCommunity."+cateC, userInfo.getLocale()));
-		}
+		}*/
 		
 		logger.debug("categoryPrint ended.");
 		

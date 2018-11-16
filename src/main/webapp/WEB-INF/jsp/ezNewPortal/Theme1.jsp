@@ -153,8 +153,8 @@
 			</section>
 		</div>
 		<div style="position:relative;">
-			<aside id="quickSide">	
-				<p class="linkBtn_open" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>
+			<aside id="quickSide" style="width:0px">	
+				<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>
 				<div class="aside_quick">
 					<p class="quickmenu_title">Quick</p>
 					<ul class="quickmenu">
@@ -180,7 +180,7 @@
 			</div>
 		</section>
 		
-		<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1005; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 			
 		<div class="layerpopup"  style="z-index: 2000; position: fixed;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -380,6 +380,11 @@
 						url : portletUrl,
 						success : function(result) {
 							$("#" + portletId + "Portlet").append(result);
+							
+							if (portletId == 6) {
+								$("#" + portletId + "Portlet").css("background","none");
+							}
+							
 							eventSetting(portletId);
 						}
 					});
@@ -443,6 +448,7 @@
 		//개인환경설정으로 이동 동작 연결
 		$("#personalEnv").on("click", viewPersonalEnv);
 		$("#portletEnv").on("click", viewPortletEnv);
+
 		//메뉴 이동(왼쪽)
 		$("#NewMail").on("click", {"menu" : "NewMail"}, quickMenuOpen);
 		$("#Schedule").on("click", {"menu" : "Schedule"}, quickMenuOpen);
@@ -465,7 +471,7 @@
 			
 			var linkBtnOpen = document.getElementById('linkBtn_open');
 			linkBtnOpen.style.right = '';
-			linkBtnOpen.style.left = '82px';
+			linkBtnOpen.style.left = '0px';
 			
 		}
 		// 퀵링크 호출

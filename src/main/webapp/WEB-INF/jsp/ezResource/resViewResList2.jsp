@@ -21,7 +21,8 @@
 				font-weight: normal;
 			}
 			.table_layout th {
-				border-top : 1px solid #e0e0e2;
+				color:#2f2f2f;height: 32px;background: #e4e8ec;border: 1px solid #c8ccd0;padding:0;margin:0;
+				
 			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
@@ -455,7 +456,7 @@
                         		</td>
                     		</tr>
                     		<tr id="noapproval" style="display:none;">
-                        		<td colspan="2" style="padding-top:15px;padding-left:5px;vertical-align:bottom;" ><h2 style="font-weight: normal">▒&nbsp;<spring:message code="ezResource.t402" /></h2></td>
+                        		<td colspan="2" style="padding-top:15px;padding-left:5px;vertical-align:bottom;" ><h2 style="font-weight: normal;font-size:12px">▒&nbsp;<spring:message code="ezResource.t402" /></h2></td>
                     		</tr>
                     		<tr>
                       			<td colspan="2" id='tdCalViewCell2'  class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  ---->

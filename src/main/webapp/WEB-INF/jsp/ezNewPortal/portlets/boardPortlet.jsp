@@ -2,17 +2,13 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Board Portlet</title>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/boardPortlet.js')}"/>
-<script type="text/javascript">
-$(function(){
-	console.log("${access}");
-})
-</script>
 </head>
 <body>
 	<article class="customBoard box_shadow" >
@@ -30,8 +26,8 @@ $(function(){
 			<ul id="customBoardList" class="portlet_list">
 				<c:forEach items="${boardList }" var="item">
 					<li onclick="openDoc_section4_Type('${item.itemID}', '${item.guBun }', '${item.boardID}')">
-						<span class='txt'>${item.title }</span>
-						<span class='date'>${item.startDate }</span>
+						<span class='txt'><c:out value='${item.title }'/></span>
+						<span class='date'>${fn:substring(item.startDate, 5, 16) }</span>
 						<span class='name'>${item.writerName }</span>
 					</li>
 				</c:forEach>

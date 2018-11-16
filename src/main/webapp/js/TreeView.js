@@ -226,11 +226,11 @@ function TreeNode() {
         spnNode.name = "spn_" + strTreeID;
         spnNode.className = "h2_text";
         spnNode.style.display = "inline-block";
-        if(CrossYN()) {
+        /*if(CrossYN()) {
             spnNode.style.paddingTop = "0px";        	
         }
         
-        spnNode.style.paddingLeft = "1px";
+        spnNode.style.paddingLeft = "1px";*/
 
         /*if (color != "" && color != "TREE" && color != "BOARD")
             spnNode.style.color = color;

@@ -26,12 +26,13 @@ var pollPlus = function () {
 	var top = (height - 500) / 2;
 	var left = (width - 765) / 2;
 	   
-	window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=642,width=765,top=" + top + ",left=" + left, "");
+	window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=665,width=765,top=" + top + ",left=" + left, "");
 }
 
 var nodata = function () {
 	var str = '<dl class="nodata"><dt><img src="/images/ezNewPortal/nodata.png"></dt><dd>'+ messages.strLang1 +'</dd></dl>';
 	document.getElementById('pollInfo').innerHTML = str;
+	document.getElementById('pollPlus').addEventListener('click', pollPlus);
 }
 
 var assemblePollList = function (poll) {

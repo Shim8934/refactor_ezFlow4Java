@@ -28,111 +28,216 @@ if (typeof UserOffset !== 'undefined' && UserOffset) {
 var nowDay = (nowDate.getFullYear()) + "-" + leadingZeros((nowDate.getMonth() + 1), 2) + "-" + leadingZeros(nowDate.getDate(), 2);
 
 function CalendarMiniView(pTagetID) {
-    document.getElementById(pTagetID).innerHTML = "";
-    if (sDate.getFullYear() > 1800 && sDate.getFullYear() <= 2101) {
-        if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 1)
-            memorialDays[1].day = 29;
-        else if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 2)
-            memorialDays[1].day = 30;
-    }
+	
+	//Top이든 기존 Mini든 공통
+	document.getElementById(pTagetID).innerHTML = "";
+	if (sDate.getFullYear() > 1800 && sDate.getFullYear() <= 2101) {
+		if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 1)
+			memorialDays[1].day = 29;
+		else if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 2)
+			memorialDays[1].day = 30;
+	}
+	
+	var objElm = document.getElementById(pTagetID);
+	
+	if (pTagetID == "CalendarMini") {
+		//원래 CalendarMini 가 들어가는곳
+		 if (objElm) {
+		        var mTable = document.createElement("TABLE");
+		        mTable.className = "calendar_mini_title";
+		        mTable.setAttribute("id", "MiniCalendar")
+		        mTable.setAttribute("cellpadding", "0");
+		        mTable.setAttribute("cellspacing", "0");
+		        mTable.setAttribute("border", "0");
+		        mTable.setAttribute("width", "100%");
+		        var mTr = document.createElement("TR");
 
-    var objElm = document.getElementById(pTagetID);
-    if (objElm) {
-        var mTable = document.createElement("TABLE");
-        mTable.className = "calendar_mini_title";
-        mTable.setAttribute("id", "MiniCalendar")
-        mTable.setAttribute("cellpadding", "0");
-        mTable.setAttribute("cellspacing", "0");
-        mTable.setAttribute("border", "0");
-        mTable.setAttribute("width", "100%");
-        var mTr = document.createElement("TR");
+		        var mTd = document.createElement("TD");
+		        mTd.className = "btn_prev"
+		        var mSpan = document.createElement("SPAN");
+		        mSpan.style.marginLeft = "6px";
+		        mSpan.style.marginTop = "4px";
+		        mSpan.style.cursor = "pointer";
+		        var mImg = document.createElement("IMG");
+		        mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_prev.gif");
+		        mImg.setAttribute("border", "0");
+		        mImg.setAttribute("onclick", "preMonth()");
+		        mSpan.appendChild(mImg);
+		        mTd.appendChild(mSpan);
+		        mTr.appendChild(mTd);
 
-        var mTd = document.createElement("TD");
-        mTd.className = "btn_prev"
-        var mSpan = document.createElement("SPAN");
-        mSpan.style.marginLeft = "6px";
-        mSpan.style.marginTop = "4px";
-        mSpan.style.cursor = "pointer";
-        var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_prev.gif");
-        mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "preMonth()");
-        mSpan.appendChild(mImg);
-        mTd.appendChild(mSpan);
-        mTr.appendChild(mTd);
+		        var mTd = document.createElement("TD");
+		        mTd.className = "calendar_mini_day"
+		        var mSel = document.createElement("SELECT");
+		        mSel.setAttribute("name", "iYear");
+		        mSel.setAttribute("id", "iYear");
+		        mSel.setAttribute("onchange", "changeYear()");
+		        var curYear = sDate.getFullYear() + 3;
+		        for (var i = curYear; i >= curYear - 6; i--) {
+		            var mOpt = document.createElement("OPTION");
+		            mOpt.setAttribute("Value", i);
 
-        var mTd = document.createElement("TD");
-        mTd.className = "calendar_mini_day"
-        var mSel = document.createElement("SELECT");
-        mSel.setAttribute("name", "iYear");
-        mSel.setAttribute("id", "iYear");
-        mSel.setAttribute("onchange", "changeYear()");
-        var curYear = sDate.getFullYear() + 3;
-        for (var i = curYear; i >= curYear - 6; i--) {
-            var mOpt = document.createElement("OPTION");
-            mOpt.setAttribute("Value", i);
+		            if ((curYear - 3) == i)
+		                mOpt.setAttribute("selected", "");
 
-            if ((curYear - 3) == i)
-                mOpt.setAttribute("selected", "");
+		            var mText = document.createTextNode(i);
+		            mOpt.appendChild(mText);
+		            mSel.appendChild(mOpt);
+		        }
 
-            var mText = document.createTextNode(i);
-            mOpt.appendChild(mText);
-            mSel.appendChild(mOpt);
-        }
+		        mTd.appendChild(mSel);
 
-        mTd.appendChild(mSel);
+		        var mSel = document.createElement("SELECT");
+		        mSel.style.marginLeft = "10px";
+		        mSel.setAttribute("name", "iMon");
+		        mSel.setAttribute("id", "iMon");
+		        mSel.setAttribute("onchange", "changeMonth()");
 
-        var mSel = document.createElement("SELECT");
-        mSel.style.marginLeft = "10px";
-        mSel.setAttribute("name", "iMon");
-        mSel.setAttribute("id", "iMon");
-        mSel.setAttribute("onchange", "changeMonth()");
+		        var curMonth = sDate.getMonth() + 1;
+		        for (var j = 1; j <= 12; j++) {
 
-        var curMonth = sDate.getMonth() + 1;
-        for (var j = 1; j <= 12; j++) {
+		            var mOpt = document.createElement("OPTION");
+		            mOpt.setAttribute("Value", j);
 
-            var mOpt = document.createElement("OPTION");
-            mOpt.setAttribute("Value", j);
+		            if (curMonth == j)
+		                mOpt.setAttribute("selected", "");
 
-            if (curMonth == j)
-                mOpt.setAttribute("selected", "");
+		            var mText = document.createTextNode(j);
+		            mOpt.appendChild(mText);
+		            mSel.appendChild(mOpt);
+		        }
+		        mTd.appendChild(mSel);
+		        mTr.appendChild(mTd);
 
-            var mText = document.createTextNode(j);
-            mOpt.appendChild(mText);
-            mSel.appendChild(mOpt);
-        }
-        mTd.appendChild(mSel);
-        mTr.appendChild(mTd);
+		        var mTd = document.createElement("TD");
+		        mTd.className = "btn_next"
+		        var mSpan = document.createElement("SPAN");
+		        mSpan.style.marginRight = "6px";
+		        mSpan.style.marginTop = "4px";
+		        mSpan.style.cursor = "pointer";
+		        var mImg = document.createElement("IMG");
+		        mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_next.gif");
+		        mImg.setAttribute("border", "0");
+		        mImg.setAttribute("onclick", "nextMonth()");
+		        mSpan.appendChild(mImg);
+		        mTd.appendChild(mSpan);
+		        mTr.appendChild(mTd);
 
-        var mTd = document.createElement("TD");
-        mTd.className = "btn_next"
-        var mSpan = document.createElement("SPAN");
-        mSpan.style.marginRight = "6px";
-        mSpan.style.marginTop = "4px";
-        mSpan.style.cursor = "pointer";
-        var mImg = document.createElement("IMG");
-        mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_next.gif");
-        mImg.setAttribute("border", "0");
-        mImg.setAttribute("onclick", "nextMonth()");
-        mSpan.appendChild(mImg);
-        mTd.appendChild(mSpan);
-        mTr.appendChild(mTd);
+		        mTable.appendChild(mTr);
+		        objElm.appendChild(mTable);
 
-        mTable.appendChild(mTr);
-        objElm.appendChild(mTable);
+		        var oTable = document.createElement("TABLE");
+		        oTable.setAttribute("id", "");
+		        oTable.setAttribute("cellpadding", "0");
+		        oTable.setAttribute("cellspacing", "0");
+		        oTable.setAttribute("border", "0");
+		        oTable.setAttribute("width", "100%");
+		        oTable.className = "calendar_mini";
 
-        var oTable = document.createElement("TABLE");
-        oTable.setAttribute("id", "");
-        oTable.setAttribute("cellpadding", "0");
-        oTable.setAttribute("cellspacing", "0");
-        oTable.setAttribute("border", "0");
-        oTable.setAttribute("width", "100%");
-        oTable.className = "calendar_mini";
+		        var oTBody = GetTableMiniBodyObj();
+		        oTable.appendChild(oTBody);
+		        objElm.appendChild(oTable);
+		    }
+		
+	} else if (pTagetID == "CalendarMini_Top") {
+		 //새로운 Top에 CalendarMini_Top 이 들어가는곳
+		 if (objElm) {
+	        var mTable = document.createElement("TABLE");
+	        mTable.className = "calendar_mini_title";
+	        mTable.setAttribute("id", "MiniCalendar")
+	        mTable.setAttribute("cellpadding", "0");
+	        mTable.setAttribute("cellspacing", "0");
+	        mTable.setAttribute("border", "0");
+	        mTable.setAttribute("width", "100%");
+	        var mTr = document.createElement("TR");
 
-        var oTBody = GetTableMiniBodyObj();
-        oTable.appendChild(oTBody);
-        objElm.appendChild(oTable);
-    }
+	        var mTd = document.createElement("TD");
+	        mTd.className = "btn_prev"
+	        var mSpan = document.createElement("SPAN");
+	        mSpan.style.marginLeft = "6px";
+	        mSpan.style.marginTop = "4px";
+	        mSpan.style.cursor = "pointer";
+	        var mImg = document.createElement("IMG");
+	        mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_prev.gif");
+	        mImg.setAttribute("border", "0");
+	        mImg.setAttribute("onclick", "preMonthTop()");
+	        mSpan.appendChild(mImg);
+	        mTd.appendChild(mSpan);
+	        mTr.appendChild(mTd);
+
+	        var mTd = document.createElement("TD");
+	        mTd.className = "calendar_mini_day"
+	        var mSel = document.createElement("SELECT");
+	        mSel.setAttribute("name", "iYear");
+	        mSel.setAttribute("id", "iYear_Top");
+	        mSel.setAttribute("onchange", "changeYearTop()");
+	        var curYear = sDate.getFullYear() + 3;
+	        for (var i = curYear; i >= curYear - 6; i--) {
+	            var mOpt = document.createElement("OPTION");
+	            mOpt.setAttribute("Value", i);
+
+	            if ((curYear - 3) == i)
+	                mOpt.setAttribute("selected", "");
+
+	            var mText = document.createTextNode(i);
+	            mOpt.appendChild(mText);
+	            mSel.appendChild(mOpt);
+	        }
+
+	        mTd.appendChild(mSel);
+
+	        var mSel = document.createElement("SELECT");
+	        mSel.style.marginLeft = "10px";
+	        mSel.setAttribute("name", "iMon");
+	        mSel.setAttribute("id", "iMonTop");
+	        mSel.setAttribute("onchange", "changeMonthTop()");
+
+	        var curMonth = sDate.getMonth() + 1;
+	        for (var j = 1; j <= 12; j++) {
+
+	            var mOpt = document.createElement("OPTION");
+	            mOpt.setAttribute("Value", j);
+
+	            if (curMonth == j)
+	                mOpt.setAttribute("selected", "");
+
+	            var mText = document.createTextNode(j);
+	            mOpt.appendChild(mText);
+	            mSel.appendChild(mOpt);
+	        }
+	        mTd.appendChild(mSel);
+	        mTr.appendChild(mTd);
+
+	        var mTd = document.createElement("TD");
+	        mTd.className = "btn_next"
+	        var mSpan = document.createElement("SPAN");
+	        mSpan.style.marginRight = "6px";
+	        mSpan.style.marginTop = "4px";
+	        mSpan.style.cursor = "pointer";
+	        var mImg = document.createElement("IMG");
+	        mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_next.gif");
+	        mImg.setAttribute("border", "0");
+	        mImg.setAttribute("onclick", "nextMonthTop()");
+	        mSpan.appendChild(mImg);
+	        mTd.appendChild(mSpan);
+	        mTr.appendChild(mTd);
+
+	        mTable.appendChild(mTr);
+	        objElm.appendChild(mTable);
+
+	        var oTable = document.createElement("TABLE");
+	        oTable.setAttribute("id", "");
+	        oTable.setAttribute("cellpadding", "0");
+	        oTable.setAttribute("cellspacing", "0");
+	        oTable.setAttribute("border", "0");
+	        oTable.setAttribute("width", "100%");
+	        oTable.className = "calendar_mini";
+
+	        var oTBody = GetTableMiniBodyObj();
+	        oTable.appendChild(oTBody);
+	        objElm.appendChild(oTable);
+	    }
+	}
 }
 
 function GetTableMiniBodyObj() {
@@ -612,6 +717,19 @@ function changeYear() {
 
 }
 
+//선택한 년도 이동
+function changeYearTop() {
+    var iMonthTop = document.getElementById("iMonTop").value;
+    var iYearTop = document.getElementById("iYearTop").value;
+
+    document.getElementById("iYearTop").value = iYearTop;
+    document.getElementById("iMonTop").value = iMonthTop;
+    sDate.setFullYear(iYearTop, iMonthTop - 1, 14);
+
+    CalendarMiniView("CalendarMini_Top");
+    CalendarMiniDataSource("Top");
+}
+
 //선택한 월 이동
 function changeMonth() {
     var iMonth = document.getElementById("iMon").value;
@@ -631,6 +749,18 @@ function changeMonth() {
     /*if (_funCode == 3) {
         parent.frames["right"].DateChange(sStartDate, sEndDate)
     }*/
+}
+
+function changeMonthTop() {
+    var iMonthTop = document.getElementById("iMonTop").value;
+    var iYearTop = document.getElementById("iYearTop").value;
+
+    document.getElementById("iYearTop").value = iYearTop;
+    document.getElementById("iMonTop").value = iMonthTop;
+    sDate.setFullYear(iYearTop, iMonthTop - 1, 14);
+
+    CalendarMiniView("CalendarMini_Top");
+    CalendarMiniDataSource();
 }
 
 function preWeek() {
@@ -752,6 +882,49 @@ function nextWeekMonth() {
     document.getElementById("iMon").value = iMonth;
 
     CalendarMiniView("CalendarMini");
+    CalendarMiniDataSource();
+}
+
+//이전월 이동
+function preWeekMonthTop() {
+    var iMonthTop = parseInt(document.getElementById("iMonTop").value, 10) - 1;
+    var iYearTop = document.getElementById("iYearTop").value;
+
+    if (iMonthTop < 1) {
+        iYearTop--;
+        iMonthTop = 12;
+    }
+    else if (iMonthTop > 12) {
+        iYearTop++;
+        iMonthTop = 1;
+    }
+
+    document.getElementById("iYearTop").value = iYearTop;
+    document.getElementById("iMonTop").value = iMonthTop;
+
+    CalendarMiniView("CalendarMini_Top");
+    CalendarMiniDataSource();
+}
+
+//다음월 이동
+function nextWeekMonthTop() {
+    var iMonth = parseInt(document.getElementById("iMonTop").value, 10) + 1;
+    var iYear = document.getElementById("iYearTop").value;
+
+    if (iMonth < 1) {
+        iYear--;
+        iMonth = 12;
+    }
+    else if (iMonth > 12) {
+        iYear++;
+        iMonth = 1;
+    }
+
+    sDate.setFullYear(iYear, iMonth - 1, 14);
+    document.getElementById("iYearTop").value = iYear;
+    document.getElementById("iMonTop").value = iMonth;
+
+    CalendarMiniView("CalendarMini_Top");
     CalendarMiniDataSource();
 }
 

@@ -20,7 +20,7 @@
 			.set-head { background-color: #687077; height:44px; line-height:42px; display: flex; align-items: center; margin:0px; padding:0px;}
 			.set-head h1 { font-size: 16px; margin-left: 20px; color:#fff;}
 			.set-action { height: 9%; display: flex; justify-content: center; align-items: center;} 
-			.ui-portlet { position:relative;  width: 230px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 45px;}
+			.ui-portlet { position:relative;  width: 230px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
 			.ui-portlet-on { background-color: #f0f0f0; }
 			.ui-portlet-off { background-color: #f0f0f0; }
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
@@ -54,12 +54,14 @@
 			<h3>포틀릿 설정</h3>
 			<div class="ui-portlet-list" id="portletList"></div>
 		</section>
-		<section class="set-action">
-			<div class="button-location">
-				<p class="pollBtn" id="cancelBtn">취소</p>
-				<p class="pollBtn" id="saveBtn">저장</p>
-			</div>
-		</section>
+		<div class="btnpositionLayer" style="margin:20px 0px 0px">
+			<a class="imgbtn">
+				<span id="saveBtn">저장</span>
+			</a>
+			<a class="imgbtn">
+				<span id="cancelBtn">취소</span>
+			</a>
+		</div>
 		<div id="close">
 			<ul>
 				<li><span id="closeBtn"></span></li>
@@ -122,7 +124,7 @@
 								// 최초 회사 frame 설정
 								if(item.frameDefault) {
 									div.classList.add('select-flipster');
-									portletSetting.selectedFrame = item.frameId;
+									portletSetting.selectedFrame = index;
 									portletSetting.usedTheme = item.themeId;						
 								}
 								

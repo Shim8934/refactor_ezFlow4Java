@@ -2177,7 +2177,8 @@
 					c_clubconfirmtype,
 					c_membercnt,
 					description,
-					description2
+					description2,
+					TBL_C_CATEGORY.C_NAME
 				FROM
 					TBL_C_CLUB
 				JOIN
@@ -2204,8 +2205,6 @@
 					TBL_C_CLUB.tenant_id = #tenantID#
 				ORDER BY
 					TBL_C_CLUB.c_regdate
-				LIMIT
-					#mariaStart#, #mariaEnd#
 		</isEqual>
 		
 		<isNotEqual property="cat" compareValue="A">
@@ -2221,7 +2220,8 @@
 						c_clubconfirmtype, 
 						c_membercnt,
 						description,
-						description2
+						description2,
+						TBL_C_CATEGORY.C_NAME
 					FROM
 						TBL_C_CLUB 
 					JOIN
@@ -2248,8 +2248,6 @@
 						TBL_C_CLUB.tenant_id = #tenantID#
 					ORDER BY
 						TBL_C_CLUB.c_regdate
-					LIMIT
-						#mariaStart#, #mariaEnd#
 			]]>
 		</isNotEqual>
 	</select>
@@ -2271,7 +2269,8 @@
 					displayname2, 
 					c_clubconfirmtype,
 					description,
-					description2
+					description2,
+					T3.C_NAME
 				FROM
 					TBL_C_CLUB T1
 				JOIN
@@ -2280,6 +2279,14 @@
 					RTRIM(T1.c_sysopid) = RTRIM(T2.cn)
 				AND
 					T1.tenant_id = T2.tenant_id
+				LEFT JOIN
+					tbl_c_category T3
+				on
+					T1.C_CATE_A = T3.C_CODE
+				AND
+					T1.tenant_id = T3.tenant_id
+				AND
+					T3.C_CAT = 'a'
 				WHERE
 					$v_searchName$ LIKE CONCAT('%', #v_searchValue#, '%')
 				AND
@@ -2290,8 +2297,6 @@
 					T1.C_ADMINCONFIRM = 'Y'
 				ORDER BY
 					T1.c_regdate
-				LIMIT
-					#mariaStart#, #mariaEnd#
 			]]>
 		</isEqual>
 		
@@ -2906,7 +2911,7 @@
 	<select id="EzCommunityDAO.myCommunityItemGet"				parameterClass="Map"		resultClass="CommunityMyCommunityVO">
 		<![CDATA[
 			SELECT
-       			c_clubno,
+       			a.c_clubno,
                 boardname,
                 boardname2,
                 itemid,
@@ -2950,8 +2955,11 @@
 					A.boardid = B.boardid
 				AND
                		A.tenant_id = B.tenant_id
-				WHERE
-					RTRIM(A.c_clubno) = #v_copNo#
+               	]]>
+				<iterate prepend="WHERE RTRIM(A.c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+					            #v_copNo[]#
+			    </iterate>
+			    <![CDATA[
 				AND
 					A.parentboardid != 'top'
 				AND
@@ -2959,18 +2967,27 @@
 				) T1
 			CROSS JOIN
 				(SELECT
+					c_clubno,
 					c_clubname,
 					c_clubname2,
 					c_membercnt
                   	FROM
                   		TBL_C_CLUB
-                  	WHERE
-                  		RTRIM(c_clubno) = #v_copNo#
+                  		]]>
+					<iterate prepend="WHERE RTRIM(c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+						            #v_copNo[]#
+				    </iterate>
+			    <![CDATA[
                   	AND
 					TBL_C_CLUB.tenant_id = #tenantID#
                   	) T3
-       		WHERE
-       			RTRIM(A.c_clubno) = #v_copNo#
+       			]]>
+				<iterate prepend="WHERE RTRIM(A.c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+					            #v_copNo[]#
+			    </iterate>
+			    <![CDATA[
+			AND
+				T3.c_clubno = A.c_clubno
        		AND
        			A.parentboardid != 'top'
        		AND
@@ -4073,8 +4090,6 @@
 						) T1 
 					ORDER BY
 						writedate DESC
-					LIMIT
-						#mariaStart#, #mariaEnd#
 					) T2
 				WHERE
 					T2.companyid = #companyID#

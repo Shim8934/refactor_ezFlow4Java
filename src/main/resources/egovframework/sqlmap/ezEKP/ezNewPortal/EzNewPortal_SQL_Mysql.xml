@@ -43,6 +43,9 @@
 <result property="portletUrl" 				column="PORTLET_URL" />
 <result property="portletBoardId" 			column="BOARD_ID" />
 <result property="menuId" 					column="MENU_ID" />
+<result property="userAuth" 				column="userAuth" nullValue=""/>
+<result property="deptAuth" 				column="deptAuth" nullValue=""/>
+<result property="comAuth" 					column="comAuth" nullValue=""/>
 </resultMap>
 <resultMap class="PortletInfoVO" id="PortletInfoVO">
 <result property="portletId" 				column="PORTLET_ID" />
@@ -274,7 +277,7 @@ SELECT
 	main.MENU_URL         AS MENUURL,
     main.ICON_URL         AS ICONURL,
     comp.company_order    AS COMPANYORDER,
-    user.menu_order       AS MENUORDER
+    if(isnull(user.menu_order), comp.company_order, user.menu_order)       AS MENUORDER
 FROM 
 	tbl_portal_menu_comp as comp
 JOIN 
@@ -299,6 +302,8 @@ AND
 	comp.tenant_id = user.tenant_id
 AND
 	comp.menu_id = user.menu_id
+AND
+	user.user_id = #userId#
 WHERE 
 	comp.MENU_USED = 1
 AND 
@@ -307,10 +312,8 @@ AND
 	comp.COMPANY_LANG = #langType#
 AND
 	comp.TENANT_ID = #tenantId#
-AND
-	user.user_id = #userId#
 ORDER BY 
-	menu_order asc, company_order asc	
+	menu_order is null asc, menu_order asc, company_order asc	
 </select>
 
 <!-- 회사 접근 가능한 메뉴 리스트 -->
@@ -405,18 +408,13 @@ VALUES
 
 <update id="ezNewPortal.updateUserMenuOrder" parameterClass="Map">
 <![CDATA[
-UPDATE 
-	tbl_portal_menu_user 
-SET 
+INSERT INTO tbl_portal_menu_user (
+	user_id,		tenant_id,		company_id,		menu_id,	menu_order
+) VALUES (
+	#userId#,		#tenantId#,		#companyId#,		#menuId#,	#order#
+)
+ON DUPLICATE KEY UPDATE
 	menu_order = #order#
-WHERE 
-	tenant_id = #tenantId#
-AND 
-	company_id = #companyId#
-AND 
-	user_id = #userId#
-AND
-	menu_id = #menuId#
 ]]>	
 </update>
 
@@ -792,6 +790,36 @@ AND
 <!-- 사용자 포틀릿 순서 불러오기 -->
 <select id="ezNewPortal.getPortletOrderUser" parameterClass="Map" resultMap="PortletOrderVO">
 <![CDATA[
+SELECT h.PORTLET_ID, h.PORTLET_ORDER, h.PORTLET_NAME, h.PORTLET_URL, h.BOARD_ID, h.MENU_ID,
+	   (
+	    SELECT ACCESS_YN as accessYN
+		  FROM TBL_PORTAL_MENU_AUTH
+		 WHERE MENU_ID = H.MENU_ID
+		   AND USER_ID = #userId#
+		   AND USER_TYPE = 1
+		   AND TENANT_ID = #tenantId#
+		   AND COMPANY_ID = #companyId#
+	   ) as userAuth,
+	   (
+	    SELECT ACCESS_YN as accessYN
+		  FROM TBL_PORTAL_MENU_AUTH
+		 WHERE MENU_ID = H.MENU_ID
+		   AND USER_ID = #deptId#
+		   AND USER_TYPE = 0
+		   AND TENANT_ID = #tenantId#
+		   AND COMPANY_ID = #companyId#
+	   ) as deptAuth,
+	   (
+	    SELECT ACCESS_YN as accessYN
+		  FROM TBL_PORTAL_MENU_AUTH
+		 WHERE MENU_ID = H.MENU_ID
+		   AND USER_ID = #companyId#
+		   AND USER_TYPE = 0
+		   AND TENANT_ID = #tenantId#
+		   AND COMPANY_ID = #companyId#
+		   AND USER_ID=COMPANY_ID
+	   ) as comAuth
+FROM (	   
 SELECT
 	A.PORTLET_ID, A.PORTLET_ORDER, B.PORTLET_NAME, C.PORTLET_URL, D.BOARD_ID, A.MENU_ID
 FROM	
@@ -830,6 +858,7 @@ AND
 	A.COMPANY_ID = #companyId#
 ORDER BY
 	A.PORTLET_ORDER
+) h	
 ]]>
 </select>
 
@@ -838,7 +867,7 @@ ORDER BY
 <isNull property="order">
 <![CDATA[
 SELECT
-	A.PORTLET_ID, A.PORTLET_ORDER, B.PORTLET_NAME, C.PORTLET_URL, A.BOARD_ID
+	A.PORTLET_ID, A.PORTLET_ORDER, B.PORTLET_NAME, C.PORTLET_URL, A.BOARD_ID, A.MENU_ID
 FROM	
 	TBL_PORTAL_PORTLET_COMP A
 JOIN
@@ -1010,7 +1039,7 @@ SELECT
 	A.theme_id,
 	A.theme_name,
     A.theme_content,
-    B.theme_used,
+    if(isnull(D.used_theme),  0, 1) as theme_used,
     B.theme_default,
     C.frame_id as frame_default
 FROM
@@ -1023,6 +1052,12 @@ JOIN
 	TBL_PORTAL_FRAME_COMP C
 ON
 	B.theme_id = C.theme_id
+LEFT OUTER JOIN
+	TBL_PORTAL_THEME_USER D
+ON
+	A.theme_id = D.used_theme
+AND
+	D.user_id = #userId#
 WHERE
 	B.company_id = #companyId#
 AND
@@ -1130,6 +1165,7 @@ SELECT
 	A.WRITERDEPTID,
 	A.WRITERDEPTNAME,
 	A.WRITERDEPTNAME2,
+	A.startdate,
 	C.GUBUN
 FROM
 	TBL_BOARD_ITEM A

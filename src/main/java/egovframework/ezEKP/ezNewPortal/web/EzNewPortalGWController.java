@@ -156,8 +156,10 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			LoginVO info2 = commonUtil.getUserForGw(userId, serverName);
 			String companyId = info.getCompanyId();
 			String deptId = info.getDeptId();
+			String deptPath = info2.getDeptPathCode();
 			int tenantId = info.getTenantId();
 			String portletLang = info.getPrimary();
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
@@ -167,7 +169,7 @@ public class EzNewPortalGWController {
 			LOGGER.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame());
 			
 			// 사용자 포틀릿 순서 가져오기
-			List<PortletInfoVO> portletOrder = ezNewPortalService.getPortletOrderUser(portletLang, userId, tenantId, companyId);
+			List<PortletInfoVO> portletOrder = ezNewPortalService.getPortletOrderUser(portletLang, userId, tenantId, companyId, deptId);
 			// 권한체크가 끝난 포틀릿 리스트를 담을 리스트선언
 			List<PortletInfoVO> resultPortletList = new ArrayList<PortletInfoVO>();
 			
@@ -178,14 +180,38 @@ public class EzNewPortalGWController {
 				data.put("portletOrder", portletOrder);
 			} else {
 				//개인별 포틀릿 에서 메뉴아이디 가져와서 권한체크 들어간다
+				String userAuth = "";
+				String deptAuth = "";
+				String comAuth = "";
 				for (PortletInfoVO pVO : portletOrder) {
-					boolean resultAuth = ezNewPortalService.getCheckAuth(pVO.getMenuId(), userId, deptId, companyId, tenantId);
-						LOGGER.debug(pVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
-						if (resultAuth) {
+//					boolean resultAuth = ezNewPortalService.getCheckAuth(pVO.getMenuId(), userId, deptId, companyId, tenantId);
+//						LOGGER.debug(pVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
+//						if (resultAuth) {
+//							resultPortletList.add(pVO);
+//						}
+					userAuth = pVO.getUserAuth();
+					deptAuth = pVO.getDeptAuth();
+					comAuth = pVO.getComAuth();
+					
+					if (userAuth != null && userAuth != "") {
+						if (userAuth.equals("1")) {
 							resultPortletList.add(pVO);
+						} 
+					} else {
+						if (deptAuth != null && deptAuth != "") {
+							if (deptAuth.equals("1")) {
+								resultPortletList.add(pVO);
+							}
+						} else {
+							if (comAuth != null && comAuth != "") {
+								if (comAuth.equals("1")) {
+									resultPortletList.add(pVO);
+								}
+							}
 						}
+					} 
 				}
-				data.put("portletOrder", resultPortletList);
+				data.put("portletOrder", portletOrder);
 			}
 
 			// 회사의 슬라이더 이미지 가져오기
@@ -272,9 +298,11 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		LOGGER.debug("ezNewPortal G/W getUserPortalSetting ended.");
 		return result;
@@ -416,7 +444,7 @@ public class EzNewPortalGWController {
 			
 			// List<ThemeInfoVO> userThemeList =
 			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
-			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId);
+			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId, userId);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1116,7 +1144,7 @@ public class EzNewPortalGWController {
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 
-			List<ThemeInfoVO> themeList = ezNewPortalService.getThemes(true, companyId, userInfo.getTenantId());
+			List<ThemeInfoVO> themeList = ezNewPortalService.getThemes(true, companyId, userInfo.getTenantId(), userId);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1273,19 +1301,24 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-
+			String mode = request.getParameter("mode");
+			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
-			JSONParser jp = new JSONParser();
-			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
-			
-			JSONArray menus = (JSONArray) jsonParam.get("menus");
-			
-			ezNewPortalService.udpateMenuOrder(menus, companyId, userInfo.getTenantId());
+			if (mode != null && mode.equals("reset")) {
+				ezNewPortalService.resetCompanyMenuOrder(companyId, userInfo.getTenantId());
+			} else {
+				JSONParser jp = new JSONParser();
+				jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+				
+				JSONArray menus = (JSONArray) jsonParam.get("menus");
+				ezNewPortalService.udpateMenuOrder(menus, companyId, userInfo.getTenantId());
+			}
 
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

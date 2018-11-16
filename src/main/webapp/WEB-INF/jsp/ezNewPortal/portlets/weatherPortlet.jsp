@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.orbit-1.2.3.min.js')}"></script>
-<link href="css/default_kr.css" rel="stylesheet" type="text/css">
+
 <script type="text/javascript">
 var currentWeather = "${currentWeather}";
 var todayWeather = "${todayWeather}";
@@ -55,9 +57,31 @@ var today5Temp = today5Arr[1];
 var today5Time = todayHoursArr[4];
 
 $(document).ready(function(){
-	console.log(todayHoursArr)
+	
 	$("#currentIcon").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon" +  currentIcon.substring(0,2) + ".png");
-	$("#mainWeather").text(currentMain);
+	
+	switch (currentMain) {
+	case "Clear" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm01'/>");
+				   break;
+
+	case "Clouds" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm02'/>");
+				   break;
+	
+	case "Haze" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm03'/>");
+				   break;
+	
+	case "Rain" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm04'/>");
+				   break;
+	
+	case "Snow" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm05'/>");
+				   break;
+	
+	case "Thunderstrom" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm06'/>");
+				   break;
+	
+	default : $("#mainWeather").text(currentMain);
+				   break;
+	}
 	
 	$("#humidity").text("습도 ");
 	$("#clouds").text("구름 ");
@@ -158,7 +182,30 @@ $(function(){
     			todayHoursArr = data.todayHours.split(";");
     			
     			$("#currentIcon").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon" +  currentIcon.substring(0,2) + ".png");
-    			$("#mainWeather").text(currentMain);
+
+    			switch (currentMain) {
+    			case "Clear" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm01'/>");
+    						   break;
+
+    			case "Clouds" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm02'/>");
+    						   break;
+    			
+    			case "Haze" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm03'/>");
+    						   break;
+    			
+    			case "Rain" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm04'/>");
+    						   break;
+    			
+    			case "Snow" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm05'/>");
+    						   break;
+    			
+    			case "Thunderstrom" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm06'/>");
+    						   break;
+    			
+    			default : $("#mainWeather").text(currentMain);
+    						   break;
+    			}
+    			
     			if (currentTemp.indexOf(".") == -1) {
     				$("#currentTemp").text(currentTemp + "℃");
     			} else {
@@ -251,7 +298,14 @@ $(function(){
 <body>
 <article class="weather box_shadow" style="background-color:#ffffff">
 	<div class="layDiv">
-    	<dl class="portlet_title sortablePortlet">
+		<c:choose>
+			<c:when test="${usedTheme eq 3 }">
+				<dl class="portlet_title sortablePortlet" style="border-bottom: 1px solid #e7e7e7;">
+			</c:when>
+			<c:otherwise>
+				<dl class="portlet_title sortablePortlet">
+			</c:otherwise>
+		</c:choose>
         	<dt class="portletText">오늘의날씨</dt>
             <dd class="portletPlus">
             	<select id="cityList" class="weatherSelect">

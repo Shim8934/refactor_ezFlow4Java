@@ -960,9 +960,8 @@
 			
 			<div id="mainmenu">
 				<ul>
-					<li><a onclick="buttons.fileDownload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-					<li id="uploadBtn" style="display:none;"><a onclick="buttons.fileUpload()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t187'/></span></a></li>
-					<li id="fileDeleteBtn" style="display:none;"><a onclick="buttons.fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
+					<li class="important" onclick="buttons.fileDownload()"><span><spring:message code='ezWebFolder.t186'/></span></li>
+					<li class="important" id="uploadBtn" style="display:none;" onclick="buttons.fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
 					<li id="fileRenameBtn" style="display:none;"><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
 					<li id="fileMoveCopyBtn" style="display:none;"><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
 					<li id="fileCopyBtn"><a onclick="buttons.fileCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t316'/></span></a></li>
@@ -971,11 +970,12 @@
 					<li id="hideShareBtn"><a onclick="shareContext.hideShare()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t317'/></span></a></li>
 					<li id="hiddenShareListBtn"><a onclick="shareContext.showHiddenSharedList(1)" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t318'/></span></a></li>
 					<!-- <li><img src="/images/i_bar.gif"></li> -->
-					<li><span onclick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
-					<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
-					<li><a onclick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
+					<li><span class="icon16 icon16_star" onclick="favoriteContext.toggleAll()"></span></li>
+					<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span class="icon16 icon16_search"></span></li>
+					<li id="fileDeleteBtn" style="display:none;" onclick="buttons.fileDelete()"><span class="icon16 icon16_delete"></span></li>
+					<li onclick="refreshView()"><span class="icon16 icon16_refresh"></span></li>
 					<!-- <li><img src="/images/i_bar.gif"></li> -->
-					<li style="height: 28px;">
+					<li>
 						<select id="fileTypeSelect" class="select" onchange="onFileTypeChange(this.value);">
 							<option value=""><spring:message code='ezWebFolder.t191'/></option>
 							<option value="document"><spring:message code='ezWebFolder.t192'/></option>

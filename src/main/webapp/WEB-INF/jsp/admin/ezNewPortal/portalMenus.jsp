@@ -19,7 +19,7 @@
 			span.icon_topmenu {margin-top : 20px;}
 			.menuUsed {background-color : #fff;}
 			.menuUsed_on{color: #0470e3; border-color: #b9d7f6; background: #f1f8ff;}
-			.menuNotUsed {background-color : #cbcbcb;}
+			.menuNotUsed {background-color : #efefef; border:1px solid #d9d9d9; color:#b9b9be;}
 			.menuDetails {list-style:none;display : none; float:left; width:98%; position : relative;}
 			.menuTitle {margin : 10px;}
 			.menuTitle span {font-size : 18px; font-weight:bold;}
@@ -38,7 +38,7 @@
 			.menuName table th {border:none;background-color:white;font-size:13px;color:black;}
 			.menuAuth {vertical-align:top;margin-top:23px;margin-left:150px;}
 			.menuAuthBtn {display:inline-block}
-			.updateMenu, .addMenu {float : right; margin-right:20px;}
+			.updateMenu, .addMenu {margin-right:20px;}
 			.btnpositionJsp {margin-top : 0px;padding:0px;}
 			.hideDetails {display : none;}
 			.menuSortable {display : inline-block;}
@@ -150,7 +150,7 @@
 						menusHTML += "<dl>";
 						menusHTML += "<dt><span class='" + item.iconUrl + "'>";
 						menusHTML += "</span></dt>";
-						menusHTML += "<dd>" + item.menuName + "</dd>";
+						menusHTML += "<dd>" + ConvertCharToEntityReference(item.menuName) + "</dd>" ;
 						menusHTML += "</li>";
 					});
 					
@@ -231,7 +231,7 @@
 					var menusHTML = "<li class='menuDetails' id='menuLi" + menuInfo.menuId + "'>";
 					menusHTML += "<div class='admin_menu' id='menuDetails" + menuInfo.menuId + "'>";
 					menusHTML += "<dl class='admin_menuDL'>";
-					menusHTML += "<dt class='admin_menuTit'>" + menuInfo.menuName + "</dt><dd class='admin_menuX'></dd></dl>";
+					menusHTML += "<dt class='admin_menuTit'>" + ConvertCharToEntityReference(menuInfo.menuName) + "</dt><dd class='admin_menuX'></dd></dl>";
 					
 					menusHTML += "<div class='admin_menu_content'>";
 					menusHTML += "<dl class='adminMenu_icon'><dt class='admenuIcon menuIcon'><span class='" + menuInfo.iconUrl + "'></span></dt>";
@@ -261,11 +261,11 @@
 						}
 						
 						menusHTML += country + ")</td>";
-						menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu" +  item.menuLang + "' type='text' value='" + item.menuName + "' maxlength='50'></td>";
+						menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu" +  item.menuLang + "' type='text' value='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(item.menuName), '\"', "&#39;"), "\'", "&#34;") + "' maxlength='50'></td>";
 						menusHTML += "</tr>";
 					});
 					
-					menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' value='" + menuInfo.menuUrl + "' maxlength='100'></td></tr></table>";
+					menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' value='" +ReplaceText(ReplaceText(ConvertCharToEntityReference(menuInfo.menuUrl), '\"', "&#39;"), "\'", "&#34;") + "' maxlength='100'></td></tr></table>";
 					menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
 					menusHTML += "<tr><th class='menuIconTH'>접근허용</th><td class='menuIconTD accessOK'>";
 					
@@ -534,12 +534,16 @@
 			
 			request.onerror = function() {}
 			
+			if (typeof menuAuths == "string") {
+				menuAuths = JSON.parse(menuAuths);
+			}
+			
 			var data = JSON.stringify({
 				menuId : menuId,
 				companyId : companyValue,
 				menuNames : menuNameList,
 				menuInfo : menuInfo, 
-				menuAuths : JSON.parse(menuAuths)
+				menuAuths : menuAuths
 			});
 			 
 			request.send(data);
@@ -710,13 +714,17 @@
 				getMenus();
 			}
 			
+			if (typeof menuAuths == "string") {
+				menuAuths = JSON.parse(menuAuths);
+			}
+			
 			request.onerror = function() {}
 			
 			var data = JSON.stringify({
 				companyId : companyValue,
 				menuNames : menuNameList,
 				menuInfo : menuInfo,
-				menuAuths : JSON.parse(menuAuths)
+				menuAuths : menuAuths
 			});
 			 
 			request.send(data);
@@ -782,7 +790,7 @@
 			request.open('POST', '/admin/ezNewPortal/updateMenuOrder.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
-			request.onload = function() { getMenus(); }
+			request.onload = function() { }
 			
 			request.onerror = function() {}
 			
