@@ -586,7 +586,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 /* main media query */
 @media only screen and (min-width :1921px) {
-	.portlet{ width:483px; float:left;}
+	.portlet{ width:609px; float:left; margin:30px 2px -8px 16px; height: 252px;}
+	.box_shadow{ width:auto;}
 }
 
 @media only screen and (max-width :1920px) and (min-width :1686px) { 
@@ -595,7 +596,6 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_left{ width:33.3%;}
 	.section_main .mainLayout_middle{ width:33.3%;}
 	.box_shadow{ width:auto;}
-	.portlet{width:auto;}
 	.portlet{ width:32%; float:left; margin:30px 2px -8px 16px; height: 252px;}
 	.bannerText{ padding:73px 18px 0px 0px;}
 }
