@@ -847,7 +847,7 @@
 	                	<input type="checkbox" id="chkURLBoard" onclick="checkboardtype()" />
 	                	URL<spring:message code="ezBoard.t0006"/>
 	                </c:if>
-	                 <input type="text" id="txtURL" style="width: 74%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />                
+	                 <input type="text" id="txtURL" style="width: 73%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />                
 	            </td>
 	        </tr>
 	        <tr id="tr3" style="${style}">
