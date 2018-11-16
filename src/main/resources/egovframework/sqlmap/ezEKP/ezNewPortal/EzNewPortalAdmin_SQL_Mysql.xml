@@ -727,6 +727,38 @@
 	]]>
 	</update>
 	
+	<update id="ezNewPortal.updateUserThemeAndFrameDefault" parameterClass="Map">
+	<![CDATA[
+		UPDATE 
+			TBL_PORTAL_THEME_USER
+		SET 
+			used_theme = (SELECT theme_id FROM tbl_portal_theme_comp WHERE theme_default = 1 AND company_id = #companyId# AND tenant_id = #tenantId#),
+			used_frame = (SELECT frame_id FROM tbl_portal_frame_comp WHERE frame_default = 1 AND theme_id = 
+    						(SELECT theme_id FROM tbl_portal_theme_comp WHERE theme_default = 1 AND company_id = #companyId# AND tenant_id = #tenantId#))
+		WHERE
+			company_id = #companyId#
+		AND 
+			tenant_id = #tenantId#
+		AND
+			used_theme = #themeId#;	
+	]]>
+	</update>
+	
+	<update id="ezNewPortal.updateUserFrameDefault" parameterClass="Map">
+	<![CDATA[
+		UPDATE 
+			TBL_PORTAL_THEME_USER
+		SET 
+			used_frame = (SELECT frame_id FROM tbl_portal_frame_comp WHERE frame_default = 1 AND theme_id = #themeId#)
+		WHERE
+			company_id = #companyId#
+		AND 
+			tenant_id = #tenantId#
+		AND
+			used_theme = #themeId#;	
+	]]>
+	</update>
+	
 	<select id="ezNewPortal.getSilderImages" parameterClass="Map"  resultClass="PortalPortletSliderImageVO">
 	<![CDATA[
 		SELECT
@@ -847,5 +879,4 @@
 			SLIDERID = #slideId#
 	]]>
 	</update>
-	
 </sqlMap>

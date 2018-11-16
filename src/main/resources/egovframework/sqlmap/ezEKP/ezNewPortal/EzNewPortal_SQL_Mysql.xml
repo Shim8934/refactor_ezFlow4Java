@@ -558,6 +558,8 @@ AND
 	fcomp.tenant_id = #tenantId#
 AND 
 	tuser.user_id = #userId#
+AND
+	fcomp.frame_used = 1
 ]]>	
 </select>
 
@@ -584,7 +586,9 @@ WHERE
 AND 
 	fcomp.tenant_id = #tenantId#
 AND 
-	tcomp.theme_default = '1'  
+	tcomp.theme_default = 1
+AND
+	fcomp.frame_used = 1
 ]]>		
 </select>
 

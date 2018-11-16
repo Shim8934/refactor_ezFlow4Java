@@ -445,7 +445,26 @@ public class EzNewPortalGWController {
 			// List<ThemeInfoVO> userThemeList =
 			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
 			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId, userId);
-
+			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId);
+			boolean hasUserDefault = false;
+			int usedTheme = 0;
+			
+			for (int i = 0; i < userThemeList.size(); i++) {
+				if (userThemeList.get(i).isThemeUsed()) {
+					hasUserDefault = true;
+				}
+			}
+			
+			if (!hasUserDefault) {
+				usedTheme = userThemeSetting.getUsedTheme();
+			}
+			
+			for (int i = 0; i < userThemeList.size(); i++) {
+				if (userThemeList.get(i).getThemeId() == usedTheme) {
+					userThemeList.get(i).setThemeUsed(true);
+				}
+			}
+			 
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", userThemeList);

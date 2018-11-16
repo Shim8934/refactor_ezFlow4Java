@@ -1240,7 +1240,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			ezNewPortalDAO.updateThemeDefault(map);
 		}
 		
+		boolean themeUsed = (boolean) map.get("themeUsed");
+		
 		ezNewPortalDAO.updateThemeInfo(map);
+		
+		if (!themeUsed) {
+			//현재 테마를 사용하고 있던 사원들의 테마와 프레임을 회사의 기본 테마, 기본 프레임으로 가도록 설정
+			ezNewPortalDAO.updateUserThemeAndFrameDefault(map);
+		}
 		
 		for (Object item : frameInfos) {
 			if (item instanceof JSONObject) {
@@ -1251,6 +1258,23 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("tenantId", tenantId);
 				
 				ezNewPortalDAO.updateFrameInfo(map);
+			}
+		}
+		
+		for (Object item : frameInfos) {
+			if (item instanceof JSONObject) {
+				JSONObject frameInfo = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(frameInfo.toJSONString(), Map.class);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				
+				boolean frameUsed = (boolean) map.get("frameUsed");
+				
+				if (!frameUsed) {
+					//사용하지 않는 프레임을 기존에 사용하고 있는 사원들의 프레임 아이디를 변경
+					ezNewPortalDAO.updateUserFrameDefault(map);
+				}
 			}
 		}
 		

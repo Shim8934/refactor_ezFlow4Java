@@ -144,7 +144,7 @@
 								
 								// 프레임 이미지 나오면 변경하자!!
 								var img = document.createElement('img');
-								img.src = '/images/admin/theme'+item.themeId+"_frame"+index+".png";
+								img.src = '/images/admin/theme' + item.themeId + "_frame" + item.frameId + ".png";
 								
 								div.appendChild(img);
 								li.appendChild(div);
