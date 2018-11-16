@@ -340,6 +340,7 @@ var btnSave_click = function () {
 	request.send(data);
 }
 
+//레이어 닫기
 var layerCloseBtnClick = function(event) {
 	document.getElementById("imageUrl").value = "";
 	document.getElementById("UploadSliderImage").src = "";
@@ -391,6 +392,8 @@ var slideImageEdit = function(event) {
 	
 	request.send(data);
 }
+
+//삭제버튼
 var slideImageDel = function(event) {
 	if (document.getElementsByClassName("selectTheme").length <= 0) {	
         alert("<spring:message code = 'ezPersonal.t20000' /> ");
@@ -426,6 +429,7 @@ var slideImageDel = function(event) {
 	}
 }
 
+//슬라이드 이미지 순서변경
 var updateSlideOrder = function() {
 	var slideList = $(".theme");
 	var slideListCount = slideList.length;
