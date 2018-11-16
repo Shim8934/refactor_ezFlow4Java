@@ -17,6 +17,16 @@
 #featured>div,
 #featured>a { display: none; }
 
+/* 슬라이드 포틀릿 부분 */ 
+#roll_featured { 
+	width: 467px;
+	height: 200px;
+	background: url('/images/WebPartSliderCI/loading.gif') no-repeat center center;
+	overflow: hidden; }
+#roll_featured>img,  
+#roll_featured>div,
+#roll_featured>a { display: none; }
+
 /* CONTAINER
    ================================================== */
 

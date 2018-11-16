@@ -96,34 +96,34 @@
 // ==============
 
             //Timer Execution
-            function startClock() {
+            function startClock2() {
             	if(!options2.timer  || options2.timer == 'false') { 
             		return false;
             	//if timer is hidden, don't need to do crazy calculations
             	} else if(timer.is(':hidden')) {
-		            clock = setInterval(function(e){
+		            clock2 = setInterval(function(e){
 						shift2("next");  
 		            }, options2.advanceSpeed);            		
 		        //if timer is visible and working, let's do some math
             	} else {
 		            timerRunning = true;
-		            pause.removeClass('active')
-		            clock = setInterval(function(e){
-		                var degreeCSS = "rotate("+degrees+"deg)"
-		                degrees += 2
-		                rotator.css({ 
+		            pause2.removeClass('active2')
+		            clock2 = setInterval(function(e){
+		                var degreeCSS = "rotate("+degrees2+"deg)"
+		                degrees2 += 2
+		                rotator2.css({ 
 		                    "-webkit-transform": degreeCSS,
 		                    "-moz-transform": degreeCSS,
 		                    "-o-transform": degreeCSS
 		                });
-		                if(degrees > 180) {
-		                    rotator.addClass('move');
-		                    mask.addClass('move');
+		                if(degrees2 > 180) {
+		                    rotator2.addClass('move2');
+		                    mask2.addClass('move2');
 		                }
-		                if(degrees > 360) {
-		                    rotator.removeClass('move');
-		                    mask.removeClass('move');
-		                    degrees = 0;
+		                if(degrees2 > 360) {
+		                    rotator2.removeClass('move2');
+		                    mask2.removeClass('move2');
+		                    degrees2 = 0;
 		                    shift2("next");
 		                }
 		            }, options2.advanceSpeed/180);
@@ -132,8 +132,8 @@
 	        function stopClock2() {
 	        	if(!options2.timer || options2.timer == 'false') { return false; } else {
 		            timerRunning = false;
-		            clearInterval(clock);
-		            pause.addClass('active2');
+		            clearInterval(clock2);
+		            pause2.addClass('active2');
 				}
 	        }  
             
@@ -141,33 +141,33 @@
             if(options2.timer) {         	
                 var timerHTML = '<div class="timer2"><span class="mask2"><span class="rotator2"></span></span><span class="pause2"></span></div>'
                 orbitWrapper2.append(timerHTML);
-                var timer = orbitWrapper2.children('div.timer2'),
+                var timer2 = orbitWrapper2.children('div.timer2'),
                 	timerRunning;
-                if(timer.length != 0) {
-                    var rotator = $('div.timer2 span.rotator2'),
-                    	mask = $('div.timer2 span.mask2'),
-                    	pause = $('div.timer2 span.pause2'),
-                    	degrees = 0,
-                    	clock; 
-                    startClock();
-                    timer.click(function() {
+                if(timer2.length != 0) {
+                    var rotator2 = $('div.timer2 span.rotator2'),
+                    	mask2 = $('div.timer2 span.mask2'),
+                    	pause2 = $('div.timer2 span.pause2'),
+                    	degrees2 = 0,
+                    	clock2; 
+                    startClock2();
+                    timer2.click(function() {
                         if(!timerRunning) {
-                            startClock();
+                            startClock2();
                         } else { 
                             stopClock2();
                         }
                     });
                     if(options2.startClockOnMouseOut){
-                        var outTimer;
+                        var outTimer2;
                         orbitWrapper2.mouseleave(function() {
-                            outTimer = setTimeout(function() {
+                            outTimer2 = setTimeout(function() {
                                 if(!timerRunning){
-                                    startClock();
+                                    startClock2();
                                 }
                             }, options2.startClockOnMouseOutAfter)
                         })
                         orbitWrapper2.mouseenter(function() {
-                            clearTimeout(outTimer);
+                            clearTimeout(outTimer2);
                         })
                     }
                 }
