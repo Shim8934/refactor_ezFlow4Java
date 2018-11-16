@@ -3277,6 +3277,7 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String realPath = request.getServletContext().getRealPath("");
 					
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
@@ -3292,6 +3293,155 @@ public class EzNewPortalGWController {
 		}
 		
 		LOGGER.debug("ezNewPortal G/W getSlideImages ended.");
+		return result;
+	}
+	
+	/**
+	 * 포탈개인화 G/W [POST] 슬라이드이미지 등록하기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezportal/slideimages/companies/{companyId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject insertSlideImage(HttpServletRequest request, @PathVariable String companyId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W insertSlideImage started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			int tenantId = info.getTenantId();
+			String imageUrl = request.getParameter("imageUrl");
+			String imagePath = request.getParameter("imagePath");
+			String imageName = request.getParameter("imageName");
+			
+			ezNewPortalService.insertSlideImage(companyId, tenantId, imageUrl, imagePath, imageName, info.getUserId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "ok");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W insertSlideImage ended.");
+		return result;
+	}
+	/**
+	 * 포탈개인화 G/W [GET] 슬라이드이미지 정보 가져오기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezportal/slideimages/{slideId}/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getSlideImageInfo(HttpServletRequest request, @PathVariable String companyId, @PathVariable String slideId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getSlideImageInfo started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			int tenantId = info.getTenantId();
+			
+			PersonalSliderImageVO slideInfo = ezNewPortalService.getSlideImageInfo(tenantId, companyId, slideId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", slideInfo);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getSlideImageInfo ended.");
+		return result;
+	}
+	/**
+	 * 포탈개인화 G/W [PUT] 슬라이드이미지 수정하기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezportal/slideimages/{slideId}/companies/{companyId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject updateSlideImage(HttpServletRequest request, @PathVariable String slideId, @PathVariable String companyId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W updateSlideImage started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			int tenantId = info.getTenantId();
+			String imageUrl = request.getParameter("imageUrl");
+			String imagePath = request.getParameter("imagePath");
+			String imageName = request.getParameter("imageName");
+			
+			ezNewPortalService.updateSlideImage(companyId, tenantId, imageUrl, imagePath, imageName, info.getUserId(), slideId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "ok");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W updateSlideImage ended.");
+		return result;
+	}
+	
+	/**
+	 * 포탈개인화 G/W [DELETE] 슬라이드이미지 삭제
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezportal/slideimages/{slideId}/companies/{companyId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteSlideImage(HttpServletRequest request, @PathVariable String companyId, @PathVariable String slideId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W deleteSlideImage started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			int tenantId = info.getTenantId();
+			
+			ezNewPortalService.deleteSlideImage(tenantId, companyId, slideId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "ok");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W deleteSlideImage ended.");
+		return result;
+	}
+	
+	/**
+	 * 포탈개인화 G/W [PATCH] 슬라이드 이미지 순서 변경
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/slideimages/order/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	public JSONObject updateSlideOrder(HttpServletRequest request, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
+		LOGGER.debug("ezNewPortal G/W updateSlideOrder started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			
+			JSONArray slideList = (JSONArray) jsonParam.get("slideList");
+			
+			ezNewPortalService.updateSlideOrder(slideList, companyId, userInfo.getTenantId());
+
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W updateSlideOrder ended.");
 		return result;
 	}
 }
