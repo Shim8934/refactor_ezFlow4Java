@@ -166,7 +166,6 @@ function CalendarMiniView(pTagetID) {
 		
 	} else if (pTagetID == "CalendarMini_Top") {
 		//Top
-		
 		if (objElm) {
 	        var mTable = document.createElement("TABLE");
 	        mTable.className = "scalendar_mini_title";///

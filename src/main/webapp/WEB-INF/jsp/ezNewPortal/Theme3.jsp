@@ -257,28 +257,29 @@
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
-			
-			(function (portletId, portletUrl, portletName) {
-				$.ajax({
-					type : "POST",
-					dataType : "html",
-					data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
-					url : portletUrl,
-					success : function(result) {
-						$("#" + portletId + "Portlet").append(result);
-						
-						if(portletId != "34") {
-							$("#" + portletId + "Portlet").css("background", "none");
+			if (portletUrl.indexOf("ezNewPortal") != -1) {
+				(function (portletId, portletUrl, portletName) {
+					$.ajax({
+						type : "POST",
+						dataType : "html",
+						data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
+						url : portletUrl,
+						success : function(result) {
+							$("#" + portletId + "Portlet").append(result);
+							
+							if(portletId != "34") {
+								$("#" + portletId + "Portlet").css("background", "none");
+							}
+							
+							eventSetting(portletId);
+						},
+						error : function() {
+							var nonePage = "<article class='box_shadow'></article>"
+							$("#" + portletId + "Portlet").append(nonePage);
 						}
-						
-						eventSetting(portletId);
-					},
-					error : function() {
-						var nonePage = "<article class='box_shadow'></article>"
-						$("#" + portletId + "Portlet").append(nonePage);
-					}
-				});
-			}(portletId, portletUrl, portletName));
+					});
+				}(portletId, portletUrl, portletName));
+			}
 		}
 		
 		var useQuestion = "<c:out value='${useQuestion}'/>";
