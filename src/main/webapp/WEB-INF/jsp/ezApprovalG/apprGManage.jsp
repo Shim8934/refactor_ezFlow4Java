@@ -515,7 +515,7 @@
 		            if (GetBujaeFlag())
 		                return;
 		            if (pListTypeValue == "1" || pListTypeValue == "11") { //listTypeValue = 11(공유결재문서)
-						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
 							alert("<spring:message code='ezApprovalG.bhs23'/>");
 							getDocList();
 							return;
@@ -710,7 +710,7 @@
 		            //2018-10-31 배현상, 공유결재자 중복 결재 방지 처리
 		            if (tempFlag == 0 || tempFlag == 1) {
 		            	//첫번째 문서가 모두결재인 경우에는 결재창을 열지 않도록 변경
-						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
 							alert("<spring:message code='ezApprovalG.bhs23'/>");
 							getDocList();
 							return;
@@ -799,7 +799,7 @@
 		            }
 		        }
 		        
-		        if ((pListTypeValue == "1" || pListTypeValue == "11") && checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+		        if ((pListTypeValue == "1" || pListTypeValue == "11") && checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
 		        	alert("<spring:message code='ezApprovalG.bhs23'/>");
 					getDocList();
 					return;
@@ -853,7 +853,7 @@
 		        if (Ans) {
 			        var pCurSelRow = oArrRows[0];
 			        if (pListTypeValue == "1" || pListTypeValue == "11" || pListTypeValue == "2") {
-						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
 							alert("<spring:message code='ezApprovalG.bhs23'/>");
 							getDocList();
 							return;
@@ -985,7 +985,7 @@
 			    } else {
 			    	if (oArrRows != 0) {
 		                var pCurSelRow = oArrRows[0];
-		                if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+		                if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"),pCurSelRow.getAttribute("ORGCOMPANYID"))){
 							alert("<spring:message code='ezApprovalG.bhs23'/>");
 							getDocList();
 							return;
@@ -1995,7 +1995,7 @@
     			}
 		    }
 			
-			function checkAprState(pDocID, docState, OrgAprUserID, aprMemberSN) {
+			function checkAprState(pDocID, docState, OrgAprUserID, aprMemberSN, pOrgCompanyID) {
 		    	var result = "";
 		    	
 		    	$.ajax({
@@ -2008,7 +2008,7 @@
 		    			docState : docState,
 		    			userID : OrgAprUserID,
 		    			aprMemberSN : aprMemberSN,
-		    			orgCompanyID : orgCompanyID
+		    			orgCompanyID : pOrgCompanyID
 		    		},
 		    		success : function(text) {
 		    			result = text;

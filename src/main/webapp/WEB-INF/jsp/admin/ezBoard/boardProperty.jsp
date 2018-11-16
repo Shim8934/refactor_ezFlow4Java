@@ -23,6 +23,7 @@
 	        var orgAPPRFLAG = $.trim("<c:out value='${model.apprFlag}'/>");
 	        var parentBoardID =  "<c:out value='${model.parentBoardID}'/>";
 	        var primary = "<c:out value='${primary}'/>";
+	        var isAllGroupBoard = "<c:out value='${isAllGroupBoard}'/>";
 	        var xmlhttp = createXMLHttpRequest();
 	        var ApprUserList = "";
 	        var selectTargetListXML = "";
@@ -481,7 +482,7 @@
 			    
 			    selecttarget_cross_dialogArguments[0] = receiverData;
 			    selecttarget_cross_dialogArguments[1] = SelectTarget_Complete;
-			    var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget2.do", "SelectTarget_Cross2", GetOpenWindowfeature(1144, 590));
+			    var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget2.do?isAllGroupBoard=" + isAllGroupBoard, "SelectTarget_Cross2", GetOpenWindowfeature(1144, 590));
 			    try { SelectTarget_Cross.focus(); } catch (e) {}
 			}
 			
@@ -846,7 +847,7 @@
 	                	<input type="checkbox" id="chkURLBoard" onclick="checkboardtype()" />
 	                	URL<spring:message code="ezBoard.t0006"/>
 	                </c:if>
-	                 <input type="text" id="txtURL" style="width: 74%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />                
+	                 <input type="text" id="txtURL" style="width: 73%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />                
 	            </td>
 	        </tr>
 	        <tr id="tr3" style="${style}">

@@ -22,6 +22,7 @@
         var CancelFunction;
         var isDivPopUp = false;
         var isFolderManager = false;
+        var shareId = "${shareId}";
         
         if ("${isFolderManager}" == "1") {
         	isFolderManager = true;

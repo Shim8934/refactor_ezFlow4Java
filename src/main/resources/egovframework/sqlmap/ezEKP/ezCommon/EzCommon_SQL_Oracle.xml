@@ -416,12 +416,12 @@
 	 	CREATE TABLE JMOCHA_MAIL_SIGNATURE_TEMPLATE 
 		(
 		  SIGN_NO NUMBER NOT NULL 
-		, CONTENT LONG VARCHAR 
+		, CONTENT LONG 
 		, DISPLAYNAME VARCHAR2(45) 
 		, DISPLAYNAME2 VARCHAR2(45) 
 		, TENANT_ID NUMBER DEFAULT 0 NOT NULL 
 		, COMPANY_ID VARCHAR2(45) 
-		, CONSTRAINT JMOCHA_MAIL_SIGNATURE_TEMPLATE_PK PRIMARY KEY 
+		, CONSTRAINT SIGNATURE_TEMPLATE_PK PRIMARY KEY 
 		  (
 		    SIGN_NO 
 		  )
@@ -458,4 +458,21 @@
 		 )
 	</statement>
 	
+	<select id="EzCommonDAO.getUseSession" parameterClass="Map" resultClass="String">
+		SELECT 
+			PROPERTY_VALUE value
+		FROM 
+			TBL_TENANT_CONFIG
+		WHERE 
+			TENANT_ID=#tenantID#
+		AND
+			PROPERTY_NAME = #confName#
+	</select>
+	
+	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
+		INSERT INTO tbl_tenant_config
+		(tenant_id, property_name, property_value, description, config_name, regdate)
+		VALUES
+		(#tenantID#, #confName#, #property_value#, #description#, #config_name#, sysdate)
+	</insert>
 </sqlMap>

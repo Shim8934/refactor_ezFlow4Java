@@ -162,7 +162,7 @@ function SetGongRamList(pstrXML) {
             
             strRows += "<ROW>";
             strRows += "<CELL>";
-            strRows += "<VALUE>" + i + "</VALUE>";
+            strRows += "<VALUE>" + (listnodes.length+1-i) + "</VALUE>";
             strRows += "<DATA1>" + "" + "</DATA1>";
             strRows += "<DATA2>" + "" + "</DATA2>";
             strRows += "<DATA3>" + pDocID + "</DATA3>";
