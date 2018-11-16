@@ -246,7 +246,7 @@
 					u.extensionattribute4 as gyumJik,
 					u.extensionattribute2 as userFileUrl,
 					u.extensionattribute14 as sabun,
-					password_updatedt
+					u.password_updatedt
 				FROM 
 					TBL_USERMASTER u
 				inner join
@@ -345,7 +345,7 @@
 					u.extensionattribute4 as gyumJik,
 					u.extensionattribute2 as userFileUrl,
 					u.extensionattribute14 as sabun,
-					password_updatedt
+					u.password_updatedt
 				FROM 
 					TBL_USERMASTER u
 				inner join

@@ -120,7 +120,7 @@ public class LoginController {
         
     	logger.debug("ezOffice365Auth=" + ezOffice365Auth);
     	
-        if (ezOffice365Auth.equals("YES")) {        	
+        if (ezOffice365Auth != null && ezOffice365Auth.equals("YES")) {        	
         	return "redirect:/ezPortal/portalMain.do";         	
         }
         
@@ -279,12 +279,12 @@ public class LoginController {
     				String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
     				
     				// 사원번호를 사용한 로그인을 허용하는 경우
-    				if (useEmpNumberLogin.equals("YES") && !resultVO.getId().equals("")) {
+    				if (useEmpNumberLogin != null && useEmpNumberLogin.equals("YES") && !resultVO.getId().equals("")) {
     					
     					String orgId = resultVO.getId();
     					
     					// useMasteradminLogin이 YES일 경우 masteradmin의 암호로 로그인 가능하도록 한다.
-    					if (useMasteradminLogin.equals("YES")) {
+    					if (useEmpNumberLogin != null && useMasteradminLogin.equals("YES")) {
     						displayName1 = resultVO.getDisplayName1();
     						_pwd = EgovFileScrty.encryptPassword(rpwd, "masteradmin");
     						
@@ -331,7 +331,7 @@ public class LoginController {
 		// 로그인 실패 최대 허용 횟수를 구한다.
 		String maxAllowedCountOfLoginFail = ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId);
 				
-		if (!maxAllowedCountOfLoginFail.equals("")) {
+		if (maxAllowedCountOfLoginFail != null && !maxAllowedCountOfLoginFail.equals("")) {
 			try {
 				numberOfLoginFailPermit = Integer.parseInt(maxAllowedCountOfLoginFail);
 			} catch (NumberFormatException e) {
@@ -390,7 +390,7 @@ public class LoginController {
     	        	} else {
     		        	String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
     		        	
-    		        	if (!expirePassPeriod.trim().equals("0")) {
+    		        	if (expirePassPeriod != null && !expirePassPeriod.trim().equals("0")) {
     		        		int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
     		        		
     		        		Calendar cal = Calendar.getInstance();
@@ -563,7 +563,7 @@ public class LoginController {
     		useIPAccess = "NO";
     	}
     	
-    	if (useIPAccess.equals("NO")) {
+    	if (useIPAccess != null && useIPAccess.equals("NO")) {
     		logger.debug("ipAccessCheck ended");
     		return true;
     	} else { // useIPAccess 사용하면 IP, ID 체크
@@ -746,7 +746,7 @@ public class LoginController {
         
     	logger.debug("actionLogout ezOffice365Auth=" + ezOffice365Auth);
     	
-        if (ezOffice365Auth.equals("YES")) {       
+        if (ezOffice365Auth != null && ezOffice365Auth.equals("YES")) {       
 			String redirectUri = request.getScheme()
 					+ "://"
 					+ request.getServerName()
@@ -881,7 +881,7 @@ public class LoginController {
         
     	String userLoginFailedAttempt = ezCommonService.getUserConfigInfo(tenantID, userId, "LoginFailCount");
         
-        if (userLoginFailedAttempt.equals("")) {
+        if (userLoginFailedAttempt != null && userLoginFailedAttempt.equals("")) {
         	//This is the first time this user failed to login        	
         	return -2; 
         } else {
