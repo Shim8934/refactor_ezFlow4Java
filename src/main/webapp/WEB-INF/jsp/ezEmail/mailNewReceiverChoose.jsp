@@ -268,8 +268,8 @@
 	                
 	                // 관리자>조직도 관리>부서추가>부서장 아이디 선택
 	                if (rulekind == "MANAGER") { 
-	                	document.title = "부서장 선택";
-	                	document.getElementById("h1Title").innerHTML = "부서장 선택";
+	                	document.title = "<spring:message code='ezEmail.jje17'/>";
+	                	document.getElementById("h1Title").innerHTML = "<spring:message code='ezEmail.jje17'/>";
 	                	document.getElementById("contactTabButton").style.display = "none";
 	                	document.getElementById("dlTabButton").style.display = "none";
 	                	
