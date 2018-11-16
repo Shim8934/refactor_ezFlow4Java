@@ -20,6 +20,7 @@
 		ul .slider-imagePage {padding:5px 15px 10px 15px;}
 		ul .addSlider {border:1px dashed #aab2ba; display:inline-block; text-align:center; vertical-align : top; height:19.3em; border-radius:0px; width:225px; height: 370px; position:relative;}
 		ul .addSlider:hover {cursor:pointer;}
+		ul .slideIsUse {padding: 30px 0px 10px 0px;}
 	}
 		</style>
 		<script type="text/javascript">
@@ -36,6 +37,7 @@
 		    	getSliderList();
 		    })
 		    
+		    //데이터 값 부르기
 		    var getSliderList = function() {
 		    	$.ajax({
 		        	type : "POST",
@@ -49,6 +51,7 @@
 		        });
 		    }
 		    
+		    //슬라이드 이미지 목록
 		    function MakeSliderList(result) {
 		    	console.log(result);
 		    
@@ -86,10 +89,13 @@
 		    		sliderHTML += "<td>"+sliderURL+"</td></tr>"
 		    		sliderHTML += "<tr><td class ='sliderRegDate'>등록일   |</td>";
 		    		sliderHTML += "<td>"+sliderRegDate+"</td></tr>"
+		    		sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox'><span class='slider round'></label></td>";
+		    		
+		    		
 		    		sliderHTML += "</tr></table>";
-		    		sliderHTML += "</div>"; 
-		    	
+		    		sliderHTML += "</div>";
 		    	}
+		    	
 		    	sliderHTML += "<li class='addSlider' id='addSlider'><div style='margin-top:97px'><img src='/images/admin/admin_portlet_plus.png' ></img></div></li>";
 		    	sliderHTML += "</li>"
 		    	document.getElementById("sliderContainer").innerHTML = sliderHTML;
@@ -130,7 +136,7 @@
 		        window.location.reload(false);
 		    } 
 	
-		    /* function sliderdelete() {
+		    function sliderdelete() {
 		        if (tempid == "") {
 		            alert("<spring:message code = 'ezPersonal.t1022' />");
 		            return;
@@ -152,7 +158,7 @@
 		        		}
 		        	}
 		        });
-		    } */
+		    } 
 	
 		    /* function MakeDescription(filepath) {
 		        document.getElementById("ContentDescription").innerHTML = "<IMG src = '"+filepath+"' style='width:280px;height:515px' />";
@@ -316,7 +322,7 @@
 	    <div id="mainmenu">
 	    	<ul>
 	        	<%-- <li class="important"><span id ="NEW" onClick="btn_Select(this)"><spring:message code = 'ezPersonal.t105' /></span></li> --%>
-				<li><span onclick="sliderdelete();"><spring:message code = 'ezPersonal.t99' /></span></li>
+				<%-- <li><span onclick="sliderdelete();"><spring:message code = 'ezPersonal.t99' /></span></li> --%>
 				<%-- <li><span class="icon16 icon16_refresh" onclick="Reload();"></span></li>
 				<li><span onclick="Priority_UP();"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code = 'ezPersonal.t366' />"/></span></li>
 				<li><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code = 'ezPersonal.t367' />" /></span></li> --%>
