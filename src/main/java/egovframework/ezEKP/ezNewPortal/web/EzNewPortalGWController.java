@@ -2427,17 +2427,38 @@ public class EzNewPortalGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = info.getTenantId();
-			String companyId = info.getCompanyId();
+			String deptId = info.getDeptID();
+			String deptPath = info.getDeptPathCode();
+			deptPath += "everyone," + deptPath + "," + userId;
+			String companyId = info.getCompanyID();
+			String rollInfo = info.getRollInfo();
+			int portletId = Integer.parseInt(request.getParameter("portletId"));
+			String portletLang = info.getLang();
 			int limit = 3; // 공지사항 갯수
-
+			
+			// 회사의 포토게시판의 포틀릿 정보 가져오기
+			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
+			String boardId = portlet.getPortletBoardId();
+			
+			// 게시판 권한 체크
+			boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+			
 			// 여기에 데이터를 put해서 넘기면 됨.
 			JSONObject data = new JSONObject();
+			
+			if (!accessCheck) {
+				data.put("access", "false");
+			} else {
+				// 권한이 true이면 boardList불러오기
+				List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
+				noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, limit);
 
-			List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
-			noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, limit);
-			data.put("noticeList", noticeList);
+				data.put("access", "true");
+				data.put("noticeList", noticeList);
+			}
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2446,6 +2467,7 @@ public class EzNewPortalGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			e.printStackTrace();
 		}
 		LOGGER.debug("ezNewPortal G/W getNoticePortlet ended.");
 		return result;

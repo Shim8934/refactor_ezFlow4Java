@@ -1,18 +1,20 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hsqldb.result.Result;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -27,11 +29,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -1125,34 +1127,26 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (userInfo == null) {
-			LOGGER.debug("openBoardTree accessDenied.");
-			
-			return "cmm/error/adminDenied";
-		} else {
-			LOGGER.debug("openBoardTree ended.");
-			//게시판이 top인 목록 가져오기
-			String userId = userInfo.getId();
-			String companyId = request.getParameter("companyId");
-			
-//			Map<String, Object> param = new HashMap<String, Object>();
-//			param.put("userId", userId);
-//			
-//			String url = "/rest/admin/ezPortal//companies/" + companyId;
-//			
-//			JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
-//			String result = resultBody.get("status").toString();
-//			
-//			if (result.equals("ok")) {
-//				model.addAttribute("List", resultBody.get("data"));
-//			}
-			model.addAttribute("companyId", companyId);
-			model.addAttribute("portletId", request.getParameter("portletId"));
-			
-			LOGGER.debug("openSlideImageSetting ended.");
-			return "/admin/ezNewPortal/portalSlideImageSetting";
-		}
+		//게시판이 top인 목록 가져오기
+		String userId = userInfo.getId();
+		String companyId = request.getParameter("companyId");
+		
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("portletId", request.getParameter("portletId"));
+		
+		LOGGER.debug("openSlideImageSetting ended.");
+		return "/admin/ezNewPortal/portalSlideImageSetting";
 	}
+	
+	/**
+	 * 슬라이드 이미지 설정 화면 슬라이드 이미지 목록 출력
+	 * @param loginCookie
+	 * @param paramMap
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getSlideImages.do")
 	public String getSlideImages(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("getSlideImages started.");
@@ -1175,5 +1169,236 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		LOGGER.debug("getSlideImages ended.");
 		
 		return "json";
+	}
+	
+	/**
+	 * 슬라이드 이미지 설정 화면 이미지 업로드
+	 * @param loginCookie
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezNewPortal/uploadSlideImage.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String uploadSlideImage(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("uploadSlideImages started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String companyId = request.getParameter("companyId").toString();
+		String result = "";
+		
+        String imagePath = "";
+
+		MultipartFile multiFile =  ((MultipartRequest) request).getFile("file");
+		
+		String realPath = request.getServletContext().getRealPath("");
+		String pFileName = "";
+        String sGUID = "";
+        String pUploadSN = "";        
+        String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+        
+        sGUID = UUID.randomUUID().toString();
+        pUploadSN = "{" + sGUID + "}";
+
+        if (StringUtils.isNotEmpty(multiFile.getOriginalFilename()) && StringUtils.isNotBlank(multiFile.getOriginalFilename())) {        	
+            String _pFileName = multiFile.getOriginalFilename();
+            
+            if (_pFileName.indexOf(commonUtil.separator) > 0) {
+                _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
+            }
+            
+            pFileName = _pFileName;
+        }
+        
+        String pDirPath = commonUtil.getUploadPath("upload_newPortal.ROOT", userInfo.getTenantId());
+        pDirPath = pDirPath + commonUtil.separator + companyId + commonUtil.separator + "slideImagePortlet";
+        
+        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+        	pDirPath = pDirPath + commonUtil.separator;
+        }
+        
+        File file = new File(realPath + pDirPath);
+
+        if (!file.exists()) {
+        	file.mkdir();        
+        }
+        
+        String extend = pFileName.substring(pFileName.lastIndexOf(".") + 1);
+        String newFileName = pUploadSN + "." + extend;
+        
+        if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {           	
+			writeUploadedFile(multiFile, newFileName, realPath + pDirPath);
+			
+			imagePath = realPath + pDirPath + newFileName;
+			
+			File imageFile = new File(imagePath); 
+			
+			String saveName = UUID.randomUUID() + ".jpg";
+			if (imageFile.exists()) {
+				BufferedImage inputImage = ImageIO.read(imageFile);
+				BufferedImage outputImage = null;
+				Graphics2D saveImage = null;
+				
+				outputImage= new BufferedImage(617, 250, BufferedImage.TYPE_INT_RGB);
+				saveImage = outputImage.createGraphics();
+				saveImage.drawImage(inputImage, 0, 0, 617, 250, null);
+				saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+				
+				File newFile = new File( realPath + pDirPath + saveName);
+				
+				ImageIO.write(outputImage, "png" , newFile);
+				deleteFile(imagePath);
+
+			}
+
+			result = pDirPath + saveName;
+        }
+
+		LOGGER.debug("uploadSlideImages ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 관리자 슬라이드포틀릿 이미지 설정 저장버튼 클릭시
+	 * @param loginCookie
+	 * @param paramMap
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/saveSlideImages.do")
+	public String saveSlideImages(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("saveSlideImages started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String imagePath = paramMap.get("imagePath").toString();
+		String imageUrl = paramMap.get("imageUrl").toString();
+		String imageName = paramMap.get("imageName").toString();
+		String mode = paramMap.get("mode").toString();
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("imagePath", imagePath);
+		param.put("imageUrl", imageUrl);
+		param.put("imageName", imageName);
+		
+		String url = "";
+		String type = "";
+		if (mode.equals("new")) {
+			url = "/rest/admin/ezportal/slideimages/companies/" + paramMap.get("companyId");
+			type = "post";
+		} else {
+			url = "/rest/admin/ezportal/slideimages/" + paramMap.get("slideId") + "/companies/" + paramMap.get("companyId");
+			type = "put";
+		}
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, type, null);
+				
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			
+		}
+		
+		LOGGER.debug("saveSlideImages ended.");
+		
+		return "json";
+	}
+	
+	/**
+	 * 관리자 슬라이드포틀릿 이미지 설정 수정버튼 클릭시 슬라이드이미지 정보
+	 * @param loginCookie
+	 * @param paramMap
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/getSlideImageInfo.do")
+	public String getSlideImageInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("getSlideImageInfo started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/admin/ezportal/slideimages/" + paramMap.get("slideId") + "/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("slideInfo", resultBody.get("data"));
+		}
+		
+		LOGGER.debug("getSlideImageInfo ended.");
+		
+		return "json";
+	}
+	
+	/**
+	 * 관리자 슬라이드포틀릿 이미지 설정 삭제버튼
+	 * @param loginCookie
+	 * @param paramMap
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/delSlideImage.do")
+	public void deleteSlideImage(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("deleteSlideImage started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/admin/ezportal/slideimages/" + paramMap.get("slideId") + "/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "delete", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+		}
+		
+		LOGGER.debug("deleteSlideImage ended.");
+	}
+	
+	/**
+	 * 관리자 슬라이드포틀릿 순서조정
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezNewPortal/updateSlideOrder.do")
+	@ResponseBody
+	public void updateSlideOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("updateSlideOrder started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		JSONObject jsonParam = new JSONObject();
+		jsonParam.put("slideList", paramMap.get("slideList"));
+		
+		String url = "/rest/admin/ezPortal/slideimages/order/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			
+		}
+		
+		LOGGER.debug("updateSlideOrder ended.");
 	}
 }

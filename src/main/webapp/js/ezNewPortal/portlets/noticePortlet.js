@@ -58,6 +58,8 @@ var assembleNoticeList = function(noticeList) {
 	
 	document.getElementById('noticePlus').addEventListener('click', noticePlus);
 }
+var portletId = $(".notice").parent().attr("id");
+portletId = portletId.substring(0, portletId.indexOf("P"));
 
 /* [포틀릿] 공지사항 리스트 */ 
 var getNoticePortletList = function () {
@@ -70,7 +72,7 @@ var getNoticePortletList = function () {
 			console.error(xhr.responseText);
 		}
 	};
-	xhr.open('GET', '/ezNewPortal/getNoticePortlet.do');
+	xhr.open('GET', '/ezNewPortal/getNoticePortlet.do?portletId='+portletId);
 	xhr.send();
 };
 

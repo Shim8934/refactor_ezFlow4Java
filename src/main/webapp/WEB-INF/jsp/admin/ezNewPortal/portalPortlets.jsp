@@ -428,12 +428,12 @@
 					listHTML += "</div>";
 					listHTML += "<div class='portlet-content'>";
 					listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'>포틀릿 사용  : </th>";
-// 					if (portletId == 34) { //슬라이드 이미지의 경우 - 개발 진행중! ~2018.11.16
-// 						listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
-// 						listHTML += "<div class='slideImageSetting'><a><img src='/images/admin/admin_portlet_set.png'></a></div></td>";
-// 					} else {
+					if (portletId == 34) { //슬라이드 이미지 포틀릿의 경우
+						listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
+						listHTML += "<div class='slideImageSetting'><a><img src='/images/admin/admin_portlet_set.png'></a></div></td>";
+					} else {
 						listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td>";
-// 					}
+					}
 					listHTML += "</tr>";
 					
 					for (var j = 0; j < portletNameListCnt; j++) {
@@ -696,8 +696,8 @@
  		var companiesObj = document.getElementById("ListCompany");
 		var companyId = companiesObj.options[companiesObj.selectedIndex].value;
 		
-        var wWeight = "1200";
-        var wHeight = "720";
+        var wWeight = "902";
+        var wHeight = "734";
 
         var heigth = window.screen.availHeight;
         var width = window.screen.availWidth;
