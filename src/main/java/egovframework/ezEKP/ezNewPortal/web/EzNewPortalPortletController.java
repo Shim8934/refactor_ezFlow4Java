@@ -815,7 +815,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		
-		String url = "/rest/ezportal/portlets/slideimages";
+		String url = "/rest/admin/ezportal/slideimages/companies/" + userInfo.getCompanyID();
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		

@@ -6,11 +6,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 
@@ -48,6 +50,7 @@ import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
+import egovframework.ezEKP.ezPersonal.dao.EzPersonalAdminDAO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -1851,8 +1854,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	};
 
 	@Override
-	public List<PersonalSliderImageVO> getSilderImages(String companyId,
-			int tenantId) {
+	public List<PersonalSliderImageVO> getSilderImages(String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getSilderImages started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1861,5 +1863,91 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		LOGGER.debug("getSilderImages ended.");
 		return ezNewPortalDAO.getSilderImages(map);
+	}
+	
+	@Override
+	public void insertSlideImage(String companyId, int tenantId, String imageUrl, String slideImagePath, String fileName, String userId) throws Exception {
+		LOGGER.debug("insertSlideImage started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantID", tenantId);
+		map.put("companyId", companyId);
+		map.put("imageUrl", imageUrl);
+		map.put("fileName", fileName);
+		map.put("slideImagePath", slideImagePath);
+		map.put("regUserId", userId);
+		map.put("regDate", commonUtil.getTodayUTCTime(""));
+		
+		int count = ezNewPortalDAO.getSlideImageMaxSn(map);
+		map.put("count", count);
+		
+		map.put("slideId", "slidePortletImage{" + fileName.split("\\.")[0] + "}");
+		
+		ezNewPortalDAO.insertSilderImages(map);
+		
+		LOGGER.debug("insertSlideImage ended.");
+	}
+	
+	@Override
+	public PersonalSliderImageVO getSlideImageInfo(int tenantId, String companyId, String slideId) throws Exception {
+		LOGGER.debug("getSlideImageInfo started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("slideId", slideId);
+		
+		LOGGER.debug("getSlideImageInfo ended.");
+		return ezNewPortalDAO.getSilderImagInfo(map);
+	}
+	
+	@Override
+	public void updateSlideImage(String companyId, int tenantId, String imageUrl, String imagePath, String imageName, String userId, String slideId) throws Exception {
+		LOGGER.debug("updateSlideImage started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("imageUrl", imageUrl);
+		map.put("fileName", imageName);
+		map.put("slideImagePath", imagePath);
+		map.put("regUserId", userId);
+		map.put("regDate", commonUtil.getTodayUTCTime(""));
+		map.put("slideId", slideId);
+		
+		ezNewPortalDAO.updateSilderImage(map);
+		
+		LOGGER.debug("updateSlideImage ended.");
+	}
+	
+	@Override
+	public void deleteSlideImage(int tenantId, String companyId, String slideId) throws Exception {
+		LOGGER.debug("deleteSlideImage started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("slideId", slideId);
+		
+		ezNewPortalDAO.deleteSlideImage(map);
+		
+		LOGGER.debug("deleteSlideImage ended.");
+	}
+	
+	@Override
+	public void updateSlideOrder(JSONArray slideList, String companyId,
+			int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		for (Object item : slideList) {
+			if (item instanceof JSONObject) {
+				JSONObject slideInfo = (JSONObject) item;
+				map.put("slideId", slideInfo.get("slideId"));
+				map.put("order", slideInfo.get("order"));
+				
+				ezNewPortalDAO.updateSlideOrder(map);
+			}
+		}		
 	}
 }
