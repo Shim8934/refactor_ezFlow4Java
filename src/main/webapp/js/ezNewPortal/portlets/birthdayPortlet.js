@@ -67,7 +67,7 @@ function getBirthdayList() {
 				for (var i = 0; i < resultCount; i++) {
 					var userBirthday = birthdayList[i].userBirthday.substring(5);
 					
-					strHTML += "<li id='B" + birthdayList[i].userId + "'>";
+					strHTML += "<li id='P" + birthdayList[i].userId + "'>";
 					strHTML += "<dl class='birthListDL'>";
 					strHTML += "<dt class='birthPic'>";
 					strHTML += "<img src='" + birthdayList[i].userImg + "' width = '32' height='32'>";
@@ -82,7 +82,7 @@ function getBirthdayList() {
 				
 				for (var i = 0; i< resultCount; i++) {
 					var userInfo = birthdayList[i];
-					$("#B" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
+					$("#P" + userInfo.userId).on("click", {"userId" : userInfo.userId}, openUserInfo);
 				}
 			} else {
 				$("#nodata_NewBirthday").css("display", "");

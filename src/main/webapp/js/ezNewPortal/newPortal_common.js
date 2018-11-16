@@ -994,12 +994,15 @@ function quickMenuOpenRight(event) {
 		case 'schedule':		
 			url = '/ezSchedule/scheduleWrite.do?defaultid=0';
 			location = '';
-			option = 'top='+pTop+', left='+pLeft+ 'height='+ '300' +', width='+'300'+', status=no, toolbar=no, menubar=no, location=no, resizable=1';			
+			pTop = (pheight - 819) / 2;
+			pLeft = (pwidth - 890) / 2;	
+			option = 'top='+pTop+', left='+pLeft+ ',height='+ '802' +', width='+'890'+', status=no, toolbar=no, menubar=no, location=no, resizable=1';			
 			break;
 		case 'organ':
 			url = '/ezPersonal/personSearch.do';
-			location = '';
-			option = 'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0';			
+			pTop = (pheight - 659) / 2;
+			pLeft = (pwidth - 715) / 2;	
+			option = 'top='+pTop+', left='+pLeft+ ',height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0';			
 			break;
 	}
 	
