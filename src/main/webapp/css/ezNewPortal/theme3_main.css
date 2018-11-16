@@ -343,7 +343,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* schedule_small */
 .sCalendarArea{ overflow:hidden;}
-.sCalendarArea .scalender {overflow:hidden; float:left; width:96%; margin:4px 5px; padding:10px 10px 10px 10px; box-sizing:border-box; /*border-right:1px solid #e7e7e7;*/}
+.sCalendarArea .scalender {overflow:hidden; float:left; width:96%; margin:2px 5px 5px 5px; padding:1px; /* box-sizing:border-box; */ /*border-right:1px solid #e7e7e7;*/}
 .scalendar_mini_title{table-layout:fixed; text-align:center; height:25px; margin:10px 0px; padding:0px 10px 0px 3px;}
 .scalendar_mini_title .btn_prev{width:14.2%;  padding:0px 1px; cursor:pointer;}
 .scalendar_mini_title .calendar_mini_day{width:100%; text-align:center; color:#333; font-size:16px; font-weight:bold;}
