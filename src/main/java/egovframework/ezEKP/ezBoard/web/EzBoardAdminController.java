@@ -757,6 +757,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");
 		String adminType = request.getParameter("adminType");
 		String style = "";
+		String isAllGroupBoard = "";
 		
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
@@ -781,6 +782,16 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			boardPropertyVO.setGuBun("6");
 		}
 		
+		/* 2018-11-15 홍승비 - 그룹사게시판 여부 판별하여 값을 전달 */
+		if (boardPropertyVO.getParentBoardID() != null) {
+			BoardPropertyVO parentProp = ezBoardService.getBoardProperty(boardPropertyVO.getParentBoardID(), userInfo.getTenantId());
+			if (parentProp.getGuBun() != null && parentProp.getGuBun().equals("99")) {
+				isAllGroupBoard = "Y";
+			} else {
+				isAllGroupBoard = "N";
+			}
+		}
+		
 		/* 2018-07-26 홍승비 - 다국어 표출 시 lang 대신 primary 조건 사용하도록 수정 */
 		model.addAttribute("model", boardPropertyVO);
 		model.addAttribute("use_multiData", use_multiData);
@@ -790,6 +801,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("use_portal", use_portal);
 		model.addAttribute("style", style);
 		model.addAttribute("adminType", adminType);
+		model.addAttribute("isAllGroupBoard", isAllGroupBoard);
 
 		logger.debug("boardProperty ended");
 		return "admin/ezBoard/boardProperty";
@@ -1189,17 +1201,30 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		String topid = "";
+		String deptTreeTopId = "";
+		String isAllGroupBoard = "";
+		
+		if(request.getParameter("isAllGroupBoard") != null) {
+			isAllGroupBoard = request.getParameter("isAllGroupBoard");
+		}
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topid = user.getCompanyID();
+			deptTreeTopId = topid;
 		} else {
 			topid = "Top";
+			// 전체관리자이면서 그룹사게시판인 경우, 전체 조직도 표출
+			if (isAllGroupBoard != null && isAllGroupBoard.equals("Y")) {
+				deptTreeTopId = topid + "/organ";
+			}
 		}
 		
 		/* 2018-07-26 홍승비 - 비어있는 userLang 대신 primary값이 들어가도록 수정, 사용하지 않는 strXML 제거 */
 		model.addAttribute("topid", topid);
 		model.addAttribute("primary", user.getPrimary());
 		model.addAttribute("deptID", user.getDeptID());
+		model.addAttribute("deptTreeTopId", deptTreeTopId);
+		model.addAttribute("isAllGroupBoard", isAllGroupBoard);
 
 		logger.debug("selectTarget2 ended");
 		return "admin/ezBoard/selectTarget2";

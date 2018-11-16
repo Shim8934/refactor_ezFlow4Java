@@ -102,6 +102,8 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -259,8 +261,38 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 
 		// get user credentials
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(loginInfo.getId(), loginInfo.getPrimary(), loginInfo.getTenantId());
 		String password  = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userAccount = loginInfo.getId() + "@" + domainName;
+        String mailId = loginInfo.getId();
+        Map<String, Object> extraMap = new HashMap<>();
+        String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+        if (useSharedMailbox.equals("YES")) {
+        	String shareId = request.getParameter("shareId");
+    		logger.debug("shareId=" + shareId);
+    		
+    		if (shareId != null) {
+    			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
+    				logger.debug("the user cannot access the shareId.");
+    			} else {
+    				MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(shareId, loginInfo.getTenantId());
+    				
+    				mailId = shareId;
+    				userAccount = shareId + "@" + domainName;
+    				extraMap.put("shareId", shareId);
+    				
+    				model.addAttribute("shareId", shareId);
+    				model.addAttribute("shareName", sharedMailboxInfo.getShareName());
+    				model.addAttribute("shareMail", sharedMailboxInfo.getShareMail());
+    			}
+    		}
+        }
+		
+        logger.debug("userId=" + loginInfo.getId() + ",userAccount=" + userAccount);
+        
+		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(mailId, loginInfo.getPrimary(), loginInfo.getTenantId());
 		
 		// set replyReadTime
 		String isDefaultReceiptExternal = ezCommonService.getTenantConfig("isDefaultReceiptExternal", loginInfo.getTenantId());
@@ -303,14 +335,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		
+		logger.debug("serverName=" + serverName);
+		
 		//수아 수정
-		String useMailWriteSenderClick = ezCommonService.getTenantConfig("useMailWriteSenderClick", userInfo.getTenantId());
+		String useMailWriteSenderClick = ezCommonService.getTenantConfig("useMailWriteSenderClick", loginInfo.getTenantId());
 		
 		if (useMailWriteSenderClick.equals("")) {
 			useMailWriteSenderClick = "NO";
 		}
-		
-		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
 		
 		String stateName = UUID.randomUUID().toString();
 		logger.debug("stateName=" + stateName);
@@ -442,10 +474,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         if (request.getParameter("include") != null) {
         	includeContent = request.getParameter("include");
 		}
-        
-        String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
-		String userAccount = loginInfo.getId() + "@" + domainName;
-        
+		
 		// make mail top level folders
         IMAPAccess ia = null;
         try {
@@ -570,7 +599,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);					
 						tempBody = bodyInfoList.get(0);
 						
 						if (attachedFileList.size() > 0) {
@@ -685,8 +714,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		subject = orgMessage.getSubject();
 						subject = (subject != null) ? subject : "";
 		        		
-						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
+						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);					
 						bodyValue = bodyInfoList.get(0);
 		        		
 		        		if (attachedFileList.size() > 0) {
@@ -889,8 +918,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        sb.append("<br/><br/>");
 				            
 						// analyze the message and retrieve the attached file list.
-						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, false, locale, null, null);					
+						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);					
 						String tmphtmlbody = bodyInfoList.get(0);
 			            
 			            bodyValue = sb.toString() + tmphtmlbody;
@@ -934,7 +963,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								List<Map<String, String>> attachedFileListInReply = new ArrayList<Map<String, String>>();	
 								
 								// replyMessage의 첨부 파일 구성이 orgMessage와 다르게 될 수 있기 때문에 다시 첨부파일 정보를 구하도록 한다.
-								ezEmailUtil.getBodyInfo(replyMessage, folderPath, uid, -1, attachedFileListInReply, false, false, locale, null, null);					
+								ezEmailUtil.getBodyInfo(replyMessage, folderPath, uid, -1, attachedFileListInReply, locale, extraMap);					
 								
 				                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
 				                
@@ -1048,7 +1077,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		if (useFromAddress != null) {
 			if (useFromAddress.equals("YES")) {
-				List<String[]> fromAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
+				List<String[]> fromAddressList = ezEmailService.getAliasAddress(mailId, loginInfo.getTenantId());
 				
 				if (fromAddressList.size() >= 2) {
 					String companyDomainName = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "DomainName");
@@ -1086,7 +1115,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					}
 					
 					if (!isValidFrom) {
-						from = loginInfo.getEmail();
+						from = userInfo.getMail();
 					}
 					
 					for (String[] address : fromAddressList) {
@@ -1254,6 +1283,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezEmail/dragAndDrop.do")
 	public String dragAndDropIframe(
 			@CookieValue("loginCookie") String loginCookie, 
+			HttpServletRequest request,
 			LoginVO userInfo, 
 			Model model) throws Exception{
 		
@@ -1263,6 +1293,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		if (attachFileNameMaxLength.equals("")) {
 			attachFileNameMaxLength = "100";
+		}
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 2, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+				} else {
+					model.addAttribute("shareId", shareId);
+				}
+			}
 		}
 		
 		model.addAttribute("userInfo", userInfo);
@@ -2516,6 +2561,25 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String pDirTempPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", loginInfo.getTenantId()) + commonUtil.separator + "tempFileUpload";
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailInterAttach ended.");
+					
+					return "";
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
+		}
+		
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
 		
 		MimeMessage newMessage = null;
 		IMAPAccess ia = null;
@@ -2757,6 +2821,27 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String userId = userInfo.getId();
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userAccount = userId + "@" + domainName;
+		String mailId = userId;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 2, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailInterSend ended.");
+					
+					return "";
+				}
+				
+				mailId = shareId;
+				userAccount = shareId + "@" + domainName;
+			}
+		}
+		
+		logger.debug("userId=" + userInfo.getId() + ",userAccount=" + userAccount);
 		
 		//변수들은 메일발송 실패 시 다시 사용되므로 메일발송 로직 도중 값이 바뀌면 안된다.
 		String url = "";
@@ -3825,7 +3910,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            		securePassword = egovFileScrty.encryptAES(securePassword);
 			            		
 			            		// save secure mail info and get secureId
-			            		secureId = ezEmailService.setMailSecure(userInfo.getTenantId(), userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
+			            		secureId = ezEmailService.setMailSecure(userInfo.getTenantId(), mailId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
 		    		        	
 		    		        	if (secureId == 0) {
 		    		        		throw new Exception("INSERTSECUREMAILFAIL");
@@ -3948,7 +4033,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    	                    }
 	    	                    
 			            		// 보낸편지함에 저장한 메일의 uid를 저장한다.
-    			            	String result = ezEmailService.updateMailSecure(userInfo.getTenantId(), userId, secureId, sentFolder.getFullName() + "/" + sentFolderMessageUID);
+    			            	String result = ezEmailService.updateMailSecure(userInfo.getTenantId(), mailId, secureId, sentFolder.getFullName() + "/" + sentFolderMessageUID);
     				        	
     				        	if (!result.equals("OK")) {
     				        		throw new Exception("UPDATESECUREMAILFAIL");
@@ -4258,6 +4343,25 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (uid != 0) {
     		String domainName = ezCommonService.getTenantConfig("domainName", loginInfo.getTenantId());
     		String userEmail = loginInfo.getId() + "@" + domainName;
+    		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+    		if (useSharedMailbox.equals("YES")) {
+    			String shareId = request.getParameter("shareId");
+        		logger.debug("shareId=" + shareId);
+        		
+        		if (shareId != null) {
+        			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+        				logger.debug("the user cannot access the shareId.");
+        				logger.debug("delDrafts ended.");
+        				
+        				return "";
+        			}
+        			
+        			userEmail = shareId + "@" + domainName;
+        		}
+    		}
+    		
+    		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
     		
     		IMAPAccess ia = null;
     		try {
@@ -4405,6 +4509,25 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailDelInterAttach ended.");
+					
+					return "";
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
+		}
+		
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
 		
 		if (uid != 0) {
 			NodeList rows = root.getElementsByTagName("ROW");
@@ -4612,6 +4735,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String pDLPropList = "mail";
 		String pDLListType = "group";
 		String pAddressFilter = "";
+		String pSharedMailboxSearchList = "";
 		
 		Document xmlDoc = commonUtil.convertRequestToDocument(request);
 		Element root = xmlDoc.getDocumentElement();
@@ -4627,6 +4751,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			tempNode = root.getElementsByTagName("DLGSEARCH").item(0);
 			if (tempNode != null && !tempNode.getTextContent().equals("")) {
 				pDLSearchList = tempNode.getTextContent();
+			}
+		}
+		if (root.getElementsByTagName("SHAREDMAILBOXSEARCH") != null) {
+			tempNode = root.getElementsByTagName("SHAREDMAILBOXSEARCH").item(0);
+			if (tempNode != null && !tempNode.getTextContent().equals("")) {
+				pSharedMailboxSearchList = tempNode.getTextContent();
 			}
 		}
 		if (root.getElementsByTagName("CELL") != null) {
@@ -4670,9 +4800,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo);
         String dlXML = getOrganDLSearch(pDLSearchList, userInfo);
         String addressXML = getAddressSearch(pAddressFilter, userInfo);
-        
+        String sharedMailboxXML = getSharedMailboxSearch(pSharedMailboxSearchList, userInfo);
+
         logger.debug("mailNameCheck ended.");
-        return String.format("<RESULT><ORGAN>%s</ORGAN><DL>%s</DL><ADDRESS>%s</ADDRESS></RESULT>", organXML, dlXML, addressXML);
+        return String.format("<RESULT><ORGAN>%s</ORGAN><DL>%s</DL><ADDRESS>%s</ADDRESS><SHAREDMAILBOX>%s</SHAREDMAILBOX></RESULT>", organXML, dlXML, addressXML, sharedMailboxXML);
 	}
 	
 	/**
@@ -4755,6 +4886,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", tenantId);
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		String useReceiptExternal = ezCommonService.getTenantConfig("useReceiptExternal", tenantId);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+				} else {
+					model.addAttribute("shareId", shareId);
+				}
+			}
+		}
 		
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("userInfo", userInfo);
@@ -4809,12 +4954,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String type = request.getParameter("type") == null ? "" : request.getParameter("type").trim();
 		String ruleKind = request.getParameter("ruleKind") == null ? "" : request.getParameter("ruleKind").trim();
 		String useOcs = config.getProperty("config.USE_OCS") == null ? "" : config.getProperty("config.USE_OCS");
-		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
 		model.addAttribute("defaultWin", defaultWin);
 		model.addAttribute("type", type);
 		model.addAttribute("ruleKind", ruleKind);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useSharedMailbox", useSharedMailbox);
 		
 		logger.debug("mailNewReceiverChoose ended.");
 		return "ezEmail/mailNewReceiverChoose";
@@ -5003,11 +5150,105 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		model.addAttribute("isUser", isUser);
 		model.addAttribute("list", list);
 		
 		logger.debug("mailSelectDLMember ended.");
 		return "ezEmail/mailSelectDLMember";
+	}
+	
+	/**
+	 * 공유사서함 리스트 호출 함수 (수신자 설정)
+	 */
+	@RequestMapping(value="/ezEmail/getSharedMailboxList.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getSharedMailboxList(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		logger.debug("getSharedMailboxList started.");
+		
+		String returnData = "";
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			List<MailSharedMailboxVO> sharedMailboxList = ezEmailService.getSharedMailboxList(userInfo.getCompanyID(), userInfo.getTenantId());
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (MailSharedMailboxVO vo : sharedMailboxList) {
+				sb.append("<ROW><CELL>");
+				
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getShareName()));
+				sb.append("</VALUE>");
+				
+				sb.append("<DATA1>");
+				sb.append(commonUtil.cleanValue(vo.getShareId()));
+				sb.append("</DATA1>");
+				
+				sb.append("<DATA2>");
+				sb.append(commonUtil.cleanValue(vo.getShareMail()));
+				sb.append("</DATA2>");
+				
+				sb.append("</CELL></ROW>");
+			}
+			
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("getSharedMailboxList ended.");
+		return returnData;
+	}
+	
+	/**
+	 * 공유사서함 공유자 정보 호출 함수 (수신자 설정)
+	 */
+	@RequestMapping(value="/ezEmail/getSharedMailboxMember.do")
+	public String getSharedMailboxMember(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		logger.debug("getSharedMailboxMember started.");
+		
+	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String shareId = request.getParameter("shareId");
+		int tenantId = userInfo.getTenantId();
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(shareId, tenantId);
+		List<MailSharedMailboxUserVO> userList = sharedMailboxInfo.getUserList();
+		String userId = null;
+		OrganUserVO userVO = null;
+		
+		for (MailSharedMailboxUserVO user : userList) {
+			userId = user.getUserId();
+			userVO = ezOrganAdminService.getUserInfo(userId, userInfo.getPrimary(), userInfo.getTenantId());
+			
+			if (userVO != null) {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("displayName", userVO.getDisplayName());
+				map.put("mail", userVO.getMail());
+				map.put("company", userVO.getCompany());
+				map.put("dept", userVO.getDescription());
+				map.put("title", userVO.getTitle());
+				
+				list.add(map);
+			}
+		}
+		
+		model.addAttribute("list", list);
+		
+		logger.debug("getSharedMailboxMember ended.");
+		return "ezEmail/mailShowSharedMailboxMember";
 	}
 	
 	/**
@@ -5059,7 +5300,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		return "<DATA>OK</DATA>";
 	}
-	
 	
 	/**
 	 * 사원 Organ 정보 호출 함수
@@ -5155,6 +5395,52 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	returnValue = "EXCEPTION";
         }
         return returnValue;
+    }
+	
+	/**
+	 * 공유사서함 정보 호출 함수
+	 */
+	private String getSharedMailboxSearch(String pSearchList, LoginVO userInfo) {
+        String returnData = "";
+        
+        try {
+        	String searchValue = pSearchList.split("::")[1];
+        	
+			List<MailSharedMailboxVO> sharedMailboxList = ezEmailService.getSharedMailboxSearchList(userInfo.getCompanyID(), userInfo.getTenantId(), searchValue);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (MailSharedMailboxVO vo : sharedMailboxList) {
+				sb.append("<ROW><CELL>");
+				
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getShareName()));
+				sb.append("</VALUE>");
+				
+				sb.append("<DATA1>group</DATA1>");
+				
+				sb.append("<DATA2>");
+				sb.append(commonUtil.cleanValue(vo.getShareId()));
+				sb.append("</DATA2>");
+				
+				sb.append("<DATA3>");
+				sb.append(commonUtil.cleanValue(vo.getShareMail()));
+				sb.append("</DATA3>");
+				
+				sb.append("</CELL></ROW>");
+			}
+			
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "EXCEPTION";
+			e.printStackTrace();
+		}
+        
+        return returnData;
     }
 	
 	private String convertDownloadInlineImageURLtoCid(String htmlStr) {
@@ -5306,12 +5592,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String pOrganListType = "all";
 		String pDLSearchList = "displayname::" + searchValue;
 		String pAddressFilter = searchValue;
+		String pSharedMailboxSearchList = "displayname::" + searchValue;
 
 		try {
 			Document organXML = commonUtil.convertStringToDocument(
 					getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo));
 			Document dlXML = commonUtil.convertStringToDocument(getOrganDLSearch(pDLSearchList, userInfo));
 			Document addressXML = commonUtil.convertStringToDocument(getAddressSearch(pAddressFilter, userInfo));
+			Document sharedMailboxXML = commonUtil.convertStringToDocument(getSharedMailboxSearch(pSharedMailboxSearchList, userInfo));
 
 			HashMap<String, Object> jsonObject = null;
 			List<Object> jsonList = new ArrayList<Object>();
@@ -5367,6 +5655,25 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					jsonList.add(jsonObject);
 				}
 			}
+			
+			NodeList sharedMailboxRow = sharedMailboxXML.getElementsByTagName("ROW");
+			for (int i = 0; i < sharedMailboxRow.getLength(); i++) {
+				Element row = (Element) sharedMailboxRow.item(i);
+				NodeList sharedMailboxList = row.getElementsByTagName("CELL");
+				Element sharedMailboxCell = (Element) sharedMailboxList.item(0);
+				if (sharedMailboxCell.getElementsByTagName("DATA3").item(0) != null
+						&& !sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
+					jsonObject = new HashMap<String, Object>();
+					jsonObject.put("name", sharedMailboxCell.getElementsByTagName("VALUE").item(0).getTextContent());
+					jsonObject.put("title", "");
+					jsonObject.put("description", egovMessageSource.getMessage("ezEmail.sharedMailbox02", locale));
+					jsonObject.put("mail", sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent());
+					jsonObject.put("type", "");
+					jsonObject.put("href", "");
+					jsonList.add(jsonObject);
+				}
+			}
+			
 			model.addAttribute("susinList", jsonList);
 		} catch (Exception e) {
 
@@ -5413,7 +5720,25 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
-		logger.debug("userEmail=" + userEmail);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("downloadAttachInWriter ended.");
+					
+					return;
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
+		}
+		
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
 		
 		String folderPath = request.getParameter("folderPath");
 		String fileName = request.getParameter("filename");

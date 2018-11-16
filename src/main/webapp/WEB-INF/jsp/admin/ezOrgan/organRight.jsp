@@ -1038,7 +1038,7 @@
 		      //크롬일때 alert창 크기때문에 크롬일때 구별
 	            var agent = navigator.userAgent.toLowerCase();
 	            if (agent.indexOf("chrome") != -1) {
-	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(450, 185));	
+	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));	
 	            } else {
 	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));	
 	            }

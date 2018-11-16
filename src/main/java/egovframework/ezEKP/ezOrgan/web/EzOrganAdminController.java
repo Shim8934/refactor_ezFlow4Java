@@ -170,9 +170,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("useSignatureTemplate=" + useSignatureTemplate);
 		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", user.getTenantId());
+		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("useLetter", useLetter);
 		model.addAttribute("useSignatureTemplate", useSignatureTemplate);
+		model.addAttribute("useSharedMailbox", useSharedMailbox);
 		model.addAttribute("cChk", cChk);
 		
 		return "admin/ezOrgan/organLeft";
