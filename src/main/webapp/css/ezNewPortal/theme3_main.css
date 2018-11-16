@@ -349,7 +349,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .scalendar_mini_title .calendar_mini_day{width:100%; text-align:center; color:#333; font-size:16px; font-weight:bold;}
 .scalendar_mini_title .btn_next{width:14.2%; padding:0px 1px; cursor:pointer;}
 .scalendar_mini{table-layout:fixed; border-collapse: collapse;}
-.scalendar_mini th{color:#000; margin:0; padding:4px 0px 4px 0px; border-top:0 none; font-size:13px; border-left:0 none; font-weight:bold; }
+.scalendar_mini th{color:#000; margin:0; padding:2px 0px 13px 0px; border-top:0 none; font-size:13px; border-left:0 none; font-weight:bold; }
 .scalendar_mini th.sun{color:#cd3b3b;}
 .scalendar_mini th.sat{color:#0470e4;}
 .scalendar_mini td {height:26px; text-align:center; cursor:pointer; color:#333333; position: relative; font-size:12px;}
@@ -358,7 +358,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .scalendar_mini td.gray{color:#8a8e9b;}
 .scalendar_mini td.today{color:#333333; background:url(/images/ezNewPortal/theme3Img/scalendar_today_bg.png) center center no-repeat; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 .scalendar_mini td.schedule{color:#333333; background:url(/images/ezNewPortal/theme3Img/scalendar_schedule_bg.png) center center no-repeat; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
-.scalendar_mini td div {height:28px;line-height:28px; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
+.scalendar_mini td div {height:26px;line-height:26px; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 .sschedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px; overflow:hidden; height:203px; background: white}
 
 .sschedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px;clear:both;overflow:hidden;border-top:1px solid #e7e7e7;}

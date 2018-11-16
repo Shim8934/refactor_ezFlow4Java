@@ -955,32 +955,42 @@
 	      </span>
 	    </h1>	
         <div id="mainmenu">
-        <ul id="tb_Parent">
-          <li class="important"><span onClick="new_mail_onclick()"><spring:message code="ezEmail.t510" /></span></li>
-          <li class="important" id="reply"><span onClick="reply_mail_onclick()"><spring:message code="ezEmail.t511" /></span></li>
-          <li class="important"><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
-          <li class="important" id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
-          <li class="important"><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
-          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-          <li id="read_stat"><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
-          <li id="unread_stat"><span onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></span></li>
-          <li onClick="mail_export();" id="EmailPCSave"><span><spring:message code="ezEmail.t378" /></span></li>
-          <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
-          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-          <li id="deleteone"><span onClick="deleteWork(true)"><spring:message code="ezEmail.t156" /></span></li>
-          <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>
-          <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
-          <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
-          <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="icon16 icon16_star"></span></li>
-          <li><span class="icon16 icon16_delete" onClick="deleteWork(false)"></span></li>
-          <li onClick="MailListRefresh()"><span class="icon16 icon16_refresh"></span></li>
-		  <li id="right">
-	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
-	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
-					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
-					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" class="maillistoptiondivbtn" onclick="MailOptionView(this);" />
-		  </li> 
-        </ul>
+	        <ul id="tb_Parent">
+	          <li class="important"><span onClick="new_mail_onclick()"><spring:message code="ezEmail.t510" /></span></li>
+	          <li class="important" id="reply"><span onClick="reply_mail_onclick()"><spring:message code="ezEmail.t511" /></span></li>
+	          <li class="important"><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
+	          <li class="important" id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
+	          <li class="important"><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
+	          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
+	          <li id="read_stat"><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
+	          <li id="unread_stat"><span onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></span></li>
+	          <li onClick="mail_export();" id="EmailPCSave"><span><spring:message code="ezEmail.t378" /></span></li>
+	          <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
+	          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
+	          <li id="deleteone"><span onClick="deleteWork(true)"><spring:message code="ezEmail.t156" /></span></li>
+	          <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>
+	          <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
+	          <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
+	          <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="icon16 icon16_star"></span></li>
+	          <li><span class="icon16 icon16_delete" onClick="deleteWork(false)"></span></li>
+	          <li onClick="MailListRefresh()"><span class="icon16 icon16_refresh"></span></li>
+	<!-- 		  <li id="right">
+	          	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
+	           	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
+				<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
+				<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" class="maillistoptiondivbtn" onclick="MailOptionView(this);" />
+			  </li>  -->
+			  <div class="sub_frameIcon" style="float:right">	
+				<div class="sub_frameIconUL">
+				   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
+				    <p class="frameIconLI"><span class="icon16 btn_bottomframe" id="PreViewBottom" onclick="PreviewRayerChange('W')"></span></p>
+				    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
+				</div>
+				<div class="sub_frameIconUL02">
+				  	<p class="frameIconLI"><span class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this);"></span></p>  
+				</div>
+			 </div>
+	        </ul>
         </div>
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
