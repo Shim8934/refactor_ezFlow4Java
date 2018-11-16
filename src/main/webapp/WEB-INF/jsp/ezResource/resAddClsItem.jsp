@@ -179,6 +179,8 @@
 			
 			function btnTakeOwner_Click_Complete(retVal) {
 				if (typeof (retVal) != "undefined") {
+					retVal = JSON.parse(retVal);
+					
 					//document.getElementById("Owner").innerHTML = retVal["ownerName"][0] + "(" + retVal["ownerName1"][0] + ")";
 					//document.getElementById("subOwner").innerHTML = "";
 					document.getElementById("Owner").innerHTML = "";
