@@ -46,10 +46,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
 	    <script type="text/javascript">
-	        var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };
-	        var m_dlImg = { "normal": "/imagefs/tab_dl1.gif", "select": "/images/tab_dl.gif" };
-	        var m_contactImg = { "normal": "/images/tab_addr1.gif", "select": "/images/tab_addr.gif" };
-	        var m_tabDialogState = { "org": "select", "contact": "normal", "dl": "normal" };
+	        var m_tabDialogState = { "org": "select", "contact": "normal", "dl": "normal", "sharedMailbox": "normal" };
 	        var m_receiverTitleList;
 	        var m_receiverWindowList;
 	        var m_titleNoneSelectedColor = "white";
@@ -271,8 +268,8 @@
 	                
 	                // 관리자>조직도 관리>부서추가>부서장 아이디 선택
 	                if (rulekind == "MANAGER") { 
-	                	document.title = "부서장 선택";
-	                	document.getElementById("h1Title").innerHTML = "부서장 선택";
+	                	document.title = "<spring:message code='ezEmail.jje17'/>";
+	                	document.getElementById("h1Title").innerHTML = "<spring:message code='ezEmail.jje17'/>";
 	                	document.getElementById("contactTabButton").style.display = "none";
 	                	document.getElementById("dlTabButton").style.display = "none";
 	                	
@@ -280,6 +277,10 @@
 	            }
 	            else {
 	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
+	            }
+	            
+	            if ("${useSharedMailbox}" == "YES") {
+	            	document.getElementById("sharedMailboxTabButton").style.display = "";
 	            }
 	            
 	            // (수신자 설정 시 drag, drop으로 순서 조정)
@@ -544,12 +545,14 @@
 		        m_tabDialogState["org"] = "select";
 		        m_tabDialogState["contact"] = "normal";
 		        m_tabDialogState["dl"] = "normal";
-		        ImageUpdate();
+		        m_tabDialogState["sharedMailbox"] = "normal";
 		        TreeViewTD.style.display = "block";
 		        ListViewTD.style.display = "none";
 		        ListViewDLTD.style.display = "none";
+		        ListViewSharedMailboxTD.style.display = "none";
 		        ListViewINPUT.style.display = "none";
 		        dlmember.style.display = "none";
+		        sharedMailboxMember.style.display = "none";
 		        m_selectedTree = orglistView;
 		        AddrSearch.style.display = "none";
 		    }
@@ -565,12 +568,14 @@
 		        m_tabDialogState["org"] = "normal";
 		        m_tabDialogState["contact"] = "select";
 		        m_tabDialogState["dl"] = "normal";
-		        ImageUpdate();
+		        m_tabDialogState["sharedMailbox"] = "normal";
 		        TreeViewTD.style.display = "none";
 		        ListViewTD.style.display = "block";
 		        ListViewDLTD.style.display = "none";
+		        ListViewSharedMailboxTD.style.display = "none";
 		        ListViewINPUT.style.display = "none";
 		        dlmember.style.display = "none";
+		        sharedMailboxMember.style.display = "none";
 		        m_selectedTree = AddressListView;
 		        AddrSearch.style.display = "block";
 		    }
@@ -581,51 +586,112 @@
 		        m_tabDialogState["org"] = "normal";
 		        m_tabDialogState["contact"] = "normal";
 		        m_tabDialogState["dl"] = "select";
-		        ImageUpdate();
+		        m_tabDialogState["sharedMailbox"] = "normal";
 		        TreeViewTD.style.display = "none";
 		        ListViewTD.style.display = "none";
 		        ListViewDLTD.style.display = "block";
+		        ListViewSharedMailboxTD.style.display = "none";
 		        ListViewINPUT.style.display = "none";
 		        dlmember.style.display = "block";
+		        sharedMailboxMember.style.display = "none";
 		        AddrSearch.style.display = "none";
 		        m_selectedTree = ListViewDL;
+		        
 		        try {
 		            var xmlHTTP = createXMLHttpRequest();
 		            xmlHTTP.open("GET", "/ezEmail/mailGetDistribution.do", false);
 		            xmlHTTP.send("");
+		            
+		            if (xmlHTTP.status != 200) {
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+		            } else {
+		            	document.getElementById("ListViewDL").innerHTML = "";
+			            var pListViewDL = new ListView();
+			            pListViewDL.SetID("pListViewDL");
+			            pListViewDL.SetSelectFlag(false);
+			            pListViewDL.SetMulSelectable(true);
+			            pListViewDL.SetRowOnDblClick("ListViewNodeDblClick");
+			            pListViewDL.DataSource(loadXMLString(document.getElementById("listviewheader3").innerHTML.toUpperCase()));
+			            pListViewDL.DataBind("ListViewDL");
+			            pListViewDL.DataSource(loadXMLString(xmlHTTP.responseText));
+			            pListViewDL.RowDataBind();
+			
+			            for (var i = 0; i < pListViewDL.GetRowCount() ; i++) {
+			                pListViewDL.GetDataRows()[i].draggable = true;
+			                if (CrossYN())
+			                    pListViewDL.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
+			                else
+			                    pListViewDL.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
+			
+			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+			                    pListViewDL.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+			                }
+			            }
+		            }
+		            
+		            xmlHTTP = null;
 		        } catch (e) {
 		            alert("<spring:message code='ezEmail.t574' />" + e.description);
 		            xmlHTTP = null;
 		            return;
 		        }
-		        if (xmlHTTP.status != 200) {
-		            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
-		                xmlHTTP = null;
-		                xmlDom = null;
-		                return;
-	            }
-	            document.getElementById("ListViewDL").innerHTML = "";
-	            var pListViewDL = new ListView();
-	            pListViewDL.SetID("pListViewDL");
-	            pListViewDL.SetSelectFlag(false);
-	            pListViewDL.SetMulSelectable(true);
-	            pListViewDL.SetRowOnDblClick("ListViewNodeDblClick");
-	            pListViewDL.DataSource(loadXMLString(document.getElementById("listviewheader3").innerHTML.toUpperCase()));
-	            pListViewDL.DataBind("ListViewDL");
-	            pListViewDL.DataSource(loadXMLString(xmlHTTP.responseText));
-	            pListViewDL.RowDataBind();
-	
-	            for (var i = 0; i < pListViewDL.GetRowCount() ; i++) {
-	                pListViewDL.GetDataRows()[i].draggable = true;
-	                if (CrossYN())
-	                    pListViewDL.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
-	                else
-	                    pListViewDL.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
-	
-	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                    pListViewDL.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
-	                }
-	            }
+	        }
+		    function sharedMailboxTabButton_onClick() {
+		    	methodForTabAction(5);
+		    	selTab = "sharedMailboxList";
+		    	selSpan = "sharedMailboxSpan";
+		        m_tabDialogState["org"] = "normal";
+		        m_tabDialogState["contact"] = "normal";
+		        m_tabDialogState["dl"] = "normal";
+		        m_tabDialogState["sharedMailbox"] = "select";
+		        TreeViewTD.style.display = "none";
+		        ListViewTD.style.display = "none";
+		        ListViewDLTD.style.display = "none";
+		        ListViewSharedMailboxTD.style.display = "block";
+		        ListViewINPUT.style.display = "none";
+		        dlmember.style.display = "none";
+		        sharedMailboxMember.style.display = "block";
+		        AddrSearch.style.display = "none";
+		        m_selectedTree = ListViewSharedMailbox;
+		        
+		        try {
+		            var xmlHTTP = createXMLHttpRequest();
+		            xmlHTTP.open("GET", "/ezEmail/getSharedMailboxList.do", false);
+		            xmlHTTP.send("");
+		            
+		            if (xmlHTTP.status != 200) {
+			            alert("<spring:message code='ezEmail.sharedMailbox07' />" + xmlHTTP.statusText);
+		            } else {
+		            	document.getElementById("ListViewSharedMailbox").innerHTML = "";
+			            var pListViewSharedMailbox = new ListView();
+			            pListViewSharedMailbox.SetID("pListViewSharedMailbox");
+			            pListViewSharedMailbox.SetSelectFlag(false);
+			            pListViewSharedMailbox.SetMulSelectable(true);
+			            pListViewSharedMailbox.SetRowOnDblClick("ListViewNodeDblClick");
+			            pListViewSharedMailbox.DataSource(loadXMLString(document.getElementById("listviewheader5").innerHTML.toUpperCase()));
+			            pListViewSharedMailbox.DataBind("ListViewSharedMailbox");
+			            pListViewSharedMailbox.DataSource(loadXMLString(xmlHTTP.responseText));
+			            pListViewSharedMailbox.RowDataBind();
+			
+			            for (var i = 0; i < pListViewSharedMailbox.GetRowCount() ; i++) {
+			            	pListViewSharedMailbox.GetDataRows()[i].draggable = true;
+			                if (CrossYN())
+			                	pListViewSharedMailbox.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
+			                else
+			                	pListViewSharedMailbox.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
+			
+			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+			                	pListViewSharedMailbox.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+			                }
+			            }
+		            }
+		            
+		            xmlHTTP = null;
+		        } catch (e) {
+		            alert("<spring:message code='ezEmail.sharedMailbox07' />" + e.description);
+		            xmlHTTP = null;
+		            return;
+		        }
 	        }
 	        var g_binputLoaded = false;
 	        function inputTabButton_onClick() {
@@ -638,38 +704,18 @@
 	            m_tabDialogState["org"] = "normal";
 	            m_tabDialogState["contact"] = "normal";
 	            m_tabDialogState["dl"] = "normal";
+	            m_tabDialogState["sharedMailbox"] = "normal";
 	            m_tabDialogState["input"] = "select";
-	            ImageUpdate();
 	            TreeViewTD.style.display = "none";
 	            ListViewTD.style.display = "none";
 	            ListViewDLTD.style.display = "none";
+	            ListViewSharedMailboxTD.style.display = "none";
 	            ListViewINPUT.style.display = "block";
 	            dlmember.style.display = "none";
+	            sharedMailboxMember.style.display = "none";
 	            AddrSearch.style.display = "none";
 	        }
 
-
-	        function ImageUpdate() {
-	            return (navigator.userAgent.indexOf('Firefox') != -1) ?
-	                (function () {
-	                    orgTabButton.setAttribute('src', m_orgImg[m_tabDialogState["org"]]);
-	                    contactTabButton.setAttribute('src', m_contactImg[m_tabDialogState["contact"]]);
-	                    dlTabButton.setAttribute('src', m_dlImg[m_tabDialogState["dl"]]);
-	                }).call(this)
-	                : (CrossYN()) ?
-	                (function () {
-	                    orgTabButton.setAttribute('src', m_orgImg[m_tabDialogState["org"]]);
-	                    contactTabButton.setAttribute('src', m_contactImg[m_tabDialogState["contact"]]);
-	                    dlTabButton.setAttribute('src', m_dlImg[m_tabDialogState["dl"]]);
-	                }).call(this)
-	                :
-	                (function () {
-	                    orgTabButton.src = m_orgImg[m_tabDialogState["org"]];
-	                    contactTabButton.src = m_contactImg[m_tabDialogState["contact"]];
-	                    dlTabButton.src = m_dlImg[m_tabDialogState["dl"]];
-	                }).call(this)
-	            ;
-	        }
 	        function RequestData(pNodeID, pTreeID) {
 	            var TreeIdx = pNodeID;
 	            var treeNode = new TreeNode();
@@ -757,7 +803,19 @@
 	                    alert(strLang42);
 	                    return;
 	                }
+	            } else if (selTab == "sharedMailboxList") {
+	            	var pListViewSharedMailbox = new ListView();
+	            	pListViewSharedMailbox.LoadFromID("pListViewSharedMailbox");
+	                var arrRows = pListViewSharedMailbox.GetSelectedRows();
+	                if (arrRows.length > 0) {
+	                    var strEmail = GetAttribute(arrRows[0], "DATA2");
+	                }
+	                else {
+	                    alert(strLang42);
+	                    return;
+	                }
 	            }
+	            
 	            if (ReturnFunction != null)
 	                ReturnFunction(strEmail);
 	            
@@ -970,6 +1028,85 @@
 	                var _tdlength = 0;
 	                pListViewDL.LoadFromID("pListViewDL");
 	                var arrRows = pListViewDL.GetSelectedRows();
+	                if (arrRows.length > 0) {
+	                    var pparsingXML = "";
+	                    var pparsingXML2 = "";
+	                    for (var i = 0; i < arrRows.length; i++) {
+	
+	                        var strName = arrRows[i].innerText;
+	                        var strEmail = GetAttribute(arrRows[i], "DATA2");
+	                        if (strEmail.trim() == "")
+	                            return;
+	
+	                        if (strName.trim() == "")
+	                            strName = strEmail;
+	                        var listid = "";
+	
+	                        if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
+	                            listid = "MsgToList";
+	                        }
+	                        else if (pListView.id == "ListViewMsgCC" || pListView == "MsgCCList") {
+	                            listid = "MsgCCList";
+	                        }
+	                        else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
+	                            listid = "MsgBCCList";
+	                        }
+	
+	                        var targetList = new ListView();
+	                        targetList.LoadFromID(listid);
+	                        var IsInsert = CheckMailReceiver(strEmail, "3");
+	
+	                        if (!IsInsert) {
+	                            pparsingXML2 = "";
+	                            pparsingXML = "";
+	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
+	                            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
+	                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+	                            Resultxml = loadXMLString(pparsingXML2);
+	
+	                            var listview = new ListView();
+	                            listview.LoadFromID(listid);
+	                            var MaxID = 0;
+	                            var InitTr = listview.GetDataRows();
+	                            var MaxCntNum = 0;
+	                            for (var j = 0  ; j < InitTr.length  ; j++) {
+	                                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+	                                if (MaxID < curnum) {
+	                                    MaxID = curnum;
+	                                    MaxCntNum = j;
+	                                }
+	                            }
+	
+	                            var objTr = listview.AddRow(InitTr.length);
+	                            if (MaxCntNum != 0)
+	                                MaxCntNum = MaxCntNum + 1;
+	                            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                            listview.AddDataRow(objTr, Resultxml);
+	
+	                            document.getElementById(listid).className = "receiver_list";
+	                            _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+	                            for (var y = 0; y < _tdlength; y++) {
+	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+	                            }
+	                        }
+	                    }
+	                }
+	                
+		            for (var i = 0; i < arrRows.length; i++) {
+	            		arrRows[i].style.backgroundColor = m_strColorDefault;
+	            		arrRows[i].setAttribute("selected", "false");
+		            }
+	                
+	            }
+	            else if (m_selectedTree == ListViewSharedMailbox) {
+	                var pListViewSharedMailbox = new ListView();
+	                var _tdlength = 0;
+	                pListViewSharedMailbox.LoadFromID("pListViewSharedMailbox");
+	                var arrRows = pListViewSharedMailbox.GetSelectedRows();
 	                if (arrRows.length > 0) {
 	                    var pparsingXML = "";
 	                    var pparsingXML2 = "";
@@ -2499,6 +2636,25 @@
 	            } catch (e) { }
 	        }
 	        
+	        var mail_select_sharedMailboxMember_cross_dialogArguments = new Array();
+	        function sharedMailboxMember_click() {
+	            var sharedMailboxList = new ListView();
+	            sharedMailboxList.LoadFromID("pListViewSharedMailbox");
+	            var arrRows = sharedMailboxList.GetSelectedRows();
+	            
+	            if (arrRows.length < 1) {
+	                alert("<spring:message code='ezEmail.sharedMailbox20' />");
+	                return;
+	            }
+	            
+	            if (ReturnFunction != null) {
+	                var rtnValue = { "name": new Array(), "email": new Array() };
+	                mail_select_sharedMailboxMember_cross_dialogArguments[0] = rtnValue;
+	                mail_select_sharedMailboxMember_cross_dialogArguments[1] = DivPopUpHidden;
+	                DivPopUpShow(601, 470, "/ezEmail/getSharedMailboxMember.do?shareId=" + GetAttribute(arrRows[0], "DATA1"));
+	            }
+	        }
+	        
 	        var address_select_groupemaillist_dialogArguments = new Array();
 	        function groupmember_click() {
 	            var AdddressList = new ListView();
@@ -3215,6 +3371,18 @@
                     if (!islist)
                         event_listclick(obj);
                 }
+                else if (m_selectedTree == ListViewSharedMailbox) {
+                    var pListViewSharedMailbox = new ListView();
+                    pListViewSharedMailbox.LoadFromID("pListViewSharedMailbox");
+                    for (var i = 0; i < pListViewSharedMailbox.GetSelectedRows().length; i++) {
+                        if (pListViewSharedMailbox.GetSelectedRows()[i].id == obj.id) {
+                            islist = true;
+                            break;
+                        }
+                    }
+                    if (!islist)
+                        obj.onclick();
+                }
             }
             
             window.ondragover = function () {
@@ -3367,26 +3535,38 @@
             	var tab2 = document.getElementById("contactTabButton").children[0];
             	var tab3 = document.getElementById("dlTabButton").children[0];
             	var tab4 = document.getElementById("inputTabButton").children[0];
+            	var tab5 = document.getElementById("sharedMailboxTabButton").children[0];
+            	
             	if (target == 1) {
             		tab1.className = "tabon";
             		tab2.className = "";
             		tab3.className = "";
             		tab4.className = "";
+            		tab5.className = "";
             	} else if (target == 2) {
             		tab1.className = "";
             		tab2.className = "tabon";
             		tab3.className = "";
             		tab4.className = "";
+            		tab5.className = "";
             	} else if (target == 3) {
             		tab1.className = "";
             		tab2.className = "";
             		tab3.className = "tabon";
             		tab4.className = "";
+            		tab5.className = "";
             	} else if (target == 4) {
             		tab1.className = "";
             		tab2.className = "";
             		tab3.className = "";
             		tab4.className = "tabon";
+            		tab5.className = "";
+            	} else if (target == 5) {
+            		tab1.className = "";
+            		tab2.className = "";
+            		tab3.className = "";
+            		tab4.className = "";
+            		tab5.className = "tabon";
             	}
             }
             
@@ -3465,7 +3645,7 @@
 		    </HEADERS>
 		  </LISTVIEWDATA>
 		</xml>
-		    <xml id="listviewheader2" style="display: none;">
+		<xml id="listviewheader2" style="display: none;">
 		  <LISTVIEWDATA>
 		    <HEADERS>
 		      <HEADER>	
@@ -3487,7 +3667,7 @@
 		    </HEADERS>
 		  </LISTVIEWDATA>
 		</xml>
-		    <xml id="listviewheader3" style="display: none;">
+		<xml id="listviewheader3" style="display: none;">
 		  <LISTVIEWDATA>
 		    <HEADERS>
 		      <HEADER>
@@ -3497,7 +3677,7 @@
 		    </HEADERS>
 		  </LISTVIEWDATA>
 		</xml>
-		    <xml id="listviewheader4" style="display: none;">
+		<xml id="listviewheader4" style="display: none;">
 		  <LISTVIEWDATA>
 		    <HEADERS>
 		      <HEADER>
@@ -3511,6 +3691,16 @@
 		      <HEADER>
 		        <NAME>E-Mail</NAME>
 		        <WIDTH>100</WIDTH>
+		      </HEADER>
+		    </HEADERS>
+		  </LISTVIEWDATA>
+		</xml>
+		<xml id="listviewheader5" style="display: none;">
+		  <LISTVIEWDATA>
+		    <HEADERS>
+		      <HEADER>
+		        <NAME><spring:message code='ezEmail.sharedMailbox02' /></NAME>
+		        <WIDTH>70</WIDTH>
 		      </HEADER>
 		    </HEADERS>
 		  </LISTVIEWDATA>
@@ -3534,6 +3724,9 @@
 	            			</p>
 	            			<p id="dlTabButton">
 	            				<span id="dlSpan" onclick="dlTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t593' /></span>
+	            			</p>
+	            			<p id="sharedMailboxTabButton" style="display: none;">
+	            				<span id="sharedMailboxSpan" onclick="sharedMailboxTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.sharedMailbox02' /></span>
 	            			</p>
 	            			<p id="inputTabButton" style="display: none;">
 	            				<span id="inputSpan" onclick="inputTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t244' /></span>
@@ -3726,6 +3919,26 @@
 	                        </td>
 	                    </tr>
 	                </table>
+	                <table id="ListViewSharedMailboxTD" style="display: none">
+	                    <tr>
+	                        <td>
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom: 0px; height:26px;">
+	                                    <table style="margin-top: 4px; width: 100%;">
+	                                        <tr>
+	                                            <td id="sharedMailboxMember" style="display: none">
+	                                                <a href="#" class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="sharedMailboxMember_click()">
+	                                                    <spring:message code='ezEmail.sharedMailbox21' /></span></a>
+	                                            </td>
+	                                        </tr>
+	                                    </table>
+	                                </div>
+	                            </div>
+	                            <div style="width: 668px; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewSharedMailbox" class="border_gray">
+	                            </div>
+	                        </td>
+	                    </tr>
+	                </table>
 	                <table id="ListViewINPUT" style="display: none">
 	                    <tr>
 	                        <td>
@@ -3754,9 +3967,9 @@
 	                <table id="listType1" style="margin-top:1px;">
 	                    <tr id="ListMsgTo">
 	                        <td style="width: 30px; text-align: center;">
-	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
+	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgTo)"><br>
-	                            <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
+	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 	                        </td>
 	                        <td style="vertical-align: top;">
@@ -3771,9 +3984,9 @@
 	                    <tr id="ListMsgCC">
 	                        <td style="width: 30px; text-align: center;">
 	                            <br />
-	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
+	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgCC)"><br>
-	                            <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
+	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgCC)">
 	                        </td>
 	                        <td style="vertical-align: top;">
@@ -3789,9 +4002,9 @@
 	                    <tr id="ListMsgBCC">
 	                        <td style="width: 30px; text-align: center;">
 	                            <br />
-	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
+	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgBCC)"><br>
-	                            <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
+	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgBCC)">
 	                        </td>
 	                        <td style="vertical-align: top;">

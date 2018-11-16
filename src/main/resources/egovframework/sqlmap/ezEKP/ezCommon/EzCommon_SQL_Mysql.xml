@@ -435,7 +435,7 @@
 	</select>
 	
 	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
-		INSERT INTO jmocha.tbl_tenant_config
+		INSERT INTO tbl_tenant_config
 		(tenant_id, property_name, property_value, description, config_name, regdate, config_type)
 		VALUES
 		(#tenantID#, #confName#, #property_value#, #description#, #config_name#, #regdate#, #config_type#)

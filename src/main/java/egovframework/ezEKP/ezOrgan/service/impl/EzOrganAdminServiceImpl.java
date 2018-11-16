@@ -344,6 +344,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PROPVALUE", number);
 		map.put("V_DEPTID", deptID);
 		
+		if (column.equals("EXTENSIONATTRIBUTE15")) {
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			date.setTimeZone(TimeZone.getTimeZone("GMT"));
+			String nowDate = date.format(new Date());
+			map.put("nowDate", nowDate);
+		}
+		
         // 사원의 경우
     	if (pClass.toLowerCase().equals("user")) {
     		ezOrganAdminDao.updateProperty(map);
@@ -823,7 +830,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		// 트리뷰순서값이 null일 경우 현재 추가한 부서가 제일 위에 오도록
 		// 나머지 부서들의 트리뷰순서값들을 1씩 증가
-		if (vo.getManualFlag().equals("Y")) {
+		if (vo.getManualFlag() != null && vo.getManualFlag().equals("Y")) {
 			if (checkExtrattrIsNull(vo.getExtensionAttribute15())) {
 				vo.setExtensionAttribute15("0");
 				ezOrganAdminDao.updateDBData_deptOrderIsNull(map);		
@@ -910,7 +917,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		// 트리뷰순서값이 null일 경우 현재 추가한 사원이 제일 위에 오도록
 		// 나머지 사원들의 트리뷰순서값들을 1씩 증가
-		if (vo.getManualFlag().equals("Y")) {
+		if (vo.getManualFlag() != null && vo.getManualFlag().equals("Y")) {
 			if (checkExtrattrIsNull(vo.getExtensionAttribute15())) {
 				vo.setExtensionAttribute15("0");
 				ezOrganAdminDao.updateDBData_userOrderIsNull(map);		

@@ -57,9 +57,13 @@ import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -83,6 +87,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Autowired
 	private EzOrganAdminDAO ezOrganAdminDao;
+	
+	@Autowired
+	private EzOrganDAO ezOrganDao;
 	
 	@Autowired
 	private EzEmailAsync ezEmailAsync;
@@ -1363,12 +1370,27 @@ public class EzEmailServiceImpl implements EzEmailService {
 			int attachIDPos1 = url.indexOf("&folderPath=") + 12;
             int attachIDPos2 = url.indexOf("&uid=");
             int attachIDPos3 = url.indexOf("&contentId=");
+            int attachIDPos4 = url.indexOf("&shareId=");
 			
             String mailbox = url.substring(attachIDPos1, attachIDPos2);
             mailbox = URLDecoder.decode(mailbox, "utf-8");
             String uidStr = url.substring(attachIDPos2 + 5, attachIDPos3);
-            String contentId = url.substring(attachIDPos3 + 11);
+            String contentId = null;
+            
+            if (attachIDPos4 > -1) {
+            	contentId = url.substring(attachIDPos3 + 11, attachIDPos4);
+                
+            	String shareId = url.substring(attachIDPos4 + 9);
+            	shareId = URLDecoder.decode(shareId, "utf-8");
+            	logger.debug("shareId=" + shareId);
+            	
+            	userAccount = shareId + "@" + domainName;
+            } else {
+            	contentId = url.substring(attachIDPos3 + 11);
+            }
+            
             contentId = URLDecoder.decode(contentId, "utf-8");
+            
             logger.debug("mailbox=" + mailbox + ",uid=" + uidStr + ",contentId=" + contentId);
             
             IMAPAccess ia = null;
@@ -2226,6 +2248,307 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
+	public List<Map<String, String>> getUserSharedMailboxList(String userId, int tenantId) throws Exception {
+		logger.debug("getUserSharedMailboxList started.");
+		logger.debug("userId=" + userId + ",tenantId=" + tenantId);
+		
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		
+		String tenantIdParam = "tenantId=" + tenantId;
+		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		String inputParams = tenantIdParam + "&" + userIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getUserSharedMailboxList";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (object.get("resultCode").equals("OK")) {
+        	JSONArray array = (JSONArray)object.get("result");
+        	
+        	if (array != null) {
+        		int length = array.size();
+        		Map<String, String> map = null;
+        		
+        		for (int i = 0; i < length; i++) {
+        			JSONObject obj = (JSONObject)array.get(i);
+        			
+        			map = new HashMap<String, String>();
+        			map.put("shareId", (String)obj.get("shareId"));
+        			map.put("deletePermission", (String)obj.get("deletePermission"));
+        			map.put("sendPermission", (String)obj.get("sendPermission"));
+    				map.put("shareName", (String)obj.get("shareName"));
+        			map.put("mail", (String)obj.get("mail"));
+        			map.put("compId", (String)obj.get("compId"));
+        			
+        			list.add(map);
+        		}
+        	}
+        }
+		
+		logger.debug("getUserSharedMailboxList ended.");
+		return list;
+	}
+	
+	@Override
+	public boolean checkUserShareId(String userId, String shareId, int tenantId) throws Exception {
+		return checkUserShareId(userId, shareId, 0, tenantId);
+	}
+	
+	@Override
+	public boolean checkUserShareId(String userId, String shareId, int permissionType, int tenantId) throws Exception {
+		logger.debug("checkUserShareId started.");
+		logger.debug("userId=" + userId + ",shareId=" + shareId + ",permissionType=" + permissionType + ",tenantId=" + tenantId);
+		
+		boolean result = false;
+		
+		String tenantIdParam = "tenantId=" + tenantId;
+		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		String shareIdParam = "shareId=" + URLEncoder.encode(shareId, "UTF-8");
+		String permissionTypeParam = "permissionType=" + permissionType;
+		String inputParams = tenantIdParam + "&" + userIdParam + "&" + shareIdParam + "&" + permissionTypeParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/checkUserShareId";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (((String)object.get("resultCode")).equals("OK") && (Long)object.get("reasonCode") == 0) {
+        	result = (boolean)object.get("result");
+        }
+		
+		logger.debug("checkUserShareId ended.");
+		return result;
+	}
+	
+	@Override
+	public List<MailSharedMailboxVO> getSharedMailboxList(String compId, int tenantId) throws Exception {
+		logger.debug("getSharedMailboxList started.");
+		logger.debug("compId=" + compId + ",tenantId=" + tenantId);
+		
+		List<MailSharedMailboxVO> list = new ArrayList<MailSharedMailboxVO>();
+		
+		String tenantIdParam = "tenantId=" + tenantId;
+		String compIdParam = "compId=" + URLEncoder.encode(compId, "UTF-8");
+		String inputParams = tenantIdParam + "&" + compIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getSharedMailboxList";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (((String)object.get("resultCode")).equals("OK") && (Long)object.get("reasonCode") == 0) {
+        	JSONArray sharedMailboxArray = (JSONArray)object.get("result");
+        	
+        	if (sharedMailboxArray != null) {
+        		MailSharedMailboxVO vo = null;
+        		
+        		for (int i = 0; i < sharedMailboxArray.size(); i++) {
+        			JSONObject sharedMailbox = (JSONObject)sharedMailboxArray.get(i);
+        			vo = new MailSharedMailboxVO();
+        			
+        			vo.setShareId((String)sharedMailbox.get("shareId"));
+        			vo.setShareMail((String)sharedMailbox.get("shareMail"));
+        			vo.setShareName((String)sharedMailbox.get("shareName"));
+        			
+        			list.add(vo);
+        		}
+        	}
+        }
+		
+		logger.debug("getSharedMailboxList ended.");
+		return list;
+	}
+	
+	@Override
+	public MailSharedMailboxVO getSharedMailboxInfo(String shareId, int tenantId) throws Exception {
+		logger.debug("getSharedMailboxInfo started.");
+		logger.debug("shareId=" + shareId + ",tenantId=" + tenantId);
+		
+		MailSharedMailboxVO sharedMailboxInfo = null;
+		
+		String tenantIdParam = "tenantId=" + tenantId;
+		String shareIdParam = "shareId=" + URLEncoder.encode(shareId, "UTF-8");
+		String inputParams = tenantIdParam + "&" + shareIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getSharedMailboxInfo";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (((String)object.get("resultCode")).equals("OK") && (Long)object.get("reasonCode") == 0) {
+        	JSONObject result = (JSONObject)object.get("result");
+        	
+        	if (result != null) {
+        		sharedMailboxInfo = new MailSharedMailboxVO();
+        		
+        		sharedMailboxInfo.setShareId((String)result.get("shareId"));
+        		sharedMailboxInfo.setShareMail((String)result.get("shareMail"));
+        		sharedMailboxInfo.setShareName((String)result.get("shareName"));
+        		sharedMailboxInfo.setShareName1((String)result.get("shareName"));
+        		sharedMailboxInfo.setShareName2((String)result.get("shareName2"));
+        		
+        		JSONArray userArray = (JSONArray)result.get("userList");
+        		List<MailSharedMailboxUserVO> userList = sharedMailboxInfo.getUserList();
+        		MailSharedMailboxUserVO userVO = null;
+        		
+        		for (int i = 0; i < userArray.size(); i++) {
+        			JSONObject user = (JSONObject)userArray.get(i);
+        			userVO = new MailSharedMailboxUserVO();
+        			
+        			userVO.setUserId((String)user.get("userId"));
+        			userVO.setUserName((String)user.get("userName"));
+        			userVO.setDeptId((String)user.get("deptId"));
+        			userVO.setDeptName((String)user.get("deptName"));
+        			userVO.setCompId((String)user.get("compId"));
+        			userVO.setCompName((String)user.get("compName"));
+        			userVO.setDeletePermission((String)user.get("deletePermission"));
+        			userVO.setSendPermission((String)user.get("sendPermission"));
+        			
+        			userList.add(userVO);
+        		}
+        	}
+        }
+		
+		logger.debug("getSharedMailboxInfo ended.");
+		return sharedMailboxInfo;
+	}
+	
+	@Override
+	public MailSharedMailboxUserVO getSharedMailboxPermissionInfo(String shareId, int tenantId, String userId) throws Exception {
+		logger.debug("getSharedMailboxPermissionInfo started.");
+		logger.debug("shareId=" + shareId + ",tenantId=" + tenantId);
+		
+		String tenantIdParam = "tenantId=" + tenantId;
+		String shareIdParam = "shareId=" + URLEncoder.encode(shareId, "UTF-8");
+		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		String inputParams = tenantIdParam + "&" + shareIdParam + "&" + userIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getShareMailBoxPermissionInfo";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		MailSharedMailboxUserVO shareMailBoxPermissonInfo = new MailSharedMailboxUserVO();
+        if (((String)object.get("resultCode")).equals("OK") && (Long)object.get("reasonCode") == 0) {
+        	JSONObject result = (JSONObject)object.get("result");
+        	shareMailBoxPermissonInfo.setShareId((String)result.get("shareId"));
+        	shareMailBoxPermissonInfo.setDeletePermission((String)result.get("delete_permission"));
+        	shareMailBoxPermissonInfo.setSendPermission((String)result.get("send_permission"));
+        	shareMailBoxPermissonInfo.setShareName((String)result.get("displayname"));
+        }
+		
+		logger.debug("getSharedMailboxPermissionInfo ended.");
+		return shareMailBoxPermissonInfo;
+	}
+	
+	@Override
+	public String delSharedMailboxAllUser(String shareId, int tenantId) throws Exception {
+		logger.debug("delSharedMailboxAllUser started.");
+		logger.debug("shareId=" + shareId + ",tenantId=" + tenantId);
+		
+		String result = "OK";
+		
+		String tenantIdParam = "tenantId=" + tenantId;
+		String shareIdParam = "shareId=" + URLEncoder.encode(shareId, "UTF-8");
+		String inputParams = tenantIdParam + "&" + shareIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/delSharedMailboxAllUser";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!((String)object.get("resultCode")).equals("OK") || (Long)object.get("reasonCode") != 0) {
+        	result = "ERROR";
+        }
+		
+		logger.debug("delSharedMailboxAllUser ended.");
+		return result;
+	}
+	
+	@Override
+	public String setSharedMailboxUsers(String shareId, JSONArray userList, int tenantId) throws Exception {
+		logger.debug("setSharedMailboxUsers started.");
+		logger.debug("shareId=" + shareId + ",tenantId=" + tenantId);
+		
+		String result = "OK";
+		
+		String tenantIdParam = "tenantId=" + tenantId;
+		String shareIdParam = "shareId=" + URLEncoder.encode(shareId, "UTF-8");
+		String inputParams = tenantIdParam + "&" + shareIdParam;
+		
+		for (int i = 0; i < userList.size(); i++) {
+			String user = (String)userList.get(i);
+			inputParams += "&user=" + URLEncoder.encode(user, "UTF-8");
+		}
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setSharedMailboxUsers";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!((String)object.get("resultCode")).equals("OK") || (Long)object.get("reasonCode") != 0) {
+        	result = "ERROR";
+        }
+		
+		logger.debug("setSharedMailboxUsers ended.");
+		return result;
+	}
+	
+	@Override
+	public List<MailSharedMailboxVO> getSharedMailboxSearchList(String companyId, int tenantId, String searchValue) throws Exception {
+		logger.debug("getSharedMailboxSearchList started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchValue=" + searchValue);
+		
+		List<MailSharedMailboxVO> list = new ArrayList<>();
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+		
+		if (useSharedMailbox.equals("YES")) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("tenantId", tenantId);
+			map.put("deptId", "shared_mailbox_" + companyId);
+			map.put("searchValue", "%" + searchValue + "%");
+			
+			List<OrganUserVO> userList = ezOrganDao.getSharedMailboxSearchList(map);
+			MailSharedMailboxVO vo = null;
+			
+			for (OrganUserVO user : userList) {
+				vo = new MailSharedMailboxVO();
+				
+				vo.setShareName(user.getDisplayName());
+				vo.setShareId(user.getCn());
+				vo.setShareMail(user.getMail());
+				
+				list.add(vo);
+			}
+		}
+		
+		logger.debug("getSharedMailboxSearchList ended. listSize=" + list.size());
+		return list;
+	}
+	
+	@Override
 	public JSONArray selectAllSignatureTemplate(String companyId, String tenantId) throws Exception {
 		logger.debug("selectAllSignatureTemplate started.");
 		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId);
@@ -2398,6 +2721,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         
 	}
 	
+	@Override
 	public MailDistributionVO getDistributionSub(String userName, String subMail, String companyId, int tenantId) throws Exception {
 		logger.debug("getDistributionSub started.");
 		logger.debug("userName = " + userName + ",subMail=" + subMail + ",companyId=" + companyId + ",tenantId=" + tenantId);
