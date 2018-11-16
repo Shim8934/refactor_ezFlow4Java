@@ -101,7 +101,19 @@
 		    	document.getElementById("sliderContainer").innerHTML = sliderHTML;
 		    	document.getElementById("addSlider").onclick = btn_Select; 
 		    	
-		    	
+		    	for (var i = 0; i < sliderCnt; i++) {
+		    		var checkbox = document.getElementById("slideIsUse");
+		    		var sliderId = result[i].sliderID;
+		    		var isUse = "";
+		    		
+		    		/* if(checkbox.checked == true){
+		    			isUse = true;
+		    		} else{
+		    			isUse = false;
+		    		}
+		    		
+		    		event_statuschange(isUse, sliderId); */
+		    	}
 		    
 		}
 		    
@@ -264,10 +276,10 @@
 		        itemtmp = null;
 		    } */
 	
-		    function event_statuschange(check) {
+		    function event_statuschange(check, sliderId) {
 		        var isUse = "";
 		        
-		        if(check.checked) {
+		        if(check) {
 		        	isUse = '1';
 		        } else {
 		        	isUse = '0';
@@ -278,7 +290,7 @@
 		        	url : "/admin/ezPersonal/statusChangeSlider.do",
 		        	async : false,
 		        	dataType : "text",
-		        	data : {sliderID : check.parentElement.parentElement.getAttribute("DATA1"), isUse : isUse, mode : "U"},
+		        	data : {sliderID : sliderId, isUse : isUse, mode : "U"},
 		        	success : function(result) {
 		        		if (result != "OK") {
 		        			alert(result);
