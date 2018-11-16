@@ -119,6 +119,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("portletId", req.getParameter("portletId"));
 		String url = "/rest/ezPortal/portlets/notice";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -126,8 +127,16 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
-			JSONArray noticeList = (JSONArray) data.get("noticeList");
-			model.addAttribute("noticeList", noticeList);
+			String access = data.get("access").toString();
+			
+			if (access.equals("true")) {
+				if (data.get("noticeList") != null) {
+					JSONArray noticeList = (JSONArray) data.get("noticeList");
+					model.addAttribute("noticeList", noticeList);
+				} else {
+					return "json";
+				}
+			}
 		}
 		logger.debug("getPortalNoticePortlet End");		
 		return "json";

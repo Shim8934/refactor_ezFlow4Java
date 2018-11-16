@@ -856,9 +856,7 @@ AND
 	A.TENANT_ID = #tenantId#
 AND
 	A.COMPANY_ID = #companyId#
-ORDER BY
-	A.PORTLET_ORDER
-) h	
+) h	ORDER BY h.PORTLET_ORDER;
 ]]>
 </select>
 
