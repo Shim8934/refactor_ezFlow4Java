@@ -344,6 +344,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PROPVALUE", number);
 		map.put("V_DEPTID", deptID);
 		
+		if (column.equals("EXTENSIONATTRIBUTE15")) {
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			date.setTimeZone(TimeZone.getTimeZone("GMT"));
+			String nowDate = date.format(new Date());
+			map.put("nowDate", nowDate);
+		}
+		
         // 사원의 경우
     	if (pClass.toLowerCase().equals("user")) {
     		ezOrganAdminDao.updateProperty(map);
