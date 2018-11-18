@@ -2495,6 +2495,24 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .icon16_search{background-position:-182px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 검색버튼아이콘 */
 .icon16_star{background-position:-208px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 즐겨찾기 별 아이콘 */
 .icon16_mail{background-position:-104px 0px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 메일쓰기 아이콘 */
+.btn_noframe{background-position:0px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 없음 */
+.btn_bottomframe{background-position:-26px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 하단 */
+.btn_leftframe{background-position:-52px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 왼쪽 */
+.btn_arrow_down{background-position:-78px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 아래화살표 */
+
+/* icon16 hover */
+.sub_frameIcon .btn_noframe:hover, .btn_onnoframe{background-position:0px -104px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 없음 오버 */
+.sub_frameIcon .btn_bottomframe:hover, .btn_onbottomframe{background-position:-26px -104px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 하단 오버 */
+.sub_frameIcon .btn_leftframe:hover, .btn_onleftframe{background-position:-52px -104px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 왼쪽 오버 */
+.sub_frameIcon .btn_arrow_down:hover, .btn_onarrow_down{background-position:-78px -104px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 아래화살표 오버 */
+
+/* sub_frameIcon */
+.sub_frameIcon{ margin:0px !important; padding:0px !important; overflow:hidden !important;}
+.sub_frameIcon .sub_frameIconUL{ margin:0px !important; padding:0px !important; overflow:hidden !important; width:85px !important; height:29px !important; box-sizing:border-box !important; list-style:none !important;border-left:1px solid #c7c7c7 !important; border-right:1px solid #c7c7c7 !important; border-top:1px solid #c7c7c7 !important; border-bottom:1px solid #909193 !important; float:left !important;}
+.sub_frameIcon .sub_frameIconUL .frameIconLI{ margin:0px !important; padding:6px 5px 5px 6px !important; float:left !important; overflow:hidden !important; cursor:pointer !important; border-left:1px solid #e6e6e6 !important; border-top:none !important; border-bottom:none !important; border-right:none !important;}
+.sub_frameIcon .sub_frameIconUL .frameIconLI:first-child{ border-left:none !important;}
+.sub_frameIcon .sub_frameIconUL02{ margin:0px 0px 0px 3px !important; padding:0px !important; float:left !important; overflow:hidden !important; width:29px !important; height:29px !important; box-sizing:border-box !important; list-style:none !important;border-left:1px solid #c7c7c7 !important; border-right:1px solid #c7c7c7 !important; border-top:1px solid #c7c7c7 !important; border-bottom:1px solid #909193 !important;}
+.sub_frameIcon .sub_frameIconUL02 .frameIconLI{ margin:0px !important; padding:6px 5px 5px 6px !important; overflow:hidden !important; cursor:pointer !important; border:none !important;}
 
 /* previewmail */
 .previewmail{margin:0px; padding:0px; font-family:Malgun Gothic, malgun gothic; overflow:hidden; }

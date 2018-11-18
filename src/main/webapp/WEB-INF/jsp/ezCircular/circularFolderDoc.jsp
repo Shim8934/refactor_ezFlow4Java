@@ -678,12 +678,22 @@
 	            <li><span onClick="CircularMove_onclick()"><spring:message code='ezCircular.t56'/></span></li>
 	            <li><span onClick="CircularReturn_onclick()"><spring:message code='ezCircular.t98'/></span></li>
 	            <li onClick="CircularDelete_onclick()"><span class="icon16 icon16_delete"></span></li>
-	            <li id="right">
+	            <!-- <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
-				</li>
+				</li> -->
+				<div class="sub_frameIcon" style="float:right">	
+					<div class="sub_frameIconUL">
+					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_bottomframe" id="PreViewBottom" onclick="PreviewRayerChange('W')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
+					</div>
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this);"></span></p>  
+					</div>
+				 </div>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">

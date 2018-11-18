@@ -8,36 +8,39 @@
  
 /* PUT IN YOUR SLIDER ID AND SIZE TO MAKE LOAD BEAUTIFULLY
    ================================================== */
-#featured { 
+/* 슬라이드 포틀릿 부분 */ 
+#roll_featured { 
 	width: 467px;
 	height: 200px;
 	background: url('/images/WebPartSliderCI/loading.gif') no-repeat center center;
 	overflow: hidden; }
-#featured>img,  
-#featured>div,
-#featured>a { display: none; }
+#roll_featured>img,  
+#roll_featured>div,
+#roll_featured>a { display: none; }
+
+
 
 /* CONTAINER
    ================================================== */
 
-div.orbit-wrapper {
+div.orbit2-wrapper {
     width: 1px;
     height: 1px;
     position: relative; }
 
-div.orbit {
+div.orbit2 {
     width: 1px;
     height: 1px;
     position: relative;
     overflow: hidden }
 
-div.orbit>img {
+div.orbit2>img {
     position: absolute;
     top: 0;
     left: 0;
     display: none; }
 
-div.orbit>a {
+div.orbit2>a {
     border: none;
     position: absolute;
     top: 0;
@@ -45,7 +48,7 @@ div.orbit>a {
     line-height: 0; 
     display: none; }
 
-.orbit>div {
+.orbit2>div {
     position: absolute;
     top: 0;
     left: 0;
@@ -58,7 +61,7 @@ div.orbit>a {
 /* TIMER
    ================================================== */
 
-div.timer {
+div.timer2 {
     width: 40px;
     height: 40px;
     overflow: hidden;
@@ -69,7 +72,7 @@ div.timer {
     cursor: pointer;
     z-index: 1001; }
 
-span.rotator {
+span.rotator2 {
     display: block;
     width: 40px;
     height: 40px;
@@ -79,7 +82,7 @@ span.rotator {
     background: url(/images/WebPartSliderCI/rotator-black.png) no-repeat;
     z-index: 3; }
 
-span.mask {
+span.mask2 {
     display: block;
     width: 20px;
     height: 40px;
@@ -89,15 +92,15 @@ span.mask {
     z-index: 2;
     overflow: hidden; }
 
-span.rotator.move {
+span.rotator2.move {
     left: 0 }
 
-span.mask.move {
+span.mask2.move {
     width: 40px;
     left: 0;
     background: url(/images/WebPartSliderCI/timer-black.png) repeat 0 0; }
 
-span.pause {
+span.pause2 {
     display: block;
     width: 40px;
     height: 40px;
@@ -108,22 +111,22 @@ span.pause {
     z-index: 4;
     opacity: 0; }
 
-span.pause.active {
+span.pause2.active {
     background: url(/images/WebPartSliderCI/pause-black.png) no-repeat 0 -40px }
 
-div.timer:hover span.pause,
-span.pause.active {
+div.timer2:hover span.pause2,
+span.pause2.active {
     opacity: 1 }
 
 
 /* CAPTIONS
    ================================================== */
 
-.orbit-caption {
+.orbit2-caption {
     display: none;
 }
 
-.orbit-wrapper .orbit-caption {
+.orbit2-wrapper .orbit2-caption {
     background: #000;
     background: rgba(0,0,0,.6);
     z-index: 1000;
@@ -140,10 +143,10 @@ span.pause.active {
 /* DIRECTIONAL NAV
    ================================================== */
 
-div.slider-nav {
+div.slider-nav2 {
     display: block }
 
-div.slider-nav span {
+div.slider-nav2 span {
     width: 24px;
     height: 39px;
     text-indent: -9999px;
@@ -153,18 +156,18 @@ div.slider-nav span {
     margin-top: -20px;
     cursor: pointer; }
 
-div.slider-nav span.right {
+div.slider-nav2 span.right {
     /* background: url(/images/WebPartSliderCI/right-arrow.png); */
     right: 0; }
 
-div.slider-nav span.left {
+div.slider-nav2 span.left {
     /* background: url(/images/WebPartSliderCI/left-arrow.png); */
     left: 0; }
 
 /* BULLET NAV
    ================================================== */
 
-.orbit-bullets {
+.orbit2-bullets {
     position: absolute;
     z-index: 1000;
     list-style: none;
@@ -173,7 +176,7 @@ div.slider-nav span.left {
 	margin-left: -50px;
     padding: 0; }
 
-.orbit-bullets li {
+.orbit2-bullets li {
     float: left;
     margin-left: 5px;
     cursor: pointer;
@@ -184,15 +187,15 @@ div.slider-nav span.left {
     height: 12px;
     overflow: hidden; }
 
-.orbit-bullets li.active {
+.orbit2-bullets li.active {
     color: #222;
     background-position: -8px 0; }
     
-.orbit-bullets li.has-thumb {
+.orbit2-bullets li.has-thumb {
     background: none;
     width: 100px;
     height: 75px; }
 
-.orbit-bullets li.active.has-thumb {
+.orbit2-bullets li.active.has-thumb2 {
     background-position: 0 0;
     border-top: 2px solid #000; }

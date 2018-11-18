@@ -1352,6 +1352,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/delSlideImage.do")
+	@ResponseBody
 	public void deleteSlideImage(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("deleteSlideImage started.");
 		
