@@ -172,7 +172,7 @@
 				return result;
 			}
 			function openLinkAdd()  {
-				var linksHTML = "<li class='linkDetails'>";
+				var linksHTML = "<li class='linkDetails' style='display:none'>";
 				linksHTML += "<div id='showNewLink'>";
 				linksHTML += "<div class='linkTitle'>";
 				linksHTML += "<span>빠른 링크 등록/수정</span>";
@@ -182,7 +182,7 @@
 				linksHTML += "<table class='content def'>";
 				linksHTML += "<tr class='primary'>";
 				linksHTML += "<th>이름 (한국어) <span style='color:red'>*</span></th>";
-				linksHTML += "<td><input name='Input' id='Title1' class='contInput' maxlength='50'></td>";
+				linksHTML += "<td style='border-bottom: 0px;'><input name='Input' id='Title1' class='contInput' maxlength='50'></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr class='primary'>";
 				linksHTML += "<th>이름 (영어) <span style='color:red'>*</span></th>";
@@ -198,7 +198,7 @@
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
 				linksHTML += "<th>열림 종류 </th>";
-				linksHTML += "<td><input type='text' class='contInput' maxlength='512'></td>";
+				linksHTML += "<td><select style='height: 24px; padding-left: 5px;'><option>FULL</option><option>SIZE</option></select></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
 				linksHTML += "<th rowspan='2' style='text-align: bottom; vertical-align: top;'>팝업 크기</th>";
@@ -251,7 +251,7 @@
 				linksHTML += "<table class='content perm'>";
 				linksHTML += "<tr>";
 				linksHTML += "<th>권한</th>";
-				linksHTML += "<td><div class='listview' id='AccessList'></div></td>";
+				linksHTML += "<td style='border-left: 1px solid #d2d2d2;'><div class='listview' id='AccessList'></div></td>";	
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
 				linksHTML += "<td colspan='2'>"
