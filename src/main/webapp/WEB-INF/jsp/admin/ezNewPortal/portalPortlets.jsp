@@ -6,7 +6,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>portalPortlets</title>
+	<title><spring:message code='ezNewPortal.t056' /></title>
 	<link rel="stylesheet"  href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css">
 	<link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -123,7 +123,7 @@
 		}
 		
 		if (portletNameEmptyNum >= portletNameListCount) {
-			alert("하나 이상의 포틀릿 이름을 입력해주세요.");
+			alert("<spring:message code='ezNewPortal.t091' />");
 			return;
 		}
 			
@@ -143,22 +143,22 @@
 		var portletMenuId = document.getElementById("newPortlet").querySelector("#newPortletMenu").getAttribute("data2");
 
 		if (connectionUrl == "" && portletMenuId != 4) {
-			alert("연결 URL을 입력해주세요.");
+			alert("<spring:message code='ezNewPortal.t092' />");
 			return;
 		}
 		
 		if (connectionUrl.indexOf("#_self") != -1 && portletMenuId != 4) {
-			alert("#이나 _self 등은 입력할 수 없습니다.");
+			alert("<spring:message code='ezNewPortal.t093' />");
 			return;
 		}
 		
 		if (portletMenuId == null) {
-			alert("추가할 포틀릿과 관련된 메뉴를 설정해주세요.");
+			alert("<spring:message code='ezNewPortal.t094' />");
 			return;
 		}
 		
 		if (portletMenuId == 4 && boardId == null && portletId != 10) {
-			alert("게시판을 선택해 주세요.");
+			alert("<spring:message code='ezNewPortal.t050' />");
 			return;
 		}
 		
@@ -185,7 +185,7 @@
 	}
 	  
 	var portletDelete = function(event) {
-		var response = confirm("포틀릿을 삭제하시겠습니까?");
+		var response = confirm("<spring:message code='ezNewPortal.t095' />");
 		
 		if (!response) {
 			return;
@@ -347,7 +347,7 @@
 		var favoriteBoardUrl = document.getElementById("portlet" + portletId).dataset.url; 
 		
 		if ((menuId == 4 && favoriteBoardUrl != '/ezNewPortal/favoriteBoardPortlet.do' ) && boardId == null) {
-			alert("게시판을 선택해 주세요.");
+			alert("<spring:message code='ezNewPortal.t050' />");
 			return;
 		}
 
@@ -420,14 +420,14 @@
 					
 					if (!result[i].general) {
 						listHTML += "<a class='deletePortletBtn'>";
-						listHTML += "<span>삭제</span></a>"
+						listHTML += "<span><spring:message code='ezNewPortal.t059 /></span></a>"
 					}
 					
 					listHTML += "<a class='updatePortletBtn'>";
 					listHTML += "<span>저장</span></a>";
 					listHTML += "</div>";
 					listHTML += "<div class='portlet-content'>";
-					listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'>포틀릿 사용  : </th>";
+					listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t096' /></th>";
 					if (portletId == 34) { //슬라이드 이미지 포틀릿의 경우
 						listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
 						listHTML += "<div class='slideImageSetting'><a><img src='/images/admin/admin_portlet_set.png'></a></div></td>";
@@ -441,23 +441,23 @@
 						
 						//언어
 						if (portletNameList[j].portletLang == 1) {
-							language = "한국어";
+							language = "<spring:message code='ezNewPortal.t078' />";
 						} else if (portletNameList[j].portletLang == 2) {
-							language = "영어";
+							language = "<spring:message code='ezNewPortal.t079' />";
 						} else if (portletNameList[j].portletLang == 3) {
-							language = "일본어";
+							language = "<spring:message code='ezNewPortal.t080' />";
 						}
 						
-						listHTML += "<tr><th class='portletInfoTH'>포틀릿명(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + ConvertCharToEntityReference(portletNameList[j].portletName) + "' maxlength='50'></td></tr>"
+						listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + ConvertCharToEntityReference(portletNameList[j].portletName) + "' maxlength='50'></td></tr>"
 					 }
 					
 					if (!result[i].general) {						
-						listHTML += "<tr><th class='portletInfoTH'>관련 메뉴 : </th><td class='portletInfoTD'>";
+						listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t098' /></th><td class='portletInfoTD'>";
 						
 						var menuName = result[i].menuName;
 						
 						if (menuName == null || menuName == "null") {
-							menuName = "없음";
+							menuName = "<spring:message code='ezNewPortal.t089' />";
 						} else {
 							menuName = ConvertCharToEntityReference(menuName);
 						}
@@ -469,12 +469,12 @@
 						listHTML += "</td></tr>";
 						
 						if (menuId != 4) {
-							listHTML += "<tr class='connectionTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
+							listHTML += "<tr class='connectionTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
 						} else {
 							if (!result[i].general) {
-								listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
+								listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
 							} else {
-								listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='' maxlength='100'></td></tr>";
+								listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='' maxlength='100'></td></tr>";
 							}	
 						}
 						

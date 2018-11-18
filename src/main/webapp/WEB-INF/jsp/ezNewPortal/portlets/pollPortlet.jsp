@@ -8,7 +8,7 @@
 	<article class="box_shadow">
 		<div class="layDiv pollLay">
 			<dl class="portlet_title sortablePortlet">
-				<dt class="portletText">설문조사</dt>
+				<dt class="portletText"><spring:message code='ezNewPortal.t045' /></dt>
 				<dd class="portletPlus" id="pollPlus">
 					<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
 				</dd>

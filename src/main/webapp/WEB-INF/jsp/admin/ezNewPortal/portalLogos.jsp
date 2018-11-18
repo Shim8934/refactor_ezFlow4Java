@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Portal Logos</title>
+		<title><spring:message code='ezNewPortal.t057' /></title>
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<style type="text/css">
 			.logoTitle {padding:0px;font-size: 14px !important;font-weight:bold;margin: 0px 0px 5px 0px;}
@@ -24,7 +24,7 @@
 	</head>
 	<body class="mainbody">
 		<h1>
-			로고설정
+			<spring:message code='ezNewPortal.t057' />
 			<select class="companySelect" id="ListCompany"></select>
 		</h1>
 		<div class="loginLogo" style="margin-top:30px">
@@ -34,13 +34,13 @@
 				</div>
 				<div class="logoContent">
 					<c:if test="${adminCheck eq true }">
-						<div id = "imgLogin" class='btnpositionJsp'><a class='imgbtn updateLogoBtn'><span>등록</span></a> <a class='imgbtn deleteLogoBtn'><span>삭제</span></a></div>
+						<div id = "imgLogin" class='btnpositionJsp'><a class='imgbtn updateLogoBtn'><span><spring:message code='ezNewPortal.t058' /></span></a> <a class='imgbtn deleteLogoBtn'><span><spring:message code='ezNewPortal.t059' /></span></a></div>
 					</c:if>
 					<ul>
-						<li class="logoTitle">로그인 페이지 로고 설정</li>
-						<li>로그인 로고의 이미지를 변경합니다.</li>
-						<li>가로 x 세로의 크기는 137(px) x 38(px) 입니다.</li>
-						<li>로그인 로고의 이미지는 전체관리자만 변경 가능합니다.</li>
+						<li class="logoTitle"><spring:message code='ezNewPortal.t060' /></li>
+						<li><spring:message code='ezNewPortal.t061' /></li>
+						<li><spring:message code='ezNewPortal.t062' /></li>
+						<li><spring:message code='ezNewPortal.t063' /></li>
 					</ul>
 				</div>
 			</div>
@@ -53,11 +53,11 @@
 					</div>
 					
 					<div class="logoContent">
-						<div id="imgTop" class='btnpositionJsp'><a class='imgbtn updateLogoBtn'><span>등록</span></a> <a class='imgbtn deleteLogoBtn'><span>삭제</span></a></div>
+						<div id="imgTop" class='btnpositionJsp'><a class='imgbtn updateLogoBtn'><span><spring:message code='ezNewPortal.t058' /></span></a> <a class='imgbtn deleteLogoBtn'><span><spring:message code='ezNewPortal.t059' /></span></a></div>
 						<ul>
-							<li class="logoTitle">상단 메뉴 로고 설정</li>
-							<li>홈페이지 접속 후, 상단의 로고의 이미지를 변경합니다.</li>
-							<li>가로 x 세로의 크기는 106(px) x 42(px) 입니다.</li>
+							<li class="logoTitle"><spring:message code='ezNewPortal.t064' /></li>
+							<li><spring:message code='ezNewPortal.t065' /></li>
+							<li><spring:message code='ezNewPortal.t066' /></li>
 						</ul>
 					</div>
 				</div>
@@ -138,10 +138,10 @@
 							$(".loginLogo").find(".logoIcon").find("img").attr("src", logoUrl);
 							
 							if (!logoDefault) {
-								$("#imgLogin").find(".updateLogoBtn").find("span").text("수정");
+								$("#imgLogin").find(".updateLogoBtn").find("span").text("<spring:message code='ezNewPortal.t067' />");
 								$("#imgLogin").find(".deleteLogoBtn").css("display", "inline-block");
 							} else {
-								$("#imgLogin").find(".updateLogoBtn").find("span").text("등록");
+								$("#imgLogin").find(".updateLogoBtn").find("span").text("<spring:message code='ezNewPortal.t058' />");
 								$("#imgLogin").find(".deleteLogoBtn").css("display", "none");
 							}
 							
@@ -149,10 +149,10 @@
 							$(".portalLogo").find(".logoIcon").find("img").attr("src", logoUrl);
 							
 							if (!logoDefault) {
-								$("#imgTop").find(".updateLogoBtn").find("span").text("수정");
+								$("#imgTop").find(".updateLogoBtn").find("span").text("<spring:message code='ezNewPortal.t067' />");
 								$("#imgTop").find(".deleteLogoBtn").css("display", "inline-block");
 							} else {
-								$("#imgTop").find(".updateLogoBtn").find("span").text("등록");
+								$("#imgTop").find(".updateLogoBtn").find("span").text("<spring:message code='ezNewPortal.t058' />");
 								$("#imgTop").find(".deleteLogoBtn").css("display", "none");
 							}
 						}
@@ -210,17 +210,17 @@
 	    				var result = request.responseText;
 	    	
 	    				if (result == "rejected") {
-	    					alert("로그인 이미지는 전체관리자만 변경가능합니다.");
+	    					alert("<spring:message code='ezNewPortal.t068' />");
 	    					return;
 	    				}
 	    				
 	    				if (logoType == "L") {
 	    					$(".loginLogo").find(".logoIcon").find("img").attr("src", result);
-							$("#imgLogin").find(".updateLogoBtn").find("span").text("수정");
+							$("#imgLogin").find(".updateLogoBtn").find("span").text("<spring:message code='ezNewPortal.t067' />");
 							$("#imgLogin").find(".deleteLogoBtn").css("display", "inline-block");
 	    				} else if (logoType == "P") {
 	    					$(".portalLogo").find(".logoIcon").find("img").attr("src", result);
-							$("#imgTop").find(".updateLogoBtn").find("span").text("수정");
+							$("#imgTop").find(".updateLogoBtn").find("span").text("<spring:message code='ezNewPortal.t067' />");
 							$("#imgTop").find(".deleteLogoBtn").css("display", "inline-block");
 	    				}
 	    	
@@ -232,7 +232,7 @@
 			}
 
 			var deleteLogo = function() {
-				var response = confirm("로고를 삭제하시겠습니까?");
+				var response = confirm("<spring:message code='ezNewPortal.t069' />");
 	
 				if (response) {
 					var companiesObj = document.getElementById("ListCompany");

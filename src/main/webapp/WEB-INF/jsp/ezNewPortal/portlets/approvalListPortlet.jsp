@@ -240,7 +240,7 @@
 	                    openLocation += "&isOpinion=" + escape(pArgument[6]);
 	                    openLocation += "&listType=" + escape(pArgument[7]);
                 	} else {
-                		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+                		var pAlertContent = "<spring:message code='ezNewPortal.t038' />";
                         alert(pAlertContent);
                         
                         return;
@@ -349,7 +349,7 @@
 		                openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]);
 		                openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0" + "&docState=" + escape(pDocState);
 	            	} else {
-	            		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	            		var pAlertContent = "<spring:message code='ezNewPortal.t038' />";
 	                    alert(pAlertContent);
 	                    
 	                    return;

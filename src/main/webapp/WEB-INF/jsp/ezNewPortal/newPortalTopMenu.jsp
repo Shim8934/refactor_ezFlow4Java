@@ -234,9 +234,9 @@
 				str += '	<div class="menu_toggle_context" id="expandMenuFooter">'
 				str += '		<div id="editBtn"><img src="/images/ezNewPortal/icon_setup.png" /></div>';
 				str += '		<div id="editMenuBtn">'
-				str += '			<span class="topMenuBtn" id="editMenuCancel">취소</span>';
-				str += '			<span class="topMenuBtn" id="editMenuSave">저장</span>';
-				str += '			<span class="topMenuBtn initOrder" id="editcompanyOrder">메뉴 순서 초기화</span>';
+				str += '			<span class="topMenuBtn" id="editMenuCancel"><spring:message code="ezNewPortal.t001" /></span>';
+				str += '			<span class="topMenuBtn" id="editMenuSave"><spring:message code="ezNewPortal.t002" /></span>';
+				str += '			<span class="topMenuBtn initOrder" id="editcompanyOrder"><spring:message code="ezNewPortal.t003" /></span>';
 				str += '		</div>';
 				str += '	</div>';				
 				str += '</div>';
@@ -282,12 +282,12 @@
 			var str = '';
 			
 				str += '<ul class="util">';
-				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="관리자"></span></li>';
-				str += '<li><span class="icon_topmenu util_employee_search" id="util_employee_search" title="직원조회"></span></li>';
+				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' +'"></span></li>';
+				str += '<li><span class="icon_topmenu util_employee_search" id="util_employee_search" title="' + '<spring:message code="ezNewPortal.t005" />' + '"></span></li>';
 				/* str += '<li><span class="icon_topmenu util_frame" id="util_frame" title="프레임설정"></span></li>'; */
-				str += '<li><span class="icon_topmenu util_set" id="util_set" title="환경설정"></span></li>';
-				str += '<li><span class="icon_topmenu util_help" id="util_help" title="도움말"></span></li>';
-				str += '<li><span class="icon_topmenu util_logout" id="util_logout" title="로그아웃"></span></li>';
+				str += '<li><span class="icon_topmenu util_set" id="util_set" title="' + '<spring:message code="ezNewPortal.t006" />' + '"></span></li>';
+				str += '<li><span class="icon_topmenu util_help" id="util_help" title="' + '<spring:message code="ezNewPortal.t007" />' + '"></span></li>';
+				str += '<li><span class="icon_topmenu util_logout" id="util_logout" title="' + '<spring:message code="ezNewPortal.t008" />' + '"></span></li>';
 				str += '</ul>';
 			
 			return str;

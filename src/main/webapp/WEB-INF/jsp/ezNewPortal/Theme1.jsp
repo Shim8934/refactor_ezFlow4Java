@@ -82,15 +82,15 @@
 			</article>
 			<article class="main_time_check">
 				<div id="timeinput" class="main_presentTime">
-	               	<p class="main_timeTit" id="todayTime">현재시간</p>
+	               	<p class="main_timeTit" id="todayTime"><spring:message code='ezNewPortal.t012' /></p>
 					<div id="timeFlow" class="main_timeText"></div>
 			    </div>
 			    <div id="atti_area" class="main_main_time">
 	            	<dl class="main_timeCheckIn">
-	                	<dd id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this)">출근</dd>
+	                	<dd id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t013' /></dd>
 	                </dl>
 	                <dl class="main_timeCheckOut">
-	                   	<dd id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this)">퇴근</dd>
+	                   	<dd id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t014' /></dd>
 	                </dl>
 		    	</div>
 				</article>
@@ -99,38 +99,38 @@
 					<div class="countingIcon01">
 						<dl id="NewMail">
                 			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon01.png"></dt>
-                    		<dd class="iconText">새메일</dd>
+                    		<dd class="iconText"><spring:message code='ezNewPortal.t015' /></dd>
                     		<dd id="unreadMailCount" class="iconCount_none">0</dd>
                 		</dl>
                 		<dl id="AprSign">
                     		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon03.png"></dt>
                     
-                    		<dd class="iconText">결재문서</dd>
+                    		<dd class="iconText"><spring:message code='ezNewPortal.t016' /></dd>
                     		<dd id="approvalCount" class="iconCount_none">0</dd>
                 		</dl>
                 		<dl id="Schedule">
                   		  	<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon02.png"></dt>
-                    		<dd class="iconText">오늘일정</dd>
+                    		<dd class="iconText"><spring:message code='ezNewPortal.gu3' /></dd>
                 		    <dd id="scheduleCount" class="iconCount_none">0</dd>
                			</dl>
 					</div>
 					<div class="countingIcon02">
             			<dl id="Poll">
                     		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
-                    		<dd class="iconText">전자설문</dd>                        
+                    		<dd class="iconText"><spring:message code='ezNewPortal.gu4' /></dd>                        
                     		<dd id="pollCount" class="iconCount_none">0</dd>
                 		</dl>
             	
                 		<dl id="Circular"> 
                     		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon04.png"></dt>
-                    		<dd class="iconText">회람판</dd>
+                    		<dd class="iconText"><spring:message code='ezNewPortal.gu5' /></dd>
                     		<dd id="circularCount" class="iconCount_none">0</dd>
                 		</dl>
                 	</div>
 				</article>
 				<article class="birthday">
 					<div class="birthTit">
-               			<p class="birthText"><span id="curMon"></span>월 생일자</p>
+               			<p class="birthText"><span id="curMon"></span><spring:message code='ezNewPortal.t017' /></p>
            	    		<span class="birthRighttbtn" id="birthdayNext"><img src="/images/ezNewPortal/birthday_next.png"></span>
                 		<span class="birthLeftbtn" id="birthdayPrev"><img src="/images/ezNewPortal/birthday_pre.png"></span>
             		</div>
@@ -140,14 +140,14 @@
             		<div id="nodata_NewBirth" style="">
             			<dl class="nodata">
 	            			<dt style="padding-top:33px"><img src="/images/ezNewPortal/nodata.png"></dt>
-	            			<dd>"데이터가 없습니다"</dd>
+	            			<dd>"<spring:message code='ezNewPortal.t018' />"</dd>
             			</dl>
             		</div>
 				</article>
 				<article class="bestEmployee">
 					<p class="emPic" id="emPic"><img src="/images/ezNewPortal/bestEmployee_pic_none.png"></p>
 					<dl class="emDL">
-            			<dt class="emTit">이달의 우수사원</dt>
+            			<dt class="emTit"><spring:message code='ezNewPortal.t019' /></dt>
             		</dl>
 				</article>
 			</section>
@@ -156,16 +156,16 @@
 			<aside id="quickSide" style="width:0px">	
 				<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>
 				<div class="aside_quick">
-					<p class="quickmenu_title">Quick</p>
+					<p class="quickmenu_title"><spring:message code='ezNewPortal.t020' /></p>
 					<ul class="quickmenu">
-						<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt">메일작성</span></li>
-						<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt">결재작성</span></li>
-						<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt">일정작성</span></li>
-						<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt">조직도</span></li>
+						<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt"><spring:message code='ezNewPortal.t021' /></span></li>
+						<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt"><spring:message code='ezNewPortal.t022' /></span></li>
+						<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt"><spring:message code='ezNewPortal.t023' /></span></li>
+						<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt"><spring:message code='ezNewPortal.t024' /></span></li>
 					</ul>
 				</div>
 				<div class="aside_link">
-					<p class="linkmenu_title">Link</p>
+					<p class="linkmenu_title"><spring:message code='ezNewPortal.t025' /></p>
 					<ul class="linkmenu" id="QuickUl">
 					</ul>
 					<div class="linkBtn">

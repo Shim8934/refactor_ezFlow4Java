@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>portalMenus</title>
+		<title><spring:message code='ezNewPortal.t055' /></title>
 		<link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<style type="text/css">
@@ -52,13 +52,13 @@
 	
 	<body class="mainbody">
 		<h1>
-			메뉴관리
+			<spring:message code='ezNewPortal.t055' />
 			<select class="companySelect" id="ListCompany"></select>
 		</h1>
 		
 		<div id="mainmenu">
 			<ul style="margin-top: 15px;">
-				<li id="menuOrderReset"><span>메뉴 순서 초기화</span></li>
+				<li id="menuOrderReset"><span><spring:message code='ezNewPortal.t003' /></span></li>
 			</ul>
 		</div>
 		<ul id="menuList">
@@ -237,27 +237,27 @@
 					menusHTML += "<dl class='adminMenu_icon'><dt class='admenuIcon menuIcon'><span class='" + menuInfo.iconUrl + "'></span></dt>";
 					
 					if (menuInfo.menuType != "G") { //기본 메뉴는 아이콘 변경이 불가능함					
-						menusHTML += "<dd class='admenuIcon_up iconBtn'>아이콘 등록</dd>";
+						menusHTML += "<dd class='admenuIcon_up iconBtn'><spring:message code='ezNewPortal.t075' /></dd>";
 					}
 					
 					menusHTML += "</dl><table class='iconTable01' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
-					menusHTML += "<tr><th class='menuIconTH'>메뉴 사용</th><td colspan='2' class='menuIconTD'><label class='switch menuSwitch'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
-					menusHTML += "<tr><th rowspan='3' class='menuIconTH'>메뉴명</th>";
+					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t076' /></th><td colspan='2' class='menuIconTD'><label class='switch menuSwitch'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
+					menusHTML += "<tr><th rowspan='3' class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
 					
 					menuNames.forEach(function(item, index) {
 						if (index != 0) {
 							menusHTML += "<tr>";
 						}
 						menusHTML += "<td class='menuIconTD'>";
-						menusHTML += "메뉴명 ("; 
+						menusHTML += "<spring:message code='ezNewPortal.t077' /> ("; 
 						
 						var country = "";
 						if (item.menuLang == 1) {
-							country = "한국어";
+							country = "<spring:message code='ezNewPortal.t078' />";
 						} else if (item.menuLang == 2) {
-							country = "영어";
+							country = "<spring:message code='ezNewPortal.t079' />";
 						} else if (item.menuLang == 3) {
-							country = "일본어";
+							country = "<spring:message code='ezNewPortal.t080' />";
 						}
 						
 						menusHTML += country + ")</td>";
@@ -267,7 +267,7 @@
 					
 					menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' value='" +ReplaceText(ReplaceText(ConvertCharToEntityReference(menuInfo.menuUrl), '\"', "&#39;"), "\'", "&#34;") + "' maxlength='100'></td></tr></table>";
 					menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
-					menusHTML += "<tr><th class='menuIconTH'>접근허용</th><td class='menuIconTD accessOK'>";
+					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'>";
 					
 					if (menuAuthsY != null && menuAuthsY.length != 0) {
 						var menuAuthsYList = "";
@@ -284,7 +284,7 @@
 						menusHTML += menuAuthsYList.substring(1) + "</td></tr>";
 					}
 					
-					menusHTML += "<tr><th class='menuIconTH'>접근불가</th><td class='menuIconTD accessNO'>";
+					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'>";
 					
 					if (menuAuthsN != null && menuAuthsN.length != 0) {
 						var menuAuthsNList = "";
@@ -302,10 +302,10 @@
 					}
 					
 					menusHTML += "</table>";
-					menusHTML += "<div class='bottomBtn'><a class='btnA updateMenu'>저장</a><a class='btnA menuAuthBtn'>권한 설정</a>";
+					menusHTML += "<div class='bottomBtn'><a class='btnA updateMenu'>저장</a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t086' /></a>";
 					
 					if (menuInfo.menuType == "A") {
-						menusHTML += "<a class='btnA deleteMenu'>메뉴 삭제</a>";
+						menusHTML += "<a class='btnA deleteMenu'><spring:message code='ezNewPortal.t124' /></a>";
 					}
 					menusHTML += "</div></div></div></li>"
 					
@@ -483,12 +483,12 @@
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
 			
 			if (menuUrl == "" || menuUrl == null) {
-				alert("메뉴 URL을 입력해 주세요.");
+				alert("<spring:message code='ezNewPortal.t083' />");
 				return;
 			}
 			
 			if (menuAuths.length == 0 || menuAuths == null) {
-				alert("메뉴 접근 권한을 설정해 주세요.");
+				alert("<spring:message code='ezNewPortal.t084' />");
 				return;
 			}
 			
@@ -516,7 +516,7 @@
 			}
 			
 			if (menuNameEmptyNum >= menuNamesCount) {
-				alert("하나 이상의 메뉴 이름을 입력해주세요.");
+				alert("<spring:message code='ezNewPortal.t085' />");
 				return;
 			}
 			
@@ -557,24 +557,24 @@
 			menusHTML += "<dl class='admin_menuDL'><dt class='admin_menuTit'>&nbsp;</dt><dd class='admin_menuX'></dd></dl>";
 			menusHTML += "<div class='admin_menu_content'>";
 			menusHTML += "<dl class='adminMenu_icon'><dt class='admenuIcon menuIcon'><span></span></dt>";
-			menusHTML += "<dd class='admenuIcon_up iconBtn'>아이콘 등록</dd></dl>";
+			menusHTML += "<dd class='admenuIcon_up iconBtn'><spring:message code='ezNewPortal.t075' /></dd></dl>";
 			menusHTML += "<table class='iconTable01' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
-			menusHTML += "<tr><th class='menuIconTH'>메뉴 사용</th><td colspan='2' class='menuIconTD'><label class='switch menuSwitch'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
-			menusHTML += "<tr><th rowspan='3' class='menuIconTH'>메뉴명</th>";
-			menusHTML += "<td class='menuIconTD'>메뉴명(한국어)</td>";
+			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t076' /></th><td colspan='2' class='menuIconTD'><label class='switch menuSwitch'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
+			menusHTML += "<tr><th rowspan='3' class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
+			menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t078' />)</td>";
 			menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
 			menusHTML += "</tr>";
-			menusHTML += "<tr><td class='menuIconTD'>메뉴명(영어)</td>";
+			menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t079' />)</td>";
 			menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu2' type='text' maxlength='50'></td>";
 			menusHTML += "</tr>";
-			menusHTML += "<tr><td class='menuIconTD'>메뉴명(일본어)</td>";
+			menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t080' />)</td>";
 			menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu3' type='text' maxlength='50'></td>";
 			menusHTML += "</tr>";
 			menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' maxlength='100'></td></tr></table>";
 			menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
-			menusHTML += "<tr><th class='menuIconTH'>접근허용</th><td class='menuIconTD accessOK'></td></tr>";
-			menusHTML += "<tr><th class='menuIconTH'>접근불가</th><td class='menuIconTD accessNO'></td></tr></table>";
-			menusHTML += "<div class='bottomBtn'><a class='btnA addMenuBtn'>저장</a><a class='btnA menuAuthBtn'>권한 설정</a>";
+			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'></td></tr>";
+			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'></td></tr></table>";
+			menusHTML += "<div class='bottomBtn'><a class='btnA addMenuBtn'>저장</a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t86' /></a>";
 			menusHTML += "</div></div></div></li>"
 			
 			/* menusHTML += "<div class='btnpositionJsp addMenu'><a class='imgbtn addMenuBtn'><span>저장</span></a></div>";
@@ -667,7 +667,7 @@
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
 			
 			if (menuUrl == "" || menuUrl == null) {
-				alert("메뉴 URL을 입력해 주세요.");
+				alert("<spring:message code='ezNewPortal.t083' />");
 				return;
 			}
 			
@@ -694,12 +694,12 @@
 			}
 			
 			if (menuNameEmptyNum >= menuNamesCount) {
-				alert("하나 이상의 메뉴 이름을 입력해주세요.");
+				alert("<spring:message code='ezNewPortal.t085' />");
 				return;
 			}
 			
 			if (menuAuths.length == 0 || menuAuths == null) {
-				alert("메뉴 접근 권한을 설정해 주세요.");
+				alert("<spring:message code='ezNewPortal.t084' />");
 				return;
 			}
 			
@@ -731,7 +731,7 @@
 		}
 		
 		var deleteMenu = function (event) {
-			var response = confirm("메뉴를 삭제하면 메뉴와 관련된 포틀릿도 함께 삭제됩니다.\n메뉴를 삭제하시겠습니까?");
+			var response = confirm("<spring:message code='ezNewPortal.t087' />");
 			
 			if (response) {
 				var menuId = event.data.menuId;

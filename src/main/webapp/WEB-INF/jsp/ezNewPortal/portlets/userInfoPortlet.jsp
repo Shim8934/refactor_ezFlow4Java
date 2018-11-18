@@ -41,11 +41,11 @@
 	            <div class="main_time">
 	            	<dl class="timeCheckIn out" id="ptlInAttiBtn" type="A01" datetype="2" onclick="ptlCheckHoliday(this)">
 	                	<dt><img src="/images/ezNewPortal/theme3Img/main_time_icon.png"></dt>
-	                	<dd>출근입력</dd>
+	                	<dd><spring:message code='ezNewPortal.t046' /></dd>
 	                </dl>
 	                <dl class="timeCheckOut out" id="ptlOutAttiBtn" type="A03" datetype="2" onclick="ptlCheckHoliday(this)">
 	                	<dt><img src="/images/ezNewPortal/theme3Img/main_time_icon.png"></dt>
-	                	<dd>퇴근입력</dd>
+	                	<dd><spring:message code='ezNewPortal.t047' /></dd>
 	                </dl>
 	            </div>
 	        </div>
