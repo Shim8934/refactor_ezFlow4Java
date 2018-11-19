@@ -11,4 +11,5 @@ var messages = {
 	strLang10 : "조퇴 후 퇴근은 불가능합니다.",
 	strLang11 : "비공개 CoP입니다.",
 	strLang12 : "회원가입을 하시기 바랍니다.	",
+	strLang13 : "투표를 수정하고 있습니다.기다려주세요."
 }
