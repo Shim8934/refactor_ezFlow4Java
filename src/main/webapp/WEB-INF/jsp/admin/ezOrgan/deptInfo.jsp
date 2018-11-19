@@ -119,12 +119,14 @@
 			}
 			
 			function OK_Click(){
-	            for (var i = 0; i < document.getElementById("DeptID").value.length; i++) {
-	                if (document.getElementById("DeptID").value.charCodeAt(i) >= 65 && document.getElementById("DeptID").value.charCodeAt(i) <= 90) {
-	                	OpenAlertUI("<spring:message code='ezOrgan.x0003'/>");
-	                    return;
-	                }
-	            }
+				if(RetValue[1] == ""){ //20181115 조진호 - 닷넷 그룹웨어 인사연동시 부서 ID에 대문자가 포함되어 있는경우가 있어서, 부서 정보 수정시에는 해당 체크를 하지 않도록 수정
+					for (var i = 0; i < document.getElementById("DeptID").value.length; i++) {
+		                if (document.getElementById("DeptID").value.charCodeAt(i) >= 65 && document.getElementById("DeptID").value.charCodeAt(i) <= 90) {
+		                	OpenAlertUI("<spring:message code='ezOrgan.x0003'/>");
+		                    return;
+		                }
+		            }
+				}
 				if (DeptID.value == ""){
                 	OpenAlertUI("<spring:message code='ezOrgan.t210'/>");
 					return;
