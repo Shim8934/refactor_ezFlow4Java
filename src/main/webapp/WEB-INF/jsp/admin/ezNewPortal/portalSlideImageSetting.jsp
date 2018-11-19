@@ -18,11 +18,11 @@
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 
 <style type="text/css">
-.ui-sortable{ margin:0px; padding:0px; padding-left: 43px;}
-.themeThumbnails {width : 350px; height : 200px; border : 1px solid #cecece; margin-top : 40px;}
+.ui-sortable{ margin:0px; padding:0px; padding-left: 30px;}
+.themeThumbnails {width : 355px; height : 190px; border : 1px solid #cecece;}
 .themesImgDetails {width : 500px; height : 350px; border : 3px solid #898989;margin:15px; float:left;}
 .selectTheme {background-color:#edf7ff !important; border:1px solid #2196f3 !important; width : 375px; height : 270px; text-align:center; }
-.theme {position:relative;background-color : white; width : 375px; height : 270px; text-align : center; border: 1px solid #cecece; cursor: pointer;}
+.theme {position:relative;background-color : white; width : 390px; height : 270px; text-align : center; border: 1px solid #cecece; cursor: pointer;}
 .themeHr {margin-top : 10px;width : 85%;margin-left : 30px;}
 .themeTitle {margin-top : 9px;}
 .themeName {margin-left : 10px;font-size : 14px;font-weight : bold;}
@@ -31,15 +31,17 @@
 .close {margin-top : 6px;}
 
 #slideImageList li {margin : 10px; display : inline-block;}
-.slideDiv {position: absolute; top: -21px; left: 11px;}
+.slideDiv {position: absolute; top: 18px; left: 16px;}
+.slideDiv2 {position: relative;}
 
 #mainmenu ul {margin-top: 15px;}
+#mainmenu li {margin-right: 5px;}
 
 .addLayerPopup {z-index: 2000; position: absolute; top: 46.7px; left: 50px; height: 809.6px;}
 .layerPopupBackground {	width:100%;	height:100%; position:absolute; top:0; left:0; z-index:1000; background:none rgba(0,0,0,0.5); display:none;}
+#tdNormalImage {width: 514px; height: 250px;}
 
 dd {margin : 20px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: bold;}
-
 </style>
 </head>
 <body class="popup">
@@ -59,7 +61,7 @@ dd {margin : 20px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: b
 
 <!-- 등록/수정 레이어 팝업 -->
 	<div id="addLayerPopup" class="popupwrap1"
-		style="display: none; margin-bottom: 50px; max-width: 748px;">
+		style="display: none; margin-bottom: 50px; max-width: 650px;">
 		<div class="popupJQLayer">
 			<div id="contentPopup_title" class="title"><spring:message code='ezNewPortal.t105' /></div>
 			<div id="close">
@@ -78,16 +80,8 @@ dd {margin : 20px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: b
 						<tr>
 							<th><a class="imgbtn"><span onclick="ImageUploadBtn()"><spring:message code='ezNewPortal.t108' /></span></a>
 							</th>
-							<td>
-								<table border="0">
-									<tbody>
-										<tr>
-											<td id="tdNormalImage">
-												<img id="UploadSliderImage" src="" onload="imgdisplay()" style="width:100%; height: 100%; display: none">
-											</td>
-										</tr>
-									</tbody>
-								</table>
+							<td id="tdNormalImage">
+								<img id="UploadSliderImage" src="" onload="imgdisplay()" style="width:100%; height: 100%; display: none">
 							</td>
 						</tr>
 					</tbody>
@@ -148,29 +142,35 @@ var getSlideImage = function () {
 			var slideImageHTML = "";
 			
 			if (slideImageList != null && slideImageList.length > 0) {
+				document.getElementById("slideImageList").style.textAlign = "";
+				document.getElementById("slideImageList").style.marginLeft = "";
+				
 				slideImageList.forEach(function (item, index) {
 					slideImageHTML += "<li class='slide'>";
-					slideImageHTML += "<div class='theme' id='" + item.sliderID + "' sn='" + item.sn + "' onclick='selectImage(this)'><div class='slideDiv'>";
+					slideImageHTML += "<div class='theme' id='" + item.sliderID + "' sn='" + item.sn + "' onclick='selectImage(this)'><div class='slideDiv'><div class='slideDiv2'>";
 					slideImageHTML += "<div class='themeImg'><img src='" + item.imagePath + "' class='themeThumbnails' alt='img02'/>";
 					slideImageHTML += "</div><div>";
 					slideImageHTML += "<hr class='themeHr'/>";
 					slideImageHTML += "<div class='themeTitle' id='themeTitle" + item.sliderID + "'>";
 					if (item.url == null || item.url == "") {
-						slideImageHTML += "<span class='themeName'>url : 없음</span>";
+						slideImageHTML += "<span class='themeName'>url : <spring:message code='ezNewPortal.t089'/></span>";
 					} else {
 						slideImageHTML += "<span class='themeName'>url : " + item.url + "</span>";
 					}
-					slideImageHTML += "</div></div>";
+					slideImageHTML += "</div></div></div>";
 					slideImageHTML += "</li>";
 				});
 			} else {
+					document.getElementById("slideImageList").style.textAlign = "center";
+					document.getElementById("slideImageList").style.marginLeft = "-45px";
+				
 					slideImageHTML += "<li>";
-					slideImageHTML += "<div id='nodata_slideImage' class='nodata'>"
-					slideImageHTML += "<dl class='nodata'>"
-					slideImageHTML += "	<dt><img src='/images/kr/main/nodata.png'></dt>"
-					slideImageHTML += "	<dd>\"" + "<spring:message code='main.t00026' />" + "\"</dd>"
-					slideImageHTML += "</dl>"
-					slideImageHTML += "</div>"
+					slideImageHTML += "<div id='nodata_slideImage' class='nodata'>";
+					slideImageHTML += "<dl class='nodata'>";
+					slideImageHTML += "	<dt><img src='/images/kr/main/nodata.png'></dt>";
+					slideImageHTML += "	<dd>\"" + "<spring:message code='main.t00026' />" + "\"</dd>";
+					slideImageHTML += "</dl>";
+					slideImageHTML += "</div>";
 					slideImageHTML += "</li>";
 			}
 			document.getElementById("slideImageList").innerHTML = slideImageHTML;
@@ -187,7 +187,7 @@ var getSlideImage = function () {
 			});
 			
 			$("#slideImageList").disableSelection();
-			$("#slideImageList").on("sortstart", function( event, ui ) { ui.placeholder.css("width","377px"); });
+			$("#slideImageList").on("sortstart", function( event, ui ) { ui.placeholder.css("width","390px"); });
 		} else {
 			// We reached our target server, but it returned an error
 		}
