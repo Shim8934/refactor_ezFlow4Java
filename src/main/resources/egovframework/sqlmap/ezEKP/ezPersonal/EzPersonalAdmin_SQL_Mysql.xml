@@ -299,7 +299,7 @@
 			SELECT
 				ITEMSEQ ,
              	STARTDATE ,
-	            IFNULL(ENDDATE, '1900-01-01') EndDate  ,
+	            ENDDATE,
 	            POLLSELECTIONCOUNT ,
 	            POLLTITLE ,
 	            POLLTITLE2 ,

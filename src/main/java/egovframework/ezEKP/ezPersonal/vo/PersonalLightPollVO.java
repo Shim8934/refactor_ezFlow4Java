@@ -39,6 +39,8 @@ public class PersonalLightPollVO {
 	private int result;
 	/** 선택된 보기 수 */
 	private int count;
+	/** 퍼센트*/
+	private int percent;
 	
 	public int getItemSeq() {
 		return itemSeq;
@@ -153,6 +155,12 @@ public class PersonalLightPollVO {
 	}
 	public void setCount(int count) {
 		this.count = count;
+	}
+	public int getPercent() {
+		return percent;
+	}
+	public void setPercent(int percent) {
+		this.percent = percent;
 	}
 	@Override
 	public String toString() {
