@@ -53,7 +53,7 @@ function setStartPage(event) {
 	
 	var menuName = $("#M" + menuId).find("td").eq(1).text();
 	
-	var result = confirm(menuName + "<spring:message code='ezNewPortal.t030' />");
+	var result = confirm("<spring:message code='ezNewPortal.t030' />");
 	
 	if (result) {
 		$.ajax({
