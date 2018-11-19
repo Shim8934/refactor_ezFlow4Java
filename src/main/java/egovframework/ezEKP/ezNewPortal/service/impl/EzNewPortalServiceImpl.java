@@ -6,11 +6,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 
@@ -48,6 +50,7 @@ import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
+import egovframework.ezEKP.ezPersonal.dao.EzPersonalAdminDAO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -149,7 +152,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("langType", langType);
 		map.put("userId", userId);
 		map.put("deptId", deptId);
-		return ezNewPortalDAO.getUserMenuList(map);
+		
+		List<MenuInfoVO> menuList = ezNewPortalDAO.getUserMenuList(map);
+		
+		return menuList;
 	}
 	
 	public List<MenuInfoVO> getCompanyMenuList(String companyId, int tenantId, String langType, String userId, String deptId) throws Exception {
@@ -182,9 +188,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			map.put("companyId", companyId);
 			map.put("tenantId", tenantId);
 			map.put("userId", userId);			
-				map.put("menuId", list.get(i).get("menuId"));
+			map.put("menuId", list.get(i).get("menuId"));
 			map.put("order", list.get(i).get("order"));
-			
+			System.out.println(list.toString());
 			if (cnt < 1) {
 				ezNewPortalDAO.insertUserMenuOrder(map);
 			} else {
@@ -346,7 +352,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		 * -> 그 안에 있는 포틀릿만 쓰는 것으로 판단
 		*/
 		List<PortletInfoVO> compPortletList = getPortletOrderCompForUser(portletLang, tenantId, companyId, deptId, userId);
-		List<PortletInfoVO> userPortletList = getPortletOrderUser(portletLang, userId, tenantId, companyId);		
+		List<PortletInfoVO> userPortletList = getPortletOrderUser(portletLang, userId, tenantId, companyId, deptId);		
 		if(userPortletList.size() < 1) {
 			Iterator<PortletInfoVO> it = compPortletList.iterator();
 			while (it.hasNext()) {
@@ -360,12 +366,36 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			while (comp.hasNext()) {
 				PortletInfoVO compVO = comp.next(); 
 				Map<String, Object> map = commonUtil.transBean2Map(compVO);
+				String userAuth = "";
+				String deptAuth = "";
+				String comAuth = "";
 				for (PortletInfoVO pVO : userPortletList) {
-					boolean resultAuth = getCheckAuth(pVO.getMenuId(), userId, deptId, companyId, tenantId);
-					LOGGER.debug(pVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
-					if (resultAuth) {
-						resultPortletList.add(pVO);
-					}
+//					boolean resultAuth = getCheckAuth(pVO.getMenuId(), userId, deptId, companyId, tenantId);
+//					LOGGER.debug(pVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
+//					if (resultAuth) {
+//						resultPortletList.add(pVO);
+//					}
+					userAuth = pVO.getUserAuth();
+					deptAuth = pVO.getDeptAuth();
+					comAuth = pVO.getComAuth();
+					
+					if (userAuth != null && userAuth != "") {
+						if (userAuth.equals("1")) {
+							resultPortletList.add(pVO);
+						} 
+					} else {
+						if (deptAuth != null && deptAuth != "") {
+							if (deptAuth.equals("1")) {
+								resultPortletList.add(pVO);
+							}
+						} else {
+							if (comAuth != null && comAuth != "") {
+								if (comAuth.equals("1")) {
+									resultPortletList.add(pVO);
+								}
+							}
+						}
+					} 
 				}
 				
 				Iterator<PortletInfoVO> user = resultPortletList.iterator();
@@ -471,13 +501,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 
 	@Override
-	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId) {
+	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId, String deptPath) {
 		LOGGER.debug("[Serivce] getPortletOrderUser Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("portletLang", portletLang);
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
+		map.put("deptId", deptPath);
 
 		LOGGER.debug("[Serivce] getPortletOrderUser Ended");
 		return ezNewPortalDAO.getPortletOrderUser(map);
@@ -1209,7 +1240,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			ezNewPortalDAO.updateThemeDefault(map);
 		}
 		
+		boolean themeUsed = (boolean) map.get("themeUsed");
+		
 		ezNewPortalDAO.updateThemeInfo(map);
+		
+		if (!themeUsed) {
+			//현재 테마를 사용하고 있던 사원들의 테마와 프레임을 회사의 기본 테마, 기본 프레임으로 가도록 설정
+			ezNewPortalDAO.updateUserThemeAndFrameDefault(map);
+		}
 		
 		for (Object item : frameInfos) {
 			if (item instanceof JSONObject) {
@@ -1220,6 +1258,23 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("tenantId", tenantId);
 				
 				ezNewPortalDAO.updateFrameInfo(map);
+			}
+		}
+		
+		for (Object item : frameInfos) {
+			if (item instanceof JSONObject) {
+				JSONObject frameInfo = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(frameInfo.toJSONString(), Map.class);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				
+				boolean frameUsed = (boolean) map.get("frameUsed");
+				
+				if (!frameUsed) {
+					//사용하지 않는 프레임을 기존에 사용하고 있는 사원들의 프레임 아이디를 변경
+					ezNewPortalDAO.updateUserFrameDefault(map);
+				}
 			}
 		}
 		
@@ -1863,8 +1918,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	};
 
 	@Override
-	public List<PersonalSliderImageVO> getSilderImages(String companyId,
-			int tenantId) {
+	public List<PersonalSliderImageVO> getSilderImages(String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getSilderImages started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1873,5 +1927,91 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		LOGGER.debug("getSilderImages ended.");
 		return ezNewPortalDAO.getSilderImages(map);
+	}
+	
+	@Override
+	public void insertSlideImage(String companyId, int tenantId, String imageUrl, String slideImagePath, String fileName, String userId) throws Exception {
+		LOGGER.debug("insertSlideImage started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantID", tenantId);
+		map.put("companyId", companyId);
+		map.put("imageUrl", imageUrl);
+		map.put("fileName", fileName);
+		map.put("slideImagePath", slideImagePath);
+		map.put("regUserId", userId);
+		map.put("regDate", commonUtil.getTodayUTCTime(""));
+		
+		int count = ezNewPortalDAO.getSlideImageMaxSn(map);
+		map.put("count", count);
+		
+		map.put("slideId", "slidePortletImage" + fileName.split("\\.")[0]);
+		
+		ezNewPortalDAO.insertSilderImages(map);
+		
+		LOGGER.debug("insertSlideImage ended.");
+	}
+	
+	@Override
+	public PersonalSliderImageVO getSlideImageInfo(int tenantId, String companyId, String slideId) throws Exception {
+		LOGGER.debug("getSlideImageInfo started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("slideId", slideId);
+		
+		LOGGER.debug("getSlideImageInfo ended.");
+		return ezNewPortalDAO.getSilderImagInfo(map);
+	}
+	
+	@Override
+	public void updateSlideImage(String companyId, int tenantId, String imageUrl, String imagePath, String imageName, String userId, String slideId) throws Exception {
+		LOGGER.debug("updateSlideImage started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("imageUrl", imageUrl);
+		map.put("fileName", imageName);
+		map.put("slideImagePath", imagePath);
+		map.put("regUserId", userId);
+		map.put("regDate", commonUtil.getTodayUTCTime(""));
+		map.put("slideId", slideId);
+		
+		ezNewPortalDAO.updateSilderImage(map);
+		
+		LOGGER.debug("updateSlideImage ended.");
+	}
+	
+	@Override
+	public void deleteSlideImage(int tenantId, String companyId, String slideId) throws Exception {
+		LOGGER.debug("deleteSlideImage started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("slideId", slideId);
+		
+		ezNewPortalDAO.deleteSlideImage(map);
+		
+		LOGGER.debug("deleteSlideImage ended.");
+	}
+	
+	@Override
+	public void updateSlideOrder(JSONArray slideList, String companyId,
+			int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		for (Object item : slideList) {
+			if (item instanceof JSONObject) {
+				JSONObject slideInfo = (JSONObject) item;
+				map.put("slideId", slideInfo.get("slideId"));
+				map.put("order", slideInfo.get("order"));
+				
+				ezNewPortalDAO.updateSlideOrder(map);
+			}
+		}		
 	}
 }

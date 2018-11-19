@@ -181,6 +181,8 @@
              			COMPANYID = #v_COMPANYID#
              		AND
              			TENANT_ID = #tenantID#	
+             		AND
+             			IMAGEPATH like '%SLIDERIMAGE%'
               		ORDER BY
               			SN
 				]]>
@@ -232,6 +234,8 @@
                 	ISUSE = 1
                 AND
                 	TENANT_ID = #tenantID#	
+                AND
+           			IMAGEPATH like '%SLIDERIMAGE%'
            		ORDER BY
            			SN
 			]]>
@@ -701,7 +705,9 @@
 		    FROM
 		    	TBL_PS_SLIDERIMAGE
 		    WHERE
-	  	    	TENANT_ID = #tenantID#	
+	  	    	TENANT_ID = #tenantID#
+	  	    AND
+				IMAGEPATH like '%SLIDERIMAGE%'
 		]]>
 	</select>
 	

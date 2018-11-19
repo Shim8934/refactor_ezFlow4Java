@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -297,7 +298,14 @@ $(function(){
 <body>
 <article class="weather box_shadow" style="background-color:#ffffff">
 	<div class="layDiv">
-    	<dl class="portlet_title sortablePortlet">
+		<c:choose>
+			<c:when test="${usedTheme eq 3 }">
+				<dl class="portlet_title sortablePortlet" style="border-bottom: 1px solid #e7e7e7;">
+			</c:when>
+			<c:otherwise>
+				<dl class="portlet_title sortablePortlet">
+			</c:otherwise>
+		</c:choose>
         	<dt class="portletText">오늘의날씨</dt>
             <dd class="portletPlus">
             	<select id="cityList" class="weatherSelect">

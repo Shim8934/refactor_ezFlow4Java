@@ -4,6 +4,8 @@
 	<typeAlias alias="FrameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO"/>
 	<typeAlias alias="PortalBoardTreeVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO"/>
 	<typeAlias alias="PortalLogoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalLogoVO"/>
+	<typeAlias alias="PortalPortletSliderImageVO" type="egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO"/>
+	
 	<select id="ezNewPortal.getThemeInfo" parameterClass="Map" resultClass="ThemeInfoVO">
 		<![CDATA[
 			SELECT
@@ -722,6 +724,159 @@
 			company_id = #companyId#
 		AND
 			tenant_id = #tenantId#
+	]]>
+	</update>
+	
+	<update id="ezNewPortal.updateUserThemeAndFrameDefault" parameterClass="Map">
+	<![CDATA[
+		UPDATE 
+			TBL_PORTAL_THEME_USER
+		SET 
+			used_theme = (SELECT theme_id FROM tbl_portal_theme_comp WHERE theme_default = 1 AND company_id = #companyId# AND tenant_id = #tenantId#),
+			used_frame = (SELECT frame_id FROM tbl_portal_frame_comp WHERE frame_default = 1 AND theme_id = 
+    						(SELECT theme_id FROM tbl_portal_theme_comp WHERE theme_default = 1 AND company_id = #companyId# AND tenant_id = #tenantId#))
+		WHERE
+			company_id = #companyId#
+		AND 
+			tenant_id = #tenantId#
+		AND
+			used_theme = #themeId#;	
+	]]>
+	</update>
+	
+	<update id="ezNewPortal.updateUserFrameDefault" parameterClass="Map">
+	<![CDATA[
+		UPDATE 
+			TBL_PORTAL_THEME_USER
+		SET 
+			used_frame = (SELECT frame_id FROM tbl_portal_frame_comp WHERE frame_default = 1 AND theme_id = #themeId#)
+		WHERE
+			company_id = #companyId#
+		AND 
+			tenant_id = #tenantId#
+		AND
+			used_theme = #themeId#;	
+	]]>
+	</update>
+	
+	<select id="ezNewPortal.getSilderImages" parameterClass="Map"  resultClass="PortalPortletSliderImageVO">
+	<![CDATA[
+		SELECT
+			SLIDERID ,
+			SLIDERNAME ,
+			SLIDERNAME2 ,
+			IMAGEPATH ,
+			REGUSERID ,
+			REGDATE ,
+			SN ,
+			ISUSE ,
+		 	URL
+		FROM
+			TBL_PS_SLIDERIMAGE 
+		WHERE
+			COMPANYID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			IMAGEPATH like '%slideImagePortlet%'
+		ORDER BY
+			SN
+	]]>
+	</select>
+	
+	<insert id="ezNewPortal.insertSilderImages" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PS_SLIDERIMAGE
+	   		( SLIDERID, SLIDERNAME, SLIDERNAME2, FILENAME, IMAGEPATH, REGUSERID, REGDATE, COMPANYID, ISUSE, SN, TENANT_ID, URL )
+	   	VALUES
+	   		( #slideId#, 'slideImagePotlet', 'slideImagePotlet', #fileName#, #slideImagePath#, #regUserId#, #regDate#, #companyId#, 1, #count# + 1, #tenantID#, #imageUrl# )
+	]]>
+	</insert>
+	
+	<select id="ezNewPortal.getSilderImageInfo" parameterClass="Map"  resultClass="PortalPortletSliderImageVO">
+	<![CDATA[
+		SELECT
+			SLIDERID ,
+			SLIDERNAME ,
+			SLIDERNAME2 ,
+			IMAGEPATH ,
+			REGUSERID ,
+			REGDATE ,
+			SN ,
+			ISUSE ,
+		 	URL
+		FROM
+			TBL_PS_SLIDERIMAGE 
+		WHERE
+			COMPANYID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			SLIDERID = #slideId#
+		ORDER BY
+			SN
+	]]>
+	</select>
+	
+	<select id="ezNewPortal.getSlideImageMaxSn" parameterClass="Map" resultClass="Integer">
+	<![CDATA[
+		SELECT
+			IFNULL(MAX(SN), 0)  
+	    FROM
+	    	TBL_PS_SLIDERIMAGE
+	    WHERE
+  	    	TENANT_ID = #tenantID#
+  	    AND
+  	    	COMPANYID = #companyId#
+  	    AND
+			IMAGEPATH like '%slideImagePortlet%'
+	]]>
+	</select>
+	
+	<update id="ezNewPortal.updateSilderImage" parameterClass="Map">
+	<![CDATA[
+		UPDATE 
+			TBL_PS_SLIDERIMAGE
+		SET
+			IMAGEPATH = #slideImagePath#,
+			REGUSERID = #regUserId#,
+			REGDATE = #regDate#,
+			FILENAME = #fileName#,
+			URL = #imageUrl#
+		WHERE
+			COMPANYID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			SLIDERID = #slideId#
+	]]>
+	</update>
+	
+	<delete id="ezNewPortal.deleteSilderImage" parameterClass="Map">
+	<![CDATA[
+		DELETE FROM
+			TBL_PS_SLIDERIMAGE 
+		WHERE
+			COMPANYID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			SLIDERID = #slideId#
+	]]>
+	</delete>
+	
+	<update id="ezNewPortal.updateSlideOrder" parameterClass="Map">
+	<![CDATA[
+		UPDATE 
+			TBL_PS_SLIDERIMAGE
+		SET
+			sn = #order#
+		WHERE
+			COMPANYID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			SLIDERID = #slideId#
 	]]>
 	</update>
 </sqlMap>

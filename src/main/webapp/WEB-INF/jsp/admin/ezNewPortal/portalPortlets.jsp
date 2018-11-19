@@ -415,8 +415,8 @@
 					menuId = result[i].menuId;
 					portletNameListCnt = portletNameList.length;
 					
-					listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder + "' data2='" + menuId + "' data-url='" + result[i].portletUrl + "'>";
-					listHTML += "<div class='portlet-header'>" + portletNameList[arrayLang].portletName;
+					listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder + "' data2='" + menuId + "' data-url='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(result[i].portletUrl), '\"', "&#39;"), "\'", "&#34;") + "'>";
+					listHTML += "<div class='portlet-header'>" + ConvertCharToEntityReference(portletNameList[arrayLang].portletName) ;
 					
 					if (!result[i].general) {
 						listHTML += "<a class='deletePortletBtn'>";
@@ -428,12 +428,12 @@
 					listHTML += "</div>";
 					listHTML += "<div class='portlet-content'>";
 					listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'>포틀릿 사용  : </th>";
-// 					if (portletId == 34) { //슬라이드 이미지의 경우 - 개발 진행중! ~2018.11.16
-// 						listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
-// 						listHTML += "<div class='slideImageSetting'><a><img src='/images/admin/admin_portlet_set.png'></a></div></td>";
-// 					} else {
+					if (portletId == 34) { //슬라이드 이미지 포틀릿의 경우
+						listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
+						listHTML += "<div class='slideImageSetting'><a><img src='/images/admin/admin_portlet_set.png'></a></div></td>";
+					} else {
 						listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td>";
-// 					}
+					}
 					listHTML += "</tr>";
 					
 					for (var j = 0; j < portletNameListCnt; j++) {
@@ -448,7 +448,7 @@
 							language = "일본어";
 						}
 						
-						listHTML += "<tr><th class='portletInfoTH'>포틀릿명(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + portletNameList[j].portletName + "' maxlength='50'></td></tr>"
+						listHTML += "<tr><th class='portletInfoTH'>포틀릿명(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + ConvertCharToEntityReference(portletNameList[j].portletName) + "' maxlength='50'></td></tr>"
 					 }
 					
 					if (!result[i].general) {						
@@ -458,6 +458,8 @@
 						
 						if (menuName == null || menuName == "null") {
 							menuName = "없음";
+						} else {
+							menuName = ConvertCharToEntityReference(menuName);
 						}
 
 						listHTML += "<input id='portletMenu" + portletId + "' type='text' value='" + menuName + "'readonly>";
@@ -465,12 +467,12 @@
 						listHTML += "<a class='menuSettingtBtn'>";
 						listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div>";
 						listHTML += "</td></tr>";
-						console.log(portletURL);
+						
 						if (menuId != 4) {
-							listHTML += "<tr class='connectionTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"' maxlength='100'></td></tr>";
+							listHTML += "<tr class='connectionTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
 						} else {
 							if (!result[i].general) {
-								listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ portletURL +"' maxlength='100'></td></tr>";
+								listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
 							} else {
 								listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'>연결 URL :</th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='' maxlength='100'></td></tr>";
 							}	
@@ -694,8 +696,8 @@
  		var companiesObj = document.getElementById("ListCompany");
 		var companyId = companiesObj.options[companiesObj.selectedIndex].value;
 		
-        var wWeight = "1200";
-        var wHeight = "720";
+        var wWeight = "902";
+        var wHeight = "734";
 
         var heigth = window.screen.availHeight;
         var width = window.screen.availWidth;

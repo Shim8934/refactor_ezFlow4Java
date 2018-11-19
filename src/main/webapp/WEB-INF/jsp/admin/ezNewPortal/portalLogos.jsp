@@ -18,6 +18,8 @@
 	         .logoContent ul {margin-top:5px;padding-left:7px;}
 	         .logoContent ul li {font-size: 12px;display:block;padding: 2px 0px;}
 	         .deleteLogoBtn {display : none;}
+	         .loginLogo .logoIcon img {width:137px; height:38px;}
+	         .portalLogo .logoIcon img {width:106px; height:42px;}
 		</style>
 	</head>
 	<body class="mainbody">

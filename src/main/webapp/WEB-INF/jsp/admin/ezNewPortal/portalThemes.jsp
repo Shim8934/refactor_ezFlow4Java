@@ -18,7 +18,7 @@
          	.theme {position:relative;background-color : white; width : 375px; height : 270px; text-align : center; border: 1px solid #cecece; cursor: pointer;}
 			.themeHr {margin-top : 10px;width : 85%;margin-left : 30px;}
 			.themeTitle {margin-top : 9px;}
-			.themeNotUsed {display:none;width:100%; height:87%;background-color:#e1e1e180; z-index:99;position:absolute; right:0; top:0;}
+			.themeNotUsed {background-color : #eee}
 			.themeName {margin-left : 40px;font-size : 14px;font-weight : bold;}
 			.themeDetails {display : none; float:left; width:98%; position : relative;margin-left:0px; padding:0px;}
 			.themeSetting {float : right;margin-right : 27px; margin-top:3px; cursor:pointer;}
@@ -61,6 +61,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript">
+		var defaultTheme = "";
 		
 		$(function() {
 			getCompanies();
@@ -134,7 +135,6 @@
 						themesHTML += "<li>";
 						themesHTML += "<div class='theme' id='theme" + item.themeId + "' onclick='selectTheme(this)'>";
 						themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
-						themesHTML += "<div class='themeNotUsed'>&nbsp;</div>";
 						themesHTML += "</div><div>";
 						themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
 						themesHTML += "<span class='themeName'>" + item.themeName + "</span>";
@@ -163,10 +163,11 @@
 						$("#themeTitle" + item.themeId).find(".themeSetting").on("click", {"themeId" : item.themeId}, openThemeDetail);
 						
 						if (!item.themeUsed) {
-							$("#theme" + item.themeId).find(".themeNotUsed").css("display", "");
+							$("#theme" + item.themeId).attr("class", "theme themeNotUsed");
 						}
 						
 						if (item.themeDefault) {
+							defaultTheme = item.themeId;
 							$("#theme" + item.themeId).addClass("defaultTheme");
 							$("#theme" + item.themeId).append("<div class='isDefault'><img src='/images/admin/themeDefault.png' style='margin-top:70px' /></div>");
 						}
@@ -232,7 +233,7 @@
 						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='defaultTheme'><span class='slider round'></span></label></td></tr>";
 					}
 					
-					themesHTML += "<tr><th class='menuIconTH'>테마설명</th><td colspan='4' class='menuIconTD'><input type='text' class='admin_input themeContent'></td></tr>";						
+					themesHTML += "<tr><th class='menuIconTH'>테마설명</th><td colspan='4' class='menuIconTD'><input type='text' class='admin_input themeContent' readOnly></td></tr>";						
 					themesHTML += "</table>";
 					themesHTML += "<table class='themaTable frameList' border='0' cellpadding='0' cellspacing='0' width='100%' style='margin:20px 0px 0px 0px;'></table>";
 					themesHTML += "<div class='bottomBtn'><a class='btnA updateThemeBtn'>저장</a><a class='btnA previewBtn' >미리 보기</a></div>";
@@ -278,7 +279,7 @@
 					frameHTML += "<th class='menuIconTH'></th>";
 					
 					frameList.forEach(function (item, index) {
-						frameHTML += "<td class='menuIconTD_img'><img src='/images/admin/theme"+theme.themeId+"_frame"+index+".png' /></td>"; //사진 url 필요
+						frameHTML += "<td class='menuIconTD_img'><img src='/images/admin/theme" + theme.themeId + "_frame" + item.frameId + ".png' /></td>"; //사진 url 필요
 					});
 					
 					frameHTML += "</tr>";
@@ -334,6 +335,17 @@
 				//테마 사용여부, 테마  디폴트
 				var themeUsed = $("#themeDetails" + themeId).find("input[name='usedTheme']").prop("checked");
 				var themeDefault = $("#themeDetails" + themeId).find("input[name='defaultTheme']").prop("checked");
+				
+				if (!themeDefault && defaultTheme == themeId) {
+					alert("기본 테마로 지정된 테마를 해제하려면 다른 테마를 기본으로 설정해주세요.");
+					return;
+				}
+				
+				if (themeDefault && !themeUsed) {
+					alert("기본 테마로 설정된 테마를 비활성화 할 수 없습니다.");
+					return;
+				}
+				
 				var themeInfo = {"themeUsed" : themeUsed, "themeDefault" : themeDefault, "themeId" : themeId};
 				
 				//현재 전체적으로 기본테마가 있는지 확인
@@ -360,6 +372,11 @@
 					
 					if (frameDefault == frameId) {
 						isDefault = true;
+					}
+					
+					if (frameDefault == frameId && !frameUsed) {
+						alert("기본 프레임으로 설정한 테마를 비활성화 할 수 없습니다.");
+						return;
 					}
 					
 					frameInfos.push({"themeId" : themeId, "frameId" : frameId, "frameDefault" : isDefault, "frameUsed" : frameUsed});
@@ -427,6 +444,11 @@
 				themeId = themeId.substring(5);
 			}
 			
+			console.log($("#theme" + themeId).attr("class").indexOf("themeNotUsed"));
+			if ($("#theme" + themeId).attr("class").indexOf("themeNotUsed") != -1) {
+				alert("사용하지 않는 테마를 기본테마로 설정할 수 없습니다.");
+				return;
+			}
 			
 			var request = new XMLHttpRequest();
 			request.open('POST', '/admin/ezNewPortal/updateCompanyDefaultTheme.do', true);

@@ -32,13 +32,27 @@
 							<c:if test="${status.index lt 4 }">
 								<li class="voteList_0${status.index + 1 }">
 									<div class="voteT">
-										<span class="Vnum">${status.index + 1 }</span> <span class="Vtext">${poll.content}</span>
+										<span class="Vnum">${status.index + 1 }</span> <span class="Vtext"><c:out value='${poll.content}'/></span>
 									</div>
 									<div class="percent" id="percent${status.index + 1 }">
-										<fmt:parseNumber value="${(poll.votesNumber / pollAnswerCount) * 100}" integerOnly="true" />%
+										<c:choose>
+										<c:when test="${pollAnswerCount eq 0 }">
+											<c:out value='0%'/>
+										</c:when>
+										<c:otherwise>
+											<fmt:parseNumber value="${(poll.votesNumber / pollAnswerCount) * 100}" integerOnly="true" />%
+										</c:otherwise>
+										</c:choose>
 									</div>
 									<div class="voteGraph" id="divGraph${status.index + 1 }">
-										<span id="graph${status.index + 1 }" style="width : ${(poll.votesNumber / pollAnswerCount) * 100}%"></span>
+										<c:choose>
+										<c:when test="${pollAnswerCount eq 0 }">
+											<span id="graph${status.index + 1 }" style="width : 0%"></span>
+										</c:when>
+										<c:otherwise>
+											<span id="graph${status.index + 1 }" style="width : ${(poll.votesNumber / pollAnswerCount) * 100}%"></span>
+										</c:otherwise>
+										</c:choose>
 									</div>
 								</li>
 							</c:if>

@@ -568,10 +568,11 @@
 		
 		        function ItemRead_onclick(obj) {
 		            var feature = GetOpenWindowfeature(765, 700);
-		            if(obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
+		            if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
 		                window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
-		            }
-		            else{
+		            } else if (obj.getAttribute("DATA10") == "7" ) {
+			        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
+			        }  else{
                     	window.open("/ezBoard/boardNewItem.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
 		            }
 		            
@@ -905,8 +906,10 @@
 		
 		                if (ret[2] == "3" || ret[2] == "4") {
 		                    window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
-		                }
-		                else{
+		                } else if (ret[2] == "7" ) {
+							var feature = GetOpenWindowfeature(765, 679);
+		                	window.open("/ezBoard/newBoardItemMovie.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+		                } else {
 	                        window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 		                }
 		            }
@@ -923,7 +926,10 @@
 		            var feature = GetOpenWindowfeature(765, 820);
 		            if(ret[2] == "3" || ret[2] == "4") {
 		                window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
-		            }else{
+		            } else if (ret[2] == "7" ) {
+						var feature = GetOpenWindowfeature(765, 700);
+	                	window.open("/ezBoard/newBoardItemMovie.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+	                } else {
 	                    window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 		            }
 		        }
@@ -934,7 +940,10 @@
 		        var feature = GetOpenWindowfeature(765, 820);
 		        if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
 		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
-		        }else {
+		        } else if (obj.getAttribute("DATA10") == "7" ) {
+		        	feature = GetOpenWindowfeature(765, 700);
+		        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
+		        } else {
 	                window.open("/ezBoard/boardNewItem.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
 		        }
 		    }
@@ -957,12 +966,22 @@
 	            <li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup(this)"></span></li>
 	            <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
 	            <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
-	            <li id="right">
+	            <!-- <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this, 'N');" />
-				</li>      
+				</li> -->      
+				<div class="sub_frameIcon" style="float:right">	
+					<div class="sub_frameIconUL">
+					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_bottomframe" id="PreViewBottom" onclick="PreviewRayerChange('W')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
+					</div>
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this, 'N');"></span></p>  
+					</div>
+				 </div>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">

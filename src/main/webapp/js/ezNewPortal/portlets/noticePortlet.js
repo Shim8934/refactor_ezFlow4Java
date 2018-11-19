@@ -33,7 +33,7 @@ var assembleNoticeList = function(noticeList) {
 	var dataAssembler = function(data, index) {	
 		index = (index*1 + 1); // 혹시 모르니 int형태로 변환
 		boardId = data.boardID;
-		return '<li class="notiLI" data1="'+data.itemID+'" data2="'+data.boardID+'" data3="'+data.guBun+'"><dl class="notiDL0'+index+'"><dt class="noti_num">'+index+'</dt><dt class="N"></dt><dd class="noti_text">'+data.title+'</dd></dl></li>';
+		return '<li class="notiLI" data1="'+data.itemID+'" data2="'+data.boardID+'" data3="'+data.guBun+'"><dl class="notiDL0'+index+'"><dt class="noti_num">'+index+'</dt><dt class="N"></dt><dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd></dl></li>';
 	};	
 	noticeList.forEach(function(item, index){
 		str += dataAssembler(item, index);
@@ -58,6 +58,8 @@ var assembleNoticeList = function(noticeList) {
 	
 	document.getElementById('noticePlus').addEventListener('click', noticePlus);
 }
+var portletId = $(".notice").parent().attr("id");
+portletId = portletId.substring(0, portletId.indexOf("P"));
 
 /* [포틀릿] 공지사항 리스트 */ 
 var getNoticePortletList = function () {
@@ -70,7 +72,7 @@ var getNoticePortletList = function () {
 			console.error(xhr.responseText);
 		}
 	};
-	xhr.open('GET', '/ezNewPortal/getNoticePortlet.do');
+	xhr.open('GET', '/ezNewPortal/getNoticePortlet.do?portletId='+portletId);
 	xhr.send();
 };
 

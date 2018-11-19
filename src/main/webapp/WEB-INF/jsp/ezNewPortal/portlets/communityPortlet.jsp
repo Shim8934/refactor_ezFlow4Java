@@ -62,8 +62,8 @@
 									</c:choose>
 
 								</dt>
-								<dd class="comTit">"${commu.c_ClubName }"</dd>
-								<dd class="comText">${commu.c_ClubDesc }</dd>
+								<dd class="comTit">"<c:out value='${commu.c_ClubName }'/>"</dd>
+								<dd class="comText"><c:out value='${commu.c_ClubDesc }'/></dd>
 							</dl>
 						</c:forEach>
 						<dl class="comListDL02">
@@ -96,8 +96,8 @@
 										</c:otherwise>
 									</c:choose>
 								</dt>
-								<dd class="comTit">"${commu.c_ClubName }"</dd>
-								<dd class="comText">${commu.c_ClubDesc }</dd>
+								<dd class="comTit">"<c:out value='${commu.c_ClubName }'/>"</dd>
+								<dd class="comText"><c:out value='${commu.c_ClubDesc }'/></dd>
 							</dl>
 						</c:forEach>
 					</c:otherwise>
