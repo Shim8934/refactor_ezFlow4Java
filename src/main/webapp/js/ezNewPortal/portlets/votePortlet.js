@@ -24,7 +24,7 @@ function votePoll() {
 				window.open("/ezBoard/boardMain.do?func=3&qstId=" + qstId, "main");
 			}
 			else {
-				alert("투표를 수정하고 있습니다.기다려주세요.");
+				alert(messages.strLang13);
 				window.location.reload();
 			}
 		},

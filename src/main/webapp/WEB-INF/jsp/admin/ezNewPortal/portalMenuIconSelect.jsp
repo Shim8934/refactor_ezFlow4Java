@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>아이콘 등록</title>
+<title><spring:message code='ezNewPortal.t075' /></title>
 <link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 <style type="text/css">
@@ -18,7 +18,7 @@
 </style>
 </head>
 <body class="popup">
-	<h1>아이콘 등록</h1>
+	<h1><spring:message code='ezNewPortal.t075' /></h1>
 	<div id="close"><ul><li><span></span></li></ul></div>
 	<div class="iconArea">
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_webfolder"></span></div><input type="radio" name="selIcon"></div>
@@ -29,7 +29,7 @@
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_board"></span></div><input type="radio" name="selIcon"></div>
 	</div>
 	<div id="addIcon" class="btnposition btnpositionNew">
-		<a class="imgbtn"><span>등록</span></a>
+		<a class="imgbtn"><span><spring:message code='ezNewPortal.t058' /></span></a>
 	</div>
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>

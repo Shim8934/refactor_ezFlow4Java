@@ -46,7 +46,7 @@ function deleteUserThemeSetting() {
 			parent.parent.location.reload();
 		},
 		fail : function() {
-			alert("오류가 발생하였습니다.");
+			alert("<spring:message code='ezNewPortal.t032' />");
 		}
 	});
 }
@@ -63,7 +63,7 @@ function updateUserThemeSetting(event) {
 			parent.parent.location.reload();
 		},
 		fail : function() {
-			alert("오류가 발생하였습니다.");
+			alert("<spring:message code='ezNewPortal.t032' />");
 		}
 	});
 }
@@ -105,10 +105,10 @@ function updateUserThemeSetting(event) {
 </style>
 </head>
 <body class="mainbody">
-	<h1>테마 설정</h1>
+	<h1><spring:message code='ezNewPortal.t034' /></h1>
 	<div id="mainmenu">
 		<ul>
-			<li id="themeInit"><span>테마설정 초기화</span></li>
+			<li id="themeInit"><span><spring:message code='ezNewPortal.t035' /></span></li>
 		</ul>
 	</div>
 	<div id="themeList">
@@ -119,10 +119,10 @@ function updateUserThemeSetting(event) {
 						<img src="/images/ezNewPortal/Theme1.GIF" class="themeImg">
 						<c:choose>
 							<c:when test="${theme.themeId eq usedTheme }">
-								<div id="usedTheme"><span>"적용 중인 테마"</span></div>	
+								<div id="usedTheme"><span>"<spring:message code='ezNewPortal.t036' />"</span></div>	
 							</c:when>
 							<c:otherwise>
-								<div class="btnpositionJsp"><a class="imgbtn"><span>기본 테마 선택</span></a></div>
+								<div class="btnpositionJsp"><a class="imgbtn"><span><spring:message code='ezNewPortal.t037' /></span></a></div>
 							</c:otherwise>
 						</c:choose>
 					</div>

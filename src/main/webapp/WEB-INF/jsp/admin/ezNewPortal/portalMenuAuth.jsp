@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>메뉴 권한설정</title>
+		<title><spring:message code='ezNewPortal.t070' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
@@ -28,7 +28,7 @@
 	    </style>
 	</head>
 	<body class="popup" style="overflow: hidden;"> 
-        <h1>메뉴권한설정</h1>
+        <h1><spring:message code='ezNewPortal.t070' /></h1>
         <div id="close">
 	        <ul>
 	            <li><span onclick="close_Click()"></span></li>
@@ -42,7 +42,7 @@
 				        	<td id="journalOrgan_content" style='vertical-align: top'>
 				        		<div style="display: inline-flex; display: -ms-inline-flexbox; border-bottom: 1px solid #565b66; width: 680px;">
 		                            <h2 class="receiver_tltype01" style='margin-top:4px; border-bottom:none;'>
-										<span style="min-width: 45px;" id="PermissionStr">조직도</span>
+										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezNewPortal.t024' /></span>
 									</h2>
 								</div>
 				        		<div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 2px; padding:0px; border-top: none;">
@@ -69,7 +69,7 @@
 				                                </td>
 				                                <td>
 				                                    <div style="float: right; margin-right: 5px; position: relative;">
-				                                    	<a href="#" class="imgbtn"><span onclick="setAuthorViewUser('dept')">부서 추가</span></a>
+				                                    	<a href="#" class="imgbtn"><span onclick="setAuthorViewUser('dept')"><spring:message code='ezNewPortal.t071' /></span></a>
 				                                    	<a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezCircular.t161' /></span></a>  
 				                                    </div>
 				                                </td> 
@@ -96,7 +96,7 @@
 	                        <td style='vertical-align: top'>
 	                        	<div style="display: inline-flex; display: -ms-inline-flexbox; border-bottom: 1px solid #565b66; width: 252px;">
 		                            <h2 class="receiver_tltype01" style='margin-top:4px; border-bottom:none;'>
-										<span style="min-width: 45px;" id="PermissionStr">권한목록 </span>
+										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezNewPortal.t072' /> </span>
 									</h2>
 								</div>
 								<div class="receiver_borderbox" style="border-top: 1px solid #ddd; margin-top: 2px;">
@@ -478,7 +478,7 @@
 	   		
 	   		var drawAuths = function() {
 	   			var authsHTML = "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
-	   			authsHTML += "<tr><th class='nameTD'>이름(부서)</th><th class='authTD'>권한</th></table>";
+	   			authsHTML += "<tr><th class='nameTD'><spring:message code='ezNewPortal.t073' /></th><th class='authTD'><spring:message code='ezNewPortal.t074' /></th></table>";
 	   			
 				menuAuths.forEach(function(item, index) {
 					authsHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";

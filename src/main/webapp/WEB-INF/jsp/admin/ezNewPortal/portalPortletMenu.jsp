@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>관련 메뉴 선택</title>
+<title><spring:message code='ezNewPortal.t088' /></title>
 <link rel="stylesheet"  href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css">
 <link rel="stylesheet"  href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" type="text/css">
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -21,7 +21,7 @@
 </style>
 </head>
 <body class='popup'>
-<h1>관련 메뉴 선택</h1>
+<h1><spring:message code='ezNewPortal.t088' /></h1>
 <div id="close"><ul><li><span></span></ul></div>
 <div class='full_menu_toggle'>
 <ul class='full_menu_toggleUL'>
@@ -36,12 +36,12 @@
 		<li id="menu0" class="menuList">
 			<dl class="full_menu_toggleDL">
 				<dt><span style="display:inline-block"><img src="/images/admin/noMenu.png" /></span></dt>
-				<dd>없음</dd>
+				<dd><spring:message code='ezNewPortal.t089' /></dd>
 			</dl>
 		</li>
 </ul>
 </div>
-<div id="selMenu" class="btnposition btnpositionNew"><a class="imgbtn"><span>선택</span></a></div>
+<div id="selMenu" class="btnposition btnpositionNew"><a class="imgbtn"><span><spring:message code='ezNewPortal.t049' /></span></a></div>
 
 <script type="text/javascript">
 $(function(){
@@ -61,7 +61,7 @@ var selectMenu = function() {
 	var menuId = $(".select_li").attr("id");
 	
 	if (menuId == undefined) {
-		alert("메뉴를 선택해 주세요.");
+		alert("<spring:message code='ezNewPortal.t090' />");
 		return;
 	}
 	
