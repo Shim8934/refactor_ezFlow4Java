@@ -435,10 +435,27 @@
 	</select>
 	
 	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
-		INSERT INTO jmocha.tbl_tenant_config
+		INSERT INTO tbl_tenant_config
 		(tenant_id, property_name, property_value, description, config_name, regdate, config_type)
 		VALUES
 		(#tenantID#, #confName#, #property_value#, #description#, #config_name#, #regdate#, #config_type#)
 	</insert>
+	
+	<select id="EzCommonDAO.checkAddJobMasterJobID" resultClass="String">
+		<![CDATA[
+			SELECT 
+				JOBID
+			FROM 
+				TBL_ADDJOBMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterJobID"> 
+		ALTER TABLE 
+			TBL_ADDJOBMASTER
+		ADD 
+			JOBID VARCHAR(100) DEFAULT NULL
+	</statement>
 
 </sqlMap>

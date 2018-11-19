@@ -783,7 +783,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		}
 		
 		/* 2018-11-15 홍승비 - 그룹사게시판 여부 판별하여 값을 전달 */
-		if (boardPropertyVO.getParentBoardID() != null) {
+		if (boardPropertyVO.getParentBoardID() != null && !boardPropertyVO.getParentBoardID().equals("top")) {
 			BoardPropertyVO parentProp = ezBoardService.getBoardProperty(boardPropertyVO.getParentBoardID(), userInfo.getTenantId());
 			if (parentProp.getGuBun() != null && parentProp.getGuBun().equals("99")) {
 				isAllGroupBoard = "Y";

@@ -546,6 +546,14 @@
 				TBL_USERMASTER
 			SET 
 			    $v_PROPNAME$ = #v_PROPVALUE#
+			    
+			]]>
+			<isEqual property="v_PROPNAME" compareValue="EXTENSIONATTRIBUTE15">
+				<![CDATA[
+					, UPDATEDT = TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
+				]]>
+			</isEqual>
+			<![CDATA[
 			WHERE
 				CN = #v_CN#
 			AND
@@ -3783,9 +3791,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_ADDJOBMASTER
-              	( CN, DEPTID, TITLE, TITLE2, TENANT_ID, ORDERBY )
+              	( CN, DEPTID, TITLE, TITLE2, TENANT_ID, ORDERBY, JOBID )
            VALUES
-           		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_TENANT_ID#, 0 )
+           		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_TENANT_ID#, 0, #v_JOBID# )
 		]]>
 	</insert>
 	
