@@ -478,7 +478,7 @@
 			//영역 외 삭제
 			var obj = e.target;
 			var flag = false;
-			var elemArr = ["menu", "admin_menuDL", "admin_menu_content", "menuOrderResetButton", "companySelect"];
+			var elemArr = ["menu", "admin_menuDL", "admin_menu_content", "menuOrderResetButton", "companySelect", "menuAdd"];
 			if (obj.tagName == "HTML") {
 				closeMenuDetail();
 				return false;
