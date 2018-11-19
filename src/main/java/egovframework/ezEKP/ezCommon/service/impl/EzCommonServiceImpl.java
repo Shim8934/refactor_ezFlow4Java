@@ -1363,5 +1363,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void insertUseSession(Map<String, Object> map) {
 		ezCommonDAO.insertUseSession(map);
 	}
+	@Override
+	public void addJobMasterJobID() throws Exception {
+		ezCommonDAO.addJobMasterJobID();
+	}
 	
 }

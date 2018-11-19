@@ -348,4 +348,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public void insertUseSession(Map<String, Object> map) {
 		insert ("EzCommonDAO.insertUseSession", map);
 	}
+	
+	public void addJobMasterJobID() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddJobMasterJobID");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster jobid column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addAddJobMasterJobID");
+		}
+	}
 }
