@@ -270,7 +270,7 @@
 		var setEvent = function (id, url, location, option) {
 			var element = document.getElementById(id);
 			element.addEventListener('click', function () {
-				if (id != 'util_employee_search') {
+				if (id != 'util_employee_search' && id != 'util_admin') {
 					subMenuClickEvent('off', url);
 				} else {
 					subMenuClickEvent('off');

@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Portlet Setting</title>
+		<title><spring:message code='ezNewPortal.t009' /></title>
 		<link href="${util.addVer('main.e15', 'msg')}" rel="stylesheet" type="text/css">
 		<link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet"  href="${util.addVer('/css/ezNewPortal/jquery.flipster.min.css')}" type="text/css">

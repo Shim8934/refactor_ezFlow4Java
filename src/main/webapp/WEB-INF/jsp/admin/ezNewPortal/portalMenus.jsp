@@ -302,7 +302,7 @@
 					}
 					
 					menusHTML += "</table>";
-					menusHTML += "<div class='bottomBtn'><a class='btnA updateMenu'>저장</a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t086' /></a>";
+					menusHTML += "<div class='bottomBtn'><a class='btnA updateMenu'><spring:message code='ezNewPortal.t002' /></a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t086' /></a>";
 					
 					if (menuInfo.menuType == "A") {
 						menusHTML += "<a class='btnA deleteMenu'><spring:message code='ezNewPortal.t124' /></a>";
@@ -599,7 +599,7 @@
 			menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
 			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'></td></tr>";
 			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'></td></tr></table>";
-			menusHTML += "<div class='bottomBtn'><a class='btnA addMenuBtn'>저장</a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t86' /></a>";
+			menusHTML += "<div class='bottomBtn'><a class='btnA addMenuBtn'><spring:message code='ezNewPortal.t002' /></a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t086' /></a>";
 			menusHTML += "</div></div></div></li>"
 			
 			/* menusHTML += "<div class='btnpositionJsp addMenu'><a class='imgbtn addMenuBtn'><span>저장</span></a></div>";
