@@ -229,8 +229,14 @@ function do_Attach_Add(ocx_file, forceBigFileUpload) {
         if (extFlag)
             alert(strLang323);
         
+        var requestUrl = "/ezEmail/mailInterAttachCK.do";
+        
+    	if (typeof(shareId) != "undefined" && shareId != "") {
+    		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    	}
+        
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        xmlhttp.open("POST", "/ezEmail/mailInterAttachCK.do", false);
+        xmlhttp.open("POST", requestUrl, false);
         xmlhttp.send(xmlDoc.xml);
 
         if (xmlhttp.status == "200") {
@@ -932,9 +938,15 @@ function Save_onClick_Complete(ReturnValue) {
                 }
 
                 g_saveHttp = createXMLHttpRequest();
-
+                
+                var requestUrl = "/ezEmail/mailInterSend.do";
+                
+                if (typeof(shareId) != "undefined" && shareId != "") {
+            		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+				}
+                
                 if (!isClosedSave) {
-                    g_saveHttp.open("POST", "/ezEmail/mailInterSend.do", true);
+                    g_saveHttp.open("POST", requestUrl, true);
                     event_SaveonClick.savemode = Save_onClick_Complete.savemode;
 
                     if (Save_onClick_Complete.savemode == "sendsave" || (Save_onClick_Complete.savemode == "tempsave" && !isAutoSave)) {
@@ -946,7 +958,7 @@ function Save_onClick_Complete(ReturnValue) {
                     g_saveHttp.send(xmlDoc);
                 }
                 else {
-                    g_saveHttp.open("POST", "/ezEmail/mailInterSend.do", false);
+                    g_saveHttp.open("POST", requestUrl, false);
                     g_saveHttp.send(xmlDoc);
                 }
                 xmlDoc = null;
@@ -1318,9 +1330,9 @@ function GetMailAddresses(name) {
     createNodeAndInsertText(xmlDOM, objNode, "DLTYPE", "group");
     createNodeAndInsertText(xmlDOM, objNode, "FIELD", "AddressID,SNAME,SEMAIL,STYPE");
     createNodeAndInsertText(xmlDOM, objNode, "ADDFILTER", name);
+    createNodeAndInsertText(xmlDOM, objNode, "SHAREDMAILBOXSEARCH", "displayname::" + name);
     xmlHTTP.open("POST", "/ezEmail/mailNameCheck.do", false);
     xmlHTTP.send(xmlDOM);
-
 
     xmlDOM = loadXMLString(xmlHTTP.responseText);
     var rows = SelectNodes(xmlDOM, "RESULT/ORGAN/ROW");
@@ -1385,6 +1397,19 @@ function GetMailAddresses(name) {
         m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
         m_addrBook["href"][count + adCount] = "";
         m_addrBook["company"][count + adCount] = strLang114;
+        m_addrBook["dept"][count + adCount] = "";
+        m_addrBook["title"][count + adCount] = "";
+    }
+    
+    adCount += rows.length;
+    rows = SelectNodes(xmlDOM, "RESULT/SHAREDMAILBOX/ROW");
+    
+    for (var count = 0 ; count < rows.length ; count++) {
+        m_addrBook["type"][count + adCount] = "email";
+        m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
+        m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
+        m_addrBook["href"][count + adCount] = "";
+        m_addrBook["company"][count + adCount] = strLangSharedMailbox01;
         m_addrBook["dept"][count + adCount] = "";
         m_addrBook["title"][count + adCount] = "";
     }
@@ -2892,11 +2917,25 @@ function Option_onClick() {
     letteroption_cross_dialogArguments[1] = Option_onClick_Complete;
     letteroption_cross_dialogArguments[2] = DivPopUpHidden;
     
-    if (individualmailuser != "0") {
-        DivPopUpShow(410, 325, "/ezEmail/letterOption.do");
-    } else {
-        DivPopUpShow(410, 250, "/ezEmail/letterOption.do");
-    }
+    var requestUrl = "/ezEmail/letterOption.do";
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    	
+    	if (individualmailuser != "0") {
+	        DivPopUpShow(410, 250, requestUrl);
+	    } else {
+	        DivPopUpShow(410, 175, requestUrl);
+	    }
+	} else {
+		if (individualmailuser != "0") {
+	        DivPopUpShow(410, 325, requestUrl);
+	    } else {
+	        DivPopUpShow(410, 250, requestUrl);
+	    }
+	}
+    
+    
 }
 
 function Option_onClick_Complete(m_rgParams4PostOption) {

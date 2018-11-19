@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
@@ -97,6 +98,8 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.web.EzEmailMailReadController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -259,7 +262,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	/**
 	 * 모바일 G/W 이메일 [GET] 왼쪽 슬라이드 메뉴에 공유 편지함 목록 조회
 	 */
-	/*@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/shared-folders-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object mMailSharedFolderList(HttpServletRequest request, @PathVariable String userId) {
 		LOGGER.debug("MOBILE G/W MAIL mMailSharedFolderList started.");		
@@ -354,12 +357,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		LOGGER.debug("MOBILE G/W MAIL mMailSharedFolderList ended.");
 		
 		return result;
-	}*/
+	}
 	
 	/**
 	 * 유저의 공유 사서함 권한 가져오기
 	 */
-	/*@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/share/{shareId:.+}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getShareMailBoxPermissionInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable String shareId) {		
 		LOGGER.debug("MOBILE G/W MAIL getShareMailBoxPermissionInfo started.");
@@ -393,7 +396,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		LOGGER.debug("MOBILE G/W MAIL getShareMailBoxPermissionInfo ended.");
 		
 		return result;
-	}*/
+	}
 	
 	/**
 	 * 모바일 G/W 이메일 [GET] (받은,보낸,임시,지운,개인,기타) 편지함 메일 리스트
@@ -5521,7 +5524,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				Element row = (Element) organRow.item(i);
 				NodeList organList = row.getElementsByTagName("CELL");
 				Element organCell = (Element) organList.item(0);
-				if(organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim() != "" || organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim() != null){
+				if (organCell.getElementsByTagName("DATA6").item(0) != null 
+						&& !organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim().equals("")) {
 					jsonObject = new HashMap<String, Object>();
 					jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
 					jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
@@ -5538,7 +5542,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				Element row = (Element) dlRow.item(i);
 				NodeList dlList = row.getElementsByTagName("CELL");
 				Element dlCell = (Element) dlList.item(0);
-				if(dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim() != "" || dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim() != null){
+				if (dlCell.getElementsByTagName("DATA3").item(0) != null 
+						&& !dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
 					jsonObject = new HashMap<String, Object>();
 					jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
 					jsonObject.put("title", "");
@@ -5553,7 +5558,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			NodeList addressRow = addressXML.getElementsByTagName("ROW");
 			for (int i = 0; i < addressRow.getLength(); i++) {
 				Element row = (Element) addressRow.item(i);
-				if(row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim() != "" || row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim() != null){
+				if(row.getElementsByTagName("SEMAIL").item(0) != null
+						&& !row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim().equals("")){
 					jsonObject = new HashMap<String, Object>();
 					jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
 					jsonObject.put("title", "");

@@ -114,6 +114,9 @@
 				    	break;
 				    case 32:
 				    	url = "/admin/ezEmail/signatureMain.do";
+					 	break;
+				    case 33:
+					 	url = "/admin/ezEmail/showSharedMailboxList.do";
 				    	break;
 				}
 				window.open(url,"right");
@@ -143,7 +146,15 @@
   			<h2>
   				<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
     			<ul></ul>    			
-  			</h2>  
+  			</h2>
+  			
+  			<c:if test="${useSharedMailbox == 'YES'}">
+  			<h2>
+  				<span onClick="goPage(33)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.sharedMailbox01' /></span>
+    			<ul></ul>
+  			</h2>
+  			</c:if>
+  			
   			<!--
   			<h2>
   				<span onClick="goPage(20)" style="display:inline-block;width:100%;"><spring:message code='main.t1000' /></span>

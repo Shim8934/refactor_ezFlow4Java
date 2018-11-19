@@ -853,7 +853,10 @@
 		        parameter[2] = arr_userinfo[4];
 		        parameter[3] = pAprState;
 		        parameter[4] = RECEIPTDEPTID.innerText;
-		
+		        parameter[5] = pDocState;
+				parameter[6] = isReDraft;	
+		        parameter[7] = orgCompanyID;
+		        
 		        ezreceivedistributeui_cross_dialogArguments[0] = parameter;
 		        ezreceivedistributeui_cross_dialogArguments[1] = btnDistribute_onclick_Complete;
 		
@@ -864,6 +867,9 @@
 		        if (ret == "true") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1419'/>";
 		            OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+		        } else if (ret == "DUPL") {
+		        	alert("<spring:message code='ezApprovalG.bhs23'/>");
+	    			window.close();
 		        }
 		    }
 		
@@ -879,7 +885,10 @@
 		        parameter[0] = pDocID;
 		        parameter[1] = pSusinSN;
 		        parameter[2] = pAprState;
-		
+				parameter[3] = pDocState;
+				parameter[4] = isReDraft;	
+		        parameter[5] = orgCompanyID;
+				
 		        ezreceiveassignui_cross_dialogArguments[0] = parameter;
 		        ezreceiveassignui_cross_dialogArguments[1] = btnAssign_onclick_Complete;
 		
@@ -891,6 +900,9 @@
 		        if (ret == "OK") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1420'/>";
 		            OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+		        } else if (ret == "DUPL") {
+		        	alert("<spring:message code='ezApprovalG.bhs23'/>");
+	    			window.close();
 		        }
 		    }
 		
@@ -943,6 +955,11 @@
 		    }
 		    function btnReturn_onclick_Complete(ret) {
 		        DivPopUpHidden();
+		        if (isReDraft == "Y" && checkAprState()) {
+		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+	    			window.close();
+	    			return;
+		    	}
 		        var hesongok = true;
 		        if (ret != "cancel") {
 		            setButtonReceiveTrue();
@@ -1480,6 +1497,9 @@
 		            catch (e) {
 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
 		            }
+		        } else if (ret != undefined && ret[0] == "DUPL") {
+		        	window.returnValue = "CLOSE";
+	    			window.close();
 		        }
 		    }
 		    
@@ -1491,22 +1511,24 @@
 		    function checkAprState() {
 		    	var result = "";
 		    	
-		    	$.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/ezApprovalG/checkAprState.do",
-		    		data : {
-		    			docID : pDocID,
-		    			docState : pDocState,
-		    			userID : '',
-		    			aprMemberSN : wAprMemberSN,
-		    			orgCompanyID : orgCompanyID
-		    		},
-		    		success : function(text) {
-		    			result = text;
-		    		}
-		    	});
+		    	if (approvalFlag == "S") {
+			    	$.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/checkAprState.do",
+			    		data : {
+			    			docID : pDocID,
+			    			docState : pDocState,
+			    			userID : '',
+			    			aprMemberSN : wAprMemberSN,
+			    			orgCompanyID : orgCompanyID
+			    		},
+			    		success : function(text) {
+			    			result = text;
+			    		}
+			    	});
+		    	}
 		    	
 		    	return result == "FALSE" ? true : false;
 		    }

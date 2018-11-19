@@ -302,6 +302,8 @@ public class MLoginController {
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
     				response.addCookie(cookie);
+
+    				request.getSession().invalidate();
     			}
     	    }
     	}

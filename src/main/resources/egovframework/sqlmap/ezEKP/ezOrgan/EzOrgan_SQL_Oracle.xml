@@ -1330,6 +1330,8 @@
             AND 
                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
             AND 
+            	DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+            AND 
                 A.TENANT_ID = #v_TENANT_ID#
 	    		 
 	      	UNION ALL
@@ -1341,7 +1343,9 @@
 	      		'user' as type
 	      	FROM	
 				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
-            $strGyumjikForOracle$ AND A.TENANT_ID = #v_TENANT_ID#
+            $strGyumjikForOracle$ 
+            AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+            AND A.TENANT_ID = #v_TENANT_ID#
 				
 			<isEqual property="class" compareValue="all">
 				UNION ALL
@@ -1353,7 +1357,9 @@
 					'group' as type
 				FROM
 					TBL_DEPTMASTER 
-                $strSQL$ AND TENANT_ID = #v_TENANT_ID#
+                $strSQL$ 
+                AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+                AND TENANT_ID = #v_TENANT_ID#
 			</isEqual>	      				
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
@@ -1364,7 +1370,9 @@
 	    		'group' as type
 	    	FROM
 	    		TBL_DEPTMASTER 
-            $strSQL$ AND TENANT_ID = #v_TENANT_ID#
+            $strSQL$ 
+            AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+            AND TENANT_ID = #v_TENANT_ID#
 	    </isEqual>
 	</select>
 
@@ -1392,6 +1400,8 @@
                          AND 
                              CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                                                
                          AND 
+                         	DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+                         AND 
                              A.TENANT_ID = #v_TENANT_ID#
 			       
 					UNION ALL
@@ -1407,7 +1417,9 @@
 						TBL_ADDJOBMASTER A
 					ON
 						a.cn = b.cn AND a.tenant_id = b.tenant_id
-						$strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+						$strSQL$ 
+						AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+						AND A.TENANT_ID = #v_TENANT_ID#
 					)  A) B 
 					WHERE RNUM >= #startRow# AND RNUM < #endRow#
                ]]>
@@ -1424,6 +1436,8 @@
 				$strSQL$
 			AND
 				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
+			AND 
+				DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 			AND
 				A.TENANT_ID = #v_TENANT_ID#
 
@@ -1439,7 +1453,9 @@
 			INNER JOIN
 				TBL_ADDJOBMASTER A
 			ON
-				A.CN = B.CN $strSQL$ AND A.TENANT_ID = B.TENANT_ID
+				A.CN = B.CN $strSQL$ 
+				AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+				AND A.TENANT_ID = B.TENANT_ID
 
 			UNION ALL
 				
@@ -1449,7 +1465,9 @@
 					'' as extensionAttribute15,
 					'group' as type
 				FROM
-					TBL_DEPTMASTER $strSize$ AND TENANT_ID = #v_TENANT_ID#	
+					TBL_DEPTMASTER $strSize$ 
+				AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+				AND TENANT_ID = #v_TENANT_ID#	
 			]]>
           </isEqual>
 		  <isEqual property="type" compareValue="G">
@@ -1461,7 +1479,9 @@
 	    		'group' as type
 	    	FROM
 	    		TBL_DEPTMASTER 
-            $strSQL$ AND TENANT_ID = #v_TENANT_ID#
+            $strSQL$ 
+            AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+            AND TENANT_ID = #v_TENANT_ID#
 			]]>
 	      </isEqual>
 	</select>
@@ -1479,6 +1499,8 @@
 				AND 
 					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
 				AND 
+					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+				AND 
 					A.TENANT_ID = #v_TENANT_ID#
 
 				UNION ALL
@@ -1491,6 +1513,8 @@
 				ON
 					a.cn = b.cn and a.tenant_id = b.tenant_id
 					$strSQL$ 
+				AND 
+					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 				AND 
 					A.TENANT_ID = #v_TENANT_ID#
 				) A
@@ -1765,4 +1789,22 @@
 		AND
 			TENANT_ID = #v_TENANT_ID#		
 	</select>
+	
+	<select id="EzOrganDAO.getSharedMailboxSearchList" parameterClass="Map" resultClass="OrganUserVO">
+		SELECT
+			CN,
+           	DISPLAYNAME,
+           	MAIL 
+      	FROM
+      		TBL_USERMASTER 
+      	WHERE
+      		DEPARTMENT = #deptId#
+      	AND
+      		(CN LIKE #searchValue# OR DISPLAYNAME LIKE #searchValue#)
+      	AND
+      		TENANT_ID = #tenantId#
+		ORDER BY
+			CN
+	</select>
+	
 </sqlMap>
