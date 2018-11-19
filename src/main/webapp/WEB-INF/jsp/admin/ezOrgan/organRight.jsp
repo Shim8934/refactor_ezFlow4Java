@@ -1524,7 +1524,7 @@
 		<spring:message code='main.t24' />
 		</c:if>
 		</h1>
-		<table style="margin-top:10px;width:900px;border:1px solid #ddd">
+		<table style="height:630px;margin-top:10px;width:900px;border:1px solid #ddd">
 			<tr>
 				<th style="height:30px;border-bottom:0px"><spring:message code='ezOrgan.t73' /></th>
 				<th style="border-bottom:0px">
@@ -1619,7 +1619,7 @@
 					<a class="imgbtn" style="vertical-align:middle"><span onClick="deptsearch_click()"><spring:message code='main.t74' />/<spring:message code='ezOrgan.t93' /></span></a>
 				</th>
 				<th style="border-top:0px">
-					<select id="search_type" style="WIDTH:60px; height:22px;">
+					<select id="search_type" style="WIDTH:100px; height:22px;">
 						<option selected value="displayname"><spring:message code='ezOrgan.t67' /></option>
 						<option value="cn"><spring:message code='ezOrgan.t94' /></option>
 						<option value="description"><spring:message code='ezOrgan.t68' /></option>

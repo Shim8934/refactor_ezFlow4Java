@@ -126,6 +126,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addDeptMasterManualFlag();
     	ezCommonService.createJMochaMailSignatureTemplate();
     	ezCommonService.createJobMasterTable();
+    	ezCommonService.addJobMasterJobID();
     	
     	logger.debug("init ended.");
     }
@@ -1997,6 +1998,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String userID = doc.getElementsByTagName("CN").item(0).getTextContent();
 		String titleInfo = "";
 		String deleteTitleInfo = "";
+		String jobID = "";
 				
 		for (int i = 0; i < doc.getElementsByTagName("CN").getLength(); i++) {
 			String titleValue = doc.getElementsByTagName("TITLE").item(i).getTextContent();
@@ -2021,7 +2023,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
                     deleteTitleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue; 
                 }		        
 		    }
+		    
+		    jobID += doc.getElementsByTagName("JOBID").item(i).getTextContent() + ";";
 		}
+		jobID = jobID.substring(0, jobID.length() - 1);
 		
 		logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",deleteTitleInfo=" + deleteTitleInfo);
 		
@@ -2090,7 +2095,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	            logger.debug("new titleInfo=" + titleInfo);
 	            
 	            // 새로운 겸직 목록을 설정한다.
-	            ezOrganAdminService.addJob(userID, titleInfo, tenantID);	            
+	            ezOrganAdminService.addJob(userID, titleInfo, jobID, tenantID);	            
 		    }		    
 		}
 		

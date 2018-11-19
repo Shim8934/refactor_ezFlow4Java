@@ -230,7 +230,7 @@
             listview.SetHeightFree(true);
             listview.SetSelectFlag(false);
             listview.SetMulSelectable(true);
-            listview.SetRowOnDblClick("DeleteOwner()");
+            listview.SetRowOnDblClick("DeleteOwner");
             listview.DataSource(loadXMLString("<LISTVIEWDATA></LISTVIEWDATA>"));
             listview.DataBind(pListView);
             listview.RowDataBind();
@@ -563,7 +563,7 @@
 					rtn["ownerName1"][i+1] = GetAttribute(totalRows2[i], "DATA4");
 					rtn["ownerDeptName"][i+1] = GetAttribute(totalRows2[i], "DATA5");
 				} */
-				
+				rtn = JSON.stringify(rtn);
 				if (ReturnFunction != null) {
 	                ReturnFunction(rtn);
 	            } else {
@@ -1308,7 +1308,7 @@
 	   			}
 	        }
 	        
-	        function DeleteOwner() {
+	        function DeleteOwner(pListView) {
 	            var selList = new ListView();
 	            selList.LoadFromID("OwnerList");
 	            var arrRows = selList.GetSelectedRows();

@@ -74,7 +74,7 @@
 				var strHTML = "";
 				
 				if (listLength == 0) {
-					strHTML = "<tr id='noItem'><td colspan='5' style='text-align: center'>데이터가 없습니다.</td></tr>";	
+					strHTML = "<tr id='noItem'><td colspan='5' style='text-align: center'><spring:message code='ezApprovalG.bhs21'/></td></tr>";	
 				} else {
 					for (var i = 0; i < listdom.getElementsByTagName("ROW").length; i++) {
 						strHTML += "<tr data1='" + getNodeText(listdom.getElementsByTagName("SHAREUSERID")[i]) + "'>";
