@@ -31,7 +31,7 @@
 	}
 	
 	.portlet {
-		 margin:20px 0px 0px 16px;
+		 margin:20px 0px 0px 20px;
 		 height:250px;
 		 background:#fff;
 		 border-radius: 5px;
@@ -40,7 +40,7 @@
 	.right_float {float:right;}
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
-	.two_column {width:48%;}
+	.two_column {width:48.4%;}
 </style>
 </head>
 <body class="mainbg">	
@@ -393,7 +393,7 @@
 				$(".info_right").css("width", "100%");
 				$(".info_right").css("margin-left", "0px !important");
 			} else if (media1279.matches) {
-				$(".portlet").addClass("two_column");
+				$(".portlet").css("width", "");
 				$(".box_shadow.info_left").css("display", "none");
 				$(".box_shadow.info_right").css("width", "100%");
 				$(".box_shadow.info_right").css("margin-left", "0px !important");

@@ -34,10 +34,10 @@
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
 	.box_shadow {width:100%; margin:0px;}
-	.portlet {height:250px; margin:20px 0px 0px 16px;background-color:#ffffff;}
+	.portlet {height:250px; margin:20px 0px 0px 20px;background-color:#ffffff;}
 	.infoImg img {width:60px; height:60px;}
 	.attitudePtl {border:none;}
-	.two_column{width:48%;}
+	.two_column{width:47.9%;}
 </style>
 </head>
 <body class="mainbg">
@@ -486,7 +486,7 @@
 				}); 
 				
 				$(".ui-sortable-placeholder").css({
-					'width' : $(".portlet").not(block.item).not(block.placeholder).width() + 0.25,
+					'width' : $(".portlet").not(block.item).not(block.placeholder).width() + 0.23,
 					'height' : $(".portlet").not(".ui-sortable-helper").height()
 				});
 			},
