@@ -42,7 +42,7 @@ function setStartPage(event) {
 		var selId = $(".selectTR").attr("id");
 		
 		if (selId == undefined) {
-			alert("시작페이지를 선택해 주세요.");
+			alert("<spring:message code='ezNewPortal.t029' />");
 			return;
 		} else {
 			menuId = selId.substring(1);
@@ -53,7 +53,7 @@ function setStartPage(event) {
 	
 	var menuName = $("#M" + menuId).find("td").eq(1).text();
 	
-	var result = confirm(menuName + "을 기본화면으로 선택하시겠습니까?");
+	var result = confirm(menuName + "<spring:message code='ezNewPortal.t030' />");
 	
 	if (result) {
 		$.ajax({
@@ -62,11 +62,10 @@ function setStartPage(event) {
 			url : "/ezNewPortal/updateUserStartPage.do",
 			success : function() {
 				$("#M" + oldStartPageId).find("td").eq(2).text("");
-				$("#M" + menuId).find("td").eq(2).text("사용중");
-				alert("변경되었습니다.");
+				$("#M" + menuId).find("td").eq(2).text("<spring:message code='ezNewPortal.t031' />");
 			},
 			fail : function () {
-				alert("오류가 발생하였습니다.");
+				alert("<spring:message code='ezNewPortal.t032' />");
 			}
 		});
 	}
@@ -120,10 +119,10 @@ function setStartPage(event) {
 	<table id="menuList" class="mainlist">
 		<tr id="M0">
 			<td></td>
-			<td>홈</td>
+			<td><spring:message code='ezNewPortal.t033' /></td>
 		<c:choose>
 			<c:when test="${menuId eq 0 }">
-				<td>사용중</td>
+				<td><spring:message code='ezNewPortal.t031' /></td>
 			</c:when>
 			<c:otherwise>
 				<td></td>
@@ -137,7 +136,7 @@ function setStartPage(event) {
 				<tr id="M${menu.menuId }">
 					<td></td>
 					<td>${menu.menuName }</td>
-					<td>사용중</td>
+					<td><spring:message code='ezNewPortal.t031' /></td>
 			        <td></td>	
 				</tr>
 			</c:when>

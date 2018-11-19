@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>슬라이드 이미지 설정</title>
+<title><spring:message code='ezNewPortal.t104' /></title>
 <link rel="stylesheet"  href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css">
 
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -43,14 +43,14 @@ dd {margin : 20px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: b
 </style>
 </head>
 <body class="popup">
-	<h1>슬라이드 이미지 설정</h1>
+	<h1><spring:message code='ezNewPortal.t104' /></h1>
 	<div id="close"><ul><li><span></span></ul></div>
 	
 	<div id="mainmenu">
 		<ul>
-			<li id="slideImageAddBtn"><span>등록</span></li>
-			<li id="slideImageEditBtn"><span>수정</span></li>
-			<li id="slideImageDelBtn"><span>삭제</span></li>
+			<li id="slideImageAddBtn"><span><spring:message code='ezNewPortal.t058' /></span></li>
+			<li id="slideImageEditBtn"><span><spring:message code='ezNewPortal.t067' /></span></li>
+			<li id="slideImageDelBtn"><span><spring:message code='ezNewPortal.t059' /></span></li>
 		</ul>
 	</div>
 	<ul id="slideImageList">
@@ -61,22 +61,22 @@ dd {margin : 20px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: b
 	<div id="addLayerPopup" class="popupwrap1"
 		style="display: none; margin-bottom: 50px; max-width: 748px;">
 		<div class="popupJQLayer">
-			<div id="contentPopup_title" class="title">슬라이드 이미지 등록/수정</div>
+			<div id="contentPopup_title" class="title"><spring:message code='ezNewPortal.t105' /></div>
 			<div id="close">
 				<ul>
 					<li><a id="layerCloseBtn" rel="modal:close"><span></span></a></li>
 				</ul>
 			</div>
 			<div style="max-height: 466px; overflow-y: auto;">
-				<h2 style="font-weight: normal">▒ 이미지는 611 * 250 사이즈로 등록됩니다.</h2>
+				<h2 style="font-weight: normal"><spring:message code='ezNewPortal.t106' /></h2>
 				<table id="toggle_tbl1" class="content">
 					<tbody>
 						<tr>
-							<th>URL</th>
+							<th><spring:message code='ezNewPortal.t107' /></th>
 							<td><input type="text" id="imageUrl" style="width: 100%"></td>
 						</tr>
 						<tr>
-							<th><a class="imgbtn"><span onclick="ImageUploadBtn()">이미지등록</span></a>
+							<th><a class="imgbtn"><span onclick="ImageUploadBtn()"><spring:message code='ezNewPortal.t108' /></span></a>
 							</th>
 							<td>
 								<table border="0">
@@ -98,7 +98,7 @@ dd {margin : 20px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: b
 					<tr>
 						<td style="text-align: center;">
 							<div class="btnpositionLayer">
-								<a class="imgbtn"><span onclick="btnSave_click();">저장</span></a>
+								<a class="imgbtn"><span onclick="btnSave_click();"><spring:message code='ezNewPortal.t002' /></span></a>
 							</div>	
 						</td>
 					</tr>
@@ -371,7 +371,7 @@ var slideImageDel = function(event) {
         return;
     }
     
-	if (confirm("삭제하시겠습니까?")) {
+	if (confirm("<spring:message code='ezNewPortal.t109' />")) {
 		var selectImage = document.getElementsByClassName("selectTheme");
 	    var selectSlideId = selectImage[0].id; 
 	    

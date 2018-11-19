@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>portalThemes</title>
+		<title><spring:message code='ezNewPortal.t054' /></title>
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<style type="text/css">
 			.themeThumbnails {width : 350px; height : 200px; border : 1px solid #cecece; margin-top : 15px;}
@@ -45,12 +45,12 @@
 	
 	<body class="mainbody">
 		<h1 class="adminH1">
-			테마관리
+			<spring:message code='ezNewPortal.t054' />
 			<select class="companySelect" id="ListCompany"></select>
 		</h1>
 		<div id="mainmenu">
 			<ul style="margin-top: 15px;">
-				<li id="setDefaultTheme"><span>기본 테마 설정</span></li>
+				<li id="setDefaultTheme"><span><spring:message code='ezNewPortal.t110' /></span></li>
 			</ul>
 		</div>
 		<ul id="themeList" style="margin-top:10px">
@@ -217,7 +217,7 @@
 					themesHTML += "<div class='admin_thema'><dl class='admin_menuDL'><dt class='admin_menuTit'>" + theme.themeName + "</dt><dd class='admin_menuX'></dd></dl>";
 					themesHTML += "<div class='admin_menu_content'>";
 					themesHTML += "<table class='themaTable' border='0' cellpadding='0' cellspacing='0' width='100%'>";
-					themesHTML += "<tr><th class='menuIconTH'>테마 활성화</th>";
+					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t111' /></th>";
 					
 					if (theme.themeUsed) {
 						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='usedTheme' checked><span class='slider round'></span></label></td>";
@@ -225,7 +225,7 @@
 						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='usedTheme'><span class='slider round'></span></label></td>";
 					}
 					
-					themesHTML += "<th class='menuIconTH'>기본 테마 설정</th>";
+					themesHTML += "<th class='menuIconTH'><spring:message code='ezNewPortal.t110' /></th>";
 					
 					if (theme.themeDefault) {
 						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='defaultTheme' checked><span class='slider round'></span></label></td></tr>";
@@ -233,10 +233,10 @@
 						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='defaultTheme'><span class='slider round'></span></label></td></tr>";
 					}
 					
-					themesHTML += "<tr><th class='menuIconTH'>테마설명</th><td colspan='4' class='menuIconTD'><input type='text' class='admin_input themeContent' readOnly></td></tr>";						
+					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t112' /></th><td colspan='4' class='menuIconTD'><input type='text' class='admin_input themeContent' readOnly></td></tr>";						
 					themesHTML += "</table>";
 					themesHTML += "<table class='themaTable frameList' border='0' cellpadding='0' cellspacing='0' width='100%' style='margin:20px 0px 0px 0px;'></table>";
-					themesHTML += "<div class='bottomBtn'><a class='btnA updateThemeBtn'>저장</a><a class='btnA previewBtn' >미리 보기</a></div>";
+					themesHTML += "<div class='bottomBtn'><a class='btnA updateThemeBtn'>저장</a><a class='btnA previewBtn' ><spring:message code='ezNewPortal.t113' /></a></div>";
 					themesHTML += "</div></div></div>";
 					
 
@@ -283,7 +283,7 @@
 					});
 					
 					frameHTML += "</tr>";
-					frameHTML += "<tr><th class='menuIconTH'>기본 프레임 설정</th>";
+					frameHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t114' /></th>";
 					
 					frameList.forEach(function (item, index) {
 						if (item.frameDefault) {
@@ -295,7 +295,7 @@
 					});
 
 					frameHTML += "</tr>";
-					frameHTML += "<tr><th class='menuIconTH'>사용자 프레임 설정</th>";
+					frameHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t115' /></th>";
 					
 					frameList.forEach(function (item, index) {
 						if (item.frameUsed) {
@@ -328,7 +328,7 @@
 		
 		//테마 수정
 		var updateTheme = function(event) {
-			var result = confirm("테마 설정을 수정하시겠습니까?");
+			var result = confirm("<spring:message code='ezNewPortal.t116' />");
 			
 			if (result) {
 				var themeId = event.data.themeId;
@@ -337,12 +337,12 @@
 				var themeDefault = $("#themeDetails" + themeId).find("input[name='defaultTheme']").prop("checked");
 				
 				if (!themeDefault && defaultTheme == themeId) {
-					alert("기본 테마로 지정된 테마를 해제하려면 다른 테마를 기본으로 설정해주세요.");
+					alert("<spring:message code='ezNewPortal.t117' />");
 					return;
 				}
 				
 				if (themeDefault && !themeUsed) {
-					alert("기본 테마로 설정된 테마를 비활성화 할 수 없습니다.");
+					alert("<spring:message code='ezNewPortal.t118' />");
 					return;
 				}
 				
@@ -375,7 +375,7 @@
 					}
 					
 					if (frameDefault == frameId && !frameUsed) {
-						alert("기본 프레임으로 설정한 테마를 비활성화 할 수 없습니다.");
+						alert("<spring:message code='ezNewPortal.t119' />");
 						return;
 					}
 					
@@ -438,7 +438,7 @@
 			var themeId = $(".selectTheme").attr("id");
 			
 			if (themeId == undefined) {
-				alert("테마를 선택해주세요.");
+				alert("<spring:message code='ezNewPortal.t120' />");
 				return;
 			} else {
 				themeId = themeId.substring(5);
@@ -446,7 +446,7 @@
 			
 			console.log($("#theme" + themeId).attr("class").indexOf("themeNotUsed"));
 			if ($("#theme" + themeId).attr("class").indexOf("themeNotUsed") != -1) {
-				alert("사용하지 않는 테마를 기본테마로 설정할 수 없습니다.");
+				alert("<spring:message code='ezNewPortal.t121' />");
 				return;
 			}
 			

@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>게시판 설정</title>
+<title><spring:message code='ezNewPortal.t048' /></title>
 <link rel="stylesheet"  href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css">
 <link rel="stylesheet"  href="${util.addVer('/js/dist/themes/default/style.min.css')}" type="text/css">
 
@@ -22,7 +22,7 @@
 </style>
 </head>
 <body class="popup">
-	<h1>게시판 설정</h1>
+	<h1><spring:message code='ezNewPortal.t048' /></h1>
 	<div id="close"><ul><li><span></span></ul></div>
 	<div id="boardTreeArea">
 		<table id="TopBoards">
@@ -40,7 +40,7 @@
 		</c:forEach>
 		</table>
 	</div>
-	<div id="selBoard" class="btnposition btnpositionNew"><a class="imgbtn"><span>선택</span></a></div>
+	<div id="selBoard" class="btnposition btnpositionNew"><a class="imgbtn"><span><spring:message code='ezNewPortal.t049' /></span></a></div>
 	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
     	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
@@ -73,14 +73,14 @@ var selectBoard = function(event) {
 	board_alertArguments[1] = DivPopUpHidden;
 	
 	if ($(".jstree").length == 0) {
-    	var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("게시판을 선택해주세요.") + "&MESSAGE=" + encodeURIComponent("게시판을 선택해주세요.") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+    	var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezNewPortal.t050' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezNewPortal.t050' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 		DivPopUpShow(330, 205, url);
 		return;
 	} else {
 		var selBoard = $("li[aria-selected='true']");
 		
 		if (selBoard.length == 0) {
-	    	var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("게시판을 선택해주세요.") + "&MESSAGE=" + encodeURIComponent("게시판을 선택해주세요.") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+	    	var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezNewPortal.t050' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezNewPortal.t050' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 			DivPopUpShow(330, 205, url);
 			return;
 		} else {
@@ -88,13 +88,13 @@ var selectBoard = function(event) {
 			var gubun = selBoard.attr("gubun");
 		
 			if (portletId == 9 && (gubun != 3 && gubun != 4)) {
-		    	var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("선택된 게시판은 포토 게시판이나 썸네일 게시판이 아닙니다.") + "&MESSAGE=" + encodeURIComponent("선택된 게시판은 포토 게시판이나 썸네일 게시판이 아닙니다.") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+		    	var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezNewPortal.t051' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezNewPortal.t051' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 				DivPopUpShow(330, 205, url);
 				return;
 			}
 			/* 2018-11-09 홍승비 - 동영상게시판 게시판선택 분기 임시 추가 */
 			else if (portletId == 47 && (gubun != 7)) {
-		    	var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("선택된 게시판은 동영상 게시판이 아닙니다.") + "&MESSAGE=" + encodeURIComponent("선택된 게시판은 동영상 게시판이 아닙니다.") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+		    	var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezNewPortal.t052' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezNewPortal.t052' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 				DivPopUpShow(330, 205, url);
 				return;
 			}

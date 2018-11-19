@@ -83,9 +83,9 @@ $(document).ready(function(){
 				   break;
 	}
 	
-	$("#humidity").text("습도 ");
-	$("#clouds").text("구름 ");
-	$("#wind").text("바람 ");
+	$("#humidity").text("<spring:message code='ezNewPortal.yej01' /> ");
+	$("#clouds").text("<spring:message code='ezNewPortal.garm02' /> ");
+	$("#wind").text("<spring:message code='ezNewPortal.yej02' /> ");
 	
 	$(".weatherPerLi").show();
 	$(".weather_mini").show();
@@ -306,7 +306,7 @@ $(function(){
 				<dl class="portlet_title sortablePortlet">
 			</c:otherwise>
 		</c:choose>
-        	<dt class="portletText">오늘의날씨</dt>
+        	<dt class="portletText"><spring:message code='ezNewPortal.yej03' /></dt>
             <dd class="portletPlus">
             	<select id="cityList" class="weatherSelect">
                 </select>

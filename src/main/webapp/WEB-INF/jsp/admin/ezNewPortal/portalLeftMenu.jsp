@@ -22,16 +22,16 @@
 	
 	<body class="newLeft"> 
 		<div id="left" class="lnb" style="overflow: auto">
-			<div class="admin_left_title" title="포탈">포탈</div>
+			<div class="admin_left_title" title="<spring:message code='ezNewPortal.t053' />"><spring:message code='ezNewPortal.t053' /></div>
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<!-- themes -->
-				<h2><span class = "leftMenu_btn" id = "themes">테마관리</span><ul></ul></h2>
+				<h2><span class = "leftMenu_btn" id = "themes"><spring:message code='ezNewPortal.t054' /></span><ul></ul></h2>
 				<!-- menus -->	
-				<h2><span class = "leftMenu_btn" id = "menus">메뉴관리</span><ul></ul></h2>
+				<h2><span class = "leftMenu_btn" id = "menus"><spring:message code='ezNewPortal.t055' /></span><ul></ul></h2>
 				<!-- portlets -->	
-				<h2><span class = "leftMenu_btn" id = "portlets">포틀릿관리</span><ul></ul></h2>
+				<h2><span class = "leftMenu_btn" id = "portlets"><spring:message code='ezNewPortal.t056' /></span><ul></ul></h2>
 				<!-- logos -->	
-				<h2><span class = "leftMenu_btn" id = "logos">로고설정</span><ul></ul></h2>
+				<h2><span class = "leftMenu_btn" id = "logos"><spring:message code='ezNewPortal.t057' /></span><ul></ul></h2>
 			</div>
 		</div>
 	</body>

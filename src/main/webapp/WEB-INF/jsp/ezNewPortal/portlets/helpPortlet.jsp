@@ -13,11 +13,11 @@
 				<div class="layDIV" id="helpDiv">
 					<span class="leftImg"><img src="/images/ezNewPortal/bannerImg_left.png"></span>
 					<dl class="bannerText sortablePortlet">
-						<dt class="bText">그룹웨어 쉽게 활용하기</dt>
+						<dt class="bText"><spring:message code='ezNewPortal.t040' /></dt>
 						<dt class="sText">
-							그룹웨어 알아보기 등 활용도를<br>높일 수 있는 메뉴얼입니다.
+							<spring:message code='ezNewPortal.t041' /><br><spring:message code='ezNewPortal.t042' />
 						</dt>
-						<dd class="bannerBtn" id="helpDetail">자세히보기</dd>
+						<dd class="bannerBtn" id="helpDetail"><spring:message code='ezNewPortal.t043' /></dd>
 					</dl>
 					<span class="rightImg"><img src="/images/ezNewPortal/bannerImg_right.png"></span>
 				</div>
@@ -29,9 +29,9 @@
 	                        <span class="leftImg"><img src="/images/ezNewPortal/theme3Img/bannerImg_left.png"></span>
 	                        <div class="groupware_bannerWrap sortablePortlet">
 	                            <dl class="bannerText">
-	                                <dt class="bText">그룹웨어 쉽게 활용하기</dt>
-	                                <dt class="sText">그룹웨어 알아보기 등 활용도를<br>높일 수 있는 메뉴얼입니다.</dt>
-	                                <dd class="bannerBtn" id="helpDetail">자세히보기</dd>
+	                                <dt class="bText"><spring:message code='ezNewPortal.t040' /></dt>
+	                                <dt class="sText"><spring:message code='ezNewPortal.t041' /><br><spring:message code='ezNewPortal.t042' /></dt>
+	                                <dd class="bannerBtn" id="helpDetail"><spring:message code='ezNewPortal.t043' /></dd>
 	                            </dl>
 	                        </div>
 	                	</div>
@@ -42,11 +42,11 @@
 				<div class="layDIV" id="helpDiv">
 					<span class="leftImg"><img src="/images/ezNewPortal/bannerImg_left.png"></span>
 					<dl class="bannerText sortablePortlet">
-						<dt class="bText">그룹웨어 쉽게 활용하기</dt>
+						<dt class="bText"><spring:message code='ezNewPortal.t040' /></dt>
 						<dt class="sText">
-							그룹웨어 알아보기 등 활용도를<br>높일 수 있는 메뉴얼입니다.
+							<spring:message code='ezNewPortal.t041' /><br><spring:message code='ezNewPortal.t042' />
 						</dt>
-						<dd class="bannerBtn" id="helpDetail">자세히보기</dd>
+						<dd class="bannerBtn" id="helpDetail"><spring:message code='ezNewPortal.t043' /></dd>
 					</dl>
 					<span class="rightImg"><img src="/images/ezNewPortal/bannerImg_right.png"></span>
 				</div>
