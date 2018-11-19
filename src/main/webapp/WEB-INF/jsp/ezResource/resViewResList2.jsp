@@ -325,13 +325,13 @@
 							$("#brdNm").html(result.resBrd.brdNm);
 						} else {
 							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownDeptNm2 + ")");
-							$("#ownerNm").attr("ownerID", "mins99");
+							$("#ownerNm").attr("ownerID", ownerID);
 							$("#submanager").html(result.resBrd.ownDeptNm2);
 							$("#brdNm").html(result.resBrd.brdNm2);
 						} */
-						$("#brdNm").html(result.resBrd.brdNm);
-						$("#ownerCall").html(result.resBrd.ownerCall);
-						$("#resLocation").html(result.resBrd.resLocation);					
+						$("#brdNm").html(MakeXMLString(result.resBrd.brdNm));
+						$("#ownerCall").html(MakeXMLString(result.resBrd.ownerCall));
+						$("#resLocation").html(MakeXMLString(result.resBrd.resLocation));					
 						
 						$("#ownerInfo").html(strOwnerList);
 						

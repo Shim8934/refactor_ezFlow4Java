@@ -11011,7 +11011,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					continue;
 				}
 				if (NextLineCheck) {
-					if (!(aprtype.equals("001") || aprtype.equals("002") || aprtype.equals("004") || aprtype.equals("008") || aprtype.equals("013") || aprtype.equals("016") || aprtype.equals("019"))) {
+					if (!(aprtype.equals("001") || aprtype.equals("002") || aprtype.equals("004") || aprtype.equals("007") || aprtype.equals("008") || aprtype.equals("013") || aprtype.equals("016") || aprtype.equals("019"))) {
 						result = "<RESULT>FALSE</RESULT>";
 						break;
 					}
