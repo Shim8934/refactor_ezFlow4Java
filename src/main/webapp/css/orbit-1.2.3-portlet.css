@@ -92,10 +92,10 @@ span.mask2 {
     z-index: 2;
     overflow: hidden; }
 
-span.rotator2.move {
+span.rotator2.move2 {
     left: 0 }
 
-span.mask2.move {
+span.mask2.move2 {
     width: 40px;
     left: 0;
     background: url(/images/WebPartSliderCI/timer-black.png) repeat 0 0; }
@@ -111,11 +111,11 @@ span.pause2 {
     z-index: 4;
     opacity: 0; }
 
-span.pause2.active {
+span.pause2.active2 {
     background: url(/images/WebPartSliderCI/pause-black.png) no-repeat 0 -40px }
 
 div.timer2:hover span.pause2,
-span.pause2.active {
+span.pause2.active2 {
     opacity: 1 }
 
 
@@ -187,15 +187,15 @@ div.slider-nav2 span.left {
     height: 12px;
     overflow: hidden; }
 
-.orbit2-bullets li.active {
+.orbit2-bullets li.active2 {
     color: #222;
     background-position: -8px 0; }
     
-.orbit2-bullets li.has-thumb {
+.orbit2-bullets li.has-thumb2 {
     background: none;
     width: 100px;
     height: 75px; }
 
-.orbit2-bullets li.active.has-thumb2 {
+.orbit2-bullets li.active2.has-thumb2 {
     background-position: 0 0;
     border-top: 2px solid #000; }

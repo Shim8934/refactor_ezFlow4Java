@@ -1,3 +1,15 @@
 var messages = {
-	strLang1 : "데이터가 없습니다.",
+	strLang1 : "Data is missing",
+	strLang2 : "Error occurred",
+	strLang3 : "You can leave the office after work.",
+	strLang4 : "Year ",
+	strLang5 : "Mon. ",
+	strLang6 : "Day ",
+	strLang7 : "The present time is",
+	strLang8 : "",
+	strLang9 : "No holiday can be registered.",
+	strLang10: "It is not possible to leave the office after work.",
+	strLang11 : "This is a private CoP.",
+	strLang12 : "Please join us.	",
+	strLang13 : "Voting is being modified.Please wait."
 }
