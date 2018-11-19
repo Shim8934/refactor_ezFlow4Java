@@ -338,8 +338,9 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String selectCount = doc.getElementsByTagName("NUM").item(0).getTextContent();
 		String pollTitle = doc.getElementsByTagName("TITLE").item(0).getTextContent();
 		String pollTitle2 = doc.getElementsByTagName("TITLE2").item(0).getTextContent();
-		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
-		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+		// 2018-11-19 로직 수정 보류
+		//String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		//String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 		
 		if (pollTitle2.equals("")) {
 			pollTitle2 = pollTitle;
@@ -351,8 +352,9 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pSelectionCount", selectCount);
 		map.put("v_pPollTitle", pollTitle);
 		map.put("v_pPollTitle2", pollTitle2);
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
+		// 2018-11-19 로직 수정 보류
+		//map.put("startDate", startDate);
+		//map.put("endDate", endDate);
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
