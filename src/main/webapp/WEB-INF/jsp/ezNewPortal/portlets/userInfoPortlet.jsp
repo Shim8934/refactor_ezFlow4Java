@@ -8,7 +8,7 @@
 <body>
 <div class="attitudePtl">
 	<input type="hidden" id="useAttitude" value="${useAttitude}">
-	<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 1000; border-bottom:none; background:none;"></dl>
+	<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 100; border-bottom:none; background:none;"></dl>
 	<div style="position:relative; bottom:46px; overflow:hidden;">
 		<div class="box_shadow info_left" style="margin:0px; margin-right:7px">
 	    	<div></div>
@@ -28,9 +28,9 @@
 	            <dd class="infoMail">${userEmail }</dd>
 	            <dd class="infoTime"><spring:message code="main.t00016" /><spring:message code="ezPersonal.t27" />&nbsp;&nbsp;${lastLogin }</dd>
 	            <!-- 임시 -->
-	            <dd id="portletEnv" class="infoSet" onclick="viewPortletEnv()" style="z-index: 1001;background-color: rgb(51, 152, 254)"><img src="/images/admin/frameSetting.png"></dd>
+	            <dd id="portletEnv" class="infoSet" onclick="viewPortletEnv()" style="z-index: 101;background-color: rgb(51, 152, 254)"><img src="/images/admin/frameSetting.png"></dd>
 	            <!-- <dd id="portletEnv" class="infoSet" onclick="infoSetClick()" style="z-index: 1001;"><img src="/images/ezNewPortal/theme3Img/infoSet_btn.png"></dd> -->
-	            <dd class="infoLogout" onclick="infoLogoutClick()" style="z-index: 1001;"><img src="/images/ezNewPortal/theme3Img/infoLogout_btn.png"></dd>
+	            <dd class="infoLogout" onclick="infoLogoutClick()" style="z-index: 101;"><img src="/images/ezNewPortal/theme3Img/infoLogout_btn.png"></dd>
 	        </dl>
 	        <div class="time_check">
 	        	<div class="presentTime">

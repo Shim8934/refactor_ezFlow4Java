@@ -332,14 +332,15 @@
 		//포틀릿 드래그 앤 드롭
 		$(".portlet_area").sortable({
 			handle : ".sortablePortlet",
+			helper : "clone",
 			start : function (event, block) {
-				
+				/* 
 				$(".portlet.ui-sortable-helper").css("width", $(".portlet").not(block.item).not(block.placeholder).outerWidth());
 				
 				$(".ui-sortable-placeholder").css({
 					'width' : $(".portlet").not(block.item).not(block.placeholder).outerWidth(),
 					'height' : $(".portlet").not(".ui-sortable-helper").outerHeight()
-				});
+				}); */
 			},
 			update : function(event, ui) {
 				updatePortletOrderUser();

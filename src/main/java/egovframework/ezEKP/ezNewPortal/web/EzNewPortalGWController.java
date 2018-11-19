@@ -176,7 +176,7 @@ public class EzNewPortalGWController {
 			JSONObject data = new JSONObject();
 			// 사용자 설정 포틀릿 순서가 없으면 회사의 포틀릿 순서를 따름
 			if (portletOrder.isEmpty()) {
-				portletOrder = ezNewPortalService.getPortletOrderComp(portletLang, tenantId, companyId);
+				portletOrder = ezNewPortalService.getPortletOrderComp(portletLang, tenantId, companyId, deptId, userId);
 				data.put("portletOrder", portletOrder);
 			} else {
 				//개인별 포틀릿 에서 메뉴아이디 가져와서 권한체크 들어간다
