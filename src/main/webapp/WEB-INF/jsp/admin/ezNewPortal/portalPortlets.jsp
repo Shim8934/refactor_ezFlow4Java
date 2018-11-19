@@ -513,7 +513,7 @@
 						$("#portlet" + result[i].portletId).find(".switch").find("input").prop("checked", false);
 						$("#portlet" + result[i].portletId + " .updatePortletBtn span").attr("class", "spanOff");
 						$("#portlet" + result[i].portletId + " .deletePortletBtn span").attr("class", "spanOff");
-					}
+					} 
 					
 					//포틀릿 게시판 설정이 있으면 설정 버튼 활성화
 					if ((result[i].menuId == 4 && result[i].portletId != 10) || !result[i].isGeneral) {

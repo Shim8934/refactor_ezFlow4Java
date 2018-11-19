@@ -89,11 +89,16 @@
 		    		sliderHTML += "<td>"+sliderURL+"</td></tr>"
 		    		sliderHTML += "<tr><td class ='sliderRegDate'>등록일   |</td>";
 		    		sliderHTML += "<td>"+sliderRegDate+"</td></tr>"
-		    		sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox'><span class='slider round'></label></td>";
 		    		
+		    		if(sliderIsUse == 1){
+		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' checked='checked' onchange='toggleButton()'><span class='slider round'></label></td>";
+		    		}else {
+		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton'><span class='slider round' onchange='toggleButton()'></label></td>";
+		    		}
 		    		
 		    		sliderHTML += "</tr></table>";
 		    		sliderHTML += "</div>";
+		    		
 		    	}
 		    	
 		    	sliderHTML += "<li class='addSlider' id='addSlider'><div style='margin-top:97px'><img src='/images/admin/admin_portlet_plus.png' ></img></div></li>";
@@ -102,23 +107,28 @@
 		    	document.getElementById("addSlider").onclick = btn_Select; 
 		    	
 		    	for (var i = 0; i < sliderCnt; i++) {
-		    		var checkbox = document.getElementById("slideIsUse");
+		    		var checkbox = document.getElementById("toggleButton");
+		    		var choose = checkbox.checked;
 		    		var sliderId = result[i].sliderID;
-		    		var isUse = "";
+		    		var sliderIsUse = result[i].isUse;
 		    		
-		    		/* if(checkbox.checked == true){
-		    			isUse = true;
+		    		console.log(checkbox);
+		    		
+		    		if(choose){
+		    			$(".sliderList").find(".slider-header").css("background-color", "##edf7ff");
 		    		} else{
-		    			isUse = false;
+		    			$(".sliderList").find(".slider-header").css("background-color", "#f4f4f4").css("border", "1px solid #e7e7e7").css("color", "#b1b1b1");
 		    		}
 		    		
-		    		event_statuschange(isUse, sliderId); */
+		    		event_statuschange(choose, sliderId); 
 		    	}
 		    
-		}
+		    }
+		
+		    function toggleButton(){
+		    	
+		    }
 		    
-	    
-	
 		     var tempid = "";
 		    var _RowObject = null;
 		    function event_click(obj) {
@@ -277,14 +287,15 @@
 		    } */
 	
 		    function event_statuschange(check, sliderId) {
-		        var isUse = "";
-		        
-		        if(check) {
-		        	isUse = '1';
-		        } else {
-		        	isUse = '0';
-		        }
-		        
+		       var isUse = "";
+		         
+		       if(check== true) {
+			      isUse = '1';
+			   } else {
+			      isUse = '0';
+			   } 
+			    
+			        
 		        $.ajax({
 		        	type : "POST",
 		        	url : "/admin/ezPersonal/statusChangeSlider.do",
