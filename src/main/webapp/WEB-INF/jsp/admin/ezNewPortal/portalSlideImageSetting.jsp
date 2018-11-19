@@ -18,66 +18,28 @@
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 
 <style type="text/css">
-.ui-sortable{ margin:0px; padding:0px;}
-.themeThumbnails {width : 350px; height : 200px; border : 1px solid #cecece; margin-top : 15px;}
+.ui-sortable{ margin:0px; padding:0px; padding-left: 43px;}
+.themeThumbnails {width : 350px; height : 200px; border : 1px solid #cecece; margin-top : 40px;}
 .themesImgDetails {width : 500px; height : 350px; border : 3px solid #898989;margin:15px; float:left;}
-#themeList{ padding:0px;}
-#themeList li {margin : 10px 10px 10px 0px; display : inline-block;}
-.isDefault{position:absolute;background: rgba(0,0,0,0.3);width: 352px;height: 202px;top: 15px;left: 12px;}
 .selectTheme {background-color:#edf7ff !important; border:1px solid #2196f3 !important; width : 375px; height : 270px; text-align:center; }
 .theme {position:relative;background-color : white; width : 375px; height : 270px; text-align : center; border: 1px solid #cecece; cursor: pointer;}
 .themeHr {margin-top : 10px;width : 85%;margin-left : 30px;}
 .themeTitle {margin-top : 9px;}
-.themeNotUsed {display:none;width:100%; height:87%;background-color:#e1e1e180; z-index:99;position:absolute; right:0; top:0;}
 .themeName {margin-left : 10px;font-size : 14px;font-weight : bold;}
-.themeDetails {display : none; float:left; width:98%; position : relative;margin-left:0px; padding:0px;}
-.themeSetting {float : right;margin-right : 27px; margin-top:3px; cursor:pointer;}
-.themeSetting img {width : 13px;height : 13px;}
 .hideDetails {display : none;}
 .showDetails {display : block;}
-.themeInfo {margin : 15px;}
-.themeActive{position:relative; margin-top : 20px; font-size : 15px; font-weight : bold; display : inline-block;}
-.themeActive div {display : inline-block;}
-.btnpositionJsp {float : right; margin-top : 0px;padding-right:35px; padding-top:0px;}
 .close {margin-top : 6px;}
-.btnpositionJsp a {margin-left : 5px;}
-.themeDefault {font-size : 15px; font-weight:bold; margin-top : 20px;}
 
-.frameInfo {margin : 15px;}
-.frameInfo p {font-size : 15px; font-weight : bold;}
-.frameList {clear : none !important; width:100%; margin-bottom:20px;}
-.frameList tr {height:40px;}
-.frameList tr:first-child {height : 78px;}
-.frameList td {text-align : center; border:1px solid #e1e1e1;}
-.frameList th {width:61px;}
-			
-#slideImageList {margin-top:30px;}
 #slideImageList li {margin : 10px; display : inline-block;}
+.slideDiv {position: absolute; top: -21px; left: 11px;}
 
-#mainmenu ul {
-	margin-top: 15px;
-}
+#mainmenu ul {margin-top: 15px;}
 
-.addLayerPopup {
-    z-index: 2000;
-    position: absolute;
-    top: 46.7px;
-    left: 50px;
-    height: 809.6px;
-}
-.layerPopupBackground {
-	width:100%;
-	height:100%;
-	position:absolute;
-	top:0;
-	left:0;
-	z-index:1000;
-	background:none rgba(0,0,0,0.5);
-	display:none;
-}
-#tdNormalImage {
-	width: 611px; height: 250px;
-}
+.addLayerPopup {z-index: 2000; position: absolute; top: 46.7px; left: 50px; height: 809.6px;}
+.layerPopupBackground {	width:100%;	height:100%; position:absolute; top:0; left:0; z-index:1000; background:none rgba(0,0,0,0.5); display:none;}
+
+dd {margin : 20px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: bold;}
+
 </style>
 </head>
 <body class="popup">
@@ -91,10 +53,8 @@
 			<li id="slideImageDelBtn"><span>삭제</span></li>
 		</ul>
 	</div>
-	<div>
-		<ul id="slideImageList">
-		</ul>
-	</div>
+	<ul id="slideImageList">
+	</ul>
 
 
 <!-- 등록/수정 레이어 팝업 -->
@@ -190,19 +150,27 @@ var getSlideImage = function () {
 			if (slideImageList != null && slideImageList.length > 0) {
 				slideImageList.forEach(function (item, index) {
 					slideImageHTML += "<li class='slide'>";
-					slideImageHTML += "<div class='theme' id='" + item.sliderID + "' sn='" + item.sn + "' onclick='selectImage(this)'>";
+					slideImageHTML += "<div class='theme' id='" + item.sliderID + "' sn='" + item.sn + "' onclick='selectImage(this)'><div class='slideDiv'>";
 					slideImageHTML += "<div class='themeImg'><img src='" + item.imagePath + "' class='themeThumbnails' alt='img02'/>";
-					slideImageHTML += "<div class='themeNotUsed'>&nbsp;</div>";
 					slideImageHTML += "</div><div>";
 					slideImageHTML += "<hr class='themeHr'/>";
 					slideImageHTML += "<div class='themeTitle' id='themeTitle" + item.sliderID + "'>";
-					slideImageHTML += "<span class='themeName'>url : " + item.url + "</span>";
-					slideImageHTML += "</div>";
+					if (item.url == null || item.url == "") {
+						slideImageHTML += "<span class='themeName'>url : 없음</span>";
+					} else {
+						slideImageHTML += "<span class='themeName'>url : " + item.url + "</span>";
+					}
+					slideImageHTML += "</div></div>";
 					slideImageHTML += "</li>";
 				});
 			} else {
 					slideImageHTML += "<li>";
-					slideImageHTML += "데이터가 없습니다.";
+					slideImageHTML += "<div id='nodata_slideImage' class='nodata'>"
+					slideImageHTML += "<dl class='nodata'>"
+					slideImageHTML += "	<dt><img src='/images/kr/main/nodata.png'></dt>"
+					slideImageHTML += "	<dd>\"" + "<spring:message code='main.t00026' />" + "\"</dd>"
+					slideImageHTML += "</dl>"
+					slideImageHTML += "</div>"
 					slideImageHTML += "</li>";
 			}
 			document.getElementById("slideImageList").innerHTML = slideImageHTML;
@@ -210,6 +178,9 @@ var getSlideImage = function () {
 			//드래그앤드롭
 			$("#slideImageList").sortable({ 
 				items: "li.slide",
+				start : function(event, ui) {
+					
+				},
 				update : function(event, ui) {
 					updateSlideOrder();
 				}
