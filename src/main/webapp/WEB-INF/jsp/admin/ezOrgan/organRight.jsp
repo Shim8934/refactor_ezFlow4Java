@@ -1524,7 +1524,7 @@
 		<spring:message code='main.t24' />
 		</c:if>
 		</h1>
-		<table style="margin-top:10px;width:900px;border:1px solid #ddd">
+		<table style="height:630px;margin-top:10px;width:900px;border:1px solid #ddd">
 			<tr>
 				<th style="height:30px;border-bottom:0px"><spring:message code='ezOrgan.t73' /></th>
 				<th style="border-bottom:0px">
