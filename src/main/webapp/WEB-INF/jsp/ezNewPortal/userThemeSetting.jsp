@@ -32,7 +32,7 @@ $(function(){
 	for (var i = 0; i < themeListCount; i++) {
 		var themeId = themeList[i].themeId;
 		var frameDefault = themeList[i].frameDefault;
-		$("#T" + themeId).find(".btnpositionJsp").on("click", {"themeId" : themeId, "frameDefault" : frameDefault}, updateUserThemeSetting);
+		$("#T" + themeId).find(".btnpositionJsp a span").on("click", {"themeId" : themeId, "frameDefault" : frameDefault}, updateUserThemeSetting);
 	}
 	
 	$("#usedTheme").parent().addClass("usedThemeBorder");
