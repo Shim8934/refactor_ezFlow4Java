@@ -1191,14 +1191,23 @@
 		        <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188'/></span></li>
 		        <li><span onClick="AddToMyBoards()"><spring:message code='ezBoard.t10051'/></span></li>
 		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052'/></span></li> 
-		        <li id="right">
+		        <!-- <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
-				</li>
+				</li> -->
 		        <c:if test="${boardInfo.boardAdmin_FG == 'true'}">
-			      <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63'/></span></li> 
+			    	<li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63'/></span></li> 
 		        </c:if>
+		        <div class="sub_frameIcon" style="float:right">	
+					<div class="sub_frameIconUL" style="width:57px !important">
+					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
+					</div>
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this);"></span></p>  
+					</div>
+				 </div>
 		  </ul>
 		</div>
 		<script type="text/javascript">

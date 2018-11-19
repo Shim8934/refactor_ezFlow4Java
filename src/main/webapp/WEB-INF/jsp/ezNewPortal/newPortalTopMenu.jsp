@@ -98,9 +98,9 @@
 			menuLi.forEach(function (item, index) {
 				var menuUrl = newPortalTopMenu.menuListObj[item.id].menuUrl;
 				item.addEventListener('click', function () {
-					window.open(menuUrl, 'main', '');
+					//window.open(menuUrl, 'main', '');
 					// 클릭하면 창닫기.
-					subMenuClickEvent('off');
+					subMenuClickEvent('off', menuUrl);
 				});
 			});
 			
@@ -270,9 +270,11 @@
 		var setEvent = function (id, url, location, option) {
 			var element = document.getElementById(id);
 			element.addEventListener('click', function () {
-				window.open(url, location, option);
-				if (id === 'logoUrl') {
+				if (id != 'util_employee_search') {
+					subMenuClickEvent('off', url);
+				} else {
 					subMenuClickEvent('off');
+					window.open(url, location, option);
 				}				
 			});				
 		}
@@ -332,7 +334,8 @@
 		var subMenuClickEvent = function (type, menuUrl) {
 			var topMenuFull = document.getElementById('topMenuFull');
 			var topFrame = parent.document.getElementById('topFrame');
-			var bodyTag = document.getElementsByTagName('Body')[0];				
+			var bodyTag = document.getElementsByTagName('Body')[0];
+			
 			if(type === 'on') {
 				$("#menu_toggle").css('display', 'none');
 				
@@ -346,11 +349,12 @@
 				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
 				$("#menu_toggle").slideDown(200);
 			} else if (type === 'off'){
-				
-				$("#topMenuFull").fadeOut(100, function() {
-					$("#topMenuFull").attr("class", "full_nav off");
-					$("#topMenuFull").fadeIn(100);
-				});
+				if ($("#topMenuFull").attr("class") == "full_nav on") {
+					$("#topMenuFull").fadeOut(100, function() {
+						$("#topMenuFull").attr("class", "full_nav off");
+						$("#topMenuFull").fadeIn(100);
+					});
+				}
 				
 				$(".full_menu_toggleDL").attr("class", "full_menu_toggleDL");
 				

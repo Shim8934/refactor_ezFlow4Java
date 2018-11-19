@@ -649,12 +649,22 @@
 				<li style="background:none;cursor:default;border:0px;color:#393939"><span style="display:inline-block; border:0px; width:16px; height:16px; background:url(/images/ImgIcon/msg-rd.gif); overflow:hidden; margin:7px 0px 0px 15px; padding:0; vertical-align:middle;box-shadow:none"></span>&nbsp;<spring:message code='ezCircular.t197'/></li>
 	            <li style="background:none;cursor:default;border:0px;color:#393939"><span style="display:inline-block; border:0px; width:16px; height:16px; background:url(/images/ImgIcon/msg-unrd.gif); overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;box-shadow:none"></span>&nbsp;<spring:message code='ezCircular.t143'/></li>
 	            <li style="background:none;cursor:default;border:0px;color:#393939"><span style="display:inline-block; border:0px; width:16px; height:16px; background:url(/images/ImgIcon/circular_share2.gif); overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;box-shadow:none"></span>&nbsp;<spring:message code='ezCircular.t188'/></li>
-	            <li id="right">
+	            <!-- <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
-				</li>
+				</li> -->
+				<div class="sub_frameIcon" style="float:right">	
+					<div class="sub_frameIconUL">
+					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_bottomframe" id="PreViewBottom" onclick="PreviewRayerChange('W')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
+					</div>
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this);"></span></p>  
+					</div>
+				 </div>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
