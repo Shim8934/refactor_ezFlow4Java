@@ -28,6 +28,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzNewPortalService {
 
@@ -60,7 +61,7 @@ public interface EzNewPortalService {
 	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount);
 	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang);
 	public String getBoardAuthCheck(String boardId, String accessId, int tenantId, String companyId);
-	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId);
+	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId, String deptId);
 	public List<PortletInfoVO> getPortletOrderComp(String portletLang, int tenantId, String companyId);
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId);
 	public void updatePortletOrderUser(String userId, String companyId, int tenantId, List<Map<String, Integer>> portletOrder, String portletLang);
@@ -178,5 +179,15 @@ public interface EzNewPortalService {
 	 * @return
 	 */
 	//관리자 슬라이드 이미지 포틀릿의 슬라이드 이미지 목록 가져오기
-	public List<PersonalSliderImageVO> getSilderImages(String companyId, int tenantId);
+	public List<PersonalSliderImageVO> getSilderImages(String companyId, int tenantId) throws Exception;
+	//관리자 슬라이드 이미지 포틀릿의 슬라이드 이미지 상세정보 가져오기
+	public PersonalSliderImageVO getSlideImageInfo(int tenantId, String companyId, String slideId) throws Exception;
+	//관리자 슬라이드 이미지 포틀릿의 슬라이드 이미지 등록
+	public void insertSlideImage(String companyId, int tenantId, String imageUrl, String slideImagePath, String fileName, String userId) throws Exception;
+	//관리자 슬라이드 이미지 포틀릿의 슬라이드 이미지 수정
+	public void updateSlideImage(String companyId, int tenantId, String imageUrl, String imagePath, String imageName, String userId, String slideId) throws Exception;
+	//관리자 슬라이드 이미지 포틀릿의 슬라이드 이미지 삭제
+	public void deleteSlideImage(int tenantId, String companyId, String slideId) throws Exception;
+	//관리자 슬라이드 이미지 포틀릿의 슬라이드 이미지 순서변경
+	public void updateSlideOrder(JSONArray slideList, String companyId,	int tenantId) throws Exception;
 }

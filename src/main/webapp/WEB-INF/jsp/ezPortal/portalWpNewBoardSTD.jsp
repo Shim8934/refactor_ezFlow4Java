@@ -252,7 +252,12 @@
 				        pLeft = (pwidth - 764) / 2;
 				        
 		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
-		            } else {
+		            } else if (pType == "7") {
+	            		pTop = (pheight - 679) / 2;
+						pLeft = (pwidth - 764) / 2;
+						
+		                window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=764,top=" + pTop + ",left=" + pLeft, "");
+	            	} else {
 		                if (CrossYN()) {
 		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		                } else {
@@ -269,6 +274,8 @@
 
 		            if (pBoardType_NewBoardSTD == "3" || pBoardType_NewBoardSTD == "4") {
 		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            } else if (pBoardType_NewBoardSTD == "7") {
+		            	window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=765,top=" + pTop + ",left=" + pLeft, "");
 		            } else {
 		                if (CrossYN()) {
 		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");

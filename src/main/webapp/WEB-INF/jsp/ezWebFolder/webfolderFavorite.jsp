@@ -866,20 +866,20 @@
 		</div>
 		<div id="mainmenu">
 			<ul>
-				<li favoritemenu onclick="buttons.fileDownload()"><span><spring:message code='ezWebFolder.t186'/></span></li>
-				<li id="upload" onclick="buttons.fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
-				<li favoritemenu onclick="buttons.fileDelete()"><span><spring:message code='ezWebFolder.t274'/></span></li>
+				<li favoritemenu onclick="buttons.fileDownload()" class="important"><span><spring:message code='ezWebFolder.t186'/></span></li>
+				<li id="upload" onclick="buttons.fileUpload()" class="important"><span><spring:message code='ezWebFolder.t187'/></span></li>
 				<li favoritemenu onclick="buttons.fileRename()"><span><spring:message code='ezWebFolder.t273'/></span></li>
 				<li onclick="buttons.fileMoveAndCopy()"><span><spring:message code='ezWebFolder.t275'/></span></li>
 				<li onclick="shareContext.addShareView()"><span><spring:message code='ezWebFolder.t254'/></span></li>			
 				<!-- <li favoritemenu><img src="/images/i_bar.gif"></li> -->
-				<li favoritemenu onclick="favoriteContext.toggleAll()"><span><spring:message code='ezWebFolder.t281'/></span></li>
+				<li favoritemenu onclick="favoriteContext.toggleAll()"><span class="icon16 icon16_star"></span></li>
 				<!-- <li><img src="/images/i_bar.gif"></li> -->
-				<li id="SearchOption" favoritemenu mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
+				<li id="SearchOption" favoritemenu mode="off" onclick="doLayerPopup(this)"><span class="icon16 icon16_search"></span></li>
+				<li favoritemenu onclick="buttons.fileDelete()"><span class="icon16 icon16_delete"></span></li>
 				<!-- <li><img src="/images/i_bar.gif"></li> -->
-				<li favoritemenu onclick="context.refreshList(true)"><span><spring:message code='ezWebFolder.t139'/></span></li>
+				<li favoritemenu onclick="context.refreshList(true)"><span class="icon16 icon16_refresh"></span></li>
 				<!-- <li favoritemenu><img src="/images/i_bar.gif"></li> -->
-				<li favoritemenu style="height: 28px;">
+				<li favoritemenu>
 					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value);">
 						<option value=""><spring:message code='ezWebFolder.t191'/></option>
 						<option value="document"><spring:message code='ezWebFolder.t192'/></option>

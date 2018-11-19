@@ -448,6 +448,15 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void resetCompanyMenuOrder (Map<String, Object> map) {
 		update("ezNewPortal.resetCompanyMenuOrder", map);
 	}
+	
+	public void updateUserThemeAndFrameDefault(Map<String, Object> map) {
+		update("ezNewPortal.updateUserThemeAndFrameDefault", map);
+	}
+	
+	public void updateUserFrameDefault (Map<String, Object> map) {
+		update("ezNewPortal.updateUserFrameDefault", map);
+	}
+	
 	/**
 	 * 구해안
 	 */
@@ -552,4 +561,29 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<PersonalSliderImageVO> getSilderImages(Map<String, Object> map) {
 		return (List<PersonalSliderImageVO>) list("ezNewPortal.getSilderImages", map);
 	}
+
+	public void insertSilderImages(Map<String, Object> map) {
+		insert("ezNewPortal.insertSilderImages", map);
+	}
+
+	public PersonalSliderImageVO getSilderImagInfo(Map<String, Object> map) {
+		return (PersonalSliderImageVO) select("ezNewPortal.getSilderImageInfo", map);
+	}
+
+	public int getSlideImageMaxSn(Map<String, Object> map) {
+		return (int) select("ezNewPortal.getSlideImageMaxSn", map);
+	}
+
+	public void updateSilderImage(Map<String, Object> map) {
+		update("ezNewPortal.updateSilderImage", map);
+	}
+
+	public void deleteSlideImage(Map<String, Object> map) {
+		delete("ezNewPortal.deleteSilderImage", map);
+	}
+
+	public void updateSlideOrder(Map<String, Object> map) {
+		update("ezNewPortal.updateSlideOrder", map);
+	}
+
 }

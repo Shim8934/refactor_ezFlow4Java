@@ -10,7 +10,8 @@
         else
             document.getElementById("layer_Viewpopup").style.top = "100px";
         document.getElementById("layer_Viewpopup").style.display = "";
-        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+        //obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+        obj.setAttribute("class", "icon16 btn_onarrow_down");
         obj.setAttribute("mode", "on");
     }
     else {
@@ -20,7 +21,8 @@
 function MailOptionHidden() {
     document.getElementById("layer_Viewpopup").style.display = "none";
     document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
-    document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
+    //document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+    document.getElementById("maillistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
 }
 //레이어팝업 바깥쪽 클릭시 레이어팝업 꺼지게 2018-02-22 강민수92
 function MailOptionHiddenOutside(e) {
@@ -39,7 +41,7 @@ function PreviewRayerChange(pGubun) {
 
     if (pGubun == "OFF")
         pGubun = "NONE";
-    if (clickPreviweType == "PHOTO") {
+    if (clickPreviweType == "PHOTO" || clickPreviweType == "MOVIE") {
         if (document.documentElement.clientWidth < 1300) {
             PreviewRayerChange_photo("NONE");
         }
@@ -292,7 +294,7 @@ function PreviewRayerChange_photo(pGubun) {
 
 function PreviewMode_ChangeBtn() {
     try {
-    document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_noframe.gif");
+    /*document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_noframe.gif");
     if (document.getElementById("PreViewBottom") != null)
         document.getElementById("PreViewBottom").setAttribute("src", "/images/kr/cm/btn_bottomframe.gif");
     document.getElementById("PreViewleft").setAttribute("src", "/images/kr/cm/btn_leftframe.gif");
@@ -303,7 +305,29 @@ function PreviewMode_ChangeBtn() {
             document.getElementById("PreViewBottom").setAttribute("src", "/images/kr/cm/btn_onbottomframe.gif");
     }
     else
-        document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_onnoframe.gif");
+        document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_onnoframe.gif");*/
+    	
+    	document.getElementById("PreViewNone").className = "icon16 btn_noframe";
+    	
+    	if (document.getElementById("PreViewBottom")) {
+    		document.getElementById("PreViewBottom").className = "icon16 btn_bottomframe";
+    	}
+    	
+    	if (document.getElementById("PreViewleft")) {
+    		document.getElementById("PreViewleft").className = "icon16 btn_leftframe";
+    	}
+    	
+    	if (pPreviewShow_HOW == "H") {
+    		if (document.getElementById("PreViewleft")) {
+    			document.getElementById("PreViewleft").className = "icon16 btn_onleftframe";
+    		}
+    	} else if (pPreviewShow_HOW == "W") {
+    		if (document.getElementById("PreViewBottom")) {
+    			document.getElementById("PreViewBottom").className = "icon16 btn_onbottomframe";
+    		}
+    	} else {
+            document.getElementById("PreViewNone").className = "icon16 btn_onnoframe";
+    	}
     } catch (e) { }
 }
 
@@ -333,7 +357,7 @@ function ItemPreviewRead(obj) {
         document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
         //document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal"; // 게시판 > 썸네일게시판  > PreViewH사용시 스크립트오류 발생시킨부분 주석
     }
-    if (previewType == "PHOTO" || (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4")) {
+    if (previewType == "PHOTO" || previewType == "MOVIE" || (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4" || obj.getAttribute("DATA10") == "7")) {
         clickPreviweType = "PHOTO";
         if (document.getElementById("previewmail_bar_h") != null)
             document.getElementById("previewmail_bar_h").style.cursor = "default";
@@ -388,6 +412,7 @@ function event_ItemPreviewRead_photo() {
             var WriteDate = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriteDate");
             var Title = SelectSingleNodeValueNew(xmldom, "NODES/NODE/Title");
             var ContentLocation = SelectSingleNodeValueNew(xmldom, "NODES/NODE/ContentLocation");
+            var GuBun = SelectSingleNodeValueNew(xmldom, "NODES/NODE/GUBUN");
 
             if (pPreviewShow_HOW.trim() == "W") {
                 PreviewRayerChange_photo("H");
@@ -430,11 +455,19 @@ function event_ItemPreviewRead_photo() {
             document.getElementById("PreH_MailReceiver").innerHTML = pOCS;
             setNodeText(document.getElementById("PreH_date"), WriteDate);
             var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + javaURLEncode(ContentLocation);
-            if (location.href.toLowerCase().indexOf('temp') > -1)
-                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
-            else
-                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=GENERAL";
-
+            
+            /* 20118-11-07 홍승비 - 동영상게시물 미리보기 분기 추가 */
+            if (GuBun == "7") {
+            	 if (location.href.toLowerCase().indexOf('temp') > -1)
+ 	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewMovieContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
+ 	            else
+ 	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewMovieContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=GENERAL";
+            } else {
+	            if (location.href.toLowerCase().indexOf('temp') > -1)
+	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
+	            else
+	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=GENERAL";
+            }
         }
     }
 }
@@ -567,7 +600,7 @@ function event_downContent(result, result2) {
 }
 
 function PreviewH_onMouserDown(e) {
-    if (clickPreviweType == "PHOTO") {
+    if (clickPreviweType == "PHOTO" || clickPreviweType == "MOVIE") {
         return;
     }
 
@@ -588,7 +621,7 @@ function PreviewH_onMouserDown(e) {
     PreviewH_Move = true;
 }
 function PreviewW_onMouserDown(e) {
-    if (clickPreviweType == "PHOTO") {
+    if (clickPreviweType == "PHOTO" ||  clickPreviweType == "MOVIE") {
         return;
     }
 
@@ -610,7 +643,7 @@ function PreviewW_onMouserDown(e) {
 }
 
 function MailPreviewEnd(e) {
-    if (clickPreviweType == "PHOTO")
+    if (clickPreviweType == "PHOTO" ||  clickPreviweType == "MOVIE")
         return;
 
     if (PreviewW_Move || PreviewH_Move) {
@@ -672,7 +705,7 @@ function MailPreviewEnd(e) {
     }
 }
 function MailPreviewResize(e) {
-    if (clickPreviweType == "PHOTO")
+    if (clickPreviweType == "PHOTO" ||  clickPreviweType == "MOVIE")
         return;
 
     if (PreviewH_Move) {
@@ -728,8 +761,10 @@ function MailReadOpen() {
     if (previewType == "PHOTO" || (selobj.getAttribute("DATA10") == "3" || selobj.getAttribute("DATA10") == "4")) {
         pTop = (pheight - 780) / 2;
         window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
-    }
-    else {
+    } else if (previewType == "MOVIE" || selobj.getAttribute("DATA10") == "7" ) {
+    	 pTop = (pheight - 679) / 2;
+         window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=765,top=" + pTop + ",left=" + pLeft, "");
+    } else {
         window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
     }
 }
@@ -772,7 +807,7 @@ function ReplaceText(orgStr, findStr, replaceStr) {
     return (orgStr.replace(re, replaceStr));
 }
 function Window_resize() {
-    if (clickPreviweType == "PHOTO") {
+    if (clickPreviweType == "PHOTO" || clickPreviweType == "MOVIE") {
         Window_resize_photo();
         return;
     }

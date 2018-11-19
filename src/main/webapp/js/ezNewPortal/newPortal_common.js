@@ -176,9 +176,7 @@ function eventSetting(portletId) { //포틀릿 아이디별로 자바스크립�
 				CalendarMiniView("CalendarMini");
 				CalendarMiniDataSource();
 			    
-				if (Number($("#schedule_usedTheme").val()) === 3) {
-					today();
-				}
+				today();
 				
 				getScheduleList(nowDay, "P");
 				
@@ -317,7 +315,7 @@ function eventSetting(portletId) { //포틀릿 아이디별로 자바스크립�
 			try {
 				$("#roll_featured").orbit(); //슬라이드 포틀릿
 				
-				imageSizeControl(); //사이즈 응급처치 나중에 변경할것.
+				imageSizeControl(); //이미지 사이즈 조절
 			} catch(err) {
 				console.log(err);
 				alert(messages.strLang2);
@@ -674,18 +672,53 @@ function getAttitudeList() {
 		url : "/ezAttitude/getAttitudeList.do",
 		data : {},
 		success : function(result) {
-			console.log(result);
 			for (var i = 0; i < result.length; i++) {
 				if (result[i].typeId == "A01") {
  					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+ 					
+ 					if (usedTheme == 2) {
+ 						$("#inAttiBtn").parent().addClass("commute_on");
+ 					}
+ 					
+ 					if ($('#36Portlet')) {
+ 						$("#ptlInAttiBtn").attr("onclick", "").unbind("mouseenter");
+ 						$("#ptlInAttiBtn").removeClass("out").addClass("in");
+ 						$("#ptlInAttiBtn dt").css("margin-bottom","5px");
+ 						$("#ptlInAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
+ 					}
+ 					
 					$("#inAttiBtn").removeClass("main_out").addClass("main_in");
 					$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 				} else if (result[i].typeId == "A02") {
 					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+					
+					if (usedTheme == 2) {
+ 						$("#inAttiBtn").parent().addClass("commute_on");
+ 					}
+					
+					if ($('#36Portlet')) {
+						$("#ptlInAttiBtn").attr("onclick", "").unbind("mouseenter");
+						$("#ptlInAttiBtn").removeClass("out").addClass("lateIn");
+						$("#ptlInAttiBtn dt").css("margin-bottom","5px");
+						$("#ptlInAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
+ 					}
+					
 					$("#inAttiBtn").removeClass("main_out").addClass("main_lateIn");
 					$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 				} else if (result[i].typeId == "A03") {
 					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
+					
+					if (usedTheme == 2) {
+ 						$("#outAttiBtn").parent().addClass("commute_on");
+ 					}
+					
+					if ($('#36Portlet')) {
+						$("#ptlOutAttiBtn").attr("onclick", "").unbind("mouseenter");
+						$("#ptlOutAttiBtn").removeClass("out").addClass("in");
+						$("#ptlOutAttiBtn dt").css("margin-bottom","5px");
+						$("#ptlOutAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
+ 					}
+					
 					$("#outAttiBtn").removeClass("main_out").addClass("main_in");
 					$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 				}
@@ -961,12 +994,15 @@ function quickMenuOpenRight(event) {
 		case 'schedule':		
 			url = '/ezSchedule/scheduleWrite.do?defaultid=0';
 			location = '';
-			option = 'top='+pTop+', left='+pLeft+ 'height='+ '300' +', width='+'300'+', status=no, toolbar=no, menubar=no, location=no, resizable=1';			
+			pTop = (pheight - 819) / 2;
+			pLeft = (pwidth - 890) / 2;	
+			option = 'top='+pTop+', left='+pLeft+ ',height='+ '802' +', width='+'890'+', status=no, toolbar=no, menubar=no, location=no, resizable=1';			
 			break;
 		case 'organ':
 			url = '/ezPersonal/personSearch.do';
-			location = '';
-			option = 'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0';			
+			pTop = (pheight - 659) / 2;
+			pLeft = (pwidth - 715) / 2;	
+			option = 'top='+pTop+', left='+pLeft+ ',height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0';			
 			break;
 	}
 	

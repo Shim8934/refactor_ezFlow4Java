@@ -48,12 +48,15 @@
 				}
 				catch (e)
 				{ }
+				
+				/* 2018-11-19 로직 수정전				
 				nowDate = new Date();
 				document.getElementById("Sdatepicker").value = DateFormat(nowDate);
-    	        document.getElementById("Edatepicker").value = DateFormat(nowDate);
+    	        document.getElementById("Edatepicker").value = DateFormat(nowDate); */
 			}
 			
-			$(function () {
+			/* 		2018-11-19 로직 수정전	
+ 			$(function () {
 				$("#Sdatepicker").datepicker({
 					changeMonth: true,
 					changeYear: true,
@@ -123,7 +126,7 @@
 			    }
 			    var date = String(yy) + "-" + String(mm) + "-" + String(dd);
 			    return date;
-			}
+			} */
 			function selectnum_change() {
 				var number = parseInt(selectnum.value);
 				for (var i = 1; i < number + 1; i++) {
@@ -163,7 +166,7 @@
 					return;
 				}
 				
-				// Sdatepicker*Edatepicker check
+				/* // Sdatepicker*Edatepicker check
 				var Sdate = $('#Sdatepicker').datepicker('getDate');
 				var Edate = $('#Edatepicker').datepicker('getDate');
 				
@@ -191,7 +194,7 @@
 				}
 				
 				var tmpStartDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
-			    var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+			    var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59"; */
 			    
 				for (var i=1; i<11; i++) {
 					if (get_length(eval("answer" + i).value) > 100) {
@@ -223,8 +226,8 @@
 				createNodeAndInsertText(xmlDom, objNode, "COMPID", compid);
 				createNodeAndInsertText(xmlDom, objNode, "TITLE", document.getElementById("Title").value);
 				createNodeAndInsertText(xmlDom, objNode, "TITLE2", document.getElementById("Title2").value);
-				createNodeAndInsertText(xmlDom, objNode, "STARTDATE", tmpStartDateTime);
-				createNodeAndInsertText(xmlDom, objNode, "ENDDATE", tmpEndDateTime);
+				//createNodeAndInsertText(xmlDom, objNode, "STARTDATE", tmpStartDateTime);
+				//createNodeAndInsertText(xmlDom, objNode, "ENDDATE", tmpEndDateTime);
 				createNodeAndInsertText(xmlDom, objNode, "NUM", document.getElementById("selectnum").value);
 				
 				for (var i=1; i<11; i++) {
@@ -287,7 +290,7 @@
 			    	</table>
 		    	</td>
 		  	</tr>
-		  	<tr>
+		  	<%-- <tr>
 			  	<th><spring:message code = 'ezPersonal.t265' /></th> 
 				<td>
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
@@ -301,7 +304,7 @@
 					<input id='_T2' class='datepicker_time' readonly> 
 					<IMG align="absmiddle" border="0" height="16" id="img_EndTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative" width="16">
 				</td> 
-			</tr> 
+			</tr>  --%>
 		  	<tr>
 		    	<th><spring:message code = 'ezPersonal.t222' /></th>
 		    	<td>

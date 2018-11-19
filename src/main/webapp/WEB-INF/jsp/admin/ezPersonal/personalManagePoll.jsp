@@ -110,7 +110,7 @@
 		            
 		            //2018-08-02 김보미 - 데이터가 없을 때
 		            if (TotalCount == null || TotalCount == 0) { 
-		            	var TR_noItems = "<tr id='Poll_TR_noItems'><td style='text-align: center;' colspan='5'>" + strLang5 + "</td></tr>";
+		            	var TR_noItems = "<tr id='Poll_TR_noItems'><td style='text-align: center;' colspan='6'>" + strLang5 + "</td></tr>";
 		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
 		            }
 		            
@@ -162,8 +162,9 @@
 			}
 			
 			
+			var itemseq;
 			function PollList_onClick(obj) {
-				var itemseq = document.getElementById(obj).getAttribute("DATA1");
+				itemseq = document.getElementById(obj).getAttribute("DATA1");
 				if(itemseq == "0") {
 					return;
 				}
@@ -188,6 +189,7 @@
 						$("#" + itemseq).prop("checked", true);
 					}
 				}
+				showPreview(isPreview, itemseq);
 			}
 		    
 		    function PollList_onDblclick(obj) {
@@ -219,11 +221,11 @@
 		        if (CrossYN()) {
 		            addpoll_cross_dialogArguments[0] = document.getElementById("ListCompany").value;
 		            addpoll_cross_dialogArguments[1] = add_poll_Complete;
-		            var AddPoll_Cross = window.open("/admin/ezPersonal/addPoll.do", "AddPoll_Cross", GetOpenWindowfeature(450, 550));
+		            var AddPoll_Cross = window.open("/admin/ezPersonal/addPoll.do", "AddPoll_Cross", GetOpenWindowfeature(450, 500));
 		            try { AddPoll_Cross.focus(); } catch (e) {
 		            }
 		        } else {
-		            rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do", document.getElementById("ListCompany").value, "dialogHeight:500px;dialogwidth:430px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 550));
+		            rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do", document.getElementById("ListCompany").value, "dialogHeight:500px;dialogwidth:430px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 500));
 		
 		            if (typeof (rtnValue) != "undefined") {
 		                company_change();
@@ -452,18 +454,33 @@
 	        });
 		    
 			var conH;
-		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 122 - document.getElementById("mainmenu").clientHeight;
-	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-	        		height = height - 30;
-	        	}
-	        	conH = height;
-	        	document.getElementById("contentlist").style.height = height + "px";
-	        	document.getElementById("contentlist").style.overflow = "auto";
-	        }
-		    
-		    // 빠른 설문 config 조회
-		    var isPreview = 0;
+			function windowResize()
+			{
+				var doc = window.document;
+				var mainView = doc.getElementById("mainView");
+				var height = doc.documentElement.clientHeight - 122 - document.getElementById("mainmenu").clientHeight;
+				if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+					height = height - 30;
+				}
+
+				conH = height;
+				if(isPreview == 0) {
+					doc.getElementById("contentlist").style.height = height + "px";
+					doc.getElementById("contentlist").style.overflow = "auto";
+				} else if ( isPreview == 1) {
+					doc.getElementById("contentlist").style.height = height + "px";
+					doc.getElementById("contentlist").style.overflow = "auto";
+					doc.getElementById("previewH").style.height = height + 47 + "px";
+					doc.getElementById("previewmail_bar_h").style.height = height + 47 + "px";
+					doc.getElementById("ifrmPreViewH").style.height = height + 47 + "px";
+				} else {
+					doc.getElementById("contentlist").style.height = height/2 + "px";
+					doc.getElementById("contentlist").style.overflow = "auto";
+				}
+			}
+			
+			// 빠른 설문 config 조회
+			var isPreview = 0;
 			function getLightPollConfig() {
 				$.ajax({
 					type : "POST",
@@ -549,31 +566,79 @@
 				var PreviewRayerH = doc.getElementById("PreviewRayerH");
 				var PreviewRayerW = doc.getElementById("PreviewRayerW");
 				var contentlistH = doc.getElementById("contentlist");
+				var previewmail_bar_h = doc.getElementById("previewmail_bar_h");
 				
 				switch(previewNum) {
 				case 0 :
 					previewH.style.display = "none";
 					previewW.style.display = "none";
 					mainView.style.width = "100%";
-					doc.getElementById("contentlist").style.height = conlistH + "px";
+					doc.getElementById("contentlist").style.height = conlistH + "px";					
 					break;
 				case 1 :
 					previewW.style.display = "none";
 					doc.getElementById("contentlist").style.height = conlistH + "px";
 					mainView.style.width = "70%";
-					previewH.style.width = "29%";
+					previewH.style.width = "30%";
+					previewH.style.height = conlistH + 47 + "px";
 					previewH.style.display = "";
+					previewmail_bar_h.style.height = conlistH + 47 + "px";
 					PreviewRayerH.style.display = "";
+					doc.getElementById("ifrmPreViewH").style.height = conlistH + 47 + "px";
 					break;
 				case 2 :
 					previewH.style.display = "none";
 					mainView.style.width = "100%";
 					doc.getElementById("contentlist").style.height = conlistH/2 + "px";
-					previewW.style.height = "50%";
-					previewW.style.display = "";
+					previewW.style.height = conlistH/2 + "px";
+					previewW.style.display = "inline-block";
 					PreviewRayerW.style.display = "";
+					doc.getElementById("ifrmPreViewW").style.height = conlistH/2 + "px";
 					break;
+				}
+
+				// row가 선택 되어 있다면
+				if(itemseq) {
+					showPreview(isPreview, itemseq);
+				}
 			}
+			
+			
+			function showPreview(isPreview, itemseq) {
+				var doc = window.document;
+				var pollVO;
+				var pollResultVO;
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					async: false,
+					url: "/admin/ezPersonal/getPollItem.do",
+					data: {itemseq: itemseq},
+					success: function(result) {
+						pollVO = result["pollVO"];
+						personResultVO = result["pollResultVO"];
+					}
+				});
+				
+				
+				if(isPreview == 1) {
+					// 가로 모드
+					doc.getElementById('Preview_HeaderH').style.display ="inline-block";
+					doc.getElementById('Preview_HeaderH').title = pollVO.pollTitle;
+					doc.getElementById('PreH_sub_subject').innerHTML = pollVO.pollTitle;
+					PrevViewFormH.itemSeq.value = itemseq;
+					PrevViewFormH.submit();
+					// PreH_subject
+				} else if(isPreview == 2) {
+					// 세로 모드
+					doc.getElementById('Preview_HeaderW').style.display ="inline-block";
+					doc.getElementById('Preview_HeaderW').title = pollVO.pollTitle;
+					doc.getElementById('PreW_sub_subject').innerHTML = pollVO.pollTitle;
+					PrevViewFormW.itemSeq.value = itemseq;
+					PrevViewFormW.submit();
+				} else {
+					// none 모드
+				}
 			}
 			
 		</script>
@@ -642,18 +707,17 @@
 			</div>
 			
 			<div class="previewH" id="previewH" style="width:29%; float:right;">
-				<span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top;  margin-left:-5px;">
-					<span id="previewmail_bar_h" class="previewmail_bar_h" style="display: inline-block;">
-						<p class="hbar_dotted">
-							<img src="/images/prevview_hbar_dotted.gif" draggable="false">
+				<span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top;  margin-left:0px;">
+					<span id="previewmail_bar_h" class="previewmail_bar_h" style="display: inline-block; border: 1px solid #e5e5e5; border-top:0px !important; border-bottom:0px !important;">
+						<p class="hbar_dotted" style="width:5px">
 						</p>
 					</span>
-					<span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
+					<span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue; width:29%;">
 						<span style="width: 100%; height: 100px; display: block;">
-							<span class="previewmail_info" style="display: block; width: 100%;">
+							<span class="previewmail_info" style="display: block; width: 100%; border-top: 1px solid #e8e8e8; ">
 								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
-									<p class="mail_title" style="margin-left: 0px;">
-										<span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
+									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 0px 0px 0px 0px; height: 36px; line-height: 37px;">
+										<span class="icon_btn" style="margin-left:13px;"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
 											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
 									</p>
 									<span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
@@ -665,17 +729,16 @@
 				</span>
 			</div>
 			
-			<div class="previewW" id="previewW" style="width:100%;">
-				<span id="PreviewRayerW" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top; margin-left:-5px;">
-					<span style="width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
-						<img src="/images/prevview_bar_dotted.gif" draggable="false">
+			<div class="previewW" id="previewW" style="width:100%; display:inline-block;">
+				<span id="PreviewRayerW" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top; ">
+					<span style="width:100%; display:inline-block; border:1px solid #e8e8e8; border-left:0px; border-right:0px; height:3px;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
 					</span>
-					<span id="PreContent_RayerW" style="position: absolute; border: 0px solid blue;">
+					<span id="PreContent_RayerW" style="position:border: 0px solid blue; width:99%;">
 						<span style="width: 100%; height: 100px; display: block;">
 							<span class="previewmail_info" style="display: block; width: 100%;">
-								<div id="Preview_WeaderW" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
-									<p class="mail_title" style="margin-left: 0px;">
-										<span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
+								<div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; width: 100%; background-color: #f1f3f5; margin-top: -3px; display: none;">
+									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 0px 0px 0px 0px; height: 36px; line-height: 37px;">
+										<span class="icon_btn" style="margin-left: 13px;"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
 											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
 									</p>
 									<span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date" style="display: none;"></span></span></span>
@@ -686,6 +749,15 @@
 					</span>
 				</span>
 			</div>
+		</form>
+		
+		<form name="PrevViewFormH" action="pollResult.do" method="get" target="ifrmPreViewH" >
+			<input  type="hidden" name="itemSeq" value="">
+			<input  type="hidden" name="flag" value="preview">
+		</form>
+		<form name="PrevViewFormW" action="pollResult.do" method="post" target="ifrmPreViewW">
+			<input  type="hidden"  name="itemSeq" value="">
+			<input  type="hidden" name="flag" value="preview">
 		</form>
 	</body>
 </html>

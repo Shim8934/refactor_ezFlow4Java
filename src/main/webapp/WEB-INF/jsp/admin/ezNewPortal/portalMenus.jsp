@@ -19,7 +19,7 @@
 			span.icon_topmenu {margin-top : 20px;}
 			.menuUsed {background-color : #fff;}
 			.menuUsed_on{color: #0470e3; border-color: #b9d7f6; background: #f1f8ff;}
-			.menuNotUsed {background-color : #cbcbcb;}
+			.menuNotUsed {background-color : #efefef; border:1px solid #d9d9d9; color:#b9b9be;}
 			.menuDetails {list-style:none;display : none; float:left; width:98%; position : relative;}
 			.menuTitle {margin : 10px;}
 			.menuTitle span {font-size : 18px; font-weight:bold;}
@@ -38,7 +38,7 @@
 			.menuName table th {border:none;background-color:white;font-size:13px;color:black;}
 			.menuAuth {vertical-align:top;margin-top:23px;margin-left:150px;}
 			.menuAuthBtn {display:inline-block}
-			.updateMenu, .addMenu {float : right; margin-right:20px;}
+			.updateMenu, .addMenu {margin-right:20px;}
 			.btnpositionJsp {margin-top : 0px;padding:0px;}
 			.hideDetails {display : none;}
 			.menuSortable {display : inline-block;}
@@ -58,7 +58,7 @@
 		
 		<div id="mainmenu">
 			<ul style="margin-top: 15px;">
-				<li id="menuOrderReset"><span>메뉴 순서 초기화</span></li>
+				<li class="menuOrderResetButton" id="menuOrderReset"><span>메뉴 순서 초기화</span></li>
 			</ul>
 		</div>
 		<ul id="menuList">
@@ -150,7 +150,7 @@
 						menusHTML += "<dl>";
 						menusHTML += "<dt><span class='" + item.iconUrl + "'>";
 						menusHTML += "</span></dt>";
-						menusHTML += "<dd>" + item.menuName + "</dd>";
+						menusHTML += "<dd>" + ConvertCharToEntityReference(item.menuName) + "</dd>" ;
 						menusHTML += "</li>";
 					});
 					
@@ -231,7 +231,7 @@
 					var menusHTML = "<li class='menuDetails' id='menuLi" + menuInfo.menuId + "'>";
 					menusHTML += "<div class='admin_menu' id='menuDetails" + menuInfo.menuId + "'>";
 					menusHTML += "<dl class='admin_menuDL'>";
-					menusHTML += "<dt class='admin_menuTit'>" + menuInfo.menuName + "</dt><dd class='admin_menuX'></dd></dl>";
+					menusHTML += "<dt class='admin_menuTit'>" + ConvertCharToEntityReference(menuInfo.menuName) + "</dt><dd class='admin_menuX'></dd></dl>";
 					
 					menusHTML += "<div class='admin_menu_content'>";
 					menusHTML += "<dl class='adminMenu_icon'><dt class='admenuIcon menuIcon'><span class='" + menuInfo.iconUrl + "'></span></dt>";
@@ -261,11 +261,11 @@
 						}
 						
 						menusHTML += country + ")</td>";
-						menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu" +  item.menuLang + "' type='text' value='" + item.menuName + "' maxlength='50'></td>";
+						menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu" +  item.menuLang + "' type='text' value='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(item.menuName), '\"', "&#39;"), "\'", "&#34;") + "' maxlength='50'></td>";
 						menusHTML += "</tr>";
 					});
 					
-					menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' value='" + menuInfo.menuUrl + "' maxlength='100'></td></tr></table>";
+					menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' value='" +ReplaceText(ReplaceText(ConvertCharToEntityReference(menuInfo.menuUrl), '\"', "&#39;"), "\'", "&#34;") + "' maxlength='100'></td></tr></table>";
 					menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
 					menusHTML += "<tr><th class='menuIconTH'>접근허용</th><td class='menuIconTD accessOK'>";
 					
@@ -400,11 +400,12 @@
 					
 					var nowShowDetails = $(".menuDetails").children().attr("id");
 		
-					if (nowShowDetails == "menuDetails" + menuId) { 
+					if (nowShowDetails == "menuDetails" + menuId) {
 						$(".menuDetails").slideUp(function(){
 							$(".menuDetails").remove();
 						});
 					} else {
+						//나와있는 menuDetails를 제외하곤 다 지운다
 						$(".menuDetails").slideUp(function(){
 							$(".menuDetails").not("#menuLi" + menuId).remove();
 						});
@@ -468,6 +469,30 @@
 			request.send(data);
 		}
 		
+		var closeMenuDetail = function(event) {
+			//그냥 모든 메뉴디테일을 닫아버린다
+			$(".menuDetails").slideUp();
+		}
+		
+		$('html').click(function(e) {
+			//영역 외 삭제
+			var obj = e.target;
+			var flag = false;
+			var elemArr = ["menu", "admin_menuDL", "admin_menu_content", "menuOrderResetButton", "companySelect"];
+			if (obj.tagName == "HTML") {
+				closeMenuDetail();
+				return false;
+			}
+			
+			while(elemArr.indexOf(obj.className) == -1){
+				obj = obj.parentElement;
+				if(obj.tagName == "HTML"){
+					closeMenuDetail();
+					break;
+				}
+			}
+		}); 
+
 		var updateMenu = function(event) {
 			var menuId = event.data.menuId;
 			var menuNameList = [];

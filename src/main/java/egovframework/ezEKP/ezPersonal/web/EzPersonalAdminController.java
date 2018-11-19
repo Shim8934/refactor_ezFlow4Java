@@ -616,9 +616,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String subject = "", title = "";
 		
 		String itemSeq = request.getParameter("itemSeq");
-		
-		
-		
+		String flag = "";
+		if (request.getParameter("flag") != null) {
+			flag = request.getParameter("flag");
+		}
+
 		PersonalLightPollVO infoVO = ezPersonalAdminService.getPollInfo(itemSeq, userInfo.getTenantId());
 		
 		if (userInfo.getPrimary().equals("2") && infoVO.getPollTitle2() != null) {
@@ -683,7 +685,13 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("result", result.toString());
 
 		logger.debug("pollResult ended");
-		return "admin/ezPersonal/personalPollResult";
+		if(flag.equals("preview")) {
+			// 미리보기 창
+			return "admin/ezPersonal/personalPollResultPreview";
+		} else {
+			// double 클릭
+			return "admin/ezPersonal/personalPollResult";
+		}
 	}
 	
 	/**
@@ -1317,5 +1325,37 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		ezPersonalAdminService.setLightPollConfigVO(userInfo.getId(), isPreview, userInfo.getTenantId());
 		logger.debug("setLightPollConfig ended");
 		return null;
+	}
+	
+	
+	/** 
+	 *빠른설문 itemseq 조회 함수  
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/getPollItem.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject getPollItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam String itemseq) throws Exception {
+		logger.debug("getPollItem started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		PersonalLightPollVO pollVO = ezPersonalAdminService.getPollInfo(itemseq, userInfo.getTenantId());
+		
+		// 다국어 처리
+		if (userInfo.getPrimary().equals("2") && pollVO.getPollTitle2() != null) {
+			pollVO.setPollTitle(pollVO.getPollTitle2());
+		} 
+		List<PersonalLightPollVO> pollResultVO = ezPersonalAdminService.getPollResult(itemseq, userInfo.getTenantId());
+		int totalCount = 0;
+		for (PersonalLightPollVO vo : pollResultVO) {
+			totalCount += vo.getCount();
+		}
+		for (PersonalLightPollVO vo : pollResultVO) {
+			vo.setPercent((int)(vo.getCount() / totalCount * 100));
+		}
+		
+		JSONObject json = new JSONObject();
+		json.put("pollVO", pollVO);
+		json.put("pollResultVO", pollResultVO);
+		logger.debug("getPollItem ended");
+		return json;
 	}
 }

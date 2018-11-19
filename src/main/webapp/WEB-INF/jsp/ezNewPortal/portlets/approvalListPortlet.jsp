@@ -145,7 +145,7 @@
 			    
 			    str += '<li class="first_approval" onclick=\'opendocview("'+ object.docID +'", "'+ object.href +'", "'+ object.aprMemberID +'", "'+ object.aprMemberName +'", "'+ object.aprMemberDeptID +'", "'+ object.docState +'", "'+ object.functionType +'", "'+ object.companyID +'")\'>';
 			    str += '	<p class="approval_tit">'
-			    str += '	<span class="txt">'+ object.docTitle +'</span><span class="date">'+ object.startDate.substr(5, 11).replace(/-/gi, ".") +'</span><span class="name">'+ object.writerName +'</span></p>';
+			    str += '	<span class="txt">'+ ConvertCharToEntityReference(object.docTitle) +'</span><span class="date">'+ object.startDate.substr(5, 11).replace(/-/gi, ".") +'</span><span class="name">'+ object.writerName +'</span></p>';
 			    str += '	<div class="approval_content">';
 			    
 			    for(var i=0; i<listSize; i++){

@@ -183,7 +183,7 @@
 	</section>
 </div>
 
-	<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	<div style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 1005; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 			
 	<div class="layerpopup"  style="z-index: 2000; position: fixed;display: none;" id="iFramePanel">
 		<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -537,19 +537,20 @@
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
-			
-			(function (portletId, portletUrl, portletName) {
-				$.ajax({
-					type : "POST",
-					dataType : "html",
-					data : {"portletId" : portletId, "portletName" : portletName},
-					url : portletUrl,
-					success : function(result) {
-						$("#" + portletId + "Portlet").append(result);
-						eventSetting(portletId);
-					}
-				});
-			}(portletId, portletUrl, portletName));
+			if (portletUrl.indexOf("ezNewPortal") != -1) {
+				(function (portletId, portletUrl, portletName) {
+					$.ajax({
+						type : "POST",
+						dataType : "html",
+						data : {"portletId" : portletId, "portletName" : portletName},
+						url : portletUrl,
+						success : function(result) {
+							$("#" + portletId + "Portlet").append(result);
+							eventSetting(portletId);
+						}
+					});
+				}(portletId, portletUrl, portletName));
+			}
 		}
 		
 		var useQuestion = "<c:out value='${useQuestion}'/>";
@@ -609,6 +610,7 @@
 		//개인환경설정으로 이동 동작 연결
 		$("#main_personalEnv").on("click", viewPersonalEnv);
 		$("#main_portletEnv").on("click", viewPortletEnv);
+
 		//메뉴 이동(왼쪽)
 		$("#NewMail").on("click", {"menu" : "NewMail"}, quickMenuOpen);
 		$("#Schedule").on("click", {"menu" : "Schedule"}, quickMenuOpen);

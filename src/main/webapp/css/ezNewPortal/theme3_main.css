@@ -190,10 +190,10 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* portlet_list approval */
 .approval .portlet_list li{ margin:0px; padding:0px 10px 0px 23px; background:url(/images/ezNewPortal/list_bul.png) no-repeat 15px 17px; font-size:13px; color:#555555; height:36px; line-height:34px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
-.portlet_list li.first_approval{margin:0px; padding:0px; background:#f4f4f4; border:1px solid #e7e7e7; height:113px; box-sizing:border-box;}
-.first_approval .approval_tit{ margin:0px; padding:0px 0px 0px 10px; height:27px; background:#f4f4f4; line-height:25px;}
+.portlet_list li.first_approval{margin:0px; padding:0px; border:1px solid #e7e7e7; height:113px; box-sizing:border-box; border-left:0px; border-right:0px;}
+.first_approval .approval_tit{ margin:0px; padding:0px 0px 0px 10px; height:27px; background:#f4f4f4; line-height:25px; border-bottom: 1px solid #e5e5e5}
 .first_approval .approval_tit span.txt{ font-weight:bold;}
-.first_approval .approval_content{margin:10px 0px 15px 0px; padding:0px; overflow:hidden; background: #f4f4f4;}
+.first_approval .approval_content{margin:10px 0px 15px 0px; padding:0px; overflow:hidden;}
 .first_approval .approval_content .apprDL{margin:0px; padding:0px 0px 0px 10px; float:left; overflow:hidden; width:30%; box-sizing:border-box;}
 .first_approval .approval_content .apprDL .apprPic{margin:0px; padding:0px; width:53px; height:53px; border:1px solid #e7e7e7; border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; float:left;}
 .first_approval .approval_content .apprDL .apprPic img{border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; width:53px; height:53px;}
@@ -343,13 +343,13 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* schedule_small */
 .sCalendarArea{ overflow:hidden;}
-.sCalendarArea .scalender {overflow:hidden; float:left; width:96%; margin:4px 5px; padding:10px 10px 10px 10px; box-sizing:border-box; /*border-right:1px solid #e7e7e7;*/}
+.sCalendarArea .scalender {overflow:hidden; float:left; width:96%; margin:2px 5px 5px 5px; padding:1px; /* box-sizing:border-box; */ /*border-right:1px solid #e7e7e7;*/}
 .scalendar_mini_title{table-layout:fixed; text-align:center; height:25px; margin:10px 0px; padding:0px 10px 0px 3px;}
 .scalendar_mini_title .btn_prev{width:14.2%;  padding:0px 1px; cursor:pointer;}
 .scalendar_mini_title .calendar_mini_day{width:100%; text-align:center; color:#333; font-size:16px; font-weight:bold;}
 .scalendar_mini_title .btn_next{width:14.2%; padding:0px 1px; cursor:pointer;}
 .scalendar_mini{table-layout:fixed; border-collapse: collapse;}
-.scalendar_mini th{color:#000; margin:0; padding:4px 0px 4px 0px; border-top:0 none; font-size:13px; border-left:0 none; font-weight:bold; }
+.scalendar_mini th{color:#000; margin:0; padding:2px 0px 13px 0px; border-top:0 none; font-size:13px; border-left:0 none; font-weight:bold; }
 .scalendar_mini th.sun{color:#cd3b3b;}
 .scalendar_mini th.sat{color:#0470e4;}
 .scalendar_mini td {height:26px; text-align:center; cursor:pointer; color:#333333; position: relative; font-size:12px;}
@@ -358,7 +358,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .scalendar_mini td.gray{color:#8a8e9b;}
 .scalendar_mini td.today{color:#333333; background:url(/images/ezNewPortal/theme3Img/scalendar_today_bg.png) center center no-repeat; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 .scalendar_mini td.schedule{color:#333333; background:url(/images/ezNewPortal/theme3Img/scalendar_schedule_bg.png) center center no-repeat; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
-.scalendar_mini td div {height:28px;line-height:28px; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
+.scalendar_mini td div {height:26px;line-height:26px; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 .sschedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px; overflow:hidden; height:203px; background: white}
 
 .sschedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px;clear:both;overflow:hidden;border-top:1px solid #e7e7e7;}
@@ -499,7 +499,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .photo_board .preBtn{ margin:0px; padding:0px; float:right; cursor:pointer;}
 .photoList{ margin:0px 0px; padding:34px 10px; list-style:none; overflow:hidden; height:136px; /*border-top:1px solid #e7e7e7; border-bottom:1px solid #e7e7e7; background:#f4f4f4;*/ background:#ffffff;}
 .photoList li{ margin:0px; padding:17px 3px; float:left; box-sizing:border-box; width:25%; text-align:center; overflow:hidden; height:136px;}
-.photoList li img{ width:100%; height:102px; cursor:pointer;}
+.photoList li img{ width:100%; height:102px; cursor:pointer;border:1px solid #d9d9d9;}
 .photoList li.none img{ cursor:default;}
 
 /* stats_graph */
@@ -564,7 +564,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 /* main media query */
 @media only screen and (min-width :1921px) {
-	.portlet{ width:483px; float:left;}
+	.portlet{ width:610px; float:left;}
 }
 
 @media only screen and (max-width :1920px) and (min-width :1686px) { 

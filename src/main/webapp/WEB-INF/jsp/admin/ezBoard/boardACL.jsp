@@ -660,6 +660,11 @@
 	                    location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	                else
 	                    location.href = "/ezBoard/boardItemListThumbnail.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
+	            } else if (pType == "7") {
+	            	 if (pParentNeed == "Y")
+						location.href = "/ezBoard/boardItemListMovie.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
+	                else
+	                    location.href = "/ezBoard/boardItemListMovie.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	            }
 	            else {
 	                if(pParentNeed == "Y")

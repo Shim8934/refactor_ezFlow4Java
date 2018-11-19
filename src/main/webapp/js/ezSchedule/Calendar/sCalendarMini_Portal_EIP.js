@@ -44,11 +44,13 @@ function CalendarMiniView(pTagetID) {
 	        mTable.setAttribute("cellpadding", "0");
 	        mTable.setAttribute("cellspacing", "0");
 	        mTable.setAttribute("border", "0");
+	        mTable.setAttribute("style", "margin: 10px 10px; padding: 0px 25px 0px 3px;");
 	        mTable.setAttribute("width", "100%");
 	        var mTr = document.createElement("TR");
 
 	        var mTd = document.createElement("TD");
 	        mTd.className = "btn_prev"
+        	mTd.setAttribute("style","position: relative; z-index: 1001;");
 	        var mSpan = document.createElement("SPAN");
 	        mSpan.style.cursor = "pointer";
 	        //mSpan.style.marginLeft = "6px";
@@ -131,6 +133,7 @@ function CalendarMiniView(pTagetID) {
 
 	        var mTd = document.createElement("TD");
 	        mTd.className = "btn_next"
+        	mTd.setAttribute("style","position: relative; z-index: 1001;");
 	        var mSpan = document.createElement("SPAN");
 	        mSpan.style.cursor = "pointer";
 	        //mSpan.style.marginRight = "6px";
@@ -163,7 +166,6 @@ function CalendarMiniView(pTagetID) {
 		
 	} else if (pTagetID == "CalendarMini_Top") {
 		//Top
-		
 		if (objElm) {
 	        var mTable = document.createElement("TABLE");
 	        mTable.className = "scalendar_mini_title";///
@@ -171,7 +173,7 @@ function CalendarMiniView(pTagetID) {
 	        mTable.setAttribute("cellpadding", "0");
 	        mTable.setAttribute("cellspacing", "0");
 	        mTable.setAttribute("border", "0");
-	        mTable.setAttribute("width", "100%");
+//	        mTable.setAttribute("width", "100%");
 	        var mTr = document.createElement("TR");
 
 	        var mTd = document.createElement("TD");
@@ -345,7 +347,7 @@ function GetTableMiniBodyObj() {
     sStartDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
 
     //Month Start
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 6; i++) {
         var objTr = document.createElement("TR");
         objTr.setAttribute("id", "TR_" + oThisMonth + "_" + i);
 
@@ -420,7 +422,7 @@ function GetTableMiniBodyObjTop() {
     sStartDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
 
     //Month Start
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 6; i++) {
         var objTr = document.createElement("TR");
         //이거 그냥 이름정해놓고 그대로 갖다 쓰는거 같은데 TR뒤에 TOP만 붙여봄
         objTr.setAttribute("id", "TR_TOP" + oThisMonth + "_" + i);
@@ -626,6 +628,19 @@ function CalendarMiniDataSource(Type) {
 function sTempData() {
 }
 
+function dateDiff(_date1, _date2) {
+    var diffDate_1 = _date1 instanceof Date ? _date1 : new Date(_date1);
+    var diffDate_2 = _date2 instanceof Date ? _date2 : new Date(_date2);
+ 
+    diffDate_1 = new Date(diffDate_1.getFullYear(), diffDate_1.getMonth()+1, diffDate_1.getDate());
+    diffDate_2 = new Date(diffDate_2.getFullYear(), diffDate_2.getMonth()+1, diffDate_2.getDate());
+ 
+    var diff = Math.abs(diffDate_2.getTime() - diffDate_1.getTime());
+    diff = Math.ceil(diff / (1000 * 3600 * 24));
+ 
+    return diff;
+}
+
 function getCalendarMiniDataSource_after(resultList) {
     var tempData = new Array();
     var k = 0;
@@ -635,12 +650,20 @@ function getCalendarMiniDataSource_after(resultList) {
     	var _Dtend = item.endDate;
     	var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7)) - 1, parseInt(_Dtstart.substring(8, 10)), parseInt(_Dtstart.substring(11, 13)), parseInt(_Dtstart.substring(14, 16)));
     	var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7)) - 1, parseInt(_Dtend.substring(8, 10)), parseInt(_Dtend.substring(11, 13)), parseInt(_Dtend.substring(14, 16)));
+    	OrgDataSDT = new Date(DataSDT);
+        OrgDataEDT = new Date(DataEDT);
+        
+        var diff = Math.abs(OrgDataEDT.getTime() - OrgDataSDT.getTime());
+        diff = Math.ceil(diff / (1000 * 3600 * 24)); 
     	
     	if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
     		
     		var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
     		var day = 1000 * 60 * 60 * 24;
     		betweenDay = parseInt(betweenDay / day, 10);
+    		if (_Dtend.substring(10) == " 00:00:00.0") {
+            	betweenDay = betweenDay - 1;
+            }
     		
     		for (var j = 0; j <= betweenDay; j++) {
     			
@@ -675,12 +698,20 @@ function getCalendarMiniDataSourceTop_after(resultList) {
     	var _Dtend = item.endDate;
     	var DataSDT = new Date(_Dtstart.substring(0, 4), parseInt(_Dtstart.substring(5, 7)) - 1, parseInt(_Dtstart.substring(8, 10)), parseInt(_Dtstart.substring(11, 13)), parseInt(_Dtstart.substring(14, 16)));
     	var DataEDT = new Date(_Dtend.substring(0, 4), parseInt(_Dtend.substring(5, 7)) - 1, parseInt(_Dtend.substring(8, 10)), parseInt(_Dtend.substring(11, 13)), parseInt(_Dtend.substring(14, 16)));
+    	OrgDataSDT = new Date(DataSDT);
+        OrgDataEDT = new Date(DataEDT);
+        
+        var diff = Math.abs(OrgDataEDT.getTime() - OrgDataSDT.getTime());
+        diff = Math.ceil(diff / (1000 * 3600 * 24));     	
     	
     	if (_Dtstart.substring(0, 10) != _Dtend.substring(0, 10)) { // 반복일정
     		
     		var betweenDay = new Date(_Dtend.substring(0, 10)) - new Date(_Dtstart.substring(0, 10));
     		var day = 1000 * 60 * 60 * 24;
     		betweenDay = parseInt(betweenDay / day, 10);
+    		if (_Dtend.substring(10) == " 00:00:00.0") {
+    			betweenDay = betweenDay - 1;
+            }
     		
     		for (var j = 0; j <= betweenDay; j++) {
     			
