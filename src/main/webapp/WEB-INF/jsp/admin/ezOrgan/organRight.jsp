@@ -1619,7 +1619,7 @@
 					<a class="imgbtn" style="vertical-align:middle"><span onClick="deptsearch_click()"><spring:message code='main.t74' />/<spring:message code='ezOrgan.t93' /></span></a>
 				</th>
 				<th style="border-top:0px">
-					<select id="search_type" style="WIDTH:60px; height:22px;">
+					<select id="search_type" style="WIDTH:100px; height:22px;">
 						<option selected value="displayname"><spring:message code='ezOrgan.t67' /></option>
 						<option value="cn"><spring:message code='ezOrgan.t94' /></option>
 						<option value="description"><spring:message code='ezOrgan.t68' /></option>
