@@ -3105,4 +3105,13 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateOpinionInfo(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateOpinionInfo", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getShareOwnerId(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzApprovalG.getShareOwnerId", map);
+	}
+	
+	public int getCheckAprState(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getCheckAprState", map);
+	}
 }

@@ -1105,7 +1105,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		}
 		CircularListVO result = new CircularListVO();
 
-		if (user.get(0).getMemberID() != "") {	
+		if (!user.get(0).getMemberID().equals("")) {	
 			userMyID = user.get(0).getMemberID();
 			userMyName = user.get(0).getMemberName();
 			userMyName2 = user.get(0).getMemberName2();

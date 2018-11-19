@@ -4885,6 +4885,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String susinAdmin = "";
 		String serverName = userInfo.getServerName();
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -4895,6 +4896,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("serverName", serverName);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("ezReceiveAssignUI ended.");
 		
@@ -5172,7 +5174,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			userInfo.setCompanyID(orgCompanyID);
 		}
 		
-		if (listType.equals("1") || listType.equals("2") || listType.equals("3")) {
+		if (listType.equals("1") || listType.equals("2") || listType.equals("3") || listType.equals("11")) {
 			mode = "VIE";
 		} else if (listType.equals("4") || listType.equals("6") || listType.equals("10") || listType.equals("99")) {
 			mode = "REC";
@@ -5219,17 +5221,42 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			if (docID != null && !docID.equals("")) {
-				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId(), docState);
+				String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", userInfo.getTenantId(), userInfo.getOffset());
+				String[] proxyUserArray = proxyUser.split(",");
+				boolean checkPermission = true;
 				
-				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
-					return "main/warning";
+				if (proxyUserArray.length > 1) {
+					String docList = ezApprovalGService.getAprLineInfoDB(docID, "1", "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", mode);
+					
+					Document docXML = commonUtil.convertStringToDocument(docList);
+					
+					for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
+						if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002") || docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("005") || docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("000")) {
+							String curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
+							
+							for (int j = 0; j < proxyUserArray.length; j++) {
+								if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 1))) {
+									checkPermission = false;
+									break;
+								}
+							}
+						}
+					}
 				}
-				if (!doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals(userInfo.getId()) && !doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("NULL")) {
-					if (doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("") && (!doc.getElementsByTagName("RECEIVEDDEPTID").item(0).getTextContent().equals(userInfo.getDeptID()) || userInfo.getRollInfo().indexOf("a=1") == -1)) {
+				
+				if (checkPermission) {
+					Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId(), docState);
+					
+					if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
 						return "main/warning";
 					}
-					if (!doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("")) {
-						return "main/warning";
+					if (!doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals(userInfo.getId()) && !doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("NULL")) {
+						if (doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("") && (!doc.getElementsByTagName("RECEIVEDDEPTID").item(0).getTextContent().equals(userInfo.getDeptID()) || userInfo.getRollInfo().indexOf("a=1") == -1)) {
+							return "main/warning";
+						}
+						if (!doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("")) {
+							return "main/warning";
+						}
 					}
 				}
 			}
@@ -5750,12 +5777,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String aprType_aprState = "";
 			String aprDocUserID = "";
 			String orgCompanyID = "";
-
+			String aprMemberSN = "";
+			
 			for (int k = 0; k < docListNode.getLength(); k++) {
 				strDocState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(15).getTextContent();
 				strAprState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
 				aprDocUserID = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
 				orgCompanyID = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(21).getTextContent();
+				aprMemberSN = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(22).getTextContent();
 				//orgCompanyID = xmlResult.getElementsByTagName("orgCompanyID").item(k).getTextContent();
 				
 				/* 2018-04-27 천성준 - 부재자 결재문서는 일괄결재에서 제외시킨다 */
@@ -5788,7 +5817,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 								cnt++;
 								
 							    sbStr.append("<tr>");
-	                            sbStr.append("<TD style='padding:0;background-color:White' align='center'><input type='checkbox' name='chk' id='chk' orgCompanyID="+orgCompanyID+" value = \""+ docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(20).getTextContent() + "|" + mhtOrHwp + "|" + strDocState + "\")'></td>");
+	                            sbStr.append("<TD style='padding:0;background-color:White' align='center'><input type='checkbox' name='chk' id='chk' orgCompanyID="+orgCompanyID+" value = \""+ docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(20).getTextContent() + "|" + mhtOrHwp + "|" + strDocState + "|" + aprMemberSN + "\")'></td>");
 	                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("DOCTITLE").item(k).getTextContent()) + "</TD>");
 	                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERDEPTNAME").item(k).getTextContent()) + "</TD>");
 	                            //sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + commonUtil.cleanValue(xmlResult.getElementsByTagName("WRITERNAME").item(k).getTextContent()) + "</TD>");
@@ -7220,15 +7249,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				String docState = xmlDom.getElementsByTagName("DOCSTATE").item(k).getTextContent().trim();
 				String orgCompanyID = xmlDom.getElementsByTagName("orgCompanyID").item(k).getTextContent().trim();
 				String approveRet = ezApprovalGService.getApproveDocInfo(userInfo, xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgCompanyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(),mode,docState);
+				String aprMemberSN = xmlDom.getElementsByTagName("APRMEMBERSN").item(k).getTextContent().trim();
 				
 				Document aprXML = commonUtil.convertStringToDocument(approveRet);
 				
 				if (xmlDom.getElementsByTagName("TYPE").getLength() > 0) {
 					if (xmlDom.getElementsByTagName("TYPE").item(k).getTextContent().equals("MHT")) {
 						logger.debug("type = MHT");
-						//rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo, mode);
-						//참조일때
-						if (aprXML.getElementsByTagName("DocFlag").item(0).getTextContent().equals("CHAMJO")) {
+						//공유결재자에 의해 결재가 완료된 문서인지 확인
+						int checkAprState = ezApprovalGService.getCheckAprState(xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, docState, aprMemberSN, orgCompanyID, userInfo.getTenantId());
+						if (checkAprState == 0) {
+							//checkAprState가 0인 경우 현재 결재자의 진행,보류,미결 상태가 아님을 의미
+							rtnVal = "ERROR";
+						} else if (aprXML.getElementsByTagName("DocFlag").item(0).getTextContent().equals("CHAMJO")) {
+							//rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo, mode);
+							//참조일때
 							rtnVal = ezApprovalGService.doApprove(xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, "003", aprXML.getElementsByTagName("WRITERNAME").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent(), realPath + aprXML.getElementsByTagName("HREF").item(0).getTextContent(), aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent(), userInfo.getId(), orgCompanyID, userInfo.getLang(), userInfo, "", "017", "");
 						} else {
 							rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, orgCompanyID, request, userInfo,mode);
@@ -8707,5 +8742,38 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("checkNonElecRec ended. result = " + rtnVal);
 		
 		return rtnVal;
+	}
+	
+	/* 2018-10-24 배현상
+	 * 결재상태 여부(진행, 보류인지 검사), 중복결재를 방지하기 위한 검사
+	 */
+	@RequestMapping(value = "/ezApprovalG/checkAprState.do")
+	@ResponseBody
+	public String checkAprState(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("checkAprState started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String userID = request.getParameter("userID");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String docState = request.getParameter("docState");
+		String aprMemberSN = request.getParameter("aprMemberSN");
+		String companyID = userInfo.getCompanyID();
+		String retValue = "";
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		} 
+		
+		int result = ezApprovalGService.getCheckAprState(docID, userID, docState, aprMemberSN, userInfo.getCompanyID(), userInfo.getTenantId());
+			
+		if (result > 0) {
+			retValue = "TRUE";
+		} else {
+			retValue = "FALSE";
+		}
+		
+		logger.debug("checkAprState ended");
+		return retValue;
 	}
 }

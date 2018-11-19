@@ -741,7 +741,7 @@
 			WHERE 
 				A.tenant_id = #tenantID#
 			AND
-				B.companyid = #companyID#
+				(B.companyid = #companyID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 		]]>
 	</select>
 	

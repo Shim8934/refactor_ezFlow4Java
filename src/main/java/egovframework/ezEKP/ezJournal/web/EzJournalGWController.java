@@ -1799,7 +1799,7 @@ public class EzJournalGWController {
 			String curPage = request.getParameter("curPage");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			if (companyId.equals("") || companyId == null) {
+			if (companyId == null || companyId.equals("")) {
 				companyId = info.getCompanyId();
 			}
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());

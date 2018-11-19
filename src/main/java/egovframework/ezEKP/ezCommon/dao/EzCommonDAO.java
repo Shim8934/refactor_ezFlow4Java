@@ -309,6 +309,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		}
 	}
 	
+	public void createJmochaMailSignatureTemplate() throws Exception {
+		try {
+			select("EzCommonDAO.checkJMochaMailSignatureTemplate");
+		} catch (Exception e) {
+			logger.debug("tbl_access_id doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createJMochaMailSignatureTemplate");
+		}
+	}
+		
 	public void createJobMasterTable() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblUserJobMaster");
@@ -316,6 +326,26 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			logger.debug("tbl_user_jobmaster doesn't exist. creating the table...");
 			
 			update("EzCommonDAO.createTblUserJobMaster");
+		}
+	}
+	
+	/*세션 사용 시간 get*/
+	public String getUseSession(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.getUseSession", map);
+	}
+	
+	/*세션 사용 row가 없을 시 생성*/
+	public void insertUseSession(Map<String, Object> map) {
+		insert ("EzCommonDAO.insertUseSession", map);
+	}
+	
+	public void addJobMasterJobID() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddJobMasterJobID");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster jobid column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addAddJobMasterJobID");
 		}
 	}
 }

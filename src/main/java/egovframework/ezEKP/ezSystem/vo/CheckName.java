@@ -16,5 +16,6 @@ public enum CheckName {
 	Use_FromAddress,
 	MaxAllowedCountOfLoginFail,
 	USE_HTMLMODE,
-	editorFontStyle
+	editorFontStyle,
+	useSession
 }

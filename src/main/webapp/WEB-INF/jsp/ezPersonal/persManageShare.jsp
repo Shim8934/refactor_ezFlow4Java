@@ -63,7 +63,7 @@
 						shareSetList_complete(rtnValue);
 					},
 					error : function() {
-						alert("공유자 리스트를 가져오는 도중 오류가 발생했습니다.");
+						alert("<spring:message code='ezApprovalG.bhs04'/>");
 					}
 				})
 			}
@@ -74,7 +74,7 @@
 				var strHTML = "";
 				
 				if (listLength == 0) {
-					strHTML = "<tr id='noItem'><td colspan='5' style='text-align: center'>데이터가 없습니다.</td></tr>";	
+					strHTML = "<tr id='noItem'><td colspan='5' style='text-align: center'><spring:message code='ezApprovalG.bhs21'/></td></tr>";	
 				} else {
 					for (var i = 0; i < listdom.getElementsByTagName("ROW").length; i++) {
 						strHTML += "<tr data1='" + getNodeText(listdom.getElementsByTagName("SHAREUSERID")[i]) + "'>";
@@ -97,16 +97,18 @@
 		        try { OpenWin.focus(); } catch (e) { }
 			}
 			
-			function addShare_onclick_complete(rtnValue) {
+			function addShare_onclick_complete(userId, deptId) {
 				$.ajax({
 					url : '/ezPersonal/saveShareApproval.do',
 					method : 'POST',
 					dataType : 'text',
 					data : {
-						shareUserId : rtnValue
+						shareUserId : userId,
+						shareUserDeptId : deptId
 					},
 					success : function() {
 						shareSetList();
+						alert("<spring:message code='ezApprovalG.bhs05'/>");
 					},
 					error : function() {
 						
@@ -119,7 +121,7 @@
 				var selectedChkLength = $("#shareApprovalList tbody").find("input[type=checkbox]:checked").length;
 				
 				if (selectedChkLength == 0) {
-					alert("선택된 공유결재자가 없습니다.");
+					alert("<spring:message code='ezApprovalG.bhs06'/>");
 					return;
 				}
 				
@@ -140,7 +142,7 @@
 						shareUserId : checkedUserList
 					},
 					success : function() {
-						alert("공유결재자를 삭제하였습니다.");
+						alert("<spring:message code='ezApprovalG.bhs07'/>");
 						shareSetList();
 					},
 					error : function() {
@@ -163,8 +165,8 @@
 	</head>
 	<body>
 		<br>
-	    <h2 class="txt">▒ 공유결재자는 로그인 사용자의 결재할 문서를 대리 결재할 수 있습니다.</h2>
-	    <h2 class="txt" style="margin-top:3px">▒ 대리 결재 시 공유자의 결재사인이 등록됩니다.</h2>
+	    <h2 class="txt">▒ <spring:message code='ezApprovalG.bhs08'/></h2>
+	    <h2 class="txt" style="margin-top:3px">▒ <spring:message code='ezApprovalG.bhs09'/></h2>
 	    <table class="mainlist" style="width:750px;">
 	    	<tbody>
 	    		<tr>
@@ -174,15 +176,15 @@
 						    	<thead>
 						    		<tr>
 						    			<th style="width: 30px; text-align: center;"><input type="checkbox" id="checkboxAll" name="checkboxAll" onclick="checkboxAll_click()"/></th>
-						    			<th>공유자</th>
-						    			<th>부서</th>
-						    			<th>직급</th>
-						    			<th>공유일</th>
+						    			<th><spring:message code='ezApprovalG.bhs10'/></th>
+						    			<th><spring:message code='ezApprovalG.bhs11'/></th>
+						    			<th><spring:message code='ezApprovalG.bhs12'/></th>
+						    			<th><spring:message code='ezApprovalG.bhs13'/></th>
 						    		</tr>
 						    	</thead>
 						    	<tbody>
 						    		<tr>
-						    			<td colspan="5" style="text-align:center;">데이터가 없습니다.</td>
+						    			<td colspan="5" style="text-align:center;"><spring:message code='ezApprovalG.bhs21'/></td>
 						    		</tr>
 						    	</tbody>
 						    </table>
@@ -192,8 +194,8 @@
 	    	</tbody>
 	    </table>
 	    <div class="btnpositionJsp" style="width:750px;">
-	    	<a class="imgbtn" onclick="addShare_onclick()"><span>추가</span></a>
-	    	<a class="imgbtn" onclick="delShare_onclick()"><span>삭제</span></a>
+	    	<a class="imgbtn" onclick="addShare_onclick()"><span><spring:message code='ezApprovalG.bhs14'/></span></a>
+	    	<a class="imgbtn" onclick="delShare_onclick()"><span><spring:message code='ezApprovalG.bhs15'/></span></a>
 	    </div>    
 	</body>
 </html>

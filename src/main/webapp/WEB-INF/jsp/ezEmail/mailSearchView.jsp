@@ -250,7 +250,7 @@
 			    var count = 0;
 			    
 			    if (GetChildNodes(resultTD).length == 0) {
-			    	alert('<spring:message code="ezEmail.t622" />');
+			    	alert(strLang42);
 			        return;
 			    }
 			    
@@ -263,12 +263,12 @@
 				}
 				if (count == 0) 
 				{
-					alert('<spring:message code="ezEmail.t622" />');
+					alert(strLang42);
 					return;
 				}			
 				else if (count > 1) 
 				{
-					alert('<spring:message code="ezEmail.t623" />');
+					alert(strLang44);
 					return;
 				}
 			    var pheight = window.screen.availHeight;
@@ -289,7 +289,7 @@
 			    var count = 0;
 			    
 			    if (GetChildNodes(resultTD).length == 0) {
-			    	alert('<spring:message code="ezEmail.t625" />');
+			    	alert(strLang42);
 			        return;
 			    }
 			    
@@ -302,12 +302,12 @@
 			    }
 				if (count == 0) 
 				{
-					alert('<spring:message code="ezEmail.t625" />');
+					alert(strLang42);
 					return;
 				}	
 				else if (count > 1) 
 				{
-					alert('<spring:message code="ezEmail.t626" />');
+					alert(strLang44);
 					return;
 				}
 			
@@ -329,7 +329,7 @@
 			    var count = 0;
 			    
 			    if (GetChildNodes(resultTD).length == 0) {
-			    	alert('<spring:message code="ezEmail.t628" />');
+			    	alert(strLang42);
 			        return;
 			    }
 			    
@@ -342,12 +342,12 @@
 			    }
 				if (count == 0) 
 				{
-					alert('<spring:message code="ezEmail.t628" />');
+					alert(strLang42);
 					return;
 				}	
 				else if (count > 1) 
 				{
-					alert('<spring:message code="ezEmail.t629" />');
+					alert(strLang44);
 					return;
 				}
 			    var pheight = window.screen.availHeight;
@@ -369,7 +369,7 @@
 			    var count = 0;
 			    
 			    if (GetChildNodes(resultTD).length == 0) {
-			    	alert('<spring:message code="ezEmail.t631" />');
+			    	alert(strLang42);
 			        return;
 			    }
 			    
@@ -382,7 +382,7 @@
 			            }
 			        }
 			        if (count == 0) {
-			            alert('<spring:message code="ezEmail.t631" />');
+			            alert(strLang42);
 			            return;
 			        }
 			        if (CrossYN()) {
@@ -523,7 +523,7 @@
 		
 			function deleteWork(bDel) {
 			    if (GetChildNodes(resultTD).length == 0) {
-			        alert(strLang57);
+			        alert(strLang42);
 			        return;
 			    }
 
@@ -589,7 +589,7 @@
 			    var count = 0;
 			    
 			    if (GetChildNodes(resultTD).length == 0) {
-			    	alert('<spring:message code="ezEmail.t637" />');
+			    	alert(strLang42);
 			        return;
 			    }
 			    
@@ -603,7 +603,7 @@
 				
 				if (count == 0)
 				{
-					alert('<spring:message code="ezEmail.t637" />');
+					alert(strLang42);
 					return;
 				}
 		
@@ -640,7 +640,7 @@
 				var exportType = "MAIL";
 				if (document.getElementById("maillist") == null 
 					|| document.getElementById("maillist").childNodes[0].childNodes[0].childNodes[1] == null ){
-					alert("<spring:message code="ezEmail.t640" />");
+					alert(strLang42);
 					return;
 				}
 				var mailcount = document.getElementById("maillist").childNodes[0].childNodes.length;
@@ -656,7 +656,7 @@
 				}
 				
 				if (checkMailCnt == 0 || checkMailCnt == null) {
-					alert("<spring:message code="ezEmail.t640" />");
+					alert(strLang42);
 					return;
 				} else {
 					
@@ -811,6 +811,7 @@
 			  <li><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
 			  <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
 			  <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
+			  <li><span onClick="mail_export()"><spring:message code="ezEmail.t378" /></span></li>
 			  <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
 			  <li><span onClick="deleteWork()"><spring:message code="ezEmail.t95" /></span></li>
 			  <li><span onClick="delete_mail()"><spring:message code="ezEmail.t156" /></span></li>

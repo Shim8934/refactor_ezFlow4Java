@@ -878,7 +878,7 @@
 				//if (CrossYN()) {
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = add_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 620));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
 			    try { OpenWin.focus(); } catch (e) { }
 				/* }else{
 				    var rtnValue;
@@ -934,7 +934,7 @@
 			    userinfo_dialogArguments = new Array();
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = info_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 510));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
 			    try { OpenWin.focus(); } catch (e) { }
 				/* }else{
 				    var rtnValue;
@@ -1038,7 +1038,7 @@
 		      //크롬일때 alert창 크기때문에 크롬일때 구별
 	            var agent = navigator.userAgent.toLowerCase();
 	            if (agent.indexOf("chrome") != -1) {
-	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(450, 185));	
+	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));	
 	            } else {
 	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));	
 	            }
@@ -1524,7 +1524,7 @@
 		<spring:message code='main.t24' />
 		</c:if>
 		</h1>
-		<table style="margin-top:10px;width:900px;border:1px solid #ddd">
+		<table style="height:630px;margin-top:10px;width:900px;border:1px solid #ddd">
 			<tr>
 				<th style="height:30px;border-bottom:0px"><spring:message code='ezOrgan.t73' /></th>
 				<th style="border-bottom:0px">
@@ -1619,7 +1619,7 @@
 					<a class="imgbtn" style="vertical-align:middle"><span onClick="deptsearch_click()"><spring:message code='main.t74' />/<spring:message code='ezOrgan.t93' /></span></a>
 				</th>
 				<th style="border-top:0px">
-					<select id="search_type" style="WIDTH:60px; height:22px;">
+					<select id="search_type" style="WIDTH:100px; height:22px;">
 						<option selected value="displayname"><spring:message code='ezOrgan.t67' /></option>
 						<option value="cn"><spring:message code='ezOrgan.t94' /></option>
 						<option value="description"><spring:message code='ezOrgan.t68' /></option>
