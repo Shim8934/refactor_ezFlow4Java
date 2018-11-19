@@ -183,60 +183,26 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public String getQuickLinkList(LoginVO userInfo, String lang) throws Exception {
+	public List<PersonalQuickLinkVO> getQuickLinkList(LoginVO userInfo, String lang) throws Exception {
 		logger.debug("getQuickLinkList started");
 
-		StringBuilder result = new StringBuilder();
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyID());
+		map.put("lang", userInfo.getLang());
 		
 		List<PersonalQuickLinkVO> list = ezPersonalAdminDAO.getQuickLinkList(map);
-		
-		result.append("<LISTVIEWDATA>");
-		result.append("<ROWS>");
-		
-		for(PersonalQuickLinkVO vo : list) {
-			result.append("<ROW>");
+		for (PersonalQuickLinkVO vo : list) {
+			vo.setRegDate(commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false));
 			
-			if (lang.equals("1")) {
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName()) + "</VALUE>");
-				result.append("<DATA1>" + commonUtil.cleanValue(vo.getQuickLinkID()) + "</DATA1></CELL>");
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName2()) + "</VALUE></CELL>");
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName3()) + "</VALUE></CELL>");
-			} else if (lang.equals("2")) {
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName2()) + "</VALUE>");
-				result.append("<DATA1>" + commonUtil.cleanValue(vo.getQuickLinkID()) + "</DATA1></CELL>");
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName()) + "</VALUE></CELL>");
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName3()) + "</VALUE></CELL>");
-			} else if (lang.equals("3")) {
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName3()) + "</VALUE>");
-				result.append("<DATA1>" + commonUtil.cleanValue(vo.getQuickLinkID()) + "</DATA1></CELL>");
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName()) + "</VALUE></CELL>");
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName2()) + "</VALUE></CELL>");
+			if (vo.getModiDate() != null) {
+				vo.setModiDate(commonUtil.getDateStringInUTC(vo.getModiDate(), userInfo.getOffset(), false));
 			}
-			
-			result.append("<CELL><VALUE>" + vo.getLinkType() + "</VALUE></CELL>");
-			result.append("<CELL><VALUE><![CDATA[" + vo.getUrl() + "]]></VALUE></CELL>");
-			result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false) + "</VALUE></CELL>");
-			
-			if (vo.getModiDate() == null) {
-				result.append("<CELL><VALUE>" + " " + "</VALUE></CELL>");
-			} else {
-				result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getModiDate(), userInfo.getOffset(), false) + "</VALUE></CELL>");
-			}
-			
-			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getDisplayName()) + "</VALUE></CELL>");
-			result.append("</ROW>");
 		}
 		
-		result.append("</ROWS>");
-		result.append("</LISTVIEWDATA>");
-
 		logger.debug("getQuickLinkList ended");
-		return result.toString();
+		return list;
 	}
 
 	@Override

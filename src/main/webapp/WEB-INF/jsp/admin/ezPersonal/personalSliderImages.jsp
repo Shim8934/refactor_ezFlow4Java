@@ -15,8 +15,12 @@
 		body {background-color : white;}
 		.ui-sortable{ margin:0px; padding:0px;}
 		ul .sliderList {margin:0px 15px 15px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
-		ul .slider-header {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; border:1px solid #2196f3;}
-		ul .slider-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:215px;}
+		ul .slider-header {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;background-color:#2196f3; border:1px solid #2196f3; width:210px;}
+		ul .slider-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:130px;}
+		ul .slider-imagePage {padding:5px 15px 10px 15px;}
+		ul .addSlider {border:1px dashed #aab2ba; display:inline-block; text-align:center; vertical-align : top; height:19.3em; border-radius:0px; width:225px; height: 370px; position:relative;}
+		ul .addSlider:hover {cursor:pointer;}
+		ul .slideIsUse {padding: 30px 0px 10px 0px;}
 	}
 		</style>
 		<script type="text/javascript">
@@ -33,6 +37,7 @@
 		    	getSliderList();
 		    })
 		    
+		    //데이터 값 부르기
 		    var getSliderList = function() {
 		    	$.ajax({
 		        	type : "POST",
@@ -46,10 +51,10 @@
 		        });
 		    }
 		    
+		    //슬라이드 이미지 목록
 		    function MakeSliderList(result) {
 		    	console.log(result);
 		    
-		    if (result.status >= 200 && result.status < 400){
 		    	var sliderSn = "";
 		    	var sliderID = "";
 		    	var sliderImagePath = "";
@@ -59,40 +64,62 @@
 		    	var sliderURL = "";
 		    	var sliderIsUse = "";
 		    	var sliderHTML = "";
+		    	var sliderCnt = result.length;
 		    	var sliderFileName = "";
 		    	
-		    	result.forEach( function(item, value) {
+		    	for (var i = 0; i < sliderCnt; i++) {
+		    		sliderSn = result[i].sn;
+		    		sliderID = result[i].sliderID;
+		    		sliderImagePath = result[i].imagePath;
+		    		sliderName = result[i].sliderName;
+		    		sliderName2 = result[i].sliderName2;
+		    		sliderRegDate = result[i].regDate;
+		    		sliderURL = result[i].url;
+		    		sliderIsUse = result[i].isUse;
+		    		
 		    		sliderHTML += "<li class = 'sliderList' id = 'sliderList'>";
 		    		sliderHTML += "<div class = 'slider-header'>";
-		    		sliderHTML += "<dt><span class='imagePage" + item.imagePage + "'>";
+		    		sliderHTML += "</div>";
+		    		sliderHTML += "<dt><span class='imagePage'><IMG src ="+sliderImagePath+" style='width:220px;height:200px'/></dt>";
+		    		sliderHTML += "</span>";
 		    		sliderHTML += "<div class = 'slider-content'>";
-		    		sliderHTML += "</span></dt>";
+		    		sliderHTML += "<table class = 'sliderInfo'><tr><td class ='sliderName1'>이름    |</td>";
+		    		sliderHTML += "<td>"+sliderName+"</td></tr>"
+		    		sliderHTML += "<tr><td class ='sliderURL'>URL   |</td>";
+		    		sliderHTML += "<td>"+sliderURL+"</td></tr>"
+		    		sliderHTML += "<tr><td class ='sliderRegDate'>등록일   |</td>";
+		    		sliderHTML += "<td>"+sliderRegDate+"</td></tr>"
+		    		sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox'><span class='slider round'></label></td>";
+		    		
+		    		
+		    		sliderHTML += "</tr></table>";
 		    		sliderHTML += "</div>";
-		    		sliderHTML += "</div>";
-		    		sliderHTML += "</li>";
-		    	});
+		    	}
 		    	
-		    	$(".sliderContainer").html(sliderHTML);
-		    	console.log(sliderHTML);
+		    	sliderHTML += "<li class='addSlider' id='addSlider'><div style='margin-top:97px'><img src='/images/admin/admin_portlet_plus.png' ></img></div></li>";
+		    	sliderHTML += "</li>"
+		    	document.getElementById("sliderContainer").innerHTML = sliderHTML;
+		    	document.getElementById("addSlider").onclick = btn_Select; 
 		    	
-		    }
+		    	for (var i = 0; i < sliderCnt; i++) {
+		    		var checkbox = document.getElementById("slideIsUse");
+		    		var sliderId = result[i].sliderID;
+		    		var isUse = "";
+		    		
+		    		/* if(checkbox.checked == true){
+		    			isUse = true;
+		    		} else{
+		    			isUse = false;
+		    		}
+		    		
+		    		event_statuschange(isUse, sliderId); */
+		    	}
 		    
+		}
 		    
-		    
-		    	
-		        /* XmlNode = result;
-		        var DocList = new ListView();
-		        DocList.SetID("DocList");
-		        DocList.SetMulSelectable(false);
-		        DocList.SetSelectFlag(false);
-		        DocList.SetRowOnClick("event_click");
-		        DocList.SetRowOnDblClick("event_dbclick");
-		        DocList.DataSource(XmlNode);
-		        DocList.DataBind("lvDocList");
-		        DocList = null; */
-		    } 
+	    
 	
-		   /*  var tempid = "";
+		     var tempid = "";
 		    var _RowObject = null;
 		    function event_click(obj) {
 		        tempid = document.getElementById(obj).getAttribute("DATA1");
@@ -115,13 +142,13 @@
 		            window.showModalDialog(url, "", feature);
 		            window.location.reload(false);
 		        }
-		    } */
+		    } 
 		     
 		    function btn_Select_Complete() {
 		        window.location.reload(false);
 		    } 
 	
-		    /* function sliderdelete() {
+		    function sliderdelete() {
 		        if (tempid == "") {
 		            alert("<spring:message code = 'ezPersonal.t1022' />");
 		            return;
@@ -143,7 +170,7 @@
 		        		}
 		        	}
 		        });
-		    } */
+		    } 
 	
 		    /* function MakeDescription(filepath) {
 		        document.getElementById("ContentDescription").innerHTML = "<IMG src = '"+filepath+"' style='width:280px;height:515px' />";
@@ -249,10 +276,10 @@
 		        itemtmp = null;
 		    } */
 	
-		    function event_statuschange(check) {
+		    function event_statuschange(check, sliderId) {
 		        var isUse = "";
 		        
-		        if(check.checked) {
+		        if(check) {
 		        	isUse = '1';
 		        } else {
 		        	isUse = '0';
@@ -263,7 +290,7 @@
 		        	url : "/admin/ezPersonal/statusChangeSlider.do",
 		        	async : false,
 		        	dataType : "text",
-		        	data : {sliderID : check.parentElement.parentElement.getAttribute("DATA1"), isUse : isUse, mode : "U"},
+		        	data : {sliderID : sliderId, isUse : isUse, mode : "U"},
 		        	success : function(result) {
 		        		if (result != "OK") {
 		        			alert(result);
@@ -306,8 +333,8 @@
 	    <br /><br /><br />
 	    <div id="mainmenu">
 	    	<ul>
-	        	<li class="important"><span id ="NEW" onClick="btn_Select(this)"><spring:message code = 'ezPersonal.t105' /></span></li>
-				<li><span onclick="sliderdelete();"><spring:message code = 'ezPersonal.t99' /></span></li>
+	        	<%-- <li class="important"><span id ="NEW" onClick="btn_Select(this)"><spring:message code = 'ezPersonal.t105' /></span></li> --%>
+				<%-- <li><span onclick="sliderdelete();"><spring:message code = 'ezPersonal.t99' /></span></li> --%>
 				<%-- <li><span class="icon16 icon16_refresh" onclick="Reload();"></span></li>
 				<li><span onclick="Priority_UP();"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code = 'ezPersonal.t366' />"/></span></li>
 				<li><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code = 'ezPersonal.t367' />" /></span></li> --%>
