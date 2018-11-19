@@ -9,7 +9,6 @@
 <title>PortalPage</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
-<link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3-portlet.css')}" type="text/css" />
 <link href="${util.addVer('/css/ezNewPortal/theme3_main.css')}" rel="stylesheet" type="text/css">
 <style type="text/css">
 	.notEmptySlider {
@@ -89,7 +88,6 @@
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/showModalDialog.js')}" ></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.orbit-1.2.3.min.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.orbit-1.2.3-portlet.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
 <script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
