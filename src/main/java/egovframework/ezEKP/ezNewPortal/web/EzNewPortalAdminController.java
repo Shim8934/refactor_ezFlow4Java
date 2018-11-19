@@ -1241,7 +1241,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 				BufferedImage outputImage = null;
 				Graphics2D saveImage = null;
 				
-				outputImage= new BufferedImage(514, 250, BufferedImage.TYPE_INT_RGB);
+				outputImage= new BufferedImage(512, 250, BufferedImage.TYPE_INT_RGB);
 				saveImage = outputImage.createGraphics();
 				saveImage.drawImage(inputImage, 0, 0, 617, 250, null);
 				saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
