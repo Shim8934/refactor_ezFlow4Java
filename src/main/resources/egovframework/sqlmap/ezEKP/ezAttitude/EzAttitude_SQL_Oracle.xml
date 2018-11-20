@@ -1,0 +1,1763 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezAttitude">
+	<typeAlias alias="AttitudeDeptVO" 				type="egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO"/>
+	<typeAlias alias="AttitudeConfigVO" 			type="egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO"/>
+	<typeAlias alias="AttitudeUserConfigVO" 		type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
+	<typeAlias alias="AttitudeTypeVO" 				type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
+	<typeAlias alias="AttitudeApplicationVO" 		type="egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO"/>
+	<typeAlias alias="AttitudeVO" 					type="egovframework.ezEKP.ezAttitude.vo.AttitudeVO"/>
+	<typeAlias alias="AttitudeStatisVO" 			type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
+	<typeAlias alias="HolidayVO" 					type="egovframework.ezEKP.ezAttitude.vo.HolidayVO"/>
+	<typeAlias alias="attitudeFormVO" 				type="egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO"/>
+	
+	<resultMap id="attitudeApplicationVO" class="AttitudeApplicationVO">
+		<result property="attitudeId"		column="ATTITUDE_ID" 		columnIndex="1"/>
+		<result property="changeDate"		column="CHANGE_DATE" 		columnIndex="2"/>
+		<result property="apprUserName"		column="APPR_USER_NAME"		columnIndex="3"/>
+		<result property="originDate"		column="START_DATE" 		columnIndex="4"/> 		
+		<result property="apprStatus"		column="APPR_STATUS" 		columnIndex="5"/>
+		<result property="writerName"		column="WRITER_NAME" 		columnIndex="6"/>
+		<result property="writerDeptName"	column="WRITER_DEPT_NAME" 	columnIndex="7"/>
+		<result property="applCnt"			column="APPL_CNT" 			columnIndex="8"/>
+		<result property="writerId"			column="WRITER_ID" 			columnIndex="9"/>
+		<result property="applDate"			column="APPL_DATE"			columnIndex="10"/>
+	</resultMap>
+	
+	<resultMap id="deptTreeInfo" class="OrganDeptVO">
+		<result property="cn" 									column="cn" 							columnIndex="1"/>
+		<result property="displayName" 					        column="displayName" 			        columnIndex="2"/>
+		<result property="extensionAttribute15" 			    column="extensionAttribute15"	        columnIndex="3"/>
+		<result property="type" 								column="type" 						    columnIndex="4"/>		
+	</resultMap>
+		
+	<resultMap id="attitudeUserConfig" class="AttitudeUserConfigVO">
+		<result property="userId" 					column="USER_ID" 				columnIndex="1"/>
+		<result property="workStartTime"			column="WORK_STARTTIME"			columnIndex="2"/>
+		<result property="workEndTime" 				column="WORK_ENDTIME" 			columnIndex="3"/>
+		<result property="userTitle"				column="TITLE"					columnIndex="4"/>
+		<result property="userName" 				column="DISPLAYNAME" 			columnIndex="5"/>
+		<result property="deptName" 				column="DESCRIPTION" 			columnIndex="6"/>
+	</resultMap>
+	
+	<resultMap id="attitude" class="AttitudeVO">
+		<result  property="attitudeId" 			column="ATTITUDE_ID"			columnIndex="1"/>
+		<result  property="companyId" 			column="COMPANY_ID"				columnIndex="2"/>
+		<result  property="tenantId" 			column="TENANT_ID"				columnIndex="3"/>
+		<result  property="writerId" 			column="WRITER_ID"				columnIndex="4"/>
+		<result  property="deptId" 				column="DEPT_ID"				columnIndex="5"/>
+		<result  property="startDate" 			column="START_DATE"				columnIndex="6"/>
+		<result  property="endDate" 			column="END_DATE"				columnIndex="7"/>
+		<result  property="modAppl" 			column="MODAPPL"				columnIndex="8"/>
+		<result  property="region" 				column="REGION"					columnIndex="9"/>
+		<result  property="mobile" 				column="MOBILE"					columnIndex="10"/>
+		<result  property="bizSub" 				column="BIZSUB"					columnIndex="11"/>
+		<result  property="content" 			column="CONTENT"				columnIndex="12"/>
+		<result  property="ip" 					column="IP"						columnIndex="13"/>
+		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="14"/>
+		<result  property="typeId" 				column="TYPE_ID"				columnIndex="15"/>
+		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
+		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
+		<result  property="writerName"			column="WRITER_NAME"			columnIndex="18"/>
+		<result  property="writerDeptName"		column="WRITER_DEPT_NAME"		columnIndex="19"/>
+	</resultMap>
+	
+	<resultMap id="attitudeUserConfTime" class="AttitudeUserConfigVO">
+		<result property="workStartTime"			column="WORK_STARTTIME"			columnIndex="1"/>
+		<result property="workEndTime" 				column="WORK_ENDTIME" 			columnIndex="2"/>
+	</resultMap>
+	
+	<resultMap id="attitudeStatis" class="AttitudeStatisVO">
+		<result property="count"			column="COUNT"			columnIndex="1"/>
+		<result property="typeId"			column="TYPE_ID"			columnIndex="2"/>
+	</resultMap>
+	
+	<resultMap id="holiday" class="HolidayVO">
+		<result property="holidayId"		column="HOLIDAYID"			columnIndex="1"/>
+		<result property="holidayName"		column="HOLIDAYNAME"		columnIndex="2"/>
+		<result property="holidayName2"		column="HOLIDAYNAME2"		columnIndex="3"/>
+		<result property="holidayDate"		column="HOLIDAYDATE"		columnIndex="4"/>
+		<result property="isSolar"			column="ISSOLAR"			columnIndex="5"/>
+		<result property="isRepeat"			column="ISREPEAT"			columnIndex="6"/>
+		<result property="isRest"			column="ISREST"				columnIndex="7"/>
+		<result property="isUse"			column="ISUSE"				columnIndex="8"/>
+		<result property="useCompany"		column="USECOMPANY"			columnIndex="9"/>
+	</resultMap>
+	
+	<resultMap id="attitudeApplicationDetailVO" class="AttitudeApplicationVO">
+		<result property="attitudeId"		column="ATTITUDE_ID" 		columnIndex="1"/>
+		<result property="changeDate"		column="CHANGE_DATE" 		columnIndex="2"/>
+		<result property="apprUserName"		column="APPR_USER_NAME" 	columnIndex="3"/>
+		<result property="originDate"		column="START_DATE" 		columnIndex="4"/> 		
+		<result property="apprStatus"		column="APPR_STATUS" 		columnIndex="5"/>
+		<result property="typeId"			column="TYPE_ID" 			columnIndex="6"/>
+		<result property="typeName"			column="TYPE_NAME" 			columnIndex="7"/> 		
+		<result property="content"			column="CONTENT" 			columnIndex="8"/>
+		<result property="writerId"			column="WRITER_ID" 			columnIndex="9"/>
+		<result property="writerDeptId"		column="WRITER_DEPT_ID"		columnIndex="10"/>
+		<result property="writerName"		column="WRITER_NAME"		columnIndex="11"/>
+		<result property="writerTitle"		column="WRITER_TITLE"		columnIndex="12"/>
+		<result property="writerDeptName"	column="WRITER_DEPT_NAME"	columnIndex="13"/>
+	</resultMap>
+	
+	<resultMap id="simpleAtt" class="AttitudeApplicationVO">
+		<result property="originDate"		column="START_DATE" 	columnIndex="4"/> 		
+		<result property="writerId"			column="WRITER_ID" 		columnIndex="10"/>
+	</resultMap>
+	
+	
+	<resultMap id="attitudeApplicationHistoryVO" class="AttitudeApplicationVO">
+		<result property="attitudeId"		column="ATTITUDE_ID" 	columnIndex="1"/>
+		<result property="apprDate"			column="APPR_DATE" 		columnIndex="2"/>
+		<result property="apprUserName"		column="APPR_USER_NAME" columnIndex="3"/>
+		<result property="apprStatus"		column="APPR_STATUS" 	columnIndex="4"/> 		
+		<result property="content"			column="CONTENT" 		columnIndex="5"/>
+		<result property="originDate"		column="ORIGIN_DATE"	columnIndex="6"/>
+		<result property="changeDate"		column="CHANGE_DATE"	columnIndex="7"/>
+		<result property="title"			column="TITLE"			columnIndex="8"/>
+		<result property="description"		column="DESCRIPTION"	columnIndex="9"/>
+	</resultMap>
+	
+	<resultMap id="getFormBody" class="AttitudeFormVO">
+		<result property="formId"		    column="FORM_ID"		columnIndex="1"/>
+		<result property="formHtml"			column="FORM_HTML"		columnIndex="2"/>
+	</resultMap>
+	
+	<resultMap id="attitudeInfo" class="AttitudeVO">
+		<result  property="attitudeId" 			column="ATTITUDE_ID"			columnIndex="1"/>
+		<result  property="companyId" 			column="COMPANY_ID"				columnIndex="2"/>
+		<result  property="tenantId" 			column="TENANT_ID"				columnIndex="3"/>
+		<result  property="writerId" 			column="WRITER_ID"				columnIndex="4"/>
+		<result  property="deptId" 				column="DEPT_ID"				columnIndex="5"/>
+		<result  property="startDate" 			column="START_DATE"				columnIndex="6"/>
+		<result  property="endDate" 			column="END_DATE"				columnIndex="7"/>
+		<result  property="modAppl" 			column="MODAPPL"				columnIndex="8"/>
+		<result  property="region" 				column="REGION"					columnIndex="9"/>
+		<result  property="mobile" 				column="MOBILE"					columnIndex="10"/>
+		<result  property="bizSub" 				column="BIZSUB"					columnIndex="11"/>
+		<result  property="content" 			column="CONTENT"				columnIndex="12"/>
+		<result  property="ip" 					column="IP"						columnIndex="13"/>
+		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="14"/>
+		<result  property="typeId" 				column="TYPE_ID"				columnIndex="15"/>
+		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
+		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
+		<result  property="writerName"			column="DISPLAYNAME"			columnIndex="18"/>
+		<result  property="writerDeptName"		column="DESCRIPTION"			columnIndex="19"/>
+	</resultMap>
+	
+	<select id="ezAttitudeDAO.getAttitudeList" parameterClass="Map" resultMap="attitude" remapResults="true">
+		<![CDATA[
+			SELECT * FROM (
+				SELECT 
+					A.ATTITUDE_ID,
+					A.COMPANY_ID,
+					A.TENANT_ID,
+					A.WRITER_ID,
+					A.DEPT_ID,
+					IF(
+						date_add(A.START_DATE, INTERVAL +#offsetMin# minute) < #startDate#, 
+						CONCAT(substr(#startDate#,1,11), substr(A.START_DATE,12)), 
+						date_format(date_add(A.START_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
+					  ) AS START_DATE,
+					IF(
+						date_add(A.END_DATE, INTERVAL +#offsetMin# minute) > #endDate#, 
+						CONCAT(substr(#endDate#,1,11), substr(A.END_DATE,12)), 
+						date_format(date_add(A.END_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
+					  ) AS END_DATE,
+					A.MODAPPL,
+					A.REGION,
+					A.MOBILE,
+					A.BIZSUB,
+					A.CONTENT,
+					A.IP,
+					A.DATE_TYPE,
+					A.TYPE_ID,
+					B.TYPE_NAME$lang$ AS TYPE_NAME,
+					B.IMG_PATH,
+					C.DISPLAYNAME$lang$ AS WRITER_NAME,
+					C.DESCRIPTION$lang$ AS WRITER_DEPT_NAME
+				FROM   
+					tbl_attitude A 
+				INNER JOIN 
+					tbl_attitude_type B 
+				ON 
+					(A.TYPE_ID = B.TYPE_ID AND A.COMPANY_ID = B.COMPANY_ID AND A.TENANT_ID = B.TENANT_ID)
+				INNER JOIN 
+					tbl_usermaster C
+				ON
+					(C.CN = A.WRITER_ID AND A.COMPANY_ID = C.PHYSICALDELIVERYOFFICENAME AND A.TENANT_ID = C.TENANT_ID)
+				WHERE
+				]]>
+				(
+				<isNotEmpty property="pidListArr">
+					<iterate prepend="WRITER_ID IN" property="pidListArr" open="(" close=")" conjunction=",">
+				      		#pidListArr[]#
+					</iterate>
+					<isNotEmpty property="deptIdArr" prepend="or">
+						<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+				      		#deptIdArr[]#
+						</iterate>
+					</isNotEmpty> 
+				</isNotEmpty>
+				<isEmpty property="pidListArr">
+					<isNotEmpty property="deptIdArr">
+						<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+				      		#deptIdArr[]#
+						</iterate>
+					</isNotEmpty>
+				</isEmpty>
+				)
+				<isNotEmpty property="typeId" prepend="and">
+					A.TYPE_ID = #typeId#
+				</isNotEmpty>
+				AND
+					A.TENANT_ID = #tenantId#
+				<![CDATA[
+				AND  
+					(
+						(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 
+						or
+						(date_add(END_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) < #endDate#) 
+						or
+						(date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) >= #endDate#)
+					)
+		]]>
+		
+		
+			<isNotEmpty property="deptIdArr">
+				<![CDATA[
+					UNION
+					SELECT 
+						D.ATTITUDE_ID,
+						D.COMPANY_ID,
+						D.TENANT_ID,
+						D.WRITER_ID,
+						D.DEPT_ID,
+						IF(
+							date_add(D.START_DATE, INTERVAL +#offsetMin# minute) < #startDate#, 
+							CONCAT(substr(#startDate#,1,11), substr(D.START_DATE,12)), 
+							date_format(date_add(D.START_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
+						  ) AS START_DATE,
+						IF(
+							date_add(D.END_DATE, INTERVAL +#offsetMin# minute) > #endDate#, 
+							CONCAT(substr(#endDate#,1,11), substr(D.END_DATE,12)), 
+							date_format(date_add(D.END_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
+						  ) AS END_DATE,
+						D.MODAPPL,
+						D.REGION,
+						D.MOBILE,
+						D.BIZSUB,
+						D.CONTENT,
+						D.IP,
+						D.DATE_TYPE,
+						D.TYPE_ID,
+						E.TYPE_NAME$lang$ AS TYPE_NAME,
+						E.IMG_PATH,
+						F.DISPLAYNAME$lang$ AS WRITER_NAME,
+						F.DESCRIPTION$lang$ AS WRITER_DEPT_NAME
+					FROM   
+						tbl_attitude D 
+					INNER JOIN 
+						tbl_attitude_type E 
+					ON 
+						(D.TYPE_ID = E.TYPE_ID AND D.COMPANY_ID = E.COMPANY_ID AND D.TENANT_ID = E.TENANT_ID)
+					INNER JOIN 
+						tbl_usermaster F
+					ON
+						(F.CN = D.WRITER_ID AND D.COMPANY_ID = F.PHYSICALDELIVERYOFFICENAME AND D.TENANT_ID = F.TENANT_ID)
+					INNER JOIN
+						TBL_ADDJOBMASTER G
+					ON (
+					]]>
+						<iterate prepend="G.DEPTID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+					    	#deptIdArr[]#
+						</iterate>
+						AND D.TENANT_ID = G.TENANT_ID AND D.WRITER_ID = G.CN
+						)
+					WHERE
+						D.TENANT_ID = #tenantId#
+					<isNotEmpty property="typeId" prepend="and">
+						D.TYPE_ID = #typeId#
+					</isNotEmpty>
+					<![CDATA[
+					AND  
+						(
+							(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 
+							or
+							(date_add(END_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) < #endDate#) 
+							or
+							(date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) >= #endDate#)
+						)
+				]]>
+			</isNotEmpty>
+		) AS H
+		<![CDATA[
+			ORDER BY
+				H.START_DATE,
+				H.TYPE_ID
+		]]>
+	</select>
+
+	<insert id="ezAttitudeDAO.insertAttitude" parameterClass="Map">
+		INSERT INTO tbl_attitude
+		(
+			COMPANY_ID,
+			TENANT_ID,
+			WRITER_ID,
+			DEPT_ID,
+			START_DATE,
+			END_DATE,
+			REGION,
+			MOBILE,
+			BIZSUB,
+			CONTENT,
+			IP,
+			DATE_TYPE,
+			TYPE_ID,
+			MODAPPL
+		)
+		VALUES
+		(
+			#companyId#,
+			#tenantId#,
+			#writerId#,
+			#deptId#,
+			date_add(#startDate#, INTERVAL -#offsetMin# minute),
+			IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute)),
+			IFNULL(#region#, ''),
+			IFNULL(#mobile#, ''),
+			IFNULL(#bizSub#, ''),
+			IFNULL(#content#, ''),
+			IFNULL(#ipAddress#, ''),
+			#dateType#,
+			#typeId#,
+			#modappl#
+		)
+		<selectKey resultClass="int" keyProperty="attitudeId">
+		    SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<insert id="ezAttitudeDAO.insertAdminAttHistory" parameterClass="Map">
+		INSERT INTO tbl_attitude_modappl_history(
+			COMPANY_ID,
+			TENANT_ID,
+			WRITER_ID,
+			WRITER_NAME,
+			WRITER_NAME2,
+			WRITER_TITLE,
+			WRITER_TITLE2,
+			WRITER_DEPT_ID,
+			WRITER_DEPT_NAME,
+			WRITER_DEPT_NAME2,
+			CHANGE_STARTDATE,
+			CHANGE_ENDDATE,
+			CHANGE_REGION,
+			CHANGE_MOBILE,
+			CHANGE_BIZSUB,
+			CHANGE_CONTENT,
+			CHANGE_IP,
+			CHANGE_DATE_TYPE,
+			CHANGE_TYPE_ID,
+			CHANGE_TYPE_NAME,
+			CHANGE_TYPE_NAME2,
+			APPR_USER_ID,
+			APPR_USER_NAME,
+			APPR_USER_NAME2,
+			APPR_DATE
+			)
+			SELECT
+				#companyId#,
+				#tenantId#,
+				#writerId#,
+				b.displayname,
+				b.displayname2,
+				b.title,
+				b.title2,
+				#deptId#,
+				b.DESCRIPTION,
+				b.DESCRIPTION2,
+				date_add(#startDate#, INTERVAL -#offsetMin# minute),
+				IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute)),
+				IFNULL(#region#, ''),
+				IFNULL(#mobile#, ''),
+				IFNULL(#bizSub#, ''),
+				IFNULL(#content#, ''),
+				IFNULL(#ipAddress#, ''),
+				#dateType#,
+				#typeId#,
+				a.type_name,
+				a.type_name2,
+				#adminId#,
+				c.displayname,
+				c.displayname2,
+				#apprDate#
+			FROM
+				(select 
+					*
+				from 
+					tbl_attitude_type
+				where
+					type_id = #typeId#
+				and
+					company_id = #companyId#
+				and
+					tenant_id = #tenantId#					
+				) a
+				,
+				(select 
+					*
+				from 
+					tbl_usermaster
+				where
+					cn = #writerId#
+				and
+					PHYSICALDELIVERYOFFICENAME = #companyId#
+				and
+					tenant_id = #tenantId#					
+				) b
+				,
+				(select 
+					*
+				from 
+					tbl_usermaster
+				where
+					cn = #adminId#
+				and
+					PHYSICALDELIVERYOFFICENAME = #companyId#
+				and
+					tenant_id = #tenantId#					
+				) c
+	</insert>
+	
+	<select id="ezAttitudeDAO.getIsAttitudeUserConf" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				tbl_attitude_user_conf
+			WHERE
+				USER_ID = #writerId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="ezAttitudeDAO.getAttitudeUserConfTime" parameterClass="Map" resultMap="attitudeUserConfTime">
+		<isEqual property="isValue" compareValue="1">
+			SELECT
+				WORK_STARTTIME,
+				WORK_ENDTIME
+			FROM
+				tbl_attitude_user_conf
+			WHERE
+				USER_ID = #writerId#
+			AND
+				TENANT_ID = #tenantId#
+		</isEqual>
+		<isEqual property="isValue" compareValue="0">
+			SELECT
+				WORK_STARTTIME,
+				WORK_ENDTIME
+			FROM
+				tbl_attitude_conf
+			WHERE
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+		</isEqual>
+	</select>
+	
+	<sql id="ezAttitudeDAO.searchQuery">
+		<isNotEmpty property="userId" prepend="and"> 
+			a.WRITER_ID = #userId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchDeptId">
+			A.WRITER_DEPT_ID = #searchDeptId#
+		</isNotEmpty>
+		<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+      		#deptIdList[]#
+		</iterate>
+		<isNotEmpty property="apprUserName" prepend="and">
+			<isNotEmpty property="apprUserName" >
+				A.APPR_USER_NAME$lang$ LIKE CONCAT('%', #apprUserName#,'%')
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="writerName" prepend="and">
+			<isNotEmpty property="writerName" >
+				A.WRITER_NAME$lang$ LIKE CONCAT('%', #writerName#,'%')
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="writerDeptName" prepend="and">
+			<isNotEmpty property="writerDeptName" >
+				A.WRITER_DEPT_NAME$lang$ LIKE CONCAT('%', #writerDeptName#,'%')
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') <= #endDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="type" prepend="and">
+			<![CDATA[
+			a.APPR_STATUS = #type#
+			]]>
+		</isNotEmpty>
+		<![CDATA[
+			AND
+				A.DELFLAG = 0
+		]]>
+		<isNotEmpty prepend="" property="order">
+				ORDER BY $order$, A.APPL_CNT DESC
+		</isNotEmpty>
+		<isEmpty prepend="" property="order">
+				ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
+		</isEmpty>
+		<isNotEmpty property="startPoint" prepend="limit">
+			<isNotEmpty property="endPoint">
+				<![CDATA[
+					$startPoint$, $endPoint$
+				]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+
+	<select id="ezAttitudeDAO.getUsersModiyAtt" parameterClass="Map" resultMap="attitudeApplicationVO">
+		<![CDATA[
+			SELECT
+					a.attitude_id as ATTITUDE_ID,
+					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
+					a.appr_user_name$lang$ as APPR_USER_NAME,
+					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.origin_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
+					a.appr_status as APPR_STATUS,
+					a.writer_name$lang$ as WRITER_NAME,
+					a.writer_dept_name$lang$ as WRITER_DEPT_NAME,
+					a.appl_cnt AS APPL_CNT,
+					a.writer_id as WRITER_ID,
+					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.appl_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') as APPL_DATE
+			FROM 
+				jmocha.tbl_attitude_modappl a 
+			inner 
+				join tbl_attitude b 
+			on 
+				a.ATTITUDE_ID = b.ATTITUDE_ID
+			and
+				a.COMPANY_ID = b.COMPANY_ID
+			and 
+				a.TENANT_ID = b.TENANT_ID
+			where 
+				a.COMPANY_ID = #companyId#
+			and 
+				a.TENANT_ID = #tenantId#
+		]]>
+		<include refid="ezAttitudeDAO.searchQuery"/>
+	</select>
+	
+	<select id="ezAttitudeDAO.attDetail" parameterClass="Map" resultMap="simpleAtt">
+		<![CDATA[
+			SELECT
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(START_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offsetMin# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
+				WRITER_ID
+			FROM 
+				tbl_attitude 
+			where 
+				COMPANY_ID = #companyId#
+			and 
+				TENANT_ID = #tenantId#
+			and
+				ATTITUDE_ID = #ids#
+		]]>
+	</select>
+	
+	<select id="ezAttitudeDAO.attModAppDetail" parameterClass="Map" resultMap="attitudeApplicationDetailVO">
+		<![CDATA[
+			SELECT
+				a.attitude_id AS ATTITUDE_ID,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.change_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
+				a.appr_user_name$lang$ AS APPR_USER_NAME,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.origin_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
+				a.appr_status AS APPR_STATUS,
+				c.type_id AS TYPE_ID,
+				c.type_name$lang$ AS TYPE_NAME,
+				a.content AS CONTENT,
+				a.writer_id AS WRITER_ID,
+				a.writer_dept_id AS WRITER_DEPT_ID,
+				a.writer_name$lang$ AS WRITER_NAME,
+				a.writer_title$lang$ AS WRITER_TITLE,
+				a.writer_dept_name$lang$ AS WRITER_DEPT_NAME
+			FROM 
+				jmocha.tbl_attitude_modappl a
+			inner 
+				join tbl_attitude b 
+			on 
+				a.ATTITUDE_ID = b.ATTITUDE_ID
+			inner 
+				join tbl_attitude_type c 
+			on 
+				b.TYPE_ID = c.TYPE_ID
+			and
+				a.COMPANY_ID = c.COMPANY_ID
+			and
+				a.TENANT_ID = c.TENANT_ID
+			where 
+				a.COMPANY_ID = #companyId#
+			and 
+				a.TENANT_ID = #tenantId#
+			and
+				a.ATTITUDE_ID = #attModId#
+		]]>
+		<!-- 			applCnt가 없으면 제일 큰 거 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
+		<isNotEmpty property="applCnt">
+			and
+				a.APPL_CNT = #applCnt#
+		</isNotEmpty>
+		<isEmpty property="applCnt">
+			order by
+				a.APPL_CNT DESC
+			limit 
+				1
+		</isEmpty>
+	</select>
+	
+	<select id="ezAttitudeDAO.getAttitudeStatisList" parameterClass="Map" resultMap="attitudeStatis" remapResults="true">
+		<![CDATA[
+			SELECT SUM(to_days(
+								IF(
+									date_add(END_DATE, INTERVAL +#offsetMin# minute) > #endDate#, 
+			                        #endDate#, 
+			                        date_add(IFNULL(END_DATE, START_DATE), INTERVAL +#offsetMin# minute)
+								   )
+							   ) 
+					   -
+					   to_days(
+								IF(
+									date_add(START_DATE, INTERVAL +#offsetMin# minute) < #startDate#, 
+			                        #startDate#, 
+			                        date_add(START_DATE, INTERVAL +#offsetMin# minute)
+								   )
+							   )
+						) + COUNT(TYPE_ID) AS COUNT,
+			       TYPE_ID
+			FROM   
+				jmocha.tbl_attitude
+			WHERE  
+				(
+			]]>
+			<isNotEmpty property="pidListArr">
+				<iterate prepend="WRITER_ID IN" property="pidListArr" open="(" close=")" conjunction=",">
+			      		#pidListArr[]#
+				</iterate>
+				<isNotEmpty property="deptIdArr" prepend="or">
+					<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+			      		#deptIdArr[]#
+					</iterate>
+				</isNotEmpty> 
+			</isNotEmpty>
+			<isEmpty property="pidListArr">
+				<isNotEmpty property="deptIdArr">
+					<iterate prepend="DEPT_ID IN" property="deptIdArr" open="(" close=")" conjunction=",">
+			      		#deptIdArr[]#
+					</iterate>
+				</isNotEmpty>
+			</isEmpty>
+			<![CDATA[
+			)
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				TYPE_ID NOT IN ('A01', 'A03')
+			AND    
+				(
+					(START_DATE >= #startDate# and START_DATE <= #endDate#) 
+					or
+					(END_DATE >= #startDate# and END_DATE < #endDate#) 
+					or
+					(START_DATE < #startDate# and END_DATE >= #endDate#)
+				)
+			GROUP BY
+				TYPE_ID
+		]]>
+	</select>
+	
+	<select id="ezAttitudeDAO.getUsersModiyAttCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				count(*)
+			FROM 
+				jmocha.tbl_attitude_modappl a 
+			inner 
+				join tbl_attitude b 
+			on 
+				a.ATTITUDE_ID = b.ATTITUDE_ID
+			and
+				a.COMPANY_ID = b.COMPANY_ID
+			and 
+				a.TENANT_ID = b.TENANT_ID
+			where 
+				a.COMPANY_ID = #companyId#
+			and 
+				a.TENANT_ID = #tenantId#
+		]]>
+		<include refid="ezAttitudeDAO.searchQuery"/>
+	</select>
+	
+	<select id="ezAttitudeDAO.getAttsModAttCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				count(*)
+			FROM 
+				jmocha.tbl_attitude_modappl a 
+			inner 
+				join tbl_attitude b 
+			on 
+				a.ATTITUDE_ID = b.ATTITUDE_ID
+			where 
+				a.COMPANY_ID = #companyId#
+			and 
+				a.TENANT_ID = #tenantId#
+			and
+				a.ATTITUDE_ID = #attModId#
+		]]>
+	</select>
+	
+	<select id="ezAttitudeDAO.getHolidayList" parameterClass="Map" resultMap="holiday">
+		<![CDATA[
+			SELECT
+				HOLIDAYID,
+				HOLIDAYNAME,
+			    HOLIDAYNAME2,
+			    HOLIDAYDATE,
+			    ISSOLAR,
+			    ISREPEAT,
+			    ISREST,
+			    ISUSE,
+			    USECOMPANY
+			FROM
+				tbl_holidayList
+			WHERE
+				USECOMPANY = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				isuse = 1
+		]]>
+		<isEqual property="isRest" compareValue="rest">
+			AND
+				isrest = 1
+		</isEqual>
+	</select>
+	
+	<delete id="ezAttitudeDAO.delUsersModifyAtt" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_ATTITUDE_MODAPPL
+          	WHERE
+          		TENANT_ID = #tenantId#
+          	AND
+        		COMPANY_ID = #companyId#
+          	AND
+          		ATTITUDE_ID = #attModId#
+          	AND
+          		APPL_CNT = (SELECT 
+          						* 
+          				    FROM
+          				    	(
+          				    	SELECT
+          							MAX(APPL_CNT)
+	          					FROM
+	          						TBL_ATTITUDE_MODAPPL
+	          					WHERE
+	          						TENANT_ID = #tenantId#
+					          	AND
+					        		COMPANY_ID = #companyId#
+					          	AND
+					          		ATTITUDE_ID = #attModId#)t)
+		]]>
+	</delete>
+	
+	<delete id="ezAttitudeDAO.delUsersModifyAttHistory" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_ATTITUDE_MODAPPL_HISTORY
+          	WHERE
+          		TENANT_ID = #tenantId#
+          	AND
+        		COMPANY_ID = #companyId#
+          	AND
+          		ATTITUDE_ID = #attModId#
+		]]>
+	</delete>	
+
+	<update id="ezAttitudeDAO.setAttModApp" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ATTITUDE A
+			SET
+				A.MODAPPL = #modappl#
+          	WHERE
+          		A.TENANT_ID = #tenantId#
+          	AND
+        		A.COMPANY_ID = #companyId#
+        	AND 
+        		A.ATTITUDE_ID = #attitudeId#
+        ]]>
+	</update>
+	
+	<select id="ezAttitudeDAO.getAttModApp" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				MODAPPL
+			FROM
+				TBL_ATTITUDE A
+          	WHERE
+          		A.TENANT_ID = #tenantId#
+          	AND
+        		A.COMPANY_ID = #companyId#
+        	AND 
+        		A.ATTITUDE_ID = #attitudeId#
+        ]]>
+	</select>
+	
+	<update id="ezAttitudeDAO.resetAttModApp" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ATTITUDE A
+			SET
+				A.MODAPPL = #modappl#
+          	WHERE
+          		A.TENANT_ID = #tenantId#
+          	AND
+        		A.COMPANY_ID = #companyId#
+        	AND 
+        		A.ATTITUDE_ID = #attModId#
+        ]]>
+	</update>
+
+	<update id="ezAttitudeDAO.attAppUpdate" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ATTITUDE A
+			INNER JOIN
+				TBL_ATTITUDE_MODAPPL
+			ON
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.COMPANY_ID = B.COMPANY_ID
+			AND
+				A.ATTITUDE_ID = B.ATTITUDE_ID
+			SET
+				A.MODAPPL = #modappl#
+		]]>
+		<isEqual property="modappl" compareValue="0">
+				,A.START_DATE = B.CHANGE_DATE
+				,A.TYPE_ID = "A02"
+		</isEqual>
+		<![CDATA[				 
+          	WHERE
+          		A.TENANT_ID = #tenantId#
+          	AND
+        		A.COMPANY_ID = #companyId#
+        ]]>
+		<isNotEmpty property="attitudeId" prepend="and">
+				A.ATTITUDE_ID = #attitudeId#  
+		</isNotEmpty>
+		<isNotEmpty property="ids" prepend="and">
+			<iterate prepend="A.ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
+			      #ids[]#
+			</iterate>
+		</isNotEmpty>
+	</update>
+	
+	<select id="ezAttitudeDAO.getFormBody" parameterClass="Map" resultMap="getFormBody">
+		<![CDATA[
+			SELECT 
+				A.FORM_ID,
+				A.FORM_HTML
+			FROM 
+				jmocha.tbl_attitude_form A
+			INNER JOIN
+				jmocha.tbl_attitude_type B
+			ON
+				A.FORM_ID = B.FORM_ID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE
+				B.COMPANY_ID = #companyId#
+			AND
+				B.TYPE_ID = #typeId#
+			AND
+				A.TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<insert id="ezAttitudeDAO.attSaveAppModify" parameterClass="map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_ATTITUDE_MODAPPL(
+					ATTITUDE_ID,
+					APPL_CNT, 
+					COMPANY_ID, 
+					TENANT_ID, 
+					WRITER_ID, 
+					WRITER_NAME, 
+					WRITER_NAME2, 
+					WRITER_TITLE, 
+					WRITER_TITLE2, 
+					WRITER_DEPT_ID, 
+					WRITER_DEPT_NAME,
+					WRITER_DEPT_NAME2,
+					CHANGE_DATE,
+					ORIGIN_DATE,
+					DELFLAG,
+					APPR_STATUS,
+					CONTENT,
+					APPL_DATE
+				)
+				VALUES(
+					#attitudeId#,
+					(
+					SELECT 
+						IFNULL(MAX(a.APPL_CNT) + 1, 0)
+					FROM
+						TBL_ATTITUDE_MODAPPL a
+					WHERE
+						TENANT_ID = #tenantId#
+		        	AND
+		        		COMPANY_ID = #companyId#
+		        	AND
+		        		ATTITUDE_ID = #attitudeId#
+					),
+					#companyId#, 
+					#tenantId#, 
+					#writerId#, 
+					#writerName#, 
+					#writerName2#, 
+					#writerTitle#, 
+					#writerTitle2#, 
+					#writerDeptId#, 
+					#writerDeptName#,
+					#writerDeptName2#,
+					DATE_FORMAT(DATE_SUB(DATE_FORMAT(#changeDate#, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S'),
+					DATE_FORMAT(DATE_SUB(DATE_FORMAT(#originDate#, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S'),
+					#delFlag#,
+					#apprStatus#,
+					#content#,
+					#applDate#
+				)
+		]]>
+	</insert>
+	
+	<insert id="ezAttitudeDAO.adminAttSaveAppMod" parameterClass="map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_ATTITUDE_MODAPPL(
+					ATTITUDE_ID,
+					APPL_CNT, 
+					COMPANY_ID, 
+					TENANT_ID, 
+					WRITER_ID, 
+					WRITER_NAME, 
+					WRITER_NAME2, 
+					WRITER_TITLE, 
+					WRITER_TITLE2, 
+					WRITER_DEPT_ID, 
+					WRITER_DEPT_NAME,
+					WRITER_DEPT_NAME2,
+					APPR_USER_ID,
+					APPR_USER_NAME,
+					APPR_USER_NAME2,
+					APPR_DATE,
+					CHANGE_DATE,
+					ORIGIN_DATE,
+					APPR_STATUS,
+					CONTENT,
+					APPL_DATE
+				)
+				SELECT
+					#attitudeId#,
+					(
+					SELECT 
+						IFNULL(MAX(a.APPL_CNT) + 1, 0)
+					FROM
+						TBL_ATTITUDE_MODAPPL a
+					WHERE
+						TENANT_ID = #tenantId#
+		        	AND
+		        		COMPANY_ID = #companyId#
+		        	AND
+		        		ATTITUDE_ID = #attitudeId#
+					),
+					#companyId#, 
+					#tenantId#, 
+					#adminId#, 
+					b.DISPLAYNAME, 
+					b.DISPLAYNAME2, 
+					b.TITLE, 
+					b.TITLE2, 
+					b.DEPARTMENT, 
+					b.DESCRIPTION,
+					b.DESCRIPTION2,
+					#adminId#,
+					b.DISPLAYNAME, 
+					b.DISPLAYNAME2,
+					#apprDate#,
+					DATE_FORMAT(DATE_SUB(DATE_FORMAT(#changeDate#, '%Y-%m-%d %H:%i:%S'), INTERVAL #offsetMin# MINUTE), '%Y-%m-%d %H:%i:%S'),
+					DATE_FORMAT(DATE_SUB(DATE_FORMAT(#originDate#, '%Y-%m-%d %H:%i:%S'), INTERVAL #offsetMin# MINUTE), '%Y-%m-%d %H:%i:%S'),
+					"1",
+					#content#,
+					#applDate#
+				FROM
+					(select 
+					*
+					from 
+						tbl_usermaster
+					where
+						cn = #adminId#
+					and
+						PHYSICALDELIVERYOFFICENAME = #companyId#
+					and
+						tenant_id = #tenantId#					
+					) b
+		]]>
+	</insert>
+	
+	<update id="ezAttitudeDAO.attModAppModify" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_ATTITUDE_MODAPPL
+			SET 
+				CONTENT = #content#,
+	            CHANGE_DATE = DATE_FORMAT(DATE_SUB(DATE_FORMAT(#changeDate#, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S'),
+	            APPL_DATE = #applDate#
+	        WHERE
+	        	TENANT_ID = #tenantId#
+	        AND
+	        	ATTITUDE_ID = #attModId#
+	        AND
+	        	COMPANY_ID = #companyId#
+	        AND
+	        	WRITER_ID = #userId#
+	        AND
+	        	APPL_CNT = (SELECT *
+	        				FROM (SELECT 
+		        					MAX(APPL_CNT)
+		        				  FROM 
+		        					TBL_ATTITUDE_MODAPPL
+		        			      WHERE
+						        	TENANT_ID = #tenantId#
+								  AND	        	
+									ATTITUDE_ID = #attModId#
+								  AND
+						        	COMPANY_ID = #companyId#)a) 
+		]]>
+	</update>
+	
+	<select id="ezAttitude.getAttitudeInfo" parameterClass="map" resultMap="attitudeInfo">
+		SELECT 
+			A.ATTITUDE_ID,
+			A.COMPANY_ID,
+			A.TENANT_ID,
+			A.WRITER_ID,
+			A.DEPT_ID,
+			date_add(A.START_DATE, INTERVAL +#offsetMin# minute) AS START_DATE,
+			date_add(A.END_DATE, INTERVAL +#offsetMin# minute) AS END_DATE,
+			A.MODAPPL,
+			A.REGION,
+			A.MOBILE,
+			A.BIZSUB,
+			A.CONTENT,
+			A.IP,
+			A.DATE_TYPE,
+			A.TYPE_ID,
+			B.TYPE_NAME$lang$ AS TYPE_NAME,
+			B.IMG_PATH,
+		    C.DISPLAYNAME$lang$ AS DISPLAYNAME,
+		    C.DESCRIPTION$lang$ AS DESCRIPTION
+		FROM   
+			tbl_attitude A 
+		INNER JOIN
+			tbl_attitude_type B 
+		ON 
+			A.TYPE_ID = B.TYPE_ID 
+		AND 
+			A.COMPANY_ID = B.COMPANY_ID 
+		AND 
+			A.TENANT_ID = B.TENANT_ID
+		INNER JOIN 
+			tbl_usermaster C 
+		ON 
+			A.TENANT_ID = C.TENANT_ID
+		AND 
+			A.WRITER_ID = C.CN
+		WHERE  
+			A.ATTITUDE_ID = #attitudeId# 
+		AND    
+			A.TENANT_ID = #tenantId#
+	</select>
+	
+	<update id="ezAttitudeDAO.changeUsersModifyAtt" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_ATTITUDE_MODAPPL
+			SET 
+				APPR_STATUS =
+		]]> 
+			<isEqual property="changeStatus" compareValue="appr">
+				1
+			</isEqual>
+			<isEqual property="changeStatus" compareValue="ret">
+				2
+			</isEqual>
+		<![CDATA[
+			,APPR_DATE = DATE_FORMAT(#apprDate#, '%Y-%m-%d %H:%i:%S')
+			,APPR_USER_ID = #userId#
+			,APPR_USER_NAME = #displayName#
+			,APPR_USER_NAME2 = #displayName2#
+	        WHERE
+	        	TENANT_ID = #tenantId#
+			AND	        	
+				ATTITUDE_ID = #ids#
+			AND
+	        	COMPANY_ID = #companyId#
+		]]>
+		<isNotEmpty property="applCnt">
+	        AND
+	        	APPL_CNT = #applCnt#
+	    </isNotEmpty>
+	    <isEmpty property="applCnt">
+	        AND
+	        	APPL_CNT = (SELECT *
+	        				FROM (SELECT 
+		        					MAX(APPL_CNT)
+		        				  FROM 
+		        					TBL_ATTITUDE_MODAPPL
+		        			      WHERE
+						        	TENANT_ID = #tenantId#
+								  AND	        	
+									ATTITUDE_ID = #ids#
+								  AND
+						        	COMPANY_ID = #companyId#)a)
+	    </isEmpty>
+	</update>
+	
+	<update id="ezAttitudeDAO.adminChangeUsersModAtt" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_ATTITUDE_MODAPPL , (SELECT displayname,displayname2 from tbl_usermaster where cn=#adminId# and tenant_id=#tenantId#) a
+			SET 
+				APPR_STATUS =
+		]]> 
+			<isEqual property="changeStatus" compareValue="appr">
+				1
+			</isEqual>
+			<isEqual property="changeStatus" compareValue="ret">
+				2
+			</isEqual>
+		<![CDATA[
+			,APPR_DATE = DATE_FORMAT(#apprDate#, '%Y-%m-%d %H:%i:%S')
+			,APPR_USER_ID = #adminId#
+			,APPR_USER_NAME = a.displayname
+			,APPR_USER_NAME2 = a.displayname2
+	        WHERE
+	        	TENANT_ID = #tenantId#
+			AND	        	
+				ATTITUDE_ID = #ids#
+			AND
+	        	COMPANY_ID = #companyId#
+		]]>
+		<isNotEmpty property="applCnt">
+	        AND
+	        	APPL_CNT = #applCnt#
+	    </isNotEmpty>
+	    <isEmpty property="applCnt">
+	        AND
+	        	APPL_CNT = (SELECT *
+	        				FROM (SELECT 
+		        					MAX(APPL_CNT)
+		        				  FROM 
+		        					TBL_ATTITUDE_MODAPPL
+		        			      WHERE
+						        	TENANT_ID = #tenantId#
+								  AND	        	
+									ATTITUDE_ID = #ids#
+								  AND
+						        	COMPANY_ID = #companyId#)a)
+	    </isEmpty>
+	</update>
+	
+	<update id="ezAttitudeDAO.changeUsersAtt" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_ATTITUDE A 
+			INNER JOIN 
+				TBL_ATTITUDE_MODAPPL B 
+			ON 
+				A.ATTITUDE_ID = B.ATTITUDE_ID
+			AND 
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.COMPANY_ID = B.COMPANY_ID
+			SET
+			]]>
+			<isEqual property="changeStatus" compareValue="appr">
+				<![CDATA[
+				A.START_DATE = B.CHANGE_DATE
+				]]>
+			</isEqual>
+		<![CDATA[
+	        WHERE
+	        	A.TENANT_ID = #tenantId#
+		]]>	        	
+	        AND 
+	        	A.ATTITUDE_ID = #ids# 
+		<![CDATA[			
+	        AND
+	        	A.COMPANY_ID = #companyId#
+		]]>
+		<isNotEmpty property="applCnt">
+	        AND
+	        	B.APPL_CNT = #applCnt#
+	    </isNotEmpty>
+	    <isEmpty property="applCnt">
+	        AND
+	        	B.APPL_CNT = (SELECT *
+	        				FROM (SELECT 
+		        					MAX(APPL_CNT)
+		        				  FROM 
+		        					TBL_ATTITUDE_MODAPPL
+		        			      WHERE
+						        	TENANT_ID = #tenantId#
+								  AND	        	
+									ATTITUDE_ID = #ids#
+								  AND
+						        	COMPANY_ID = #companyId#)a)
+	    </isEmpty>
+	</update>
+	
+	<update id="ezAttitudeDAO.changeUsersAttType" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_ATTITUDE A 
+			SET
+				A.TYPE_ID = #typeId#
+	        WHERE
+	        	A.TENANT_ID = #tenantId#
+	        AND 
+	        	A.ATTITUDE_ID = #ids# 
+	        AND
+	        	A.COMPANY_ID = #companyId#
+		]]>
+	</update>
+	
+	<insert id="ezAttitudeAdminDAO.addUsersModifyAttHistory" parameterClass="Map">
+		INSERT INTO tbl_attitude_modappl_history(
+			ATTITUDE_ID,
+			MOD_CNT,
+			COMPANY_ID,
+			TENANT_ID,
+			WRITER_ID,
+			WRITER_NAME,
+			WRITER_NAME2,
+			WRITER_TITLE,
+			WRITER_TITLE2,
+			WRITER_DEPT_ID,
+			WRITER_DEPT_NAME,
+			WRITER_DEPT_NAME2,
+			CHANGE_DATE,
+			DELFLAG,
+			APPR_USER_ID,
+			APPR_USER_NAME,
+			APPR_USER_NAME2,
+			APPR_DATE,
+			APPR_STATUS,
+			CONTENT
+			)
+		SELECT
+			ATTITUDE_ID,
+			(SELECT 
+				IFNULL(MAX(MOD_CNT) + 1, 0)
+			FROM
+				tbl_attitude_modappl_history
+			WHERE
+				TENANT_ID = #tenantId#
+        	AND
+        		COMPANY_ID = #companyId#
+        	AND
+			<iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
+			      #ids[]# 
+			</iterate>),
+			COMPANY_ID,
+			TENANT_ID,
+			WRITER_ID,
+			WRITER_NAME,
+			WRITER_NAME2,
+			WRITER_TITLE,
+			WRITER_TITLE2,
+			WRITER_DEPT_ID,
+			WRITER_DEPT_NAME,
+			WRITER_DEPT_NAME2,
+			CHANGE_DATE,
+			DELFLAG,
+			APPR_USER_ID,
+			APPR_USER_NAME,
+			APPR_USER_NAME2,
+			APPR_DATE,
+			<isEqual property="changeStatus" compareValue="appr">
+				1
+			</isEqual>
+			<isEqual property="changeStatus" compareValue="ret">
+				2
+			</isEqual>,
+			CONTENT
+		FROM 
+			tbl_attitude_modappl
+		WHERE
+			TENANT_ID = #tenantId#
+        AND
+        	COMPANY_ID = #companyId#
+        AND
+		<iterate prepend="ATTITUDE_ID IN" property="ids" open="(" close=")" conjunction=",">
+		      #ids[]# 
+		</iterate>
+	</insert>
+	
+	<delete id="ezAttitudeDAO.deleteAttitude" parameterClass="Map">
+		DELETE FROM
+			tbl_attitude
+		WHERE
+			ATTITUDE_ID = #attitudeId#
+		AND
+			TENANT_ID = #tenantId#
+	</delete>
+	
+	<insert id="ezAttitudeDAO.updateAttitude" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				tbl_attitude
+			SET
+				TYPE_ID = #typeId#,
+			    REGION = #region#,
+			    MOBILE = #mobile#,
+			    BIZSUB = #bizSub#,
+			    CONTENT = #content#,
+			    DATE_TYPE = #dateType#,
+			    IP = #ipAddress#,
+			    START_DATE = date_add(#startDate#, INTERVAL -#offsetMin# minute),
+			    END_DATE = IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute))
+		]]>
+		<isNotEmpty property="modappl">
+				,MODAPPL = #modappl#
+		</isNotEmpty>
+		<![CDATA[
+			WHERE
+				ATTITUDE_ID = #attitudeId#
+		]]>
+	</insert>
+	
+	<select id="ezAttitudeDAO.attModGetHistory" parameterClass="Map" resultMap="attitudeApplicationHistoryVO">
+		<![CDATA[
+			SELECT
+				A.ATTITUDE_ID,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.APPR_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS APPR_DATE,
+				A.APPR_USER_NAME$lang$ AS APPR_USER_NAME,
+				A.APPR_STATUS,
+				A.CONTENT,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.ORIGIN_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS ORIGIN_DATE,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.CHANGE_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
+				B.TITLE$lang$ AS TITLE,
+				B.DESCRIPTION$lang$ AS DESCRIPTION
+			FROM 
+				TBL_ATTITUDE_MODAPPL A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				A.APPR_USER_ID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			AND 
+				A.TENANT_ID = #tenantId#
+			AND
+				A.ATTITUDE_ID = #attModId#
+			ORDER BY
+				A.APPR_DATE DESC, A.APPL_CNT DESC
+		]]>
+	</select>
+	
+	<insert id="ezAttitudeDAO.insertAdminAttHistory2" parameterClass="Map">
+		INSERT INTO tbl_attitude_modappl_history(
+			COMPANY_ID,
+			TENANT_ID,
+			WRITER_ID,
+			WRITER_NAME,
+			WRITER_NAME2,
+			WRITER_TITLE,
+			WRITER_TITLE2,
+			WRITER_DEPT_ID,
+			WRITER_DEPT_NAME,
+			WRITER_DEPT_NAME2,
+			CHANGE_STARTDATE,
+			CHANGE_ENDDATE,
+			CHANGE_REGION,
+			CHANGE_MOBILE,
+			CHANGE_BIZSUB,
+			CHANGE_CONTENT,
+			CHANGE_IP,
+			CHANGE_DATE_TYPE,
+			CHANGE_TYPE_ID,
+			CHANGE_TYPE_NAME,
+			CHANGE_TYPE_NAME2,
+			APPR_USER_ID,
+			APPR_USER_NAME,
+			APPR_USER_NAME2,
+			ATTITUDE_ID,
+			ORIGIN_STARTDATE,
+			ORIGIN_ENDDATE,
+			ORIGIN_CONTENT,
+			ORIGIN_REGION,
+			ORIGIN_MOBILE,
+			ORIGIN_BIZSUB,
+			ORIGIN_IP,
+			ORIGIN_TYPE_ID,
+			ORIGIN_TYPE_NAME,
+			ORIGIN_TYPE_NAME2,
+			ORIGIN_DATE_TYPE,
+			APPR_DATE
+			)
+			VALUES
+			(
+				#attVO.companyId#,
+				#tenantId#,
+				#attVO.writerId#,
+				#userInfo.userName#,
+				#userInfo.userName2#,
+				#userInfo.title#,
+				#userInfo.title2#,
+				#attVO.deptId#,
+				#userInfo.deptName#,
+				#userInfo.deptName2#,
+				IF(#startDate# = '', null, date_add(#startDate#, INTERVAL -#offsetMin# minute)),
+				IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute)),
+				IFNULL(#region#, ''),
+				IFNULL(#mobile#, ''),
+				IFNULL(#bizSub#, ''),
+				IFNULL(#content#, ''),
+				IFNULL(#ipAddress#, ''),
+				#dateType#,
+				#typeId#,
+				(select 
+					type_name
+				from 
+					tbl_attitude_type
+				where
+					type_id = #typeId#
+				and
+					company_id = #attVO.companyId#
+				and
+					tenant_id = #tenantId#),
+				(select 
+					type_name2
+				from 
+					tbl_attitude_type
+				where
+					type_id = #typeId#
+				and
+					company_id = #attVO.companyId#
+				and
+					tenant_id = #tenantId#),
+				#adminId#,
+				#adminInfo.userName#,
+				#adminInfo.userName2#,
+				#attitudeId#,
+				date_add(#attVO.startDate#, INTERVAL -#offsetMin# minute),
+				IF(#attVO.endDate# = '', null, date_add(#attVO.endDate#, INTERVAL -#offsetMin# minute)),
+				#attVO.content#,
+				#attVO.region#,
+				#attVO.mobile#,
+				#attVO.bizSub#,
+				#attVO.ip#,
+				#attVO.typeId#,
+				#attVO.typeName#,
+				#attVO.typeName2#,
+				#attVO.dateType#,
+				#apprDate#
+			)
+	</insert>
+	
+	<insert id="ezAttitudeDAO.insertAdminAttHistory3" parameterClass="Map">
+		INSERT INTO tbl_attitude_modappl_history(
+				COMPANY_ID,
+				TENANT_ID,
+				WRITER_ID,
+				WRITER_NAME,
+				WRITER_NAME2,
+				WRITER_TITLE,
+				WRITER_TITLE2,
+				WRITER_DEPT_ID,
+				WRITER_DEPT_NAME,
+				WRITER_DEPT_NAME2,
+				APPR_USER_ID,
+				APPR_USER_NAME,
+				APPR_USER_NAME2,
+				ATTITUDE_ID,
+				ORIGIN_STARTDATE,
+				ORIGIN_ENDDATE,
+				ORIGIN_CONTENT,
+				ORIGIN_REGION,
+				ORIGIN_MOBILE,
+				ORIGIN_BIZSUB,
+				ORIGIN_IP,
+				ORIGIN_TYPE_ID,
+				ORIGIN_TYPE_NAME,
+				ORIGIN_TYPE_NAME2,
+				ORIGIN_DATE_TYPE,
+				APPR_DATE
+			)
+			VALUES
+			(
+				#attVO.companyId#,
+				#tenantId#,
+				#attVO.writerId#,
+				#userInfo.userName#,
+				#userInfo.userName2#,
+				#userInfo.title#,
+				#userInfo.title2#,
+				#attVO.deptId#,
+				#userInfo.deptName#,
+				#userInfo.deptName2#,
+				#adminId#,
+				#adminInfo.userName#,
+				#adminInfo.userName2#,
+				#attitudeId#,
+				date_add(#attVO.startDate#, INTERVAL -#offsetMin# minute),
+				IF(#attVO.endDate# = '', null, date_add(#attVO.endDate#, INTERVAL -#offsetMin# minute)),
+				#attVO.content#,
+				#attVO.region#,
+				#attVO.mobile#,
+				#attVO.bizSub#,
+				#attVO.ip#,
+				#attVO.typeId#,
+				#attVO.typeName#,
+				#attVO.typeName2#,
+				#attVO.dateType#,
+				#apprDate#
+			)
+	</insert>
+	
+	<select id="ezAttitudeDAO.getIsAttitude" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		select
+			count(*)
+		from
+			tbl_attitude
+		where
+			tenant_id = #tenantId#
+		and
+			company_id = #companyId#
+		and
+			writer_id = #writerId#
+		]]>
+		<isNotEmpty property="typeIdArr" prepend="and">
+			<iterate prepend="type_id IN" property="typeIdArr" open="(" close=")" conjunction=",">
+				#typeIdArr[]#
+			</iterate>
+		</isNotEmpty>
+		<![CDATA[
+		and
+			start_date >= date_add(concat(#checkStartDate#, ' 00:00:00'), INTERVAL -#offsetMin# minute)
+		and
+			start_date <= date_add(concat(#checkStartDate#, ' 23:59:59'), INTERVAL -#offsetMin# minute)
+		]]>
+	</select>
+	
+	<select id="ezAttitudeDAO.getSearchListCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT 
+				COUNT(*) AS TOTALCOUNT 
+			FROM (
+				SELECT
+					CN
+				FROM
+					TBL_USERMASTER  A
+					$strSQL$
+		]]>					
+		<iterate prepend="AND DEPARTMENT IN" property="deptIdList" open="(" close=")" conjunction=",">
+      		#deptIdList[]#
+		</iterate>
+		<![CDATA[					
+				AND 
+					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+				AND 
+					A.TENANT_ID = #v_TENANT_ID#
+
+				UNION ALL
+
+				SELECT
+					A.CN
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN  TBL_ADDJOBMASTER A
+				ON
+					a.cn = b.cn and a.tenant_id = b.tenant_id
+					$strSQL$
+		]]>
+		<iterate prepend="AND DEPARTMENT IN" property="deptIdList" open="(" close=")" conjunction=",">
+      		#deptIdList[]#
+		</iterate>
+		<![CDATA[					 
+				AND 
+					A.TENANT_ID = #v_TENANT_ID#
+				) A
+		]]>
+	</select>
+	
+	<select id="ezAttitudeDAO.attOrganSearchList" parameterClass="Map" resultMap="deptTreeInfo">
+		<isEqual property="type" compareValue="U">
+			<![CDATA[
+				 	  SELECT  
+						cn, 
+						displayName,
+						extensionAttribute15, 
+						type 
+			          FROM 
+			          	(SELECT  
+			             	cn, 
+			                department as displayName, 
+			                '' as extensionAttribute15,
+			                'user' as type,
+			                DESCRIPTION 
+			             FROM  
+			             	TBL_USERMASTER A 
+                         $strSQL$
+			]]>					
+			<iterate prepend="AND DEPARTMENT IN" property="deptIdList" open="(" close=")" conjunction=",">
+	      		#deptIdList[]#
+			</iterate>
+			<![CDATA[
+                         AND 
+                             CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                                      
+                         AND 
+                             A.TENANT_ID = #v_TENANT_ID#
+			       		 
+			             UNION ALL
+			            
+       			         SELECT
+       			        	a.cn  , 
+       			            deptid as displayName , 
+       			            '' as extensionAttribute15,
+       			            'user' as type,
+       			            DESCRIPTION  
+       			         FROM 
+       			         	TBL_USERMASTER b   
+       			         INNER JOIN 
+       			         	TBL_ADDJOBMASTER A  
+       			         ON  
+       			         	a.cn = b.cn AND a.tenant_id = b.tenant_id
+                         $strSQL$
+			]]>					
+			<iterate prepend="AND DEPARTMENT IN" property="deptIdList" open="(" close=")" conjunction=",">
+	      		#deptIdList[]#
+			</iterate>
+			<![CDATA[                        
+                      AND A.TENANT_ID = #v_TENANT_ID#
+                        )  AA
+                      ORDER BY DESCRIPTION
+                      LIMIT #startRowForMySQL#, #count#
+               ]]>
+          </isEqual>
+          <isEqual property="class" compareValue="all">
+          	<![CDATA[
+            SELECT
+            *
+            FROM
+                (
+			    SELECT 
+				cn,
+				department as displayName,
+				'' as extensionAttribute15,
+				'user' as type				
+     			FROM 
+     	    		TBL_USERMASTER A 
+                $strSQL$
+                AND 
+                    CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                             
+                AND 
+                    A.TENANT_ID = #v_TENANT_ID#
+     	    		 
+     	      	UNION ALL
+     	      		      	
+     	      	SELECT 
+     	      		A.cn,
+     	      		deptid as displayName,
+     	      		'' as extensionAttribute15,
+     	      		'user' as type
+     	      	FROM	
+     				TBL_USERMASTER B 
+     			INNER JOIN 
+     				TBL_ADDJOBMASTER A 
+     			ON 
+     				A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+     				
+     			UNION ALL
+				
+				SELECT
+					CN,
+					'' as displayName,
+					'' as extensionAttribute15,
+					'group' as type
+				FROM
+					TBL_DEPTMASTER A	
+                $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+                ) AA
+			ORDER BY DISPLAYNAME                
+            LIMIT #startRowForMySQL#, #count#
+			]]>
+          </isEqual>
+		  <isEqual property="type" compareValue="G">
+		  	<![CDATA[
+			SELECT
+	    		cn,
+	    		'' as displayName,
+	    		'' as extensionAttribute15,
+	    		'group' as type
+	    	FROM
+	    		TBL_DEPTMASTER A
+            $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+            ORDER BY DISPLAYNAME
+            LIMIT #startRowForMySQL#, #count#
+			]]>
+	      </isEqual>
+	</select>
+	
+	<select id="ezAttitudeDAO.checkModApplStatus" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				appr_status as APPR_STATUS
+			FROM 
+				jmocha.tbl_attitude_modappl
+			where 
+				COMPANY_ID = #companyId#
+			and 
+				TENANT_ID = #tenantId#
+			and
+				ATTITUDE_ID = #attModId#
+		]]>
+		<!-- applCnt가 없으면 제일 큰 거 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
+		<isNotEmpty property="applCnt">
+			and
+				APPL_CNT = #applCnt#
+		</isNotEmpty>
+		<isEmpty property="applCnt">
+			order by
+				APPL_CNT DESC
+			limit 
+				1
+		</isEmpty>
+	</select>
+</sqlMap>

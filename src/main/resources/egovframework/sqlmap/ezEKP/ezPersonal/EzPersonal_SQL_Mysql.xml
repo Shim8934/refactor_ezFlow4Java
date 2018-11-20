@@ -817,13 +817,30 @@
      <select id="EzPersonalDAO.getShareApprovalList" parameterClass="Map" resultClass="PersonalShareApprovalVO">
 	     <![CDATA[
 	     	SELECT
-	     		*
-	     	FROM
-	     		TBL_PS_SHAREAPPROVAL
-	     	WHERE
-	     		TENANTID = #tenantID#
-	     	AND
-	     		OWNERID = #userID#
+				A.OWNERID      				AS OWNERID,
+				A.SHAREUSERID  				AS SHAREUSERID,
+				B.DISPLAYNAME$lang$			AS SHAREUSERNAME,
+				A.SHAREDATE 				AS SHAREDATE,
+				B.TITLE$lang$  				AS SHAREUSERTITLE,
+				A.SHAREUSERDEPTID   		AS SHAREUSERDEPTID,
+				B.DESCRIPTION$lang$			AS SHAREUSERDEPTNAME,
+				A.TENANTID     				AS TENANTID
+			FROM
+				TBL_PS_SHAREAPPROVAL A
+			JOIN
+				tbl_usermaster B
+			ON
+				A.TENANTID = B.TENANT_ID
+			AND
+				A.SHAREUSERID = B.CN
+			WHERE
+				TENANTID = #tenantID#
+			AND
+				OWNERID = #userID#
+			AND
+				SHAREUSERDEPTID IN (SELECT CN FROM TBL_DEPTMASTER WHERE TENANT_ID = #tenantID# AND EXTENSIONATTRIBUTE2 = #companyID#)
+			ORDER BY
+				SHAREDATE
 	     ]]>
      </select>
      
@@ -834,12 +851,10 @@
 	   		SELECT
 	   			#userID#,
 	   			CN,
-	   			DISPLAYNAME,
 	   			#shareDate#,
-	   			TITLE,
-	   			DEPARTMENT,
-	   			DESCRIPTION,
-	   			#tenantID#
+	   			#shareUserDeptID#,
+	   			#tenantID#,
+	   			PHYSICALDELIVERYOFFICENAME
 	   		FROM
 	   			TBL_USERMASTER
 	   		WHERE
@@ -862,5 +877,18 @@
    			#shareUserID[]#
    		</iterate>
      </delete>
+     
+     <select id="EzPersonalDAO.getCheckDuplShareUser" parameterClass="Map" resultClass="Integer">
+     	SELECT
+     		COUNT(SHAREUSERID)
+     	FROM
+     		TBL_PS_SHAREAPPROVAL
+     	WHERE
+     		TENANTID = #tenantID#
+     	AND
+     		OWNERID = #userID#
+     	AND
+     		SHAREUSERID = #shareUserID#
+     </select>
 </sqlMap>
 

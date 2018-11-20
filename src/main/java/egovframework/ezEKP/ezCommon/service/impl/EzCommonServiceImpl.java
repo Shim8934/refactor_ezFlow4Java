@@ -1341,7 +1341,32 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
+	public void createJMochaMailSignatureTemplate() throws Exception {
+		ezCommonDAO.createJmochaMailSignatureTemplate();
+	}
+	
 	public void createJobMasterTable() throws Exception {
 		ezCommonDAO.createJobMasterTable();
 	}
+	
+	@Override
+	public String getUseSession(Map<String, Object> map) {
+		return ezCommonDAO.getUseSession(map);
+	}
+
+	@Override
+	public void insertUseSession(Map<String, Object> map) {
+		ezCommonDAO.insertUseSession(map);
+	}
+	@Override
+	public void addJobMasterJobID() throws Exception {
+		ezCommonDAO.addJobMasterJobID();
+	}
+
+	@Override
+	public void createWebfolderToken() throws Exception {
+		ezCommonDAO.createWebfolderToken();
+		
+	}
+	
 }

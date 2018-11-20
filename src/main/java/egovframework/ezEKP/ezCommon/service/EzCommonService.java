@@ -74,5 +74,17 @@ public interface EzCommonService {
 	
 	public void addDeptMasterManualFlag() throws Exception;
 	
+	public void createJMochaMailSignatureTemplate() throws Exception;
+
 	public void createJobMasterTable() throws Exception;
+	
+	public String getUseSession(Map<String, Object> map);
+
+	public void insertUseSession(Map<String, Object> map);
+	
+	public void addJobMasterJobID() throws Exception;
+
+	public void createWebfolderToken() throws Exception;
+
 }
+

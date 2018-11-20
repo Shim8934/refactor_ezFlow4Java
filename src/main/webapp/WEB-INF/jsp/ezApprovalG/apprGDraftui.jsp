@@ -158,6 +158,7 @@
 			var nonElecRec = "${nonElecRec}";
 			var nonElecRecInfoXml = "";
 			var nonSepAttachLVXml = "";
+			var wAprMemberSN = "1";
 			
 		    window.onload = function ()
 		    {
@@ -488,6 +489,12 @@
 		        try {
 		        	
 		        	if (isEditorComplete == true) {
+		        		if (pDraftFlag == "REDRAFT" && checkAprState() && ListType != "21") {
+		        			alert("<spring:message code='ezApprovalG.bhs23'/>");
+			    			window.returnValue = "CLOSE";
+			    			window.close();
+			    			return;
+				    	}
 		        	
 			        	var result = "";
 			        	
@@ -854,6 +861,13 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
+		        
+		        if (pDraftFlag == "REDRAFT" && checkAprState() && ListType != "21") {
+		        	alert("<spring:message code='ezApprovalG.bhs23'/>");
+	    			window.returnValue = "CLOSE";
+	    			window.close();
+	    			return;
+		    	}
 		        
 		        if (addLastKyulJeYN != "0") {
 		        	var hDocID ;
@@ -1302,6 +1316,12 @@
 		
 		    var ezapprovalinfo_dialogArguments = new Array();
 		    function btnApprovalInfo(pGubun) {
+		    	if (pDraftFlag == "REDRAFT" && checkAprState() && ListType != "21") {
+		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+	    			window.returnValue = "CLOSE";
+	    			window.close();
+	    			return;
+		    	}
 		        var onlydocinfiview = false;
 		        var parameter = new Array();
 		        parameter[0] = pDocID;
@@ -1485,6 +1505,9 @@
 		            catch (e) {
 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
 		            }
+		        } else if (ret != undefined && ret[0] == "DUPL") {
+		        	window.returnValue = "CLOSE";
+	    			window.close();
 		        }
 		    }
 		
@@ -1597,6 +1620,31 @@
 	            }
 	            message.Editor_ReUseContent(reUseContent);
 	        }
+	        
+	        function checkAprState() {
+		    	var result = "";
+		    	
+		    	if (approvalFlag == "S") {
+			    	$.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/checkAprState.do",
+			    		data : {
+			    			docID : pDocID,
+			    			docState : DocState,
+			    			userID : '',
+			    			aprMemberSN : wAprMemberSN,
+			    			orgCompanyID : orgCompanyID
+			    		},
+			    		success : function(text) {
+			    			result = text;
+			    		}
+			    	});
+		    	}
+		    	
+		    	return result == "FALSE" ? true : false;
+		    }
 		</script>
 	</head>
 	<body class="popup" onbeforeunload="return window_onbeforeunload()" style="height:100%;">
