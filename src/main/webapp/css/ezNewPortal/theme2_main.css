@@ -37,19 +37,19 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 
 .scrollbox-play-light .scrollbox .scrollbar-v .button-up { 
     position:absolute; top:0; left:0; 
-    background:url(images/ezNewPortal/scrollbar_arrow_up_w.gif) no-repeat; 
+    background:url(/images/kr/main/scrollbar_arrow_up_w.gif) no-repeat; 
     width:11px; height:8px; 
 } 
 
 .scrollbox-play-light .scrollbox .scrollbar-v .button-down { 
     position:absolute; bottom:0; left:0; 
-    background:url(/images/ezNewPortal/scrollbar_arrow_down_w.gif) no-repeat; 
+    background:url(/images/kr/main/scrollbar_arrow_down_w.gif) no-repeat; 
     width:11px; height:8px; 
 } 
 
 .scrollbox-play-light .scrollbox .scrollbar-v .thumb-v { 
     position:absolute; 
-    background:url(/images/ezNewPortal/scrollbar_ball_w.gif) no-repeat; 
+    background:url(/images/kr/main/scrollbar_ball_w.gif) no-repeat; 
     height:11px; overflow:hidden; 
 } 
 

@@ -296,7 +296,7 @@ $(function(){
 </script>
 </head>
 <body>
-<article class="weather box_shadow" style="background-color:#ffffff">
+<article class="weather box_shadow">
 	<div class="layDiv">
 		<c:choose>
 			<c:when test="${usedTheme eq 3 }">

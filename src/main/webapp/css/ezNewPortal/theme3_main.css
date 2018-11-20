@@ -37,19 +37,19 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 
 .scrollbox-play-light .scrollbox .scrollbar-v .button-up { 
     position:absolute; top:0; left:0; 
-    background:url(/images/ezNewPortal/scrollbar_arrow_up_w.gif) no-repeat; 
+    background:url(/images/kr/main/scrollbar_arrow_up_w.gif) no-repeat; 
     width:11px; height:8px; 
 } 
 
 .scrollbox-play-light .scrollbox .scrollbar-v .button-down { 
     position:absolute; bottom:0; left:0; 
-    background:url(/images/ezNewPortal/scrollbar_arrow_down_w.gif) no-repeat; 
+    background:url(/images/kr/main/scrollbar_arrow_down_w.gif) no-repeat; 
     width:11px; height:8px; 
 } 
 
 .scrollbox-play-light .scrollbox .scrollbar-v .thumb-v { 
     position:absolute; 
-    background:url(/images/ezNewPortal/scrollbar_ball_w.gif) no-repeat; 
+    background:url(/images/kr/main/scrollbar_ball_w.gif) no-repeat; 
     height:11px; overflow:hidden; 
 } 
 
@@ -556,7 +556,6 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 /* wather */
 .weather_icon{ height:47%}
-.weather_content{background:#fff;}
 
 .dataHave {position:absolute; top:2px; left:45%; font-weight: bold; font-size: 18px; }
 /* layer */
@@ -685,7 +684,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .portlet_title .portletPlus{float:right; overflow:hidden; margin:0px; padding:0px; cursor:pointer;}
 
 .portlet_title .portletPlus .weatherSelect{width:78px; height:28px; margin:0px 10px 0px 0px; padding:0px; border:1px solid #c0c0c0; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px;}
-.weather_content{height:110px; margin:10px;}
+.weather_content{height:188px; padding:10px;background:#fff;}
 .weather_title{overflow:hidden; margin:0px 5px 5px 5px;}
 .weather_title .weatherPresent{float:left; width:calc(60% - 10px); margin:0px 20px 0px 0px; padding:16px 0px;}
 .weather_title .weatherPresent dt{float:left; width:calc(40% - 20px); margin:0px 10px; padding:0px; text-align:center;}
