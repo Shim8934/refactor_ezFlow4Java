@@ -18,8 +18,6 @@
 			var approvalFlag = "${approvalFlag}";
 			
 			$(document).ready(function(){
-				var RetValue;
-				
 			    if (CrossYN()){
 			    	try {
 			        	ReturnFunction = opener.deptinfo_dialogArguments[1];
