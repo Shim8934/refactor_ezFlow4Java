@@ -85,7 +85,7 @@ function makePageSelPageAtti() {
 	$("#tblPageLayer").html("");
 	var pagingHtml = "";
 	
-	$("#mailBoxInfo").html(" - [총<span style='color:#017BEC;'> " + totalCount + " </span>개]");
+	$("#mailBoxInfo").html("&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>");
 	
 	pagingHtml = "<div class='pagenavi'>";
 	//|< 버튼 셋팅 ==> 1번페이지로 이동

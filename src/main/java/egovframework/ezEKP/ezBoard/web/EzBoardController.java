@@ -3269,7 +3269,7 @@ public class EzBoardController extends EgovFileMngUtil{
 						String strName = "";
 						
 						if (intCount != 0) {
-							strName = "(" + intCount + ")";
+							strName = " " + intCount;
 						}
 						
 						node.getChildNodes().item(0).setTextContent(node.getChildNodes().item(0).getTextContent() + strName);

@@ -349,7 +349,7 @@
 	                strListInfo = "";
 
 	                $("#lstCnt").html("");
-	                $("#lstCnt").append("(" + lstCnt + ")");
+	                $("#lstCnt").append("&nbsp;&nbsp;<span style='color:#017BEC;'>" + lstCnt + "</span>");
 	            }
 	        
 	

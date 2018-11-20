@@ -1279,9 +1279,9 @@ function makePageSelPage() {
     var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
     
     if (searchMode) {
-    	document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang156 + "<span id='pSearchListCount' style='color:#017BEC;'> " + pSearchListCount + " </span>" + strLang157 + "]";
+    	document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span id='pSearchListCount' style='color:#017BEC;'>" + pSearchListCount + "</span>";
     } else {
-    	document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang255 + "<span id='folderUnreadCount' style='color:#017BEC;'> " + pFolderUnReadCount + " </span>" + strLang257 + " / " + strLang256 + "<span id='folderTotalCount' style='color:#017BEC;'> " + pFolderTotalCount + " </span>" + strLang257 + "</b>]";
+    	document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span id='folderUnreadCount' style='color:#017BEC;'>" + pFolderUnReadCount + " </span> / <span id='folderTotalCount'>" + pFolderTotalCount + " </span></b>";
     }
     
     if (totalPage > 1 && pageNum != 1) {

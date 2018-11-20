@@ -682,9 +682,9 @@
 	                    var dataNodes = GetChildNodes(ResultXML);
 	                    var count = getNodeText(dataNodes[0]);
 	                    if (count > 0)
-	                        document.getElementById("countsub" + presentValue).innerHTML = "<b>(" + count + ")</b>";
+	                        document.getElementById("countsub" + presentValue).innerHTML = "&nbsp;&nbsp;<b>" + count + "</b>";
 	                    else
-	                        document.getElementById("countsub" + presentValue).innerHTML = "(" + count + ")";
+	                        document.getElementById("countsub" + presentValue).innerHTML = "";
 	                    presentValue++;
 	                    getAprCountTemp();
 	                }
@@ -713,68 +713,68 @@
 		            // 결재할 문서
 		            if (pListTypeValue != "1") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) > 0)
-		                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
+		                    count1.innerHTML = "&nbsp;&nbsp;" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0));
 		                else
-		                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
+		                    count1.innerHTML = "";
 		            }
 		            // 결재진행문서
 		            if (pListTypeValue != "3") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(1)) > 0)
-		                    count2.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(1)) + ")";
+		                    count2.innerHTML = "&nbsp;&nbsp;" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(1));
 		                else
-		                    count2.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(1)) + ")";
+		                    count2.innerHTML = "";
 		            }
 		            // 기안한문서
 		            if (pListTypeValue != "2") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(2)) > 0)
-		                    count3.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(2)) + ")";
+		                    count3.innerHTML = "&nbsp;&nbsp;" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(2));
 		                else
-		                    count3.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(2)) + ")";
+		                    count3.innerHTML = "";
 		            }
 		            // 부서수신함
 		            if (pListTypeValue != "4") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(3)) > 0)
-		                    count4.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(3)) + ")";
+		                    count4.innerHTML = "&nbsp;&nbsp;" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(3));
 		                else
-		                    count4.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(3)) + ")";
+		                    count4.innerHTML = "";
 		            }
 		            // 발송의뢰문서
 		            if (pListTypeValue != "6") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) > 0)
-		                    count6.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) + ")";
+		                    count6.innerHTML = "&nbsp;&nbsp;" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4));
 		                else
-		                    count6.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) + ")";
+		                    count6.innerHTML = "";
 		            }
 		            
 		            if (document.getElementById('countWHO') != null) {
 			            if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) > 0)
-		                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) + ")";
+		                    document.getElementById('countWHO').innerHTML = "&nbsp;&nbsp;" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(10));
 		                else
-		                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) + ")";
+		                    document.getElementById('countWHO').innerHTML = "";
 		            }
 		            
 		            // 임시보관함
 		            if (pListTypeValue != "21") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) > 0)
-		                    count21.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
+		                    count21.innerHTML = "&nbsp;&nbsp;" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9));
 		                else
-		                    count21.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
+		                    count21.innerHTML = "";
 		            }
 		            
 		            try {
 		                // 공람할문서
 		                if (pListTypeValue != "99") {
 		                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) > 0)
-		                    	count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
+		                    	count99.innerHTML = "&nbsp;&nbsp;" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7));
 		                    else
-		                    	count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
+		                    	count99.innerHTML = "";
 		                }
 		                // 공람한문서
 		                if (pListTypeValue != "10") {
 		                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) > 0)
-		                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
+		                    	count10.innerHTML = "&nbsp;&nbsp;" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8));
 		                    else
-		                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
+		                    	count10.innerHTML = "";
 		                }
 		            } catch (e) { }
 		            try {
@@ -783,9 +783,9 @@
 		                	//겸직 시 겸직된 부서로 이동할 경우 직인의뢰함의 count가 표시되지 않는 현상 제거
 		                	//if("${userSendOut}" == "YES") {
 		                    	if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) > 0)
-		                        	count7.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) + ")";
+		                        	count7.innerHTML = "&nbsp;&nbsp;" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5));
 		                    	else
-		                        	count7.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) + ")";
+		                        	count7.innerHTML = "";
 		                	//}
 	                	}
 		            } catch (e) { }
@@ -793,9 +793,9 @@
 		            // 공유결재문서
 		            if (pListTypeValue != "11") {
 		            	if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) > 0)
-		            		count11.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) + ")";
+		            		count11.innerHTML = "&nbsp;&nbsp;" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(11));
 		            	else
-		            		count11.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) + ")";
+		            		count11.innerHTML = "";
 		            }
 		        } catch (e) { }
 		    }
@@ -815,9 +815,9 @@
 		            var ResultXML = xmlhttp_1.responseXML;
 		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
 		            if (cnt > 0)
-		                count1.innerHTML = "<b>(" + cnt + ")</b>";
+		                count1.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
-		                count1.innerHTML = "(" + cnt + ")";
+		                count1.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -837,9 +837,9 @@
 		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
 		
 		            if (cnt > 0)
-		                count2.innerHTML = "<b>(" + cnt + ")</b>";
+		                count2.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
-		                count2.innerHTML = "(" + cnt + ")";
+		                count2.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -858,9 +858,9 @@
 		            var ResultXML = xmlhttp_3.responseXML;
 		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
 		            if (cnt > 0)
-		                count3.innerHTML = "<b>(" + cnt + ")</b>";
+		                count3.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
-		                count3.innerHTML = "(" + cnt + ")";
+		                count3.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -879,9 +879,9 @@
 		            var ResultXML = xmlhttp_4.responseXML;
 		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
 		            if (cnt > 0)
-		                count4.innerHTML = "<b>(" + cnt + ")</b>";
+		                count4.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
-		                count4.innerHTML = "(" + cnt + ")";
+		                count4.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -900,9 +900,9 @@
 		            var ResultXML = xmlhttp_6.responseXML;
 		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
 		            if (cnt > 0)
-		                count6.innerHTML = "<b>(" + cnt + ")</b>";
+		                count6.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
-		                count6.innerHTML = "(" + cnt + ")";
+		                count6.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -921,9 +921,9 @@
 		            var ResultXML = xmlhttp_7.responseXML;
 		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
 		            if (cnt > 0)
-		                count7.innerHTML = "<b>(" + cnt + ")</b>";
+		                count7.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
-		                count7.innerHTML = "(" + cnt + ")";
+		                count7.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -942,9 +942,9 @@
 		            var ResultXML = xmlhttp_99.responseXML;
 		            var cnt = getNodeText(GetChildNodes(ResultXML)[0]);
 		            if (cnt > 0)
-		                count99.innerHTML = "<b>(" + cnt + ")</b>";
+		                count99.innerHTML = "&nbsp;&nbsp;<b>" + cnt + "</b>";
 		            else
-		                count99.innerHTML = "(" + cnt + ")";
+		                count99.innerHTML = "";
 		        } catch (e) { }
 		    }
 		
@@ -1094,9 +1094,9 @@
 	                var dataNodes = GetChildNodes(ResultXML);
 
 	                if (dataNodes.length > 0)
-	                    document.getElementById('countWHO').innerHTML = "<b>(" + getNodeText(dataNodes[0]) + ")</b>";
+	                    document.getElementById('countWHO').innerHTML = "&nbsp;&nbsp;<b>" + (getNodeText(dataNodes[0]) == "0" ? "" : getNodeText(dataNodes[0])) + "</b>";
 	                else
-	                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(dataNodes[0]) + ")";
+	                    document.getElementById('countWHO').innerHTML = "";
 	            } catch (e) { }
 	        }
 	        

@@ -201,7 +201,14 @@
 						listType : 'newCircular'
 					},
 					success: function(result){
-						$("#newCircularCount").html("(" + result.count + ")");
+						var rcnt;
+						
+						if (result.count == "0") {
+							rcnt = "";	
+						} else {
+							rcnt = result.count;
+						}
+						$("#newCircularCount").html("&nbsp;" + rcnt);
 					}
 				});
 	        }

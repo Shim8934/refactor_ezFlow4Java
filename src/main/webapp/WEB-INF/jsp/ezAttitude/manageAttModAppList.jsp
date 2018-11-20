@@ -471,18 +471,18 @@
 		    	totalPages = data.totalPages;
 		    	makePageSelPage();
 		    	
-		    	infoStr += " [<spring:message code='ezAttitude.t76'/> <span style='color:#017BEC;'>" + data.totalAtt;
+		    	infoStr += "&nbsp;&nbsp;<span style='color:#017BEC;'>" + data.totalAtt;
 		    	
 		    	if (data.startDate != "" && data.endDate != "") {
-		    		infoStr += "</span> <spring:message code='ezAttitude.t78'/>";
-	    			infoStr += ' - ' + data.startDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/>" + 
+		    		infoStr += "</span>";
+	    			infoStr += ' / ' + data.startDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/>" + 
 			    	data.startDate.substring(5,7) + "<spring:message code='ezAttitude.t67'/>" + 
 			    	data.startDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/>~";
 			    	infoStr += data.endDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/>" + 
 			    	data.endDate.substring(5,7) + "<spring:message code='ezAttitude.t67'/>" + 
 			    	data.endDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/>]</span>";	
 		    	} else {
-		    		infoStr += "</span> <spring:message code='ezAttitude.t78'/>]";
+		    		infoStr += "</span>";
 		    	}
 		    	
 		    	$("#mailBoxInfo").html(infoStr);

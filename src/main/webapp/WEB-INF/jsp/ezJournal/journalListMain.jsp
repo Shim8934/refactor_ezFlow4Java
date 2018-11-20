@@ -1048,17 +1048,10 @@
 	</c:if>
 	<c:choose>
 		<c:when test="${listType eq 'recv' }">
-			<span id="mailBoxInfo">[<spring:message code='ezJournal.t161' />
-				<span id="recvCount" style="color: #017BEC;"></span> 
-					<spring:message code='ezJournal.t55' /> / <spring:message code='ezJournal.t54' /> 
-				<span id="totalCount" style="color: #017BEC;"></span> 
-					<spring:message code='ezJournal.t55' />]
-			</span>
+			<span id="mailBoxInfo">&nbsp;<span id="recvCount" style="color: #017BEC;"></span> / <span id="totalCount"></span></span>
 		</c:when>
 		<c:otherwise>
-			<span id="mailBoxInfo">[<spring:message code='ezJournal.t54' />
-				<span id="totalCount" style="color: #017BEC;"></span> <spring:message code='ezJournal.t55' />]
-			</span>
+			<span id="mailBoxInfo">&nbsp;<span id="totalCount" style="color: #017BEC;"></span></span>
 		</c:otherwise>
 	</c:choose>
 	<span style="float: right; font-weight: normal; color: black;">

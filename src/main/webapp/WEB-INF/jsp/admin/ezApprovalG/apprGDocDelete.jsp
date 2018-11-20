@@ -275,8 +275,8 @@
 				var strtext;
 				var PagingHTML = "";
 				$("#tblpageRayer").html("");
-				$("#listInfo").html(" &nbsp;[<spring:message code='main.t252'/><span style='color:#017BEC;'> "
-						+ totalCount + " </span><spring:message code='ezSystem.kyj2'/>]")
+				$("#listInfo").html("&nbsp;&nbsp;<span style='color:#017BEC;'>"
+						+ totalCount + " </span>")
 				strtext = "<div class='pagenavi'>";
 				PagingHTML += strtext;
 				var pageNum = CurPage;

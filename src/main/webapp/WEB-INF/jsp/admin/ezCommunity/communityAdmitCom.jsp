@@ -88,7 +88,7 @@
                 var strtext;
                 var PagingHTML = "";
                 document.getElementById("tblPageRayer").innerHTML = "";
-                document.getElementById("TitleInfo").innerHTML = " - [" + "<spring:message code = 'ezCommunity.t26' />" + "<span style='color:#017BEC;font-weight:bold;'> " + totalCount + " </span>" + "<spring:message code = 'ezCommunity.t27' />" + "]";
+                document.getElementById("TitleInfo").innerHTML = "&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + totalCount + "</span>";
                 strtext = "<div class='pagenavi'>";
                 PagingHTML += strtext;
                 var pageNum = sCurPage;
@@ -230,7 +230,7 @@
 		</script>
 	</head>
 	<body class="mainbody" onload="makePageSelPage()">
-		<h1><spring:message code = 'ezCommunity.t25' />  <span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
+		<h1><spring:message code = 'ezCommunity.t25' />  <span id="TitleInfo"></span></h1>
 		<%--<div class="page"><spring:message code = 'ezCommunity.t26' /><span class="point">${keywordCount}</span><spring:message code = 'ezCommunity.t27' /></div>--%>
         <table class="content" style="height:35px">
 			<form name="comm_search" method="post">
