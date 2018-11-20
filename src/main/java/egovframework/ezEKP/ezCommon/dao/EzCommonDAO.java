@@ -358,4 +358,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addAddJobMasterJobID");
 		}
 	}
+
+	public void createWebfolderToken() {
+		try {
+			select("EzCommonDAO.checkWebfolderToken");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_token doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblWebfolderToken");
+		}
+	}
 }

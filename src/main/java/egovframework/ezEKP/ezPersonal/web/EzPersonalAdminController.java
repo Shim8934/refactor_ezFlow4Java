@@ -990,8 +990,12 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			sliderID = request.getParameter("item");
 		}
 		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 		model.addAttribute("sliderID", sliderID);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 

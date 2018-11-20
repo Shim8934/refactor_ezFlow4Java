@@ -500,7 +500,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 								
 								String calcuDate = nsdf.format(newCal.getTime());
 								
-								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {
+								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0 && calcuDate.compareTo(vo.getStartDate().substring(0,10)) >= 0) {
 									//row 추가
 									if (!rList.contains(calcuDate)) {
 										ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
