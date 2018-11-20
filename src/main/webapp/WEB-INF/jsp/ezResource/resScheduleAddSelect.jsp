@@ -300,11 +300,6 @@
                           pListView.AddRow(emptyxml);
                           pListView.make();
                       }
-                      // 자원 쪽 padding 수정
-                       document.querySelectorAll("[id^='row_'] td").forEach(function(item, index) {
-                    	  console.log(item);
-                    	  item.style.paddingLeft = '3px';
-                      });
                   } else {
                       alert(strLang249);
                   }
@@ -337,11 +332,6 @@
               pListView.AddRow(emptyxml);
               pListView.make();
           }
-          
-          document.querySelectorAll("[id^='row_'] td").forEach(function(item, index) {
-        	console.log(item);
-            item.style.paddingLeft = '3px';
-          });
       }
 
       function DeleteReceiver() {
