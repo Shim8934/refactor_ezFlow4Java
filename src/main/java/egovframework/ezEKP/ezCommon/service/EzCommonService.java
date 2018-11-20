@@ -81,6 +81,8 @@ public interface EzCommonService {
 	public String getUseSession(Map<String, Object> map);
 
 	public void insertUseSession(Map<String, Object> map);
+	
+	public void addJobMasterJobID() throws Exception;
 
 }
 

@@ -446,4 +446,22 @@
 		VALUES
 		(#tenantID#, #confName#, #property_value#, #description#, #config_name#, sysdate)
 	</insert>
+	
+	<select id="EzCommonDAO.checkAddJobMasterJobID" resultClass="String">
+		<![CDATA[
+			SELECT 
+				JOBID
+			FROM 
+				TBL_ADDJOBMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterJobID"> 
+		ALTER TABLE 
+			TBL_ADDJOBMASTER
+		ADD 
+			JOBID VARCHAR2(100) DEFAULT NULL
+	</statement>
 </sqlMap>

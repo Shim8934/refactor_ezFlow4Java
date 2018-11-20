@@ -230,7 +230,7 @@
             listview.SetHeightFree(true);
             listview.SetSelectFlag(false);
             listview.SetMulSelectable(true);
-            listview.SetRowOnDblClick("DeleteOwner()");
+            listview.SetRowOnDblClick("DeleteOwner");
             listview.DataSource(loadXMLString("<LISTVIEWDATA></LISTVIEWDATA>"));
             listview.DataBind(pListView);
             listview.RowDataBind();
@@ -516,7 +516,6 @@
 		                treeView.SetID("FromTreeView");
 		                treeView.SetUseAgency(true);
 		                treeView.SetRequestData("TreeViewRequestData");
-		                treeView.SetMulSelectable(true);
 		                treeView.SetNodeClick("TreeViewNodeClick");
 		                treeView.SetNodeDblClick("TreeViewNodeDbClick");
 		                treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
@@ -564,7 +563,7 @@
 					rtn["ownerName1"][i+1] = GetAttribute(totalRows2[i], "DATA4");
 					rtn["ownerDeptName"][i+1] = GetAttribute(totalRows2[i], "DATA5");
 				} */
-				
+				rtn = JSON.stringify(rtn);
 				if (ReturnFunction != null) {
 	                ReturnFunction(rtn);
 	            } else {
@@ -1309,7 +1308,7 @@
 	   			}
 	        }
 	        
-	        function DeleteOwner() {
+	        function DeleteOwner(pListView) {
 	            var selList = new ListView();
 	            selList.LoadFromID("OwnerList");
 	            var arrRows = selList.GetSelectedRows();
@@ -1434,7 +1433,7 @@
 			    <table style="margin-top: 3px;">
 			        <tr>
 			            <td class="box">
-			            	<div id="TreeView" style="height: 400px; width: 250px; overflow-x: hidden; overflow-y: auto;"></div></td>
+			            	<div id="TreeView" style="height: 400px; width: 250px; overflow-x: auto; overflow-y: auto;"></div></td>
 			            <td style="width: 5px;">&nbsp;</td>
 			            <td class="listview" style="width: 425px;" id="orglistView">
 			                <!-- <div id="OrganListView" style="border:0;width: 415px; height: 400px; overflow-x: hidden; overflow-y: auto;"></div> -->
