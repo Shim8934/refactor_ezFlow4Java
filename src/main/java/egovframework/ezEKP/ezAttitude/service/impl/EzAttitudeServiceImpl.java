@@ -576,6 +576,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
 		map.put("offsetMin", offsetMin);
+		map.put("startRow", limit + 1);
+		map.put("endRow", limit + Integer.valueOf(listSize));
 		if (primary.equals("1")) {
 			primary = "";
 		}
@@ -973,6 +975,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("limit", limit);
 		map.put("deptIdList", deptIdList);
+		map.put("startRow", limit + 1);
+		map.put("endRow", limit + Integer.valueOf(listSize));
 		if (primary.equals("1")) {
 			primary = "";
 		}
@@ -1799,6 +1803,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			primary = "";
 		}
 		map.put("primary", primary);
+		map.put("row_startNum", (limit + 1));
+		map.put("row_endNum", (limit + Integer.valueOf(listSize)));
 
 		List<ModApplHistoryVO> resultList = ezAttitudeDAO.getAttitudeHistoryList(map);
 

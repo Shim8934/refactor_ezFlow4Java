@@ -1639,7 +1639,7 @@
 			('SA02', '032',		'회송',					'Returning',			'差し戻し',	'退回',		'0',	'회송',		#companyID#,	#tenantID#),
            ('SA03','0  ','결재방법','결재방법',null,null,'0','결재방법',#companyID#, #tenantID# ),
            ('SA03','001','결재','Approval','決裁','审批','1','일반',#companyID#, #tenantID# ),
-           ('SA03','002','확인','Confirmation','回覧','確認','1','확인',#companyID#, #tenantID# ),
+           ('SA03','002','확인','Confirmation','確認','確認','1','확인',#companyID#, #tenantID# ),
            ('SA03','003','결재안함','Skip-approval','決裁しない','不审批','0','결재안함',#companyID#, #tenantID# ),
            ('SA03','004','전결','Pre-approval','専決','先决','1','전결',#companyID#, #tenantID# ),
            ('SA03','005','준법감시','Audit','遵法監視','监督','0','감사',#companyID#, #tenantID# ),

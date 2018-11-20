@@ -985,15 +985,17 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sliderID = "";
-		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
-		String secondary = ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		
 		if (request.getParameter("item") != null) {
 			sliderID = request.getParameter("item");
 		}
 		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 		model.addAttribute("sliderID", sliderID);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 		model.addAttribute("primary", primary);

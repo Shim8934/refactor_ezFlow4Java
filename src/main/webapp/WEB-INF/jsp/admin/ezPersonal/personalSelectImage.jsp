@@ -271,13 +271,11 @@
 				<td>
 				    <table>
 	                    <tr class="primary">
-<%-- 		                    <th><spring:message code = 'ezPersonal.s81' /></th> --%>
-		                    <th><c:out value="${primary }"></c:out></th>
+		                    <th>${primary}</th>
 		                    <td><input type="text" id="txtDisplayName" style="width: 100%" maxLength="50"></td>	
 	                    </tr>
 	                    <tr class="secondary">
-<%-- 		                    <th><spring:message code = 'ezPersonal.s82' /></th> --%>
-		                    <th><c:out value="${secondary }"></c:out></th>
+		                    <th>${secondary}</th>
 		                    <td><input type="text" id="txtDisplayName2" style="width:100%" maxLength="50"></td>	
 	                    </tr>
 	                </table>
