@@ -13,7 +13,7 @@
 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript">
 			var guid = "{" + GetGUID() + "}";
-		     var g_xmlhttp; 
+		    var g_xmlhttp; 
 		    var sliderid = "<c:out value = '${sliderID}' />";
 		    var ReturnFunction;
 		    var pNoneActiveX = "YES";

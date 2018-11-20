@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<style type="text/css">
 		body {background-color : white;}
@@ -23,8 +24,9 @@
 		ul .slideIsUse {padding: 30px 0px 10px 0px;}
 		.cancelNewSliderBtn span {height:25px; float:right; padding: 3px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 		.addNewSliderBttn span {height:25px; float:right; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
+		.slider-header-add {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;border:1px solid #2196f3; width:210px;}
 		.addImageBtn span {height:25px; background-color:#f4f4f4; border:1px solid #e7e7e7;  float:right; padding: 0px 9px; line-height: 23px; display:block; text-align: center; margin-top:40%; margin-right:30%}
-		.sliderInfoTDadd { padding: 5px;}
+		.sliderInfoTDadd { padding: 3px;}
 	}
 		</style>
 		<script type="text/javascript">
@@ -163,15 +165,25 @@
 		    	sliderHTML += "</div>";
 		    	sliderHTML += "<div class = 'slider-content' style='width:225px; height:210px'>";
 		    	sliderHTML += "<a class ='addImageBtn'>";
-		    	sliderHTML += "<span class = 'addImage' onclick='addImage()'>이미지 선택</span></a>";
+		    	sliderHTML += "<span class = 'addImage' id='addImage' onclick='addImage()'>이미지 선택</span></a>";
+		    	sliderHTML += "<img id='UploadSliderImage' src='' onload ='imgdisplay()' style='width:280px;height:515px;display:none'>";
+		    	sliderHTML += "<form method='post' id='form' name ='form' enctype='multipart/form-data' target='ifrm'>";
+		    	sliderHTML += "<input type='file' name='file1' id='file1' onchange='btn_attach()' style='display: none; multiple='false'/>";
+		    	sliderHTML += "<input type='hidden' name='boardid' id='boardid' />";
+		    	sliderHTML += "<input type='hidden' name='maxsize' id='maxsize' />";
+		    	sliderHTML += "<input type='hidden' name='mode' id='mode' value='SLIDERIMAGE'/>";
+		    	sliderHTML += "<input type='hidden' name='cnt' id='cnt' />";
+		    	sliderHTML += "<input type='hidden' name='mailgubun' id='mailgubun' />";
+		    	sliderHTML += "</form>";
 		    	sliderHTML += "</div>";
+		    	sliderHTML += "<div class = 'slider-content'>";
 		    	sliderHTML += "<table class = 'sliderInfo'><tr><td class ='sliderInfoTDadd'>한글 |   ";
 		    	sliderHTML += "<input class='sliderName' data1='displayname' type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>영어 |   ";
 		    	sliderHTML += "<input class='sliderName2' data2='displayname2' type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL |   ";
 		    	sliderHTML += "<input class='sliderURL' data3=Url' type='text' maxlength='50'></td></tr>";
-		    	sliderHTML += "</table>"
+		    	sliderHTML += "</table></div>"
 		    	sliderHTML += "</li>";
 		    	
 		    	document.getElementById("sliderContainer").insertAdjacentHTML('beforeend', sliderHTML);
@@ -195,6 +207,52 @@
 		    var addCancel = function() {
 		    	getSliderList();
 		    }
+		    var g_xmlhttp;
+		    var ReturnFunction;
+		    var pNoneActiveX = "YES";
+		    
+		    //슬라이드 이미지 추가
+		    function addImage(){
+		    	if(CrossYN() || pNoneActiveX == "YES"){
+		    		document.getElementById("file1").click();
+		    	} else {
+		    		//IE9 미만 처리 소스
+		    	}
+		    }
+		    
+		    function btn_attach(){
+		    	var extension = document.getElementById("file1").value.split('.');
+		    	console.log(extension);
+		        var check = false;
+		        check = compareExtension(check, extension[1]);
+		        
+		       if (!check) {
+		            alert("<spring:message code = 'ezPersonal.t206' />" + " <spring:message code = 'ezPersonal.t200' />");
+		            document.getElementById("file1").value = "";
+		        }
+		        
+		        var frm = document.getElementById('form');
+		        
+		        
+		        document.form.file1.value = ""; 
+		    }
+		    
+		    //슬라이드 이미지 파일 체크 여부
+		    function compareExtension(check, extension) {
+		        var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
+		        for (var i = 0; i < filterExtension.length; i++) {
+		            if (extension.toLowerCase() == filterExtension[i]) {
+		                check = true;
+		                break;
+		            }
+		        }
+		        return check;
+		    } 
+		    
+		    function imgdisplay() {
+		        UploadSliderImage.style.display = "";
+		    }
+		    
 		    function btn_Select_Complete() {
 		        window.location.reload(false);
 		    } 
