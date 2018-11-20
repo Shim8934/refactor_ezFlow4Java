@@ -2438,6 +2438,7 @@ public class EzNewPortalGWController {
 			int portletId = Integer.parseInt(request.getParameter("portletId"));
 			String portletLang = info.getLang();
 			int limit = 3; // 공지사항 갯수
+			String offset = info.getOffset();
 			
 			// 회사의 포토게시판의 포틀릿 정보 가져오기
 			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
@@ -2455,7 +2456,14 @@ public class EzNewPortalGWController {
 				// 권한이 true이면 boardList불러오기
 				List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
 				noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, limit);
-
+				int noticeCount = noticeList.size();
+				
+				for (int i = 0; i < noticeCount; i++) {
+					String writeDate = noticeList.get(i).getWriteDate();
+					
+					noticeList.get(i).setWriteDate(commonUtil.getDateStringInUTC(writeDate, info.getOffset(), false));
+				}
+				
 				data.put("access", "true");
 				data.put("noticeList", noticeList);
 			}
@@ -3208,7 +3216,7 @@ public class EzNewPortalGWController {
 	}
 
 	/**
-	 * 포탈개인화 G/W [GET] 포틀릿 - 포토게시판 포틀릿 조회
+	 * 포탈개인화 G/W [GET] 포틀릿 - 커스텀 게시판 포틀릿 조회
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/board", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
@@ -3233,7 +3241,7 @@ public class EzNewPortalGWController {
 			deptPath += "everyone," + deptPath + "," + userId;
 			JSONObject data = new JSONObject();
 
-			// 회사의 포토게시판의 포틀릿 정보 가져오기
+			// 회사의 포틀릿 정보 가져오기
 			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
 			String boardId = portlet.getPortletBoardId();
 			data.put("boardId", boardId);
@@ -3247,7 +3255,16 @@ public class EzNewPortalGWController {
 			} else {
 				// 권한이 true이면 boardList불러오기
 				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(tenantId, boardId, itemCount, companyId);
-
+				
+				// 리스트 개수로 utc time 적용시키기
+				int boardListCount = boardList.size();
+				
+				for (int i = 0; i < boardListCount; i++) {
+					String writeDate = boardList.get(i).getStartDate();
+					
+					boardList.get(i).setStartDate(commonUtil.getDateStringInUTC(writeDate, info.getOffset(), false));
+				}
+				
 				data.put("access", "true");
 				data.put("boardList", boardList);
 			}
