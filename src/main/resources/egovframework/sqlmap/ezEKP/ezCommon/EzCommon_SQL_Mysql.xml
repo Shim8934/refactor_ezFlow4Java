@@ -447,4 +447,23 @@
 			JOBID VARCHAR(100) DEFAULT NULL
 	</statement>
 
+	<select id="EzCommonDAO.checkWebfolderToken">
+		SELECT 
+			userId
+		FROM 
+			TBL_webfolder_token
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblWebfolderToken"> 
+		CREATE TABLE `tbl_webfolder_token` (
+		  `USERID` varchar(32) NOT NULL,
+		  `LTOKEN` varchar(128) DEFAULT NULL,
+		  `REGDATA` datetime DEFAULT NULL,
+		  `COMPID` varchar(32) DEFAULT NULL,
+		  `TENANTID` varchar(45) NOT NULL,
+		  `DEVICE` varchar(128) DEFAULT NULL,
+		  PRIMARY KEY (`USERID`,`TENANTID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
 </sqlMap>

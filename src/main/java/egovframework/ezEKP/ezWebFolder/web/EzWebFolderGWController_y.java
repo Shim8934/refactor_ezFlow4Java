@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -10,15 +11,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,14 +38,17 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 
 @RestController
@@ -73,6 +78,12 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	
 	@Autowired
 	private Properties globals;
+	
+	@Autowired
+	private EzWebfolderUtil webfolderUtil;
+	
+	@Autowired
+	private LoginService loginService;
 	
 	/**
 	 * root 폴더 존재 여부 확인 - 존재하지 않을 경우 생성
@@ -865,88 +876,98 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/filemanage/file-upload-overwrite", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject postFileUploadOverWrite(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, Locale locale, HttpServletRequest request) throws Exception {
+	public JSONObject postFileUploadOverWrite(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, Locale locale, HttpServletRequest request) {
 		LOGGER.debug("postFileUploadOverWrite start");
 		JSONParser jp          = new JSONParser();
-		JSONObject jsonObject  = (JSONObject) jp.parse(dataList);
-		
-		String serverName      = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host")          : "";
-		JSONArray nameArray    = jsonObject.get("nameArray")    != null ? (JSONArray) jsonObject.get("nameArray") : null;
-		String userId          = jsonObject.get("userId")       != null ? (String) jsonObject.get("userId")       : "";
-		String folderId        = jsonObject.get("folderId")     != null ? (String) jsonObject.get("folderId")     : "";
-		JSONArray fileIdArray  = jsonObject.get("fileIdArray")   	!= null ? (JSONArray) jsonObject.get("fileIdArray")	  : null;
+		JSONObject jsonObject;
 		JSONObject result      = new JSONObject();
+		try {
+			jsonObject = (JSONObject) jp.parse(dataList);
 		
-		LOGGER.debug("Servername: " + serverName + " || UserId: " + userId + " || FolderId: " + folderId ); 
-		
-		if (nameArray == null || serverName.equals("") || userId.equals("") || folderId.equals("") || fileIdArray == null ) {
-			LOGGER.debug("Parameter error!");
-			result.put("status", "error");
-			result.put("code", 1);
-			return result;
-		}
-		
-		if (nameArray.size() != multiFileLists.size() || fileIdArray.size() != multiFileLists.size()) {
-			System.out.println(fileIdArray.size());
-			System.out.println(nameArray.size());
-			System.out.println(multiFileLists.size());
-			LOGGER.debug("Some files upload failed!");
-			result.put("status", "error");
-			result.put("code", 1);
-			return result;
-		}
-		
-		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-		int tenantId = userInfo.getTenantId();
-		String primary = userInfo.getPrimary();
-		String realPath  = request.getServletContext().getRealPath("");
-		
-		if (!isWebfolderAdmin(userInfo)){
-			JSONObject permissionResult = service.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, null, userInfo.getTenantId());
+			String serverName      = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host")          : "";
+			JSONArray nameArray    = jsonObject.get("nameArray")    != null ? (JSONArray) jsonObject.get("nameArray") : null;
+			String userId          = jsonObject.get("userId")       != null ? (String) jsonObject.get("userId")       : "";
+			String folderId        = jsonObject.get("folderId")     != null ? (String) jsonObject.get("folderId")     : "";
+			JSONArray fileIdArray  = jsonObject.get("fileIdArray")   	!= null ? (JSONArray) jsonObject.get("fileIdArray")	  : null;
 			
-			if ("error".equals(permissionResult.get("status"))) {
+			LOGGER.debug("Servername: " + serverName + " || UserId: " + userId + " || FolderId: " + folderId ); 
+			
+			if (nameArray == null || serverName.equals("") || userId.equals("") || folderId.equals("") || fileIdArray == null ) {
+				LOGGER.debug("Parameter error!");
 				result.put("status", "error");
-				result.put("code", 2);
+				result.put("code", 1);
 				return result;
 			}
-		}
-		
-		WebfolderConfigVO webfolderConfig   = ezWebFolderAdminService.getWebfolderConfig(userInfo.getCompanyID(), userInfo.getTenantId());
-		double limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Double.parseDouble(webfolderConfig.getUploadLimit());
-		double totalUploadSize              = 0;
-		
-		for (int i = 0; i < multiFileLists.size(); i++) {
-			totalUploadSize += multiFileLists.get(i).getSize();
-		}
-		
-		if (limitUploadValue * 1073741824 < totalUploadSize) {
+			
+			if (nameArray.size() != multiFileLists.size() || fileIdArray.size() != multiFileLists.size()) {
+				System.out.println(fileIdArray.size());
+				System.out.println(nameArray.size());
+				System.out.println(multiFileLists.size());
+				LOGGER.debug("Some files upload failed!");
+				result.put("status", "error");
+				result.put("code", 1);
+				return result;
+			}
+			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			String primary = userInfo.getPrimary();
+			String realPath  = request.getServletContext().getRealPath("");
+			
+			if (!isWebfolderAdmin(userInfo)){
+				JSONObject permissionResult = service.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, null, userInfo.getTenantId());
+				
+				if ("error".equals(permissionResult.get("status"))) {
+					result.put("status", "error");
+					result.put("code", 2);
+					return result;
+				}
+			}
+			
+			WebfolderConfigVO webfolderConfig   = ezWebFolderAdminService.getWebfolderConfig(userInfo.getCompanyID(), userInfo.getTenantId());
+			double limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Double.parseDouble(webfolderConfig.getUploadLimit());
+			double totalUploadSize              = 0;
+			
+			for (int i = 0; i < multiFileLists.size(); i++) {
+				totalUploadSize += multiFileLists.get(i).getSize();
+			}
+			
+			if (limitUploadValue * 1073741824 < totalUploadSize) {
+				result.put("status", "error");
+				result.put("code", 4);
+				return result;
+			}
+			
+			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
+			LOGGER.debug("userCapacity!");
+			
+			double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
+			double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;
+			
+			if (totalUploadSize > (totalCapa - totalUsed)) {
+				LOGGER.debug("Not enough storage to upload these files!");
+				result.put("status", "error");
+				result.put("code", 5);
+				return result;
+			}
+			
+			JSONObject returnData = service.fileUpdateOverwrite( multiFileLists, nameArray, userInfo, folderId, fileIdArray, realPath, tenantId);
+			if (returnData.get("status") == "ok") {
+				result.put("status", "ok");
+				result.put("code", 0);
+			} else {
+				result.put("status", "error");
+				result.put("code", 3);
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 4);
-			return result;
-		}
-		
-		UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
-		LOGGER.debug("userCapacity!");
-		
-		double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
-		double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;
-		
-		if (totalUploadSize > (totalCapa - totalUsed)) {
-			LOGGER.debug("Not enough storage to upload these files!");
+			result.put("code", 2);
+		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
-			result.put("code", 5);
-			return result;
+			result.put("code", 2);
 		}
-		
-		JSONObject returnData = service.fileUpdateOverwrite( multiFileLists, nameArray, userInfo, folderId, fileIdArray, realPath, tenantId);
-		if (returnData.get("status") == "ok") {
-			result.put("status", "ok");
-			result.put("code", 0);
-		} else {
-			result.put("status", "error");
-			result.put("code", 3);
-		}
-		
 
 		LOGGER.debug("postFileUploadOverWrite end");
 		return result;
@@ -964,4 +985,67 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		return rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("wf=1");
 	}
 	
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping(value="/rest/ezwebfolder/login", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
+	public JSONObject webfolderLogin(HttpServletRequest request, @RequestBody String requestBody) {
+		JSONObject result = new JSONObject();
+		LOGGER.debug("webfolderLogin start.");
+		LOGGER.debug("requestBody=" + requestBody);
+		
+		try {
+			JSONObject requestObject = new JSONObject();
+	    	JSONParser parser = new JSONParser();
+			requestObject = (JSONObject)parser.parse(requestBody);
+	    	
+	    	String userId = requestObject.get("userid") != null ? (String)requestObject.get("userid") : "";
+	    	String pw = requestObject.get("pw") != null ? (String)requestObject.get("pw") : "";
+	    	int tenantId = 0;
+
+	    	System.out.println(webfolderUtil.encryptAES("yy9320"));
+	    	System.out.println(webfolderUtil.encryptAES("qkrdus93!"));
+	    	
+	    	userId = webfolderUtil.decryptAES(userId);
+			pw = webfolderUtil.decryptAES(pw);
+			LOGGER.debug("userId=" + userId + ",pw=" + pw);
+		
+			String encryptedPw = EgovFileScrty.encryptPassword(pw, userId);
+			
+			LoginVO vo = new LoginVO();
+			vo.setId(userId);
+			vo.setPassword(encryptedPw);
+			vo.setTenantId(tenantId);
+			LoginVO returnVo = new LoginVO();
+			returnVo = loginService.selectUser(vo);
+
+			if (returnVo.getTenantId() == -1) {
+				throw new Exception("not exists user.");
+			}
+			SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
+			String createdToken = UUID.randomUUID().toString() + userId + sdf.format(new Date());
+			createdToken = Base64.encodeBase64String(createdToken.getBytes());
+			LOGGER.debug("createdToken=" + createdToken);
+			
+			// table은 tbl_webfolder_token
+			// table에 insert할 데이터 : userId, 토큰, 등록날짜(디비에 있는 서버 utc사용 ), companyId, tenantId(PK), divice 
+			
+			String resultToken = service.setAuthLoginTokenSql(userId, createdToken, tenantId, 0);
+			LOGGER.debug("resultToken=" + resultToken);
+			
+			if (resultToken == null) {
+				throw new Exception("resultToken is null");
+			} else {
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("ltoken", createdToken);
+			}
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			e.printStackTrace();
+		}
+		
+		LOGGER.debug("webfolderLogin end.");
+		return result;
+	}
 }

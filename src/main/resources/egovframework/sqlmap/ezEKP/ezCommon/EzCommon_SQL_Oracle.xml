@@ -464,4 +464,27 @@
 		ADD 
 			JOBID VARCHAR2(100) DEFAULT NULL
 	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderToken">
+		<![CDATA[
+			SELECT 
+			    userId
+			FROM 
+			    TBL_webfolder_token
+			where 
+			    ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblWebfolderToken"> 
+		CREATE TABLE tbl_webfolder_token (
+		  "USERID" varchar2(32) NOT NULL,
+		  "LTOKEN" varchar2(128) DEFAULT NULL,
+		  "REGDATA" date DEFAULT NULL,
+		  "COMPID" varchar2(32) DEFAULT NULL,
+		  "TENANTID" varchar2(45) NOT NULL,
+		  "DEVICE" varchar2(128) DEFAULT NULL,
+		  PRIMARY KEY ("USERID","TENANTID")
+		) 
+	</statement>
 </sqlMap>

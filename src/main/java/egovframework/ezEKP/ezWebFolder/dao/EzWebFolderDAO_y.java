@@ -163,4 +163,25 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public int updateFileRealData (Map<String, Object> map ) {
 		return update("EzWebFolderDAO_y.updateFileRealData", map);
 	}
+
+	// 웹폴더 탐색기에서 로그인 기능  - 토큰 생성 (탐색기 지원)
+	public String setAuthLoginTokenSql (Map<String, Object> map) {
+		return (String) insert("EzWebFolderDAO_y.insertToken", map);
+	}
+	
+	// 웹폴더 탐색기에서 로그인 기능 - 토큰 삭제 (탐색기 지원)
+	public int deleteAuthLoginTokenSql (Map<String, Object> map) {
+		return delete("EzWebFolderDAO_y.deleteToken", map);
+	}
+	
+	// 웹폴더 탐색기에서 로그인 기능 - 토큰 존재여부 판단 (탐색기 지원)
+	public int existsTokenCheck (Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.existsToken", map);
+	}
+
+	// 웹폴더 탐색기에서 로그인 기능 - token userId 존재 판단 (탐색기 지원)
+	// 위와는 다르게 userid와 tenantid만 가지고 있는지만 판단
+	public int existsUserIdTokenCheck (Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.existsUserIdTokenCheck", map);
+	}
 }

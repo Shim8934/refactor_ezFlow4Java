@@ -1367,4 +1367,61 @@
 				TENANT_ID = #tenantId#
 		]]>
 	</update>
+	<insert id="EzWebFolderDAO_y.insertToken" parameterClass="Map">
+		<![CDATA[	
+			INSERT INTO 
+			TBL_WEBFOLDER_TOKEN 
+				(USERID, LTOKEN, REGDATA, TENANTID, DEVICE) 
+			VALUES 
+				(#userId#, #token#, UTC_TIMESTAMP(), #tenantId#, #device#)
+		]]>
+		<selectKey keyProperty="token" resultClass="String">
+			<![CDATA[
+				SELECT 
+					LTOKEN
+				FROM 
+					TBL_WEBFOLDER_TOKEN  
+				WHERE 
+					USERID = #userId# 
+				AND 
+					TENANTID = #tenantId#
+			]]>
+		</selectKey>
+	</insert>
+	<delete id="EzWebFolderDAO_y.deleteToken">
+		<![CDATA[
+			DELETE 
+				FROM TBL_WEBFOLDER_TOKEN 
+			WHERE 
+				USERID = #userId# 
+			AND 
+				TENANTID = #tenantId#
+		]]>
+	</delete>
+	<select id="EzWebFolderDAO_y.existsToken" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(USERID) 
+			FROM 
+				TBL_WEBFOLDER_TOKEN
+			WHERE 
+				USERID = #userId#
+			AND 	
+				LTOKEN = #token#
+			AND 
+				TENANTID = #tenantId#
+		]]>
+	</select>
+	<select id="EzWebFolderDAO_y.existsUserIdTokenCheck" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(USERID) 
+			FROM 
+				TBL_WEBFOLDER_TOKEN
+			WHERE 
+				USERID = #userId#
+			AND 
+				TENANTID = #tenantId#
+		]]>
+	</select>
 </sqlMap>
