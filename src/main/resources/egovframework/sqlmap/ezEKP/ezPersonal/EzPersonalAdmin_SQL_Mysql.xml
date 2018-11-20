@@ -9,6 +9,7 @@
 	<typeAlias  alias="PersonalEmpMonthVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO"/>
 	<typeAlias  alias="PersonalSliderImageVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO"/>
 	<typeAlias  alias="PersonalLightPollConfigVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO"/>
+	<typeAlias  alias="PersonalPopopConfigVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO"/>
 	
 	<resultMap class="PersonalNoticeVO" id="personalNoticeVO">
 		<result property="title"						column="TITLE"					columnIndex="1"/>
@@ -941,6 +942,50 @@
 		<![CDATA[
 			UPDATE
 				TBL_PS_LIGHTPOLL_OPTION
+			SET
+				ISPREVIEW = #isPreview#
+			WHERE
+				USERID = #userId#
+			AND
+				TENANTID = #tenantId#	
+		]]>
+	</update>
+	
+	<select id="EzPersonalAdmin.EZSP_getPopupConfig" parameterClass="Map"	resultClass="PersonalPopopConfigVO">
+		<![CDATA[
+			SELECT
+				POPUPOPTIONID, USERID, ISPREVIEW, TENANTID
+			FROM
+				TBL_PS_POPUP_OPTION
+			WHERE
+				USERID = #userId#
+			AND
+				TENANTID = #tenantId#
+		]]>
+	</select>
+	
+	<insert id="EzPersonalAdmin.EZSP_insertPopupConfig" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PS_POPUP_OPTION
+				(POPUPOPTIONID, USERID, ISPREVIEW, TENANTID)
+			VALUES
+				(#popupOptionId# ,#userId#, 0, #tenantId# )
+		]]>
+		<selectKey keyProperty="popupOptionId" resultClass="Integer" type="pre">
+			<![CDATA[
+				SELECT 
+					MAX(POPUPOPTIONID)+1 
+				FROM 
+					TBL_PS_POPUP_OPTION
+			]]>	
+		</selectKey>
+	</insert>
+	
+	<update id="EzPersonalAdmin.EZSP_setPopupConfig" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_POPUP_OPTION
 			SET
 				ISPREVIEW = #isPreview#
 			WHERE

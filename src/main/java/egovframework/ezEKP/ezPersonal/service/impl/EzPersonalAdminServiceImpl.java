@@ -26,6 +26,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
@@ -851,7 +852,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 	
 	@Override
-	public void setLightPollConfigVO(String userId, String isPreview, int tenantId)throws Exception {
+	public void setLightPollConfig(String userId, String isPreview, int tenantId) throws Exception {
 		logger.debug("setLightPollConfig started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -861,5 +862,38 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		ezPersonalAdminDAO.setLightPollConfig(map);
 		logger.debug("setLightPollConfig ended");
+	}
+
+	@Override
+	public PersonalPopopConfigVO getPopupConfig(String userId, int tenantId) throws Exception {
+		logger.debug("getPopupConfig started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		
+		PersonalPopopConfigVO configVO = ezPersonalAdminDAO.getPopupConfig(map);
+		if(configVO == null) {
+			// insert 후 다시 조회
+			logger.debug("insertPopupConfig started");
+			ezPersonalAdminDAO.insertPopupConfig(map);
+			configVO = ezPersonalAdminDAO.getPopupConfig(map);
+			logger.debug("insertPopupConfig ended");
+		}
+		logger.debug("getPopupConfig ended");
+		return configVO;
+	}
+
+	@Override
+	public void setPopupConfig(String userId, String isPreview, int tenantId) throws Exception {
+		logger.debug("setPopupConfig started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("isPreview", isPreview);
+		map.put("tenantId", tenantId);
+		
+		ezPersonalAdminDAO.setPopupConfig(map);
+		logger.debug("setPopupConfig ended");
 	}
 }

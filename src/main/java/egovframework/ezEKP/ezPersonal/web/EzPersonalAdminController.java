@@ -45,6 +45,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
@@ -1310,7 +1311,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("setLightPollConfig started");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		ezPersonalAdminService.setLightPollConfigVO(userInfo.getId(), isPreview, userInfo.getTenantId());
+		ezPersonalAdminService.setLightPollConfig(userInfo.getId(), isPreview, userInfo.getTenantId());
 		logger.debug("setLightPollConfig ended");
 		return null;
 	}
@@ -1345,5 +1346,37 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		json.put("pollResultVO", pollResultVO);
 		logger.debug("getPollItem ended");
 		return json;
+	}
+	
+	/** 
+	 * 팝업공지 config 조회 함수  
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/getPopupConfig.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject getPopupConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getPopupConfig started");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		PersonalPopopConfigVO configVO = ezPersonalAdminService.getPopupConfig(userInfo.getId(), userInfo.getTenantId());
+		JSONObject json = new JSONObject();
+		json.put("configVO", configVO);
+		logger.debug("getPopupConfig ended");
+		return json;
+	}
+	
+	
+	
+	/**
+	 * 팝업공지 config 저장 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/setPopupConfig.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public String setPopupConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam String isPreview) throws Exception {
+		logger.debug("setPopupConfig started");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		ezPersonalAdminService.setPopupConfig(userInfo.getId(), isPreview, userInfo.getTenantId());
+		logger.debug("setPopupConfig ended");
+		return null;
 	}
 }
