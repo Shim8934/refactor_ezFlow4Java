@@ -1577,7 +1577,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	 */
 
 	@Override
-	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit) {
+	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit, String offset) {
 		LOGGER.debug("getFavNewItemList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -1585,6 +1585,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("nowDate", nowDate);
 		map.put("limit", limit);
+		map.put("v_OFFSETMIN", offset);
 		
 		List<FavoriteBoardVO> favNewItemList = ezNewPortalDAO.getFavNewItemList(map);
 		
@@ -1593,13 +1594,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit) {
+	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit, String offset) {
 		LOGGER.debug("getFavItemList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("boardId", boardId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("limit", limit);
+		map.put("v_OFFSETMIN", offset);
 		
 		List<FavoriteBoardVO> FavItemList = ezNewPortalDAO.getFavItemList(map);
 		

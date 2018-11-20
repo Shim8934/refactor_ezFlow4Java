@@ -20,10 +20,24 @@
 				</dd>
 				<c:if test="${access eq 'true' }">
 					<dd class="nextBtn">
-						<img src="/images/ezNewPortal/photo_next.png">
+						<c:choose>
+							<c:when test="${usedTheme eq 3 }">
+								<img src="/images/ezNewPortal/photo_next3.png">
+							</c:when>
+							<c:otherwise>
+								<img src="/images/ezNewPortal/photo_next.png">
+							</c:otherwise>
+						</c:choose>
 					</dd>
 					<dd class="preBtn">
-						<img src="/images/ezNewPortal/photo_pre.png">
+						<c:choose>
+							<c:when test="${usedTheme eq 3 }">
+								<img src="/images/ezNewPortal/photo_pre3.png">
+							</c:when>
+							<c:otherwise>
+								<img src="/images/ezNewPortal/photo_pre.png">
+							</c:otherwise>
+						</c:choose>
 					</dd>
 			</dl>
 			<c:choose>

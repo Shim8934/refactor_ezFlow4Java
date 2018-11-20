@@ -1959,6 +1959,7 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String offset = info.getOffSet();
 
 			JSONObject data = new JSONObject();
 
@@ -1966,7 +1967,7 @@ public class EzNewPortalGWController {
 
 			if (boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) { // 새게시물
 
-				List<FavoriteBoardVO> favNewList = ezNewPortalService.getFavNewItemList(info.getUserId(), info.getTenantId(), info.getCompanyId(), commonUtil.getTodayUTCTime(""), limit);
+				List<FavoriteBoardVO> favNewList = ezNewPortalService.getFavNewItemList(info.getUserId(), info.getTenantId(), info.getCompanyId(), commonUtil.getTodayUTCTime(""), limit, offset);
 
 				for (FavoriteBoardVO fvo : favNewList) {
 					LOGGER.debug("resultList : " + fvo.getItemId());
@@ -1976,7 +1977,7 @@ public class EzNewPortalGWController {
 
 			} else { // 일반게시판
 
-				List<FavoriteBoardVO> favList = ezNewPortalService.getFavItemList(boardId, info.getTenantId(), info.getCompanyId(), limit);
+				List<FavoriteBoardVO> favList = ezNewPortalService.getFavItemList(boardId, info.getTenantId(), info.getCompanyId(), limit, offset);
 
 				for (FavoriteBoardVO fvo : favList) {
 					LOGGER.debug("resultList : " + fvo.getItemId());

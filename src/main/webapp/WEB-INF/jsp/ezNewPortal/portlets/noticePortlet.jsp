@@ -14,6 +14,8 @@
 				<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
 			</dd>
 		</dl>
+		<div id="BoardList_NewBoard">
+		</div>
 		<ul class="noti_portlet_list" id="BoardList_NewBoard">
 		</ul>
 	</div>
