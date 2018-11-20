@@ -206,14 +206,14 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			// insert후 return 값 성공 : ok 실패 : fail
 			String result = service.insertFolder(tenantId, comId , deptId, userId, foldervo.getFolderType(),newFolderName1, newFolderName2, foldervo, timeUTC);
 			
-			if (result.equals("ok")) {
-				jsonObj.put("status", "ok");
-				jsonObj.put("code", 0);
-				jsonObj.put("data", result);
-			}else {
+			if (result.equals("fail")) {
 				jsonObj.put("status", "fail");
 				jsonObj.put("code", 2);
 				jsonObj.put("data", "");
+			}else {
+				jsonObj.put("status", "ok");
+				jsonObj.put("code", 0);
+				jsonObj.put("data", result);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
