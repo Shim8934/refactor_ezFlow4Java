@@ -945,6 +945,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("access", access);
 			model.addAttribute("boardId", data.get("boardId"));
 			model.addAttribute("portletName", data.get("portletName"));
+			
+			if (access.equals("true")) {
+				model.addAttribute("boardList", data.get("boardList"));
+			}
 		}
 		
 		model.addAttribute("portletId", portletId);
