@@ -15,6 +15,7 @@
 <style type="text/css">
 	.two_column{width:48%;}
 	.mainbg {min-width:1280px;}
+	#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}
 </style>
 </head>
 
@@ -44,33 +45,35 @@
 	</div>   
 <div class="section1_bg">
 	<section class="section1">
+    <div class="sec1Layout_left">
     	<article class="personal">
-        	<p>	
-            	<span class="info_set" id="main_personalEnv"></span>
-                <span style="float:left; width:80%;">${userEmail}</span>
-				<span class="" id="main_portletEnv" style="float:left;"><img src="/images/admin/frameSetting.png" style="margin-top:11px;margin-left:21px;cursor:pointer;background-color:#b9b9b9; border:1px solid #b9b9b9;"/></span>                
-            </p>
             <div class="info">
             	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png" style="border-radius:100px;" width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" style="border-radius:100px;"id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
                 <dl class="info_txt">
-                	<dt>${deptName}</dt>
+                	<dt>${deptName}
+                		<span class="info_set" id="main_personalEnv"></span>
+                		<span class="" id="main_portletEnv" style="float:left;"><img src="/images/admin/frameSetting.png" style="margin-top:11px;margin-left:21px;cursor:pointer;background-color:#b9b9b9; border:1px solid #b9b9b9;"/></span>
+                	</dt>
                     <dt>${userName} ${userTitle}</dt>
                     <dd><spring:message code='ezNewPortal.t026' />${lastLogin}</dd>
                 </dl>
             </div>
             <div class="personal_content">
+            	<p><spring:message code='ezNewPortal.t125' /></p>
             <c:choose>
             	<c:when test="${useAttitude eq 'YES' }">
-	             	<dl class="time">
-	                	<dt><spring:message code='ezNewPortal.t012' /></dt>
-	                    <dd id="timeFlow"></dd>
-	                </dl>
 	                <dl class="commute">
 	                	<dt id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t013' /></dt>
+	                	<dd id="inAttiBtn_txt" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t126' /></dd>
 	                </dl>
 	                <dl class="commute">
 	                	<dt id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t014' /></dt>
-	                </dl>            	
+	                	<dd id="outAttiBtn_txt" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t126' /></dd>
+	                </dl>    
+	             	<dl class="time">
+	                	<dt><spring:message code='ezNewPortal.t012' /></dt>
+	                    <dd id="timeFlow"></dd>
+	                </dl>        	
             	</c:when>
             	<c:otherwise>
 	            	<dl class="time commuteNone">
@@ -81,6 +84,56 @@
             </c:choose>
             </div>
         </article>
+        <div class="bannerlink_area">
+        	<article class="writebanner">
+                <ul class="writebannerUL">
+                    <li>
+                        <dl class="writebannerDL" id="NewMail">
+                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner01.png" alt="<spring:message code='ezNewPortal.t015' />"></dt>
+                            <dt><spring:message code='ezNewPortal.t015' /></dt>
+                            <dd id="unreadMailCount" class="iconCount_none">0</dd>
+                        </dl>
+                    </li>
+                    <li>
+                        <dl class="writebannerDL" id="AprSign">
+                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner02.png" alt="<spring:message code='ezNewPortal.t016' />"></dt>
+                            <dt><spring:message code='ezNewPortal.t016' /></dt>
+                            <dd id="approvalCount" class="iconCount_none">0</dd>
+                        </dl>
+                    </li>
+                    <li>
+                        <dl class="writebannerDL" id="Schedule">
+                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner03.png" alt="<spring:message code='ezNewPortal.gu3' />"></dt>
+                            <dt><spring:message code='ezNewPortal.gu3' /></dt>
+                            <dd id="scheduleCount" class="iconCount_none">0</dd>
+                        </dl>
+                    </li>
+                    <li>
+                        <dl class="writebannerDL" id="Poll">
+                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
+                            <dt><spring:message code='ezNewPortal.gu4' /></dt>
+                            <dd id="pollCount" class="iconCount_none">0</dd>
+                        </dl>
+                    </li>
+                    <li>
+                        <dl class="writebannerDL" id="Circular">
+                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner05.png" alt="<spring:message code='ezNewPortal.gu5' />"></dt>
+                            <dt><spring:message code='ezNewPortal.gu5' /></dt>
+                            <dd id="circularCount" class="iconCount_none">0</dd>
+                        </dl>
+                    </li>
+                    <li>
+<!--                     <dl class="writebannerDL">
+                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner06.png" alt="협업"></dt>
+                            <dt>협업</dt>
+                            <dd>9</dd>
+                        </dl> -->
+                    </li>
+                </ul>
+            </article>
+        </div>
+        </div>
+    <div class="sec1Layout_middle">
         <div class="main_schedule">
         	<article class="list">
             	<div class="maintab01">
@@ -107,73 +160,21 @@
                 </div>
             </article>
         </div>
-        <div class="bannerlink_area">
-        	<article class="writebanner">
-                <ul class="writebannerUL">
-                    <li>
-                        <dl class="writebannerDL" id="NewMail">
-                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner01.png" alt="<spring:message code='ezNewPortal.t015' />"></dt>
-                            <dt><spring:message code='ezNewPortal.t015' /></dt>
-                            <dd id="unreadMailCount">0</dd>
-                        </dl>
-                    </li>
-                    <li>
-                        <dl class="writebannerDL" id="AprSign">
-                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner02.png" alt="<spring:message code='ezNewPortal.t016' />"></dt>
-                            <dt><spring:message code='ezNewPortal.t016' /></dt>
-                            <dd id="approvalCount">0</dd>
-                        </dl>
-                    </li>
-                    <li>
-                        <dl class="writebannerDL" id="Schedule">
-                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner03.png" alt="<spring:message code='ezNewPortal.gu3' />"></dt>
-                            <dt><spring:message code='ezNewPortal.gu3' /></dt>
-                            <dd id="scheduleCount">0</dd>
-                        </dl>
-                    </li>
-                    <li>
-                        <dl class="writebannerDL" id="Poll">
-                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
-                            <dt><spring:message code='ezNewPortal.gu4' /></dt>
-                            <dd id="pollCount">0</dd>
-                        </dl>
-                    </li>
-                    <li>
-                        <dl class="writebannerDL" id="Circular">
-                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner05.png" alt="<spring:message code='ezNewPortal.gu5' />"></dt>
-                            <dt><spring:message code='ezNewPortal.gu5' /></dt>
-                            <dd id="circularCount">0</dd>
-                        </dl>
-                    </li>
-                    <li>
-<!--                     <dl class="writebannerDL">
-                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner06.png" alt="협업"></dt>
-                            <dt>협업</dt>
-                            <dd>9</dd>
-                        </dl> -->
-                    </li>
-                </ul>
-            </article>
         </div>
-        <!-- <article class="excellentemployee">
-        	<p><span>이달의</span><span class="blue">우수사원</span></p>
-            <div class="excellentcontent" id="excellentcontent">
-                <dl>
-                    <dt id="emPic"></dt>
-                    <dd><img src="/images/ezNewPortal/theme2Img/icon_excellent.png"></dd>
-                </dl>
-                <p class="name"><span>UI/UX팀</span><span>홍길동</span></p>
-            </div>
-        </article> -->
+    	<div class="sec1Layout_right">
         <article class="event">
             <p></p>
         </article>
-<!--          <article class="event">
-        	<p><span>이달의</span><span class="blue">행사</span></p>
-            <dl>
-            	<dt><img src="/images/ezNewPortal/theme2Img/event_pic.png"></dt>
+        <article class="exellentEmployee">
+        	<p class="title"><span><spring:message code='ezNewPortal.t127' /></span><span class="color"><spring:message code='ezNewPortal.t128' /></span></p>
+            <dl class="excellent_info" id="excellentcontent">
+            	<dt class="pic" id="emPic"></dt>
+                <dt id="exellentDeptName"></dt>
+                <dt id="exellentEmpName"></dt>
+                <dd><img src="/images/ezNewPortal/theme2Img/icon_excellent.png"></dd>
             </dl>
-        </article> -->
+        </article>
+    </div>
     </section>
 </div>
 <div class="section_main">
@@ -379,14 +380,13 @@
  	}	
 	
 	//월별 우수사원 정보 호출
-	/* var getMonthlyBestEmployeeTheme2 = function () {
+	var getMonthlyBestEmployeeTheme2 = function () {
 		$.ajax({
 			type : "POST",
 			url : "/ezNewPortal/getMonthlyBestEmployee.do",
 			dataType : "json",
 			success : function(result) {
 				var bestEmployee = result.bestEmployee;
-				var strHTML = "";
 				var excellentContent = document.getElementById('excellentcontent');
 				
 				if(bestEmployee === null) {
@@ -399,13 +399,9 @@
 
 					emPic.appendChild(img);
 					
-					var p = document.createElement('p');
-					p.className = 'name';
-
-					var spanDept = document.createElement('span');
-					spanDept.textContent = '데이터가 없습니다.';
+					document.getElementById("exellentDeptName").innerText = "";
+					document.getElementById("exellentEmpName").innerText = "데이터가 없습니다.";
 					
-					p.appendChild(spanDept);
 				} else {
 					var emPic = document.getElementById('emPic');
 					
@@ -416,24 +412,12 @@
 					
 					emPic.appendChild(img);
 					
-					var p = document.createElement('p');
-					p.className = 'name';
-
-					var spanDept = document.createElement('span');
-					spanDept.textContent = bestEmployee.userDeptName;
-					
-					var spanName = document.createElement('span');
-					spanName.textContent = bestEmployee.userName;
-					
-					p.appendChild(spanDept);
-					p.appendChild(spanName);
+					document.getElementById("exellentDeptName").innerText = bestEmployee.userDeptName;
+					document.getElementById("exellentEmpName").innerText = bestEmployee.userName;
 				}
-
-				excellentContent.appendChild(p);
-				$(".emDL").append(strHTML);
 			}
 		});
-	} */
+	}
 	
 	var getScheduleList_after_Theme2 = function (list) {
 		// 개인일정, 부서일정 나누기 scheduleType 1 or 2
@@ -605,7 +589,7 @@
 		
 		//이달의 우수사원 불러오기
 		//getMonthlyBestEmployee();
-		//getMonthlyBestEmployeeTheme2();
+		getMonthlyBestEmployeeTheme2();
 		
 		//개인환경설정으로 이동 동작 연결
 		$("#main_personalEnv").on("click", viewPersonalEnv);

@@ -32,7 +32,22 @@ var assembleNoticeList = function(noticeList) {
 	var dataAssembler = function(data, index) {	
 		index = (index*1 + 1); // 혹시 모르니 int형태로 변환
 		boardId = data.boardID;
-		return '<li class="notiLI" data1="'+data.itemID+'" data2="'+data.boardID+'" data3="'+data.guBun+'"><dl class="notiDL0'+index+'"><dt class="noti_num">'+index+'</dt><dt class="N"></dt><dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd></dl></li>';
+		
+		//오늘날짜 구하기
+		var today = new Date();
+		var writeDate = new Date(data.writeDate);
+		var date = today.getDate();
+		
+		today.setDate(date - 1);
+		
+		var text = "";
+		
+		if (today < writeDate) {
+			text = '<li class="notiLI" data1="'+data.itemID+'" data2="'+data.boardID+'" data3="'+data.guBun+'"><dl class="notiDL0'+index+'"><dt class="noti_num">'+index+'</dt><dt class="noti_new">N</dt><dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd></dl></li>';
+		} else {
+			text = '<li class="notiLI" data1="'+data.itemID+'" data2="'+data.boardID+'" data3="'+data.guBun+'"><dl class="notiDL0'+index+'"><dt class="noti_num">'+index+'</dt><dt class="N"></dt><dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd></dl></li>'; 
+		}
+		return text;
 	};	
 	if (noticeList) {
 		str += "<ul class='noti_portlet_list'>";

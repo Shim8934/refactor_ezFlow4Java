@@ -53,6 +53,7 @@
 		    var ReturnFunction;
 		    var isfirst = true;
 		    var preObj = "";
+		    var adminChk = "<c:out value='${adminChk}'/>"
 		    
 		    $(document).ready(function(){
 		    	try {
@@ -74,7 +75,7 @@
 		        } catch (e) { }
 		        
 		        document.getElementById('keyword').value = cn;	
-		        var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP></DATA>";
+		        var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP><ADMINCHK>" + adminChk + "</ADMINCHK></DATA>";
 	
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        xmlHTTP.onreadystatechange = event_GetDeptTreeInfo;
@@ -928,7 +929,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",		        	
 		        	data : {search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, cell : "company;description;displayname;title;telephonenumber;" + document.getElementById("search_type").value, 
-		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user"},
+		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user", "company" : topid},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var usedefault;		                

@@ -18,8 +18,6 @@
 			var approvalFlag = "${approvalFlag}";
 			
 			$(document).ready(function(){
-				var RetValue;
-				
 			    if (CrossYN()){
 			    	try {
 			        	ReturnFunction = opener.deptinfo_dialogArguments[1];
@@ -119,12 +117,14 @@
 			}
 			
 			function OK_Click(){
-	            for (var i = 0; i < document.getElementById("DeptID").value.length; i++) {
-	                if (document.getElementById("DeptID").value.charCodeAt(i) >= 65 && document.getElementById("DeptID").value.charCodeAt(i) <= 90) {
-	                	OpenAlertUI("<spring:message code='ezOrgan.x0003'/>");
-	                    return;
-	                }
-	            }
+				if(RetValue[1] == ""){ //20181115 조진호 - 닷넷 그룹웨어 인사연동시 부서 ID에 대문자가 포함되어 있는경우가 있어서, 부서 정보 수정시에는 해당 체크를 하지 않도록 수정
+					for (var i = 0; i < document.getElementById("DeptID").value.length; i++) {
+		                if (document.getElementById("DeptID").value.charCodeAt(i) >= 65 && document.getElementById("DeptID").value.charCodeAt(i) <= 90) {
+		                	OpenAlertUI("<spring:message code='ezOrgan.x0003'/>");
+		                    return;
+		                }
+		            }
+				}
 				if (DeptID.value == ""){
                 	OpenAlertUI("<spring:message code='ezOrgan.t210'/>");
 					return;
@@ -205,6 +205,26 @@
 		            DivPopUpShow(300, 205, url);
 		        }
 		    }
+		    
+			var mail_newreceiverchoose_dialogArguments = new Array();
+	        
+	        function SelectReceiver_onClick() {
+	            var type = "auto";
+	            var receiverData = new Array();
+	            
+	            receiverData["addReceiver"] = addReceiver;
+	            receiverData["window"] = this;
+	            mail_newreceiverchoose_dialogArguments[0] = receiverData;
+	            mail_newreceiverchoose_dialogArguments[1] = addReceiver;
+	            
+	            var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&ruleKind=MANAGER", "mail_foldermanage_Cross", GetOpenWindowfeature(690, 650));
+	            try { OpenWin.focus(); } catch (e) { }
+	        }
+	
+	        function addReceiver(strEmail) {
+	            document.getElementById("Manager").value = strEmail;
+	        }
+		    
 		    function OpenAlertUI_Complete() {
 		        DivPopUpHidden();
 		    }
@@ -260,7 +280,10 @@
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t225' /></th> 
-		    	<td><input type="text" id=Manager style="width:97%" maxlength="50"></td> 
+		    	<td>
+		    		<input type="text" id=Manager style="width:75%" maxlength="50">
+		    		<a id="ReceiverSelect" class="imgbtn imgbck" style="width:16%; padding-left: 10px;" onClick="SelectReceiver_onClick()"><span style="width:80%;text-align:center;"><spring:message code='ezEmail.t488' /></span></a>
+		    	</td> 
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t226' /></th> 

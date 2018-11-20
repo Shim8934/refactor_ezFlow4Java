@@ -491,7 +491,7 @@ function MonthMiniDataTop(oThisDate) {
 
     var className = "";
     if (divID == nowDay) {
-        className = "today";  // 현재일
+        className = "main_today";  // 현재일
     }
 
     var oDiv = document.createElement("DIV");

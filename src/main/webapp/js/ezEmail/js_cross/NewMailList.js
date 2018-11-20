@@ -239,6 +239,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_SecureMail = SelectSingleNodeValue(XmlRows[Cnt], "securemail");
                 var p_Readdt = SelectSingleNodeValue(XmlRows[Cnt], "readdt");
                 var p_Group = SelectSingleNodeValue(XmlRows[Cnt], "group");
+                var p_RecipientCount = SelectSingleNodeValue(XmlRows[Cnt], "recipientCount");
                 var p_countryCode = SelectSingleNodeValue(XmlRows[Cnt], "countryCode");
                 var recipients = [];
             	var recipientsLen = 1;
@@ -255,8 +256,13 @@ function MakeListInfoHTML(ConentObject) {
                 _TR.setAttribute("_contentclass", p_ContentClass);
                 _TR.setAttribute("_isdraft", p_IsDraft);
                 _TR.setAttribute("securemail", p_SecureMail);
-                _TR.setAttribute("draggable", true);
-                _TR.ondragstart = function () { drag(event) };
+                
+                if (shareId != "" && deletePermission != "Y") {
+                	_TR.setAttribute("draggable", false);
+                } else {
+                	_TR.setAttribute("draggable", true);
+                	_TR.ondragstart = function () { drag(event) };
+                }
             
                 var _TDCheckBox = document.createElement("TD");
                 _TDCheckBox.style.width = "22px";
@@ -276,10 +282,10 @@ function MakeListInfoHTML(ConentObject) {
                 XmlHeaderRows = SelectNodes(XmlHeader, "view/column");
                 
                 // 수신확인 중 수신자가 여러명일 경우
-            	if (useReceivingChk) {
+            	//if (useReceivingChk) {
             		recipients = p_Msgto.split(',');
             		recipientsLen = recipients.length;
-            	}
+            	//}
             	
                 for (var HRows = 0; HRows < XmlHeaderRows.length; HRows++) {
 
@@ -294,7 +300,7 @@ function MakeListInfoHTML(ConentObject) {
                             break;
                         case "receiveInfo":
                         	_TDColum.style.width = "18px";
-                        	if (recipientsLen >= 2 || p_Group == "yes") {
+                        	if (p_RecipientCount >= 2 || p_Group == "yes") {
                         		_TDColum.innerHTML = "<span style='cursor: pointer'><IMG src='/images/receivedCheck_closed.png'></span>";
                         		_TDColum.setAttribute("viewSelect", "false");
                         		_TDColum.onclick = function () { viewReceivers(this); };
@@ -332,6 +338,7 @@ function MakeListInfoHTML(ConentObject) {
                             
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             // 수아 수정 (보낸사람 클릭 -> 보낸 사람에게 메일 전송창)
+                            _TDColum.setAttribute("data-msgtoLen", recipientsLen);
                             _TDColum.setAttribute("data-msgto", p_Msgto);
                             // 재원 수정
                             _TDColum.setAttribute("data-name", p_Sender);
@@ -436,9 +443,11 @@ function MakeListInfoHTML(ConentObject) {
                     	_TDColumSpan.style.padding = "7px 3px";
                     	_TDColumSpan.innerHTML = innerHTML;
                     	
-                    	if(useMailWriteSenderClick == "YES") {
-                    		_TDColumSpan.onclick = function (event) { event_senderNameClick(this.parentElement, event); };
-                    		_TDColumSpan.ondblclick = function (event) { event_senderNameDBClick(event); };
+                    	if (useMailWriteSenderClick == "YES") {
+                    		if (shareId == "" || (shareId != "" && sendPermission == "Y")) {
+                    			_TDColumSpan.onclick = function (event) { event_senderNameClick(this.parentElement, event); };
+                    			_TDColumSpan.ondblclick = function (event) { event_senderNameDBClick(event); };
+                    		}
                     	}
                     	
                     	_TR.lastChild.innerHTML = "";
@@ -591,8 +600,9 @@ function getReaderCount(parentId) {
 
 function makeReceiverList(parentId) {
 	var XmlRows = SelectNodes(MailReceiverListXML, "DATA/ROW");
+	XmlRows = sortNode(XmlRows, "READDATE", "UNREAD", "DESC"); // READDATE 컬럼 기준 UNREAD가 아닌것 정렬 (내림차순으로)
 	
-	for (var i = 0; i < XmlRows.length; i++) {
+	for (var i = XmlRows.length - 1; i >= 0; i--) {
 		var readDate = SelectSingleNodeValue(XmlRows[i], "READDATE");
         var readerEmail = SelectSingleNodeValue(XmlRows[i], "READEREMAIL");
         var cancel = trim_Cross(SelectSingleNodeValue(XmlRows[i], "CANCEL"));
@@ -687,8 +697,14 @@ function viewReceivers(obj) {
         xmlhttp_MailReceiverList = null;
         
         var strQuery = "<MESSAGEID>" + decodeURIComponent(parentHref) + "</MESSAGEID>";
+        var requestUrl = "/ezEmail/mailGetReceiveList.do";
+        
+    	if (typeof(shareId) != "undefined" && shareId != "") {
+    		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    	}
+        
         xmlhttp_MailReceiverList = createXMLHttpRequest();
-        xmlhttp_MailReceiverList.open("POST", "/ezEmail/mailGetReceiveList.do", true);
+        xmlhttp_MailReceiverList.open("POST", requestUrl, true);
         xmlhttp_MailReceiverList.onreadystatechange = function() { getReaderCount(parentId); }
         xmlhttp_MailReceiverList.send(strQuery);
 		
@@ -880,14 +896,20 @@ function GetListInfo(HeaderObject, ContentObject) {
     pOldSearchKeyword = SearchKeyword;
     createNodeAndInsertText(xmlpara, objNode, "SEARCH", SearchKeyword);
     createNodeAndInsertText(xmlpara, objNode, "START", pStart);
-    if(p_ListorderValue == "GROUPSUBLIST")
-        createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
-    else
-        createNodeAndInsertText(xmlpara, objNode, "END", pEnd);
-
+    
+    if (p_ListorderValue == "GROUPSUBLIST") {
+    	createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "END", pEnd);
+    }
+    
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
     
     var _url = "/ezEmail/mailGetList.do";
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	_url += "?shareId=" + encodeURIComponent(shareId);
+    }
     
     if (useReceivingChk) {
     	_url = "/ezEmail/getReceiverMailList.do";
@@ -939,9 +961,15 @@ function GetListInfo_SUB(HeaderObject, ContentObject) {
     createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
     
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
-
+    
+    var url = "/ezEmail/mailGetList.do";
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	url += "?shareId=" + encodeURIComponent(shareId);
+    }
+    
     GetList_HTTP_SUB = createXMLHttpRequest();
-    GetList_HTTP_SUB.open("POST", "/ezEmail/mailGetList.do", true);
+    GetList_HTTP_SUB.open("POST", url, true);
     GetList_HTTP_SUB.onreadystatechange = GetListIevent_ongetxmlcomplete_SUB;
     GetList_HTTP_SUB.send(xmlpara);
     GetListInfo_HeaderObject = HeaderObject;
@@ -1135,7 +1163,11 @@ function MailListRefreshByTimeout() {
 function MailListRefresh() {
 	ContextMenuHidden();
 	
-	parent.frames["left"].detailView();
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		parent.frames["left"].detailView(shareId);
+	} else {
+		parent.frames["left"].detailView();
+	}
     
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
         goToPageByNum(MailList.getAttribute("curPage"));
@@ -1875,8 +1907,14 @@ function event_senderNameClick(thisParent, event){
 		return; 
 	} else {
 		setTimeout(function(){
-			new_mail_onclick(thisParent); // 메일쓰기
+			var msgToLen = $(thisParent).attr("data-msgtoLen");
 			
+			if (msgToLen > 20) { // 보낸편지함 > 받는 사람 클릭시 받는사람이 20명 이상일 경우 빈 메일창 띄우기 (메일쓰기 get방식으로 변경하면서 수정)
+				new_mail_onclick();
+			} else {
+				new_mail_onclick(thisParent); // 메일쓰기		
+			}
+
 			mailWriteSenderChk = true;
 		}, 200);
 		

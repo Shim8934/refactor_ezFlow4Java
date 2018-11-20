@@ -70,7 +70,7 @@
 			</div>
 		</c:when>
 		<c:otherwise>
-			<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 1000; border-bottom:none; background:none;"></dl>
+			<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 998; border-bottom:none; background:none;"></dl>
 			<div style="position:relative; bottom:46px; overflow:hidden;">
 				<article class="schedule_small box_shadow schedule_calendar" style="width: calc(46% - 11px);">
 					<div class="layDIV">
@@ -87,7 +87,7 @@
 								<dt class="portletText">
 									<spring:message code='main.t203' />
 								</dt>
-								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 1001;">
+								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
 									<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
 								</dd>
 							</dl>

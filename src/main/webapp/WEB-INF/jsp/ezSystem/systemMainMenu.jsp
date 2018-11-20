@@ -28,6 +28,9 @@
 			}
 			
 			function update_Sys_Param() {
+				
+				checkUseSession();
+				
 				var paramArray
 					= [
 						{ name : "BigSizeMailAttachDelDay", value : document.getElementById("BigSizeMailAttachDelDay").value.trim() },
@@ -44,7 +47,8 @@
 						{ name : "Use_FromAddress", value : document.getElementById("Use_FromAddress").value.trim() },
 						{ name : "USE_HTMLMODE", value : document.getElementById("Use_HTMLMode").value.trim() },
 						{ name : "editorFontStyle", value : editorFontStyle },
-						{ name : "useAllUserOldMailDeletePeriod", value : useAllUserOldMailDeletePeriod } 
+						{ name : "useAllUserOldMailDeletePeriod", value : useAllUserOldMailDeletePeriod },
+						{ name : "useSession", value : document.getElementById("useSession").value.trim() }
 					  ];
 				
 				if (!paramArray[0].value.match(/^\d+$/)) {
@@ -62,7 +66,10 @@
 				} else if (!paramArray[4].value.match(/^\d+$/)) {
 				    alert("<spring:message code='ezSystem.x0006'/>: <spring:message code='ezEmail.t99000066'/>");
 				    return;
-				}		
+				} else if (!paramArray[15].value.match(/^\d+$/)) {
+					alert("<spring:message code='ezSystem.lsh001'/>: <spring:message code='ezEmail.t99000066'/>");
+				    return;
+				}	
 						
 				var jsonStr = JSON.stringify(paramArray);
 				
@@ -87,6 +94,17 @@
 					}
 				});	
 			}
+			
+			function checkUseSession() {
+				
+				$.ajax({
+					type : "GET",
+					url : "/admin/ezSystem/checkUseSession.do",
+					dataType: "json",
+					success : function(result) {
+					}
+				});
+			}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -94,6 +112,15 @@
 	    <table class="content">
 	        <tbody>
 	            <tr><th><spring:message code="main.kms1"/></th><th><spring:message code="main.kms3"/></th></tr>
+	            
+	            <c:choose>
+	            	<c:when test="${configMap.useSession ne null and configMap.useSession ne ''}">
+	            		<tr><th><spring:message code="ezSystem.lsh001"/></th><td><input id="useSession" minlength="1" type="text" value="${configMap.useSession}"> (<spring:message code="ezSystem.lsh002"/>)</td></tr>
+	            	</c:when>
+	            	<c:otherwise>
+	            		<tr><th><spring:message code="ezSystem.lsh001"/></th><td><input id="useSession" minlength="1" type="text" value="0" > (<spring:message code="ezSystem.lsh002"/>)</td></tr>
+	            	</c:otherwise>
+	            </c:choose>
 	            <tr><th><spring:message code="ezSystem.x0001"/></th><td><input id="BigSizeMailAttachDelDay" maxlength="3" type="text" value="${configMap.BigSizeMailAttachDelDay}"> (<spring:message code="ezSystem.x0010"/>)</td></tr>          
 	            <tr><th><spring:message code="ezSystem.x0002"/></th><td><input id="totBigSizeMailAttachLimit" maxlength="4" type="text" value="${configMap.totBigSizeMailAttachLimit}"> (<spring:message code="ezSystem.x0011"/>, <spring:message code="ezSystem.x0019"/>)</td></tr>
 	            <tr><th><spring:message code="ezSystem.x0003"/></th><td><input id="MailAttachLimit" maxlength="3" type="text" value="${configMap.MailAttachLimit}"> (<spring:message code="ezSystem.x0011"/>)</td></tr>                              

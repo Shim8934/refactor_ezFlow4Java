@@ -64,6 +64,7 @@
 <result property="boardID" 				column="BOARDID" />
 <result property="title" 				column="TITLE" />
 <result property="guBun" 				column="GUBUN" />
+<result property="writeDate" 			column="WRITEDATE" />
 </resultMap>
 <resultMap class="PersonalLightPollVO" id="PersonalLightPollVO">
 <result property="itemSeq"              column="ITEMSEQ"  nullValue=""/>
@@ -155,7 +156,8 @@ SELECT
 	B.GUBUN,
 	A.BOARDID,
     A.ITEMID,
-    A.TITLE
+    A.TITLE,
+    A.WRITEDATE
 FROM 
 	TBL_BOARD_ITEM AS A
 JOIN

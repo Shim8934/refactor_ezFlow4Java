@@ -350,6 +350,8 @@
 						A.tenant_id = D.tenant_id
 					AND
 						A.tenant_id = #tenantID#
+					AND
+						A.COMPANYID = #companyID#
 		]]>
 		
 		<isNotEmpty property="v_PTITLE">
@@ -1494,7 +1496,9 @@
 					AND
 						A.tenant_id = D.tenant_id
 					AND
-						A.tenant_id = #tenantID#			
+						A.tenant_id = #tenantID#
+					AND
+						A.COMPANYID = #companyID#			
       				)
 		]]>
 		

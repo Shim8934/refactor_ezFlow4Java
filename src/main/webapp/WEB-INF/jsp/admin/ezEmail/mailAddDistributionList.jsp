@@ -1367,7 +1367,6 @@
 	                            
 	                            SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                            getlistview.AddDataRow(objTr, Resultxml);
-	                            document.getElementById(listid).className = "receiver_list";
 	                            _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
 	                          
 	                            for (var y = 0; y < _tdlength; y++) {
@@ -1770,7 +1769,6 @@
                             SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxID).substring(0, getlistview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
                             getlistview.AddDataRow(objTr, Resultxml);
                             
-	                        document.getElementById("MsgToList").className = "receiver_list";
                             var _tdlength = document.getElementById("MsgToList").getElementsByTagName("TD").length;
                             
                             for (var y = 0; y < _tdlength; y++) {
@@ -2310,7 +2308,6 @@
 	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	                       
-	                        document.getElementById(listid).className = "receiver_list";
 	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
 	                       
 	                        for (var y = 0; y < _tdlength; y++) {
@@ -2361,7 +2358,6 @@
 	                        SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxID).substring(0, getlistview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                        getlistview.AddDataRow(objTr, Resultxml);
 	                        
-	                        document.getElementById("MsgToList").className = "receiver_list";
 	                        var _tdlength = document.getElementById("MsgToList").getElementsByTagName("TD").length;
 	                        
 	                        for (var y = 0; y < _tdlength; y++) {
@@ -2430,7 +2426,6 @@
 	              SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	              listview.AddDataRow(objTr, Resultxml);
 	
-	              document.getElementById(listid).className = "receiver_list";
 	              var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
 	              for (var y = 0; y < _tdlength; y++) {
 	                  document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
@@ -2881,7 +2876,7 @@
 		                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezEmail.t659' /></span>
 		                            </h2>
 		                            <div class="receiver_borderbox">
-		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 501px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 501px; overflow: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 		                            </div>
 		                        </td>
 		                    </tr>

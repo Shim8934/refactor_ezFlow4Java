@@ -607,9 +607,9 @@
 	        		return;
 	        	}
 	        	
-	        	var feature = GetOpenPosition(420, 375);
+	        	var feature = GetOpenPosition(500, 375);
 	        	url = "/ezCircular/circularMove.do?circularIdList=" + strListInfo + "&folderId=" + folderId;
-	        	var OpenWin = window.open(url, "", "width=420, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+	        	var OpenWin = window.open(url, "", "width=500, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
 	        
 	        function CircularReturn_onclick() {
