@@ -238,8 +238,11 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO {
 		insert("EzPersonalAdmin.EZSP_insertPopupConfig", map);
 	}
 	
-	
 	public void setPopupConfig(Map<String, Object> map) throws Exception {
 		update("EzPersonalAdmin.EZSP_setPopupConfig", map);
+	}
+	
+	public int getPopupCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzPersonalAdmin.EZSP_GETPOPUPCOUNT", map);
 	}
 }

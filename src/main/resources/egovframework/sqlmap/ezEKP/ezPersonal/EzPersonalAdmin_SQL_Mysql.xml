@@ -328,25 +328,52 @@
 	</select>
 	
 	<select id="EzPersonalAdmin.EZSP_GETPOPUPLIST" parameterClass="Map"		resultClass="PersonalPopupVO">
-		<![CDATA[
-			SELECT
-				ITEMSEQ ,
-             	TITLE ,
-             	TITLE2 ,
-             	STARTDATE ,
-             	ENDDATE ,
-             	WIDTH ,
-             	HEIGHT ,
-             	POSITION 
-        	FROM
-        		TBL_PS_POPUP 
-       		WHERE
-       			COMPANYID = #v_pCompanyID#
-       		AND
-       			TENANT_ID = #tenantID#	
-        	ORDER BY
-        		ITEMSEQ DESC
-		]]>
+		<isEqual property="v_pStart" compareValue="0">
+			<![CDATA[
+				SELECT
+					ITEMSEQ ,
+					TITLE ,
+					TITLE2 ,
+					STARTDATE ,
+					ENDDATE ,
+					WIDTH ,
+					HEIGHT ,
+					POSITION 
+				FROM
+					TBL_PS_POPUP 
+				WHERE
+					COMPANYID = #v_pCompanyID#
+				AND
+					TENANT_ID = #tenantID#	
+				ORDER BY
+					ITEMSEQ DESC
+				LIMIT
+					#v_pCount#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_pStart" compareValue="0">
+			<![CDATA[
+				SELECT
+					ITEMSEQ ,
+					TITLE ,
+					TITLE2 ,
+					STARTDATE ,
+					ENDDATE ,
+					WIDTH ,
+					HEIGHT ,
+					POSITION 
+				FROM
+					TBL_PS_POPUP 
+				WHERE
+					COMPANYID = #v_pCompanyID#
+				AND
+					TENANT_ID = #tenantID#	
+				ORDER BY
+					ITEMSEQ DESC
+				LIMIT
+					#v_pStart#, #v_pCount#
+			]]>
+		</isNotEqual>
 	</select>
 	
 	<select id="EzPersonalAdmin.EZSP_GETEMPLOYEEMONTH" parameterClass="Map"		resultClass="PersonalEmpMonthVO">
@@ -994,4 +1021,33 @@
 				TENANTID = #tenantId#	
 		]]>
 	</update>
+	
+	<select id="EzPersonalAdmin.EZSP_GETPOPUPCOUNT" parameterClass="Map"	resultClass="Integer">
+		<isEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					COUNT(ITEMSEQ)
+				FROM
+					TBL_PS_POPUP 
+				WHERE
+					COMPANYID = #v_pCompanyID#
+				AND
+					TENANT_ID = #tenantID#	
+			]]>
+		</isEqual>
+		<isNotEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					COUNT(ITEMSEQ)
+				FROM
+					TBL_PS_POPUP 
+				WHERE
+					COMPANYID = #v_pCompanyID#
+				OR
+					COMPANYID = 'Top'
+				AND
+					TENANT_ID = #tenantID#	
+			]]>
+		</isNotEqual>
+	</select>
 </sqlMap>
