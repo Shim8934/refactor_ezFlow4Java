@@ -30,7 +30,6 @@
 	
 			window.onload = function () {
 				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "선택된 설문이 없습니다.";
-				ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "선택된 설문이 없습니다.";
 			}
 			
 			document.onselectstart = function () {
@@ -223,7 +222,6 @@
 				
 				checkItems();
 				doc.getElementById("ifrmPreViewH").style.display = "";
-				doc.getElementById("ifrmPreViewW").style.display = "";
 				showPreview(isPreview, itemseq);
 			}
 		    
@@ -475,15 +473,12 @@
 				if(isPreview == 0) {
 					doc.getElementById("contentlist").style.height = height + "px";
 					doc.getElementById("contentlist").style.overflow = "auto";
-				} else if ( isPreview == 1) {
+				} else if ( isPreview == 2) {
 					doc.getElementById("contentlist").style.height = height + "px";
 					doc.getElementById("contentlist").style.overflow = "auto";
 					doc.getElementById("previewH").style.height = height + 47 + "px";
 					doc.getElementById("previewmail_bar_h").style.height = height + 47 + "px";
 					doc.getElementById("ifrmPreViewH").style.height = height + 47 + "px";
-				} else {
-					doc.getElementById("contentlist").style.height = height/2 + "px";
-					doc.getElementById("contentlist").style.overflow = "auto";
 				}
 			}
 			
@@ -542,19 +537,15 @@
 				var noneImage = doc.getElementById("PreViewNone");
 				var leftImage = doc.getElementById("PreViewleft");
 				
-				//noneImage.src = "/images/kr/cm/btn_noframe.gif";
 				noneImage.className = "icon16 btn_noframe";
-				//leftImage.src = "/images/kr/cm/btn_leftframe.gif";
 				leftImage.className = "icon16 btn_leftframe";
 				
 				switch(previewNum) {
 					case 0 :
-						//noneImage.src = "/images/kr/cm/btn_onnoframe.gif";
 						noneImage.className = "icon16 btn_onnoframe";
 						
 						break;
 					case 2 :
-						//leftImage.src = "/images/kr/cm/btn_onleftframe.gif";
 						leftImage.className = "icon16 btn_onleftframe";
 						break;
 				}
@@ -567,21 +558,17 @@
 				var doc = window.document;
 				var mainView = doc.getElementById("mainView");
 				var previewH = doc.getElementById("previewH");
-				var previewW = doc.getElementById("previewW");
 				var PreviewRayerH = doc.getElementById("PreviewRayerH");
-				var PreviewRayerW = doc.getElementById("PreviewRayerW");
 				var contentlistH = doc.getElementById("contentlist");
 				var previewmail_bar_h = doc.getElementById("previewmail_bar_h");
 				
 				switch(previewNum) {
 				case 0 :
 					previewH.style.display = "none";
-					previewW.style.display = "none";
 					mainView.style.width = "100%";
 					doc.getElementById("contentlist").style.height = conlistH + "px";					
 					break;
 				case 2 :
-					previewW.style.display = "none";
 					doc.getElementById("contentlist").style.height = conlistH + "px";
 					mainView.style.width = "70%";
 					previewH.style.width = "30%";
@@ -624,14 +611,8 @@
 				
 				
 				if(itemseq == 0) {
-					doc.getElementById('Preview_HeaderH').title = "";
-					doc.getElementById('PreH_sub_subject').innerHTML = "";
-					doc.getElementById('Preview_HeaderW').title = "";
-					doc.getElementById('PreW_sub_subject').innerHTML = "";
 					doc.getElementById('Preview_HeaderH').style.display ="none";
-					doc.getElementById('Preview_HeaderW').style.display ="none";
 					doc.getElementById("ifrmPreViewH").style.display = "none";
-					doc.getElementById("ifrmPreViewW").style.display = "none";
 				} else {
 					if(isPreview == 2) {
 						// 세로 모드
@@ -735,35 +716,10 @@
 					</span>
 				</span>
 			</div>
-			
-			<div class="previewW" id="previewW" style="width:100%; display:inline-block;">
-				<span id="PreviewRayerW" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top; ">
-					<span style="width:100%; display:inline-block; border:1px solid #e8e8e8; border-left:0px; border-right:0px; height:3px;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
-					</span>
-					<span id="PreContent_RayerW" style="position:border: 0px solid blue; width:99%;">
-						<span style="width: 100%; height: 100px; display: block;">
-							<span class="previewmail_info" style="display: block; width: 100%;">
-								<div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; width: 100%; background-color: #f1f3f5; margin-top: -3px; display: none;">
-									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 10px 0px 0px 0px; height: 36px; line-height: 37px;">
-										<span class="icon_btn" style="margin-left: 13px;"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
-											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" style="position:absolute; margin-top:-6px;" class="title_blodtxt"></span></span>
-									</p>
-									<span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date" style="display: none;"></span></span></span>
-								</div>
-							</span>
-							<iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
-						</span>
-					</span>
-				</span>
-			</div>
 		</form>
 		
 		<form name="PrevViewFormH" action="/ezPersonal/pollResult.do" method="get" target="ifrmPreViewH" >
 			<input  type="hidden" name="itemSeq" value="">
-			<input  type="hidden" name="flag" value="preview">
-		</form>
-		<form name="PrevViewFormW" action="/ezPersonal/pollResult.do" method="post" target="ifrmPreViewW">
-			<input  type="hidden"  name="itemSeq" value="">
 			<input  type="hidden" name="flag" value="preview">
 		</form>
 	</body>
