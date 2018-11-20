@@ -15,6 +15,15 @@
 		<script type="text/javascript">
 			var Strmessage = "<spring:message code = 'ezPersonal.t1022' />";
 	        var xmlhttp = null;
+			var host;                         //host서버
+			var userLang;                     //언어
+			var mode;                         //new, modify
+			var guid = "{" + GetGUID() + "}"; //랜덤Id
+			var checkValue = "A";             //타입종류
+			var LinkTypeURL;                  //타입src정보
+			var mainTitleId;
+			var subTitle1Id;
+			var subTitle2Id;
 			
 			document.onselectstart = function () {
 	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -22,63 +31,23 @@
 	        else
 	            return true;
 			};
-			
-	        $(document).ready(function() {
-	        	$(".hidden").hide().removeClass("hidden");
-	        	
-	        	$.ajax({
-	        		type : "POST",
-	        		url : "/admin/ezPersonal/getQuickLinkList.do",
-	        		dataType : "JSON",
-            		contentType: "application/json",
-	        		success : function(result) {
-	        			event_QuickList2(result);
-	        			//event_QuickList(loadXMLString(result));
-	        		}
-	        	});
-	        });
-	        
-	        function event_QuickList(result) {
-	            try {
-	                document.getElementById("AccessList").innerHTML = "";
-	                var xmldom = result;
-	                var headerData = createXmlDom();
-	                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
-					
-	                if (CrossYN()) {
-	                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-	                    var Node = headerData.importNode(xmlRtn, true);
-	                    headerData.documentElement.appendChild(Node);
-	                } else {
-	                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-	                    headerData.documentElement.appendChild(xmlRtn);
-	                }
-	
-	                var listview = new ListView();
-	                listview.SetID("AccessListView");
-	                listview.SetSelectFlag(false);
-	                listview.SetMulSelectable(true);
-	                listview.SetRowOnDblClick("QuickList_onDblclick");
-	                listview.DataSource(headerData);
-	                listview.DataBind("AccessList");
-	                //listview.DataSource(xmldom);
-	                listview.RowDataBind();
-	                xmldomNode = null;
-	                xmldom = null;
-	                
-	                //2018-08-09 김보미 - 데이터가 없을 경우 출력
-	                if (headerData.getElementsByTagName("ROW").length == 0) {
-	                	var TR_noItems = "<tr id='Link_TR_noItems'><td style='text-align: center;' colspan='8'>" + "<spring:message code = 'ezPersonal.t20005' />" + "</td></tr>";
-		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
-	                }
-	            } catch (e) {
-	
-	            }
-	        }
-			function event_QuickList2(result) {
+			$(document).ready(function() {
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezPersonal/getQuickLinkList.do",
+					dataType : "JSON",
+					contentType: "application/json",
+					success : function(result) {
+						host = result.host;
+						event_QuickList(result.list);
+					}
+				});
+			});
+			function event_QuickList(result) {
 				var mainList = document.getElementById("mainlist");
 				
 				result.forEach(function(item, index) {
+					var itemId  = item.quickLinkID;
 					var liElmt  = document.createElement("li");
 					var divElmt = document.createElement("div");
 					var titElmt = document.createElement("p");
@@ -88,11 +57,14 @@
 					var dlElmt  = document.createElement("dl");
 					
 					liElmt.className = "link";
-					liElmt.setAttribute("id", item.quickLinkID);
+					liElmt.setAttribute("id", itemId);
 					
 					divElmt.className = "linkBttn";
 					updElmt.setAttribute("src", "/images/email/popup_icon.gif");
+					updElmt.addEventListener("click", function(event) {btn_modify(itemId);});
+					
 					delElmt.setAttribute("src", "/images/close_xBtn.png");
+					delElmt.addEventListener("click", function(event) {btn_delete(itemId);});
 					
 					divElmt.appendChild(updElmt);
 					divElmt.appendChild(delElmt);
@@ -138,7 +110,7 @@
 				var ddElmt1 = document.createElement("dd");
 				var ddElmt2 = document.createElement("dd");
 				
-				addElmt.addEventListener("click", function(event) { openLinkAdd(); });
+				addElmt.addEventListener("click", function(event) {btn_add();});
 				addElmt.className = "linkAdd";
 				addElmt.setAttribute("id", "linkAdd");
 				imgElmt.setAttribute("src", "/images/admin/menuAdd.png");
@@ -157,21 +129,117 @@
 			function setQuickImg(linkType, linkTypeUrl) {
 				var result;
 				
-				switch(linkType) {
-					case "A" : result = "<img src='/images/kr/main/quickmenu_icon01.gif'>"; break;
-					case "B" : result = "<img src='/images/kr/main/quickmenu_icon02.gif'>"; break;
-					case "C" : result = "<img src='/images/kr/main/quickmenu_icon03.gif'>"; break;
-					case "D" : result = "<img src='/images/kr/main/quickmenu_icon04.gif'>"; break;
-					case "E" : result = "<img src='/images/kr/main/quickmenu_icon05.gif'>"; break;
-					case "F" : result = "<img src='/images/kr/main/quickmenu_icon06.gif'>"; break;
-					case "G" : result = "<img src='/images/kr/main/quickmenu_icon07.gif'>"; break;
-					case "H" : result = "<img src='/images/kr/main/quickmenu_icon08.gif'>"; break;
-					default : result = "<img src='" + linkTypeUrl + "'>"; break;
+				if (host == "gw.freet.co.kr") {
+					switch(linkType) {
+						case "A" : result = "<img src='/images/kr/main/quickmenu_icon01.png' id='A'>"; break;
+						case "B" : result = "<img src='/images/kr/main/quickmenu_icon02.gif' id='B'>"; break;
+						case "C" : result = "<img src='/images/kr/main/quickmenu_icon03.png' id='C'>"; break;
+						case "D" : result = "<img src='/images/kr/main/quickmenu_icon04.gif' id='D'>"; break;
+						case "E" : result = "<img src='/images/kr/main/quickmenu_icon05.gif' id='E'>"; break;
+						case "F" : result = "<img src='/images/kr/main/quickmenu_icon06.gif' id='F'>"; break;
+						case "G" : result = "<img src='/images/kr/main/quickmenu_icon07.png' id='G'>"; break;
+						case "H" : result = "<img src='/images/kr/main/quickmenu_icon08.gif' id='H'>"; break;
+						default : result = "<img src='" + linkTypeUrl + "'>"; break;
 						break;
+					}	
+				}
+				else {
+					switch(linkType) {
+						case "A" : result = "<img src='/images/kr/main/quickmenu_icon01.gif' id='A'>"; break;
+						case "B" : result = "<img src='/images/kr/main/quickmenu_icon02.gif' id='B'>"; break;
+						case "C" : result = "<img src='/images/kr/main/quickmenu_icon03.gif' id='C'>"; break;
+						case "D" : result = "<img src='/images/kr/main/quickmenu_icon04.gif' id='D'>"; break;
+						case "E" : result = "<img src='/images/kr/main/quickmenu_icon05.gif' id='E'>"; break;
+						case "F" : result = "<img src='/images/kr/main/quickmenu_icon06.gif' id='F'>"; break;
+						case "G" : result = "<img src='/images/kr/main/quickmenu_icon07.gif' id='G'>"; break;
+						case "H" : result = "<img src='/images/kr/main/quickmenu_icon08.gif' id='H'>"; break;
+						default : result = "<img src='" + linkTypeUrl + "'>"; break;
+						break;
+					}	
 				}
 				return result;
 			}
-			function openLinkAdd()  {
+			function btn_add()  {
+				var itemId = "";
+				$.ajax({
+					url : "/admin/ezPersonal/addQuickLink.do",
+					data : {"mode": "new"},
+					dataType : "JSON",
+					contentType: "application/json",
+					success : function(result) {
+						openLinkDetail(result, itemId);
+					}
+				});
+			}
+			function btn_modify(itemId) {
+				$.ajax({
+					url : "/admin/ezPersonal/addQuickLink.do",
+					data : {"mode": "modify"},
+					dataType : "JSON",
+					contentType: "application/json",
+					success : function(result) {
+						openLinkDetail(result, itemId);
+					}
+				});
+			}
+			function btn_delete(itemId) {
+				if (!confirm("<spring:message code = 'ezPersonal.t00003' />")) {
+					return;
+				}
+				
+				$.ajax({
+					url : "/admin/ezPersonal/delQuickLink.do",
+					async : false,
+					data : {pQuickLinkID : itemId},
+					dataType : "JSON",
+					contentType: "application/json",
+					success : function(result) {
+						if (result.result == "OK") {
+							alert("<spring:message code = 'ezPersonal.t00004' />");
+							window.location.reload();
+						}
+					}
+				});
+			}
+			function openLinkDetail(item, itemId) {
+				userLang = item.strUserLang;
+				mode = item.mode;
+				
+				if (itemId != "" && mode == "modify") {
+					initQuickLink(itemId);
+					initQuickLinkACL(itemId);
+				}
+				
+				var mainTitle;
+				var subTitle1;
+				var subTitle2;
+				
+				if (item.primary == 1) {
+					mainTitle = "한국어";
+					subTitle1 = "영어";
+					subTitle2 = "일본어";
+					
+					mainTitleId = "Title1";
+					subTitle1Id = "Title2";
+					subTitle2Id = "Title3";
+				} else if (item.primary == 2) {
+					mainTitle = "영어";
+					subTitle1 = "한국어";
+					subTitle2 = "일본어";
+					
+					mainTitleId = "Title2";
+					subTitle1Id = "Title1";
+					subTitle2Id = "Title3";
+				} else {
+					mainTitle = "일본어";
+					subTitle1 = "한국어";
+					subTitle2 = "영어";
+					
+					mainTitleId = "Title3";
+					subTitle1Id = "Title1";
+					subTitle2Id = "Title2";
+				}
+				
 				var linksHTML = "<li class='linkDetails' style='display:none'>";
 				linksHTML += "<div id='showNewLink'>";
 				linksHTML += "<div class='linkTitle'>";
@@ -181,16 +249,16 @@
 				linksHTML += "<div class='linkContent'>";
 				linksHTML += "<table class='content def'>";
 				linksHTML += "<tr class='primary'>";
-				linksHTML += "<th>이름 (한국어) <span style='color:red'>*</span></th>";
-				linksHTML += "<td style='border-bottom: 0px;'><input name='Input' id='Title1' class='contInput' maxlength='50'></td>";
+				linksHTML += "<th>이름 (" + mainTitle + ") <span style='color:red'>*</span></th>";
+				linksHTML += "<td style='border-bottom: 0px;'><input name='Input' id='"+ mainTitleId +"' class='contInput' maxlength='50'></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr class='primary'>";
-				linksHTML += "<th>이름 (영어) <span style='color:red'>*</span></th>";
-				linksHTML += "<td style='border-bottom: 0px;'><input type='text' id='Title2' class='contInput' maxlength='50'></td>";
+				linksHTML += "<th>이름 (" + subTitle1 + ") <span style='color:red'>*</span></th>";
+				linksHTML += "<td style='border-bottom: 0px;'><input type='text' id='"+ subTitle1Id +"' class='contInput' maxlength='50'></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr class='secondary'>";
-				linksHTML += "<th>이름 (일본어) <span style='color:red'>*</span></th>";
-				linksHTML += "<td><input type='text' id='Title3' class='contInput' maxlength='50'></td>";
+				linksHTML += "<th>이름 (" + subTitle2 + ") <span style='color:red'>*</span></th>";
+				linksHTML += "<td><input type='text' id='"+ subTitle2Id +"' class='contInput' maxlength='50'></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
 				linksHTML += "<th>URL <span style='color:red'>*</span></th>";
@@ -198,7 +266,7 @@
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
 				linksHTML += "<th>열림 종류 </th>";
-				linksHTML += "<td><select style='height: 24px; padding-left: 5px;'><option>FULL</option><option>SIZE</option></select></td>";
+				linksHTML += "<td><select id='popSize' style='height: 24px; padding-left: 5px;'><option value='chk_Full'>FULL</option><option value='chk_Size'>SIZE</option></select></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
 				linksHTML += "<th rowspan='2' style='text-align: bottom; vertical-align: top;'>팝업 크기</th>";
@@ -216,34 +284,42 @@
 				linksHTML += "<td style='border-left: 1px solid #d2d2d2;'>";
 				linksHTML += "<table class='linkType'>"	
 				linksHTML += "<tr>";
-				linksHTML += "<td><img src='/images/kr/main/quickmenu_icon01.gif' id='A' onclick='radioClick(this,'img')'></td>"
-				linksHTML += "<td><img src='/images/kr/main/quickmenu_icon02.gif' id='B' onclick='radioClick(this,'img')'></td>";
-				linksHTML += "<td><img src='/images/kr/main/quickmenu_icon03.gif' id='C' onclick='radioClick(this,'img')'></td>";
-				linksHTML += "<td><img src='/images/kr/main/quickmenu_icon04.gif' id='D' onclick='radioClick(this,'img')'></td>";
+				linksHTML += "<td>" + setQuickImg("A", "") + "</td>";
+				linksHTML += "<td>" + setQuickImg("B", "") + "</td>";
+				linksHTML += "<td>" + setQuickImg("C", "") + "</td>";
+				linksHTML += "<td>" + setQuickImg("D", "") + "</td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr>"
-				linksHTML += "<td><input name='linktypeOption' type='radio' value='A' onclick='radioClick(this,'rad')' checked=''></td>";
-				linksHTML += "<td><input name='linktypeOption' type='radio' value='B' onclick='radioClick(this,'rad')'></td>";
-				linksHTML += "<td><input name='linktypeOption' type='radio' value='C' onclick='radioClick(this,'rad')'></td>";
-				linksHTML += "<td><input name='linktypeOption' type='radio' value='D' onclick='radioClick(this,'rad')'></td>";
+				linksHTML += "<td><input name='linktypeOption' type='radio' value='A' checked=''></td>";
+				linksHTML += "<td><input name='linktypeOption' type='radio' value='B'></td>";
+				linksHTML += "<td><input name='linktypeOption' type='radio' value='C'></td>";
+				linksHTML += "<td><input name='linktypeOption' type='radio' value='D'></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
-				linksHTML += "<td><img src='/images/kr/main/quickmenu_icon05.gif' id='E' onclick='radioClick(this,'img')'></td>";
-				linksHTML += "<td><img src='/images/kr/main/quickmenu_icon06.gif' id='F' onclick='radioClick(this,'img')'></td>";
-				linksHTML += "<td><img src='/images/kr/main/quickmenu_icon07.gif' id='G' onclick='radioClick(this,'img')'></td>";
-				linksHTML += "<td><img src='/images/kr/main/quickmenu_icon08.gif' id='H' onclick='radioClick(this,'img')'></td>";
+				linksHTML += "<td>" + setQuickImg("E", "") + "</td>";
+				linksHTML += "<td>" + setQuickImg("F", "") + "</td>";
+				linksHTML += "<td>" + setQuickImg("G", "") + "</td>";
+				linksHTML += "<td>" + setQuickImg("H", "") + "</td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
-				linksHTML += "<td><input name='linktypeOption' type='radio' value='E' onclick='radioClick(this, 'rad')'></td>";
-				linksHTML += "<td><input name='linktypeOption' type='radio' value='F' onclick='radioClick(this, 'rad')'></td>";
-				linksHTML += "<td><input name='linktypeOption' type='radio' value='G' onclick='radioClick(this, 'rad')'></td>";
-				linksHTML += "<td><input name='linktypeOption' type='radio' value='H' onclick='radioClick(this, 'rad')'></td>";
+				linksHTML += "<td><input name='linktypeOption' type='radio' value='E'></td>";
+				linksHTML += "<td><input name='linktypeOption' type='radio' value='F'></td>";
+				linksHTML += "<td><input name='linktypeOption' type='radio' value='G'></td>";
+				linksHTML += "<td><input name='linktypeOption' type='radio' value='H'></td>";
 				linksHTML += "</tr>";
 				linksHTML += "</table>";
 				linksHTML += "</td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
-				linksHTML += "<td colspan='2'><div class='btnpositionJsp iconBtn' style='text-align: right;'><a class='imgbtn'><span>type 등록</span></a></div></td>";
+				linksHTML += "<td colspan='2'>";
+				linksHTML += "<div class='btnpositionJsp iconBtn' style='text-align: right;'><a class='imgbtn'><span onclick='CreateType()'>type 등록</span></a></div>";
+				linksHTML += "<table style='margin-top: 10px; margin-left: 10px;display:none;' id='makeTypeTable'>";
+				linksHTML += "<tr style='text-align: center;'><td id='makeTypeImgTD'></td></tr>";
+				linksHTML += "<tr style='text-align: center;'>";
+				linksHTML += "<td style='text-align: center;'><input name='linktypeOption' type='radio' value='Z' id='Z' onclick='radioClick(this, 'rad')' style='margin-top: -5px;' /></td>";
+				linksHTML += "</tr>";
+				linksHTML += "</table>";
+				linksHTML += "</td>";
 				linksHTML += "</tr>";
 				linksHTML += "</table>";
 				linksHTML += "</div>";
@@ -255,7 +331,19 @@
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
 				linksHTML += "<td colspan='2'>"
-				linksHTML += "<div class='btnpositionJsp iconBtn' style='text-align: right;'><a class='imgbtn'><span>저장</span></a></div>";
+				linksHTML += "<div class='btnpositionJsp iconBtn' style='text-align: right;'>";
+				linksHTML += "<a class='imgbtn' style='margin-right: 10px'><span onclick='regit()'>권한등록</span></a>";
+				linksHTML += "<a class='imgbtn'><span id='btn_OK'>"; 
+				
+				if (itemId != "" && mode == "modify") {
+					linksHTML += "수정";
+				}
+				else {
+					linksHTML += "저장";
+				}
+				
+				linksHTML += "</span></a>";
+				linksHTML += "</div>";
 				linksHTML += "</td>"
 				linksHTML += "</tr>";
 				linksHTML += "</table>";
@@ -263,97 +351,414 @@
 				linksHTML += "</div>";
 				linksHTML += "</li>"; 
 				
-				$("#linkAdd").after(linksHTML);
-				$(".linkDetails").slideDown();
+				var nowShowDetails = $(".linkDetails").children().attr("id");
+				var DetailMode = $(".linkDetails").attr("id");
+				console.log(nowShowDetails);
+				console.log("이전" + DetailMode);
+				if (mode == "new") {
+					if (nowShowDetails == "showNewLink") {
+						if (DetailMode != "modify") {
+							$(".linkDetails").slideUp(function(){
+								$(".linkDetails").remove();
+							});
+						}
+						else {
+							//추가해야함
+							console.log("이전" + DetailMode);
+							$(".linkDetails").remove();
+							$("#linkAdd").after(linksHTML);
+							$(".linkDetails").slideDown();
+						}
+					} else{
+						$("#linkAdd").after(linksHTML);
+						$(".linkDetails").slideDown();
+					}
+				} else {
+					if (nowShowDetails != "showNewLink") {
+						$("#linkAdd").after(linksHTML);
+						$(".linkDetails").slideDown();
+					}
+				}
+				
+				//타입이미지버튼선택설정
+				$("img").on("click", function() {
+					radioClick(this, 'img');
+				});
+				
+				
+				//타입라디오버튼선택설정
+				$("input[type=radio]").on("click", function() {
+					radioClick(this, 'rad');
+				});
+				
+				//저장버튼설정
+				$("#btn_OK").on("click", function() {
+					btn_ok(itemId);
+				});
+				
+				//닫기버튼설정
+				$(".close").on("click", function(){
+					$(".linkDetails").slideUp();
+					$(".linkDetails").attr("class", "linkDetails hideDetails");
+				});
+				
 			}
-	        var addquicklink_dialogArguments = new Array();
-	        function btn_Select() {
-	            if (CrossYN()) {
-	                addquicklink_dialogArguments[0] = "";
-	                addquicklink_dialogArguments[1] = btn_Select_Complete;
-	                
-	                //크롬일때 alert창 크기때문에 크롬일때 구별
-		            var agent = navigator.userAgent.toLowerCase();
-		            if (agent.indexOf("chrome") != -1) {
-		            	//2018-08-03 김보미 - alert창 크기때문에 팝업 사이즈 조정
-		            	//var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(450, 682));	
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(460, 682));	
-		            } else {
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(415, 670));
-		            }
-	                
-	                try { AddQuickLink.focus(); } catch (e) {
-	                }
-	            } else {
-	                var rtnValue = window.showModalDialog("/admin/ezPersonal/addQuickLink.do?mode=new", "", "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(415, 670));
-	                window.location.reload();
-	            }
-	        }
-	
-	        function btn_Select_Complete() {
-	            window.location.reload();
-	        }
-	
-	        function QuickList_onDblclick() {
-	            var listview = new ListView();
-	            listview.LoadFromID("AccessListView");
-	            var listviewSelected = listview.GetSelectedRows();
-	            if (listviewSelected == "") {
-	                alert(Strmessage);
-	                return;
-	            }
-	
-	            if (CrossYN()) {
-	                addquicklink_dialogArguments[0] = listviewSelected[0].getAttribute("data1");
-	                addquicklink_dialogArguments[1] = btn_Select_Complete;
-	                
-		            //2018-08-03 김보미 - alert창 크기때문에 팝업 사이즈 조정
- 	                //var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 680));
-		            var agent = navigator.userAgent.toLowerCase();
-		            if (agent.indexOf("chrome") != -1) {
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(460, 682));	
-		            } else {
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 670));
-		            }
-	                try { AddQuickLink.focus(); } catch (e) {
-	                }
-	                
-	            } else {
-	                var rtnValue = window.showModalDialog("/admin/ezPersonal/addQuickLink.do?mode=modify", listviewSelected[0].getAttribute("data1"), "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(415, 625));
-	                window.location.reload();
-	            }
-	        }
-	
-	        function btn_Del() {
-	            var listview = new ListView();
-	            listview.LoadFromID("AccessListView");
-	            var listviewSelected = listview.GetSelectedRows();
-	            if (listviewSelected == "") {
-	                alert(Strmessage);
-	                return;
-	            }
-	
-	            if (!confirm("<spring:message code = 'ezPersonal.t00003' />")) {
-	            	return;
-	            }
-	
-	            var xmlpara = createXmlDom();
-	            var objNode;
-	            createNodeInsert(xmlpara, objNode, "PARAMETER");
-	            createNodeAndInsertText(xmlpara, objNode, "pQuickLinkID", listviewSelected[0].getAttribute("data1"));
-	
-	            xmlhttp = null;
-	            xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/admin/ezPersonal/delQuickLink.do", false);
-	            xmlhttp.send(xmlpara);
-	
-	            if (xmlhttp != null && xmlhttp.readyState == 4) {
-	                if (xmlhttp.statusText == "OK") {
-	                    alert("<spring:message code = 'ezPersonal.t00004' />");
-	                    window.location.reload();
-	                }
-	            }
-	        }
+			function S4() {
+				return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+			}
+			function GetGUID() {
+				return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+			}
+			var g_xmlhttp;
+			function CreateType() {
+				if (CrossYN() || (pNoneActiveX == "YES")) {
+					document.getElementById('mode').value = "PHOTO";
+					document.form.file1.click();
+				}
+				else {
+					var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+					var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
+					if (filepath == "") return;
+					
+					var strBase64 = ezUtil.DownloadToBase64(filepath);
+					ezUtil = null;
+					
+					var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
+					var temp = ezUtil.GetImageSize(filepath);
+					ezUtil = null;
+					
+					imageWidth = temp.split("*")[0];
+					imageHeight = temp.split("*")[1];
+					var strXML = "<IMAGE><DATA>" + strBase64 + "</DATA></IMAGE>";
+					
+					g_xmlhttp = createXMLHttpRequest();
+					g_xmlhttp.onreadystatechange = changeNormalImage_end;
+					g_xmlhttp.send(strXML);
+				}
+			}
+			function changeNormalImage_end() {
+				if (g_xmlhttp.readyState != 4) return;
+				document.getElementById("makeTypeTable").style.display = "";
+				document.getElementById("makeTypeImgTD").innerHTML = "";
+				
+				var _img = document.createElement("IMG");
+				_img.src = g_xmlhttp.responseText;
+				_img.id = "ZmakeTypeImg";
+				_img.onclick = function(){ radioClick(this,'img') };
+				_img.style.cursor = "pointer";
+				
+				document.getElementById("makeTypeImgTD").appendChild(_img);
+				document.getElementById("Z").checked = true;
+				checkValue = "Z";
+				LinkTypeURL = g_xmlhttp.responseText;
+			}
+			function btn_AttachAdd_onclick() {
+				if (document.form.file1.value != "") {
+					if (document.getElementById('mode').value == "PHOTO") {
+						if (document.getElementById("form").file1.files.length < 2) { } else { alert(""); }
+					}
+				}
+				document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
+				var frm = document.getElementById('form');
+				frm.action = "/admin/ezPersonal/typeImageUpload.do?QId=" + guid;
+				frm.submit();
+				document.form.file1.value = "";
+			}
+			function returnvalue(strXML) {
+				var xml = loadXMLString(strXML);
+				var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
+				for (i = 0; i < nodes.length; i++) {
+					if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
+						document.getElementById("makeTypeTable").style.display = "";
+						
+						var path = getNodeText(GetChildNodes(nodes[i])[4]);
+						document.getElementById("makeTypeTable").style.display = "";
+						document.getElementById("makeTypeImgTD").innerHTML = "";
+						
+						var _img = document.createElement("IMG");
+						_img.src = path;
+						_img.id = "ZmakeTypeImg";
+						_img.onclick = function () { radioClick(this, 'img') };
+						_img.style.cursor = "pointer";
+						document.getElementById("makeTypeImgTD").appendChild(_img);
+						document.getElementById("Z").checked = true;
+						checkValue = "Z";
+						LinkTypeURL = path;
+					}
+				}
+			}
+			var g_attendant = "";
+			var selecttarget_dialogArguments = new Array();
+			function regit() {
+				if (CrossYN()) {
+					selecttarget_dialogArguments[0] = g_attendant;
+					selecttarget_dialogArguments[1] = regit_Complete;
+					
+					var SelectTarget = window.open("/admin/ezPersonal/selectTarget.do", "SelectTarget", GetOpenWindowfeature(840, 480));
+					try { SelectTarget.focus(); } catch (e) { }
+				} 
+				else {
+					var config = "status:false;dialogWidth:840px;dialogHeight:480px;scroll:no;status:no;edge:sunken" + GetShowModalPosition(840, 480);
+					var ret = window.showModalDialog("/admin/ezPersonal/selectTarget.do", g_attendant, config);
+					
+					if (ret == undefined)
+						return;
+					makePermissionsList(ret, false);
+				}
+			}
+			function regit_Complete(rtv) {
+				if (rtv == undefined) {
+					return;
+				}
+				makePermissionsList(rtv, false);
+			}
+			function makePermissionsList(value, xmlFalg) {
+				if (document.getElementById("AccessList").innerHTML != "") document.getElementById("AccessList").innerHTML = "";
+				g_attendant = { "DATA1": new Array(), "DATA2": new Array(), "DATA3": new Array(), "DATA5": new Array() };
+				
+				if(xmlFalg) {
+					var xmldom = value;
+				} else {
+					var xmldom = loadXMLString(value);
+				}
+				var listview = new ListView();
+				listview.SetID("AccessListView");
+				listview.SetSelectFlag(false);
+				listview.SetMulSelectable(true);
+				listview.DataSource(document.getElementById("listviewheader"));
+				listview.SetHeightFree(true);
+				listview.DataBind("AccessList");
+				var xmldomNode = SelectNodes(xmldom, "NODES/NODE");
+				
+				for (var i = 0; i < xmldomNode.length; i++) {
+					g_attendant["DATA1"][i] = SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME");
+					g_attendant["DATA2"][i] = SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2");
+					g_attendant["DATA3"][i] = SelectSingleNodeValue(xmldomNode[i], "ACCESSID");
+					g_attendant["DATA5"][i] = SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS");
+					
+					var listTR = listview.AddRow(listview.GetRowCount());
+					var listTD = document.createElement("TD");
+					listTD.style.paddingBottom = "0px";
+					listTD.style.paddingTop = "0px";
+					
+					if (userLang == "2" && SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2") != "") {
+						if (SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS") == "N") {
+							var listTDText = document.createTextNode(SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
+						} else {
+							var listTDText = document.createTextNode(SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
+						}
+					} else {
+						if (SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS") == "N") {
+							var listTDText = document.createTextNode(SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME"));
+						} else {
+							var listTDText = document.createTextNode(SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME"));
+						}
+					}
+					
+					listTD.setAttribute("DATA", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME"));
+					listTD.setAttribute("DATA2", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
+					listTD.setAttribute("DATA1", SelectSingleNodeValue(xmldomNode[i], "ACCESSID"));
+					listTD.setAttribute("DATA5", SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS"));
+					listTD.appendChild(listTDText);
+					listTR.appendChild(listTD);
+				}
+				
+				xmldomNode = null;
+				xmldom = null;
+				
+				var listview2 = new ListView();
+				listview2.LoadFromID("AccessListView");
+				var InitTr2 = listview2.GetDataRows();
+				
+				for (var i = 0; i < InitTr2.length; i++) {
+					if (InitTr2[i].childNodes[0].getAttribute("data5") == "N") {
+						InitTr2[i].childNodes[0].style.color = "red";
+					}
+				}
+			}
+			function radioClick(obj, type) {
+				if (type == "img") {
+					var imgCnt = document.getElementsByName("linktypeOption").length;
+					
+					for (var i = 0; i < imgCnt; i++) {
+						if (document.getElementsByName("linktypeOption")[i].value == obj.id) {
+							document.getElementsByName("linktypeOption")[i].checked = true;
+							checkValue = document.getElementsByName("linktypeOption")[i].value;
+							LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
+						}
+					}
+				} else {
+					checkValue = obj.value;
+					LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
+				}
+			}
+			function btn_ok(itemId) {
+				if (specialChk(document.getElementById("Title1").value) || specialChk(document.getElementById("Title2").value) ||  specialChk(document.getElementById("Title3").value)) {
+					alert("<spring:message code='ezResource.special' />");
+					return;
+				}
+				
+				if (document.getElementById(mainTitleId).value.trim() == "") {
+					document.getElementById(mainTitleId).focus();
+					alert("<spring:message code = 'ezPersonal.t1027' />");
+					return;
+				}
+				
+				if (document.getElementById("txtURL").value.trim() == "") {
+					document.getElementById("txtURL").focus();
+					alert("<spring:message code = 'ezPersonal.t87' />");
+					return;
+				}
+				
+				if (document.getElementById(subTitle1Id).value.trim() == "") {
+					document.getElementById(subTitle1Id).value = document.getElementById(mainTitleId).value;
+				}
+				
+				if (document.getElementById(subTitle2Id).value.trim() == "") {
+					document.getElementById(subTitle2Id).value = document.getElementById(mainTitleId).value;
+				}
+				
+				SaveQuickLink(itemId);
+			}
+			function SaveQuickLink(itemId) {
+				var xmlpara = createXmlDom();
+				var objNode;
+				var objNode2;
+				var objNode3;
+				objNode = createNodeInsert(xmlpara, objNode, "parameter");
+				
+				if(mode == "new") {
+					createNodeAndInsertText(xmlpara, objNode, "pQuickLinkID", guid);
+				} else {
+					createNodeAndInsertText(xmlpara, objNode, "pQuickLinkID", itemId);
+				}
+				
+				createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName", document.getElementById(mainTitleId).value);
+				createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName2", document.getElementById(subTitle1Id).value);
+				createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName3", document.getElementById(subTitle2Id).value);
+				createNodeAndInsertText(xmlpara, objNode, "pLinkType", checkValue);
+				createNodeAndInsertText(xmlpara, objNode, "pLinkTypeURL", LinkTypeURL);
+				createNodeAndInsertText(xmlpara, objNode, "pMode", mode);
+				createNodeAndInsertText(xmlpara, objNode, "pURL", document.getElementById("txtURL").value);
+				
+				if (document.getElementById("popSize").value == "chk_Full") {
+					createNodeAndInsertText(xmlpara, objNode, "pSize", "FULL");
+				} else {
+					createNodeAndInsertText(xmlpara, objNode, "pSize", document.getElementById("txt_Width").value + ":" + document.getElementById("txt_Height").value);
+				}
+				
+				var listview = new ListView();
+				listview.LoadFromID("AccessListView");
+				var listviewSelected = listview.GetDataRows();
+				
+				if (listviewSelected != undefined) {
+					for (var nCnt1 = 0; nCnt1 < listviewSelected.length; nCnt1++) {
+						objNode2 = createNodeAndAppandNode(xmlpara, objNode, objNode2, "node");
+						createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data", listviewSelected[nCnt1].childNodes[0].getAttribute("data"));
+						createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data1", listviewSelected[nCnt1].childNodes[0].getAttribute("data1"));
+						createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data2", listviewSelected[nCnt1].childNodes[0].getAttribute("data2"));
+						createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data5", listviewSelected[nCnt1].childNodes[0].getAttribute("data5"));
+						
+						if (mode == "new") {
+							createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data6", guid);
+						} else {
+							createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data6", itemId);
+						}
+						
+						createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "value", getNodeText(listviewSelected[nCnt1].childNodes[0]));
+						createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "mode", mode);
+					}
+				}
+				
+				xmlhttp = null;
+				xmlhttp = createXMLHttpRequest();
+				xmlhttp.open("POST", "/admin/ezPersonal/saveQuickLink.do", false);
+				xmlhttp.send(xmlpara);
+				
+				if (xmlhttp != null && xmlhttp.readyState == 4) {
+					if (xmlhttp.statusText == "OK") {
+						alert("<spring:message code = 'ezPersonal.s2' />");
+						window.location.reload();
+					} else {
+						alert("<spring:message code = 'ezPersonal.t108' />");
+					}
+				}
+			}
+			//상세화면관련 기본정보뿌리기
+			function initQuickLink(itemId) {
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					url : "/admin/ezPersonal/getQuickLink.do",
+					async : true,
+					data : {pQuickLinkID : itemId},
+					success : function(result) {
+						event_GetQuickLink(result.quickLinkVO);
+					}
+				});
+			}
+			function event_GetQuickLink(result) {
+				document.getElementsByClassName("linkDetails")[0].setAttribute("id", "modify");
+				
+				document.getElementById("Title1").value = result["quickLinkName"];
+				document.getElementById("Title2").value = result["quickLinkName2"];
+				document.getElementById("Title3").value = result["quickLinkName3"];
+				document.getElementById("txtURL").value = result["url"];
+				
+				var size = result["size_"];
+				if (size == "FULL") {
+					document.getElementById("popSize").value = "chk_Full";
+				}
+				else{
+					document.getElementById("popSize").value = "chk_Size"; 
+					document.getElementById("txt_Width").value = size.split(':')[0];
+					document.getElementById("txt_Height").value = size.split(':')[1];
+				}
+				
+				var type = result["linkType"];
+				checkValue = type;
+				LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
+				
+				if (type == "Z") {
+					var typeUrl = result["linkTypeUrl"];
+					document.getElementById("makeTypeTable").style.display = "";
+					document.getElementById("makeTypeImgTD").innerHTML = "";
+					
+					var _img = document.createElement("IMG");
+					_img.src = typeUrl;
+					
+					_img.id = "ZmakeTypeImg";
+					_img.onclick = function () { radioClick(this, 'img') };
+					_img.style.cursor = "pointer";
+					document.getElementById("makeTypeImgTD").appendChild(_img);
+					document.getElementById("Z").checked = true;
+					
+					checkValue = "Z";
+				}
+				else {
+					var cnt = document.getElementsByName("linktypeOption").length;
+					for (var i = 0; i < cnt; i++) {
+						if (document.getElementsByName("linktypeOption")[i].value.trim() == type.trim()) {
+							document.getElementsByName("linktypeOption")[i].checked = true;
+						}
+					}
+				}
+			}
+			//상세화면관련 권한정보뿌리기
+			function initQuickLinkACL(itemId) {
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezPersonal/getQuickLinkACL.do",
+					dataType : "text",
+					data : {pQuickLinkID : itemId},
+					success : function(result) {
+						event_GetQuickLinkACL(loadXMLString(result));
+					}
+				});
+			}
+			function event_GetQuickLinkACL(result) {
+				makePermissionsList(result, true);
+			}
 		</script>
 		<style type="text/css">
 			.link, .linkAdd {cursor: pointer; vertical-align: top; display: inline-block; width: 310px; border: 1px solid #d9d9d9; margin: 20px 30px 0px 0px; height: 200px;}
@@ -387,149 +792,26 @@
 			.linkType tr td {width:25%;}
 			.linkType tr:nth-child(odd) > td {cursor:pointer;}
 			.linkType tr:nth-child(even) > td {text-align:center; margin-top:-5px;}
-			.hidden {display: none;}
+			.hideDetails {display: none;}
 		</style>
 	</head>
 	<body class="mainbody">
-		<c:choose>
-			<c:when test="${lang == '1'}">
-				<xml id="listviewheader" style ="display:none">
-					<LISTVIEWDATA>
-						<HEADERS>
-					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' /></NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-					      	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-							<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-					     	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1023' />Type</NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME>URL</NAME>
-					        	<WIDTH>70</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1024' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1025' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1026' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					    </HEADERS>
-					</LISTVIEWDATA>
-				</xml>
-			</c:when>
-			<c:when test="${lang == '2'}">
-				<xml id="listviewheader" style ="display:none">
-					<LISTVIEWDATA>
-						<HEADERS>
-					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s81' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-							<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-					     	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1023' />Type</NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME>URL</NAME>
-					        	<WIDTH>70</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1024' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1025' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1026' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					    </HEADERS>
-					</LISTVIEWDATA>
-				</xml>
-			</c:when>
-			<c:otherwise>
-				<xml id="listviewheader" style ="display:none">
-					<LISTVIEWDATA>
-						<HEADERS>
-					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s81' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-							<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-					     	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1023' />Type</NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME>URL</NAME>
-					        	<WIDTH>70</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1024' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1025' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1026' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					    </HEADERS>
-					</LISTVIEWDATA>
-				</xml>
-			</c:otherwise>
-		</c:choose>
-
-		
 		<h1>Quick Link</h1>
-		<div id="mainmenu">
-			<ul>
-		    	<li class="important"><span onclick="btn_Select()"><spring:message code = 'ezPersonal.t105' /></span></li>
-		    	<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		        <li><span onclick="QuickList_onDblclick()"><spring:message code = 'ezPersonal.t169' /></span></li>
-		        <li><span class="icon16 icon16_delete" onclick="btn_Del()"></span></li>
-			</ul>
-		</div>
-		<script type="text/javascript">
-	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-	    </script>
-	    <table class="mainlist" style="width:100%;">
-	        <div id=AccessList style ="WIDTH:100%; border-right:1px solid #e8e8e8; border-left:1px solid #e8e8e8;"></div>
-	    </table>
+
+		<!-- 빠른 링크 리스트 영역 -->
 		<ul id="mainlist"></ul>
+		
+		<!-- 빠른 링크 추가 영역 -->
+		<xml id="listviewheader" style="display: none;"></xml>
+		<iframe name="ifrm" src="about:blank" style="display: none;"></iframe>
+		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPersonal/typeImageUpload.do?guid=" target="ifrm" style ="display:none">
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="true" />
+			<input type="hidden" name="boardid" id="boardid" />
+			<input type="hidden" name="maxsize" id="maxsize" />
+			<input type="hidden" name="mode" id="mode" value="PHOTO"/>
+			<input type="hidden" name="cnt" id="cnt" />
+			<input type="hidden" name="guid" id="guid"  />
+			<input type="hidden" name="mailgubun" id="mailgubun" />
+		</form>
 	</body>
 </html>
