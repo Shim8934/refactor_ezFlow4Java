@@ -131,6 +131,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.createJMochaMailSignatureTemplate();
     	ezCommonService.createJobMasterTable();
     	ezCommonService.addJobMasterJobID();
+    	ezCommonService.createWebfolderToken();
     	
     	logger.debug("init ended.");
     }

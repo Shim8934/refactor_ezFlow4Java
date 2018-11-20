@@ -74,7 +74,7 @@
 					<tbody>
 						<tr>
 							<td style="height:770px; vertical-align:top">
-								<iframe id="message" class="viewbox" src="/admin/ezEditor/selectEditor.do?type=ADMIN&height=770&formID=${docID}" name="message" frameborder="0" style="padding:0; height:99%; width:800px; overflow:auto;"></iframe>
+								<iframe id="message" class="viewbox" src="/admin/ezEditor/selectApprovalEditor.do?type=ADMIN&height=770&formID=${docID}" name="message" frameborder="0" style="padding:0; height:99%; width:800px; overflow:auto;"></iframe>
 							</td>
 							<td id="rootTD" name="rootTD" style="width:100%; vertical-align:top; text-align:left; padding-left:10px; display:none"></td>
 						</tr>

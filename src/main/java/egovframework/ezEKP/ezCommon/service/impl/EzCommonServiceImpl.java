@@ -1362,5 +1362,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addJobMasterJobID() throws Exception {
 		ezCommonDAO.addJobMasterJobID();
 	}
+
+	@Override
+	public void createWebfolderToken() throws Exception {
+		ezCommonDAO.createWebfolderToken();
+		
+	}
 	
 }
