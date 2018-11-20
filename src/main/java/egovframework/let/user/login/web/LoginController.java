@@ -558,15 +558,15 @@ public class LoginController {
     	} else { // useIPAccess 사용하면 IP, ID 체크
     		
     		String topID = loginVO.getCompanyID();
+    		String deptID = loginVO.getDeptID();
     		//String topID = loginVO.getRollInfo().indexOf("c=1") != -1 ? "Top" : loginVO.getCompanyID();
     		String clientIP[] = loginVO.getIp().split("\\.");
         	List<AccessIdVO> accessIdList = ezSystemAdminService.getAllAccessList(loginVO.getPrimary(), loginVO.getTenantId(), topID);
         	List<AccessIdVO> accessDeptList = ezSystemAdminService.getAllAccessListDept(loginVO.getPrimary(), loginVO.getTenantId(), topID);
         	List<IPBandVO> ipBandList = ezSystemAdminService.getAllIPBand(loginVO.getTenantId());
     		
-    		 
         	// ID 먼저 체크
-        	if (!(accessIdList.size() == 0 || accessIdList == null)) {
+        	if (!(accessIdList == null || accessIdList.size() == 0)) {
         		for (int i = 0; i < accessIdList.size(); i++) {
         			String getListId = accessIdList.get(i).getCn();
         			if (loginVO.getId().equals(getListId)) {
@@ -575,23 +575,23 @@ public class LoginController {
         			}
         		}
         	}
-        	
+
         	// 부서 체크
-        	if (!(accessDeptList.size() == 0 || accessDeptList == null)) {
+        	if (!(accessDeptList == null || accessDeptList.size() == 0)) {
         		for (int i = 0; i < accessDeptList.size(); i++) {
         			String getListDept = accessDeptList.get(i).getCn();
-        			if (topID.equals(getListDept)) {
+        			if (deptID.equals(getListDept) || topID.equals(getListDept)) {
         			logger.debug("dept checked");
         				return true;
         			}
         		}
         	}
-        	
+
         	// IP 대역 체크
         	boolean returnValue = false;
         	String getAccess = "NO";
         	int checkCnt = 0;
-        	if (!(ipBandList.size() == 0 || ipBandList == null)) {
+        	if (!(ipBandList == null || ipBandList.size() == 0)) {
         		for (int i = 0; i < ipBandList.size(); i++) {
         			getAccess = ipBandList.get(i).getAccess();
         			

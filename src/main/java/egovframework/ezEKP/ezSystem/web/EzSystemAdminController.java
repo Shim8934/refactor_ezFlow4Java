@@ -897,18 +897,28 @@ public class EzSystemAdminController {
 	}
 	
 	@RequestMapping(value="/ezSystem/systemAddAccessList.do")
-	public String systemAddAccessList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String systemAddAccessList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("systemAddAccessList started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		String topID = userInfo.getCompanyID();
+		String companyId = request.getParameter("companyId");
+		String adminChk = "false";
 		
 		if (userInfo.getRollInfo().indexOf("c=1") != -1) {
-			topID = "Top";
+			adminChk = "true";
+			
+			if (!topID.equals(companyId)){
+				topID = companyId;
+			} else {
+				topID = "Top";
+			}
 		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("topID", topID);
+		model.addAttribute("adminChk", adminChk);
+		
 		logger.debug("systemAddAccessList ended");
 		return "/ezSystem/systemAddAccessList";
 	}
