@@ -6114,10 +6114,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
         }
         subQuery = ReturnQuery;
         
-        if ( xmlDom.getDocumentElement().getChildNodes().getLength() > 24)
+        if ( xmlDom.getDocumentElement().getChildNodes().getLength() > 22)
         {
-            if (xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent().trim() != "")
-                subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent();
+            if (xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent().trim() != "")
+                subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent();
         }
          result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftfrom, draftto, apprfrom,
                 papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, searchStatus,

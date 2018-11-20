@@ -54,6 +54,8 @@
 	<!-- 케비닛 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinet_SQL_Oracle.xml"/>
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinet_SQL_Oracle_h.xml"/>
+    <!--근태관리 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitude_SQL_Oracle.xml"/>
 
 	<!-- 2.관리자 모듈관리 SQL쿼리 XML -->
 	
@@ -81,4 +83,6 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolderAdmin_SQL_Oracle.xml"/>
 	<!-- 케비닛 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinetAdmin_SQL_Oracle.xml"/>
+	<!-- 근태관리 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitudeAdmin_SQL_Oracle.xml"/>
 </sqlMapConfig>

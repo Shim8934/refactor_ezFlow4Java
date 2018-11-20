@@ -127,6 +127,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.createJMochaMailSignatureTemplate();
     	ezCommonService.createJobMasterTable();
     	ezCommonService.addJobMasterJobID();
+    	ezCommonService.createWebfolderToken();
     	
     	logger.debug("init ended.");
     }
@@ -2636,7 +2637,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveEmail.do")
 	@ResponseBody
-	public String saveEmail(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData) throws Exception{
+	public String saveEmail(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, OrganUserVO organVO) throws Exception{
 		logger.debug("saveEmail started.");
 		
 		String returnValue = "ERROR";
@@ -2645,20 +2646,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		try {
 			//관리자 권한 체크
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
 			if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 				return returnValue;
 			}
 			
 			logger.debug("bodyData=" + bodyData);
-			
 			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String userId = xmldom.getElementsByTagName("CN").item(0).getTextContent();
 			String primaryMail = xmldom.getElementsByTagName("PRIMARYMAIL").item(0).getTextContent();
-			
 			int tenantID = userInfo.getTenantId();
 			
 			List<String> mailList = new ArrayList<String>();
 			NodeList mailNodeList = xmldom.getElementsByTagName("MAIL");
+			
 			for (int i=0; i<mailNodeList.getLength(); i++) {
 				String mail = mailNodeList.item(i).getTextContent();
 				mailList.add(mail.substring(5));
@@ -2681,7 +2682,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				}				
 			}
 			
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			date.setTimeZone(TimeZone.getTimeZone("GMT"));
+			String nowDate = date.format(new Date()); 
+			
+			organVO.setCn(userId);
+			organVO.setTenantId(tenantID);
+			organVO.setNowDate(nowDate);
+			
 			returnValue = ezEmailService.setIndividualAlias(userId, tenantID, primaryMail, mailList);
+			ezOrganAdminService.updateDBData_user(organVO);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
