@@ -6938,7 +6938,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 		} else {
-			for (int k = 1; k < 10; k++) {
+			for (int k = 1; k < 20; k++) {
 				if (!doc.body().html().contains("id=\"sign" + k + "\"")) {
 					LSignNum = k - 1;
 					lastSignNum = LSignNum;
