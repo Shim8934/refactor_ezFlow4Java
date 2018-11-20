@@ -207,7 +207,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public String getQuickLink(String quickLinkID, int tenantID) throws Exception {
+	public PersonalQuickLinkVO getQuickLink(String quickLinkID, int tenantID) throws Exception {
 		logger.debug("getQuickLink started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -217,10 +217,10 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		PersonalQuickLinkVO vo = ezPersonalAdminDAO.getQuickLink(map);
 		
-		String result = "<DATA>" + commonUtil.getQueryResult(vo) + "</DATA>";
+		//String result = "<DATA>" + commonUtil.getQueryResult(vo) + "</DATA>";
 
 		logger.debug("getQuickLink ended");
-		return result;
+		return vo;
 	}
 
 	@Override

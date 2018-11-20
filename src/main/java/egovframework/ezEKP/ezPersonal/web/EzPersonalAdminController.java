@@ -329,23 +329,30 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickLink 목록 호출 함수
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkList.do", produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public List<PersonalQuickLinkVO> getQuickLinkList(@CookieValue("loginCookie") String loginCookie) throws Exception {
+	public JSONObject getQuickLinkList(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getQuickLinkList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		List<PersonalQuickLinkVO> list = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang());
 		
+		JSONObject json = new JSONObject();
+		json.put("list", list);
+		json.put("host", userInfo.getServerName());
+		
 		logger.debug("getQuickLinkList ended");
-		return list;
+		return json;
 	}
 	
 	/**
 	 * 초기화면 QuickLink 등록,수정화면 호출 함수
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezPersonal/addQuickLink.do")
-	public String addQuickLink(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	@ResponseBody
+	public JSONObject addQuickLink(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("addQuickLink started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -355,31 +362,42 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			mode = request.getParameter("mode");
 		}
 		
-		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()));
+		/*model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()));
 		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("mode", mode);
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("lang", userInfo.getLang());
+		return "admin/ezPersonal/personalAddQuickLink";*/
+		
+		JSONObject json = new JSONObject();
+		json.put("strUserLang", commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()));
+		json.put("primary", userInfo.getPrimary());
+		json.put("mode", mode);
+		json.put("lang", userInfo.getLang());
 		
 		logger.debug("addQuickLink ended");
-		return "admin/ezPersonal/personalAddQuickLink";
+		return json;
 	}
 	
 	/**
 	 * 초기화면 QuickLink 수정화면 내용 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/getQuickLink.do", produces = "text/xml; charset=utf-8")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/getQuickLink.do", produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public String getQuickLink(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+	public JSONObject getQuickLink(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
 		logger.debug("getQuickLink started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String quickLinkID = request.getParameter("pQuickLinkID");
 		
-		String result = ezPersonalAdminService.getQuickLink(quickLinkID, userInfo.getTenantId());
-
+		PersonalQuickLinkVO quickLinkVO = ezPersonalAdminService.getQuickLink(quickLinkID, userInfo.getTenantId());
+		
+		JSONObject json = new JSONObject();
+		json.put("quickLinkVO", quickLinkVO);
+		
 		logger.debug("getQuickLink ended");
-		return result;
+		return json;
 	}
 	
 	/**
@@ -1186,17 +1204,22 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickLink 삭제 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/delQuickLink.do", produces = "text/xml; charset=utf-8")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/delQuickLink.do", produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public String  delQuickLink(@CookieValue("loginCookie") String loginCookie, @RequestBody String data) throws Exception {
+	public JSONObject  delQuickLink(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("delQuickLink started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		Document doc = commonUtil.convertStringToDocument(data);
-		ezPersonalAdminService.delQuickLink(doc.getElementsByTagName("pQuickLinkID").item(0).getTextContent(), userInfo.getTenantId());
-
+		
+		String pQuickLinkID = request.getParameter("pQuickLinkID");
+		ezPersonalAdminService.delQuickLink(pQuickLinkID, userInfo.getTenantId());
+		
+		JSONObject json = new JSONObject();
+		json.put("result", "OK");
+		
 		logger.debug("delQuickLink ended");
-		return "OK";
+		return json;
 	}
 	
 	/**

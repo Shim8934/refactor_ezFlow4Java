@@ -40,7 +40,7 @@ public interface EzPersonalAdminService {
 	
 	List<PersonalQuickLinkVO> getQuickLinkList(LoginVO loginVO, String lang) throws Exception;
 	
-	String getQuickLink(String quickLinkID, int tenantID) throws Exception;
+	PersonalQuickLinkVO getQuickLink(String quickLinkID, int tenantID) throws Exception;
 	
 	String getQuickLinkACL(String quickLinkID, int tenantID) throws Exception;
 	
