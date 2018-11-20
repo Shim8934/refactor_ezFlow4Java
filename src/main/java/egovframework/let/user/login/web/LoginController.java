@@ -352,10 +352,8 @@ public class LoginController {
 	        	response.addCookie(cookieName);
 	        	
 	        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
-	        	int sessionTime = 0;
-	        	
 	        	if (!useSession.equals("")) {
-	        		sessionTime = Integer.parseInt(useSession);
+	        		int sessionTime = Integer.parseInt(useSession);
 	        		
 	        		if (sessionTime != 0) {
 	        			session = request.getSession(); 
@@ -447,10 +445,8 @@ public class LoginController {
     		        	response.addCookie(cookieName);
     		        	
     		        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
-    		        	int sessionTime = 0;
-    		        	
     		        	if (!useSession.equals("")) {
-    		        		sessionTime = Integer.parseInt(useSession);
+    		        		int sessionTime = Integer.parseInt(useSession);
     		        		
 	    		        	if (sessionTime != 0) {
 	    		        		//세션 생성 - 일시적으로 주석처리 필요할때 사용

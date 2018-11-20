@@ -99,12 +99,9 @@
 				
 				$.ajax({
 					type : "GET",
-					url : "/admin/ezSystem/insertUseSession.do",
-					/* processData : true, 
-					contentType : "application/json; charset=UTF-8", */ 
+					url : "/admin/ezSystem/checkUseSession.do",
 					dataType: "json",
 					success : function(result) {
-						console.log(result);
 					}
 				});
 			}
