@@ -1803,6 +1803,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			primary = "";
 		}
 		map.put("primary", primary);
+		map.put("row_startNum", (limit + 1));
+		map.put("row_endNum", (limit + Integer.valueOf(listSize)));
 
 		List<ModApplHistoryVO> resultList = ezAttitudeDAO.getAttitudeHistoryList(map);
 
