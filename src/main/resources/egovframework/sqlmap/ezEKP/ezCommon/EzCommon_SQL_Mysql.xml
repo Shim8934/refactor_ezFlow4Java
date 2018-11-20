@@ -423,17 +423,6 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	</statement>
 
-	<select id="EzCommonDAO.getUseSession" parameterClass="Map" resultClass="String">
-		SELECT 
-			PROPERTY_VALUE value
-		FROM 
-			TBL_TENANT_CONFIG
-		WHERE 
-			TENANT_ID=#tenantID#
-		AND
-			PROPERTY_NAME = #confName#
-	</select>
-	
 	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
 		INSERT INTO tbl_tenant_config
 		(tenant_id, property_name, property_value, description, config_name, regdate, config_type)

@@ -213,20 +213,8 @@ public class LoginController {
     		sessionParam.put("tenantID", tenantId);
     		sessionParam.put("confName", confName);
         	
-    		useSession = ezCommonService.getUseSession(sessionParam);
-    		// tenant_config 테이블에 useSession row 없으면 추가
-    		if (useSession == null || "".equals(useSession)) {
-    			String regdate = commonUtil.getTodayUTCTime("");
-        		sessionParam.put("property_value", "0");
-    			sessionParam.put("description", "세션 유지 시간. 단, 0이면 세션 사용 안함");
-    			sessionParam.put("config_name", "세션 유지 시간");
-    			sessionParam.put("regdate", regdate);
-    			sessionParam.put("config_type", "일반");
-    			
-    			ezCommonService.insertUseSession(sessionParam);
-    			useSession = ezCommonService.getUseSession(sessionParam);
-        	}
-        	
+    		useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+    		
         	if (ipAddressChk == true) {
         		// 사용자 ID를 사용해 로그인하는 경우
     			if (_uid.equals(resultVO.getId())) {

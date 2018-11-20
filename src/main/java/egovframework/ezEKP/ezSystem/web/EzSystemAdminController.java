@@ -12,6 +12,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +50,7 @@ import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -78,6 +81,10 @@ public class EzSystemAdminController {
 	
 	@Resource
 	private EgovMessageSource egovMessageSource;
+	
+	/** LoginService */
+	@Resource(name = "loginService")
+    private LoginService loginService;
     
 	@RequestMapping(value="/admin/ezSystem/systemMain.do")
 	public String systemMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
@@ -906,6 +913,36 @@ public class EzSystemAdminController {
 		return "/ezSystem/systemAddAccessList";
 	}
 	
-	
+	// 세션 있는지 확인 후 없으면 추가
+	// 2018-11-16일 추가
+	@RequestMapping(value="/admin/ezSystem/insertUseSession.do", produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String insertUseSession(Locale locale, @ModelAttribute("loginVO") LoginVO loginVO, HttpSession session, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		logger.debug("insertUseSession started");
+		String serverName = request.getServerName();
+        int tenantId = loginService.getTenantId(serverName);
+		
+		Map<String, Object> sessionParam = new HashMap<String, Object>();
+		String confName = "useSession"; 
+		sessionParam.put("tenantID", tenantId);
+		sessionParam.put("confName", confName);
+		
+		String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+		
+		// tenant_config 테이블에 useSession row 없으면 추가
+		if (useSession.equals("") || "".equals(useSession)) {
+			String regdate = commonUtil.getTodayUTCTime("");
+    		sessionParam.put("property_value", "0");
+			sessionParam.put("description", "세션 유지 시간. 단, 0이면 세션 사용 안함");
+			sessionParam.put("config_name", "세션 유지 시간");
+			sessionParam.put("regdate", regdate);
+			sessionParam.put("config_type", "일반");
+			
+			ezCommonService.insertUseSession(sessionParam);
+    	}
+		
+		logger.debug("insertUseSession ended");
+		return useSession;
+	}
 
 }
