@@ -938,4 +938,31 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		return result;
 	}
 
+	@Override
+	public String setAuthLoginTokenSql(String userId, String token, int tenantId, int device) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("token", token);
+		map.put("tenantId", tenantId);
+		map.put("device", device);
+		if (ezWebFolderDAO_y.existsUserIdTokenCheck(map) > 0 ) {
+			ezWebFolderDAO_y.deleteAuthLoginTokenSql(map);
+		}
+		return ezWebFolderDAO_y.setAuthLoginTokenSql(map);
+	}
+
+	@Override
+	public int existsTokenCheck(String userId, String token, int tenantId) throws Exception {
+		int count=0;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("userId", userId);
+		map.put("token", token);
+		map.put("tenantId", tenantId);
+		
+		count = ezWebFolderDAO_y.existsTokenCheck(map);
+		
+		return count ;
+	}
+
 }
