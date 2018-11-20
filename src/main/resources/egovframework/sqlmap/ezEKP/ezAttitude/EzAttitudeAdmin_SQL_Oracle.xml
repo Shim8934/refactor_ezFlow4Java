@@ -1,0 +1,1355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezAttitudeAdmin">
+	<typeAlias alias="AttitudeDeptVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeDeptVO"/>
+	<typeAlias alias="AttitudeConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO"/>
+	<typeAlias alias="AttitudeUserConfigVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeUserConfigVO"/>
+	<typeAlias alias="AttitudeTypeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeTypeVO"/>
+	<typeAlias alias="AttitudeFormVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeFormVO"/>
+	<typeAlias alias="deptViewVO" type="egovframework.ezEKP.ezJournal.vo.DeptViewVO" />
+	<typeAlias alias="AttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeVO"/>
+	<typeAlias alias="AdminAttitudeVO" type="egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO"/>
+	<typeAlias alias="AttitudeAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO"/>
+	<typeAlias alias="AttitudeStatisVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
+	<typeAlias alias="ModApplHistoryVO" type="egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO"/>
+	
+	<resultMap id="attitudeConfig" class="AttitudeConfigVO">
+		<result property="companyId"				column="COMPANY_ID"				columnIndex="1"/>
+		<result property="tenantId"					column="TENANT_ID"				columnIndex="2"/>
+		<result property="workStartTime"			column="WORK_STARTTIME"			columnIndex="3"/>
+		<result property="workEndTime"				column="WORK_ENDTIME"			columnIndex="4"/>
+		<result property="closedDay"				column="CLOSED_DAY"				columnIndex="5"/>
+		<result property="attitudeModAppl"			column="ATTITUDE_MOD_APPL"		columnIndex="6"/>
+		<result property="closedDateAttitude"		column="CLOSED_DATE_ATTITUDE"	columnIndex="7"/>
+		<result property="confSetDate"				column="CONF_SET_DATE"			columnIndex="8"/>
+	</resultMap>
+	
+	<resultMap id="attitudeForm" class="AttitudeFormVO">
+		<result property="formId"					column="FORM_ID"				columnIndex="1"/>
+		<result property="tenantId"					column="TENANT_ID"				columnIndex="2"/>
+		<result property="formName"					column="FORM_NAME"				columnIndex="3"/>
+		<result property="formName2"				column="FORM_NAME2"				columnIndex="4"/>
+		<result property="formHtml"					column="FORM_HTML"				columnIndex="5"/>
+	</resultMap>
+	
+	<resultMap class="AttitudeAuthorVO" id="userMap">
+		<result property="userName" 				column="USER_NAME" 				columnIndex="1"/>
+		<result property="userId" 					column="USER_ID" 				columnIndex="2"/>
+		<result property="jikwi" 					column="JIKWI" 					columnIndex="3"/>
+		<result property="mail" 					column="MAIL" 					columnIndex="4"/>
+		<result property="deptName" 				column="DEPT_NAME" 				columnIndex="5"/>
+		<result property="userImg" 					column="USER_IMG" 				columnIndex="6"/>
+		<result property="extensionAttribute15" 	column="EXTENSIONATTRIBUTE15" 	columnIndex="7"/>
+	</resultMap>
+	
+	<resultMap class="deptViewVO" id="deptViewMap">
+      <result property="id"             			column="ID" 					columnIndex="1"/>
+      <result property="parent"          			column="PARENT" 				columnIndex="2"/>
+      <result property="companyId"       			column="COMPANYID" 				columnIndex="3"/>
+      <result property="text"          				column="TEXT" 					columnIndex="4"/>
+      <result property="isComp"          			column="ISCOMP" 				columnIndex="5"/>
+      <result property="myDept"          			column="MYDEPT" 				columnIndex="6"/>
+   </resultMap>
+   
+	<resultMap class="AttitudeStatisVO" id="userStatistics">
+		<result property="count" 					column="COUNT" 					columnIndex="1"/>
+		<result property="typeId" 					column="TYPE_ID" 				columnIndex="2"/>
+		<result property="statMonth" 				column="STAT_MONTH" 			columnIndex="3"/>
+	</resultMap>
+	
+	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
+		<![CDATA[
+			SELECT 
+				D.CN,
+				D.DISPLAYNAME$lang$ AS DISPLAYNAME
+			FROM 
+				TBL_DEPTMASTER D
+			LEFT JOIN
+				TBL_USERMASTER U ON D.TENANT_ID = U.TENANT_ID
+			WHERE
+				D.TENANT_ID = #tenantId#
+			AND 
+				U.CN = #userId#
+			AND 
+				U.TENANT_ID = #tenantId#
+			AND
+				(
+					((substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 0 
+				AND
+					D.EXTENSIONATTRIBUTE2 = U.PHYSICALDELIVERYOFFICENAME))
+				OR
+					(substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 1)
+				)
+			AND 
+				D.EXTENSIONATTRIBUTE2 = d.CN
+			ORDER BY 
+				LPAD(NVL(D.EXTENSIONATTRIBUTE15, 0), 6, 0),
+				D.DISPLAYNAME$lang$
+				
+		]]>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeConfig" parameterClass="Map" resultMap="attitudeConfig">
+		<![CDATA[
+			SELECT
+				company_id,
+				tenant_id,
+				work_starttime,
+				work_endtime,
+				closed_day,
+				attitude_mod_appl,
+				closed_date_attitude,
+				TO_CHAR(conf_set_date, 'YYYY-MM-DD') AS conf_set_date
+			FROM
+				TBL_ATTITUDE_CONF
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+		]]>
+	</select>
+	
+	<update id="ezAttitudeAdminDAO.updateAttitudeConfig" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_ATTITUDE_CONF
+			SET
+				work_starttime = #workStartTime#,
+				work_endtime = #workEndTime#,
+				closed_day = #closedDay#,
+				attitude_mod_appl = #attitudeModAppl#,
+				closed_date_attitude = #closedDateAttitude#,
+				conf_set_date = TO_DATE(#confSetDate#, 'YYYY-MM-DD') 
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+		]]>
+	</update>
+
+	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigList" parameterClass="Map" resultClass="AttitudeUserConfigVO" remapResults="true">
+		<![CDATA[
+			SELECT
+				TBL_USERMASTER.cn AS userid,
+				DECODE(TBL_ATTITUDE_USER_CONF.work_starttime, null, SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_CONF.work_starttime || ':00', 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5), SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_USER_CONF.work_starttime || ':00', 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5)) AS workstarttime,
+				DECODE(TBL_ATTITUDE_USER_CONF.work_endtime, null, SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_CONF.work_endtime || ':00', 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5), SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_USER_CONF.work_endtime || ':00', 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5)) AS workendtime,
+				TBL_USERMASTER.title$primary$ AS usertitle,
+				TBL_USERMASTER.displayname$primary$ AS userName,
+				TBL_USERMASTER.description$primary$ AS deptName,
+				CASE 
+					WHEN (TBL_ATTITUDE_USER_CONF.work_starttime is null OR TBL_ATTITUDE_USER_CONF.work_endtime is null) 
+					THEN '0' 
+					ELSE '1' 
+				END AS gubun
+			FROM
+				TBL_USERMASTER
+			LEFT JOIN
+				TBL_ATTITUDE_USER_CONF
+			ON 
+				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_USER_CONF.tenant_id
+			AND
+				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_USER_CONF.company_id
+			AND
+				TBL_USERMASTER.cn = TBL_ATTITUDE_USER_CONF.user_id
+			LEFT JOIN
+				TBL_ATTITUDE_CONF
+			ON
+				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_CONF.tenant_id
+			AND
+				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_CONF.company_id
+			WHERE
+				TBL_USERMASTER.tenant_id = #tenantId#
+			AND 
+				cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+		]]>
+		
+		<isNotEmpty prepend="AND" property="companyId">
+			TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			TBL_USERMASTER.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			TBL_USERMASTER.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			TBL_USERMASTER.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchStartTime">
+			<![CDATA[
+				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) >= #searchStartTime#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchEndTime">
+			<![CDATA[
+				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) <= #searchEndTime#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchGubun">
+			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL, '0', '1') = #searchGubun#
+		</isNotEmpty>
+		
+		<isNotEmpty property="orderCell">
+			ORDER BY
+				$orderCell$ $orderOption$,
+				TBL_USERMASTER.displayname$primary$
+		</isNotEmpty>
+		<isEmpty property="orderCell">
+			ORDER BY TBL_USERMASTER.displayname$primary$
+		</isEmpty>
+		
+		<![CDATA[
+			LIMIT #limit#, #listSize#
+		]]>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigCount" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_USERMASTER
+			LEFT JOIN
+				TBL_ATTITUDE_USER_CONF
+			ON
+				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_USER_CONF.tenant_id
+			AND
+				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_USER_CONF.company_id
+			AND
+				TBL_USERMASTER.cn = TBL_ATTITUDE_USER_CONF.user_id
+			LEFT JOIN
+				TBL_ATTITUDE_CONF
+			ON
+				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_CONF.tenant_id
+			AND
+				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_CONF.company_id
+			WHERE
+				TBL_USERMASTER.tenant_id = #tenantId#
+			AND 
+				TBL_USERMASTER.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+			AND
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #companyId#
+		]]>
+		
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			TBL_USERMASTER.description LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			TBL_USERMASTER.displayname LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			TBL_USERMASTER.title LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchStartTime">
+			<![CDATA[
+				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) >= #searchStartTime#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchEndTime">
+			<![CDATA[
+				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) <= #searchEndTime#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchGubun">
+			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL, '0', '1') = #searchGubun#
+		</isNotEmpty>
+	</select>
+
+	<select id="ezAttitudeAdminDAO.getAttitudeTypeList" parameterClass="Map" resultClass="AttitudeTypeVO">
+		<![CDATA[
+			SELECT
+				TYPE_ID AS typeId,
+				COMPANY_ID AS companyId,
+				TENANT_ID AS tenantId,
+				TYPE_NAME$primary$ AS typeName,
+				ISUSE AS isuse,
+				IFNULL(PARENT_ID,'') AS parentId,
+				FORM_ID AS formId,
+				ISADD AS isAdd,
+				IMG_PATH AS imgPath
+			FROM
+				TBL_ATTITUDE_TYPE
+			WHERE
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+			<isNotEmpty prepend="AND" property="isuse">
+			<![CDATA[
+				ISUSE = #isuse#
+			]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="isAdmin">
+			<![CDATA[
+				PARENT_ID = 'A05'
+			]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="statistics">
+			<![CDATA[
+				TYPE_ID NOT IN ('A01', 'A03', 'A05')
+			]]>
+			</isNotEmpty>
+			AND
+				ISDEL = '0'
+	</select>
+	
+	<update id="ezAttitudeAdminDAO.updateAttitudeTypeConfig" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_ATTITUDE_TYPE
+			SET
+				ISUSE = #isuse#
+			WHERE
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				TYPE_ID = #typeId#
+		]]>
+	</update>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeTypeInfo" parameterClass="Map" resultClass="AttitudeTypeVO">
+		<![CDATA[
+			SELECT
+				TYPE_ID AS typeId,
+				COMPANY_ID AS companyId,
+				TENANT_ID AS tenantId,
+				TYPE_NAME AS typeName,
+				TYPE_NAME2 AS typeName2,
+				ISUSE AS isuse,
+				IFNULL(PARENT_ID,'') AS parentId,
+				FORM_ID AS formId,
+				ISADD AS isAdd
+			FROM
+				TBL_ATTITUDE_TYPE
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				COMPANY_ID = #companyId#
+			AND
+				TYPE_ID = #typeId#
+		]]>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeTypeMaxTypeId" parameterClass="Map" resultClass="string">
+		<![CDATA[
+			SELECT 
+			    MAX(cast(substring(TYPE_ID,2) as unsigned)) + 1 AS MAXTYPEID
+			FROM
+			    TBL_ATTITUDE_TYPE
+			WHERE
+			    COMPANY_ID = #companyId#
+			AND
+			    TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeFormList" parameterClass="Map" resultMap="attitudeForm">
+		<![CDATA[
+			SELECT
+				FORM_ID,
+				TENANT_ID,
+				FORM_NAME,
+				FORM_NAME2,
+				FORM_HTML
+			FROM
+				TBL_ATTITUDE_FORM
+			WHERE
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<update id="ezAttitudeAdminDAO.updateAttitudeType" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_ATTITUDE_TYPE
+			SET
+				TYPE_NAME = #typeName#,
+				TYPE_NAME2 = #typeName2#
+			WHERE
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				TYPE_ID = #typeId#
+		]]>
+	</update>
+	
+	<insert id="ezAttitudeAdminDAO.insertAttitudeType" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_ATTITUDE_TYPE
+				(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, PARENT_ID, ISADD, ISDEL, IMG_PATH, FORM_ID)
+			VALUES
+				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, 'A05', '1', '0', 'refresh', (SELECT
+																										  	  A.FORM_ID
+																									  	   FROM
+																										      TBL_ATTITUDE_TYPE A
+																									  	   WHERE
+																										  	  A.TENANT_ID = #tenantId#
+																									  	   AND
+																										  	  A.COMPANY_ID = #companyId#
+																									  	   AND
+																										  	  A.TYPE_ID = 'A11'))
+		]]>
+	</insert>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigInfo" parameterClass="Map" resultClass="AttitudeUserConfigVO">
+		<isEqual property="userType" compareValue="user">
+			<![CDATA[
+				SELECT
+					IFNULL(SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(NOW(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) AS workstarttime,
+					IFNULL(SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(NOW(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) AS workendtime,
+					IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL, '0', '1') AS gubun
+				FROM
+					TBL_USERMASTER
+				LEFT JOIN
+					TBL_ATTITUDE_USER_CONF
+				ON 
+					TBL_USERMASTER.tenant_id = TBL_ATTITUDE_USER_CONF.tenant_id
+				AND
+					TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_USER_CONF.company_id
+				AND
+					TBL_USERMASTER.cn = TBL_ATTITUDE_USER_CONF.user_id
+				LEFT JOIN
+					TBL_ATTITUDE_CONF
+				ON
+					TBL_USERMASTER.tenant_id = TBL_ATTITUDE_CONF.tenant_id
+				AND
+					TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_CONF.company_id
+				WHERE
+					TBL_USERMASTER.tenant_id = #tenantId#
+				AND
+					TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+				AND
+					TBL_USERMASTER.cn = #selectedUserId#
+			]]>
+		</isEqual>
+		
+		<isEqual property="userType" compareValue="list">
+			<![CDATA[
+				SELECT
+					SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', work_starttime), INTERVAL #offsetMin# minute), 12, 5) AS workstarttime,
+					SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', work_endtime), INTERVAL #offsetMin# minute), 12, 5) AS workendtime,
+					'0' AS gubun
+				FROM
+					TBL_ATTITUDE_CONF
+				WHERE
+					tenant_id = #tenantId#
+				AND
+					company_id = #companyId#
+			]]>
+		</isEqual>
+	</select>
+		
+	<!-- 조직도 만들기 위한 쿼리 -->
+   <select id="ezAttitudeAdminDAO.selectDeptList" parameterClass="map" resultMap="deptViewMap">
+		<![CDATA[
+			SELECT 
+		    	D.CN AS ID,
+		        IF(D.EXTENSIONATTRIBUTE1=NULL
+		 ]]>
+		 <isNotEmpty property="companyId">
+		 <![CDATA[
+		 	OR D.CN=#companyId#
+		 ]]>
+		 </isNotEmpty>
+		 <![CDATA[
+		 	,'##',D.EXTENSIONATTRIBUTE1) AS PARENT,
+		 	D.EXTENSIONATTRIBUTE2 AS COMPANYID,
+		    D.DISPLAYNAME$primary$ AS TEXT,
+		    CASE D.CN
+		    	WHEN D.EXTENSIONATTRIBUTE2 THEN 'COMP'
+		        ELSE 'DEPT'
+		    END AS ISCOMP,
+		    CASE D.CN
+		    	WHEN U.DEPARTMENT THEN 'YES'
+		        ELSE 'NO'
+		    END AS MYDEPT
+		    FROM
+		        TBL_DEPTMASTER D
+		    LEFT JOIN 
+		        TBL_USERMASTER U
+		    ON 
+		       	D.TENANT_ID = U.TENANT_ID
+		    WHERE 
+		       	D.TENANT_ID = #tenantId#
+		    AND 
+		     	U.CN = #userId#
+		    AND
+		       	U.TENANT_ID = #tenantId#
+		    AND 
+		       (
+					((substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 0
+				AND 
+		       		D.extensionattribute2 = U.PHYSICALDELIVERYOFFICENAME))
+				OR
+					(substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 1)
+		       )
+		]]>
+		     AND
+		     	NOT((D.EXTENSIONATTRIBUTE1 IS NULL OR D.EXTENSIONATTRIBUTE1 = '') AND D.CN <![CDATA[<>]]> D.EXTENSIONATTRIBUTE2)
+		<isNotEmpty property="companyId">
+		<![CDATA[
+			AND 
+				D.EXTENSIONATTRIBUTE2 = #companyId#
+		]]>
+		</isNotEmpty>
+		<![CDATA[
+		    ORDER BY lpad(ifnull(D.EXTENSIONATTRIBUTE15, 0), 6, 0), D.DISPLAYNAME$primary$			
+		]]>
+   </select>
+   
+	<!-- 조직도 부서별 사원 리스트 -->
+	<select id="ezAttitudeAdminDAO.getDeptUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
+		SELECT * FROM 
+		(	SELECT
+				DISPLAYNAME$lang$ AS USER_NAME,
+				CN AS USER_ID,
+				TITLE$lang$ AS JIKWI,
+				MAIL AS MAIL,
+				DEPARTMENT AS DEPT_ID,
+				DESCRIPTION$lang$ AS DEPT_NAME,
+				EXTENSIONATTRIBUTE2 AS USER_IMG,
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15
+			FROM 
+				TBL_USERMASTER
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				PHYSICALDELIVERYOFFICENAME = #companyId#
+			AND
+			    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#) 
+			<isNotEqual property="key" compareValue="DEPARTMENT">
+				AND 
+					$key$ like concat('%', #value#, '%')
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT">
+				AND 
+					$key$ = #value#
+			</isEqual>
+		UNION ALL 
+			SELECT
+	        	A.DISPLAYNAME$lang$ AS USER_NAME,
+				A.CN AS USER_ID,
+				B.TITLE$lang$ AS JIKWI,
+				A.MAIL AS MAIL,
+				B.DEPTID AS DEPT_ID,
+				C.DISPLAYNAME$lang$ AS DEPT_NAME,
+				A.EXTENSIONATTRIBUTE2 AS USER_IMG,
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.EXTENSIONATTRIBUTE15, '0'))), IFNULL(A.EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15               	
+			FROM
+				TBL_ADDJOBMASTER B
+			JOIN
+				TBL_USERMASTER A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
+			JOIN
+				TBL_DEPTMASTEr C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+			WHERE
+				B.TENANT_ID = #tenantId#
+			<isNotEqual property="key" compareValue="DEPARTMENT">
+				AND 
+					A.$key$ like concat('%', #value#, '%')
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT">
+				AND 
+					B.DEPTID = #value#
+			</isEqual>
+		) AA
+		ORDER BY 8 ASC, 1 ASC
+	</select>
+		
+	<insert id="ezAttitudeAdminDAO.saveAttitudeUserConfig" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_ATTITUDE_USER_CONF
+				(user_id, tenant_id, work_starttime, work_endtime, company_id, dept_id)
+			SELECT
+				#selectedUserId# AS user_id,
+				#tenantId# AS tenant_id,
+				#workStartTime# AS work_starttime,
+				#workEndTime# AS work_endtime,
+				physicaldeliveryofficename AS company_id,
+				department AS dept_id
+			FROM
+				TBL_USERMASTER
+			WHERE
+				cn = #selectedUserId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				physicaldeliveryofficename  = #companyId#
+			ON DUPLICATE KEY UPDATE
+				work_starttime = #workStartTime#,
+				work_endtime = #workEndTime#
+		]]>
+	</insert>
+   
+   <delete id="ezAttitudeAdminDAO.deleteAttitudeUserConfig" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM 
+				TBL_ATTITUDE_USER_CONF
+          	WHERE
+          		tenant_id = #tenantId#
+          	AND
+          		company_id = #companyId#
+		]]>
+		<iterate prepend="AND user_id IN" property="selectedUserIdList" open="(" close=")" conjunction=",">
+			#selectedUserIdList[]#
+		</iterate>
+   </delete>
+   
+	<insert id="ezAttitudeAdminDAO.saveAttitudeDeptConfig" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_ATTITUDE_USER_CONF
+				(user_id, tenant_id, work_starttime, work_endtime, company_id, dept_id)
+			SELECT
+				cn AS user_id,
+				#tenantId# AS tenant_id,
+				#workStartTime# AS work_starttime,
+				#workEndTime# AS work_endtime,
+				physicaldeliveryofficename AS company_id,
+				department AS dept_id
+			FROM
+				TBL_USERMASTER
+			WHERE
+				department = #selectDeptId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				physicaldeliveryofficename  = #companyId#
+			ON DUPLICATE KEY UPDATE
+				work_starttime = #workStartTime#,
+				work_endtime = #workEndTime#
+		]]>
+	</insert>
+   
+   <delete id="ezAttitudeAdminDAO.deleteAttitudeDeptConfig" parameterClass="Map">
+   		<![CDATA[
+			DELETE FROM 
+				TBL_ATTITUDE_USER_CONF
+          	WHERE
+          		tenant_id = #tenantId#
+          	AND
+          		company_id = #companyId#
+		]]>
+		<iterate prepend="AND dept_id IN" property="selectDeptId" open="(" close=")" conjunction=",">
+			#selectDeptId[]#
+		</iterate>
+   </delete>
+   
+   	<select id="ezAttitudeAdminDAO.getAttitudeList2" parameterClass="Map" resultClass="AdminAttitudeVO">
+		<![CDATA[
+			SELECT 
+				A.attitude_id AS attitudeid,
+				A.company_id AS companyid,
+				A.tenant_id AS tenantid,
+				A.writer_id AS writerid,
+				A.dept_id AS deptid,
+				DATE_ADD(A.start_date, INTERVAL #offsetMin# minute) AS startdate,
+                SUBSTR(DATE_ADD(A.start_date, INTERVAL #offsetMin# minute), 12) AS starttime,
+                IFNULL(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute),'') AS enddate,
+                IFNULL(SUBSTR(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute), 12),'') AS endtime,
+				A.modappl,
+				A.ip,
+				A.date_type AS datetype,
+				A.type_id AS typeid,
+				B.type_name$primary$ AS typename,
+				C.displayname$primary$ AS username,
+                C.description$primary$ AS deptname,
+                C.title$primary$ AS usertitle
+			FROM
+				TBL_ATTITUDE A
+			JOIN
+				TBL_ATTITUDE_TYPE B
+			ON
+				A.type_id = B.type_id
+			AND
+				A.company_id = B.company_id
+			AND
+				A.tenant_id = B.tenant_id
+			JOIN
+				TBL_USERMASTER C
+			ON
+				A.writer_id = C.cn
+			AND
+				A.tenant_id = C.tenant_id
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.company_id = #companyId#
+			AND
+				(
+					(A.start_date >= #searchStartDate# AND A.start_date <= #searchEndDate#) 
+				OR
+					(A.end_date >= #searchStartDate# AND A.end_date < #searchEndDate#) 
+				OR
+					(A.start_date < #searchStartDate# AND A.end_date >= #searchEndDate#)
+				)
+		]]>
+			
+		<isNotEmpty property="searchAttitudeType">	
+			<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
+				<![CDATA[
+					A.type_id = #searchAttitudeType#
+				]]>
+			</isNotEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchDeptId">
+			C.department = #searchDeptId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			C.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			C.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			C.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+		<iterate prepend="AND C.department IN" property="deptIdList" open="(" close=")" conjunction=",">
+			#deptIdList[]#
+		</iterate>
+		<isNotEmpty property="orderCell">
+			ORDER BY
+				$orderCell$ $orderOption$,
+				startdate DESC,
+				enddate DESC,
+				starttime DESC
+		</isNotEmpty>
+		<isEmpty property="orderCell">
+			ORDER BY
+				startdate DESC,
+				enddate DESC,
+				starttime DESC
+		</isEmpty>
+		
+		<isNotEmpty property="listSize">
+			<![CDATA[
+				LIMIT
+					#limit#, #listSize#
+			]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeCount2" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+			FROM
+				TBL_ATTITUDE A
+			JOIN
+				TBL_ATTITUDE_TYPE B
+			ON
+				A.type_id = B.type_id
+			AND
+				A.company_id = B.company_id
+			AND
+				A.tenant_id = B.tenant_id
+			JOIN
+				TBL_USERMASTER C
+			ON
+				A.writer_id = C.cn
+			AND
+				A.tenant_id = C.tenant_id
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.company_id = #companyId#
+			AND
+				(
+					(A.start_date >= #searchStartDate# AND A.start_date <= #searchEndDate#) 
+				OR
+					(A.end_date >= #searchStartDate# AND A.end_date < #searchEndDate#) 
+				OR
+					(A.start_date < #searchStartDate# AND A.end_date >= #searchEndDate#)
+				)
+		]]>
+		<isNotEmpty property="searchAttitudeType">	
+			<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
+				<![CDATA[
+					A.type_id = #searchAttitudeType#
+				]]>
+			</isNotEqual>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchDeptId">
+			C.DEPARTMENT = #searchDeptId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			C.description LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			C.displayname LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			C.title LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+		<iterate prepend="AND C.department IN" property="deptIdList" open="(" close=")" conjunction=",">
+			#deptIdList[]#
+		</iterate>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeAbsentList" parameterClass="Map" resultClass="AdminAttitudeVO">
+		<![CDATA[
+			SELECT
+				A.cn AS writerid,
+				A.displayname$primary$ AS username,
+                A.description$primary$ AS deptname,
+                A.title$primary$ AS usertitle,
+                A.mail AS useremail,
+                SUBSTR(DATE_ADD(#searchStartDate#, INTERVAL #offsetMin# minute), 1, 10) as startdate
+			FROM
+				TBL_USERMASTER A
+			LEFT JOIN
+				(SELECT
+					*
+				FROM
+					TBL_ATTITUDE C
+				WHERE
+					C.tenant_id = #tenantId#
+				AND
+					C.company_id = #companyId#
+				AND
+					(
+						(C.start_date >= #searchStartDate# AND C.start_date <= #searchEndDate#)
+					OR
+						(C.end_date >= #searchStartDate# AND C.end_date < #searchEndDate#)
+					OR
+						(C.start_date < #searchStartDate# AND C.end_date >= #searchEndDate#)
+					)) B
+			ON
+				A.cn = B.writer_id
+			AND
+				A.tenant_id = B.tenant_id
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.physicaldeliveryofficename = #companyId#
+			AND
+				B.start_date IS NULL
+		]]>
+			
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			A.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			A.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			A.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchDeptId">
+			A.department = #searchDeptId#
+		</isNotEmpty>
+		<iterate prepend="AND A.department IN" property="deptIdList" open="(" close=")" conjunction=",">
+			#deptIdList[]#
+		</iterate>
+	</select>
+
+	<select id="ezAttitudeAdminDAO.getAttitudeAuthList" parameterClass="Map" resultClass="AttitudeAuthorVO">
+		<![CDATA[
+			SELECT 
+				A.USER_ID AS userId,
+			    B.DISPLAYNAME$primary$ AS userName,
+			    B.TITLE$primary$ AS jikwi,
+			    B.DESCRIPTION$primary$ AS deptName,
+			    group_concat(A.AUTH_DEPT_ID order by C.DISPLAYNAME$primary$) AS authDeptId,
+			    group_concat(C.DISPLAYNAME$primary$ order by C.DISPLAYNAME$primary$) AS authDeptName,
+    			group_concat(A.AUTH_TYPE order by C.DISPLAYNAME$primary$) AS authType
+			FROM 
+				TBL_ATTITUDE_AUTH A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				A.USER_ID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			INNER JOIN
+				TBL_DEPTMASTER C 
+			ON
+				A.AUTH_DEPT_ID = C.CN
+			AND
+				A.TENANT_ID = C.TENANT_ID
+			WHERE
+				A.COMPANY_ID = #companyId#
+			AND
+				A.TENANT_ID = #tenantId#
+			GROUP BY 
+				A.USER_ID
+			ORDER BY
+				userName
+		]]>
+	</select>
+	
+	<delete id="ezAttitudeAdminDAO.deleteAttitudeAuth" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_ATTITUDE_AUTH
+          	WHERE
+          		TENANT_ID = #tenantId#
+          	AND
+        		USER_ID = #selectUserId#
+		]]>
+	</delete>
+		
+	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList" parameterClass="Map" resultClass="AttitudeAuthorVO">
+		<![CDATA[
+			SELECT
+				D.DISPLAYNAME$primary$ AS deptName,
+				D.CN AS deptId,
+				'no' AS mine,
+				A.AUTH_TYPE AS authType
+			FROM 
+				TBL_DEPTMASTER D
+			INNER JOIN 
+				TBL_ATTITUDE_AUTH A 
+			ON
+				D.CN = A.AUTH_DEPT_ID 
+			AND
+				A.TENANT_ID = D.TENANT_ID
+			WHERE 
+				A.USER_ID = #userId#
+			AND 
+				A.TENANT_ID = #tenantId#
+			UNION
+			SELECT
+				D.DISPLAYNAME$primary$ AS deptName,
+				D.CN AS deptId,
+				'yes' AS mine,
+				'' AS authType
+			FROM 
+				TBL_DEPTMASTER D
+			LEFT JOIN 
+				TBL_USERMASTER U 
+			ON
+				D.CN = U.DEPARTMENT 
+			AND
+				U.TENANT_ID = D.TENANT_ID
+			WHERE 
+				U.CN = #userId#
+			AND 
+				U.TENANT_ID = #tenantId#
+			ORDER BY 
+				deptName
+		]]>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList_hyo" parameterClass="Map" resultClass="AttitudeAuthorVO">
+		<isEqual property="userAuthType" compareValue="all">
+			SELECT
+				displayname AS deptname,
+				cn AS deptid,
+				'no' AS mine,
+				'M' AS authtype
+			FROM 
+				TBL_DEPTMASTER
+			WHERE 
+				tenant_id = #tenantId#
+			AND
+				extensionattribute2 = #companyId#
+			AND
+				cn != (SELECT
+							department
+						FROM
+							TBL_USERMASTER
+						WHERE
+							TBL_USERMASTER.tenant_id = #tenantId#
+						AND
+							TBL_USERMASTER.cn = #userId#)
+			UNION
+			
+			SELECT
+				displayname AS deptname,
+				cn AS deptid,
+				'yes' AS mine,
+				'M' AS authtype
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				TBL_DEPTMASTER.extensionattribute2 = #companyId#
+			AND
+				cn = (SELECT
+							department
+						FROM
+							TBL_USERMASTER
+						WHERE
+							TBL_USERMASTER.tenant_id = #tenantId#
+						AND
+							TBL_USERMASTER.cn = #userId#)
+			ORDER BY
+				deptName
+		</isEqual>
+		
+		<isEqual property="userAuthType" compareValue="dept">
+			SELECT
+				TBL_DEPTMASTER.displayname AS deptname,
+				TBL_DEPTMASTER.cn AS deptid,
+				'no' AS mine,
+				TBL_ATTITUDE_AUTH.auth_type AS authtype
+			FROM
+				TBL_ATTITUDE_AUTH
+			INNER JOIN
+				TBL_DEPTMASTER
+			ON
+				TBL_ATTITUDE_AUTH.auth_dept_id = TBL_DEPTMASTER.cn 
+			AND
+				TBL_ATTITUDE_AUTH.tenant_id = TBL_DEPTMASTER.tenant_id
+			WHERE
+				TBL_ATTITUDE_AUTH.user_id = #userId#
+			AND
+				TBL_DEPTMASTER.tenant_id = #tenantId#
+			AND
+				TBL_DEPTMASTER.extensionattribute2 = #companyId#
+			AND
+				TBL_DEPTMASTER.cn != (SELECT
+											department
+										FROM
+											TBL_USERMASTER
+										WHERE
+											TBL_USERMASTER.tenant_id = #tenantId#
+										AND
+											TBL_USERMASTER.cn = #userId#)
+			<isEqual prepend="AND" property="listAuthType" compareValue="M">
+				TBL_ATTITUDE_AUTH.auth_type = 'M'
+			</isEqual>
+			UNION
+			SELECT
+				displayname AS deptname,
+				cn AS deptid,
+				'yes' AS mine,
+				'M' AS authtype
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				TBL_DEPTMASTER.extensionattribute2 = #companyId#
+			AND
+				cn = (SELECT
+							department
+						FROM
+							TBL_USERMASTER
+						WHERE
+							TBL_USERMASTER.tenant_id = #tenantId#
+						AND
+							TBL_USERMASTER.cn = #userId#)
+			UNION
+			SELECT
+				D.DISPLAYNAME AS dept_name,
+				D.CN AS dept_id,
+				'add' AS mine,
+				'M' AS authtype
+			FROM 
+				TBL_DEPTMASTER D
+			RIGHT JOIN 
+				TBL_ADDJOBMASTER A ON (D.CN = A.DEPTID and A.TENANT_ID = d.TENANT_ID)
+			WHERE 
+				A.CN = #userId#
+			AND 
+				A.TENANT_ID = #tenantId#
+			ORDER BY deptname
+		</isEqual>
+		
+		<isEqual property="userAuthType" compareValue="">
+			SELECT
+				TBL_DEPTMASTER.displayname AS deptname,
+				TBL_DEPTMASTER.cn AS deptid,
+				'no' AS mine,
+				TBL_ATTITUDE_AUTH.auth_type AS authtype
+			FROM
+				TBL_ATTITUDE_AUTH
+			INNER JOIN
+				TBL_DEPTMASTER
+			ON
+				TBL_ATTITUDE_AUTH.auth_dept_id = TBL_DEPTMASTER.cn 
+			AND
+				TBL_ATTITUDE_AUTH.tenant_id = TBL_DEPTMASTER.tenant_id
+			WHERE
+				TBL_ATTITUDE_AUTH.user_id = #userId#
+			AND
+				TBL_DEPTMASTER.tenant_id = #tenantId#
+			AND
+				TBL_DEPTMASTER.extensionattribute2 = #companyId#
+			AND
+				TBL_DEPTMASTER.cn != (SELECT
+											department
+										FROM
+											TBL_USERMASTER
+										WHERE
+											TBL_USERMASTER.tenant_id = #tenantId#
+										AND
+											TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+										AND
+											TBL_USERMASTER.cn = #userId#)
+			<isEqual prepend="AND" property="listAuthType" compareValue="M">
+				TBL_ATTITUDE_AUTH.auth_type = 'M'
+			</isEqual>
+			UNION
+			SELECT
+				displayname AS deptname,
+				cn AS deptid,
+				'yes' AS mine,
+				IFNULL((SELECT
+					A.auth_type AS authtype
+				FROM
+					TBL_ATTITUDE_AUTH A
+				WHERE
+					A.auth_dept_id = (SELECT
+										department
+									FROM
+										TBL_USERMASTER
+									WHERE
+										TBL_USERMASTER.tenant_id = #tenantId#
+									AND
+										TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+									AND
+										TBL_USERMASTER.cn = #userId#)
+				AND
+					A.user_id = #userId#), 'R') AS authtype
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				TBL_DEPTMASTER.extensionattribute2 = #companyId#
+			AND
+				cn = (SELECT
+							department
+						FROM
+							TBL_USERMASTER
+						WHERE
+							TBL_USERMASTER.tenant_id = #tenantId#
+						AND
+							TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+						AND
+							TBL_USERMASTER.cn = #userId#)
+			UNION
+			SELECT
+				D.DISPLAYNAME AS dept_name,
+				D.CN AS dept_id,
+				'add' AS mine,
+				IFNULL((SELECT
+					A.auth_type AS authtype
+				FROM
+					TBL_ATTITUDE_AUTH A
+				WHERE
+					A.auth_dept_id = (SELECT
+										department
+									FROM
+										TBL_USERMASTER
+									WHERE
+										TBL_USERMASTER.tenant_id = #tenantId#
+									AND
+										TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+									AND
+										TBL_USERMASTER.cn = #userId#)
+				AND
+					A.user_id = #userId#), 'R') AS authtype
+			FROM 
+				TBL_DEPTMASTER D
+			RIGHT JOIN 
+				TBL_ADDJOBMASTER A ON (D.CN = A.DEPTID and A.TENANT_ID = d.TENANT_ID)
+			WHERE 
+				A.CN = #userId#
+			AND 
+				A.TENANT_ID = #tenantId#
+			ORDER BY deptname
+		</isEqual>
+	</select>
+	
+	<insert id="ezAttitudeAdminDAO.insertAttitudeAuth" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_ATTITUDE_AUTH (USER_ID, TENANT_ID, COMPANY_ID, AUTH_DEPT_ID, AUTH_TYPE)
+			VALUES (#selectUserId#, #tenantId#, #companyId#, #deptId#, #deptAuth#)
+		]]>
+	</insert>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeUserStatistics" parameterClass="Map" resultMap="userStatistics">
+<!-- 		<iterate conjunction=";"> -->
+		<![CDATA[
+			SELECT ifnull(SUM(to_days(
+								IF(
+									date_add(A.END_DATE, INTERVAL +#offsetMin# minute) > date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T'), 
+			                        date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T'), 
+			                        date_add(IFNULL(A.END_DATE, A.START_DATE), INTERVAL +#offsetMin# minute)
+								   )
+							   ) 
+					   -
+					   to_days(
+								IF(
+									date_add(A.START_DATE, INTERVAL +#offsetMin# minute) < date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T'), 
+			                        date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T'), 
+			                        date_add(A.START_DATE, INTERVAL +#offsetMin# minute)
+								   )
+							   )
+						) + COUNT(A.TYPE_ID), 0) AS COUNT,
+			       A.TYPE_ID,
+			       #months# AS STAT_MONTH
+			FROM   
+				TBL_ATTITUDE A
+			WHERE
+				A.TENANT_ID = #tenantId#
+			AND
+				A.TYPE_ID = #typeId#
+		]]>
+		<isNotEmpty property="userId">
+			AND
+				A.WRITER_ID = #userId#
+		</isNotEmpty>
+		<isNotEmpty property="deptId">
+			AND
+				A.DEPT_ID = #deptId#
+		</isNotEmpty>
+		<![CDATA[
+			AND    
+				(
+					(A.START_DATE >= date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T') and A.START_DATE <= date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T')) 
+					or
+					(A.END_DATE >= date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T') and A.END_DATE < date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T')) 
+					or
+					(A.START_DATE < date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T') and A.END_DATE >= date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T'))
+				)
+			GROUP BY
+				A.TYPE_ID
+		]]>
+<!-- 		</iterate> -->
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="AttitudeAuthorVO">
+		<![CDATA[
+			SELECT 
+				CN AS deptId,
+				DISPLAYNAME$primary$ AS deptName
+		]]>
+		<isNotEmpty prepend="," property="isAllDept">
+			'M' AS authType
+		</isNotEmpty>
+			FROM
+				TBL_DEPTMASTER
+			WHERE 
+				TENANT_ID = #tenantId#
+			AND 
+				EXTENSIONATTRIBUTE2 = #companyId#
+			ORDER BY 
+				deptName
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.checkUseAttitudeType" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(attitude_id)
+			FROM
+				TBL_ATTITUDE
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				type_id = #typeId#
+		]]>
+	</select>
+	
+	<update id="ezAttitudeAdminDAO.deleteAttitudeType" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_ATTITUDE_TYPE
+			SET
+				isdel = '1'
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				type_id = #typeId#
+		]]>
+	</update>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeHistoryList" parameterClass="Map" resultClass="ModApplHistoryVO">
+		<![CDATA[
+			SELECT
+				attitude_id AS attitudeId,
+			    writer_name$primary$ AS writerName,
+			    writer_title$primary$ AS writerTitle,
+			    writer_dept_name$primary$ AS writerDeptName,
+			    DATE_FORMAT(DATE_ADD(origin_startdate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') AS originstartdate,
+			    DATE_FORMAT(DATE_ADD(origin_enddate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') AS originenddate,
+			    IFNULL(DATE_FORMAT(DATE_ADD(change_startdate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i'),'') AS changestartdate,
+			    IFNULL(DATE_FORMAT(DATE_ADD(change_enddate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i'),'') AS changeenddate,
+			    origin_type_name$primary$ AS origintypename,
+			    IFNULL(change_type_name$primary$, '') AS changetypename,
+			    appr_user_name$primary$ AS apprusername,
+			    DATE_FORMAT(DATE_ADD(appr_date, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') AS apprdate
+			FROM
+				TBL_ATTITUDE_MODAPPL_HISTORY
+			WHERE
+				company_id = #companyId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				(appr_date >= #searchStartDate# 
+				  AND
+				  appr_date <= #searchEndDate#)
+		]]>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			<![CDATA[
+				writer_name$primary$ LIKE CONCAT('%', #searchUserName#, '%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			<![CDATA[
+				writer_title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="deptId">
+			WRITER_DEPT_ID = #deptId#
+		</isNotEmpty>
+		<iterate prepend="AND WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+			#deptIdList[]#
+		</iterate>
+		<isNotEmpty property="orderCell">
+			<![CDATA[
+				ORDER BY
+					$orderCell$ $orderOption$
+			]]>
+		</isNotEmpty>
+		<isEmpty property="orderCell">
+			<![CDATA[
+				ORDER BY
+					changestartdate DESC,
+					writerName
+			]]>
+		</isEmpty>
+		<isNotEmpty property="listSize">
+			<![CDATA[
+				LIMIT
+					#limit#, #listSize#
+			]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeHistoryCount" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				count(*)
+			FROM
+				TBL_ATTITUDE_MODAPPL_HISTORY
+			WHERE
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				(appr_date >= #searchStartDate# 
+				  AND
+				  appr_date <= #searchEndDate#)
+		]]>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			WRITER_NAME LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			WRITER_TITLE LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="deptId">
+			WRITER_DEPT_ID = #deptId#
+		</isNotEmpty>
+		<iterate prepend="AND WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+			#deptIdList[]#
+		</iterate>
+	</select>
+	
+</sqlMap>
