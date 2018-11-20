@@ -8,6 +8,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
@@ -77,5 +78,9 @@ public interface EzPersonalAdminService {
 
 	PersonalLightPollConfigVO getLightPollConfig(String userId, int tenantId) throws Exception;
 	
-	void setLightPollConfigVO(String userId, String isPreview, int tenantId) throws Exception;
+	void setLightPollConfig(String userId, String isPreview, int tenantId) throws Exception;
+	
+	PersonalPopopConfigVO getPopupConfig(String userId, int tenantId) throws Exception;
+	
+	void setPopupConfig(String userId, String isPreview, int tenantId) throws Exception;
 }

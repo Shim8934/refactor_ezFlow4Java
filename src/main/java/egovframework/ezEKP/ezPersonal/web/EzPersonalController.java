@@ -653,6 +653,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String itemSeq = req.getParameter("itemSeq");
 		
+		String flag = "";
+		if (req.getParameter("flag") != null) {
+			flag = req.getParameter("flag");
+		}
+		
 		if (req.getParameter("answer") != null && !req.getParameter("answer").equals("")) {
 			ezPersonalService.insertResult(Integer.parseInt(itemSeq), userInfo.getId(), Integer.parseInt(req.getParameter("answer")), userInfo.getTenantId());
 		}
@@ -775,7 +780,12 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("subjectCont", subjectCont);
 		
 		logger.debug("pollResult ended");
-		return "ezPersonal/persPollResult";
+		if(flag.equals("preview")) {
+			// 미리보기 창
+			return "admin/ezPersonal/personalPollResultPreview";
+		} else {
+			return "ezPersonal/persPollResult";
+		}
 	}
 	
 	/**

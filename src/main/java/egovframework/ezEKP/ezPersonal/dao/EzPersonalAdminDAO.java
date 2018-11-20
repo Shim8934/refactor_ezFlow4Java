@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
@@ -227,5 +228,18 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO {
 	
 	public void setLightPollConfig(Map<String, Object> map) throws Exception {
 		update("EzPersonalAdmin.EZSP_setLightPollConfig", map);
+	}
+	
+	public PersonalPopopConfigVO getPopupConfig(Map<String, Object> map) throws Exception {
+		return (PersonalPopopConfigVO) select("EzPersonalAdmin.EZSP_getPopupConfig", map);
+	}
+	
+	public void insertPopupConfig(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_insertPopupConfig", map);
+	}
+	
+	
+	public void setPopupConfig(Map<String, Object> map) throws Exception {
+		update("EzPersonalAdmin.EZSP_setPopupConfig", map);
 	}
 }

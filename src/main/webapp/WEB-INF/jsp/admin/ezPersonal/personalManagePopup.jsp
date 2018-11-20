@@ -17,6 +17,10 @@
 		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
 		    var pUse_Editor = "<c:out value = '${useEditor}' />";
 		    var pNoneActiveX = "<c:out value = '${noneActiveX}' />";
+			
+			window.onload = function () {
+				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "선택된 공지사항이 없습니다.";
+			}
 		    
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -33,6 +37,7 @@
 // 		            document.getElementById("ListCompany").selectedIndex = 0;
 		            company_change();
 		        }
+		    	getPopupConfig();
 		    });
 		    
 		    function makelist() {		        
@@ -195,6 +200,114 @@
 		        	}
 		        });
 		    }
+		    
+		    
+			
+			// 팝업공지 config 조회
+			var isPreview = 0;
+			function getPopupConfig() {
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					aysnc : false,
+					url : "/admin/ezPersonal/getPopupConfig.do",
+					success : function(result) {
+						isPreview = result["configVO"].isPreview;
+						changeImg(isPreview);
+						setPreview(isPreview);
+					}, error: function(xhr, option, error){
+						isPreview = 0;
+					}
+				});
+			}
+			
+			// 팝업공지 config 업데이트
+			var isPreview = 0;
+			function PreviewRayerChange(direction) {
+				var temp = isPreview;
+				switch(direction)
+				{
+					case "NONE" : 
+						isPreview = 0;
+						break;
+					case "H" :
+						isPreview = 2;
+						break;
+				}
+							  
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					data : {isPreview : isPreview},
+					aysnc : false,
+					url : "/admin/ezPersonal/setPopupConfig.do",
+					success : function(result) {
+						changeImg(isPreview);
+						setPreview(isPreview);
+					}, error: function(xhr, option, error){
+						isPreview = temp;
+					}
+				});
+			}
+			
+			// 미리보기 버튼 교체
+			function changeImg(previewNum) {
+				var doc = window.document;
+				var noneImage = doc.getElementById("PreViewNone");
+				var leftImage = doc.getElementById("PreViewleft");
+				
+				noneImage.className = "icon16 btn_noframe";
+				leftImage.className = "icon16 btn_leftframe";
+				
+				switch(previewNum) {
+					case 0 :
+						noneImage.className = "icon16 btn_onnoframe";
+						
+						break;
+					case 2 :
+						leftImage.className = "icon16 btn_onleftframe";
+						break;
+				}
+			}
+			
+			// 미리보기창 show
+			function setPreview(previewNum) {
+				//var conlistH = conH
+				var doc = window.document;
+				var mainView = doc.getElementById("mainView");
+				var previewH = doc.getElementById("previewH");
+				var PreviewRayerH = doc.getElementById("PreviewRayerH");
+				//var contentlistH = doc.getElementById("contentlist");
+				var previewmail_bar_h = doc.getElementById("previewmail_bar_h");
+				
+				switch(previewNum) {
+				case 0 :
+					previewH.style.display = "none";
+					mainView.style.width = "100%";
+					//doc.getElementById("contentlist").style.height = conlistH + "px";					
+					break;
+				case 2 :
+					//doc.getElementById("contentlist").style.height = conlistH + "px";
+					mainView.style.width = "70%";
+					previewH.style.width = "30%";
+					//previewH.style.height = conlistH + 47 + "px";
+					previewH.style.display = "";
+					//previewmail_bar_h.style.height = conlistH + 47 + "px";
+					PreviewRayerH.style.display = "";
+					if(itemseq!=0) {
+						doc.getElementById("ifrmPreViewH").style.display = "";
+					}
+					//doc.getElementById("ifrmPreViewH").style.height = conlistH + 47 + "px";
+					break;
+				}
+				
+				// row가 선택 되어 있다면
+				//if(itemseq) {
+				//	showPreview(isPreview, itemseq);
+				//}
+			}
+			
+
 		</script>
 	</head>
 	<body class = "mainbody">
@@ -240,15 +353,53 @@
 			</h1>
 			<div id="mainmenu">
 				<ul style="margin-top:15px">	            	
-	                <li class="important"><span onClick="add_popup()"><spring:message code = 'ezPersonal.t158' /></span></li>
-	            </ul>
+					<li class="important"><span onClick="add_popup()"><spring:message code = 'ezPersonal.t158' /></span></li>
+					<div class="sub_frameIcon" style="float:right;">	
+						<div class="sub_frameIconUL" style="width:100% !important;">
+							<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
+							<p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
+						</div>
+					</div>
+				</ul>
 		  	</div>
 			<script type="text/javascript">
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			</script>
-			<table class="mainlist" style="width:100%;">
-				<div id=AccessList style ="WIDTH:100%; border-right:1px solid #e8e8e8; border-left:1px solid #e8e8e8;"></div>
-			</table>
+			
+			<div class="mainView" id="mainView" style="width:100%;float:left">
+				<table class="mainlist" style="width:100%;">
+					<div id=AccessList style ="WIDTH:100%; border-right:1px solid #e8e8e8; border-left:1px solid #e8e8e8;"></div>
+				</table>
+				<div id="tblPageRayer"></div>
+			</div>
+			
+			<div class="previewH" id="previewH" style="width:29%; float:right;">
+				<span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top;  margin-left:0px;">
+					<span id="previewmail_bar_h" class="previewmail_bar_h" style="display: inline-block; border: 1px solid #e5e5e5; border-top:0px !important; border-bottom:0px !important;">
+						<p class="hbar_dotted" style="width:5px">
+						</p>
+					</span>
+					<span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue; width:29%;">
+						<span style="width: 100%; height: 100px; display: block;">
+							<span class="previewmail_info" style="display: block; width: 100%; border-top: 1px solid #e8e8e8; ">
+								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
+									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 10px 0px 0px 0px; height: 36px; line-height: 37px;">
+										<span class="icon_btn" style="margin-left:13px;"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
+											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" style="position:absolute; margin-top:-6px;" class="title_blodtxt"></span></span>
+									</p>
+									<span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
+								</div>
+							</span>
+							<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+						</span>
+					</span>
+				</span>
+			</div>
+		</form>
+		
+		<form name="PrevViewFormH" action="/ezPersonal/pollResult.do" method="get" target="ifrmPreViewH" >
+			<input  type="hidden" name="itemSeq" value="">
+			<input  type="hidden" name="flag" value="preview">
 		</form>
 	</body>
 </html>

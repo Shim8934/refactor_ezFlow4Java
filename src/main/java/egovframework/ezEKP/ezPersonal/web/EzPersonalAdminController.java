@@ -45,6 +45,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
@@ -530,12 +531,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			if(jinhang) {
 				result.append("<VALUE>" + "진행중" + "</VALUE>");	// 삭제
 				result.append("<TYPE>" + "BTN" + "</TYPE>");
-				result.append("<FUNC>" + "del_poll" + "</FUNC>");
 				result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			} else {
 				result.append("<VALUE>" + "종료" + "</VALUE>");	// 삭제
 				result.append("<TYPE>" + "BTN" + "</TYPE>");
-				result.append("<FUNC>" + "del_poll" + "</FUNC>");
 				result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			}
 			
@@ -616,10 +615,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String subject = "", title = "";
 		
 		String itemSeq = request.getParameter("itemSeq");
-		String flag = "";
-		if (request.getParameter("flag") != null) {
-			flag = request.getParameter("flag");
-		}
 
 		PersonalLightPollVO infoVO = ezPersonalAdminService.getPollInfo(itemSeq, userInfo.getTenantId());
 		
@@ -685,13 +680,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("result", result.toString());
 
 		logger.debug("pollResult ended");
-		if(flag.equals("preview")) {
-			// 미리보기 창
-			return "admin/ezPersonal/personalPollResultPreview";
-		} else {
-			// double 클릭
-			return "admin/ezPersonal/personalPollResult";
-		}
+		return "admin/ezPersonal/personalPollResult";
 	}
 	
 	/**
@@ -1322,7 +1311,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("setLightPollConfig started");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
-		ezPersonalAdminService.setLightPollConfigVO(userInfo.getId(), isPreview, userInfo.getTenantId());
+		ezPersonalAdminService.setLightPollConfig(userInfo.getId(), isPreview, userInfo.getTenantId());
 		logger.debug("setLightPollConfig ended");
 		return null;
 	}
@@ -1357,5 +1346,37 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		json.put("pollResultVO", pollResultVO);
 		logger.debug("getPollItem ended");
 		return json;
+	}
+	
+	/** 
+	 * 팝업공지 config 조회 함수  
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/getPopupConfig.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject getPopupConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getPopupConfig started");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		PersonalPopopConfigVO configVO = ezPersonalAdminService.getPopupConfig(userInfo.getId(), userInfo.getTenantId());
+		JSONObject json = new JSONObject();
+		json.put("configVO", configVO);
+		logger.debug("getPopupConfig ended");
+		return json;
+	}
+	
+	
+	
+	/**
+	 * 팝업공지 config 저장 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/setPopupConfig.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public String setPopupConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam String isPreview) throws Exception {
+		logger.debug("setPopupConfig started");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		ezPersonalAdminService.setPopupConfig(userInfo.getId(), isPreview, userInfo.getTenantId());
+		logger.debug("setPopupConfig ended");
+		return null;
 	}
 }
