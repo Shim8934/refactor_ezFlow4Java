@@ -207,14 +207,10 @@ public class LoginController {
 			// 로그인 후 IP 주소 체크
         	boolean ipAddressChk = ipAccessCheck(resultVO);
         	logger.debug("ipAddressChk=" + ipAddressChk);
-        	// 2018.10.22 이석화 추가 - useSession row 유무 확인
-        	Map<String, Object> sessionParam = new HashMap<String, Object>();
-    		String confName = "useSession"; 
-    		sessionParam.put("tenantID", tenantId);
-    		sessionParam.put("confName", confName);
         	
+        	// 2018.10.22 이석화 추가 - useSession row 유무 확인
     		useSession = ezCommonService.getTenantConfig("useSession", tenantId);
-    		
+        	
         	if (ipAddressChk == true) {
         		// 사용자 ID를 사용해 로그인하는 경우
     			if (_uid.equals(resultVO.getId())) {
@@ -356,11 +352,17 @@ public class LoginController {
 	        	response.addCookie(cookieName);
 	        	
 	        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
-	        	if (Integer.parseInt(useSession) != 0) {
+	        	int sessionTime = 0;
+	        	
+	        	if (!useSession.equals("")) {
+	        		sessionTime = Integer.parseInt(useSession);
 	        		
-	        		session = request.getSession(); 
-	        		session.setMaxInactiveInterval(Integer.parseInt(useSession)*60);	// 세션 유지 시간 설정
+	        		if (sessionTime != 0) {
+	        			session = request.getSession(); 
+	        			session.setMaxInactiveInterval(sessionTime * 60);	// 세션 유지 시간 설정
+	        		}
 	        	}
+	        	
 	        
 	        	return "redirect:/ezPortal/portalMain.do";
         		
@@ -445,11 +447,18 @@ public class LoginController {
     		        	response.addCookie(cookieName);
     		        	
     		        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
-    		        	if (Integer.parseInt(useSession) != 0) {
-    		        		//세션 생성 - 일시적으로 주석처리 필요할때 사용
-	    		        	session = request.getSession();			// 세션 필요로 주석 해제
-	    		        	session.setMaxInactiveInterval(Integer.parseInt(useSession)*60);		// 세션의 유지 시간 설정
+    		        	int sessionTime = 0;
+    		        	
+    		        	if (!useSession.equals("")) {
+    		        		sessionTime = Integer.parseInt(useSession);
+    		        		
+	    		        	if (sessionTime != 0) {
+	    		        		//세션 생성 - 일시적으로 주석처리 필요할때 사용
+		    		        	session = request.getSession();			// 세션 필요로 주석 해제
+		    		        	session.setMaxInactiveInterval(sessionTime * 60);		// 세션의 유지 시간 설정
+	    		        	}
     		        	}
+    		        	
     		        	return "redirect:/ezPortal/portalMain.do";
     		        	
     				}

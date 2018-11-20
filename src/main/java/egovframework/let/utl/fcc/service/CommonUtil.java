@@ -439,7 +439,7 @@ public class CommonUtil {
 		// 2018.10.22 이석화 변경 - 세션 0이면 세션 사용 안 함
 		if (!useSession.equals("") && !useSession.equals("0")) {
 			/* session time을 위한 처리 주석 */	
-			/* 세션 사용 위해 주석 해제 */
+			/* 세션 사용 위해 주석 해제*/
 			HttpSession session = request.getSession(false);
 			
 			if (session != null) {
