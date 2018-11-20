@@ -17,10 +17,14 @@
 		ul .sliderList {margin:0px 15px 15px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
 		ul .slider-header {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;background-color:#2196f3; border:1px solid #2196f3; width:210px;}
 		ul .slider-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:130px;}
-		ul .slider-imagePage {padding:5px 15px 10px 15px;}
+		ul .slider-imagePage {padding:5px 10px 10px 15px; width:225px; height:210px;}
 		ul .addSlider {border:1px dashed #aab2ba; display:inline-block; text-align:center; vertical-align : top; height:19.3em; border-radius:0px; width:225px; height: 370px; position:relative;}
 		ul .addSlider:hover {cursor:pointer;}
 		ul .slideIsUse {padding: 30px 0px 10px 0px;}
+		.cancelNewSliderBtn span {height:25px; float:right; padding: 3px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
+		.addNewSliderBttn span {height:25px; float:right; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
+		.addImageBtn span {height:25px; background-color:#f4f4f4; border:1px solid #e7e7e7;  float:right; padding: 0px 9px; line-height: 23px; display:block; text-align: center; margin-top:40%; margin-right:30%}
+		.sliderInfoTDadd { padding: 5px;}
 	}
 		</style>
 		<script type="text/javascript">
@@ -80,29 +84,28 @@
 		    		sliderHTML += "<li class = 'sliderList' id = 'sliderList'>";
 		    		sliderHTML += "<div class = 'slider-header'>";
 		    		sliderHTML += "</div>";
-		    		sliderHTML += "<dt><span class='imagePage'><IMG src ="+sliderImagePath+" style='width:220px;height:200px'/></dt>";
+		    		sliderHTML += "<dt><span class='imagePage'><IMG src ="+sliderImagePath+" style='width:225px;height:210px'/></dt>";
 		    		sliderHTML += "</span>";
 		    		sliderHTML += "<div class = 'slider-content'>";
-		    		sliderHTML += "<table class = 'sliderInfo'><tr><td class ='sliderName1'>이름    |</td>";
-		    		sliderHTML += "<td>"+sliderName+"</td></tr>"
+		    		sliderHTML += "<table class = 'sliderInfo'><tr><td class ='sliderInfoTD'>이름    |</td>";
+		    		sliderHTML += "<td class ='sliderInfoTD'>"+sliderName+"</td></tr>"
 		    		sliderHTML += "<tr><td class ='sliderURL'>URL   |</td>";
-		    		sliderHTML += "<td>"+sliderURL+"</td></tr>"
+		    		sliderHTML += "<td class ='sliderInfoTD'>"+sliderURL+"</td></tr>"
 		    		sliderHTML += "<tr><td class ='sliderRegDate'>등록일   |</td>";
-		    		sliderHTML += "<td>"+sliderRegDate+"</td></tr>"
+		    		sliderHTML += "<td class ='sliderInfoTD'>"+sliderRegDate+"</td></tr>"
 		    		
 		    		if(sliderIsUse == 1){
-		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' checked='checked' onchange='toggleButton()'><span class='slider round'></label></td>";
+		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' checked='checked')' onchange='toggleButton(this)'><span class='slider round'></label></td>";
 		    		}else {
-		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton'><span class='slider round' onchange='toggleButton()'></label></td>";
+		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' onchange='toggleButton(this)'><span class='slider round'></label></td>";
 		    		}
 		    		
 		    		sliderHTML += "</tr></table>";
-		    		sliderHTML += "</div>";
+		    		sliderHTML += "</div></li>";
 		    		
 		    	}
 		    	
 		    	sliderHTML += "<li class='addSlider' id='addSlider'><div style='margin-top:97px'><img src='/images/admin/admin_portlet_plus.png' ></img></div></li>";
-		    	sliderHTML += "</li>"
 		    	document.getElementById("sliderContainer").innerHTML = sliderHTML;
 		    	document.getElementById("addSlider").onclick = btn_Select; 
 		    	
@@ -112,21 +115,29 @@
 		    		var sliderId = result[i].sliderID;
 		    		var sliderIsUse = result[i].isUse;
 		    		
-		    		console.log(checkbox);
-		    		
 		    		if(choose){
-		    			$(".sliderList").find(".slider-header").css("background-color", "##edf7ff");
+		    			$("#sliderList").find(".slider-header").css("background-color", "##edf7ff");
 		    		} else{
-		    			$(".sliderList").find(".slider-header").css("background-color", "#f4f4f4").css("border", "1px solid #e7e7e7").css("color", "#b1b1b1");
+		    			$("#sliderList").find(".slider-header").css("background-color", "#f4f4f4").css("border", "1px solid #e7e7e7").css("color", "#b1b1b1");
 		    		}
+		    		
 		    		
 		    		event_statuschange(choose, sliderId); 
 		    	}
 		    
 		    }
 		
-		    function toggleButton(){
-		    	
+		    function toggleButton(check){
+		    	//버튼 클릭할 때(보류)
+		    	console.log($(".sliderList").find(".slider-header"));
+				$(".sliderList").find(".slider-header").each(function(){
+					if(check.checked){
+	 		    		$(this).css("background-color", "#2196f3");
+	 		    	} else{
+	 		    		$(this).css("background-color", "#f4f4f4").css("border", "1px solid #e7e7e7").css("color", "#b1b1b1");
+	 		    	}
+		    	})
+	 		    	
 		    }
 		    
 		     var tempid = "";
@@ -138,7 +149,34 @@
 		    }
 		    
 		    var selectimage_dialogArguments = new Array();
+		    //슬라이더 이미지 추가
 		    function btn_Select() {
+		    	$(".addSlider").remove();
+		    	
+		    	var sliderHTML = "";
+		    	sliderHTML += "<li class = 'sliderList' id = 'sliderList'>";
+		    	sliderHTML += "<div class = 'slider-header-add' style='background-color:#f4f4f4;border:1px solid #e7e7e7;color:#b1b1b1'>";
+		    	sliderHTML += "<a class = 'cancelNewSliderBtn'>";
+		    	sliderHTML += "<span class ='addCancel'><img src='/images/close_xBtn.png'></span></a>";
+		    	sliderHTML += "<a class= 'addNewSliderBttn'>";
+		    	sliderHTML += "<span class='addCancel'><img src='/images/email/popup_icon.gif' ></span></a>";
+		    	sliderHTML += "</div>";
+		    	sliderHTML += "<div class = 'slider-content' style='width:225px; height:210px'>";
+		    	sliderHTML += "<a class ='addImageBtn'>";
+		    	sliderHTML += "<span class = 'addImage' onclick='addImage()'>이미지 선택</span></a>";
+		    	sliderHTML += "</div>";
+		    	sliderHTML += "<table class = 'sliderInfo'><tr><td class ='sliderInfoTDadd'>한글 |   ";
+		    	sliderHTML += "<input class='sliderName' data1='displayname' type='text' maxlength='50'></td></tr>";
+		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>영어 |   ";
+		    	sliderHTML += "<input class='sliderName2' data2='displayname2' type='text' maxlength='50'></td></tr>";
+		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL |   ";
+		    	sliderHTML += "<input class='sliderURL' data3=Url' type='text' maxlength='50'></td></tr>";
+		    	sliderHTML += "</table>"
+		    	sliderHTML += "</li>";
+		    	
+		    	document.getElementById("sliderContainer").insertAdjacentHTML('beforeend', sliderHTML);
+		    	
+		    	$(".cancelNewSliderBtn").on("click", addCancel);
 		        if (CrossYN()) {
 		            selectimage_dialogArguments[1] = btn_Select_Complete;
 		            var SelectImage = window.open("/admin/ezPersonal/selectImage.do", "SelectImage", GetOpenWindowfeature(410, 750));
@@ -153,7 +191,10 @@
 		            window.location.reload(false);
 		        }
 		    } 
-		     
+		    //슬라이드 이미지 생성 취소
+		    var addCancel = function() {
+		    	getSliderList();
+		    }
 		    function btn_Select_Complete() {
 		        window.location.reload(false);
 		    } 
