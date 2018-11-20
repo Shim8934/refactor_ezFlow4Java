@@ -743,22 +743,33 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
 		
+		int currentPage = 1, pageSize = 15;
 		
-		List<PersonalPopupVO> list = ezPersonalAdminService.getPopupList(companyID, userInfo.getTenantId());
+		if (request.getParameter("page") != null) {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		}
+		
+		int totalCount = ezPersonalAdminService.getPopupCount(companyID, userInfo.getTenantId());
+		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
+		
+		List<PersonalPopupVO> list = ezPersonalAdminService.getPopupList(companyID, totalCount, pageSize, (currentPage - 1 ) * pageSize, userInfo.getTenantId());
 		
 		StringBuilder result = new StringBuilder();
 		
 		result.append("<LISTVIEWDATA>");
+		result.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		result.append("<PAGECNT>" + pageCount + "</PAGECNT>");
+		result.append("<CURPAGE>" + currentPage + "</CURPAGE>");
 		result.append("<ROWS>");
 		
 		//2018-08-08  김보미 - rownumber추가
-		int i = list.size();
+		int i=0;
 		for (PersonalPopupVO vo : list) {
 			result.append("<ROW>");
 			result.append("<CELL>");
 			//2018-08-08  김보미 - rownumber추가
 //			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
-			result.append("<VALUE>" + i + "</VALUE>");
+			result.append("<VALUE>" + (totalCount - (pageSize * (currentPage-1)+i)) + "</VALUE>");
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("<DATA2>" + vo.getWidth() + "</DATA2>");
 			result.append("<DATA3>" + vo.getHeight() + "</DATA3>");
@@ -791,7 +802,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			result.append("</ROW>");
-			i--;
+			i++;
 		}
 		
 		result.append("</ROWS>");

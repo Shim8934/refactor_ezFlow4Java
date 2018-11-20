@@ -17,42 +17,56 @@
 		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
 		    var pUse_Editor = "<c:out value = '${useEditor}' />";
 		    var pNoneActiveX = "<c:out value = '${noneActiveX}' />";
+			var TotalCount;
+			var totalPage = "";
+			var BlockSize = 10;
+			var pageNum = 1;
+			var PageSize = 15;
+			
+			var strLang1 = "<spring:message code = 'ezPersonal.t10002' />";
+			var strLang2 = "<spring:message code = 'ezPersonal.t10000' />";
+			var strLang3 = "<spring:message code = 'ezPersonal.t10001' />";
+			var strLang4 = "<spring:message code = 'ezPersonal.t223' />";
 			
 			window.onload = function () {
 				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "선택된 공지사항이 없습니다.";
 			}
-		    
-			document.onselectstart = function () {
-		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
-		            return false;
-		        } else {
-		            return true;
-		        }
-		    };
 			
-		    $(document).ready(function(){
-		    	if (document.getElementById("ListCompany").length == 0) {
-		            alert("<spring:message code = 'ezPersonal.t106' />");
-		        } else {
-// 		            document.getElementById("ListCompany").selectedIndex = 0;
-		            company_change();
-		        }
-		    	getPopupConfig();
-		    });
-		    
-		    function makelist() {		        
-		        $.ajax({
-		        	type : "POST",
-		        	dataType : "text",
-		        	url : "/admin/ezPersonal/managePopupList.do",
-		        	async : false,
-		        	data : {companyID : encodeURIComponent(document.getElementById("ListCompany").value)},
-		        	success : function (result) {
-		        		event_PopupList(loadXMLString(result));
-		        	}
-		        });
-		    }
-		    
+			document.onselectstart = function () {
+				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
+					return false;
+				} else {
+					return true;
+				}
+			};
+			
+			$(document).ready(function(){
+				if (document.getElementById("ListCompany").length == 0) {
+					alert("<spring:message code = 'ezPersonal.t106' />");
+				} else {
+					//document.getElementById("ListCompany").selectedIndex = 0;
+					company_change();
+				}
+				getPopupConfig();
+			});
+			
+			
+			function makelist() {
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezPersonal/managePopupList.do",
+					async : false,
+					data : {
+						companyID : encodeURIComponent(document.getElementById("ListCompany").value),
+						page : pageNum
+					},
+					success : function (result) {
+						event_PopupList(loadXMLString(result));
+					}
+				});
+			}
+			
 		    function event_PopupList(result) {
 		        try {
 		            document.getElementById("AccessList").innerHTML = "";
@@ -68,23 +82,38 @@
 		                var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
 		                headerData.documentElement.appendChild(xmlRtn);
 		            }
-		            
-		            var listview = new ListView();
-		            listview.SetID("AccessListView");
-		            listview.SetSelectFlag(false);
-		            listview.SetMulSelectable(true);
-		            listview.SetRowOnDblClick("PopupList_onDblclick");
-		            listview.DataSource(headerData);
-		            listview.DataBind("AccessList");
-		            //listview.DataSource(xmldom);
-		            listview.RowDataBind();
-		            xmldomNode = null;
-		            
-	                //2018-08-09 김보미 - 데이터가 없을 경우 출력
+					
+					var listview = new ListView();
+					listview.SetID("AccessListView");
+					listview.SetSelectFlag(false);
+					listview.SetMulSelectable(true);
+					listview.SetRowOnDblClick("PopupList_onDblclick");
+					listview.DataSource(headerData);
+					listview.DataBind("AccessList");
+					//listview.DataSource(xmldom);
+					listview.RowDataBind();
+					xmldomNode = null;
+					
+					if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
+						TotalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
+						pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
+					} else if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
+						//IE11일때 추가
+						TotalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
+						pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
+					} else {
+						TotalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
+						pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
+					}
+					
+					totalPage = Math.ceil(new Number(TotalCount / PageSize));
+					
+					//2018-08-09 김보미 - 데이터가 없을 경우 출력
 	                if (headerData.getElementsByTagName("ROW").length == 0) {
 	                	var TR_noItems = "<tr id='Link_TR_noItems'><td style='text-align: center;' colspan='6'>" + "<spring:message code = 'ezPersonal.t20005' />" + "</td></tr>";
 		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
 	                }
+	                makePageSelPage();
 		        } catch (e) {
 	
 		        }
@@ -294,9 +323,9 @@
 					previewH.style.display = "";
 					//previewmail_bar_h.style.height = conlistH + 47 + "px";
 					PreviewRayerH.style.display = "";
-					if(itemseq!=0) {
-						doc.getElementById("ifrmPreViewH").style.display = "";
-					}
+					//if(itemseq!=0) {
+					doc.getElementById("ifrmPreViewH").style.display = "";
+					//}
 					//doc.getElementById("ifrmPreViewH").style.height = conlistH + 47 + "px";
 					break;
 				}
@@ -307,7 +336,143 @@
 				//}
 			}
 			
-
+			
+			function td_Create1(strtext) {
+		        document.getElementById("tblPageRayer").innerHTML = strtext;
+		    }
+		    
+		    function makePageSelPage() {
+		        var strtext;
+		        var PagingHTML = "";
+		        document.getElementById("tblPageRayer").innerHTML = "";
+		        document.getElementById("mailBoxInfo").innerHTML = " &nbsp;[" + strLang1 + "<span style='color:#017BEC;'> " + TotalCount + " </span>" + strLang4 + "]";
+		        strtext = "<div class='pagenavi'>";
+		        PagingHTML += strtext;
+		        
+		        if (totalPage > 1 && pageNum != 1) {
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+		            PagingHTML += strtext;
+		        } else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        if (totalPage > BlockSize) {
+		            if (pageNum > BlockSize) {
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+		                PagingHTML += strtext;
+		            } else {
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+		                PagingHTML += strtext;
+		            }
+		        } else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        var MaxNum;
+		        var i;
+		        var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+		        if (totalPage >= (startNum + parseInt(BlockSize))) {
+		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
+		        } else {
+		            MaxNum = totalPage;
+		        }
+		        
+		        for (i = startNum; i <= MaxNum; i++) {
+		            if (i == pageNum) {
+		                strtext = "<span class='on'>" + i + "</span>";
+		                PagingHTML += strtext;
+		            } else {
+		                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+		                PagingHTML += strtext;
+		            }
+		        }
+		        
+		        //2018-08-02 김보미 - 데이터가 하나도 없을때 디폴트 페이징
+	            if (i == 1) {
+	            	strtext = "<span class='on'>" + i + "</span>";
+                    PagingHTML += strtext;
+	            }
+		        
+		        if (totalPage > BlockSize) {
+		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+		                PagingHTML += strtext;
+		            } else {
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+		                PagingHTML += strtext;
+		            }
+		        } else {
+		            strtext = "";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+		            PagingHTML += strtext;
+		        } else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        PagingHTML += "</div>";
+		        td_Create1(PagingHTML);
+		    }
+		    
+		    function goToPageByNum(Value) {
+		        pageNum = Value;
+		        makePageSelPage();
+		        makelist();
+		    }
+		    
+		    function selbeforeBlock() {
+		        pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+		        goToPageByNum(pageNum);
+		    }
+		    
+		    function selbeforeBlock_one() {
+		        if (parseInt(pageNum - 1) > 0) {
+		            goToPageByNum(parseInt(pageNum - 1));
+		        } else {
+		            return;
+		        }
+		    }
+		    
+		    function selafterBlock() {
+		        pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+		        goToPageByNum(pageNum);
+		    }
+		    
+		    function selafterBlock_one() {
+		        if (parseInt(pageNum + 1) <= totalPage) {
+		            goToPageByNum(parseInt(pageNum + 1));
+		        } else {
+		            return;
+		        }
+		    }
+		    
+		    function selNum(pselNum) {
+		        pageNum = pselNum;
+		        makelist();
+		    }
+		    
+		    function selNext() {
+		        pageNum = pageNum + 1;
+		        makelist();
+		    }
+		    
+		    function selPrev() {
+		        pageNum = pageNum - 1;
+		        makelist();
+		    }
+		    
+		    function td_Create(strtext) {
+		        tblPageNum.innerHTML = tblPageNum.innerHTML + strtext;
+		    }
 		</script>
 	</head>
 	<body class = "mainbody">
@@ -344,7 +509,7 @@
 		
 	    <form method="post">
 			<h1>
-				<spring:message code = 'ezPersonal.t266' />
+				<spring:message code = 'ezPersonal.t266' /><span id="mailBoxInfo"></span>
 				<SELECT class="companySelect" id="ListCompany" name="ListCompany" onChange="company_change()">
 		        	<c:forEach var="item" items="${list}">
 						<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>

@@ -20,7 +20,7 @@ public interface EzPersonalAdminService {
 	
 	List<PersonalLightPollVO> getPollList(String companyID, int totalCount, int pageSize, int start, int tenantID) throws Exception;
 	
-	List<PersonalPopupVO> getPopupList(String companyID, int tenantID) throws Exception;
+	List<PersonalPopupVO> getPopupList(String companyID, int totalCount, int pageSize, int start, int tenantID) throws Exception;
 	
 	List<PersonalEmpMonthVO> getEmpMonth(String companyID, int tenantID) throws Exception;
 	
@@ -83,4 +83,6 @@ public interface EzPersonalAdminService {
 	PersonalPopopConfigVO getPopupConfig(String userId, int tenantId) throws Exception;
 	
 	void setPopupConfig(String userId, String isPreview, int tenantId) throws Exception;
+	
+	int getPopupCount(String companyID, int tenantID) throws Exception;
 }
