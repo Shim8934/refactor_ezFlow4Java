@@ -64,8 +64,11 @@ function getScheduleList_after(resultList, mode, date) {
 				} else {
 					listHTML += "";
 				}
-				
-				listHTML += "<span class='" + timeClass + "_timeText'>" + startTime + " ~ " + endTime + "</span></p>";
+				if (Number($("#schedule_usedTheme").val()) == 1) {
+					listHTML += "<span class='" + timeClass + "_timeText' style='margin-left:6px; font-size:14px; color:#333;'>" + startTime + " ~ " + endTime + "</span></p>";
+				} else {
+					listHTML += "<span class='" + timeClass + "_timeText'>" + startTime + " ~ " + endTime + "</span></p>";
+				}
 				listHTML += "<p class='scheduleText'>";
 				listHTML += ConvertCharToEntityReference(TITLE)+"</p></li>";
 			} else {

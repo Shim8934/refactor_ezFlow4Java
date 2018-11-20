@@ -11,5 +11,6 @@ var messages = {
 	strLang10: "It is not possible to leave the office after work.",
 	strLang11 : "This is a private CoP.",
 	strLang12 : "Please join us.	",
-	strLang13 : "Voting is being modified.Please wait."
+	strLang13 : "Voting is being modified.Please wait.",
+	strLang14 : "You do not have permission on that bulletin."
 }

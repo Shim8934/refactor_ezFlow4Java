@@ -45,11 +45,9 @@
 					<c:when test="${fn:length(CommunityList) == 1 }">
 						<c:forEach var="commu" begin="0" end="1" items="${CommunityList }"
 							varStatus="i">
-							<dl class="comListDL0${i.count}" data1="${commu.c_ClubNo}"
-								style="cursor: pointer">
+							<dl class="comListDL0${i.count}" data1="${commu.c_ClubNo}" style="cursor: pointer">
 								<dt class="comPic">
-									<span class="best"><img
-										src="/images/kr/main/com_best.png"></span>
+									<span class="best"><img src="/images/kr/main/com_best.png"></span>
 									<c:choose>
 										<c:when
 											test="${commu.c_Logo_Thumbnail == 'default_logo_type'}">
@@ -78,12 +76,10 @@
 					<c:otherwise>
 						<c:forEach var="commu" begin="0" end="1" items="${CommunityList }"
 							varStatus="i">
-							<dl class="comListDL0${i.count}" data1="${commu.c_ClubNo}"
-								style="cursor: pointer">
+							<dl class="comListDL0${i.count}" data1="${commu.c_ClubNo}" style="cursor: pointer">
 								<dt class="comPic">
-									<c:if test="${i.count == 0}">
-										<span class="best"><img
-											src="/images/kr/main/com_best.png"></span>
+									<c:if test="${i.count == 1}">
+										<span class="best"><img src="/images/kr/main/com_best.png"></span>
 									</c:if>
 									<c:choose>
 										<c:when

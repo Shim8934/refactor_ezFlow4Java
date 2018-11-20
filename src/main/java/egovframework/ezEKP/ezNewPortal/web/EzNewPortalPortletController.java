@@ -804,6 +804,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalBirthdayPortlet(HttpServletRequest req, Model model) throws Exception {
 		logger.debug("portalBirthdayPortlet Start");
 		
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("usedTheme", usedTheme);
+		
 		Calendar cal = Calendar.getInstance();
 		String nowMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
 		model.addAttribute("nowMonth", nowMonth);

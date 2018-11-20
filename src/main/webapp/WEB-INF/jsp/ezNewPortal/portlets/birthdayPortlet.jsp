@@ -17,10 +17,24 @@
 			</dt>
 			<!-- 		<dd class="portletPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd> -->
 			<dd id="birthNext" class="nextBtn">
-				<img src="/images/ezNewPortal/photo_next.png">
+				<c:choose>
+					<c:when test="${usedTheme eq 3 }">
+						<img src="/images/ezNewPortal/photo_next3.png">
+					</c:when>
+					<c:otherwise>
+						<img src="/images/ezNewPortal/photo_next.png">
+					</c:otherwise>
+				</c:choose>
 			</dd>
 			<dd id="birthPrev" class="preBtn">
-				<img src="/images/ezNewPortal/photo_pre.png">
+				<c:choose>
+					<c:when test="${usedTheme eq 3 }">
+						<img src="/images/ezNewPortal/photo_pre3.png">
+					</c:when>
+					<c:otherwise>
+						<img src="/images/ezNewPortal/photo_pre.png">
+					</c:otherwise>
+				</c:choose>
 			</dd>
 		</dl>
 		<div class="birthdayList" id="birthcount" style="display: none;">
