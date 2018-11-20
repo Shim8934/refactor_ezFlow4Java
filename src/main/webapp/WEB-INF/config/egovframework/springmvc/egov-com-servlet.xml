@@ -76,7 +76,14 @@
         <mvc:interceptor>            
             <mvc:mapping path="/mobile/**"/>
             <mvc:mapping path="/rest/**"/>
+            <mvc:exclude-mapping path="/rest/ezwebfolder/**"/>
 		    <bean class="egovframework.com.cmm.interceptor.MAuthenticInterceptor" />
+        </mvc:interceptor>    
+
+        <mvc:interceptor>            
+            <mvc:mapping path="/rest/ezwebfolder/**"/>
+            <mvc:exclude-mapping path="/rest/ezwebfolder/login"/>
+		    <bean class="egovframework.com.cmm.interceptor.WebfolderAuthenticInterceptor" />
         </mvc:interceptor>    
 	</mvc:interceptors>
 
