@@ -941,16 +941,45 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("access", access);
 			model.addAttribute("boardId", data.get("boardId"));
 			model.addAttribute("portletName", data.get("portletName"));
-			
-			if (access.equals("true")) {
-				model.addAttribute("boardList", data.get("boardList"));
-			}
 		}
 		
 		model.addAttribute("portletId", portletId);
 		logger.debug("portalBoardPortlet End");
 		
 		return "/ezNewPortal/portlets/boardPortlet";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/getCustomBoardInfo.do")
+	@ResponseBody
+	public JSONArray getCustomBoardInfo(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getCustomBoardInfo Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = req.getParameter("portletId");
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("startRow", 0);
+		param.put("photoCount", 5);
+		param.put("portletId", portletId);
+		String url = "/rest/ezPortal/portlets/board";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		String result = resultBody.get("status").toString();
+		JSONArray boardList = new JSONArray();
+		
+		if (result.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			String access = data.get("access").toString();
+			
+			if (access.equals("true")) {
+				boardList = (JSONArray) data.get("boardList");
+			}
+		}
+		
+		model.addAttribute("portletId", portletId);
+		logger.debug("portalBoardPortlet End");
+		
+		return boardList;
 	}
 	
 	/**
