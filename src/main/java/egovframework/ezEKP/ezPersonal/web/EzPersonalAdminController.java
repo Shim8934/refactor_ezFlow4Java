@@ -530,12 +530,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			if(jinhang) {
 				result.append("<VALUE>" + "진행중" + "</VALUE>");	// 삭제
 				result.append("<TYPE>" + "BTN" + "</TYPE>");
-				result.append("<FUNC>" + "del_poll" + "</FUNC>");
 				result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			} else {
 				result.append("<VALUE>" + "종료" + "</VALUE>");	// 삭제
 				result.append("<TYPE>" + "BTN" + "</TYPE>");
-				result.append("<FUNC>" + "del_poll" + "</FUNC>");
 				result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			}
 			
@@ -616,10 +614,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String subject = "", title = "";
 		
 		String itemSeq = request.getParameter("itemSeq");
-		String flag = "";
-		if (request.getParameter("flag") != null) {
-			flag = request.getParameter("flag");
-		}
 
 		PersonalLightPollVO infoVO = ezPersonalAdminService.getPollInfo(itemSeq, userInfo.getTenantId());
 		
@@ -685,13 +679,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("result", result.toString());
 
 		logger.debug("pollResult ended");
-		if(flag.equals("preview")) {
-			// 미리보기 창
-			return "admin/ezPersonal/personalPollResultPreview";
-		} else {
-			// double 클릭
-			return "admin/ezPersonal/personalPollResult";
-		}
+		return "admin/ezPersonal/personalPollResult";
 	}
 	
 	/**

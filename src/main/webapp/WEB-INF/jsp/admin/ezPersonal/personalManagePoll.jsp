@@ -64,7 +64,6 @@
 	            		event_PollList(loadXMLString(result));
 	            	}
 	            });
-	            checkFlag = false;
 	        }
 	        
 		    function event_PollList(result) {
@@ -121,7 +120,8 @@
 		            } else {
 		                progressPollFlag = SelectSingleNodeValueNew(xmldom.documentElement, "PROFLAG");
 		            }
-		            
+		            rowListSelect();
+		            checkItems();
 		            makePageSelPage();
 		        } catch (e) {
 		
@@ -158,12 +158,43 @@
 						$(".checks").prop("checked",true);
 						$("#contentlist tr td").css("background-color", "rgb(228, 232, 236)");
 					}
+					checkItems();
+				});
+			}
+
+			
+		    var rowList = new Array();
+			function checkItems() {
+				rowList = [];
+				$("input:checkbox[name='checks']").each(function(){
+					if($(this).is(":checked")) {
+						rowList.push(this.value);
+					}
 				});
 			}
 			
 			
+			function rowListSelect() {
+				var len = rowList.length;
+				for(var i=0; i<len; i++) {
+					var tempItemSeq = rowList.pop();	
+					if(document.getElementById(tempItemSeq) != null) {
+						$("#" + tempItemSeq).prop("checked", true);
+						var tempID = $("#" + tempItemSeq)[0].parentNode.parentNode.id;
+						$("#" + tempID + " td").css("background-color", "rgb(228, 232, 236)");
+					}
+				}
+				
+				if(checkFlag) {
+					$("#checkAll").prop("checked",true);
+				} else {
+					$("#checkAll").prop("checked",false);
+				}
+			}
+			
 			var itemseq;
 			function PollList_onClick(obj) {
+				var doc = window.document;
 				itemseq = document.getElementById(obj).getAttribute("DATA1");
 				if(itemseq == "0") {
 					return;
@@ -189,6 +220,10 @@
 						$("#" + itemseq).prop("checked", true);
 					}
 				}
+				
+				checkItems();
+				doc.getElementById("ifrmPreViewH").style.display = "";
+				doc.getElementById("ifrmPreViewW").style.display = "";
 				showPreview(isPreview, itemseq);
 			}
 		    
@@ -203,8 +238,10 @@
 		        var left = (width - 455) / 2;
 		        var top = (heigth - 400) / 2;
 		
+		        checkItems();
 		        window.open("/ezPersonal/pollResult.do?itemSeq=" + itemseq, "", "height=400px,width=455px, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
 		    }
+		    
 		    
 		    function company_change() {
 		        makelist();
@@ -238,39 +275,8 @@
 	                company_change();
 	            }
 	        }
-	
-	        function del_poll(poll_number) {
-		    	//2018-09-06  김보미 - rownumber추가
-	            /*if (!confirm(poll_number + "<spring:message code = 'ezPersonal.t236' />")) {
-	                return;
-	            }*/
-		        var row_number = $("tr[data1=" + poll_number + "] td:eq(0)").text();
-		        if (!confirm(row_number + "<spring:message code = 'ezPersonal.t159' />")) {
-		            return;
-		        }
-	            
-	            $.ajax({
-	            	type : "POST",
-	            	url : "/admin/ezPersonal/delPoll.do",
-	            	async : false,
-	            	data : {itemSeq : poll_number},
-	            	dataType : "text",
-	            	success : function(result) {
-	            		if (result != "OK") {
-	            			alert("<spring:message code = 'ezPersonal.t237' />");
-	            		} else {
-	            			alert("<spring:message code = 'ezPersonal.t238' />");
-	            			
-	    	                if (document.getElementById("rowdata") != null && typeof (document.getElementById("rowdata").length) == "undefined" && page != 1) {
-	    	                    pagemove(-1);
-	    	                } else {
-	    	                    makelist();
-	    	                }
-	            		}
-	            	}
-	            });
-	        }
-	        
+			
+			
 			var pollList = "";
 			function delete_poll() {
 				var delCnt = 0;
@@ -302,6 +308,9 @@
 							if((cnt - delCnt == 0) && pageNum > 1) {
 								pageNum = pageNum -1 ;
 							}
+							itemseq=0;
+							showPreview(isPreview, 0);
+							rowList = [];
 							makelist();
 						} else {
 							alert("<spring:message code = 'ezPersonal.t237' />");
@@ -310,7 +319,7 @@
 				});
 				pollList = "";
 			}
-
+			
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
 		    }
@@ -454,15 +463,14 @@
 	        });
 		    
 			var conH;
-			function windowResize()
-			{
+			function windowResize() {
 				var doc = window.document;
 				var mainView = doc.getElementById("mainView");
 				var height = doc.documentElement.clientHeight - 122 - document.getElementById("mainmenu").clientHeight;
 				if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 					height = height - 30;
 				}
-
+				
 				conH = height;
 				if(isPreview == 0) {
 					doc.getElementById("contentlist").style.height = height + "px";
@@ -507,9 +515,6 @@
 					case "NONE" : 
 						isPreview = 0;
 						break;
-					case "W" :
-						isPreview = 1;
-						break;
 					case "H" :
 						isPreview = 2;
 						break;
@@ -535,22 +540,22 @@
 			function changeImg(previewNum) {
 				var doc = window.document;
 				var noneImage = doc.getElementById("PreViewNone");
-				var botImage = doc.getElementById("PreViewBottom");
 				var leftImage = doc.getElementById("PreViewleft");
 				
-				noneImage.src = "/images/kr/cm/btn_noframe.gif";
-				botImage.src = "/images/kr/cm/btn_bottomframe.gif";
-				leftImage.src = "/images/kr/cm/btn_leftframe.gif";
+				//noneImage.src = "/images/kr/cm/btn_noframe.gif";
+				noneImage.className = "icon16 btn_noframe";
+				//leftImage.src = "/images/kr/cm/btn_leftframe.gif";
+				leftImage.className = "icon16 btn_leftframe";
 				
 				switch(previewNum) {
 					case 0 :
-						noneImage.src = "/images/kr/cm/btn_onnoframe.gif";
-						break;
-					case 1 :
-						botImage.src = "/images/kr/cm/btn_onbottomframe.gif";
+						//noneImage.src = "/images/kr/cm/btn_onnoframe.gif";
+						noneImage.className = "icon16 btn_onnoframe";
+						
 						break;
 					case 2 :
-						leftImage.src = "/images/kr/cm/btn_onleftframe.gif";
+						//leftImage.src = "/images/kr/cm/btn_onleftframe.gif";
+						leftImage.className = "icon16 btn_onleftframe";
 						break;
 				}
 			}
@@ -575,7 +580,7 @@
 					mainView.style.width = "100%";
 					doc.getElementById("contentlist").style.height = conlistH + "px";					
 					break;
-				case 1 :
+				case 2 :
 					previewW.style.display = "none";
 					doc.getElementById("contentlist").style.height = conlistH + "px";
 					mainView.style.width = "70%";
@@ -584,19 +589,13 @@
 					previewH.style.display = "";
 					previewmail_bar_h.style.height = conlistH + 47 + "px";
 					PreviewRayerH.style.display = "";
+					if(itemseq!=0) {
+						doc.getElementById("ifrmPreViewH").style.display = "";
+					}
 					doc.getElementById("ifrmPreViewH").style.height = conlistH + 47 + "px";
 					break;
-				case 2 :
-					previewH.style.display = "none";
-					mainView.style.width = "100%";
-					doc.getElementById("contentlist").style.height = conlistH/2 + "px";
-					previewW.style.height = conlistH/2 + "px";
-					previewW.style.display = "inline-block";
-					PreviewRayerW.style.display = "";
-					doc.getElementById("ifrmPreViewW").style.height = conlistH/2 + "px";
-					break;
 				}
-
+				
 				// row가 선택 되어 있다면
 				if(itemseq) {
 					showPreview(isPreview, itemseq);
@@ -608,36 +607,42 @@
 				var doc = window.document;
 				var pollVO;
 				var pollResultVO;
-				$.ajax({
-					type: "POST",
-					dataType: "json",
-					async: false,
-					url: "/admin/ezPersonal/getPollItem.do",
-					data: {itemseq: itemseq},
-					success: function(result) {
-						pollVO = result["pollVO"];
-						personResultVO = result["pollResultVO"];
-					}
-				});
+				
+				if(itemseq!=0){
+					$.ajax({
+						type: "POST",
+						dataType: "json",
+						async: false,
+						url: "/admin/ezPersonal/getPollItem.do",
+						data: {itemseq: itemseq},
+						success: function(result) {
+							pollVO = result["pollVO"];
+							personResultVO = result["pollResultVO"];
+						}
+					});
+				} 
 				
 				
-				if(isPreview == 1) {
-					// 가로 모드
-					doc.getElementById('Preview_HeaderH').style.display ="inline-block";
-					doc.getElementById('Preview_HeaderH').title = pollVO.pollTitle;
-					doc.getElementById('PreH_sub_subject').innerHTML = pollVO.pollTitle;
-					PrevViewFormH.itemSeq.value = itemseq;
-					PrevViewFormH.submit();
-					// PreH_subject
-				} else if(isPreview == 2) {
-					// 세로 모드
-					doc.getElementById('Preview_HeaderW').style.display ="inline-block";
-					doc.getElementById('Preview_HeaderW').title = pollVO.pollTitle;
-					doc.getElementById('PreW_sub_subject').innerHTML = pollVO.pollTitle;
-					PrevViewFormW.itemSeq.value = itemseq;
-					PrevViewFormW.submit();
+				if(itemseq == 0) {
+					doc.getElementById('Preview_HeaderH').title = "";
+					doc.getElementById('PreH_sub_subject').innerHTML = "";
+					doc.getElementById('Preview_HeaderW').title = "";
+					doc.getElementById('PreW_sub_subject').innerHTML = "";
+					doc.getElementById('Preview_HeaderH').style.display ="none";
+					doc.getElementById('Preview_HeaderW').style.display ="none";
+					doc.getElementById("ifrmPreViewH").style.display = "none";
+					doc.getElementById("ifrmPreViewW").style.display = "none";
 				} else {
-					// none 모드
+					if(isPreview == 2) {
+						// 세로 모드
+						doc.getElementById('Preview_HeaderH').style.display ="inline-block";
+						doc.getElementById('Preview_HeaderH').title = pollVO.pollTitle;
+						doc.getElementById('PreH_sub_subject').innerHTML = pollVO.pollTitle;
+						PrevViewFormH.itemSeq.value = itemseq;
+						PrevViewFormH.submit();
+					} else {
+						// none 모드
+					}
 				}
 			}
 			
@@ -686,11 +691,13 @@
 				<ul style="margin-top:15px">	            	
 					<li class="important"><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
 					<li><span onclick="delete_poll()">삭제</span></li>
-					<li id="right">
-						<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
-						<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
-						<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
-					</li>
+					<div class="sub_frameIcon" style="float:right;">	
+						<div class="sub_frameIconUL" style="width:100% !important;">
+							<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
+							<p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
+						</div>
+					</div>
+			 </div>
 				</ul>
 			</div>
 			
@@ -716,9 +723,9 @@
 						<span style="width: 100%; height: 100px; display: block;">
 							<span class="previewmail_info" style="display: block; width: 100%; border-top: 1px solid #e8e8e8; ">
 								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
-									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 0px 0px 0px 0px; height: 36px; line-height: 37px;">
+									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 10px 0px 0px 0px; height: 36px; line-height: 37px;">
 										<span class="icon_btn" style="margin-left:13px;"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
-											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
+											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" style="position:absolute; margin-top:-6px;" class="title_blodtxt"></span></span>
 									</p>
 									<span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
 								</div>
@@ -737,9 +744,9 @@
 						<span style="width: 100%; height: 100px; display: block;">
 							<span class="previewmail_info" style="display: block; width: 100%;">
 								<div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; width: 100%; background-color: #f1f3f5; margin-top: -3px; display: none;">
-									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 0px 0px 0px 0px; height: 36px; line-height: 37px;">
+									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 10px 0px 0px 0px; height: 36px; line-height: 37px;">
 										<span class="icon_btn" style="margin-left: 13px;"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
-											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
+											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" style="position:absolute; margin-top:-6px;" class="title_blodtxt"></span></span>
 									</p>
 									<span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date" style="display: none;"></span></span></span>
 								</div>
@@ -751,11 +758,11 @@
 			</div>
 		</form>
 		
-		<form name="PrevViewFormH" action="pollResult.do" method="get" target="ifrmPreViewH" >
+		<form name="PrevViewFormH" action="/ezPersonal/pollResult.do" method="get" target="ifrmPreViewH" >
 			<input  type="hidden" name="itemSeq" value="">
 			<input  type="hidden" name="flag" value="preview">
 		</form>
-		<form name="PrevViewFormW" action="pollResult.do" method="post" target="ifrmPreViewW">
+		<form name="PrevViewFormW" action="/ezPersonal/pollResult.do" method="post" target="ifrmPreViewW">
 			<input  type="hidden"  name="itemSeq" value="">
 			<input  type="hidden" name="flag" value="preview">
 		</form>
