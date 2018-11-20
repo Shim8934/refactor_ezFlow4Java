@@ -11,7 +11,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		
+
 		<script type="text/javascript">
 			var UserAgentState = navigator.userAgent.toLowerCase();
 		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
@@ -31,7 +31,7 @@
 			window.onload = function () {
 				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "선택된 공지사항이 없습니다.";
 			}
-			
+
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 					return false;
@@ -39,7 +39,7 @@
 					return true;
 				}
 			};
-			
+
 			$(document).ready(function(){
 				if (document.getElementById("ListCompany").length == 0) {
 					alert("<spring:message code = 'ezPersonal.t106' />");
@@ -49,8 +49,8 @@
 				}
 				getPopupConfig();
 			});
-			
-			
+
+
 			function makelist() {
 				$.ajax({
 					type : "POST",
@@ -66,7 +66,7 @@
 					}
 				});
 			}
-			
+
 		    function event_PopupList(result) {
 		        try {
 		            document.getElementById("AccessList").innerHTML = "";
@@ -92,6 +92,7 @@
 					listview.DataBind("AccessList");
 					//listview.DataSource(xmldom);
 					listview.RowDataBind();
+					checkbox_header();
 					xmldomNode = null;
 					
 					if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
@@ -110,7 +111,7 @@
 					
 					//2018-08-09 김보미 - 데이터가 없을 경우 출력
 	                if (headerData.getElementsByTagName("ROW").length == 0) {
-	                	var TR_noItems = "<tr id='Link_TR_noItems'><td style='text-align: center;' colspan='6'>" + "<spring:message code = 'ezPersonal.t20005' />" + "</td></tr>";
+	                	var TR_noItems = "<tr id='Link_TR_noItems'><td style='text-align: center;' colspan='7'>" + "<spring:message code = 'ezPersonal.t20005' />" + "</td></tr>";
 		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
 	                }
 	                makePageSelPage();
@@ -118,6 +119,23 @@
 	
 		        }
 		    }
+		    
+			var cnt;
+			function checkbox_header() {
+				var doc = window.document;
+				var th = doc.getElementById("AccessListView_TH_0");
+				var acList = doc.getElementById("AccessListView");
+				th.innerHTML = "<input type='checkbox' id = 'checkAll'></input>";
+				
+				cnt = acList.children[1].childElementCount;
+				
+				var i = 0;
+				for(i;i<cnt;i++) {
+					var seq = acList.children[1].children[i].children[0].innerHTML;
+					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq +"'></input>";
+				}
+			//	checkboxHeaderClick();
+			}
 	
 		    function company_change() {
 				makelist();
@@ -480,6 +498,9 @@
 			<LISTVIEWDATA>
 				<HEADERS>
 					<HEADER>
+						<WIDTH>20</WIDTH>
+					</HEADER>
+					<HEADER>
 						<NAME><spring:message code = 'ezPersonal.t166' /></NAME>
 						<WIDTH>40</WIDTH>
 					</HEADER>
@@ -496,11 +517,11 @@
 					  	<WIDTH>80</WIDTH>
 					</HEADER>
 				  	<HEADER>
-						<NAME><spring:message code = 'ezPersonal.t169' /></NAME>
+						<NAME>진행여부</NAME>
 						<WIDTH>80</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code = 'ezPersonal.t99' /></NAME>
+						<NAME>사용여부</NAME>
 					    <WIDTH>80</WIDTH>
 					</HEADER>
 			    </HEADERS>
@@ -518,7 +539,9 @@
 			</h1>
 			<div id="mainmenu">
 				<ul style="margin-top:15px">	            	
-					<li class="important"><span onClick="add_popup()"><spring:message code = 'ezPersonal.t158' /></span></li>
+					<li class="important"><span onClick="add_popup()">등록</span></li>
+					<li><span onclick="delete_poll()">수정</span></li>
+					<li><span onclick="delete_poll()">삭제</span></li>
 					<div class="sub_frameIcon" style="float:right;">	
 						<div class="sub_frameIconUL" style="width:100% !important;">
 							<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>

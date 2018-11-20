@@ -748,6 +748,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		int i=0;
 		for (PersonalPopupVO vo : list) {
 			result.append("<ROW>");
+			result.append("<CELL>"); 
+			result.append("<VALUE>" + vo.getItemSeq() +"</VALUE>");
+			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");								// itemSeq
+			result.append("</CELL>");
 			result.append("<CELL>");
 			//2018-08-08  김보미 - rownumber추가
 //			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");

@@ -634,7 +634,7 @@
 			<LISTVIEWDATA>
 				<HEADERS>
 					<HEADER>
-						<WIDTH>40</WIDTH>
+						<WIDTH>20</WIDTH>
 					</HEADER>
 					<HEADER>
 						<NAME><spring:message code = 'ezPersonal.t166' /></NAME>
@@ -670,7 +670,7 @@
 			</h1>
 			<div id="mainmenu">
 				<ul style="margin-top:15px">	            	
-					<li class="important"><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
+					<li class="important"><span onclick="add_poll()">등록</span></li>
 					<li><span onclick="delete_poll()">삭제</span></li>
 					<div class="sub_frameIcon" style="float:right;">	
 						<div class="sub_frameIconUL" style="width:100% !important;">
