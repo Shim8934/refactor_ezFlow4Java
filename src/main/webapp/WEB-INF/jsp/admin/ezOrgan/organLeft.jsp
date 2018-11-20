@@ -119,6 +119,12 @@
 				    case 31:
 				    	url = "/admin/ezOrgan/jobInfoList.do";
 				    	break;
+				    case 32:
+				    	url = "/admin/ezEmail/signatureMain.do";
+					 	break;
+				    case 33:
+					 	url = "/admin/ezEmail/showSharedMailboxList.do";
+				    	break;
 				}
 				window.open(url,"right");
 			}
@@ -143,7 +149,7 @@
 		<div id="left" class="lnb" style="overflow: auto">
   			<div class="admin_left_title" title="<spring:message code='main.t23' />">
 	  			<c:if test="${dotNetIntegration != 'YES'}"><spring:message code='main.t23' /></c:if>
-	  			<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.t24' /></c:if>
+	  			<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.turl = "/admin/ezEmail/signatureMain.do";24' /></c:if>
   			</div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 	  			<c:if test="${dotNetIntegration != 'YES'}">
@@ -235,6 +241,12 @@
 	  				<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
 	    			<ul></ul>
 	  			</h2>
+  				<c:if test="${useSignatureTemplate == 'YES'}">
+  					<h2>
+						<span onClick="goPage(32)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.jje05'/></span>
+			    		<ul></ul>
+					</h2>
+				</c:if>
 	  			<c:if test="${cChk == '1'}">
 				<h2>
 					<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
@@ -260,7 +272,7 @@
 	                <li><span style="display:inline-block;width:100%;" onclick="goPage(29)"><spring:message code='ezStatistics.kyj2' /></span></li>
 			    </ul>			            				
 	            </c:if>		
-            </div>				
+            </div>
 		</div>
         <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
 	</body>

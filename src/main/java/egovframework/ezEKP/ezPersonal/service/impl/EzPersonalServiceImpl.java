@@ -622,14 +622,15 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 	
 	@Override
-	public String getShareApprovalList (String userID, String offset, int tenantID) throws Exception {
+	public String getShareApprovalList (String userID, String lang, String offset, String companyID, int tenantID) throws Exception {
 		logger.debug("getShareApprovalList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("offset", offset);
 		map.put("tenantID", tenantID);
-		
+		map.put("lang", commonUtil.getMultiData(lang, tenantID));
+		map.put("companyID", companyID);
 		List<PersonalShareApprovalVO> shareApprovalList = ezPersonalDAO.getShareApprovalList(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -645,14 +646,16 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 	
 	@Override
-	public String insertShareApproval (String userID, String shareUserID, int tenantID) throws Exception {
+	public String insertShareApproval (String userID, String shareUserID, String shareUserDeptID, String companyID, int tenantID) throws Exception {
 		logger.debug("insertShareApproval started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("shareUserID", shareUserID);
+		map.put("shareUserDeptID", shareUserDeptID);
 		map.put("tenantID", tenantID);
 		map.put("shareDate", commonUtil.getTodayUTCTime(""));
+		map.put("companyID", companyID);
 		
 		ezPersonalDAO.insertShareApproval(map);
 		
@@ -661,17 +664,41 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 	
 	@Override
-	public String deleteShareApproval (String userID, String shareUserID, int tenantID) throws Exception {
+	public String deleteShareApproval (String userID, String shareUserID, String companyID, int tenantID) throws Exception {
 		logger.debug("deleteShareApproval started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("shareUserID", shareUserID.split(",")); //'id1', 'id2'형태로?? 아니면 배열해서 iterate
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		
 		ezPersonalDAO.deleteShareApproval(map);
 		
 		logger.debug("deleteShareApproval ended");
 		return "OK";
+	}
+	
+	@Override
+	public String getCheckDuplShareUser (String userID, String shareUserID, String companyID, int tenantID) throws Exception {
+		logger.debug("getCheckDuplShareUser started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("shareUserID", shareUserID);
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
+		
+		String rtnValue = "";
+		int result = ezPersonalDAO.getCheckDuplShareUser(map);
+		
+		if (result == 0) {
+			rtnValue = "Ok";
+		} else {
+			rtnValue = "Dupl";
+		}
+		
+		logger.debug("getCheckDuplShareUser ended.");
+		return rtnValue;
 	}
 }

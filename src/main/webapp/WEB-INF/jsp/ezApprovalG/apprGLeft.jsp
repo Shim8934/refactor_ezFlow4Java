@@ -154,7 +154,7 @@
 			        if (parseInt(pListTypeValue) < 10) {
 			            window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
 			
-			            if (pListTypeValue == "1") {
+			            if (pListTypeValue == "1" || pListTypeValue == "11") {
 			                setPresentValue("<spring:message code='ezApprovalG.t1747'/>");
 			                document.getElementById('APPROVAL1').click();
 			                //document.getElementById('APPROVAL1').parentElement.setAttribute("class", "on");
@@ -797,7 +797,6 @@
 		            	else
 		            		count11.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(11)) + ")";
 		            }
-		         
 		        } catch (e) { }
 		    }
 		
@@ -1405,7 +1404,7 @@
 				<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><span style="width:100%;display:inline-block;" id="APPROVAL1"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1747'/><span id=count1></span></span></li>
 				
 				<c:if test="${approvalFlag == 'S' && useShareApproval == 'YES' }">
-					<li onclick="setPresentValue('공유결재문서');convMain('11','')"><span style="width:100%;display:inline-block;" id="APPROVAL11"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon">공유결재문서<span id=count11></span></span></li>
+					<li onclick="setPresentValue('<spring:message code='ezApprovalG.bhs03'/>');convMain('11','')"><span style="width:100%;display:inline-block;" id="APPROVAL11"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.bhs03'/><span id=count11></span></span></li>
 				</c:if>
 				<li onclick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><span style="width:100%;display:inline-block;" id="APPROVAL2"><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1706'/><span id=count2></span></span></li>
 

@@ -42,6 +42,7 @@
 		    var isbigyn = "N";
 			var alertCnt = 1;
 			var currUid = 0;
+		    var shareId = "${shareId}";
 		    
 		    function onDrop(evt) {
 		       

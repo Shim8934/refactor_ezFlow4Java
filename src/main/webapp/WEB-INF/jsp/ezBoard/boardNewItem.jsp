@@ -121,6 +121,7 @@
 		    var rsa = new RSAKey();
 		    var orgCompanyID = "${orgCompanyID}";
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+		    var mailShareId = "${mailShareId}";
 		    
 		    window.onload = function () {		    	
 		        if (pUseBackGround == "TRUE") {
@@ -1006,9 +1007,15 @@
 		        var FileName = "";
 		        var FileURL = "";
 		        var ItemID = "";
-		        MailxmlHTTP.open("POST", "/ezEmail/mailReadBoard.do", false);
-		
+		        var requestUrl = "/ezEmail/mailReadBoard.do";
+		        
+		        if (typeof(mailShareId) != "undefined" && mailShareId != "") {
+            		requestUrl += "?shareId=" + encodeURIComponent(mailShareId);
+				}
+		        
+		        MailxmlHTTP.open("POST", requestUrl, false);
 		        MailxmlHTTP.send(strQuery);
+		        
 		        if (MailxmlHTTP.status == 200) {
 		            var mailXml = loadXMLString(MailxmlHTTP.responseText);
 		            document.getElementById('txtTitle').value = "<spring:message code='ezBoard.t409' />" + getNodeText(mailXml.getElementsByTagName("SUBJECT").item(0));

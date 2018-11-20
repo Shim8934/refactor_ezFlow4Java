@@ -758,6 +758,7 @@
 		                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(jobTitle) + "</DATA3>";
 		                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(jobTitle2) + "</DATA4>";
 		                pparsingXML = pparsingXML + "<DATA5>" + MakeXMLString(dept[1]) + "</DATA5>";
+		                pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(jobID) + "</DATA6>";
 		                pparsingXML = pparsingXML + "</CELL></ROW>";
 		                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		                Resultxml = loadXMLString(pparsingXML2);
@@ -816,6 +817,7 @@
 	                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(p_ListOrderObject, "_data2"));
 	                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(Addjoblistview.GetDataRows()[i], "data1"));
 	                createNodeAndInsertText(xmlDom, objNode, "TITLE", GetAttribute(Addjoblistview.GetDataRows()[i], "data3") + ":" + GetAttribute(Addjoblistview.GetDataRows()[i], "data4"));
+	                createNodeAndInsertText(xmlDom, objNode, "JOBID", GetAttribute(Addjoblistview.GetDataRows()[i], "data6"));
 
 	                AddjobText = AddjobText + "- " + GetAttribute(Addjoblistview.GetDataRows()[i], "data5") + " (" + GetAttribute(Addjoblistview.GetDataRows()[i], "data3") + ":" + GetAttribute(Addjoblistview.GetDataRows()[i], "data4") + ")<BR>";
 	            }

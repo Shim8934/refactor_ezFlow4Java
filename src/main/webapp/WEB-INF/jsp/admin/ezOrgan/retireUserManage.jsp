@@ -27,6 +27,7 @@
 			var strListInfo = "";
 			var CheckBoxArr = new Array();
 			var companyId = "${companyId}";
+			var changePassLength = 0;
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -254,6 +255,8 @@
 			    if (CheckBoxArr.length == 0) {
 			        alert("<spring:message code='ezOrgan.t39' />"); 
 			        return;
+			    } else {
+				    changePassLength = CheckBoxArr.length; 
 			    }
 			    
 		        inputpassword_dialogArguments[1] = mod_password_Complete;

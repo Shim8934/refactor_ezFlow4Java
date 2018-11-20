@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
@@ -82,6 +83,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzEmailService")
 	private EzEmailService ezEmailService;
+	
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -170,6 +174,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				
 				dataObject.put("resourceList", resourceList);
 				dataObject.put("resourceCnt", resourceCnt+"");
+				
 			} else {//timeline
 				String utcSessionDate = request.getParameter("sessionDate");
 				String utcNowDate = commonUtil.getTodayUTCTime("");

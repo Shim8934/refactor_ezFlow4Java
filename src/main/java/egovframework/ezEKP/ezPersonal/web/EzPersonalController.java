@@ -1631,7 +1631,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String result = ezPersonalService.getShareApprovalList(userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
+		String result = ezPersonalService.getShareApprovalList(userInfo.getId(), userInfo.getLang(), userInfo.getOffset(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("shareApprovalList ended");
 		return result;
@@ -1647,8 +1647,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		String shareUserId = req.getParameter("shareUserId");
+		String shareUserDeptId = req.getParameter("shareUserDeptId");
 		
-		ezPersonalService.insertShareApproval(userInfo.getId(), shareUserId, userInfo.getTenantId());
+		ezPersonalService.insertShareApproval(userInfo.getId(), shareUserId, shareUserDeptId, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("saveShareApproval ended");
 		return "OK";
@@ -1665,7 +1666,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String shareUserId = req.getParameter("shareUserId");
 		
-		ezPersonalService.deleteShareApproval(userInfo.getId(), shareUserId, userInfo.getTenantId());
+		ezPersonalService.deleteShareApproval(userInfo.getId(), shareUserId, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("removeShareApproval ended");
 		return "OK";
@@ -1822,4 +1823,22 @@ public class EzPersonalController extends EgovFileMngUtil {
 		logger.debug("setMobileDeviceInfo ended.");
 	}
 	
+	/**
+	 * 공유결재자 중복확인
+	 */
+	@RequestMapping(value = "/ezPersonal/checkDuplShareUser.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String checkDuplShareUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("checkDuplShareUser started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String shareUserId = req.getParameter("shareUserId");
+		
+		String rtnValue = "";
+		
+		rtnValue = ezPersonalService.getCheckDuplShareUser(userInfo.getId(), shareUserId, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("checkDuplShareUser ended");
+		return rtnValue;
+	}
 }

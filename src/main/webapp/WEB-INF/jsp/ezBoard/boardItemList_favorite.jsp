@@ -92,8 +92,11 @@
 						if (document.getElementById("overSpan")) {
 							document.getElementById("overSpan").className = "";
 						}
-					} else {					
-						document.getElementById("overSpan").className = "tabon";
+					} else {
+						if (document.getElementById("overSpan")) {
+							document.getElementById("overSpan").className = "tabon";
+						}
+						
 						Tab1_SelectID = "overSpan";
 					}
 					
