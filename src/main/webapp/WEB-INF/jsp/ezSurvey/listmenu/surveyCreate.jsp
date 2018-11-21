@@ -1,0 +1,35 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"  %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><spring:message code="ezSurvey.t34"/></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="${util.addVer('ezSurvey.css', 'msg')}"       type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezSurvey/survey.css')}"  type="text/css">
+	</head>
+	<body class="surveyBody">
+		<div class="surveyCrtTtl">
+			<div class="sryFirst"></div>
+			<div class="sryTxt"><spring:message code='ezSurvey.t34'/></div>
+		</div>
+		
+		<div class="headpanel">
+			<span class="crust selected">
+				<a class="crumb"><span><spring:message code='ezSurvey.t35'/></span></a>
+				<span class="arrow"><span></span></span>
+			</span>
+			<span class="crust">
+				<a class="crumb"><span><spring:message code='ezSurvey.t36'/></span></a>
+				<span class="arrow"><span></span></span>
+			</span>
+			<span class="crust">
+				<a class="crumb"><span><spring:message code='ezSurvey.t37'/></span></a>
+				<span class="arrow"><span></span></span>
+			</span>
+		</div>
+		<div style="height: 400px; /* box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; */ border: 1px solid #d7d7d7;"></div>
+	</body>
+</html>

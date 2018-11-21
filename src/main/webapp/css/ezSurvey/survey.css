@@ -1,0 +1,137 @@
+.left_survey span {background: url(/images/survey/left_survey.png) no-repeat left center; display: inline-block; height: 50px; line-height: 48px; font-weight: normal; color: #fff; margin: 0px 0px 0px 16px; padding: 0px 0px 0px 33px; text-align: center; font-family: Malgun Gothic; font-size: 20px;}
+.left_survey {height: 52px; background: #0470e4;}
+.overY {overflow-y: hidden !important;}
+.surveyConfig {margin: 0px 10px;}
+.surveyConfig .surveyBttn {width: 680px; text-align: center;}
+.surveyConfig .surveyBttn a.imgbtn {box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
+.surveyConfig .surveyBttn a.imgbtn span {height: 24px; line-height: 24px; font-weight: bold; font-size: 12px; color: #000;}
+.surveyPrevMode {width: 100px;}
+.surveySelectConf {width: 50px;}
+.content.config {width: 680px; margin-top: 5px;}
+.tabIfrm {width: 100%; height: 100%; border: none;}
+.surveyBody {background-color: rgb(244, 245, 245); margin: 10px 10px 0px;}
+.surveyCrtTtl {height: 50px; background-color: #fff; box-shadow: rgba(0, 0, 0, 0.69) 0px 3px 10px 0px; display: flex;}
+.surveyCrtTtl .sryFirst {width: 10px; background-color: rgba(211, 84, 0, 0.64);}
+.surveyCrtTtl .sryTxt {height: 50px; line-height: 50px; padding: 0px 10px; font-weight: bold; font-size: 20px;}
+
+.surveyTtlInf {font-weight: normal; color: #666;}
+.surveyTtlInf >span {color: #017BEC !important; font-weight: bold !important;}
+.topSearchSpan {float: right; font-weight: normal; color: black;}
+.topSearchSpan >select {height: 27px; margin-right: 0px; border: 1px solid #cbcbcb; min-width:80px; outline: none;}
+.topSearchSpan >input[type='text'] {width: 150px; ime-mode: active; height: 27px; border: 1px solid #cbcbcb; border-right: 0px; vertical-align: top; outline: none; padding: 0px 3px;}
+.topSearchSpan >a {float: right;}
+.topSearchSpan >a img {border: none; cursor: pointer;}
+.btnimg.survey {width: 22px; height: 20px;}
+.loadingPanel {width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; display: none; z-index: 5000;}
+.loadingProgress {width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;}
+.loadingProgress >img {padding-top: 20px;}
+.loadingProgress >div {padding-top: 10px; vertical-align: middle; font-weight: bold; font-size: 1.2em;}
+
+.surveyTbl {width: 100%; text-algin: center;}
+.surveyTbl th {cursor: pointer !important;}
+.surveyTbl .inputTh {width: 20px;}
+.inputTh >img {vertical-align: middle;}
+.surveyTbl .noTh   {width: 20px; text-align: center;}
+.surveyTbl .ttlTh  {width: 60%;}
+.surveyTbl .createTh {width: 20%;}
+.surveyTbl .endDateTh {width: 20%;}
+.surveyTbl .statisTh, .surveyTbl .anoynmTh, .surveyTbl .publicTh, .surveyTbl .targetTh {width: 80px; text-align: center;}
+
+.searchPanel {z-index: 2000; position: fixed; border:1px solid #666; background-color: #fff;; border-radius: 5px; height: auto; width: 464px;}
+.searchPanel h1 {margin-top: 0px !important;}
+.searchPanel.off {display: none;}
+
+.closeImgBttn {position: absolute; right: 10px; top: 10px;}
+.closeImgBttn >ul {margin: 0px; padding: 0px; list-style: none;}
+.closeImgBttn >ul >li {display: block; float: left; margin: 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
+.closeImgBttn >ul >li >span {display: inline-block; width: 25px; height: 28px; background-image: url(/images/close_xBtn.png); background-repeat: no-repeat; background-position: 4px 6px;}
+
+.searchtable {border-collapse: collapse; width:100%; margin-bottom: 10px;}
+.searchtable .layerHeader >img {vertical-align: middle; padding-bottom: 1px; width: 16px;}
+
+.searchTblTd {border:1px solid #b6b6b6; background-color:#fff;}
+.searchTblTd input[type='text'] {height: 23px; width: 100%; outline: none; padding: 0px 5px;}
+.searchTblTd input[type='text']:focus {border-color:#66afe9; outline:0; -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6); box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
+.searchTblTd .srchDate {width: 100px !important; text-align: center;}
+.searchTblTd >div {display: flex; align-items: center;}
+.searchTblTd .searchName {flex: 1; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; padding-left: 5px;}
+
+.popupMenu {background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top; margin: 0px; padding: 5px 10px 10px;}
+.popupMenu.searchDiv {border-radius: 5px;}
+.popupMenu .srchBttnDiv {margin: 0px 0px 0px -10px; margin-top: 10px; height: 28px !important; background: none; border: none; border-top: 1px solid #eee; padding: 7px 0px; background-color: #fcfcfc; position: fixed; text-align: center; bottom: 0px; width: 100%;}
+.srchBttnDiv {text-align: center; margin: -9px; margin-top: 10px; padding: 7px; border-top: 1px solid #eee; background-color: #fcfcfc;}
+.srchBttn {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding-left: 12px; vertical-align: top; cursor: pointer; margin-bottom: 2px; border: 1px solid #ccc; border-radius: 2px; background-color: white; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
+.srchBttn span {background-repeat: no-repeat; height: 20px; padding-right: 12px; font: 12px gulim; letter-spacing: -1; vertical-align: top; height: 24px; line-height: 24px; font-weight: solid; font-size: 12px; color: #000;}
+.list_element.survey {width: 100%; border-spacing: 0px; border-collapse: collapse; border:none;}
+.list_element.survey select {width: 40px; height: 20px;}
+.surveycol {width: 80px;}
+.surveyTitle {line-height: 20px;}
+
+.viewPopupMain {width:150px; position: absolute; background-color:#fff; z-index: 2500;}
+.viewPopupMain .popupwrap1 {background-color:#fff; border: 1px solid #666a64; padding: 0px; margin: 0px; position: relative;}
+.viewPopupMain .popupwrap2 {border: 2px solid #e5e5e5; padding: 10px;}
+
+.divPrevH {width: 100%; overflow: hidden; flex: 1; display: flex;}
+.mainPrevH {width: 100%; position: relative; padding-top: 5px;}
+.mainPrevH >div {height: 100%; display: flex; flex-flow: column;}
+.prevHeaderCabW >div, .prevHeaderCabH >div {background-color: #f8f8fa; border-bottom: solid 1px #e8e8e8; position: relative;}
+.prevHeaderCabW >span, .prevHeaderCabH >span {margin-top: 50px;height: 10px; display: inline-block; text-align: center; width: 100%;}
+.prevHeaderCabW {border-top: 1px solid #ddd;}
+.divPrevW {height: 100%; overflow: hidden; vertical-align: top; flex: 1; display: flex; margin-left: 5px;}
+.mainPrevW {height: 100%; width: 100%; position: relative;}
+.mainPrevW >div {width: 100%; height: 100%; display: flex; flex-flow: column;}
+.prevTitle {width: 100%; color: #333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px; clear: both; padding: 0px; height: 36px; line-height: 36px; display: flex;}
+.prevTitle .prevIcon {background-image: url('/images/kr/cm/btn_newpopup.gif'); background-repeat: no-repeat; background-position: center left; margin-left: 14px; padding-right: 5px; display: inline-block; float: left; cursor: pointer; height: 100%; width: 27px;}
+.prevTitle .cabTitleTxt {height: 100%; color: #333; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; flex: 1;}
+.preDate {display: inline-block; width: 150px; font-size: 12px; color: #333; text-align: center;}
+.prevItem {margin: 0px; padding: 4px 10px 2px 14px; font-size: 12px; color: #666;}
+.prevItem dt {font-weight: normal; margin: 0px 10px 0px 0px; line-height: 18px; padding: 0px 0px 2px 0px; color: #919293;}
+.prevItem dd {margin: -19px 0px 0px 0px; padding: 0px 0px 2px 60px; line-height: 18px; word-break: break-all;}
+.prevItem .ddRes {padding: 0px 0px 2px 70px !important;}
+.zoomDiv {text-align: left; padding: 5px; margin: 0px; line-height: 0px;}
+.zoomDiv >img {cursor: pointer;}
+
+.headpanel {height: 40px; margin: 15px 0px 1px;}
+.headpanel .crust a.crumb>span {display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 100%; font-size: 16px; font-weight: bold;}
+.headpanel .crust:hover a.crumb, .headpanel .crust.selected a.crumb {background-color: rgb(230, 126, 34); color: #fff;}
+.headpanel .crust a.crumb {cursor: pointer; font-weight: bold; text-decoration: none; background-color: #fff; padding: 0px 8px 0px 25px; margin-bottom: -1px; border-bottom: 1px solid #d7d7d7; outline: 0 none; -moz-outline-style: 0 none; display: block; line-height: 40px; overflow: hidden; _border-bottom: none; height: 40px;}
+.headpanel .crust {display: block; float: left; position: relative; zoom: 1; max-width: 50%; clear: none; border: 1px solid #d7d7d7; border-left: none; border-right: none;}
+.headpanel .crust .arrow {border: 20px solid transparent; border-right: 1px none black; border-left-color: #d7d7d7; display: block; position: absolute; right: -20px; top: 0px; z-index: 50; width: 0px; height: 0px;}
+.headpanel .crust .arrow span {border: 20px solid transparent; border-right: 1px none black; border-left-color: #fafafa; display: block; position: absolute; left: -21px; top: -20px; z-index: 51; white-space: nowrap; overflow: hidden; text-indent: 9999px; width: 0px; height: 0px;}
+.headpanel .crust:hover .arrow span, .headpanel .crust.selected .arrow span {border-left-color: rgb(230, 126, 34);}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
