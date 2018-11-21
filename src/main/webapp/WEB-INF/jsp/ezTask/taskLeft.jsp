@@ -202,17 +202,17 @@
 		                	<span>
 		                    	<span>
 		                        	<div class="node_div" id='Task' onclick="Function_Flag(3)">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_task_general"></span><span class="h2_text"><spring:message code='ezTask.t200901' /><span id="taskCnt" style="padding-left:5px"></span></span>
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_task_general"></span><span class="h2_text"><spring:message code='ezTask.t200901' /><span id="taskCnt" style="padding-left:10px"></span></span>
 		                            </div>
 		                    	</span>
 		                        <span>
 		                        	<div class="node_div" id="Task2" onclick="Function_Flag(12)">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_task_repeat"></span><span class="h2_text"><spring:message code='ezTask.t200902' /><span id="task2Cnt" style="padding-left:5px"></span></span>
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_task_repeat"></span><span class="h2_text"><spring:message code='ezTask.t200902' /><span id="task2Cnt" style="padding-left:10px"></span></span>
 		                            </div>
 		                    	</span>
 		                        <span>
 		                        	<div class="node_div" id="Task3" onclick="Function_Flag(13)">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_task_out"></span><span class="h2_text"><spring:message code='ezTask.t200903' /><span id="task3Cnt" style="padding-left:5px"></span></span>
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_task_out"></span><span class="h2_text"><spring:message code='ezTask.t200903' /><span id="task3Cnt" style="padding-left:10px"></span></span>
 		                            </div>
 		                    	</span>
 		                    </span>        

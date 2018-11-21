@@ -515,19 +515,19 @@
 		    	totalPages = data.totalPages;
 		    	makePageSelPage();
 		    	
-		    	infoStr += ' [<spring:message code="ezAttitude.t76"/> <span style="color:#017BEC;">' + data.totalAtt;
+		    	infoStr += '&nbsp;&nbsp;<span style="color:#017BEC;">' + data.totalAtt;
 		    	
 		    	if (data.startDate != "" && data.endDate != "") {
-		    		infoStr += '</span> <spring:message code="ezAttitude.t78"/>';
+		    		infoStr += '</span>';
 		    		if (checkAdmin != 'true') {
-		    			infoStr += ' - ' + data.startDate.substring(0,4) + '<spring:message code="ezAttitude.t66"/>' + 
+		    			infoStr += ' / ' + data.startDate.substring(0,4) + '<spring:message code="ezAttitude.t66"/>' + 
 				    	data.startDate.substring(5,7) + '<spring:message code="ezAttitude.t67"/>' + 
 				    	data.startDate.substring(8,10) + '<spring:message code="ezAttitude.t68"/>~';
 				    	infoStr += data.endDate.substring(0,4) + '<spring:message code="ezAttitude.t66"/>' + 
 				    	data.endDate.substring(5,7) + '<spring:message code="ezAttitude.t67"/>' + 
 				    	data.endDate.substring(8,10) + '<spring:message code="ezAttitude.t68"/>]</span>';	
 		    		} else {
-		    			infoStr += ']</span>'
+		    			infoStr += '</span>'
 		    		}
 		    	} else {
 		    		infoStr += '</span> <spring:message code="ezAttitude.t78"/>]';
@@ -1124,7 +1124,7 @@
 </head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
 		<h1>
-			<spring:message code = 'ezAttitude.t7' /> - <span id="mailBoxInfo"></span>
+			<spring:message code = 'ezAttitude.t7' /><span id="mailBoxInfo"></span>
 			<select class="companySelect" name="ListCompany" id="ListCompany" onchange="company_change()">
 				<c:forEach var = "companyItem" items="${list }">
 					<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>

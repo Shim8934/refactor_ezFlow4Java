@@ -36,6 +36,10 @@
 	      	var useMailReceiveScreen = "${useMailReceiveScreen}";
 	      	var operatorMailAddress = "${operatorMailAddress}";
 	      	var receiveText = "<spring:message code='ezEmail.t516' />";
+	      	var shareId = "";
+	      	var deletePermission = "";
+	      	var sendPermission = "";
+	      	var treeviewStr = "PostTreeView";
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -60,16 +64,16 @@
 	                document.body.style.UserSelect = 'none';
 	            }
 	            
-// 	            if (document.documentElement.clientHeight > 900) {
-// 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";
-// 	                /* document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px"; */
-// 	            }
-// 	            else {
-// 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.33) + "px";
-// 	                /* document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.38 + "px"; */
-// 	            }
-	            
-	            document.getElementById("mailexportall").style.display = "none";
+	            /* 2018-05-23 이소담 - 편지함 목록 스크롤 제거 
+	            if (document.documentElement.clientHeight > 900) {
+	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";
+	                document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px";
+	            }
+	            else {
+	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";
+	                document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px";
+	            } */
+
 	            Function_Flag(funcCode);
 	            //LoadAddressTree(true);
 	            previewSubTreeCall();
@@ -131,9 +135,16 @@
 	        
 	        
 	        // 수정 수아 재은
-	        function detailView() {
+	        function detailView(_shareId) {
+	        	
+	        	var requestUrl = "/ezEmail/mailGetUse.do";
+	        	
+	        	if (typeof(_shareId) != "undefined" && _shareId != "") {
+	            	requestUrl += "?shareId=" + encodeURIComponent(_shareId);
+	            }
+	        	
                 $.ajax({
-                    url: "/ezEmail/mailGetUse.do",
+                    url: requestUrl,
                     type: "POST",
                     dataType: "xml",
                     error : function(error) {
@@ -280,8 +291,8 @@
 	            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
 	                nodeIdx = arguments[0].nodeIdx;
 	            }
-	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true, false);
-	            PostTreeView.putchildxml(nodeIdx, childxml);
+	            var childxml = get_childXML(eval(treeviewStr).getvalue(nodeIdx, "href"), false, true, false);
+	            eval(treeviewStr).putchildxml(nodeIdx, childxml);
 	            
 	            /**
 	            	ellipsis 적용을 위해 함수 호출
@@ -294,18 +305,24 @@
 				/* 2018-08-06 장진혁 스크립트 오류로 undefined 걸름 */
 	        	if (event != undefined) {
 		        	if (event.which != 3) {
-		        		var nodeIdx = PostTreeView.selectedIndex();
-			            var href = PostTreeView.getvalue(nodeIdx, "href");
-			            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
-			            
-			            try {
+					    var nodeIdx = eval(treeviewStr).selectedIndex();
+					    var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(eval(treeviewStr).getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(eval(treeviewStr).getvalue(nodeIdx, "href"));
+		        		
+		        		if (shareId != "") {
+		        			url += "&shareId=" + encodeURIComponent(shareId);
+		        		}
+		        		
+		        		try {
 			                if (typeof (parent.frames["right"]) != "undefined")
 			                    parent.frames["right"].Window_onunload();
 			            } catch (e) { }
-			            if (g_firstOpen)
+			            
+			            if (g_firstOpen) {
 			                g_firstOpen = false;
-			            else
+			            } else {
 			                window.open(url, "right");
+			            }
+			            
 			            get_unreadcount();
 		        	}
 	        	}
@@ -321,24 +338,24 @@
 	            if (CrossYN()) {
 	                if (szCommand == "move" && szSubCommand == "ViewMailListMove") {
 	                    try {
-	                        window.parent.frames("right").move_on_dragdrop(PostTreeView.getvalue(event.nodeIdx, "href"));
+	                        window.parent.frames("right").move_on_dragdrop(eval(treeviewStr).getvalue(event.nodeIdx, "href"));
 	                    } catch (e) { }
 	                }
 	                else if (szCommand == "copy" && szSubCommand == "ViewMailListMove") {
 	                    try {
-	                        window.parent.frames("right").copy_on_dragdrop(PostTreeView.getvalue(event.nodeIdx, "href"));
+	                        window.parent.frames("right").copy_on_dragdrop(eval(treeviewStr).getvalue(event.nodeIdx, "href"));
 	                    } catch (e) { }
 	                }
 	            }
 	            else {
 	                if (szCommand == "move" && szSubCommand == "ViewMailListMove") {
 	                    try {
-	                        window.parent.frames("right").document.Script.move_on_dragdrop(PostTreeView.getvalue(event.nodeIdx, "href"));
+	                        window.parent.frames("right").document.Script.move_on_dragdrop(eval(treeviewStr).getvalue(event.nodeIdx, "href"));
 	                    } catch (e) { }
 	                }
 	                else if (szCommand == "copy" && szSubCommand == "ViewMailListMove") {
 	                    try {
-	                        window.parent.frames("right").document.Script.copy_on_dragdrop(PostTreeView.getvalue(event.nodeIdx, "href"));
+	                        window.parent.frames("right").document.Script.copy_on_dragdrop(eval(treeviewStr).getvalue(event.nodeIdx, "href"));
 	                    } catch (e) { }
 	                }
 	            }
@@ -351,11 +368,18 @@
 	                xmlHTTP_Unread = createXMLHttpRequest();
 	                var xmlpara = createXmlDom();
 	                var objNode;
-	                createNodeInsert(xmlpara, objNode, "DATA");
-	                createNodeAndInsertText(xmlpara, objNode, "URL", PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"));
+                	var href = eval(treeviewStr).getvalue(eval(treeviewStr).selectedIndex(), "href");
+                	
+                	createNodeInsert(xmlpara, objNode, "DATA");
+	                createNodeAndInsertText(xmlpara, objNode, "URL", href);
+	                
+	                if (shareId != "") {
+		                createNodeAndInsertText(xmlpara, objNode, "SHAREID", shareId);
+	                }
+	                
 	                xmlHTTP_Unread.open("POST", "/ezEmail/getFolderUnreadCount.do", true);
 	                xmlHTTP_Unread.onreadystatechange = get_unreadend_2010;
-	                get_unreadend_2010.href = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+	                get_unreadend_2010.href = href;
 	                xmlHTTP_Unread.send(xmlpara);
 	            }
 	            catch (e) {
@@ -366,10 +390,10 @@
 	            if (xmlHTTP_Unread == null || xmlHTTP_Unread.readyState != 4)
 	                return;
 	            if (xmlHTTP_Unread.status >= 200 && xmlHTTP_Unread.status < 300) {
-	                var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "DATA")[0]);
-	                var caption = PostTreeView.getvalue(PostTreeView.selectedIndex(), "foldername");
+            		var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "DATA")[0]);
+	                var caption = eval(treeviewStr).getvalue(eval(treeviewStr).selectedIndex(), "foldername");
 	
-	                if (get_unreadend_2010.href == PostTreeView.getvalue(PostTreeView.selectedIndex(), "href")) {
+	                if (get_unreadend_2010.href == eval(treeviewStr).getvalue(eval(treeviewStr).selectedIndex(), "href")) {
 	                    if (unreadcount == "0") {
 	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption);
 	                        //PostTreeView.putstyle(PostTreeView.selectedIndex(), "font-weight : ''");
@@ -388,6 +412,7 @@
 	                    xmlDom = null;
 	                }
 	            }
+	            
 	            xmlHTTP_Unread = null;
 	            applyEllipsisMailTree();
 	        }
@@ -398,14 +423,6 @@
 	            var OpenWin = window.open("/ezEmail/mailGetPop3.do", "mail_getpop3_cross", GetOpenWindowfeature(460, 360));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
-	        function mail_exportall() {
-	            var param = { "href": new Array(), "parent": new Object(), "url": new String() };
-	            param["name"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "foldername");
-	            param["url"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-	            var feature = "dialogWidth:480px; dialogHeight:265px; scroll:no; status:no; help:no; scroll:no; edge:sunken";
-	            feature = feature + GetShowModalPosition(480, 265);
-	            window.showModalDialog("/myoffice/ezEmail/htm/mail_exportall.aspx", param, feature);
-	        }
 	        var mail_foldermanage_Cross_dialogArguments = new Array();
 	        function folder_manage() {
 	            mail_foldermanage_Cross_dialogArguments[1] = folder_manager_after;
@@ -413,15 +430,18 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function folder_manager_after(RtnVal) {
-	            if (RtnVal) {
+	            if (RtnVal && shareId == "") {
 	                var href = PostTreeView.getvalue(1, "href");
-	                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(1, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(1, "href"));
 	                PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
 	                PostTreeView.update();
+	                
 	                if (PostTreeView.selectedIndex() == -1) {
 	                    PostTreeView.select(1);
 	                }
+	                
+	                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(1, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(1, "href"));
 	                window.open(url, "right");
+	                
 	                previewSubTreeCall();
 	                
 	                $("#inboxMail").closest("div").append("<span onclick='folder_manage()' class='sub_iconLNB tree_manage'></span>");
@@ -429,6 +449,8 @@
 		            if ("${useMailReceiveScreen}" == "YES") {
 		            	$("#sentMail").closest("div").append("<span onclick='reception_check()' class='confirmation'><spring:message code='ezEmail.t516' /></span>");
 		            }
+		            
+	            	detailView();
 	            }
 	        }
 	        
@@ -453,7 +475,7 @@
 	                    break;
 	                case 2:
 	                    LoadEmailTree();
-	                    WebPartToggle(level1El.item(1));
+	                    WebPartToggle(level1El.item(level1El.length - 1));
 	                    break;
 	            }
 	        }
@@ -530,79 +552,19 @@
 	            frmSpam.target = "right";
 	            frmSpam.submit();
 	        }
-	        function mail_export() {
-	            parent.frames["right"].mail_export();
-	        }
-	        function mail_exportall() {
-	            var param = { "href": new Array(), "parent": new Object(), "url": new String() };
-	            param["name"] = PostTreeView.getvalue(PostTreeView.selectedIndex, "foldername");
-	            param["url"] = PostTreeView.getvalue(PostTreeView.selectedIndex, "href");
-	            param["parent"] = window.parent.frames("right");
-	            var feature = "dialogWidth:480px; dialogHeight:265px; scroll:no; status:no; help:no; scroll:no; edge:sunken";
-	            feature = feature + GetShowModalPosition(480, 265);
-	            window.showModalDialog("/myoffice/ezEmail/htm/mail_exportall.aspx", param, feature);
-	        }
-	        var mail_import_cross_dialogArguments = new Array();
-	        function mail_import() {
-	            var param = { "foldername": new Array(), "href": new Object() };
-	            param["foldername"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "foldername");
-	            param["href"] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-	            mail_import_cross_dialogArguments[0] = param;
-	            mail_import_cross_dialogArguments[1] = mail_import_Complete;
-	            var OpenWin = window.open("/ezEmail/mailImport.do", "mail_foldermanage_Cross", GetOpenWindowfeature(500, 400));
-	            try { OpenWin.focus(); } catch (e) { }
-	        }
-	        /* function mail_import_Complete() {
-	        	if (typeof (window.parent.frames["right"].MailListRefresh) == "function")
-	                window.parent.frames["right"].MailListRefresh();
-	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
-	            PostTreeView.update();
-	            if (PostTreeView.selectedIndex() == -1) {
-	                PostTreeView.select(1);
-	            }
-	        }  */
-	        // 수정 수아 재은
-	        function mail_import_Complete() {
-	        	if (typeof (window.parent.frames["right"].MailListRefresh) == "function")
-	                window.parent.frames["right"].MailListRefresh();
-	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
-	            PostTreeView.update();
-	            if (PostTreeView.selectedIndex() == -1) {
-	            	var allHref = mail_import_cross_dialogArguments[0]["href"];
-	            	
-	            	// 처음 선택한 메일함
-	            	if (allHref != null && allHref != "") {
-	            		var splitHref = allHref.split(".");
-	            		
-	            		// 하위메일함일 경우
-	            		if (splitHref.length > 1) {
-	            			var pStr = "";
-	            			
-	            			// select를 하기위해 상위 메일함의 하위메일함을 불러 열어줌
-	            			for (i = 0; i < splitHref.length-1; i++) {
-	            				pStr += splitHref[i];
-	            				var splitIndex = PostTreeView.findindex("href", pStr);
-	            				
-	            				requestdata({"nodeIdx": splitIndex});
-	            				pStr += ".";
-	            			}
-	            		}
-	            		
-		        		var getNowIndex= PostTreeView.findindex("href", allHref);
-		        		
-		                PostTreeView.select(getNowIndex);
-		        	} else {
-	                	PostTreeView.select(1);
-		        	}
-	            }
-	        }
-	        
 	        function mail_Config() {
-	        	detailView();
+	        	
+				if (shareId == "") {
+					detailView();
+				}
+				
 	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=email";
 	        }
+	        
 	        function Address_Menu_Click() {
+	        	HiddenFolderMenu();
 	            LoadAddressTree(true);
+	            
 	            if (AddressTreeView.selectedIndex() == -1)
 	                AddressTreeView.select(1);
 	            else
@@ -688,7 +650,21 @@
 	            window.open("/ezAddress/addressMainSearch.do", "right");
 	        }
 	        function Email_Menu_Click() {
-	            PostTreeView.select(1);
+	        	shareId = "";
+	        	deletePermission = "";
+	        	sendPermission = "";
+	        	treeviewStr = "PostTreeView";
+	        	
+	        	HiddenFolderMenu();
+	        	
+		    	if (useMailBoxBackUp == "YES") {
+			    	document.getElementById("mailbox_import").style.display = "";
+		    	}
+		    	
+			    document.getElementById("mailbox_delete").style.display = "";
+	        	
+	        	detailView();
+	            eval(treeviewStr).select(1);
 	        }
 	        
 	        function showProgress() {
@@ -794,37 +770,56 @@
 		    //편지함 모두 읽기
 		    function folder_ReadChange(pGubun){
 		    	var xmlHTTP = createXMLHttpRequest();
-		    	var nodeIdx = PostTreeView.selectedIndex();
-	            var href = PostTreeView.getvalue(nodeIdx, "href");
-	            var isRead = "FALSE"
+		    	var nodeIdx = eval(treeviewStr).selectedIndex();
+	            var href = eval(treeviewStr).getvalue(nodeIdx, "href");
+	            var foldername = eval(treeviewStr).getvalue(nodeIdx, "foldername");
+	            var isRead = "FALSE";
 	            
 	            if (pGubun == "R") {
 	            	isRead = "TRUE";
 	            }
 	            
-	            xmlHTTP.open("POST","/ezEmail/folderSetReadChange.do?url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href")) + "&isRead=" + isRead, false);
+	            var requestUrl = "/ezEmail/folderSetReadChange.do?url=" + encodeURIComponent(href) + "&isRead=" + isRead;
+	            
+	            if (shareId != "") {
+	            	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	            }
+	            
+	            xmlHTTP.open("POST",requestUrl, false);
 	            xmlHTTP.send();
 	            
-	            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
 	            try {
 	                if (typeof (parent.frames["right"]) != "undefined")
 	                    parent.frames["right"].Window_onunload();
 	            } catch (e) { }
-	            if (g_firstOpen)
-	                g_firstOpen = false;
-	            else
-	                window.open(url, "right");
-	            get_unreadcount();
 	            
+	            if (g_firstOpen) {
+	                g_firstOpen = false;
+	            } else {
+	            	requestUrl = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(foldername) + "&url=" + encodeURIComponent(href);
+	                
+	            	if (shareId != "") {
+		            	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+		            }
+	            	
+	            	window.open(requestUrl, "right");
+	            }
+	            
+	            get_unreadcount();
 		    }
 		    
 		    function mailbox_export(){
 		    	try {
-		    		var nodeIdx = PostTreeView.selectedIndex();
-		    		var folderPath = PostTreeView.getvalue(nodeIdx, "href");
+		    		var nodeIdx = eval(treeviewStr).selectedIndex();
+		    		var folderPath = eval(treeviewStr).getvalue(nodeIdx, "href");
 		    		
 		    		if (typeof (parent.frames["right"].g_moveUrl) == "undefined" || parent.frames["right"].g_moveUrl != folderPath) {
-		            	var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(folderPath);
+		            	var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(eval(treeviewStr).getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(folderPath);
+		            	
+		            	if (shareId != "") {
+		            		url += "&shareId=" + encodeURIComponent(shareId);
+			            }
+		            	
 		            	parent.frames["right"].location.href = url;
 		    		}
 	            	
@@ -839,11 +834,16 @@
 		    
 		    function mailbox_import(){
 		    	try {
-		    		var nodeIdx = PostTreeView.selectedIndex();
-		    		var folderPath = PostTreeView.getvalue(nodeIdx, "href");
+		    		var nodeIdx = eval(treeviewStr).selectedIndex();
+		    		var folderPath = eval(treeviewStr).getvalue(nodeIdx, "href");
 		    		
 		    		if (typeof (parent.frames["right"].g_moveUrl) == "undefined" || parent.frames["right"].g_moveUrl != folderPath) {
-		            	var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
+		            	var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(eval(treeviewStr).getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(folderPath);
+		            	
+		            	if (shareId != "") {
+		            		url += "&shareId=" + encodeURIComponent(shareId);
+			            }
+		            	
 		            	parent.frames["right"].location.href = url;
 		    		}
 		    		
@@ -857,8 +857,8 @@
 		    
 		   function mailbox_delete() {
 			   try {
-				   var nodeIdx = PostTreeView.selectedIndex();
-		    	   var folderPath = PostTreeView.getvalue(nodeIdx, "href");
+				   var nodeIdx = eval(treeviewStr).selectedIndex();
+		    	   var folderPath = eval(treeviewStr).getvalue(nodeIdx, "href");
 		    	   
 		    	   var trashBoxURL = "${pDeleteBoxID}";
 			        
@@ -902,35 +902,50 @@
 		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", destURL);
 		        createNodeAndInsertText(xmlDOM, objNode, "CMD", deltype);
 		        
-		        xmlHTTP2.open("POST", "/ezEmail/mailMakeFolder.do", true);
+		        var requestUrl = "/ezEmail/mailMakeFolder.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	            }
+		        
+		        xmlHTTP2.open("POST", requestUrl, true);
 		        xmlHTTP2.onreadystatechange = delete_mail_complete;
 		        xmlHTTP2.send(xmlDOM);
 		        
 		        ShowMailProgressNew();
 		    }
 		   
-		   function delete_mail_complete() {
-		        if (xmlHTTP2 != null && deltype != null && xmlHTTP2.readyState == 4) {
-		        	var nodeIdx = PostTreeView.selectedIndex();
-		        	 HiddenMailProgressNew();
-		        	 HiddenFolderMenu();
+			function delete_mail_complete() {
+				if (xmlHTTP2 != null && deltype != null && xmlHTTP2.readyState == 4) {
+					var nodeIdx = eval(treeviewStr).selectedIndex();
+					var foldername = eval(treeviewStr).getvalue(nodeIdx, "foldername");
+					var href = eval(treeviewStr).getvalue(nodeIdx, "href");
+					
+					HiddenMailProgressNew();
+					HiddenFolderMenu();
 		        	 
 		            //지운편지함의 메일 영구삭제
 		            if (deltype == "MAILREALDEL") {
 		            	if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
-					    	if (xmlHTTP2.responseText == "OK") {
-					    		alert("<spring:message code='ezEmail.t473' />");
-			 		            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
+							if (xmlHTTP2.responseText == "OK") {
+								alert("<spring:message code='ezEmail.t473' />");
 
-			 			        if (typeof (parent.frames["right"]) != "undefined")
-			 	                    parent.frames["right"].Window_onunload();
+								if (typeof (parent.frames["right"]) != "undefined") {
+									parent.frames["right"].Window_onunload();
+								}
 			 			        
-			 			       if (g_firstOpen) {
-			 		               g_firstOpen = false;
-			 				   } else {
-			 		               window.open(url, "right");
-			 		               get_unreadcount();
-			 				   }
+								if (g_firstOpen) {
+									g_firstOpen = false;
+								} else {
+									var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(foldername) + "&url=" + encodeURIComponent(href);
+
+									if (shareId != "") {
+										url += "&shareId=" + encodeURIComponent(shareId);
+									}
+
+									window.open(url, "right");
+									get_unreadcount();
+								}
 					    	} else {
 					    		alert("<spring:message code='ezEmail.t472' />");
 					    	}
@@ -939,28 +954,33 @@
 					    }
 		            }
 		            //편지함의 메일 지운편지함으로 이동
-		            else {
-		            	if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
-		            		if (xmlHTTP2.responseText == "OK") {
-		            			alert("<spring:message code='ezEmail.t478' />");
-		            			
-		            			 var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
+					else {
+						if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
+							if (xmlHTTP2.responseText == "OK") {
+								alert("<spring:message code='ezEmail.t478' />");
 
-			 			        if (typeof (parent.frames["right"]) != "undefined")
-			 	                    parent.frames["right"].Window_onunload();
+								if (typeof (parent.frames["right"]) != "undefined") {
+									parent.frames["right"].Window_onunload();
+								}
 			 			        
-			 			       if (g_firstOpen) {
-			 		               g_firstOpen = false;
-			 				   } else {
-			 		               window.open(url, "right");
-			 		               get_unreadcount();
-			 				   }
+								if (g_firstOpen) {
+									g_firstOpen = false;
+								} else {
+									var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(foldername) + "&url=" + encodeURIComponent(href);
+									
+									if (shareId != "") {
+										url += "&shareId=" + encodeURIComponent(shareId);
+									}
+									
+									window.open(url, "right");
+									get_unreadcount();
+								}
 		            		} else if (xmlHTTP2.responseText.indexOf("NO COPY processing failed.") > -1) {
 		            			alert(strLang241);
 		            		} else {
 		            			alert("<spring:message code='ezEmail.t477' />");
 		            		}
-		            	} else {
+						} else {
 		            		alert("<spring:message code='ezEmail.t477' />");
 		            	}
 		            }
@@ -968,7 +988,7 @@
 		        }
 		    }
 		   
-		   function HiddenMailProgressNew() {
+			function HiddenMailProgressNew() {
 				var CurrentHeight = parent.frames["right"].document.CurrentHeight;
 				var CurrenWidth = parent.frames["right"].document.CurrenWidth;
 				
@@ -1038,7 +1058,111 @@
 	        $( window ).resize(function() {
 	        	leftResize();
         	});
-	        
+
+			// 2018-10-16 공유사서함 관련 함수 추가
+			function Share_Menu_Click(_shareId, _deletePermission, _sendPermission) {
+				shareId = _shareId;
+				deletePermission = _deletePermission;
+				sendPermission = _sendPermission;
+				treeviewStr = 'shareTreeView_' + shareId;
+			    
+			    if (document.getElementById(treeviewStr).innerHTML === "") {
+			        var xmlHTTP = createXMLHttpRequest();
+			        var xmlDOM = createXmlDom();
+			        var objNode;
+			        createNodeInsert(xmlDOM, objNode, "DATA");
+			        createNodeAndInsertText(xmlDOM, objNode, "URL", "");
+			        createNodeAndInsertText(xmlDOM, objNode, "BCOUNT", "-1");
+			        
+			        xmlHTTP.open("POST", "/ezEmail/getFolderList.do?shareId=" + encodeURIComponent(shareId), false);
+			        xmlHTTP.send(xmlDOM);
+
+			        var nodeTreeXml = xmlHTTP.responseText.replace("<DATA>", "").replace("</DATA>", "");
+			        LoadEmailTree2(nodeTreeXml);
+			        
+			    } else {
+			    	eval(treeviewStr).select(1);
+			    }
+			    
+			    HiddenFolderMenu();
+			    
+			    if (deletePermission == "Y") {
+			    	if (useMailBoxBackUp == "YES") {
+				    	document.getElementById("mailbox_import").style.display = "";
+			    	}
+			    	
+				    document.getElementById("mailbox_delete").style.display = "";
+			    } else {
+				    document.getElementById("mailbox_import").style.display = "none";
+				    document.getElementById("mailbox_delete").style.display = "none";
+			    }
+			    
+			    detailView(shareId);
+			}
+			
+			function LoadEmailTree2(RootShareFolderXML) {
+			    if (RootShareFolderXML.trim() == "") {
+			        return;
+			    }
+			    
+			    var shareTreeView = new TreeView('shareTreeView_' + shareId, 'shareTreeView_' + shareId);
+			    shareTreeView.attachEvent('requestdata', requestdata);
+			    shareTreeView.attachEvent('nodeselect', selectnode);
+			    shareTreeView.attachEvent('nodedblclick', function () { shareTreeView.toggle(shareTreeView.selectedIndex()) });
+			    
+			    if (deletePermission == "Y") {
+			    	shareTreeView.attachEvent('dragdrop', email_dragdrop);
+			    	shareTreeView.dragdrop(true);
+			    }
+			    
+			    var xmlHTTP = createXMLHttpRequest();
+			    xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
+			    xmlHTTP.send();
+				
+			    var treeconfig;
+	            if (CrossYN()) {
+	                treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
+	            } else {
+	                treeconfig = xmlHTTP.responseXML;
+	            }
+			    
+			    shareTreeView.config(treeconfig);
+			    shareTreeView.source("<tree><nodes>" + RootShareFolderXML + "</nodes></tree>");
+			    shareTreeView.update();
+			    shareTreeView.select(1);
+			    
+			    selectnode();
+			}
+
+			function SharefindID() {
+			    var str = "";
+			    
+			    for (var i = 0; i < document.getElementsByTagName("ul").length; i++) {
+			        if (document.getElementsByTagName("ul")[i].className == "on") {
+			            str = document.getElementsByTagName("ul")[i];
+			        }
+			    }
+			    
+			    str = str.getElementsByTagName("div")[0].id;
+			    var rtn = GetAttribute(document.getElementById(str), "value");
+			    
+			    return rtn;
+			}
+
+			function SharefindIndex() {
+			    var str = "";
+			    
+			    for (var i = 0; i < document.getElementsByTagName("ul").length; i++) {
+			        if (document.getElementsByTagName("ul")[i].className == "on") {
+			            str = document.getElementsByTagName("ul")[i];
+			        }
+			    }
+			    
+			    str = str.getElementsByTagName("div")[0].id;
+			    var rtn = GetAttribute(document.getElementById(str), "index");
+			    
+			    return rtn;
+			}
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1093,11 +1217,11 @@
 			                            </div>
 			                    	</span>
 		                    	</c:if>
-		                        <span id="mailimport">
+		                        <%-- <span id="mailimport">
 		                        	<div class="node_div">
 		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outlook_mail_get"></span><span class="h2_text" onclick="mail_import()"><spring:message code="ezEmail.t99000015" /></span> 
 		                            </div>
-		                    	</span>
+		                    	</span> --%>
 		                    	<span id="mailexportall" style="display: none;">
 		                        	<div class="node_div">
 		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outlook_mail_get"></span><span class="h2_text" onclick="mail_exportall()"><spring:message code="ezEmail.t99000014" /></span> 
@@ -1179,14 +1303,20 @@
 		        <c:if test="${useOnlyInnerMail != 'YES'}">
 	            <li><span onclick="check_pop3()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t490" /></span></li>
 	            </c:if>
-	            <li id="mailexport"><span style="width: 100%; display: inline-block;" onclick="mail_export()"><spring:message code="ezEmail.t378" /></span></li>
-	            <li id="mailexportall" style="display: none;"><span style="width: 100%; display: inline-block;" onclick="mail_exportall()"><spring:message code="ezEmail.t99000014" /></span></li>
-	            <li id="mailimport"><span onclick="mail_import()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000015" /></span></li>
 	            <li><span onclick="Open_ReservationManage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t605" /></span></li>
                 <c:if test="${useBizmekaSpambox == 'YES'}"> 
                 <li><span onclick="openSpamBox()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.ldh01" /></span></li>
                 </c:if>
 	        </ul>
+	        
+	        <c:if test="${useSharedMailbox == 'YES'}">
+		        <c:forEach items="${shareInfoList}" var="shareInfo">
+		        	<h2><span onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');" style="width: 100%; display: inline-block;"><c:out value="${shareInfo.shareName}" /></span></h2>
+		        	<ul>
+		            	<div id="shareTreeView_${shareInfo.shareId}" class="tree" value="${shareInfo.shareId}" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
+		        	</ul>
+		        </c:forEach>
+	        </c:if>
 	        <h2><span onclick="Address_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000041" /></span></h2>
 	        <ul>
 	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow-x:hidden; overflow-y: auto; padding-left: 20px;" id="AddressTreeView"></div>
@@ -1275,7 +1405,7 @@
 		    <tr id="mailbox_import" <c:if test="${useMailBoxBackUp ne 'YES'}">style="display:none"</c:if>>
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_import();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_fw.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.lhm32" /></span></td>
 		    </tr>
-		    <tr>
+		    <tr id="mailbox_delete">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_delete();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/deleted.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.t483" /></span></td>
 		    </tr>
 		    </table>

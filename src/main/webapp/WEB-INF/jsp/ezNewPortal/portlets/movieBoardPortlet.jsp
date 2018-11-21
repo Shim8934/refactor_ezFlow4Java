@@ -91,7 +91,7 @@
 							<dt style="padding-top:60px;">
 								<img src="/images/ezNewPortal/nodata.png">
 							</dt>
-							<dd>데이터가 없습니다.</dd>
+							<dd><spring:message code='ezNewPortal.t018' /></dd>
 						</dl>
 					</ul>
 				</c:otherwise>

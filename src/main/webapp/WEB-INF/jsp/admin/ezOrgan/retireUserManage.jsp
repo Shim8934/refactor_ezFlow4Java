@@ -27,6 +27,7 @@
 			var strListInfo = "";
 			var CheckBoxArr = new Array();
 			var companyId = "${companyId}";
+			var changePassLength = 0;
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -254,6 +255,8 @@
 			    if (CheckBoxArr.length == 0) {
 			        alert("<spring:message code='ezOrgan.t39' />"); 
 			        return;
+			    } else {
+				    changePassLength = CheckBoxArr.length; 
 			    }
 			    
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
@@ -316,7 +319,7 @@
                 var strtext;
                 var PagingHTML = "";
                 document.getElementById("tblPageRayer").innerHTML = "";
-                document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang23 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang24 + "]";
+                document.getElementById("TitleInfo").innerHTML = "&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
                 strtext = "<div class='pagenavi'>";
                 PagingHTML += strtext;
                 var pageNum = CurPage;
@@ -565,7 +568,7 @@
 	</head>
 	<body class="mainbody">
 		<h1>
-			<spring:message code='ezOrgan.t311'/><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
+			<spring:message code='ezOrgan.t311'/><span id="TitleInfo"></span>
 			<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
 	        	<c:forEach var="item" items="${companylist}">
             		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>

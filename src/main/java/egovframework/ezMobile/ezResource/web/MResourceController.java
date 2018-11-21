@@ -288,6 +288,8 @@ public class MResourceController extends EgovFileMngUtil {
 			model.addAttribute("folderList", folderList);
 			
 			model.addAttribute("adminYn", resultMap.get("adminYn"));
+			model.addAttribute("authYn", resultMap.get("authYn"));
+			
 		LOGGER.debug("getResFolderList ended.");
 		return "json";
 	}

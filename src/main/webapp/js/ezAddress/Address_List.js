@@ -547,7 +547,7 @@ function makePageSelPage() {
     totalPage = Math.ceil(pTotalCnt / pPageSize);
     var pageNum = pCurrentPage;
     if (!searchFlag || strLang_1 == "")
-        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + " <span style='color:#017BEC;'>" + pTotalCnt + "</span> " + strLang42 + "]";
+        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + "</span>";
     else {
         document.getElementById("mailBoxInfo").className = "h2_dot"; 
         document.getElementById("mailBoxInfo").innerHTML = strLang_1 + "&nbsp;<span class='point'>" + pTotalCnt + "</span> " + strLang_2;

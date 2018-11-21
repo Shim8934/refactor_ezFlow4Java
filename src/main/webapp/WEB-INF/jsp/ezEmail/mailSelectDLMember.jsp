@@ -31,9 +31,7 @@
 		                CancelFunction = opener.mail_select_dlmember_cross_dialogArguments[2];
 		            } catch (e) { }
 		        }
-		        if ("${isUser}" == "group") {
-		            document.getElementById("h1").innerHTML += " - <spring:message code='ezEmail.t26' />";
-		        }
+		        
 		        document.all("cmd_ok").focus();
 		    }
 		    function Window_Close() {

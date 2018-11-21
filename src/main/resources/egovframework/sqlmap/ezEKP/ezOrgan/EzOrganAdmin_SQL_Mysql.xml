@@ -530,6 +530,11 @@
 				TBL_USERMASTER
 			SET
 				$v_PROPNAME$ = #v_PROPVALUE#
+		]]>
+		<isEqual property="v_PROPNAME" compareValue="EXTENSIONATTRIBUTE15">
+				, UPDATEDT = #nowDate#
+		</isEqual>
+		<![CDATA[	
 			WHERE
 				CN = #v_CN#
 			AND
@@ -858,7 +863,7 @@
             (#portalItemUID12#,'배너_우수사원_포틀릿','Banner_TopUser_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID12#),' ','0','1',225,'0',#companyID#,null,null,330,null,#tenantID# ),
             (#portalItemUID14#,'우수커뮤니티_포틀릿','Community_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID14#),' ','0','1',235,'0',#companyID#,null,null,330,null,#tenantID# ),
             (#portalItemUID4#,'슬라이드이미지_포틀릿','SlideImage_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID4#),' ','0','1',225,'0',#companyID#,null,null,517,null,#tenantID# ),
-            (#portalItemUID17#,'포토_생일 통합 포틀릿','Photo_Birthday_Total_Portlet,1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID17#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
+            (#portalItemUID17#,'포토_생일 통합 포틀릿','Photo_Birthday_Total_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID17#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
             (#portalItemUID18#,'공지_슬라이드_이모저모 통합 포틀릿','Notice_Slide_Total_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID18#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
             (#portalItemUID15#,'결재사용현황_포틀릿','ApprovalUse_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID15#),' ','0','1',225,'0',#companyID#,null,null,348,null,#tenantID# ),
             (#portalItemUID5#,'결재_메일 통합 포틀릿','Approval_Mail_Total_Portlet',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID5#),' ','0','1',235,'0',#companyID#,null,null,797,null,#tenantID# ),
@@ -1634,7 +1639,7 @@
 			('SA02', '032',		'회송',					'Returning',			'差し戻し',	'退回',		'0',	'회송',		#companyID#,	#tenantID#),
            ('SA03','0  ','결재방법','결재방법',null,null,'0','결재방법',#companyID#, #tenantID# ),
            ('SA03','001','결재','Approval','決裁','审批','1','일반',#companyID#, #tenantID# ),
-           ('SA03','002','확인','Confirmation','回覧','確認','1','확인',#companyID#, #tenantID# ),
+           ('SA03','002','확인','Confirmation','確認','確認','1','확인',#companyID#, #tenantID# ),
            ('SA03','003','결재안함','Skip-approval','決裁しない','不审批','0','결재안함',#companyID#, #tenantID# ),
            ('SA03','004','전결','Pre-approval','専決','先决','1','전결',#companyID#, #tenantID# ),
            ('SA03','005','준법감시','Audit','遵法監視','监督','0','감사',#companyID#, #tenantID# ),
@@ -2988,9 +2993,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_ADDJOBMASTER
-              	( CN, DEPTID, TITLE, TITLE2, TENANT_ID )
+              	( CN, DEPTID, TITLE, TITLE2, TENANT_ID, ORDERBY, JOBID )
            VALUES
-           		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_TENANT_ID# )
+           		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_TENANT_ID#, 0 , #v_JOBID#)
 		]]>
 	</insert>
 	
@@ -3286,7 +3291,8 @@
                 PHYSICALDELIVERYOFFICENAME = (SELECT EXTENSIONATTRIBUTE2 FROM (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
                 COMPANY = (SELECT EXTENSIONATTRIBUTE3 FROM (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
                 COMPANY2 = (SELECT COMPNM2 FROM (SELECT COMPNM2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
-                UPDATEDT = #timeUTC#
+                UPDATEDT = #timeUTC#,
+                EXTENSIONATTRIBUTE15 = 0
             WHERE
                 CN = #v_CN#
             AND
@@ -4172,6 +4178,91 @@
 			TENANT_ID = #v_TENANTID#
 	]]>
 	</select>
+	
+	<update id="EzOrganAdminDAO.updateDBData_userOrder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_USERMASTER
+			SET
+				EXTENSIONATTRIBUTE15 = EXTENSIONATTRIBUTE15 + 1,
+				UPDATEDT = #nowDate#
+			WHERE
+				DEPARTMENT = #v_PARENTCN#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				EXTENSIONATTRIBUTE15 IS NOT NULL
+			AND 
+				EXTENSIONATTRIBUTE15 >= #v_EXTATTR15#
+		]]>
+	</update>
+	
+	<update id="EzOrganAdminDAO.updateDBData_addjobmasterOrder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ADDJOBMASTER
+			SET
+				ORDERBY = ORDERBY + 1
+			WHERE
+				DEPTID = #v_PARENTCN#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				ORDERBY IS NOT NULL
+			AND
+				ORDERBY >= #v_EXTATTR15#
+		]]>
+	</update>
+	
+	<update id="EzOrganAdminDAO.updateDBData_userOrderIsNull" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_USERMASTER
+			SET
+				EXTENSIONATTRIBUTE15 = 0,
+				UPDATEDT = #nowDate#
+			WHERE
+				DEPARTMENT = #v_PARENTCN#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				EXTENSIONATTRIBUTE15 IS NULL
+		]]>
+	</update>
+	
+	<update id="EzOrganAdminDAO.updateDBData_deptOrderIsNull" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_DEPTMASTER
+			SET
+				EXTENSIONATTRIBUTE15 = 0,
+				UPDATEDT = #nowDate#
+			WHERE
+				EXTENSIONATTRIBUTE2 = (SELECT * FROM(SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#)AS AA)
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				EXTENSIONATTRIBUTE15 IS NULL
+		]]>
+	</update>
+	
+	<update id="EzOrganAdminDAO.updateDBData_deptOrder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_DEPTMASTER
+			SET
+				EXTENSIONATTRIBUTE15 = EXTENSIONATTRIBUTE15 + 1,
+				UPDATEDT = #nowDate#
+			WHERE
+				EXTENSIONATTRIBUTE2 = (SELECT * FROM(SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#)AS AA)
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				EXTENSIONATTRIBUTE15 IS NOT NULL
+			AND 
+				EXTENSIONATTRIBUTE15 >= #v_EXTATTR15#
+		]]>
+	</update>
  	 
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}

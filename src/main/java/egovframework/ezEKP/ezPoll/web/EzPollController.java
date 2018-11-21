@@ -1001,7 +1001,7 @@ public class EzPollController extends EgovFileMngUtil {
 			model.addAttribute("creatorDeptId", pollCreator.getDeptID());
 		}
 		
-		if(brdId != ""){
+		if(!brdId.equals("")){
 			model.addAttribute("brdId", Integer.parseInt(brdId));
 		}
 		

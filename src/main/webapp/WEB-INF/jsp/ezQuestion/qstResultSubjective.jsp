@@ -215,7 +215,7 @@
 			    //document.getElementById("tblPageRayer").innerHTML = "";
 			    $('#tblPageRayer').html();
 			    //document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
-			    $('#mailBoxInfo').html(" - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]");
+			    $('#mailBoxInfo').html("&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>");
 			    strtext = "<div class='pagenavi'>";
 			    PagingHTML += strtext;
 			    var pageNum = pCurrPage;

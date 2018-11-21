@@ -383,6 +383,35 @@
 			MANUAL_FLAG NVARCHAR2(2) DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkJMochaMailSignatureTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				sign_no
+			FROM 
+				JMOCHA_MAIL_SIGNATURE_TEMPLATE
+			WHERE
+				rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createJMochaMailSignatureTemplate"> 
+	 	CREATE TABLE JMOCHA_MAIL_SIGNATURE_TEMPLATE 
+		(
+		  SIGN_NO NUMBER NOT NULL 
+		, CONTENT LONG 
+		, DISPLAYNAME VARCHAR2(45) 
+		, DISPLAYNAME2 VARCHAR2(45) 
+		, TENANT_ID NUMBER DEFAULT 0 NOT NULL 
+		, COMPANY_ID VARCHAR2(45) 
+		, CONSTRAINT SIGNATURE_TEMPLATE_PK PRIMARY KEY 
+		  (
+		    SIGN_NO 
+		  )
+		  ENABLE 
+		)
+		
+	</statement>
+		
 	<select id="EzCommonDAO.checkTblUserJobMaster" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -411,4 +440,51 @@
 		 )
 	</statement>
 	
+	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
+		INSERT INTO tbl_tenant_config
+		(tenant_id, property_name, property_value, description, config_name, regdate)
+		VALUES
+		(#tenantID#, #confName#, #property_value#, #description#, #config_name#, sysdate)
+	</insert>
+	
+	<select id="EzCommonDAO.checkAddJobMasterJobID" resultClass="String">
+		<![CDATA[
+			SELECT 
+				JOBID
+			FROM 
+				TBL_ADDJOBMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterJobID"> 
+		ALTER TABLE 
+			TBL_ADDJOBMASTER
+		ADD 
+			JOBID VARCHAR2(100) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderToken">
+		<![CDATA[
+			SELECT 
+			    userId
+			FROM 
+			    TBL_webfolder_token
+			where 
+			    ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblWebfolderToken"> 
+		CREATE TABLE tbl_webfolder_token (
+		  "USERID" varchar2(32) NOT NULL,
+		  "LTOKEN" varchar2(128) DEFAULT NULL,
+		  "REGDATA" date DEFAULT NULL,
+		  "COMPID" varchar2(32) DEFAULT NULL,
+		  "TENANTID" varchar2(45) NOT NULL,
+		  "DEVICE" varchar2(128) DEFAULT NULL,
+		  PRIMARY KEY ("USERID","TENANTID")
+		) 
+	</statement>
 </sqlMap>

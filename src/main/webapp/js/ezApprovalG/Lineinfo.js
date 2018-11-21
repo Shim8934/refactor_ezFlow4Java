@@ -324,7 +324,8 @@ function SAPRLINEATTENDADDFunction(pCurSelectedRow, Mode) {
     } else {
         if (pReDraftAprLineFlag) {
             if (pCurSelRowRows[0] != null) {
-			    if (p_PrevAprStat == "002" && GetAttribute(pCurSelRowRows[0], "DATA4") == pUserID) {
+			    if (p_PrevAprStat == "002" && GetAttribute(pCurSelRowRows[0], "DATA4") == pOrgApruserid) {
+			    	//2018-11-12 배현상, pUserID로 할 경우 대리결재자가 최종결재선을 바꿀 수 있는 오류 수정
                     var pAlertContent = strLangS254;
                     OpenAlertUI(pAlertContent);
                 } else {

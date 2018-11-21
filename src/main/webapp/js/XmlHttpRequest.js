@@ -1677,9 +1677,9 @@ function makePageSelPageBrd() {
     var PagingHTML = "";
     document.getElementById("tblPageRayer").innerHTML = "";
     if (pAdminType != "y")
-        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + pTotalCnt + " </span>" + strLang42 + "]";
+        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + " </span>";
     else
-        parent.document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + pTotalCnt + " </span>" + strLang42 + "]";
+        parent.document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + " </span>";
     strtext = "<div class='pagenavi'>";
     PagingHTML += strtext;
     var pageNum = CurPage;
@@ -1801,4 +1801,74 @@ function BroswerAndNonActiveXCheck() {
             }
         }
     }    
+}
+
+// 특정 컬럼명 기준으로 xml 정렬하는 함수 (정렬할 xml, 정렬할 컬럼명, 예외처리(~가 아닌것), 정렬방법)
+// 필수 파라미터 (xmlRows, colName)
+function sortNode(xmlRows, colName, exception, orderby) {
+	var least = '';
+	var i = 0;
+	var j = 0;
+	
+	if (exception == null) {
+		exception = '';
+	}
+	
+	if (orderby == '' || orderby == null) {
+		orderby = 'ASC';
+	}
+	
+	
+	
+	if (xmlRows != null && colName != null) {
+		if (orderby == 'ASC') {
+			for (i = 0; i < xmlRows.length - 1; i++) {
+	     		least = i;
+	    		
+	    		for (j = i + 1; j < xmlRows.length; j++) {
+	    			if (SelectSingleNodeValue(xmlRows[j], colName) < SelectSingleNodeValue(xmlRows[least], colName)) {
+	    				least = j;
+	    			}
+	    		}
+	    		
+	    		if (i != least) {
+	    			var temp = '';
+	    			
+	    			for (var t = 0; t < xmlRows[0].childNodes.length; t++) {
+	    				temp = SelectSingleNodeValue(xmlRows[i], xmlRows[i].childNodes[t].nodeName);
+	    				setNodeText(xmlRows[i].childNodes[t], SelectSingleNodeValue(xmlRows[least], xmlRows[i].childNodes[t].nodeName));
+	    				setNodeText(xmlRows[least].childNodes[t], temp);
+	    			}
+	    			
+	    		}
+	    		
+	    	}
+	    	return xmlRows;
+		} else {
+			for (i = 0; i < xmlRows.length - 1; i++) {
+	     		least = i;
+	    		
+	    		for (j = i + 1; j < xmlRows.length; j++) {
+	    			if (SelectSingleNodeValue(xmlRows[j], colName) != exception && SelectSingleNodeValue(xmlRows[j], colName) > SelectSingleNodeValue(xmlRows[least], colName)) {
+	    				least = j;
+	    			}
+	    		}
+	    		
+	    		if (i != least) {
+	    			var temp = '';
+	    			
+	    			for (var t = 0; t < xmlRows[0].childNodes.length; t++) {
+	    				temp = SelectSingleNodeValue(xmlRows[i], xmlRows[i].childNodes[t].nodeName);
+	    				setNodeText(xmlRows[i].childNodes[t], SelectSingleNodeValue(xmlRows[least], xmlRows[i].childNodes[t].nodeName));
+	    				setNodeText(xmlRows[least].childNodes[t], temp);
+	    			}
+	    			
+	    		}
+	    		
+	    	}
+	    	return xmlRows;
+		}
+		
+	}
+	
 }

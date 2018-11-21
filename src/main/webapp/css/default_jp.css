@@ -10,7 +10,7 @@ input, label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, 
 	ime-mode:active;
 }
 
-p, strong, h3 {
+p, strong, h3, dl, dt, dd {
 	font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 }
 
