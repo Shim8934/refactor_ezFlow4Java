@@ -472,95 +472,105 @@
 				TENANT_ID = #tenantId#
 		</isEqual>
 	</select>
-	
-	<sql id="ezAttitudeDAO.searchQuery">
-		<isNotEmpty property="userId" prepend="and"> 
-			a.WRITER_ID = #userId#
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchDeptId">
-			A.WRITER_DEPT_ID = #searchDeptId#
-		</isNotEmpty>
-		<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
-      		#deptIdList[]#
-		</iterate>
-		<isNotEmpty property="apprUserName" prepend="and">
-			<isNotEmpty property="apprUserName" >
-				A.APPR_USER_NAME$lang$ LIKE CONCAT('%', #apprUserName#,'%')
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="writerName" prepend="and">
-			<isNotEmpty property="writerName" >
-				A.WRITER_NAME$lang$ LIKE CONCAT('%', #writerName#,'%')
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="writerDeptName" prepend="and">
-			<isNotEmpty property="writerDeptName" >
-				A.WRITER_DEPT_NAME$lang$ LIKE CONCAT('%', #writerDeptName#,'%')
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="startDate" prepend="and">
-			<![CDATA[
-			DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
-			]]>
-		</isNotEmpty>
-		<isNotEmpty property="endDate" prepend="and">
-			<![CDATA[
-			DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') <= #endDate#
-			]]>
-		</isNotEmpty>
-		<isNotEmpty property="type" prepend="and">
-			<![CDATA[
-			a.APPR_STATUS = #type#
-			]]>
-		</isNotEmpty>
-		<![CDATA[
-			AND
-				A.DELFLAG = 0
-		]]>
-		<isNotEmpty prepend="" property="order">
-				ORDER BY $order$, A.APPL_CNT DESC
-		</isNotEmpty>
-		<isEmpty prepend="" property="order">
-				ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
-		</isEmpty>
-		<isNotEmpty property="startPoint" prepend="limit">
-			<isNotEmpty property="endPoint">
-				<![CDATA[
-					$startPoint$, $endPoint$
-				]]>
-			</isNotEmpty>
-		</isNotEmpty>
-	</sql>
 
 	<select id="ezAttitudeDAO.getUsersModiyAtt" parameterClass="Map" resultMap="attitudeApplicationVO">
 		<![CDATA[
 			SELECT
-					a.attitude_id as ATTITUDE_ID,
-					TO_CHAR((TO_DATE(a.change_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as CHANGE_DATE,
-					a.appr_user_name$lang$ as APPR_USER_NAME,
-					TO_CHAR((TO_DATE(a.origin_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as START_DATE,
-					a.appr_status as APPR_STATUS,
-					a.writer_name$lang$ as WRITER_NAME,
-					a.writer_dept_name$lang$ as WRITER_DEPT_NAME,
-					a.appl_cnt AS APPL_CNT,
-					a.writer_id as WRITER_ID,
-					TO_CHAR((TO_DATE(a.appl_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as APPL_DATE
-			FROM 
-				jmocha.tbl_attitude_modappl a 
-			inner 
-				join tbl_attitude b 
-			on 
-				a.ATTITUDE_ID = b.ATTITUDE_ID
-			and
-				a.COMPANY_ID = b.COMPANY_ID
-			and 
-				a.TENANT_ID = b.TENANT_ID
-			where 
-				a.COMPANY_ID = #companyId#
-			and 
-				a.TENANT_ID = #tenantId#
-		]]>
-		<include refid="ezAttitudeDAO.searchQuery"/>
+				*
+			FROM
+			(
+				SELECT
+					T1.*,
+					ROWNUM AS RN
+				FROM
+				(
+					SELECT
+							a.attitude_id as ATTITUDE_ID,
+							TO_CHAR((TO_DATE(a.change_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as CHANGE_DATE,
+							a.appr_user_name$lang$ as APPR_USER_NAME,
+							TO_CHAR((TO_DATE(a.origin_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as START_DATE,
+							a.appr_status as APPR_STATUS,
+							a.writer_name$lang$ as WRITER_NAME,
+							a.writer_dept_name$lang$ as WRITER_DEPT_NAME,
+							a.appl_cnt AS APPL_CNT,
+							a.writer_id as WRITER_ID,
+							TO_CHAR((TO_DATE(a.appl_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as APPL_DATE
+					FROM 
+						jmocha.tbl_attitude_modappl a 
+					inner 
+						join tbl_attitude b 
+					on 
+						a.ATTITUDE_ID = b.ATTITUDE_ID
+					and
+						a.COMPANY_ID = b.COMPANY_ID
+					and 
+						a.TENANT_ID = b.TENANT_ID
+					where 
+						a.COMPANY_ID = #companyId#
+					and 
+						a.TENANT_ID = #tenantId#
+				]]>
+				<isNotEmpty property="userId" prepend="and"> 
+					a.WRITER_ID = #userId#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchDeptId">
+					A.WRITER_DEPT_ID = #searchDeptId#
+				</isNotEmpty>
+				<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+		      		#deptIdList[]#
+				</iterate>
+				<isNotEmpty property="apprUserName" prepend="and">
+					<isNotEmpty property="apprUserName" >
+						A.APPR_USER_NAME$lang$ LIKE '%' || #apprUserName# ||'%'
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="writerName" prepend="and">
+					<isNotEmpty property="writerName" >
+						A.WRITER_NAME$lang$ LIKE '%' || #writerName# || '%'
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="writerDeptName" prepend="and">
+					<isNotEmpty property="writerDeptName" >
+						A.WRITER_DEPT_NAME$lang$ LIKE '%' || #writerDeptName# || '%'
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="startDate" prepend="and">
+					<![CDATA[
+						TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="endDate" prepend="and">
+					<![CDATA[
+						TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="type" prepend="and">
+					<![CDATA[
+						a.APPR_STATUS = #type#
+					]]>
+				</isNotEmpty>
+				<![CDATA[
+					AND
+						A.DELFLAG = 0
+				]]>
+				<isNotEmpty prepend="" property="order">
+						ORDER BY $order$, A.APPL_CNT DESC
+				</isNotEmpty>
+				<isEmpty prepend="" property="order">
+						ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
+				</isEmpty>
+				) T1
+			)
+			<isNotEmpty property="startRow">
+				<isNotEmpty property="endRow">
+					<![CDATA[
+						WHERE
+							RN >= #endRow#
+						AND
+							RN <= #startRow#
+					]]>
+				</isNotEmpty>
+			</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeDAO.attDetail" parameterClass="Map" resultMap="simpleAtt">
@@ -716,7 +726,55 @@
 			and 
 				a.TENANT_ID = #tenantId#
 		]]>
-		<include refid="ezAttitudeDAO.searchQuery"/>
+		<isNotEmpty property="userId" prepend="and"> 
+			a.WRITER_ID = #userId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchDeptId">
+			A.WRITER_DEPT_ID = #searchDeptId#
+		</isNotEmpty>
+		<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+      		#deptIdList[]#
+		</iterate>
+		<isNotEmpty property="apprUserName" prepend="and">
+			<isNotEmpty property="apprUserName" >
+				A.APPR_USER_NAME$lang$ LIKE '%' || #apprUserName# ||'%'
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="writerName" prepend="and">
+			<isNotEmpty property="writerName" >
+				A.WRITER_NAME$lang$ LIKE '%' || #writerName# || '%'
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="writerDeptName" prepend="and">
+			<isNotEmpty property="writerDeptName" >
+				A.WRITER_DEPT_NAME$lang$ LIKE '%' || #writerDeptName# || '%'
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="type" prepend="and">
+			<![CDATA[
+			a.APPR_STATUS = #type#
+			]]>
+		</isNotEmpty>
+		<![CDATA[
+			AND
+				A.DELFLAG = 0
+		]]>
+		<isNotEmpty prepend="" property="order">
+				ORDER BY $order$, A.APPL_CNT DESC
+		</isNotEmpty>
+		<isEmpty prepend="" property="order">
+				ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
+		</isEmpty>
 	</select>
 	
 	<select id="ezAttitudeDAO.getAttsModAttCount" parameterClass="Map" resultClass="Integer">
