@@ -9544,7 +9544,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("isUsed", isUsed);
 		map.put("beforeDocID", beforeDocID);
-
+		
 		//재사용 시 END 테이블에서 정보 가져옴
 		
 		logger.debug("getDocInfo Param : v_DOCID = " + docID + " v_MODE = " + " v_TENANTID = " + tenantID + " companyID = " + companyID);
@@ -9554,6 +9554,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (isUsed.equals("reuse")) {
 			apprGDocListVOList.get(0).setDocID(docID);
 			apprGDocListVOList.get(0).setHasOpinionYn("N");;
+			
+			String apprReuseConfig = ezCommonService.getTenantConfig("apprReuseConfig", userInfo.getTenantId());
+			if ( apprReuseConfig != null && apprReuseConfig.equals("0") ){
+				ezApprovalGDAO.insertReuseAttachFileInfo(map);
+			}
 		}
 		
 		if (mode.equals("CHAMJOEND") || mode.equals("CHAMJOAPR") ) {
