@@ -237,6 +237,8 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 .main_time{float:right; width:150px; height:76px; margin:0px; padding:0px;}
 .main_time .timeCheckIn{float:left; width:calc(50% - 1px); height:76px; margin:0px; padding:0px; color:#ffffff; font-size:13px; border-left:1px solid #ffffff; text-align:center; background:#45a8fb; cursor:pointer;}
+.main_time .timeCheckIn.in{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
+.main_time .timeCheckIn.in dd{margin:-4px 0px 0px 0px;}
 .main_time .timeCheckIn.lateIn{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
 .main_time .timeCheckIn.lateIn dd{margin:-4px 0px 0px 0px;}
 .main_time .timeCheckIn dt{margin:15px 0px 12px 0px; padding:0px;}
@@ -266,7 +268,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 .birthTit .birthRighttbtn{ display:inline-block; margin:0px; padding:0px; overflow:hidden; float:right; cursor:pointer;}
 .birthList{ margin:0px; padding:15px 10px; list-style:none; overflow:hidden;}
 .birthList li{float:left; overflow:hidden; width:129px; padding:0px 0px 12px 0px;}
-.birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;}
+.birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;cursor:pointer;}
 .birthList li .birthListDL .birthPic{margin:0px; padding:0px 4px 0px 0px; float:left;}
 .birthList li .birthListDL .birthPic img{border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; border:1px solid #e7e7e7;}
 .birthList li .birthListDL .birthName{margin:0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
@@ -277,7 +279,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 /* birthday portlet */
 /* 생일자 포틀릿*/
 .box_shadow .birthList li {width:33%;float:none; display:inline-block; padding:7px 0px 12px 0px;} 
-.birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;}
+.birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;cursor:pointer;}
 .birthList li .birthListDL .birthPic{margin:0px; padding:0px 4px 0px 0px; float:left;}
 .birthList li .birthListDL .birthPic img{width:50px; height:50px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; border:1px solid #e7e7e7;}
 .birthList li .birthListDL .birthName{margin:11px 0px 0px 0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}

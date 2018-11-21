@@ -584,9 +584,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 		if (result.equals(null)) {
 			result = "fail";
-		} else {
-			result = "ok";
-		}
+		} 
 
 		LOGGER.debug("insertFolder ended");
 		return result;
