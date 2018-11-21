@@ -19,8 +19,13 @@ public class PortletInfoVO {
 	private String boardName1;
 	private String boardName2;
 	private String menuName;
+	private boolean accessYN;
+	
+	//이거 필요한가
 	private String userAuth;
+	//이거 필요한가
 	private String deptAuth;
+	//이거 필요한가
 	private String comAuth;
 	
 	public String getUserAuth() {
@@ -132,18 +137,17 @@ public class PortletInfoVO {
 	public void setMenuName(String menuName) {
 		this.menuName = menuName;
 	}
+	public boolean isAccessYN() {
+		return accessYN;
+	}
+	public void setAccessYN(boolean accessYN) {
+		this.accessYN = accessYN;
+	}
 	@Override
 	public String toString() {
-		return "PortletInfoVO [portletId=" + portletId + ", portletOrder="
-				+ portletOrder + ", portletName=" + portletName + ", menuId="
-				+ menuId + ", portletUrl=" + portletUrl + ", isGeneral="
-				+ isGeneral + ", defaultOrder=" + defaultOrder
-				+ ", portletCategory=" + portletCategory + ", connectionUrl="
-				+ connectionUrl + ", portletUsed=" + portletUsed
-				+ ", portletBoardId=" + portletBoardId + ", portletNameList="
-				+ portletNameList + ", boardName1=" + boardName1
-				+ ", boardName2=" + boardName2 + ", menuName=" + menuName
-				+ ", userAuth=" + userAuth + ", deptAuth=" + deptAuth
-				+ ", comAuth=" + comAuth + "]";
+		return "PortletInfoVO [portletId=" + portletId + ", portletOrder=" + portletOrder + ", portletName=" + portletName + ", menuId=" + menuId + ", portletUrl=" + portletUrl + ", isGeneral="
+				+ isGeneral + ", defaultOrder=" + defaultOrder + ", portletCategory=" + portletCategory + ", connectionUrl=" + connectionUrl + ", portletUsed=" + portletUsed + ", portletBoardId="
+				+ portletBoardId + ", portletNameList=" + portletNameList + ", boardName1=" + boardName1 + ", boardName2=" + boardName2 + ", menuName=" + menuName + ", accessYN=" + accessYN
+				+ ", userAuth=" + userAuth + ", deptAuth=" + deptAuth + ", comAuth=" + comAuth + "]";
 	}
 }
