@@ -323,6 +323,12 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<MenuAuthVO>) list("ezNewPortal.getMenuAuth", map);
 	}
 	
+	//
+	@SuppressWarnings("unchecked")
+	public List<PortletInfoVO> getPortletForUser(Map<String, Object> map) throws Exception {
+		return (List<PortletInfoVO>) list("ezNewPortal.getPortletForUser", map);
+	}
+	
 	public int insertMenu(Map<String, Object> map) throws Exception {
 		return (int) insert("ezNewPortal.insertMenu", map);
 	}

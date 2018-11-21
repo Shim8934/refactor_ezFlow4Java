@@ -168,7 +168,7 @@ public class EzNewPortalGWController {
 			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId);
 			LOGGER.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame());
 			
-			// 사용자 포틀릿 순서 가져오기
+			/*// 사용자 포틀릿 순서 가져오기
 			List<PortletInfoVO> portletOrder = ezNewPortalService.getPortletOrderUser(portletLang, userId, tenantId, companyId, deptId);
 			// 권한체크가 끝난 포틀릿 리스트를 담을 리스트선언
 			List<PortletInfoVO> resultPortletList = new ArrayList<PortletInfoVO>();
@@ -212,7 +212,11 @@ public class EzNewPortalGWController {
 					} 
 				}
 				data.put("portletOrder", portletOrder);
-			}
+			}*/
+			
+			List<PortletInfoVO> portletOrder = ezNewPortalService.getUserPortletList(portletLang, userId, tenantId, companyId, deptId);
+			JSONObject data = new JSONObject();
+			data.put("portletOrder", portletOrder);
 
 			// 회사의 슬라이더 이미지 가져오기
 			List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(companyId, "USER", null, tenantId);
@@ -760,7 +764,7 @@ public class EzNewPortalGWController {
 			String deptId = info.getDeptId();
 			JSONObject data = new JSONObject();
 			
-			List<?> portletList = ezNewPortalService.getUserPortletList(portletLang, userId, tenantId, companyId, deptId);
+			List<PortletInfoVO> portletList = ezNewPortalService.getUserPortletList(portletLang, userId, tenantId, companyId, deptId);
 			
 			data.put("portletList", portletList);
 			
