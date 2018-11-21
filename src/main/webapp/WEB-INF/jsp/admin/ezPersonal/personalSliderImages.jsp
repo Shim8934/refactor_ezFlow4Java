@@ -27,7 +27,7 @@
 		.addNewSliderBttn span {height:25px; float:right; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 		.slider-header-add {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;border:1px solid #2196f3; width:210px;}
 		.addImageBtn span {height:25px; background-color:#f4f4f4; border:1px solid #e7e7e7;  float:right; padding: 0px 9px; line-height: 23px; display:block; text-align: center; margin-top:40%; margin-right:30%}
-		#UploadSliderImage {position:fixed;}
+		#UploadSliderImage {position:relative; bottom:120px;}
 		.sliderInfoTDadd { padding: 3px;}
 		.imgbtn {}
 	}
@@ -35,6 +35,9 @@
 		<script type="text/javascript">
 		  var sliderid = "<c:out value = '${sliderID}' />";
 		  var guid = "{" + GetGUID() + "}";
+		  var g_xmlhttp;
+		  var ReturnFunction;
+		  var pNoneActiveX = "YES";
 			/*  document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
@@ -87,8 +90,12 @@
 		    		sliderURL = result[i].url;
 		    		sliderIsUse = result[i].isUse;
 		    		
-		    		sliderHTML += "<li class = 'sliderList' id = 'sliderList'>";
+		    		sliderHTML += "<li class = 'sliderList' id = 'sliderList"+sliderID+"'>";
 		    		sliderHTML += "<div class = 'slider-header'>";
+		    		sliderHTML += "<a class = 'cancelNewSliderBtn'>";
+			    	sliderHTML += "<span class ='modifyCancel'><img src='/images/close_xBtn.png'></span></a>";
+			    	sliderHTML += "<a class= 'addNewSliderBttn'>";
+			    	sliderHTML += "<span class='modifyPopUp' id= 'modifyPopUp'><img src='/images/email/popup_icon.gif' ></span></a>";
 		    		sliderHTML += "</div>";
 		    		sliderHTML += "<dt><span class='imagePage'><IMG src ="+sliderImagePath+" style='width:225px;height:210px'/></dt>";
 		    		sliderHTML += "</span>";
@@ -109,11 +116,13 @@
 		    		sliderHTML += "</tr></table>";
 		    		sliderHTML += "</div></li>";
 		    		
+		    		
 		    	}
 		    	
 		    	sliderHTML += "<li class='addSlider' id='addSlider'><div style='margin-top:97px'><img src='/images/admin/admin_portlet_plus.png' ></img></div></li>";
 		    	document.getElementById("sliderContainer").innerHTML = sliderHTML;
-		    	document.getElementById("addSlider").onclick = btn_Select; 
+		    	document.getElementById("addSlider").onclick = btn_Select;
+		    	document.getElementById("modifyPopUp").onclick = modifySlider;
 		    	
 		    	for (var i = 0; i < sliderCnt; i++) {
 		    		var checkbox = document.getElementById("toggleButton");
@@ -164,8 +173,6 @@
 		    	sliderHTML += "<div class = 'slider-header-add' style='background-color:#f4f4f4;border:1px solid #e7e7e7;color:#b1b1b1'>";
 		    	sliderHTML += "<a class = 'cancelNewSliderBtn'>";
 		    	sliderHTML += "<span class ='addCancel'><img src='/images/close_xBtn.png'></span></a>";
-		    	sliderHTML += "<a class= 'addNewSliderBttn'>";
-		    	sliderHTML += "<span class='addCancel'><img src='/images/email/popup_icon.gif' ></span></a>";
 		    	sliderHTML += "</div>";
 		    	sliderHTML += "<div class = 'slider-content' style='width:225px; height:210px'>";
 		    	sliderHTML += "<a class ='addImageBtn'>";
@@ -188,7 +195,7 @@
 		    	document.getElementById("sliderContainer").insertAdjacentHTML('beforeend', sliderHTML);
 		    	
 		    	$(".cancelNewSliderBtn").on("click", addCancel);
-		        if (CrossYN()) {
+		        /* if (CrossYN()) {
 		            selectimage_dialogArguments[1] = btn_Select_Complete;
 		            var SelectImage = window.open("/admin/ezPersonal/selectImage.do", "SelectImage", GetOpenWindowfeature(410, 750));
 		            try { SelectImage.focus(); } catch (e) {
@@ -200,15 +207,12 @@
 		            feature = feature + GetShowModalPosition(410, 750);
 		            window.showModalDialog(url, "", feature);
 		            window.location.reload(false);
-		        }
+		        } */
 		    } 
 		    //슬라이드 이미지 생성 취소
 		    var addCancel = function() {
 		    	getSliderList();
 		    }
-		    var g_xmlhttp;
-		    var ReturnFunction;
-		    var pNoneActiveX = "YES";
 		    
 		    //슬라이드 이미지 추가
 		    function addImage(){
@@ -374,6 +378,8 @@
 		        	}
 		        });
 		        
+		        getSliderList();
+		        
 		    }
 		    
 		    function S4() {
@@ -384,9 +390,13 @@
 		        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 		    }
 		    
-		    function btn_Select_Complete() {
+		    /* function btn_Select_Complete() {
 		        window.location.reload(false);
-		    } 
+		    }  */
+		    //슬라이더 수정 함수
+		    function modifySlider() {
+		    	
+		    }
 	
 		    function sliderdelete() {
 		        if (tempid == "") {
