@@ -88,7 +88,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -106,7 +106,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) D
 			ON
@@ -115,7 +115,10 @@
             	(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
             AND
             	A.status <> '2'
-            	
+            AND
+				B.updatestatus IN (0, 1)
+            AND 
+            	B.companyid = #companyID#
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -196,9 +199,13 @@
             AND
             	A.status <> 2
             AND
+				B.updatestatus IN (0, 1)
+            AND
                 B.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
         ]]>
         
         <isNotEqual property="searchValue" compareValue="">
@@ -237,6 +244,7 @@
                 A.title,
                 A.memberid,
                 TO_CHAR(TO_DATE(A.regdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS regdate,
+                TO_CHAR(TO_DATE(A.enddate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') AS enddate,
                 A."option",
                 A."content",
                 A.memberName,
@@ -245,7 +253,8 @@
 				B.status confirmstatus,
 				B.updateStatus,
 				B.commentStatus,
-				B.shareStatus
+				B.shareStatus,
+				A.companyId
             FROM
                 TBL_CIRCULAR A
 			JOIN
@@ -273,7 +282,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -291,7 +300,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) D
 			ON
@@ -418,7 +427,9 @@
             WHERE
                 A.memberid = #memberID#
             AND
-                A.tenantid = #tenantID#) d
+                A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID# ) d
         join (        
         select c.circularBMID, c.membername 
         from
@@ -437,23 +448,51 @@
 			SELECT
 				A.circularbmid,
 				A.memberid,
-				B.company,
-				B.description,
-				B.title,
+				CC.company,
+    			CC.description,
+    			CC.title,
 				A.membername,
-				B.mail
+				CC.mail
 			FROM
 				TBL_CIRCULAR_BMUSER A
 			LEFT JOIN
-				TBL_USERMASTER B
+				( SELECT 
+						BB.*, ROW_NUMBER() OVER (PARTITION BY BB.CN ORDER BY ROWNUM) CNT 
+			      FROM ( 
+			      		SELECT 
+			                D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION
+			            FROM 
+			                TBL_USERMASTER D
+			            WHERE 
+			                D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
+			            UNION ALL
+			            SELECT 
+			                B.cn, B.DISPLAYNAME, C.EXTENSIONATTRIBUTE3 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION
+			            FROM 
+			                TBL_USERMASTER B 
+			            INNER JOIN 
+			                TBL_ADDJOBMASTER A 
+			            ON 
+			                A.CN = B.CN 
+			            AND 
+			                A.TENANT_ID = B.TENANT_ID       
+			            RIGHT JOIN 
+			                TBL_DEPTMASTER C
+			            ON 
+			                A.DEPTID = C.CN
+			            AND 
+			                B.TENANT_ID = C.TENANT_ID   
+			            WHERE 
+			                A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID#) BB
+			        ) CC
 			ON
-				A.memberid = B.cn
-			AND
-				A.tenantid = B.tenant_id
+				A.memberid = CC.cn
 			WHERE
-				circularbmid = #circularBMId#
+				CC.CNT = '1' 
 			AND
-				tenantid = #tenantID#
+				A.circularbmid = #circularBMId#
+			AND
+				A.tenantid = #tenantID#
         ]]>
     </select>
     
@@ -552,6 +591,8 @@
 				A.memberid <> #memberID#
 			AND
 				A.tenantid = #tenantID#
+			AND
+				A.companyid = #companyID#
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -632,6 +673,8 @@
 				A.memberid <> #memberID#
             AND
                 A.tenantid = #tenantID#
+			AND
+            	A.companyid = #companyID#
         ]]>
         
         <isNotEqual property="searchValue" compareValue="">
@@ -680,6 +723,8 @@
                 A.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
         ]]>
         
         <isNotEqual property="searchValue" compareValue="">
@@ -753,7 +798,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -771,7 +816,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) D
 			ON
@@ -780,6 +825,8 @@
             	A.status = 2
             AND
              	B.updatestatus IN (0, 1)
+             AND
+            	A.companyid =#companyID#
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -854,6 +901,8 @@
             	memberid = #memberId#
             AND
                 tenantid = #tenantId#      
+            AND
+                companyid = #companyID#
         ]]>
     </select>
     
@@ -879,6 +928,8 @@
 				A.memberid = #memberID#
 			AND
 				A.tenantid = #tenantID#
+			AND
+				A.companyid = #companyID#
 		]]>
          
 		<isNotEqual property="searchValue" compareValue="">
@@ -953,7 +1004,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = 0
+					BB.tenantid = #tenandID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -971,7 +1022,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) D
 			ON
@@ -984,6 +1035,8 @@
 				A.tenantid = #tenantID# 
 			AND
 				A.status <> 2
+			AND
+				A.companyid = #companyID#
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -1108,7 +1161,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) C
 			ON
@@ -1126,7 +1179,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) D
 			ON
@@ -1137,6 +1190,8 @@
             	B.memberID = #memberID#
             AND
                 A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -1209,6 +1264,8 @@
             	B.memberID = #memberID#
             AND
                 A.tenantid = #tenantID#
+            AND
+            	A.companyid = #companyID#
         ]]>
         
         <isNotEqual property="searchValue" compareValue="">
@@ -1340,7 +1397,7 @@
 				WHERE
 					BB.status = 1
 				AND
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) E
 			ON
@@ -1358,7 +1415,7 @@
 				AND
 					AA.tenantid = BB.tenantid
 				WHERE
-					BB.tenantid = 0
+					BB.tenantid = #tenantID#
 				GROUP BY
 					BB.circularid) F
 			ON
@@ -1403,7 +1460,8 @@
 				D.updatestatus = '3'  
 			AND
 				A.tenantid = #tenantID#
-			
+			AND
+				A.companyid = #companyID#
 		]]>
         
         <isNotEqual property="orderCell" compareValue="">
@@ -1684,14 +1742,20 @@
 					A.circularid = B.circularid
 				AND
 					A.tenantid = B.tenantid
+				AND
+					A.companyid = B.companyid
 				WHERE
 					(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
 				AND
 					A.status <> 2
 				AND
+					B.updatestatus IN (0, 1)
+				AND
 					B.memberid = #userID#
 				AND
 					A.tenantid = #tenantID#
+				AND
+					A.companyid = #companyID#
 			]]>
 		</isEqual>
 		<isEqual property="listType" compareValue="circularComplete">
@@ -1740,6 +1804,8 @@
 					A.memberid = #userID#
 				AND
 					A.tenantid = #tenantID#
+				AND
+					A.companyid = #companyID#
 			]]>
 		</isEqual>
 		<isEqual property="listType" compareValue="circularTemp">
@@ -1836,26 +1902,56 @@
 	<select id="EzCircularDAO.getConfirmMember" resultClass="CircularConfirmVO" >
 		<![CDATA[
 			SELECT *
-			FROM (
-				SELECT rownum as rnum, A.memberid, B.displayname, B.description, B.company, B.title, 
-					NVL(A.confirmdate, ' ') AS confirmdate
-				FROM 
-					TBL_CIRCULAR_USER A
-				RIGHT JOIN 
-					TBL_USERMASTER B
-				ON 
-					A.memberid = B.cn
-				WHERE 
-					A.CIRCULARID=#circularID# AND A.TENANTID=#tenantID# AND A.STATUS = '1' and A.TENANTID=B.tenant_id 
-				AND
-					a.memberid <> ( SELECT 
-													memberId 
-											FROM 
-												TBL_CIRCULAR 
-											WHERE 
-												circularId = #circularID# )
-				ORDER BY 
-				 	A.confirmdate desc ) 
+			    FROM (
+			        SELECT rownum as rnum, A.memberid, CC.displayname, CC.description, CC.company, CC.title, 
+			            NVL(A.confirmdate, ' ') AS confirmdate, CC.DEPTID
+			        FROM 
+			            TBL_CIRCULAR_USER A
+			        RIGHT JOIN 
+			             ( SELECT 
+			                 BB.*, ROW_NUMBER() OVER (PARTITION BY BB.CN ORDER BY ROWNUM) CNT 
+			               FROM ( 
+			                SELECT 
+								D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION, D.DEPARTMENT AS DEPTID
+							FROM 
+								TBL_USERMASTER D
+							WHERE 
+								D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
+							UNION ALL
+							SELECT 
+								B.cn, B.DISPLAYNAME, C.EXTENSIONATTRIBUTE3 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, A.DEPTID
+							FROM 
+								TBL_USERMASTER B 
+							INNER JOIN 
+								TBL_ADDJOBMASTER A 
+							ON 
+								A.CN = B.CN 
+							AND 
+								A.TENANT_ID = B.TENANT_ID       
+							RIGHT JOIN 
+								TBL_DEPTMASTER C
+							ON 
+								A.DEPTID = C.CN
+							AND 
+								B.TENANT_ID = C.TENANT_ID   
+							WHERE 
+								A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# ) BB
+			            ) CC
+			        ON 
+			            A.memberid = CC.cn
+			        AND
+			            CC.CNT = '1'
+			        WHERE 
+			            A.CIRCULARID=#circularID# AND A.TENANTID=#tenantID# AND A.STATUS = '1'  
+			        AND
+			            a.memberid <> ( SELECT 
+			                                            memberId 
+			                                    FROM 
+			                                        TBL_CIRCULAR 
+			                                    WHERE 
+			                                        circularId = #circularID# )
+			        ORDER BY 
+			            A.confirmdate desc ) 
 				WHERE rnum between #start#+1 and #perCount#+#start#
 		]]>
 	</select>
@@ -1881,13 +1977,52 @@
 											circularId = #circularID# )
 		]]>
 	</select>
+	
+	<select id="EzCircularDAO.getCircularUserDeptId" parameterClass="Map" resultClass="CircularMemberVO">
+		<![CDATA[
+			SELECT 
+				BB.department, BB.company
+			FROM (
+				SELECT 
+					A.*, ROW_NUMBER() OVER (PARTITION BY A.CN ORDER BY ROWNUM) CNT
+				FROM ( 
+					SELECT 
+						D.CN, D.DEPARTMENT, D.PHYSICALDELIVERYOFFICENAME as companyid, D.TENANT_ID, D.company
+					FROM 
+						TBL_USERMASTER D
+					WHERE 
+						D.CN = #circularUserID# and D.tenant_id = #tenantID# and D.PHYSICALDELIVERYOFFICENAME =  #companyID#
+					UNION ALL
+					SELECT 
+						B.cn, A.DEPTID, C.EXTENSIONATTRIBUTE2, A.TENANT_ID, C.EXTENSIONATTRIBUTE3
+					FROM 
+						TBL_USERMASTER B 
+					INNER JOIN 
+						TBL_ADDJOBMASTER A 
+					ON 
+						A.CN = B.CN 
+					AND 
+						A.TENANT_ID = B.TENANT_ID       
+					RIGHT JOIN 
+						TBL_DEPTMASTER C
+					ON 
+						A.DEPTID = C.CN
+					AND 
+						B.TENANT_ID = C.TENANT_ID
+					WHERE 
+            			A.CN = #circularUserID# and A.tenant_id = #tenantID# and C.EXTENSIONATTRIBUTE2 = #companyID#) A
+					) BB
+			WHERE 
+				BB.CNT = '1'
+		]]>
+	</select> 
 
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[
             INSERT INTO TBL_CIRCULAR
-                (circularid, title, importance, "option", "content", hasfile, status, memberid, membername, membername2, regdate, enddate, tenantid)
+                (circularid, title, importance, "option", "content", hasfile, status, memberid, membername, membername2, regdate, enddate, tenantid, companyID)
             VALUES
-                ((select (case when max(circularid) is null then 1 else max(circularid)+1 end) from tbl_circular), #title#, #importance#, #option#, #content#, #hasFile#, #status#, #memberID#, #memberName#, #memberName2#, #regDate#, #endDate#, #tenantID#)
+                ((select (case when max(circularid) is null then 1 else max(circularid)+1 end) from tbl_circular), #title#, #importance#, #option#, #content#, #hasFile#, #status#, #memberID#, #memberName#, #memberName2#, #regDate#, #endDate#, #tenantID#, #companyID#)
         ]]>
         
         <selectKey keyProperty="circularid" resultClass="Integer" >
@@ -1898,9 +2033,9 @@
     <insert id="EzCircularDAO.insertCircularUser" parameterClass="Map">
         <![CDATA[
             INSERT INTO TBL_CIRCULAR_USER
-                (circularuserid, circularid, memberid, membername, membername2, status, confirmdate, updatestatus, tenantid)
+                (circularuserid, circularid, memberid, membername, membername2, status, confirmdate, updatestatus, tenantid, companyid)
             VALUES
-                ((select (case when max(circularuserid) is null then 1 else max(circularuserid)+1 end) from tbl_circular_user) ,#circularID#, #memberID#, #memberName#, #memberName2#, #status#, #confirmDate#, #updateStatus#, #tenantID#)
+                ((select (case when max(circularuserid) is null then 1 else max(circularuserid)+1 end) from tbl_circular_user) ,#circularID#, #memberID#, #memberName#, #memberName2#, #status#, #confirmDate#, #updateStatus#, #tenantID#, #companyID#)
         ]]>
     </insert>
   
@@ -1925,9 +2060,9 @@
     <insert id="EzCircularDAO.setCircularDeptSave" parameterClass="Map">
         <![CDATA[
 			INSERT INTO TBL_CIRCULAR_BM
-				(circularbmid, title, memberid, regdate, tenantid)
+				(circularbmid, title, memberid, regdate, tenantid, companyid)
 			VALUES 
-				((select (case when max(circularbmid) is null then 1 else max(circularbmid)+1 end) from tbl_circular_bm), #title#, #userID#, #nowDate#, #tenantID#)
+				((select (case when max(circularbmid) is null then 1 else max(circularbmid)+1 end) from tbl_circular_bm), #title#, #userID#, #nowDate#, #tenantID#, #companyID#)
         ]]>
         
         <selectKey resultClass="String">
@@ -1967,9 +2102,9 @@
     <insert id="EzCircularDAO.circularFolderAdd" parameterClass="map">
         <![CDATA[
             INSERT INTO TBL_CIRCULAR_FOLDER
-                (circularfolderid, circularfoldername, memberid, regdate, tenantid) 
+                (circularfolderid, circularfoldername, memberid, regdate, tenantid, companyid) 
             VALUES 
-                ((select (case when max(circularfolderid) is null then 1 else max(circularfolderid)+1 end) from tbl_circular_folder), #folderName#, #memberId#, #regDate#, #tenantId#)
+                ((select (case when max(circularfolderid) is null then 1 else max(circularfolderid)+1 end) from tbl_circular_folder), #folderName#, #memberId#, #regDate#, #tenantId#, #companyID#)
         ]]>
     </insert>
     
@@ -2402,7 +2537,7 @@
         ]]>
     </update>
     
-    <update id="EzCircularDAO.updateCircularAttach" parameterClass="Map">
+<!--     <update id="EzCircularDAO.updateCircularAttach" parameterClass="Map">
         <![CDATA[
             UPDATE
 	            TBL_CIRCULAR_FILE
@@ -2415,7 +2550,7 @@
 	        AND
 	            tenantid = #tenantID#
         ]]>
-    </update>
+    </update> -->
     
     <update id="EzCircularDAO.restoreCircular" parameterClass="Map">
     	<![CDATA[
