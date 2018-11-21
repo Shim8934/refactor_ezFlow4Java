@@ -897,7 +897,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
-		String reuseTitleYN = ezCommonService.getTenantConfig("reuseTitleYN", userInfo.getTenantId());
+		String apprReuseConfig = ezCommonService.getTenantConfig("apprReuseConfig", userInfo.getTenantId());
 		
 		String docSN = "";
 		String beforeUrl = "";
@@ -1017,7 +1017,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("beforeUrl", beforeUrl);
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
-		model.addAttribute("reuseTitleYN", reuseTitleYN);
+		model.addAttribute("apprReuseConfig", apprReuseConfig);
 		model.addAttribute("nonElecRec", nonElecRec);
 		// FormBuilder
 		model.addAttribute("reformflag", reformflag);
