@@ -519,7 +519,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		for(String itemSeq : popupList.split(";")) {
 			map.put("v_pItemSeq", itemSeq);
 			map.put("tenantID", tenantID);
-			ezPersonalAdminDAO.deletePopup(map);		
+			ezPersonalAdminDAO.deletePopup(map);
 		}
 		logger.debug("deletePopup ended");
 	}

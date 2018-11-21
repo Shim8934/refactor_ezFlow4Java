@@ -170,7 +170,7 @@
 			function rowListSelect() {
 				var len = rowList.length;
 				for(var i=0; i<len; i++) {
-					var tempItemSeq = rowList.pop();	
+					var tempItemSeq = rowList.pop();
 					if(document.getElementById(tempItemSeq) != null) {
 						$("#" + tempItemSeq).prop("checked", true);
 						var tempID = $("#" + tempItemSeq)[0].parentNode.parentNode.id;
@@ -233,7 +233,7 @@
 				if(itemseq == "0") {
 					return;
 				}
-				
+
 				if(checkFlag) {
 					var color = $("#" + obj + " td").css("background-color");
 					if(color === "rgb(228, 232, 236)") {
@@ -254,7 +254,7 @@
 						$("#" + itemseq).prop("checked", true);
 					}
 				}
-				
+
 				checkItems();
 				doc.getElementById("ifrmPreViewH").style.display = "";
 				//showPreview(isPreview, itemseq);
@@ -431,7 +431,7 @@
 				case 0 :
 					previewH.style.display = "none";
 					mainView.style.width = "100%";
-					doc.getElementById("contentlist").style.height = conlistH + "px";					
+					doc.getElementById("contentlist").style.height = conlistH + "px";
 					break;
 				case 2 :
 					doc.getElementById("contentlist").style.height = conlistH + "px";
@@ -605,7 +605,7 @@
 				if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 					height = height - 30;
 				}
-				
+
 				conH = height;
 				if(isPreview == 0) {
 					doc.getElementById("contentlist").style.height = height + "px";
@@ -680,7 +680,7 @@
 			<script type="text/javascript">
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			</script>
-			
+
 			<div class="mainView" id="mainView" style="width:100%;float:left">
 				<div id="contentlist" style="width:100%; overflow: auto;">
 					<table class="mainlist" style="width:100%;">

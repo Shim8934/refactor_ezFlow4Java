@@ -108,7 +108,7 @@
 					}
 
 					//2018-08-02 김보미 - 데이터가 없을 때
-					if (TotalCount == null || TotalCount == 0) { 
+					if (TotalCount == null || TotalCount == 0) {
 						var TR_noItems = "<tr id='Poll_TR_noItems'><td style='text-align: center;' colspan='6'>" + strLang5 + "</td></tr>";
 						$("#AccessListView tbody").eq(0).html(TR_noItems);
 					}
