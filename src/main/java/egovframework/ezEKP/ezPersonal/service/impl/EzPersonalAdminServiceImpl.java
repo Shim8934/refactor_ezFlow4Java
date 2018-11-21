@@ -207,7 +207,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public String getQuickLink(String quickLinkID, int tenantID) throws Exception {
+	public PersonalQuickLinkVO getQuickLink(String quickLinkID, int tenantID) throws Exception {
 		logger.debug("getQuickLink started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -217,10 +217,10 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		PersonalQuickLinkVO vo = ezPersonalAdminDAO.getQuickLink(map);
 		
-		String result = "<DATA>" + commonUtil.getQueryResult(vo) + "</DATA>";
+		//String result = "<DATA>" + commonUtil.getQueryResult(vo) + "</DATA>";
 
 		logger.debug("getQuickLink ended");
-		return result;
+		return vo;
 	}
 
 	@Override
@@ -441,14 +441,17 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public List<PersonalPopupVO> getPopupList(String companyID, int tenantID) throws Exception {
+	public List<PersonalPopupVO> getPopupList(String companyID, int totalCount, int pageSize, int start, int tenantID) throws Exception {
 		logger.debug("getPopupList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_pCompanyID", companyID);
-		map.put("tenantID", tenantID);	
-
+		map.put("v_pTotal", totalCount);
+		map.put("v_pCount", pageSize);
+		map.put("v_pStart", start);
+		map.put("tenantID", tenantID);
+		
 		logger.debug("getPopupList ended");
 		return ezPersonalAdminDAO.getPopupList(map);
 	}
@@ -895,5 +898,19 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		ezPersonalAdminDAO.setPopupConfig(map);
 		logger.debug("setPopupConfig ended");
+	}
+	
+	@Override
+	public int getPopupCount(String companyID, int tenantID) throws Exception {
+		logger.debug("getPopupCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pCompanyID", companyID);
+		map.put("v_pMode", "A");
+		map.put("tenantID", tenantID);
+
+		logger.debug("getPopupCount ended");
+		return ezPersonalAdminDAO.getPopupCount(map);
 	}
 }
