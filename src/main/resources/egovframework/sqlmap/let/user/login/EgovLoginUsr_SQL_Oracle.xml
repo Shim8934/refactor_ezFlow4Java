@@ -27,7 +27,7 @@
 		<result property="jikChek"				column="jikchek"					columnIndex="17"/>
         <result property="tenantId"             column="tenant_id"                  columnIndex="18"/>
         <result property="deptPathCode"         column="deptPathCode"               columnIndex="19"/>
-        <result property="primary"         		column="primaryLang"              		columnIndex="20"/>
+        <result property="primary"         		column="primary"              		columnIndex="20"/>
         <result property="loginCnt"             column="loginCnt"                	columnIndex="21"/>
         <result property="gyumJik"              column="gyumJik"                	columnIndex="22"/>
         <result property="userFileUrl"          column="userFileUrl"                columnIndex="23"/>
@@ -117,7 +117,7 @@
 					u.extensionattribute10 as jikchek,
 					u.tenant_id,
 					concat('top,Top,', d.dept_cd_path) AS deptPathCode,
-					(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+					(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primary,
 					u.loginCnt,
 					u.extensionattribute4 as gyumJik,
 					u.extensionattribute2 as userFileUrl,
@@ -214,7 +214,7 @@
 					u.extensionattribute10 as jikchek,
 					u.tenant_id,
 					concat('top,Top,', d.dept_cd_path) AS deptPathCode,
-					(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+					(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primary,
 					u.loginCnt,
 					u.extensionattribute4 as gyumJik,
 					u.extensionattribute2 as userFileUrl,
