@@ -11,6 +11,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -18,7 +19,9 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1420,5 +1423,28 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		ezPersonalAdminService.setPopupConfig(userInfo.getId(), isPreview, userInfo.getTenantId());
 		logger.debug("setPopupConfig ended");
 		return null;
+	}
+	/**
+	 * 초기화면 QuickLink 순서 변경
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/updateQuickLinkOrder.do", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject updateQuickLinkOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject jsonParam) throws Exception {
+		logger.debug("updateQuickLinkOrder started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		JSONObject json = new JSONObject();
+		JSONParser jp = new JSONParser();
+		jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+		
+		JSONArray linkOrderList = (JSONArray) jsonParam.get("linkOrderList");
+		ezPersonalAdminService.updateQuickLinkOrder(linkOrderList, userInfo.getTenantId());
+		
+		json.put("result", "OK");
+		
+		logger.debug("updateQuickLinkOrder ended");
+		return json;
 	}
 }

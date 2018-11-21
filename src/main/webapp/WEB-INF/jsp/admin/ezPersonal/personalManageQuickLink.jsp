@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 		
 		<script type="text/javascript">
 			var Strmessage = "<spring:message code = 'ezPersonal.t1022' />";
@@ -125,6 +126,22 @@
 				
 				addElmt.appendChild(dlElmt);
 				mainList.appendChild(addElmt);
+				
+				//링크삭제후순서업데이트
+				updateLinkOrder();
+				
+				//링크드래그앤드롭
+				$("#mainlist").sortable({
+					items: "li.link",
+					start: function(event, ui) {
+						$(".linkDetails").remove();
+					},
+					update: function(event, ui) {
+						updateLinkOrder();
+					}
+				});
+				
+				$("#mainlist").disableSelection();
 			}
 			function setQuickImg(linkType, linkTypeUrl) {
 				var result;
@@ -205,7 +222,7 @@
 				userLang = item.strUserLang;
 				mode = item.mode;
 				
-				if (itemId != "" && mode == "modify") {
+				if (mode == "modify") {
 					initQuickLink(itemId);
 					initQuickLinkACL(itemId);
 				}
@@ -215,33 +232,33 @@
 				var subTitle2;
 				
 				if (item.primary == 1) {
-					mainTitle = "한국어";
-					subTitle1 = "영어";
-					subTitle2 = "일본어";
+					mainTitle = "<spring:message code = 'ezPersonal.s81' />";
+					subTitle1 = "<spring:message code = 'ezPersonal.s82' />";
+					subTitle2 = "<spring:message code = 'ezPersonal.s84' />";
 					
 					mainTitleId = "Title1";
 					subTitle1Id = "Title2";
 					subTitle2Id = "Title3";
 				} else if (item.primary == 2) {
-					mainTitle = "영어";
-					subTitle1 = "한국어";
-					subTitle2 = "일본어";
+					mainTitle = "<spring:message code = 'ezPersonal.s82' />";
+					subTitle1 = "<spring:message code = 'ezPersonal.s81' />";
+					subTitle2 = "<spring:message code = 'ezPersonal.s84' />";
 					
 					mainTitleId = "Title2";
 					subTitle1Id = "Title1";
 					subTitle2Id = "Title3";
 				} else {
-					mainTitle = "일본어";
-					subTitle1 = "한국어";
-					subTitle2 = "영어";
+					mainTitle = "<spring:message code = 'ezPersonal.s84' />";
+					subTitle1 = "<spring:message code = 'ezPersonal.s81' />";
+					subTitle2 = "<spring:message code = 'ezPersonal.s82' />";
 					
 					mainTitleId = "Title3";
 					subTitle1Id = "Title1";
 					subTitle2Id = "Title2";
 				}
 				
-				var linksHTML = "<li class='linkDetails' style='display:none'>";
-				linksHTML += "<div id='showNewLink'>";
+				var linksHTML = "<li class='linkDetails' id='linkLiNew' style='display:none'>";
+				linksHTML += "<div id='linkDetailsNew'>";
 				linksHTML += "<div class='linkTitle'>";
 				linksHTML += "<span>빠른 링크 등록/수정</span>";
 				linksHTML += "<div id='close' class='close'><ul><li><span></span></li></ul></div>"
@@ -249,15 +266,15 @@
 				linksHTML += "<div class='linkContent'>";
 				linksHTML += "<table class='content def'>";
 				linksHTML += "<tr class='primary'>";
-				linksHTML += "<th>이름 (" + mainTitle + ") <span style='color:red'>*</span></th>";
+				linksHTML += "<th><spring:message code = 'ezPersonal.jjs03' /> (" + mainTitle + ") <span style='color:red'>*</span></th>";
 				linksHTML += "<td style='border-bottom: 0px;'><input name='Input' id='"+ mainTitleId +"' class='contInput' maxlength='50'></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr class='primary'>";
-				linksHTML += "<th>이름 (" + subTitle1 + ") <span style='color:red'>*</span></th>";
+				linksHTML += "<th><spring:message code = 'ezPersonal.jjs03' /> (" + subTitle1 + ") <span style='color:red'>*</span></th>";
 				linksHTML += "<td style='border-bottom: 0px;'><input type='text' id='"+ subTitle1Id +"' class='contInput' maxlength='50'></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr class='secondary'>";
-				linksHTML += "<th>이름 (" + subTitle2 + ") <span style='color:red'>*</span></th>";
+				linksHTML += "<th><spring:message code = 'ezPersonal.jjs03' /> (" + subTitle2 + ") <span style='color:red'>*</span></th>";
 				linksHTML += "<td><input type='text' id='"+ subTitle2Id +"' class='contInput' maxlength='50'></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
@@ -266,14 +283,14 @@
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
 				linksHTML += "<th>열림 종류 </th>";
-				linksHTML += "<td><select id='popSize' style='height: 24px; padding-left: 5px;'><option value='chk_Full'>FULL</option><option value='chk_Size'>SIZE</option></select></td>";
+				linksHTML += "<td><select id='popSize' onchange='popChange();' style='height: 24px; padding-left: 5px;'><option value='chk_Full'>FULL</option><option value='chk_Size'>SIZE</option></select></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
 				linksHTML += "<th rowspan='2' style='text-align: bottom; vertical-align: top;'>팝업 크기</th>";
-				linksHTML += "<td><span id='div_Size'>Width <input type='text' id='txt_Width' class='popInput'></span></td>";
+				linksHTML += "<td><span id='div_Size'>Width <input type='text' id='txt_Width' class='popInput' disabled></span></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
-				linksHTML += "<td><span id='div_Size'>Height <input type='text' id='txt_Height' class='popInput'></span></td>";
+				linksHTML += "<td><span id='div_Size'>Height <input type='text' id='txt_Height' class='popInput'disabled></span></td>";
 				linksHTML += "</tr>";
 				linksHTML += "</table>";
 				linksHTML += "</div>";
@@ -336,7 +353,7 @@
 				linksHTML += "<a class='imgbtn'><span id='btn_OK'>"; 
 				
 				if (itemId != "" && mode == "modify") {
-					linksHTML += "수정";
+					linksHTML += "<spring:message code = 'ezPersonal.t169' />";
 				}
 				else {
 					linksHTML += "저장";
@@ -352,32 +369,48 @@
 				linksHTML += "</li>"; 
 				
 				var nowShowDetails = $(".linkDetails").children().attr("id");
-				var DetailMode = $(".linkDetails").attr("id");
-				console.log(nowShowDetails);
-				console.log("이전" + DetailMode);
+				var detailId = $(".linkDetails").attr("id");
+				
+				if(itemId != "") {
+					var itemId2 = itemId.substring(1, itemId.indexOf("}"));
+				}
+				
 				if (mode == "new") {
-					if (nowShowDetails == "showNewLink") {
-						if (DetailMode != "modify") {
+					if (nowShowDetails == "linkDetailsNew") {
+						if (detailId != "linkLiNew") {
+							$(".linkDetails").slideUp(function(){
+								$(".linkDetails").not("#linkLiNew").remove();
+							});
+							
+							$("#linkAdd").after(linksHTML);
+							$(".linkDetails").slideDown();
+						}
+						else {
 							$(".linkDetails").slideUp(function(){
 								$(".linkDetails").remove();
 							});
 						}
-						else {
-							//추가해야함
-							console.log("이전" + DetailMode);
+					}
+					else {
+						$("#linkAdd").after(linksHTML);
+						$(".linkDetails").slideDown();
+					}
+				}
+				else {
+					if (detailId == itemId2) {
+						$(".linkDetails").slideUp(function(){
 							$(".linkDetails").remove();
-							$("#linkAdd").after(linksHTML);
-							$(".linkDetails").slideDown();
-						}
-					} else{
+						});
+					}
+					else {
+						$(".linkDetails").slideUp(function(){
+							$(".linkDetails").not("#" + itemId2).remove();
+						});
+						
 						$("#linkAdd").after(linksHTML);
 						$(".linkDetails").slideDown();
 					}
-				} else {
-					if (nowShowDetails != "showNewLink") {
-						$("#linkAdd").after(linksHTML);
-						$(".linkDetails").slideDown();
-					}
+					
 				}
 				
 				//타입이미지버튼선택설정
@@ -402,6 +435,18 @@
 					$(".linkDetails").attr("class", "linkDetails hideDetails");
 				});
 				
+				LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
+			}
+			function popChange() {
+				var popSize = document.getElementById("popSize").value;
+				if (popSize == "chk_Full") {
+					document.getElementById("txt_Width").disabled = true; 
+					document.getElementById("txt_Height").disabled = true; 	
+				}
+				else{
+					document.getElementById("txt_Width").disabled = false; 
+					document.getElementById("txt_Height").disabled = false; 
+				}
 			}
 			function S4() {
 				return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -698,7 +743,10 @@
 				});
 			}
 			function event_GetQuickLink(result) {
-				document.getElementsByClassName("linkDetails")[0].setAttribute("id", "modify");
+				var quickLinkId = result["quickLinkID"];
+				
+				document.getElementsByClassName("linkDetails")[0].setAttribute("id",
+						quickLinkId.substring(1, quickLinkId.indexOf("}")));
 				
 				document.getElementById("Title1").value = result["quickLinkName"];
 				document.getElementById("Title2").value = result["quickLinkName2"];
@@ -708,9 +756,14 @@
 				var size = result["size_"];
 				if (size == "FULL") {
 					document.getElementById("popSize").value = "chk_Full";
+					document.getElementById("txt_Width").disabled = true;
+					document.getElementById("txt_Height").disabled = true;
 				}
 				else{
-					document.getElementById("popSize").value = "chk_Size"; 
+					document.getElementById("popSize").value = "chk_Size";
+					document.getElementById("txt_Width").disabled = false;
+					document.getElementById("txt_Height").disabled = false;
+					
 					document.getElementById("txt_Width").value = size.split(':')[0];
 					document.getElementById("txt_Height").value = size.split(':')[1];
 				}
@@ -759,9 +812,33 @@
 			function event_GetQuickLinkACL(result) {
 				makePermissionsList(result, true);
 			}
+			function updateLinkOrder() {
+				var linkList = $(".link");
+				var linkListCount = linkList.length;
+				var linkOrderList = [];
+				
+				for (var i = 0; i < linkListCount; i++) {
+					var linkId = linkList[i].id;
+					var order = i + 1;
+					linkOrderList.push({"linkOrder": order, "linkId": linkId});
+				}
+				var data = {
+					linkOrderList : linkOrderList
+				};
+				$.ajax({
+					type: "POST",
+					url: "/admin/ezPersonal/updateQuickLinkOrder.do",
+					contentType: "application/json; charset=utf-8",
+					dataType: "json",
+					data: JSON.stringify(data),
+					success: function(result) {
+						//성공
+					}
+				});
+			}
 		</script>
 		<style type="text/css">
-			.link, .linkAdd {cursor: pointer; vertical-align: top; display: inline-block; width: 310px; border: 1px solid #d9d9d9; margin: 20px 30px 0px 0px; height: 200px;}
+			.link, .linkAdd {cursor: pointer; vertical-align: top; display: inline-block; width: 310px; border: 1px solid #d9d9d9; margin: 20px 30px 0px 0px; height: 200px; background-color: rgb(255, 255, 255);}
 			.linkAdd {border: 1px dashed #aaaaaa;}
 			.linkAdd dl dt {text-align: center; margin-top: 50px;}
 			.linkAdd dl dt img {height: 60px; width: 60px;}
