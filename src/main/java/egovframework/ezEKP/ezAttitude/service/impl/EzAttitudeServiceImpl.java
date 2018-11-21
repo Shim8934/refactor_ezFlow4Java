@@ -684,6 +684,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("startPoint", startPoint);
 		map.put("endPoint", endPoint);
 		map.put("type", type);
+		if (startPoint != null && endPoint != null && !startPoint.equals("") && !endPoint.equals("")) {
+			map.put("startRow", Integer.valueOf(startPoint) + 1);
+			map.put("endRow", Integer.valueOf(startPoint) + endPoint);
+		}
 		
 		if (adminFlag.equals("false")){
 			map.put("userId", userId);
