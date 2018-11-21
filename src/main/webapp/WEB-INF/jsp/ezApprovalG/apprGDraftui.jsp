@@ -411,7 +411,7 @@
 		                     	if (isUsed == "reuse") {
 			                		getDocInfo();
 			                		// 재사용이고 문서의 모든정보를 재사용 할시
-				                	if( apprReuseConfig == 0 ){
+				                	if( apprReuseConfig != '1' ){
 				                		setAttachInfo(pDocID, "APR", lstAttachLink);
 				                		ClearDocCellInfo();
 				                	}
@@ -1297,7 +1297,7 @@
 		                drafterDeptid = arr_userinfo[4];
 		                getDraftInfo();
 		                //재사용이고 문서의 모든정보를 재사용하는 옵션일때
-		                if (isUsed == "reuse" && apprReuseConfig == 0) {
+		                if (isUsed == "reuse" && apprReuseConfig != '1') {
 		                	message.Set_EditorContentURL(beforeUrl);
 		                } else {
 			                if (pFormHref != "") {

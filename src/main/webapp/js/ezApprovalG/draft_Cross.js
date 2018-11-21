@@ -3143,7 +3143,7 @@ function getDocInfo() {
             pHasOpinionYN = "Y";
        
 //        if (isUsed == "reuse") {
-//        	if (apprReuseConfig == 0) {
+//        	if (apprReuseConfig != '1') {
 //        		doctitle = SelectSingleNodeValueNew(result, "DATA/DOCTITLE");
 //        	}
 //        }
