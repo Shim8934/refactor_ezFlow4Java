@@ -2612,7 +2612,9 @@
 				ITEMID ,
             	WRITERID ,
 	            WRITERNAME$lang$ WRITERNAME ,
+	            WRITERDEPTID,
 	            WRITERDEPTNAME$lang$ WRITERDEPTNAME ,
+	            WRITERCOMPANYID,
 	            WRITERCOMPANYNAME$lang$ WRITERCOMPANYNAME,
 	            WRITEDATE ,
 	            PARENTWRITEDATE ,
@@ -2661,8 +2663,10 @@
 			SELECT 
 				ITEMID ,
 	            WRITERID ,
+	            WRITERDEPTID,
 	            WRITERNAME$lang$ WRITERNAME,
 	            WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+	            WRITERCOMPANYID,
 	            WRITERCOMPANYNAME$lang$  WRITERCOMPANYNAME,
 	            WRITEDATE ,
 	            PARENTWRITEDATE ,
@@ -3423,7 +3427,7 @@
 			AND
 				A.BoardID = B.BoardID
    			WHERE
-   				TENANT_ID = #v_TENANTID#
+   				A.TENANT_ID = #v_TENANTID#
    			AND
 				(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
    			AND
