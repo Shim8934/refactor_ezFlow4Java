@@ -512,16 +512,16 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public void deletePopup(String itemSeq, int tenantID) throws Exception {
+	public void deletePopup(String popupList, int tenantID) throws Exception {
 		logger.debug("deletePopup started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_pItemSeq", itemSeq);
-		map.put("tenantID", tenantID);
-
+		for(String itemSeq : popupList.split(";")) {
+			map.put("v_pItemSeq", itemSeq);
+			map.put("tenantID", tenantID);
+			ezPersonalAdminDAO.deletePopup(map);		
+		}
 		logger.debug("deletePopup ended");
-		ezPersonalAdminDAO.deletePopup(map);
 	}
 
 	@Override

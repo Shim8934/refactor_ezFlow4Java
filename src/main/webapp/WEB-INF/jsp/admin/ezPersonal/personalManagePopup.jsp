@@ -48,6 +48,8 @@
 					company_change();
 				}
 				getPopupConfig();
+				makelist();
+				windowResize();
 			});
 
 
@@ -67,26 +69,27 @@
 				});
 			}
 
-		    function event_PopupList(result) {
-		        try {
-		            document.getElementById("AccessList").innerHTML = "";
-		            var xmldom = result;
-		            var headerData = createXmlDom();
-		            headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
-	
-		            if (CrossYN()) {
-		                var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-		                var Node = headerData.importNode(xmlRtn, true);
-		                headerData.documentElement.appendChild(Node);
-		            } else {
-		                var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-		                headerData.documentElement.appendChild(xmlRtn);
-		            }
-					
+			function event_PopupList(result) {
+				try {
+					document.getElementById("AccessList").innerHTML = "";
+					var xmldom = result;
+					var headerData = createXmlDom();
+					headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+
+					if (CrossYN()) {
+						var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+						var Node = headerData.importNode(xmlRtn, true);
+						headerData.documentElement.appendChild(Node);
+					} else {
+						var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+						headerData.documentElement.appendChild(xmlRtn);
+					}
+
 					var listview = new ListView();
 					listview.SetID("AccessListView");
 					listview.SetSelectFlag(false);
 					listview.SetMulSelectable(true);
+					listview.SetRowOnClick("PopupList_onClick");
 					listview.SetRowOnDblClick("PopupList_onDblclick");
 					listview.DataSource(headerData);
 					listview.DataBind("AccessList");
@@ -106,20 +109,21 @@
 						TotalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
 						pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
 					}
-					
+
 					totalPage = Math.ceil(new Number(TotalCount / PageSize));
 					
 					//2018-08-09 김보미 - 데이터가 없을 경우 출력
-	                if (headerData.getElementsByTagName("ROW").length == 0) {
-	                	var TR_noItems = "<tr id='Link_TR_noItems'><td style='text-align: center;' colspan='7'>" + "<spring:message code = 'ezPersonal.t20005' />" + "</td></tr>";
-		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
-	                }
-	                makePageSelPage();
-		        } catch (e) {
-	
-		        }
-		    }
-		    
+					if (headerData.getElementsByTagName("ROW").length == 0) {
+						var TR_noItems = "<tr id='Link_TR_noItems'><td style='text-align: center;' colspan='7'>" + "<spring:message code = 'ezPersonal.t20005' />" + "</td></tr>";
+						$("#AccessListView tbody").eq(0).html(TR_noItems);
+					}
+					rowListSelect();
+					checkItems();
+					makePageSelPage();
+					} catch (e) {
+					}
+			}
+
 			// xml data -> input checkbox
 			var cnt;
 			function checkbox_header() {
@@ -163,9 +167,28 @@
 			}
 
 
-		    function company_change() {
+			function rowListSelect() {
+				var len = rowList.length;
+				for(var i=0; i<len; i++) {
+					var tempItemSeq = rowList.pop();	
+					if(document.getElementById(tempItemSeq) != null) {
+						$("#" + tempItemSeq).prop("checked", true);
+						var tempID = $("#" + tempItemSeq)[0].parentNode.parentNode.id;
+						$("#" + tempID + " td").css("background-color", "rgb(228, 232, 236)");
+					}
+				}
+				
+				if(checkFlag) {
+					$("#checkAll").prop("checked",true);
+				} else {
+					$("#checkAll").prop("checked",false);
+				}
+			}
+
+
+			function company_change() {
 				makelist();
-		    }
+			}
 	
 		    function add_popup() {
 		        var pheight = window.screen.availHeight;
@@ -201,6 +224,43 @@
 		        //    makelist();
 		    }
 	
+
+
+			var itemseq;
+			function PopupList_onClick(obj) {
+				var doc = window.document;
+				itemseq = document.getElementById(obj).getAttribute("DATA1");
+				if(itemseq == "0") {
+					return;
+				}
+				
+				if(checkFlag) {
+					var color = $("#" + obj + " td").css("background-color");
+					if(color === "rgb(228, 232, 236)") {
+						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + obj + " td").css("background-color", "rgb(228, 232, 236)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				} else {
+					$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+					$(".checks").prop("checked",false);
+					if($("#" + itemseq).is(":checked")) {
+						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + obj + " td").css("background-color", "rgb(228, 232, 236)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				}
+				
+				checkItems();
+				doc.getElementById("ifrmPreViewH").style.display = "";
+				//showPreview(isPreview, itemseq);
+			}
+
+
 		    var pUse_Editor = "<c:out value = '${useEditor}' />";
 		    function PopupList_onDblclick(obj) {
 		        var popup_number = document.getElementById(obj).getAttribute("DATA1");
@@ -245,37 +305,51 @@
 		        
 		        window.open("/admin/ezPersonal/showPopup.do?itemSeq=" + popup_number +
 		            "&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
-		    }
-	
-		    function del_popup(popup_number) {
-		    	//2018-08-08  김보미 - rownumber추가
-		        /*if (!confirm(popup_number + "<spring:message code = 'ezPersonal.t159' />")) {
-		            return;
-		        }*/
-		        var row_number = $("tr[data1=" + popup_number + "] td:eq(0)").text();
-		        if (!confirm(row_number + "<spring:message code = 'ezPersonal.t159' />")) {
-		            return;
-		        }
-		        
-		        $.ajax({
-		        	type : "POST",
-		        	url : "/admin/ezPersonal/delPopup.do",
-		        	async : false,
-		        	data : {itemSeq : popup_number},
-		        	dataType : "text",
-		        	success : function (result) {
-		        		if (result != "OK") {
-		        			alert("<spring:message code = 'ezPersonal.t160' />");
-		        		} else {
-		        			alert("<spring:message code = 'ezPersonal.t161' />");
-				            makelist();
-		        		}
-		        	}
-		        });
-		    }
-		    
-		    
-			
+		}
+
+
+			var popupList ="";
+			function del_popup() {
+/* 				var row_number = $("tr[data1=" + popup_number + "] td:eq(0)").text();
+				if (!confirm(row_number + "<spring:message code = 'ezPersonal.t159' />")) {
+					return;
+				} */
+				var delCnt = 0;
+				$("input:checkbox[name='checks']").each(function(){
+					if($(this).is(":checked")) {
+						popupList += this.value + ";"
+						delCnt = delCnt + 1;
+					}
+				});
+
+				if(!popupList) {
+					alert("선택된 설문이 없습니다.");
+					return;
+				}
+
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezPersonal/delPopup.do",
+					async : false,
+					data : {"popupList" : popupList},
+					dataType : "text",
+					success : function (result) {
+						if (result == "OK") {
+							alert("<spring:message code = 'ezPersonal.t161' />");
+							if((cnt - delCnt == 0) && pageNum > 1) {
+								pageNum = pageNum -1 ;
+							}
+							itemseq=0;
+							//showPreview(isPreview, 0);
+							makelist();
+						} else {
+							alert("<spring:message code = 'ezPersonal.t160' />");
+						}
+					}
+				});
+			}
+
+
 			// 팝업공지 config 조회
 			var isPreview = 0;
 			function getPopupConfig() {
@@ -345,32 +419,32 @@
 			
 			// 미리보기창 show
 			function setPreview(previewNum) {
-				//var conlistH = conH
+				var conlistH = conH
 				var doc = window.document;
 				var mainView = doc.getElementById("mainView");
 				var previewH = doc.getElementById("previewH");
 				var PreviewRayerH = doc.getElementById("PreviewRayerH");
-				//var contentlistH = doc.getElementById("contentlist");
+				var contentlistH = doc.getElementById("contentlist");
 				var previewmail_bar_h = doc.getElementById("previewmail_bar_h");
 				
 				switch(previewNum) {
 				case 0 :
 					previewH.style.display = "none";
 					mainView.style.width = "100%";
-					//doc.getElementById("contentlist").style.height = conlistH + "px";					
+					doc.getElementById("contentlist").style.height = conlistH + "px";					
 					break;
 				case 2 :
-					//doc.getElementById("contentlist").style.height = conlistH + "px";
+					doc.getElementById("contentlist").style.height = conlistH + "px";
 					mainView.style.width = "70%";
 					previewH.style.width = "30%";
-					//previewH.style.height = conlistH + 47 + "px";
+					previewH.style.height = conlistH + 47 + "px";
 					previewH.style.display = "";
-					//previewmail_bar_h.style.height = conlistH + 47 + "px";
+					previewmail_bar_h.style.height = conlistH + 47 + "px";
 					PreviewRayerH.style.display = "";
 					//if(itemseq!=0) {
 					doc.getElementById("ifrmPreViewH").style.display = "";
 					//}
-					//doc.getElementById("ifrmPreViewH").style.height = conlistH + 47 + "px";
+					doc.getElementById("ifrmPreViewH").style.height = conlistH + 47 + "px";
 					break;
 				}
 				
@@ -517,6 +591,33 @@
 		    function td_Create(strtext) {
 		        tblPageNum.innerHTML = tblPageNum.innerHTML + strtext;
 		    }
+
+			$(window).on("resize", function(){
+				windowResize();
+			});
+
+
+			var conH;
+			function windowResize() {
+				var doc = window.document;
+				var mainView = doc.getElementById("mainView");
+				var height = doc.documentElement.clientHeight - 122 - document.getElementById("mainmenu").clientHeight;
+				if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+					height = height - 30;
+				}
+				
+				conH = height;
+				if(isPreview == 0) {
+					doc.getElementById("contentlist").style.height = height + "px";
+					doc.getElementById("contentlist").style.overflow = "auto";
+				} else if ( isPreview == 2) {
+					doc.getElementById("contentlist").style.height = height + "px";
+					doc.getElementById("contentlist").style.overflow = "auto";
+					doc.getElementById("previewH").style.height = height + 47 + "px";
+					doc.getElementById("previewmail_bar_h").style.height = height + 47 + "px";
+					doc.getElementById("ifrmPreViewH").style.height = height + 47 + "px";
+				}
+			}
 		</script>
 	</head>
 	<body class = "mainbody">
@@ -566,8 +667,8 @@
 			<div id="mainmenu">
 				<ul style="margin-top:15px">	            	
 					<li class="important"><span onClick="add_popup()">등록</span></li>
-					<li><span onclick="delete_poll()">수정</span></li>
-					<li><span onclick="delete_poll()">삭제</span></li>
+					<li><span>수정</span></li>
+					<li><span onclick="del_popup()">삭제</span></li>
 					<div class="sub_frameIcon" style="float:right;">	
 						<div class="sub_frameIconUL" style="width:100% !important;">
 							<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
@@ -581,9 +682,12 @@
 			</script>
 			
 			<div class="mainView" id="mainView" style="width:100%;float:left">
-				<table class="mainlist" style="width:100%;">
-					<div id=AccessList style ="WIDTH:100%; border-right:1px solid #e8e8e8; border-left:1px solid #e8e8e8;"></div>
-				</table>
+				<div id="contentlist" style="width:100%; overflow: auto;">
+					<table class="mainlist" style="width:100%;">
+						<div id=AccessList style ="width:100%;"></div>
+					</table>
+				</div>
+					
 				<div id="tblPageRayer"></div>
 			</div>
 			
