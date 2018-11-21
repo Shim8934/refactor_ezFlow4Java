@@ -65,6 +65,7 @@
 		<result property="location"			column="LOCATION"			columnIndex="27"/>
 		<result property="contentPath"		column="CONTENTPATH"		columnIndex="28"/>
 		<result property="groupName"		column="GROUPNAME"			columnIndex="29"/>
+		<result property="companyid"		column="COMPANYID"			columnIndex="30"/>
 	</resultMap>
 
 	<resultMap class="AttendantListVO" id="attendantListVO">
@@ -113,7 +114,8 @@
 		<result property="status"			column="STATUS"				columnIndex="4"/>
 		<result property="responseDate"		column="RESPONSEDATE"		columnIndex="5"/>
 		<result property="mail"				column="MAIL"				columnIndex="6"/>
-		<result property="info"				column="INFO"				columnIndex="7"/>		
+		<result property="department"		column="DEPARTMENT"			columnIndex="7"/>
+		<result property="info"				column="INFO"				columnIndex="8"/>		
 	</resultMap>
 	
 	<resultMap class="ScheduleGroupListVO" id="inviteScheduleGroupListVO">
@@ -181,7 +183,9 @@
        		WHERE  
        			(CREATORID = #v_USERID# OR ( MEMBERID = #v_USERID# AND STATUS = 1 ))
 			AND
-				A.TENANT_ID = #v_TENANTID#       			
+				A.TENANT_ID = #v_TENANTID#       
+			AND
+				A.COMPANYID = #v_COMPANYID#			
         	ORDER BY GROUPNAME
 		]]>
 	</select>
@@ -218,7 +222,8 @@
 	            TITLE,
 	            LOCATION,
 	            CONTENTPATH,
-	            GROUPNAME	           
+	            GROUPNAME,
+	            A.COMPANYID      
 			FROM 
 				TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID AND A.TENANT_ID = B.TENANT_ID
 	       	WHERE  
@@ -230,6 +235,8 @@
 	
 	<select id="EzScheduleDAO.getScheduleList" parameterClass="Map" resultMap="scheduleListVO">
 		<![CDATA[
+			SELECT a.* FROM
+			(
 			SELECT 
 				SCHEDULEID,
 				PARENTID,
@@ -259,11 +266,12 @@
 				TITLE,
 				LOCATION,
 				CONTENTPATH,
-				'' AS GROUPNAME
+				'' AS GROUPNAME,
+				COMPANYID
         	FROM 
         		TBL_SCHEDULE
        		WHERE  
-       			OWNERID IN ($v_PIDLIST$)
+       			OWNERID IN ($v_INDILIST$)
             AND 
             	(            		
             		(STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
@@ -277,9 +285,108 @@
             AND
             	TENANT_ID = #v_TENANTID#
             ]]>
-             
+            <isNotEmpty property="v_SEARCHTITLE">
+            <![CDATA[
+            and 
+            	title like '%'||(REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')||'%'
+            ]]>
+            </isNotEmpty> 
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ LIKE '%'||#v_PKEYWORD#||'%' </isNotEmpty>            		
         	ORDER BY STARTDATE ASC
+			) a
+			UNION
+			<![CDATA[
+			SELECT b.* FROM
+			(
+			SELECT 
+				SCHEDULEID,
+				PARENTID,
+				OWNERID,
+				OWNERNAME,
+				OWNERNAME2,
+				CREATORID,
+				CREATORNAME,
+				CREATORNAME2,
+				(CREATEDATE + #v_OFFSETMIN#/(24*60)) AS CREATEDATE,
+				MODIFIERID,
+				MODIFIERNAME,
+				MODIFIERNAME2,
+				(MODIFYDATE + #v_OFFSETMIN#/(24*60)) AS MODIFYDATE,
+				SCHEDULETYPE,
+				IMPORTANCE,
+				HASATTENDANT,
+				HASATTACH,
+				HASCOMMENT,
+				ISREADONLY,
+				ISPUBLIC,
+				DATETYPE,
+				(STARTDATE + #v_OFFSETMIN#/(24*60)) AS STARTDATE,
+				(ENDDATE + #v_OFFSETMIN#/(24*60)) AS ENDDATE,
+				REPETITION,
+				REPETITIONDELETE,
+				TITLE,
+				LOCATION,
+				CONTENTPATH,
+				'' AS GROUPNAME,
+				COMPANYID
+        	FROM 
+        		TBL_SCHEDULE
+       		WHERE  
+       			OWNERID IN ($v_PIDLIST$)
+       		and
+        		companyid = #v_COMPANYID#        	     	
+        	and 
+        		((scheduletype = '2' and ownerid in (SELECT 
+														deptid
+													FROM 
+														TBL_ADDJOBMASTER 
+													WHERE 
+														TENANT_ID = #v_TENANTID# 
+													AND 
+														CN = #v_USERID#
+													UNION ALL
+													SELECT 
+														department
+													FROM
+														TBL_USERMASTER
+													WHERE
+														CN = #v_USERID#
+													AND
+														TENANT_ID = #v_TENANTID#
+													UNION ALL
+													SELECT
+														UNISTR(DEPARTMENTCN)
+													FROM
+														tbl_schedule_public_dept
+													WHERE
+														USERCN = #v_USERID#
+													AND
+														TENANT_ID = #v_TENANTID#
+													 ))
+					or
+					(scheduletype <> '2'))
+            AND 
+            	(            		
+            		(STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		OR
+            		(ENDDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		OR
+            		(STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		OR 
+            		(DATETYPE='3')
+            	)
+            AND
+            	TENANT_ID = #v_TENANTID#
+            ]]>
+            <isNotEmpty property="v_SEARCHTITLE">
+            <![CDATA[
+            and 
+            	title like concat('%',concat(REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ LIKE '%'||#v_PKEYWORD#||'%' </isNotEmpty>            		
+        	ORDER BY STARTDATE ASC
+			)b
 	</select>
 	
 	<select id="EzScheduleDAO.getMyGroupList" parameterClass="map" resultMap="scheduleGroupListVO">
@@ -295,13 +402,14 @@
         		CREATORID = #v_USERID#
        		AND
        			TENANT_ID = #v_TENANTID#
+       		AND
+        		COMPANYID = #v_COMPANYID#	
         	ORDER BY GROUPNAME
 		]]>
 	</select>
 	
 	<select id="EzScheduleDAO.getMyGroupMemberListCnt" parameterClass="map" resultClass="int">
-		<![CDATA[
-			 SELECT 
+<!-- 			 SELECT 
 			 	COUNT(*)
              FROM (
 	                  SELECT 
@@ -315,42 +423,137 @@
                       	TENANT_ID = #v_TENANTID#	
              )A JOIN TBL_USERMASTER B ON A.MemberID = B.CN AND A.TENANT_ID = B.TENANT_ID
              WHERE
-             	B.TENANT_ID = #v_TENANTID#
-		]]>
+             	B.TENANT_ID = #v_TENANTID# -->
+<![CDATA[
+	SELECT COUNT(DISTINCT MEMBERID)
+      FROM (
+      	   SELECT GROUPID,
+           	      MEMBERID,
+          		  MEMBERNAME,
+       		      MEMBERNAME2,
+       			  TENANT_ID
+             FROM TBL_SCHEDULEGROUPMEMBER 
+            WHERE TENANT_ID = #v_TENANTID#	
+           ) A JOIN (
+           			SELECT D.CN,
+           				   D.DISPLAYNAME, 
+           				   D.COMPANY, 
+           				   D.TITLE, 
+           				   D.MAIL, 
+           				   D.DESCRIPTION , 
+           				   D.DESCRIPTION2, 
+           				   D.DEPARTMENT
+					  FROM TBL_USERMASTER D 
+					 WHERE D.TENANT_ID = #v_TENANTID# 
+					   AND D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+					 UNION ALL 
+					SELECT B.CN, 
+						   B.DISPLAYNAME, 
+						   C.COMPNM2 AS COMPANY, 
+						   A.TITLE, 
+						   B.MAIL, 
+						   C.DISPLAYNAME AS DESCRIPTION, 
+						   C.DISPLAYNAME2 AS DESCRIPTION2, 
+						   A.DEPTID 
+					  FROM TBL_USERMASTER B  
+					 INNER JOIN TBL_ADDJOBMASTER A  
+						ON A.CN = B.CN  
+					   AND A.TENANT_ID = B.TENANT_ID        
+					 RIGHT JOIN TBL_DEPTMASTER C 
+						ON A.DEPTID = C.CN 
+					   AND B.TENANT_ID = C.TENANT_ID    
+					 WHERE A.TENANT_ID = #v_TENANTID# 
+					   AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+			        ) BB 
+		   ON A.MEMBERID = BB.CN 
+	 WHERE A.GROUPID = #v_GROUPID#
+	   AND A.TENANT_ID = #v_TENANTID#
+	]]>
 	</select>
-	
+	<select id="EzScheduleDAO.getCumDeptId" parameterClass="map" resultClass="String">
+	<![CDATA[
+	SELECT A.DEPARTMENT
+	  FROM (
+	  	   SELECT D.CN, 
+	  	   		  D.DEPARTMENT, 
+	  	   		  D.PHYSICALDELIVERYOFFICENAME, 
+	  	   		  D.TENANT_ID
+			 FROM TBL_USERMASTER D
+			UNION ALL
+		   SELECT B.CN,
+				  A.DEPTID, 
+				  C.EXTENSIONATTRIBUTE2, 
+				  A.TENANT_ID
+			 FROM TBL_USERMASTER B 
+			INNER JOIN TBL_ADDJOBMASTER A 
+			   ON A.CN = B.CN 
+			  AND A.TENANT_ID = B.TENANT_ID       
+			RIGHT JOIN TBL_DEPTMASTER C
+			   ON A.DEPTID = C.CN
+			  AND B.TENANT_ID = C.TENANT_ID
+		   ) A
+	 WHERE A.CN = #v_USERID# 
+	   AND A.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+	   AND A.TENANT_ID = #v_TENANTID#
+	 GROUP BY A.CN
+	]]>
+	</select>
 	<select id="EzScheduleDAO.getMyGroupMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
-		<![CDATA[
-			 SELECT 
-			 	A.MEMBERID,
-			 	'' AS MEMBERNAME,
-			 	'' AS MEMBERNAME2,
-			 	'' AS STATUS,
-			 	'' AS RESPONSEDATE,
-             	B.MAIL,
-             	CASE #v_LANG#
-	                WHEN '1' THEN B.DISPLAYNAME || '(' || DESCRIPTION || ')'
-                    WHEN '2' THEN B.DISPLAYNAME2 || '(' || DESCRIPTION2 || ')'   
-                END info  
-             FROM (
-	                  SELECT 
-	                  	MEMBERID,
-	                  	TENANT_ID 
-                      FROM 
-                      	TBL_SCHEDULEGROUPMEMBER 
-                      WHERE  
-                      	GROUPID = #v_GROUPID#
-                      AND
-                      	TENANT_ID = #v_TENANTID#	
-             )A JOIN TBL_USERMASTER B ON A.MEMBERID = B.CN AND A.TENANT_ID = B.TENANT_ID
-             WHERE
-             	B.TENANT_ID = #v_TENANTID#
-		]]>
+	<![CDATA[
+	SELECT A.MEMBERID,
+	 	   '' AS MEMBERNAME,
+	 	   '' AS MEMBERNAME2,
+	 	   '' AS STATUS,
+	 	   '' AS RESPONSEDATE,
+           BB.MAIL,
+           BB.DEPARTMENT,
+           CASE #v_LANG#
+           WHEN '1' THEN CONCAT(A.MEMBERNAME, CONCAT(CONCAT( '(', BB.DESCRIPTION) ,')')
+      	   WHEN '2' THEN CONCAT(A.MEMBERNAME2, CONCAT(CONCAT( '(', BB.DESCRIPTION2) ,')')
+           END INFO  
+      FROM (
+			SELECT GROUPID,
+                   MEMBERID,
+                   MEMBERNAME,
+                   MEMBERNAME2,
+                   TENANT_ID
+              FROM TBL_SCHEDULEGROUPMEMBER 
+             WHERE TENANT_ID = #v_TENANTID#	
+           ) A JOIN (
+           		    SELECT  
+					D.CN, D.DISPLAYNAME, D.COMPANY, D.TITLE, D.MAIL, D.DESCRIPTION , D.DESCRIPTION2, D.DEPARTMENT
+					FROM  
+					TBL_USERMASTER D 
+					WHERE  
+					D.TENANT_ID = #v_TENANTID# AND D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+					UNION ALL 
+					SELECT B.CN, 
+						   B.DISPLAYNAME, 
+						   C.COMPNM2 AS COMPANY, 
+						   A.TITLE, 
+						   B.MAIL, 
+						   C.DISPLAYNAME AS DESCRIPTION, 
+						   C.DISPLAYNAME2 AS DESCRIPTION2, 
+						   A.DEPTID 
+					  FROM TBL_USERMASTER B  
+					 INNER JOIN TBL_ADDJOBMASTER A  
+					    ON A.CN = B.CN  
+					   AND A.TENANT_ID = B.TENANT_ID        
+					 RIGHT JOIN TBL_DEPTMASTER C 
+					    ON A.DEPTID = C.CN 
+					   AND B.TENANT_ID = C.TENANT_ID    
+					 WHERE A.TENANT_ID = #v_TENANTID# 
+					   AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+				   ) BB 
+           ON A.MEMBERID = BB.CN 
+		WHERE A.GROUPID = #v_GROUPID#
+		  AND A.TENANT_ID = #v_TENANTID# 
+		GROUP BY MEMBERID
+	]]>
 	</select>
 	
 	<select id="EzScheduleDAO.getGroupMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
-		<![CDATA[
-			 SELECT 
+			 <!-- SELECT 
 			 	memberid,
 			 	membername,
 			 	membername2,
@@ -363,8 +566,72 @@
              WHERE
              	groupid = #v_GROUPID#
              AND
-             	tenant_id = #v_TENANTID#
-		]]>
+             	tenant_id = #v_TENANTID# -->
+	<![CDATA[
+	select A.memberid,
+           case #v_LANG#
+	       when '1' then A.memberName                 
+		   when '2' then A.memberName2
+           end membername, 
+           '' as membername2,
+		   A.status as status,
+		   date_add(a.responsedate, interval +#v_OFFSETMIN# minute) as responsedate,
+           '' as mail,
+           '' as department,
+       	   '' as info  
+      from ( 
+      		SELECT GROUPID,
+       			   MEMBERID,
+	               MEMBERNAME,
+	           	   MEMBERNAME2,
+	           	   STATUS,
+	           	   RESPONSEDATE,
+	           	   TENANT_ID
+              FROM TBL_SCHEDULEGROUPMEMBER 
+             WHERE TENANT_ID = #v_TENANTID#	
+           )A join ( 
+           			SELECT D.CN, 
+           				   D.DISPLAYNAME, 
+           				   D.COMPANY, 
+           				   D.title, 
+           				   D.MAIL, 
+           				   D.DESCRIPTION , 
+           				   D.DESCRIPTION2, 
+           				   D.department
+					  FROM TBL_USERMASTER D 
+					 WHERE D.TENANT_ID = #v_TENANTID# 
+					   AND D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+					 UNION ALL 
+					SELECT B.cn, 
+						   B.DISPLAYNAME, 
+						   C.COMPNM2 as COMPANY, 
+						   A.title, 
+						   b.mail, 
+						   C.DISPLAYNAME AS DESCRIPTION, 
+						   C.DISPLAYNAME2 AS DESCRIPTION2, 
+						   A.deptid 
+					  FROM TBL_USERMASTER B  
+					 INNER JOIN TBL_ADDJOBMASTER A  
+					ON  
+					A.CN = B.CN  
+					AND  
+					A.TENANT_ID = B.TENANT_ID        
+					RIGHT JOIN  
+					TBL_DEPTMASTER C 
+					ON  
+					A.DEPTID = C.CN 
+					AND  
+					B.TENANT_ID = C.TENANT_ID    
+					WHERE  
+					A.TENANT_ID = #v_TENANTID# AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#) BB 
+            	ON 
+				A.memberid = BB.cn 
+				WHERE 
+				A.groupid = #v_GROUPID#
+				AND 
+				A.tenant_id = #v_TENANTID# 
+				GROUP BY memberid
+	]]>
 	</select>
 	
 	<select id="EzScheduleDAO.getDeptMemberList" parameterClass="map" resultMap="organUserVO">		
@@ -404,7 +671,9 @@
             		DEPARTMENT = #v_DEPTID# 
             	</isNotEqual>
             AND
-				TENANT_ID = #v_TENANTID#	  
+				TENANT_ID = #v_TENANTID#
+			AND
+       		PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
 			UNION ALL
 				SELECT
 					A.CN ,                  			
@@ -470,6 +739,8 @@
         		USERID = #v_USERID#
         	AND
         		TENANT_ID = #v_TENANTID#	
+        	AND
+        		COMPANYID = #v_COMPANYID#	
         	ORDER BY SECRETARYNAME							
 		]]>			
 	</select>
@@ -488,6 +759,8 @@
         		SECRETARYID = #v_CN#
         	AND	
         		TENANT_ID = #v_TENANTID#
+        	AND
+        		COMPANYID = #v_COMPANYID#	
 		]]>			
 	</select>
 	
@@ -505,6 +778,8 @@
        			USERCN = #v_CN#
        		AND
        			TENANT_ID = #v_TENANTID#
+       		AND
+       			COMPANYID = #v_COMPANYID#	
 		]]>			
 	</select>
 	
@@ -522,6 +797,8 @@
        			A.CN = #v_CN#
        		AND
        			A.TENANT_ID = #v_TENANTID#
+     		AND
+       			B.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
 		]]>			
 	</select>
 	
@@ -552,6 +829,8 @@
             	( STATUS = 0 OR STATUS = 3 )
             AND
             	A.TENANT_ID = #v_TENANTID#
+            AND
+        		A.COMPANYID = #v_COMPANYID#	
             	
 		]]>			
 	</select>
@@ -700,6 +979,8 @@
 				SCHEDULEID = #v_SCHEDULEID#
 			AND
 				TENANT_ID = #v_TENANTID#
+			AND
+        		COMPANYID = #v_COMPANYID#	
 		]]>
 	</select>
 	
@@ -773,12 +1054,12 @@
 			INSERT INTO TBL_SCHEDULE(
 				SCHEDULEID, 					PARENTID, 			OWNERID, 		OWNERNAME, 			OWNERNAME2,		CREATORID, 			CREATORNAME,		CREATORNAME2,		CREATEDATE,		MODIFIERID,		MODIFIERNAME,
 				MODIFIERNAME2,					MODIFYDATE,			SCHEDULETYPE,	IMPORTANCE,			HASATTENDANT,	HASATTACH,			HASCOMMENT,			ISREADONLY,			ISPUBLIC,		DATETYPE,	
-				STARTDATE, 						ENDDATE,	 		REPETITION,		REPETITIONDELETE,	TITLE,			LOCATION,			CONTENTPATH,		TENANT_ID
+				STARTDATE, 						ENDDATE,	 		REPETITION,		REPETITIONDELETE,	TITLE,			LOCATION,			CONTENTPATH,		TENANT_ID,			companyid
 			) VALUES (
 				SEQ_TBL_SCHEDULE.NEXTVAL,		0,					#v_OWNERID#,	#v_OWNERNAME#,		#v_OWNERNAME2#,	#v_CREATORID#,		#v_CREATORNAME#,	#v_CREATORNAME2#,	SYS_EXTRACT_UTC(SYSTIMESTAMP),	#v_CREATORID#,	#v_CREATORNAME#,
 				#v_CREATORNAME2#,				SYS_EXTRACT_UTC(SYSTIMESTAMP),		#v_SCHEDULETYPE#,	#v_IMPORTANCE#,	#v_HASATTENDANT#,	#v_HASATTACH#,		'N',				'N',			#v_ISPUBLIC#,	#v_DATETYPE#,
 				TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),		TO_DATE(#v_ENDDATE#,'yyyy-mm-dd hh24:mi'),			NVL(#v_REPETITION#, ' '),				' ',				#v_TITLE#,		NVL(#v_LOCATION#, ' '),				
-				#v_CONTENTPATH#,				#v_TENANTID#	 
+				#v_CONTENTPATH#,				#v_TENANTID#,		#v_COMPANYID#	 
 			)
    		]]>
 	</insert>
@@ -797,10 +1078,10 @@
 		<![CDATA[
 			INSERT INTO TBL_ATTENDANT(
 				SCHEDULEID,			ATTENDANTID,			ATTENDANTNAME, 			ATTENDANTNAME2,			ATTENDANTDEPTNAME,		ATTENDANTDEPTNAME2,
-				STATUS,				TENANT_ID,				RESPONSEDATE			
+				STATUS,				TENANT_ID,				RESPONSEDATE,			COMPANYID			
 			) VALUES (
 				#v_SCHEDULEID#,		#v_ATTENDANTID#,		#v_ATTENDANTNAME#,		#v_ATTENDANTNAME2#,		#v_ATTENDANTDEPTNAME#,	#v_ATTENDANTDEPTNAME2#,	
-				0,					#v_TENANTID#,			SYS_EXTRACT_UTC(SYSTIMESTAMP)	
+				0,					#v_TENANTID#,			SYS_EXTRACT_UTC(SYSTIMESTAMP),					#v_COMPANYID#	
 			)
    		]]>
 	</insert>
@@ -808,9 +1089,9 @@
 	<insert id="EzScheduleDAO.insertScheduleRepeDel" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULEREPETITION_DEL(
-				REPETITIONID,								SCHEDULEID,				STARTDATE, 				ENDDATE,				TENANT_ID
+				REPETITIONID,								SCHEDULEID,				STARTDATE, 				ENDDATE,				TENANT_ID,				COMPANYID
 			) VALUES (
-				SEQ_TBL_SCHEDULE_REPEDEL.NEXTVAL,			#v_SCHEDULEID#,			TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),			TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),			#v_TENANTID#
+				SEQ_TBL_SCHEDULE_REPEDEL.NEXTVAL,			#v_SCHEDULEID#,			TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),			TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),			#v_TENANTID#,			#v_COMPANYID#
 			)
    		]]>
 	</insert>
@@ -828,9 +1109,9 @@
 	<insert id="EzScheduleDAO.insertScheduleGroup" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULEGROUP(
-				groupid, 		groupname, 			creatorid, 		creatorname, 		creatorname2, 		description,		createdate,						tenant_id		
+				groupid, 		groupname, 			creatorid, 		creatorname, 		creatorname2, 		description,		createdate,			tenant_id,		COMPANYID			
 			) VALUES (
-				#v_GUID#,		#v_GROUPNAME#,		#v_USERID#,		#v_DISPLAYNAME#,	#v_DISPLAYNAME2#,	#v_DESCRIPTION#,	SYS_EXTRACT_UTC(SYSTIMESTAMP),	#v_TENANTID#
+				#v_GUID#,		#v_GROUPNAME#,		#v_USERID#,		#v_DISPLAYNAME#,	#v_DISPLAYNAME2#,	#v_DESCRIPTION#,	SYS_EXTRACT_UTC(SYSTIMESTAMP),	#v_TENANTID#,	#v_COMPANYID#
 			)
    		]]>
 	</insert>
@@ -848,9 +1129,9 @@
 	<insert id="EzScheduleDAO.insertSecretary" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SECRETARY(
-				USERID, 		USERNAME, 			USERNAME2, 			SECRETARYID, 		SECRETARYNAME, 			TENANT_ID		
+				USERID, 		USERNAME, 			USERNAME2, 			SECRETARYID, 		SECRETARYNAME, 			TENANT_ID,			COMPANYID			
 			) VALUES (
-				#v_USERID#,		#v_DISPLAYNAME#,	#v_DISPLAYNAME2#,	#v_SECRETARYID#,	#v_SECRETARYNAME#,		#v_TENANTID#
+				#v_USERID#,		#v_DISPLAYNAME#,	#v_DISPLAYNAME2#,	#v_SECRETARYID#,	#v_SECRETARYNAME#,		#v_TENANTID#,		#v_COMPANYID#
 			)
    		]]>
 	</insert>
@@ -861,13 +1142,13 @@
 				SCHEDULEID, 				PARENTID, 			OWNERID, 			OWNERNAME, 			OWNERNAME2, 			CREATORID, 			CREATORNAME, 			CREATORNAME2, 
 				CREATEDATE, 				MODIFIERID, 		MODIFIERNAME, 		MODIFIERNAME2, 		MODIFYDATE, 			SCHEDULETYPE, 		IMPORTANCE, 			HASATTENDANT, 
 				HASATTACH, 					HASCOMMENT, 		ISREADONLY, 		ISPUBLIC, 			DATETYPE, 				STARTDATE, 			ENDDATE, 				REPETITION, 
-				REPETITIONDELETE, 			TITLE, 				LOCATION, 			CONTENTPATH,		TENANT_ID
+				REPETITIONDELETE, 			TITLE, 				LOCATION, 			CONTENTPATH,		TENANT_ID,				COMPANYID
 			) (
 			SELECT
 				SEQ_TBL_SCHEDULE.NEXTVAL,	#v_SCHEDULEID#,		#v_ATTENDANTID#,	#v_ATTENDANTNAME#,	#v_ATTENDANTNAME2#,		CREATORID, 			CREATORNAME, 			CREATORNAME2,
 				CREATEDATE, 				MODIFIERID, 		MODIFIERNAME, 		MODIFIERNAME2, 		MODIFYDATE, 			SCHEDULETYPE, 		IMPORTANCE, 			HASATTENDANT,
 				HASATTACH, 					HASCOMMENT,			'Y',				ISPUBLIC, 			DATETYPE, 				STARTDATE, 			ENDDATE, 				REPETITION, 
-				REPETITIONDELETE, 			TITLE,				LOCATION, 			CONTENTPATH,		TENANT_ID
+				REPETITIONDELETE, 			TITLE,				LOCATION, 			CONTENTPATH,		TENANT_ID,				COMPANYID
 			FROM
 				TBL_SCHEDULE
 			WHERE
@@ -1016,6 +1297,8 @@
 	   			USERID = #v_USERID#	   		
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#
+   			AND
+	   			COMPANYID = #v_COMPANYID#
 	   	]]>		
 	</delete>
 	
@@ -1096,7 +1379,7 @@
 				modifierid = #v_MODIFIERID#,
 				modifiername = #v_MODIFIERNAME#,
 				modifiername2 = #v_MODIFIERNAME2#,
-				modifydate = utc_timestamp(),
+				modifydate = SYS_EXTRACT_UTC(SYSTIMESTAMP),
 				startdate = #v_STARTDATE#,
 				enddate = #v_ENDDATE#
 			where

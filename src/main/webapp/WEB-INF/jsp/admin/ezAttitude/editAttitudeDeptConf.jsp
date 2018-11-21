@@ -137,6 +137,11 @@
 	   		
 	   		//확인
 	   		function btnOk_onclick() {
+	   			if (lpDepts.toString() == "") {
+	   				alert("<spring:message code='ezOrgan.t249' />");
+	   				return;
+	   			}
+	   			
 				if (!checkPattern()) {
 	    			alert("<spring:message code='ezAttitude.t117' />")
 	    			return;
@@ -207,7 +212,7 @@
                 	<img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept(targetDept)">
                 </td>
                 <td class="listview" style="width: 250px; height: 465px; vertical-align: top;" id="lplistView" rowspan="2">
-                	<div style="width: 200px; height: 100%; overflow: auto;">
+                	<div style="width: 100%; height: 100%; overflow: auto;">
 	                	<table class="mainlist_free">
 						</table>
 					</div>

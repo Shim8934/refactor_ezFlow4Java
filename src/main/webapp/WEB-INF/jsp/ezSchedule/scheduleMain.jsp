@@ -309,46 +309,13 @@
 		                idSelect.options[lastindex] = newoption;
                     }
                 } */
-             	// 2018-06-08 구해안 공유 main에서 미사용으로 주석처리
-                /* if (sharexml != "") {	
-                    var sharexmldom = loadXMLString(sharexml);
-
-                    for (var i = 0; i < xmldom.getElementsByTagName("OWNERID").length; i++) {
-                        var lastindex = idSelect.length;
-                        var newoption = new Option("<spring:message code='ezSchedule.t205'/>" + " " + getNodeText(sharexmldom.getElementsByTagName("OWNERNAME")[i]), getNodeText(sharexmldom.getElementsByTagName("OWNERID")[i]));
-
-                        if (getNodeText(sharexmldom.getElementsByTagName("SHAREPERMISSION")[i]) == "R")
-                            newoption.onlyread = "1";
-
-                        idSelect.options[lastindex] = newoption;
-                    }
-                } */
-             	// 2018-06-08 구해안 그룹 main에서 미사용으로 주석처리
-		        /* if (idtype == "G") {
-		            idSelect.value = groupid;
-		        } else {
-		            if (idtype != "") {
-		                if (idtype == "6" || idtype == "8")
-		                    idSelect.value = "T";
-		                else
-		                    idSelect.value = idtype;
-		            }
-		        } */
+                //alert('windowonload_Complete2');
+                //parent.frames["left"].document.location.reload();
 		        
                 if (otherid != "") {
                     secretarySelect.value = otherid;
                 }
-		     	// 2018-06-08 구해안 비서 미사용으로 주석처리
-                /* var secretaryxmldom = loadXMLString(secretaryxml);
-                
-                for (var i = 0; i < secretaryxmldom.getElementsByTagName("USERID").length; i++) {
-                    var lastindex = secretarySelect.length;
-                    var newoption = new Option(getNodeText(secretaryxmldom.getElementsByTagName("USERNAME" + GetLangData("${userinfo.primary}"))[i]), getNodeText(secretaryxmldom.getElementsByTagName("USERID")[i]));
-                    secretarySelect.options[lastindex] = newoption;
-
-                    if (getNodeText(secretaryxmldom.getElementsByTagName("USERID")[i]) == otherid)
-                        secretarySelect.selectedIndex = lastindex;
-                }       */          
+                parent.frames["left"].groupRefresh();  
                 resize();
 		    }
 			
