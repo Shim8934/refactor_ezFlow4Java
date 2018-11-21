@@ -758,8 +758,10 @@
 		    	document.getElementById("folderPanel").style.display = "none";
 		        document.getElementById("folderMenuDiv").style.display = "none";
 		    	
-		        if (parent.frames["right"].document.getElementById("mailPanel").style.display == "") {
-		        	parent.frames["right"].document.getElementById("mailPanel").style.display = "none";
+		        if (parent.frames["right"].document.getElementById("mailPanel")) {
+			        if (parent.frames["right"].document.getElementById("mailPanel").style.display == "") {
+			        	parent.frames["right"].document.getElementById("mailPanel").style.display = "none";
+			        }
 		        }
 		    }
 		    
@@ -1326,7 +1328,7 @@
 	            <li style="border-bottom-color:#e8e8e8" evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
 	        </ul>	        
 	    	<!-- 수정 수아 재은 -->
-	    	<!-- <div style="border:1px solid #e8e8e8;margin:10px 10px 2px;background-color:#f8f8fa">
+	    	<!-- <div style="border:1px solid #e8e8e8;margin:10px 10px 2px;background-color:#f1f3f5">
 			    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
 			    <div style="width:80%">
 			    	<div id='myBar'></div>

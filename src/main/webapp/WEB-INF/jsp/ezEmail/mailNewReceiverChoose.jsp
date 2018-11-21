@@ -1626,9 +1626,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang300 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang300 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang300 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -1850,7 +1850,7 @@
 		            
 		            if (typeof pSeach !== "undefined") {
 			            if (pSeach) {
-			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 			                SelectDeptNM.setAttribute("countinfo", "1")
 			            }
 		            }
@@ -1868,7 +1868,7 @@
 			            else {
 			                document.getElementById("Search_txtlist_table").style.display = "";
 			                document.getElementById("txtlist_table").style.display = "none";
-			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 			                SelectDeptNM.setAttribute("countinfo", "1")
 			            }
 		            }
@@ -2289,9 +2289,9 @@
 	            addressList = null;
 	            document.getElementById('totalcount').textContent = xmlDom.getElementsByTagName("PAGECOUNT").item(0).firstChild.nodeValue;
 	            if (CrossYN())
-	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue + strLang300;
+	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
 	            else
-	                document.getElementById('addressFolderCnt').innerText = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue + strLang300;
+	                document.getElementById('addressFolderCnt').innerText = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
 	            document.getElementById('txt_PageInputNum').value = "1";
 	            //page = document.getElementById('txt_PageInputNum').value;
 	            totalPage = Math.ceil(xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue / 25);
@@ -2972,7 +2972,7 @@
 	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.getElementById('totalcount').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
-	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue + strLang300;
+	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
 	                document.getElementById('txt_PageInputNum').value = pGubun == "page" ? xmlDom.getElementsByTagName("CURRENTPAGE").item(0).firstChild.nodeValue : "1";
 	                page = document.getElementById('txt_PageInputNum').value;
 	
@@ -2981,7 +2981,7 @@
 	            }
 	            else if (CrossYN()) {
 	                document.getElementById('totalcount').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
-	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue + strLang300;
+	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
 	                document.getElementById('txt_PageInputNum').value = pGubun == "page" ? xmlDom.getElementsByTagName("CURRENTPAGE").item(0).firstChild.nodeValue : "1";
 	                page = document.getElementById('txt_PageInputNum').value;
 	
@@ -2990,7 +2990,7 @@
 	            }
 	            else {
 	                document.getElementById('totalcount').innerText = xmlDom.getElementsByTagName("TOTALCN").item(0).text;
-	                document.getElementById('addressFolderCnt').innerText = xmlDom.getElementsByTagName("TOTALCN").item(0).text + strLang300;
+	                document.getElementById('addressFolderCnt').innerText = xmlDom.getElementsByTagName("TOTALCN").item(0).text;
 	                document.getElementById('txt_PageInputNum').value = pGubun == "page" ? xmlDom.getElementsByTagName("CURRENTPAGE").item(0).text : "1";
 	                page = document.getElementById('txt_PageInputNum').value;
 	
@@ -3750,7 +3750,7 @@
 	                <table id="TreeViewTD">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                            <div class="portlet_tabpart03" style="background-color: #f1f3f5; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
 	                                <div class="portlet_tabpart03_top" id="tab1" style="border-bottom: 0px; height:26px;">
 	                                    <table style="margin-top: 4px; width: 100%;">
 	                                        <tr>
@@ -3791,7 +3791,7 @@
 	                                    <td></td>
 	                                    <td class="listview" style="width: 432px" id="orglistView">
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
-	                                            <tr>
+	                                            <tr style="height:35px">
 	                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
 														<span id="SelectDeptNM" style="font-weight: normal; width: 385px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 	                                                    <span style="float:right; position: relative;">
@@ -3806,17 +3806,17 @@
 	                                        <div id="txtlist_Layer" style="vertical-align: top; width: 446px; height: 398px; overflow: auto;" >
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t31' /></td>
-	                                                    <td style="width: 130px;color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t28' /></td>
-	                                                    <td style="color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t99000045' /></td>
+	                                                    <td style="width: 150px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t31' /></td>
+	                                                    <td style="width: 130px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t28' /></td>
+	                                                    <td style="color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t99000045' /></td>
 	                                                </tr>
 	                                            </table>
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 110px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezEmail.t26' /></td>
-	                                                    <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezEmail.t31' /></td>
-	                                                    <td style="width: 80px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezEmail.t28' /></td>
-	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t99000045' /></td>
+	                                                    <td style="width: 110px; color:#333;background-color: #f1f3f5" class="td_gray"><spring:message code='ezEmail.t26' /></td>
+	                                                    <td style="width: 90px; color:#333;background-color: #f1f3f5" class="td_gray"><spring:message code='ezEmail.t31' /></td>
+	                                                    <td style="width: 80px; color:#333;background-color: #f1f3f5" class="td_gray"><spring:message code='ezEmail.t28' /></td>
+	                                                    <td class="td_gray" style="color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t99000045' /></td>
 	                                                </tr>
 	                                            </table>
 	                                        </div>
@@ -3834,7 +3834,7 @@
 	                            <table style="width: 100%;">
 	                                <tr>
 	                                    <td id="AddrSearch">
-	                                        <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                                        <div class="portlet_tabpart03" style="background-color: #f1f3f5; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
 	                                            <div class="portlet_tabpart03_top" id="Div1" style="border-bottom: 0px; height:26px;">
 	                                                <table style="margin-top: 4px; width: 100%;">
 	                                                    <tr>
@@ -3878,7 +3878,7 @@
 	                            <div style="margin-top: 3px; vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 23px; padding-top: 7px; padding-left: 5px;">
 	                                <img src="/images/ImgIcon/fldr.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
 	                                <span id="addressFolderName" style="font-weight: normal;"></span>
-	                                -[<span id="addressFolderCnt" style="color: #017BEC;"></span>]
+	                                &nbsp;<span id="addressFolderCnt" style="color: #017BEC;"></span>
 	                            </div>
 	                            <div id="AddressListView" class="border_gray" style="width: 446px; height: 396px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea">
 	                            </div>
@@ -3902,7 +3902,7 @@
 	                <table id="ListViewDLTD" style="display: none">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                            <div class="portlet_tabpart03" style="background-color: white; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
 	                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom: 0px; height:26px;">
 	                                    <table style="margin-top: 4px; width: 100%;">
 	                                        <tr>
@@ -3922,7 +3922,7 @@
 	                <table id="ListViewSharedMailboxTD" style="display: none">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                            <div class="portlet_tabpart03" style="background-color: white; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
 	                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom: 0px; height:26px;">
 	                                    <table style="margin-top: 4px; width: 100%;">
 	                                        <tr>
