@@ -591,7 +591,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 }
 
 @media only screen and (max-width : 1279px) {
-	.portlet {width:605px; float:left;}
+	.portlet {width:48%; float:left;}
 }
 
 /* collaborate */
@@ -632,8 +632,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .info .infoSet img{margin:5px 0px 0px 0px;}
 .info .infoLogout{position:absolute; top:-20px; right:16px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
 .info .infoLogout img{margin:5px 0px 0px 0px;}
+
 @media only screen and (max-width :1730px) and (min-width :1280px) {
-	.info .infoImg{margin:0px 24px 34px 0px;}
 	.info .infoTime{margin:12px 0px 0px 13px;}
 }
 
