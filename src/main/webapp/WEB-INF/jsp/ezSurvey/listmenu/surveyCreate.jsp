@@ -10,6 +10,32 @@
 		<link rel="stylesheet" href="${util.addVer('ezSurvey.css', 'msg')}"       type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezSurvey/survey.css')}"  type="text/css">
 	</head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	<script type="text/javascript">
+	$(function() {
+		
+		$(".quesTypeSelect").click(function() {
+			$(".option_wrap").show().animate({height: "300px"});
+		});
+		
+		$(".select_op").mouseleave(function() {
+			$(".option_wrap").hide();
+			$(".option_wrap").css("height", "0");
+		});
+		
+		$(".atchImg").click(function(e) {
+			
+			var clickObj = $(this).next();
+			clickObj.click();
+		});
+		
+		$(".sryTxt").click(function() {
+			window.open("/ezSurvey/statisticsPage.do", "", GetOpenWindowfeature(500, 500));
+		});
+		 
+	});
+	</script>
 	<body class="surveyBody">
 		<div class="surveyCrtTtl">
 			<div class="sryFirst"></div>
@@ -30,6 +56,7 @@
 				<span class="arrow"><span></span></span>
 			</span>
 		</div>
-		<div style="height: 400px; /* box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; */ border: 1px solid #d7d7d7;"></div>
+		<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/questionCreate.jsp"></jsp:include>
+		<!-- <div style="height: 400px; /* box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; */ border: 1px solid #d7d7d7;"></div> -->
 	</body>
 </html>

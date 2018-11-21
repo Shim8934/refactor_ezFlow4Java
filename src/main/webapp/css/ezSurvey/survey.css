@@ -100,19 +100,35 @@
 .headpanel .crust .arrow span {border: 20px solid transparent; border-right: 1px none black; border-left-color: #fafafa; display: block; position: absolute; left: -21px; top: -20px; z-index: 51; white-space: nowrap; overflow: hidden; text-indent: 9999px; width: 0px; height: 0px;}
 .headpanel .crust:hover .arrow span, .headpanel .crust.selected .arrow span {border-left-color: rgb(230, 126, 34);}
 
+/* 2018.11.21 추가 */
+.surveyCrtTt2 {height: 50px; width: 100%; background-color: #fff; border: 1px solid #d7d7d7; display: flex;}
+.surveyCrtTt2 .sryFirst2 {width: 10px; background-color: rgba(0, 115, 230, 0.64);}
+.surveyCrtTt2 .filler {flex-grow: 1;}
+.surveyCrtTt2 .sryTxt {height: 50px; line-height: 50px; padding: 0px 10px; font-weight: bold; font-size: 20px;}
+.surveyCrtTt2 img {height: 40px; width:40px; margin-top: 5px;}
 
+.quesBacgr {background-color: #fff; padding: 20px;}
 
+.quesDiv {text-align: center;}
+.quesDiv .questnTitle {background-color: rgba(204, 204, 204, 0.8); width: 50%; height: 50px; border-radius: 10px;}
+.quesDiv .atchImg {width: 50px; height: 50px; margin-bottom: -15px; padding-left: 5px; padding-right: 5px; cursor: pointer;}
+.quesDiv .attachFile {opacity: 0; width: 0px}
+.quesDiv select {width: 20%; height: 50px; border-radius: 10px;}
+.quesDiv .optionBox {padding-top: 5px; }
+.quesDiv .option_wrap {width: 20%; border-radius: 10px; margin-right:155px; float: right; border: 1px solid #d7d7d7; height: 0px; display:none;}
+.quesDiv .option_wrap .select_op  {text-align: left; padding-left: 0px; list-style: none;}
+.quesDiv .option_wrap .select_op li {height: 35px; vertical-align: middle;}
+.quesDiv .option_wrap .select_op li img {width: 30px; height: 30px;}
 
+.surveyCrtTt3 {height: 50px; width: 100%; background-color: #fff; border: 1px solid #d7d7d7; display: flex; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px;}
+.surveyCrtTt3 .sryFirst2 {width: 10px; background-color: rgba(0, 115, 230, 0.64);}
+.surveyCrtTt3 .filler {flex-grow: 1;}
+.surveyCrtTt3 .sryTxt {height: 50px; line-height: 50px; padding: 0px 10px; font-weight: bold; font-size: 20px;}
+.surveyCrtTt3 img {height: 40px; width:40px; margin-top: 5px; cursor: pointer;}
+.surveyCrtTt3 span {position: absolute; right: 9px; background-color: rgba(0, 115, 230, 0.64); color: #fff; border: 1px solid #d7d7d7; border-radius: 10px; font-size: 17px; cursor: pointer;}
 
-
-
-
-
-
-
-
-
-
+.statBody {background-color: rgb(244, 245, 245); margin: 10px 10px 0px;}
+.statBody #contentsBox {margin-top: 20px; height: 500px; border: 1px solid #d7d7d7; background-color: #fff; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px;}
 
 
 

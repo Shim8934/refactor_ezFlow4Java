@@ -93,4 +93,20 @@ public class ezSurveyController {
 		logger.debug("jspGetCreateSurveyPage ended");
 		return "ezSurvey/listmenu/surveyCreate";
 	}
+	
+	@RequestMapping(value="/ezSurvey/addQuestionPage.do")
+	public String addQuestionPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("addQuestionPage started");
+		
+		logger.debug("addQuestionPage ended");
+		return "ezSurvey/listmenu/questionCreate";
+	}
+	
+	@RequestMapping(value="/ezSurvey/statisticsPage.do")
+	public String statisticsPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("statisticsPage started");
+		
+		logger.debug("statisticsPage ended");
+		return "ezSurvey/listmenu/statistics";
+	}
 }

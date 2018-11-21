@@ -43,11 +43,13 @@
 					document.getElementById("surveyConfig"    ).addEventListener("click", function(e) {getConfigPage()          ;});
 					document.getElementById("processingSurvey").addEventListener("click", function(e) {getProcessingSurveyList();});
 					document.getElementById("finishedSurvey"  ).addEventListener("click", function(e) {getCreateSurveyPage()    ;});
+					document.getElementById("mySurvey"  ).addEventListener("click", function(e) {addQuestionPage()    ;});
 				}
 				
 				function getConfigPage()           {window.parent.frames["right"].location.href = "/ezSurvey/surveyConfig.do";}
 				function getProcessingSurveyList() {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=process";}
 				function getCreateSurveyPage()     {window.parent.frames["right"].location.href = "/ezSurvey/createSurvey.do";}
+				function addQuestionPage()     	   {window.parent.frames["right"].location.href = "/ezSurvey/addQuestionPage.do";}
 				
 				return {
 					
