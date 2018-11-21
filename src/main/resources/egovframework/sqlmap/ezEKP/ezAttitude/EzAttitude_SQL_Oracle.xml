@@ -155,16 +155,16 @@
 					A.TENANT_ID,
 					A.WRITER_ID,
 					A.DEPT_ID,
-					IF(
-						date_add(A.START_DATE, INTERVAL +#offsetMin# minute) < #startDate#, 
-						CONCAT(substr(#startDate#,1,11), substr(A.START_DATE,12)), 
-						date_format(date_add(A.START_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
-					  ) AS START_DATE,
-					IF(
-						date_add(A.END_DATE, INTERVAL +#offsetMin# minute) > #endDate#, 
-						CONCAT(substr(#endDate#,1,11), substr(A.END_DATE,12)), 
-						date_format(date_add(A.END_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
-					  ) AS END_DATE,
+					CASE
+						WHEN TO_DATE(A.START_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+						THEN substr(#startDate#,1,11) || substr(A.START_DATE,12) 
+						ELSE TO_CHAE(TO_DATE(A.START_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60)), 'YYYY-MM-DD HH24:MI:SS')
+					END AS START_DATE,
+					CASE
+						WHEN TO_DATE(A.END_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
+						THEN substr(#endDate#,1,11) || substr(A.END_DATE,12) 
+						ELSE TO_CHAE(TO_DATE(A.END_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60)), 'YYYY-MM-DD HH24:MI:SS')
+					END AS END_DATE,
 					A.MODAPPL,
 					A.REGION,
 					A.MOBILE,
@@ -216,11 +216,11 @@
 				<![CDATA[
 				AND  
 					(
-						(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 
+						(TO_DATE(START_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(START_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
 						or
-						(date_add(END_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) < #endDate#) 
+						(TO_DATE(END_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(END_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
 						or
-						(date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) >= #endDate#)
+						(TO_DATE(START_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(END_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
 					)
 		]]>
 		
@@ -234,16 +234,16 @@
 						D.TENANT_ID,
 						D.WRITER_ID,
 						D.DEPT_ID,
-						IF(
-							date_add(D.START_DATE, INTERVAL +#offsetMin# minute) < #startDate#, 
-							CONCAT(substr(#startDate#,1,11), substr(D.START_DATE,12)), 
-							date_format(date_add(D.START_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
-						  ) AS START_DATE,
-						IF(
-							date_add(D.END_DATE, INTERVAL +#offsetMin# minute) > #endDate#, 
-							CONCAT(substr(#endDate#,1,11), substr(D.END_DATE,12)), 
-							date_format(date_add(D.END_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
-						  ) AS END_DATE,
+						CASE
+						WHEN TO_DATE(D.START_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+						THEN substr(#startDate#,1,11) || substr(D.START_DATE,12) 
+						ELSE TO_CHAE(TO_DATE(D.START_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60)), 'YYYY-MM-DD HH24:MI:SS')
+						END AS START_DATE,
+						CASE
+							WHEN TO_DATE(D.END_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
+							THEN substr(#endDate#,1,11) || substr(D.END_DATE,12) 
+							ELSE TO_CHAE(TO_DATE(D.END_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60)), 'YYYY-MM-DD HH24:MI:SS')
+						END AS END_DATE,
 						D.MODAPPL,
 						D.REGION,
 						D.MOBILE,
@@ -283,11 +283,11 @@
 					<![CDATA[
 					AND  
 						(
-							(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 
+							(TO_DATE(START_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(START_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
 							or
-							(date_add(END_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) < #endDate#) 
+							(TO_DATE(END_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(END_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
 							or
-							(date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) >= #endDate#)
+							(TO_DATE(START_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(END_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
 						)
 				]]>
 			</isNotEmpty>
@@ -302,6 +302,7 @@
 	<insert id="ezAttitudeDAO.insertAttitude" parameterClass="Map">
 		INSERT INTO tbl_attitude
 		(
+			ATTITUDE_ID,
 			COMPANY_ID,
 			TENANT_ID,
 			WRITER_ID,
@@ -319,28 +320,30 @@
 		)
 		VALUES
 		(
+			SEQ_TBL_ATTITUDE.nextval,
 			#companyId#,
 			#tenantId#,
 			#writerId#,
 			#deptId#,
-			date_add(#startDate#, INTERVAL -#offsetMin# minute),
-			IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute)),
-			IFNULL(#region#, ''),
-			IFNULL(#mobile#, ''),
-			IFNULL(#bizSub#, ''),
-			IFNULL(#content#, ''),
-			IFNULL(#ipAddress#, ''),
+			TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60),
+			DECODE(#endDate#, '', null, TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)),
+			NVL(#region#, ''),
+			NVL(#mobile#, ''),
+			NVL(#bizSub#, ''),
+			NVL(#content#, ''),
+			NVL(#ipAddress#, ''),
 			#dateType#,
 			#typeId#,
 			#modappl#
 		)
 		<selectKey resultClass="int" keyProperty="attitudeId">
-		    SELECT LAST_INSERT_ID()
+		    SELECT SEQ_TBL_ATTITUDE.currval FROM dual
 		</selectKey>
 	</insert>
 	
 	<insert id="ezAttitudeDAO.insertAdminAttHistory" parameterClass="Map">
 		INSERT INTO tbl_attitude_modappl_history(
+			MOD_CNT,
 			COMPANY_ID,
 			TENANT_ID,
 			WRITER_ID,
@@ -368,6 +371,7 @@
 			APPR_DATE
 			)
 			SELECT
+				SEQ_TBL_ATTITUDE_MODAPPL_HISTORY.nextval,
 				#companyId#,
 				#tenantId#,
 				#writerId#,
@@ -378,13 +382,13 @@
 				#deptId#,
 				b.DESCRIPTION,
 				b.DESCRIPTION2,
-				date_add(#startDate#, INTERVAL -#offsetMin# minute),
-				IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute)),
-				IFNULL(#region#, ''),
-				IFNULL(#mobile#, ''),
-				IFNULL(#bizSub#, ''),
-				IFNULL(#content#, ''),
-				IFNULL(#ipAddress#, ''),
+				TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
+				DECODE(#endDate#, '', null, TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)),
+				NVL(#region#, ''),
+				NVL(#mobile#, ''),
+				NVL(#bizSub#, ''),
+				NVL(#content#, ''),
+				NVL(#ipAddress#, ''),
 				#dateType#,
 				#typeId#,
 				a.type_name,
