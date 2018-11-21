@@ -710,7 +710,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 }
 
 @media only screen and (max-width : 1279px) {
-	.portlet {width:469px; float:left;}
+	.portlet {width:47.7%; float:left;}
 	.box_shadow.info_left {display:none;}
 	.box_shadow.info_right {width:100%; margin-left:0px !important;}
 }

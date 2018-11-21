@@ -35,9 +35,9 @@
 	#featured {background : none;}
 	.box_shadow {width:100%; margin:0px;}
 	.portlet {height:250px; margin:20px 0px 0px 20px;background-color:#ffffff;}
-	.infoImg img {width:60px; height:60px;}
+	.infoImg img {width:60px; height:60px; border-radius:90px;-webkit-border-radius:90px;}
 	.attitudePtl {border:none;}
-	.two_column{width:47.9%;}
+	.two_column{width:47.7%;}
 </style>
 </head>
 <body class="mainbg">
@@ -87,10 +87,10 @@
 			    </div>
 			    <div id="atti_area" class="main_main_time">
 	            	<dl class="main_timeCheckIn">
-	                	<dd id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t013' /></dd>
+	                	<dd id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t013' /></dd>
 	                </dl>
 	                <dl class="main_timeCheckOut">
-	                   	<dd id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t014' /></dd>
+	                   	<dd id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t014' /></dd>
 	                </dl>
 		    	</div>
 			</article>
@@ -433,7 +433,7 @@
 								$("#" + portletId + "Portlet").css("background","none");
 							}
 							
-							eventSetting(portletId);
+							eventSetting(portletId, usedTheme);
 						}
 					});
 				}(portletId, portletUrl, portletName));
@@ -481,10 +481,10 @@
 		var useAttitude = "<c:out value='${useAttitude}'/>";
 		
 		if (useAttitude === "YES") {
-			parseDate();
+			parseDate(usedTheme);
 			attiClock();
 			setAttiBtnHover();
-			getAttitudeList();
+			getAttitudeList(usedTheme);
 			getHolidayList();
 		} else {
 			$(".time_check").css("display", "none");

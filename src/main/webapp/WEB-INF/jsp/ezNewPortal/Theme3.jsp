@@ -271,7 +271,7 @@
 								$("#" + portletId + "Portlet").css("background", "none");
 							}
 							
-							eventSetting(portletId);
+							eventSetting(portletId, usedTheme);
 						},
 						error : function() {
 							var nonePage = "<article class='box_shadow'></article>"

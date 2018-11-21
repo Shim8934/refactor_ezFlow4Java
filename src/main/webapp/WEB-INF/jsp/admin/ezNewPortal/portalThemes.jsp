@@ -134,7 +134,7 @@
 					themes.forEach(function (item, index) {
 						themesHTML += "<li>";
 						themesHTML += "<div class='theme' id='theme" + item.themeId + "' onclick='selectTheme(this)'>";
-						themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/Theme1.GIF' class='themeThumbnails' alt='img02'/>";
+						themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/Theme" + item.themeId + ".JPG' class='themeThumbnails' alt='img02'/>";
 						themesHTML += "</div><div>";
 						themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
 						themesHTML += "<span class='themeName'>" + item.themeName + "</span>";
@@ -417,8 +417,8 @@
 			var portletId = event.data.portletId;
 	 		var companiesObj = document.getElementById("ListCompany");
 			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
-	        var wWeight = "900";
-	        var wHeight = "750";
+	        var wWeight = "1208";
+	        var wHeight = "744";
 
 	        var heigth = window.screen.availHeight;
 	        var width = window.screen.availWidth;

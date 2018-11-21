@@ -1370,6 +1370,34 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I22", map);
     }
     
+    public void insertCompanyInfo_I23(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I23", map);
+    }
+    
+    public void insertCompanyInfo_I24(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I24", map);
+    }
+    
+    public void insertCompanyInfo_I25(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I25", map);
+    }
+    
+    public void insertCompanyInfo_I26(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I26", map);
+    }
+    
+    public void insertCompanyInfo_I27(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I27", map);
+    }
+    
+    public void insertCompanyInfo_I28(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I28", map);
+    }
+    
+    public void insertCompanyInfo_I29(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I29", map);
+    }
+    
     public void insertCompanyInfo_IKMS(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS", map);
     }

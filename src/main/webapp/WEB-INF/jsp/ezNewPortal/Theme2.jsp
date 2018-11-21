@@ -16,6 +16,7 @@
 	.two_column{width:48%;}
 	.mainbg {min-width:1280px;}
 	#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}
+	.top_two_column {margin : 0px 0px 25px 0px;}
 </style>
 </head>
 
@@ -63,12 +64,12 @@
             <c:choose>
             	<c:when test="${useAttitude eq 'YES' }">
 	                <dl class="commute">
-	                	<dt id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t013' /></dt>
-	                	<dd id="inAttiBtn_txt" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t126' /></dd>
+	                	<dt id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t013' /></dt>
+	                	<dd id="inAttiBtn_txt" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t126' /></dd>
 	                </dl>
 	                <dl class="commute">
-	                	<dt id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t014' /></dt>
-	                	<dd id="outAttiBtn_txt" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t126' /></dd>
+	                	<dt id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t014' /></dt>
+	                	<dd id="outAttiBtn_txt" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t126' /></dd>
 	                </dl>    
 	             	<dl class="time">
 	                	<dt><spring:message code='ezNewPortal.t012' /></dt>
@@ -307,10 +308,13 @@
 			
 			if (media1921.matches) {
 				$(".portlet").addClass("two_column");
+				$(".section1_bg").removeClass("top_two_column");
 			} else if (media1686.matches) {
 				$(".portlet").addClass("two_column");
+				$(".section1_bg").removeClass("top_two_column");
 			} else if (media1280.matches) {
 				$(".portlet").addClass("two_column");
+				$(".section1_bg").addClass("top_two_column");
 			}
 		}
 	} 	
@@ -571,11 +575,11 @@
 					$.ajax({
 						type : "POST",
 						dataType : "html",
-						data : {"portletId" : portletId, "portletName" : portletName},
+						data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
 						url : portletUrl,
 						success : function(result) {
 							$("#" + portletId + "Portlet").append(result);
-							eventSetting(portletId);
+							eventSetting(portletId, usedTheme);
 						}
 					});
 				}(portletId, portletUrl, portletName));
@@ -623,10 +627,10 @@
 		var useAttitude = "<c:out value='${useAttitude}'/>";
 		
 		if (useAttitude === "YES") {
-			parseDate();
+			parseDate(usedTheme);
 			attiClock();
 			setAttiBtnHover();
-			getAttitudeList();
+			getAttitudeList(usedTheme);
 			getHolidayList();
 		} else {
 			$(".time_check").css("display", "none");
