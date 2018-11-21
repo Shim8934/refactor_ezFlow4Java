@@ -553,7 +553,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .info_right{width:calc(100% - 194px); background:#ffffff;}
 
 .info{position:relative; margin:34px 0px 0px 30px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
-.info .infoImg{float:left; margin:0px 24px 52px 0px; padding:0px;}
+.info .infoImg{float:left; margin:0px 24px 0px 0px; padding:0px;}
 .info .infoName{margin:0px; padding:0px; color:#444445; font-size:18px; font-weight:bold;}
 .info .infoTeam{margin:10px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
 .info .infoMail{margin:17px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
