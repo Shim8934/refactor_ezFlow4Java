@@ -446,10 +446,6 @@
 	                
 	                $("#inboxMail").closest("div").append("<span onclick='folder_manage()' class='sub_iconLNB tree_manage'></span>");
 		            
-		            if ("${useMailReceiveScreen}" == "YES") {
-		            	$("#sentMail").closest("div").append("<span onclick='reception_check()' class='confirmation'><spring:message code='ezEmail.t516' /></span>");
-		            }
-		            
 	            	detailView();
 	            }
 	        }
@@ -1205,6 +1201,11 @@
 		        	<div class="tree">
 		            	<span>
 		                	<span>
+		                		<span>
+		                        	<div class="node_div">
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outlook_mail"></span><span class="h2_text" onclick="reception_check();"><spring:message code="ezEmail.t516" /></span>
+		                            </div>
+		                    	</span>
 		                    	<span>
 		                        	<div class="node_div">
 		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onclick="Open_Search();"><spring:message code="ezEmail.t641" /></span>
@@ -1311,7 +1312,8 @@
 	        
 	        <c:if test="${useSharedMailbox == 'YES'}">
 		        <c:forEach items="${shareInfoList}" var="shareInfo">
-		        	<h2><span onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');" style="width: 100%; display: inline-block;"><c:out value="${shareInfo.shareName}" /></span></h2>
+		        	<h2><span onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');" 
+		        			style="width:85%; display:inline-block; overflow:hidden; text-overflow:ellipsis; display:inline-block; white-space:nowrap;" title="${shareInfo.shareName}"><c:out value="${shareInfo.shareName}" /></span></h2>
 		        	<ul>
 		            	<div id="shareTreeView_${shareInfo.shareId}" class="tree" value="${shareInfo.shareId}" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 		        	</ul>
@@ -1342,7 +1344,7 @@
 		    <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
 		    <h4 onclick="operatorSendMail()"><span><spring:message code="ezEmail.0hun01" /></span></h4>
 		    </c:if>
-	        <h3 style="border-top:0px"><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
+	        <h3 onclick="mail_Config()" style="border-top:0px"><span style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
 	        <c:if test="${isDotNetAdmin == true}">
   			<h2>
   				<span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
