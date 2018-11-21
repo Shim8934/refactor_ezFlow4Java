@@ -1462,7 +1462,8 @@ public class EzAttitudeController {
 					.queryParam("adminFlag", adminFlag)
 					.queryParam("checkAdmin", checkAdmin)
 					.queryParam("deptid", writerDeptId)
-					.queryParam("isAllDept", isAllDept);
+//					.queryParam("isAllDept", isAllDept);
+					.queryParam("listAuthType", "M");
 		} else {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", companyId)
@@ -1481,7 +1482,8 @@ public class EzAttitudeController {
 					.queryParam("adminFlag", adminFlag)
 					.queryParam("checkAdmin", checkAdmin)
 					.queryParam("deptid", writerDeptId)
-					.queryParam("isAllDept", isAllDept);;
+//					.queryParam("isAllDept", isAllDept);
+					.queryParam("listAuthType", "M");
 		}
 
 		rest = new RestTemplate();
@@ -1514,7 +1516,7 @@ public class EzAttitudeController {
 			// g -> 자신의 부서 + auth TB 확인해볼것.
 		}
 		
-		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth/hyo";
 		
 		headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

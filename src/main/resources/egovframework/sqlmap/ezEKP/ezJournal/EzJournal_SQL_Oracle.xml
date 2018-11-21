@@ -603,7 +603,50 @@
 			) AA
 		ORDER BY 8 ASC, 1 ASC
 	</select>
-
+	
+	<!-- 해당부서의 사원수 -->
+	<select id="getDeptUserListCount" parameterClass="Map" resultClass="Integer">
+			select count(*) AS count from 
+		(	select
+				CN as user_id
+			from 
+				tbl_usermaster
+			where
+				TENANT_ID = #tenantId#
+			and
+				PHYSICALDELIVERYOFFICENAME = #companyId#
+			and
+			    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#) 
+			<isNotEqual property="key" compareValue="DEPARTMENT">
+				and 
+					$key$ like '%' || #value# || '%'
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT">
+				and 
+					$key$ = #value#
+			</isEqual>
+		union all 
+			select
+	        	A.CN as user_id
+			from
+				tbl_addjobmaster B
+			join
+				tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
+			join
+				tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+			where
+				B.TENANT_ID = #tenantId#
+			<isNotEqual property="key" compareValue="DEPARTMENT">
+				and 
+					A.$key$ like '%' || #value# || '%'
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT">
+				and 
+					B.DEPTID = #value#
+			</isEqual>
+		) AA
+	</select>
+	
 	<!-- 양식 상세정보 -->
 	<select id="getJournalFormInfo" parameterClass="map" resultMap="getJournalFormInfoVO">
 		select
