@@ -46,9 +46,7 @@ public interface EzNewPortalService {
 	public void deleteUserMenuOrder(String companyId, int tenantId, String userId) throws Exception;
 	public List<?> getQuickLinkList(String companyId, int tenantId, int page, int limit) throws Exception; 
 	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit) throws Exception;
-	//이효진
-	public List<PortletInfoVO> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception;
-	
+	public List<?> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception;
 	public List<?> getUserFrameListAndSelectedFrame(String companyId, int tenantId, String userId) throws Exception;
 	public void updateUserUsedFrame(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
 	public void updateUserUsedPortlet(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
