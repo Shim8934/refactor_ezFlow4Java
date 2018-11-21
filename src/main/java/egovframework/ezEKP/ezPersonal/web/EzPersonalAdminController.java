@@ -793,7 +793,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
-			result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t169", userInfo.getLocale()) + "</VALUE>");
+			result.append("<VALUE>" + vo.getProgress() + "</VALUE>");
 			result.append("<TYPE>" + "BTN" + "</TYPE>");
 			/*result.append("<FUNC>" + "mod_popup" + "</FUNC>");*/
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
