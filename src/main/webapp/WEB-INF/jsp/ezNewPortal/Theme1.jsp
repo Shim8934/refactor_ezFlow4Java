@@ -35,7 +35,7 @@
 	#featured {background : none;}
 	.box_shadow {width:100%; margin:0px;}
 	.portlet {height:250px; margin:20px 0px 0px 20px;background-color:#ffffff;}
-	.infoImg img {width:60px; height:60px;}
+	.infoImg img {width:60px; height:60px; border-radius:90px;-webkit-border-radius:90px;}
 	.attitudePtl {border:none;}
 	.two_column{width:47.9%;}
 </style>
