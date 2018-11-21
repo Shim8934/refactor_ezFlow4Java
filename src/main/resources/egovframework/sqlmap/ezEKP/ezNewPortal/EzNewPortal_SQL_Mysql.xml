@@ -1163,6 +1163,8 @@ AND
 WHERE
 	B.company_id = #companyId#
 AND
+	C.company_id = #companyId#
+AND
 	B.tenant_id = #tenantId#
 AND
 	B.theme_used = 1

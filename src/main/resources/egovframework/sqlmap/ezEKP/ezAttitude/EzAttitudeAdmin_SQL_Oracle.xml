@@ -209,12 +209,13 @@
 				<isEmpty property="orderCell">
 					ORDER BY TBL_USERMASTER.displayname$primary$
 				</isEmpty>
-				
+				<![CDATA[
 					) T1
 				) WHERE 
 					   RN >= #endRow#
 				  AND
 				  	   RN <= #startRow#
+				]]>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigCount" parameterClass="Map" resultClass="String">

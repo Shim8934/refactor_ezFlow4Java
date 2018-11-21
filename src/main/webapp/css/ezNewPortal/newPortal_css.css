@@ -252,12 +252,14 @@ nav > .countBox .hidden_nav_count {position: absolute; right: 0px; top: 6px; dis
 .countingIcon{ margin:0px; padding:30px 0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; background-color: white;} /* 장진혁 추가 */
 .countingIcon01{ overflow:hidden; padding:0px 0px; margin:0 auto; width:258px;}
 .countingIcon02{ overflow:hidden; padding:30px 0px 0px 0px; margin:0 auto; width:182px;}
-.countingIcon dl{ margin:0px; padding:0px 13px; position:relative; float:left; cursor:pointer;}
+.countingIcon dl{ margin:0px; padding:0px 13px; position:relative; float:left; cursor:pointer; text-align:center;}
 .countingIcon dl dt.iconImg{ margin:0px; padding:0px;}
 .countingIcon dl dd.iconText{ margin:0px; padding:0px; font-size:12px; color:#333; text-align:center;}
 .countingIcon dl dd.iconCount{ margin:0px; padding:2px 8px; font-size:12px; color:#fff; position:absolute; right:2px; top:0px; background:#0470e4; border:1px solid #0260c4; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
 .countingIcon dl dd.iconCount_none{ margin:0px; padding:2px 8px; font-size:12px; color:#fff; position:absolute; right:2px; top:0px; background:#b4b4b4; border:1px solid #a4a4a4; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
-
+.countingIcon .iconCircle_none{width:58px; height:58px; margin:0px auto; padding:0px; background:#f8f8f8; border-radius:58px;-webkit-border-radius:58px;-moz-border-radius:58px;border:1px solid #e9e9e9;}
+.countingIcon .iconCircle_none .iconCommon{display:inline-block; vertical-align:middle; width:25px; height:25px; margin:16px auto; background:url(/images/ezNewPortal/theme3Img/writebanner_icon_v1.001.png) left top no-repeat; background-position:2px 2px;}
+.countingIcon dl.icon_disabled {cursor:default;}
 /* birthday */
 .birthday{ margin:0px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; background-color: white; height:197px;} /* 장진혁 추가 */
 .birthTit{ height:32px; border-top:1px solid #e7e7e7; border-bottom:1px solid #e7e7e7; box-sizing:border-box; line-height:30px;}
@@ -583,6 +585,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 .main_time{float:right; width:150px; height:76px; margin:0px; padding:0px;}
 .main_time .timeCheckIn{float:left; width:calc(50% - 1px); height:76px; margin:0px; padding:0px; color:#ffffff; font-size:13px; border-left:1px solid #ffffff; text-align:center; background:#45a8fb; cursor:pointer;}
+.main_time .timeCheckIn.in{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
+.main_time .timeCheckIn.in dd{margin:-4px 0px 0px 0px;}
 .main_time .timeCheckIn.lateIn{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
 .main_time .timeCheckIn.lateIn dd{margin:-4px 0px 0px 0px;}
 .main_time .timeCheckIn dt{margin:15px 0px 12px 0px; padding:0px;}
@@ -633,13 +637,13 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .writebannerIcon .countZero{background:rgba(0,0,0,0.2);}
 
 @media only screen and (max-width :1730px) and (min-width :1680px) {
-	.info .infoImg{margin:0px 24px 0px 0px;}
+	/*.info .infoImg{margin:0px 24px 0px 0px;} */
 	.info_left {width:103px;}
 	.info_right {width : calc(100% - 111px);}
 }
 /* 생일자 포틀릿*/
 .box_shadow .birthList li {width:33.33%;float:none; display:inline-block; padding:15px 0px 15px 0px;} 
-.birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;}
+.birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;cursor:pointer;}
 .birthList li .birthListDL .birthPic{margin:0px; padding:0px 7px 0px 0px; float:left;}
 .birthList li .birthListDL .birthPic img{width:50px; height:50px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; border:1px solid #e7e7e7;}
 .birthList li .birthListDL .birthName{margin:10px 0px 0px 0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
@@ -676,6 +680,12 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	
 	.box_shadow.info_left {display:none;}
 	.box_shadow.info_right {width:100%; margin-left:0px !important;}
+}
+@media only screen and (max-width :1807px) and (min-width :1740px) {
+	.sscheduleUL .scheduleLi_nodata .sNodataPlus{ margin:10px 8px 0px 0px; padding:0px; float:right; cursor:pointer;}
+}
+@media only screen and (max-width :1739px) and (min-width :1686px) {
+	.sscheduleUL .scheduleLi_nodata .sNodataPlus{ margin:10px 3px 0px 0px; padding:0px; float:right; cursor:pointer;}
 }
 
 @media only screen and (max-width :1685px) and (min-width :1590px) {

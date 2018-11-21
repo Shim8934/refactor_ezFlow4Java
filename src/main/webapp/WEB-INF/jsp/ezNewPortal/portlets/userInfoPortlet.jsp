@@ -39,11 +39,11 @@
 	                <span class="timePM">PM</span></p>
 	            </div>
 	            <div class="main_time">
-	            	<dl class="timeCheckIn out" id="ptlInAttiBtn" type="A01" datetype="2" onclick="ptlCheckHoliday(this)">
+	            	<dl class="timeCheckIn out" id="ptlInAttiBtn" type="A01" datetype="2" onclick="ptlCheckHoliday(this, '${usedTheme}')">
 	                	<dt><img src="/images/ezNewPortal/theme3Img/main_time_icon.png"></dt>
 	                	<dd><spring:message code='ezNewPortal.t046' /></dd>
 	                </dl>
-	                <dl class="timeCheckOut out" id="ptlOutAttiBtn" type="A03" datetype="2" onclick="ptlCheckHoliday(this)">
+	                <dl class="timeCheckOut out" id="ptlOutAttiBtn" type="A03" datetype="2" onclick="ptlCheckHoliday(this, '${usedTheme}')">
 	                	<dt><img src="/images/ezNewPortal/theme3Img/main_time_icon.png"></dt>
 	                	<dd><spring:message code='ezNewPortal.t047' /></dd>
 	                </dl>
