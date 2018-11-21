@@ -742,10 +742,8 @@
 				var typeId = t.getAttribute("id");
 				var typeName = t.previousSibling.innerText;
 				var pDate = $("#calTitle").text().trim();
-				var startDate = pDate + "-01 00:00:00";
-				var endDate = pDate + "-" + ( new Date(pDate.split("-")[0],pDate.split("-")[1], 0) ).getDate() + " 23:59:59";
-
-// 				document.getElementById("popup_title").innerText = "<spring:message code='ezAttitude.t141'/>" + "[" + typeName.trim() + "]";
+				var startDate = pDate + "-01";
+				var endDate = pDate + "-" + ( new Date(pDate.split("-")[0],pDate.split("-")[1], 0) ).getDate();
 				
 				$.ajax({
 					type : "POST",
@@ -753,194 +751,13 @@
 					async : true,
 					url : "/ezAttitude/getAttitudeList.do",
 					data : {
-						startDate : pDate + "-01 00:00:00",
+						startDate : startDate,
 						endDate : endDate,
 						deptFlag : deptFlag,
 						typeId : t.getAttribute("id"),
 						selectedDeptID : encodeURIComponent(authDeptList.value)
 					},
 					success : function(result) {
-				    	/*
-						var len = result.length;
-						
-						if (deptFlag == 'true') {
-							$('#addpopup_list tbody').children('tr').not(":first").remove();
-					    	
-					    	if (len == 0) {
-					    		var uvobjTr = $("<tr style=''></tr>").append($("<td style='width:5%;height:0px;border:none;'></td>"));
-					    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
-					    		uvobjTr.append($("<td style='width:10%; height:0px; border:none;'></td>"));
-					    		uvobjTr.append($("<td style='width:30%; height:0px; border:none;'></td>"));
-					    		uvobjTr.append($("<td style='width:35%; height:0px; border:none;'></td>"));
-					    		$("#addpopup_list tbody").append(uvobjTr);
-					    		
-					    		var objTr = $("<tr></tr>").append($("<td colspan='5' style='text-align:center; width:500px; border-top:none;'></td>").text("<spring:message code='ezAttitude.t142'/>"));
-					    		$("#addpopup_list tbody").append(objTr);
-					    	}
-					    	
-					    	result.forEach(function(vo, index) {
-					    		if (vo.apprStatus == 1) {
-					    			vo.apprStatus = "<spring:message code='ezAttitude.t210'/>";
-					    		} else {
-					    			vo.apprStatus = "<spring:message code='ezAttitude.t211'/>";
-					    		}
-					    		
-					    		var gubunBar = "";
-					    		if (vo.region != "" && vo.content != "") {
-					    			gubunBar = " / ";
-					    		}
-					    		
-					    		var contentTrim = $.trim($("<p></p>").html(vo.content).text());
-					    		var statusContent = $("<p></p>").html((vo.region == "" ? "" : "<spring:message code='ezAttitude.t47'/> : " + vo.region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
-	
-					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(index + 1)));
-				    			objTr.append($("<td style='max-width:10%; width:10%;' title='" + vo.writerName + "'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
-				    			objTr.append($("<td style='width:10%;' title='" + vo.writerDeptName + "'></td>").append($("<div style='width:72px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerDeptName)));
-
-				    			if (vo.dateType == 1) {
-					    			objTr.append($("<td style='width:15%;'></td>").append($("<div class='dateDiv' style='width:131px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,11))));
-					    			
-					    			if (len >= 15) {
-					    				objTr.append($("<td style='width:60%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:355px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			} else {
-					    				objTr.append($("<td style='width:60%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:371px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			}
-						    		
-					    		} else if (vo.dateType == 2) {
-					    			if (vo.typeId == 'A02' || vo.typeId == 'A08') {
-					    				objTr.append("<td style='width:15%;'><div class='dateDiv' style='width:131px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>"+ vo.startDate.substring(0,11) + "<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span></div></td>");	
-					    			} else {
-					    				objTr.append($("<td style='width:15%;'></td>").append($("<div class='dateDiv' style='width:131px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16))));
-					    			}
-					    			
-					    			if (len >= 15) {
-					    				objTr.append($("<td style='width:60%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:355px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			} else {
-					    				objTr.append($("<td style='width:60%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:371px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			}
-						    		
-					    		} else if (vo.dateType == 3) {
-					    			objTr.append("<td style='width:25%;'><div class='dateDiv' style='width:175px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16) + "</span>\u00a0~\u00a0<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span></div></td>");
-					    			if (len >= 15) {
-					    				objTr.append($("<td style='width:50%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:311px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			} else {
-					    				objTr.append($("<td style='width:50%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:327px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			}
-						    		
-					    		} else if (vo.dateType == 4 && vo.typeId != 'A04') {
-					    			objTr.append($("<td style='width:25%;'></td>").append($("<div class='dateDiv' style='width:175px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
-					    			
-					    			if (len >= 15) {
-					    				objTr.append($("<td style='width:50%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:311px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			} else {
-					    				objTr.append($("<td style='width:50%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:327px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			}
-						    		
-					    		} else if (vo.typeId == 'A04') {
-					    			if (vo.dateType == 4) {
-					    				objTr.append("<td style='width:35%;'><div class='dateDiv' style='width:239px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10) + "</div></td>");
-					    			} else if (vo.dateType == 5) {
-					    				objTr.append("<td style='width:35%;'><div class='dateDiv' style='width:239px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16)+ "</span>\u00a0~\u00a0" + vo.endDate.substring(0,11) + "<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span></div></td>");
-					    			}
-					    			
-					    			if (len >= 15) {
-					    				objTr.append($("<td style='width:40%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:247px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			} else {
-					    				objTr.append($("<td style='width:40%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:263px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			}
-					    		}
-	
-					    		$("#addpopup_list tbody").append(objTr);
-					    	});
-						} else {
-					    	$('#addpopup_list tbody').children('tr').not(":first").remove();
-					    	if (len == 0) {
-					    		if (typeId == 'A02' || typeId == 'A03') {
-						    		var uvobjTr = $("<tr style=''></tr>").append($("<td style='width:5%;height:0px;border:none;'></td>"));
-						    		uvobjTr.append($("<td style='width:25%; height:0px; border:none;'></td>"));
-						    		$("#addpopup_list tbody").append(uvobjTr);
-					    		} else {
-						    		var uvobjTr = $("<tr style=''></tr>").append($("<td style='width:5%;height:0px;border:none;'></td>"));
-						    		uvobjTr.append($("<td style='width:25%; height:0px; border:none;'></td>"));
-						    		uvobjTr.append($("<td style='width:70%; height:0px; border:none;'></td>"));
-						    		$("#addpopup_list tbody").append(uvobjTr);
-					    		}
-					    		
-					    		var objTr = $("<tr></tr>").append($("<td colspan='3' style='text-align:center; border-top:none;'></td>").text("<spring:message code='ezAttitude.t142'/>"));
-					    		$("#addpopup_list tbody").append(objTr);
-					    	}
-					    	
-					    	result.forEach(function(vo, index) {
-					    		if (vo.apprStatus == 1) {
-					    			vo.apprStatus = "<spring:message code='ezAttitude.t210'/>";
-					    		} else {
-					    			vo.apprStatus = "<spring:message code='ezAttitude.t211'/>";
-					    		}
-								
-					    		var gubunBar = "";
-					    		if (vo.region != "" && vo.content != "") {
-					    			gubunBar = " / ";
-					    		}
-					    		
-					    		var contentTrim = $.trim($("<p></p>").html(vo.content).text());
-					    		var statusContent = $("<p></p>").html((vo.region == "" ? "" : "<spring:message code='ezAttitude.t47'/> : " + vo.region) + (contentTrim == "" ? "" : gubunBar + contentTrim)).text();
-					    		
-					    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(index + 1)));
-					    		
-					    		if (vo.dateType == 1) {
-					    			objTr.append($("<td style='width:20%;'></td>").append($("<div class='dateDiv' style='width:131px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,11))));
-					    			
-					    			if (len >= 15) {
-							    		objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:519px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			} else {
-							    		objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:535px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			}
-					    		} else if (vo.dateType == 2) {
-					    			if (vo.typeId == 'A02' || vo.typeId == 'A08') {
-					    				objTr.append("<td style='width:20%;'><div class='dateDiv' style='width:131px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>"+ vo.startDate.substring(0,11) + "<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span></div></td>");	
-					    			} else {
-					    				objTr.append($("<td style='width:20%;'></td>").append($("<div class='dateDiv' style='width:131px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16))));
-					    			}
-					    			
-									if (len >= 15) {
-							    		objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:519px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			} else {
-							    		objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:535px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			}
-					    		} else if (vo.dateType == 3) {
-					    			objTr.append("<td style='width:20%;'><div class='dateDiv' style='width:175px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16) + "</span>\u00a0~\u00a0<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span></div></td>");
-									if (len >= 15) {
-							    		objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:475px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			} else {
-							    		objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:491px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			}
-					    		} else if (vo.dateType == 4 && vo.typeId != 'A04') {
-					    			objTr.append($("<td style='width:20%;'></td>").append($("<div class='dateDiv' style='width:175px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
-					    			
-									if (len >= 15) {
-										objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:475px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			} else {
-							    		objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:491px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			}
-					    		} else if (vo.typeId == 'A04') {
-					    			if (vo.dateType == 4) {
-					    				objTr.append($("<td style='width:20%;'></td>").append($("<div class='dateDiv' style='width:235px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
-					    			} else if (vo.dateType == 5) {
-					    				objTr.append("<td style='width:20%;'><div class='dateDiv' style='width:235px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16)+ "</span>\u00a0~\u00a0" + vo.endDate.substring(0,11) + "<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span></div></td>");
-					    			}
-					    			
-									if (len >= 15) {
-										objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:384px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			} else {
-					    				objTr.append($("<td style='width:75%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:400px; padding:0px 5px 0px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-					    			}
-						    		
-					    		}
-					    		
-					    		$("#addpopup_list tbody").append(objTr);
-					    	});
-						}
-					    	*/
 				    	if (typeId == "A02" || typeId == "A07") {
 				    		onlyTimePopup(result);
 				    	} else if (typeId == "A04" || typeId == "A09" || typeId == "A10") {
@@ -1152,7 +969,7 @@
 			    	}
 		    		
 			    	result.forEach(function(vo, index) {
-			    		var statusContent = $("<p></p>").html((vo.content == "" ? "" : trim(vo.content))).text();
+			    		var statusContent = $("<p></p>").html((vo.content == null || vo.content == "" ? "" : trim(vo.content))).text();
 			    		
 			    		//no,이름,부서
 						var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(index + 1)));
@@ -1217,7 +1034,7 @@
 			    	}
 			    	
 			    	result.forEach(function(vo, index) {
-			    		var statusContent = $("<p></p>").html((vo.content == "" ? "" : trim(vo.content))).text();
+			    		var statusContent = $("<p></p>").html((vo.content == null || vo.content == "" ? "" : trim(vo.content))).text();
 			    		
 			    		//no
 			    		var objTr = $("<tr></tr>").append($("<td style='width:5%;'></td>").append($("<div style='width:36px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(index + 1)));
@@ -1278,8 +1095,6 @@
 			function searchByDay(t) {
 				
 				var date = $(t).attr('dispdate');
-				var startDate = date + " 00:00:00";
-				var endDate = date + " 23:59:59";
 				
 				document.getElementById("popupDay_title").innerText = "<spring:message code='ezAttitude.t141'/> [" + date + "]";
 				
@@ -1289,8 +1104,8 @@
 					async : true,
 					url : "/ezAttitude/getAttitudeList.do",
 					data : {
-						startDate : startDate,
-						endDate : endDate,
+						startDate : date,
+						endDate : date,
 						deptFlag : deptFlag,
 						selectedDeptID : encodeURIComponent(authDeptList.value)
 					},
@@ -1303,57 +1118,6 @@
 				    		var objTr = $("<tr></tr>").append($("<td colspan='7' style='text-align:center; width:820px; border-top:none;'></td>").text("<spring:message code='ezAttitude.t142'/>"));
 				    		$("#addpopupDay_list tbody").append(objTr);
 				    	} else {
-				    		/*
-					    	result.forEach(function(vo, index) {
-					    		var contentTrim = $.trim($("<p></p>").html(vo.content).text());
-					    		var statusContent = "";
-					    		
-					    		if (vo.typeId == "A02" || vo.typeId == "A07") { //지각,휴근은 근무지및 내용이 필요없음.
-						    	} else if (vo.typeId == "A04" || vo.typeId == "A09" || vo.typeId == "A10") { //근무지만
-						    		statusContent = $("<p></p>").html((vo.region == "" ? "" : vo.region)).text();
-						    	} else {
-						    		statusContent = $("<p></p>").html((contentTrim == "" ? "" : contentTrim)).text();
-						    	}
-					    		
-					    		//no, 이름, 출근, 퇴근, 근태유형
-					    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>").append($("<div style='width:35px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
-				    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:55px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
-				    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
-				    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:75px; padding-left: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
-					    		objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.typeName + "'></td>").append($("<div style='width:55px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html(vo.typeName)));
-				    			
-					    		//일시
-				    			if (vo.dateType == 1) {
-					    			objTr.append($("<td></td>").append($("<div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,11))));
-					    		} else if (vo.dateType == 2) {
-					    			if (vo.typeId == 'A02' || vo.typeId == 'A08') {
-					    				objTr.append("<td><div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>"+ vo.startDate.substring(0,11) + "<span class='AttRedText'>" +vo.startDate.substring(11,16) + "</span></div></td>");	
-					    			} else {
-						    			objTr.append($("<td></td>").append($("<div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,16))));
-					    			}
-					    		} else if (vo.dateType == 3) {
-					    			objTr.append("<td><div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16) + "</span>\u00a0~\u00a0<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span></div></td>");
-					    		} else if (vo.dateType == 4 && vo.typeId != 'A04') {
-					    			objTr.append($("<td></td>").append($("<div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
-					    		} else if (vo.typeId == 'A04') {
-					    			if (vo.dateType == 4) {
-					    				objTr.append($("<td></td>").append($("<div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10))));
-					    			} else if (vo.dateType == 5) {
-					    				objTr.append("<td><div class='dateDiv' style='width:240px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16)+ "</span>\u00a0~\u00a0" + vo.endDate.substring(0,11) + "<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span></div></td>");
-					    			}
-					    		}
-				    			
-					    		//근무지 및 내용
-				    			if (len >= 15) {
-				    				objTr.append($("<td style='width:30%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));
-				    			} else {
-				    				objTr.append($("<td style='width:30%;' title='" + statusContent.replace(/'/gi, "&apos;").replace(/"/gi, "&quot;") + "'></td>").append($("<div style='width:235px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(statusContent)));			    				
-				    			}
-					    		
-					    		
-					    		$("#addpopupDay_list tbody").append(objTr);
-				    		});
-				    		*/
 				    		inoutAttitudeList(result);
 				    		attitudeList(result);
 				    		

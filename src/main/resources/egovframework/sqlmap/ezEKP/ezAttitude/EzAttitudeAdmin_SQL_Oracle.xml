@@ -903,7 +903,7 @@
 			AND
 				A.TENANT_ID = #tenantId#
 			GROUP BY 
-				A.USER_ID
+				A.USER_ID, userName, jikwi, deptName
 			ORDER BY
 				userName
 		]]>
@@ -1245,7 +1245,7 @@
 					(A.START_DATE < TO_DATE((#year# || '-' || #months# || #startTime#), 'YYYY-MM-DD HH24:MI:SS') and A.END_DATE >= TO_DATE((#year# || '-' || #months# || #endTime#), 'YYYY-MM-DD HH24:MI:SS'))
 				)
 			GROUP BY
-				A.TYPE_ID
+				A.TYPE_ID, STAT_MONTH
 		]]>
 <!-- 		</iterate> -->
 	</select>
