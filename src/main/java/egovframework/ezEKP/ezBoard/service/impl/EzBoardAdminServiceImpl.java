@@ -492,7 +492,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		/* 2018-10-15 홍승비 - 게시판그룹의 그룹사게시판 여부를 체크하여 하위게시판 등록하도록 수정 */
 		map.put("isAllGroupBoard", boardPropertyVO.getIsAllGroupBoard());
 		
-		/* 2018-10-15 홍승비 - 그룹사게시판(하위게시판) 생성 시 디폴트 구분값 '1' 부여 */
 		ezBoardAdminDAO.createBoard_I(map);
 		
 		if (boardPropertyVO.getIsAllGroupBoard().equals("Y")) {
