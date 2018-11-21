@@ -102,6 +102,10 @@ body{margin:0px; padding:0px;}
 	.section1 .sec1Layout_right{width:33.3%;}
 }
 
+@media only screen and (max-width: 1685px){
+	.section1_bg{margin:0px 0px 25px 0px;}
+}
+
 @media only screen and (max-width: 1580px){
 	.section1 .sec1Layout_left{width:40%;}
 	.section1 .sec1Layout_middle{width:42%;}
