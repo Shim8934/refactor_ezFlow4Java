@@ -167,7 +167,7 @@
 	                    A.boardcolor BoardColor,
 	                    A.gubun,
 	                    A.url,
-	                    '' BoardGroupACL
+	                    TO_NCHAR('') BoardGroupACL
 	              	FROM 
 	              		TBL_Board_BoardInfo A
 	                JOIN 
@@ -219,7 +219,7 @@
 		                    boardcolor BoardColor,
 		                    gubun,
 		                    url,
-		                    '' BoardGroupACL
+		                    TO_NCHAR('') BoardGroupACL
 		              	FROM 
 		              		TBL_Board_BoardInfo
 		              	WHERE
@@ -316,7 +316,7 @@
 		                    boardcolor BoardColor,
 		                    gubun,
 		                    url,
-		                    '' BoardGroupACL
+		                    TO_NCHAR('') BoardGroupACL
 		              	FROM 
 		              		TBL_Board_BoardInfo
 		              	WHERE
