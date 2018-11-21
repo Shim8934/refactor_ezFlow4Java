@@ -446,6 +446,8 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	public List<PersonalPopupVO> getPopupList(String companyID, int totalCount, int pageSize, int start, int tenantID) throws Exception {
 		logger.debug("getPopupList started");
 
+		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_pCompanyID", companyID);
@@ -453,9 +455,12 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pCount", pageSize);
 		map.put("v_pStart", start);
 		map.put("tenantID", tenantID);
+		map.put("nowDate", nowDate);
 		
 		logger.debug("getPopupList ended");
-		return ezPersonalAdminDAO.getPopupList(map);
+		List<PersonalPopupVO> list = ezPersonalAdminDAO.getPopupList(map);
+		//return ezPersonalAdminDAO.getPopupList(map);
+		return list;
 	}
 
 	@Override
@@ -514,16 +519,16 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public void deletePopup(String itemSeq, int tenantID) throws Exception {
+	public void deletePopup(String popupList, int tenantID) throws Exception {
 		logger.debug("deletePopup started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_pItemSeq", itemSeq);
-		map.put("tenantID", tenantID);
-
+		for(String itemSeq : popupList.split(";")) {
+			map.put("v_pItemSeq", itemSeq);
+			map.put("tenantID", tenantID);
+			ezPersonalAdminDAO.deletePopup(map);
+		}
 		logger.debug("deletePopup ended");
-		ezPersonalAdminDAO.deletePopup(map);
 	}
 
 	@Override

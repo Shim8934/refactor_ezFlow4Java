@@ -64,68 +64,68 @@
 	            	}
 	            });
 	        }
-	        
-		    function event_PollList(result) {
-		        try {
-		            document.getElementById("AccessList").innerHTML = "";
-		            var xmldom = result
-		            var headerData = createXmlDom();
-		            headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
-		
-		            if (CrossYN()) {
-		                var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-		                var Node = headerData.importNode(xmlRtn, true);
-		                headerData.documentElement.appendChild(Node);
-		            } else {
-		                var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-		                headerData.documentElement.appendChild(xmlRtn);
-		            }
-		            
-		            var listview = new ListView();
-		            listview.SetID("AccessListView");
-		            listview.SetSelectFlag(false);
-		            listview.SetMulSelectable(true);
-		            listview.SetRowOnClick("PollList_onClick");
-		            listview.SetRowOnDblClick("PollList_onDblclick");
-		            listview.DataSource(headerData);
-		            listview.DataBind("AccessList");
-		            //listview.DataSource(xmldom);
-		            listview.RowDataBind();
-		            checkbox_header();
-		            xmldomNode = null;
-		
-		            if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
+
+
+			function event_PollList(result) {
+				try {
+					document.getElementById("AccessList").innerHTML = "";
+					var xmldom = result
+					var headerData = createXmlDom();
+					headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+
+					if (CrossYN()) {
+						var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+						var Node = headerData.importNode(xmlRtn, true);
+						headerData.documentElement.appendChild(Node);
+					} else {
+						var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+						headerData.documentElement.appendChild(xmlRtn);
+					}
+
+					var listview = new ListView();
+					listview.SetID("AccessListView");
+					listview.SetSelectFlag(false);
+					listview.SetMulSelectable(true);
+					listview.SetRowOnClick("PollList_onClick");
+					listview.SetRowOnDblClick("PollList_onDblclick");
+					listview.DataSource(headerData);
+					listview.DataBind("AccessList");
+					//listview.DataSource(xmldom);
+					listview.RowDataBind();
+					checkbox_header();
+					xmldomNode = null;
+
+					if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
 						TotalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
 						pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
-		            } else if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
-		            	//IE11일때 추가
-		                TotalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
+					} else if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
+						//IE11일때 추가
+						TotalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
 						pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
-		            } else {
-		                TotalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
-		                pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
-		            }
-		            
-		            //2018-08-02 김보미 - 데이터가 없을 때
-		            if (TotalCount == null || TotalCount == 0) { 
-		            	var TR_noItems = "<tr id='Poll_TR_noItems'><td style='text-align: center;' colspan='6'>" + strLang5 + "</td></tr>";
-		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
-		            }
-		            
-		            totalPage = Math.ceil(new Number(TotalCount / PageSize));
-		            
-		            if (CrossYN()) {
-		                progressPollFlag = SelectSingleNodeValueNew(xmldom, "PROFLAG");
-		            } else {
-		                progressPollFlag = SelectSingleNodeValueNew(xmldom.documentElement, "PROFLAG");
-		            }
-		            rowListSelect();
-		            checkItems();
-		            makePageSelPage();
-		        } catch (e) {
-		
-		        }
-		    }
+					} else {
+						TotalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
+						pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
+					}
+
+					//2018-08-02 김보미 - 데이터가 없을 때
+					if (TotalCount == null || TotalCount == 0) {
+						var TR_noItems = "<tr id='Poll_TR_noItems'><td style='text-align: center;' colspan='6'>" + strLang5 + "</td></tr>";
+						$("#AccessListView tbody").eq(0).html(TR_noItems);
+					}
+
+					totalPage = Math.ceil(new Number(TotalCount / PageSize));
+
+					if (CrossYN()) {
+						progressPollFlag = SelectSingleNodeValueNew(xmldom, "PROFLAG");
+					} else {
+						progressPollFlag = SelectSingleNodeValueNew(xmldom.documentElement, "PROFLAG");
+					}
+					rowListSelect();
+					checkItems();
+					makePageSelPage();
+				} catch (e) {
+				}
+			}
 
 
 			// xml data -> input checkbox
@@ -687,7 +687,7 @@
 			<div class="mainView" id="mainView" style="width:100%;float:left">
 				<div id="contentlist" style="width:100%; overflow: auto;">
 					<table class="mainlist" style="width: 100%;">
-						<div id="AccessList" style="BORDER: 0; WIDTH: 100%"></div>
+						<div id="AccessList" style="border: 0; width: 100%"></div>
 					</table>
 				</div>
 				<div id="tblPageRayer"></div>
