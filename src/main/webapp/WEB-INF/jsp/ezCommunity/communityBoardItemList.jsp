@@ -136,7 +136,7 @@
                        	
                        	/* 2018-05-04 홍승비 - 댓글 표시하기 */
                        	if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
-                       		listXML += "<SPAN class= '" + bClass + "' style='color:#c64200; position: absolute;'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                       		listXML += "<SPAN class= '" + bClass + "' style='color:#c64200;'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
                        	}
                         listXML += "</TD><TD></TD>";
 					}
@@ -151,7 +151,7 @@
                        	listXML += "</div>";
 	                    
 						if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
-                       		listXML += "<SPAN class ='" + bClass + "' style='color:#c64200; position: absolute;'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                       		listXML += "<SPAN class ='" + bClass + "' style='color:#c64200;'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
                        	}
                     	listXML += "</TD><TD></TD>";
 					}				

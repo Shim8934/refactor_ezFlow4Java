@@ -338,7 +338,7 @@
 		        var title2 = node.getElementsByClassName("node_div");
    
 		        /* 2018-10-11 홍승비 - 접근권한 등의 문제로 트리노드를 확장할 수 없는 경우에는 건너뛰도록 수정 */
-		        if (typeof(title2[0]) != "undefined") {
+		        /* if (typeof(title2[0]) != "undefined") {
 			        var nodeLevel = title2[0].getAttribute("nodelevel");
 			        
 			        for(var i=0; i<title2.length; i++) {
@@ -346,7 +346,6 @@
 			        	title3 = title2[i].getElementsByClassName("h2_text");
 			        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2"));
 			        	
-			        	/* 2018-08-24 홍승비 - 게시판명의 width가 음수가 되는 경우 분기 처리 */
 			        	if (spanW < 0) {
 							 spanW = 0;
 						 }
@@ -354,7 +353,7 @@
 			        	title3[0].style.textOverflow = 'ellipsis';
 			        	title3[0].style.overflow = 'hidden';
 			        }
-		        }
+		        } */
 		    }
 		    
 		    function TreeCtrl_onNodeClickNew(pNodeID, pTreeID) {
@@ -1026,12 +1025,12 @@
 		                    	</span>
 		                    	<span>
 		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_my"></span><span class="h2_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span>
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_reservation"></span><span class="h2_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span>
 		                            </div>
 		                    	</span>
 		                    	<span>
 		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_my"></span><span class="h2_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span>
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outbox"></span><span class="h2_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span>
 		                            </div>
 		                    	</span>
 		                    </div>	
@@ -1083,7 +1082,7 @@
 			                    	<c:if test="${applyFlag == 'OK'}">
 			                    		<span>
 				                        	<div class="node_div">
-				                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onclick="Apprboard()"><spring:message code="ezBoard.t999001" /><span id="applyCount">${applyCount}</span></span>
+				                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_firstPage"></span><span class="h2_text" onclick="Apprboard()"><spring:message code="ezBoard.t999001" /><span id="applyCount">${applyCount}</span></span>
 				                            </div>
 				                    	</span>
 			                    	</c:if>

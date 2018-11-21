@@ -11,8 +11,8 @@
 		<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<link href="${util.addVer('/css/jquery.selectbox.css')}" type="text/css" rel="stylesheet" />
-		<%-- <link href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" rel="stylesheet" /> --%>
-		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
+		<link href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" rel="stylesheet" />
+		<%-- <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css"> --%>
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	    <style type="text/css">
 	        .instance.sbHolder{
@@ -221,7 +221,7 @@
 	            treeView.LoadFromID(pTreeID);
 	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID);
 	            
-	            var node = document.getElementById(pNodeID);
+	            /* var node = document.getElementById(pNodeID);
 		        var title2 = node.getElementsByClassName("node_div");
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
 		        
@@ -234,7 +234,7 @@
 		        	title3[0].style.width = 135 - 16*(nodeLevel-1) +'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
-		        }		        
+		        } */		        
 	        }
 		    
 		    function Tree_setconfig() {

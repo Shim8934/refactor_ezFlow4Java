@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezCommunity.t1047' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('ezOrgan.e3', 'msg')}">
+		<%-- <link rel="stylesheet" type="text/css" href="${util.addVer('ezOrgan.e3', 'msg')}"> --%>
+		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
 		<style>
 			.groupBoard {
@@ -14,11 +15,6 @@
 				overflow:hidden;
 				text-overflow:ellipsis;
 				display: inline-block;
-			}
-			.node_div span {
-				width:266px;
-				overflow:hidden;
-				text-overflow:ellipsis;
 			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
