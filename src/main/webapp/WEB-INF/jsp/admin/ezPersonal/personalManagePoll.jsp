@@ -126,14 +126,15 @@
 		
 		        }
 		    }
-		    
+
+
 			// xml data -> input checkbox
 			var cnt;
 			function checkbox_header() {
 				var doc = window.document;
 				var th = doc.getElementById("AccessListView_TH_0");
 				var acList = doc.getElementById("AccessListView");
-				th.innerHTML = "<input type='checkbox' id = 'checkAll'></input>";
+				th.innerHTML = "<input type='checkbox' id = 'checkAll' onchange='checkboxHeaderClick()'></input>";
 				
 				cnt = acList.children[1].childElementCount;
 				
@@ -142,27 +143,25 @@
 					var seq = acList.children[1].children[i].children[0].innerHTML;
 					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq +"'></input>";
 				}
-				checkboxHeaderClick();
-			}
-			
-			var checkFlag = false;
-			function checkboxHeaderClick() {
-				$("#checkAll").click(function(){
-					if(checkFlag){
-						checkFlag = false;
-						$(".checks").prop("checked",false);
-						$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
-					}else {
-						checkFlag = true;
-						$(".checks").prop("checked",true);
-						$("#contentlist tr td").css("background-color", "rgb(228, 232, 236)");
-					}
-					checkItems();
-				});
 			}
 
-			
-		    var rowList = new Array();
+
+			var checkFlag = false;
+			function checkboxHeaderClick() {
+				if(checkFlag){
+					checkFlag = false;
+					$(".checks").prop("checked",false);
+					$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+				}else {
+					checkFlag = true;
+					$(".checks").prop("checked",true);
+					$("#contentlist tr td").css("background-color", "rgb(228, 232, 236)");
+				}
+				checkItems();
+			}
+
+
+			var rowList = new Array();
 			function checkItems() {
 				rowList = [];
 				$("input:checkbox[name='checks']").each(function(){
