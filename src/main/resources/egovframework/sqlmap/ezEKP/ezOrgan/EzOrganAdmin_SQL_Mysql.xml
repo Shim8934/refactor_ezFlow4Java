@@ -2801,7 +2801,8 @@
 	    		(#companyID#, #tenantID#, 13, 1, 1, 13),
 	    		(#companyID#, #tenantID#, 14, 1, 1, 14),
 	    		(#companyID#, #tenantID#, 15, 1, 1, 15),
-	    		(#companyID#, #tenantID#, 16, 1, 1, 16)
+	    		(#companyID#, #tenantID#, 16, 1, 1, 16),
+	    		(#companyID#, #tenantID#, 17, 1, 1, 17)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I26" parameterClass="Map">
@@ -2825,7 +2826,8 @@
 	    		(13, #companyID#, #tenantID#, #companyID#, 1, 0),
 	    		(14, #companyID#, #tenantID#, #companyID#, 1, 0),
 	    		(15, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(16, #companyID#, #tenantID#, #companyID#, 1, 0)
+	    		(16, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(17, #companyID#, #tenantID#, #companyID#, 1, 0)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I27" parameterClass="Map">
@@ -2881,7 +2883,10 @@
 	    		(15, 3, #companyID#, #tenantID#, '投票'),
 	    		(16, 1, #companyID#, #tenantID#, '사다리게임'),
 	    		(16, 2, #companyID#, #tenantID#, 'LadderGame'),
-	    		(16, 3, #companyID#, #tenantID#, 'はしごゲーム')
+	    		(16, 3, #companyID#, #tenantID#, 'はしごゲーム'),
+	    		(17, 1, #companyID#, #tenantID#, '업무관리'),
+	    		(17, 2, #companyID#, #tenantID#, 'Tasks'),
+	    		(17, 3, #companyID#, #tenantID#, 'To Do管理')
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I28" parameterClass="Map">
