@@ -2,13 +2,14 @@
  * 김보미
  */
 //근태관리 연동
-function ptlGetAttitudeList() {
+function ptlGetAttitudeList(usedTheme) {
 	$.ajax({
 		type : "POST",
 		dataType : "json",
 		async : false,
 		url : "/ezAttitude/getAttitudeList.do",
 		success : function(result) {
+			
 			for (var i = 0; i < result.length; i++) {
 				if (result[i].typeId == "A01") { //출근
  					$("#ptlInAttiBtn").attr("onclick", "").unbind("mouseenter");
@@ -20,6 +21,12 @@ function ptlGetAttitudeList() {
  					
  					if (usedTheme == 2) {
  						$("#inAttiBtn").parent().addClass("commute_on");
+ 						$("#inAttiBtn").removeClass("main_out").addClass("main_in");
+ 						$("#inAttiBtn_txt").removeClass("main_out").addClass("main_in");
+						$("#inAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+ 					} else {
+ 						$("#inAttiBtn").removeClass("main_out").addClass("main_in");
+ 						$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
  					}
 				} else if (result[i].typeId == "A02") { //지각
 					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
@@ -34,7 +41,15 @@ function ptlGetAttitudeList() {
 					$("#ptlInAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
 					
 					$("#inAttiBtn").removeClass("main_out").addClass("main_lateIn");
-					$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+					
+					if (usedTheme == 2) {
+ 						$("#inAttiBtn").removeClass("main_out").addClass("main_in");
+ 						$("#inAttiBtn_txt").removeClass("main_out").addClass("main_in");
+						$("#inAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+ 					} else {
+ 						$("#inAttiBtn").removeClass("main_out").addClass("main_in");
+ 						$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+ 					}
 				} else if (result[i].typeId == "A03") { //퇴근
 					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
 					
@@ -47,8 +62,14 @@ function ptlGetAttitudeList() {
 					$("#ptlOutAttiBtn dt").css("margin-bottom","5px");
 					$("#ptlOutAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
 					
-					$("#outAttiBtn").removeClass("main_out").addClass("main_in");
-					$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+					if (usedTheme == 2) {
+ 						$("#outAttiBtn").removeClass("main_out").addClass("main_in");
+ 						$("#outAttiBtn_txt").removeClass("main_out").addClass("main_in");
+						$("#outAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+ 					} else {
+ 						$("#outAttiBtn").removeClass("main_out").addClass("main_in");
+ 						$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+ 					}
 				}
 			}
 		}
@@ -122,7 +143,7 @@ function ptlCheckAttitude(obj) {
 		ptlAddAttitude(obj);
 	} else {
 		alert(messages.strLang10);
-		ptlGetAttitudeList();
+		ptlGetAttitudeList(usedTheme);
 		try{}catch(e){}
 	}
 }
@@ -137,7 +158,7 @@ function ptlAddAttitude(obj) {
 			alert(messages.strLang3);
     		return;
 		} else {
-			ptlGetAttitudeList();
+			ptlGetAttitudeList(usedTheme);
 		}
 	}
 	
@@ -160,7 +181,7 @@ function ptlAddAttitude(obj) {
 			mode : "new"
 		},
 		success : function(result) {
-			ptlGetAttitudeList();
+			ptlGetAttitudeList(usedTheme);
 		},
 		complete : function() {
 			afterAlertDate = new Date();

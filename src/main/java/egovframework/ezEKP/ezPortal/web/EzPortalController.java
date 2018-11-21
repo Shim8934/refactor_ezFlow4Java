@@ -360,6 +360,12 @@ public class EzPortalController extends EgovFileMngUtil {
 			mainUrl = "/ezPortal/myPortal.do";
 		}
 		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		
+		if (packageType.equals(CommonUtil.PT_MAIL) || packageType.equals(CommonUtil.PT_BASIC)) {
+			mainUrl = "/ezEmail/mailMain.do";
+		}
+		
 		if (userInfo.getLang().equals("1")) {
 			//responseCookie
 		} else if (userInfo.getLang().equals("2")) {

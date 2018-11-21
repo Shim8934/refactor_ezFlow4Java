@@ -22,6 +22,9 @@
 			    var g_paramURL = "${url}";
 			    var objLink = document.all("BigSizeFileLink");
 			    var memoFlag = "<c:out value='${memoFlag}' />";
+			    var shareId = "${shareId}";
+			    var deletePermission = "${deletePermission}";
+			    var sendPermission = "${sendPermission}";
 			    var mouseTop;
 			    
 			    if (objLink != null) {
@@ -46,6 +49,14 @@
 				    }
 					sizeBtnAppend();
 					sentDateView();
+					
+					if (shareId != "" && deletePermission != "Y") {
+						var divsToHide = document.getElementsByClassName("icon_rbtn");
+						
+					    for(var i = 0; i < divsToHide.length; i++){
+					        divsToHide[i].style.display = "none";
+					    }
+					}
 					
 					if(memoFlag === "YES") {
 						/* 마우스 오른쪽 메뉴 변수 */
@@ -208,6 +219,11 @@
 			    function AttachAllDownload() {
 			    	
 			    	var url = "/ezEmail/downloadAttachAll.do";
+			    	
+			    	if (typeof(shareId) != "undefined" && shareId != "") {
+			    		url += "?shareId=" + encodeURIComponent(shareId);
+			    	}
+			    	
 			    	var fileLen = document.getElementsByName("MailAttachDownloadItems").length;
 			    	var params = "";
 			    	var folderPath = "";
@@ -296,9 +312,15 @@
 			        xml += "<NAME><![CDATA[" + obj.getAttribute("fileid") + "]]></NAME>";
 			        xml += "</ROW>";
 			        xml += "<ITEMID><![CDATA[" + g_paramURL + "]]></ITEMID></FILE>";
-			
+					
+			        var requestUrl = "/ezEmail/mailDelReadInterAttach.do";
+			        
+					if (typeof(shareId) != "undefined" && shareId != "") {
+						requestUrl += "?shareId=" + encodeURIComponent(shareId);
+					}
+			        
 			        var xmlHTTP = new XMLHttpRequest();
-			        xmlHTTP.open("POST", "/ezEmail/mailDelReadInterAttach.do", false);
+			        xmlHTTP.open("POST", requestUrl, false);
 			        xmlHTTP.send(xml);
 			
 			        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {

@@ -683,6 +683,9 @@ function attach_Delete()
 	}
 }		
 
+/* 2018-11-09 김민성 - 일정관리의 일보기, 주보기의 종일일정 선택시 하루종일,
+								월보기, 일정작성 선택시 현재 시간,
+								일보기, 주보기의 시간 선택시 선택 시간 으로 설정 되도록 수정 */
 function allday_change()
 {
     if (document.getElementById("alldaycheck").checked == true)
@@ -694,37 +697,44 @@ function allday_change()
 	{
         document.getElementById("Stimepicker").style.display = "";
         document.getElementById("Etimepicker").style.display = "";
-       
-        if (!timeSelect && datetype == "2") { //하루종일 일정일 때 시간
+        if ((!timeSelect && datetype == "1") || datetype == "") { //하루종일 일정일 때 시간
         	//2018-08-28 김보미 - 현재시간으로 설정
-        	var now = new Date();
-        	
-        	//시작시간
-        	var startTime;
-        	var hour = now.getHours();
-        	var time = now.getMinutes();
-        	
-        	if (parseInt(time) < 30) {
-        		startTime = hour + ":00:00";
-        	} else {
-        		startTime = hour + ":30:00";
+        	if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "23:59") {
+	        	var now = new Date();
+	        	
+	        	//시작시간
+	        	var startTime;
+	        	var hour = now.getHours();
+	        	var time = now.getMinutes();
+	        	
+	        	if (parseInt(time) < 30) {
+	        		startTime = hour + ":00:00";
+	        	} else {
+	        		startTime = hour + ":30:00";
+	        	}
+	        	
+	        	//종료시간
+	        	var endTime;
+	        	now.setMinutes(now.getMinutes() + 30);
+	        	
+	        	hour = now.getHours();
+	        	time = now.getMinutes();
+	        	
+	        	if (parseInt(time) < 30) {
+	        		endTime = hour + ":00:00";
+	        	} else {
+	        		endTime = hour + ":30:00";
+	        	}
+	        	
+	        	$('#Stimepicker').timepicker('setTime', startTime);
+	        	$('#Etimepicker').timepicker('setTime', endTime);
         	}
+        }
+        else {
+        	document.getElementById("alldaycheck").checked = true;
         	
-        	//종료시간
-        	var endTime;
-        	now.setMinutes(now.getMinutes() + 30);
-        	
-        	hour = now.getHours();
-        	time = now.getMinutes();
-        	
-        	if (parseInt(time) < 30) {
-        		endTime = hour + ":00:00";
-        	} else {
-        		endTime = hour + ":30:00";
-        	}
-        	
-        	$('#Stimepicker').timepicker('setTime', startTime);
-        	$('#Etimepicker').timepicker('setTime', endTime);
+            document.getElementById("Stimepicker").style.display = "none";
+            document.getElementById("Etimepicker").style.display = "none";
         }
 	}
 }

@@ -374,6 +374,17 @@
 			MANUAL_FLAG VARCHAR(4) DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkJMochaMailSignatureTemplate" resultClass="String">
+		<![CDATA[
+			SELECT 
+				sign_no
+			FROM 
+				JMOCHA_MAIL_SIGNATURE_TEMPLATE
+			LIMIT 1
+		]]>
+	</select>
+				
+	
 	<select id="EzCommonDAO.checkTblUserJobMaster" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -383,6 +394,18 @@
 			LIMIT 1
 		]]>
 	</select>
+	
+	<statement id="EzCommonDAO.createJMochaMailSignatureTemplate"> 
+		CREATE TABLE `jmocha`.`jmocha_mail_signature_template` (
+			  `sign_no` INT(11) NOT NULL AUTO_INCREMENT,
+			  `content` LONGTEXT NULL,
+			  `displayname` VARCHAR(45) NULL,
+			  `displayname2` VARCHAR(45) NULL,
+			  `tenant_id` MEDIUMINT(5) NULL,
+			  `company_id` VARCHAR(45) NULL,
+			  PRIMARY KEY (`sign_no`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
 	
 	<statement id="EzCommonDAO.createTblUserJobMaster"> 
 		CREATE TABLE `tbl_user_jobmaster` (
@@ -398,5 +421,49 @@
 		  `TENANT_ID` int(11) NOT NULL DEFAULT '0',
 		  PRIMARY KEY (`JOBID`,`TYPE`,`COMPANYID`,`TENANT_ID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+
+	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
+		INSERT INTO tbl_tenant_config
+		(tenant_id, property_name, property_value, description, config_name, regdate, config_type)
+		VALUES
+		(#tenantID#, #confName#, #property_value#, #description#, #config_name#, #regdate#, #config_type#)
+	</insert>
+	
+	<select id="EzCommonDAO.checkAddJobMasterJobID" resultClass="String">
+		<![CDATA[
+			SELECT 
+				JOBID
+			FROM 
+				TBL_ADDJOBMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterJobID"> 
+		ALTER TABLE 
+			TBL_ADDJOBMASTER
+		ADD 
+			JOBID VARCHAR(100) DEFAULT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkWebfolderToken">
+		SELECT 
+			userId
+		FROM 
+			TBL_webfolder_token
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblWebfolderToken"> 
+		CREATE TABLE `tbl_webfolder_token` (
+		  `USERID` varchar(32) NOT NULL,
+		  `LTOKEN` varchar(128) DEFAULT NULL,
+		  `REGDATA` datetime DEFAULT NULL,
+		  `COMPID` varchar(32) DEFAULT NULL,
+		  `TENANTID` varchar(45) NOT NULL,
+		  `DEVICE` varchar(128) DEFAULT NULL,
+		  PRIMARY KEY (`USERID`,`TENANTID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
 </sqlMap>

@@ -231,9 +231,9 @@
 			renderData(filelist);
 			
 			namePath(folderPath, originalPath);
-			document.getElementById("mailBoxInfo").innerHTML = " - [" + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
-			 + messages.strLang11 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
-				+ fileCnt +" </span>"  + messages.strLang11 + "]";
+			document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
+			 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
+				+ fileCnt +" </span>";
 			$("#listcount").val(result.listCount).prop("selected", true);
 			parent.frames["left"].drawVolume();
 			scroll();

@@ -793,16 +793,16 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
-			result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t169", userInfo.getLocale()) + "</VALUE>");
+			result.append("<VALUE>" + vo.getProgress() + "</VALUE>");
 			result.append("<TYPE>" + "BTN" + "</TYPE>");
-			result.append("<FUNC>" + "mod_popup" + "</FUNC>");
+			/*result.append("<FUNC>" + "mod_popup" + "</FUNC>");*/
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
 			result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t99", userInfo.getLocale()) + "</VALUE>");
 			result.append("<TYPE>" + "BTN" + "</TYPE>");
-			result.append("<FUNC>" + "del_popup" + "</FUNC>");
+			/*result.append("<FUNC>" + "del_popup" + "</FUNC>");*/
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			result.append("</ROW>");
@@ -890,9 +890,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("deletePopup started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String itemSeq = request.getParameter("itemSeq");
+		String popupList = request.getParameter("popupList");
 		
-		ezPersonalAdminService.deletePopup(itemSeq, userInfo.getTenantId());
+		ezPersonalAdminService.deletePopup(popupList, userInfo.getTenantId());
 
 		logger.debug("deletePopup ended");
 		return "OK";
@@ -1044,8 +1044,12 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			sliderID = request.getParameter("item");
 		}
 		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 		model.addAttribute("sliderID", sliderID);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 

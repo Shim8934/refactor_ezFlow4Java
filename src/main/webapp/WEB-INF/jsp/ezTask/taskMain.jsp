@@ -778,7 +778,7 @@
 		                type = "1";
 		                cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200901' />";
-		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + currentCount + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + currentCount + "</span>";
 		                currentTab = "normal";
 		                if(chkValue === "memo") {
 		                	cnt = currentCount;
@@ -788,7 +788,7 @@
 		                type = "2";
 		                cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200903' />";
-		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + currentCount + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + currentCount + "</span>";
 		                currentTab = "send";
 		                if(chkValue === "memo") {
 		                	cnt2 = currentCount;
@@ -798,7 +798,7 @@
 		                type = "3";
 		                cnt3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200902' />";
-		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + currentCount + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + currentCount + "</span>";
 		                currentTab = "repeat"
 		                if(chkValue === "memo") {
 			                cnt3 = currentCount;
@@ -866,19 +866,19 @@
 		            case "taskprog":
 		                type = "1";
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200901' />";
-		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + cnt + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + cnt + "</span>";
 		                currentTab = "normal";
 		                break;
 		            case "taskdictate":
 		                type = "2";
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200903' />";
-		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + cnt2 + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + cnt2 + "</span>";
 		                currentTab = "send";
 		                break;
 		            case "taskrepetition":
 		                type = "3";
 		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200902' />";
-		                document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + cnt3 + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + cnt3 + "</span>";
 		                currentTab = "repeat"
 		                break;
 		        }

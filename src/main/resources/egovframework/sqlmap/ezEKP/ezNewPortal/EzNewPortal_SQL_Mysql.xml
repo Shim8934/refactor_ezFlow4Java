@@ -64,6 +64,7 @@
 <result property="boardID" 				column="BOARDID" />
 <result property="title" 				column="TITLE" />
 <result property="guBun" 				column="GUBUN" />
+<result property="writeDate" 			column="WRITEDATE" />
 </resultMap>
 <resultMap class="PersonalLightPollVO" id="PersonalLightPollVO">
 <result property="itemSeq"              column="ITEMSEQ"  nullValue=""/>
@@ -155,7 +156,8 @@ SELECT
 	B.GUBUN,
 	A.BOARDID,
     A.ITEMID,
-    A.TITLE
+    A.TITLE,
+    A.WRITEDATE
 FROM 
 	TBL_BOARD_ITEM AS A
 JOIN
@@ -865,11 +867,16 @@ AND
 </select>
 
 <!-- 회사 포틀릿 순서 불러오기 -->
-<select id="ezNewPortal.getPortletOrderComp" parameterClass="Map" resultMap="PortletOrderVO">
+<select id="ezNewPortal.getPortletOrderComp" parameterClass="Map" resultClass="PortletInfoVO">
 <isNull property="order">
 <![CDATA[
 SELECT
-	A.PORTLET_ID, A.PORTLET_ORDER, B.PORTLET_NAME, C.PORTLET_URL, A.BOARD_ID, A.MENU_ID
+	A.PORTLET_ID as portletid, 
+	A.PORTLET_ORDER as portletorder, 
+	B.PORTLET_NAME as portletname, 
+	C.PORTLET_URL as portleturl,
+	A.BOARD_ID as portletBoardId,
+	A.MENU_ID as menuid
 FROM	
 	TBL_PORTAL_PORTLET_COMP A
 JOIN
@@ -890,6 +897,8 @@ WHERE
 	A.TENANT_ID = #tenantId#
 AND
 	A.COMPANY_ID = #companyId#
+AND
+	A.PORTLET_USED = 1
 ORDER BY
 	A.PORTLET_ORDER
 ]]>
@@ -897,7 +906,12 @@ ORDER BY
 <isNotNull property="order">
 <![CDATA[
 SELECT DISTINCT
-	A.PORTLET_ID, A.DEFAULT_ORDER AS PORTLET_ORDER, B.PORTLET_NAME, A.PORTLET_URL
+	A.PORTLET_ID as portletid, 
+	A.PORTLET_ORDER as portletorder, 
+	B.PORTLET_NAME as portletname, 
+	C.PORTLET_URL as portleturl,
+	A.BOARD_ID as portletBoardId,
+	A.MENU_ID as menuid
 FROM	
 	tbl_portal_portlet A
 JOIN
@@ -1553,7 +1567,7 @@ LIMIT
 SELECT A.BOARDID,
 	   A.ITEMID,
 	   A.WRITERNAME,
-	   A.STARTDATE,
+	   DATE_ADD(A.STARTDATE, interval +#v_OFFSETMIN# minute) as STARTDATE,
 	   A.TITLE,
 	   C.GUBUN
   FROM TBL_BOARD_ITEM A 
@@ -1601,7 +1615,7 @@ SELECT A.BOARDID,
 <![CDATA[
 SELECT A.TITLE,
 	   A.WRITERNAME,
-	   A.STARTDATE,
+	   DATE_ADD(A.STARTDATE, interval +#v_OFFSETMIN# minute) as STARTDATE,
 	   A.ITEMID,
 	   A.BOARDID,
 	   B.GUBUN

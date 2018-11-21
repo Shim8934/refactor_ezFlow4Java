@@ -29,25 +29,50 @@ var assembleNoticeList = function(noticeList) {
 		//console.log('boardId', boardId);
 		window.open("/ezBoard/boardMainRedirect.do?boardID=" + boardId, "main", "");
 	}
-	
 	var dataAssembler = function(data, index) {	
 		index = (index*1 + 1); // 혹시 모르니 int형태로 변환
 		boardId = data.boardID;
-		return '<li class="notiLI" data1="'+data.itemID+'" data2="'+data.boardID+'" data3="'+data.guBun+'"><dl class="notiDL0'+index+'"><dt class="noti_num">'+index+'</dt><dt class="N"></dt><dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd></dl></li>';
+		
+		//오늘날짜 구하기
+		var today = new Date();
+		var writeDate = new Date(data.writeDate);
+		var date = today.getDate();
+		
+		today.setDate(date - 1);
+		
+		var text = "";
+		
+		if (today < writeDate) {
+			text = '<li class="notiLI" data1="'+data.itemID+'" data2="'+data.boardID+'" data3="'+data.guBun+'"><dl class="notiDL0'+index+'"><dt class="noti_num">'+index+'</dt><dt class="noti_new">N</dt><dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd></dl></li>';
+		} else {
+			text = '<li class="notiLI" data1="'+data.itemID+'" data2="'+data.boardID+'" data3="'+data.guBun+'"><dl class="notiDL0'+index+'"><dt class="noti_num">'+index+'</dt><dt class="N"></dt><dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd></dl></li>'; 
+		}
+		return text;
 	};	
-	noticeList.forEach(function(item, index){
-		str += dataAssembler(item, index);
-	});
+	if (noticeList) {
+		str += "<ul class='noti_portlet_list'>";
+		noticeList.forEach(function(item, index){
+			str += dataAssembler(item, index);
+		});
+	} else {
+		str += "<ul class='portlet_list'>";
+		str += "<dl class='nodata'>"
+		str += "<dt>"
+		str += "<img src='/images/ezNewPortal/nodata.png'>"
+		str += "</dt>"
+		str += "<dd>&#34;"+messages.strLang14+"&#34;</dd>"
+		str += "</dl>"
+	}
 
 	var noticeCnt = str.match(/notiLI/g); // 공지사항 갯수 확인.
-	if (noticeCnt === null || noticeCnt.length < viewCnt) {
+	if (noticeCnt && noticeCnt.length < viewCnt) {
 		var cnt = noticeCnt === null ? 0 : noticeCnt.length;
-		
 		for(var i=cnt; i<viewCnt; i++) {
 			str += '<li class="notiLI"><p class="noti_nodata"></p></li>';
 		}
 	}
 	
+	str += "</ul>";
 	document.getElementById('BoardList_NewBoard').innerHTML = str;
 	
 	document.getElementsByClassName('notiLI').forEach(function(item, index) {

@@ -537,7 +537,7 @@ public interface EzApprovalGService {
 
 	public String getOrgDraftDeptID(String docID, int tenantId, String companyID) throws Exception;
 
-	public String getLineModeFlag(String docID, String companyID, int tenantId) throws Exception;
+	public String getLineModeFlag(String docID, String userID, String companyID, int tenantId) throws Exception;
 
 	public String updateSusinState(String docID, String mode, String deptID, String companyID, int tenantID) throws Exception;
 
@@ -589,4 +589,8 @@ public interface EzApprovalGService {
 	public String getDocNumZeroCnt(String companyID, int tenantID) throws Exception;
 	
 	public String setDocNumZeroCnt(String docNumZeroCnt, String companyID, int tenantID) throws Exception;
+	
+	public List<String> getShareOwnerId(String userID, int tenantID) throws Exception;
+	
+	public int getCheckAprState(String docID, String userID, String docState, String aprMemberSN, String companyID, int tenantID) throws Exception;
 }

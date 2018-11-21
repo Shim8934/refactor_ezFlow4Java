@@ -20,10 +20,24 @@
 				</dd>
 				<c:if test="${access eq 'true' }">
 					<dd class="nextBtn">
-						<img src="/images/ezNewPortal/photo_next.png">
+						<c:choose>
+							<c:when test="${usedTheme eq 3 }">
+								<img src="/images/ezNewPortal/photo_next3.png">
+							</c:when>
+							<c:otherwise>
+								<img src="/images/ezNewPortal/photo_next.png">
+							</c:otherwise>
+						</c:choose>
 					</dd>
 					<dd class="preBtn">
-						<img src="/images/ezNewPortal/photo_pre.png">
+						<c:choose>
+							<c:when test="${usedTheme eq 3 }">
+								<img src="/images/ezNewPortal/photo_pre3.png">
+							</c:when>
+							<c:otherwise>
+								<img src="/images/ezNewPortal/photo_pre.png">
+							</c:otherwise>
+						</c:choose>
 					</dd>
 			</dl>
 			<c:choose>
@@ -41,7 +55,7 @@
 							<dt>
 								<img src="/images/ezNewPortal/nodata.png">
 							</dt>
-							<dd>데이터가 없습니다.</dd>
+							<dd><spring:message code='ezNewPortal.t018' /></dd>
 						</dl>
 					</ul>
 				</c:otherwise>
@@ -54,7 +68,7 @@
 						<dt>
 							<img src="/images/ezNewPortal/nodata.png">
 						</dt>
-						<dd>해당 게시판의 접근 권한이 없습니다.</dd>
+						<dd><spring:message code='ezNewPortal.t039' /></dd>
 					</dl>
 				</ul>
 			</c:if>

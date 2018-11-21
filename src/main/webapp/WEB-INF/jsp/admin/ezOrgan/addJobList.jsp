@@ -255,6 +255,7 @@
 				                    createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "data1"));
 				                    createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
 				                    createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
+				                    createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
 				                }
 				                mode = "";
 				            } else {
@@ -263,10 +264,12 @@
 		                                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
 		                                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
 		                                createNodeAndInsertText(xmlDom, objNode, "TITLE", "");                              		                        
+					                    createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
 				                    } else {
 		                                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
 		                                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
 		                                createNodeAndInsertText(xmlDom, objNode, "TITLE", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t1") + ":" + GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t2"));		                        
+					                    createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
 				                    }
 				                }
 				            }		            		
@@ -288,6 +291,7 @@
 		                    createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "data1"));
 		                    createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
 		                    createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
+		                    createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
 		                }
 		            } else {
 		                window.location.reload(false);

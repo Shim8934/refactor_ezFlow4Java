@@ -21,6 +21,9 @@ public class PersonalPopupVO {
 	private String content;
 	/** 공지 위치*/
 	private String position;
+	/** 진행중 여부(0: x, 1: 진행중)*/
+	private int progress;
+
 	public String getCompanyID() {
 		return companyID;
 	}
@@ -80,5 +83,11 @@ public class PersonalPopupVO {
 	}
 	public void setPosition(String position) {
 		this.position = position;
+	}
+	public int getProgress() {
+		return progress;
+	}
+	public void setProgress(int progress) {
+		this.progress = progress;
 	}
 }

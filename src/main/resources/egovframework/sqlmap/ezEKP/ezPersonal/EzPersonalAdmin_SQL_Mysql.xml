@@ -331,14 +331,24 @@
 		<isEqual property="v_pStart" compareValue="0">
 			<![CDATA[
 				SELECT
-					ITEMSEQ ,
-					TITLE ,
-					TITLE2 ,
-					STARTDATE ,
-					ENDDATE ,
-					WIDTH ,
-					HEIGHT ,
-					POSITION 
+					ITEMSEQ,
+					TITLE,
+					TITLE2,
+					STARTDATE,
+					ENDDATE,
+					WIDTH,
+					HEIGHT,
+					POSITION,
+					(
+						CASE
+							WHEN 
+								(STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'))
+							THEN
+								1
+							ELSE
+								0
+						END
+					) PROGRESS
 				FROM
 					TBL_PS_POPUP 
 				WHERE
@@ -361,7 +371,17 @@
 					ENDDATE ,
 					WIDTH ,
 					HEIGHT ,
-					POSITION 
+					POSITION,
+					(
+						CASE
+							WHEN 
+								(STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'))
+							THEN
+								1
+							ELSE
+								0
+						END
+					) PROGRESS
 				FROM
 					TBL_PS_POPUP 
 				WHERE

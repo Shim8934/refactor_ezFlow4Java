@@ -96,7 +96,7 @@
 					},
 					success : function(result) {
 						getAbsentedList_after(result.list);
-						$("#mailBoxInfo").html(" - [<spring:message code='ezAttitude.t76'/><span style='color:#017BEC;'> " + result.totalCount + " </span><spring:message code='ezAttitude.t78'/>]");
+						$("#mailBoxInfo").html("&nbsp;&nbsp;<span style='color:#017BEC;'>" + result.totalCount + "</span>");
 					}
 				});
 	    	}

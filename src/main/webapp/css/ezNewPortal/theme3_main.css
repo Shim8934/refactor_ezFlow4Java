@@ -37,19 +37,19 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 
 .scrollbox-play-light .scrollbox .scrollbar-v .button-up { 
     position:absolute; top:0; left:0; 
-    background:url(/images/ezNewPortal/scrollbar_arrow_up_w.gif) no-repeat; 
+    background:url(/images/kr/main/scrollbar_arrow_up_w.gif) no-repeat; 
     width:11px; height:8px; 
 } 
 
 .scrollbox-play-light .scrollbox .scrollbar-v .button-down { 
     position:absolute; bottom:0; left:0; 
-    background:url(/images/ezNewPortal/scrollbar_arrow_down_w.gif) no-repeat; 
+    background:url(/images/kr/main/scrollbar_arrow_down_w.gif) no-repeat; 
     width:11px; height:8px; 
 } 
 
 .scrollbox-play-light .scrollbox .scrollbar-v .thumb-v { 
     position:absolute; 
-    background:url(/images/ezNewPortal/scrollbar_ball_w.gif) no-repeat; 
+    background:url(/images/kr/main/scrollbar_ball_w.gif) no-repeat; 
     height:11px; overflow:hidden; 
 } 
 
@@ -141,7 +141,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 /* layout */
 #Center {min-height:600px; margin:0px; min-width:1260px; background:url(/images/ezNewPortal/theme3Img/main_background.png) center top no-repeat; background-size:cover;}
 .section_left{  margin:0px; padding:0px; float:left; overflow:hidden; border-right:0px solid #cdcdcd; width:0px; box-sizing:border-box; background:#fff;}
-.section_main{ overflow:hidden; padding:0px 0px 20px 3px; float:none; min-width:880px; max-width:1920px; box-sizing:border-box; min-height:1000px;}
+.section_main{ overflow:hidden; padding:0px 16px 20px 3px; float:none; min-width:880px; max-width:1920px; box-sizing:border-box; min-height:1000px;}
 .section_main .mainLayout_left{ overflow:hidden; float:left; padding:0px 0px 0px 18px; box-sizing:border-box; }
 .section_main .mainLayout_middle{ overflow:hidden;  padding:0px 0px 0px 16px; float:left; box-sizing:border-box; }
 .section_main .mainLayout_right{ float:left; padding:0px 0px 0px 16px; box-sizing:border-box; overflow:hidden; }
@@ -556,7 +556,6 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 /* wather */
 .weather_icon{ height:47%}
-.weather_content{background:#fff;}
 
 .dataHave {position:absolute; top:2px; left:45%; font-weight: bold; font-size: 18px; }
 /* layer */
@@ -564,7 +563,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 /* main media query */
 @media only screen and (min-width :1921px) {
-	.portlet{ width:610px; float:left;}
+	.portlet{ width:603px; float:left;}
 }
 
 @media only screen and (max-width :1920px) and (min-width :1686px) { 
@@ -572,7 +571,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_right{  width:33.3%;}
 	.section_main .mainLayout_left{ width:33.3%;}
 	.section_main .mainLayout_middle{ width:33.3%;}
-	.portlet{ width:32.1%; float:left;}
+	.portlet{ width:32%; float:left;}
 	/* .bannerText{ padding:73px 18px 0px 0px;} */
 }
 
@@ -589,7 +588,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 }
 
 @media only screen and (max-width : 1279px) {
-	.portlet {width:565px; float:left;}
+	.portlet {width:605px; float:left;}
 }
 
 /* collaborate */
@@ -685,7 +684,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .portlet_title .portletPlus{float:right; overflow:hidden; margin:0px; padding:0px; cursor:pointer;}
 
 .portlet_title .portletPlus .weatherSelect{width:78px; height:28px; margin:0px 10px 0px 0px; padding:0px; border:1px solid #c0c0c0; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px;}
-.weather_content{height:110px; margin:10px;}
+.weather_content{height:188px; padding:10px;background:#fff;}
 .weather_title{overflow:hidden; margin:0px 5px 5px 5px;}
 .weather_title .weatherPresent{float:left; width:calc(60% - 10px); margin:0px 20px 0px 0px; padding:16px 0px;}
 .weather_title .weatherPresent dt{float:left; width:calc(40% - 20px); margin:0px 10px; padding:0px; text-align:center;}

@@ -49,9 +49,9 @@
 	   				url:"/ezJournal/leftRecvCount.do",
 	   				success: function(data){
 	   					if(data != 0){
-		   					$("#recvCount").text("(" + data + ")");
+		   					$("#recvCount").html("&nbsp;&nbsp;" + data);
 	   					}else{
-		   					$("#recvCount").text("");
+		   					$("#recvCount").html("");
 	   					}
 	   				}
 	   			});
@@ -206,7 +206,7 @@
 		                    	<span>
 		                        	<div class="node_div">
 		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_businessLog_receive"></span>
-		                            	<span class="h2_text" listType='recv' onClick="goJournalList(this);"><spring:message code='ezJournal.t51'/><c:if test="${recvCount ne 0 }"><span id="recvCount">(${recvCount })</span></c:if></span>
+		                            	<span class="h2_text" listType='recv' onClick="goJournalList(this);"><spring:message code='ezJournal.t51'/><c:if test="${recvCount ne 0 }"><span id="recvCount">&nbsp;&nbsp;${recvCount}</span></c:if></span>
 		                            </div>
 		                    	</span>
 		                        <span>

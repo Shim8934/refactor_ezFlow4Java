@@ -50,7 +50,7 @@ function CalendarMiniView(pTagetID) {
 
 	        var mTd = document.createElement("TD");
 	        mTd.className = "btn_prev"
-        	mTd.setAttribute("style","position: relative; z-index: 1001;");
+        	mTd.setAttribute("style","position: relative; z-index: 999;");
 	        var mSpan = document.createElement("SPAN");
 	        mSpan.style.cursor = "pointer";
 	        //mSpan.style.marginLeft = "6px";
@@ -133,7 +133,7 @@ function CalendarMiniView(pTagetID) {
 
 	        var mTd = document.createElement("TD");
 	        mTd.className = "btn_next"
-        	mTd.setAttribute("style","position: relative; z-index: 1001;");
+        	mTd.setAttribute("style","position: relative; z-index: 999;");
 	        var mSpan = document.createElement("SPAN");
 	        mSpan.style.cursor = "pointer";
 	        //mSpan.style.marginRight = "6px";
@@ -491,7 +491,7 @@ function MonthMiniDataTop(oThisDate) {
 
     var className = "";
     if (divID == nowDay) {
-        className = "today";  // 현재일
+        className = "main_today";  // 현재일
     }
 
     var oDiv = document.createElement("DIV");

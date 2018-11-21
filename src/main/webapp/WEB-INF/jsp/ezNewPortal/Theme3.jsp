@@ -31,7 +31,7 @@
 	}
 	
 	.portlet {
-		 margin:20px 0px 0px 16px;
+		 margin:20px 0px 0px 20px;
 		 height:250px;
 		 background:#fff;
 		 border-radius: 5px;
@@ -40,7 +40,7 @@
 	.right_float {float:right;}
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
-	.two_column {width:48%;}
+	.two_column {width:48.4%;}
 </style>
 </head>
 <body class="mainbg">	
@@ -49,16 +49,16 @@
 		<aside id="quickSide" style="width:0px">
 			<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/theme3Img/linkBtn_open.png"></p>
 			<div class="aside_quick">
-				<p class="quickmenu_title">Quick</p>
+				<p class="quickmenu_title"><spring:message code='ezNewPortal.t020' /></p>
 				<ul class="quickmenu">
-					<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt">메일작성</span></li>
-					<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt">결재작성</span></li>
-					<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt">일정작성</span></li>
-					<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt">조직도</span></li>
+					<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt"><spring:message code='ezNewPortal.t021' /></span></li>
+					<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt"><spring:message code='ezNewPortal.t022' /></span></li>
+					<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt"><spring:message code='ezNewPortal.t023' /></span></li>
+					<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt"><spring:message code='ezNewPortal.t024' /></span></li>
 				</ul>
 			</div>
 			<div class="aside_link">
-				<p class="linkmenu_title">Link</p>
+				<p class="linkmenu_title"><spring:message code='ezNewPortal.t025' /></p>
 				<ul class="linkmenu" id="QuickUl">
 				</ul>
 				<div class="linkBtn">
@@ -332,14 +332,15 @@
 		//포틀릿 드래그 앤 드롭
 		$(".portlet_area").sortable({
 			handle : ".sortablePortlet",
+			helper : "clone",
 			start : function (event, block) {
-				
+				/* 
 				$(".portlet.ui-sortable-helper").css("width", $(".portlet").not(block.item).not(block.placeholder).outerWidth());
 				
 				$(".ui-sortable-placeholder").css({
 					'width' : $(".portlet").not(block.item).not(block.placeholder).outerWidth(),
 					'height' : $(".portlet").not(".ui-sortable-helper").outerHeight()
-				});
+				}); */
 			},
 			update : function(event, ui) {
 				updatePortletOrderUser();
@@ -393,7 +394,7 @@
 				$(".info_right").css("width", "100%");
 				$(".info_right").css("margin-left", "0px !important");
 			} else if (media1279.matches) {
-				$(".portlet").addClass("two_column");
+				$(".portlet").css("width", "");
 				$(".box_shadow.info_left").css("display", "none");
 				$(".box_shadow.info_right").css("width", "100%");
 				$(".box_shadow.info_right").css("margin-left", "0px !important");

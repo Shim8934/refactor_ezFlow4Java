@@ -496,8 +496,8 @@
 					}
 					
 					
-					$("#ownerCall").html(result.resBrd.ownerCall);
-					$("#resLocation").html(result.resBrd.resLocation);						
+					$("#ownerCall").html(MakeXMLString(result.resBrd.ownerCall));
+					$("#resLocation").html(MakeXMLString(result.resBrd.resLocation));						
 					
 					var approveFlag = result.resBrd.approveFlag;
 					

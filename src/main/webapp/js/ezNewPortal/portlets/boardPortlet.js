@@ -1,10 +1,44 @@
 /**
  * 
  */
+function getBoardPortletInfo(portletId) {
+	var data = {"portletId" : portletId};
+	$.ajax({
+		type : "POST",
+		dataType : "json",
+		data : data,
+		url : "/ezNewPortal/getCustomBoardInfo.do",
+		success : function(result) { 
+			getBoardList(result);
+		}
+	})
+}
 
-$(function() {
-	$(".customBoard").find(".portletPlus").on("click", Boardmore_NewBoardSTD_btnClick);
-});
+function getBoardList(data) {
+	var boardList = data;
+	var boardCount = boardList.length;
+	var boardHTML = "";
+	var today = new Date();
+	var date = today.getDate();
+	today.setDate(date - 1);
+	
+	for (var i = 0; i < boardCount; i++) {
+		var item = boardList[i];
+		boardHTML += "<li onclick='openDoc_section4_Type(\"" + item.itemID + "\", \"" + item.guBun + "\", \"" + item.boardID + "\")'>";
+		var startDate = item.startDate;
+		var writeDate = new Date(startDate);
+		
+		if (today < writeDate) {
+			boardHTML += "<span class='boardNew'>N</span>";
+		}
+		
+		boardHTML += "<span class='txt'>" + item.title + "</span>";
+		boardHTML += "<span class='date'>" + startDate.substring(5, 16) + "</span>";
+		boardHTML += "<span class='name'>" + item.writerName + "</span>";
+		boardHTML += "</li>";
+	}
+	$("#customBoardList").html(boardHTML);
+}
 
 function openDoc_section4_Type(pItemID, pType, oBoardID) {
     var pheight = window.screen.availHeight;

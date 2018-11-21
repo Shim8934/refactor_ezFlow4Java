@@ -351,7 +351,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         String ldapPath = (String)map.get("v_LDAPPATH");
         
         logger.debug("insertDBData_deptForJMocha started. tenantId=" + tenantId + ",deptId=" + deptId + ",parentCn=" + parentCn);
-
+        
         String param1 = "tenantId=" + tenantId;
         String param2 = "deptId=" + URLEncoder.encode(deptId, "UTF-8");
         String param3 = "displayName=" + URLEncoder.encode(displayName, "UTF-8");
@@ -427,6 +427,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             
             throw e;	            
         }
+	}
+	
+	public void updateDBData_deptOrder(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateDBData_deptOrder", map);
+	}
+	
+	public void updateDBData_deptOrderIsNull(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateDBData_deptOrderIsNull", map);
 	}
 
     private void insertDBData_userForJMocha(Map<String, Object> map) throws Exception {
@@ -542,6 +550,18 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             
             throw e;                
         }            
+	}
+	
+	public void updateDBData_userOrder(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateDBData_userOrder", map);
+	}
+	
+	public void updateDBData_addjobmasterOrder(Map<String, Object> map) throws Exception {
+		update ("EzOrganAdminDAO.updateDBData_addjobmasterOrder", map);
+	}
+	
+	public void updateDBData_userOrderIsNull(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateDBData_userOrderIsNull", map);
 	}
 	
     private void updateDBData_companyForJMocha(Map<String, Object> map) throws Exception {

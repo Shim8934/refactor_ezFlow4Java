@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Portlet Setting</title>
+		<title><spring:message code='ezNewPortal.t009' /></title>
 		<link href="${util.addVer('main.e15', 'msg')}" rel="stylesheet" type="text/css">
 		<link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet"  href="${util.addVer('/css/ezNewPortal/jquery.flipster.min.css')}" type="text/css">
@@ -41,25 +42,25 @@
 	</head>
 	<body id="set-body">
 		<section class="set-head">
-			<h1>포틀릿 설정</h1>
+			<h1><spring:message code='ezNewPortal.t009' /></h1>
 		</section>
 		<section class="set-frame">
-			<h3>화면 프레임 설정</h3>
+			<h3><spring:message code='ezNewPortal.t010' /></h3>
 			<div class="frameList" id="frameList">
 				<ul id="frameUl">
 				</ul>
 			</div>
 		</section>
 		<section class="set-portlet">
-			<h3>포틀릿 설정</h3>
+			<h3><spring:message code='ezNewPortal.t009' /></h3>
 			<div class="ui-portlet-list" id="portletList"></div>
 		</section>
 		<div class="btnpositionLayer" style="margin:20px 0px 0px">
 			<a class="imgbtn">
-				<span id="saveBtn">저장</span>
+				<span id="saveBtn"><spring:message code='ezNewPortal.t002' /></span>
 			</a>
 			<a class="imgbtn">
-				<span id="cancelBtn">취소</span>
+				<span id="cancelBtn"><spring:message code='ezNewPortal.t001' /></span>
 			</a>
 		</div>
 		<div id="close">
@@ -334,7 +335,7 @@
 					console.log('param', param.portletList);					
 					
 					if(param.portletList.length < 1) {
-						alert('한 개 이상의 포틀릿을 설정해 주세요.');	
+						alert('<spring:message code="ezNewPortal.t011" />');	
 						return;
 					}
 					

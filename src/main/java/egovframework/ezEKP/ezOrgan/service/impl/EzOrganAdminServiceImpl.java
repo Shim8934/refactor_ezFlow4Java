@@ -344,6 +344,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PROPVALUE", number);
 		map.put("V_DEPTID", deptID);
 		
+		if (column.equals("EXTENSIONATTRIBUTE15")) {
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			date.setTimeZone(TimeZone.getTimeZone("GMT"));
+			String nowDate = date.format(new Date());
+			map.put("nowDate", nowDate);
+		}
+		
         // 사원의 경우
     	if (pClass.toLowerCase().equals("user")) {
     		ezOrganAdminDao.updateProperty(map);
@@ -416,7 +423,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
     		
     		map.put("timeUTC", timeUTC);
+    		map.put("nowDate", timeUTC);
+    		map.put("v_EXTATTR15", "0");
     		
+    		// 사원이동 시 트리뷰순서값을 0으로 세팅
+    		ezOrganAdminDao.updateDBData_addjobmasterOrder(map); // 겸직되어있는 사용자 트리뷰순서값 1씩 증가
+			ezOrganAdminDao.updateDBData_userOrder(map); // 원부서 사용자 트리뷰순서값 1씩 증가
 	    	ezOrganAdminDao.moveGroupUser_U(map);
 	    	
 	    	/**
@@ -806,8 +818,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_EXTATTR6", vo.getExtensionAttribute6() != null ? vo.getExtensionAttribute6() : "");
 		map.put("v_EXTATTR8", vo.getExtensionAttribute8() != null ? vo.getExtensionAttribute8() : "");
 		map.put("v_EXTATTR9", vo.getExtensionAttribute9() != null ? vo.getExtensionAttribute9() : "");
-		map.put("v_EXTATTR10", vo.getExtensionAttribute10() != null ? vo.getExtensionAttribute10() : "");
-		map.put("v_EXTATTR15", vo.getExtensionAttribute15() != null ? vo.getExtensionAttribute15() : "");	
+		map.put("v_EXTATTR10", vo.getExtensionAttribute10() != null ? vo.getExtensionAttribute10() : "");	
 		map.put("v_EXTATTR11", vo.getExtensionAttribute11() != null ? vo.getExtensionAttribute11() : "");
 		map.put("v_MANUAL_FLAG", vo.getManualFlag() != null ? vo.getManualFlag() : "N");
 		map.put("v_LDAPPATH", "");
@@ -817,7 +828,20 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
 		
+		// 트리뷰순서값이 null일 경우 현재 추가한 부서가 제일 위에 오도록
+		// 나머지 부서들의 트리뷰순서값들을 1씩 증가
+		if (vo.getManualFlag() != null && vo.getManualFlag().equals("Y")) {
+			if (checkExtrattrIsNull(vo.getExtensionAttribute15())) {
+				vo.setExtensionAttribute15("0");
+				ezOrganAdminDao.updateDBData_deptOrderIsNull(map);		
+			}
+			
+			map.put("v_EXTATTR15", vo.getExtensionAttribute15());
+			
+			ezOrganAdminDao.updateDBData_deptOrder(map); // 부서 트리뷰순서값 1씩 증가
+		}
 		
+		map.put("v_EXTATTR15", vo.getExtensionAttribute15());
 		ezOrganAdminDao.insertDBData_dept(map);
 		
 		logger.debug("insertDBData_dept ended");
@@ -871,7 +895,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_EXTATTR10", vo.getExtensionAttribute10() != null ? vo.getExtensionAttribute10() : "");
 		map.put("v_EXTATTR102", vo.getExtensionAttribute102() != null ? vo.getExtensionAttribute102() : "");
 		map.put("v_EXTATTR14", vo.getExtensionAttribute14() != null ? vo.getExtensionAttribute14() : "");
-		map.put("v_EXTATTR15", vo.getExtensionAttribute15() != null ? vo.getExtensionAttribute15() : "");
 		
 		// 코린도에서 extensionAttribute11 필드를 한국인, 현지인 구분에 사용하여 추가함
 		map.put("v_EXTATTR11", vo.getExtensionAttribute11() != null ? vo.getExtensionAttribute11() : "");
@@ -892,10 +915,32 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
 		
+		// 트리뷰순서값이 null일 경우 현재 추가한 사원이 제일 위에 오도록
+		// 나머지 사원들의 트리뷰순서값들을 1씩 증가
+		if (vo.getManualFlag() != null && vo.getManualFlag().equals("Y")) {
+			if (checkExtrattrIsNull(vo.getExtensionAttribute15())) {
+				vo.setExtensionAttribute15("0");
+				ezOrganAdminDao.updateDBData_userOrderIsNull(map);		
+			}
+			
+			map.put("v_EXTATTR15", vo.getExtensionAttribute15());
+			
+			ezOrganAdminDao.updateDBData_addjobmasterOrder(map); // 겸직되어있는 사용자 트리뷰순서값 1씩 증가
+			ezOrganAdminDao.updateDBData_userOrder(map); // 원부서 사용자 트리뷰순서값 1씩 증가
+		}
 		
+		map.put("v_EXTATTR15", vo.getExtensionAttribute15());
 		ezOrganAdminDao.insertDBData_user(map);
 				
 		logger.debug("insertDBData_user ended");
+	}
+	
+	public boolean checkExtrattrIsNull(String str) {
+		if (str == null || str.equals("")) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
     @Override
@@ -1064,9 +1109,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public void addJob(String userID, String titleInfo, int tenantID) throws Exception {
+	public void addJob(String userID, String titleInfo, String jobID, int tenantID) throws Exception {
 	    logger.debug("addJob started");
-	    logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",tenantID=" + tenantID);
+	    logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",jobID=" + jobID + ",tenantID=" + tenantID);
 	    
 		String sTitle1 = "";
         String sTitle2 = "";
@@ -1076,6 +1121,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
             
         	String[] addJobinfo = titleInfo.split(";");
+        	String[] jobIDinfo = jobID.split(";");
         	
             for (int i = 0; i < addJobinfo.length; i++) {
             	String[] userInfo = addJobinfo[i].split(":");
@@ -1108,6 +1154,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_DEPTID", pDeptID);
             		map.put("v_TITLE1", sTitle1);
             		map.put("v_TITLE2", sTitle2);
+            		map.put("v_EXTATTR15", "0");
+            		map.put("v_PARENTCN", pDeptID);
+            		map.put("v_JOBID", jobIDinfo[i]);
+            		
+            		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+            		String nowDate = date.format(new Date());
+            		map.put("nowDate", nowDate);
                     
             		String bizmekaResult = "ERROR";
             		
@@ -1131,7 +1185,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     					}
     					
         				if ((pDeptID != null && !pDeptID.equals("")) || (sTitle1 != null && !sTitle1.equals(""))) {
+        					
+        					// 겸직 시 조직도에서 트리뷰순서값 0으로 수정(맨 위에 세팅 되도록)
+                    		// 부서 사용자 순서값 1씩 증가
+                    		ezOrganAdminDao.updateDBData_userOrder(map);
+                    		ezOrganAdminDao.updateDBData_addjobmasterOrder(map);
         					ezOrganAdminDao.setAddJob_I(map);
+        					
         				}       
             		} catch (Exception e) { // Exception이 발생하면 Group Email 주소로부터 취소 처리를 한다.
             		    ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);

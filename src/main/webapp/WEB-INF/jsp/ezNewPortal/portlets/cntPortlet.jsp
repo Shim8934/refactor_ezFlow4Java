@@ -13,7 +13,7 @@
 	     	<div class="writebanner_leftContents">
 	         	<dl id="NewMail3" class="mail">
 	             	<dt class="icon"><span class="icon_mail"></span></dt>
-	                 <dt class="txt">받은메일</dt>
+	                 <dt class="txt"><spring:message code='ezNewPortal.gu1' /></dt>
 	                 <c:choose>
 	                 	<c:when test="${unreadMailCount eq 0}">
 	                 		<dd class="count countZero">0</dd>
@@ -28,7 +28,7 @@
 	             </dl>
 	             <dl id="AprSign3" class="work">
 	             	<dt class="icon"><span class="icon_approval"></span></dt>
-	                 <dt class="txt">결재문서</dt>
+	                 <dt class="txt"><spring:message code='ezNewPortal.gu2' /></dt>
 	                 <c:choose>
 	                 	<c:when test="${approvalCount eq 0}">
 	                 		<dd class="count countZero">0</dd>
@@ -47,7 +47,7 @@
 	                 <li>
 	                 	<dl id="Schedule3" class="writebannerIcon">
 	                     	<dt class="iconCircle iconcSchedule"><span class="iconCommon iconSchedule"></span></dt>
-	                         <dt class="iconText">오늘일정</dt>
+	                         <dt class="iconText"><spring:message code='ezNewPortal.gu3' /></dt>
 	                         <c:choose>
 			                 	<c:when test="${scheduleCount eq 0}">
 			                 		<dd class="count countZero">0</dd>
@@ -64,7 +64,7 @@
 	                 <li>
 	                 	<dl id="Poll3" class="writebannerIcon">
 	                     	<dt class="iconCircle iconcVote"><span class="iconCommon iconVote"></span></dt>
-	                         <dt class="iconText">전자설문</dt>
+	                         <dt class="iconText"><spring:message code='ezNewPortal.gu4' /></dt>
 	                         <c:choose>
 			                 	<c:when test="${pollCount eq 0}">
 			                 		<dd class="count countZero">0</dd>
@@ -87,7 +87,7 @@
 	                     		</c:when>
 	                     		<c:otherwise>
 			                     	 <dt class="iconCircle iconcBoard"><span class="iconCommon iconBoard"></span></dt>
-			                         <dt class="iconText">회람판</dt>
+			                         <dt class="iconText"><spring:message code='ezNewPortal.gu5' /></dt>
 			                         <c:choose>
 					                 	<c:when test="${circularCount eq 0}">
 					                 		<dd class="count countZero">0</dd>
@@ -108,7 +108,7 @@
 	                 <li>
 	                 	<dl id="AprProcessing" class="writebannerIcon">
 	                     	<dt class="iconCircle iconcToward"><span class="iconCommon iconToward"></span></dt>
-	                         <dt class="iconText">진행문서</dt>
+	                         <dt class="iconText"><spring:message code='ezNewPortal.gu6' /></dt>
 	                         <c:choose>
 			                 	<c:when test="${approvalProgressingCount eq 0}">
 			                 		<dd class="count countZero">0</dd>
@@ -125,7 +125,7 @@
 	                 <li>
 	                 	<dl id="AprDraft" class="writebannerIcon">
 	                     	<dt class="iconCircle iconcReturn"><span class="iconCommon iconReturn"></span></dt>
-	                         <dt class="iconText">기안문서</dt>
+	                         <dt class="iconText"><spring:message code='ezNewPortal.gu7' /></dt>
 	                         <c:choose>
 			                 	<c:when test="${approvalDraftCount eq 0}">
 			                 		<dd class="count countZero">0</dd>
@@ -142,7 +142,7 @@
 	                 <li>
 	                 	<dl id="AprDeptSusin" class="writebannerIcon">
 	                     	<dt class="iconCircle iconcReceive"><span class="iconCommon iconReceive"></span></dt>
-	                         <dt class="iconText">부서수신함</dt>
+	                         <dt class="iconText"><spring:message code='ezNewPortal.gu8' /></dt>
 	                         <c:choose>
 			                 	<c:when test="${approvalDeptSusinCount eq 0}">
 			                 		<dd class="count countZero">0</dd>
