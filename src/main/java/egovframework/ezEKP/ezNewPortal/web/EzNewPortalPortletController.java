@@ -870,6 +870,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("userPhoto", data.get("userPhoto"));
 			model.addAttribute("userEmail", data.get("userEmail"));
 			model.addAttribute("lastLogin", data.get("lastLogin"));
+			model.addAttribute("usedTheme", req.getParameter("usedTheme"));
 		}
 		
 		logger.debug("portalUserInfoPortlet End");
