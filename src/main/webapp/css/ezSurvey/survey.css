@@ -90,6 +90,24 @@
 .prevItem .ddRes {padding: 0px 0px 2px 70px !important;}
 .zoomDiv {text-align: left; padding: 5px; margin: 0px; line-height: 0px;}
 .zoomDiv >img {cursor: pointer;}
+.survey-infrow {display: flex; font-family: HanSans, Gulim;     margin: 5px 0px;}
+.survey-infrow >span {margin: 0px 10px; line-height: 32px; font-size: 14px;}
+.survey-infrow >span:FIRST-CHILD {margin-left: 0px !important; min-width: 80px;}
+.survey-infrow .target-select {border-radius: 3px; background-color: rgba(204, 204, 204, 0.46); padding: 0px 5px; font-size: 13px; line-height: 27px; cursor: pointer;}
+.survey-infrow .date-input {width: 60px; outline:none; border: 1px solid #ddd; padding-left: 5px;}
+.survey-infrow input, .survey-infrow select, .survey-infrow .target-select {height: 27px;}
+.surveyinfo-wrap {height: 240px; border: 1px solid #d7d7d7; padding: 20px 40px; background-color: #fff; margin-bottom: 15px;}
+.info-input-ttl, .info-input-pp { line-height: 40px; font-weight: 600; height: 40px; border: none; outline: none; border-bottom: 1px solid #ddd; width: 100%;}
+.info-input-ttl {font-size: 20px;}
+.info-input-pp {font-size: 16px;}
+.survey-otherinf {margin: 15px 0px;}
+.survey-attach {height: 400px; border: 1px solid #ddd; background-color: #fff; margin-bottom: 20px;}
+.survey-dropzone {height: 329px; padding: 15px 15px 0px;}
+.mainzone {border: 1px dashed #ddd; height: 100%; box-sizing: border-box;}
+.survey-attbttn {height: 56px;}
+.survey-attbttn >div {float: left; background-color: rgb(52, 152, 219); border-radius: 4px; height: 28px; line-height: 28px; margin: 14px 10px; padding: 0px 5px; font-size: 14px; color: #fff;}
+.survey-infbttn {float: left; width: 36px; height: 36px; margin-left: 10px; cursor: pointer;}
+.survey-infbttn >img {height: 100%; width: 100%;}
 
 .headpanel {height: 40px; margin: 15px 0px 1px;}
 .headpanel .crust a.crumb>span {display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 100%; font-size: 16px; font-weight: bold;}

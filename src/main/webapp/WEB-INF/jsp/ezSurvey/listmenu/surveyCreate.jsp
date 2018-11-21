@@ -30,6 +30,6 @@
 				<span class="arrow"><span></span></span>
 			</span>
 		</div>
-		<div style="height: 400px; /* box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; */ border: 1px solid #d7d7d7;"></div>
+		<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyInfomation.jsp"></jsp:include>
 	</body>
 </html>
