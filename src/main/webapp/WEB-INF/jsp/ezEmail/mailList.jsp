@@ -918,6 +918,14 @@
         		
         		var fileCount = input.files.length;
         		
+        		for (var i = 0; i < fileCount; i++) {
+        			var fileExtension = input.files[i].name.substr(input.files[i].name.lastIndexOf('.')).toLowerCase();
+        			if (fileExtension != '.eml') {
+        				alert("<spring:message code='ezEmail.lsd05'/>");
+        				return;
+        			}
+        		}
+        		
         		if (fileCount > 100) {
         			alert("<spring:message code='ezEmail.jje04'/>");
         			return;
