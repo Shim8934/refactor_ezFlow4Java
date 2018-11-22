@@ -41,7 +41,7 @@
 
 	function editComplete() {
 		// reform inner editor
-		if (iframe_content_reform) {
+		if (window.iframe_content_reform) {
 			// set editor content to innerHTML
 			document.getElementById("reform-editor").innerHTML = iframe_content_reform.GetEditorContent();
 		}
