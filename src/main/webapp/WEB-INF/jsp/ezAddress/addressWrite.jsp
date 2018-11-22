@@ -279,8 +279,11 @@
 		            else if (xmlHTTP.responseText == "PRE") {
 		            	alert("<spring:message code='ezAddress.t225' />");
 		            }		            
-		            else if (xmlHTTP.responseText == "NO_AUTHORITY") {
-		            	alert("<spring:message code='ezAddress.t1' />");
+		            else if (xmlHTTP.responseText == "NO_AUTHORITY_D") {
+		            	alert("<spring:message code='ezAddress.t999900003' />");
+		            }
+		            else if (xmlHTTP.responseText == "NO_AUTHORITY_C") {
+		            	alert("<spring:message code='ezAddress.t999900004' />");
 		            }
 		            else {
 		            	if (addressid == "") {

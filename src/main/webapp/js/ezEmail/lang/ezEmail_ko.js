@@ -302,6 +302,10 @@ var strLangSharedMailbox01 = "공유사서함";
 var strLangHSB01 = "이 게시물은 ";
 var strLangHSB02 = "에서 조회 할 수 있습니다.";
 
+/* 2018-11-22 이효진 주소록 등록, 수정 시 메시지 통일  번역 -> message property */
+var strLangLHJ01 = "부서 관리자만 작성할 수 있습니다.";
+var strLangLHJ02 = "회사 관리자만 작성할 수 있습니다.";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

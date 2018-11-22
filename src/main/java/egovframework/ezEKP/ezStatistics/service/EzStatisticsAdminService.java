@@ -22,7 +22,7 @@ public interface EzStatisticsAdminService {
 	
 	public String getStatConnBrowser(StatApprVO statApprVO);
 	
-	public String getStatConnOS(StatApprVO statApprVO);
+	public String getStatConnOS(StatApprVO statApprVO) throws Exception;
 
 	public void dailyDocCountLog(StatApprVO statApprVO) throws Exception;
 

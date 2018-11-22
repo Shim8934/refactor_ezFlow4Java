@@ -746,9 +746,11 @@
            		A.TENANT_ID = P.TENANT_ID
            	AND
            		A.BOARDID = P.BOARDID
+			AND 
+			  	A.TENANT_ID = #v_TENANTID#
 			AND
             	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
-            		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)          		
+            		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
           		AND
 					(A.APPRFLAG = 'Y' 
 					OR A.APPRFLAG IS NULL)
@@ -757,7 +759,7 @@
 				AND 
  					A.STARTDATE <= #nowDate#
 				AND 
-					A.ENDDATE > #nowDate#					
+					A.ENDDATE > #nowDate#
 				AND 
 					(NOT EXISTS
 								(SELECT 
@@ -773,7 +775,7 @@
      							 AND 
      							 	S.TENANT_ID = #v_TENANTID#
      							 AND
-     							 	S.USERID = #v_PUSERID# 
+     							 	S.USERID = #v_pUserID# 
      							 AND 
      							 	S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5))
 		]]>
@@ -914,7 +916,7 @@
 							USERCOMPANYNAME$lang$ AS USERCOMPANYNAME, 
 							NVL(USERTITLE$lang$, '') AS USERTITLE, 
 							TO_CHAR(READDATE, 'YYYY-MM-DD HH24:MI:SS') as READDATE,
-							DEPTID
+							MAX(DEPTID) AS DEPTID
 					   	FROM 
 					   		TBL_Board_Item_Read A
 						INNER JOIN
@@ -925,7 +927,16 @@
 							FROM
 								TBL_USERMASTER D
 							WHERE
-								D.TENANT_ID = #tenantID#) S1
+								D.TENANT_ID = #tenantID#
+					]]>
+					<isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+						<![CDATA[
+							AND
+								D.PHYSICALDELIVERYOFFICENAME = #companyID#
+						]]>
+					</isNotEqual>
+					<![CDATA[
+							)
 								
 							UNION ALL
 							
@@ -948,7 +959,9 @@
 							AND
 								B.TENANT_ID = C.TENANT_ID
 							AND
-								C.EXTENSIONATTRIBUTE2 = #companyID#) S2) T
+								C.EXTENSIONATTRIBUTE2 = #companyID#
+							WHERE
+								A2.TENANT_ID = #tenantID#)) T
 						ON
 							A.USERID = T.CN
 						AND
@@ -969,7 +982,8 @@
 					   						AND
 					   							ITEMID = #itemID# )
 					GROUP BY
-						ITEMID, USERID
+						ITEMID, USERID, USERNAME, USERDEPTNAME, USERCOMPANYNAME, 
+                    	NVL(USERTITLE, ''), TO_CHAR(READDATE, 'YYYY-MM-DD HH24:MI:SS')
 				   	ORDER BY
 				   		ReadDate DESC
 				)A
@@ -1585,6 +1599,8 @@
 		            	 	A.BoardID = B.BoardID
 		                 WHERE
 		                 	A.TENANT_ID = #v_TENANTID#
+		                 AND
+  				  			(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 		                 AND  
 		                 	WRITERID = #v_PUSERID#
 		                 AND 
@@ -1595,6 +1611,9 @@
 		                 	extensionAttribute1 = '0'
 		                 AND 
 		                 	extensionAttribute2 = '1' 
+						AND
+		     			  	(A.APPRFLAG = 'Y' 
+		     			     OR A.APPRFLAG IS NULL)
 		                 ORDER BY
                  			A.WriteDate DESC ) T1
 		              WHERE ROWNUM_ <= #v_END# ) T2 
@@ -2943,7 +2962,7 @@
                       AND 
                       	BOARDID = #boardId#
                       GROUP BY 
-                      	ITEMID ) D   
+                      	ITEMID, TENANT_ID ) D   
                 ON 
                 	A.TENANT_ID = D.TENANT_ID
                 AND
@@ -3178,7 +3197,7 @@
                       AND 
                       	BOARDID = #boardId#
                       GROUP BY 
-                      	ITEMID ) D   
+                      	ITEMID, TENANT_ID ) D   
                 ON 
                 	A.TENANT_ID = D.TENANT_ID
                 AND
@@ -3250,7 +3269,7 @@
                       AND 
                       	BOARDID = #boardId#
                       GROUP 
-                      	BY ITEMID ) D   
+                      	BY ITEMID, TENANT_ID ) D   
                 ON 
                 	A.TENANT_ID = D.TENANT_ID
                 AND
@@ -3366,9 +3385,17 @@
 			SELECT 
 				COUNT(ITEMID)  CNT
 			FROM 
-				TBL_Board_Item 
+				TBL_Board_Item A
+			INNER JOIN 
+				TBL_BOARD_BOARDINFO B
+			ON 
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BoardID = B.BoardID
        		WHERE  
-       			TENANT_ID = #v_TENANTID#
+       			A.TENANT_ID = #v_TENANTID#
+   			AND
+   				(WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
        		AND
        			WRITERID = #v_PUSERID#
             AND 
@@ -3379,6 +3406,9 @@
             	extensionAttribute1 = '0'
             AND 
             	EXTENSIONATTRIBUTE2 = '1' 
+			AND
+				(A.APPRFLAG = 'Y' 
+				OR A.APPRFLAG IS NULL)
 		]]>
 	</select>
 	
@@ -3802,7 +3832,7 @@
 		]]>                
 	</select>
 	
-	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO">
+	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO" remapResults="true">
 		<isNotEqual property="v_GUBUN" compareValue="2">
 			<![CDATA[
 				SELECT
@@ -3810,8 +3840,8 @@
 					A.$v_UserName$ AS USERNAME,
 					A.USERID,
 					A.CONTENT,
-					TO_CHAR(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')AS WRITEDATE
-					DEPTID
+					TO_CHAR(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')AS WRITEDATE,
+					MAX(DEPTID) AS DEPTID
 		        FROM
 		        	TBL_BOARD_ONELINEREPLY A
 		        INNER JOIN
@@ -3822,8 +3852,17 @@
 					FROM
 						TBL_USERMASTER D
 					WHERE
-						D.TENANT_ID = #v_TENANTID#) S1
-						
+						D.TENANT_ID = #v_TENANTID#
+				]]>
+			<isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+				<![CDATA[
+					AND
+                        D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+				]]>
+			</isNotEqual>
+			<![CDATA[
+					)
+					
 					UNION ALL
 					
 					(SELECT
@@ -3845,7 +3884,9 @@
 					AND
 						B.TENANT_ID = C.TENANT_ID
 					AND
-						C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#) S2 ) T
+						C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+					WHERE
+						A2.TENANT_ID = #v_TENANTID#)) T
 				ON
 					A.USERID = T.CN
 				AND
@@ -3857,7 +3898,7 @@
 				AND 
 					A.ITEMID = #v_ItemID#
 				GROUP BY
-					A.USERID, A.REPLYID
+					A.USERID, A.REPLYID, A.USERNAME, A.CONTENT, TO_CHAR(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')
 				ORDER BY 
 					writedate ASC
 			]]>
@@ -3866,8 +3907,8 @@
 			<![CDATA[
 				SELECT 
 					REPLYID, 
-					$v_UserName$ AS USERNAME, 
-					USERID, 
+					$v_UserName$ AS USERNAME,
+					USERID,
 					CONTENT, 
 					TO_CHAR(WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')AS WRITEDATE
 		        FROM 
@@ -3878,8 +3919,6 @@
 		       		boardid = #v_BoardID#
 				AND 
 					itemid = #v_ItemID#
-				GROUP BY
-					REPLYID
 				ORDER BY 
 					writedate ASC
 			]]>
