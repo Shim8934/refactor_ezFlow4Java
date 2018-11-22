@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -86,13 +87,12 @@ public class EzTalkGateController {
 	        int tenantId = loginService.getTenantId(serverName);
 	        logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 			
-			String orgId = ezTalkGateUtil.decryptEzTalkAES(ezTalkId);
-			String orgPw = ezTalkGateUtil.decryptEzTalkAES(ezTalkPw);
+			String userId = ezTalkGateUtil.decryptEzTalkAES(ezTalkId);
+			String userPw = ezTalkGateUtil.decryptEzTalkAES(ezTalkPw);
 			type = (type == null) ? "" : type;
-			logger.debug("type=" + type);
-			logger.debug("orgId=" + orgId);
+			logger.debug("type=" + type + "orgId=" + userId);
 			
-			boolean isUserExists = checkIfUserExists(orgId, orgPw, tenantId);
+			boolean isUserExists = checkIfUserExists(userId, userPw, tenantId);
 			logger.debug("isUserExists=" + isUserExists);
 			
 			if (isUserExists) {
@@ -103,15 +103,15 @@ public class EzTalkGateController {
 					String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", tenantId);
 					
 					if (useMobileManagemant.equals("YES")) {
-						String notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, orgId, "notUseMobileLogin");
-						String adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, orgId, "adminOrderNotUsedMobileLogin");
+						String notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId, "notUseMobileLogin");
+						String adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId, "adminOrderNotUsedMobileLogin");
 						
 						if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
-							logger.debug("cannot use mobile login. userId=" + orgId);
+							logger.debug("userId=" + userId + " not used mobile login.");
 							result = "NOTUSE";
 						} else {
-							String inputParams = "userId=" + orgId + "&deviceId=";
-							logger.debug("userId=" + orgId + ",deviceId=");
+							String inputParams = "userId=" + userId + "&deviceId=";
+							logger.debug("userId=" + userId + ",deviceId=");
 							
 							String requestURL = "/ezTalkGate/getUserMobileDeviceInfo";
 							String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
@@ -119,9 +119,11 @@ public class EzTalkGateController {
 							
 							JSONParser parser = new JSONParser();
 							JSONObject resultObj = (JSONObject) parser.parse(getResult);
+							int mobileUsed = (resultObj.get("data").equals("")) ? 
+												0 : Integer.valueOf(String.valueOf(resultObj.get("data")));
 							
-							if (resultObj.get("data").equals("1")) {
-								logger.debug("this device cannot use. userId=" + orgId);
+							if (mobileUsed > 0) {
+								logger.debug("userId=" + userId + ", this device can't use.");
 								result = "NOTUSE";
 							}
 						}
@@ -340,7 +342,7 @@ public class EzTalkGateController {
 		logger.debug("encryptedPw=" + encryptedPw);
 		
 		LoginVO loginVO = new LoginVO();	
-		
+		tenantId = 0;
 		loginVO.setId(id);
 		loginVO.setPassword(encryptedPw);
 		loginVO.setTenantId(tenantId);
