@@ -1451,8 +1451,8 @@
 			*/
 			function excelDown() {
 				var pDate = $("#calTitle").text().trim();
-				var startDate = pDate + "-01 00:00:00";
-				var endDate = pDate + "-" + ( new Date(pDate.split("-")[0],pDate.split("-")[1], 0) ).getDate() + " 23:59:59";
+				var startDate = pDate + "-01";
+				var endDate = pDate + "-" + ( new Date(pDate.split("-")[0],pDate.split("-")[1], 0) ).getDate();
 				
 				$.ajax({
 					type : "POST",
