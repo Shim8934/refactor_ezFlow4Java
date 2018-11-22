@@ -289,7 +289,7 @@
 	    			$("#searchTitle").val("");
 	    			$("#Sdatepicker").val("${searchStartDate}");
 	    			$("#Edatepicker").val("${searchEndDate}");
-	    			$("select[id='searchAttitudeType']").val('total');
+	    			$("select[id='searchAttitudeType']").val('ALL');
 	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";

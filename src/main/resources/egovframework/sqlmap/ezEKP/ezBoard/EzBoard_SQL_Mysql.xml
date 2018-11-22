@@ -895,8 +895,17 @@
 				FROM
 					TBL_USERMASTER D
 				WHERE
-					D.TENANT_ID = #tenantID#)
-					
+					D.TENANT_ID = #tenantID#
+			]]>
+		<isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+				AND
+					D.PHYSICALDELIVERYOFFICENAME = #companyID#
+			]]>
+		</isNotEqual>
+		<![CDATA[
+				)
+				
 				UNION ALL
 				
 				(SELECT
@@ -918,7 +927,9 @@
 				AND
 					B.TENANT_ID = C.TENANT_ID
 				AND
-					C.EXTENSIONATTRIBUTE2 = #companyID#)) T
+					C.EXTENSIONATTRIBUTE2 = #companyID#
+				WHERE
+					A2.TENANT_ID = #tenantID#)) T
 		ON
 			A.USERID = T.CN
 		AND
@@ -3663,7 +3674,7 @@
 		]]>                
 	</select>
 	
-	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO">
+	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO" remapResults="true">
 		<isNotEqual property="v_GUBUN" compareValue="2">
 			<![CDATA[
 				SELECT
@@ -3683,8 +3694,17 @@
 					FROM
 						TBL_USERMASTER D
 					WHERE
-						D.TENANT_ID = #v_TENANTID#)
-						
+						D.TENANT_ID = #v_TENANTID#
+				]]>
+			<isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+				<![CDATA[
+					AND
+                        D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+				]]>
+			</isNotEqual>
+			<![CDATA[
+					)
+					
 					UNION ALL
 					
 					(SELECT
@@ -3706,7 +3726,9 @@
 					AND
 						B.TENANT_ID = C.TENANT_ID
 					AND
-						C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#)) T
+						C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+					WHERE
+						A2.TENANT_ID = #v_TENANTID#)) T
 				ON
 					A.USERID = T.CN
 				AND

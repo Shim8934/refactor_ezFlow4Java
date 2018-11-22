@@ -1078,12 +1078,12 @@
 					#adminId#,
 					b.DISPLAYNAME, 
 					b.DISPLAYNAME2,
-					#apprDate#,
+					TO_DATE(#apprDate#, 'YYYY-MM-DD HH24:MI:SS'),
 					TO_DATE(#changeDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
 					TO_DATE(#originDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
-					"1",
+					'1',
 					#content#,
-					#applDate#
+					TO_DATE(#applDate#, 'YYYY-MM-DD HH24:MI:SS')
 				FROM
 					(select 
 					*
