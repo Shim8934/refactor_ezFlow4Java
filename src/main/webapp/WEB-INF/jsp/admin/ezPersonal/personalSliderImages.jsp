@@ -23,8 +23,8 @@
 		.sliderInfoTD {padding:5px 15px 5px 5px;}
 		ul .addSlider:hover {cursor:pointer;}
 		ul .slideIsUse {padding: 30px 0px 10px 0px;}
-		.cancelNewSliderBtn span {height:25px; float:right; padding: 3px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
-		.addNewSliderBttn span {height:25px; float:right; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
+		.cancelNewSliderBtn img {height:25px; float:right; padding: 3px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
+		.addNewSliderBttn img {height:25px; float:right; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 		.slider-header-add {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;border:1px solid #2196f3; width:210px;}
 		.addImageBtn span {height:25px; background-color:#f4f4f4; border:1px solid #e7e7e7;  float:right; padding: 0px 9px; line-height: 23px; display:block; text-align: center; margin-top:40%; margin-right:30%}
 		#UploadSliderImage {position:relative; bottom:120px;}
@@ -66,7 +66,6 @@
 		    
 		    //슬라이드 이미지 목록
 		    function MakeSliderList(result) {
-		    	console.log(result);
 		    
 		    	var sliderSn = "";
 		    	var sliderID = "";
@@ -90,12 +89,12 @@
 		    		sliderURL = result[i].url;
 		    		sliderIsUse = result[i].isUse;
 		    		
-		    		sliderHTML += "<li class = 'sliderList' id = 'sliderList'"+sliderID+">";
+		    		sliderHTML += "<li class = 'sliderList' id = '"+sliderID+"'>";
 		    		sliderHTML += "<div class = 'slider-header'>";
-		    		sliderHTML += "<a class = 'cancelNewSliderBtn'>";
-			    	sliderHTML += "<span class ='modifyCancel'><img src='/images/close_xBtn.png'></span></a>";
-			    	sliderHTML += "<a class= 'addNewSliderBttn'>";
-			    	sliderHTML += "<span class='modifyPopUp' id= 'modifyPopUp' onclick='modifySlider("+ sliderID +")'><img src='/images/email/popup_icon.gif' ></span></a>";
+		    		sliderHTML += "<a class = 'cancelNewSliderBtn' id='cancelNewSliderBtn'>";
+			    	sliderHTML += "<img src='/images/close_xBtn.png'></a>";
+			    	sliderHTML += "<a class= 'addNewSliderBttn' id= 'addNewSliderBttn'>";
+			    	sliderHTML += "<img src='/images/email/popup_icon.gif' ></a>";
 		    		sliderHTML += "</div>";
 		    		sliderHTML += "<dt><span class='imagePage'><IMG src ="+sliderImagePath+" style='width:225px;height:210px'/></dt>";
 		    		sliderHTML += "</span>";
@@ -108,21 +107,25 @@
 		    		sliderHTML += "<td class ='sliderRegDate'>"+sliderRegDate+"</td></tr>"
 		    		
 		    		if(sliderIsUse == 1){
-		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' checked='checked')' onchange='toggleButton(this)'><span class='slider round'></label></td>";
+		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' checked='checked')' onchange='toggleButton("+sliderIsUse+")'><span class='slider round'></label></td>";
 		    		}else {
-		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' onchange='toggleButton(this)'><span class='slider round'></label></td>";
+		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' onchange='toggleButton("+sliderIsUse+")'><span class='slider round'></label></td>";
 		    		}
 		    		
 		    		sliderHTML += "</tr></table>";
 		    		sliderHTML += "</div></li>";
-		    		
-		    		
+		    		document.getElementById("sliderContainer").innerHTML = sliderHTML;
 		    	}
 		    	
 		    	sliderHTML += "<li class='addSlider' id='addSlider'><div style='margin-top:97px'><img src='/images/admin/admin_portlet_plus.png' ></img></div></li>";
 		    	document.getElementById("sliderContainer").innerHTML = sliderHTML;
-		    	document.getElementById("addSlider").onclick = btn_Select;
 		    	
+		    	//슬라이더 추가
+		    	document.getElementById("addSlider").onclick = btn_Select;
+		    	//슬라이더 수정
+		    	for(var i=0; i < sliderCnt; i++){
+		    		$("#addNewSliderBttn"+result[i].sliderID.replace(/[{}]/g, "")).on("click", {"sliderId" : result[i].sliderID}, modifySlider);
+		    	}
 		    	//슬라이더 사용 유무
 		    	for (var i = 0; i < sliderCnt; i++) {
 		    		var checkbox = document.getElementById("toggleButton");
@@ -146,7 +149,7 @@
 		    	//버튼 클릭할 때(보류)
 		    	console.log($(".sliderList").find(".slider-header"));
 				$(".sliderList").find(".slider-header").each(function(){
-					if(check.checked){
+					if(check = "1"){
 	 		    		$(this).css("background-color", "#2196f3");
 	 		    	} else{
 	 		    		$(this).css("background-color", "#f4f4f4").css("border", "1px solid #e7e7e7").css("color", "#b1b1b1");
@@ -169,7 +172,7 @@
 		    	$(".addSlider").remove();
 		    	
 		    	var sliderHTML = "";
-		    	sliderHTML += "<li class = 'sliderList' id = 'sliderList'>";
+		    	sliderHTML += "<li class = 'sliderList' id = '"+sliderID+"'>";
 		    	sliderHTML += "<div class = 'slider-header-add' style='background-color:#f4f4f4;border:1px solid #e7e7e7;color:#b1b1b1'>";
 		    	sliderHTML += "<a class = 'cancelNewSliderBtn'>";
 		    	sliderHTML += "<span class ='addCancel'><img src='/images/close_xBtn.png'></span></a>";
@@ -394,8 +397,10 @@
 		        window.location.reload(false);
 		    }  */
 		    //슬라이더 수정 함수
-		    function modifySlider(data) {
-		    	console.log(data);
+		    var modifySlider = function(event) {
+		    	var sliderId = event.data.sliderId;
+		    	
+		    	
 		    }
 	
 		    function sliderdelete() {
