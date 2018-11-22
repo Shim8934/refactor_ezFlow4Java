@@ -377,7 +377,7 @@
 			APPR_DATE
 			)
 			SELECT
-				SEQ_TBL_ATTITUDE_MODAPPL_HISTORY.nextval,
+				SEQ_TBL_ATTI_MODAPPL_HISTORY.nextval,
 				#companyId#,
 				#tenantId#,
 				#writerId#,
@@ -402,7 +402,7 @@
 				#adminId#,
 				c.displayname,
 				c.displayname2,
-				#apprDate#
+				to_date(#apprDate#, 'YYYY-MM-DD HH24:MI:SS')
 			FROM
 				(select 
 					*
@@ -754,12 +754,12 @@
 		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
-			A.CHANGE_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+			A.CHANGE_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate# || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="endDate" prepend="and">
 			<![CDATA[
-			A.CHANGE_DATE + #offset# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+			A.CHANGE_DATE + #offset# / (24 * 60) <= TO_DATE(#endDate# || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="type" prepend="and">
@@ -1078,12 +1078,12 @@
 					#adminId#,
 					b.DISPLAYNAME, 
 					b.DISPLAYNAME2,
-					#apprDate#,
+					TO_DATE(#apprDate#, 'YYYY-MM-DD HH24:MI:SS'),
 					TO_DATE(#changeDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
 					TO_DATE(#originDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
-					"1",
+					'1',
 					#content#,
-					#applDate#
+					TO_DATE(#applDate#, 'YYYY-MM-DD HH24:MI:SS')
 				FROM
 					(select 
 					*
@@ -1466,6 +1466,7 @@
 	
 	<insert id="ezAttitudeDAO.insertAdminAttHistory2" parameterClass="Map">
 		INSERT INTO tbl_attitude_modappl_history(
+			MOD_CNT,
 			COMPANY_ID,
 			TENANT_ID,
 			WRITER_ID,
@@ -1506,6 +1507,7 @@
 			)
 			VALUES
 			(
+				SEQ_TBL_ATTI_MODAPPL_HISTORY.NEXTVAL,
 				#attVO.companyId#,
 				#tenantId#,
 				#attVO.writerId#,
@@ -1587,6 +1589,7 @@
 	
 	<insert id="ezAttitudeDAO.insertAdminAttHistory3" parameterClass="Map">
 		INSERT INTO tbl_attitude_modappl_history(
+				MOD_CNT,
 				COMPANY_ID,
 				TENANT_ID,
 				WRITER_ID,
@@ -1616,6 +1619,7 @@
 			)
 			VALUES
 			(
+				SEQ_TBL_ATTI_MODAPPL_HISTORY.NEXTVAL,
 				#attVO.companyId#,
 				#tenantId#,
 				#attVO.writerId#,
