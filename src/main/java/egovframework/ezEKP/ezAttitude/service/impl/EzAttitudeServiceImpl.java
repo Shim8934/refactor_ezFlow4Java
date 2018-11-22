@@ -1589,6 +1589,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
+		if (attModId.indexOf("_") > 0) {
+			attModId = attModId.split("_")[0];
+		}
 		map.put("attModId", attModId);
 		map.put("offset", offset);
 		if (lang.equals("1")) {
