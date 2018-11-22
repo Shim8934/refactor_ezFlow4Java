@@ -43,13 +43,19 @@ function restoreSelection() {
 
 function moveCursorToElement(element) {
 	var selection = webEditorDocument.getSelection();
-	var parentElement = element.parentElement;
+	var parentNode = element.parentNode;
 	
-	if (selection != null && parentElement != null) {
-		var selectionIndex = Array.prototype.indexOf.call(parentElement.childNodes, element);
+	if (selection != null && parentNode != null) {
+		var selectionIndex = Array.prototype.indexOf.call(parentNode.childNodes, element);
 		
-		selection.collapse(parentElement, selectionIndex + 1);
+		selection.collapse(parentNode, selectionIndex + 1);
 		saveSelection();
+	}
+}
+
+function removeElement(element) {
+	if (element.parentNode !== null) {
+		element.parentNode.removeChild(element);
 	}
 }
 
@@ -179,7 +185,7 @@ function onFormDocumentLoadHandler() {
 			}
 			
 			if (targetElement.nodeType === 3) {
-				targetElement = targetElement.parentElement;
+				targetElement = targetElement.parentNode;
 			} else {
 				var selectionChildNode = targetElement.childNodes.item(selection.anchorOffset - 1);
 				
@@ -188,7 +194,7 @@ function onFormDocumentLoadHandler() {
 				}
 			}
 			
-			if (targetElement.getAttribute("data-type") !== "label") {
+			if (targetElement != null && targetElement.getAttribute("data-type") !== "label") {
 				return;
 			}
 			
@@ -201,12 +207,12 @@ function onFormDocumentLoadHandler() {
 					
 					targetElement.parentElement.insertBefore(dummySibling, targetElement.nextSibling);
 					// selection.collapse(targetElement.parentElement, 0);
-					targetElement.remove();
+					removeElement(targetElement);
 					
 					setTimeout(function() {
 						dummySibling = webEditorDocument.getElementById("__reform-dummy-sibling");
 						dummySibling.parentElement.insertBefore(cloneTargetElement, dummySibling);
-						dummySibling.remove();
+						removeElement(dummySibling);
 						//						
 						parentElement = cloneTargetElement.parentElement;
 						var selectionIndex = Array.prototype.indexOf.call(parentElement.childNodes, cloneTargetElement);
@@ -225,7 +231,7 @@ function onFormDocumentLoadHandler() {
 					targetElement.parentElement.insertBefore(focusElement, targetElement.nextSibling);
 					
 					setTimeout(function() {
-						focusElement.remove();
+						removeElement(focusElement);
 					}, 1);
 				}
 				
