@@ -68,6 +68,66 @@ public class EzTalkGateController {
 	
     @Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
+    
+    @RequestMapping("/ezTalkGate/tokenLogin.do")
+    @ResponseBody
+    public String ezTalkTokenLogin(
+    			@RequestParam String ezTalkId,
+    			HttpServletRequest request,
+    			HttpServletResponse response
+    		) throws Exception{
+    	logger.debug("ezTalkTokenLogin started.");
+		String result = "Y";
+
+		String serverName = request.getServerName();
+		int tenantId = loginService.getTenantId(serverName);
+		logger.debug("serverName=" + serverName + ",tenantId=" + tenantId);
+
+		String userId = ezTalkGateUtil.decryptEzTalkAES(ezTalkId);
+		logger.debug("userId=" + userId);
+
+		try {
+			String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", tenantId);
+			logger.debug("useMobileManagemant=" + useMobileManagemant);
+
+			if (useMobileManagemant.equals("YES")) {
+				String notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId, "notUseMobileLogin");
+				String adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId,
+				        "adminOrderNotUsedMobileLogin");
+
+				// 전체 사용안함. 사용자, 관리자 설정
+				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
+					logger.debug("userId=" + userId + ", can't use mobile login.");
+					result = "N";
+				} else {
+					// 기능 사용하며, 기기별 검색
+					String inputParams = "userId=" + userId + "&deviceId=";
+					logger.debug("userId=" + userId + ",deviceId=");
+
+					String requestURL = "/ezTalkGate/getUserMobileDeviceInfo";
+					String getResult = ezEmailUtil
+					        .getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+					logger.debug("getResult=" + getResult);
+
+					JSONParser parser = new JSONParser();
+					JSONObject resultObj = (JSONObject) parser.parse(getResult);
+					int mobileUsed = (resultObj.get("data").equals("")) ? 0
+					        : Integer.valueOf(String.valueOf(resultObj.get("data")));
+
+					if (mobileUsed > 0) {
+						logger.debug("userId=" + userId + ", this device can't use.");
+						result = "N";
+					}
+				}
+			}
+		} catch (Exception e) {
+			result = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("ezTalkTokenLogin ended. mobileUsed=" + result);
+		return result;
+    }
 	
     @RequestMapping("/ezTalkGate/login.do")
     @ResponseBody
