@@ -2159,7 +2159,7 @@
 				TBL_CIRCULAR
 			SET
 				status = '1',
-				endDate = utc_timestamp()
+				endDate = #endDate#
 			WHERE 
 				circularid = #circularID#
 			AND

@@ -686,7 +686,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("type", type);
 		if (startPoint != null && endPoint != null && !startPoint.equals("") && !endPoint.equals("")) {
 			map.put("startRow", Integer.valueOf(startPoint) + 1);
-			map.put("endRow", Integer.valueOf(startPoint) + endPoint);
+			map.put("endRow", Integer.valueOf(startPoint) + Integer.valueOf(endPoint));
 		}
 		
 		if (adminFlag.equals("false")){
@@ -1589,6 +1589,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
+		if (attModId.indexOf("_") > 0) {
+			attModId = attModId.split("_")[0];
+		}
 		map.put("attModId", attModId);
 		map.put("offset", offset);
 		if (lang.equals("1")) {
