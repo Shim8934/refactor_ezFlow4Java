@@ -90,12 +90,12 @@
 		    		sliderURL = result[i].url;
 		    		sliderIsUse = result[i].isUse;
 		    		
-		    		sliderHTML += "<li class = 'sliderList' id = 'sliderList"+sliderID+"'>";
+		    		sliderHTML += "<li class = 'sliderList' id = 'sliderList'"+sliderID+">";
 		    		sliderHTML += "<div class = 'slider-header'>";
 		    		sliderHTML += "<a class = 'cancelNewSliderBtn'>";
 			    	sliderHTML += "<span class ='modifyCancel'><img src='/images/close_xBtn.png'></span></a>";
 			    	sliderHTML += "<a class= 'addNewSliderBttn'>";
-			    	sliderHTML += "<span class='modifyPopUp' id= 'modifyPopUp'><img src='/images/email/popup_icon.gif' ></span></a>";
+			    	sliderHTML += "<span class='modifyPopUp' id= 'modifyPopUp' onclick='modifySlider("+ sliderID +")'><img src='/images/email/popup_icon.gif' ></span></a>";
 		    		sliderHTML += "</div>";
 		    		sliderHTML += "<dt><span class='imagePage'><IMG src ="+sliderImagePath+" style='width:225px;height:210px'/></dt>";
 		    		sliderHTML += "</span>";
@@ -122,8 +122,8 @@
 		    	sliderHTML += "<li class='addSlider' id='addSlider'><div style='margin-top:97px'><img src='/images/admin/admin_portlet_plus.png' ></img></div></li>";
 		    	document.getElementById("sliderContainer").innerHTML = sliderHTML;
 		    	document.getElementById("addSlider").onclick = btn_Select;
-		    	document.getElementById("modifyPopUp").onclick = modifySlider;
 		    	
+		    	//슬라이더 사용 유무
 		    	for (var i = 0; i < sliderCnt; i++) {
 		    		var checkbox = document.getElementById("toggleButton");
 		    		var choose = checkbox.checked;
@@ -394,8 +394,8 @@
 		        window.location.reload(false);
 		    }  */
 		    //슬라이더 수정 함수
-		    function modifySlider() {
-		    	
+		    function modifySlider(data) {
+		    	console.log(data);
 		    }
 	
 		    function sliderdelete() {
