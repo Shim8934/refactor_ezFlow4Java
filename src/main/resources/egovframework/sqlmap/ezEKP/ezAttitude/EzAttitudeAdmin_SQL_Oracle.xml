@@ -751,7 +751,7 @@
 				</isEmpty>
 				) T1
 			)
-			<isNotEmpty prepend="WHERE" property="listSize">
+			<isNotEmpty prepend="WHERE" property="startRow">
 				<![CDATA[
 					RN >= #startRow#
 				AND
@@ -881,9 +881,9 @@
 			    B.DISPLAYNAME$primary$ AS userName,
 			    B.TITLE$primary$ AS jikwi,
 			    B.DESCRIPTION$primary$ AS deptName,
-			    group_concat(A.AUTH_DEPT_ID order by C.DISPLAYNAME$primary$) AS authDeptId,
-			    group_concat(C.DISPLAYNAME$primary$ order by C.DISPLAYNAME$primary$) AS authDeptName,
-    			group_concat(A.AUTH_TYPE order by C.DISPLAYNAME$primary$) AS authType
+			    LISTAGG(A.AUTH_DEPT_ID, ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authDeptId,
+			    LISTAGG(cast(C.DISPLAYNAME$primary$ as varchar(500)), ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authDeptName,
+    			LISTAGG(A.AUTH_TYPE, ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authType
 			FROM 
 				TBL_ATTITUDE_AUTH A
 			INNER JOIN
@@ -903,7 +903,7 @@
 			AND
 				A.TENANT_ID = #tenantId#
 			GROUP BY 
-				A.USER_ID, userName, jikwi, deptName
+				A.USER_ID, B.DISPLAYNAME, B.TITLE, B.DESCRIPTION
 			ORDER BY
 				userName
 		]]>
@@ -922,41 +922,44 @@
 		
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList" parameterClass="Map" resultClass="AttitudeAuthorVO">
 		<![CDATA[
-			SELECT
-				D.DISPLAYNAME$primary$ AS deptName,
-				D.CN AS deptId,
-				'no' AS mine,
-				A.AUTH_TYPE AS authType
-			FROM 
-				TBL_DEPTMASTER D
-			INNER JOIN 
-				TBL_ATTITUDE_AUTH A 
-			ON
-				D.CN = A.AUTH_DEPT_ID 
-			AND
-				A.TENANT_ID = D.TENANT_ID
-			WHERE 
-				A.USER_ID = #userId#
-			AND 
-				A.TENANT_ID = #tenantId#
-			UNION
-			SELECT
-				D.DISPLAYNAME$primary$ AS deptName,
-				D.CN AS deptId,
-				'yes' AS mine,
-				'' AS authType
-			FROM 
-				TBL_DEPTMASTER D
-			LEFT JOIN 
-				TBL_USERMASTER U 
-			ON
-				D.CN = U.DEPARTMENT 
-			AND
-				U.TENANT_ID = D.TENANT_ID
-			WHERE 
-				U.CN = #userId#
-			AND 
-				U.TENANT_ID = #tenantId#
+		select * from 
+			(
+				SELECT
+					D.DISPLAYNAME$primary$ AS deptName,
+					D.CN AS deptId,
+					'no' AS mine,
+					TO_CHAR(A.AUTH_TYPE) AS authType
+				FROM 
+					TBL_DEPTMASTER D
+				INNER JOIN 
+					TBL_ATTITUDE_AUTH A 
+				ON
+					D.CN = A.AUTH_DEPT_ID 
+				AND
+					A.TENANT_ID = D.TENANT_ID
+				WHERE 
+					A.USER_ID = #userId#
+				AND 
+					A.TENANT_ID = #tenantId#
+				UNION
+				SELECT
+					D.DISPLAYNAME$primary$ AS deptName,
+					D.CN AS deptId,
+					'yes' AS mine,
+					'' AS authType
+				FROM 
+					TBL_DEPTMASTER D
+				LEFT JOIN 
+					TBL_USERMASTER U 
+				ON
+					D.CN = U.DEPARTMENT 
+				AND
+					U.TENANT_ID = D.TENANT_ID
+				WHERE 
+					U.CN = #userId#
+				AND 
+					U.TENANT_ID = #tenantId#
+			)
 			ORDER BY 
 				deptName
 		]]>
