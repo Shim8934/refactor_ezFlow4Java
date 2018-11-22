@@ -776,7 +776,7 @@
 		                    window.close();
 		                }
 		                else {
-		                    swidth = 440;
+		                    swidth = 550;
 		                    sheight = 520;
 		                    
 		                    pleft = (pwidth - swidth) / 2;
