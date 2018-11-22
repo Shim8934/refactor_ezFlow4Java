@@ -377,7 +377,7 @@
 			APPR_DATE
 			)
 			SELECT
-				SEQ_TBL_ATTITUDE_MODAPPL_HISTORY.nextval,
+				SEQ_TBL_ATTI_MODAPPL_HISTORY.nextval,
 				#companyId#,
 				#tenantId#,
 				#writerId#,
@@ -402,7 +402,7 @@
 				#adminId#,
 				c.displayname,
 				c.displayname2,
-				#apprDate#
+				to_date(#apprDate#, 'YYYY-MM-DD HH24:MI:SS')
 			FROM
 				(select 
 					*
@@ -542,12 +542,12 @@
 				</isNotEmpty>
 				<isNotEmpty property="startDate" prepend="and">
 					<![CDATA[
-						TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+						A.CHANGE_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate# || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
 					]]>
 				</isNotEmpty>
 				<isNotEmpty property="endDate" prepend="and">
 					<![CDATA[
-						TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+						A.CHANGE_DATE + #offset# / (24 * 60) <= TO_DATE(#endDate# || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
 					]]>
 				</isNotEmpty>
 				<isNotEmpty property="type" prepend="and">
@@ -754,12 +754,12 @@
 		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
-			TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+			A.CHANGE_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate# || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="endDate" prepend="and">
 			<![CDATA[
-			TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+			A.CHANGE_DATE + #offset# / (24 * 60) <= TO_DATE(#endDate# || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="type" prepend="and">
@@ -1078,12 +1078,12 @@
 					#adminId#,
 					b.DISPLAYNAME, 
 					b.DISPLAYNAME2,
-					#apprDate#,
+					TO_DATE(#apprDate#, 'YYYY-MM-DD HH24:MI:SS'),
 					TO_DATE(#changeDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
 					TO_DATE(#originDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
-					"1",
+					'1',
 					#content#,
-					#applDate#
+					TO_DATE(#applDate#, 'YYYY-MM-DD HH24:MI:SS')
 				FROM
 					(select 
 					*
@@ -1266,50 +1266,46 @@
 	<update id="ezAttitudeDAO.changeUsersAtt" parameterClass="map">
 		<![CDATA[
 			UPDATE 
-				TBL_ATTITUDE A 
-			INNER JOIN 
-				TBL_ATTITUDE_MODAPPL B 
-			ON 
-				A.ATTITUDE_ID = B.ATTITUDE_ID
-			AND 
-				A.TENANT_ID = B.TENANT_ID
-			AND
-				A.COMPANY_ID = B.COMPANY_ID
+				TBL_ATTITUDE
 			SET
-			]]>
-			<isEqual property="changeStatus" compareValue="appr">
-				<![CDATA[
-				A.START_DATE = B.CHANGE_DATE
-				]]>
-			</isEqual>
-		<![CDATA[
-	        WHERE
-	        	A.TENANT_ID = #tenantId#
-		]]>	        	
-	        AND 
-	        	A.ATTITUDE_ID = #ids# 
-		<![CDATA[			
-	        AND
-	        	A.COMPANY_ID = #companyId#
-		]]>
-		<isNotEmpty property="applCnt">
-	        AND
-	        	B.APPL_CNT = #applCnt#
-	    </isNotEmpty>
-	    <isEmpty property="applCnt">
-	        AND
-	        	B.APPL_CNT = (SELECT *
-	        				FROM (SELECT 
-		        					MAX(APPL_CNT)
-		        				  FROM 
-		        					TBL_ATTITUDE_MODAPPL
-		        			      WHERE
-						        	TENANT_ID = #tenantId#
-								  AND	        	
+				START_DATE = (SELECT 
+									CHANGE_DATE
+								FROM
+									TBL_ATTITUDE_MODAPPL
+								WHERE
+									TENANT_ID = #tenantId#
+								AND
 									ATTITUDE_ID = #ids#
-								  AND
-						        	COMPANY_ID = #companyId#)a)
-	    </isEmpty>
+								AND
+									COMPANY_ID = #companyId#
+								]]>
+								<isNotEmpty property="applCnt" prepend="AND">
+									APPL_CNT = #applCnt#
+								</isNotEmpty>
+								<isEmpty property="applCnt" prepend="AND">
+									APPL_CNT = (SELECT 
+													*
+												FROM
+												 (SELECT 
+												 	MAX(APPL_CNT)
+												  FROM 
+												  	TBL_ATTITUDE_MODAPPL
+												  WHERE
+												  	TENANT_ID = #tenantId#
+												  AND
+												  	ATTITUDE_ID = #ids#
+												  AND
+												  	COMPANY_ID = #companyId#))
+								</isEmpty>
+								<![CDATA[
+								)
+	        WHERE
+	        	TENANT_ID = #tenantId#
+	        AND 
+	        	ATTITUDE_ID = #ids# 
+	        AND
+	        	COMPANY_ID = #companyId#
+			]]>
 	</update>
 	
 	<update id="ezAttitudeDAO.changeUsersAttType" parameterClass="map">
@@ -1470,6 +1466,7 @@
 	
 	<insert id="ezAttitudeDAO.insertAdminAttHistory2" parameterClass="Map">
 		INSERT INTO tbl_attitude_modappl_history(
+			MOD_CNT,
 			COMPANY_ID,
 			TENANT_ID,
 			WRITER_ID,
@@ -1510,6 +1507,7 @@
 			)
 			VALUES
 			(
+				SEQ_TBL_ATTI_MODAPPL_HISTORY.NEXTVAL,
 				#attVO.companyId#,
 				#tenantId#,
 				#attVO.writerId#,
@@ -1526,7 +1524,7 @@
 				    THEN
 				        null
 				    ELSE
-				        (to_date(#startDate#, 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60)))
+				        to_date(#startDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
 				END),
 				(CASE
 				    WHEN
@@ -1534,7 +1532,7 @@
 				    THEN
 				        null
 				    ELSE
-				        (to_date(#endDate#, 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60)))
+				        to_date(#endDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
 				END),
 				NVL(#region#, ''),
 				NVL(#mobile#, ''),
@@ -1567,14 +1565,14 @@
 				#adminInfo.userName#,
 				#adminInfo.userName2#,
 				#attitudeId#,
-				(#attVO.startDate# - (#offsetMin# / (24 * 60))),
+				TO_DATE(#attVO.startDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
 				(CASE
 				    WHEN
 				        #attVO.endDate# = ''
 				    THEN
 				        null
 				    ELSE
-				        (to_date(#attVO.endDate#, 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60)))
+				        TO_DATE(#attVO.endDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
 				END),
 				#attVO.content#,
 				#attVO.region#,
@@ -1591,6 +1589,7 @@
 	
 	<insert id="ezAttitudeDAO.insertAdminAttHistory3" parameterClass="Map">
 		INSERT INTO tbl_attitude_modappl_history(
+				MOD_CNT,
 				COMPANY_ID,
 				TENANT_ID,
 				WRITER_ID,
@@ -1620,6 +1619,7 @@
 			)
 			VALUES
 			(
+				SEQ_TBL_ATTI_MODAPPL_HISTORY.NEXTVAL,
 				#attVO.companyId#,
 				#tenantId#,
 				#attVO.writerId#,
@@ -1634,14 +1634,14 @@
 				#adminInfo.userName#,
 				#adminInfo.userName2#,
 				#attitudeId#,
-				(to_date(#attVO.startDate#, 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60))),
+				TO_DATE(#attVO.startDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
 				(CASE
 				    WHEN
 				        #attVO.endDate# = ''
 				    THEN
 				        null
 				    ELSE
-				        (to_date(#attVO.endDate#, 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60)))
+				        TO_DATE(#attVO.endDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
 				END),
 				#attVO.content#,
 				#attVO.region#,
@@ -1676,9 +1676,9 @@
 		</isNotEmpty>
 		<![CDATA[
 		and
-			start_date >= TO_DATE((#checkStartDate# || ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60))
+			start_date >= TO_DATE((#checkStartDate# || ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
 		and
-			start_date <= TO_DATE((#checkStartDate# || ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60))
+			start_date <= TO_DATE((#checkStartDate# || ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
 		]]>
 	</select>
 	

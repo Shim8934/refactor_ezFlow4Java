@@ -104,6 +104,7 @@
 		    var sendPermission = "${sendPermission}";
 		    var systemCountryCode = "${systemCountryCode}";
 		    var useShowSystemCountry = "${useShowSystemCountry}";
+		    var file 		 = new Array();
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -370,6 +371,11 @@
 		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
 		    	});
+		    	
+		    	var dragDropAreaElmt = document.getElementById("dragDropArea");
+				dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
+				dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
+				dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
 		    	
 		    });
 		    
@@ -905,21 +911,14 @@
 			}
 	        
 	        function mail_import_onclick() {
-	        	document.getElementById("file").value = "";
 	        	document.getElementById("file").click();
 	        }
 	        
 	        function mail_import() {
-        		var input = document.getElementById("file");
-        		
-        		if (input.value == "") {
-        			return;
-        		}
-        		
-        		var fileCount = input.files.length;
+        		var fileCount = file.length;
         		
         		for (var i = 0; i < fileCount; i++) {
-        			var fileExtension = input.files[i].name.substr(input.files[i].name.lastIndexOf('.')).toLowerCase();
+        			var fileExtension = file[i].name.substr(file[i].name.lastIndexOf('.')).toLowerCase();
         			if (fileExtension != '.eml') {
         				alert("<spring:message code='ezEmail.lsd05'/>");
         				return;
@@ -939,7 +938,7 @@
         		data.append("folderid", g_moveUrl);
         		
         		for (var i = 0; i < fileCount; i++) {
-        			data.append("file1", input.files[i]);
+        			data.append("file1", file[i]);
         		}
         		
         		if (shareId != "") {
@@ -1054,6 +1053,43 @@
 		        }
 				event_listContextMenu(event);
 			}
+			
+			function onDragEnter(evt) {
+				evt.dataTransfer.dropEffect = "copy";
+				evt.stopPropagation();
+				evt.preventDefault();
+			}
+
+			function onDragOver(evt) {
+				evt.dataTransfer.dropEffect = "copy";
+				evt.stopPropagation();
+				evt.preventDefault();
+			}
+
+			function onDrop(evt) {
+				file = new Array();
+				
+				if (evt !== undefined) {
+					evt.stopPropagation();
+					evt.preventDefault();
+				}
+					
+				var filelist = (evt === undefined) ? document.getElementById("file").files : evt.dataTransfer.files;
+				
+				if (filelist.length == 0) {
+					return;
+				}
+				
+				for (var i = 0; i < filelist.length; i++) {
+					file[i] = filelist[i];
+				}
+				
+				mail_import();
+				
+				if (!evt) {
+					document.getElementById("file").value = null;
+				}
+			}
 		</script>	
 	</head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
@@ -1160,7 +1196,7 @@
            
         </div>
         <span id="MailListRayer" style="border:0px solid blue;width:500px;height:100%;vertical-align:top;overflow:hidden;" > 
-		    <div>
+		    <div id="dragDropArea">
 		        <div id="MailHeaderDiv" style="overflow-x: hidden; ">
 	    	        <table style="width:100%;border:1px solid #ddd; min-width:400px;" id="MailHeader" class="mainlist" >               
 	        	    </table>
@@ -1304,7 +1340,7 @@
 				<input  type="hidden" name="shareId" value="${shareId}">
 			</c:if>
 		</form>
-	    <input type="file" name="file" id="file" accept=".eml" onchange="mail_import()" style="display: none;" multiple />
+	    <input type="file" name="file" id="file" accept=".eml" onchange="onDrop()" style="display: none;" multiple />
 		<iframe name="importMailboxIframe" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="importMailboxform" name="importMailboxform" enctype="multipart/form-data" target="importMailboxIframe">
 	        <input type="file" name="file1" id="file1" accept=".zip" onchange="mailbox_attach_import()" style="display: none"/>
