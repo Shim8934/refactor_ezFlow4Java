@@ -12,7 +12,14 @@ public class MenuInfoVO {
 	private boolean menuUsed; //메뉴 사용 여부 : 사용(true), 미사용(false)
 	private String companyLang; //회사 사용 언어
 	private int companyOrder; // 회사 설정 기본 순서
+	private boolean accessYN;
 	
+	public boolean isAccessYN() {
+		return accessYN;
+	}
+	public void setAccessYN(boolean accessYN) {
+		this.accessYN = accessYN;
+	}
 	public int getCompanyOrder() {
 		return companyOrder;
 	}
@@ -80,7 +87,6 @@ public class MenuInfoVO {
 				+ ", menuType=" + menuType + ", iconUrl=" + iconUrl
 				+ ", defaultOrder=" + defaultOrder + ", menuUsed=" + menuUsed
 				+ ", companyLang=" + companyLang + ", companyOrder="
-				+ companyOrder + "]";
+				+ companyOrder + ", accessYN=" + accessYN + "]";
 	}
-
 }

@@ -153,11 +153,63 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("langType", langType);
 		map.put("userId", userId);
-		map.put("deptId", deptId);
+		map.put("deptId", "");
 		
-		List<MenuInfoVO> menuList = ezNewPortalDAO.getUserMenuList(map);
+		/**
+		 * 2018-11-21 신규작성
+		 */
 		
-		return menuList;
+		String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
+		
+		//path 거꾸로 돌려야해서
+		List<String> deptIds = Arrays.asList(deptPath.split(","));
+		Collections.reverse(deptIds);
+		
+		//유저권한체크
+		List<MenuInfoVO> result = ezNewPortalDAO.getMenuForUser(map);
+		List<MenuInfoVO> deptResult = null;
+		
+		//전체체크필요없어서 id만
+		List<Integer> menuIds = new ArrayList<Integer>();
+		
+		for (MenuInfoVO vo : result) {
+				menuIds.add(vo.getMenuId());
+		}
+		
+		result.removeIf(vo -> !vo.isAccessYN());
+		
+		//부서 및 상위부서권한체크(유저 나 하위부서에서 권한체크걸린건 추가안함
+		for(String pathId : deptIds) {
+			map.put("deptId", pathId);
+			
+			deptResult = ezNewPortalDAO.getMenuForUser(map);
+			
+			//권한잇는것들 && 기존 권한체크안된것들 추가
+			for (MenuInfoVO deptMenu : deptResult) {
+				int menuId = deptMenu.getMenuId();
+				
+				if (menuIds.indexOf(menuId) == -1) {
+					menuIds.add(menuId);
+					
+					if (deptMenu.isAccessYN()) {
+						result.add(deptMenu);
+					}
+				}
+			}
+		}
+		//여기까지가 권한체크된 모든 메뉴 리스트
+		
+		
+		
+		//order에 따라 다시 소팅
+		Collections.sort(result, new Comparator<MenuInfoVO>() {
+			@Override
+			public int compare(MenuInfoVO o1, MenuInfoVO o2) {
+				return Integer.compare(o1.getMenuOrder(), o2.getMenuOrder());
+			}
+		});
+		
+		return result;
 	}
 	
 	public List<MenuInfoVO> getCompanyMenuList(String companyId, int tenantId, String langType, String userId, String deptId) throws Exception {
