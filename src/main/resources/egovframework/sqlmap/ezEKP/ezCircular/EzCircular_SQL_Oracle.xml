@@ -2286,8 +2286,8 @@
 			UPDATE
 				TBL_CIRCULAR
 			SET
-				status = '1'
-				endDate = SYS_EXTRACT_UTC(SYSTIMESTAMP)
+				status = '1',
+				endDate = #endDate#
 			WHERE 
 				circularid = #circularID#
 			AND
