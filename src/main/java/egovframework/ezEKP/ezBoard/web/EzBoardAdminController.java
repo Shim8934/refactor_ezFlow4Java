@@ -757,6 +757,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");
 		String adminType = request.getParameter("adminType");
 		String style = "";
+		String style2 = "";
 		String isAllGroupBoard = "";
 		
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
@@ -791,6 +792,14 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				isAllGroupBoard = "N";
 			}
 		}
+		/* 2018-11-22 홍승비 - 게시판그룹에서 그룹사게시판 여부 표출 추가 */
+		else if (boardPropertyVO.getGuBun() != null && boardPropertyVO.getGuBun().equals("99")) {
+			isAllGroupBoard = "Y";
+		}
+		
+		if (!boardPropertyVO.getParentBoardID().equals("top")) {
+			style2 = "display:none";			
+		}
 		
 		/* 2018-07-26 홍승비 - 다국어 표출 시 lang 대신 primary 조건 사용하도록 수정 */
 		model.addAttribute("model", boardPropertyVO);
@@ -800,6 +809,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("lang_secondary", lang_secondary);
 		model.addAttribute("use_portal", use_portal);
 		model.addAttribute("style", style);
+		model.addAttribute("style2", style2);
 		model.addAttribute("adminType", adminType);
 		model.addAttribute("isAllGroupBoard", isAllGroupBoard);
 
