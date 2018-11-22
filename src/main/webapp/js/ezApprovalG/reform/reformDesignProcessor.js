@@ -673,15 +673,19 @@ function reform_actualOnClickHandler(event) {
 		currentControlElement.style.outline = kSelectionOutlineSytle;
 	}
 	
-	unloadControlProperties();
-	loadControlProperties(currentControlElement);
-	showControlProperties(currentControlElement);
-	
 	event.preventDefault();
 	event.cancelBubble = true;
 	if (event.stopPropagation) {
 		event.stopPropagation();
 	}
+	
+	// 체크박스, 라디오박스 같은 경우 onchange에서 preventDefault 하지 않았기 때문에
+	// checked 상태가 눈에 보이는 것과 달라서  타이머를 걸어서 해결함
+	setTimeout(function() {
+		unloadControlProperties();
+		loadControlProperties(currentControlElement);
+		showControlProperties(currentControlElement);
+	}, 0)
 	
 	if (orgTarget.type == "checkbox" || orgTarget.type == "radio") {
 		return false;
