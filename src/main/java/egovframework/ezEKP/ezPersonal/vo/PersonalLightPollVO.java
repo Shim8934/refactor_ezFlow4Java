@@ -41,6 +41,8 @@ public class PersonalLightPollVO {
 	private int count;
 	/** 퍼센트*/
 	private int percent;
+	/** 진행중 여부(0: x, 1: 진행중)*/
+	private int progress;
 	
 	public int getItemSeq() {
 		return itemSeq;
@@ -161,6 +163,13 @@ public class PersonalLightPollVO {
 	}
 	public void setPercent(int percent) {
 		this.percent = percent;
+	}
+	
+	public int getProgress() {
+		return progress;
+	}
+	public void setProgress(int progress) {
+		this.progress = progress;
 	}
 	@Override
 	public String toString() {

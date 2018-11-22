@@ -41,6 +41,7 @@ import org.w3c.dom.Document;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
@@ -95,6 +96,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@Autowired
 	private EzPersonalAdminService ezPersonalAdminService;
 	
+	@Autowired
+	private EzNewPortalService ezNewPortalService;
 	/**
 	 * 초기화면 메인화면 호출 함수
 	 */
@@ -507,6 +510,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
 		
+		PersonalLightPollVO progressFlagVO = ezNewPortalService.getPollPortlet(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId());
+		if(progressFlagVO != null) {
+			progressPollFlag = "true";
+		}
+		
 		int totalCount = ezPersonalAdminService.getPollCount(companyID, userInfo.getTenantId());
 		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
 		List<PersonalLightPollVO> list = ezPersonalAdminService.getPollList(companyID, totalCount, pageSize, (currentPage - 1) * pageSize, userInfo.getTenantId());
@@ -534,32 +542,18 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");	// startDate
 			result.append("</CELL>");
 			result.append("<CELL>");
-			
-			// 진행여부 헤더 임시
-			boolean jinhang = false;
-			// endDate
-			if (commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).indexOf("1900-01-01") > -1) {
-				result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t244", userInfo.getLocale()) + "</VALUE>");	// 진행중
-				progressPollFlag = "true";
-				jinhang = true;
-			} else {
-				result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
-			}
-			
-			// 진행여부
+			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
 			result.append("</CELL>");
+
+			// 진행여부
 			result.append("<CELL>");
-			if(jinhang) {
-				result.append("<VALUE>" + "진행중" + "</VALUE>");	// 삭제
-				result.append("<TYPE>" + "BTN" + "</TYPE>");
+			if(vo.getProgress() == 1) {
+				result.append("<VALUE>" + "1" + "</VALUE>");	// 진행중
 				result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			} else {
-				result.append("<VALUE>" + "종료" + "</VALUE>");	// 삭제
-				result.append("<TYPE>" + "BTN" + "</TYPE>");
+				result.append("<VALUE>" + "0" + "</VALUE>");	// 삭제
 				result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			}
-			
-			
 			result.append("</CELL>");
 			result.append("</ROW>");
 		}
@@ -751,7 +745,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		if (request.getParameter("page") != null) {
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
-		
+
 		int totalCount = ezPersonalAdminService.getPopupCount(companyID, userInfo.getTenantId());
 		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
 		

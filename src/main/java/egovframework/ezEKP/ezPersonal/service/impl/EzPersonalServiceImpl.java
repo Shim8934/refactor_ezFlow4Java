@@ -328,9 +328,9 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		logger.debug("getPopUpListUser started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"); 
-		
+
+		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+
 		map.put("v_pCompanyID", pComapnyID);
 		map.put("nowDate", nowDate);
 		map.put("tenantID", tenantID);

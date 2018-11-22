@@ -82,10 +82,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@Override
 	public PersonalLightPollVO getPollPortlet(String companyId, int tenantId, String userId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+
+		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+		
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
-		
+		map.put("nowDate", nowDate);
+
 		return ezNewPortalDAO.getPollPortlet(map);
 	}
 	

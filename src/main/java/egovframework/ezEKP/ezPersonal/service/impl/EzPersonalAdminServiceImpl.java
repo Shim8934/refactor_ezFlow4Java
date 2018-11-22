@@ -322,13 +322,15 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		logger.debug("getPollList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
+		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
 		map.put("v_pCompanyID", companyID);
 		map.put("v_pTotal", totalCount);
 		map.put("v_pCount", pageSize);
 		map.put("v_pStart", start);
 		map.put("tenantID", tenantID);
-
+		map.put("nowDate", nowDate);
+		
 		logger.debug("getPollList ended");
 		return ezPersonalAdminDAO.getPollList(map);
 	}
@@ -341,9 +343,8 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String selectCount = doc.getElementsByTagName("NUM").item(0).getTextContent();
 		String pollTitle = doc.getElementsByTagName("TITLE").item(0).getTextContent();
 		String pollTitle2 = doc.getElementsByTagName("TITLE2").item(0).getTextContent();
-		// 2018-11-19 로직 수정 보류
-		//String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
-		//String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 		
 		if (pollTitle2.equals("")) {
 			pollTitle2 = pollTitle;
@@ -355,9 +356,8 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pSelectionCount", selectCount);
 		map.put("v_pPollTitle", pollTitle);
 		map.put("v_pPollTitle2", pollTitle2);
-		// 2018-11-19 로직 수정 보류
-		//map.put("startDate", startDate);
-		//map.put("endDate", endDate);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));

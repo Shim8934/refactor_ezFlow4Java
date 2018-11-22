@@ -48,14 +48,13 @@
 				}
 				catch (e)
 				{ }
-				
-				/* 2018-11-19 로직 수정전				
+
 				nowDate = new Date();
 				document.getElementById("Sdatepicker").value = DateFormat(nowDate);
-    	        document.getElementById("Edatepicker").value = DateFormat(nowDate); */
+				document.getElementById("Edatepicker").value = DateFormat(nowDate);
 			}
-			
-			/* 		2018-11-19 로직 수정전	
+
+
  			$(function () {
 				$("#Sdatepicker").datepicker({
 					changeMonth: true,
@@ -63,7 +62,9 @@
 					autoSize: true,
 					showOn: "both",
 					buttonImage: "/images/ImgIcon/calendar-month.png",
-					buttonImageOnly: true
+					buttonImageOnly: true,
+					minDate : 0,
+					maxDate : new Date()
 				});
 
 				$("#Edatepicker").datepicker({
@@ -72,61 +73,63 @@
 					autoSize: true,
 					showOn: "both",
 					buttonImage: "/images/ImgIcon/calendar-month.png",
-					buttonImageOnly: true
+					buttonImageOnly: true,
+					minDate : 0
 				});
 			});
-			
+
 			$(function () {
-		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
-		            closeText: "<spring:message code='main.t3' />",
-		            prevText: "<spring:message code='main.t0604' />",
-		            nextText: "<spring:message code='main.t0605' />",
-		            currentText: "<spring:message code='main.t0606' />",
-		            monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-		                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-		                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-		                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-		            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-		                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-		                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-		                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-		            dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-		                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-		                       "<spring:message code='main.t0627' />"],
-		            dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-				                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-				                       "<spring:message code='main.t0627' />"],
-		            dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-			                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-			                       "<spring:message code='main.t0627' />"],
-		            weekHeader: "Wk",
-		            dateFormat: "yy-mm-dd",
-		            firstDay: 0,
-		            isRTL: false,
-		            duration: 200,
-		            showAnim: "show",
-		            showMonthAfterYear: true
-		        };
-		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-		    });
-			
+				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+					closeText: "<spring:message code='main.t3' />",
+					prevText: "<spring:message code='main.t0604' />",
+					nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+					monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+								"<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+								"<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+								"<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+									"<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+									"<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+									"<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+								"<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+								"<spring:message code='main.t0627' />"],
+					dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+									"<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+									"<spring:message code='main.t0627' />"],
+					dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+								"<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+								"<spring:message code='main.t0627' />"],
+					weekHeader: "Wk",
+					dateFormat: "yy-mm-dd",
+					firstDay: 0,
+					isRTL: false,
+					duration: 200,
+					showAnim: "show",
+					showMonthAfterYear: true
+				};
+				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+			});
+
 			function DateFormat(obj) {
-			    var yy = String(obj.getFullYear()).substring(0, 4);
-			    if (String(obj.getMonth() + 1).length == 1) {
-			        var mm = "0" + (obj.getMonth() + 1);
-			    }
-			    else {
-			        var mm = obj.getMonth() + 1;
-			    }
-			    if (String(obj.getDate()).length == 1) {
-			        var dd = "0" + obj.getDate();
-			    }
-			    else {
-			        var dd = obj.getDate();
-			    }
-			    var date = String(yy) + "-" + String(mm) + "-" + String(dd);
-			    return date;
-			} */
+				var yy = String(obj.getFullYear()).substring(0, 4);
+				if (String(obj.getMonth() + 1).length == 1) {
+					var mm = "0" + (obj.getMonth() + 1);
+				}
+				else {
+					var mm = obj.getMonth() + 1;
+				}
+				if (String(obj.getDate()).length == 1) {
+					var dd = "0" + obj.getDate();
+				}
+				else {
+					var dd = obj.getDate();
+				}
+				var date = String(yy) + "-" + String(mm) + "-" + String(dd);
+				return date;
+			} 
+
 			function selectnum_change() {
 				var number = parseInt(selectnum.value);
 				for (var i = 1; i < number + 1; i++) {
@@ -139,7 +142,7 @@
 				    document.getElementById("answer" + i).value = "";
 				}
 			}
-				
+
 			function OK_Click() {
 				if (specialChk(document.getElementById("Title").value) || specialChk(document.getElementById("Title2").value)) {
 			    	alert("<spring:message code='ezResource.special'/>");
@@ -166,10 +169,10 @@
 					return;
 				}
 				
-				/* // Sdatepicker*Edatepicker check
+				// Sdatepicker*Edatepicker check
 				var Sdate = $('#Sdatepicker').datepicker('getDate');
 				var Edate = $('#Edatepicker').datepicker('getDate');
-				
+
 				// startDate
 				if (!Sdate) {
 					alert("시작일을 설정해주세요.");
@@ -180,22 +183,22 @@
 					alert("시작일을 다시 설정해주세요.");
 					return;
 				}
-				
+
 				// endDate
 				if (!Edate) {
 					alert("종료일을 설정해주세요.");
 					return;
 				}
-				
+
 				days = (Edate - Sdate) / 86400000
 				if(days<0) {
 					alert("종료일을 다시 설정해주세요.")
 					return;
 				}
-				
+
 				var tmpStartDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
-			    var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59"; */
-			    
+				var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+
 				for (var i=1; i<11; i++) {
 					if (get_length(eval("answer" + i).value) > 100) {
 						alert("<spring:message code = 'ezPersonal.t217'/>");
@@ -226,17 +229,17 @@
 				createNodeAndInsertText(xmlDom, objNode, "COMPID", compid);
 				createNodeAndInsertText(xmlDom, objNode, "TITLE", document.getElementById("Title").value);
 				createNodeAndInsertText(xmlDom, objNode, "TITLE2", document.getElementById("Title2").value);
-				//createNodeAndInsertText(xmlDom, objNode, "STARTDATE", tmpStartDateTime);
-				//createNodeAndInsertText(xmlDom, objNode, "ENDDATE", tmpEndDateTime);
+				createNodeAndInsertText(xmlDom, objNode, "STARTDATE", tmpStartDateTime);
+				createNodeAndInsertText(xmlDom, objNode, "ENDDATE", tmpEndDateTime);
 				createNodeAndInsertText(xmlDom, objNode, "NUM", document.getElementById("selectnum").value);
-				
+
 				for (var i=1; i<11; i++) {
 				    createNodeAndInsertText(xmlDom, objNode, "ANSWER", eval("answer" + i).value);
 				}
-				
+
 				xmlHTTP.open("POST", "/admin/ezPersonal/savePoll.do", false);
 				xmlHTTP.send(xmlDom);
-				
+
 				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
 					alert("<spring:message code = 'ezPersonal.t218' />");
 				} else {
@@ -250,7 +253,7 @@
 					window.close();
 				}
 			}
-			
+
 			function get_length(chkstr) {
 				var length = 0;
 				var i;
@@ -270,27 +273,27 @@
 	<body class = "popup">
 		<h1><spring:message code = 'ezPersonal.t220' /></h1>
 		<div id="close">
-            <ul>
-                <li><span onclick="window.close()"></span></li>
-            </ul>
-        </div>
+			<ul>
+				<li><span onclick="window.close()"></span></li>
+			</ul>
+		</div>
 		<table class="content" style="margin-top:3px">
 			<tr>
-		    	<th><spring:message code = 'ezPersonal.t221' /></th>
-		    	<td style="padding:0">
-			    	<table width="100%">
-			        	<tr class="primary">
-			          		<th><c:out value = '${langPrimary}' /></th>
-			          		<td><input type="text" name="Input" id=Title style="WIDTH:100%"></td>
-			        	</tr>
-			        	<tr class="secondary">
-			          		<th><c:out value = '${langSecondary}' /></th>
-			          		<td><input type="text" id=Title2 style="WIDTH:100%"></td>
-			        	</tr>
-			    	</table>
-		    	</td>
-		  	</tr>
-		  	<%-- <tr>
+				<th><spring:message code = 'ezPersonal.t221' /></th>
+				<td style="padding:0">
+					<table width="100%">
+						<tr class="primary">
+							<th><c:out value = '${langPrimary}' /></th>
+							<td><input type="text" name="Input" id=Title style="WIDTH:100%"></td>
+						</tr>
+						<tr class="secondary">
+							<th><c:out value = '${langSecondary}' /></th>
+							<td><input type="text" id=Title2 style="WIDTH:100%"></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
 			  	<th><spring:message code = 'ezPersonal.t265' /></th> 
 				<td>
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
@@ -304,7 +307,7 @@
 					<input id='_T2' class='datepicker_time' readonly> 
 					<IMG align="absmiddle" border="0" height="16" id="img_EndTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative" width="16">
 				</td> 
-			</tr>  --%>
+			</tr>
 		  	<tr>
 		    	<th><spring:message code = 'ezPersonal.t222' /></th>
 		    	<td>
