@@ -916,7 +916,7 @@
 							USERCOMPANYNAME$lang$ AS USERCOMPANYNAME, 
 							NVL(USERTITLE$lang$, '') AS USERTITLE, 
 							TO_CHAR(READDATE, 'YYYY-MM-DD HH24:MI:SS') as READDATE,
-							MAX(DEPTID)
+							MAX(DEPTID) AS DEPTID
 					   	FROM 
 					   		TBL_Board_Item_Read A
 						INNER JOIN
@@ -927,7 +927,16 @@
 							FROM
 								TBL_USERMASTER D
 							WHERE
-								D.TENANT_ID = #tenantID#)
+								D.TENANT_ID = #tenantID#
+					]]>
+					<isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+						<![CDATA[
+							AND
+								D.PHYSICALDELIVERYOFFICENAME = #companyID#
+						]]>
+					</isNotEqual>
+					<![CDATA[
+							)
 								
 							UNION ALL
 							
@@ -950,7 +959,9 @@
 							AND
 								B.TENANT_ID = C.TENANT_ID
 							AND
-								C.EXTENSIONATTRIBUTE2 = #companyID#)) T
+								C.EXTENSIONATTRIBUTE2 = #companyID#
+							WHERE
+								A2.TENANT_ID = #tenantID#)) T
 						ON
 							A.USERID = T.CN
 						AND
@@ -3821,7 +3832,7 @@
 		]]>                
 	</select>
 	
-	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO">
+	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO" remapResults="true">
 		<isNotEqual property="v_GUBUN" compareValue="2">
 			<![CDATA[
 				SELECT
@@ -3830,7 +3841,7 @@
 					A.USERID,
 					A.CONTENT,
 					TO_CHAR(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')AS WRITEDATE,
-					MAX(DEPTID)
+					MAX(DEPTID) AS DEPTID
 		        FROM
 		        	TBL_BOARD_ONELINEREPLY A
 		        INNER JOIN
@@ -3841,8 +3852,17 @@
 					FROM
 						TBL_USERMASTER D
 					WHERE
-						D.TENANT_ID = #v_TENANTID#)
-						
+						D.TENANT_ID = #v_TENANTID#
+				]]>
+			<isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+				<![CDATA[
+					AND
+                        D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+				]]>
+			</isNotEqual>
+			<![CDATA[
+					)
+					
 					UNION ALL
 					
 					(SELECT
@@ -3864,7 +3884,9 @@
 					AND
 						B.TENANT_ID = C.TENANT_ID
 					AND
-						C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#)) T
+						C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+					WHERE
+						A2.TENANT_ID = #v_TENANTID#)) T
 				ON
 					A.USERID = T.CN
 				AND
@@ -3885,8 +3907,8 @@
 			<![CDATA[
 				SELECT 
 					REPLYID, 
-					$v_UserName$ AS USERNAME, 
-					USERID, 
+					$v_UserName$ AS USERNAME,
+					USERID,
 					CONTENT, 
 					TO_CHAR(WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')AS WRITEDATE
 		        FROM 
