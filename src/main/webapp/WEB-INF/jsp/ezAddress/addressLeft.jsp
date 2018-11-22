@@ -494,19 +494,7 @@
 		                    </span>        
 		                </span>
 		            </div>
-		        </ul>
-		        <ul class="lnbUL">
-		        	<div class="tree">
-		            	<span>
-		                	<span>
-		                    	<span>
-		                        	<div class="node_div" onclick="address_Search()">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text"><spring:message code="ezEmail.t99000042" /></span>
-		                            </div>
-		                    	</span>
-		                    </span>        
-		                </span>
-		            </div>
+		            <li onclick="address_Search()"><span class="sub_iconLNB tree_search"></span><span class="list_text"><spring:message code="ezEmail.t99000042" /></span></li>
 		        </ul>
 	        </div>
 	    </div>

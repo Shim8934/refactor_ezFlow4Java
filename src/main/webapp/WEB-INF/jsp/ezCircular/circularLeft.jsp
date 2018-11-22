@@ -143,10 +143,8 @@
 	        function openFolder() {
 	        	if ($("#PostTreeView").css("display") == "none") {	        	
 	        		$("#PostTreeView").css("display", "");
-	        		$("#openDoc").attr("class", "sub_iconLNB tree_arrow_up");
 	        	} else {
 	        		$("#PostTreeView").css("display", "none");
-	        		$("#openDoc").attr("class", "sub_iconLNB tree_blank");
 	        	}
 	        }
 	        
@@ -343,64 +341,18 @@
 	        </div>
 	        <div class="circularListBox" style="overflow:hidden; padding-right: 0;">
 		        <ul class="lnbUL">
-		        	<div class="tree">
-		            	<span>
-		                	<span>
-		                    	<span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_circular_new"></span><span class="h2_text" id="newCircular" onclick="newCircular()"><spring:message code="ezCircular.t2" /> <span id="newCircularCount"></span></span>
-		                            </div>
-		                    	</span>
-		                        <span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_circular_in"></span><span class="h2_text" id="circularComplete" onclick="circularComplete()"><spring:message code="ezCircular.t3" /><span id="circularCompleteCount"></span></span>
-		                            </div>
-		                    	</span>
-		                        <span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_circular_write"></span><span class="h2_text" id="circularMyCircular" onclick="circularMyCircular()"><spring:message code="ezCircular.t4" /><span id="myCircularCount"></span></span>
-		                            </div>
-		                    	</span>
-		                        <span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outbox"></span><span class="h2_text" id="circularTemp" onclick="circularTemp()"><spring:message code="ezCircular.t5" /><span id="circularTempCount"></span></span>
-		                            </div>
-		                    	</span>
-		                        <span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_delete"></span><span class="h2_text" id="circularDelete" onclick="circularDelete()"><spring:message code="ezCircular.t6" /><span id="circularDeleteCount"></span></span>
-		                            </div>
-		                    	</span>
-		                    </span>        
-		                </span>
-		            </div>
+                   	<li><span class="sub_iconLNB tree_circular_new"></span><span class="list_text" id="newCircular" onclick="newCircular()"><spring:message code="ezCircular.t2" /> <span id="newCircularCount"></span></span></li>
+                   	<li><span class="sub_iconLNB tree_circular_in"></span><span class="list_text" id="circularComplete" onclick="circularComplete()"><spring:message code="ezCircular.t3" /><span id="circularCompleteCount"></span></span></li>
+                   	<li><span class="sub_iconLNB tree_circular_write"></span><span class="list_text" id="circularMyCircular" onclick="circularMyCircular()"><spring:message code="ezCircular.t4" /><span id="myCircularCount"></span></span></li>
+                   	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" id="circularTemp" onclick="circularTemp()"><spring:message code="ezCircular.t5" /><span id="circularTempCount"></span></span></li>
+                   	<li><span class="sub_iconLNB tree_delete"></span><span class="list_text" id="circularDelete" onclick="circularDelete()"><spring:message code="ezCircular.t6" /><span id="circularDeleteCount"></span></span></li>
 		        </ul>
 		        <ul class="lnbUL">
-		        	<div class="tree" style="overflow: hidden;">
-		            	<span>
-		                	<span>
-		                    	<span>
-		                        	<div class="node_div" id="circularDoc">
-		                            	<span class="sub_iconLNB tree_blank" id="openDoc"></span><span class="sub_iconLNB tree_circular_document"></span><span class="h2_text" onclick="openFolder()"><spring:message code="ezCircular.t7" /></span><span class="sub_iconLNB tree_manage" onclick="folder_Manage()"></span>
-		                            </div>
-		                    	</span>
-		                        <div class="circularDoc" id="PostTreeView" style="display:none"></div>
-		                    </span>        
-		                </span>
-		            </div>
+                   	<li id="circularDoc"><span class="sub_iconLNB tree_circular_document"></span><span class="h2_text" onclick="openFolder()"><spring:message code="ezCircular.t7" /></span><span class="sub_iconLNB tree_manage" onclick="folder_Manage()"></span></li>
+                    <div class="tree onlytree circularDoc" id="PostTreeView" style="display:none"></div>
 		        </ul>
 		        <ul class="lnbUL">
-		        	<div class="tree">
-		            	<span>
-		                	<span>
-		                    	<span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onclick="circular_Search()"><spring:message code="ezCircular.t8" /></span>
-		                            </div>
-		                    	</span>
-		                    </span>        
-		                </span>
-		            </div>
+                   	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onclick="circular_Search()"><spring:message code="ezCircular.t8" /></span></li>
 		        </ul>
 	        </div>
 	    </div>

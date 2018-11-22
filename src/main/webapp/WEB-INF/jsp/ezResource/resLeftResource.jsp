@@ -202,7 +202,7 @@
 	        </div>
 	        <div class="resourceListBox" style="overflow:hidden; padding-right: 0;">
 		        <ul class="lnbUL">
-		        	<div class="tree" id="TreeView" style="overflow-y: hidden; height: 100%;"></div>
+		        	<div class="tree onlytree" id="TreeView" style="overflow-y: hidden; height: 100%;"></div>
 		        	<!-- <div class="tree">
 		            	<span>
 		                	<span>

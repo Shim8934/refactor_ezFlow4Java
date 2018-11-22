@@ -197,40 +197,12 @@
 	        </div>
 	        <div class="taskListBox" style="overflow:hidden; padding-right: 0;">
 		        <ul class="lnbUL">
-		        	<div class="tree">
-		            	<span>
-		                	<span>
-		                    	<span>
-		                        	<div class="node_div" id='Task' onclick="Function_Flag(3)">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_task_general"></span><span class="h2_text"><spring:message code='ezTask.t200901' /><span id="taskCnt" style="padding-left:10px"></span></span>
-		                            </div>
-		                    	</span>
-		                        <span>
-		                        	<div class="node_div" id="Task2" onclick="Function_Flag(12)">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_task_repeat"></span><span class="h2_text"><spring:message code='ezTask.t200902' /><span id="task2Cnt" style="padding-left:10px"></span></span>
-		                            </div>
-		                    	</span>
-		                        <span>
-		                        	<div class="node_div" id="Task3" onclick="Function_Flag(13)">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_task_out"></span><span class="h2_text"><spring:message code='ezTask.t200903' /><span id="task3Cnt" style="padding-left:10px"></span></span>
-		                            </div>
-		                    	</span>
-		                    </span>        
-		                </span>
-		            </div>
+                   	<li id='Task' onclick="Function_Flag(3)"><span class="sub_iconLNB tree_task_general"></span><span class="list_text"><spring:message code='ezTask.t200901' /><span id="taskCnt" style="padding-left:10px"></span></span></li>
+                   	<li id="Task2" onclick="Function_Flag(12)"><span class="sub_iconLNB tree_task_repeat"></span><span class="list_text"><spring:message code='ezTask.t200902' /><span id="task2Cnt" style="padding-left:10px"></span></span></li>
+                   	<li id="Task3" onclick="Function_Flag(13)"><span class="sub_iconLNB tree_task_out"></span><span class="list_text"><spring:message code='ezTask.t200903' /><span id="task3Cnt" style="padding-left:10px"></span></span></li>
 		        </ul>
 		        <ul class="lnbUL">
-		        	<div class="tree">
-		            	<span>
-		                	<span>
-		                    	<span>
-		                        	<div class="node_div" onclick="Function_Flag(7)">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text"><spring:message code='ezTask.t180' /></span>
-		                            </div>
-		                    	</span>
-		                    </span>        
-		                </span>
-		            </div>
+                   	<li onclick="Function_Flag(7)"><span class="sub_iconLNB tree_search"></span><span class="list_text"><spring:message code='ezTask.t180' /></span></li>
 		        </ul>
 	        </div>
 	    </div>
