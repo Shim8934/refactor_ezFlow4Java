@@ -84,9 +84,11 @@ public interface EzPersonalAdminService {
 	
 	PersonalPopopConfigVO getPopupConfig(String userId, int tenantId) throws Exception;
 	
-	void setPopupConfig(String userId, String isPreview, int tenantId) throws Exception;
+	String setPopupConfig(String userId, String isPreview, int tenantId) throws Exception;
 	
 	int getPopupCount(String companyID, int tenantID) throws Exception;
+	
+	String setPopupUse(String companyID, int tenantID, String itemSeq, String inUse);
 
 	void updateQuickLinkOrder(JSONArray linkOrderList, int tenantId) throws Exception;
 }

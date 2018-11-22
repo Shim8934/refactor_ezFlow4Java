@@ -591,21 +591,23 @@
 		<![CDATA[
 			SELECT
 				ITEMSEQ ,
-             	WIDTH ,
-             	HEIGHT ,
-             	POSITION 
-        	FROM
-        		TBL_PS_POPUP 
-       		WHERE
-       			( 	COMPANYID = 'Top'
-                OR
-                	COMPANYID = #v_pCompanyID# )
-            AND
-            	STARTDATE <= to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
-            AND
-            	ENDDATE >= to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
-            AND
-            	TENANT_ID = #tenantID#	
+				WIDTH ,
+				HEIGHT ,
+				POSITION 
+			FROM
+				TBL_PS_POPUP 
+			WHERE
+				( 		COMPANYID = 'Top'
+					OR
+						COMPANYID = #v_pCompanyID# )
+			AND
+				STARTDATE <= to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+			AND
+				ENDDATE >= to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+			AND
+				TENANT_ID = #tenantID#
+			AND	
+				INUSE = 1
 		]]>
 	</select>
 	

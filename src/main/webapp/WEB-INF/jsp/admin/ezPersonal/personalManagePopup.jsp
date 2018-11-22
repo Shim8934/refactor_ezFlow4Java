@@ -133,14 +133,21 @@
 				th.innerHTML = "<input type='checkbox' id = 'checkAll' onchange='checkboxHeaderClick()'></input>";
 				
 				cnt = acList.children[1].childElementCount;
-				
 				var i = 0;
 				for(i;i<cnt;i++) {
-					var seq = acList.children[1].children[i].children[0].innerHTML;
+					var seq = acList.children[1].children[i].getAttribute("data1");
+					var inuse = acList.children[1].children[i].getAttribute("inuse");
 					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq +"'></input>";
+					acList.children[1].children[i].children[6].innerHTML = "<td class='portletInfoTD'><label class='switch' id='switch" + seq + "' inuse='" + inuse +"'><input type='checkbox'><span class='slider round'></span></label>";
+					if(inuse == 1) {
+						$("#switch"+seq).find("input").prop("checked", true);
+					} else {
+						$("#switch"+seq).find("input").prop("checked", false);
+					}
 				}
+				inUseUpdate();
 			}
-			
+
 			var checkFlag = false;
 			function checkboxHeaderClick() {
 				if(checkFlag){
@@ -153,6 +160,45 @@
 					$("#contentlist tr td").css("background-color", "rgb(228, 232, 236)");
 				}
 				checkItems();
+			}
+
+
+			// 사용여부 업데이트
+			function inUseUpdate() {
+				$(".slider").click(function(){
+					event.stopPropagation();
+					var itemseq = $("#" + $(this)[0].parentNode.id)[0].id.substring(6);
+					var inuse = $("#switch" + itemseq).attr("inuse");
+					if(inuse == 0) {
+						inuse = 1;
+					} else {
+						inuse = 0;
+					}
+
+					$.ajax({
+						type : "POST",
+						url : "/admin/ezPersonal/setPopupUse.do",
+						async : false,
+						data : {
+							"itemSeq" : itemseq,
+							"inUse" : inuse
+						},
+						dataType : "text",
+						success : function (result) {
+							if(result === "OK") {
+								$("#switch" + itemseq).attr("inuse", inuse);
+								$("#switch" + itemseq)[0].parentNode.parentNode.setAttribute("inuse", inuse);
+							}
+						}, error: function(xhr, option, error) {
+							alert(xhr.status);
+							if(inuse == 1) {
+								$("#switch"+seq).find("input").prop("checked", false);
+							} else {
+								$("#switch"+seq).find("input").prop("checked", true);
+							}
+						}
+					}); 
+				});
 			}
 
 
@@ -389,8 +435,10 @@
 					aysnc : false,
 					url : "/admin/ezPersonal/setPopupConfig.do",
 					success : function(result) {
-						changeImg(isPreview);
-						setPreview(isPreview);
+						if(result === "OK") {
+							changeImg(isPreview);
+							setPreview(isPreview);
+						}
 					}, error: function(xhr, option, error){
 						isPreview = temp;
 					}
@@ -619,6 +667,10 @@
 				}
 			}
 		</script>
+		<style>
+			.portletInfoTD {width:100%;}
+	.portletInfoTD input[type='text'] {width:100%; height:27px; font-size:12px; padding:0px 0px 0px 5px; color:#393939;}
+		</style>
 	</head>
 	<body class = "mainbody">
 		<xml id="listviewheader" style ="display:none">

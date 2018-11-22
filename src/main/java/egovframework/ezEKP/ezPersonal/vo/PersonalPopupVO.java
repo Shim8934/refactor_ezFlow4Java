@@ -23,6 +23,8 @@ public class PersonalPopupVO {
 	private String position;
 	/** 진행중 여부(0: x, 1: 진행중)*/
 	private int progress;
+	/** 사용여부 on/off (0: off, 1: on)*/
+	private int inUse;
 
 	public String getCompanyID() {
 		return companyID;
@@ -89,5 +91,11 @@ public class PersonalPopupVO {
 	}
 	public void setProgress(int progress) {
 		this.progress = progress;
+	}
+	public int getInUse() {
+		return inUse;
+	}
+	public void setInUse(int inUse) {
+		this.inUse = inUse;
 	}
 }

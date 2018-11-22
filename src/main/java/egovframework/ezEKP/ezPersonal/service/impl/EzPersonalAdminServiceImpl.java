@@ -447,20 +447,19 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		logger.debug("getPopupList started");
 
 		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("v_pCompanyID", companyID);
 		map.put("v_pTotal", totalCount);
 		map.put("v_pCount", pageSize);
 		map.put("v_pStart", start);
 		map.put("tenantID", tenantID);
 		map.put("nowDate", nowDate);
-		
+
 		logger.debug("getPopupList ended");
-		List<PersonalPopupVO> list = ezPersonalAdminDAO.getPopupList(map);
-		//return ezPersonalAdminDAO.getPopupList(map);
-		return list;
+
+		return ezPersonalAdminDAO.getPopupList(map);
 	}
 
 	@Override
@@ -849,11 +848,11 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	@Override
 	public PersonalLightPollConfigVO getLightPollConfig(String userId, int tenantId) throws Exception {
 		logger.debug("getLightPollConfig started");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
-		
+
 		PersonalLightPollConfigVO configVO = ezPersonalAdminDAO.getLightPollConfig(map);
 		if(configVO == null) {
 			// insert 후 다시 조회
@@ -861,7 +860,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			ezPersonalAdminDAO.insertLightPollConfig(map);
 			configVO = ezPersonalAdminDAO.getLightPollConfig(map);
 			logger.debug("insertLightPollConfig ended");
-		}		
+		}
 		logger.debug("getLightPollConfig ended");
 		return configVO;
 	}
@@ -869,12 +868,12 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	@Override
 	public void setLightPollConfig(String userId, String isPreview, int tenantId) throws Exception {
 		logger.debug("setLightPollConfig started");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("isPreview", isPreview);
 		map.put("tenantId", tenantId);
-		
+
 		ezPersonalAdminDAO.setLightPollConfig(map);
 		logger.debug("setLightPollConfig ended");
 	}
@@ -882,11 +881,11 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	@Override
 	public PersonalPopopConfigVO getPopupConfig(String userId, int tenantId) throws Exception {
 		logger.debug("getPopupConfig started");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
-		
+
 		PersonalPopopConfigVO configVO = ezPersonalAdminDAO.getPopupConfig(map);
 		if(configVO == null) {
 			// insert 후 다시 조회
@@ -900,16 +899,21 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public void setPopupConfig(String userId, String isPreview, int tenantId) throws Exception {
-		logger.debug("setPopupConfig started");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userId);
-		map.put("isPreview", isPreview);
-		map.put("tenantId", tenantId);
-		
-		ezPersonalAdminDAO.setPopupConfig(map);
-		logger.debug("setPopupConfig ended");
+	public String setPopupConfig(String userId, String isPreview, int tenantId) throws Exception {
+		try {
+			logger.debug("setPopupConfig started");
+			Map<String, Object> map = new HashMap<String, Object>();
+
+			map.put("userId", userId);
+			map.put("isPreview", isPreview);
+			map.put("tenantId", tenantId);
+			ezPersonalAdminDAO.setPopupConfig(map);
+
+			logger.debug("setPopupConfig ended");
+			return "OK";
+		} catch (Exception e) {
+			return "Error" + e.getMessage();
+		}
 	}
 	
 	@Override
@@ -917,7 +921,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		logger.debug("getPopupCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("v_pCompanyID", companyID);
 		map.put("v_pMode", "A");
 		map.put("tenantID", tenantID);
@@ -926,6 +930,26 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		return ezPersonalAdminDAO.getPopupCount(map);
 	}
 
+	@Override
+	public String setPopupUse(String companyID, int tenantID, String itemSeq, String inUse) {
+		try {
+			logger.debug("setPopupUse ended");
+			Map<String, Object> map = new HashMap<String, Object>();
+
+			map.put("companyID", companyID);
+			map.put("tenantID", tenantID);
+			map.put("itemSeq", itemSeq);
+			map.put("inUse", inUse);
+
+			ezPersonalAdminDAO.setPopupUse(map);
+
+			logger.debug("setPopupUse ended");
+			return "OK";
+		} catch (Exception e) {
+			return "Error" + e.getMessage();
+		}
+	}
+	
 	@Override
 	public void updateQuickLinkOrder(JSONArray linkOrderList, int tenantId) throws Exception {
 		logger.debug("updateQuickLinkOrder started");
