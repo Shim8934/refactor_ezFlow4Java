@@ -443,7 +443,7 @@
             AND
             	U.PHYSICALDELIVERYOFFICENAME = #companyID#
             ORDER BY
-                Q.REGDATE DESC          	
+                Q.LINKORDER ASC          	
 		]]>
 	</select>
 	
@@ -520,9 +520,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_QUICKLINK
-        		( QUICKLINKID, QUICKLINKNAME, QUICKLINKNAME2, QUICKLINKNAME3, QUICKLINKNAME4, LINKTYPE, LINKTYPEURL, URL, REGDATE, REGUSERID, SIZE_, TENANT_ID )
+        		( QUICKLINKID, QUICKLINKNAME, QUICKLINKNAME2, QUICKLINKNAME3, QUICKLINKNAME4, LINKTYPE, LINKTYPEURL, URL, REGDATE, REGUSERID, SIZE_, LINKORDER, TENANT_ID )
         	VALUES
-        		( #v_QUICKLINKID#, #v_QUICKLINKNAME#, #v_QUICKLINKNAME2#, #v_QUICKLINKNAME3#, '',#v_LINKTYPE#, #v_LINKTYPEURL#, #v_URL#, #v_NOWDATE#, #v_REGUSERID#, #v_SIZE#, #tenantID# )
+        		( #v_QUICKLINKID#, #v_QUICKLINKNAME#, #v_QUICKLINKNAME2#, #v_QUICKLINKNAME3#, '',#v_LINKTYPE#, #v_LINKTYPEURL#, #v_URL#, #v_NOWDATE#, #v_REGUSERID#, #v_SIZE#, #V_LINKORDER#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -1069,5 +1069,37 @@
 					TENANT_ID = #tenantID#	
 			]]>
 		</isNotEqual>
+	</select>
+	
+	<update id="EzPersonalAdmin.EZSP_SETQUICKLINKITEM_ORDER" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_QUICKLINK
+			SET
+				LINKORDER = #v_LINKORDER#
+			WHERE
+				QUICKLINKID = #v_QUICKLINKID#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPersonalAdmin.EZSP_GETQUICKLINKMAXORDER" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				IFNULL(MAX(LINKORDER), 0) + 1
+			FROM
+				TBL_PS_QUICKLINK Q
+			JOIN
+				TBL_USERMASTER U
+			ON
+				Q.RegUserID = U.CN
+			AND
+				Q.TENANT_ID = U.TENANT_ID
+			WHERE
+				Q.TENANT_ID = #tenantID#
+			AND
+				U.PHYSICALDELIVERYOFFICENAME = #companyID#
+		]]>
 	</select>
 </sqlMap>
