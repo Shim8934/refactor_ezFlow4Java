@@ -101,10 +101,5 @@
 			</td>
 		</tr>
 	</table>
-	<div class="btnposition btnpositionNew">
-		<a class="imgbtn">
-			<span onclick="btnOK_onclick()"><spring:message code='reform.public.confirm' /></span>
-		</a>
-	</div>
 </body>
 </html>
