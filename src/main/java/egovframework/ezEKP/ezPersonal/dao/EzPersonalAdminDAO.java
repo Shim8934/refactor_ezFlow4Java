@@ -249,4 +249,12 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO {
 	public void setPopupUse(Map<String, Object> map) throws Exception {
 		update("EzPersonalAdmin.EZSP_SETPOPUPUSE", map);
 	}
+
+	public void updateQuickLinkOrder(Map<String, Object> map) {
+		update("EzPersonalAdmin.EZSP_SETQUICKLINKITEM_ORDER", map);
+	}
+
+	public int getQuickLinkMaxOrder(Map<String, Object> map) {
+		return (int)select("EzPersonalAdmin.EZSP_GETQUICKLINKMAXORDER", map);
+	}
 }

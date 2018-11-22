@@ -11,6 +11,8 @@ import java.util.TimeZone;
 
 import javax.annotation.Resource;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -274,7 +276,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String pUrl= doc.getElementsByTagName("pURL").item(0).getTextContent();
 		String pSize= doc.getElementsByTagName("pSize").item(0).getTextContent();
 		
-		setQuickLinkListXML(pQuickLinkID, pQuickLinkName, pQuickLinkName2, pQuickLinkName3, pLinkType, pLinkTypeURL, pMode, pUrl, pSize, userInfo.getId(), userInfo.getTenantId());
+		setQuickLinkListXML(pQuickLinkID, pQuickLinkName, pQuickLinkName2, pQuickLinkName3, pLinkType, pLinkTypeURL, pMode, pUrl, pSize, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (doc.getElementsByTagName("node").getLength() == 0) {
 			setQuickLinkACL(pQuickLinkID, "", "", "", "", "DEL", userInfo.getTenantId()); 
@@ -784,7 +786,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		logger.debug("delQuickLink ended");
 	}
 
-	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String linkType, String linkTypeURL, String mode, String url, String size, String userID, int tenantID) throws Exception {
+	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String linkType, String linkTypeURL, String mode, String url, String size, String userID, String companyID, int tenantID) throws Exception {
 		logger.debug("setQuickLinkListXML started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -806,8 +808,13 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_REGUSERID", userID);
 		map.put("v_SIZE", size);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		
 		if (mode != null && mode.equals("new")) {
+			int max = ezPersonalAdminDAO.getQuickLinkMaxOrder(map);
+			map.put("V_LINKORDER", max);
+			logger.debug("max: " + max);
+			
 			ezPersonalAdminDAO.setQuickLinkItem_I(map);
 		} else {
 			ezPersonalAdminDAO.setQuickLinkItem_U(map);
@@ -941,5 +948,27 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		} catch (Exception e) {
 			return "Error" + e.getMessage();
 		}
+	}
+	
+	@Override
+	public void updateQuickLinkOrder(JSONArray linkOrderList, int tenantId) throws Exception {
+		logger.debug("updateQuickLinkOrder started");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("tenantId", tenantId);
+		
+		for (Object item : linkOrderList) {
+			if (item instanceof JSONObject) {
+				JSONObject linkInfo = (JSONObject) item;
+				map.put("v_QUICKLINKID", linkInfo.get("linkId"));
+				map.put("v_LINKORDER", linkInfo.get("linkOrder"));
+				
+				logger.debug("linkId: " + linkInfo.get("linkId"));
+				logger.debug("linkOrder: " + linkInfo.get("linkOrder"));
+				
+				ezPersonalAdminDAO.updateQuickLinkOrder(map);
+			}
+		}
+		logger.debug("updateQuickLinkOrder ended");
 	}
 }

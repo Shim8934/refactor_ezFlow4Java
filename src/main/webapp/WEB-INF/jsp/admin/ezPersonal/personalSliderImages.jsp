@@ -10,25 +10,34 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<style type="text/css">
 		body {background-color : white;}
 		.ui-sortable{ margin:0px; padding:0px;}
 		ul .sliderList {margin:0px 15px 15px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
 		ul .slider-header {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;background-color:#2196f3; border:1px solid #2196f3; width:210px;}
-		ul .slider-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:130px;}
+		ul .slider-content {clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:130px;}
 		ul .slider-imagePage {padding:5px 10px 10px 15px; width:225px; height:210px;}
 		ul .addSlider {border:1px dashed #aab2ba; display:inline-block; text-align:center; vertical-align : top; height:19.3em; border-radius:0px; width:225px; height: 370px; position:relative;}
+		.sliderInfoTD {padding:5px 15px 5px 5px;}
 		ul .addSlider:hover {cursor:pointer;}
 		ul .slideIsUse {padding: 30px 0px 10px 0px;}
 		.cancelNewSliderBtn span {height:25px; float:right; padding: 3px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 		.addNewSliderBttn span {height:25px; float:right; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
+		.slider-header-add {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;border:1px solid #2196f3; width:210px;}
 		.addImageBtn span {height:25px; background-color:#f4f4f4; border:1px solid #e7e7e7;  float:right; padding: 0px 9px; line-height: 23px; display:block; text-align: center; margin-top:40%; margin-right:30%}
-		.sliderInfoTDadd { padding: 5px;}
+		#UploadSliderImage {position:relative; bottom:120px;}
+		.sliderInfoTDadd { padding: 3px;}
+		.imgbtn {}
 	}
 		</style>
 		<script type="text/javascript">
-			
+		  var sliderid = "<c:out value = '${sliderID}' />";
+		  var guid = "{" + GetGUID() + "}";
+		  var g_xmlhttp;
+		  var ReturnFunction;
+		  var pNoneActiveX = "YES";
 			/*  document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
@@ -81,18 +90,22 @@
 		    		sliderURL = result[i].url;
 		    		sliderIsUse = result[i].isUse;
 		    		
-		    		sliderHTML += "<li class = 'sliderList' id = 'sliderList'>";
+		    		sliderHTML += "<li class = 'sliderList' id = 'sliderList'"+sliderID+">";
 		    		sliderHTML += "<div class = 'slider-header'>";
+		    		sliderHTML += "<a class = 'cancelNewSliderBtn'>";
+			    	sliderHTML += "<span class ='modifyCancel'><img src='/images/close_xBtn.png'></span></a>";
+			    	sliderHTML += "<a class= 'addNewSliderBttn'>";
+			    	sliderHTML += "<span class='modifyPopUp' id= 'modifyPopUp' onclick='modifySlider("+ sliderID +")'><img src='/images/email/popup_icon.gif' ></span></a>";
 		    		sliderHTML += "</div>";
 		    		sliderHTML += "<dt><span class='imagePage'><IMG src ="+sliderImagePath+" style='width:225px;height:210px'/></dt>";
 		    		sliderHTML += "</span>";
 		    		sliderHTML += "<div class = 'slider-content'>";
 		    		sliderHTML += "<table class = 'sliderInfo'><tr><td class ='sliderInfoTD'>이름    |</td>";
-		    		sliderHTML += "<td class ='sliderInfoTD'>"+sliderName+"</td></tr>"
-		    		sliderHTML += "<tr><td class ='sliderURL'>URL   |</td>";
-		    		sliderHTML += "<td class ='sliderInfoTD'>"+sliderURL+"</td></tr>"
-		    		sliderHTML += "<tr><td class ='sliderRegDate'>등록일   |</td>";
-		    		sliderHTML += "<td class ='sliderInfoTD'>"+sliderRegDate+"</td></tr>"
+		    		sliderHTML += "<td class ='sliderName'>"+sliderName+"</td></tr>"
+		    		sliderHTML += "<tr><td class ='sliderInfoTD'>URL   |</td>";
+		    		sliderHTML += "<td class ='sliderInfo'>"+sliderURL+"</td></tr>"
+		    		sliderHTML += "<tr><td class ='sliderInfoTD'>등록일   |</td>";
+		    		sliderHTML += "<td class ='sliderRegDate'>"+sliderRegDate+"</td></tr>"
 		    		
 		    		if(sliderIsUse == 1){
 		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' checked='checked')' onchange='toggleButton(this)'><span class='slider round'></label></td>";
@@ -103,12 +116,14 @@
 		    		sliderHTML += "</tr></table>";
 		    		sliderHTML += "</div></li>";
 		    		
+		    		
 		    	}
 		    	
 		    	sliderHTML += "<li class='addSlider' id='addSlider'><div style='margin-top:97px'><img src='/images/admin/admin_portlet_plus.png' ></img></div></li>";
 		    	document.getElementById("sliderContainer").innerHTML = sliderHTML;
-		    	document.getElementById("addSlider").onclick = btn_Select; 
+		    	document.getElementById("addSlider").onclick = btn_Select;
 		    	
+		    	//슬라이더 사용 유무
 		    	for (var i = 0; i < sliderCnt; i++) {
 		    		var checkbox = document.getElementById("toggleButton");
 		    		var choose = checkbox.checked;
@@ -158,26 +173,29 @@
 		    	sliderHTML += "<div class = 'slider-header-add' style='background-color:#f4f4f4;border:1px solid #e7e7e7;color:#b1b1b1'>";
 		    	sliderHTML += "<a class = 'cancelNewSliderBtn'>";
 		    	sliderHTML += "<span class ='addCancel'><img src='/images/close_xBtn.png'></span></a>";
-		    	sliderHTML += "<a class= 'addNewSliderBttn'>";
-		    	sliderHTML += "<span class='addCancel'><img src='/images/email/popup_icon.gif' ></span></a>";
 		    	sliderHTML += "</div>";
 		    	sliderHTML += "<div class = 'slider-content' style='width:225px; height:210px'>";
 		    	sliderHTML += "<a class ='addImageBtn'>";
-		    	sliderHTML += "<span class = 'addImage' onclick='addImage()'>이미지 선택</span></a>";
+		    	sliderHTML += "<span class = 'addImage' id='addImage' onclick='addImage()'>이미지 선택</span></a>";
+		    	sliderHTML += "<img id='UploadSliderImage' src='' onload ='imgdisplay()' style='width:225px;height:210px;display:none'>";
 		    	sliderHTML += "</div>";
+		    	sliderHTML += "<div class = 'slider-content'>";
 		    	sliderHTML += "<table class = 'sliderInfo'><tr><td class ='sliderInfoTDadd'>한글 |   ";
-		    	sliderHTML += "<input class='sliderName' data1='displayname' type='text' maxlength='50'></td></tr>";
+		    	sliderHTML += "<input id ='txtDisplayName' type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>영어 |   ";
-		    	sliderHTML += "<input class='sliderName2' data2='displayname2' type='text' maxlength='50'></td></tr>";
+		    	sliderHTML += "<input id ='txtDisplayName2' type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL |   ";
-		    	sliderHTML += "<input class='sliderURL' data3=Url' type='text' maxlength='50'></td></tr>";
+		    	sliderHTML += "<input id='txtDisplayName3' type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "</table>"
+		    	sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton()' checked='checked' onchange='toggleButton(this)'><span class='slider round'></label></td>";
+		    	sliderHTML += "<a href='#' class='imgbtn'><span onclick='btnSave_click();'><spring:message code = 'ezPersonal.t34' /></span></a>";
+		    	sliderHTML += "</div>";
 		    	sliderHTML += "</li>";
 		    	
 		    	document.getElementById("sliderContainer").insertAdjacentHTML('beforeend', sliderHTML);
 		    	
 		    	$(".cancelNewSliderBtn").on("click", addCancel);
-		        if (CrossYN()) {
+		        /* if (CrossYN()) {
 		            selectimage_dialogArguments[1] = btn_Select_Complete;
 		            var SelectImage = window.open("/admin/ezPersonal/selectImage.do", "SelectImage", GetOpenWindowfeature(410, 750));
 		            try { SelectImage.focus(); } catch (e) {
@@ -189,15 +207,196 @@
 		            feature = feature + GetShowModalPosition(410, 750);
 		            window.showModalDialog(url, "", feature);
 		            window.location.reload(false);
-		        }
+		        } */
 		    } 
 		    //슬라이드 이미지 생성 취소
 		    var addCancel = function() {
 		    	getSliderList();
 		    }
-		    function btn_Select_Complete() {
-		        window.location.reload(false);
+		    
+		    //슬라이드 이미지 추가
+		    function addImage(){
+		    	if(CrossYN() || pNoneActiveX == "YES"){
+		    		document.getElementById("file1").click();
+		    	} else {
+		    		//IE9 미만 처리 소스
+		    		var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+ 		            var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
+ 		            if (filepath == "") return;
+	
+ 		            var strBase64 = ezUtil.DownloadToBase64(filepath);
+ 		            ezUtil = null;
+	
+ 		            var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
+ 		            var temp = ezUtil.GetImageSize(filepath);
+ 		            ezUtil = null;
+	
+ 		            imageWidth = temp.split("*")[0];
+ 		            imageHeight = temp.split("*")[1];
+ 		            tempfilename = filepath.substr(filepath.lastIndexOf("\\") + 1);
+ 		            var strXML = "<IMAGE><OLDFILENAME>" + tempfilename + "</OLDFILENAME><FILENAME>" + guid + "</FILENAME><DATA>" + strBase64 + "</DATA></IMAGE>";
+	
+ 		            g_xmlhttp = createXMLHttpRequest();
+ 		            g_xmlhttp.open("POST", "/ezPersonal/uploadSliderImage.do?mode=SLIDERIMAGE", true);
+ 		            g_xmlhttp.onreadystatechange = changeSliderImage_end;
+ 		            g_xmlhttp.send(strXML);
+		    	}
+		    }
+		    //IE9 미만 브라우저일 때 이미지 처리
+		    function changeSliderImage_end() {
+		        /* if (g_xmlhttp.readyState != 4) {
+		        	return;
+		        } */
+	
+		        UploadSliderImage.src = g_xmlhttp.responseText;
 		    } 
+		    
+		    //이미지 파일 컨트롤러에 보내기
+		    function btn_attach(){
+		    	var extension = document.getElementById("file1").value.split('.');
+		    	console.log(extension);
+		        var check = false;
+		        check = compareExtension(check, extension[1]);
+		        
+		       if (!check) {
+		            alert("<spring:message code = 'ezPersonal.t206' />" + " <spring:message code = 'ezPersonal.t200' />");
+		            document.getElementById("file1").value = "";
+		        }
+		        
+		        var frm = document.getElementById('form');
+		        
+		        frm.action = "/admin/ezPersonal/saveSliderImage.do?mode=SLIDERIMAGE";
+		        frm.submit();
+		        
+		        
+		        document.form.file1.value = ""; 
+		        
+		    }
+		    
+		    
+		    //슬라이드 이미지 파일 체크 여부
+		    function compareExtension(check, extension) {
+		        var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
+		        for (var i = 0; i < filterExtension.length; i++) {
+		            if (extension.toLowerCase() == filterExtension[i]) {
+		                check = true;
+		                break;
+		            }
+		        }
+		        return check;
+		    } 
+		    
+		    function imgdisplay() {
+		        UploadSliderImage.style.display = "";
+		    }
+		    
+		    var xml;
+		    //xml로 된 이미지 파일 출력
+		    function returnvalue(result) {
+		        xml = loadXMLString(result);
+		        var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
+		        for (var i = 0; i < nodes.length; i++) {
+		            if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
+		                if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
+		                    alert(strLang6);
+		                    return;
+		                }
+		                
+		                if (navigator.userAgent.indexOf("Firefox") != -1) {
+		                    UploadSliderImage.src = getNodeText(GetChildNodes(nodes[i])[4]);
+		                } else {
+		                    UploadSliderImage.src = getNodeText(GetChildNodes(nodes[i])[4]);
+		                }
+		                
+		                UploadSliderImage.style.display = "";
+		            } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
+		                alert(strLang8 + "10MB" + strLang9);
+		                return;
+		            } else {
+		                alert(filename + " <spring:message code = 'ezPersonal.lhj01' />" + "\n\n" + result);
+		            }
+		        }
+		    }
+		    
+		    //슬라이드 이미지 저장 
+		    function btnSave_click(){
+		    	if (specialChk(document.getElementById("txtDisplayName").value)) {
+			    	alert("<spring:message code='ezResource.special' />");
+			    	return;
+			    }
+		    	if (document.getElementById("txtDisplayName").value == "") {
+		            alert("<spring:message code = 'ezPersonal.t1027' />");
+		            return;
+		        } else if (document.getElementById("txtDisplayName2").value == "") {
+		            alert("<spring:message code = 'ezPersonal.t1027' />");
+		            return;
+		        //} else if (document.getElementById("UploadSliderImage").src.indexOf("upload_portal") == -1) {
+		        } else if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
+		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
+		            return;
+		        }
+		    	
+		    	var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("${uploadPortalPath}"));
+
+		        var item;
+		        var mode;
+		        
+		        if (sliderid == "") {
+		            item = guid;
+		            mode = "NEW";
+		            fileName = getNodeText(SelectNodes(xml, "ROOT/NODES/NODE/PFILENAME")[0]);
+		        } else {
+		            item = sliderid;
+		            mode = "MOD";
+		            fileName = SliderImgPath.substr(SliderImgPath.lastIndexOf("/") + 1);
+		        }
+		        
+		        $.ajax({
+		        	type : "POST",
+		        	url : "/admin/ezPersonal/saveSlider.do",
+		        	async : false,
+		        	data : {sliderID : item,
+		        			mode : mode,
+		        			displayName : txtDisplayName.value,
+		        			displayName2 : txtDisplayName2.value,
+		        			url : txtDisplayName3.value,
+		        			fileName : fileName,
+		        			sliderImage : SliderImgPath},
+		        	dataType : "text",
+		        	success : function (result) {
+		        		if (result == "OK") {
+		        			alert("<spring:message code = 'ezPersonal.t191' />");
+				            
+				            if (ReturnFunction != null) {
+				                ReturnFunction();
+				            }
+				            
+				            window.close();
+		        		} else {
+		        			alert("<spring:message code = 'ezPersonal.t192' />");
+		        		}
+		        	}
+		        });
+		        
+		        getSliderList();
+		        
+		    }
+		    
+		    function S4() {
+		        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+		    }
+	
+		    function GetGUID() {
+		        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+		    }
+		    
+		    /* function btn_Select_Complete() {
+		        window.location.reload(false);
+		    }  */
+		    //슬라이더 수정 함수
+		    function modifySlider(data) {
+		    	console.log(data);
+		    }
 	
 		    function sliderdelete() {
 		        if (tempid == "") {
@@ -422,6 +621,15 @@
 		</table> --%>
 		<script>
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-		</script>		
+		</script>
+		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
+	     <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="width:1px;height:1px">
+	        <input type="file" name="file1" id="file1" onchange="btn_attach()" style="display: none;" multiple="false" />
+	        <input type="hidden" name="boardid" id="boardid" />
+	        <input type="hidden" name="maxsize" id="maxsize" />
+	        <input type="hidden" name="mode" id="mode" value="SLIDERIMAGE"/>
+	        <input type="hidden" name="cnt" id="cnt" />
+	        <input type="hidden" name="mailgubun" id="mailgubun" />
+	    </form>		
 	</body>
 </html>

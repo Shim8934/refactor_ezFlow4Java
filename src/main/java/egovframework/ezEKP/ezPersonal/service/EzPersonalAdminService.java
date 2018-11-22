@@ -1,7 +1,9 @@
 package egovframework.ezEKP.ezPersonal.service;
 
 import java.util.List;
+import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
@@ -87,4 +89,6 @@ public interface EzPersonalAdminService {
 	int getPopupCount(String companyID, int tenantID) throws Exception;
 	
 	String setPopupUse(String companyID, int tenantID, String itemSeq, String inUse);
+
+	void updateQuickLinkOrder(JSONArray linkOrderList, int tenantId) throws Exception;
 }
