@@ -172,30 +172,95 @@
         	</ul>
     	</div>
 		
-    	<div class="page">
-    		<c:choose>
-    			<c:when test="${intPage != '1'}">
-    				<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onclick="goToPage('front')" style="cursor:pointer">
-    			</c:when>
-    			<c:otherwise>
-    				<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onclick="goToPage('front')">
-    			</c:otherwise>
-    		</c:choose>
-        	<spring:message code='ezPortal.t253'/>${totalPage} <spring:message code='ezPortal.t254'/>
-        	<input type="text" name="txt_PageInputNum" style="width: 30px" value='${intPage}' onkeypress="if ( window.event.keyCode == 13 ) { goToPage('page'); }">
-        	<c:choose>
-        		<c:when test="${intPage != totalPage}">
-        			<img src="/images/page_next.gif" align="absmiddle" hspace="2" style="cursor:pointer" onclick="goToPage('next')">
-        		</c:when>
-        		<c:otherwise>
-        			<img src="/images/page_next.gif" align="absmiddle" hspace="2">
-        		</c:otherwise>
-        	</c:choose>
-    	</div>
+<!--     	<div class="page"> -->
+<%--     		<c:choose> --%>
+<%--     			<c:when test="${intPage != '1'}"> --%>
+<!--     				<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onclick="goToPage('front')" style="cursor:pointer"> -->
+<%--     			</c:when> --%>
+<%--     			<c:otherwise> --%>
+<!--     				<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onclick="goToPage('front')"> -->
+<%--     			</c:otherwise> --%>
+<%--     		</c:choose> --%>
+<%--         	<spring:message code='ezPortal.t253'/>${totalPage} <spring:message code='ezPortal.t254'/> --%>
+<%--         	<input type="text" name="txt_PageInputNum" style="width: 30px" value='${intPage}' onkeypress="if ( window.event.keyCode == 13 ) { goToPage('page'); }"> --%>
+<%--         	<c:choose> --%>
+<%--         		<c:when test="${intPage != totalPage}"> --%>
+<!--         			<img src="/images/page_next.gif" align="absmiddle" hspace="2" style="cursor:pointer" onclick="goToPage('next')"> -->
+<%--         		</c:when> --%>
+<%--         		<c:otherwise> --%>
+<!--         			<img src="/images/page_next.gif" align="absmiddle" hspace="2"> -->
+<%--         		</c:otherwise> --%>
+<%--         	</c:choose> --%>
+<!--     	</div> -->
     	<div class="textbox"><spring:message code='ezPortal.t990023'/></div>
     	<div class="select_themebox">
         	${resultHTML}
     	</div>
+    	<c:choose>
+			<c:when test="${endPage>0 }">
+			<div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
+				<div class="pagenavi">   
+					<c:choose>
+							<c:when test="${intPage gt 1}">   
+								<span onclick="pageChange(1)" class="btnimg"><img src="/images/sub/btn_p_prev.gif" ></span>            
+							</c:when>
+							<c:otherwise>
+								<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" ></span>            
+							</c:otherwise>         
+					</c:choose>
+					<c:choose>
+						<c:when test="${startPage gt 1}">
+							<span onclick="pageChange(${startPage-1})" class="btnimg"><img src="/images/sub/btn_prev.gif" ></span>              
+						</c:when>
+						<c:otherwise>
+							<span class="btnimg"><img src="/images/sub/btn_prev01.gif" ></span>              
+						</c:otherwise>                                                                    
+					</c:choose>
+					<%-- <span class="ptxt" onclick="<c:if test="${intPage gt 1 }">pageChange(${intPage-1})</c:if>"><spring:message code='ezApproval.t931'/></span> --%>                                   
+					<c:forEach begin="0" end="${endPage-startPage }" varStatus="status">
+						<c:choose>
+							<c:when test="${startPage+status.index eq  intPage}">
+								<span class="on">${intPage }</span>
+							</c:when>
+							<c:otherwise>
+								<span onclick="pageChange(${startPage+status.index})">${startPage+status.index}</span>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+					<%-- <span class="ptxt" onclick="<c:if test="${totalPage gt intPage }">pageChange(${intPage+1})</c:if>"><spring:message code='ezApproval.t932'/></span> --%>
+					<c:choose>
+						<c:when test="${totalPage gt endPage }">
+							<span class="btnimg" onclick="pageChange(${endPage+1})"><img src="/images/sub/btn_next.gif" ></span>
+						</c:when>
+						<c:otherwise>
+							<span class="btnimg"><img src="/images/sub/btn_next01.gif" ></span>
+						</c:otherwise>
+					</c:choose>
+					<c:choose>
+						<c:when test="${totalPage gt intPage }">
+							<span class="btnimg" onclick="pageChange(${totalPage})"><img src="/images/sub/btn_n_next.gif" ></span>
+						</c:when>
+						<c:otherwise>
+							<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" ></span>
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</div>
+			</c:when>
+			<c:otherwise>
+			<div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
+				<div class="pagenavi">  
+					<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" ></span>
+					<span class="btnimg"><img src="/images/sub/btn_prev01.gif" ></span>
+					<%-- <span class="ptxt"> <spring:message code='ezApproval.t931'/></span> --%>  
+					<span class="on">1</span> 
+					<%-- <span class="ptxt"><spring:message code='ezApproval.t932'/></span> --%>
+					<span class="btnimg"><img src="/images/sub/btn_next01.gif" ></span>
+					<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" ></span>
+				</div>
+			</div>
+			</c:otherwise>
+			</c:choose>
     	<script type="text/javascript">
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
     	</script>
