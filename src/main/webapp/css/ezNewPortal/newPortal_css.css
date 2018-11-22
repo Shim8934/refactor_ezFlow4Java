@@ -129,7 +129,7 @@ nav > .full_nav {float:left; width: 56px; height: 54px; margin-right:10px; paddi
 nav > .full_nav.on { border: 0px none; background: #0287db; }
 nav > .full_nav.on .full_menu { background-position: 0px -155px; width: 25px; height: 24px; }
 nav > .countBox {position:relative; float: right; width: 56px; height: 54px; padding: 18px 0px; text-align: center; box-sizing: border-box; display:none;}
-nav > .countBox .hidden_nav_count {position: absolute; right: 0px; top: 6px; display: inline-block; height: 18px; line-height: 18px; background: #ff2323; border-radius: 16px; padding: 0px 7px; font-size: 12px; color: #fff; vertical-align: top; }
+nav > .countBox .hidden_nav_count {position: absolute; right: 0px; top: 6px; display: inline-block; height: 18px; line-height: 18px; background: #60a9fa; border-radius: 16px; padding: 0px 7px; font-size: 12px; color: #fff; vertical-align: top; }
 
 #menu_toggle{ border:1px solid #cecece;}
 .full_menu_toggle {position:relative;/* border: 1px solid #424242; */overflow:hidden;}
@@ -568,10 +568,10 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .info .infoTeam{margin:10px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
 .info .infoMail{margin:17px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
 .info .infoTime{margin:12px 20px 0px 0px; padding:0px; color:#444445; font-size:14px;}
-.info .infoSet{position:absolute; top:-20px; right:48px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
-.info .infoSet img{margin:5px 0px 0px 0px;}
-.info .infoLogout{position:absolute; top:-20px; right:16px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
-.info .infoLogout img{margin:5px 0px 0px 0px;}
+.info .infoSet{z-index:101; position:absolute; top:-20px; right:48px; width:27px; height:27px; margin:0px; padding:0px; text-align:center; background:#3398fe;  border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer; }
+.info .infoSet img{vertical-align:middle;}
+.info .infoLogout{z-index:101; position:absolute; top:-20px; right:16px; width:27px; height:27px; margin:0px; padding:0px; text-align:center; background:#ccc;  border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
+.info .infoLogout img{vertical-align:middle; margin-left:2px;}
 
 /* time_check */
 .time_check{height:76px; margin:23px 0px 0px 0px; padding:0px; background:url(/images/ezNewPortal/theme3Img/time_check_bg.png) left center repeat-x; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
@@ -580,7 +580,6 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .presentTime .timeTxt span{vertical-align:middle; color:#ffffff; font-size:40px; font-weight:bold; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
 .presentTime .timeTxt span.timeAM{margin:0px 0px 0px 10px; padding:0px; font-size:12px; font-weight:normal;}
 .presentTime .timeTxt span.timePM{margin:0px 0px 0px 10px; padding:0px; font-size:12px; font-weight:normal;}
-
 .presentTime_commuteNone{width:100%;}
 
 .main_time{float:right; width:150px; height:76px; margin:0px; padding:0px;}

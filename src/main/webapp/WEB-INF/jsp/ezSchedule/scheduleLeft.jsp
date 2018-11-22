@@ -430,14 +430,14 @@
 	        </div>
         	<div class="scheduleListBox" style="overflow:hidden; padding-right: 0;">
 		        <ul class="lnbUL">
-		        	<div class="tree" style="overflow:hidden;">
+		        	<li style="overflow:hidden;padding:0px">
 			    		<!-- 2018-07-11 구해안 left 체크박스 label에 title 삽입 -->
+			    		<span class="sub_iconLNB tree_manage" onClick="Function_Flag(5)"></span>
 			    		<label class="IDcontainer" onchange="chk_all()">
 			    			<span class="h2_text"><spring:message code='ezSchedule.t220'/></span>
 							<input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse" style="left:0px">
 					  		<span class="checkmark" style="background:rgb(125, 125, 125);"></span>
 						</label>
-						<span class="sub_iconLNB tree_manage" style="position:absolute;top:10px;right:11px" onClick="Function_Flag(5)"></span>
 						<label class="IDcontainer" onchange="chk_DisplayChange()">
 							<span class="h2_text"><spring:message code='ezSchedule.t221'/></span>
 					  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${loginVO.id}" class="checkSelect">
@@ -491,25 +491,11 @@
 								</label>
 							</c:forEach>
 						</c:if>
-			    	</div>
+			    	</li>
 		        </ul>
 		        <ul class="lnbUL">
-		        	<div class="tree" style="overflow:hidden;">
-		            	<span>
-		                	<span>
-		                    	<span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span>
-		                            </div>
-		                    	</span>
-		                        <span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_pims_search_open"></span><span class="h2_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span>
-		                            </div>
-		                    	</span>
-		                    </span>        
-		                </span>
-		            </div>
+                  	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
+                  	<li><span class="sub_iconLNB tree_pims_search_open"></span><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li>
 		        </ul>
 	        </div>
 	    </div>
