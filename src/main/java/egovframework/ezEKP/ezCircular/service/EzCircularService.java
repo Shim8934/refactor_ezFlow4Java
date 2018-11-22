@@ -105,7 +105,7 @@ public interface EzCircularService {
 
 	public void circularConfirmStatus(String circularIDList, String memberID, int tenantID) throws Exception;
 
-	public void circularClose(String circularIDList, int tenantId) throws Exception;
+	public void circularClose(String circularIDList, int tenantId, String endDate) throws Exception;
 
 	public void circularFolderAdd(String folderName, String memberId, String regDate, int tenantId, String companyID) throws Exception;
 
