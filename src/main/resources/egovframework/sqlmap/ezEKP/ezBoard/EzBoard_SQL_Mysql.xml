@@ -1504,6 +1504,8 @@
             	 	A.BoardID = B.BoardID
                  WHERE
                  	A.TENANT_ID = #v_TENANTID#
+				AND
+					(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
                  AND  
                  	WRITERID = #v_PUSERID#
                  AND 
@@ -3224,9 +3226,17 @@
 			SELECT 
 				COUNT(ITEMID)  CNT
 			FROM 
-				TBL_Board_Item 
+				TBL_Board_Item A
+			INNER JOIN 
+				TBL_BOARD_BOARDINFO B
+			ON 
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BoardID = B.BoardID
        		WHERE  
-       			TENANT_ID = #v_TENANTID#
+       			A.TENANT_ID = #v_TENANTID#
+   			AND
+   				(WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
        		AND
        			WRITERID = #v_PUSERID#
             AND 
@@ -3238,8 +3248,8 @@
             AND 
             	EXTENSIONATTRIBUTE2 = '1' 
 			AND
-				(APPRFLAG = 'Y' 
-				OR APPRFLAG IS NULL)
+				(A.APPRFLAG = 'Y' 
+				OR A.APPRFLAG IS NULL)
 		]]>
 	</select>
 	
