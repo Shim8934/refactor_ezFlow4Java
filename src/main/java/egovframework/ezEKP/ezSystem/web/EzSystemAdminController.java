@@ -248,8 +248,15 @@ public class EzSystemAdminController {
 				resultList.add(j++, vo);
 			}
 		}
+		
+		String isMasterAdmin = "";
+		if (userInfo.getRollInfo().indexOf("c=1") != -1) { // 전체관리자
+			isMasterAdmin = "y";
+		}
+		
 		model.addAttribute("list", resultList);
 		model.addAttribute("companyId", companyId);
+		model.addAttribute("isMasterAdmin", isMasterAdmin);
 		
 		logger.debug("ended systemLoginHistMain controller.");
 		
@@ -288,12 +295,17 @@ public class EzSystemAdminController {
 			startRow = -1;
 		}
 		
-		//String companyId = req.getParameter("companyId"); // 선택된 회사
+		/*
+		 * 2018.11.21 김수아
+		 * (전체관리자) 회사선택 후 선택한 회사의 로그인 히스토리가 나오도록 변경 
+		 */
+		String companyId = req.getParameter("companyId"); // 선택된 회사
+		
 		/*
 		 * 2017.07.26 강민석
 		 * 로그인 히스토리에는 자신의 회사만 나오도록 수정
 		 * */
-		String companyId = userInfo.getCompanyID();
+		//String companyId = userInfo.getCompanyID();
 		logger.debug("companyId : " + companyId);
 
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
