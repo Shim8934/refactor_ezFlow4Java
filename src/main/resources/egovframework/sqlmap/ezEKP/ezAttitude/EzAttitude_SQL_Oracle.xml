@@ -542,12 +542,12 @@
 				</isNotEmpty>
 				<isNotEmpty property="startDate" prepend="and">
 					<![CDATA[
-						TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+						A.CHANGE_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate# || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
 					]]>
 				</isNotEmpty>
 				<isNotEmpty property="endDate" prepend="and">
 					<![CDATA[
-						TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+						A.CHANGE_DATE + #offset# / (24 * 60) <= TO_DATE(#endDate# || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
 					]]>
 				</isNotEmpty>
 				<isNotEmpty property="type" prepend="and">
