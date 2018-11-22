@@ -1514,6 +1514,9 @@
                  	extensionAttribute1 = '0'
                  AND 
                  	extensionAttribute2 = '1'
+				AND
+     			  	(A.APPRFLAG = 'Y' 
+     			     OR A.APPRFLAG IS NULL)
                  ORDER BY 
                  	A.WriteDate DESC 
                  LIMIT
