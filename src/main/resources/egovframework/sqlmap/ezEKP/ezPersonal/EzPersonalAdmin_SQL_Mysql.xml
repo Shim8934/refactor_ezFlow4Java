@@ -339,6 +339,7 @@
 					WIDTH,
 					HEIGHT,
 					POSITION,
+					INUSE,
 					(
 						CASE
 							WHEN 
@@ -372,6 +373,7 @@
 					WIDTH ,
 					HEIGHT ,
 					POSITION,
+					INUSE,
 					(
 						CASE
 							WHEN 
@@ -636,9 +638,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_POPUP
-     			( COMPANYID, STARTDATE, ENDDATE, WIDTH, HEIGHT, POSITION, TITLE, TITLE2, CONTENT, TENANT_ID )
-   			VALUES 
-     			( #v_pCompanyID#, DATE_FORMAT(#v_pStartDate#, '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(#v_pEndDate#, '%Y-%m-%d %H:%i:%s'), #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #tenantID# )
+				( COMPANYID, STARTDATE, ENDDATE, WIDTH, HEIGHT, POSITION, TITLE, TITLE2, CONTENT, TENANT_ID, INUSE )
+			VALUES 
+				( #v_pCompanyID#, DATE_FORMAT(#v_pStartDate#, '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(#v_pEndDate#, '%Y-%m-%d %H:%i:%s'), #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #tenantID#, 1)
 		]]>
 	</insert>
 	
@@ -1070,4 +1072,19 @@
 			]]>
 		</isNotEqual>
 	</select>
+	
+	<update id="EzPersonalAdmin.EZSP_SETPOPUPUSE" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_POPUP
+			SET
+				INUSE = #inUse#
+			WHERE
+				ITEMSEQ = #itemSeq#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+		]]>
+	</update>
 </sqlMap>

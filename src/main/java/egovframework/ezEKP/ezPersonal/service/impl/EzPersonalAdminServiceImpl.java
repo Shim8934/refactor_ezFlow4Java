@@ -445,20 +445,19 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		logger.debug("getPopupList started");
 
 		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("v_pCompanyID", companyID);
 		map.put("v_pTotal", totalCount);
 		map.put("v_pCount", pageSize);
 		map.put("v_pStart", start);
 		map.put("tenantID", tenantID);
 		map.put("nowDate", nowDate);
-		
+
 		logger.debug("getPopupList ended");
-		List<PersonalPopupVO> list = ezPersonalAdminDAO.getPopupList(map);
-		//return ezPersonalAdminDAO.getPopupList(map);
-		return list;
+
+		return ezPersonalAdminDAO.getPopupList(map);
 	}
 
 	@Override
@@ -893,16 +892,21 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public void setPopupConfig(String userId, String isPreview, int tenantId) throws Exception {
-		logger.debug("setPopupConfig started");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userId);
-		map.put("isPreview", isPreview);
-		map.put("tenantId", tenantId);
-		
-		ezPersonalAdminDAO.setPopupConfig(map);
-		logger.debug("setPopupConfig ended");
+	public String setPopupConfig(String userId, String isPreview, int tenantId) throws Exception {
+		try {
+			logger.debug("setPopupConfig started");
+			Map<String, Object> map = new HashMap<String, Object>();
+
+			map.put("userId", userId);
+			map.put("isPreview", isPreview);
+			map.put("tenantId", tenantId);
+			ezPersonalAdminDAO.setPopupConfig(map);
+
+			logger.debug("setPopupConfig ended");
+			return "OK";
+		} catch (Exception e) {
+			return "Error" + e.getMessage();
+		}
 	}
 	
 	@Override
@@ -917,5 +921,25 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 
 		logger.debug("getPopupCount ended");
 		return ezPersonalAdminDAO.getPopupCount(map);
+	}
+
+	@Override
+	public String setPopupUse(String companyID, int tenantID, String itemSeq, String inUse) {
+		try {
+			logger.debug("setPopupUse ended");
+			Map<String, Object> map = new HashMap<String, Object>();
+
+			map.put("companyID", companyID);
+			map.put("tenantID", tenantID);
+			map.put("itemSeq", itemSeq);
+			map.put("inUse", inUse);
+
+			ezPersonalAdminDAO.setPopupUse(map);
+
+			logger.debug("setPopupUse ended");
+			return "OK";
+		} catch (Exception e) {
+			return "Error" + e.getMessage();
+		}
 	}
 }

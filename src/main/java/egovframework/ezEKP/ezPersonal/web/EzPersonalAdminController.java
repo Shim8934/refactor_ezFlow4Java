@@ -769,15 +769,17 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<CELL>"); 
 			result.append("<VALUE>" + vo.getItemSeq() +"</VALUE>");
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");								// itemSeq
+			result.append("<DATA2>" + vo.getWidth() + "</DATA2>");
+			result.append("<DATA3>" + vo.getHeight() + "</DATA3>");
+			result.append("<DATA4>" + vo.getPosition() + "</DATA4>");
+			result.append("<PROGRESS>" + vo.getProgress() + "</PROGRESS>");
+			result.append("<INUSE>" + vo.getInUse() + "</INUSE>");
 			result.append("</CELL>");
 			result.append("<CELL>");
 			//2018-08-08  김보미 - rownumber추가
 //			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
 			result.append("<VALUE>" + (totalCount - (pageSize * (currentPage-1)+i)) + "</VALUE>");
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
-			result.append("<DATA2>" + vo.getWidth() + "</DATA2>");
-			result.append("<DATA3>" + vo.getHeight() + "</DATA3>");
-			result.append("<DATA4>" + vo.getPosition() + "</DATA4>");
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
@@ -794,16 +796,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			
 			result.append("<CELL>");
 			result.append("<VALUE>" + vo.getProgress() + "</VALUE>");
-			result.append("<TYPE>" + "BTN" + "</TYPE>");
-			/*result.append("<FUNC>" + "mod_popup" + "</FUNC>");*/
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
-			result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t99", userInfo.getLocale()) + "</VALUE>");
-			result.append("<TYPE>" + "BTN" + "</TYPE>");
-			/*result.append("<FUNC>" + "del_popup" + "</FUNC>");*/
-			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
+			result.append("<VALUE>" + vo.getInUse() + "</VALUE>");
 			result.append("</CELL>");
 			result.append("</ROW>");
 			i++;
@@ -1405,9 +1402,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("getPopupConfig ended");
 		return json;
 	}
-	
-	
-	
+
+
 	/**
 	 * 팝업공지 config 저장 함수
 	 */
@@ -1416,9 +1412,24 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	public String setPopupConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam String isPreview) throws Exception {
 		logger.debug("setPopupConfig started");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
-		ezPersonalAdminService.setPopupConfig(userInfo.getId(), isPreview, userInfo.getTenantId());
+
+		String msg = ezPersonalAdminService.setPopupConfig(userInfo.getId(), isPreview, userInfo.getTenantId());
 		logger.debug("setPopupConfig ended");
-		return null;
+		return msg;
+	}
+
+
+	/**
+	 * 팝업공지 사용여저장 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/setPopupUse.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public String setPopupUse(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam String itemSeq, @RequestParam String inUse) throws Exception {
+		logger.debug("setPopupUse started");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+
+		String msg = ezPersonalAdminService.setPopupUse(userInfo.getCompanyID(), userInfo.getTenantId(), itemSeq, inUse);
+		logger.debug("setPopupUse ended");
+		return msg;
 	}
 }
