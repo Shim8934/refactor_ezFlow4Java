@@ -551,8 +551,12 @@
 	            		alert("<spring:message code='ezAddress.t225' />");
 	            		return;
 	            	}
-	            	else if (xmlHTTP.responseText == "NO_AUTHORITY") {
-	            		alert("<spring:message code='ezAddress.t1' />");
+	            	else if (xmlHTTP.responseText == "NO_AUTHORITY_D") {
+	            		alert("<spring:message code='ezAddress.t999900003' />");
+	            		window.location.href = window.location.href;
+	            	}
+	            	else if (xmlHTTP.responseText == "NO_AUTHORITY_C") {
+	            		alert("<spring:message code='ezAddress.t999900004' />");
 	            		window.location.href = window.location.href;
 	            	}
 	            	else {

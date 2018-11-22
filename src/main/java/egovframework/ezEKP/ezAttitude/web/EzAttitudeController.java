@@ -556,7 +556,7 @@ public class EzAttitudeController {
 			JSONObject dept = (JSONObject) deptList.get(i);
 			authFlag = (String) dept.get("authType");
 			
-			if (authFlag.equals("M")) {
+			if (authFlag != null && authFlag.equals("M")) {
 				attitudeAdminCheck = true;
 			}
 		}
@@ -1462,7 +1462,8 @@ public class EzAttitudeController {
 					.queryParam("adminFlag", adminFlag)
 					.queryParam("checkAdmin", checkAdmin)
 					.queryParam("deptid", writerDeptId)
-					.queryParam("isAllDept", isAllDept);
+//					.queryParam("isAllDept", isAllDept);
+					.queryParam("listAuthType", "M");
 		} else {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", companyId)
@@ -1481,7 +1482,8 @@ public class EzAttitudeController {
 					.queryParam("adminFlag", adminFlag)
 					.queryParam("checkAdmin", checkAdmin)
 					.queryParam("deptid", writerDeptId)
-					.queryParam("isAllDept", isAllDept);;
+//					.queryParam("isAllDept", isAllDept);
+					.queryParam("listAuthType", "M");
 		}
 
 		rest = new RestTemplate();
@@ -1514,7 +1516,7 @@ public class EzAttitudeController {
 			// g -> 자신의 부서 + auth TB 확인해볼것.
 		}
 		
-		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth/hyo";
 		
 		headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -1949,7 +1951,7 @@ public class EzAttitudeController {
 		for (int i = 0; i < deptList.size(); i++ ){
 			JSONObject dept = (JSONObject)deptList.get(i);
 			if (dept.get("deptId").equals(attModDeptId)) {
-				if (!((String) dept.get("authType")).equals("")) {
+				if ((String) dept.get("authType") != null && !((String) dept.get("authType")).equals("")) {
 					authFlag = (String) dept.get("authType");
 				}
 				adminFlag = "true";
