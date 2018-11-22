@@ -2012,8 +2012,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String circularIDList = request.getParameter("circularIDList");
+		String endDate = commonUtil.getTodayUTCTime("");
 		
-		ezCircularService.circularClose(circularIDList, userInfo.getTenantId());
+		ezCircularService.circularClose(circularIDList, userInfo.getTenantId(), endDate);
 		
 		logger.debug("circularClose ended");
 		
