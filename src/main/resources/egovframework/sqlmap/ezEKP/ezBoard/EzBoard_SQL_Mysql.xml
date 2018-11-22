@@ -3237,6 +3237,9 @@
             	extensionAttribute1 = '0'
             AND 
             	EXTENSIONATTRIBUTE2 = '1' 
+			AND
+				(APPRFLAG = 'Y' 
+				OR APPRFLAG IS NULL)
 		]]>
 	</select>
 	
