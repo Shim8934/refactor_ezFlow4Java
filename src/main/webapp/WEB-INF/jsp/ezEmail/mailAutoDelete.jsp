@@ -97,14 +97,14 @@
 					<th><spring:message code='ezEmail.t119' /></th>
 					<td>
 						<div style="margin:1px 0px 0px 0px;">
-							&nbsp;<input id="folderpath" lealfolderPath="" readonly="true" type="text" style="WIDTH:190px;margin:0px 1px 0px 0px;" name="text">&nbsp;<a class="imgbtn imgbck" style="height:22px"><span style="line-height:22px" onClick="getFolder()"><spring:message code='ezEmail.t120' /></span></a>
+							<input id="folderpath" lealfolderPath="" readonly="true" type="text" style="WIDTH:190px;margin:0px 1px 0px 0px;" name="text">&nbsp;<a class="imgbtn imgbck" style="height:22px"><span style="line-height:22px" onClick="getFolder()"><spring:message code='ezEmail.t120' /></span></a>
 						</div>
 					</td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezEmail.t121' /></th>
 					<td>
-						&nbsp;<input id="expiretime" type="text" style="WIDTH:40px" name="text2" maxlength="5">
+						<input id="expiretime" type="text" style="WIDTH:40px" name="text2" maxlength="5">
 						<spring:message code='ezEmail.t122' />
 					</td>
 				</tr>

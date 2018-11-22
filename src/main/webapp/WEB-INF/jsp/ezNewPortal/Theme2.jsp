@@ -16,6 +16,7 @@
 	.two_column{width:48%;}
 	.mainbg {min-width:1280px;}
 	#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}
+	.top_two_column {margin : 0px 0px 25px 0px;}
 </style>
 </head>
 
@@ -307,10 +308,13 @@
 			
 			if (media1921.matches) {
 				$(".portlet").addClass("two_column");
+				$(".section1_bg").removeClass("top_two_column");
 			} else if (media1686.matches) {
 				$(".portlet").addClass("two_column");
+				$(".section1_bg").removeClass("top_two_column");
 			} else if (media1280.matches) {
 				$(".portlet").addClass("two_column");
+				$(".section1_bg").addClass("top_two_column");
 			}
 		}
 	} 	

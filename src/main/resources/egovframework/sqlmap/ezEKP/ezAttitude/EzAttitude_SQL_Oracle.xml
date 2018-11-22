@@ -155,16 +155,16 @@
 					A.TENANT_ID,
 					A.WRITER_ID,
 					A.DEPT_ID,
-					IF(
-						date_add(A.START_DATE, INTERVAL +#offsetMin# minute) < #startDate#, 
-						CONCAT(substr(#startDate#,1,11), substr(A.START_DATE,12)), 
-						date_format(date_add(A.START_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
-					  ) AS START_DATE,
-					IF(
-						date_add(A.END_DATE, INTERVAL +#offsetMin# minute) > #endDate#, 
-						CONCAT(substr(#endDate#,1,11), substr(A.END_DATE,12)), 
-						date_format(date_add(A.END_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
-					  ) AS END_DATE,
+					CASE
+						WHEN A.START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+						THEN substr(#startDate#, 1, 11) || substr(A.START_DATE, 12) 
+						ELSE TO_CHAR(A.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+					END AS START_DATE,
+					CASE
+						WHEN A.END_DATE + #offsetMin# / (24 * 60) > TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
+						THEN substr(#endDate#, 1, 11) || substr(A.END_DATE, 12) 
+						ELSE TO_CHAR(A.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+					END AS END_DATE,
 					A.MODAPPL,
 					A.REGION,
 					A.MOBILE,
@@ -216,14 +216,13 @@
 				<![CDATA[
 				AND  
 					(
-						(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 
+						(START_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND START_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
 						or
-						(date_add(END_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) < #endDate#) 
+						(END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND END_DATE + #offsetMin# / (24 * 60) < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
 						or
-						(date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) >= #endDate#)
+						(START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
 					)
-		]]>
-		
+				]]>
 		
 			<isNotEmpty property="deptIdArr">
 				<![CDATA[
@@ -234,16 +233,16 @@
 						D.TENANT_ID,
 						D.WRITER_ID,
 						D.DEPT_ID,
-						IF(
-							date_add(D.START_DATE, INTERVAL +#offsetMin# minute) < #startDate#, 
-							CONCAT(substr(#startDate#,1,11), substr(D.START_DATE,12)), 
-							date_format(date_add(D.START_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
-						  ) AS START_DATE,
-						IF(
-							date_add(D.END_DATE, INTERVAL +#offsetMin# minute) > #endDate#, 
-							CONCAT(substr(#endDate#,1,11), substr(D.END_DATE,12)), 
-							date_format(date_add(D.END_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
-						  ) AS END_DATE,
+						CASE
+							WHEN D.START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+							THEN substr(#startDate#, 1, 11) || substr(D.START_DATE, 12) 
+							ELSE TO_CHAR(D.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+						END AS START_DATE,
+						CASE
+							WHEN D.END_DATE + #offsetMin# / (24 * 60) > TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
+							THEN substr(#endDate#, 1, 11) || substr(D.END_DATE, 12) 
+							ELSE TO_CHAR(D.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+						END AS END_DATE,
 						D.MODAPPL,
 						D.REGION,
 						D.MOBILE,
@@ -283,16 +282,16 @@
 					<![CDATA[
 					AND  
 						(
-							(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 
+							(START_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND START_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
 							or
-							(date_add(END_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) < #endDate#) 
+							(END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND END_DATE + #offsetMin# / (24 * 60) < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
 							or
-							(date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) >= #endDate#)
+							(START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') AND END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
 						)
 				]]>
 			</isNotEmpty>
-		) AS H
 		<![CDATA[
+		) H
 			ORDER BY
 				H.START_DATE,
 				H.TYPE_ID
@@ -302,6 +301,7 @@
 	<insert id="ezAttitudeDAO.insertAttitude" parameterClass="Map">
 		INSERT INTO tbl_attitude
 		(
+			ATTITUDE_ID,
 			COMPANY_ID,
 			TENANT_ID,
 			WRITER_ID,
@@ -319,28 +319,37 @@
 		)
 		VALUES
 		(
+			SEQ_TBL_ATTITUDE.nextval,
 			#companyId#,
 			#tenantId#,
 			#writerId#,
 			#deptId#,
-			date_add(#startDate#, INTERVAL -#offsetMin# minute),
-			IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute)),
-			IFNULL(#region#, ''),
-			IFNULL(#mobile#, ''),
-			IFNULL(#bizSub#, ''),
-			IFNULL(#content#, ''),
-			IFNULL(#ipAddress#, ''),
+			TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
+			CASE
+			   WHEN
+			       #endDate# = ''
+			   THEN
+			       null
+			   ELSE
+			       TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
+			END,
+			NVL(#region#, ''),
+			NVL(#mobile#, ''),
+			NVL(#bizSub#, ''),
+			NVL(#content#, ''),
+			NVL(#ipAddress#, ''),
 			#dateType#,
 			#typeId#,
 			#modappl#
 		)
 		<selectKey resultClass="int" keyProperty="attitudeId">
-		    SELECT LAST_INSERT_ID()
+		    SELECT SEQ_TBL_ATTITUDE.currval FROM dual
 		</selectKey>
 	</insert>
 	
 	<insert id="ezAttitudeDAO.insertAdminAttHistory" parameterClass="Map">
 		INSERT INTO tbl_attitude_modappl_history(
+			MOD_CNT,
 			COMPANY_ID,
 			TENANT_ID,
 			WRITER_ID,
@@ -368,6 +377,7 @@
 			APPR_DATE
 			)
 			SELECT
+				SEQ_TBL_ATTITUDE_MODAPPL_HISTORY.nextval,
 				#companyId#,
 				#tenantId#,
 				#writerId#,
@@ -378,13 +388,13 @@
 				#deptId#,
 				b.DESCRIPTION,
 				b.DESCRIPTION2,
-				date_add(#startDate#, INTERVAL -#offsetMin# minute),
-				IF(#endDate# = '', null, date_add(#endDate#, INTERVAL -#offsetMin# minute)),
-				IFNULL(#region#, ''),
-				IFNULL(#mobile#, ''),
-				IFNULL(#bizSub#, ''),
-				IFNULL(#content#, ''),
-				IFNULL(#ipAddress#, ''),
+				TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
+				DECODE(#endDate#, '', null, TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)),
+				NVL(#region#, ''),
+				NVL(#mobile#, ''),
+				NVL(#bizSub#, ''),
+				NVL(#content#, ''),
+				NVL(#ipAddress#, ''),
 				#dateType#,
 				#typeId#,
 				a.type_name,
@@ -468,95 +478,105 @@
 				TENANT_ID = #tenantId#
 		</isEqual>
 	</select>
-	
-	<sql id="ezAttitudeDAO.searchQuery">
-		<isNotEmpty property="userId" prepend="and"> 
-			a.WRITER_ID = #userId#
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchDeptId">
-			A.WRITER_DEPT_ID = #searchDeptId#
-		</isNotEmpty>
-		<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
-      		#deptIdList[]#
-		</iterate>
-		<isNotEmpty property="apprUserName" prepend="and">
-			<isNotEmpty property="apprUserName" >
-				A.APPR_USER_NAME$lang$ LIKE CONCAT('%', #apprUserName#,'%')
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="writerName" prepend="and">
-			<isNotEmpty property="writerName" >
-				A.WRITER_NAME$lang$ LIKE CONCAT('%', #writerName#,'%')
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="writerDeptName" prepend="and">
-			<isNotEmpty property="writerDeptName" >
-				A.WRITER_DEPT_NAME$lang$ LIKE CONCAT('%', #writerDeptName#,'%')
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="startDate" prepend="and">
-			<![CDATA[
-			DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
-			]]>
-		</isNotEmpty>
-		<isNotEmpty property="endDate" prepend="and">
-			<![CDATA[
-			DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.CHANGE_DATE,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') <= #endDate#
-			]]>
-		</isNotEmpty>
-		<isNotEmpty property="type" prepend="and">
-			<![CDATA[
-			a.APPR_STATUS = #type#
-			]]>
-		</isNotEmpty>
-		<![CDATA[
-			AND
-				A.DELFLAG = 0
-		]]>
-		<isNotEmpty prepend="" property="order">
-				ORDER BY $order$, A.APPL_CNT DESC
-		</isNotEmpty>
-		<isEmpty prepend="" property="order">
-				ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
-		</isEmpty>
-		<isNotEmpty property="startPoint" prepend="limit">
-			<isNotEmpty property="endPoint">
-				<![CDATA[
-					$startPoint$, $endPoint$
-				]]>
-			</isNotEmpty>
-		</isNotEmpty>
-	</sql>
 
 	<select id="ezAttitudeDAO.getUsersModiyAtt" parameterClass="Map" resultMap="attitudeApplicationVO">
 		<![CDATA[
 			SELECT
-					a.attitude_id as ATTITUDE_ID,
-					TO_CHAR((TO_DATE(a.change_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as CHANGE_DATE,
-					a.appr_user_name$lang$ as APPR_USER_NAME,
-					TO_CHAR((TO_DATE(a.origin_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as START_DATE,
-					a.appr_status as APPR_STATUS,
-					a.writer_name$lang$ as WRITER_NAME,
-					a.writer_dept_name$lang$ as WRITER_DEPT_NAME,
-					a.appl_cnt AS APPL_CNT,
-					a.writer_id as WRITER_ID,
-					TO_CHAR((TO_DATE(a.appl_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as APPL_DATE
-			FROM 
-				jmocha.tbl_attitude_modappl a 
-			inner 
-				join tbl_attitude b 
-			on 
-				a.ATTITUDE_ID = b.ATTITUDE_ID
-			and
-				a.COMPANY_ID = b.COMPANY_ID
-			and 
-				a.TENANT_ID = b.TENANT_ID
-			where 
-				a.COMPANY_ID = #companyId#
-			and 
-				a.TENANT_ID = #tenantId#
-		]]>
-		<include refid="ezAttitudeDAO.searchQuery"/>
+				*
+			FROM
+			(
+				SELECT
+					T1.*,
+					ROWNUM AS RN
+				FROM
+				(
+					SELECT
+							a.attitude_id as ATTITUDE_ID,
+							TO_CHAR((TO_DATE(a.change_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as CHANGE_DATE,
+							a.appr_user_name$lang$ as APPR_USER_NAME,
+							TO_CHAR((TO_DATE(a.origin_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as START_DATE,
+							a.appr_status as APPR_STATUS,
+							a.writer_name$lang$ as WRITER_NAME,
+							a.writer_dept_name$lang$ as WRITER_DEPT_NAME,
+							a.appl_cnt AS APPL_CNT,
+							a.writer_id as WRITER_ID,
+							TO_CHAR((TO_DATE(a.appl_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as APPL_DATE
+					FROM 
+						tbl_attitude_modappl a 
+					inner 
+						join tbl_attitude b 
+					on 
+						a.ATTITUDE_ID = b.ATTITUDE_ID
+					and
+						a.COMPANY_ID = b.COMPANY_ID
+					and 
+						a.TENANT_ID = b.TENANT_ID
+					where 
+						a.COMPANY_ID = #companyId#
+					and 
+						a.TENANT_ID = #tenantId#
+				]]>
+				<isNotEmpty property="userId" prepend="and"> 
+					a.WRITER_ID = #userId#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchDeptId">
+					A.WRITER_DEPT_ID = #searchDeptId#
+				</isNotEmpty>
+				<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+		      		#deptIdList[]#
+				</iterate>
+				<isNotEmpty property="apprUserName" prepend="and">
+					<isNotEmpty property="apprUserName" >
+						A.APPR_USER_NAME$lang$ LIKE '%' || #apprUserName# ||'%'
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="writerName" prepend="and">
+					<isNotEmpty property="writerName" >
+						A.WRITER_NAME$lang$ LIKE '%' || #writerName# || '%'
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="writerDeptName" prepend="and">
+					<isNotEmpty property="writerDeptName" >
+						A.WRITER_DEPT_NAME$lang$ LIKE '%' || #writerDeptName# || '%'
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="startDate" prepend="and">
+					<![CDATA[
+						TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="endDate" prepend="and">
+					<![CDATA[
+						TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="type" prepend="and">
+					<![CDATA[
+						a.APPR_STATUS = #type#
+					]]>
+				</isNotEmpty>
+				<![CDATA[
+					AND
+						A.DELFLAG = 0
+				]]>
+				<isNotEmpty prepend="" property="order">
+						ORDER BY $order$, A.APPL_CNT DESC
+				</isNotEmpty>
+				<isEmpty prepend="" property="order">
+						ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
+				</isEmpty>
+				) T1
+			)
+			<isNotEmpty property="startRow">
+				<isNotEmpty property="endRow">
+					<![CDATA[
+						WHERE
+							RN >= #endRow#
+						AND
+							RN <= #startRow#
+					]]>
+				</isNotEmpty>
+			</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeDAO.attDetail" parameterClass="Map" resultMap="simpleAtt">
@@ -592,7 +612,7 @@
 				a.writer_title$lang$ AS WRITER_TITLE,
 				a.writer_dept_name$lang$ AS WRITER_DEPT_NAME
 			FROM 
-				jmocha.tbl_attitude_modappl a
+				tbl_attitude_modappl a
 			inner 
 				join tbl_attitude b 
 			on 
@@ -629,28 +649,24 @@
 	
 	<select id="ezAttitudeDAO.getAttitudeStatisList" parameterClass="Map" resultMap="attitudeStatis" remapResults="true">
 		<![CDATA[
-			SELECT (to_date(
-								CASE
-									WHEN
-										(END_DATE + (#offsetMin#/(60*24))) > #endDate#
-			                        THEN
-			                        	#endDate#
-			                        ELSE
-			                        	(NVL(END_DATE, START_DATE) + (#offsetMin#/(60*24)))
-			                     END
-								)
-							    
-					   -
-					   to_date(
-								CASE
-									WHEN
-										(START_DATE + (#offsetMin#/(60*24))) < #startDate#
-			                        THEN
-			                        	#startDate#
-			                        ELSE	 
-			                        	(START_DATE + (#offsetMin#/(60*24)))
-							   )
-						) + COUNT(TYPE_ID) AS COUNT,
+			SELECT 
+				SUM(
+			       TRUNC(
+			        TO_DATE( 
+			            CASE
+			                WHEN END_DATE + #offsetMin# / (24 * 60) > TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+			                THEN #endDate#
+			                ELSE TO_CHAR(NVL(END_DATE, START_DATE) + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+			            END
+			            , 'YYYY-MM-DD HH24:MI:SS')
+			           -
+			        TO_DATE(
+			            CASE
+			                WHEN START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+			                THEN #startDate#
+			                ELSE TO_CHAR(START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+			            END
+			            , 'YYYY-MM-DD HH24:MI:SS'), 0)) + COUNT(TYPE_ID)AS COUNT,
 			       TYPE_ID
 			FROM   
 				tbl_attitude
@@ -682,11 +698,11 @@
 				TYPE_ID NOT IN ('A01', 'A03')
 			AND    
 				(
-					(START_DATE >= #startDate# and START_DATE <= #endDate#) 
+					(START_DATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and START_DATE <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) 
 					or
-					(END_DATE >= #startDate# and END_DATE < #endDate#) 
+					(END_DATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and END_DATE < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) 
 					or
-					(START_DATE < #startDate# and END_DATE >= #endDate#)
+					(START_DATE < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and END_DATE >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				)
 			GROUP BY
 				TYPE_ID
@@ -712,7 +728,55 @@
 			and 
 				a.TENANT_ID = #tenantId#
 		]]>
-		<include refid="ezAttitudeDAO.searchQuery"/>
+		<isNotEmpty property="userId" prepend="and"> 
+			a.WRITER_ID = #userId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchDeptId">
+			A.WRITER_DEPT_ID = #searchDeptId#
+		</isNotEmpty>
+		<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+      		#deptIdList[]#
+		</iterate>
+		<isNotEmpty property="apprUserName" prepend="and">
+			<isNotEmpty property="apprUserName" >
+				A.APPR_USER_NAME$lang$ LIKE '%' || #apprUserName# ||'%'
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="writerName" prepend="and">
+			<isNotEmpty property="writerName" >
+				A.WRITER_NAME$lang$ LIKE '%' || #writerName# || '%'
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="writerDeptName" prepend="and">
+			<isNotEmpty property="writerDeptName" >
+				A.WRITER_DEPT_NAME$lang$ LIKE '%' || #writerDeptName# || '%'
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="type" prepend="and">
+			<![CDATA[
+			a.APPR_STATUS = #type#
+			]]>
+		</isNotEmpty>
+		<![CDATA[
+			AND
+				A.DELFLAG = 0
+		]]>
+		<isNotEmpty prepend="" property="order">
+				ORDER BY $order$, A.APPL_CNT DESC
+		</isNotEmpty>
+		<isEmpty prepend="" property="order">
+				ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
+		</isEmpty>
 	</select>
 	
 	<select id="ezAttitudeDAO.getAttsModAttCount" parameterClass="Map" resultClass="Integer">
@@ -888,9 +952,9 @@
 				A.FORM_ID,
 				A.FORM_HTML
 			FROM 
-				jmocha.tbl_attitude_form A
+				tbl_attitude_form A
 			INNER JOIN
-				jmocha.tbl_attitude_type B
+				tbl_attitude_type B
 			ON
 				A.FORM_ID = B.FORM_ID
 			AND
@@ -1612,9 +1676,9 @@
 		</isNotEmpty>
 		<![CDATA[
 		and
-			start_date >= to_date((#checkStartDate# || ' 00:00:00') - (#offsetMin# / (24 * 60)))
+			start_date >= TO_DATE((#checkStartDate# || ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60))
 		and
-			start_date <= to_date((#checkStartDate# || ' 23:59:59') - (#offsetMin# / (24 * 60)))
+			start_date <= TO_DATE((#checkStartDate# || ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60))
 		]]>
 	</select>
 	
@@ -1794,7 +1858,7 @@
 			SELECT
 				appr_status as APPR_STATUS
 			FROM 
-				jmocha.tbl_attitude_modappl
+				tbl_attitude_modappl
 			where 
 				COMPANY_ID = #companyId#
 			and 

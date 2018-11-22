@@ -3143,4 +3143,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public int getCheckAprState(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.getCheckAprState", map);
 	}
+	
+	public void insertReuseAttachFileInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertReuseAttachFileInfo", map);
+	}
 }

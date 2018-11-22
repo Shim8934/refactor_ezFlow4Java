@@ -4,14 +4,15 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
 
@@ -49,7 +50,7 @@ import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezPersonal.dao.EzPersonalAdminDAO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -62,9 +63,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Resource(name = "EzNewPortalDAO")
 	private EzNewPortalDAO ezNewPortalDAO;
-	
-	@Autowired
-	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -396,69 +394,86 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	// 사용자 포틀릿 리스트 가져오기
-	public List<PortletInfoVO> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception {
+	public List<?> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception {
 		LOGGER.debug("[Serivce] getUserPortletList Started");
-		/**
-		 * 2018-11-21 신규작성
-		 */
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("tenantId", tenantId);
-		map.put("companyId", companyId);
-		map.put("userId", userId);
-		map.put("deptId", "");
-		map.put("portletLang", portletLang);
-		
-		String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
-		
-		//path 거꾸로 돌려야해서
-		List<String> deptIds = Arrays.asList(deptPath.split(","));
-		Collections.reverse(deptIds);
-		
-		//유저권한체크
-		List<PortletInfoVO> result = ezNewPortalDAO.getPortletForUser(map);
-		List<PortletInfoVO> deptResult = null;
-		
-		//전체체크필요없어서 id만
-		List<Integer> portletIds = new ArrayList<Integer>();
-		
-		for (PortletInfoVO vo : result) {
-			portletIds.add(vo.getPortletId());
-		}
-		
-		result.removeIf(vo -> !vo.isAccessYN());
-		
-		//부서 및 상위부서권한체크(유저 나 하위부서에서 권한체크걸린건 추가안함
-		for(String pathId : deptIds) {
-			map.put("deptId", pathId);
-			
-			deptResult = ezNewPortalDAO.getPortletForUser(map);
-			
-			//권한잇는것들 && 기존 권한체크안된것들 추가
-			for (PortletInfoVO deptPortlet : deptResult) {
-				int portletId = deptPortlet.getPortletId();
-				
-				if (portletIds.indexOf(portletId) == -1) {
-					portletIds.add(portletId);
+		List<Map<?, ?>> resultList = new ArrayList<>();
+		/** 
+		 * tbl_portal_portlet_user에 해당 유저 관련 정보가 없으면?
+		 * -> 회사 포틀릿 전체를 쓰는 것으로 판단
+		 * tbl_portal_portlet_user에 해당 유저 정보가 존재하면?
+		 * -> 그 안에 있는 포틀릿만 쓰는 것으로 판단
+		*/
+		List<PortletInfoVO> compPortletList = getPortletOrderCompForUser(portletLang, tenantId, companyId, deptId, userId);
+		List<PortletInfoVO> userPortletList = getPortletOrderUser(portletLang, userId, tenantId, companyId, deptId);		
+		if(userPortletList.size() < 1) {
+			Iterator<PortletInfoVO> it = compPortletList.iterator();
+			while (it.hasNext()) {
+				Map<String, Object> map = commonUtil.transBean2Map(it.next());
+				map.put("use", "on");
+				resultList.add(map);
+			}
+		} else {
+			Iterator<PortletInfoVO> comp = compPortletList.iterator();
+			List<PortletInfoVO> resultPortletList = new ArrayList<PortletInfoVO>();
+			while (comp.hasNext()) {
+				PortletInfoVO compVO = comp.next(); 
+				Map<String, Object> map = commonUtil.transBean2Map(compVO);
+				String userAuth = "";
+				String deptAuth = "";
+				String comAuth = "";
+				for (PortletInfoVO pVO : userPortletList) {
+//					boolean resultAuth = getCheckAuth(pVO.getMenuId(), userId, deptId, companyId, tenantId);
+//					LOGGER.debug(pVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
+//					if (resultAuth) {
+//						resultPortletList.add(pVO);
+//					}
+					userAuth = pVO.getUserAuth();
+					deptAuth = pVO.getDeptAuth();
+					comAuth = pVO.getComAuth();
 					
-					if (deptPortlet.isAccessYN()) {
-						result.add(deptPortlet);
+					if (userAuth != null && userAuth != "") {
+						if (userAuth.equals("1")) {
+							resultPortletList.add(pVO);
+						} 
+					} else {
+						if (deptAuth != null && deptAuth != "") {
+							if (deptAuth.equals("1")) {
+								resultPortletList.add(pVO);
+							}
+						} else {
+							if (comAuth != null && comAuth != "") {
+								if (comAuth.equals("1")) {
+									resultPortletList.add(pVO);
+								}
+							}
+						}
+					} 
+				}
+				
+				Iterator<PortletInfoVO> user = resultPortletList.iterator();
+				while (user.hasNext()) {
+					PortletInfoVO userVO = user.next();
+					if(compVO.getPortletId() == userVO.getPortletId()) {
+						map.put("portletOrder", userVO.getPortletOrder());
+						map.put("use", "on");
+						break;
+					} else {
+						map.put("portletOrder", 0);
+						map.put("use", "off");
 					}
 				}
-			}
+				resultList.add(map);
+			}	
 		}
-		//여기까지가 권한체크된 모든 포틀릿 리스트
 		
-		//order에 따라 다시 소팅
-		Collections.sort(result, new Comparator<PortletInfoVO>() {
-			@Override
-			public int compare(PortletInfoVO o1, PortletInfoVO o2) {
-				return Integer.compare(o1.getPortletOrder(), o2.getPortletOrder());
-			}
-		});
+		/**
+		 * 권한체크
+		 */
+		
+		//이것도 메뉴랑 똑같이 1. 회사전체 리스트 2. 
 		
 		LOGGER.debug("[Serivce] getUserPortletList Ended");
-		
-		return result;
+		return resultList;
 	}
 	
 	@Override

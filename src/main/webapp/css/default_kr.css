@@ -675,6 +675,7 @@ form{display:inline;margin:0}
 	word-break:keep-all;
 	height:20px;
 	padding-top:4px;
+	font-size:12px;
 }
 
 .h2_dot { 
@@ -1797,7 +1798,7 @@ form{display:inline;margin:0}
 	margin-top:3px;	
 }
 
-#left .list_thumbnail li .thumbnail img{ border-radius:2px; width:41px !important; height:28px !important;}
+#left .list_thumbnail li .thumbnail img{ border-radius:2px; width:39px !important; height:27px !important;}
 
 #left .list_thumbnail li .name {
 	display:inline;
@@ -2714,3 +2715,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .nodata_bIcon dd{margin:0px; padding:0px; font-size:17px; color:#c0c0c0; font-weight: bold;}
 
 .nodata_bIconGray{background:#ebeef1;}
+
+/* 장진혁 */
+h2, #menu span {font-size: 12px;}
+.popup .mainlist tr {height:31px;}
