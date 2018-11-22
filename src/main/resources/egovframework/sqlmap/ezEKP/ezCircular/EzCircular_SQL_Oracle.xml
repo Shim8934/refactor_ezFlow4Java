@@ -361,6 +361,7 @@
 				A.memberid ASC-->
 		<![CDATA[
 			ORDER BY
+				DECODE(A.memberid, (SELECT memberID FROM TBL_CIRCULAR WHERE circularid = #circularID#), 1, 2),
 				A.memberid ASC
 		]]>
     </select>
