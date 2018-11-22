@@ -209,12 +209,13 @@
 				<isEmpty property="orderCell">
 					ORDER BY TBL_USERMASTER.displayname$primary$
 				</isEmpty>
-				
+				<![CDATA[
 					) T1
 				) WHERE 
-					   RN >= #endRow#
+					   RN >= #startRow#
 				  AND
-				  	   RN <= #startRow#
+				  	   RN <= #endRow#
+				]]>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigCount" parameterClass="Map" resultClass="String">
@@ -394,9 +395,9 @@
 	<insert id="ezAttitudeAdminDAO.insertAttitudeType" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_ATTITUDE_TYPE
-				(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, PARENT_ID, ISADD, ISDEL, IMG_PATH, FORM_ID)
+				("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, PARENT_ID, ISADD, ISDEL, IMG_PATH, FORM_ID)
 			VALUES
-				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, 'A05', '1', '0', 'refresh', (SELECT
+				(SEQ_TBL_ATTITUDE_TYPE.nextval, #typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, 'A05', '1', '0', 'refresh', (SELECT
 																										  	  A.FORM_ID
 																									  	   FROM
 																										      TBL_ATTITUDE_TYPE A
@@ -463,63 +464,51 @@
 		
 	<!-- 조직도 만들기 위한 쿼리 -->
    <select id="ezAttitudeAdminDAO.selectDeptList" parameterClass="map" resultMap="deptViewMap">
-		<![CDATA[
-			SELECT 
-		    	D.CN AS ID,
-		    	CASE
-		    		WHEN D.EXTENSIONATTRIBUTE1 = NULL
-		 ]]>
-		 <isNotEmpty property="companyId">
-		 <![CDATA[
-		 	OR D.CN=#companyId#
-		 ]]>
-		 </isNotEmpty>
-		 <![CDATA[
-		 	THEN '##'
-		 	ELSE D.EXTENSIONATTRIBUTE1
-		 	END AS PARENT,
-		 	D.EXTENSIONATTRIBUTE2 AS COMPANYID,
-		    D.DISPLAYNAME$primary$ AS TEXT,
-		    CASE D.CN
-		    	WHEN D.EXTENSIONATTRIBUTE2 THEN 'COMP'
-		        ELSE 'DEPT'
-		    END AS ISCOMP,
-		    CASE D.CN
-		    	WHEN U.DEPARTMENT THEN 'YES'
-		        ELSE 'NO'
-		    END AS MYDEPT
-		    FROM
-		        TBL_DEPTMASTER D
-		    LEFT JOIN 
-		        TBL_USERMASTER U
-		    ON 
-		       	D.TENANT_ID = U.TENANT_ID
-		    WHERE 
-		       	D.TENANT_ID = #tenantId#
-		    AND 
-		     	U.CN = #userId#
-		    AND
-		       	U.TENANT_ID = #tenantId#
-		    AND 
-		       (
-					((substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 0
-				AND 
-		       		D.extensionattribute2 = U.PHYSICALDELIVERYOFFICENAME))
-				OR
-					(substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 1)
-		       )
-		]]>
-		     AND
-		     	NOT((D.EXTENSIONATTRIBUTE1 IS NULL OR D.EXTENSIONATTRIBUTE1 = '') AND D.CN <![CDATA[<>]]> D.EXTENSIONATTRIBUTE2)
-		<isNotEmpty property="companyId">
-		<![CDATA[
-			AND 
-				D.EXTENSIONATTRIBUTE2 = #companyId#
-		]]>
-		</isNotEmpty>
-		<![CDATA[
-		    ORDER BY lpad(NVL(D.EXTENSIONATTRIBUTE15, 0), 6, 0), D.DISPLAYNAME$primary$			
-		]]>
+		select 
+			d.CN as id,
+			case 
+				when d.extensionattribute1 = null
+				<isNotEmpty property="companyId">
+					or d.CN = #companyId#
+				</isNotEmpty>
+					then N'##'
+				else d.EXTENSIONATTRIBUTE1 
+			end as parent,
+			d.extensionattribute2 as companyId,
+			d.DISPLAYNAME$lang$ as text,
+			case 
+				when d.CN = d.extensionattribute2 then 'comp'
+				else 'dept'
+			end as isComp,
+			case 
+				when d.CN = u.DEPARTMENT then 'yes'
+				else 'no'
+			end as myDept
+		from
+			tbl_deptmaster d 
+		left join 
+			tbl_usermaster u 
+		on 
+			d.tenant_id = u.TENANT_ID
+		where 
+			d.tenant_id = #tenantId#
+		and 
+		 u.CN = #userId#
+		and
+			u.tenant_id = #tenantId#
+		and 
+			(
+				((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0 
+			and 
+				d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
+			or
+				(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
+			)
+			<isNotEmpty property="companyId">
+			and 
+				d.EXTENSIONATTRIBUTE2 = #companyId#
+			</isNotEmpty>
+		ORDER BY lpad(nvl(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
    </select>
    
 	<!-- 조직도 부서별 사원 리스트 -->
@@ -685,8 +674,8 @@
 						A.dept_id AS deptid,
 						TO_CHAR(TO_DATE(A.start_date, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS startdate,
 		                SUBSTR(TO_CHAR(TO_DATE(A.start_date, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12) AS starttime,
-		                DECODE(A.end_date, NULL, '',  TO_CHAR(TO_DATE(A.end_date, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS enddate,
-		                DECODE(A.end_date, NULL, '',  SUBSTR(TO_CHAR(TO_DATE(A.end_date, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12) AS endtime,
+		                DECODE(A.end_date, NULL, '',  TO_CHAR(TO_DATE(A.end_date, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')) AS enddate,
+		                DECODE(A.end_date, NULL, '',  SUBSTR(TO_CHAR(TO_DATE(A.end_date, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12)) AS endtime,
 						A.modappl,
 						A.ip,
 						A.date_type AS datetype,
@@ -717,11 +706,11 @@
 						A.company_id = #companyId#
 					AND
 						(
-							(A.start_date >= #searchStartDate# AND A.start_date <= #searchEndDate#) 
+							(A.start_date >= to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.start_date <= to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS')) 
 						OR
-							(A.end_date >= #searchStartDate# AND A.end_date < #searchEndDate#) 
+							(A.end_date >= to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.end_date < to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS')) 
 						OR
-							(A.start_date < #searchStartDate# AND A.end_date >= #searchEndDate#)
+							(A.start_date < to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.end_date >= to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 						)
 				]]>
 					
@@ -762,11 +751,11 @@
 				</isEmpty>
 				) T1
 			)
-			<isNotEmpty prepend="WHERE" property="listSize">
+			<isNotEmpty prepend="WHERE" property="startRow">
 				<![CDATA[
-					RN >= #endRow#
+					RN >= #startRow#
 				AND
-					RN <= #startRow#
+					RN <= #endRow#
 				]]>
 			</isNotEmpty>
 	</select>
@@ -797,11 +786,11 @@
 				A.company_id = #companyId#
 			AND
 				(
-					(A.start_date >= #searchStartDate# AND A.start_date <= #searchEndDate#) 
+					(A.start_date >= to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.start_date <= to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				OR
-					(A.end_date >= #searchStartDate# AND A.end_date < #searchEndDate#) 
+					(A.end_date >= to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.end_date < to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				OR
-					(A.start_date < #searchStartDate# AND A.end_date >= #searchEndDate#)
+					(A.start_date < to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.end_date >= to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				)
 		]]>
 		<isNotEmpty property="searchAttitudeType">	
@@ -836,7 +825,7 @@
                 A.description$primary$ AS deptname,
                 A.title$primary$ AS usertitle,
                 A.mail AS useremail,
-                SUBSTR(TO_CHAR(#searchStartDate# + (#offsetMin#/(60*24)), 'YYYY-MM-DD HH24:MI:SS'), 1, 10) as startdate
+                SUBSTR(TO_CHAR(TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') + (#offsetMin#/(60*24)), 'YYYY-MM-DD HH24:MI:SS'), 1, 10) as startdate
 			FROM
 				TBL_USERMASTER A
 			LEFT JOIN
@@ -850,11 +839,11 @@
 					C.company_id = #companyId#
 				AND
 					(
-						(C.start_date >= #searchStartDate# AND C.start_date <= #searchEndDate#)
+						(C.start_date >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND C.start_date <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 					OR
-						(C.end_date >= #searchStartDate# AND C.end_date < #searchEndDate#)
+						(C.end_date >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND C.end_date < TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 					OR
-						(C.start_date < #searchStartDate# AND C.end_date >= #searchEndDate#)
+						(C.start_date < TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND C.end_date >= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 					)) B
 			ON
 				A.cn = B.writer_id
@@ -892,9 +881,9 @@
 			    B.DISPLAYNAME$primary$ AS userName,
 			    B.TITLE$primary$ AS jikwi,
 			    B.DESCRIPTION$primary$ AS deptName,
-			    group_concat(A.AUTH_DEPT_ID order by C.DISPLAYNAME$primary$) AS authDeptId,
-			    group_concat(C.DISPLAYNAME$primary$ order by C.DISPLAYNAME$primary$) AS authDeptName,
-    			group_concat(A.AUTH_TYPE order by C.DISPLAYNAME$primary$) AS authType
+			    LISTAGG(A.AUTH_DEPT_ID, ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authDeptId,
+			    LISTAGG(cast(C.DISPLAYNAME$primary$ as varchar(500)), ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authDeptName,
+    			LISTAGG(A.AUTH_TYPE, ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authType
 			FROM 
 				TBL_ATTITUDE_AUTH A
 			INNER JOIN
@@ -914,7 +903,7 @@
 			AND
 				A.TENANT_ID = #tenantId#
 			GROUP BY 
-				A.USER_ID
+				A.USER_ID, B.DISPLAYNAME, B.TITLE, B.DESCRIPTION
 			ORDER BY
 				userName
 		]]>
@@ -933,41 +922,44 @@
 		
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList" parameterClass="Map" resultClass="AttitudeAuthorVO">
 		<![CDATA[
-			SELECT
-				D.DISPLAYNAME$primary$ AS deptName,
-				D.CN AS deptId,
-				'no' AS mine,
-				A.AUTH_TYPE AS authType
-			FROM 
-				TBL_DEPTMASTER D
-			INNER JOIN 
-				TBL_ATTITUDE_AUTH A 
-			ON
-				D.CN = A.AUTH_DEPT_ID 
-			AND
-				A.TENANT_ID = D.TENANT_ID
-			WHERE 
-				A.USER_ID = #userId#
-			AND 
-				A.TENANT_ID = #tenantId#
-			UNION
-			SELECT
-				D.DISPLAYNAME$primary$ AS deptName,
-				D.CN AS deptId,
-				'yes' AS mine,
-				'' AS authType
-			FROM 
-				TBL_DEPTMASTER D
-			LEFT JOIN 
-				TBL_USERMASTER U 
-			ON
-				D.CN = U.DEPARTMENT 
-			AND
-				U.TENANT_ID = D.TENANT_ID
-			WHERE 
-				U.CN = #userId#
-			AND 
-				U.TENANT_ID = #tenantId#
+		select * from 
+			(
+				SELECT
+					D.DISPLAYNAME$primary$ AS deptName,
+					D.CN AS deptId,
+					'no' AS mine,
+					TO_CHAR(A.AUTH_TYPE) AS authType
+				FROM 
+					TBL_DEPTMASTER D
+				INNER JOIN 
+					TBL_ATTITUDE_AUTH A 
+				ON
+					D.CN = A.AUTH_DEPT_ID 
+				AND
+					A.TENANT_ID = D.TENANT_ID
+				WHERE 
+					A.USER_ID = #userId#
+				AND 
+					A.TENANT_ID = #tenantId#
+				UNION
+				SELECT
+					D.DISPLAYNAME$primary$ AS deptName,
+					D.CN AS deptId,
+					'yes' AS mine,
+					'' AS authType
+				FROM 
+					TBL_DEPTMASTER D
+				LEFT JOIN 
+					TBL_USERMASTER U 
+				ON
+					D.CN = U.DEPARTMENT 
+				AND
+					U.TENANT_ID = D.TENANT_ID
+				WHERE 
+					U.CN = #userId#
+				AND 
+					U.TENANT_ID = #tenantId#
+			)
 			ORDER BY 
 				deptName
 		]]>
@@ -1256,7 +1248,7 @@
 					(A.START_DATE < TO_DATE((#year# || '-' || #months# || #startTime#), 'YYYY-MM-DD HH24:MI:SS') and A.END_DATE >= TO_DATE((#year# || '-' || #months# || #endTime#), 'YYYY-MM-DD HH24:MI:SS'))
 				)
 			GROUP BY
-				A.TYPE_ID
+				A.TYPE_ID, STAT_MONTH
 		]]>
 <!-- 		</iterate> -->
 	</select>

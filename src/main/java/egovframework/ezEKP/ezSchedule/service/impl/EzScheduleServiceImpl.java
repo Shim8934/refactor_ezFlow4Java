@@ -544,7 +544,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				svo = resultList.get(i);
 				svoId = svo.getScheduleId();
 				svoRepetition = svo.getRepetition();
-				if (svoRepetition.equals("") || svoRepetition == null) {
+				if (svoRepetition.equals("") || svoRepetition.equals(" ") || svoRepetition == null) {
 					continue;
 				} else {
 					info = svo.getRepetition().split("\\|");
