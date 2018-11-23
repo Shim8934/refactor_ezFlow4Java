@@ -1048,7 +1048,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 
 		logger.debug("selectImage ended");
-		return "admin/ezPersonal/personalSelectImage";
+		return "admin/ezPersonal/personalSelectImages";
 	}
 	
 	/**
