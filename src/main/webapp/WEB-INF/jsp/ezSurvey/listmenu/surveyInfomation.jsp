@@ -39,11 +39,11 @@
 			</div>
 			<div class="survey-infrow">
 				<span><spring:message code="ezSurvey.t52"/></span>
-				<select>
+				<select id="selectTarget">
 					<option><spring:message code="ezSurvey.t53"/></option>
 					<option><spring:message code="ezSurvey.t54"/></option>
 				</select>
-				<span class="target-select"><spring:message code="ezSurvey.t55"/></span>
+				<span class="target-select" id="targetBttn"><spring:message code="ezSurvey.t55"/></span>
 			</div>
 		</div>
 	</div>

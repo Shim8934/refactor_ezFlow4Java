@@ -40,6 +40,7 @@
 .searchPanel {z-index: 2000; position: fixed; border:1px solid #666; background-color: #fff;; border-radius: 5px; height: auto; width: 464px;}
 .searchPanel h1 {margin-top: 0px !important;}
 .searchPanel.off {display: none;}
+.receiver_tltype01 >span {min-width: 45px;}
 
 .closeImgBttn {position: absolute; right: 10px; top: 10px;}
 .closeImgBttn >ul {margin: 0px; padding: 0px; list-style: none;}
@@ -93,7 +94,8 @@
 .survey-infrow {display: flex; font-family: HanSans, Gulim;     margin: 5px 0px;}
 .survey-infrow >span {margin: 0px 10px; line-height: 32px; font-size: 14px;}
 .survey-infrow >span:FIRST-CHILD {margin-left: 0px !important; min-width: 80px;}
-.survey-infrow .target-select {border-radius: 3px; background-color: rgba(204, 204, 204, 0.46); padding: 0px 5px; font-size: 13px; line-height: 27px; cursor: pointer;}
+.survey-infrow .target-select {border-radius: 3px; background-color: rgba(204, 204, 204, 0.46); padding: 0px 5px; font-size: 13px; line-height: 27px; cursor: pointer; display: none;}
+.target-select.on {display: block;}
 .survey-infrow .date-input {width: 60px; outline:none; border: 1px solid #ddd; padding-left: 5px;}
 .survey-infrow input, .survey-infrow select, .survey-infrow .target-select {height: 27px;}
 .surveyinfo-wrap {height: 240px; border: 1px solid #d7d7d7; padding: 20px 40px; background-color: #fff; margin-bottom: 15px;}
@@ -108,6 +110,59 @@
 .survey-attbttn >div {float: left; background-color: rgb(52, 152, 219); border-radius: 4px; height: 28px; line-height: 28px; margin: 14px 10px; padding: 0px 5px; font-size: 14px; color: #fff;}
 .survey-infbttn {float: left; width: 36px; height: 36px; margin-left: 10px; cursor: pointer;}
 .survey-infbttn >img {height: 100%; width: 100%;}
+.popup.survey-target {overflow: hidden;}
+.survey-target .target-slt {width:100%;}
+
+.infor-tbl tr th {width: 50px;}
+.infor-tbl tr td {padding-left: 10px;}
+.infor-tbl {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
+.infor-tbl tr td, .infor-tbl tr th {border: 1px solid #ddd;}
+.infor-tbl {padding: 0px 5px; background: #fff; height: 29px; word-break: break-all;}
+.infor-searchPanel {background-color: #f8f8fa; margin-top: 15px; border: 1px solid #eaeaea; margin: 10px 0px 0px 0px; padding: 0px; clear: both; overflow: hidden; z-index: 1;}
+.inforsub-searchPanel {border-bottom: 0px; height:26px; list-style: none; margin: 0px; padding: 0px;}
+
+.inf-searchTbl {margin-top: 3px; width: 100%;}
+.inf-searchTbl tr td:nth-child(1) >div {margin-left: 5px;}
+.inf-searchTbl tr td:nth-child(1) >div >input[type='text'] {width: 130px; margin: 0px; height: 21px; padding-left: 5px;}
+.inf-searchTbl tr td:nth-child(2) >div {float: right; margin-right: 5px; position: relative;}
+
+.organ-tbl {margin-top: 3px;}
+.organ-tbl .listview {width: 440px; border-top: none !important;}
+.organ-tbl tr td:first-child {border-right: 0px;}
+.bnkOrgTree {width: 220px; height: 518px; overflow-x: auto; overflow-y: auto; white-space: nowrap;}
+
+.organ-deptTbl {table-layout: fixed; width: 100%;  border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0; border-collapse: collapse;}
+.organ-deptTbl tr th{text-align: left; border: 0px; text-decoration: none; color: #777; font-size: 12px; line-height: 19px; padding: 4px 4px 0px; white-space: normal; background-color: white; border-top: 1px solid #ddd; border-bottom: 1px solid #eaeaea;}
+.organ-deptTbl tr th >span:nth-child(1) {font-weight: normal; margin-top: 2px; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;}
+.organ-deptTbl tr th >span:nth-child(1) >img {vertical-align: middle; margin-right: 3px;}
+.organ-deptTbl tr th >span:nth-child(2) {float: right; position: relative;}
+
+.organ-txtList {vertical-align: top; height: 441px; overflow: auto; width: 440px;}
+.organ-txtList .mainlist {width: 100%;}
+.organ-txtList .mainlist tr:first-child td {color: #333; background-color: #f8f8fa;}
+.organ-txtList .mainlist tr:first-child td:nth-child(1){width: 150px;}
+.organ-txtList .mainlist tr:first-child td:nth-child(2){width: 130px;}
+.organ-txtList .mainlist tr:not(first-child) td:nth-child(1) {overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 150px;}
+.organ-txtList .mainlist tr:not(first-child) td:nth-child(2) {width: 80px;}
+
+.organ-subTbl {margin-top: 5px !important; margin-right: auto !important; margin-left: auto !important; border: none !important; font-size: 12px; table-layout: fixed; width: 400px;}
+.organ-subTbl td {border: 0px !important; padding: 0px;}
+.organ-subTbl .pic {width: 90px; height: 90px; border: 1px solid #cfcfcf!important; overflow: hidden; background: url(/images/noperson.png) center; background-repeat: no-repeat;}
+.organ-subTbl .trCabTxt, .organ-subTbl .txtCabTd {display: none;}
+.organ-subTbl .pic img {border: none !important;}
+.organ-subTbl .pic img {width: 90px; height: 90px;}
+
+.selectDeptNm span {color: #666;}
+.pgshare {height: 47px; min-height: 47px;}
+.slt-userBttn {width: 30px; text-align: center;}
+.slt-userBttn >img {width: 16px; height: 16px; margin: 2px 0px; border: 0px; cursor: pointer;}
+
+.slt-listDiv {border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; margin-top: 10px;}
+.slt-listDiv >div{width: 100%; overflow-x: auto; overflow-y: auto;}
+.slt-listDiv >div {height: 554px;}
+.slt-listDiv .mainlist {width: 100%;}
+.slt-listDiv .mainlist tr:first-child td {color: #333; background-color: #f8f8fa;}
+.slt-listDiv .mainlist tr:not(first-child) td:first-child {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 
 .headpanel {height: 40px; margin: 15px 0px 1px;}
 .headpanel .crust a.crumb>span {display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 100%; font-size: 16px; font-weight: bold;}

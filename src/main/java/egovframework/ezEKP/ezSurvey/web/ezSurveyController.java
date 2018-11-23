@@ -95,18 +95,27 @@ public class ezSurveyController {
 	}
 	
 	@RequestMapping(value="/ezSurvey/addQuestionPage.do")
-	public String addQuestionPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("addQuestionPage started");
+	public String jspAddQuestionPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspAddQuestionPage started");
 		
-		logger.debug("addQuestionPage ended");
+		logger.debug("jspAddQuestionPage ended");
 		return "ezSurvey/listmenu/questionCreate";
 	}
 	
 	@RequestMapping(value="/ezSurvey/statisticsPage.do")
-	public String statisticsPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("statisticsPage started");
+	public String jspStatisticsPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspStatisticsPage started");
 		
-		logger.debug("statisticsPage ended");
+		logger.debug("jspStatisticsPage ended");
 		return "ezSurvey/listmenu/statistics";
+	}
+	
+	@RequestMapping(value="/ezSurvey/selectUsers.do")
+	public String jspGetSelectUesrPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetSelectUesrPage started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		logger.debug("jspGetSelectUesrPage ended");
+		return "ezSurvey/user/selectUser";
 	}
 }
