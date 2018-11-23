@@ -2,8 +2,8 @@
  * 초기 pointet-event set 메서드
  */
 function defaultPointer() {
-	$(".noteBlock").css("pointer-events", "none");
-	$("#open-memo").css("pointer-events", "auto");
+	$(".noteBlock").css("visibility", "hidden");
+	$("#open-memo").css("visibility", "visible");
 }
 
 /**
@@ -19,11 +19,11 @@ function setPanelPointer() {
 			defaultPointer();
 		}
 	}).on("mouseup", function() {
-		$(".noteBlock").css("pointer-events", "none");
-		$("#open-memo").css("pointer-events", "auto");
-		$("#layer-popup").css("pointer-events", "auto");
+		$(".noteBlock").css("visibility", "hidden");
+		$("#open-memo").css("visibility", "visible");
+		$("#layer-popup").css("visibility", "visible");
 	}).on("mousedown", function() {
-		$(".noteBlock").css("pointer-events", "auto");
+		$(".noteBlock").css("visibility", "visible");
 	}).on("click", function(event) {
 		event.preventDefault();
 		if ("none" == ($("#layer-popup").css("display"))) {
@@ -35,18 +35,18 @@ function setPanelPointer() {
 	});
 
 	$('.memo_wrap').on("mouseup", function() {
-		$(".noteBlock").css("pointer-events", "none");
-		$("#open-memo").css("pointer-events", "auto");
-		$("#layer-popup ").css("pointer-events", "auto");
+		$(".noteBlock").css("visibility", "hidden");
+		$("#open-memo").css("visibility", "visible");
+		$("#layer-popup ").css("visibility", "visible");
 	}).on("mousedown", function() {
-		$(".noteBlock").css("pointer-events", "auto");
+		$(".noteBlock").css("visibility", "visible");
 	}).draggable({
 
 		containment : ".noteBlock",
 		stop : function() {
-			$(".noteBlock").css("pointer-events", "none");
-			$("#open-memo").css("pointer-events", "auto");
-			$("#layer-popup ").css("pointer-events", "auto");
+			$(".noteBlock").css("visibility", "hidden");
+			$("#open-memo").css("visibility", "visible");
+			$("#layer-popup ").css("visibility", "visible");
 
 			setLayerPosition();
 		}
