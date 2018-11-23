@@ -302,8 +302,8 @@
 	                _img.src = "/images/OrganTree/porson_noimg.gif";
 	            }
 	            
-	            _img.style.width = "51px";
-	            _img.style.height = "54px";
+	            _img.style.width = "48px";
+	            _img.style.height = "48px";
 
 	            document.getElementById("pic").appendChild(_img);
 				var sConfirmType = "";

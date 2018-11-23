@@ -686,5 +686,5 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
             callbackFunc(pNodeID, pNodeNM);
     }
     
-    applyEllipsis();
+    //applyEllipsis();
 }

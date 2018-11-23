@@ -205,8 +205,8 @@
 			<br />
 			<div id="mainmenu" style="width: 750px;">
 			    <ul>
-			        <li style=><span onClick="add_circularDept()"><spring:message code='ezCircular.t77' /></span></li>
-			        <li style=><span onClick="delete_circularDept()"><spring:message code='ezCircular.t30' /></span></li>
+			        <li class="important"><span onClick="add_circularDept()"><spring:message code='ezCircular.t77' /></span></li>
+			        <li><span class="icon16 icon16_delete" onClick="delete_circularDept()"></span></li>
 			    </ul>
 			</div>
 			<table style="width: 750px; height: 385px;" border="0">

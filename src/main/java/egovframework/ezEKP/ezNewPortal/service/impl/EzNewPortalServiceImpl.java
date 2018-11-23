@@ -457,6 +457,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 					break;
 				}
 			}
+			
+			if (userResult.size() == 0) {
+				resultPortlet.setPortletUsed(true);
+			}
 		}
 		
 		if (config) {

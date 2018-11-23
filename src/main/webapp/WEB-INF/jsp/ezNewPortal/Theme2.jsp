@@ -53,7 +53,7 @@
                 <dl class="info_txt">
                 	<dt>${deptName}
                 		<span class="info_set" id="main_personalEnv"></span>
-                		<span class="" id="main_portletEnv" style="float:left;"><img src="/images/admin/frameSetting.png" style="margin-top:11px;margin-left:21px;cursor:pointer;background-color:#b9b9b9; border:1px solid #b9b9b9;"/></span>
+                		<span id="main_portletEnv" style="float:left;"><img src="/images/admin/frameSetting.png" style="margin-top:11px;margin-left:21px;cursor:pointer;background-color:#b9b9b9; border:1px solid #b9b9b9;"/></span>
                 	</dt>
                     <dt>${userName} ${userTitle}</dt>
                     <dd><spring:message code='ezNewPortal.t026' />${lastLogin}</dd>
