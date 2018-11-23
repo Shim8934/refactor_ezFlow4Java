@@ -628,10 +628,10 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .info .infoTeam{margin:10px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
 .info .infoMail{margin:12px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
 .info .infoTime{margin:12px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
-.info .infoSet{position:absolute; top:-20px; right:48px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
-.info .infoSet img{margin:5px 0px 0px 0px;}
-.info .infoLogout{position:absolute; top:-20px; right:16px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
-.info .infoLogout img{margin:5px 0px 0px 0px;}
+.info .infoSet{z-index:101; position:absolute; top:-20px; right:48px; width:27px; height:27px; margin:0px; padding:0px; text-align:center; background:#3398fe;  border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer; }
+.info .infoSet img{vertical-align:middle;}
+.info .infoLogout{z-index:101; position:absolute; top:-20px; right:16px; width:27px; height:27px; margin:0px; padding:0px; text-align:center; background:#ccc;  border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
+.info .infoLogout img{vertical-align:middle; margin-left:2px;}
 
 .writebanner_leftContents{float:left; width:145px; margin:0px; padding:0px; background:#ffffff;}
 .writebanner_leftContents dl{position:relative; width:145px; height:calc(50% - 22px); margin:0px; padding:19px 0px 20px 0px; text-align:center; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; cursor:pointer;}

@@ -3019,12 +3019,21 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 		}
 		
+		int startPage = ((intPage - 1) / 10) * 10 + 1;
+		int endPage = startPage + 10 - 1;
+		
+		if (endPage > totalPage) {
+		    endPage = totalPage;
+		}
+		
 		logger.debug("resultHTML="+resultHTML);
 		
 		model.addAttribute("searchNewMyPortalPageList", searchNewMyPortalPageList);
 		model.addAttribute("resultHTML", resultHTML);
 		model.addAttribute("intPage", intPage);
 		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
 		model.addAttribute("pSearchString", pSearchString);
 		model.addAttribute("portalGubun", portalGubun);
 		

@@ -377,7 +377,7 @@
 			APPR_DATE
 			)
 			SELECT
-				SEQ_TBL_ATTITUDE_MODAPPL_HISTORY.nextval,
+				SEQ_TBL_ATTI_MODAPPL_HISTORY.nextval,
 				#companyId#,
 				#tenantId#,
 				#writerId#,
@@ -402,7 +402,7 @@
 				#adminId#,
 				c.displayname,
 				c.displayname2,
-				#apprDate#
+				TO_DATE(#apprDate#, 'YYYY-MM-DD HH24:MI:SS')
 			FROM
 				(select 
 					*
@@ -492,15 +492,15 @@
 				(
 					SELECT
 							a.attitude_id as ATTITUDE_ID,
-							TO_CHAR((TO_DATE(a.change_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as CHANGE_DATE,
+							TO_CHAR(a.change_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as CHANGE_DATE,
 							a.appr_user_name$lang$ as APPR_USER_NAME,
-							TO_CHAR((TO_DATE(a.origin_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as START_DATE,
+							TO_CHAR(a.origin_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as START_DATE,
 							a.appr_status as APPR_STATUS,
 							a.writer_name$lang$ as WRITER_NAME,
 							a.writer_dept_name$lang$ as WRITER_DEPT_NAME,
 							a.appl_cnt AS APPL_CNT,
 							a.writer_id as WRITER_ID,
-							TO_CHAR((TO_DATE(a.appl_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') as APPL_DATE
+							TO_CHAR(a.appl_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') as APPL_DATE
 					FROM 
 						tbl_attitude_modappl a 
 					inner 
@@ -542,12 +542,12 @@
 				</isNotEmpty>
 				<isNotEmpty property="startDate" prepend="and">
 					<![CDATA[
-						TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+						A.CHANGE_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate# || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
 					]]>
 				</isNotEmpty>
 				<isNotEmpty property="endDate" prepend="and">
 					<![CDATA[
-						TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+						A.CHANGE_DATE + #offset# / (24 * 60) <= TO_DATE(#endDate# || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
 					]]>
 				</isNotEmpty>
 				<isNotEmpty property="type" prepend="and">
@@ -571,9 +571,9 @@
 				<isNotEmpty property="endRow">
 					<![CDATA[
 						WHERE
-							RN >= #endRow#
+							RN <= #endRow#
 						AND
-							RN <= #startRow#
+							RN >= #startRow#
 					]]>
 				</isNotEmpty>
 			</isNotEmpty>
@@ -582,7 +582,7 @@
 	<select id="ezAttitudeDAO.attDetail" parameterClass="Map" resultMap="simpleAtt">
 		<![CDATA[
 			SELECT
-				TO_CHAR((to_date(START_DATE, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE,
+				TO_CHAR(START_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE,
 				WRITER_ID
 			FROM 
 				tbl_attitude 
@@ -599,9 +599,9 @@
 		<![CDATA[
 			SELECT
 				a.attitude_id AS ATTITUDE_ID,
-				TO_CHAR((TO_DATE(a.change_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
+				TO_CHAR(a.change_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
 				a.appr_user_name$lang$ AS APPR_USER_NAME,
-				TO_CHAR((to_date(a.origin_date, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE,
+				TO_CHAR(a.origin_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE,
 				a.appr_status AS APPR_STATUS,
 				c.type_id AS TYPE_ID,
 				c.type_name$lang$ AS TYPE_NAME,
@@ -754,12 +754,12 @@
 		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
-			TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
+			A.CHANGE_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate# || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') 
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="endDate" prepend="and">
 			<![CDATA[
-			TO_DATE(A.CHANGE_DATE,'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+			A.CHANGE_DATE + #offset# / (24 * 60) <= TO_DATE(#endDate# || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="type" prepend="and">
@@ -1015,12 +1015,12 @@
 					#writerDeptId#, 
 					#writerDeptName#,
 					#writerDeptName2#,
-					to_date(#changeDate#, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))),
-					to_date(#originDate#, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60))),
+					TO_DATE(#changeDate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60),
+					TO_DATE(#originDate#, 'YYYY-MM-DD HH24:MI:SS') - #offset# / (24 * 60),
 					#delFlag#,
 					#apprStatus#,
 					#content#,
-					#applDate#
+					TO_DATE(#applDate#, 'YYYY-MM-DD HH24:MI:SS')
 				)
 		]]>
 	</insert>
@@ -1078,12 +1078,12 @@
 					#adminId#,
 					b.DISPLAYNAME, 
 					b.DISPLAYNAME2,
-					#apprDate#,
-					to_date((to_date(#changeDate#, 'YYYY-MM-DD HH24:MI:SS') + (#offsetMin# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS'),
-					to_date((to_date(#originDate#, 'YYYY-MM-DD HH24:MI:SS') + (#offsetMin# / (24 * 60))), 'YYYY-MM-DD HH24:MI:SS'),
-					"1",
+					TO_DATE(#apprDate#, 'YYYY-MM-DD HH24:MI:SS'),
+					TO_DATE(#changeDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
+					TO_DATE(#originDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
+					'1',
 					#content#,
-					#applDate#
+					TO_DATE(#applDate#, 'YYYY-MM-DD HH24:MI:SS')
 				FROM
 					(select 
 					*
@@ -1137,8 +1137,8 @@
 			A.TENANT_ID,
 			A.WRITER_ID,
 			A.DEPT_ID,
-			(A.START_DATE + (#offsetMin# / (24 * 60))) AS START_DATE,
-			(A.END_DATE + (#offsetMin# / (24 * 60))) AS END_DATE,
+			TO_CHAR(A.START_DATE + (#offsetMin# / (24 * 60)), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE,
+			TO_CHAR(A.END_DATE + (#offsetMin# / (24 * 60)), 'YYYY-MM-DD HH24:MI:SS') AS END_DATE,
 			A.MODAPPL,
 			A.REGION,
 			A.MOBILE,
@@ -1266,50 +1266,46 @@
 	<update id="ezAttitudeDAO.changeUsersAtt" parameterClass="map">
 		<![CDATA[
 			UPDATE 
-				TBL_ATTITUDE A 
-			INNER JOIN 
-				TBL_ATTITUDE_MODAPPL B 
-			ON 
-				A.ATTITUDE_ID = B.ATTITUDE_ID
-			AND 
-				A.TENANT_ID = B.TENANT_ID
-			AND
-				A.COMPANY_ID = B.COMPANY_ID
+				TBL_ATTITUDE
 			SET
-			]]>
-			<isEqual property="changeStatus" compareValue="appr">
-				<![CDATA[
-				A.START_DATE = B.CHANGE_DATE
-				]]>
-			</isEqual>
-		<![CDATA[
-	        WHERE
-	        	A.TENANT_ID = #tenantId#
-		]]>	        	
-	        AND 
-	        	A.ATTITUDE_ID = #ids# 
-		<![CDATA[			
-	        AND
-	        	A.COMPANY_ID = #companyId#
-		]]>
-		<isNotEmpty property="applCnt">
-	        AND
-	        	B.APPL_CNT = #applCnt#
-	    </isNotEmpty>
-	    <isEmpty property="applCnt">
-	        AND
-	        	B.APPL_CNT = (SELECT *
-	        				FROM (SELECT 
-		        					MAX(APPL_CNT)
-		        				  FROM 
-		        					TBL_ATTITUDE_MODAPPL
-		        			      WHERE
-						        	TENANT_ID = #tenantId#
-								  AND	        	
+				START_DATE = (SELECT 
+									CHANGE_DATE
+								FROM
+									TBL_ATTITUDE_MODAPPL
+								WHERE
+									TENANT_ID = #tenantId#
+								AND
 									ATTITUDE_ID = #ids#
-								  AND
-						        	COMPANY_ID = #companyId#)a)
-	    </isEmpty>
+								AND
+									COMPANY_ID = #companyId#
+								]]>
+								<isNotEmpty property="applCnt" prepend="AND">
+									APPL_CNT = #applCnt#
+								</isNotEmpty>
+								<isEmpty property="applCnt" prepend="AND">
+									APPL_CNT = (SELECT 
+													*
+												FROM
+												 (SELECT 
+												 	MAX(APPL_CNT)
+												  FROM 
+												  	TBL_ATTITUDE_MODAPPL
+												  WHERE
+												  	TENANT_ID = #tenantId#
+												  AND
+												  	ATTITUDE_ID = #ids#
+												  AND
+												  	COMPANY_ID = #companyId#))
+								</isEmpty>
+								<![CDATA[
+								)
+	        WHERE
+	        	TENANT_ID = #tenantId#
+	        AND 
+	        	ATTITUDE_ID = #ids# 
+	        AND
+	        	COMPANY_ID = #companyId#
+			]]>
 	</update>
 	
 	<update id="ezAttitudeDAO.changeUsersAttType" parameterClass="map">
@@ -1443,12 +1439,12 @@
 		<![CDATA[
 			SELECT
 				A.ATTITUDE_ID,
-				to_char(to_date(A.APPR_DATE, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60)), 'YYYY-MM-DD HH24:MI:SS') AS APPR_DATE
+				to_char(A.APPR_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS APPR_DATE,
 				A.APPR_USER_NAME$lang$ AS APPR_USER_NAME,
 				A.APPR_STATUS,
 				A.CONTENT,
-				to_char(to_date(A.ORIGIN_DATE, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60)), 'YYYY-MM-DD HH24:MI:SS') AS ORIGIN_DATE
-				to_char(to_date(A.CHANGE_DATE, 'YYYY-MM-DD HH24:MI:SS') + (#offset# / (24 * 60)), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE
+				to_char(A.ORIGIN_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS ORIGIN_DATE,
+				to_char(A.CHANGE_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
 				B.TITLE$lang$ AS TITLE,
 				B.DESCRIPTION$lang$ AS DESCRIPTION
 			FROM 
@@ -1470,6 +1466,7 @@
 	
 	<insert id="ezAttitudeDAO.insertAdminAttHistory2" parameterClass="Map">
 		INSERT INTO tbl_attitude_modappl_history(
+			MOD_CNT,
 			COMPANY_ID,
 			TENANT_ID,
 			WRITER_ID,
@@ -1510,6 +1507,7 @@
 			)
 			VALUES
 			(
+				SEQ_TBL_ATTI_MODAPPL_HISTORY.nextval,
 				#attVO.companyId#,
 				#tenantId#,
 				#attVO.writerId#,
@@ -1526,7 +1524,7 @@
 				    THEN
 				        null
 				    ELSE
-				        (to_date(#startDate#, 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60)))
+				        to_date(#startDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
 				END),
 				(CASE
 				    WHEN
@@ -1534,7 +1532,7 @@
 				    THEN
 				        null
 				    ELSE
-				        (to_date(#endDate#, 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60)))
+				        to_date(#endDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
 				END),
 				NVL(#region#, ''),
 				NVL(#mobile#, ''),
@@ -1567,14 +1565,14 @@
 				#adminInfo.userName#,
 				#adminInfo.userName2#,
 				#attitudeId#,
-				(#attVO.startDate# - (#offsetMin# / (24 * 60))),
+				TO_DATE(#attVO.startDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
 				(CASE
 				    WHEN
 				        #attVO.endDate# = ''
 				    THEN
 				        null
 				    ELSE
-				        (to_date(#attVO.endDate#, 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60)))
+				        TO_DATE(#attVO.endDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
 				END),
 				#attVO.content#,
 				#attVO.region#,
@@ -1585,12 +1583,13 @@
 				#attVO.typeName#,
 				#attVO.typeName2#,
 				#attVO.dateType#,
-				#apprDate#
+				TO_DATE(#apprDate#, 'YYYY-MM-DD HH24:MI:SS')
 			)
 	</insert>
 	
 	<insert id="ezAttitudeDAO.insertAdminAttHistory3" parameterClass="Map">
 		INSERT INTO tbl_attitude_modappl_history(
+				MOD_CNT,
 				COMPANY_ID,
 				TENANT_ID,
 				WRITER_ID,
@@ -1620,6 +1619,7 @@
 			)
 			VALUES
 			(
+				SEQ_TBL_ATTI_MODAPPL_HISTORY.nextval,
 				#attVO.companyId#,
 				#tenantId#,
 				#attVO.writerId#,
@@ -1634,14 +1634,14 @@
 				#adminInfo.userName#,
 				#adminInfo.userName2#,
 				#attitudeId#,
-				(to_date(#attVO.startDate#, 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60))),
+				TO_DATE(#attVO.startDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60),
 				(CASE
 				    WHEN
 				        #attVO.endDate# = ''
 				    THEN
 				        null
 				    ELSE
-				        (to_date(#attVO.endDate#, 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60)))
+				        TO_DATE(#attVO.endDate#, 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
 				END),
 				#attVO.content#,
 				#attVO.region#,
@@ -1652,7 +1652,7 @@
 				#attVO.typeName#,
 				#attVO.typeName2#,
 				#attVO.dateType#,
-				#apprDate#
+				TO_DATE(#apprDate#, 'YYYY-MM-DD HH24:MI:SS')
 			)
 	</insert>
 	
@@ -1676,9 +1676,9 @@
 		</isNotEmpty>
 		<![CDATA[
 		and
-			start_date >= TO_DATE((#checkStartDate# || ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60))
+			start_date >= TO_DATE((#checkStartDate# || ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
 		and
-			start_date <= TO_DATE((#checkStartDate# || ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS') - (#offsetMin# / (24 * 60))
+			start_date <= TO_DATE((#checkStartDate# || ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
 		]]>
 	</select>
 	

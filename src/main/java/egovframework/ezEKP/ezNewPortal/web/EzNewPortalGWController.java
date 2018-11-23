@@ -1269,7 +1269,7 @@ public class EzNewPortalGWController {
 	}
 
 	/**
-	 * 포탈개인화 G/W [GET] 회사별 테마 미리보기
+	 * 포탈개인화 G/W [GET] 회사별 기본 테마 설정
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/default/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
@@ -1637,9 +1637,9 @@ public class EzNewPortalGWController {
 	}
 
 	/**
-	 * 포탈개인화 G/W [GET] 회사별 포틀릿 상세조회
+	 * 포탈개인화 G/W [GET] 회사별 포틀릿 상세조회 ------ 사용 안함
 	 */
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getPortletInfo(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyPortletInfo started.");
@@ -1658,7 +1658,7 @@ public class EzNewPortalGWController {
 		}
 		LOGGER.debug("ezNewPortal G/W getCompanyPortletInfo ended.");
 		return result;
-	}
+	}*/
 
 	/**
 	 * 포탈개인화 G/W [POST] 포틀릿 추가
@@ -1916,8 +1916,7 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String logoType = jsonParam.get("logoType").toString();
 			String logoUrl = jsonParam.get("logoUrl").toString();
-			System.out.println(logoType);
-			System.out.println(logoUrl);
+			
 			ezNewPortalService.updateCompanyLogo(companyId, tenantId, logoType, logoUrl);
 			
 			String addedLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, logoType);
@@ -2393,9 +2392,7 @@ public class EzNewPortalGWController {
 			String deptId = info.getDeptID();
 			String rollInfo = info.getRollInfo();
 			int tenantId = info.getTenantId();
-			int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의
-																					// 포틀릿
-																					// 아이디
+			int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의  포틀릿 아이디
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
 			int photoCount = Integer.parseInt(request.getParameter("photoCount"));
 			String portletLang = info.getLang();

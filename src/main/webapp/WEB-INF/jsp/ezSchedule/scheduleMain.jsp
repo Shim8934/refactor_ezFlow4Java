@@ -315,7 +315,7 @@
                 if (otherid != "") {
                     secretarySelect.value = otherid;
                 }
-                parent.frames["left"].groupRefresh();  
+                parent.frames["left"].leftRefresh();
                 resize();
 		    }
 			
