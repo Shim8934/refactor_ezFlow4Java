@@ -613,7 +613,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		if (startPageStatus.equals("ok")) {
 			JSONObject data = (JSONObject) startPageResultBody.get("data");
 			JSONObject startPage = (JSONObject) data.get("startPage");
-			JSONObject useMemo = (JSONObject) data.get("useMemo");
 			
 			if (startPage == null) {
 				model.addAttribute("menuId", 0);
@@ -621,7 +620,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			} else {
 				model.addAttribute("menuId", startPage.get("menuId"));
 				model.addAttribute("menuUrl", startPage.get("menuUrl"));
-				model.addAttribute("useMemo", useMemo);
 			}
 		}
 		
