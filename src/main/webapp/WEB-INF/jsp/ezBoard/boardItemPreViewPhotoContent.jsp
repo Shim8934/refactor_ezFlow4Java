@@ -711,7 +711,7 @@
 		    			$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","");
 		    			
 	    				var imgPB_LeftOffset = (window.innerWidth - imgPopupBox.width()) / 2;
-	    	    		var imgPB_TopOffset = ((window.innerHeight - 118) - imgPopupBox.height()) / 2  + window.pageYOffset;
+	    	    		var imgPB_TopOffset = 0;
 	    	    		var imgP_LeftOffset = (imgPopup.parent().width() - imgPopup.width()) / 2;
 	    	    		
 	    	    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
