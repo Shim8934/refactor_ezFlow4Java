@@ -4420,6 +4420,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String[] fileTypes = xmlDom.getElementsByTagName("PTYPEINFO").item(0).getTextContent().split(separators);
 		String[] filePaths = xmlDom.getElementsByTagName("PPATHINFO").item(0).getTextContent().split(separators);
 		String[] fileNames = xmlDom.getElementsByTagName("PFILEINFO").item(0).getTextContent().split(separators);
+		
+		String serverPrimaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
 		ZipOutputStream zout = null;
 		InputStream inpStream = null;
@@ -4480,12 +4482,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		 zipFilePath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + zipFileName + ".zip";
+		zipFilePath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + zipFileName + ".zip";
 
 		byte[] buffer = new byte[1024];
 
-		 zout = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
-		zout.setEncoding("EUC-KR");
+		zout = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
+		
+		if (serverPrimaryLang.equals("3")) {
+			zout.setEncoding("shift-jis");
+		} else {
+			zout.setEncoding("EUC-KR");
+		}
 		
 		for (int k = 0; k < filePaths.length; k++) {
 			String fileName = fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").

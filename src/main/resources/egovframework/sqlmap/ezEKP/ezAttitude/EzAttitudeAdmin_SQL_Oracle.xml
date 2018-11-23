@@ -1315,14 +1315,14 @@
 					    writer_name$primary$ AS writerName,
 					    writer_title$primary$ AS writerTitle,
 					    writer_dept_name$primary$ AS writerDeptName,
-                        TO_DATE((origin_startdate +(#offsetMin#/(60*24))), 'YYYY-MM-DD HH24:MI') AS originstartdate,
-                        TO_DATE((origin_enddate +(#offsetMin#/(60*24))), 'YYYY-MM-DD HH24:MI') AS origin_enddate,
-                        NVL(TO_DATE((change_startdate +(#offsetMin#/(60*24))), 'YYYY-MM-DD HH24:MI'),'') AS changestartdate,
-                        NVL(TO_DATE((changeenddate +(#offsetMin#/(60*24))), 'YYYY-MM-DD HH24:MI'),'') AS changeenddate,
+                        TO_CHAR(origin_startdate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI') AS originstartdate,
+                        TO_CHAR(origin_enddate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI') AS origin_enddate,
+                        NVL(TO_CHAR(change_startdate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI'),'') AS changestartdate,
+                        NVL(TO_CHAR(change_enddate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI'),'') AS changeenddate,
 					    origin_type_name$primary$ AS origintypename,
-					    IFNULL(change_type_name$primary$, '') AS changetypename,
+					    NVL(change_type_name$primary$, '') AS changetypename,
 					    appr_user_name$primary$ AS apprusername,
-                        TO_DATE((appr_date +(#offsetMin#/(60*24))), 'YYYY-MM-DD HH24:MI') AS apprdate
+                        TO_CHAR(appr_date + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI') AS apprdate
 					FROM
 						TBL_ATTITUDE_MODAPPL_HISTORY
 					WHERE
@@ -1330,9 +1330,9 @@
 					AND
 						tenant_id = #tenantId#
 					AND
-						(appr_date >= #searchStartDate# 
+						(appr_date >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') 
 						  AND
-						  appr_date <= #searchEndDate#)
+						  appr_date <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				]]>
 				<isNotEmpty prepend="AND" property="searchUserName">
 					<![CDATA[
@@ -1367,9 +1367,9 @@
 						) T1
 				)
 			where
-				rn <= #row_startNum#
+				rn >= #row_startNum#
 			and
-				rn >= #row_endNum#
+				rn <= #row_endNum#
 			]]>
 	</select>
 	
@@ -1384,9 +1384,9 @@
 			AND
 				TENANT_ID = #tenantId#
 			AND
-				(appr_date >= #searchStartDate# 
+				(appr_date >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS')
 				  AND
-				  appr_date <= #searchEndDate#)
+				  appr_date <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 		]]>
 		<isNotEmpty prepend="AND" property="searchUserName">
 			WRITER_NAME LIKE '%' || #searchUserName# || '%'
