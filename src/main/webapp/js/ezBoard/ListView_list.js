@@ -867,7 +867,7 @@ function ListView() {
                     	}
                     } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('TITLE') > -1) { //2018-01-09 강민수92 공지일 때 docNo 안보이게
                     	if (getNodeText(oDatas[10]) != "0"){
-                        	objTd.innerHTML = titleImage + "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>" + MakeXMLString(strValue) + "</div> " + titleOneLineCnt;
+                        	objTd.innerHTML = "<img style='vertical-align: initial;' src='/images/i_new.gif'>&nbsp;<div style='vertical-align: middle; overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>" + MakeXMLString(strValue) + "</div> " + titleOneLineCnt;
                         }else{
                         	objTd.innerHTML = titleImage + MakeXMLString(strValue);
                         }
