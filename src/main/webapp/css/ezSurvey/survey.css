@@ -149,6 +149,16 @@
 .statBody #contentsBox {margin-top: 20px; height: 500px; border: 1px solid #d7d7d7; background-color: #fff; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px;}
 
 
+/* 2018.11.22 추가 */
+#surveyListBody {height: 400px;}
+.surveyTbody {width: 100%; text-algin: center;}
+.surveyTbody .inputTd {width: 20px;}
+.inputTh >img {vertical-align: middle;}
+.surveyTbody .noTd   {width: 20px; text-align: center;}
+.surveyTbody .ttlTd  {width: 60%;}
+.surveyTbody .createTd {width: 20%;}
+.surveyTbody .endDateTd {width: 20%;}
+.surveyTbody .statisTd, .surveyTbody .anoynmTd, .surveyTbody .publicTd, .surveyTbody .targetTd {width: 80px; text-align: center;}
 
 
 

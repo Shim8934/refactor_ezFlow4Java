@@ -56,6 +56,6 @@
 				<span class="arrow"><span></span></span>
 			</span>
 		</div>
-		<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyInfomation.jsp"></jsp:include>
+		<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/questionCreate.jsp"></jsp:include>
 	</body>
 </html>

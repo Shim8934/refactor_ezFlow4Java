@@ -1,20 +1,31 @@
 package egovframework.ezEKP.ezSurvey.web;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.stringtemplate.v4.compiler.CodeGenerator.list_return;
+
+import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Controller
-public class ezSurveyController {
-	private static final Logger logger = LoggerFactory.getLogger(ezSurveyController.class);
+public class EzSurveyController {
+	private static final Logger logger = LoggerFactory.getLogger(EzSurveyController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -109,4 +120,26 @@ public class ezSurveyController {
 		logger.debug("statisticsPage ended");
 		return "ezSurvey/listmenu/statistics";
 	}
+	
+	@RequestMapping(value="/ezSurvey/getSurveyList.do")
+	public String getSurveyList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getSurveyList started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		JSONObject resultBody= commonUtil.getJsonFromRestApi("/rest/ezSurvey/survey-list/user/" + userInfo.getId(), param, request, "get", null);
+
+		String status = resultBody.get("status").toString();
+		
+		if ("ok".equals(status)) {
+			model.addAttribute("surveyList", resultBody.get("surveyList"));
+			model.addAttribute("pagination", resultBody.get("pagination"));
+		}
+		logger.debug("getSurveyList ended");
+		return "json";
+	}
+	
 }

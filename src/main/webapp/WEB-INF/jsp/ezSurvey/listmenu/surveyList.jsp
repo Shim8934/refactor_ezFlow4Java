@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"   %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -117,6 +118,9 @@
 						</tr>
 					</table>
 				</div>
+				
+				<div id="surveyListBody"></div>
+				
 				<div id="tblPageRayer"></div>
 			</div>
 			
@@ -157,6 +161,12 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetItem.js')   }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')   }"></script> --%>
 		<script type="text/javascript">
+		
+			var currPage = <c:out value="1" />;
+			var pageChange = 1;
+			var totalPage;
+			var blockSize = 10;
+		
 			$(function () {
 				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
 					closeText: "<spring:message code='main.t3' />",
@@ -190,6 +200,214 @@
 				};
 				
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619'/>"]);
+				
+				getSurveyList();
+				
+				function getSurveyList() {
+					$.ajax({
+						dataType:"JSON",
+						url : "/ezSurvey/getSurveyList.do",
+						success : function(result) {
+							console.log(result);
+							
+							var html = "";
+							html += "<table class='mainlist surveyTbody'>";
+							html += "<tbody>";
+							
+							$.each(result.surveyList, function(index, survey) {
+								html += "<tr>"
+								html += "<td class='inputTd'><input type='checkbox' id ='"+survey.survey_id+"'></td>";
+								html += "<td class='inputTd'><img src='/images/newAttach.gif'></td>";
+								html += "<td class='inputTd'><img src='/images/ImgIcon/view-importance.gif'> </td>";
+								html += "<td class='ttlTd'>"+survey.title+"</td>";
+								html += "<td class='endDateTd'>종료일</td>";
+
+								if (survey.participate_flag == 0) {
+									html += "<td class='targetTd'>전체</td>";
+									
+								} else {
+									html += "<td class='targetTd'>선택</td>";
+								}
+								
+								html += "<td class='createTd'>"+survey.user_id+"</td>";
+								
+								if (survey.result_public_flag == 0) {
+									html += "<td class='publicTd'><img src='/images/ezSurvey/open.png'></td>";
+
+								} else {
+									html += "<td class='publicTd'><img src='/images/ezSurvey/lock.png'></td>";
+								}
+								
+								if (survey.anonymous_flag == 0) {
+									html += "<td class='anoynmTd'><img src='/images/ezSurvey/name.png'></td>";
+									
+								} else {
+									html += "<td class='anoynmTd'><img src='/images/ezSurvey/anonymous.png'></td>";
+								}
+								html += "<td class='statisTd'><img src='/images/ezSurvey/analysis.png'></td>";
+								html += "</tr>"
+							});
+
+							html += "</tbody>";
+							html += "</table>";
+							
+							$("#surveyListBody").html(html);
+							
+							var totalPages = result.pagination.totalPages;
+							
+							makePageSelPage(totalPages);
+						}
+					});
+					
+				}
+				
+				// 페이징 처리
+				function pageZeroCheck() {
+					if(totalPage==0) {
+						totalPage=1;
+						currPage=1;
+					}
+				}
+				
+				function goToPageByNum(page) {
+					pageChange = page;
+					searchOption ='on';
+					if (searchSelect !== '' && searchSelect !== 'none') {
+						searchLadder();
+					} else  {
+						participant(modeCheck);
+					}
+					makePageSelPage();
+				}
+				
+				function makePageSelPage(totalPages) {
+					
+					totalPage = totalPages;
+					pageZeroCheck();
+					var strtext = "";
+					var PagingHTML = "<div class='pagenavi'>";
+					var pageNum = currPage;
+
+					document.getElementById("tblPageRayer").innerHTML = "";
+					if(document.getElementById("mailBoxInfo") !== null) {
+						document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang8
+						+ "<span style='color:#017BEC;'> " + totalLadder + " </span>"
+						+ strLang9 + "]";
+					}
+
+					if (totalPage > 1 && pageNum != 1) {
+						strtext = "<span class='btnimg' onClick='goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
+						PagingHTML += strtext;
+					}
+
+					if (totalPage > blockSize) {
+						if (pageNum > blockSize) {
+							strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
+							PagingHTML += strtext;
+						} else {
+							strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+							PagingHTML += strtext;
+						}
+					} else {
+						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+						PagingHTML += strtext;
+					}
+
+					var MaxNum;
+					var i;
+					var startNum = (parseInt((pageNum - 1) / blockSize) * blockSize) + 1;
+
+					if (totalPage >= (startNum + parseInt(blockSize))) {
+						MaxNum = (startNum + parseInt(blockSize)) - 1;
+					} else {
+						MaxNum = totalPage;
+					}
+
+					for (i = startNum; i <= MaxNum; i++) {
+						if (i == pageNum) {
+							strtext = "<span class='on'>" + i + "</span>";
+							PagingHTML += strtext;
+						} else {
+							console.log("버튼 생성" + i);
+							strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i
+									+ "</span>";
+							PagingHTML += strtext;
+						}
+					}
+
+					if (totalPage > blockSize) {
+						if (totalPage >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
+							strtext = "";
+							strtext = strtext
+									+ "<span class='btnimg' onClick='return selafterBlock()' ><img src='/images/sub/btn_next.gif'></span>";
+							PagingHTML += strtext;
+						} else {
+							strtext = "";
+							strtext = strtext
+									+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+							PagingHTML += strtext;
+						}
+					} else {
+						strtext = ""; 
+						strtext = strtext
+								+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+						PagingHTML += strtext;
+					}
+
+					if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+						strtext = "<span class='btnimg' onclick = 'goToPageByNum("
+								+ totalPage
+								+ ")'><img src='/images/sub/btn_n_next.gif'></span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+						PagingHTML += strtext;
+					}
+
+					PagingHTML += "</div>";
+					td_Create1(PagingHTML);
+				}
+
+				function td_Create1(strtext) {
+					document.getElementById("tblPageRayer").innerHTML = strtext;
+				}
+
+				function selbeforeBlock() {
+					var pageNum = parseInt(currPage);
+					if(pageNum%blockSize == 0) {
+						pageNum = pageNum - blockSize;
+					}
+					pageNum = ((parseInt(pageNum / blockSize)) * blockSize);
+					goToPageByNum(pageNum);
+				}
+
+				function selbeforeBlock_one() {
+					var pageNum = parseInt(currPage);
+					if (parseInt(pageNum - 1) > 0)
+						goToPageByNum(parseInt(pageNum - 1));
+					else
+						return;
+				}
+
+				function selafterBlock() {
+					var pageNum = parseInt(currPage);
+					pageNum = ((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1;
+					goToPageByNum(pageNum);
+				}
+
+				function selafterBlock_one() {
+					var pageNum = parseInt(currPage);
+					if (parseInt(pageNum + 1) <= totalPage)
+						goToPageByNum(parseInt(pageNum + 1));
+					else
+						return;
+				}
+
+				
+				
 			});
 			
 			/* CabinetItem.start("<c:out value='${cabinetId}'/>", "<c:out value='${config.contentHpercent}'/>", "<c:out value='${config.contentWpercent}'/>", "<c:out value='${config.previewMode}'/>"); */
