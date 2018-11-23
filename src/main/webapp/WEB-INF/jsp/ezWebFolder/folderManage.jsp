@@ -100,7 +100,7 @@
 						},
 						"types": {
 							"default": {
-								"icon": "/images/webfolder/fldr.png"
+								"icon": "/images/OrganTree_cross/fldr.gif"
 							}
 						},
 						"grid": {
