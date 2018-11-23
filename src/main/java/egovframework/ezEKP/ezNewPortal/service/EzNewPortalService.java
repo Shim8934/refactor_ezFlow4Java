@@ -36,7 +36,7 @@ public interface EzNewPortalService {
 	 * 박종균
 	 * */
 	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit) throws Exception;
-	public PersonalLightPollVO getPollPortlet(String companyId, int tenantId, String userId) throws Exception;
+	public PersonalLightPollVO getPollPortlet(String companyId, int tenantId, String userId, String offset) throws Exception;
 	public List<PersonalLightPollVO> getPollPortletResult(String companyId, int tenantId, int itemSeq) throws Exception;
 	public List<Map<String, Object>> getAssemblePollData(PersonalLightPollVO poll, List<PersonalLightPollVO> pollResult) throws Exception;
 	public String getPortalLogoInfo(String companyId, int tenantId, String logoType) throws Exception;
@@ -46,7 +46,8 @@ public interface EzNewPortalService {
 	public void deleteUserMenuOrder(String companyId, int tenantId, String userId) throws Exception;
 	public List<?> getQuickLinkList(String companyId, int tenantId, int page, int limit) throws Exception; 
 	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit) throws Exception;
-	public List<?> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception;
+//	public List<?> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception;
+	public List<PortletInfoVO> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId, boolean config) throws Exception;
 	public List<?> getUserFrameListAndSelectedFrame(String companyId, int tenantId, String userId) throws Exception;
 	public void updateUserUsedFrame(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
 	public void updateUserUsedPortlet(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;

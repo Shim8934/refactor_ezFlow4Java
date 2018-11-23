@@ -43,6 +43,9 @@ body{margin:0px; padding:0px;}
 .writebanner .writebannerDL dt{margin:4px 0px; padding:0px; text-align:center; color:#000000; font-size:13px; letter-spacing:-1px;}
 .writebanner .writebannerDL dd{position:absolute; top:-6px; left:50%; margin:0px 0px 0px 16px; padding:1px 6px 2px 6px; color:#ffffff; text-align:center; font-size:14px; font-weight:bold; background:#0079e8; border:2px solid #e9f7fd; border-radius:40px;-webkit-border-radius:40px;-moz-border-radius:40px;}
 .writebanner .writebannerDL dd.iconCount_none{background:#97b6c3;}
+.writebanner .iconCircle_none{width:65px; height:65px; margin:0px auto; padding:0px; background:#f3f3f3; border-radius:58px;-webkit-border-radius:58px;-moz-border-radius:58px;border:1px solid #e9e9e9;}
+.writebanner .iconCircle_none .iconCommon{display:inline-block; vertical-align:middle; width:25px; height:25px; margin:19px auto; background:url(/images/ezNewPortal/theme3Img/writebanner_icon_v1.001.png) left top no-repeat; background-position:2px 2px;}
+.writebanner dl.icon_disabled {cursor:default;margin-left:11px;}
 
 
 .main_schedule{float:left; width:100%; margin:19px 0px; padding:0px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
@@ -99,6 +102,10 @@ body{margin:0px; padding:0px;}
 	.section1 .sec1Layout_right{width:33.3%;}
 }
 
+@media only screen and (max-width: 1685px){
+	.section1_bg{margin:0px 0px 25px 0px;}
+}
+
 @media only screen and (max-width: 1580px){
 	.section1 .sec1Layout_left{width:40%;}
 	.section1 .sec1Layout_middle{width:42%;}
@@ -118,7 +125,7 @@ body{margin:0px; padding:0px;}
 /* 근태관련 */
 .info_left{float:left; width:181px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
 .info_right{width:calc(100% - 194px); background:#ffffff;}
-.infoImg img {width:60px; height:60px;}
+.infoImg img {width:60px; height:60px; border-radius:90px;-webkit-border-radius:90px;}
 .attitudePtl {border:none;}
 
 /* 전체 적으로 sortable 할 수 있는 영역 cursor : move*/

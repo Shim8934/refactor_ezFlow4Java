@@ -795,6 +795,86 @@ AND
 ]]>
 </select>
 
+	<select id="ezNewPortal.getMenuForUser" parameterClass="Map" resultClass="MenuInfoVO">
+        <![CDATA[
+            SELECT
+                A.menu_id AS menuId,
+                NAME.menu_name AS menuName,
+                IFNULL((SELECT
+                            menu_order
+                        FROM
+                            tbl_portal_menu_user AS USER
+                        WHERE
+                            USER.tenant_id = #tenantId#
+                        AND
+                            USER.company_id = #companyId#
+                        AND
+                            USER.menu_id = A.menu_id
+                        AND
+                            USER.user_id = #userId#), IFNULL(COMP.company_order, A.default_order)) AS menuOrder,
+                AUTH.access_yn AS accessYN,
+                COMP.menu_used        AS menuUsed,
+                COMP.company_lang     AS companyLang,
+                A.menu_url         AS menuUrl,
+                A.icon_urL         AS iconUrl,
+                COMP.company_order    AS companyOrder
+            FROM
+                tbl_portal_menu AS A
+            JOIN
+                tbl_portal_menu_name AS NAME
+            ON
+                A.menu_id = NAME.menu_id
+            JOIN
+                TBL_PORTAL_MENU_COMP AS COMP
+            ON
+                NAME.tenant_id = COMP.tenant_id
+            AND
+                NAME.company_id = COMP.company_id
+            AND
+                A.menu_id = COMP.menu_id
+            LEFT JOIN
+                TBL_PORTAL_MENU_AUTH AS AUTH
+            ON
+                COMP.tenant_id = AUTH.tenant_id
+            AND
+                COMP.company_id = AUTH.company_id
+            AND
+                A.menu_id = AUTH.menu_id
+       ]]>
+        
+        <isEmpty property="deptId">
+            <![CDATA[
+                AND
+                    AUTH.user_type = 1
+                AND
+                    AUTH.user_id = #userId#
+            ]]>
+        </isEmpty>
+        
+        <isNotEmpty property="deptId">
+            <![CDATA[
+                AND
+                    AUTH.user_type = 0
+                AND
+                    AUTH.user_id = #deptId#
+            ]]>
+        </isNotEmpty>
+            <![CDATA[
+            WHERE
+                NAME.tenant_id = #tenantId#
+            AND
+                NAME.company_id = #companyId#
+            AND
+                NAME.menu_lang = #langType#
+            AND
+                COMP.menu_used = 1        
+            AND
+            (AUTH.access_yn IS NOT NULL)    
+            ORDER BY
+                menuOrder;
+            ]]>
+    </select>
+
 <!-- 사용자 포틀릿 순서 불러오기 -->
 <select id="ezNewPortal.getPortletOrderUser" parameterClass="Map" resultMap="PortletOrderVO">
 <![CDATA[
@@ -1078,6 +1158,8 @@ AND
 	D.user_id = #userId#
 WHERE
 	B.company_id = #companyId#
+AND
+	C.company_id = #companyId#
 AND
 	B.tenant_id = #tenantId#
 AND
@@ -1492,6 +1574,91 @@ LIMIT
 				LINEINFO.aprstate = '002'         
 			AND 
 				DOCINFO.docstate not in ('015')
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getPortletForUser" parameterClass="Map" resultClass="PortletInfoVO">
+		<![CDATA[
+			SELECT
+				A.portlet_id AS portletId,
+				A.menu_id AS menuId,
+				NAME.portlet_name AS portletName,
+				COMP.board_id AS boardId,
+				IFNULL(COMP.connection_url, A.portlet_url) AS portletUrl,
+				IFNULL((SELECT
+							portlet_order
+						FROM
+							TBL_PORTAL_PORTLET_USER AS USER
+						WHERE
+							USER.tenant_id = #tenantId#
+						AND
+							USER.company_id = #companyId#
+						AND
+							USER.portlet_id = A.portlet_id
+						AND
+							USER.menu_id = A.menu_id
+						AND
+							USER.user_id = #userId#), IFNULL(COMP.portlet_order, A.default_order)) AS portletOrder,
+				AUTH.access_yn AS accessYN
+			FROM
+				TBL_PORTAL_PORTLET AS A
+			JOIN
+				TBL_PORTAL_PORTLET_NAME AS NAME
+			ON
+				A.portlet_id = NAME.portlet_id
+			AND
+				A.menu_id = NAME.menu_id
+			JOIN
+				TBL_PORTAL_PORTLET_COMP AS COMP
+			ON
+				NAME.tenant_id = COMP.tenant_id
+			AND
+				NAME.company_id = COMP.company_id
+			AND
+				A.portlet_id = COMP.portlet_id
+			AND
+				A.menu_id = COMP.menu_id
+			LEFT JOIN
+				TBL_PORTAL_MENU_AUTH AS AUTH
+			ON
+				COMP.tenant_id = AUTH.tenant_id
+			AND
+				COMP.company_id = AUTH.company_id
+			AND
+				A.menu_id = AUTH.menu_id
+		]]>
+		
+		<isEmpty property="deptId">
+			<![CDATA[
+				AND
+					AUTH.user_type = 1
+				AND
+					AUTH.user_id = #userId#
+			]]>
+		</isEmpty>
+		
+		<isNotEmpty property="deptId">
+			<![CDATA[
+				AND
+					AUTH.user_type = 0
+				AND
+					AUTH.user_id = #deptId#
+			]]>
+		</isNotEmpty>
+		
+		<![CDATA[
+			WHERE
+				NAME.tenant_id = #tenantId#
+			AND
+				NAME.company_id = #companyId#
+			AND
+				NAME.portlet_lang = #portletLang#
+			AND
+				COMP.portlet_used = 1
+			AND
+				(AUTH.access_yn IS NOT NULL)
+			ORDER BY
+				portletOrder;
 		]]>
 	</select>
 	

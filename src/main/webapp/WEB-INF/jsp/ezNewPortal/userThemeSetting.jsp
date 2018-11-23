@@ -116,7 +116,7 @@ function updateUserThemeSetting(event) {
 			<c:forEach items="${themeList }" var="theme">
 				<li data-flip-title="${theme.themeName }" id="T${theme.themeId }">
 					<div class="themeImage">
-						<img src="/images/ezNewPortal/Theme1.GIF" class="themeImg">
+						<img src="/images/ezNewPortal/Theme${theme.themeId }.JPG" class="themeImg">
 						<c:choose>
 							<c:when test="${theme.themeId eq usedTheme }">
 								<div id="usedTheme"><span>"<spring:message code='ezNewPortal.t036' />"</span></div>	

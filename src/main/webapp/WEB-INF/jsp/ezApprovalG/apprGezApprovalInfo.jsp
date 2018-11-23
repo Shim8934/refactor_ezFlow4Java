@@ -1929,7 +1929,7 @@
 	                            </table>
 	                        </div>
 	                    </td>
-	                    <td style="vertical-align: top">
+	                    <td style="vertical-align: top;">
 	                    <c:if test="${approvalFlag == 'G' }">
 	                        <table style="margin-left: 5px;">
 	                    </c:if>
@@ -1938,7 +1938,7 @@
 	                    </c:if>
 	                            <tr>
 	                                <td style="vertical-align: top;">
-	                                    <h2 class="h2_dot"><spring:message code='ezApprovalG.t407'/>
+	                                    <h2 class="h2_dot" style="margin-top:6px;"><spring:message code='ezApprovalG.t407'/>
 	                                        <div style="text-align: right; margin-top: -23px;">
 	                                            <a class="imgbtn" onclick="AprlineUpper_onclick();" style="height:22px;box-shadow:0px 2px 0px 0px rgba(0,0,0,0.1)"><span>
 	                                                <img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezApprovalG.pjj28'/>" style="vertical-align:middle"/></span></a>
@@ -2329,7 +2329,7 @@
 	                                </td>
 	                                <td>
 	                                    <span style="float: right;">
-	                                        <select id="selSearchOption" style="vertical-align: middle;height:22px">
+	                                        <select id="selSearchOption" style="vertical-align: top;height:22px">
 	                                            <option id="ITEMNAME">
 	                                                <spring:message code='ezApproval.t79'/>
 	                                            </option>

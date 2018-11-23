@@ -564,7 +564,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		//사용자 영역에서만 팝업 공지사항을 오픈한다.
 		if (mode.equals("view") && !viewMode.equals("preview")) {
 			// 팝업 공지사항
-			List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID(), userInfo.getTenantId());
+			List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 			
 			String popUp = "";
 			int popUpWidth = 0;
@@ -2754,7 +2754,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		//사용자 영역에서만 팝업 공지사항을 오픈한다.
 		if (mode.equals("view") && !viewMode.equals("preview")) {
 			// 팝업 공지사항
-			List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID(), userInfo.getTenantId());
+			List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 			
 			String popUp = "";
 			int popUpWidth = 0;
@@ -3019,12 +3019,21 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 		}
 		
+		int startPage = ((intPage - 1) / 10) * 10 + 1;
+		int endPage = startPage + 10 - 1;
+		
+		if (endPage > totalPage) {
+		    endPage = totalPage;
+		}
+		
 		logger.debug("resultHTML="+resultHTML);
 		
 		model.addAttribute("searchNewMyPortalPageList", searchNewMyPortalPageList);
 		model.addAttribute("resultHTML", resultHTML);
 		model.addAttribute("intPage", intPage);
 		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
 		model.addAttribute("pSearchString", pSearchString);
 		model.addAttribute("portalGubun", portalGubun);
 		

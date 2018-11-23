@@ -3,6 +3,7 @@
  */
 //근태관리 연동
 function ptlGetAttitudeList(usedTheme) {
+	console.log(usedTheme);
 	$.ajax({
 		type : "POST",
 		dataType : "json",
@@ -19,6 +20,8 @@ function ptlGetAttitudeList(usedTheme) {
 					
 					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
  					
+					console.log(usedTheme);
+					
  					if (usedTheme == 2) {
  						$("#inAttiBtn").parent().addClass("commute_on");
  						$("#inAttiBtn").removeClass("main_out").addClass("main_in");
@@ -103,7 +106,7 @@ function ptlAmPmCheck(hours) {
 }
 
 //휴일 체크
-function ptlCheckHoliday(obj) {
+function ptlCheckHoliday(obj, usedTheme) {
 	var todayLunar = lunarCalc(ptlNowAttiTime.getFullYear(), ptlNowAttiTime.getMonth() + 1, ptlNowAttiTime.getDate(), 1);
 	var todayMemorialDayList = memorialDayCheck(ptlNowAttiTime, todayLunar);
 	var todayYearMemorialDayList = yearmemorialDayCheck(ptlNowAttiTime, todayLunar);
@@ -129,18 +132,18 @@ function ptlCheckHoliday(obj) {
 	}
 	
 	if(addAttitude) {
-		ptlCheckAttitude(obj);
+		ptlCheckAttitude(obj, usedTheme);
 	} else {
 		alert(messages.strLang9);
 	}
 }
 
 //근태 중복 체크
-function ptlCheckAttitude(obj) {
+function ptlCheckAttitude(obj, usedTheme) {
 	var returnValue = getIsAttitude(obj.getAttribute("type"));
 	
 	if (returnValue == 0) {
-		ptlAddAttitude(obj);
+		ptlAddAttitude(obj, usedTheme);
 	} else {
 		alert(messages.strLang10);
 		ptlGetAttitudeList(usedTheme);
@@ -149,7 +152,7 @@ function ptlCheckAttitude(obj) {
 }
 
 //시간놓고 alert내용을 파라미터로 던져서 체크
-function ptlAddAttitude(obj) {
+function ptlAddAttitude(obj,usedTheme) {
 	var pTypeId = obj.getAttribute("type");
 	var pDateType = obj.getAttribute("datetype");
 	if (pTypeId == "A03") {

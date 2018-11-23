@@ -2,7 +2,7 @@ var joinPoll = function (e) {
 	var condition = true;
 	var height = window.screen.availHeight;
 	var width = window.screen.availWidth;		
-	var itemseq = '50';
+	var itemseq = document.getElementById('pollBtn').getAttribute('data1');
 	
 	if (condition) {
 		var top = (height - 370) / 2;
@@ -42,9 +42,10 @@ var assemblePollList = function (poll) {
 	
 	var answerList = poll.answerList;
 	var str = '';
+	var itemSeq = poll.pollInfo.itemSeq;
 	
 	str += '<p class="pollTitle" id="pollTitle"></p>';
-	str += '<p class="pollBtn" id="pollBtn">참여</p>';	
+	str += '<p class="pollBtn" id="pollBtn" data1="' + itemSeq +'">참여</p>';	
 	str += '<div class="pollList">';
 	for (var i=0; i<answerList.length; i++) {
 		if(answerList[i].answer.trim() !== '') {

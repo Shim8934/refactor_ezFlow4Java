@@ -192,9 +192,9 @@
 			<input type="hidden" name="content" value="">
 		</form>
 		
-		<table class="layout" style="height:707px">
+		<table class="layout">
 			<tr>
-				<td style="height:20px;">
+				<td style="height: 10px; vertical-align: top;">
 					<div id="menu">
 						<ul>
 							<c:if test="${bName == 'tbl_c_board'}">
@@ -235,7 +235,7 @@
       			</td>
   			</tr>
   			<tr>
-				<td style="padding-top:10px;height:70%" id="ItemOverflow">
+				<td style="padding-top:10px;height:580px" id="ItemOverflow">
 					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
     			</td>
   			</tr>

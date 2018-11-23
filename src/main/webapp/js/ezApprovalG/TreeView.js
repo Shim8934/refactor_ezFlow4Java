@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 /*트리의 설정값을 가지고 있는 변수*/
 var TreeIcons       = new Array();
 var TreeIconSizes   = new Array();
@@ -97,13 +97,13 @@ function TreeNode() {
         //부모노드의 점선 이미지와 동일하게 세팅한다.
         var arrParentDotImg = GetParentDotImg(pParentNode);
         for (var i = 0; i < arrParentDotImg.length - 1; i++) {
-            /*var imgDot = arrParentDotImg[i].cloneNode(true);
+            var imgDot = arrParentDotImg[i].cloneNode(true);
             imgDot.border = "0";
             imgDot.style.width = TreeIconSizes["width"];
             imgDot.style.height = TreeIconSizes["height"];
             imgDot.className = "DOT";
 
-            treeDiv.innerHTML += imgDot.outerHTML;*/
+            treeDiv.innerHTML += imgDot.outerHTML;
         }
 
         //부모노드가 마지막 노드인지 확인한다.
@@ -126,16 +126,12 @@ function TreeNode() {
             imgDot.style.width = TreeIconSizes["width"];
             imgDot.style.height = TreeIconSizes["height"];
             imgDot.className = "DOT";
-            
-            var imgSpan = document.createElement("SPAN");
 
             if (i < this.NodeLevel) {
                 if (bParentEndNode)
-                    //imgDot.src = TreeIcons["node_space"];
-                	imgSpan.setAttribute("class", "sub_iconLNB tree_blank");
+                    imgDot.src = TreeIcons["node_space"];
                 else
-                    //imgDot.src = TreeIcons["dot_normal"];
-                	imgSpan.setAttribute("class", "sub_iconLNB tree_blank");
+                    imgDot.src = TreeIcons["dot_normal"];
             }
 
             if (i == this.NodeLevel - 1 && pEndNode == false)
@@ -145,8 +141,7 @@ function TreeNode() {
                 imgDot.src = TreeIcons["dot_end"];
 
 
-            //treeDiv.innerHTML += imgDot.outerHTML;
-            treeDiv.innerHTML += imgSpan.outerHTML;
+            treeDiv.innerHTML += imgDot.outerHTML;
         }
 
         //노드 아이콘 생성
@@ -155,8 +150,6 @@ function TreeNode() {
         imgNode.border = "0";
         imgNode.style.width = TreeIconSizes["width"];
         imgNode.style.height = TreeIconSizes["height"];
-        
-        var imgSpan2 = document.createElement("SPAN");
 
         //자식 노드를 가지고 있는 노드인지 체크
         var strIsLeaf = GetAttribute(treeDiv, "ISLEAF");
@@ -173,45 +166,31 @@ function TreeNode() {
             }
         }
         if (strIsLeaf == "TRUE")
-            //imgNode.src = TreeIcons["node_end"];
-        	imgSpan2.setAttribute("class", "sub_iconLNB tree_blank");
+            imgNode.src = TreeIcons["node_end"];
         else if (bExpanded)
-        	//imgNode.src = TreeIcons["node_minus"];
-        	imgSpan2.setAttribute("class", "sub_iconLNB tree_minus");
+        	imgNode.src = TreeIcons["node_minus"];
         else
-            //imgNode.src = TreeIcons["node_plus"];
-        	imgSpan2.setAttribute("class", "sub_iconLNB tree_plus");
+            imgNode.src = TreeIcons["node_plus"];            
             
         var strTreeID = this.NodeID.substring(0, this.NodeID.indexOf("_"));
 
         //노드 Request Data 이벤트 Attach
         if (pRequestHandler != "" && strIsLeaf.toUpperCase() == "FALSE") {
-            //imgNode.style.cursor = "pointer";
-            //imgNode.setAttribute("onClick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + imgNode.id + "\");");
-            
-        	imgSpan2.setAttribute("onClick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + imgNode.id + "\");");
+            imgNode.style.cursor = "pointer";
+            imgNode.setAttribute("onClick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + imgNode.id + "\");");
         }
 
-        //treeDiv.innerHTML += imgNode.outerHTML;
-        
-        imgSpan2.setAttribute("id", "imgNode_" + this.NodeID);
-        
-        treeDiv.innerHTML += imgSpan2.outerHTML;
+        treeDiv.innerHTML += imgNode.outerHTML;
         //
         //노드 아이콘 생성
-        /*var subImgNode = document.createElement("IMG");
+        var subImgNode = document.createElement("IMG");
         subImgNode.id = "subImgNode_" + this.NodeID;
         subImgNode.border = "0";
         subImgNode.style.width = TreeIconSizes["width"];
         subImgNode.style.height = TreeIconSizes["height"];
         subImgNode.src = pUseAgency ? TreeImages["iconcomp"] : TreeImages["base"];
-        treeDiv.innerHTML += subImgNode.outerHTML; */
-        
-        var subImgNode = document.createElement("SPAN");
-        subImgNode.setAttribute("id", "subImgNode_" + this.NodeID);
-        subImgNode.setAttribute("class", "sub_iconLNB tree_tree");
-        
         treeDiv.innerHTML += subImgNode.outerHTML;
+        //
 
         //노드 이름 SPAN 생성
         var spnNode = document.createElement("SPAN");
@@ -652,20 +631,13 @@ function TreeView() {
 function treeicon_toggle(pNodeID, pTreeID, callbackFunc, pNodeIconID) {
     var objNodeIcon = document.getElementById(pNodeIconID);
     //puls 로 통일  2010.04.07
-    /*if (objNodeIcon) {
+    if (objNodeIcon) {
         if (objNodeIcon.src.indexOf(TreeIcons["node_plus"]) > 0)
             objNodeIcon.src = TreeIcons["node_minus"];
         else if (objNodeIcon.src.indexOf(TreeIcons["node_minus"]) > 0)
             objNodeIcon.src = TreeIcons["node_plus"];
-    }*/
-    
-    if (objNodeIcon) {
-    	 if (objNodeIcon.className.indexOf("sub_iconLNB tree_plus") >= 0) {
-    		 objNodeIcon.className = "sub_iconLNB tree_minus";
-    	 } else {
-        	 objNodeIcon.className = "sub_iconLNB tree_plus";
-    	 }
     }
+
 
     var subDiv = document.getElementById(pNodeID + "_sub");
     if (subDiv.style.display == "none")

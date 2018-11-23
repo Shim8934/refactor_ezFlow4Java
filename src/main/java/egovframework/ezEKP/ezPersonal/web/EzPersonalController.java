@@ -547,7 +547,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 					list.get(i).setPollTitle(list.get(i).getPollTitle2());
 				}
 				
-				PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+				PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 				
 				if (result != null) {
 					if (result.getResult() == 0) {
@@ -583,7 +583,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String answer = "";
 		String literalAnswer = "";
 		String pollSeq = "";
-		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
 		

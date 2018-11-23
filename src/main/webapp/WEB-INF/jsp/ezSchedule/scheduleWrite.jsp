@@ -172,6 +172,8 @@
 		        try {
 		    		window.opener.openerCalendarMiniView("CalendarMini");	    		
 		    		window.opener.openerCalendarMiniDataSource();
+		    		window.opener.openerCalendarMiniView("CalendarMini_Top");	    		
+		    		window.opener.openerCalendarMiniDataSource("Top");
 		            window.opener.getScheduleList(window.opener.nowDay, "P");
 		        } catch (e) { }
 		    }

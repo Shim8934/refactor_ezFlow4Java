@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code="ezBoard.t52" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	   	<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">	   	
+		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
+	   	<%-- <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css"> --%>
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	    <style>
@@ -163,7 +164,7 @@
 	            treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
 	       
 	            /* 18-05-18 김민성 - tootip 추가 및 글자수 관련 style 수정 */
-		        var node = document.getElementById(TreeIdx);
+		        /* var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
 		        
@@ -171,15 +172,14 @@
 		        	var spanW = 152 - (18 * nodeLevel);	
 		        	title3 = title2[i].getElementsByClassName("node_normal");
 		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2"));
-		        	
-		        	/* 2018-08-24 홍승비 - 게시판명의 width가 음수가 되는 경우 분기 처리 */
+		        			        	
 		        	if (spanW < 0) {
 						 spanW = 0;
 					 }
 		        	title3[0].style.width = spanW + 'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
-		        }
+		        } */
 		    }
 
 	        var AccessLevel = "0";
@@ -200,13 +200,41 @@
 	            treeView.DataBind(obj + "obj");
 	            
 	            /* 18-05-18 김민성 - tootip 추가 및 글자수 관련 style 수정 */
-				var node = $(".node_normal");
+				/* var node = $(".node_normal");
 				for(var i=0; i<node.length; i++) {
 					node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
 					node[i].style.width = '152px';
 					node[i].style.textOverflow = 'ellipsis';
 					node[i].style.overflow = 'hidden';
-				} 
+				} */
+				
+				var ctr = $("#TreeCtr"+num[1]).closest("h2");
+	            var ctrobj = $("#"+obj + "obj").closest("ul");
+	            
+	            $("h2.on").not(ctr).attr("class","off");
+	            $("#TopBoard .lnbUL").attr("class","lnbUL off");
+	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
+	            
+	            if (ctr.attr("class") == "off") {
+	            	ctr.attr("class","on");		            	
+	            	ctrobj.attr("class","lnbUL");
+	            	
+	            	/* ctrobj.animate({
+	            		maxHeight: "250px"
+	            	}, 500, function(){
+		            	ctrobj.attr("class","lnbUL");
+	            	}); */		            	
+	            } else {
+	            	ctrobj.attr("class","lnbUL off");
+	            	ctr.attr("class","off");
+	            	
+	            	/* ctrobj.animate({
+	            		maxHeight: "0px"
+	            	}, 500, function(){		            			
+	            		ctrobj.attr("class","lnbUL off");
+	            		ctr.attr("class","off")
+	            	}); */		            	
+	            }
 	        }
 
 	        function SetTreeConfig() {
@@ -329,19 +357,57 @@
 	    	});
 	    </script>
 	</head>
-	<body class="leftbody">
-	    <div id="left">
-	        <div class="left_admin"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code="ezBoard.t58" /></div>
+	<body class="newLeft">
+	    <div id="left" class="lnb" style="overflow: auto">
+	        <div class="left_title"><spring:message code="ezBoard.t58" /></div>
 	        <div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-		        <div id="TopBoard"></div>	
-		        <h3 style="border-top:1px solid #e8e8e8"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(1)"><spring:message code="ezBoard.t122" /></span></h3>
-		        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(6)"><spring:message code="ezBoard.t0004" /></span></h3>
-		        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(7)"><spring:message code="ezBoard.t500" /></span></h3>
-		        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(2)"><spring:message code="ezBoard.t62" /></span></h3>
-		        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(3)"><spring:message code="ezBoard.t64" /></span></h3>
-		        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(4)"><spring:message code="ezBoard.t65" /></span></h3>
-		        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(5)"><spring:message code="ezBoard.t66" /></span></h3>
-		        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(8)"><spring:message code="ezBoard.t5006" /></span></h3>
+	        	<div class="lnb_lay">
+		        	<div id="TopBoard"></div>
+		        	<ul class="lnbUL">
+			        	<div class="tree">
+			        		<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_firstPage"></span><span class="h2_text" onclick="OpenRightMenu(1)"><spring:message code="ezBoard.t122" /></span>
+	                            </div>
+	                    	</span>
+	                    	<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_firstPage"></span><span class="h2_text" onclick="OpenRightMenu(6)"><spring:message code="ezBoard.t0004" /></span>
+	                            </div>
+	                    	</span>
+	                    	<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_firstPage"></span><span class="h2_text" onclick="OpenRightMenu(7)"><spring:message code="ezBoard.t500" /></span>
+	                            </div>
+	                    	</span>
+	                    	<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_firstPage"></span><span class="h2_text" onclick="OpenRightMenu(2)"><spring:message code="ezBoard.t62" /></span>
+	                            </div>
+	                    	</span>
+	                    	<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_firstPage"></span><span class="h2_text" onclick="OpenRightMenu(3)"><spring:message code="ezBoard.t64" /></span>
+	                            </div>
+	                    	</span>
+	                    	<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_firstPage"></span><span class="h2_text" onclick="OpenRightMenu(4)"><spring:message code="ezBoard.t65" /></span>
+	                            </div>
+	                    	</span>
+	                    	<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_firstPage"></span><span class="h2_text" onclick="OpenRightMenu(5)"><spring:message code="ezBoard.t66" /></span>
+	                            </div>
+	                    	</span>
+	                    	<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_env_firstPage"></span><span class="h2_text" onclick="OpenRightMenu(8)"><spring:message code="ezBoard.t5006" /></span>
+	                            </div>
+	                    	</span>
+			        	</div>
+			        </ul>
+		        </div>
 	        </div>
 		</div>
 		<script>		
@@ -357,10 +423,10 @@
 				success: function(result){
 					$.each(result, function(idx, item){	        					
 						$.each(item, function(idx, i){
-							strHTML += "<h2><div AccessLevel='1' class='groupBoard' id='TreeCtr" + idx + "' value='" + i.boardId;
+							strHTML += "<h2 class='off'><span><span class='sub_iconLNB tree_arrow_up'></span><span AccessLevel='1' class='h2Title' id='TreeCtr" + idx + "' value='" + i.boardId;
 	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
-	                        strHTML += i.boardName + "</div></h2>";
-	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow-x: hidden; overflow-y: auto; padding-left: 10px; padding-bottom: 20px;'>";
+	                        strHTML += i.boardName + "</span></span></h2>";
+	                        strHTML += "<ul class='lnbUL off'><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj'>";
 	                        strHTML += "</div></ul>";
 						});
 						cnt = item.length;
@@ -368,13 +434,13 @@
 					});
 					$("#TopBoard").html(strHTML);
 	
-	                if (cnt > 0){         	
+	                /* if (cnt > 0){         	
 						TopBoard_onclick("TreeCtrl0", data);
-	                }
+	                } */
 				}        			
 			});
 			
-			initToggleList(document.getElementById("left"), "h2", "ul", "li");
+			//initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		</script>	    
 	</body>
 </html>

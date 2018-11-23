@@ -12,32 +12,48 @@
 		<div class="layDIV">
 	     	<div class="writebanner_leftContents">
 	         	<dl id="NewMail3" class="mail">
-	             	<dt class="icon"><span class="icon_mail"></span></dt>
-	                 <dt class="txt"><spring:message code='ezNewPortal.gu1' /></dt>
 	                 <c:choose>
-	                 	<c:when test="${unreadMailCount eq 0}">
-	                 		<dd class="count countZero">0</dd>
-	                 	</c:when>
-	                 	<c:when test="${unreadMailCount > 999}">
-	                 		<dd class="count">999+</dd>
-	                 	</c:when>
+	                 	<c:when test="${useMail eq 'NO'}">
+                   			<dt class="iconCircle icon"><span class="iconCommon"></span></dt>
+			                 <dt class="txt">&nbsp;</dt>
+                   		</c:when>
 	                 	<c:otherwise>
-			            	<dd class="count">${unreadMailCount }</dd>
+			             	 <dt class="icon"><span class="icon_mail"></span></dt>
+			                 <dt class="txt"><spring:message code='ezNewPortal.gu1' /></dt>
+			                 <c:choose>
+			                 	<c:when test="${unreadMailCount eq 0}">
+			                 		<dd class="count countZero">0</dd>
+			                 	</c:when>
+			                 	<c:when test="${unreadMailCount > 999}">
+			                 		<dd class="count">999+</dd>
+			                 	</c:when>
+			                 	<c:otherwise>
+					            	<dd class="count">${unreadMailCount }</dd>
+			                 	</c:otherwise>
+			                 </c:choose>
 	                 	</c:otherwise>
 	                 </c:choose>
 	             </dl>
 	             <dl id="AprSign3" class="work">
-	             	<dt class="icon"><span class="icon_approval"></span></dt>
-	                 <dt class="txt"><spring:message code='ezNewPortal.gu2' /></dt>
 	                 <c:choose>
-	                 	<c:when test="${approvalCount eq 0}">
-	                 		<dd class="count countZero">0</dd>
-	                 	</c:when>
-	                 	<c:when test="${approvalCount > 999}">
-	                 		<dd class="count">999+</dd>
-	                 	</c:when>
+	                 	<c:when test="${useApproval eq 'NO'}">
+                   			 <dt class="iconCircle icon"><span class="iconCommon"></span></dt>
+			                 <dt class="txt">&nbsp;</dt>
+                   		</c:when>
 	                 	<c:otherwise>
-			            	<dd class="count">${approvalCount }</dd>
+			             	 <dt class="icon"><span class="icon_approval"></span></dt>
+			                 <dt class="txt"><spring:message code='ezNewPortal.gu2' /></dt>
+			                 <c:choose>
+			                 	<c:when test="${approvalCount eq 0}">
+			                 		<dd class="count countZero">0</dd>
+			                 	</c:when>
+			                 	<c:when test="${approvalCount > 999}">
+			                 		<dd class="count">999+</dd>
+			                 	</c:when>
+			                 	<c:otherwise>
+					            	<dd class="count">${approvalCount }</dd>
+			                 	</c:otherwise>
+			                 </c:choose>
 	                 	</c:otherwise>
 	                 </c:choose>
 	             </dl>
@@ -46,36 +62,52 @@
 	         	<ul class="writebannerTop sortablePortlet">
 	                 <li>
 	                 	<dl id="Schedule3" class="writebannerIcon">
-	                     	<dt class="iconCircle iconcSchedule"><span class="iconCommon iconSchedule"></span></dt>
-	                         <dt class="iconText"><spring:message code='ezNewPortal.gu3' /></dt>
 	                         <c:choose>
-			                 	<c:when test="${scheduleCount eq 0}">
-			                 		<dd class="count countZero">0</dd>
-			                 	</c:when>
-			                 	<c:when test="${scheduleCount > 999}">
-			                 		<dd class="count">999+</dd>
-			                 	</c:when>
-			                 	<c:otherwise>
-					            	<dd class="count">${scheduleCount }</dd>
-			                 	</c:otherwise>
-			                 </c:choose>
+	                         	<c:when test="${useSchedule eq 'NO'}">
+	                     			<dt class="iconCircle"><span class="iconCommon"></span></dt>
+	                        		<dt class="iconText"></dt>
+	                     		</c:when>
+	                         	<c:otherwise>
+			                     	 <dt class="iconCircle iconcSchedule"><span class="iconCommon iconSchedule"></span></dt>
+			                         <dt class="iconText"><spring:message code='ezNewPortal.gu3' /></dt>
+			                         <c:choose>
+					                 	<c:when test="${scheduleCount eq 0}">
+					                 		<dd class="count countZero">0</dd>
+					                 	</c:when>
+					                 	<c:when test="${scheduleCount > 999}">
+					                 		<dd class="count">999+</dd>
+					                 	</c:when>
+					                 	<c:otherwise>
+							            	<dd class="count">${scheduleCount }</dd>
+					                 	</c:otherwise>
+					                 </c:choose>
+	                         	</c:otherwise>
+	                         </c:choose>
 	                     </dl>
 	                 </li>	                 
 	                 <li>
 	                 	<dl id="Poll3" class="writebannerIcon">
-	                     	<dt class="iconCircle iconcVote"><span class="iconCommon iconVote"></span></dt>
-	                         <dt class="iconText"><spring:message code='ezNewPortal.gu4' /></dt>
 	                         <c:choose>
-			                 	<c:when test="${pollCount eq 0}">
-			                 		<dd class="count countZero">0</dd>
-			                 	</c:when>
-			                 	<c:when test="${pollCount > 999}">
-			                 		<dd class="count">999+</dd>
-			                 	</c:when>
-			                 	<c:otherwise>
-					            	<dd class="count">${pollCount }</dd>
-			                 	</c:otherwise>
-			                 </c:choose>
+	                         	<c:when test="${useQuestion eq 'NO'}">
+	                     			<dt class="iconCircle"><span class="iconCommon"></span></dt>
+	                        		<dt class="iconText"></dt>
+	                     		</c:when>
+	                         	<c:otherwise>
+			                     	 <dt class="iconCircle iconcVote"><span class="iconCommon iconVote"></span></dt>
+			                         <dt class="iconText"><spring:message code='ezNewPortal.gu4' /></dt>
+			                         <c:choose>
+					                 	<c:when test="${pollCount eq 0}">
+					                 		<dd class="count countZero">0</dd>
+					                 	</c:when>
+					                 	<c:when test="${pollCount > 999}">
+					                 		<dd class="count">999+</dd>
+					                 	</c:when>
+					                 	<c:otherwise>
+							            	<dd class="count">${pollCount }</dd>
+					                 	</c:otherwise>
+					                 </c:choose>
+	                         	</c:otherwise>
+	                         </c:choose>
 	                     </dl>
 	                 </li>
 	             	<li>
@@ -107,53 +139,77 @@
 	             <ul class="writebannerBottom">
 	                 <li>
 	                 	<dl id="AprProcessing" class="writebannerIcon">
-	                     	<dt class="iconCircle iconcToward"><span class="iconCommon iconToward"></span></dt>
-	                         <dt class="iconText"><spring:message code='ezNewPortal.gu6' /></dt>
 	                         <c:choose>
-			                 	<c:when test="${approvalProgressingCount eq 0}">
-			                 		<dd class="count countZero">0</dd>
-			                 	</c:when>
-			                 	<c:when test="${approvalProgressingCount > 999}">
-			                 		<dd class="count">999+</dd>
-			                 	</c:when>
-			                 	<c:otherwise>
-					            	<dd class="count">${approvalProgressingCount }</dd>
-			                 	</c:otherwise>
-			                 </c:choose>
+	                         	<c:when test="${useApproval eq 'NO'}">
+		                   			<dt class="iconCircle"><span class="iconCommon"></span></dt>
+		                      		<dt class="iconText"></dt>
+		                   		</c:when>
+	                         	<c:otherwise>
+			                         <dt class="iconCircle iconcToward"><span class="iconCommon iconToward"></span></dt>
+			                         <dt class="iconText"><spring:message code='ezNewPortal.gu6' /></dt>
+			                         <c:choose>
+					                 	<c:when test="${approvalProgressingCount eq 0}">
+					                 		<dd class="count countZero">0</dd>
+					                 	</c:when>
+					                 	<c:when test="${approvalProgressingCount > 999}">
+					                 		<dd class="count">999+</dd>
+					                 	</c:when>
+					                 	<c:otherwise>
+							            	<dd class="count">${approvalProgressingCount }</dd>
+					                 	</c:otherwise>
+					                 </c:choose>
+	                         	</c:otherwise>
+	                         </c:choose>
 	                     </dl>
 	                 </li>
 	                 <li>
 	                 	<dl id="AprDraft" class="writebannerIcon">
-	                     	<dt class="iconCircle iconcReturn"><span class="iconCommon iconReturn"></span></dt>
-	                         <dt class="iconText"><spring:message code='ezNewPortal.gu7' /></dt>
 	                         <c:choose>
-			                 	<c:when test="${approvalDraftCount eq 0}">
-			                 		<dd class="count countZero">0</dd>
-			                 	</c:when>
-			                 	<c:when test="${approvalDraftCount > 999}">
-			                 		<dd class="count">999+</dd>
-			                 	</c:when>
-			                 	<c:otherwise>
-					            	<dd class="count">${approvalDraftCount }</dd>
-			                 	</c:otherwise>
-			                 </c:choose>
+	                         	<c:when test="${useApproval eq 'NO'}">
+		                   			<dt class="iconCircle"><span class="iconCommon"></span></dt>
+		                      		<dt class="iconText"></dt>
+		                   		</c:when>
+	                         	<c:otherwise>
+			                     	 <dt class="iconCircle iconcReturn"><span class="iconCommon iconReturn"></span></dt>
+			                         <dt class="iconText"><spring:message code='ezNewPortal.gu7' /></dt>
+			                         <c:choose>
+					                 	<c:when test="${approvalDraftCount eq 0}">
+					                 		<dd class="count countZero">0</dd>
+					                 	</c:when>
+					                 	<c:when test="${approvalDraftCount > 999}">
+					                 		<dd class="count">999+</dd>
+					                 	</c:when>
+					                 	<c:otherwise>
+							            	<dd class="count">${approvalDraftCount }</dd>
+					                 	</c:otherwise>
+					                 </c:choose>
+	                         	</c:otherwise>
+	                         </c:choose>
 	                     </dl>
 	                 </li>
 	                 <li>
 	                 	<dl id="AprDeptSusin" class="writebannerIcon">
-	                     	<dt class="iconCircle iconcReceive"><span class="iconCommon iconReceive"></span></dt>
-	                         <dt class="iconText"><spring:message code='ezNewPortal.gu8' /></dt>
 	                         <c:choose>
-			                 	<c:when test="${approvalDeptSusinCount eq 0}">
-			                 		<dd class="count countZero">0</dd>
-			                 	</c:when>
-			                 	<c:when test="${approvalDeptSusinCount >= 999}">
-			                 		<dd class="count">999+</dd>
-			                 	</c:when>
-			                 	<c:otherwise>
-					            	<dd class="count">${approvalDeptSusinCount }</dd>
-			                 	</c:otherwise>
-			                 </c:choose>
+	                         	<c:when test="${useApproval eq 'NO'}">
+		                   			<dt class="iconCircle"><span class="iconCommon"></span></dt>
+		                      		<dt class="iconText"></dt>
+		                   		</c:when>
+	                         	<c:otherwise>
+			                     	 <dt class="iconCircle iconcReceive"><span class="iconCommon iconReceive"></span></dt>
+			                         <dt class="iconText"><spring:message code='ezNewPortal.gu8' /></dt>
+			                         <c:choose>
+					                 	<c:when test="${approvalDeptSusinCount eq 0}">
+					                 		<dd class="count countZero">0</dd>
+					                 	</c:when>
+					                 	<c:when test="${approvalDeptSusinCount >= 999}">
+					                 		<dd class="count">999+</dd>
+					                 	</c:when>
+					                 	<c:otherwise>
+							            	<dd class="count">${approvalDeptSusinCount }</dd>
+					                 	</c:otherwise>
+					                 </c:choose>
+	                         	</c:otherwise>
+	                         </c:choose>
 	                     </dl>
 	                 </li>
 	             </ul>

@@ -117,7 +117,7 @@
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TYPE", document.frm.chk.value.split("|")[3]);
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCSTATE", document.frm.chk.value.split("|")[4]);
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "orgCompanyID", orgCompanyID);
-		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "APRMEMBERSN", document.frm.chk[i].value.split("|")[5]);
+		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "APRMEMBERSN", document.frm.chk.value.split("|")[5]);
 		        		createNodeAndInsertText(xmlpara, objNode, "MODE", pMode);
 		            }
 		        }

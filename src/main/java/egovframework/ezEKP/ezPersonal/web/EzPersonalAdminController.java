@@ -510,7 +510,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
 		
-		PersonalLightPollVO progressFlagVO = ezNewPortalService.getPollPortlet(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId());
+		PersonalLightPollVO progressFlagVO = ezNewPortalService.getPollPortlet(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId(), userInfo.getOffset());
 		if(progressFlagVO != null) {
 			progressPollFlag = "true";
 		}
@@ -1046,6 +1046,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("secondary", secondary);
 		model.addAttribute("sliderID", sliderID);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 
 		logger.debug("selectImage ended");
 		return "admin/ezPersonal/personalSelectImages";

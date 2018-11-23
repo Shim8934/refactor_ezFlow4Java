@@ -386,71 +386,29 @@
 	        </div>
 	        <div class="attitudeListBox" style="overflow:hidden; padding-right: 0;">
 		        <h2 class="on">
-		        	<span>
-		            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t1'/></span>
-		            </span>
+		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t1'/></span>
 		        </h2>
 		        <ul class="lnbUL">
-		        	<div class="tree">
-		            	<span>
-		                	<span>
-		                    	<span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_individual"></span><span class="h2_text" id="userAttitude" onclick="functionFlag(1)"><spring:message code='ezAttitude.t143'/></span>
-		                            </div>
-		                    	</span>
-		                        <span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_department"></span><span class="h2_text" id="deptAttitude" onclick="functionFlag(2)"><spring:message code='ezAttitude.t144'/></span>
-		                            </div>
-		                    	</span>
-		                    </span>        
-		                </span>
-		            </div>
+                   	<li><span class="sub_iconLNB tree_workTime_individual"></span><span class="list_text" id="userAttitude" onclick="functionFlag(1)"><spring:message code='ezAttitude.t143'/></span></li>
+                   	<li><span class="sub_iconLNB tree_workTime_department"></span><span class="list_text" id="deptAttitude" onclick="functionFlag(2)"><spring:message code='ezAttitude.t144'/></span></li>
 		        </ul>
 		        <h2 class="on">
-		        	<span>
-		            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t7'/></span>
-		            </span>
+		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t7'/></span>
 		        </h2>
 		        <ul class="lnbUL">
-		        	<div class="tree">
-		            	<span>
-		                	<span>
-		                		<span>
-		                        	<div class="node_div">
-		                        		<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_change"></span><span class="h2_text" onclick="functionFlag(3)"><spring:message code='ezAttitude.t166'/></span>
-		                            </div>
-		                    	</span>
-		                    	<c:if test="${attitudeAdminCheck == true}">
-			                    	<span>
-			                        	<div class="node_div">
-			                        		<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTime_change"></span><span class="h2_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t7'/>
-			                        			<c:if test="${totalAtt != 0 }">
-													<span class="attCount">(${totalAtt})</span>
-												</c:if>
-			                        		</span>
-			                            </div>
-			                    	</span>
-			                    </c:if>
-		                    </span>        
-		                </span>
-		            </div>
+               		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(3)"><spring:message code='ezAttitude.t166'/></span></li>
+                   	<c:if test="${attitudeAdminCheck == true}">
+                   		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t7'/>
+                   			<c:if test="${totalAtt != 0 }">
+								<span class="attCount">(${totalAtt})</span>
+							</c:if>
+                   		</span></li>
+                    </c:if>
 		        </ul>
 		        <c:if test="${attitudeAdminCheck == true}">
-		        <ul class="lnbUL">
-		        	<div class="tree">
-		            	<span>
-		                	<span>
-		                		<span>
-		                        	<div class="node_div">
-		                        		<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_workTimeset"></span><span class="h2_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t73'/></span>
-		                            </div>
-		                    	</span>
-		                    </span>
-		                </span>    	
-					</div>
-				</ul>
+			        <ul class="lnbUL">
+                  		<li><span class="sub_iconLNB tree_workTimeset"></span><span class="list_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t73'/></span></li>
+					</ul>
 				</c:if>
 			</div>
 	    </div>
