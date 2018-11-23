@@ -331,7 +331,7 @@
                     POLLTITLE ,
                     POLLTITLE2 ,
                     STARTDATE ,
-                    IFNULL(EndDate, DATE_FORMAT('1900-01-01', '%Y-%m-%d %H:%i:%s')) EndDate  
+                    EndDate  
        			FROM
        				TBL_PS_LIGHTPOLL 
       			WHERE
@@ -351,7 +351,7 @@
        						POLLTITLE ,
        						POLLTITLE2 ,
        						STARTDATE ,
-       						IFNULL(ENDDATE, DATE_FORMAT('1900-01-01', '%Y-%m-%d %H:%i:%s')) EndDate  
+       						EndDate  
 				FROM
 					TBL_PS_LIGHTPOLL 
 				WHERE
