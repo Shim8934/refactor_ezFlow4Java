@@ -80,11 +80,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getNoticePortletList(map);
 	}
 	@Override
-	public PersonalLightPollVO getPollPortlet(String companyId, int tenantId, String userId) throws Exception {
+	public PersonalLightPollVO getPollPortlet(String companyId, int tenantId, String userId, String offset) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
-		
+		//String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+		// 2018-11-23 황윤호 offset 적용 
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);

@@ -510,7 +510,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
 		
-		PersonalLightPollVO progressFlagVO = ezNewPortalService.getPollPortlet(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId());
+		PersonalLightPollVO progressFlagVO = ezNewPortalService.getPollPortlet(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId(), userInfo.getOffset());
 		if(progressFlagVO != null) {
 			progressPollFlag = "true";
 		}

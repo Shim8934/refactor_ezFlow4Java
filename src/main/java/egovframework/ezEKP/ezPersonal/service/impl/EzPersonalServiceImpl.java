@@ -324,12 +324,14 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 	
 	@Override
-	public List<PersonalGetPopUpListUserVO> getPopUpListUser(String pComapnyID, int tenantID) throws Exception {
+	public List<PersonalGetPopUpListUserVO> getPopUpListUser(String pComapnyID, int tenantID, String offset) throws Exception {
 		logger.debug("getPopUpListUser started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+		//String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+		// 2018-11-23 황윤호 offset 적용 
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 
 		map.put("v_pCompanyID", pComapnyID);
 		map.put("nowDate", nowDate);

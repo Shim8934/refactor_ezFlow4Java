@@ -491,6 +491,7 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
+			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
 			String deptId = info.getDeptId();
 			String langType = info.getLang();
@@ -550,7 +551,7 @@ public class EzNewPortalGWController {
 			/**
 			 * 4) 팝업 공지
 			 */
-			List<PersonalGetPopUpListUserVO> popupNotiList = ezPersonalService.getPopUpListUser(companyId, tenantId);
+			List<PersonalGetPopUpListUserVO> popupNotiList = ezPersonalService.getPopUpListUser(companyId, tenantId, offset);
 			data.put("popupNotiList", popupNotiList);
 			
 			data.put("logoUrl", logoUrl);
@@ -2495,11 +2496,12 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String companyId = info.getCompanyId();
+			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
 			List<Map<String, Object>> answerList = new ArrayList<Map<String, Object>>();
 
 			PersonalLightPollVO pollInfo = new PersonalLightPollVO();
-			pollInfo = ezNewPortalService.getPollPortlet(companyId, tenantId, request.getParameter("userId"));
+			pollInfo = ezNewPortalService.getPollPortlet(companyId, tenantId, request.getParameter("userId"), offset);
 
 			int itemSeq = pollInfo.getItemSeq();
 			List<PersonalLightPollVO> pollResult = ezNewPortalService.getPollPortletResult(companyId, tenantId, itemSeq);

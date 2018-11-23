@@ -21,7 +21,7 @@ public interface EzPersonalService {
 	
 	public List<PersonalLightPollVO> getPollResult (int pItemSeq, int tenantID) throws Exception;
 	
-	public List<PersonalGetPopUpListUserVO> getPopUpListUser (String pComapnyID, int tenantID) throws Exception;
+	public List<PersonalGetPopUpListUserVO> getPopUpListUser (String pComapnyID, int tenantID, String Offset) throws Exception;
 	
 	public List<PersonalGetWebPartGroupVO> getWebPartGroup (String pCompanyID, String pMode, int tenantID) throws Exception;
 	
