@@ -33,21 +33,42 @@
 	            <dd class="infoLogout" onclick="infoLogoutClick()"><img src="/images/ezNewPortal/theme3Img/infoLogout_btn.png"></dd>
 	        </dl>
 	        <div class="time_check">
-	        	<div class="presentTime">
-	                <p class="timeTxt"><span id="ptlTimeFlow"></span>
-	                <span class="timeAM">AM</span>
-	                <span class="timePM">PM</span></p>
-	            </div>
-	            <div class="main_time">
-	            	<dl class="timeCheckIn out" id="ptlInAttiBtn" type="A01" datetype="2" onclick="ptlCheckHoliday(this, '${usedTheme}')">
-	                	<dt><img src="/images/ezNewPortal/theme3Img/main_time_icon.png"></dt>
-	                	<dd><spring:message code='ezNewPortal.t046' /></dd>
-	                </dl>
-	                <dl class="timeCheckOut out" id="ptlOutAttiBtn" type="A03" datetype="2" onclick="ptlCheckHoliday(this, '${usedTheme}')">
-	                	<dt><img src="/images/ezNewPortal/theme3Img/main_time_icon.png"></dt>
-	                	<dd><spring:message code='ezNewPortal.t047' /></dd>
-	                </dl>
-	            </div>
+	        	<c:choose>
+	        		<c:when test="${useAttitude eq 'YES' }">
+	        			<div class="presentTime">
+	               		 	<p class="timeTxt"><span id="ptlTimeFlow"></span>
+	                		<span class="timeAM">AM</span>
+	                		<span class="timePM">PM</span></p>
+	            		</div>
+	            		<div class="main_time">
+	            			<dl class="timeCheckIn out" id="ptlInAttiBtn" type="A01" datetype="2" onclick="ptlCheckHoliday(this, '${usedTheme}')">
+	                			<dt><img src="/images/ezNewPortal/theme3Img/main_time_icon.png"></dt>
+	                			<dd><spring:message code='ezNewPortal.t046' /></dd>
+	                		</dl>
+	                		<dl class="timeCheckOut out" id="ptlOutAttiBtn" type="A03" datetype="2" onclick="ptlCheckHoliday(this, '${usedTheme}')">
+	                			<dt><img src="/images/ezNewPortal/theme3Img/main_time_icon.png"></dt>
+	                			<dd><spring:message code='ezNewPortal.t047' /></dd>
+	                		</dl>
+	            		</div>
+	        		</c:when>
+	        		<c:otherwise>
+	        			<div class="presentTime presentTime_commuteNone">
+	               		 	<p class="timeTxt"><span id="ptlTimeFlow"></span>
+	                		<span class="timeAM">AM</span>
+	                		<span class="timePM">PM</span></p>
+	            		</div>
+	            		<div class="main_time">
+	            			<dl class="timeCheckIn out" id="ptlInAttiBtn" type="A01" datetype="2" onclick="ptlCheckHoliday(this, '${usedTheme}')">
+	                			<dt><img src="/images/ezNewPortal/theme3Img/main_time_icon.png"></dt>
+	                			<dd><spring:message code='ezNewPortal.t046' /></dd>
+	                		</dl>
+	                		<dl class="timeCheckOut out" id="ptlOutAttiBtn" type="A03" datetype="2" onclick="ptlCheckHoliday(this, '${usedTheme}')">
+	                			<dt><img src="/images/ezNewPortal/theme3Img/main_time_icon.png"></dt>
+	                			<dd><spring:message code='ezNewPortal.t047' /></dd>
+	                		</dl>
+	            		</div>
+	        		</c:otherwise>
+	        	</c:choose>
 	        </div>
 	    </div>
 	 </div>
