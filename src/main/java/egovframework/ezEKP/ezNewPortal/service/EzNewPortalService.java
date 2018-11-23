@@ -46,7 +46,8 @@ public interface EzNewPortalService {
 	public void deleteUserMenuOrder(String companyId, int tenantId, String userId) throws Exception;
 	public List<?> getQuickLinkList(String companyId, int tenantId, int page, int limit) throws Exception; 
 	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit) throws Exception;
-	public List<?> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception;
+//	public List<?> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception;
+	public List<PortletInfoVO> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId, boolean config) throws Exception;
 	public List<?> getUserFrameListAndSelectedFrame(String companyId, int tenantId, String userId) throws Exception;
 	public void updateUserUsedFrame(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
 	public void updateUserUsedPortlet(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
@@ -69,8 +70,8 @@ public interface EzNewPortalService {
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month);
 	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId);
 	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId);
-	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId);
-	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId);
+	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId) throws Exception;
+	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId) throws Exception;
 	public void deleteUserThemeSetting(String userId, int tenantId, String companyId);
 	public void updateUserThemeSetting(int usedTheme, int usedFrame, String userId, int tenantId, String companyId);
 	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String compnyId);

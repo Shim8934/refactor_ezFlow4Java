@@ -583,11 +583,19 @@
 			newPortalTopMenu.menuWidth.forEach(function (item, index) {
 				if (sumWidth < listWidth) {
 					sumWidth += (item*1);
-					menuCnt++;
+					if (sumWidth < listWidth) {
+						menuCnt++;
+					}
 				}
 				totalMenuCnt++;
 			});
-			document.getElementById('nav_count').innerHTML = '+' + (totalMenuCnt*1 - (menuCnt*1-1));
+			var viewCnt = totalMenuCnt*1 - (menuCnt*1);
+			if (viewCnt > 0) {
+				$('.hidden_nav_count').css('background','#ff2323');
+				document.getElementById('nav_count').innerHTML = '+' + (totalMenuCnt*1 - (menuCnt*1));
+			} else {
+				$('.hidden_nav_count').css('background','none');
+			}
 		}
 		
 		var getNotiPopup = function () {
