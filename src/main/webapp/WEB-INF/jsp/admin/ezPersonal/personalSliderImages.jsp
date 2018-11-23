@@ -22,14 +22,14 @@
 		ul .addSlider {border:1px dashed #aab2ba; display:inline-block; text-align:center; vertical-align : top; height:19.3em; border-radius:0px; width:225px; height: 370px; position:relative;}
 		.sliderInfoTD {padding:5px 15px 5px 5px;}
 		ul .addSlider:hover {cursor:pointer;}
-		ul .slideIsUse {padding: 30px 0px 10px 0px;}
+		ul .slideIsUse {padding: 10px 5px 10px 10px;}
 		.cancelNewSliderBtn img {height:25px; float:right; padding: 3px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 		.addNewSliderBttn img {height:25px; float:right; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 		.slider-header-add {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;border:1px solid #2196f3; width:210px;}
 		.addImageBtn span {height:25px; background-color:#f4f4f4; border:1px solid #e7e7e7;  float:right; padding: 0px 9px; line-height: 23px; display:block; text-align: center; margin-top:40%; margin-right:30%}
 		#UploadSliderImage {position:relative; bottom:120px;}
 		.sliderInfoTDadd { padding: 3px;}
-		.imgbtn {}
+		.imgbtn {position: relative; left: 100px;}
 		.sliderList-modify {display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
 		.cancelNewSliderBtn-modify img {height:25px; float:right; padding: 3px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 	}
@@ -345,11 +345,10 @@
 		        var item;
 		        var mode;
 		        
-		        if (sliderid == "") {
 		            item = guid;
 		            mode = "NEW";
 		            fileName = getNodeText(SelectNodes(xml, "ROOT/NODES/NODE/PFILENAME")[0]);
-		        } /* else {
+		         /* else {
 		            item = sliderid;
 		            mode = "MOD";
 		            fileName = SliderImgPath.substr(SliderImgPath.lastIndexOf("/") + 1);
@@ -374,8 +373,7 @@
 				            if (ReturnFunction != null) {
 				                ReturnFunction();
 				            }
-				            
-				            window.close();
+				            window.location.reload();
 		        		} else {
 		        			alert("<spring:message code = 'ezPersonal.t192' />");
 		        		}
@@ -431,10 +429,10 @@
 		        		if (result == "OK") {
 		        			alert("<spring:message code = 'ezPersonal.t191' />");
 				            
-				            /* if (ReturnFunction != null) {
+				            if (ReturnFunction != null) {
 				                ReturnFunction();
-				            } */
-				            getSliderList();
+				            } 
+				            window.location.reload();
 		        		} else {
 		        			alert("<spring:message code = 'ezPersonal.t192' />");
 		        		}
@@ -458,11 +456,12 @@
 		    function modifySlider(obj) {
 		    	var sliderID = obj.getAttribute("data");
 		    	var sliderList = obj.parentNode.parentNode;
-		    	var name1 = sliderList.querySelector("#sliderName").getAttribute("data4").value;
-		    	var name2 = sliderList.querySelector("#sliderName2").getAttribute("data5").value;
-		    	var url = sliderList.querySelector("#sliderURL").getAttribute("data6").value;
-		    	var regDate = sliderList.querySelector("#sliderRegDate").getAttribute("data7").value;
+		    	var name1 = sliderList.querySelector("#sliderName").getAttribute("data4");
+		    	var name2 = sliderList.querySelector("#sliderName2").getAttribute("data5");
+		    	var url = sliderList.querySelector("#sliderURL").getAttribute("data6");
+		    	var regDate = sliderList.querySelector("#sliderRegDate").getAttribute("data7");
 		    	
+		    	console.log(name1);
 		    	var sliderHTML = "";
 		    	sliderHTML += "<li class = 'sliderList-modify' id = 'sliderList-modify'>";
 		    	sliderHTML += "<div class = 'slider-header-add' style='background-color:#f4f4f4;border:1px solid #e7e7e7;color:#b1b1b1'>";
@@ -476,11 +475,11 @@
 		    	sliderHTML += "</div>";
 		    	sliderHTML += "<div class = 'slider-content'>";
 		    	sliderHTML += "<table class = 'sliderInfo'><tr><td class ='sliderInfoTDadd'>한글 |   ";
-		    	sliderHTML += "<input id ='txtDisplayName' type='text' maxlength='50'></td></tr>";
+		    	sliderHTML += "<input id ='txtDisplayName' value='"+name1+"' type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>영어 |   ";
-		    	sliderHTML += "<input id ='txtDisplayName2' type='text' maxlength='50'></td></tr>";
+		    	sliderHTML += "<input id ='txtDisplayName2' value='"+name2+"' type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL |   ";
-		    	sliderHTML += "<input id='txtDisplayName3' type='text' maxlength='50'></td></tr>";
+		    	sliderHTML += "<input id='txtDisplayName3' value='"+url+"'type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "</table>"
 		    	sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton()' checked='checked' onchange='toggleButton(this)'><span class='slider round'></label></td>";
 		    	sliderHTML += "<a href='#' class='imgbtn'><span data='"+sliderID+"' onclick='btnSave_click_modify(this);'><spring:message code = 'ezPersonal.t34' /></span></a>";
