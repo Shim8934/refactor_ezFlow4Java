@@ -103,11 +103,12 @@
 		    		sliderHTML += "</span>";
 		    		sliderHTML += "<div class = 'slider-content'>";
 		    		sliderHTML += "<table class = 'sliderInfo'><tr><td class ='sliderInfoTD'>이름    |</td>";
-		    		sliderHTML += "<td class ='sliderName'>"+sliderName+"</td></tr>"
+		    		sliderHTML += "<td class ='sliderName' id = 'sliderName' data4 ='"+sliderName+"'>"+sliderName+"</td></tr>"
+		    		sliderHTML += "<tr><td class ='sliderInfoTD'></td><td class ='sliderName2'id = 'sliderName2' data5 ='"+sliderName2+"'></td></tr>";
 		    		sliderHTML += "<tr><td class ='sliderInfoTD'>URL   |</td>";
-		    		sliderHTML += "<td class ='sliderInfo'>"+sliderURL+"</td></tr>"
+		    		sliderHTML += "<td class ='sliderURL' id = 'sliderURL' data6 ='"+sliderURL+"'>"+sliderURL+"</td></tr>"
 		    		sliderHTML += "<tr><td class ='sliderInfoTD'>등록일   |</td>";
-		    		sliderHTML += "<td class ='sliderRegDate'>"+sliderRegDate+"</td></tr>"
+		    		sliderHTML += "<td class ='sliderRegDate' id= 'sliderRegDate' data7 ='"+sliderRegDate+"'>"+sliderRegDate+"</td></tr>"
 		    		
 		    		if(sliderIsUse == 1){
 		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' checked='checked')' onchange='toggleButton("+sliderIsUse+")'><span class='slider round'></label></td>";
@@ -457,7 +458,10 @@
 		    function modifySlider(obj) {
 		    	var sliderID = obj.getAttribute("data");
 		    	var sliderList = obj.parentNode.parentNode;
-		    	console.log(sliderList);
+		    	var name1 = sliderList.querySelector("#sliderName").getAttribute("data4").value;
+		    	var name2 = sliderList.querySelector("#sliderName2").getAttribute("data5").value;
+		    	var url = sliderList.querySelector("#sliderURL").getAttribute("data6").value;
+		    	var regDate = sliderList.querySelector("#sliderRegDate").getAttribute("data7").value;
 		    	
 		    	var sliderHTML = "";
 		    	sliderHTML += "<li class = 'sliderList-modify' id = 'sliderList-modify'>";
