@@ -604,8 +604,6 @@
 					
 				window.opener.$(".accessNO").text(menuAuthsNList.substring(1));
 
-	   			console.log(menuAuths);
-	   			console.log(window.opener.menuAuths);
 	   			window.close();
 	   		}
 	   		

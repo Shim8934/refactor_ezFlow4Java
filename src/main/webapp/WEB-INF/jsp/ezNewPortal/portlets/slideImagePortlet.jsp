@@ -27,8 +27,8 @@
 						</c:forEach>
 					</c:when>
 					<c:otherwise>
-						<img src="/images/ezNewPortal/rolling01.png" width="280" height="515" />
-						<img src="/images/ezNewPortal/rolling01.png" width="280" height="515" />
+						<img src="/images/ezNewPortal/potletSlide01.png" width="280" height="515" />
+						<img src="/images/ezNewPortal/potletSlide02.png" width="280" height="515" />
 					</c:otherwise>
 				</c:choose>
 			</div>

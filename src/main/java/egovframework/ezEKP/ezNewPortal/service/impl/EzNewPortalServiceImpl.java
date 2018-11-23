@@ -457,6 +457,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 					break;
 				}
 			}
+			
+			if (userResult.size() == 0) {
+				resultPortlet.setPortletUsed(true);
+			}
 		}
 		
 		if (config) {
@@ -547,7 +551,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("boardId", boardId);
 		map.put("accessId", accessId);
-
+		
 		LOGGER.debug("[Serivce] getBoardAuthCheck Ended");
 		return ezNewPortalDAO.getBoardAuthCheck(map);
 	}
