@@ -2988,10 +2988,15 @@ e.printStackTrace();
 				userPhoto = commonUtil.getUploadPath("upload_personal.PHOTO", info.getTenantId()) + commonUtil.separator + imgUrl;
 			}
 			
+			String useAttitude = "NO";
 			//근태 사용여부
-			String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());			
-			if (useAttitude == null || useAttitude.equals("")) {
-				useAttitude = "YES";
+			String useAttitude2 = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());			
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(info.getCompanyId(), info.getTenantId(), info.getLang(), userId, info.getDeptId());
+			
+			for (MenuInfoVO mVO : menuList) {
+				if (mVO.getMenuId()==9 && useAttitude2.equals("YES")) {
+					useAttitude = "YES";
+				}	
 			}
 			
 			//마지막(최종)접속시간
