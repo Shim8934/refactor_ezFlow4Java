@@ -39,6 +39,7 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -2870,7 +2871,7 @@ e.printStackTrace();
 		String rootBoardID = "top";
 
 		try {
-			String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(rootBoardID, userId, deptId, companyId, tenantId);
+			String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(boardId, userId, deptId, companyId, tenantId);
 
 			if (rollInfo != null
 					&& (boardGroupAdmin_FG.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
@@ -2878,7 +2879,28 @@ e.printStackTrace();
 			} else {
 				for (int i = 0; i < deptPathCount; i++) {
 					String deptPathId = deptPathSplit[i];
-					String authCompare = ezNewPortalService.getBoardAuthCheck(boardId, deptPathId, tenantId, companyId);
+					BoardPropertyVO authInfo = ezBoardAdminService.getACL(boardId, deptPathId, tenantId);
+					
+					if (authInfo == null) {
+						
+					} else {
+						String access = authInfo.getAccess_();
+						String deptAcl = authInfo.getBoardGroupACL();
+						
+						if (i == deptPathCount - 1) {
+							deptAcl = "Y";
+						}
+						
+						if (access.equals("1") && deptAcl.equals("Y")) {
+							authCheck = true;
+						} else if (access.equals("0") && deptAcl.equals("Y")) {
+							authCheck = false;
+						}
+						
+					}
+					
+					
+					/*String authCompare = ezNewPortalService.getBoardAuthCheck(boardId, deptPathId, tenantId, companyId);
 
 					if (authCompare != null) {
 						if (authCompare.equals("true")) {
@@ -2886,7 +2908,7 @@ e.printStackTrace();
 						} else {
 							authCheck = false;
 						}
-					}
+					}*/
 				}
 			}
 		} catch (Exception e) {
