@@ -378,9 +378,9 @@ form{display:inline;margin:0}
     overflow:auto;
 }
 .mainbody h1 {
-	font-size:17px;
+	font-size:16px;
 	font-weight:bold;
-	padding-left:5px;
+	padding-left:2px;
 	margin:15px 0px 14px;
 	left:7px;
 	color:#333;
@@ -1803,7 +1803,7 @@ form{display:inline;margin:0}
 	margin-top:3px;	
 }
 
-#left .list_thumbnail li .thumbnail img{ border-radius:2px; width:39px !important; height:27px !important;}
+#left .list_thumbnail li .thumbnail img{ border-radius:2px; width:36px !important; height:24px !important; margin-top:2px;}
 
 #left .list_thumbnail li .name {
 	display:inline;

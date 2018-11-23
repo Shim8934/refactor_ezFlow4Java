@@ -457,6 +457,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 					break;
 				}
 			}
+			
+			if (userResult.size() == 0) {
+				resultPortlet.setPortletUsed(true);
+			}
 		}
 		
 		if (config) {
@@ -547,7 +551,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("boardId", boardId);
 		map.put("accessId", accessId);
-
+		
 		LOGGER.debug("[Serivce] getBoardAuthCheck Ended");
 		return ezNewPortalDAO.getBoardAuthCheck(map);
 	}
@@ -844,7 +848,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 
-	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId) {
+	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId) throws Exception {
 		LOGGER.debug("getUserStartPage started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -854,7 +858,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getUserStartPage(map);
 	}
 	
-	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId) {
+	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId) throws Exception {
 		LOGGER.debug("updateUserStartPage started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);

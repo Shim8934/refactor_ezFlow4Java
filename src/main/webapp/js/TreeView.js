@@ -224,7 +224,7 @@ function TreeNode() {
 
         spnNode.id = "spn_" + this.NodeID;
         spnNode.name = "spn_" + strTreeID;
-        spnNode.className = "h2_text";
+        spnNode.className = "node_normal";
         spnNode.style.display = "inline-block";
         /*if(CrossYN()) {
             spnNode.style.paddingTop = "0px";        	

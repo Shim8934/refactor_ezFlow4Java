@@ -21,7 +21,7 @@
 				font-weight: normal;
 			}
 			.table_layout th {
-				color:#2f2f2f;height: 32px;background: #e4e8ec;border: 1px solid #c8ccd0;padding:0;margin:0;
+				color:#2f2f2f;height: 32px;background:#e4e8ec;border: 1px solid #c8ccd0;padding:0;margin:0;
 				
 			}
 		</style>

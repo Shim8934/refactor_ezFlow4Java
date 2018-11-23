@@ -70,8 +70,8 @@ public interface EzNewPortalService {
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month);
 	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId);
 	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId);
-	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId);
-	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId);
+	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId) throws Exception;
+	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId) throws Exception;
 	public void deleteUserThemeSetting(String userId, int tenantId, String companyId);
 	public void updateUserThemeSetting(int usedTheme, int usedFrame, String userId, int tenantId, String companyId);
 	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String compnyId);

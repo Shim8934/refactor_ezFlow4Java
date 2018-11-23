@@ -207,7 +207,7 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<ThemeInfoVO>) list("ezNewPortal.getUserThemeList", map);
 	}
 	
-	public MenuInfoVO getUserStartPage(Map<String, Object> map) {
+	public MenuInfoVO getUserStartPage(Map<String, Object> map) throws Exception {
 		return (MenuInfoVO) select("ezNewPortal.getUserStartPage", map);
 	}
 	

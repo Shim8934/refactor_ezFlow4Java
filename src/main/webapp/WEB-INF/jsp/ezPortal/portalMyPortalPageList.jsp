@@ -38,10 +38,10 @@
             	g_UseFlag = pUseFG;
             	
             	if (g_SelectedObj == null) {
-	                pObj.style.backgroundColor = "#e4e8ec";
+	                pObj.style.backgroundColor = "#f1f8ff";
     	            g_SelectedObj = pObj;
         	    } else {
-                	pObj.style.backgroundColor = "#e4e8ec";
+                	pObj.style.backgroundColor = "#f1f8ff";
 
                 	if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
                 	g_SelectedObj = pObj;

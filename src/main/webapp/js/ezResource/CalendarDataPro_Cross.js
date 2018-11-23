@@ -1420,7 +1420,7 @@ function mfFormatTime(iMin) {
 
 //날짜에 마우스 오버시
 function MonthlyViewHeader_onMouseOver(pThis) {
-    pThis.style.backgroundColor = "#e4e8ec";
+    pThis.style.backgroundColor = "#f1f8ff";
 }
 
 //마우스 아웃시
@@ -1439,7 +1439,7 @@ function Schedule_onMouseClick(event, type) {
         if (g_szCurrentApptDivID != null && document.getElementById(g_szCurrentApptDivID))
             document.getElementById(g_szCurrentApptDivID).style.backgroundColor = "";
 
-        event.style.backgroundColor = "#e4e8ec";
+        event.style.backgroundColor = "#f1f8ff";
 
         //M:월, W:주, D:일
         if (type == "M") {
