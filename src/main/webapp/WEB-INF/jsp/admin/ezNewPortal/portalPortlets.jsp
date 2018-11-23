@@ -482,7 +482,16 @@
 					
 					if (menuId == 4 && portletId != 10) {
 						listHTML += "<tr class='boardTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t048' /> :</th><td class='portletInfoTD'>";
-						listHTML += "<input id='portletBoard" + portletId + "' class='boardName' type='text' value='" + ReplaceText(ReplaceText(result[i].boardName1, '\"', "&#39;"), "\'", "&#34;") + "' data1='" + result[i].portletBoardId + "' readonly>";
+						
+						var boardName = "";
+						
+						if (result[i].boardName1 == null || result[i].boardName1 == "null") {
+							boardName = "<spring:message code='ezNewPortal.t089' />";
+						} else {
+							boardName = ReplaceText(ReplaceText(result[i].boardName1, '\"', "&#39;"), "\'", "&#34;");
+						}
+						
+						listHTML += "<input id='portletBoard" + portletId + "' class='boardName' type='text' value='" + boardName + "' data1='" + result[i].portletBoardId + "' readonly>";
 						listHTML += "<div class='boardSetting'>";
 						listHTML += "<a class='boardSettingtBtn'>";
 						listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
