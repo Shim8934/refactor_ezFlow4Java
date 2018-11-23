@@ -786,10 +786,10 @@
 			<span class="txt">▒ <img src="/images/ImgIcon/prev.gif"   height="16" style="margin-top:-3px;vertical-align:middle;text-align:center;" alt="<spring:message code='ezEmail.t833' />"/><img src="/images/ImgIcon/next.gif" align="absmiddle"  height="16" style="margin-top:-3px;" alt="<spring:message code='ezEmail.t834' />" /><spring:message code='ezEmail.t807' /></span><br /><br /><br />
 		    <div id="mainmenu">
 		        <ul id="tb_Parent">
-		          <li><span onclick="New_InboxRule();"><spring:message code='ezEmail.t804' /></span></li>
+		          <li class="important"><span onclick="New_InboxRule();"><spring:message code='ezEmail.t804' /></span></li>
 		          <li><span onclick="Detail_InboxRule();"><spring:message code='ezEmail.t805' /></span></li>
-		          <li><span onclick="event_DeleteRule();"><spring:message code='ezEmail.t95' /></span></li>
-		          <li><span onclick="Rule_Reload();"><spring:message code='ezEmail.t515' /></span></li>
+		          <li onclick="event_DeleteRule();"><span class="icon16 icon16_delete"></span></li>
+		          <li onclick="Rule_Reload();"><span class="icon16 icon16_refresh"></span></li>
 		          <li class="prevLi"><span onclick="Priority_UP();"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code='ezEmail.t833' />"/></span></li>
 		          <li class="prevLi"><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code='ezEmail.t834' />" /></span></li>
 		          </ul>        
@@ -800,9 +800,9 @@
 						<div style="border:1px solid #dbdbda;width:435px;height:397px;">
 							<table class="mainlist" style="width:100%;">
 			                    <tr>
-			                        <td style="width:8%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;"><span><spring:message code='ezEmail.t808' /></span></td>
-			                        <td onclick="sortRuleName(this)" style="width:60%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;cursor:pointer"><span style="padding-left:10px;"><spring:message code='ezEmail.t809' /></span></td>
-			                        <td style="width:32%;background-color:#f8f8f8;text-align:center;border-bottom:2px solid #dbdbda;"><span><spring:message code='ezEmail.t810' /></span></td>
+			                        <td style="width:8%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:1px solid #dbdbda;"><span><spring:message code='ezEmail.t808' /></span></td>
+			                        <td onclick="sortRuleName(this)" style="width:60%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:1px solid #dbdbda;cursor:pointer"><span style="padding-left:10px;"><spring:message code='ezEmail.t809' /></span></td>
+			                        <td style="width:32%;background-color:#f8f8f8;text-align:center;border-bottom:1px solid #dbdbda;"><span><spring:message code='ezEmail.t810' /></span></td>
 			                    </tr>
 							</table>
 							<div id="contentlist" name="contentlist" style="height:365px;overflow-y:auto;">

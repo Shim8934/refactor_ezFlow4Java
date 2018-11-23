@@ -395,7 +395,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("nowMonth", nowMonth);
 			model.addAttribute("useAttitude", data.get("useAttitude"));
 			model.addAttribute("useQuestion", data.get("useQuestion"));
-			model.addAttribute("uesCircular", data.get("useCircular"));
+			model.addAttribute("useCircular", data.get("useCircular"));
 			model.addAttribute("useMail", data.get("useMail"));
 			model.addAttribute("useApproval", data.get("useApproval"));
 			model.addAttribute("useSchedule", data.get("useSchedule"));
@@ -613,6 +613,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		if (startPageStatus.equals("ok")) {
 			JSONObject data = (JSONObject) startPageResultBody.get("data");
 			JSONObject startPage = (JSONObject) data.get("startPage");
+			JSONObject useMemo = (JSONObject) data.get("useMemo");
 			
 			if (startPage == null) {
 				model.addAttribute("menuId", 0);
@@ -620,6 +621,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			} else {
 				model.addAttribute("menuId", startPage.get("menuId"));
 				model.addAttribute("menuUrl", startPage.get("menuUrl"));
+				model.addAttribute("useMemo", useMemo);
 			}
 		}
 		

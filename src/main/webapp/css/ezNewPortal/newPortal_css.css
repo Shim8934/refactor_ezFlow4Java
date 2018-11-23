@@ -129,7 +129,7 @@ nav > .full_nav {float:left; width: 56px; height: 54px; margin-right:10px; paddi
 nav > .full_nav.on { border: 0px none; background: #0287db; }
 nav > .full_nav.on .full_menu { background-position: 0px -155px; width: 25px; height: 24px; }
 nav > .countBox {position:relative; float: right; width: 56px; height: 54px; padding: 18px 0px; text-align: center; box-sizing: border-box; display:none;}
-nav > .countBox .hidden_nav_count {position: absolute; right: 0px; top: 6px; display: inline-block; height: 18px; line-height: 18px; background: #ff2323; border-radius: 16px; padding: 0px 7px; font-size: 12px; color: #fff; vertical-align: top; }
+nav > .countBox .hidden_nav_count {position: absolute; right: 0px; top: 6px; display: inline-block; height: 18px; line-height: 18px; background: #60a9fa; border-radius: 16px; padding: 0px 7px; font-size: 12px; color: #fff; vertical-align: top; }
 
 #menu_toggle{ border:1px solid #cecece;}
 .full_menu_toggle {position:relative;/* border: 1px solid #424242; */overflow:hidden;}
@@ -252,12 +252,14 @@ nav > .countBox .hidden_nav_count {position: absolute; right: 0px; top: 6px; dis
 .countingIcon{ margin:0px; padding:30px 0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; background-color: white;} /* 장진혁 추가 */
 .countingIcon01{ overflow:hidden; padding:0px 0px; margin:0 auto; width:258px;}
 .countingIcon02{ overflow:hidden; padding:30px 0px 0px 0px; margin:0 auto; width:182px;}
-.countingIcon dl{ margin:0px; padding:0px 13px; position:relative; float:left; cursor:pointer;}
+.countingIcon dl{ margin:0px; padding:0px 13px; position:relative; float:left; cursor:pointer; text-align:center;}
 .countingIcon dl dt.iconImg{ margin:0px; padding:0px;}
 .countingIcon dl dd.iconText{ margin:0px; padding:0px; font-size:12px; color:#333; text-align:center;}
 .countingIcon dl dd.iconCount{ margin:0px; padding:2px 8px; font-size:12px; color:#fff; position:absolute; right:2px; top:0px; background:#0470e4; border:1px solid #0260c4; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
 .countingIcon dl dd.iconCount_none{ margin:0px; padding:2px 8px; font-size:12px; color:#fff; position:absolute; right:2px; top:0px; background:#b4b4b4; border:1px solid #a4a4a4; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
-
+.countingIcon .iconCircle_none{width:58px; height:58px; margin:0px auto; padding:0px; background:#f8f8f8; border-radius:58px;-webkit-border-radius:58px;-moz-border-radius:58px;border:1px solid #e9e9e9;}
+.countingIcon .iconCircle_none .iconCommon{display:inline-block; vertical-align:middle; width:25px; height:25px; margin:16px auto; background:url(/images/ezNewPortal/theme3Img/writebanner_icon_v1.001.png) left top no-repeat; background-position:2px 2px;}
+.countingIcon dl.icon_disabled {cursor:default;}
 /* birthday */
 .birthday{ margin:0px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; background-color: white; height:197px;} /* 장진혁 추가 */
 .birthTit{ height:32px; border-top:1px solid #e7e7e7; border-bottom:1px solid #e7e7e7; box-sizing:border-box; line-height:30px;}
@@ -561,15 +563,15 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .info_right{width:calc(100% - 194px); background:#ffffff;}
 
 .info{position:relative; margin:34px 0px 0px 30px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
-.info .infoImg{float:left; margin:0px 24px 52px 0px; padding:0px;}
+.info .infoImg{float:left; margin:0px 24px 0px 0px; padding:0px;}
 .info .infoName{margin:0px; padding:0px; color:#444445; font-size:18px; font-weight:bold;}
 .info .infoTeam{margin:10px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
 .info .infoMail{margin:17px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
 .info .infoTime{margin:12px 20px 0px 0px; padding:0px; color:#444445; font-size:14px;}
-.info .infoSet{position:absolute; top:-20px; right:48px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
-.info .infoSet img{margin:5px 0px 0px 0px;}
-.info .infoLogout{position:absolute; top:-20px; right:16px; width:25px; height:25px; margin:0px; padding:0px; text-align:center; border:1px solid rgba(13,3,7,0.2); border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
-.info .infoLogout img{margin:5px 0px 0px 0px;}
+.info .infoSet{z-index:101; position:absolute; top:-20px; right:48px; width:27px; height:27px; margin:0px; padding:0px; text-align:center; background:#3398fe;  border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer; }
+.info .infoSet img{vertical-align:middle;}
+.info .infoLogout{z-index:101; position:absolute; top:-20px; right:16px; width:27px; height:27px; margin:0px; padding:0px; text-align:center; background:#ccc;  border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
+.info .infoLogout img{vertical-align:middle; margin-left:2px;}
 
 /* time_check */
 .time_check{height:76px; margin:23px 0px 0px 0px; padding:0px; background:url(/images/ezNewPortal/theme3Img/time_check_bg.png) left center repeat-x; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
@@ -578,11 +580,12 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .presentTime .timeTxt span{vertical-align:middle; color:#ffffff; font-size:40px; font-weight:bold; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
 .presentTime .timeTxt span.timeAM{margin:0px 0px 0px 10px; padding:0px; font-size:12px; font-weight:normal;}
 .presentTime .timeTxt span.timePM{margin:0px 0px 0px 10px; padding:0px; font-size:12px; font-weight:normal;}
-
 .presentTime_commuteNone{width:100%;}
 
 .main_time{float:right; width:150px; height:76px; margin:0px; padding:0px;}
 .main_time .timeCheckIn{float:left; width:calc(50% - 1px); height:76px; margin:0px; padding:0px; color:#ffffff; font-size:13px; border-left:1px solid #ffffff; text-align:center; background:#45a8fb; cursor:pointer;}
+.main_time .timeCheckIn.in{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
+.main_time .timeCheckIn.in dd{margin:-4px 0px 0px 0px;}
 .main_time .timeCheckIn.lateIn{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
 .main_time .timeCheckIn.lateIn dd{margin:-4px 0px 0px 0px;}
 .main_time .timeCheckIn dt{margin:15px 0px 12px 0px; padding:0px;}
@@ -606,9 +609,11 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .writebanner_leftContents dl dt span{display:block; width:30px; height:30px; background:url(/images/ezNewPortal/topmenu_icon_v1.001.png) #ffffff left top no-repeat;}
 .writebanner_leftContents dl dt span.icon_mail{display:inline-block; verticla-align:top; margin:17px 0px 0px 8px; background-position:0px -60px;}
 .writebanner_leftContents dl dt span.icon_approval{display:inline-block; verticla-align:top; margin:17px 0px 0px 8px; background-position:-62px -60px;}
+.writebanner_leftContents dl dt span.iconCommon{display:inline-block; vertical-align:middle; width:25px; height:25px; margin:16px auto; background:url(/images/ezNewPortal/theme3Img/writebanner_icon_v1.001.png) left top no-repeat; background-position:2px 2px;}
 .writebanner_leftContents dl dt.txt{color:#ffffff; font-size:14px;}
 .writebanner_leftContents dl dd{position:absolute; top:22px; left:82px; margin:0px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(0,0,0,0.8); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
 .writebanner_rightContents{float:left; width:calc(100% - 145px); background:#ffffff;}
+.writebanner_leftContents .countZero{background:rgba(0,0,0,0.2);}
 .writebannerTop{overflow:hidden; list-style:none; margin:0px; padding:19px 0px; border-bottom:1px solid #ececec;}
 .writebannerTop li{float:left; width:33.3%; cursor:pointer;}
 .writebannerBottom{overflow:hidden; list-style:none; margin:0px; padding:20px 0px;}
@@ -633,13 +638,13 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .writebannerIcon .countZero{background:rgba(0,0,0,0.2);}
 
 @media only screen and (max-width :1730px) and (min-width :1680px) {
-	.info .infoImg{margin:0px 24px 0px 0px;}
+	/*.info .infoImg{margin:0px 24px 0px 0px;} */
 	.info_left {width:103px;}
 	.info_right {width : calc(100% - 111px);}
 }
 /* 생일자 포틀릿*/
 .box_shadow .birthList li {width:33.33%;float:none; display:inline-block; padding:15px 0px 15px 0px;} 
-.birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;}
+.birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;cursor:pointer;}
 .birthList li .birthListDL .birthPic{margin:0px; padding:0px 7px 0px 0px; float:left;}
 .birthList li .birthListDL .birthPic img{width:50px; height:50px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; border:1px solid #e7e7e7;}
 .birthList li .birthListDL .birthName{margin:10px 0px 0px 0px; padding:0px; font-size:12px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
@@ -677,6 +682,12 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.box_shadow.info_left {display:none;}
 	.box_shadow.info_right {width:100%; margin-left:0px !important;}
 }
+@media only screen and (max-width :1807px) and (min-width :1740px) {
+	.sscheduleUL .scheduleLi_nodata .sNodataPlus{ margin:10px 8px 0px 0px; padding:0px; float:right; cursor:pointer;}
+}
+@media only screen and (max-width :1739px) and (min-width :1686px) {
+	.sscheduleUL .scheduleLi_nodata .sNodataPlus{ margin:10px 3px 0px 0px; padding:0px; float:right; cursor:pointer;}
+}
 
 @media only screen and (max-width :1685px) and (min-width :1590px) {
 	.box_shadow.info_left{display:inline-block;float:left; width:187px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
@@ -700,7 +711,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 }
 
 @media only screen and (max-width : 1279px) {
-	.portlet {width:469px; float:left;}
+	.portlet {width:47.7%; float:left;}
 	.box_shadow.info_left {display:none;}
 	.box_shadow.info_right {width:100%; margin-left:0px !important;}
 }

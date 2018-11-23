@@ -522,11 +522,13 @@ function func_addaddr_Complete(ret) {
                 	return;
                 }
                 
-                if (xmlHTTP.responseText == "NO_AUTHORITY") {
-                	alert(strLangLHM02);
+                if (xmlHTTP.responseText == "NO_AUTHORITY_D") {
+                	alert(strLangLHJ01);
                 	return;
-                }
-                else {
+                } else if (xmlHTTP.responseText == "NO_AUTHORITY_C") {
+                	alert(strLangLHJ02);
+                	return;
+                } else {
                 	alert(strLang135);
                 	return;
                 }

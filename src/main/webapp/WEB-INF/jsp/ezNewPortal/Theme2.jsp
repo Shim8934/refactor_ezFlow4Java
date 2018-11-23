@@ -16,6 +16,7 @@
 	.two_column{width:48%;}
 	.mainbg {min-width:1280px;}
 	#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}
+	.top_two_column {margin : 0px 0px 25px 0px;}
 </style>
 </head>
 
@@ -63,12 +64,12 @@
             <c:choose>
             	<c:when test="${useAttitude eq 'YES' }">
 	                <dl class="commute">
-	                	<dt id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t013' /></dt>
-	                	<dd id="inAttiBtn_txt" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t126' /></dd>
+	                	<dt id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t013' /></dt>
+	                	<dd id="inAttiBtn_txt" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t126' /></dd>
 	                </dl>
 	                <dl class="commute">
-	                	<dt id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t014' /></dt>
-	                	<dd id="outAttiBtn_txt" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t126' /></dd>
+	                	<dt id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t014' /></dt>
+	                	<dd id="outAttiBtn_txt" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t126' /></dd>
 	                </dl>    
 	             	<dl class="time">
 	                	<dt><spring:message code='ezNewPortal.t012' /></dt>
@@ -88,39 +89,84 @@
         	<article class="writebanner">
                 <ul class="writebannerUL">
                     <li>
-                        <dl class="writebannerDL" id="NewMail">
-                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner01.png" alt="<spring:message code='ezNewPortal.t015' />"></dt>
-                            <dt><spring:message code='ezNewPortal.t015' /></dt>
-                            <dd id="unreadMailCount" class="iconCount_none">0</dd>
-                        </dl>
+                    	<c:choose>
+                    		<c:when test="${useMail eq 'NO' }">								
+                    			<dl id="NewMail" class="icon_disabled writebannerDL">
+									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+								</dl>
+                    		</c:when>
+                    		<c:otherwise>
+                        		<dl class="writebannerDL" id="NewMail">
+                           		 	<dt><img src="/images/ezNewPortal/theme2Img/writebanner01.png" alt="<spring:message code='ezNewPortal.t015' />"></dt>
+                            		<dt><spring:message code='ezNewPortal.t015' /></dt>
+                            		<dd id="unreadMailCount" class="iconCount_none">0</dd>
+                        		</dl>
+                    		</c:otherwise>
+                    	</c:choose>
                     </li>
                     <li>
-                        <dl class="writebannerDL" id="AprSign">
-                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner02.png" alt="<spring:message code='ezNewPortal.t016' />"></dt>
-                            <dt><spring:message code='ezNewPortal.t016' /></dt>
-                            <dd id="approvalCount" class="iconCount_none">0</dd>
-                        </dl>
+                    	<c:choose>
+                    		<c:when test="${useApproval eq 'NO' }">								
+                    			<dl id="AprSign" class="icon_disabled writebannerDL">
+									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+								</dl>
+                    		</c:when>
+                    		<c:otherwise>
+                        		<dl class="writebannerDL" id="AprSign">
+                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner02.png" alt="<spring:message code='ezNewPortal.t016' />"></dt>
+                            		<dt><spring:message code='ezNewPortal.t016' /></dt>
+                            		<dd id="approvalCount" class="iconCount_none">0</dd>
+                        		</dl>
+                    		</c:otherwise>
+                    	</c:choose>
                     </li>
                     <li>
-                        <dl class="writebannerDL" id="Schedule">
-                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner03.png" alt="<spring:message code='ezNewPortal.gu3' />"></dt>
-                            <dt><spring:message code='ezNewPortal.gu3' /></dt>
-                            <dd id="scheduleCount" class="iconCount_none">0</dd>
-                        </dl>
+                    	<c:choose>
+                    		<c:when test="${useSchedule eq 'NO' }">								
+                    			<dl id="Schedule" class="icon_disabled writebannerDL">
+									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+								</dl>
+                    		</c:when>
+                    		<c:otherwise>
+                        		<dl class="writebannerDL" id="Schedule">
+                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner03.png" alt="<spring:message code='ezNewPortal.gu3' />"></dt>
+                            		<dt><spring:message code='ezNewPortal.gu3' /></dt>
+                            		<dd id="scheduleCount" class="iconCount_none">0</dd>
+                        		</dl>
+                    		</c:otherwise>
+                    	</c:choose>
                     </li>
                     <li>
-                        <dl class="writebannerDL" id="Poll">
-                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
-                            <dt><spring:message code='ezNewPortal.gu4' /></dt>
-                            <dd id="pollCount" class="iconCount_none">0</dd>
-                        </dl>
+                    	<c:choose>
+                    		<c:when test="${useQuestion eq 'NO' }">								
+                    			<dl id="Poll" class="icon_disabled writebannerDL">
+									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+								</dl>
+                    		</c:when>
+                    		<c:otherwise>
+                        		<dl class="writebannerDL" id="Poll">
+                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
+                            		<dt><spring:message code='ezNewPortal.gu4' /></dt>
+                            		<dd id="pollCount" class="iconCount_none">0</dd>
+                       			</dl>
+                    		</c:otherwise>
+                    	</c:choose>
                     </li>
                     <li>
-                        <dl class="writebannerDL" id="Circular">
-                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner05.png" alt="<spring:message code='ezNewPortal.gu5' />"></dt>
-                            <dt><spring:message code='ezNewPortal.gu5' /></dt>
-                            <dd id="circularCount" class="iconCount_none">0</dd>
-                        </dl>
+                    	<c:choose>
+                    		<c:when test="${useCircular eq 'NO' }">								
+                    			<dl id="Circular" class="icon_disabled writebannerDL">
+									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+								</dl>
+                    		</c:when>
+                    		<c:otherwise>
+                        		<dl class="writebannerDL" id="Circular">
+                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner05.png" alt="<spring:message code='ezNewPortal.gu5' />"></dt>
+                            		<dt><spring:message code='ezNewPortal.gu5' /></dt>
+                            		<dd id="circularCount" class="iconCount_none">0</dd>
+                        		</dl>
+                    		</c:otherwise>
+                    	</c:choose>
                     </li>
                     <li>
 <!--                     <dl class="writebannerDL">
@@ -247,6 +293,9 @@
  	
 	var pScheduleList = [];
 	var dScheduleList = [];
+	
+	/* openerCalendarMiniView = CalendarMiniView;
+	openerCalendarMiniDataSource = CalendarMiniDataSource; */
  	
  	window.onresize = function(event) {
  		frameSetting(frameId);
@@ -262,10 +311,13 @@
 			
 			if (media1921.matches) {
 				$(".portlet").addClass("two_column");
+				$(".section1_bg").removeClass("top_two_column");
 			} else if (media1686.matches) {
 				$(".portlet").addClass("two_column");
+				$(".section1_bg").removeClass("top_two_column");
 			} else if (media1280.matches) {
 				$(".portlet").addClass("two_column");
+				$(".section1_bg").addClass("top_two_column");
 			}
 		}
 	} 	
@@ -489,6 +541,7 @@
         	if(index > 5) return;
         	var li = document.createElement('li');
         	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
+        	li.style.cursor = "pointer";
         	li.addEventListener('click', function() {
 			    var wWeight = "760";
 			    var wHeight = "670";
@@ -526,16 +579,23 @@
 					$.ajax({
 						type : "POST",
 						dataType : "html",
-						data : {"portletId" : portletId, "portletName" : portletName},
+						data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
 						url : portletUrl,
 						success : function(result) {
 							$("#" + portletId + "Portlet").append(result);
-							eventSetting(portletId);
+							eventSetting(portletId, usedTheme);
 						}
 					});
 				}(portletId, portletUrl, portletName));
 			}
 		}
+
+		//메뉴 이동(왼쪽)
+		$("#NewMail").on("click", {"menu" : "NewMail"}, quickMenuOpen);
+		$("#Schedule").on("click", {"menu" : "Schedule"}, quickMenuOpen);
+		$("#Poll").on("click", {"menu" : "Poll"}, quickMenuOpen);
+		$("#Circular").on("click", {"menu" : "Circular"}, quickMenuOpen);
+		$("#AprSign").on("click", {"menu" : "ApprG"}, quickMenuOpen);
 		
 		var useQuestion = "<c:out value='${useQuestion}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";
@@ -545,23 +605,23 @@
 		
 		//권한에 없는거는 보여주지 않기
 		if (useQuestion === "NO") {
-			$("#Poll").css("display", "none");
+			$("#Poll").off("click");
 		}
 		
 		if (useCircular === "NO") {
-			$("#Circular").css("display", "none");
+			$("#Circular").off("click");
 		}
 		
 		if (useMail === "NO") {
-			$("#NewMail").css("display", "none");
+			$("#NewMail").off("click");
 		}
 		
 		if (useApproval === "NO") {
-			$("#AprSign").css("display", "none");
+			$("#AprSign").off("click");
 		}
 		
 		if (useSchedule === "NO") {
-			$("#Schedule").css("display", "none");
+			$("#Schedule").off("click");
 		}
 		
 		//ajax로 count 불러오기
@@ -571,10 +631,10 @@
 		var useAttitude = "<c:out value='${useAttitude}'/>";
 		
 		if (useAttitude === "YES") {
-			parseDate();
+			parseDate(usedTheme);
 			attiClock();
 			setAttiBtnHover();
-			getAttitudeList();
+			getAttitudeList(usedTheme);
 			getHolidayList();
 		} else {
 			$(".time_check").css("display", "none");
@@ -595,13 +655,6 @@
 		$("#main_personalEnv").on("click", viewPersonalEnv);
 		$("#main_portletEnv").on("click", viewPortletEnv);
 
-		//메뉴 이동(왼쪽)
-		$("#NewMail").on("click", {"menu" : "NewMail"}, quickMenuOpen);
-		$("#Schedule").on("click", {"menu" : "Schedule"}, quickMenuOpen);
-		$("#Poll").on("click", {"menu" : "Poll"}, quickMenuOpen);
-		$("#Circular").on("click", {"menu" : "Circular"}, quickMenuOpen);
-		$("#AprSign").on("click", {"menu" : "ApprG"}, quickMenuOpen);
-		
 		//퀵메뉴 on/off 버튼
 		$("#quicklinkBtn").on('click', viewQuick);
 		//퀵메뉴 이동(오른쪽)

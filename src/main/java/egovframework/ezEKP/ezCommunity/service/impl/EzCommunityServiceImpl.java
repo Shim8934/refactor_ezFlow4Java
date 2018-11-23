@@ -3470,7 +3470,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 
 			if (cBoard.getWriteDay().compareTo(nowDate) >= 0) {
-				strHTML.append("<img src=\"/images/i_new.gif\" alt border=\"0\">");
+				strHTML.append("<img src=\"/images/i_new.gif\" alt border=\"0\">&nbsp;");
 			}
 			
 			strHTML.append(commonUtil.cleanValue(cBoard.getTitle().trim())+"</nobr></td>");

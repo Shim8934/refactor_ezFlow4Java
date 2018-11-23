@@ -35,9 +35,9 @@
 	#featured {background : none;}
 	.box_shadow {width:100%; margin:0px;}
 	.portlet {height:250px; margin:20px 0px 0px 20px;background-color:#ffffff;}
-	.infoImg img {width:60px; height:60px;}
+	.infoImg img {width:60px; height:60px; border-radius:90px;-webkit-border-radius:90px;}
 	.attitudePtl {border:none;}
-	.two_column{width:47.9%;}
+	.two_column{width:47.7%;}
 </style>
 </head>
 <body class="mainbg">
@@ -87,45 +87,93 @@
 			    </div>
 			    <div id="atti_area" class="main_main_time">
 	            	<dl class="main_timeCheckIn">
-	                	<dd id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t013' /></dd>
+	                	<dd id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t013' /></dd>
 	                </dl>
 	                <dl class="main_timeCheckOut">
-	                   	<dd id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezNewPortal.t014' /></dd>
+	                   	<dd id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t014' /></dd>
 	                </dl>
 		    	</div>
-				</article>
+			</article>
 				
 				<article class="countingIcon">
 					<div class="countingIcon01">
-						<dl id="NewMail">
-                			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon01.png"></dt>
-                    		<dd class="iconText"><spring:message code='ezNewPortal.t015' /></dd>
-                    		<dd id="unreadMailCount" class="iconCount_none">0</dd>
-                		</dl>
-                		<dl id="AprSign">
-                    		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon03.png"></dt>
-                    
-                    		<dd class="iconText"><spring:message code='ezNewPortal.t016' /></dd>
-                    		<dd id="approvalCount" class="iconCount_none">0</dd>
-                		</dl>
-                		<dl id="Schedule">
-                  		  	<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon02.png"></dt>
-                    		<dd class="iconText"><spring:message code='ezNewPortal.gu3' /></dd>
-                		    <dd id="scheduleCount" class="iconCount_none">0</dd>
-               			</dl>
+						<c:choose>
+							<c:when test="${useMail eq 'NO'}"> <!-- 메일 권한이 없을때 disable 아이콘 나타남 -->
+								<dl id="NewMail" class="icon_disabled">
+									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+									<dd class="iconText"></dd>
+								</dl>
+							</c:when>
+							<c:otherwise>
+								<dl id="NewMail">
+                					<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon01.png"></dt>
+                    				<dd class="iconText"><spring:message code='ezNewPortal.t015' /></dd>
+                    				<dd id="unreadMailCount" class="iconCount_none">0</dd>
+                				</dl>
+							</c:otherwise>
+						</c:choose>
+						<c:choose>
+							<c:when test="${useApproval eq 'NO'}"> <!-- 전자결재 권한이 없을 때 disable 아이콘 나타남 -->
+								<dl id="AprSign" class="icon_disabled">
+									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+									<dd class="iconText"></dd>
+								</dl>
+							</c:when>
+							<c:otherwise>
+                				<dl id="AprSign">
+                    				<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon03.png"></dt>
+                    				<dd class="iconText"><spring:message code='ezNewPortal.t016' /></dd>
+                    				<dd id="approvalCount" class="iconCount_none">0</dd>
+                				</dl>
+							</c:otherwise>
+						</c:choose>
+						<c:choose>
+							<c:when test="${useSchedule eq 'NO'}"> <!-- 일정 권한이 없을 때 disable 아이콘 나타남 -->
+								<dl id="Schedule" class="icon_disabled">
+									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+									<dd class="iconText"></dd>
+								</dl>
+							</c:when>
+							<c:otherwise>
+                				<dl id="Schedule">
+                  		  			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon02.png"></dt>
+                    				<dd class="iconText"><spring:message code='ezNewPortal.gu3' /></dd>
+                		  	  	<dd id="scheduleCount" class="iconCount_none">0</dd>
+               					</dl>
+							</c:otherwise>
+						</c:choose>
 					</div>
 					<div class="countingIcon02">
-            			<dl id="Poll">
-                    		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
-                    		<dd class="iconText"><spring:message code='ezNewPortal.gu4' /></dd>                        
-                    		<dd id="pollCount" class="iconCount_none">0</dd>
-                		</dl>
-            	
-                		<dl id="Circular"> 
-                    		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon04.png"></dt>
-                    		<dd class="iconText"><spring:message code='ezNewPortal.gu5' /></dd>
-                    		<dd id="circularCount" class="iconCount_none">0</dd>
-                		</dl>
+					<c:choose>
+						<c:when test="${useQuestion eq 'NO'}"> <!-- 전자설문 권한이 없을 때 disable 아이콘 나타남 -->
+							<dl id="Poll" class="icon_disabled">
+								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+								<dd class="iconText"></dd>
+							</dl>
+						</c:when>
+						<c:otherwise>
+            				<dl id="Poll">
+                    			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
+                    			<dd class="iconText"><spring:message code='ezNewPortal.gu4' /></dd>                        
+                    			<dd id="pollCount" class="iconCount_none">0</dd>
+                			</dl>
+						</c:otherwise>
+					</c:choose>
+					<c:choose>
+						<c:when test="${useCircular eq 'NO'}"> <!-- 회람판 권한이 없을 때 disable 아이콘 나타남 -->
+							<dl id="Circular" class="icon_disabled">
+								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+								<dd class="iconText"></dd>
+							</dl>
+						</c:when>
+						<c:otherwise>
+                			<dl id="Circular"> 
+                    			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon04.png"></dt>
+                    			<dd class="iconText"><spring:message code='ezNewPortal.gu5' /></dd>
+                    			<dd id="circularCount" class="iconCount_none">0</dd>
+                			</dl>
+						</c:otherwise>
+					</c:choose>
                 	</div>
 				</article>
 				<article class="birthday">
@@ -385,38 +433,45 @@
 								$("#" + portletId + "Portlet").css("background","none");
 							}
 							
-							eventSetting(portletId);
+							eventSetting(portletId, usedTheme);
 						}
 					});
 				}(portletId, portletUrl, portletName));
 			}
 		}
 
+		//메뉴 이동(왼쪽)
+		$("#NewMail").on("click", {"menu" : "NewMail"}, quickMenuOpen);
+		$("#Schedule").on("click", {"menu" : "Schedule"}, quickMenuOpen);
+		$("#Poll").on("click", {"menu" : "Poll"}, quickMenuOpen);
+		$("#Circular").on("click", {"menu" : "Circular"}, quickMenuOpen);
+		$("#AprSign").on("click", {"menu" : "ApprG"}, quickMenuOpen);
+		
 		var useQuestion = "<c:out value='${useQuestion}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";
 		var useMail = "<c:out value='${useMail}'/>";
 		var useApproval = "<c:out value='${useApproval}'/>";
 		var useSchedule = "<c:out value='${useSchedule}'/>";
 		
-		//권한에 없는거는 보여주지 않기
+		//권한에 없는거는 이미지 변경
 		if (useQuestion === "NO") {
-			$("#Poll").css("display", "none");
+			$("#Poll").off("click");
 		}
 		
 		if (useCircular === "NO") {
-			$("#Circular").css("display", "none");
+			$("#Circular").off("click");
 		}
 		
 		if (useMail === "NO") {
-			$("#NewMail").css("display", "none");
+			$("#NewMail").off("click");
 		}
 		
 		if (useApproval === "NO") {
-			$("#AprSign").css("display", "none");
+			$("#AprSign").off("click");
 		}
 		
 		if (useSchedule === "NO") {
-			$("#Schedule").css("display", "none");
+			$("#Schedule").off("click");
 		}
 		
 		//ajax로 count 불러오기
@@ -426,10 +481,10 @@
 		var useAttitude = "<c:out value='${useAttitude}'/>";
 		
 		if (useAttitude === "YES") {
-			parseDate();
+			parseDate(usedTheme);
 			attiClock();
 			setAttiBtnHover();
-			getAttitudeList();
+			getAttitudeList(usedTheme);
 			getHolidayList();
 		} else {
 			$(".time_check").css("display", "none");
@@ -449,12 +504,6 @@
 		$("#personalEnv").on("click", viewPersonalEnv);
 		$("#portletEnv").on("click", viewPortletEnv);
 
-		//메뉴 이동(왼쪽)
-		$("#NewMail").on("click", {"menu" : "NewMail"}, quickMenuOpen);
-		$("#Schedule").on("click", {"menu" : "Schedule"}, quickMenuOpen);
-		$("#Poll").on("click", {"menu" : "Poll"}, quickMenuOpen);
-		$("#Circular").on("click", {"menu" : "Circular"}, quickMenuOpen);
-		$("#AprSign").on("click", {"menu" : "ApprG"}, quickMenuOpen);
 		
 		//퀵메뉴 on/off 버튼
 		$("#quicklinkBtn").on('click', viewQuick);

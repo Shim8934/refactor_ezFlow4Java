@@ -24,7 +24,7 @@ public class ezNewPortalScheduler {
 	
 	@Scheduled(cron = "00 1/10 * * * *")
 	public void receiveWeatherData() {
-		if (config.getProperty("config.Run_Weather").equals("NO")) {
+		if (config.getProperty("config.useInternet") == null ||config.getProperty("config.useInternet").equals("NO")) {
 			return;
 		}
 		

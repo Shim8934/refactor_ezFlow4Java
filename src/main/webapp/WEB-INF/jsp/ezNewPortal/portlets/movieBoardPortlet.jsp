@@ -85,13 +85,23 @@
 						</li>
 					</c:forEach>
 				</c:when>
+				<c:when test="${access eq 'false' }">
+					<ul class="portlet_list">
+						<dl class="nodata">
+							<dt style="padding-top:60px;">
+								<img src="/images/ezNewPortal/nodata.png">
+							</dt>
+							<dd>"<spring:message code='ezNewPortal.t039' />"</dd>
+						</dl>
+					</ul>
+				</c:when>
 				<c:otherwise>
 					<ul class="portlet_list">
 						<dl class="nodata">
 							<dt style="padding-top:60px;">
 								<img src="/images/ezNewPortal/nodata.png">
 							</dt>
-							<dd><spring:message code='ezNewPortal.t018' /></dd>
+							<dd>"<spring:message code='ezNewPortal.t018' />"</dd>
 						</dl>
 					</ul>
 				</c:otherwise>

@@ -28,9 +28,9 @@
 	            <dd class="infoMail">${userEmail }</dd>
 	            <dd class="infoTime"><spring:message code="main.t00016" /><spring:message code="ezPersonal.t27" />&nbsp;&nbsp;${lastLogin }</dd>
 	            <!-- 임시 -->
-	            <dd id="portletEnv" class="infoSet" onclick="viewPortletEnv()" style="z-index: 101;background-color: rgb(51, 152, 254)"><img src="/images/admin/frameSetting.png"></dd>
+	            <dd id="portletEnv" class="infoSet" onclick="viewPortletEnv()"><img src="/images/admin/frameSetting.png"></dd>
 	            <!-- <dd id="portletEnv" class="infoSet" onclick="infoSetClick()" style="z-index: 1001;"><img src="/images/ezNewPortal/theme3Img/infoSet_btn.png"></dd> -->
-	            <dd class="infoLogout" onclick="infoLogoutClick()" style="z-index: 101;"><img src="/images/ezNewPortal/theme3Img/infoLogout_btn.png"></dd>
+	            <dd class="infoLogout" onclick="infoLogoutClick()"><img src="/images/ezNewPortal/theme3Img/infoLogout_btn.png"></dd>
 	        </dl>
 	        <div class="time_check">
 	        	<div class="presentTime">
@@ -39,11 +39,11 @@
 	                <span class="timePM">PM</span></p>
 	            </div>
 	            <div class="main_time">
-	            	<dl class="timeCheckIn out" id="ptlInAttiBtn" type="A01" datetype="2" onclick="ptlCheckHoliday(this)">
+	            	<dl class="timeCheckIn out" id="ptlInAttiBtn" type="A01" datetype="2" onclick="ptlCheckHoliday(this, '${usedTheme}')">
 	                	<dt><img src="/images/ezNewPortal/theme3Img/main_time_icon.png"></dt>
 	                	<dd><spring:message code='ezNewPortal.t046' /></dd>
 	                </dl>
-	                <dl class="timeCheckOut out" id="ptlOutAttiBtn" type="A03" datetype="2" onclick="ptlCheckHoliday(this)">
+	                <dl class="timeCheckOut out" id="ptlOutAttiBtn" type="A03" datetype="2" onclick="ptlCheckHoliday(this, '${usedTheme}')">
 	                	<dt><img src="/images/ezNewPortal/theme3Img/main_time_icon.png"></dt>
 	                	<dd><spring:message code='ezNewPortal.t047' /></dd>
 	                </dl>

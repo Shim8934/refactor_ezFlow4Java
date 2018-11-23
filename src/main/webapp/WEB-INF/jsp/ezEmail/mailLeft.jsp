@@ -446,10 +446,6 @@
 	                
 	                $("#inboxMail").closest("div").append("<span onclick='folder_manage()' class='sub_iconLNB tree_manage'></span>");
 		            
-		            if ("${useMailReceiveScreen}" == "YES") {
-		            	$("#sentMail").closest("div").append("<span onclick='reception_check()' class='confirmation'><spring:message code='ezEmail.t516' /></span>");
-		            }
-		            
 	            	detailView();
 	            }
 	        }
@@ -762,8 +758,10 @@
 		    	document.getElementById("folderPanel").style.display = "none";
 		        document.getElementById("folderMenuDiv").style.display = "none";
 		    	
-		        if (parent.frames["right"].document.getElementById("mailPanel").style.display == "") {
-		        	parent.frames["right"].document.getElementById("mailPanel").style.display = "none";
+		        if (parent.frames["right"].document.getElementById("mailPanel")) {
+			        if (parent.frames["right"].document.getElementById("mailPanel").style.display == "") {
+			        	parent.frames["right"].document.getElementById("mailPanel").style.display = "none";
+			        }
 		        }
 		    }
 		    
@@ -1200,55 +1198,19 @@
         	<div class="taskListBox" style="overflow:hidden; padding-right: 0;">
 		        <ul class="lnbUL">
 		        	<div class="tree" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
-		        </ul>
-		        <ul class="lnbUL">
-		        	<div class="tree">
-		            	<span>
-		                	<span>
-		                    	<span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text" onclick="Open_Search();"><spring:message code="ezEmail.t641" /></span>
-		                            </div>
-		                    	</span>
-		                    	<c:if test="${useOnlyInnerMail != 'YES'}">
-			                        <span>
-			                        	<div class="node_div">
-			                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outlook_mail"></span><span class="h2_text" onclick="check_pop3()"><spring:message code="ezEmail.t490" /></span>
-			                            </div>
-			                    	</span>
-		                    	</c:if>
-		                        <%-- <span id="mailimport">
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outlook_mail_get"></span><span class="h2_text" onclick="mail_import()"><spring:message code="ezEmail.t99000015" /></span> 
-		                            </div>
-		                    	</span> --%>
-		                    	<span id="mailexportall" style="display: none;">
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_outlook_mail_get"></span><span class="h2_text" onclick="mail_exportall()"><spring:message code="ezEmail.t99000014" /></span> 
-		                            </div>
-		                    	</span>
-		                        <span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_reservation"></span><span class="h2_text" onclick="Open_ReservationManage()"><spring:message code="ezEmail.t605" /></span>
-		                            </div>
-		                    	</span>
-		                    	<c:if test="${useBizmekaSpambox == 'YES'}">
-			                    	<span> 
-			                    		<div class="node_div">
-			                    			<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_reservation"></span><span class="h2_text" onclick="openSpamBox()"><spring:message code="ezEmail.ldh01" /></span>
-			                            </div>
-			                        </span>
-				                </c:if>
-				                <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
-					                <span> 
-			                    		<div class="node_div">
-			                    			<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB left_admin_mail"></span><span class="h2_text" onclick="operatorSendMail()"><spring:message code="ezEmail.0hun01" /></span>
-			                            </div>
-			                        </span>
-		                        </c:if>
-		                    </span>        
-		                </span>
-		            </div>
+		        	<li onclick="reception_check();"><span class="sub_iconLNB tree_receive_ok"></span><span class="list_text"><spring:message code="ezEmail.t516" /></span></li>
+		            <li onclick="Open_Search();"><span class="sub_iconLNB tree_search"></span><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
+		            <c:if test="${useOnlyInnerMail != 'YES'}">
+		            	<li onclick="check_pop3()"><span class="sub_iconLNB tree_outlook_mail"></span><span class="list_text"><spring:message code="ezEmail.t490" /></span></li>
+		            </c:if>	
+		            <li onclick="mail_exportall()" style="display: none;"><span class="sub_iconLNB tree_outlook_mail_get"></span><span class="list_text"><spring:message code="ezEmail.t99000014" /></span></li>
+		            <li onclick="Open_ReservationManage()"><span class="sub_iconLNB tree_reservation"></span><span class="list_text"><spring:message code="ezEmail.t605" /></span></li>
+		            <c:if test="${useBizmekaSpambox == 'YES'}">
+		            	<li onclick="openSpamBox()"><span class="sub_iconLNB tree_reservation"></span><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
+		            </c:if>
+		            <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
+		            	<li onclick="operatorSendMail()"><span class="sub_iconLNB left_admin_mail"></span><span class="list_text"><spring:message code="ezEmail.0hun01" /></span></li>
+		            </c:if>	
 		        </ul>
 	        </div>
 	        <div class="mail_space">
@@ -1311,7 +1273,8 @@
 	        
 	        <c:if test="${useSharedMailbox == 'YES'}">
 		        <c:forEach items="${shareInfoList}" var="shareInfo">
-		        	<h2><span onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');" style="width: 100%; display: inline-block;"><c:out value="${shareInfo.shareName}" /></span></h2>
+		        	<h2><span onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');" 
+		        			style="width:85%; display:inline-block; overflow:hidden; text-overflow:ellipsis; display:inline-block; white-space:nowrap;" title="${shareInfo.shareName}"><c:out value="${shareInfo.shareName}" /></span></h2>
 		        	<ul>
 		            	<div id="shareTreeView_${shareInfo.shareId}" class="tree" value="${shareInfo.shareId}" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 		        	</ul>
@@ -1324,7 +1287,7 @@
 	            <li style="border-bottom-color:#e8e8e8" evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
 	        </ul>	        
 	    	<!-- 수정 수아 재은 -->
-	    	<!-- <div style="border:1px solid #e8e8e8;margin:10px 10px 2px;background-color:#f8f8fa">
+	    	<!-- <div style="border:1px solid #e8e8e8;margin:10px 10px 2px;background-color:#f1f3f5">
 			    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
 			    <div style="width:80%">
 			    	<div id='myBar'></div>
@@ -1342,7 +1305,7 @@
 		    <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
 		    <h4 onclick="operatorSendMail()"><span><spring:message code="ezEmail.0hun01" /></span></h4>
 		    </c:if>
-	        <h3 style="border-top:0px"><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
+	        <h3 onclick="mail_Config()" style="border-top:0px"><span style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
 	        <c:if test="${isDotNetAdmin == true}">
   			<h2>
   				<span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>

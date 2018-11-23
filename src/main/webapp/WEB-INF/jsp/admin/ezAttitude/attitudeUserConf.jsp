@@ -60,6 +60,9 @@
 		        } else {
 		    		if (adminCompany != null) {
 		    			$('#ListCompany').val(adminCompany);
+		    			if (document.getElementById("ListCompany").selectedIndex < 0) {
+				            document.getElementById("ListCompany").selectedIndex = 0;
+		    			}
 		    		} else {
 			            document.getElementById("ListCompany").selectedIndex = 0;
 		    		}
@@ -109,6 +112,21 @@
 	    	
 	    	function company_change() {
 	    		pCompanyId = $("select[name=ListCompany]").val();
+	    		
+    			//검색초기화
+    			$("#searchUserName").val("");
+    			$("#searchDeptName").val("");
+    			$("#searchTitle").val("");
+    			$("#searchStartTime").val("");
+    			$("#searchEndTime").val("");
+    			$("[type='radio'][value='']").prop("checked", true);
+    			
+    			searchUserName = "";
+    			searchDeptName = "";
+    			searchTitle = "";
+    			searchStartTime = "";
+    			searchEndTime = "";
+    			searchGubun = "";
 	    		
 	    		getUserConfList();
 	    	}

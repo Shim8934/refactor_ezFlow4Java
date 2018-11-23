@@ -49,7 +49,7 @@
 			}
 			
 			 .lmLetterBoxTitle>input {
-			    width: 68%;
+			    width: 70%;
 			    height: 24px;
 			    color: #393939;
 			    border: 1px solid #cbcbcb;
@@ -113,14 +113,11 @@
 			</tr>
 			<tr style="border-color:#ddd;">
 				<td style="width:50%; vertical-align:top; border-right:1px solid #ddd">
-					<div id="divTree" style="height: 340px; width: 273px; overflow: auto; "></div>
+					<div id="divTree" style="height: 340px; width: 268px; overflow: auto; "></div>
 				</td>
 				<td style="width:50%; vertical-align:top; ">
-					<div class="lmtitle lmLetterTitle">
-						<spring:message code='ezEmail.letter2'/>
-					</div> 
-					<div class="lmLetterList boxNo" data-boxNo="" style="height:308px; width:273px; overflow: auto;">
-						<ul class="lmLetterListUl"></ul>
+					<div class="lmLetterList boxNo" data-boxNo="" style="height:341px; width:278px; overflow: auto;">
+						<ul class="lmLetterListUl" style="background: white;"></ul>
 					</div>
 				</td>
 			</tr>

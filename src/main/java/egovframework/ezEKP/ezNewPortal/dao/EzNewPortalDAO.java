@@ -289,6 +289,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (Map<String, Object>) select("ezNewPortal.getApprovalStatistics", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PortletInfoVO> getPortletForUser(Map<String, Object> map) throws Exception {
+		return (List<PortletInfoVO>) list("ezNewPortal.getPortletForUser", map);
+	}
+	
 	//여기서부터 관리잔데 걍 다만들고 dao옮기자
 	@SuppressWarnings("unchecked")
 	public List<ThemeInfoVO> getCompanyThemes(Map<String, Object> map) throws Exception {
@@ -321,6 +326,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<MenuAuthVO> getMenuAuth(Map<String, Object> map) throws Exception {
 		return (List<MenuAuthVO>) list("ezNewPortal.getMenuAuth", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MenuInfoVO> getMenuForUser(Map<String, Object> map) throws Exception {
+		return (List<MenuInfoVO>) list("ezNewPortal.getMenuForUser", map);
 	}
 	
 	public int insertMenu(Map<String, Object> map) throws Exception {

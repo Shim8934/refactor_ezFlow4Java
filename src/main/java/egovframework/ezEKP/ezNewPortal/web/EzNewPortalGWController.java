@@ -168,7 +168,7 @@ public class EzNewPortalGWController {
 			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId);
 			LOGGER.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame());
 			
-			// 사용자 포틀릿 순서 가져오기
+			/*// 사용자 포틀릿 순서 가져오기
 			List<PortletInfoVO> portletOrder = ezNewPortalService.getPortletOrderUser(portletLang, userId, tenantId, companyId, deptId);
 			// 권한체크가 끝난 포틀릿 리스트를 담을 리스트선언
 			List<PortletInfoVO> resultPortletList = new ArrayList<PortletInfoVO>();
@@ -212,7 +212,11 @@ public class EzNewPortalGWController {
 					} 
 				}
 				data.put("portletOrder", portletOrder);
-			}
+			}*/
+			
+			List<PortletInfoVO> portletOrder = ezNewPortalService.getUserPortletList(portletLang, userId, tenantId, companyId, deptId, true);
+			JSONObject data = new JSONObject();
+			data.put("portletOrder", portletOrder);
 
 			// 회사의 슬라이더 이미지 가져오기
 			List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(companyId, "USER", null, tenantId);
@@ -243,12 +247,12 @@ public class EzNewPortalGWController {
 			}
 
 			// 메일, 결재, 일정, 전자설문, 회람판, 근태관리 권한이 있는지 확인
-			String useAttitude = "";
-			String useQuestion = "";
-			String useCircular = "";
-			String useMail = "";
-			String useApproval = "";
-			String useSchedule = "";
+			String useAttitude = "NO";
+			String useQuestion = "NO";
+			String useCircular = "NO";
+			String useMail = "NO";
+			String useApproval = "NO";
+			String useSchedule = "NO";
 
 			// 1. tenantConfig가 YES인지 -- 회람판(USE_CIRCULAR), 근태관리(USE_ATTITUDE),
 			// 전자설문(useQuestion)
@@ -257,21 +261,45 @@ public class EzNewPortalGWController {
 			useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", info.getTenantId());
 			
 			// 2. 메뉴에 권한이 있는지 ================ 수정하기 start
-			if (useAttitude.equals("NO")) {
-				useAttitude = "NO";
+			if (useAttitude.equals("YES")) {
+				useAttitude = "YES";
 			}
-
-			if (useQuestion.equals("NO")) {
-				useQuestion = "NO";
+			
+			if (useQuestion.equals("YES")) {
+				useQuestion = "YES";
 			}
-
-			if (useCircular.equals("NO")) {
-				useCircular = "NO";
+			
+			if (useCircular.equals("YES")) {
+				useCircular = "YES";
 			}
-
-			useMail = "YES";
-			useApproval = "YES";
-			useSchedule = "YES";
+			
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
+			
+			for (MenuInfoVO mVO : menuList) {
+				if (mVO.getMenuId()==3) {
+					useApproval = "YES";
+				} 
+				
+				if (mVO.getMenuId()==14 && useQuestion.equals("YES")) {
+					useQuestion = "YES";
+				}
+				
+				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
+					useCircular = "YES";
+				}
+				
+				if (mVO.getMenuId()==9 && useAttitude.equals("YES")) {
+					useAttitude = "YES";
+				}
+				
+				if (mVO.getMenuId()==1) {
+					useMail = "YES";
+				}
+				
+				if (mVO.getMenuId()==2) {
+					useSchedule = "YES";
+				}
+			}
 			
 			LOGGER.debug("useAttitude : " + useAttitude + ", useQuestion : " + useQuestion + ", useCircular : " + useCircular);
 			LOGGER.debug("useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
@@ -513,31 +541,25 @@ public class EzNewPortalGWController {
 			/**
 			 * 2) 메인메뉴 및 서브메뉴 - 권한체크 - user 순서가 없을 경우 회사 순서로 진행
 			 */
-			List<MenuInfoVO> userMenuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
-			List<MenuInfoVO> compMenuList = new ArrayList<MenuInfoVO>();
-			List<MenuInfoVO> resultMenuList = new ArrayList<MenuInfoVO>();
-			LOGGER.debug("list.toString() : " + userMenuList.toString());
-			if (userMenuList.size() == 0) {
-				compMenuList = ezNewPortalService.getCompanyMenuList(companyId, tenantId, langType, userId, deptId);
-				data.put("menuList", compMenuList);
-			} else {
-				for (MenuInfoVO mVO : userMenuList) {
-					boolean resultAuth = ezNewPortalService.getCheckAuth(mVO.getMenuId(), userId, deptId, companyId, tenantId);
-					LOGGER.debug(mVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
-					if (resultAuth) {
-						resultMenuList.add(mVO);
-					}
-				}
-				
-				data.put("menuList", resultMenuList);
-			}
-			/**
-			 * 구해안 - 권한체크 
-			 */
-			//회사 메뉴 다 출력하는 함수
-			List<MenuInfoVO> companymenus = ezNewPortalService.getAllCompanyMenus(companyId, tenantId, langType);
-			//결과 보낼 리스트 제작
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
 			
+			String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());
+			String useQuestion = ezCommonService.getTenantConfig("useQuestion", info.getTenantId());
+			String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", info.getTenantId());
+			
+			if (useAttitude.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 9));
+			}
+			
+			if (useQuestion.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 14));
+			}
+			
+			if (useCircular.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 7));
+			}
+			
+			data.put("menuList", menuList);
 			/**
 			 * 3) 유틸메뉴 - 관리자 권한의 유무 - DB에서 가져오지 말고 그냥 다 출력
 			 */
@@ -590,17 +612,17 @@ public class EzNewPortalGWController {
 			ezNewPortalService.updateUserMenuOrder(info.getCompanyId(), info.getTenantId(), userId, jObj);
 			
 			// 리스트 다시 받아서 출력
-			List<MenuInfoVO> userMenuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
 			// List<MenuInfoVO> compMenuList = new ArrayList<MenuInfoVO>();
-			List<MenuInfoVO> resultMenuList = new ArrayList<MenuInfoVO>();
-			for (MenuInfoVO mVO : userMenuList) {
-				boolean resultAuth = ezNewPortalService.getCheckAuth(mVO.getMenuId(), userId, deptId, companyId, tenantId);
-				LOGGER.debug(mVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
-				if (resultAuth) {
-					resultMenuList.add(mVO);
-				}
-			}
-			data.put("menuList", resultMenuList);
+//			List<MenuInfoVO> resultMenuList = new ArrayList<MenuInfoVO>();
+//			for (MenuInfoVO mVO : userMenuList) {
+//				boolean resultAuth = ezNewPortalService.getCheckAuth(mVO.getMenuId(), userId, deptId, companyId, tenantId);
+//				LOGGER.debug(mVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
+//				if (resultAuth) {
+//					resultMenuList.add(mVO);
+//				}
+//			}
+			data.put("menuList", menuList);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -761,7 +783,7 @@ public class EzNewPortalGWController {
 			String deptId = info.getDeptId();
 			JSONObject data = new JSONObject();
 			
-			List<?> portletList = ezNewPortalService.getUserPortletList(portletLang, userId, tenantId, companyId, deptId);
+			List<PortletInfoVO> portletList = ezNewPortalService.getUserPortletList(portletLang, userId, tenantId, companyId, deptId, false);
 			
 			data.put("portletList", portletList);
 			
@@ -1252,7 +1274,7 @@ public class EzNewPortalGWController {
 	}
 
 	/**
-	 * 포탈개인화 G/W [GET] 회사별 테마 미리보기
+	 * 포탈개인화 G/W [GET] 회사별 기본 테마 설정
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/default/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
@@ -1620,9 +1642,9 @@ public class EzNewPortalGWController {
 	}
 
 	/**
-	 * 포탈개인화 G/W [GET] 회사별 포틀릿 상세조회
+	 * 포탈개인화 G/W [GET] 회사별 포틀릿 상세조회 ------ 사용 안함
 	 */
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getPortletInfo(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCompanyPortletInfo started.");
@@ -1641,7 +1663,7 @@ public class EzNewPortalGWController {
 		}
 		LOGGER.debug("ezNewPortal G/W getCompanyPortletInfo ended.");
 		return result;
-	}
+	}*/
 
 	/**
 	 * 포탈개인화 G/W [POST] 포틀릿 추가
@@ -1899,8 +1921,7 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String logoType = jsonParam.get("logoType").toString();
 			String logoUrl = jsonParam.get("logoUrl").toString();
-			System.out.println(logoType);
-			System.out.println(logoUrl);
+			
 			ezNewPortalService.updateCompanyLogo(companyId, tenantId, logoType, logoUrl);
 			
 			String addedLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, logoType);
@@ -2376,9 +2397,7 @@ public class EzNewPortalGWController {
 			String deptId = info.getDeptID();
 			String rollInfo = info.getRollInfo();
 			int tenantId = info.getTenantId();
-			int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의
-																					// 포틀릿
-																					// 아이디
+			int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의  포틀릿 아이디
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
 			int photoCount = Integer.parseInt(request.getParameter("photoCount"));
 			String portletLang = info.getLang();
@@ -3001,11 +3020,17 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 
-			String useQuestion = "";
-			String useCircular = "";
-			String useMail = "";
-			String useApproval = "";
-			String useSchedule = "";
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			String portletLang = info.getLang();
+			String deptId = info.getDeptId();
+			
+			// 메일, 결재, 일정, 전자설문, 회람판, 근태관리 권한이 있는지 확인
+			String useQuestion = "NO";
+			String useCircular = "NO";
+			String useMail = "NO";
+			String useApproval = "NO";
+			String useSchedule = "NO";
 
 			// 1. tenantConfig가 YES인지 -- 회람판(USE_CIRCULAR), 근태관리(USE_ATTITUDE),
 			// 전자설문(useQuestion)
@@ -3013,26 +3038,40 @@ public class EzNewPortalGWController {
 			useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", info.getTenantId());
 			
 			// 2. 메뉴에 권한이 있는지 ================ 수정하기 start
-
-			if (useQuestion.equals("NO")) {
-				useQuestion = "NO";
+			if (useQuestion.equals("YES")) {
+				useQuestion = "YES";
 			}
-
-			if (useCircular.equals("NO")) {
-				useCircular = "NO";
-			}
-
-			useMail = "YES";
-			useApproval = "YES";
-			useSchedule = "YES";
 			
-			String companyId = info.getCompanyId();
-			int tenantId = info.getTenantId();
-			String portletLang = info.getLang();
+			if (useCircular.equals("YES")) {
+				useCircular = "YES";
+			}
+			
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
+			
+			for (MenuInfoVO mVO : menuList) {
+				if (mVO.getMenuId()==3) {
+					useApproval = "YES";
+				} 
+				
+				if (mVO.getMenuId()==14 && useQuestion.equals("YES")) {
+					useQuestion = "YES";
+				}
+				
+				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
+					useCircular = "YES";
+				}
+				
+				if (mVO.getMenuId()==1) {
+					useMail = "YES";
+				}
+				
+				if (mVO.getMenuId()==2) {
+					useSchedule = "YES";
+				}
+			}
+			
 			String offset = info.getOffSet();
 			String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
-			String idList = "T";
-			String deptId = info.getDeptId();
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
 			String password = jspw;
@@ -3204,6 +3243,10 @@ public class EzNewPortalGWController {
 			}
 			
 			data.put("useCircular", useCircular);
+			data.put("useQuestion", useQuestion);
+			data.put("useMail", useMail);
+			data.put("useApproval", useApproval);
+			data.put("useSchedule", useSchedule);
 
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -97,31 +97,32 @@
                 document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_end"]) == -1 &&
                 document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_end"]) == -1)
                 return;*/
-
-        if (document.getElementById(g_childid + nodeIdx).style.display == "none") {
-            document.getElementById(g_childid + nodeIdx).style.display = "inline-block";
-            if (document.getElementById(g_toggleid + nodeIdx).className.indexOf("sub_iconLNB tree_plus") >= 0)
-                document.getElementById(g_toggleid + nodeIdx).className = "sub_iconLNB tree_minus";
-            else
-            	document.getElementById(g_toggleid + nodeIdx).className = "sub_iconLNB tree_minus";
-
-            if (document.getElementById(g_childid + nodeIdx).innerHTML == "") {
-                if (g_nodeArray["nodeXML"][nodeIdx].childNodes.length == 0) {
-                    var oEvent = {};
-                    oEvent.nodeIdx = nodeIdx;
-                    window[thisid].onrequestdata(oEvent);
-                }
-                else {
-                    document.getElementById(g_childid + nodeIdx).appendChild(make_childHtml(nodeIdx));
-                }
-            }
-        }
-        else {
-            document.getElementById(g_childid + nodeIdx).style.display = "none";
-            if (document.getElementById(g_toggleid + nodeIdx).className.indexOf("sub_iconLNB tree_minus") >= 0)
-            	document.getElementById(g_toggleid + nodeIdx).className = "sub_iconLNB tree_plus";
-            else
-            	document.getElementById(g_toggleid + nodeIdx).className = "sub_iconLNB tree_plus";
+        if (document.getElementById(g_toggleid + nodeIdx)) {
+	        if (document.getElementById(g_childid + nodeIdx).style.display == "none") {
+	            document.getElementById(g_childid + nodeIdx).style.display = "inline-block";
+	            if (document.getElementById(g_toggleid + nodeIdx).className.indexOf("sub_iconLNB tree_plus") >= 0)
+	                document.getElementById(g_toggleid + nodeIdx).className = "sub_iconLNB tree_minus";
+	            else
+	            	document.getElementById(g_toggleid + nodeIdx).className = "sub_iconLNB tree_minus";
+	
+	            if (document.getElementById(g_childid + nodeIdx).innerHTML == "") {
+	                if (g_nodeArray["nodeXML"][nodeIdx].childNodes.length == 0) {
+	                    var oEvent = {};
+	                    oEvent.nodeIdx = nodeIdx;
+	                    window[thisid].onrequestdata(oEvent);
+	                }
+	                else {
+	                    document.getElementById(g_childid + nodeIdx).appendChild(make_childHtml(nodeIdx));
+	                }
+	            }
+	        }
+	        else {
+	            document.getElementById(g_childid + nodeIdx).style.display = "none";
+	            if (document.getElementById(g_toggleid + nodeIdx).className.indexOf("sub_iconLNB tree_minus") >= 0)
+	            	document.getElementById(g_toggleid + nodeIdx).className = "sub_iconLNB tree_plus";
+	            else
+	            	document.getElementById(g_toggleid + nodeIdx).className = "sub_iconLNB tree_plus";
+	        }
         }
 
         /*if (document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_normal"]) == -1 &&
@@ -865,14 +866,14 @@
 		            
 		            SPAN3.appendChild(SPAN_TAG_MNG);
 	            } else if (_foldername == "_SENT") {
-	            	if (useMailReceiveScreen == "YES") {
+	            	/*if (useMailReceiveScreen == "YES") {
 			            var SPAN_TAG_MNG = document.createElement("SPAN");
 			            SPAN_TAG_MNG.setAttribute("class", "confirmation");
 			            SPAN_TAG_MNG.setAttribute("onclick", "reception_check()");
 			            SPAN_TAG_MNG.innerHTML = receiveText;
 			            
 			            SPAN3.appendChild(SPAN_TAG_MNG);
-	            	}
+	            	}*/
 	            }
 	            
 	            if (g_nodeid + g_nodeCount == "AddressTreeView_node_1") {

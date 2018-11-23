@@ -870,6 +870,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("userPhoto", data.get("userPhoto"));
 			model.addAttribute("userEmail", data.get("userEmail"));
 			model.addAttribute("lastLogin", data.get("lastLogin"));
+			model.addAttribute("usedTheme", req.getParameter("usedTheme"));
 		}
 		
 		logger.debug("portalUserInfoPortlet End");
@@ -1020,6 +1021,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("approvalDeptSusinCount", data.get("approvalDeptSusinCount"));
 			model.addAttribute("unreadMailCount", data.get("unreadMailCount"));
 			model.addAttribute("useCircular", data.get("useCircular"));
+			model.addAttribute("useQuestion", data.get("useQuestion"));
+			model.addAttribute("useMail", data.get("useMail"));
+			model.addAttribute("useApproval", data.get("useApproval"));
+			model.addAttribute("useSchedule", data.get("useSchedule"));
 		}
 		
 		logger.debug("portalCountPortlet End");

@@ -25347,6 +25347,22 @@
 	       AND
 	       		COMPANYID = #companyID#) 
    </insert>
+   
+   <insert id="EzApprovalG.insertReuseAttachFileInfo" parameterClass="Map"> 
+   		INSERT INTO 
+   			TBL_APRATTACHINFO
+	     ( 	  	 DocID,      AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID )
+	     ( SELECT 
+	     		#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID, COMPANYID 
+	       FROM 
+	       		TBL_ENDATTACHINFO A 
+	       WHERE  
+	       		DOCID = #beforeDocID#
+	       AND
+	        	TENANT_ID = #v_TENANTID#
+	       AND
+	       		COMPANYID = #companyID#) 
+   </insert>
 			  
    <insert id="EzApprovalG.insertRejectEndDocAttachInfoS" parameterClass="Map"> 
 		INSERT INTO 

@@ -1165,10 +1165,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void circularClose(String circularIDList, int tenantID) throws Exception {
+	public void circularClose(String circularIDList, int tenantID, String endDate) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantID", tenantID);
+		map.put("endDate", endDate);
 		
 		for (String circularID : circularIDList.split(";")) {
 			map.put("circularID", circularID);

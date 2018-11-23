@@ -839,9 +839,9 @@
 						</c:choose>
 					</p>
 					<div style="float:left;margin:1px 8px">
-						<span class="name" style="float:left"><c:out value="${vo.writerName}" /></span>
-						<span class="team" style="float:left"><c:out value="${vo.deptName}" /></span>
-						<span class="date" style="float:left"><c:out value="${vo.writeDate}" /></span>
+						<span class="name" style="display:block;"><c:out value="${vo.writerName}" /></span>
+						<span class="team" style="display:block;"><c:out value="${vo.deptName}" /></span>
+						<span class="date" style="display:block;"><c:out value="${vo.writeDate}" /></span>
 					</div>
 				</div>	
 				<div class="ladderGame_info" style="float:right">
