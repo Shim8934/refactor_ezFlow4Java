@@ -177,185 +177,41 @@
 		    <div class="admin_left_title" title="<spring:message code='ezStatistics.t124' />"><spring:message code='ezStatistics.t124' /></div>      
 		    <div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 	            <h2 class="on" id="menu1H2">
-	            	<span>
-	            		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="PERSONAL" onclick="openFolder('menu1')" ><spring:message code='ezStatistics.t1049' /></span>
-	            	</span>	
+            		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="PERSONAL" onclick="openFolder('menu1')" ><spring:message code='ezStatistics.t1049' /></span>
 	            </h2>
 	            <ul class="lnbUL" id="menu1UL">
-	            	<div class="tree">
-	            		<span>
-	                		<span>
-	                			<span>
-	                        		<div class="node_div">
-	                        			<span class="sub_iconLNB tree_blank"></span>
-	                        			<span class="sub_iconLNB tree_admin_stats"></span>
-	                					<span class="h2_text" onclick="goPage(16)"><spring:message code='ezStatistics.t1047' /></span>
-	                				</div>
-	                			</span>
-	                			<span>
-	                        		<div class="node_div">
-	                        			<span class="sub_iconLNB tree_blank"></span>
-	                        			<span class="sub_iconLNB tree_admin_stats"></span>
-	                					<span class="h2_text" onclick="goPage(17)"><spring:message code='ezStatistics.t1045' /></span>
-	                				</div>
-	                			</span>
-	                			<span>
-	                        		<div class="node_div">
-	                        			<span class="sub_iconLNB tree_blank"></span>
-	                        			<span class="sub_iconLNB tree_admin_stats"></span>
-	                					<span class="h2_text" onclick="goPage(18)"><spring:message code='ezStatistics.t1048' /></span>
-	                				</div>
-	                			</span>
-	                		</span>
-	                	</span>
-	                </div>
+           			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(16)"><spring:message code='ezStatistics.t1047' /></span></li>
+           			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(17)"><spring:message code='ezStatistics.t1045' /></span></li>
+           			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(18)"><spring:message code='ezStatistics.t1048' /></span></li>
 	            </ul>
 	      	    <h2 class="off" id="menu2H2">
-	      	    	<span>
-	            		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="MAIL" onclick="openFolder('menu2')" ><spring:message code='ezStatistics.t2' /></span>
-	            	</span>
+            		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="MAIL" onclick="openFolder('menu2')" ><spring:message code='ezStatistics.t2' /></span>
 	      	    </h2>
 			    <ul class="lnbUL off" id="menu2UL">
-			    	<div class="tree">
-	            		<span>
-	                		<span>
-	                			<span>
-	                        		<div class="node_div">
-	                        			<span class="sub_iconLNB tree_blank"></span>
-	                        			<span class="sub_iconLNB tree_admin_stats"></span>
-	                					<span class="h2_text" onClick="menu_change('MAIL')"><spring:message code='ezStatistics.t1001' /></span>
-	                				</div>
-	                			</span>
-	                			<span>
-	                        		<div class="node_div">
-	                        			<span class="sub_iconLNB tree_blank"></span>
-	                        			<span class="sub_iconLNB tree_admin_stats"></span>
-	                					<span class="h2_text" onClick="goPage(1)"><spring:message code='ezStatistics.t1012' /></span>
-	                				</div>
-	                			</span>
-	                			<span>
-	                        		<div class="node_div">
-	                        			<span class="sub_iconLNB tree_blank"></span>
-	                        			<span class="sub_iconLNB tree_admin_stats"></span>
-	                					<span class="h2_text" onclick="goPage(2)"><spring:message code='ezStatistics.t1018' /></span>
-	                				</div>
-	                			</span>
-	                			<span>
-	                        		<div class="node_div">
-	                        			<span class="sub_iconLNB tree_blank"></span>
-	                        			<span class="sub_iconLNB tree_admin_stats"></span>
-	                					<span class="h2_text" onclick="goPage(4)"><spring:message code='ezStatistics.t1023' /></span>
-	                				</div>
-	                			</span>
-	                			<span>
-	                        		<div class="node_div">
-	                        			<span class="sub_iconLNB tree_blank"></span>
-	                        			<span class="sub_iconLNB tree_admin_stats"></span>
-	                					<span class="h2_text" onclick="goPage(5)"><spring:message code='ezStatistics.t1025' /></span>
-	                				</div>
-	                			</span>
-	                			<span>
-	                        		<div class="node_div">
-	                        			<span class="sub_iconLNB tree_blank"></span>
-	                        			<span class="sub_iconLNB tree_admin_stats"></span>
-	                					<span class="h2_text" onclick="goPage(22)"><spring:message code='ezStatistics.kyj1' /></span>
-	                				</div>
-	                			</span>
-	                			<span>
-	                        		<div class="node_div">
-	                        			<span class="sub_iconLNB tree_blank"></span>
-	                        			<span class="sub_iconLNB tree_admin_stats"></span>
-	                					<span class="h2_text" onclick="goPage(23)"><spring:message code='ezStatistics.kyj2' /></span>
-	                				</div>
-	                			</span>
-	                		</span>
-	                	</span>
-	                </div>
+           			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onClick="menu_change('MAIL')"><spring:message code='ezStatistics.t1001' /></span></li>
+           			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onClick="goPage(1)"><spring:message code='ezStatistics.t1012' /></span></li>
+           			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(2)"><spring:message code='ezStatistics.t1018' /></span></li>
+           			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(4)"><spring:message code='ezStatistics.t1023' /></span></li>
+           			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(5)"><spring:message code='ezStatistics.t1025' /></span></li>
+           			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(22)"><spring:message code='ezStatistics.kyj1' /></span></li>
+           			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(23)"><spring:message code='ezStatistics.kyj2' /></span></li>
 			    </ul>
 	            <c:if test="${packageType == 'standard'}">
 	            	<c:if test="${use_approvalG == 'YES'}">
 	            		<h2 class="off" id="menu3H2">
-	            			<span>
-			            		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('menu3')" ><spring:message code='ezStatistics.t1030' /></span>
-			            	</span>
+		            		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('menu3')" ><spring:message code='ezStatistics.t1030' /></span>
 			            </h2>
 					    <ul class="lnbUL off" id="menu3UL">
-					    	<div class="tree">
-			            		<span>
-			                		<span>
-			                			<span>
-			                        		<div class="node_div">
-			                        			<span class="sub_iconLNB tree_blank"></span>
-			                        			<span class="sub_iconLNB tree_admin_stats"></span>
-			                					<span class="h2_text" onclick="goPage(15)"><spring:message code='ezStatistics.t1030' /></span>
-			                				</div>
-			                			</span>
-			                			<span>
-			                        		<div class="node_div">
-			                        			<span class="sub_iconLNB tree_blank"></span>
-			                        			<span class="sub_iconLNB tree_admin_stats"></span>
-			                					<span class="h2_text" onclick="goPage(6)"><spring:message code='ezStatistics.t1031' /></span>
-			                				</div>
-			                			</span>
-			                			<span>
-			                        		<div class="node_div">
-			                        			<span class="sub_iconLNB tree_blank"></span>
-			                        			<span class="sub_iconLNB tree_admin_stats"></span>
-			                					<span class="h2_text" onclick="goPage(7)"><spring:message code='ezStatistics.t1033' /></span>
-			                				</div>
-			                			</span>
-			                			<span>
-			                        		<div class="node_div">
-			                        			<span class="sub_iconLNB tree_blank"></span>
-			                        			<span class="sub_iconLNB tree_admin_stats"></span>
-			                					<span class="h2_text" onclick="goPage(8)"><spring:message code='ezStatistics.t1034' /></span>
-			                				</div>
-			                			</span>
-			                			<span>
-			                        		<div class="node_div">
-			                        			<span class="sub_iconLNB tree_blank"></span>
-			                        			<span class="sub_iconLNB tree_admin_stats"></span>
-			                					<span class="h2_text" onclick="goPage(9)"><spring:message code='ezStatistics.t1036' /></span>
-			                				</div>
-			                			</span>
-			                			<span>
-			                        		<div class="node_div">
-			                        			<span class="sub_iconLNB tree_blank"></span>
-			                        			<span class="sub_iconLNB tree_admin_stats"></span>
-			                					<span class="h2_text" onclick="goPage(10)"><spring:message code='ezStatistics.t1037' /></span>
-			                				</div>
-			                			</span>
-			                			<span>
-			                        		<div class="node_div">
-			                        			<span class="sub_iconLNB tree_blank"></span>
-			                        			<span class="sub_iconLNB tree_admin_stats"></span>
-			                					<span class="h2_text" onclick="goPage(11)"><spring:message code='ezStatistics.t1038' /></span>
-			                				</div>
-			                			</span>
-			                			<span>
-			                        		<div class="node_div">
-			                        			<span class="sub_iconLNB tree_blank"></span>
-			                        			<span class="sub_iconLNB tree_admin_stats"></span>
-			                					<span class="h2_text" onclick="goPage(12)"><spring:message code='ezStatistics.t1039' /></span>
-			                				</div>
-			                			</span>
-			                			<span>
-			                        		<div class="node_div">
-			                        			<span class="sub_iconLNB tree_blank"></span>
-			                        			<span class="sub_iconLNB tree_admin_stats"></span>
-			                					<span class="h2_text" onclick="goPage(13)"><spring:message code='ezStatistics.t1040' /></span>
-			                				</div>
-			                			</span>
-			                			<span>
-			                        		<div class="node_div">
-			                        			<span class="sub_iconLNB tree_blank"></span>
-			                        			<span class="sub_iconLNB tree_admin_stats"></span>
-			                					<span class="h2_text" onclick="goPage(14)"><spring:message code='ezStatistics.t1041' /></span>
-			                				</div>
-			                			</span>
-			                		</span>
-			                	</span>
-			                </div>
+                   			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(15)"><spring:message code='ezStatistics.t1030' /></span></li>
+                   			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(6)"><spring:message code='ezStatistics.t1031' /></span></li>
+                   			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(7)"><spring:message code='ezStatistics.t1033' /></span></li>
+                   			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(8)"><spring:message code='ezStatistics.t1034' /></span></li>
+                   			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(9)"><spring:message code='ezStatistics.t1036' /></span></li>
+                   			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(10)"><spring:message code='ezStatistics.t1037' /></span></li>
+                   			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(11)"><spring:message code='ezStatistics.t1038' /></span></li>
+                   			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(12)"><spring:message code='ezStatistics.t1039' /></span></li>
+                   			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(13)"><spring:message code='ezStatistics.t1040' /></span></li>
+                   			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onclick="goPage(14)"><spring:message code='ezStatistics.t1041' /></span></li>
 					    </ul>
 	           	 	</c:if>
 	      <!--
@@ -368,31 +224,11 @@
 	            </c:if>
 	            <c:if test="${use_attitude == 'YES'}">
 		            <h2 class="off" id="menu4H2">
-		            	<span>
-		            		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="ATTITUDE" onclick="openFolder('menu4')" ><spring:message code='ezStatistics.kbm1' /></span>
-		            	</span>
+	            		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="ATTITUDE" onclick="openFolder('menu4')" ><spring:message code='ezStatistics.kbm1' /></span>
 		            </h2>
 				    <ul class="lnbUL off" id="menu4UL">
-				    	<div class="tree">
-		            		<span>
-		                		<span>
-		                			<span>
-		                        		<div class="node_div">
-		                        			<span class="sub_iconLNB tree_blank"></span>
-		                        			<span class="sub_iconLNB tree_admin_stats"></span>
-		                					<span class="h2_text" onClick="menu_change('ATTITUDE')"><spring:message code='ezStatistics.t1018' /></span>
-		                				</div>
-		                			</span>
-		                			<span>
-		                        		<div class="node_div">
-		                        			<span class="sub_iconLNB tree_blank"></span>
-		                        			<span class="sub_iconLNB tree_admin_stats"></span>
-		                					<span class="h2_text" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span>
-		                				</div>
-		                			</span>
-		                		</span>
-		                	</span>
-		                </div>
+              			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onClick="menu_change('ATTITUDE')"><spring:message code='ezStatistics.t1018' /></span></li>
+              			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span></li>
 					    <%-- <li><span style="display:inline-block;width:100%;" onClick="menu_change('ATTITUDE')"><spring:message code='ezStatistics.t1018' /></span></li>
 					    <li><span style="display:inline-block;width:100%;" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span></li> --%>
 				    </ul>
