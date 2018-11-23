@@ -452,7 +452,7 @@
 	        }
 
 	        selectelem = elem;
-	        elem.style.backgroundColor = "#e4e8ec";
+	        elem.style.backgroundColor = "#f1f8ff";
 	        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
 
 	        // 목록화면 나오고 처음 선택할 때 strMoveListIDInfo 값 셋팅
@@ -470,7 +470,7 @@
 					strMoveListIDInfo = "";
 
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body").css("background", "#e4e8ec");
+					$(".row_body").css("background", "#f1f8ff");
 
 					$(":checkbox[name=myCheckbox]:checked").each(function(){
 						deleteListID.push($(this).attr("id") + ";")
@@ -773,7 +773,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#e4e8ec";
+		        elem.style.backgroundColor = "#f1f8ff";
 		        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
 
 		        // 목록화면 나오고 처음 선택할 때 strMoveListIDInfo 값 셋팅
