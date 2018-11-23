@@ -276,21 +276,15 @@ public class EzNewPortalGWController {
 			
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
 			
+			boolean isUseQuestionAuth = false;
+			
 			for (MenuInfoVO mVO : menuList) {
 				if (mVO.getMenuId()==3) {
 					useApproval = "YES";
 				} 
 				
 				if (mVO.getMenuId()==14 && useQuestion.equals("YES")) {
-					useQuestion = "YES";
-				}
-				
-				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
-					useCircular = "YES";
-				}
-				
-				if (mVO.getMenuId()==9 && useAttitude.equals("YES")) {
-					useAttitude = "YES";
+					isUseQuestionAuth = true;
 				}
 				
 				if (mVO.getMenuId()==1) {
@@ -299,6 +293,31 @@ public class EzNewPortalGWController {
 				
 				if (mVO.getMenuId()==2) {
 					useSchedule = "YES";
+				}
+			}
+			
+			if (isUseQuestionAuth) {
+				useQuestion = "YES";
+			} else {
+				useQuestion = "NO";
+			}
+			
+			for (MenuInfoVO mVO : menuList) {
+				
+				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
+					useCircular = "YES";
+					break;
+				} else {
+					useCircular = "NO";
+				}
+			}
+			
+			for (MenuInfoVO mVO : menuList) {
+				if (mVO.getMenuId()==9 && useAttitude.equals("YES")) {
+					useAttitude = "YES";
+					break;
+				} else {
+					useAttitude = "NO";
 				}
 			}
 			
@@ -2988,10 +3007,15 @@ e.printStackTrace();
 				userPhoto = commonUtil.getUploadPath("upload_personal.PHOTO", info.getTenantId()) + commonUtil.separator + imgUrl;
 			}
 			
+			String useAttitude = "NO";
 			//근태 사용여부
-			String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());			
-			if (useAttitude == null || useAttitude.equals("")) {
-				useAttitude = "YES";
+			String useAttitude2 = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());			
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(info.getCompanyId(), info.getTenantId(), info.getLang(), userId, info.getDeptId());
+			
+			for (MenuInfoVO mVO : menuList) {
+				if (mVO.getMenuId()==9 && useAttitude2.equals("YES")) {
+					useAttitude = "YES";
+				}	
 			}
 			
 			//마지막(최종)접속시간

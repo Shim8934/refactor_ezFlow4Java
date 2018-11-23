@@ -2811,6 +2811,7 @@
 	    	TBL_PORTAL_MENU_AUTH 
 	    		(MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
 	    VALUES 
+	    		(0, #companyID#, #tenantID#, #companyID#, 1, 0),
 	    		(1, #companyID#, #tenantID#, #companyID#, 1, 0),
 	    		(2, #companyID#, #tenantID#, #companyID#, 1, 0),
 	    		(3, #companyID#, #tenantID#, #companyID#, 1, 0),

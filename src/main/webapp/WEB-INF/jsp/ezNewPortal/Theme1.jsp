@@ -81,18 +81,28 @@
            		</dl>
 			</article>
 			<article class="main_time_check">
-				<div id="timeinput" class="main_presentTime">
-	               	<p class="main_timeTit" id="todayTime"><spring:message code='ezNewPortal.t012' /></p>
-					<div id="timeFlow" class="main_timeText"></div>
-			    </div>
-			    <div id="atti_area" class="main_main_time">
-	            	<dl class="main_timeCheckIn">
-	                	<dd id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t013' /></dd>
-	                </dl>
-	                <dl class="main_timeCheckOut">
-	                   	<dd id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t014' /></dd>
-	                </dl>
-		    	</div>
+				<c:choose>
+					<c:when test="${useAttitude eq 'YES' }">
+						<div id="timeinput" class="main_presentTime">
+	               			<p class="main_timeTit" id="todayTime"><spring:message code='ezNewPortal.t012' /></p>
+							<div id="timeFlow" class="main_timeText"></div>
+			    		</div>
+			   			<div id="atti_area" class="main_main_time">
+	            			<dl class="main_timeCheckIn">
+	                			<dd id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t013' /></dd>
+	                		</dl>
+	                		<dl class="main_timeCheckOut">
+	                   			<dd id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t014' /></dd>
+	                		</dl>
+		    			</div>
+					</c:when>
+					<c:otherwise>
+						<div id="timeinput" class="main_presentTime presentTime_commuteNone">
+	               			<p class="main_timeTit" id="todayTime"><spring:message code='ezNewPortal.t012' /></p>
+							<div id="timeFlow" class="main_timeText"></div>
+			    		</div>
+					</c:otherwise>
+				</c:choose>
 			</article>
 				
 				<article class="countingIcon">
@@ -479,7 +489,7 @@
 		
 		//근태관리 연동
 		var useAttitude = "<c:out value='${useAttitude}'/>";
-		
+		console.log(useAttitude);
 		if (useAttitude === "YES") {
 			parseDate(usedTheme);
 			attiClock();
@@ -487,7 +497,9 @@
 			getAttitudeList(usedTheme);
 			getHolidayList();
 		} else {
-			$(".time_check").css("display", "none");
+			parseDate(usedTheme);
+			attiClock();
+			//$(".time_check").css("display", "none");
 		}
 		
 		//생일자 조회 기능 연동

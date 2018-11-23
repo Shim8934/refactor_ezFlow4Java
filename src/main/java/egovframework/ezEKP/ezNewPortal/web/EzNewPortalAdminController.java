@@ -152,7 +152,6 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 * 관리자 메뉴 권한 조직도 화면조회
 	 */
 	@SuppressWarnings("unchecked")
-	//TODO 2018-11-06 need시간
 	@RequestMapping(value = "/admin/ezNewPortal/portalMenuAuth.do")
 	public String portalMenuAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("portalMenuAuth started.");
@@ -167,6 +166,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("companyId", request.getParameter("companyId"));
 		
 		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request, "get", null);
 		String status = result.get("status").toString();

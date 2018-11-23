@@ -13,79 +13,31 @@
 	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	    <style>
 			/* Hide the browser's default checkbox */
-			.IDcontainer input {
-			    position: absolute;
-			    opacity: 0;
-			    cursor: pointer;
-			}
-			
-			/* Create a custom checkbox */
-			.checkmark {
-			    position: absolute;
-			    top: 10px;
-			    left: 16px;
-			    height: 13px;
-			    width: 13px;
-			    background-color: #eee;
-			}
-									
-			/* When the checkbox is checked, add a blue background */
-			.IDcontainer input:checked ~ .checkmark {
-			    background-color: #ccc;
-			}
-			
-			/* Create the checkmark/indicator (hidden when not checked) */
-			.checkmark:after {
-			    content: "";
-			    position: absolute;
-			    display: none;
-			}
-			
-			/* Show the checkmark when checked */
-			.IDcontainer input:checked ~ .checkmark:after {
-			    display: block;
-			}
-			
-			/* Style the checkmark/indicator */
-			.IDcontainer .checkmark:after {
-			    left: 5px;
-			    top: 1px;
-			    width: 2px;
-			    height: 6px;
-			    border: solid white;
-			    border-width: 0 2px 2px 0;
-			    -webkit-transform: rotate(45deg);
-			    -ms-transform: rotate(45deg);
-			    transform: rotate(45deg);
-			}
-			/* 2018-08-03 김보미 - 그룹명이 길 경우 처리 */
-			.IDcontainer {
-			    white-space: nowrap;
-			    overflow: hidden;
-			    text-overflow: ellipsis;
-			    font-family:Malgun Gothic, malgun gothic;
-			    font-size: 13px;
-			    padding-top:0px;
-			    margin:0px;
-			    width:150px
-			}
-			
-			.IDcontainer span {
-				font-family:Malgun Gothic, malgun gothic;
-			}
-			
-			/* 2018-08-03 김보미 - 클릭시마다 앞의 체크박스 ui 틀어지는 현상 막기 */
-			.IDcontainer .checkSelect {
-				display: none;
-			}
-			
-			.IDcontainer .h2_text {
-				width: 150px;
-				margin-left:7px;
-			}
-			#mCSB_1_container {
-				margin-right: 0px;
-			}
+	        .IDcontainer input {display:none; cursor: pointer; }
+	
+	        /* Create a custom checkbox */
+	        .checkmark {float:left; height: 13px; width: 13px; margin-top:9px; background-color: #eee; border-radius:3px;}
+	
+	        /* When the checkbox is checked, add a blue background */
+	        .IDcontainer input:checked ~ .checkmark { background-color: #ccc; }
+	
+	        /* Create the checkmark/indicator (hidden when not checked) */
+	        .checkmark:after { content: ""; display: none; }
+	
+	        /* Show the checkmark when checked */
+	        .IDcontainer input:checked ~ .checkmark:after { display: block; }
+	
+	        /* Style the checkmark/indicator */
+	        .IDcontainer .checkmark:after {position:relative; width: 2px; height: 6px; margin:2px auto 0px auto; border: solid white; border-width: 0 1px 1px 0; -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); }
+	        /* 2018-08-03 김보미 - 그룹명이 길 경우 처리 */
+	        .IDcontainer { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: Malgun Gothic, malgun gothic; font-size: 13px; padding-top: 0px; padding-left:0px; margin: 0px; }
+	
+	        .IDcontainer span { font-family: Malgun Gothic, malgun gothic; }
+	
+	        /* 2018-08-03 김보미 - 클릭시마다 앞의 체크박스 ui 틀어지는 현상 막기 */
+	        .IDcontainer .checkSelect { display: none; }
+	
+	        #mCSB_1_container { margin-right: 0px; }
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
@@ -439,68 +391,82 @@
 	        </div>
         	<div class="scheduleListBox" style="overflow:hidden; padding-right: 0;">
 		        <ul class="lnbUL">
-		        	<li style="overflow:hidden;padding:0px">
+		        	<li>
 			    		<!-- 2018-07-11 구해안 left 체크박스 label에 title 삽입 -->
 			    		<span class="sub_iconLNB tree_manage" onClick="Function_Flag(5)"></span>
 			    		<label class="IDcontainer" onchange="chk_all()">
-			    			<span class="h2_text"><spring:message code='ezSchedule.t220'/></span>
 							<input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse" style="left:0px">
 					  		<span class="checkmark" style="background:rgb(125, 125, 125);"></span>
+					  		<span class="list_text"><spring:message code='ezSchedule.t220'/></span>
 						</label>
+					</li>
+					<li>
 						<label class="IDcontainer" onchange="chk_DisplayChange()">
-							<span class="h2_text"><spring:message code='ezSchedule.t221'/></span>
 					  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${loginVO.id}" class="checkSelect">
 					  		<span class="checkmark" style="background:rgb(1, 138, 249);"></span>
+					  		<span class="list_text"><spring:message code='ezSchedule.t221'/></span>
 						</label>
-						<c:if test='${!empty scheSec}'>
-							<c:forEach var="sec" items="${scheSec}">
+					</li>	
+					<c:if test='${!empty scheSec}'>
+						<c:forEach var="sec" items="${scheSec}">
+							<li>
 								<label class="IDcontainer" onchange="chk_DisplayChange()">
-									<span class="h2_text" title="${sec.secName }"><spring:message code='ezSchedule.t372'/>${sec.secName }</span>
 							 	 	<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${sec.secId }" class="checkSelect">
 								  	<span class="checkmark" style="background-color:rgb(1, 138, 249);"></span>
+								  	<span class="list_text" title="${sec.secName }"><spring:message code='ezSchedule.t372'/>${sec.secName }</span>
 								</label>
-							</c:forEach>
-						</c:if>
+							</li>	
+						</c:forEach>
+					</c:if>
+					<li>
 						<label class="IDcontainer" onchange="chk_DisplayChange()">
-							<span class="h2_text"><spring:message code='ezSchedule.t222'/></span>
 							<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${loginVO.deptID}" class="checkSelect">
 						  	<span class="checkmark" style="background:rgb(1, 179, 63);"></span>
-						</label>				
-						<c:if test='${!empty scheDept}'>
-							<c:forEach var="dep" items="${scheDept}">
+						  	<span class="list_text"><spring:message code='ezSchedule.t222'/></span>
+						</label>
+					</li>					
+					<c:if test='${!empty scheDept}'>
+						<c:forEach var="dep" items="${scheDept}">
+							<li>
 								<label class="IDcontainer" onchange="chk_DisplayChange()">
-									<span class="h2_text" title="${dep.deptName }"><spring:message code='ezSchedule.t373'/>${dep.deptName }</span>
 							  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${dep.deptId }" class="checkSelect">
 							  		<span class="checkmark" style="background-color:rgb(1, 179, 63);"></span>
+							  		<span class="list_text" title="${dep.deptName }"><spring:message code='ezSchedule.t373'/>${dep.deptName }</span>
 								</label>
-							</c:forEach>
-						</c:if>
-						<c:if test='${!empty scheCum}'>
-							<c:forEach var="cum" items="${scheCum}">
-								<c:if test="${cum.deptId ne loginVO.deptID}">
+							</li>	
+						</c:forEach>
+					</c:if>
+					<c:if test='${!empty scheCum}'>
+						<c:forEach var="cum" items="${scheCum}">
+							<c:if test="${cum.deptId ne loginVO.deptID}">
+								<li>
 									<label class="IDcontainer" onchange="chk_DisplayChange()">
-										<span class="h2_text" title="${cum.titleName }"><spring:message code='ezSchedule.t373'/>${cum.titleName }</span>
 										<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
 									  	<span class="checkmark" style="background-color:rgb(1, 179, 63);"></span>
+									  	<span class="list_text" title="${cum.titleName }"><spring:message code='ezSchedule.t373'/>${cum.titleName }</span>
 									</label>
-								</c:if>
-							</c:forEach>
-						</c:if>
+								</li>	
+							</c:if>
+						</c:forEach>
+					</c:if>
+					<li>
 						<label class="IDcontainer" onchange="chk_DisplayChange()">
-							<span class="h2_text"><spring:message code='ezSchedule.t223'/></span>
 					  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="3" value="${loginVO.companyID}" class="checkSelect">
 					  		<span class="checkmark" style="background:rgb(254, 28, 113);"></span>
+					  		<span class="list_text"><spring:message code='ezSchedule.t223'/></span>
 						</label>
-						<c:if test='${!empty groupList}'>
-							<c:forEach var="group" items="${groupList}">
+					</li>	
+					<c:if test='${!empty groupList}'>
+						<c:forEach var="group" items="${groupList}">
+							<li>
 								<label class="IDcontainer" onchange="chk_DisplayChange()">
-									<span class="h2_text" title="${group.groupName }"><spring:message code='ezSchedule.t375'/>${group.groupName }</span>
 							  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="7" value="${group.groupId }" class="checkSelect">
 							  		<span class="checkmark" style="background-color:#e9de13;"></span>
+							  		<span class="list_text" title="${group.groupName }"><spring:message code='ezSchedule.t375'/>${group.groupName }</span>
 								</label>
-							</c:forEach>
-						</c:if>
-			    	</li>
+							</li>	
+						</c:forEach>
+					</c:if>
 		        </ul>
 		        <ul class="lnbUL">
                   	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
