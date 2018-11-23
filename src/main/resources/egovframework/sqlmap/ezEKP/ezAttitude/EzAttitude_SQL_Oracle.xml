@@ -402,7 +402,7 @@
 				#adminId#,
 				c.displayname,
 				c.displayname2,
-				to_date(#apprDate#, 'YYYY-MM-DD HH24:MI:SS')
+				TO_DATE(#apprDate#, 'YYYY-MM-DD HH24:MI:SS')
 			FROM
 				(select 
 					*
@@ -1137,8 +1137,8 @@
 			A.TENANT_ID,
 			A.WRITER_ID,
 			A.DEPT_ID,
-			(A.START_DATE + (#offsetMin# / (24 * 60))) AS START_DATE,
-			(A.END_DATE + (#offsetMin# / (24 * 60))) AS END_DATE,
+			TO_CHAR(A.START_DATE + (#offsetMin# / (24 * 60)), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE,
+			TO_CHAR(A.END_DATE + (#offsetMin# / (24 * 60)), 'YYYY-MM-DD HH24:MI:SS') AS END_DATE,
 			A.MODAPPL,
 			A.REGION,
 			A.MOBILE,
@@ -1507,7 +1507,7 @@
 			)
 			VALUES
 			(
-				SEQ_TBL_ATTI_MODAPPL_HISTORY.NEXTVAL,
+				SEQ_TBL_ATTI_MODAPPL_HISTORY.nextval,
 				#attVO.companyId#,
 				#tenantId#,
 				#attVO.writerId#,
@@ -1583,7 +1583,7 @@
 				#attVO.typeName#,
 				#attVO.typeName2#,
 				#attVO.dateType#,
-				#apprDate#
+				TO_DATE(#apprDate#, 'YYYY-MM-DD HH24:MI:SS')
 			)
 	</insert>
 	
@@ -1619,7 +1619,7 @@
 			)
 			VALUES
 			(
-				SEQ_TBL_ATTI_MODAPPL_HISTORY.NEXTVAL,
+				SEQ_TBL_ATTI_MODAPPL_HISTORY.nextval,
 				#attVO.companyId#,
 				#tenantId#,
 				#attVO.writerId#,
@@ -1652,7 +1652,7 @@
 				#attVO.typeName#,
 				#attVO.typeName2#,
 				#attVO.dateType#,
-				#apprDate#
+				TO_DATE(#apprDate#, 'YYYY-MM-DD HH24:MI:SS')
 			)
 	</insert>
 	
