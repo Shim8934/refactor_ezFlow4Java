@@ -246,15 +246,12 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 	
 	@Override
-	public PersonalLightPollVO getCurrentPoll(String pUserID, String pCompanyID, int tenantID) throws Exception {
+	public PersonalLightPollVO getCurrentPoll(String pUserID, String pCompanyID, int tenantID, String offset) throws Exception {
 		logger.debug("getCurrentPoll started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String nowDate = date.format(new Date()); 
-		
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false); 
+
 		map.put("v_pUserID", pUserID);
 		map.put("v_pCompanyID", pCompanyID);
 		map.put("tenantID", tenantID);

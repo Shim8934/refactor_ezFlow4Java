@@ -398,9 +398,9 @@
    			WHERE
    				COMPANYID = #v_pCompanyID#
             AND
-            	STARTDATE < DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
+            	STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
             AND
-            	ENDDATE IS NULL
+            	ENDDATE >=  DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
             AND
                	A.TENANT_ID = #tenantID#	
        		ORDER BY

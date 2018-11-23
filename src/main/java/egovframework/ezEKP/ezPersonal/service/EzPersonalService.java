@@ -35,7 +35,7 @@ public interface EzPersonalService {
 	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm, LoginVO userInfo) throws Exception;
 	
-	public PersonalLightPollVO getCurrentPoll (String pUserID, String pCompanyID, int tenantID) throws Exception;
+	public PersonalLightPollVO getCurrentPoll (String pUserID, String pCompanyID, int tenantID, String offset) throws Exception;
 	
 	public PersonalLightPollVO getPollInfo (int pItemSeq, int tenantID) throws Exception;
 	
