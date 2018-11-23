@@ -232,7 +232,7 @@ nav > .countBox .hidden_nav_count {position: absolute; right: 0px; top: 6px; dis
 .rolling_info .info dd{font-size:12px; font-family:Gulim; color:#fff; overflow:hidden;}
 .rolling_info .info .infoName{font-weight:bold; padding:11px 0px 2px 10px; margin:0px;}
 .rolling_info .info .infoTeam{font-weight:normal; padding:0px 0px 0px 10px; margin:0px;}
-.rolling_info .info .infoSet{-webkit-border-radius:0px; border-radius:0px; width:auto; margin:0px; padding:0px; position:absolute; right:10px; top:10px; cursor:pointer; border:none;}
+.rolling_info .info .infoSet{-webkit-border-radius:0px; border-radius:0px; width:auto; margin:0px; padding:0px; position:absolute; right:10px; top:10px; cursor:pointer; border:none;background:none;}
 
 /* time_check */
 .main_time_check{ height:66px; border-bottom:1px solid #e7e7e7; box-sizing:border-box; background:#f2f4f7; overflow:hidden; margin:0px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
