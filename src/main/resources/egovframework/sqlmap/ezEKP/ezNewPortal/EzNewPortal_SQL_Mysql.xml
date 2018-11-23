@@ -1183,7 +1183,7 @@ WHERE
 AND
 	A.tenant_id = #tenantId#
 AND
-	A.company_id = #companyId#;
+	A.company_id = #companyId#
 ]]>
 </select>
 

@@ -582,6 +582,7 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1060,7 +1061,7 @@ public class EzNewPortalGWController {
 	//사용자 초기화면 정보 조회 + 메모 모듈 사용여부 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/startpage/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getUserStartPage(HttpServletRequest request, @PathVariable String userId) {
+	public JSONObject getUserStartPage(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getUserStartPage started.");
 		JSONObject result = new JSONObject();
 
