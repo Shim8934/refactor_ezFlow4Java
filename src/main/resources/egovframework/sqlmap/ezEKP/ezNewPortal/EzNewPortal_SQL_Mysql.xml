@@ -1575,7 +1575,7 @@ LIMIT
 		]]>
 	</select>
 	
-	<select id="ezNewPortal.getPortletForUser" parameterClass="Map" resultClass="PortletInfoVO">
+	<select id="ezNewPortal.getPortletForUser" parameterClass="Map" resultClass="PortletInfoVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				A.portlet_id AS portletId,
@@ -1597,7 +1597,21 @@ LIMIT
 							USER.menu_id = A.menu_id
 						AND
 							USER.user_id = #userId#), IFNULL(COMP.portlet_order, A.default_order)) AS portletOrder,
+		]]>
+		
+		<isEmpty property="deptId">
+			<![CDATA[
 				AUTH.access_yn AS accessYN
+			]]>
+		</isEmpty>
+		
+		<isNotEmpty property="deptId">
+			<![CDATA[
+				IFNULL(AUTH.access_yn, 1) AS accessYN
+			]]>
+		</isNotEmpty>
+		
+		<![CDATA[
 			FROM
 				TBL_PORTAL_PORTLET AS A
 			JOIN
@@ -1626,18 +1640,16 @@ LIMIT
 				A.menu_id = AUTH.menu_id
 		]]>
 		
-		<isEmpty property="deptId">
+		<isEmpty property="deptId" prepend="AND">
 			<![CDATA[
-				AND
 					AUTH.user_type = 1
 				AND
 					AUTH.user_id = #userId#
 			]]>
 		</isEmpty>
 		
-		<isNotEmpty property="deptId">
+		<isNotEmpty property="deptId" prepend="AND">
 			<![CDATA[
-				AND
 					AUTH.user_type = 0
 				AND
 					AUTH.user_id = #deptId#
@@ -1653,8 +1665,14 @@ LIMIT
 				NAME.portlet_lang = #portletLang#
 			AND
 				COMP.portlet_used = 1
-			AND
+		]]>
+		
+		<isEmpty property="deptId" prepend="AND">
+			<![CDATA[
 				(AUTH.access_yn IS NOT NULL)
+			]]>
+		</isEmpty>
+		<![CDATA[
 			ORDER BY
 				portletOrder;
 		]]>
