@@ -1021,6 +1021,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("approvalDeptSusinCount", data.get("approvalDeptSusinCount"));
 			model.addAttribute("unreadMailCount", data.get("unreadMailCount"));
 			model.addAttribute("useCircular", data.get("useCircular"));
+			model.addAttribute("useQuestion", data.get("useQuestion"));
+			model.addAttribute("useMail", data.get("useMail"));
+			model.addAttribute("useApproval", data.get("useApproval"));
+			model.addAttribute("useSchedule", data.get("useSchedule"));
 		}
 		
 		logger.debug("portalCountPortlet End");

@@ -293,6 +293,9 @@
  	
 	var pScheduleList = [];
 	var dScheduleList = [];
+	
+	/* openerCalendarMiniView = CalendarMiniView;
+	openerCalendarMiniDataSource = CalendarMiniDataSource; */
  	
  	window.onresize = function(event) {
  		frameSetting(frameId);
@@ -538,6 +541,7 @@
         	if(index > 5) return;
         	var li = document.createElement('li');
         	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
+        	li.style.cursor = "pointer";
         	li.addEventListener('click', function() {
 			    var wWeight = "760";
 			    var wHeight = "670";
