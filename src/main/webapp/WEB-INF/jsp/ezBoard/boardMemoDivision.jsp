@@ -222,9 +222,9 @@
      
 			<div id="mainmenu" style="width: 750px;">
 			    <ul>
-			        <li style=><span onClick="add_onclick()"><spring:message code='ezMemo.t0027' /></span></li>
+			        <li class="important"><span onClick="add_onclick()"><spring:message code='ezMemo.t0027' /></span></li>
 			        <%-- <li style=><span onClick="modify_onclick()"><spring:message code='ezMemo.t0028' /></span></li> --%>
-			        <li style=><span onClick="delete_onclick()"><spring:message code='ezMemo.t0029' /></span></li>
+			        <li><span class="icon16 icon16_delete" onClick="delete_onclick()"></span></li>
 			    </ul>
 			</div>
         	<table style="width: 450px; height: 385px;">

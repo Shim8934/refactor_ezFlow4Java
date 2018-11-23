@@ -404,7 +404,7 @@
 				<c:if test="${guest != '1' }">
 					<c:choose>
 						<c:when test="${disable == false }">
-							<li><span onClick="goPage(1)"><spring:message code='ezCommunity.t167' /></span></li>
+							<li class="important"><span onClick="goPage(1)"><spring:message code='ezCommunity.t167' /></span></li>
 						</c:when>
 						
 						<c:otherwise>
@@ -413,7 +413,7 @@
 					</c:choose>
 
 					<li><span onClick="javascript:mo_onclick()"><spring:message code='ezCommunity.t6' /></span></li>
-					<li><span onClick="javascript:delete1()"><spring:message code='ezCommunity.t208' /></span></li>
+					<li onClick="javascript:delete1()"><span class="icon16 icon16_delete"></span></li>
 				</c:if>
 				<c:if test="${keyword != '' }">
 					<li><span onClick="goPage(2)" ><spring:message code='ezCommunity.t168' /></span></li>

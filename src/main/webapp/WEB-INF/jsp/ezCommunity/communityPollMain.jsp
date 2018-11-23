@@ -105,8 +105,8 @@
 		<div id="mainmenu">
 		<%-- 2018-05-07 홍승비 - 사용하지 않는 변수와 jstl 분기 제거 --%>
 			<ul>
-				<li><span  onClick="poll_add()"><spring:message code='ezCommunity.t671' /></span></li>
-				<li><span  onClick="poll_BeforeDelete()"><spring:message code='ezCommunity.t208' /></span></li>
+				<li class="important"><span  onClick="poll_add()"><spring:message code='ezCommunity.t671' /></span></li>
+				<li onClick="poll_BeforeDelete()"><span class="icon16 icon16_delete"></span></li>
 			</ul>
 		</div>
 		

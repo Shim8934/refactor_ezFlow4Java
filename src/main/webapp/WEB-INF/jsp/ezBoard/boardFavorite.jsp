@@ -297,8 +297,8 @@
 		<br/>
     	<h2><spring:message code="ezBoard.t00010" /></h2>
     	<span class="txt">▒ 
-        	<img src="/images/ImgIcon/prev.gif" style="height: 16px; margin-top: -3px; vertical-align: middle; text-align: center;" />
-        	<img src="/images/ImgIcon/next.gif" align="absmiddle" style="height: 16px; margin-top: -3px;" />
+        	<img src="/images/ImgIcon/prev.gif" style="height: 16px; vertical-align: middle; text-align: center;" />
+        	<img src="/images/ImgIcon/next.gif" align="absmiddle" style="height: 16px; margin-top: 3px;" />
         	: <spring:message code="ezBoard.t00015" />
     	</span>
     	<br />    	
@@ -306,10 +306,10 @@
     	<div id="mainmenu">
         	<ul id="tb_Parent">
             	<li>
-                	<span onclick="favorite_Delete();"><spring:message code="ezBoard.t89" /></span>
+                	<span class="icon16 icon16_delete" onclick="favorite_Delete();"></span>
             	</li>
             	<li>
-                	<span onclick="favorite_reload()"><spring:message code="ezBoard.t205" /></span>
+                	<span class="icon16 icon16_refresh" onclick="favorite_reload()"></span>
             	</li>
             	<li>
                 	<span onclick="Priority_UP()">
