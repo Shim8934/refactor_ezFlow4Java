@@ -547,7 +547,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("boardId", boardId);
 		map.put("accessId", accessId);
-
+		
 		LOGGER.debug("[Serivce] getBoardAuthCheck Ended");
 		return ezNewPortalDAO.getBoardAuthCheck(map);
 	}

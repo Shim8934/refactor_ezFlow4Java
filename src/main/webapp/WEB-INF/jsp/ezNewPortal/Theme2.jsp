@@ -49,7 +49,7 @@
     <div class="sec1Layout_left">
     	<article class="personal">
             <div class="info">
-            	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png" style="border-radius:100px;" width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" style="border-radius:100px;"id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
+            	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/default_pic.gif" style="border-radius:100px;" width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" style="border-radius:100px;"id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
                 <dl class="info_txt">
                 	<dt>${deptName}
                 		<span class="info_set" id="main_personalEnv"></span>
@@ -441,7 +441,7 @@
 				var bestEmployee = result.bestEmployee;
 				var excellentContent = document.getElementById('excellentcontent');
 				
-				if(bestEmployee === null) {
+				if(bestEmployee === null || bestEmployee ==  undefined) {
 					var emPic = document.getElementById('emPic');
 					
 					var img = document.createElement('img');
@@ -453,6 +453,9 @@
 					
 					document.getElementById("exellentDeptName").innerText = "";
 					document.getElementById("exellentEmpName").innerText = "데이터가 없습니다.";
+					
+					var nodata = document.getElementById("exellentEmpName");
+					nodata.style.color = "#c0c0c0";
 					
 				} else {
 					var emPic = document.getElementById('emPic');
