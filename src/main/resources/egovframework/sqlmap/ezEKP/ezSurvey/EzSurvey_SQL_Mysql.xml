@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezSurvey">
+	<typeAlias alias="surveySimpleDeptVO"  type="egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO"       />
+	
+	<!-- SimpleDept resultMap -->
+	<resultMap id="simpleDeptVO" class="surveySimpleDeptVO">
+		<result property="deptId"            column="dept_id"                columnIndex="1"/>
+		<result property="deptName"          column="dept_name"              columnIndex="2"/>
+		<result property="level"             column="dept_level"             columnIndex="3"/>
+		<result property="hasSub"            column="has_sub"                columnIndex="4"/>
+	</resultMap>
+	
+	<!--***********************************************************************************
+	**                            Organization tree process                              **
+	************************************************************************************-->
+	
+	<select id="EzSurveyDAO.getDeptPath" parameterClass="Map" resultClass="String">
+		<![CDATA[ select dept_cd_path from tbl_deptmaster where cn = #deptId# and tenant_id = #tenantId# ]]> 
+	</select>
+	
+	<select id="EzSurveyDAO.getSimpleCompany" resultMap="simpleDeptVO">
+		select
+			a.cn                                                                                                                                        as dept_id,
+			case when #primary# = '1' then a.displayname else a.displayname2 end                                                                        as dept_name,
+			#level#                                                                                                                                     as dept_level,
+			case when (select count(b.cn) from tbl_deptmaster b where a.cn = b.extensionattribute1 and a.tenant_id = b.tenant_id) = 0 then 0 else 1 end as has_sub
+		from
+			tbl_deptmaster a
+		where
+			a.cn = #deptId# and a.tenant_id = #tenantId#
+	</select>
+	
+	<select id="EzSurveyDAO.getAllSimpleSubDepts" resultMap="simpleDeptVO">
+		<![CDATA[
+			select
+				a.cn                                                                                                                                                                          as dept_id,
+				case when #primary# = '1' then a.displayname else a.displayname2 end                                                                                                          as dept_name,
+				#level#                                                                                                                                                                       as dept_level,
+				case when (select count(b.cn) from tbl_deptmaster b where a.cn = b.extensionattribute1 and b.cn <> b.extensionattribute2 and a.tenant_id = b.tenant_id) = 0 then 0 else 1 end as has_sub
+			from
+				tbl_deptmaster a
+			where
+				a.extensionattribute1 = #deptId# and a.tenant_id = #tenantId# and a.cn <> a.extensionattribute2
+			order by
+				lpad(ifnull(a.extensionattribute15, 0), 6, 0), a.displayname
+		]]>
+	</select>
+</sqlMap>

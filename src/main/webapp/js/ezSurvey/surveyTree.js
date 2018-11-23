@@ -7,7 +7,6 @@ function CabinetTree() {
 	var _companyId    = null;
 	var _initialUrl   = null;
 	var _getSubUrl    = null;
-	var _shareUrl     = null;
 	var _clickHandle  = null;
 	var _dblClickHdl  = null;
 	var _treeType     = null;
@@ -22,10 +21,12 @@ function CabinetTree() {
 	var _minusImg     = null;
 	var _name1        = null;
 	var _name2        = null;
-	var _userIcon     = null;
-	var _cabinetIcon  = null;
-	var _errorHandler = null;
-	var _relatedUrl   = null;
+	var _strErr       = null;
+	var _paramErr     = null;
+	var _treeErr      = null;
+	var _imgClass     = null;
+	var _plusClass    = null;
+	var _minClass     = null;
 	
 	//set public functions
 	this.makeTree     = getInitalData;
@@ -37,20 +38,20 @@ function CabinetTree() {
 		_treeType      = data["treeType"];
 		_initialUrl    = data["initialUrl"];
 		_getSubUrl     = data["extendUrl"];
-		_shareUrl      = data["shareUrl"];
 		_clickHandle   = data["click"];
 		_dblClickHdl   = data["dblClick"];
 		_companyId     = data["companyId"];
-		_genType       = data["type"]       ? data["type"]       : _genType;
-		_transImg      = data["transImg"]   ? data["transImg"]   : "/images/OrganTree_cross/dot_continue.gif";
-		_plusImg       = data["plus"]       ? data["plus"]       : "/images/OrganTree_cross/plus.gif";
-		_minusImg      = data["minus"]      ? data["minus"]      : "/images/OrganTree_cross/minus.gif";
-		_errorHandler  = data["errHandler"] ? data["errHandler"] : null;
-		_userIcon      = "/images/cabinet/icon_user.png";
-		_cabinetIcon   = "/images/cabinet/carbinet_popup.png";
-		_relatedUrl    = "/ezCabinet/cabinetRelatedTreeNotFound.do";
-		_shareErrUrl   = "/ezCabinet/cabinetShareTreeNotFound.do";
-		_myshareErrUrl = "/ezCabinet/myShareTreeNotFound.do";
+		_genType       = data["type"]      ? data["type"]       : _genType;
+		_transImg      = data["transImg"]  ? data["transImg"]   : "/images/OrganTree_cross/dot_continue.gif";
+		_plusImg       = data["plus"]      ? data["plus"]       : "/images/OrganTree_cross/plus.gif";
+		_minusImg      = data["minus"]     ? data["minus"]      : "/images/OrganTree_cross/minus.gif";
+		_imgClass      = data["imgclass"]  ? data["imgclass"]   : "";
+		_plusClass     = data["plusclass"] ? data["plusclass"]   : "";
+		_minClass      = data["minclass"]  ? data["minclass"]   : "";
+		_strErr        = data["messages"]  ? data["messages"]["errStr"]   : "";
+		_paramErr      = data["messages"]  ? data["messages"]["paramErr"] : "";
+		_treeErr       = data["messages"]  ? data["messages"]["treeErr"]  : "";
+		
 		
 		switch(_treeType) {
 			case "organ": 
@@ -62,16 +63,6 @@ function CabinetTree() {
 				_nodeImg   = "/images/OrganTree_cross/ic-open.gif";
 				_name1     = "";
 				_name2     = "";
-				break;
-			case "cabinet":
-				_nodeId    = "cabinetId";
-				_nodeName  = "cabinetName";
-				_levelName = "cabinetLevel";
-				_nodeSub   = "subList";
-				_rootImg   = "/images/webfolder/fldr.png";
-				_nodeImg   = "/images/webfolder/fldr.png";
-				_name1     = "cabinetName1";
-				_name2     = "cabinetName2";
 				break;
 		}
 	}
@@ -89,11 +80,8 @@ function CabinetTree() {
 		
 		var code = data.code;
 		switch(code) {
-			case 1 : alert(CabinetMessages.strParamErr) ; return;
-			case 2 : alert(CabinetMessages.strError)    ; return;
-			case 4 : while (divTree.hasChildNodes()) {divTree.removeChild(divTree.lastChild);};
-					 if (_errorHandler) {_errorHandler(_relatedUrl) }; return; //alert(CabinetMessages.strTreeErr2);
-			case 5 : if (_errorHandler) {_errorHandler(_shareErrUrl)}; return; //alert(CabinetMessages.strShareErr2); return;
+			case 1 : alert(_paramErr) ; return;
+			case 2 : alert(_strErr)   ; return;
 		}
 		
 		var nodesTree   = data.tree;
@@ -101,52 +89,10 @@ function CabinetTree() {
 		
 		switch(_genType) {
 			case "normal":
-				if (!nodesTree) {alert(CabinetMessages.strTreeErr); return;}
+				if (!nodesTree) {alert(_treeErr); return;}
 				var divNode = document.createElement("div");
 				generateSubTree(divTree, divNode, nodesTree);
 				break;
-			case "list":
-			case "listshare":
-				var len = nodesTree.length;
-				
-				if (len == 0 && _genType == "listshare") {if (_errorHandler) {_errorHandler(_myshareErrUrl)}; return;} //alert(CabinetMessages.strShareErr3); return;
-				
-				for (var i = 0; i < len; i++) {
-					var divChildNode  = document.createElement("div");
-					generateSubTree(divTree, divChildNode, nodesTree[i]);
-				}
-				
-				break;
-			case "share":
-				var userLen  = nodesTree.length;
-				
-				for (var i = 0; i < userLen; i++) {
-					var userDivNode  = document.createElement("div");
-					generateShareList(divTree, userDivNode, nodesTree[i]);
-				}
-				
-				var listElmts = divTree.firstElementChild.lastElementChild.firstElementChild.children;
-				
-				for (var i = 0, len = listElmts.length; i < len; i++) {
-					if (listElmts[i].tagName.toLowerCase() == "span") {listElmts[i].click(); break;}
-				}
-				
-				break;
-			case "all":
-				var totalNodes = nodesTree.length;
-				if (totalNodes == 0) {alert(CabinetMessages.strError); return;}
-				
-				var myCabinetPart = [];
-				myCabinetPart.push(nodesTree[0]);
-				var myCabinetNode = document.createElement("div");
-				
-				generateAddRelatedTree(divTree, myCabinetNode, myCabinetPart, CabinetMessages.strMycabinet);
-				
-				if (totalNodes > 1) {
-					nodesTree.shift();
-					var relatedNode = document.createElement("div");
-					generateAddRelatedTree(divTree, relatedNode, nodesTree, CabinetMessages.strRelatedTr);
-				}
 		}
 		
 		if (currentNode) {document.getElementById(_treeElmtId).querySelector("span[role='" + currentNode +"']").click();}
@@ -173,7 +119,7 @@ function CabinetTree() {
 			for (var j = 0; j < level; j++) {
 				var imgTag       = document.createElement("img");
 				imgTag.src       = _transImg;
-				imgTag.className = "cabinetImg";
+				imgTag.className = _imgClass;
 				divElmt.appendChild(imgTag);
 			}
 		}
@@ -183,7 +129,7 @@ function CabinetTree() {
 		imgElmt.setAttribute("level" , list[_levelName]);
 		
 		var imgElmt2       = document.createElement("img");
-		imgElmt2.className = "cabinetImg";
+		imgElmt2.className = _imgClass;
 		imgElmt2.src       = level > 0 ? _nodeImg : _rootImg;
 		
 		var spanDeptName         = document.createElement("span");
@@ -206,19 +152,19 @@ function CabinetTree() {
 		
 		if (list["hasSub"] == "0") {
 			imgElmt.src       = _transImg;
-			imgElmt.className = "cabinetImg";
+			imgElmt.className = _imgClass;
 		}
 		else {
 			imgElmt.onclick = function() {getSubNodes(this);};
 			
 			if (list[_nodeSub] == null) {
 				imgElmt.src       = _plusImg;
-				imgElmt.className = "cabinetPlus";
+				imgElmt.className = _plusClass;
 				return;
 			}
 			
 			imgElmt.src       = _minusImg;
-			imgElmt.className = "cabinetMinus";
+			imgElmt.className = _minClass;
 			
 			var len = list[_nodeSub].length;
 			
@@ -232,101 +178,6 @@ function CabinetTree() {
 		}
 	}
 	
-	function generateShareList(divTree, divElmt, list) {
-		var imgElmt       = document.createElement("img");
-		imgElmt.className = "cabinetPlus";
-		imgElmt.setAttribute("role", list["userId"]);
-		imgElmt.onclick = function() {getUserSharedCabinet(this);};
-		
-		var imgElmt2       = document.createElement("img");
-		imgElmt2.className = "cabinetImg";
-		imgElmt2.src       = _userIcon;
-		
-		var spanDeptName         = document.createElement("span");
-		spanDeptName.textContent = list["userName"];
-		spanDeptName.setAttribute("title", list["userName"] + "[" + list["deptName"] + "]");
-		spanDeptName.className   = "spanName";
-		spanDeptName.setAttribute("role", list["userId"]);
-		spanDeptName.addEventListener("click", function(e) {getUserSelected(this);}, false);
-		
-		divElmt.appendChild(imgElmt);
-		divElmt.appendChild(imgElmt2);
-		divElmt.appendChild(spanDeptName);
-		divTree.appendChild(divElmt);
-		
-		if (list["sharedCabinet"] && list["sharedCabinet"].length > 0) {
-			imgElmt.className = "cabinetMinus";
-			imgElmt.src       = _minusImg;
-			var newDivElmt    = document.createElement("div");
-			divElmt.appendChild(newDivElmt);
-			
-			for (var j = 0, len = list["sharedCabinet"].length; j < len; j++) {
-				var subDiv = document.createElement("div");
-				generateSubTree(newDivElmt, subDiv, list["sharedCabinet"][j]);
-			}
-		}
-		else {
-			imgElmt.className = "cabinetPlus";
-			imgElmt.src       = _plusImg;
-		}
-	}
-	
-	function generateAddRelatedTree(divTree, divElmt, list, strName) {
-		var imgElmt2       = document.createElement("img");
-		imgElmt2.className = "cabinetImg";
-		imgElmt2.src       = _cabinetIcon;
-		
-		var spanDeptName         = document.createElement("span");
-		spanDeptName.textContent = strName;
-		spanDeptName.setAttribute("title", strName);
-		spanDeptName.className   = "spanName";
-		
-		divElmt.appendChild(imgElmt2);
-		divElmt.appendChild(spanDeptName);
-		divTree.appendChild(divElmt);
-		
-		var newDivElmt    = document.createElement("div");
-		divElmt.appendChild(newDivElmt);
-		
-		for (var i = 0, len = list.length; i < len; i++) {
-			var subDiv = document.createElement("div");
-			generateSubTree(newDivElmt, subDiv, list[i], 1);
-		}
-	}
-	
-	function getUserSharedCabinet(obj) {
-		var parentDiv   = obj.parentElement;
-		var divChildren = parentDiv.getElementsByTagName("div").length;
-		
-		if (divChildren > 0) {
-			var childElmt = parentDiv.lastElementChild;
-			
-			if (obj.className == "cabinetMinus") {
-				obj.src                 = _plusImg;
-				obj.className           = "cabinetPlus";
-				childElmt.style.display = "none";
-			}
-			else {
-				obj.src                 = _minusImg;
-				obj.className           = "cabinetMinus";
-				childElmt.style.display = "";
-			}
-		}
-		else {
-			obj.src       = _minusImg;
-			obj.className = "cabinetMinus";
-			var userId    = obj.getAttribute("role");
-			var dataInf   = {"shareId" : userId};
-			
-			makeAjaxCall(dataInf, "GET", _shareUrl, makeSubTree, null, true, parentDiv);
-		}
-	}
-	
-	function getUserSelected(spanObj) {
-		var imgElmt = spanObj.parentElement.firstElementChild;
-		imgElmt.click();
-	}
-	
 	function getSubNodes(obj) {
 		var parentDiv   = obj.parentElement;
 		var divChildren = parentDiv.getElementsByTagName("div").length;
@@ -336,20 +187,20 @@ function CabinetTree() {
 		if (divChildren > 0) {
 			var childElmt = parentDiv.lastElementChild;
 			
-			if (obj.className == "cabinetMinus") {
+			if (obj.className == _minClass) {
 				obj.src                 = _plusImg;
-				obj.className           = "cabinetPlus";
+				obj.className           = _plusClass;
 				childElmt.style.display = "none";
 			}
 			else {
 				obj.src                 = _minusImg;
-				obj.className           = "cabinetMinus";
+				obj.className           = _minClass;
 				childElmt.style.display = "";
 			}
 		}
 		else {
 			obj.src       = _minusImg;
-			obj.className = "cabinetMinus";
+			obj.className = _minClass;
 			var deptData  = {"nodeId" : nodeId, "level" : level};
 			
 			makeAjaxCall(deptData, "GET", _getSubUrl, makeSubTree, null, true, parentDiv);
@@ -359,7 +210,7 @@ function CabinetTree() {
 	function makeSubTree(data, divElmt) {
 		var resultData = data.subNodes;
 		
-		if (resultData == null) {alert(CabinetMessages.strTreeErr); return;}
+		if (resultData == null) {alert(_treeErr); return;}
 		
 		var len        = resultData.length;
 		var newDivElmt = document.createElement("div");
@@ -374,18 +225,7 @@ function CabinetTree() {
 	function getSelected(selectElmt) {
 		var divTree      = document.getElementById(_treeElmtId);
 		var previousElmt = divTree.querySelector("span[class='selectedNode']");
-		
-		if (previousElmt != null) {
-			previousElmt.className = "spanName";
-			
-			/*if (previousElmt.getAttribute("role") != selectElmt.getAttribute("role")) {
-				previousElmt.className = "spanName";
-			}
-			else {
-				return;
-			}*/
-		}
-		
+		if (previousElmt != null) {previousElmt.className = "spanName";}
 		selectElmt.className = "selectedNode";
 	}
 	
@@ -403,7 +243,7 @@ function CabinetTree() {
 			error : function(error) {
 				if (handleError != null) {handleError();}
 				
-				alert(CabinetMessages.strError);
+				alert(_strErr);
 			}
 		});
 	}

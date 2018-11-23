@@ -1,4 +1,4 @@
-var CabinetShareItem = function() {
+(function() {
 	var companyTree  = new CabinetTree();
 	var searchOpt    = "";
 	var searchValue  = "";
@@ -6,10 +6,7 @@ var CabinetShareItem = function() {
 	var searchMode   = "normal";
 	var cabinetNavi  = null;
 	var userPopup    = null;
-	var sharePopup   = null;
-	var ancesPopup   = null;
-	var cabinetId    = null;
-	var ownId        = null;
+	initEvents();
 	
 	var userTable = new CabinetTable({
 		normal   : "bnkCabNormal2",
@@ -25,18 +22,16 @@ var CabinetShareItem = function() {
 		dblclick : removeUser
 	});
 	
-	function initEvents(cabId, uId) {
-		cabinetId               = cabId;
-		ownId                   = uId;
+	function initEvents(uId) {
 		document.onselectstart  = function () { return false;};
 		window.addEventListener("beforeunload", function(e) {closeAllPopUp();}, false);
 		
 		//Cabinet navigation
 		var naviMessages = {
-			next     : CabinetMessages.strNext,
-			previous : CabinetMessages.strPrev,
-			item     : CabinetMessages.strItem,
-			total    : CabinetMessages.strTotal
+			next     : SurveyMessages.strNext,
+			previous : SurveyMessages.strPrev,
+			item     : SurveyMessages.strItem,
+			total    : SurveyMessages.strTotal
 		};
 		
 		cabinetNavi = new CabinetNavi({
@@ -46,36 +41,40 @@ var CabinetShareItem = function() {
 			callback : getUsers
 		});
 		
-		var ancestorBttn        = document.getElementById("ancestorshare");
 		var cabShareBttnElmt    = document.getElementById("cabShareBttn");
 		var listBttns           = cabShareBttnElmt.children;
 		listBttns[0].onclick    = function(e) {saveShareUsers();};
 		listBttns[1].onclick    = function(e) {closeWindow();};
-		document.getElementById("cabRlClose"   ).addEventListener("click", function(e) {closeWindow()        ;}, false);
-		document.getElementById("txtSpanView"  ).addEventListener("click", function(e) {changeListView('TXT');}, false);
-		document.getElementById("imgSpanView"  ).addEventListener("click", function(e) {changeListView('IMG');}, false);
-		document.getElementById("addBttn"      ).addEventListener("click", function(e) {addUsers()           ;}, false);
-		document.getElementById("removeBttn"   ).addEventListener("click", function(e) {removeUsers()        ;}, false);
-		document.getElementById("searchBtn"    ).addEventListener("click", function(e) {searchUserList()     ;}, false);
-		document.getElementById("searchBtn2"   ).addEventListener("click", function(e) {searchShareList()    ;}, false);
-		document.getElementById("addDeptBttn"  ).addEventListener("click", function(e) {addDeptToShareList() ;}, false);
-		document.getElementById("userInfBttn"  ).addEventListener("click", function(e) {viewUserInfo()       ;}, false);
-		if (ancestorBttn) {ancestorBttn.addEventListener("click", function(e) {viewAncestorShare()  ;}, false);}
+		document.getElementById("surveyClose").addEventListener("click", function(e) {closeWindow()        ;}, false);
+		document.getElementById("txtSpanView").addEventListener("click", function(e) {changeListView('TXT');}, false);
+		document.getElementById("imgSpanView").addEventListener("click", function(e) {changeListView('IMG');}, false);
+		document.getElementById("addBttn"    ).addEventListener("click", function(e) {addUsers()           ;}, false);
+		document.getElementById("removeBttn" ).addEventListener("click", function(e) {removeUsers()        ;}, false);
+		document.getElementById("searchBtn"  ).addEventListener("click", function(e) {searchUserList()     ;}, false);
+		document.getElementById("addDeptBttn").addEventListener("click", function(e) {addDeptToShareList() ;}, false);
+		document.getElementById("userInfBttn").addEventListener("click", function(e) {viewUserInfo()       ;}, false);
 		
 		var sSearchInputElmt   = document.getElementById("keyword");
 		sSearchInputElmt.addEventListener("keypress" , function(e) {onStartSimpleSearch(e);}, false);
 		sSearchInputElmt.addEventListener("mousedown", function(e) {clearKeyword(this)    ;}, false);
-		var sSearchInputElmt2  = document.getElementById("keyword2");
-		sSearchInputElmt2.addEventListener("keypress" , function(e) {onStartShareSearch(e);}, false);
-		sSearchInputElmt2.addEventListener("mousedown", function(e) {clearKeyword(this)   ;}, false);
 		
 		//Set Company Tree
+		var treeMessages = {
+				errStr   : SurveyMessages.strError,
+				paramErr : SurveyMessages.strParamErr,
+				treeErr  : SurveyMessages.strTreeErr
+		};
+		
 		companyTree.setTreeInfo({
 			treeId     : "treeView",
 			treeType   : "organ",
 			type       : "normal",
-			initialUrl : "/ezCabinet/getCompanyTree.do",
-			extendUrl  : "/ezCabinet/getSubNodes.do",
+			initialUrl : "/ezSurvey/getCompanyTree.do",
+			extendUrl  : "/ezSurvey/getSubNodes.do",
+			imgclass   : "organImg",
+			plusclass  : "org-plus",
+			minclass   : "org-minus",
+			messages   : treeMessages,
 			click      : getSelectedList,
 			dblClick   : null,
 			companyId  : ""
@@ -254,7 +253,6 @@ var CabinetShareItem = function() {
 		var userId        = trElmt.getAttribute("role");
 		var checkElmt     = selectedTable.querySelector("tr[role='" + userId + "'][userType='user']");
 		if (checkElmt) {if(mode) {alert(CabinetMessages.strExist);}; return;}
-		if (ownId == userId) {alert(CabinetMessages.strSelect5); return;}
 		
 		var userName      = trElmt.getAttribute("userName");
 		var deptName      = trElmt.getAttribute("deptName");
@@ -268,7 +266,6 @@ var CabinetShareItem = function() {
 		if (selectedTrList.length == 0) {addDeptToShareList();}
 		
 		for (var i = 0, len = selectedTrList.length; i < len; i++) {
-			if (ownId ==  selectedTrList[i].getAttribute("role")) {continue;}
 			addUser(selectedTrList[i]);
 		}
 	}
@@ -345,8 +342,8 @@ var CabinetShareItem = function() {
 	}
 	
 	function onStartSimpleSearch(event) {if(event.keyCode == "13") {searchUserList() ;}}
-	function onStartShareSearch(event)  {if(event.keyCode == "13") {searchShareList();}}
 	function clearKeyword(inputElmt) {inputElmt.value = "";}
+	
 	function searchUserList() {
 		searchValue = document.getElementById("keyword").value;
 		if (!searchValue.replace(/\s/g,'')) {alert(CabinetMessages.strNoInput); return;}
@@ -355,22 +352,6 @@ var CabinetShareItem = function() {
 		searchMode = "search";
 		document.getElementById("searchResult").textContent = CabinetMessages.strResult;
 		getUsers("1");
-	}
-	
-	function searchShareList() {
-		var searchValue2 = document.getElementById("keyword2").value;
-		if (!searchValue2.replace(/\s/g,'')) {alert(CabinetMessages.strNoInput); return;}
-		var searchOpt2 = document.getElementById("searchType2").value;
-		
-		if (sharePopup) {sharePopup.close();}
-		
-		var width        = 470;
-		var height       = 450;
-		var leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
-		var topPosition  = (window.screen.height / 2) - ((height / 2) + 50);
-		var option       = "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1";
-		
-		sharePopup = window.open("/ezCabinet/getSearchShareList.do?cabinetId=" + cabinetId + "&searchOpt=" + searchOpt2 + "&searchValue=" + searchValue2, "", option);
 	}
 	
 	function setUserListType(pListType) {
@@ -443,17 +424,6 @@ var CabinetShareItem = function() {
 		userPopup = window.open("/ezCommon/showPersonInfo.do?id=" + userId + "&dept=" + deptId, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	}
 	
-	function viewAncestorShare() {
-		if (ancesPopup) {ancesPopup.close();}
-		var width        = 433;
-		var height       = 412;
-		var leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
-		var topPosition  = (window.screen.height / 2) - ((height / 2) + 50);
-		var option       = "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1";
-		
-		ancesPopup = window.open("/ezCabinet/getAncestorShareList.do?cabinetId=" + cabinetId, "", option);
-	}
-	
 	function addDeptToShareList() {
 		var selectedTable = document.getElementById("sharedTable");
 		var organTreeElmt = document.getElementById("treeView");
@@ -470,11 +440,7 @@ var CabinetShareItem = function() {
 		addUserToShareList(deptId, deptName, userType, deptName, 0, 0);
 	}
 	
-	function closeAllPopUp() {
-		if (userPopup)  {userPopup.close() ;}
-		if (sharePopup) {sharePopup.close();}
-		if (ancesPopup) {ancesPopup.close();}
-	}
+	function closeAllPopUp() {if (userPopup) {userPopup.close() ;}}
 	
 	function saveShareUsers() {
 		var selectedUsers = document.getElementById("sharedTable");
@@ -504,11 +470,11 @@ var CabinetShareItem = function() {
 				var code = data.code;
 				switch(code) {
 					case 0 : saveSuccessfully(userList.length)  ; break;
-					case 1 : alert(CabinetMessages.strParamErr) ; break;
-					case 2 : alert(CabinetMessages.strError)    ; break;
-					case 3 : alert(CabinetMessages.strPerm)     ; break;
-					case 4 : alert(CabinetMessages.strShareErr1); break;
-					default: alert(CabinetMessages.strError)    ; return;
+					case 1 : alert(SurveyMessages.strParamErr) ; break;
+					case 2 : alert(SurveyMessages.strError)    ; break;
+					case 3 : alert(SurveyMessages.strPerm)     ; break;
+					case 4 : alert(SurveyMessages.strShareErr1); break;
+					default: alert(SurveyMessages.strError)    ; return;
 				}
 			},
 			error: function(error) {
@@ -517,7 +483,7 @@ var CabinetShareItem = function() {
 	}
 	
 	function saveSuccessfully(totalUsers) {
-		alert(CabinetMessages.strSave);
+		alert(SurveyMessages.strSave);
 		
 		if (totalUsers == 0) {
 			var leftMenu = window.opener.parent.frames["left"];
@@ -548,8 +514,8 @@ var CabinetShareItem = function() {
 		return type;
 	}
 	
-	return {
+	/*return {
 		init       : initEvents,
 		reloadList : getShareList
-	};
-}();
+	};*/
+})();

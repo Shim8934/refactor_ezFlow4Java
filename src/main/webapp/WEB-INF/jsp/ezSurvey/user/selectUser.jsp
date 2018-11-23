@@ -13,7 +13,7 @@
 	</head>
 	<body class="popup survey-target">
 		<h1><spring:message code="ezSurvey.t52"/></h1>
-		<div id="surveyCloseBttn" class="closeImgBttn"><ul><li><span></span></li></ul></div>
+		<div id="surveyClose" class="closeImgBttn"><ul><li><span></span></li></ul></div>
 		
 		<table class="target-slt">
 			<tr>
@@ -139,9 +139,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg')           }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyTree.js')     }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyNavi.js')    }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyTable.js')   }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyShare.js')   }"></script>
-		<script type="text/javascript">CabinetShareItem.init("<c:out value='${cabinetId}'/>", "<c:out value='${userId}'/>");</script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyNavi.js')     }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyTable.js')    }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyUser.js')     }"></script>
+		<!-- <script type="text/javascript">CabinetShareItem.init("<c:out value='${cabinetId}'/>", "<c:out value='${userId}'/>");</script> -->
 	</body>
 </html>

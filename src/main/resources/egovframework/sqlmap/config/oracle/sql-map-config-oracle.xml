@@ -51,6 +51,8 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezLadder/EzLadder_SQL_Oracle.xml"/>
      <!--업무일지 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezJournal/EzJournal_SQL_Oracle.xml"/>
+    <!-- 전자 설문 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezSurvey/EzSurvey_SQL_Oracle.xml"/>
 
 	<!-- 2.관리자 모듈관리 SQL쿼리 XML -->
 	

@@ -5,19 +5,26 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import egovframework.ezEKP.ezSurvey.service.EzSurveyRestService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("unchecked")
 @Controller
 public class ezSurveyController {
 	private static final Logger logger = LoggerFactory.getLogger(ezSurveyController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzSurveyRestService surveyRestService;
 	
 	@RequestMapping(value = "/ezSurvey/surveyMain.do")
 	public String jspGetSurveyMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) {
@@ -117,5 +124,39 @@ public class ezSurveyController {
 		
 		logger.debug("jspGetSelectUesrPage ended");
 		return "ezSurvey/user/selectUser";
+	}
+	
+	@RequestMapping(value="/ezSurvey/getCompanyTree.do")
+	@ResponseBody
+	public String jsonGetCompanyTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String companyId       = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		resultObj = surveyRestService.getCompanyTree(request, userInfo.getId(), companyId);
+		
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezSurvey/getSubNodes.do")
+	@ResponseBody
+	public String jsonGetSubNodes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+		logger.debug("jsonGetSubNodes started");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String deptId          = request.getParameter("nodeId") != null ? request.getParameter("nodeId") : "";
+		String level           = request.getParameter("level")  != null ? request.getParameter("level")  : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		if (deptId.equals("") || level.equals("")) {
+			logger.debug("Parameter error");
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = surveyRestService.getDeptSubNodes(request, userInfo.getId(), deptId, level);
+		logger.debug("jsonGetSubNodes ended");
+		
+		return resultObj.toString();
 	}
 }
