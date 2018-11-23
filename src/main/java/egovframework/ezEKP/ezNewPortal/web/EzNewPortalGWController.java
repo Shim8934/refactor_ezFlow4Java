@@ -276,21 +276,15 @@ public class EzNewPortalGWController {
 			
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
 			
+			boolean isUseQuestionAuth = false;
+			
 			for (MenuInfoVO mVO : menuList) {
 				if (mVO.getMenuId()==3) {
 					useApproval = "YES";
 				} 
 				
 				if (mVO.getMenuId()==14 && useQuestion.equals("YES")) {
-					useQuestion = "YES";
-				}
-				
-				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
-					useCircular = "YES";
-				}
-				
-				if (mVO.getMenuId()==9 && useAttitude.equals("YES")) {
-					useAttitude = "YES";
+					isUseQuestionAuth = true;
 				}
 				
 				if (mVO.getMenuId()==1) {
@@ -299,6 +293,31 @@ public class EzNewPortalGWController {
 				
 				if (mVO.getMenuId()==2) {
 					useSchedule = "YES";
+				}
+			}
+			
+			if (isUseQuestionAuth) {
+				useQuestion = "YES";
+			} else {
+				useQuestion = "NO";
+			}
+			
+			for (MenuInfoVO mVO : menuList) {
+				
+				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
+					useCircular = "YES";
+					break;
+				} else {
+					useCircular = "NO";
+				}
+			}
+			
+			for (MenuInfoVO mVO : menuList) {
+				if (mVO.getMenuId()==9 && useAttitude.equals("YES")) {
+					useAttitude = "YES";
+					break;
+				} else {
+					useAttitude = "NO";
 				}
 			}
 			

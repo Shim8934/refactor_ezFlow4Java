@@ -640,7 +640,8 @@
 			getAttitudeList(usedTheme);
 			getHolidayList();
 		} else {
-			$(".time_check").css("display", "none");
+			parseDate(usedTheme);
+			attiClock();
 		}
 		
 		//생일자 조회 기능 연동
