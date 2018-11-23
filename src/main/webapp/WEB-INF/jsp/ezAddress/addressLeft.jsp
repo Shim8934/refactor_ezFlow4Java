@@ -478,17 +478,17 @@
 		                	<span>
 		                    	<span>
 		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_individual"></span><span class="h2_text"><spring:message code='ezAddress.t145' /></span><span class="sub_iconLNB tree_manage" onclick="address_foldermanage()"></span>
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_individual"></span><span class="list_text"><spring:message code='ezAddress.t145' /></span><span class="sub_iconLNB tree_manage" onclick="address_foldermanage()"></span>
 		                            </div>
 		                    	</span>
 		                        <span>
 		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_department"></span><span class="h2_text"><spring:message code='ezAddress.t146' /></span>
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_department"></span><span class="list_text"><spring:message code='ezAddress.t146' /></span>
 		                            </div>
 		                    	</span>
 		                        <span>
 		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_company"></span><span class="h2_text"><spring:message code='ezAddress.t147' /></span>
+		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_company"></span><span class="list_text"><spring:message code='ezAddress.t147' /></span>
 		                            </div>
 		                    	</span>
 		                    </span>        
