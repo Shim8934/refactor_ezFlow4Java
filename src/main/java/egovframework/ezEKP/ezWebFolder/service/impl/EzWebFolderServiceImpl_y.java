@@ -89,10 +89,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				ezWebFolderDAO_y.insertRootFolder(map);
 				if (idMap.get("type").equals("D")) {
 					ezWebFolderAdminService.insertFolderUser(
-							ezWebFolderAdminService
-									.getMaxFolderUserSeq(tenantId), idMap
-									.get("id"), "dept", folderId, userId,
-							timeUTC, compId, tenantId);
+						ezWebFolderAdminService.getMaxFolderUserSeq(tenantId), idMap.get("id"), "dept", folderId, userId,timeUTC, compId, tenantId);
 				}
 				LOGGER.debug("root folder created. idMap: " + idMap);
 			}
@@ -307,14 +304,17 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("searchStartDate", searchStartDate);
 		map.put("searchEndDate", searchEndDate);
 		
-		List<Map<String, String>> idList = ezWebFolderService_m
-				.getPermissionIdMapList(userId, deptId, comId, tenantId);
+		List<Map<String, String>> idList = ezWebFolderService_m.getPermissionIdMapList(userId, deptId, comId, tenantId);
 		System.out.println(idList);
 		map.put("idList", idList);
 		map.put("flag", flag);
 		
 		if (flag.equals("1")) {
-			filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileList2(map);
+//			if (parentId.equals("root")) {
+//				filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileListR(map);
+//			} else {
+				filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileList2(map);
+//			}
 		} else {
 			filevo = (List<FileVO>) ezWebFolderDAO_y.getFileList2(map);
 		}
@@ -369,8 +369,6 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			flag = "1";
 			
 			if (searchEndDate != "" ) {
-//				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
-//				searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 				searchStartDate = searchStartDate + " 00:00:00";
 				searchEndDate   = searchEndDate + " 23:59:59";
 				
@@ -485,7 +483,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("flag", flag);
 		
 		if (flag.equals("1")) {
-			fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCount(map);
+			fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCount2(map);
 		} else {
 			fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
 		}

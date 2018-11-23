@@ -32,6 +32,7 @@
 		    var firFolderId = "";
 		    var flag = "";
 		    var treeData;
+		    var allFileFlag = "N";
 		    
 			document.onselectstart = function() {
 				return false;
@@ -73,7 +74,6 @@
 						},
 					dataType: "JSON",
 					success : function (data) {
-// 						upperId = data.data[0]["parent"];
 						var firstNode = "#" + folderId;
 						
 						$($element).on('loaded.jstree', function() {
@@ -83,6 +83,9 @@
 							var childE = document.getElementById(firFolderId + "_anchor");
 							childE.setAttribute("class", "jstree-anchor jstree-clicked");
 							elmentTest.setAttribute("aria-selected", "true");
+							$('.jstree-anchor').attr('oncontextmenu', 'event_folderMenu(event);');
+							$('.jstree-anchor').attr('onclick', 'HiddenFolderMenu();');
+
 							treeData = data.data;
 							addTitle();
 							folderId = firFolderId;
@@ -92,7 +95,7 @@
 							folderId = data.selected[0];
 							getFileList(folderId);
 						}).jstree({
-							'plugins': ["core","types","json_data","themes","ui"],
+							'plugins': ["core","types","json_data","themes","contextmenu","ui"],
 							'core' : {
 								"animation" : 0,
 								'data' : data.data,
@@ -225,7 +228,8 @@
 	        }
 		    
 		    function getFileList(folderId) {
-		    	window.parent.frames["right"].location.href = "/ezWebFolder/main.do?folderId="+folderId+"&folderType="+folderType;
+		    	window.parent.frames["right"].location.href = "/ezWebFolder/main.do?folderId="+folderId+"&folderType="+folderType+"&allFileFlag="+allFileFlag;
+		    	allFileFlag = "N";
 		   	}
 		    
 		    function getSharedList() {
@@ -305,6 +309,47 @@
 	        		$("#"+val01).attr("class", "");
 	        	}
 	        }
+	        
+			function event_folderMenu(event){
+				var currentId = "#"+event.currentTarget.id;
+				var id = $(currentId).closest("li").attr('id');
+				folderId = id;
+				console.log(currentId);
+				console.log(folderId);
+				
+				var id = $(currentId).closest("li").attr('id');
+		    	if (!event) event = window.event;
+		        var EventMouseX = event.clientX;
+		        var EventMouseY = event.clientY;
+
+		        var listsizeheight = document.documentElement.clientHeight;
+		        var listsizewidth = document.documentElement.clientWidth;
+		        var EventDivSize = EventMouseY + 240;
+		        if (listsizeheight < EventDivSize) {
+		            var Div_ = EventDivSize - listsizeheight;
+		            EventMouseY = EventMouseY - Div_;
+		        }
+
+		        EventDivSize = EventMouseX + 140;
+		        if (listsizewidth < EventDivSize) {
+		            var Div_ = EventDivSize - listsizewidth;
+		            EventMouseX = EventMouseX - Div_;
+		        }
+		        
+		        document.getElementById("folderPanel").style.display = "";
+		        document.getElementById("folderMenuDiv").style.left = EventMouseX + "px";
+		        document.getElementById("folderMenuDiv").style.top = EventMouseY + "px";
+		        document.getElementById("folderMenuDiv").style.display = "";
+		       
+		    }
+			function HiddenFolderMenu(){
+		    	document.getElementById("folderPanel").style.display = "none";
+		        document.getElementById("folderMenuDiv").style.display = "none";
+		    }
+			function allFile() {
+				allFileFlag = "all";
+				getFileList(folderId);
+			}
 		</script>
 	</head>
 	<style>
@@ -491,6 +536,14 @@
 	   		    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderLeftPanel">&nbsp;</div>
    		    </div>
 	    </div> --%>
+	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="folderPanel" onclick="HiddenFolderMenu();" >&nbsp;</div>
+	    <div id="folderMenuDiv" style="position:absolute;top:180px;z-index:6000;display:none;">
+		    <table cellpadding=2 cellspacing=1 border=0 style="width:130px;" class="popuplist">
+			    <tr>
+			        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="allFile();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/icon-msg-read.gif" align="absmiddle" hspace="5"/>모든파일보기</span></td>
+			    </tr>
+		    </table>
+		</div>
 	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderLeftPanel">&nbsp;</div>
 	    <div id="bnkBlockLeft" class="blockLeft" style="width:100%; height:100%; display: none; z-index: 10;"></div>
 	</body>

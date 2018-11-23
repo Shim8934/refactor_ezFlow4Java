@@ -42,13 +42,15 @@ public class EzWebFolderController_y {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderType = orElse(request.getParameter("folderType"), "");
 		String folderId = request.getParameter("folderId");
-		LOGGER.debug("folderType : "+ folderType + " folderId : " + request.getParameter("folderId"));
+		String allFileFlag = orElse(request.getParameter("allFileFlag"),"");
+		LOGGER.debug("folderType : "+ folderType + " folderId : " + request.getParameter("folderId") + "allFileFlag : " + request.getParameter("allFileFlag"));
 		
         //Add more function here
 		model.addAttribute("folderType"	, folderType);
         model.addAttribute("folderId"	, folderId );
 		model.addAttribute("userId"		, userInfo.getId());
         model.addAttribute("lang"		, userInfo.getLang());
+        model.addAttribute("allFileFlag", allFileFlag);
         
         LOGGER.debug("main ended");
 		return "ezWebFolder/webFolderRight";
@@ -88,6 +90,7 @@ public class EzWebFolderController_y {
 		LoginSimpleVO userInfo 	= commonUtil.userInfoSimple(loginCookie);
 		JSONObject jsonObj 	= new JSONObject();
 		String folderId 		= request.getParameter("folderId");
+		String allFileFlag  	= orElse(request.getParameter("allFileFlag"),"");
 		
 		if (folderId == null) {
 			jsonObj.put("status", "error");
@@ -140,8 +143,13 @@ public class EzWebFolderController_y {
 					+ 	" currPage : " + request.getParameter("currPage")
 					+ 	" totalPages"+ request.getParameter("totalpages")  );
 		
-		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folders/" + folderId + "/file-list",
-				param, request, "get", null);
+		if (allFileFlag.equals("all")) {
+			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folders/" + folderId + "/file-list",
+					param, request, "get", null);
+		} else {
+			resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folders/" + folderId + "/file-list2",
+					param, request, "get", null);
+		}
 		
 		LOGGER.debug("getFileList ended");
 		return resultBody.toString();

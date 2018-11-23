@@ -529,17 +529,18 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
 						String[] fldPathArr = fldPath.split("\\|");
 						
-						if (folder.getFolderUpper().equals("root")) {
-							for (int i = rootPath.length; i < fldPathArr.length; i++) {
-								file_path += filePathMap.get(fldPathArr[i]) + "/";
-							}
-						} else {
+						if (file.getFileTypeName().equals("folder")) {
 							for (int i = rootPath.length; i < fldPathArr.length-1; i++) {
 								file_path += filePathMap.get(fldPathArr[i]) + "/";
 							}
+						} else {
+							for (int i = rootPath.length; i < fldPathArr.length; i++) {
+								file_path += filePathMap.get(fldPathArr[i]) + "/";
+							}
 						}
-						file_path = file_path.substring(0, file_path.length() - 1);
-						file.setFilePosition(file_path );
+						
+						file_path = file_path.substring(0, file_path.length()-1);
+						file.setFilePosition(file_path);
 					}
 				}
 			}
@@ -705,12 +706,12 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
 						String[] fldPathArr = fldPath.split("\\|");
 						
-						if (folder.getFolderUpper().equals("root")) {
-							for (int i = rootPath.length; i < fldPathArr.length; i++) {
+						if (file.getFileTypeName().equals("folder")) {
+							for (int i = rootPath.length; i < fldPathArr.length-1; i++) {
 								file_path += filePathMap.get(fldPathArr[i]) + "/";
 							}
 						} else {
-							for (int i = rootPath.length; i < fldPathArr.length-1; i++) {
+							for (int i = rootPath.length; i < fldPathArr.length; i++) {
 								file_path += filePathMap.get(fldPathArr[i]) + "/";
 							}
 						}

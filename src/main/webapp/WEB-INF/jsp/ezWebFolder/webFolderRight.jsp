@@ -40,6 +40,7 @@
 		var pEnd =10;
 		var folderId = "${folderId}";
 		var folderType = "${folderType}";
+		var allFileFlag = "${allFileFlag}";
 		var resultErr1 = "<spring:message code='ezWebFolder.t306'/>";
 		var resultErr2 = "<spring:message code='ezWebFolder.t305'/>";
 		var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
@@ -65,7 +66,9 @@
 		
 		window.onload = function() {
 			closeAllPopup();
-			$('#upload').css('display','none');
+			if (allFileFlag == "all") {
+				$('#upload').css('display','none');
+			}
 			getFileList(folderId);
 			
 			searchContext.setSearchStartEventHandler(function() {
@@ -174,7 +177,8 @@
 					 "searchCreateName" : searchRequirement.creatorName,
 					 "searchFileType" 	: searchContext.getFileType(),
 					 "searchStartDate" 	: searchRequirement.startDate,
-					 "searchEndDate" 	: searchRequirement.endDate
+					 "searchEndDate" 	: searchRequirement.endDate,
+					 "allFileFlag"		: allFileFlag
 					},
 				dataType: "JSON",
 				success : function (data) {
@@ -277,32 +281,35 @@
 				detailName.appendChild(divName);
 				nameTag.appendChild(detailName);
 				
+				/* root 폴더 업로드기능이 적용되지 않았을 시 name path 
 				if(length == 1) {
-					/* detailName = document.createElement("div");
-					/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 및 꺽새 추가 */
-					//detailName.textContent =  " > " + messages.strLang17 + " "; // 모든파일
-					//detailName.setAttribute("style", "font-size:15px;");
-					//nameTag.appendChild(detailName);
 					var divSeparator = document.createElement("div");
 					divSeparator.setAttribute("class", "separator");
 					divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
 					nameTag.appendChild(divSeparator);
 				}
 				
-				/* 2018-05-07 장진혁 - 이미지 태그 안씀 */
-				/* var imgElmt = document.createElement("img");
-				imgElmt.setAttribute("style", "height: 14px; width: 14px; display: inline-block; margin: 0px 6px;");
-				imgElmt.src = "/images/webfolder/arrow2.png"; */
-				
 				if (i != length - 1) {
-/* 					detailName = document.createElement("span");
-					detailName.textContent = " > ";
-					nameTag.appendChild(detailName); */
 					var divSeparator = document.createElement("div");
 					divSeparator.textContent = " > ";
 					divSeparator.setAttribute("class", "separator");
 					nameTag.appendChild(divSeparator);
-				}	
+				}
+				*/
+				
+				if (allFileFlag == "all") {
+					var divSeparator = document.createElement("div");
+					divSeparator.setAttribute("class", "separator");
+					divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
+					nameTag.appendChild(divSeparator);
+				} else {
+					var divSeparator = document.createElement("div");
+					if (i != length - 1) {
+						divSeparator.textContent = " > ";
+					}
+					divSeparator.setAttribute("class", "separator");
+					nameTag.appendChild(divSeparator);
+				}
 			}
 		}
 		
@@ -392,6 +399,7 @@
 						faImgElmt.src = "/images/ImgIcon/icon-flag.gif";
 						trElmt.setAttribute("favorite", "");
 					}
+					
 					faImgElmt.style.height  = "14px";
 					faImgElmt.style.width  	= "14px";
 					
@@ -404,18 +412,14 @@
 					
 					tdElmt4.textContent = result[i]["fileName"];
 					tdElmt4.setAttribute("title", result[i]["fileName"]);
+					
 					if(result[i]["typeId"] == "folder") {
 						tdElmt5.textContent = ' - ';
 					}else {
 						tdElmt5.textContent = getFileSize(result[i]["fileSize"]);
 					}
-// 					if (primary == "1") {
-						tdElmt6.textContent = result[i]["createName1"];
-// 					}
-// 					else {
-// 						tdElmt6.textContent = result[i]["createName2"];
-// 					}
 					
+					tdElmt6.textContent = result[i]["createName1"];
 					tdElmt7.textContent = result[i]["createDate"].substring(0, 10);
 					tdElmt8.textContent = result[i]["updateDate"].substring(0, 10);
 					tdElmt9.textContent = result[i]["filePosition"];
@@ -548,10 +552,7 @@
 	    function optionView(obj) {
 	   		 if (obj.getAttribute("mode") == "off") {
 	   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-//	    	        if(pAdminType == "y")
-	   	            document.getElementById("layer_Viewpopup").style.top = "130px";
-//	    	        else
-//	    	            document.getElementById("layer_Viewpopup").style.top = "100px";
+   	            document.getElementById("layer_Viewpopup").style.top = "130px";
 	   	        document.getElementById("layer_Viewpopup").style.display = "";
 	   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
 	   	        obj.setAttribute("mode", "on");

@@ -502,12 +502,18 @@
 		   		]]>	
 		   		<isEqual property="parentId" compareValue="root" > 
 		      	 	<isEqual property="folderType" compareValue="C" >
-	                	AND 
-	                		u.user_id IN
-	   		
+						and folder.folder_id in (select distinct CASE WHEN ( substr(folder.folder_path, instr(folder.folder_path ,'|',1,2)+1,                    
+						(instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)) in (                   
+						select distinct substr(folder.folder_path,instr(folder.folder_path ,'|',1,2)+1,                    
+						instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)                   
+						from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID                   
+						where folder.folder_level > 0                    
+						AND u.user_id IN  
 						<iterate property="idList" open="(" close=")" conjunction=",">
 							#idList[].id#
-						</iterate>
+						</iterate>))
+			         then folder.folder_id 
+					else null end as aaa  from dual)
 		      	   </isEqual>  
 		         </isEqual> 
 		         <![CDATA[ 
@@ -660,7 +666,94 @@
 	        where rownums >= #pStart# + 1
 		]]>	
 	</select>
-	
+	<select id="EzWebFolderDAO_y.searchFileList2" resultMap="fileVO" parameterClass="Map">   
+		<![CDATA[
+			select * from ( 
+	  			select pchk.*, ROWNUM rownums 
+	        	from (
+					SELECT DISTINCT
+							t.*	 
+					from 
+						(
+					]]>
+					<include refid="fileListSelect"/>
+						<![CDATA[
+							from tbl_webfolder_file f inner join (
+								select *
+								from tbl_webfolder_folder  
+								where folder_path like (#folderPath#||'%') and tenant_id = #tenantId# and folder_type = #folderType# ) 
+									folder on folder.folder_id  = f.folder_id
+							inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id
+							left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+								and s.tenant_id = #tenantId# and s.target_type ='F'   
+							where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
+							
+						]]>
+						<isEqual property="parentId" compareValue="root" > 
+				      	 	<isEqual property="folderType" compareValue="C" >
+								and folder.folder_id in (select distinct CASE WHEN ( substr(folder.folder_path, instr(folder.folder_path ,'|',1,2)+1,                    
+								(instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)) in (                   
+								select distinct substr(folder.folder_path,instr(folder.folder_path ,'|',1,2)+1,                    
+								instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)                   
+								from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID                   
+								where folder.folder_level > 0                    
+								AND                    u.user_id IN  
+			   		
+								<iterate property="idList" open="(" close=")" conjunction=",">
+									#idList[].id#
+								</iterate>))
+					        	then folder.folder_id 
+								else null end as aaa  from dual)
+				      	   </isEqual>  
+				         </isEqual> 
+						<include refid="fldSelect"/>
+						<![CDATA[
+						    from tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder' and folder.tenant_id = #tenantId#
+						    left outer join tbl_webfolder_favor s on folder.folder_id = s.target_id and s.user_id = #userId# 
+				            	and s.tenant_id = #tenantId# and s.target_type ='D' 
+						    where 
+									folder.tenant_id = #tenantId# 
+								and
+									type.tenant_id = #tenantId#
+								and 
+									folder.FOLDER_TYPE = #folderType#
+				                and 
+				                	folder.USE_STATUS = 'Y'
+				                and 
+				                	folder.company_id = #comId#
+				                and 
+				                	folder_path <> #folderPath#		
+						]]>
+						<isEqual property="parentId" compareValue="root" > 
+				      	 	<isEqual property="folderType" compareValue="C" >
+								and folder.folder_id in (select distinct CASE WHEN ( substr(folder.folder_path, instr(folder.folder_path ,'|',1,2)+1,                    
+								(instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)) in (                   
+								select distinct substr(folder.folder_path,instr(folder.folder_path ,'|',1,2)+1,                    
+								instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)                   
+								from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID                   
+								where folder.folder_level > 0                    
+								AND u.user_id IN  
+			   		
+								<iterate property="idList" open="(" close=")" conjunction=",">
+									#idList[].id#
+								</iterate>))
+					       		then folder.folder_id 
+								else null end as aaa  from dual)
+				      	   </isEqual>  
+				         </isEqual> 
+					<![CDATA[
+					) t 
+					where folder_path like (#folderPath#||'%') 
+					]]>
+					<include refid="searchAll"/>
+					<![CDATA[
+					ORDER BY FOLDER_SORT, CREATE_DATE DESC, FILE_ID
+	                ) pchk 
+				where ROWNUM <= #pEnd# + #pStart#
+	            )
+	        where rownums >= #pStart# + 1
+		]]>	
+	</select>
 	<select id="EzWebFolderDAO_y.searchFileListR" resultMap="fileVO" parameterClass="Map">
 		<![CDATA[
     		select * from ( 
@@ -798,7 +891,7 @@
 
 	<select id="EzWebFolderDAO_y.getFldToTalCount2" resultClass="Integer" parameterClass="Map">   
 			<![CDATA[
-	           	SELECT count(folder.folder_id) as cnt
+	           	SELECT count(distinct folder.folder_id) as cnt
 	            from 
 		            tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder'
 		            left outer join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
@@ -812,14 +905,23 @@
 			]]>
 			<isEqual property="parentId" compareValue="root" > 
 	      	 	<isEqual property="folderType" compareValue="C" >
-                	AND 
-                		u.user_id IN
-   		
+					and folder.folder_id in (
+					select distinct 
+						CASE WHEN ( substr(folder.folder_path, instr(folder.folder_path ,'|',1,2)+1,                    
+							(instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)) in (                   
+							select distinct substr(folder.folder_path,instr(folder.folder_path ,'|',1,2)+1,                    
+							instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)                   
+							from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID                   
+							where folder.folder_level > 0                    
+							AND u.user_id IN  
 					<iterate property="idList" open="(" close=")" conjunction=",">
 						#idList[].id#
-					</iterate>
+					</iterate>))
+				        then folder.folder_id 
+						else '0' end as aaa  from dual)
 	      	   </isEqual>  
-	         </isEqual>  
+	         </isEqual> 
+	         
 			<isEqual property = "flag" compareValue="1" prepend="AND">
 				<![CDATA[
 					folder.folder_path like ('%'||#folderPath#||'%') 
@@ -850,9 +952,7 @@
 			</isNotEqual>	
 			<isNotEqual property="searchFileName" compareValue="" prepend="AND">
 				<![CDATA[
-					(folder.folder_name1 LIKE '%' || #searchFileName# || '%' ESCAPE '\'
-						or
-					folder.folder_name2 LIKE '%' || #searchFileName# || '%' ESCAPE '\') 
+					(folder.folder_name1 LIKE '%' || #searchFileName# || '%' ESCAPE '\')
 	       		]]> 
 			</isNotEqual>
 			<isNotEqual property="searchStartDate" compareValue="" prepend="AND">
@@ -900,7 +1000,61 @@
 			]]>	
 		<include refid="searchAll"/>
 	</select>
-		
+		<select id="EzWebFolderDAO_y.searchFileToTalCount2" resultClass="Integer" parameterClass="Map">   
+   		<![CDATA[
+			SELECT distinct count(*)
+			from 
+				(
+		   		SELECT DISTINCT
+						folder.FOLDER_NAME1    	AS FOLDER_NAME1,
+						f.FILE_ID 	  			AS FILE_ID,
+						f.FILE_NAME 	  		AS FILE_NAME,
+						f.FILE_EXT	  			AS FILE_EXT,
+						f.FOLDER_ID	  			AS FOLDER_ID,
+						f.USE_STATUS   			AS USE_STATUS,
+						decode ( #primary# , '1' , f.CREATE_NAME1, f.CREATE_NAME2) as CREATE_NAME1,
+						f.CREATE_NAME2 as CREATE_NAME2,
+						f.CREATE_DATE + NUMTODSINTERVAL(#offset#, 'MINUTE') AS CREATE_DATE,
+						f.TENANT_ID    			AS TENANT_ID,
+						type.TYPE_NAME 			AS TYPE_NAME    	   		
+				from tbl_webfolder_file f inner join (
+					select 
+						* 
+					from 
+						tbl_webfolder_folder 
+					where 
+							folder_path like (#folderPath#||'%') 
+						and tenant_id = #tenantId# 
+						and folder_type = #folderType#
+						and use_status = 'Y'
+					) folder on folder.folder_id  = f.folder_id
+						
+				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
+				where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
+			]]>	
+			<isEqual property="parentId" compareValue="root" > 
+	      	 	<isEqual property="folderType" compareValue="C" >
+					and folder.folder_id in (select distinct CASE WHEN ( substr(folder.folder_path, instr(folder.folder_path ,'|',1,2)+1,                    
+					(instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)) in (                   
+					select distinct substr(folder.folder_path,instr(folder.folder_path ,'|',1,2)+1,                    
+					instr(folder.folder_path ,'|',1,3)-instr(folder.folder_path ,'|',1,2)-1)                   
+					from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID                   
+					where folder.folder_level > 0                    
+					AND                    u.user_id IN  
+		   		
+				<iterate property="idList" open="(" close=")" conjunction=",">
+					#idList[].id#
+				</iterate>))
+				    then folder.folder_id 
+					else null end as aaa  from dual)
+				</isEqual>  
+			</isEqual> 
+			<![CDATA[
+			) t
+			where 1=1
+			]]>	
+		<include refid="searchAll"/>
+	</select>	
 	<select id="EzWebFolderDAO_y.searchFileToTalCountR" resultClass="Integer" parameterClass="Map">   
 		<![CDATA[
 		SELECT distinct count(*)

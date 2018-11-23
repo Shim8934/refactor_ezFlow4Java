@@ -53,7 +53,7 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	}
 	
 	public List<FileVO> searchFileList2(Map<String, Object> map) {
-		return  (List<FileVO>) list("EzWebFolderDAO_y.searchFileList",map);
+		return  (List<FileVO>) list("EzWebFolderDAO_y.searchFileList2",map);
 	}
 	
 	public List<FileVO> searchFileListR(Map<String, Object> map) {
@@ -78,6 +78,10 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	
 	public int searchFileToTalCount (Map<String, Object> map) {
 		return (int) select("EzWebFolderDAO_y.searchFileToTalCount",map);
+	}
+
+	public int searchFileToTalCount2 (Map<String, Object> map) {
+		return (int) select("EzWebFolderDAO_y.searchFileToTalCount2",map);
 	}
 	
 	public int searchFileToTalCountR (Map<String, Object> map) {
