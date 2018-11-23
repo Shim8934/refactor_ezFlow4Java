@@ -209,7 +209,7 @@
 				 				var div = document.createElement('div');
 				 				div.classList.add('ui-portlet');
 				 				// 사용중인 포틀릿
-				 				if (item.use === 'on') {
+				 				if (item.portletUsed === true) {
 				 					div.classList.add('ui-portlet-on');
 				 				} else {
 				 					div.classList.add('ui-portlet-off');
@@ -231,7 +231,7 @@
 								input.id = 'portletid_' + item.portletId;
 			
 				 				// 사용중인 포틀릿
-				 				if (item.use === 'on') {
+				 				if (item.portletUsed === true) {
 				 					input.setAttribute('checked', true);
 				 				}
 				 				

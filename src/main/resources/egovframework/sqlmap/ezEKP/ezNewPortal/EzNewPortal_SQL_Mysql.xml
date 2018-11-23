@@ -1495,6 +1495,91 @@ LIMIT
 		]]>
 	</select>
 	
+	<select id="ezNewPortal.getPortletForUser" parameterClass="Map" resultClass="PortletInfoVO">
+		<![CDATA[
+			SELECT
+				A.portlet_id AS portletId,
+				A.menu_id AS menuId,
+				NAME.portlet_name AS portletName,
+				COMP.board_id AS boardId,
+				IFNULL(COMP.connection_url, A.portlet_url) AS portletUrl,
+				IFNULL((SELECT
+							portlet_order
+						FROM
+							TBL_PORTAL_PORTLET_USER AS USER
+						WHERE
+							USER.tenant_id = #tenantId#
+						AND
+							USER.company_id = #companyId#
+						AND
+							USER.portlet_id = A.portlet_id
+						AND
+							USER.menu_id = A.menu_id
+						AND
+							USER.user_id = #userId#), IFNULL(COMP.portlet_order, A.default_order)) AS portletOrder,
+				AUTH.access_yn AS accessYN
+			FROM
+				TBL_PORTAL_PORTLET AS A
+			JOIN
+				TBL_PORTAL_PORTLET_NAME AS NAME
+			ON
+				A.portlet_id = NAME.portlet_id
+			AND
+				A.menu_id = NAME.menu_id
+			JOIN
+				TBL_PORTAL_PORTLET_COMP AS COMP
+			ON
+				NAME.tenant_id = COMP.tenant_id
+			AND
+				NAME.company_id = COMP.company_id
+			AND
+				A.portlet_id = COMP.portlet_id
+			AND
+				A.menu_id = COMP.menu_id
+			LEFT JOIN
+				TBL_PORTAL_MENU_AUTH AS AUTH
+			ON
+				COMP.tenant_id = AUTH.tenant_id
+			AND
+				COMP.company_id = AUTH.company_id
+			AND
+				A.menu_id = AUTH.menu_id
+		]]>
+		
+		<isEmpty property="deptId">
+			<![CDATA[
+				AND
+					AUTH.user_type = 1
+				AND
+					AUTH.user_id = #userId#
+			]]>
+		</isEmpty>
+		
+		<isNotEmpty property="deptId">
+			<![CDATA[
+				AND
+					AUTH.user_type = 0
+				AND
+					AUTH.user_id = #deptId#
+			]]>
+		</isNotEmpty>
+		
+		<![CDATA[
+			WHERE
+				NAME.tenant_id = #tenantId#
+			AND
+				NAME.company_id = #companyId#
+			AND
+				NAME.portlet_lang = #portletLang#
+			AND
+				COMP.portlet_used = 1
+			AND
+				(AUTH.access_yn IS NOT NULL)
+			ORDER BY
+				portletOrder;
+		]]>
+	</select>
+	
 	<select id="ezNewPortal.getCompanyThemes" parameterClass="Map" resultClass="ThemeInfoVO">
 		<![CDATA[
 			SELECT
