@@ -686,7 +686,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("type", type);
 		if (startPoint != null && endPoint != null && !startPoint.equals("") && !endPoint.equals("")) {
 			map.put("startRow", Integer.valueOf(startPoint) + 1);
-			map.put("endRow", Integer.valueOf(startPoint) + endPoint);
+			map.put("endRow", Integer.valueOf(startPoint) + Integer.valueOf(endPoint));
 		}
 		
 		if (adminFlag.equals("false")){
@@ -954,16 +954,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAttitudeList2 started");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-		int limit = 0;
+		Map<String, Object> map = new HashMap<String, Object>();
 		
+		int limit = 0;
 		if (pageNum != null && !pageNum.equals("")) {
 			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+			
+			map.put("startRow", limit + 1);
+			map.put("endRow", limit + Integer.valueOf(listSize));
 		}
 		
 		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
 		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 		
-		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
 		map.put("searchDeptId", searchDeptId);
@@ -979,8 +982,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("limit", limit);
 		map.put("deptIdList", deptIdList);
-		map.put("startRow", limit + 1);
-		map.put("endRow", limit + Integer.valueOf(listSize));
+
 		if (primary.equals("1")) {
 			primary = "";
 		}
@@ -1587,6 +1589,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
+		if (attModId.indexOf("_") > 0) {
+			attModId = attModId.split("_")[0];
+		}
 		map.put("attModId", attModId);
 		map.put("offset", offset);
 		if (lang.equals("1")) {

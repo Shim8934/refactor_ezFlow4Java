@@ -413,6 +413,14 @@
 	        $( window ).resize(function() {
 	        	leftResize();
         	});
+        	
+	      	//2018-11-01 김보미 - 일정그룹 추가시 left바에 그룹 바로 보이도록
+	        function groupRefresh() {
+	        	frm.submit();
+	        } 
+	        function leftRefresh() {
+	        	frm2.submit();
+	        } 
 		</script>
 	</head>
 
@@ -581,6 +589,13 @@
 		</div>		
 	    <script type="text/javascript">
 		    initToggleList(document.getElementById("left"), "h2", "ul", "li");
+<<<<<<< HEAD
 	    </script> --%>
+=======
+	    </script>
+	    <!-- 2018-11-01 김보미 - 일정그룹 추가시 left바에 그룹 바로 보이도록 -->
+	    <form id="frm" action="/ezSchedule/scheduleLeft.do?funCode=5"></form>
+	    <form id="frm2" action="/ezSchedule/scheduleLeft.do?"></form>
+>>>>>>> master
 	</body>
 </html>

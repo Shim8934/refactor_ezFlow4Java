@@ -18,8 +18,8 @@
 	        var DelCount = 0;
 	        var ImageFilePath = "";
 	
-	        window.onload = function ()
-	        {
+	        window.onload = function () {
+	        	document.getElementById("allImageList").addEventListener("click", click_image);
 	        };
 	
 	        function btn_Delete_Onclick() {
@@ -104,6 +104,18 @@
 	                inputEle.checked = false;
 	            }
 	        }
+	        
+	        function click_image(event) {
+	        	var imageElem = event.target;
+	        	
+	        	if(imageElem.nodeName == "IMG") {
+		        	var checkboxElem = imageElem.previousElementSibling;
+		        	
+		        	checkboxElem.checked = !checkboxElem.checked;
+		        	
+		        	checkMainFg(checkboxElem);
+	        	}
+	        }
 	    </script>
 	</head>
 	<body class="popup">
@@ -128,7 +140,7 @@
 	        </tr>
 	        <tr>
 	            <td>
-	                <div class="layout" style="padding-top:10px;padding-bottom:10px;overflow-y:scroll;height:410px;">
+	                <div class="layout" style="padding-top:10px;padding-bottom:10px;overflow-y:scroll;height:410px;" id="allImageList">
 	                	<c:set var="result" value="${fn:split(listImages, '|')}"/>
 	                	<c:set var="imageID" value="${fn:split(imageID, ';')}"/>
 	                	<c:set var="content" value="${fn:split(imageContent, ';')}"/>

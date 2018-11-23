@@ -672,10 +672,10 @@
 						A.tenant_id AS tenantid,
 						A.writer_id AS writerid,
 						A.dept_id AS deptid,
-						TO_CHAR(TO_DATE(A.start_date, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS startdate,
-		                SUBSTR(TO_CHAR(TO_DATE(A.start_date, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12) AS starttime,
-		                DECODE(A.end_date, NULL, '',  TO_CHAR(TO_DATE(A.end_date, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')) AS enddate,
-		                DECODE(A.end_date, NULL, '',  SUBSTR(TO_CHAR(TO_DATE(A.end_date, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12)) AS endtime,
+						to_char(A.start_date + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS startdate,
+		                SUBSTR(TO_CHAR(A.start_date + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12) AS starttime,
+		                DECODE(A.end_date, NULL, '',  TO_CHAR(A.end_date + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') ) AS enddate,
+		                DECODE(A.end_date, NULL, '',  SUBSTR(TO_CHAR(A.end_date + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12)) AS endtime,
 						A.modappl,
 						A.ip,
 						A.date_type AS datetype,
@@ -751,7 +751,7 @@
 				</isEmpty>
 				) T1
 			)
-			<isNotEmpty prepend="WHERE" property="listSize">
+			<isNotEmpty prepend="WHERE" property="startRow">
 				<![CDATA[
 					RN >= #startRow#
 				AND
@@ -881,9 +881,9 @@
 			    B.DISPLAYNAME$primary$ AS userName,
 			    B.TITLE$primary$ AS jikwi,
 			    B.DESCRIPTION$primary$ AS deptName,
-			    group_concat(A.AUTH_DEPT_ID order by C.DISPLAYNAME$primary$) AS authDeptId,
-			    group_concat(C.DISPLAYNAME$primary$ order by C.DISPLAYNAME$primary$) AS authDeptName,
-    			group_concat(A.AUTH_TYPE order by C.DISPLAYNAME$primary$) AS authType
+			    LISTAGG(A.AUTH_DEPT_ID, ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authDeptId,
+			    LISTAGG(cast(C.DISPLAYNAME$primary$ as varchar(500)), ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authDeptName,
+    			LISTAGG(A.AUTH_TYPE, ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authType
 			FROM 
 				TBL_ATTITUDE_AUTH A
 			INNER JOIN
@@ -903,7 +903,7 @@
 			AND
 				A.TENANT_ID = #tenantId#
 			GROUP BY 
-				A.USER_ID, userName, jikwi, deptName
+				A.USER_ID, B.DISPLAYNAME, B.TITLE, B.DESCRIPTION
 			ORDER BY
 				userName
 		]]>
@@ -922,41 +922,44 @@
 		
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList" parameterClass="Map" resultClass="AttitudeAuthorVO">
 		<![CDATA[
-			SELECT
-				D.DISPLAYNAME$primary$ AS deptName,
-				D.CN AS deptId,
-				'no' AS mine,
-				A.AUTH_TYPE AS authType
-			FROM 
-				TBL_DEPTMASTER D
-			INNER JOIN 
-				TBL_ATTITUDE_AUTH A 
-			ON
-				D.CN = A.AUTH_DEPT_ID 
-			AND
-				A.TENANT_ID = D.TENANT_ID
-			WHERE 
-				A.USER_ID = #userId#
-			AND 
-				A.TENANT_ID = #tenantId#
-			UNION
-			SELECT
-				D.DISPLAYNAME$primary$ AS deptName,
-				D.CN AS deptId,
-				'yes' AS mine,
-				'' AS authType
-			FROM 
-				TBL_DEPTMASTER D
-			LEFT JOIN 
-				TBL_USERMASTER U 
-			ON
-				D.CN = U.DEPARTMENT 
-			AND
-				U.TENANT_ID = D.TENANT_ID
-			WHERE 
-				U.CN = #userId#
-			AND 
-				U.TENANT_ID = #tenantId#
+		select * from 
+			(
+				SELECT
+					D.DISPLAYNAME$primary$ AS deptName,
+					D.CN AS deptId,
+					'no' AS mine,
+					TO_CHAR(A.AUTH_TYPE) AS authType
+				FROM 
+					TBL_DEPTMASTER D
+				INNER JOIN 
+					TBL_ATTITUDE_AUTH A 
+				ON
+					D.CN = A.AUTH_DEPT_ID 
+				AND
+					A.TENANT_ID = D.TENANT_ID
+				WHERE 
+					A.USER_ID = #userId#
+				AND 
+					A.TENANT_ID = #tenantId#
+				UNION
+				SELECT
+					D.DISPLAYNAME$primary$ AS deptName,
+					D.CN AS deptId,
+					'yes' AS mine,
+					'' AS authType
+				FROM 
+					TBL_DEPTMASTER D
+				LEFT JOIN 
+					TBL_USERMASTER U 
+				ON
+					D.CN = U.DEPARTMENT 
+				AND
+					U.TENANT_ID = D.TENANT_ID
+				WHERE 
+					U.CN = #userId#
+				AND 
+					U.TENANT_ID = #tenantId#
+			)
 			ORDER BY 
 				deptName
 		]]>
@@ -1312,14 +1315,14 @@
 					    writer_name$primary$ AS writerName,
 					    writer_title$primary$ AS writerTitle,
 					    writer_dept_name$primary$ AS writerDeptName,
-                        TO_DATE((origin_startdate +(#offsetMin#/(60*24))), 'YYYY-MM-DD HH24:MI') AS originstartdate,
-                        TO_DATE((origin_enddate +(#offsetMin#/(60*24))), 'YYYY-MM-DD HH24:MI') AS origin_enddate,
-                        NVL(TO_DATE((change_startdate +(#offsetMin#/(60*24))), 'YYYY-MM-DD HH24:MI'),'') AS changestartdate,
-                        NVL(TO_DATE((changeenddate +(#offsetMin#/(60*24))), 'YYYY-MM-DD HH24:MI'),'') AS changeenddate,
+                        TO_CHAR(origin_startdate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI') AS originstartdate,
+                        TO_CHAR(origin_enddate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI') AS origin_enddate,
+                        NVL(TO_CHAR(change_startdate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI'),'') AS changestartdate,
+                        NVL(TO_CHAR(change_enddate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI'),'') AS changeenddate,
 					    origin_type_name$primary$ AS origintypename,
-					    IFNULL(change_type_name$primary$, '') AS changetypename,
+					    NVL(change_type_name$primary$, '') AS changetypename,
 					    appr_user_name$primary$ AS apprusername,
-                        TO_DATE((appr_date +(#offsetMin#/(60*24))), 'YYYY-MM-DD HH24:MI') AS apprdate
+                        TO_CHAR(appr_date + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI') AS apprdate
 					FROM
 						TBL_ATTITUDE_MODAPPL_HISTORY
 					WHERE
@@ -1327,9 +1330,9 @@
 					AND
 						tenant_id = #tenantId#
 					AND
-						(appr_date >= #searchStartDate# 
+						(appr_date >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') 
 						  AND
-						  appr_date <= #searchEndDate#)
+						  appr_date <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				]]>
 				<isNotEmpty prepend="AND" property="searchUserName">
 					<![CDATA[
@@ -1364,9 +1367,9 @@
 						) T1
 				)
 			where
-				rn <= #row_startNum#
+				rn >= #row_startNum#
 			and
-				rn >= #row_endNum#
+				rn <= #row_endNum#
 			]]>
 	</select>
 	
@@ -1381,9 +1384,9 @@
 			AND
 				TENANT_ID = #tenantId#
 			AND
-				(appr_date >= #searchStartDate# 
+				(appr_date >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS')
 				  AND
-				  appr_date <= #searchEndDate#)
+				  appr_date <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 		]]>
 		<isNotEmpty prepend="AND" property="searchUserName">
 			WRITER_NAME LIKE '%' || #searchUserName# || '%'
