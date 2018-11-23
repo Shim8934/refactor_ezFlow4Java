@@ -15,21 +15,4 @@ public class EzSurveyDAO extends EgovAbstractDAO{
 
 	private static final Logger Logger = LoggerFactory.getLogger(EzSurveyDAO.class);
 	
-	@SuppressWarnings("unchecked")
-	public List<SurveyVO> getSurveyList(Map<String, Object> map) {
-		
-		List<SurveyVO> list = null;
-		try {
-			list = (List<SurveyVO>) list("EzSurveyDAO.getSurveyList", map);
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-		}
-		return list; 
-	}
-
-	public int getTotalCount(Map<String, Object> map) {
-		return (int) select("EzSurveyDAO.getTotalCount", map);
-	}
-
 }

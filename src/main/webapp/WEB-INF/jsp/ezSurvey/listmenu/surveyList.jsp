@@ -119,7 +119,9 @@
 					</table>
 				</div>
 				
-				<div id="surveyListBody"></div>
+				<div id="surveyListBody">
+					
+				</div>
 				
 				<div id="tblPageRayer"></div>
 			</div>
@@ -261,154 +263,206 @@
 					
 				}
 				
-				// 페이징 처리
-				function pageZeroCheck() {
-					if(totalPage==0) {
-						totalPage=1;
-						currPage=1;
-					}
+			});
+			
+			// 페이징 처리
+			function pageZeroCheck() {
+				if(totalPage==0) {
+					totalPage=1;
+					currPage=1;
 				}
-				
-				function goToPageByNum(page) {
-					pageChange = page;
-					searchOption ='on';
-					if (searchSelect !== '' && searchSelect !== 'none') {
-						searchLadder();
-					} else  {
-						participant(modeCheck);
-					}
-					makePageSelPage();
+			}
+			
+			function goToPageByNum(page) {
+				pageChange = page;
+				searchOption ='on';
+				if (searchSelect !== '' && searchSelect !== 'none') {
+					searchLadder();
+				} else  {
+					participant(modeCheck);
 				}
+				makePageSelPage();
+			}
+			
+			function makePageSelPage(totalPages) {
 				
-				function makePageSelPage(totalPages) {
-					
-					totalPage = totalPages;
-					pageZeroCheck();
-					var strtext = "";
-					var PagingHTML = "<div class='pagenavi'>";
-					var pageNum = currPage;
+				totalPage = totalPages;
+				pageZeroCheck();
+				var strtext = "";
+				var PagingHTML = "<div class='pagenavi'>";
+				var pageNum = currPage;
 
-					document.getElementById("tblPageRayer").innerHTML = "";
-					if(document.getElementById("mailBoxInfo") !== null) {
-						document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang8
-						+ "<span style='color:#017BEC;'> " + totalLadder + " </span>"
-						+ strLang9 + "]";
-					}
+				document.getElementById("tblPageRayer").innerHTML = "";
+				if(document.getElementById("mailBoxInfo") !== null) {
+					document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang8
+					+ "<span style='color:#017BEC;'> " + totalLadder + " </span>"
+					+ strLang9 + "]";
+				}
 
-					if (totalPage > 1 && pageNum != 1) {
-						strtext = "<span class='btnimg' onClick='goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
+				if (totalPage > 1 && pageNum != 1) {
+					strtext = "<span class='btnimg' onClick='goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
+					PagingHTML += strtext;
+				}
+
+				if (totalPage > blockSize) {
+					if (pageNum > blockSize) {
+						strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
 						PagingHTML += strtext;
-					} else {
-						strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
-						PagingHTML += strtext;
-					}
-
-					if (totalPage > blockSize) {
-						if (pageNum > blockSize) {
-							strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
-							PagingHTML += strtext;
-						} else {
-							strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
-							PagingHTML += strtext;
-						}
 					} else {
 						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
 						PagingHTML += strtext;
 					}
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+					PagingHTML += strtext;
+				}
 
-					var MaxNum;
-					var i;
-					var startNum = (parseInt((pageNum - 1) / blockSize) * blockSize) + 1;
+				var MaxNum;
+				var i;
+				var startNum = (parseInt((pageNum - 1) / blockSize) * blockSize) + 1;
 
-					if (totalPage >= (startNum + parseInt(blockSize))) {
-						MaxNum = (startNum + parseInt(blockSize)) - 1;
+				if (totalPage >= (startNum + parseInt(blockSize))) {
+					MaxNum = (startNum + parseInt(blockSize)) - 1;
+				} else {
+					MaxNum = totalPage;
+				}
+
+				for (i = startNum; i <= MaxNum; i++) {
+					if (i == pageNum) {
+						strtext = "<span class='on'>" + i + "</span>";
+						PagingHTML += strtext;
 					} else {
-						MaxNum = totalPage;
+						strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i
+								+ "</span>";
+						PagingHTML += strtext;
 					}
+				}
 
-					for (i = startNum; i <= MaxNum; i++) {
-						if (i == pageNum) {
-							strtext = "<span class='on'>" + i + "</span>";
-							PagingHTML += strtext;
-						} else {
-							console.log("버튼 생성" + i);
-							strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i
-									+ "</span>";
-							PagingHTML += strtext;
-						}
-					}
-
-					if (totalPage > blockSize) {
-						if (totalPage >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
-							strtext = "";
-							strtext = strtext
-									+ "<span class='btnimg' onClick='return selafterBlock()' ><img src='/images/sub/btn_next.gif'></span>";
-							PagingHTML += strtext;
-						} else {
-							strtext = "";
-							strtext = strtext
-									+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
-							PagingHTML += strtext;
-						}
+				if (totalPage > blockSize) {
+					if (totalPage >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
+						strtext = "";
+						strtext = strtext
+								+ "<span class='btnimg' onClick='return selafterBlock()' ><img src='/images/sub/btn_next.gif'></span>";
+						PagingHTML += strtext;
 					} else {
-						strtext = ""; 
+						strtext = "";
 						strtext = strtext
 								+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
 						PagingHTML += strtext;
 					}
-
-					if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-						strtext = "<span class='btnimg' onclick = 'goToPageByNum("
-								+ totalPage
-								+ ")'><img src='/images/sub/btn_n_next.gif'></span>";
-						PagingHTML += strtext;
-					} else {
-						strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
-						PagingHTML += strtext;
-					}
-
-					PagingHTML += "</div>";
-					td_Create1(PagingHTML);
+				} else {
+					strtext = ""; 
+					strtext = strtext
+							+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+					PagingHTML += strtext;
 				}
 
-				function td_Create1(strtext) {
-					document.getElementById("tblPageRayer").innerHTML = strtext;
+				if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+					strtext = "<span class='btnimg' onclick = 'goToPageByNum("
+							+ totalPage
+							+ ")'><img src='/images/sub/btn_n_next.gif'></span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+					PagingHTML += strtext;
 				}
 
-				function selbeforeBlock() {
-					var pageNum = parseInt(currPage);
-					if(pageNum%blockSize == 0) {
-						pageNum = pageNum - blockSize;
-					}
-					pageNum = ((parseInt(pageNum / blockSize)) * blockSize);
-					goToPageByNum(pageNum);
+				PagingHTML += "</div>";
+				td_Create1(PagingHTML);
+			}
+
+			function td_Create1(strtext) {
+				document.getElementById("tblPageRayer").innerHTML = strtext;
+			}
+
+			function selbeforeBlock() {
+				var pageNum = parseInt(currPage);
+				if(pageNum%blockSize == 0) {
+					pageNum = pageNum - blockSize;
+				}
+				pageNum = ((parseInt(pageNum / blockSize)) * blockSize);
+				goToPageByNum(pageNum);
+			}
+
+			function selbeforeBlock_one() {
+				var pageNum = parseInt(currPage);
+				if (parseInt(pageNum - 1) > 0)
+					goToPageByNum(parseInt(pageNum - 1));
+				else
+					return;
+			}
+
+			function selafterBlock() {
+				var pageNum = parseInt(currPage);
+				pageNum = ((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1;
+				goToPageByNum(pageNum);
+			}
+
+			function selafterBlock_one() {
+				var pageNum = parseInt(currPage);
+				if (parseInt(pageNum + 1) <= totalPage)
+					goToPageByNum(parseInt(pageNum + 1));
+				else
+					return;
+			}
+			
+			//검색 
+			function searchLadder() {
+				mode = modeCheck;
+				var tempInput=searchInput;
+				var tempSelect=searchSelect;
+				if (searchSelect === 'none') {
+					currPage = 1;
+				}
+				if (searchInput !== document.getElementById("searchInput").value) {
+					currPage = 1;
 				}
 
-				function selbeforeBlock_one() {
-					var pageNum = parseInt(currPage);
-					if (parseInt(pageNum - 1) > 0)
-						goToPageByNum(parseInt(pageNum - 1));
-					else
-						return;
+				if (pageChange === parseInt(currPage)) {
+					currPage = 1;
+				} else {
+					currPage = pageChange;
+					pageChange = 1;
 				}
-
-				function selafterBlock() {
-					var pageNum = parseInt(currPage);
-					pageNum = ((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1;
-					goToPageByNum(pageNum);
-				}
-
-				function selafterBlock_one() {
-					var pageNum = parseInt(currPage);
-					if (parseInt(pageNum + 1) <= totalPage)
-						goToPageByNum(parseInt(pageNum + 1));
-					else
-						return;
-				}
-
 				
 				
-			});
+				searchSelect = document.getElementById("searchOption").value;
+
+				if(searchSelect === 'kind') {	// 종류 검색
+					searchInput = document.getElementById("ladderType").value;
+				} else {	// 이외
+					searchInput = document.getElementById("searchInput").value.trim();
+				}
+				if(searchOption==='on'){
+					searchInput = tempInput;
+					searchSelect = tempSelect;
+					searchOption ='off';
+				}
+				if(searchInput==="") {
+					alert(strLang14);
+					searchSelect = '';
+					return;
+				}
+				if(mode === "pre") {
+					viewAjax();
+				} else {
+					view();
+				}
+			}
+			
+			function view() {
+				if(mode === "pre") {
+					sort ='date';
+					sortFlag = 'desc';
+				}
+				searchInput = encodeURIComponent(searchInput).replace(/%20/g,'+');
+				var szUrl = "/ezSurvey/surveyList.do";
+
+				document.location.href = szUrl;
+			}
 			
 			/* CabinetItem.start("<c:out value='${cabinetId}'/>", "<c:out value='${config.contentHpercent}'/>", "<c:out value='${config.contentWpercent}'/>", "<c:out value='${config.previewMode}'/>"); */
 		</script>

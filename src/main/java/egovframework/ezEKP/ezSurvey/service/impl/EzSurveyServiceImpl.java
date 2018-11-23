@@ -21,26 +21,4 @@ public class EzSurveyServiceImpl implements EzSurveyService {
 	@Resource(name="EzSurveyDAO")
 	private EzSurveyDAO ezSurveyDAO;
 	
-	@Override
-	public List<SurveyVO> getSurveyList(Map<String, Object> map) throws Exception {
-		Logger.debug("getSurveyList started");
-		
-		List<SurveyVO> surveyList = ezSurveyDAO.getSurveyList(map);
-		
-		Logger.debug("getSurveyList ended");
-		
-		return surveyList;
-	}
-
-	@Override
-	public int getSurveyCount(Map<String, Object> map) {
-		Logger.debug("getSurveyCount started");
-		
-		int totalCount = ezSurveyDAO.getTotalCount(map);
-		
-		Logger.debug("getSurveyCount ended");
-		
-		return totalCount;
-	}
-
 }

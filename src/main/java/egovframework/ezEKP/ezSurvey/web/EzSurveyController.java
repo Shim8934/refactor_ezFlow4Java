@@ -121,25 +121,4 @@ public class EzSurveyController {
 		return "ezSurvey/listmenu/statistics";
 	}
 	
-	@RequestMapping(value="/ezSurvey/getSurveyList.do")
-	public String getSurveyList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("getSurveyList started");
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", userInfo.getId());
-		
-		JSONObject resultBody= commonUtil.getJsonFromRestApi("/rest/ezSurvey/survey-list/user/" + userInfo.getId(), param, request, "get", null);
-
-		String status = resultBody.get("status").toString();
-		
-		if ("ok".equals(status)) {
-			model.addAttribute("surveyList", resultBody.get("surveyList"));
-			model.addAttribute("pagination", resultBody.get("pagination"));
-		}
-		logger.debug("getSurveyList ended");
-		return "json";
-	}
-	
 }
