@@ -157,12 +157,12 @@
 					A.DEPT_ID,
 					CASE
 						WHEN A.START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
-						THEN substr(#startDate#, 1, 11) || substr(A.START_DATE, 12) 
+						THEN substr(#startDate#, 1, 11) || substr(to_char(A.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12) 
 						ELSE TO_CHAR(A.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
 					END AS START_DATE,
 					CASE
 						WHEN A.END_DATE + #offsetMin# / (24 * 60) > TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
-						THEN substr(#endDate#, 1, 11) || substr(A.END_DATE, 12) 
+						THEN substr(#endDate#, 1, 11) || substr(to_char(A.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12) 
 						ELSE TO_CHAR(A.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
 					END AS END_DATE,
 					A.MODAPPL,
@@ -235,12 +235,12 @@
 						D.DEPT_ID,
 						CASE
 							WHEN D.START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
-							THEN substr(#startDate#, 1, 11) || substr(D.START_DATE, 12) 
+							THEN substr(#startDate#, 1, 11) || substr(TO_CHAR(D.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12) 
 							ELSE TO_CHAR(D.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
 						END AS START_DATE,
 						CASE
 							WHEN D.END_DATE + #offsetMin# / (24 * 60) > TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
-							THEN substr(#endDate#, 1, 11) || substr(D.END_DATE, 12) 
+							THEN substr(#endDate#, 1, 11) || substr(TO_CHAR(D.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12) 
 							ELSE TO_CHAR(D.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
 						END AS END_DATE,
 						D.MODAPPL,

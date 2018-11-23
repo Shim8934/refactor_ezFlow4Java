@@ -311,7 +311,10 @@
         }
 
         function btnexportexcel_onclick() {
-        	document.querySelector('#statisticstable2 tr[style*="display: none;"]').remove();
+        	if (document.querySelector('#statisticstable2 tr[style*="display: none;"]')) {
+	        	document.querySelector('#statisticstable2 tr[style*="display: none;"]').remove();
+        	}
+        	
             document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML + "_" + document.getElementById("statisticstable2").innerHTML;
             document.getElementById("formAgent").target = "saveExcel";
             document.getElementById("formAgent").submit();
