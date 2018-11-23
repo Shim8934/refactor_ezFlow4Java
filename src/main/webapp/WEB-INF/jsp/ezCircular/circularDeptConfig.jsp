@@ -85,7 +85,7 @@
 						$(obj).css("backgroundColor", "#FFFFFF");
 					} else {
 						$(obj).find("input").prop("checked", true);
-						$(obj).css("backgroundColor", "#e4e8ec");
+						$(obj).css("backgroundColor", "#f1f8ff");
 					}
 				} else {
 					if (_RowObject != null) {
@@ -95,7 +95,7 @@
 
 					_RowObject = obj;
 					$(obj).find("input").prop("checked", true);
-					$(obj).css("backgroundColor", "#e4e8ec");
+					$(obj).css("backgroundColor", "#f1f8ff");
 				}
         	}
 
@@ -178,7 +178,7 @@
 				// 전체 체크박스 선택, 해제
 				if ($("#checkboxAll").prop("checked") == true) {
 					$(".myCheckbox").prop("checked", true);
-					$("#circularDeptList tr").css("background", "#e4e8ec");
+					$("#circularDeptList tr").css("background", "#f1f8ff");
 				} else {
 					$(".myCheckbox").prop("checked", false);
 					$("#circularDeptList tr").css("background", "#FFFFFF");
@@ -192,7 +192,7 @@
 					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#FFFFFF");
 				} else {
 					$(obj).prop("checked", true);
-					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#e4e8ec");
+					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#f1f8ff");
 				}
 
 				event.stopPropagation();

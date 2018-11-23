@@ -261,7 +261,7 @@
 			}
 			#infoTbl {padding: 0px;}
 			
-			.active {background: #e4e8ec;}
+			.active {background: #f1f8ff;}
 			
 		</style>
 	</head>
