@@ -46,7 +46,7 @@ function photoBoardMovePage(event) {
 function viewPhotoBoardList() {
 	var boardId = $(".photo_board").find(".portletText").attr("data1");
 	console.log(boardId);
-	window.open("/ezBoard/boardMainRedirect.do?boardID=" + boardId, "main", "");
+	window.open("/ezBoard/boardMainRedirect.do?boardID=" + encodeURIComponent(boardId), "main", "");
 }
 
 function photoItemRead(elem) {
@@ -62,5 +62,5 @@ function photoItemRead(elem) {
 		var height = 785;
 	}
 
-	window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + elem.getAttribute("data2") + "&boardID=" + elem.getAttribute("data1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+	window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(elem.getAttribute("data2")) + "&boardID=" + encodeURIComponent(elem.getAttribute("data1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 }

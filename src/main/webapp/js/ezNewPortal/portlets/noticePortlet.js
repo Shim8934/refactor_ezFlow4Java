@@ -13,21 +13,21 @@ var assembleNoticeList = function(noticeList) {
 		var option = 'toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top='+top+',left='+left;
 		
 		if(this.getAttribute('data3') === "3" || this.getAttribute('data3') === "4") {
-			window.open('/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID='+ this.getAttribute('data1')+'&boardID='+ this.getAttribute('data2'), "", option, "");
+			window.open('/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID='+ encodeURIComponent(this.getAttribute('data1'))+'&boardID='+ encodeURIComponent(this.getAttribute('data2')), "", option, "");
 		} else if (this.getAttribute('data3') == "7") {
 			 top = (height - 679) / 2;
 			 left = (width - 765) / 2;
 			 
 			 option = 'toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=765,top='+top+',left='+left;
-			 window.open('/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID='+ this.getAttribute('data1')+'&boardID='+ this.getAttribute('data2'), "", option, "");
+			 window.open('/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID='+ encodeURIComponent(this.getAttribute('data1'))+'&boardID='+ encodeURIComponent(this.getAttribute('data2')), "", option, "");
 		   } else {
-			window.open('/ezBoard/boardItemView.do?showAdjacent=&itemID='+ this.getAttribute('data1')+'&boardID='+ this.getAttribute('data2'), "", option, "");
+			window.open('/ezBoard/boardItemView.do?showAdjacent=&itemID='+ encodeURIComponent(this.getAttribute('data1'))+'&boardID='+ encodeURIComponent(this.getAttribute('data2')), "", option, "");
 		}
 	}
 	
 	var noticePlus = function() {
 		//console.log('boardId', boardId);
-		window.open("/ezBoard/boardMainRedirect.do?boardID=" + boardId, "main", "");
+		window.open("/ezBoard/boardMainRedirect.do?boardID=" + encodeURIComponent(boardId), "main", "");
 	}
 	var dataAssembler = function(data, index) {	
 		index = (index*1 + 1); // 혹시 모르니 int형태로 변환
