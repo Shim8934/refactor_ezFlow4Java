@@ -58,7 +58,7 @@
 										<dt>
 											<img src="/images/ezNewPortal/nodata.png">
 										</dt>
-										<dd><spring:message code='ezNewPortal.t018' /></dd>
+										<dd>"<spring:message code='ezNewPortal.t018' />"</dd>
 									</dl>
 								</ul>
 							</c:otherwise>
@@ -76,12 +76,11 @@
 								<dt>
 									<img src="/images/ezNewPortal/nodata.png">
 								</dt>
-								<dd><spring:message code='ezNewPortal.t039' /></dd>
+								<dd>"<spring:message code='ezNewPortal.t039' />"</dd>
 							</dl>
 						</ul>
 					</c:otherwise>
 			</c:choose>
-			</c:if>
 			<c:if test="${access eq 'false' }">
 				</dl>
 				<ul class="portlet_list">
