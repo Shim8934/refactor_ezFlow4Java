@@ -64,21 +64,21 @@
 							</c:otherwise>
 						</c:choose>
 				</c:when>
-					<c:otherwise>
-						<dl class="portlet_title photo_board sortablePortlet">
-							<dt class="portletText" data1="${boardId }">
-								<c:out value="${portletName }" />
+				<c:otherwise>
+					<dl class="portlet_title photo_board sortablePortlet">
+						<dt class="portletText" data1="${boardId }">
+							<c:out value="${portletName }" />
+						</dt>
+					</dl>
+					<ul class="portlet_list">
+						<dl class="nodata">
+							<dt>
+								<img src="/images/ezNewPortal/nodata.png">
 							</dt>
+							<dd><spring:message code='ezNewPortal.t039' /></dd>
 						</dl>
-						<ul class="portlet_list">
-							<dl class="nodata">
-								<dt>
-									<img src="/images/ezNewPortal/nodata.png">
-								</dt>
-								<dd>"<spring:message code='ezNewPortal.t039' />"</dd>
-							</dl>
-						</ul>
-					</c:otherwise>
+					</ul>
+				</c:otherwise>
 			</c:choose>
 		</div>
 	</article>
