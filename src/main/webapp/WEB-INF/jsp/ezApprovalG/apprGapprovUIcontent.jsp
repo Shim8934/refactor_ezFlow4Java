@@ -640,21 +640,16 @@
 	                    inputRows.item(i).disabled = false;
 	            }
 	            
-	            // FormBuilder
-	            // 폼빌더만 textarea 비활성화 되도록 추가
-	            <c:if test="${isReform}">
-	            	var textAreaElements = HtmlObject.getElementsByTagName("textarea");
-	            	var element;
-	            	
-	            	for (var i = 0; i < textAreaElements.length; i++) {
-	            		element = textAreaElements[i];
-	            		
-	            		if (element.disabled) {
-	            			element.disabled = false;
-	            		}
-	            	}
-	            </c:if>
-	            // FormBuilder - end
+				var textAreaElements = HtmlObject.getElementsByTagName("textarea");
+				var element;
+
+				for (var i = 0; i < textAreaElements.length; i++) {
+					element = textAreaElements[i];
+
+					if (element.disabled) {
+						element.disabled = false;
+					}
+				}
 	            
 	            return HtmlObject;
 	        }
@@ -671,21 +666,16 @@
 	                    inputRows.item(i).disabled = true;
 	            }
 	            
-	            // FormBuilder
-	            // 폼빌더만 textarea 비활성화 되도록 추가
-	            <c:if test="${isReform}">
-	            	var textAreaElements = HtmlObject.getElementsByTagName("textarea");
-	            	var element;
-	            	
-	            	for (var i = 0; i < textAreaElements.length; i++) {
-	            		element = textAreaElements[i];
-	            		
-	            		if (!element.disabled) {
-	            			element.disabled = true;
-	            		}
-	            	}
-	            </c:if>
-	            // FormBuilder - end
+				var textAreaElements = HtmlObject.getElementsByTagName("textarea");
+				var element;
+
+				for (var i = 0; i < textAreaElements.length; i++) {
+					element = textAreaElements[i];
+
+					if (!element.disabled) {
+						element.disabled = true;
+					}
+				}
 	            
 	            return HtmlObject;
 	        }
