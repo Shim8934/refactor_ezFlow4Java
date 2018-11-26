@@ -1148,6 +1148,19 @@
 		]]>
 	</update>
 	
+	<update id="EzPersonalAdmin.EZSP_SETSLIDERIMAGEITEM_ORDER" parameterClass="Map">
+		<![CDATA[
+				UPDATE
+					TBL_PS_SLIDERIMAGE
+				SET
+					SN = #v_SN#
+				WHERE
+					SLIDERID = #v_SLIDERID#
+				AND
+					TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
 	<select id="EzPersonalAdmin.EZSP_GETQUICKLINKMAXORDER" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
