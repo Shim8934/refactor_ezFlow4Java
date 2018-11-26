@@ -86,9 +86,14 @@
 					</c:forEach>
 				</c:when>
 				<c:when test="${access eq 'false' }">
+					<dl class="portlet_title photo_board sortablePortlet">
+							<dt class="portletText">
+								<c:out value="${portletName }" />
+							</dt>
+					</dl>
 					<ul class="portlet_list">
 						<dl class="nodata">
-							<dt style="padding-top:60px;">
+							<dt>
 								<img src="/images/ezNewPortal/nodata.png">
 							</dt>
 							<dd>"<spring:message code='ezNewPortal.t039' />"</dd>
@@ -96,9 +101,14 @@
 					</ul>
 				</c:when>
 				<c:otherwise>
+					<dl class="portlet_title photo_board sortablePortlet">
+							<dt class="portletText">
+								<c:out value="${portletName }" />
+							</dt>
+					</dl>
 					<ul class="portlet_list">
 						<dl class="nodata">
-							<dt style="padding-top:60px;">
+							<dt>
 								<img src="/images/ezNewPortal/nodata.png">
 							</dt>
 							<dd>"<spring:message code='ezNewPortal.t018' />"</dd>
