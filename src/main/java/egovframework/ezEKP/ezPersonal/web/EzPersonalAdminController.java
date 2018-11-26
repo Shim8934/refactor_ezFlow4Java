@@ -815,11 +815,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
-		
 		String companyID = request.getParameter("companyID");
-		
 		String initDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm"), userInfo.getOffset(), false);
-		
+		String flag = request.getParameter("flag");
+
 		if (request.getParameter("itemSeq") != null) {
 			itemSeq = request.getParameter("itemSeq");
 			
@@ -838,6 +837,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("isoUTFstartDate", commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false));
 		model.addAttribute("isoUTFEndDate", commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false));
 		model.addAttribute("personalPopupVO", vo);
+		model.addAttribute("flag", flag);
 
 		logger.debug("addPopupCK ended");
 		return "admin/ezPersonal/personalAddPopupCK";
@@ -895,6 +895,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = request.getParameter("itemSeq");
 		String title = "";
+		String flag = "";
+		if (request.getParameter("flag") != null) {
+			flag = request.getParameter("flag");
+		}
 		
 		vo = ezPersonalAdminService.getPopupInfo(itemSeq, userInfo.getTenantId());
 		vo.setStartDate(commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false));
@@ -912,6 +916,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("title", title);
 		model.addAttribute("content", content);
 		model.addAttribute("user", userInfo.getId());
+		model.addAttribute("flag", flag);
 		
 		logger.debug("showPopup ended");
 		return "admin/ezPersonal/personalShowPopup";
@@ -1069,7 +1074,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("secondary", secondary);
 
 		logger.debug("selectImage ended");
-		return "admin/ezPersonal/personalSelectImage";
+		return "admin/ezPersonal/personalSelectImages";
 	}
 	
 	/**
@@ -1473,4 +1478,28 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("updateQuickLinkOrder ended");
 		return json;
 	}
+	
+	/**
+	 * 초기화면 슬라이디 이미지 순서 변경
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/updateSliderImageOrder.do", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject updateSliderImageOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject jsonParam) throws Exception {
+		logger.debug("updateSliderImageOrder started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		JSONObject json = new JSONObject();
+		JSONParser jp = new JSONParser();
+		jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+		
+		JSONArray sliderImageList = (JSONArray) jsonParam.get("slierImageList");
+		ezPersonalAdminService.updateSliderImageOrder(sliderImageList, userInfo.getTenantId());
+		json.put("result", "OK");
+		
+		logger.debug("updateSliderImageOrder started");
+		return json;
+	}
+	
 }

@@ -491,6 +491,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pTitle2", vo.getTitle2());
 		map.put("v_pContent", vo.getContent().replace("\"", "\'"));
 		map.put("tenantID", tenantID);
+		map.put("skinValue", vo.getSkinValue());
 
 		ezPersonalAdminDAO.insertPopup(map);
 		logger.debug("insertPopup ended");
@@ -512,6 +513,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pTitle2", vo.getTitle2());
 		map.put("v_pContent", vo.getContent().replace("\"", "\'"));
 		map.put("tenantID", tenantID);
+		map.put("skinValue", vo.getSkinValue());
 
 		ezPersonalAdminDAO.updatePopup(map);
 		logger.debug("updatePopup ended");
@@ -972,4 +974,28 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		}
 		logger.debug("updateQuickLinkOrder ended");
 	}
+	
+	@Override
+	public void updateSliderImageOrder(JSONArray sliderImageList, int tenantId){
+		logger.debug("updateSliderImageOrder started");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("tenantId", tenantId);
+		
+		for (Object item : sliderImageList) {
+			if(item instanceof JSONObject) {
+				JSONObject sliderInfo = (JSONObject) item;
+				map.put("sliderID", sliderInfo.get("sliderID"));
+				map.put("sn", sliderInfo.get("sn"));
+				
+				logger.debug("v_SLIDERID: " + sliderInfo.get("sliderID"));
+				logger.debug("v_SN: " + sliderInfo.get("sn"));
+				
+				ezPersonalAdminDAO.updateSliderImageOrder(map);
+			}
+		}
+		logger.debug("updateSliderImageOrder started");
+	}
+	
+	
 }

@@ -257,4 +257,9 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO {
 	public int getQuickLinkMaxOrder(Map<String, Object> map) {
 		return (int)select("EzPersonalAdmin.EZSP_GETQUICKLINKMAXORDER", map);
 	}
+	
+
+	public void updateSliderImageOrder(Map<String, Object> map) {
+		update("EzPersonalAdmin.EZSP_SETSLIDERIMAGEITEM_ORDER", map);
+	}
 }

@@ -91,4 +91,6 @@ public interface EzPersonalAdminService {
 	String setPopupUse(String companyID, int tenantID, String itemSeq, String inUse);
 
 	void updateQuickLinkOrder(JSONArray linkOrderList, int tenantId) throws Exception;
+
+	void updateSliderImageOrder(JSONArray sliderImageList, int tenantId) throws Exception;
 }

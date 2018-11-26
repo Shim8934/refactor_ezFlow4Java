@@ -25,350 +25,371 @@
 			var itemseq = "<c:out value = '${personalPopupVO.itemSeq}' />";
 			var startdate = "<c:out value = '${personalPopupVO.startDate}' />";
 			var enddate = "<c:out value = '${personalPopupVO.endDate}' />";
-			var flag = false;
+			var flag = "<c:out value = '${flag}' />";
 			var MHTLoadComplete="";
-	        var initdate = "<c:out value = '${initDate}' />";
-	        
-	        window.onload = window_onload;
-	        function window_onload() {
-	            //compid = window.dialogArguments;
+			var initdate = "<c:out value = '${initDate}' />";
+			var skinValue = "<c:out value = '${personalPopupVO.skinValue}' />";
 
-	            if (startdate == "" && enddate == "") {
-	                var nowDate = new Date();
-	                document.getElementById("Sdatepicker").value = DateFormat(nowDate);
-	    	        document.getElementById("Edatepicker").value = DateFormat(nowDate);
-	            }
-	            
-	            if (startdate != "") {
-	            }
-	            
-	            var wPosition = "<c:out value = '${position}' />";
+			window.onload = window_onload;
+			function window_onload() {
+				//compid = window.dialogArguments;
+
+				if (startdate == "" && enddate == "") {
+					var nowDate = new Date();
+					document.getElementById("Sdatepicker").value = DateFormat(nowDate);
+					document.getElementById("Edatepicker").value = DateFormat(nowDate);
+				}
+
+				if (startdate != "") {
+				}
+
+				var wPosition = "<c:out value = '${position}' />";
 	
-	            if (wPosition == 0)
-	                document.getElementById("selectPos").selectedIndex = 0;
-	            else if (wPosition == 1)
-	                document.getElementById("selectPos").selectedIndex = 3;
-	            else if (wPosition == 2)
-	                document.getElementById("selectPos").selectedIndex = 4;
-	            else if (wPosition == 3)
-	                document.getElementById("selectPos").selectedIndex = 5;
-	            else if (wPosition == 4)
-	                document.getElementById("selectPos").selectedIndex = 6;
-	            else if (wPosition == 5)
-	                document.getElementById("selectPos").selectedIndex = 1;
-	            else if (wPosition == 6)
-	                document.getElementById("selectPos").selectedIndex = 2;
-	        }
-				        
-	        window.onresize = function () {
-        		document.getElementById("addPopEditor").style.height = document.documentElement.clientHeight - 293 + "PX";
-		    }
-	        
-		   $(function () {
-		        $("#Sdatepicker").datepicker({
-		            changeMonth: true,
-		            changeYear: true,
-		            autoSize: true,
-		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.png",
-		            buttonImageOnly: true
-		        });
-		        $("#Edatepicker").datepicker({
-		            changeMonth: true,
-		            changeYear: true,
-		            autoSize: true,
-		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.png",
-		            buttonImageOnly: true
-		        });
-		        var SDate;
-		        var EDate;
-		        if (startdate != "") {
-		            SDate = new Date(startdate);
-		            EDate = new Date(enddate);
-		        }
-		        else {
-		            SDate = new Date();
-		            EDate = new Date();
-		        }
-		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		        $("#Sdatepicker").datepicker('setDate', SDate);
-
-		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-
-		        $("#Edatepicker").datepicker('setDate', EDate);
-		    });
-			
-		    $(function () {
-		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
-		            closeText: "<spring:message code='main.t3' />",
-		            prevText: "<spring:message code='main.t0604' />",
-		            nextText: "<spring:message code='main.t0605' />",
-		            currentText: "<spring:message code='main.t0606' />",
-		            monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-		                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-		                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-		                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-		            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-		                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-		                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-		                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-		            dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-		                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-		                       "<spring:message code='main.t0627' />"],
-		            dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-				                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-				                       "<spring:message code='main.t0627' />"],
-		            dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-			                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-			                       "<spring:message code='main.t0627' />"],
-		            weekHeader: "Wk",
-		            dateFormat: "yy-mm-dd",
-		            firstDay: 0,
-		            isRTL: false,
-		            duration: 200,
-		            showAnim: "show",
-		            showMonthAfterYear: true
-		        };
-		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-		    });
-			
-			function DateFormat(obj) {
-			    var yy = String(obj.getFullYear()).substring(0, 4);
-			    if (String(obj.getMonth() + 1).length == 1) {
-			        var mm = "0" + (obj.getMonth() + 1);
-			    }
-			    else {
-			        var mm = obj.getMonth() + 1;
-			    }
-			    if (String(obj.getDate()).length == 1) {
-			        var dd = "0" + obj.getDate();
-			    }
-			    else {
-			        var dd = obj.getDate();
-			    }
-			    var date = String(yy) + "-" + String(mm) + "-" + String(dd);
-			    return date;
+				if (wPosition == 0)
+					document.getElementById("selectPos").selectedIndex = 0;
+				else if (wPosition == 1)
+					document.getElementById("selectPos").selectedIndex = 3;
+				else if (wPosition == 2)
+					document.getElementById("selectPos").selectedIndex = 4;
+				else if (wPosition == 3)
+					document.getElementById("selectPos").selectedIndex = 5;
+				else if (wPosition == 4)
+					document.getElementById("selectPos").selectedIndex = 6;
+				else if (wPosition == 5)
+					document.getElementById("selectPos").selectedIndex = 1;
+				else if (wPosition == 6)
+					document.getElementById("selectPos").selectedIndex = 2;
 			}
-			
+
+			window.onresize = function () {
+				document.getElementById("addPopEditor").style.height = document.documentElement.clientHeight - 293 + "PX";
+			}
+
+			$(function () {
+				$("#Sdatepicker").datepicker({
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImageOnly: true,
+				});
+				
+				
+
+				$("#Edatepicker").datepicker({
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImageOnly: true
+				});
+
+				var SDate;
+				var EDate;
+				if (startdate != "") {
+					SDate = new Date(startdate);
+					EDate = new Date(enddate);
+				} else {
+					SDate = new Date();
+					EDate = new Date();
+				}
+
+				$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#Sdatepicker").datepicker('setDate', SDate);
+
+				$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#Edatepicker").datepicker('setDate', EDate);
+				
+				$("#skin"+skinValue).prop("checked", "checked");
+			});
+
+			$(function () {
+				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+					closeText: "<spring:message code='main.t3' />",
+					prevText: "<spring:message code='main.t0604' />",
+					nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+					monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+								"<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+								"<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />",
+								"<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />",
+										"<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+										"<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />",
+										"<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />",
+								"<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+								"<spring:message code='main.t0627' />"],
+					dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />",
+									"<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+									"<spring:message code='main.t0627' />"],
+					dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />",
+									"<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+									"<spring:message code='main.t0627' />"],
+					weekHeader: "Wk",
+					dateFormat: "yy-mm-dd",
+					firstDay: 0,
+					isRTL: false,
+					duration: 200,
+					showAnim: "show",
+					showMonthAfterYear: true
+				};
+				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+			});
+
+			function DateFormat(obj) {
+				var yy = String(obj.getFullYear()).substring(0, 4);
+				if (String(obj.getMonth() + 1).length == 1) {
+					var mm = "0" + (obj.getMonth() + 1);
+				} else {
+					var mm = obj.getMonth() + 1;
+				}
+
+				if (String(obj.getDate()).length == 1) {
+					var dd = "0" + obj.getDate();
+				} else {
+					var dd = obj.getDate();
+				}
+
+				var date = String(yy) + "-" + String(mm) + "-" + String(dd);
+				return date;
+			}
+
 			function OK_Click() {
 				if (specialChk(document.getElementById("Title").value)) {
-			    	alert("<spring:message code='ezResource.special' />");
-			    	return;
-			   	}
-	
-				if (parseInt(document.getElementById("wWidth").value, 10) != document.getElementById("wWidth").value)
-				{
+					alert("<spring:message code='ezResource.special' />");
+					return;
+				}
+
+				if (parseInt(document.getElementById("wWidth").value, 10) != document.getElementById("wWidth").value) {
 					alert("<spring:message code = 'ezPersonal.t251' />");
 					return;
 				}
-	
-				if (parseInt(document.getElementById("wHeight").value, 10) != document.getElementById("wHeight").value)
-				{
+
+				if (parseInt(document.getElementById("wHeight").value, 10) != document.getElementById("wHeight").value) {
 					alert("<spring:message code = 'ezPersonal.t252' />");
 					return;
 				}
-	
-				if (parseInt(document.getElementById("wWidth").value, 10) > 1000)
-				{
+
+				if (parseInt(document.getElementById("wWidth").value, 10) > 1000) {
 					alert("<spring:message code = 'ezPersonal.t253' />");
 					return;
 				}
-	
-				if (parseInt(document.getElementById("wHeight").value, 10) > 800)
-				{
+
+				if (parseInt(document.getElementById("wHeight").value, 10) > 800) {
 					alert("<spring:message code = 'ezPersonal.t254' />");
 					return;
 				}
-				
-				if (parseInt(document.getElementById("wWidth").value, 10) < 100)
-				{
+
+				if (parseInt(document.getElementById("wWidth").value, 10) < 100) {
 					alert("<spring:message code = 'ezAdmin.jjh01' />");
 					return;
 				}
-	
-				if (parseInt(document.getElementById("wHeight").value, 10) < 250)
-				{
+
+				if (parseInt(document.getElementById("wHeight").value, 10) < 250) {
 					alert("<spring:message code = 'ezAdmin.jjh02' />");
 					return;
 				}
-				
+
 				if (document.getElementById("Title").value == "") {
 					alert("<spring:message code = 'ezPersonal.t148' />");
 					return;
 				}
-				
-				if (document.getElementById("Title2").value == "")
-				{
+
+				if (document.getElementById("Title2").value == "") {
 					alert("<spring:message code = 'ezPersonal.t148' />");
 					return;
 				}
-	
-				if (get_length(document.getElementById("Title").value, 10) > 250)
-				{
+
+				if (get_length(document.getElementById("Title").value, 10) > 250) {
 					alert("<spring:message code = 'ezPersonal.t149' />");
 					document.getElementById("Title").focus();
 					return;
 				}
-				
-				if (get_length(document.getElementById("Title2").value, 10) > 250)
-				{
+
+				if (get_length(document.getElementById("Title2").value, 10) > 250) {
 					alert("<spring:message code = 'ezPersonal.t149' />");
 					document.getElementById("Title2").focus();
 					return;
 				}
-				
+
 				var tmpStartDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
-			    var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+				var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+				var skinVal = $('input:radio[name="skin"]:checked').val();
 
 				$.ajax({
-		        	type : "POST",
-		        	url : "/admin/ezPersonal/savePopup.do",
-		        	async : false,
-		        	data : {companyID : compid,
-		        			itemSeq : itemseq,
-		        			title : Title.value,
-		        			title2 : Title2.value,
-		        			startDate : tmpStartDateTime,
-		        			endDate : tmpEndDateTime,
-		        			width : wWidth.value,
-		        			height : wHeight.value,
-		        			position : document.getElementById("selectPos").value,
-		        			content : message.GetEditorContent() },
-		        	dataType : "text",
-		        	success : function (result) {
-		        		if (result != "OK") {
+					type : "POST",
+					url : "/admin/ezPersonal/savePopup.do",
+					async : false,
+					data : {companyID : compid,
+							itemSeq : itemseq,
+							title : Title.value,
+							title2 : Title2.value,
+							startDate : tmpStartDateTime,
+							endDate : tmpEndDateTime,
+							width : wWidth.value,
+							height : wHeight.value,
+							position : document.getElementById("selectPos").value,
+							content : message.GetEditorContent(),
+							skinValue : skinVal
+							},
+					dataType : "text",
+					success : function (result) {
+						if (result != "OK") {
 							alert("<spring:message code = 'ezPersonal.t255' />");
-		        		} else {
-		        			if (itemseq != "") {
+						} else {
+							if (itemseq != "") {
 								alert("<spring:message code = 'ezPersonal.t256' />");
 							} else {
 								alert("<spring:message code = 'ezPersonal.t257' />");
 							}
-				            
-		        			window.opener.company_change();
+
+							try {
+								window.opener.company_change();
+								if(flag === "mod") {
+									// 수정사항 반영
+									window.opener.showPreview(2, itemseq);
+								}
+							} catch(e) {
+								window.close();
+							}
 							window.close();
-		        		}
-		        	}
-		        });
+						}
+					}
+				});
 			}
-			
+
 			function CheckTimeRevision(szTime) {
-			    if (parseInt(szTime) == 0) {
-			        szTime = "00";
-			    } else if (parseInt(szTime) > 0 && parseInt(szTime) < 10) {
-			        szTime = "0" + szTime;
-			    }
-			
-			    return szTime;
+				if (parseInt(szTime) == 0) {
+					szTime = "00";
+				} else if (parseInt(szTime) > 0 && parseInt(szTime) < 10) {
+					szTime = "0" + szTime;
+				}
+				return szTime;
 			}
-			
+
 			function html_edit() {
-			    var rtnValue = window.showModalDialog("/myoffice/ezEmail/htm/html_edit.aspx", message.GetEditorContent(), "dialogHeight:480px; dialogWidth:538px; status:no; scroll:no; help:no; edge:sunken" + GetShowModalPosition(538, 480));
-			    if (typeof (rtnValue) != "undefined") {
-			        message.SetEditorContent(rtnValue);
-			    }
+				var rtnValue = window.showModalDialog("/myoffice/ezEmail/htm/html_edit.aspx", message.GetEditorContent(), "dialogHeight:480px; dialogWidth:538px; status:no; scroll:no; help:no; edge:sunken" + GetShowModalPosition(538, 480));
+
+				if (typeof (rtnValue) != "undefined") {
+					message.SetEditorContent(rtnValue);
+				}
 			}
 			
 			function get_length(chkstr) {
-			    var length = 0;
-			    var i;
-			
-			    for (i = 0; i < chkstr.length; i++) {
-			        if (chkstr.charCodeAt(i) > 256) {
-			            length = length + 2;
-			        } else {
-			            length++;
-			        }
-			    }
-			    
-			    return length;
+				var length = 0;
+				var i;
+
+				for (i = 0; i < chkstr.length; i++) {
+					if (chkstr.charCodeAt(i) > 256) {
+						length = length + 2;
+					} else {
+						length++;
+					}
+				}
+				return length;
 			}
-			
+
 			function Editor_Complete() {
 				message.SetEditorContent("${personalPopupVO.content}");
 			}
 		</script>
 	</head>
 	<body class = "popup">
-		<xmp id="sigBody" style="display:none;"><c:out value = '${personalPopupVO.content}' /></xmp> 
+		<xmp id="sigBody" style="display:none;"><c:out value = '${personalPopupVO.content}' /></xmp>
 		<h1><spring:message code = 'ezPersonal.t258' /></h1>
 		<div id="close">
-            <ul>
-                <li><span onclick="window.close()"></span></li>
-            </ul>
-        </div>
-		<table class="content"> 
-  			<tr> 
-    			<th><spring:message code = 'ezPersonal.t259' /></th> 
-    			<td style="height:35px">
-    				<spring:message code = 'ezPersonal.t260' /><br> 
-      				<spring:message code = 'ezPersonal.t261' />
-      			</td> 
-  			</tr> 
-  			<tr> 
-    			<th><spring:message code = 'ezPersonal.t262' /></th> 
-    			<td>
-    				<spring:message code = 'ezPersonal.t263' />
-      				<input type="text" id=wWidth style="width:50px;height:22px;" value="<c:out value = '${personalPopupVO.width}' />"> &nbsp;&nbsp;&nbsp;&nbsp; <spring:message code = 'ezPersonal.t264' />
-      				<input type="text" id=wHeight style="width:50px;height:22px;" value="<c:out value = '${personalPopupVO.height}' />">
-      			</td> 
-  			</tr> 
-  			<tr> 
-    			<th><spring:message code = 'ezPersonal.tt9' /></th> 
-    			<td>
+			<ul>
+				<li><span onclick="window.close()"></span></li>
+			</ul>
+		</div>
+		<table class="content">
+			<tr> 
+				<th><spring:message code = 'ezPersonal.t259' /></th>
+				<td style="height:35px">
+					<spring:message code = 'ezPersonal.t260' /><br>
+					<spring:message code = 'ezPersonal.t261' />
+				</td> 
+			</tr> 
+			<tr> 
+				<th><spring:message code = 'ezPersonal.t262' /></th>
+				<td>
+					<spring:message code = 'ezPersonal.t263' />
+					<input type="text" id=wWidth style="width:50px;height:22px;" value="<c:out value = '${personalPopupVO.width}' />"> &nbsp;&nbsp;&nbsp;&nbsp; <spring:message code = 'ezPersonal.t264' />
+					<input type="text" id=wHeight style="width:50px;height:22px;" value="<c:out value = '${personalPopupVO.height}' />">
+				</td> 
+			</tr> 
+			<tr> 
+				<th><spring:message code = 'ezPersonal.tt9' /></th>
+				<td>
 					<select id="selectPos"> 
-						<option value="0"><spring:message code = 'ezPersonal.tt2' /></option> 
-						<option value="5"><spring:message code = 'ezPersonal.tt3' /></option> 
-						<option value="6"><spring:message code = 'ezPersonal.tt4' /></option> 
-						<option value="1"><spring:message code = 'ezPersonal.tt5' /></option> 
-						<option value="2"><spring:message code = 'ezPersonal.tt6' /></option> 
-						<option value="3"><spring:message code = 'ezPersonal.tt7' /></option> 
+						<option value="0"><spring:message code = 'ezPersonal.tt2' /></option>
+						<option value="5"><spring:message code = 'ezPersonal.tt3' /></option>
+						<option value="6"><spring:message code = 'ezPersonal.tt4' /></option>
+						<option value="1"><spring:message code = 'ezPersonal.tt5' /></option>
+						<option value="2"><spring:message code = 'ezPersonal.tt6' /></option>
+						<option value="3"><spring:message code = 'ezPersonal.tt7' /></option>
 						<option value="4"><spring:message code = 'ezPersonal.tt8' /></option>
 					</select> </td> 
-  			</tr> 
-  			<tr> 
-    			<th><spring:message code = 'ezPersonal.t154' /></th> 
-    			<td style="padding:0px">
-    				<table width="100%">
-			        	<tr class="primary">
-			          		<th><c:out value = '${langPrimary}' /></th>
-			          		<td><input type="text" name="Input" id=Title style="WIDTH:100%" value="<c:out value = '${personalPopupVO.title}' />"></td>
-			        	</tr>
-			        	<tr class="secondary">
-			          		<th><c:out value = '${langSecondary}' /></th>
-			          		<td><input type="text" id=Title2 style="WIDTH:100%" value="<c:out value = '${personalPopupVO.title2}' />"></td>
-			        	</tr>
-			    	</table>
-    			</td> 
-  			</tr> 
-  			<tr> 
-    			<th><spring:message code = 'ezPersonal.t265' /></th> 
-    			<td>
-			        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
-        			<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-			     </td>    
-  					<tr style="display:none"> 
-    					<td>
-    						<input id='_T1' class='datepicker_time' readonly> 
-      						<IMG align="absmiddle" border="0" height="16" id="img_StartTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative" width="16"> 
-      						<input id='_T2' class='datepicker_time' readonly> 
-      						<IMG align="absmiddle" border="0" height="16" id="img_EndTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative" width="16"></td> 
-  					</tr> 
-  					<tr> 
-    					<th><spring:message code = 'ezPersonal.t155' /></th> 
-   						<td id="addPopEditor" style="padding:3px; height:385px">
-    						<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0px; height:100%; width:100%; overflow:auto;border:none; margin-bottom:-3px;"></iframe>
-    					</td> 
-  					</tr>
-  				</td>
-  			</tr>
-		</table> 
-		<div class="btnpositionNew"> 
-		    <%-- <a class="imgbtn"><span onclick="html_edit()">HTML<spring:message code = 'ezPersonal.t156' /></span></a> --%>
-		    <a class="imgbtn"><span onclick="OK_Click()"><spring:message code = 'ezPersonal.t12' /></span></a>
+			</tr> 
+			<tr> 
+				<th><spring:message code = 'ezPersonal.t154' /></th>
+				<td style="padding:0px">
+					<table width="100%">
+						<tr class="primary">
+							<th><c:out value = '${langPrimary}' /></th>
+							<td><input type="text" name="Input" id=Title style="WIDTH:100%" value="<c:out value = '${personalPopupVO.title}' />"></td>
+						</tr>
+						<tr class="secondary">
+							<th><c:out value = '${langSecondary}' /></th>
+							<td><input type="text" id=Title2 style="WIDTH:100%" value="<c:out value = '${personalPopupVO.title2}' />"></td>
+						</tr>
+					</table>
+				</td> 
+			</tr>
+			<tr>
+				<th><spring:message code = 'ezPersonal.t265' /></th>
+				<td>
+					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
+					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+				</td>
+				<tr style="display:none">
+					<td>
+						<input id='_T1' class='datepicker_time' readonly>
+						<IMG align="absmiddle" border="0" height="16" id="img_StartTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative" width="16">
+						<input id='_T2' class='datepicker_time' readonly>
+						<IMG align="absmiddle" border="0" height="16" id="img_EndTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative" width="16">
+					</td>
+				</tr> 
+				<tr>
+					<th>스킨선택</th>
+					<td id="skinView" style="padding:3px; height:100px">
+						<input type="radio" name="skin" class="skins" id="skin0" value="0">
+						<label for="skin0">스킨0</label>	
+						<input type="radio" name="skin" class="skins" id="skin1" value="1">
+						<label for="skin1">스킨1</label>
+						<input type="radio" name="skin" class="skins" id="skin2" value="2">
+						<label for="skin2">스킨2</label>	
+						<input type="radio" name="skin" class="skins" id="skin3" value="3">
+						<label for="skin3">스킨3</label>
+						<input type="radio" name="skin" class="skins" id="skin4" value="4">
+						<label for="skin4">스킨4</label>	
+					</td>
+				</tr>
+				<tr>
+					<th><spring:message code = 'ezPersonal.t155' /></th>
+					<td id="addPopEditor" style="padding:3px; height:385px">
+						<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0px; height:100%; width:100%; overflow:auto;border:none; margin-bottom:-3px;"></iframe>
+					</td>
+				</tr>
+			</tr>
+		</table>
+		<div class="btnpositionNew">
+			<a class="imgbtn"><span onclick="OK_Click()"><spring:message code = 'ezPersonal.t12' /></span></a>
 		</div>
-		
+
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
