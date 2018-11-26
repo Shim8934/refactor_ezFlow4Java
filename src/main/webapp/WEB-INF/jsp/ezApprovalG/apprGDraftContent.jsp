@@ -550,6 +550,18 @@
 	                if (inputRows.item(i).disabled)
 	                    inputRows.item(i).disabled = false;
 	            }
+
+				var textAreaElements = HtmlObject.getElementsByTagName("textarea");
+				var element;
+
+				for (var i = 0; i < textAreaElements.length; i++) {
+					element = textAreaElements[i];
+
+					if (element.disabled) {
+						element.disabled = false;
+					}
+				}
+
 	            return HtmlObject;
 	        }
 	        
