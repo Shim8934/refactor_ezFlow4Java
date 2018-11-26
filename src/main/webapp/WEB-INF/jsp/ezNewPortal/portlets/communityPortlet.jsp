@@ -9,6 +9,7 @@
 <head>
 </head>
 <body>
+	<input type="hidden" id="userId" value="${userId}">
 	<article class="community box_shadow">
 		<div class="layDIV">
 			<input type="hidden" id="CommuSize" value="${CommuSize}">

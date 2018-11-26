@@ -610,7 +610,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		}
 		model.addAttribute("portletName", req.getParameter("portletName"));
 		model.addAttribute("userInfo", userInfo);
-		
+		model.addAttribute("userId", userInfo.getId());
 		
 		logger.debug("phoroBoardPortlet End");
 		
