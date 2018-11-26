@@ -47,12 +47,25 @@
 					//document.getElementById("ListCompany").selectedIndex = 0;
 					company_change();
 				}
+
 				getPopupConfig();
 				makelist();
+				setFucntion()
 				windowResize();
 			});
 
 
+			// 수정, 삭제 함수 등록
+			function setFucntion() {
+				var doc = window.document;
+				var add = doc.getElementById("add");
+				var mod = doc.getElementById("mod");
+				var del = doc.getElementById("del");
+				add.addEventListener("click", add_popup);
+				mod.addEventListener("click", mod_popup);
+				del.addEventListener("click", del_popup);
+
+			}
 			function makelist() {
 				$.ajax({
 					type : "POST",
@@ -236,40 +249,100 @@
 				makelist();
 			}
 	
-		    function add_popup() {
-		        var pheight = window.screen.availHeight;
-		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - 680) / 2;
-		        var pLeft = (pwidth - 820) / 2;
-		        var compid = document.getElementById("ListCompany").value;
-	
-		        if (browserIE) {
-		            if(pNoneActiveX == "YES") {
-		                window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=680,width=820,top=" + pTop + ",left=" + pLeft, "");
-		            } else {
-		                window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=680,width=820,top=" + pTop + ",left=" + pLeft, "");
-		            }
-		        } else {
-	                window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=680,width=820,top=" + pTop + ",left=" + pLeft, "");
-		        }
-		    }
-		    
-		    function mod_popup(popup_number) {
-		        var pheight = window.screen.availHeight;
-		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - 620) / 2;
-		        var pLeft = (pwidth - 820) / 2;
-		        var compid = document.getElementById("ListCompany").value;
-	
-		        if (CrossYN()) {
-	                window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popup_number, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
-		        } else {
-	                window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popup_number, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
-		        }
-		        //if (typeof (rtnValue) != "undefined")
-		        //    makelist();
-		    }
-	
+			var add_popup = function() {
+				var pheight = window.screen.availHeight;
+				var pwidth = window.screen.availWidth;
+				var pTop = (pheight - 680) / 2;
+				var pLeft = (pwidth - 820) / 2;
+				var compid = document.getElementById("ListCompany").value;
+
+				if (browserIE) {
+					if(pNoneActiveX == "YES") {
+						window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=680,width=820,top=" + pTop + ",left=" + pLeft, "");
+					} else {
+						window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=680,width=820,top=" + pTop + ",left=" + pLeft, "");
+					}
+				} else {
+					window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=680,width=820,top=" + pTop + ",left=" + pLeft, "");
+				}
+			}
+
+
+			var mod_popup = function() {
+				var modCnt = 0;
+				$("input:checkbox[name='checks']").each(function(){
+					if($(this).is(":checked")) {
+						popupList += this.value;
+						modCnt = modCnt + 1;
+					}
+				});
+
+				if(!popupList) {
+					alert("선택된 공지사항이 없습니다.");
+					return;
+				}
+				
+				if(modCnt>1) {
+					alert("하나의 공지사항만 선택해주세요.")
+					return;
+				}
+
+				var pheight = window.screen.availHeight;
+				var pwidth = window.screen.availWidth;
+				var pTop = (pheight - 620) / 2;
+				var pLeft = (pwidth - 820) / 2;
+				var compid = document.getElementById("ListCompany").value;
+
+				if (CrossYN()) {
+					window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popupList + "&flag=mod", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
+				} else {
+					window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popupList + "&flag=mod", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
+				} 
+				popupList = "";
+			}
+
+
+			var popupList ="";
+			var del_popup = function () {
+/* 				var row_number = $("tr[data1=" + popup_number + "] td:eq(0)").text();
+				if (!confirm(row_number + "<spring:message code = 'ezPersonal.t159' />")) {
+					return;
+				} */
+				var delCnt = 0;
+				$("input:checkbox[name='checks']").each(function(){
+					if($(this).is(":checked")) {
+						popupList += this.value + ";"
+						delCnt = delCnt + 1;
+					}
+				});
+
+				if(!popupList) {
+					alert("선택된 설문이 없습니다.");
+					return;
+				}
+
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezPersonal/delPopup.do",
+					async : false,
+					data : {"popupList" : popupList},
+					dataType : "text",
+					success : function (result) {
+						if (result == "OK") {
+							alert("<spring:message code = 'ezPersonal.t161' />");
+							if((cnt - delCnt == 0) && pageNum > 1) {
+								pageNum = pageNum -1 ;
+							}
+							itemseq=0;
+							//showPreview(isPreview, 0);
+							makelist();
+						} else {
+							alert("<spring:message code = 'ezPersonal.t160' />");
+						}
+					}
+				});
+				popupList = "";
+			}
 
 
 			var itemseq;
@@ -352,48 +425,6 @@
 		        window.open("/admin/ezPersonal/showPopup.do?itemSeq=" + popup_number +
 		            "&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
 		}
-
-
-			var popupList ="";
-			function del_popup() {
-/* 				var row_number = $("tr[data1=" + popup_number + "] td:eq(0)").text();
-				if (!confirm(row_number + "<spring:message code = 'ezPersonal.t159' />")) {
-					return;
-				} */
-				var delCnt = 0;
-				$("input:checkbox[name='checks']").each(function(){
-					if($(this).is(":checked")) {
-						popupList += this.value + ";"
-						delCnt = delCnt + 1;
-					}
-				});
-
-				if(!popupList) {
-					alert("선택된 설문이 없습니다.");
-					return;
-				}
-
-				$.ajax({
-					type : "POST",
-					url : "/admin/ezPersonal/delPopup.do",
-					async : false,
-					data : {"popupList" : popupList},
-					dataType : "text",
-					success : function (result) {
-						if (result == "OK") {
-							alert("<spring:message code = 'ezPersonal.t161' />");
-							if((cnt - delCnt == 0) && pageNum > 1) {
-								pageNum = pageNum -1 ;
-							}
-							itemseq=0;
-							//showPreview(isPreview, 0);
-							makelist();
-						} else {
-							alert("<spring:message code = 'ezPersonal.t160' />");
-						}
-					}
-				});
-			}
 
 
 			// 팝업공지 config 조회
@@ -718,9 +749,9 @@
 			</h1>
 			<div id="mainmenu">
 				<ul style="margin-top:15px">	            	
-					<li class="important"><span onClick="add_popup()">등록</span></li>
-					<li><span>수정</span></li>
-					<li><span onclick="del_popup()">삭제</span></li>
+					<li class="important"><span id="add">등록</span></li>
+					<li><span id="mod">수정</span></li>
+					<li><span id="del">삭제</span></li>
 					<div class="sub_frameIcon" style="float:right;">	
 						<div class="sub_frameIconUL" style="width:100% !important;">
 							<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>

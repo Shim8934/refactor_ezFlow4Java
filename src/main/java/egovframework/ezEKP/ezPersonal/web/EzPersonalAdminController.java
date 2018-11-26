@@ -822,11 +822,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
-		
 		String companyID = request.getParameter("companyID");
-		
 		String initDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm"), userInfo.getOffset(), false);
-		
+		String flag = request.getParameter("flag");
+
 		if (request.getParameter("itemSeq") != null) {
 			itemSeq = request.getParameter("itemSeq");
 			
@@ -845,6 +844,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("isoUTFstartDate", commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false));
 		model.addAttribute("isoUTFEndDate", commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false));
 		model.addAttribute("personalPopupVO", vo);
+		model.addAttribute("flag", flag);
 
 		logger.debug("addPopupCK ended");
 		return "admin/ezPersonal/personalAddPopupCK";
