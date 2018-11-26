@@ -6,4 +6,9 @@ var SurveyMessages = {
 	strItem      : "개",
 	strParamErr  : "파라미터가 부족합니다.",
 	strTreeErr   : "데이터 오류",
+	strNoSearch  : "검색결과가 없습니다.",
+	strExist     : "이미 추가되어 있습니다.",
+	strNoInput   : "검색어를 입력하세요.",
+	strResult    : "검색결과",
+	strEmployee  : "직원을 먼저 선택해주세요.",
 }

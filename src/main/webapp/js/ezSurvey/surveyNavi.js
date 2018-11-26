@@ -1,5 +1,5 @@
 //Baonk 2018-06-25
-var CabinetNavi = function() {
+var SurveyNavi = function() {
 	return function(data) {
 		var _blockSize      = 10;
 		var _currentPage    = 0;

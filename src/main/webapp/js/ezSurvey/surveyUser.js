@@ -4,23 +4,24 @@
 	var searchValue  = "";
 	var deptId       = "";
 	var searchMode   = "normal";
-	var cabinetNavi  = null;
+	var surveyNavi   = null;
 	var userPopup    = null;
-	initEvents();
 	
-	var userTable = new CabinetTable({
+	var userTable = new SurveyTable({
 		normal   : "bnkCabNormal2",
 		selected : "bnkCabSelect2",
 		mode     : "normal",
 		render   : processUserList
 	});
 	
-	var selectedUsers = new CabinetTable({
+	var selectedUsers = new SurveyTable({
 		normal   : "bnkCabNormal",
 		selected : "bnkCabSelect",
 		mode     : "received",
 		dblclick : removeUser
 	});
+	
+	initEvents();
 	
 	function initEvents(uId) {
 		document.onselectstart  = function () { return false;};
@@ -34,7 +35,7 @@
 			total    : SurveyMessages.strTotal
 		};
 		
-		cabinetNavi = new CabinetNavi({
+		surveyNavi = new SurveyNavi({
 			messages : naviMessages,
 			divId    : "tblPageRayer",
 			divClass : "pagenavi",
@@ -43,15 +44,16 @@
 		
 		var cabShareBttnElmt    = document.getElementById("cabShareBttn");
 		var listBttns           = cabShareBttnElmt.children;
-		listBttns[0].onclick    = function(e) {saveShareUsers();};
+		listBttns[0].onclick    = function(e) {saveSelectUsers();};
 		listBttns[1].onclick    = function(e) {closeWindow();};
+		
 		document.getElementById("surveyClose").addEventListener("click", function(e) {closeWindow()        ;}, false);
 		document.getElementById("txtSpanView").addEventListener("click", function(e) {changeListView('TXT');}, false);
 		document.getElementById("imgSpanView").addEventListener("click", function(e) {changeListView('IMG');}, false);
 		document.getElementById("addBttn"    ).addEventListener("click", function(e) {addUsers()           ;}, false);
 		document.getElementById("removeBttn" ).addEventListener("click", function(e) {removeUsers()        ;}, false);
 		document.getElementById("searchBtn"  ).addEventListener("click", function(e) {searchUserList()     ;}, false);
-		document.getElementById("addDeptBttn").addEventListener("click", function(e) {addDeptToShareList() ;}, false);
+		document.getElementById("addDeptBttn").addEventListener("click", function(e) {addDeptToSelectList();}, false);
 		document.getElementById("userInfBttn").addEventListener("click", function(e) {viewUserInfo()       ;}, false);
 		
 		var sSearchInputElmt   = document.getElementById("keyword");
@@ -84,12 +86,15 @@
 		
 		//Set file tables 
 		userTable.setTableType("files");
-		userTable.setTableElement("shareTable", "id");
+		userTable.setTableElement("selectTable", "id");
 		
 		//Set selected tables 
-		selectedUsers.setTableElement("sharedTable", "id");
+		selectedUsers.setTableElement("selectedTable", "id");
 		
-		getShareList();
+		//Load already selected users
+		var crrList = [];
+		if (window.opener.SurveyCreate) {crrList = window.opener.SurveyCreate.getUsers();}
+		loadSelectedList(crrList);
 	}
 	
 	function getSelectedList(node) {
@@ -104,10 +109,10 @@
 		var data = {};
 		
 		switch(searchMode) {
-			case "normal" : url = "/ezCabinet/getDeptMembers.do";
+			case "normal" : url = "/ezSurvey/getDeptMembers.do";
 						data = {deptId : deptId, currentPage : page};
 						break;
-			case "search" : url = "/ezCabinet/getSearchMember.do";
+			case "search" : url = "/ezSurvey/getSearchMember.do";
 						data = {srchOption : searchOpt, srchValue : searchValue, currentPage : page};
 						break;
 		}
@@ -120,7 +125,7 @@
 			async: true,
 			success : function(data) {
 				var result = data.memberList;
-				cabinetNavi.init(data.currentPage, data.memberCount, data.totalPages);
+				surveyNavi.init(data.currentPage, data.memberCount, data.totalPages);
 				document.getElementById("memberCount").innerHTML = " - [" + "<span class='cabColor'>" + data.memberCount + "명" + "</span>" + "]";
 				userTable.setDataSource(result);
 				userTable.renderTable();
@@ -132,10 +137,10 @@
 	
 	function processUserList(result, unselectClass, tableList, clickRow) {
 		var txtSpanView     = document.getElementById("txtlist").getAttribute("role");
-		tableList.className = txtSpanView == "on" ? "mainlist" : "organCabTbl";
+		tableList.className = txtSpanView == "on" ? "mainlist" : "organ-subTbl";
 		
 		if(result == null || result.length == 0) {
-			alert(CabinetMessages.strNoSearch);
+			alert(SurveyMessages.strNoSearch);
 		}
 		else {
 			for(var i = 0, len = result.length; i < len ; i++) {
@@ -230,7 +235,7 @@
 		setUserListType(flag);
 		var txtImgElmt = document.getElementById("txtlist");
 		var imgImgElmt = document.getElementById("imglist");
-		var tableList  = document.getElementById("shareTable");
+		var tableList  = document.getElementById("selectTable");
 		
 		if (flag == 'TXT') {
 			txtImgElmt.setAttribute("role", "on");
@@ -244,39 +249,34 @@
 			imgImgElmt.setAttribute("role", "on");
 			txtImgElmt.src      = "/images/kr/cm/btn_list.gif";
 			imgImgElmt.src      = "/images/kr/cm/btn_onimglist.gif";
-			tableList.className = "organCabTbl";
+			tableList.className = "organ-subTbl";
 		}
 	}
 	
 	function addUser(trElmt, mode) {
-		var selectedTable = document.getElementById("sharedTable");
+		var selectedTable = document.getElementById("selectedTable");
 		var userId        = trElmt.getAttribute("role");
 		var checkElmt     = selectedTable.querySelector("tr[role='" + userId + "'][userType='user']");
-		if (checkElmt) {if(mode) {alert(CabinetMessages.strExist);}; return;}
+		if (checkElmt) {if(mode) {alert(SurveyMessages.strExist);}; return;}
 		
 		var userName      = trElmt.getAttribute("userName");
 		var deptName      = trElmt.getAttribute("deptName");
-		addUserToShareList(userId, userName, "user", deptName, 0, 0);
+		addUserToSelectList(userId, userName, "user", deptName);
 	}
 	
 	function addUsers() {
-		var listTableElmt  = document.getElementById("shareTable");
+		var listTableElmt  = document.getElementById("selectTable");
 		var selectedTrList = listTableElmt.querySelectorAll("tr[class='bnkCabSelect2']");
 		
-		if (selectedTrList.length == 0) {addDeptToShareList();}
+		if (selectedTrList.length == 0) {addDeptToSelectList();}
 		
 		for (var i = 0, len = selectedTrList.length; i < len; i++) {
 			addUser(selectedTrList[i]);
 		}
 	}
 	
-	function removeUser(trElmt) {
-		var selectedTable = document.getElementById("sharedTable");
-		selectedTable.removeChild(trElmt);
-	}
-	
 	function removeUsers() {
-		var selectedTblElmt = document.getElementById("sharedTable");
+		var selectedTblElmt = document.getElementById("selectedTable");
 		var selectedTrList  = selectedTblElmt.querySelectorAll("tr[class='bnkCabSelect']");
 		
 		for (var i = 0, len = selectedTrList.length; i < len; i++) {
@@ -284,52 +284,18 @@
 		}
 	}
 	
-	function addUserToShareList(userId, userName, userType, deptName, permission, subPermission) {
-		var selectedTable       = document.getElementById("sharedTable");
+	function addUserToSelectList(userId, userName, userType, deptName) {
+		var selectedTable       = document.getElementById("selectedTable");
 		var newTrElmt           = document.createElement("tr");
 		var newTdElmt1          = document.createElement("td");
 		var newTdElmt2          = document.createElement("td");
-		var newTdElmt3          = document.createElement("td");
-		var newTdElmt4          = document.createElement("td");
-		var selectPerm          = document.createElement("select");
-		var selectSub           = document.createElement("select");
-		var optionPerm1         = document.createElement("option");
-		var optionPerm2         = document.createElement("option");
-		var optionSub1          = document.createElement("option");
-		var optionSub2          = document.createElement("option");
-		
-		selectPerm.addEventListener("dblclick", function(e) {e.cancelBubble = true;}, false);
-		selectSub.addEventListener("dblclick", function(e)  {e.cancelBubble = true;}, false);
-		
-		optionPerm1.textContent = CabinetMessages.strRead;
-		optionPerm2.textContent = CabinetMessages.strWrite;
-		optionSub1.textContent  = CabinetMessages.strNoSub;
-		optionSub2.textContent  = CabinetMessages.strSub;
-		
-		optionPerm1.setAttribute("value", "0");
-		optionPerm2.setAttribute("value", "1");
-		optionSub1.setAttribute("value",  "0");
-		optionSub2.setAttribute("value",  "1");
-		
-		if (permission == 0)    {optionPerm1.selected = 'selected';} else {optionPerm2.selected = 'selected';}
-		if (subPermission == 0) {optionSub1.selected = 'selected'; } else {optionSub2.selected = 'selected';}
-		
-		selectPerm.appendChild(optionPerm1);
-		selectPerm.appendChild(optionPerm2);
-		selectSub.appendChild(optionSub1);
-		selectSub.appendChild(optionSub2);
 		
 		newTdElmt1.textContent = deptName;
 		newTdElmt1.setAttribute("title", deptName);
 		newTdElmt2.textContent = userName;
 		newTdElmt2.setAttribute("title", userName);
-		newTdElmt3.appendChild(selectPerm);
-		newTdElmt4.appendChild(selectSub);
-		
 		newTrElmt.appendChild(newTdElmt1);
 		newTrElmt.appendChild(newTdElmt2);
-		newTrElmt.appendChild(newTdElmt3);
-		newTrElmt.appendChild(newTdElmt4);
 		
 		newTrElmt.className = "bnkCabNormal";
 		newTrElmt.setAttribute("role", userId);
@@ -341,16 +307,13 @@
 		selectedUsers.resetEvents();
 	}
 	
-	function onStartSimpleSearch(event) {if(event.keyCode == "13") {searchUserList() ;}}
-	function clearKeyword(inputElmt) {inputElmt.value = "";}
-	
 	function searchUserList() {
 		searchValue = document.getElementById("keyword").value;
-		if (!searchValue.replace(/\s/g,'')) {alert(CabinetMessages.strNoInput); return;}
+		if (!searchValue.replace(/\s/g,'')) {alert(SurveyMessages.strNoInput); return;}
 		
 		searchOpt  = document.getElementById("searchType").value;
 		searchMode = "search";
-		document.getElementById("searchResult").textContent = CabinetMessages.strResult;
+		document.getElementById("searchResult").textContent = SurveyMessages.strResult;
 		getUsers("1");
 	}
 	
@@ -365,32 +328,10 @@
 		});
 	}
 	
-	function getShareList() {
-		$.ajax({
-			type: "POST",
-			url: "/ezCabinet/getShareUserList.do",
-			data: {"cabinetId" : cabinetId},
-			dataType: "JSON",
-			async: false,
-			success: function(data) {
-				var code = data.code;
-				switch(code) {
-					case 0 : getDataSuccessfully(data)          ; break;
-					case 1 : alert(CabinetMessages.strParamErr) ; break;
-					case 2 : alert(CabinetMessages.strError)    ; break;
-					case 3 : alert(CabinetMessages.strPerm)     ; break;
-					default: alert(CabinetMessages.strError)    ; return;
-				}
-			},
-			error: function(error) {}
-		});
-	}
-	
-	function getDataSuccessfully(data) {
-		var selectedTable = document.getElementById("sharedTable");
+	function loadSelectedList(listUser) {
+		var selectedTable = document.getElementById("selectedTable");
 		while (selectedTable.rows.length > 1) {selectedTable.deleteRow(1);}
 		
-		var listUser = data.shareList;
 		if (!listUser || listUser.length == 0) {return;}
 		
 		for (var i = 0, len = listUser.length; i < len; i++) {
@@ -398,18 +339,16 @@
 			var userName = listUser[i]["userName"];
 			var deptName = listUser[i]["deptName"];
 			var userType = convertUserType(listUser[i]["userType"]);
-			var permiss  = listUser[i]["permission"];
-			var subPerm  = listUser[i]["subPermission"];
 			
-			addUserToShareList(userId, userName, userType, deptName, permiss, subPerm);
+			addUserToSelectList(userId, userName, userType, deptName);
 		}
 	}
 	
 	function viewUserInfo() {
-		var userTable   = document.getElementById("shareTable");
+		var userTable   = document.getElementById("selectTable");
 		var selectUsers = userTable.querySelectorAll("tr[class='bnkCabSelect2']");
 		
-		if (!selectUsers || selectUsers.length == 0) {alert(CabinetMessages.strEmployee); return;}
+		if (!selectUsers || selectUsers.length == 0) {alert(SurveyMessages.strEmployee); return;}
 		
 		if (userPopup) {userPopup.close();}
 		
@@ -424,83 +363,49 @@
 		userPopup = window.open("/ezCommon/showPersonInfo.do?id=" + userId + "&dept=" + deptId, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	}
 	
-	function addDeptToShareList() {
-		var selectedTable = document.getElementById("sharedTable");
+	function addDeptToSelectList() {
+		var selectedTable = document.getElementById("selectedTable");
 		var organTreeElmt = document.getElementById("treeView");
 		var selectedNode  = organTreeElmt.querySelector("span[class='selectedNode']");
-		if (!selectedNode) {alert(CabinetMessages.strError); return;}
+		if (!selectedNode) {alert(SurveyMessages.strError); return;}
 		
 		var deptName      = selectedNode.textContent;
 		var deptId        = selectedNode.getAttribute("role");
 		var deptLevel     = selectedNode.getAttribute("level");
 		var userType      = deptLevel != "0" ? "dept" : "comp";
 		var checkElmt     = selectedTable.querySelector("tr[role='" + deptId + "'][userType='"+ userType + "']");
-		if (checkElmt) {alert(CabinetMessages.strExist); return;}
+		if (checkElmt) {alert(SurveyMessages.strExist); return;}
 		
-		addUserToShareList(deptId, deptName, userType, deptName, 0, 0);
+		addUserToSelectList(deptId, deptName, userType, deptName);
 	}
 	
-	function closeAllPopUp() {if (userPopup) {userPopup.close() ;}}
-	
-	function saveShareUsers() {
-		var selectedUsers = document.getElementById("sharedTable");
+	function saveSelectUsers() {
+		var selectedUsers = document.getElementById("selectedTable");
 		var listTr        = selectedUsers.rows;
 		var userList      = [];
 		
 		for (var i = 1, len = listTr.length; i < len; i++) {
 			var userId   = listTr[i].getAttribute("role");
 			var userType = listTr[i].getAttribute("userType");
-			var perSlBox = listTr[i].children[2].firstElementChild;
-			var subSlBox = listTr[i].children[3].firstElementChild;
-			var permiss  = perSlBox.options[perSlBox.selectedIndex].value;
-			var subPerm  = subSlBox.options[subSlBox.selectedIndex].value;
-			userList.push({userId: userId, userType : userType, permis: permiss, subPerm: subPerm});
+			var userName = listTr[i].getAttribute("userName");
+			var deptName = listTr[i].getAttribute("deptName");
+			userList.push({userId: userId, userType : userType, userName: userName, deptName: deptName});
 		}
 		
-		$.ajax({
-			type: "POST",
-			url: "/ezCabinet/saveShareUserList.do",
-			data: {
-				"cabinetId" : cabinetId,
-				"userList"  : JSON.stringify(userList)
-			},
-			dataType: "JSON",
-			async: false,
-			success: function(data) {
-				var code = data.code;
-				switch(code) {
-					case 0 : saveSuccessfully(userList.length)  ; break;
-					case 1 : alert(SurveyMessages.strParamErr) ; break;
-					case 2 : alert(SurveyMessages.strError)    ; break;
-					case 3 : alert(SurveyMessages.strPerm)     ; break;
-					case 4 : alert(SurveyMessages.strShareErr1); break;
-					default: alert(SurveyMessages.strError)    ; return;
-				}
-			},
-			error: function(error) {
-			}
-		});
-	}
-	
-	function saveSuccessfully(totalUsers) {
-		alert(SurveyMessages.strSave);
-		
-		if (totalUsers == 0) {
-			var leftMenu = window.opener.parent.frames["left"];
-			
-			if (leftMenu) {
-				var myShareTreeH2 = leftMenu.document.getElementById("shareCabinet");
-				if (myShareTreeH2.className == "on") {
-					//Reload my share tree
-					if (leftMenu.CabUserLeft) {leftMenu.CabUserLeft.reloadMyShare(cabinetId);}
-				}
-			}
+		if (window.opener.SurveyCreate) {
+			window.opener.SurveyCreate.setUsers(userList);
+			closeWindow();
 		}
-		
-		closeWindow();
+		else {
+			alert(SurveyMessages.strError); return;
+		}
 	}
 	
 	function closeWindow() {window.close();}
+	function closeAllPopUp() {if (userPopup) {userPopup.close();}}
+	function onStartSimpleSearch(event) {if(event.keyCode == "13") {searchUserList();}}
+	function clearKeyword(inputElmt) {inputElmt.value = "";}
+	function removeUser(trElmt) {trElmt.parentElement.removeChild(trElmt);}
 	
 	function convertUserType(userType) {
 		var type = "";
@@ -513,9 +418,4 @@
 		
 		return type;
 	}
-	
-	/*return {
-		init       : initEvents,
-		reloadList : getShareList
-	};*/
 })();

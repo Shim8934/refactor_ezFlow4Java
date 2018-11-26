@@ -86,7 +86,7 @@
 											</table>
 											
 											<div id="txtlist_Layer" class="organ-txtList">
-												<table id="shareTable" class="organ-subTbl">
+												<table id="selectTable" class="organ-subTbl">
  													<tr class="trCabTxt">
 														<td><spring:message code="ezSurvey.t57" /></td>
 														<td><spring:message code="ezSurvey.t60" /></td>
@@ -114,12 +114,10 @@
 									
 								<div class="slt-listDiv">
 									<div>
-										<table id="sharedTable" class="mainlist">
+										<table id="selectedTable" class="mainlist">
 											<tr>
 												<td><spring:message code='ezSurvey.t70'/></td>
 												<td><spring:message code='ezSurvey.t71'/></td>
-												<td><spring:message code='ezSurvey.t72'/></td>
-												<td><spring:message code='ezSurvey.t73'/></td>
 											</tr>
 										</table>
 									</div>
