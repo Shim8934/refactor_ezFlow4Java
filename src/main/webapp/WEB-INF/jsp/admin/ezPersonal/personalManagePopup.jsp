@@ -150,8 +150,18 @@
 				for(i;i<cnt;i++) {
 					var seq = acList.children[1].children[i].getAttribute("data1");
 					var inuse = acList.children[1].children[i].getAttribute("inuse");
+					var jinhangFlag = acList.children[1].children[i].children[5].innerHTML;
 					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq +"'></input>";
 					acList.children[1].children[i].children[6].innerHTML = "<td class='portletInfoTD'><label class='switch' id='switch" + seq + "' inuse='" + inuse +"'><input type='checkbox'><span class='slider round'></span></label>";
+
+					if(jinhangFlag == 1) {
+						acList.children[1].children[i].children[5].innerHTML = "<img src='/images/admin/inuse.png' border='0' class='jinhang'>";
+					} else if(jinhangFlag == 0) {
+						acList.children[1].children[i].children[5].innerHTML = "<img src='/images/admin/inuse_end.png' border='0' class='jinhang'>";
+					} else {
+						acList.children[1].children[i].children[5].innerHTML = "<img src='/images/admin/inuse_schedule.png' border='0' class='jinhang'>";
+					}
+
 					if(inuse == 1) {
 						$("#switch"+seq).find("input").prop("checked", true);
 					} else {
@@ -304,15 +314,16 @@
 
 			var popupList ="";
 			var del_popup = function () {
-/* 				var row_number = $("tr[data1=" + popup_number + "] td:eq(0)").text();
-				if (!confirm(row_number + "<spring:message code = 'ezPersonal.t159' />")) {
-					return;
-				} */
 				var delCnt = 0;
+				var inUseFlag = false;
 				$("input:checkbox[name='checks']").each(function(){
 					if($(this).is(":checked")) {
 						popupList += this.value + ";"
 						delCnt = delCnt + 1;
+						var tempUse = $(this)[0].parentNode.parentNode.children[5].innerHTML;
+						if(tempUse === "1") {
+							inUseFlag = true;
+						}
 					}
 				});
 
@@ -320,6 +331,17 @@
 					alert("선택된 설문이 없습니다.");
 					return;
 				}
+
+				// 삭제 여부 확인
+				if(inUseFlag) {
+					if (!confirm("진행중인 공지사항을 삭제하시겠습니까?")){
+						return;
+					}
+				} else {
+					if (!confirm("공지사항을 삭제하시겠습니까?")){
+						return;
+					}
+ 				}
 
 				$.ajax({
 					type : "POST",
@@ -722,7 +744,13 @@
 		</script>
 		<style>
 			.portletInfoTD {width:100%;}
-	.portletInfoTD input[type='text'] {width:100%; height:27px; font-size:12px; padding:0px 0px 0px 5px; color:#393939;}
+			.portletInfoTD input[type='text'] {width:100%; height:27px; font-size:12px; padding:0px 0px 0px 5px; color:#393939;}
+			.jinhang {
+				width: 16px;
+				height: 16px;
+				margin-left: 15px;
+				margin-top: 5px;
+			}
 		</style>
 	</head>
 	<body class = "mainbody">

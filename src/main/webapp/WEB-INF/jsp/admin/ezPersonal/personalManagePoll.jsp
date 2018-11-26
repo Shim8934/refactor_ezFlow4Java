@@ -141,7 +141,13 @@
 				var i = 0;
 				for(i;i<cnt;i++) {
 					var seq = acList.children[1].children[i].children[0].innerHTML;
+					var jinhangFlag = acList.children[1].children[i].children[5].innerHTML;
 					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq +"'></input>";
+					if(jinhangFlag == 1) {
+						acList.children[1].children[i].children[5].innerHTML = "<img src='/images/admin/inuse.png' border='0' class='jinhang'>";
+					} else {
+						acList.children[1].children[i].children[5].innerHTML = "<img src='/images/admin/inuse_end.png' border='0' class='jinhang'>";
+					}
 				}
 			}
 
@@ -277,21 +283,34 @@
 			var pollList = "";
 			function delete_poll() {
 				var delCnt = 0;
+				var inUseFlag = false;
 				$("input:checkbox[name='checks']").each(function(){
 					if($(this).is(":checked")) {
 						pollList += this.value + ";"
 						delCnt = delCnt + 1;
+						var tempUse = $(this)[0].parentNode.parentNode.children[5].innerHTML;
+						if(tempUse === "1") {
+							inUseFlag = true;
+						}
 					}
 				});
-				
+
 				if(!pollList) {
 					alert("선택된 설문이 없습니다.");
 					return;
 				}
-				 
-				/*	if() {	// 진행중인 설문 삭제 할지 check // return; 	} 	*/
-				
-				// TotalCount
+
+				// 삭제 여부 확인
+				if(inUseFlag) {
+					if (!confirm("진행중인 설문을 삭제하시겠습니까?")){
+						return;
+					}
+				} else {
+					if (!confirm("설문을 삭제하시겠습니까?")){
+						return;
+					}
+ 				}
+
 				$.ajax({
 					type : "POST",
 					url : "/admin/ezPersonal/delPoll.do",
@@ -625,6 +644,14 @@
 			}
 			
 		</script>
+		<style>
+			.jinhang {
+				width: 16px;
+				height: 16px;
+				margin-left: 15px;
+				margin-top: 5px;
+			}
+		</style>
 	</head>
 	<body class = "mainbody">
 		<xml id="listviewheader" style="display: none">

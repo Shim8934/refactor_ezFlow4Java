@@ -131,12 +131,8 @@
 						ENDDATE,
 						(
 							CASE
-								WHEN 
-									(STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'))
-								THEN
-									1
-								ELSE
-									0
+								WHEN (STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')) THEN 1
+								ELSE 0
 							END
 						) PROGRESS
 					FROM
@@ -160,15 +156,11 @@
 					STARTDATE,
 					ENDDATE,
 					(
-						CASE
-							WHEN 
-								(STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'))
-							THEN
-								1
-							ELSE
-								0
-						END
-					) PROGRESS
+							CASE
+								WHEN (STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')) THEN 1
+								ELSE 0
+							END
+						) PROGRESS
 				FROM
 					TBL_PS_LIGHTPOLL 
 				WHERE
@@ -364,12 +356,9 @@
 					INUSE,
 					(
 						CASE
-							WHEN 
-								(STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'))
-							THEN
-								1
-							ELSE
-								0
+							WHEN (STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')) THEN 1
+							WHEN (STARTDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')) THEN 2
+							ELSE 0
 						END
 					) PROGRESS
 				FROM
@@ -398,12 +387,9 @@
 					INUSE,
 					(
 						CASE
-							WHEN 
-								(STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'))
-							THEN
-								1
-							ELSE
-								0
+							WHEN (STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')) THEN 1
+							WHEN (STARTDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= STARTDATE) THEN 2
+							ELSE 0
 						END
 					) PROGRESS
 				FROM
