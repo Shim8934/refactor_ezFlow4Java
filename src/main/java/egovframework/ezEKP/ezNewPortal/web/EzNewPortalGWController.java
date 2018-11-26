@@ -3109,17 +3109,15 @@ e.printStackTrace();
 			
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
 			
+			boolean isUseQuestionAuth = false;
+			
 			for (MenuInfoVO mVO : menuList) {
 				if (mVO.getMenuId()==3) {
 					useApproval = "YES";
 				} 
 				
 				if (mVO.getMenuId()==14 && useQuestion.equals("YES")) {
-					useQuestion = "YES";
-				}
-				
-				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
-					useCircular = "YES";
+					isUseQuestionAuth = true;
 				}
 				
 				if (mVO.getMenuId()==1) {
@@ -3129,6 +3127,30 @@ e.printStackTrace();
 				if (mVO.getMenuId()==2) {
 					useSchedule = "YES";
 				}
+			}
+			
+			if (isUseQuestionAuth) {
+				useQuestion = "YES";
+			} else {
+				useQuestion = "NO";
+			}
+			
+			boolean isUseCircular = false;
+			
+			for (MenuInfoVO mVO : menuList) {
+				
+				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
+					isUseCircular = true;
+					break;
+				} else {
+					isUseCircular = false;
+				}
+			}
+			
+			if (isUseCircular) {
+				useCircular = "YES";
+			} else {
+				useCircular = "NO";
 			}
 			
 			String offset = info.getOffSet();
