@@ -414,6 +414,7 @@
 				                	if( apprReuseConfig != '1' ){
 				                		setAttachInfo(pDocID, "APR", lstAttachLink);
 				                		ClearDocCellInfo();
+				                		message.SetEditable(true);
 				                	}
 			                	}
 		                    }
