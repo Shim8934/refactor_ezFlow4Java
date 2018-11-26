@@ -26,7 +26,7 @@ function view_bestCommunity(event) {
 		dataType : "text",
 		async : true,
 		url : "/ezCommunity/remote/getACL.do",
-		data : { cID	:	clubNo,
+		data : { cID	:	event.data.iClubNo,
 				 uID	:	userId
 		},
 		success: function(result){
