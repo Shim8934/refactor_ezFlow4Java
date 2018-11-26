@@ -350,7 +350,7 @@
 			INNER JOIN
 				TBL_C_MEMBERINFO B
 			ON
-				A.c_sysopid = B.userID
+				TRIM(A.c_sysopid) = TRIM(B.userID)
 			AND
 				A.tenant_id = B.tenant_id
 			WHERE

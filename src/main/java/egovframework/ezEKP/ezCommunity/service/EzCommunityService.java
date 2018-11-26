@@ -285,7 +285,8 @@ public interface EzCommunityService {
 
 	public int adminMemberListOkGetE(String code, String cID, int tenantID) throws Exception;	
 
-	public int bbsListGet1(String bName, String primary, String pKeyword, String sRadio, int tenantID) throws Exception;
+	/* 2018-11-23 홍승비 - 커뮤니티 공지사항에 companyID 조건 추가 */
+	public int bbsListGet1(String bName, String primary, String pKeyword, String sRadio, String companyID, int tenantID) throws Exception;
 	
 	public int getReservedItemListCount(String id, int tenantID) throws Exception;
 	

@@ -135,7 +135,7 @@ public class EzCommunityAdminController {
 			titleName = ezCommunityService.getBoardTitleName(bName, code, userInfo.getTenantId());
 		}
 		
-		int keywordCount = ezCommunityService.bbsListGet1(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId());
+		int keywordCount = ezCommunityService.bbsListGet1(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId());
 		int totalPage = keywordCount / comNoPerPage;
 		
 		if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {

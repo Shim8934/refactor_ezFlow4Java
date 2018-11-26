@@ -1071,7 +1071,7 @@
                       AND 
                       	ITEMID <> #v_PITEMID#
                       AND 
-                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE #v_PUPPERITEMIDTREE# || '%'
                       AND 
                       	STARTDATE <= #nowDate#
                       AND 
@@ -1105,7 +1105,7 @@
                       AND 
                       	ITEMID <> #v_PITEMID#
                       AND 
-                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE #v_PUPPERITEMIDTREE# || '%'
                       AND 
                       	STARTDATE <= #nowDate#
                       AND 
@@ -2917,7 +2917,7 @@
        		WHERE  
        			tenant_id = #v_TENANTID#
        		AND
-       			TO_CHAR(UpperItemIDTree) LIKE CONCAT(CONCAT('%', #v_pItemID#), '%')
+       			TO_CHAR(UpperItemIDTree) LIKE '%' || #v_pItemID# || '%'
             AND 
             	ItemID <> #v_pItemID#
 		]]>
@@ -3671,7 +3671,7 @@
             AND 
             	parentwritedate = #v_PPARENTWRITEDATE#
             AND 
-            	TO_CHAR(upperitemidtree) LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+            	TO_CHAR(upperitemidtree) LIKE #v_PUPPERITEMIDTREE# || '%'
             AND 
             	startdate <= #nowDate#
             AND 
@@ -4111,7 +4111,7 @@
 			AND 
 				BoardID = #boardID# 
 			AND 
-				ItemID like CONCAT(#itemTreeID#, '%')
+				ItemID like #itemTreeID# || '%'
 		]]>
 	</select>
 	

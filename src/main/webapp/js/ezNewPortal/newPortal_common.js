@@ -549,7 +549,7 @@ function getBirthdayEmployeesList() {
 			
 			$("#curMon").text(birth);
 			
-			if (birthdayList.length > 0 && birthdayList != null) {
+			if (birthdayList != null && birthdayList != undefined && birthdayList.length > 0) {
 				$("#nodata_NewBirth").css("display", "none");
 				$("#birthcont").css("display", "");
 				
