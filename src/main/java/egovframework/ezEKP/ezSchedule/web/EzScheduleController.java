@@ -742,10 +742,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 		List<ScheduleGroupListVO> mList = ezScheduleService.getGroupMemberList(groupID, loginVO.getPrimary(),loginVO.getTenantId(), offSetMin ,loginVO.getCompanyID());
 		
-		for (ScheduleGroupListVO sg : mList) {
-			logger.debug("결과가 어떻게 나오나~~ : " + sg.getMemberId());
-		}
-		
 		model.addAttribute("userInfo", loginVO);
 		model.addAttribute("groupID", groupID);
 		model.addAttribute("memberList", mList);
@@ -1242,7 +1238,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String userID = request.getParameter("userID");
-		String companyID = request.getParameter("companyID");
+		String companyID = "";
+		
+		if(request.getParameter("companyID") != null && !request.getParameter("companyID").equals("")) {
+			companyID = request.getParameter("companyID");
+		}
+		else {
+			companyID = loginSimpleVO.getCompanyID();
+		}
 		
 		String cumDeptID = ezScheduleService.getCumDeptId(userID,loginSimpleVO.getTenantId(), companyID);
 		
@@ -2137,6 +2140,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         	}
         }
         
+        model.addAttribute("companyID", companyID);
         model.addAttribute("scheduleInfo", vo);        
         model.addAttribute("_date", _date);
         model.addAttribute("_scheduleid", _scheduleid);
