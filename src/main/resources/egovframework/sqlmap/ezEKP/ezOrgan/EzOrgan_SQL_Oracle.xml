@@ -216,10 +216,17 @@
                				TBL_DEPTMASTER 
               			WHERE
               				EXTENSIONATTRIBUTE1 = #v_CN#
+        ]]>
+              			<isEmpty property="isOrgan">
+              				<![CDATA[
+		              			AND
+		              				EXTENSIONATTRIBUTE2 <> CN
+		              		]]>
+              			</isEmpty>
               			AND
               				TENANT_ID = #v_TENANT_ID#	 ) A
         	ORDER BY A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
-		]]>
+		
 	</select> 
 
  	<select id="EzOrganDAO.getDeptSubTreeInfo" parameterClass="Map" resultMap="deptSubTreeInfo">
