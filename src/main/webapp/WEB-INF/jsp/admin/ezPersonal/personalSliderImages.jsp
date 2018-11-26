@@ -93,10 +93,14 @@
 		    		sliderIsUse = result[i].isUse;
 		    		
 		    		sliderHTML += "<li class = 'sliderList' id = 'sliderList"+i+"' data = '"+sliderID+"' >";
-		    		sliderHTML += "<div class = 'slider-header'>";
-		    		sliderHTML += "<span class = 'cancelNewSliderBtn' id='cancelNewSliderBtn' data = '"+sliderID+"' onclick='deleteSlider(this)'>";
+		    		if(sliderIsUse == 1){
+		    			sliderHTML += "<div class = 'slider-header' style= background-color : #3d8fea;'>";
+		    		}else {
+		    			sliderHTML += "<div class = 'slider-header' style= 'background-color : #f4f4f4; border : 1px solid #e7e7e7; color = #b1b1b1;'>";
+		    		}
+		    		sliderHTML += "<span class = 'cancelNewSliderBtn' id='cancelNewSliderBtn' data2 = '"+sliderID+"' onclick='deleteSlider(this)'>";
 			    	sliderHTML += "<img src='/images/close_xBtn.png'></span>";
-			    	sliderHTML += "<span class= 'addNewSliderBttn' id= 'addNewSliderBttn"+i+"' data = '"+sliderID+"' onclick='modifySlider(this)'>";
+			    	sliderHTML += "<span class= 'addNewSliderBttn' id= 'addNewSliderBttn"+i+"' data3 = '"+sliderID+"' onclick='modifySlider(this)'>";
 			    	sliderHTML += "<img src='/images/email/popup_icon.gif' ></span>";
 		    		sliderHTML += "</div>";
 		    		sliderHTML += "<dt><span class='imagePage'><IMG src ="+sliderImagePath+" style='width:225px;height:210px'/></dt>";
@@ -111,9 +115,9 @@
 		    		sliderHTML += "<td class ='sliderRegDate' id= 'sliderRegDate' data7 ='"+sliderRegDate+"'>"+sliderRegDate+"</td></tr>"
 		    		
 		    		if(sliderIsUse == 1){
-		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' checked='checked')' onchange='toggleButton("+sliderIsUse+")'><span class='slider round'></label></td>";
+		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' checked='checked' data7='"+sliderIsUse+"' onchange='toggleButton(this)'><span class='slider round'></label></td>";
 		    		}else {
-		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' onchange='toggleButton("+sliderIsUse+")'><span class='slider round'></label></td>";
+		    			sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' data7='"+sliderIsUse+"' onchange='toggleButton(this)'><span class='slider round'></label></td>";
 		    		}
 		    		
 		    		sliderHTML += "</tr></table>";
@@ -126,7 +130,7 @@
 		    	
 		    	//슬라이더 추가
 		    	document.getElementById("addSlider").onclick = btn_Select;
-		    	//슬라이더 수정
+		    	
 		    	//슬라이더 사용 유무
 		    	for (var i = 0; i < sliderCnt; i++) {
 		    		var checkbox = document.getElementById("toggleButton");
@@ -141,22 +145,26 @@
 		    		}
 		    		
 		    		
-		    		event_statuschange(choose, sliderId); 
+		    		//event_statuschange(choose, sliderId); 
 		    	}
 		    
 		    }
-		
-		    function toggleButton(check){
-		    	//버튼 클릭할 때(보류)
-		    	console.log($(".sliderList").find(".slider-header"));
-				$(".sliderList").find(".slider-header").each(function(){
-					if(check = "1"){
-	 		    		$(this).css("background-color", "#2196f3");
-	 		    	} else{
-	 		    		$(this).css("background-color", "#f4f4f4").css("border", "1px solid #e7e7e7").css("color", "#b1b1b1");
-	 		    	}
-		    	})
-	 		    	
+			//슬라이드 이미지 사용여부 토글 버튼
+		    function toggleButton(obj){
+		    	var sliderIsUse = obj.checked;
+		    	var sliderList = obj.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+		    	var sliderID = sliderList.getAttribute("data");
+		    	var sliderHeader = sliderList.querySelector(".slider-header");
+		    	
+				if(sliderIsUse){
+	 		    	sliderHeader.style.backgroundColor = "#2196f3";
+	 		    } else{
+	 		    	sliderHeader.style.backgroundColor = "#f4f4f4";
+	 		    	sliderHeader.style.border = "1px solid #e7e7e7";
+	 		    	sliderHeader.style.color =  "#b1b1b1";
+	 		    }
+				
+				event_statuschange(sliderIsUse, sliderID);
 		    }
 		    
 		     var tempid = "";
@@ -440,11 +448,11 @@
 		        });
 		        
 		    }
-		    
+		    //슬라이드 아이디 16진수 랜덤으로 등록
 		    function S4() {
 		        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 		    }
-	
+			//슬라이드 16진수 아이디 반환
 		    function GetGUID() {
 		        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 		    }
@@ -454,7 +462,7 @@
 		    }  */
 		    //슬라이더 수정 함수
 		    function modifySlider(obj) {
-		    	var sliderID = obj.getAttribute("data");
+		    	var sliderID = obj.getAttribute("data3");
 		    	var sliderList = obj.parentNode.parentNode;
 		    	var name1 = sliderList.querySelector("#sliderName").getAttribute("data4");
 		    	var name2 = sliderList.querySelector("#sliderName2").getAttribute("data5");
@@ -490,10 +498,10 @@
 		    	
 		    	$("#cancelNewSliderBtn-modify").on("click", addCancel);
 		    }
-	
+			//슬라이드 카드 삭제
 		    function deleteSlider(obj) {
 		    	var slideList = obj.parentNode.parentNode;
-		    	var sliderID = obj.getAttribute("data");
+		    	var sliderID = obj.getAttribute("data2");
 		    	console.log(sliderID);
 		    	
 		        if (sliderID == "") {
@@ -622,7 +630,7 @@
 		        parent.replaceChild(item1, itemtmp);
 		        itemtmp = null;
 		    } */
-	
+			//슬라이드 이미지 사용여부
 		    function event_statuschange(check, sliderId) {
 		       var isUse = "";
 		         
@@ -630,7 +638,7 @@
 			      isUse = '1';
 			   } else {
 			      isUse = '0';
-			   } 
+			   }  
 			    
 			        
 		        $.ajax({
