@@ -246,7 +246,15 @@
 								alert("<spring:message code = 'ezPersonal.t257' />");
 							}
 
-							window.opener.company_change();
+							try {
+								window.opener.company_change();
+								if(flag === "mod") {
+									// 수정사항 반영
+									window.opener.showPreview(2, itemseq);
+								}
+							} catch(e) {
+								window.close();
+							}
 							window.close();
 						}
 					}
