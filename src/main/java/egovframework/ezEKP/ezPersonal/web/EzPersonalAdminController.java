@@ -368,13 +368,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			mode = request.getParameter("mode");
 		}
 		
-		/*model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()));
-		model.addAttribute("primary", userInfo.getPrimary());
-		model.addAttribute("mode", mode);
-		model.addAttribute("host", userInfo.getServerName());
-		model.addAttribute("lang", userInfo.getLang());
-		return "admin/ezPersonal/personalAddQuickLink";*/
-		
 		JSONObject json = new JSONObject();
 		json.put("strUserLang", commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()));
 		json.put("primary", userInfo.getPrimary());
@@ -928,12 +921,30 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 이달의우수사원메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/employeeOfMonth.do")
-	public String employeeOfMonth(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String employeeOfMonth(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("employeeOfMonth started");
-
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		List<PersonalEmpMonthVO> list = ezPersonalAdminService.getEmpMonth(userInfo.getCompanyID(), userInfo.getTenantId());
+		logger.debug("employeeOfMonth ended");
+		return "admin/ezPersonal/personalEmployeeOfMonth";
+	}
+	
+	/**
+	 * 초기화면 이달의우수사원메뉴 리스트 호출 함수
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/getEmployeeOfMonthList.do", produces = "application/json; charset=utf-8")
+	@ResponseBody
+	public JSONObject getEmployeeOfMonthList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getEmployeeOfMonthList started");
+		
+		String year = request.getParameter("year");
+		logger.debug("year: " + year);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<PersonalEmpMonthVO> list = ezPersonalAdminService.getEmpMonth(year, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		for (PersonalEmpMonthVO vo : list) {
 			if (userInfo.getPrimary().equals("2")) {
@@ -942,12 +953,20 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 				vo.setDescription(vo.getDescription2());
 				vo.setCompany(vo.getCompany2());
 			}
+			
+			if (vo.getFilePath() != null && !vo.getFilePath().equals("")) {
+				vo.setFilePath("/ezCommon/downloadAttach.do?&filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + vo.getFilePath());
+			}
+			else{
+				vo.setFilePath("/images/kr/main/bestEmployee_pic_none.png");
+			}
 		}
 		
-		model.addAttribute("list", list);
-
-		logger.debug("employeeOfMonth ended");
-		return "admin/ezPersonal/personalEmployeeOfMonth";
+		JSONObject json = new JSONObject();
+		json.put("list", list);
+		
+		logger.debug("getEmployeeOfMonthList ended");
+		return json;
 	}
 	
 	/**

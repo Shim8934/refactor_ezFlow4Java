@@ -421,15 +421,32 @@
 	<select id="EzPersonalAdmin.EZSP_GETEMPLOYEEMONTH" parameterClass="Map"		resultClass="PersonalEmpMonthVO">
 		<![CDATA[
 			SELECT
-				* 
-        	FROM
-        		TBL_PS_EMPMONTH 
-       		WHERE
-       			PHYSICALDELIVERYOFFICENAME = #v_pCompanyID#
-       		AND
-       			TENANT_ID = #tenantID#	
-        	ORDER BY
-        		DATE_ DESC
+				A.CN ,
+				A.DISPLAYNAME ,
+				A.DISPLAYNAME2 ,
+				A.DEPARTMENT ,
+				A.DESCRIPTION ,
+				A.DESCRIPTION2 ,
+				A.COMPANY ,
+				A.COMPANY2 ,
+				A.TITLE ,
+				A.TITLE2 ,
+				B.EXTENSIONATTRIBUTE2 FILEPATH ,
+				A.TERM
+			FROM
+				TBL_PS_EMPMONTH A
+			JOIN
+				TBL_USERMASTER B
+			ON
+				A.CN = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			WHERE
+				A.PHYSICALDELIVERYOFFICENAME = #v_pCompanyID#
+			AND
+				A.TENANT_ID = #tenantID#
+			AND
+				TERM LIKE CONCAT(#v_pYear#, '%')
 		]]>
 	</select>
 	

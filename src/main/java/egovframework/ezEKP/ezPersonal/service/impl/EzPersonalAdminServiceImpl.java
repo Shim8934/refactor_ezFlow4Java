@@ -531,11 +531,12 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public List<PersonalEmpMonthVO> getEmpMonth(String companyID, int tenantID) throws Exception {
+	public List<PersonalEmpMonthVO> getEmpMonth(String year, String companyID, int tenantID) throws Exception {
 		logger.debug("getEmpMonth started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("v_pYear", year);
 		map.put("v_pCompanyID", companyID);
 		map.put("tenantID", tenantID);
 

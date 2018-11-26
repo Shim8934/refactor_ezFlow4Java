@@ -24,7 +24,7 @@ public interface EzPersonalAdminService {
 	
 	List<PersonalPopupVO> getPopupList(String companyID, int totalCount, int pageSize, int start, int tenantID) throws Exception;
 	
-	List<PersonalEmpMonthVO> getEmpMonth(String companyID, int tenantID) throws Exception;
+	List<PersonalEmpMonthVO> getEmpMonth(String year, String companyID, int tenantID) throws Exception;
 	
 	List<PersonalLightPollVO> getPollResult(String itemSeq, int tenantID) throws Exception;
 	
