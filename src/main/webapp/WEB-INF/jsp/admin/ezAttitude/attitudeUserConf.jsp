@@ -115,6 +115,21 @@
 	    	function company_change() {
 	    		pCompanyId = $("select[name=ListCompany]").val();
 	    		
+    			//검색초기화
+    			$("#searchUserName").val("");
+    			$("#searchDeptName").val("");
+    			$("#searchTitle").val("");
+    			$("#searchStartTime").val("");
+    			$("#searchEndTime").val("");
+    			$("[type='radio'][value='']").prop("checked", true);
+    			
+    			searchUserName = "";
+    			searchDeptName = "";
+    			searchTitle = "";
+    			searchStartTime = "";
+    			searchEndTime = "";
+    			searchGubun = "";
+	    		
 	    		getUserConfList();
 	    	}
 	    	

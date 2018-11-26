@@ -302,6 +302,10 @@ var strLangSharedMailbox01 = "共有メールボックス";
 var strLangHSB01 = "この掲示は";
 var strLangHSB02 = "で照会できます。";
 
+/* 2018-11-22 이효진 주소록 등록, 수정 시 메시지 통일  번역 -> message property */
+var strLangLHJ01 = "部署の管理者のみ作成できます。";
+var strLangLHJ02 = "会社の管理者のみ作成できます。";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

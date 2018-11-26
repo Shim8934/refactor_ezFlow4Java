@@ -876,8 +876,6 @@ function GetListInfo(HeaderObject, ContentObject) {
     
     pStart = (pageCount * (curPage - 1));
     pEnd = ((curPage) * pageCount) - 1;
-    if (pEnd > MaxCount && MaxCount != 0)
-        pEnd = MaxCount;
         
     if (pStart >= MaxCount && pEnd >= MaxCount && MaxCount != 0) {
         curPage = Math.ceil(MaxCount / pageCount);
