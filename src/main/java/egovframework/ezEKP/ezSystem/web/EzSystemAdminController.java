@@ -248,8 +248,15 @@ public class EzSystemAdminController {
 				resultList.add(j++, vo);
 			}
 		}
+		
+		String isMasterAdmin = "";
+		if (userInfo.getRollInfo().indexOf("c=1") != -1) { // 전체관리자
+			isMasterAdmin = "y";
+		}
+		
 		model.addAttribute("list", resultList);
 		model.addAttribute("companyId", companyId);
+		model.addAttribute("isMasterAdmin", isMasterAdmin);
 		
 		logger.debug("ended systemLoginHistMain controller.");
 		
@@ -288,12 +295,17 @@ public class EzSystemAdminController {
 			startRow = -1;
 		}
 		
-		//String companyId = req.getParameter("companyId"); // 선택된 회사
+		/*
+		 * 2018.11.21 김수아
+		 * (전체관리자) 회사선택 후 선택한 회사의 로그인 히스토리가 나오도록 변경 
+		 */
+		String companyId = req.getParameter("companyId"); // 선택된 회사
+		
 		/*
 		 * 2017.07.26 강민석
 		 * 로그인 히스토리에는 자신의 회사만 나오도록 수정
 		 * */
-		String companyId = userInfo.getCompanyID();
+		//String companyId = userInfo.getCompanyID();
 		logger.debug("companyId : " + companyId);
 
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -925,33 +937,37 @@ public class EzSystemAdminController {
 	
 	// 세션 있는지 확인 후 없으면 추가
 	// 2018-11-16일 추가
-	@RequestMapping(value="/admin/ezSystem/insertUseSession.do", produces="application/json;charset=utf-8")
+	@RequestMapping(value="/admin/ezSystem/checkUseSession.do", produces="application/json;charset=utf-8")
 	@ResponseBody
-	public String insertUseSession(Locale locale, @ModelAttribute("loginVO") LoginVO loginVO, HttpSession session, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-		logger.debug("insertUseSession started");
+	public String checkUseSession(Locale locale, @ModelAttribute("loginVO") LoginVO loginVO, HttpSession session, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		logger.debug("checkUseSession started");
+
 		String serverName = request.getServerName();
-        int tenantId = loginService.getTenantId(serverName);
-		
-		Map<String, Object> sessionParam = new HashMap<String, Object>();
-		String confName = "useSession"; 
-		sessionParam.put("tenantID", tenantId);
-		sessionParam.put("confName", confName);
+        
+		int tenantId = loginService.getTenantId(serverName);
 		
 		String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
 		
 		// tenant_config 테이블에 useSession row 없으면 추가
-		if (useSession.equals("") || "".equals(useSession)) {
-			String regdate = commonUtil.getTodayUTCTime("");
+		if (useSession.equals("")) {
+			
+			Map<String, Object> sessionParam = new HashMap<String, Object>();
+			
+			sessionParam.put("tenantID", tenantId);
+			sessionParam.put("confName", "useSession");
     		sessionParam.put("property_value", "0");
 			sessionParam.put("description", "세션 유지 시간. 단, 0이면 세션 사용 안함");
 			sessionParam.put("config_name", "세션 유지 시간");
-			sessionParam.put("regdate", regdate);
 			sessionParam.put("config_type", "일반");
+			
+			String regdate = commonUtil.getTodayUTCTime("");
+			
+			sessionParam.put("regdate", regdate);
 			
 			ezCommonService.insertUseSession(sessionParam);
     	}
 		
-		logger.debug("insertUseSession ended");
+		logger.debug("checkUseSession ended");
 		return useSession;
 	}
 

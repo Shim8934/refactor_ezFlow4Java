@@ -894,7 +894,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
-		String reuseTitleYN = ezCommonService.getTenantConfig("reuseTitleYN", userInfo.getTenantId());
+		String apprReuseConfig = ezCommonService.getTenantConfig("apprReuseConfig", userInfo.getTenantId());
 		
 		String docSN = "";
 		String beforeUrl = "";
@@ -1014,7 +1014,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("beforeUrl", beforeUrl);
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
-		model.addAttribute("reuseTitleYN", reuseTitleYN);
+		model.addAttribute("apprReuseConfig", apprReuseConfig);
 		model.addAttribute("nonElecRec", nonElecRec);
 		
 		logger.debug("draftui ended.");
@@ -4394,6 +4394,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String[] fileTypes = xmlDom.getElementsByTagName("PTYPEINFO").item(0).getTextContent().split(separators);
 		String[] filePaths = xmlDom.getElementsByTagName("PPATHINFO").item(0).getTextContent().split(separators);
 		String[] fileNames = xmlDom.getElementsByTagName("PFILEINFO").item(0).getTextContent().split(separators);
+		
+		String serverPrimaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
 		ZipOutputStream zout = null;
 		InputStream inpStream = null;
@@ -4454,12 +4456,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		 zipFilePath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + zipFileName + ".zip";
+		zipFilePath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + zipFileName + ".zip";
 
 		byte[] buffer = new byte[1024];
 
-		 zout = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
-		zout.setEncoding("EUC-KR");
+		zout = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
+		
+		if (serverPrimaryLang.equals("3")) {
+			zout.setEncoding("shift-jis");
+		} else {
+			zout.setEncoding("EUC-KR");
+		}
 		
 		for (int k = 0; k < filePaths.length; k++) {
 			String fileName = fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
@@ -6081,10 +6088,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
         }
         subQuery = ReturnQuery;
         
-        if ( xmlDom.getDocumentElement().getChildNodes().getLength() > 24)
+        if ( xmlDom.getDocumentElement().getChildNodes().getLength() > 22)
         {
-            if (xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent().trim() != "")
-                subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent();
+            if (xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent().trim() != "")
+                subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent();
         }
          result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftfrom, draftto, apprfrom,
                 papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, searchStatus,

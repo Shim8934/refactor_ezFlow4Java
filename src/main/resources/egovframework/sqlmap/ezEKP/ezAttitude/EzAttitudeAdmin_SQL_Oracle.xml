@@ -130,77 +130,92 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigList" parameterClass="Map" resultClass="AttitudeUserConfigVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				TBL_USERMASTER.cn AS userid,
-				DECODE(TBL_ATTITUDE_USER_CONF.work_starttime, null, SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_CONF.work_starttime || ':00', 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5), SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_USER_CONF.work_starttime || ':00', 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5)) AS workstarttime,
-				DECODE(TBL_ATTITUDE_USER_CONF.work_endtime, null, SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_CONF.work_endtime || ':00', 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5), SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_USER_CONF.work_endtime || ':00', 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5)) AS workendtime,
-				TBL_USERMASTER.title$primary$ AS usertitle,
-				TBL_USERMASTER.displayname$primary$ AS userName,
-				TBL_USERMASTER.description$primary$ AS deptName,
-				CASE 
-					WHEN (TBL_ATTITUDE_USER_CONF.work_starttime is null OR TBL_ATTITUDE_USER_CONF.work_endtime is null) 
-					THEN '0' 
-					ELSE '1' 
-				END AS gubun
+				*
 			FROM
-				TBL_USERMASTER
-			LEFT JOIN
-				TBL_ATTITUDE_USER_CONF
-			ON 
-				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_USER_CONF.tenant_id
-			AND
-				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_USER_CONF.company_id
-			AND
-				TBL_USERMASTER.cn = TBL_ATTITUDE_USER_CONF.user_id
-			LEFT JOIN
-				TBL_ATTITUDE_CONF
-			ON
-				TBL_USERMASTER.tenant_id = TBL_ATTITUDE_CONF.tenant_id
-			AND
-				TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_CONF.company_id
-			WHERE
-				TBL_USERMASTER.tenant_id = #tenantId#
-			AND 
-				cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
-		]]>
-		
-		<isNotEmpty prepend="AND" property="companyId">
-			TBL_USERMASTER.physicaldeliveryofficename = #companyId#
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchDeptName">
-			TBL_USERMASTER.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchUserName">
-			TBL_USERMASTER.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchTitle">
-			TBL_USERMASTER.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchStartTime">
-			<![CDATA[
-				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) >= #searchStartTime#
-			]]>
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchEndTime">
-			<![CDATA[
-				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) <= #searchEndTime#
-			]]>
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchGubun">
-			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL, '0', '1') = #searchGubun#
-		</isNotEmpty>
-		
-		<isNotEmpty property="orderCell">
-			ORDER BY
-				$orderCell$ $orderOption$,
-				TBL_USERMASTER.displayname$primary$
-		</isNotEmpty>
-		<isEmpty property="orderCell">
-			ORDER BY TBL_USERMASTER.displayname$primary$
-		</isEmpty>
-		
-		<![CDATA[
-			LIMIT #limit#, #listSize#
-		]]>
+				(
+				SELECT
+					T1.*,
+					ROWNUM AS RN
+				FROM(
+					SELECT
+						TBL_USERMASTER.cn AS userid,
+						DECODE(TBL_ATTITUDE_USER_CONF.work_starttime, null, SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_CONF.work_starttime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5), SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_USER_CONF.work_starttime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5)) AS workstarttime,
+						DECODE(TBL_ATTITUDE_USER_CONF.work_endtime, null, SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_CONF.work_endtime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5), SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_USER_CONF.work_endtime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5)) AS workendtime,
+						TBL_USERMASTER.title$primary$ AS usertitle,
+						TBL_USERMASTER.displayname$primary$ AS userName,
+						TBL_USERMASTER.description$primary$ AS deptName,
+						CASE 
+							WHEN (TBL_ATTITUDE_USER_CONF.work_starttime is null OR TBL_ATTITUDE_USER_CONF.work_endtime is null) 
+							THEN '0' 
+							ELSE '1' 
+						END AS gubun
+					FROM
+						TBL_USERMASTER
+					LEFT JOIN
+						TBL_ATTITUDE_USER_CONF
+					ON 
+						TBL_USERMASTER.tenant_id = TBL_ATTITUDE_USER_CONF.tenant_id
+					AND
+						TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_USER_CONF.company_id
+					AND
+						TBL_USERMASTER.cn = TBL_ATTITUDE_USER_CONF.user_id
+					LEFT JOIN
+						TBL_ATTITUDE_CONF
+					ON
+						TBL_USERMASTER.tenant_id = TBL_ATTITUDE_CONF.tenant_id
+					AND
+						TBL_USERMASTER.physicaldeliveryofficename = TBL_ATTITUDE_CONF.company_id
+					WHERE
+						TBL_USERMASTER.tenant_id = #tenantId#
+					AND 
+						cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+				]]>
+				
+				<isNotEmpty prepend="AND" property="companyId">
+					TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchDeptName">
+					TBL_USERMASTER.description$primary$ LIKE '%' || #searchDeptName# || '%'
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchUserName">
+					TBL_USERMASTER.displayname$primary$ LIKE '%' || #searchUserName# || '%'
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchTitle">
+					TBL_USERMASTER.title$primary$ LIKE '%' || #searchTitle# || '%'
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchStartTime">
+					<![CDATA[
+						DECODE(TBL_ATTITUDE_USER_CONF.work_starttime, null, SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_CONF.work_starttime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5), SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_USER_CONF.work_starttime , 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5)) >= #searchStartTime#
+					]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchEndTime">
+					<![CDATA[
+						DECODE(TBL_ATTITUDE_USER_CONF.work_endtime, null, SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_CONF.work_endtime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5), SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_USER_CONF.work_endtime , 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5)) <= #searchEndTime#
+					]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchGubun">
+					#searchGubun# = CASE 
+								        WHEN (TBL_ATTITUDE_USER_CONF.work_starttime is null OR TBL_ATTITUDE_USER_CONF.work_endtime is null) 
+								        THEN '0' 
+								        ELSE '1' 
+								    END 
+				</isNotEmpty>
+				
+				<isNotEmpty property="orderCell">
+					ORDER BY
+						$orderCell$ $orderOption$,
+						TBL_USERMASTER.displayname$primary$
+				</isNotEmpty>
+				<isEmpty property="orderCell">
+					ORDER BY TBL_USERMASTER.displayname$primary$
+				</isEmpty>
+				<![CDATA[
+					) T1
+				) WHERE 
+					   RN >= #startRow#
+				  AND
+				  	   RN <= #endRow#
+				]]>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeUserConfigCount" parameterClass="Map" resultClass="String">
@@ -232,26 +247,30 @@
 		]]>
 		
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			TBL_USERMASTER.description LIKE CONCAT('%', #searchDeptName#, '%')
+			TBL_USERMASTER.description LIKE '%' || #searchDeptName# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			TBL_USERMASTER.displayname LIKE CONCAT('%', #searchUserName#, '%')
+			TBL_USERMASTER.displayname LIKE '%' || #searchUserName# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			TBL_USERMASTER.title LIKE CONCAT('%', #searchTitle#, '%')
+			TBL_USERMASTER.title LIKE '%' || #searchTitle# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchStartTime">
 			<![CDATA[
-				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) >= #searchStartTime#
+				DECODE(TBL_ATTITUDE_USER_CONF.work_starttime, null, SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_CONF.work_starttime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5), SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_USER_CONF.work_starttime , 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5)) >= #searchStartTime#
 			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchEndTime">
 			<![CDATA[
-				IFNULL(SUBSTR(DATE_ADD(CONCAT((date_format(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) <= #searchEndTime#
+				DECODE(TBL_ATTITUDE_USER_CONF.work_endtime, null, SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_CONF.work_endtime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5), SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_USER_CONF.work_endtime , 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5)) <= #searchEndTime#
 			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchGubun">
-			IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL, '0', '1') = #searchGubun#
+			#searchGubun# = CASE 
+						        WHEN (TBL_ATTITUDE_USER_CONF.work_starttime is null OR TBL_ATTITUDE_USER_CONF.work_endtime is null) 
+						        THEN '0' 
+						        ELSE '1' 
+						    END 
 		</isNotEmpty>
 	</select>
 
@@ -263,7 +282,7 @@
 				TENANT_ID AS tenantId,
 				TYPE_NAME$primary$ AS typeName,
 				ISUSE AS isuse,
-				IFNULL(PARENT_ID,'') AS parentId,
+				NVL(PARENT_ID,'') AS parentId,
 				FORM_ID AS formId,
 				ISADD AS isAdd,
 				IMG_PATH AS imgPath
@@ -316,7 +335,7 @@
 				TYPE_NAME AS typeName,
 				TYPE_NAME2 AS typeName2,
 				ISUSE AS isuse,
-				IFNULL(PARENT_ID,'') AS parentId,
+				NVL(PARENT_ID,'') AS parentId,
 				FORM_ID AS formId,
 				ISADD AS isAdd
 			FROM
@@ -333,7 +352,7 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeTypeMaxTypeId" parameterClass="Map" resultClass="string">
 		<![CDATA[
 			SELECT 
-			    MAX(cast(substring(TYPE_ID,2) as unsigned)) + 1 AS MAXTYPEID
+			    MAX(To_number(SUBSTR(TYPE_ID,2))) + 1 AS MAXTYPEID
 			FROM
 			    TBL_ATTITUDE_TYPE
 			WHERE
@@ -376,9 +395,9 @@
 	<insert id="ezAttitudeAdminDAO.insertAttitudeType" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_ATTITUDE_TYPE
-				(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, PARENT_ID, ISADD, ISDEL, IMG_PATH, FORM_ID)
+				("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, PARENT_ID, ISADD, ISDEL, IMG_PATH, FORM_ID)
 			VALUES
-				(#typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, 'A05', '1', '0', 'refresh', (SELECT
+				(SEQ_TBL_ATTITUDE_TYPE.nextval, #typeId#, #companyId#, #tenantId#, #typeName#, #typeName2#, 'A05', '1', '0', 'refresh', (SELECT
 																										  	  A.FORM_ID
 																									  	   FROM
 																										      TBL_ATTITUDE_TYPE A
@@ -395,9 +414,13 @@
 		<isEqual property="userType" compareValue="user">
 			<![CDATA[
 				SELECT
-					IFNULL(SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(NOW(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_starttime), INTERVAL #offsetMin# minute), 12, 5)) AS workstarttime,
-					IFNULL(SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(NOW(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_USER_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5), SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', TBL_ATTITUDE_CONF.work_endtime), INTERVAL #offsetMin# minute), 12, 5)) AS workendtime,
-					IF(TBL_ATTITUDE_USER_CONF.work_starttime IS NULL OR TBL_ATTITUDE_USER_CONF.work_endtime IS NULL, '0', '1') AS gubun
+					DECODE(TBL_ATTITUDE_USER_CONF.work_starttime, null, SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_CONF.work_starttime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5), SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_USER_CONF.work_starttime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5)) AS workstarttime,
+					DECODE(TBL_ATTITUDE_USER_CONF.work_endtime, null, SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_CONF.work_endtime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5), SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD') || ' ' || TBL_ATTITUDE_USER_CONF.work_endtime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5)) AS workendtime,
+					CASE 
+						WHEN (TBL_ATTITUDE_USER_CONF.work_starttime is null OR TBL_ATTITUDE_USER_CONF.work_endtime is null) 
+						THEN '0' 
+						ELSE '1' 
+					END AS gubun
 				FROM
 					TBL_USERMASTER
 				LEFT JOIN
@@ -426,8 +449,8 @@
 		<isEqual property="userType" compareValue="list">
 			<![CDATA[
 				SELECT
-					SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', work_starttime), INTERVAL #offsetMin# minute), 12, 5) AS workstarttime,
-					SUBSTR(DATE_ADD(CONCAT((DATE_FORMAT(now(),'%Y-%m-%d')), ' ', work_endtime), INTERVAL #offsetMin# minute), 12, 5) AS workendtime,
+					SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD') || ' ' || work_starttime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') ,12 ,5) AS workstarttime,
+    				SUBSTR(TO_CHAR(TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD') || ' ' || work_endtime, 'YYYY-MM-DD HH24:MI:SS') + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') ,12 ,5) AS workendtime,
 					'0' AS gubun
 				FROM
 					TBL_ATTITUDE_CONF
@@ -441,60 +464,51 @@
 		
 	<!-- 조직도 만들기 위한 쿼리 -->
    <select id="ezAttitudeAdminDAO.selectDeptList" parameterClass="map" resultMap="deptViewMap">
-		<![CDATA[
-			SELECT 
-		    	D.CN AS ID,
-		        IF(D.EXTENSIONATTRIBUTE1=NULL
-		 ]]>
-		 <isNotEmpty property="companyId">
-		 <![CDATA[
-		 	OR D.CN=#companyId#
-		 ]]>
-		 </isNotEmpty>
-		 <![CDATA[
-		 	,'##',D.EXTENSIONATTRIBUTE1) AS PARENT,
-		 	D.EXTENSIONATTRIBUTE2 AS COMPANYID,
-		    D.DISPLAYNAME$primary$ AS TEXT,
-		    CASE D.CN
-		    	WHEN D.EXTENSIONATTRIBUTE2 THEN 'COMP'
-		        ELSE 'DEPT'
-		    END AS ISCOMP,
-		    CASE D.CN
-		    	WHEN U.DEPARTMENT THEN 'YES'
-		        ELSE 'NO'
-		    END AS MYDEPT
-		    FROM
-		        TBL_DEPTMASTER D
-		    LEFT JOIN 
-		        TBL_USERMASTER U
-		    ON 
-		       	D.TENANT_ID = U.TENANT_ID
-		    WHERE 
-		       	D.TENANT_ID = #tenantId#
-		    AND 
-		     	U.CN = #userId#
-		    AND
-		       	U.TENANT_ID = #tenantId#
-		    AND 
-		       (
-					((substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 0
-				AND 
-		       		D.extensionattribute2 = U.PHYSICALDELIVERYOFFICENAME))
-				OR
-					(substr(U.EXTENSIONATTRIBUTE1, 3, 1) = 1)
-		       )
-		]]>
-		     AND
-		     	NOT((D.EXTENSIONATTRIBUTE1 IS NULL OR D.EXTENSIONATTRIBUTE1 = '') AND D.CN <![CDATA[<>]]> D.EXTENSIONATTRIBUTE2)
-		<isNotEmpty property="companyId">
-		<![CDATA[
-			AND 
-				D.EXTENSIONATTRIBUTE2 = #companyId#
-		]]>
-		</isNotEmpty>
-		<![CDATA[
-		    ORDER BY lpad(ifnull(D.EXTENSIONATTRIBUTE15, 0), 6, 0), D.DISPLAYNAME$primary$			
-		]]>
+		select 
+			d.CN as id,
+			case 
+				when d.extensionattribute1 = null
+				<isNotEmpty property="companyId">
+					or d.CN = #companyId#
+				</isNotEmpty>
+					then N'##'
+				else d.EXTENSIONATTRIBUTE1 
+			end as parent,
+			d.extensionattribute2 as companyId,
+			d.DISPLAYNAME$lang$ as text,
+			case 
+				when d.CN = d.extensionattribute2 then 'comp'
+				else 'dept'
+			end as isComp,
+			case 
+				when d.CN = u.DEPARTMENT then 'yes'
+				else 'no'
+			end as myDept
+		from
+			tbl_deptmaster d 
+		left join 
+			tbl_usermaster u 
+		on 
+			d.tenant_id = u.TENANT_ID
+		where 
+			d.tenant_id = #tenantId#
+		and 
+		 u.CN = #userId#
+		and
+			u.tenant_id = #tenantId#
+		and 
+			(
+				((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0 
+			and 
+				d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
+			or
+				(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
+			)
+			<isNotEmpty property="companyId">
+			and 
+				d.EXTENSIONATTRIBUTE2 = #companyId#
+			</isNotEmpty>
+		ORDER BY lpad(nvl(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
    </select>
    
 	<!-- 조직도 부서별 사원 리스트 -->
@@ -508,7 +522,7 @@
 				DEPARTMENT AS DEPT_ID,
 				DESCRIPTION$lang$ AS DEPT_NAME,
 				EXTENSIONATTRIBUTE2 AS USER_IMG,
-				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15
+				SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') AS EXTENSIONATTRIBUTE15
 			FROM 
 				TBL_USERMASTER
 			WHERE
@@ -519,7 +533,7 @@
 			    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#) 
 			<isNotEqual property="key" compareValue="DEPARTMENT">
 				AND 
-					$key$ like concat('%', #value#, '%')
+					$key$ like '%' || #value# || '%'
 			</isNotEqual>
 			<isEqual property="key" compareValue="DEPARTMENT">
 				AND 
@@ -534,18 +548,18 @@
 				B.DEPTID AS DEPT_ID,
 				C.DISPLAYNAME$lang$ AS DEPT_NAME,
 				A.EXTENSIONATTRIBUTE2 AS USER_IMG,
-				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.EXTENSIONATTRIBUTE15, '0'))), IFNULL(A.EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15               	
+				SUBSTR('0000000000', 1, 10 - LENGTH(NVL(A.EXTENSIONATTRIBUTE15, '0'))) || NVL(A.EXTENSIONATTRIBUTE15, '0') AS EXTENSIONATTRIBUTE15               	
 			FROM
 				TBL_ADDJOBMASTER B
 			JOIN
 				TBL_USERMASTER A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
 			JOIN
-				TBL_DEPTMASTEr C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+				TBL_DEPTMASTER C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
 			WHERE
 				B.TENANT_ID = #tenantId#
 			<isNotEqual property="key" compareValue="DEPARTMENT">
 				AND 
-					A.$key$ like concat('%', #value#, '%')
+					A.$key$ like '%' || #value# || '%'
 			</isNotEqual>
 			<isEqual property="key" compareValue="DEPARTMENT">
 				AND 
@@ -557,26 +571,30 @@
 		
 	<insert id="ezAttitudeAdminDAO.saveAttitudeUserConfig" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO TBL_ATTITUDE_USER_CONF
-				(user_id, tenant_id, work_starttime, work_endtime, company_id, dept_id)
-			SELECT
-				#selectedUserId# AS user_id,
-				#tenantId# AS tenant_id,
-				#workStartTime# AS work_starttime,
-				#workEndTime# AS work_endtime,
-				physicaldeliveryofficename AS company_id,
-				department AS dept_id
-			FROM
-				TBL_USERMASTER
-			WHERE
-				cn = #selectedUserId#
-			AND
-				tenant_id = #tenantId#
-			AND
-				physicaldeliveryofficename  = #companyId#
-			ON DUPLICATE KEY UPDATE
-				work_starttime = #workStartTime#,
-				work_endtime = #workEndTime#
+			MERGE INTO TBL_ATTITUDE_USER_CONF TA1
+			USING (
+			        SELECT
+			            #selectedUserId# AS user_id,
+			            #tenantId# AS tenant_id,
+			            #workStartTime# AS work_starttime,
+			            #workEndTime# AS work_endtime,
+			            physicaldeliveryofficename AS company_id,
+			            department AS dept_id
+			        FROM
+			            TBL_USERMASTER
+			        WHERE
+			            cn = #selectedUserId#
+			        AND
+			            tenant_id = #tenantId#
+			        AND
+			            physicaldeliveryofficename  = #companyId#
+			) TA2
+			ON  (TA1.USER_ID = TA2.USER_ID AND TA1.TENANT_ID = TA2.TENANT_ID)
+			WHEN MATCHED THEN
+			    UPDATE SET TA1.WORK_STARTTIME = #workStartTime#, TA1.WORK_ENDTIME = #workEndTime#
+			WHEN NOT MATCHED THEN
+			    INSERT (TA1.USER_ID, TA1.TENANT_ID, TA1.WORK_STARTTIME, TA1.WORK_ENDTIME, TA1.COMPANY_ID, TA1.DEPT_ID)
+			    VALUES (TA2.USER_ID, TA2.TENANT_ID, TA2.WORK_STARTTIME, TA2.WORK_ENDTIME, TA2.COMPANY_ID, TA2.DEPT_ID)
 		]]>
 	</insert>
    
@@ -596,26 +614,30 @@
    
 	<insert id="ezAttitudeAdminDAO.saveAttitudeDeptConfig" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO TBL_ATTITUDE_USER_CONF
-				(user_id, tenant_id, work_starttime, work_endtime, company_id, dept_id)
-			SELECT
-				cn AS user_id,
-				#tenantId# AS tenant_id,
-				#workStartTime# AS work_starttime,
-				#workEndTime# AS work_endtime,
-				physicaldeliveryofficename AS company_id,
-				department AS dept_id
-			FROM
-				TBL_USERMASTER
-			WHERE
-				department = #selectDeptId#
-			AND
-				tenant_id = #tenantId#
-			AND
-				physicaldeliveryofficename  = #companyId#
-			ON DUPLICATE KEY UPDATE
-				work_starttime = #workStartTime#,
-				work_endtime = #workEndTime#
+			MERGE INTO TBL_ATTITUDE_USER_CONF TA1
+			USING (
+			    SELECT
+			        cn AS user_id,
+			        #tenantId# AS tenant_id,
+			        #workStartTime# AS work_starttime,
+			        #workEndTime# AS work_endtime,
+			        physicaldeliveryofficename AS company_id,
+			        department AS dept_id
+			    FROM
+			        TBL_USERMASTER
+			    WHERE
+			        department = #selectDeptId#
+			    AND
+			        tenant_id = #tenantId#
+			    AND
+			        physicaldeliveryofficename  = #companyId#
+			) TA2
+			ON (TA1.USER_ID = TA2.USER_ID AND TA1.TENANT_ID = TA2.TENANT_ID)
+			WHEN MATCHED THEN
+			    UPDATE SET TA1.WORK_STARTTIME = #workStartTime#, TA1.WORK_ENDTIME = #workEndTime#
+			WHEN NOT MATCHED THEN
+			    INSERT (TA1.USER_ID, TA1.TENANT_ID, TA1.WORK_STARTTIME, TA1.WORK_ENDTIME, TA1.COMPANY_ID, TA1.DEPT_ID)
+			    VALUES (TA2.USER_ID, TA2.TENANT_ID, TA2.WORK_STARTTIME, TA2.WORK_ENDTIME, TA2.COMPANY_ID, TA2.DEPT_ID)
 		]]>
 	</insert>
    
@@ -635,96 +657,107 @@
    
    	<select id="ezAttitudeAdminDAO.getAttitudeList2" parameterClass="Map" resultClass="AdminAttitudeVO">
 		<![CDATA[
-			SELECT 
-				A.attitude_id AS attitudeid,
-				A.company_id AS companyid,
-				A.tenant_id AS tenantid,
-				A.writer_id AS writerid,
-				A.dept_id AS deptid,
-				DATE_ADD(A.start_date, INTERVAL #offsetMin# minute) AS startdate,
-                SUBSTR(DATE_ADD(A.start_date, INTERVAL #offsetMin# minute), 12) AS starttime,
-                IFNULL(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute),'') AS enddate,
-                IFNULL(SUBSTR(DATE_ADD(A.end_date, INTERVAL #offsetMin# minute), 12),'') AS endtime,
-				A.modappl,
-				A.ip,
-				A.date_type AS datetype,
-				A.type_id AS typeid,
-				B.type_name$primary$ AS typename,
-				C.displayname$primary$ AS username,
-                C.description$primary$ AS deptname,
-                C.title$primary$ AS usertitle
+			SELECT
+				*
 			FROM
-				TBL_ATTITUDE A
-			JOIN
-				TBL_ATTITUDE_TYPE B
-			ON
-				A.type_id = B.type_id
-			AND
-				A.company_id = B.company_id
-			AND
-				A.tenant_id = B.tenant_id
-			JOIN
-				TBL_USERMASTER C
-			ON
-				A.writer_id = C.cn
-			AND
-				A.tenant_id = C.tenant_id
-			WHERE
-				A.tenant_id = #tenantId#
-			AND
-				A.company_id = #companyId#
-			AND
+			(
+				SELECT
+					T1.*,
+					ROWNUM AS RN
+				FROM
 				(
-					(A.start_date >= #searchStartDate# AND A.start_date <= #searchEndDate#) 
-				OR
-					(A.end_date >= #searchStartDate# AND A.end_date < #searchEndDate#) 
-				OR
-					(A.start_date < #searchStartDate# AND A.end_date >= #searchEndDate#)
-				)
-		]]>
-			
-		<isNotEmpty property="searchAttitudeType">	
-			<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
-				<![CDATA[
-					A.type_id = #searchAttitudeType#
+					SELECT 
+						A.attitude_id AS attitudeid,
+						A.company_id AS companyid,
+						A.tenant_id AS tenantid,
+						A.writer_id AS writerid,
+						A.dept_id AS deptid,
+						to_char(A.start_date + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS startdate,
+		                SUBSTR(TO_CHAR(A.start_date + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12) AS starttime,
+		                DECODE(A.end_date, NULL, '',  TO_CHAR(A.end_date + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') ) AS enddate,
+		                DECODE(A.end_date, NULL, '',  SUBSTR(TO_CHAR(A.end_date + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12)) AS endtime,
+						A.modappl,
+						A.ip,
+						A.date_type AS datetype,
+						A.type_id AS typeid,
+						B.type_name$primary$ AS typename,
+						C.displayname$primary$ AS username,
+		                C.description$primary$ AS deptname,
+		                C.title$primary$ AS usertitle
+					FROM
+						TBL_ATTITUDE A
+					JOIN
+						TBL_ATTITUDE_TYPE B
+					ON
+						A.type_id = B.type_id
+					AND
+						A.company_id = B.company_id
+					AND
+						A.tenant_id = B.tenant_id
+					JOIN
+						TBL_USERMASTER C
+					ON
+						A.writer_id = C.cn
+					AND
+						A.tenant_id = C.tenant_id
+					WHERE
+						A.tenant_id = #tenantId#
+					AND
+						A.company_id = #companyId#
+					AND
+						(
+							(A.start_date >= to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.start_date <= to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS')) 
+						OR
+							(A.end_date >= to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.end_date < to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS')) 
+						OR
+							(A.start_date < to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.end_date >= to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
+						)
 				]]>
-			</isNotEqual>
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchDeptId">
-			C.department = #searchDeptId#
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchDeptName">
-			C.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchUserName">
-			C.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchTitle">
-			C.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
-		</isNotEmpty>
-		<iterate prepend="AND C.department IN" property="deptIdList" open="(" close=")" conjunction=",">
-			#deptIdList[]#
-		</iterate>
-		<isNotEmpty property="orderCell">
-			ORDER BY
-				$orderCell$ $orderOption$,
-				startdate DESC,
-				enddate DESC,
-				starttime DESC
-		</isNotEmpty>
-		<isEmpty property="orderCell">
-			ORDER BY
-				startdate DESC,
-				enddate DESC,
-				starttime DESC
-		</isEmpty>
-		
-		<isNotEmpty property="listSize">
-			<![CDATA[
-				LIMIT
-					#limit#, #listSize#
-			]]>
-		</isNotEmpty>
+					
+				<isNotEmpty property="searchAttitudeType">	
+					<isNotEqual prepend="AND" property="searchAttitudeType" compareValue="total">
+						<![CDATA[
+							A.type_id = #searchAttitudeType#
+						]]>
+					</isNotEqual>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchDeptId">
+					C.department = #searchDeptId#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchDeptName">
+					C.description$primary$ LIKE '%' || #searchDeptName# || '%'
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchUserName">
+					C.displayname$primary$ LIKE '%' || #searchUserName# || '%'
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchTitle">
+					C.title$primary$ LIKE '%' || #searchTitle# || '%'
+				</isNotEmpty>
+				<iterate prepend="AND C.department IN" property="deptIdList" open="(" close=")" conjunction=",">
+					#deptIdList[]#
+				</iterate>
+				<isNotEmpty property="orderCell">
+					ORDER BY
+						$orderCell$ $orderOption$,
+						startdate DESC,
+						enddate DESC,
+						starttime DESC
+				</isNotEmpty>
+				<isEmpty property="orderCell">
+					ORDER BY
+						startdate DESC,
+						enddate DESC,
+						starttime DESC
+				</isEmpty>
+				) T1
+			)
+			<isNotEmpty prepend="WHERE" property="startRow">
+				<![CDATA[
+					RN >= #startRow#
+				AND
+					RN <= #endRow#
+				]]>
+			</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeCount2" parameterClass="Map" resultClass="String">
@@ -753,11 +786,11 @@
 				A.company_id = #companyId#
 			AND
 				(
-					(A.start_date >= #searchStartDate# AND A.start_date <= #searchEndDate#) 
+					(A.start_date >= to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.start_date <= to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				OR
-					(A.end_date >= #searchStartDate# AND A.end_date < #searchEndDate#) 
+					(A.end_date >= to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.end_date < to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				OR
-					(A.start_date < #searchStartDate# AND A.end_date >= #searchEndDate#)
+					(A.start_date < to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.end_date >= to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				)
 		]]>
 		<isNotEmpty property="searchAttitudeType">	
@@ -771,13 +804,13 @@
 			C.DEPARTMENT = #searchDeptId#
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			C.description LIKE CONCAT('%', #searchDeptName#, '%')
+			C.description LIKE '%' || #searchDeptName# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			C.displayname LIKE CONCAT('%', #searchUserName#, '%')
+			C.displayname LIKE '%' || #searchUserName# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			C.title LIKE CONCAT('%', #searchTitle#, '%')
+			C.title LIKE '%' || #searchTitle# || '%'
 		</isNotEmpty>
 		<iterate prepend="AND C.department IN" property="deptIdList" open="(" close=")" conjunction=",">
 			#deptIdList[]#
@@ -792,7 +825,7 @@
                 A.description$primary$ AS deptname,
                 A.title$primary$ AS usertitle,
                 A.mail AS useremail,
-                SUBSTR(DATE_ADD(#searchStartDate#, INTERVAL #offsetMin# minute), 1, 10) as startdate
+                SUBSTR(TO_CHAR(TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') + (#offsetMin#/(60*24)), 'YYYY-MM-DD HH24:MI:SS'), 1, 10) as startdate
 			FROM
 				TBL_USERMASTER A
 			LEFT JOIN
@@ -806,11 +839,11 @@
 					C.company_id = #companyId#
 				AND
 					(
-						(C.start_date >= #searchStartDate# AND C.start_date <= #searchEndDate#)
+						(C.start_date >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND C.start_date <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 					OR
-						(C.end_date >= #searchStartDate# AND C.end_date < #searchEndDate#)
+						(C.end_date >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND C.end_date < TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 					OR
-						(C.start_date < #searchStartDate# AND C.end_date >= #searchEndDate#)
+						(C.start_date < TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND C.end_date >= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 					)) B
 			ON
 				A.cn = B.writer_id
@@ -825,13 +858,13 @@
 		]]>
 			
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			A.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
+			A.description$primary$ LIKE '%' || #searchDeptName# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			A.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
+			A.displayname$primary$ LIKE '%' || #searchUserName# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			A.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
+			A.title$primary$ LIKE '%' || #searchTitle# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptId">
 			A.department = #searchDeptId#
@@ -848,9 +881,9 @@
 			    B.DISPLAYNAME$primary$ AS userName,
 			    B.TITLE$primary$ AS jikwi,
 			    B.DESCRIPTION$primary$ AS deptName,
-			    group_concat(A.AUTH_DEPT_ID order by C.DISPLAYNAME$primary$) AS authDeptId,
-			    group_concat(C.DISPLAYNAME$primary$ order by C.DISPLAYNAME$primary$) AS authDeptName,
-    			group_concat(A.AUTH_TYPE order by C.DISPLAYNAME$primary$) AS authType
+			    LISTAGG(A.AUTH_DEPT_ID, ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authDeptId,
+			    LISTAGG(cast(C.DISPLAYNAME$primary$ as varchar(500)), ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authDeptName,
+    			LISTAGG(A.AUTH_TYPE, ',') WITHIN GROUP (order by C.DISPLAYNAME$primary$) AS authType
 			FROM 
 				TBL_ATTITUDE_AUTH A
 			INNER JOIN
@@ -870,7 +903,7 @@
 			AND
 				A.TENANT_ID = #tenantId#
 			GROUP BY 
-				A.USER_ID
+				A.USER_ID, B.DISPLAYNAME, B.TITLE, B.DESCRIPTION
 			ORDER BY
 				userName
 		]]>
@@ -889,41 +922,44 @@
 		
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList" parameterClass="Map" resultClass="AttitudeAuthorVO">
 		<![CDATA[
-			SELECT
-				D.DISPLAYNAME$primary$ AS deptName,
-				D.CN AS deptId,
-				'no' AS mine,
-				A.AUTH_TYPE AS authType
-			FROM 
-				TBL_DEPTMASTER D
-			INNER JOIN 
-				TBL_ATTITUDE_AUTH A 
-			ON
-				D.CN = A.AUTH_DEPT_ID 
-			AND
-				A.TENANT_ID = D.TENANT_ID
-			WHERE 
-				A.USER_ID = #userId#
-			AND 
-				A.TENANT_ID = #tenantId#
-			UNION
-			SELECT
-				D.DISPLAYNAME$primary$ AS deptName,
-				D.CN AS deptId,
-				'yes' AS mine,
-				'' AS authType
-			FROM 
-				TBL_DEPTMASTER D
-			LEFT JOIN 
-				TBL_USERMASTER U 
-			ON
-				D.CN = U.DEPARTMENT 
-			AND
-				U.TENANT_ID = D.TENANT_ID
-			WHERE 
-				U.CN = #userId#
-			AND 
-				U.TENANT_ID = #tenantId#
+		select * from 
+			(
+				SELECT
+					D.DISPLAYNAME$primary$ AS deptName,
+					D.CN AS deptId,
+					'no' AS mine,
+					TO_CHAR(A.AUTH_TYPE) AS authType
+				FROM 
+					TBL_DEPTMASTER D
+				INNER JOIN 
+					TBL_ATTITUDE_AUTH A 
+				ON
+					D.CN = A.AUTH_DEPT_ID 
+				AND
+					A.TENANT_ID = D.TENANT_ID
+				WHERE 
+					A.USER_ID = #userId#
+				AND 
+					A.TENANT_ID = #tenantId#
+				UNION
+				SELECT
+					D.DISPLAYNAME$primary$ AS deptName,
+					D.CN AS deptId,
+					'yes' AS mine,
+					'' AS authType
+				FROM 
+					TBL_DEPTMASTER D
+				LEFT JOIN 
+					TBL_USERMASTER U 
+				ON
+					D.CN = U.DEPARTMENT 
+				AND
+					U.TENANT_ID = D.TENANT_ID
+				WHERE 
+					U.CN = #userId#
+				AND 
+					U.TENANT_ID = #tenantId#
+			)
 			ORDER BY 
 				deptName
 		]]>
@@ -1086,23 +1122,23 @@
 				displayname AS deptname,
 				cn AS deptid,
 				'yes' AS mine,
-				IFNULL((SELECT
-					A.auth_type AS authtype
-				FROM
-					TBL_ATTITUDE_AUTH A
-				WHERE
-					A.auth_dept_id = (SELECT
-										department
-									FROM
-										TBL_USERMASTER
-									WHERE
-										TBL_USERMASTER.tenant_id = #tenantId#
-									AND
-										TBL_USERMASTER.physicaldeliveryofficename = #companyId#
-									AND
-										TBL_USERMASTER.cn = #userId#)
-				AND
-					A.user_id = #userId#), 'R') AS authtype
+				NVL((SELECT
+							A.auth_type AS authtype
+						FROM
+							TBL_ATTITUDE_AUTH A
+						WHERE
+							A.auth_dept_id = (SELECT
+												department
+											FROM
+												TBL_USERMASTER
+											WHERE
+												TBL_USERMASTER.tenant_id = #tenantId#
+											AND
+												TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+											AND
+												TBL_USERMASTER.cn = #userId#)
+						AND
+							A.user_id = #userId#), 'R') AS authtype
 			FROM
 				TBL_DEPTMASTER
 			WHERE
@@ -1125,23 +1161,23 @@
 				D.DISPLAYNAME AS dept_name,
 				D.CN AS dept_id,
 				'add' AS mine,
-				IFNULL((SELECT
-					A.auth_type AS authtype
-				FROM
-					TBL_ATTITUDE_AUTH A
-				WHERE
-					A.auth_dept_id = (SELECT
-										department
-									FROM
-										TBL_USERMASTER
-									WHERE
-										TBL_USERMASTER.tenant_id = #tenantId#
-									AND
-										TBL_USERMASTER.physicaldeliveryofficename = #companyId#
-									AND
-										TBL_USERMASTER.cn = #userId#)
-				AND
-					A.user_id = #userId#), 'R') AS authtype
+				NVL((SELECT
+							A.auth_type AS authtype
+						FROM
+							TBL_ATTITUDE_AUTH A
+						WHERE
+							A.auth_dept_id = (SELECT
+												department
+											FROM
+												TBL_USERMASTER
+											WHERE
+												TBL_USERMASTER.tenant_id = #tenantId#
+											AND
+												TBL_USERMASTER.physicaldeliveryofficename = #companyId#
+											AND
+												TBL_USERMASTER.cn = #userId#)
+						AND
+							A.user_id = #userId#), 'R') AS authtype
 			FROM 
 				TBL_DEPTMASTER D
 			RIGHT JOIN 
@@ -1164,22 +1200,27 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeUserStatistics" parameterClass="Map" resultMap="userStatistics">
 <!-- 		<iterate conjunction=";"> -->
 		<![CDATA[
-			SELECT ifnull(SUM(to_days(
-								IF(
-									date_add(A.END_DATE, INTERVAL +#offsetMin# minute) > date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T'), 
-			                        date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T'), 
-			                        date_add(IFNULL(A.END_DATE, A.START_DATE), INTERVAL +#offsetMin# minute)
-								   )
-							   ) 
-					   -
-					   to_days(
-								IF(
-									date_add(A.START_DATE, INTERVAL +#offsetMin# minute) < date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T'), 
-			                        date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T'), 
-			                        date_add(A.START_DATE, INTERVAL +#offsetMin# minute)
-								   )
-							   )
-						) + COUNT(A.TYPE_ID), 0) AS COUNT,
+			SELECT 
+				NVL((to_date((CASE
+								WHEN 
+									(A.END_DATE + (#offsetMin#/(60*24))) > TO_DATE((#year# || '-' || #months# || #endTime#), 'YYYY-MM-DD HH24:MI:SS') 
+								THEN 
+									TO_DATE((#year# || '-' || #months# || #endTime#), 'YYYY-MM-DD HH24:MI:SS') 
+		                        ELSE 
+		                        	(NVL(A.END_DATE, A.START_DATE) + (#offsetMin#/(60*24)))
+		                     END
+							 ), 'YYYY/MM/DD')
+						    
+				  			 -
+					to_date((CASE
+								WHEN
+									(A.START_DATE + (#offsetMin#/(60*24))) < TO_DATE((#year# || '-' || #months# || #startTime#), 'YYYY-MM-DD HH24:MI:SS'), 
+		                        THEN
+		                        	TO_DATE((#year# || '-' || #months# || #startTime#), 'YYYY-MM-DD HH24:MI:SS'), 
+		                        ELSE
+		                        	(A.START_DATE + (#offsetMin#/(60*24)))
+		                     END
+						   	 ), 'YYYY/MM/DD')) + COUNT(A.TYPE_ID), 0) AS COUNT,
 			       A.TYPE_ID,
 			       #months# AS STAT_MONTH
 			FROM   
@@ -1200,14 +1241,14 @@
 		<![CDATA[
 			AND    
 				(
-					(A.START_DATE >= date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T') and A.START_DATE <= date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T')) 
+					(A.START_DATE >= TO_DATE((#year# || '-' || #months# || #startTime#), 'YYYY-MM-DD HH24:MI:SS') and A.START_DATE <= TO_DATE((#year# || '-' || #months# || #endTime#), 'YYYY-MM-DD HH24:MI:SS')) 
 					or
-					(A.END_DATE >= date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T') and A.END_DATE < date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T')) 
+					(A.END_DATE >= TO_DATE((#year# || '-' || #months# || #startTime#), 'YYYY-MM-DD HH24:MI:SS') and A.END_DATE < TO_DATE((#year# || '-' || #months# || #endTime#), 'YYYY-MM-DD HH24:MI:SS')) 
 					or
-					(A.START_DATE < date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T') and A.END_DATE >= date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T'))
+					(A.START_DATE < TO_DATE((#year# || '-' || #months# || #startTime#), 'YYYY-MM-DD HH24:MI:SS') and A.END_DATE >= TO_DATE((#year# || '-' || #months# || #endTime#), 'YYYY-MM-DD HH24:MI:SS'))
 				)
 			GROUP BY
-				A.TYPE_ID
+				A.TYPE_ID, STAT_MONTH
 		]]>
 <!-- 		</iterate> -->
 	</select>
@@ -1262,65 +1303,78 @@
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeHistoryList" parameterClass="Map" resultClass="ModApplHistoryVO">
 		<![CDATA[
-			SELECT
-				attitude_id AS attitudeId,
-			    writer_name$primary$ AS writerName,
-			    writer_title$primary$ AS writerTitle,
-			    writer_dept_name$primary$ AS writerDeptName,
-			    DATE_FORMAT(DATE_ADD(origin_startdate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') AS originstartdate,
-			    DATE_FORMAT(DATE_ADD(origin_enddate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') AS originenddate,
-			    IFNULL(DATE_FORMAT(DATE_ADD(change_startdate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i'),'') AS changestartdate,
-			    IFNULL(DATE_FORMAT(DATE_ADD(change_enddate, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i'),'') AS changeenddate,
-			    origin_type_name$primary$ AS origintypename,
-			    IFNULL(change_type_name$primary$, '') AS changetypename,
-			    appr_user_name$primary$ AS apprusername,
-			    DATE_FORMAT(DATE_ADD(appr_date, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i') AS apprdate
-			FROM
-				TBL_ATTITUDE_MODAPPL_HISTORY
-			WHERE
-				company_id = #companyId#
-			AND
-				tenant_id = #tenantId#
-			AND
-				(appr_date >= #searchStartDate# 
-				  AND
-				  appr_date <= #searchEndDate#)
-		]]>
-		<isNotEmpty prepend="AND" property="searchUserName">
+		select
+			*
+		from
+			(SELECT
+				T1.*,
+				rownum AS RN
+				FROM
+					(SELECT
+					    attitude_id AS attitudeId,
+					    writer_name$primary$ AS writerName,
+					    writer_title$primary$ AS writerTitle,
+					    writer_dept_name$primary$ AS writerDeptName,
+                        TO_CHAR(origin_startdate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI') AS originstartdate,
+                        TO_CHAR(origin_enddate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI') AS origin_enddate,
+                        NVL(TO_CHAR(change_startdate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI'),'') AS changestartdate,
+                        NVL(TO_CHAR(change_enddate + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI'),'') AS changeenddate,
+					    origin_type_name$primary$ AS origintypename,
+					    NVL(change_type_name$primary$, '') AS changetypename,
+					    appr_user_name$primary$ AS apprusername,
+                        TO_CHAR(appr_date + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI') AS apprdate
+					FROM
+						TBL_ATTITUDE_MODAPPL_HISTORY
+					WHERE
+						company_id = #companyId#
+					AND
+						tenant_id = #tenantId#
+					AND
+						(appr_date >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') 
+						  AND
+						  appr_date <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
+				]]>
+				<isNotEmpty prepend="AND" property="searchUserName">
+					<![CDATA[
+						writer_name$primary$ LIKE '%' || #searchUserName# || '%'
+					]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchTitle">
+					<![CDATA[
+						writer_title$primary$ LIKE '%' || #searchTitle# || '%'
+					]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="deptId">
+					WRITER_DEPT_ID = #deptId#
+				</isNotEmpty>
+				<iterate prepend="AND WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+					#deptIdList[]#
+				</iterate>
+				<isNotEmpty property="orderCell">
+					<![CDATA[
+						ORDER BY
+							$orderCell$ $orderOption$
+					]]>
+				</isNotEmpty>
+				<isEmpty property="orderCell">
+					<![CDATA[
+						ORDER BY
+							changestartdate DESC,
+							writerName
+					]]>
+				</isEmpty>
 			<![CDATA[
-				writer_name$primary$ LIKE CONCAT('%', #searchUserName#, '%')
+						) T1
+				)
 			]]>
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchTitle">
-			<![CDATA[
-				writer_title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
-			]]>
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="deptId">
-			WRITER_DEPT_ID = #deptId#
-		</isNotEmpty>
-		<iterate prepend="AND WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
-			#deptIdList[]#
-		</iterate>
-		<isNotEmpty property="orderCell">
-			<![CDATA[
-				ORDER BY
-					$orderCell$ $orderOption$
-			]]>
-		</isNotEmpty>
-		<isEmpty property="orderCell">
-			<![CDATA[
-				ORDER BY
-					changestartdate DESC,
-					writerName
-			]]>
-		</isEmpty>
-		<isNotEmpty property="listSize">
-			<![CDATA[
-				LIMIT
-					#limit#, #listSize#
-			]]>
-		</isNotEmpty>
+			<isNotEmpty property="startRow">
+				<![CDATA[
+					where
+						rn >= #startRow#
+					and
+						rn <= #endRow#
+				]]>
+			</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeHistoryCount" parameterClass="Map" resultClass="String">
@@ -1334,15 +1388,15 @@
 			AND
 				TENANT_ID = #tenantId#
 			AND
-				(appr_date >= #searchStartDate# 
+				(appr_date >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS')
 				  AND
-				  appr_date <= #searchEndDate#)
+				  appr_date <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 		]]>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			WRITER_NAME LIKE CONCAT('%', #searchUserName#, '%')
+			WRITER_NAME LIKE '%' || #searchUserName# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			WRITER_TITLE LIKE CONCAT('%', #searchTitle#, '%')
+			WRITER_TITLE LIKE '%' || #searchTitle# || '%'
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="deptId">
 			WRITER_DEPT_ID = #deptId#

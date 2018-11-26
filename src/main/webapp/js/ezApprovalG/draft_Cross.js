@@ -2065,6 +2065,7 @@ function SetBtnStateTrue() {
     }
 }
 function createNewDoc() {
+	var url = "/ezApprovalG/createNewDoc.do";
     try {
     	var result = "";
         $.ajax({
@@ -3141,11 +3142,11 @@ function getDocInfo() {
         if (SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "Y" || SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "O")
             pHasOpinionYN = "Y";
        
-        if (isUsed == "reuse") {
-        	if (reuseTitleYN == "YES") {
-        		doctitle = SelectSingleNodeValueNew(result, "DATA/DOCTITLE");
-        	}
-        }
+//        if (isUsed == "reuse") {
+//        	if (apprReuseConfig != '1') {
+//        		doctitle = SelectSingleNodeValueNew(result, "DATA/DOCTITLE");
+//        	}
+//        }
         
         tempSecurity = SelectSingleNodeValueNew(result, "DATA/SECURITYCODE");
         tempKeep = SelectSingleNodeValueNew(result, "DATA/STORAGEPERIOD");

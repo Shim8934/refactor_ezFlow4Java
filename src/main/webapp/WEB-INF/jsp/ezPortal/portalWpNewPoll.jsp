@@ -11,9 +11,8 @@
 		<section  class="body_bg1">
 			<article class="portletbox pollbox">
    				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt"><spring:message code='main.t2000' /></span><span class="btn_more" onclick="viewquicklist()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span></div>
-  				<!-- 2018-07-25 김보미 - 스크롤 생기지 않게 style추가 -->
-<!--   				<div class="pollcont"> -->
-  				<div class="pollcont" style="overflow-y: hidden; overflow-x: hidden;">
+   				<!-- 18.11.20 qc팀 요청으로 재수정 -->
+   				<div class="pollcont">
  	 				<c:choose>
   						<c:when test="${pPollItemSeq != 0}">
   							<p class="qusetion">
