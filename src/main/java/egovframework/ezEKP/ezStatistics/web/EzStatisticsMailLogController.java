@@ -1,6 +1,7 @@
 
 package egovframework.ezEKP.ezStatistics.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -31,6 +32,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezStatistics.service.EzStatisticsAdminService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -95,7 +97,33 @@ public class EzStatisticsMailLogController {
 		String mailLogKeepPeriodMessage = egovMessageSource.getMessage("ezStatistics.t1065", locale);
 		mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, LoginMailLogKeepPeriod);
 		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+
+		String topid = "";
+		String adminOrganVal = "n";
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			topid = userInfo.getCompanyID();
+		} else {
+			topid = "Top/organ"; // 전체관리자 조직도 전체 트리 보여줌
+			
+			adminOrganVal = "y"; // 전체관리자 조직도 전체 검색
+		}
+		
 		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyID", topid);				
+		model.addAttribute("adminOrganVal", adminOrganVal);
 		
 		logger.debug("getStatMailRecieveLogMain ended.");
 		

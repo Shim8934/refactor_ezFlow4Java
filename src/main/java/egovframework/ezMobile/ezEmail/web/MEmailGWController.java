@@ -227,7 +227,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				folder.put("fullName", f.getFullName());
 				folder.put("unReadCount", f.getUnreadMessageCount());
 				
-				if (f.list().length > 0) {
+				if (f.listSubscribed().length > 0) {
 					folder.put("hasSub", true);
 				} else {
 					folder.put("hasSub", false);
@@ -320,7 +320,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					folder.put("fullName", f.getFullName());
 					folder.put("unReadCount", f.getUnreadMessageCount());
 
-					if (f.list().length > 0) {
+					if (f.listSubscribed().length > 0) {
 						folder.put("hasSub", true);
 					} else {
 						folder.put("hasSub", false);
