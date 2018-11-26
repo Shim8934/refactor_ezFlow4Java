@@ -97,7 +97,4 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitude_SQL_Mysql.xml"/>
     <!-- 근태관리 관리자모듈 xml -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitudeAdmin_SQL_Mysql.xml"/>
-    
-    <!-- 리뉴얼 전자설문 -->
-    <sqlMap resource="egovframework/sqlmap/ezEKP/ezSurvey/EzSurvey_SQL_Mysql.xml"/>
 </sqlMapConfig>

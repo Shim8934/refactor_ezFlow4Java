@@ -7,11 +7,14 @@
 	<span class="sryTxt"><c:out value="설문제목"></c:out> </span>
 </div>
 
-<div class="quesBacgr" style="height: 400px; /* box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; */ border: 1px solid #d7d7d7;">
-	<div class="quesDiv">
+<div class="quesBacgr" style="height: 400px; border: 1px solid #d7d7d7;">
+	
+	<!-- <div class="quesDiv">
 		<input class="questnTitle">
 		<img alt="파일첨부" src="/images/ezSurvey/attach.png" class="atchImg">
 		<input type="file" class="attachFile" multiple="multiple">
+		
+		<select class="selectBox"></select>
 		
 		<select class="quesTypeSelect"></select>
 		<div class="optionBox">
@@ -31,4 +34,36 @@
 		</div>
 		
 	</div>
+	
+	
+	<div class="oneSelection" style="width:100%; height:50%;">
+	
+		<div class="optionPart" style="text-align: center;">
+			<div class="option">
+				<input class="textInput" type="text" style="width: 50%; height: 30px;"> <img src="/images/ezSurvey/attach.png" style="width: 30px; height: 30px;"> 
+				<input class="fileInput" type="file" multiple="multiple" style="width: 0px; opacity: 0"> <button><img src="/images/ezSurvey/minus.jpg" style="width: 30px; height: 30px; "></button>
+			</div>
+		</div>
+		
+		<div class="additionalPart" style="width: 60%; margin-left: 20%; margin-top: 10px;">
+		
+			<div class="addBtns" style="text-align: left;">
+				<button class="addRow">추가</button>
+				<button class="addOther">기타추가</button>
+			</div>
+			
+			<div class="required" style="text-align: left; font-size: 13px;">
+				<input type="checkbox">
+				<strong>필수 답변</strong>
+			</div>
+			
+			<div class="btns" style="text-align: right;">
+				<button class="save">저장</button>
+				<button class="cancel">취소</button>
+			</div>
+			
+		</div>
+		
+	</div> -->
+	
 </div>
