@@ -67,7 +67,7 @@
 						} else {
 							docsHTML += "<dl class='nodata'>";
 							docsHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
-							docsHTML += "<dd>\"<spring:message code='main.t00026' />\"</dd>";
+							docsHTML += "<dd>&#34;<spring:message code='main.t00026' />&#34;</dd>";
 							docsHTML += "</dl>";
 						}
 						

@@ -302,23 +302,39 @@ public class EzNewPortalGWController {
 				useQuestion = "NO";
 			}
 			
+			boolean isUseCircular = false;
+			
 			for (MenuInfoVO mVO : menuList) {
 				
 				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
-					useCircular = "YES";
+					isUseCircular = true;
 					break;
 				} else {
-					useCircular = "NO";
+					isUseCircular = false;
 				}
 			}
 			
+			if (isUseCircular) {
+				useCircular = "YES";
+			} else {
+				useCircular = "NO";
+			}
+			
+			boolean isUseAttitude = false;
+			
 			for (MenuInfoVO mVO : menuList) {
 				if (mVO.getMenuId()==9 && useAttitude.equals("YES")) {
-					useAttitude = "YES";
+					isUseAttitude = true;
 					break;
 				} else {
-					useAttitude = "NO";
+					isUseAttitude = false;
 				}
+			}
+			
+			if (isUseAttitude) {
+				useAttitude = "YES";
+			} else {
+				useAttitude = "NO";
 			}
 			
 			LOGGER.debug("useAttitude : " + useAttitude + ", useQuestion : " + useQuestion + ", useCircular : " + useCircular);
