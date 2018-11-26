@@ -290,7 +290,7 @@ nav > .countBox .hidden_nav_count {position: absolute; right: 0px; top: 6px; dis
 /* mail */
 .mailGraph{ margin:0px; padding:0px; width:206px; border-left:1px solid #e7e7e7; overflow:hidden; float:right;}
 .mailGraph .mGraph{margin:14px 13px 0px 15px; padding:0px; float:left; width:96px; text-align:left; overflow:hidden; height:14px; background:#d5d5d5;border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
-.mailGraph .mGraph span{margin:0px; padding:0px; display:block; width:30%; height:14px; background:#0470e4;border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
+.mailGraph .mGraph span{margin:0px; padding:0px; display:block; width:0%; height:14px; background:#0470e4;border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
 .mailGraph .mGraph_text{margin:0px; padding:0px; float:left; overflow:hidden; font-size:12px; font-weight:bold; color:#333; font-family:Gulim;}
 .mailGraph .mGraph_text span{ color:#999;}
 

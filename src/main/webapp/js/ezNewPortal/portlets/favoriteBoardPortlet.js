@@ -84,7 +84,9 @@ function getBoardList_NewBoardSTD() {
    		var itemId = "";
 		var RowCnt = result.length;
 		var listHTML = "";
-
+		var today = new Date();
+		var date = today.getDate();
+		today.setDate(date - 1);
         if (RowCnt > 0) {
 	        if (RowCnt > 5) {
         		RowCnt = 5;
@@ -99,6 +101,12 @@ function getBoardList_NewBoardSTD() {
            	itemId = result[i].itemId;
             	
              listHTML += "<li onclick=\"openDoc_section4_Type('" + itemId + "','" + boardType + "', '" + boardId + "')\" >";			                        
+             
+             var writeDate = new Date(startDate);
+     		
+     		 if (today < writeDate) {
+     			listHTML += "<span class='boardNew'>N</span>";
+     		 }
              
              listHTML += "<span class='txt'>" + ConvertCharToEntityReference(title) + "</span>";
              listHTML += "<span class='date'>" + startDate.substring(5,16) + "</span>";
