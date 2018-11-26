@@ -3311,7 +3311,7 @@
 		</isEqual>
 	</select>
 	
-	<select id="EzBoardDAO.getCheckItemID" parameterClass="Map" resultClass="Integer">
+	<select id="EzBoardDAO.getCheckItemID" parameterClass="Map" resultClass="Integer" remapResults="true">
 		<isNotEqual property="v_BOARDTYPE" compareValue="TEMP">
 			<![CDATA[
 				SELECT 
