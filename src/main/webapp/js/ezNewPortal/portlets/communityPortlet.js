@@ -6,6 +6,7 @@ var CommuSize = $('#CommuSize').val();
 var userId = $('#userId').val();
 
 function view_bestCommunity(event) {
+	console.log('clubNo : ' + clubNo + ' ,  userId : '+userId);
 	var clubType = "";
 	$.ajax({
 		type : "POST",
@@ -17,6 +18,7 @@ function view_bestCommunity(event) {
 				clubNo	:	event.data.iClubNo,
 			   },
 		success: function(result){
+			console.log('clubType : ' + result);
 			clubType = result;
 		}
 	});
@@ -30,6 +32,7 @@ function view_bestCommunity(event) {
 				 uID	:	userId
 		},
 		success: function(result){
+			console.log('OK or ERR      :     ' + result);
 			if (result == "ERR" && clubType != "1") {
 				OpenAlertUI(messages.strLang11+"<br>"+messages.strLang12, null, "/ezPortal/wpNewCommunity.do.OpenAlertUI");
 			} else {
@@ -42,7 +45,7 @@ function view_bestCommunity(event) {
                 var left = (width - wWeight) / 2;
                 var top = (heigth - wHeight) / 2 - 30;
 
-                var ret = window.open("/ezCommunity/checkCommHome.do?communityCD=" + clubNo, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+                var ret = window.open("/ezCommunity/checkCommHome.do?communityCD=" + encodeURIComponent(clubNo), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 			}
 		}
 	});
