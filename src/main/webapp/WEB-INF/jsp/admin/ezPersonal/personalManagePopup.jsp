@@ -334,7 +334,7 @@
 								pageNum = pageNum -1 ;
 							}
 							itemseq=0;
-							//showPreview(isPreview, 0);
+							showPreview(isPreview, 0);
 							makelist();
 						} else {
 							alert("<spring:message code = 'ezPersonal.t160' />");
@@ -376,7 +376,7 @@
 
 				checkItems();
 				doc.getElementById("ifrmPreViewH").style.display = "";
-				//showPreview(isPreview, itemseq);
+				showPreview(isPreview, itemseq);
 			}
 
 
@@ -697,6 +697,28 @@
 					doc.getElementById("ifrmPreViewH").style.height = height + 47 + "px";
 				}
 			}
+
+
+			function showPreview(isPreview, itemseq) {
+				var doc = window.document;
+
+				if(itemseq == 0) {
+					doc.getElementById('Preview_HeaderH').style.display ="none";
+					doc.getElementById("ifrmPreViewH").style.display = "none";
+				} else {
+					if(isPreview == 2) {
+						// 세로 모드
+						var itemSeqTitle = $("#"+itemseq)[0].parentNode.parentNode.children[2].innerHTML;
+						doc.getElementById('Preview_HeaderH').style.display ="inline-block";
+						doc.getElementById('Preview_HeaderH').title = itemSeqTitle;
+						doc.getElementById('PreH_sub_subject').innerHTML = itemSeqTitle;
+						PrevViewFormH.itemSeq.value = itemseq;
+						PrevViewFormH.submit();
+						var conlistH = conH
+						doc.getElementById("ifrmPreViewH").style.height = conlistH + 27 + "px";
+					} 
+				}
+			}
 		</script>
 		<style>
 			.portletInfoTD {width:100%;}
@@ -798,7 +820,7 @@
 			</div>
 		</form>
 		
-		<form name="PrevViewFormH" action="/ezPersonal/pollResult.do" method="get" target="ifrmPreViewH" >
+		<form name="PrevViewFormH" action="/admin/ezPersonal/showPopup.do" method="get" target="ifrmPreViewH" >
 			<input  type="hidden" name="itemSeq" value="">
 			<input  type="hidden" name="flag" value="preview">
 		</form>

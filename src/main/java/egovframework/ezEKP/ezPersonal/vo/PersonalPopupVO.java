@@ -25,6 +25,9 @@ public class PersonalPopupVO {
 	private int progress;
 	/** 사용여부 on/off (0: off, 1: on)*/
 	private int inUse;
+	/** 스킨번호 (default 0)*/
+	private int skinValue;
+	
 
 	public String getCompanyID() {
 		return companyID;
@@ -97,5 +100,11 @@ public class PersonalPopupVO {
 	}
 	public void setInUse(int inUse) {
 		this.inUse = inUse;
+	}
+	public int getSkinValue() {
+		return skinValue;
+	}
+	public void setSkinValue(int skinValue) {
+		this.skinValue = skinValue;
 	}
 }

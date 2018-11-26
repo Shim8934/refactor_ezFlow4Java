@@ -620,8 +620,6 @@
 						doc.getElementById('PreH_sub_subject').innerHTML = pollVO.pollTitle;
 						PrevViewFormH.itemSeq.value = itemseq;
 						PrevViewFormH.submit();
-					} else {
-						// none 모드
 					}
 				}
 			}

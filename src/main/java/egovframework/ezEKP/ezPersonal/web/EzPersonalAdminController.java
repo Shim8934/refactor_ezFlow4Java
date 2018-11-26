@@ -902,6 +902,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = request.getParameter("itemSeq");
 		String title = "";
+		String flag = "";
+		if (request.getParameter("flag") != null) {
+			flag = request.getParameter("flag");
+		}
 		
 		vo = ezPersonalAdminService.getPopupInfo(itemSeq, userInfo.getTenantId());
 		vo.setStartDate(commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false));
@@ -919,6 +923,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("title", title);
 		model.addAttribute("content", content);
 		model.addAttribute("user", userInfo.getId());
+		model.addAttribute("flag", flag);
 		
 		logger.debug("showPopup ended");
 		return "admin/ezPersonal/personalShowPopup";

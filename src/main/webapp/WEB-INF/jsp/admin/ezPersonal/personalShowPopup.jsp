@@ -26,8 +26,9 @@
 				line-height:36px;
 		    }
 		</style>
-
+		
 		<script type="text/javascript">
+			var flag = "<c:out value = '${flag}' />";
 			$(document).ready(function() {
 				popupcontent.style.height = document.documentElement.clientHeight - 136 + "px";
 			});
@@ -47,7 +48,7 @@
 				window.close();
 			}
 		</script>
-	
+		
 	</head>
 	<body class = "popup_notice">
 		<!--  popup 
@@ -72,12 +73,14 @@
 		                                    <dd>${content}</dd>
 		                                </dl>
 		                            </div>
-		                            <div class="notice_btn">
-		                            	<p class="btn_checkbox">
-		                                    <input type="checkbox" name="checkbox" class="inp_noticeCheck" id="inp_noticeCheck" onClick="closepopup()" /> 
-		                                    <label for="inp_noticeCheck"><spring:message code = 'ezPersonal.t267' /></label></p>
-		                                <p class="btn_style01"><span onclick=window.close() ><spring:message code = 'ezPersonal.t10' /> </span></p>
-		                            </div> 
+		                            <c:if test = "${flag ne 'preview' }" >
+			                            <div class="notice_btn">
+			                            	<p class="btn_checkbox">
+			                                    <input type="checkbox" name="checkbox" class="inp_noticeCheck" id="inp_noticeCheck" onClick="closepopup()" /> 
+			                                    <label for="inp_noticeCheck"><spring:message code = 'ezPersonal.t267' /></label></p>
+			                                <p class="btn_style01"><span onclick=window.close() ><spring:message code = 'ezPersonal.t10' /> </span></p>
+			                            </div>
+		                            </c:if> 
 		                      </div>
 		                    </div>	
 		                </div>
