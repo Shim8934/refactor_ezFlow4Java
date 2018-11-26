@@ -25,7 +25,7 @@
 		.yearDiv {height: 38px; /* border: 1px solid #c8ccd0; */ }
 		.yearSpan {text-align: center; font-size: 20px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; letter-spacing: -1px; line-height: 31px;}
 		.employee {vertical-align: top; display: inline-block; width: 180px; border: 1px solid #d9d9d9; margin: 20px 60px 0px 0px; height: 240px;}
-		.empBttn {text-align: right; padding: 10px 10px 0px 0px;}
+		.empBttn {text-align: right; padding: 10px 10px 0px 0px; height: 27px;}
 		.empBttn > img:first-child {margin-right: 5px;}
 		.empBttn > img {height: 14px; width: 14px;}
 		.empAdd dl dt {margin: 0px;}
@@ -137,8 +137,6 @@
 					var empInfoDivElmt = document.createElement("div");
 					var empAddDivElmt  = document.createElement("div");
 					var addBttnElmt    = document.createElement("img");
-					var updBttnElmt    = document.createElement("img");
-					var delBttnElmt    = document.createElement("img");
 					var titleElmt      = document.createElement("p");
 					var dlElmt         = document.createElement("dl");
 					var dtElmt         = document.createElement("dt");
@@ -155,24 +153,17 @@
 					
 					titleElmt.textContent = month + "월";
 					
-					ddElmt1.textContent = month + "의 우수사원을";
+					ddElmt1.textContent = month + "월의 우수사원을";
 					ddElmt2.textContent = "등록하세요.";
 					
 					addBttnElmt.setAttribute("src", "/images/admin/menuAdd.png");
-					updBttnElmt.setAttribute("src", "/images/email/popup_icon.gif");
-					delBttnElmt.setAttribute("src", "/images/close_xBtn.png");
-					
 					addBttnElmt.addEventListener("click", function(event) {btn_add(month);});
-					updBttnElmt.addEventListener("click", function(event) {btn_modify(month);});
-					delBttnElmt.addEventListener("click", function(event) {btn_delete(month);});
-					
+
 					dtElmt.appendChild(addBttnElmt);
 					dtElmt.appendChild(ddElmt1);
 					dtElmt.appendChild(ddElmt2);
 					dlElmt.appendChild(dtElmt);
 					
-					empBttnDivElmt.appendChild(updBttnElmt);
-					empBttnDivElmt.appendChild(delBttnElmt);
 					empInfoDivElmt.appendChild(titleElmt);
 					empAddDivElmt.appendChild(dlElmt);
 					
@@ -204,8 +195,6 @@
 					var addElmt  = liElmt.getElementsByClassName("empAdd")[0];
 					var imgElmt  = liElmt.getElementsByClassName("empImg")[0];
 					
-					console.log(bttnElmt);
-					
 					if (imgElmt) {
 						addElmt.style.display = ""; 
 						liElmt.removeChild(imgElmt);
@@ -217,6 +206,8 @@
 							
 							var liElmt  = document.getElementById(month);
 							
+							var updBttnElmt   = document.createElement("img");
+							var delBttnElmt   = document.createElement("img");
 							var empImgDivElmt = document.createElement("div");
 							var dlElmt        = document.createElement("dl");
 							var dtElmt        = document.createElement("dt");
@@ -224,6 +215,12 @@
 							var ddElmt1       = document.createElement("dd");
 							var ddElmt2       = document.createElement("dd");
 							var ddElmt3       = document.createElement("dd");
+							
+							updBttnElmt.setAttribute("src", "/images/email/popup_icon.gif");
+							delBttnElmt.setAttribute("src", "/images/close_xBtn.png");
+							
+							updBttnElmt.addEventListener("click", function(event) {btn_modify(item.term);});
+							delBttnElmt.addEventListener("click", function(event) {btn_delete(item.term);});
 							
 							empImgDivElmt.className = "empImg";
 							imgElmt.style.border = "1px solid #999";
@@ -234,6 +231,9 @@
 							ddElmt1.textContent = item.company;
 							ddElmt2.textContent = item.description;
 							ddElmt3.textContent = item.title + " " + item.displayName;
+							
+							bttnElmt.appendChild(updBttnElmt);
+							bttnElmt.appendChild(delBttnElmt);
 							
 							dtElmt.appendChild(imgElmt);
 							dlElmt.appendChild(dtElmt);
@@ -247,8 +247,7 @@
 					});
 				}
 			}
-			function btn_add(month) {
-				var term = year + "-" + month;
+			function btn_add(term) {
 				console.log(term);
 				
 				/* if (CrossYN()) {
@@ -258,16 +257,19 @@
 					var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=EMP", "", "dialogHeight:535px;dialogwidth:760px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken");
 				} */
 			}
-			function btn_delete(month) {
-				var term = year + "-" + month;
+			function btn_modify(term) {
 				console.log(term);
 				
-				/* if (confirm("<spring:message code = 'ezPersonal.t00003' />")) {
+			}
+			function btn_delete(term) {
+				console.log(term);
+				
+				if (confirm("<spring:message code = 'ezPersonal.t00003' />")) {
 					$.ajax({
 						type : "POST",
 						url : "/admin/ezPersonal/setEmployeeMonth.do",
 						async : false,
-						data : {type : "DEL", userID : "", deptID : "", term : temp},
+						data : {type : "DEL", userID : "", deptID : "", term : term},
 						dataType : "text",
 						success : function (result) {
 							if (result != "OK") {
@@ -278,7 +280,7 @@
 							}
 						}
 					});
-				} */
+				}
 			}
 		</script>
 	</head>
