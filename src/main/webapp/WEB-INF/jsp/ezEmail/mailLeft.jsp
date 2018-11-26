@@ -256,6 +256,25 @@
                     window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
 	            }          
 	        }
+	        
+	        function write_LetterToMe() {
+	            var pheight = window.screen.availHeight;
+	            var conHeight = pheight * 0.8;
+	            var pwidth = window.screen.availWidth;
+	            var conWidth = pwidth * 0.8;
+	            if (conWidth > 890)
+	                conWidth = 890;
+	            var pTop = (pheight - conHeight) / 2;
+	            var pLeft = (pwidth - 890) / 2;
+	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+	            if (CrossYN() || pNoneActiveX == "YES") {
+	                window.open("/ezEmail/mailWrite.do?cmd=NEW&isMailToMe=YES", "", feature);
+	            }
+	            else {
+                    window.open("/ezEmail/mailWrite.do?cmd=NEW&isMailToMe=YES", "", feature);
+	            }          
+	        }
+	        
 	        function LoadEmailTree() {
 	            var PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
 	            PostTreeView.attachEvent('requestdata', requestdata);
@@ -1190,7 +1209,7 @@
 	        	<span class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezEmail.t99000044" />" onclick="mail_Config()"></span>
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write02"><span class="sub_iconLNB tree_Mwrite"></span><spring:message code="ezEmail.t99000010" /></p> 
+	        	<p class="btn_write02" onclick="write_LetterToMe()"><span class="sub_iconLNB tree_Mwrite"></span><spring:message code="ezEmail.t99000010" /></p> 
 	        	<p class="btn_write01" onclick="write_Letter()"><span class="sub_iconLNB tree_write"></span><spring:message code="ezEmail.t99000013" /></p>
 	        </div>
         	<div class="taskListBox" style="overflow:hidden; padding-right: 0;">
