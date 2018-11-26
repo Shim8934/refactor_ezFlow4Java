@@ -228,7 +228,11 @@
 		<result property="characterID"			column="CHARACTERID"			columnIndex="19"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="20"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
+		<result property="ownerNm2"			    column="OWNERNM2"			    columnIndex="22"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="23"/>
+		<result property="deptNm2"				column="DEPTNM2"				columnIndex="24"/>
+		<result property="jobTitle"				column="JOBTITLE"				columnIndex="25"/>
+		<result property="jobTitle2"			column="JOBTITLE2"				columnIndex="26"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" 		    id="resGetRepResourceVO">
@@ -641,7 +645,7 @@
 					AND 
 						B.TENANT_ID = C.TENANT_ID 
 					WHERE 
-						AA.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# ) BB
+						AA.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# AND B.physicaldeliveryofficename <> #v_PCOMPANYID# ) BB
 			ON
 				A.WRITERID = BB.CN AND A.TENANT_ID = BB.TENANT_ID
           	WHERE
@@ -653,8 +657,6 @@
 			AND 
 				A.OWNERID = #v_POWNERID#
 			AND
-				A.DEPTNM = BB.DEPTNM
-			AND
 				REFLAG = '0'
 			AND 
                 ( BB.OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') OR BB.OWNERNM2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
@@ -662,6 +664,8 @@
 				( BB.DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR BB.DEPTNM2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
 			AND
 				A.TENANT_ID = #tenantID#	
+			GROUP BY
+				A.NUM
 			ORDER BY
 				STARTDATE ASC,
 				ENDDATE DESC 
@@ -771,8 +775,12 @@
             	A.companyID ,
             	CHARACTERID ,
             	APPROVEFLAG ,
-            	A.OWNERNM  ,
-            	A.DEPTNM  
+                BB.OWNERNM  ,
+                BB.OWNERNM2  ,
+                BB.DEPTNM  ,
+                BB.DEPTNM2  ,
+                BB.JOBTITLE  ,
+                BB.JOBTITLE2  
 			FROM
 				TBL_RS_SCHEDULE A
 			JOIN
@@ -814,7 +822,7 @@
 					AND 
 						B.TENANT_ID = CC.TENANT_ID 
 					WHERE 
-						AA.TENANT_ID = #tenantID# AND CC.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# ) BB   
+						AA.TENANT_ID = #tenantID# AND CC.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# AND B.physicaldeliveryofficename <> #v_PCOMPANYID#) BB   
 			ON
 				A.writerID = BB.CN
 			AND
