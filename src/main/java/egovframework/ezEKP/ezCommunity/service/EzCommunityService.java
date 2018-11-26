@@ -261,7 +261,8 @@ public interface EzCommunityService {
 	
 	public int pollETCViewGet(String questionID, int tenantID) throws Exception;
 	
-	public int commViewMemberGet2(String code, String primary, String keyword, String sRadio, int tenantID) throws Exception;
+	/* 2018-11-26 홍승비 - 커뮤니티 회원목록 카운트에 companyID 조건 추가 */
+	public int commViewMemberGet2(String code, String primary, String keyword, String sRadio, String companyID, int tenantID) throws Exception;
 	
 	public int adminMemPermitGet1(String code, int tenantID) throws Exception;
 	
