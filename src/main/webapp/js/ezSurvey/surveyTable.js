@@ -1,5 +1,5 @@
 //Baonk 2018-06-25
-function CabinetTable(data) {
+function SurveyTable(data) {
 	//set public functions
 	this.setTableElement  = setTableElement;
 	this.setDataSource    = setDataSource;

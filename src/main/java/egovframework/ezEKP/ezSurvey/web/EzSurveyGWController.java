@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezSurvey.web;
 
 import java.util.List;
+import java.util.Locale;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -34,6 +37,9 @@ public class EzSurveyGWController {
 	
 	@Resource(name="loginService")
 	private LoginService loginService;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
 	
 	@RequestMapping(value="/rest/ezsurvey/company-tree/comp", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getCompanyTree(HttpServletRequest request) {
@@ -113,6 +119,132 @@ public class EzSurveyGWController {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezsurvey/dept-member/{deptid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getDeptMembers(@PathVariable(value="deptid") String deptId, Locale locale, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
+		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
+		int currentPage   = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId + "|| currentPage: " + currentPage);
+		
+		if (serverName.equals("") || userId.equals("") || currentPage == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo               = commonUtil.getUserForGw(userId, serverName);
+			int tenantId                   = userInfo.getTenantId();
+			String primary                 = userInfo.getPrimary();
+			int startPoint                 = (currentPage - 1) * 50;
+			int totalUsers                 = surveyService.getTotalDeptMembers(deptId, tenantId);
+			int totalPages                 = (totalUsers + 49) / 50;
+			
+			List<SimpleUserVO> memberList = surveyService.getDeptMemberList(deptId, primary, startPoint, 50, tenantId);
+			
+			result.put("currentPage", currentPage);
+			result.put("totalPages",  totalPages);
+			result.put("memberList",  memberList);
+			result.put("memberCount", totalUsers);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezsurvey/list-type/userid/{userid}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getUserListType(@PathVariable(value="userid") String userId, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String listType  = ezOrganService.getListType(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+			
+			result.put("listType", listType);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezsurvey/search-member", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getSearchMember(Locale locale, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
+		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
+		String srchOption = request.getParameter("srchOption")  != null ? request.getParameter("srchOption")                    : "";
+		String srchValue  = request.getParameter("srchValue")   != null ? request.getParameter("srchValue")                     : "";
+		int currentPage   = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId + " || srchOption : " + srchOption + "|| srchValue" + srchValue + "|| currentPage: " + currentPage);
+		
+		if (serverName.equals("") || userId.equals("") || srchOption.equals("") || srchValue.equals("") || currentPage == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo               = commonUtil.getUserForGw(userId, serverName);
+			int tenantId                   = userInfo.getTenantId();
+			String primary                 = userInfo.getPrimary();
+			String sqlQuery                = "";
+			
+			switch(srchOption) {
+				case "displayname": sqlQuery = primary.equals("1") ? srchOption : "displayname2" ; break;
+				case "description": sqlQuery = primary.equals("1") ? srchOption : "description2" ; break;
+				default: sqlQuery = srchOption;
+			}
+			
+			int startPoint                 = (currentPage - 1) * 50;
+			int totalUsers                 = surveyService.getTotalSearchMembers(sqlQuery, srchValue, tenantId);
+			int totalPages                 = (totalUsers + 49) / 50;
+			List<SimpleUserVO> memberList  = surveyService.getSearchMemberList(primary, startPoint, 50, sqlQuery, srchValue, tenantId);
+			
+			result.put("currentPage", currentPage);
+			result.put("totalPages",  totalPages);
+			result.put("memberList",  memberList);
+			result.put("memberCount", totalUsers);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
 		}
 		
 		return result;

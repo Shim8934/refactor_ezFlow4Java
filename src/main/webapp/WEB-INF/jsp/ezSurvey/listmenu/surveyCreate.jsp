@@ -7,36 +7,40 @@
 	<head>
 		<title><spring:message code="ezSurvey.t34"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${util.addVer('ezSurvey.css', 'msg')}"       type="text/css">
-		<link rel="stylesheet" href="${util.addVer('/css/ezSurvey/survey.css')}"  type="text/css">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezSurvey.css', 'msg')                      }">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezSurvey/survey.css')                 }">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')                       }">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
+		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js')     }"></script>
+		<script type="text/javascript">
+			$(function() {
+				
+				$(".quesTypeSelect").click(function() {
+					$(".option_wrap").show().animate({height: "300px"});
+				});
+				
+				$(".select_op").mouseleave(function() {
+					$(".option_wrap").hide();
+					$(".option_wrap").css("height", "0");
+				});
+				
+				$(".atchImg").click(function(e) {
+					var clickObj = $(this).next();
+					clickObj.click();
+				});
+				
+				$(".sryTxt").click(function() {
+					window.open("/ezSurvey/statisticsPage.do", "", GetOpenWindowfeature(500, 500));
+				});
+				 
+			});
+		</script>
 	</head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-	<script type="text/javascript">
-	$(function() {
-		
-		$(".quesTypeSelect").click(function() {
-			$(".option_wrap").show().animate({height: "300px"});
-		});
-		
-		$(".select_op").mouseleave(function() {
-			$(".option_wrap").hide();
-			$(".option_wrap").css("height", "0");
-		});
-		
-		$(".atchImg").click(function(e) {
-			
-			var clickObj = $(this).next();
-			clickObj.click();
-		});
-		
-		$(".sryTxt").click(function() {
-			window.open("/ezSurvey/statisticsPage.do", "", GetOpenWindowfeature(500, 500));
-		});
-		 
-	});
-	</script>
-	<body class="surveyBody">
+	
+	<body class="mainbody srvey">
 		<div class="surveyCrtTtl">
 			<div class="sryFirst"></div>
 			<div class="sryTxt"><spring:message code='ezSurvey.t34'/></div>
@@ -58,8 +62,12 @@
 		</div>
 		<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyInfomation.jsp"></jsp:include>
 		<script type="text/javascript">
-			(function() {
+			var SurveyCreate    = function() {
 				var selectPopup = null;
+				var surveyObj   = {
+					info : {},
+					questions : []
+				};
 				
 				initEvents();
 				
@@ -67,6 +75,30 @@
 					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 					document.getElementById("selectTarget").addEventListener("change", toggleSelectTargetBttn, false);
 					document.getElementById("targetBttn"  ).addEventListener("click" , showSelectPopUp       , false);
+					var today = new Date();
+					
+					$("#startDate").datepicker({
+						changeMonth: true,
+						changeYear: true,
+						autoSize: true,
+						showOn: "both",
+						buttonImage: "/images/ImgIcon/calendar-month.gif",
+						buttonImageOnly: true,
+						dateFormat: "yy-mm-dd"
+					});
+					
+					$("#endDate").datepicker({
+						changeMonth: true,
+						changeYear: true,
+						autoSize: true,
+						showOn: "both",
+						buttonImage: "/images/ImgIcon/calendar-month.gif",
+						buttonImageOnly: true,
+						dateFormat: "yy-mm-dd"
+					});
+					
+					$("#startDate").datepicker("setDate", today);
+					$("#endDate").datepicker("setDate", today);
 				}
 				
 				function toggleSelectTargetBttn() {
@@ -74,10 +106,6 @@
 					var targetBttn       = document.getElementById("targetBttn");
 					var sltedIdx         = sltBoxElmt.selectedIndex;
 					targetBttn.className = sltedIdx == 0 ? "target-select" : "target-select on";
-				}
-				
-				function showSelectPopUp() {
-					selectPopup = window.open("/ezSurvey/selectUsers.do", "selectUser", getOpenWindowfeature(1125, 700));
 				}
 				
 				function getOpenWindowfeature(popUpW, popUpH) {
@@ -93,8 +121,16 @@
 					return feature;
 				}
 				
+				function showSelectPopUp() {selectPopup = window.open("/ezSurvey/selectUsers.do", "selectUser", getOpenWindowfeature(1125, 700));}
 				function closeAllPopups() {if(selectPopup) {selectPopup.close();}}
-			})();
+				function getSurveyUsers() {return surveyObj["info"]["users"];}
+				function setSurveyUsers(userList) {surveyObj["info"]["users"] = userList;}
+				
+				return {
+					getUsers : getSurveyUsers,
+					setUsers : setSurveyUsers,
+				};
+			}();
 		</script>
 	</body>
 </html>

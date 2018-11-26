@@ -14,6 +14,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezSurvey.dao.EzSurveyDAO;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service
@@ -58,7 +59,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	}
 	
 	@Override
-	public void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level) {
+	public void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level) throws Exception {
 		if (sDept.getHasSub().equals("1")) {
 			List<SimpleDeptVO> listSubSimpleDepts = getAllSimpleSubDepts(sDept.getDeptId(), level, primary, tenantId);
 			sDept.setSubDepts(listSubSimpleDepts);
@@ -80,5 +81,50 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		return ezSurveyDAO.getAllSimpleSubDepts(map);
 	}
+	
+	@Override
+	public int getTotalDeptMembers(String deptId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptId",   deptId);
+		map.put("tenantId", tenantId);
+		
+		return ezSurveyDAO.getTotalDeptMembers(map);
+	}
+	
+	@Override
+	public List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int startPoint, int listCount, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("deptId",     deptId);
+		map.put("startPoint", startPoint);
+		map.put("listCount",  listCount);
+		map.put("primary",    primary);
+		map.put("tenantId",   tenantId);
+		
+		return ezSurveyDAO.getDeptMemberList(map);
+	}
+	
+	@Override
+	public int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("srchOption", sqlQuery);
+		map.put("srchValue",  srchValue);
+		map.put("tenantId",   tenantId);
+		
+		return ezSurveyDAO.getTotalSearchMembers(map);
+	}
+	
+	@Override
+	public List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int listCount, String srchOption, String srchValue, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("startPoint", startPoint);
+		map.put("listCount",  listCount);
+		map.put("srchOption", srchOption);
+		map.put("srchValue",  srchValue);
+		map.put("primary",    primary);
+		map.put("tenantId",   tenantId);
+		
+		return ezSurveyDAO.getSearchMemberList(map);
+	}
+	
+	
 }
-

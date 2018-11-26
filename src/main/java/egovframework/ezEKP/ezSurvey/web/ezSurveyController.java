@@ -5,10 +5,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import egovframework.ezEKP.ezSurvey.service.EzSurveyRestService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
@@ -122,6 +129,12 @@ public class ezSurveyController {
 		logger.debug("jspGetSelectUesrPage started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
+		JSONObject result = surveyRestService.getUserListType(request, user.getId());
+		if (result.get("status").toString().equals("ok")) {
+			String listType = (String)result.get("listType");
+			model.addAttribute("listType", listType);
+		}
+		
 		logger.debug("jspGetSelectUesrPage ended");
 		return "ezSurvey/user/selectUser";
 	}
@@ -157,6 +170,77 @@ public class ezSurveyController {
 		resultObj = surveyRestService.getDeptSubNodes(request, userInfo.getId(), deptId, level);
 		logger.debug("jsonGetSubNodes ended");
 		
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezSurvey/getDeptMembers.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String jsonGetDeptMembers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("jsonGetDeptMembers started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String deptId      = request.getParameter("deptId")      != null ? request.getParameter("deptId")      : "";
+		String currentPage = request.getParameter("currentPage") != null ? request.getParameter("currentPage") : "";
+		
+		logger.debug("deptId: " + deptId + " || currentPage: " + currentPage);
+		
+		JSONObject resultObj = new JSONObject();
+		
+		if (deptId.equals("") || currentPage.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = surveyRestService.getDeptMembers(request, user.getId(), deptId, currentPage);
+		
+		logger.debug("jsonGetDeptMembers ended");
+		logger.debug(resultObj.toString());
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezSurvey/getSearchMember.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String jsonGetSearchMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("jsonGetSearchMember started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String srchOption  = request.getParameter("srchOption")  != null  ? request.getParameter("srchOption") : "";
+		String srchValue   = request.getParameter("srchValue")   != null  ? request.getParameter("srchValue")  : "";
+		String currentPage = request.getParameter("currentPage") != null ? request.getParameter("currentPage") : "";
+		
+		logger.debug("srchOption: " + srchOption + " || srchValue: " + srchValue + " || currentPage: " + currentPage);
+		
+		JSONObject resultObj = new JSONObject();
+		
+		if (srchOption.equals("") || srchValue.equals("") || currentPage.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = surveyRestService.getSearchMember(request, user.getId(), srchOption, srchValue, currentPage);
+		
+		logger.debug("jsonGetSearchMember ended");
+		logger.debug(resultObj.toString());
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezSurvey/uploadAttachFile.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonUploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("Upload file is running!");
+		LoginSimpleVO userInfo         = commonUtil.userInfoSimple(loginCookie);
+		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
+		JSONObject resultObj           = new JSONObject();
+		
+		if (multiFiles.size() == 0) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = surveyRestService.uploadAttachFile(request, userInfo.getId(), multiFiles);
+		
+		logger.debug("Upload file finishes!");
 		return resultObj.toString();
 	}
 }
