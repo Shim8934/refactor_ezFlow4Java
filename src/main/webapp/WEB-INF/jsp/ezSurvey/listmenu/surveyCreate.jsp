@@ -36,6 +36,7 @@
 				<span class="arrow"><span></span></span>
 			</span>
 		</div>
+		
 		<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/questionCreate.jsp"></jsp:include>
 		<script type="text/javascript">
 	$(function() {
@@ -261,5 +262,47 @@
 		
 	}
 	</script>
+
+<%-- 		<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyInfomation.jsp"></jsp:include> --%>
+		<script type="text/javascript">
+			(function() {
+				var selectPopup = null;
+				
+				initEvents();
+				
+				function initEvents() {
+					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
+					document.getElementById("selectTarget").addEventListener("change", toggleSelectTargetBttn, false);
+					document.getElementById("targetBttn"  ).addEventListener("click" , showSelectPopUp       , false);
+				}
+				
+				function toggleSelectTargetBttn() {
+					var sltBoxElmt       = document.getElementById("selectTarget");
+					var targetBttn       = document.getElementById("targetBttn");
+					var sltedIdx         = sltBoxElmt.selectedIndex;
+					targetBttn.className = sltedIdx == 0 ? "target-select" : "target-select on";
+				}
+				
+				function showSelectPopUp() {
+					selectPopup = window.open("/ezSurvey/selectUsers.do", "selectUser", getOpenWindowfeature(1125, 700));
+				}
+				
+				function getOpenWindowfeature(popUpW, popUpH) {
+					var heigth   = window.screen.availHeight;
+					var width    = window.screen.availWidth;
+					var left     = 0;
+					var top      = 0;
+					var pleftpos = parseInt(width) - popUpW;
+					heigth       = parseInt(heigth) - popUpH;
+					left         = pleftpos / 2;
+					top          = heigth / 2;
+					var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+					return feature;
+				}
+				
+				function closeAllPopups() {if(selectPopup) {selectPopup.close();}}
+			})();
+		</script>
+		
 	</body>
 </html>
