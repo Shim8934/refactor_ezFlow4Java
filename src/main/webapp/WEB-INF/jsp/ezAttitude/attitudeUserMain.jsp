@@ -525,13 +525,17 @@
 			* [개인근태현황, 부서근태현황] 근태 메소드
 			*/
 			function getAttitudeMainList_after(result) {
+				console.time("attitudeTime");
 				var startDate = "";   // 근태의 시작일
 				var endDate = "";     // 근태의 종료일
 				var betweenDate = ""; // 연속일자의 일자 저장
 				var subDate = "";     // 연속일자로 등록된 근태의 날짜 차이를 저장
 				var imgPath = "";	  // 이미지 경로
+				var calendarHTML = document.getElementById("attiCalendar").innerHTML;
+				var resultLength = result.length;
 				if (deptFlag == false){ //개인근태현황일때
-					for (var i = 0; i < result.length; i++) {
+					for (var i = 0; i < resultLength; i++) {
+						var tdHTML = "";
 						var iconStr = "";
 						//0과 2는 icon을 추가하지 않는다.
 						if (result[i].modAppl  == '2') {
@@ -549,36 +553,26 @@
 							for (var j = 0; j<= subDate; j++) {
 								betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
 								var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
-								$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId)
-																															.html(result[i].typeName + (result[i].region.trim() != "" ? " : " + result[i].region.trim() : "") + iconStr)
-																															.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
+								tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png'/>" + result[i].typeName + (result[i].region.trim() != "" ? " : " + result[i].region.trim() : "") + iconStr + "</td></tr>";
+								calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>",calendarHTML.indexOf("TD_" + tdDay + "_Value")), tdHTML);
 							}
 						} else if (result[i].dateType == '3') { 
-							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId)
-																																.html(result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + iconStr)
-																																.prepend($("<img/>").addClass("attiImg").css("vertical-align", "middle").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
-									//"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>"); 
+							tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png' style='vertical-align:middle'/>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + " ~ " + result[i].endDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>";
+							calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>", calendarHTML.indexOf("TD_" + startDate + "_Value")), tdHTML);
 						} else if (result[i].dateType == '1') { 
-							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId)
-																																.html(result[i].typeName + iconStr)
-																																.prepend($("<img/>").addClass("attiImg").css("vertical-align", "middle").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png")))); 
-									//"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + iconStr + "</td></tr>"); 
+							tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png' style='vertical-align:middle'/>" + result[i].typeName + iconStr + "</td></tr>";
+							calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>", calendarHTML.indexOf("TD_" + startDate + "_Value")), tdHTML);
 						} else {
-							$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId).attr("modappl", result[i].modAppl)
-																																.html(result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + iconStr)
-																																.prepend($("<img/>").addClass("attiImg").css("vertical-align", "middle").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
-									//"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>"); 
+							tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png' style='vertical-align:middle'/>" + result[i].typeName + " : " + result[i].startDate.split(" ")[1].substring(0, 5) + iconStr + "</td></tr>";
+							calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>", calendarHTML.indexOf("TD_" + startDate + "_Value")), tdHTML);
 						} 
 					}
-					checkAttiModAppl();
 				} else { //부서근태현황일때
-					for (var i = 0; i < result.length; i++) {
+					for (var i = 0; i < resultLength; i++) {
 						var iconStr = "";
 						if (result[i].modAppl  == '2') {
-							/* iconStr = " <i class='fas fa-pencil-alt'></i>"; */
 							iconStr = " <img class='pencil' src='/images/ezAttitude/change.png' />";
 						} else if (result[i].modAppl  == '3') {
-							/* iconStr = " <i class='fas fa-pencil-alt'></i>"; */
 							iconStr = " <img class='pencil' src='/images/ezAttitude/change.png' />";
 						}
 						if (result[i].typeId != 'A01' && result[i].typeId != 'A03') {
@@ -592,40 +586,38 @@
 								for (var j = 0; j<= subDate; j++) {
 									betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1));
 									var tdDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
-									$("td[day=" + tdDay + "]").find("table#TD_" + tdDay + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId)
-																																.html(result[i].typeName + " : " + result[i].writerName + iconStr)
-																																.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
-											//"<tr><td attitudeId='" + result[i].attitudeId+ "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
+									tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png'/>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>";
+									calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>",calendarHTML.indexOf("TD_" + tdDay + "_Value")), tdHTML);
 								}
 							} else if (result[i].dateType == '3') {
-								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId)
-																																	.html(result[i].typeName + " : " + result[i].writerName + iconStr)
-																																	.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
-										//"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
+								tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png'/>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>";
+								calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>", calendarHTML.indexOf("TD_" + startDate + "_Value")), tdHTML);
 							} else if (result[i].dateType == '1') {
-								$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId)
-																																	.html(result[i].typeName + " : " + result[i].writerName + iconStr)
-																																	.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
-										//"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
+								tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png'/>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>";
+								calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>", calendarHTML.indexOf("TD_" + startDate + "_Value")), tdHTML);
 							} else {
 								if (result[i].typeId == "A02") {
-									$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId).attr("modappl", result[i].modAppl)
-																																		.html(result[i].typeName + " (" + result[i].startDate.split(" ")[1].substring(0, 5) + ")" + " : " + result[i].writerName + iconStr)
-																																		.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
+									tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png'/>" + result[i].typeName + " (" + result[i].startDate.split(" ")[1].substring(0, 5) + ")" + " : " + result[i].writerName + iconStr + "</td></tr>";
+									calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>", calendarHTML.indexOf("TD_" + startDate + "_Value")), tdHTML);
 								} else {
-									$("td[day=" + startDate + "]").find("table#TD_" + startDate + "_Value").append($("<tr></tr>").append($("<td></td>").attr("attitudeId", result[i].attitudeId).attr("typeId", result[i].typeId).attr("modappl", result[i].modAppl)
-																																		.html(result[i].typeName + " : " + result[i].writerName + iconStr)
-																																		.prepend($("<img/>").addClass("attiImg").attr("src","/images/ezAttitude/" + result[i].imgPath + ".png"))));
+									tdHTML = "<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'><img class='attiImg' src='/images/ezAttitude/" + result[i].imgPath + ".png'/>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>";
+									calendarHTML = insertCalendarData(calendarHTML, calendarHTML.indexOf("</table>", calendarHTML.indexOf("TD_" + startDate + "_Value")), tdHTML);
 								}
-										//"<tr><td attitudeId='" + result[i].attitudeId + "' typeId='" + result[i].typeId + "' modappl='" + result[i].modAppl + "'>" + result[i].typeName + " : " + result[i].writerName + iconStr + "</td></tr>");
 							}	
 						}
 					}
 					if ($("#authDeptList option:selected").attr("authtype") != "M") {
 						$("td[typeid=A02][modappl=0]").css('cursor','default');
 					}
-					checkAttiModAppl();
+					
 				}
+				document.getElementById("attiCalendar").innerHTML = calendarHTML;
+				checkAttiModAppl();
+				console.timeEnd("attitudeTime");
+			}
+			
+			function insertCalendarData(str, index, value) {
+			    return str.substr(0, index) + value + str.substr(index);
 			}
 			
 			/**
