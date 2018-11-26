@@ -69,7 +69,6 @@
 							<dt class="portletText" data1="${boardId }">
 								<c:out value="${portletName }" />
 							</dt>
-							<dd>"<spring:message code='ezNewPortal.t018' />"</dd>
 						</dl>
 						<ul class="portlet_list">
 							<dl class="nodata">
@@ -81,17 +80,6 @@
 						</ul>
 					</c:otherwise>
 			</c:choose>
-			<c:if test="${access eq 'false' }">
-				</dl>
-				<ul class="portlet_list">
-					<dl class="nodata">
-						<dt>
-							<img src="/images/ezNewPortal/nodata.png">
-						</dt>
-						<dd>"<spring:message code='ezNewPortal.t039' />"</dd>
-					</dl>
-				</ul>
-			</c:if>
 		</div>
 	</article>
 </body>
