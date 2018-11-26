@@ -1454,4 +1454,28 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("updateQuickLinkOrder ended");
 		return json;
 	}
+	
+	/**
+	 * 초기화면 슬라이디 이미지 순서 변경
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/updateSliderImageOrder.do", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject updateSliderImageOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject jsonParam) throws Exception {
+		logger.debug("updateSliderImageOrder started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		JSONObject json = new JSONObject();
+		JSONParser jp = new JSONParser();
+		jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+		
+		JSONArray sliderImageList = (JSONArray) jsonParam.get("slierImageList");
+		ezPersonalAdminService.updateSliderImageOrder(sliderImageList, userInfo.getTenantId());
+		json.put("result", "OK");
+		
+		logger.debug("updateSliderImageOrder started");
+		return json;
+	}
+	
 }
