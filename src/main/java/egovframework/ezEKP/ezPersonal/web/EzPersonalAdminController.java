@@ -1050,7 +1050,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("secondary", secondary);
 
 		logger.debug("selectImage ended");
-		return "admin/ezPersonal/personalSelectImage";
+		return "admin/ezPersonal/personalSelectImages";
 	}
 	
 	/**
