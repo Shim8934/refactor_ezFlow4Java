@@ -226,7 +226,7 @@
 .quesBacgr .selection {width:100%; height:50%; padding-top: 15px;}
 .quesBacgr .selection .optionPart {text-align: center;}
 .quesBacgr .selection .optionPart .textInput {width: 50%; height: 30px;}
-.quesBacgr .selection .optionPart .attachImg {width: 30px; height: 30px; cursor: pointer;}
+.quesBacgr .selection .optionPart .attachImg {width: 30px; height: 30px; cursor: pointer; padding-left: 20px; padding-right: 10px;}
 .quesBacgr .selection .optionPart .fileInput {width: 0px; opacity: 0;}
 .quesBacgr .selection .optionPart .deleteOption {width: 30px; height: 30px; cursor: pointer;}
 .quesBacgr .selection .additionalPart {width: 60%; margin-left: 20%; padding-top: 15px;}

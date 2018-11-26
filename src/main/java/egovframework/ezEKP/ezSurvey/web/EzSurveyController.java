@@ -1,24 +1,36 @@
 package egovframework.ezEKP.ezSurvey.web;
 
+import java.io.File;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyRestService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("unchecked")
 @Controller
-public class EzSurveyController {
+public class EzSurveyController extends EgovFileMngUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzSurveyController.class);
 	
 	@Autowired
@@ -26,6 +38,9 @@ public class EzSurveyController {
 	
 	@Autowired
 	private EzSurveyRestService surveyRestService;
+	
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	@RequestMapping(value = "/ezSurvey/surveyMain.do")
 	public String jspGetSurveyMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) {
@@ -160,4 +175,82 @@ public class EzSurveyController {
 		
 		return resultObj.toString();
 	}
+	
+	@RequestMapping(value = "/ezSurvey/uploadFile.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletResponse response) throws Exception {		
+		logger.debug("Upload file is running!");		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
+		List<MultipartFile> multiFile = request.getFiles("fileToUpload"); 
+		int cnt = multiFile.size();
+		
+		String realPath = request.getServletContext().getRealPath("");
+		String[] pFileName = new String[cnt];
+        Long[] fileSize = new Long[cnt];        
+        String[] resultUpload = new String[cnt];
+        String[] sGUID = new String[cnt];
+        String[] pUploadSN = new String[cnt];        
+        String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", loginSimpleVO.getTenantId());
+
+        for (int i = 0; i < cnt; i++) {
+            resultUpload[i] = "false";
+            sGUID[i] = UUID.randomUUID().toString();
+            pUploadSN[i] = "{" + sGUID[i] + "}";
+        }
+
+        if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {        	
+            for (int i = 0; i < cnt; i++) {
+                String _pFileName = multiFile.get(i).getOriginalFilename();
+                
+                if (_pFileName.indexOf(commonUtil.separator) > 0) {
+                    _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
+                }
+                
+                pFileName[i] = _pFileName;
+            }
+        }
+
+/*        for (int i = 0; i < cnt; i++) {
+            pFileName[i] = pFileName[i].replace("+", "%2b");
+            pFileName[i] = pFileName[i].replace(";", "%3b");
+        }    */       
+        
+        String pDirPath = commonUtil.getUploadPath("upload_vote.ROOT", loginSimpleVO.getTenantId());
+        pDirPath = realPath + pDirPath;
+        
+        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+        	pDirPath = pDirPath + commonUtil.separator;
+        }
+        
+        File file = new File(pDirPath + "uploadFile");
+
+        if (!file.exists()) {
+        	file.mkdir();        
+        }
+
+        StringBuffer strXML = new StringBuffer();
+        strXML.append("<ROOT><NODES>");
+        
+        for (int i = 0; i < cnt; i++) {        	
+        	fileSize[i] = multiFile.get(i).getSize();
+            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+            String newFileName = pUploadSN[i] + "." + extend;
+            
+            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {           	
+				strXML.append("<DATA><![CDATA[" + newFileName + "/" + pFileName[i] + "/" + fileSize[i] + "]]></DATA>");
+				strXML.append("<DATA2><![CDATA[]]></DATA2>");
+				strXML.append("<DATA3><![CDATA[denied]]></DATA3>");
+            } 
+            else {
+				writeUploadedFile(multiFile.get(i), newFileName, pDirPath + "uploadFile");
+				strXML.append("<DATA><![CDATA[" + newFileName + "/" + pFileName[i] + "/" + fileSize[i] + "]]></DATA>");
+				strXML.append("<DATA2><![CDATA[]]></DATA2>");
+				strXML.append("<DATA3><![CDATA[OK]]></DATA3>");
+            }
+        }
+        strXML.append("</NODES></ROOT>");        
+       
+        logger.debug("Upload file finishes!");        
+        return strXML.toString();
+    }
 }
