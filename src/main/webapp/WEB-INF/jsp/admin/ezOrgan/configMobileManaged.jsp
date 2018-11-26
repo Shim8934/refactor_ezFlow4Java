@@ -112,6 +112,11 @@
 				</td>
 			</tr>
 		</table>
+		<div class="btnposition">
+		    <a class="imgbtn">
+		    	<span onClick="return setUserMobileInfo()"><spring:message code='ezOrgan.t124' /></span>
+		    </a>
+		</div>
 		<br/>
 		<table class="mainlist" id="deviceTbl" style="white-space: nowrap; width:100%; overflow-x: hidden; overflow-y: auto;">
             <tr>
@@ -146,11 +151,6 @@
     			</tr>
     		</c:if>
         </table>
-        <div class="btnposition">
-		    <a class="imgbtn">
-		    	<span onClick="return setUserMobileInfo()"><spring:message code='ezOrgan.t124' /></span>
-		    </a>
-		</div>
 		<br/><br/>
 	</body>
 </html>

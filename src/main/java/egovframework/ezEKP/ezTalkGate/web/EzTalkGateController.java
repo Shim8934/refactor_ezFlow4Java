@@ -96,14 +96,14 @@ public class EzTalkGateController {
 
 				// 전체 사용안함. 사용자, 관리자 설정
 				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
-					logger.debug("userId=" + userId + ", can't use mobile login.");
+					logger.debug("userId=" + userId + ", no use mobile login by userconfig.");
 					result = "N";
 				} else {
 					// 기능 사용하며, 기기별 검색
 					String inputParams = "userId=" + userId + "&deviceId=";
 					logger.debug("userId=" + userId + ",deviceId=");
 
-					String requestURL = "/ezTalkGate/getUserMobileDeviceInfo";
+					String requestURL = "/ezTalkGate/getUserMobileDeviceUsedInfo";
 					String getResult = ezEmailUtil
 					        .getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
 					logger.debug("getResult=" + getResult);
@@ -114,7 +114,7 @@ public class EzTalkGateController {
 					        : Integer.valueOf(String.valueOf(resultObj.get("data")));
 
 					if (mobileUsed > 0) {
-						logger.debug("userId=" + userId + ", this device can't use.");
+						logger.debug("userId=" + userId + ", no use mobile login by deviceInfo.");
 						result = "N";
 					}
 				}
@@ -166,13 +166,13 @@ public class EzTalkGateController {
 						String adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId, "adminOrderNotUsedMobileLogin");
 						
 						if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
-							logger.debug("userId=" + userId + " not used mobile login.");
+							logger.debug("userId=" + userId + ", no use mobile login by userconfig");
 							result = "NOTUSE";
 						} else {
 							String inputParams = "userId=" + userId + "&deviceId=";
-							logger.debug("userId=" + userId + ",deviceId=");
+							logger.debug("userId=" + userId + ", deviceId=");
 							
-							String requestURL = "/ezTalkGate/getUserMobileDeviceInfo";
+							String requestURL = "/ezTalkGate/getUserMobileDeviceUsedInfo";
 							String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
 							logger.debug("getResult=" + getResult);
 							
@@ -182,7 +182,7 @@ public class EzTalkGateController {
 												0 : Integer.valueOf(String.valueOf(resultObj.get("data")));
 							
 							if (mobileUsed > 0) {
-								logger.debug("userId=" + userId + ", this device can't use.");
+								logger.debug("userId=" + userId + ", no use mobile login by deviceInfo");
 								result = "NOTUSE";
 							}
 						}
@@ -194,7 +194,7 @@ public class EzTalkGateController {
 			result = "ERROR";
 		}
 		
-		logger.debug("ezTalkLogin ended. result=" + result);
+		logger.debug("ezTalkLogin ended. mobile=" + result);
 		return result;
     }
     
