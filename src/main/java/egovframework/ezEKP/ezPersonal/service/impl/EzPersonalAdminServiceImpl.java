@@ -491,6 +491,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pTitle2", vo.getTitle2());
 		map.put("v_pContent", vo.getContent().replace("\"", "\'"));
 		map.put("tenantID", tenantID);
+		map.put("skinValue", vo.getSkinValue());
 
 		ezPersonalAdminDAO.insertPopup(map);
 		logger.debug("insertPopup ended");
@@ -512,6 +513,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pTitle2", vo.getTitle2());
 		map.put("v_pContent", vo.getContent().replace("\"", "\'"));
 		map.put("tenantID", tenantID);
+		map.put("skinValue", vo.getSkinValue());
 
 		ezPersonalAdminDAO.updatePopup(map);
 		logger.debug("updatePopup ended");

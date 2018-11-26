@@ -28,6 +28,7 @@
 			var flag = "<c:out value = '${flag}' />";
 			var MHTLoadComplete="";
 			var initdate = "<c:out value = '${initDate}' />";
+			var skinValue = "<c:out value = '${personalPopupVO.skinValue}' />";
 
 			window.onload = window_onload;
 			function window_onload() {
@@ -100,6 +101,8 @@
 
 				$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 				$("#Edatepicker").datepicker('setDate', EDate);
+				
+				$("#skin"+skinValue).prop("checked", "checked");
 			});
 
 			$(function () {
@@ -214,6 +217,7 @@
 
 				var tmpStartDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
 				var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+				var skinVal = $('input:radio[name="skin"]:checked').val();
 
 				$.ajax({
 					type : "POST",
@@ -228,7 +232,9 @@
 							width : wWidth.value,
 							height : wHeight.value,
 							position : document.getElementById("selectPos").value,
-							content : message.GetEditorContent() },
+							content : message.GetEditorContent(),
+							skinValue : skinVal
+							},
 					dataType : "text",
 					success : function (result) {
 						if (result != "OK") {
@@ -346,8 +352,24 @@
 						<input id='_T1' class='datepicker_time' readonly>
 						<IMG align="absmiddle" border="0" height="16" id="img_StartTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative" width="16">
 						<input id='_T2' class='datepicker_time' readonly>
-						<IMG align="absmiddle" border="0" height="16" id="img_EndTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative" width="16"></td>
-					</tr> 
+						<IMG align="absmiddle" border="0" height="16" id="img_EndTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative" width="16">
+					</td>
+				</tr> 
+				<tr>
+					<th>스킨선택</th>
+					<td id="skinView" style="padding:3px; height:100px">
+						<input type="radio" name="skin" class="skins" id="skin0" value="0">
+						<label for="skin0">스킨0</label>	
+						<input type="radio" name="skin" class="skins" id="skin1" value="1">
+						<label for="skin1">스킨1</label>
+						<input type="radio" name="skin" class="skins" id="skin2" value="2">
+						<label for="skin2">스킨2</label>	
+						<input type="radio" name="skin" class="skins" id="skin3" value="3">
+						<label for="skin3">스킨3</label>
+						<input type="radio" name="skin" class="skins" id="skin4" value="4">
+						<label for="skin4">스킨4</label>	
+					</td>
+				</tr>
 				<tr>
 					<th><spring:message code = 'ezPersonal.t155' /></th>
 					<td id="addPopEditor" style="padding:3px; height:385px">

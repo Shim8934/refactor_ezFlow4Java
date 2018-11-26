@@ -27,7 +27,8 @@
 		<result property="endDate"						column="ENDDATE"				columnIndex="5"/>
 		<result property="width"						column="WIDTH"					columnIndex="6"/>
 		<result property="height"						column="HEIGHT"					columnIndex="7"/>
-		<result property="position"						column="POSITION"				columnIndex="8"/>		
+		<result property="position"						column="POSITION"				columnIndex="8"/>
+		<result property="skinValue"					column="SKINVALUE"				columnIndex="9"/>		
 	</resultMap>
 	
 	<select id="EzPersonalAdmin.EZSP_GETNOTICEINFO" parameterClass="Map"		resultMap="personalNoticeVO">
@@ -50,20 +51,21 @@
 	<select id="EzPersonalAdmin.EZSP_GETPOPUPINFO" parameterClass="Map"		resultMap="personalPopupVO">
 		<![CDATA[
 			SELECT
-				TITLE ,
-             	TITLE2 ,
-             	CONTENT ,
-             	WIDTH ,
-             	HEIGHT ,
-             	POSITION ,
-             	STARTDATE ,
-             	ENDDATE 
-        	FROM
-        		TBL_PS_POPUP 
-       		WHERE
-       			ITEMSEQ = #v_pItemSeq#
-       		AND
-       			TENANT_ID = #tenantID#	
+				TITLE,
+				TITLE2,
+				CONTENT,
+				WIDTH,
+				HEIGHT,
+				POSITION,
+				STARTDATE,
+				ENDDATE,
+				SKINVALUE
+			FROM
+				TBL_PS_POPUP 
+			WHERE
+				ITEMSEQ = #v_pItemSeq#
+			AND
+				TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
@@ -696,9 +698,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_POPUP
-				( COMPANYID, STARTDATE, ENDDATE, WIDTH, HEIGHT, POSITION, TITLE, TITLE2, CONTENT, TENANT_ID, INUSE )
+				( COMPANYID, STARTDATE, ENDDATE, WIDTH, HEIGHT, POSITION, TITLE, TITLE2, CONTENT, TENANT_ID, INUSE, SKINVALUE)
 			VALUES 
-				( #v_pCompanyID#, DATE_FORMAT(#v_pStartDate#, '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(#v_pEndDate#, '%Y-%m-%d %H:%i:%s'), #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #tenantID#, 1)
+				( #v_pCompanyID#, DATE_FORMAT(#v_pStartDate#, '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(#v_pEndDate#, '%Y-%m-%d %H:%i:%s'), #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #tenantID#, 1, #skinValue#)
 		]]>
 	</insert>
 	
@@ -706,19 +708,20 @@
 		<![CDATA[
 			UPDATE
 				TBL_PS_POPUP
-      		SET
-      			STARTDATE = DATE_FORMAT(#v_pStartDate#, '%Y-%m-%d %H:%i:%s'),
-          		ENDDATE = DATE_FORMAT(#v_pEndDate#, '%Y-%m-%d %H:%i:%s'),
-          		WIDTH = #v_pWidth#,
-          		HEIGHT = #v_pHeight#,
-          		POSITION = #v_pPosition#,
-          		TITLE = #v_pTitle#,
-          		TITLE2 = #v_pTitle2#,
-          		CONTENT = #v_pContent#
-    		WHERE
-    			ITEMSEQ = #v_pItemSeq#
-    		AND
-    			TENANT_ID = #tenantID#	
+			SET
+				STARTDATE = DATE_FORMAT(#v_pStartDate#, '%Y-%m-%d %H:%i:%s'),
+				ENDDATE = DATE_FORMAT(#v_pEndDate#, '%Y-%m-%d %H:%i:%s'),
+				WIDTH = #v_pWidth#,
+				HEIGHT = #v_pHeight#,
+				POSITION = #v_pPosition#,
+				TITLE = #v_pTitle#,
+				TITLE2 = #v_pTitle2#,
+				CONTENT = #v_pContent#,
+				SKINVALUE = #skinValue#
+			WHERE
+				ITEMSEQ = #v_pItemSeq#
+			AND
+				TENANT_ID = #tenantID#
 		]]>
 	</update>
 	
