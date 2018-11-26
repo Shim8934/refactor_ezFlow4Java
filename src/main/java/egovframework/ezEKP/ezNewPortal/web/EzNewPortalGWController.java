@@ -2898,7 +2898,7 @@ e.printStackTrace();
 	}
 
 	// //////board 권한 체크
-	public boolean boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId, String deptId, String userId, String rollInfo) {
+	public boolean boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId, String deptId, String userId, String rollInfo) throws Exception {
 		LOGGER.debug("boardAuthCheck started");
 		boolean authCheck = false;
 		String[] deptPathSplit = deptPath.split(",");
