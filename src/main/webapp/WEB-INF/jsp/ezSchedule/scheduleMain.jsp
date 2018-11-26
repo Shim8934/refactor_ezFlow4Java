@@ -311,12 +311,14 @@
                     }
                 } */
                 //alert('windowonload_Complete2');
-                //parent.frames["left"].document.location.reload();
 		        
                 if (otherid != "") {
                     secretarySelect.value = otherid;
                 }
-                parent.frames["left"].groupRefresh();  
+                
+                if (ret == "success" ) {
+	                parent.frames["left"].leftRefresh();
+                }
                 resize();
 		    }
 			

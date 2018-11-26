@@ -525,7 +525,7 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code="ezSystem.x0021"></spring:message><span id="listInfo"></span></h1>
-		<div id="" style="display:none"> <!-- mainmenu -->
+		<%-- <div id=""> <!-- mainmenu -->
 		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
 			    <select id="ListCompany" onChange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
@@ -533,10 +533,19 @@
 	            	</c:forEach>
 			    </select><br /><br />
 		    </span>
-		</div>
+		</div> --%>
 		<table style="width: 100%; background-color: #f8f8f8; border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
+					<span id="topmenu" style="width: 500px">&nbsp;<spring:message code='ezStatistics.t195'/> :
+		            <select style="height:24px" id="ListCompany" name="SCompID" onchange="selectCompanyID()">
+		           		<c:if test="${isMasterAdmin eq 'y'}">
+		           			<option value="Top/organ"><spring:message code="ezPoll.t237"/></option>
+		           		</c:if>
+		           		<c:forEach var="item" items="${list}">
+			            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+		            	</c:forEach>
+		            </select>&nbsp;
 					<span id="topmenu" style="width: 500px"><spring:message code='ezSystem.x0032'/> : &nbsp; 
 						<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
 						<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />

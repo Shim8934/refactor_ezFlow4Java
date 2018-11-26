@@ -556,7 +556,7 @@ public class EzAttitudeController {
 			JSONObject dept = (JSONObject) deptList.get(i);
 			authFlag = (String) dept.get("authType");
 			
-			if (authFlag.equals("M")) {
+			if (authFlag != null && authFlag.equals("M")) {
 				attitudeAdminCheck = true;
 			}
 		}
@@ -1951,7 +1951,7 @@ public class EzAttitudeController {
 		for (int i = 0; i < deptList.size(); i++ ){
 			JSONObject dept = (JSONObject)deptList.get(i);
 			if (dept.get("deptId").equals(attModDeptId)) {
-				if (!((String) dept.get("authType")).equals("")) {
+				if ((String) dept.get("authType") != null && !((String) dept.get("authType")).equals("")) {
 					authFlag = (String) dept.get("authType");
 				}
 				adminFlag = "true";
@@ -2897,7 +2897,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태입력관리, 미입력자관리, 관리내역 엑셀 출력
 	 */
-	@RequestMapping(value = {"/ezAttitude/excelAttitudeListExport.do", "/ezAttitude/excelAbsentedListExport.do", "ezAttitude/excelHistoryListExport.do"})
+	@RequestMapping(value = {"/ezAttitude/excelAttitudeListExport.do", "/ezAttitude/excelAbsentedListExport.do", "/ezAttitude/excelHistoryListExport.do"})
 	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
 		LOGGER.debug("excelFileExport started."); 
 		

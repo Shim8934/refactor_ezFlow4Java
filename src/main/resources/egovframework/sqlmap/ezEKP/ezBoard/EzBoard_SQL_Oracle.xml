@@ -916,45 +916,60 @@
 							USERCOMPANYNAME$lang$ AS USERCOMPANYNAME, 
 							NVL(USERTITLE$lang$, '') AS USERTITLE, 
 							TO_CHAR(READDATE, 'YYYY-MM-DD HH24:MI:SS') as READDATE,
-							MAX(DEPTID)
+							DEPTID
 					   	FROM 
 					   		TBL_Board_Item_Read A
 						INNER JOIN
-						   ((SELECT
-								D.CN, D.DEPARTMENT as DEPTID,
-								D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-								D.TENANT_ID
-							FROM
-								TBL_USERMASTER D
-							WHERE
-								D.TENANT_ID = #tenantID#)
+						   (SELECT
+					   			T.*,
+					    		ROW_NUMBER() OVER (PARTITION BY T.CN ORDER BY ROWNUM) CNT
+					    	FROM
+						    	((SELECT
+									D.CN, D.DEPARTMENT as DEPTID,
+									D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+									D.TENANT_ID
+								FROM
+									TBL_USERMASTER D
+								WHERE
+									D.TENANT_ID = #tenantID#
+						]]>
+						<isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+							<![CDATA[
+								AND
+									D.PHYSICALDELIVERYOFFICENAME = #companyID#
+							]]>
+						</isNotEqual>
+						<![CDATA[
+								)
+									
+								UNION ALL
 								
-							UNION ALL
-							
-							(SELECT
-								B.cn, A2.DEPTID,
-								C.EXTENSIONATTRIBUTE2 as COMPANYID,
-								A2.TENANT_ID
-							FROM
-								TBL_USERMASTER B
-							INNER JOIN
-								TBL_ADDJOBMASTER A2
-							ON
-								A2.CN = B.CN
-							AND
-								A2.TENANT_ID = B.TENANT_ID
-							RIGHT JOIN
-								TBL_DEPTMASTER C
-							ON
-								A2.DEPTID = C.CN
-							AND
-								B.TENANT_ID = C.TENANT_ID
-							AND
-								C.EXTENSIONATTRIBUTE2 = #companyID#)) T
+								(SELECT
+									B.cn, A2.DEPTID,
+									C.EXTENSIONATTRIBUTE2 as COMPANYID,
+									A2.TENANT_ID
+								FROM
+									TBL_USERMASTER B
+								INNER JOIN
+									TBL_ADDJOBMASTER A2
+								ON
+									A2.CN = B.CN
+								AND
+									A2.TENANT_ID = B.TENANT_ID
+								RIGHT JOIN
+									TBL_DEPTMASTER C
+								ON
+									A2.DEPTID = C.CN
+								AND
+									B.TENANT_ID = C.TENANT_ID
+								AND
+									C.EXTENSIONATTRIBUTE2 = #companyID#
+								WHERE
+									A2.TENANT_ID = #tenantID#)) T ) TR
 						ON
-							A.USERID = T.CN
+							A.USERID = TR.CN
 						AND
-							A.TENANT_ID = T.TENANT_ID
+							A.TENANT_ID = TR.TENANT_ID
 					   	WHERE
 					   		A.tenant_id = #tenantID#
 					   	AND
@@ -970,9 +985,6 @@
 					   							TENANT_ID = #tenantID#
 					   						AND
 					   							ITEMID = #itemID# )
-					GROUP BY
-						ITEMID, USERID, USERNAME, USERDEPTNAME, USERCOMPANYNAME, 
-                    	NVL(USERTITLE, ''), TO_CHAR(READDATE, 'YYYY-MM-DD HH24:MI:SS')
 				   	ORDER BY
 				   		ReadDate DESC
 				)A
@@ -1588,6 +1600,8 @@
 		            	 	A.BoardID = B.BoardID
 		                 WHERE
 		                 	A.TENANT_ID = #v_TENANTID#
+		                 AND
+  				  			(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 		                 AND  
 		                 	WRITERID = #v_PUSERID#
 		                 AND 
@@ -1598,6 +1612,9 @@
 		                 	extensionAttribute1 = '0'
 		                 AND 
 		                 	extensionAttribute2 = '1' 
+						AND
+		     			  	(A.APPRFLAG = 'Y' 
+		     			     OR A.APPRFLAG IS NULL)
 		                 ORDER BY
                  			A.WriteDate DESC ) T1
 		              WHERE ROWNUM_ <= #v_END# ) T2 
@@ -3294,7 +3311,7 @@
 		</isEqual>
 	</select>
 	
-	<select id="EzBoardDAO.getCheckItemID" parameterClass="Map" resultClass="Integer">
+	<select id="EzBoardDAO.getCheckItemID" parameterClass="Map" resultClass="Integer" remapResults="true">
 		<isNotEqual property="v_BOARDTYPE" compareValue="TEMP">
 			<![CDATA[
 				SELECT 
@@ -3369,9 +3386,17 @@
 			SELECT 
 				COUNT(ITEMID)  CNT
 			FROM 
-				TBL_Board_Item 
+				TBL_Board_Item A
+			INNER JOIN 
+				TBL_BOARD_BOARDINFO B
+			ON 
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BoardID = B.BoardID
        		WHERE  
-       			TENANT_ID = #v_TENANTID#
+       			A.TENANT_ID = #v_TENANTID#
+   			AND
+   				(WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
        		AND
        			WRITERID = #v_PUSERID#
             AND 
@@ -3382,6 +3407,9 @@
             	extensionAttribute1 = '0'
             AND 
             	EXTENSIONATTRIBUTE2 = '1' 
+			AND
+				(A.APPRFLAG = 'Y' 
+				OR A.APPRFLAG IS NULL)
 		]]>
 	</select>
 	
@@ -3805,7 +3833,7 @@
 		]]>                
 	</select>
 	
-	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO">
+	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO" remapResults="true">
 		<isNotEqual property="v_GUBUN" compareValue="2">
 			<![CDATA[
 				SELECT
@@ -3814,53 +3842,68 @@
 					A.USERID,
 					A.CONTENT,
 					TO_CHAR(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')AS WRITEDATE,
-					MAX(DEPTID)
+					DEPTID
 		        FROM
 		        	TBL_BOARD_ONELINEREPLY A
 		        INNER JOIN
-				   ((SELECT
-						D.CN, D.DEPARTMENT as DEPTID,
-						D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-						D.TENANT_ID
+				   (SELECT
+				   		T.*,
+				    	ROW_NUMBER() OVER (PARTITION BY T.CN ORDER BY ROWNUM) CNT 
 					FROM
-						TBL_USERMASTER D
-					WHERE
-						D.TENANT_ID = #v_TENANTID#)
+						((SELECT
+							D.CN, D.DEPARTMENT as DEPTID,
+							D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+							D.TENANT_ID
+						FROM
+							TBL_USERMASTER D
+						WHERE
+							D.TENANT_ID = #v_TENANTID#
+					]]>
+				<isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+					<![CDATA[
+						AND
+	                        D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+					]]>
+				</isNotEqual>
+				<![CDATA[
+						)
 						
-					UNION ALL
-					
-					(SELECT
-						B.cn, A2.DEPTID,
-						C.EXTENSIONATTRIBUTE2 as COMPANYID,
-						A2.TENANT_ID
-					FROM
-						TBL_USERMASTER B
-					INNER JOIN
-						TBL_ADDJOBMASTER A2
-					ON
-						A2.CN = B.CN
-					AND
-						A2.TENANT_ID = B.TENANT_ID
-					RIGHT JOIN
-						TBL_DEPTMASTER C
-					ON
-						A2.DEPTID = C.CN
-					AND
-						B.TENANT_ID = C.TENANT_ID
-					AND
-						C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#)) T
+						UNION ALL
+						
+						(SELECT
+							B.cn, A2.DEPTID,
+							C.EXTENSIONATTRIBUTE2 as COMPANYID,
+							A2.TENANT_ID
+						FROM
+							TBL_USERMASTER B
+						INNER JOIN
+							TBL_ADDJOBMASTER A2
+						ON
+							A2.CN = B.CN
+						AND
+							A2.TENANT_ID = B.TENANT_ID
+						RIGHT JOIN
+							TBL_DEPTMASTER C
+						ON
+							A2.DEPTID = C.CN
+						AND
+							B.TENANT_ID = C.TENANT_ID
+						AND
+							C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+						WHERE
+							A2.TENANT_ID = #v_TENANTID#)) T ) TR
 				ON
-					A.USERID = T.CN
+					A.USERID = TR.CN
 				AND
-					A.TENANT_ID = T.TENANT_ID
+					TR.CNT = 1
+				AND
+					A.TENANT_ID = TR.TENANT_ID
 		        WHERE
 		        	A.TENANT_ID = #v_TENANTID#
 		        AND
 		       		A.BOARDID = #v_BoardID#
 				AND 
 					A.ITEMID = #v_ItemID#
-				GROUP BY
-					A.USERID, A.REPLYID, A.USERNAME, A.CONTENT, TO_CHAR(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')
 				ORDER BY 
 					writedate ASC
 			]]>
@@ -3869,8 +3912,8 @@
 			<![CDATA[
 				SELECT 
 					REPLYID, 
-					$v_UserName$ AS USERNAME, 
-					USERID, 
+					$v_UserName$ AS USERNAME,
+					USERID,
 					CONTENT, 
 					TO_CHAR(WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')AS WRITEDATE
 		        FROM 
