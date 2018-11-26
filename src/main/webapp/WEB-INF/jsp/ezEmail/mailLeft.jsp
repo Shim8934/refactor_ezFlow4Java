@@ -288,9 +288,9 @@
 	            var treeconfig;
 	            if (CrossYN()) {
 	                treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
-	            }
-	            else
+	            } else {
 	                treeconfig = xmlHTTP.responseXML;
+	            }
 	
 	            PostTreeView.config(treeconfig);
 	            PostTreeView.source("<tree><nodes>" + document.getElementById("RootFolderXML").innerHTML + "</nodes></tree>");
@@ -418,7 +418,7 @@
 	                        //PostTreeView.putstyle(PostTreeView.selectedIndex(), "font-weight : ''");
 	                    }
 	                    else {
-	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption + "(" + unreadcount + ")");
+	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption + unreadcount);
 	                        //PostTreeView.putstyle(PostTreeView.selectedIndex(), "font-weight : bold");
 	                    }
 	                    
