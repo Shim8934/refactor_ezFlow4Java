@@ -531,7 +531,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 
 	@Override
-	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) {
+	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) throws Exception {
 		LOGGER.debug("[Serivce] getCompanyPortletInfo Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);

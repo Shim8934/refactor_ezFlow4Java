@@ -198,7 +198,7 @@
     	</div>
     	<c:choose>
 			<c:when test="${endPage>0 }">
-			<div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
+			<div id="tblPageRayer" style="display: none; width:470px; margin:6px auto; font-size:0">
 				<div class="pagenavi">   
 					<c:choose>
 							<c:when test="${intPage gt 1}">   

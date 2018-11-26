@@ -30,7 +30,7 @@ var pollPlus = function () {
 }
 
 var nodata = function () {
-	var str = '<dl class="nodata"><dt><img src="/images/ezNewPortal/nodata.png"></dt><dd>'+ messages.strLang1 +'</dd></dl>';
+	var str = '<dl class="nodata"><dt><img src="/images/ezNewPortal/nodata.png"></dt><dd>&#34;'+ messages.strLang1 +'&#34;</dd></dl>';
 	document.getElementById('pollInfo').innerHTML = str;
 	document.getElementById('pollPlus').addEventListener('click', pollPlus);
 }

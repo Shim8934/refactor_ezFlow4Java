@@ -228,7 +228,11 @@
 		<result property="characterID"			column="CHARACTERID"			columnIndex="19"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="20"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
+		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="22"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="23"/>
+		<result property="deptNm2"				column="DEPTNM2"				columnIndex="24"/>
+		<result property="jobTitle"					column="JOBTITLE"					columnIndex="25"/>
+		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="26"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" 		id="resGetRepResourceVO">
@@ -593,16 +597,17 @@
                 ATTACHFLAG ,
                 CHARACTERID ,
                 APPROVEFLAG ,
-                BB.OWNERNM  ,
-                BB.OWNERNM2  ,
-                BB.DEPTNM  ,
-                BB.DEPTNM2  ,
-                BB.JOBTITLE  ,
-                BB.JOBTITLE2  
+            	CC.OWNERNM  ,
+                CC.OWNERNM2  ,
+                CC.DEPTNM  ,
+                CC.DEPTNM2  ,
+                CC.JOBTITLE  ,
+                CC.JOBTITLE2  
            	FROM
            		TBL_RS_SCHEDULE A
 			JOIN
-				(	SELECT 
+				( SELECT BB.*, ROW_NUMBER() OVER (PARTITION BY BB.CN ORDER BY ROWNUM) CNT 
+					FROM ( SELECT 
 						d.DISPLAYNAME OWNERNM  ,
 						d.DISPLAYNAME2 OWNERNM2  ,
 						d.DESCRIPTION DEPTNM  ,
@@ -619,8 +624,8 @@
 					SELECT 
 						B.DISPLAYNAME OWNERNM  ,
 						B.DISPLAYNAME2 OWNERNM2  ,
-						C.DISPLAYNAME DEPTNM  ,
-						C.DISPLAYNAME2 DEPTNM2  ,
+						CC.DISPLAYNAME DEPTNM  ,
+						CC.DISPLAYNAME2 DEPTNM2  ,
 						AA.TITLE JOBTITLE  ,
 						AA.TITLE2 JOBTITLE2 ,
 						B.CN ,
@@ -634,15 +639,20 @@
 					AND 
 						AA.TENANT_ID = B.TENANT_ID       
 					RIGHT JOIN 
-						TBL_DEPTMASTER C
+						TBL_DEPTMASTER CC
 					ON 
-						AA.DEPTID = C.CN
+						AA.DEPTID = CC.CN
 					AND 
-						B.TENANT_ID = C.TENANT_ID 
+						B.TENANT_ID = CC.TENANT_ID 
 					WHERE 
-						AA.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# ) BB
+						AA.TENANT_ID = #tenantID# AND CC.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# AND B.physicaldeliveryofficename <> #v_PCOMPANYID# ) BB  
+				) CC  
 			ON
-				A.WRITERID = BB.CN AND A.TENANT_ID = BB.TENANT_ID
+				A.writerID = CC.CN
+			AND
+				CC.CNT = '1' 
+			AND 
+				A.TENANT_ID = CC.TENANT_ID
           	WHERE
 				STARTDATE <= to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
@@ -652,13 +662,11 @@
 			AND
 				A.OWNERID = #v_POWNERID# 
 			AND
-				A.DEPTNM = BB.DEPTNM
-			AND
 				REFLAG = '0'
 			AND
-                ( BB.OWNERNM LIKE '%' || #v_WRITERNAME# || '%' OR BB.OWNERNM2 LIKE '%' || #v_WRITERNAME# || '%' )
+                ( CC.OWNERNM LIKE '%' || #v_WRITERNAME# || '%' OR CC.OWNERNM2 LIKE '%' || #v_WRITERNAME# || '%' )
 			AND
-				( BB.DEPTNM LIKE '%' || #v_WRITERDEPT# || '%' OR BB.DEPTNM2 LIKE '%' || #v_WRITERDEPT# || '%' )
+				( CC.DEPTNM LIKE '%' || #v_WRITERDEPT# || '%' OR CC.DEPTNM2 LIKE '%' || #v_WRITERDEPT# || '%' )
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
@@ -770,8 +778,12 @@
             	A.companyID ,
             	CHARACTERID ,
             	APPROVEFLAG ,
-            	A.OWNERNM  ,
-            	A.DEPTNM 
+            	CC.OWNERNM  ,
+                CC.OWNERNM2  ,
+                CC.DEPTNM  ,
+                CC.DEPTNM2  ,
+                CC.JOBTITLE  ,
+                CC.JOBTITLE2  
 			FROM
 				TBL_RS_SCHEDULE A
 			JOIN
@@ -814,7 +826,7 @@
 					AND 
 						B.TENANT_ID = CC.TENANT_ID 
 					WHERE 
-						AA.TENANT_ID = #tenantID# AND CC.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# ) BB  
+						AA.TENANT_ID = #tenantID# AND CC.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# AND B.physicaldeliveryofficename <> #v_PCOMPANYID# ) BB  
 				) CC  
 			ON
 				A.writerID = CC.CN

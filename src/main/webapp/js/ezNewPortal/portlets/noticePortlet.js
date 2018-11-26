@@ -49,19 +49,19 @@ var assembleNoticeList = function(noticeList) {
 		}
 		return text;
 	};	
-	if (noticeList) {
+	if (noticeList && noticeList.length != 0) {
 		str += "<ul class='noti_portlet_list'>";
 		noticeList.forEach(function(item, index){
 			str += dataAssembler(item, index);
 		});
 	} else {
 		str += "<ul class='portlet_list'>";
-		str += "<dl class='nodata'>"
-		str += "<dt>"
-		str += "<img src='/images/ezNewPortal/nodata.png'>"
-		str += "</dt>"
-		str += "<dd>&#34;"+messages.strLang14+"&#34;</dd>"
-		str += "</dl>"
+		str += "<dl class='nodata'>";
+		str += "<dt>";
+		str += "<img src='/images/ezNewPortal/nodata.png'>";
+		str += "</dt>";
+		str += "<dd>&#34;" + messages.strLang14 + "&#34;</dd>";
+		str += "</dl>";
 	}
 
 	var noticeCnt = str.match(/notiLI/g); // 공지사항 갯수 확인.
