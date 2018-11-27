@@ -297,29 +297,29 @@
 	        function selectnode(event) {
 	        	if (!event) event = window.event;
 				/* 2018-08-06 장진혁 스크립트 오류로 undefined 걸름 */
-	        	if (event != undefined) {
-		        	if (event.which != 3) {
-					    var nodeIdx = eval(treeviewStr).selectedIndex();
-					    var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(eval(treeviewStr).getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(eval(treeviewStr).getvalue(nodeIdx, "href"));
-		        		
-		        		if (shareId != "") {
-		        			url += "&shareId=" + encodeURIComponent(shareId);
-		        		}
-		        		
-		        		try {
-			                if (typeof (parent.frames["right"]) != "undefined")
-			                    parent.frames["right"].Window_onunload();
-			            } catch (e) { }
-			            
-			            if (g_firstOpen) {
-			                g_firstOpen = false;
-			            } else {
-			                window.open(url, "right");
-			            }
-			            
-			            get_unreadcount();
-		        	}
+	        	if (event != undefined && event.which == 3) {
+	        		return;
 	        	}
+				
+			    var nodeIdx = eval(treeviewStr).selectedIndex();
+			    var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(eval(treeviewStr).getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(eval(treeviewStr).getvalue(nodeIdx, "href"));
+        		
+        		if (shareId != "") {
+        			url += "&shareId=" + encodeURIComponent(shareId);
+        		}
+        		
+        		try {
+	                if (typeof (parent.frames["right"]) != "undefined")
+	                    parent.frames["right"].Window_onunload();
+	            } catch (e) { }
+	            
+	            if (g_firstOpen) {
+	                g_firstOpen = false;
+	            } else {
+	                window.open(url, "right");
+	            }
+	            
+	            get_unreadcount();
 	        }
 	        
 	        function email_dragdrop(event) {

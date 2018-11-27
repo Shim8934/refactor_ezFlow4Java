@@ -37,7 +37,7 @@
 		        if (document.getElementById("OrgForwardAddress").value == "") {
 		            if (document.getElementById("ForwardAddress").value == "" || document.getElementById("ForwardAddress").value.indexOf("@") == -1) {
 		                alert("<spring:message code='ezEmail.t130' />");
-		                ddocument.getElementById("ForwardAddress").focus();
+		                document.getElementById("ForwardAddress").focus();
 		                event.returnValue = false;
 		                return false;
 		            }
