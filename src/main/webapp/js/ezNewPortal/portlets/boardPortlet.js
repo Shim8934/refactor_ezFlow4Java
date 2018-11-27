@@ -73,7 +73,6 @@ function openDoc_section4_Type(pItemID, pType, oBoardID) {
 }
 
 function Boardmore_NewBoardSTD_btnClick() {
-	console.log(this);
 	var boardId = $(this).attr("data1");
-    window.open("/ezBoard/boardMainRedirect.do?boardID=" + boardId, "main", "");
+    window.open("/ezBoard/boardMainRedirect.do?boardID=" + encodeURIComponent(boardId), "main", "");
 }
