@@ -53,7 +53,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -3273,18 +3272,7 @@ public class EzBoardController extends EgovFileMngUtil{
 							strName = " " + intCount;
 						}
 						
-						
-						//org.w3c.dom.Element ele = connNode.getChildNodes().item(2).getOwnerDocument().createElement("key");
-						
-						//Node root = node.getChildNodes().item(0);
-						
-						Element e2 = doc.createElement("boardCount");
-						e2.setTextContent("himan");
-						
-						//node1.setTextContent(strName);
-						
-						//node.getChildNodes().item(0).setTextContent(node.getChildNodes().item(0).getTextContent() + strName);
-						node.getChildNodes().item(0).appendChild(e2);
+						node.getChildNodes().item(0).setTextContent(node.getChildNodes().item(0).getTextContent() + strName);
 					}
 				}
 			}
@@ -3293,7 +3281,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		String output = commonUtil.convertDocumentToString(doc);
-System.out.println(output);		
+		
 		res.setContentType("text/xml"); 
 		res.setCharacterEncoding("UTF-8");
 		res.setHeader("Cache-Control", "no-cache");
