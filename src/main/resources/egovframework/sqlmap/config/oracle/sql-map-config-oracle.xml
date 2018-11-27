@@ -53,6 +53,8 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezJournal/EzJournal_SQL_Oracle.xml"/>
     <!--근태관리 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitude_SQL_Oracle.xml"/>
+	<!-- 포탈개인화 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezNewPortal/EzNewPortal_SQL_Oracle.xml"/>
 
 	<!-- 2.관리자 모듈관리 SQL쿼리 XML -->
 	
@@ -80,4 +82,6 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolderAdmin_SQL_Oracle.xml"/>
 	<!-- 근태관리 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitudeAdmin_SQL_Oracle.xml"/>
+	<!-- 포탈개인화 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezNewPortal/EzNewPortalAdmin_SQL_Oracle.xml"/>
 </sqlMapConfig>
