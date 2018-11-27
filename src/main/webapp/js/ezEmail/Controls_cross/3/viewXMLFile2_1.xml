@@ -16,7 +16,7 @@
     <align>center</align>
   </column>
   <column>
-    <heading>受信人</heading>
+    <heading>宛先</heading>
     <type>string</type>
     <propname>sender</propname>
     <prop>urn:schemas:httpmail:displayto</prop>

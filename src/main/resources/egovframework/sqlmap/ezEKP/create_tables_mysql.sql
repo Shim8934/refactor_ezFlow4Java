@@ -11100,6 +11100,24 @@ CREATE TABLE `tbl_webfolder_user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_ps_shareapproval`
+--
+
+DROP TABLE IF EXISTS `tbl_ps_shareapproval`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_ps_shareapproval` (
+  `OWNERID` varchar(80) NOT NULL,
+  `SHAREUSERID` varchar(80) NOT NULL,
+  `SHAREDATE` datetime DEFAULT NULL,
+  `SHAREUSERDEPTID` varchar(200) DEFAULT NULL,
+  `TENANTID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(160) NOT NULL,
+  PRIMARY KEY (`OWNERID`,`TENANTID`,`SHAREUSERID`,`COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Temporary view structure for view `vaprdoingdoclist`
 --
 
