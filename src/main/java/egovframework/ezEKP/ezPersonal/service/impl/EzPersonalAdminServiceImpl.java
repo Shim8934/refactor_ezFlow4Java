@@ -985,8 +985,8 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		for (Object item : sliderImageList) {
 			if(item instanceof JSONObject) {
 				JSONObject sliderInfo = (JSONObject) item;
-				map.put("sliderID", sliderInfo.get("sliderID"));
-				map.put("sn", sliderInfo.get("sn"));
+				map.put("v_SLIDERID", sliderInfo.get("sliderID"));
+				map.put("v_SN", sliderInfo.get("sn"));
 				
 				logger.debug("v_SLIDERID: " + sliderInfo.get("sliderID"));
 				logger.debug("v_SN: " + sliderInfo.get("sn"));
@@ -994,7 +994,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				ezPersonalAdminDAO.updateSliderImageOrder(map);
 			}
 		}
-		logger.debug("updateSliderImageOrder started");
+		logger.debug("updateSliderImageOrder end");
 	}
 	
 	
