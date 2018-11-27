@@ -31,7 +31,7 @@
 		.empAdd dl dt img {margin: 10px 0px 20px 60px; cursor: pointer;}
 		.empAdd dl dd {color: #999; font-size: 15px; line-height: 21px; text-align: center; margin: 0px;}
 		.empImg dl dd {font-size: 15px; line-height: 19px; text-align: center; margin: 0px;}
-		.empImg dl dt img {margin-left: 40px; height: 95px; width: 95px;}
+		.empImg dl dt img {margin-left: 40px; height: 95px; width: 95px; cursor:pointer;}
 		.empInfo {border-bottom: 3px solid; margin: 0px 25px 0px 25px;}
 		.empInfo p {margin: 0px; text-align: center; font-size: 20px; font-weight: bold;}
 		.empCompany {font-weight: bold; font-size: 20px;}
@@ -39,7 +39,8 @@
 		.calendarright {margin: 0px;}
 		</style>
 		<script type="text/javascript">
-			var year;
+			var selectedYear;
+			var selectedTerm;
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -47,44 +48,6 @@
 		        else
 		            return true;
 		    };
-	
-			var select_best_dialogArguments = new Array();
-		    function btn_Select() {
-		        if (CrossYN()) {
-		            select_best_dialogArguments[1] = btn_Select_Complete;
-		            //크롬일때 alert창 크기때문에 크롬일때 구별
-		            var agent = navigator.userAgent.toLowerCase();
-		            if (agent.indexOf("chrome") != -1) {
-		            	var Select_Best = window.open("/admin/ezPersonal/selectBest.do", "SelectBest", GetOpenWindowfeature(460, 200));	
-		            } else {
-		            	var Select_Best = window.open("/admin/ezPersonal/selectBest.do", "SelectBest", GetOpenWindowfeature(400, 200));
-		            }
-		            
-		            try { Select_Best.focus(); } catch (e) {
-		            }
-		        }  else {
-		            var heigth = window.screen.availHeight;
-		            var width = window.screen.availWidth;
-		            var left = (width - 500) / 2;
-		            var top = (heigth - 400) / 2;
-		            var rtnValue = window.showModalDialog("/admin/ezPersonal/selectBest.do", "",
-		                  "dialogHeight:200px;dialogwidth:400px;dialogleft:left = " + left + ";dialogtop:" + top + ", status:no;toolbar:no;location:no;scroll:no;edge:sunken, top=" + top + ",left = " + left);
-		            window.location.reload(false);
-		        } 
-		    }
-	
-		    function btn_Select_Complete(){
-		        window.location.reload(false);
-		    }
-	
-		    function OpenUserInfo(pUserID) {
-		        var heigth = window.screen.availHeight;
-		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 400) / 2;
-		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		    }
-			
 			$(document).on('ready', function() {
 				var regular = document.getElementById("regular");
 				
@@ -103,15 +66,16 @@
 				}
 				
 				$(".regular").slick({
-					dots: false,     //도트안보이게설정
-					infinite: false, //무한반복
-					slidesToShow: 5, //5개씩보여줌
+					dots: false,
+					infinite: false,
+					slidesToShow: 5,
 					initialSlide: 20,
 					slidesToScroll: 5,
 					focusOnSelect: true,
 					centerMode: true,
 					speed: 500,
 					centerPadding: '0px',
+					draggable: false,
 					allow: true,
 					prevArrow: '<div class="slick-prev"><span class="icon16 calendarleft"></span></div>',
 					nextArrow: '<div class="slick-next"><span class="icon16 calendarright"></span></div>',
@@ -123,7 +87,6 @@
 				$(".regular").on('afterChange', function(event, slick, currentSlide, nextSlide){
 					var centerElmt = document.getElementsByClassName("slick-center")[0];
 					var centerYear = centerElmt.getElementsByClassName("yearSpan")[0].innerHTML;
-					console.log(centerYear);
 					getEmployeeList(centerYear);
 				});
 			});
@@ -174,8 +137,8 @@
 					mainList.appendChild(liElmt);
 				}
 			}
-			function getEmployeeList(selectedYear) {
-				year = selectedYear;
+			function getEmployeeList(year) {
+				selectedYear = year;
 				
 				$.ajax({
 					type : "POST",
@@ -227,11 +190,12 @@
 							delBttnElmt.addEventListener("click", function(event) {btn_delete(item.term);});
 							
 							empImgDivElmt.className = "empImg";
+							
 							imgElmt.style.border = "1px solid #999";
 							imgElmt.setAttribute("src", item.filePath);
+							imgElmt.addEventListener("click", function(event) {OpenUserInfo(item.cn);});
 							
 							ddElmt1.className = "empCompany"
-							
 							ddElmt1.textContent = item.company;
 							ddElmt2.textContent = item.description;
 							ddElmt3.textContent = item.title + " " + item.displayName;
@@ -251,25 +215,81 @@
 					});
 				}
 			}
+			function OpenUserInfo(pUserID) {
+				var heigth = window.screen.availHeight;
+				var width = window.screen.availWidth;
+				var left = (width - 500) / 2;
+				var top = (heigth - 400) / 2;
+				window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+			}
+			var selectperson_cross_dialogArguments = new Array();
 			function btn_add(obj) {
-				console.log(obj);
+				selectperson_cross_dialogArguments[1] = btn_add_Complete;
 				
+				var month = obj.getAttribute("id");
+				var term = selectedYear + "-" + month.substring(4);
+				selectedTerm = term;
 				
-				/* if (CrossYN()) {
-					var SelectPerson_cross = window.open("/ezPersonal/selectPerson.do?type=EMP", "SelectPerson", GetOpenWindowfeature(760, 535));
-					try { SelectPerson_cross.focus(); } catch (e) { }
-				} else {
-					var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=EMP", "", "dialogHeight:535px;dialogwidth:760px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken");
-				} */
+				selectperson_cross_dialogArguments[1] = btn_add_Complete;
+				var SelectPerson_cross = window.open("/ezPersonal/selectPerson.do?type=EMP", "SelectPerson", GetOpenWindowfeature(760, 535));
+				try { SelectPerson_cross.focus(); } catch (e) { }
+				
+			}
+			function btn_add_Complete(rtv) {
+				if (typeof (rtv) != "undefined") {
+					var userId = rtv.split(":")[0];
+					var deptId = rtv.split(":")[4];
+				}
+				
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezPersonal/setEmployeeMonth.do",
+					async : false,
+					data : {type : "INS", userID : userId, deptID : deptId, term : selectedTerm},
+					dataType : "text",
+					success : function (result) {
+						if (result != "OK") {
+							alert("<spring:message code = 'ezPersonal.t00005' />");
+						} else {
+							alert("<spring:message code = 'ezPersonal.t191' />");
+							window.close();
+							window.location.reload(false);
+						}
+					}
+				});
 			}
 			function btn_modify(term) {
-				console.log(term);
+				selectperson_cross_dialogArguments[1] = btn_modify_Complete;
+				selectedTerm = term;
 				
-				
+				var SelectPerson_cross = window.open("/ezPersonal/selectPerson.do?type=EMP", "SelectPerson", GetOpenWindowfeature(760, 535));
+				try { SelectPerson_cross.focus(); } catch (e) { }
 			}
-			function btn_delete(term) {
-				console.log(term);
+			function btn_modify_Complete(rtv) {
+				if (typeof (rtv) != "undefined") {
+					var userId = rtv.split(":")[0];
+					var deptId = rtv.split(":")[4];
+				}
 				
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezPersonal/setEmployeeMonth.do",
+					async : false,
+					data : {type : "UPD", userID : userId, deptID : deptId, term : selectedTerm},
+					dataType : "text",
+					success : function (result) {
+						if (result != "OK") {
+							alert("<spring:message code = 'ezPersonal.t00005' />");
+						} else {
+							alert("<spring:message code = 'ezPersonal.t191' />");
+							window.close();
+							window.location.reload(false);
+						}
+					}
+				});
+			}
+			
+			function btn_delete(term) {
 				if (confirm("<spring:message code = 'ezPersonal.t00003' />")) {
 					$.ajax({
 						type : "POST",
@@ -292,56 +312,14 @@
 	</head>
 	<body class = "mainbody">
 		<form id="form1">
-		    <h1><spring:message code = 'ezPersonal.t299' /></h1>
-		
-		    <%-- <div id="mainmenu">
-				<ul>
-		            <li class="important"><span onClick="btn_Select()"><spring:message code = 'ezPersonal.t105' /></span></li>
-				</ul>
-		    </div>
-		    <script type="text/javascript">
-				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-			</script> --%>
-		    <div style="width:100%;/* border-right:1px solid #e8e8e8; border-left:1px solid #e8e8e8; */">
-		        <%-- <table class="mainlist" style="width:100%;"> 
-					<tr> 
-						<th style="width:10%; text-align:center"><spring:message code = 'ezPersonal.t290' />/<spring:message code = 'ezPersonal.t291' /></th> 
-						<th style="width:20%; text-align:center"><spring:message code = 'ezPersonal.t304' /></th> 
-						<th style="width:20%; text-align:center"><spring:message code = 'ezPersonal.t69' /></th> 
-						<th style="width:20%; text-align:center"><spring:message code = 'ezPersonal.t7' /></th>
-						<th style="width:20%; text-align:center"><spring:message code = 'ezPersonal.t67' /></th> 
-				        <th style="width:10%; text-align:center"></th> 
-					</tr> 
-					<c:if test="${list == '[]'}">
-						<tr>
-							<td colspan="6" style="text-align: center; color:#5b5a5a;">
-		  						<spring:message code='main.t00026'/>
-							</td>
-						</tr>
-					</c:if>
-					<c:forEach var="item" items="${list }">
-						<tr> 
-							<td style="text-align:center">
-								<c:if test="${fn:length(item.term) > 6}">${item.term}</c:if>
-								<c:if test="${fn:length(item.term) <= 6}">${fn:substring(item.term,0,5)}0${fn:substring(item.term,5,6)}</c:if>
-							</td> 
-							<td style="text-align:center">
-								<span style="cursor:pointer;" onclick="OpenUserInfo('${item.cn}')">${item.displayName }</span>
-					        </td> 
-					        <td style="text-align:center">${item.title}</td> 
-							<td style="text-align:center">${item.description}</td> 
-							<td style="text-align:center">${item.company}</td>
-					        <td style="text-align:center"><a class="imgbtn"><span onClick="btnDel_click('${item.term}')" ><spring:message code = 'ezPersonal.t99' /></span></a></td>
-						</tr> 
-					</c:forEach>
-				</table> --%>
-				
+			<h1><spring:message code = 'ezPersonal.t299' /></h1>
+			<div style="width:100%;">
 				<!-- 달력슬라이더 영역 -->
 				<div class="regular calSlider" id="regular"></div>
 				
 				<!-- 이달의우수사원 리스트 영역 -->
 				<ul id="mainlist"></ul>
-		    </div>   
+			</div>
 	    </form>
 	</body>
 </html>

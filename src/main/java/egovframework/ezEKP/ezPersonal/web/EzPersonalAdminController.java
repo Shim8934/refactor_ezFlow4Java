@@ -988,7 +988,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 초기화면 이달의우수사원 등록,삭제 실행 함수
+	 * 초기화면 이달의우수사원 등록,수정,삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/setEmployeeMonth.do")
 	@ResponseBody

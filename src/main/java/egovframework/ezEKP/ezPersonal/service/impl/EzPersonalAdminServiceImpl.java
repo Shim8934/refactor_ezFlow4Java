@@ -561,6 +561,9 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		if (type != null && type.equals("INS")) {
 			ezPersonalAdminDAO.setEmployeeMonth_I(map);
+		} else if (type != null && type.equals("UPD")) {
+			ezPersonalAdminDAO.setEmployeeMonth_D(map);
+			ezPersonalAdminDAO.setEmployeeMonth_I(map);
 		} else {
 			ezPersonalAdminDAO.setEmployeeMonth_D(map);
 		}
