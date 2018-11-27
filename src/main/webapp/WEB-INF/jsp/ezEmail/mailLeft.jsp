@@ -416,9 +416,8 @@
 	                    if (unreadcount == "0") {
 	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption);
 	                        //PostTreeView.putstyle(PostTreeView.selectedIndex(), "font-weight : ''");
-	                    }
-	                    else {
-	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption + unreadcount);
+	                    } else {
+	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption + "&nbsp;&nbsp;" + unreadcount);
 	                        //PostTreeView.putstyle(PostTreeView.selectedIndex(), "font-weight : bold");
 	                    }
 	                    
