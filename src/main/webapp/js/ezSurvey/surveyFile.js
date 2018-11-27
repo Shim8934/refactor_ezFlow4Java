@@ -6,9 +6,6 @@ var SurveyFile = function() {
 		var fillColor = "#09F";
 		var totalCap  = 0;
 		
-		function getTotalFileSize()      {return totalCap;}
-		function setTotalFileSize(value) {totalCap = value;}
-		
 		function onDragEnter(evt) {
 			evt.dataTransfer.dropEffect = "copy";
 			evt.stopPropagation();
@@ -27,14 +24,14 @@ var SurveyFile = function() {
 				evt.preventDefault();
 				
 				if (evt.dataTransfer.items == undefined || evt.dataTransfer.items == null) {
-					if (evt.dataTransfer.files.length == 0) {alert(CabinetMessages.strUpFolder); return;}
+					if (evt.dataTransfer.files.length == 0) {alert(SurveyMessages.strUpFolder); return;}
 				}
 				else {
 					var length = evt.dataTransfer.items.length;
 					
 					for (var i = 0; i < length; i++) {
 						var entry = evt.dataTransfer.items[i].webkitGetAsEntry();
-						if (entry.isDirectory) {alert(CabinetMessages.strUpFolder);return;}
+						if (entry.isDirectory) {alert(SurveyMessages.strUpFolder);return;}
 					}
 				}
 			}
@@ -64,7 +61,7 @@ var SurveyFile = function() {
 				var divInformElmt         = fileDivElmt.querySelector("div[class='divInform']");
 				var helpDivElmt           = document.getElementById("helpTxt");
 				if (divInformElmt) {fileDivElmt.removeChild(divInformElmt);}
-				if (helpDivElmt)   {helpDivElmt.className = "cabUploadHelp";}
+				if (helpDivElmt)   {helpDivElmt.className = "uploadHelp";}
 			}
 			
 			var liElmt        = document.createElement("li");
@@ -144,13 +141,13 @@ var SurveyFile = function() {
 					
 					switch(code) {
 						case 0 : afterUploadSuccessfully(liElmt, fileName, data.path, fileSize); break;
-						case 1 : alert(CabinetMessages.strParamErr)                            ; break;
-						case 2 : alert(CabinetMessages.strError)                               ; break;
-						default: alert(CabinetMessages.strError)                               ; return;
+						case 1 : alert(SurveyMessages.strParamErr)                            ; break;
+						case 2 : alert(SurveyMessages.strError)                               ; break;
+						default: alert(SurveyMessages.strError)                               ; return;
 					}
 				},
 				error : function(error) {
-					//alert(CabinetMessages.strError);
+					//alert(SurveyMessages.strError);
 				}
 			});
 		}
@@ -164,7 +161,7 @@ var SurveyFile = function() {
 			isStart            = true;
 			var checkImageFile = isImage(filename);
 			var delImg         = document.createElement("img");
-			delImg.src         = "/images/cabinet/file_del.gif";
+			delImg.src         = "/images/survey/file_del.gif";
 			delImg.addEventListener("click", function(e) {deleteFile(e, fileSize);}, false);
 			liElmt.appendChild(delImg);
 			liElmt.setAttribute("path", filePath);
@@ -176,17 +173,6 @@ var SurveyFile = function() {
 			
 			divChildElmt1.removeChild(canvasElmt);
 			divChildElmt1.appendChild(imgElmt);
-			
-			totalCap                = totalCap + fileSize;
-			var fileCapacityDivElmt = document.getElementById("fileCapacityDiv");
-			var spanElmt            = fileCapacityDivElmt.querySelector("span");
-			
-			if(!spanElmt) {
-				spanElmt = document.createElement("span");
-				fileCapacityDivElmt.appendChild(spanElmt);
-			}
-			
-			spanElmt.textContent     = CabinetMessages.strStorage + getFileSize(totalCap);
 		}
 		
 		function deleteFile(event, fileSize) {
@@ -197,7 +183,7 @@ var SurveyFile = function() {
 			
 			$.ajax({
 				type: "POST",
-				url: "/ezCabinet/deleteAttachFile.do",
+				url: "/ezSurvey/deleteAttachFile.do",
 				data: {"filePath" : filePath},
 				dataType: "JSON",
 				async: false,
@@ -205,27 +191,19 @@ var SurveyFile = function() {
 					var code = data.code;
 					
 					switch(code) {
-						case 0 : afterDeleteSuccessfully(liElmt, fileSize); break;
-						case 1 : alert(CabinetMessages.strParamErr)       ; break;
-						case 2 : alert(CabinetMessages.strError)          ; break;
-						default: alert(CabinetMessages.strError)          ; return;
+						case 0 : afterDeleteSuccessfully(liElmt)  ; break;
+						case 1 : alert(SurveyMessages.strParamErr); break;
+						case 2 : alert(SurveyMessages.strError)   ; break;
+						default: alert(SurveyMessages.strError)   ; return;
 					}
 				},
 				error : function(error) {
-					alert(CabinetMessages.strError + error);
+					alert(SurveyMessages.strError + error);
 				}
 			});
 		}
 		
-		function afterDeleteSuccessfully(liElmt, fileSize) {
-			var ulElmt = liElmt.parentElement;
-			ulElmt.removeChild(liElmt);
-			
-			totalCap                = totalCap - fileSize;
-			var fileCapacityDivElmt = document.getElementById("fileCapacityDiv");
-			var spanElmt            = fileCapacityDivElmt.querySelector("span");
-			spanElmt.textContent    = CabinetMessages.strStorage + getFileSize(totalCap);
-		}
+		function afterDeleteSuccessfully(liElmt) {liElmt.parentElement.removeChild(liElmt);}
 		
 		function getFileSize(fileSize) {
 			var result = fileSize + "B";
@@ -257,23 +235,23 @@ var SurveyFile = function() {
 				case "gif"  :
 				case "bmp"  :
 				case "png"  :
-				case "jpeg" : imgCheck = true                       ; break;
-				case "pdf"  : urlImg   = "/images/cabinet/pdf.png"  ; break;
-				case "ppt"  : urlImg   = "/images/cabinet/ppt.png"  ; break;
-				case "pptx" : urlImg   = "/images/cabinet/pptx.png" ; break;
-				case "doc"  : urlImg   = "/images/cabinet/doc.png"  ; break;
-				case "docx" : urlImg   = "/images/cabinet/docx.png" ; break;
-				case "xls"  : urlImg   = "/images/cabinet/xls.png"  ; break;
-				case "xlsx" : urlImg   = "/images/cabinet/xlsx.png" ; break;
-				case "hwp"  : urlImg   = "/images/cabinet/hwp.png"  ; break;
-				case "txt"  : urlImg   = "/images/cabinet/txt.png"  ; break;
-				case "mp4"  : urlImg   = "/images/cabinet/mp4.png"  ; break;
-				case "flv"  : urlImg   = "/images/cabinet/flv.png"  ; break;
-				case "mkv"  : urlImg   = "/images/cabinet/mkv.png"  ; break;
-				case "iso"  : urlImg   = "/images/cabinet/iso.png"  ; break;
-				case "rar"  : urlImg   = "/images/cabinet/rar.png"  ; break;
-				case "zip"  : urlImg   = "/images/cabinet/zip.png"  ; break;
-				default     : urlImg   = "/images/cabinet/none.png" ; break;
+				case "jpeg" : imgCheck = true                      ; break;
+				case "pdf"  : urlImg   = "/images/survey/pdf.png"  ; break;
+				case "ppt"  : urlImg   = "/images/survey/ppt.png"  ; break;
+				case "pptx" : urlImg   = "/images/survey/pptx.png" ; break;
+				case "doc"  : urlImg   = "/images/survey/doc.png"  ; break;
+				case "docx" : urlImg   = "/images/survey/docx.png" ; break;
+				case "xls"  : urlImg   = "/images/survey/xls.png"  ; break;
+				case "xlsx" : urlImg   = "/images/survey/xlsx.png" ; break;
+				case "hwp"  : urlImg   = "/images/survey/hwp.png"  ; break;
+				case "txt"  : urlImg   = "/images/survey/txt.png"  ; break;
+				case "mp4"  : urlImg   = "/images/survey/mp4.png"  ; break;
+				case "flv"  : urlImg   = "/images/survey/flv.png"  ; break;
+				case "mkv"  : urlImg   = "/images/survey/mkv.png"  ; break;
+				case "iso"  : urlImg   = "/images/survey/iso.png"  ; break;
+				case "rar"  : urlImg   = "/images/survey/rar.png"  ; break;
+				case "zip"  : urlImg   = "/images/survey/zip.png"  ; break;
+				default     : urlImg   = "/images/survey/none.png" ; break;
 			}
 			
 			return {
@@ -287,8 +265,6 @@ var SurveyFile = function() {
 			dragEnter  : onDragEnter,
 			dragOver   : onDragOver,
 			deleteFile : deleteFile,
-			getTotal   : getTotalFileSize,
-			setTotal   : setTotalFileSize,
 			check      : checkUploadStatus
 		};
 	}

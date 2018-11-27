@@ -11,4 +11,5 @@ var SurveyMessages = {
 	strNoInput   : "검색어를 입력하세요.",
 	strResult    : "검색결과",
 	strEmployee  : "직원을 먼저 선택해주세요.",
+	strUpFolder  : "폴더는 업로드 할 수 없습니다.",
 }

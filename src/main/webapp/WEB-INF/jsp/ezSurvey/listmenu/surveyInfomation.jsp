@@ -49,6 +49,7 @@
 	</div>
 </div>
 
+<div id="helpTxt" class="uploadHelp off"><spring:message code='ezSurvey.t74'/></div>
 <div class="survey-attach">
 	<div class="survey-dropzone">
 		<div class="mainzone" id="fileDiv">
@@ -62,17 +63,13 @@
 		</div>
 	</div>
 	<div class="survey-attbttn"><div id="addFileBttn"><spring:message code="ezSurvey.t56"/></div></div>
+	<input type="file" id="fileBttn" multiple="multiple" class="hiddenBttn">
 </div>
 
 <div class="navi-button">
 	<div>
-		<div class="survey-infbttn">
-			<img src="/images/ezSurvey/nextstep.png">
-		</div>
-		<div class="survey-infbttn">
-			<img src="/images/ezSurvey/cancel.png">
-		</div>
-		<input type="file" id="fileBttn" multiple="multiple" style="display: none;">
+		<div id="gotoSecondTab" class="survey-infbttn"><img src="/images/ezSurvey/nextstep.png"></div>
+		<div id="cancelSurvey1" class="survey-infbttn"><img src="/images/ezSurvey/cancel.png"  ></div>
 	</div>
 </div>
 
@@ -115,7 +112,6 @@
 		initEvents();
 		
 		function initEvents() {
-			
 			var fileUploadBttn      = document.getElementById("fileBttn");
 			fileUploadBttn.onchange = function(e) {surveyFile.upload();};
 			var addFileBttn         = document.getElementById("addFileBttn");

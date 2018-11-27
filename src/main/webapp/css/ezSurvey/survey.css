@@ -41,7 +41,8 @@
 .selectedNode {font-weight: bold;}
 .searchPanel {z-index: 2000; position: fixed; border:1px solid #666; background-color: #fff;; border-radius: 5px; height: auto; width: 464px;}
 .searchPanel h1 {margin-top: 0px !important;}
-.searchPanel.off {display: none;}
+.hiddenBttn, .searchPanel.off, .uploadHelp.off {display: none;}
+.uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
 .receiver_tltype01 >span {min-width: 45px;}
 .organImg {width: 18px; height: 18px; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
 .org-minus, .org-plus {width: 18px; height: 18px; cursor: pointer;}
@@ -118,7 +119,7 @@
 .navi-button {height: 40px; padding-bottom: 15px;}
 .navi-button >div {float: left;}
 
-.divInform {width: 100%; height: 100%; min-height: 60px; display: flex; flex-flow: column; justify-content: center; align-items: center;}
+.divInform {width: 100%; height: 100%; min-height: 60px; display: flex; flex-flow: column; justify-content: center; align-items: center; cursor: pointer;}
 .divInform .nofile {line-height: 60px;}
 .divInform span + span {margin-top: 5px;}
 .fileList {width: 100%; height: auto;}
@@ -126,7 +127,7 @@
 .ulFiles li {float: left; width: 100%; min-width: 100%; height: 65px; position: relative; border-bottom: 1px dashed #ddd; box-sizing: border-box;}
 .ulFiles li >img {position: absolute; top: 4.5px; right: 2.5px;}
 .ulFiles li:lastChild {padding-bottom: 5px;}
-.attDivFile {display: flex; width: 100%; height: 100%;}
+.attDivFile {display: flex; width: 100%; height: 100%; cursor: pointer;}
 .attDivFile .attImgAva {height: 40px; width: 40px; min-width: 40px; margin: 10px 5px;}
 .attDivFile .attImgAva >img {height: 100%; width: 100%;}
 .attDivFile .attFileInf {display: flex; flex: 1; flex-flow: column; overflow: hidden; padding-top: 8px;}

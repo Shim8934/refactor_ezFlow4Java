@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezSurvey.web;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,17 +12,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyRestService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -252,6 +248,43 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		logger.debug("Upload file finishes!");
 		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezSurvey/deleteAttachFile.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonDeleteFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("Delete file is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String filePath        = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		if (filePath.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = surveyRestService.deleteAttachFile(request, userInfo.getId(), filePath);
+		
+		logger.debug("Delete file finishes!");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezSurvey/downloadAttachFile", produces="application/zip")
+	public void responeDownloadFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("responeDownloadFile is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String filePath        = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
+		String fileName        = request.getParameter("fileName") != null ? request.getParameter("fileName") : "";
+		
+		if (filePath.equals("") || fileName.equals("")) {
+			logger.debug("Invalid arguments!!!");
+			return;
+		}
+		
+		surveyRestService.downloadAttachFile(request, response, userInfo.getId(), filePath, fileName);
+		
+		logger.debug("responeDownloadFile finishes!");
 	}
 	
 	@RequestMapping(value = "/ezSurvey/uploadFile.do", produces = "text/plain; charset=utf-8")

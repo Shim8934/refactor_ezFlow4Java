@@ -1,5 +1,4 @@
 //Baonk 2018-06-14
-
 function CabinetTree() {
 	//private variables
 	var _treeElmtId   = null;

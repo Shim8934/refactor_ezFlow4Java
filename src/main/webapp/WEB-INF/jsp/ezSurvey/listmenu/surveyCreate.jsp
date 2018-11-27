@@ -162,10 +162,6 @@
 				var xhr 			  = new XMLHttpRequest();
 				var optImgPrevArr 	  = [];
 				var tempObj			  = "";
-				
-				// make question form
-				createQuestiobDiv();
-				
 				// 셀렉트 박스에 들어갈 질문 유형 데이터 
 				var optionData = 
 					[ { text : "--질문 유형 선택--",	value: 0, selected: true, 	description:"--질문 유형 선택--"},
@@ -179,15 +175,17 @@
 				      { text : "순위", 			value: 8, selected: false, 	description:"순위", 			imageSrc: "/images/ezSurvey/radio.png" },
 				      { text : "드롭다운", 		value: 9, selected: false, 	description:"드롭다운", 		imageSrc: "/images/ezSurvey/radio.png" },];
 				
+				// make question form
+				createQuestionDiv();
+				
 				// 질문 유형을 선택하는 셀렉트 박스 생성
 				function createQuestionSelectBox() {
-					
 					$("#selectBox").ddslick({
 						data :optionData,
 						imagePosition: "left",
 						selectText: "질문 유형 선택",
 						onSelected: function(data) {
-
+							
 							var selectedEl = data.selectedItem;
 							var grandParent = selectedEl.parent().parent().parent().parent();
 
@@ -228,8 +226,7 @@
 				}
 				
 				// 질문 및 질문 유형 선택하는 부분 생성
-				function createQuestiobDiv() {
-					
+				function createQuestionDiv() {
 					var html = "";
 					
 					html += "<div class='quesDiv'>";
@@ -478,6 +475,5 @@
 				}
 			})();
 		</script>
-		
 	</body>
 </html>
