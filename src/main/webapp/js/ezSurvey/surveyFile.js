@@ -53,7 +53,6 @@ var SurveyFile = function() {
 			var fileName        = fileItem.name;
 			var fileSize        = fileItem.size;
 			var fileDivElmt     = document.getElementById("fileDiv");
-			
 			var divfileListElmt = fileDivElmt.firstElementChild;
 			var ulElmt          = divfileListElmt.firstElementChild;
 			

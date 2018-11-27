@@ -10,16 +10,14 @@
 <div class="quesBacgr" style="height: 400px; border: 1px solid #d7d7d7;">
 	<!-- 
 	<div class="quesDiv">
+	
 		<input class="questnTitle">
 		<img alt="파일첨부" src="/images/ezSurvey/attach.png" class="atchImg">
-		<input type="file" class="attachFile" multiple="multiple">
 		
-		<select class="selectBox"></select>
-		
-		<select class="quesTypeSelect"></select>
-		<div class="optionBox">
-			<div class="option_wrap">
-				<ul class="select_op">
+		<select class='selectBox'></select>
+		<div class='optionBox'>
+			<div class='option_wrap'>
+				<ul class='select_op'>
 					<li><a href="#"><img alt="" src="/images/ezSurvey/radio.png">단일선택</a></li>
 					<li><a href="#"><img alt="" src="/images/ezSurvey/radio.png">다중선택</a></li>
 					<li><a href="#"><img alt="" src="/images/ezSurvey/radio.png">행렬(단일선택)</a></li>
@@ -29,21 +27,45 @@
 					<li><a href="#"><img alt="" src="/images/ezSurvey/radio.png">슬라이드</a></li>
 					<li><a href="#"><img alt="" src="/images/ezSurvey/radio.png">순위</a></li>
 					<li><a href="#"><img alt="" src="/images/ezSurvey/radio.png">드롭다운</a></li>
-				</ul>					
+				</ul>
+			</div>
+		</div>
+		
+		
+		<div>
+			<input type="file" class="questionFile" multiple="multiple">
+			<div class="qstnFileInfo">
+				<div>
+					<ul></ul>
+				</div>
 			</div>
 		</div>
 		
 	</div>
 	
 	
-	<div class="oneSelection" style="width:100%; height:50%;">
+	<div class="oneSelection" style="width:100%; height:50%; padding-top: 15px;">
 	
-		<div class="optionPart" style="text-align: center;">
-			<div class="option">
-				<input class="textInput" type="text" style="width: 50%; height: 30px;"> 
-				<img src="/images/ezSurvey/attach.png" style="width: 30px; height: 30px;"> 
-				<input class="fileInput" type="file" multiple="multiple" style="width: 0px; opacity: 0"> 
-				<button><img src="/images/ezSurvey/minus.jpg" style="width: 30px; height: 30px; "></button>
+		<div class="optPart" style="text-align: center;">
+		
+			<div class="optRow" style="width: 60%; padding-left: 20%;">
+				<div class="option">
+					<input class="textInput" type="text" style="width: 85%;height: 30px;"> 
+					<img src="/images/ezSurvey/attach.png" class="attImg" style="width: 30px; height: 30px; cursor: pointer; padding-left: 20px; padding-right: 10px; margin-bottom: -11px;"> 
+					<input class="fileInput" type="file" multiple="multiple" style="width: 0px; opacity: 0;"> 
+					<img src="/images/ezSurvey/minus.jpg" class="delImg" style="width: 30px; height: 30px; cursor: pointer; margin-bottom: -11px;">
+				</div>
+				
+				<div class="fileInfo">
+				<div class="optFileInfo">
+					<div>
+						<ul>파일 정보</ul>
+					</div>
+				</div>
+			</div>
+			
+			<div class="optAtt">
+				<input  type='file' class='optionFile' style='display: none;' />
 			</div>
 		</div>
 		
@@ -67,6 +89,6 @@
 		</div>
 		
 	</div>
-	 -->
+	  -->
 	 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/questionFile.js')}"></script>
 </div>
