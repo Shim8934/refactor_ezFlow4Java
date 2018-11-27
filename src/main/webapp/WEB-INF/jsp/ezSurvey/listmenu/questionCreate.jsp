@@ -167,7 +167,10 @@
 			html += "<img src='/images/ezSurvey/minus.jpg' class='deleteOption' onclick='deleteEvent(this);'>";
 			html += "</div>";
 			html += "<div>"
-			html += "<input type='file' id='optionAttach' class='optionAttach' multiple='multiple' style='display: none;' onchange='optImgUpload();'>"
+			html += "<input type='file' id='optionAttach' class='optionAttach' multiple='multiple' style='display: none;' onchange='optionFileUpload();'>"
+			html += "</div>";
+			html += "<div>"
+			html += "<input type='text' id='imgName'>"
 			html += "</div>";
 			html += "</div>";
 		
@@ -360,64 +363,8 @@
 	
 	
 	// option 첨부파일
-	function optImgUpload(){
-    	var fd = new FormData();
-    	
-    	//var _file = $(".optionAttach")[0].files;
-    	var _file = document.getElementById("optionAttach").files[0];
-    	
-    	var ext = _file.name.split('.').pop().toLowerCase();
-    	console.log(ext);
-        if (_file.size / 1024 / 1024 > 5) {
-            alert("<spring:message code = 'ezPoll.t208' />");
-            return;
-        }	 
-        
-        fd.append("fileToUpload", _file);			
-        xhr.addEventListener("load", uploadOptImgComplete, false);
-
-        if ( ext == "jpg" || ext == "png" || ext == "bmp") {
-    	    xhr.open("POST", "/ezSurvey/uploadFile.do");
-    	    xhr.send(fd); 
-        }
-        else {
-        	alert("<spring:message code = 'ezCommunity.lhj03' /> (jpg, png, bmp)");
-        	return false;
-        }
-    }
-	
-	function uploadOptImgComplete(evt) {		    	
-    	xhr.removeEventListener("load", uploadOptImgComplete);
-    	// clearFileInput(document.getElementById("optionfile"));
-    	var fileinfo = getNodeText(SelectNodes(loadXMLString(xhr.responseText), "ROOT/NODES/DATA")[0]);
-    	optImgPrevArr.push(fileinfo);
-    	
-    	// 임시 주석
-        //showAttachedOptFile(xhr.responseText);		       
-    }
-	
-	function showAttachedOptFile(strXML) {
-    	if (strXML == "ERROR") {    	
-            alert("Upload Failed!");
-            return;
-        }		    	
-    	
-        var xml = loadXMLString(strXML); 	        	        
-    	var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]);		
-    	var orgFileName = fileinfo.split("/")[1];		 	    	
-    	var _ext = orgFileName.split('.').pop().toLowerCase();		 
-    	var imagePreview = null;
-    	
-    	var selOptRow = tempObj.parentNode;
-    	var optimgid = selOptRow.getElementsByTagName('input')[0].id;
-    	
-    	//썸네일 이미지 처리.
-    	if(selOptRow.getElementsByClassName("thumbnail").length !== 0){
-    		cancelAttachOptImgFile(selOptRow);
-    		optImageTagAppend(fileinfo, selOptRow, optimgid);
-    	}else{
-    		optImageTagAppend(fileinfo, selOptRow, optimgid);
-    	}
+	function optionFileUpload(e){
+		surveyFile.upload();
     }
 	
 	function deleteEvent() {
@@ -439,6 +386,6 @@
 		});
 	}
 	
-	
+	var 
 	</script>
 </div>
