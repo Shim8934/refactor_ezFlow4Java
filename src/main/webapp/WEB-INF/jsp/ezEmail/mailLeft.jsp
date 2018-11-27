@@ -714,7 +714,8 @@
 			}	
 		    
  			function event_folderMenu(event){
-		    	
+ 				event.preventDefault();
+ 				
 		    	if (!event) event = window.event;
 		        var EventMouseX = event.clientX;
 		        var EventMouseY = event.clientY;
