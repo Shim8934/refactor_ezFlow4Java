@@ -1588,11 +1588,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		//2018-07-03 김보미 - 제목th에 너비 추가
 		if (managerVO.getPollSubject().indexOf("\r\n") >= 0) {
-			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;width:545px;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;") + "</th>");
-			strHTML.append("<th align=\"right\" style=\"text-align:right;\">" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + name + "</th>");
+			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;width:540px;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + managerVO.getPollSubject().replaceAll("\r\n", "<br/>&nbsp;&nbsp;") + "</th>");
+			strHTML.append("<th align=\"right\" style=\"text-align:right; white-space:pre-wrap;\">" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + "<br/>&nbsp;&nbsp;" + name + "</th>");
 		} else {
-			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;width:545px;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + commonUtil.cleanValue(managerVO.getPollSubject()) + "</th>");
-			strHTML.append("<th align=\"right\" style=\"text-align:right;\">" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + name + "</th>");
+			strHTML.append("<th align=\"left\" title = \"" + managerVO.getPollSubject() + "\" style=\"word-break:break-all;white-space:normal;width:540px;\" >" + egovMessageSource.getMessage("ezCommunity.t686", userInfo.getLocale()) + commonUtil.cleanValue(managerVO.getPollSubject()) + "</th>");
+			strHTML.append("<th align=\"right\" style=\"text-align:right; white-space:pre-wrap;\">" + egovMessageSource.getMessage("ezCommunity.t687", userInfo.getLocale()) + name + "</th>");
 		}
 		
 		strHTML.append("</tr>");
