@@ -1196,7 +1196,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String mode = request.getParameter("mode");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		String subject = request.getParameter("pollSubject").replaceAll("\r\n", "<br>");
+		String subject = request.getParameter("pollSubject").replaceAll("\r\n", " ");
 		/*String selRes = request.getParameter("selRes");
 		String sel = request.getParameter("sel");*/
 		String selType = request.getParameter("selType");
