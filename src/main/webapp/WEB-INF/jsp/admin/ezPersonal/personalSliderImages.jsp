@@ -230,7 +230,7 @@
 		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL |   ";
 		    	sliderHTML += "<input id='txtDisplayName3' type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "</table>"
-		    	sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton()' checked='checked' onchange='toggleButton(this)'><span class='slider round'></label></td>";
+		    	sliderHTML += "<tr><td class= 'slideIsUse'><label class='switch'><input id='slideIsUseAdd' type='checkbox' checked='checked' onchange='toggleButtonModify()'><span class='slider round'></label></td>";
 		    	sliderHTML += "<a href='#' class='imgbtn'><span onclick='btnSave_click();'><spring:message code = 'ezPersonal.t34' /></span></a>";
 		    	sliderHTML += "</div>";
 		    	sliderHTML += "</li>";
@@ -367,6 +367,15 @@
 		        }
 		    	
 		    	var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("${uploadPortalPath}"));
+		    	var isUseCk = document.getElementById("slideIsUseAdd").checked;
+		    	var isUse = "";
+		    	console.log(isUseCk);
+		    	if (isUseCk) {
+		    		isUse = 1;
+		    	} else {
+		    		isUse = 0;
+		    	}
+		    	console.log(isUse);
 
 		        var item;
 		        var mode;
@@ -507,7 +516,7 @@
 		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL |   ";
 		    	sliderHTML += "<input id='txtDisplayName3' value='"+url+"'type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "</table>"
-		    	sliderHTML += "<tr><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton()' checked='checked' onchange='toggleButton(this)'><span class='slider round'></label></td>";
+		    	sliderHTML += "<tr><td class= 'slideIsUse'><label class='switch'><input id='slideIsUseModify' type='checkbox' checked='checked' onchange='toggleButton(this)'><span class='slider round'></label></td>";
 		    	sliderHTML += "<a href='#' class='imgbtn'><span data='"+sliderID+"' onclick='btnSave_click_modify(this);'><spring:message code = 'ezPersonal.t34' /></span></a>";
 		    	sliderHTML += "</div>";
 		    	sliderHTML += "</li>";
