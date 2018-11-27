@@ -17,6 +17,10 @@ public interface EzSurveyRestService {
 	public JSONObject getUserListType(HttpServletRequest request, String id) throws Exception;
 	public JSONObject getSearchMember(HttpServletRequest request, String id, String srchOption, String srchValue, String currentPage) throws Exception;
 	
+	//User preview configuration
+	public JSONObject getUserPreviewConfig(HttpServletRequest request, String userId) throws Exception;
+	public JSONObject saveUserConfig(HttpServletRequest request, String userId, String prevMode, String listCount, String contentWPrev, String contentHPrev) throws Exception;
+	
 	//User upload/download/delete attach file
 	public JSONObject uploadAttachFile(MultipartHttpServletRequest request, String userId, List<MultipartFile> multiFiles) throws Exception;
 	public JSONObject deleteAttachFile(HttpServletRequest request, String userId, String filePath) throws Exception;

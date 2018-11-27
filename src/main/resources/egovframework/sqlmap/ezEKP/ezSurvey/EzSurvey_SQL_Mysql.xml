@@ -4,6 +4,7 @@
 <sqlMap namespace="ezSurvey">
 	<typeAlias alias="SurveySimpleDeptVO" type="egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO"      />
 	<typeAlias alias="SurveySimpleUserVO" type="egovframework.ezEKP.ezSurvey.vo.SimpleUserVO"      />
+	<typeAlias alias="UserConfigVO"       type="egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO"   />
 	
 	<!-- SimpleDept resultMap -->
 	<resultMap id="simpleDeptVO" class="SurveySimpleDeptVO">
@@ -13,6 +14,18 @@
 		<result property="hasSub"            column="has_sub"                columnIndex="4"/>
 	</resultMap>
 	
+	<!-- UserConfig resultMap -->
+	<resultMap id="userConfigVO" class="UserConfigVO">
+		<result property="userId"            column="user_id"                columnIndex="1"/>
+		<result property="companyId"         column="company_id"             columnIndex="2"/>
+		<result property="listCount"         column="list_count"             columnIndex="3"/>
+		<result property="previewMode"       column="preview_flag"           columnIndex="4"/>
+		<result property="contentWpercent"   column="list_w_percent"         columnIndex="5"/>
+		<result property="contentHpercent"   column="list_h_percent"         columnIndex="6"/>
+		<result property="tenantId"          column="tenant_id"              columnIndex="7"/>
+	</resultMap>
+	
+	<!-- SimpleUser resultMap -->
 	<resultMap id="deptMemberInfo" class="SurveySimpleUserVO">
 		<result property="userId"           column="cn"                     columnIndex="1"/>
 		<result property="position"         column="position"               columnIndex="2"/>
@@ -204,4 +217,38 @@
 			LIMIT #startPoint#, #listCount#
 		]]>
 	</select>
+	
+	<!--***********************************************************************************
+	**                                User config process                                **
+	************************************************************************************-->
+	
+	<select id="EzSurveyDAO.getUserPreviewConfig" resultMap="userConfigVO">
+		<![CDATA[select * from tbl_survey_config where user_id = #userId# and company_id = #companyId# and tenant_id = #tenantId#]]>
+	</select>
+	
+	<insert id="EzSurveyDAO.saveUserConfig" parameterClass="Map">
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[ select 1 from dual where not exists (select tenant_id, user_id from tbl_survey_config where user_id = #userId# and company_id = #companyId# and tenant_id = #tenantId#) ]]>
+		</selectKey>
+		<isEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				insert into tbl_survey_config (user_id, company_id, list_count, preview_flag, list_w_percent, list_h_percent, tenant_id)
+				values (#userId#, #companyId#, #listCount#, #prevMode#, #contentWPrev#, #contentHPrev#, #tenantId#)
+			]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				update
+					tbl_survey_config
+				set
+					preview_flag   = #prevMode#,
+					list_count     = #listCount#,
+					list_w_percent = #contentWPrev#,
+					list_h_percent = #contentHPrev#
+				where
+					user_id = #userId# and company_id = #companyId# and tenant_id = #tenantId#
+			]]>
+		</isNotEqual>
+	</insert>
+	
 </sqlMap>

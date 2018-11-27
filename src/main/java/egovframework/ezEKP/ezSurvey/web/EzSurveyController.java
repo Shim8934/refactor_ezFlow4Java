@@ -69,12 +69,12 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("jspGetSurveyGeneral started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
-/*		JSONObject resultObj = cabinetRestService.getUserPreviewConfig(request, user.getId());
+		JSONObject resultObj = surveyRestService.getUserPreviewConfig(request, user.getId());
 		
 		if (resultObj.get("status").toString().equals("ok")) {
 			JSONObject userConfig = (JSONObject)resultObj.get("config");
 			model.addAttribute("config", userConfig);
-		}*/
+		}
 		
 		logger.debug("jspGetSurveyGeneral ended");
 		return "ezSurvey/config/surveyGeneral";
@@ -285,6 +285,29 @@ public class EzSurveyController extends EgovFileMngUtil {
 		surveyRestService.downloadAttachFile(request, response, userInfo.getId(), filePath, fileName);
 		
 		logger.debug("responeDownloadFile finishes!");
+	}
+	
+	@RequestMapping(value="/ezSurvey/saveUserConfig.do")
+	@ResponseBody
+	public String jsonSaveUserConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveUserConfig start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String prevMode      = request.getParameter("prevMode")  != null ? request.getParameter("prevMode")  : "";
+		String listCount     = request.getParameter("listCount") != null ? request.getParameter("listCount") : "";
+		String contentWPrev  = request.getParameter("contentW")  != null ? request.getParameter("contentW")  : "";
+		String contentHPrev  = request.getParameter("contentH")  != null ? request.getParameter("contentH")  : "";
+		JSONObject resultObj = new JSONObject();
+		
+		if (prevMode.equals("") || listCount.equals("") || (!prevMode.equals("off") && (contentWPrev.equals("") || contentHPrev.equals("")))) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = surveyRestService.saveUserConfig(request, user.getId(), prevMode, listCount, contentWPrev, contentHPrev);
+		
+		logger.debug("jsonSaveUserConfig end");
+		return resultObj.toString();
 	}
 	
 	@RequestMapping(value = "/ezSurvey/uploadFile.do", produces = "text/plain; charset=utf-8")

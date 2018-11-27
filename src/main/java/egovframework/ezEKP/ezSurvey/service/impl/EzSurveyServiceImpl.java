@@ -26,6 +26,7 @@ import egovframework.ezEKP.ezSurvey.dao.EzSurveyDAO;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service
@@ -135,6 +136,30 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("tenantId",   tenantId);
 		
 		return ezSurveyDAO.getSearchMemberList(map);
+	}
+	
+	@Override
+	public SurveyGeneralVO getUserPreviewConfig(String userId, String companyId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("userId",    userId);
+		map.put("tenantId",  tenantId);
+		
+		return ezSurveyDAO.getUserPreviewConfig(map);
+	}
+	
+	@Override
+	public void saveUserConfig(String prevMode, int listCount, int contentWPrev, int contentHPrev, String userId, String companyId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId",    companyId);
+		map.put("userId",       userId);
+		map.put("tenantId",     tenantId);
+		map.put("prevMode",     prevMode);
+		map.put("listCount",    listCount);
+		map.put("contentWPrev", contentWPrev);
+		map.put("contentHPrev", contentHPrev);
+		
+		ezSurveyDAO.saveUserConfig(map);
 	}
 	
 	@Override

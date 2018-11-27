@@ -7,6 +7,7 @@ import org.json.simple.JSONArray;
 import org.springframework.web.multipart.MultipartFile;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
 
 public interface EzSurveyService {
 	//Company Tree process functions
@@ -18,6 +19,10 @@ public interface EzSurveyService {
 	List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int startPoint, int listcnt, int tenantId) throws Exception;
 	int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception;
 	List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int listcnt, String sqlQuery, String srchValue, int tenantId) throws Exception;
+	
+	//User preview config functions
+	SurveyGeneralVO getUserPreviewConfig(String userId, String companyID, int tenantId) throws Exception;
+	void saveUserConfig(String prevMode, int listCount, int contentWPrev, int contentHPrev, String userId, String companyId, int tenantId) throws Exception;
 	
 	//User upload/download/delete attach file functions
 	String saveUploadFile(List<MultipartFile> multiFileLists, JSONArray nameArray, String realPath, int tenantId) throws Exception;
