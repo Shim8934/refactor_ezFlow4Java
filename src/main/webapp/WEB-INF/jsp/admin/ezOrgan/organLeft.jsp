@@ -154,49 +154,21 @@
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 	  			<c:if test="${dotNetIntegration != 'YES'}">
 		  			<h2 class="on">
-		  				<span>
-		  					<span class="sub_iconLNB tree_arrow_up"></span>
-			  				<span class="h2Title"><spring:message code='main.t56' /></span>
-			  			</span>	
+		  				<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='main.t56' /></span>
 		  			</h2>
 	  			</c:if>
 	  			<c:if test="${dotNetIntegration == 'YES'}">
-		  			<h2>
-		  				<span onClick="goPage(1)">
-		  					<span class="sub_iconLNB tree_arrow_up"></span>
-			  				<span class="h2Title"><spring:message code='main.t24' /></span>
-			  			</span>
+		  			<h2 onClick="goPage(1)">
+		  				<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='main.t24' /></span>
 	  				</h2>
 	  			</c:if>
 	  			  
 	  			<c:if test="${dotNetIntegration != 'YES'}">
 		    		<ul class="lnbUL">
-		    			<div class="tree">
-		            		<span>
-		                		<span>
-		                			<span>
-		                        		<div class="node_div">
-				        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_admin_organization"></span><span class="h2_text" id="Organ" onClick="goPage(1)" ><spring:message code='main.t56' /></span>
-				        				</div>
-				        			</span>
-				        			<span>
-		                        		<div class="node_div">		
-				        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_admin_organization"></span><span class="h2_text" id="CheckAdmin" onClick="goPage(12)" ><spring:message code='main.t00062' /></span>
-				        				</div>
-				        			</span>
-				        			<span>
-		                        		<div class="node_div">	
-				        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_admin_organization"></span><span class="h2_text" id="Addjob" onClick="goPage(13)" ><spring:message code='main.t00063' /></span>
-				        				</div>
-				        			</span>
-				        			<span>
-		                        		<div class="node_div">		
-				        					<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_admin_organization"></span><span class="h2_text" id="JobInfo" onClick="goPage(31)"><spring:message code='ezOrgan.csj01' /></span>
-				        				</div>
-				        			</span>
-				        		</span>
-				        	</span>
-				        </div>					
+       					<li><span class="sub_iconLNB tree_admin_organization"></span><span class="list_text" id="Organ" onClick="goPage(1)" ><spring:message code='main.t56' /></span></li>
+       					<li><span class="sub_iconLNB tree_admin_organization"></span><span class="list_text" id="CheckAdmin" onClick="goPage(12)" ><spring:message code='main.t00062' /></span></li>
+       					<li><span class="sub_iconLNB tree_admin_organization"></span><span class="list_text" id="Addjob" onClick="goPage(13)" ><spring:message code='main.t00063' /></span></li>
+       					<li><span class="sub_iconLNB tree_admin_organization"></span><span class="list_text" id="JobInfo" onClick="goPage(31)"><spring:message code='ezOrgan.csj01' /></span></li>
 				    </ul>   
 			    </c:if>
 	  			<h2>

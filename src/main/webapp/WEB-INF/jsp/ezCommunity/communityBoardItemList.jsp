@@ -669,27 +669,21 @@
 		
 		<div id="mainmenu">
 			<ul>
-				<li><span onClick="SetRead_onclick()"><spring:message code='ezCommunity.t915'/></span></li>
-				
 				<c:if test="${pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
-				<!-- 2018-05-30 구해안 게시하기 동사형을 '등록'으로 변경 -->
-					<li><span onClick="NewItem_onclick()"><spring:message code='ezCommunity.t958' /></span></li>
-					<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-					<li><span onClick="DeleteItem_onclick()"><spring:message code='ezCommunity.t208' /></span></li>
+					<li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezCommunity.t958' /></span></li>
 				</c:if>
-				
+				<li><span onClick="SetRead_onclick()"><spring:message code='ezCommunity.t915'/></span></li>
 				<c:if test="${boardInfo.gubun != '2' && pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
 					<li><span onClick="CopyItem_onclick()"><spring:message code='ezCommunity.t911' /></span></li>
 				</c:if>
-				
-				<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-				<li><span onClick="refresh_onclick()"><spring:message code='ezCommunity.t912' /></span></li>
-				
-				<c:if test="${boardInfo.read_FG == 'true' && pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
-					<li><span onClick="search_onclick()"><spring:message code='ezCommunity.t31' /></span></li>
-				</c:if>
-				
 				<li><span onClick="ReservationItem_onclick()"><spring:message code='ezCommunity.t913' /></span></li>
+				<c:if test="${boardInfo.read_FG == 'true' && pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
+					<li onClick="search_onclick()"><span class="icon16 icon16_search"></span></li>
+				</c:if>
+				<c:if test="${pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
+					<li onClick="DeleteItem_onclick()"><span class="icon16 icon16_delete"></span></li>
+				</c:if>
+				<li onClick="refresh_onclick()"><span class="icon16 icon16_refresh"></span></li>
      		</ul>
 		</div>
 		

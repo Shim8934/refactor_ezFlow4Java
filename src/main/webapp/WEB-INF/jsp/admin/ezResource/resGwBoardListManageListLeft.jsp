@@ -7,7 +7,7 @@
 		<title><spring:message code="ezResource.t20" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
-		<link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" />
+		<link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" />
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<style>
 			#mCSB_1_container {

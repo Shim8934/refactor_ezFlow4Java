@@ -248,7 +248,7 @@
 		        }
 		        */
 				tId = pObjSpan.getAttribute("id").replace("TreeCtr", "TreeCtrl");
-		        var spans = document.getElementById("TreeView" + tId).getElementsByClassName("h2_text");//게시판들
+		        var spans = document.getElementById("TreeView" + tId).getElementsByClassName("node_normal");//게시판들
 		 
 		        var cnt = spans.length;
 		        var accessCheck = "";
@@ -343,7 +343,7 @@
 			        
 			        for(var i=0; i<title2.length; i++) {
 			        	var spanW = 152 - (18 * nodeLevel);
-			        	title3 = title2[i].getElementsByClassName("h2_text");
+			        	title3 = title2[i].getElementsByClassName("node_normal");
 			        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2"));
 			        	
 			        	if (spanW < 0) {

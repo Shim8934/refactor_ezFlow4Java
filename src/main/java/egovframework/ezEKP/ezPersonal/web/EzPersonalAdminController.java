@@ -1498,7 +1498,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		ezPersonalAdminService.updateSliderImageOrder(sliderImageList, userInfo.getTenantId());
 		json.put("result", "OK");
 		
-		logger.debug("updateSliderImageOrder started");
+		logger.debug("updateSliderImageOrder end");
 		return json;
 	}
 	

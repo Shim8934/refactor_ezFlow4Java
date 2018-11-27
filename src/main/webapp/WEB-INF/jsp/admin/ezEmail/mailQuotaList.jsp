@@ -402,9 +402,15 @@
 						<a class="imgbtn" >
 							<span onclick="javascript:reload();"><spring:message code="ezStatistics.t1060"></spring:message></span> <!-- 새로고침 -->
 						</a>
-					</td>
-				</tr>
-			</table>
+					</span>
+				</td>
+				<td width="5%">
+					<a class="imgbtn" style="margin-right:5px;">
+						<span onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span>
+					</a>
+				</td>
+			</tr>
+		</table>
 		</div>
 		<div id="contentlist" style="width:100%; overflow: auto;">
 			<div>

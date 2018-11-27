@@ -504,7 +504,7 @@
 			//메뉴 사용 유무
 			var menuUsed = $(".menuSwitch").find("input[type='checkbox']").prop("checked");
 			
-			//연결 url
+			//연결 urlz
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
 			
 			if (menuUrl == "" || menuUrl == null) {
@@ -512,7 +512,7 @@
 				return;
 			}
 			
-			if (menuAuths.length == 0 || menuAuths == null) {
+			if (menuAuths.length == 0 || menuAuths == null || menuAuths == "[]") {
 				alert("<spring:message code='ezNewPortal.t084' />");
 				return;
 			}
@@ -723,7 +723,7 @@
 				return;
 			}
 			
-			if (menuAuths.length == 0 || menuAuths == null) {
+			if (menuAuths.length == 0 || menuAuths == null || menuAuths == "[]") {
 				alert("<spring:message code='ezNewPortal.t084' />");
 				return;
 			}

@@ -21,7 +21,7 @@
 		ul .slider-header {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;background-color:#2196f3; border:1px solid #2196f3; width:210px;}
 		ul .slider-content {clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:130px;}
 		ul .slider-imagePage {padding:5px 10px 10px 15px; width:225px; height:210px;}
-		ul .addSlider {border:1px dashed #aab2ba; display:inline-block; text-align:center; vertical-align : top; height:19.3em; border-radius:0px; width:225px; height: 370px; position:relative;}
+		ul .addSlider {border:1px dashed #aab2ba; display:inline-block; text-align:center; vertical-align : top; height:19.3em; border-radius:0px; width:225px; height: 382px; position:relative;}
 		.sliderInfoTD {padding:5px 15px 5px 5px;}
 		ul .addSlider:hover {cursor:pointer;}
 		ul .slideIsUse {padding: 10px 5px 10px 10px;}
@@ -136,7 +136,7 @@
 		    		document.getElementById("sliderContainer").innerHTML = sliderHTML;
 		    	}
 		    	
-		    	sliderHTML += "<li class='addSlider' id='addSlider'><div style='margin-top:97px'><img src='/images/admin/admin_portlet_plus.png' ></img></div></li>";
+		    	sliderHTML += "<li class='addSlider' id='addSlider'><div style='margin-top:140px'><img src='/images/admin/slideImg_addbtn.png' ></img></div></li>";
 		    	document.getElementById("sliderContainer").innerHTML = sliderHTML;
 		    	
 		    	//슬라이더 추가
@@ -152,6 +152,7 @@
 		    			updateLinkOrder();
 		    		}
 		    	});
+		    	$("#sliderContainer").disableSelection();
 		    }
 			//슬라이드 이미지 사용여부 토글 버튼
 		    function toggleButton(obj){
@@ -184,7 +185,7 @@
 		    	var slierImageList = [];
 		    	
 		    	for (var i = 0; i < sliderListCount; i++){
-		    		var sliderID = sliderList[i].id;
+		    		var sliderID = sliderList[i].getAttribute("data");
 		    		var sn = i + 1;
 		    		slierImageList.push({"sn": sn, "sliderID": sliderID});
 		    	}

@@ -224,19 +224,19 @@ function TreeNode() {
 
         spnNode.id = "spn_" + this.NodeID;
         spnNode.name = "spn_" + strTreeID;
-        spnNode.className = "h2_text";
+        spnNode.className = "node_normal";
         spnNode.style.display = "inline-block";
         /*if(CrossYN()) {
             spnNode.style.paddingTop = "0px";        	
         }
         
         spnNode.style.paddingLeft = "1px";*/
-
-        /*if (color != "" && color != "TREE" && color != "BOARD")
+        
+        if (color != "" && color != "TREE" && color != "BOARD")
             spnNode.style.color = color;
             //spnNode.setAttribute("style", "color:" + color);
         else
-            spnNode.style.color = "#000000";*/
+            spnNode.style.color = "#000000";
 
 
         if (typeof (document.body.onselectstart) != "undefined") //IE route

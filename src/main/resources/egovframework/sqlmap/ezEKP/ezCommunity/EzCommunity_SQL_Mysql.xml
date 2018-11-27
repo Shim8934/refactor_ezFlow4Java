@@ -267,9 +267,9 @@
 	            FROM
 	            	$v_BNAME$
 	            WHERE
-	            	title LIKE CONCAT('%', #v_KEYWORD#, '%')
-	            OR
-	            	content LIKE CONCAT('%', #v_KEYWORD#, '%')
+	            	(title LIKE CONCAT('%', #v_KEYWORD#, '%')
+	            	OR
+	            	content LIKE CONCAT('%', #v_KEYWORD#, '%'))
 	            AND
 	            	tenant_id = #tenantID#
 	            AND
@@ -1236,7 +1236,11 @@
 				ON
 					A2.DEPTID = C.CN
 				AND
-					B.TENANT_ID = C.TENANT_ID)) T
+					B.TENANT_ID = C.TENANT_ID
+				AND
+					C.EXTENSIONATTRIBUTE2 = #companyID#
+				WHERE
+               		B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T
 			ON
 				A.USERID = T.CN
 			AND
@@ -1308,7 +1312,11 @@
 				ON
 					A2.DEPTID = C.CN
 				AND
-					B.TENANT_ID = C.TENANT_ID)) T
+					B.TENANT_ID = C.TENANT_ID
+				AND
+					C.EXTENSIONATTRIBUTE2 = #companyID#
+				WHERE
+                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T
 			ON
 				A.USERID = T.CN
 			AND
@@ -1486,7 +1494,11 @@
 					ON
 						A2.DEPTID = C.CN
 					AND
-						B.TENANT_ID = C.TENANT_ID)) T2
+						B.TENANT_ID = C.TENANT_ID
+					AND
+						C.EXTENSIONATTRIBUTE2 = #companyID#
+					WHERE
+	                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2
 				ON
 					A.C_ID = T2.CN
 				AND
@@ -1556,7 +1568,11 @@
 						ON
 							A2.DEPTID = C.CN
 						AND
-							B.TENANT_ID = C.TENANT_ID)) T2
+							B.TENANT_ID = C.TENANT_ID
+						AND
+							C.EXTENSIONATTRIBUTE2 = #companyID#
+						WHERE
+		                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2
 					ON
 						A.C_ID = T2.CN
 					AND
@@ -1625,7 +1641,11 @@
 						ON
 							A2.DEPTID = C.CN
 						AND
-							B.TENANT_ID = C.TENANT_ID)) T2
+							B.TENANT_ID = C.TENANT_ID
+						AND
+							C.EXTENSIONATTRIBUTE2 = #companyID#
+						WHERE
+		                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2
 					ON
 						A.C_ID = T2.CN
 					AND
@@ -2066,7 +2086,11 @@
 				ON
 					A2.DEPTID = C.CN
 				AND
-					B.TENANT_ID = C.TENANT_ID)) T2
+					B.TENANT_ID = C.TENANT_ID
+				AND
+					C.EXTENSIONATTRIBUTE2 = #companyID#
+				WHERE
+					B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2
 			ON
 				A.C_ID = T2.CN
 			AND
@@ -3998,6 +4022,8 @@
 						TBL_C_CLUBUSER.permit <> 0
 					AND
 						TBL_C_CLUBUSER.tenant_id = #tenantID#
+					AND
+						TBL_C_MEMBERINFO.companyID = #companyID#
 				]]>
 			</isEqual>
 			<isNotEqual property="v_S_RADIO" compareValue="NAME">
@@ -4670,6 +4696,8 @@
 					(title LIKE CONCAT('%', #v_KEYWORD#, '%') OR content LIKE CONCAT('%', #v_KEYWORD#, '%'))
 				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
 			]]>
 		</isEqual>
 		
@@ -4684,6 +4712,8 @@
 						title LIKE CONCAT('%', #v_KEYWORD#, '%')
 					AND
 						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
 				]]>
 			</isEqual>
 			
@@ -4698,6 +4728,8 @@
 							CASE WHEN #primary# = '1' THEN username ELSE username2 END LIKE CONCAT('%', #v_KEYWORD#, '%')
 						AND
 							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
 					]]>
 				</isEqual>
 				
@@ -4709,6 +4741,8 @@
 							$v_BNAME$
 						WHERE
 							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
 					]]>
 				</isNotEqual>
 			</isNotEqual>

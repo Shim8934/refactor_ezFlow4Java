@@ -197,6 +197,8 @@
 			</isNotEqual>
 		<![CDATA[
 			AND
+				B.companyid = #companyID#
+			AND
 				TBL_C_CLUB.companyid = #companyID#
 			AND
 				C1.tenant_id = #tenantID#
@@ -350,7 +352,7 @@
 			INNER JOIN
 				TBL_C_MEMBERINFO B
 			ON
-				A.c_sysopid = B.userID
+				TRIM(A.c_sysopid) = TRIM(B.userID)
 			AND
 				A.tenant_id = B.tenant_id
 			WHERE

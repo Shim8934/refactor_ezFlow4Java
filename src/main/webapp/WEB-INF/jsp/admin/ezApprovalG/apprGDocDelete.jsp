@@ -620,7 +620,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#e4e8ec";
+		        elem.style.backgroundColor = "#f1f8ff";
 		        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
 		    }
 			

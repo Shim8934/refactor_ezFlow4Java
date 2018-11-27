@@ -19,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -1696,11 +1695,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String userId = userInfo.getId();
 		String inputParams = "userId=" + userId;
 		String getResult = "";
-		String returnZero = "0";
 		logger.debug("inputParams=" + inputParams);
 		
 		JSONParser parser = new JSONParser();
-		JSONArray jsonArr = new JSONArray();
+		JSONArray jsonArr = null;
 		
 		String requestURL = "/ezTalkGate/getUserMobileDeviceList";
 		
@@ -1709,24 +1707,17 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		JSONObject resultObj = (JSONObject) parser.parse(getResult);
 		
-		if (!resultObj.get("data").equals("false")) {
+		if (!resultObj.get("data").equals("0")) {
 			jsonArr = (JSONArray) resultObj.get("data");
-			model.addAttribute("deviceInfo", jsonArr);
-		} else {
-			model.addAttribute("deviceInfo", returnZero);
 		}
 		
 		String adminOrder = ezCommonService.getUserConfigInfo(tenantId, userId, "adminOrderNotUsedMobileLogin");
 		String notUserMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId, "notUseMobileLogin");
 		
-		if (adminOrder.equals("")) {
-			adminOrder = returnZero;
-		}
+		adminOrder = adminOrder.equals("") ? "0" : adminOrder;
+		notUserMobileLogin = notUserMobileLogin.equals("") ? "0" : notUserMobileLogin;
 		
-		if (notUserMobileLogin.equals("")) {
-			notUserMobileLogin = returnZero;
-		}
-		
+		model.addAttribute("deviceInfo", jsonArr);
 		model.addAttribute("adminOrder", adminOrder);
 		model.addAttribute("notUserMobileLogin", notUserMobileLogin);
 		
@@ -1766,7 +1757,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		response.addHeader("customStatus", returnValue);
+		response.addHeader("Result", returnValue);
 		logger.debug("setMobileManaged ended. " + returnValue);
 	}
 	
@@ -1796,7 +1787,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		response.addHeader("customStatus", returnValue);
+		response.addHeader("Result", returnValue);
 		logger.debug("deleteMobileDeviceManaged ended.");
 	}
 	
@@ -1829,7 +1820,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		response.addHeader("customStatus", returnValue);
+		response.addHeader("Result", returnValue);
 		logger.debug("setMobileDeviceInfo ended.");
 	}
 	

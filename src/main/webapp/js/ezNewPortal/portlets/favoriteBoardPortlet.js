@@ -63,7 +63,6 @@ function getTabList() {
     		}
        },
        error:function(request,status,error){
-    	    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
     	   }
 	});	
 }
@@ -84,7 +83,9 @@ function getBoardList_NewBoardSTD() {
    		var itemId = "";
 		var RowCnt = result.length;
 		var listHTML = "";
-
+		var today = new Date();
+		var date = today.getDate();
+		today.setDate(date - 1);
         if (RowCnt > 0) {
 	        if (RowCnt > 5) {
         		RowCnt = 5;
@@ -99,6 +100,12 @@ function getBoardList_NewBoardSTD() {
            	itemId = result[i].itemId;
             	
              listHTML += "<li onclick=\"openDoc_section4_Type('" + itemId + "','" + boardType + "', '" + boardId + "')\" >";			                        
+             
+             var writeDate = new Date(startDate);
+     		
+     		 if (today < writeDate) {
+     			listHTML += "<span class='boardNew'>N</span>";
+     		 }
              
              listHTML += "<span class='txt'>" + ConvertCharToEntityReference(title) + "</span>";
              listHTML += "<span class='date'>" + startDate.substring(5,16) + "</span>";
@@ -141,18 +148,18 @@ function openDoc_section4_Type(pItemID, pType, oBoardID) {
 		pTop = (pheight - 789) / 2;
 		pLeft = (pwidth - 764) / 2;
 
-       window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+       window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
    } else if (pType == "7") {
 	   var height = 679;
 	   pTop = (pheight - 679) / 2;
 	   pLeft = (pwidth - 764) / 2;
 
-      window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+      window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
    } else {
        if (CrossYN()) {
-           window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+           window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
        } else {
-           window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+           window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
        }
    }
 }
@@ -189,7 +196,7 @@ function boardChangeTab(obj) {
 }
 
 function Boardmore_NewBoardSTD_btnClick() {
-    window.open("/ezBoard/boardMainRedirect.do?boardID=" + favoriteBoardId, "main", "");
+    window.open("/ezBoard/boardMainRedirect.do?boardID=" + encodeURIComponent(favoriteBoardId), "main", "");
 }
     
 function refresh_onclick() {
