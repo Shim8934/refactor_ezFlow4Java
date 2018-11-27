@@ -61,10 +61,10 @@
 					liElmt.setAttribute("id", itemId);
 					
 					divElmt.className = "linkBttn";
-					updElmt.setAttribute("src", "/images/email/popup_icon.gif");
+					updElmt.setAttribute("src", "/images/admin/slideUpdate.png");
 					updElmt.addEventListener("click", function(event) {btn_modify(itemId);});
 					
-					delElmt.setAttribute("src", "/images/close_xBtn.png");
+					delElmt.setAttribute("src", "/images/admin/slideDelete.png");
 					delElmt.addEventListener("click", function(event) {btn_delete(itemId);});
 					
 					divElmt.appendChild(updElmt);
@@ -114,7 +114,7 @@
 				addElmt.addEventListener("click", function(event) {btn_add();});
 				addElmt.className = "linkAdd";
 				addElmt.setAttribute("id", "linkAdd");
-				imgElmt.setAttribute("src", "/images/admin/menuAdd.png");
+				imgElmt.setAttribute("src", "/images/admin/slideAdd.png");
 				
 				ddElmt1.textContent = "빠른 링크를";
 				ddElmt2.textContent = "추가하세요.";
@@ -841,7 +841,6 @@
 			.link, .linkAdd {cursor: pointer; vertical-align: top; display: inline-block; width: 310px; border: 1px solid #d9d9d9; margin: 20px 30px 0px 0px; height: 200px; background-color: rgb(255, 255, 255);}
 			.linkAdd {border: 1px dashed #aaaaaa;}
 			.linkAdd dl dt {text-align: center; margin-top: 50px;}
-			.linkAdd dl dt img {height: 60px; width: 60px;}
 			.linkAdd dl dd {margin-left: 120px; color: #999; font-size: 15px; line-height: 19px;}
 			.link dl {margin: 10px;}
 			.link dl dt, .link dl dd {font-size: 13px; line-height: 25px;} 
@@ -849,8 +848,7 @@
 			.link p {margin: 0px 10px 0px 10px; font-size: 18px; font-weight: bold; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
 			.link p img {vertical-align: bottom; width: 30px; height: 30px;}
 			.linkBttn {text-align: right; padding: 10px 10px 0px 0px;}
-			.linkBttn > img {height: 14px; width: 14px;}
-			.linkBttn > img:first-child {margin-right: 5px;}
+			.linkBttn > img:first-child {margin-right: 7px;}
 			.linkDetails {list-style: none; float: left; width: 90%; border: 1px solid black; position: relative; display: list-item; margin: 20px 0px 20px 0px;}
 			.linkTitle {margin: 10px;}
 			.linkTitle span {font-size: 18px; font-weight: bold;}
