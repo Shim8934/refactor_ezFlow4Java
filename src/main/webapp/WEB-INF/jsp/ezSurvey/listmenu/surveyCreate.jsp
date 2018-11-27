@@ -158,325 +158,274 @@
 				};
 			}();
 			
-			(function(){
-				var xhr 			  = new XMLHttpRequest();
-				var optImgPrevArr 	  = [];
-				var tempObj			  = "";
+			
+			
+			
+		$(function() {
 				
-				// make question form
-				createQuestiobDiv();
+			var questionFile = new QuestionFile();
 				
-				// 셀렉트 박스에 들어갈 질문 유형 데이터 
-				var optionData = 
-					[ { text : "--질문 유형 선택--",	value: 0, selected: true, 	description:"--질문 유형 선택--"},
-				      { text : "단일선택", 		value: 1, selected: false, 	description:"단일선택", 		imageSrc: "/images/ezSurvey/radio.png" },
-				      { text : "다중선택", 		value: 2, selected: false, 	description:"다중선택", 		imageSrc: "/images/ezSurvey/radio.png" },
-				      { text : "행렬(단일선택)", 	value: 3, selected: false, 	description:"행렬(단일선택)", 	imageSrc: "/images/ezSurvey/radio.png" },
-				      { text : "행렬(다중선택)",	value: 4, selected: false, 	description:"행렬(다중선택)", 	imageSrc: "/images/ezSurvey/radio.png" },
-				      { text : "단답형", 			value: 5, selected: false, 	description:"단답형", 		imageSrc: "/images/ezSurvey/radio.png" },
-				      { text : "문장형", 			value: 6, selected: false, 	description:"문장형", 		imageSrc: "/images/ezSurvey/radio.png" },
-				      { text : "슬라이드", 		value: 7, selected: false, 	description:"슬라이드", 		imageSrc: "/images/ezSurvey/radio.png" },
-				      { text : "순위", 			value: 8, selected: false, 	description:"순위", 			imageSrc: "/images/ezSurvey/radio.png" },
-				      { text : "드롭다운", 		value: 9, selected: false, 	description:"드롭다운", 		imageSrc: "/images/ezSurvey/radio.png" },];
+			// 셀렉트 박스에 들어갈 질문 유형 데이터 
+			var optionData = 
+				[ { text : "질문 유형 선택",		value: 0, selected: true, 	description:"질문 유형 선택"											   },
+			      { text : "단일선택", 		value: 1, selected: false, 	description:"단일선택", 		imageSrc: "/images/ezSurvey/radio.png" },
+			      { text : "다중선택", 		value: 2, selected: false, 	description:"다중선택", 		imageSrc: "/images/ezSurvey/radio.png" },
+			      { text : "행렬(단일선택)", 	value: 3, selected: false, 	description:"행렬(단일선택)", 	imageSrc: "/images/ezSurvey/radio.png" },
+			      { text : "행렬(다중선택)",	value: 4, selected: false, 	description:"행렬(다중선택)", 	imageSrc: "/images/ezSurvey/radio.png" },
+			      { text : "단답형", 			value: 5, selected: false, 	description:"단답형", 		imageSrc: "/images/ezSurvey/radio.png" },
+			      { text : "문장형", 			value: 6, selected: false, 	description:"문장형", 		imageSrc: "/images/ezSurvey/radio.png" },
+			      { text : "슬라이드", 		value: 7, selected: false, 	description:"슬라이드", 		imageSrc: "/images/ezSurvey/radio.png" },
+			      { text : "순위", 			value: 8, selected: false, 	description:"순위", 			imageSrc: "/images/ezSurvey/radio.png" },
+			      { text : "드롭다운", 		value: 9, selected: false, 	description:"드롭다운", 		imageSrc: "/images/ezSurvey/radio.png" }];
+			
+			// make question form
+			createQuestiobDiv();
+			
+			// 질문 및 질문 유형 선택하는 부분 생성
+			function createQuestiobDiv() {
 				
-				// 질문 유형을 선택하는 셀렉트 박스 생성
-				function createQuestionSelectBox() {
-					
-					$("#selectBox").ddslick({
-						data :optionData,
-						imagePosition: "left",
-						selectText: "질문 유형 선택",
-						onSelected: function(data) {
+				var html = "";
+				
+				html += "<div class='quesDiv'>";
+				html += "<input class='questnTitle'>";
+				html += "<img alt='파일첨부' src='/images/ezSurvey/attach.png' class='atchImg'>";
+				html += "<input type='file' class='attachFile' multiple='multiple' >";
+				html += "<div id='selectBox'></div>";
+				
+				$(".quesBacgr").html(html);
+				
+				createQuestionSelectBox();
+			}
+			
+			// 질문 유형을 선택하는 셀렉트 박스 생성
+			function createQuestionSelectBox() {
+				
+				$("#selectBox").ddslick({
+					data :optionData,
+					imagePosition: "left",
+					selectText: "질문 유형 선택",
+					onSelected: function(data) {
 
-							var selectedEl = data.selectedItem;
-							var grandParent = selectedEl.parent().parent().parent().parent();
+						var selectedEl = data.selectedItem;
+						var grandParent = selectedEl.parent().parent().parent().parent();
 
-							var questionType = data.selectedIndex;
-							
-							switch (questionType) {
-								case 1:
-									makeSelectQuestion(grandParent, questionType);
-									break;
-								case 2:
-									
-									break;
-								case 3:
-									
-									break;
-								case 4:
-									
-									break;
-								case 5:
-									
-									break;
-								case 6:
-									
-									break;
-								case 7:
-									
-									break;
-								case 8:
-									
-									break;
-								case 9:
-									
-									break;
+						var questionType = data.selectedIndex;
+						
+						switch (questionType) {
+							case 1:
+								makeSelectQuestion(grandParent, questionType);
+								break;
+							case 2:
 								
-							}
+								break;
+							case 3:
+								
+								break;
+							case 4:
+								
+								break;
+							case 5:
+								
+								break;
+							case 6:
+								
+								break;
+							case 7:
+								
+								break;
+							case 8:
+								
+								break;
+							case 9:
+								
+								break;
+							
 						}
-					});
-				}
+					}
+				});
+			}
+			
+			// 생성된 질문을 붙일 부분과 
+			// 질문 유형을 파라미터로 받아 질문 영역 생성
+			function makeSelectQuestion(grandParent, questionType) {
 				
-				// 질문 및 질문 유형 선택하는 부분 생성
-				function createQuestiobDiv() {
-					
-					var html = "";
-					
-					html += "<div class='quesDiv'>";
-					html += "<input class='questnTitle'>";
-					html += "<img alt='파일첨부' src='/images/ezSurvey/attach.png' class='atchImg'>";
-					html += "<input type='file' class='attachFile' multiple='multiple' >";
-					html += "<div id='selectBox'></div>";
+				var html = "";
+				
+					html += "<div class='selection' questionType='" + questionType + "'>";
+				
+					html += "<div class='optionPart'>";
+					html += "<div class='option'>";
+					html += "<input class='textInput' type='text'>";
+					html += "<img src='/images/ezSurvey/attach.png' class='attachImg' onclick='optTrigger();'>";
+					html += "<img src='/images/ezSurvey/minus.jpg' class='deleteOption' onclick='deleteEvent(this);'>";
+					html += "</div>";
+					html += "<div>"
+					html += "<input type='file' id='optionAttach' class='optionAttach' style='display: none;'>"
+					html += "</div>";
+					html += "<div id='fileDiv'>"
+					html += "</div>";
+					html += "</div>";
+				
+					html += "<div class='additionalPart'>";
+				
+					html += "<div class='addBtns'>";
+					html += "<button class='addRow'>추가</button>";
+					html += "<button class='addOther'>기타추가</button>";
 					html += "</div>";
 					
-					$(".quesBacgr").html(html);
+					html += "<div class='required'>";
+					html += "<input type='checkbox' name='checkbox'>";
+					html += "<strong>필수 답변</strong>";
+					html += "</div>";
 					
-					createQuestionSelectBox();
-				}
-				// 생성된 질문을 붙일 부분과 
-				// 질문 유형을 파라미터로 받아 질문 영역 생성
-				function makeSelectQuestion(grandParent, questionType) {
+					html += "<div class='btns'>";
+					html += "<button class='save'>저장</button>";
+					html += "<button class='cancel'>취소</button>";
+					html += "</div>";
+					
+					html += "</div>";
+				
+					html += "</div>";
+					
+				grandParent.append(html);
+				
+				addEvent();
+			}
+			
+			function addEvent() {
+				
+				// 추가 버튼 클릭시 옵션 추가 이벤트
+				$(".addRow").click(function(event) {
+					
+					var element = $(this).parent().parent().parent();
 					
 					var html = "";
+					html += "<div class='option'>";
+					html += "<input class='textInput' type='text'>";
+					html += "<img src='/images/ezSurvey/attach.png' class='attachImg' onclick='optTrigger();'> ";
+					html += "<img src='/images/ezSurvey/minus.jpg' class='deleteOption' onclick='deleteEvent(this);'>";
+					html += "</div>";
 					
-						html += "<div class='selection' questionType='" + questionType + "'>";
+					element.find(".option").last().after(html);
 					
-						html += "<div class='optionPart'>";
-						html += "<div class='option'>";
-						html += "<input class='textInput' type='text'>";
+				});
+				
+				// 삭제 버튼 클릭시 옵션 삭제 이벤트
+				/* $(".deleteOption").click(function() {
+					var element = $(this).parent().parent().parent();
+
+					var option = element.find(".optionPart").find(".option");
+					console.log("옵션 개수: " + option.length );
+					
+					if (option.length > 2) {
+						var option = $(this).parent();
+						option.remove();
+					
+					} else {
+						alert("보기는 2개 이상 필요합니다.");
+					}
+				}); */
+				
+				// 기타 버튼 클릭시 기타 추가 이벤트
+				$(".addOther").click(function() {
+					
+					var element = $(this).parent().parent().parent();
+
+					var other = element.find(".optionPart").find(".other");
+					
+					if (other.length == 0) {
+						
+						var html = "";
+						html += "<div class='other'>";
+						html += "<input class='textInput' type='text' placeholder='기타'>";
 						html += "<img src='/images/ezSurvey/attach.png' class='attachImg' onclick='optTrigger();'>";
 						html += "<img src='/images/ezSurvey/minus.jpg' class='deleteOption' onclick='deleteEvent(this);'>";
 						html += "</div>";
-						html += "<div>"
-						html += "<input type='file' id='optionAttach' class='optionAttach' multiple='multiple' style='display: none;' onchange='optionFileUpload();'>"
-						html += "</div>";
-						html += "<div>"
-						html += "<input type='text' id='imgName'>"
-						html += "</div>";
-						html += "</div>";
-					
-						html += "<div class='additionalPart'>";
-					
-						html += "<div class='addBtns'>";
-						html += "<button class='addRow'>추가</button>";
-						html += "<button class='addOther'>기타추가</button>";
-						html += "</div>";
 						
-						html += "<div class='required'>";
-						html += "<input type='checkbox' name='checkbox'>";
-						html += "<strong>필수 답변</strong>";
-						html += "</div>";
-						
-						html += "<div class='btns'>";
-						html += "<button class='save'>저장</button>";
-						html += "<button class='cancel'>취소</button>";
-						html += "</div>";
-						
-						html += "</div>";
-					
-						html += "</div>";
-						
-					grandParent.append(html);
-					
-					addEvent();
-				}
+						element.find(".optionPart").append(html);
+					} else {
+						alert("기타는 하나만 추가 가능합니다.");
+					}
+				});
 				
-				function addEvent() {
+				// 질문과 보기의 모든 내용 임시 저장
+				$(".save").click(function(event) {
+					var questionType = parseInt($(this).parents(".selection").attr("questiontype"));
 					
-					// 추가 버튼 클릭시 옵션 추가 이벤트
-					$(".addRow").click(function(event) {
+					if (questionType == 1) {
+						var optionPart = $(this).parents(".optionPart").find(".option");
+						console.log("콘솔");
+						var additional = $(this).parents(".additionalPart");
 						
-						var element = $(this).parent().parent().parent();
+						var requiedVal = additional.find("input[name=checkbox]").is(":checked")
 						
-						var html = "";
-						html += "<div class='option'>";
-						html += "<input class='textInput' type='text'>";
-						html += "<img src='/images/ezSurvey/attach.png' class='attachImg' onclick='optTrigger();'> ";
-						html += "<img src='/images/ezSurvey/minus.jpg' class='deleteOption' onclick='deleteEvent(this);'>";
-						html += "</div>";
+						console.log(optionPart);
+						var question = {};
 						
-						element.find(".option").last().after(html);
-						
-					});
-					
-					// 삭제 버튼 클릭시 옵션 삭제 이벤트
-					/* $(".deleteOption").click(function() {
-						var element = $(this).parent().parent().parent();
-
-						var option = element.find(".optionPart").find(".option");
-						console.log("옵션 개수: " + option.length );
-						
-						if (option.length > 2) {
-							var option = $(this).parent();
-							option.remove();
-						
-						} else {
-							alert("보기는 2개 이상 필요합니다.");
-						}
-					}); */
-					
-					// 기타 버튼 클릭시 기타 추가 이벤트
-					$(".addOther").click(function() {
-						
-						var element = $(this).parent().parent().parent();
-
-						var other = element.find(".optionPart").find(".other");
-						
-						if (other.length == 0) {
+						for (var i = 0; i < optionPart.length; i++) {
+							var option = {};
+							// 보기의 내용
+							var contents = optionPart[i].childNodes[0].value;
 							
-							var html = "";
-							html += "<div class='other'>";
-							html += "<input class='textInput' type='text' placeholder='기타'>";
-							html += "<img src='/images/ezSurvey/attach.png' class='attachImg' onclick='optTrigger();'>";
-							html += "<img src='/images/ezSurvey/minus.jpg' class='deleteOption' onclick='deleteEvent(this);'>";
-							html += "</div>";
+							option['content'] = contents;
 							
-							element.find(".optionPart").append(html);
-						} else {
-							alert("기타는 하나만 추가 가능합니다.");
-						}
-					});
-					
-					// 질문과 보기의 모든 내용 임시 저장
-					$(".save").click(function(event) {
-						var questionType = parseInt($(this).parents(".selection").attr("questiontype"));
-						
-						if (questionType == 1) {
-							var optionPart = $(this).parents(".optionPart").find(".option");
-							console.log("콘솔");
-							var additional = $(this).parents(".additionalPart");
+							question['option' + i] = option;
+							question['questionType'] = questionType;
 							
-							var requiedVal = additional.find("input[name=checkbox]").is(":checked")
-							
-							console.log(optionPart);
-							var question = {};
-							
-							for (var i = 0; i < optionPart.length; i++) {
-								var option = {};
-								// 보기의 내용
-								var contents = optionPart[i].childNodes[0].value;
+							if (requiedVal == true) {
+								question['requied'] = "1";
 								
-								option['content'] = contents;
-								
-								question['option' + i] = option;
-								question['questionType'] = questionType;
-								
-								if (requiedVal == true) {
-									question['requied'] = "1";
-									
-								} else {
-									question['requied'] = "0";
-								}
+							} else {
+								question['requied'] = "0";
 							}
-							console.log(question);
 						}
-					});
-					
-					// option의 attachFile 임시 저장
-					/* $(".fileInput").change(function(e) {
-						
-						var target = "option";
-						
-						var attachFile = {};
-						
-						var fileLength = e.target.files.length;
-						for (var i = 0; i < fileLength; i++ ) {
-							
-							var fileObj = {};
-							var file = e.target.files[i];
-							
-							var fName = file.name;
-							var fSize = file.size;
-							var fType = file.type;
-							
-							fileObj["target"] = target;
-							fileObj["name"] = fName;	
-							fileObj["size"] = fSize;	
-							fileObj["type"] = fType;
-							
-							attachFile["file" + i] = fileObj;
-						}
-						
-						console.log(attachFile);
-					}); */
-					
-					
-					
-					
-					// question의 attachFile 임시 저장
-					/* $(".attachFile").change(function(e) {
-						
-						var target = "question";
-						
-						console.log($(this)[0]);
-						//var savePath = "C:\Temp\attachFile";
-
-						var attachFile = {};
-						
-						var fileLength = e.target.files.length;
-						for (var i = 0; i < fileLength; i++ ) {
-							
-							var file = e.target.files[i];
-							
-							var fName = file.name;
-							var fSize = file.size;
-							var fType = file.type;
-							
-							var fileObj = {};
-							fileObj["target"] = target;
-							fileObj["name"] = fName;	
-							fileObj["size"] = fSize;	
-							fileObj["type"] = fType;
-							
-							attachFile["file" + i] = fileObj;
-						}
-						
-						console.log(attachFile);
-						
-					}); */
-					
+						console.log(question);
+					}
+				});
+				
+/* 				var optionList = $(".optionAttach");
+				optionList.onchange = function(e) {fileUpload();} */
+				
+				var optionList = document.getElementsByClassName("optionAttach");
+				for (var i = 0, len = optionList.length; i < len; i++) {
+					optionList[i].onchange = function(e) {fileUpload();};
 				}
+			}
+			
+			// option 첨부파일
+			function fileUpload() {
 				
-				// option 첨부파일의 trigger
-				function optTrigger() {
-					$(".optionAttach").click();
+				//var flag = "option";
+				console.log("업로드");
+				questionFile.upload();
+			}
+		}());
+		
+		// option 첨부파일의 trigger
+		function optTrigger() {
+			$(".optionAttach").click();
+		}
+		
+		function deleteEvent() {
+			// 삭제 버튼 클릭시 옵션 삭제 이벤트
+			$(".deleteOption").click(function() {
+				console.log($(this));
+				var element = $(this).parent().parent().parent();
+				
+				var option = element.find(".optionPart").find(".option");
+				console.log("옵션 개수: " + option.length );
+				// 보기의 개수가 3개 이상일 때만 보기 삭제
+				if (option.length > 2) {
+					var option = $(this).parent();
+					option.remove();
+				
+				} else {
+					alert("보기는 2개 이상 필요합니다.");
 				}
-				
-				
-				// option 첨부파일
-				function optionFileUpload(e){
-					surveyFile.upload();
-			    }
-				
-				function deleteEvent() {
-					// 삭제 버튼 클릭시 옵션 삭제 이벤트
-					$(".deleteOption").click(function() {
-						console.log($(this));
-						var element = $(this).parent().parent().parent();
-						
-						var option = element.find(".optionPart").find(".option");
-						console.log("옵션 개수: " + option.length );
-						// 보기의 개수가 3개 이상일 때만 보기 삭제
-						if (option.length > 2) {
-							var option = $(this).parent();
-							option.remove();
-						
-						} else {
-							alert("보기는 2개 이상 필요합니다.");
-						}
-					});
-				}
-			})();
+			});
+		}
+			
+		
 		</script>
 		
 	</body>

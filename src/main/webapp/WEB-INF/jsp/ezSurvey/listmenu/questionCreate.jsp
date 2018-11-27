@@ -68,4 +68,5 @@
 		
 	</div>
 	 -->
+	 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/questionFile.js')}"></script>
 </div>
