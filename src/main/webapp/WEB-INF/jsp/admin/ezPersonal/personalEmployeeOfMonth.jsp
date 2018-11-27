@@ -26,10 +26,9 @@
 		.yearSpan {text-align: center; font-size: 20px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; letter-spacing: -1px; line-height: 31px;}
 		.employee {vertical-align: top; display: inline-block; width: 180px; border: 1px solid #d9d9d9; margin: 20px 60px 0px 0px; height: 240px;}
 		.empBttn {text-align: right; padding: 10px 10px 0px 0px; height: 27px;}
-		.empBttn > img:first-child {margin-right: 5px;}
-		.empBttn > img {height: 14px; width: 14px;}
+		.empBttn > img:first-child {margin-right: 7px;}
 		.empAdd dl dt {margin: 0px;}
-		.empAdd dl dt img {height: 60px; width: 60px; margin: 10px 0px 20px 60px; cursor: pointer;}
+		.empAdd dl dt img {margin: 10px 0px 20px 60px; cursor: pointer;}
 		.empAdd dl dd {color: #999; font-size: 15px; line-height: 21px; text-align: center; margin: 0px;}
 		.empImg dl dd {font-size: 15px; line-height: 19px; text-align: center; margin: 0px;}
 		.empImg dl dt img {margin-left: 40px; height: 95px; width: 95px;}
@@ -156,8 +155,9 @@
 					ddElmt1.textContent = month + "월의 우수사원을";
 					ddElmt2.textContent = "등록하세요.";
 					
-					addBttnElmt.setAttribute("src", "/images/admin/menuAdd.png");
-					addBttnElmt.addEventListener("click", function(event) {btn_add(month);});
+					addBttnElmt.setAttribute("id", "add_" + month);
+					addBttnElmt.setAttribute("src", "/images/admin/slideAdd.png");
+					addBttnElmt.addEventListener("click", function(event) {btn_add(this);});
 
 					dtElmt.appendChild(addBttnElmt);
 					dtElmt.appendChild(ddElmt1);
@@ -195,6 +195,10 @@
 					var addElmt  = liElmt.getElementsByClassName("empAdd")[0];
 					var imgElmt  = liElmt.getElementsByClassName("empImg")[0];
 					
+					while (bttnElmt.firstChild) {
+						bttnElmt.removeChild(bttnElmt.firstChild);
+					}
+					
 					if (imgElmt) {
 						addElmt.style.display = ""; 
 						liElmt.removeChild(imgElmt);
@@ -216,8 +220,8 @@
 							var ddElmt2       = document.createElement("dd");
 							var ddElmt3       = document.createElement("dd");
 							
-							updBttnElmt.setAttribute("src", "/images/email/popup_icon.gif");
-							delBttnElmt.setAttribute("src", "/images/close_xBtn.png");
+							updBttnElmt.setAttribute("src", "/images/admin/slideUpdate.png");
+							delBttnElmt.setAttribute("src", "/images/admin/slideDelete.png");
 							
 							updBttnElmt.addEventListener("click", function(event) {btn_modify(item.term);});
 							delBttnElmt.addEventListener("click", function(event) {btn_delete(item.term);});
@@ -247,8 +251,9 @@
 					});
 				}
 			}
-			function btn_add(term) {
-				console.log(term);
+			function btn_add(obj) {
+				console.log(obj);
+				
 				
 				/* if (CrossYN()) {
 					var SelectPerson_cross = window.open("/ezPersonal/selectPerson.do?type=EMP", "SelectPerson", GetOpenWindowfeature(760, 535));
@@ -259,6 +264,7 @@
 			}
 			function btn_modify(term) {
 				console.log(term);
+				
 				
 			}
 			function btn_delete(term) {
