@@ -58,30 +58,30 @@ var QuestionFile = function() {
 			var filePath        = null;
 			var fileName        = fileItem.name;
 			var fileSize        = fileItem.size;
-			var fileDivElmt     = document.getElementById("fileDiv");
-			var divfileListElmt = fileDivElmt.firstElementChild;
-			var ulElmt          = divfileListElmt.firstElementChild;
+			var fileDivElmt     = document.getElementsByClassName("fileInfo");
+			//var divfileListElmt = fileDivElmt.firstElementChild;
+			//var ulElmt          = divfileListElmt.firstElementChild;
 			
-			if (!isStart) {
+			/*if (!isStart) {
 				divfileListElmt.className = "fileList";
 				var divInformElmt         = fileDivElmt.querySelector("div[class='divInform']");
 				var helpDivElmt           = document.getElementById("helpTxt");
 				if (divInformElmt) {fileDivElmt.removeChild(divInformElmt);}
 				if (helpDivElmt)   {helpDivElmt.className = "cabUploadHelp";}
-			}
+			}*/
 			
 			var liElmt        = document.createElement("li");
 			var divMainElmt   = document.createElement("div");
 			var divChildElmt1 = document.createElement("div");
 			var divChildElmt2 = document.createElement("div");
-			var canvasElmt    = document.createElement("canvas");
+			//var canvasElmt    = document.createElement("canvas");
 			var spanChild1    = document.createElement("span");
 			var spanChild2    = document.createElement("span");
 			
-			canvasElmt.setAttribute("width" , "40");
+			/*canvasElmt.setAttribute("width" , "40");
 			canvasElmt.setAttribute("height", "40");
 			divChildElmt1.className = "attImgAva";
-			divChildElmt1.appendChild(canvasElmt);
+			divChildElmt1.appendChild(canvasElmt);*/
 			
 			spanChild1.textContent  = fileName;
 			spanChild1.setAttribute("title", fileName);
@@ -95,15 +95,16 @@ var QuestionFile = function() {
 			divMainElmt.appendChild(divChildElmt2);
 			liElmt.setAttribute("fname", fileName);
 			liElmt.appendChild(divMainElmt);
-			ulElmt.appendChild(liElmt);
+			//ulElmt.appendChild(liElmt);
+			fileDivElmt.appendChild(liElmt);
 			
 			fd.append("fileToUpload", fileItem);
 			
-			var ctx       = canvasElmt.getContext("2d");
+			/*var ctx       = canvasElmt.getContext("2d");
 			var cw        = ctx.canvas.width;
 			var ch        = ctx.canvas.height;
 			ctx.fillStyle = fillColor;
-			ctx.fillText("0%", cw * 0.5 - lineWidth, ch * 0.5 + 3, cw);
+			ctx.fillText("0%", cw * 0.5 - lineWidth, ch * 0.5 + 3, cw);*/
 			
 			$.ajax({
 				url : "/ezSurvey/uploadAttachFile.do",

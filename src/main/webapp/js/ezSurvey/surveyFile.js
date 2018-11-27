@@ -52,19 +52,19 @@ var SurveyFile = function() {
 			var filePath        = null;
 			var fileName        = fileItem.name;
 			var fileSize        = fileItem.size;
-			//var fileDivElmt     = document.getElementById("fileDiv");
+			var fileDivElmt     = document.getElementById("fileDiv");
 			var fileDivElmt 	= document.getElementsByClassName("fileInfo");
 			
-			//var divfileListElmt = fileDivElmt.firstElementChild;
-			//var ulElmt          = divfileListElmt.firstElementChild;
+			var divfileListElmt = fileDivElmt.firstElementChild;
+			var ulElmt          = divfileListElmt.firstElementChild;
 			
-			/*if (!isStart) {
+			if (!isStart) {
 				divfileListElmt.className = "fileList";
 				var divInformElmt         = fileDivElmt.querySelector("div[class='divInform']");
 				var helpDivElmt           = document.getElementById("helpTxt");
 				if (divInformElmt) {fileDivElmt.removeChild(divInformElmt);}
 				if (helpDivElmt)   {helpDivElmt.className = "uploadHelp";}
-			}*/
+			}
 			
 			var liElmt        = document.createElement("li");
 			var divMainElmt   = document.createElement("div");
@@ -94,13 +94,13 @@ var SurveyFile = function() {
 			ulElmt.appendChild(liElmt);
 			
 			fd.append("fileToUpload", fileItem);
-			/*
+			
 			var ctx       = canvasElmt.getContext("2d");
 			var cw        = ctx.canvas.width;
 			var ch        = ctx.canvas.height;
 			ctx.fillStyle = fillColor;
 			ctx.fillText("0%", cw * 0.5 - lineWidth, ch * 0.5 + 3, cw);
-			*/
+			
 			$.ajax({
 				url : "/ezSurvey/uploadAttachFile.do",
 				type: "POST",
