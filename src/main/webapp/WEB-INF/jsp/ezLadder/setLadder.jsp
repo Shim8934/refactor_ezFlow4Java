@@ -1151,7 +1151,6 @@
 								<input name="lineCnt" style="display: none;" />
 							</div>
 							<div style="float: right; height: 45px;line-height: 45px;margin-top: 2px;position: relative;">
-								<img src="/images/users.png" style="vertical-align: middle;" title="<spring:message code='ezLadder.t071' />" />
 								<input type="text" class="input" id="inputAttendant" style="height: 100%; width: 200px; margin-left:10px; padding-right: 45px;" placeholder="<spring:message code='ezLadder.t071' />"/>
 								<div id="addAttendant" title="<spring:message code='ezLadder.t080'/>">
 									<img src="/images/ezLadder/icon_addAtt_default.png" style="width: 30px;height: 30px;padding-top: 2px;padding-left: 2px;display: inline;" />
