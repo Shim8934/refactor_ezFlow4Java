@@ -95,7 +95,7 @@
 					var previewModeElmt = document.getElementById("previewMode");
 					previewModeElmt.addEventListener("change", function(e) {selectPreviewOption(this);}, false);
 					
-					var selectBoxList = document.getElementsByClassName("cabSelectConf");
+					var selectBoxList = document.getElementsByClassName("surveySelectConf");
 					for (var i = 0, len = selectBoxList.length; i < len; i++) {
 						selectBoxList[i].addEventListener("change", function(e) {changeValue(this);}, false);
 					}
@@ -131,7 +131,7 @@
 				function cancel() {window.location.reload(true);}
 				
 				function save() {
-					var url  = "/ezCabinet/saveUserConfig.do";
+					var url  = "/ezSurvey/saveUserConfig.do";
 					var data = {
 						prevMode  : document.getElementById("previewMode").value,
 						listCount : document.getElementById("listcount").value,
@@ -145,10 +145,10 @@
 				function afterSaveConfig(data) {
 					var code = data.code;
 					switch(code) {
-						case 0 : alert(CabinetMessages.strSave)    ; break;
-						case 1 : alert(CabinetMessages.strParamErr); break;
-						case 2 : alert(CabinetMessages.strError)   ; break;
-						default: alert(CabinetMessages.strError)   ; return;
+						case 0 : alert(SurveyMessages.strSave)    ; break;
+						case 1 : alert(SurveyMessages.strParamErr); break;
+						case 2 : alert(SurveyMessages.strError)   ; break;
+						default: alert(SurveyMessages.strError)   ; return;
 					}
 				}
 				
@@ -165,7 +165,7 @@
 						error : function(error) {
 							if (handleError != null) {handleError();}
 							
-							alert(CabinetMessages.strError);
+							alert(SurveyMessages.strError);
 						}
 					});
 				}

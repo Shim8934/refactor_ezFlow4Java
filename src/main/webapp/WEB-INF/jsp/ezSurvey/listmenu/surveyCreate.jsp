@@ -13,33 +13,10 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
 		
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js')     }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}   "></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js')     }   "></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/jquery.ddslick.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript">
-			$(function() {
-				
-				$(".quesTypeSelect").click(function() {
-					$(".option_wrap").show().animate({height: "300px"});
-				});
-				
-				$(".select_op").mouseleave(function() {
-					$(".option_wrap").hide();
-					$(".option_wrap").css("height", "0");
-				});
-				
-				$(".atchImg").click(function(e) {
-					var clickObj = $(this).next();
-					clickObj.click();
-				});
-				
-				$(".sryTxt").click(function() {
-					window.open("/ezSurvey/statisticsPage.do", "", GetOpenWindowfeature(500, 500));
-				});
-				 
-			});
-		</script>
+		<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg')}              "></script>
 	</head>
 	
 	<body class="mainbody srvey">
@@ -50,27 +27,27 @@
 		
 		<div class="headpanel">
 			<span class="crust selected">
-				<a class="crumb" id="survTab1"><span><spring:message code='ezSurvey.t35'/></span></a>
+				<a class="crumb"><span><spring:message code='ezSurvey.t35'/></span></a>
 				<span class="arrow"><span></span></span>
 			</span>
 			<span class="crust">
-				<a class="crumb" id="survTab2"><span><spring:message code='ezSurvey.t36'/></span></a>
+				<a class="crumb"><span><spring:message code='ezSurvey.t36'/></span></a>
 				<span class="arrow"><span></span></span>
 			</span>
 			<span class="crust">
-				<a class="crumb" id="survTab3"><span><spring:message code='ezSurvey.t37'/></span></a>
+				<a class="crumb"><span><spring:message code='ezSurvey.t37'/></span></a>
 				<span class="arrow"><span></span></span>
 			</span>
 		</div>
 		
 		<div id="bodyPanel">
-			<div id="tab1">
+			<div id="tab1" class="select-tab">
 				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyInfomation.jsp"></jsp:include>
 			</div>
-			<div id="tab2">
+			<div id="tab2" class="hidden-tab">
 				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/questionCreate.jsp"></jsp:include>
 			</div>
-			<div id="tab3">
+			<div id="tab3" class="hidden-tab">
 			</div>
 		</div>
 
@@ -83,24 +60,14 @@
 					questions : []
 				};
 				
-				// 클릭한 tab 열기
-				$("#survTab1, #survTab2, #survTab3").click(function() {
-					
-					$(this).parent().siblings().removeClass("selected")
-					$(this).parent().addClass("selected");
-					
-					var tabNum = $(this).attr("id").replace("survTab", "");
-					$("#tab" + tabNum).siblings().css("display", "none");
-					$("#tab" + tabNum).css("display", "");
-					
-				});
-				
 				initEvents();
 				
 				function initEvents() {
 					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
-					document.getElementById("selectTarget").addEventListener("change", toggleSelectTargetBttn, false);
-					document.getElementById("targetBttn"  ).addEventListener("click" , showSelectPopUp       , false);
+					document.getElementById("selectTarget" ).addEventListener("change", toggleSelectTargetBttn, false);
+					document.getElementById("targetBttn"   ).addEventListener("click" , showSelectPopUp       , false);
+					document.getElementById("gotoSecondTab").addEventListener("click" , gotoSecondStep        , false);
+					document.getElementById("cancelSurvey1").addEventListener("click" , cancleThisSurvey      , false);
 					var today = new Date();
 					
 					$("#startDate").datepicker({
@@ -125,6 +92,36 @@
 					
 					$("#startDate").datepicker("setDate", today);
 					$("#endDate").datepicker("setDate", today);
+					
+					var listTabElmt = document.getElementsByClassName("headpanel")[0].children;
+					for (var i = 0, len = listTabElmt.length; i < len; i++) {
+						var tabElmt            = listTabElmt[i];
+						var spanElmt           = tabElmt.querySelector("span[class='arrow']");
+						tabElmt.onclick        = (function(idx, elmt) {return function() {selectStep(idx, elmt);}; })(i + 1, tabElmt);
+						spanElmt.onclick       = (function(idx, elmt) {return function() {selectStep(idx, elmt);}; })(i + 1, tabElmt);
+					}
+				}
+				
+				function cancleThisSurvey() {/* Add function later */}
+				
+				function gotoSecondStep() {
+					var listTabElmt          = document.getElementsByClassName("headpanel")[0].children;
+					listTabElmt[0].className = "crust";
+					listTabElmt[1].className = "crust selected";
+					document.getElementById("tab1").className = "hidden-tab";
+					document.getElementById("tab2").className = "select-tab";
+				}
+				
+				function selectStep(tabIdx, spanElemt) {
+					var crrSpan = document.querySelector("span[class='crust selected']");
+					if (crrSpan == spanElemt) {return;}
+					
+					spanElemt.className = "crust selected";
+					crrSpan.className   = "crust";
+					var tabElmt         = document.getElementById("tab" + tabIdx);
+					var selectTab       = document.querySelector("div[class='select-tab']");
+					tabElmt.className   = "select-tab";
+					selectTab.className = "hidden-tab";
 				}
 				
 				function toggleSelectTargetBttn() {
@@ -157,9 +154,6 @@
 					setUsers : setSurveyUsers,
 				};
 			}();
-			
-			
-			
 			
 		$(function() {
 				
@@ -294,16 +288,79 @@
 					html += "<button class='cancel'>취소</button>";
 					html += "</div>";
 					
-					html += "</div>";
+				// 셀렉트 박스에 들어갈 질문 유형 데이터 
+				var optionData = 
+					[{ text : SurveyMessages.strQselect , value: 0, selected: true , description: SurveyMessages.strQselect                                         },
+					 { text : SurveyMessages.strSlOne   , value: 1, selected: false, description: SurveyMessages.strSlOne   , imageSrc: "/images/ezSurvey/radio.png"},
+					 { text : SurveyMessages.strSlMtp   , value: 2, selected: false, description: SurveyMessages.strSlMtp   , imageSrc: "/images/ezSurvey/radio.png"},
+					 { text : SurveyMessages.strTblOne  , value: 3, selected: false, description: SurveyMessages.strTblOne  , imageSrc: "/images/ezSurvey/radio.png"},
+					 { text : SurveyMessages.strTblMtp  , value: 4, selected: false, description: SurveyMessages.strTblMtp  , imageSrc: "/images/ezSurvey/radio.png"},
+					 { text : SurveyMessages.strShortQs , value: 5, selected: false, description: SurveyMessages.strShortQs , imageSrc: "/images/ezSurvey/radio.png"},
+					 { text : SurveyMessages.strLongQs  , value: 6, selected: false, description: SurveyMessages.strLongQs  , imageSrc: "/images/ezSurvey/radio.png"},
+					 { text : SurveyMessages.strSlider  , value: 7, selected: false, description: SurveyMessages.strSlider  , imageSrc: "/images/ezSurvey/radio.png"},
+					 { text : SurveyMessages.strRanking , value: 8, selected: false, description: SurveyMessages.strRanking , imageSrc: "/images/ezSurvey/radio.png"},
+					 { text : SurveyMessages.strDropdown, value: 9, selected: false, description: SurveyMessages.strDropdown, imageSrc: "/images/ezSurvey/radio.png"}];
 				
-					html += "</div>";
+				// make question form
+				createQuestiobDiv();
+				
+				// 질문 및 질문 유형 선택하는 부분 생성
+				function createQuestiobDiv() {
+					var html  = "";
+						html += "<div class='quesDiv'>";
+						html += "<input class='questnTitle'>";
+						html += "<img alt='파일첨부' src='/images/ezSurvey/attach.png' class='atchImg'>";
+						html += "<input type='file' class='attachFile' multiple='multiple' >";
+						html += "<div id='selectBox'></div>";
 					
-				grandParent.append(html);
+					$(".quesBacgr").html(html);
+					createQuestionSelectBox();
+				}
 				
-				addEvent();
-			}
-			
-			function addEvent() {
+				// 질문 유형을 선택하는 셀렉트 박스 생성
+				function createQuestionSelectBox() {
+					$("#selectBox").ddslick({
+						data :optionData,
+						imagePosition: "left",
+						selectText: "질문 유형 선택",
+						onSelected: function(data) {
+							var selectedEl = data.selectedItem;
+							var grandParent = selectedEl.parent().parent().parent().parent();
+							var questionType = data.selectedIndex;
+							
+							switch (questionType) {
+								case 1:
+									makeSelectQuestion(grandParent, questionType);
+									break;
+								case 2:
+									
+									break;
+								case 3:
+									
+									break;
+								case 4:
+									
+									break;
+								case 5:
+									
+									break;
+								case 6:
+									
+									break;
+								case 7:
+									
+									break;
+								case 8:
+									
+									break;
+								case 9:
+									
+									break;
+								
+							}
+						}
+					});
+				}
 				
 				// 보기 추가
 				$(".addRow").click(function() {
@@ -420,34 +477,66 @@
 				$(".save").click(function(event) {
 					var questionType = parseInt($(this).parents(".selection").attr("questiontype"));
 					
-					if (questionType == 1) {
-						var optionPart = $(this).parents(".optionPart").find(".option");
-						console.log("콘솔");
-						var additional = $(this).parents(".additionalPart");
+					// 기타 버튼 클릭시 기타 추가 이벤트
+					$(".addOther").click(function() {
 						
-						var requiedVal = additional.find("input[name=checkbox]").is(":checked")
+						var element = $(this).parent().parent().parent();
+	
+						var other = element.find(".optionPart").find(".other");
 						
-						console.log(optionPart);
-						var question = {};
-						
-						for (var i = 0; i < optionPart.length; i++) {
-							var option = {};
-							// 보기의 내용
-							var contents = optionPart[i].childNodes[0].value;
+						if (other.length == 0) {
 							
-							option['content'] = contents;
+							var html = "";
+							html += "<div class='other'>";
+							html += "<input class='textInput' type='text' placeholder='기타'>";
+							html += "<img src='/images/ezSurvey/attach.png' class='attachImg' onclick='optTrigger();'>";
+							html += "<img src='/images/ezSurvey/minus.jpg' class='deleteOption' onclick='deleteEvent(this);'>";
+							html += "</div>";
 							
-							question['option' + i] = option;
-							question['questionType'] = questionType;
-							
-							if (requiedVal == true) {
-								question['requied'] = "1";
-								
-							} else {
-								question['requied'] = "0";
-							}
+							element.find(".optionPart").append(html);
+						} else {
+							alert("기타는 하나만 추가 가능합니다.");
 						}
-						console.log(question);
+					});
+					
+					// 질문과 보기의 모든 내용 임시 저장
+					$(".save").click(function(event) {
+						var questionType = parseInt($(this).parents(".selection").attr("questiontype"));
+						
+						if (questionType == 1) {
+							var optionPart = $(this).parents(".optionPart").find(".option");
+							console.log("콘솔");
+							var additional = $(this).parents(".additionalPart");
+							
+							var requiedVal = additional.find("input[name=checkbox]").is(":checked")
+							
+							console.log(optionPart);
+							var question = {};
+							
+							for (var i = 0; i < optionPart.length; i++) {
+								var option = {};
+								// 보기의 내용
+								var contents = optionPart[i].childNodes[0].value;
+								
+								option['content'] = contents;
+								
+								question['option' + i] = option;
+								question['questionType'] = questionType;
+								
+								if (requiedVal == true) {
+									question['requied'] = "1";
+									
+								} else {
+									question['requied'] = "0";
+								}
+							}
+							console.log(question);
+						}
+					});
+					
+					var optionList = document.getElementsByClassName("optionAttach");
+					for (var i = 0, len = optionList.length; i < len; i++) {
+						optionList[i].onchange = function(e) {fileUpload();};
 					}
 				});
 				

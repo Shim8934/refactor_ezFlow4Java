@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @SuppressWarnings("unchecked")
@@ -29,11 +30,19 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public List<SimpleUserVO> getDeptMemberList(Map<String, Object> map) {
 		return (List<SimpleUserVO>)list("EzSurveyDAO.getDeptMemberList", map);
 	}
-
+	
 	public int getTotalSearchMembers(Map<String, Object> map) {
 		return (int)select("EzSurveyDAO.getTotalSearchMembers", map);
 	}
-
+	
+	public SurveyGeneralVO getUserPreviewConfig(Map<String, Object> map) {
+		return (SurveyGeneralVO)select("EzSurveyDAO.getUserPreviewConfig", map);
+	}
+	
+	public void saveUserConfig(Map<String, Object> map) {
+		insert("EzSurveyDAO.saveUserConfig", map);
+	}
+	
 	public List<SimpleUserVO> getSearchMemberList(Map<String, Object> map) {
 		return (List<SimpleUserVO>)list("EzSurveyDAO.getSearchMemberList", map);
 	}

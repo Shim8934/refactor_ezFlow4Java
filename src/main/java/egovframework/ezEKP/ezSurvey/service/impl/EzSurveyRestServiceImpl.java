@@ -139,6 +139,25 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		return resultBody;
 	}
 	
+	@Override
+	public JSONObject getUserPreviewConfig(HttpServletRequest request, String userId) throws Exception {
+		String url            = "/rest/ezsurvey/config/id/" + userId;
+		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject saveUserConfig(HttpServletRequest request, String userId, String prevMode, String listCount, String contentWPrev, String contentHPrev) throws Exception {
+		String url                = "/rest/ezsurvey/config/id/" + userId;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("prevMode",  prevMode);
+		param.put("listCount", listCount);
+		param.put("contentW",  contentWPrev);
+		param.put("contentH",  contentHPrev);
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject uploadAttachFile(MultipartHttpServletRequest request, String userId, List<MultipartFile> multiFiles) throws Exception {

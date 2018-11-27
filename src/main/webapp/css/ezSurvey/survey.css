@@ -41,7 +41,7 @@
 .selectedNode {font-weight: bold;}
 .searchPanel {z-index: 2000; position: fixed; border:1px solid #666; background-color: #fff;; border-radius: 5px; height: auto; width: 464px;}
 .searchPanel h1 {margin-top: 0px !important;}
-.hiddenBttn, .searchPanel.off, .uploadHelp.off {display: none;}
+.hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off {display: none;}
 .uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
 .receiver_tltype01 >span {min-width: 45px;}
 .organImg {width: 18px; height: 18px; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
@@ -196,16 +196,17 @@
 .slt-listDiv .mainlist tr:not(first-child) td:first-child {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 
 .headpanel {height: 40px; margin: 15px 0px 1px;}
+.headpanel >span:first-child {border-left: 1px solid #d7d7d7 !important;}
 .headpanel .crust a.crumb>span {display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 100%; font-size: 16px; font-weight: bold;}
 .headpanel .crust:hover a.crumb, .headpanel .crust.selected a.crumb {background-color: rgb(230, 126, 34); color: #fff;}
 .headpanel .crust a.crumb {cursor: pointer; font-weight: bold; text-decoration: none; background-color: #fff; padding: 0px 8px 0px 25px; margin-bottom: -1px; border-bottom: 1px solid #d7d7d7; outline: 0 none; -moz-outline-style: 0 none; display: block; line-height: 40px; overflow: hidden; _border-bottom: none; height: 40px;}
-.headpanel .crust {display: block; float: left; position: relative; zoom: 1; max-width: 50%; clear: none; border: 1px solid #d7d7d7; border-left: none; border-right: none;}
-.headpanel .crust .arrow {border: 20px solid transparent; border-right: 1px none black; border-left-color: #d7d7d7; display: block; position: absolute; right: -20px; top: 0px; z-index: 50; width: 0px; height: 0px;}
+.headpanel .crust {display: block; float: left; position: relative; zoom: 1; max-width: 50%; clear: none; border: 1px solid #d7d7d7; border-left: none; border-right: none; border-bottom: none;}
+.headpanel .crust .arrow {border: 20px solid transparent; border-right: 1px none black; border-left-color: #d7d7d7; display: block; position: absolute; right: -20px; top: 0px; z-index: 50; width: 0px; height: 0px; cursor: pointer;}
 .headpanel .crust .arrow span {border: 20px solid transparent; border-right: 1px none black; border-left-color: #fafafa; display: block; position: absolute; left: -21px; top: -20px; z-index: 51; white-space: nowrap; overflow: hidden; text-indent: 9999px; width: 0px; height: 0px;}
 .headpanel .crust:hover .arrow span, .headpanel .crust.selected .arrow span {border-left-color: rgb(230, 126, 34);}
 
 /* 2018.11.21 추가 */
-.surveyCrtTt2 {height: 50px; width: 100%; background-color: #fff; border: 1px solid #d7d7d7; display: flex;}
+.surveyCrtTt2 {height: 50px; background-color: #fff; border: 1px solid #d7d7d7; display: flex;}
 .surveyCrtTt2 .sryFirst2 {width: 10px; background-color: rgba(0, 115, 230, 0.64);}
 .surveyCrtTt2 .filler {flex-grow: 1;}
 .surveyCrtTt2 .sryTxt {height: 50px; line-height: 50px; padding: 0px 10px; font-weight: bold; font-size: 20px;}

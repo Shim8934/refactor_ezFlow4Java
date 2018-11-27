@@ -122,8 +122,6 @@
 			fileDivElmt.addEventListener("dragenter", function(e) {surveyFile.dragEnter(e);}, false);
 			fileDivElmt.addEventListener("dragover" , function(e) {surveyFile.dragOver(e);} , false);
 			fileDivElmt.addEventListener("drop"     , function(e) {surveyFile.upload(e);}   , false);
-			
-			
 		}
 		
 		function startUpload() {document.getElementById("fileBttn").click();}
