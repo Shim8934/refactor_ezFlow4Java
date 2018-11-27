@@ -7361,10 +7361,13 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         
         CommunityClubVO vo = ezCommunityDAO.commOutOkGet2(map);
         
+        /* 2018-11-27 홍승비 - 커뮤니티 탈퇴 신청 알림 메일 폰트 수정 */
         if (vo.getEmail() != null) {
         	String subject = "[" + vo.getC_ClubName() + "]Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t722", userInfo.getLocale());
-        	String bodyContent = "[" + vo.getC_ClubName() + "]" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t587", userInfo.getLocale()) + "< " + reason + " > " + egovMessageSource.getMessage("ezCommunity.t721", userInfo.getLocale());
-        
+        	String bodyContent = "<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">";
+        	bodyContent += "[" + vo.getC_ClubName() + "]" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t587", userInfo.getLocale()) + "< " + reason + " > " + egovMessageSource.getMessage("ezCommunity.t721", userInfo.getLocale());
+        	bodyContent += "</DIV>";
+        	
         	InternetAddress from = new InternetAddress();
         	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
         	from.setAddress(userInfo.getEmail());
