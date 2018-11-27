@@ -559,7 +559,7 @@ public class MLoginGWController {
 				result.put("code", "1");
 				result.put("data", "device info update fail");
 
-				LOGGER.debug("device info update fail. userId=" + userId + ", devId=" + devId);
+				LOGGER.debug("device info update fail." + userId + ", devId=" + devId);
 			}
 			
 		} catch (Exception e) {
