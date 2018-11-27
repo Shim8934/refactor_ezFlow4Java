@@ -70,6 +70,7 @@ y-axis
 		top: 0;
 		right: 0;
 		bottom: 0;
+		z-index: 100;
 	}
 
 	.mCSB_outside + .mCSB_scrollTools{ right: -26px; } /* scrollbar position: outside */

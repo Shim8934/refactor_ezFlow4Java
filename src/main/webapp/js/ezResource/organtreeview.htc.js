@@ -371,7 +371,7 @@ function organtreeview(thisobjid, elobjid) {
 
             if (g_selectedIdx != -1) {
                 //document.getElementById(g_nodeid + g_selectedIdx).className = g_baseClass["normal"];
-            	document.getElementById(g_nodeid + g_selectedIdx).className = "h2_text";
+            	document.getElementById(g_nodeid + g_selectedIdx).className = "node_normal";
             }
 
             document.getElementById(g_nodeid + nodeIdx).className = g_baseClass["selected"];
@@ -1157,7 +1157,7 @@ function organtreeview(thisobjid, elobjid) {
                   		g_baseClass["selected"] + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + (168 - (mydepth.length * 18)) + "px;'" +
                   		" title='" + findchildnodevalue(childNode, "VALUE") + "'>");*/
                 	
-                	nodeHtml += "<span class='h2_text' id='" + g_nodeid + nodeCount + "'>";
+                	nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "'>";
                     g_selectedIdx = nodeCount;
                 }
                 else {
@@ -1167,7 +1167,7 @@ function organtreeview(thisobjid, elobjid) {
                     /*nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
                   		g_baseClass["normal"] + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + (168 - (mydepth.length * 18)) + "px;'" +
                   		" title='" + findchildnodevalue(childNode, "VALUE") + "'>");*/
-                	nodeHtml += "<span class='h2_text' id='" + g_nodeid + nodeCount + "'>";
+                	nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "'>";
                 }
                 
                 //nodeHtml += (findchildnodevalue(childNode, "VALUE") + "</span></a></span>");
@@ -1300,13 +1300,13 @@ function organtreeview(thisobjid, elobjid) {
                 if (childNode.selectSingleNode("SELECT") != null) {
                     /*nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
 						g_baseClass["selected"] + "' style='display:inline-block;'>");*/
-                	nodeHtml += "<span class='h2_text' id='" + g_nodeid + nodeCount + "'>";
+                	nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "'>";
                     g_selectedIdx = nodeCount;
                 }
                 else
                     /*nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
 						g_baseClass["normal"] + "' style='display:inline-block;'>");*/
-                	nodeHtml += "<span class='h2_text' id='" + g_nodeid + nodeCount + "'>";
+                	nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "'>";
 
                 nodeHtml += (childNode.selectSingleNode("VALUE").text + "</span></div></span>");
 

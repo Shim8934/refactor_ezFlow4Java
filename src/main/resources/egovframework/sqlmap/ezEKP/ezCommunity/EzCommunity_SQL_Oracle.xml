@@ -52,7 +52,9 @@
 		<result property="itemID"						column="ItemID"						/>
 		<result property="writerID"						column="WriterID"					/>
 		<result property="writerName"					column="WriterName"					/>
+		<result property="writerDeptID"				column="WriterDeptID"				/>
 		<result property="writerDeptName"				column="WriterDeptName"				/>
+		<result property="writerCompanyID"			column="WriterCompanyID"			/>
 		<result property="writerCompanyName"			column="WriterCompanyName"			/>
 		<result property="writeDate"					column="WriteDate"					/>
 		<result property="parentWriteDate"				column="ParentWriteDate"			/>
@@ -268,9 +270,9 @@
 	            FROM
 	            	$v_BNAME$
 	            WHERE
-	            	title LIKE '%' ||#v_KEYWORD#|| '%'
-	            OR
-	            	content LIKE '%' ||#v_KEYWORD#|| '%'
+	            	(title LIKE '%' ||#v_KEYWORD#|| '%'
+	           	 	OR
+	            	content LIKE '%' ||#v_KEYWORD#|| '%')
 	            AND
 	            	tenant_id = #tenantID#
 	            AND
@@ -718,6 +720,7 @@
 					CASE WHEN #primary# = '1' THEN A.writername ELSE A.writername2 END AS writername,
 					CASE WHEN #primary# = '1' THEN A.writerdeptname ELSE A.writerdeptname2 END AS writerdeptname,
 					CASE WHEN #primary# = '1' THEN A.writercompanyname ELSE A.writercompanyname2 END AS writercompanyname,
+					A.writerDeptID,
 					A.startdate,
 					A.writedate,
 					A.parentwritedate,
@@ -804,6 +807,7 @@
 					A.itemid,
 					A.writerid,
 					A.writername$v_strLang$ AS writername,
+					A.writerDeptID,
 					A.writerdeptname$v_strLang$ AS writerdeptname,
 					A.writercompanyname$v_strLang$ AS writercompanyname,
 					A.parentwritedate,
@@ -900,6 +904,7 @@
 		            B.boardname$v_strLang$,
 		            A.writerid,
 		            A.writername$v_strLang$,
+		            A.writerDeptID,
 		            A.writerdeptname$v_strLang$,
 		            A.writercompanyname$v_strLang$,
 		            A.parentwritedate,
@@ -1001,7 +1006,9 @@
 				itemid,
 				writerid,
 				writername$v_strLang$ AS writername,
+				writerdeptid,
 				writerdeptname$v_strLang$ AS writerdeptname,
+				writercompanyid,
 				writercompanyname$v_strLang$ AS writercompanyname,
 				TO_DATE(writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
 				TO_DATE(parentwritedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS parentwritedate,
@@ -1227,19 +1234,68 @@
 	<select id="EzCommunityDAO.readOneLineReply"				parameterClass="Map"		resultClass="CommunityOneLineReplyVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				replyid,
-				CASE WHEN #primary# = '1' THEN username ELSE username2 END AS username,
-				userid,
-				content,
-				writedate+(#offset#/(60*24)) AS writedate
+				A.replyid,
+				CASE WHEN #primary# = '1' THEN A.username ELSE A.username2 END AS username,
+				A.userid,
+				A.content,
+				writedate+(#offset#/(60*24)) AS writedate,
+				DEPTID
 			FROM
-				TBL_COMM_ONELINEREPLY
+				TBL_COMM_ONELINEREPLY A
+			INNER JOIN
+			   (SELECT
+			   		T1.*,
+			    	ROW_NUMBER() OVER (PARTITION BY T1.CN ORDER BY ROWNUM) CNT 
+				FROM
+					((SELECT
+						D.CN, D.DEPARTMENT as DEPTID,
+						D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+						D.TENANT_ID
+					FROM
+						TBL_USERMASTER D
+					WHERE
+						D.TENANT_ID = #tenantID#
+					AND
+						D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+						
+					UNION ALL
+					
+					(SELECT
+						B.cn, A2.DEPTID,
+						C.EXTENSIONATTRIBUTE2 as COMPANYID,
+						A2.TENANT_ID
+					FROM
+						TBL_USERMASTER B
+					INNER JOIN
+						TBL_ADDJOBMASTER A2
+					ON
+						A2.CN = B.CN
+					AND
+						A2.TENANT_ID = B.TENANT_ID
+					RIGHT JOIN
+						TBL_DEPTMASTER C
+					ON
+						A2.DEPTID = C.CN
+					AND
+						B.TENANT_ID = C.TENANT_ID
+					AND
+						C.EXTENSIONATTRIBUTE2 = #companyID#
+					WHERE
+	                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T1 ) TR
+			ON
+				A.USERID = TR.CN
+			AND
+				TR.CNT = 1
+			AND
+				A.TENANT_ID = TR.TENANT_ID
 			WHERE
 				boardid = #v_pBoardID#
 			AND
 				itemid = #v_pItemID#
 			AND
-				tenant_id = #tenantID#
+				A.tenant_id = #tenantID#
+			AND
+				TR.COMPANYID = #companyID#
 			ORDER BY
 				writedate ASC
 		]]>
@@ -1266,15 +1322,64 @@
 						usercompanyname2,
 						usertitle,
 						usertitle2,
-						TO_CHAR(readdate, 'YYYY-MM-DD HH24:MI:SS') AS readdate
+						TO_CHAR(readdate, 'YYYY-MM-DD HH24:MI:SS') AS readdate,
+						DEPTID
 					FROM
-						TBL_COMM_ITEM_READ 
+						TBL_COMM_ITEM_READ A
+					INNER JOIN
+					   (SELECT
+					   		T.*,
+					    	ROW_NUMBER() OVER (PARTITION BY T.CN ORDER BY ROWNUM) CNT 
+						FROM
+							((SELECT
+									D.CN, D.DEPARTMENT as DEPTID,
+									D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+									D.TENANT_ID
+								FROM
+									TBL_USERMASTER D
+								WHERE
+									D.TENANT_ID = #tenantID#
+								AND
+									D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+									
+								UNION ALL
+								
+								(SELECT
+									B.cn, A2.DEPTID,
+									C.EXTENSIONATTRIBUTE2 as COMPANYID,
+									A2.TENANT_ID
+								FROM
+									TBL_USERMASTER B
+								INNER JOIN
+									TBL_ADDJOBMASTER A2
+								ON
+									A2.CN = B.CN
+								AND
+									A2.TENANT_ID = B.TENANT_ID
+								RIGHT JOIN
+									TBL_DEPTMASTER C
+								ON
+									A2.DEPTID = C.CN
+								AND
+									B.TENANT_ID = C.TENANT_ID
+								AND
+									C.EXTENSIONATTRIBUTE2 = #companyID#
+								WHERE
+				                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T ) TR
+					ON
+						A.USERID = TR.CN
+					AND
+						TR.CNT = 1
+					AND
+						A.TENANT_ID = TR.TENANT_ID
 					WHERE
-						boardid = #boardID#
+						A.boardid = #boardID#
 					AND
-						itemid = #itemID#
+						A.itemid = #itemID#
 					AND
-						tenant_id = #tenantID#
+						A.tenant_id = #tenantID#
+					AND
+						TR.COMPANYID = #companyID#
 					AND
 		   				USERID <> ( SELECT 
 		   								WRITERID 
@@ -1397,9 +1502,65 @@
 		<isEqual property="v_s_radio" compareValue="ID">
 			<![CDATA[
 				SELECT
-					*
+					A.*,
+					DEPTID,
+					CASE WHEN #primary# = '1' THEN T.DEPTNAME ELSE T.DEPTNAME2 END AS DEPTNAME
 				FROM
-					TBL_C_CLUBUSER 
+					TBL_C_CLUBUSER A
+				JOIN
+					TBL_C_MEMBERINFO T
+				ON
+					A.TENANT_ID = T.TENANT_ID
+				AND
+					A.COMPANYID = T.COMPANYID
+				AND
+					T.userid = RTRIM(A.c_id)
+				INNER JOIN
+				   (SELECT
+			   			T2.*,
+			    		ROW_NUMBER() OVER (PARTITION BY T2.CN ORDER BY ROWNUM) CNT 
+					FROM
+						((SELECT
+							D.CN, D.DEPARTMENT as DEPTID,
+							D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+							D.TENANT_ID
+						FROM
+							TBL_USERMASTER D
+						WHERE
+							D.TENANT_ID = #tenantID#
+						AND
+							D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+							
+						UNION ALL
+						
+						(SELECT
+							B.cn, A2.DEPTID,
+							C.EXTENSIONATTRIBUTE2 as COMPANYID,
+							A2.TENANT_ID
+						FROM
+							TBL_USERMASTER B
+						INNER JOIN
+							TBL_ADDJOBMASTER A2
+						ON
+							A2.CN = B.CN
+						AND
+							A2.TENANT_ID = B.TENANT_ID
+						RIGHT JOIN
+							TBL_DEPTMASTER C
+						ON
+							A2.DEPTID = C.CN
+						AND
+							B.TENANT_ID = C.TENANT_ID
+						AND
+							C.EXTENSIONATTRIBUTE2 = #companyID#
+						WHERE
+		                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2 ) TR
+				ON
+					A.C_ID = TR.CN
+				AND
+					TR.CNT = 1
+				AND
+					A.TENANT_ID = TR.TENANT_ID
 				WHERE
 					RTRIM(c_clubno) = #v_code#
 				AND
@@ -1407,7 +1568,9 @@
 				AND
 					permit <> 0
 				AND
-					tenant_id = #tenantID#
+					A.tenant_id = #tenantID#
+				AND
+					TR.companyid = #companyID#
 				ORDER BY
 					c_indate DESC
 			]]>
@@ -1417,38 +1580,150 @@
 			<isEqual property="v_s_radio" compareValue="NAME">
 				<![CDATA[
 					SELECT
-						*
+						A.*,
+						DEPTID,
+						CASE WHEN #primary# = '1' THEN T.DEPTNAME ELSE T.DEPTNAME2 END AS DEPTNAME
 					FROM
-						TBL_C_CLUBUSER
+						TBL_C_CLUBUSER A
 					JOIN
-						TBL_C_MEMBERINFO
+						TBL_C_MEMBERINFO T
 					ON
-						TBL_C_MEMBERINFO.userid = RTRIM(TBL_C_CLUBUSER.c_id)
+						A.TENANT_ID = T.TENANT_ID
+					AND
+						A.COMPANYID = T.COMPANYID
+					AND
+						T.userid = RTRIM(A.c_id)
+					INNER JOIN
+					   (SELECT
+				   			T2.*,
+				    		ROW_NUMBER() OVER (PARTITION BY T2.CN ORDER BY ROWNUM) CNT 
+						FROM
+							((SELECT
+								D.CN, D.DEPARTMENT as DEPTID,
+								D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+								D.TENANT_ID
+							FROM
+								TBL_USERMASTER D
+							WHERE
+								D.TENANT_ID = #tenantID#
+							AND
+								D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+								
+							UNION ALL
+							
+							(SELECT
+								B.cn, A2.DEPTID,
+								C.EXTENSIONATTRIBUTE2 as COMPANYID,
+								A2.TENANT_ID
+							FROM
+								TBL_USERMASTER B
+							INNER JOIN
+								TBL_ADDJOBMASTER A2
+							ON
+								A2.CN = B.CN
+							AND
+								A2.TENANT_ID = B.TENANT_ID
+							RIGHT JOIN
+								TBL_DEPTMASTER C
+							ON
+								A2.DEPTID = C.CN
+							AND
+								B.TENANT_ID = C.TENANT_ID
+							AND
+								C.EXTENSIONATTRIBUTE2 = #companyID#
+							WHERE
+			                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2 ) TR
+					ON
+						A.C_ID = TR.CN
+					AND
+						TR.CNT = 1
+					AND
+						A.TENANT_ID = TR.TENANT_ID	
 					WHERE
-						RTRIM(TBL_C_CLUBUSER.c_clubno) = #v_code#
+						RTRIM(A.c_clubno) = #v_code#
 					AND
-						CASE WHEN #primary# = '1' THEN TBL_C_MEMBERINFO.username ELSE TBL_C_MEMBERINFO.username2 END LIKE '%'||#v_keyword#||'%'
+						CASE WHEN #primary# = '1' THEN T.username ELSE T.username2 END LIKE '%'||#v_keyword#||'%'
 					AND
-						TBL_C_CLUBUSER.permit <> 0
+						A.permit <> 0
 					AND
-						TBL_C_CLUBUSER.tenant_id = #tenantID#
+						A.tenant_id = #tenantID#
+					AND
+						TR.companyid = #companyID#
 					ORDER BY
-						TBL_C_CLUBUSER.c_indate DESC
+						A.c_indate DESC
 				]]>
 			</isEqual>
 			
 			<isNotEqual property="v_s_radio" compareValue="NAME">
 				<![CDATA[
 					SELECT
-						*
+						A.*,
+						DEPTID,
+						CASE WHEN #primary# = '1' THEN T.DEPTNAME ELSE T.DEPTNAME2 END AS DEPTNAME
 					FROM
-						TBL_C_CLUBUSER
+						TBL_C_CLUBUSER A
+					JOIN
+						TBL_C_MEMBERINFO T
+					ON
+						A.TENANT_ID = T.TENANT_ID
+					AND
+						A.COMPANYID = T.COMPANYID
+					AND
+						T.userid = RTRIM(A.c_id)
+					INNER JOIN
+					   (SELECT
+				   			T2.*,
+				    		ROW_NUMBER() OVER (PARTITION BY T2.CN ORDER BY ROWNUM) CNT 
+						FROM
+							((SELECT
+								D.CN, D.DEPARTMENT as DEPTID,
+								D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+								D.TENANT_ID
+							FROM
+								TBL_USERMASTER D
+							WHERE
+								D.TENANT_ID = #tenantID#
+							AND
+								D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+								
+							UNION ALL
+							
+							(SELECT
+								B.cn, A2.DEPTID,
+								C.EXTENSIONATTRIBUTE2 as COMPANYID,
+								A2.TENANT_ID
+							FROM
+								TBL_USERMASTER B
+							INNER JOIN
+								TBL_ADDJOBMASTER A2
+							ON
+								A2.CN = B.CN
+							AND
+								A2.TENANT_ID = B.TENANT_ID
+							RIGHT JOIN
+								TBL_DEPTMASTER C
+							ON
+								A2.DEPTID = C.CN
+							AND
+								B.TENANT_ID = C.TENANT_ID
+							AND
+								C.EXTENSIONATTRIBUTE2 = #companyID#
+							WHERE
+			                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2 ) TR
+					ON
+						A.C_ID = TR.CN
+					AND
+						TR.CNT = 1
+					AND
+						A.TENANT_ID = TR.TENANT_ID
 					WHERE
 						RTRIM(c_clubno) = #v_code#
 					AND
 						permit <> 0
 					AND
-						tenant_id = #tenantID#
+						A.tenant_id = #tenantID#
+					AND
+						TR.companyid = #companyID#
 					ORDER BY
 						c_indate DESC
 				]]>
@@ -1533,6 +1808,8 @@
 				RTRIM(TBL_C_CLUB.c_clubno) = #v_code#
 			AND
 				TBL_C_CLUB.tenant_id = #tenantID#
+			AND
+				TBL_C_MEMBERINFO.companyid = #companyID#
 		]]>
 	</select>
 	
@@ -1547,6 +1824,8 @@
 				TBL_C_MEMBERINFO
 			WHERE
 				userid = #v_RECORD_C_SYSOPID#
+			AND
+				companyid = #companyID#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -1600,7 +1879,7 @@
 				AND
 					(showposition = ' ' OR showposition IS NULL)
 				AND
-					(parentboardid != 'TOP' AND parentboardid != 'top')
+					parentboardid != 'top'
 				AND
 					tenant_id = #tenantID#
 			]]>
@@ -1666,6 +1945,8 @@
 			WHERE
 				RTRIM(A.c_clubno) = #v_CODE#
 			AND
+				B.companyid = #companyID#
+			AND
 				A.tenant_id = #tenantID#
 		]]>
 	</select>
@@ -1688,12 +1969,16 @@
 					RTRIM(A.c_id) = RTRIM(B.userid)
 				AND
 					A.tenant_id = B.tenant_id
+				AND
+					A.companyid = B.companyid
 				WHERE
 					RTRIM(c_clubno) = #v_CODE#
 				AND
 					permit <> 0
 				AND
 					A.c_id LIKE '%' || #v_SER# || '%'
+				AND
+					B.companyid = #companyID#
 				AND
 					A.tenant_id = #tenantID#
 			]]>
@@ -1713,12 +1998,16 @@
 						RTRIM(A.c_id) = RTRIM(B.userid)
 					AND
 						A.tenant_id = B.tenant_id
+					AND
+						A.companyid = B.companyid
 					WHERE
 						RTRIM(c_clubno) = #v_CODE#
 					AND
 						permit <> 0
 					AND
 						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END LIKE '%' || #v_SER# || '%'
+					AND
+						B.companyid = #companyID#
 					AND
 						A.tenant_id = #tenantID#
 				]]>
@@ -1737,10 +2026,14 @@
 						RTRIM(A.c_id) = RTRIM(B.userid)
 					AND
 						A.tenant_id = B.tenant_id
+					AND
+						A.companyid = B.companyid
 					WHERE
 						RTRIM(c_clubno) = #v_CODE#
 					AND
 						permit <> 0
+					AND
+						B.companyid = #companyID#
 					AND
 						A.tenant_id = #tenantID#
 				]]>
@@ -1814,19 +2107,70 @@
 				A.c_id,
 				A.companyid,
 				A.c_indate,
-				B.username$v_USERINFO_LANG$
+				CASE WHEN #primary# = '1' THEN T.username ELSE T.username2 END AS username,
+				DEPTID
 			FROM
 				TBL_C_CLUBUSER A
 			INNER JOIN
-				TBL_C_MEMBERINFO B
+				TBL_C_MEMBERINFO T
 			ON
-				RTRIM(A.c_id) = RTRIM(B.userid)
+				RTRIM(A.c_id) = RTRIM(T.userid)
 			AND
-				A.tenant_id = B.tenant_id
+				A.tenant_id = T.tenant_id
+			AND 
+				A.COMPANYID = T.COMPANYID
+			INNER JOIN
+			   (SELECT
+			   		T2.*,
+			    	ROW_NUMBER() OVER (PARTITION BY T2.CN ORDER BY ROWNUM) CNT 
+				FROM
+					((SELECT
+						D.CN, D.DEPARTMENT as DEPTID,
+						D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+						D.TENANT_ID
+					FROM
+						TBL_USERMASTER D
+					WHERE
+						D.TENANT_ID = #tenantID#
+					AND
+						D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+						
+					UNION ALL
+					
+					(SELECT
+						B.cn, A2.DEPTID,
+						C.EXTENSIONATTRIBUTE2 as COMPANYID,
+						A2.TENANT_ID
+					FROM
+						TBL_USERMASTER B
+					INNER JOIN
+						TBL_ADDJOBMASTER A2
+					ON
+						A2.CN = B.CN
+					AND
+						A2.TENANT_ID = B.TENANT_ID
+					RIGHT JOIN
+						TBL_DEPTMASTER C
+					ON
+						A2.DEPTID = C.CN
+					AND
+						B.TENANT_ID = C.TENANT_ID
+					AND
+						C.EXTENSIONATTRIBUTE2 = #companyID#
+					WHERE
+						B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2 ) TR
+			ON
+				A.C_ID = TR.CN
+			AND
+				TR.CNT = 1
+			AND
+				A.TENANT_ID = TR.TENANT_ID
 			WHERE
 				RTRIM(A.c_clubno) = #v_CODE#
 			AND
 				permit = '0'
+			AND
+				TR.companyid = #companyID#
 			AND
 				A.tenant_id = #tenantID#
 		]]>
@@ -1863,6 +2207,8 @@
 				AND
 					c_adminconfirm = 'Y'
 				AND
+					TBL_C_CLUB.companyid = #companyID#
+				AND
 					TBL_C_CLUB.tenant_id = #tenantID#
 				GROUP BY
 					c_name,
@@ -1896,6 +2242,8 @@
 					TBL_C_CATEGORY.c_cat = #cat#
 				AND
 					c_adminconfirm = 'Y'
+				AND
+					TBL_C_CLUB.companyid = #companyID#
 				AND
 					TBL_C_CLUB.tenant_id = #tenantID#
 				GROUP BY
@@ -1952,6 +2300,8 @@
 					AND
 						TBL_C_CLUB.C_ADMINCONFIRM = 'Y'
 					AND
+						TBL_C_CLUB.companyid = #companyID#
+					AND
 						TBL_C_CLUB.tenant_id = #tenantID#
 					) T1
 				) X
@@ -2000,6 +2350,8 @@
 						TBL_C_CATEGORY.c_cat = LOWER(#cat#)
 					AND
 						TBL_C_CLUB.C_ADMINCONFIRM = 'Y'
+					AND
+						TBL_C_CLUB.companyid = #companyID#
 					AND
 						TBL_C_CLUB.tenant_id = #tenantID#
 					) T1
@@ -2053,7 +2405,11 @@
 					WHERE
 						$v_searchName$ LIKE '%' || #v_searchValue# || '%'
 					AND
+						T1.companyid = #companyID#
+					AND
 						T1.tenant_id = #tenantID#
+					AND
+						T1.C_ADMINCONFIRM = 'Y'
 					)
 				) X
 			]]>
@@ -2075,7 +2431,6 @@
 						displayname2,
 						description,
 						description2,
-						c_Cate_A,
 						ROW_NUMBER() OVER (ORDER BY T1.c_regdate) AS ROWNUM_
 					FROM
 						TBL_C_CLUB T1
@@ -2088,7 +2443,11 @@
 					WHERE
 						$v_searchName$ LIKE '%' || #v_searchValue# || '%'
 					AND
+						T1.companyid = #companyID#
+					AND
 						T1.tenant_id = #tenantID#
+					AND
+						T1.C_ADMINCONFIRM = 'Y'
 					)
 			]]>
 		</isNotEqual>
@@ -2344,6 +2703,8 @@
 				TBL_C_CLUB.c_adminconfirm = 'Y'
 			AND
 				permit <> 0
+			AND
+				TBL_C_CLUB.companyid = #companyID#
 			AND
 				TBL_C_CLUBUSER.tenant_id = #tenantID#
 			ORDER BY
@@ -2802,6 +3163,8 @@
                 WHERE
                 	c_adminconfirm = 'Y'
                 AND
+					TBL_C_CLUB.companyid = #companyID#
+                AND
                 	TBL_C_CLUB.tenant_id = #tenantID#
                 ORDER BY
                 	c_membercnt DESC
@@ -2840,6 +3203,8 @@
                 	(c_regdate >=  (TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS') -30))
                 AND
                 	c_adminconfirm = 'Y'
+                AND
+					TBL_C_CLUB.companyid = #companyID#
                 AND
                 	TBL_C_CLUB.tenant_id = #tenantID#
                 ORDER BY
@@ -2976,6 +3341,8 @@
 			WHERE
 				c_adminconfirm = 'Y'
 			AND
+				companyid = #companyID#
+			AND
 				TBL_C_CLUB.tenant_id = #tenantID#
 		]]>
 	</select>
@@ -3022,6 +3389,8 @@
 						TBL_C_CLUB.tenant_id = T2.tenant_id
 					WHERE
 						c_adminconfirm = 'Y'
+					AND
+						TBL_C_CLUB.companyid = #companyID#
 					AND
 						TBL_C_CLUB.tenant_id = #tenantID#
 					) T1
@@ -3731,6 +4100,8 @@
 			WHERE
 				userid = #v_POLLREGUSER#
 			AND
+				companyid = #companyID#
+			AND
 				tenant_id = #tenantID#
 		]]>
 	</select>
@@ -3774,6 +4145,8 @@
 						TBL_C_CLUBUSER.permit <> 0
 					AND
 						TBL_C_CLUBUSER.tenant_id = #tenantID#
+					AND
+						TBL_C_MEMBERINFO.companyID = #companyID#
 				]]>
 			</isEqual>
 			<isNotEqual property="v_S_RADIO" compareValue="NAME">
@@ -3826,12 +4199,13 @@
 					(SELECT
 						T1.c_clubno,
                         writedate,
-                        T1.tenant_id,
-                        ROW_NUMBER() OVER (ORDER BY writedate DESC) ROWNUM_  
+                        T1.companyid,
+                        T1.tenant_id
                   	FROM 
                   		(SELECT
 							DISTINCT TBL_C_CLUBUSER.c_clubno,
 							MAX(writedate) WRITEDATE,
+							TBL_C_CLUB.companyid,
 							TBL_C_CLUBUSER.tenant_id
                        	FROM
                        		TBL_C_CLUBUSER 
@@ -3860,13 +4234,19 @@
                        	AND
                        		TBL_C_CLUBUSER.permit <> 0
                        	AND
+                       		TBL_C_CLUBUSER.companyid = #companyID#
+                       	AND
                        		TBL_C_CLUBUSER.tenant_id = #tenantID#
                        	GROUP BY
-                       		TBL_C_CLUBUSER.c_clubno, TBL_C_CLUBUSER.tenant_id
+                       		TBL_C_CLUBUSER.c_clubno, TBL_C_CLUBUSER.tenant_id, TBL_C_CLUB.companyid
 						) T1 
+					ORDER BY
+						writedate DESC
 					) T2
 				WHERE
-					T2.tenant_id = #tenantID# 
+					T2.companyid = #companyID#
+				AND
+					T2.tenant_id = #tenantID#
 				) X
 		]]>
 		</isEqual>
@@ -3877,8 +4257,8 @@
 				FROM
 					(SELECT
 						TBL_C_CLUBUSER.c_clubno,
-						TBL_C_CLUBUSER.tenant_id,
-						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUBUSER.c_visited DESC ) ROWNUM_
+						TBL_C_CLUB.companyid,
+						TBL_C_CLUBUSER.tenant_id
 					FROM
 						TBL_C_CLUBUSER 
 					JOIN
@@ -3894,7 +4274,11 @@
 					AND
 						permit <> 0
 					AND
+                    	TBL_C_CLUBUSER.companyid = #companyID#
+					AND
 						TBL_C_CLUBUSER.tenant_id = #tenantID#
+					ORDER BY
+						TBL_C_CLUBUSER.c_visited DESC 
 					) T1
 				JOIN 
 					TBL_COMM_BOARDINFO
@@ -4385,6 +4769,8 @@
 			WHERE
 				c_adminconfirm = 'Y'
 			AND
+				companyid = #companyID#
+			AND
 				tenant_id = #tenantID# 
 		]]>
 	</select>	
@@ -4437,6 +4823,8 @@
 					(title LIKE  '%'||#v_KEYWORD#||'%' OR content LIKE '%'||#v_KEYWORD#||'%')
 				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
 			]]>
 		</isEqual>
 		
@@ -4451,6 +4839,8 @@
 						title LIKE '%'||#v_KEYWORD#||'%'
 					AND
 						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
 				]]>
 			</isEqual>
 			
@@ -4465,6 +4855,8 @@
 							CASE WHEN #primary# = '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
 						AND
 							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
 					]]>
 				</isEqual>
 				
@@ -4476,6 +4868,8 @@
 							$v_BNAME$
 						WHERE
 							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
 					]]>
 				</isNotEqual>
 			</isNotEqual>
@@ -4600,18 +4994,70 @@
 <!-- 		{CALL EZSP_ADMIN_MEMBERLIST_GET1(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.adminMemberListGet1"				parameterClass="Map"		resultClass="Integer">
-		<![CDATA[
-			SELECT
-				NVL(COUNT(c_clubno), 0)  
-			FROM
-				TBL_C_CLUBUSER
-			WHERE
-				RTRIM(c_clubno) = #v_CODE#
-			AND
-				permit <> 0
-			AND
-				tenant_id = #tenantID#
-		]]>
+		<isEqual property="v_FLAG" compareValue="ID">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(c_clubno), 0)  
+				FROM
+					TBL_C_CLUBUSER A
+				INNER JOIN
+					TBL_C_MEMBERINFO B
+				ON
+					RTRIM(A.c_id) = RTRIM(B.userid)
+				AND
+					A.tenant_id = B.tenant_id
+				AND
+					A.companyid = B.companyid
+				WHERE
+					RTRIM(c_clubno) = #v_CODE#
+				AND
+					permit <> 0
+				AND
+					A.c_id LIKE '%' || #v_SER# || '%'
+				AND
+					A.tenant_id = #tenantID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_FLAG" compareValue="ID">
+			<isEqual property="v_FLAG" compareValue="NAME">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(c_clubno), 0)  
+					FROM
+						TBL_C_CLUBUSER A
+					INNER JOIN
+						TBL_C_MEMBERINFO B
+					ON
+						RTRIM(A.c_id) = RTRIM(B.userid)
+					AND
+						A.tenant_id = B.tenant_id
+					AND
+						A.companyid = B.companyid
+					WHERE
+						RTRIM(c_clubno) = #v_CODE#
+					AND
+						permit <> 0
+					AND
+						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END LIKE '%' || #v_SER# || '%'
+					AND
+						A.tenant_id = #tenantID#
+				]]>
+			</isEqual>
+		<isNotEqual property="v_FLAG" compareValue="NAME">
+			<![CDATA[
+				SELECT
+					NVL(COUNT(c_clubno), 0)  
+				FROM
+					TBL_C_CLUBUSER
+				WHERE
+					RTRIM(c_clubno) = #v_CODE#
+				AND
+					permit <> 0
+				AND
+					tenant_id = #tenantID#
+				]]>
+			</isNotEqual>
+		</isNotEqual>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.getBoardTreeSet"				parameterClass="Map"> -->
@@ -5167,7 +5613,8 @@
 			usertitle,
 			usertitle2,
 			readdate,
-			tenant_id)
+			tenant_id,
+			companyid)
 		VALUES
 			(#v_pBoardID#,
 			#v_pItemID#,
@@ -5181,7 +5628,8 @@
 			#v_pUserTitle#,
 			#v_pUserTitle2#,
 			TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
-			#tenantID#)
+			#tenantID#,
+			#companyID#)
 		]]>
 	</insert>
 	
@@ -5348,7 +5796,8 @@
 				writedate,
 				content,
 				password,
-				tenant_id)
+				tenant_id,
+				companyid)
 			VALUES
 				(#v_PITEMID#,
 				#v_PREPLYID#,
@@ -5359,7 +5808,8 @@
 				TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
 				#v_PCONTENT#,
 				#v_PPASSWORD#,
-				#tenantID#)
+				#tenantID#,
+				#companyID#)
 		]]>
 	</insert>
 	

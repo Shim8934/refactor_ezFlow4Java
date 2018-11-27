@@ -39,6 +39,7 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -275,21 +276,15 @@ public class EzNewPortalGWController {
 			
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
 			
+			boolean isUseQuestionAuth = false;
+			
 			for (MenuInfoVO mVO : menuList) {
 				if (mVO.getMenuId()==3) {
 					useApproval = "YES";
 				} 
 				
 				if (mVO.getMenuId()==14 && useQuestion.equals("YES")) {
-					useQuestion = "YES";
-				}
-				
-				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
-					useCircular = "YES";
-				}
-				
-				if (mVO.getMenuId()==9 && useAttitude.equals("YES")) {
-					useAttitude = "YES";
+					isUseQuestionAuth = true;
 				}
 				
 				if (mVO.getMenuId()==1) {
@@ -299,6 +294,47 @@ public class EzNewPortalGWController {
 				if (mVO.getMenuId()==2) {
 					useSchedule = "YES";
 				}
+			}
+			
+			if (isUseQuestionAuth) {
+				useQuestion = "YES";
+			} else {
+				useQuestion = "NO";
+			}
+			
+			boolean isUseCircular = false;
+			
+			for (MenuInfoVO mVO : menuList) {
+				
+				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
+					isUseCircular = true;
+					break;
+				} else {
+					isUseCircular = false;
+				}
+			}
+			
+			if (isUseCircular) {
+				useCircular = "YES";
+			} else {
+				useCircular = "NO";
+			}
+			
+			boolean isUseAttitude = false;
+			
+			for (MenuInfoVO mVO : menuList) {
+				if (mVO.getMenuId()==9 && useAttitude.equals("YES")) {
+					isUseAttitude = true;
+					break;
+				} else {
+					isUseAttitude = false;
+				}
+			}
+			
+			if (isUseAttitude) {
+				useAttitude = "YES";
+			} else {
+				useAttitude = "NO";
 			}
 			
 			LOGGER.debug("useAttitude : " + useAttitude + ", useQuestion : " + useQuestion + ", useCircular : " + useCircular);
@@ -583,6 +619,7 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1061,7 +1098,7 @@ public class EzNewPortalGWController {
 	//사용자 초기화면 정보 조회 + 메모 모듈 사용여부 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/startpage/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getUserStartPage(HttpServletRequest request, @PathVariable String userId) {
+	public JSONObject getUserStartPage(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getUserStartPage started.");
 		JSONObject result = new JSONObject();
 
@@ -2863,7 +2900,7 @@ public class EzNewPortalGWController {
 	}
 
 	// //////board 권한 체크
-	public boolean boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId, String deptId, String userId, String rollInfo) {
+	public boolean boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId, String deptId, String userId, String rollInfo) throws Exception {
 		LOGGER.debug("boardAuthCheck started");
 		boolean authCheck = false;
 		String[] deptPathSplit = deptPath.split(",");
@@ -2871,7 +2908,7 @@ public class EzNewPortalGWController {
 		String rootBoardID = "top";
 
 		try {
-			String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(rootBoardID, userId, deptId, companyId, tenantId);
+			String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(boardId, userId, deptId, companyId, tenantId);
 
 			if (rollInfo != null
 					&& (boardGroupAdmin_FG.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
@@ -2879,7 +2916,28 @@ public class EzNewPortalGWController {
 			} else {
 				for (int i = 0; i < deptPathCount; i++) {
 					String deptPathId = deptPathSplit[i];
-					String authCompare = ezNewPortalService.getBoardAuthCheck(boardId, deptPathId, tenantId, companyId);
+					BoardPropertyVO authInfo = ezBoardAdminService.getACL(boardId, deptPathId, tenantId);
+					
+					if (authInfo == null) {
+						
+					} else {
+						String access = authInfo.getAccess_();
+						String deptAcl = authInfo.getBoardGroupACL();
+						
+						if (i == deptPathCount - 1) {
+							deptAcl = "Y";
+						}
+						
+						if (access.equals("1") && deptAcl.equals("Y")) {
+							authCheck = true;
+						} else if (access.equals("0") && deptAcl.equals("Y")) {
+							authCheck = false;
+						}
+						
+					}
+					
+					
+					/*String authCompare = ezNewPortalService.getBoardAuthCheck(boardId, deptPathId, tenantId, companyId);
 
 					if (authCompare != null) {
 						if (authCompare.equals("true")) {
@@ -2887,7 +2945,7 @@ public class EzNewPortalGWController {
 						} else {
 							authCheck = false;
 						}
-					}
+					}*/
 				}
 			}
 		} catch (Exception e) {
@@ -2967,10 +3025,15 @@ public class EzNewPortalGWController {
 				userPhoto = commonUtil.getUploadPath("upload_personal.PHOTO", info.getTenantId()) + commonUtil.separator + imgUrl;
 			}
 			
+			String useAttitude = "NO";
 			//근태 사용여부
-			String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());			
-			if (useAttitude == null || useAttitude.equals("")) {
-				useAttitude = "YES";
+			String useAttitude2 = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());			
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(info.getCompanyId(), info.getTenantId(), info.getLang(), userId, info.getDeptId());
+			
+			for (MenuInfoVO mVO : menuList) {
+				if (mVO.getMenuId()==9 && useAttitude2.equals("YES")) {
+					useAttitude = "YES";
+				}	
 			}
 			
 			//마지막(최종)접속시간
@@ -3048,17 +3111,15 @@ public class EzNewPortalGWController {
 			
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
 			
+			boolean isUseQuestionAuth = false;
+			
 			for (MenuInfoVO mVO : menuList) {
 				if (mVO.getMenuId()==3) {
 					useApproval = "YES";
 				} 
 				
 				if (mVO.getMenuId()==14 && useQuestion.equals("YES")) {
-					useQuestion = "YES";
-				}
-				
-				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
-					useCircular = "YES";
+					isUseQuestionAuth = true;
 				}
 				
 				if (mVO.getMenuId()==1) {
@@ -3068,6 +3129,30 @@ public class EzNewPortalGWController {
 				if (mVO.getMenuId()==2) {
 					useSchedule = "YES";
 				}
+			}
+			
+			if (isUseQuestionAuth) {
+				useQuestion = "YES";
+			} else {
+				useQuestion = "NO";
+			}
+			
+			boolean isUseCircular = false;
+			
+			for (MenuInfoVO mVO : menuList) {
+				
+				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
+					isUseCircular = true;
+					break;
+				} else {
+					isUseCircular = false;
+				}
+			}
+			
+			if (isUseCircular) {
+				useCircular = "YES";
+			} else {
+				useCircular = "NO";
 			}
 			
 			String offset = info.getOffSet();

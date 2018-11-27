@@ -6,7 +6,7 @@ var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
 //따라서 List의 SetMulSelectable 속성의 값이 true인 경우에만
 //document 객체에 keydown, keyup 이벤트를 등록하여 FLAG의 값을 지정한다.
-var m_strColorSelect = "#e4e8ec";
+var m_strColorSelect = "#f1f8ff";
 var m_strColorDefault =  "#FFFFFF";
 var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
@@ -867,7 +867,7 @@ function ListView() {
                     	}
                     } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('TITLE') > -1) { //2018-01-09 강민수92 공지일 때 docNo 안보이게
                     	if (getNodeText(oDatas[10]) != "0"){
-                        	objTd.innerHTML = titleImage + "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>" + MakeXMLString(strValue) + "</div> " + titleOneLineCnt;
+                        	objTd.innerHTML = "<img style='vertical-align: initial;' src='/images/i_new.gif'>&nbsp;<div style='vertical-align: middle; overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>" + MakeXMLString(strValue) + "</div> " + titleOneLineCnt;
                         }else{
                         	objTd.innerHTML = titleImage + MakeXMLString(strValue);
                         }

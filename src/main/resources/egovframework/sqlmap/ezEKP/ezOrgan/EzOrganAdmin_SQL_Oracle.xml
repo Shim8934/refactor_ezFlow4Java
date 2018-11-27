@@ -4036,7 +4036,9 @@
             FROM
             	TBL_USERMASTER_RETIRE
             WHERE
-            	TENANT_ID = #v_TENANT_ID#	
+            	TENANT_ID = #v_TENANT_ID#
+            	AND
+            	PHYSICALDELIVERYOFFICENAME = #companyId#	
 		]]>
 		<include refid="EzOrganAdminDAO.searchQuery"/>
 	</select>
@@ -4093,6 +4095,8 @@
 		           		TBL_USERMASTER_RETIRE 
 		           WHERE
 		           		TENANT_ID = #v_TENANT_ID#	
+		           		AND 
+           				PHYSICALDELIVERYOFFICENAME = #companyId#
 				  		<include refid="EzOrganAdminDAO.searchQuery"/>
 				   ORDER BY 
 				   		UPDATEDT DESC
@@ -4773,7 +4777,7 @@
  			FROM
  				TBL_USERMASTER
  			WHERE
- 				tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
+ 				tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN') AND PHYSICALDELIVERYOFFICENAME = #companyId#
  				<include refid="EzOrganAdminDAO.searchQuery"/>
  			ORDER BY
  				displayName
@@ -4793,7 +4797,7 @@
 			COUNT(CN) 
 		FROM 
             TBL_USERMASTER 
-		WHERE	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
+		WHERE	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN') AND PHYSICALDELIVERYOFFICENAME = #companyId#
   		<include refid="EzOrganAdminDAO.searchQuery"/>
 	</select>
 	

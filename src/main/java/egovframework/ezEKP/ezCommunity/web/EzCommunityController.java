@@ -1549,7 +1549,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			titleName = ezCommunityService.getBoardTitleName(bName, code, userInfo.getTenantId());
 		}
 
-		keywordCount = ezCommunityService.bbsListGet1(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId());
+		keywordCount = ezCommunityService.bbsListGet1(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId());
 		totalPage = keywordCount / comNoPerPage;
 		
 		if (keywordCount % comNoPerPage != 0) {
@@ -2294,7 +2294,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		int keywordCount = ezCommunityService.commViewMemberGet2(code, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId());
+		int keywordCount = ezCommunityService.commViewMemberGet2(code, userInfo.getPrimary(), keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		int comNoPerPage = 10;
         int totalPage = keywordCount / comNoPerPage;
@@ -2332,7 +2332,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		// 2018-06-29 김보미 - 커뮤니티 회원수 수정
-		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 		CommunityMemberInfoVO member = ezCommunityService.commOutGet(club.getC_SysopID().trim(), club.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();
@@ -3419,7 +3419,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		
 		// 2018-07-03 김보미 - 커뮤니티 회원수 수정
-		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 		
 		/* 겸직사원의 커뮤니티 선택 시 companyID로 조건 추가 */
 		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getCompanyID(), userInfo.getTenantId());
@@ -3907,7 +3907,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (club != null) {
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 			
 			if (!club.getC_Cate_A().equals("0")){
 				cCatecAName = ezCommunityService.todayCopGet3(club.getC_Cate_A(), "A", userInfo.getTenantId());
@@ -3997,8 +3997,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		// 18-05-08 김민성 - 커뮤니티 회원수 수정
 		for (CommunityClubVO club : clubList) {
-			// 이미 companyID로 걸러진 커뮤니티를 가져와 후작업하므로, 쿼리에 companyID를 줄 필요는 없다.(동일 테넌트에서 C_CLUBNO로 구분 가능하므로)
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		
@@ -4045,9 +4044,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 				clubList.get(0).setCopCnt(clubCopCnt.get(0).getCopCnt());
 			}
 			
-			// 이미 companyID로 걸러진 커뮤니티를 가져와 후작업하므로, 쿼리에 companyID를 줄 필요는 없다.(동일 테넌트에서 C_CLUBNO로 구분 가능하므로)
 			// 18-05-08 김민성 - 커뮤니티 회원수 수정
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		

@@ -289,7 +289,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 /* mail */
 .mailGraph{ margin:0px; padding:0px; width:206px; border-left:1px solid #e7e7e7; overflow:hidden; float:right;}
 .mailGraph .mGraph{margin:14px 13px 0px 15px; padding:0px; float:left; width:96px; text-align:left; overflow:hidden; height:14px; background:#d5d5d5;border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
-.mailGraph .mGraph span{margin:0px; padding:0px; display:block; width:30%; height:14px; background:#0470e4;border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
+.mailGraph .mGraph span{margin:0px; padding:0px; display:block; width:0%; height:14px; background:#0470e4;border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
 .mailGraph .mGraph_text{margin:0px; padding:0px; float:left; overflow:hidden; font-size:12px; font-weight:bold; color:#333; font-family:Gulim;}
 .mailGraph .mGraph_text span{ color:#999;}
 
@@ -552,19 +552,19 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .info_left{float:left; width:187px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
 .info_right{width:calc(100% - 194px); background:#ffffff;}
 
-.info{position:relative; margin:34px 0px 0px 30px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
+.info{position:relative; height:140px; margin:34px 0px 0px 30px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
 .info .infoImg{float:left; margin:0px 24px 0px 0px; padding:0px;}
 .info .infoName{margin:0px; padding:0px; color:#444445; font-size:18px; font-weight:bold;}
 .info .infoTeam{margin:10px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
-.info .infoMail{margin:17px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
-.info .infoTime{margin:12px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
+.info .infoMail{width:90%;  margin :20px 0px 0px 0px; padding:0px 0px 0px 18px; color:#444445; font-size:14px; background:url(/images/ezNewPortal/theme3Img/infoicon_mail.png )no-repeat 0px 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;  }
+.info .infoTime{margin:10px 0px 0px 0px; padding:0px 0px 0px 18px; color:#444445; font-size:14px;background:url(/images/ezNewPortal/theme3Img/infoicon_clock.png )no-repeat 0px 4px;}
 .info .infoSet{z-index:101; position:absolute; top:-20px; right:48px; width:27px; height:27px; margin:0px; padding:0px; text-align:center; background:#3398fe;  border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer; }
 .info .infoSet img{vertical-align:middle;}
 .info .infoLogout{z-index:101; position:absolute; top:-20px; right:16px; width:27px; height:27px; margin:0px; padding:0px; text-align:center; background:#ccc;  border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
 .info .infoLogout img{vertical-align:middle; margin-left:2px;}
 
 /* time_check */
-.time_check{height:76px; margin:23px 0px 0px 0px; padding:0px; background:url(/images/ezNewPortal/theme3Img/time_check_bg.png) left center repeat-x; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
+.time_check{height:76px; margin:0px 0px 0px 0px; padding:0px; background:url(/images/ezNewPortal/theme3Img/time_check_bg.png) left center repeat-x; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
 .presentTime{float:left; width:calc(100% - 150px); height:76px; margin:0px; padding:0px;}
 .presentTime .timeTxt{margin:9px 0px; padding:0px; text-align:center;}
 .presentTime .timeTxt span{vertical-align:middle; color:#ffffff; font-size:40px; font-weight:bold; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}

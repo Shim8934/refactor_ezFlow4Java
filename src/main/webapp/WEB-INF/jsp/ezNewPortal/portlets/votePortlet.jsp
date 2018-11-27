@@ -67,7 +67,7 @@
 								<img src="/images/ezNewPortal/nodata.png">
 							</dt>
 							<dd>
-								<spring:message code='main.t00026' />
+								"<spring:message code='main.t00026' />"
 							</dd>
 						</dl>
 					</ul>

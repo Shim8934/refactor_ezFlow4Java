@@ -57,7 +57,7 @@ function getBirthdayList() {
 			
 			$("#curMonth").text(birth);
 			
-			if (birthdayList.length > 0 && birthdayList != null) {
+			if (birthdayList != null && birthdayList != undefined && birthdayList.length > 0) {
 				$("#nodata_NewBirthday").css("display", "none");
 				$("#birthcount").css("display", "");
 				
