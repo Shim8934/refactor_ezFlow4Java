@@ -1246,6 +1246,8 @@ function NameCertify_onClick(returnFunction) {
     CompletBccisEnd = false;
     CompletCancelBtn = false;
     ToTalCompletEmailAddress();
+    // 20181127 조진호 - 검색 후에 검색 리스트가 계속 보이는 현상 수정
+    $(".ui-autocomplete").css('display', 'none');
     return true;
 }
 
