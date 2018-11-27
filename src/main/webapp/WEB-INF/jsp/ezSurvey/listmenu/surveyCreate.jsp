@@ -261,7 +261,8 @@
 					html += "<div>"
 					html += "<input type='file' id='optionAttach' class='optionAttach' style='display: none;'>"
 					html += "</div>";
-					html += "<div id='fileDiv'>"
+					html += "<div id='fileInfo'>"
+					
 					html += "</div>";
 					html += "</div>";
 				
@@ -393,9 +394,6 @@
 			
 			// option 첨부파일
 			function fileUpload() {
-				
-				//var flag = "option";
-				console.log("업로드");
 				questionFile.upload();
 			}
 		}());

@@ -1,4 +1,7 @@
 var QuestionFile = function() {
+	
+	console.log("QuestionFile");
+	
 	return function(data) {
 		var lineWidth = 4;
 		var start     = 4.72;
