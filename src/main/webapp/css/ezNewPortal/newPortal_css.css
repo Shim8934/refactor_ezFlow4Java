@@ -349,7 +349,7 @@ nav > .countBox .hidden_nav_count {position: absolute; right: 0px; top: 6px; dis
 .scalendar_mini td.sun{color:#fc4a4a;}
 .scalendar_mini td.sat{color:#46abfc;}
 .scalendar_mini td.gray{color:#8a8e9b;}
-.scalendar_mini td.today{color:#333333; background:url(/images/ezNewPortal/theme3Img/scalendar_today_bg.png) center center no-repeat; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
+.scalendar_mini td.today{color:#333333; background:lightblue; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 .scalendar_mini td.schedule{color:#333333; background:url(/images/ezNewPortal/theme3Img/scalendar_schedule_bg.png) center center no-repeat; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 .scalendar_mini td div {height:26px;line-height:26px; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 
