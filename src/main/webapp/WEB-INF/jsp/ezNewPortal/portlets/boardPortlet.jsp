@@ -14,7 +14,6 @@ var boardPortlet = "<c:out value='${portletId}'/>";
 
 $(function() {
 	$(".customBoard").find(".portletPlus").on("click", Boardmore_NewBoardSTD_btnClick);
-	console.log(boardPortlet);
 	getBoardPortletInfo(boardPortlet);
 });
 </script>
