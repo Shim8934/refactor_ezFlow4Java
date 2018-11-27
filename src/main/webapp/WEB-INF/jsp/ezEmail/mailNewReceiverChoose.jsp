@@ -13,8 +13,9 @@
 	    		padding-left:15px;	    		
 	    	}
 	    	
-	    	.mainlist_free tr td {
+	    	.mainlist_free tr th, .mainlist_free tr td {
 			    height: 0px;
+			    padding-left:15px;
 			}
 			
 	    	/* 조직도 #SelectDeptNM(부서명[사원수]) 부분 */
@@ -219,7 +220,7 @@
 	                document.getElementById("ListMsgTo").setAttribute("rowspan", "3");
 	                document.getElementById("ListMsgCC").style.display = "none";
 	                document.getElementById("ListMsgBCC").style.display = "none";
-	                document.getElementById("ListViewMsgTo").style.height = "508px";
+	                document.getElementById("ListViewMsgTo").style.height = "517px";
 	                SelectReceiverWindow(ToTitle, ListViewMsgTo);
 	            }
 	            else if (type == "rule") {
@@ -1584,7 +1585,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right:3px; \" >"
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
 	            	+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
 	            	+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
@@ -1644,7 +1645,7 @@
 	        
 		    var m_strColorSelect = "#f1f8ff";
 		    var m_strColorOver = "#f4f5f5";
-		    var m_strColorDefault = "#ffffff";
+		    var m_strColorDefault = "";
 		    var p_ListOrderObject = null;
 		    function event_listMover(obj) {
 		        for (var i = 0; i < listContentArry.length; i++) {
@@ -3786,14 +3787,14 @@
 	                            <table style="margin-top: 3px;">
 	                                <tr>
 	                                    <td class="box" style="border-right:0px">
-	                                        <div id="TreeView" style="width: 220px; height: 469px; overflow-x: auto; overflow-y: auto;" ></div>
+	                                        <div id="TreeView" style="width: 220px; height: 474px; overflow-x: auto; overflow-y: auto;" ></div>
 	                                    </td>
 	                                    <td></td>
 	                                    <td class="listview" style="width: 432px" id="orglistView">
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr style="height:35px">
 	                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
-														<span id="SelectDeptNM" style="font-weight: normal; width: 385px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+														<span id="SelectDeptNM" style="font-weight: normal; width: 385px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: top;"></span>
 	                                                    <span style="float:right; position: relative;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');">
 	                                                            <img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
@@ -3803,7 +3804,7 @@
 	                                                </th>
 	                                            </tr>
 	                                        </table>
-	                                        <div id="txtlist_Layer" style="vertical-align: top; width: 446px; height: 398px; overflow: auto;" >
+	                                        <div id="txtlist_Layer" style="vertical-align: top; width: 446px; height: 395px; overflow: auto;" >
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 150px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t31' /></td>
@@ -3820,7 +3821,7 @@
 	                                                </tr>
 	                                            </table>
 	                                        </div>
-	                                        <div style="vertical-align: top; text-align: center; height: 394px; overflow: auto; display: none; width: 446px;" id="DeptUserImgList"></div>
+	                                        <div style="vertical-align: top; text-align: center; height: 395px; overflow: auto; display: none; width: 446px;" id="DeptUserImgList"></div>
 	                                        <div id="tblPageRayer2"  style="text-align:center;"></div>
 	                                	</td>
 	                                </tr>
@@ -3871,16 +3872,16 @@
 	                    </tr>
 	                    <tr>
 	                        <td>
-	                            <div id="AddressTreeView" style="overflow-x: auto; overflow-y: auto; width: 221px; height: 469px;  border: 1px solid #ddd; background-color: #FFFFFF; margin-top: 3px;padding-top:5px;border-right:0px;"></div>
+	                            <div id="AddressTreeView" style="overflow-x: auto; overflow-y: auto; width: 221px; height: 472px;  border: 1px solid #ddd; background-color: #FFFFFF; margin-top: 3px;padding-top:5px;border-right:0px;"></div>
 	                        </td>
 	                        <td></td>
 	                        <td style="vertical-align: top;">
 	                            <div style="margin-top: 3px; vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 23px; padding-top: 7px; padding-left: 5px;">
-	                                <img src="/images/ImgIcon/fldr.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
+	                                <img src="/images/ImgIcon/fldr.gif" align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
 	                                <span id="addressFolderName" style="font-weight: normal;"></span>
 	                                &nbsp;<span id="addressFolderCnt" style="color: #017BEC;"></span>
 	                            </div>
-	                            <div id="AddressListView" class="border_gray" style="width: 446px; height: 396px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea">
+	                            <div id="AddressListView" class="border_gray" style="width: 446px; height: 399px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea">
 	                            </div>
 	                            <div id="tblPageRayer" style="left: 446px; vertical-align: middle; border: 1px solid #ddd; border-top: 0px; width:auto !important"></div>
 	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 446px; border: 1px solid #ddd; border-top: 0px; height: 27px;">
@@ -3914,7 +3915,7 @@
 	                                    </table>
 	                                </div>
 	                            </div>
-	                            <div style="width: 668px; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
+	                            <div style="width: 668px; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -3934,7 +3935,7 @@
 	                                    </table>
 	                                </div>
 	                            </div>
-	                            <div style="width: 668px; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewSharedMailbox" class="border_gray">
+	                            <div style="width: 668px; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewSharedMailbox" class="border_gray">
 	                            </div>
 	                        </td>
 	                    </tr>
