@@ -195,6 +195,10 @@
 					var addElmt  = liElmt.getElementsByClassName("empAdd")[0];
 					var imgElmt  = liElmt.getElementsByClassName("empImg")[0];
 					
+					while (bttnElmt.firstChild) {
+						bttnElmt.removeChild(bttnElmt.firstChild);
+					}
+					
 					if (imgElmt) {
 						addElmt.style.display = ""; 
 						liElmt.removeChild(imgElmt);
