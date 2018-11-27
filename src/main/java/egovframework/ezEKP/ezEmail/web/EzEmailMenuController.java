@@ -176,7 +176,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				rootFolderXML.append("<node imgidx='1'");
 				
 				if (folderUnreadMessageCount > 0) {
-					rootFolderXML.append(" caption='" + displayName + "(" + folderUnreadMessageCount + ")'");
+					rootFolderXML.append(" caption='" + displayName + "'");
+					rootFolderXML.append(" foldercount='" + folderUnreadMessageCount + "'");
 				} else {
 					rootFolderXML.append(" caption='" + displayName + "'");
 				}
