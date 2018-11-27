@@ -334,7 +334,7 @@
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/admin/ezJournal/userList.do",
-	   				data:{"key" : key, "value" : value, "deptName" : deptName, "listType" : listType, "curPage" : CurPage },
+	   				data:{"key" : key, "value" : value, "deptName" : deptName, "companyId":"${companyId}", "listType" : listType, "curPage" : CurPage },
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");
 	   					if(picList.length == 0 && key != "DEPARTMENT"){
@@ -604,8 +604,6 @@
 					
 				window.opener.$(".accessNO").text(menuAuthsNList.substring(1));
 
-	   			console.log(menuAuths);
-	   			console.log(window.opener.menuAuths);
 	   			window.close();
 	   		}
 	   		

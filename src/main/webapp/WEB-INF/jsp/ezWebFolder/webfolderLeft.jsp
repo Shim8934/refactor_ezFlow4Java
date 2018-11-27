@@ -107,7 +107,7 @@
 							},
 							"types" : {
 								"default": {
-									"icon" :"/images/webfolder/fldr.png"
+									"icon" :"/images/OrganTree_cross/fldr.gif"
 								}
 							},
 							"grid": {
@@ -322,85 +322,37 @@
 	        </div>-->
 	        <div class="webfolderListBox" style="overflow:hidden; padding-right: 0;">
 		        <h2 class="on" id="companyH2">
-		        	<span>
-		            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('company')"><spring:message code='ezWebFolder.t233' /></span>
-		            </span>
+	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('company')"><spring:message code='ezWebFolder.t233' /></span>
 		        </h2>
 		        <ul class="lnbUL" id="companyUL">
-	    			<div class="tree" style="padding-left:0px">
-		    			<div id="tree" class="webfolderTree" ></div>
-	    			</div>
+	    			<div id="tree" class="webfolderTree" ></div>
 			    </ul>
 			    <h2 class="off" id="deptH2">
-		        	<span>
-		            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('dept')"><spring:message code='ezWebFolder.t234' /></span>
-		            </span>
+	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('dept')"><spring:message code='ezWebFolder.t234' /></span>
 		        </h2>
 		        <ul class="lnbUL off" id="deptUL">
-	    			<div class="tree" style="padding-left:0px">
-	    				<div id ="treeDept" class="webfolderTree"></div>
-	    			</div>
+    				<div id ="treeDept" class="webfolderTree"></div>
 			    </ul>
 			    <h2 class="off" id="personalH2">
-		        	<span>
-		            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('personal')"><spring:message code='ezWebFolder.t235' /></span>
-		            </span>
+	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('personal')"><spring:message code='ezWebFolder.t235' /></span>
 		        </h2>
 		        <ul class="lnbUL off" id="personalUL">
-	    			<div class="tree" style="padding-left:0px">
-	    				<div id ="treePer" class="webfolderTree" ></div>
-	    			</div>
+    				<div id ="treePer" class="webfolderTree" ></div>
 			    </ul>
 			    <h2 class="off" id="shareH2">
-		        	<span>
-		            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('share')"><spring:message code='ezWebFolder.t266' /></span>
-		            </span>
+	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('share')"><spring:message code='ezWebFolder.t266' /></span>
 		        </h2>
 			    <ul class="lnbUL off" id="shareUL">
-		        	<div class="tree">
-		            	<span>
-		                	<span>
-		                    	<span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_appr"></span><span class="h2_text" onclick="getSharedList();"><spring:message code='ezWebFolder.t214' /></span>
-		                            </div>
-		                    	</span>
-		                    	<span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_appr_ing"></span><span class="h2_text" onclick="getSharingList();"><spring:message code='ezWebFolder.t267' /></span>
-		                            </div>
-		                    	</span>
-		                    </span>
-						</span>
-					</div>
+                   	<li><span class="sub_iconLNB tree_appr"></span><span class="list_text" onclick="getSharedList();"><spring:message code='ezWebFolder.t214' /></span></li>
+                   	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" onclick="getSharingList();"><spring:message code='ezWebFolder.t267' /></span></li>
 				</ul>
 				<ul class="lnbUL" id="option">
-		        	<div class="tree">
-						<span>
-							<span>
-		                    	<span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_board_star"></span><span class="h2_text" onclick="moveFavorPage();"><spring:message code='ezWebFolder.t216'/></span>
-		                            </div>
-		                    	</span>
-		                    	<span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_delete"></span><span class="h2_text" onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span>
-		                            </div>
-		                    	</span>
-		                    	<span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_manage" style="position:relative;left:0px"></span><span class="h2_text" onClick="folder_Manage()"><spring:message code='ezWebFolder.t268'/></span>
-		                            </div>
-		                    	</span>
-		                    	<c:if test="${isWfAdmin == '1'}">
-									<div class="node_div">
-										<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_appr_department"></span><span class="h2_text" onclick="wfAdministrator();"><spring:message code="ezWebFolder.t25" /></span><!-- 웹폴더 관리자 -->
-									</div>
-								</c:if>
-		                    </span>		                    	
-						</span>
-					</div>
+                   	<li><span class="sub_iconLNB tree_board_star"></span><span class="list_text" onclick="moveFavorPage();"><spring:message code='ezWebFolder.t216'/></span></li>
+                   	<li><span class="sub_iconLNB tree_delete"></span><span class="list_text" onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span></li>
+                   	<li><span class="sub_iconLNB tree_manage" style="float:left"></span><span class="list_text" onClick="folder_Manage()"><spring:message code='ezWebFolder.t268'/></span></li>
+                   	<c:if test="${isWfAdmin == '1'}">
+						<li><span class="sub_iconLNB tree_appr_department"></span><span class="list_text" onclick="wfAdministrator();"><spring:message code="ezWebFolder.t25" /></span></li><!-- 웹폴더 관리자 -->
+					</c:if>
 				</ul>
 			</div>	
 			<div class="mail_space">

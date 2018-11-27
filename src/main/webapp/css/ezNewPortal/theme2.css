@@ -54,8 +54,8 @@ body{margin:0px; padding:0px;}
 .maintab01 p{float:left; display:block; overflow:hidden; width:50%; height:36px; line-height:34px; margin:0px 0px 0px -1px; padding:0px; box-sizing:border-box; font-size:16px; font-weight:bold; text-align:center; cursor:pointer;}
 .maintab01 .left{background:#ffffff; border:2px solid #00a0e9; box-sizing: border-box;color: #b3aebc; border-top-right-radius:3px; border-bottom-right-radius:3px;}
 .maintab01 .right{background:#ffffff; border:2px solid #00a0e9; box-sizing: border-box;color: #b3aebc; border-top-right-radius:3px; border-bottom-right-radius:3px;}
-.maintab01 .left_on{background:#00a0e9; color:#ffffff; border-top-left-radius:3px; border-bottom-left-radius:3px;}
-.maintab01 .right_on{background:#00a0e9; color:#ffffff; border-top-left-radius:3px; border-bottom-left-radius:3px;}
+.maintab01 .left_on{background:#00a0e9; color:#ffffff; border-top-left-radius:3px; border-bottom-left-radius:3px;border:2px solid #00a0e9;}
+.maintab01 .right_on{background:#00a0e9; color:#ffffff; border-top-left-radius:3px; border-bottom-left-radius:3px;border:2px solid #00a0e9;}
 .scrollbox-play-light .scrollbox{position:relative;}
 .scrollbox-play-light .scrollbox .content{position:relative; overflow:hidden;}
 .schedule_list{list-style:none; margin:0px 0px 0px 10px; padding:0px; font-size:13px; color:#444444;}

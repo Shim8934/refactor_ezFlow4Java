@@ -86,7 +86,7 @@
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
 	border: 1px solid #c7c7c7/*{borderColorActive}*/;
-	background-color:#e4e8ec;
+	background-color:#f1f8ff;
 	font-weight: normal/*{fwDefault}*/;
 	color: #212121/*{fcActive}*/;
 }

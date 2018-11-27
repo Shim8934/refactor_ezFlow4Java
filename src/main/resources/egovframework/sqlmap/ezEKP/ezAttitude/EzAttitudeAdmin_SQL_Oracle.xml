@@ -1366,11 +1366,15 @@
 			<![CDATA[
 						) T1
 				)
-			where
-				rn >= #row_startNum#
-			and
-				rn <= #row_endNum#
 			]]>
+			<isNotEmpty property="startRow">
+				<![CDATA[
+					where
+						rn >= #startRow#
+					and
+						rn <= #endRow#
+				]]>
+			</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeHistoryCount" parameterClass="Map" resultClass="String">

@@ -60,7 +60,7 @@ public interface EzNewPortalService {
 	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId);
 	public List<PollAnswerVO> getVotePortletAnswer(int qstId, int tenantId);
 	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount);
-	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang);
+	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) throws Exception;
 	public String getBoardAuthCheck(String boardId, String accessId, int tenantId, String companyId);
 	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId, String deptId);
 	public List<PortletInfoVO> getPortletOrderComp(String portletLang, int tenantId, String companyId, String deptId, String userId) throws Exception;
@@ -70,8 +70,8 @@ public interface EzNewPortalService {
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month);
 	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId);
 	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId);
-	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId);
-	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId);
+	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId) throws Exception;
+	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId) throws Exception;
 	public void deleteUserThemeSetting(String userId, int tenantId, String companyId);
 	public void updateUserThemeSetting(int usedTheme, int usedFrame, String userId, int tenantId, String companyId);
 	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String compnyId);

@@ -348,7 +348,7 @@
                    	<li><span class="sub_iconLNB tree_delete"></span><span class="list_text" id="circularDelete" onclick="circularDelete()"><spring:message code="ezCircular.t6" /><span id="circularDeleteCount"></span></span></li>
 		        </ul>
 		        <ul class="lnbUL">
-                   	<li id="circularDoc"><span class="sub_iconLNB tree_circular_document"></span><span class="h2_text" onclick="openFolder()"><spring:message code="ezCircular.t7" /></span><span class="sub_iconLNB tree_manage" onclick="folder_Manage()"></span></li>
+                   	<li id="circularDoc"><span class="sub_iconLNB tree_circular_document"></span><span class="sub_iconLNB tree_manage" onclick="folder_Manage()"></span><span class="list_text" onclick="openFolder()"><spring:message code="ezCircular.t7" /></span></li>
                     <div class="tree onlytree circularDoc" id="PostTreeView" style="display:none"></div>
 		        </ul>
 		        <ul class="lnbUL">

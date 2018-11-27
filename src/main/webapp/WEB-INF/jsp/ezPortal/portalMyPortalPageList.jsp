@@ -38,10 +38,10 @@
             	g_UseFlag = pUseFG;
             	
             	if (g_SelectedObj == null) {
-	                pObj.style.backgroundColor = "#e4e8ec";
+	                pObj.style.backgroundColor = "#f1f8ff";
     	            g_SelectedObj = pObj;
         	    } else {
-                	pObj.style.backgroundColor = "#e4e8ec";
+                	pObj.style.backgroundColor = "#f1f8ff";
 
                 	if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
                 	g_SelectedObj = pObj;
@@ -198,7 +198,7 @@
     	</div>
     	<c:choose>
 			<c:when test="${endPage>0 }">
-			<div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
+			<div id="tblPageRayer" style="display: none; width:470px; margin:6px auto; font-size:0">
 				<div class="pagenavi">   
 					<c:choose>
 							<c:when test="${intPage gt 1}">   

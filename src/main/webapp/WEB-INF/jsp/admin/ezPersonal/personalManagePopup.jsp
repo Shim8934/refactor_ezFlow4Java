@@ -258,6 +258,7 @@
 			function company_change() {
 				makelist();
 			}
+
 	
 			var add_popup = function() {
 				var pheight = window.screen.availHeight;

@@ -256,6 +256,25 @@
                     window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
 	            }          
 	        }
+	        
+	        function write_LetterToMe() {
+	            var pheight = window.screen.availHeight;
+	            var conHeight = pheight * 0.8;
+	            var pwidth = window.screen.availWidth;
+	            var conWidth = pwidth * 0.8;
+	            if (conWidth > 890)
+	                conWidth = 890;
+	            var pTop = (pheight - conHeight) / 2;
+	            var pLeft = (pwidth - 890) / 2;
+	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+	            if (CrossYN() || pNoneActiveX == "YES") {
+	                window.open("/ezEmail/mailWrite.do?cmd=NEW&isMailToMe=YES", "", feature);
+	            }
+	            else {
+                    window.open("/ezEmail/mailWrite.do?cmd=NEW&isMailToMe=YES", "", feature);
+	            }          
+	        }
+	        
 	        function LoadEmailTree() {
 	            var PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
 	            PostTreeView.attachEvent('requestdata', requestdata);
@@ -269,9 +288,9 @@
 	            var treeconfig;
 	            if (CrossYN()) {
 	                treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
-	            }
-	            else
+	            } else {
 	                treeconfig = xmlHTTP.responseXML;
+	            }
 	
 	            PostTreeView.config(treeconfig);
 	            PostTreeView.source("<tree><nodes>" + document.getElementById("RootFolderXML").innerHTML + "</nodes></tree>");
@@ -399,7 +418,7 @@
 	                        //PostTreeView.putstyle(PostTreeView.selectedIndex(), "font-weight : ''");
 	                    }
 	                    else {
-	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption + "(" + unreadcount + ")");
+	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption + unreadcount);
 	                        //PostTreeView.putstyle(PostTreeView.selectedIndex(), "font-weight : bold");
 	                    }
 	                    
@@ -1186,13 +1205,11 @@
 	</head>
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
-	    	<!-- <div class="lnb_btn"></div> -->
-	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
 	    	<div class="left_title" title="<spring:message code="ezEmail.t99000012" />"><spring:message code="ezEmail.t99000012" />
 	        	<span class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezEmail.t99000044" />" onclick="mail_Config()"></span>
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write02"><span class="sub_iconLNB tree_Mwrite"></span><spring:message code="ezEmail.t99000010" /></p> 
+	        	<p class="btn_write02" onclick="write_LetterToMe()"><span class="sub_iconLNB tree_Mwrite"></span><spring:message code="ezEmail.t99000010" /></p> 
 	        	<p class="btn_write01" onclick="write_Letter()"><span class="sub_iconLNB tree_write"></span><spring:message code="ezEmail.t99000013" /></p>
 	        </div>
         	<div class="taskListBox" style="overflow:hidden; padding-right: 0;">
@@ -1250,137 +1267,5 @@
 		       	}
 			</script>
 	    </div>
-	    <%-- <div id="left">
-	        <div class="left_mail" title="<spring:message code="ezEmail.t99000012" />"><span><spring:message code="ezEmail.t99000012" /></span></div>
-	        <h2><span onclick="Email_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000012" /></span></h2>
-	        <ul>
-	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
-	            <li><span onclick="write_Letter()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000013" /></span></li>
-	            
-	            <c:if test="${useMailReceiveScreen == 'YES'}">
-	            	<li><span onclick="reception_check()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t516" /></span></li>
-	            </c:if>
-	            <li><span onclick="folder_manage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t481" /></span></li>
-	            <li><span onclick="Open_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t641" /></span></li>
-		        <c:if test="${useOnlyInnerMail != 'YES'}">
-	            <li><span onclick="check_pop3()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t490" /></span></li>
-	            </c:if>
-	            <li><span onclick="Open_ReservationManage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t605" /></span></li>
-                <c:if test="${useBizmekaSpambox == 'YES'}"> 
-                <li><span onclick="openSpamBox()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.ldh01" /></span></li>
-                </c:if>
-	        </ul>
-	        
-	        <c:if test="${useSharedMailbox == 'YES'}">
-		        <c:forEach items="${shareInfoList}" var="shareInfo">
-		        	<h2><span onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');" 
-		        			style="width:85%; display:inline-block; overflow:hidden; text-overflow:ellipsis; display:inline-block; white-space:nowrap;" title="${shareInfo.shareName}"><c:out value="${shareInfo.shareName}" /></span></h2>
-		        	<ul>
-		            	<div id="shareTreeView_${shareInfo.shareId}" class="tree" value="${shareInfo.shareId}" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
-		        	</ul>
-		        </c:forEach>
-	        </c:if>
-	        <h2><span onclick="Address_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000041" /></span></h2>
-	        <ul>
-	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow-x:hidden; overflow-y: auto; padding-left: 20px;" id="AddressTreeView"></div>
-	            <li><span id='Address_Search' onclick="address_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000042" /></span></li>
-	            <li style="border-bottom-color:#e8e8e8" evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
-	        </ul>	        
-	    	<!-- 수정 수아 재은 -->
-	    	<!-- <div style="border:1px solid #e8e8e8;margin:10px 10px 2px;background-color:#f1f3f5">
-			    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
-			    <div style="width:80%">
-			    	<div id='myBar'></div>
-			    </div>	
-			    <div style='text-align:center; margin-top:10px;margin-bottom:5px;font-weight: bold;font-family: dotum;' class="volumes"></div>
-		    </div> -->
-		    <div class="mail_volume">
-		    	<p class="volume_num"><img src="/images/volume_num.png" /></p>
-		        <p class="volume_graph" id='myProgress'><span id='myBar'></span></p>
-		        <dl class="volumeDL" >
-		        	<dt id="useVol"></dt>
-		            <dd id="usePer"></dd>
-		        </dl>
-		    </div>
-		    <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
-		    <h4 onclick="operatorSendMail()"><span><spring:message code="ezEmail.0hun01" /></span></h4>
-		    </c:if>
-	        <h3 onclick="mail_Config()" style="border-top:0px"><span style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
-	        <c:if test="${isDotNetAdmin == true}">
-  			<h2>
-  				<span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
-    			<ul></ul>  				
-  			</h2>  
-  			<h2>
-  				<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
-    			<ul></ul>    			
-  			</h2>  
-  			<h2>
-  				<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
-    			<ul></ul>
-  			</h2>  			
-  			<h2>
-  				<span onClick="goPage(14)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.lsd01' /></span>
-    			<ul></ul>
-  			</h2>  			
-			<h2>
-				<span onClick="goPage(4)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
-			    <ul></ul>
-			</h2>
-			<h2>
-				<span onClick="goPage(5)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
-			    <ul></ul>
-			</h2>		
-            <h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="goPage(13)" ><spring:message code='main.kms1' /></span>
-            <ul class="on"></ul>
-            </h2>			
-      	    <h2><span id="MAIL" style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='ezStatistics.t2' /></span></h2>
-		    <ul>
-			    <li><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='ezStatistics.t1001' /></span></li>
-			    <li><span style="display:inline-block;width:100%;" onClick="goPage(7)"><spring:message code='ezStatistics.t1012' /></span></li>
-                <li><span style="display:inline-block;width:100%;" onclick="goPage(8)"><spring:message code='ezStatistics.t1018' /></span></li>
-                <li><span style="display:inline-block;width:100%;" onclick="goPage(9)"><spring:message code='ezStatistics.t1023' /></span></li>
-                <li><span style="display:inline-block;width:100%;" onclick="goPage(10)"><spring:message code='ezStatistics.t1025' /></span></li>
-                <li><span style="display:inline-block;width:100%;" onclick="goPage(11)"><spring:message code='ezStatistics.kyj1' /></span></li>
-                <li><span style="display:inline-block;width:100%;" onclick="goPage(12)"><spring:message code='ezStatistics.kyj2' /></span></li>
-		    </ul>			
-			</c:if>		        
-	    </div>
-	    <script type="text/javascript">
-	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
-	    </script>
-	    <xml id="RootFolderXML" style="display: none;">
-	    ${rootFolderXML}
-	    </xml>
-	    <xml id="AddressFolderXML" style="display: none;">
-	    ${rootAddressXML}
-	    </xml>
-	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
-		<div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="folderPanel" onclick="HiddenFolderMenu();" >&nbsp;</div>   		    		               
-		<div id="folderMenuDiv" style="position:absolute;top:180px;z-index:6000;display:none;">
-		    <table cellpadding=2 cellspacing=1 border=0 style="width:130px;" class="popuplist">
-		    <tr>
-		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="folder_ReadChange('R');HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/icon-msg-read.gif" align="absmiddle" hspace="5"/><spring:message code="ezEmail.jyh01" /></span></td>
-		    </tr>
-		    <tr id="mailbox_export" <c:if test="${useMailBoxBackUp ne 'YES'}">style="display:none"</c:if>>
-		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_export();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_mailreply.gif" alt="" align="absmiddle" border="0" hspace="5"><spring:message code="ezEmail.lhm31" /></span></td>
-		    </tr>
-		    <tr id="mailbox_import" <c:if test="${useMailBoxBackUp ne 'YES'}">style="display:none"</c:if>>
-		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_import();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_fw.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.lhm32" /></span></td>
-		    </tr>
-		    <tr id="mailbox_delete">
-		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_delete();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/deleted.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.t483" /></span></td>
-		    </tr>
-		    </table>
-		</div>
-		<script>
-			// 웹소켓 지원을 안할 경우 '편지함 내려받기/가져오기' 버튼 숨김
-	        if ('WebSocket' in window) {
-	       	} else if ('MozWebSocket' in window) {
-	       	} else {
-	       		document.getElementById("mailbox_export").style.display = "none";
-				document.getElementById("mailbox_import").style.display = "none";
-	       	}
-		</script> --%>
 	</body>
 </html>

@@ -38,7 +38,7 @@ function getMailList() {
 			if (mailList.length < 1) {
 				listHTML2 += "<dl class='nodata'>";
 				listHTML2 += "<dt><img src='/images/kr/main/nodata.png'></dt>";
-				listHTML2 += "<dd>"+messages.strLang1+"</dd>";
+				listHTML2 += "<dd>&#34;" + messages.strLang1 + "&#34;</dd>";
 				listHTML2 += "</dl>";
 				
 			} else {
