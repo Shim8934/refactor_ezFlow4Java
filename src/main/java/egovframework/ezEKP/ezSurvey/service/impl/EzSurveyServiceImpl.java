@@ -1,14 +1,25 @@
 package egovframework.ezEKP.ezSurvey.service.impl;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezSurvey.dao.EzSurveyDAO;
@@ -126,5 +137,88 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return ezSurveyDAO.getSearchMemberList(map);
 	}
 	
+	@Override
+	public String saveUploadFile(List<MultipartFile> multiFileLists, JSONArray nameArray, String realPath, int tenantId) throws Exception {
+		String pFileName   = (String)((JSONObject)nameArray.get(0)).get("originalFilename");
+		String cabinetPath = getSurveyDirPath(tenantId);
+		String pDirPath    = realPath + cabinetPath;
+		
+		File file = new File(pDirPath);
+		
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		
+		int dotPos     = pFileName.lastIndexOf(".");
+		String extend  = dotPos == -1 ? ".none" : pFileName.substring(dotPos + 1);
+		String newName = UUID.randomUUID().toString() + "." + extend;
+		writeUploadedFile(multiFileLists.get(0), newName, pDirPath);
+		
+		return cabinetPath + newName;
+	}
 	
+	@Override
+	public void deleteAttachFile(String filePath, String realPath, int tenantId) throws Exception {
+		String pDirPath = realPath + filePath;
+		File file       = new File(pDirPath);
+		
+		if (file.exists()) {
+			try {
+				file.delete();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	@Override
+	public void getDownloadedFile(String fileName, String filePath, String realPath, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String _fileName = fileName;
+		_fileName        = CommonUtil.getEncodedFileNameForDownload(userAgent, _fileName);
+		File file        = new File(realPath + filePath);
+		
+		if (!file.exists()) {
+			throw new FileNotFoundException(fileName);
+		}
+		
+		if (!file.isFile()) {
+			throw new FileNotFoundException(fileName);
+		}
+		
+		BufferedInputStream in = null;
+		
+		try {
+			in              = new BufferedInputStream(new FileInputStream(file));
+			String mimetype = "application/octet-stream";
+			
+			response.setBufferSize(BUFF_SIZE);
+			response.setContentType(mimetype);
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + _fileName + "\"");
+			response.setContentLength((int)file.length());
+			
+			FileCopyUtils.copy(in, response.getOutputStream());
+		}
+		catch (Exception e) {
+			throw e;
+		}
+		finally {
+			if (in != null) {
+				try {
+					in.close();
+				}
+				catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+					throw ignore;
+				}
+			}
+		}
+		
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
+	}
+	
+	private String getSurveyDirPath(int tenantId) {
+		return commonUtil.getUploadPath("upload_survey.ROOT", tenantId) + commonUtil.separator;
+	}
 }

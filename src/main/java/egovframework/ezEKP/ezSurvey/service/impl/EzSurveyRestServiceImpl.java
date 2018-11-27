@@ -142,8 +142,8 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject uploadAttachFile(MultipartHttpServletRequest request, String userId, List<MultipartFile> multiFiles) throws Exception {
-		String gwServerUrl                              = config.getProperty("config.cabinetGwServerURL");
-		String url                                      = gwServerUrl + "/rest/ezcabinet/attachfile/file-upload";
+		String gwServerUrl                              = config.getProperty("config.surveyGwServerURL");
+		String url                                      = gwServerUrl + "/rest/ezsurvey/attachfile/file-upload";
 		SimpleClientHttpRequestFactory requestFactory   = new SimpleClientHttpRequestFactory();
 		requestFactory.setBufferRequestBody(false);
 		RestTemplate restTemplate                       = new RestTemplate(requestFactory);

@@ -4,14 +4,20 @@ import java.util.List;
 import java.util.Locale;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
@@ -245,6 +251,41 @@ public class EzSurveyGWController {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezsurvey/attachfile/file-upload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, Locale locale, HttpServletRequest request) throws Exception {
+		JSONParser jp          = new JSONParser();
+		JSONObject jsonObject  = (JSONObject) jp.parse(dataList);
+		JSONArray nameArray    = jsonObject.get("nameArray")    != null ? (JSONArray) jsonObject.get("nameArray") : null;
+		String serverName      = request.getHeader("host-name") != null ? request.getHeader("host-name")          : "";
+		JSONObject result      = new JSONObject();
+		
+		logger.debug("serverName: " + serverName);
+		
+		if (nameArray == null || serverName.equals("") || nameArray.size() != multiFileLists.size() || multiFileLists.size() != 1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			int tenantId    = loginService.getTenantId(serverName);
+			String realPath = request.getServletContext().getRealPath("");
+			String filePath = surveyService.saveUploadFile(multiFileLists, nameArray, realPath, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("path", filePath);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
 		}
 		
 		return result;
