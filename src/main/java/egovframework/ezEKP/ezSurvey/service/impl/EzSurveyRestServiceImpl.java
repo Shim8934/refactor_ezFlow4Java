@@ -195,7 +195,7 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 	
 	@Override
 	public JSONObject deleteAttachFile(HttpServletRequest request, String userId, String filePath) throws Exception {
-		String url                = "/rest/ezcabinet/attachfile/file-delete";
+		String url                = "/rest/ezsurvey/attachfile/file-delete";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("filePath", filePath);
 		JSONObject resultBody     = getJsonResult(url, param, request, "delete", null);
@@ -204,8 +204,8 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 	
 	@Override
 	public void downloadAttachFile(HttpServletRequest request, HttpServletResponse response, String userId, String filePath, String fileName) throws Exception {
-		String gwServerUrl = config.getProperty("config.cabinetGwServerURL");
-		String url         = gwServerUrl + "/rest/ezcabinet/attachfile/file-download";
+		String gwServerUrl = config.getProperty("config.surveyGwServerURL");
+		String url         = gwServerUrl + "/rest/ezsurvey/attachfile/file-download";
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userAgent", request.getHeader("User-Agent"))

@@ -208,7 +208,6 @@
 
 						var selectedEl = data.selectedItem;
 						var grandParent = selectedEl.parent().parent().parent().parent();
-
 						var questionType = data.selectedIndex;
 						
 						switch (questionType) {
@@ -427,6 +426,5 @@
 			
 		
 		</script>
-		
 	</body>
 </html>

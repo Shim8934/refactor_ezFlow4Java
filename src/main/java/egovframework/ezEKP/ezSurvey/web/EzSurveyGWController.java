@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -11,6 +12,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -281,6 +283,62 @@ public class EzSurveyGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("path", filePath);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/rest/ezsurvey/attachfile/file-download", method=RequestMethod.GET, produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	public void getFileDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String filePath   = request.getParameter("filePath")   != null ? request.getParameter("filePath")  : "";
+		String fileName   = request.getParameter("fileName")   != null ? request.getParameter("fileName")  : "";
+		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")    : "";
+		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")    : "";
+		String userAgent  = request.getParameter("userAgent")  != null ? request.getParameter("userAgent") : "";
+		
+		logger.debug("serverName: " + serverName + " ||  filePath: " + filePath + " || UserId: " + userId + " || File Name: " + fileName);
+		
+		if (filePath.equals("") || fileName.equals("") || serverName.equals("") || userId.equals("")) {
+			logger.debug("Invalid arguments!!!!!!");
+			return;
+		}
+		
+		//Get absolute path of the application
+		String realPath = request.getServletContext().getRealPath("");
+		
+		surveyService.getDownloadedFile(fileName, filePath, realPath, userAgent, request, response);
+		
+		logger.debug("File Download Finish!");
+		return;
+	}
+	
+	@RequestMapping(value="/rest/ezsurvey/attachfile/file-delete", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject delFileUploadGW(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
+		String filePath   = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " filePath: " + filePath);
+		
+		if (serverName.equals("") || filePath.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			int tenantId      = loginService.getTenantId(serverName);
+			String realPath   = request.getServletContext().getRealPath("");
+			surveyService.deleteAttachFile(filePath, realPath, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
