@@ -175,16 +175,15 @@
 			      { text : "드롭다운", 		value: 9, selected: false, 	description:"드롭다운", 		imageSrc: "/images/ezSurvey/radio.png" }];
 			 */
 			var optionData = 
-				[{ text : SurveyMessages.strQselect , value: 0, selected: true , description: SurveyMessages.strQselect                                         },
-				 { text : SurveyMessages.strSlOne   , value: 1, selected: false, description: SurveyMessages.strSlOne   , imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strSlMtp   , value: 2, selected: false, description: SurveyMessages.strSlMtp   , imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strTblOne  , value: 3, selected: false, description: SurveyMessages.strTblOne  , imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strTblMtp  , value: 4, selected: false, description: SurveyMessages.strTblMtp  , imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strShortQs , value: 5, selected: false, description: SurveyMessages.strShortQs , imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strLongQs  , value: 6, selected: false, description: SurveyMessages.strLongQs  , imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strSlider  , value: 7, selected: false, description: SurveyMessages.strSlider  , imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strRanking , value: 8, selected: false, description: SurveyMessages.strRanking , imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strDropdown, value: 9, selected: false, description: SurveyMessages.strDropdown, imageSrc: "/images/ezSurvey/radio.png"}];
+				[{ text : SurveyMessages.strSlOne   , value: 1, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
+				 { text : SurveyMessages.strSlMtp   , value: 2, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
+				 { text : SurveyMessages.strTblOne  , value: 3, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
+				 { text : SurveyMessages.strTblMtp  , value: 4, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
+				 { text : SurveyMessages.strShortQs , value: 5, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
+				 { text : SurveyMessages.strLongQs  , value: 6, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
+				 { text : SurveyMessages.strSlider  , value: 7, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
+				 { text : SurveyMessages.strRanking , value: 8, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
+				 { text : SurveyMessages.strDropdown, value: 9, selected: false, imageSrc: "/images/ezSurvey/radio.png"}];
 			
 			
 			// make question form
@@ -214,7 +213,7 @@
 				$("#selectBox").ddslick({
 					data :optionData,
 					imagePosition: "left",
-					selectText: "질문 유형 선택",
+					selectText: SurveyMessages.strQselect,
 					onSelected: function(data) {
 
 						var selectedEl = data.selectedItem;

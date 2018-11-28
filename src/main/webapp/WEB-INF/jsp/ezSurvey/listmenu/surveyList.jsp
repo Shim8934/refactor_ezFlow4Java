@@ -23,7 +23,7 @@
 				</select>
 				
 				<input name="keyword" type="text" id="ssInput">
-				<a id="searchBttn"><img src="/images/bsearch_new.gif"></a>
+				<a id="searchBttnSp"><img src="/images/bsearch_new.gif"></a>
 			</span>
 		</h1>
 		
@@ -45,7 +45,7 @@
 		
 		<div id="searchPanel" class="searchPanel off">
 			<div class="popupMenu searchDiv">
-				<h1><spring:message code='ezSurvey.t25'/></h1>
+				<div class="srchTtl"><spring:message code='ezSurvey.t25'/></div>
 				<div id="surveyClose" class="closeImgBttn"><ul><li><span></span></li></ul></div>
 				<table class="content searchtable">
 					<tr>
@@ -61,7 +61,6 @@
 						<td class="searchTblTd"><input type="text" id="Sdatepicker" class="srchDate" readonly="readonly">&nbsp;~&nbsp;<input type="text" id="Edatepicker" class="srchDate" readonly="readonly"></td>
 					</tr>
 				</table>
-				<br>
 				<div class="srchBttnDiv" id="searchDivBttn">
 					<a class="srchBttn"><span><spring:message code='ezSurvey.t27'/></span></a>
 					<a class="srchBttn"><span><spring:message code='ezSurvey.t20'/></span></a>
@@ -94,10 +93,10 @@
 			<div class="shadow"></div>
 		</div>
 		
-		<div id="cabWraperDiv" style="height: 400px;">
+		<div id="wraperDiv" style="height: 400px;">
 			<div id="surveyList" style="width: 100%; /* display: none; */">
 				<div>
-					<table class="mainlist surveyTbl" id="tblCabinetList">
+					<table class="mainlist surveyTbl" id="tblSurveyList">
 						<tr>
 							<th headers=""   class="inputTh"><input type="checkbox"></th>
 							<th headers=""   class="inputTh"><img src="/images/newAttach.gif"></th>
@@ -122,20 +121,20 @@
 				<div id="tblPageRayer"></div>
 			</div>
 			
-			<div id="previewCabH" class="divPrevH" style="display: none;">
+			<div id="previewH" class="divPrevH" style="display: none;">
 				<div id="preContentH" class="mainPrevH">
 					<div>
-						<div class="prevHeaderCabH" id="previewHeaderH">
+						<div class="prevHeaderH" id="previewHeaderH">
 							<span class="notSelected"><spring:message code='ezSurvey.t28'/></span>
 						</div>
 					</div>
 				</div>
 			</div>
 			
-			<div id="previewCabW" class="divPrevW" style="display: none;">
+			<div id="previewW" class="divPrevW" style="display: none;">
 				<div id="preContentW" class="mainPrevW">
 					<div>
-						<div class="prevHeaderCabW" id="previewHeaderW">
+						<div class="prevHeaderW" id="previewHeaderW">
 							<span class="notSelected"><spring:message code='ezSurvey.t28'/></span>
 						</div>
 					</div>
@@ -153,13 +152,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')             }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js')     }"></script>
-		<%-- <script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetPreview.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetNavi.js')   }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTable.js')  }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetItem.js')   }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')   }"></script> --%>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyPreview.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyNavi.js')   }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyTable.js')  }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyItem.js')   }"></script>
 		<script type="text/javascript">
-		
 			$(function () {
 				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
 					closeText: "<spring:message code='main.t3' />",
@@ -193,10 +190,9 @@
 				};
 				
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619'/>"]);
-				
 			});
 			
-			/* CabinetItem.start("<c:out value='${cabinetId}'/>", "<c:out value='${config.contentHpercent}'/>", "<c:out value='${config.contentWpercent}'/>", "<c:out value='${config.previewMode}'/>"); */
+			SurveyItem.start("<c:out value='${config.contentHpercent}'/>", "<c:out value='${config.contentWpercent}'/>", "<c:out value='${config.previewMode}'/>");
 		</script>
 	</body>
 </html>

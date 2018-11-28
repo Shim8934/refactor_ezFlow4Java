@@ -101,6 +101,14 @@ public class EzSurveyController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("cabinetId", cabinetId);*/
+		
+		JSONObject configObj = surveyRestService.getUserPreviewConfig(request, user.getId());
+		
+		if (configObj.get("status").toString().equals("ok")) {
+			JSONObject userConfig = (JSONObject)configObj.get("config");
+			model.addAttribute("config", userConfig);
+		}
+		
 		logger.debug("jspGetSurveyList ended");
 		return "ezSurvey/listmenu/surveyList";
 	}
