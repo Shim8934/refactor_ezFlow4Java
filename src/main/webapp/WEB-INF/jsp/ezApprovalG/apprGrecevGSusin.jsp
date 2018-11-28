@@ -1018,17 +1018,20 @@
 		    	}
 		    	
 		        var RecevState = getDocRecevState();
-		        if (RecevState != "011" && RecevState != "012" && RecevState != "014") {
-		            if (RecevState == "015") {
-		                var pAlertContent = strLang912;
-		                OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
-		            }
-		            else if (RecevState == "013") {
-		                var pAlertContent = strLang913;
-		                OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
-		            }
-		            return false;
-		        }
+		        
+		        if (isReDraft != "Y") {
+			        if (RecevState != "011" && RecevState != "012" && RecevState != "014") {
+			            if (RecevState == "015") {
+			                var pAlertContent = strLang912;
+			                OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+			            }
+			            else if (RecevState == "013") {
+			                var pAlertContent = strLang913;
+			                OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+			            }
+			            return false;
+			        }
+			    }
 		
 		        var Resultxml;
 		
