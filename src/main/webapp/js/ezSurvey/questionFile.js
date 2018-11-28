@@ -1,6 +1,6 @@
 var QuestionFile = function() {
 	
-	console.log("QuestionFile");
+	// console.log("QuestionFile");
 	
 	return function(data) {
 		var lineWidth = 4;
@@ -25,9 +25,9 @@ var QuestionFile = function() {
 		}
 		
 		function onStartUpload(thisEl, thisFile) {
-			console.log("onStartUpload");
-			console.log(thisEl);
-			console.log(thisFile.length);
+			//console.log("onStartUpload");
+			//console.log(thisEl);
+			//console.log(thisFile.length);
 			
 			/*if (evt != undefined) {
 				evt.stopPropagation();
@@ -90,6 +90,7 @@ var QuestionFile = function() {
 			var canvasElmt    = document.createElement("canvas");
 			var spanChild1    = document.createElement("span");
 			var spanChild2    = document.createElement("span");
+			var delImg         = document.createElement("img");
 			
 			canvasElmt.setAttribute("width" , "40");
 			canvasElmt.setAttribute("height", "40");
@@ -103,10 +104,16 @@ var QuestionFile = function() {
 			divChildElmt2.appendChild(spanChild1);
 			divChildElmt2.appendChild(spanChild2);
 			
+			delImg.setAttribute("height" , "50%");
+			delImg.src         = "/images/survey/file_del.gif";
+			delImg.addEventListener("click", function(e) {deleteFile(e, fileSize);}, false);
 			divMainElmt.className = "attDivFile";
+			divMainElmt.appendChild(delImg);
 			divMainElmt.appendChild(divChildElmt1);
 			divMainElmt.appendChild(divChildElmt2);
+			
 			liElmt.setAttribute("fname", fileName);
+			liElmt.setAttribute("fsize", fileSize);
 			liElmt.appendChild(divMainElmt);
 			ulElmt.appendChild(liElmt);
 			
@@ -179,10 +186,13 @@ var QuestionFile = function() {
 			
 			isStart            = true;
 			var checkImageFile = isImage(filename);
-			var delImg         = document.createElement("img");
-			delImg.src         = "/images/cabinet/file_del.gif";
-			delImg.addEventListener("click", function(e) {deleteFile(e, fileSize);}, false);
-			liElmt.appendChild(delImg);
+			/*var delImg         = document.createElement("img");
+			delImg.src         = "/images/survey/file_del.gif";
+			delImg.addEventListener("click", function(e) {deleteFile(e, fileSize);}, false);*/
+			// liElmt.appendChild(delImg);
+			/*var attDivFile = liElmt.firstChild;
+			attDivFile.appendChild(delImg);*/
+			
 			liElmt.setAttribute("path", filePath);
 			
 			var divChildElmt1 = liElmt.querySelector("div[class='attImgAva']");

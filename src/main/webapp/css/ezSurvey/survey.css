@@ -265,16 +265,12 @@
 
 .quesBacgr .selection .other {text-align: center; padding-top: 10px;}
 .quesBacgr .selection .other .optRow {width: 60%; padding-left: 20%;}
-
 .quesBacgr .selection .other .optRow .option .textInput {width: 85%;height: 30px;}
 .quesBacgr .selection .other .optRow .option .attImg {width: 30px;height: 30px;cursor: pointer;padding-left: 20px;padding-right: 20px;margin-bottom: -11px;}
 .quesBacgr .selection .other .optRow .option .fileInput {width: 0px;opacity: 0;display: none;}
 .quesBacgr .selection .other .optRow .option .delImg {width: 30px;height: 30px;cursor: pointer;margin-bottom: -11px;}
 
-
-.quesBacgr .selection .optPart .optRow .optFileInfo {}
-
-.quesBacgr .selection .optPart .optRow .optAtt {}
+.quesBacgr .selection .optPart .optRow .optFileInfo ul {margin-left: -32px;}
 .quesBacgr .selection .optPart .optRow .optAtt .optionFile {display: none;}
 
 .quesBacgr .selection .additionalPart {width: 60%; margin-left: 20%; padding-top: 15px;}
@@ -284,6 +280,23 @@
 
 .optFileInfo .attFileInf {text-align: left;}
 
+/* 2018.11.28 임시 단일 선택 질문 css */
+.tempQstnWrapper {border: 1px solid black; box-shadow: rga(0, 0, 0, 0.69) 0px 3px 10px 0px; padding: 10px;}
+.tempQstnWrapper .mvBtnDiv {text-align: center;}
+.tempQstnWrapper .mvBtnDiv .mvBtn {width: 70px; height: 30px;}
+
+.tempQstnWrapper .fiCoDelBtns {float: right;}
+.tempQstnWrapper .fiCoDelBtns .crtBtn {width: 30px; height: 30px; cursor: pointer;}
+.tempQstnWrapper .fiCoDelBtns .cpBtn {width: 30px; height: 30px; cursor: pointer;}
+.tempQstnWrapper .fiCoDelBtns .dltBtn {width: 30px; height: 30px; cursor: pointer;}
+
+.tempQstnWrapper .qstnCtts {font-size: 15px; padding-left: 20px;}
+
+.tempQstnWrapper .opts {padding-left: 35px; padding-top: 15px;}
+.tempQstnWrapper .opts .opt {width: 100%; height: 50px;}
+.tempQstnWrapper .opts .opt .optSpan {padding-right: 10px;}
+.tempQstnWrapper .opts .opt .optImg {width: 40px; height: 40px;}
+.tempQstnWrapper .opts .opt .othInput {border-radius: 10px;}
 
 
 

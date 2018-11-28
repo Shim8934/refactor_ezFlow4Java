@@ -157,6 +157,8 @@
 			
 		$(function() {
 				
+			var question = {};
+			
 			var questionFile = new QuestionFile();
 				
 			/* // 셀렉트 박스에 들어갈 질문 유형 데이터 
@@ -193,11 +195,13 @@
 				
 				var html = "";
 				
+				html += "<div class='qstnWrapper'>";
 				html += "<div class='quesDiv'>";
 				html += "<input class='questnTitle'>";
 				html += "<img alt='파일첨부' src='/images/ezSurvey/attach.png' class='atchImg'>";
 				html += "<input type='file' class='attachFile' multiple='multiple' >";
 				html += "<div id='selectBox'></div>";
+				html += "</div>";
 				
 				$(".quesBacgr").html(html);
 				
@@ -307,7 +311,6 @@
 				addEvent();
 			}
 			
-				
 			function addEvent() {
 				// 보기 추가
 				$(".addRow").click(function() {
@@ -340,7 +343,7 @@
 						
 						html += "</div>";
 					
-						thisEl.find(".optPart").last().after(html);
+					thisEl.find(".optPart").last().after(html);
 					
 				});
 				
@@ -422,69 +425,186 @@
 				
 				// 질문과 보기의 모든 내용 임시 저장
 				$(".save").click(function(event) {
-					var questionType = parseInt($(this).parents(".selection").attr("questiontype"));
 					
-					// 기타 버튼 클릭시 기타 추가 이벤트
-					$(".addOther").click(function() {
-						
-						var element = $(this).parent().parent().parent();
-	
-						var other = element.find(".optionPart").find(".other");
-						
-						if (other.length == 0) {
-							
-							var html = "";
-							html += "<div class='other'>";
-							html += "<input class='textInput' type='text' placeholder='기타'>";
-							html += "<img src='/images/ezSurvey/attach.png' class='attachImg' onclick='optTrigger();'>";
-							html += "<img src='/images/ezSurvey/minus.jpg' class='deleteOption' onclick='deleteEvent(this);'>";
-							html += "</div>";
-							
-							element.find(".optionPart").append(html);
-						} else {
-							alert("기타는 하나만 추가 가능합니다.");
-						}
-					});
+					var thisEl = $(this);
 					
-					// 질문과 보기의 모든 내용 임시 저장
-					$(".save").click(function(event) {
-						var questionType = parseInt($(this).parents(".selection").attr("questiontype"));
+					var qstnArea = thisEl.parents(".quesBacgr").find(".quesDiv");
+					var qstnVal = qstnArea.find(".questnTitle").val();
+					// 질문의 내용이 있는지 확인
+					if (qstnVal != null && qstnVal != '') {
+						// 질문의 내용을 질문 객체에 추가
+						question['qstnContents'] = qstnVal;
+					}
+					
+					// 질문 타입을 질문 객체에 저장
+					var optArea = thisEl.parents(".quesBacgr").find(".quesDiv").next();
+					var qstnType = optArea.attr("questiontype");
+					question['qstnType'] = qstnType;
+
+					if (qstnType == 1) {
 						
-						if (questionType == 1) {
-							var optionPart = $(this).parents(".optionPart").find(".option");
-							console.log("콘솔");
-							var additional = $(this).parents(".additionalPart");
+						// optArea -> .selection
+						// 보기
+						var opt = optArea.find(".optPart");
+						
+						// 보기의 개수 확인
+						if (opt.length > 0) {
 							
-							var requiedVal = additional.find("input[name=checkbox]").is(":checked")
+							var option = [];
 							
-							console.log(optionPart);
-							var question = {};
-							
-							for (var i = 0; i < optionPart.length; i++) {
-								var option = {};
-								// 보기의 내용
-								var contents = optionPart[i].childNodes[0].value;
+							for (var i = 0; i < opt.length; i++) {
+								var optObj = {};
 								
-								option['content'] = contents;
+								// 보기가 비어있는지 확인
+								var optVal = opt[i].childNodes[0].childNodes[0].childNodes[0].value;
 								
-								question['option' + i] = option;
-								question['questionType'] = questionType;
+								if (optVal != null && optVal != '') {
+									// 보기 객체에 내용 추가
+									optObj['contents'] = optVal; 
+								}
 								
-								if (requiedVal == true) {
-									question['requied'] = "1";
+								// 첨부 파일이 있는지 확인
+								var fObj = opt[i].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
+								var optAttach = {};
+								
+								// 첨부파일이 있는 경우만 파일 내용 추가
+								if (fObj != undefined) {
+									var fName = fObj.getAttribute("fname");
+									optAttach['fileName'] = fName;
 									
-								} else {
-									question['requied'] = "0";
+									var fPath = fObj.getAttribute("path");
+									optAttach['filePath'] = fPath;
+									
+									var fSize = fObj.getAttribute("fsize");
+									optAttach['fileSize'] = fSize;
+									
+									optObj['optionAttach'] = optAttach;
+								}
+								option.push(optObj);
+							}
+							question['option'] = option; 
+						}
+						
+						// 기타
+						var oth = optArea.find(".other");
+						var other = {};
+						// 기타의 유무 확인
+						if (oth.length != 0) {
+							
+							var othVal = oth[0].childNodes[0].childNodes[0].childNodes[0].value;
+							if (othVal != null && othVal != '') {
+								// 기타 객체에 내용 추가
+								other['contents'] = othVal; 
+							}
+							
+							var othObj = oth[0].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
+							//console.log(othObj);
+							if (othObj != undefined) {
+								// 첨부파일 객체 생성
+								var otherAttach = {};
+								
+								var othFName = othObj.getAttribute("fname");
+								var othFPath = othObj.getAttribute("path");
+								var othFSize = othObj.getAttribute("fsize");
+								
+								otherAttach['fname'] = othFName;
+								otherAttach['fpath'] = othFPath;
+								otherAttach['fsize'] = othFSize;
+								// 기타 객체에 첨부파일 객체 추가
+								other['otherAttachFile'] = otherAttach;
+							}
+							// 질문 객체에 기타 객체 추가
+							question['other'] = other;
+						}
+						
+						// 필수 확인
+						var required = {};
+						
+						var rqrd = optArea.find(".additionalPart").find("input[name='checkbox']");
+						var isChecked = rqrd.is(":checked");
+						//console.log(isChecked);
+						if (isChecked == true) {
+							required['required'] = 'Y';
+							
+						} else {
+							required['required'] = 'N';
+						}
+						question['required'] = required;
+						
+						console.log(question);
+						
+						// 기존 내용 숨기기
+						var wrapper = thisEl.parents(".qstnWrapper");
+						//console.log(wrapper);
+						wrapper.find(".quesDiv").css("display", "none");
+						wrapper.find(".selection").css("display", "none");
+						
+						var qstnContents = question.qstnContents;
+						console.log(qstnContents);
+						
+						var qstnType = question.qstnType;
+						console.log(qstnType);
+						
+						var option = question.option;
+						console.log(option);
+						
+						var required = question.required;
+						console.log(required);
+						
+						var other = question.other
+						console.log(other);
+						
+						var html = "";
+							html += "<div class='tempQstnWrapper'>";
+					  	
+							html += "<div class='mvBtnDiv'>";
+							html += "<img class='mvBtn' alt='' src='/images/ezSurvey/move.png'>";
+							html += "</div>";
+					  	
+							html += "<div class='fiCoDelBtns'>";
+							html += "<img alt='' src='/images/ezSurvey/correct.png' class='crtBtn'>";
+							html += "<img alt='' src='/images/ezSurvey/copy.png' class='cpBtn'>";
+							html += "<img alt='' src='/images/ezSurvey/trash.png' class='dltBtn'>";
+							html += "</div>";
+					  	
+							if (qstnContents != null && qstnContents != '' && qstnContents != undefined) {
+								html += "<strong class='qstnCtts'>" + qstnContents + "</strong>";
+							}
+					  		
+							html += "<div class='opts'>";
+							// 보기
+							if (option != null && option != '' && option != undefined) {
+								for (var i = 0; i < option.length; i++) {
+									html += "<div class='opt'>";
+									html += "<input class='optRdo' type='radio' value=''/>";
+									html += "<span class='optSpan'>" + option[i].contents + "</span>";
+									html += "<img alt='' src='" + option[i].optionAttach.filePath + "' class='optImg'>";
+									html += "</div>";
 								}
 							}
-							console.log(question);
-						}
-					});
+							
+							// 기타
+							if (other != null && other != '' && other != undefined) {
+								html += "<div class='opt'>";
+								html += "<input class='optRdo' type='radio' value=''/>";
+								html += "<span class='optSpan'>" + other.contents + "</span>";
+								html += "<img alt='' src='" + other.otherAttachFile.fpath + "' class='optImg'>";
+								html += "<input class='othInput' type='text'/>";
+								html += "</div>";
+								html += "</div>";
+							}
+							
+							html += "</div>";
+							
+							$(this).parents(".qstnWrapper").prepend(html);
+					}
 					
-					/* var optionList = document.getElementsByClassName("optionAttach");
-					for (var i = 0, len = optionList.length; i < len; i++) {
-						optionList[i].onchange = function(e) {fileUpload();};
-					} */
+				});
+				
+				$(".quesBacgr").on("click", ".crtBtn", function() {
+					
+					var tmpQstnWpr = $(this).find(".tempQstnWrapper");
+					
 				});
 				
 			}

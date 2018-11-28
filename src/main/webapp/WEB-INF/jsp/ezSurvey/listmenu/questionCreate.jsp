@@ -8,6 +8,9 @@
 </div>
 
 <div class="quesBacgr" style="height: 400px; border: 1px solid #d7d7d7;">
+	<div>
+	
+	<!-- 질문 생성 -->
 	<!-- 
 	<div class="quesDiv">
 	
@@ -90,5 +93,39 @@
 		
 	</div>
 	  -->
+	  
+	  <!-- 만들어진 질문 -->
+	  <!-- 
+	  <div class='tempQstnWrapper'>
+	  	
+	  	<div class='mvBtnDiv'>
+	  		<img class='mvBtn' alt="" src='/images/ezSurvey/move.png'>
+	  	</div>
+	  	
+	  	<div class='fiCoDelBtns' style='float: right;'>
+	  		<img alt='' src='/images/ezSurvey/correct.png' class='crtBtn'>
+	  		<img alt='' src='/images/ezSurvey/copy.png' class='cpBtn'>
+	  		<img alt='' src='/images/ezSurvey/trash.png' class='dltBtn'>
+	  	</div>
+	  	
+	  	<strong class='qstnCtts'>질문 영역</strong>
+	  	
+	  	<div class='opts'>
+	  		<div class='opt'>
+		  		<input class='optRdo' type='radio' value='1'/>
+		  		<span class='optSpan'>보기1</span>
+	  			<img alt='' src='/images/ezSurvey/minus.jpg' class='optImg'>
+	  		</div>
+	  		<div class='opt'>
+		  		<input class='optRdo' type='radio' value='1'/>
+		  		<span class='optSpan'>기타</span>
+	  			<img alt='' src='/images/ezSurvey/minus.jpg' class='optImg'>
+		  		<input class='othInput' type='text'/>
+	  		</div>
+	  	</div>
+	  	
+	  </div>
+	   -->
+	  </div>
 	 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/questionFile.js')}"></script>
 </div>
