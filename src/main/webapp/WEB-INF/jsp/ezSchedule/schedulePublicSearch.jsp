@@ -70,7 +70,7 @@
 	            changeYear: true,
 	            autoSize: true,
 	            showOn: "both",
-	            buttonImage: "/images/ImgIcon/calendar-month.png",
+	            buttonImage: "/images/ImgIcon/calendar-month.gif",
 	            buttonImageOnly: true
 	        });
 	        $("#Edatepicker").datepicker({
@@ -78,7 +78,7 @@
 	            changeYear: true,
 	            autoSize: true,
 	            showOn: "both",
-	            buttonImage: "/images/ImgIcon/calendar-month.png",
+	            buttonImage: "/images/ImgIcon/calendar-month.gif",
 	            buttonImageOnly: true
 	        });
 	        var SDate;
@@ -160,7 +160,7 @@
 	        schedule_select_entity_dialogArguments[0] = g_entity;
 	        schedule_select_entity_dialogArguments[1] = select_entity_Complete;
 	        var OpenWin = GetOpenWindow("/ezSchedule/scheduleSelectEntity.do?title=" + encodeURIComponent("<spring:message code='ezSchedule.t288' />"), "scheduleSelectEntity", 970, 655);
-	        try { OpenWin.focus(); } catch (e) { }
+	        try {} catch (e) { }
 	    }
 
 	    function select_entity_Complete(rtn) {
@@ -211,7 +211,7 @@
 		
 	    function onmouseOver(elem) {
 	        elem.style.color = "blue";
-	        elem.style.backgroundColor = "#f1f8ff";
+	        elem.style.backgroundColor = "#edf4fd";
 	    }
 
 	    function onmouseOut(elem) {
@@ -227,7 +227,7 @@
 				<tr>
 			    	<th style="white-space:nowrap"><spring:message code='ezSchedule.t290' /></th>
 			    	<td style="width:20px;border-right:none">
-			    		<a href="#" class="imgbtn imgbck">
+			    		<a class="imgbtn imgbck">
 			    			<span onClick="select_entity();"><spring:message code='ezSchedule.t291' /></span>
 			    		</a>
 			    	</td>

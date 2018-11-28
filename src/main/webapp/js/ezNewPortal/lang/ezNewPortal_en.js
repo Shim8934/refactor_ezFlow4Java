@@ -12,5 +12,6 @@ var messages = {
 	strLang11 : "This is a private CoP.",
 	strLang12 : "Please join us.	",
 	strLang13 : "Voting is being modified.Please wait.",
-	strLang14 : "You do not have permission on that bulletin."
+	strLang14 : "You do not have permission on that bulletin.",
+	strLang15 : "JAN;FEB;MAR;APR;MAY;JUN;JUL;AUG;SEP;OCT;NOV;DEC"
 }
