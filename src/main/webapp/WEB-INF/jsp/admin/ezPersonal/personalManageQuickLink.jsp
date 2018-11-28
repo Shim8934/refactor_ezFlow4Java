@@ -53,21 +53,18 @@
 					var divElmt = document.createElement("div");
 					var titElmt = document.createElement("p");
 					var urlElmt = document.createElement("p");
-					var updElmt = document.createElement("img");
 					var delElmt = document.createElement("img");
 					var dlElmt  = document.createElement("dl");
 					
 					liElmt.className = "link";
 					liElmt.setAttribute("id", itemId);
+					liElmt.addEventListener("click", function(event) {btn_modify(this);});
 					
 					divElmt.className = "linkBttn";
-					updElmt.setAttribute("src", "/images/admin/slideUpdate.png");
-					updElmt.addEventListener("click", function(event) {btn_modify(itemId);});
 					
 					delElmt.setAttribute("src", "/images/admin/slideDelete.png");
 					delElmt.addEventListener("click", function(event) {btn_delete(itemId);});
 					
-					divElmt.appendChild(updElmt);
 					divElmt.appendChild(delElmt);
 					
 					titElmt.innerHTML = setQuickImg(item.linkType, item.linkTypeUrl) + item.quickLinkName;
@@ -188,7 +185,16 @@
 					}
 				});
 			}
-			function btn_modify(itemId) {
+			function btn_modify(obj) {
+				var linkChoice = document.getElementsByClassName("linkChoice");
+				var length = linkChoice.length;
+				for (var i = 0; i < length; i++) {
+					linkChoice[i].classList.remove("linkChoice");
+				}
+				
+				obj.classList.add("linkChoice");
+				
+				var itemId = obj.getAttribute("id");
 				$.ajax({
 					url : "/admin/ezPersonal/addQuickLink.do",
 					data : {"mode": "modify"},
@@ -843,7 +849,7 @@
 			.linkAdd dl dt {text-align: center; margin-top: 50px;}
 			.linkAdd dl dd {margin-left: 120px; color: #999; font-size: 15px; line-height: 19px;}
 			.link dl {margin: 10px;}
-			.link dl dt, .link dl dd {font-size: 13px; line-height: 25px;} 
+			.link dl dt, .link dl dd {font-size: 13px; line-height: 25px; margin-left: 0px;} 
 			.link dl dt {float: left; width: 50px;}
 			.link p {margin: 0px 10px 0px 10px; font-size: 18px; font-weight: bold; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
 			.link p img {vertical-align: bottom; width: 30px; height: 30px;}
@@ -868,6 +874,7 @@
 			.linkType tr:nth-child(odd) > td {cursor:pointer;}
 			.linkType tr:nth-child(even) > td {text-align:center; margin-top:-5px;}
 			.hideDetails {display: none;}
+			.linkChoice {background: #edf7ff; border: 1px solid #2196f3; color: #0470e3;}
 		</style>
 	</head>
 	<body class="mainbody">
