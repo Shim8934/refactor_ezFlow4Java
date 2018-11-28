@@ -203,7 +203,7 @@ nav > .countBox .hidden_nav_count {position: absolute; right: 0px; top: 6px; dis
 .portlet_list li.first_approval{margin:0px; padding:0px; border:1px solid #e7e7e7; height:113px; border-top: #fff; box-sizing:border-box; border-left:0px; border-right:0px; background-color: #fff;}
 .first_approval .approval_tit{ margin:0px; padding:0px 0px 0px 10px; height:27px; background:#fff; line-height:16px; border-bottom: 1px solid #e5e5e5}
 .first_approval .approval_tit span.txt{ font-weight:bold;}
-.first_approval .approval_content{margin:13px 0px 12px 0px; padding:0px; overflow:hidden;}
+.first_approval .approval_content{margin:14px 0px 11px 0px; padding:0px; overflow:hidden;}
 .first_approval .approval_content .apprDL{margin:0px; padding:0px 0px 0px 10px; float:left; overflow:hidden; width:30%; box-sizing:border-box;}
 .first_approval .approval_content .apprDL .apprPic{margin:0px; padding:0px; width:53px; height:53px; border:1px solid #e7e7e7; border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; float:left;}
 .first_approval .approval_content .apprDL .apprPic img{border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; width:53px; height:53px;}

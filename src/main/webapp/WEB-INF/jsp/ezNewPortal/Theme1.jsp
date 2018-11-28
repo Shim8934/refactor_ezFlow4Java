@@ -40,7 +40,7 @@
 	.two_column{width:47.7%;}
 </style>
 </head>
-<body class="mainbg">
+<body class="mainbg" id="theme1Body">
 	<div id="center">
 	<c:if test="${usedFrame eq 'Frame2'  || usedFrame eq 'Frame4'}">
 		<section class="section_left right_float" style="height:1130px;">

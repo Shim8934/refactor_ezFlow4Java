@@ -20,7 +20,7 @@
 </style>
 </head>
 
-<body class="mainbg"">
+<body class="mainbg" id="theme2Body">
 	<div style="position:relative;">
 		<aside id="quickSide" style="width:0px">
 			<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>

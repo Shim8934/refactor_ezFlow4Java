@@ -43,7 +43,7 @@
 	.two_column {width:48.4%;}
 </style>
 </head>
-<body class="mainbg">	
+<body class="mainbg" id="theme3Body">
 	<div id="Center">
 	<div style="position:relative;">
 		<aside id="quickSide" style="width:0px">
