@@ -269,7 +269,6 @@
 					html += "<div class='option'>";
 					html += "<input class='textInput' type='text'>";
 					html += "<img src='/images/ezSurvey/attach.png' class='attImg'>"; 
-					html += "<input class='fileInput' type='file'>";
 					html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
 					html += "</div>";
 						
@@ -324,7 +323,6 @@
 						html += "<div class='option'>";
 						html += "<input class='textInput' type='text'>";
 						html += "<img src='/images/ezSurvey/attach.png' class='attImg'>"; 
-						html += "<input class='fileInput' type='file'>";
 						html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
 						html += "</div>";
 							
@@ -363,7 +361,6 @@
 							html += "<div class='option'>";
 							html += "<input class='textInput' type='text' placeholder='기타'>";
 							html += "<img src='/images/ezSurvey/attach.png' class='attImg'>"; 
-							html += "<input class='fileInput' type='file'>";
 							html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
 							html += "</div>";
 								
