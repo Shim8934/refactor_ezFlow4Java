@@ -16,7 +16,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/slick.js')}"></script>
 		<style type="text/css">
-		* {box-sizing: border-box;}
 		.calSlider {width: 85% !important; margin-left: 25px; border-top: 2px solid; border-bottom: 1px solid #c8ccd0;}
 		.slick-slide {margin: 0px 3px;}
 		.slick-slide img {width: 100% !important;}
@@ -39,6 +38,7 @@
 		.calendarright {margin: 0px;}
 		</style>
 		<script type="text/javascript">
+			var popup;
 			var selectedYear;
 			var selectedTerm;
 			
@@ -224,6 +224,8 @@
 			}
 			var selectperson_cross_dialogArguments = new Array();
 			function btn_add(obj) {
+				if (popup) {popup.close();} 
+				
 				selectperson_cross_dialogArguments[1] = btn_add_Complete;
 				
 				var month = obj.getAttribute("id");
@@ -232,6 +234,7 @@
 				
 				selectperson_cross_dialogArguments[1] = btn_add_Complete;
 				var SelectPerson_cross = window.open("/ezPersonal/selectPerson.do?type=EMP", "SelectPerson", GetOpenWindowfeature(760, 535));
+				popup = SelectPerson_cross;
 				try { SelectPerson_cross.focus(); } catch (e) { }
 				
 			}
@@ -259,10 +262,14 @@
 				});
 			}
 			function btn_modify(term) {
+				if (popup) {popup.close();} 
+				
 				selectperson_cross_dialogArguments[1] = btn_modify_Complete;
 				selectedTerm = term;
 				
 				var SelectPerson_cross = window.open("/ezPersonal/selectPerson.do?type=EMP", "SelectPerson", GetOpenWindowfeature(760, 535));
+				popup = SelectPerson_cross;
+				
 				try { SelectPerson_cross.focus(); } catch (e) { }
 			}
 			function btn_modify_Complete(rtv) {
