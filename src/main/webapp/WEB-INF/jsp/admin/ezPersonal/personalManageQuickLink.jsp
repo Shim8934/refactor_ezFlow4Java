@@ -854,7 +854,6 @@
 			.link p {margin: 0px 10px 0px 10px; font-size: 18px; font-weight: bold; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
 			.link p img {vertical-align: bottom; width: 30px; height: 30px;}
 			.linkBttn {text-align: right; padding: 10px 10px 0px 0px;}
-			.linkBttn > img:first-child {margin-right: 7px;}
 			.linkDetails {list-style: none; float: left; width: 90%; border: 1px solid black; position: relative; display: list-item; margin: 20px 0px 20px 0px;}
 			.linkTitle {margin: 10px;}
 			.linkTitle span {font-size: 18px; font-weight: bold;}
@@ -878,7 +877,7 @@
 		</style>
 	</head>
 	<body class="mainbody">
-		<h1>Quick Link</h1>
+		<h1>빠른 링크</h1>
 
 		<!-- 빠른 링크 리스트 영역 -->
 		<ul id="mainlist"></ul>
