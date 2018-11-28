@@ -151,7 +151,7 @@
 					var seq = acList.children[1].children[i].getAttribute("data1");
 					var inuse = acList.children[1].children[i].getAttribute("inuse");
 					var jinhangFlag = acList.children[1].children[i].children[5].innerHTML;
-					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq +"'></input>";
+					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq +"' onchange='inputFunc(event,"+seq+")'></input>";
 					acList.children[1].children[i].children[6].innerHTML = "<td class='portletInfoTD'><label class='switch' id='switch" + seq + "' inuse='" + inuse +"'><input type='checkbox'><span class='slider round'></span></label>";
 
 					if(jinhangFlag == 1) {
@@ -171,6 +171,22 @@
 				inUseUpdate();
 			}
 
+
+			function inputFunc(event, itemseq) {
+				event.stopPropagation();
+				if(checkFlag) {
+					var objID = $("#"+itemseq)[0].parentNode.parentNode.id;
+					if($("#"+itemseq).prop("checked")) {
+						$("#" + objID + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + objID + " td").css("background-color", "rgb(241, 248, 255)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				}
+			}
+
+
 			var checkFlag = false;
 			function checkboxHeaderClick() {
 				if(checkFlag){
@@ -180,7 +196,7 @@
 				}else {
 					checkFlag = true;
 					$(".checks").prop("checked",true);
-					$("#contentlist tr td").css("background-color", "rgb(228, 232, 236)");
+					$("#contentlist tr td").css("background-color", "rgb(241, 248, 255)");
 				}
 				checkItems();
 			}
@@ -243,7 +259,7 @@
 					if(document.getElementById(tempItemSeq) != null) {
 						$("#" + tempItemSeq).prop("checked", true);
 						var tempID = $("#" + tempItemSeq)[0].parentNode.parentNode.id;
-						$("#" + tempID + " td").css("background-color", "rgb(228, 232, 236)");
+						$("#" + tempID + " td").css("background-color", "rgb(241, 248, 255)");
 					}
 				}
 				
@@ -377,12 +393,11 @@
 				}
 
 				if(checkFlag) {
-					var color = $("#" + obj + " td").css("background-color");
-					if(color === "rgb(228, 232, 236)") {
+					if($("#"+itemseq).prop("checked")) {
 						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
 						$("#" + itemseq).prop("checked", false);
 					} else {
-						$("#" + obj + " td").css("background-color", "rgb(228, 232, 236)");
+						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
 						$("#" + itemseq).prop("checked", true);
 					}
 				} else {
@@ -392,7 +407,7 @@
 						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
 						$("#" + itemseq).prop("checked", false);
 					} else {
-						$("#" + obj + " td").css("background-color", "rgb(228, 232, 236)");
+						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
 						$("#" + itemseq).prop("checked", true);
 					}
 				}
@@ -537,8 +552,8 @@
 					break;
 				case 2 :
 					doc.getElementById("contentlist").style.height = conlistH + "px";
-					mainView.style.width = "70%";
-					previewH.style.width = "30%";
+					mainView.style.width = "60%";
+					previewH.style.width = "40%";
 					previewH.style.height = conlistH + 47 + "px";
 					previewH.style.display = "";
 					previewmail_bar_h.style.height = conlistH + 47 + "px";
@@ -550,10 +565,10 @@
 					break;
 				}
 				
-				// row가 선택 되어 있다면
-				//if(itemseq) {
-				//	showPreview(isPreview, itemseq);
-				//}
+				//row가 선택 되어 있다면
+				if(itemseq) {
+					showPreview(isPreview, itemseq);
+				}
 			}
 			
 			
@@ -715,9 +730,9 @@
 				} else if ( isPreview == 2) {
 					doc.getElementById("contentlist").style.height = height + "px";
 					doc.getElementById("contentlist").style.overflow = "auto";
-					doc.getElementById("previewH").style.height = height + 47 + "px";
+					doc.getElementById("previewH").style.height = height + 41 + "px";
 					doc.getElementById("previewmail_bar_h").style.height = height + 47 + "px";
-					doc.getElementById("ifrmPreViewH").style.height = height + 47 + "px";
+					doc.getElementById("ifrmPreViewH").style.height = height + 41 + "px";
 				}
 			}
 
@@ -732,13 +747,15 @@
 					if(isPreview == 2) {
 						// 세로 모드
 						var itemSeqTitle = $("#"+itemseq)[0].parentNode.parentNode.children[2].innerHTML;
+						var itemSeqSDate = $("#"+itemseq)[0].parentNode.parentNode.children[3].innerHTML;
 						doc.getElementById('Preview_HeaderH').style.display ="inline-block";
 						doc.getElementById('Preview_HeaderH').title = itemSeqTitle;
 						doc.getElementById('PreH_sub_subject').innerHTML = itemSeqTitle;
+						doc.getElementById('PreH_date').innerHTML = itemSeqSDate;
 						PrevViewFormH.itemSeq.value = itemseq;
 						PrevViewFormH.submit();
 						var conlistH = conH
-						doc.getElementById("ifrmPreViewH").style.height = conlistH + 27 + "px";
+						doc.getElementById("ifrmPreViewH").style.height = conlistH + 41 + "px";
 					} 
 				}
 			}
@@ -825,21 +842,21 @@
 				<div id="tblPageRayer"></div>
 			</div>
 			
-			<div class="previewH" id="previewH" style="width:29%; float:right;">
+			<div class="previewH" id="previewH" style="width:39%; float:right;">
 				<span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top;  margin-left:0px;">
 					<span id="previewmail_bar_h" class="previewmail_bar_h" style="display: inline-block; border: 1px solid #e5e5e5; border-top:0px !important; border-bottom:0px !important;">
 						<p class="hbar_dotted" style="width:5px">
 						</p>
 					</span>
-					<span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue; width:29%;">
+					<span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue; width:39%;">
 						<span style="width: 100%; height: 100px; display: block;">
 							<span class="previewmail_info" style="display: block; width: 100%; border-top: 1px solid #e8e8e8; ">
 								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
 									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 10px 0px 0px 0px; height: 36px; line-height: 37px;">
 										<span class="icon_btn" style="margin-left:13px;"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
 											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" style="position:absolute; margin-top:-6px;" class="title_blodtxt"></span></span>
+										<span class="mail_date" style="margin-right: 10px; display: inline-block; float:right;margin-top:-7px;"><span id="PreH_date" style="font-weight:normal;"><span id="PreH_sub_date" style="display: none;"></span></span></span>
 									</p>
-									<span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
 								</div>
 							</span>
 							<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
