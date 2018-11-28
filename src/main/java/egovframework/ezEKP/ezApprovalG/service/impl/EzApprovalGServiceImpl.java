@@ -10930,7 +10930,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent().trim();
 		String orgCompanyID = xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent().trim();
 		
-		if (!orgCompanyID.equals(companyID)) {
+		if (!orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			companyID = orgCompanyID;
 		}
 		
@@ -24036,6 +24036,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA8><![CDATA[" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "]]></DATA8>");
 					resultXML.append("<DATA9><![CDATA[" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "]]></DATA9>");
 					resultXML.append("<DATA10><![CDATA[" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "]]></DATA10>");
+					resultXML.append("<DATA99><![CDATA[" + docXML.getElementsByTagName("FORMNAME").item(k).getTextContent() + "]]></DATA99>");					
 				}
 				
 				if (FieldName.equals("HASATTACHYN")) {
