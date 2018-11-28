@@ -75,8 +75,8 @@
 		    	var sliderSn = "";
 		    	var sliderID = "";
 		    	var sliderImagePath = "";
-		    	var sliderName = "";
-		    	var sliderName2 = "";
+		    	/* var sliderName = "";
+		    	var sliderName2 = ""; */
 		    	var sliderRegDate = "";
 		    	var sliderURL = "";
 		    	var sliderIsUse = "";
@@ -88,8 +88,8 @@
 		    		sliderSn = result[i].sn;
 		    		sliderID = result[i].sliderID;
 		    		sliderImagePath = result[i].imagePath;
-		    		sliderName = result[i].sliderName;
-		    		sliderName2 = result[i].sliderName2;
+		    		/* sliderName = result[i].sliderName;
+		    		sliderName2 = result[i].sliderName2; */
 		    		sliderRegDate = result[i].regDate;
 		    		sliderURL = result[i].url;
 		    		sliderIsUse = result[i].isUse;
@@ -106,27 +106,17 @@
 			    	sliderHTML += "<img src='/images/email/popup_icon.gif' ></span>";
 		    		sliderHTML += "</div>";
 		    		sliderHTML += "<dt><span class='imagePage'>";
-		    		/* if(sliderIsUse == 1){ 
-		    			sliderHTML += "<dt><span class='imagePage' style = 'opacity : 1;'>";
-		    		}else {
-		    			sliderHTML += "<dt><span class='imagePage' style = 'opacity : 0.2;'>";
-		    		} */
 		    		sliderHTML += "<IMG src ="+sliderImagePath+" style='width:225px;height:210px'/></dt>";
 		    		sliderHTML += "</span>";
 		    		sliderHTML += "<div class = 'slider-content'>";
-		    		/* if(sliderIsUse == 1){ 
-		    			sliderHTML += "<div class = 'slider-content' style = 'opacity : 1;'>";
-		    		}else {
-		    			sliderHTML += "<div class = 'slider-content' style = 'opacity : 0.2';'>";
-		    		} */
 		    		sliderHTML += "<table class = 'sliderInfo'>";
-		    		sliderHTML += "<tr><td class ='sliderInfoTD'>이름</td>";
+		    		/* sliderHTML += "<tr><td class ='sliderInfoTD'>이름</td>";
 		    		sliderHTML += "<td class ='sliderName' id = 'sliderName' data4 ='"+sliderName+"'>"+sliderName+"</td></tr>"
-		    		sliderHTML += "<tr><td class ='sliderInfoTD'></td><td class ='sliderName2'id = 'sliderName2' data5 ='"+sliderName2+"'></td></tr>";
+		    		sliderHTML += "<tr><td class ='sliderInfoTD'></td><td class ='sliderName2'id = 'sliderName2' data5 ='"+sliderName2+"'></td></tr>"; */
 		    		sliderHTML += "<tr><td class ='sliderInfoTD'>URL</td>";
 		    		sliderHTML += "<td class ='sliderURL' id = 'sliderURL' data6 ='"+sliderURL+"'>"+sliderURL+"</td></tr>"
-		    		sliderHTML += "<tr><td class ='sliderInfoTD'>등록일</td>";
-		    		sliderHTML += "<td class ='sliderRegDate' id= 'sliderRegDate' data7 ='"+sliderRegDate+"'>"+sliderRegDate+"</td></tr>"
+		    		/* sliderHTML += "<tr><td class ='sliderInfoTD'>등록일</td>";
+		    		sliderHTML += "<td class ='sliderRegDate' id= 'sliderRegDate' data7 ='"+sliderRegDate+"'>"+sliderRegDate+"</td></tr>" */
 		    		
 		    		if(sliderIsUse == 1){
 		    			sliderHTML += "<tr><td class ='sliderInfoTD'>사용여부</td><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' checked='checked' data7='"+sliderIsUse+"' onchange='toggleButton(this)'><span class='slider round'></label></td>";
@@ -168,15 +158,11 @@
 		    	
 				if(sliderIsUse){
 	 		    	sliderHeader.style.backgroundColor = "#2196f3";
-	 		    	/* picture.style.opacity = "1";
-	 		    	sliderContent.style.opacity = "1"; */
 	 		    } else{
 	 		    	sliderHeader.style.backgroundColor = "#f4f4f4";
 	 		    	sliderHeader.style.border = "1px solid #e7e7e7";
 	 		    	sliderHeader.style.color =  "#b1b1b1";
-	 		    	/* picture.style.opacity = "0.2";
-	 		    	sliderContent.style.opacity = "0.2";
- */	 		    }
+					}
 				
 				event_statuschange(sliderIsUse, sliderID);
 		    }
@@ -226,10 +212,11 @@
 		    	sliderHTML += "<img id='UploadSliderImage' src='' onload ='imgdisplay()' style='width:225px;height:210px;display:none'>";
 		    	sliderHTML += "</div>";
 		    	sliderHTML += "<div class = 'slider-content'>";
-		    	sliderHTML += "<table class = 'sliderInfo'><tr><td class ='sliderInfoTDadd'>한글";
+		    	sliderHTML += "<table class = 'sliderInfo'>";
+		    	/* sliderHTML += "<tr><td class ='sliderInfoTDadd'>한글";
 		    	sliderHTML += "<input id ='txtDisplayName' type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>영어";
-		    	sliderHTML += "<input id ='txtDisplayName2' type='text' maxlength='50'></td></tr>";
+		    	sliderHTML += "<input id ='txtDisplayName2' type='text' maxlength='50'></td></tr>"; */
 		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL";
 		    	sliderHTML += "<input id='txtDisplayName3' type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "</table>"
@@ -353,7 +340,7 @@
 		    
 		    //생성된 슬라이드 이미지 저장 
 		    function btnSave_click(){
-		    	if (specialChk(document.getElementById("txtDisplayName").value)) {
+		    	/* if (specialChk(document.getElementById("txtDisplayName").value)) {
 			    	alert("<spring:message code='ezResource.special' />");
 			    	return;
 			    }
@@ -362,13 +349,15 @@
 		            return;
 		        } else if (document.getElementById("txtDisplayName2").value == "") {
 		            alert("<spring:message code = 'ezPersonal.t1027' />");
-		            return;
+		            return; 
+		        } */
 		        //} else if (document.getElementById("UploadSliderImage").src.indexOf("upload_portal") == -1) {
-		        } else if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
+		         if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
 		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
 		            return;
 		        }
-		    	
+		    	var displayName = "";
+		    	var displayName2 = "";
 		    	var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("${uploadPortalPath}"));
 		    	var isUseCk = document.getElementById("slideIsUseAdd").checked;
 		    	var isUse = "";
@@ -398,8 +387,8 @@
 		        	async : false,
 		        	data : {sliderID : item,
 		        			mode : mode,
-		        			displayName : txtDisplayName.value,
-		        			displayName2 : txtDisplayName2.value,
+		        			displayName : displayName,
+		        			displayName2 : displayName2,
 		        			url : txtDisplayName3.value,
 		        			fileName : fileName,
 		        			sliderImage : SliderImgPath,
@@ -440,12 +429,11 @@
 		    function modifySlider(obj) {
 		    	var sliderID = obj.getAttribute("data3");
 		    	var sliderList = obj.parentNode.parentNode;
-		    	var name1 = sliderList.querySelector("#sliderName").getAttribute("data4");
-		    	var name2 = sliderList.querySelector("#sliderName2").getAttribute("data5");
+		    	/* var name1 = sliderList.querySelector("#sliderName").getAttribute("data4");
+		    	var name2 = sliderList.querySelector("#sliderName2").getAttribute("data5"); */
 		    	var url = sliderList.querySelector("#sliderURL").getAttribute("data6");
-		    	var regDate = sliderList.querySelector("#sliderRegDate").getAttribute("data7");
+		    	//var regDate = sliderList.querySelector("#sliderRegDate").getAttribute("data7");
 		    	
-		    	console.log(name1);
 		    	var sliderHTML = "";
 		    	sliderHTML += "<li class = 'sliderList-modify' id = 'sliderList-modify'>";
 		    	sliderHTML += "<div class = 'slider-header-add' style='background-color:#f4f4f4;border:1px solid #e7e7e7;color:#b1b1b1'>";
@@ -458,10 +446,10 @@
 		    	sliderHTML += "<img id='UploadSliderImage' src='' onload ='imgdisplay()' style='width:225px;height:210px;display:none'>";
 		    	sliderHTML += "</div>";
 		    	sliderHTML += "<div class = 'slider-content'>";
-		    	sliderHTML += "<table class = 'sliderInfo'><tr><td class ='sliderInfoTDadd'>한글";
-		    	sliderHTML += "<input id ='txtDisplayName' value='"+name1+"' type='text' maxlength='50'></td></tr>";
+		    	sliderHTML += "<table class = 'sliderInfo'>";
+		    	/* sliderHTML += "<tr><td class ='sliderInfoTDadd'>한글<input id ='txtDisplayName' value='"+name1+"' type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>영어";
-		    	sliderHTML += "<input id ='txtDisplayName2' value='"+name2+"' type='text' maxlength='50'></td></tr>";
+		    	sliderHTML += "<input id ='txtDisplayName2' value='"+name2+"' type='text' maxlength='50'></td></tr>"; */
 		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL";
 		    	sliderHTML += "<input id='txtDisplayName3' value='"+url+"'type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "</table>"
@@ -478,7 +466,7 @@
 		    function btnSave_click_modify(obj){
 		    	var sliderID = obj.getAttribute("data");
 		    	
-		    	if (specialChk(document.getElementById("txtDisplayName").value)) {
+		    	/* if (specialChk(document.getElementById("txtDisplayName").value)) {
 			    	alert("<spring:message code='ezResource.special' />");
 			    	return;
 			    }
@@ -487,12 +475,15 @@
 		            return;
 		        } else if (document.getElementById("txtDisplayName2").value == "") {
 		            alert("<spring:message code = 'ezPersonal.t1027' />");
-		            return;
+		            return; } */
 		        //} else if (document.getElementById("UploadSliderImage").src.indexOf("upload_portal") == -1) {
-		        } else if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
+		         if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
 		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
 		            return;
 		        }
+		        
+		        var displayName = "";
+			    var displayName2 = "";
 		    	var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("${uploadPortalPath}"));
 		    	var isUseCk = document.getElementById("slideIsUseModify").checked;
 		    	var isUse = "";
@@ -517,8 +508,8 @@
 		        	async : false,
 		        	data : {sliderID : item,
 		        			mode : mode,
-		        			displayName : txtDisplayName.value,
-		        			displayName2 : txtDisplayName2.value,
+		        			displayName : displayName,
+		        			displayName2 : displayName2,
 		        			url : txtDisplayName3.value,
 		        			fileName : fileName,
 		        			sliderImage : SliderImgPath,
