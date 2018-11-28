@@ -24,7 +24,7 @@ function checkLines() {
         var rtnVal = getNodeText(dataNodes[0]);
 
         if (rtnVal != "") {
-            OpenAlertUILong(rtnVal);
+            OpenAlertUI(rtnVal);
             return false;
         }
     }
