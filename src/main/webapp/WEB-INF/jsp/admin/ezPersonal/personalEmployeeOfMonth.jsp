@@ -30,7 +30,7 @@
 		.empAdd dl dt {margin: 0px;}
 		.empAdd dl dt img {margin: 10px 0px 20px 60px; cursor: pointer;}
 		.empAdd dl dd {color: #999; font-size: 15px; line-height: 21px; text-align: center; margin: 0px;}
-		.empImg dl dd {font-size: 15px; line-height: 19px; text-align: center; margin: 0px;}
+		.empImg dl dd {font-size: 15px; line-height: 19px; text-align: center; margin: 0px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
 		.empImg dl dt img {margin-left: 40px; height: 95px; width: 95px; cursor:pointer;}
 		.empInfo {border-bottom: 3px solid; margin: 0px 25px 0px 25px;}
 		.empInfo p {margin: 0px; text-align: center; font-size: 20px; font-weight: bold;}
