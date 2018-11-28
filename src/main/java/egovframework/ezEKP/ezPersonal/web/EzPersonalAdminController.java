@@ -1175,8 +1175,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String mode = request.getParameter("mode");
 		// 18-05-10 김민성 - 슬라이드 이미지 등록 URL 컬럼 추가
 		String url = request.getParameter("url");
+		// 18-11-28 문성업 - 슬라이디 하용여부 파라미터 추가
+		String isUse = request.getParameter("isUse");
 		
-		ezPersonalAdminService.setSliderImage(sliderID, displayName, displayName2, sliderPath, fileName, mode, userInfo, url);
+		ezPersonalAdminService.setSliderImage(sliderID, displayName, displayName2, sliderPath, fileName, mode, userInfo, url, isUse);
 
 		logger.debug("saveSlider ended");
 		return "OK";

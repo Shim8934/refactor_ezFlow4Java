@@ -831,7 +831,7 @@
 				TBL_PS_SLIDERIMAGE
         		( SLIDERID, SLIDERNAME, SLIDERNAME2, FILENAME, IMAGEPATH, REGUSERID, REGDATE, COMPANYID, ISUSE, SN, TENANT_ID, URL )
         	VALUES
-        		( #v_SLIDERID#, #v_SLIDERNAME#, #v_SLIDERNAME2#, #v_FILENAME#, #v_IMAGEPATH#, #v_REGUSERID#, #v_REGDATE#, #v_COMPANYID#, 1, #count# + 1, #tenantID#, #v_URL# )
+        		( #v_SLIDERID#, #v_SLIDERNAME#, #v_SLIDERNAME2#, #v_FILENAME#, #v_IMAGEPATH#, #v_REGUSERID#, #v_REGDATE#, #v_COMPANYID#, #v_ISUSE#, #count# + 1, #tenantID#, #v_URL# )
 		]]>
 	</insert>
 	
@@ -844,7 +844,8 @@
              	SLIDERNAME2 = #v_SLIDERNAME2#,
              	FILENAME = #v_FILENAME#,
              	IMAGEPATH = #v_IMAGEPATH#,
-             	URL = #v_URL#
+             	URL = #v_URL#,
+             	isUse = #v_ISUSE#
        		WHERE
        			SLIDERID = #v_SLIDERID#
        		AND

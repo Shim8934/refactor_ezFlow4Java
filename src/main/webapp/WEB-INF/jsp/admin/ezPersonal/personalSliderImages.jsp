@@ -233,7 +233,7 @@
 		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL";
 		    	sliderHTML += "<input id='txtDisplayName3' type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "</table>"
-		    	sliderHTML += "<tr><td class ='sliderInfoTD'>사용여부</td><td class= 'slideIsUse'><label class='switch'><input id='slideIsUseAdd' type='checkbox' checked='checked' onchange='toggleButtonAdd()'><span class='slider round'></label></td>";
+		    	sliderHTML += "<tr><td class ='sliderInfoTD'>사용여부</td><td class= 'slideIsUse'><label class='switch'><input id='slideIsUseAdd' type='checkbox' checked='checked'><span class='slider round'></label></td>";
 		    	sliderHTML += "<a href='#' class='imgbtn'><span onclick='btnSave_click();'><spring:message code = 'ezPersonal.t34' /></span></a>";
 		    	sliderHTML += "</div>";
 		    	sliderHTML += "</li>";
@@ -402,7 +402,8 @@
 		        			displayName2 : txtDisplayName2.value,
 		        			url : txtDisplayName3.value,
 		        			fileName : fileName,
-		        			sliderImage : SliderImgPath},
+		        			sliderImage : SliderImgPath,
+		        			isUse : isUse},
 		        	dataType : "text",
 		        	success : function (result) {
 		        		if (result == "OK") {
@@ -423,61 +424,6 @@
 		    }
 		    
 		    //수정한 슬라이드 저장
-		    function btnSave_click_modify(obj){
-		    	var sliderID = obj.getAttribute("data");
-		    	console.log(sliderID);
-		    	
-		    	if (specialChk(document.getElementById("txtDisplayName").value)) {
-			    	alert("<spring:message code='ezResource.special' />");
-			    	return;
-			    }
-		    	if (document.getElementById("txtDisplayName").value == "") {
-		            alert("<spring:message code = 'ezPersonal.t1027' />");
-		            return;
-		        } else if (document.getElementById("txtDisplayName2").value == "") {
-		            alert("<spring:message code = 'ezPersonal.t1027' />");
-		            return;
-		        //} else if (document.getElementById("UploadSliderImage").src.indexOf("upload_portal") == -1) {
-		        } else if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
-		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
-		            return;
-		        }
-		    	var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("${uploadPortalPath}"));
-
-		        var item;
-		        var mode;
-		        item = sliderID;
-	            mode = "MOD";
-	            fileName = SliderImgPath.substr(SliderImgPath.lastIndexOf("/") + 1);
-	            
-	            
-	            $.ajax({
-		        	type : "POST",
-		        	url : "/admin/ezPersonal/saveSlider.do",
-		        	async : false,
-		        	data : {sliderID : item,
-		        			mode : mode,
-		        			displayName : txtDisplayName.value,
-		        			displayName2 : txtDisplayName2.value,
-		        			url : txtDisplayName3.value,
-		        			fileName : fileName,
-		        			sliderImage : SliderImgPath},
-		        	dataType : "text",
-		        	success : function (result) {
-		        		if (result == "OK") {
-		        			alert("<spring:message code = 'ezPersonal.t191' />");
-				            
-				            if (ReturnFunction != null) {
-				                ReturnFunction();
-				            } 
-				            window.location.reload();
-		        		} else {
-		        			alert("<spring:message code = 'ezPersonal.t192' />");
-		        		}
-		        	}
-		        });
-		        
-		    }
 		    //슬라이드 아이디 16진수 랜덤으로 등록
 		    function S4() {
 		        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -519,7 +465,7 @@
 		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL";
 		    	sliderHTML += "<input id='txtDisplayName3' value='"+url+"'type='text' maxlength='50'></td></tr>";
 		    	sliderHTML += "</table>"
-		    	sliderHTML += "<tr><td class ='sliderInfoTD'>사용여부</td><td class= 'slideIsUse'><label class='switch'><input id='slideIsUseModify' type='checkbox' checked='checked' onchange='toggleButtonModify(this)'><span class='slider round'></label></td>";
+		    	sliderHTML += "<tr><td class ='sliderInfoTD'>사용여부</td><td class= 'slideIsUse'><label class='switch'><input id='slideIsUseModify' type='checkbox' checked='checked'><span class='slider round'></label></td>";
 		    	sliderHTML += "<a href='#' class='imgbtn'><span data='"+sliderID+"' onclick='btnSave_click_modify(this);'><spring:message code = 'ezPersonal.t34' /></span></a>";
 		    	sliderHTML += "</div>";
 		    	sliderHTML += "</li>";
@@ -528,6 +474,72 @@
 		    	
 		    	$(".cancelNewSliderBtnmodify").on("click", addCancelModify);
 		    }
+		    
+		    function btnSave_click_modify(obj){
+		    	var sliderID = obj.getAttribute("data");
+		    	
+		    	if (specialChk(document.getElementById("txtDisplayName").value)) {
+			    	alert("<spring:message code='ezResource.special' />");
+			    	return;
+			    }
+		    	if (document.getElementById("txtDisplayName").value == "") {
+		            alert("<spring:message code = 'ezPersonal.t1027' />");
+		            return;
+		        } else if (document.getElementById("txtDisplayName2").value == "") {
+		            alert("<spring:message code = 'ezPersonal.t1027' />");
+		            return;
+		        //} else if (document.getElementById("UploadSliderImage").src.indexOf("upload_portal") == -1) {
+		        } else if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
+		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
+		            return;
+		        }
+		    	var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("${uploadPortalPath}"));
+		    	var isUseCk = document.getElementById("slideIsUseModify").checked;
+		    	var isUse = "";
+		    	console.log(isUseCk);
+		    	if (isUseCk) {
+		    		isUse = 1;
+		    	} else {
+		    		isUse = 0;
+		    	}
+		    	console.log(isUse);
+
+		        var item;
+		        var mode;
+		        item = sliderID;
+	            mode = "MOD";
+	            fileName = SliderImgPath.substr(SliderImgPath.lastIndexOf("/") + 1);
+	            
+	            
+	            $.ajax({
+		        	type : "POST",
+		        	url : "/admin/ezPersonal/saveSlider.do",
+		        	async : false,
+		        	data : {sliderID : item,
+		        			mode : mode,
+		        			displayName : txtDisplayName.value,
+		        			displayName2 : txtDisplayName2.value,
+		        			url : txtDisplayName3.value,
+		        			fileName : fileName,
+		        			sliderImage : SliderImgPath,
+		        			isUse : isUse},
+		        	dataType : "text",
+		        	success : function (result) {
+		        		if (result == "OK") {
+		        			alert("<spring:message code = 'ezPersonal.t191' />");
+				            
+				            if (ReturnFunction != null) {
+				                ReturnFunction();
+				            } 
+				            window.location.reload();
+		        		} else {
+		        			alert("<spring:message code = 'ezPersonal.t192' />");
+		        		}
+		        	}
+		        });
+		        
+		    }
+		    
 		    var addCancelModify = function(){
 		    	window.location.reload();
 		    }
@@ -535,7 +547,6 @@
 		    function deleteSlider(obj) {
 		    	var slideList = obj.parentNode.parentNode;
 		    	var sliderID = obj.getAttribute("data2");
-		    	console.log(sliderID);
 		    	
 		        if (sliderID == "") {
 		            alert("<spring:message code = 'ezPersonal.t1022' />");
