@@ -1257,7 +1257,7 @@ SELECT
 	A.theme_id,
 	A.theme_name,
     A.theme_content,
-    NVL2(D.used_theme,  0, 1) as theme_used,
+    NVL2(D.used_theme,  1, 0) as theme_used,
     B.theme_default,
     C.frame_id as frame_default
 FROM
