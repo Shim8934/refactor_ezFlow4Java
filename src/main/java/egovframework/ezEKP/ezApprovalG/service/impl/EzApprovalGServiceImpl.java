@@ -10891,7 +10891,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent().trim();
 		String orgCompanyID = xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent().trim();
 		
-		if (!orgCompanyID.equals(companyID)) {
+		if (!orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			companyID = orgCompanyID;
 		}
 		
