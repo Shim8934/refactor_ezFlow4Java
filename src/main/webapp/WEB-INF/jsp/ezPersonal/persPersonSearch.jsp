@@ -708,10 +708,29 @@
 	    	}
 	    	
 	    	function ChangeListView_onClick(Div) {
+	    		var selectedIndex = "";
+	    		if(p_ListOrderObject != null){
+		        	if(pListType == 'IMG'){
+			        	$(".organwrap>tr").each(function(i){
+			        		if(this == p_ListOrderObject){
+			        			selectedIndex = i+1;
+			        		}
+			        	});
+		        	} else if(pListType == 'TXT'){
+		        		selectedIndex = $(p_ListOrderObject).index();
+		        	}
+	        	}
 		        pListType = Div;
 	        	ListTypeChangeIcon();
 	        	DisplayUserImageList();
 	        	setOrganListType(pListType);
+	        	if(p_ListOrderObject != null){
+		        	if(Div == 'TXT'){
+	        			$("#txtlist_table tr").eq(selectedIndex).click();
+		        	} else if(Div == 'IMG'){
+		        		$(".organwrap>tr").eq(selectedIndex-1).click();
+		        	}
+	        	}
 	    	}
 	    	function keyword_Clear() {
 		        document.getElementById('keyword').value = "";

@@ -472,35 +472,52 @@
 	</select>
 	<select id="EzScheduleDAO.getCumDeptId" parameterClass="map" resultClass="String">
 	<![CDATA[
-	SELECT A.DEPARTMENT
-	  FROM (
-	  	   SELECT D.CN, 
-	  	   		  D.DEPARTMENT, 
-	  	   		  D.PHYSICALDELIVERYOFFICENAME, 
-	  	   		  D.TENANT_ID
-			 FROM TBL_USERMASTER D
+	SELECT 
+		AA.DEPARTMENT
+	FROM  
+		( SELECT 
+			A.DEPARTMENT, ROW_NUMBER() OVER (PARTITION BY A.CN ORDER BY ROWNUM) CNT
+	  	  FROM 
+	  	   ( SELECT 
+	  	   		D.CN, D.DEPARTMENT, D.PHYSICALDELIVERYOFFICENAME, D.TENANT_ID
+			 FROM 
+			 	TBL_USERMASTER D
 			UNION ALL
-		   SELECT B.CN,
-				  A.DEPTID, 
-				  C.EXTENSIONATTRIBUTE2, 
-				  A.TENANT_ID
-			 FROM TBL_USERMASTER B 
-			INNER JOIN TBL_ADDJOBMASTER A 
-			   ON A.CN = B.CN 
-			  AND A.TENANT_ID = B.TENANT_ID       
-			RIGHT JOIN TBL_DEPTMASTER C
-			   ON A.DEPTID = C.CN
-			  AND B.TENANT_ID = C.TENANT_ID
+		   	 SELECT 
+		   	 	B.CN, A.DEPTID, C.EXTENSIONATTRIBUTE2, A.TENANT_ID
+			 FROM 
+			 	TBL_USERMASTER B 
+			INNER JOIN 
+				TBL_ADDJOBMASTER A 
+			ON 
+			   A.CN = B.CN 
+			AND 
+				A.TENANT_ID = B.TENANT_ID       
+			RIGHT JOIN 
+				TBL_DEPTMASTER C
+			ON 
+			   A.DEPTID = C.CN
+			AND 
+			  B.TENANT_ID = C.TENANT_ID
 		   ) A
-	 WHERE A.CN = #v_USERID# 
-	   AND A.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
-	   AND A.TENANT_ID = #v_TENANTID#
-	 GROUP BY A.CN
+		 WHERE 
+		 	A.CN = #v_USERID# 
+		 AND 
+		 	A.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+		 AND 
+		 	A.TENANT_ID = #v_TENANTID#
+		 ) AA
+    WHERE
+        AA.CNT = '1'
 	]]>
 	</select>
 	<select id="EzScheduleDAO.getMyGroupMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
 	<![CDATA[
-	SELECT A.MEMBERID,
+	SELECT 
+		CC.*
+	FROM ( 
+		SELECT 
+			A.MEMBERID,
 	 	   '' AS MEMBERNAME,
 	 	   '' AS MEMBERNAME2,
 	 	   '' AS STATUS,
@@ -508,9 +525,10 @@
            BB.MAIL,
            BB.DEPARTMENT,
            CASE #v_LANG#
-           WHEN '1' THEN CONCAT(A.MEMBERNAME, CONCAT(CONCAT( '(', BB.DESCRIPTION) ,')')
-      	   WHEN '2' THEN CONCAT(A.MEMBERNAME2, CONCAT(CONCAT( '(', BB.DESCRIPTION2) ,')')
-           END INFO  
+           WHEN '1' THEN CONCAT(A.MEMBERNAME, CONCAT(CONCAT( '(', BB.DESCRIPTION) ,')') )
+      	   WHEN '2' THEN CONCAT(A.MEMBERNAME2, CONCAT(CONCAT( '(', BB.DESCRIPTION2) ,')') )
+           END INFO ,
+           ROW_NUMBER() OVER (PARTITION BY BB.CN ORDER BY ROWNUM) CNT 
       FROM (
 			SELECT GROUPID,
                    MEMBERID,
@@ -544,11 +562,13 @@
 					   AND B.TENANT_ID = C.TENANT_ID    
 					 WHERE A.TENANT_ID = #v_TENANTID# 
 					   AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+					   AND B.physicaldeliveryofficename <> #v_COMPANYID# 
 				   ) BB 
            ON A.MEMBERID = BB.CN 
 		WHERE A.GROUPID = #v_GROUPID#
-		  AND A.TENANT_ID = #v_TENANTID# 
-		GROUP BY MEMBERID
+		  AND A.TENANT_ID = #v_TENANTID#  ) CC
+        WHERE
+        	CC.CNT = '1'
 	]]>
 	</select>
 	
@@ -568,17 +588,19 @@
              AND
              	tenant_id = #v_TENANTID# -->
 	<![CDATA[
-	select A.memberid,
+	SELECT CC.*
+	FROM ( select A.memberid,
            case #v_LANG#
 	       when '1' then A.memberName                 
 		   when '2' then A.memberName2
            end membername, 
            '' as membername2,
 		   A.status as status,
-		   date_add(a.responsedate, interval +#v_OFFSETMIN# minute) as responsedate,
+		   (A.RESPONSEDATE + #v_OFFSETMIN#/(24*60)) as responsedate,
            '' as mail,
            '' as department,
-       	   '' as info  
+       	   '' as info  ,
+       	   ROW_NUMBER() OVER (PARTITION BY BB.CN ORDER BY ROWNUM) CNT 
       from ( 
       		SELECT GROUPID,
        			   MEMBERID,
@@ -623,14 +645,15 @@
 					AND  
 					B.TENANT_ID = C.TENANT_ID    
 					WHERE  
-					A.TENANT_ID = #v_TENANTID# AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#) BB 
+					A.TENANT_ID = #v_TENANTID# AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#  AND B.physicaldeliveryofficename <> #v_COMPANYID# ) BB 
             	ON 
 				A.memberid = BB.cn 
 				WHERE 
 				A.groupid = #v_GROUPID#
 				AND 
-				A.tenant_id = #v_TENANTID# 
-				GROUP BY memberid
+				A.tenant_id = #v_TENANTID# ) CC
+				WHERE
+				CC.CNT = '1'
 	]]>
 	</select>
 	

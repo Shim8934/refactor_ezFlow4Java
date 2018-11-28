@@ -277,10 +277,12 @@ function GetDocSearch() {
     createNodeAndInsertText(xmlpara, objNode, "PageNum", curpage);
     createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
     createNodeAndInsertText(xmlpara, objNode, "DocState", "");
-    createNodeAndInsertText(xmlpara, objNode, "pSubQuery", SQLPARADATA);
+    createNodeAndInsertText(xmlpara, objNode, "searchStatus", "ALL");
     createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
     createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
-
+    createNodeAndInsertText(xmlpara, objNode, "pSubQuery", "");
+    createNodeAndInsertText(xmlpara, objNode, "SearchQuery", SQLPARADATA);
+    
     xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocListS.do", false);
     xmlhttp.onreadystatechange = getsearchDocList_after;
     xmlhttp.send(xmlpara);

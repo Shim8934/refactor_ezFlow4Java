@@ -348,17 +348,20 @@
 		                    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
 		                    feature = feature + GetShowModalPosition(330, 200);
 		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID, "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+		                    
+			                if (ret == "NO") {
+			                    alert("<spring:message code='ezBoard.t267' />");
+			                    return;
+			                }
+			                
 		                    if (typeof (ret) == "undefined") {
 		                        alert("<spring:message code='ezBoard.t265' />");
 		                        return;
 		                    }
-		
-		                    if (ret != "OK") {
-		                        alert("<spring:message code='ezBoard.t265' />");
-		                        return;
+		                    
+		                    if (!confirm("<spring:message code='ezBoard.t197' />")) {
+		                    	return;
 		                    }
-		
-		                    if (!confirm("<spring:message code='ezBoard.t197' />")) return;
 		                    var xmlhttp = createXMLHttpRequest();
 		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
 		                    xmlhttp.send();
@@ -417,12 +420,14 @@
 		            return;
 		        }
 		
-		        if (ret != "OK") {
-		            alert("<spring:message code='ezBoard.t265' />");
-		            return;
-		        }
+                if (ret == "NO") {
+                    alert("<spring:message code='ezBoard.t267' />");
+                    return;
+                }
 		
-		        if (!confirm("<spring:message code='ezBoard.t197' />")) return;
+		        if (!confirm("<spring:message code='ezBoard.t197' />")) {
+		        	return;
+		        }
 		        var xmlhttp = createXMLHttpRequest();
 		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
 		        xmlhttp.send();

@@ -729,6 +729,9 @@ function CalMonthDataBind(oAppointment) {
         } else if (oAppointment.DateType != 2 && (getThisDate < getOrgEndDate && getThisDate == getOrgStartDate)) {
         	pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
             pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
+        } else if (oAppointment.DateType != 2 && (getThisDate == getOrgEndDate && getThisDate == getOrgStartDate)) {
+        	pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+            pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
         } else {
             pTime = strLang39;
             pSubject = oAppointment.Subject;
