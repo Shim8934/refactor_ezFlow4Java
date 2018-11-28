@@ -94,4 +94,7 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		insert("EzSystemAdminDAO.insertAccessId", map);
 	}
 	
+	public long selectModuleSize(String tableNames) throws Exception {
+		return (long) select("EzSystemAdminDAO.selectModuleSize", tableNames);
+	}
 }

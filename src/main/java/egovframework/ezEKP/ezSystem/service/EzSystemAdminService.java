@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzSystemAdminService {
 	public List<SysParamVO> getSysParam(int tenantID) throws Exception;
@@ -35,4 +36,5 @@ public interface EzSystemAdminService {
 	public List<String> getAllAccessListCom (int tenantID) throws Exception;
 	public void deleteAccessId(String accessNo) throws Exception;
 	public void insertAccessId(int tenantID, String cn) throws Exception;
+	public String getTotalUsage(String module, String realPath, LoginVO userInfo) throws Exception;
 }

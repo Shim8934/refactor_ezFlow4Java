@@ -970,5 +970,39 @@ public class EzSystemAdminController {
 		logger.debug("checkUseSession ended");
 		return useSession;
 	}
+	
+	@RequestMapping(value = "/admin/ezSystem/systemModuleMonitor.do")
+	public String temp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("systemModuleMonitor started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		String cloudFlag = ezCommonService.getTenantConfig("useCloud", userInfo.getTenantId());
+		String realPath = commonUtil.getRealPath(request);
+		
+		if(userInfo != null) {
+			String mailTotalSize = ezSystemAdminService.getTotalUsage("mail", realPath, userInfo);
+			String scheduleTotalSize = ezSystemAdminService.getTotalUsage("schedule", realPath, userInfo);
+			String boardTotalSize = ezSystemAdminService.getTotalUsage("board", realPath, userInfo);
+			String communityTotalSize = ezSystemAdminService.getTotalUsage("community", realPath, userInfo);
+			String resourceTotalSize = ezSystemAdminService.getTotalUsage("resource", realPath, userInfo);
+			
+			model.addAttribute("mail", mailTotalSize);
+			model.addAttribute("schedule", scheduleTotalSize);
+			model.addAttribute("board", boardTotalSize);
+			model.addAttribute("community", communityTotalSize);
+			model.addAttribute("resource", resourceTotalSize);
+			
+			if(!cloudFlag.equalsIgnoreCase("YES")) {
+				String approvalTotalSize = ezSystemAdminService.getTotalUsage("approval", realPath, userInfo);
+				
+				model.addAttribute("approval", approvalTotalSize);
+			}
+		}
+		
+		logger.debug("systemModuleMonitor ended");
+		
+		return "/ezSystem/systemModuleMonitor";
+	}
 
 }

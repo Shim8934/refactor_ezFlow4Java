@@ -1,10 +1,20 @@
 package egovframework.ezEKP.ezSystem.service.impl;
 
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +23,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -31,6 +42,8 @@ import egovframework.ezEKP.ezSystem.vo.CheckName;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzSystemAdminService")
 public class EzSystemAdminServiceImpl implements EzSystemAdminService {
@@ -42,6 +55,9 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	@Override
 	public List<SysParamVO> getSysParam(int tenantID) throws Exception {	
@@ -507,5 +523,85 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		}
 		
 		logger.debug("insertAccessId ended.");
+	}
+
+	public enum dataForModules {
+		MAIL("^james|^jmocha", new String [] {"upload_mail.ROOT"}), 
+		SCHEDULE("^tbl_schedule|^tbl_task", new String [] {"upload_schedule.ROOT", "upload_task.ROOT"}),
+		APPROVAL("", new String [] {"upload_approvalG.ROOT"}),
+		BOARD("^tbl_board|^tbl_photo|^tbl_poll|^tbl_qs", new String [] {"upload_board.ROOT"}), 
+		COMMUNITY("^tbl_c_|^tbl_comm|^tbl_club", new String [] {"upload_community.ROOT"}), 
+		RESOURCE("^tbl_rs", null);
+		
+		final private String tableName;
+		final private String [] filerootName;
+		
+		private dataForModules(String tableName, String [] filerootName) {
+			this.tableName = tableName;
+			this.filerootName = filerootName;
+		}
+		
+		public String getTableName() {
+			return tableName;
+		}
+		
+		public String [] getFilerootName() {
+			return filerootName;
+		}
+	}
+	
+	@Override
+	public String getTotalUsage(String moduleName, String realPath, LoginVO userInfo) throws Exception {
+		
+		dataForModules module = dataForModules.valueOf(moduleName.toUpperCase());
+		
+		long fileSize = 0;
+		long tableSize = 0;
+		
+		if(module.getFilerootName() != null) {
+			int tableNameLen = module.getFilerootName().length;
+			AtomicLong fileSizeByte = new AtomicLong(0);
+			
+			for(int i = 0; i < tableNameLen; i++) {
+				// get file size
+				String uploadPath = commonUtil.getUploadPath(module.getFilerootName()[i], userInfo.getTenantId());
+				
+				Path filePath = Paths.get(realPath + uploadPath);
+				if(filePath.toFile().exists()) {
+					Files.walkFileTree(filePath, new SimpleFileVisitor<Path>() {
+						
+						@Override
+						public FileVisitResult visitFile(Path file,
+								BasicFileAttributes attrs) throws IOException {
+							
+							fileSizeByte.addAndGet(attrs.size());
+							logger.debug("### file name/ " + file.toString());
+							
+							return FileVisitResult.CONTINUE;
+						}
+						
+					});
+				}
+			}
+			
+			fileSize = fileSizeByte.longValue();
+		}
+		
+		// get table size
+		tableSize = ezSystemAdminDAO.selectModuleSize(module.getTableName());
+		
+		logger.debug("### modula name/ " + moduleName);
+		logger.debug("### file size/ " + fileSize);
+		logger.debug("### table size/ " + tableSize);
+		
+		logger.debug("### total size (number)/ " + (fileSize + tableSize));
+		
+		String totalSizeStr = String.valueOf(fileSize + tableSize);
+		totalSizeStr = commonUtil.byteCalculation(totalSizeStr);
+		
+		// file size + table size return
+		logger.debug("### total size (string)/ " + totalSizeStr);
+		
+		return totalSizeStr;
 	}
 }

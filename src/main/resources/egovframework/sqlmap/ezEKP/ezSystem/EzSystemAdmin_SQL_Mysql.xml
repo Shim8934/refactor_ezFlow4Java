@@ -269,5 +269,16 @@
 			VALUES (#tenantID#, #cn#)
 		]]>
 	</insert>
+	
+	<select id="EzSystemAdminDAO.selectModuleSize" parameterClass="java.lang.String" resultClass="java.lang.Long">
+		SELECT 
+			SUM(DATA_LENGTH + INDEX_LENGTH) AS MODULESIZE
+		FROM
+			INFORMATION_SCHEMA.TABLES
+		WHERE
+			TABLE_SCHEMA = 'JMOCHA'
+		AND
+			TABLE_NAME REGEXP #tableNames#
+	</select>
 		
 </sqlMap>
