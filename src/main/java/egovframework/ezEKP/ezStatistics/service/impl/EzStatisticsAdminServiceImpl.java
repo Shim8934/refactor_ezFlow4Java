@@ -321,7 +321,7 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 
 	@Override
 	public Map<String, Object> getMailLogList(String tenantId, String pageNo, String pageSize, String mailLogType, String searchStartTime,
-			String searchEndTime, String searchField, String searchValue, String isPrimaryLang) throws Exception {
+			String searchEndTime, String searchField, String searchValue, String isPrimaryLang, String companyId) throws Exception {
 		logger.debug("getMailLogList started.");
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -338,10 +338,11 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 		String searchFieldParam = "searchField=" + searchField;
 		String searchValueParam = "searchValue=" + URLEncoder.encode(searchValue, "UTF-8");
 		String isPrimaryLangParam = "isPrimaryLang=" + isPrimaryLang;
+		String companyIdParam = "companyId=" + companyId;
 		
 		String inputParams = tenantIdParam + "&" + pageNoParam + "&" + pageSizeParam + "&" + mailLogTypeParam + "&" +
 							 searchStartTimeParam + "&" + searchEndTimeParam + "&" + searchFieldParam + "&" +
-							 searchValueParam + "&" + isPrimaryLangParam ;
+							 searchValueParam + "&" + isPrimaryLangParam + "&" + companyIdParam;
 		logger.debug("inputParmas=" + inputParams);
 		
 		String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/getMailLogList";
