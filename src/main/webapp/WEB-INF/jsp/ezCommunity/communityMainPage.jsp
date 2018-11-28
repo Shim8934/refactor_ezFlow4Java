@@ -385,9 +385,8 @@
                     dl.appendChild(dt);
                     dl.appendChild(dd);
                     dl.appendChild(dd2);
-
+                    
                     document.getElementById("bestcomm").appendChild(dl);
-<<<<<<< HEAD
                 } */
                 
                 if( bestcoummunity.length <= 0 ){
