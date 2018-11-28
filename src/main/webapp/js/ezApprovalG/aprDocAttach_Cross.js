@@ -126,7 +126,7 @@ function DocMove() {
                 SDocID = GetAttribute(selRow, "DATA1");
                 objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
                 objNode = createNodeAndAppandNode(xmlpara, objRoot, objNode, "CELL");
-                createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "VALUE", "【" + getNodeText(selRow.cells[5]) + "】" + getNodeText(selRow.cells[1]));
+                createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "VALUE", "【" + GetAttribute(selRow, "DATA99") + "】" + getNodeText(selRow.cells[1]));
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA1", GetAttribute(selRow, "DATA2"));
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA2", "");
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA3", pDocID);
@@ -136,7 +136,7 @@ function DocMove() {
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA7", arr_userinfo[15]);
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA8", arr_userinfo[11]);
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA9", "N");
-                createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA10", "【" + getNodeText(selRow.cells[5]) + "】" + getNodeText(selRow.cells[1]));
+                createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA10", "【" + GetAttribute(selRow, "DATA99") + "】" + getNodeText(selRow.cells[1]));
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA11", arr_userinfo[12]);
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA12", arr_userinfo[14]);
                 createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA13", arr_userinfo[16]);

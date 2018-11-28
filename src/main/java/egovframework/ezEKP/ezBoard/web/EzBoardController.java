@@ -2782,6 +2782,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String orderOption1 = "";
 		String orderOption2 = "";
 		String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
+		String anonyMsg = "";
 		
 		BoardListVO boardListVO = new BoardListVO();
 		
@@ -2862,8 +2863,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		resultXML.append("</HEADERS>");
 		resultXML.append("<ROWS>");
 		
+		/* 2018-11-28 홍승비 - 새게시물 리스트의 익명게시물 부서칼럼 '익명'으로 표출 */
+		anonyMsg = egovMessageSource.getMessage("ezBoard.t249", userInfo.getLocale()).split(";")[0];
+		
 		for (int j = 0; j < dlength; j++) {
 			resultXML.append("<ROW>");
+			
+			if (String.valueOf(boardList.get(j).get("GUBUN")).equals("2")) {
+				boardList.get(j).replace("WRITERDEPTNAME", anonyMsg);
+			}
+			
 			for (i = 0; i < hlength; i++) {
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
