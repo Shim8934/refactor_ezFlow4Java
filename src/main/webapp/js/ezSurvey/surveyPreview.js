@@ -1,7 +1,7 @@
 //Baonk 2018-06-22
 var SurveyPreview = function() {
 	window.addEventListener("load", function(e) {clearLeftFogPanel();}, false);
-	window.addEventListener("beforeunload", function(e) {clearLeftFogPanel();}, false);
+	//window.addEventListener("beforeunload", function(e) {clearLeftFogPanel();}, false);
 	
 	function clearLeftFogPanel() {
 		var leftFrameBody = window.parent.frames["left"].document.body;

@@ -27,6 +27,9 @@
 .loadingProgress >img {padding-top: 20px;}
 .loadingProgress >div {padding-top: 10px; vertical-align: middle; font-weight: bold; font-size: 1.2em;}
 
+.ui-resizable-e, .ui-resizable-s {border: 1px solid #ddd; background-repeat: no-repeat;}
+.ui-resizable-e {background-image: url('/images/prevview_hbar_dotted.gif'); width: 5px !important; background-position: center;}
+.ui-resizable-s {background-image: url('/images/prevview_bar_dotted.gif'); height: 5px !important; background-position: center -2px;}
 .surveyTbl {width: 100%; text-algin: center;}
 .surveyTbl th {cursor: pointer !important;}
 .surveyTbl .inputTh {width: 20px;}
@@ -51,7 +54,7 @@
 .closeImgBttn >ul >li {display: block; float: left; margin: 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
 .closeImgBttn >ul >li >span {display: inline-block; width: 25px; height: 28px; background-image: url(/images/close_xBtn.png); background-repeat: no-repeat; background-position: 4px 6px;}
 
-.searchtable {border-collapse: collapse; width:100%; margin-bottom: 10px;}
+.searchtable {border-collapse: collapse; width:100%; margin-bottom: 15px;}
 .searchtable .layerHeader >img {vertical-align: middle; padding-bottom: 1px; width: 16px;}
 
 .searchTblTd {border:1px solid #b6b6b6; background-color:#fff;}
@@ -61,9 +64,10 @@
 .searchTblTd >div {display: flex; align-items: center;}
 .searchTblTd .searchName {flex: 1; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; padding-left: 5px;}
 
+.searchDiv .srchTtl{font-size: 11pt; font-weight: bold;color: black; height: 44px; margin-left: 1px; margin-bottom: 8px; line-height: 36px;}
 .popupMenu {background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top; margin: 0px; padding: 5px 10px 10px;}
 .popupMenu.searchDiv {border-radius: 5px;}
-.popupMenu .srchBttnDiv {margin: 0px 0px 0px -10px; margin-top: 10px; height: 28px !important; background: none; border: none; border-top: 1px solid #eee; padding: 7px 0px; background-color: #fcfcfc; position: fixed; text-align: center; bottom: 0px; width: 100%;}
+.popupMenu .srchBttnDiv2 {margin: 0px 0px 0px -10px; margin-top: 10px; height: 28px !important; background: none; border: none; border-top: 1px solid #eee; padding: 7px 0px; background-color: #fcfcfc; position: fixed; text-align: center; bottom: 0px; width: 100%;}
 .srchBttnDiv {text-align: center; margin: -9px; margin-top: 10px; padding: 7px; border-top: 1px solid #eee; background-color: #fcfcfc;}
 .srchBttn {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding-left: 12px; vertical-align: top; cursor: pointer; margin-bottom: 2px; border: 1px solid #ccc; border-radius: 2px; background-color: white; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
 .srchBttn span {background-repeat: no-repeat; height: 20px; padding-right: 12px; font: 12px gulim; letter-spacing: -1; vertical-align: top; height: 24px; line-height: 24px; font-weight: solid; font-size: 12px; color: #000;}
@@ -76,12 +80,13 @@
 .viewPopupMain .popupwrap1 {background-color:#fff; border: 1px solid #666a64; padding: 0px; margin: 0px; position: relative;}
 .viewPopupMain .popupwrap2 {border: 2px solid #e5e5e5; padding: 10px;}
 
+.rfogPanel {width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; z-index: 1000; background: none rgba(0,0,0,0.5);}
 .divPrevH {width: 100%; overflow: hidden; flex: 1; display: flex;}
 .mainPrevH {width: 100%; position: relative; padding-top: 5px;}
 .mainPrevH >div {height: 100%; display: flex; flex-flow: column;}
-.prevHeaderCabW >div, .prevHeaderCabH >div {background-color: #f8f8fa; border-bottom: solid 1px #e8e8e8; position: relative;}
-.prevHeaderCabW >span, .prevHeaderCabH >span {margin-top: 50px;height: 10px; display: inline-block; text-align: center; width: 100%;}
-.prevHeaderCabW {border-top: 1px solid #ddd;}
+.prevHeaderW >div, .prevHeaderH >div {background-color: #f8f8fa; border-bottom: solid 1px #e8e8e8; position: relative;}
+.prevHeaderW >span, .prevHeaderH >span {margin-top: 50px;height: 10px; display: inline-block; text-align: center; width: 100%;}
+.prevHeaderW {border-top: 1px solid #ddd;}
 .divPrevW {height: 100%; overflow: hidden; vertical-align: top; flex: 1; display: flex; margin-left: 5px;}
 .mainPrevW {height: 100%; width: 100%; position: relative;}
 .mainPrevW >div {width: 100%; height: 100%; display: flex; flex-flow: column;}
