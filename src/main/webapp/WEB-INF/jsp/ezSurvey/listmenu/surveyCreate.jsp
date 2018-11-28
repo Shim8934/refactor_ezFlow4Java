@@ -288,80 +288,14 @@
 					html += "<button class='cancel'>취소</button>";
 					html += "</div>";
 					
-				// 셀렉트 박스에 들어갈 질문 유형 데이터 
-				var optionData = 
-					[{ text : SurveyMessages.strQselect , value: 0, selected: true , description: SurveyMessages.strQselect                                         },
-					 { text : SurveyMessages.strSlOne   , value: 1, selected: false, description: SurveyMessages.strSlOne   , imageSrc: "/images/ezSurvey/radio.png"},
-					 { text : SurveyMessages.strSlMtp   , value: 2, selected: false, description: SurveyMessages.strSlMtp   , imageSrc: "/images/ezSurvey/radio.png"},
-					 { text : SurveyMessages.strTblOne  , value: 3, selected: false, description: SurveyMessages.strTblOne  , imageSrc: "/images/ezSurvey/radio.png"},
-					 { text : SurveyMessages.strTblMtp  , value: 4, selected: false, description: SurveyMessages.strTblMtp  , imageSrc: "/images/ezSurvey/radio.png"},
-					 { text : SurveyMessages.strShortQs , value: 5, selected: false, description: SurveyMessages.strShortQs , imageSrc: "/images/ezSurvey/radio.png"},
-					 { text : SurveyMessages.strLongQs  , value: 6, selected: false, description: SurveyMessages.strLongQs  , imageSrc: "/images/ezSurvey/radio.png"},
-					 { text : SurveyMessages.strSlider  , value: 7, selected: false, description: SurveyMessages.strSlider  , imageSrc: "/images/ezSurvey/radio.png"},
-					 { text : SurveyMessages.strRanking , value: 8, selected: false, description: SurveyMessages.strRanking , imageSrc: "/images/ezSurvey/radio.png"},
-					 { text : SurveyMessages.strDropdown, value: 9, selected: false, description: SurveyMessages.strDropdown, imageSrc: "/images/ezSurvey/radio.png"}];
-				
-				// make question form
-				createQuestiobDiv();
-				
-				// 질문 및 질문 유형 선택하는 부분 생성
-				function createQuestiobDiv() {
-					var html  = "";
-						html += "<div class='quesDiv'>";
-						html += "<input class='questnTitle'>";
-						html += "<img alt='파일첨부' src='/images/ezSurvey/attach.png' class='atchImg'>";
-						html += "<input type='file' class='attachFile' multiple='multiple' >";
-						html += "<div id='selectBox'></div>";
 					
-					$(".quesBacgr").html(html);
-					createQuestionSelectBox();
-				}
+				grandParent.append(html);
 				
-				// 질문 유형을 선택하는 셀렉트 박스 생성
-				function createQuestionSelectBox() {
-					$("#selectBox").ddslick({
-						data :optionData,
-						imagePosition: "left",
-						selectText: "질문 유형 선택",
-						onSelected: function(data) {
-							var selectedEl = data.selectedItem;
-							var grandParent = selectedEl.parent().parent().parent().parent();
-							var questionType = data.selectedIndex;
-							
-							switch (questionType) {
-								case 1:
-									makeSelectQuestion(grandParent, questionType);
-									break;
-								case 2:
-									
-									break;
-								case 3:
-									
-									break;
-								case 4:
-									
-									break;
-								case 5:
-									
-									break;
-								case 6:
-									
-									break;
-								case 7:
-									
-									break;
-								case 8:
-									
-									break;
-								case 9:
-									
-									break;
-								
-							}
-						}
-					});
-				}
+				addEvent();
+			}
+			
 				
+			function addEvent() {
 				// 보기 추가
 				$(".addRow").click(function() {
 					
@@ -534,10 +468,10 @@
 						}
 					});
 					
-					var optionList = document.getElementsByClassName("optionAttach");
+					/* var optionList = document.getElementsByClassName("optionAttach");
 					for (var i = 0, len = optionList.length; i < len; i++) {
 						optionList[i].onchange = function(e) {fileUpload();};
-					}
+					} */
 				});
 				
 			}
