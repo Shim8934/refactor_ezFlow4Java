@@ -9,7 +9,7 @@ var messages = {
 	strLang8 : "입니다.",
 	strLang9 : "휴일은 출/퇴근을 등록할 수 없습니다.",
 	strLang10 : "조퇴 후 퇴근은 불가능합니다.",
-	strLang11 : "비공개 CoP입니다.",
+	strLang11 : "비공개 커뮤니티입니다.",
 	strLang12 : "회원가입을 하시기 바랍니다.	",
 	strLang13 : "투표를 수정하고 있습니다.기다려주세요.",
 	strLang14 : "해당 게시판에 대한 권한이 없습니다.",
