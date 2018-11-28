@@ -1962,10 +1962,16 @@ WHERE
 </isNotEqual>	
 </select>
 
-<select id="ezNewPortal.getCityList" parameterClass="String" resultMap="WeatherVO">
+<select id="ezNewPortal.getCityList" parameterClass="int" resultMap="WeatherVO">
 <![CDATA[
 SELECT
-	* 
+	SN,
+	CITYCODE,
+	CITYNAME,
+	DISPLAYCITYNAME,
+	PRIMARYLANG,
+	CURRENTWEATHER,
+	TODAYWEATHER
 FROM
 	TBL_WEATHER
 WHERE
