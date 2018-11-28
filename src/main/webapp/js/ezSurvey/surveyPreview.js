@@ -1,12 +1,11 @@
 //Baonk 2018-06-22
-var CabinetPreview = function() {
+var SurveyPreview = function() {
 	window.addEventListener("load", function(e) {clearLeftFogPanel();}, false);
 	window.addEventListener("beforeunload", function(e) {clearLeftFogPanel();}, false);
 	
 	function clearLeftFogPanel() {
 		var leftFrameBody = window.parent.frames["left"].document.body;
 		var leftFogPanel  = leftFrameBody.querySelector("div[class='blockLeft'");
-		
 		if (leftFogPanel) {leftFrameBody.style.overflow = "auto"; leftFrameBody.removeChild(leftFogPanel);}
 	}
 	
