@@ -1780,10 +1780,10 @@
        		WHERE
        			NOT EXISTS (  SELECT UID_ 
                           			FROM TBL_USERSTARTPAGE_ITEM 
-                           			WHERE  PARENTUID = '$v_pPARENTUID$'
-                                    AND ACCESSID = '$v_pUSERID$'
-                                    AND COMPANYID = '$v_pCOMPANYID$'
-                                    AND TENANT_ID = $tenantID$ )
+                           			WHERE  PARENTUID = #v_pPARENTUID#
+                                    AND ACCESSID = #v_pUSERID#
+                                    AND COMPANYID = #v_pCOMPANYID#
+                                    AND TENANT_ID = #tenantID# )
 		]]>
 	</select>
 	

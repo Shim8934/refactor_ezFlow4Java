@@ -47,7 +47,16 @@
 				} else {
 					$(this).addClass("trClick").find("input[type=checkbox]").prop("checked", true);
 				}
-			})
+			});
+			
+			//체크박스로 클릭하면 체크가 되지 않는 문제로 추가.
+			$(document).on('click', '#shareApprovalList input[type=checkbox]:not(#checkboxAll)', function(){
+				if ($(this).prop("checked")) {
+					$(this).prop("checked", false);
+				} else {
+					$(this).prop("checked", true);
+				}
+			});
 			
 			window.onload = function() {
 				shareSetList();
