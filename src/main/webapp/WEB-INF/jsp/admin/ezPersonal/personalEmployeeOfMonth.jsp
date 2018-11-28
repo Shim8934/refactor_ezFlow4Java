@@ -16,7 +16,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/slick.js')}"></script>
 		<style type="text/css">
-		* {box-sizing: border-box;}
 		.calSlider {width: 85% !important; margin-left: 25px; border-top: 2px solid; border-bottom: 1px solid #c8ccd0;}
 		.slick-slide {margin: 0px 3px;}
 		.slick-slide img {width: 100% !important;}
@@ -26,19 +25,21 @@
 		.yearSpan {text-align: center; font-size: 20px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; letter-spacing: -1px; line-height: 31px;}
 		.employee {vertical-align: top; display: inline-block; width: 180px; border: 1px solid #d9d9d9; margin: 20px 60px 0px 0px; height: 240px;}
 		.empBttn {text-align: right; padding: 10px 10px 0px 0px; height: 27px;}
-		.empBttn > img:first-child {margin-right: 7px;}
+		.empBttn > img:first-child {margin-right: 7px; height: 16px; width: 16px;}
 		.empAdd dl dt {margin: 0px;}
 		.empAdd dl dt img {margin: 10px 0px 20px 60px; cursor: pointer;}
 		.empAdd dl dd {color: #999; font-size: 15px; line-height: 21px; text-align: center; margin: 0px;}
-		.empImg dl dd {font-size: 15px; line-height: 19px; text-align: center; margin: 0px;}
+		.empImg dl dd {font-size: 15px; line-height: 19px; text-align: center; margin: 0px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
 		.empImg dl dt img {margin-left: 40px; height: 95px; width: 95px; cursor:pointer;}
 		.empInfo {border-bottom: 3px solid; margin: 0px 25px 0px 25px;}
 		.empInfo p {margin: 0px; text-align: center; font-size: 20px; font-weight: bold;}
 		.empCompany {font-weight: bold; font-size: 20px;}
 		.calendarleft {margin: 0px;}
 		.calendarright {margin: 0px;}
+		.tree_delete {margin: 0px; cursor: pointer;}
 		</style>
 		<script type="text/javascript">
+			var popup;
 			var selectedYear;
 			var selectedTerm;
 			
@@ -174,7 +175,7 @@
 							var liElmt  = document.getElementById(month);
 							
 							var updBttnElmt   = document.createElement("img");
-							var delBttnElmt   = document.createElement("img");
+							var delBttnElmt   = document.createElement("span");
 							var empImgDivElmt = document.createElement("div");
 							var dlElmt        = document.createElement("dl");
 							var dtElmt        = document.createElement("dt");
@@ -182,6 +183,8 @@
 							var ddElmt1       = document.createElement("dd");
 							var ddElmt2       = document.createElement("dd");
 							var ddElmt3       = document.createElement("dd");
+							
+							delBttnElmt.className = "sub_iconLNB tree_delete";
 							
 							updBttnElmt.setAttribute("src", "/images/admin/slideUpdate.png");
 							delBttnElmt.setAttribute("src", "/images/admin/slideDelete.png");
@@ -224,6 +227,8 @@
 			}
 			var selectperson_cross_dialogArguments = new Array();
 			function btn_add(obj) {
+				if (popup) {popup.close();} 
+				
 				selectperson_cross_dialogArguments[1] = btn_add_Complete;
 				
 				var month = obj.getAttribute("id");
@@ -232,6 +237,7 @@
 				
 				selectperson_cross_dialogArguments[1] = btn_add_Complete;
 				var SelectPerson_cross = window.open("/ezPersonal/selectPerson.do?type=EMP", "SelectPerson", GetOpenWindowfeature(760, 535));
+				popup = SelectPerson_cross;
 				try { SelectPerson_cross.focus(); } catch (e) { }
 				
 			}
@@ -259,10 +265,14 @@
 				});
 			}
 			function btn_modify(term) {
+				if (popup) {popup.close();} 
+				
 				selectperson_cross_dialogArguments[1] = btn_modify_Complete;
 				selectedTerm = term;
 				
 				var SelectPerson_cross = window.open("/ezPersonal/selectPerson.do?type=EMP", "SelectPerson", GetOpenWindowfeature(760, 535));
+				popup = SelectPerson_cross;
+				
 				try { SelectPerson_cross.focus(); } catch (e) { }
 			}
 			function btn_modify_Complete(rtv) {

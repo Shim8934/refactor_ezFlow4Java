@@ -655,7 +655,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 
 	// 18-05-10 김민성 - 슬라이드 이미지 등록 URL 컬럼 추가
 	@Override
-	public void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo, String url) throws Exception {
+	public void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo, String url, String isUse) throws Exception {
 		logger.debug("setSliderImage started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -667,6 +667,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_IMAGEPATH", sliderPath);
 		map.put("v_REGUSERID", userInfo.getId());
 		map.put("v_URL", url);
+		map.put("v_ISUSE", isUse);
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
