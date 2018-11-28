@@ -21,6 +21,8 @@
 			var pageNum = 1;
 			var PageSize = 15;
 			var progressPollFlag = "false";
+			var progressSDate = "";
+			var progressEDate = "";
 			
 			var strLang1 = "<spring:message code = 'ezPersonal.t10002' />";
 			var strLang2 = "<spring:message code = 'ezPersonal.t10000' />";
@@ -31,15 +33,17 @@
 			window.onload = function () {
 				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "선택된 설문이 없습니다.";
 			}
-			
+
+
 			document.onselectstart = function () {
-		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
-		            return false;
-		        } else {
-		            return true;
-		        }
+				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
+					return false;
+				} else {
+					return true;
+				}
 			};
-			
+
+
 			$(document).ready(function() {
 				if (document.getElementById("ListCompany").length == 0) {
 					alert("<spring:message code = 'ezPersonal.t106' />");
@@ -50,21 +54,34 @@
 				}
 				getLightPollConfig();
 				makelist();
-				//2018-08-06 김보미 - 페이지 위치 고정
+				setFucntion();
 				windowResize();
 			});
-			
-	        function makelist() {
-	            $.ajax({
-	            	type : "POST",
-	            	url : "/admin/ezPersonal/managePollList.do",
-	            	dataType : "text",
-	            	data : {companyID : encodeURIComponent(document.getElementById("ListCompany").value), page : pageNum},
-	            	success : function (result) {
-	            		event_PollList(loadXMLString(result));
-	            	}
-	            });
-	        }
+
+
+			// 수정, 삭제 함수 등록
+			function setFucntion() {
+				var doc = window.document;
+				var add = doc.getElementById("add");
+				var mod = doc.getElementById("mod");
+				var del = doc.getElementById("del");
+				add.addEventListener("click", add_poll);
+				mod.addEventListener("click", mod_poll);
+				del.addEventListener("click", del_poll);
+			}
+
+
+			function makelist() {
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezPersonal/managePollList.do",
+					dataType : "text",
+					data : {companyID : encodeURIComponent(document.getElementById("ListCompany").value), page : pageNum},
+					success : function (result) {
+						event_PollList(loadXMLString(result));
+					}
+				});
+			}
 
 
 			function event_PollList(result) {
@@ -118,6 +135,8 @@
 
 					if (CrossYN()) {
 						progressPollFlag = SelectSingleNodeValueNew(xmldom, "PROFLAG");
+						progressSDate = SelectSingleNodeValueNew(xmldom, "PROFLAGSDATE");
+						progressEDate = SelectSingleNodeValueNew(xmldom, "PROFLAGEDATE");
 					} else {
 						progressPollFlag = SelectSingleNodeValueNew(xmldom.documentElement, "PROFLAG");
 					}
@@ -244,59 +263,104 @@
 				doc.getElementById("ifrmPreViewH").style.display = "";
 				showPreview(isPreview, itemseq);
 			}
-		    
-		    function PollList_onDblclick(obj) {
-		        var itemseq = document.getElementById(obj).getAttribute("DATA1");
-		        if (itemseq == "0") {
-		            return;
-		        }
-		        
-		        var heigth = window.screen.availHeight;
-		        var width = window.screen.availWidth;
-		        var left = (width - 455) / 2;
-		        var top = (heigth - 400) / 2;
-		
-		        checkItems();
-		        window.open("/ezPersonal/pollResult.do?itemSeq=" + itemseq, "", "height=400px,width=455px, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
-		    }
-		    
-		    
-		    function company_change() {
-		        makelist();
-		    }
-		    
-		    var addpoll_cross_dialogArguments = new Array();
-		    function add_poll() {
-		        if (totalCount != "0" && progressPollFlag == "true") {
-		            if (!confirm("<spring:message code = 'ezPersonal.t234' />")) {
-		                return;
-		            }
-		        }
-		        
-		        if (CrossYN()) {
-		            addpoll_cross_dialogArguments[0] = document.getElementById("ListCompany").value;
-		            addpoll_cross_dialogArguments[1] = add_poll_Complete;
-		            var AddPoll_Cross = window.open("/admin/ezPersonal/addPoll.do", "AddPoll_Cross", GetOpenWindowfeature(450, 550));
-		            try { AddPoll_Cross.focus(); } catch (e) {
-		            }
-		        } else {
-		            rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do", document.getElementById("ListCompany").value, "dialogHeight:550px;dialogwidth:450px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 550));
-		
-		            if (typeof (rtnValue) != "undefined") {
-		                company_change();
-		            }
-		        }
-		    }
-	
-	        function add_poll_Complete(rtv) {
-	            if (typeof (rtv) != "undefined") {
-	                company_change();
-	            }
-	        }
-			
-			
+
+
+			function PollList_onDblclick(obj) {
+				var itemseq = document.getElementById(obj).getAttribute("DATA1");
+				if (itemseq == "0") {
+					return;
+				}
+
+				var heigth = window.screen.availHeight;
+				var width = window.screen.availWidth;
+				var left = (width - 455) / 2;
+				var top = (heigth - 400) / 2;
+
+				checkItems();
+				window.open("/ezPersonal/pollResult.do?itemSeq=" + itemseq, "", "height=400px,width=455px, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
+			}
+
+
+			function company_change() {
+				makelist();
+			}
+
+
+			var addpoll_cross_dialogArguments = new Array();
+			var add_poll = function() {
+				if (totalCount != "0" && progressPollFlag == "true") {
+					if (!confirm("<spring:message code = 'ezPersonal.t234' />")) {
+						return;
+					}
+				}
+
+				if (CrossYN()) {
+					addpoll_cross_dialogArguments[0] = document.getElementById("ListCompany").value;
+					addpoll_cross_dialogArguments[1] = add_poll_Complete;
+					var AddPoll_Cross = window.open("/admin/ezPersonal/addPoll.do?flag=add", "AddPoll_Cross", GetOpenWindowfeature(450, 550));
+					try {
+						AddPoll_Cross.focus();
+					} 
+						catch (e) {
+					}
+				} else {
+					rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do?flag=add", document.getElementById("ListCompany").value, "dialogHeight:550px;dialogwidth:450px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 550));
+
+					if (typeof (rtnValue) != "undefined") {
+						company_change();
+					}
+				}
+			}
+
+
+			function add_poll_Complete(rtv) {
+				if (typeof (rtv) != "undefined") {
+					company_change();
+				}
+			}
+
+
+			var mod_poll = function() {
+				var modCnt = 0;
+				$("input:checkbox[name='checks']").each(function(){
+					if($(this).is(":checked")) {
+						pollList += this.value;
+						modCnt = modCnt + 1;
+					}
+				});
+
+				if(!pollList) {
+					alert("선택된 설문이 없습니다.");
+					return;
+				}
+
+				if(modCnt>1) {
+					alert("하나의 설문만 선택해주세요.")
+					return;
+				}
+
+				if (CrossYN()) {
+					addpoll_cross_dialogArguments[0] = document.getElementById("ListCompany").value;
+					addpoll_cross_dialogArguments[1] = add_poll_Complete;
+					var AddPoll_Cross = window.open("/admin/ezPersonal/addPoll.do?flag=mod&itemSeq=" + pollList, "AddPoll_Cross", GetOpenWindowfeature(450, 550));
+					try {
+						AddPoll_Cross.focus();
+					} 
+						catch (e) {
+					}
+				} else {
+					rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do?flag=mod&itemSeq=" + pollList, document.getElementById("ListCompany").value, "dialogHeight:550px;dialogwidth:450px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 550));
+
+					if (typeof (rtnValue) != "undefined") {
+						company_change();
+					}
+				}
+				pollList = "";
+			}
+
+
 			var pollList = "";
-			function delete_poll() {
+			var del_poll = function() {
 				var delCnt = 0;
 				var inUseFlag = false;
 				$("input:checkbox[name='checks']").each(function(){
@@ -350,149 +414,167 @@
 				});
 				pollList = "";
 			}
-			
-		    function td_Create1(strtext) {
-		        document.getElementById("tblPageRayer").innerHTML = strtext;
-		    }
-		    
-		    function makePageSelPage() {
-		        var strtext;
-		        var PagingHTML = "";
-		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + TotalCount + "</span>";
-		        strtext = "<div class='pagenavi'>";
-		        PagingHTML += strtext;
-		        
-		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
-		            PagingHTML += strtext;
-		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
-		            PagingHTML += strtext;
-		        }
-		        
-		        if (totalPage > BlockSize) {
-		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
-		                PagingHTML += strtext;
-		            } else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
-		                PagingHTML += strtext;
-		            }
-		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
-		            PagingHTML += strtext;
-		        }
-		        
-		        var MaxNum;
-		        var i;
-		        var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
-		        if (totalPage >= (startNum + parseInt(BlockSize))) {
-		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
-		        } else {
-		            MaxNum = totalPage;
-		        }
-		        
-		        for (i = startNum; i <= MaxNum; i++) {
-		            if (i == pageNum) {
-		                strtext = "<span class='on'>" + i + "</span>";
-		                PagingHTML += strtext;
-		            } else {
-		                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
-		                PagingHTML += strtext;
-		            }
-		        }
-		        
-		        //2018-08-02 김보미 - 데이터가 하나도 없을때 디폴트 페이징
-	            if (i == 1) {
-	            	strtext = "<span class='on'>" + i + "</span>";
-                    PagingHTML += strtext;
-	            }
-		        
-		        if (totalPage > BlockSize) {
-		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
-		                PagingHTML += strtext;
-		            } else {
-		                strtext = "";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
-		                PagingHTML += strtext;
-		            }
-		        } else {
-		            strtext = "";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
-		            PagingHTML += strtext;
-		        }
-		        
-		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
-		            PagingHTML += strtext;
-		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
-		            PagingHTML += strtext;
-		        }
-		        
-		        PagingHTML += "</div>";
-		        td_Create1(PagingHTML);
-		    }
-		    
-		    function goToPageByNum(Value) {
-		        pageNum = Value;
-		        makePageSelPage();
-		        makelist();
-		    }
-		    
-		    function selbeforeBlock() {
-		        pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
-		        goToPageByNum(pageNum);
-		    }
-		    
-		    function selbeforeBlock_one() {
-		        if (parseInt(pageNum - 1) > 0) {
-		            goToPageByNum(parseInt(pageNum - 1));
-		        } else {
-		            return;
-		        }
-		    }
-		    
-		    function selafterBlock() {
-		        pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
-		        goToPageByNum(pageNum);
-		    }
-		    
-		    function selafterBlock_one() {
-		        if (parseInt(pageNum + 1) <= totalPage) {
-		            goToPageByNum(parseInt(pageNum + 1));
-		        } else {
-		            return;
-		        }
-		    }
-		    
-		    function selNum(pselNum) {
-		        pageNum = pselNum;
-		        makelist();
-		    }
-		    
-		    function selNext() {
-		        pageNum = pageNum + 1;
-		        makelist();
-		    }
-		    
-		    function selPrev() {
-		        pageNum = pageNum - 1;
-		        makelist();
-		    }
-		    
-		    function td_Create(strtext) {
-		        tblPageNum.innerHTML = tblPageNum.innerHTML + strtext;
-		    }
-		    
-            //2018-08-06 김보미 - 페이지 위치 고정
-		    $(window).on("resize", function(){
-	            windowResize();
-	        });
-		    
+
+
+			// 페이징 객체 생성
+			function td_Create1(strtext) {
+				document.getElementById("tblPageRayer").innerHTML = strtext;
+			}
+
+
+			// 페이징 처리
+			function makePageSelPage() {
+				var strtext;
+				var PagingHTML = "";
+				document.getElementById("tblPageRayer").innerHTML = "";
+				document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + TotalCount + "</span>";
+				strtext = "<div class='pagenavi'>";
+				PagingHTML += strtext;
+
+					if (totalPage > 1 && pageNum != 1) {
+					strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+					PagingHTML += strtext;
+				}
+
+				if (totalPage > BlockSize) {
+					if (pageNum > BlockSize) {
+						strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+						PagingHTML += strtext;
+					}
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+					PagingHTML += strtext;
+				}
+
+
+				var MaxNum;
+				var i;
+				var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+				if (totalPage >= (startNum + parseInt(BlockSize))) {
+					MaxNum = (startNum + parseInt(BlockSize)) - 1;
+				} else {
+					MaxNum = totalPage;
+				}
+
+
+				for (i = startNum; i <= MaxNum; i++) {
+					if (i == pageNum) {
+						strtext = "<span class='on'>" + i + "</span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+						PagingHTML += strtext;
+					}
+				}
+
+
+				//2018-08-02 김보미 - 데이터가 하나도 없을때 디폴트 페이징
+				if (i == 1) {
+					strtext = "<span class='on'>" + i + "</span>";
+					PagingHTML += strtext;
+				}
+
+
+				if (totalPage > BlockSize) {
+					if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+						strtext = "";
+						strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "";
+						strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+						PagingHTML += strtext;
+					}
+				} else {
+					strtext = "";
+					strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+					PagingHTML += strtext;
+				}
+
+				if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+					strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+					PagingHTML += strtext;
+				}
+
+				PagingHTML += "</div>";
+				td_Create1(PagingHTML);
+			}
+
+
+			function goToPageByNum(Value) {
+				pageNum = Value;
+				makePageSelPage();
+				makelist();
+			}
+
+
+			function selbeforeBlock() {
+				pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+				goToPageByNum(pageNum);
+			}
+
+
+			function selbeforeBlock_one() {
+				if (parseInt(pageNum - 1) > 0) {
+					goToPageByNum(parseInt(pageNum - 1));
+				} else {
+					return;
+				}
+			}
+
+
+			function selafterBlock() {
+				pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+				goToPageByNum(pageNum);
+			}
+
+
+			function selafterBlock_one() {
+				if (parseInt(pageNum + 1) <= totalPage) {
+					goToPageByNum(parseInt(pageNum + 1));
+				} else {
+					return;
+				}
+			}
+
+
+			function selNum(pselNum) {
+				pageNum = pselNum;
+				makelist();
+			}
+
+
+			function selNext() {
+				pageNum = pageNum + 1;
+				makelist();
+			}
+
+
+			function selPrev() {
+				pageNum = pageNum - 1;
+				makelist();
+			}
+
+
+			function td_Create(strtext) {
+				tblPageNum.innerHTML = tblPageNum.innerHTML + strtext;
+			}
+
+
+			//2018-08-06 김보미 - 페이지 위치 고정
+			$(window).on("resize", function(){
+				 windowResize();
+			});
+
 			var conH;
 			function windowResize() {
 				var doc = window.document;
@@ -501,7 +583,7 @@
 				if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 					height = height - 30;
 				}
-				
+
 				conH = height;
 				if(isPreview == 0) {
 					doc.getElementById("contentlist").style.height = height + "px";
@@ -514,7 +596,7 @@
 					doc.getElementById("ifrmPreViewH").style.height = height + 30 + "px";
 				}
 			}
-			
+
 			// 빠른 설문 config 조회
 			var isPreview = 0;
 			function getLightPollConfig() {
@@ -532,8 +614,8 @@
 					}
 				});
 			}
-			
-			
+
+
 			// 빠른 설문 config 업데이트
 			var isPreview = 0;
 			function PreviewRayerChange(direction) {
@@ -547,7 +629,7 @@
 						isPreview = 2;
 						break;
 				}
-							  
+
 				$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -569,22 +651,21 @@
 				var doc = window.document;
 				var noneImage = doc.getElementById("PreViewNone");
 				var leftImage = doc.getElementById("PreViewleft");
-				
+
 				noneImage.className = "icon16 btn_noframe";
 				leftImage.className = "icon16 btn_leftframe";
-				
+
 				switch(previewNum) {
 					case 0 :
 						noneImage.className = "icon16 btn_onnoframe";
-						
 						break;
 					case 2 :
 						leftImage.className = "icon16 btn_onleftframe";
 						break;
 				}
 			}
-			
-			
+
+
 			// 미리보기창 show
 			function setPreview(previewNum) {
 				var conlistH = conH
@@ -594,7 +675,7 @@
 				var PreviewRayerH = doc.getElementById("PreviewRayerH");
 				var contentlistH = doc.getElementById("contentlist");
 				var previewmail_bar_h = doc.getElementById("previewmail_bar_h");
-				
+
 				switch(previewNum) {
 				case 0 :
 					previewH.style.display = "none";
@@ -615,21 +696,23 @@
 					doc.getElementById("ifrmPreViewH").style.height = conlistH + 30 + "px";
 					break;
 				}
-				
+
 				// row가 선택 되어 있다면
 				if(itemseq) {
 					showPreview(isPreview, itemseq);
 				}
 			}
-			
-			
+
+
+			// preview창 보여주기
 			function showPreview(isPreview, itemseq) {
 				var doc = window.document;
 
+				// row 선택 X
 				if(itemseq == 0) {
 					doc.getElementById('Preview_HeaderH').style.display ="none";
 					doc.getElementById("ifrmPreViewH").style.display = "none";
-				} else {
+				} else { // row 선택
 					if(isPreview == 2) {
 						// 세로 모드
 						var itemSeqTitle = $("#"+itemseq)[0].parentNode.parentNode.children[2].innerHTML;
@@ -643,7 +726,6 @@
 					}
 				}
 			}
-			
 		</script>
 		<style>
 			.jinhang {
@@ -695,8 +777,9 @@
 			</h1>
 			<div id="mainmenu">
 				<ul style="margin-top:15px">	            	
-					<li class="important"><span onclick="add_poll()">등록</span></li>
-					<li><span onclick="delete_poll()">삭제</span></li>
+					<li class="important"><span id="add">등록</span></li>
+					<li><span id="mod">수정</span></li>
+					<li><span id="del">삭제</span></li>
 					<div class="sub_frameIcon" style="float:right;">	
 						<div class="sub_frameIconUL" style="width:100% !important;">
 							<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>

@@ -1196,4 +1196,101 @@
 				U.PHYSICALDELIVERYOFFICENAME = #companyID#
 		]]>
 	</select>
+
+	<update id="EzPersonalAdmin.EZSP_UPDATEPOLL_U1" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_LIGHTPOLL
+			SET
+				STARTDATE = DATE_FORMAT(#startDate#, '%Y-%m-%d %H:%i:%s')
+			AND
+				ENDDATE = DATE_FORMAT(#endDate#, '%Y-%m-%d %H:%i:%s')
+			AND
+				POLLSELECTIONCOUNT = #v_pSelectionCount#
+			AND
+				POLLTITLE = #v_pPollTitle#
+			AND
+				POLLTITLE2 = #v_pPollTitle2#
+			AND
+				ANSWER1 = #v_pAnswer1#
+			AND
+				ANSWER2 = #v_pAnswer2#
+			AND
+				ANSWER3 = #v_pAnswer3#
+			AND
+				ANSWER4 = #v_pAnswer4#
+			AND
+				ANSWER5 = #v_pAnswer5#
+			AND
+				ANSWER6 = #v_pAnswer6#
+			AND
+				ANSWER7 = #v_pAnswer7#
+			AND
+				ANSWER8 = #v_pAnswer8#
+			AND
+				ANSWER9 = #v_pAnswer9#
+			AND
+				ANSWER10 = #v_pAnswer10#
+			WHERE
+				ITEMSEQ = #itemSeq#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
+	
+	<update id="EzPersonalAdmin.EZSP_UPDATEPOLL_U2" parameterClass="Map"> 
+		<![CDATA[
+			UPDATE
+				TBL_PS_LIGHTPOLL
+			SET
+				STARTDATE = DATE_FORMAT(#startDate#, '%Y-%m-%d %H:%i:%s')
+			,
+				ENDDATE = DATE_FORMAT(#endDate#, '%Y-%m-%d %H:%i:%s')
+			,
+				POLLSELECTIONCOUNT = #v_pSelectionCount#
+			,
+				POLLTITLE = #v_pPollTitle#
+			,
+				POLLTITLE2 = #v_pPollTitle2#
+			,
+				ANSWER1 = #v_pAnswer1#
+			,
+				ANSWER2 = #v_pAnswer2#
+			,
+				ANSWER3 = #v_pAnswer3#
+			,
+				ANSWER4 = #v_pAnswer4#
+			,
+				ANSWER5 = #v_pAnswer5#
+			,
+				ANSWER6 = #v_pAnswer6#
+			,
+				ANSWER7 = #v_pAnswer7#
+			,
+				ANSWER8 = #v_pAnswer8#
+			,
+				ANSWER9 = #v_pAnswer9#
+			,
+				ANSWER10 = #v_pAnswer10#
+			WHERE
+				ITEMSEQ = #itemSeq#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				CompanyID = #v_pCompanyID#	
+		]]>
+	</update>
+	
+	<delete id="EzPersonalAdmin.EZSP_UPDATE_RESULT" parameterClass="Map" >
+		<![CDATA[
+			DELETE FROM
+				TBL_PS_LIGHTPOLLRESULT
+			WHERE
+				ITEMSEQ = #itemSeq#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				RESULT IN ($sbQuery$)
+		]]>
+	</delete>
 </sqlMap>

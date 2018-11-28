@@ -345,35 +345,35 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String pollTitle2 = doc.getElementsByTagName("TITLE2").item(0).getTextContent();
 		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
 		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
-		
+
 		if (pollTitle2.equals("")) {
 			pollTitle2 = pollTitle;
 		}
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("v_pCompanyID", companyID.toUpperCase());
 		map.put("v_pSelectionCount", selectCount);
 		map.put("v_pPollTitle", pollTitle);
 		map.put("v_pPollTitle2", pollTitle2);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
-		
+
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date());
-		
+
 		map.put("nowDate", nowDate);
 		map.put("tenantID", tenantID);
-		
+
 		for (int i = 0; i < Integer.parseInt(selectCount); i++) {
 			map.put("v_pAnswer" + (i + 1), doc.getElementsByTagName("ANSWER").item(i).getTextContent());
 		}
-		
+
 		for (int i = Integer.parseInt(selectCount); i < 10; i++) {
 			map.put("v_pAnswer" + (i + 1), " ");
 		}
-		
+
 		try {
 			if (companyID != null && companyID.equals("Top")) {
 				ezPersonalAdminDAO.insertPoll_U1(map);
@@ -386,7 +386,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			} else {
 				ezPersonalAdminDAO.insertPoll_I2(map);
 			}
-			
+
 			logger.debug("insertPoll ended");
 			return "OK";
 		} catch (Exception e) {
@@ -998,6 +998,76 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			}
 		}
 		logger.debug("updateSliderImageOrder end");
+	}
+
+	@Override
+	public String updatePoll(Document doc, int tenantID) throws Exception {
+		logger.debug("updatePoll started");
+
+		String companyID = doc.getElementsByTagName("COMPID").item(0).getTextContent();
+		String selectCount = doc.getElementsByTagName("NUM").item(0).getTextContent();
+		String pollTitle = doc.getElementsByTagName("TITLE").item(0).getTextContent();
+		String pollTitle2 = doc.getElementsByTagName("TITLE2").item(0).getTextContent();
+		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+		String itemSeq = doc.getElementsByTagName("ITEMSEQ").item(0).getTextContent();
+
+		if (pollTitle2.equals("")) {
+			pollTitle2 = pollTitle;
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_pCompanyID", companyID.toUpperCase());
+		map.put("v_pSelectionCount", selectCount);
+		map.put("v_pPollTitle", pollTitle);
+		map.put("v_pPollTitle2", pollTitle2);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("itemSeq", itemSeq);
+
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+
+		map.put("nowDate", nowDate);
+		map.put("tenantID", tenantID);
+
+		for (int i = 0; i < Integer.parseInt(selectCount); i++) {
+			map.put("v_pAnswer" + (i + 1), doc.getElementsByTagName("ANSWER").item(i).getTextContent());
+		}
+
+		StringBuilder sbQuery = new StringBuilder();
+		for (int i = Integer.parseInt(selectCount); i < 10; i++) {
+			map.put("v_pAnswer" + (i + 1), " ");
+			sbQuery.append(i+1);
+			sbQuery.append(",");
+		}
+		sbQuery.deleteCharAt(sbQuery.length() - 1);
+
+		try {
+			// 현재 진행중인 설문 종료시간 업데이트
+			if (companyID != null && companyID.equals("Top")) {
+				ezPersonalAdminDAO.insertPoll_U1(map);
+			} else {
+				ezPersonalAdminDAO.insertPoll_U2(map);
+			}
+
+			// 수정된 설문 업데이트
+			if (companyID != null && companyID.equals("Top")) {
+				ezPersonalAdminDAO.updatePoll_U1(map);
+			} else {
+				ezPersonalAdminDAO.updatePoll_U2(map);
+			}
+
+			// Result 설문 없는것 삭제
+			map.put("sbQuery", sbQuery.toString());
+			ezPersonalAdminDAO.updatePoll_Result(map);
+			logger.debug("updatePoll ended");
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR : " + e.getMessage();
+		}
 	}
 	
 	

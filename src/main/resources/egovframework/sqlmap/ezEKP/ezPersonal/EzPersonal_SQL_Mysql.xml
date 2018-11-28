@@ -626,31 +626,31 @@
 	<select id="EzPersonalDAO.getPollInfo" parameterClass="Map"  resultClass="PersonalLightPollVO">
 		<![CDATA[
 			SELECT
-				ITEMSEQ ,
-             	STARTDATE ,
-             	IFNULL(ENDDATE, DATE_FORMAT('1900-01-01', '%Y-%m-%d %H:%i:%s')) EndDate  ,
-             	POLLSELECTIONCOUNT ,
-             	POLLTITLE ,
-	            POLLTITLE2 ,
-	            ANSWER1 ,
-	            ANSWER2 ,
-	            ANSWER3 ,
-	            ANSWER4 ,
-	            ANSWER5 ,
-	            ANSWER6 ,
-	            ANSWER7 ,
-	            ANSWER8 ,
-	            ANSWER9 ,
-	            ANSWER10 
-        	FROM
-        		TBL_PS_LIGHTPOLL 
-       		WHERE
-       			ITEMSEQ = #v_pItemSeq#
-       		AND
-       			TENANT_ID = #tenantID#	
+				ITEMSEQ,
+				STARTDATE,
+				EndDate,
+				POLLSELECTIONCOUNT,
+				POLLTITLE,
+				POLLTITLE2,
+				ANSWER1,
+				ANSWER2,
+				ANSWER3,
+				ANSWER4,
+				ANSWER5,
+				ANSWER6,
+				ANSWER7,
+				ANSWER8,
+				ANSWER9,
+				ANSWER10
+			FROM
+				TBL_PS_LIGHTPOLL
+			WHERE
+				ITEMSEQ = #v_pItemSeq#
+			AND
+				TENANT_ID = #tenantID#	
 		]]>
-	</select>		
-	
+	</select>
+
 	<select id="EzPersonalDAO.getPollResult" parameterClass="Map"  resultClass="PersonalLightPollVO">
 		<![CDATA[
 			SELECT

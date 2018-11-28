@@ -495,6 +495,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int currentPage = 1, pageSize = 15;
 		String progressPollFlag = "false";
+		String progressSDate = "";
+		String progressEDate = "";
 		StringBuilder result = new StringBuilder();
 		
 		String companyID = request.getParameter("companyID");
@@ -506,6 +508,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		PersonalLightPollVO progressFlagVO = ezNewPortalService.getPollPortlet(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId(), userInfo.getOffset());
 		if(progressFlagVO != null) {
 			progressPollFlag = "true";
+			progressSDate = progressFlagVO.getStartDate();
+			progressEDate = progressFlagVO.getEndDate();
 		}
 		
 		int totalCount = ezPersonalAdminService.getPollCount(companyID, userInfo.getTenantId());
@@ -553,6 +557,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		result.append("</ROWS>");
 		result.append("<PROFLAG>" + progressPollFlag + "</PROFLAG>");
+		result.append("<PROFLAGSDATE>" + progressSDate + "</PROFLAGSDATE>");
+		result.append("<PROFLAGEDATE>" + progressEDate + "</PROFLAGEDATE>");
 		result.append("</LISTVIEWDATA>");
 		
 		logger.debug("managePollList ended");
@@ -563,16 +569,27 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickPoll 등록화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/addPoll.do")
-	public String addPoll(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String addPoll(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, PersonalLightPollVO infoVO) throws Exception {
 		logger.debug("addPoll started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		String flag = "";
+		String itemSeq = "";
+		if(request.getParameter("flag") != null) {
+			flag = request.getParameter("flag");
+		}
+		if (request.getParameter("itemSeq") != null) {
+			itemSeq = request.getParameter("itemSeq");
+			infoVO = ezPersonalAdminService.getPollInfo(itemSeq, userInfo.getTenantId());
+			model.addAttribute("infoVO", infoVO);
+		} 
 		
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("flag", flag);
 
 		logger.debug("addPoll ended");
 		return "admin/ezPersonal/personalAddPoll";
@@ -588,8 +605,17 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
+		String itemSeq;
+		itemSeq = doc.getElementsByTagName("ITEMSEQ").item(0).getTextContent();
 		
-		String result = ezPersonalAdminService.insertPoll(doc, userInfo.getTenantId());
+		String result = "";
+		if(itemSeq.equals("")){
+			// 생성
+			result = ezPersonalAdminService.insertPoll(doc, userInfo.getTenantId());
+		} else {
+			// 수정
+			result = ezPersonalAdminService.updatePoll(doc, userInfo.getTenantId());
+		}
 
 		logger.debug("savePoll ended");
 		return result;

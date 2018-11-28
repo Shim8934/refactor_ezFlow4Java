@@ -93,4 +93,6 @@ public interface EzPersonalAdminService {
 	void updateQuickLinkOrder(JSONArray linkOrderList, int tenantId) throws Exception;
 
 	void updateSliderImageOrder(JSONArray sliderImageList, int tenantId) throws Exception;
+	
+	String updatePoll(Document doc, int tenantID) throws Exception;
 }

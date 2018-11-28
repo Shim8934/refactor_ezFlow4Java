@@ -64,8 +64,9 @@
 				add.addEventListener("click", add_popup);
 				mod.addEventListener("click", mod_popup);
 				del.addEventListener("click", del_popup);
-
 			}
+
+
 			function makelist() {
 				$.ajax({
 					type : "POST",
@@ -308,7 +309,7 @@
 					alert("선택된 공지사항이 없습니다.");
 					return;
 				}
-				
+
 				if(modCnt>1) {
 					alert("하나의 공지사항만 선택해주세요.")
 					return;
