@@ -640,7 +640,12 @@
 	<!-- 			<li id=""><a onClick="folder_Manage()"style="margin-top: 3px;"><span>폴더관리</span></a></li> -->
 				<li><span class="icon16 icon16_refresh" onclick="refreshView()"></span></li>
 				<!-- <li><img src="/images/i_bar.gif" /></li> -->
-				<li style="float:right;border:0px;background-color: white"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li>
+				<!-- <li style="float:right;border:0px;background-color: white"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li> -->
+				<div class="sub_frameIcon" style="float:right">
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+					</div>
+				</div>
 				<li style="float:left;">
 					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value)">
 						<option value=""><spring:message code='ezWebFolder.t191' /></option>
