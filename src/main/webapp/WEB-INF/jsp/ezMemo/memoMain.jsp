@@ -184,11 +184,13 @@
 		        <li><span onClick="memoDisplayChange2()"><spring:message code='ezMemo.t0024'/></span></li>
 		        <li><span class="icon16 icon16_search" onClick="doLayerPopup(this);"></span></li>
 		        <li onClick="DeleteItem_onclick()"><span class="icon16 icon16_delete"></span></li>
-		        <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh"></span></li> 
-		        <li><select id="memoType" style="height: 20px; width:175px;" onchange="getMemoList('folder')"></select></li>
-		        <li id="right" class="off">
-		        	<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);">
-		        </li>
+		        <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh"></span></li>
+		        <div class="sub_frameIcon" style="float:right">
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this);"></span></p>  
+					</div>
+				 </div>
+				 <li style="float:right;height:27px;"><select id="memoType" style="width:175px; height:27px !important; line-height: 25px !important;" onchange="getMemoList('folder')"></select></li>
 		  </ul>
 		</div>
 		<div style="width:100%; border-bottom: 1px solid #e8e8e8;"></div>
