@@ -484,10 +484,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) {
 		LOGGER.debug("[Serivce] getVotePortletCount Started");
 		Map<String, Object> map = new HashMap<String, Object>();
+		String[] deptArr = deptPath.split(",");
 		map.put("userId", userId);
 		map.put("companyId", companyId);
 		map.put("deptPath", deptPath);
 		map.put("tenantId", tenantId);
+		map.put("deptArr", deptArr);
 		
 		LOGGER.debug("[Serivce] getVotePortletCount Ended");
 		return ezNewPortalDAO.getVotePortletCount(map);
@@ -497,10 +499,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId) {
 		LOGGER.debug("[Serivce] getVotePortletInfo Started");
 		Map<String, Object> map = new HashMap<String, Object>();
+		String[] deptArr = deptPath.split(",");
 		map.put("userId", userId);
 		map.put("companyId", companyId);
 		map.put("deptPath", deptPath);
 		map.put("tenantId", tenantId);
+		map.put("deptArr", deptArr);
 		
 		LOGGER.debug("[Serivce] getVotePortletInfo Ended");
 		return ezNewPortalDAO.getVotePortletInfo(map);
@@ -1845,7 +1849,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public Map<String, Object> getWeather(String cityCode, String primary) {
+	public Map<String, Object> getWeather(String cityCode, int primary) {
 		LOGGER.debug("getWeather started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1860,7 +1864,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<WeatherVO> getCityList(String primaryLang) {
+	public List<WeatherVO> getCityList(int primaryLang) {
 		LOGGER.debug("getCityList started.");
 		
 		List<WeatherVO> result = ezNewPortalDAO.getCityList(primaryLang);

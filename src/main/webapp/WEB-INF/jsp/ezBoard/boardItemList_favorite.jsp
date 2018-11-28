@@ -23,6 +23,9 @@
 	    .tabpart01UL li {
 	    	height:20px;
 	    	color:#777;
+			white-space: nowrap;
+		    text-overflow: ellipsis;
+		    overflow: hidden;
 	    }
 	    </style>
 	    <script type="text/javascript">

@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezMemo">
+	<typeAlias  alias="MemoVO" type="egovframework.ezEKP.ezMemo.vo.MemoVO"/>
+	<typeAlias  alias="MemoConfigVO" type="egovframework.ezEKP.ezMemo.vo.MemoConfigVO"/>
+	<typeAlias  alias="MemoFolderVO" type="egovframework.ezEKP.ezMemo.vo.MemoFolderVO"/>
+				
+	<select id="EzMemoDAO.getMemoCount" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_MEMO
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				USER_ID = #user_id#
+			AND
+				DELETE_FLAG = 0
+		]]>
+	</select>
+	
+	<select id="EzMemoDAO.getMemoFolderInfo" resultClass="MemoFolderVO">
+		<![CDATA[
+			SELECT
+				C.FOLDER_ID, C.FOLDER_NAME, NVL(D.COUNT, 0) AS COUNT, TO_CHAR(TO_DATE(C.REG_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') REG_DATE 
+			FROM (
+				SELECT CC.*, ROW_NUMBER() OVER (PARTITION BY CC.FOLDER_ID ORDER BY ROWNUM) CNT 
+				FROM ( SELECT 
+					A.FOLDER_ID, A.FOLDER_NAME, A.REG_DATE
+				FROM
+					TBL_MEMO_FOLDER A
+				LEFT OUTER JOIN
+					TBL_MEMO B
+				ON
+					A.FOLDER_ID = B.FOLDER_ID
+				WHERE 
+					A.TENANT_ID = #tenant_id#
+				AND 
+					A.USER_ID = #user_id#
+				AND 
+					A.COMPANY_ID = #company_id# 
+				AND
+					A.DELETE_FLAG = 0 ) CC 
+			) C
+			LEFT OUTER JOIN   
+			(
+				SELECT 
+					D.FOLDER_ID, COUNT(FOLDER_ID) AS COUNT
+				FROM 
+					TBL_MEMO D
+				WHERE 	
+					TENANT_ID = #tenant_id#
+				AND 
+					USER_ID = #user_id#
+				AND 
+					COMPANY_ID = #company_id#
+				AND
+					DELETE_FLAG = 0 
+				group by
+       				 D.FOLDER_ID) D
+ 			ON      
+				C.FOLDER_ID = D.FOLDER_ID
+			WHERE
+				C.CNT = '1'
+		]]>
+	</select>
+	
+	<select id="EzMemoDAO.getMemoConfig" resultClass="MemoConfigVO">
+		<![CDATA[
+			SELECT
+				USER_ID, FONT_SIZE, USE_DATE, USE_GADGET, DEFAULT_COLOR, GADGET_RIGHT, 
+				GADGET_BOTTOM, LAYER_LEFT, LAYER_TOP, LAYER_WIDTH, LAYER_HEIGHT, COMPANY_ID, TENANT_ID, FULL_MODE
+			FROM
+				TBL_MEMO_CONFIG
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				USER_ID = #user_id#
+		]]>
+	</select>
+	
+	<select id="EzMemoDAO.getMemoList" resultClass="MemoVO">
+		<![CDATA[
+			SELECT
+				MEMO_ID, NVL(CONTENTS, '') AS CONTENTS, DISPLAY_FLAG, WRITE_DATE, ORDERS, FOLDER_ID, COLOR_ID
+			FROM
+				TBL_MEMO
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				USER_ID = #user_id#
+			AND
+				DELETE_FLAG = 0
+		]]>
+			<isNotEmpty property="searchInput" >
+				<![CDATA[
+	              AND
+						CONTENTS LIKE '%' || #searchInput# || '%'
+	             ]]> 
+            </isNotEmpty>
+			<isNotEmpty property="startDate" >
+				<![CDATA[
+	              AND
+	              		WRITE_DATE >= TO_CHAR(TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') 
+	              AND 
+	              		WRITE_DATE <= TO_CHAR(TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') 
+	             ]]> 
+            </isNotEmpty>
+			<isNotEqual property="folder_id" compareValue="0">
+				  <![CDATA[
+				  	AND
+						 FOLDER_ID = #folder_id#
+				  ]]>
+			 </isNotEqual>
+			 
+			<isEqual property="orderOption" compareValue="1">
+	        	<![CDATA[
+	        		ORDER BY
+	        			ORDERS
+	        	]]>
+	        </isEqual>
+	        <isEqual property="orderOption" compareValue="2">
+	        	<![CDATA[
+	        		ORDER BY
+	        			WRITE_DATE ASC
+	        	]]>
+	        </isEqual>
+	        <isEqual property="orderOption" compareValue="3">
+	        	<![CDATA[
+	        		ORDER BY
+	        			WRITE_DATE DESC
+	        	]]>
+	        </isEqual>
+	</select>
+	
+	<select id="EzMemoDAO.getMaxOrder" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				NVL(MAX(ORDERS), '0') +1 
+			FROM 
+				TBL_MEMO 
+			WHERE 
+				USER_ID = #user_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				TENANT_ID=#tenant_id#
+		]]>
+	</select>
+	
+	<select id="EzMemoDAO.getMemoDefaultFolder" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				MIN(FOLDER_ID)
+			FROM 
+				TBL_MEMO_FOLDER 
+			WHERE 
+				USER_ID = #user_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				TENANT_ID=#tenant_id#
+		]]>
+	</select>
+					
+	<insert id="EzMemoDAO.insertMemo" parameterClass="Map">
+		<![CDATA[
+		 	INSERT INTO TBL_MEMO
+                (memo_id, user_id, write_date, folder_id, orders, company_id, tenant_id, color_id)
+            VALUES
+                (SEQ_TBL_MEMO.NEXTVAL, #user_id#, TO_DATE(#write_date#, 'YYYY-MM-DD HH24:MI:SS'), #folder_id#, #orders#,  #company_id#, #tenant_id#, #color_id#)
+         ]]>
+	</insert>
+	
+	<update id="EzMemoDAO.setMemoConfig" parameterClass="hashmap">
+
+		<![CDATA[
+		]]>
+			UPDATE
+				TBL_MEMO_CONFIG
+			<dynamic prepend="SET">
+				<isNotNull property="use_date" prepend=",">
+				USE_DATE = #use_date#
+				</isNotNull>
+				<isNotNull property="use_gadget" prepend=",">
+				USE_GADGET = #use_gadget#
+				</isNotNull>
+				<isNotNull property="font_size" prepend=",">
+				FONT_SIZE = #font_size#
+				</isNotNull>
+				<isNotNull property="layer_left" prepend=",">
+				layer_left = #layer_left#
+				</isNotNull>
+				<isNotNull property="layer_top" prepend=",">
+				layer_top = #layer_top#
+				</isNotNull>
+				<isNotNull property="full_mode" prepend=",">
+				full_mode = #full_mode#
+				</isNotNull>
+			</dynamic>
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				USER_ID = #user_id#
+		
+	</update>
+	
+	<insert id="EzMemoDAO.addMemoFolder" parameterClass="map">
+		INSERT INTO 
+			TBL_MEMO_FOLDER (FOLDER_ID, FOLDER_NAME, REG_DATE, USER_ID, COMPANY_ID, TENANT_ID, ORDERS)
+		VALUES
+			(SEQ_TBL_MEMO_FOLDER.NEXTVAL, #folder_name#, TO_DATE(#reg_date#, 'YYYY-MM-DD HH24:MI:SS'), #user_id#, #company_id#, #tenant_id#, #orders#)
+	</insert>
+	
+	<update id="EzMemoDAO.modifyMemoFolder" parameterClass="map">
+		UPDATE
+			TBL_MEMO_FOLDER 
+		SET
+			FOLDER_NAME = #folder_name#
+		WHERE
+			FOLDER_ID = #folder_id#
+		AND
+			USER_ID = #user_id#
+		AND
+			COMPANY_ID = #company_id# 
+		AND
+			TENANT_ID = #tenant_id#
+	</update>
+	
+	<update id="EzMemoDAO.deleteMemos" parameterClass="map">
+		UPDATE
+			TBL_MEMO
+		SET
+			DELETE_FLAG = 1
+		WHERE
+			FOLDER_ID = #folder_id#
+		AND
+			USER_ID = #user_id#
+		AND
+			COMPANY_ID = #company_id# 
+		AND
+			TENANT_ID = #tenant_id#
+	</update>
+	
+	<update id="EzMemoDAO.deleteMemoFolder" parameterClass="map">
+		UPDATE
+			TBL_MEMO_FOLDER 
+		SET
+			DELETE_FLAG = 1
+		WHERE
+			FOLDER_ID = #folder_id#
+		AND
+			USER_ID = #user_id#
+		AND
+			COMPANY_ID = #company_id# 
+		AND
+			TENANT_ID = #tenant_id#
+	</update>
+	
+	<update id="EzMemoDAO.setMemoContents" parameterClass="map">
+		UPDATE
+			TBL_MEMO 
+		SET
+			CONTENTS = #contents#,
+			WRITE_DATE = TO_DATE(#write_date#, 'YYYY-MM-DD HH24:MI:SS')
+		WHERE
+			MEMO_ID = #memo_id#
+		AND
+			USER_ID = #user_id#
+		AND
+			COMPANY_ID = #company_id# 
+		AND
+			TENANT_ID = #tenant_id#
+	</update>
+	
+	<insert id="EzMemoDAO.insertMemoConfig" parameterClass="map">
+		insert into tbl_memo_config 
+			(user_id, font_size, use_date, use_gadget, default_color, gadget_right, gadget_bottom, layer_left, layer_top, layer_width, layer_height, company_id, tenant_id)
+		values
+			(#user_id#, #font_size#, #use_date#, #use_gadget#, #default_color#, #gadget_right#, #gadget_bottom#, #layer_left#, #layer_top#, #layer_width#, #layer_height#, #company_id#, #tenant_id#)
+	</insert>
+	
+	<select id="EzMemoDAO.hasMemoFolder" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_MEMO_FOLDER
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				USER_ID = #user_id#
+			AND
+				DELETE_FLAG = 0
+		]]>
+	</select>
+	
+	<insert id="EzMemoDAO.setDefaultMemoFolder" parameterClass="map">
+		INSERT INTO 
+			TBL_MEMO_FOLDER (FOLDER_ID, FOLDER_NAME, REG_DATE, USER_ID, COMPANY_ID, TENANT_ID, ORDERS, DELETE_FLAG)
+		VALUES
+			(SEQ_TBL_MEMO_FOLDER.NEXTVAL, #folder_name#, TO_DATE(#reg_date#, 'YYYY-MM-DD HH24:MI:SS'), #user_id#, #company_id#, #tenant_id#, #orders#, #delete_flag#)
+	</insert>
+	
+	<select id="EzMemoDAO.getMemo" resultClass="MemoVO">
+		SELECT 
+			MEMO_ID, CONTENTS, USER_ID, DISPLAY_FLAG, WRITE_DATE, DELETE_DATE, ORDERS, FOLDER_ID, COLOR_ID, COMPANY_ID, TENANT_ID
+		FROM
+			TBL_MEMO
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+		AND 
+			MEMO_ID = #memo_id#
+	</select>
+	
+	<update id="EzMemoDAO.setMemoDisplay">
+		UPDATE
+			TBL_MEMO
+		SET
+			DISPLAY_FLAG = #display_flag#
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+		AND 
+			MEMO_ID = #memo_id#
+	</update>
+
+	<select id="EzMemoDAO.maxFolderOrders" resultClass="Integer">
+		SELECT 
+			MAX(ORDERS)+1
+		FROM 
+			TBL_MEMO_FOLDER
+		WHERE 
+			TENANT_ID = #tenant_id#
+		AND 
+			COMPANY_ID = #company_id#
+		AND
+			USER_ID = #user_id#    
+	</select>
+	
+	<update id="EzMemoDAO.memoMove">
+		UPDATE
+			TBL_MEMO
+		SET
+			FOLDER_ID = #folder_id#
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+		AND 
+			MEMO_ID = #memo_id#
+	</update>
+	
+	<update id = "EzMemoDAO.memoDelete">
+		<![CDATA[
+			UPDATE
+				TBL_MEMO
+			SET
+				DELETE_DATE = TO_DATE(#delete_date#, 'YYYY-MM-DD HH24:MI:SS'),
+				DELETE_FLAG = 1
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				USER_ID = #user_id#
+			AND 
+				MEMO_ID = #memo_id#
+		]]>
+	</update>
+	
+	<insert id="EzMemoDAO.otherModuleCopy" parameterClass="Map">
+		<![CDATA[
+		 	INSERT INTO TBL_MEMO
+                (MEMO_ID, USER_ID, WRITE_DATE, FOLDER_ID, ORDERS, COMPANY_ID, TENANT_ID, COLOR_ID, CONTENTS)
+            VALUES
+                (SEQ_TBL_MEMO.NEXTVAL, #user_id#, TO_DATE(#write_date#, 'YYYY-MM-DD HH24:MI:SS'), #folder_id#, #orders#,  #company_id#, #tenant_id#, #color_id#, #contents#)
+         ]]>
+	</insert>
+
+	<update id="EzMemoDAO.setMemoColor">
+		UPDATE
+			TBL_MEMO
+		SET
+			COLOR_ID = #color_id#
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+		AND 
+			MEMO_ID = #memo_id#
+	</update>
+	
+	<select id="EzMemoDAO.getMemoListForReOrder" resultClass="MemoVO">
+		<![CDATA[
+			SELECT
+				MEMO_ID, CONTENTS, USER_ID, DISPLAY_FLAG, DELETE_FLAG, WRITE_DATE, 
+				DELETE_DATE, ORDERS, FOLDER_ID, COLOR_ID, COMPANY_ID, TENANT_ID
+			FROM
+				TBL_MEMO
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				USER_ID = #user_id#
+			AND
+				DELETE_FLAG = 0
+		]]>
+		<isNotEqual property="bigger_order" compareValue="0">
+			  <![CDATA[
+			  	AND
+					 ORDERS <= #bigger_order#
+			  ]]>
+		 </isNotEqual>
+		 <isNotEqual property="smaller_order" compareValue="0">
+			  <![CDATA[
+			  	AND
+					 ORDERS >= #smaller_order#
+			  ]]>
+		 </isNotEqual>
+		 order by
+		 		orders
+	</select>
+	
+	<update id="EzMemoDAO.setMemoOrders">
+		UPDATE
+			TBL_MEMO
+		SET
+		<isNotEqual property="orders" compareValue="0">
+			orders = #orders#
+		</isNotEqual>
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+		AND 
+			MEMO_ID = #memo_id#
+	</update>
+	
+	<update id="EzMemoDAO.setDefaultColor">
+		UPDATE
+			TBL_MEMO_CONFIG
+		SET
+			DEFAULT_COLOR = #color_id#
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+	</update>
+	
+	<update id="EzMemoDAO.setGadgetConfig" parameterClass="hashmap">
+
+		<![CDATA[
+			UPDATE
+				TBL_MEMO_CONFIG
+		]]>
+			<dynamic prepend="SET">
+				<isNotNull property="gadget_bottom" prepend=",">
+				gadget_bottom = #gadget_bottom#
+				</isNotNull>
+				<isNotNull property="gadget_right" prepend=",">
+				gadget_right = #gadget_right#
+				</isNotNull>
+			</dynamic>
+			WHERE 
+				TENANT_ID = #tenant_id# 
+			AND 
+				COMPANY_ID = #company_id# 
+			AND 
+				USER_ID = #user_id#
+	</update>
+	
+	<update id="EzMemoDAO.setMemoLayerMode" parameterClass="hashmap">
+		UPDATE
+			TBL_MEMO_CONFIG
+		SET
+			FULL_MODE = #full_mode#
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+	</update>
+	
+	<update id="EzMemoDAO.setMemoLayerArea" parameterClass="hashmap">
+		UPDATE
+			TBL_MEMO_CONFIG
+		SET
+			LAYER_WIDTH = #layer_width#, LAYER_HEIGHT = #layer_height#
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+	</update>
+</sqlMap>

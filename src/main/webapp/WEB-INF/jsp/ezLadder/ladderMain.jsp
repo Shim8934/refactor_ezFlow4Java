@@ -91,7 +91,7 @@
 		<h1><spring:message code="ezLadder.t001"/>
 			<span id="mailBoxInfo"></span>
 			<span style="float: right; font-weight:normal;color:black;">
-				<select id="searchOption" style="height:27px; ">
+				<select id="searchOption" style="height:27px; border-color: #c8c8c8">
 				  <option value="title" <c:if test = "${searchSelect eq 'title' }" >selected="selected"</c:if>><spring:message code="ezLadder.t003"/></option>
 				  <option value="kind" <c:if test = "${searchSelect eq 'kind' }" >selected="selected"</c:if>><spring:message code="ezLadder.t002"/></option>
 				  <option value="writer" <c:if test = "${searchSelect eq 'writer' }" >selected="selected"</c:if>><spring:message code="ezLadder.t004"/></option>

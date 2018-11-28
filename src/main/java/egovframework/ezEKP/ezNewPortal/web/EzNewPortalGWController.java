@@ -2282,7 +2282,7 @@ e.printStackTrace();
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			String offset = info.getOffSet();
+			String offset = commonUtil.getMinuteUTC(info.getOffSet());
 
 			JSONObject data = new JSONObject();
 
@@ -3112,8 +3112,8 @@ e.printStackTrace();
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 			
-			String primaryLang = ezCommonService.getTenantConfig("primaryLang", info.getTenantId());
-			
+			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
+			int primLang = Integer.parseInt(primaryLang);
 			
 			String cityCode = request.getParameter("cityCode");
 			
@@ -3128,14 +3128,15 @@ e.printStackTrace();
 			
 			JSONObject data = new JSONObject();
 			
-			Map<String, Object> resultMap = ezNewPortalService.getWeather(cityCode, primaryLang);
-			List<WeatherVO> cityList = ezNewPortalService.getCityList(primaryLang);
+			Map<String, Object> resultMap = ezNewPortalService.getWeather(cityCode, primLang);
+			List<WeatherVO> cityList = ezNewPortalService.getCityList(primLang);
 			data.put("cityList", cityList);
 			data.put("displayName", resultMap.get("DISPLAYCITYNAME"));
 			data.put("currentWeather", resultMap.get("CURRENTWEATHER"));
 			data.put("todayWeather", resultMap.get("TODAYWEATHER"));
 			data.put("cityCode", resultMap.get("CITYCODE"));
-			
+			System.out.println(resultMap);
+			System.out.println(resultMap.toString());
 			String[] todayArr = resultMap.get("TODAYWEATHER").toString().split("!");
 			
 			String todayHours = "";
@@ -3154,6 +3155,7 @@ e.printStackTrace();
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

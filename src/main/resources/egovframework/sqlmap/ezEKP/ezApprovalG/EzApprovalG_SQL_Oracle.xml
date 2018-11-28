@@ -27681,30 +27681,31 @@
 	
 	<select id="EzApprovalG.getCheckAprState" parameterClass="Map" resultClass="Integer">
 		SELECT
-			IF (
-				B.DOCID = 0,
-				CASE
-					WHEN #v_DOCSTATE# = '017'
-					THEN (
-							SELECT
-								COUNT(DOCID)
-							FROM
-								VENDCHAMJODOCINFO
-							WHERE
-								DOCID = #v_DOCID#
-							AND
-								APRMEMBERSN = #v_APRMEMBERSN#
-							AND
-								APRSTATE IN ('000')
-							AND
-								COMPANYID = #v_COMPANYID#
-							AND
-								TENANT_ID = #v_TENANTID#
-						  )
-					ELSE 0
-				END,
-				B.DOCID
-				)
+			CASE
+				WHEN B.DOCID = 0
+				THEN
+					(CASE
+						WHEN #v_DOCSTATE# = '017'
+						THEN (
+								SELECT
+									COUNT(DOCID)
+								FROM
+									VENDCHAMJODOCINFO
+								WHERE
+									DOCID = #v_DOCID#
+								AND
+									APRMEMBERSN = #v_APRMEMBERSN#
+								AND
+									APRSTATE IN ('000')
+								AND
+									COMPANYID = #v_COMPANYID#
+								AND
+									TENANT_ID = #v_TENANTID#
+							  )
+						ELSE 0
+					END)
+				ELSE B.DOCID
+			END
 		FROM
 			(
 			SELECT

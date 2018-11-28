@@ -15,8 +15,8 @@
         .jqplot-table-legend {
         	white-space:nowrap
         }
-        #statisticschart svg {right:100px; padding-right:150px;}
-        #statisticschart2 svg {left:-100px !important;right:100px; padding-right:150px;}
+        #statisticschart svg {right:100px; padding-right:150px; width:650px;}
+        #statisticschart2 svg {left:-100px !important;right:100px; padding-right:150px; width:650px;}
     </style>
     <script type="text/javascript" src="${util.addVer('ezStatistics.e1', 'msg')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>

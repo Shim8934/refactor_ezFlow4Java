@@ -218,7 +218,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right:3px; \" >"
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
 	            	+ "<span id='spn_deptName' title='" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;") + "'>" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;") + "</span>"
 	            	+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
@@ -269,9 +269,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang256 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang256 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang256 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -331,7 +331,7 @@
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + totalCount + strLang256 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + strLang257 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -344,7 +344,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + totalCount + strLang256 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + strLang257 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1386,7 +1386,7 @@
 			    </tr> 
 			</table> 
 			<br/>
-			<table style="width:100%;margin-top: -12px;">
+			<table style="width:100%;margin-top: -6px;">
 				<tr>
 			    	<td>
 			        	<table id="TreeViewTD">
@@ -1428,7 +1428,7 @@
 		                            <table style="margin-top: 3px;">
 		                                <tr>
 		                                    <td class="box" style="border-right:0px;">		                                    			                                    	
-		                                        <div style="width: 220px; height: 460px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+		                                        <div style="width: 220px; height: 467px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 		                                    </td>
 		                                    <td></td>
 		                                    <td class="listview" style="width: 426px" id="orglistView">
@@ -1475,7 +1475,7 @@
 		                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezSchedule.t00001' /></span>
 		                            </h2>
 		                            <div class="receiver_borderbox">
-		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 267px; Height: 479px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 267px; Height: 478px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 		                            </div>
 		                        </td>
 		                    </tr>

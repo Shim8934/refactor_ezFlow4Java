@@ -160,6 +160,11 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 
 		logger.debug("getLoginHist started. tenantID : " + tenantID);
 		
+		String companyOracleStr = "";
+		if (companyId != null && !companyId.equals("Top/organ")) {
+			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
+		}
+		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("v_tenantID", tenantID);
 		params.put("offset", offset);
@@ -171,6 +176,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		params.put("startDate", startDate);
 		params.put("endDate", endDate);
 		params.put("companyId", companyId);
+		params.put("companyOracleStr", companyOracleStr);
 
 		List<ConnectionInfoVO> list = ezSystemAdminDAO.getLoginHist(params);
 		logger.debug("getLoginHist ended.");
@@ -182,6 +188,11 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	public int getLoginHistCount(int tenantID, String offset, String keycode, String keyword, String lang, String startDate, String endDate, String companyId) throws Exception {
 		
 		logger.debug("getLoginHistCount started. tenantID : " + tenantID);
+
+		String companyOracleStr = "";
+		if (companyId != null && !companyId.equals("Top/organ")) {
+			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
+		}
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("v_tenantID", tenantID);
@@ -192,6 +203,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		params.put("startDate", startDate);
 		params.put("endDate", endDate);
 		params.put("companyId", companyId);
+		params.put("companyOracleStr", companyOracleStr);
 				
 		logger.debug("getLoginHistCount ended.");
 		

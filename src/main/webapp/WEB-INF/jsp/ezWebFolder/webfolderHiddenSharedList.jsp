@@ -395,9 +395,14 @@
 				<ul>
 					<li><a onClick="showSharedList()" style="margin-top: 3px;"><span>돌아가기</span></a></li>
 					<li><a onClick="shareContext.showShare()" style="margin-top: 3px;"><span>숨김취소</span></a></li>
-					<li id="right" style="float:right;">
+					<!-- <li id="right" style="float:right;">
 						<img src ="/images/kr/cm/btn_arrow_down.gif" mode="off" id="webfolderlistoptiondiv">
-					</li>
+					</li> -->
+					<div class="sub_frameIcon" style="float:right">
+						<div class="sub_frameIconUL02">
+						  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+						</div>
+					</div>
 				</ul>
 			</div>
 			

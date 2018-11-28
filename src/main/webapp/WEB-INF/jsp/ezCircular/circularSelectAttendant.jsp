@@ -338,7 +338,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right:3px; \" >"
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
 	            	+ "<span id='spn_deptName' title='" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;") + "'>" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;") + "</span>"
 	            	+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
@@ -400,9 +400,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang256 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang256 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang256 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -1980,11 +1980,11 @@
 	        	
 	          	if (containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
 	          		if (sum > 359) {
-	          			deptNameWidth = 360 - $("#countInfo").width();
+	          			deptNameWidth = 340 - $("#countInfo").width();
 	          		}
 	          	} else {
 	          		if (sum > 357) {
-	          			deptNameWidth = 358 - $("#countInfo").width();
+	          			deptNameWidth = 338 - $("#countInfo").width();
 	          		}
 	          	}
 	        	
@@ -2062,7 +2062,7 @@
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr>
 	                                                <th style="white-space:normal;background-color: white;border-top:0px solid #ddd;border-bottom:1px solid #eaeaea">
-														<span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+														<span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: middle; margin-top:-6px"></span>
 	                                                    <span style="float:right;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
 	                                                        <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
