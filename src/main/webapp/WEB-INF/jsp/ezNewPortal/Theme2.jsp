@@ -541,7 +541,7 @@
 		}
 		
         data.forEach(function(item, index) {
-        	if(index > 5) return;
+        	if(index > 4) return;
         	var li = document.createElement('li');
         	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
         	li.style.cursor = "pointer";
