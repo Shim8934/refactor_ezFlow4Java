@@ -109,21 +109,17 @@ public class EzStatisticsMailLogController {
 			}
 		}
 
-		String topid = "";
-		String adminOrganVal = "n";
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
-			topid = userInfo.getCompanyID();
-		} else {
-			topid = "Top/organ"; // 전체관리자 조직도 전체 트리 보여줌
-			
-			adminOrganVal = "y"; // 전체관리자 조직도 전체 검색
+		String topid = userInfo.getCompanyID();
+
+		String isMasterAdmin = "n";
+		if (userInfo.getRollInfo().indexOf("c=1") > -1) {
+			isMasterAdmin = "y";
 		}
 		
 		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
 		model.addAttribute("list", resultList);
-		model.addAttribute("companyID", topid);				
-		model.addAttribute("adminOrganVal", adminOrganVal);
+		model.addAttribute("companyID", topid);		
+		model.addAttribute("isMasterAdmin", isMasterAdmin);				
 		
 		logger.debug("getStatMailRecieveLogMain ended.");
 		
@@ -150,7 +146,29 @@ public class EzStatisticsMailLogController {
 		String mailLogKeepPeriodMessage = egovMessageSource.getMessage("ezStatistics.t1065", locale);
 		mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, LoginMailLogKeepPeriod);
 		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		String topid = userInfo.getCompanyID();
+		
+		String isMasterAdmin = "n";
+		if (userInfo.getRollInfo().indexOf("c=1") > -1) {
+			isMasterAdmin = "y";
+		}
+		
 		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyID", topid);		
+		model.addAttribute("isMasterAdmin", isMasterAdmin);		
 		
 		logger.debug("getStatMailSendLogMain ended.");
 		
@@ -191,6 +209,7 @@ public class EzStatisticsMailLogController {
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String startDate = request.getParameter("searchStartTime");
 		String endDate = request.getParameter("searchEndTime");
+		String companyId = request.getParameter("companyId");
 		
 		
 		if (!searchStartTime.isEmpty()) {
@@ -206,9 +225,13 @@ public class EzStatisticsMailLogController {
 		} else { 
 			isPrimaryLang = userInfo.getLang();
 		}
+		
+		if (companyId == null || companyId.equals("Top/organ")) {
+			companyId = "";
+		}
 
 		Map<String, Object> resultMap = ezStatisticsAdminService.getMailLogList(tenantId, pageNo, String.valueOf(pageSize), 
-				mailLogType, searchStartTime, searchEndTime, searchField, searchValue, isPrimaryLang);
+				mailLogType, searchStartTime, searchEndTime, searchField, searchValue, isPrimaryLang, companyId);
 		
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> mailLogList = (List<Map<String, Object>>) resultMap.get("mailLogList");
@@ -309,6 +332,7 @@ public class EzStatisticsMailLogController {
 		String pageNo = request.getParameter("pageNo");
 		String pageSize = request.getParameter("pageSize");
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String companyId = request.getParameter("companyId");
 		
 		if (!searchStartTime.isEmpty()) {
 			searchStartTime = searchStartTime.replaceAll("[^0-9]", "");
@@ -325,7 +349,7 @@ public class EzStatisticsMailLogController {
 		}
 
 		Map<String, Object> resultMap = ezStatisticsAdminService.getMailLogList(tenantId, pageNo, String.valueOf(pageSize), 
-				mailLogType, searchStartTime, searchEndTime, searchField, searchValue, isPrimaryLang);
+				mailLogType, searchStartTime, searchEndTime, searchField, searchValue, isPrimaryLang, companyId);
 		
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> mailLogList = (List<Map<String, Object>>) resultMap.get("mailLogList");

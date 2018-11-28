@@ -20,6 +20,18 @@
 			    padding: 0px;
 			    border: 1px solid rgb(225, 97, 100);
 			}
+			<%-- 2018-11-28 홍승비 - 설문 등록자의 이름이 화면을 뚫는 문제 수정 --%>
+			.mainlist tr th.pollTitle {
+				word-break: break-all;
+				white-space: normal;
+				width: 535px;
+			}
+			.mainlist tr th.pollWriter {
+				text-align: right;
+				white-space: pre-wrap;
+				word-break: break-all;
+				padding-right: 5px;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">

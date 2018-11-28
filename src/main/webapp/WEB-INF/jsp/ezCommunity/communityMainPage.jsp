@@ -198,6 +198,11 @@
 
                     document.getElementById("newcomm").appendChild(dl);
                 }
+                
+                if( bestcoummunity.length <= 0 ){
+	                conts = "<div style='height:170px; text-align:center;margin-top:5px;'><div><img style='margin-top:28px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
+					$("#newcomm").html(conts);
+                }
 	        }
 
 	        function event_get_bestCommunity(result) {
@@ -257,7 +262,11 @@
 
                     document.getElementById("bestcomm").appendChild(dl);
                 }
-
+                
+                if( bestcoummunity.length <= 0 ){
+	                conts = "<div style='height:170px; text-align:center;margin-top:5px;'><div><img style='margin-top:28px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
+					$("#bestcomm").html(conts);
+                }
 	        }
 
 	        function get_myCommunity() {
@@ -957,8 +966,6 @@
 			                
 			                document.getElementById("todaycop").appendChild(div);
 							
-							conts = "<div style='height:170px; text-align:center;margin-top:5px;'><div><img style='margin-top:28px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
-							$(".newCommunity_listLayout").html(conts);
 						}
 					}
 				});
