@@ -533,77 +533,23 @@
 						
 						console.log(question);
 						
-						// 기존 내용 숨기기
-						var wrapper = thisEl.parents(".qstnWrapper");
-						//console.log(wrapper);
-						wrapper.find(".quesDiv").css("display", "none");
-						wrapper.find(".selection").css("display", "none");
+						// 설문 생성 ui 숨기기
+						hideMkQstn(thisEl);
 						
-						var qstnContents = question.qstnContents;
-						console.log(qstnContents);
-						
-						var qstnType = question.qstnType;
-						console.log(qstnType);
-						
-						var option = question.option;
-						console.log(option);
-						
-						var required = question.required;
-						console.log(required);
-						
-						var other = question.other
-						console.log(other);
-						
-						var html = "";
-							html += "<div class='tempQstnWrapper'>";
-					  	
-							html += "<div class='mvBtnDiv'>";
-							html += "<img class='mvBtn' alt='' src='/images/ezSurvey/move.png'>";
-							html += "</div>";
-					  	
-							html += "<div class='fiCoDelBtns'>";
-							html += "<img alt='' src='/images/ezSurvey/correct.png' class='crtBtn'>";
-							html += "<img alt='' src='/images/ezSurvey/copy.png' class='cpBtn'>";
-							html += "<img alt='' src='/images/ezSurvey/trash.png' class='dltBtn'>";
-							html += "</div>";
-					  	
-							if (qstnContents != null && qstnContents != '' && qstnContents != undefined) {
-								html += "<strong class='qstnCtts'>" + qstnContents + "</strong>";
-							}
-					  		
-							html += "<div class='opts'>";
-							// 보기
-							if (option != null && option != '' && option != undefined) {
-								for (var i = 0; i < option.length; i++) {
-									html += "<div class='opt'>";
-									html += "<input class='optRdo' type='radio' value=''/>";
-									html += "<span class='optSpan'>" + option[i].contents + "</span>";
-									html += "<img alt='' src='" + option[i].optionAttach.filePath + "' class='optImg'>";
-									html += "</div>";
-								}
-							}
-							
-							// 기타
-							if (other != null && other != '' && other != undefined) {
-								html += "<div class='opt'>";
-								html += "<input class='optRdo' type='radio' value=''/>";
-								html += "<span class='optSpan'>" + other.contents + "</span>";
-								html += "<img alt='' src='" + other.otherAttachFile.fpath + "' class='optImg'>";
-								html += "<input class='othInput' type='text'/>";
-								html += "</div>";
-								html += "</div>";
-							}
-							
-							html += "</div>";
-							
-							$(this).parents(".qstnWrapper").prepend(html);
+						// selection 질문 생성
+						mkSelectQstn(thisEl, question);
 					}
 					
 				});
 				
+				// 질문 수정
 				$(".quesBacgr").on("click", ".crtBtn", function() {
-					
-					var tmpQstnWpr = $(this).find(".tempQstnWrapper");
+					var tmpQstnWpr = $(this).parents(".tmpQstnWrapper");
+
+					tmpQstnWpr.siblings().css("display", "");
+					tmpQstnWpr.css("display", "none");
+					//기존에 있던 질문은 삭제
+					tmpQstnWpr.remove();
 					
 				});
 				
@@ -613,6 +559,77 @@
 			function fileUpload(thisEl, thisFile) {
 				questionFile.upload(thisEl, thisFile);
 			}
+			// 설문 생성 ui 숨기기
+			function hideMkQstn(thisEl) {
+				var wrapper = thisEl.parents(".qstnWrapper");
+				//console.log(wrapper);
+				wrapper.find(".quesDiv").css("display", "none");
+				wrapper.find(".selection").css("display", "none");
+			}
+			
+			// 단일선택 질문 생성 
+			function mkSelectQstn(thisEl, question) {
+				
+				var qstnContents = question.qstnContents;
+				var qstnType = question.qstnType;
+				var option = question.option;
+				var required = question.required;
+				var other = question.other
+				
+				var html = "";
+					html += "<div class='tmpQstnWrapper'>";
+			  	
+					html += "<div class='mvBtnDiv'>";
+					html += "<img class='mvBtn' alt='' src='/images/ezSurvey/move.png'>";
+					html += "</div>";
+			  	
+					html += "<div class='fiCoDelBtns'>";
+					html += "<img alt='' src='/images/ezSurvey/correct.png' class='crtBtn'>";
+					html += "<img alt='' src='/images/ezSurvey/copy.png' class='cpBtn'>";
+					html += "<img alt='' src='/images/ezSurvey/trash.png' class='dltBtn'>";
+					html += "</div>";
+			  	
+					if (qstnContents != null && qstnContents != '' && qstnContents != undefined) {
+						html += "<strong class='qstnCtts'>" + qstnContents + "</strong>";
+					}
+			  		
+					html += "<div class='opts'>";
+					// 보기
+					if (option != null && option != '' && option != undefined) {
+						for (var i = 0; i < option.length; i++) {
+							html += "<div class='opt'>";
+							html += "<input class='optRdo' type='radio' value=''/>";
+							html += "<span class='optSpan'>" + option[i].contents + "</span>";
+							// 첨부파일이 있는지 확인
+							if (option[i].optionAttach != null && option[i].optionAttach != '' && option[i].optionAttach != undefined) {
+								html += "<img alt='' src='" + option[i].optionAttach.filePath + "' class='optImg'>";
+							}
+							html += "</div>";
+						}
+					}
+					
+					// 기타
+					if (other != null && other != '' && other != undefined) {
+						html += "<div class='opt'>";
+						html += "<input class='optRdo' type='radio' value=''/>";
+						html += "<span class='optSpan'>" + other.contents + "</span>";
+						// 첨부파일이 있는지 확인
+						if (other.otherAttachFile != null && other.otherAttachFile != '' && other.otherAttachFile != undefined) {
+							html += "<img alt='' src='" + other.otherAttachFile.fpath + "' class='optImg'>";
+						}
+						html += "<input class='othInput' type='text'/>";
+						html += "</div>";
+						html += "</div>";
+					}
+					
+					html += "</div>";
+					
+					thisEl.parents(".qstnWrapper").prepend(html);
+					
+					console.log("질문");
+					console.log(question);
+			}
+			
 		}());
 		
 		</script>
