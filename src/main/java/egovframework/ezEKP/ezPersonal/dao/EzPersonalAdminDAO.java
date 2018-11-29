@@ -262,4 +262,16 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO {
 	public void updateSliderImageOrder(Map<String, Object> map) {
 		update("EzPersonalAdmin.EZSP_SETSLIDERIMAGEITEM_ORDER", map);
 	}
+
+	public void updatePoll_U1(Map<String, Object> map) {
+		update("EzPersonalAdmin.EZSP_UPDATEPOLL_U1", map);
+	}
+	
+	public void updatePoll_U2(Map<String, Object> map) {
+		update("EzPersonalAdmin.EZSP_UPDATEPOLL_U2", map);
+	}
+
+	public void updatePoll_Result(Map<String, Object> map) {
+		delete("EzPersonalAdmin.EZSP_UPDATE_RESULT", map);
+	}
 }

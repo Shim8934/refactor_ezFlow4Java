@@ -20,63 +20,99 @@
 			var compid = "";
 			var ReturnFunction;
 			var RetValue;
+			var itemSeq = "<c:out value = '${infoVO.itemSeq}' />";
+			var startdate = "<c:out value = '${infoVO.startDate}' />";
+			var enddate = "<c:out value = '${infoVO.endDate}' />";
+			var Title = "<c:out value = '${infoVO.pollTitle}' />";
+			var Title2 = "<c:out value = '${infoVO.pollTitle2}' />";
+			var pollCount = "<c:out value = '${infoVO.pollSelectionCount}' />";
+			var flag = "<c:out value='${flag}' />";
+			var nowDate = new Date();
+
 			window.onload = window_onload;
 			function window_onload() {
 				try {
-				    RetValue = parent.addpoll_cross_dialogArguments[0];
-				    ReturnFunction = parent.addpoll_cross_dialogArguments[1];
+					RetValue = parent.addpoll_cross_dialogArguments[0];
+					ReturnFunction = parent.addpoll_cross_dialogArguments[1];
 				} catch (e) {
-				    try {
-				        RetValue = opener.addpoll_cross_dialogArguments[0];
-				        ReturnFunction = opener.addpoll_cross_dialogArguments[1];
-				    } catch (e) {
-				        RetValue = window.dialogArguments;
-				    }
+					try {
+						RetValue = opener.addpoll_cross_dialogArguments[0];
+						ReturnFunction = opener.addpoll_cross_dialogArguments[1];
+					} catch (e) {
+						RetValue = window.dialogArguments;
+					}
 				}
 				compid = RetValue;
 				selectnum_change();
-				
+
 				try {
-				    var ua = navigator.userAgent;
-				    if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-				        var input = document.getElementsByTagName("input");
-				        for (var i = 0; i < input.length; i++) {
-				            if (input[i].getAttribute("type") == "text")
-				                KeEventControl(input[i]);
-				        }
-				    }
+					var ua = navigator.userAgent;
+					if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+						var input = document.getElementsByTagName("input");
+						for (var i = 0; i < input.length; i++) {
+							if (input[i].getAttribute("type") == "text")
+							KeEventControl(input[i]);
+						}
+					}
 				}
 				catch (e)
 				{ }
 
-				nowDate = new Date();
-				document.getElementById("Sdatepicker").value = DateFormat(nowDate);
-				document.getElementById("Edatepicker").value = DateFormat(nowDate);
+				if (startdate == "" && enddate == "") {
+					document.getElementById("Sdatepicker").value = DateFormat(nowDate);
+					document.getElementById("Edatepicker").value = DateFormat(nowDate);
+				}
 			}
 
 
  			$(function () {
-				$("#Sdatepicker").datepicker({
-					changeMonth: true,
-					changeYear: true,
-					autoSize: true,
-					showOn: "both",
-					buttonImage: "/images/ImgIcon/calendar-month.png",
-					buttonImageOnly: true,
-					minDate : 0,
-					maxDate : new Date()
-				});
+ 				if(flag === "add") {
+					$("#Sdatepicker").datepicker({
+						changeMonth: true,
+						changeYear: true,
+						autoSize: true,
+						showOn: "both",
+						buttonImage: "/images/ImgIcon/calendar-month.png",
+						buttonImageOnly: true,
+						minDate : 0,
+						maxDate : new Date()
+					});
+	
+					$("#Edatepicker").datepicker({
+						changeMonth: true,
+						changeYear: true,
+						autoSize: true,
+						showOn: "both",
+						buttonImage: "/images/ImgIcon/calendar-month.png",
+						buttonImageOnly: true,
+						minDate : 0
+					});
+ 				} else {
+					$("#Sdatepicker").datepicker({
+						changeMonth: true,
+						changeYear: true,
+						autoSize: true,
+						showOn: "both",
+						buttonImage: "/images/ImgIcon/calendar-month.png",
+						buttonImageOnly: true,
+						maxDate : new Date()
+					});
+	
+					$("#Edatepicker").datepicker({
+						changeMonth: true,
+						changeYear: true,
+						autoSize: true,
+						showOn: "both",
+						buttonImage: "/images/ImgIcon/calendar-month.png",
+						buttonImageOnly: true
+					});
+				}
 
-				$("#Edatepicker").datepicker({
-					changeMonth: true,
-					changeYear: true,
-					autoSize: true,
-					showOn: "both",
-					buttonImage: "/images/ImgIcon/calendar-month.png",
-					buttonImageOnly: true,
-					minDate : 0
-				});
+ 				if(flag === "mod") {
+ 					modItemSet();
+ 				}
 			});
+
 
 			$(function () {
 				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
@@ -128,47 +164,47 @@
 				}
 				var date = String(yy) + "-" + String(mm) + "-" + String(dd);
 				return date;
-			} 
+			}
 
 			function selectnum_change() {
 				var number = parseInt(selectnum.value);
 				for (var i = 1; i < number + 1; i++) {
-				    document.getElementById("answer" + i).readOnly = false;
-				    document.getElementById("answer" + i).disabled = false;
+					document.getElementById("answer" + i).readOnly = false;
+					document.getElementById("answer" + i).disabled = false;
 				}
-				
+
 				for (var i=number+1; i<11; i++) {
-				    document.getElementById("answer" + i).disabled = true;
-				    document.getElementById("answer" + i).value = "";
+					document.getElementById("answer" + i).disabled = true;
+					document.getElementById("answer" + i).value = "";
 				}
 			}
 
 			function OK_Click() {
 				if (specialChk(document.getElementById("Title").value) || specialChk(document.getElementById("Title2").value)) {
-			    	alert("<spring:message code='ezResource.special'/>");
-			    	return;
-			    }
-				
+					alert("<spring:message code='ezResource.special'/>");
+					return;
+				}
+
 				if (compid == "") {
 					return;
 				}
-				
+
 				if( document.getElementById("Title").value == "" ) {
 					alert("<spring:message code = 'ezPersonal.t215'/>");
 					document.getElementById("Title").focus();
 					return;
 				}
-				
+
 				if (get_length(document.getElementById("Title").value) > 500) {
 					alert("<spring:message code = 'ezPersonal.t216'/>");
 					return;
 				}
-				
+
 				if (get_length(document.getElementById("Title2").value) > 500) {
 					alert("<spring:message code = 'ezPersonal.t216'/>");
 					return;
 				}
-				
+
 				// Sdatepicker*Edatepicker check
 				var Sdate = $('#Sdatepicker').datepicker('getDate');
 				var Edate = $('#Edatepicker').datepicker('getDate');
@@ -178,10 +214,13 @@
 					alert("시작일을 설정해주세요.");
 					return;
 				}
+
 				var days = (Sdate - nowDate) / 86400000;
-				if(days<=-1) {
-					alert("시작일을 다시 설정해주세요.");
-					return;
+				if(flag === "add") {
+					if(days<=-1) {
+						alert("시작일을 다시 설정해주세요.");
+						return;
+					}
 				}
 
 				// endDate
@@ -232,9 +271,10 @@
 				createNodeAndInsertText(xmlDom, objNode, "STARTDATE", tmpStartDateTime);
 				createNodeAndInsertText(xmlDom, objNode, "ENDDATE", tmpEndDateTime);
 				createNodeAndInsertText(xmlDom, objNode, "NUM", document.getElementById("selectnum").value);
+				createNodeAndInsertText(xmlDom, objNode, "ITEMSEQ", itemSeq);
 
 				for (var i=1; i<11; i++) {
-				    createNodeAndInsertText(xmlDom, objNode, "ANSWER", eval("answer" + i).value);
+					createNodeAndInsertText(xmlDom, objNode, "ANSWER", eval("answer" + i).value);
 				}
 
 				xmlHTTP.open("POST", "/admin/ezPersonal/savePoll.do", false);
@@ -243,13 +283,25 @@
 				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
 					alert("<spring:message code = 'ezPersonal.t218' />");
 				} else {
-				    alert("<spring:message code = 'ezPersonal.t219' />");
-				    
-				    if (ReturnFunction != null) {
-				        ReturnFunction("");
-				    } else {
-				        window.returnValue = "";
-				    }
+					if(flag === "add") {
+						alert("<spring:message code = 'ezPersonal.t219' />");
+					} else {
+						alert("설문을 수정하였습니다.");
+					}
+
+					if (ReturnFunction != null) {
+						ReturnFunction("");
+					} else {
+						window.returnValue = "";
+					}
+					if(flag === "mod") {
+						try{
+							window.opener.showPreview(2, itemSeq);
+							
+						} catch(e) {
+							window.close();
+						}
+					}
 					window.close();
 				}
 			}
@@ -265,9 +317,41 @@
 						length++;
 					}
 				}
-				
 				return length;
 			}
+
+
+			var answerArray;
+ 			function modItemSet() {
+				var SDate;
+				var EDate;
+				if (startdate != "") {
+					SDate = new Date(startdate);
+					EDate = new Date(enddate);
+				} else {
+					SDate = new Date();
+					EDate = new Date();
+				}
+
+				$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#Sdatepicker").datepicker('setDate', SDate);
+
+				$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#Edatepicker").datepicker('setDate', EDate);
+
+				document.getElementById("Title").value = Title;
+				document.getElementById("Title2").value = Title2;
+
+				selectnum.value = pollCount;
+				selectnum_change();
+				answerArray = ["<c:out value = '${infoVO.answer1}' />", "<c:out value = '${infoVO.answer2}' />", "<c:out value = '${infoVO.answer3}' />",
+									"<c:out value = '${infoVO.answer4}' />", "<c:out value = '${infoVO.answer5}' />", "<c:out value = '${infoVO.answer6}' />",
+									"<c:out value = '${infoVO.answer7}' />", "<c:out value = '${infoVO.answer8}' />", "<c:out value = '${infoVO.answer9}' />",
+									"<c:out value = '${infoVO.answer10}' />"]
+				for (var i=1; i<=pollCount; i++) {
+				    document.getElementById("answer" + i).value = answerArray[i-1];
+				}
+ 			}
 		</script>
 	</head>
 	<body class = "popup">

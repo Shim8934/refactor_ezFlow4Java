@@ -70,6 +70,8 @@
 <result property="itemSeq"              column="ITEMSEQ"  nullValue=""/>
 <result property="pollTitle"            column="POLLTITLE" nullValue=""/>
 <result property="pollSelectionCount"   column="POLLSELECTIONCOUNT" nullValue=""/>
+<result property="startDate"   			column="STARTDATE" nullValue=""/>
+<result property="endDate"   			column="ENDDATE" nullValue=""/>
 <result property="answer1"              column="ANSWER1" nullValue=""/>
 <result property="answer2"              column="ANSWER2" nullValue=""/>
 <result property="answer3"              column="ANSWER3" nullValue=""/>
@@ -196,6 +198,7 @@ LIMIT #limit#
 SELECT
 	 A.ITEMSEQ ,
      STARTDATE ,
+     ENDDATE,
      POLLSELECTIONCOUNT ,
      POLLTITLE ,
      POLLTITLE2 ,

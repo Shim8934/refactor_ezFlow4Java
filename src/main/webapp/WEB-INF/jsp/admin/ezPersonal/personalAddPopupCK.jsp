@@ -215,6 +215,16 @@
 					return;
 				}
 
+				// Sdatepicker*Edatepicker check
+				var Sdate = $('#Sdatepicker').datepicker('getDate');
+				var Edate = $('#Edatepicker').datepicker('getDate');
+
+				days = (Edate - Sdate) / 86400000
+				if(days<0) {
+					alert("종료일을 다시 설정해주세요.")
+					return;
+				}
+
 				var tmpStartDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
 				var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
 				var skinVal = $('input:radio[name="skin"]:checked').val();
