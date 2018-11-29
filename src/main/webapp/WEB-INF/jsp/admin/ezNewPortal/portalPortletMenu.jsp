@@ -16,8 +16,8 @@
 .full_menu_toggleUL > li.select_li { background: #e5efff; border-right: 1px solid #c6cfdf; border-bottom: 1px solid #c6cfdf; box-sizing: border-box; }
 .not_select { background: #ffffff; border-right: 1px solid #c6cfdf; border-bottom: 1px solid #c6cfdf; box-sizing: border-box; }
 .full_menu_toggleUL > li {border:1px solid #d9d9d9; margin:2px;}
-.popup {height:96%;}
-.full_menu_toggle {margin-top:4%;}
+.popup {height:96%; overflow:hidden;}
+.full_menu_toggle {margin-top:3%;overflow:auto;height:320px;}
 </style>
 </head>
 <body class='popup'>
