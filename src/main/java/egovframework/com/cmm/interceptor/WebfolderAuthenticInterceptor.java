@@ -80,6 +80,18 @@ public class WebfolderAuthenticInterceptor extends WebContentInterceptor {
 					String token = requestObject.get("token") != null ? (String)requestObject.get("token") : "";
 					int tenantId = 0;
 					
+					if (token.equals("")) {
+						try (PrintWriter writer = response.getWriter();) {
+							JSONObject obj = new JSONObject();
+							obj.put("status", "no-token");
+							writer.println(obj.toString());
+							response.setContentType("application/json;charset=utf-8");
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+						return result;
+					}
+					
 					int count = webfolder.existsTokenCheck(userId, token, tenantId);
 					
 					if (count > 0) {
