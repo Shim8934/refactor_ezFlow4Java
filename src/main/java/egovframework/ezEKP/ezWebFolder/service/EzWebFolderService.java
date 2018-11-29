@@ -43,6 +43,7 @@ public interface EzWebFolderService {
 	String getMaxFolderStep(String folderId, int tenantId) throws Exception;
 	String getFolderUserSequence(int tenantId) throws Exception;
 	void updateFolderUseStatus(FolderVO folder, LoginVO userInfo) throws Exception;
+	List<FileVO> getDuplicatedNameFiles(List<String> fileNames, String folderId, String offset, int tenantId) throws Exception;
 	List<FileVO> getAllFilesInFolder(String sqlCode, String order, String folderId, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception;
 	List<FileVO> getAllFiles(String sqlCode, String order, String folderPath, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception;
 	int getTotalFileCnt(String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, int tenantId) throws Exception;

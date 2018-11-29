@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -541,6 +542,54 @@ public class EzWebFolderGWController {
 		
 		logger.debug("createExcelFile end");
 		return result;
+	}
+	
+	@RequestMapping(value = "/rest/ezwebfolder/filemanage/duplicate-check", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject duplicateFileCheckGW(@RequestBody Map<String, Object> parameter, HttpServletRequest request, HttpServletResponse response) {
+
+		Map<String, Object> result = new HashMap<>();
+
+		String serverName = request.getHeader("x-user-host");
+
+		List<String> fileNames = (List<String>) parameter.get("fileNames");
+		String folderId = (String) parameter.get("folderId");
+		String userId = (String) parameter.get("userId");
+
+		// TODO 널 또는 빈 값 체크 serverName, fileNames, folderId, userId
+
+		if (containsNull(serverName, fileNames, folderId, userId)) {
+			logger.debug("Parameter error!");
+
+			result.put("status", "error");
+			result.put("code", 1);
+
+			return new JSONObject(result);
+		}
+
+		try {
+			LoginVO userInfo  = commonUtil.getUserForGw(userId, serverName);
+
+			if (!isWebfolderAdmin(userInfo)) {
+				JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, null, userInfo.getTenantId());
+
+				if ("error".equals(permissionResult.get("status"))) {
+					return permissionResult;
+				}
+			}
+
+			List<FileVO> duplicatedFiles = ezWebFolderService.getDuplicatedNameFiles(fileNames, folderId, userInfo.getOffset(), userInfo.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("duplicatedFiles", duplicatedFiles);
+			result.put("code", 0);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+
+		return new JSONObject(result);
 	}
 	
 	@RequestMapping(value="/rest/ezwebfolder/filemanage/file-upload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
@@ -2534,6 +2583,21 @@ public class EzWebFolderGWController {
 		
 		logger.debug("checkWfAdmin end");
 		return result;
+	}
+	
+	private boolean containsNull(Object... elements) {
+		for(Object e : elements) {
+			if (e == null) {
+				return true;
+			}
+			
+			// string is ""
+			if (e.toString().isEmpty()) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	private boolean isWebfolderAdmin(LoginVO user) {

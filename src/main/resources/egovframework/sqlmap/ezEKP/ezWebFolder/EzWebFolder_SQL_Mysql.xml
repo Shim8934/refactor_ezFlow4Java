@@ -435,6 +435,45 @@
 		]]>
 	</select>
 	
+	<select id="EzWebFolderDAO.getDuplicatedNameFiles" resultMap="fileVO2">
+		<![CDATA[
+			SELECT
+				f.FILE_ID,
+				f.FILE_NAME,
+				f.FILE_PATH,
+				f.FILE_SIZE,
+				f.TYPE_ID,
+				f.DOWN_COUNT,
+				f.FILE_EXT,
+				f.FOLDER_ID,
+				f.USE_STATUS,
+				f.CREATE_ID,
+				f.CREATE_NAME1,
+				f.CREATE_NAME2,
+				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				f.UPDATE_ID,
+				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				t.TYPE_ID AS FILETYPE_ID,
+				CASE WHEN t.TYPE_NAME IS NOT NULL THEN t.TYPE_NAME ELSE (SELECT TYPE_NAME FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_NAME,
+				CASE WHEN t.TYPE_ICON IS NOT NULL THEN t.TYPE_ICON ELSE (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_ICON,
+				CONCAT(#originalPath#, f.FILE_NAME) AS FILE_POSITION,
+				'' AS FOLDER_NAME,
+				'' AS FOLDER_PATH,
+				f.DELETER_ID,
+				f.TENANT_ID
+			FROM
+				TBL_WEBFOLDER_FILE f LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
+			WHERE
+				f.FOLDER_ID = #folderId#
+				AND f.USE_STATUS = 'Y'
+				AND f.TENANT_ID = #tenantId#
+				AND f.FILE_NAME IN
+		]]>
+		<iterate property="fileNames" open="(" close=")" conjunction=",">
+			#fileNames[]#
+		</iterate>
+	</select>
+	
 	<select id="EzWebFolderDAO.getAllFilesInFolder" resultMap="fileVO2">
 		<![CDATA[
 			SELECT

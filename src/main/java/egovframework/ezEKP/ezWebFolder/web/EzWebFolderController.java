@@ -2,18 +2,25 @@ package egovframework.ezEKP.ezWebFolder.web;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -32,6 +39,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +50,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -183,6 +192,98 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return "ezWebFolder/webfolderGeneral";
 	}
 	
+	@RequestMapping(value = "/ezWebFolder/fileDuplicatedConfirm.do")
+	public String fileDuplicatedConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+		logger.debug("fileDuplicateConfirm start");
+		
+		boolean isFolder = request.getParameter("isFolder") != null;
+		
+		logger.debug("Is folder: " + isFolder);
+		
+		model.addAttribute("isFolder", isFolder);
+		
+		if (isFolder) {
+			model.addAttribute("folderName", request.getParameter("folderName"));
+		} else {
+			SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String newDateStr = request.getParameter("newDate");
+			String newSizeStr = request.getParameter("newSize");
+			String oldSizeStr = request.getParameter("oldSize");
+			
+			try {
+				newDateStr = dateFormatter.format(new Date(Long.parseLong(newDateStr)));
+			} catch (Exception ex) {
+				newDateStr = dateFormatter.format(new Date());
+			}
+			
+			try {
+				newSizeStr = humanReadableByteCount(Long.parseLong(newSizeStr));
+			} catch (Exception ex) {
+				// ignore
+			}
+			
+			try {
+				oldSizeStr = humanReadableByteCount(Long.parseLong(oldSizeStr));
+			} catch (Exception ex) {
+				// ignore
+			}
+			
+			model.addAttribute("fileName", request.getParameter("fileName"));
+			model.addAttribute("newDate", newDateStr);
+			model.addAttribute("newSize", newSizeStr);
+			model.addAttribute("oldDate", request.getParameter("oldDate"));
+			model.addAttribute("oldSize", oldSizeStr);
+			
+//			model.addAttribute("newDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+		}
+
+		logger.debug("fileDuplicateConfirm start");
+		return "ezWebFolder/fileDuplicateConfirm";
+	}
+	
+	private String humanReadableByteCount(long bytes) {
+		int unit = 1024;
+		
+		if (bytes < unit) {
+			return bytes + " B";
+		}
+		
+		int exp = (int) (Math.log(bytes) / Math.log(unit));
+		String pre = ("KMGTPE").charAt(exp - 1) + "";
+		
+		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+	}
+	
+	
+	@RequestMapping(value="/ezWebFolder/getDuplicatedFiles.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public String duplicateFileCheck(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> parameter, HttpServletRequest request) throws Exception {
+		logger.debug("getDuplicatedFiles start");
+
+		// user id 추가
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		parameter.put("userId", userInfo.getId());
+
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
+		String url = gwServerUrl + "/rest/ezwebfolder/filemanage/duplicate-check";
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+
+		HttpEntity<?> entity = new HttpEntity<>(new JSONObject(parameter), headers);
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+
+		logger.debug("getDuplicatedFiles end");
+		return resultBody.toString();
+	}
+	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezWebFolder/uploadFile.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -240,6 +341,68 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("uploadFile end");
+		return resultBody.toString();
+	}
+	
+	@RequestMapping(value="/ezWebFolder/uploadFileWrite.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String uploadFileOverwrite(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("uploadFileWrite start");
+		LoginSimpleVO userInfo         = commonUtil.userInfoSimple(loginCookie);
+		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
+		String folderId                = request.getParameter("folderId");
+		String fileIdListStr           = request.getParameter("fileIdArray");
+		String gwServerUrl             = config.getProperty("config.webFolderGwServerURL");
+		String url                     = gwServerUrl + "/rest/ezwebfolder/filemanage/file-upload-overwrite";
+		
+		logger.debug("Folder Id: " + folderId);
+		
+		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+		requestFactory.setBufferRequestBody(false);
+		
+		RestTemplate restTemplate                       = new RestTemplate(requestFactory);
+		List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
+		
+		for (int i = 0; i < messageConverters.size(); i++) {
+			HttpMessageConverter<?> messageConverter = messageConverters.get(i);
+			
+			if (messageConverter.getClass().equals(ResourceHttpMessageConverter.class)) {
+				messageConverters.set(i, new BnkResourceHttpMessageConverter());
+			}
+		}
+		
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		Map<String, Object> jsonObject = new HashMap<>();
+		List<Object> nameList = new ArrayList<>();
+		List<?> fileIdList = (List<?>) new JSONParser().parse(fileIdListStr);
+		
+		for (MultipartFile file: multiFiles) {
+			Map<String, Object> fileJson = new HashMap<>();
+			
+			fileJson.put("originalFilename", file.getOriginalFilename());
+			nameList.add(fileJson);
+			map.add("files", new MultipartFileResource(file.getInputStream(), file.getOriginalFilename()));
+		}
+		
+		jsonObject.put("nameArray", nameList);
+		jsonObject.put("userId", userInfo.getId());
+		jsonObject.put("folderId", folderId);
+		jsonObject.put("fileIdArray", fileIdList);
+		
+		map.add("data", new JSONObject(jsonObject));
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<MultiValueMap<String, Object>>(map, headers);
+		UriComponentsBuilder builder                     = UriComponentsBuilder.fromHttpUrl(url);
+		ResponseEntity<String> result                    = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp         = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		logger.debug("uploadFileWrite end");
 		return resultBody.toString();
 	}
 
@@ -350,6 +513,18 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		model.addAttribute("fileId", fileId);
 		logger.debug("fileRenameConfirm start");
 		return "/ezWebFolder/fileRename";
+	}
+	
+	@RequestMapping(value="/ezWebFolder/fileDuplicateConfirm.do")
+	public String fileDuplicateConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("fileDuplicateConfirm start");
+		String fileId = request.getParameter("fileId") != null ? request.getParameter("fileId") : "";
+		
+		logger.debug("File Id: " + fileId);
+		
+		model.addAttribute("fileId", fileId);
+		logger.debug("fileRenameConfirm start");
+		return "/ezWebFolder/duplicateConfirm";
 	}
 
 	@RequestMapping(value="/ezWebFolder/renameFile.do", method = RequestMethod.POST)
