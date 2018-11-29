@@ -58,11 +58,16 @@
 					var centerElmt = document.getElementsByClassName("slick-center")[0];
 					var centerYear = centerElmt.getElementsByClassName("yearSpan")[0].innerHTML;
 					var mainList   = document.getElementById("mainlist");
-					while (mainList.firstChild) {
-						mainList.removeChild(mainList.firstChild);
-					}
 					
-					getEmployeeList(centerYear);
+					$("#mainlist").fadeOut(100, function() {
+						while (mainList.firstChild) {
+							mainList.removeChild(mainList.firstChild);
+						}
+					})
+					
+					$("#mainlist").fadeIn(100, function() {
+						getEmployeeList(centerYear);
+					});
 				});
 			});
 			function getYearList() {
