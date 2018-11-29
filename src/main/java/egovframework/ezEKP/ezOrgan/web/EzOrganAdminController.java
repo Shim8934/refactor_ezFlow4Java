@@ -207,6 +207,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
+		String useSyncServer = ezCommonService.getTenantConfig("useSyncServer", user.getTenantId());
 		String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", user.getTenantId());
 		String useDisablePop3Imap = ezCommonService.getTenantConfig("UseDisablePopImap", user.getTenantId());
 		String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", user.getTenantId());
@@ -223,6 +224,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useBizmekaTalk", useBizmekaTalk);
 		model.addAttribute("deptTreeTopId", deptTreeTopId);
 		model.addAttribute("useMobileManagemant", useMobileManagemant);
+		model.addAttribute("useSyncServer", useSyncServer);
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
@@ -2879,6 +2881,46 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("syncWithBizmekaTalkAccounts ended.");
+		
+		return returnValue;
+	}
+	
+	/**
+	 * ezSyncServer를 호출하여 인사 정보를 동기화한다.
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/syncOrganAccounts.do")
+	@ResponseBody
+	public String syncOrganAccounts(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("syncOrganAccounts started.");
+		
+		String returnValue = "ERROR";
+		
+		try {
+			// 전체관리자 권한 체크
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+				return returnValue;
+			}
+			
+			String ezSyncServerUrl = ezCommonService.getTenantConfig("ezSyncServerUrl", userInfo.getTenantId());
+			String inputParams = "tenantId=" + userInfo.getTenantId();
+			
+			String resultCode = ezEmailUtil.getWebServiceResult(ezSyncServerUrl, inputParams);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject obj = (JSONObject) parser.parse(resultCode);
+			logger.debug("ezSyncServer getWebServerResult=" + obj.toJSONString());
+			
+			if (!obj.get("resultCode").equals("ERROR") && obj.get("resultCode") != null) {
+				returnValue = "OK";
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("syncOrganAccounts ended.");
 		
 		return returnValue;
 	}

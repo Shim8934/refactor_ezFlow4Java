@@ -89,9 +89,11 @@
 	            </h2>
             </c:if>
             
+            <c:if test="${cChk == '1' }">
             <h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span>
             <ul class="on"></ul>
             </h2>            
+            </c:if>
       	</div>
         <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
