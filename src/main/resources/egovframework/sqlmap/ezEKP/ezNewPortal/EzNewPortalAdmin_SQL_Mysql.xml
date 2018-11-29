@@ -263,10 +263,6 @@
 			VALUES
 				(#menuId#, #menuLang#, #menuName#, #companyId#, #tenantId#)
 			ON DUPLICATE KEY UPDATE
-				tenant_id = #tenantId#,
-				company_id = #companyId#,
-				menu_id = #menuId#,
-				menu_lang = #menuLang#,
 				menu_name = #menuName#
 		]]>
 	</update>
@@ -293,10 +289,6 @@
 			VALUES
 				(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#)
 			ON DUPLICATE KEY UPDATE
-				tenant_id = #tenantId#,
-				company_id = #companyId#,
-				menu_id = #menuId#,
-				user_id = #userId#,
 				access_yn = #accessYN#
 		]]>
 	</update>
