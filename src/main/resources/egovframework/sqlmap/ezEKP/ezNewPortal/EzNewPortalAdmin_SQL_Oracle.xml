@@ -253,7 +253,7 @@
 	<update id="ezNewPortal.updateCompanyMenuNameInfo" parameterClass="Map">
 		<![CDATA[
 			MERGE INTO TBL_PORTAL_MENU_NAME
-			USEING DUAL
+			USING DUAL
 			ON (
 					menu_id = #menuId#
 				AND
