@@ -1434,6 +1434,16 @@ function ClearDocCellInfo() {
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
             }
+            
+            // 사인칸에 부서 
+            fieldname = susunSN + "approdept" + i;
+            field = message.GetListItem(fields, fieldname);
+
+            if (field) {
+                field.textContent = " ";
+                if (new RegExp(/Firefox/).test(navigator.userAgent))
+                    field.innerHTML = "<br type='_moz'>";
+            } 
         }
         for (j = 1 ; j <= hapyuiCount ; j++) {
             fieldname = susunSN + "habyui" + j;
@@ -1531,6 +1541,15 @@ function ClearDocCellInfo() {
         				if (new RegExp(/Firefox/).test(navigator.userAgent))
         					field.innerHTML = "<br type='_moz'>";
         			}
+        			
+        			fieldname = susunSN + "approdept" + i;
+        			field = message.GetListItem(fields, fieldname);
+        			
+        			if (field) {
+        				field.innerHTML = "&nbsp; "; //그냥 공백(" ")을 넣으면 표가 틀어지기 때문에 기호값으로 넣어준다.
+        				if (new RegExp(/Firefox/).test(navigator.userAgent))
+        					field.innerHTML = "<br type='_moz'>";
+        			}        			
         		}
         	}
         }
@@ -1624,6 +1643,7 @@ function SendDraftMappingSign(ret) {
         var psigncell;
         var pseumyungcell;
         var pseumyungdatecell;
+        var papprodeptcell;
         var signInfo = new Array();
         var signCnt = 0;
         var sn = 1;
@@ -1665,6 +1685,7 @@ function SendDraftMappingSign(ret) {
         psigncell = "sign" + sn;
         pseumyungcell = "jikwe" + sn;
         pseumyungdatecell = "seumyungdate" + sn;
+        papprodeptcell = "approdept" + sn;
          
         var RtnVal = getGyulJeDate();
         var CurrentDate = RtnVal.split(".");
@@ -1699,6 +1720,18 @@ function SendDraftMappingSign(ret) {
         } else {
         	signWidth = 50;
             signHeight = 28;
+        }
+        
+        // 결재선에 부서가 있는 경우.
+        var field = message.GetListItem(fields, papprodeptcell);
+        if (field) {
+        	var userDeptInfo;
+        	if(Number(arr_userinfo[17]) === 1) {
+        		userDeptInfo = arr_userinfo[15];
+        	} else {
+        		userDeptInfo = arr_userinfo[16];
+        	}
+        	setNodeText(field, userDeptInfo);	
         }
 
         if (CurAprType == strAprType16) {

@@ -38,6 +38,7 @@
 	.infoImg img {width:60px; height:60px; border-radius:90px;-webkit-border-radius:90px;}
 	.attitudePtl {border:none;}
 	.two_column{width:47.7%;}
+	.orbit-wrapper .timer {display:none;}
 </style>
 </head>
 <body class="mainbg" id="theme1Body">

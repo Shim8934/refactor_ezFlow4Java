@@ -229,24 +229,30 @@
 		]]>
 	</update>
 	
+	<update id="ezNewPortal.updateCompanyMenuUsed" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PORTAL_MENU_COMP 
+			SET
+				menu_used = #menuUsed#
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				menu_id = #menuId#
+		]]>
+	</update>
+	
 	<update id="ezNewPortal.updateCompanyMenuInfo" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				TBL_PORTAL_MENU_COMP A
-			JOIN
-				TBL_PORTAL_MENU B
-			ON
-				A.menu_id = B.menu_id
+				TBL_PORTAL_MENU
 			SET
-				A.menu_used = #menuUsed#,
-				B.menu_url = #menuUrl#,
-				B.icon_url = #iconUrl#
+				menu_url = #menuUrl#,
+				icon_url = #iconUrl#
 			WHERE
-				A.tenant_id = #tenantId#
-			AND
-				A.company_id = #companyId#
-			AND
-				A.menu_id = #menuId#
+				menu_id = #menuId#
 		]]>
 	</update>
 	
@@ -265,11 +271,15 @@
 				)
 			WHEN MATCHED THEN
 				UPDATE SET
-					tenant_id = #tenantId#,
-					company_id = #companyId#,
-					menu_id = #menuId#,
-					menu_lang = #menuLang#,
 					menu_name = #menuName#
+				WHERE
+					tenant_id = #tenantId#
+				AND
+					company_id = #companyId#
+				AND
+					menu_id = #menuId#
+				AND
+					menu_lang = #menuLang#
 			WHEN NOT MATCHED THEN
 				INSERT 
 					(menu_id, menu_lang, menu_name, company_id, tenant_id)
@@ -295,7 +305,7 @@
 
 	<update id="ezNewPortal.updateMenuAuth" parameterClass="Map">
 		<![CDATA[
-			MEGE INTO TBL_PORTAL_MENU_AUTH
+			MERGE INTO TBL_PORTAL_MENU_AUTH
 			USING DUAL
 			ON (
 					menu_id = #menuId#
@@ -308,11 +318,15 @@
 				)
 			WHEN MATCHED THEN
 				UPDATE SET
-					tenant_id = #tenantId#,
-					company_id = #companyId#,
-					menu_id = #menuId#,
-					user_id = #userId#,
 					access_yn = #accessYN#
+				WHERE
+					tenant_id = #tenantId#
+				AND
+					company_id = #companyId#
+				AND
+					menu_id = #menuId#
+				AND
+					user_id = #userId#
 			WHEN NOT MATCHED THEN
 				INSERT 
 					(menu_id, user_id, user_type, access_yn, company_id, tenant_id)
@@ -447,7 +461,7 @@
 			AND
 				A.tenant_id = #tenantId#
 			ORDER BY
-				A.treevieworder;
+				A.treevieworder
 		]]>
 	</select>
 	
@@ -510,35 +524,43 @@
 	<update id="ezNewPortal.updateCompanyPortletInfo" parameterClass="Map">
 	<![CDATA[
 		UPDATE
-			TBL_PORTAL_PORTLET_COMP A
-		JOIN
-			TBL_PORTAL_PORTLET B
-		ON
-			A.portlet_id = B.portlet_id
+			TBL_PORTAL_PORTLET_COMP
 		SET
-			A.menu_id = #menuId#,
-			A.portlet_used = #portletUsed#
+			menu_id = #menuId#,
+			portlet_used = #portletUsed#
 	]]>
-	<isNotNull property="connectionUrl">
+	<isNotNull property="connectionUrl" prepend=",">
 	<![CDATA[
-			,B.portlet_url = #connectionUrl#
-			,A.connection_url = #connectionUrl#
-			,B.menu_id = #menuId#
+			connection_url = #connectionUrl#
 	]]>
 	</isNotNull>
-	<isNotEmpty property="boardId">
+	<isNotEmpty property="boardId" prepend=",">
 	<![CDATA[
-			,A.board_id = #boardId#
+			board_id = #boardId#
 	]]>
 	</isNotEmpty>
 	<![CDATA[
 		WHERE
-			A.tenant_id = #tenantId#
+			tenant_id = #tenantId#
 		AND
-			A.company_id = #companyId#
+			company_id = #companyId#
 		AND
-			A.portlet_id = #portletId#
+			portlet_id = #portletId#
 	]]>
+	</update>
+	
+	<update id="ezNewPortal.updateCompanyPortletInfo2" parameterClass="Map">
+	<isNotNull property="connectionUrl">
+	<![CDATA[
+		UPDATE
+			TBL_PORTAL_PORTLET
+		SET
+			portlet_url = #connectionUrl#,
+			menu_id = #menuId#
+		WHERE
+			portlet_id = #portletId#
+	]]>
+	</isNotNull>
 	</update>
 	
 	<delete id="ezNewPortal.deletePortletName" parameterClass="map">
@@ -769,16 +791,19 @@
 	
 	<update id="ezNewPortal.resetCompanyMenuOrder" parameterClass="Map">
 	<![CDATA[
-		UPDATE 
-			TBL_PORTAL_MENU_COMP A, TBL_PORTAL_MENU B
-		SET
-			A.company_order = B.default_order
-		WHERE
-			A.menu_id = B.menu_id
-		AND
-			company_id = #companyId#
-		AND
-			tenant_id = #tenantId#
+		MERGE INTO
+			TBL_PORTAL_MENU_COMP A
+		USING
+			TBL_PORTAL_MENU B
+		ON
+			(A.menu_id = B.menu_id)
+		WHEN MATCHED THEN
+			UPDATE SET
+				A.company_order = B.default_order
+			WHERE
+					A.company_id = #companyId#
+			AND
+				A.tenant_id = #tenantId#
 	]]>
 	</update>
 	
@@ -795,7 +820,7 @@
 		AND 
 			tenant_id = #tenantId#
 		AND
-			used_theme = #themeId#;	
+			used_theme = #themeId#
 	]]>
 	</update>
 	
@@ -810,7 +835,7 @@
 		AND 
 			tenant_id = #tenantId#
 		AND
-			used_theme = #themeId#;	
+			used_theme = #themeId#
 	]]>
 	</update>
 	
