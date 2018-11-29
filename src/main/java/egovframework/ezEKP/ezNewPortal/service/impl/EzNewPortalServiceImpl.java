@@ -1737,13 +1737,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<PortletInfoVO> portetList = ezNewPortalDAO.getPortletList(map);
 		
-		LOGGER.debug("getPortletList started");
+		LOGGER.debug("getPortletList ended");
 		return portetList;
 	}
 	
 	@Override
 	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId) {
-		LOGGER.debug("getPortletList started");
+		LOGGER.debug("getPortletNameList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
@@ -1752,7 +1752,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<PortletNameInfoVO> portetList = ezNewPortalDAO.getPortletNameList(map);
 		
-		LOGGER.debug("getPortletList started");
+		LOGGER.debug("getPortletNameList ended");
 		return portetList;
 	}
 	
