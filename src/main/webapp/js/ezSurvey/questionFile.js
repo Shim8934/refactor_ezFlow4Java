@@ -70,7 +70,11 @@ var QuestionFile = function() {
 			var fileName        = thisFile.name;
 			var fileSize        = thisFile.size;
 			//var fileDivElmt     = document.getElementsByClassName("fileInfo")[0];
-			var fileDivElmt     = thisEl.parent().prev().find(".optFileInfo")[0];
+			if (thisEl.attr("class") == 'qstnFile') {
+				var fileDivElmt = thisEl.parent().prev()[0];
+			} else {
+				var fileDivElmt     = thisEl.parent().prev().find(".optFileInfo")[0];
+			}
 			console.log(fileDivElmt);
 			var divfileListElmt = fileDivElmt.firstElementChild;
 			var ulElmt          = divfileListElmt.firstElementChild;

@@ -219,15 +219,20 @@
 
 .quesBacgr {background-color: #fff; padding: 20px;}
 
-.quesDiv {text-align: center; display: flex; align-items: center; justify-content: center;}
-.quesDiv .questnTitle {background-color: rgba(204, 204, 204, 0.4); width: 50%; height: 50px; border-radius: 10px; outline: none; padding: 0px 8px; font-size: 16px;}
-.quesDiv .atchImg {width: 50px; height: 50px; padding: 0px 10px; cursor: pointer;}
-.quesDiv .attachFile {opacity: 0; width: 0px}
-.quesDiv .dd-container {width: 20%; height: 50px; border-radius: 10px; display: inline-block;}
-.quesDiv .dd-container .dd-select {height: 48px; border-radius: 10px;}
-.quesDiv .dd-container .dd-options {border-radius: 10px;}
-.quesDiv .dd-container .dd-option {height: 25px; line-height: 25px; text-align: left;}
-.quesDiv .optionBox {padding-top: 5px; }
+.quesDiv {text-align: center; align-items: center; justify-content: center;}
+.quesDiv .qstnRow {display: flex; width: 70%; padding-left: 15%;}
+.quesDiv .qstnRow .questnTitle {background-color: rgba(204, 204, 204, 0.4); width: 80%; height: 50px; border-radius: 10px; outline: none; padding: 0px 8px; font-size: 16px;}
+.quesDiv .qstnRow .atchImg {width: 50px; height: 50px; padding: 0px 10px; cursor: pointer;}
+.quesDiv .qstnRow .attachFile {opacity: 0; width: 0px}
+
+.quesDiv .qstnRow .dd-container {width: 20%; height: 50px; border-radius: 10px; display: inline-block;}
+.quesDiv .qstnRow .dd-container .dd-select {height: 48px; border-radius: 10px;}
+.quesDiv .qstnRow .dd-container .dd-options {border-radius: 10px;}
+.quesDiv .qstnRow .dd-container .dd-option {height: 25px; line-height: 25px; text-align: left;}
+/* .quesDiv .optionBox {padding-top: 5px; } */
+.quesDiv .qstnAtt .qstnFileInfo .fileList ul {width: 70%; padding-left: 15%;}
+.quesDiv .qstnAtt .qstnFileInfo .fileList ul .attFileInf {text-align: left;}
+
 .quesDiv .option_wrap {width: 20%; border-radius: 10px; margin-right:155px; float: right; border: 1px solid #d7d7d7; height: 0px; display:none;}
 .quesDiv .option_wrap .select_op  {text-align: left; padding-left: 0px; list-style: none;}
 .quesDiv .option_wrap .select_op li {height: 35px; vertical-align: middle;}
@@ -286,22 +291,22 @@
 .optFileInfo .attFileInf {text-align: left;}
 
 /* 2018.11.28 임시 단일 선택 질문 css */
-.tempQstnWrapper {border: 1px solid black; box-shadow: rga(0, 0, 0, 0.69) 0px 3px 10px 0px; padding: 10px;}
-.tempQstnWrapper .mvBtnDiv {text-align: center;}
-.tempQstnWrapper .mvBtnDiv .mvBtn {width: 70px; height: 30px;}
+.tmpQstnWrapper {border: 1px solid black; box-shadow: rga(0, 0, 0, 0.69) 0px 3px 10px 0px; padding: 10px;}
+.tmpQstnWrapper .mvBtnDiv {text-align: center;}
+.tmpQstnWrapper .mvBtnDiv .mvBtn {width: 70px; height: 30px;}
 
-.tempQstnWrapper .fiCoDelBtns {float: right;}
-.tempQstnWrapper .fiCoDelBtns .crtBtn {width: 30px; height: 30px; cursor: pointer;}
-.tempQstnWrapper .fiCoDelBtns .cpBtn {width: 30px; height: 30px; cursor: pointer;}
-.tempQstnWrapper .fiCoDelBtns .dltBtn {width: 30px; height: 30px; cursor: pointer;}
+.tmpQstnWrapper .fiCoDelBtns {float: right;}
+.tmpQstnWrapper .fiCoDelBtns .crtBtn {width: 30px; height: 30px; cursor: pointer;}
+.tmpQstnWrapper .fiCoDelBtns .cpBtn {width: 30px; height: 30px; cursor: pointer;}
+.tmpQstnWrapper .fiCoDelBtns .dltBtn {width: 30px; height: 30px; cursor: pointer;}
 
-.tempQstnWrapper .qstnCtts {font-size: 15px; padding-left: 20px;}
+.tmpQstnWrapper .qstnCtts {font-size: 15px; padding-left: 20px;}
 
-.tempQstnWrapper .opts {padding-left: 35px; padding-top: 15px;}
-.tempQstnWrapper .opts .opt {width: 100%; height: 50px;}
-.tempQstnWrapper .opts .opt .optSpan {padding-right: 10px;}
-.tempQstnWrapper .opts .opt .optImg {width: 40px; height: 40px;}
-.tempQstnWrapper .opts .opt .othInput {border-radius: 10px;}
+.tmpQstnWrapper .opts {padding-left: 35px; padding-top: 15px;}
+.tmpQstnWrapper .opts .opt {width: 100%; height: 50px;}
+.tmpQstnWrapper .opts .opt .optSpan {padding-right: 10px;}
+.tmpQstnWrapper .opts .opt .optImg {width: 40px; height: 40px;}
+.tmpQstnWrapper .opts .opt .othInput {border-radius: 10px;}
 
 
 

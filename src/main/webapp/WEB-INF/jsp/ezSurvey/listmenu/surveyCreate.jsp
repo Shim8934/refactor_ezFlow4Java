@@ -194,17 +194,77 @@
 				
 				var html = "";
 				
-				html += "<div class='qstnWrapper'>";
+				/* html += "<div class='qstnWrapper'>";
 				html += "<div class='quesDiv'>";
 				html += "<input class='questnTitle'>";
 				html += "<img alt='파일첨부' src='/images/ezSurvey/attach.png' class='atchImg'>";
 				html += "<input type='file' class='attachFile' multiple='multiple' >";
 				html += "<div id='selectBox'></div>";
+				
+				html += "<div class='qstnFileInfo'>";
+
+				html += "<div>";
+				html += "<ul></ul>";
+				html += "</div>";
+
+				html += "</div>";
+
+				html += "<div class='qstnAtt'>";
+				html += "<input type='file' class='qstnFile' style='display:none;'/>";
+				html += "</div>";
+				
+				html += "</div>"; */
+				
+				html += "<div class='qstnWrapper'>";
+				html += "<div class='quesDiv'>";
+				
+				html += "<div class='qstnRow'>";
+				html += "<input class='questnTitle'>";
+				html += "<img alt='' src='/images/ezSurvey/attach.png' class='atchImg'>";
+				html += "<input type='file' class='attachFile' multiple='multiple' >";
+				html += "<div id='selectBox'></div>";
+				html += "</div>";
+					
+				html += "<div class='qstnAtt'>";
+				html += "<div class='qstnFileInfo'>";
+				html += "<div>";
+				html += "<ul></ul>";
+				html += "</div>";
+				html += "</div>";
+						
+				html += "<div class='qstnAtt'>";
+				html += "<input type='file' class='qstnFile' style='display:none;'/>";
+				html += "</div>";
+				html += "</div>";
+				html += "</div>";
+			
 				html += "</div>";
 				
 				$(".quesBacgr").html(html);
 				
+				addQstnEvent();
+				
 				createQuestionSelectBox();
+			}
+			
+			function addQstnEvent() {
+				
+				// question 첨부파일 트리거
+				$(".quesBacgr").on("click", ".atchImg", function() {
+					$(this).parent().next().find(".qstnFile").click();
+				});
+				
+				// question 첨부파일 추가
+				$(".quesBacgr").on("change", ".qstnFile", function (e) {
+					
+					console.log("question 첨부파일 추가");
+					var thisEl = $(this);
+					var thisFile = $(this)[0].files;
+					console.log(thisEl.parent().prev()[0]);
+					
+					fileUpload(thisEl, thisFile);
+				});
+				
 			}
 			
 			// 질문 유형을 선택하는 셀렉트 박스 생성
@@ -215,11 +275,12 @@
 					imagePosition: "left",
 					selectText: SurveyMessages.strQselect,
 					onSelected: function(data) {
-
-						var selectedEl = data.selectedItem;
-						var grandParent = selectedEl.parent().parent().parent().parent();
-						var questionType = data.selectedIndex;
 						
+						var selectedEl = data.selectedItem;
+						var grandParent = selectedEl.parents(".qstnWrapper");
+						//var questionType = data.selectedIndex;
+						var questionType = data.selectedData.value;
+
 						switch (questionType) {
 							case 1:
 								makeSelectQuestion(grandParent, questionType);
@@ -257,7 +318,6 @@
 			// 생성된 질문을 붙일 부분과 
 			// 질문 유형을 파라미터로 받아 질문 영역 생성
 			function makeSelectQuestion(grandParent, questionType) {
-				
 				var html = "";
 				
 					html += "<div class='selection' questionType='" + questionType + "'>";
@@ -306,10 +366,11 @@
 					
 				grandParent.append(html);
 				
-				addEvent();
+				addOptEvent();
+				
 			}
 			
-			function addEvent() {
+			function addOptEvent() {
 				// 보기 추가
 				$(".addRow").click(function() {
 					
