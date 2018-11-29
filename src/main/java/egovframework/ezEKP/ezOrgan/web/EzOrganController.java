@@ -79,7 +79,7 @@ public class EzOrganController {
         
         if (adminDist.equals("true") || (adminOrganChk.length > 1 && adminOrganChk[1].equals("other"))) {
         	topID = adminOrganChk[0];
-        } else if (adminOrganChk.length > 1 && adminOrganChk[1].equals("organ")) {
+        } else if (adminOrganChk.length > 1 && adminOrganChk[1].equals("organ")) { // 전체 관리자 관리자페이지 일부에서 조직도 전체 트리 보여줌
 		} else if (!orgCompanyID.equals("") && !orgCompanyID.equals("undefined")) {
 			topID = orgCompanyID;
 		} else if (!topID.equals(userCompanyID) && adminChk.equals("true")) {

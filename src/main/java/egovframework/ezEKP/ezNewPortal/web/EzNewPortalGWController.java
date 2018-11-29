@@ -216,6 +216,71 @@ public class EzNewPortalGWController {
 			}*/
 			
 			List<PortletInfoVO> portletOrder = ezNewPortalService.getUserPortletList(portletLang, userId, tenantId, companyId, deptId, true);
+			
+			//1. tenant config가 NO인 경우 사용자 포틀릿 순서에서도 나오면 안됨
+			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
+			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
+			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티)
+			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
+			String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
+			String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
+			String useVote = ezCommonService.getTenantConfig("useBallotSystem", tenantId);
+			String useJournal = ezCommonService.getTenantConfig("USE_JOURNAL", tenantId);
+			String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", tenantId);
+			String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", tenantId);
+			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
+			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
+			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+			
+			if (useAttitude == null || useAttitude.equals("")) {
+				useAttitude = "YES";
+			}
+			
+			if (useQuestion.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuId() == 14));
+			}
+			
+			if (useMemo.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuId() == 18));
+			}
+			
+			if (useLadder.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuId() == 16));
+			}
+			
+			if (useCabinet.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuId() == 11));
+			}
+			
+			if (useVote.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuId() == 15));
+			}
+			
+			if (useJournal.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuId() == 8));
+			}
+			
+			if (useCircular.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuId() == 7));
+			}
+			
+			if (useAttitude.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuId() == 9));
+			}
+			
+			if (useWebfolder.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuId() == 10));
+			}
+			
+			if (useEzPMS.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuId() == 12));
+			}
+			
+			if (useCommunity.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getMenuId() == 5));
+			}
+			
 			JSONObject data = new JSONObject();
 			data.put("portletOrder", portletOrder);
 
@@ -248,31 +313,11 @@ public class EzNewPortalGWController {
 			}
 
 			// 메일, 결재, 일정, 전자설문, 회람판, 근태관리 권한이 있는지 확인
-			String useAttitude = "NO";
-			String useQuestion = "NO";
-			String useCircular = "NO";
 			String useMail = "NO";
 			String useApproval = "NO";
 			String useSchedule = "NO";
 
-			// 1. tenantConfig가 YES인지 -- 회람판(USE_CIRCULAR), 근태관리(USE_ATTITUDE),
-			// 전자설문(useQuestion)
-			useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());
-			useQuestion = ezCommonService.getTenantConfig("useQuestion", info.getTenantId());
-			useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", info.getTenantId());
-			
 			// 2. 메뉴에 권한이 있는지 ================ 수정하기 start
-			if (useAttitude.equals("YES")) {
-				useAttitude = "YES";
-			}
-			
-			if (useQuestion.equals("YES")) {
-				useQuestion = "YES";
-			}
-			
-			if (useCircular.equals("YES")) {
-				useCircular = "YES";
-			}
 			
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
 			
@@ -302,23 +347,39 @@ public class EzNewPortalGWController {
 				useQuestion = "NO";
 			}
 			
+			boolean isUseCircular = false;
+			
 			for (MenuInfoVO mVO : menuList) {
 				
 				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
-					useCircular = "YES";
+					isUseCircular = true;
 					break;
 				} else {
-					useCircular = "NO";
+					isUseCircular = false;
 				}
 			}
 			
+			if (isUseCircular) {
+				useCircular = "YES";
+			} else {
+				useCircular = "NO";
+			}
+			
+			boolean isUseAttitude = false;
+			
 			for (MenuInfoVO mVO : menuList) {
 				if (mVO.getMenuId()==9 && useAttitude.equals("YES")) {
-					useAttitude = "YES";
+					isUseAttitude = true;
 					break;
 				} else {
-					useAttitude = "NO";
+					isUseAttitude = false;
 				}
+			}
+			
+			if (isUseAttitude) {
+				useAttitude = "YES";
+			} else {
+				useAttitude = "NO";
 			}
 			
 			LOGGER.debug("useAttitude : " + useAttitude + ", useQuestion : " + useQuestion + ", useCircular : " + useCircular);
@@ -562,20 +623,68 @@ public class EzNewPortalGWController {
 			 */
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
 			
-			String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());
-			String useQuestion = ezCommonService.getTenantConfig("useQuestion", info.getTenantId());
-			String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", info.getTenantId());
-			
-			if (useAttitude.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 9));
+			//tenant config가 NO인 경우 사용자 메뉴 순서에서도 나오면 안됨
+			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
+			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
+			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티)
+			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
+			String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
+			String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
+			String useVote = ezCommonService.getTenantConfig("useBallotSystem", tenantId);
+			String useJournal = ezCommonService.getTenantConfig("USE_JOURNAL", tenantId);
+			String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", tenantId);
+			String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", tenantId);
+			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
+			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
+			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+
+			if (useAttitude == null || useAttitude.equals("")) {
+				useAttitude = "YES";
 			}
 			
 			if (useQuestion.equals("NO")) {
 				menuList.removeIf(vo -> (vo.getMenuId() == 14));
 			}
 			
+			if (useMemo.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 18));
+			}
+			
+			if (useLadder.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 16));
+			}
+			
+			if (useCabinet.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 11));
+			}
+			
+			if (useVote.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 15));
+			}
+			
+			if (useJournal.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 8));
+			}
+			
 			if (useCircular.equals("NO")) {
 				menuList.removeIf(vo -> (vo.getMenuId() == 7));
+			}
+			
+			if (useAttitude.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 9));
+			}
+			
+			if (useWebfolder.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 10));
+			}
+			
+			if (useEzPMS.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 12));
+			}
+			
+			if (useCommunity.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 5));
 			}
 			
 			data.put("menuList", menuList);
@@ -804,6 +913,70 @@ e.printStackTrace();
 			JSONObject data = new JSONObject();
 			
 			List<PortletInfoVO> portletList = ezNewPortalService.getUserPortletList(portletLang, userId, tenantId, companyId, deptId, false);
+			
+			//tenant config가 NO인 경우 포틀릿 리스트에서도 나오면 안됨
+			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
+			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
+			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티)
+			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
+			String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
+			String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
+			String useVote = ezCommonService.getTenantConfig("useBallotSystem", tenantId);
+			String useJournal = ezCommonService.getTenantConfig("USE_JOURNAL", tenantId);
+			String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", tenantId);
+			String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", tenantId);
+			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
+			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
+			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+
+			if (useAttitude == null || useAttitude.equals("")) {
+				useAttitude = "YES";
+			}
+			
+			if (useQuestion.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 14));
+			}
+			
+			if (useMemo.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 18));
+			}
+			
+			if (useLadder.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 16));
+			}
+			
+			if (useCabinet.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 11));
+			}
+			
+			if (useVote.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 15));
+			}
+			
+			if (useJournal.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 8));
+			}
+			
+			if (useCircular.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 7));
+			}
+			
+			if (useAttitude.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 9));
+			}
+			
+			if (useWebfolder.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 10));
+			}
+			
+			if (useEzPMS.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 12));
+			}
+			
+			if (useCommunity.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 5));
+			}
 			
 			data.put("portletList", portletList);
 			
@@ -1334,9 +1507,74 @@ e.printStackTrace();
 			String userId = request.getParameter("userId");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			
+			int tenantId = userInfo.getTenantId();
 			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, userInfo.getTenantId());
+			
+			//tenant config가 NO인 경우 관리자 메뉴 관리에서도 나오면 안됨
+			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
+			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
+			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티)
+			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
+			String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
+			String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
+			String useVote = ezCommonService.getTenantConfig("useBallotSystem", tenantId);
+			String useJournal = ezCommonService.getTenantConfig("USE_JOURNAL", tenantId);
+			String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", tenantId);
+			String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", tenantId);
+			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
+			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
+			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+			
 
+			if (useAttitude == null || useAttitude.equals("")) {
+				useAttitude = "YES";
+			}
+			
+			if (useQuestion.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuId() == 14));
+			}
+			
+			if (useMemo.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuId() == 18));
+			}
+			
+			if (useLadder.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuId() == 16));
+			}
+			
+			if (useCabinet.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuId() == 11));
+			}
+			
+			if (useVote.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuId() == 15));
+			}
+			
+			if (useJournal.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuId() == 8));
+			}
+			
+			if (useCircular.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuId() == 7));
+			}
+			
+			if (useAttitude.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuId() == 9));
+			}
+			
+			if (useWebfolder.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuId() == 10));
+			}
+			
+			if (useEzPMS.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuId() == 12));
+			}
+			
+			if (useCommunity.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuId() == 5));
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", menuInfos);
@@ -1608,6 +1846,71 @@ e.printStackTrace();
 			JSONObject data = new JSONObject();
 
 			List<PortletInfoVO> portletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang));
+			
+			//1. tenant config가 NO인 경우 관리자 포틀릿 관리에서도 나오면 안됨
+			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
+			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
+			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티)
+			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
+			String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
+			String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
+			String useVote = ezCommonService.getTenantConfig("useBallotSystem", tenantId);
+			String useJournal = ezCommonService.getTenantConfig("USE_JOURNAL", tenantId);
+			String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", tenantId);
+			String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", tenantId);
+			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
+			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
+			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+			
+
+			if (useAttitude == null || useAttitude.equals("")) {
+				useAttitude = "YES";
+			}
+			
+			if (useQuestion.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 14));
+			}
+			
+			if (useMemo.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 18));
+			}
+			
+			if (useLadder.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 16));
+			}
+			
+			if (useCabinet.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 11));
+			}
+			
+			if (useVote.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 15));
+			}
+			
+			if (useJournal.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 8));
+			}
+			
+			if (useCircular.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 7));
+			}
+			
+			if (useAttitude.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 9));
+			}
+			
+			if (useWebfolder.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 10));
+			}
+			
+			if (useEzPMS.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 12));
+			}
+			
+			if (useCommunity.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getMenuId() == 5));
+			}
 			
 			for (PortletInfoVO pvo : portletList) {
 				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId());
@@ -2001,7 +2304,7 @@ e.printStackTrace();
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			String offset = info.getOffSet();
+			String offset = commonUtil.getMinuteUTC(info.getOffSet());
 
 			JSONObject data = new JSONObject();
 
@@ -2831,8 +3134,8 @@ e.printStackTrace();
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 			
-			String primaryLang = ezCommonService.getTenantConfig("primaryLang", info.getTenantId());
-			
+			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
+			int primLang = Integer.parseInt(primaryLang);
 			
 			String cityCode = request.getParameter("cityCode");
 			
@@ -2847,14 +3150,15 @@ e.printStackTrace();
 			
 			JSONObject data = new JSONObject();
 			
-			Map<String, Object> resultMap = ezNewPortalService.getWeather(cityCode, primaryLang);
-			List<WeatherVO> cityList = ezNewPortalService.getCityList(primaryLang);
+			Map<String, Object> resultMap = ezNewPortalService.getWeather(cityCode, primLang);
+			List<WeatherVO> cityList = ezNewPortalService.getCityList(primLang);
 			data.put("cityList", cityList);
 			data.put("displayName", resultMap.get("DISPLAYCITYNAME"));
 			data.put("currentWeather", resultMap.get("CURRENTWEATHER"));
 			data.put("todayWeather", resultMap.get("TODAYWEATHER"));
 			data.put("cityCode", resultMap.get("CITYCODE"));
-			
+			System.out.println(resultMap);
+			System.out.println(resultMap.toString());
 			String[] todayArr = resultMap.get("TODAYWEATHER").toString().split("!");
 			
 			String todayHours = "";
@@ -2873,6 +3177,7 @@ e.printStackTrace();
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -2882,7 +3187,7 @@ e.printStackTrace();
 	}
 
 	// //////board 권한 체크
-	public boolean boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId, String deptId, String userId, String rollInfo) {
+	public boolean boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId, String deptId, String userId, String rollInfo) throws Exception {
 		LOGGER.debug("boardAuthCheck started");
 		boolean authCheck = false;
 		String[] deptPathSplit = deptPath.split(",");
@@ -3009,7 +3314,12 @@ e.printStackTrace();
 			
 			String useAttitude = "NO";
 			//근태 사용여부
-			String useAttitude2 = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());			
+			String useAttitude2 = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());
+			
+			if (useAttitude2 == null || useAttitude2.equals("")) {
+				useAttitude2 = "YES";
+			}
+			
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(info.getCompanyId(), info.getTenantId(), info.getLang(), userId, info.getDeptId());
 			
 			for (MenuInfoVO mVO : menuList) {
@@ -3093,17 +3403,15 @@ e.printStackTrace();
 			
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
 			
+			boolean isUseQuestionAuth = false;
+			
 			for (MenuInfoVO mVO : menuList) {
 				if (mVO.getMenuId()==3) {
 					useApproval = "YES";
 				} 
 				
 				if (mVO.getMenuId()==14 && useQuestion.equals("YES")) {
-					useQuestion = "YES";
-				}
-				
-				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
-					useCircular = "YES";
+					isUseQuestionAuth = true;
 				}
 				
 				if (mVO.getMenuId()==1) {
@@ -3113,6 +3421,30 @@ e.printStackTrace();
 				if (mVO.getMenuId()==2) {
 					useSchedule = "YES";
 				}
+			}
+			
+			if (isUseQuestionAuth) {
+				useQuestion = "YES";
+			} else {
+				useQuestion = "NO";
+			}
+			
+			boolean isUseCircular = false;
+			
+			for (MenuInfoVO mVO : menuList) {
+				
+				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
+					isUseCircular = true;
+					break;
+				} else {
+					isUseCircular = false;
+				}
+			}
+			
+			if (isUseCircular) {
+				useCircular = "YES";
+			} else {
+				useCircular = "NO";
 			}
 			
 			String offset = info.getOffSet();

@@ -74,7 +74,7 @@
 				<c:when test="${not empty movieBoardList}">
 					<c:forEach items="${movieBoardList}" var="movie" varStatus="status">
 						<li id="li_${status.index}" style="width:100%; height:100%; padding:0px; display:inline-flex; background-color:black;">
-							<div style="position:relative;">
+							<div style="position:relative; width:100%;">
 								<video style="width:100%; height:100%;" id="mainVideo" src="${movie.filePath}" data1="${movie.boardID}" data2="${movie.itemID}" preload="metadata"/>
 								<img id="playButton" src="/images/playButton.png" style="position:absolute; width:64px; left:43%; top:34%; cursor:pointer; opacity:0.7;" onclick="moviePlay()"/>
 								<div id="titleDiv" class="noti_portlet_list" style="position:absolute; width:100%; height:55px; margin:-57px 0px 0px 0px; padding:0px;
@@ -86,9 +86,14 @@
 					</c:forEach>
 				</c:when>
 				<c:when test="${access eq 'false' }">
+					<dl class="portlet_title photo_board sortablePortlet">
+							<dt class="portletText">
+								<c:out value="${portletName }" />
+							</dt>
+					</dl>
 					<ul class="portlet_list">
 						<dl class="nodata">
-							<dt style="padding-top:60px;">
+							<dt>
 								<img src="/images/ezNewPortal/nodata.png">
 							</dt>
 							<dd>"<spring:message code='ezNewPortal.t039' />"</dd>
@@ -96,9 +101,14 @@
 					</ul>
 				</c:when>
 				<c:otherwise>
+					<dl class="portlet_title photo_board sortablePortlet">
+							<dt class="portletText">
+								<c:out value="${portletName }" />
+							</dt>
+					</dl>
 					<ul class="portlet_list">
 						<dl class="nodata">
-							<dt style="padding-top:60px;">
+							<dt>
 								<img src="/images/ezNewPortal/nodata.png">
 							</dt>
 							<dd>"<spring:message code='ezNewPortal.t018' />"</dd>

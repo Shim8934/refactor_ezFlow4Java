@@ -168,6 +168,7 @@
 	    var searchStartDate = "${searchStartDate}";
 	    var searchEndDate = "${searchEndDate}";
 	    var shareId = "${shareId}";
+	    var isMailToMe = "${isMailToMe}"; 
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -2286,6 +2287,12 @@
 	    	} else {
 	    		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 160 + "PX";
 	    	}
+	    	
+	    	 // 내게쓰기 버튼 클릭시  checkobx checked 
+	    	if (isMailToMe == 'YES') {
+	         	document.getElementById('toMe').checked = 'checked';
+	  	        MailToMe_Onclick();
+         	}
 	    </script>
 	</body>
 	<xmp id="AttachXmlList" style="display:none;">

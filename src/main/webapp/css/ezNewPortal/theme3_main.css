@@ -190,10 +190,10 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* portlet_list approval */
 .approval .portlet_list li{ margin:0px; padding:0px 10px 0px 23px; background:url(/images/ezNewPortal/list_bul.png) no-repeat 15px 17px; font-size:13px; color:#555555; height:36px; line-height:34px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
-.portlet_list li.first_approval{margin:0px; padding:0px; border:1px solid #e7e7e7; height:113px; box-sizing:border-box; border-left:0px; border-right:0px;}
-.first_approval .approval_tit{ margin:0px; padding:0px 0px 0px 10px; height:27px; background:#f4f4f4; line-height:25px; border-bottom: 1px solid #e5e5e5}
+.portlet_list li.first_approval{margin:0px; padding:0px; border:1px solid #e7e7e7; border-top: #fff; height:113px; box-sizing:border-box; border-left:0px; border-right:0px; background-color: #fff;}
+.first_approval .approval_tit{ margin:0px; padding:0px 0px 0px 10px; height:27px; background:#fff; line-height:16px; border-bottom: 1px solid #e5e5e5}
 .first_approval .approval_tit span.txt{ font-weight:bold;}
-.first_approval .approval_content{margin:10px 0px 15px 0px; padding:0px; overflow:hidden;}
+.first_approval .approval_content{margin:14px 0px 11px 0px; padding:0px; overflow:hidden;}
 .first_approval .approval_content .apprDL{margin:0px; padding:0px 0px 0px 10px; float:left; overflow:hidden; width:30%; box-sizing:border-box;}
 .first_approval .approval_content .apprDL .apprPic{margin:0px; padding:0px; width:53px; height:53px; border:1px solid #e7e7e7; border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; float:left;}
 .first_approval .approval_content .apprDL .apprPic img{border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px; width:53px; height:53px;}
@@ -300,7 +300,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 /* mail */
 .mailGraph{ margin:0px; padding:0px; width:206px; overflow:hidden; float:right;}
 .mailGraph .mGraph{margin:14px 13px 0px 15px; padding:0px; float:left; width:96px; text-align:left; overflow:hidden; height:14px; background:#ffffff;border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
-.mailGraph .mGraph span{margin:0px; padding:0px; display:block; width:30%; height:14px; background:#0470e4;border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
+.mailGraph .mGraph span{margin:0px; padding:0px; display:block; width:0%; height:14px; background:#0470e4;border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
 .mailGraph .mGraph_text{margin:0px; padding:0px; float:left; overflow:hidden; font-size:12px; font-weight:bold; color:#333; font-family:Gulim;}
 .mailGraph .mGraph_text span{ color:#999;}
 
@@ -623,6 +623,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 .info{position:relative; height:140px; margin:34px 0px 0px 30px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
 .info .infoImg{float:left; margin:0px 24px 0px 0px; padding:0px;}
+.info .infoImg img {width:60px; height:60px; border-radius : 90px; -webkit-border-radius:90px;}
 .info .infoName{margin:0px; padding:0px; color:#444445; font-size:18px; font-weight:bold;}
 .info .infoTeam{margin:10px 0px 0px 0px; padding:0px; color:#444445; font-size:14px;}
 .info .infoMail{width:90%;  margin :20px 0px 0px 0px; padding:0px 0px 0px 18px; color:#444445; font-size:14px; background:url(/images/ezNewPortal/theme3Img/infoicon_mail.png )no-repeat 0px 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;  }

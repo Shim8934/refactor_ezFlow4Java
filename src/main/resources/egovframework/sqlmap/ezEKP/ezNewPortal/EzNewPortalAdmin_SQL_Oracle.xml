@@ -171,12 +171,12 @@
 				user_id AS userid,
 				CASE
 				WHEN user_type = 1
-					THEN (SELECT displayname FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
+					THEN (SELECT TO_CHAR(displayname) FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
 					ELSE ''
 				END AS username,
 				CASE WHEN user_type = 1
-					THEN (SELECT description FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
-					ELSE (SELECT displayname FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
+					THEN (SELECT TO_CHAR(description) FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
+					ELSE (SELECT TO_CHAR(displayname) FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 				END AS userdeptname,
 				user_type AS usertype,
 				access_yn AS accessyn
@@ -252,16 +252,29 @@
 	
 	<update id="ezNewPortal.updateCompanyMenuNameInfo" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO TBL_PORTAL_MENU_NAME
-				(menu_id, menu_lang, menu_name, company_id, tenant_id)
-			VALUES
-				(#menuId#, #menuLang#, #menuName#, #companyId#, #tenantId#)
-			ON DUPLICATE KEY UPDATE
-				tenant_id = #tenantId#,
-				company_id = #companyId#,
-				menu_id = #menuId#,
-				menu_lang = #menuLang#,
-				menu_name = #menuName#
+			MERGE INTO TBL_PORTAL_MENU_NAME
+			USEING DUAL
+			ON (
+					menu_id = #menuId#
+				AND
+					menu_lang = #menuLang#
+				AND
+					company_id = #companyId#
+				AND
+					tenant_id = #tenantId#
+				)
+			WHEN MATCHED THEN
+				UPDATE SET
+					tenant_id = #tenantId#,
+					company_id = #companyId#,
+					menu_id = #menuId#,
+					menu_lang = #menuLang#,
+					menu_name = #menuName#
+			WHEN NOT MATCHED THEN
+				INSERT 
+					(menu_id, menu_lang, menu_name, company_id, tenant_id)
+				VALUES
+					(#menuId#, #menuLang#, #menuName#, #companyId#, #tenantId#)
 		]]>
 	</update>
 	
@@ -282,16 +295,29 @@
 
 	<update id="ezNewPortal.updateMenuAuth" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO TBL_PORTAL_MENU_AUTH
-				(menu_id, user_id, user_type, access_yn, company_id, tenant_id)
-			VALUES
-				(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#)
-			ON DUPLICATE KEY UPDATE
-				tenant_id = #tenantId#,
-				company_id = #companyId#,
-				menu_id = #menuId#,
-				user_id = #userId#,
-				access_yn = #accessYN#
+			MEGE INTO TBL_PORTAL_MENU_AUTH
+			USING DUAL
+			ON (
+					menu_id = #menuId#
+				AND
+					company_id = #companyId#
+				AND
+					tenant_id = #tenantId#
+				AND
+					user_id = #userId#
+				)
+			WHEN MATCHED THEN
+				UPDATE SET
+					tenant_id = #tenantId#,
+					company_id = #companyId#,
+					menu_id = #menuId#,
+					user_id = #userId#,
+					access_yn = #accessYN#
+			WHEN NOT MATCHED THEN
+				INSERT 
+					(menu_id, user_id, user_type, access_yn, company_id, tenant_id)
+				VALUES
+					(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#)
 		]]>
 	</update>
 	
@@ -312,19 +338,19 @@
 	
 	<insert id="ezNewPortal.insertMenu" parameterClass="Map">
 		<selectKey keyProperty="menuId" resultClass="Integer">
-			SELECT
-				AUTO_INCREMENT
-			FROM
-				INFORMATION_SCHEMA.TABLES
-			WHERE
-				TABLE_NAME = "TBL_PORTAL_MENU";
+		<![CDATA[
+				SELECT
+					NVL(MAX(menu_id), 0) + 1 as menuId
+				FROM 
+					TBL_PORTAL_MENU
+		]]>
 		</selectKey>
 		
 		<![CDATA[
 			INSERT INTO TBL_PORTAL_MENU
-				(menu_url, menu_type, icon_url)
+				(menu_id, menu_url, menu_type, icon_url)
 			VALUES
-				(#menuUrl#, #menuType#, #iconUrl#)
+				(#menuId#, #menuUrl#, #menuType#, #iconUrl#)
 		]]>
 	</insert>
 	
@@ -396,7 +422,7 @@
 				A.treevieworder as sort,
 				B.parentboardid as topParent,
 				A.boardcolor,
-				IFNULL(A.gubun, -1) as gubun
+				NVL(A.gubun, -1) as gubun
 			FROM
 				TBL_BOARD_BOARDINFO A
 			LEFT JOIN
@@ -412,7 +438,7 @@
 		</isEqual>
 		<isNotEqual property="parentBoardId" compareValue="top">
 		<![CDATA[
-				A.boardtreepath LIKE CONCAT('%', #parentBoardId#, '%')
+				A.boardtreepath LIKE '%' || #parentBoardId# || '%'
 		]]>
 		</isNotEqual>	
 		<![CDATA[
@@ -427,19 +453,18 @@
 	
 	<insert id="ezNewPortal.insertPortlet" parameterClass="Map">
 		<selectKey keyProperty="portletId" resultClass="Integer">
-			SELECT
-				AUTO_INCREMENT
-			FROM
-				INFORMATION_SCHEMA.TABLES
-			WHERE
-				TABLE_NAME = "TBL_PORTAL_PORTLET";
+			<![CDATA[
+				SELECT
+					NVL(MAX(portlet_id), 0) + 1 as portlet_id
+				FROM 
+					TBL_PORTAL_PORTLET
+			]]>
 		</selectKey>
-		
 		<![CDATA[
 			INSERT INTO TBL_PORTAL_PORTLET
-				(menu_id, portlet_url, portlet_type, default_order)
+				(portlet_id, menu_id, portlet_url, portlet_type, default_order)
 			VALUES
-				(#menuId#, #connectionUrl#, 'A', (SELECT MAX(A.portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE A.tenant_id = #tenantId# AND A.company_id = #companyId#))
+				(#portletId#, #menuId#, #connectionUrl#, 'A', (SELECT MAX(A.portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE A.tenant_id = #tenantId# AND A.company_id = #companyId#))
 		]]>
 	</insert>
 	
@@ -571,22 +596,44 @@
 	<update id="ezNewPortal.updateCompanyLogo" parameterClass="Map">
 		<isEqual property="logoType" compareValue="P">
 		<![CDATA[
-			INSERT INTO TBL_PORTAL_LOGO
-				(company_id, tenant_id, logo_type, logo_url)
-			VALUES
-				(#companyId#, #tenantId#, #logoType#, #logoUrl#)
-			ON DUPLICATE KEY UPDATE
-				logo_url = #logoUrl#
+			MERGE INTO TBL_PORTAL_LOGO
+			USING DUAL
+			ON (
+					company_id = #companyId#
+				AND
+					tenant_id = #tenantId#
+				AND
+					logo_type = #logoType#
+				)
+			WHEN MATCHED THEN
+				UPDATE SET
+					logo_url = #logoUrl#
+			WHEN NOT MATCHED THEN
+				INSERT 
+					(company_id, tenant_id, logo_type, logo_url)
+				VALUES
+					(#companyId#, #tenantId#, #logoType#, #logoUrl#)
 		]]>
 		</isEqual>
 		<isEqual property="logoType" compareValue="L">
 		<![CDATA[
-			INSERT INTO TBL_PORTAL_LOGO
-				(company_id, tenant_id, logo_type, logo_url)
-			VALUES
-				(#tenantId#, #tenantId#, #logoType#, #logoUrl#)
-			ON DUPLICATE KEY UPDATE
-				logo_url = #logoUrl#
+			MERGE INTO TBL_PORTAL_LOGO
+			USING DUAL
+			ON (
+					company_id = #tenantId#
+				AND
+					tenant_id = #tenantId#
+				AND
+					logo_type = #logoType#
+				)
+			WHEN MATCHED THEN
+				UPDATE SET
+					logo_url = #logoUrl#
+			WHEN NOT MATCHED THEN
+				INSERT
+					(company_id, tenant_id, logo_type, logo_url)
+				VALUES
+					(#tenantId#, #tenantId#, #logoType#, #logoUrl#)
 		]]>
 		</isEqual>
 	</update>
@@ -829,7 +876,7 @@
 	<select id="ezNewPortal.getSlideImageMaxSn" parameterClass="Map" resultClass="Integer">
 	<![CDATA[
 		SELECT
-			IFNULL(MAX(SN), 0)  
+			NVL(MAX(SN), 0)  
 	    FROM
 	    	TBL_PS_SLIDERIMAGE
 	    WHERE

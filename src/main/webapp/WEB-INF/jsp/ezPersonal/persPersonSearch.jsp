@@ -134,7 +134,7 @@
 	    	    var treeView = new TreeView();
 	        	treeView.LoadFromID("FromTreeView");
 	        	var nodeIdx = treeView.GetSelectNode();
-        		document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" 
+        		document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" 
 	        		+ "<span id='spn_deptName' title='" + MakeXMLString(nodeIdx.GetNodeData("VALUE")) + "'>" + MakeXMLString(nodeIdx.GetNodeData("VALUE")) + "</span>"
 	        		+ "<span id='countInfo'></span>";
 	        	SelectDeptNM.setAttribute("countinfo","")
@@ -186,9 +186,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-			        			document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang1 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang1 + "</span>]";
+			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang1 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -293,7 +293,7 @@
 	            	document.getElementById("txtlist_table").style.display = "none";
 	            	document.getElementById("Search_txtlist_table").style.display = "none";
 	            	if (pSeach) {
-	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + strLang2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
+	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + strLang2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 	                	SelectDeptNM.setAttribute("countinfo", "1")
 	            	}
 	        	} else {
@@ -305,7 +305,7 @@
 	            	} else {
 	                	document.getElementById("Search_txtlist_table").style.display = "";
 	                	document.getElementById("txtlist_table").style.display = "none";
-	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" + strLang2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
+	                	document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + strLang2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 	                	SelectDeptNM.setAttribute("countinfo", "1")
 	            	}
 	        	}
@@ -708,10 +708,29 @@
 	    	}
 	    	
 	    	function ChangeListView_onClick(Div) {
+	    		var selectedIndex = "";
+	    		if(p_ListOrderObject != null){
+		        	if(pListType == 'IMG'){
+			        	$(".organwrap>tr").each(function(i){
+			        		if(this == p_ListOrderObject){
+			        			selectedIndex = i+1;
+			        		}
+			        	});
+		        	} else if(pListType == 'TXT'){
+		        		selectedIndex = $(p_ListOrderObject).index();
+		        	}
+	        	}
 		        pListType = Div;
 	        	ListTypeChangeIcon();
 	        	DisplayUserImageList();
 	        	setOrganListType(pListType);
+	        	if(p_ListOrderObject != null){
+		        	if(Div == 'TXT'){
+	        			$("#txtlist_table tr").eq(selectedIndex).click();
+		        	} else if(Div == 'IMG'){
+		        		$(".organwrap>tr").eq(selectedIndex-1).click();
+		        	}
+	        	}
 	    	}
 	    	function keyword_Clear() {
 		        document.getElementById('keyword').value = "";

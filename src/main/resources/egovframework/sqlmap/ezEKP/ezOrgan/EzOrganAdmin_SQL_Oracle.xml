@@ -4763,7 +4763,27 @@
         AND 
             TENANT_ID = #v_TENANT_ID#
      </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D20" parameterClass="Map">
+        DELETE FROM 
+        	TBL_ATTITUDE_CONF
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
  	
+ 	<delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS7" parameterClass="Map">
+        DELETE FROM
+            TBL_BOARD_MYBOARDS    
+        WHERE  
+            COMPANYID = #v_CN#
+		AND
+			TENANT_ID = #v_TENANT_ID#
+		AND
+			BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'
+     </delete>
+     
  	<select id="EzOrganAdminDAO.userList" parameterClass="map" resultClass="OrganUserVO">
  		SELECT
  			*
@@ -4777,7 +4797,7 @@
  			FROM
  				TBL_USERMASTER
  			WHERE
- 				tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
+ 				tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN') AND PHYSICALDELIVERYOFFICENAME = #companyId#
  				<include refid="EzOrganAdminDAO.searchQuery"/>
  			ORDER BY
  				displayName
@@ -4797,7 +4817,7 @@
 			COUNT(CN) 
 		FROM 
             TBL_USERMASTER 
-		WHERE	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
+		WHERE	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN') AND PHYSICALDELIVERYOFFICENAME = #companyId#
   		<include refid="EzOrganAdminDAO.searchQuery"/>
 	</select>
 	

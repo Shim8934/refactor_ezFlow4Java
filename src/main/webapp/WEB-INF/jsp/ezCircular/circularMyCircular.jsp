@@ -684,7 +684,7 @@
 	    <h1><spring:message code='ezCircular.t4'/><span id="lstCnt"></span><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 	        	<!-- 2018-07-12 김민성 - 회람판 검색 select box로 수정 -->
-	        	<select id="searchType" style="width: 65px; height: 27px; border: 1px solid #cbcbcb; vertical-align: middle; ">
+	        	<select id="searchType" style="width: 65px; height: 27px; border: 1px solid #c8c8c8;">
 	        		<option value="subject"><spring:message code='ezCircular.t32'/></option>
 	        		<option value="writer"><spring:message code='ezCircular.t166'/></option>
 	        	</select>

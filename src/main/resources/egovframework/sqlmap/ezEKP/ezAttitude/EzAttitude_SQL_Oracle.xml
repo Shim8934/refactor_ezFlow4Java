@@ -666,7 +666,7 @@
 			                THEN #startDate#
 			                ELSE TO_CHAR(START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
 			            END
-			            , 'YYYY-MM-DD HH24:MI:SS'), 0)) + COUNT(TYPE_ID)AS COUNT,
+			            , 'YYYY-MM-DD HH24:MI:SS'), 0)) + COUNT(TYPE_ID) AS COUNT,
 			       TYPE_ID
 			FROM   
 				tbl_attitude
@@ -698,11 +698,11 @@
 				TYPE_ID NOT IN ('A01', 'A03')
 			AND    
 				(
-					(START_DATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and START_DATE <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) 
+					(START_DATE + #offsetMin# / (24 * 60)  >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and START_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) 
 					or
-					(END_DATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and END_DATE < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) 
+					(END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and END_DATE + #offsetMin# / (24 * 60) < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) 
 					or
-					(START_DATE < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and END_DATE >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
+					(START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				)
 			GROUP BY
 				TYPE_ID
@@ -1221,7 +1221,7 @@
 	<update id="ezAttitudeDAO.adminChangeUsersModAtt" parameterClass="map">
 		<![CDATA[
 			UPDATE 
-				TBL_ATTITUDE_MODAPPL , (SELECT displayname,displayname2 from tbl_usermaster where cn=#adminId# and tenant_id=#tenantId#) a
+				TBL_ATTITUDE_MODAPPL
 			SET 
 				APPR_STATUS =
 		]]> 
@@ -1234,8 +1234,8 @@
 		<![CDATA[
 			,APPR_DATE = TO_DATE(#apprDate#, 'YYYY-MM-DD HH24:MI:SS')
 			,APPR_USER_ID = #adminId#
-			,APPR_USER_NAME = a.displayname
-			,APPR_USER_NAME2 = a.displayname2
+			,APPR_USER_NAME = (SELECT displayname from tbl_usermaster where cn=#adminId# and tenant_id=#tenantId#)
+			,APPR_USER_NAME2 = (SELECT displayname2 from tbl_usermaster where cn=#adminId# and tenant_id=#tenantId#)
 	        WHERE
 	        	TENANT_ID = #tenantId#
 			AND	        	

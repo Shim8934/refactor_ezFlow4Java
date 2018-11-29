@@ -484,10 +484,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) {
 		LOGGER.debug("[Serivce] getVotePortletCount Started");
 		Map<String, Object> map = new HashMap<String, Object>();
+		String[] deptArr = deptPath.split(",");
 		map.put("userId", userId);
 		map.put("companyId", companyId);
 		map.put("deptPath", deptPath);
 		map.put("tenantId", tenantId);
+		map.put("deptArr", deptArr);
 		
 		LOGGER.debug("[Serivce] getVotePortletCount Ended");
 		return ezNewPortalDAO.getVotePortletCount(map);
@@ -497,10 +499,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId) {
 		LOGGER.debug("[Serivce] getVotePortletInfo Started");
 		Map<String, Object> map = new HashMap<String, Object>();
+		String[] deptArr = deptPath.split(",");
 		map.put("userId", userId);
 		map.put("companyId", companyId);
 		map.put("deptPath", deptPath);
 		map.put("tenantId", tenantId);
+		map.put("deptArr", deptArr);
 		
 		LOGGER.debug("[Serivce] getVotePortletInfo Ended");
 		return ezNewPortalDAO.getVotePortletInfo(map);
@@ -531,7 +535,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 
 	@Override
-	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) {
+	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) throws Exception {
 		LOGGER.debug("[Serivce] getCompanyPortletInfo Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
@@ -797,15 +801,33 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		Calendar cal = Calendar.getInstance();
 		
 		cc.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(birthday.substring(0, 4)) + 2637);
-		cc.set(ChineseCalendar.MONTH, Integer.parseInt(birthday.substring(4, 6)) - 1);
-		cc.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(birthday.substring(6)));
+		
+		String monthStr = birthday.substring(5,7);
+		int month = 0;
+		
+		if (monthStr.indexOf("0") == 0) { //1월~9월까지는 앞에 0이 붙기때문에 제거해야함.
+			monthStr = monthStr.substring(1);
+		}
+		
+		month = Integer.parseInt(monthStr);
+		
+		cc.set(ChineseCalendar.MONTH, month - 1);
+		cc.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(birthday.substring(8)));
 
 		cal.setTimeInMillis(cc.getTimeInMillis());
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		result = sdf.format(cal.getTime());
 		
-		if (result.contains("-" + compMonth + "-")) {
+		String monthComp = String.valueOf(compMonth);
+		
+		String chineseMonth = result.substring(5, 7);
+		
+		if (chineseMonth.indexOf("0") == 0) {
+			chineseMonth = chineseMonth.substring(1);
+		}
+		
+		if (!chineseMonth.equals(monthComp)) {
 			result = "";
 		}
 		
@@ -1827,7 +1849,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public Map<String, Object> getWeather(String cityCode, String primary) {
+	public Map<String, Object> getWeather(String cityCode, int primary) {
 		LOGGER.debug("getWeather started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1842,7 +1864,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<WeatherVO> getCityList(String primaryLang) {
+	public List<WeatherVO> getCityList(int primaryLang) {
 		LOGGER.debug("getCityList started.");
 		
 		List<WeatherVO> result = ezNewPortalDAO.getCityList(primaryLang);

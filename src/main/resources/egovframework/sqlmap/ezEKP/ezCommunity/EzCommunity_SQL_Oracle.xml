@@ -1243,45 +1243,51 @@
 			FROM
 				TBL_COMM_ONELINEREPLY A
 			INNER JOIN
-			   ((SELECT
-					D.CN, D.DEPARTMENT as DEPTID,
-					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-					D.TENANT_ID
+			   (SELECT
+			   		T1.*,
+			    	ROW_NUMBER() OVER (PARTITION BY T1.CN ORDER BY ROWNUM) CNT 
 				FROM
-					TBL_USERMASTER D
-				WHERE
-					D.TENANT_ID = #tenantID#
-				AND
-					D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+					((SELECT
+						D.CN, D.DEPARTMENT as DEPTID,
+						D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+						D.TENANT_ID
+					FROM
+						TBL_USERMASTER D
+					WHERE
+						D.TENANT_ID = #tenantID#
+					AND
+						D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+						
+					UNION ALL
 					
-				UNION ALL
-				
-				(SELECT
-					B.cn, A2.DEPTID,
-					C.EXTENSIONATTRIBUTE2 as COMPANYID,
-					A2.TENANT_ID
-				FROM
-					TBL_USERMASTER B
-				INNER JOIN
-					TBL_ADDJOBMASTER A2
-				ON
-					A2.CN = B.CN
-				AND
-					A2.TENANT_ID = B.TENANT_ID
-				RIGHT JOIN
-					TBL_DEPTMASTER C
-				ON
-					A2.DEPTID = C.CN
-				AND
-					B.TENANT_ID = C.TENANT_ID
-				AND
-					C.EXTENSIONATTRIBUTE2 = #companyID#
-				WHERE
-                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T
+					(SELECT
+						B.cn, A2.DEPTID,
+						C.EXTENSIONATTRIBUTE2 as COMPANYID,
+						A2.TENANT_ID
+					FROM
+						TBL_USERMASTER B
+					INNER JOIN
+						TBL_ADDJOBMASTER A2
+					ON
+						A2.CN = B.CN
+					AND
+						A2.TENANT_ID = B.TENANT_ID
+					RIGHT JOIN
+						TBL_DEPTMASTER C
+					ON
+						A2.DEPTID = C.CN
+					AND
+						B.TENANT_ID = C.TENANT_ID
+					AND
+						C.EXTENSIONATTRIBUTE2 = #companyID#
+					WHERE
+	                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T1 ) TR
 			ON
-				A.USERID = T.CN
+				A.USERID = TR.CN
 			AND
-				A.TENANT_ID = T.TENANT_ID
+				TR.CNT = 1
+			AND
+				A.TENANT_ID = TR.TENANT_ID
 			WHERE
 				boardid = #v_pBoardID#
 			AND
@@ -1289,7 +1295,7 @@
 			AND
 				A.tenant_id = #tenantID#
 			AND
-				T.COMPANYID = #companyID#
+				TR.COMPANYID = #companyID#
 			ORDER BY
 				writedate ASC
 		]]>
@@ -1321,45 +1327,51 @@
 					FROM
 						TBL_COMM_ITEM_READ A
 					INNER JOIN
-					   ((SELECT
-							D.CN, D.DEPARTMENT as DEPTID,
-							D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-							D.TENANT_ID
+					   (SELECT
+					   		T.*,
+					    	ROW_NUMBER() OVER (PARTITION BY T.CN ORDER BY ROWNUM) CNT 
 						FROM
-							TBL_USERMASTER D
-						WHERE
-							D.TENANT_ID = #tenantID#
-						AND
-							D.PHYSICALDELIVERYOFFICENAME = #companyID#)
-							
-						UNION ALL
-						
-						(SELECT
-							B.cn, A2.DEPTID,
-							C.EXTENSIONATTRIBUTE2 as COMPANYID,
-							A2.TENANT_ID
-						FROM
-							TBL_USERMASTER B
-						INNER JOIN
-							TBL_ADDJOBMASTER A2
-						ON
-							A2.CN = B.CN
-						AND
-							A2.TENANT_ID = B.TENANT_ID
-						RIGHT JOIN
-							TBL_DEPTMASTER C
-						ON
-							A2.DEPTID = C.CN
-						AND
-							B.TENANT_ID = C.TENANT_ID
-						AND
-							C.EXTENSIONATTRIBUTE2 = #companyID#
-						WHERE
-		                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T
+							((SELECT
+									D.CN, D.DEPARTMENT as DEPTID,
+									D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+									D.TENANT_ID
+								FROM
+									TBL_USERMASTER D
+								WHERE
+									D.TENANT_ID = #tenantID#
+								AND
+									D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+									
+								UNION ALL
+								
+								(SELECT
+									B.cn, A2.DEPTID,
+									C.EXTENSIONATTRIBUTE2 as COMPANYID,
+									A2.TENANT_ID
+								FROM
+									TBL_USERMASTER B
+								INNER JOIN
+									TBL_ADDJOBMASTER A2
+								ON
+									A2.CN = B.CN
+								AND
+									A2.TENANT_ID = B.TENANT_ID
+								RIGHT JOIN
+									TBL_DEPTMASTER C
+								ON
+									A2.DEPTID = C.CN
+								AND
+									B.TENANT_ID = C.TENANT_ID
+								AND
+									C.EXTENSIONATTRIBUTE2 = #companyID#
+								WHERE
+				                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T ) TR
 					ON
-						A.USERID = T.CN
+						A.USERID = TR.CN
 					AND
-						A.TENANT_ID = T.TENANT_ID
+						TR.CNT = 1
+					AND
+						A.TENANT_ID = TR.TENANT_ID
 					WHERE
 						A.boardid = #boardID#
 					AND
@@ -1367,7 +1379,7 @@
 					AND
 						A.tenant_id = #tenantID#
 					AND
-						T.COMPANYID = #companyID#
+						TR.COMPANYID = #companyID#
 					AND
 		   				USERID <> ( SELECT 
 		   								WRITERID 
@@ -1504,45 +1516,51 @@
 				AND
 					T.userid = RTRIM(A.c_id)
 				INNER JOIN
-				   ((SELECT
-						D.CN, D.DEPARTMENT as DEPTID,
-						D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-						D.TENANT_ID
+				   (SELECT
+			   			T2.*,
+			    		ROW_NUMBER() OVER (PARTITION BY T2.CN ORDER BY ROWNUM) CNT 
 					FROM
-						TBL_USERMASTER D
-					WHERE
-						D.TENANT_ID = #tenantID#
-					AND
-						D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+						((SELECT
+							D.CN, D.DEPARTMENT as DEPTID,
+							D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+							D.TENANT_ID
+						FROM
+							TBL_USERMASTER D
+						WHERE
+							D.TENANT_ID = #tenantID#
+						AND
+							D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+							
+						UNION ALL
 						
-					UNION ALL
-					
-					(SELECT
-						B.cn, A2.DEPTID,
-						C.EXTENSIONATTRIBUTE2 as COMPANYID,
-						A2.TENANT_ID
-					FROM
-						TBL_USERMASTER B
-					INNER JOIN
-						TBL_ADDJOBMASTER A2
-					ON
-						A2.CN = B.CN
-					AND
-						A2.TENANT_ID = B.TENANT_ID
-					RIGHT JOIN
-						TBL_DEPTMASTER C
-					ON
-						A2.DEPTID = C.CN
-					AND
-						B.TENANT_ID = C.TENANT_ID
-					AND
-						C.EXTENSIONATTRIBUTE2 = #companyID#
-					WHERE
-	                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2
+						(SELECT
+							B.cn, A2.DEPTID,
+							C.EXTENSIONATTRIBUTE2 as COMPANYID,
+							A2.TENANT_ID
+						FROM
+							TBL_USERMASTER B
+						INNER JOIN
+							TBL_ADDJOBMASTER A2
+						ON
+							A2.CN = B.CN
+						AND
+							A2.TENANT_ID = B.TENANT_ID
+						RIGHT JOIN
+							TBL_DEPTMASTER C
+						ON
+							A2.DEPTID = C.CN
+						AND
+							B.TENANT_ID = C.TENANT_ID
+						AND
+							C.EXTENSIONATTRIBUTE2 = #companyID#
+						WHERE
+		                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2 ) TR
 				ON
-					A.C_ID = T2.CN
+					A.C_ID = TR.CN
 				AND
-					A.TENANT_ID = T2.TENANT_ID
+					TR.CNT = 1
+				AND
+					A.TENANT_ID = TR.TENANT_ID
 				WHERE
 					RTRIM(c_clubno) = #v_code#
 				AND
@@ -1552,7 +1570,7 @@
 				AND
 					A.tenant_id = #tenantID#
 				AND
-					T2.companyid = #companyID#
+					TR.companyid = #companyID#
 				ORDER BY
 					c_indate DESC
 			]]>
@@ -1576,45 +1594,51 @@
 					AND
 						T.userid = RTRIM(A.c_id)
 					INNER JOIN
-					   ((SELECT
-							D.CN, D.DEPARTMENT as DEPTID,
-							D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-							D.TENANT_ID
+					   (SELECT
+				   			T2.*,
+				    		ROW_NUMBER() OVER (PARTITION BY T2.CN ORDER BY ROWNUM) CNT 
 						FROM
-							TBL_USERMASTER D
-						WHERE
-							D.TENANT_ID = #tenantID#
-						AND
-							D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+							((SELECT
+								D.CN, D.DEPARTMENT as DEPTID,
+								D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+								D.TENANT_ID
+							FROM
+								TBL_USERMASTER D
+							WHERE
+								D.TENANT_ID = #tenantID#
+							AND
+								D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+								
+							UNION ALL
 							
-						UNION ALL
-						
-						(SELECT
-							B.cn, A2.DEPTID,
-							C.EXTENSIONATTRIBUTE2 as COMPANYID,
-							A2.TENANT_ID
-						FROM
-							TBL_USERMASTER B
-						INNER JOIN
-							TBL_ADDJOBMASTER A2
-						ON
-							A2.CN = B.CN
-						AND
-							A2.TENANT_ID = B.TENANT_ID
-						RIGHT JOIN
-							TBL_DEPTMASTER C
-						ON
-							A2.DEPTID = C.CN
-						AND
-							B.TENANT_ID = C.TENANT_ID
-						AND
-							C.EXTENSIONATTRIBUTE2 = #companyID#
-						WHERE
-		                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2
+							(SELECT
+								B.cn, A2.DEPTID,
+								C.EXTENSIONATTRIBUTE2 as COMPANYID,
+								A2.TENANT_ID
+							FROM
+								TBL_USERMASTER B
+							INNER JOIN
+								TBL_ADDJOBMASTER A2
+							ON
+								A2.CN = B.CN
+							AND
+								A2.TENANT_ID = B.TENANT_ID
+							RIGHT JOIN
+								TBL_DEPTMASTER C
+							ON
+								A2.DEPTID = C.CN
+							AND
+								B.TENANT_ID = C.TENANT_ID
+							AND
+								C.EXTENSIONATTRIBUTE2 = #companyID#
+							WHERE
+			                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2 ) TR
 					ON
-						A.C_ID = T2.CN
+						A.C_ID = TR.CN
 					AND
-						A.TENANT_ID = T2.TENANT_ID	
+						TR.CNT = 1
+					AND
+						A.TENANT_ID = TR.TENANT_ID	
 					WHERE
 						RTRIM(A.c_clubno) = #v_code#
 					AND
@@ -1624,7 +1648,7 @@
 					AND
 						A.tenant_id = #tenantID#
 					AND
-						T2.companyid = #companyID#
+						TR.companyid = #companyID#
 					ORDER BY
 						A.c_indate DESC
 				]]>
@@ -1647,45 +1671,51 @@
 					AND
 						T.userid = RTRIM(A.c_id)
 					INNER JOIN
-					   ((SELECT
-							D.CN, D.DEPARTMENT as DEPTID,
-							D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-							D.TENANT_ID
+					   (SELECT
+				   			T2.*,
+				    		ROW_NUMBER() OVER (PARTITION BY T2.CN ORDER BY ROWNUM) CNT 
 						FROM
-							TBL_USERMASTER D
-						WHERE
-							D.TENANT_ID = #tenantID#
-						AND
-							D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+							((SELECT
+								D.CN, D.DEPARTMENT as DEPTID,
+								D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+								D.TENANT_ID
+							FROM
+								TBL_USERMASTER D
+							WHERE
+								D.TENANT_ID = #tenantID#
+							AND
+								D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+								
+							UNION ALL
 							
-						UNION ALL
-						
-						(SELECT
-							B.cn, A2.DEPTID,
-							C.EXTENSIONATTRIBUTE2 as COMPANYID,
-							A2.TENANT_ID
-						FROM
-							TBL_USERMASTER B
-						INNER JOIN
-							TBL_ADDJOBMASTER A2
-						ON
-							A2.CN = B.CN
-						AND
-							A2.TENANT_ID = B.TENANT_ID
-						RIGHT JOIN
-							TBL_DEPTMASTER C
-						ON
-							A2.DEPTID = C.CN
-						AND
-							B.TENANT_ID = C.TENANT_ID
-						AND
-							C.EXTENSIONATTRIBUTE2 = #companyID#
-						WHERE
-		                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2
+							(SELECT
+								B.cn, A2.DEPTID,
+								C.EXTENSIONATTRIBUTE2 as COMPANYID,
+								A2.TENANT_ID
+							FROM
+								TBL_USERMASTER B
+							INNER JOIN
+								TBL_ADDJOBMASTER A2
+							ON
+								A2.CN = B.CN
+							AND
+								A2.TENANT_ID = B.TENANT_ID
+							RIGHT JOIN
+								TBL_DEPTMASTER C
+							ON
+								A2.DEPTID = C.CN
+							AND
+								B.TENANT_ID = C.TENANT_ID
+							AND
+								C.EXTENSIONATTRIBUTE2 = #companyID#
+							WHERE
+			                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2 ) TR
 					ON
-						A.C_ID = T2.CN
+						A.C_ID = TR.CN
 					AND
-						A.TENANT_ID = T2.TENANT_ID
+						TR.CNT = 1
+					AND
+						A.TENANT_ID = TR.TENANT_ID
 					WHERE
 						RTRIM(c_clubno) = #v_code#
 					AND
@@ -1693,7 +1723,7 @@
 					AND
 						A.tenant_id = #tenantID#
 					AND
-						T2.companyid = #companyID#
+						TR.companyid = #companyID#
 					ORDER BY
 						c_indate DESC
 				]]>
@@ -2090,51 +2120,57 @@
 			AND 
 				A.COMPANYID = T.COMPANYID
 			INNER JOIN
-			   ((SELECT
-					D.CN, D.DEPARTMENT as DEPTID,
-					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-					D.TENANT_ID
+			   (SELECT
+			   		T2.*,
+			    	ROW_NUMBER() OVER (PARTITION BY T2.CN ORDER BY ROWNUM) CNT 
 				FROM
-					TBL_USERMASTER D
-				WHERE
-					D.TENANT_ID = #tenantID#
-				AND
-					D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+					((SELECT
+						D.CN, D.DEPARTMENT as DEPTID,
+						D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+						D.TENANT_ID
+					FROM
+						TBL_USERMASTER D
+					WHERE
+						D.TENANT_ID = #tenantID#
+					AND
+						D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+						
+					UNION ALL
 					
-				UNION ALL
-				
-				(SELECT
-					B.cn, A2.DEPTID,
-					C.EXTENSIONATTRIBUTE2 as COMPANYID,
-					A2.TENANT_ID
-				FROM
-					TBL_USERMASTER B
-				INNER JOIN
-					TBL_ADDJOBMASTER A2
-				ON
-					A2.CN = B.CN
-				AND
-					A2.TENANT_ID = B.TENANT_ID
-				RIGHT JOIN
-					TBL_DEPTMASTER C
-				ON
-					A2.DEPTID = C.CN
-				AND
-					B.TENANT_ID = C.TENANT_ID
-				AND
-					C.EXTENSIONATTRIBUTE2 = #companyID#
-				WHERE
-					B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2
+					(SELECT
+						B.cn, A2.DEPTID,
+						C.EXTENSIONATTRIBUTE2 as COMPANYID,
+						A2.TENANT_ID
+					FROM
+						TBL_USERMASTER B
+					INNER JOIN
+						TBL_ADDJOBMASTER A2
+					ON
+						A2.CN = B.CN
+					AND
+						A2.TENANT_ID = B.TENANT_ID
+					RIGHT JOIN
+						TBL_DEPTMASTER C
+					ON
+						A2.DEPTID = C.CN
+					AND
+						B.TENANT_ID = C.TENANT_ID
+					AND
+						C.EXTENSIONATTRIBUTE2 = #companyID#
+					WHERE
+						B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2 ) TR
 			ON
-				A.C_ID = T2.CN
+				A.C_ID = TR.CN
 			AND
-				A.TENANT_ID = T2.TENANT_ID
+				TR.CNT = 1
+			AND
+				A.TENANT_ID = TR.TENANT_ID
 			WHERE
 				RTRIM(A.c_clubno) = #v_CODE#
 			AND
 				permit = '0'
 			AND
-				T2.companyid = #companyID#
+				TR.companyid = #companyID#
 			AND
 				A.tenant_id = #tenantID#
 		]]>
@@ -3283,6 +3319,8 @@
 				FROM
 					TBL_C_CLUB
 				WHERE
+					companyid = #companyID#
+				AND
 					tenant_id = #tenantID#
 				) T1
 			WHERE
@@ -4109,6 +4147,8 @@
 						TBL_C_CLUBUSER.permit <> 0
 					AND
 						TBL_C_CLUBUSER.tenant_id = #tenantID#
+					AND
+						TBL_C_MEMBERINFO.companyID = #companyID#
 				]]>
 			</isEqual>
 			<isNotEqual property="v_S_RADIO" compareValue="NAME">
@@ -4722,7 +4762,7 @@
 <!-- 	<procedure id="EzCommunityDAO.todayCopGet1"												resultClass="String"> -->
 <!-- 		{CALL EZSP_TODAYCOP_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure>	 -->
-	<select id="EzCommunityDAO.todayCopGet1"					parameterClass="Integer"		resultClass="Integer">
+	<select id="EzCommunityDAO.todayCopGet1"					parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
 				NVL(COUNT(*), 0) CNT

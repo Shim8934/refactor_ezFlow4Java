@@ -40,7 +40,7 @@
 	.two_column{width:47.7%;}
 </style>
 </head>
-<body class="mainbg">
+<body class="mainbg" id="theme1Body">
 	<div id="center">
 	<c:if test="${usedFrame eq 'Frame2'  || usedFrame eq 'Frame4'}">
 		<section class="section_left right_float" style="height:1130px;">
@@ -349,7 +349,7 @@
 		linkBtnPre.classList.add('linkBtn_pre');
 		var preBtnImg = document.createElement('img');
 		
-		if(quickLinkPage.current*1 === 1) {
+		if(quickLinkPage.current*1 === 1 || totalCnt*1 === 0) {
 			preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn_dis.png');
 			preBtnImg.setAttribute('id', 'preBtnDis');
 		} else {
@@ -363,7 +363,7 @@
 		linkBtnNext.classList.add('linkBtn_next');
 		var nextBtnImg = document.createElement('img');
 		
-		if(quickLinkPage.current*1 === totalCnt*1) {
+		if(quickLinkPage.current*1 === totalCnt*1 || totalCnt*1 === 0) {
 			nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn_dis.png');
 			nextBtnImg.setAttribute('id', 'nextBtnDis');
 		} else {
@@ -489,7 +489,7 @@
 		
 		//근태관리 연동
 		var useAttitude = "<c:out value='${useAttitude}'/>";
-		console.log(useAttitude);
+		
 		if (useAttitude === "YES") {
 			parseDate(usedTheme);
 			attiClock();

@@ -1784,16 +1784,18 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public List<ModApplHistoryVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String deptId, List<String> deptIdList, String primary) throws Exception {
 		LOGGER.debug("getAttitudeHistoryList started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+
 		int limit = 0;
-		
 		if (pageNum != null && !pageNum.equals("")) {
 			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+			map.put("startRow", (limit + 1));
+			map.put("endRow", (limit + Integer.valueOf(listSize)));
 		}
 		
 		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
 		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 		
-		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
 		map.put("deptId", deptId);
@@ -1812,8 +1814,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			primary = "";
 		}
 		map.put("primary", primary);
-		map.put("row_startNum", (limit + 1));
-		map.put("row_endNum", (limit + Integer.valueOf(listSize)));
 
 		List<ModApplHistoryVO> resultList = ezAttitudeDAO.getAttitudeHistoryList(map);
 

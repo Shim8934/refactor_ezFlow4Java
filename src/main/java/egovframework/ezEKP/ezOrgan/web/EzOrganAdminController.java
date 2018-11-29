@@ -27,6 +27,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -55,7 +56,6 @@ import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -3194,6 +3194,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertUserConfigInfo(tenantId, userId, "adminOrderNotUsedMobileLogin", adminOrder);
 		}
 		
+		// 사용자 기기목록
+		String inputParams = "userId=" + userId;
+		String getResult = "";
+		logger.debug("inputParams=" + inputParams);
+		
+		JSONParser parser = new JSONParser();
+		JSONArray jsonArr = null;
+		
+		String requestURL = "/ezTalkGate/getUserMobileDeviceList";
+		
+		getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+		logger.debug("result=" + getResult);
+		
+		JSONObject resultObj = (JSONObject) parser.parse(getResult);
+		
+		if (!resultObj.get("data").equals("0")) {
+			jsonArr = (JSONArray) resultObj.get("data");
+		}
+		
+		model.addAttribute("deviceInfo", jsonArr);
 		model.addAttribute("userName", userName);
 		model.addAttribute("userId", userId);
 		model.addAttribute("adminOrder", adminOrder);
@@ -3225,7 +3245,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		response.addHeader("customStatus", returnValue);
+		response.addHeader("Result", returnValue);
 		logger.debug("setUserMobileManaged ended");
 	}
 
@@ -3464,10 +3484,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-//		String cn = request.getParameter("cn");
-		String jobID = request.getParameter("jobID");
+		String cn = request.getParameter("cn");
 		
-		OrganUserVO vo = ezOrganAdminService.getUserInfo(jobID, userInfo.getPrimary(), userInfo.getTenantId());
+		OrganUserVO vo = ezOrganAdminService.getUserInfo(cn, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		String companyID = vo.getPhysicalDeliveryOfficeName();
 		

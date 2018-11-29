@@ -197,6 +197,8 @@
 			</isNotEqual>
 		<![CDATA[
 			AND
+				B.companyid = #companyID#
+			AND
 				TBL_C_CLUB.companyid = #companyID#
 			AND
 				C1.tenant_id = #tenantID#
@@ -408,47 +410,53 @@
 						FROM
 							TBL_C_CLUB A
 						INNER JOIN
-						   ((SELECT
-								D.CN, D.DEPARTMENT as DEPTID,
-								D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-								D.TENANT_ID
+						   (SELECT
+						   		T.*,
+						    	ROW_NUMBER() OVER (PARTITION BY T.CN ORDER BY ROWNUM) CNT 
 							FROM
-								TBL_USERMASTER D
-							WHERE
-								D.TENANT_ID = #tenantID#
-							AND
-								D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+								((SELECT
+									D.CN, D.DEPARTMENT as DEPTID,
+									D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+									D.TENANT_ID
+								FROM
+									TBL_USERMASTER D
+								WHERE
+									D.TENANT_ID = #tenantID#
+								AND
+									D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+									
+								UNION ALL
 								
-							UNION ALL
-							
-							(SELECT
-								B.cn, A2.DEPTID,
-								C.EXTENSIONATTRIBUTE2 as COMPANYID,
-								A2.TENANT_ID
-							FROM
-								TBL_USERMASTER B
-							INNER JOIN
-								TBL_ADDJOBMASTER A2
-							ON
-								A2.CN = B.CN
-							AND
-								A2.TENANT_ID = B.TENANT_ID
-							RIGHT JOIN
-								TBL_DEPTMASTER C
-							ON
-								A2.DEPTID = C.CN
-							AND
-								B.TENANT_ID = C.TENANT_ID
-							AND
-								C.EXTENSIONATTRIBUTE2 = #companyID#
-							WHERE
-			                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T
+								(SELECT
+									B.cn, A2.DEPTID,
+									C.EXTENSIONATTRIBUTE2 as COMPANYID,
+									A2.TENANT_ID
+								FROM
+									TBL_USERMASTER B
+								INNER JOIN
+									TBL_ADDJOBMASTER A2
+								ON
+									A2.CN = B.CN
+								AND
+									A2.TENANT_ID = B.TENANT_ID
+								RIGHT JOIN
+									TBL_DEPTMASTER C
+								ON
+									A2.DEPTID = C.CN
+								AND
+									B.TENANT_ID = C.TENANT_ID
+								AND
+									C.EXTENSIONATTRIBUTE2 = #companyID#
+								WHERE
+				                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T ) TR
 						ON
-							TRIM(A.C_SYSOPID) = T.CN
+							TRIM(A.C_SYSOPID) = TR.CN
 						AND
-							A.TENANT_ID = T.TENANT_ID
+							TR.CNT = 1
 						AND
-							A.COMPANYID = T.COMPANYID
+							A.TENANT_ID = TR.TENANT_ID
+						AND
+							A.COMPANYID = TR.COMPANYID
 				]]>
 			
 			<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
