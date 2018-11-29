@@ -90,6 +90,7 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    arr_userinfo[17]  = "${userInfo.primary}";
 		    var pCompanyID = "${userInfo.companyID}";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
@@ -1017,17 +1018,20 @@
 		    	}
 		    	
 		        var RecevState = getDocRecevState();
-		        if (RecevState != "011" && RecevState != "012" && RecevState != "014") {
-		            if (RecevState == "015") {
-		                var pAlertContent = strLang912;
-		                OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
-		            }
-		            else if (RecevState == "013") {
-		                var pAlertContent = strLang913;
-		                OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
-		            }
-		            return false;
-		        }
+		        
+		        if (isReDraft != "Y") {
+			        if (RecevState != "011" && RecevState != "012" && RecevState != "014") {
+			            if (RecevState == "015") {
+			                var pAlertContent = strLang912;
+			                OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+			            }
+			            else if (RecevState == "013") {
+			                var pAlertContent = strLang913;
+			                OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+			            }
+			            return false;
+			        }
+			    }
 		
 		        var Resultxml;
 		

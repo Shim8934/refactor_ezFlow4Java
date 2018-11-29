@@ -1771,9 +1771,8 @@ public class EzAttitudeGWController {
 			String year = request.getParameter("year");
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			userId = "";
 			
-			List<AttitudeStatisVO> resultList = ezAttitudeService.getAttitudeUserStatistics(userId, deptId, offset, year, attitudetypeId, info.getTenantId());
+			List<AttitudeStatisVO> resultList = ezAttitudeService.getAttitudeUserStatistics("", deptId, offset, year, attitudetypeId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

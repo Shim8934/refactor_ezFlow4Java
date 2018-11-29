@@ -424,7 +424,13 @@
                     alert("<spring:message code='ezBoard.t267' />");
                     return;
                 }
-		
+                
+                /* 2018-11-28 홍승비 - 크롬에서 confirm() 실행 시 현재 창 활성화를 위해 함수 동작 추가함 */
+				if (CheckIfHasReplies()) {
+		            alert("<spring:message code='ezBoard.t196' />");
+		            return;
+		        } 
+		        
 		        if (!confirm("<spring:message code='ezBoard.t197' />")) {
 		        	return;
 		        }
