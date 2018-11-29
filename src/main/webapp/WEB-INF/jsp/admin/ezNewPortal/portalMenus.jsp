@@ -506,6 +506,7 @@
 			
 			//연결 urlz
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
+			menuUrl = $.trim(menuUrl);
 			
 			if (menuUrl == "" || menuUrl == null) {
 				alert("<spring:message code='ezNewPortal.t083' />");
@@ -690,6 +691,7 @@
 			
 			//연결 url
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
+			menuUrl = $.trim(menuUrl);
 			
 			if (menuUrl == "" || menuUrl == null) {
 				alert("<spring:message code='ezNewPortal.t083' />");

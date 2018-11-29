@@ -137,7 +137,7 @@
 			
 		//새로운 포틀릿인 경우 connection url
 		var connectionUrl = document.getElementById("newPortlet").querySelector(".connectionUrl").value;
-		
+		connectionUrl = $.trim(connectionUrl);
 		
 		//새로운 포틀릿인 경우 관련 메뉴 지정
 		var portletMenuId = document.getElementById("newPortlet").querySelector("#newPortletMenu").getAttribute("data2");
@@ -358,6 +358,12 @@
 		
 		if (url != null) {
 			connectionUrl = url.value;
+			connectionUrl = $.trim(connectionUrl);
+			
+			if (connectionUrl == null || connectionUrl == "") {
+				alert("<spring:message code='ezNewPortal.t092'/>");
+				return;
+			}
 		}
 		
 		var request = new XMLHttpRequest();
