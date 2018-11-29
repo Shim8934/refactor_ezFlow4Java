@@ -1201,26 +1201,31 @@
 <!-- 		<iterate conjunction=";"> -->
 		<![CDATA[
 			SELECT 
-				NVL((to_date((CASE
-								WHEN 
-									(A.END_DATE + (#offsetMin#/(60*24))) > TO_DATE((#year# || '-' || #months# || #endTime#), 'YYYY-MM-DD HH24:MI:SS') 
-								THEN 
-									TO_DATE((#year# || '-' || #months# || #endTime#), 'YYYY-MM-DD HH24:MI:SS') 
-		                        ELSE 
-		                        	(NVL(A.END_DATE, A.START_DATE) + (#offsetMin#/(60*24)))
-		                     END
-							 ), 'YYYY/MM/DD')
-						    
-				  			 -
-					to_date((CASE
-								WHEN
-									(A.START_DATE + (#offsetMin#/(60*24))) < TO_DATE((#year# || '-' || #months# || #startTime#), 'YYYY-MM-DD HH24:MI:SS'), 
-		                        THEN
-		                        	TO_DATE((#year# || '-' || #months# || #startTime#), 'YYYY-MM-DD HH24:MI:SS'), 
-		                        ELSE
-		                        	(A.START_DATE + (#offsetMin#/(60*24)))
-		                     END
-						   	 ), 'YYYY/MM/DD')) + COUNT(A.TYPE_ID), 0) AS COUNT,
+				NVL(
+			        sum(
+			            trunc(
+			                to_date(
+			                        CASE
+			                            WHEN 
+			                                A.END_DATE + #offsetMin#/(60*24) > TO_DATE(#year# || '-' || #months# || #endTime#, 'YYYY-MM-DD HH24:MI:SS') 
+			                            THEN 
+			                                TO_DATE(#year# || '-' || #months# || #endTime#, 'YYYY-MM-DD HH24:MI:SS') 
+			                            ELSE 
+			                                NVL(A.END_DATE, A.START_DATE) + #offsetMin#/(60*24)
+			                         END
+			                         , 'YYYY-MM-DD HH24:MI:SS')
+			                         -
+			                to_date(
+			                        CASE
+			                            WHEN
+			                                A.START_DATE + #offsetMin#/(60*24) < TO_DATE(#year# || '-' || #months# || #startTime#, 'YYYY-MM-DD HH24:MI:SS')
+			                            THEN
+			                                TO_DATE(#year# || '-' || #months# || #startTime#, 'YYYY-MM-DD HH24:MI:SS')
+			                            ELSE
+			                                A.START_DATE + #offsetMin#/(60*24)
+			                         END
+			                         , 'YYYY-MM-DD HH24:MI:SS')
+			                 , 0)), 0) + COUNT(A.TYPE_ID) AS COUNT,
 			       A.TYPE_ID,
 			       #months# AS STAT_MONTH
 			FROM   
@@ -1248,7 +1253,7 @@
 					(A.START_DATE < TO_DATE((#year# || '-' || #months# || #startTime#), 'YYYY-MM-DD HH24:MI:SS') and A.END_DATE >= TO_DATE((#year# || '-' || #months# || #endTime#), 'YYYY-MM-DD HH24:MI:SS'))
 				)
 			GROUP BY
-				A.TYPE_ID, STAT_MONTH
+				A.TYPE_ID, #months#
 		]]>
 <!-- 		</iterate> -->
 	</select>
@@ -1366,11 +1371,15 @@
 			<![CDATA[
 						) T1
 				)
-			where
-				rn >= #row_startNum#
-			and
-				rn <= #row_endNum#
 			]]>
+			<isNotEmpty property="startRow">
+				<![CDATA[
+					where
+						rn >= #startRow#
+					and
+						rn <= #endRow#
+				]]>
+			</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAttitudeHistoryCount" parameterClass="Map" resultClass="String">

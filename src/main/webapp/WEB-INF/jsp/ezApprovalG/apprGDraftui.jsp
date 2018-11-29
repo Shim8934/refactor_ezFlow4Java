@@ -105,6 +105,7 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    arr_userinfo[17]  = "${userInfo.primary}";
 		    var pCompanyID = "${userInfo.companyID}";
 		    var pUserID = arr_userinfo[1];
 		    var KuyjeType = "002";
@@ -414,6 +415,7 @@
 				                	if( apprReuseConfig != '1' ){
 				                		setAttachInfo(pDocID, "APR", lstAttachLink);
 				                		ClearDocCellInfo();
+				                		message.SetEditable(true);
 				                	}
 			                	}
 		                    }

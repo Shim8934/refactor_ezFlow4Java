@@ -520,19 +520,19 @@
 	<select id="EzBoardAdminDAO.getBoardAccessList" parameterClass="Map" resultMap="boardAccessList">
 		<![CDATA[
 			(SELECT
-				T2.COMPANY ,
-	            T2.DESCRIPTION ,
-	            T2.DISPLAYNAME ,
-	            T2.TITLE ,
-	            T2.COMPANY2 ,
-	            T2.DESCRIPTION2 ,
-	            T2.DISPLAYNAME2 ,
-	            T2.TITLE2 ,
+				TR.COMPANY ,
+	            TR.DESCRIPTION ,
+	            TR.DISPLAYNAME ,
+	            TR.TITLE ,
+	            TR.COMPANY2 ,
+	            TR.DESCRIPTION2 ,
+	            TR.DISPLAYNAME2 ,
+	            TR.TITLE2 ,
 	            T1.ACCESSID , 
 	            T1.ACCESSNAME ,
 	            T1.ACCESSNAME2 ,
 	            T1.BOARDGROUPACL ,
-	            T2.DISPLAYNAME DISPLAYNAME3,
+	            TR.DISPLAYNAME DISPLAYNAME3,
 	            T1.BOARDADMIN_FG ,
 	            T1.ACCESS_ ,
 	            T1.LISTVIEW_FG ,
@@ -544,67 +544,73 @@
         	FROM 
         		TBL_Board_BoardManage T1
         	INNER JOIN
-			   ((SELECT
-					D.CN,
-                    D.COMPANY,
-                    D.DESCRIPTION,
-                    D.DISPLAYNAME,
-                    D.TITLE,
-                    D.COMPANY2,
-                    D.DESCRIPTION2,
-                    D.DISPLAYNAME2,
-                    D.TITLE2,
-                    D.DEPARTMENT as DEPTID,
-					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-					D.TENANT_ID
+			   (SELECT
+			   		T2.*,
+			    	ROW_NUMBER() OVER (PARTITION BY T2.CN ORDER BY ROWNUM) CNT 
 				FROM
-					TBL_USERMASTER D
-				WHERE
-					D.TENANT_ID = #v_TENANTID#
-				AND
-					D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#)
+					((SELECT
+						D.CN,
+	                    D.COMPANY,
+	                    D.DESCRIPTION,
+	                    D.DISPLAYNAME,
+	                    D.TITLE,
+	                    D.COMPANY2,
+	                    D.DESCRIPTION2,
+	                    D.DISPLAYNAME2,
+	                    D.TITLE2,
+	                    D.DEPARTMENT as DEPTID,
+						D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+						D.TENANT_ID
+					FROM
+						TBL_USERMASTER D
+					WHERE
+						D.TENANT_ID = #v_TENANTID#
+					AND
+						D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#)
+						
+					UNION ALL
 					
-				UNION ALL
-				
-				(SELECT
-					B.CN,
-                    C.EXTENSIONATTRIBUTE3 as COMPANY,
-                    C.DISPLAYNAME as DESCRIPTION,
-                    B.DISPLAYNAME,
-                    A2.TITLE,
-                    C.COMPNM2 as COMPANY2,
-                    C.DISPLAYNAME2 as DESCRIPTION2,
-                    B.DISPLAYNAME2,
-                    A2.TITLE2,
-					A2.DEPTID,
-					C.EXTENSIONATTRIBUTE2 as COMPANYID,
-					A2.TENANT_ID
-				FROM
-					TBL_USERMASTER B
-				INNER JOIN
-					TBL_ADDJOBMASTER A2
-				ON
-					A2.CN = B.CN
-				AND
-					A2.TENANT_ID = B.TENANT_ID
-				RIGHT JOIN
-					TBL_DEPTMASTER C
-				ON
-					A2.DEPTID = C.CN
-				AND
-					B.TENANT_ID = C.TENANT_ID
-				AND
-					C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
-				WHERE
-                    B.PHYSICALDELIVERYOFFICENAME <> #v_COMPANYID#)) T2
+					(SELECT
+						B.CN,
+	                    C.EXTENSIONATTRIBUTE3 as COMPANY,
+	                    C.DISPLAYNAME as DESCRIPTION,
+	                    B.DISPLAYNAME,
+	                    A2.TITLE,
+	                    C.COMPNM2 as COMPANY2,
+	                    C.DISPLAYNAME2 as DESCRIPTION2,
+	                    B.DISPLAYNAME2,
+	                    A2.TITLE2,
+						A2.DEPTID,
+						C.EXTENSIONATTRIBUTE2 as COMPANYID,
+						A2.TENANT_ID
+					FROM
+						TBL_USERMASTER B
+					INNER JOIN
+						TBL_ADDJOBMASTER A2
+					ON
+						A2.CN = B.CN
+					AND
+						A2.TENANT_ID = B.TENANT_ID
+					RIGHT JOIN
+						TBL_DEPTMASTER C
+					ON
+						A2.DEPTID = C.CN
+					AND
+						B.TENANT_ID = C.TENANT_ID
+					AND
+						C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+					WHERE
+	                    B.PHYSICALDELIVERYOFFICENAME <> #v_COMPANYID#)) T2 ) TR
 			ON
-				T1.ACCESSID = T2.CN
+				T1.ACCESSID = TR.CN
 			AND
-				T1.TENANT_ID = T2.TENANT_ID
+				TR.CNT = 1
+			AND
+				T1.TENANT_ID = TR.TENANT_ID
         	WHERE 
         		T1.TENANT_ID = #v_TENANTID#
 			AND
-				T2.COMPANYID = #v_COMPANYID#
+				TR.COMPANYID = #v_COMPANYID#
         	AND
         		BOARDID = #v_PBOARDID#)
         		

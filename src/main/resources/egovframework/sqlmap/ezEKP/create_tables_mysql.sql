@@ -4904,7 +4904,7 @@ DROP TABLE IF EXISTS `tbl_dev_master`;
 CREATE TABLE `tbl_dev_master` (
   `DEVSEQ` bigint(20) NOT NULL AUTO_INCREMENT,
   `DEVID` varchar(64) CHARACTER SET utf8 NOT NULL,
-  `DEVTYPE` varchar(4) CHARACTER SET utf8 DEFAULT NULL,
+  `DEVTYPE` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
   `SUBTYPE` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
   `USERID` varchar(100) CHARACTER SET utf8 NOT NULL,
   `TOKEN` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
@@ -5346,22 +5346,6 @@ CREATE TABLE `tbl_expendaprline` (
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`ORGUSERID`,`APRMEMBERSN`,`DOCID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_ezoms_usercount`
---
-
-DROP TABLE IF EXISTS `tbl_ezoms_usercount`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ezoms_usercount` (
-  `SERVERNAME` varchar(50) NOT NULL,
-  `CURRENTUSERNUM` int(11) NOT NULL DEFAULT '0',
-  `FIRSTUSERNUM` int(11) NOT NULL DEFAULT '0',
-  `ADMINEMAIL` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`SERVERNAME`)
-) ENGINE=FEDERATED DEFAULT CHARSET=utf8 CONNECTION='mysql://jmocha2:jmocha202@211.253.139.136:3306/ezoms/customer_usercount';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11607,6 +11591,24 @@ SET character_set_client = utf8;
  1 AS `TEL_NO`,
  1 AS `EMAIL`*/;
 SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `tbl_ps_shareapproval`
+--
+
+DROP TABLE IF EXISTS `tbl_ps_shareapproval`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_ps_shareapproval` (
+  `OWNERID` varchar(80) NOT NULL,
+  `SHAREUSERID` varchar(80) NOT NULL,
+  `SHAREDATE` datetime DEFAULT NULL,
+  `SHAREUSERDEPTID` varchar(200) DEFAULT NULL,
+  `TENANTID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(160) NOT NULL,
+  PRIMARY KEY (`OWNERID`,`TENANTID`,`SHAREUSERID`,`COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Temporary view structure for view `vaprdoingdoclist`

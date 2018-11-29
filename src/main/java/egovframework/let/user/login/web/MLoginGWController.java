@@ -147,11 +147,14 @@ public class MLoginGWController {
     				String notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, uid, "notUseMobileLogin");
     				String adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, uid, "adminOrderNotUsedMobileLogin");
     				
+    				notUseAllMobileLogin = notUseAllMobileLogin.equals("") ? "0" : notUseAllMobileLogin;
+    				adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
+    				
     				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
     					LOGGER.debug("cannot use mobile login. userId=" + uid);
     					
     					result.put("status", "error");
-    					result.put("code", "6");			
+    					result.put("code", "6");
     					result.put("data", "cannot use mobile login.");
     					
     					return result;
@@ -162,14 +165,14 @@ public class MLoginGWController {
     						String inputParams = "userId=" + uid + "&deviceId=" + deviceId;
     						LOGGER.debug("userId=" + uid + ",deviceId=" + deviceId);
     						
-    						String requestURL = "/ezTalkGate/getUserMobileDeviceInfo";
+    						String requestURL = "/ezTalkGate/getUserMobileDeviceUsedInfo";
     						String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
     						LOGGER.debug("getResult=" + getResult);
     						
     						JSONParser parser = new JSONParser();
     						JSONObject resultObj = (JSONObject) parser.parse(getResult);
-    						
-    						if (resultObj.get("data").equals("1")) {
+
+    						if (Integer.valueOf(String.valueOf(resultObj.get("data"))) > 0) {
     							LOGGER.debug("this device cannot use. userId=" + uid);
     							
     							result.put("status", "error");
@@ -177,6 +180,24 @@ public class MLoginGWController {
     							result.put("data", "this device cannot use.");
     							
     							return result;
+    						} else { 
+    							// 0이지만 그전 사용자의 config 확인
+    							String oldUserId = String.valueOf(resultObj.get("oldUserId"));
+    							notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, oldUserId, "notUseMobileLogin");
+    							adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, oldUserId, "adminOrderNotUsedMobileLogin");
+    		    				
+    		    				notUseAllMobileLogin = notUseAllMobileLogin.equals("") ? "0" : notUseAllMobileLogin;
+    		    				adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
+    						
+    		    				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
+    		    					LOGGER.debug("cannot use mobile login. oldUserId=" + oldUserId);
+    		    					
+    		    					result.put("status", "error");
+    		    					result.put("code", "6");
+    		    					result.put("data", "cannot use mobile login.");
+    		    					
+    		    					return result;
+    		    				}
     						}
     					}
     				}
@@ -466,6 +487,7 @@ public class MLoginGWController {
     			}
     		}
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", "1");			
 			result.put("data", "fail");
@@ -537,7 +559,7 @@ public class MLoginGWController {
 				result.put("code", "1");
 				result.put("data", "device info update fail");
 
-				LOGGER.debug("device info update fail devId=" + devId);
+				LOGGER.debug("device info update fail." + userId + ", devId=" + devId);
 			}
 			
 		} catch (Exception e) {

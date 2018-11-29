@@ -36,7 +36,6 @@
         <result property="sendPostNotice"   	column="sendpostnotice"		   	   columnIndex="21" />
         <result property="openToAll" 			column="openToAll"		  	 	   columnIndex="22" />
         <result property="companyId" 			column="companyid"		  	 	   columnIndex="23" />
-        
     </resultMap>    
     
     <resultMap id="pollAnswer" class="PollAnswerVO">
@@ -1808,7 +1807,7 @@
 		</dynamic>	
     </select> 
     
-    <select id="EzPollDAO.getAddJobDept" resultClass="String">
+    <!-- <select id="EzPollDAO.getAddJobDept" resultClass="String">
     <![CDATA[
     	SELECT 
 		  CASE
@@ -1835,24 +1834,9 @@
 			user_id IN ( SELECT a.CN FROM TBL_DEPTMASTER a JOIN TBL_DEPTMASTER b ON a.EXTENSIONATTRIBUTE2 = b.EXTENSIONATTRIBUTE2 AND b.CN = #dept_id# AND a.TENANT_ID = #tenant_id# )
 		)
     ]]>
-    </select>
+    </select> -->
     
     <select id="EzPollDAO.getQuestionRelatedDept" resultClass="String">
-    <![CDATA[
-    	SELECT
-    		DEPT_ID 
-    	FROM 
-    		TBL_VOTE_QUESTION_RELATED
-    	WHERE 
-    		TENANT_ID = #tenant_id#
-    	AND
-    		QST_ID = #qst_id#
-    	AND
-    		USER_ID = #user_id#
-    ]]>
-    </select>
-    
-    <select id="EzPollDAO.getQuestionUserDept" resultClass="String">
     <![CDATA[
     	SELECT
     		DEPT_ID 

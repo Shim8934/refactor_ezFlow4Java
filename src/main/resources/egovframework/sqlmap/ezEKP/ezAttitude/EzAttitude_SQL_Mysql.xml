@@ -156,13 +156,13 @@
 					A.WRITER_ID,
 					A.DEPT_ID,
 					IF(
-						date_add(A.START_DATE, INTERVAL +#offsetMin# minute) < #startDate#, 
+						date_add(A.START_DATE, INTERVAL #offsetMin# minute) < #startDate#, 
 						CONCAT(substr(#startDate#,1,11), substr(date_add(A.START_DATE, INTERVAL #offsetMin# minute),12)), 
 						date_format(date_add(A.START_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
 					  ) AS START_DATE,
 					IF(
-						date_add(A.END_DATE, INTERVAL +#offsetMin# minute) > #endDate#, 
-						CONCAT(substr(#endDate#,1,11), substr(date_add(A.END_DATE INTERVAL #offsetMin# minute), 12)), 
+						date_add(A.END_DATE, INTERVAL #offsetMin# minute) > #endDate#, 
+						CONCAT(substr(#endDate#,1,11), substr(date_add(A.END_DATE, INTERVAL #offsetMin# minute), 12)), 
 						date_format(date_add(A.END_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
 					  ) AS END_DATE,
 					A.MODAPPL,

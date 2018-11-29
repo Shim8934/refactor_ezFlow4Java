@@ -38,6 +38,7 @@
 			var scheduleid = "<c:out value='${_scheduleid}' />";			
 			var datetype = "<c:out value='${scheduleInfo.dateType}' />";			
 			var commpanyid = "<c:out value='${scheduleInfo.companyid}' />";
+			var userCompanyid = "<c:out value='${companyID}' />";
 			var changekey = "";
 			var pattern = "<c:out value='${_pattern}' />";
 			var pageFrom = "<c:out value='${pageFrom}' />";			
@@ -59,6 +60,11 @@
                 if (document.getElementById('managespan') && (scheduletype != "1" && scheduletype != "6")) {
                     managespan.style.display = "none";
                     manageli.style.display = "none";
+                }
+                // 2018-11-26 김민성 - 작성자 회사가 아닌 겸직 회사의 참석자는 등록 안되도록 수정
+                else if(userCompanyid != commpanyid) {
+                	managespan.style.display = "none";
+                	manageli.style.display = "none";
                 }
                 
                 $.ajax({

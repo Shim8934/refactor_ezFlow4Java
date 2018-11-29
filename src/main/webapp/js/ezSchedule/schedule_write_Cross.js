@@ -1121,14 +1121,14 @@ function ListOwnerID_Change()
 	
 	if (scheduleid == "") {
     	if (useAnyoneEdit != "YES") {
-	        if (ListOwnerID == companyID) {
+	        if (pListOwnerID == "3" && ListOwnerID == companyID) {
 	            if (pCompanyAdmin != "Y") {
 	                alert(strLang1000);
 	                $("#ListOwnerID option:eq(0)").prop("selected", true);
 	                return;
 	            }
 	        }
-	        else if (ListOwnerID == deptID) {
+	        else if (pListOwnerID == "2") {
 	            if (pCompanyAdmin != "Y" && pDeptAdmin != "Y") {
 	                alert(strLang1001);
 	                $("#ListOwnerID option:eq(0)").prop("selected", true);

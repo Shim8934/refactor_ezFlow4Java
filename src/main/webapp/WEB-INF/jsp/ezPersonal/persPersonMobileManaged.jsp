@@ -39,7 +39,7 @@
 		// 취소버튼
 		function cancel_onclick() {
     		window.close();
-		}	
+		}
 		
 		// 사용안함 체크박스 상태 변경 
 		function changeChk(obj) {
@@ -78,18 +78,18 @@
 		
 	    function loader() {
 			xhttp.onreadystatechange = function() {
-			    if (this.readyState == 4 && this.status == 200) {
-			    	var response = xhttp.getResponseHeader("customStatus");
-			    	
-			       	if (response == "OK") {
+				if (this.readyState == 4 && this.status == 200) {
+					var response = xhttp.getResponseHeader("Result");
+					
+			    	if (response == "OK") {
 			    	   	alert("<spring:message code='ezOrgan.kyj03' />");
 			       	} else if (response == "DELETE") { 
 			       		window.location.reload(true);
 			       	} else {
 			    		alert("<spring:message code='ezOrgan.kyj04' />");
 			    	}
-			       
-			       	xhttp = null;
+			    	
+			    	xhttp = null;
 			    }
 			};
 		}
@@ -125,7 +125,7 @@
                 <th width='30%'><spring:message code="ezApproval.t367" /></th>
                 <th width='20%'><spring:message code="ezPersonal.kyj02" /></th>
             </tr>
-            <c:if test="${deviceInfo ne '0'}">
+            <c:if test="${deviceInfo ne null}">
 	    		<c:forEach items="${deviceInfo}" var="list">
 		            <c:set var="notUsed" value="${list.notUsed}"></c:set>
 		            <tr height=24px bgcolor=ffffff>
@@ -133,7 +133,7 @@
 						<td>
 							<select name="selectbox" id='selectChangeState' onchange='selectChange("${list.devId}",this,"S")'>
 								<option value='0' <c:if test="${notUsed eq 0}"> selected="selected" </c:if>><spring:message code="ezPersonal.t937" /></option>
-								<option value='1' <c:if test="${notUsed eq 1}"> selected="selected" </c:if>><spring:message code="ezPersonal.t1000" /></option>
+								<option value='1' <c:if test="${notUsed ne 0}"> selected="selected" </c:if>><spring:message code="ezPersonal.t1000" /></option>
 							</select>
 						</td>
 						<td>${list.regDate}</td>
@@ -142,6 +142,11 @@
 						</td>
 					</tr>
 	    		</c:forEach>
+    		</c:if>
+    		<c:if test="${deviceInfo eq null}">
+    			<tr height=24px bgcolor=ffffff>
+    				<td colspan="4" align="center"><spring:message code='ezOrgan.kyj09' /></td>
+    			</tr>
     		</c:if>
         </table>
 	</body>
