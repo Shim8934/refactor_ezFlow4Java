@@ -25,7 +25,7 @@
 		.yearSpan {text-align: center; font-size: 20px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; letter-spacing: -1px; line-height: 31px;}
 		.employee {vertical-align: top; display: inline-block; width: 180px; border: 1px solid #d9d9d9; margin: 20px 60px 0px 0px; height: 240px;}
 		.empBttn {text-align: right; padding: 10px 10px 0px 0px; height: 27px;}
-		.empBttn > img:first-child {margin-right: 7px; height: 16px; width: 16px;}
+		.empBttn > img:first-child {margin-right: 7px;}
 		.empAdd dl dt {margin: 0px;}
 		.empAdd dl dt img {margin: 10px 0px 20px 60px; cursor: pointer;}
 		.empAdd dl dd {color: #999; font-size: 15px; line-height: 21px; text-align: center; margin: 0px;}

@@ -143,34 +143,16 @@
 			function setQuickImg(linkType, linkTypeUrl) {
 				var result;
 				
-				if (host == "gw.freet.co.kr") {
-					switch(linkType) {
-						case "A" : result = "<img src='/images/kr/main/quickmenu_icon01.png' id='A'>"; break;
-						case "B" : result = "<img src='/images/kr/main/quickmenu_icon02.gif' id='B'>"; break;
-						case "C" : result = "<img src='/images/kr/main/quickmenu_icon03.png' id='C'>"; break;
-						case "D" : result = "<img src='/images/kr/main/quickmenu_icon04.gif' id='D'>"; break;
-						case "E" : result = "<img src='/images/kr/main/quickmenu_icon05.gif' id='E'>"; break;
-						case "F" : result = "<img src='/images/kr/main/quickmenu_icon06.gif' id='F'>"; break;
-						case "G" : result = "<img src='/images/kr/main/quickmenu_icon07.png' id='G'>"; break;
-						case "H" : result = "<img src='/images/kr/main/quickmenu_icon08.gif' id='H'>"; break;
-						default : result = "<img src='" + linkTypeUrl + "'>"; break;
-						break;
-					}	
+				switch(linkType) {
+					case "A" : result = "<img src='/images/kr/main/link_externalSite.png' id='A'>"; break;
+					case "B" : result = "<img src='/images/kr/main/link_homePage.png' id='B'>"; break;
+					case "C" : result = "<img src='/images/kr/main/link_intranet.png' id='C'>"; break;
+					case "D" : result = "<img src='/images/kr/main/link_connectedPrograms.png' id='D'>"; break;
+					case "E" : result = "<img src='/images/kr/main/link_blog.png' id='E'>"; break;
+					default : result = "<img src='" + linkTypeUrl + "'>"; break;
+					break;
 				}
-				else {
-					switch(linkType) {
-						case "A" : result = "<img src='/images/kr/main/quickmenu_icon01.gif' id='A'>"; break;
-						case "B" : result = "<img src='/images/kr/main/quickmenu_icon02.gif' id='B'>"; break;
-						case "C" : result = "<img src='/images/kr/main/quickmenu_icon03.gif' id='C'>"; break;
-						case "D" : result = "<img src='/images/kr/main/quickmenu_icon04.gif' id='D'>"; break;
-						case "E" : result = "<img src='/images/kr/main/quickmenu_icon05.gif' id='E'>"; break;
-						case "F" : result = "<img src='/images/kr/main/quickmenu_icon06.gif' id='F'>"; break;
-						case "G" : result = "<img src='/images/kr/main/quickmenu_icon07.gif' id='G'>"; break;
-						case "H" : result = "<img src='/images/kr/main/quickmenu_icon08.gif' id='H'>"; break;
-						default : result = "<img src='" + linkTypeUrl + "'>"; break;
-						break;
-					}	
-				}
+				
 				return result;
 			}
 			function btn_add()  {
@@ -227,11 +209,6 @@
 			function openLinkDetail(item, itemId) {
 				userLang = item.strUserLang;
 				mode = item.mode;
-				
-				if (mode == "modify") {
-					initQuickLink(itemId);
-					initQuickLinkACL(itemId);
-				}
 				
 				var mainTitle;
 				var subTitle1;
@@ -320,15 +297,15 @@
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
 				linksHTML += "<td>" + setQuickImg("E", "") + "</td>";
-				linksHTML += "<td>" + setQuickImg("F", "") + "</td>";
-				linksHTML += "<td>" + setQuickImg("G", "") + "</td>";
-				linksHTML += "<td>" + setQuickImg("H", "") + "</td>";
+				linksHTML += "<td id='typeImg'></td>";
+				linksHTML += "<td></td>";
+				linksHTML += "<td></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
 				linksHTML += "<td><input name='linktypeOption' type='radio' value='E'></td>";
-				linksHTML += "<td><input name='linktypeOption' type='radio' value='F'></td>";
-				linksHTML += "<td><input name='linktypeOption' type='radio' value='G'></td>";
-				linksHTML += "<td><input name='linktypeOption' type='radio' value='H'></td>";
+				linksHTML += "<td><input name='linktypeOption' type='radio' value='Z' id='Z' onclick='radioClick(this, 'rad')' style='display:none;' /></td>";
+				linksHTML += "<td></td>";
+				linksHTML += "<td></td>";
 				linksHTML += "</tr>";
 				linksHTML += "</table>";
 				linksHTML += "</td>";
@@ -336,12 +313,6 @@
 				linksHTML += "<tr>";
 				linksHTML += "<td colspan='2'>";
 				linksHTML += "<div class='btnpositionJsp iconBtn' style='text-align: right;'><a class='imgbtn'><span onclick='CreateType()'>type 등록</span></a></div>";
-				linksHTML += "<table style='margin-top: 10px; margin-left: 10px;display:none;' id='makeTypeTable'>";
-				linksHTML += "<tr style='text-align: center;'><td id='makeTypeImgTD'></td></tr>";
-				linksHTML += "<tr style='text-align: center;'>";
-				linksHTML += "<td style='text-align: center;'><input name='linktypeOption' type='radio' value='Z' id='Z' onclick='radioClick(this, 'rad')' style='margin-top: -5px;' /></td>";
-				linksHTML += "</tr>";
-				linksHTML += "</table>";
 				linksHTML += "</td>";
 				linksHTML += "</tr>";
 				linksHTML += "</table>";
@@ -419,6 +390,12 @@
 					
 				}
 				
+				//수정일경우
+				if (mode == "modify") {
+					initQuickLink(itemId);
+					initQuickLinkACL(itemId);
+				}
+				
 				//타입이미지버튼선택설정
 				$("img").on("click", function() {
 					radioClick(this, 'img');
@@ -489,16 +466,14 @@
 			}
 			function changeNormalImage_end() {
 				if (g_xmlhttp.readyState != 4) return;
-				document.getElementById("makeTypeTable").style.display = "";
-				document.getElementById("makeTypeImgTD").innerHTML = "";
+				var typeImg = document.createElement("IMG");
 				
-				var _img = document.createElement("IMG");
-				_img.src = g_xmlhttp.responseText;
-				_img.id = "ZmakeTypeImg";
-				_img.onclick = function(){ radioClick(this,'img') };
-				_img.style.cursor = "pointer";
+				typeImg.setAttribute("src", g_xmlhttp.responseText);
+				typeImg.setAttribute("id", "ZmakeTypeImg");
+				typeImg.addEventListener("click", radioClick(this, 'img'));
+				typeImg.style.cursor = "pointer";
 				
-				document.getElementById("makeTypeImgTD").appendChild(_img);
+				document.getElementById("typeImg").appendChild(typeImg);
 				document.getElementById("Z").checked = true;
 				checkValue = "Z";
 				LinkTypeURL = g_xmlhttp.responseText;
@@ -520,18 +495,16 @@
 				var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
 				for (i = 0; i < nodes.length; i++) {
 					if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
-						document.getElementById("makeTypeTable").style.display = "";
-						
 						var path = getNodeText(GetChildNodes(nodes[i])[4]);
-						document.getElementById("makeTypeTable").style.display = "";
-						document.getElementById("makeTypeImgTD").innerHTML = "";
+						var typeImg = document.createElement("IMG");
 						
-						var _img = document.createElement("IMG");
-						_img.src = path;
-						_img.id = "ZmakeTypeImg";
-						_img.onclick = function () { radioClick(this, 'img') };
-						_img.style.cursor = "pointer";
-						document.getElementById("makeTypeImgTD").appendChild(_img);
+						typeImg.setAttribute("src", path);
+						typeImg.setAttribute("id", "ZmakeTypeImg");
+						typeImg.addEventListener("click", radioClick(this, 'img'));
+						typeImg.style.cursor = "pointer";
+						
+						document.getElementById("typeImg").appendChild(typeImg);
+						document.getElementById("Z").style.display = "";
 						document.getElementById("Z").checked = true;
 						checkValue = "Z";
 						LinkTypeURL = path;
@@ -780,16 +753,15 @@
 				
 				if (type == "Z") {
 					var typeUrl = result["linkTypeUrl"];
-					document.getElementById("makeTypeTable").style.display = "";
-					document.getElementById("makeTypeImgTD").innerHTML = "";
+					var typeImg = document.createElement("IMG");
 					
-					var _img = document.createElement("IMG");
-					_img.src = typeUrl;
+					typeImg.setAttribute("src", typeUrl);
+					typeImg.setAttribute("id", "ZmakeTypeImg");
+					typeImg.addEventListener("click", radioClick(this, 'img'));
+					typeImg.style.cursor = "pointer";
 					
-					_img.id = "ZmakeTypeImg";
-					_img.onclick = function () { radioClick(this, 'img') };
-					_img.style.cursor = "pointer";
-					document.getElementById("makeTypeImgTD").appendChild(_img);
+					document.getElementById("typeImg").appendChild(typeImg);
+					document.getElementById("Z").style.display = "";
 					document.getElementById("Z").checked = true;
 					
 					checkValue = "Z";
@@ -799,6 +771,7 @@
 					for (var i = 0; i < cnt; i++) {
 						if (document.getElementsByName("linktypeOption")[i].value.trim() == type.trim()) {
 							document.getElementsByName("linktypeOption")[i].checked = true;
+							break;
 						}
 					}
 				}
@@ -851,8 +824,8 @@
 			.link dl {margin: 10px;}
 			.link dl dt, .link dl dd {font-size: 13px; line-height: 25px; margin-left: 0px;} 
 			.link dl dt {float: left; width: 50px;}
-			.link p {margin: 0px 10px 0px 10px; font-size: 18px; font-weight: bold; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
-			.link p img {vertical-align: bottom; width: 30px; height: 30px;}
+			.link p {margin: 0px 10px 0px 10px; font-size: 18px; font-weight: bold; line-height: 36px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+			.link p img {vertical-align: bottom; margin-right: 4px;}
 			.linkBttn {text-align: right; padding: 10px 10px 0px 0px;}
 			.linkDetails {list-style: none; float: left; width: 90%; border: 1px solid black; position: relative; display: list-item; margin: 20px 0px 20px 0px;}
 			.linkTitle {margin: 10px;}
