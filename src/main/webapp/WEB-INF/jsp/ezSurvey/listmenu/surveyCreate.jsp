@@ -39,6 +39,22 @@
 				<span class="arrow"><span></span></span>
 			</span>
 		</div>
+		<!-- 
+		<ul>
+			<li fname='' fsize='' path=''>
+				<div class='attDivFile'>
+					<img alt='' src='/images/survey/file_del.gif'>
+					<div class='attImgAva'>
+						<img alt='' src='파일경로'>
+					</div>
+					<div class='attFileInf'>
+						<span title='파일이름'>파일이름</span>
+						<span>사이즈</span>
+					</div>
+				</div>
+			</li>
+		</ul>
+		 -->
 		
 		<div id="bodyPanel">
 			<div id="tab1" class="select-tab">
@@ -146,22 +162,26 @@
 				
 				function showSelectPopUp() {selectPopup = window.open("/ezSurvey/selectUsers.do", "selectUser", getOpenWindowfeature(1125, 700));}
 				function closeAllPopups() {if(selectPopup) {selectPopup.close();}}
+				function getSurveyQuestions() {return surveyObj["questions"];}
+				function setSurveyQuestions(question) {surveyObj["questions"].push(question);}
 				function getSurveyUsers() {return surveyObj["info"]["users"];}
 				function setSurveyUsers(userList) {surveyObj["info"]["users"] = userList;}
 				
 				return {
 					getUsers : getSurveyUsers,
 					setUsers : setSurveyUsers,
+					getQs    : getSurveyQuestions,
+					setQs    : setSurveyQuestions,
 				};
 			}();
 			
 		$(function() {
-				
 			var question = {};
-			
+
 			var questionFile = new QuestionFile();
 				
-			/* // 셀렉트 박스에 들어갈 질문 유형 데이터 
+			// 셀렉트 박스에 들어갈 질문 유형 데이터 
+			/*
 			var optionData = 
 				[ { text : "질문 유형 선택",		value: 0, selected: true, 	description:"질문 유형 선택"											   },
 			      { text : "단일선택", 		value: 1, selected: false, 	description:"단일선택", 		imageSrc: "/images/ezSurvey/radio.png" },
@@ -189,31 +209,15 @@
 			// make question form
 			createQuestiobDiv();
 			
+			addQstnEvent();
+			
+			createQuestionSelectBox();
+			
+			
 			// 질문 및 질문 유형 선택하는 부분 생성
 			function createQuestiobDiv() {
 				
 				var html = "";
-				
-				/* html += "<div class='qstnWrapper'>";
-				html += "<div class='quesDiv'>";
-				html += "<input class='questnTitle'>";
-				html += "<img alt='파일첨부' src='/images/ezSurvey/attach.png' class='atchImg'>";
-				html += "<input type='file' class='attachFile' multiple='multiple' >";
-				html += "<div id='selectBox'></div>";
-				
-				html += "<div class='qstnFileInfo'>";
-
-				html += "<div>";
-				html += "<ul></ul>";
-				html += "</div>";
-
-				html += "</div>";
-
-				html += "<div class='qstnAtt'>";
-				html += "<input type='file' class='qstnFile' style='display:none;'/>";
-				html += "</div>";
-				
-				html += "</div>"; */
 				
 				html += "<div class='qstnWrapper'>";
 				html += "<div class='quesDiv'>";
@@ -226,7 +230,7 @@
 					
 				html += "<div class='qstnAtt'>";
 				html += "<div class='qstnFileInfo'>";
-				html += "<div>";
+				html += "<div class='fileList'>";
 				html += "<ul></ul>";
 				html += "</div>";
 				html += "</div>";
@@ -239,11 +243,8 @@
 			
 				html += "</div>";
 				
-				$(".quesBacgr").html(html);
+				$(".quesBacgr").append(html);
 				
-				addQstnEvent();
-				
-				createQuestionSelectBox();
 			}
 			
 			function addQstnEvent() {
@@ -317,6 +318,7 @@
 			// 생성된 질문을 붙일 부분과 
 			// 질문 유형을 파라미터로 받아 질문 영역 생성
 			function makeSelectQuestion(grandParent, questionType) {
+				console.log("makeSelectQuestion");
 				var html = "";
 				
 					html += "<div class='selection' questionType='" + questionType + "'>";
@@ -481,25 +483,43 @@
 				
 				// 질문과 보기의 모든 내용 임시 저장
 				$(".save").click(function(event) {
-					
 					var thisEl = $(this);
 					
-					var qstnArea = thisEl.parents(".quesBacgr").find(".quesDiv");
+					var qstnArea = thisEl.parents(".qstnWrapper").find(".quesDiv");
 					var qstnVal = qstnArea.find(".questnTitle").val();
 					// 질문의 내용이 있는지 확인
-					if (qstnVal != null && qstnVal != '') {
+					if (qstnVal != null && qstnVal != '' && qstnVal != undefined) {
 						// 질문의 내용을 질문 객체에 추가
 						question['qstnContents'] = qstnVal;
 					}
+					// 질문에 첨부파일이 있는지 확인
+					// console.log(qstnArea.find(".qstnFileInfo"));
+					var qstnFObj = qstnArea.find(".qstnFileInfo")[0].childNodes[0].childNodes[0].childNodes[0];
+					// 첨부파일이 있는 경우만 파일 내용 추가
+					if (qstnFObj != undefined) {
+						var qstnAttach = {};
+						
+						var fName = qstnFObj.getAttribute("fname");
+						qstnAttach['fname'] = fName;
+						
+						var fPath = qstnFObj.getAttribute("path");
+						qstnAttach['fpath'] = fPath;
+						
+						var fSize = qstnFObj.getAttribute("fsize");
+						qstnAttach['fsize'] = fSize;
+						
+						question['questionAttach'] = qstnAttach;
+					}
+					
 					
 					// 질문 타입을 질문 객체에 저장
-					var optArea = thisEl.parents(".quesBacgr").find(".quesDiv").next();
+					var optArea = thisEl.parents(".qstnWrapper").find(".quesDiv").next();
+					// optArea -> .selection
 					var qstnType = optArea.attr("questiontype");
 					question['qstnType'] = qstnType;
 
 					if (qstnType == 1) {
 						
-						// optArea -> .selection
 						// 보기
 						var opt = optArea.find(".optPart");
 						
@@ -514,6 +534,9 @@
 								// 보기가 비어있는지 확인
 								var optVal = opt[i].childNodes[0].childNodes[0].childNodes[0].value;
 								
+								var level = i;
+								optObj['level'] = i;
+								
 								if (optVal != null && optVal != '') {
 									// 보기 객체에 내용 추가
 									optObj['contents'] = optVal; 
@@ -526,13 +549,13 @@
 								// 첨부파일이 있는 경우만 파일 내용 추가
 								if (fObj != undefined) {
 									var fName = fObj.getAttribute("fname");
-									optAttach['fileName'] = fName;
+									optAttach['fname'] = fName;
 									
 									var fPath = fObj.getAttribute("path");
-									optAttach['filePath'] = fPath;
+									optAttach['fpath'] = fPath;
 									
 									var fSize = fObj.getAttribute("fsize");
-									optAttach['fileSize'] = fSize;
+									optAttach['fsize'] = fSize;
 									
 									optObj['optionAttach'] = optAttach;
 								}
@@ -567,47 +590,308 @@
 								otherAttach['fpath'] = othFPath;
 								otherAttach['fsize'] = othFSize;
 								// 기타 객체에 첨부파일 객체 추가
-								other['otherAttachFile'] = otherAttach;
+								other['otherAttach'] = otherAttach;
 							}
 							// 질문 객체에 기타 객체 추가
 							question['other'] = other;
 						}
 						
-						// 필수 확인
-						var required = {};
-						
-						var rqrd = optArea.find(".additionalPart").find("input[name='checkbox']");
-						var isChecked = rqrd.is(":checked");
-						//console.log(isChecked);
-						if (isChecked == true) {
-							required['required'] = 'Y';
-							
-						} else {
-							required['required'] = 'N';
-						}
-						question['required'] = required;
-						
-						console.log(question);
-						
-						// 설문 생성 ui 숨기기
-						hideMkQstn(thisEl);
-						
-						// selection 질문 생성
-						mkSelectQstn(thisEl, question);
 					}
+					// 필수 확인
+					var rqrd = optArea.find(".additionalPart").find("input[name='checkbox']");
+					var isChecked = rqrd.is(":checked");
+					//console.log(isChecked);
+					if (isChecked == true) {
+						question['required'] = 'Y';
+						
+					} else {
+						question['required'] = 'N';
+					}
+					
+					// 질문 array에 들어있는 질문의 개수를 가져옴
+					var qstnList = SurveyCreate.getQs();
+					var qstnCnt = qstnList.length;
+					// 들어있는 개수보다 1 높여서 임시 id 부여
+					question['id'] = qstnCnt + 1;
+					
+					console.log(question);
+					// 질문  array에 질문 추가
+					SurveyCreate.setQs(question);
+					
+					// selection 질문 생성
+					mkSelectQstn(thisEl, question);
+					
+					// 설문 생성 폼 삭제
+					rmQstnForm(thisEl);
 					
 				});
 				
 				// 질문 수정
 				$(".quesBacgr").on("click", ".crtBtn", function() {
 					var tmpQstnWpr = $(this).parents(".tmpQstnWrapper");
-
-					tmpQstnWpr.siblings().css("display", "");
+					var qstnWrapper = $(this).parents(".qstnWrapper");
+					// 수정할 질문 id
+					var qstnId = parseInt(tmpQstnWpr.attr("id"));
+					var arrNum = qstnId - 1; 
+					// 넘길 질문 객체
+					var qstnList = SurveyCreate.getQs();
+					var qstn = qstnList[arrNum];
+					
+					mdfQuestiobDiv(qstnWrapper, qstn);
+					
+					mdfQuestionSelectBox(qstnWrapper, question);
+					
+					mdfSelectQuestion(qstnWrapper, question);
+					
+					//수정을 취소할 경우를 고려해 삭제는 보류
 					tmpQstnWpr.css("display", "none");
-					//기존에 있던 질문은 삭제
-					tmpQstnWpr.remove();
 					
 				});
+				
+			}
+			
+			// 수정시 : 질문 
+			function mdfQuestiobDiv(qstnWrapper, question) {
+				
+				var html = "";
+					html += "<div class='qstnWrapper' id='" + question.id + "'>";
+					html += "<div class='quesDiv'>";
+					
+					html += "<div class='qstnRow'>";
+					html += "<input class='questnTitle' value='" + question.qstnContents + "'>";
+					html += "<img alt='' src='/images/ezSurvey/attach.png' class='atchImg'>";
+					html += "<div class='selectBox'></div>";
+					html += "</div>";
+						
+					html += "<div class='qstnAtt'>";
+					
+					html += "<div class='qstnFileInfo'>";
+					html += "<div class='fileList'>";
+					
+					html += "<ul>";
+					
+					var qstnAtt = question.questionAttach;
+					
+					if (qstnAtt != null && qstnAtt != '' && qstnAtt != undefined) {
+						html += "<li fname='" + qstnAtt.fname + "' fsize='" + qstnAtt.fsize + "' path='" + qstnAtt.fpath + "'>";
+						html += "<div class='attDivFile'>";
+						html += "<img style='height: 50%;' src='/images/survey/file_del.gif'>";
+						html += "<div class='attImgAva'>";
+						html += "<img alt='' src='" + qstnAtt.fpath + "'>";
+						html += "</div>";
+						html += "<div class='attFileInf'>";
+						html += "<span title='" + qstnAtt.fname + "'>" + qstnAtt.fname + "</span>";
+						html += "<span>" + qstnAtt.fsize + "</span>";
+						html += "</div>";
+						html += "</div>";
+						html += "</li>";
+					}
+					
+					html += "</ul>";
+					
+					html += "</div>";
+					html += "</div>";
+					
+					html += "<div class='qstnAtt'>";
+					html += "<input type='file' class='qstnFile' style='display:none;'/>";
+					html += "</div>";
+					html += "</div>";
+					html += "</div>";
+				
+					html += "</div>";
+					
+				qstnWrapper.after(html);
+			}
+			
+			// 수정시 : 질문 유형을 선택하는 셀렉트 박스 생성
+			function mdfQuestionSelectBox(qstnWrapper, question) {
+				// 자동으로 함수 실행되어 주석 
+				//var qstnType = question.qstnType;
+				//var typeNum = parseInt(qstnType) - 1;
+				
+				$(".selectBox").ddslick({
+					data :optionData,
+					imagePosition: "left",
+					//defaultSelectedIndex: typeNum,
+					onSelected: function(data) {
+						
+						var selectedEl = data.selectedItem;
+						var grandParent = selectedEl.parents(".qstnWrapper");
+						//var questionType = data.selectedIndex;
+						var questionType = data.selectedData.value;
+
+						switch (questionType) {
+							case 1:
+								makeSelectQuestion(grandParent, question);
+								break;
+							case 2:
+								
+								break;
+							case 3:
+								
+								break;
+							case 4:
+								
+								break;
+							case 5:
+								
+								break;
+							case 6:
+								
+								break;
+							case 7:
+								
+								break;
+							case 8:
+								
+								break;
+							case 9:
+								
+								break;
+							
+						}
+					}
+				});
+			}
+			
+			// 생성된 질문을 붙일 부분과 
+			// 질문 유형을 파라미터로 받아 질문 영역 생성
+			function mdfSelectQuestion(qstnWrapper, question) {
+				
+				var html = "";
+					
+					html += "<div class='selection' questionType='" + question.qstnType + "'>";
+					
+					var options = question.option;
+					
+					for (var i = 0; i < options.length; i++) {
+					
+						html += "<div class='optPart'>";
+						
+						html += "<div class='optRow'>";
+						
+						html += "<div class='option'>";
+						html += "<input class='textInput' type='text' value='" + options[i].contents + "'>";
+						html += "<img src='/images/ezSurvey/attach.png' class='attImg'>"; 
+						html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
+						html += "</div>";
+							
+						html += "<div class='optFileInfo'>";
+						html += "<div>";
+						
+						html += "<ul>";
+
+						var optAtt = options[i].optionAttach;
+
+						if (optAtt != null && optAtt != '' && optAtt != undefined) {
+							html += "<li fname='" + optAtt.fname + "' fsize='" + optAtt.fsize + "' path='" + optAtt.fpath + "'>";
+							html += "<div class='attDivFile'>";
+							html += "<img alt='' src='/images/survey/file_del.gif' style='height: 50%;'>";
+							html += "<div class='attImgAva'>";
+							html += "<img alt='' src='" + optAtt.fpath + "'>";
+							html += "</div>";
+							html += "<div class='attFileInf'>";
+							html += "<span title='" + optAtt.fname + "'>" + optAtt.fname + "</span>";
+							html += "<span>" + optAtt.fsize + "</span>";
+							html += "</div>";
+							html += "</div>";
+							html += "</li>";
+						}
+						
+						html += "</ul>";
+						
+						html += "</div>";
+						html += "</div>";
+						
+						html += "</div>";
+						
+						html += "<div class='optAtt'>";
+						html += "<input type='file' class='optionFile' style='display:none;'/>";
+						html += "</div>";
+						
+						html += "</div>";
+					
+					}
+					var other = question.other;
+					if (other != null && other != '' && other != undefined) {
+						
+						html += "<div class='other'>";
+						
+						html += "<div class='optRow'>";
+						
+						html += "<div class='option'>";
+						html += "<input class='textInput' type='text' value='" + other.contents + "'>";
+						html += "<img src='/images/ezSurvey/attach.png' class='attImg'>"; 
+						html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
+						html += "</div>";
+							
+						html += "<div class='optFileInfo'>";
+						html += "<div>";
+						
+						html += "<ul>";
+						
+						var othAtt = other.otherAttach;
+						
+						if (othAtt != null && othAtt != '' && othAtt != undefined) {
+							html += "<li fname='" + othAtt.fname + "' fsize='" + othAtt.fsize + "' path='" + othAtt.fpath + "'>";
+							html += "<div class='attDivFile'>";
+							html += "<img alt='' src='/images/survey/file_del.gif' style='height: 50%;'>";
+							html += "<div class='attImgAva'>";
+							html += "<img alt='' src='" + othAtt.fpath + "'>";
+							html += "</div>";
+							html += "<div class='attFileInf'>";
+							html += "<span title='" + othAtt.fname + "'>" + othAtt.fname + "</span>";
+							html += "<span>" + othAtt.fsize + "</span>";
+							html += "</div>";
+							html += "</div>";
+							html += "</li>";
+						}
+						
+						html += "</ul>";
+						
+						html += "</div>";
+						html += "</div>";
+						
+						html += "</div>";
+						
+						html += "<div class='optAtt'>";
+						html += "<input type='file' class='optionFile' style='display:none;'/>";
+						html += "</div>";
+						
+						html += "</div>";
+						
+					}
+				
+					html += "<div class='additionalPart'>";
+				
+					html += "<div class='addBtns'>";
+					html += "<button class='addRow'>추가</button>";
+					html += "<button class='addOther'>기타추가</button>";
+					html += "</div>";
+					
+					html += "<div class='required'>";
+					
+					var required = question.required;
+					
+					if (required == 'Y') {
+						html += "<input type='checkbox' name='checkbox' checked='checked'>";
+						
+					} else if(required == 'N') {
+						html += "<input type='checkbox' name='checkbox'>";
+					}
+					
+					html += "<strong>필수 답변</strong>";
+					html += "</div>";
+					
+					html += "<div class='btns'>";
+					html += "<button class='modify'>수정</button>";
+					html += "<button class='cancel'>취소</button>";
+					html += "</div>";
+					
+				
+				qstnWrapper.next().append(html);
+				
+				//addOptEvent();
 				
 			}
 			
@@ -615,51 +899,61 @@
 			function fileUpload(thisEl, thisFile) {
 				questionFile.upload(thisEl, thisFile);
 			}
-			// 설문 생성 ui 숨기기
-			function hideMkQstn(thisEl) {
+			// 설문 생성 폼 삭제
+			function rmQstnForm(thisEl) {
 				var wrapper = thisEl.parents(".qstnWrapper");
 				//console.log(wrapper);
-				wrapper.find(".quesDiv").css("display", "none");
-				wrapper.find(".selection").css("display", "none");
+				wrapper.find(".quesDiv").remove();
+				wrapper.find(".selection").remove();
 			}
-			
 			// 단일선택 질문 생성 
 			function mkSelectQstn(thisEl, question) {
 				
+				var id = question.id;
 				var qstnContents = question.qstnContents;
+				var qstnAtt = question.questionAttach;
 				var qstnType = question.qstnType;
 				var option = question.option;
 				var required = question.required;
 				var other = question.other
 				
 				var html = "";
-					html += "<div class='tmpQstnWrapper'>";
-			  	
+					html += "<div class='tmpQstnWrapper' id='" + id + "'>";
+			  		
 					html += "<div class='mvBtnDiv'>";
 					html += "<img class='mvBtn' alt='' src='/images/ezSurvey/move.png'>";
 					html += "</div>";
-			  	
+			  		
 					html += "<div class='fiCoDelBtns'>";
 					html += "<img alt='' src='/images/ezSurvey/correct.png' class='crtBtn'>";
 					html += "<img alt='' src='/images/ezSurvey/copy.png' class='cpBtn'>";
 					html += "<img alt='' src='/images/ezSurvey/trash.png' class='dltBtn'>";
 					html += "</div>";
-			  	
+			  		
 					if (qstnContents != null && qstnContents != '' && qstnContents != undefined) {
-						html += "<strong class='qstnCtts'>" + qstnContents + "</strong>";
+						html += "<strong class='qstnCtts' id='" + id + "'>" + qstnContents + "</strong>";
+						
+						if (required == 'Y') {
+							html += "<strong class='imptt'>*</strong>";
+						}
+						if (qstnAtt != null && qstnAtt != '' && qstnAtt != undefined) {
+							html += "<div class='qstnAtt'>"
+							html += "<img alt='' src='" + qstnAtt.fpath + "' class='qstnImg'>";
+							html += "</div>"
+						}
 					}
 			  		
 					html += "<div class='opts'>";
 					// 보기
 					if (option != null && option != '' && option != undefined) {
 						for (var i = 0; i < option.length; i++) {
-							html += "<div class='opt'>";
+							html += "<div class='opt' level='" + option[i].level + "'>";
 							html += "<input class='optRdo' type='radio' value=''/>";
-							html += "<span class='optSpan'>" + option[i].contents + "</span>";
 							// 첨부파일이 있는지 확인
 							if (option[i].optionAttach != null && option[i].optionAttach != '' && option[i].optionAttach != undefined) {
-								html += "<img alt='' src='" + option[i].optionAttach.filePath + "' class='optImg'>";
+								html += "<img alt='' src='" + option[i].optionAttach.fpath + "' class='optImg'>";
 							}
+							html += "<span class='optSpan'>" + option[i].contents + "</span>";
 							html += "</div>";
 						}
 					}
@@ -668,11 +962,11 @@
 					if (other != null && other != '' && other != undefined) {
 						html += "<div class='opt'>";
 						html += "<input class='optRdo' type='radio' value=''/>";
-						html += "<span class='optSpan'>" + other.contents + "</span>";
 						// 첨부파일이 있는지 확인
-						if (other.otherAttachFile != null && other.otherAttachFile != '' && other.otherAttachFile != undefined) {
-							html += "<img alt='' src='" + other.otherAttachFile.fpath + "' class='optImg'>";
+						if (other.otherAttach != null && other.otherAttach != '' && other.otherAttach != undefined) {
+							html += "<img alt='' src='" + other.otherAttach.fpath + "' class='optImg'>";
 						}
+						html += "<span class='optSpan'>" + other.contents + "</span>";
 						html += "<input class='othInput' type='text'/>";
 						html += "</div>";
 						html += "</div>";
@@ -684,7 +978,15 @@
 					
 					console.log("질문");
 					console.log(question);
+					
+					// 임시 주석
+					createQuestiobDiv();
+					
+					createQuestionSelectBox();
 			}
+			
+			
+			
 			
 		}());
 		

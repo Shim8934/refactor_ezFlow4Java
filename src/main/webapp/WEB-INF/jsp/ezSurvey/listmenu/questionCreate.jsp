@@ -8,31 +8,29 @@
 
 <div class="quesBacgr" style="height: 400px; border: 1px solid #d7d7d7;">
 	
-	<div class='qstnWrapper'>
 	
-		<!-- <div class='quesDiv'>
+	<!-- <div class='quesDiv'>
+	
+		<div class='qstnRow'>
+			<input class='questnTitle'>
+			<img alt='' src='/images/ezSurvey/attach.png' class='atchImg'>
+			<input type='file' class='attachFile' multiple='multiple' >
+			<div id='selectBox'></div>
+		</div>
 		
-			<div class='qstnRow'>
-				<input class='questnTitle'>
-				<img alt='' src='/images/ezSurvey/attach.png' class='atchImg'>
-				<input type='file' class='attachFile' multiple='multiple' >
-				<div id='selectBox'></div>
+		<div class='qstnAtt'>
+			<div class='qstnFileInfo'>
+				<div>
+					<ul></ul>
+				</div>
 			</div>
 			
 			<div class='qstnAtt'>
-				<div class='qstnFileInfo'>
-					<div>
-						<ul></ul>
-					</div>
-				</div>
-				
-				<div class='qstnAtt'>
-					<input type='file' class='qstnFile' style='display:none;'/>
-				</div>
+				<input type='file' class='qstnFile' style='display:none;'/>
 			</div>
-		</div> -->
+		</div>
+	</div> -->
 	
-	</div>
 	
 	
 

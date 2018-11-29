@@ -25,38 +25,13 @@ var QuestionFile = function() {
 		}
 		
 		function onStartUpload(thisEl, thisFile) {
-			//console.log("onStartUpload");
-			//console.log(thisEl);
-			//console.log(thisFile.length);
 			
-			/*if (evt != undefined) {
-				evt.stopPropagation();
-				evt.preventDefault();
-				
-				if (evt.dataTransfer.items == undefined || evt.dataTransfer.items == null) {
-					if (evt.dataTransfer.files.length == 0) {alert(CabinetMessages.strUpFolder); return;}
-				}
-				else {
-					var length = evt.dataTransfer.items.length;
-					
-					for (var i = 0; i < length; i++) {
-						var entry = evt.dataTransfer.items[i].webkitGetAsEntry();
-						if (entry.isDirectory) {alert(CabinetMessages.strUpFolder);return;}
-					}
-				}
-			}
-			
-			var filelist = (evt == undefined) ? document.getElementsByClassName("optionAttach")[0].files : evt.dataTransfer.files;
-			*/
-			//if (filelist.length == 0) {return;}
 			if (thisFile.length == 0) {return;}
 			
 			for (var i = 0; i < thisFile.length; i++) {
-				//fileupload(filelist[i]);
 				fileupload(thisEl, thisFile[i]);
 			}
 			
-			//if (!evt) {document.getElementById("fileBttn").value = null;}
 			if (thisFile.length == 0) {
 				thisEl.val() == null;
 			}
@@ -65,26 +40,25 @@ var QuestionFile = function() {
 		function fileupload(thisEl, thisFile) {
 			var fd              = new FormData();
 			var filePath        = null;
-			//var fileName        = fileItem.name;
-			//var fileSize        = fileItem.size;
 			var fileName        = thisFile.name;
 			var fileSize        = thisFile.size;
-			//var fileDivElmt     = document.getElementsByClassName("fileInfo")[0];
+			
 			if (thisEl.attr("class") == 'qstnFile') {
 				var fileDivElmt = thisEl.parent().prev()[0];
+			
 			} else {
 				var fileDivElmt     = thisEl.parent().prev().find(".optFileInfo")[0];
 			}
-			console.log(fileDivElmt);
+			
 			var divfileListElmt = fileDivElmt.firstElementChild;
 			var ulElmt          = divfileListElmt.firstElementChild;
 
 			if (!isStart) {
 				divfileListElmt.className = "fileList";
 				var divInformElmt         = fileDivElmt.querySelector("div[class='divInform']");
-				var helpDivElmt           = document.getElementById("helpTxt");
+				//var helpDivElmt           = document.getElementById("helpTxt");
 				if (divInformElmt) {fileDivElmt.removeChild(divInformElmt);}
-				if (helpDivElmt)   {helpDivElmt.className = "cabUploadHelp";}
+				//if (helpDivElmt)   {helpDivElmt.className = "cabUploadHelp";}
 			}
 			
 			var liElmt        = document.createElement("li");
@@ -190,13 +164,6 @@ var QuestionFile = function() {
 			
 			isStart            = true;
 			var checkImageFile = isImage(filename);
-			/*var delImg         = document.createElement("img");
-			delImg.src         = "/images/survey/file_del.gif";
-			delImg.addEventListener("click", function(e) {deleteFile(e, fileSize);}, false);*/
-			// liElmt.appendChild(delImg);
-			/*var attDivFile = liElmt.firstChild;
-			attDivFile.appendChild(delImg);*/
-			
 			liElmt.setAttribute("path", filePath);
 			
 			var divChildElmt1 = liElmt.querySelector("div[class='attImgAva']");
@@ -207,7 +174,7 @@ var QuestionFile = function() {
 			divChildElmt1.removeChild(canvasElmt);
 			divChildElmt1.appendChild(imgElmt);
 			
-			totalCap                = totalCap + fileSize;
+			/*totalCap                = totalCap + fileSize;
 			var fileCapacityDivElmt = document.getElementById("fileCapacityDiv");
 			var spanElmt            = fileCapacityDivElmt.querySelector("span");
 			
@@ -216,18 +183,19 @@ var QuestionFile = function() {
 				fileCapacityDivElmt.appendChild(spanElmt);
 			}
 			
-			spanElmt.textContent     = CabinetMessages.strStorage + getFileSize(totalCap);
+			spanElmt.textContent     = CabinetMessages.strStorage + getFileSize(totalCap);*/
 		}
 		
 		function deleteFile(event, fileSize) {
 			event.stopPropagation();
-			var imgObj   = event.currentTarget;
-			var liElmt   = imgObj.parentElement;
-			var filePath = liElmt.getAttribute("path");
+			
+			var thisEl = event.target;
+			var liEl = thisEl.closest("li");
+			var filePath = liEl.getAttribute("path");
 			
 			$.ajax({
 				type: "POST",
-				url: "/ezCabinet/deleteAttachFile.do",
+				url: "/ezSurvey/deleteAttachFile.do",
 				data: {"filePath" : filePath},
 				dataType: "JSON",
 				async: false,
@@ -235,26 +203,20 @@ var QuestionFile = function() {
 					var code = data.code;
 					
 					switch(code) {
-						case 0 : afterDeleteSuccessfully(liElmt, fileSize); break;
-						case 1 : alert(CabinetMessages.strParamErr)       ; break;
-						case 2 : alert(CabinetMessages.strError)          ; break;
-						default: alert(CabinetMessages.strError)          ; return;
+						case 0 : afterDeleteSuccessfully(liEl, fileSize); break;
+						case 1 : alert(SurveyMessages.strParamErr); break;
+						case 2 : alert(SurveyMessages.strError)   ; break;
+						default: alert(SurveyMessages.strError)   ; return;
 					}
 				},
 				error : function(error) {
-					alert(CabinetMessages.strError + error);
+					alert(SurveyMessages.strError + error);
 				}
 			});
 		}
 		
-		function afterDeleteSuccessfully(liElmt, fileSize) {
-			var ulElmt = liElmt.parentElement;
-			ulElmt.removeChild(liElmt);
-			
-			totalCap                = totalCap - fileSize;
-			var fileCapacityDivElmt = document.getElementById("fileCapacityDiv");
-			var spanElmt            = fileCapacityDivElmt.querySelector("span");
-			spanElmt.textContent    = CabinetMessages.strStorage + getFileSize(totalCap);
+		function afterDeleteSuccessfully(liEl) {
+			liEl.remove();
 		}
 		
 		function getFileSize(fileSize) {
