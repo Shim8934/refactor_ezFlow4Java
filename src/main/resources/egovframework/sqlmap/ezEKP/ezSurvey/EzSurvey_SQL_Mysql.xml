@@ -5,6 +5,7 @@
 	<typeAlias alias="SurveySimpleDeptVO" type="egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO"      />
 	<typeAlias alias="SurveySimpleUserVO" type="egovframework.ezEKP.ezSurvey.vo.SimpleUserVO"      />
 	<typeAlias alias="UserConfigVO"       type="egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO"   />
+	<typeAlias alias="SurveyVO"           type="egovframework.ezEKP.ezSurvey.vo.SurveyVO"          />
 	
 	<!-- SimpleDept resultMap -->
 	<resultMap id="simpleDeptVO" class="SurveySimpleDeptVO">
@@ -35,6 +36,30 @@
 		<result property="telNumber"        column="telephoneNumber"        columnIndex="6"/>
 		<result property="mail"             column="mail"                   columnIndex="7"/>
 		<result property="userImg"          column="userImage"              columnIndex="8"/>
+	</resultMap>
+	
+	<!-- SurveyVO resultMap -->
+	<resultMap id="surveyVO" class="SurveyVO">
+		<result property="surveyId"         column="survey_id"           columnIndex="1" />
+		<result property="companyId"        column="company_id"          columnIndex="2" />
+		<result property="tenantId"         column="tenant_id"           columnIndex="3" />
+		<result property="tittle"           column="title"               columnIndex="4" />
+		<result property="purpose"          column="purpose"             columnIndex="5" />
+		<result property="creatorId"        column="user_id"             columnIndex="6" />
+		<result property="createDate"       column="create_date"         columnIndex="7" />
+		<result property="updateDate"       column="update_date"         columnIndex="8" />
+		<result property="startDate"        column="survey_start_date"   columnIndex="9" />
+		<result property="endDate"          column="survey_end_date"     columnIndex="10" />
+		<result property="creatorName1"     column="user_name1"          columnIndex="11"/>
+		<result property="creatorName2"     column="user_name2"          columnIndex="12"/>
+		<result property="deleteUser"       column="delete_user"         columnIndex="13"/>
+		<result property="updateUser"       column="update_user"         columnIndex="14"/>
+		<result property="useStatus"        column="use_status"          columnIndex="15"/>
+		<result property="openDays"         column="open_days"           columnIndex="16"/>
+		<result property="resultPublicFlag" column="result_public_flag"  columnIndex="17"/>
+		<result property="anonymousFlag"    column="update_id"           columnIndex="18"/>
+		<result property="multiAnswerFlag"  column="multi_answer_flag"   columnIndex="19"/>
+		<result property="paritipateFlag"   column="participate_flag"    columnIndex="20"/>
 	</resultMap>
 	
 	<!--***********************************************************************************
@@ -251,4 +276,57 @@
 		</isNotEqual>
 	</insert>
 	
+	<!--***********************************************************************************
+	**                             Check permission process                              **
+	************************************************************************************-->
+	
+	<select id="EzSurveyDAO.getSurveyListForPermission" resultMap="surveyVO">
+		select
+			s2.*
+		from
+			(
+				select * from tbl_survey s1
+				where
+					s1.survey_id in
+					<iterate property="surveyList" open="(" close=")" conjunction=",">#surveyList[]#</iterate>
+					<![CDATA[and s1.use_status != 0 and s1.tenant_id = #tenantId#]]>
+			) s2
+		
+	</select>
+	
+	<select id="EzSurveyDAO.getUserDepartmentIdList" resultClass="String">
+		select
+			d4.cn
+		from
+			(
+				select * from tbl_deptmaster d1 where d1.cn = #deptId# and d1.tenant_id = #tenantId#
+				union
+				select * from tbl_deptmaster d2 where d2.cn = #companyId# and d2.tenant_id = #tenantId#
+				union
+				select d3.* from tbl_deptmaster d3 join tbl_addjobmaster a on d3.cn = a.deptid and a.cn = #userId# and d3.tenant_id = a.tenant_id
+				where d3.tenant_id = #tenantId#
+			) d4
+	</select>
+	
+	<select id="EzSurveyDAO.getReceivedSurveyListForPermission" resultMap="surveyVO">
+		select
+			s1.*
+		from
+			(
+				select s.* from tbl_survey s join tbl_survey_participant p on s.survey_id = p.survey_id and s.tenant_id = p.tenant_id
+				where
+					p.survey_id in
+				<iterate property="others" open="(" close=")" conjunction=",">
+					#others[]#
+				</iterate>
+				and (
+					(p.user_id = #userId# and p.user_type = 2) or (p.user_id in 
+					<iterate property="deptList" open="(" close=")" conjunction=",">
+						#deptList[]#
+					</iterate> and (p.user_type = 0 or p.user_type = 1)
+					)
+				)
+				and s.use_status = 1 and s.tenant_id = #tenantId#
+			) s1
+	</select>
 </sqlMap>

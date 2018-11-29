@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @SuppressWarnings("unchecked")
@@ -45,6 +46,18 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	
 	public List<SimpleUserVO> getSearchMemberList(Map<String, Object> map) {
 		return (List<SimpleUserVO>)list("EzSurveyDAO.getSearchMemberList", map);
+	}
+	
+	public List<SurveyVO> getSurveyListForPermission(Map<String, Object> map) {
+		return (List<SurveyVO>)list("EzSurveyDAO.getSurveyListForPermission", map);
+	}
+	
+	public List<String> getUserDepartmentIdList(Map<String, Object> map) {
+		return (List<String>)list("EzSurveyDAO.getUserDepartmentIdList", map);
+	}
+
+	public List<SurveyVO> getReceivedSurveyListForPermission(Map<String, Object> map) {
+		return (List<SurveyVO>)list("EzSurveyDAO.getReceivedSurveyListForPermission", map);
 	}
 }
 
