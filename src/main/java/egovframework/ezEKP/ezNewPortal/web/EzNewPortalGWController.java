@@ -233,6 +233,10 @@ public class EzNewPortalGWController {
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			
+			if (useAttitude == null || useAttitude.equals("")) {
+				useAttitude = "YES";
+			}
+			
 			if (useQuestion.equals("NO")) {
 				portletOrder.removeIf(vo -> (vo.getMenuId() == 14));
 			}
@@ -634,6 +638,10 @@ public class EzNewPortalGWController {
 			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+
+			if (useAttitude == null || useAttitude.equals("")) {
+				useAttitude = "YES";
+			}
 			
 			if (useQuestion.equals("NO")) {
 				menuList.removeIf(vo -> (vo.getMenuId() == 14));
@@ -921,6 +929,10 @@ e.printStackTrace();
 			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+
+			if (useAttitude == null || useAttitude.equals("")) {
+				useAttitude = "YES";
+			}
 			
 			if (useQuestion.equals("NO")) {
 				portletList.removeIf(vo -> (vo.getMenuId() == 14));
@@ -1514,6 +1526,11 @@ e.printStackTrace();
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			
+
+			if (useAttitude == null || useAttitude.equals("")) {
+				useAttitude = "YES";
+			}
+			
 			if (useQuestion.equals("NO")) {
 				menuInfos.removeIf(vo -> (vo.getMenuId() == 14));
 			}
@@ -1845,6 +1862,11 @@ e.printStackTrace();
 			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+			
+
+			if (useAttitude == null || useAttitude.equals("")) {
+				useAttitude = "YES";
+			}
 			
 			if (useQuestion.equals("NO")) {
 				portletList.removeIf(vo -> (vo.getMenuId() == 14));
@@ -3292,7 +3314,12 @@ e.printStackTrace();
 			
 			String useAttitude = "NO";
 			//근태 사용여부
-			String useAttitude2 = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());			
+			String useAttitude2 = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());
+			
+			if (useAttitude2 == null || useAttitude2.equals("")) {
+				useAttitude2 = "YES";
+			}
+			
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(info.getCompanyId(), info.getTenantId(), info.getLang(), userId, info.getDeptId());
 			
 			for (MenuInfoVO mVO : menuList) {

@@ -456,6 +456,8 @@ WHERE
 	Q.TENANT_ID = #tenantId#
 AND 
 	U.PHYSICALDELIVERYOFFICENAME = #companyId#
+ORDER BY
+    Q.REGDATE DESC
 LIMIT #limit#
 OFFSET #offset#
 ]]>	
@@ -1962,10 +1964,16 @@ WHERE
 </isNotEqual>	
 </select>
 
-<select id="ezNewPortal.getCityList" parameterClass="String" resultMap="WeatherVO">
+<select id="ezNewPortal.getCityList" parameterClass="int" resultMap="WeatherVO">
 <![CDATA[
 SELECT
-	* 
+	SN,
+	CITYCODE,
+	CITYNAME,
+	DISPLAYCITYNAME,
+	PRIMARYLANG,
+	CURRENTWEATHER,
+	TODAYWEATHER
 FROM
 	TBL_WEATHER
 WHERE

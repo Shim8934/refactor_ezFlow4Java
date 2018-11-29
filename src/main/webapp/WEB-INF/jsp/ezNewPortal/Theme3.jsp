@@ -43,7 +43,7 @@
 	.two_column {width:48.4%;}
 </style>
 </head>
-<body class="mainbg">	
+<body class="mainbg" id="theme3Body">
 	<div id="Center">
 	<div style="position:relative;">
 		<aside id="quickSide" style="width:0px">
@@ -178,7 +178,7 @@
 		linkBtnPre.classList.add('linkBtn_pre');
 		var preBtnImg = document.createElement('img');
 		
-		if(quickLinkPage.current*1 === 1) {
+		if(quickLinkPage.current*1 === 1 || totalCnt*1 === 0) {
 			preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn_dis.png');
 			preBtnImg.setAttribute('id', 'preBtnDis');
 		} else {
@@ -192,7 +192,7 @@
 		linkBtnNext.classList.add('linkBtn_next');
 		var nextBtnImg = document.createElement('img');
 		
-		if(quickLinkPage.current*1 === totalCnt*1) {
+		if(quickLinkPage.current*1 === totalCnt*1 || totalCnt*1 === 0) {
 			nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn_dis.png');
 			nextBtnImg.setAttribute('id', 'nextBtnDis');
 		} else {
