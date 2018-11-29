@@ -480,7 +480,64 @@ function event_btnOk_onclick()
 	
 	if( !CheckBeforeSave() )
 		return;
-		
+	
+	switch (pRepetitionFlag) {
+	case 0://매일
+		if (document.getElementById("id0D1").checked) {
+			if (NumCheck(document.getElementById("txt_De").value) == false) {
+		        alert(g_Error);
+		        document.getElementById("txt_De").value = "1";
+			    return;
+		    }
+		}
+		break;
+	case 1://매주
+		if (NumCheck(document.getElementById("txt_We").value) == false) {
+	        alert(g_Error);
+	        document.getElementById("txt_We").value = "1";
+		    return;
+	    }
+		break;
+	case 2://매월
+		if (document.getElementById("idOM1").checked) {
+			if (NumCheck(document.getElementById("list_MonthInterval").value) == false) {
+		        alert(g_Error);
+		        document.getElementById("list_MonthInterval").value = "1";
+			    return;
+		    }
+		    if (NumCheck(document.getElementById("list_MonthlyDays").value) == false) {
+		        alert(g_Error);
+		        //document.getElementById("list_MonthlyDays").value = idDatepickers.startDate();
+			    return;
+		    }
+		} else {
+			if (NumCheck(document.getElementById("list_MonthInterval2").value) == false) {
+		        alert(g_Error);
+		        document.getElementById("list_MonthInterval2").value = "1";
+			    return;
+		    }
+		}
+		break;
+	case 3://매년
+		if (document.getElementById("optY1").checked) {
+			if (NumCheck(document.getElementById("list_YearlyDays").value) == false) {
+		        alert(g_Error);
+		        //document.getElementById("list_YearlyDays").value = idDatepickers.startDate();
+			    return;
+		    }
+		}
+		break;
+	default:
+		break;
+	}
+	
+	if (document.getElementById("Instances").checked == true && NumCheck(document.getElementById("list_ReCount").value) == false) {
+        alert(g_Error);
+        document.getElementById("list_ReCount").value = "10";
+	    return;
+    }
+	
+    /*
     if(NumCheck(document.getElementById("txt_De").value) == false)
     {
         alert(g_Error);
@@ -528,7 +585,7 @@ function event_btnOk_onclick()
         alert(g_Error);
         document.getElementById("list_ReCount").value = "10";
 	    return;
-    }
+    }*/
 
     try {
         xmlDoc = createXmlDom();
@@ -934,6 +991,7 @@ function showMainPattern(idx)
 		eAllPatterns[x].style.display="none";
 	}
 	window.document.getElementsByName("divRecurPatterns")[idx].style.display = "";
+	pRepetitionFlag = idx;
 }
 
 function IsLeapYear(yr)
