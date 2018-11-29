@@ -321,6 +321,10 @@
 			}
 		    
 		    function OK_Click() {
+		    	if (RetValue[5] != "" && RetValue[5] == "addJob") {
+		    		alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+            	}
 		        if (document.getElementById("UserID").value == "") {
 		            alert("<spring:message code='ezOrgan.t253' />");
 		            return;
@@ -502,6 +506,10 @@
 			}
 		    var personpicture_cross_dialogArguments = new Array();
 		    function btnPhoto_onclick() {
+		    	if (RetValue[5] != "" && RetValue[5] == "addJob") {
+		    		alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+            	}
 		    	//2016-04-19 장진혁과장 -- Cross 버전 사용으로 주석 처리
 		        //if (CrossYN()) {
 	            personpicture_cross_dialogArguments[0] = document.getElementById("UserID").value;
@@ -526,7 +534,11 @@
 		            UserPhotoDiv.innerHTML = "<img style='width:119px; height:128px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + ret + "' />";		            
 		        }
 		    }
-		    function deleteImg() {		        
+		    function deleteImg() {	
+		    	if (RetValue[5] != "" && RetValue[5] == "addJob") {
+		    		alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+            	}
 		        $.ajax({
 					type : "POST",
 					dataType : "text",

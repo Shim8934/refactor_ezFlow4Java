@@ -167,6 +167,12 @@
 				        
 				        if (CrossYN()) {
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+				            $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
+				            	if($(this).find("DATA3").text() == "addJob"){
+				            		var orgPosition = $(this).find("CELL").eq(2).find("VALUE").text();
+				            		$(this).find("CELL").eq(2).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            	}
+				            });
 				            var Node = headerData.importNode(xmlRtn, true);
 				            headerData.documentElement.appendChild(Node);
 				        }else{
@@ -709,7 +715,10 @@
 			    } else if (listview.GetSelectedRows().length > 1) {
 					alert("<spring:message code='ezOrgan.t51' />");
 					return;
-				}
+				} else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+		    		alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+			    }
 
 			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
 			}
@@ -977,7 +986,10 @@
 		        } else if (listview.GetSelectedRows().length > 1) {
 		            alert("<spring:message code='ezOrgan.t44' />");
 		            return;
-		        }
+		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+		    		alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+			    }
 		        
 		        var agent = navigator.userAgent.toLowerCase();
 	            if (agent.indexOf("chrome") != -1) {
@@ -1001,7 +1013,10 @@
 				} else if (listview.GetSelectedRows().length > 1) {
 		            alert("<spring:message code='ezOrgan.t46' />");
 		            return;
-		        }
+		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+		    		alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+			    }
 		        
 		        //2016-04-15 장진혁과장 -- cross 버전으로 통일하기 위한 주석처리
 		        //if (CrossYN()){
@@ -1029,7 +1044,10 @@
 				} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
                     alert(strLang13);
                     return;
-				}
+				} else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+		    		alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+			    }
 		        changePassLength = listview.GetSelectedRows().length;
 		        
 		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
@@ -1095,6 +1113,11 @@
 				    if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
 	                    alert(strLang13);
 	                    return;
+				    } else {
+				    	if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+				    		alert("<spring:message code='ezOrgan.psb02' />");
+							return;
+				    	}
 				    }
 				}
 	            
@@ -1156,6 +1179,11 @@
 				    if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
 				    	alert(strLang13);
 	                    return;
+				    } else {
+				    	if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+				    		alert("<spring:message code='ezOrgan.psb02' />");
+							return;
+				    	}
 				    }
 				}
 		        
