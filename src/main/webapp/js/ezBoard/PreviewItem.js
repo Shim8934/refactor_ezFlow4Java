@@ -628,9 +628,17 @@ function PreviewW_onMouserDown(e) {
     curevent = (typeof event == 'undefined' ? e : event);
 
     var newPos_W = curevent.clientY;
+    var offsetW = 0;
+    
+    /* 2018-11-29 홍승비 - 즐겨찾기 탭 > 하단 미리보기 리사이즈바 어긋나는 부분 수정  */
+    if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1 || window.parent.location.href.indexOf("/admin/ezBoard/boardConfig.do") > -1) {
+    	offsetW = 72;
+    } else {
+    	offsetW = 90;
+    }
 
-    if (newPos_W < (parseInt(CurrentHeight * 0.25) + 90)) {
-        newPos_W = parseInt(CurrentHeight * 0.25) + 90;
+    if (newPos_W < (parseInt(CurrentHeight * 0.25) + offsetW)) {
+        newPos_W = parseInt(CurrentHeight * 0.25) + offsetW;
     }
     else if (newPos_W > (parseInt(CurrentHeight * 0.65) + 90)) {
         newPos_W = (parseInt(CurrentHeight * 0.65) + 90);
@@ -673,7 +681,15 @@ function MailPreviewEnd(e) {
 
         }
         else if (PreviewW_Move) {
-            var newPos_W = parseInt(document.getElementById("ResizeBarW").style.top) - 90;
+        	var offset = 0;
+        	
+        	/* 2018-11-29 홍승비 - 즐겨찾기 탭 > 하단 미리보기 리사이즈바 어긋나는 부분 수정  */
+        	if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1 || window.parent.location.href.indexOf("/admin/ezBoard/boardConfig.do") > -1) {
+        		offsetW = 72;
+        	} else {
+        		offsetW = 90;
+        	}
+        	var newPos_W = parseInt(document.getElementById("ResizeBarW").style.top) - offsetW;
             if (pMailListHeightW > newPos_W) {
                 pMailPreHeightW = pMailPreHeightW + (pMailListHeightW - newPos_W);
                 pMailListHeightW = newPos_W;
@@ -742,10 +758,20 @@ function MailPreviewResize(e) {
         }
         else {
             var newPos_W = curevent.clientY;
-            if (newPos_W < (parseInt(CurrentHeight * 0.25) + 90))
-                newPos_W = parseInt(CurrentHeight * 0.25) + 90;
+        	var offset = 0;
+        	
+        	/* 2018-11-29 홍승비 - 즐겨찾기 탭 > 하단 미리보기 리사이즈바 어긋나는 부분 수정  */
+        	if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1 || window.parent.location.href.indexOf("/admin/ezBoard/boardConfig.do") > -1) {
+        		offsetW = 72;
+        	} else {
+        		offsetW = 90;
+        	}
+        	
+            if (newPos_W < (parseInt(CurrentHeight * 0.25) + offsetW)) {
+                newPos_W = parseInt(CurrentHeight * 0.25) + offsetW;
+            }
             else if (newPos_W > (parseInt(CurrentHeight * 0.65) + 90)) {
-                newPos_W = (parseInt(CurrentHeight * 0.65) + 90);
+            	newPos_W = (parseInt(CurrentHeight * 0.65) + 90);
             }
             document.getElementById("ResizeBarW").style.top = newPos_W + "px";
         }
