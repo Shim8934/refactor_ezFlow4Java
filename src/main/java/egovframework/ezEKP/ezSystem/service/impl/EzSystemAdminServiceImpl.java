@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezSystem.service.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
@@ -41,6 +42,7 @@ import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.CheckName;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
+import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -551,16 +553,17 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 	
 	@Override
-	public String getTotalUsage(String moduleName, String realPath, LoginVO userInfo) throws Exception {
+	public ModuleSizeVO getModuleUsage(String moduleName, String realPath, LoginVO userInfo) throws Exception {
+		logger.debug("getModuleUsage started.");
 		
 		dataForModules module = dataForModules.valueOf(moduleName.toUpperCase());
 		
-		long fileSize = 0;
+		long storageSize = 0;
 		long tableSize = 0;
 		
 		if(module.getFilerootName() != null) {
 			int tableNameLen = module.getFilerootName().length;
-			AtomicLong fileSizeByte = new AtomicLong(0);
+			AtomicLong storageSizeByte = new AtomicLong(0);
 			
 			for(int i = 0; i < tableNameLen; i++) {
 				// get file size
@@ -571,11 +574,9 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 					Files.walkFileTree(filePath, new SimpleFileVisitor<Path>() {
 						
 						@Override
-						public FileVisitResult visitFile(Path file,
-								BasicFileAttributes attrs) throws IOException {
+						public FileVisitResult visitFile(Path file,	BasicFileAttributes attrs) throws IOException {
 							
-							fileSizeByte.addAndGet(attrs.size());
-							logger.debug("### file name/ " + file.toString());
+							storageSizeByte.addAndGet(attrs.size());
 							
 							return FileVisitResult.CONTINUE;
 						}
@@ -584,24 +585,51 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 				}
 			}
 			
-			fileSize = fileSizeByte.longValue();
+			storageSize = storageSizeByte.longValue();
 		}
 		
 		// get table size
 		tableSize = ezSystemAdminDAO.selectModuleSize(module.getTableName());
 		
-		logger.debug("### modula name/ " + moduleName);
-		logger.debug("### file size/ " + fileSize);
-		logger.debug("### table size/ " + tableSize);
+		logger.debug("getModuleUsage ended.");
 		
-		logger.debug("### total size (number)/ " + (fileSize + tableSize));
+		return setModuleSize(storageSize, tableSize);
+	}
+	
+	public ModuleSizeVO setModuleSize(long storageSize, long tableSize) throws Exception {
+		logger.debug("setModuleSize started.");
 		
-		String totalSizeStr = String.valueOf(fileSize + tableSize);
-		totalSizeStr = commonUtil.byteCalculation(totalSizeStr);
+		ModuleSizeVO module = new ModuleSizeVO();
 		
-		// file size + table size return
-		logger.debug("### total size (string)/ " + totalSizeStr);
+		long totalSize = storageSize + tableSize;
 		
-		return totalSizeStr;
+		module.setStorageSize(storageSize);
+		module.setTableSize(tableSize);
+		module.setTotalSizePerModule(totalSize);
+		
+		module.setStorageSizeStr(commonUtil.byteCalculation(String.valueOf(storageSize)));
+		module.setTableSizeStr(commonUtil.byteCalculation(String.valueOf(tableSize)));
+		module.setTotalSizePerModuleStr(commonUtil.byteCalculation(String.valueOf(totalSize)));
+		
+		logger.debug("setModuleSize ended.");
+		
+		return module;
+	}
+	
+	@Override
+	public ModuleSizeVO setAllModuleUsage(ModuleSizeVO module) throws Exception {
+		logger.debug("setAllModuleUsage started.");
+		
+		long storageSize = module.getStorageSizeAllModule();
+		long tableSize = module.getTableSizeAllModule();
+		long totalSize = module.getTotalSizeAllModule();
+		
+		module.setStorageSizeAllModuleStr(commonUtil.byteCalculation(String.valueOf(storageSize)));
+		module.setTableSizeAllModuleStr(commonUtil.byteCalculation(String.valueOf(tableSize)));
+		module.setTotalSizeAllModuleStr(commonUtil.byteCalculation(String.valueOf(totalSize)));
+		
+		logger.debug("setAllModuleUsage ended.");
+		
+		return module;
 	}
 }

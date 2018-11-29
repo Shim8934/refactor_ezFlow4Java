@@ -5,13 +5,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.antlr.grammar.v3.ANTLRParser.exceptionGroup_return;
-import org.stringtemplate.v4.compiler.CodeGenerator.list_return;
-
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
+import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -36,5 +33,6 @@ public interface EzSystemAdminService {
 	public List<String> getAllAccessListCom (int tenantID) throws Exception;
 	public void deleteAccessId(String accessNo) throws Exception;
 	public void insertAccessId(int tenantID, String cn) throws Exception;
-	public String getTotalUsage(String module, String realPath, LoginVO userInfo) throws Exception;
+	public ModuleSizeVO getModuleUsage(String module, String realPath, LoginVO userInfo) throws Exception;
+	public ModuleSizeVO setAllModuleUsage(ModuleSizeVO module) throws Exception;
 }

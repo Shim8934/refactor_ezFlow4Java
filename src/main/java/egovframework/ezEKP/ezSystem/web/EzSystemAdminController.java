@@ -14,9 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -24,6 +21,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,6 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
@@ -49,6 +48,7 @@ import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
+import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -972,32 +972,31 @@ public class EzSystemAdminController {
 	}
 	
 	@RequestMapping(value = "/admin/ezSystem/systemModuleMonitor.do")
-	public String temp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public String systemModuleMonitor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("systemModuleMonitor started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		String cloudFlag = ezCommonService.getTenantConfig("useCloud", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		
 		if(userInfo != null) {
-			String mailTotalSize = ezSystemAdminService.getTotalUsage("mail", realPath, userInfo);
-			String scheduleTotalSize = ezSystemAdminService.getTotalUsage("schedule", realPath, userInfo);
-			String boardTotalSize = ezSystemAdminService.getTotalUsage("board", realPath, userInfo);
-			String communityTotalSize = ezSystemAdminService.getTotalUsage("community", realPath, userInfo);
-			String resourceTotalSize = ezSystemAdminService.getTotalUsage("resource", realPath, userInfo);
+			ModuleSizeVO moduleSizeVO = new ModuleSizeVO(true);
 			
-			model.addAttribute("mail", mailTotalSize);
-			model.addAttribute("schedule", scheduleTotalSize);
-			model.addAttribute("board", boardTotalSize);
-			model.addAttribute("community", communityTotalSize);
-			model.addAttribute("resource", resourceTotalSize);
+			moduleSizeVO.putModuleMap("mail", ezSystemAdminService.getModuleUsage("mail", realPath, userInfo));
+			moduleSizeVO.putModuleMap("schedule", ezSystemAdminService.getModuleUsage("schedule", realPath, userInfo));
+			moduleSizeVO.putModuleMap("board", ezSystemAdminService.getModuleUsage("board", realPath, userInfo));
+			moduleSizeVO.putModuleMap("community", ezSystemAdminService.getModuleUsage("community", realPath, userInfo));
+			moduleSizeVO.putModuleMap("resource", ezSystemAdminService.getModuleUsage("resource", realPath, userInfo));
 			
-			if(!cloudFlag.equalsIgnoreCase("YES")) {
-				String approvalTotalSize = ezSystemAdminService.getTotalUsage("approval", realPath, userInfo);
-				
-				model.addAttribute("approval", approvalTotalSize);
-			}
+			moduleSizeVO = ezSystemAdminService.setAllModuleUsage(moduleSizeVO);
+			
+			model.addAttribute("modules", moduleSizeVO);
+			
+//			if(!cloudFlag.equalsIgnoreCase("YES")) {
+//				Map<String, String> approvalTotalSize = ezSystemAdminService.getTotalUsage("approval", realPath, userInfo);
+//				
+//				model.addAttribute("approval", approvalTotalSize);
+//			}
 		}
 		
 		logger.debug("systemModuleMonitor ended");
