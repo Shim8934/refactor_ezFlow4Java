@@ -221,7 +221,6 @@
 				html += "<div class='qstnRow'>";
 				html += "<input class='questnTitle'>";
 				html += "<img alt='' src='/images/ezSurvey/attach.png' class='atchImg'>";
-				html += "<input type='file' class='attachFile' multiple='multiple' >";
 				html += "<div class='selectBox'></div>";
 				html += "</div>";
 					

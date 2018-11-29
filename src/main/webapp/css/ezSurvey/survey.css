@@ -221,13 +221,12 @@
 
 .quesDiv {text-align: center; align-items: center; justify-content: center;}
 .quesDiv .qstnRow {display: flex; width: 70%; padding-left: 15%;}
-.quesDiv .qstnRow .questnTitle {background-color: rgba(204, 204, 204, 0.4); width: 80%; height: 50px; border-radius: 10px; outline: none; padding: 0px 8px; font-size: 16px;}
-.quesDiv .qstnRow .atchImg {width: 50px; height: 50px; padding: 0px 10px; cursor: pointer;}
-.quesDiv .qstnRow .attachFile {opacity: 0; width: 0px}
+.quesDiv .qstnRow .questnTitle {background-color: rgba(204, 204, 204, 0.4); width: 70%; height: 50px; border-radius: 10px; outline: none; padding: 0px 8px; font-size: 16px;}
+.quesDiv .qstnRow .atchImg {width: 5%; height: 5%; padding: 0px 10px; cursor: pointer;}
 
-.quesDiv .qstnRow .dd-container {width: 20%; height: 50px; border-radius: 10px; display: inline-block;}
-.quesDiv .qstnRow .dd-container .dd-select {height: 48px; border-radius: 10px;}
-.quesDiv .qstnRow .dd-container .dd-options {border-radius: 10px;}
+.quesDiv .qstnRow .dd-container {width: 25%; height: 50px; border-radius: 10px; display: inline-block;}
+.quesDiv .qstnRow .dd-container .dd-select {height: 48px; border-radius: 10px; width: 100%;}
+.quesDiv .qstnRow .dd-container .dd-options {border-radius: 10px; width: 100%;}
 .quesDiv .qstnRow .dd-container .dd-option {height: 25px; line-height: 25px; text-align: left;}
 /* .quesDiv .optionBox {padding-top: 5px; } */
 .quesDiv .qstnAtt .qstnFileInfo .fileList ul {width: 70%; padding-left: 15%;}
