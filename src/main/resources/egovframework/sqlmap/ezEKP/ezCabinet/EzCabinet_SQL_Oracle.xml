@@ -777,7 +777,7 @@
 					</iterate> and (s.shared_type = 0 or s.shared_type = 1)
 					)
 				)
-				and s.use_status = 1
+				and s.use_status = 1 and s.tenant_id = #tenantId#
 				<isNotEmpty property="permMode">
 					<isEqual property="permMode" compareValue="1">and s.permission = 1</isEqual>
 				</isNotEmpty>
@@ -788,8 +788,8 @@
 		select
 			c1.cabinet_id
 		from
-			tbl_cb_cabinet c1 where 
-			<iterate property="pathList" conjunction=" or ">
+			tbl_cb_cabinet c1 where c1.tenant_id = #tenantId# and 
+			<iterate property="pathList" open="(" close=")" conjunction=" or ">
 				c1.cabinet_path like concat('%', concat(#pathList[]#, '%'))
 			</iterate>
 	</select>
