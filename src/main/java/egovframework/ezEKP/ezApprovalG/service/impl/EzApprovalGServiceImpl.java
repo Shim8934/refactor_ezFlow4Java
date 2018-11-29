@@ -6872,6 +6872,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String strSign = "";
 		String strJikwe = "";
 		String strSeumyungDate = "";
+		String strApproDept = "";
 		String strSql = "TRUE";
 		
 		String lineResult = getAprLineInfo(docID, orgUID, formID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset(), "DRAFT", "", "", "");
@@ -6962,13 +6963,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					if (refResult > 0) {
 						//분석해야함
 						int tmps = signCnt - refResult;
-						
 						if (totalLineSN == tmps) {
 							doc.getElementById(signAdd + "sign" + lastSignNum).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 							
 							if (doc.getElementById(signAdd + "seumyungdate" + lastSignNum) != null) {
 								doc.getElementById(signAdd + "seumyungdate" + lastSignNum).html(lastCnt);
 							}
+							strApproDept = signAdd + "approdept" + lastSignNum;
 						} else {
 							strSign = signAdd + "sign" + tmps;
 							strSeumyungDate = signAdd + "seumyungdate" + tmps;
@@ -6979,10 +6980,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							if (doc.getElementById(strSeumyungDate) != null) {
 								doc.getElementById(strSeumyungDate).html(lastCnt);
 							}
+							strApproDept = signAdd + "approdept" + tmps;
 						}
+						
+						/* 결재칸에 부서 추가 */
+						if (doc.getElementById(strApproDept) != null) {
+							if(userInfo.getPrimary().equalsIgnoreCase("1")) {
+								doc.getElementById(strApproDept).html(description);
+							} else {
+								doc.getElementById(strApproDept).html(description2);
+							}
+						}						
 					} else {
 						int tmps = signCnt - refResult;
-						
 						if (totalLineSN == tmps) {
 							strSign = signAdd + "sign" + lastSignNum;
 							strSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
@@ -6992,17 +7002,32 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							if (doc.getElementById(strSeumyungDate) != null) {	
 								doc.getElementById(strSeumyungDate).html(lastCnt);
 							}
+							/* 결재칸에 부서 추가 */
+							strApproDept = signAdd + "approdept" + lastSignNum;
+							
 						} else {
 							strSign = signAdd + "sign" + tmps;
 							strSeumyungDate = signAdd + "seumyungdate" + tmps;
 							strJikwe = signAdd + "jikwe" + tmps;
+							strApproDept = signAdd + "approdept" + tmps;
 							
 							doc.getElementById(strSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 							
 							if (doc.getElementById(strSeumyungDate) != null) {	
 								doc.getElementById(strSeumyungDate).html(lastCnt);
 							}
+							
+							/* 결재칸에 부서 추가 */
+							strApproDept = signAdd + "approdept" + tmps;
 						}
+						/* 결재칸에 부서 추가 */
+						if (doc.getElementById(strApproDept) != null) {
+							if(userInfo.getPrimary().equalsIgnoreCase("1")) {
+								doc.getElementById(strApproDept).html(description);
+							} else {
+								doc.getElementById(strApproDept).html(description2);
+							}
+						}						
 					}
 					
 					signInfo = strSign;
@@ -7028,6 +7053,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						int tmps = signCnt - refResult;
 						String tempSign = signAdd + "sign" + lastSignNum;
 						String tempSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
+						String tempApproDept = signAdd + "approdept" + lastSignNum;
 						
 						for (int k = tmps; k < lastAprLineSN; k++) {
 							doc.getElementById(signAdd + "sign" + k).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + "</P>");
@@ -7035,6 +7061,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						doc.getElementById(tempSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 						doc.getElementById(tempSeumyungDate).html(lastCnt);
+						
+						if(userInfo.getPrimary().equalsIgnoreCase("1")) {
+							doc.getElementById(tempApproDept).html(description);
+						} else {
+							doc.getElementById(tempApproDept).html(description2);
+						}
 						
 						signInfo = tempSign;
 						signText = "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
@@ -7044,9 +7076,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						int tmps = signCnt - refResult;
 						String tempSign = signAdd + "sign" + tmps;
 						String tempSeumyungDate = signAdd + "seumyungdate" + tmps;
+						String tempApproDept = signAdd + "approdept" + tmps;
 						
 						doc.getElementById(signAdd + "sign" + tmps).html(messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + "<BR/><P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 						doc.getElementById(tempSeumyungDate).html(lastCnt);
+						
+						if(userInfo.getPrimary().equalsIgnoreCase("1")) {
+							doc.getElementById(tempApproDept).html(description);
+						} else {
+							doc.getElementById(tempApproDept).html(description2);
+						}
 						
 						signInfo = tempSign;
 						signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + "<BR/><P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
@@ -10892,7 +10931,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent().trim();
 		String orgCompanyID = xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent().trim();
 		
-		if (!orgCompanyID.equals(companyID)) {
+		if (!orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			companyID = orgCompanyID;
 		}
 		
@@ -24002,6 +24041,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA8><![CDATA[" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "]]></DATA8>");
 					resultXML.append("<DATA9><![CDATA[" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "]]></DATA9>");
 					resultXML.append("<DATA10><![CDATA[" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "]]></DATA10>");
+					resultXML.append("<DATA99><![CDATA[" + docXML.getElementsByTagName("FORMNAME").item(k).getTextContent() + "]]></DATA99>");					
 				}
 				
 				if (FieldName.equals("HASATTACHYN")) {

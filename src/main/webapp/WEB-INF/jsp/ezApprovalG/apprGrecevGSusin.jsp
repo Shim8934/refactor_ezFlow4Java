@@ -90,6 +90,7 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    arr_userinfo[17]  = "${userInfo.primary}";
 		    var pCompanyID = "${userInfo.companyID}";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
