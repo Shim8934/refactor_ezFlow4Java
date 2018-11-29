@@ -2026,7 +2026,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		int count = ezNewPortalDAO.getSlideImageMaxSn(map);
 		map.put("count", count);
 		
-		map.put("slideId", "slidePortletImage" + fileName.split("\\.")[0]);
+		map.put("slideId", fileName.split("\\.")[0]);
 		
 		ezNewPortalDAO.insertSilderImages(map);
 		
