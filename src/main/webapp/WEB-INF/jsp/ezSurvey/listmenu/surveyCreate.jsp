@@ -222,7 +222,7 @@
 				html += "<input class='questnTitle'>";
 				html += "<img alt='' src='/images/ezSurvey/attach.png' class='atchImg'>";
 				html += "<input type='file' class='attachFile' multiple='multiple' >";
-				html += "<div id='selectBox'></div>";
+				html += "<div class='selectBox'></div>";
 				html += "</div>";
 					
 				html += "<div class='qstnAtt'>";
@@ -270,7 +270,7 @@
 			// 질문 유형을 선택하는 셀렉트 박스 생성
 			function createQuestionSelectBox() {
 				
-				$("#selectBox").ddslick({
+				$(".selectBox").ddslick({
 					data :optionData,
 					imagePosition: "left",
 					selectText: SurveyMessages.strQselect,
