@@ -39,6 +39,7 @@
 		.tree_delete {margin: 0px; cursor: pointer;}
 		</style>
 		<script type="text/javascript">
+			var nowYear = new Date().getFullYear();
 			var popup;
 			var selectedYear;
 			var selectedTerm;
@@ -50,9 +51,23 @@
 		            return true;
 		    };
 			$(document).on('ready', function() {
+				getYearList();
+				getEmployeeList(nowYear);
+				
+				$(".regular").on('afterChange', function(event, slick, currentSlide, nextSlide){
+					var centerElmt = document.getElementsByClassName("slick-center")[0];
+					var centerYear = centerElmt.getElementsByClassName("yearSpan")[0].innerHTML;
+					var mainList   = document.getElementById("mainlist");
+					while (mainList.firstChild) {
+						mainList.removeChild(mainList.firstChild);
+					}
+					
+					getEmployeeList(centerYear);
+				});
+			});
+			function getYearList() {
 				var regular = document.getElementById("regular");
 				
-				var nowYear = new Date().getFullYear();
 				for (var i = nowYear - 20; i < nowYear + 21; i++) {
 					var sliderDiv  = document.createElement("div");
 					var sliderSpan = document.createElement("span");
@@ -81,62 +96,13 @@
 					prevArrow: '<div class="slick-prev"><span class="icon16 calendarleft"></span></div>',
 					nextArrow: '<div class="slick-next"><span class="icon16 calendarright"></span></div>',
 				});
-				
-				initList();
-				getEmployeeList(nowYear);
-				
-				$(".regular").on('afterChange', function(event, slick, currentSlide, nextSlide){
-					var centerElmt = document.getElementsByClassName("slick-center")[0];
-					var centerYear = centerElmt.getElementsByClassName("yearSpan")[0].innerHTML;
-					getEmployeeList(centerYear);
-				});
-			});
-			function initList() {
+			}
+			function changeYear() {
 				var mainList = document.getElementById("mainlist");
-				
-				for (var month = 1; month < 13; month++) {
-					var liElmt         = document.createElement("li");
-					var empBttnDivElmt = document.createElement("div");
-					var empInfoDivElmt = document.createElement("div");
-					var empAddDivElmt  = document.createElement("div");
-					var addBttnElmt    = document.createElement("img");
-					var titleElmt      = document.createElement("p");
-					var dlElmt         = document.createElement("dl");
-					var dtElmt         = document.createElement("dt");
-					var imgElmt        = document.createElement("img");
-					var ddElmt1        = document.createElement("dd");
-					var ddElmt2        = document.createElement("dd");
-					
-					liElmt.setAttribute("id", month);
-					liElmt.className = "employee";
-					
-					empBttnDivElmt.className = "empBttn";
-					empInfoDivElmt.className = "empInfo";
-					empAddDivElmt.className = "empAdd";
-					
-					titleElmt.textContent = month + "월";
-					
-					ddElmt1.textContent = month + "월의 우수사원을";
-					ddElmt2.textContent = "등록하세요.";
-					
-					addBttnElmt.setAttribute("id", "add_" + month);
-					addBttnElmt.setAttribute("src", "/images/admin/slideAdd.png");
-					addBttnElmt.addEventListener("click", function(event) {btn_add(this);});
-
-					dtElmt.appendChild(addBttnElmt);
-					dtElmt.appendChild(ddElmt1);
-					dtElmt.appendChild(ddElmt2);
-					dlElmt.appendChild(dtElmt);
-					
-					empInfoDivElmt.appendChild(titleElmt);
-					empAddDivElmt.appendChild(dlElmt);
-					
-					liElmt.appendChild(empBttnDivElmt);
-					liElmt.appendChild(empInfoDivElmt);
-					liElmt.appendChild(empAddDivElmt);
-					
-					mainList.appendChild(liElmt);
+				while (mainList.firstChild) {
+					mainList.removeChild(mainList.firstChild);
 				}
+				getEmployeeList(selectedYear);
 			}
 			function getEmployeeList(year) {
 				selectedYear = year;
@@ -152,28 +118,24 @@
 				});
 			}
 			function renderList(result) {
+				var mainList = document.getElementById("mainlist");
 				
 				for (var month = 1; month < 13; month++) {
-					var liElmt   = document.getElementById(month);
-					var bttnElmt = liElmt.getElementsByClassName("empBttn")[0];
-					var addElmt  = liElmt.getElementsByClassName("empAdd")[0];
-					var imgElmt  = liElmt.getElementsByClassName("empImg")[0];
+					var liElmt         = document.createElement("li");
+					var empBttnDivElmt = document.createElement("div");
+					var empInfoDivElmt = document.createElement("div");
+					var empAddDivElmt  = document.createElement("div");
+					var titleElmt      = document.createElement("p");
 					
-					while (bttnElmt.firstChild) {
-						bttnElmt.removeChild(bttnElmt.firstChild);
-					}
+					liElmt.className = "employee";
+					empBttnDivElmt.className = "empBttn";
+					empInfoDivElmt.className = "empInfo";
+					empAddDivElmt.className = "empAdd";
 					
-					if (imgElmt) {
-						addElmt.style.display = ""; 
-						liElmt.removeChild(imgElmt);
-					}
+					titleElmt.textContent = month + "월";
 					
 					result.forEach(function(item, index) {
 						if (month == item.term.substring(5)) {
-							if (addElmt) { addElmt.style.display = "none"; }
-							
-							var liElmt  = document.getElementById(month);
-							
 							var updBttnElmt   = document.createElement("img");
 							var delBttnElmt   = document.createElement("span");
 							var empImgDivElmt = document.createElement("div");
@@ -185,14 +147,13 @@
 							var ddElmt3       = document.createElement("dd");
 							
 							delBttnElmt.className = "sub_iconLNB tree_delete";
+							empImgDivElmt.className = "empImg";
 							
 							updBttnElmt.setAttribute("src", "/images/admin/slideUpdate.png");
 							delBttnElmt.setAttribute("src", "/images/admin/slideDelete.png");
 							
 							updBttnElmt.addEventListener("click", function(event) {btn_modify(item.term);});
 							delBttnElmt.addEventListener("click", function(event) {btn_delete(item.term);});
-							
-							empImgDivElmt.className = "empImg";
 							
 							imgElmt.style.border = "1px solid #999";
 							imgElmt.setAttribute("src", item.filePath);
@@ -203,19 +164,56 @@
 							ddElmt2.textContent = item.description;
 							ddElmt3.textContent = item.title + " " + item.displayName;
 							
-							bttnElmt.appendChild(updBttnElmt);
-							bttnElmt.appendChild(delBttnElmt);
+							empBttnDivElmt.appendChild(updBttnElmt);
+							empBttnDivElmt.appendChild(delBttnElmt);
 							
 							dtElmt.appendChild(imgElmt);
 							dlElmt.appendChild(dtElmt);
 							dlElmt.appendChild(ddElmt1);
 							dlElmt.appendChild(ddElmt2);
 							dlElmt.appendChild(ddElmt3);
-							empImgDivElmt.appendChild(dlElmt);
 							
+							empImgDivElmt.appendChild(dlElmt);
+							empInfoDivElmt.appendChild(titleElmt);
+							
+							liElmt.appendChild(empBttnDivElmt);
+							liElmt.appendChild(empInfoDivElmt);
 							liElmt.appendChild(empImgDivElmt);
+							
+							return false;
 						}
 					});
+					
+					var imgElmt  = liElmt.getElementsByClassName("empImg")[0];
+					if (!imgElmt) {
+						var addBttnElmt    = document.createElement("img");
+						var dlElmt         = document.createElement("dl");
+						var dtElmt         = document.createElement("dt");
+						var imgElmt        = document.createElement("img");
+						var ddElmt1        = document.createElement("dd");
+						var ddElmt2        = document.createElement("dd");
+						
+						ddElmt1.textContent = month + "월의 우수사원을";
+						ddElmt2.textContent = "등록하세요.";
+						
+						addBttnElmt.setAttribute("id", "add_" + month);
+						addBttnElmt.setAttribute("src", "/images/admin/slideAdd.png");
+						addBttnElmt.addEventListener("click", function(event) {btn_add(this);});
+
+						dtElmt.appendChild(addBttnElmt);
+						dtElmt.appendChild(ddElmt1);
+						dtElmt.appendChild(ddElmt2);
+						dlElmt.appendChild(dtElmt);
+						
+						empInfoDivElmt.appendChild(titleElmt);
+						empAddDivElmt.appendChild(dlElmt);
+						
+						liElmt.appendChild(empBttnDivElmt);
+						liElmt.appendChild(empInfoDivElmt);
+						liElmt.appendChild(empAddDivElmt);
+					}
+					
+					mainList.appendChild(liElmt);
 				}
 			}
 			function OpenUserInfo(pUserID) {
@@ -259,7 +257,8 @@
 						} else {
 							alert("<spring:message code = 'ezPersonal.t191' />");
 							window.close();
-							window.location.reload(false);
+							//window.location.reload(false);
+							changeYear();
 						}
 					}
 				});
@@ -293,7 +292,8 @@
 						} else {
 							alert("<spring:message code = 'ezPersonal.t191' />");
 							window.close();
-							window.location.reload(false);
+							//window.location.reload(false);
+							changeYear();
 						}
 					}
 				});
@@ -312,7 +312,8 @@
 								alert("<spring:message code = 'ezPersonal.t302' />");
 							} else {
 								alert("<spring:message code = 'ezPersonal.t00004' />");
-								window.location.reload(false);
+								//window.location.reload(false);
+								changeYear();
 							}
 						}
 					});
