@@ -456,6 +456,8 @@ WHERE
 	Q.TENANT_ID = #tenantId#
 AND 
 	U.PHYSICALDELIVERYOFFICENAME = #companyId#
+ORDER BY
+    Q.REGDATE DESC
 LIMIT #limit#
 OFFSET #offset#
 ]]>	
