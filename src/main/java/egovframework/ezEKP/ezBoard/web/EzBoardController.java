@@ -555,9 +555,18 @@ public class EzBoardController extends EgovFileMngUtil{
 	        	strXMLRange.append("<MEMBER>"); 
 	        	
 	        	for (String userID : userIdList) {
+	        		//개인 대상 특정할 경우 겸직 처리하기 위해 수정. 2018-11-27 홍대표.
+	        		String deptID = "";
+	        		String tmpUserID = userID;
+	        		if(userID.indexOf("|") != -1) {
+	        			userID = tmpUserID.split("\\|")[0];
+	        			deptID = tmpUserID.split("\\|")[1];
+	        		}
+	        		
 	        		LoginVO user = loginService.selectReceiver(userID, userInfo.getTenantId());
-	        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(user.getDisplayName1()) + 
-		        			"\" nm2=\"" + commonUtil.cleanValue(user.getDeptName1()) + "\">" + commonUtil.cleanValue(user.getId()) + "</DATA>");
+	        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(user.getDisplayName1())
+		        			+ "\" nm2=\"" + commonUtil.cleanValue(user.getDeptName1()) + "\" deptid=\"" + commonUtil.cleanValue(deptID) + "\">"
+	        				+ commonUtil.cleanValue(user.getId()) + "</DATA>");
 	        		
 		        	if (userInfo.getPrimary().equals("1")) {
 		        		listOfTarget += user.getDisplayName1() + ",";
@@ -614,6 +623,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			for (int i = 0; i < pUserCnt; i++) {
 				String userID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
+				String deptID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("deptid").getTextContent();
+				
+				userID = userID + "|" + deptID;
 				targetUsers += userID + ",";
 			}
 			

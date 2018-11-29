@@ -1366,6 +1366,25 @@
 	            });				
 			}
 		    
+		    function syncOrganAccounts() {
+	            $.ajax({
+	            	type : "POST",
+	            	dataType : "text",
+	            	url : "/admin/ezOrgan/syncOrganAccounts.do",
+	            	async : true,
+	            	success : function(result) {
+	            	    if (result == "OK") {
+	            	        alert("<spring:message code='ezOrgan.lhm6' />");
+	            	    } else {
+	            	        alert("<spring:message code='ezQuestion.t263' />");
+	            	    }
+	            	},
+	            	error : function(error) {
+	            	    alert("<spring:message code='ezQuestion.t263' /> " + error);
+	            	}
+	            });
+		    }
+		    
 		    function syncWithBizmekaTalkAccounts() {
 	            $.ajax({
 	            	type : "POST",
@@ -1622,7 +1641,12 @@
 						</tr>		
 						<tr>
 							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></a></td>
-						</tr>		                
+						</tr>
+						<c:if test="${useSyncServer == 'YES'}">			
+							<tr>
+			                	<td><a class="imgbtn" id="usermenu24"><span onClick="syncOrganAccounts()"><spring:message code='ezOrgan.lhm5' /></span></a></td>
+			                </tr>
+		                </c:if>
 						<c:if test="${useBizmekaTalk == 'YES'}">			
 							<tr>
 			                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
