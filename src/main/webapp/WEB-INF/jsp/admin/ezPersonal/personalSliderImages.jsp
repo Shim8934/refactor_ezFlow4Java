@@ -35,8 +35,9 @@
 		.addImageBtn span {height:25px; background-color:#f4f4f4; border:1px solid #e7e7e7;  float:right; padding: 0px 9px; line-height: 23px; display:block; text-align: center; margin-top:65%; margin-right:35%}
 		#UploadSliderImage {position:relative; bottom:210px;}
 		.imgbtn {position: relative;}
-		.sliderList-modify {display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
+		.sliderListmodify {display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
 		.cancelNewSliderBtnmodify img {height:25px; float:right; padding: 3px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
+		.sliderURL {display: block; width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 	}
 		</style>
 		<script type="text/javascript">
@@ -234,7 +235,8 @@
 		    } 
 		    //슬라이드 이미지 생성 취소
 		    var addCancel = function() {
-		    	window.location.reload();
+		    	getSliderList();
+		    	//window.location.reload();
 		    }
 		    
 		    //슬라이드 이미지 추가
@@ -358,7 +360,11 @@
 		         if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
 		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
 		            return;
+		        } else if (document.getElementById("txtDisplayName3").value == "") {
+		            alert("URL을 입력하세요.");
+		            return; 
 		        }
+		         
 		    	var displayName = "";
 		    	var displayName2 = "";
 		    	var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("${uploadPortalPath}"));
@@ -430,6 +436,14 @@
 		    }  */
 		    //슬라이더 수정 함수
 		    function modifySlider(obj) {
+		    	var preList = $("#sliderListmodify");
+		    	var length = preList.length;
+		    	
+		    	for(var i = 0; i<length; i++){
+		    		preList[i].remove();
+		    		getSliderList();
+		    	}
+		    	
 		    	var sliderID = obj.getAttribute("data3");
 		    	var sliderList = obj.parentNode.parentNode;
 		    	/* var name1 = sliderList.querySelector("#sliderName").getAttribute("data4");
@@ -438,7 +452,7 @@
 		    	//var regDate = sliderList.querySelector("#sliderRegDate").getAttribute("data7");
 		    	
 		    	var sliderHTML = "";
-		    	sliderHTML += "<li class = 'sliderList-modify' id = 'sliderList-modify'>";
+		    	sliderHTML += "<li class = 'sliderListmodify' id = 'sliderListmodify'>";
 		    	sliderHTML += "<div class = 'slider-header-add' style='background-color:#f4f4f4;border:1px solid #e7e7e7;color:#b1b1b1'>";
 		    	sliderHTML += "<a class = 'cancelNewSliderBtnmodify' id='cancelNewSliderBtnmodify'>";
 		    	sliderHTML += "<span class ='addCancel-modify'><img src='/images/close_xBtn.png'></span></a>";
@@ -537,7 +551,8 @@
 		    }
 		    
 		    var addCancelModify = function(){
-		    	window.location.reload();
+		    	//window.location.reload();
+		    	getSliderList();
 		    }
 			//슬라이드 카드 삭제
 		    function deleteSlider(obj) {
