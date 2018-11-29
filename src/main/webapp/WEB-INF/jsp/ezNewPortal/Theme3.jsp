@@ -41,6 +41,7 @@
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
 	.two_column {width:48.4%;}
+	.orbit-wrapper .timer {display:none;}
 </style>
 </head>
 <body class="mainbg" id="theme3Body">
