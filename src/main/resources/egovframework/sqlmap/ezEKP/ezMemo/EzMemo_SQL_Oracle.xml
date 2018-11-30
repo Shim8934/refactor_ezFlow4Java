@@ -178,6 +178,9 @@
             VALUES
                 (SEQ_TBL_MEMO.NEXTVAL, #user_id#, TO_DATE(#write_date#, 'YYYY-MM-DD HH24:MI:SS'), #folder_id#, #orders#,  #company_id#, #tenant_id#, #color_id#)
          ]]>
+         <selectKey keyProperty="memo_id" resultClass="Integer">
+			SELECT max(memo_id) from tbl_memo
+		</selectKey>
 	</insert>
 	
 	<update id="EzMemoDAO.setMemoConfig" parameterClass="hashmap">
@@ -397,6 +400,9 @@
             VALUES
                 (SEQ_TBL_MEMO.NEXTVAL, #user_id#, TO_DATE(#write_date#, 'YYYY-MM-DD HH24:MI:SS'), #folder_id#, #orders#,  #company_id#, #tenant_id#, #color_id#, #contents#)
          ]]>
+         <selectKey keyProperty="memo_id" resultClass="Integer">
+			SELECT max(memo_id) from tbl_memo
+		</selectKey>
 	</insert>
 
 	<update id="EzMemoDAO.setMemoColor">
