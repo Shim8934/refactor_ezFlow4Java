@@ -110,20 +110,23 @@
 			        if (g_bRecAdmin || AdminYN == "TRUE") {
 			            /* document.getElementById("tag07").style.display = "";
 			            document.getElementById("tag08").style.display = ""; */
-			            document.getElementById("tag09").style.display = "";
-			            document.getElementById("tag10").style.display = "";
+			            /* left 디자인 수정작업 이전 오류로 주석처리  -> left G메뉴까지 작업 이후 주석처리해제*/
+			            /* document.getElementById("tag09").style.display = "";
+			            document.getElementById("tag10").style.display = ""; */
 			        }
 			        else if (g_bDeptCharger) {
 			            /* document.getElementById("tag07").style.display = "";
 			            document.getElementById("tag08").style.display = ""; */
-			            document.getElementById("tag09").style.display = "";
-			            document.getElementById("tag10").style.display = "none";
+			            /* left 디자인 수정작업 이전 오류로 주석처리  -> left G메뉴까지 작업 이후 주석처리해제*/
+			            /* document.getElementById("tag09").style.display = "";
+			            document.getElementById("tag10").style.display = "none"; */
 			        }
 			        else {
 			            /* document.getElementById("tag07").style.display = "none";
 			            document.getElementById("tag08").style.display = "none"; */
-			            document.getElementById("tag09").style.display = "none";
-			            document.getElementById("tag10").style.display = "none";
+			            /* left 디자인 수정작업 이전 오류로 주석처리  -> left G메뉴까지 작업 이후 주석처리해제*/
+			            /* document.getElementById("tag09").style.display = "none";
+			            document.getElementById("tag10").style.display = "none"; */
 			        }
 		        }
 		        
