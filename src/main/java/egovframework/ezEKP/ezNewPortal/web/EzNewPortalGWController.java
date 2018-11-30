@@ -3161,11 +3161,11 @@ e.printStackTrace();
 			Map<String, Object> resultMap = ezNewPortalService.getApprovalStatistics(userId, info.getCompanyID(), info.getTenantId());
 
 			JSONObject data = new JSONObject();
-			data.put("hour", resultMap.get("HOUR"));
-			data.put("day", resultMap.get("DAY"));
-			data.put("week", resultMap.get("WEEK"));
-			data.put("month", resultMap.get("MONTH"));
-			data.put("other", resultMap.get("OTHER"));
+			data.put("hour", resultMap.get("hour"));
+			data.put("day", resultMap.get("day"));
+			data.put("week", resultMap.get("week"));
+			data.put("month", resultMap.get("month"));
+			data.put("other", resultMap.get("other"));
 
 			result.put("status", "ok");
 			result.put("code", 0);
