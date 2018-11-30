@@ -155,7 +155,7 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* portlet_title */
 .portlet_title{ margin:0px; padding:0px; height:46px; line-height:44px; box-sizing:border-box; overflow:hidden; background:rgba(255,255,255,0.7);}
-.portlet_title .portletText{ margin:0px; padding:0px 0px 0px 20px; font-size:16px; color:#333; font-weight:bold; letter-spacing:-1px; float:left; overflow:hidden;width:81%;text-overflow:ellipsis;white-space:nowrap;}
+.portlet_title .portletText{ margin:0px; padding:0px 0px 0px 20px; font-size:16px; color:#333; font-weight:bold; letter-spacing:-1px; float:left; overflow:hidden;width:70%;text-overflow:ellipsis;white-space:nowrap;}
 .portlet_title .portletPlus{ margin:0px; padding:0px; float:right; overflow:hidden; cursor:pointer;}
 .sortablePortlet:hover {cursor : move;}
 
@@ -681,7 +681,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 /* .box_shadow{overflow:hidden; height:250px; margin:20px 0px 0px 16px; padding0px; background:#fff; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20); font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} */
 .weather{overflow:hidden}
 .portlet_title{overflow:hidden; height:46px; margin:0px; padding:0px; line-height:44px; box-sizing:border-box;}
-.portlet_title .portletText{float:left; overflow:hidden; margin:0px; padding:0px 0px 0px 10px; color:#333; font-size:16px; font-weight:bold; letter-spacing:-1px;width:81%;text-overflow:ellipsis;white-space:nowrap;}
+.portlet_title .portletText{float:left; overflow:hidden; margin:0px; padding:0px 0px 0px 10px; color:#333; font-size:16px; font-weight:bold; letter-spacing:-1px;width:70%;text-overflow:ellipsis;white-space:nowrap;}
 .portlet_title .portletPlus{float:right; overflow:hidden; margin:0px; padding:0px; cursor:pointer;}
 
 .portlet_title .portletPlus .weatherSelect{width:78px; height:28px; margin:0px 10px 0px 0px; padding:0px; border:1px solid #c0c0c0; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px;}
