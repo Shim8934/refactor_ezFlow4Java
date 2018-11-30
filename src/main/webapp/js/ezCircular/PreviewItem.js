@@ -150,9 +150,9 @@ function PreviewRayerChange(pGubun) {
 
             document.getElementById("divList").style.overflow = "auto";
             document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
-            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
+            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 5) + "px";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
-            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 200) + "px";
+            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
             
             pPreviewShow_HOW = "H";
             pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
@@ -263,6 +263,7 @@ var RegDate;
 var Content;
 var status;
 var option;
+var memberFile;
 
 function event_ItemPreviewRead() {
     if ((xmlhttp != null && xmlhttp.readyState == 4) && (xmlhttp2 != null && xmlhttp2.readyState == 4)) {
@@ -281,6 +282,13 @@ function event_ItemPreviewRead() {
             Content = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/Content");
             status = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/Status");
             option = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/Option");
+            memberFile = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/MemberFile");
+            
+            if (memberFile == null || memberFile == "null") {
+            	document.getElementById("Pre" + pPreviewShow_HOW + "_userPic").innerHTML = "<img src='/images/kr/main/bestEmployee_pic_none.png' width='55px' height='55px'>";
+            } else {
+            	document.getElementById("Pre" + pPreviewShow_HOW + "_userPic").innerHTML = "<img src='/admin/ezOrgan/getPersonalInfo.do?fileName=" + memberFile + "' width='55px' height='55px'>";
+            }
 
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
@@ -308,8 +316,10 @@ function event_ItemPreviewRead() {
 function previewItemSet() {
     document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
     document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").setAttribute("title", Title);
-    document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = MemberName;
+    document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + MemberName
+	+ "' onclick='MemberInfo_onclick(\"" + MemberId + "\")'>" + MemberName + "</span>";
     document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = RegDate.substring(0, 16);
+    
     var readHTML = Content;
     var tempText = xmlhttp2.responseText;
     
@@ -417,9 +427,9 @@ function MailPreviewEnd(e) {
             document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
             document.getElementById("divList").style.height = (CurrentHeight - 60) + "px";
             document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
-            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
+            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 5) + "px";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
-            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 200) + "px";
+            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
             pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
             pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
 
@@ -590,9 +600,9 @@ function Window_resize() {
 
                 document.getElementById("divList").style.overflow = "auto";
                 document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
-                document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
+                document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 5) + "px";
                 document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
-                document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 200) + "px";
+                document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
                 pPreviewShow_HOW = "H";
                 pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
                 pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
@@ -668,4 +678,10 @@ function javaURLEncode(str) {
 	    .replace(/\(/g, "%28")
 	    .replace(/\)/g, "%29")
 	    .replace(/~/g, "%7E");
+}
+
+function MemberInfo_onclick(pUserID, pDeptID) {
+	var feature = "width=420px, height=450px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+    feature = feature + GetOpenPosition(420, 450);
+    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 }
