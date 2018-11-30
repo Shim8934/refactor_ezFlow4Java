@@ -1001,7 +1001,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		ezNewPortalDAO.updateCompanyPortletInfo2(map); //포틀릿 정보 테이블 업데이트
+		if (map.get("connectionUrl") != null) {
+			ezNewPortalDAO.updateCompanyPortletInfo2(map); //포틀릿 정보 테이블 업데이트
+		}
+		
 		ezNewPortalDAO.updateCompanyPortletInfo(map); //포틀릿 회사관련 정보 테이블 업데이트
 		
 		String menuId = map.get("menuId").toString();
