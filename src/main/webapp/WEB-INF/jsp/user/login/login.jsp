@@ -197,12 +197,12 @@
 		    		success: function(text){
 		    			if (text == 'OK') {
 		    				alert("<spring:message code='ezPersonal.t197'/>");			            	
+			    			window.top.location.href = '/user/login/login.do';
 		    			} else if (text == 'LOGINERROR') {
 		    				alert("<spring:message code='ezPersonal.t946'/>");		    				
 		    			} else {
 		    				alert("<spring:message code='fail.common.login'/>");
 		    			}
-		    			window.top.location.href = '/user/login/login.do';
 		    		},
 		    		error: function(err){
 		    			alert("<spring:message code='ezPersonal.t198'/>");
