@@ -1756,11 +1756,11 @@ AND
 	<select id="ezNewPortal.getApprovalStatistics" parameterClass="Map" resultClass="egovframework.ezEKP.ezNewPortal.vo.LowerKeyMap">
 		<![CDATA[
 			SELECT
-                COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE((sysdate - INTERVAL '6' HOUR), 'YY/MM/DD')) THEN 1 END ) AS hour,
-                COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE((sysdate - 1), 'YY/MM/DD') AND TO_DATE((sysdate - INTERVAL '6' HOUR), 'YY/MM/DD') > DOCINFO.startdate) THEN 1 END ) AS day,
-	            COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE((sysdate - 7), 'YY/MM/DD') AND TO_DATE((sysdate - 1), 'YY/MM/DD') > DOCINFO.STARTDATE) THEN 1 END) AS week,
-	            COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE(ADD_MONTHS(sysdate, -1), 'YY/MM/DD') AND TO_DATE((sysdate - 7), 'YY/MM/DD') > DOCINFO.STARTDATE) THEN 1 END) AS month,
-	            COUNT(CASE WHEN (TO_DATE(ADD_MONTHS(sysdate, -1), 'YY/MM/DD') > DOCINFO.startdate) THEN 1 END) AS other
+                COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE((sysdate - INTERVAL '6' HOUR), 'YY/MM/DD')) THEN 1 END ) AS HOUR,
+                COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE((sysdate - 1), 'YY/MM/DD') AND TO_DATE((sysdate - INTERVAL '6' HOUR), 'YY/MM/DD') > DOCINFO.startdate) THEN 1 END ) AS DAY,
+	            COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE((sysdate - 7), 'YY/MM/DD') AND TO_DATE((sysdate - 1), 'YY/MM/DD') > DOCINFO.STARTDATE) THEN 1 END) AS WEEK,
+	            COUNT(CASE WHEN (DOCINFO.startdate >= TO_DATE(ADD_MONTHS(sysdate, -1), 'YY/MM/DD') AND TO_DATE((sysdate - 7), 'YY/MM/DD') > DOCINFO.STARTDATE) THEN 1 END) AS MONTH,
+	            COUNT(CASE WHEN (TO_DATE(ADD_MONTHS(sysdate, -1), 'YY/MM/DD') > DOCINFO.startdate) THEN 1 END) AS OTHER
 			FROM 
 				TBL_APRDOCINFO DOCINFO
 			JOIN 
