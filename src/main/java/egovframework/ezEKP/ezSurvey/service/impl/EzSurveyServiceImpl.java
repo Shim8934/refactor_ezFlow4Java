@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +29,8 @@ import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service
@@ -160,6 +164,51 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("contentHPrev", contentHPrev);
 		
 		ezSurveyDAO.saveUserConfig(map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject checkPermission(List<Integer> surveyList, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		String userId          = userInfo.getId();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("surveyList", surveyList);
+		map.put("userId"    , userId);
+		map.put("tenantId"  , userInfo.getTenantId());
+		
+		List<SurveyVO> listSurvey  = ezSurveyDAO.getSurveyListForPermission(map);
+		
+		if (listSurvey == null || listSurvey.size() == 0) {
+			result.put("code", 1);
+			result.put("reason", 1);
+			return result;
+		}
+		
+		List<SurveyVO> otherSurvey = listSurvey.stream().filter(i -> !i.getCreatorId().equals(userId)).collect(Collectors.toList());
+		
+		if (otherSurvey.size() == 0) {
+			result.put("code", 0);
+			return result;
+		}
+		
+		List<Integer> listOtherSurveyId = otherSurvey.stream().map(SurveyVO::getSurveyId).collect(Collectors.toList());
+		map.put("deptId",      userInfo.getDeptID());
+		map.put("companyId",   userInfo.getCompanyID());
+		List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(map);
+		map.put("deptList",    userDeptList);
+		map.put("others",      listOtherSurveyId);
+		
+		List<SurveyVO> listReceivedCabinet = ezSurveyDAO.getReceivedSurveyListForPermission(map);
+		List<Integer> listReceivedSurveyId = listReceivedCabinet.stream().map(SurveyVO::getSurveyId).collect(Collectors.toList());
+		
+		if (listReceivedSurveyId.containsAll(listOtherSurveyId)) {
+			result.put("code", 0);
+		}
+		else {
+			result.put("code", 1);
+		}
+		
+		return result;
 	}
 	
 	@Override

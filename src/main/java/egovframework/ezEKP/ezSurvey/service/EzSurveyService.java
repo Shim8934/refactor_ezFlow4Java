@@ -4,10 +4,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzSurveyService {
 	//Company Tree process functions
@@ -19,6 +21,9 @@ public interface EzSurveyService {
 	List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int startPoint, int listcnt, int tenantId) throws Exception;
 	int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception;
 	List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int listcnt, String sqlQuery, String srchValue, int tenantId) throws Exception;
+	
+	//Check user permission
+	JSONObject checkPermission(List<Integer> surveyList, LoginVO userInfo) throws Exception;
 	
 	//User preview config functions
 	SurveyGeneralVO getUserPreviewConfig(String userId, String companyID, int tenantId) throws Exception;
