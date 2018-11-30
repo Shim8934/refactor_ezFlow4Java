@@ -115,6 +115,7 @@
         <result property="docNo" 					column="DOCNO" 					columnIndex="29"/>
 		<result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="30"/>
 		<result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="31"/>
+		<result property="guBun" 					column="GUBUN" 					columnIndex="32"/>
 	</resultMap>
 	
 	<!-- baonk added -->
@@ -2706,6 +2707,7 @@
 	            EXTENSIONATTRIBUTE4 ,
 	            EXTENSIONATTRIBUTE5 ,
 	            MAINCONTENT ,
+	            B.GUBUN ,
 	            EXTENSIONATTRIBUTE6 ,
 	            EXTENSIONATTRIBUTE7 ,
 	            EXTENSIONATTRIBUTE8 ,
@@ -2713,7 +2715,13 @@
 	            EXTENSIONATTRIBUTE10,
 	            DOCNO 
 	        FROM 
-	        	TBL_Board_Item_temp 
+	        	TBL_Board_Item_temp A
+	        JOIN
+	        	TBL_Board_BoardInfo B
+            ON
+            	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.BoardID = B.BoardID
        		WHERE
        			TENANT_ID = #v_TENANTID#
        		AND  
