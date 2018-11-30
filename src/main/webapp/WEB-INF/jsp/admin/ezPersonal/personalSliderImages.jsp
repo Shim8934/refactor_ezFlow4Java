@@ -109,7 +109,7 @@
 			    	sliderHTML += "<span class= 'addNewSliderBttn' id= 'addNewSliderBttn"+i+"' data3 = '"+sliderID+"' onclick='modifySlider(this)'>";
 			    	sliderHTML += "<img src='/images/email/popup_icon.gif' ></span>";
 		    		sliderHTML += "</div>";
-		    		sliderHTML += "<dt><span class='slider-imagePage'>";
+		    		sliderHTML += "<dt><span class='slider-imagePage' data4 = '"+sliderImagePath+"'>";
 		    		sliderHTML += "<IMG src ="+sliderImagePath+" style='width:285px;height:515px'/>";
 		    		sliderHTML += "</span></dt>";
 		    		sliderHTML += "<div class = 'slider-content'>";
@@ -436,12 +436,17 @@
 		    }  */
 		    //슬라이더 수정 함수
 		    function modifySlider(obj) {
-		    	var preList = $("#sliderListmodify");
-		    	var length = preList.length;
+		    	var preList = $(".sliderList");
+		    	var preListlength = preList.length;
+		    	var preFind = "";
 		    	
-		    	for(var i = 0; i<length; i++){
-		    		preList[i].remove();
-		    		getSliderList();
+		    	for(var i = 0; i<preListlength; i++){
+		    		preFind = preList[i].querySelector(".sliderListmodify");
+		    		
+		    		if(preFind != null){
+		    			preFind.remove();
+		    			getSliderList();
+		    		}
 		    	}
 		    	
 		    	var sliderID = obj.getAttribute("data3");
@@ -455,7 +460,7 @@
 		    	sliderHTML += "<li class = 'sliderListmodify' id = 'sliderListmodify'>";
 		    	sliderHTML += "<div class = 'slider-header-add' style='background-color:#f4f4f4;border:1px solid #e7e7e7;color:#b1b1b1'>";
 		    	sliderHTML += "<a class = 'cancelNewSliderBtnmodify' id='cancelNewSliderBtnmodify'>";
-		    	sliderHTML += "<span class ='addCancel-modify'><img src='/images/close_xBtn.png'></span></a>";
+		    	sliderHTML += "<span class ='addCancel-modify'><img src='/images/admin/icon_cancel.png'></span></a>";
 		    	sliderHTML += "</div>";
 		    	sliderHTML += "<div class = 'slider-content' style='width:285px;height:515px'>";
 		    	sliderHTML += "<a class ='addImageBtn'>";
