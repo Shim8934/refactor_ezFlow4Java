@@ -274,6 +274,65 @@ var QuestionFile = function() {
 			};
 		}
 		
+		
+		function mkImgTag(fileObj) {
+			
+			var filePath        = null;
+			var fileName        = fileObj.fname;
+			var fileSize        = fileObj.fsize;
+			var filePath        = fileObj.fpath;
+
+			var html = "";
+				html += "<li fname='" + fileObj.fname + "' fsize='" + fileObj.fsize + "' path='" + fileObj.fpath + "'>";
+				html += "<div class='attDivFile'>";
+				html += "<img style='height: 50%;' src='/images/survey/file_del.gif' onclick='deleteFile(e);'>";
+				html += "<div class='attImgAva'>";
+				html += "<img alt='' src='" + fileObj.fpath + "'>";
+				html += "</div>";
+				html += "<div class='attFileInf'>";
+				html += "<span title='" + fileObj.fname + "'>" + fileObj.fname + "</span>";
+				html += "<span>" + fileObj.fsize + "</span>";
+				html += "<mkImgTag/div>";
+				html += "</div>";
+				html += "</li>";
+			
+			/*var liElmt        = document.createElement("li");
+			var divMainElmt   = document.createElement("div");
+			var divChildElmt1 = document.createElement("div");
+			var divChildElmt2 = document.createElement("div");
+			var img    = document.createElement("img");
+			var spanChild1    = document.createElement("span");
+			var spanChild2    = document.createElement("span");
+			var delImg         = document.createElement("img");
+			
+			img.setAttribute("width" , "40");
+			img.setAttribute("height", "40");
+			divChildElmt1.className = "attImgAva";
+			divChildElmt1.appendChild(img);
+			
+			spanChild1.textContent  = fileName;
+			spanChild1.setAttribute("title", fileName);
+			spanChild2.textContent  = getFileSize(fileSize);
+			divChildElmt2.className = "attFileInf";
+			divChildElmt2.appendChild(spanChild1);
+			divChildElmt2.appendChild(spanChild2);
+			
+			delImg.setAttribute("height" , "50%");
+			delImg.src         = "/images/survey/file_del.gif";
+			delImg.addEventListener("click", function(e) {deleteFile(e, fileSize);}, false);
+			divMainElmt.className = "attDivFile";
+			divMainElmt.appendChild(delImg);
+			divMainElmt.appendChild(divChildElmt1);
+			divMainElmt.appendChild(divChildElmt2);
+			
+			liElmt.setAttribute("fname", fileName);
+			liElmt.setAttribute("fsize", fileSize);
+			liElmt.appendChild(divMainElmt);*/
+			
+			return html;
+			
+		}
+		
 		return {
 			upload     : onStartUpload,
 			dragEnter  : onDragEnter,
@@ -281,7 +340,9 @@ var QuestionFile = function() {
 			deleteFile : deleteFile,
 			getTotal   : getTotalFileSize,
 			setTotal   : setTotalFileSize,
-			check      : checkUploadStatus
+			check      : checkUploadStatus,
+			
+			mkImgTag     : mkImgTag
 		};
 	}
 }();
