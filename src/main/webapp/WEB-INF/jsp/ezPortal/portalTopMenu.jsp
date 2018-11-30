@@ -40,6 +40,7 @@
 			var SkinExist = "${skinExist}";
 			var pNoneActiveX = "${noneActiveX}";
 			var useHWP = "${useHWP}";
+			var lastLoginYN = "${lastLoginYN}";
 			
 			// 2009.11.25 - 소스보기시 개인정보 유출방지
 			var pwd = "";
@@ -105,6 +106,14 @@
 				    	} */
 				    } 
 	//				window.setInterval("update_connectinfo()", 30000);	
+				}
+			
+				if(lastLoginYN == "YES"){
+					$('.utmenu ul li:first-child').css('padding', '5px 15px');
+					$('.utmenu ul li:first-child').css('font-size', '12px');
+					$('.utmenu ul li:first-child').css('font-weight', 'bold');
+					$('.utmenu ul li:first-child').css('cursor:default', 'cursor:default');
+					$('.utmenu ul li:first-child').css('color', '#000');
 				}
 			}
 			
