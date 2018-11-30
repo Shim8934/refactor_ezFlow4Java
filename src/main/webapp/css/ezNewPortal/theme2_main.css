@@ -156,9 +156,11 @@ nav > .countBox .hidden_nav_count {position:absolute; right:6px; top:6px; displa
 
 /* portlet_title */
 .portlet_title{ margin:0px; padding:0px; height:46px; line-height:44px; border-bottom:1px solid #e7e7e7; box-sizing:border-box; overflow:hidden;}
-.portlet_title .portletText{ margin:0px; padding:0px 0px 0px 10px; font-size:16px; color:#333; font-weight:bold; letter-spacing:-1px; float:left; overflow:hidden;width:70%;text-overflow:ellipsis;white-space:nowrap;}
+.portlet_title .portletText{ margin:0px; padding:0px 0px 0px 10px; font-size:16px; color:#333; font-weight:bold; letter-spacing:-1px; float:left; overflow:hidden;width:80%;text-overflow:ellipsis;white-space:nowrap;}
 .portlet_title .portletPlus{ margin:0px; padding:0px; float:right; overflow:hidden; cursor:pointer;}
 .sortablePortlet:hover {cursor : move;}
+/* photoboard 클래스가 있을 경우 text너비 변경*/
+.portlet_title.photo_board .portletText {width:61%;}
 
 /* portlet_list */
 .portlet_list{ margin:0px; padding:12px 0px; list-style:none; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} 
@@ -680,9 +682,9 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .writebannerIcon .countZero{background:rgba(0,0,0,0.2);}
 /* 날씨 포틀릿 여기서부터  하단에 추가해주시면 됩니다. */
 /* .box_shadow{overflow:hidden; height:250px; margin:20px 0px 0px 16px; padding0px; background:#fff; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20); font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} */
-.portlet_title{overflow:hidden; height:46px; margin:0px; padding:0px; line-height:44px;  border-bottom:1px solid #e7e7e7; box-sizing:border-box;}
+/* .portlet_title{overflow:hidden; height:46px; margin:0px; padding:0px; line-height:44px;  border-bottom:1px solid #e7e7e7; box-sizing:border-box;}
 .portlet_title .portletText{float:left; overflow:hidden; margin:0px; padding:0px 0px 0px 10px; color:#333; font-size:16px; font-weight:bold; letter-spacing:-1px;width:70%;text-overflow:ellipsis;white-space:nowrap;}
-.portlet_title .portletPlus{float:right; overflow:hidden; margin:0px; padding:0px; cursor:pointer;}
+.portlet_title .portletPlus{float:right; overflow:hidden; margin:0px; padding:0px; cursor:pointer;} */
 
 .portlet_title .portletPlus .weatherSelect{width:78px; height:28px; margin:0px 10px 0px 0px; padding:0px; border:1px solid #c0c0c0; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px;}
 .weather_content{height:110px; margin:10px;}
