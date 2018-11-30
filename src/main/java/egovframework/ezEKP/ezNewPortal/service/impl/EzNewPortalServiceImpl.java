@@ -1001,7 +1001,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		ezNewPortalDAO.updateCompanyPortletInfo(map);
+		if (map.get("connectionUrl") != null) {
+			ezNewPortalDAO.updateCompanyPortletInfo2(map); //포틀릿 정보 테이블 업데이트
+		}
+		
+		ezNewPortalDAO.updateCompanyPortletInfo(map); //포틀릿 회사관련 정보 테이블 업데이트
 		
 		String menuId = map.get("menuId").toString();
 		
@@ -1449,6 +1453,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
+		ezNewPortalDAO.updateCompanyMenuUsed(map);
 		ezNewPortalDAO.updateCompanyMenuInfo(map);
 		
 		for (Object item : menuNames) {
@@ -1735,13 +1740,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<PortletInfoVO> portetList = ezNewPortalDAO.getPortletList(map);
 		
-		LOGGER.debug("getPortletList started");
+		LOGGER.debug("getPortletList ended");
 		return portetList;
 	}
 	
 	@Override
 	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId) {
-		LOGGER.debug("getPortletList started");
+		LOGGER.debug("getPortletNameList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
@@ -1750,7 +1755,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<PortletNameInfoVO> portetList = ezNewPortalDAO.getPortletNameList(map);
 		
-		LOGGER.debug("getPortletList started");
+		LOGGER.debug("getPortletNameList ended");
 		return portetList;
 	}
 	

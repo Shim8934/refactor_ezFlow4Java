@@ -11039,8 +11039,7 @@ CREATE TABLE `tbl_portal_portlet_comp` (
   `portlet_used` int(11) DEFAULT '0' COMMENT '포틀릿 보임(Y)/숨김(N)',
   `portlet_order` int(11) DEFAULT NULL COMMENT '포틀릿 순서',
   `board_id` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`company_id`,`tenant_id`,`portlet_id`),
-  KEY `FK_tbl_portlet_comp` (`menu_id`,`portlet_id`)
+  PRIMARY KEY (`company_id`,`tenant_id`,`portlet_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='회사별 포틀릿 설정 테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -11075,9 +11074,7 @@ CREATE TABLE `tbl_portal_menu_user` (
   `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
   `menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '메뉴 아이디',
   `menu_order` int(11) DEFAULT NULL COMMENT '메뉴 순서',
-  PRIMARY KEY (`user_id`,`tenant_id`,`company_id`,`menu_id`),
-  KEY `FK_tbl_portal_menu_user_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
-  CONSTRAINT `FK_tbl_portal_menu_user_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
+  PRIMARY KEY (`user_id`,`tenant_id`,`company_id`,`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='개인별 메뉴 순서 설정 테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -11096,9 +11093,7 @@ CREATE TABLE `tbl_portal_portlet_user` (
   `portlet_order` int(11) DEFAULT NULL COMMENT '포틀릿 순서',
   `menu_id` int(11) DEFAULT NULL COMMENT '포틀릿과 연관된 메뉴 아이디',
   `portlet_used` int(11) DEFAULT '1',
-  PRIMARY KEY (`user_id`,`tenant_id`,`company_id`,`portlet_id`),
-  KEY `FK_tbl_portlet_user_idx` (`portlet_id`,`menu_id`),
-  CONSTRAINT `FK_tbl_portlet_user` FOREIGN KEY (`portlet_id`, `menu_id`) REFERENCES `tbl_portal_portlet` (`portlet_id`, `menu_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  PRIMARY KEY (`user_id`,`tenant_id`,`company_id`,`portlet_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='사용자별 포틀릿 순서 설정 테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;
 

@@ -22,6 +22,7 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<script type="text/javascript">
 			var lang = "${userInfo.lang}";
+			var pRepetitionFlag = 1; //0:매일, 1:매주, 2:매월, 3:매년 (매주가 default이므로 초기설정)
 			
 		    function windows_close() {
 		        window.close();

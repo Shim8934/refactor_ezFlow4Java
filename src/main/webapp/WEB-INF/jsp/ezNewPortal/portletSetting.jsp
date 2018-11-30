@@ -347,7 +347,7 @@
 							bodyFrameSetting('off');
 							parent.DivPopUpHidden();
 							window.close();
-							parent.document.location.reload()
+							parent.document.location.reload();
 						} else {
 							console.error('failure', xhr.responseText);
 						}

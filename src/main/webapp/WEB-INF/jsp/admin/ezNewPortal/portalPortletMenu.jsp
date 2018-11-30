@@ -70,6 +70,8 @@ var selectMenu = function() {
 	var menuName = $(".select_li").find("dd")[0].innerText;
 	
 	if (portletId == "null") {
+		var beforeMenu = window.opener.document.getElementById("newPortletMenu").getAttribute("data2");
+		
 		window.opener.document.getElementById("newPortletMenu").value = menuName;
 		window.opener.document.getElementById("newPortletMenu").setAttribute("value", menuName);
 		window.opener.document.getElementById("newPortletMenu").setAttribute("data2", menuId);
@@ -79,15 +81,20 @@ var selectMenu = function() {
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "none";
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
 		} else {
-			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "none";
-			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "table-row";
+			
+			if (beforeMenu == 4) {
+				window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "";
+			}
+			
 			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").value = "";
-			window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "";
 			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").setAttribute("data1", "");
 			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").setAttribute("value", "");
+			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "none";
+			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "table-row";
 		}
 		 
 	} else {
+		var beforeMenu = window.opener.document.getElementById("portlet" + portletId).getAttribute("data2");
 		window.opener.document.getElementById("portletMenu" + portletId).value =  menuName;
 		window.opener.document.getElementById("portletMenu" + portletId).setAttribute("value", menuName);
 		window.opener.document.getElementById("portlet" + portletId).setAttribute("data2", menuId);
@@ -98,10 +105,14 @@ var selectMenu = function() {
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "/ezNewPortal/boardPortlet.do");
 		} else {
+			
+			if (beforeMenu == 4) {
+				window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "";
+				window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "");
+			}
+			
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").style.display = "none";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionTR").style.display = "table-row";
-			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "";
-			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "");
 			window.opener.document.getElementById("portletBoard" + portletId).value = "";
 			window.opener.document.getElementById("portletBoard" + portletId).setAttribute("data1", "");
 			window.opener.document.getElementById("portletBoard" + portletId).setAttribute("value", "");

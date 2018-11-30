@@ -286,7 +286,7 @@
 		                document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
 		                document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
 		                document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
-		                document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+		                document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
 		                
 		                pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
 		                pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
@@ -1220,17 +1220,35 @@
 		    </div>
             <div id="tblPageRayer"  style="width:470px; margin:6px auto;" onclick="event_secondRightClick();"></div>
         </span>
-        <span id="PreviewRayerH" style="border:0px solid red;width:500px;height:100%;overflow:hidden;vertical-align:top;display:none;margin-left:-5px;" onclick="event_secondRightClick();">
-            <span class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor:w-resize;display:inline-block;">
+        <div id="PreviewRayerH" style="border:0px;width:500px;height:100%;overflow:hidden;vertical-align:top;display:none;margin-left:-5px;" onclick="event_secondRightClick();">
+            <div class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor:w-resize;display:inline-block;">
 				<p class="hbar_dotted"><img src="/images/prevview_hbar_dotted.gif"></p>
-            </span>
-            <span id="PreContent_RayerH" style="position:absolute; border:0px solid red;">
-                <span style="width:100%;height:100px;display:block;" onclick="event_secondRightClick();">            
-	                <span class="previewmail_info" style="display:block;width:100%;">
-                        <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width:100%;display:none;" onclick="event_secondRightClick();">
-		                    <p class="mail_title" style="margin-left:0px;"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreH_subject" style="display:none;"><span id="PreH_sub_subject" class="title_blodtxt"></span></span></p>
-		                    <span class="mail_date" style="margin-right:10px;display:inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span>
-		                    <dl class="mail_item">
+            </div>
+            <div id="PreContent_RayerH" style="position:absolute; border:0px; margin-left:7px;">
+                <div class="previewmail" onclick="event_secondRightClick();">            
+	                <div class="previewmail_info">
+                        	<dl class="previewmailDL" id="Preview_HeaderH" style="display:none;" onclick="event_secondRightClick();">
+				            	<dt class="prepic"><img src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
+				                <dd class="pretext">
+				                	<ul class="pretextUL">
+				                    	<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject" style="display:none;"><span class="subjectText" id="PreH_sub_subject"></span></span></li>
+				                        <li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezEmail.t693" /></span> <span id="PreH_MailSender"><span id="PreH_sub_MailSender"></span></span></span><span class="t_right"><span class="cblack"><spring:message code="ezEmail.t657" /> : </span><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span></li>
+				                        <li class="preT_list"><span class="cblack"><spring:message code="ezEmail.t527" /></span> <span id="PreH_MailReceiver" style="display:inline-block"></span>
+					                    	<span id="PreH_MailReceiver_sub"></span>
+					                    	<span class="icon_graydown" onclick="ReceiverDetail_view(this);" id="PreH_ReceiverDetail"></span>
+					                    	<p class="hidden_area" id="PreH_MailReceiverDetail_Rayer" style="display:none;"><span id="PreH_MailReceiverDetail"></span></p>
+					                    </li>
+				                        <li class="preT_list" id="PreH_CCMain" style="display:none;"><span class="cblack"><spring:message code="ezEmail.t526" /> :</span> <span id="PreH_MailCC" style="display:inline-block"></span>
+					                    	<span id="PreH_MailCC_sub"></span>
+					                    	<span class="icon_graydown" onclick="CCDetail_view(this);" id="PreH_CCDetail" style="display:none;"></span>
+					                    	<p class="hidden_area" id="PreH_MailCC_Rayer" style="display:none;"><span id="PreH_MailCCDetail"></span></p>
+					                    </li>
+				                    </ul>
+				                </dd>
+				            </dl>
+		                    <%-- <p class="mail_title" style="margin-left:0px;"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreH_subject" style="display:none;"><span id="PreH_sub_subject" class="title_blodtxt"></span></span></p> --%>
+		                    <!-- <span class="mail_date" style="margin-right:10px;display:inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span> -->
+		                    <%-- <dl class="mail_item">
 			                    <dt><spring:message code="ezEmail.t693" /></dt>
 			                    <dd><span id="PreH_MailSender"><span id="PreH_sub_MailSender"></span></span></dd>
 			                    <dt><spring:message code="ezEmail.t527" /></dt>
@@ -1247,15 +1265,15 @@
 			                    	<span class="icon_graydown" onclick="CCDetail_view(this);" id="PreH_CCDetail" style="display:none;"></span>
 			                    	<p class="hidden_area" id="PreH_MailCC_Rayer" style="display:none;"><span id="PreH_MailCCDetail"></span></p>
 								</dd>
-		                    </dl>
-                        </div>
-	                </span>
+		                    </dl> --%>
+                        
+	                </div>
 					<span style="width: 100%;" onclick="event_secondRightClick();">
 						<iframe onclick="event_secondRightClick();" id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code="main.kms4" />" frameborder="0" style="width:100%;height:100%;border:solid 0px green;display:inline-block;"></iframe>
 					</span>
-                </span>
-            </span>
-        </span>        
+                </div>
+            </div>
+        </div>        
         <span id="PreviewRayerW" style="border:0px solid red;width:100%;height:300px;overflow:hidden;display:none;">
             <span onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width:100%;display:list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
 				<img src="/images/prevview_bar_dotted.gif">

@@ -297,6 +297,7 @@ var strLangKMS08 = "폴더는 업로드 할 수 없습니다."
 var strLangKYJ03 = "공백은 입력할 수 없습니다.";
 var strLangLSD02 = "구성원이 없는 부서입니다.";
 var strLangSharedMailbox01 = "공유사서함";
+var strLangJYH01 = "선택된 메일이 없습니다.";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리 일본어 번역X*/
 var strLangHSB01 = "이 게시물은 ";

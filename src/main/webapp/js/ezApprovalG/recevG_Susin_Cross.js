@@ -1,4 +1,4 @@
-﻿﻿var selectcabinet_cross_dialogArguments = new Array();
+﻿var selectcabinet_cross_dialogArguments = new Array();
 function btnSetTaskCode_onclick() {
     try {
         var para = new Array();
@@ -929,6 +929,12 @@ function ClearDocCellInfo() {
 	
 	            if (field)
 	                field.textContent = " ";
+	            
+	            // 부서 출력
+	            fieldname = susunSN + "approdept" + i;
+	            field = message.GetListItem(fields, fieldname);
+	            if (field)
+	            	field.textContent = " ";
 	        }
 	
 	        for (j = 1 ; j <= hapyuiCount ; j++) {
@@ -973,6 +979,12 @@ function ClearDocCellInfo() {
         		if (HwpCtrl.CheckFieldExist(fieldname)) {
         			HwpCtrl.SetFieldText(fieldname, "");
         		}
+        		
+	            // 부서 출력
+	            fieldname = susunSN + "approdept" + i;
+        		if (HwpCtrl.CheckFieldExist(fieldname)) {
+        			HwpCtrl.SetFieldText(fieldname, "");
+        		}        		
         	}
 
             for(j = 1 ; j <= hapyuiCount ; j++) {
@@ -1076,6 +1088,7 @@ function SendDraftMappingSign(ret) {
         var psigncell;
         var pseumyungcell;
         var pseumyungdatecell;
+        var papprodeptcell;
         var signInfo = new Array();
         var signCnt;
         var sn = 1;
@@ -1120,10 +1133,12 @@ function SendDraftMappingSign(ret) {
             psigncell = pSusinSN + "sign" + sn;
             pseumyungcell = pSusinSN + "jikwe" + sn;
             pseumyungdatecell = pSusinSN + "seumyungdate" + sn;
+            papprodeptcell = pSusinSN + "approdept" + sn;
         } else {
             psigncell = "sign" + sn;
             pseumyungcell = "jikwe" + sn;
             pseumyungdatecell = "seumyungdate" + sn;
+            papprodeptcell = "approdept" + sn;
         }
 
          
@@ -1152,6 +1167,18 @@ function SendDraftMappingSign(ret) {
         } else {  
 	        signWidth = 50;
 	        signHeight = 28;
+        }
+        
+        // 결재칸에 부서 추가
+        var field = message.GetListItem(fields, papprodeptcell);
+        if (field) {
+        	var userDeptInfo;
+        	if(Number(arr_userinfo[17]) === 1) {
+        		userDeptInfo = arr_userinfo[15];
+        	} else {
+        		userDeptInfo = arr_userinfo[16];
+        	}
+        	setNodeText(field, userDeptInfo);	
         }
        
         var strimg;
