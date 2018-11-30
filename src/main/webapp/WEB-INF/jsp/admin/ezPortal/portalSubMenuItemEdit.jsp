@@ -152,6 +152,8 @@
 						menu_1.src = "/images/tap_portal01o.gif";
 						menu_2.src = "/images/tap_portal02.gif";
 						menu_3.src = "/images/tap_portal03.gif";
+						idbr.style.display = "none";
+						idbr2.style.display = "none";
 						toggle_tbl1.style.display = "";
 						toggle_tbl2_1.style.display = "none";
 						toggle_tbl2_2.style.display = "none";
@@ -164,6 +166,8 @@
 						menu_1.src = "/images/tap_portal01.gif";
 						menu_2.src = "/images/tap_portal02o.gif";
 						menu_3.src = "/images/tap_portal03.gif";
+						idbr.style.display = "";
+						idbr2.style.display = "none";
 						toggle_tbl1.style.display = "none";
 						toggle_tbl2_1.style.display = "";
 						toggle_tbl2_2.style.display = "";
@@ -176,6 +180,8 @@
 						menu_1.src = "/images/tap_portal01.gif";
 						menu_2.src = "/images/tap_portal02.gif";
 						menu_3.src = "/images/tap_portal03o.gif";
+						idbr.style.display = "none";
+						idbr2.style.display = "";
 						toggle_tbl1.style.display = "none";
 						toggle_tbl2_1.style.display = "none";
 						toggle_tbl2_2.style.display = "none";
@@ -699,8 +705,16 @@
 				</th>
 				<th width="70"></th>
 			</tr>
+			<c:if test="${paramHtml == ''}">
+ 					<tr>
+ 						<td colspan="3" style="text-align: center; color:#5b5a5a;">
+	    				<spring:message code='main.t00026'/>
+ 						</td>
+ 					</tr>
+ 				</c:if>
 			${paramHtml}
 		</table>
+		<br id="idbr" style="">
 		<table id="toggle_tbl2_2" width="500" class="popuplist" style="display: none">
 			<tr>
 				<th>
@@ -786,18 +800,16 @@
     					</c:choose>
     				</td>
     				<td align="center">
-    					<div class="btnpositionJsp">
-							<a class="imgbtn">
-								<span onclick="DeleteRight('${item.accessID}')">
-									<spring:message code='ezPortal.t67'/>
-								</span>
-							</a>
-						</div>
+						<a class="imgbtn imgbck">
+							<span onclick="DeleteRight('${item.accessID}')">
+								<spring:message code='ezPortal.t67'/>
+							</span>
+						</a>
 					</td>
   				</tr>
   			</c:forEach>
 		</table>
-		<br>
+		<br id="idbr2" style="display: none;">
 		<table id="toggle_tbl3_2" width="500" class="popuplist" style="display: none">
 			<tr>
 				<th width="70">

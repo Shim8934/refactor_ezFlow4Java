@@ -5823,9 +5823,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				strDocState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(15).getTextContent();
 				strAprState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
 				aprDocUserID = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
-				orgCompanyID = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(21).getTextContent();
-				aprMemberSN = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(22).getTextContent();
-				//orgCompanyID = xmlResult.getElementsByTagName("orgCompanyID").item(k).getTextContent();
+				
+				if (docListNode.item(k).getChildNodes().item(0) instanceof Element) {
+					Element rowElement = (Element) docListNode.item(k).getChildNodes().item(0);
+					
+					aprMemberSN = rowElement.getElementsByTagName("APRMEMBERSN").item(0).getTextContent();
+					orgCompanyID = rowElement.getElementsByTagName("orgCompanyID").item(0).getTextContent();
+				}
 				
 				/* 2018-04-27 천성준 - 부재자 결재문서는 일괄결재에서 제외시킨다 */
 				if (!aprDocUserID.equals(userID)) {

@@ -321,6 +321,10 @@
 			}
 		    
 		    function OK_Click() {
+		    	if (RetValue[5] != "" && RetValue[5] == "addJob") {
+		    		alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+            	}
 		        if (document.getElementById("UserID").value == "") {
 		            alert("<spring:message code='ezOrgan.t253' />");
 		            return;
@@ -502,6 +506,10 @@
 			}
 		    var personpicture_cross_dialogArguments = new Array();
 		    function btnPhoto_onclick() {
+		    	if (RetValue[5] != "" && RetValue[5] == "addJob") {
+		    		alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+            	}
 		    	//2016-04-19 장진혁과장 -- Cross 버전 사용으로 주석 처리
 		        //if (CrossYN()) {
 	            personpicture_cross_dialogArguments[0] = document.getElementById("UserID").value;
@@ -526,7 +534,11 @@
 		            UserPhotoDiv.innerHTML = "<img style='width:119px; height:128px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + ret + "' />";		            
 		        }
 		    }
-		    function deleteImg() {		        
+		    function deleteImg() {	
+		    	if (RetValue[5] != "" && RetValue[5] == "addJob") {
+		    		alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+            	}
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
@@ -573,18 +585,12 @@
 			    	for (i = 0; i < oRows.length; i++) {
 			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
 				    		if (flag) {
-// 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
-// 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
-// 					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE");
 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1");
 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
 					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
 					    		flag = false;
 				    		}
 				    		
-// 				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
-// 						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) 
-// 						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE")) + "'>";
 				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1")) 
 						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
 						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) + "'>";
@@ -641,18 +647,12 @@
 			    	for (i = 0; i < oRows.length; i++) {
 			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
 			    			if (flag) {
-// 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
-// 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
-// 					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE");
-					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1");
-					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
-					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
+					    		jobID2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1");
+					    		jobPosition = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
+					    		jobPosition2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
 					    		flag = false;
 				    		}
 				    		
-// 				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
-// 						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) 
-// 						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE")) + "'>";
 				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1")) 
 						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
 						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) + "'>";
@@ -775,37 +775,20 @@
 	            <td style="width: 240px; padding: 0">
 	                <table style="width:100%">
 	                    <tr>
-	                        <%-- <th><c:out value='${primary}'/></th> --%>
 	                        <td colspan="2">
 	                        	<div id="JobTitleOption"></div>
-	                            <!-- <input id="JobTitle" name="txtUserJobTitle" style="width: 100%" maxlength="50"/> -->
 	                        </td>
 	                    </tr>
-	                    <%-- <tr class="secondary">
-	                    	<th colspan="2"></th>
-	                        <th><c:out value='${secondary}'/></th>
-	                        <td>
-	                            <input id="JobTitle2" type="text" style="width: 100%" maxlength="50" disabled="disabled"/>
-	                        </td>
-	                    </tr> --%>
 	                </table>
 	            </td>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t280' /></th>
 	            <td style="width: 240px; padding: 0">
 	                <table style="width:100%">
 	                    <tr>
-	                        <%-- <th><c:out value='${primary}'/></th> --%>
 	                        <td colspan="2">
 	                        	<div id="JobPositionOption"></div>
-	                            <!-- <input name="Input2" id="JobPosition" style="width: 100%" maxlength="50"/> -->
 	                        </td>
 	                    </tr>
-	                    <%-- <tr class="secondary">
-	                        <th><c:out value='${secondary}'/></th>
-	                        <td>
-	                            <input id="JobPosition2" type="text" style="width: 100%" maxlength="50"/>
-	                        </td>
-	                    </tr> --%>
 	                </table>
 	            </td>
 	        </tr>       
