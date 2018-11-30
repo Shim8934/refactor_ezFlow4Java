@@ -229,7 +229,7 @@
     "border_inner": "内部",
     "border_all": "すべて",
     "border_custom": "カスタム",
-    "table_caption": "キャプション",
+    "table_caption": "Caption",
     "table_summary": "要約",
     "table_background_image": "イメージ",
     "table_background_attachment": "添付ファイル",
@@ -619,6 +619,8 @@
     "table_split_row": "行分割",
     "cell_horizontal_size": "等しい幅",
     "cell_vertical_size": "等しい高さ",
+    "table_lock": "テーブルロック",
+    "cell_lock": "セルのロック",
     "table_background_color": "グリッドカラー",
     "table_border_style": "線のスタイル",
     "menuToolName": "ツール",
@@ -727,7 +729,8 @@
     "notFoundTextErrorMessage": "文字列が見つかりません。",
     "errorParsingError" : "変換中にエラーが発生しました。",
     "pasteParsingError" : "貼り付け中にエラーが発生しました。",
-    "invalidBrowserError" : "サポートされていないブラウザ。"
+    "invalidBrowserError" : "サポートされていないブラウザ。",
+    "notSetCellLockNameError" : "ロック名が設定されていない。"
   },
   "processingMessage" : "変換中 ...",
   "paragraphInsert": "段落挿入",
