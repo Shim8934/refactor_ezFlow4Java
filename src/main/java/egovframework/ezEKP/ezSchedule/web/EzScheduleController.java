@@ -1221,6 +1221,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		String cID = request.getParameter("COMPANYID");
 		
+		if (cID == null) {
+			cID = loginSimpleVO.getCompanyID();
+		}
+		
 		String result = ezScheduleService.scheduleGetLunarUse(cID, loginSimpleVO.getTenantId());
 		
 		return result;
