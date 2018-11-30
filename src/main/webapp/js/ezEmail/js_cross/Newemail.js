@@ -1173,7 +1173,7 @@ function PreviewRayerChange(pGubun) {
             else
                 document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
             document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
-            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
+            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 80) + "px";
             document.getElementById("PreW_subject").style.width = (CurrenWidth - 185) + "px";
             
             pPreviewShow_HOW = "W";

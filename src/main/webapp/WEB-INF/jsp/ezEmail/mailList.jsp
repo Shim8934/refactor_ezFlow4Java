@@ -257,7 +257,7 @@
 		                document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
 		                document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
 		                document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
-		                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
+		                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 80) + "px";
 		                document.getElementById("PreW_subject").style.width = (CurrenWidth - 185) + "px";
 		                
 		                pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
