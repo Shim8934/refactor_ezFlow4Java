@@ -942,7 +942,7 @@
                 });
                 
                 if (list.length == 0) {
-                	var str = "<spring:message code = 'main.t00026' />";
+                	var str = strLang88;
                 	document.getElementById("categorytab").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='text-align:center;'><img style='margin-top:160px' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>" + str + "</div></div>";
                 	document.getElementById("categorylist").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='text-align:center;'><img style='margin-top:160px' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>" + str + "</div></div>";
                 }
