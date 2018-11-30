@@ -840,15 +840,22 @@
 	<select id="EzCommunityAdminDAO.getUserName" 						parameterClass="Map"		resultClass="String">
 		<![CDATA[
 			SELECT 
-				CASE #primary# WHEN '1' THEN username ELSE username2 END AS username
+				IFNULL(CASE #primary# WHEN '1' THEN B.DISPLAYNAME ELSE B.DISPLAYNAME2 END,
+					CASE #primary# WHEN '1' THEN A.username ELSE A.username2 END) AS username
 			FROM
-				TBL_C_MEMBERINFO
+				TBL_C_MEMBERINFO A
+			LEFT OUTER JOIN
+				TBL_USERMASTER B
+			ON
+				A.tenant_id = B.tenant_id
+			AND
+				A.userid = B.CN
 			WHERE
 				RTRIM(userid) = #v_ID#
 			AND
-				companyid = #companyID#
+				A.companyid = #companyID#
 			AND
-				tenant_id = #tenantID#
+				A.tenant_id = #tenantID#
 		]]>
 	</select>
 	
