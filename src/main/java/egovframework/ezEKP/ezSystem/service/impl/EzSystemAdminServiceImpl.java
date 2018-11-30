@@ -1,11 +1,8 @@
 package egovframework.ezEKP.ezSystem.service.impl;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
@@ -18,7 +15,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -34,13 +30,13 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.CheckName;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.DataForModulesEnum;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
@@ -526,48 +522,52 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		logger.debug("insertAccessId ended.");
 	}
-
-	public enum dataForModules {
-		MAIL("^james|^jmocha", new String [] {"upload_mail.ROOT"}), 
-		SCHEDULE("^tbl_schedule|^tbl_task", new String [] {"upload_schedule.ROOT", "upload_task.ROOT"}),
-		APPROVAL("", new String [] {"upload_approvalG.ROOT"}),
-		BOARD("^tbl_board|^tbl_photo|^tbl_poll|^tbl_qs", new String [] {"upload_board.ROOT"}), 
-		COMMUNITY("^tbl_c_|^tbl_comm|^tbl_club", new String [] {"upload_community.ROOT"}), 
-		RESOURCE("^tbl_rs", null);
-		
-		final private String tableName;
-		final private String [] filerootName;
-		
-		private dataForModules(String tableName, String [] filerootName) {
-			this.tableName = tableName;
-			this.filerootName = filerootName;
-		}
-		
-		public String getTableName() {
-			return tableName;
-		}
-		
-		public String [] getFilerootName() {
-			return filerootName;
-		}
-	}
 	
+	/** 
+	 * 각 모듈별 스토리지 사용량과 데이터베이스 사용량, 총 사용량을 구한다.
+	 * @param moduleNamesStr
+	 * @param realPath
+	 * @param userInfo
+	 *  */
 	@Override
-	public ModuleSizeVO getModuleUsage(String moduleName, String realPath, LoginVO userInfo) throws Exception {
+	public ModuleSizeVO getModuleUsage(List<String> moduleNames, String realPath, LoginVO userInfo) throws Exception {
 		logger.debug("getModuleUsage started.");
 		
-		dataForModules module = dataForModules.valueOf(moduleName.toUpperCase());
+		ModuleSizeVO moduleSizeVO = new ModuleSizeVO(true);
+		int tenantId = userInfo.getTenantId();
+		
+		long totalStorageSize = 0;
+		long totalTableSize = 0;
+		
+		for(String moduleName : moduleNames) {
+			ModuleSizeVO tempModuleSizeVO = getModuleUsage(moduleName, realPath, tenantId);
+			
+			totalStorageSize += tempModuleSizeVO.getStorageSize();
+			totalTableSize += tempModuleSizeVO.getTableSize();
+			
+			moduleSizeVO.putModuleMap(moduleName, tempModuleSizeVO);
+		}
+		
+		moduleSizeVO.putModuleMap("total", setModuleSize(totalStorageSize, totalTableSize));
+		
+		logger.debug("getModuleUsage ended.");
+		
+		return moduleSizeVO;
+	}
+	
+	public ModuleSizeVO getModuleUsage(String moduleName, String realPath, int tenantId) throws Exception {
+		DataForModulesEnum module = DataForModulesEnum.valueOf(moduleName.toUpperCase());
 		
 		long storageSize = 0;
 		long tableSize = 0;
 		
+		// get file size
 		if(module.getFilerootName() != null) {
-			int tableNameLen = module.getFilerootName().length;
+			int filerootNameLen = module.getFilerootName().length;
 			AtomicLong storageSizeByte = new AtomicLong(0);
 			
-			for(int i = 0; i < tableNameLen; i++) {
-				// get file size
-				String uploadPath = commonUtil.getUploadPath(module.getFilerootName()[i], userInfo.getTenantId());
+			for(int i = 0; i < filerootNameLen; i++) {
+				String uploadPath = commonUtil.getUploadPath(module.getFilerootName()[i], tenantId);
 				
 				Path filePath = Paths.get(realPath + uploadPath);
 				if(filePath.toFile().exists()) {
@@ -587,15 +587,20 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			
 			storageSize = storageSizeByte.longValue();
 		}
+		// end
 		
 		// get table size
 		tableSize = ezSystemAdminDAO.selectModuleSize(module.getTableName());
-		
-		logger.debug("getModuleUsage ended.");
+		// end
 		
 		return setModuleSize(storageSize, tableSize);
 	}
 	
+	/**
+	 * 모듈별 사용량을 구해서 ModuleSizeVO에 set한다.
+	 * @param storageSize
+	 * @param tableSize
+	 * */
 	public ModuleSizeVO setModuleSize(long storageSize, long tableSize) throws Exception {
 		logger.debug("setModuleSize started.");
 		
@@ -612,23 +617,6 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		module.setTotalSizePerModuleStr(commonUtil.byteCalculation(String.valueOf(totalSize)));
 		
 		logger.debug("setModuleSize ended.");
-		
-		return module;
-	}
-	
-	@Override
-	public ModuleSizeVO setAllModuleUsage(ModuleSizeVO module) throws Exception {
-		logger.debug("setAllModuleUsage started.");
-		
-		long storageSize = module.getStorageSizeAllModule();
-		long tableSize = module.getTableSizeAllModule();
-		long totalSize = module.getTotalSizeAllModule();
-		
-		module.setStorageSizeAllModuleStr(commonUtil.byteCalculation(String.valueOf(storageSize)));
-		module.setTableSizeAllModuleStr(commonUtil.byteCalculation(String.valueOf(tableSize)));
-		module.setTotalSizeAllModuleStr(commonUtil.byteCalculation(String.valueOf(totalSize)));
-		
-		logger.debug("setAllModuleUsage ended.");
 		
 		return module;
 	}

@@ -33,6 +33,5 @@ public interface EzSystemAdminService {
 	public List<String> getAllAccessListCom (int tenantID) throws Exception;
 	public void deleteAccessId(String accessNo) throws Exception;
 	public void insertAccessId(int tenantID, String cn) throws Exception;
-	public ModuleSizeVO getModuleUsage(String module, String realPath, LoginVO userInfo) throws Exception;
-	public ModuleSizeVO setAllModuleUsage(ModuleSizeVO module) throws Exception;
+	public ModuleSizeVO getModuleUsage(List<String> moduleNames, String realPath, LoginVO userInfo) throws Exception;
 }

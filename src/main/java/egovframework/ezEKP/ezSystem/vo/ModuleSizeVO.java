@@ -13,13 +13,6 @@ public class ModuleSizeVO {
 	private String totalSizePerModuleStr;
 	
 	private Map<String, ModuleSizeVO> moduleMap;
-	private long storageSizeAllModule;
-	private long tableSizeAllModule;
-	private long totalSizeAllModule;
-	
-	private String storageSizeAllModuleStr;
-	private String tableSizeAllModuleStr;
-	private String totalSizeAllModuleStr;
 	
 	public ModuleSizeVO() {
 		this(false);
@@ -54,24 +47,6 @@ public class ModuleSizeVO {
 	public void setModuleMap(Map<String, ModuleSizeVO> moduleMap) {
 		this.moduleMap = moduleMap;
 	}
-	public long getTotalSizeAllModule() {
-		return totalSizeAllModule;
-	}
-	public void setTotalSizeAllModule(long totalSizeAllModule) {
-		this.totalSizeAllModule = totalSizeAllModule;
-	}
-	public long getStorageSizeAllModule() {
-		return storageSizeAllModule;
-	}
-	public void setStorageSizeAllModule(long storageSizeAllModule) {
-		this.storageSizeAllModule = storageSizeAllModule;
-	}
-	public long getTableSizeAllModule() {
-		return tableSizeAllModule;
-	}
-	public void setTableSizeAllModule(long tableSizeAllModule) {
-		this.tableSizeAllModule = tableSizeAllModule;
-	}
 	public String getStorageSizeStr() {
 		return storageSizeStr;
 	}
@@ -90,40 +65,9 @@ public class ModuleSizeVO {
 	public void setTotalSizePerModuleStr(String totalSizePerModuleStr) {
 		this.totalSizePerModuleStr = totalSizePerModuleStr;
 	}
-	public String getStorageSizeAllModuleStr() {
-		return storageSizeAllModuleStr;
-	}
-	public void setStorageSizeAllModuleStr(String storageSizeAllModuleStr) {
-		this.storageSizeAllModuleStr = storageSizeAllModuleStr;
-	}
-	public String getTableSizeAllModuleStr() {
-		return tableSizeAllModuleStr;
-	}
-	public void setTableSizeAllModuleStr(String tableSizeAllModuleStr) {
-		this.tableSizeAllModuleStr = tableSizeAllModuleStr;
-	}
-	public String getTotalSizeAllModuleStr() {
-		return totalSizeAllModuleStr;
-	}
-	public void setTotalSizeAllModuleStr(String totalSizeAllModuleStr) {
-		this.totalSizeAllModuleStr = totalSizeAllModuleStr;
-	}
 	
 	/**custom method*/
 	public void putModuleMap(String name, ModuleSizeVO moduleVo) {
 		this.moduleMap.put(name, moduleVo);
-		
-		addStorageSizeAllModule(moduleVo.getStorageSize());
-		addTableSizeAllModule(moduleVo.getTableSize());
-		addTotalSizeAllModule(moduleVo.getTotalSizePerModule());
-	}
-	public void addStorageSizeAllModule(long storageSize) {
-		this.storageSizeAllModule += storageSize;
-	}
-	public void addTableSizeAllModule(long tableSize) {
-		this.tableSizeAllModule += tableSize;
-	}
-	public void addTotalSizeAllModule(long totalSizePerModule) {
-		this.totalSizeAllModule += totalSizePerModule;
 	}
 }

@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezSystem.web;
 
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,6 +28,8 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -972,36 +975,39 @@ public class EzSystemAdminController {
 	}
 	
 	@RequestMapping(value = "/admin/ezSystem/systemModuleMonitor.do")
-	public String systemModuleMonitor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("systemModuleMonitor started");
+	public String systemModuleMonitor(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String cloudFlag = ezCommonService.getTenantConfig("useCloud", userInfo.getTenantId());
 		
-		String realPath = commonUtil.getRealPath(request);
-		
-		if(userInfo != null) {
-			ModuleSizeVO moduleSizeVO = new ModuleSizeVO(true);
-			
-			moduleSizeVO.putModuleMap("mail", ezSystemAdminService.getModuleUsage("mail", realPath, userInfo));
-			moduleSizeVO.putModuleMap("schedule", ezSystemAdminService.getModuleUsage("schedule", realPath, userInfo));
-			moduleSizeVO.putModuleMap("board", ezSystemAdminService.getModuleUsage("board", realPath, userInfo));
-			moduleSizeVO.putModuleMap("community", ezSystemAdminService.getModuleUsage("community", realPath, userInfo));
-			moduleSizeVO.putModuleMap("resource", ezSystemAdminService.getModuleUsage("resource", realPath, userInfo));
-			
-			moduleSizeVO = ezSystemAdminService.setAllModuleUsage(moduleSizeVO);
-			
-			model.addAttribute("modules", moduleSizeVO);
-			
-//			if(!cloudFlag.equalsIgnoreCase("YES")) {
-//				Map<String, String> approvalTotalSize = ezSystemAdminService.getTotalUsage("approval", realPath, userInfo);
-//				
-//				model.addAttribute("approval", approvalTotalSize);
-//			}
-		}
-		
-		logger.debug("systemModuleMonitor ended");
+		model.addAttribute("cloudFlag", cloudFlag);
 		
 		return "/ezSystem/systemModuleMonitor";
+	}
+	
+	@RequestMapping(value = "/admin/ezSystem/getModuleMonitor.do")
+	public ResponseEntity<ModuleSizeVO> getModuleMonitor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, @RequestParam String cloudFlag) throws Exception {
+		logger.debug("systemModuleMonitorOMS started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
+		ModuleSizeVO moduleSizeVO = null;
+		
+		if(userInfo != null) {
+			ArrayList<String> moduleNames = new ArrayList<String>(Arrays.asList("mail", "schedule", "board", "community", "resource"));
+			
+			if(!cloudFlag.equalsIgnoreCase("yes")) {
+				moduleNames.add("approval");
+			}
+			
+			moduleSizeVO = ezSystemAdminService.getModuleUsage(moduleNames, realPath, userInfo);
+		}
+		
+		logger.debug("systemModuleMonitorOMS ended");
+		
+		return ResponseEntity.ok()
+				.contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+				.body(moduleSizeVO);
 	}
 
 }
