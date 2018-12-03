@@ -771,14 +771,19 @@ function prevShow() {
         if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         	var sentDateStr = document.querySelector("#PreContent_Rayer" + pPreviewShow_HOW).getElementsByClassName("sentDateStr")[0];
         	
-        	document.getElementById("ifrmPreView" + pPreviewShow_HOW).src = strLangLHM18;
+        	var innerFrame  = document.getElementById("ifrmPreView" + pPreviewShow_HOW);
             document.getElementById("Preview_Header" + pPreviewShow_HOW).style.display = "none";
             
             if (sentDateStr != null) {
             	sentDateStr.style.display = "none";
             }
             
-            return;
+            innerFrame.onload = function () {
+            	var innerDoc = innerFrame.contentDocument || innerFrame.contentWindow.document;
+            	if (innerDoc.getElementById("ifrmviewEmptyText").innerText == "") {
+            		innerDoc.getElementById("ifrmviewEmptyText").innerText = strLangJYH01;
+            	}
+            }
         }
         else {
             var Preview_Href;
@@ -1168,7 +1173,7 @@ function PreviewRayerChange(pGubun) {
             else
                 document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
             document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
-            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
+            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 80) + "px";
             document.getElementById("PreW_subject").style.width = (CurrenWidth - 185) + "px";
             
             pPreviewShow_HOW = "W";

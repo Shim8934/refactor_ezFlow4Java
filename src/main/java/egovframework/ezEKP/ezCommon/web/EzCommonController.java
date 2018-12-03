@@ -6,8 +6,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -308,6 +310,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		String literalAddress = "";
 		String literalPhone = "";
 		String literalInfo = "";
+		boolean aliasMailUse = false;
 		
 		String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT";
 		
@@ -390,6 +393,27 @@ public class EzCommonController extends EgovFileMngUtil{
 			if (!email.equals("")) {
 				id = ezOrganService.getCNByEmail(email, loginVO.getTenantId());
 			}
+		} 
+		
+		if (id == null || id.equals("")) {
+			List<String> aliasAddress = new ArrayList<String>();
+			aliasAddress.add(email);
+			Map<String, String> targetAddress = ezEmailService.getAliasAddressMap(aliasAddress, loginVO.getTenantId());
+			
+			if (targetAddress != null) {
+				String resultTargetAddress = targetAddress.get(email);
+				logger.debug("resultAddress=" + resultTargetAddress);
+				
+				if (resultTargetAddress != null) {
+					aliasMailUse = true;
+				}
+				
+				int atSignPos = resultTargetAddress.indexOf("@");
+				if (atSignPos != -1) {
+					id = resultTargetAddress.substring(0, atSignPos);
+					logger.debug("id=" + id);
+				}
+			}
 		}
 		
 		if (id != null && !id.equals("")) {
@@ -401,12 +425,6 @@ public class EzCommonController extends EgovFileMngUtil{
 				literalDisplayName = email;
 				literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
 			} else {
-				
-//        		if (xmldom.getElementsByTagName(email) == null) {
-//        			infoXML = ezOrganService.getSearchLikeByEmail(id);
-//        			xmldom = commonUtil.convertStringToDocument(infoXML);
-//        		}
-				
 				if (!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)) {
 					String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getPrimary(), loginVO.getTenantId());
 					
@@ -494,6 +512,11 @@ public class EzCommonController extends EgovFileMngUtil{
 			}
 			
 			literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
+		}
+		
+		//보낸사람이 alias mail로 보냈을 경우, 메일주소에 alias 주소로 입력
+		if (aliasMailUse == true) {
+			literalEmail = email;
 		}
 		
 		model.addAttribute("LiteralEmail", literalEmail);

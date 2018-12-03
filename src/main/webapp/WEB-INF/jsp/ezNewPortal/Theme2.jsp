@@ -17,6 +17,7 @@
 	.mainbg {min-width:1280px;}
 	#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}
 	.top_two_column {margin : 0px 0px 25px 0px;}
+	.orbit-wrapper .timer {display:none;}
 </style>
 </head>
 
