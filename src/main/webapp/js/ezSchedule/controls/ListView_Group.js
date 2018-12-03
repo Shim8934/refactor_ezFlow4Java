@@ -622,11 +622,17 @@ function ListView() {
                 objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\");");*/
             if (_rowonclick != null)
         		/*objTd.onclick = new Function("td_select(this.parentElement.id, \"" + _thisID + "\", " + _rowonclick + ");");*/
-            	objTr.onclick = new Function("event_listclick(this, event);View_Detail(this);");
+            	objTr.addEventListener('click', function (event) {
+            		event_listclick(this, event);
+            		View_Detail(this);
+            	}, false);
             else
             	/*objTd.onclick = new Function("td_select(this.parentElement.id, \"" + _thisID + "\");");*/
-            	objTr.onclick = new Function("event_listclick(this, event);View_Detail(this);");
-
+            	objTr.addEventListener('click', function (event) {
+            		event_listclick(this, event);
+            		View_Detail(this);
+            	}, false);
+            
             if (_rowondblclick != null)
                 objTr.ondblclick = new Function(_rowondblclick + "(this.id);");
             	/*objTr.ondblclick = new Function("show_groupinfo()");*/
