@@ -276,7 +276,6 @@ var QuestionFile = function() {
 		
 		
 		function mkImgTag(fileObj) {
-			
 			var filePath        = null;
 			var fileName        = fileObj.fname;
 			var fileSize        = fileObj.fsize;

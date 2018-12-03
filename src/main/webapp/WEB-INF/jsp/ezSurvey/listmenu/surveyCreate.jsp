@@ -201,6 +201,7 @@
 			
 			// question input 및 img 생성
 			function createQuestionDiv(qstnWrapper, question) {
+				console.log(question)
 				var html       = "";
 				var qstId      = "";
 				var qstContent = "";
@@ -209,13 +210,17 @@
 				if (question) {
 					qstId      = question.id;
 					qstContent = question.qstnContents;
-					qstAtt     = mkImgTag(question.questionAttach);
+					
+					if (question.questionAttach != undefined) {
+						qstAtt     = mkImgTag(question.questionAttach);
+					}
+					
 				}
 				
-				html += "<div class='qstnWrapper' id='" + question.id + "'>";
+				html += "<div class='qstnWrapper' id='" + qstId + "'>";
 				html += "<div class='quesDiv'>";
 				html += "<div class='qstnRow'>";
-				html += "<input class='questnTitle' value='" + question.qstnContents + "'>";
+				html += "<input class='questnTitle' value='" + qstContent + "'>";
 				html += "<img alt='' src='/images/ezSurvey/attach.png' class='atchImg'>";
 				html += "<div class='selectBox'></div>";
 				html += "</div>";
@@ -442,9 +447,18 @@
 					tmpQstnWpr.css("display", "none");
 				});
 				
-				// 수정 폼의 내용 임시 저장
+				// 수정 폼 저장
 				$(".quesBacgr").on("click", ".modify", function (e) {
 					mkQstnObj("modify", $(this));
+				});
+				
+				// 수정 폼 삭제
+				$(".quesBacgr").on("click", ".mdfCancel", function() {
+					var thisWrapper = $(this).parents(".qstnWrapper");
+					// 숨김 처리했던 사용자 폼 다시 보임 처리
+					thisWrapper.prev()[0].display("display", "");
+					// 수정 폼 삭제
+					thisWrapper.remove();
 				});
 			}
 			
@@ -584,7 +598,7 @@
 					html += "</div>";
 			  		
 					if (qstnContents) {
-						html += "<strong class='qstnCtts' id='" + id + "'>" + qstnContents + "</strong>";
+						html += "<strong class='qstnCtts' id='" + qstId + "'>" + qstnContents + "</strong>";
 						
 						if (required == 'Y') {
 							html += "<strong class='imptt'>*</strong>";
