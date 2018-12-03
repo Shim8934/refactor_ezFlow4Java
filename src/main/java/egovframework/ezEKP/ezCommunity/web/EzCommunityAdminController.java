@@ -393,7 +393,7 @@ public class EzCommunityAdminController {
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), tenantID);
 		
 		CommunityClubVO clubVO = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
-		CommunityMemberInfoVO memberVO = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang(), tenantID), clubVO.getC_SysopID().trim(), userInfo.getCompanyID(), tenantID);
+		CommunityMemberInfoVO memberVO = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), clubVO.getC_SysopID().trim(), userInfo.getCompanyID(), tenantID);
 		
 		String strCategory = ezCommunityService.categoryPrint(clubVO.getC_Cate_A().trim(), clubVO.getC_Cate_B().trim(), clubVO.getC_Cate_C().trim(), userInfo);
 		
