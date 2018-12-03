@@ -322,7 +322,7 @@
 								makeSelectQuestion(grandParent, questionType);
 								break;
 							case 2:
-								
+								makeSelectQuestion(grandParent, questionType);
 								break;
 							case 3:
 								
@@ -402,7 +402,7 @@
 				
 					html += "<div class='optPart'>";
 					
-					html += "<div class='optRow'>";
+					html += "<div class='optArea'>";
 					
 					html += "<div class='option'>";
 					html += "<input class='textInput' type='text'>";
@@ -427,7 +427,7 @@
 					html += "<div class='additionalPart'>";
 				
 					html += "<div class='addBtns'>";
-					html += "<button class='addRow'>추가</button>";
+					html += "<button class='addOpt'>추가</button>";
 					html += "<button class='addOther'>기타추가</button>";
 					html += "</div>";
 					
@@ -444,20 +444,17 @@
 					
 				grandParent.append(html);
 				
-				//addOptEvent();
-				
 			}
 			
 			function addOptEvent() {
-				// 보기 추가 -> 안 걸림
-				//$(".addRow").click(function() {
-				$(".quesBacgr").on("click", ".addRow", function() {
+				// 보기 추가
+				$(".quesBacgr").on("click", ".addOpt", function() {
 					var thisEl = $(this).parents(".selection");
 					
 					var html = "";
 						html += "<div class='optPart'>";
 						
-						html += "<div class='optRow'>";
+						html += "<div class='optArea'>";
 						
 						html += "<div class='option'>";
 						html += "<input class='textInput' type='text'>";
@@ -483,8 +480,7 @@
 					
 				});
 				
-				// 기타 추가 -> 안 걸림
-				//$(".addOther").click(function() {
+				// 기타 추가
 				$(".quesBacgr").on("click", ".addOther", function() {
 					var thisEl = $(this).parents(".selection");
 
@@ -495,7 +491,7 @@
 							
 							html += "<div class='other'>";
 							
-							html += "<div class='optRow'>";
+							html += "<div class='optArea'>";
 							
 							html += "<div class='option'>";
 							html += "<input class='textInput' type='text' placeholder='기타'>";
@@ -524,7 +520,7 @@
 					}
 				});
 				
-				// 보기, 기타 삭제 -> 걸림
+				// 보기, 기타 삭제
 				$(".quesBacgr").on("click", ".delImg", function() {
 					var thisEl = $(this);
 					
@@ -545,12 +541,12 @@
 					}
 				});
 				
-				// option 첨부파일 트리거 -> 걸림
+				// option 첨부파일 트리거
 				$(".quesBacgr").on("click", ".attImg", function() {
-					$(this).parents(".optRow").next().find(".optionFile").click();
+					$(this).parents(".optArea").next().find(".optionFile").click();
 				});
 				
-				// option 첨부파일 추가 -> 걸림
+				// option 첨부파일 추가
 				$(".quesBacgr").on("change", ".optionFile", function (e) {
 					var thisEl = $(this);
 					var thisFile = $(this)[0].files;
@@ -558,19 +554,19 @@
 				});
 				
 				// 질문 생성 폼의 내용 임시 저장
-				//$(".save").click(function() {
 				$(".quesBacgr").on("click", ".save", function() {
 					var thisEl = $(this);
 					var status = "save";
 					
-					mkUserIfForm(status, thisEl);
+					// 질문 객체 생성
+					mkQstnObj(status, thisEl);
 					
 				});
 				
 				// 질문 수정
 				// 생성된 질문의 오른쪽 위에 뜬 수정 버튼 클릭시
 				$(".quesBacgr").on("click", ".crtBtn", function() {
-					var tmpQstnWpr = $(this).parents(".tmpQstnWrapper");
+					var tmpQstnWpr = $(this).parents(".usrQstnWrapper");
 					var qstnWrapper = $(this).parents(".qstnWrapper");
 					// 수정할 질문 id
 					var qstnId = parseInt(tmpQstnWpr.attr("id"));
@@ -579,13 +575,8 @@
 					var qstnList = SurveyCreate.getQs();
 					var qstn = qstnList[arrNum];
 					
-					// 임시 주석
-					//mdfQuestiobDiv(qstnWrapper, qstn);
-					//mdfQuestionSelectBox(qstnWrapper, question);
-					
-					
 					createQuestiobDiv(qstnWrapper, qstn);
-					createQuestionSelectBox(qstnWrapper, qstn);
+					createQuestionSelectBox(qstn);
 					
 					mdfSelectQuestion(qstnWrapper, qstn);
 					
@@ -600,95 +591,12 @@
 					var thisEl = $(this);
 					var status = "modify";
 					
-					mkUserIfForm(status, thisEl);
+					// 질문 객체 생성
+					mkQstnObj(status, thisEl);
+					
 				});
 				
 			}
-			
-			// 수정시 : 질문 유형을 선택하는 셀렉트 박스 생성
-			/* function mdfQuestionSelectBox(qstnWrapper, question) {
-				// 자동으로 함수 실행되어 주석 
-				var qstnType = parseInt(question.qstnType);
-				
-				var selectText;
-				
-				switch (qstnType) {
-	
-				case 1:
-					selectText = SurveyMessages.strSlOne;
-					break;
-				case 2:
-					selectText = SurveyMessages.strSlOne;
-					break;
-				case 3:
-					selectText = SurveyMessages.strSlOne;
-					break;
-				case 4:
-					selectText = SurveyMessages.strSlOne;
-					break;
-				case 5:
-					selectText = SurveyMessages.strSlOne;
-					break;
-				case 6:
-					selectText = SurveyMessages.strSlOne;
-					break;
-				case 7:
-					selectText = SurveyMessages.strSlOne;
-					break;
-				case 8:
-					selectText = SurveyMessages.strSlOne;
-					break;
-				case 9:
-					selectText = SurveyMessages.strSlOne;
-					break;
-				}
-				
-				$(".selectBox").ddslick({
-					data :optionData,
-					imagePosition: "left",
-					selectText: selectText,
-					// defaultSelectedIndex -> selected 되어 밑에 함수까지 실행 됨
-					//defaultSelectedIndex: typeNum,
-					onSelected: function(data) {
-						
-						var selectedEl = data.selectedItem;
-						var grandParent = selectedEl.parents(".qstnWrapper");
-						//var questionType = data.selectedIndex;
-						var questionType = data.selectedData.value;
-
-						switch (questionType) {
-							case 1:
-								makeSelectQuestion(grandParent, question);
-								break;
-							case 2:
-								
-								break;
-							case 3:
-								
-								break;
-							case 4:
-								
-								break;
-							case 5:
-								
-								break;
-							case 6:
-								
-								break;
-							case 7:
-								
-								break;
-							case 8:
-								
-								break;
-							case 9:
-								
-								break;
-							
-						}
-					}
-				});
-			} */
 			
 			// 생성된 질문을 붙일 부분과 
 			// 질문 유형을 파라미터로 받아 질문 영역 생성
@@ -704,7 +612,7 @@
 					
 						html += "<div class='optPart'>";
 						
-						html += "<div class='optRow'>";
+						html += "<div class='optArea'>";
 						
 						html += "<div class='option'>";
 						html += "<input class='textInput' type='text' value='" + options[i].contents + "'>";
@@ -753,7 +661,7 @@
 						
 						html += "<div class='other'>";
 						
-						html += "<div class='optRow'>";
+						html += "<div class='optArea'>";
 						
 						html += "<div class='option'>";
 						html += "<input class='textInput' type='text' value='" + other.contents + "'>";
@@ -801,7 +709,7 @@
 					html += "<div class='additionalPart'>";
 				
 					html += "<div class='addBtns'>";
-					html += "<button class='addRow'>추가</button>";
+					html += "<button class='addOpt'>추가</button>";
 					html += "<button class='addOther'>기타추가</button>";
 					html += "</div>";
 					
@@ -821,21 +729,17 @@
 					
 					html += "<div class='btns'>";
 					html += "<button class='modify'>수정</button>";
-					html += "<button class='cancel'>취소</button>";
+					html += "<button class='mdfCancel'>취소</button>";
 					html += "</div>";
-					
 				
 				qstnWrapper.next().append(html);
 				
-			
-				
 			}
+			
 			// 수정시 x버튼에 이벤트 생성
 			function mkImgTag(qstnAtt) {
-				console.log("이미지 태그 생성 시작");
-				
 				var imgTag = questionFile.mkImgTag(qstnAtt);
-				console.log(imgTag);
+				
 				return imgTag; 
 			}
 			
@@ -848,7 +752,8 @@
 			// 설문 생성 폼 삭제
 			function rmQstnForm(thisEl) {
 				var wrapper = thisEl.parents(".qstnWrapper");
-				//console.log(wrapper);
+				
+				//question input 및 selectBox 제거
 				wrapper.find(".quesDiv").remove();
 				wrapper.find(".selection").remove();
 			}
@@ -864,7 +769,7 @@
 				var other = question.other
 				
 				var html = "";
-					html += "<div class='tmpQstnWrapper' id='" + id + "'>";
+					html += "<div class='usrQstnWrapper' id='" + id + "' qstnType='" + qstnType + "'>";
 			  		
 					html += "<div class='mvBtnDiv'>";
 					html += "<img class='mvBtn' alt='' src='/images/ezSurvey/move.png'>";
@@ -933,8 +838,18 @@
 					}
 			}
 			
+			function rmPrevEl(thisEl) {
+				// 질문을 수정하면 숨겨뒀던 userInterface를 지움 
+				thisEl.parents(".qstnWrapper").prev().remove();
+			}
 			
-			function mkUserIfForm(status, thisEl) {
+			// 질문 객체 생성
+			function mkQstnObj(status, thisEl) {
+				
+				if (status == 'modify') {
+					rmPrevEl(thisEl);
+				}
+				
 				var question = {};
 				
 				var qstnWrapper = thisEl.parents(".qstnWrapper");
@@ -1102,6 +1017,7 @@
 				
 				// 설문 생성 폼 삭제
 				rmQstnForm(thisEl);
+				
 			}
 			
 		}());
