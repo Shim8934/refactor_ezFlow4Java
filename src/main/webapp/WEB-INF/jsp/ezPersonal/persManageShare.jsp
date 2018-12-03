@@ -174,9 +174,13 @@
 	</head>
 	<body>
 		<br>
+		<span class="txt">▒ <spring:message code='ezApprovalG.bhs08' /></span><br/>
+		<span class="txt">▒ <spring:message code='ezApprovalG.bhs09' /></span><br/>
+	   	<%--
 	    <h2 class="txt">▒ <spring:message code='ezApprovalG.bhs08'/></h2>
-	    <h2 class="txt" style="margin-top:3px">▒ <spring:message code='ezApprovalG.bhs09'/></h2>
-	    <table class="mainlist" style="width:750px;">
+	    <h2 class="txt" style="margin-top:3px">▒ <spring:message code='ezApprovalG.bhs09'/></h2> 
+	    --%>
+	    <table class="mainlist" style="width:750px; margin-top: 10px;">
 	    	<tbody>
 	    		<tr>
 	    			<td style="padding-left:0px; border-bottom:0;">

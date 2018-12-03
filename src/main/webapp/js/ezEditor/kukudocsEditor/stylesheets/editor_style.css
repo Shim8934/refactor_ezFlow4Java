@@ -29,7 +29,6 @@ body {
 table {
     font-size: inherit;
     font-family: inherit;
-    border-collapse: collapse;
 }
 
 td,th {
