@@ -2104,11 +2104,12 @@
 								                        <thead id="List_THEAD">
 									                        <tr>
 									                        <!-- 18-05-24 김민성 - 회람자 추가시 즐겨찾기 작성일 -> 등록일로 수정 -->
+									                        <!-- 18-12-03 김민성 - 컬럼 사이즈 변경 -->
 									                        	<th style="width: 5%;"><span><spring:message code='ezCircular.t31' /></span></th>
-									                            <th style="width: 35%; "><span><spring:message code='ezCircular.t32' /></span></th>
-									                            <th style="width: 27%; "><span><spring:message code='ezBoard.t5007' /></span></th>
-									                            <th style="width: 19%; "><span><spring:message code='ezCircular.t34' /></span></th>
-									                            <th style="width: 13%; "></th>
+									                            <th style="width: 45%; "><span><spring:message code='ezCircular.t32' /></span></th>
+									                            <th style="width: 20%; "><span><spring:message code='ezBoard.t5007' /></span></th>
+									                            <th style="width: 30%; "><span><spring:message code='ezCircular.t34' /></span></th>
+									                            <!-- <th style="width: 13%; "></th> -->
 									                        </tr>
 								                        </thead>
 								                        <tbody id="List_TBODY">					                        

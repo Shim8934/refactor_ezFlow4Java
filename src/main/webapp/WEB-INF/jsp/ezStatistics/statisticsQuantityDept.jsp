@@ -534,7 +534,7 @@
     </tr>
 </table>
 <br />
-<h2 id="ToTitle" class="receiver_tltype01">
+<h2 id="ToTitle" class="receiver_tltype01" style="border-bottom:0px">
     <span style="min-width: 45px;"><spring:message code='ezStatistics.t1014' /></span>
 </h2>
 <table style="width: 1180px;height:630px ;border:1px solid #ddd"> 
