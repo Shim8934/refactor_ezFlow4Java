@@ -39,22 +39,6 @@
 				<span class="arrow"><span></span></span>
 			</span>
 		</div>
-		<!-- 
-		<ul>
-			<li fname='' fsize='' path=''>
-				<div class='attDivFile'>
-					<img alt='' src='/images/survey/file_del.gif'>
-					<div class='attImgAva'>
-						<img alt='' src='파일경로'>
-					</div>
-					<div class='attFileInf'>
-						<span title='파일이름'>파일이름</span>
-						<span>사이즈</span>
-					</div>
-				</div>
-			</li>
-		</ul>
-		 -->
 		
 		<div id="bodyPanel">
 			<div id="tab1" class="select-tab">
@@ -201,7 +185,7 @@
 			
 			// question input 및 img 생성
 			function createQuestionDiv(qstnWrapper, question) {
-				console.log(question);
+				
 				var html       = "";
 				var qstId      = "";
 				var qstContent = "";
@@ -309,33 +293,10 @@
 			function makeSelectQuestion(grandParent, questionType) {
 				var html = "";
 					html += "<div class='qstnForm' questionType='" + questionType + "'>";
-					html += "<div class='optPart'>";
-					html += "<div class='optArea'>";
-					html += "<div class='option'>";
-					html += "<input class='textInput' type='text'>";
-					html += "<img src='/images/ezSurvey/attach.png' class='attImg'>";
-					html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
-					html += "</div>";
-					html += "<div class='optFileInfo'>";
-					html += "<div>";
-					html += "<ul></ul>";
-					html += "</div></div></div>";
-					html += "<div class='optAtt'>";
-					html += "<input type='file' class='optionFile' style='display:none;'/>";
-					html += "</div></div>";
-					html += "<div class='additionalPart'>";
-					html += "<div class='addBtns'>";
-					html += "<button class='addOpt'>추가</button>";
-					html += "<button class='addOther'>기타추가</button>";
-					html += "</div>";
-					html += "<div class='required'>";
-					html += "<input type='checkbox' name='checkbox'>";
-					html += "<strong>필수 답변</strong>";
-					html += "</div>";
-					html += "<div class='btns'>";
-					html += "<button class='save'>저장</button>";
-					html += "<button class='cancel'>취소</button>";
-					html += "</div>";
+					
+					html += "<div class='optPart'>" + mkOpt() + "</div>";
+					
+					html += ""+ mkAddtionalPart() + "";
 					
 				grandParent.append(html);
 			}
@@ -343,47 +304,23 @@
 			function addOptEvent() {
 				// 보기 추가
 				$(".quesBacgr").on("click", ".addOpt", function() {
+					var type = "option";
+					
 					var thisEl = $(this).parents(".qstnForm");
-					var html   = "";
-						html  += "<div class='optPart'>";
-						html  += "<div class='optArea'>";
-						html  += "<div class='option'>";
-						html  += "<input class='textInput' type='text'>";
-						html  += "<img src='/images/ezSurvey/attach.png' class='attImg'>"; 
-						html  += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
-						html  += "</div>";
-						html  += "<div class='optFileInfo'>";
-						html  += "<div>";
-						html  += "<ul></ul>";
-						html  += "</div></div></div>";
-						html  += "<div class='optAtt'>";
-						html  += "<input type='file' class='optionFile' style='display:none;'/>";
-						html  += "</div></div>";
+					var html   = "<div class='optPart'>" + mkOpt(type) + "</div>";
 					
 					thisEl.find(".optPart").last().after(html);
 				});
 				
 				// 기타 추가
 				$(".quesBacgr").on("click", ".addOther", function() {
+					var type = "other";
+					
 					var thisEl = $(this).parents(".qstnForm");
 					var other  = thisEl.find(".other");
 					
 					if (other.length == 0) {
-						var html = "";
-							html += "<div class='other'>";
-							html += "<div class='optArea'>";
-							html += "<div class='option'>";
-							html += "<input class='textInput' type='text' placeholder='기타'>";
-							html += "<img src='/images/ezSurvey/attach.png' class='attImg'>"; 
-							html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
-							html += "</div>";
-							html += "<div class='optFileInfo'>";
-							html += "<div>";
-							html += "<ul></ul>";
-							html += "</div></div></div>";
-							html += "<div class='optAtt'>";
-							html += "<input type='file' class='optionFile' style='display:none;'/>";
-							html += "</div></div>";
+						var html = "<div class='other'>" + mkOpt(type) + "</div>";
 						
 						thisEl.find(".optPart").last().after(html);
 					}
@@ -395,11 +332,10 @@
 				// 보기, 기타 삭제
 				$(".quesBacgr").on("click", ".delImg", function() {
 					var thisEl    = $(this);
-					var optLength = thisEl.parents(".qstnForm").find(".optPart").length;
-					var othLength = thisEl.parents(".qstnForm").find(".other").length;
-					var totLength = optLength + othLength;
+					var optAreaLength = thisEl.parents(".qstnForm").find(".optArea").length;
 					// 보기와 기타의 합계가 2개 이상일 때만 삭제
-					if (totLength > 2) {
+					if (optAreaLength > 2) {
+						// 삭제할 요소가 option인지 other인지 확인
 						if (thisEl.parents(".optPart").length == 1) {
 							thisEl.parents(".optPart").remove();
 						}
@@ -469,8 +405,11 @@
 			
 			// 생성된 질문을 붙일 부분과 질문 유형을 파라미터로 받아 질문 영역 생성
 			function mdfSelectQuestion(qstnWrapper, question) {
+				var type = "modify";
+				
 				var html    = "";
 					html   += "<div class='qstnForm' questionType='" + question.qstnType + "'>";
+					
 				var options = question.option;
 					
 				for (var i = 0; i < options.length; i++) {
@@ -545,19 +484,7 @@
 					html += "</div></div>";
 				}
 				
-				html += "<div class='additionalPart'>";
-				html += "<div class='addBtns'>";
-				html += "<button class='addOpt'>추가</button>";
-				html += "<button class='addOther'>기타추가</button>";
-				html += "</div>";
-				html += "<div class='required'>";
-				html += question.required == 'Y' ? "<input type='checkbox' name='checkbox' checked='checked'>" : "<input type='checkbox' name='checkbox'>";
-				html += "<strong>필수 답변</strong>";
-				html += "</div>";
-				html += "<div class='btns'>";
-				html += "<button class='modify'>수정</button>";
-				html += "<button class='mdfCancel'>취소</button>";
-				html += "</div>";
+				html += "" + mkAddtionalPart(question.required, type) + "";
 				
 				qstnWrapper.next().append(html);
 			}
@@ -776,6 +703,52 @@
 				
 				mkSelectQstn(status, thisEl, question); // 질문 폼 생성
 				rmQstnForm(thisEl);                     // 설문 생성 폼 삭제
+			}
+			
+			function mkOpt(type) {
+				
+				var html = "";
+					html += "<div class='optArea'>";
+					html += "<div class='option'>";
+					html += type == 'other' ? "<input class='textInput' type='text' placeholder='기타'>" : "<input class='textInput' type='text'>";
+					html += "<img src='/images/ezSurvey/attach.png' class='attImg'>";
+					html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
+					html += "</div>";
+					html += "<div class='optFileInfo'>";
+					html += "<div>";
+					html += "<ul></ul>";
+					html += "</div></div></div>";
+					html += "<div class='optAtt'>";
+					html += "<input type='file' class='optionFile' style='display:none;'/>";
+					html += "</div>";
+				
+				return html;
+			}
+			
+			function mkAddtionalPart(required, type) {
+				var html = "";
+					html += "<div class='additionalPart'>";
+					html += "<div class='addBtns'>";
+					html += "<button class='addOpt'>추가</button>";
+					html += "<button class='addOther'>기타추가</button>";
+					html += "</div>";
+					html += "<div class='required'>";
+					html += required == 'Y' ? "<input type='checkbox' name='checkbox' checked='checked'>" : "<input type='checkbox' name='checkbox'>";
+					html += "<strong>필수 답변</strong>";
+					html += "</div>";
+					html += "<div class='btns'>";
+					
+					if (type == 'modify') {
+						html += "<button class='modify'>수정</button>";
+						html += "<button class='mdfCancel'>취소</button>";
+
+					} else {
+						html += "<button class='save'>저장</button>";
+						html += "<button class='cancel'>취소</button>";
+					}
+					html += "</div>";
+				
+				return html;
 			}
 		}());
 		
