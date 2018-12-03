@@ -264,29 +264,29 @@
 
 /* 단일선택 폼 css */
 .quesBacgr ul {list-style: none;}
-.quesBacgr .selection {width:100%; height:50%; padding-top: 15px;}
-.quesBacgr .selection .optPart {text-align: center; padding-top: 10px;}
-.quesBacgr .selection .optPart .optArea {width: 60%; padding-left: 20%;}
+.quesBacgr .qstnForm {width:100%; height:50%; padding-top: 15px;}
+.quesBacgr .qstnForm .optPart {text-align: center; padding-top: 10px;}
+.quesBacgr .qstnForm .optPart .optArea {width: 60%; padding-left: 20%;}
 
-.quesBacgr .selection .optPart .optArea .option .textInput {width: 85%;height: 30px;}
-.quesBacgr .selection .optPart .optArea .option .attImg {width: 30px;height: 30px;cursor: pointer;padding-left: 20px;padding-right: 20px;margin-bottom: -11px;}
-.quesBacgr .selection .optPart .optArea .option .fileInput {width: 0px;opacity: 0;display: none;}
-.quesBacgr .selection .optPart .optArea .option .delImg {width: 30px;height: 30px;cursor: pointer;margin-bottom: -11px;}
+.quesBacgr .qstnForm .optPart .optArea .option .textInput {width: 85%;height: 30px;}
+.quesBacgr .qstnForm .optPart .optArea .option .attImg {width: 30px;height: 30px;cursor: pointer;padding-left: 20px;padding-right: 20px;margin-bottom: -11px;}
+.quesBacgr .qstnForm .optPart .optArea .option .fileInput {width: 0px;opacity: 0;display: none;}
+.quesBacgr .qstnForm .optPart .optArea .option .delImg {width: 30px;height: 30px;cursor: pointer;margin-bottom: -11px;}
 
-.quesBacgr .selection .other {text-align: center; padding-top: 10px;}
-.quesBacgr .selection .other .optArea {width: 60%; padding-left: 20%;}
-.quesBacgr .selection .other .optArea .option .textInput {width: 85%;height: 30px;}
-.quesBacgr .selection .other .optArea .option .attImg {width: 30px;height: 30px;cursor: pointer;padding-left: 20px;padding-right: 20px;margin-bottom: -11px;}
-.quesBacgr .selection .other .optArea .option .fileInput {width: 0px;opacity: 0;display: none;}
-.quesBacgr .selection .other .optArea .option .delImg {width: 30px;height: 30px;cursor: pointer;margin-bottom: -11px;}
+.quesBacgr .qstnForm .other {text-align: center; padding-top: 10px;}
+.quesBacgr .qstnForm .other .optArea {width: 60%; padding-left: 20%;}
+.quesBacgr .qstnForm .other .optArea .option .textInput {width: 85%;height: 30px;}
+.quesBacgr .qstnForm .other .optArea .option .attImg {width: 30px;height: 30px;cursor: pointer;padding-left: 20px;padding-right: 20px;margin-bottom: -11px;}
+.quesBacgr .qstnForm .other .optArea .option .fileInput {width: 0px;opacity: 0;display: none;}
+.quesBacgr .qstnForm .other .optArea .option .delImg {width: 30px;height: 30px;cursor: pointer;margin-bottom: -11px;}
 
-.quesBacgr .selection .optPart .optArea .optFileInfo ul {margin-left: -32px;}
-.quesBacgr .selection .optPart .optArea .optAtt .optionFile {display: none;}
+.quesBacgr .qstnForm .optPart .optArea .optFileInfo ul {margin-left: -32px;}
+.quesBacgr .qstnForm .optPart .optArea .optAtt .optionFile {display: none;}
 
-.quesBacgr .selection .additionalPart {width: 60%; margin-left: 20%; padding-top: 15px;}
-.quesBacgr .selection .additionalPart .addBtns {text-align: left;}
-.quesBacgr .selection .additionalPart .required {text-align: left; font-size: 13px; padding-top: 10px;}
-.quesBacgr .selection .additionalPart .btns {text-align: right;}
+.quesBacgr .qstnForm .additionalPart {width: 60%; margin-left: 20%; padding-top: 15px;}
+.quesBacgr .qstnForm .additionalPart .addBtns {text-align: left;}
+.quesBacgr .qstnForm .additionalPart .required {text-align: left; font-size: 13px; padding-top: 10px;}
+.quesBacgr .qstnForm .additionalPart .btns {text-align: right;}
 
 .optFileInfo .attFileInf {text-align: left;}
 

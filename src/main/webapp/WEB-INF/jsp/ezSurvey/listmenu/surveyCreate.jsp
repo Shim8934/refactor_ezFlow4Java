@@ -201,7 +201,7 @@
 			
 			// question input 및 img 생성
 			function createQuestionDiv(qstnWrapper, question) {
-				console.log(question)
+				console.log(question);
 				var html       = "";
 				var qstId      = "";
 				var qstContent = "";
@@ -210,8 +210,8 @@
 				if (question) {
 					qstId      = question.id;
 					qstContent = question.qstnContents;
-					
-					if (question.questionAttach != undefined) {
+
+					if (question.questionAttach) {
 						qstAtt     = mkImgTag(question.questionAttach);
 					}
 					
@@ -308,7 +308,7 @@
 			// 생성된 질문을 붙일 부분과 질문 유형을 파라미터로 받아 질문 영역 생성
 			function makeSelectQuestion(grandParent, questionType) {
 				var html = "";
-					html += "<div class='selection' questionType='" + questionType + "'>";
+					html += "<div class='qstnForm' questionType='" + questionType + "'>";
 					html += "<div class='optPart'>";
 					html += "<div class='optArea'>";
 					html += "<div class='option'>";
@@ -343,7 +343,7 @@
 			function addOptEvent() {
 				// 보기 추가
 				$(".quesBacgr").on("click", ".addOpt", function() {
-					var thisEl = $(this).parents(".selection");
+					var thisEl = $(this).parents(".qstnForm");
 					var html   = "";
 						html  += "<div class='optPart'>";
 						html  += "<div class='optArea'>";
@@ -365,7 +365,7 @@
 				
 				// 기타 추가
 				$(".quesBacgr").on("click", ".addOther", function() {
-					var thisEl = $(this).parents(".selection");
+					var thisEl = $(this).parents(".qstnForm");
 					var other  = thisEl.find(".other");
 					
 					if (other.length == 0) {
@@ -395,8 +395,8 @@
 				// 보기, 기타 삭제
 				$(".quesBacgr").on("click", ".delImg", function() {
 					var thisEl    = $(this);
-					var optLength = thisEl.parents(".selection").find(".optPart").length;
-					var othLength = thisEl.parents(".selection").find(".other").length;
+					var optLength = thisEl.parents(".qstnForm").find(".optPart").length;
+					var othLength = thisEl.parents(".qstnForm").find(".other").length;
 					var totLength = optLength + othLength;
 					// 보기와 기타의 합계가 2개 이상일 때만 삭제
 					if (totLength > 2) {
@@ -420,6 +420,11 @@
 				// option 첨부파일 추가
 				$(".quesBacgr").on("change", ".optionFile", function (e) {
 					fileUpload($(this), $(this)[0].files);
+				});
+				
+				// 질문 생성 폼의 취소 버튼 클릭
+				$(".quesBacgr").on("click", ".cancel", function() {
+					$(this).parents(".qstnForm").remove();
 				});
 				
 				// 질문 생성 폼의 내용 임시 저장
@@ -465,7 +470,7 @@
 			// 생성된 질문을 붙일 부분과 질문 유형을 파라미터로 받아 질문 영역 생성
 			function mdfSelectQuestion(qstnWrapper, question) {
 				var html    = "";
-					html   += "<div class='selection' questionType='" + question.qstnType + "'>";
+					html   += "<div class='qstnForm' questionType='" + question.qstnType + "'>";
 				var options = question.option;
 					
 				for (var i = 0; i < options.length; i++) {
@@ -557,7 +562,7 @@
 				qstnWrapper.next().append(html);
 			}
 			
-			// 수정시 x버튼에 이벤트 생성
+			// 첨부파일 있을 시 태그 생성
 			function mkImgTag(qstnAtt) {
 				if (qstnAtt) {return "";}
 				return questionFile.mkImgTag(qstnAtt);
@@ -574,7 +579,7 @@
 				
 				//question input 및 selectBox 제거
 				wrapper.find(".quesDiv").remove();
-				wrapper.find(".selection").remove();
+				wrapper.find(".qstnForm").remove();
 			}
 			// 단일선택 질문 생성 
 			function mkSelectQstn(status, thisEl, question) {
@@ -618,10 +623,10 @@
 							html += "<div class='opt' level='" + option[i].level + "'>";
 							
 							if (qstnType == 2) {
-								html += "<input class='optChb' type='checkbox' value=''/>";
+								html += "<input class='optChb' type='checkbox' value='" + option[i].level + "'/>";
 
 							} else {
-								html += "<input class='optRdo' type='radio' value=''/>";
+								html += "<input class='optRdo' type='radio' value='" + option[i].level + "'/>";
 							}
 							// 첨부파일이 있는지 확인
 							html += option[i].optionAttach ? "<img alt='' src='" + option[i].optionAttach.fpath + "' class='optImg'>" : "";
@@ -633,7 +638,7 @@
 					// 기타
 					if (other) {
 						html += "<div class='opt'>";
-						html += "<input class='optRdo' type='radio' value=''/>";
+						html += "<input class='optRdo' type='radio' value='" + other + "'/>";
 						html += other.otherAttach ? "<img alt='' src='" + otherAtt.fpath + "' class='optImg'>" : ""; // 첨부파일이 있는지 확인
 						html += "<span class='optSpan'>" + other.contents + "</span>";
 						html += "<input class='othInput' type='text'/>";
@@ -769,7 +774,7 @@
 					questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
 				}
 				
-				mkSelectQstn(status, thisEl, question); // selection 질문 생성
+				mkSelectQstn(status, thisEl, question); // 질문 폼 생성
 				rmQstnForm(thisEl);                     // 설문 생성 폼 삭제
 			}
 		}());

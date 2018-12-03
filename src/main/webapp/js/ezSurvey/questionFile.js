@@ -291,7 +291,7 @@ var QuestionFile = function() {
 				html += "<div class='attFileInf'>";
 				html += "<span title='" + fileObj.fname + "'>" + fileObj.fname + "</span>";
 				html += "<span>" + fileObj.fsize + "</span>";
-				html += "<mkImgTag/div>";
+				html += "</div>";
 				html += "</div>";
 				html += "</li>";
 			
