@@ -185,7 +185,6 @@
 			
 			// question input 및 img 생성
 			function createQuestionDiv(qstnWrapper, question) {
-				console.log(question)
 				var html       = "";
 				var qstId      = "";
 				var qstContent = "";
@@ -194,11 +193,7 @@
 				if (question) {
 					qstId      = question.id;
 					qstContent = question.qstnContents;
-					
-					if (question.questionAttach != undefined) {
-						qstAtt     = mkImgTag(question.questionAttach);
-					}
-					
+					qstAtt     = mkImgTag(question.questionAttach);
 				}
 				
 				html += "<div class='qstnWrapper' id='" + qstId + "'>";
