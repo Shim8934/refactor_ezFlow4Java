@@ -246,6 +246,8 @@
 						var selectedEl   = data.selectedItem;
 						var grandParent  = selectedEl.parents(".qstnWrapper");
 						var questionType = data.selectedData.value;
+						// 질문 유형 선택시 셀렉트 박스 아래의 폼 삭제
+						rmQstnForm(grandParent);
 						
 						switch (questionType) {
 							case 1: makeSelectQuestion(grandParent, questionType)   ; break;
@@ -281,6 +283,15 @@
 				}
 				
 				return selectText;
+			}
+			
+			// 질문 유형 선택시 셀렉트 박스 아래의 폼 삭제
+			function rmQstnForm(qstnForm) {
+				var qstnForm = grandParent.find(".qstnForm");
+				
+				if (qstnForm.length != 0) {
+					qstnForm.remove();
+				}
 			}
 			
 			// 생성된 질문을 붙일 부분과 질문 유형을 파라미터로 받아 질문 영역 생성
@@ -358,6 +369,7 @@
 				// 질문 생성 폼의 취소 버튼 클릭
 				$(".quesBacgr").on("click", ".cancel", function() {
 					$(this).parents(".qstnForm").remove();
+					createQuestionSelectBox();
 				});
 				
 				// 질문 생성 폼의 내용 임시 저장
