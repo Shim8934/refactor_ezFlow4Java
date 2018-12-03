@@ -242,7 +242,8 @@
 				B.updateStatus,
 				B.commentStatus,
 				B.shareStatus,
-				A.companyId
+				A.companyId,
+				(SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.memberid = F.cn AND A.tenantid = F.tenant_id) as userImageFile
             FROM
                 TBL_CIRCULAR A
 			JOIN
@@ -441,7 +442,7 @@
 					D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
 				UNION ALL
 				SELECT 
-					B.cn, B.DISPLAYNAME, C.C.EXTENSIONATTRIBUTE3 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION
+					B.cn, B.DISPLAYNAME, C.EXTENSIONATTRIBUTE3 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION
 				FROM 
 					TBL_USERMASTER B 
 				INNER JOIN 
