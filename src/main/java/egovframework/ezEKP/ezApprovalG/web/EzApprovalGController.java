@@ -550,7 +550,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		if(searchStatus != null && !searchStatus.equals("") && !searchStatus.equals("ALL")) {
-			if (listType.equals("1") || listType.equals("2") || listType.equals("3") ) {
+			if (listType.equals("1") || listType.equals("2") || listType.equals("3") || listType.equals("11")) {
 				searchQuery += " AND FUNCTIONTYPE = '" + searchStatus + "' ";
 			}
 		}
