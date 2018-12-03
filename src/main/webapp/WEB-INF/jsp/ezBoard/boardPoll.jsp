@@ -248,7 +248,6 @@
 		<xmp id="sigBody" style="display: none;">${xmlRange}</xmp>
 		<body style="margin-left: 10px; margin-right: 10px;">
 			<br/>	
-    		<h2><spring:message code="ezBoard.t10011" /></h2>
     		<span class="txt">▒ <spring:message code="ezBoard.t00071" /></span>   
     		<br />  		
     		<span class="txt">▒ <spring:message code="ezBoard.t00072" /></span>

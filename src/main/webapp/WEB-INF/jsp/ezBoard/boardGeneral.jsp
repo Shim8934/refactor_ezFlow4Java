@@ -121,7 +121,6 @@
 	</head>
 		<body style="margin-left: 10px; margin-right: 10px;">
 			<br/>	
-    		<h2><spring:message code="ezBoard.t0006" /></h2>
     		<span class="txt">▒ <spring:message code="ezBoard.t0007" /></span>
         	<br />    
         	<table class="content" style="width: 623px;margin-top:5px">
