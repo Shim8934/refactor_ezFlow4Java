@@ -70,7 +70,8 @@ $(document).ready(function(){
 	case "Haze" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm03'/>");
 				   break;
 	
-	case "Rain" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm04'/>");
+	case "Rain" :
+	case "Drizzle" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm04'/>");
 				   break;
 	
 	case "Snow" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm05'/>");
