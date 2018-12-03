@@ -199,7 +199,7 @@
 				html += "<div class='qstnWrapper' id='" + qstId + "'>";
 				html += "<div class='quesDiv'>";
 				html += "<div class='qstnRow'>";
-				html += "<input class='questnTitle' value='" + qstContent + "'>";
+				html += "<input class='questnTitle' value='" + qstContent + "' placeholder='내용을 입력해주세요'/>";
 				html += "<img alt='' src='/images/ezSurvey/attach.png' class='atchImg'>";
 				html += "<div class='selectBox'></div>";
 				html += "</div>";
@@ -254,7 +254,7 @@
 							case 4: break;
 							case 5: break;
 							case 6: makeParagraphQuestion(grandParent, questionType); break;
-							case 7: break;
+							case 7: makeSliderQuestion(grandParent, questionType)   ; break;
 							case 8: break;
 							case 9: break;
 						}
@@ -401,9 +401,8 @@
 			// 생성된 질문을 붙일 부분과 질문 유형을 파라미터로 받아 질문 영역 생성
 			function mdfSelectQuestion(qstnWrapper, question) {
 				var action = 'modify';
-				
-				var html    = "";
-					html   += "<div class='qstnForm' questionType='" + question.qstnType + "'>";
+				var html   = "";
+					html  += "<div class='qstnForm' questionType='" + question.qstnType + "'>";
 					
 				var options = question.option;
 
@@ -411,7 +410,6 @@
 					for (var i = 0; i < options.length; i++) {
 						var type = "opt";
 						html += "<div class='optPart'>" + mkOpt(type, options[i], action) + "</div>";
-						
 					}
 				}
 				
@@ -653,17 +651,17 @@
 					
 					if (type == 'other') {
 						if (options) {
-							html += "<input class='textInput' type='text' value='" + options.contents + "'>";
+							html += "<input class='textInput' type='text' value='" + options.contents + "' placeholder='내용을 입력해주세요'/>";
 							
 						} else {
 							html += "<input class='textInput' type='text' placeholder='기타'>";
 						}
 					} else {
 						if (options) {
-							html += "<input class='textInput' type='text' value='" + options.contents + "'>";
+							html += "<input class='textInput' type='text' value='" + options.contents + "'/>";
 							
 						} else {
-							html += "<input class='textInput' type='text'>";
+							html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
 						}
 					}
 					html += "<img src='/images/ezSurvey/attach.png' class='attImg'>";
@@ -725,12 +723,12 @@
 				return html;
 			}
 			function makeParagraphQuestion(mainDivElmt, questionType) {
-				console.log("Here!");
 				var html = "";
 				html += "<div class='qstnForm' questionType='" + questionType + "'>";
 				html += "<div class='paragraph-wrap'>";
-				html += "<textarea class='paragraph'></textarea>";
+				html += "<textarea class='paragraph' maxlength='500' placeholder='내용을 입력해주세요'></textarea>";
 				html += "</div>";
+				html += "<div class='additionalPart'>";
 				html += "<div class='required'>";
 				html += "<input type='checkbox' name='checkbox'>";
 				html += "<strong>필수 답변</strong>";
@@ -738,7 +736,28 @@
 				html += "<div class='btns'>";
 				html += "<button class='save'>저장</button>";
 				html += "<button class='cancel'>취소</button>";
+				html += "</div></div>";
+				
+				mainDivElmt.append(html);
+			}
+			
+			function makeSliderQuestion(mainDivElmt, questionType) {
+				var html = "";
+				html += "<div class='qstnForm' questionType='" + questionType + "'>";
+				html += "<div class='silder-wrap'>";
+				html += "<input type='input' class='slider-input'/>";
+				html += "<input type='range' class='slider-main' />";
+				html += "<input type='input' class='slider-input'/>";
 				html += "</div>";
+				html += "<div class='additionalPart'>";
+				html += "<div class='required'>";
+				html += "<input type='checkbox' name='checkbox'>";
+				html += "<strong>필수 답변</strong>";
+				html += "</div>";
+				html += "<div class='btns'>";
+				html += "<button class='save'>저장</button>";
+				html += "<button class='cancel'>취소</button>";
+				html += "</div></div>";
 				
 				mainDivElmt.append(html);
 			}
