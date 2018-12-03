@@ -404,7 +404,7 @@ LEFT OUTER JOIN
        AND company_id = #companyId#
        AND access_YN = 0
        AND user_id = #deptId#
-       AND user_type = '2'     	
+       AND user_type = '0'     	
 	) as auth
 ON
 	comp.COMPANY_ID = auth.COMPANY_ID
@@ -528,7 +528,7 @@ FROM (
 	) INFO
 ) A
 WHERE 
-	A.RNUM >= #offset# 
+	A.RNUM > #offset# 
 AND
 	A.RNUM <= #offset# + #limit#
 ]]>	
@@ -893,7 +893,7 @@ FROM (
 		) INFO
 	) P
 WHERE
-	P.RNUM >= #startRow#
+	P.RNUM > #startRow#
 AND
 	P.RNUM <= #startRow# + #photoCount#
 ]]>

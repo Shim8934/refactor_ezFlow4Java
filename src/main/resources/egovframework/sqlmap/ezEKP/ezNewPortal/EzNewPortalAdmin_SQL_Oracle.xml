@@ -5,6 +5,7 @@
 	<typeAlias alias="PortalBoardTreeVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO"/>
 	<typeAlias alias="PortalLogoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalLogoVO"/>
 	<typeAlias alias="PortalPortletSliderImageVO" type="egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO"/>
+	<typeAlias alias="PortletInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO"/>
 	
 	<select id="ezNewPortal.getThemeInfo" parameterClass="Map" resultClass="ThemeInfoVO">
 		<![CDATA[
@@ -959,4 +960,55 @@
 			SLIDERID = #slideId#
 	]]>
 	</update>
+	
+	<!-- 18.12.03 테마별 포틀릿 사용여부 설정 관련 개발 ===== 시작 -->
+	<select id="ezNewPortal.getThemePortletList" parameterClass="Map" resultClass="PortletInfoVO">
+	<![CDATA[
+		SELECT
+			A.theme_id,
+			A.tenant_id,
+			A.company_id,
+			A.portlet_id,
+			A.portlet_used,
+			A.portlet_order,
+			A.menu_id
+		FROM
+			TBL_PORTAL_THEME_PORTLET A
+		JOIN
+			TBL_PORTAL_PORTLET_COMP B
+		ON
+			A.portlet_id = B.portlet_id
+		AND
+			A.company_id = B.company_id
+		AND
+			A.tenant_id = B.tenant_id
+		AND
+			B.portlet_used = 1
+		WHERE
+			A.theme_id = #themeId#
+		AND
+			A.tenant_id = #tenantId#
+		AND
+			A.company_id = #companyId#
+	]]>
+	</select>
+	
+	<update id="ezNewPortal.updateThemePortletUsed">
+	<![CDATA[
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET
+			portlet_used = #portletUsed#
+		WHERE
+			theme_id = #themeId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			company_id = #company_id#
+		AND
+			portlet_id = #portletId#
+	]]>
+	</update>
+	
+	<!-- 18.12.03 테마별 포틀릿 사용여부 설정 관련 개발 ===== 끝-->
 </sqlMap>
