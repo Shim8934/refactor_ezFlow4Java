@@ -257,8 +257,8 @@
 							case 5: break;
 							case 6: makeParagraphQuestion(grandParent, questionType); break;
 							case 7: makeSliderQuestion(grandParent, questionType)   ; break;
-							case 8: break;
-							case 9: break;
+							case 8: makeRankingQuestion(grandParent, questionType)  ; break;
+							case 9: makeDropdownQuestion(grandParent, questionType) ; break;
 						}
 					}
 				});
@@ -299,13 +299,13 @@
 				var html = "";
 					html += "<div class='qstnForm' questionType='" + questionType + "'>";
 					
-					if (questionType == 1 || questionType == 2) {
-						for (var i = 0; i < 2; i++) {
-							html += "<div class='optPart'>" + mkOpt() + "</div>";
-						}
-					} 
-					html += ""+ mkAddtionalPart() + "";
-					
+				if (questionType == 1 || questionType == 2) {
+					for (var i = 0; i < 2; i++) {
+						html += "<div class='optPart'>" + mkOpt() + "</div>";
+					}
+				}
+				
+				html += "" + mkAddtionalPart() + "";
 				grandParent.append(html);
 			}
 			
@@ -728,6 +728,7 @@
 				
 				return html;
 			}
+			
 			function makeParagraphQuestion(mainDivElmt, questionType) {
 				var html = "";
 				html += "<div class='qstnForm' questionType='" + questionType + "'>";
@@ -756,6 +757,76 @@
 				html += "<input type='input' class='slider-input'/>";
 				html += "</div>";
 				html += "<div class='additionalPart'>";
+				html += "<div class='required'>";
+				html += "<input type='checkbox' name='checkbox'>";
+				html += "<strong>필수 답변</strong>";
+				html += "</div>";
+				html += "<div class='btns'>";
+				html += "<button class='save'>저장</button>";
+				html += "<button class='cancel'>취소</button>";
+				html += "</div></div>";
+				
+				mainDivElmt.append(html);
+			}
+			
+			function makeRankingQuestion(mainDivElmt, questionType) {
+				var html = "";
+				html += "<div class='qstnForm' questionType='" + questionType + "'>";
+				html += "<div class='ranking-wrap'>";
+				html += "<div class='ranking-select'>";
+				html += "<span class='ranking-order'>1</span>";
+				html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
+				html += "<span class='dropdown-del'></span>";
+				html += "</div>";
+				html += "<div class='ranking-select'>";
+				html += "<span class='ranking-order'>2</span>";
+				html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
+				html += "<span class='dropdown-del'></span>";
+				html += "</div>";
+				html += "<div class='dropdown-select'>";
+				html += "<span class='dropdown-order'>3</span>";
+				html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
+				html += "<span class='dropdown-del'></span>";
+				html += "</div>";
+				html += "<div class='additionalPart'>";
+				html += "<div class='addBtns'>";
+				html += "<button class='addOpt'>추가</button>";
+				html += "</div>";
+				html += "<div class='required'>";
+				html += "<input type='checkbox' name='checkbox'>";
+				html += "<strong>필수 답변</strong>";
+				html += "</div>";
+				html += "<div class='btns'>";
+				html += "<button class='save'>저장</button>";
+				html += "<button class='cancel'>취소</button>";
+				html += "</div></div>";
+				
+				mainDivElmt.append(html);
+			}
+			
+			function makeDropdownQuestion(mainDivElmt, questionType) {
+				var html = "";
+				html += "<div class='qstnForm' questionType='" + questionType + "'>";
+				html += "<div class='dropdown-wrap'>";
+				html += "<div class='ranking-select'>";
+				html += "<span class='ranking-order'>1</span>";
+				html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
+				html += "<span class='ranking-del'></span>";
+				html += "</div>";
+				html += "<div class='ranking-select'>";
+				html += "<span class='ranking-order'>2</span>";
+				html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
+				html += "<span class='ranking-del'></span>";
+				html += "</div>";
+				html += "<div class='ranking-select'>";
+				html += "<span class='ranking-order'>3</span>";
+				html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
+				html += "<span class='ranking-del'></span>";
+				html += "</div>";
+				html += "<div class='additionalPart'>";
+				html += "<div class='addBtns'>";
+				html += "<button class='addOpt'>추가</button>";
+				html += "</div>";
 				html += "<div class='required'>";
 				html += "<input type='checkbox' name='checkbox'>";
 				html += "<strong>필수 답변</strong>";
