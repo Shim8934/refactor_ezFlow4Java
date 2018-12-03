@@ -232,7 +232,7 @@
 .quesDiv .qstnRow .dd-container .dd-options {border-radius: 10px; width: 100%;}
 .quesDiv .qstnRow .dd-container .dd-option {height: 25px; line-height: 25px; text-align: left;}
 /* .quesDiv .optionBox {padding-top: 5px; } */
-.quesDiv .qstnAtt .qstnFileInfo .fileList ul {width: 70%; padding-left: 15%;}
+.quesDiv .qstnAtt .qstnFileInfo .fileList ul {width: 100%; margin-left: -39px;}
 .quesDiv .qstnAtt .qstnFileInfo .fileList ul .attFileInf {text-align: left;}
 
 .quesDiv .option_wrap {width: 20%; border-radius: 10px; margin-right:155px; float: right; border: 1px solid #d7d7d7; height: 0px; display:none;}
@@ -300,6 +300,7 @@ input[type=range]::-ms-tooltip {display: none;}
 
 .qstnForm .other {padding-top: 10px;}
 .optArea .option {padding-left: 30px;}
+.optArea .optFileInfo {margin-left: 23px;}
 .optArea .optFileInfo ul {margin-left: -32px;}
 .quesBacgr .qstnForm .optPart .optArea .optAtt .optionFile {display: none;}
 

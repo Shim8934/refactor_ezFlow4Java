@@ -289,7 +289,12 @@
 					html += "<div class='qstnForm' questionType='" + questionType + "'>";
 					
 					if (questionType == 1 || questionType == 2) {
-						html += "<div class='optPart'>" + mkOpt() + "</div>";
+						html += "<div class='optPart'>";
+						
+						for (var i = 0; i < 2; i++) {
+							html += "<div class='optPart'>" + mkOpt() + "</div>";
+						}
+						html += "</div>";;
 					} 
 					html += ""+ mkAddtionalPart() + "";
 					
@@ -444,6 +449,7 @@
 				wrapper.find(".quesDiv").remove();
 				wrapper.find(".qstnForm").remove();
 			}
+			
 			// 단일선택 질문 생성 
 			function mkSelectQstn(status, thisEl, question) {
 				
@@ -651,7 +657,7 @@
 					
 					if (type == 'other') {
 						if (options) {
-							html += "<input class='textInput' type='text' value='" + options.contents + "' placeholder='내용을 입력해주세요'/>";
+							html += "<input class='textInput' type='text' value='" + options.contents + "'/>";
 							
 						} else {
 							html += "<input class='textInput' type='text' placeholder='기타'>";

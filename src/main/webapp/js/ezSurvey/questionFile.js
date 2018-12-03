@@ -83,7 +83,7 @@ var QuestionFile = function() {
 			divChildElmt2.appendChild(spanChild2);
 			
 			delImg.setAttribute("height" , "50%");
-			delImg.src         = "/images/survey/file_del.gif";
+			delImg.src         = "/images/ezSurvey/file_del.gif";
 			delImg.addEventListener("click", function(e) {deleteFile(e, fileSize);}, false);
 			divMainElmt.className = "attDivFile";
 			divMainElmt.appendChild(delImg);
@@ -284,7 +284,7 @@ var QuestionFile = function() {
 			var html = "";
 				html += "<li fname='" + fileObj.fname + "' fsize='" + fileObj.fsize + "' path='" + fileObj.fpath + "'>";
 				html += "<div class='attDivFile'>";
-				html += "<img style='height: 50%;' src='/images/survey/file_del.gif' onclick='deleteFile(e);'>";
+				html += "<img style='height: 50%;' src='/images/ezSurvey/file_del.gif' onclick='deleteFile(e);'>";
 				html += "<div class='attImgAva'>";
 				html += "<img alt='' src='" + fileObj.fpath + "'>";
 				html += "</div>";
