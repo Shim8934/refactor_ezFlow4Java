@@ -680,8 +680,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 		int count = Integer.parseInt(pollInfo.getPollSelectionCount());
 		
 		String listXML = "";
+		String[] array_title = new String[11];
+		array_title[0] = "";
 		for (int i=1; i<=count; i++) {
-			listXML += "<ROW><TITLE>" + i + ". " + commonUtil.cleanValue(xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent()) + "</TITLE><COUNT>0</COUNT><PERCENT>0</PERCENT></ROW>";
+			array_title[i] = commonUtil.cleanValue(xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent());
+			listXML += "<ROW><TITLE>" + i + "." + commonUtil.cleanValue(xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent()) + "</TITLE><COUNT>0</COUNT><PERCENT>0</PERCENT></ROW>";
 		}
 		
 		Document resultDom = commonUtil.convertStringToDocument("<DATA>"+listXML+"</DATA>");
@@ -714,19 +717,15 @@ public class EzPersonalController extends EgovFileMngUtil {
 				resultDom.getElementsByTagName("PERCENT").item(i).setTextContent(String.format("%.1f", temp));
 			}
 			//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
-			subjectCont = subject;
 			if (subject.length() > 86) {
 				subjectCont = subject.substring(0, 86) + "...";
 			}
 			//subject += " - " + egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
-			subjectCont += " - " + egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
+			subjectCont +=  egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
 		}
 		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
 		else {
-			subjectCont = subject;
-			if (subject.length() > 93) {
-				subjectCont = subject.substring(0, 92) + "...";
-			}
+			subjectCont = "";
 		}
 		
 		String strHtml = "";
@@ -748,9 +747,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 //		}
 		for (int i=0; i<resultDom.getElementsByTagName("ROW").getLength(); i++) {
 			strHtml +=
-			"<div class='poll_list1'>" + 								    
-					"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
-						"<div class='Pt_QstOptTitleDiv' style='width: 315px;' title='" + resultDom.getElementsByTagName("TITLE").item(i).getTextContent() + "'>" + resultDom.getElementsByTagName("TITLE").item(i).getTextContent() + "</div>" +
+			 								    
+					"<li class='poll_list1'>" +
+						"<div class='Pt_QstOptTitleDiv' style='width: 22%;' title='" + array_title[i+1] + "'><span class='Vnum'>" + (i+1)  + "</span><span class='Vtext'>" + array_title[i+1] +"</div>" +
 						"<div id='info" + i + "' class='Pt_QstInfoDiv'>&nbsp" + 
 							 "<span class='Pt_QstInfoVotes'>"+ resultDom.getElementsByTagName("COUNT").item(i).getTextContent() + "</span>" +
 							 egovMessageSource.getMessage("main.t20000", locale) + "/" ;
@@ -760,15 +759,15 @@ public class EzPersonalController extends EgovFileMngUtil {
 								 strHtml += "<span class='Pt_QstInfoPercent'>" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + "</span>";
 							 }
 						 strHtml += "%</div>"+
-					"</div>" +
-					"<div class='graphbar1' id='divGraph" + i + "' style='display: block;'>" ;
-						if (resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0.0") || resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0")) {
-							strHtml += "<p id='graph" + i + "' class='gx_bar11' style='display: none;'></p>";
-						} else {
-							strHtml += "<p id='graph" + i + "' class='gx_bar11' style='width:" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + "%;'></p>" ;
-						}
-					strHtml += "</div>"+	
-				"</div>";
+						"<div class='graphbar1' id='divGraph" + i + "' style='display: block;'>" ;
+							if (resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0.0") || resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0")) {
+								strHtml += "<p id='graph" + i + "' class='gx_bar11' style='display: none;'></p>";
+							} else {
+								strHtml += "<p id='graph" + i + "' class='gx_bar11' style='width:" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + "%;'></p>" ;
+							}
+						strHtml += "</div>"+
+					"</li>";	
+
 		}
 		
 		model.addAttribute("listPoll", resultDom);

@@ -768,7 +768,7 @@
 		</xml>
 		
 		<form method="post">
-			<h1>Quick Poll<span id="mailBoxInfo"></span>
+			<h1>빠른링크<span id="mailBoxInfo"></span>
 				<select class="companySelect" id="ListCompany" onChange="company_change()">
 					<c:forEach var="item" items="${list}">
 						<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
