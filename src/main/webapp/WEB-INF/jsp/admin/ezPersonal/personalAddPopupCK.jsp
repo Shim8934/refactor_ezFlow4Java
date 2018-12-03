@@ -317,13 +317,6 @@
 		</div>
 		<table class="content">
 			<tr> 
-				<th><spring:message code = 'ezPersonal.t259' /></th>
-				<td style="height:35px">
-					<spring:message code = 'ezPersonal.t260' /><br>
-					<spring:message code = 'ezPersonal.t261' />
-				</td> 
-			</tr> 
-			<tr> 
 				<th><spring:message code = 'ezPersonal.t262' /></th>
 				<td>
 					<spring:message code = 'ezPersonal.t263' />

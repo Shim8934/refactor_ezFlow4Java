@@ -1731,8 +1731,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			return "/ezPortal/portalWpNewVote";
 		}
 		else {			
-			PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
-			
+			PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 			Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
 			
 			if (result != null) {
@@ -2256,7 +2255,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		int pPollItemSeq = 0;
 		String pPollTitle = "";
 		
-		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		if (result != null) {
 			if (result.getResult() > 0) {
