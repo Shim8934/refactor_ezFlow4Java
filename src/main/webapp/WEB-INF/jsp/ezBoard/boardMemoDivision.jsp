@@ -212,10 +212,9 @@
 	</head>
 		<body style="margin-left: 10px; margin-right: 10px;">
 			<br/>	
-    		<h2><spring:message code="ezMemo.t0040" /></h2>
     		<span class="txt">▒ <spring:message code='ezMemo.t0056' /></span>  
     		<br />
-        	<span class="txt">▒ <spring:message code='ezMemo.t0057' /></span> 
+        	<span class="txt">▒ <spring:message code='ezMemo.t0057' /></span>
     		<br />
     		<span class="txt">▒ <spring:message code='ezMemo.t0058' /></span>
         	<br /><br/>

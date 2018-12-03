@@ -149,10 +149,10 @@ body{ font-family:'Arial, MalgunGothic, AppleSDGothic'; font-size:12px; /*margin
 .kk_editor .kk_editor_toolbar .menus .menu .menu_tablepicker .i_table { background-position: 0px -61px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_symbol { background-position: -30px -60px;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox .i_find_replace { background-position: -60px -60px; }
-.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_left { background-position: -240px -60px; }
-.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_right { background-position: -210px -60px; }
-.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_top { background-position: -180px -60px; }
-.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_bottom { background-position: -120px -119px;  }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_left { background-position: -210px -60px;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_right { background-position: -240px -60px; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_top { background-position: -120px -119px; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_insert_bottom { background-position: -180px -60px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_remove_row { background-position: -270px -60px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_remove_col { background-position: -300px -60px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_remove_table { background-position: -330px -60px; }
@@ -162,6 +162,9 @@ body{ font-family:'Arial, MalgunGothic, AppleSDGothic'; font-size:12px; /*margin
 
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_cell_horizontal_size { background-position: -331px -211px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_cell_vertical_size { background-position: -360px -211px; }
+
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_lock { background-position: -1px -239px; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_cell_lock { background-position: -29px -239px; }
 
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_fullscreen { background-position: -360px -150px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_video { background-position: -240px -181px; }

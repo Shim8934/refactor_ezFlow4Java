@@ -12,16 +12,16 @@
 				SELECT
 					DISTINCT A.c_clubno,
 					closestate,
-					D.c_clubname$v_USERINFO_LANG$ c_clubname,
-					username$v_USERINFO_LANG$ username,
+					D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
+					B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
 					A.c_sysopid,
 					applicationdate
 				FROM
 					TBL_C_COMCLOSE A
 				INNER JOIN
-					TBL_C_MEMBERINFO B
+					TBL_USERMASTER B
 				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.userid)
+					RTRIM(A.c_sysopid) = RTRIM(B.CN)
 				AND
 					A.tenant_id = B.tenant_id
 				INNER JOIN
@@ -34,7 +34,7 @@
 			]]>
 			<isEqual property="v_S_RADIO" compareValue="USERNAME">
 				<![CDATA[
-					B.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+					B.DISPLAYNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 				]]>
 			</isEqual>
 			<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
@@ -57,16 +57,16 @@
 				SELECT
 					DISTINCT A.c_clubno,
 					closestate,
-					D.c_clubname$v_USERINFO_LANG$ c_clubname,
-					username$v_USERINFO_LANG$ username,
+					D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
+					B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
 					A.c_sysopid,
 					applicationdate
 				FROM
 					TBL_C_COMCLOSE A
 				INNER JOIN
-					TBL_C_MEMBERINFO B
+					TBL_USERMASTER B
 				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.userid)
+					RTRIM(A.c_sysopid) = RTRIM(B.CN)
 				AND
 					A.tenant_id = B.tenant_id
 				INNER JOIN
@@ -79,7 +79,7 @@
 				]]>
 				<isEqual property="v_S_RADIO" compareValue="USERNAME">
 					<![CDATA[
-						B.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+						B.DISPLAYNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 					]]>
 				</isEqual>
 				<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
@@ -104,16 +104,16 @@
 				SELECT
 					DISTINCT A.c_clubno,
 					closestate,
-					D.c_clubname$v_USERINFO_LANG$ c_clubname,
-					username$v_USERINFO_LANG$ username,
+					D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
+					B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
 					A.c_sysopid,
 					applicationdate
 				FROM
 					TBL_C_COMCLOSE A
 				INNER JOIN
-					TBL_C_MEMBERINFO B
+					TBL_USERMASTER B
 				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.userid)
+					RTRIM(A.c_sysopid) = RTRIM(B.CN)
 				AND
 					A.tenant_id = B.tenant_id
 				INNER JOIN
@@ -136,16 +136,16 @@
 				SELECT
 					DISTINCT A.c_clubno,
 					closestate,
-					D.c_clubname$v_USERINFO_LANG$ c_clubname,
-					username$v_USERINFO_LANG$ username,
+					D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
+					B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
 					A.c_sysopid,
 					applicationdate
 				FROM
 					TBL_C_COMCLOSE A
 				INNER JOIN
-					TBL_C_MEMBERINFO B
+					TBL_USERMASTER B
 				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.userid)
+					RTRIM(A.c_sysopid) = RTRIM(B.CN)
 				AND
 					A.tenant_id = B.tenant_id
 				INNER JOIN
@@ -174,9 +174,9 @@
 			FROM
 				TBL_C_COMCLOSE as C1
 			INNER JOIN
-				TBL_C_MEMBERINFO B
+				TBL_USERMASTER B
 			ON
-				RTRIM(C1.c_sysopid) = RTRIM(B.userid)
+				RTRIM(C1.c_sysopid) = RTRIM(B.CN)
 			AND
 				C1.tenant_id = B.tenant_id
 			INNER JOIN
@@ -187,7 +187,7 @@
 			]]>
 			<isEqual property="v_S_RADIO" compareValue="USERNAME">
 				<![CDATA[
-					B.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+					B.DISPLAYNAME LIKE CONCAT('%', #v_KEYWORD#, '%')
 				]]>
 			</isEqual>
 			<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
@@ -226,8 +226,8 @@
 			<![CDATA[
 				SELECT
 					DISTINCT c_clubno,
-					c_clubname$v_USERINFO_LANG$ c_clubname,
-					username$v_USERINFO_LANG$ username,
+					c_clubname$v_USERINFO_LANG$ AS c_clubname,
+					IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
 					c_sysopid,
 					c_regdate
 				FROM
@@ -238,6 +238,12 @@
 					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
 					A.tenant_id = B.tenant_id
+				LEFT OUTER JOIN
+					TBL_USERMASTER C
+				ON
+					A.c_sysopid = C.CN
+				AND
+					A.tenant_id = C.tenant_id
 				WHERE
 					$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 				AND
@@ -256,7 +262,7 @@
 				SELECT
 					DISTINCT c_clubno,
 					c_clubname$v_USERINFO_LANG$ c_clubname,
-					username$v_USERINFO_LANG$ username,
+					IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
 					c_sysopid,
 					c_regdate
 				FROM
@@ -267,6 +273,12 @@
 					RTRIM(A.c_sysopid) = RTRIM(B.userid)
 				AND
 					A.tenant_id = B.tenant_id
+				LEFT OUTER JOIN
+					TBL_USERMASTER C
+				ON
+					A.c_sysopid = C.CN
+				AND
+					A.tenant_id = C.tenant_id
 				WHERE
 					$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 				AND
@@ -286,8 +298,8 @@
 			<![CDATA[
 				SELECT
 					DISTINCT c_clubno,
-					c_clubname$v_USERINFO_LANG$ c_clubname,
-					username$v_USERINFO_LANG$ username,
+					c_clubname$v_USERINFO_LANG$ AS c_clubname,
+					IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
 					c_sysopid,
 					c_regdate
 				FROM
@@ -300,6 +312,12 @@
 					A.c_adminconfirm = 'N'
 				AND
 					A.tenant_id = B.tenant_id
+				LEFT OUTER JOIN
+					TBL_USERMASTER C
+				ON
+					A.c_sysopid = C.CN
+				AND
+					A.tenant_id = C.tenant_id
 				WHERE
 					A.companyID = #companyID#
 				AND
@@ -313,8 +331,8 @@
 			<![CDATA[
 				SELECT
 					c_clubno,
-					c_clubname$v_USERINFO_LANG$ c_clubname,
-					username$v_USERINFO_LANG$ username,
+					c_clubname$v_USERINFO_LANG$ AS c_clubname,
+					IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
 					c_sysopid,
 					c_regdate
 				FROM
@@ -327,6 +345,12 @@
 					A.c_adminconfirm = 'N'
 				AND
 					A.tenant_id = B.tenant_id
+				LEFT OUTER JOIN
+					TBL_USERMASTER C
+				ON
+					A.c_sysopid = C.CN
+				AND
+					A.tenant_id = C.tenant_id
 				WHERE
 					A.companyID = #companyID#
 				AND
@@ -353,6 +377,12 @@
 				A.c_sysopid = B.userID
 			AND
 				A.tenant_id = B.tenant_id
+			LEFT OUTER JOIN
+				TBL_USERMASTER C
+			ON
+				A.c_sysopid = C.CN
+			AND
+				A.tenant_id = C.tenant_id
 			WHERE
 				$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
@@ -840,15 +870,22 @@
 	<select id="EzCommunityAdminDAO.getUserName" 						parameterClass="Map"		resultClass="String">
 		<![CDATA[
 			SELECT 
-				CASE #primary# WHEN '1' THEN username ELSE username2 END AS username
+				IFNULL(CASE #primary# WHEN '1' THEN B.DISPLAYNAME ELSE B.DISPLAYNAME2 END,
+					CASE #primary# WHEN '1' THEN A.username ELSE A.username2 END) AS username
 			FROM
-				TBL_C_MEMBERINFO
+				TBL_C_MEMBERINFO A
+			LEFT OUTER JOIN
+				TBL_USERMASTER B
+			ON
+				A.tenant_id = B.tenant_id
+			AND
+				A.userid = B.CN
 			WHERE
 				RTRIM(userid) = #v_ID#
 			AND
-				companyid = #companyID#
+				A.companyid = #companyID#
 			AND
-				tenant_id = #tenantID#
+				A.tenant_id = #tenantID#
 		]]>
 	</select>
 	

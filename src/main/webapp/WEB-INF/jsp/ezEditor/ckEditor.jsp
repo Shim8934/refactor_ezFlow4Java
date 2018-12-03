@@ -30,12 +30,12 @@
 					   ev.data.preventDefault(true);
 					});
 			    }
-			    
 		    });
 		    
 		    // Setdata 후 실행 함수.
 		    CKEDITOR.on( 'afterSetData', function( ev ) {
 		    });
+    
 		    
 			// 에디터 커맨드 실행
 			function ExecuteCommand(commandName) {
@@ -48,12 +48,21 @@
 			
 			function SetEditorContent(Data) {
 				try {
-	              	  CKEDITOR.instances.editor1.setData(Data);
-	                	if (type == "APPROVAL" || type == "APPROVALG") {
-	                		if ("${isUsed}" != "reuse") {
-	                    		Set_CellLocked();
-	                		}
+					if (Data === '' || Data === undefined) {
+						var pTag = document.createElement('p');
+						pTag.style.fontSize = defaultFontSize;
+						pTag.style.fontFamily = defaultFontFamily;
+						
+						console.log('pTag', pTag.outerHTML);
+						CKEDITOR.instances.editor1.setData(pTag.outerHTML);	
+					} else {
+						CKEDITOR.instances.editor1.setData(Data);	
+					}
+	                if (type == "APPROVAL" || type == "APPROVALG") {
+	                	if ("${isUsed}" != "reuse") {
+	                    	Set_CellLocked();
 	                	}
+	                }
 	            } catch (e) { }
 			}
 
