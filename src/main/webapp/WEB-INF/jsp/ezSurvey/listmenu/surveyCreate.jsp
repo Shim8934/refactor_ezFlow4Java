@@ -50,8 +50,8 @@
 			<div id="tab3" class="hidden-tab">
 			</div>
 		</div>
-
-<%-- 		<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyInfomation.jsp"></jsp:include> --%>
+		
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/questionFile.js')}"></script>
 		<script type="text/javascript">
 			var SurveyCreate    = function() {
 				var selectPopup = null;
@@ -63,6 +63,7 @@
 				initEvents();
 				
 				function initEvents() {
+					document.onselectstart = function() {return false;};
 					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 					document.getElementById("selectTarget" ).addEventListener("change", toggleSelectTargetBttn, false);
 					document.getElementById("targetBttn"   ).addEventListener("click" , showSelectPopUp       , false);
@@ -164,28 +165,26 @@
 				
 			// 셀렉트 박스에 들어갈 질문 유형 데이터 
 			var optionData = 
-				[{ text : SurveyMessages.strSlOne   , value: 1, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strSlMtp   , value: 2, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strTblOne  , value: 3, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strTblMtp  , value: 4, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strShortQs , value: 5, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strLongQs  , value: 6, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strSlider  , value: 7, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strRanking , value: 8, selected: false, imageSrc: "/images/ezSurvey/radio.png"},
-				 { text : SurveyMessages.strDropdown, value: 9, selected: false, imageSrc: "/images/ezSurvey/radio.png"}];
+				[{ text : SurveyMessages.strSlOne   , value: 1, selected: false, imageSrc: "/images/ezSurvey/oneselect.png"  },
+				 { text : SurveyMessages.strSlMtp   , value: 2, selected: false, imageSrc: "/images/ezSurvey/multiplesl.png" },
+				 { text : SurveyMessages.strTblOne  , value: 3, selected: false, imageSrc: "/images/ezSurvey/tblone.png"     },
+				 { text : SurveyMessages.strTblMtp  , value: 4, selected: false, imageSrc: "/images/ezSurvey/tblmultiple.png"},
+				 { text : SurveyMessages.strShortQs , value: 5, selected: false, imageSrc: "/images/ezSurvey/shorttext.png"  },
+				 { text : SurveyMessages.strLongQs  , value: 6, selected: false, imageSrc: "/images/ezSurvey/paragraph.png"  },
+				 { text : SurveyMessages.strSlider  , value: 7, selected: false, imageSrc: "/images/ezSurvey/slider.png"     },
+				 { text : SurveyMessages.strRanking , value: 8, selected: false, imageSrc: "/images/ezSurvey/ranking.png"    },
+				 { text : SurveyMessages.strDropdown, value: 9, selected: false, imageSrc: "/images/ezSurvey/dropdown.png"   }];
 			
 			// question input 및 img 생성
 			createQuestionDiv();
-			
 			addQstnEvent();
+			
 			// question selectBox 생성
 			createQuestionSelectBox();
-			
 			addOptEvent();
 			
 			// question input 및 img 생성
 			function createQuestionDiv(qstnWrapper, question) {
-				
 				var html       = "";
 				var qstId      = "";
 				var qstContent = "";
@@ -194,11 +193,7 @@
 				if (question) {
 					qstId      = question.id;
 					qstContent = question.qstnContents;
-
-					if (question.questionAttach) {
-						qstAtt     = mkImgTag(question.questionAttach);
-					}
-					
+					qstAtt     = mkImgTag(question.questionAttach);
 				}
 				
 				html += "<div class='qstnWrapper' id='" + qstId + "'>";
@@ -222,7 +217,6 @@
 					
 				} else {
 					$(".quesBacgr").append(html);
-					
 				}
 			}
 			
@@ -254,12 +248,12 @@
 						var questionType = data.selectedData.value;
 						
 						switch (questionType) {
-							case 1: makeSelectQuestion(grandParent, questionType); break;
-							case 2: makeSelectQuestion(grandParent, questionType); break;
+							case 1: makeSelectQuestion(grandParent, questionType)   ; break;
+							case 2: makeSelectQuestion(grandParent, questionType)   ; break;
 							case 3: break;
 							case 4: break;
 							case 5: break;
-							case 6: break;
+							case 6: makeParagraphQuestion(grandParent, questionType); break;
 							case 7: break;
 							case 8: break;
 							case 9: break;
@@ -730,9 +724,26 @@
 				
 				return html;
 			}
+			function makeParagraphQuestion(mainDivElmt, questionType) {
+				console.log("Here!");
+				var html = "";
+				html += "<div class='qstnForm' questionType='" + questionType + "'>";
+				html += "<div class='paragraph-wrap'>";
+				html += "<textarea class='paragraph'></textarea>";
+				html += "</div>";
+				html += "<div class='required'>";
+				html += "<input type='checkbox' name='checkbox'>";
+				html += "<strong>필수 답변</strong>";
+				html += "</div>";
+				html += "<div class='btns'>";
+				html += "<button class='save'>저장</button>";
+				html += "<button class='cancel'>취소</button>";
+				html += "</div>";
+				
+				mainDivElmt.append(html);
+			}
 		}());
 		
 		</script>
-		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/questionFile.js')}"></script>
 	</body>
 </html>
