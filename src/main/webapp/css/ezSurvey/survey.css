@@ -299,7 +299,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .qstnForm .optPart {padding-top: 10px;}
 .quesBacgr .qstnForm .optPart .optArea .optAtt .optionFile {display: none;}
 
-.option .textInput, .ranking-select .textInput {height: 30px; border-width: 0px 0px 1px; border-style: dotted; border-color: rgb(224, 224, 224) rgb(51, 51, 51) rgb(190, 190, 190); outline: none; line-height: 30px; font-size: 15px;}
+.option .textInput, .ranking-select .textInput, .dropdown-select .textInput {height: 30px; border-width: 0px 0px 1px; border-style: dotted; border-color: rgb(224, 224, 224) rgb(51, 51, 51) rgb(190, 190, 190); outline: none; line-height: 30px; font-size: 15px;}
 .option .textInput {width: 600px;}
 .option .attImg {width: 30px;height: 30px;cursor: pointer;padding-left: 20px;padding-right: 20px;margin-bottom: -11px;}
 .option .fileInput {width: 0px;opacity: 0;display: none;}
