@@ -578,6 +578,7 @@
 			}
 			// 단일선택 질문 생성 
 			function mkSelectQstn(status, thisEl, question) {
+				
 				var qstId        = question.id;
 				var qstnContents = question.qstnContents;
 				var qstnAtt      = question.questionAttach;
@@ -615,7 +616,13 @@
 					if (option) {
 						for (var i = 0; i < option.length; i++) {
 							html += "<div class='opt' level='" + option[i].level + "'>";
-							html += "<input class='optRdo' type='radio' value=''/>";
+							
+							if (qstnType == 2) {
+								html += "<input class='optChb' type='checkbox' value=''/>";
+
+							} else {
+								html += "<input class='optRdo' type='radio' value=''/>";
+							}
 							// 첨부파일이 있는지 확인
 							html += option[i].optionAttach ? "<img alt='' src='" + option[i].optionAttach.fpath + "' class='optImg'>" : "";
 							html += "<span class='optSpan'>" + option[i].contents + "</span>";
@@ -679,7 +686,7 @@
 				var qstnType         = optArea.attr("questiontype");
 				question['qstnType'] = qstnType;
 				
-				if (qstnType == 1) {
+				if (qstnType == 1 || qstnType == 2) {
 					var opt = optArea.find(".optPart");
 					
 					// 보기의 개수 확인
