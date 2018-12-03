@@ -444,7 +444,7 @@
 					mdfSelectQuestion(qstnWrapper, qstn);
 					
 					//수정을 취소할 경우를 고려해 임시로 숨김
-					tmpQstnWpr.css("display", "none");
+					qstnWrapper.css("display", "none");
 				});
 				
 				// 수정 폼 저장
@@ -456,7 +456,7 @@
 				$(".quesBacgr").on("click", ".mdfCancel", function() {
 					var thisWrapper = $(this).parents(".qstnWrapper");
 					// 숨김 처리했던 사용자 폼 다시 보임 처리
-					thisWrapper.prev()[0].display("display", "");
+					thisWrapper.prev().css("display", "");
 					// 수정 폼 삭제
 					thisWrapper.remove();
 				});
