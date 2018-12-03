@@ -1935,6 +1935,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getItemXML started");
 
 		StringBuilder sb = new StringBuilder();
+		String userImg = "";
 		
 		if (boardID != null) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -1981,6 +1982,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			sb.append("<ExtensionAttribute9>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute9()) + "</ExtensionAttribute9>");
 			sb.append("<ExtensionAttribute10>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
 			sb.append("<BoardID>" + commonUtil.cleanValue(itemInfo.getBoardID()) + "</BoardID>");
+			
+			/* 2018-12-03 홍승비 - 게시물 정보에 사원이미지 추가 */
+			if (itemInfo.getUserImageFile() != null && !itemInfo.getUserImageFile().equals("")) {
+				userImg = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + itemInfo.getUserImageFile();
+			} else {
+				userImg = "/images/kr/main/bestEmployee_pic_none.png";
+			}			
+			sb.append("<UserIMG>" + commonUtil.cleanValue(userImg) + "</UserIMG>");
+			
 			sb.append("</NODE>");
 			sb.append("</NODES>");
 		} else {
@@ -2007,6 +2017,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		BoardListVO itemInfo = ezBoardDAO.getBrdGetItemInfoTemp(map);
 		
 		StringBuilder sb = new StringBuilder();
+		String userImg = "";
 		
 		sb.append("<NODES>");
 		sb.append("<NODE>");
@@ -2042,6 +2053,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		sb.append("<ExtensionAttribute9>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute9()) + "</ExtensionAttribute9>");
 		sb.append("<ExtensionAttribute10>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
 		sb.append("<BoardID>" + commonUtil.cleanValue(itemInfo.getBoardID()) + "</BoardID>");
+		
+		/* 2018-12-03 홍승비 - 게시물 정보에 사원이미지 추가 */
+		if (itemInfo.getUserImageFile() != null && !itemInfo.getUserImageFile().equals("")) {
+			userImg = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + itemInfo.getUserImageFile();
+		} else {
+			userImg = "/images/kr/main/bestEmployee_pic_none.png";
+		}			
+		sb.append("<UserIMG>" + commonUtil.cleanValue(userImg) + "</UserIMG>");
+		
 		sb.append("</NODE>");
 		sb.append("</NODES>");
 
