@@ -308,7 +308,17 @@
 					
 				grandParent.append(html);
 			}
-			
+//////////////////////////////////////////////////////			
+			/* function makeMatrixQuestion(grandParent, questionType) {
+				var html = "";
+					html += "<div class='qstnForm' questionType='" + questionType + "'>";
+					
+					
+					html += ""+ mkAddtionalPart() + "";
+					
+				grandParent.append(html);
+			} */
+//////////////////////////////////////////////////////			
 			function addOptEvent() {
 				// 보기 추가
 				$(".quesBacgr").on("click", ".addOpt", function() {
