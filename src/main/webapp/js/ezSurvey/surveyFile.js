@@ -235,23 +235,23 @@ var SurveyFile = function() {
 				case "gif"  :
 				case "bmp"  :
 				case "png"  :
-				case "jpeg" : imgCheck = true                      ; break;
-				case "pdf"  : urlImg   = "/images/survey/pdf.png"  ; break;
-				case "ppt"  : urlImg   = "/images/survey/ppt.png"  ; break;
-				case "pptx" : urlImg   = "/images/survey/pptx.png" ; break;
-				case "doc"  : urlImg   = "/images/survey/doc.png"  ; break;
-				case "docx" : urlImg   = "/images/survey/docx.png" ; break;
-				case "xls"  : urlImg   = "/images/survey/xls.png"  ; break;
-				case "xlsx" : urlImg   = "/images/survey/xlsx.png" ; break;
-				case "hwp"  : urlImg   = "/images/survey/hwp.png"  ; break;
-				case "txt"  : urlImg   = "/images/survey/txt.png"  ; break;
-				case "mp4"  : urlImg   = "/images/survey/mp4.png"  ; break;
-				case "flv"  : urlImg   = "/images/survey/flv.png"  ; break;
-				case "mkv"  : urlImg   = "/images/survey/mkv.png"  ; break;
-				case "iso"  : urlImg   = "/images/survey/iso.png"  ; break;
-				case "rar"  : urlImg   = "/images/survey/rar.png"  ; break;
-				case "zip"  : urlImg   = "/images/survey/zip.png"  ; break;
-				default     : urlImg   = "/images/survey/none.png" ; break;
+				case "jpeg" : imgCheck = true                        ; break;
+				case "pdf"  : urlImg   = "/images/ezSurvey/pdf.png"  ; break;
+				case "ppt"  : urlImg   = "/images/ezSurvey/ppt.png"  ; break;
+				case "pptx" : urlImg   = "/images/ezSurvey/pptx.png" ; break;
+				case "doc"  : urlImg   = "/images/ezSurvey/doc.png"  ; break;
+				case "docx" : urlImg   = "/images/ezSurvey/docx.png" ; break;
+				case "xls"  : urlImg   = "/images/ezSurvey/xls.png"  ; break;
+				case "xlsx" : urlImg   = "/images/ezSurvey/xlsx.png" ; break;
+				case "hwp"  : urlImg   = "/images/ezSurvey/hwp.png"  ; break;
+				case "txt"  : urlImg   = "/images/ezSurvey/txt.png"  ; break;
+				case "mp4"  : urlImg   = "/images/ezSurvey/mp4.png"  ; break;
+				case "flv"  : urlImg   = "/images/ezSurvey/flv.png"  ; break;
+				case "mkv"  : urlImg   = "/images/ezSurvey/mkv.png"  ; break;
+				case "iso"  : urlImg   = "/images/ezSurvey/iso.png"  ; break;
+				case "rar"  : urlImg   = "/images/ezSurvey/rar.png"  ; break;
+				case "zip"  : urlImg   = "/images/ezSurvey/zip.png"  ; break;
+				default     : urlImg   = "/images/ezSurvey/none.png" ; break;
 			}
 			
 			return {

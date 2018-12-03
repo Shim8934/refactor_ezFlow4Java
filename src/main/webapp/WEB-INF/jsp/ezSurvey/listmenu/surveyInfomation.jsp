@@ -127,11 +127,3 @@
 		function startUpload() {document.getElementById("fileBttn").click();}
 	}());
 </script>
-
-
-
-
-
-
-
-
