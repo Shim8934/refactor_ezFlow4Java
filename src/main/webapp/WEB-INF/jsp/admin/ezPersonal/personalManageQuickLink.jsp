@@ -14,9 +14,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 		
 		<script type="text/javascript">
-			var Strmessage = "<spring:message code = 'ezPersonal.t1022' />";
-	        var xmlhttp = null;
-			var host;                         //host서버
+			var xmlhttp = null;
 			var userLang;                     //언어
 			var mode;                         //new, modify
 			var guid = "{" + GetGUID() + "}"; //랜덤Id
@@ -39,7 +37,6 @@
 					dataType : "JSON",
 					contentType: "application/json",
 					success : function(result) {
-						host = result.host;
 						event_QuickList(result.list);
 					}
 				});
@@ -78,9 +75,9 @@
 					var ddElmt2 = document.createElement("dd");
 					var ddElmt3 = document.createElement("dd");
 					
-					dtElmt1.textContent = "등록자 : ";
-					dtElmt2.textContent = "등록일: ";
-					dtElmt3.textContent = "수정일: ";
+					dtElmt1.textContent = "<spring:message code = 'ezPersonal.t1026' />" + ": ";
+					dtElmt2.textContent = "<spring:message code = 'ezPersonal.t1024' />" + ": ";
+					dtElmt3.textContent = "<spring:message code = 'ezPersonal.t1025' />" + ": ";
 					
 					ddElmt1.textContent = item.displayName;
 					ddElmt2.textContent = item.regDate.substring(0, 10);
@@ -280,7 +277,7 @@
 				linksHTML += "<div class='linkContent'>";
 				linksHTML += "<table class='content type'>";
 				linksHTML += "<tr>";
-				linksHTML += "<th>링크 Type <span style='color:red'>*</span></th>";
+				linksHTML += "<th><spring:message code = 'ezPersonal.t1023' /> Type <span style='color:red'>*</span></th>";
 				linksHTML += "<td style='border-left: 1px solid #d2d2d2;'>";
 				linksHTML += "<table class='linkType'>"	
 				linksHTML += "<tr>";
@@ -312,7 +309,7 @@
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
 				linksHTML += "<td colspan='2'>";
-				linksHTML += "<div class='btnpositionJsp iconBtn' style='text-align: right;'><a class='imgbtn'><span onclick='CreateType()'>type 등록</span></a></div>";
+				linksHTML += "<div class='btnpositionJsp iconBtn' style='text-align: right;'><a class='imgbtn'><span onclick='CreateType()'>type <spring:message code = 'ezPersonal.t105'/></span></a></div>";
 				linksHTML += "</td>";
 				linksHTML += "</tr>";
 				linksHTML += "</table>";
@@ -326,7 +323,7 @@
 				linksHTML += "<tr>";
 				linksHTML += "<td colspan='2'>"
 				linksHTML += "<div class='btnpositionJsp iconBtn' style='text-align: right;'>";
-				linksHTML += "<a class='imgbtn' style='margin-right: 10px'><span onclick='regit()'>권한등록</span></a>";
+				linksHTML += "<a class='imgbtn' style='margin-right: 10px'><span onclick='regit()'><spring:message code = 'ezPersonal.t1029' /></span></a>";
 				linksHTML += "<a class='imgbtn'><span id='btn_OK'>"; 
 				
 				if (itemId != "" && mode == "modify") {
@@ -414,8 +411,9 @@
 				
 				//닫기버튼설정
 				$(".close").on("click", function(){
-					$(".linkDetails").slideUp();
-					$(".linkDetails").attr("class", "linkDetails hideDetails");
+					$(".linkDetails").slideUp(function() {
+						$(".linkDetails").attr("class", "linkDetails hideDetails");
+					});
 				});
 				
 				LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
@@ -645,6 +643,8 @@
 				SaveQuickLink(itemId);
 			}
 			function SaveQuickLink(itemId) {
+				console.log("checkValue:" + checkValue);
+				
 				var xmlpara = createXmlDom();
 				var objNode;
 				var objNode2;
@@ -811,7 +811,6 @@
 					dataType: "json",
 					data: JSON.stringify(data),
 					success: function(result) {
-						//성공
 					}
 				});
 			}
@@ -837,14 +836,15 @@
 			.primary > td {border: 0px;}
 			.popInput {width:30px;}
 			.type tr th, .perm tr th {vertical-align: top;}
-			.listview {height: 142px; overflow-y: auto; overflow-x: hidden; border-bottom: 0px; border-width: 0px; border: 1px solid #ddd; margin-left: 7px;}
+			.listview {height: 169px; overflow-y: auto; overflow-x: hidden; border-bottom: 0px; border-width: 0px; border: 1px solid #ddd; margin-left: 7px;}
 			.perm tr:ntn-child(2) > td {padding:0px; border-left: 1px solid #ddd;}
 			.perm tr:ntn-child(2) > td > div {text-align: right;}
-			.linkType {width:280px; margin-left:5px; border: 1px solid #d2d2d2;}
+			.linkType {width:280px; height: 169px; margin-left:5px; border: 1px solid #d2d2d2;}
 			.linkType tr {text-align:center;} 
 			.linkType tr td {width:25%;}
 			.linkType tr:nth-child(odd) > td {cursor:pointer;}
 			.linkType tr:nth-child(even) > td {text-align:center; margin-top:-5px;}
+			.linkType img {margin-top: 5px;}
 			.hideDetails {display: none;}
 			.linkChoice {background: #edf7ff; border: 1px solid #2196f3; color: #0470e3;}
 		</style>

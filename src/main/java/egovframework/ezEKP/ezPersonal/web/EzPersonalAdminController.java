@@ -346,7 +346,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		JSONObject json = new JSONObject();
 		json.put("list", list);
-		json.put("host", userInfo.getServerName());
 		
 		logger.debug("getQuickLinkList ended");
 		return json;
