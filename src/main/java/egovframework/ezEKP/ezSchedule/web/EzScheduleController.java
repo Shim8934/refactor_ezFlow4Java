@@ -1221,6 +1221,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		String cID = request.getParameter("COMPANYID");
 		
+		if (cID == null) {
+			cID = loginSimpleVO.getCompanyID();
+		}
+		
 		String result = ezScheduleService.scheduleGetLunarUse(cID, loginSimpleVO.getTenantId());
 		
 		return result;
@@ -1877,8 +1881,21 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		String DeptID = ezScheduleService.getCumDeptId(idList, userInfo.getTenantId(), userInfo.getCompanyID());
 		String CompanyID = userInfo.getCompanyID();
+		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(idList, userInfo.getTenantId() ,userInfo.getCompanyID());
 		
 		String dcidList = "'" + DeptID + "'" + ",'" + CompanyID + "'";
+		
+		for(int i = 0; i < gList.size(); i++){
+			if(i == 0){
+				dcidList += ",";
+			}			
+			ScheduleGroupListVO data = gList.get(i);			
+			dcidList += "'" + data.getGroupId() + "'";
+			
+			if(i != gList.size()-1){
+				dcidList += ",";
+			}	
+		}
 		
 		startDate = startDate + " 00:00:00";
 		endDate = endDate + " 23:59:59";

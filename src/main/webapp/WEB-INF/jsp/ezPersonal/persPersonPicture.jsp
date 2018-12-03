@@ -122,12 +122,26 @@
 	    <table class="content">
     	    <tr>
         	    <th width="119" height="128" nowrap>
-        	    <%String userLang = (String)request.getAttribute("userLang"); %>
-            	    <% if (userLang.equals("1")) { %>
+        	    <c:choose>
+        	    	<c:when test="${userLang eq '1'}">
                 		<img id="preview" name="preview" src="/images/default_pic.jpg" width="119" height="128" alt="" border="0">
-                	<%} else { %>
+        	    	</c:when>
+        	    	<c:when test="${userLang eq '2'}">
                 		<img id="preview" name="preview" src="/images_en/default_pic.jpg" width="119" height="128" alt="" border="0">
-                	<%} %>
+        	    	</c:when>
+        	    	<c:when test="${userLang eq '3'}">
+                		<img id="preview" name="preview" src="/images_ja/default_pic.jpg" width="119" height="128" alt="" border="0">
+        	    	</c:when>
+        	    	<c:otherwise>
+                		<img id="preview" name="preview" src="/images_en/default_pic.jpg" width="119" height="128" alt="" border="0">
+        	    	</c:otherwise>
+        	    </c:choose>
+        	    <%-- <%String userLang = (String)request.getAttribute("userLang"); %>
+           	    <% if (userLang.equals("1")) { %>
+               		<img id="preview" name="preview" src="/images/default_pic.jpg" width="119" height="128" alt="" border="0">
+               	<%} else { %>
+               		<img id="preview" name="preview" src="/images_en/default_pic.jpg" width="119" height="128" alt="" border="0">
+               	<% } %> --%>
             	</th>
             	<td style="padding: 5px"><spring:message code='ezPersonal.t202'/><br>
                 	119(width) * 128(height)<spring:message code='ezPersonal.t100001'/><br><br>

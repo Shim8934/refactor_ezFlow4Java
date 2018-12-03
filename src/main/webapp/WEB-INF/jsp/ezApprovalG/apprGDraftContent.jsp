@@ -777,7 +777,8 @@
 	        function Editor_Complete() {
 	            try {
 	            	if (!isReform) {
-	            		iframe_content.SetEditorContent(div_BODY.innerHTML);
+				// iframe_content.SetEditorContent(div_BODY.innerHTML);
+	            		iframe_content.SetEditorContent();
 	            	} else if (parent.pDraftFlag == "REDRAFT") {
 	            		iframe_content.document.body.innerHTML = div_BODY.innerHTML;
 	            	}
