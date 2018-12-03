@@ -349,6 +349,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		update("ezNewPortal.updateFrameInfo", map);
 	}
 	
+	public void updateCompanyMenuUsed(Map<String, Object> map) throws Exception {
+		update("ezNewPortal.updateCompanyMenuUsed", map);
+	}
+	
 	public void updateCompanyMenuInfo(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateCompanyMenuInfo", map);
 	}
@@ -404,6 +408,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	
 	public void updateCompanyPortletInfo(Map<String, Object> map) {
 		update("ezNewPortal.updateCompanyPortletInfo", map);
+	}
+	
+	public void updateCompanyPortletInfo2(Map<String, Object> map) {
+		update("ezNewPortal.updateCompanyPortletInfo2", map);
 	}
 	
 	public void deletePortletComp (Map<String, Object> map) {
@@ -537,7 +545,7 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<WeatherVO> getCityList(String primaryLang) {
+	public List<WeatherVO> getCityList(int primaryLang) {
 		return (List<WeatherVO>) list("ezNewPortal.getCityList", primaryLang);
 	}
 

@@ -48,6 +48,7 @@
 	.addNewPortletBtn span{height:25px; float:right; background: #2196f3; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 	span.spanOff{ background:#959595;}
 	span.addCancel{ background:#6c6c6c;}
+	.portlet_header_name {width:60%;display:inline-block;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
 	/* switch */
 	.switch {position: absolute;display: inline-block;width: 60px;height: 22px;margin-top:-10px;}
 	.switch input {opacity: 0;width: 0;height: 0;}
@@ -137,7 +138,7 @@
 			
 		//새로운 포틀릿인 경우 connection url
 		var connectionUrl = document.getElementById("newPortlet").querySelector(".connectionUrl").value;
-		
+		connectionUrl = $.trim(connectionUrl);
 		
 		//새로운 포틀릿인 경우 관련 메뉴 지정
 		var portletMenuId = document.getElementById("newPortlet").querySelector("#newPortletMenu").getAttribute("data2");
@@ -358,6 +359,12 @@
 		
 		if (url != null) {
 			connectionUrl = url.value;
+			connectionUrl = $.trim(connectionUrl);
+			
+			if (connectionUrl == null || connectionUrl == "") {
+				alert("<spring:message code='ezNewPortal.t092'/>");
+				return;
+			}
 		}
 		
 		var request = new XMLHttpRequest();
@@ -416,7 +423,7 @@
 					portletNameListCnt = portletNameList.length;
 					
 					listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder + "' data2='" + menuId + "' data-url='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(result[i].portletUrl), '\"', "&#39;"), "\'", "&#34;") + "'>";
-					listHTML += "<div class='portlet-header'>" + ConvertCharToEntityReference(portletNameList[arrayLang].portletName) ;
+					listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + ConvertCharToEntityReference(portletNameList[arrayLang].portletName) + "</div>";
 					
 					if (!result[i].general) {
 						listHTML += "<a class='deletePortletBtn'>";
@@ -715,7 +722,7 @@
         var top = (heigth - wHeight) / 2;
         
         window.open("/admin/ezNewPortal/openSlideImageSetting.do?portletId=" + portletId + "&companyId=" + companyId, "",
-            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1, top=" + top + ",left = " + left);
 	}
 	</script>
 </head>

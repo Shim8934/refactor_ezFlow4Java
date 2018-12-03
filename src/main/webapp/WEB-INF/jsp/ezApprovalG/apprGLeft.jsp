@@ -110,20 +110,23 @@
 			        if (g_bRecAdmin || AdminYN == "TRUE") {
 			            /* document.getElementById("tag07").style.display = "";
 			            document.getElementById("tag08").style.display = ""; */
-			            document.getElementById("tag09").style.display = "";
-			            document.getElementById("tag10").style.display = "";
+			            /* left 디자인 수정작업 이전 오류로 주석처리  -> left G메뉴까지 작업 이후 주석처리해제*/
+			            /* document.getElementById("tag09").style.display = "";
+			            document.getElementById("tag10").style.display = ""; */
 			        }
 			        else if (g_bDeptCharger) {
 			            /* document.getElementById("tag07").style.display = "";
 			            document.getElementById("tag08").style.display = ""; */
-			            document.getElementById("tag09").style.display = "";
-			            document.getElementById("tag10").style.display = "none";
+			            /* left 디자인 수정작업 이전 오류로 주석처리  -> left G메뉴까지 작업 이후 주석처리해제*/
+			            /* document.getElementById("tag09").style.display = "";
+			            document.getElementById("tag10").style.display = "none"; */
 			        }
 			        else {
 			            /* document.getElementById("tag07").style.display = "none";
 			            document.getElementById("tag08").style.display = "none"; */
-			            document.getElementById("tag09").style.display = "none";
-			            document.getElementById("tag10").style.display = "none";
+			            /* left 디자인 수정작업 이전 오류로 주석처리  -> left G메뉴까지 작업 이후 주석처리해제*/
+			            /* document.getElementById("tag09").style.display = "none";
+			            document.getElementById("tag10").style.display = "none"; */
 			        }
 		        }
 		        
@@ -544,7 +547,7 @@
 		        if ("YES" == ("YES"))
 		            gb = "G";
 		        
-	        	pArgument[0] = "jongp";
+	        	pArgument[0] = pUserID;
 	            pArgument[1] = formURL;
 	            pArgument[2] = "DRAFT";
 	            pArgument[3] = formDocType;
@@ -569,7 +572,7 @@
                 openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
                 openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
                 
-	            openwindow(openLocation, "", 890, 620);
+	            openwindow(openLocation, "", 1150, 950);
 	        }
 		    
 		    function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
@@ -583,19 +586,37 @@
 		            if (window.screen.width > 800) {
 		                var pleftpos;
 
-		                pleftpos = parseInt(width) - 967;
+		                pleftpos = parseInt(width) - 1150;
 		                heigth = parseInt(heigth) - 30;
+
+		                if (CrossYN())
+		                    heigth = parseInt(heigth) - 25;
+
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		                    heigth = parseInt(heigth) - 40;
+
 		                width = parseInt(width) - pleftpos;
 
 		                left = pleftpos / 2;
-		            } else {
+		            }
+		            else {
 
 		                heigth = parseInt(heigth) - 30;
+
+		                if (CrossYN())
+		                    heigth = parseInt(heigth) - 25;
+
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+		                    heigth = parseInt(heigth) - 40;
+
 		                width = parseInt(width) - 10;
 		            }
-		            window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
 
-		        } catch (e) {}
+		            window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+		        }
+		        catch (e) {
+		            alert("openwindow :: " + e.description);
+		        }
 		    }	
 		
 		    function cmdOK_onclick(ContainerID, ContName, SubQuery) {

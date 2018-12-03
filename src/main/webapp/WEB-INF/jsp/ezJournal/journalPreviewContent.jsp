@@ -33,21 +33,20 @@
 	    </script>
 	</head>
 	<body>
-		 <span class="previewmail_info" style="border: none; display: block; width: 100%;">
-			<div id="Preview_HeaderH" style="text-align:left; border-bottom: 1px solid #e8e8e8; width: 100%;">
-	            <p class="mail_title" style="margin-left: 0px;">
-	                <span class="icon_btn"><span onclick="goJournalDetail(this);" id="${journal.journalId}" style="cursor: pointer; padding-right: 5px;">
-	                    <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt" title="<c:out value='${journal.journalTitle }'/>"><c:out value='${journal.journalTitle }'/></span></span>
-	            </p>
-	            <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><c:out value='${fn:substring(journal.journalDate, 0, 16) }'/></span></span>
-	            <dl class="mail_item">
-	                <dt>게시자:
-	                    <span style="display: inline-block"><span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor:pointer" onclick="OpenUserInfo('${journal.writerId}');"><c:out value='${journal.writerName }'/></span></span>
-	                </dt>
-	            </dl>
+		<div class="previewmail">
+			<div class="previewmail_info" style="border: none; display: block; width: 100%;">
+				<dl class="previewmailDL" id="Preview_HeaderH">
+					<dt class="prepic"><img src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
+					<dd class="pretext">
+						<ul class="pretextUL">
+							<li class="preSubject"><span class="popup_open" id="${journal.journalId}" onclick="goJournalDetail(this);"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject"><span class="subjectText" id="PreH_sub_subject" title="<c:out value='${journal.journalTitle }'/>"><c:out value='${journal.journalTitle }' /></span></span></li>
+							<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t223" /></span> : <span id="PreH_MailReceiver" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor:pointer" onclick="OpenUserInfo('${journal.writerId}');"><c:out value='${journal.writerName }'/></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t224" /> : </span><span id="PreH_date"><c:out value='${fn:substring(journal.journalDate, 0, 16) }'/></span></span></li>
+							
+						</ul>
+					</dd>
+				</dl>
 	        </div>
-         </span>
-		<iframe src="" class="journalPreviewContentIframe" style="text-align:center; padding:0; width:100%; height:100%; overflow:auto; border:none;">
-		</iframe>
+		</div>	        
+		<iframe src="" class="journalPreviewContentIframe" style="text-align:center; padding:0; width:100%; height:100%; overflow:auto; border:none;"></iframe>
 	</body>
 </html>

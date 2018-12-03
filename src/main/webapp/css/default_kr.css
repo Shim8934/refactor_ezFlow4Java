@@ -378,7 +378,7 @@ form{display:inline;margin:0}
     overflow:auto;
 }
 .mainbody h1 {
-	font-size:16px;
+	font-size:17px;
 	font-weight:bold;
 	padding-left:2px;
 	margin:15px 0px 14px;
@@ -389,7 +389,7 @@ form{display:inline;margin:0}
 }
 
 .mainbody #presentcell {
-	font-size:15px;
+	font-size:17px;
 	font-weight:bold;	
 	margin:16px 0px 24px;
 	left:7px;
@@ -1653,7 +1653,7 @@ form{display:inline;margin:0}
 
 /* organliststyle2 */
 .popup_mainlist{table-layout:fixed; width:100%;  border:0 none !important;font-family:malgun gothic, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
-.popup_mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; line-height:19px; padding:4px 4px 0px; border-top:1px solid #e8e8e8; border-bottom:1px solid #e8e8e8; background-color: #f8f8fa;}
+.popup_mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; line-height:19px; padding:3px 4px 1px; border-top:1px solid #e8e8e8; border-bottom:1px solid #e8e8e8; background-color: #f8f8fa;}
 .popup_mainlist tr th.title{width:100%; text-align:left;}
 
 .popup_mainlist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #efefef; border-spacing:0;}
@@ -1910,7 +1910,7 @@ form{display:inline;margin:0}
 .right_tabpartList01 dd .btn_community01 span{display:inline-block; padding:0px 10px 0px 10px; color:#333; border:1px solid #d2d2d2; font-size:12px; border-radius:3px; cursor:pointer;}
 
 
-.receiver_tltype01 {height:28px!important;  padding:0px 0px 0px 15px !important; background:url(../images/kr/cm/title_bg.gif) no-repeat left; display:block; line-height:28px; margin:0px;border-bottom:1px solid #565b66; }
+.receiver_tltype01 {height:28px!important;  padding:0px 0px 0px 15px !important; background:url(../images/kr/cm/title_bg.gif) no-repeat left; display:block; line-height:28px; margin:0px;border-bottom:1px solid #999; }
 .receiver_tltype01 span {font-size:12px; font-weight:bold; color:#333; height:28px;display:inline-block;padding:0px 25px 0px 0px;}
 
 .receiver_tltype02 {height:28px!important;  padding:0px 0px 0px 15px!important;  background:url(../images/kr/cm/title_bg.gif) no-repeat left; display:block; line-height:28px; margin:0px;border-bottom:1px solid #9a9a9a; }
@@ -2539,8 +2539,10 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .sub_frameIcon .sub_frameIconUL02 .frameIconLI{ margin:0px !important; padding:6px 5px 5px 6px !important; overflow:hidden !important; cursor:pointer !important; border:none !important;}
 
 /* previewmail */
-.previewmail{margin:0px; padding:0px; font-family:Malgun Gothic, "맑은 고딕"; overflow:hidden; }
-.previewmail .previewmail_info{background:#f1f3f5; margin:0px; padding:0px; overflow:hidden; border-top:1px solid #e5e5e5; border-bottom:1px solid #e5e5e5;}
+.previewmail_bar_h{ border:1px solid #e5e5e5 !important}
+
+.previewmail{margin:0px; padding:0px; font-family:Malgun Gothic, malgun gothic; overflow:hidden; }
+.previewmail .previewmail_info{background:#f1f3f5; margin:0px; padding:0px; overflow:hidden; border-top:1px solid #e5e5e5;}
 .previewmailDL{ margin:15px 20px; padding:0px; overflow:hidden;}
 .previewmailDL dt.prepic{ margin:0px; padding:0px; border-radius:30px; float:left;}
 .previewmailDL dt.prepic img{ border-radius:30px;}
@@ -2550,7 +2552,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .previewmailDL dd.pretext .pretextUL li.preSubject{ margin:0px; padding:0px;}
 .previewmailDL dd.pretext .pretextUL li.preSubject .subjectText{font-size:16px; color:#000; font-weight:bold; letter-spacing:-0.5px; float:left;}
 .previewmailDL dd.pretext .pretextUL li.preSubject .popup_open{ display:inline-block; float:left; cursor:pointer; padding:0px 7px 0px 0px;}
-.previewmailDL dd.pretext .pretextUL li.preT_list{ clear:both; overflow:hidden;}
+.previewmailDL dd.pretext .pretextUL li.preT_list{ clear:both; overflow:hidden; margin-top:2px;}
 .previewmailDL dd.pretext .pretextUL li.preT_list .t_left{ float:left;}
 .previewmailDL dd.pretext .pretextUL li.preT_list .t_right{ float:right;}
 .previewmailDL dd.pretext .pretextUL li.preT_list .cblack{ color:#000; font-weight:bold;}

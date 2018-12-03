@@ -79,6 +79,7 @@ import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -132,6 +133,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	
 	@Resource(name = "loginService")
     private LoginService loginService;
+	
+	@Resource(name = "EzOrganService")
+	private EzOrganService ezOrganService;
 	
 	/**
 	 * 메일 읽기화면 호출 함수
@@ -1518,6 +1522,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		int unread = 0;
 		int importance = 1;
 		IMAPAccess ia = null;
+		String fromId = "";
+		String senderProfileImageName = "";
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -1703,6 +1709,35 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
+		if (fromEmail != null && !fromEmail.equals("")) {
+			fromId = ezOrganService.getCNByEmail(fromEmail, loginInfo.getTenantId());
+			
+			if (fromId == null || fromId.equals("")) {
+				List<String> aliasAddress = new ArrayList<String>();
+				aliasAddress.add(fromEmail);
+				Map<String, String> targetAddress = ezEmailService.getAliasAddressMap(aliasAddress, loginInfo.getTenantId());
+			
+				if (targetAddress != null) {
+					String resultTargetAddress = targetAddress.get(fromEmail);
+					logger.debug("resultAddress=" + resultTargetAddress);
+					
+					if (resultTargetAddress != null) {
+						int atSignPos = resultTargetAddress.indexOf("@");
+						if (atSignPos != -1) {
+							fromId = resultTargetAddress.substring(0, atSignPos);
+							logger.debug("fromId=" + fromId);
+						}
+					}
+				}
+			}
+			
+			senderProfileImageName = ezOrganService.getPropertyValue(fromId, "EXTENSIONATTRIBUTE2", loginInfo.getTenantId());
+			logger.debug("senderProfileImageName=" + senderProfileImageName);
+			if (senderProfileImageName == null) {
+				senderProfileImageName = "";
+			}
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
 		sb.append("<UNREAD><![CDATA[" + unread + "]]></UNREAD>");
@@ -1720,6 +1755,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		sb.append("<SENSITIVITY><![CDATA[" + "Normal" + "]]></SENSITIVITY>");
 		sb.append("<HASEMBEDED><![CDATA[" + 0 + "]]></HASEMBEDED>");
 		sb.append("<ITEMID><![CDATA[" + url + "]]></ITEMID>");
+		sb.append("<SENDERPROFILEIMAGENAME><![CDATA[" + senderProfileImageName + "]]></SENDERPROFILEIMAGENAME>");
 		sb.append("<CONTENTCLASS><![CDATA[" + "]]></CONTENTCLASS>");
 		sb.append("</DATA>");
 

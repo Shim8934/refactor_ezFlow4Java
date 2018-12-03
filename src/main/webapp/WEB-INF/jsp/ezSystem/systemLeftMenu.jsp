@@ -105,7 +105,9 @@
 	            <c:if test="${useIPAccessMenu == 'YES'}">
 	            	<h2><span id="IPMANAGER" style="display:inline-block;width:100%;" onClick="menu_change('IPMANAGER')" ><spring:message code='ezSystem.jje1'/></span></h2>
 	            </c:if>
+	            <c:if test="${cChk == '1' }">
 	            <h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span></h2>
+	            </c:if>
             </div>
       	</div>
     </body>

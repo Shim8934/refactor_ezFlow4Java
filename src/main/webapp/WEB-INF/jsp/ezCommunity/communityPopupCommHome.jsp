@@ -299,7 +299,8 @@
 	            if (userImage != "") {
 	                _img.src = "/admin/ezOrgan/getPersonalInfo.do?type=PERSONAL&fileName=" + userImage;
 	            } else {
-	                _img.src = "/images/OrganTree/porson_noimg.gif";
+// 	                _img.src = "/images/OrganTree/porson_noimg.gif";
+	                _img.src = "<spring:message code='main.e14' />";
 	            }
 	            
 	            _img.style.width = "48px";

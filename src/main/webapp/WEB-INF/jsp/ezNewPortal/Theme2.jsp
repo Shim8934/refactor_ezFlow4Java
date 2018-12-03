@@ -17,10 +17,11 @@
 	.mainbg {min-width:1280px;}
 	#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}
 	.top_two_column {margin : 0px 0px 25px 0px;}
+	.orbit-wrapper .timer {display:none;}
 </style>
 </head>
 
-<body class="mainbg"">
+<body class="mainbg" id="theme2Body">
 	<div style="position:relative;">
 		<aside id="quickSide" style="width:0px">
 			<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>
@@ -384,7 +385,7 @@
 		linkBtnPre.classList.add('linkBtn_pre');
 		var preBtnImg = document.createElement('img');
 		
-		if(quickLinkPage.current*1 === 1) {
+		if(quickLinkPage.current*1 === 1 || totalCnt*1 === 0) {
 			preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn_dis.png');
 			preBtnImg.setAttribute('id', 'preBtnDis');
 		} else {
@@ -398,7 +399,7 @@
 		linkBtnNext.classList.add('linkBtn_next');
 		var nextBtnImg = document.createElement('img');
 		
-		if(quickLinkPage.current*1 === totalCnt*1) {
+		if(quickLinkPage.current*1 === totalCnt*1 || totalCnt*1 === 0) {
 			nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn_dis.png');
 			nextBtnImg.setAttribute('id', 'nextBtnDis');
 		} else {
@@ -541,7 +542,7 @@
 		}
 		
         data.forEach(function(item, index) {
-        	if(index > 5) return;
+        	if(index > 4) return;
         	var li = document.createElement('li');
         	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
         	li.style.cursor = "pointer";

@@ -204,6 +204,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String fileUploadType = ""; //?
 		String strSelectHtml = ""; //?
 		
+		
 		// get user credentials
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(loginInfo.getId(), loginInfo.getPrimary(), loginInfo.getTenantId());
@@ -349,6 +350,9 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
 			}
 		}
+		// 쓰기창에서 수신인 자동완성 기능 사용 유무
+		String useMailAddrAutoComplete = ezCommonService.getTenantConfig("useMailAddrAutoComplete", loginInfo.getTenantId());
+				
 		
 		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor + ",useSecureMail=" + useSecureMail + ",defaultFontAndSize" + defaultFontAndSize);
 		
@@ -652,6 +656,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("useLetter", useLetter);
 		model.addAttribute("draftsFolderName", draftsFolderName);
+		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
 		
         logger.debug("mailEdit ended.");
         

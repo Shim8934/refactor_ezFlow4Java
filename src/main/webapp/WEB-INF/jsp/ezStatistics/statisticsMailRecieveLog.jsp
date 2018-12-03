@@ -24,6 +24,8 @@
 	var BlockSize = 10;
 	var searchStartTime = "";
 	var searchEndTime = "";
+	var companyId = "<c:out value='${companyID}'/>";
+	var changeCompany = "";
 	
 	//**/ 화면 호출시 실행 함수
 	window.onload = function() {
@@ -307,16 +309,21 @@
 			var selectOption = document.getElementById("searchField");
 			var searchValue = document.getElementById("searchValue").value;
 			var searchField = "";
+			var companyIdVal = companyId;
 
 			if (searchValue != "") {
 				searchField = selectOption.options[selectOption.selectedIndex].value;
+			}
+			
+			if (changeCompany != "" && companyId != changeCompany) {
+				companyIdVal = changeCompany;
 			}
 			
 			if (pageNo == "-1") {
 				var pageSize = "-1"; // 전체
 				var params = 'searchStartTime=' + searchStartTime +'&searchEndTime=' + searchEndTime;
 				 	params += '&searchField=' + searchField + '&searchValue=' + searchValue ; 
-					params += '&pageNo=' + pageNo + '&mailLogType=' + mailLogType + '&pageSize=' + pageSize;
+					params += '&pageNo=' + pageNo + '&mailLogType=' + mailLogType + '&pageSize=' + pageSize + "&companyId=" + companyId;
 				var pURL = "/ezStatistics/statisticsMailLogExcelExport.do" + "?" + params;
 
 				saveExcel.location.href = pURL;
@@ -330,7 +337,7 @@
 	    			,dataType: 'json'
 	    			,data: {  
 	    					  'searchStartTime' : searchStartTime, 'searchEndTime' : searchEndTime, 'searchField' : searchField
-	    					  ,'searchValue' : searchValue, 'pageNo' : pageNo, 'mailLogType' : mailLogType
+	    					  ,'searchValue' : searchValue, 'pageNo' : pageNo, 'mailLogType' : mailLogType, 'companyId' : companyIdVal
 	    				   }    
 	    			,success: function(res) {
 	    				var html = "";
@@ -421,6 +428,11 @@
     	document.getElementById("contentlist").style.height = height + "px";
     	document.getElementById("contentlist").style.overflow = "auto";
     }
+
+    function companyChange() {
+    	changeCompany = document.getElementById("SCompID").value;
+    	getMailLogList(1, searchStartTime, searchEndTime);
+    }
 </script>
 </head>
 <body class="mainbody">
@@ -428,6 +440,18 @@
 	<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2;">
 		<tr>
 			<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
+				<span id="topmenu" style="width: 500px">
+					<spring:message code='ezStatistics.t195' /> :
+	        		<select style="height:24px" id="SCompID" name="SCompID" onchange="return companyChange()">
+		        		<c:if test="${isMasterAdmin eq 'y'}">
+		           			<option value="Top/organ"><spring:message code="ezPoll.t237"/></option>
+		           		</c:if>		
+				    	<c:forEach var="item" items="${list}">
+			         		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				       	</c:forEach>
+	        		</select>
+        		</span>
+        		&nbsp;&nbsp;
 				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1061'/> : &nbsp;
 					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
 					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />

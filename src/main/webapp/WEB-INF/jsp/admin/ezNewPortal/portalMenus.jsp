@@ -150,7 +150,7 @@
 						menusHTML += "<dl>";
 						menusHTML += "<dt><span class='" + item.iconUrl + "'>";
 						menusHTML += "</span></dt>";
-						menusHTML += "<dd>" + ConvertCharToEntityReference(item.menuName) + "</dd>" ;
+						menusHTML += "<dd><span style='font-size: 15px; display: inline-block; text-overflow: ellipsis; overflow: hidden; width: 95px; white-space: nowrap;'>" + ConvertCharToEntityReference(item.menuName) + "</span></dd>" ;
 						menusHTML += "</li>";
 					});
 					
@@ -506,6 +506,7 @@
 			
 			//연결 urlz
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
+			menuUrl = $.trim(menuUrl);
 			
 			if (menuUrl == "" || menuUrl == null) {
 				alert("<spring:message code='ezNewPortal.t083' />");
@@ -690,6 +691,7 @@
 			
 			//연결 url
 			var menuUrl = $(".conUrl").find("input[type='text']").val();
+			menuUrl = $.trim(menuUrl);
 			
 			if (menuUrl == "" || menuUrl == null) {
 				alert("<spring:message code='ezNewPortal.t083' />");

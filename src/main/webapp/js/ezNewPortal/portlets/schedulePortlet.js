@@ -4,11 +4,12 @@
 var pMode = "P";
 var openerCalendarMiniView, openerCalendarMiniDataSource;
 
-var newDate;
-var nDate;
-var str4;
-var nDay;
+//var newDate;
+//var nDate;
+//var str4;
+//var nDay;
 var usedTheme = Number($("#schedule_usedTheme").val());
+var newDate = new Date();
 
 function getScheduleList(date, mode) {
 	selDate = date;			    
@@ -31,6 +32,12 @@ function getScheduleList_after(resultList, mode, date) {
 	try {
 		//2018-07-04 포탈에서 read.do 호출시 출처를 알기위한 변수추가
 		var pageFrom = 'Portal';
+		
+		var sDate = date.split("-");
+		newDate.setFullYear(sDate[0], sDate[1]-1, sDate[2]);
+		
+		var str4 = messages.strLang15.split(";");
+        var nDay = newDate.getDay();
 		
 		var listHTML = "";
 		listHTML += "<div><ul class='sscheduleUL'>";
@@ -81,7 +88,7 @@ function getScheduleList_after(resultList, mode, date) {
 		
 		listHTML += "<dl id='scheduleDate' class='scheduleDate'>";
 		listHTML += "<dt class='dayT'>" + str4[nDay] + "</dt>";//요일
-		listHTML += "<dd class='dayN'>" + nDate + "</dd>";//일
+		listHTML += "<dd class='dayN'>" + sDate[2] + "</dd>";//일
 		listHTML += "</dl>";
 		
 		document.getElementById("scheduleList").innerHTML = listHTML;
@@ -127,10 +134,10 @@ function goSchedule() {
 	window.open("/ezSchedule/scheduleIndex.do?funCode=2", "main", "");
 }
 
-function today() {
-	newDate = new Date();
-	nDate = (newDate.getDate().length > 1 ? '0'+newDate.getDate() : newDate.getDate());
-	
-	str4 = strLang4_1.split(";");
-	nDay = newDate.getDay();
-}
+//function today() {
+//	newDate = new Date();
+//	nDate = (newDate.getDate().length > 1 ? '0'+newDate.getDate() : newDate.getDate());
+//	
+//	str4 = messages.strLang15.split(";");
+//	nDay = newDate.getDay();
+//}

@@ -237,7 +237,7 @@
 		                    
 		                    document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
 		                    document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
-		                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+		                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
 		                    
 		                    /* 좌우 리사이징 시 round로 인해 비율의 합이 100%가 되지 않아
 		                       오른쪽 끝에 여백이 발생하여 제거함
@@ -627,11 +627,11 @@
 								$(parentElem).find("td:eq(1)").find("img").attr("src", "/images/ImgIcon/icon-msg-read.gif");
 							}
 							var textContentSize;
-							textContentSize = $("#PreviewRayerH").height() - 55;
+							textContentSize = $("#PreviewRayerH").height() - 65;
 							$("#Preview_ContentH").css("height", textContentSize);
 							textContentSize = $("#PreviewRayerW").height() - 80;
 							$("#Preview_ContentW").css("height", textContentSize);
-							document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+							document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
 // 		   					ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 // 		   					ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 		   				}
@@ -737,8 +737,8 @@
 						document.getElementById("journalListBody").style.height = (CurrentHeight - 100) + "px";
 						g_bPrevShow = false;
 						onPreview=false;
-						$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
-						$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
+						$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+						$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
 					} else if (pGubun == "W") {
 						document.getElementById("MailListRayer").style.display = "inline-block";
 						document.getElementById("PreviewRayerW").style.display = "block";
@@ -768,10 +768,8 @@
 						g_bPrevShow = true;
 						
 						if(onPreview == false){
-							$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
-							$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
-// 							ifrmPreViewW.document
-// 									.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
 						}
 						onPreview = true;
 					} else if (pGubun == "H") {
@@ -818,9 +816,8 @@
 						g_bPrevShow = true;
 						
 						if(onPreview == false){
-							$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
-							$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
-// 							ifrmPreViewH.documentr.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
 						}
 						onPreview = true;
 					}
@@ -1167,13 +1164,8 @@
 			</p>
 		</span> 
 		<span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;"> 
-			<span style="width: 100%; height: 100px; display: block;"> 
-				<!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
-				<!-- 		                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;"> -->
-				<!-- 		                    </div> --> <!-- 		                </span> -->
-
-				<div id="Preview_ContentH" style="text-align: center; border-top: 1px solid #e8e8e8;"></div> 
-				<!-- 		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe> -->
+			<span style="width: 100%; height: 100px; display: block;">
+				<div id="Preview_ContentH" style="text-align: center; border-top: 1px solid #e8e8e8;"></div>
 			</span>
 		</span>
 	</span>
@@ -1183,11 +1175,7 @@
 			<img src="/images/prevview_bar_dotted.gif">
 		</span>		 
 		<span id="PreContent_RayerW" style="display: block;border-top:1px solid #e6e6e6"> 
-			<span style="width: 100%; height: 100px; display: block;"> 
-				<!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
-				<!-- 		                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;"> -->
-				<!-- 		                    </div> --> <!-- 		                </span> -->
-
+			<span style="width: 100%; height: 100px; display: block;">
 				<div id="Preview_ContentW" style="text-align: center;"></div>
 			</span>
 		</span>
@@ -1322,8 +1310,8 @@
 	            document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
 	            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
 // 	            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
-	            document.getElementById("Preview_ContentH").style.height = (CurrentHeight - 55) + "px";
-	            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+	            document.getElementById("Preview_ContentH").style.height = (CurrentHeight - 65) + "px";
+	            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
 	            pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
 	            pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
 

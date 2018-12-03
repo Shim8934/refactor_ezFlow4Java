@@ -17,8 +17,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.security.PrivateKey;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -66,8 +64,6 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -5812,9 +5808,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				strDocState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(15).getTextContent();
 				strAprState = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
 				aprDocUserID = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
-				orgCompanyID = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(21).getTextContent();
-				aprMemberSN = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(22).getTextContent();
-				//orgCompanyID = xmlResult.getElementsByTagName("orgCompanyID").item(k).getTextContent();
+				
+				if (docListNode.item(k).getChildNodes().item(0) instanceof Element) {
+					Element rowElement = (Element) docListNode.item(k).getChildNodes().item(0);
+					
+					aprMemberSN = rowElement.getElementsByTagName("APRMEMBERSN").item(0).getTextContent();
+					orgCompanyID = rowElement.getElementsByTagName("orgCompanyID").item(0).getTextContent();
+				}
 				
 				/* 2018-04-27 천성준 - 부재자 결재문서는 일괄결재에서 제외시킨다 */
 				if (!aprDocUserID.equals(userID)) {

@@ -843,19 +843,24 @@
                 SPAN_TAG.setAttribute("style", "display:inline-block;");
             }
 */
-            if (GetAttribute(childNode, "title") != null)
-            {
+            if (GetAttribute(childNode, "title") != null) {
                 SPAN_TAG.setAttribute("title",GetAttribute(childNode, "title"));
             }
-
-            SPAN_TAG.innerText = GetAttribute(childNode, "caption");
+            
+            var folderCount = GetAttribute(childNode, "foldercount");
+            if (folderCount > 0) {
+            	SPAN_TAG.innerHTML = GetAttribute(childNode, "caption") + "&nbsp;&nbsp;" + folderCount;
+            } else {
+            	SPAN_TAG.innerHTML = GetAttribute(childNode, "caption");
+            }
+            
             try {
                 SPAN_TAG.addEventListener('dragover', event_ondragover_span, false);
                 SPAN_TAG.addEventListener('drop', event_ondrop_span, false);
             } catch (e) {
 
             }
-
+            
             SPAN3.appendChild(SPAN_TAG);
             
             if (document.getElementById("left")) {

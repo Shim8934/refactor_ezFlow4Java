@@ -4763,7 +4763,27 @@
         AND 
             TENANT_ID = #v_TENANT_ID#
      </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D20" parameterClass="Map">
+        DELETE FROM 
+        	TBL_ATTITUDE_CONF
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
  	
+ 	<delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS7" parameterClass="Map">
+        DELETE FROM
+            TBL_BOARD_MYBOARDS    
+        WHERE  
+            COMPANYID = #v_CN#
+		AND
+			TENANT_ID = #v_TENANT_ID#
+		AND
+			BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'
+     </delete>
+     
  	<select id="EzOrganAdminDAO.userList" parameterClass="map" resultClass="OrganUserVO">
  		SELECT
  			*

@@ -16,8 +16,9 @@
 .full_menu_toggleUL > li.select_li { background: #e5efff; border-right: 1px solid #c6cfdf; border-bottom: 1px solid #c6cfdf; box-sizing: border-box; }
 .not_select { background: #ffffff; border-right: 1px solid #c6cfdf; border-bottom: 1px solid #c6cfdf; box-sizing: border-box; }
 .full_menu_toggleUL > li {border:1px solid #d9d9d9; margin:2px;}
-.popup {height:96%;}
-.full_menu_toggle {margin-top:4%;}
+.popup {height:96%; overflow:hidden;}
+.full_menu_toggle {margin-top:3%;overflow:auto;height:320px;}
+.full_menu_toggleDL dd span {font-size:15px;display:inline-block;text-overflow:ellipsis;overflow:hidden;width:84px;white-space:nowrap;}
 </style>
 </head>
 <body class='popup'>
@@ -29,7 +30,7 @@
 		<li id="menu${menu.menuId }" class="menuList">
 			<dl class="full_menu_toggleDL">
 				<dt><span class='${menu.iconUrl }'></span></dt>
-				<dd><c:out value="${menu.menuName }"/></dd>
+				<dd><span><c:out value="${menu.menuName }"/></span></dd>
 			</dl>
 		</li>
 	</c:forEach>
@@ -70,6 +71,8 @@ var selectMenu = function() {
 	var menuName = $(".select_li").find("dd")[0].innerText;
 	
 	if (portletId == "null") {
+		var beforeMenu = window.opener.document.getElementById("newPortletMenu").getAttribute("data2");
+		
 		window.opener.document.getElementById("newPortletMenu").value = menuName;
 		window.opener.document.getElementById("newPortletMenu").setAttribute("value", menuName);
 		window.opener.document.getElementById("newPortletMenu").setAttribute("data2", menuId);
@@ -79,15 +82,20 @@ var selectMenu = function() {
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "none";
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
 		} else {
-			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "none";
-			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "table-row";
+			
+			if (beforeMenu == 4) {
+				window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "";
+			}
+			
 			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").value = "";
-			window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "";
 			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").setAttribute("data1", "");
 			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").setAttribute("value", "");
+			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "none";
+			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "table-row";
 		}
 		 
 	} else {
+		var beforeMenu = window.opener.document.getElementById("portlet" + portletId).getAttribute("data2");
 		window.opener.document.getElementById("portletMenu" + portletId).value =  menuName;
 		window.opener.document.getElementById("portletMenu" + portletId).setAttribute("value", menuName);
 		window.opener.document.getElementById("portlet" + portletId).setAttribute("data2", menuId);
@@ -98,10 +106,14 @@ var selectMenu = function() {
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "/ezNewPortal/boardPortlet.do");
 		} else {
+			
+			if (beforeMenu == 4) {
+				window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "";
+				window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "");
+			}
+			
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").style.display = "none";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionTR").style.display = "table-row";
-			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "";
-			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "");
 			window.opener.document.getElementById("portletBoard" + portletId).value = "";
 			window.opener.document.getElementById("portletBoard" + portletId).setAttribute("data1", "");
 			window.opener.document.getElementById("portletBoard" + portletId).setAttribute("value", "");

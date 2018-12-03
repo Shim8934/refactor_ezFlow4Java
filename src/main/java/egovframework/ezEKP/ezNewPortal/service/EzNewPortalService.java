@@ -168,8 +168,8 @@ public interface EzNewPortalService {
 	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang);
 	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId);
 	public void setWeather() throws Exception;
-	public Map<String, Object> getWeather(String cityCode, String primary);
-	public List<WeatherVO> getCityList(String primaryLang);
+	public Map<String, Object> getWeather(String cityCode, int primary);
+	public List<WeatherVO> getCityList(int primaryLang);
 	public String getUserCityCode(String id, int tenantId) throws Exception;
 	public void setUserCityCode(String id, int tenantId, String cityCode);
 	

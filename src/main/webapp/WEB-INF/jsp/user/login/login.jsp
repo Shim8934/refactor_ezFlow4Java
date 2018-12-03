@@ -27,7 +27,7 @@
 			.warning_wrap dd.count .pointRed{ color:#ff0000; font-weight:bold; display:inline-block; font-family: Malgun Gothic, Meiryo UI; font-size:15px;}
 			.warning_wrap dd{color:#8e8e8e; font-size:12px; padding:0px 0px 2px 0px; margin:0px;letter-spacing:-1px;}
 			
-			.password_reset{ margin:0 auto; padding:0px; width:385px;}
+			.password_reset{ margin:0 auto; padding:0px; width:405px;}
 			.password_reset .passwordTitle{ margin:0px; padding:0px; font-family:Malgun Gothic, Meiryo UI; font-size:17px; color:#000; text-align:center; line-height:25px;}
 			.password_reset .passwordTitle span{ display:inline-block; color:#006be4; font-family:Malgun Gothic, Meiryo UI; font-size:17px;}
 			.password_reset .passwordForm{ margin:15px 0px; padding:8px 5px; list-style:none; border-top:1px solid #000; border-bottom:1px solid #000;}
