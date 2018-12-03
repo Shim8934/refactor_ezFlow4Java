@@ -660,6 +660,10 @@
 			}
 			
 			function mkOpt(type, options, action) {
+				
+				var optAtt = "";
+				var attEl = "";
+				
 				var html = "";
 					html += "<div class='optArea'>";
 					html += "<div class='option'>";
@@ -668,6 +672,7 @@
 						if (options) {
 							html += "<input class='textInput' type='text' value='" + options.contents + "'/>";
 							
+							optAtt = options.otherAttach;
 						} else {
 							html += "<input class='textInput' type='text' placeholder='기타'>";
 						}
@@ -675,6 +680,7 @@
 						if (options) {
 							html += "<input class='textInput' type='text' value='" + options.contents + "'/>";
 							
+							optAtt = options.optionAttach;
 						} else {
 							html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
 						}
@@ -685,25 +691,10 @@
 					html += "<div class='optFileInfo'>";
 					html += "<div>";
 					
-					if (options) {
-						var optAtt;
-						
-						if (type == 'other') {
-							optAtt = options.otherAttach;
-							
-						} else {
-							optAtt = options.optionAttach;
-						}
-						if (optAtt) {
-							var optAtt = mkImgTag(optAtt);
-							html += "<ul>" + optAtt + "</ul>";
-							
-						} else {
-							html += "<ul></ul>";
-						}
-					} else {
-						html += "<ul></ul>";
+					if (optAtt) {
+						attEl = mkImgTag(optAtt);
 					}
+					html += "<ul>" + attEl + "</ul>";
 					html += "</div></div></div>";
 					html += "<div class='optAtt'>";
 					html += "<input type='file' class='optionFile' style='display:none;'/>";
