@@ -23,6 +23,8 @@ public class PersonalGetQuickLinkMenuVO {
 	private String view_Flag;
 	/** */
 	private String size_;
+	/** */
+	private String linkOrder;
 	
 	public String getQuickLinkID() {
 		return quickLinkID;
@@ -89,5 +91,11 @@ public class PersonalGetQuickLinkMenuVO {
 	}
 	public void setSize_(String size_) {
 		this.size_ = size_;
+	}
+	public String getLinkOrder() {
+		return linkOrder;
+	}
+	public void setLinkOrder(String linkOrder) {
+		this.linkOrder = linkOrder;
 	}
 }

@@ -584,7 +584,8 @@
              	URL ,
              	REGUSERID ,
              	VIEW_FLAG ,
-             	SIZE_ 
+             	SIZE_ ,
+             	LINKORDER
         	FROM
         		TBL_PS_QUICKLINK A
             JOIN
@@ -599,8 +600,6 @@
        			A.TENANT_ID = #tenantID#
             AND
                 B.TENANT_ID = #tenantID#
-            ORDER BY
-                A.LINKORDER ASC
 		]]>
 	</select>
 	

@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -2024,6 +2025,14 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 			}
 		}
+		
+		//realList 정렬 추가
+		Collections.sort(realList, new Comparator<PersonalGetQuickLinkMenuVO>() {
+			@Override
+			public int compare(PersonalGetQuickLinkMenuVO o1, PersonalGetQuickLinkMenuVO o2) {
+				return o1.getLinkOrder().compareTo(o2.getLinkOrder());
+			}
+		});
 		
 		int lastSize = 0;
 		

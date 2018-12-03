@@ -18,8 +18,6 @@
 			var userLang;                     //언어
 			var mode;                         //new, modify
 			var guid = "{" + GetGUID() + "}"; //랜덤Id
-			var checkValue = "A";             //타입종류
-			var LinkTypeURL;                  //타입src정보
 			var mainTitleId;
 			var subTitle1Id;
 			var subTitle2Id;
@@ -238,11 +236,8 @@
 				}
 				
 				var linksHTML = "<li class='linkDetails' id='linkLiNew' style='display:none'>";
-				linksHTML += "<div id='linkDetailsNew'>";
-				linksHTML += "<div class='linkTitle'>";
-				linksHTML += "<span>빠른 링크 등록/수정</span>";
-				linksHTML += "<div id='close' class='close'><ul><li><span></span></li></ul></div>"
-				linksHTML += "</div><hr>";
+				linksHTML += "<div id='linkDetailsNew'><div class='linkTitle'><span>빠른 링크 <spring:message code = 'ezPersonal.t105' /><spring:message code = 'ezPersonal.t169' /></h1></span>";
+				linksHTML += "<div id='close' class='close'><ul><li><span></span></li></ul></div></div><hr>";
 				linksHTML += "<div class='linkContent'>";
 				linksHTML += "<table class='content def'>";
 				linksHTML += "<tr class='primary'>";
@@ -250,11 +245,11 @@
 				linksHTML += "<td style='border-bottom: 0px;'><input name='Input' id='"+ mainTitleId +"' class='contInput' maxlength='50'></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr class='primary'>";
-				linksHTML += "<th><spring:message code = 'ezPersonal.jjs03' /> (" + subTitle1 + ") <span style='color:red'>*</span></th>";
+				linksHTML += "<th><spring:message code = 'ezPersonal.jjs03' /> (" + subTitle1 + ")</th>";
 				linksHTML += "<td style='border-bottom: 0px;'><input type='text' id='"+ subTitle1Id +"' class='contInput' maxlength='50'></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr class='secondary'>";
-				linksHTML += "<th><spring:message code = 'ezPersonal.jjs03' /> (" + subTitle2 + ") <span style='color:red'>*</span></th>";
+				linksHTML += "<th><spring:message code = 'ezPersonal.jjs03' /> (" + subTitle2 + ")</th>";
 				linksHTML += "<td><input type='text' id='"+ subTitle2Id +"' class='contInput' maxlength='50'></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
@@ -295,14 +290,12 @@
 				linksHTML += "<tr>";
 				linksHTML += "<td>" + setQuickImg("E", "") + "</td>";
 				linksHTML += "<td id='typeImg'></td>";
-				linksHTML += "<td></td>";
-				linksHTML += "<td></td>";
+				linksHTML += "<td></td><td></td>";
 				linksHTML += "</tr>";
 				linksHTML += "<tr>";
 				linksHTML += "<td><input name='linktypeOption' type='radio' value='E'></td>";
 				linksHTML += "<td><input name='linktypeOption' type='radio' value='Z' id='Z' onclick='radioClick(this, 'rad')' style='display:none;' /></td>";
-				linksHTML += "<td></td>";
-				linksHTML += "<td></td>";
+				linksHTML += "<td></td><td></td>";
 				linksHTML += "</tr>";
 				linksHTML += "</table>";
 				linksHTML += "</td>";
@@ -398,12 +391,6 @@
 					radioClick(this, 'img');
 				});
 				
-				
-				//타입라디오버튼선택설정
-				$("input[type=radio]").on("click", function() {
-					radioClick(this, 'rad');
-				});
-				
 				//저장버튼설정
 				$("#btn_OK").on("click", function() {
 					btn_ok(itemId);
@@ -415,8 +402,6 @@
 						$(".linkDetails").attr("class", "linkDetails hideDetails");
 					});
 				});
-				
-				LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
 			}
 			function popChange() {
 				var popSize = document.getElementById("popSize").value;
@@ -473,8 +458,6 @@
 				
 				document.getElementById("typeImg").appendChild(typeImg);
 				document.getElementById("Z").checked = true;
-				checkValue = "Z";
-				LinkTypeURL = g_xmlhttp.responseText;
 			}
 			function btn_AttachAdd_onclick() {
 				if (document.form.file1.value != "") {
@@ -504,8 +487,6 @@
 						document.getElementById("typeImg").appendChild(typeImg);
 						document.getElementById("Z").style.display = "";
 						document.getElementById("Z").checked = true;
-						checkValue = "Z";
-						LinkTypeURL = path;
 					}
 				}
 			}
@@ -605,13 +586,8 @@
 					for (var i = 0; i < imgCnt; i++) {
 						if (document.getElementsByName("linktypeOption")[i].value == obj.id) {
 							document.getElementsByName("linktypeOption")[i].checked = true;
-							checkValue = document.getElementsByName("linktypeOption")[i].value;
-							LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
 						}
 					}
-				} else {
-					checkValue = obj.value;
-					LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
 				}
 			}
 			function btn_ok(itemId) {
@@ -643,8 +619,6 @@
 				SaveQuickLink(itemId);
 			}
 			function SaveQuickLink(itemId) {
-				console.log("checkValue:" + checkValue);
-				
 				var xmlpara = createXmlDom();
 				var objNode;
 				var objNode2;
@@ -660,8 +634,8 @@
 				createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName", document.getElementById(mainTitleId).value);
 				createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName2", document.getElementById(subTitle1Id).value);
 				createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName3", document.getElementById(subTitle2Id).value);
-				createNodeAndInsertText(xmlpara, objNode, "pLinkType", checkValue);
-				createNodeAndInsertText(xmlpara, objNode, "pLinkTypeURL", LinkTypeURL);
+				createNodeAndInsertText(xmlpara, objNode, "pLinkType", document.querySelector('input[name="linktypeOption"]:checked').value);
+				createNodeAndInsertText(xmlpara, objNode, "pLinkTypeURL", document.getElementById(document.querySelector('input[name="linktypeOption"]:checked').value).getAttribute("src"));
 				createNodeAndInsertText(xmlpara, objNode, "pMode", mode);
 				createNodeAndInsertText(xmlpara, objNode, "pURL", document.getElementById("txtURL").value);
 				
@@ -724,8 +698,7 @@
 			function event_GetQuickLink(result) {
 				var quickLinkId = result["quickLinkID"];
 				
-				document.getElementsByClassName("linkDetails")[0].setAttribute("id",
-						quickLinkId.substring(1, quickLinkId.indexOf("}")));
+				document.getElementsByClassName("linkDetails")[0].setAttribute("id", quickLinkId.substring(1, quickLinkId.indexOf("}")));
 				
 				document.getElementById("Title1").value = result["quickLinkName"];
 				document.getElementById("Title2").value = result["quickLinkName2"];
@@ -748,9 +721,6 @@
 				}
 				
 				var type = result["linkType"];
-				checkValue = type;
-				LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
-				
 				if (type == "Z") {
 					var typeUrl = result["linkTypeUrl"];
 					var typeImg = document.createElement("IMG");
@@ -763,8 +733,6 @@
 					document.getElementById("typeImg").appendChild(typeImg);
 					document.getElementById("Z").style.display = "";
 					document.getElementById("Z").checked = true;
-					
-					checkValue = "Z";
 				}
 				else {
 					var cnt = document.getElementsByName("linktypeOption").length;
