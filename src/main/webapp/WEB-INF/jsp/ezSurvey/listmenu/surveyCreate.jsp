@@ -294,8 +294,9 @@
 				var html = "";
 					html += "<div class='qstnForm' questionType='" + questionType + "'>";
 					
-					html += "<div class='optPart'>" + mkOpt() + "</div>";
-					
+					if (questionType == 1 || questionType == 2) {
+						html += "<div class='optPart'>" + mkOpt() + "</div>";
+					} 
 					html += ""+ mkAddtionalPart() + "";
 					
 				grandParent.append(html);
@@ -304,7 +305,7 @@
 			function addOptEvent() {
 				// 보기 추가
 				$(".quesBacgr").on("click", ".addOpt", function() {
-					var type = "option";
+					var type = "opt";
 					
 					var thisEl = $(this).parents(".qstnForm");
 					var html   = "<div class='optPart'>" + mkOpt(type) + "</div>";
@@ -405,93 +406,36 @@
 			
 			// 생성된 질문을 붙일 부분과 질문 유형을 파라미터로 받아 질문 영역 생성
 			function mdfSelectQuestion(qstnWrapper, question) {
-				var type = "modify";
+				var action = 'modify';
 				
 				var html    = "";
 					html   += "<div class='qstnForm' questionType='" + question.qstnType + "'>";
 					
 				var options = question.option;
-					
-				for (var i = 0; i < options.length; i++) {
-					html += "<div class='optPart'>";
-					html += "<div class='optArea'>";
-					html += "<div class='option'>";
-					html += "<input class='textInput' type='text' value='" + options[i].contents + "'>";
-					html += "<img src='/images/ezSurvey/attach.png' class='attImg'>"; 
-					html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
-					html += "</div>";
-					html += "<div class='optFileInfo'>";
-					html += "<div>";
-					html += "<ul>";
-					
-					var optAtt = options[i].optionAttach;
-					
-					if (optAtt) {
-						html += "<li fname='" + optAtt.fname + "' fsize='" + optAtt.fsize + "' path='" + optAtt.fpath + "'>";
-						html += "<div class='attDivFile'>";
-						html += "<img alt='' src='/images/survey/file_del.gif' style='height: 50%;'>";
-						html += "<div class='attImgAva'>";
-						html += "<img alt='' src='" + optAtt.fpath + "'>";
-						html += "</div>";
-						html += "<div class='attFileInf'>";
-						html += "<span title='" + optAtt.fname + "'>" + optAtt.fname + "</span>";
-						html += "<span>" + optAtt.fsize + "</span>";
-						html += "</div></div>";
-						html += "</li>";
+
+				if (options) {
+					for (var i = 0; i < options.length; i++) {
+						var type = "opt";
+						html += "<div class='optPart'>" + mkOpt(type, options[i], action) + "</div>";
+						
 					}
-					
-					html += "</ul>";
-					html += "</div></div></div>";
-					html += "<div class='optAtt'>";
-					html += "<input type='file' class='optionFile' style='display:none;'/>";
-					html += "</div></div>";
 				}
 				
 				var other = question.other;
 				
 				if (other) {
-					html += "<div class='other'>";
-					html += "<div class='optArea'>";
-					html += "<div class='option'>";
-					html += "<input class='textInput' type='text' value='" + other.contents + "'>";
-					html += "<img src='/images/ezSurvey/attach.png' class='attImg'>"; 
-					html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
-					html += "</div>";
-					html += "<div class='optFileInfo'>";
-					html += "<div>";
-					html += "<ul>";
-					
-					var othAtt = other.otherAttach;
-					
-					if (othAtt) {
-						html += "<li fname='" + othAtt.fname + "' fsize='" + othAtt.fsize + "' path='" + othAtt.fpath + "'>";
-						html += "<div class='attDivFile'>";
-						html += "<img alt='' src='/images/survey/file_del.gif' style='height: 50%;'>";
-						html += "<div class='attImgAva'>";
-						html += "<img alt='' src='" + othAtt.fpath + "'>";
-						html += "</div>";
-						html += "<div class='attFileInf'>";
-						html += "<span title='" + othAtt.fname + "'>" + othAtt.fname + "</span>";
-						html += "<span>" + othAtt.fsize + "</span>";
-						html += "</div></div>";
-						html += "</li>";
-					}
-					
-					html += "</ul>";
-					html += "</div></div></div>";
-					html += "<div class='optAtt'>";
-					html += "<input type='file' class='optionFile' style='display:none;'/>";
-					html += "</div></div>";
+					var type = "other";
+					html += "<div class='other'>" + mkOpt(type, other, action) + "</div>";
 				}
 				
-				html += "" + mkAddtionalPart(question.required, type) + "";
+				html += "" + mkAddtionalPart(question.required, action) + "";
 				
 				qstnWrapper.next().append(html);
 			}
 			
 			// 첨부파일 있을 시 태그 생성
 			function mkImgTag(qstnAtt) {
-				if (qstnAtt) {return "";}
+				if (!qstnAtt) {return "";}
 				return questionFile.mkImgTag(qstnAtt);
 			}
 			
@@ -561,17 +505,15 @@
 							html += "</div>";
 						}
 					}
-					
 					// 기타
 					if (other) {
 						html += "<div class='opt'>";
 						html += "<input class='optRdo' type='radio' value='" + other + "'/>";
-						html += other.otherAttach ? "<img alt='' src='" + otherAtt.fpath + "' class='optImg'>" : ""; // 첨부파일이 있는지 확인
+						html += other.otherAttach ? "<img alt='' src='" + other.otherAttach.fpath + "' class='optImg'>" : ""; // 첨부파일이 있는지 확인
 						html += "<span class='optSpan'>" + other.contents + "</span>";
 						html += "<input class='othInput' type='text'/>";
 						html += "</div></div>";
 					}
-					
 					html += "</div>";
 					thisEl.parents(".qstnWrapper").prepend(html);
 					
@@ -691,6 +633,9 @@
 					var qstnCnt    = qstnList.length;
 					question['id'] = qstnCnt + 1;
 					SurveyCreate.setQs(question);
+					
+					//console.log("저장");
+					//console.log(SurveyCreate.getQs());
 				}
 				else if (status == 'modify') {
 					var qstId        = qstnWrapper.attr("id");
@@ -699,24 +644,59 @@
 					
 					questionList.splice(qstId - 1, 1);           // 질문 배열에서 해당 순번의 객체 삭제
 					questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
+					
+					//console.log("수정");
+					//console.log(SurveyCreate.getQs());
 				}
-				
 				mkSelectQstn(status, thisEl, question); // 질문 폼 생성
 				rmQstnForm(thisEl);                     // 설문 생성 폼 삭제
 			}
 			
-			function mkOpt(type) {
-				
+			function mkOpt(type, options, action) {
 				var html = "";
 					html += "<div class='optArea'>";
 					html += "<div class='option'>";
-					html += type == 'other' ? "<input class='textInput' type='text' placeholder='기타'>" : "<input class='textInput' type='text'>";
+					
+					if (type == 'other') {
+						if (options) {
+							html += "<input class='textInput' type='text' value='" + options.contents + "'>";
+							
+						} else {
+							html += "<input class='textInput' type='text' placeholder='기타'>";
+						}
+					} else {
+						if (options) {
+							html += "<input class='textInput' type='text' value='" + options.contents + "'>";
+							
+						} else {
+							html += "<input class='textInput' type='text'>";
+						}
+					}
 					html += "<img src='/images/ezSurvey/attach.png' class='attImg'>";
 					html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
 					html += "</div>";
 					html += "<div class='optFileInfo'>";
 					html += "<div>";
-					html += "<ul></ul>";
+					
+					if (options) {
+						var optAtt;
+						
+						if (type == 'other') {
+							optAtt = options.otherAttach;
+							
+						} else {
+							optAtt = options.optionAttach;
+						}
+						if (optAtt) {
+							var optAtt = mkImgTag(optAtt);
+							html += "<ul>" + optAtt + "</ul>";
+							
+						} else {
+							html += "<ul></ul>";
+						}
+					} else {
+						html += "<ul></ul>";
+					}
 					html += "</div></div></div>";
 					html += "<div class='optAtt'>";
 					html += "<input type='file' class='optionFile' style='display:none;'/>";
@@ -725,7 +705,7 @@
 				return html;
 			}
 			
-			function mkAddtionalPart(required, type) {
+			function mkAddtionalPart(required, action) {
 				var html = "";
 					html += "<div class='additionalPart'>";
 					html += "<div class='addBtns'>";
@@ -738,7 +718,7 @@
 					html += "</div>";
 					html += "<div class='btns'>";
 					
-					if (type == 'modify') {
+					if (action == 'modify') {
 						html += "<button class='modify'>수정</button>";
 						html += "<button class='mdfCancel'>취소</button>";
 
