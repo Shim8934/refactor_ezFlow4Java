@@ -320,10 +320,12 @@
 		                    cmdOK_onclick3("TBENDAPRLINEINFO.AprMemberSN:1:NOT");
 		                    break;
 		                case "MYDEPTCONT":
-		                		document.getElementById('myDeptCont0').onclick();
+	                		//document.getElementById('myDeptCont0').onclick();
+	                		document.getElementById('myDeptCont0').parentElement.onclick();	//#14477
 		                    break;
 		                case "ITEMCONT":
-		                	document.getElementById('itemList0').onclick();
+		                	//document.getElementById('itemList0').onclick();
+		                	document.getElementById('itemList0').parentElement.onclick(); //#14477
 		                    break;
 		                case "DEPTCONT":
 		                    break;
