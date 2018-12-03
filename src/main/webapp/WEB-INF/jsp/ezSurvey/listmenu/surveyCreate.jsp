@@ -289,12 +289,9 @@
 					html += "<div class='qstnForm' questionType='" + questionType + "'>";
 					
 					if (questionType == 1 || questionType == 2) {
-						html += "<div class='optPart'>";
-						
 						for (var i = 0; i < 2; i++) {
 							html += "<div class='optPart'>" + mkOpt() + "</div>";
 						}
-						html += "</div>";;
 					} 
 					html += ""+ mkAddtionalPart() + "";
 					
