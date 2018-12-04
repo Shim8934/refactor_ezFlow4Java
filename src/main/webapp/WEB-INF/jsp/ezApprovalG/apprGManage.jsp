@@ -387,6 +387,7 @@
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1422"/>', "002");
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t50"/>', "005");
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
 		        } else {
 		        	$('#sel_status_div').hide();
