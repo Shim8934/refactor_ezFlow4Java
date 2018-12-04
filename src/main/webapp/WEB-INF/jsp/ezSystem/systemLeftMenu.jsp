@@ -98,7 +98,7 @@
 	            </h2>
             </c:if>
             <c:if test="${useModuleUsage == 'YES'}">
-            <h2><span id="MODMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('MODMONITOR')" >모듈 용량 모니터링</span>
+            <h2><span id="MODMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('MODMONITOR')" ><spring:message code='ezSystem.kbh1' /></span>
             <ul class="on"></ul>
             </h2>
             </c:if>
