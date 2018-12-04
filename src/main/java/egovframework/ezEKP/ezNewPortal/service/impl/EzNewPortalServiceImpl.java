@@ -358,6 +358,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<Map<String, Object>> portletList = (List<Map<String, Object>>) param.get("portletList");
 		LOGGER.debug("portletList: " + portletList.toString());
+		
 		for (int i=0; i<portletList.size(); i++) {
 			LOGGER.debug(portletList.get(i).toString());
 			Map<String, Object> portletMap = new HashMap<String, Object>();
@@ -1152,6 +1153,42 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		ezNewPortalDAO.resetCompanyMenuOrder(map);
 		LOGGER.debug("resetCompanyMenuOrder ended.");
+	}
+	
+	@Override
+	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId) throws Exception {
+		LOGGER.debug("getThemePortletList started.");
+		List<PortletInfoVO> themePortletList = new ArrayList<PortletInfoVO>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("themeId", themeId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		themePortletList = ezNewPortalDAO.getThemePortletList(map);
+		LOGGER.debug("getThemePortletList ended.");
+		return themePortletList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void updateThemePortletUsed(int themeId, int tenantId, String companyId, JSONArray themePortletList) throws Exception {
+		LOGGER.debug("getThemePortletList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (Object item : themePortletList) {
+			if (item instanceof JSONObject) {
+				JSONObject themePortlet = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(themePortlet.toJSONString(), Map.class);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				map.put("themeId", themeId);
+				
+				ezNewPortalDAO.updateThemePortletUsed(map);
+			}
+		}
+		
+		LOGGER.debug("getThemePortletList ended.");
 	}
 	/**
 	 * 이효진
