@@ -306,6 +306,12 @@
 				message.SetEditorContent("${personalPopupVO.content}");
 			}
 		</script>
+<style type="text/css">
+.skinList li {float:left; margin:10px;}
+.skinList .skins {position: relative; background-color: white; width: 100px; height: 100px; text-align: center; border: 1px solid #cecece; cursor: pointer;}
+.skinList .skinImages {position: relative; width: 75px; height: 60px; top: 10px; border: 1px solid #cecece;}
+.skinList .skinTitle{ position: relative; top: 12px;}
+</style>
 	</head>
 	<body class = "popup">
 		<xmp id="sigBody" style="display:none;"><c:out value = '${personalPopupVO.content}' /></xmp>
@@ -369,7 +375,7 @@
 				<tr>
 					<th>스킨선택</th>
 					<td id="skinView" style="padding:3px; height:100px">
-						<input type="radio" name="skin" class="skins" id="skin0" value="0">
+						<!-- <input type="radio" name="skin" class="skins" id="skin0" value="0">
 						<label for="skin0">스킨0</label>	
 						<input type="radio" name="skin" class="skins" id="skin1" value="1">
 						<label for="skin1">스킨1</label>
@@ -378,7 +384,49 @@
 						<input type="radio" name="skin" class="skins" id="skin3" value="3">
 						<label for="skin3">스킨3</label>
 						<input type="radio" name="skin" class="skins" id="skin4" value="4">
-						<label for="skin4">스킨4</label>	
+						<label for="skin4">스킨4</label>	 -->
+						<ul class="skinList" id ="skinList" style=" list-style:none;">
+							<li>
+								<div class="skins" id="skin1" onclick="selectSkin(this)">
+									<div class="skinImg">
+										<img src="/images/admin/first.png" class="skinImages">
+									</div>
+									<div class="skinTitle" id="skinTitle1">
+										<span class="skinName">Skin1</span>
+									</div>
+								</div>	
+							</li>
+							<li>
+								<div class="skins" id="skin2" onclick="selectSkin(this)">
+									<div class="skinImg">
+										<img src="/images/admin/inuse_end.png" class="skinImages">
+									</div>
+									<div class="skinTitle" id="skinTitle2">
+										<span class="skinName">Skin2</span>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="skins" id="skin3" onclick="selectSkin(this)">
+									<div class="skinImg">
+										<img src="/images/admin/inuse.png" class="skinImages">
+									</div>
+									<div class="skinTitle" id="skinTitle3">
+										<span class="skinName">Skin3</span>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="skins" id="skin4" onclick="selectSkin(this)">
+									<div class="skinImg">
+										<img src="/images/admin/icon_cancel.png" class="skinImages">
+									</div>
+									<div class="skinTitle" id="skinTitle4">
+										<span class="skinName">Skin4</span>
+									</div>
+								</div>
+							</li>
+						</ul>
 					</td>
 				</tr>
 				<tr>
