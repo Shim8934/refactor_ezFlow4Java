@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1713,12 +1712,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			fromId = ezOrganService.getCNByEmail(fromEmail, loginInfo.getTenantId());
 			
 			if (fromId == null || fromId.equals("")) {
-				List<String> aliasAddress = new ArrayList<String>();
-				aliasAddress.add(fromEmail);
-				Map<String, String> targetAddress = ezEmailService.getAliasAddressMap(aliasAddress, loginInfo.getTenantId());
-			
-				if (targetAddress != null) {
-					String resultTargetAddress = targetAddress.get(fromEmail);
+				List<String> addressList = ezEmailService.aliasMailCheck(fromEmail);
+				
+				if (addressList.size() > 0) {
+					String resultTargetAddress = addressList.get(0);
 					logger.debug("resultAddress=" + resultTargetAddress);
 					
 					if (resultTargetAddress != null) {
