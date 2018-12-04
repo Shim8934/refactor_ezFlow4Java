@@ -393,6 +393,7 @@ var WriterName;
 var WriterDeptName;
 var WriterCompanyName;
 var ContentLocation;
+var UserIMG;
 
 function event_ItemPreviewRead_photo() {
     if (xmlhttp != null && xmlhttp.readyState == 4) {
@@ -413,6 +414,7 @@ function event_ItemPreviewRead_photo() {
             var Title = SelectSingleNodeValueNew(xmldom, "NODES/NODE/Title");
             var ContentLocation = SelectSingleNodeValueNew(xmldom, "NODES/NODE/ContentLocation");
             var GuBun = SelectSingleNodeValueNew(xmldom, "NODES/NODE/GUBUN");
+            var UserIMG =  SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/UserIMG");
 
             if (pPreviewShow_HOW.trim() == "W") {
                 PreviewRayerChange_photo("H");
@@ -428,6 +430,14 @@ function event_ItemPreviewRead_photo() {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "none";
             }
+            
+            if (document.getElementById("userImgH") != null) {
+            	document.getElementById("userImgH").src = UserIMG;
+            }
+            if (document.getElementById("userImgW") != null) {
+            	document.getElementById("userImgW").src = UserIMG;
+            }
+            
             var pOCS = "";
             if (USE_OCS == "YES") {
                 if ((BroswerAndNonActiveXCheck() == "IE")) {
@@ -495,6 +505,7 @@ function event_ItemPreviewRead() {
             WriteDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriteDate");
             Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
             ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
+            UserIMG =  SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/UserIMG");
            
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
@@ -509,6 +520,13 @@ function event_ItemPreviewRead() {
             else {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "none";
+            }
+            
+            if (document.getElementById("userImgH") != null) {
+            	document.getElementById("userImgH").src = UserIMG;
+            }
+            if (document.getElementById("userImgW") != null) {
+            	document.getElementById("userImgW").src = UserIMG;
             }
         }
     }

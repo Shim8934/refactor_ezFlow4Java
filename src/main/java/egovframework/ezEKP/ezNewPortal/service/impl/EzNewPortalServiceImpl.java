@@ -240,7 +240,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			map.put("userId", userId);			
 			map.put("menuId", list.get(i).get("menuId"));
 			map.put("order", list.get(i).get("order"));
-			System.out.println(list.toString());
+			
 			if (cnt < 1) {
 				ezNewPortalDAO.insertUserMenuOrder(map);
 			} else {
@@ -614,7 +614,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				userPortalSetting = tempSetting;
 			}
 		}
-		System.out.println(userPortalSetting.toString());
+		
 		LOGGER.debug("[Serivce] getUserPortalSetting Ended");
 		return userPortalSetting;
 	}

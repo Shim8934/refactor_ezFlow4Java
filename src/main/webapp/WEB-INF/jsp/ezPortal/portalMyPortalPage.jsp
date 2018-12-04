@@ -1643,10 +1643,10 @@
                      <td bgcolor="#F5f5f5">
                      	<select id="Optioninfo">
                         	<option value="D" selected>
-                            	div(가로)
+                            	div(<spring:message code='main.t4006'/>)
                             </option>
                             <option value="T">
-                            	Table(세로)
+                            	Table(<spring:message code='main.t4007'/>)
                             </option>
                         </select>
 					</td>

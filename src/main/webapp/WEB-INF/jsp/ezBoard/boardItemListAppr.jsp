@@ -964,7 +964,7 @@
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this, 'N');" />
 				</li> -->      
-				<div class="sub_frameIcon" style="float:right">	
+				<div id="right" class="sub_frameIcon" style="float:right">	
 					<div class="sub_frameIconUL">
 					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
 					    <p class="frameIconLI"><span class="icon16 btn_bottomframe" id="PreViewBottom" onclick="PreviewRayerChange('W')"></span></p>
@@ -1028,7 +1028,7 @@
 		            <div class="previewmail">
 		                <div class="previewmail_info">
 		                	<dl class="previewmailDL" id="Preview_HeaderH" style="display:none;">
-								<dt class="prepic"><img src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
+								<dt class="prepic"><img id="userImgH" src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
 								<dd class="pretext">
 									<ul class="pretextUL">
 										<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject"><span class="subjectText" id="PreH_sub_subject"></span></span></li>
@@ -1051,7 +1051,7 @@
 		            <div class="previewmail">
 		                <div class="previewmail_info" style="display: block; width: 100%;">
 		                	<dl class="previewmailDL" id="Preview_HeaderW" style="display:none;">
-								<dt class="prepic"><img src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
+								<dt class="prepic"><img id="userImgW" src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
 								<dd class="pretext">
 									<ul class="pretextUL">
 										<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreW_subject"><span class="subjectText" id="PreW_sub_subject"></span></span></li>

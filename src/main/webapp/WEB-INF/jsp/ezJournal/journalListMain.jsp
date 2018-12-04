@@ -203,6 +203,7 @@
 							document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
 							document.getElementById("journalListBody").style.height = (pMailListHeightW - 100) + "px";
 							document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45)+ "px";
+							document.getElementById("Preview_ContentW").style.height = (pMailPreHeightW - $(".previewmail").eq(1).height()) + "px";
 							
 		                    document.getElementById("PreW_subject").style.width = (CurrenWidth - 185) + "px";
 		                }
@@ -236,6 +237,7 @@
 							document.getElementById("journalListBody").style.height = (CurrentHeight - 100) + "px";
 		                    
 		                    document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
+							document.getElementById("Preview_ContentH").style.height = (CurrentHeight - $(".previewmail").eq(0).height()) + "px";
 		                    document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
 		                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
 		                    
@@ -626,14 +628,15 @@
 								setRecvCount();
 								$(parentElem).find("td:eq(1)").find("img").attr("src", "/images/ImgIcon/icon-msg-read.gif");
 							}
-							var textContentSize;
-							textContentSize = $("#PreviewRayerH").height() - 65;
-							$("#Preview_ContentH").css("height", textContentSize);
-							textContentSize = $("#PreviewRayerW").height() - 80;
-							$("#Preview_ContentW").css("height", textContentSize);
+// 							var textContentSize;
+// 							textContentSize = $("#PreviewRayerH").height()-$(".previewmail_info").height();
+// 							$("#Preview_ContentH").css("height", textContentSize);
+// 							textContentSize = $("#PreviewRayerW").height()-$(".previewmail_info").height()-50;
+// 							$("#Preview_ContentW").css("height", textContentSize);
 							document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
 // 		   					ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 // 		   					ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
+							Window_resize();
 		   				}
 		   			});
 				}
@@ -699,6 +702,7 @@
 	   				url : "/ezJournal/saveJournalEnv.do",
 	   				success : function() {
 	   					journalPreviewRayerChange(viewHow);
+	   					Window_resize();
 	   				}
 	   			});
 			}
