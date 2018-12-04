@@ -27,7 +27,14 @@ public class JournalVO {
 	private String nextContent;
 	private String formStatus;
 	private String isSum;
+	private String userImage;
 	
+	public String getUserImage() {
+		return userImage;
+	}
+	public void setUserImage(String userImage) {
+		this.userImage = userImage;
+	}
 	public String getFormStatus() {
 		return formStatus;
 	}

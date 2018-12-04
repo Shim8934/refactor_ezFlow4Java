@@ -3535,4 +3535,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("getUserCompanyID ended.");
 		return companyID;
 	}
+	
+	@RequestMapping(value="/admin/ezOrgan/getJobOptionInfo.do", produces="application/text; charset=utf8")
+	@ResponseBody
+	public String getJobOptionInfo(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("getJobOptionInfo started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String type = request.getParameter("type");
+		String companyID = request.getParameter("companyID");
+		
+		String rtnXml = ezOrganAdminService.getJobOptionInfo(type, companyID, userInfo.getTenantId());
+		
+		logger.debug("getJobOptionInfo ended.");
+		return rtnXml;
+	}
 }

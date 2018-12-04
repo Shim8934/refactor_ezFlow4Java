@@ -146,6 +146,7 @@
 
 					var doc = document.getElementById('message').contentWindow.document;
 					doc.open();
+					doc.write('<!doctype html>');
 					doc.write(html);
 					doc.close();
 					

@@ -41,6 +41,10 @@
 				margin-top: 0px; margin-bottom: 0px;
 			}
 			
+			#divCross p span{
+				font-size: inherit;
+			}
+			
 		</style>
 		
 		<script type="text/javascript" >

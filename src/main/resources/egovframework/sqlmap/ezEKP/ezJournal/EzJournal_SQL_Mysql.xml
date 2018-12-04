@@ -54,6 +54,7 @@
 		<result property="mine" 			column="mine"/>
 		<result property="isSum"	 		column="journal_sum" />
 		<result property="fileList" 		resultMap="ezJournal.fileMap"/>
+		<result property="userImage" 		column="user_image"/>
 	</resultMap>
 
 	<resultMap class="journalFileVO" id="fileMap">
@@ -1277,7 +1278,8 @@
 				when #userId# then 'yes'
 				else 'no'
 			end as mine,
-			u.CN as writer_id
+			u.CN as writer_id,
+			u.EXTENSIONATTRIBUTE2 as user_image
 		from 
 			tbl_journal j
 		inner join	

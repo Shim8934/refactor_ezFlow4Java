@@ -19,8 +19,8 @@
 			.themeHr {margin-top : 10px;width : 85%;margin-left : 30px;}
 			.themeTitle {margin-top : 9px;}
 			.themeNotUsed {background-color : #eee}
-			.themeName {margin-left : 40px;font-size : 14px;font-weight : bold;}
-			.themeDetails {display : none; float:left; width:98%; position : relative;margin-left:0px; padding:0px;}
+			.themeName {margin-left : 10px;font-size : 14px;font-weight : bold;}
+			.themeDetails, .portletList {display : none; float:left; width:98%; position : relative;margin-left:0px; padding:0px;}
 			.themeSetting {float : right;margin-right : 27px; margin-top:3px; cursor:pointer;}
 			.themeSetting img {width : 13px;height : 13px;}
 			.hideDetails {display : none;}
@@ -40,6 +40,19 @@
 			.frameList tr:first-child {height : 78px;}
 			.frameList td {text-align : center; border:1px solid #e1e1e1;}
 			.frameList th {width:61px;}
+			
+			.themePortlet img {cursor:pointer;background-color:#b9b9b9;border:1px solid #b9b9b9;}
+			.themePortlet {float:left; margin-top:3px; margin-left:13px;}
+			
+			.ui-portlet { position:relative;  width: 230px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
+			.ui-portlet-on { background-color: #f0f0f0; }
+			.ui-portlet-off { background-color: #f0f0f0; }
+			.ui-portlet-off .ui-portlet-span{ color:#999;}
+			.ui-portlet-content { font-weight: bold; display: inline-block;}
+			.ui-portlet-list { padding-left: 20px; height: 335px; width: 97%;}
+			.ui-portlet-span { display: inline-block; width: 69%; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-bottom:-4px;}
+			.portlet_switch {position:relative;display:inline-block;width:60px;height:18px;margin-top:15px;}
+			.admin_theme_portlet {width : 987px;}
 		</style>
 	</head>
 	
@@ -137,6 +150,7 @@
 						themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/Theme" + item.themeId + ".JPG' class='themeThumbnails' alt='img02'/>";
 						themesHTML += "</div><div>";
 						themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
+						/* themesHTML += "<span class='themePortlet' id='themePortlet" + item.themeId + "'><img src='/images/admin/frameSetting.png'></span>"; */
 						themesHTML += "<span class='themeName'>" + item.themeName + "</span>";
 						themesHTML += "<span class='themeSetting' id='"+item.themeId+"'><img src='/images/kr/left/icon_setup.gif'/></span>";
 						themesHTML += "</div>";
@@ -161,6 +175,7 @@
 					//event setting
 					themes.forEach(function (item, index) {
 						$("#themeTitle" + item.themeId).find(".themeSetting").on("click", {"themeId" : item.themeId}, openThemeDetail);
+						$("#themePortlet" + item.themeId).on("click", {"themeId" : item.themeId, "themeName" : item.themeName}, getThemePortletList);
 						
 						if (!item.themeUsed) {
 							$("#theme" + item.themeId).attr("class", "theme themeNotUsed");
@@ -236,11 +251,16 @@
 					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t112' /></th><td colspan='4' class='menuIconTD'><input type='text' class='admin_input themeContent' readOnly></td></tr>";						
 					themesHTML += "</table>";
 					themesHTML += "<table class='themaTable frameList' border='0' cellpadding='0' cellspacing='0' width='100%' style='margin:20px 0px 0px 0px;'></table>";
-					themesHTML += "<div class='bottomBtn'><a class='btnA updateThemeBtn'>저장</a><a class='btnA previewBtn' ><spring:message code='ezNewPortal.t113' /></a></div>";
+					themesHTML += "<div class='bottomBtn'><a class='btnA updateThemeBtn'><spring:message code='ezNewPortal.t002'/></a><a class='btnA previewBtn' ><spring:message code='ezNewPortal.t113' /></a></div>";
 					themesHTML += "</div></div></div>";
 					
 
 					var nowShowDetails = $(".themeDetails").attr("id");
+					var portletList = document.getElementsByClassName("portletList")[0];
+					
+					if (portletList != undefined) {
+						$(".portletList").remove();
+					}
 					
 					if (nowShowDetails == "themeDetails" + themeId) { 
 						$(".themeDetails").slideUp(function(){
@@ -456,6 +476,98 @@
 			request.onload = function() {
 				getThemes();
 			}
+			
+			var data = JSON.stringify({
+				companyId : companyId,
+				themeId : themeId
+			});
+			
+			request.send(data);
+		}
+		
+		//2018-12-03 ~ 2018-12-06 테마별 포틀릿 on/off 개발
+		var getThemePortletList = function (event) {
+			var themeId = event.data.themeId;
+			var companiesObj = document.getElementById("ListCompany");
+			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
+			var themeName = event.data.themeName;
+			
+			var request = new XMLHttpRequest();
+			request.open('POST', '/admin/ezNewPortal/getPortlets.do', true);
+			request.setRequestHeader('Content-Type', 'application/json');
+			
+			request.onload = function() {
+				if (request.status >= 200 && request.status < 400) {
+					var portletList = JSON.parse(request.responseText);
+					var portletListCount = portletList.length;
+					
+					var listHTML = "<div id='themePortletList" + themeId + "' class='portletList' data-themeid='" + themeId + "'>";
+					listHTML += "<div class='admin_thema admin_theme_portlet'>";
+					listHTML += "<dl class='admin_menuDL'>";
+					listHTML += "<dt class='admin_menuTit'>" + themeName + "</dt>";
+					listHTML += "<dd class='admin_menuX'></dd>";
+					listHTML += "</dl>";
+					listHTML += "<div class='admin_menu_content'>";
+					
+					portletList.forEach(function (item, index) {
+						var portletNameList = item.portletNameList;
+						
+						listHTML += "<div class='ui-portlet ui-portlet-on ui-portlet-content'>";
+						listHTML += "<span class='ui-portlet-span' data-portletid='" + item.portletId + "'>";
+						listHTML += ConvertCharToEntityReference(portletNameList[0].portletName);
+						listHTML += "</span>";
+						listHTML += "<label class='portlet_switch'>"
+						listHTML += "<input type='checkbox' id='portletid" + item.portletId + "' checked='true'>";
+						listHTML += "<span class='slider round'></span></label>";
+						listHTML += "</div>";
+					});
+					
+					listHTML += "<div class='bottomBtn'><a class='btnA updateThemeBtn'><spring:message code='ezNewPortal.t002'/></a></div>";
+					listHTML += "</div>";
+					listHTML += "</div>";
+					
+					var nowShowList = document.getElementsByClassName("themePortletList")[0];
+					
+					if (nowShowList != undefined) {
+						nowShowList = nowShowList.getAttribute("data-themeid");
+					}
+					
+					//themeDetails가 열려있으면 없애기
+					var themeDetails = document.getElementsByClassName("themeDetails")[0];
+					
+					if (themeDetails != undefined) {
+						$(".themeDetails").remove();
+					}
+					
+					if (nowShowList == themeId) { 
+						$(".portletList").slideUp(function(){
+							$(".portletList").remove();
+						});
+					} else {
+						$(".portletList").slideUp(function(){
+							$(".portletList").not("#themePortletList" + themeId).remove();
+						});
+					}
+					
+					if (nowShowList != themeId) {
+						if (nowShowList == null || nowShowList == undefined) {
+							$("#themeList").after(listHTML);
+							
+							$(".portletList").slideDown();
+						} else {
+							$("#themeList").after(listHTML);
+							
+							$(".portletList").slideDown();
+						}
+					}
+				}else {
+					// We reached our target server, but it returned an error
+				}
+			};
+	
+			request.onerror = function() {
+			  // There was a connection error of some sort
+			};
 			
 			var data = JSON.stringify({
 				companyId : companyId,

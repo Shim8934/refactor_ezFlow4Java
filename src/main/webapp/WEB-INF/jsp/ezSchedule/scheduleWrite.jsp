@@ -273,6 +273,8 @@
 		            if ("${contentPath}" != "") {
 		                var fullPath = "${contentPath}";
 		                message.SetEditorContentURL(fullPath);		                
+		            } else {
+		            	message.SetEditorContent("");
 		            }
 		        }
 		    }

@@ -81,6 +81,7 @@
         <result property="docNo" 					column="DOCNO" 					columnIndex="32"/>
 		<result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="33"/>
         <result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="34"/>
+        <result property="userImageFile" 		column="USERIMAGEFILE" 		columnIndex="35"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -116,6 +117,7 @@
 		<result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="30"/>
 		<result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="31"/>
 		<result property="guBun" 					column="GUBUN" 					columnIndex="32"/>
+		<result property="userImageFile" 		column="USERIMAGEFILE" 		columnIndex="33"/>
 	</resultMap>
 	
 	<!-- baonk added -->
@@ -2663,7 +2665,8 @@
 	            EXTENSIONATTRIBUTE9 ,
 	            EXTENSIONATTRIBUTE10 ,
 	            A.BOARDID,
-	            A.DOCNO
+	            A.DOCNO,
+	            (SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE
 	        FROM 
 	        	TBL_Board_Item A
             JOIN 
@@ -2713,7 +2716,8 @@
 	            EXTENSIONATTRIBUTE8 ,
 	            EXTENSIONATTRIBUTE9 ,
 	            EXTENSIONATTRIBUTE10,
-	            DOCNO 
+	            DOCNO,
+	            (SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE
 	        FROM 
 	        	TBL_Board_Item_temp A
 	        JOIN
@@ -2723,7 +2727,7 @@
             AND
             	A.BoardID = B.BoardID
        		WHERE
-       			TENANT_ID = #v_TENANTID#
+       			A.TENANT_ID = #v_TENANTID#
        		AND  
        			ItemID = #v_pItemID#
 		]]>
