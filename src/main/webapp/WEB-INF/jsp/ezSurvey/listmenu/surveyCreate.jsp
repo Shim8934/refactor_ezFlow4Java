@@ -379,7 +379,7 @@
 				
 				// 질문 수정
 				// 생성된 질문의 오른쪽 위에 뜬 수정 버튼 클릭시
-				$(".quesBacgr").on("click", ".crtBtn", function() {
+				$(".quesBacgr").on("click", ".modifyBtn", function() {
 					var tmpQstnWpr  = $(this).parents(".usrQstnWrapper");
 					var qstnWrapper = $(this).parents(".qstnWrapper");
 					// 수정할 질문 id
@@ -461,7 +461,6 @@
 			
 			// 단일선택 질문 생성 
 			function mkSelectQstn(status, thisEl, question) {
-				
 				var qstId        = question.id;
 				var qstnContents = question.qstnContents;
 				var qstnAtt      = question.questionAttach;
@@ -472,29 +471,24 @@
 				
 				var html = "";
 					html += "<div class='usrQstnWrapper' id='" + qstId + "' qstnType='" + qstnType + "'>";
-					html += "<div class='mvBtnDiv'>";
-					html += "<img class='mvBtn' alt='' src='/images/ezSurvey/move.png'>";
-					html += "</div>";
-					html += "<div class='fiCoDelBtns'>";
-					html += "<img alt='' src='/images/ezSurvey/correct.png' class='crtBtn'>";
-					html += "<img alt='' src='/images/ezSurvey/copy.png' class='cpBtn'>";
-					html += "<img alt='' src='/images/ezSurvey/trash.png' class='dltBtn'>";
-					html += "</div>";
-			  		
-					if (qstnContents) {
-						html += "<strong class='qstnCtts' id='" + qstId + "'>" + qstnContents + "</strong>";
-						
-						if (required == 'Y') {
-							html += "<strong class='imptt'>*</strong>";
-						}
-						if (qstnAtt) {
-							html += "<div class='qstnAtt'>"
-							html += "<img alt='' src='" + qstnAtt.fpath + "' class='qstnImg'>";
-							html += "</div>"
-						}
+					html += "<div class='question-panel'>";
+					html += "<div class='mvBtn'></div>";
+					html += "<div class='question-header'>";
+					html += "<div class='question-content' id='" + qstId + "'>" + qstnContents;
+					html += required == 'Y' ? "<strong class='imptt'>*</strong></div>" : "</div>";
+					html += "<div class='tooltip-bttns'>";
+					html += "<span class='modifyBtn'></span>";
+					html += "<span class='copyBtn'></span>";
+					html += "<span class='deleteBtn'></span>";
+					html += "</div></div>";
+					
+					if (qstnAtt) {
+						html += "<div class='question-attach'>"
+						html += "<img alt='' src='" + qstnAtt.fpath + "' class='qstnImg'>";
+						html += "</div>"
 					}
-			  		
-					html += "<div class='opts'>";
+					
+					html += "<div class='question-opts'>";
 					// 보기
 					if (option) {
 						for (var i = 0; i < option.length; i++) {
