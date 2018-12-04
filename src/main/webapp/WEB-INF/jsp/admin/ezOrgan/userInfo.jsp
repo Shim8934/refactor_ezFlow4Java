@@ -184,19 +184,23 @@
 			                try {
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim() != "") {
 				                	pUserTitleID = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim();
+				                	getJobOptionInfo("001");
+				                	document.getElementById(pUserTitleID).selected = "true";
+				                } else {
+				                	getJobOptionInfo("001");
 				                }
-			                	getJobOptionInfo("001");
-			                	titleChange();
-			                	
+				                
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim() != "") {
 				                	pUserPositionID = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim();
+				                	getJobOptionInfo("002");
+				                	document.getElementById(pUserPositionID).selected = "true";
+				                } else {
+				                	getJobOptionInfo("002");
 				                }
-			                	getJobOptionInfo("002");
-			                	positionChange();
-			                	
-			                	document.getElementById(pUserTitleID).selected = "true";
-			                	document.getElementById(pUserPositionID).selected = "true";
 			                } catch(e) {}
+			                
+		                	titleChange();
+		                	positionChange();
 			                
 			                if (SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == "Y" || SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == ""){
 			                    eval("birth_S").checked = true;
@@ -643,16 +647,28 @@
 		    function titleChange() {
 		    	var target = document.getElementById("titleSelector");
 		    	var option = target.options[target.options.selectedIndex];
-		    	jobTitleID = option.id;
-		    	jobTitleName = option.getAttribute("nmval");
-		    	jobTitleName2 = option.getAttribute("nmval2");
+		    	if (typeof (option) != "undefined") {
+			    	jobTitleID = option.id;
+			    	jobTitleName = option.getAttribute("nmval");
+			    	jobTitleName2 = option.getAttribute("nmval2");
+		    	} else {
+			    	jobTitleID = "";
+			    	jobTitleName = "";
+			    	jobTitleName2 = "";
+		    	}
 		    }
 		    function positionChange() {
 		    	var target = document.getElementById("positionSelector");
 		    	var option = target.options[target.options.selectedIndex];
-		    	jobPositionID = option.id;
-		    	jobPositionName = option.getAttribute("nmval");
-		    	jobPositionName2 = option.getAttribute("nmval2");
+		    	if (typeof (option) != "undefined") {
+			    	jobPositionID = option.id;
+			    	jobPositionName = option.getAttribute("nmval");
+			    	jobPositionName2 = option.getAttribute("nmval2");
+		    	} else {
+			    	jobPositionID = "";
+			    	jobPositionName = "";
+			    	jobPositionName2 = "";
+		    	}
 		    }
 		    
 		    function getUserCompanyID(userID) {
