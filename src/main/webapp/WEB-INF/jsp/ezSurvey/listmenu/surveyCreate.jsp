@@ -527,7 +527,7 @@
 				wrapper.find(".quesDiv").remove();
 				wrapper.find(".qstnForm").remove();
 			}
-/////////////////////////////////////////////////////////////////////////////////////////			
+
 			// 단일선택 질문 생성 
 			function mkSelectQstn(status, thisEl, question) {
 				var qstId       = question.id;
