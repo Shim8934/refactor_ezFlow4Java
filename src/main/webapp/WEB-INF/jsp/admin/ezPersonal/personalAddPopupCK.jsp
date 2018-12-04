@@ -137,7 +137,17 @@
 					showMonthAfterYear: true
 				};
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+				var skinObjs = document.getElementsByClassName('skins');
+				for(var i=0; i<4; i++) {
+					skinObjs[i].addEventListener('click', addSkinEvent);
+				}
+				
 			});
+
+			var addSkinEvent = function(obj) {
+				alert($(this)[0].id);
+			}
+
 
 			function DateFormat(obj) {
 				var yy = String(obj.getFullYear()).substring(0, 4);
@@ -387,19 +397,29 @@
 						<label for="skin4">스킨4</label>	 -->
 						<ul class="skinList" id ="skinList" style=" list-style:none;">
 							<li>
-								<div class="skins" id="skin1" onclick="selectSkin(this)">
+								<div class="skins" id="skin0" checked="">
 									<div class="skinImg">
 										<img src="/images/admin/first.png" class="skinImages">
 									</div>
-									<div class="skinTitle" id="skinTitle1">
-										<span class="skinName">Skin1</span>
+									<div class="skinTitle" id="skinTitle0">
+										<span class="skinName">Skin0</span>
 									</div>
 								</div>	
 							</li>
 							<li>
-								<div class="skins" id="skin2" onclick="selectSkin(this)">
+								<div class="skins" id="skin1" checked="">
 									<div class="skinImg">
 										<img src="/images/admin/inuse_end.png" class="skinImages">
+									</div>
+									<div class="skinTitle" id="skinTitle1">
+										<span class="skinName">Skin1</span>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="skins" id="skin2" checked="">
+									<div class="skinImg">
+										<img src="/images/admin/inuse.png" class="skinImages">
 									</div>
 									<div class="skinTitle" id="skinTitle2">
 										<span class="skinName">Skin2</span>
@@ -407,22 +427,12 @@
 								</div>
 							</li>
 							<li>
-								<div class="skins" id="skin3" onclick="selectSkin(this)">
-									<div class="skinImg">
-										<img src="/images/admin/inuse.png" class="skinImages">
-									</div>
-									<div class="skinTitle" id="skinTitle3">
-										<span class="skinName">Skin3</span>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="skins" id="skin4" onclick="selectSkin(this)">
+								<div class="skins" id="skin3" checked="">
 									<div class="skinImg">
 										<img src="/images/admin/icon_cancel.png" class="skinImages">
 									</div>
-									<div class="skinTitle" id="skinTitle4">
-										<span class="skinName">Skin4</span>
+									<div class="skinTitle" id="skinTitle3">
+										<span class="skinName">Skin3</span>
 									</div>
 								</div>
 							</li>
