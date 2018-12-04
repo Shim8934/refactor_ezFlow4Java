@@ -176,7 +176,7 @@
 				 { text : SurveyMessages.strDropdown, value: 9, selected: false, imageSrc: "/images/ezSurvey/dropdown.png"   }];
 			
 			// question input 및 img 생성
-			//createQuestionDiv();
+			createQuestionDiv();
 			addQstnEvent();
 			
 			// question selectBox 생성
@@ -290,10 +290,7 @@
 			// 셀렉트 박스 아래의 질문 폼 삭제
 			function rmQstnFormBfSave(grandParent) {
 				var qstnForm = grandParent.find(".qstnForm");
-				
-				if (qstnForm.length != 0) {
-					qstnForm.remove();
-				}
+				if (qstnForm.length != 0) {qstnForm.remove();}
 			}
 			
 			// 셀렉트 박스 선택시 만들어지는 질문 폼
@@ -490,7 +487,7 @@
 					html  += "<div class='qstnForm' questionType='" + question.type + "'>";
 					
 				var options = question.option;
-
+				
 				if (options) {
 					for (var i = 0; i < options.length; i++) {
 						var type = "opt";
@@ -551,49 +548,48 @@
 					html += "<span class='deleteBtn'></span>";
 					html += "</div></div>";
 					
-					if (qstnAtt) {
-						html += "<div class='question-attach'>"
-						html += "<img alt='' src='" + qstnAtt.fpath + "' class='qstnImg'>";
-						html += "</div>"
-					}
-					
-					html += "<div class='question-opts'>";
-					// 보기
-					if (option) {
-						for (var i = 0; i < option.length; i++) {
-							html += "<div class='opt' level='" + option[i].level + "'>";
+				if (qstnAtt) {
+					html += "<div class='question-attach'>"
+					html += "<img alt='' src='" + qstnAtt.fpath + "' class='qstnImg'>";
+					html += "</div>"
+				}
+				
+				html += "<div class='question-opts'>";
+				// 보기
+				if (option) {
+					for (var i = 0; i < option.length; i++) {
+						html += "<div class='opt' level='" + option[i].level + "'>";
+						
+						if (qstnType == 2) {
+							html += "<input class='optChb' type='checkbox' value='" + option[i].level + "'/>";
 							
-							if (qstnType == 2) {
-								html += "<input class='optChb' type='checkbox' value='" + option[i].level + "'/>";
-
-							} else {
-								html += "<input class='optRdo' type='radio' value='" + option[i].level + "'/>";
-							}
-							// 첨부파일이 있는지 확인
-							html += option[i].optionAttach ? "<img alt='' src='" + option[i].optionAttach.fpath + "' class='optImg'>" : "";
-							html += "<span class='optSpan'>" + option[i].contents + "</span>";
-							html += "</div>";
 						}
+						else {
+							html += "<input class='optRdo' type='radio' value='" + option[i].level + "'/>";
+						}
+						// 첨부파일이 있는지 확인
+						html += option[i].optionAttach ? "<img alt='' src='" + option[i].optionAttach.fpath + "' class='optImg'>" : "";
+						html += "<span class='optSpan'>" + option[i].contents + "</span>";
+						html += "</div>";
 					}
-					// 기타
-					if (other) {
-						html += "<div class='opt'>";
-						html += "<input class='optRdo' type='radio' value='" + other + "'/>";
-						html += other.otherAttach ? "<img alt='' src='" + other.otherAttach.fpath + "' class='optImg'>" : ""; // 첨부파일이 있는지 확인
-						html += "<span class='optSpan'>" + other.contents + "</span>";
-						html += "<input class='othInput' type='text'/>";
-						html += "</div></div>";
-					}
-					html += "</div>";
-					
-					thisEl.parents(".qstnWrapper").prepend(html);
-					
-					if (status == 'save') {
-						createQuestionDiv();
-						createQuestionSelectBox();
-					} else {
-						return;
-					}
+				}
+				// 기타
+				if (other) {
+					html += "<div class='opt'>";
+					html += "<input class='optRdo' type='radio' value='" + other + "'/>";
+					html += other.otherAttach ? "<img alt='' src='" + other.otherAttach.fpath + "' class='optImg'>" : ""; // 첨부파일이 있는지 확인
+					html += "<span class='optSpan'>" + other.contents + "</span>";
+					html += "<input class='othInput' type='text'/>";
+					html += "</div></div>";
+				}
+				html += "</div>";
+				
+				thisEl.parents(".qstnWrapper").prepend(html);
+				
+				if (status == 'save') {
+					createQuestionDiv();
+					createQuestionSelectBox();
+				}
 			}
 			
 			function mkMatrixQstn(status, thisEl, question) {
@@ -643,11 +639,8 @@
 						return;
 					}
 			}
-////////////////////////////////////////////////////////////////////////////			
-			function rmPrevEl(wrapperElmt) {
-				// 질문을 수정하면 숨겨뒀던 userInterface를 지움 
-				wrapperElmt.prev().remove();
-			}
+			
+			function rmPrevEl(wrapperElmt) {wrapperElmt.prev().remove();}
 			
 			// 질문 객체 생성
 			function mkQstnObj(status, thisEl) {
@@ -698,9 +691,6 @@
 					questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
 				}
 				
-				console.log("최종");
-				console.log(SurveyCreate.getQs());
-				
 				switch(parseInt(qstnType)) {
 					case 1  :
 					case 2  : var sltObj = mkSltObj(qstnForm);
@@ -711,7 +701,7 @@
 					case 4  : var mtrObj = mkMtrObj(qstnForm);
 							  if (mtrObj.row) {question['row'] = mtrObj.row;}
 							  if (mtrObj.col) {question['col'] = mtrObj.col;}
-							  handlerFunct = null; break;
+							  handlerFunct = mkMatrixQstn; break;
 					case 5  : break;
 					case 6  : break;
 					case 7  : break;
@@ -723,6 +713,7 @@
 				if (handlerFunct) {handlerFunct(status, thisEl, question);}
 				rmQstnForm(qstnWrapper);
 			}
+			
 			// select 질문 객체 생성
 			function mkSltObj(qstnForm) {
 				var sltObj = {};
@@ -780,11 +771,13 @@
 						otherAttach['fsize'] = othFSize;
 						other['otherAttach'] = otherAttach;
 					}
+					
 					sltObj['other'] = other;
 				}
 				
 				return sltObj;
 			}
+			
 			// matrix 질문 객체 생성
 			function mkMtrObj(qstnForm) {
 				var rows   = qstnForm.find(".row");
@@ -821,6 +814,7 @@
 				
 				return mtrObj;
 			}
+			
 			// option 생성
 			function mkOpt(type, options, action) {
 				var optAtt = "";
@@ -837,7 +831,8 @@
 						} else {
 							html += "<input class='textInput' type='text' placeholder='기타'>";
 						}
-					} else {
+					}
+					else {
 						if (options) {
 							html += "<input class='textInput' type='text' value='" + options.contents + "'/>";
 							
@@ -846,6 +841,7 @@
 							html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
 						}
 					}
+					
 					html += "<img src='/images/ezSurvey/attach.png' class='attImg'>";
 					html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
 					html += "</div>";
@@ -863,6 +859,7 @@
 				
 				return html;
 			}
+			
 			function mkRow() {
 				var html = "";
 					html += "<div class='row'>";
@@ -872,6 +869,7 @@
 				
 				return html;
 			}
+			
 			// 열 생성
 			function mkCol() {
 				var html = "";
@@ -882,6 +880,7 @@
 				
 				return html;
 			}
+			
 			// 필수, 저장, 수정, 취소 버튼 생성
 			function mkAddtionalPart(required, action) {
 				var html = "";
