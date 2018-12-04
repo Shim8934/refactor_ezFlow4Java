@@ -192,8 +192,8 @@
 				
 				if (question) {
 					qstId      = question.id;
-					qstContent = question.qstnContents;
-					qstAtt     = mkImgTag(question.questionAttach);
+					qstContent = question.content;
+					qstAtt     = mkImgTag(question.attach);
 				}
 				
 				html += "<div class='qstnWrapper' id='" + qstId + "'>";
@@ -249,7 +249,7 @@
 						
 						rmQstnFormBfSave(grandParent);
 						
-						switch (questionType) {
+						switch (parseInt(questionType)) {
 							case 1: makeSelectQuestion(grandParent, questionType)   ; break;
 							case 2: makeSelectQuestion(grandParent, questionType)   ; break;
 							case 3: makeMatrixQuestion(grandParent, questionType)   ; break;
@@ -267,7 +267,7 @@
 			// 셀렉트 박스 선택시
 			// 셀렉트 박스에 나타낼 문구
 			function getSelectedOpt(question) {
-				var qstnType = parseInt(question.qstnType);
+				var qstnType = parseInt(question.type);
 				var selectText;
 				
 				switch (qstnType) {
@@ -487,7 +487,7 @@
 			function mdfSelectQuestion(qstnWrapper, question) {
 				var action = 'modify';
 				var html   = "";
-					html  += "<div class='qstnForm' questionType='" + question.qstnType + "'>";
+					html  += "<div class='qstnForm' questionType='" + question.type + "'>";
 					
 				var options = question.option;
 
@@ -522,9 +522,7 @@
 			}
 			
 			// 설문 생성 폼 삭제
-			function rmQstnForm(thisEl) {
-				var wrapper = thisEl.parents(".qstnWrapper");
-				
+			function rmQstnForm(wrapper) {
 				//question input 및 selectBox 제거
 				wrapper.find(".quesDiv").remove();
 				wrapper.find(".qstnForm").remove();
@@ -532,20 +530,20 @@
 /////////////////////////////////////////////////////////////////////////////////////////			
 			// 단일선택 질문 생성 
 			function mkSelectQstn(status, thisEl, question) {
-				var qstId        = question.id;
-				var qstnContents = question.qstnContents;
-				var qstnAtt      = question.questionAttach;
-				var qstnType     = question.qstnType;
-				var option       = question.option;
-				var required     = question.required;
-				var other        = question.other
+				var qstId       = question.id;
+				var qstnContent = question.content;
+				var qstnAtt     = question.attach;
+				var qstnType    = question.type;
+				var option      = question.option;
+				var required    = question.required;
+				var other       = question.other
 				
 				var html = "";
 					html += "<div class='usrQstnWrapper' id='" + qstId + "' qstnType='" + qstnType + "'>";
 					html += "<div class='question-panel'>";
 					html += "<div class='mvBtn'></div>";
 					html += "<div class='question-header'>";
-					html += "<div class='question-content' id='" + qstId + "'>" + qstnContents;
+					html += "<div class='question-content' id='" + qstId + "'>" + qstnContent;
 					html += required == 'Y' ? "<strong class='imptt'>*</strong></div>" : "</div>";
 					html += "<div class='tooltip-bttns'>";
 					html += "<span class='modifyBtn'></span>";
@@ -645,123 +643,103 @@
 						return;
 					}
 			}
-///////////////////////////////////////////////////////////////////////////////////////////			
-			function rmPrevEl(thisEl) {
+////////////////////////////////////////////////////////////////////////////			
+			function rmPrevEl(wrapperElmt) {
 				// 질문을 수정하면 숨겨뒀던 userInterface를 지움 
-				thisEl.parents(".qstnWrapper").prev().remove();
+				wrapperElmt.prev().remove();
 			}
 			
 			// 질문 객체 생성
 			function mkQstnObj(status, thisEl) {
-				if (status == 'modify') {rmPrevEl(thisEl);}
+				var question     = {};
+				var qstnWrapper  = thisEl.parents(".qstnWrapper");
+				var qstnArea     = qstnWrapper.find(".quesDiv");
+				var qstnContent  = qstnArea.find(".questnTitle").val();
+				var handlerFunct = null;
 				
-				var question    = {};
-				var qstnWrapper = thisEl.parents(".qstnWrapper");
-				var qstnArea    = qstnWrapper.find(".quesDiv");
-				var qstnVal     = qstnArea.find(".questnTitle").val();
-				// 질문의 내용이 있는지 확인
-				if (qstnVal) {question['qstnContents'] = qstnVal;}
-				// 질문에 첨부파일이 있는지 확인
-				var qstnFObj = qstnArea.find(".qstnFileInfo")[0].childNodes[0].childNodes[0].childNodes[0];
-				// 첨부파일이 있는 경우만 파일 내용 추가
-				if (qstnFObj) {
-					var qstnAttach             = {};
-					var fName                  = qstnFObj.getAttribute("fname");
-					var fPath                  = qstnFObj.getAttribute("path");
-					var fSize                  = qstnFObj.getAttribute("fsize");
-					qstnAttach['fname']        = fName;
-					qstnAttach['fpath']        = fPath;
-					qstnAttach['fsize']        = fSize;
-					question['questionAttach'] = qstnAttach;
-				}
+				//Save common question information
+				if (!qstnContent) {alert(SurveyMessages.strQsContent); return;}
 				
-				// 질문 타입을 질문 객체에 저장
-				var qstnForm         = thisEl.parents(".qstnWrapper").find(".quesDiv").next();
+				question['content']  = qstnContent;
+				var qstnForm         = qstnWrapper.find(".quesDiv").next();
 				var qstnType         = qstnForm.attr("questiontype");
-				question['qstnType'] = qstnType;
+				question['type']     = qstnType;
+				var rqrd             = optArea.find(".additionalPart").find("input[name='checkbox']");
+				question['required'] = rqrd.is(":checked") == true ? 'Y' : 'N';
 				
-				if (qstnType == 1 || qstnType == 2) {
-					var sltObj = mkSltObj(qstnForm);
-					var option = sltObj.option;
-					var other = sltObj.other;
-					
-					if (option) {
-						question['option'] = option;
-					}
-					if (other) {
-						question['other'] = other;
-					}
-					
-				}
-				else if (qstnType == 3 || qstnType == 4) {
-					var mtrObj = mkMtrObj(qstnForm);
-					var row = mtrObj.row;
-					var col = mtrObj.col;
-					
-					if (row) {
-						question['row'] = row;
-					}
-					if (col) {
-						question['col'] = mtrObj.col;
-					}
+				//Check question attach files
+				var qstnFObj = qstnArea.find(".qstnFileInfo")[0].childNodes[0].childNodes[0].childNodes[0];
+				
+				if (qstnFObj) {
+					var qstnAttach      = {};
+					var fName           = qstnFObj.getAttribute("fname");
+					var fPath           = qstnFObj.getAttribute("path");
+					var fSize           = qstnFObj.getAttribute("fsize");
+					qstnAttach['fname'] = fName;
+					qstnAttach['fpath'] = fPath;
+					qstnAttach['fsize'] = fSize;
+					question['attach']  = qstnAttach;
 				}
 				
-				// 필수 확인
-				var rqrd             = qstnForm.find(".additionalPart").find("input[name='checkbox']");
-				var isChecked        = rqrd.is(":checked");
-				question['required'] = isChecked == true ? 'Y' : 'N';
-				
-				// 처음 저장할 때
+				//Question order
 				if (status == 'save') {
 					// 질문 array에 들어있는 질문의 개수를 가져옴
 					var qstnList   = SurveyCreate.getQs();
-					var qstnCnt    = qstnList.length;
-					question['id'] = qstnCnt + 1;
+					question['id'] = qstnList.length + 1;
 					SurveyCreate.setQs(question);
-					
-					console.log("저장");
-					console.log(SurveyCreate.getQs());
 				}
 				else if (status == 'modify') {
+					rmPrevEl(qstnWrapper);
 					var qstId        = qstnWrapper.attr("id");
 					question['id']   = qstId;
 					var questionList = SurveyCreate.getQs();
 					
 					questionList.splice(qstId - 1, 1);           // 질문 배열에서 해당 순번의 객체 삭제
 					questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
-					
-					console.log("수정");
-					console.log(SurveyCreate.getQs());
 				}
 				
 				console.log("최종");
 				console.log(SurveyCreate.getQs());
 				
-				if (qstnType == 1 || qstnType == 2) {
-					mkSelectQstn(status, thisEl, question); // 질문 폼 생성
-				} else if (qstnType == 3 || qstnType == 4) {
-					mkMatrixQstn(status, thisEl, question);
+				switch(parseInt(qstnType)) {
+					case 1  :
+					case 2  : var sltObj = mkSltObj(qstnForm);
+							  if (sltObj.option) {question['option'] = sltObj.option;}
+							  if (sltObj.other)  {question['other']  = sltObj.other ;}
+							  handlerFunct = mkSelectQstn; break;
+					case 3  : 
+					case 4  : var mtrObj = mkMtrObj(qstnForm);
+							  if (mtrObj.row) {question['row'] = mtrObj.row;}
+							  if (mtrObj.col) {question['col'] = mtrObj.col;}
+							  handlerFunct = null; break;
+					case 5  : break;
+					case 6  : break;
+					case 7  : break;
+					case 8  : break;
+					case 9  : break;
+					default : alert(SurveyMessages.strError); return;
 				}
 				
-				rmQstnForm(thisEl);                     // 설문 생성 폼 삭제
+				if (handlerFunct) {handlerFunct(status, thisEl, question);}
+				rmQstnForm(qstnWrapper);
 			}
 			// select 질문 객체 생성
 			function mkSltObj(qstnForm) {
 				var sltObj = {};
-				
-				var opt = qstnForm.find(".optPart");
+				var opt    = qstnForm.find(".optPart");
+				var oth    = qstnForm.find(".other");
+				var optCnt = opt.length;
 				
 				// 보기의 개수 확인
-				if (opt.length > 0) {
+				if (optCnt > 0) {
 					var option = [];
 					
-					for (var i = 0; i < opt.length; i++) {
-						var optObj = {};
-						// 보기가 비어있는지 확인
-						var optVal      = opt[i].childNodes[0].childNodes[0].childNodes[0].value;
+					for (var i = 0; i < optCnt; i++) {
+						var optObj      = {};
+						var optVal      = opt[i].childNodes[0].childNodes[0].childNodes[0].value; // 보기가 비어있는지 확인
 						optObj['level'] = i;
 						
-						if (optVal) {optObj['contents'] = optVal; }
+						if (optVal) {optObj['contents'] = optVal;}
 						
 						// 첨부 파일이 있는지 확인
 						var fObj      = opt[i].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
@@ -780,14 +758,13 @@
 						
 						option.push(optObj);
 					}
+					
 					sltObj['option'] = option;
 				}
 				
-				// 기타
-				var oth   = qstnForm.find(".other");
-				var other = {};
 				// 기타의 유무 확인
 				if (oth.length != 0) {
+					var other  = {};
 					var othVal = oth[0].childNodes[0].childNodes[0].childNodes[0].value;
 					var othObj = oth[0].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
 					
@@ -803,7 +780,6 @@
 						otherAttach['fsize'] = othFSize;
 						other['otherAttach'] = otherAttach;
 					}
-					// 질문 객체에 기타 객체 추가
 					sltObj['other'] = other;
 				}
 				
@@ -811,16 +787,17 @@
 			}
 			// matrix 질문 객체 생성
 			function mkMtrObj(qstnForm) {
-				var rows = qstnForm.find(".row");
-				
+				var rows   = qstnForm.find(".row");
+				var cols   = qstnForm.find(".col");
 				var mtrObj = {};
+				
 				if (rows) {
 					var row = [];
 					
-					for(var i = 0; i < rows.length; i++) {
-						var rowObj = {};
-						var rowVal = rows[i].childNodes[0].value;
-						rowObj['level'] = i;
+					for(var i = 0, len = rows.length; i < len; i++) {
+						var rowObj         = {};
+						var rowVal         = rows[i].childNodes[0].value;
+						rowObj['level']    = i;
 						rowObj['contents'] = rowVal;
 						
 						row.push(rowObj);
@@ -828,15 +805,13 @@
 					mtrObj['row'] = row;
 				}
 				
-				var cols = qstnForm.find(".col");
-				
 				if (cols) {
 					var col = [];
 					
 					for(var i = 0; i < cols.length; i++) {
-						var colObj = {};
-						var colVal = cols[i].childNodes[0].value;
-						colObj['level'] = i;
+						var colObj         = {};
+						var colVal         = cols[i].childNodes[0].value;
+						colObj['level']    = i;
 						colObj['contents'] = colVal;
 						
 						col.push(colObj);
@@ -848,13 +823,11 @@
 			}
 			// option 생성
 			function mkOpt(type, options, action) {
-				
 				var optAtt = "";
-				var attEl = "";
-				
-				var html = "";
-					html += "<div class='optArea'>";
-					html += "<div class='option'>";
+				var attEl  = "";
+				var html   = "";
+					html  += "<div class='optArea'>";
+					html  += "<div class='option'>";
 					
 					if (type == 'other') {
 						if (options) {
@@ -890,7 +863,6 @@
 				
 				return html;
 			}
-			// 행 생성
 			function mkRow() {
 				var html = "";
 					html += "<div class='row'>";

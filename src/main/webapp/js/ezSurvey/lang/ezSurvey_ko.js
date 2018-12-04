@@ -34,4 +34,5 @@ var SurveyMessages = {
 	strPerm      : "권한이 없습니다.",
 	strDel       : "삭제하였습니다.",
 	strCreator   : "작&nbsp;성&nbsp;자",
+	strQsContent : "질문 내용을 입력해주세요.",
 }
