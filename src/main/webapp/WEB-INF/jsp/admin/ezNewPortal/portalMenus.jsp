@@ -479,18 +479,20 @@
 			var obj = e.target;
 			var flag = false;
 			var elemArr = ["menu", "admin_menuDL", "admin_menu_content", "menuOrderResetButton", "companySelect", "menuAdd"];
-			if (obj.tagName == "HTML") {
+			//console.log(obj.tagName);
+			if (obj.tagName == "HTML" || obj.tagName == "UL" || obj.tagName == "LI" || obj.tagName == "H1") {
 				closeMenuDetail();
 				return false;
 			}
-			
+			/* console.log(obj.className);
 			while(elemArr.indexOf(obj.className) == -1){
 				obj = obj.parentElement;
+				console.log(obj);
 				if(obj.tagName == "HTML"){
 					closeMenuDetail();
 					break;
 				}
-			}
+			} */
 		}); 
 
 		var updateMenu = function(event) {
