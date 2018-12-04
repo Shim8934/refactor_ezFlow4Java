@@ -133,6 +133,7 @@
 <result property="boardName2" 				column="BOARDNAME2" />
 <result property="portletBoardId" 			column="BOARD_ID" />
 <result property="menuName" 				column="MENU_NAME" />
+<result property="portletName" 				column="PORTLET_NAME" />
 </resultMap>
 <resultMap class="PortletNameInfoVO" id="PortletNameInfoVO">
 <result property="portletId" 				column="PORTLET_ID" />
@@ -1866,7 +1867,8 @@ SELECT A.PORTLET_ID,
        A.BOARD_ID,
        D.BOARDNAME,
        D.BOARDNAME2,
-       E.MENU_NAME
+       E.MENU_NAME,
+       F.PORTLET_NAME
   FROM TBL_PORTAL_PORTLET_COMP A
   JOIN TBL_PORTAL_PORTLET C
     ON A.PORTLET_ID = C.PORTLET_ID
@@ -1875,13 +1877,18 @@ SELECT A.PORTLET_ID,
   	AND A.COMPANY_ID = D.COMPANYID
   	AND	A.TENANT_ID = D.TENANT_ID
   LEFT JOIN TBL_PORTAL_MENU_NAME E
- ON	A.menu_id = E.menu_id
- AND A.COMPANY_ID = E.COMPANY_ID
- AND A.tenant_id = E.tenant_id
- AND E.menu_lang = #menuLang#
- WHERE A.COMPANY_ID = #companyId#
-   AND A.TENANT_ID = #tenantId#
- ORDER BY A.portlet_order
+ 	ON	A.menu_id = E.menu_id
+ 	AND A.COMPANY_ID = E.COMPANY_ID
+ 	AND A.tenant_id = E.tenant_id
+ 	AND E.menu_lang = #menuLang#
+  LEFT JOIN TBL_PORTAL_PORTLET_NAME F
+ 	ON A.COMPANY_ID = F.COMPANY_ID
+ 	AND A.TENANT_ID = F.TENANT_ID
+ 	AND A.PORTLET_ID = F.PORTLET_ID
+ 	AND F.PORTLET_LANG = #menuLang# 
+  WHERE A.COMPANY_ID = #companyId#
+    AND A.TENANT_ID = #tenantId#
+  ORDER BY A.portlet_order
 ]]>
 </select>
 
@@ -2079,4 +2086,6 @@ AND
 ORDER BY
 	company_order asc	
 </select>
+
+
 </sqlMap>
