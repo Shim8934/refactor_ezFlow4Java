@@ -162,8 +162,13 @@
 	                if (lstCnt == "") {
 	                    lstCnt = 0;
 	                }
-	                
+
 				    totalPage = Math.ceil(new Number(lstCnt / pageSize));
+				    
+	                if(lstCnt === 0 && totalPage === 0) {
+	                	totalPage = 1;	
+	                }				    
+				    
 				    pTotalCnt = lstCnt;
 				    makePageSelPage();
 				
