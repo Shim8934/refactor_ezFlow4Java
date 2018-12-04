@@ -233,7 +233,7 @@
 				});
 			}
 			
-			// question selectBox 생성
+			// selectBox 생성
 			function createQuestionSelectBox(question) {
 				// set selectbox default value
 				var selectText = question ? getSelectedOpt(question) : SurveyMessages.strQselect;
@@ -246,7 +246,7 @@
 						var selectedEl   = data.selectedItem;
 						var grandParent  = selectedEl.parents(".qstnWrapper");
 						var questionType = data.selectedData.value;
-						// 질문 유형 선택시 셀렉트 박스 아래의 폼 삭제
+						
 						rmQstnFormBfSave(grandParent);
 						
 						switch (questionType) {
@@ -264,7 +264,8 @@
 				});
 			}
 			
-			// selectBox에 선택된 값 가져옴
+			// 셀렉트 박스 선택시
+			// 셀렉트 박스에 나타낼 문구
 			function getSelectedOpt(question) {
 				var qstnType = parseInt(question.qstnType);
 				var selectText;
@@ -285,7 +286,8 @@
 				return selectText;
 			}
 			
-			// 질문 유형 선택시 셀렉트 박스 아래의 폼 삭제
+			// 셀렉트 박스 선택시
+			// 셀렉트 박스 아래의 질문 폼 삭제
 			function rmQstnFormBfSave(grandParent) {
 				var qstnForm = grandParent.find(".qstnForm");
 				
@@ -294,7 +296,8 @@
 				}
 			}
 			
-			// 생성된 질문을 붙일 부분과 질문 유형을 파라미터로 받아 질문 영역 생성
+			// 셀렉트 박스 선택시 만들어지는 질문 폼
+			// 선택 질문 생성
 			function makeSelectQuestion(grandParent, questionType) {
 				var html = "";
 					html += "<div class='qstnForm' questionType='" + questionType + "'>";
@@ -311,57 +314,44 @@
 				html += "" + mkAddtionalPart() + "";
 				grandParent.append(html);
 			}
+			// 셀렉트 박스 선택시 만들어지는 질문 폼
 			// 행렬 질문 생성
 			function makeMatrixQuestion(grandParent, questionType) {
 				var html = "";
 					html += "<div class='qstnForm' questionType='" + questionType + "'>";
-					
 					html += "<div class='mtrPart'>";
-					
 					html += "<div class='rowArea'>";
-						
 					html += "<div class='rName' style='float: left; width: 10%;'>";
 					html += "<span>행</span>";
 					html += "</div>";
-					
 					html += "<div class='rows' style='float: left; width: 90%;'>";
 					for (var i = 0; i < 2; i++) {
 						html += "" + mkRow() + "";
 					}
 					html += "</div>";
-						
 					html += "<div class='rowBtn'>";
 					html += "<button class='addRow'>추가</button>";
-					html += "</div>";
-						
-					html += "</div>";
-					
+					html += "</div></div>";
 					html += "<div class='colArea'>";
-						
 					html += "<div class='cName' style='float: left; width: 10%;'>";
 					html += "<span>열</span>";
 					html += "</div>";
-						
 					html += "<div class='cols' style='float: left; width: 90%;'>";
 					for (var i = 0; i < 2; i++) {
 						html += "" + mkCol() + "";
 					}
 					html += "</div>";
-						
 					html += "<div class='colBtn'>";
 					html += "<button class='addCol'>추가</button>";
-					html += "</div>";
-						
-					html += "</div>";
-					
-					html += "</div>";
-					
+					html += "</div></div></div>";
 					html += ""+ mkAddtionalPart() + "";
 					
 				grandParent.append(html);
 			}
 			
+			// 버튼 이벤트
 			function addOptEvent() {
+				/* selection 버튼 이벤트 */
 				// 보기 추가
 				$(".quesBacgr").on("click", ".addOpt", function() {
 					var type = "opt";
@@ -371,7 +361,6 @@
 					
 					thisEl.find(".optPart").last().after(html);
 				});
-				
 				// 기타 추가
 				$(".quesBacgr").on("click", ".addOther", function() {
 					var type = "other";
@@ -386,6 +375,24 @@
 					}
 					else {
 						alert("기타는 하나만 추가 가능합니다.");
+					}
+				});
+				// 보기, 기타 삭제
+				$(".quesBacgr").on("click", ".delImg", function() {
+					var thisEl    = $(this);
+					var optAreaLength = thisEl.parents(".qstnForm").find(".optArea").length;
+					// 보기와 기타의 합계가 2개 이상일 때만 삭제
+					if (optAreaLength > 2) {
+						// 삭제할 요소가 option인지 other인지 확인
+						if (thisEl.parents(".optPart").length == 1) {
+							thisEl.parents(".optPart").remove();
+						}
+						else {
+							thisEl.parents(".other").remove();
+						}
+					}
+					else {
+						alert("최소 2개 이상의 보기가 필요합니다.");
 					}
 				});
 				
@@ -421,47 +428,27 @@
 						alert("최소 1개 이상의 열이 필요합니다.");
 					}
 				});
-				 // 보기, 기타 삭제
-				$(".quesBacgr").on("click", ".delImg", function() {
-					var thisEl    = $(this);
-					var optAreaLength = thisEl.parents(".qstnForm").find(".optArea").length;
-					// 보기와 기타의 합계가 2개 이상일 때만 삭제
-					if (optAreaLength > 2) {
-						// 삭제할 요소가 option인지 other인지 확인
-						if (thisEl.parents(".optPart").length == 1) {
-							thisEl.parents(".optPart").remove();
-						}
-						else {
-							thisEl.parents(".other").remove();
-						}
-					}
-					else {
-						alert("최소 2개 이상의 보기가 필요합니다.");
-					}
-				});
 				
-				// option 첨부파일 트리거
+				/* 공통 버튼 이벤트 */
+				// 첨부파일 버튼 클릭 이벤트
 				$(".quesBacgr").on("click", ".attImg", function() {
 					$(this).parents(".optArea").next().find(".optionFile").click();
 				});
-				
-				// option 첨부파일 추가
+				// 첨부파일 버튼 이벤트
 				$(".quesBacgr").on("change", ".optionFile", function (e) {
 					fileUpload($(this), $(this)[0].files);
 				});
-				
 				// 질문 생성 폼의 취소 버튼 클릭
 				$(".quesBacgr").on("click", ".cancel", function() {
 					$(this).parents(".qstnForm").remove();
 					createQuestionSelectBox();
 				});
-				
-				// 질문 생성 폼의 내용 임시 저장
+				// 저장 버튼 클릭 이벤트
 				$(".quesBacgr").on("click", ".save", function() {
+					// 해당 질문의 객체 생성
 					mkQstnObj("save", $(this));
 				});
-				
-				// 질문 수정
+				// 수정 버튼 클릭 이벤트
 				// 생성된 질문의 오른쪽 위에 뜬 수정 버튼 클릭시
 				$(".quesBacgr").on("click", ".modifyBtn", function() {
 					var tmpQstnWpr  = $(this).parents(".usrQstnWrapper");
@@ -477,15 +464,15 @@
 					createQuestionSelectBox(qstn);
 					mdfSelectQuestion(qstnWrapper, qstn);
 					
-					//수정을 취소할 경우를 고려해 임시로 숨김
+					//수정을 취소할 경우를 고려해 숨김 처리
 					qstnWrapper.css("display", "none");
 				});
-				
-				// 수정 폼 저장
+				// 수정 버튼 클릭 이벤트
+				// 질문 객체 수정
 				$(".quesBacgr").on("click", ".modify", function (e) {
 					mkQstnObj("modify", $(this));
 				});
-				
+				// 수정 취소 버튼 클릭 이벤트
 				// 수정 폼 삭제
 				$(".quesBacgr").on("click", ".mdfCancel", function() {
 					var thisWrapper = $(this).parents(".qstnWrapper");
