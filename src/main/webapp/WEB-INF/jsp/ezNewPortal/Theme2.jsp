@@ -10,8 +10,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
 <%-- <link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">  --%>
-<link href="${util.addVer('/css/ezNewPortal/theme2_main.css')}" rel="stylesheet" type="text/css">
-<link href="${util.addVer('/css/ezNewPortal/theme2.css')}" rel="stylesheet" type="text/css">
+<link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
 <style type="text/css">
 	.two_column{width:48%;}
 	.mainbg {min-width:1280px;}

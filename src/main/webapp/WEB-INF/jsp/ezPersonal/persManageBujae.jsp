@@ -347,7 +347,17 @@
 	<body>
 		<form id="ManageBujae" method="post">
 			<br/>
-			<div class="txt">
+			<c:if test="${approvalFlag =='G'}">
+				<span class="txt">▒ <spring:message code='ezPersonal.t55' /></span><br/>
+				<span class="txt">▒ <spring:message code='ezPersonal.t56' /></span><br/>
+				<span class="txt">▒ <spring:message code='ezPersonal.t57' /></span><br/>
+				<span class="txt">▒ <spring:message code='ezPersonal.t58' /></span><br/>
+			</c:if>
+			<c:if test="${approvalFlag !='G'}">
+				<span class="txt">▒ <spring:message code='ezPersonal.pjj3' /></span><br/>
+			</c:if>
+			<%-- 
+				<div class="txt">
 				<c:if test="${approvalFlag =='G'}">
 					<div>▒&nbsp;<spring:message code='ezPersonal.t55'/></div>
 					<div style="margin-top:3px">▒&nbsp;<spring:message code='ezPersonal.t56'/></div>
@@ -357,8 +367,9 @@
 			    <c:if test="${approvalFlag !='G'}">
 			    	<div style="margin-top:3px">▒&nbsp;<spring:message code='ezPersonal.pjj3'/></div>
 			    </c:if>
-			</div>
-			<table class="content" style="width:520px;margin-top:20px">
+			</div> 
+			--%>
+			<table class="content" style="width:520px;margin-top:10px">
 				<tr> 
 					<th><spring:message code='ezPersonal.t22'/></th>
 					<td>

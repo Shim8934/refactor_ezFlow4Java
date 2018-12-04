@@ -383,6 +383,12 @@
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.F0031"/>', "R");
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t155"/>', "S");
 		        	AddOption(sel_status, strLangAprState21, "V");
+		        } else if (pListTypeValue == "11") {
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1422"/>', "002");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t50"/>', "005");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
+		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
 		        } else {
 		        	$('#sel_status_div').closest("li").hide();
 		        }
@@ -446,7 +452,7 @@
 		    
 		    function onSelect_Status() {
 		    	pageNum = 1;
-		        if (pListTypeValue == "1" || pListTypeValue == "2" || pListTypeValue == "3") {
+		        if (pListTypeValue == "1" || pListTypeValue == "2" || pListTypeValue == "3" || pListTypeValue == "11") {
 		            getDocList();
 		        } else if (pListTypeValue == "4") {
 		        	getReceivedDocList();

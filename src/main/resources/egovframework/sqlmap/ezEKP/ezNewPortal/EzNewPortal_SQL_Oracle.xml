@@ -404,7 +404,7 @@ LEFT OUTER JOIN
        AND company_id = #companyId#
        AND access_YN = 0
        AND user_id = #deptId#
-       AND user_type = '2'     	
+       AND user_type = '0'     	
 	) as auth
 ON
 	comp.COMPANY_ID = auth.COMPANY_ID
@@ -528,7 +528,7 @@ FROM (
 	) INFO
 ) A
 WHERE 
-	A.RNUM >= #offset# 
+	A.RNUM > #offset# 
 AND
 	A.RNUM <= #offset# + #limit#
 ]]>	
@@ -893,7 +893,7 @@ FROM (
 		) INFO
 	) P
 WHERE
-	P.RNUM >= #startRow#
+	P.RNUM > #startRow#
 AND
 	P.RNUM <= #startRow# + #photoCount#
 ]]>
@@ -2001,9 +2001,9 @@ FROM (
 				AND	A.BOARDID = B.BOARDID                
 				AND A.TENANT_ID = #tenantId#
 				AND A.WRITERCOMPANYID = #companyId#
-                AND TO_DATE(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS') > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5
-                AND TO_DATE(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS') <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
-                AND TO_DATE(A.ENDDATE, 'YYYY-MM-DD HH24:MI:SS') > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')					
+                AND A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS')
+                AND A.STARTDATE <= #nowDate#
+		      	AND A.ENDDATE > #nowDate#						
 				AND (
 					NOT EXISTS (
 					 		   SELECT USERID 
@@ -2013,7 +2013,7 @@ FROM (
 								  AND S.ITEMID = A.ITEMID 
 								  AND S.TENANT_ID = #tenantId#
 								  AND S.USERID = #userId# 
-								  AND TO_DATE(S.READDATE, 'YYYY-MM-DD HH24:MI:SS') > TO_DATE(#nowDate# , 'YYYY-MM-DD HH24:MI:SS') - 5
+								  AND S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5
 							   )
 				    )
 			  JOIN TBL_BOARD_BOARDINFO C

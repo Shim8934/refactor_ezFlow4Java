@@ -1615,7 +1615,7 @@
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>
 		        </li>
-		        	<c:if test = "${approvalFlag != 'G'}">
+		        	<c:if test = "${approvalFlag != 'G' && sQuery != 'usercontlist'}">
 		        		<li style="vertical-align: middle; float:right">
 		        			<div id="sel_status_div" style="display:inline;">
 							<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    

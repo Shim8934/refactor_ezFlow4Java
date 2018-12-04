@@ -1800,24 +1800,24 @@
 													+ vo.circularBMID + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
 											circularDeptList += ("<td style='width:5%'>"
 													+ (index + 1) + "</td>");
-											circularDeptList += ("<td style='width:35%'>"
+											circularDeptList += ("<td style='width:45%'>"
 													+ vo.title + "</td>");
-											circularDeptList += ("<td style='width:27%'>"
+											circularDeptList += ("<td style='width:20%'>"
 													+ vo.regDate.substring(0,
 															16) + "</td>");
 
 											if (vo.memberNameCount == 0) {
-												circularDeptList += ("<td style='width:19%'>"
+												circularDeptList += ("<td style='width:30%'>"
 														+ vo.memberName + "</td>");
 											} else {
-												circularDeptList += ("<td style='width:19%'>"
+												circularDeptList += ("<td style='width:30%'>"
 														+ vo.memberName
 														+ " <spring:message code='ezCircular.t50' /> "
 														+ vo.memberNameCount
 														+ " <spring:message code='ezCircular.t51' />" + "</td>");
 											}
 
-											circularDeptList += ("<td style='width:13%'>");
+											//circularDeptList += ("<td style='width:13%'>");
 											circularDeptList += ("</tr>");
 										});
 
@@ -2104,11 +2104,12 @@
 								                        <thead id="List_THEAD">
 									                        <tr>
 									                        <!-- 18-05-24 김민성 - 회람자 추가시 즐겨찾기 작성일 -> 등록일로 수정 -->
+									                        <!-- 18-12-03 김민성 - 컬럼 사이즈 변경 -->
 									                        	<th style="width: 5%;"><span><spring:message code='ezCircular.t31' /></span></th>
-									                            <th style="width: 35%; "><span><spring:message code='ezCircular.t32' /></span></th>
-									                            <th style="width: 27%; "><span><spring:message code='ezBoard.t5007' /></span></th>
-									                            <th style="width: 19%; "><span><spring:message code='ezCircular.t34' /></span></th>
-									                            <th style="width: 13%; "></th>
+									                            <th style="width: 45%; "><span><spring:message code='ezCircular.t32' /></span></th>
+									                            <th style="width: 20%; "><span><spring:message code='ezBoard.t5007' /></span></th>
+									                            <th style="width: 30%; "><span><spring:message code='ezCircular.t34' /></span></th>
+									                            <!-- <th style="width: 13%; "></th> -->
 									                        </tr>
 								                        </thead>
 								                        <tbody id="List_TBODY">					                        

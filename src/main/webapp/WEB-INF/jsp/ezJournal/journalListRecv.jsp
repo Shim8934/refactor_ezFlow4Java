@@ -95,7 +95,7 @@
 						<spring:message code='${journal.typeId}'/>
 					</td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:35%;">
-						<div style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>
+						<div style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 95;'>
 							<jsp:useBean id="toDay" class="java.util.Date" />
 							<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
 							<fmt:parseDate value="${journal.journalDate}" pattern="yyyy-MM-dd"  var="jDay"/>
@@ -106,8 +106,9 @@
 							<c:out value='${journal.journalTitle}'/>
 						</div>
 						<c:if test="${journal.replyCount gt 0}">
-							<!-- <a onclick=""><span onclick="quickReply('${journal.journalId }','${journal.journalTitle }');" style="color: #c64200">[${journal.replyCount }]</span></a> -->
-							<a style="position: absolute;" onclick=""><span style="color: #c64200">[<c:out value='${journal.replyCount }'/>]</span></a>
+<!-- 							<a style="position: absolute;" onclick=""> -->
+							<span style="color: #c64200">[<c:out value='${journal.replyCount }'/>]</span>
+<!-- 							</a> -->
 						</c:if>
 					</td>
 					<td style="width:20px; "></td>

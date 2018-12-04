@@ -849,7 +849,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			
 			vo = ezPersonalAdminService.getPopupInfo(itemSeq, userInfo.getTenantId());
 			vo.setItemSeq(Integer.parseInt(itemSeq));
-			vo.setContent(vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'"));
+			// &quot의 경우 FE에서 string을 감쌀 때 쌍따옴표를 사용하고 있기 때문에 따옴표로 변경
+			vo.setContent(vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\'").replace("&apos;", "\'"));
 		} else {
 			vo.setWidth(300);
 			vo.setHeight(350);

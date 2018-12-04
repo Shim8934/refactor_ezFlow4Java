@@ -1452,7 +1452,7 @@
 				SELECT
 					A.*,
 					DEPTID,
-					CASE WHEN #primary# = '1' THEN T.DEPTNAME ELSE T.DEPTNAME2 END AS DEPTNAME
+					CASE WHEN #primary# = '1' THEN T2.DESCRIPTION ELSE T2.DESCRIPTION2 END AS DEPTNAME
 				FROM
 					TBL_C_CLUBUSER A
 				JOIN
@@ -1467,7 +1467,9 @@
 				   ((SELECT
 						D.CN, D.DEPARTMENT as DEPTID,
 						D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-						D.TENANT_ID
+						D.TENANT_ID,
+						D.DESCRIPTION,
+						D.DESCRIPTION2
 					FROM
 						TBL_USERMASTER D
 					WHERE
@@ -1480,7 +1482,9 @@
 					(SELECT
 						B.cn, A2.DEPTID,
 						C.EXTENSIONATTRIBUTE2 as COMPANYID,
-						A2.TENANT_ID
+						A2.TENANT_ID,
+						B.DESCRIPTION,
+						B.DESCRIPTION2
 					FROM
 						TBL_USERMASTER B
 					INNER JOIN
@@ -1526,7 +1530,7 @@
 					SELECT
 						A.*,
 						DEPTID,
-						CASE WHEN #primary# = '1' THEN T.DEPTNAME ELSE T.DEPTNAME2 END AS DEPTNAME
+						CASE WHEN #primary# = '1' THEN T2.DESCRIPTION ELSE T2.DESCRIPTION2 END AS DEPTNAME
 					FROM
 						TBL_C_CLUBUSER A
 					JOIN
@@ -1541,7 +1545,11 @@
 					   ((SELECT
 							D.CN, D.DEPARTMENT as DEPTID,
 							D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-							D.TENANT_ID
+							D.TENANT_ID,
+							D.DISPLAYNAME,
+							D.DISPLAYNAME2,
+							D.DESCRIPTION,
+							D.DESCRIPTION2
 						FROM
 							TBL_USERMASTER D
 						WHERE
@@ -1554,7 +1562,11 @@
 						(SELECT
 							B.cn, A2.DEPTID,
 							C.EXTENSIONATTRIBUTE2 as COMPANYID,
-							A2.TENANT_ID
+							A2.TENANT_ID,
+							B.DISPLAYNAME,
+							B.DISPLAYNAME2,
+							B.DESCRIPTION,
+							B.DESCRIPTION2
 						FROM
 							TBL_USERMASTER B
 						INNER JOIN
@@ -1580,7 +1592,7 @@
 					WHERE
 						RTRIM(A.c_clubno) = #v_code#
 					AND
-						CASE WHEN #primary# = '1' THEN T.username ELSE T.username2 END LIKE CONCAT('%', #v_keyword#, '%')
+						CASE WHEN #primary# = '1' THEN T2.DISPLAYNAME ELSE T2.DISPLAYNAME2 END LIKE CONCAT('%', #v_keyword#, '%')
 					AND
 						A.permit <> 0
 					AND
@@ -1599,7 +1611,7 @@
 					SELECT
 						A.*,
 						DEPTID,
-						CASE WHEN #primary# = '1' THEN T.DEPTNAME ELSE T.DEPTNAME2 END AS DEPTNAME
+						CASE WHEN #primary# = '1' THEN T2.DESCRIPTION ELSE T2.DESCRIPTION2 END AS DEPTNAME
 					FROM
 						TBL_C_CLUBUSER A
 					JOIN
@@ -1614,7 +1626,9 @@
 					   ((SELECT
 							D.CN, D.DEPARTMENT as DEPTID,
 							D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-							D.TENANT_ID
+							D.TENANT_ID,
+							D.DESCRIPTION,
+							D.DESCRIPTION2
 						FROM
 							TBL_USERMASTER D
 						WHERE
@@ -1627,7 +1641,9 @@
 						(SELECT
 							B.cn, A2.DEPTID,
 							C.EXTENSIONATTRIBUTE2 as COMPANYID,
-							A2.TENANT_ID
+							A2.TENANT_ID,
+							B.DESCRIPTION,
+							B.DESCRIPTION2
 						FROM
 							TBL_USERMASTER B
 						INNER JOIN
@@ -1673,14 +1689,14 @@
 	<select id="EzCommunityDAO.commViewMemberGet3"				parameterClass="Map"		resultClass="CommunityMemberInfoVO"		remapResults="true">
 		<![CDATA[
 			SELECT
-				CASE WHEN #primary# = '1' THEN username ELSE username2 END AS username,
-				email
+				CASE WHEN #primary# = '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END AS username,
+				MAIL AS email
 			FROM
-				TBL_C_MEMBERINFO
+				TBL_USERMASTER
 			WHERE
-				userid = #v_USERID#
+				CN = #v_USERID#
 			AND
-				companyid = #v_COMPANYID#
+				PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -1755,15 +1771,22 @@
 	<select id="EzCommunityDAO.aspCommInfoGet2"					parameterClass="Map"		resultClass="CommunityMemberInfoVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				CASE WHEN #primary# = '1' THEN username ELSE username2 END AS username
+				IFNULL(CASE WHEN #primary# = '1' THEN B.DISPLAYNAME ELSE B.DISPLAYNAME2 END, 
+					CASE WHEN #primary# = '1' THEN A.USERNAME ELSE A.USERNAME2 END) AS username
 			FROM
-				TBL_C_MEMBERINFO
+				TBL_C_MEMBERINFO A
+			LEFT OUTER JOIN
+				TBL_USERMASTER B
+			ON
+				A.tenant_id = B.tenant_id
+			AND
+				A.USERID = B.CN
 			WHERE
-				userid = #v_RECORD_C_SYSOPID#
+				A.userid = #v_RECORD_C_SYSOPID#
 			AND
-				companyid = #companyID#
+				A.companyid = #companyID#
 			AND
-				tenant_id = #tenantID#
+				A.tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -1869,7 +1892,8 @@
 				A.userid,
 				A.outdate,
 				A.outreason,
-				CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
+				IFNULL(CASE WHEN #primary# = '1' THEN C.DISPLAYNAME ELSE C.DISPLAYNAME2 END,
+					CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END) AS username
 			FROM
 				TBL_C_OUTAPPLICATION A 
 			INNER JOIN
@@ -1877,7 +1901,13 @@
 			ON
 				A.userid = B.userid
 			AND
-				A.tenant_id = B.tenant_id 
+				A.tenant_id = B.tenant_id
+			LEFT OUTER JOIN
+				TBL_USERMASTER C
+			ON
+				A.userid = C.CN
+			AND
+				A.tenant_id = C.tenant_id
 			WHERE
 				RTRIM(A.c_clubno) = #v_CODE#
 			AND
@@ -1896,7 +1926,8 @@
 				SELECT
 					A.c_id,
 					A.companyid,
-					CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
+					IFNULL(CASE WHEN #primary# = '1' THEN C.DISPLAYNAME ELSE C.DISPLAYNAME2 END,
+						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END) AS username
 				FROM
 					TBL_C_CLUBUSER A
 				INNER JOIN
@@ -1907,6 +1938,12 @@
 					A.tenant_id = B.tenant_id
 				AND
 					A.companyid = B.companyid
+				LEFT OUTER JOIN
+					TBL_USERMASTER C
+				ON
+					A.c_id = C.CN
+				AND
+					A.tenant_id = C.tenant_id
 				WHERE
 					RTRIM(c_clubno) = #v_CODE#
 				AND
@@ -1925,7 +1962,8 @@
 					SELECT
 						A.c_id,
 						A.companyid,
-						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
+						IFNULL(CASE WHEN #primary# = '1' THEN C.DISPLAYNAME ELSE C.DISPLAYNAME2 END,
+							CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END) AS username
 					FROM
 						TBL_C_CLUBUSER A
 					INNER JOIN
@@ -1936,12 +1974,18 @@
 						A.tenant_id = B.tenant_id
 					AND
 						A.companyid = B.companyid
+					LEFT OUTER JOIN
+						TBL_USERMASTER C
+					ON
+						A.c_id = C.CN
+					AND
+						A.tenant_id = C.tenant_id
 					WHERE
 						RTRIM(c_clubno) = #v_CODE#
 					AND
 						permit <> 0
 					AND
-						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END LIKE CONCAT('%', #v_SER#, '%')
+						CASE WHEN #primary# = '1' THEN C.DISPLAYNAME ELSE C.DISPLAYNAME2 END LIKE CONCAT('%', #v_SER#, '%')
 					AND
 						B.companyid = #companyID#
 					AND
@@ -1953,7 +1997,8 @@
 					SELECT
 						A.c_id,
 						A.companyid,
-						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
+						IFNULL(CASE WHEN #primary# = '1' THEN C.DISPLAYNAME ELSE C.DISPLAYNAME2 END,
+							CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END) AS username
 					FROM
 						TBL_C_CLUBUSER A
 					INNER JOIN
@@ -1964,6 +2009,12 @@
 						A.tenant_id = B.tenant_id
 					AND
 						A.companyid = B.companyid
+					LEFT OUTER JOIN
+						TBL_USERMASTER C
+					ON
+						A.c_id = C.CN
+					AND
+						A.tenant_id = C.tenant_id
 					WHERE
 						RTRIM(c_clubno) = #v_CODE#
 					AND
@@ -2043,7 +2094,8 @@
 				A.c_id,
 				A.companyid,
 				A.c_indate,
-				CASE WHEN #primary# = '1' THEN T.username ELSE T.username2 END AS username,
+				IFNULL(CASE WHEN #primary# = '1' THEN T2.DISPLAYNAME ELSE T2.DISPLAYNAME2 END,
+					CASE WHEN #primary# = '1' THEN T.USERNAME ELSE T.USERNAME2 END) AS username,
 				DEPTID
 			FROM
 				TBL_C_CLUBUSER A
@@ -2059,7 +2111,9 @@
 			   ((SELECT
 					D.CN, D.DEPARTMENT as DEPTID,
 					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-					D.TENANT_ID
+					D.TENANT_ID,
+					D.DISPLAYNAME,
+					D.DISPLAYNAME2
 				FROM
 					TBL_USERMASTER D
 				WHERE
@@ -2072,7 +2126,9 @@
 				(SELECT
 					B.cn, A2.DEPTID,
 					C.EXTENSIONATTRIBUTE2 as COMPANYID,
-					A2.TENANT_ID
+					A2.TENANT_ID,
+					B.DISPLAYNAME,
+					B.DISPLAYNAME2
 				FROM
 					TBL_USERMASTER B
 				INNER JOIN
@@ -3971,15 +4027,22 @@
 	<select id="EzCommunityDAO.pollResGet4"						parameterClass="Map"		resultClass="String" remapResults="true">
 		<![CDATA[
 			SELECT
-				CASE WHEN #primary# = '1' THEN username ELSE username2 END
+				IFNULL(CASE WHEN #primary# = '1' THEN B.DISPLAYNAME ELSE B.DISPLAYNAME2 END, 
+					CASE WHEN #primary# = '1' THEN A.USERNAME ELSE A.USERNAME2 END)
 			FROM
-				TBL_C_MEMBERINFO
+				TBL_C_MEMBERINFO A
+			LEFT OUTER JOIN
+				TBL_USERMASTER B
+			ON
+				A.tenant_id = B.tenant_id
+			AND
+				A.USERID = B.CN
 			WHERE
-				userid = #v_POLLREGUSER#
+				A.userid = #v_POLLREGUSER#
 			AND
-				companyid = #companyID#
+				A.companyid = #companyID#
 			AND
-				tenant_id = #tenantID#
+				A.tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -4011,19 +4074,21 @@
 					FROM
 						TBL_C_CLUBUSER
 					JOIN
-						TBL_C_MEMBERINFO
+						TBL_USERMASTER
 					ON
-						RTRIM(TBL_C_MEMBERINFO.userid) = RTRIM(TBL_C_CLUBUSER.c_id)
+						RTRIM(TBL_USERMASTER.CN) = RTRIM(TBL_C_CLUBUSER.c_id)
+					AND
+						TBL_C_CLUBUSER.tenant_id = TBL_USERMASTER.tenant_id
 					WHERE
 						RTRIM(TBL_C_CLUBUSER.c_clubno) = #v_CODE#
 					AND 
-						CASE WHEN #primary# = '1' THEN TBL_C_MEMBERINFO.username ELSE TBL_C_MEMBERINFO.username2 END LIKE CONCAT('%', #v_KEYWORD#, '%')
+						CASE WHEN #primary# = '1' THEN TBL_USERMASTER.DISPLAYNAME ELSE TBL_USERMASTER.DISPLAYNAME2 END LIKE CONCAT('%', #v_KEYWORD#, '%')
 					AND
 						TBL_C_CLUBUSER.permit <> 0
 					AND
 						TBL_C_CLUBUSER.tenant_id = #tenantID#
 					AND
-						TBL_C_MEMBERINFO.companyID = #companyID#
+						TBL_C_CLUBUSER.companyID = #companyID#
 				]]>
 			</isEqual>
 			<isNotEqual property="v_S_RADIO" compareValue="NAME">
@@ -4906,12 +4971,18 @@
 						A.tenant_id = B.tenant_id
 					AND
 						A.companyid = B.companyid
+					LEFT OUTER JOIN
+						TBL_USERMASTER C
+					ON
+						A.c_id = C.CN
+					AND
+						A.tenant_id = C.tenant_id
 					WHERE
 						RTRIM(c_clubno) = #v_CODE#
 					AND
 						permit <> 0
 					AND
-						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END LIKE CONCAT('%', #v_SER#, '%')
+						CASE WHEN #primary# = '1' THEN C.DISPLAYNAME ELSE C.DISPLAYNAME2 END LIKE CONCAT('%', #v_SER#, '%')
 					AND
 						A.tenant_id = #tenantID#
 				]]>

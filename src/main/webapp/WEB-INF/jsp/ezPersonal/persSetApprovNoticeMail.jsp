@@ -83,8 +83,9 @@
 	<body>
 		<form id="Form1" method="post">
 			<br/>
-			<h2>▒&nbsp;<spring:message code='ezPersonal.t403'/></h2>
-			<table class="content" style="width:520px;margin-top:5px">
+			<%-- <h2>▒&nbsp;<spring:message code='ezPersonal.t403'/></h2> --%>
+			<span class="txt">▒ <spring:message code='ezPersonal.t403' /></span>
+			<table class="content" style="width:520px;margin-top:10px">
 				<tr>
 					<c:choose>
 						<c:when test="${alert == '1'}">
