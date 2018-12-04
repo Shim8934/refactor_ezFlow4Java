@@ -296,8 +296,7 @@
 			// 셀렉트 박스 선택시 만들어지는 질문 폼
 			// 선택 질문 생성
 			function makeSelectQuestion(grandParent, questionType) {
-				var html = "";
-					html += "<div class='qstnForm' questionType='" + questionType + "'>";
+				var html = makeQuestionForm(questionType);
 					
 				if (questionType == 1 || questionType == 2) {
 					for (var i = 0; i < 2; i++) {
@@ -309,23 +308,24 @@
 				html += "<button class='addOpt'>추가</button>";
 				html += "<button class='addOther'>기타추가</button>";
 				html += "</div>";
-				html += "" + mkAddtionalPart() + "";
+				html += mkAddtionalPart();
 				grandParent.append(html);
 			}
 			// 셀렉트 박스 선택시 만들어지는 질문 폼
 			// 행렬 질문 생성
 			function makeMatrixQuestion(grandParent, questionType) {
-				var html = "";
-					html += "<div class='qstnForm' questionType='" + questionType + "'>";
+				var html  = makeQuestionForm(questionType);
 					html += "<div class='mtrPart'>";
 					html += "<div class='rowArea'>";
 					html += "<div class='rName' style='float: left; width: 10%;'>";
 					html += "<span>행</span>";
 					html += "</div>";
 					html += "<div class='rows' style='float: left; width: 90%;'>";
+					
 					for (var i = 0; i < 2; i++) {
-						html += "" + mkRow() + "";
+						html += mkRow();
 					}
+					
 					html += "</div>";
 					html += "<div class='rowBtn'>";
 					html += "<button class='addRow'>추가</button>";
@@ -342,7 +342,7 @@
 					html += "<div class='colBtn'>";
 					html += "<button class='addCol'>추가</button>";
 					html += "</div></div></div>";
-					html += ""+ mkAddtionalPart() + "";
+					html += mkAddtionalPart();
 					
 				grandParent.append(html);
 			}
@@ -483,10 +483,8 @@
 			
 			// 생성된 질문을 붙일 부분과 질문 유형을 파라미터로 받아 질문 영역 생성
 			function handleModifyQuestion(qstnWrapper, question) {
-				var action  = 'modify';
 				var qstType = question.type;
-				var html    = "";
-					html   += "<div class='qstnForm' questionType='" + question.type + "'>";
+				var html    = makeQuestionForm(qstType);
 				
 				switch(parseInt(qstType)) {
 					case 1  :
@@ -494,14 +492,14 @@
 					case 3  : 
 					case 4  : break;
 					case 5  : break;
-					case 6  : break;
+					case 6  : html += handleModifyParagraphQuesion()      ; break;
 					case 7  : break;
 					case 8  : break;
 					case 9  : break;
 					default : alert(SurveyMessages.strError); return;
 				}
 				
-				html += "" + mkAddtionalPart(question.required, action) + "";
+				html += mkAddtionalPart(question.required, "modify");
 				
 				qstnWrapper.next().append(html);
 			}
@@ -522,9 +520,11 @@
 				return htmlTxt;
 			}
 			
-			function handleModifyParagraphQuesion(question) {
-				var htmlTxt = "";
-				
+			function handleModifyParagraphQuesion() {
+				var htmlTxt = "<div class='paragraph-wrap'>";
+				htmlTxt    += "<textarea class='paragraph' maxlength='500' placeholder='내용을 입력해주세요'></textarea>";
+				htmlTxt    += "</div>";
+				return htmlTxt;
 			}
 			
 			// 첨부파일 있을 시 태그 생성
@@ -933,28 +933,18 @@
 				return html;
 			}
 			
+			function makeQuestionForm(questionType) {return "<div class='qstnForm' questionType='" + questionType + "'>";}
+			
 			function makeParagraphQuestion(mainDivElmt, questionType) {
-				var html = "";
-				html += "<div class='qstnForm' questionType='" + questionType + "'>";
-				html += "<div class='paragraph-wrap'>";
-				html += "<textarea class='paragraph' maxlength='500' placeholder='내용을 입력해주세요'></textarea>";
-				html += "</div>";
-				html += "<div class='additionalPart'>";
-				html += "<div class='required'>";
-				html += "<input type='checkbox' name='checkbox'>";
-				html += "<strong>필수 답변</strong>";
-				html += "</div>";
-				html += "<div class='btns'>";
-				html += "<button class='save'>저장</button>";
-				html += "<button class='cancel'>취소</button>";
-				html += "</div></div>";
+				var html = makeQuestionForm(questionType);
+				html    += handleModifyParagraphQuesion();
+				html    += mkAddtionalPart();
 				
 				mainDivElmt.append(html);
 			}
 			
 			function makeSliderQuestion(mainDivElmt, questionType) {
-				var html = "";
-				html += "<div class='qstnForm' questionType='" + questionType + "'>";
+				var html = makeQuestionForm(questionType);
 				html += "<div class='silder-wrap'>";
 				html += "<input type='input' class='slider-input'/>";
 				html += "<input type='range' class='slider-main' />";
@@ -974,8 +964,7 @@
 			}
 			
 			function makeRankingQuestion(mainDivElmt, questionType) {
-				var html = "";
-				html += "<div class='qstnForm' questionType='" + questionType + "'>";
+				var html = makeQuestionForm(questionType);
 				html += "<div class='ranking-wrap'>";
 				html += "<div class='ranking-select'>";
 				html += "<span class='ranking-order'>1</span>";
@@ -1009,8 +998,7 @@
 			}
 			
 			function makeDropdownQuestion(mainDivElmt, questionType) {
-				var html = "";
-				html += "<div class='qstnForm' questionType='" + questionType + "'>";
+				var html = makeQuestionForm(questionType);
 				html += "<div class='dropdown-wrap'>";
 				html += "<div class='dropdown-select'>";
 				html += "<span class='dropdown-order'>1</span>";
