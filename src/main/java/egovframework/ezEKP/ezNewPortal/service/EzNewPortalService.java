@@ -3,8 +3,6 @@ package egovframework.ezEKP.ezNewPortal.service;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -28,7 +26,6 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
-import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzNewPortalService {
 
@@ -63,7 +60,6 @@ public interface EzNewPortalService {
 	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) throws Exception;
 	public String getBoardAuthCheck(String boardId, String accessId, int tenantId, String companyId);
 	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId, String deptId);
-	public List<PortletInfoVO> getPortletOrderComp(String portletLang, int tenantId, String companyId, String deptId, String userId) throws Exception;
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId);
 	public void updatePortletOrderUser(String userId, String companyId, int tenantId, List<Map<String, Integer>> portletOrder, String portletLang);
 	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow);

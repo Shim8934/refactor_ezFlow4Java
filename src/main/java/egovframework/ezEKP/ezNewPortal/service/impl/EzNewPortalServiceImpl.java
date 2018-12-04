@@ -576,25 +576,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 
 	@Override
-	public List<PortletInfoVO> getPortletOrderComp(String portletLang, int tenantId, String companyId, String deptId, String userId) throws Exception {
-		LOGGER.debug("[Serivce] getPortletOrderComp Started");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("portletLang", portletLang);
-		map.put("tenantId", tenantId);
-		map.put("companyId", companyId);
-		
-		List<PortletInfoVO> portletOrderComp = getPortletOrderCompForUser(portletLang, tenantId, companyId, deptId, userId);
-		
-		if (portletOrderComp == null || portletOrderComp.size() == 0) {
-			map.put("order", "default");
-			portletOrderComp = ezNewPortalDAO.getPortletOrderComp(map);
-		}
-
-		LOGGER.debug("[Serivce] getPortletOrderComp Ended");
-		return portletOrderComp;
-	}
-	
-	@Override
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId) {
 		LOGGER.debug("[Serivce] getUserPortalSetting Started");
 		Map<String, Object> map = new HashMap<String, Object>();

@@ -164,12 +164,6 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<PortletInfoVO>) list("ezNewPortal.getPortletOrderUser", map);
 	}
 	
-	//회사 포틀릿 순서 가져오기
-	@SuppressWarnings("unchecked")
-	public List<PortletInfoVO> getPortletOrderComp(Map<String, Object> map) {
-		return (List<PortletInfoVO>) list("ezNewPortal.getPortletOrderComp", map);
-	}
-
 	//포틀릿 정보 가져오기
 	public PortletInfoVO getCompanyPortletInfo(Map<String, Object> map) {
 		return (PortletInfoVO) select("ezNewPortal.getCompanyPortletInfo", map);
