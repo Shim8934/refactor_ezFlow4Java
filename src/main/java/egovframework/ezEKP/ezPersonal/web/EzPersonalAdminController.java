@@ -503,24 +503,24 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		if (request.getParameter("page") != null) {
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
-		
+
 		PersonalLightPollVO progressFlagVO = ezNewPortalService.getPollPortlet(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId(), userInfo.getOffset());
 		if(progressFlagVO != null) {
 			progressPollFlag = "true";
 			progressSDate = progressFlagVO.getStartDate();
 			progressEDate = progressFlagVO.getEndDate();
 		}
-		
+
 		int totalCount = ezPersonalAdminService.getPollCount(companyID, userInfo.getTenantId());
 		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
 		List<PersonalLightPollVO> list = ezPersonalAdminService.getPollList(companyID, totalCount, pageSize, (currentPage - 1) * pageSize, userInfo.getTenantId());
-		
+
 		result.append("<LISTVIEWDATA>");
 		result.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
 		result.append("<PAGECNT>" + pageCount + "</PAGECNT>");
 		result.append("<CURPAGE>" + currentPage + "</CURPAGE>");
 		result.append("<ROWS>");
-		
+
 		for (int i = 0; i < list.size(); i++) {
 			PersonalLightPollVO vo = list.get(i);
 			result.append("<ROW>");
@@ -553,13 +553,13 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("</CELL>");
 			result.append("</ROW>");
 		}
-		
+
 		result.append("</ROWS>");
 		result.append("<PROFLAG>" + progressPollFlag + "</PROFLAG>");
 		result.append("<PROFLAGSDATE>" + progressSDate + "</PROFLAGSDATE>");
 		result.append("<PROFLAGEDATE>" + progressEDate + "</PROFLAGEDATE>");
 		result.append("</LISTVIEWDATA>");
-		
+
 		logger.debug("managePollList ended");
 		return result.toString();
 	}
@@ -1373,8 +1373,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 
 		return "/admin/ezPortal/portalPortletImageUpload";
 	}
-	
-	
+
+
 	/** 
 	 * 빠른설문 config 조회 함수  
 	 */
@@ -1390,7 +1390,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("getLightPollConfig ended");
 		return json;
 	}
-	
+
 	/**
 	 * 빠른설문 config 저장 함수
 	 */
@@ -1404,8 +1404,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("setLightPollConfig ended");
 		return null;
 	}
-	
-	
+
+
 	/** 
 	 *빠른설문 itemseq 조회 함수  
 	 */
@@ -1433,6 +1433,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		JSONObject json = new JSONObject();
 		json.put("pollVO", pollVO);
 		json.put("pollResultVO", pollResultVO);
+		json.put("totalCount", totalCount);
 		logger.debug("getPollItem ended");
 		return json;
 	}
@@ -1528,5 +1529,49 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("updateSliderImageOrder end");
 		return json;
 	}
-	
+
+
+	/** 
+	 * 현재 진행중인 설문조사 get
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/getOnUsePoll.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject getOnUsePoll(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getOnUsePoll started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		PersonalLightPollVO progressVO = ezNewPortalService.getPollPortlet(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId(), userInfo.getOffset());
+		JSONObject json = new JSONObject();
+		if(progressVO == null) {
+			json.put("progressFlag", "FALSE");
+		} else {
+			json.put("progressFlag", "OK");
+			json.put("progressVO", progressVO);
+		}
+
+		logger.debug("getOnUsePoll ended");
+		return json;
+	}
+
+
+	/** 
+	 * 현재 진행중인 설문조사 get
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/checkJoinPoll.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public String checkJoinPoll(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("checkJoinPoll started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String itemSeq = "";
+		if(request.getParameter("itemseq") != null) {
+			itemSeq = request.getParameter("itemseq");
+		}
+
+		String msg = "OK";
+		msg = ezPersonalAdminService.checkJoinPoll(userInfo.getId(), userInfo.getTenantId(), itemSeq);
+
+		logger.debug("checkJoinPoll ended");
+		return msg;
+	}
 }

@@ -274,4 +274,8 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO {
 	public void updatePoll_Result(Map<String, Object> map) {
 		delete("EzPersonalAdmin.EZSP_UPDATE_RESULT", map);
 	}
+
+	public int checkJoinPoll(Map<String, Object> map) {
+		return (int) select("EzPersonalAdmin.EZSP_CheckJoinPoll", map);
+	}
 }

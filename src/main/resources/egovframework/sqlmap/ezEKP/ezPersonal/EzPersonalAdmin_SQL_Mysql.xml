@@ -1281,7 +1281,7 @@
 				CompanyID = #v_pCompanyID#	
 		]]>
 	</update>
-	
+
 	<delete id="EzPersonalAdmin.EZSP_UPDATE_RESULT" parameterClass="Map" >
 		<![CDATA[
 			DELETE FROM
@@ -1294,4 +1294,19 @@
 				RESULT IN ($sbQuery$)
 		]]>
 	</delete>
+
+	<select id="EzPersonalAdmin.EZSP_CheckJoinPoll" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_PS_LIGHTPOLLRESULT
+			WHERE
+				ITEMSEQ = #itemSeq#
+			AND
+				USERID = #userId#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 </sqlMap>

@@ -79,20 +79,22 @@ public interface EzPersonalAdminService {
 	void delQuickLink(String quickLinkID, int tenantID) throws Exception;
 
 	PersonalLightPollConfigVO getLightPollConfig(String userId, int tenantId) throws Exception;
-	
+
 	void setLightPollConfig(String userId, String isPreview, int tenantId) throws Exception;
-	
+
 	PersonalPopopConfigVO getPopupConfig(String userId, int tenantId) throws Exception;
-	
+
 	String setPopupConfig(String userId, String isPreview, int tenantId) throws Exception;
-	
+
 	int getPopupCount(String companyID, int tenantID) throws Exception;
-	
+
 	String setPopupUse(String companyID, int tenantID, String itemSeq, String inUse);
 
 	void updateQuickLinkOrder(JSONArray linkOrderList, int tenantId) throws Exception;
 
 	void updateSliderImageOrder(JSONArray sliderImageList, int tenantId) throws Exception;
-	
+
 	String updatePoll(Document doc, int tenantID) throws Exception;
+
+	String checkJoinPoll(String userId, int tenantID, String itemSeq) throws Exception;
 }

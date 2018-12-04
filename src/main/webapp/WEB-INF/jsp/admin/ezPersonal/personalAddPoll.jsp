@@ -88,6 +88,7 @@
 						minDate : 0
 					});
  				} else {
+ 					checkPollCount();
 					$("#Sdatepicker").datepicker({
 						changeMonth: true,
 						changeYear: true,
@@ -148,6 +149,40 @@
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 			});
 
+
+			var totalCount = 0;
+			var checkPollCount = function() {
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					async: false,
+					url: "/admin/ezPersonal/getPollItem.do",
+					data: {itemseq: itemSeq},
+					success: function(result) {
+						totalCount = result["totalCount"];
+					}
+				});
+			}
+
+
+			var onUseVO;
+			var getOnUsePoll = function() {
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					async: false,
+					url: "/admin/ezPersonal/getOnUsePoll.do",
+					data: {itemseq: itemSeq},
+					success: function(result) {
+						var onUse = result["progressFlag"];
+						if(onUse === "OK") {
+							onUseVO = result["progressVO"];	
+						}
+					}
+				});
+			}
+
+
 			function DateFormat(obj) {
 				var yy = String(obj.getFullYear()).substring(0, 4);
 				if (String(obj.getMonth() + 1).length == 1) {
@@ -166,18 +201,39 @@
 				return date;
 			}
 
-			function selectnum_change() {
-				var number = parseInt(selectnum.value);
-				for (var i = 1; i < number + 1; i++) {
-					document.getElementById("answer" + i).readOnly = false;
-					document.getElementById("answer" + i).disabled = false;
-				}
 
-				for (var i=number+1; i<11; i++) {
-					document.getElementById("answer" + i).disabled = true;
-					document.getElementById("answer" + i).value = "";
+			var strToDate = function(str) {
+				var y = str.substr(0,4),
+					m = str.substr(5,2) -1,
+					d = str.substr(8,2);
+				return new Date(y,m,d);
+			}
+
+			function selectnum_change() {
+				if(totalCount > 0) {
+					// 설문 결과가 있을 경우
+					document.getElementById("Title").disabled = true;
+					document.getElementById("Title2").disabled = true;
+					document.getElementById("selectnum").disabled = true;
+					document.getElementsByTagName('select')[0].style.background = "#dddddd";
+
+					for (var i=1; i<11; i++) {
+						document.getElementById("answer" + i).disabled = true;
+					}
+				} else {
+					var number = parseInt(selectnum.value);
+					for (var i = 1; i < number + 1; i++) {
+						document.getElementById("answer" + i).readOnly = false;
+						document.getElementById("answer" + i).disabled = false;
+					}
+	
+					for (var i=number+1; i<11; i++) {
+						document.getElementById("answer" + i).disabled = true;
+						document.getElementById("answer" + i).value = "";
+					}
 				}
 			}
+
 
 			function OK_Click() {
 				if (specialChk(document.getElementById("Title").value) || specialChk(document.getElementById("Title2").value)) {
@@ -244,14 +300,14 @@
 						eval("answer" + i).focus();
 						return;
 					}
-					
+
 					if (specialChk(document.getElementById("answer" + i).value)) {
 						alert("<spring:message code='ezResource.special' />");
 						return;
 					}
 					
 				}
-				
+
 				//2017-02-19
 				//보기에 아무것도 넣지 않았을때, 보기를 입력해야 하도록 수정
 				for (var i=1; i<parseInt(selectnum.value)+1; i++) {
@@ -260,7 +316,37 @@
 						return;
 					}
 				}
-				
+
+				if(flag !== "add") {
+					if(totalCount == 0) {
+						checkPollCount();
+						if(totalCount>0) {
+							alert("결과가 선택된 설문은 수정할 수 없습니다.");
+							window.location.reload();
+							return;
+						}
+					}
+				}
+
+				// 진행중인 설문 종료할지 체크
+				getOnUsePoll();
+				if(onUseVO) {
+					if(!(itemSeq == onUseVO.itemSeq)) {
+						var tempSD = strToDate(onUseVO.startDate);
+						var tempED = strToDate(onUseVO.endDate);
+
+						if((Sdate<= tempSD) && (tempSD <= Edate)) {
+							if(!confirm("진행중인 설문이 종료되고, 새로 시작됩니다")) {
+								return;
+							};
+						} else if((Sdate <= tempED) && (tempED <= Edate)) {
+							if(!confirm("진행중인 설문이 종료되고, 새로 시작됩니다")) {
+								return;
+							};
+						}
+					}
+				}
+
 				var objRoot, objNode;
 				var xmlDom = createXmlDom();
 				var xmlHTTP = createXMLHttpRequest();
@@ -297,7 +383,6 @@
 					if(flag === "mod") {
 						try{
 							window.opener.showPreview(2, itemSeq);
-							
 						} catch(e) {
 							window.close();
 						}
@@ -355,7 +440,16 @@
 		</script>
 	</head>
 	<body class = "popup">
-		<h1><spring:message code = 'ezPersonal.t220' /></h1>
+		<h1>
+			<c:choose>
+				<c:when test="${flag == 'add' }">
+					<spring:message code = 'ezPersonal.t220' />
+				</c:when>
+				<c:otherwise>
+					설문 수정
+				</c:otherwise>
+			</c:choose>
+		</h1>
 		<div id="close">
 			<ul>
 				<li><span onclick="window.close()"></span></li>
