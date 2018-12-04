@@ -49,7 +49,7 @@ padding:0px 0px 0px 0px; height:36px; line-height:37px;}/* 20130416 수정 */
 .previewmail_addfile .attachFileName { display:inline-block; width:90%;  white-space:nowrap; overflow:hidden;text-overflow:ellipsis;}
 
 .attachedfile{ margin:-8px; padding:0px; clear:both; overflow:hidden;}
-.attachedfile_title{ margin:0px; padding:0px 20px; list-style:none; height:33px; line-height:32px; box-sizing:border-box; background:#f1f3f5; border-bottom:1px solid #e5e5e5; font-size:13px; color:#393939;}
+.attachedfile_title{ margin:0px; padding:0px 20px; list-style:none; height:33px; line-height:31px; box-sizing:border-box; background:#f1f3f5; border-bottom:1px solid #e5e5e5; border-top:1px solid #e5e5e5; font-size:13px; color:#393939;}
 .attachedfile_title .titleText{ margin:0px; padding:0px; float:left; }
 .attachedfile_title .titleText .titleT{ font-size:13px; display:inline-block; padding:0px 10px 0px 0px; margin:0px;}
 .attachedfile_title .titleText .cblue{ margin:0px; padding:0px; font-weight:bold; color:#0470e4;}
