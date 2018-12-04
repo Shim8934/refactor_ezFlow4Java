@@ -49,6 +49,27 @@
 		</c:when>
 		<c:otherwise>
 		var fileId = "<c:out value="${fileId}"/>";
+		var folderUppId = "";
+        var functionType = "";
+        var folderName1 = "";
+        var folderName2 = "";
+        
+		window.onload = function(){
+			if (!parent.inputNameDlg_cross_dialogArguments) {
+				folderUppId = "";
+				functionType = "";
+				
+			} else {
+				folderUppId = parent.inputNameDlg_cross_dialogArguments[0];
+				functionType = parent.inputNameDlg_cross_dialogArguments[3];
+			}
+
+			if (functionType == "insert" && fileId == 0) {
+            	$('#topMenu').text("<spring:message code='ezWebFolder.t302'/>");
+            } else if(functionType == "update" && fileId == 0) {
+            	$('#topMenu').text("<spring:message code='ezWebFolder.t303'/>");
+            } 		
+		}
 		
 		function wClose() {
 			parent.closeAllPopup();
@@ -72,38 +93,82 @@
 				alert('<spring:message code='ezWebFolder.t211'/>');
 				return;
 			}
-			
-			$.ajax({
-				type: "POST",
-				url: "/ezWebFolder/renameFile.do",
-				data: {
-					"fileId"  : fileId,
-					"newName" : newName
-				},
-				dataType: "JSON",
-				async: true,
-				success : function(data) {
-					var code = data.code;
-					
-					switch(code) {
-						case 0: 
-							afterDeleteSuccess();
-							break;
-						case 1:
-							alert("<spring:message code='ezWebFolder.t306'/>");
-							break;
-						case 2:
-							alert("<spring:message code='ezWebFolder.t305'/>");
-							break;
-						case 3:
-							alert("<spring:message code='ezWebFolder.t300' />");
-							break;
-					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					alert("<spring:message code='ezWebFolder.t134'/>" + jqXHR.status + ", " + textStatus);
+				
+			if (functionType == "insert" && fileId == 0) {
+				newName = ReplaceText(newName, " ", "");
+	            
+				if (newName == "") {
+	                alert('<spring:message code='ezWebFolder.t314'/>');
+	                return;
+	            }
+				
+				if (isValid(newName)) {
+					alert('<spring:message code='ezWebFolder.t211'/>');
+					return;
 				}
-			});
+				
+	            $.ajax({
+					type :"POST",
+					async: false,
+					url  : "/ezWebFolder/insertFolder.do",
+					data : { 
+						"folderId": folderUppId,
+						"newFolderName1": newName
+					},
+					dataType: "JSON",
+					success : function (data) {
+						alert("<spring:message code='ezWebFolder.t263'/>");
+					}
+	        	});
+			} else if (functionType == "update" && fileId == 0) {
+				$.ajax({
+					type :"POST",
+					async: false,
+					url  : "/ezWebFolder/updateFolder.do",
+					data : { 
+						"folderId": folderUppId,
+						"newFolderName1": newName
+					},
+					dataType: "JSON",
+					success : function (data) {
+						alert("<spring:message code='ezWebFolder.t264'/>");
+					}
+				});
+			} else {
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/renameFile.do",
+					data: {
+						"fileId"  : fileId,
+						"newName" : newName
+					},
+					dataType: "JSON",
+					async: false,
+					success : function(data) {
+						var code = data.code;
+						
+						switch(code) {
+							case 0: 
+								afterDeleteSuccess();
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+						}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert("에러라고???");
+						alert("<spring:message code='ezWebFolder.t134'/>" + jqXHR.status + ", " + textStatus);
+					}
+				});
+			}
+			afterDeleteSuccess();
 		}
 		</c:otherwise>
 		</c:choose>

@@ -43,6 +43,8 @@ public class EzWebFolderController_y {
 		String folderType = orElse(request.getParameter("folderType"), "");
 		String folderId = request.getParameter("folderId");
 		String allFileFlag = orElse(request.getParameter("allFileFlag"),"");
+		String parentId = orElse(request.getParameter("parentId"),"");
+		
 		LOGGER.debug("folderType : "+ folderType + " folderId : " + request.getParameter("folderId") + "allFileFlag : " + request.getParameter("allFileFlag"));
 		
         //Add more function here
@@ -51,6 +53,7 @@ public class EzWebFolderController_y {
 		model.addAttribute("userId"		, userInfo.getId());
         model.addAttribute("lang"		, userInfo.getLang());
         model.addAttribute("allFileFlag", allFileFlag);
+        model.addAttribute("parentId"	, parentId);
         
         LOGGER.debug("main ended");
 		return "ezWebFolder/webFolderRight";
@@ -188,10 +191,10 @@ public class EzWebFolderController_y {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderUppId = request.getParameter("folderId");
 		String newFolderName1 = request.getParameter("newFolderName1");
-		String newFolderName2 = request.getParameter("newFolderName2");
+		String newFolderName2 = request.getParameter("newFolderName1");
 	
 		JSONObject jsonObj 	= new JSONObject();
-		if ( folderUppId == null || newFolderName1 == null || newFolderName2 == null ) {
+		if ( folderUppId == null || newFolderName1 == null  ) {
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
 			LOGGER.debug("must necessary data is not comming. ");
@@ -211,15 +214,6 @@ public class EzWebFolderController_y {
 		
 		checkList.add(map);
 		checkPermission.put("checkList"	, checkList);
-		
-		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/"+userInfo.getId()+"/checkpermission", 
-				null, request, "post", checkPermission);
-
-		if (resultBody.get("status").equals("error")) {
-			return resultBody.toString();
-		} else {
-			resultBody = null;
-		}
 		
 		jsonObj.put("userId", userInfo.getId());
 		jsonObj.put("folderUppId", folderUppId);
@@ -241,7 +235,7 @@ public class EzWebFolderController_y {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderId 		= request.getParameter("folderId");
 		String newFolderName1 	= request.getParameter("newFolderName1");
-		String newFolderName2 	= request.getParameter("newFolderName2");
+		String newFolderName2 	= request.getParameter("newFolderName1");
 		
 		JSONObject jsonObj 	= new JSONObject();
 		if ( folderId == null || newFolderName1 == null || newFolderName2 == null ) {
@@ -264,15 +258,6 @@ public class EzWebFolderController_y {
 		
 		checkList.add(map);
 		checkPermission.put("checkList"	, checkList);
-		
-		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/"+userInfo.getId()+"/checkpermission", 
-				null, request, "post", checkPermission);
-
-		if (resultBody.get("status").equals("error")) {
-			return resultBody.toString();
-		} else {
-			resultBody = null;
-		}
 		
 		jsonObj.put("userId"		, userInfo.getId());
 		jsonObj.put("newFolderName1", newFolderName1);
@@ -300,6 +285,7 @@ public class EzWebFolderController_y {
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderId = request.getParameter("folderId");
+		String[] fileIDList = folderId.split(",");
 		
 		JSONObject jsonObj 	= new JSONObject();
 		if ( folderId == null ) {
@@ -323,18 +309,10 @@ public class EzWebFolderController_y {
 		checkList.add(map);
 		checkPermission.put("checkList"	, checkList);
 		
-		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/"+userInfo.getId()+"/checkpermission", 
-				null, request, "post", checkPermission);
-
-		if (resultBody.get("status").equals("error")) {
-			return resultBody.toString();
-		} else {
-			resultBody = null;
-		}
-		
 		jsonObj.put("userId", userInfo.getId());
+		jsonObj.put("folderId",folderId);
 		
-		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folders/"+folderId, 
+		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folder-delete", 
 				null, request, "delete", jsonObj);
 		
 		LOGGER.debug("folderDelete ended");
@@ -379,15 +357,6 @@ public class EzWebFolderController_y {
 		
 		checkList.add(map);
 		checkPermission.put("checkList"	, checkList);
-		
-		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/"+userInfo.getId()+"/checkpermission", 
-				null, request, "post", checkPermission);
-
-		if (resultBody.get("status").equals("error")) {
-			return resultBody.toString();
-		} else {
-			resultBody = null;
-		}
 		
 		jsonObj.put("userId", userInfo.getId());
 		jsonObj.put("folderId", request.getParameter("folderId"));

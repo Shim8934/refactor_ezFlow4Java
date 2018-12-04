@@ -449,7 +449,7 @@
 		</isNotEqual>
 			
 		<![CDATA[
-			ORDER BY FOLDER_SORT, CREATE_DATE DESC
+			ORDER BY FOLDER_SORT, UPDATE_DATE DESC
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -519,7 +519,7 @@
 		</isNotEqual>
 			
 		<![CDATA[
-			ORDER BY FOLDER_SORT, CREATE_DATE DESC
+			ORDER BY FOLDER_SORT, UPDATE_DATE DESC
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -580,7 +580,7 @@
 			]]>
 		</isNotEqual>
 		<![CDATA[
-			ORDER BY FOLDER_SORT, CREATE_DATE DESC
+			ORDER BY FOLDER_SORT, UPDATE_DATE DESC
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -631,7 +631,7 @@
 			<include refid="searchAll"/>
 			<![CDATA[
 				
-			ORDER BY FOLDER_SORT, CREATE_DATE DESC
+			ORDER BY FOLDER_SORT, UPDATE_DATE DESC
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -721,7 +721,7 @@
 			<include refid="searchAll"/>
 			<![CDATA[
 				
-			ORDER BY FOLDER_SORT, CREATE_DATE DESC
+			ORDER BY FOLDER_SORT, UPDATE_DATE DESC
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -785,7 +785,7 @@
 			<include refid="searchAll"/>
 			<![CDATA[
 				
-				ORDER BY FOLDER_SORT,CREATE_DATE desc 
+				ORDER BY FOLDER_SORT,UPDATE_DATE desc 
 				LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>

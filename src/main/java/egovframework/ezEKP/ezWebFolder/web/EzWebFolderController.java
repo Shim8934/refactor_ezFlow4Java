@@ -479,14 +479,17 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	public String deleteFileConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("deleteFileConfirm start");
 		String listFileId = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
+		String listFolderId = request.getParameter("folderList") != null ? request.getParameter("folderList") : "";
 		
 		logger.debug("FileId list: " + listFileId);
+		logger.debug("listFolderId list: " + listFolderId);
 		
-		if (listFileId.equals("")) {
+		if ((listFileId.equals("") && listFolderId.equals(""))) {
 			logger.debug("Delete File Confirm illegal arguments!");
 			return "cmm/error/egovError";
 		}
 		
+		model.addAttribute("folderList", listFolderId);
 		model.addAttribute("fileList", listFileId);
 		logger.debug("deleteFileConfirm end");
 		
@@ -499,15 +502,17 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		logger.debug("deleteFile start");
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String listFileId   = request.getParameter("fileList");
+		String listFolderId = request.getParameter("folderList");
 		
 		logger.debug("FileId list: " + listFileId);
 		
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
-		String url          = gwServerUrl + "/rest/ezwebfolder/file-delete";
+		String url          = gwServerUrl + "/rest/ezwebfolder/filefolder-delete";
 		
 		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("fileList", listFileId);
+										.queryParam("fileList", listFileId)
+										.queryParam("folderList", listFolderId);
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
@@ -562,7 +567,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 	@RequestMapping(value="/ezWebFolder/renameFile.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String renameFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String renameFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("renameFile start");
 		
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
@@ -587,7 +592,12 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		JSONObject resultBody = new JSONObject();
+		try {
+			resultBody = (JSONObject) jp.parse(result.getBody());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		
 		logger.debug("renameFile end");
 		return resultBody.toString();
@@ -949,6 +959,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String fileId      = request.getParameter("fileId");
 		String fileList    = request.getParameter("fileList");
+		String folderList  = request.getParameter("folderList") != null ? request.getParameter("folderList") : "";
 		
 		logger.debug("File Id: " + fileId + " || FileId list: " + fileList);
 		
@@ -962,7 +973,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("fileList", fileList)
-										.queryParam("fileId", fileId);
+										.queryParam("fileId", fileId)
+										.queryParam("folderList",folderList);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		

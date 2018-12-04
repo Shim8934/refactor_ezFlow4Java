@@ -87,11 +87,13 @@ var rowContext = (function() {
 		var targetId = rowElement.getAttribute("targetId");
 		var targetType = rowElement.getAttribute("targetType");
 		var isFavorite = rowElement.hasAttribute("favorite");
+		var creator = rowElement.getAttribute("targetCreater");
 		
 		return {
 			id: targetId,
 			type: targetType,
-			isFavorite: isFavorite
+			isFavorite: isFavorite,
+			creator : creator
 		}
 	}
 	

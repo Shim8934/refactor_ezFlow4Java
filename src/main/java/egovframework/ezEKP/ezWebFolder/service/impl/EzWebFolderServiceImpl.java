@@ -45,6 +45,7 @@ import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
@@ -71,6 +72,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	
 	@Autowired
 	private EzWebFolderService_m ezWebFolderService_m;
+	
+	@Autowired
+	private EzWebFolderService_y ezWebFolderService_y;
 	
 	@Autowired
 	private EzCommonService ezCommonService;
@@ -1039,6 +1043,34 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
 			updateFileUseStatus(userId, fileIDList[i], timeUTC, tenantId);
 			saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+		}
+	}
+	
+	@Override
+	public void deleteSelectedFilesFolders (String[] fileIDList, String[] folderIDList ,LoginVO userInfo) throws Exception {
+		String userName1 = userInfo.getDisplayName1();
+		String userName2 = userInfo.getDisplayName2();
+		String companyId = userInfo.getCompanyID();
+		int tenantId     = userInfo.getTenantId();
+		String offset    = userInfo.getOffset();
+		String userId    = userInfo.getId();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		
+		if (!fileIDList[0].equals("-1")) {
+			for (int i = 0; i < fileIDList.length; i++) {
+				FileVO fileVO = getFileByFileId(fileIDList[i], offset, tenantId);
+				
+				//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
+				updateFileUseStatus(userId, fileIDList[i], timeUTC, tenantId);
+				saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+			}
+		}
+		if (!folderIDList[0].equals("-1")) {
+			for ( int i = 0; i < folderIDList.length; i++ ) {
+				ezWebFolderService_y.deleteSubFldAFile(folderIDList[i], tenantId, companyId, userId, timeUTC);
+			}
 		}
 	}
 	

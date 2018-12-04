@@ -46,6 +46,10 @@
 		var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
 		var resultErr4 = "<spring:message code='ezWebFolder.t249'/>";
 		var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
+		var functionType = "";
+		var inputNameDlg_cross_dialogArguments = new Array();
+		var parentId = "${parentId}";
+		var userId = "";
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
@@ -68,6 +72,7 @@
 			closeAllPopup();
 			if (allFileFlag == "all") {
 				$('#upload').css('display','none');
+				$('#newFolder').css('display','none');
 			}
 			getFileList(folderId);
 			
@@ -187,7 +192,6 @@
 				},
 				error : function(error) {
 					hideProgress();
-// 					alert(messages.strLang7 + error);
 				}
 			});
 		}
@@ -205,6 +209,7 @@
 					return;
 				}
 			}
+			userId = data.data.userId;
 			var result = data.data;
 			
 			var fileCnt = result.fileCnt;
@@ -233,6 +238,7 @@
 			
 			$('#tblFileList tr td').parent().remove();
 			renderData(filelist);
+			parentId = data.data.folderUpp;
 			
 			namePath(folderPath, originalPath);
 			document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
@@ -369,6 +375,7 @@
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("targetId", result[i]["fileId"]);
 					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'D' : 'F');
+					trElmt.setAttribute("targetCreater", result[i]["createId"]);
 					trElmt.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					if (result[i]["fileTypeName"] != 'folder') {
@@ -420,6 +427,7 @@
 					}
 					
 					tdElmt6.textContent = result[i]["createName1"];
+					tdElmt6.setAttribute("value",result[i]["createId"]);
 					tdElmt7.textContent = result[i]["createDate"].substring(0, 10);
 					tdElmt8.textContent = result[i]["updateDate"].substring(0, 10);
 					tdElmt9.textContent = result[i]["filePosition"];
@@ -616,6 +624,7 @@
         function hideProgress() {
         	document.getElementById("progressPanel").style.display = "none";
         }
+        
     </script>
 </head>
 <body class="mainbody" style="padding-bottom:10px;">
@@ -628,7 +637,8 @@
 			<ul>
 				<li class="important"><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186' /></span></li>
 				<li class="important" id="upload"><span onclick="buttons.fileUpload()"><spring:message code='ezWebFolder.t187' /></span></li>
-				<li><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t273' /></span></li>
+				<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
+				<li><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t508' /></span></li>
 				<li><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t275' /></span></li>
 				<li><span onclick="shareContext.addShareView()"><spring:message code='ezWebFolder.t254' /></span></li>			
 				<!-- <li><img src="/images/i_bar.gif" /></li> -->

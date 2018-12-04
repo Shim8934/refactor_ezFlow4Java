@@ -200,6 +200,17 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			Date date                  	= new Date();
 			String timeUTC             	= commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 			LOGGER.debug("timeUTC"+ timeUTC);
+			
+			String checkPermission = service.checkPermission(userId, deptId, comId, folderUppId, "D", tenantId);
+			
+			if ( checkPermission.equals("fail")) {
+				LOGGER.debug("checkPermission is fail. ");
+				jsonObj.put("status", "error");
+				jsonObj.put("code"	, 3);
+				LOGGER.debug("folderInsert method ended");
+				return jsonObj;
+			}
+			
 			// foldervo 가지고 와서 상위의 폴더의 vo를 추린다. 
 			FolderVO foldervo= service.getFolderDetail(folderUppId, userId ,tenantId,comId);
 			
@@ -241,10 +252,21 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String newFolderName2 		= (String) jsonObject.get("newFolderName2");
 			int tenantId 				= common.getTenantId();
 			String comId 				= common.getCompanyId();
+			String deptId				= common.getDeptId();
 			String offset 				= common.getOffSet();
 			SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date                  	= new Date();
 			String timeUTC             	= commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+			String checkPermission = service.checkPermission(userId, deptId, comId, folderId, "D", tenantId);
+			
+			if ( checkPermission.equals("fail")) {
+				LOGGER.debug("checkPermission is fail. ");
+				jsonObj.put("status", "error");
+				jsonObj.put("code"	, 3);
+				LOGGER.debug("folderUpdate method ended");
+				return jsonObj;
+			}
+			
 			service.updateFolder(folderId, tenantId, userId, comId, newFolderName1, newFolderName2, timeUTC);
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
@@ -273,6 +295,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			int tenantId = common.getTenantId();
 			String comId = common.getCompanyId();
 			String offset = common.getOffSet();
+			String deptId = common.getDeptId();
 			LOGGER.debug("folderId :" + folderId + ", serverName : "+ serverName + ", userId : " +userId + ", tenantId : " + tenantId
 					+ ", comId : " + comId + ", offset" + offset);
 			
@@ -282,6 +305,16 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				LOGGER.debug("Parameter error!");
 				result.put("status", "error");
 				result.put("code", 1);
+				return result;
+			}
+			
+			String checkPermission = service.checkPermission(userId, deptId, comId, folderId, "D", tenantId);
+			
+			if ( checkPermission.equals("fail")) {
+				LOGGER.debug("checkPermission is fail. ");
+				result.put("status", "error");
+				result.put("code"	, 3);
+				LOGGER.debug("folderCopy method ended");
 				return result;
 			}
 			
@@ -396,6 +429,62 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		return jsonObj;
 	}
 	
+	// 폴더 삭제 
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value ="/rest/ezwebfolder/folder-delete", method = RequestMethod.DELETE , produces = "application/json;charset=utf-8")
+	public JSONObject folderDelete2 ( HttpServletRequest request,@RequestBody JSONObject jsonObject) {
+		LOGGER.debug("folderDelete started");
+		JSONObject jsonObj 			= new JSONObject();
+		String serverName 			= request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host") : "";
+		SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  	= new Date();
+		String userId 				= (String) jsonObject.get("userId");
+		String listFolderId   		= (String) jsonObject.get("folderId") != null ? (String) jsonObject.get("folderId") : "";
+		String[] folderIDList 		= listFolderId.split(",");
+		
+		LOGGER.debug((String)jsonObject.get("userId"));
+		MCommonVO common;
+		try {
+			common = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId 	= common.getTenantId();
+			String comId 	= common.getCompanyId();
+			String offset 	= common.getOffSet();
+			String deptId 	= common.getDeptId();
+			String timeUTC  = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+			String checkPermission = "";
+			
+			for ( int i = 0; i < folderIDList.length; i++ ) {
+				checkPermission = service.checkPermission(userId, deptId, comId, folderIDList[i], "D", tenantId);
+				
+				if ( checkPermission.equals("fail")) {
+					LOGGER.debug("checkPermission is fail. ");
+					jsonObj.put("status", "error");
+					jsonObj.put("code"	, 3);
+					LOGGER.debug("fileList method ended");
+					return jsonObj;
+				}
+			}
+			
+			for ( int i = 0; i < folderIDList.length; i++ ) {
+				int result = service.deleteSubFldAFile(folderIDList[i], tenantId, comId, userId, timeUTC);
+				if (result == 1) {
+					jsonObj.put("status", "ok");
+					jsonObj.put("code", 0);
+				} else if (result == 2) {
+					jsonObj.put("status", "error");
+					jsonObj.put("code", 4);
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			jsonObj.put("status", "error");
+			jsonObj.put("code", 2);
+		}
+		LOGGER.debug("folderDelete ended");
+		return jsonObj;
+	}
+	
 	// 파일리스트 조회 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/folders/{folderId}/file-list", method=RequestMethod.GET, produces ="application/json;charset=utf-8")
@@ -444,6 +533,16 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String offset = common.getOffSet();
 			String primary = common.getPrimary();
 			String comId = common.getCompanyId();
+			
+			String checkPermission = service.checkPermission(userId, deptId, comId, folderId, "D", tenantId);
+			
+			if ( checkPermission.equals("fail")) {
+				LOGGER.debug("checkPermission is fail. ");
+				jsonObj.put("status", "error");
+				jsonObj.put("code"	, 3);
+				LOGGER.debug("fileList method ended");
+				return jsonObj;
+			}
 			
 			// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
 			int usrListCnt = service.getUsrListCount(tenantId, userId);
@@ -553,6 +652,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			data.put("createDate", fldDetail.getCreateDate());
 			data.put("updateDate", fldDetail.getUpdateDate());
 			data.put("folderName", fldDetail.getFolderName1());
+			data.put("userId", userId);
 			data.put("folderPath", folderPath2);
 			data.put("originalPath", originalPath);
 			data.put("fileList", fileList);
@@ -623,6 +723,16 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String offset = common.getOffSet();
 			String primary = common.getPrimary();
 			String comId = common.getCompanyId();
+			
+			String checkPermission = service.checkPermission(userId, deptId, comId, folderId, "D", tenantId);
+			
+			if ( checkPermission.equals("fail")) {
+				LOGGER.debug("checkPermission is fail. ");
+				jsonObj.put("status", "error");
+				jsonObj.put("code"	, 3);
+				LOGGER.debug("fileList2 method ended");
+				return jsonObj;
+			}
 			
 			// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
 			int usrListCnt = service.getUsrListCount(tenantId, userId);
@@ -738,6 +848,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			data.put("totalPages", totalpages );
 			data.put("listCount", listCount );
 			data.put("currPage", currPage );
+			data.put("userId", userId);
 			
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
@@ -798,11 +909,11 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				checkType	= (String) checkList.get(i).get("checkType");
 				checkResult = service.checkPermission(userId, deptId, comId, checkId, checkType, tenantId);
 				
-				if (checkResult == "fail") {
+				if (checkResult.equals("fail")) {
 					LOGGER.debug("this folder conection is not permission ");
 					jsonObj.put("status", "error");
 					jsonObj.put("code"	, 3);
-					LOGGER.debug("fileList method Ended ");
+					LOGGER.debug("checkPermission method Ended ");
 					return jsonObj;
 				}
 				LOGGER.debug(checkResult);
@@ -1003,8 +1114,8 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	    	String pw = requestObject.get("pw") != null ? (String)requestObject.get("pw") : "";
 	    	int tenantId = 0;
 
-	    	System.out.println(webfolderUtil.encryptAES("yy9320"));
-	    	System.out.println(webfolderUtil.encryptAES("qkrdus93!"));
+	    	System.out.println(webfolderUtil.encryptAES("webfolder2"));
+	    	System.out.println(webfolderUtil.encryptAES("123qwe!!"));
 	    	
 	    	userId = webfolderUtil.decryptAES(userId);
 			pw = webfolderUtil.decryptAES(pw);
