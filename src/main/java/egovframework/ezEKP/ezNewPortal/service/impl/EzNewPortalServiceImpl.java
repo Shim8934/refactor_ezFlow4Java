@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezNewPortal.service.impl;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -14,6 +15,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -586,27 +589,33 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return userPortalSetting;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void updatePortletOrderUser(String userId, String companyId, int tenantId,
-			List<Map<String, Integer>> portletOrder, String portletLang) {
+			JSONArray portletOrder, String portletLang) throws Exception {
 		LOGGER.debug("updatePortletOrderUser started.");
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userId);
-		map.put("companyId", companyId);
-		map.put("tenantId", tenantId);
-		map.put("portletLang", portletLang);
 
-		int portletOrderCount = portletOrder.size();
 		List<Integer> portletIdList = new ArrayList<Integer>();
-		
+	
 		//포틀릿 순서 업데이트 (없으면 insert)
-		for (int i = 0; i < portletOrderCount; i++) {
-			map.put("portletOrder", portletOrder.get(i).get("portletOrder"));
-			map.put("portletId", portletOrder.get(i).get("portletId"));
-			ezNewPortalDAO.updatePortletOrderUser(map);
-			portletIdList.add(portletOrder.get(i).get("portletId"));
+		for (Object item : portletOrder) {
+			if (item instanceof JSONObject) {
+				JSONObject portlet = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(portlet.toJSONString(), Map.class);
+				map.put("userId", userId);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				map.put("portletLang", portletLang);
+				
+				ezNewPortalDAO.updatePortletOrderUser(map);
+				
+				int portletId = Integer.parseInt(portlet.get("portletId").toString());
+				portletIdList.add(portletId);
+			}
 		}
-		
+				
 		//tbl_portal_portlet_user에는 있는데 포틀릿 순서에 없었던 목록 가져오기
 		map.put("portletIdList", portletIdList);
 		
