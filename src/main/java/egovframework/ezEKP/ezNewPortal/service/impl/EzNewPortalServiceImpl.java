@@ -613,7 +613,16 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 		int portletOrderCount = portletOrder.size();
 		
-		//portletOrder를 사용자가 설정한 정보가 있는지 확인
+		//포틀릿 순서 업데이트 (없으면 insert)
+		for (int i = 0; i < portletOrderCount; i++) {
+			map.put("portletOrder", portletOrder.get(i).get("portletOrder"));
+			map.put("portletId", portletOrder.get(i).get("portletId"));
+			ezNewPortalDAO.updatePortletOrderUser(map);
+		}
+		
+		//tbl_portal_portlet_user에는 있는데 포틀릿 순서에 없었던 목록 가져오기
+		
+		/*//portletOrder를 사용자가 설정한 정보가 있는지 확인
 		List<PortletInfoVO> userPortletOrder = ezNewPortalDAO.getPortletOrderUser(map);
 
 		if (userPortletOrder == null || userPortletOrder.isEmpty()) {//없으면 insert
@@ -633,7 +642,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("portletId", portletOrder.get(i).get("portletId"));
 				ezNewPortalDAO.insertPortletOrderUser(map);
 			}
-		}
+		}*/
 		
 		LOGGER.debug("updatePortletOrderUser ended.");
 	}

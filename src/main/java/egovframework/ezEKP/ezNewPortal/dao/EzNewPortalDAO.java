@@ -250,6 +250,24 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<BoardListVO> getBoardPortletInfo (Map<String, Object> map) {
 		return (List<BoardListVO>) list("ezNewPortal.getBoardPortletInfo", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortletInfoVO> getThemePortletList(Map<String, Object> map) {
+		return (List<PortletInfoVO>) list("ezNewPortal.getThemePortletList", map);
+	}
+	
+	public void updateThemePortletUsed(Map<String, Object> map) {
+		update("ezNewPortal.updateThemePortletUsed", map);
+	}
+	
+	public void updatePortletOrderUser(Map<String, Object> map) {
+		update("ezNewPortal.updatePortletOrderUser", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortletInfoVO> getPortletListNotSelected (Map<String, Object> map) {
+		return (List<PortletInfoVO>) list("ezNewPortal.getPortletListNotSelected", map);
+	}
 	/**
 	 * 이효진
 	 */
@@ -596,14 +614,5 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 
 	public void updateSlideOrder(Map<String, Object> map) {
 		update("ezNewPortal.updateSlideOrder", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<PortletInfoVO> getThemePortletList(Map<String, Object> map) {
-		return (List<PortletInfoVO>) list("ezNewPortal.getThemePortletList", map);
-	}
-	
-	public void updateThemePortletUsed(Map<String, Object> map) {
-		update("ezNewPortal.updateThemePortletUsed", map);
 	}
 }

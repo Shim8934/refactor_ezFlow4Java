@@ -2023,5 +2023,38 @@ ORDER BY
 	company_order asc	
 </select>
 
+<!-- 18.12.04 수정 -->
+<update id="ezNewPortal.updatePortletOrderUser" parameterClass="Map">
+<![CDATA[
+	INSERT INTO TBL_PORTAL_PORTLET_USER (
+		user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id, portlet_used
+	) VALUES (
+		#userId#, #tenantId#, #companyId#, #portletId#,	#portletOrder#, 
+		(SELECT MENU_ID FROM TBL_PORTAL_PORTLET WHERE PORTLET_ID = #portletId#), 1
+	)
+	ON DUPLICATE KEY UPDATE
+	portlet_order = #portletOrder#
+	
+]]>
+</update>
 
+<select id="ezNewPortal.getPortletListNotSelected" parameterClass="Map" resultClass="PortletInfoVO">
+<![CDATA[
+	SELECT 
+		portlet_id as portletid
+	FROM
+		TBL_PORTAL_PORTLET_USER
+	WHERE
+		user_id = #userId#
+	AND
+		tenant_id = #tenantId#
+	AND
+		company_id = #companyId#
+]]>
+	<iterate prepend="AND portlet_id NOT IN " property="portletIdList" open="(" conjunction="," close=")">
+		<![CDATA[
+			#portletIdList[]#
+		]]>
+	</iterate>
+</select>
 </sqlMap>
