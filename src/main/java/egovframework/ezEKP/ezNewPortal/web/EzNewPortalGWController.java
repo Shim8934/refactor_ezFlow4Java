@@ -4206,7 +4206,7 @@ e.printStackTrace();
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/portlets/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getThemePortletList(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateSlideOrder started.");
+		LOGGER.debug("ezNewPortal G/W getThemePortletList started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -4217,7 +4217,7 @@ e.printStackTrace();
 			int tenantId = userInfo.getTenantId();
 			String lang = userInfo.getLang();
 			
-			List<PortletInfoVO> themePortletList = ezNewPortalService.getThemePortletList(themeId, tenantId, companyId);
+			List<PortletInfoVO> themePortletList = ezNewPortalService.getThemePortletList(themeId, tenantId, companyId, lang);
 			
 			if (themePortletList == null) {
 				themePortletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang));
@@ -4335,7 +4335,7 @@ e.printStackTrace();
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateSlideOrder ended.");
+		LOGGER.debug("ezNewPortal G/W getThemePortletList ended.");
 		return result;
 	}
 	
@@ -4349,18 +4349,22 @@ e.printStackTrace();
 		JSONObject result = new JSONObject();
 
 		try {
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			
 			String serverName = request.getHeader("x-user-host");
 			String userId = jsonParam.get("userId").toString();
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
-			
-			JSONArray themePortletList = (JSONArray) jsonParam.get("themePortletList");
+
+			JSONArray themePortletList = (JSONArray)jsonParam.get("themePortletList");
 			
 			ezNewPortalService.updateThemePortletUsed(themeId, tenantId, companyId, themePortletList);
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

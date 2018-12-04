@@ -83,7 +83,7 @@ public interface EzNewPortalService {
 	public void updateCompanyDefaultTheme(int themeId, String companyId, int tenantId);
 	public void deleteCompanyLogo(String companyId, int tenantId, String logoType);
 	public void resetCompanyMenuOrder(String companyId, int tenantId);
-	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId) throws Exception;
+	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId, String lang) throws Exception;
 	public void updateThemePortletUsed(int themeId, int tenantId, String companyId, JSONArray themePortletList) throws Exception;
 	/**
 	 * 이효진

@@ -597,16 +597,32 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("portletLang", portletLang);
 
 		int portletOrderCount = portletOrder.size();
+		List<Integer> portletIdList = new ArrayList<Integer>();
 		
 		//포틀릿 순서 업데이트 (없으면 insert)
 		for (int i = 0; i < portletOrderCount; i++) {
 			map.put("portletOrder", portletOrder.get(i).get("portletOrder"));
 			map.put("portletId", portletOrder.get(i).get("portletId"));
 			ezNewPortalDAO.updatePortletOrderUser(map);
+			portletIdList.add(portletOrder.get(i).get("portletId"));
 		}
 		
 		//tbl_portal_portlet_user에는 있는데 포틀릿 순서에 없었던 목록 가져오기
+		map.put("portletIdList", portletIdList);
 		
+		List<PortletInfoVO> notSelectedPortletList = ezNewPortalDAO.getPortletListNotSelected(map);
+		
+		if (notSelectedPortletList != null) {
+			int portletCount = notSelectedPortletList.size();
+			
+			for (int i = 0; i < portletCount; i++) {
+				portletCount++;
+				map.put("portletOrder", portletCount);
+				map.put("portletId", notSelectedPortletList.get(i).getPortletId());
+				
+				ezNewPortalDAO.updatePortletOrderUser(map);
+			}
+		}
 		/*//portletOrder를 사용자가 설정한 정보가 있는지 확인
 		List<PortletInfoVO> userPortletOrder = ezNewPortalDAO.getPortletOrderUser(map);
 
@@ -1131,13 +1147,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId) throws Exception {
+	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId, String lang) throws Exception {
 		LOGGER.debug("getThemePortletList started.");
 		List<PortletInfoVO> themePortletList = new ArrayList<PortletInfoVO>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("themeId", themeId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
+		map.put("lang", lang);
 		
 		themePortletList = ezNewPortalDAO.getThemePortletList(map);
 		LOGGER.debug("getThemePortletList ended.");
@@ -1147,7 +1164,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateThemePortletUsed(int themeId, int tenantId, String companyId, JSONArray themePortletList) throws Exception {
-		LOGGER.debug("getThemePortletList started.");
+		LOGGER.debug("updateThemePortletUsed started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		for (Object item : themePortletList) {
@@ -1163,7 +1180,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
-		LOGGER.debug("getThemePortletList ended.");
+		LOGGER.debug("updateThemePortletUsed ended.");
 	}
 	/**
 	 * 이효진

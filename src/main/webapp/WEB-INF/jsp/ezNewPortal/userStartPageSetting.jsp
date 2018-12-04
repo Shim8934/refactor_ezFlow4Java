@@ -65,7 +65,7 @@ function setStartPage(event) {
 				$("#M" + menuId).find("td").eq(2).text("<spring:message code='ezNewPortal.t031' />");
 			},
 			fail : function () {
-				alert("<spring:message code='ezNewPortal.t032' />");
+				//alert("<spring:message code='ezNewPortal.t032' />");
 			}
 		});
 	}
