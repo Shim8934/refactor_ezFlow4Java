@@ -696,7 +696,7 @@
 				
 				rmQstnForm(thisEl);                     // 설문 생성 폼 삭제
 			}
-			
+			// select 질문 객체 생성
 			function mkSltObj(qstnForm) {
 				var sltObj = {};
 				
@@ -732,7 +732,6 @@
 						option.push(optObj);
 					}
 					sltObj['option'] = option;
-					//question['option'] = option; 
 				}
 				
 				// 기타
@@ -756,17 +755,15 @@
 						other['otherAttach'] = otherAttach;
 					}
 					// 질문 객체에 기타 객체 추가
-					//question['other'] = other;
 					sltObj['other'] = other;
 				}
 				
 				return sltObj;
 			}
-			
+			// matrix 질문 객체 생성
 			function mkMtrObj(qstnForm) {
 				var rows = qstnForm.find(".row");
 				
-				//var mtrArr = [];
 				var mtrObj = {};
 				if (rows) {
 					var row = [];
@@ -779,7 +776,6 @@
 						
 						row.push(rowObj);
 					}
-					//mtrArr.push(row);
 					mtrObj['row'] = row;
 				}
 				
@@ -796,14 +792,12 @@
 						
 						col.push(colObj);
 					}
-					//mtrArr.push(col);
 					mtrObj['col'] = col;
 				}
 				
-				//return mtrArr;
 				return mtrObj;
 			}
-			
+			// option 생성
 			function mkOpt(type, options, action) {
 				
 				var optAtt = "";
@@ -847,7 +841,7 @@
 				
 				return html;
 			}
-///////////////////////////////////////////////////////////			
+			// 행 생성
 			function mkRow() {
 				var html = "";
 					html += "<div class='row'>";
@@ -857,7 +851,7 @@
 				
 				return html;
 			}
-			
+			// 열 생성
 			function mkCol() {
 				var html = "";
 					html += "<div class='col'>";
@@ -867,7 +861,7 @@
 				
 				return html;
 			}
-			
+			// 필수, 저장, 수정, 취소 버튼 생성
 			function mkAddtionalPart(required, action) {
 				var html = "";
 					html += "<div class='additionalPart'>";
