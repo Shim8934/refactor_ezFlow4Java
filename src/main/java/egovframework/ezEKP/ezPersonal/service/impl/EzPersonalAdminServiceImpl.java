@@ -1070,6 +1070,26 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			return "ERROR : " + e.getMessage();
 		}
 	}
-	
-	
+
+	@Override
+	public String checkJoinPoll(String userId, int tenantID, String itemSeq) throws Exception {
+		logger.debug("checkJoinPoll started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantID", tenantID);
+		map.put("itemSeq", itemSeq);
+
+		int cnt = ezPersonalAdminDAO.checkJoinPoll(map);
+
+		String result = "";
+		if(cnt == 0) {
+			result = "OK";
+		} else {
+			result = "NO";
+		}
+
+		logger.debug("checkJoinPoll ended");
+		return result;
+	}
 }

@@ -1552,4 +1552,26 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("getOnUsePoll ended");
 		return json;
 	}
+
+
+	/** 
+	 * 현재 진행중인 설문조사 get
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/checkJoinPoll.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public String checkJoinPoll(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("checkJoinPoll started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String itemSeq = "";
+		if(request.getParameter("itemseq") != null) {
+			itemSeq = request.getParameter("itemseq");
+		}
+
+		String msg = "OK";
+		msg = ezPersonalAdminService.checkJoinPoll(userInfo.getId(), userInfo.getTenantId(), itemSeq);
+
+		logger.debug("checkJoinPoll ended");
+		return msg;
+	}
 }
