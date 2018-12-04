@@ -252,7 +252,7 @@
 
 /* paragraph css */
 .qstnWrapper {width: 1000px; margin: 0px auto;}
-.paragraph-wrap {height: 120px;}
+.paragraph-wrap, .question-paragraph {height: 120px;}
 .paragraph {padding: 6px 12px; width: 100%; height: 100%; background: #fff; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; resize: none; font-size: 14px; line-height: 20px; pointer-events: none; user-select: none; outline: none;}
 
 /* slider css */
@@ -330,7 +330,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .tooltip-bttns .copyBtn {background-image: url('/images/ezSurvey/copy.png');}
 .tooltip-bttns .deleteBtn {background-image: url('/images/ezSurvey/trash.png');}
 .question-content .imptt {color: rgba(255, 0, 0, 1);}
-.usrQstnWrapper .question-opts {padding: 10px 35px 20px;}
+.usrQstnWrapper .question-opts, .usrQstnWrapper .question-paragraph {padding: 10px 35px 20px;}
 
 .question-opts .opt {width: 100%; height: 50px; display: flex; align-items: center;}
 .question-opts .opt >input[type='radio'], .question-opts .opt >input[type='checkbox'] {width: 20px; height: 20px; margin: 0px;}
