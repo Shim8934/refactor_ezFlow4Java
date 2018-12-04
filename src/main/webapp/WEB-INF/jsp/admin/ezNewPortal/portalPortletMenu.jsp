@@ -18,6 +18,7 @@
 .full_menu_toggleUL > li {border:1px solid #d9d9d9; margin:2px;}
 .popup {height:96%; overflow:hidden;}
 .full_menu_toggle {margin-top:3%;overflow:auto;height:320px;}
+.full_menu_toggleDL dd span {font-size:15px;display:inline-block;text-overflow:ellipsis;overflow:hidden;width:84px;white-space:nowrap;}
 </style>
 </head>
 <body class='popup'>
@@ -29,7 +30,7 @@
 		<li id="menu${menu.menuId }" class="menuList">
 			<dl class="full_menu_toggleDL">
 				<dt><span class='${menu.iconUrl }'></span></dt>
-				<dd><c:out value="${menu.menuName }"/></dd>
+				<dd><span><c:out value="${menu.menuName }"/></span></dd>
 			</dl>
 		</li>
 	</c:forEach>

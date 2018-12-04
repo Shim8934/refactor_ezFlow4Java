@@ -395,6 +395,8 @@ public class EzCommonController extends EgovFileMngUtil{
 			}
 		} 
 		
+		//email이 alias 메일이어서 id를 못가져왔을 경우
+		//alias mail인지 check후 원래 이메일 주소에서 id를 가져온다.
 		if (id == null || id.equals("")) {
 			List<String> aliasAddress = new ArrayList<String>();
 			aliasAddress.add(email);
@@ -406,13 +408,13 @@ public class EzCommonController extends EgovFileMngUtil{
 				
 				if (resultTargetAddress != null) {
 					aliasMailUse = true;
+					int atSignPos = resultTargetAddress.indexOf("@");
+					if (atSignPos != -1) {
+						id = resultTargetAddress.substring(0, atSignPos);
+						logger.debug("id=" + id);
+					}
 				}
 				
-				int atSignPos = resultTargetAddress.indexOf("@");
-				if (atSignPos != -1) {
-					id = resultTargetAddress.substring(0, atSignPos);
-					logger.debug("id=" + id);
-				}
 			}
 		}
 		

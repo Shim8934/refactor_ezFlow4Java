@@ -71,7 +71,7 @@
 						
 						for (var i = 0; i < 5; i++) {
 							if (forms[i]) {
-								formsHTML += "<li class='bookmarkLi' data-location='" + forms[i].formFileLocation + "' data-type='" + forms[i].formDocType + "'><span>" + forms[i].formName + "</span></li>";
+								formsHTML += "<li class='bookmarkLi' data-location='" + forms[i].formFileLocation + "' data-type='" + forms[i].formDocType + "'><span style='width: 65px; display: inline-block; overflow:hidden; text-overflow:ellipsis;'>" + forms[i].formName + "</span></li>";
 							} else {
 								formsHTML += "<li class='bookmarkLi_none'></li>";
 							}
