@@ -37,6 +37,7 @@
 		.calendarleft {margin: 0px;}
 		.calendarright {margin: 0px;}
 		.tree_delete {margin: 0px; cursor: pointer;}
+		.slick-slide {outline: none !important;}
 		</style>
 		<script type="text/javascript">
 			var nowYear = new Date().getFullYear();
