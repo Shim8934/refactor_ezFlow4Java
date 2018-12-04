@@ -377,21 +377,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("[Serivce] updateUserUsedPortlet Ended");
 	}
 	
-	public List<PortletInfoVO> getPortletOrderCompForUser(String portletLang, int tenantId, String companyId, String deptId, String userId) throws Exception {
-		LOGGER.debug("[Serivce] getPortletOrderCompForUser Started");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("portletLang", portletLang);
-		map.put("tenantId", tenantId);
-		map.put("companyId", companyId);
-		map.put("deptId", deptId);
-		map.put("userId", userId);
-		
-		List<PortletInfoVO> portletOrderComp = ezNewPortalDAO.getPortletOrderCompForUser(map);
-
-		LOGGER.debug("[Serivce] getPortletOrderCompForUser Ended");
-		return portletOrderComp;		
-	}
-	
 	// 사용자 포틀릿 리스트 가져오기
 	public List<PortletInfoVO> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId, boolean config) throws Exception {
 		LOGGER.debug("[Serivce] getUserPortletList Started");

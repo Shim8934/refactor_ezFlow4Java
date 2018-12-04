@@ -96,12 +96,6 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (int) select("ezNewPortal.getQuickLinkTotalCnt", map);
 	}
 
-	// 사용자가 볼수 있는 회사 포틀릿
-	@SuppressWarnings("unchecked")
-	public List<PortletInfoVO> getPortletOrderCompForUser(Map<String, Object> map) throws Exception {
-		return (List<PortletInfoVO>) list("ezNewPortal.getPortletOrderCompForUser", map);
-	}
-	
 	// 사용자 사용가능 프레임 리스트
 	@SuppressWarnings("unchecked")
 	public List<FrameInfoVO> getUserUsableFrameList(Map<String, Object> map) throws Exception {

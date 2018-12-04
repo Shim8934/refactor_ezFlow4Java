@@ -484,60 +484,6 @@ AND
 ]]>		
 </select>
 
-<select id="ezNewPortal.getPortletOrderCompForUser" parameterClass="Map" resultClass="PortletInfoVO">
-<![CDATA[
-SELECT
-	A.PORTLET_ID AS PORTLETID, 
-	A.PORTLET_ORDER AS PORTLETORDER, 
-	B.PORTLET_NAME AS PORTLETNAME, 
-	C.PORTLET_URL AS PORTLETURL,
-	B.MENU_ID AS MENUID
-FROM	
-	TBL_PORTAL_PORTLET_COMP as A
-JOIN
-	TBL_PORTAL_PORTLET_NAME as B
-ON
-	A.PORTLET_ID = B.PORTLET_ID
-AND
-	A.MENU_ID = B.MENU_ID
-AND
-	A.COMPANY_ID = B.COMPANY_ID
-AND
-	B.PORTLET_LANG = #portletLang#
-JOIN
-	TBL_PORTAL_PORTLET as C
-ON
-	A.PORTLET_ID = C.PORTLET_ID
-WHERE
-	A.TENANT_ID = #tenantId#
-AND
-	A.COMPANY_ID = #companyId#
-AND
-	A.PORTLET_USED = 1
-AND
-	C.MENU_ID not in (
-		SELECT MENU_ID FROM (
-		SELECT MENU_ID FROM TBL_PORTAL_MENU_AUTH
-		WHERE COMPANY_ID = #companyId#
-		AND TENANT_ID = #tenantId#
-		AND USER_ID = #userId#
-		AND ACCESS_YN = 0
-		AND USER_TYPE = 1
-
-		UNION
-
-		SELECT MENU_ID FROM TBL_PORTAL_MENU_AUTH
-		WHERE COMPANY_ID = #companyId#
-		AND TENANT_ID = #tenantId#
-		AND USER_ID = #deptId#
-		AND ACCESS_YN = 0
-		AND USER_TYPE = 0 ) AS Z  
-    )
-ORDER BY
-	A.PORTLET_ORDER
-]]>		
-</select>
-
 <!-- 유저가 사용 가능한 프레임 리스트 -->
 <select id="ezNewPortal.getUserUsableFrameList" parameterClass="Map" resultClass="FrameInfoVO">
 <![CDATA[
