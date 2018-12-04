@@ -270,7 +270,7 @@
 		]]>
 	</insert>
 	
-	<select id="EzSystemAdminDAO.selectModuleSize" parameterClass="java.lang.String" resultClass="java.lang.Long">
+	<select id="EzSystemAdminDAO.selectModuleSize" parameterClass="java.util.Map" resultClass="java.lang.Long">
 		SELECT 
 			SUM(DATA_LENGTH + INDEX_LENGTH) AS MODULESIZE
 		FROM
@@ -279,6 +279,10 @@
 			TABLE_SCHEMA = 'JMOCHA'
 		AND
 			TABLE_NAME REGEXP #tableNames#
+		<isNotEmpty property="notTableNames">
+			AND
+				TABLE_NAME NOT REGEXP #notTableNames#
+		</isNotEmpty>
 	</select>
 		
 </sqlMap>

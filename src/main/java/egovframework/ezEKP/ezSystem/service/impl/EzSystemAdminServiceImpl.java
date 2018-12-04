@@ -590,7 +590,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		// end
 		
 		// get table size
-		tableSize = ezSystemAdminDAO.selectModuleSize(module.getTableName());
+		tableSize = ezSystemAdminDAO.selectModuleSize(module.getTableName(), module.getNotTableName());
 		// end
 		
 		return setModuleSize(storageSize, tableSize);
