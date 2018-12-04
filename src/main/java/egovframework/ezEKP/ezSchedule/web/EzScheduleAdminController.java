@@ -487,8 +487,10 @@ public class EzScheduleAdminController {
 		}else{
 			
 			loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
-			/*String cID = request.getParameter("COMPANYID");*/
-			String cID = loginSimpleVO.getCompanyID();
+			String cID = request.getParameter("COMPANYID");
+			if (cID == null || cID.equals("")){
+				cID = loginSimpleVO.getCompanyID();
+			}
 			String regi = request.getParameter("PREVIOSLYREGIUSE");
 			
 			String count = ezScheduleService.scheduleGetRegi(cID, loginSimpleVO.getTenantId());
