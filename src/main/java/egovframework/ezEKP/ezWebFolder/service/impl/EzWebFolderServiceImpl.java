@@ -292,6 +292,18 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		//Update status for all sub folders
 		ezWebFolderDAO.updateSubFolderUseStatus(map);
 	}
+	
+	@Override
+	public List<FileVO> getDuplicatedNameFiles(List<String> fileNames, String folderId, String offset, int tenantId) throws Exception {
+		Map<String, Object> sqlParams = new HashMap<>();
+		
+		sqlParams.put("fileNames", fileNames);
+		sqlParams.put("folderId", folderId);
+		sqlParams.put("offset", offset);
+		sqlParams.put("tenantId", tenantId);
+		
+		return ezWebFolderDAO.getDuplicatedNameFiles(sqlParams); 
+	}
 
 	@Override
 	public List<FileVO> getAllFilesInFolder(String realColmn, String order, String folderId, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
@@ -716,7 +728,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		folderPath                 = folderPath.substring(1, folderPath.length() - 1);
 		String originalPath        = getFolderPath(folderPath.split("\\|"), userInfo.getPrimary(), tenantId);
 		
-		if (((JSONObject)nameArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)nameArray.get(0)).get("originalFilename"))) {
+		if (StringUtils.isNotBlank((String) ((JSONObject)nameArray.get(0)).get("originalFilename"))) {
 			for (int i = 0; i < cnt; i++) {
 				String _pFileName = (String)((JSONObject)nameArray.get(i)).get("originalFilename");
 				
@@ -753,7 +765,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				extend = ".etc";
 			}
 			
-			if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {
+			if (useExtension.toLowerCase().contains(extend.toLowerCase()) || useExtension.equals("*")) {
 				writeUploadedFile(multiFileLists.get(i), newName, pDirPath);
 				FileTypeVO fileType = getFileTypeByFileExt(extend.toLowerCase(), tenantId);
 				
