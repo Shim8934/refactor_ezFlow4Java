@@ -8,13 +8,13 @@
 <div class="quesBacgr">
 <!-- 
 <table class='head'>
-	<thead style="border: 1px solid black;">
-		<tr style="border: 1px solid black;">
-			<td style="border: 1px solid black;"></td>
-			<td style="border: 1px solid black;">이름</td>
-			<td style="border: 1px solid black;">나이</td>
-			<td style="border: 1px solid black;">생일</td>
-			<td style="border: 1px solid black;">결과</td>
+	<thead>
+		<tr>
+			<td></td>
+			<td>이름</td>
+			<td>나이</td>
+			<td>생일</td>
+			<td>결과</td>
 		</tr>
 	<thead>
 
@@ -29,17 +29,9 @@
 		</tr>
 		<tr style="border: 1px solid black;">
 			<td style="border: 1px solid black;">b</td>
-			<td><input type="radio" value="(이름, b)"></td>
-			<td><input type="radio"></td>
-			<td><input type="radio"></td>
-			<td><input type="radio"></td>
 		</tr>
 		<tr style="border: 1px solid black;">
 			<td style="border: 1px solid black;">c</td>
-			<td><input type="radio" value="(이름, c)"></td>
-			<td><input type="radio"></td>
-			<td><input type="radio"></td>
-			<td><input type="radio"></td>
 		</tr>
 	</tbody>
 </table>

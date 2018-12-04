@@ -593,23 +593,23 @@
 			}
 			
 			function mkMatrixQstn(status, thisEl, question) {
-				console.log(thisEl);
-				console.log(question);
 				
-				var qstId        = question.id;
-				var qstnContents = question.qstnContents;
-				var qstnAtt      = question.questionAttach;
-				var qstnType     = question.qstnType;
-				var option       = question.option;
-				var required     = question.required;
-				var other        = question.other
-				
+				var qstId       = question.id;
+				var qstnContent = question.content;
+				var qstnAtt     = question.attach;
+				var qstnType    = question.type;
+				var option      = question.option;
+				var required    = question.required;
+				var other       = question.other
+				var col 		= question.col;
+				var row 		= question.row;
+
 				var html = "";
 					html += "<div class='usrQstnWrapper' id='" + qstId + "' qstnType='" + qstnType + "'>";
 					html += "<div class='question-panel'>";
 					html += "<div class='mvBtn'></div>";
 					html += "<div class='question-header'>";
-					html += "<div class='question-content' id='" + qstId + "'>" + qstnContents;
+					html += "<div class='question-content'>" + qstnContent;
 					html += required == 'Y' ? "<strong class='imptt'>*</strong></div>" : "</div>";
 					html += "<div class='tooltip-bttns'>";
 					html += "<span class='modifyBtn'></span>";
@@ -622,12 +622,30 @@
 						html += "<img alt='' src='" + qstnAtt.fpath + "' class='qstnImg'>";
 						html += "</div>"
 					}
-					
 					html += "<div class='question-opts'>";
+					html += "<table class='head'>";
+					html += "<thead>";
+					html += "<tr>";
+					html += "<td></td>";
 					
+					for (var i = 0; i < col.length; i++) {
+						html += "<td>" + col[i].contents + "</td>";
+					}
+					html += "</tr>";
+					html += "</thead>";
+					html += "<tbody>";
 					
-					
-					
+					for (var i = 0; i < row.length; i++) {
+						html += "<tr>";
+						html += "<td>" + row[i].contents + "</td>";
+						
+						for (var j = 0; j < col.length; j++) {
+							html += "<td><input type='radio' value='(" + row[i].contents + ", " + col[j].contents + ")'></td>";
+						}
+						html += "</tr>";
+					}
+					html += "</tbody>";
+					html += "</table>";
 					html += "</div>";
 					
 					thisEl.parents(".qstnWrapper").prepend(html);
@@ -635,8 +653,6 @@
 					if (status == 'save') {
 						createQuestionDiv();
 						createQuestionSelectBox();
-					} else {
-						return;
 					}
 			}
 			
@@ -680,6 +696,8 @@
 					var qstnList   = SurveyCreate.getQs();
 					question['id'] = qstnList.length + 1;
 					SurveyCreate.setQs(question);
+					console.log('저장');
+					console.log(SurveyCreate.getQs());
 				}
 				else if (status == 'modify') {
 					rmPrevEl(qstnWrapper);
@@ -689,8 +707,11 @@
 					
 					questionList.splice(qstId - 1, 1);           // 질문 배열에서 해당 순번의 객체 삭제
 					questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
+					console.log('수정');
+					console.log(SurveyCreate.getQs());
 				}
-				
+				console.log('최종');
+				console.log(SurveyCreate.getQs());
 				switch(parseInt(qstnType)) {
 					case 1  :
 					case 2  : var sltObj = mkSltObj(qstnForm);
