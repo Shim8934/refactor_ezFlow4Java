@@ -291,6 +291,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		logger.debug("uploadFile start");
 		LoginSimpleVO userInfo         = commonUtil.userInfoSimple(loginCookie);
 		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
+		// nullable
+		String nameArray               = request.getParameter("nameArray");
 		String folderId                = request.getParameter("folderId");
 		String gwServerUrl             = config.getProperty("config.webFolderGwServerURL");
 		String url                     = gwServerUrl + "/rest/ezwebfolder/filemanage/file-upload";
@@ -315,11 +317,34 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		JSONObject jsonObject             = new JSONObject();
 		JSONArray jsonArray               = new JSONArray();
 		
+		boolean useOriginalFileNames = true;
+		
+		// custom file names
+		if (nameArray != null) {
+			try {
+				List<?> nameList = (List<?>) new JSONParser().parse(nameArray);
+				
+				for (Object fileName : nameList) {
+					JSONObject fileJson = new JSONObject();
+					
+					fileJson.put("originalFilename", fileName);
+					jsonArray.add(fileJson);
+				}
+				
+				useOriginalFileNames = false;
+			} catch (Exception ex) {
+				// ignore
+			}
+		}
+		
 		for (MultipartFile file: multiFiles) {
-			JSONObject fileJson = new JSONObject();
-			
-			fileJson.put("originalFilename", file.getOriginalFilename());
-			jsonArray.add(fileJson);
+			if (useOriginalFileNames) {
+				JSONObject fileJson = new JSONObject();
+				
+				fileJson.put("originalFilename", file.getOriginalFilename());
+				jsonArray.add(fileJson);
+			}
+
 			map.add("files", new MultipartFileResource(file.getInputStream(), file.getOriginalFilename()));
 		}
 		
@@ -344,23 +369,23 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return resultBody.toString();
 	}
 	
-	@RequestMapping(value="/ezWebFolder/uploadFileWrite.do", method = RequestMethod.POST)
+	@RequestMapping(value="/ezWebFolder/uploadFileOverwrite.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String uploadFileOverwrite(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("uploadFileWrite start");
-		LoginSimpleVO userInfo         = commonUtil.userInfoSimple(loginCookie);
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
-		String folderId                = request.getParameter("folderId");
-		String fileIdListStr           = request.getParameter("fileIdArray");
-		String gwServerUrl             = config.getProperty("config.webFolderGwServerURL");
-		String url                     = gwServerUrl + "/rest/ezwebfolder/filemanage/file-upload-overwrite";
+		String folderId = request.getParameter("folderId");
+		String fileIdListStr = request.getParameter("fileIdArray");
+		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
+		String url = gwServerUrl + "/rest/ezwebfolder/filemanage/file-upload-overwrite";
 		
 		logger.debug("Folder Id: " + folderId);
 		
 		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
 		requestFactory.setBufferRequestBody(false);
 		
-		RestTemplate restTemplate                       = new RestTemplate(requestFactory);
+		RestTemplate restTemplate = new RestTemplate(requestFactory);
 		List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
 		
 		for (int i = 0; i < messageConverters.size(); i++) {
@@ -396,10 +421,10 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		headers.set("x-user-host", request.getServerName());
 		
 		HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<MultiValueMap<String, Object>>(map, headers);
-		UriComponentsBuilder builder                     = UriComponentsBuilder.fromHttpUrl(url);
-		ResponseEntity<String> result                    = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		ResponseEntity<String> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 		
-		JSONParser jp         = new JSONParser();
+		JSONParser jp = new JSONParser();
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("uploadFileWrite end");
@@ -502,15 +527,23 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	public String fileRenameConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("fileRenameConfirm start");
 		String fileId = request.getParameter("fileId") != null ? request.getParameter("fileId") : "";
+		String uploadFlag = request.getParameter("isUploading");
 		
-		logger.debug("File Id: " + fileId);
-		
-		if (fileId.equals("")) {
-			logger.debug("File Rename Confirm illegal arguments!");
-			return "cmm/error/egovError";
+		if (uploadFlag == null) {
+			logger.debug("File Id:  " + fileId);
+			
+			if (fileId.equals("")) {
+				logger.debug("File Rename Confirm illegal arguments!");
+				return "cmm/error/egovError";
+			}
+			
+			model.addAttribute("fileId", fileId);
+		} else {
+			logger.debug("Uploading");
+			
+			model.addAttribute("isUploading", true);
 		}
-		
-		model.addAttribute("fileId", fileId);
+
 		logger.debug("fileRenameConfirm start");
 		return "/ezWebFolder/fileRename";
 	}

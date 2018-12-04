@@ -31,5 +31,6 @@ var messages = {
 	strLang30 : "Not owner of the file",
 	strLang31 : "You do not have anyone to share with. ",
 	strLang32 : "Are you sure you want to cancel sharing?",
-	strLang33 : "You canceled sharing."
+	strLang33 : "You canceled sharing.",
+	completeDuplicatedJob : "Processing completed."
 }

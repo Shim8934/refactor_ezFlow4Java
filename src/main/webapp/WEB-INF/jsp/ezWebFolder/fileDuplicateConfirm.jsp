@@ -13,15 +13,12 @@
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
 <script type="text/javascript">
-
 	function onClickClose(result) {
-		parent.duplicatedExcutor.onClosePopup(result);
+		parent.duplicatedExecutor.onClosePopup(result);
 		
 		parent.closeAllPopup();
 		window.close();
 	}
-	
-	
 
 	// 		function afterDeleteSuccess() {
 	// 			parent.refreshView();
@@ -79,15 +76,21 @@
 	// 			});
 	// 		}
 	function onClickOverwrite() {
-		onClickClose("OVERWRITE");
+		onClickClose({
+			code: "OVERWRITE",
+			looping: document.getElementById("all-apply").checked
+		});
 	}
-	
+
 	function onClickSkip() {
-		onClickClose("SKIP");
+		onClickClose({
+			code: "SKIP",
+			looping: document.getElementById("all-apply").checked
+		});
 	}
-	
+
 	function onClickRename() {
-		onClickClose("RENAME");
+		parent.DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?isUploading");
 	}
 </script>
 <style>
@@ -95,7 +98,7 @@ table.content-inner td {
 	width: inherit;
 }
 
-table.content-inner td > h2 {
+table.content-inner td>h2 {
 	text-align: center;
 }
 </style>
@@ -139,10 +142,7 @@ table.content-inner td > h2 {
 		</tr>
 	</table>
 	<div class="btnpositionNew">
-		<a class="imgbtn" onclick="onClickOverwrite();"> <span><spring:message code='ezWebFolder.t506' /></span></a>
-		<a class="imgbtn" onclick="onClickSkip();"> <span><spring:message code='ezWebFolder.t507' /></span></a>
-		<a class="imgbtn" onclick="onClickRename();"> <span><spring:message code='ezWebFolder.t508' /></span>
-		</a>
+		<a class="imgbtn" onclick="onClickOverwrite();"> <span><spring:message code='ezWebFolder.t506' /></span></a> <a class="imgbtn" onclick="onClickSkip();"> <span><spring:message code='ezWebFolder.t507' /></span></a> <a class="imgbtn" onclick="onClickRename();"> <span><spring:message code='ezWebFolder.t508' /></span></a>
 	</div>
 </body>
 </html>

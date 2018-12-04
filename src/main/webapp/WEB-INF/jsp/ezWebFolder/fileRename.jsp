@@ -13,6 +13,41 @@
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
 	<script type="text/javascript">
+		function isValid(str){
+			var regex = /[*:"\\|<>\/?]/g;
+			return regex.test(str);
+		}
+		
+		<c:choose>
+		<c:when test="${isUploading}">
+		function wClose() {
+			parent.closeAllPopup();
+			window.close();
+		}
+		
+		function ok_Click() {
+			var newName = document.getElementById("nameInput").value;
+			
+			if (newName == "") {
+				alert('<spring:message code='ezWebFolder.t400'/>');
+				return;
+			}
+
+			if (isValid(newName)) {
+				alert('<spring:message code='ezWebFolder.t211'/>');
+				return;
+			}
+			
+			parent.duplicatedExecutor.onClosePopup({
+				code: "RENAME",
+				newFileName: newName,
+				looping: false
+			});
+			
+			wClose();
+		}
+		</c:when>
+		<c:otherwise>
 		var fileId = "<c:out value="${fileId}"/>";
 		
 		function wClose() {
@@ -23,11 +58,6 @@
 		function afterDeleteSuccess() {
 			parent.refreshView();
 			wClose();
-		}
-		
-		function isValid(str){
-			var regex = /[*:"\\|<>\/?]/g;
-			return regex.test(str);
 		}
 		
 		function ok_Click() {
@@ -75,6 +105,8 @@
 				}
 			});
 		}
+		</c:otherwise>
+		</c:choose>
 	</script>
 </head>
 <body class="popup" style="overflow: hidden;"> 
