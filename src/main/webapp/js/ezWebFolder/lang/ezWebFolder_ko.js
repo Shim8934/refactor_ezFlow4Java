@@ -28,9 +28,15 @@ var messages = {
 	strLang27 : "명(팀)",
 	strLang28 : "공유를 추가했습니다.",
 	strLang29 : "공유를 수정했습니다.",
-	strLang30 : "파일의 소유자가 아닙니다.",
+	strLang30 : "파일 또는 폴더의 소유자가 아닙니다.",
 	strLang31 : "공유대상자가 없습니다. ",
 	strLang32 : "공유를 취소하시겠습니까?",
 	strLang33 : "공유를 취소했습니다.",
+	strLang34 : "공유받은 폴더는 수정할 수 없습니다.",			// ezWebFolder.t327
+	strLang35 : "최상위 폴더는 수정할 수 없습니다.",			// ezWebFolder.t328
+	strLang36 : "관리자만  관리가 가능한 폴더입니다.",			// ezWebFolder.t329
+	strLang37 : "폴더 생성자가 아니면 폴더명을 수정 할 수 없습니다.",	// ezWebFolder.t258
+	strLang38 : "선택된 파일이나 폴더가 없습니다.",	
 	completeDuplicatedJob : "작업을 완료했습니다."
+		
 }
