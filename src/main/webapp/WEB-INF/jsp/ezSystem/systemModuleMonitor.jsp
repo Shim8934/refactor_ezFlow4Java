@@ -24,31 +24,41 @@
 			"storageSizeStr",
 			"tableSizeStr",
 			"totalSizePerModuleStr"],
-		cloudFlag : "${cloudFlag}"
+		packageType : "<c:out value='${packageType}' />"
 	}
 	var table;
 	
 	var setNames = function() {
-		if(moduleInfo.cloudFlag.toLowerCase() == "yes") {
-			moduleInfo.names = ["mail", "schedule", "board", "community", "resource", "total"];
-			moduleInfo.displaynames = [
-				"<spring:message code='ezSystem.kbh6' />",
-				"<spring:message code='ezSystem.kbh8' />",
-				"<spring:message code='ezSystem.kbh9' />",
-				"<spring:message code='ezSystem.kbh10' />",
-				"<spring:message code='ezSystem.kbh11' />",
-				"<spring:message code='ezSystem.kbh12' />"]
-		} else {
-			moduleInfo.names = ["mail", "approval", "schedule", "board", "community", "resource", "total"];
+		switch (moduleInfo.packageType.toLowerCase()) {
+		case "standard":
+			moduleInfo.names = ["mail", "approval", "schedule", "board", "community", "resource"];
 			moduleInfo.displaynames = [
 				"<spring:message code='ezSystem.kbh6' />",
 				"<spring:message code='ezSystem.kbh7' />",
 				"<spring:message code='ezSystem.kbh8' />",
 				"<spring:message code='ezSystem.kbh9' />",
 				"<spring:message code='ezSystem.kbh10' />",
-				"<spring:message code='ezSystem.kbh11' />",
-				"<spring:message code='ezSystem.kbh12' />"]
+				"<spring:message code='ezSystem.kbh11' />"
+				];
+			break;
+		case "basic":
+			moduleInfo.names = ["mail", "schedule", "board"];
+			moduleInfo.displaynames = [
+				"<spring:message code='ezSystem.kbh6' />",
+				"<spring:message code='ezSystem.kbh8' />",
+				"<spring:message code='ezSystem.kbh9' />"
+				];
+			break;
+		case "mail":
+			moduleInfo.names = ["mail"];
+			moduleInfo.displaynames = [
+				"<spring:message code='ezSystem.kbh6' />"
+				];
+			break;
 		}
+		
+		moduleInfo.names.push("total");
+		moduleInfo.displaynames.push("<spring:message code='ezSystem.kbh12' />");
 	}
 	
 	var drawTable = function() {
@@ -76,7 +86,7 @@
 			type: "GET",
 			url: "/admin/ezSystem/getModuleMonitor.do",
 			data: {
-				cloudFlag: moduleInfo.cloudFlag
+				useModuleMonitor: moduleInfo.useModuleMonitor
 			},
 			success: function(resultJson) {
 				var moduleMap = resultJson.moduleMap;

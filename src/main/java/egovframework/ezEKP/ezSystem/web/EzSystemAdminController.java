@@ -120,9 +120,16 @@ public class EzSystemAdminController {
 			useIPAccessMenu = "NO";
 		}
 		
-		logger.debug("useIPAccessMenu=" + useIPAccessMenu);
+		String useModuleUsage = ezCommonService.getTenantConfig("useModuleUsage", userInfo.getTenantId());
+		if(userInfo == null || useModuleUsage == null || useModuleUsage.equals("")) {
+			useModuleUsage = "NO";
+		}
 		
 		model.addAttribute("useIPAccessMenu", useIPAccessMenu);
+		model.addAttribute("useModuleUsage", useModuleUsage);
+		
+		logger.debug("useIPAccessMenu=" + useIPAccessMenu);
+		
 		return "/ezSystem/systemLeftMenu";
 	}
 	
@@ -976,31 +983,46 @@ public class EzSystemAdminController {
 	
 	@RequestMapping(value = "/admin/ezSystem/systemModuleMonitor.do")
 	public String systemModuleMonitor(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String cloudFlag = ezCommonService.getTenantConfig("useCloud", userInfo.getTenantId());
 		
-		model.addAttribute("cloudFlag", cloudFlag);
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		
+		model.addAttribute("packageType", packageType);
 		
 		return "/ezSystem/systemModuleMonitor";
 	}
 	
 	@RequestMapping(value = "/admin/ezSystem/getModuleMonitor.do")
-	public ResponseEntity<ModuleSizeVO> getModuleMonitor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, @RequestParam String cloudFlag) throws Exception {
+	public ResponseEntity<ModuleSizeVO> getModuleMonitor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("systemModuleMonitorOMS started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		String realPath = commonUtil.getRealPath(request);
+		
+		String useModuleUsage = ezCommonService.getTenantConfig("useModuleUsage", userInfo.getTenantId());
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		
 		ModuleSizeVO moduleSizeVO = null;
 		
 		if(userInfo != null) {
-			ArrayList<String> moduleNames = new ArrayList<String>(Arrays.asList("mail", "schedule", "board", "community", "resource"));
-			
-			if(!cloudFlag.equalsIgnoreCase("yes")) {
-				moduleNames.add("approval");
+			if(useModuleUsage != null && useModuleUsage.equalsIgnoreCase("yes")) {
+				List<String> moduleNames = null;
+				
+				switch (packageType) {
+				case CommonUtil.PT_STANDARD:
+					moduleNames = Arrays.asList("mail", "schedule", "board", "approval", "community", "resource");
+					break;
+				case CommonUtil.PT_BASIC:
+					moduleNames = Arrays.asList("mail", "schedule", "board");
+					break;
+				case CommonUtil.PT_MAIL:
+					moduleNames = Arrays.asList("mail");
+					break;
+				}
+				
+				String realPath = commonUtil.getRealPath(request);
+				
+				moduleSizeVO = ezSystemAdminService.getModuleUsage(moduleNames, realPath, userInfo);
 			}
-			
-			moduleSizeVO = ezSystemAdminService.getModuleUsage(moduleNames, realPath, userInfo);
 		}
 		
 		logger.debug("systemModuleMonitorOMS ended");
