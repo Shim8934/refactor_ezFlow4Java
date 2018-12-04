@@ -303,7 +303,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .option .textInput {width: 600px;}
 .option .attImg {width: 30px;height: 30px;cursor: pointer;padding-left: 20px;padding-right: 20px;margin-bottom: -11px;}
 .option .fileInput {width: 0px;opacity: 0;display: none;}
-.option .delImg {width: 30px;height: 30px;cursor: pointer;margin-bottom: -11px;}
+.option .delImg {width: 30px; height: 30px; cursor: pointer; margin-bottom: -11px;}
 
 .qstnForm .other {padding-top: 10px;}
 .optArea .option {padding-left: 30px;}

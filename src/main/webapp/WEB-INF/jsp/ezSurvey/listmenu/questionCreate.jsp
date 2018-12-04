@@ -7,7 +7,7 @@
 </div>
 
 
-<div class='mtrTable'>
+<!-- 
 	<div class='mtrPart'>
 	
 		<div class='rowArea' style='border: 1px solid black;'>
@@ -17,10 +17,6 @@
 			</div>
 			
 			<div class='rows' style='float: left; width: 90%;'>
-				<div class='row'>
-					<input>
-					<img alt="" src="">
-				</div>
 				<div class='row'>
 					<input>
 					<img alt="" src="">
@@ -52,10 +48,6 @@
 					<input>
 					<img alt="" src="">
 				</div>
-				<div class='col'>
-					<input>
-					<img alt="" src="">
-				</div>
 			</div>
 			
 			<div class='colBtn'>
@@ -65,5 +57,5 @@
 		</div>
 		
 	</div>
-</div>
+ -->
 <div class="quesBacgr"></div>

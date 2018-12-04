@@ -247,12 +247,12 @@
 						var grandParent  = selectedEl.parents(".qstnWrapper");
 						var questionType = data.selectedData.value;
 						// 질문 유형 선택시 셀렉트 박스 아래의 폼 삭제
-						rmQstnForm(grandParent);
+						rmQstnFormBfSave(grandParent);
 						
 						switch (questionType) {
 							case 1: makeSelectQuestion(grandParent, questionType)   ; break;
 							case 2: makeSelectQuestion(grandParent, questionType)   ; break;
-							case 3: break;
+							case 3: makeMatrixQuestion(grandParent, questionType)   ; break;
 							case 4: break;
 							case 5: break;
 							case 6: makeParagraphQuestion(grandParent, questionType); break;
@@ -286,7 +286,7 @@
 			}
 			
 			// 질문 유형 선택시 셀렉트 박스 아래의 폼 삭제
-			function rmQstnForm(qstnForm) {
+			function rmQstnFormBfSave(grandParent) {
 				var qstnForm = grandParent.find(".qstnForm");
 				
 				if (qstnForm.length != 0) {
@@ -304,21 +304,63 @@
 						html += "<div class='optPart'>" + mkOpt() + "</div>";
 					}
 				}
-				
+				html += "<div class='addBtns'>";
+				html += "<button class='addOpt'>추가</button>";
+				html += "<button class='addOther'>기타추가</button>";
+				html += "</div>";
 				html += "" + mkAddtionalPart() + "";
 				grandParent.append(html);
 			}
-//////////////////////////////////////////////////////			
-			/* function makeMatrixQuestion(grandParent, questionType) {
+			// 행렬 질문 생성
+			function makeMatrixQuestion(grandParent, questionType) {
 				var html = "";
 					html += "<div class='qstnForm' questionType='" + questionType + "'>";
 					
+					html += "<div class='mtrPart'>";
+					
+					html += "<div class='rowArea'>";
+						
+					html += "<div class='rName' style='float: left; width: 10%;'>";
+					html += "<span>행</span>";
+					html += "</div>";
+					
+					html += "<div class='rows' style='float: left; width: 90%;'>";
+					for (var i = 0; i < 2; i++) {
+						html += "" + mkRow() + "";
+					}
+					html += "</div>";
+						
+					html += "<div class='rowBtn'>";
+					html += "<button class='addRow'>추가</button>";
+					html += "</div>";
+						
+					html += "</div>";
+					
+					html += "<div class='colArea'>";
+						
+					html += "<div class='cName' style='float: left; width: 10%;'>";
+					html += "<span>열</span>";
+					html += "</div>";
+						
+					html += "<div class='cols' style='float: left; width: 90%;'>";
+					for (var i = 0; i < 2; i++) {
+						html += "" + mkCol() + "";
+					}
+					html += "</div>";
+						
+					html += "<div class='colBtn'>";
+					html += "<button class='addCol'>추가</button>";
+					html += "</div>";
+						
+					html += "</div>";
+					
+					html += "</div>";
 					
 					html += ""+ mkAddtionalPart() + "";
 					
 				grandParent.append(html);
-			} */
-//////////////////////////////////////////////////////			
+			}
+			
 			function addOptEvent() {
 				// 보기 추가
 				$(".quesBacgr").on("click", ".addOpt", function() {
@@ -347,7 +389,39 @@
 					}
 				});
 				
-				// 보기, 기타 삭제
+				/* matrix 버튼 이벤트 */
+				// matrix 행 추가
+				$(".quesBacgr").on("click", ".addRow", function() {
+					var html = mkRow();
+					$(this).parents(".rowArea").find(".rows").append(html);
+				});
+				// matrix 열 추가
+				$(".quesBacgr").on("click", ".addCol", function() {
+					var html = mkCol();
+					$(this).parents(".colArea").find(".cols").append(html);
+				});
+				// matrix 행 삭제
+				$(".quesBacgr").on("click", ".delRow", function(e) {
+					var lowLength = $(this).closest(".rows").find(".row").length;
+					
+					if (lowLength > 1) {
+						$(this).closest(".row").remove();
+						
+					} else {
+						alert("최소 1개 이상의 행이 필요합니다.");
+					}
+				});
+				// matrix 열 삭제
+				$(".quesBacgr").on("click", ".delCol", function() {
+					var colLength = $(this).closest(".cols").find(".col").length;
+					
+					if (colLength > 1) {
+						$(this).closest(".col").remove();
+					} else {
+						alert("최소 1개 이상의 열이 필요합니다.");
+					}
+				});
+				 // 보기, 기타 삭제
 				$(".quesBacgr").on("click", ".delImg", function() {
 					var thisEl    = $(this);
 					var optAreaLength = thisEl.parents(".qstnForm").find(".optArea").length;
@@ -532,6 +606,7 @@
 						html += "</div></div>";
 					}
 					html += "</div>";
+					
 					thisEl.parents(".qstnWrapper").prepend(html);
 					
 					if (status == 'save') {
@@ -573,12 +648,12 @@
 				}
 				
 				// 질문 타입을 질문 객체에 저장
-				var optArea          = thisEl.parents(".qstnWrapper").find(".quesDiv").next();
-				var qstnType         = optArea.attr("questiontype");
+				var qstnForm         = thisEl.parents(".qstnWrapper").find(".quesDiv").next();
+				var qstnType         = qstnForm.attr("questiontype");
 				question['qstnType'] = qstnType;
 				
 				if (qstnType == 1 || qstnType == 2) {
-					var opt = optArea.find(".optPart");
+					var opt = qstnForm.find(".optPart");
 					
 					// 보기의 개수 확인
 					if (opt.length > 0) {
@@ -614,7 +689,7 @@
 					}
 					
 					// 기타
-					var oth   = optArea.find(".other");
+					var oth   = qstnForm.find(".other");
 					var other = {};
 					// 기타의 유무 확인
 					if (oth.length != 0) {
@@ -636,10 +711,27 @@
 						// 질문 객체에 기타 객체 추가
 						question['other'] = other;
 					}
+				} 
+				else if (qstnType == 3 || qstnType == 4) {
+					var row = [];
+					var rows = qstnForm.find(".row");
+					
+					if (rows) {
+						for(var i = 0; i < rows.length; i++) {
+							var rowObj = {};
+							var rowVal = rows[i].find(".rowInput").val();
+							rowObj['level'] = i;
+							rowObj['contents'] = rowVal;
+							
+							row.push(rowObj);
+						}
+					}
+					
+					//var col = qstnForm.find(".colArea");
 				}
 				
 				// 필수 확인
-				var rqrd             = optArea.find(".additionalPart").find("input[name='checkbox']");
+				var rqrd             = qstnForm.find(".additionalPart").find("input[name='checkbox']");
 				var isChecked        = rqrd.is(":checked");
 				question['required'] = isChecked == true ? 'Y' : 'N';
 				
@@ -651,8 +743,8 @@
 					question['id'] = qstnCnt + 1;
 					SurveyCreate.setQs(question);
 					
-					//console.log("저장");
-					//console.log(SurveyCreate.getQs());
+					console.log("저장");
+					console.log(SurveyCreate.getQs());
 				}
 				else if (status == 'modify') {
 					var qstId        = qstnWrapper.attr("id");
@@ -662,10 +754,14 @@
 					questionList.splice(qstId - 1, 1);           // 질문 배열에서 해당 순번의 객체 삭제
 					questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
 					
-					//console.log("수정");
-					//console.log(SurveyCreate.getQs());
+					console.log("수정");
+					console.log(SurveyCreate.getQs());
 				}
-				mkSelectQstn(status, thisEl, question); // 질문 폼 생성
+				
+				if (qstnType == 1 || qstnType == 2) {
+					mkSelectQstn(status, thisEl, question); // 질문 폼 생성
+					
+				}
 				rmQstnForm(thisEl);                     // 설문 생성 폼 삭제
 			}
 			
@@ -712,14 +808,36 @@
 				
 				return html;
 			}
+///////////////////////////////////////////////////////////			
+			function mkRow() {
+				var html = "";
+					html += "<div class='row'>";
+					html += "<input class='rowInput'>";
+					html += "<img alt='' src='/images/ezSurvey/minus.jpg' class='delRow' style='width: 30px;height: 30px; cursor: pointer;'>";
+					html += "</div>";
+				
+				return html;
+			}
+			
+			function mkCol() {
+				var html = "";
+					html += "<div class='col'>";
+					html += "<input class='colInput'>";
+					html += "<img alt='' src='/images/ezSurvey/minus.jpg' class='delCol' style='width: 30px;height: 30px; cursor: pointer;'>";
+					html += "</div>";
+				
+				return html;
+			}
 			
 			function mkAddtionalPart(required, action) {
 				var html = "";
 					html += "<div class='additionalPart'>";
+					/* 
 					html += "<div class='addBtns'>";
 					html += "<button class='addOpt'>추가</button>";
 					html += "<button class='addOther'>기타추가</button>";
 					html += "</div>";
+					 */
 					html += "<div class='required'>";
 					html += required == 'Y' ? "<input type='checkbox' name='checkbox' checked='checked'>" : "<input type='checkbox' name='checkbox'>";
 					html += "<strong>필수 답변</strong>";
