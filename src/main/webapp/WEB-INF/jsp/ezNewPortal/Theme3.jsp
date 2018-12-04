@@ -9,7 +9,7 @@
 <title>PortalPage</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
-<link href="${util.addVer('/css/ezNewPortal/theme3_main.css')}" rel="stylesheet" type="text/css">
+<link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
 <style type="text/css">
 	.notEmptySlider {
 		width : 280px;

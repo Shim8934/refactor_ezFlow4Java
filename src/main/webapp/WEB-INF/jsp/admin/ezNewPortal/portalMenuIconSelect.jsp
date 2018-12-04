@@ -7,7 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezNewPortal.t075' /></title>
-<link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">
+<link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 <style type="text/css">
  .menuIcon {display:inline-block; height:118px; width:80px; text-align:center;}

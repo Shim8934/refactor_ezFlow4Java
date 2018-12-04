@@ -592,6 +592,11 @@
 	            	getDocListjson(1);
 	            } else {
 	            	if(retVal[0] != "" && retVal[1] !="") {
+	            		totalPage = 1;
+	            		CurPage= 1;
+ 	            		makePageSelPage();
+						$("#listInfo").html(" &nbsp;[<spring:message code='main.t252'/><span style='color:#017BEC;'> "
+							+ '0' + " </span><spring:message code='ezSystem.kyj2'/>]")
 	            		alert("<spring:message code='ezApprovalG.t1788'/>");
 	            	}
 	            	$('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
