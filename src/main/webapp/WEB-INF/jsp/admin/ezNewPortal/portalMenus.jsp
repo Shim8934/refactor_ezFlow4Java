@@ -7,7 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezNewPortal.t055' /></title>
-		<link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">
+		<link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<style type="text/css">
 			body {background-color : white;}
@@ -479,18 +479,20 @@
 			var obj = e.target;
 			var flag = false;
 			var elemArr = ["menu", "admin_menuDL", "admin_menu_content", "menuOrderResetButton", "companySelect", "menuAdd"];
-			if (obj.tagName == "HTML") {
+			//console.log(obj.tagName);
+			if (obj.tagName == "HTML" || obj.tagName == "UL" || obj.tagName == "LI" || obj.tagName == "H1") {
 				closeMenuDetail();
 				return false;
 			}
-			
+			/* console.log(obj.className);
 			while(elemArr.indexOf(obj.className) == -1){
 				obj = obj.parentElement;
+				console.log(obj);
 				if(obj.tagName == "HTML"){
 					closeMenuDetail();
 					break;
 				}
-			}
+			} */
 		}); 
 
 		var updateMenu = function(event) {
