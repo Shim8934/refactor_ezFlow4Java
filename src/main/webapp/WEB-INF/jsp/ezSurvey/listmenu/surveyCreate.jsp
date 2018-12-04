@@ -526,14 +526,14 @@
 			}
 
 			// 단일선택 질문 생성 
-			function mkSelectQstn(status, thisEl, question) {
+			function mkSelectQstn(status, wrapperElmt, question) {
 				var qstId       = question.id;
 				var qstnContent = question.content;
 				var qstnAtt     = question.attach;
 				var qstnType    = question.type;
 				var option      = question.option;
 				var required    = question.required;
-				var other       = question.other
+				var other       = question.other;
 				
 				var html = "";
 					html += "<div class='usrQstnWrapper' id='" + qstId + "' qstnType='" + qstnType + "'>";
@@ -584,7 +584,7 @@
 				}
 				html += "</div>";
 				
-				thisEl.parents(".qstnWrapper").prepend(html);
+				wrapperElmt.prepend(html);
 				
 				if (status == 'save') {
 					createQuestionDiv();
@@ -592,7 +592,7 @@
 				}
 			}
 			
-			function mkMatrixQstn(status, thisEl, question) {
+			function mkMatrixQstn(status, wrapperElmt, question) {
 				console.log(thisEl);
 				console.log(question);
 				
@@ -602,7 +602,7 @@
 				var qstnType     = question.qstnType;
 				var option       = question.option;
 				var required     = question.required;
-				var other        = question.other
+				var other        = question.other;
 				
 				var html = "";
 					html += "<div class='usrQstnWrapper' id='" + qstId + "' qstnType='" + qstnType + "'>";
@@ -630,7 +630,7 @@
 					
 					html += "</div>";
 					
-					thisEl.parents(".qstnWrapper").prepend(html);
+					wrapperElmt.parents(".qstnWrapper").prepend(html);
 					
 					if (status == 'save') {
 						createQuestionDiv();
@@ -648,7 +648,6 @@
 				var qstnWrapper  = thisEl.parents(".qstnWrapper");
 				var qstnArea     = qstnWrapper.find(".quesDiv");
 				var qstnContent  = qstnArea.find(".questnTitle").val();
-				var handlerFunct = null;
 				
 				//Save common question information
 				if (!qstnContent) {alert(SurveyMessages.strQsContent); return;}
@@ -696,13 +695,13 @@
 					case 2  : var sltObj = mkSltObj(qstnForm);
 							  if (sltObj.option) {question['option'] = sltObj.option;}
 							  if (sltObj.other)  {question['other']  = sltObj.other ;}
-							  handlerFunct = mkSelectQstn; break;
+							  mkSelectQstn(status, qstnWrapper, question); break;
 					case 3  : 
 					case 4  : var mtrObj = mkMtrObj(qstnForm);
 							  if (mtrObj.row) {question['row'] = mtrObj.row;}
 							  if (mtrObj.col) {question['col'] = mtrObj.col;}
-							  handlerFunct = mkMatrixQstn; break;
-					case 5  : break;
+							  mkMatrixQstn(status, qstnWrapper, question); break;
+					case 5  : ; break;
 					case 6  : break;
 					case 7  : break;
 					case 8  : break;
@@ -710,7 +709,6 @@
 					default : alert(SurveyMessages.strError); return;
 				}
 				
-				if (handlerFunct) {handlerFunct(status, thisEl, question);}
 				rmQstnForm(qstnWrapper);
 			}
 			
