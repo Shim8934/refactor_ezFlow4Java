@@ -17,7 +17,7 @@
 			var xmlhttp = null;
 			var userLang;                     //언어
 			var mode;                         //new, modify
-			var guid = "{" + GetGUID() + "}"; //랜덤Id
+			var guid;
 			var mainTitleId;
 			var subTitle1Id;
 			var subTitle2Id;
@@ -460,18 +460,20 @@
 				document.getElementById("Z").checked = true;
 			}
 			function btn_AttachAdd_onclick() {
-				if (document.form.file1.value != "") {
-					if (document.getElementById('mode').value == "PHOTO") {
-						if (document.getElementById("form").file1.files.length < 2) { } else { alert(""); }
-					}
-				}
 				document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
+				guid = "{" + GetGUID() + "}";
+				
 				var frm = document.getElementById('form');
 				frm.action = "/admin/ezPersonal/typeImageUpload.do?QId=" + guid;
 				frm.submit();
-				document.form.file1.value = "";
+				
+				//document.form.file1.value = "";
 			}
 			function returnvalue(strXML) {
+				var typeImg = document.getElementById("ZmakeTypeImg");
+				if (typeImg) {
+					typeImg.parentNode.removeChild(typeImg);
+				}
 				var xml = loadXMLString(strXML);
 				var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
 				for (i = 0; i < nodes.length; i++) {
@@ -619,6 +621,14 @@
 				SaveQuickLink(itemId);
 			}
 			function SaveQuickLink(itemId) {
+				var linkType = document.querySelector('input[name="linktypeOption"]:checked').value;
+				var linkURL = "";
+				if (linkType == "Z") {
+					linkURL = document.getElementById("ZmakeTypeImg").getAttribute("src");
+				} else {
+					linkURL = document.getElementById(document.querySelector('input[name="linktypeOption"]:checked').value).getAttribute("src");
+				}
+				
 				var xmlpara = createXmlDom();
 				var objNode;
 				var objNode2;
@@ -634,8 +644,8 @@
 				createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName", document.getElementById(mainTitleId).value);
 				createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName2", document.getElementById(subTitle1Id).value);
 				createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName3", document.getElementById(subTitle2Id).value);
-				createNodeAndInsertText(xmlpara, objNode, "pLinkType", document.querySelector('input[name="linktypeOption"]:checked').value);
-				createNodeAndInsertText(xmlpara, objNode, "pLinkTypeURL", document.getElementById(document.querySelector('input[name="linktypeOption"]:checked').value).getAttribute("src"));
+				createNodeAndInsertText(xmlpara, objNode, "pLinkType", linkType);
+				createNodeAndInsertText(xmlpara, objNode, "pLinkTypeURL", linkURL);
 				createNodeAndInsertText(xmlpara, objNode, "pMode", mode);
 				createNodeAndInsertText(xmlpara, objNode, "pURL", document.getElementById("txtURL").value);
 				
@@ -827,7 +837,7 @@
 		<xml id="listviewheader" style="display: none;"></xml>
 		<iframe name="ifrm" src="about:blank" style="display: none;"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPersonal/typeImageUpload.do?guid=" target="ifrm" style ="display:none">
-			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="true" />
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" accept=".jpg, .gif, .png" />
 			<input type="hidden" name="boardid" id="boardid" />
 			<input type="hidden" name="maxsize" id="maxsize" />
 			<input type="hidden" name="mode" id="mode" value="PHOTO"/>

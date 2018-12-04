@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code='ezPersonal.t380' /></title>
+		<title>설문조사</title>
 		<link rel="stylesheet"  href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -122,60 +122,62 @@
 				}
 				opener.location.reload();
 			}
-			
-		    function vote_poll_Complete() {
+
+
+			function vote_poll_Complete() {
 				document.location.reload();
 				window.opener.location.reload();
-				
-		        if(window.opener.opener != null) {
-		            window.opener.opener.location.reload();
-		            if(window.opener.opener.opener != null)
-		                window.opener.opener.opener.location.reload();
-		        }
-		    }
+
+				if(window.opener.opener != null) {
+					window.opener.opener.location.reload();
+					if(window.opener.opener.opener != null) {
+						window.opener.opener.opener.location.reload();
+					}
+				}
+			}
+
 
 		function open_polllist() {
-		    var pheight = window.screen.availHeight;
-		    var pwidth = window.screen.availWidth;
-		    var pTop = (pheight - 420) / 2;
-		    var pLeft = (pwidth - 765) / 2;
-		    window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=420,width=765,top=" + pTop + ",left=" + pLeft, "");
+			var pheight = window.screen.availHeight;
+			var pwidth = window.screen.availWidth;
+			var pTop = (pheight - 420) / 2;
+			var pLeft = (pwidth - 765) / 2;
+			window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=420,width=765,top=" + pTop + ",left=" + pLeft, "");
 		}
 		</script>
 	</head>
 	<body style="overflow:hidden;height:100%">
 		<div class="popup">
-  			<h1><spring:message code='ezPersonal.t380' /></h1>
-  			<div id="close">
-	            <ul>
-	                <li><span onclick="window.close()"></span></li>
-	            </ul>
-	        </div>
-	        <!-- 2018-07-26 김보미 - div네임속성 추가 -->
-     		<!-- <div style="overflow:auto;height:325px;width:auto"> -->
-    		<div style="overflow:auto;height:325px;width:auto" name='popupContentDiv'>
-    			<!-- 2018-07-26 김보미 - style속성 수정 -->   				
-   				<!-- <div class="question" style="width:223px;overflow-y:auto"> -->
-  				<div class="question" style="width:378px;overflow-y:hidden;">
-					<p><spring:message code='ezPersonal.t2000' />:</p>
-    				${labelPollTitle}
-  				</div>
-  					<!-- 2018-07-26 김보미 - 너비값 조정 -->
-   				<!--<div class="qlist" style="width: 268px;height:179px;padding:10px 0px 0px 10px;overflow:auto"> -->
-  				<div class="qlist" style="width: 423px;height:200px;padding:10px 0px 0px 10px;overflow:auto">
-    				${literalAnswer}
-  				</div>
-  				<div class="btnpositionNew">
-  					<a class="imgbtn"><span onclick="vote_poll('1')"><spring:message code='ezPersonal.jjh1' /> </span></a>
-  					<a class="imgbtn"><span onclick="vote_poll('')"><spring:message code='ezPersonal.jjh2' /> </span></a>
-  					<!-- <a class="imgbtn"><span onclick="open_polllist()"><spring:message code='ezEmail.t38' /> </span></a> --%>
-  					
-    				<img class="btn_vote" id="btnpoll" onclick="vote_poll('1')" />
-    				<img class="btn_vote_view" id="btnview" onclick="vote_poll('')" />
-    				<!-- <img class="btn_result" id="btnresult" onclick="open_polllist()" /> -->
-  				</div>
+			<h1>설문조사</h1>
+			<div id="close">
+				<ul>
+					<li><span onclick="window.close()"></span></li>
+				</ul>
 			</div>
-    	</div>
+			<!-- 2018-07-26 김보미 - div네임속성 추가 -->
+			<!-- <div style="overflow:auto;height:325px;width:auto"> -->
+			<div style="overflow:auto;height:325px;width:auto" name='popupContentDiv'>
+				<!-- 2018-07-26 김보미 - style속성 수정 -->   				
+				<!-- <div class="question" style="width:223px;overflow-y:auto"> -->
+				<div class="question" style="width:378px;overflow-y:hidden;">
+					<p><spring:message code='ezPersonal.t2000' />:</p>
+					${labelPollTitle}
+				</div>
+				<!-- 2018-07-26 김보미 - 너비값 조정 -->
+				<!--<div class="qlist" style="width: 268px;height:179px;padding:10px 0px 0px 10px;overflow:auto"> -->
+				<div class="qlist" style="width: 423px;height:200px;padding:10px 0px 0px 10px;overflow:auto">
+					${literalAnswer}
+				</div>
+				<div class="btnpositionNew">
+					<a class="imgbtn"><span onclick="vote_poll('1')"><spring:message code='ezPersonal.jjh1' /> </span></a>
+					<a class="imgbtn"><span onclick="vote_poll('')"><spring:message code='ezPersonal.jjh2' /> </span></a>
+					<!-- <a class="imgbtn"><span onclick="open_polllist()"><spring:message code='ezEmail.t38' /> </span></a> --%>
+					<img class="btn_vote" id="btnpoll" onclick="vote_poll('1')" />
+					<img class="btn_vote_view" id="btnview" onclick="vote_poll('')" />
+					<!-- <img class="btn_result" id="btnresult" onclick="open_polllist()" /> -->
+				</div>
+			</div>
+		</div>
 	<form name="wp_LightPoll">
 	</form>
 	</body>

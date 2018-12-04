@@ -149,6 +149,7 @@
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 			});
 
+
 			var totalCount = 0;
 			var checkPollCount = function() {
 				$.ajax({
@@ -202,7 +203,6 @@
 
 
 			var strToDate = function(str) {
-				
 				var y = str.substr(0,4),
 					m = str.substr(5,2) -1,
 					d = str.substr(8,2);
@@ -300,7 +300,7 @@
 						eval("answer" + i).focus();
 						return;
 					}
-					
+
 					if (specialChk(document.getElementById("answer" + i).value)) {
 						alert("<spring:message code='ezResource.special' />");
 						return;

@@ -286,12 +286,12 @@
 
 				if (browserIE) {
 					if(pNoneActiveX == "YES") {
-						window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=680,width=820,top=" + pTop + ",left=" + pLeft, "");
+						window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=730,width=820,top=" + pTop + ",left=" + pLeft, "");
 					} else {
-						window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=680,width=820,top=" + pTop + ",left=" + pLeft, "");
+						window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=730,width=820,top=" + pTop + ",left=" + pLeft, "");
 					}
 				} else {
-					window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=680,width=820,top=" + pTop + ",left=" + pLeft, "");
+					window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=730,width=820,top=" + pTop + ",left=" + pLeft, "");
 				}
 			}
 

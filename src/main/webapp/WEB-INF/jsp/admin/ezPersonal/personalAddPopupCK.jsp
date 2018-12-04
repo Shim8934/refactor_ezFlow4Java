@@ -7,6 +7,7 @@
 		<title><spring:message code = 'ezPersonal.t250' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
@@ -101,8 +102,6 @@
 
 				$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 				$("#Edatepicker").datepicker('setDate', EDate);
-				
-				$("#skin"+skinValue).prop("checked", "checked");
 			});
 
 			$(function () {
@@ -137,7 +136,79 @@
 					showMonthAfterYear: true
 				};
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+				setSkinVal();
 			});
+
+
+			var setSkinVal = function() {
+				var doc = window.document;
+				var skinObjs = doc.getElementsByClassName('skins');
+				for(var i=0; i<4; i++) {
+					skinObjs[i].classList.add('unchecked');
+					skinObjs[i].addEventListener('click', addSkinEvent);
+					skinObjs[i].addEventListener('dblclick', addSkinDblEvent);
+				}
+
+				if(flag === "mod") {
+					var skinDom = doc.getElementById('skin' + skinValue);
+					skinDom.classList.remove('unchecked');	
+					skinDom.classList.add('checked');
+				}
+			}
+
+
+			var addSkinEvent = function() {
+				var doc = window.document;
+				var skinDom = doc.getElementById('skin' + skinValue);
+				skinDom.classList.remove('checked');
+				skinDom.classList.add('unchecked');
+				
+				skinValue = this.id.substring(4);
+
+				skinDom = doc.getElementById('skin' + skinValue);
+				skinDom.classList.remove('unchecked');
+				skinDom.classList.add('checked');
+			}
+
+
+			var addSkinDblEvent = function(obj) {
+				var skinId       = this.id.substring(4);
+				var content      = document.getElementsByClassName("content")[0];
+				var skinDiv      = document.createElement("div");
+				var skinDivTop   = document.createElement("div");
+				var skinCloseBtn = document.createElement("i");
+				var skinPopImg   = document.createElement("img");
+
+				skinDiv.className = "skinPopup";
+				skinDivTop.className = "skinDivTop";
+				skinPopImg.className = "skinPopImg";
+				skinCloseBtn.className = "fa fa-times-circle skinCloseBtn";
+
+				skinDiv.setAttribute("id", "skinPopup");
+				skinCloseBtn.addEventListener("click", closeSkinEvent);
+
+				switch (skinId) {
+					case "0" : skinPopImg.setAttribute("src", "/images/ezNewPortal/Theme1.JPG"); break;
+					case "1" : skinPopImg.setAttribute("src", "/images/ezNewPortal/Theme2.JPG"); break;
+					case "2" : skinPopImg.setAttribute("src", "/images/ezNewPortal/Theme3.JPG"); break;
+					case "3" : skinPopImg.setAttribute("src", "/images/ezNewPortal/Theme3.JPG"); break;
+				}
+
+				skinDivTop.appendChild(skinCloseBtn);
+				skinDiv.appendChild(skinDivTop);
+				skinDiv.appendChild(skinPopImg);
+				content.appendChild(skinDiv);
+			}
+
+
+			function closeSkinEvent() {
+				var skinDiv = document.getElementById("skinPopup");
+				while (skinDiv.firstChild) {
+					skinDiv.removeChild(skinDiv.firstChild);
+				}
+				skinDiv.parentNode.removeChild(skinDiv);
+			}
+
 
 			function DateFormat(obj) {
 				var yy = String(obj.getFullYear()).substring(0, 4);
@@ -227,7 +298,6 @@
 
 				var tmpStartDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
 				var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
-				var skinVal = $('input:radio[name="skin"]:checked').val();
 
 				$.ajax({
 					type : "POST",
@@ -243,7 +313,7 @@
 							height : wHeight.value,
 							position : document.getElementById("selectPos").value,
 							content : message.GetEditorContent(),
-							skinValue : skinVal
+							skinValue : skinValue
 							},
 					dataType : "text",
 					success : function (result) {
@@ -306,12 +376,17 @@
 				message.SetEditorContent("${personalPopupVO.content}");
 			}
 		</script>
-<style type="text/css">
-.skinList li {float:left; margin:10px;}
-.skinList .skins {position: relative; background-color: white; width: 100px; height: 100px; text-align: center; border: 1px solid #cecece; cursor: pointer;}
-.skinList .skinImages {position: relative; width: 75px; height: 60px; top: 10px; border: 1px solid #cecece;}
-.skinList .skinTitle{ position: relative; top: 12px;}
-</style>
+		<style type="text/css">
+			.skinList {margin-left:-10px; list-style:none;}
+			li {float:left; margin:10px;}
+			.skins {position: relative; width: 140px; height: 37px; text-align: center; border: 1px solid #cecece; cursor: pointer;}
+			.skinImages {position: relative; width: 100%; height: 35px;  border: 1px solid #cecece;}
+			.checked {background-color: #edf7ff; border: 1px solid #2196f3;}
+			.skinPopup {width: 500px; height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px; top: 100px; left: 150px;}
+			.skinDivTop {display: inline-block; float: right; width: 40px; margin-top: 15px;}
+			.skinPopImg {width: 400px; height: 400px; position: relative; top: 50px; left: 45px;}
+			.skinCloseBtn {cursor: pointer; font-size: 25px;}
+		</style>
 	</head>
 	<body class = "popup">
 		<xmp id="sigBody" style="display:none;"><c:out value = '${personalPopupVO.content}' /></xmp>
@@ -341,7 +416,8 @@
 						<option value="2"><spring:message code = 'ezPersonal.tt6' /></option>
 						<option value="3"><spring:message code = 'ezPersonal.tt7' /></option>
 						<option value="4"><spring:message code = 'ezPersonal.tt8' /></option>
-					</select> </td> 
+					</select>
+				</td> 
 			</tr> 
 			<tr> 
 				<th><spring:message code = 'ezPersonal.t154' /></th>
@@ -374,55 +450,33 @@
 				</tr> 
 				<tr>
 					<th>스킨선택</th>
-					<td id="skinView" style="padding:3px; height:100px">
-						<!-- <input type="radio" name="skin" class="skins" id="skin0" value="0">
-						<label for="skin0">스킨0</label>	
-						<input type="radio" name="skin" class="skins" id="skin1" value="1">
-						<label for="skin1">스킨1</label>
-						<input type="radio" name="skin" class="skins" id="skin2" value="2">
-						<label for="skin2">스킨2</label>	
-						<input type="radio" name="skin" class="skins" id="skin3" value="3">
-						<label for="skin3">스킨3</label>
-						<input type="radio" name="skin" class="skins" id="skin4" value="4">
-						<label for="skin4">스킨4</label>	 -->
-						<ul class="skinList" id ="skinList" style=" list-style:none;">
+					<td id="skinView" style="padding:3px; height:40px">
+						<ul class="skinList" id ="skinList">
 							<li>
-								<div class="skins" id="skin1" onclick="selectSkin(this)">
+								<div class="skins" id="skin0">
 									<div class="skinImg">
 										<img src="/images/admin/first.png" class="skinImages">
-									</div>
-									<div class="skinTitle" id="skinTitle1">
-										<span class="skinName">Skin1</span>
 									</div>
 								</div>	
 							</li>
 							<li>
-								<div class="skins" id="skin2" onclick="selectSkin(this)">
+								<div class="skins" id="skin1">
 									<div class="skinImg">
 										<img src="/images/admin/inuse_end.png" class="skinImages">
 									</div>
-									<div class="skinTitle" id="skinTitle2">
-										<span class="skinName">Skin2</span>
-									</div>
 								</div>
 							</li>
 							<li>
-								<div class="skins" id="skin3" onclick="selectSkin(this)">
+								<div class="skins" id="skin2">
 									<div class="skinImg">
 										<img src="/images/admin/inuse.png" class="skinImages">
 									</div>
-									<div class="skinTitle" id="skinTitle3">
-										<span class="skinName">Skin3</span>
-									</div>
 								</div>
 							</li>
 							<li>
-								<div class="skins" id="skin4" onclick="selectSkin(this)">
+								<div class="skins" id="skin3">
 									<div class="skinImg">
 										<img src="/images/admin/icon_cancel.png" class="skinImages">
-									</div>
-									<div class="skinTitle" id="skinTitle4">
-										<span class="skinName">Skin4</span>
 									</div>
 								</div>
 							</li>
