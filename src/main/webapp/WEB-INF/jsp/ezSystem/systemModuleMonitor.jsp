@@ -10,7 +10,7 @@
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <title><spring:message code="ezSystem.kbh1" /></title>
 <style type="text/css">
-	body.mainbody table.content tr:last-child {border-top-style: double;}
+	body.mainbody table.content tr:last-child {border-top-style: double;border-top-color: #d2d2d2;}
 	body.mainbody table.content th {width: 26%;}
 	body.mainbody table.content th:first-child {width: 22%;}
 	body.mainbody table.content td {width: auto;padding-left: 10px;}
