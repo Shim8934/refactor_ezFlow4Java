@@ -495,7 +495,7 @@
 	                                <%-- <c:if test="${scheduleId == ''}">
 	                                	<li><span onclick="check_name()"><spring:message code='ezSchedule.t53'/></span></li>
 									</c:if> --%>
-	                                <li><span onclick="Print_onClick()"><spring:message code='ezSchedule.t217'/></span></li>
+	                                <li><span class="icon16 popup_icon16_print" onclick="Print_onClick()"></span></li>
 	                            </ul>
 	                            <ul style="float:right;margin-right:50px">        
 	                                <li id="menuTable" class="sel" style="background: none; border: none;">	
