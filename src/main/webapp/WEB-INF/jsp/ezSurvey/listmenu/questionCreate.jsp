@@ -6,7 +6,7 @@
 	<span class="sryTxt"><c:out value="설문제목"></c:out> </span>
 </div>
 <div class="quesBacgr">
-
+<!-- 
 <table class='head'>
 	<thead style="border: 1px solid black;">
 		<tr style="border: 1px solid black;">
@@ -43,5 +43,5 @@
 		</tr>
 	</tbody>
 </table>
-	
+ -->
 </div>

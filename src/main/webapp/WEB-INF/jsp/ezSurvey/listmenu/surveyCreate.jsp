@@ -657,7 +657,7 @@
 				var qstnForm         = qstnWrapper.find(".quesDiv").next();
 				var qstnType         = qstnForm.attr("questiontype");
 				question['type']     = qstnType;
-				var rqrd             = optArea.find(".additionalPart").find("input[name='checkbox']");
+				var rqrd             = qstnForm.find(".additionalPart").find("input[name='checkbox']");
 				question['required'] = rqrd.is(":checked") == true ? 'Y' : 'N';
 				
 				//Check question attach files
