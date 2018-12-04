@@ -7,6 +7,7 @@
 		<title><spring:message code = 'ezPersonal.t250' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
@@ -145,6 +146,7 @@
 				for(var i=0; i<4; i++) {
 					skinObjs[i].classList.add('unchecked');
 					skinObjs[i].addEventListener('click', addSkinEvent);
+					skinObjs[i].addEventListener('dblclick', addSkinDblEvent);
 				}
 
 				if(flag === "mod") {
@@ -166,6 +168,45 @@
 				skinDom = doc.getElementById('skin' + skinValue);
 				skinDom.classList.remove('unchecked');
 				skinDom.classList.add('checked');
+			}
+
+
+			var addSkinDblEvent = function(obj) {
+				var skinId       = this.id.substring(4);
+				var content      = document.getElementsByClassName("content")[0];
+				var skinDiv      = document.createElement("div");
+				var skinDivTop   = document.createElement("div");
+				var skinCloseBtn = document.createElement("i");
+				var skinPopImg   = document.createElement("img");
+
+				skinDiv.className = "skinPopup";
+				skinDivTop.className = "skinDivTop";
+				skinPopImg.className = "skinPopImg";
+				skinCloseBtn.className = "fa fa-times-circle skinCloseBtn";
+
+				skinDiv.setAttribute("id", "skinPopup");
+				skinCloseBtn.addEventListener("click", closeSkinEvent);
+
+				switch (skinId) {
+					case "0" : skinPopImg.setAttribute("src", "/images/ezNewPortal/Theme1.JPG"); break;
+					case "1" : skinPopImg.setAttribute("src", "/images/ezNewPortal/Theme2.JPG"); break;
+					case "2" : skinPopImg.setAttribute("src", "/images/ezNewPortal/Theme3.JPG"); break;
+					case "3" : skinPopImg.setAttribute("src", "/images/ezNewPortal/Theme3.JPG"); break;
+				}
+
+				skinDivTop.appendChild(skinCloseBtn);
+				skinDiv.appendChild(skinDivTop);
+				skinDiv.appendChild(skinPopImg);
+				content.appendChild(skinDiv);
+			}
+
+
+			function closeSkinEvent() {
+				var skinDiv = document.getElementById("skinPopup");
+				while (skinDiv.firstChild) {
+					skinDiv.removeChild(skinDiv.firstChild);
+				}
+				skinDiv.parentNode.removeChild(skinDiv);
 			}
 
 
@@ -341,6 +382,10 @@
 			.skins {position: relative; width: 140px; height: 37px; text-align: center; border: 1px solid #cecece; cursor: pointer;}
 			.skinImages {position: relative; width: 100%; height: 35px;  border: 1px solid #cecece;}
 			.checked {background-color: #edf7ff; border: 1px solid #2196f3;}
+			.skinPopup {width: 500px; height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px; top: 100px; left: 150px;}
+			.skinDivTop {display: inline-block; float: right; width: 40px; margin-top: 15px;}
+			.skinPopImg {width: 400px; height: 400px; position: relative; top: 50px; left: 45px;}
+			.skinCloseBtn {cursor: pointer; font-size: 25px;}
 		</style>
 	</head>
 	<body class = "popup">
