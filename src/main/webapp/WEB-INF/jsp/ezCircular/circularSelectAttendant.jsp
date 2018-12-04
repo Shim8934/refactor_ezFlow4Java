@@ -1800,24 +1800,24 @@
 													+ vo.circularBMID + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
 											circularDeptList += ("<td style='width:5%'>"
 													+ (index + 1) + "</td>");
-											circularDeptList += ("<td style='width:35%'>"
+											circularDeptList += ("<td style='width:45%'>"
 													+ vo.title + "</td>");
-											circularDeptList += ("<td style='width:27%'>"
+											circularDeptList += ("<td style='width:20%'>"
 													+ vo.regDate.substring(0,
 															16) + "</td>");
 
 											if (vo.memberNameCount == 0) {
-												circularDeptList += ("<td style='width:19%'>"
+												circularDeptList += ("<td style='width:30%'>"
 														+ vo.memberName + "</td>");
 											} else {
-												circularDeptList += ("<td style='width:19%'>"
+												circularDeptList += ("<td style='width:30%'>"
 														+ vo.memberName
 														+ " <spring:message code='ezCircular.t50' /> "
 														+ vo.memberNameCount
 														+ " <spring:message code='ezCircular.t51' />" + "</td>");
 											}
 
-											circularDeptList += ("<td style='width:13%'>");
+											//circularDeptList += ("<td style='width:13%'>");
 											circularDeptList += ("</tr>");
 										});
 

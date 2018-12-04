@@ -2027,5 +2027,40 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("getTitleCnt ended.");
 		return rtnCnt;
 	}
+	
+	@Override
+	public String getJobOptionInfo(String type, String companyID, int tenantID) throws Exception {
+		logger.debug("getJobOptionInfo started. type = "+type);
+		
+		StringBuffer rtnVal = new StringBuffer();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		List<OrganJobVO> jobList = ezOrganAdminDao.getTitleList(map);
+		
+		if (jobList != null && jobList.size() > 0) {
+			rtnVal.append("<DATA>");
+			rtnVal.append("<TYPE>" + type + "</TYPE>");
+			rtnVal.append("<ROWS>");
+			for (int i = 0; i < jobList.size(); i++) {
+				rtnVal.append("<ROW>");
+				rtnVal.append("<SORT>" + jobList.get(i).getSort() + "</SORT>");
+				rtnVal.append("<NAME1><![CDATA[" + jobList.get(i).getDisplayName() + "]]></NAME1>");
+				rtnVal.append("<NAME2><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></NAME2>");
+				rtnVal.append("<JOBID>" + jobList.get(i).getJobID() + "</JOBID>");
+				rtnVal.append("<USEFLAG>" + jobList.get(i).getUseFlag() + "</USEFLAG>");
+				rtnVal.append("</ROW>");
+			}			
+			rtnVal.append("</ROWS></DATA>");
+		} else {
+			rtnVal.append("<DATA><ROWS></ROWS></DATA>");
+		}
+		
+		logger.debug("getJobOptionInfo ended.");
+		return rtnVal.toString();
+	}
 
 }
