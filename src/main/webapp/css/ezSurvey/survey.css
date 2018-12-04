@@ -340,8 +340,28 @@ input[type=range]::-ms-tooltip {display: none;}
 .question-panel .question-attach {width: 100px; height: 100px; padding: 10px 35px;}
 .question-attach .qstnImg {width: 100%; height: 100%;}
 
+/* matrix */
+.mtrPart .rowArea {padding-bottom: 20px; padding-left: 20px;}
+.mtrPart .rowArea .rName{float: left; width: 10%;}
+.mtrPart .rowArea .rName span{font-size: 13px;}
 
+.mtrPart .rowArea .rows{float: left;width: 90%;}
+.mtrPart .rowArea .rows .row{display: flex; padding-bottom: 10px;}
+.mtrPart .rowArea .rows .row .rowInput{width: 400px;}
+.mtrPart .rowArea .rows .row .delRow{width: 30px; height: 30px; cursor: pointer; padding-left: 20px;}
+ 
+.mtrPart .colArea {padding-bottom: 20px; padding-left: 20px;}
+.mtrPart .colArea .cName{float: left;width: 10%;}
+.mtrPart .colArea .cName span{font-size: 13px;}
 
+.mtrPart .colArea .cols{float: left;width: 90%;}
+.mtrPart .colArea .cols .col{display: flex; padding-bottom: 10px;}
+.mtrPart .colArea .cols .col .colInput{width: 400px;}
+.mtrPart .colArea .cols .col .delCol{width: 30px; height: 30px; cursor: pointer; padding-left: 20px;}
+ 
+.matrix {width: 70%; text-align: center;}
+.matrix tr {height: 30px;}
+.matrix td {border: 1px solid rgba(204, 204, 204, 1)}
 
 
 

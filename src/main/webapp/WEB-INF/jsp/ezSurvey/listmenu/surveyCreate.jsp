@@ -612,7 +612,7 @@
 				}
 			}
 			
-			function mkMatrixQstn(status, thisEl, question) {
+			function mkMatrixQstn(status, wrapperElmt, question) {
 				var qstId       = question.id;
 				var qstnContent = question.content;
 				var qstnAtt     = question.attach;
@@ -642,7 +642,7 @@
 						html += "</div>"
 					}
 					html += "<div class='question-opts'>";
-					html += "<table class='head'>";
+					html += "<table class='matrix'>";
 					html += "<thead>";
 					html += "<tr>";
 					html += "<td></td>";
@@ -659,7 +659,7 @@
 						html += "<td>" + row[i].contents + "</td>";
 						
 						for (var j = 0; j < col.length; j++) {
-							html += "<td><input type='radio' value='(" + row[i].contents + ", " + col[j].contents + ")'></td>";
+							html += "<td><input type='radio' value='(" + row[i].level + ", " + col[j].level + ")'></td>";
 						}
 						html += "</tr>";
 					}
@@ -667,7 +667,7 @@
 					html += "</table>";
 					html += "</div>";
 					
-					wrapperElmt.parents(".qstnWrapper").prepend(html);
+					wrapperElmt.prepend(html);
 					
 					if (status == 'save') {
 						createQuestionDiv();
@@ -705,8 +705,6 @@
 					var qstnList   = SurveyCreate.getQs();
 					question['id'] = qstnList.length + 1;
 					SurveyCreate.setQs(question);
-					console.log('저장');
-					console.log(SurveyCreate.getQs());
 				}
 				else if (status == 'modify') {
 					rmPrevEl(qstnWrapper);
@@ -716,11 +714,7 @@
 					
 					questionList.splice(qstId - 1, 1);           // 질문 배열에서 해당 순번의 객체 삭제
 					questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
-					console.log('수정');
-					console.log(SurveyCreate.getQs());
 				}
-				console.log('최종');
-				console.log(SurveyCreate.getQs());
 				switch(parseInt(qstnType)) {
 					case 1  :
 					case 2  : var sltObj = mkSltObj(qstnForm);
