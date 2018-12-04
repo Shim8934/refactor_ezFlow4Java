@@ -1249,6 +1249,7 @@ e.printStackTrace();
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

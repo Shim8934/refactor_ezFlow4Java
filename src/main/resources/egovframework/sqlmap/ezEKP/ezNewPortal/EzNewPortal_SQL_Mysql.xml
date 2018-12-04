@@ -567,12 +567,26 @@ AND
 ]]>		
 </delete>
 
-<insert id="ezNewPortal.insertUserUsedPortlet" parameterClass="Map">
+<!-- <insert id="ezNewPortal.insertUserUsedPortlet" parameterClass="Map">
 <![CDATA[
 INSERT INTO 
 	tbl_portal_portlet_user(user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id)
 values
 	 (#userId#, #tenantId#, #companyId#, #portletId#, #portletOrder#, #menuId#)
+]]>		
+</insert> -->
+
+<insert id="ezNewPortal.insertUserUsedPortlet" parameterClass="Map">
+<![CDATA[
+INSERT INTO TBL_PORTAL_PORTLET_USER (
+		user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id, portlet_used
+	) VALUES (
+		#userId#, #tenantId#, #companyId#, #portletId#,	#portletOrder#, 
+		(SELECT MENU_ID FROM TBL_PORTAL_PORTLET WHERE PORTLET_ID = #portletId#), #portletUsed#
+	)
+	ON DUPLICATE KEY UPDATE
+		portlet_used = #portletUsed#,
+		portlet_order = #portletOrder#
 ]]>		
 </insert>
 

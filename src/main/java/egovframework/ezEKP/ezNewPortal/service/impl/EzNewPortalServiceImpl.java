@@ -357,7 +357,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);		
 		
 		// 삭제할 때 
-		ezNewPortalDAO.deleteUserUsedPortlet(map);
+		/*ezNewPortalDAO.deleteUserUsedPortlet(map);*/
 		
 		List<Map<String, Object>> portletList = (List<Map<String, Object>>) param.get("portletList");
 		LOGGER.debug("portletList: " + portletList.toString());
@@ -371,6 +371,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			portletMap.put("portletId", portletList.get(i).get("portletId"));
 			portletMap.put("portletOrder", portletList.get(i).get("portletOrder"));
 			portletMap.put("menuId", portletList.get(i).get("menuId"));
+			portletMap.put("portletUsed", Boolean.parseBoolean(portletList.get(i).get("portletUsed").toString()));
 			
 			LOGGER.debug("portletMap:" + portletMap.toString());
 			ezNewPortalDAO.insertUserUsedPortlet(portletMap);

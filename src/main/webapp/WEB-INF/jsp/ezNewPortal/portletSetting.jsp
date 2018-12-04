@@ -281,21 +281,48 @@
 				saveBtn.addEventListener('click', function (){
 					var portletList = [];
 					var classList = document.getElementsByClassName('ui-portlet-span');
+					var orderCount = 1;
 					// 반복문 돌면서 데이터 쌓기
 					HTMLCollection.prototype.forEach = Array.prototype.forEach;
+					
  					classList.forEach(function (item, index) {			
 						var switchBtn = document.getElementById('portletid_' + item.dataset.portletid);
+						
 						if (switchBtn.getAttribute('checked')) {
 							var obj = {
 								portletId: item.dataset.portletid,
-								portletOrder: item.dataset.portletorder,
-								menuId: item.dataset.menuid
+								portletOrder: orderCount,
+								menuId: item.dataset.menuid,
+								portletUsed : switchBtn.getAttribute('checked')
 							}
+							
+							orderCount++;
 							portletList.push(obj);				
 						}
 					});
  					
-					// 유저 포틀릿 순서로 재정의
+ 					classList.forEach(function (item, index) {			
+						var switchBtn = document.getElementById('portletid_' + item.dataset.portletid);
+						var portletUsed = false;
+						
+						if (switchBtn.getAttribute('checked') == null)  {
+							portletUsed = false;
+						}
+						
+						if (!switchBtn.getAttribute('checked')) {
+							var obj = {
+								portletId: item.dataset.portletid,
+								portletOrder: orderCount,
+								menuId: item.dataset.menuid,
+								portletUsed : portletUsed
+							}
+
+							orderCount++;
+							portletList.push(obj);				
+						}
+					});
+ 					
+					/* // 유저 포틀릿 순서로 재정의
 					var temp = [];
 					for(var i=0; i<portletList.length; i++) {
 						for(var j=i; j<portletList.length; j++) {
@@ -322,7 +349,7 @@
 							item.portletOrder = arrIndex;
 							arrIndex++;
 						}
-					});
+					}); */
 					// 순서 재정렬 끝
 					console.log('portletList ', portletList);
 					
@@ -332,7 +359,7 @@
 						portletList: portletList,
 					}					
 					
-					console.log('param', param.portletList);					
+					console.log('param', portletList);					
 					
 					if(param.portletList.length < 1) {
 						alert('<spring:message code="ezNewPortal.t011" />');	
