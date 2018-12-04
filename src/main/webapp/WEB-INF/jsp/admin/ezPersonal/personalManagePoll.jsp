@@ -594,6 +594,9 @@
 					doc.getElementById("previewH").style.height = height + 30 + "px";
 					doc.getElementById("previewmail_bar_h").style.height = height + 47 + "px";
 					doc.getElementById("ifrmPreViewH").style.height = height + 30 + "px";
+					if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
+						doc.getElementById("ifrmPreViewH").style.height = conH + "px";
+					} 
 				}
 			}
 
@@ -683,6 +686,9 @@
 					doc.getElementById("contentlist").style.height = conlistH + "px";					
 					break;
 				case 2 :
+					if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
+						previewmail_bar_h.style.float = "left";
+					} 
 					doc.getElementById("contentlist").style.height = conlistH + "px";
 					mainView.style.width = "60%";
 					previewH.style.width = "40%";
@@ -723,6 +729,11 @@
 						doc.getElementById('PreH_date').innerHTML = itemSeqSDate;
 						PrevViewFormH.itemSeq.value = itemseq;
 						PrevViewFormH.submit();
+						if(itemseq!=0) {
+							if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
+								doc.getElementById("ifrmPreViewH").style.height = conH + "px";
+							} 
+						}
 					}
 				}
 			}
@@ -793,7 +804,8 @@
 			<script type="text/javascript">
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			</script>
-			<div class="mainView" id="mainView" style="width:100%;float:left">
+			
+			<div class="mainView" id="mainView" style="width:60%;float:left">
 				<div id="contentlist" style="width:100%; overflow: auto;">
 					<table class="mainlist" style="width: 100%;">
 						<div id="AccessList" style="border: 0; width: 100%"></div>
@@ -801,8 +813,7 @@
 				</div>
 				<div id="tblPageRayer"></div>
 			</div>
-			
-			<div class="previewH" id="previewH" style="width:39%; float:right;">
+			<div class="previewH" id="previewH" style="width:40%; float:right;">
 				<span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top;  margin-left:0px;">
 					<span id="previewmail_bar_h" class="previewmail_bar_h" style="display: inline-block; border: 1px solid #e5e5e5; border-top:0px !important; border-bottom:0px !important;">
 						<p class="hbar_dotted" style="width:5px">
