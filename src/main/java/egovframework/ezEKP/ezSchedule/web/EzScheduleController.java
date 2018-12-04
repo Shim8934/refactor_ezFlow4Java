@@ -1268,6 +1268,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String cID = request.getParameter("COMPANYID");
+		if (cID == null || cID.equals("")){
+			cID = loginSimpleVO.getCompanyID();
+		}
 		
 		//2018-11-01 김혜정 일정드래그앤드랍을 위해 추가
 		if (cID == null) {

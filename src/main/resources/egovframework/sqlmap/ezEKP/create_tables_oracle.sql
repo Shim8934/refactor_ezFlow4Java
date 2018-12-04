@@ -403,6 +403,72 @@
    CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_USER_JOBMASTER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
    
 --------------------------------------------------------
+--  DDL for Sequence LIGHTPOLLOPTIONID_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."LIGHTPOLLOPTIONID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE NOKEEP  NOSCALE  GLOBAL ;
+   
+--------------------------------------------------------
+--  DDL for Sequence POPUPOPTIONID_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."POPUPOPTIONID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE NOKEEP  NOSCALE  GLOBAL ;
+   
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ATTI_MODAPPL_HISTORY
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ATTI_MODAPPL_HISTORY"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 61 CACHE 20 NOORDER  NOCYCLE NOKEEP  NOSCALE  GLOBAL ;
+   
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ATTITUDE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ATTITUDE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 30241 CACHE 20 NOORDER  NOCYCLE NOKEEP  NOSCALE  GLOBAL ;
+   
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ATTITUDE_TYPE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ATTITUDE_TYPE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 61 CACHE 20 NOORDER  NOCYCLE NOKEEP  NOSCALE  GLOBAL ;
+   
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_MEMO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_MEMO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 81 CACHE 20 NOORDER  NOCYCLE NOKEEP  NOSCALE  GLOBAL ;
+   
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_MEMO_FOLDER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_MEMO_FOLDER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 61 CACHE 20 NOORDER  NOCYCLE NOKEEP  NOSCALE  GLOBAL ;
+   
+--------------------------------------------------------
+--  DDL for Sequence TBL_PORTAL_FRAME_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TBL_PORTAL_FRAME_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE NOKEEP  NOSCALE  GLOBAL ;
+   
+--------------------------------------------------------
+--  DDL for Sequence TBL_PORTAL_MENU_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TBL_PORTAL_MENU_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 21 CACHE 20 NOORDER  NOCYCLE NOKEEP  NOSCALE  GLOBAL ;
+   
+--------------------------------------------------------
+--  DDL for Sequence TBL_PORTAL_PORTLET_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TBL_PORTAL_PORTLET_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE NOKEEP  NOSCALE  GLOBAL ;
+   
+--------------------------------------------------------
+--  DDL for Sequence TBL_PORTAL_THEME_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TBL_PORTAL_THEME_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE NOKEEP  NOSCALE  GLOBAL ;
+   
+--------------------------------------------------------
 --  DDL for Table JAMES_DOMAIN
 --------------------------------------------------------
 
