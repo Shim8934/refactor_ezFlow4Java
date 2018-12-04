@@ -164,7 +164,7 @@
              	endtime,
              	autodelete 
         	from 
-        		tbl_scheduleconfig 
+        		ryobimigration.tbl_scheduleconfig 
        		where  
        			userid = #v_USERID#
        		and
@@ -180,7 +180,7 @@
 				'' as description,
               	'' as createdate
         	from
-        		tbl_schedulegroup a left join tbl_schedulegroupmember b on a.groupid = b.groupid and a.tenant_id = b.tenant_id
+        		ryobimigration.tbl_schedulegroup a left join ryobimigration.tbl_schedulegroupmember b on a.groupid = b.groupid and a.tenant_id = b.tenant_id
        		where
        			(creatorid = #v_USERID# or ( memberid = #v_USERID# and status = 1 ))
 			and
@@ -226,7 +226,7 @@
 	            groupname,
 	            a.companyid	           
 			from 
-				tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid and a.tenant_id = b.tenant_id
+				ryobimigration.tbl_schedule a left join ryobimigration.tbl_schedulegroup b on a.ownerid = b.groupid and a.tenant_id = b.tenant_id
 	       	where  
 	       		a.scheduleid = #v_SCHEDULEID#
 	       	and
@@ -270,7 +270,7 @@
 				'' as groupname,
 				companyid
         	from 
-        		tbl_schedule
+        		ryobimigration.tbl_schedule
        		where  
        			ownerid in ($v_INDILIST$)
             and 
@@ -329,7 +329,7 @@
 				'' as groupname,
 				companyid
         	from 
-        		tbl_schedule
+        		ryobimigration.tbl_schedule
        		where  
        			ownerid in ($v_PIDLIST$)
        		and
@@ -356,7 +356,7 @@
 													SELECT
 														DEPARTMENTCN
 													FROM
-														tbl_schedule_public_dept
+														ryobimigration.tbl_schedule_public_dept
 													WHERE
 														USERCN = #v_USERID#
 													AND
@@ -395,7 +395,7 @@
               	description,
               	createdate
         	from
-        		tbl_schedulegroup
+        		ryobimigration.tbl_schedulegroup
         	where
         		creatorid = #v_USERID#
        		and
@@ -414,7 +414,7 @@
 	                  	memberid,
 	                  	tenant_id
                       from
-                      	tbl_schedulegroupmember
+                      	ryobimigration.tbl_schedulegroupmember
                       where
                       	groupid = #v_GROUPID#
                       and
@@ -432,7 +432,7 @@
                   	membername2,
                   	tenant_id
                      from 
-                     	tbl_schedulegroupmember 
+                     	ryobimigration.tbl_schedulegroupmember 
                      where  
                      	tenant_id = #v_TENANTID#	
              )A join ( SELECT  
@@ -522,7 +522,7 @@
                   	membername2,
                   	tenant_id
                      from 
-                     	tbl_schedulegroupmember 
+                     	ryobimigration.tbl_schedulegroupmember 
                      where  
                      	tenant_id = #v_TENANTID#	
              )A join ( SELECT  
@@ -570,7 +570,7 @@
              	'' as mail,
              	'' as info  
              from 
-             	tbl_schedulegroupmember
+             	ryobimigration.tbl_schedulegroupmember
              where
              	groupid = #v_GROUPID#
              and
@@ -597,7 +597,7 @@
                   	responsedate,
                   	tenant_id
                      from 
-                     	tbl_schedulegroupmember 
+                     	ryobimigration.tbl_schedulegroupmember 
                      where  
                      	tenant_id = #v_TENANTID#	
              )A join ( SELECT  
@@ -775,7 +775,7 @@
 					when '2' then departmentname2   
 				end deptname  
         	from 
-        		tbl_schedule_public_dept 
+        		ryobimigration.tbl_schedule_public_dept 
        		where  
        			usercn = #v_CN#
        		and
@@ -809,7 +809,7 @@
 			select 
 				count(attendantid)
         	from 
-        		tbl_attendant 
+        		ryobimigration.tbl_attendant 
        		where  
        			attendantid = #v_USERID#
             and 
@@ -826,7 +826,7 @@
 			select 
 				count(a.groupid)
         	from 
-        		tbl_schedulegroup a join tbl_schedulegroupmember b on a.groupid = b.groupid and a.tenant_id = b.tenant_id
+        		ryobimigration.tbl_schedulegroup a join ryobimigration.tbl_schedulegroupmember b on a.groupid = b.groupid and a.tenant_id = b.tenant_id
         	where  
         		memberid = #v_USERID#
             and 
@@ -845,7 +845,7 @@
 			select 
 			 	count(1) 
 	        from 
-	        	tbl_attendant 
+	        	ryobimigration.tbl_attendant 
 	       	where  
 	       		scheduleid = #v_SCHEDULEID#
 	       	and
@@ -866,7 +866,7 @@
 	            status,	            
 	            date_add(responsedate, interval +#v_OFFSETMIN# minute) as responsedate
 	        from 
-	        	tbl_attendant 
+	        	ryobimigration.tbl_attendant 
 	       	where  
 	       		scheduleid = #v_SCHEDULEID#
 	       	and
@@ -884,7 +884,7 @@
              	filename,
              	filepath
         	from 
-        		tbl_scheduleattach 
+        		ryobimigration.tbl_scheduleattach 
        		where  
        			scheduleid = #v_SCHEDULEID#
 			and
@@ -980,7 +980,7 @@
 			select 
 				date_format(date_add(startDate, interval +#v_OFFSETMIN# minute), '%Y-%m-%d') as startDate
 			from 
-				tbl_schedulerepetition_del
+				ryobimigration.tbl_schedulerepetition_del
 			where
 				scheduleid = #v_SCHEDULEID#
 			and
@@ -1005,7 +1005,7 @@
              	date_add(b.startdate, interval +#v_OFFSETMIN# minute) as startdate,
              	date_add(b.enddate, interval +#v_OFFSETMIN# minute) as enddate
         	from
-        		tbl_attendant a join tbl_schedule b on a.scheduleid = b.scheduleid and a.tenant_id = b.tenant_id
+        		ryobimigration.tbl_attendant a join ryobimigration.tbl_schedule b on a.scheduleid = b.scheduleid and a.tenant_id = b.tenant_id
         	where
         		a.attendantid = #v_USERID#
         	and
@@ -1028,7 +1028,7 @@
 	            status,	            
 	            date_add(responsedate, interval +#v_OFFSETMIN# minute) as responsedate
 	        from
-	        	tbl_schedulegroup a join tbl_schedulegroupmember b on a.groupid = b.groupid and a.tenant_id = b.tenant_id
+	        	ryobimigration.tbl_schedulegroup a join ryobimigration.tbl_schedulegroupmember b on a.groupid = b.groupid and a.tenant_id = b.tenant_id
 	        where
 	        	memberid = #v_USERID#
 	        and
@@ -1057,7 +1057,7 @@
 	<!-- checked -->	
 	<insert id="EzScheduleDAO.insertSchedule" parameterClass="map">
 		<![CDATA[
-			insert into tbl_schedule(
+			insert into ryobimigration.tbl_schedule(
 				parentid, 			ownerid, 			ownername, 					ownername2,			creatorid, 			creatorname,		creatorname2,		createdate,			modifierid,		modifiername,
 				modifiername2,		modifydate,			scheduletype,				importance,			hasattendant,		hasattach,			hascomment,			isreadonly,			ispublic,		datetype,	
 				startdate, 			enddate,	 		repetition,					repetitiondelete,	title,				location,			contentpath,		tenant_id,			companyid
@@ -1071,7 +1071,7 @@
 	<!-- checked -->
 	<insert id="EzScheduleDAO.insertScheduleAttach" parameterClass="map">
 		<![CDATA[
-			insert into tbl_scheduleattach(
+			insert into ryobimigration.tbl_scheduleattach(
 				scheduleid,			filename, 				filepath, 				filesize,				tenant_id
 			) values (
 				#v_SCHEDULEID#,		#v_FILENAME#,			#v_FILEPATH#,			#v_FILESIZE#,			#v_TENANTID#
@@ -1081,7 +1081,7 @@
 	<!-- checked -->
 	<insert id="EzScheduleDAO.insertScheduleAttendant" parameterClass="map">
 		<![CDATA[
-			insert into tbl_attendant(
+			insert into ryobimigration.tbl_attendant(
 				scheduleid,			attendantid,			attendantname, 			attendantname2,			attendantdeptname,		attendantdeptname2,
 				status,				tenant_id,				responsedate,			companyid			
 			) values (
@@ -1093,7 +1093,7 @@
 	
 	<insert id="EzScheduleDAO.insertScheduleRepeDel" parameterClass="map">
 		<![CDATA[
-			insert into tbl_schedulerepetition_del(
+			insert into ryobimigration.tbl_schedulerepetition_del(
 				scheduleid,			startdate, 				enddate,				tenant_id,				companyid
 			) values (
 				#v_SCHEDULEID#,		#v_STARTDATE#,			#v_STARTDATE#,			#v_TENANTID#,			#v_COMPANYID#
@@ -1103,7 +1103,7 @@
 	<!-- checked -->
 	<insert id="EzScheduleDAO.insertScheduleGroupMember" parameterClass="map">
 		<![CDATA[
-			insert into tbl_schedulegroupmember(
+			insert into ryobimigration.tbl_schedulegroupmember(
 				groupid, 			memberid, 				membername, 			membername2, 			status, 			responsedate,		tenant_id
 			) values (
 				#v_GROUPID#,		#v_MEMBERID#,			#v_MEMBERNAME#,			#v_MEMBERNAME2#,		0,					utc_timestamp(),	#v_TENANTID#
@@ -1113,7 +1113,7 @@
 	<!-- checked -->
 	<insert id="EzScheduleDAO.insertScheduleGroup" parameterClass="map">
 		<![CDATA[
-			insert into tbl_schedulegroup(
+			insert into ryobimigration.tbl_schedulegroup(
 				groupid, 			groupname, 				creatorid, 				creatorname, 			creatorname2, 		description,		createdate,			tenant_id,		companyid		
 			) values (
 				#v_GUID#,			#v_GROUPNAME#,			#v_USERID#,				#v_DISPLAYNAME#,		#v_DISPLAYNAME2#,	#v_DESCRIPTION#,	utc_timestamp(),	#v_TENANTID#,	#v_COMPANYID#
@@ -1123,7 +1123,7 @@
 	<!-- checked -->
 	<insert id="EzScheduleDAO.insertScheduleConfig" parameterClass="map">
 		<![CDATA[
-			insert into tbl_scheduleconfig(
+			insert into ryobimigration.tbl_scheduleconfig(
 				userid, 			defaultview, 			startday, 				starttime, 				endtime, 			autodelete,			tenant_id		
 			) values (
 				#v_USERID#,			#v_DEFAULTVIEW#,		#v_STARTDAY#,			#v_STARTTIME#,			#v_ENDTIME#,		#v_AUTODELETE#,		#v_TENANTID#
@@ -1143,7 +1143,7 @@
 	<!-- checked -->
 	<insert id="EzScheduleDAO.insertAttendantSchedule" parameterClass="map">
 		<![CDATA[
-			insert into tbl_schedule(
+			insert into ryobimigration.tbl_schedule(
 				parentid, 			ownerid, 				ownername, 				ownername2, 			creatorid, 			creatorname, 		creatorname2, 
 				createdate, 		modifierid, 			modifiername, 			modifiername2, 			modifydate, 		scheduletype, 		importance, 			hasattendant, 
 				hasattach, 			hascomment, 			isreadonly, 			ispublic, 				datetype, 			startdate, 			enddate, 				repetition, 
@@ -1155,7 +1155,7 @@
 				hasattach, 			hascomment,				'Y',					ispublic, 				datetype, 			startdate, 			enddate, 				repetition, 
 				repetitiondelete, 	title,					location, 				contentpath,			tenant_id,			companyid
 			from
-				tbl_schedule
+				ryobimigration.tbl_schedule
 			where
 				scheduleid = #v_SCHEDULEID#
 			and
@@ -1167,7 +1167,7 @@
 	<update id="EzScheduleDAO.updateSchedule" parameterClass="map">
 		<![CDATA[
 			update 
-				tbl_schedule
+				ryobimigration.tbl_schedule
 			set
 				modifierid = #v_MODIFIERID#,
 				modifiername = #v_MODIFIERNAME#,
@@ -1196,7 +1196,7 @@
 	<update id="EzScheduleDAO.updateScheduleMember" parameterClass="map">
 		<![CDATA[
 			update 
-				tbl_schedulegroupmember
+				ryobimigration.tbl_schedulegroupmember
 			set
 				status = #v_STATUS#,
 				responsedate = utc_timestamp()	
@@ -1212,7 +1212,7 @@
 	<update id="EzScheduleDAO.updateAttendantSchedule" parameterClass="map">
 		<![CDATA[
 			update 
-				tbl_schedule
+				ryobimigration.tbl_schedule
 			set
 				hasattendant = #v_HASATTENDANT#					
 	   		where  
@@ -1225,7 +1225,7 @@
 	<update id="EzScheduleDAO.updateAttendantStatus" parameterClass="map">
 		<![CDATA[
 			update 
-				tbl_attendant
+				ryobimigration.tbl_attendant
 			set
 				status = #v_STATUS#,
 				responsedate = utc_timestamp()
@@ -1241,7 +1241,7 @@
 	<delete id="EzScheduleDAO.deleteScheduleGroup" parameterClass="map">
 		<![CDATA[
 			delete from
-				tbl_schedulegroup
+				ryobimigration.tbl_schedulegroup
 	   		where  
 	   			groupid = #v_GROUPID#
 	   		and
@@ -1252,7 +1252,7 @@
 	<delete id="EzScheduleDAO.deleteScheduleRepe" parameterClass="map">
 		<![CDATA[
 			delete from
-				tbl_schedulerepetition_del
+				ryobimigration.tbl_schedulerepetition_del
 	   		where  
 	   			scheduleid = #v_SCHEDULEID#
 	   		and
@@ -1263,7 +1263,7 @@
 	<delete id="EzScheduleDAO.deleteScheduleGroupMember" parameterClass="map">
 		<![CDATA[
 			delete from
-				tbl_schedulegroupmember
+				ryobimigration.tbl_schedulegroupmember
 	   		where  
 	   			groupid = #v_GROUPID#
 	   		and
@@ -1274,7 +1274,7 @@
 	<delete id="EzScheduleDAO.deleteScheduleMember" parameterClass="map">
 		<![CDATA[
 			delete from
-				tbl_schedulegroupmember
+				ryobimigration.tbl_schedulegroupmember
 	   		where  
 	   			groupid = #v_GROUPID#
 	   		and
@@ -1287,7 +1287,7 @@
 	<delete id="EzScheduleDAO.deleteScheduleConfig" parameterClass="map">
 		<![CDATA[
 			delete from
-				tbl_scheduleconfig
+				ryobimigration.tbl_scheduleconfig
 	   		where  
 	   			userid = #v_USERID#	   		
 	   		and	
@@ -1311,7 +1311,7 @@
 	<delete id="EzScheduleDAO.deleteScheduleAttach" parameterClass="map">
 		<![CDATA[
 			delete from
-				tbl_scheduleattach
+				ryobimigration.tbl_scheduleattach
    			where
    				scheduleid = #v_SCHEDULEID#
    			and	
@@ -1322,7 +1322,7 @@
 	<delete id="EzScheduleDAO.deleteAttendant" parameterClass="map">
 		<![CDATA[
 			delete from
-				tbl_attendant
+				ryobimigration.tbl_attendant
    			where
    				scheduleid = #v_SCHEDULEID#
    			and	
@@ -1333,7 +1333,7 @@
 	<delete id="EzScheduleDAO.deleteSchedule" parameterClass="map">
 		<![CDATA[
 			delete from
-				tbl_schedule
+				ryobimigration.tbl_schedule
       		where  
       			(scheduleid = #v_SCHEDULEID# or parentid = #v_SCHEDULEID#)
       		and	
@@ -1355,7 +1355,7 @@
 	<delete id="EzScheduleDAO.deleteAttendantID" parameterClass="map">
 		<![CDATA[
 			delete from
-				tbl_attendant
+				ryobimigration.tbl_attendant
 			where
 				scheduleid = #v_SCHEDULEID#
 			and
@@ -1368,7 +1368,7 @@
 	<delete id="EzScheduleDAO.deleteAttendantSchedule" parameterClass="map">
 		<![CDATA[
 			delete from
-				tbl_schedule
+				ryobimigration.tbl_schedule
 			where
 				parentid = #v_SCHEDULEID#
 			and
@@ -1380,7 +1380,7 @@
 	<update id="EzScheduleDAO.updateDragSchedule" parameterClass="map">
 		<![CDATA[
 			update
-				tbl_schedule
+				ryobimigration.tbl_schedule
 			set
 				modifierid = #v_MODIFIERID#,
 				modifiername = #v_MODIFIERNAME#,

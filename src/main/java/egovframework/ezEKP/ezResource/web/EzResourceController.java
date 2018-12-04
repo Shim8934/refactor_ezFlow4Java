@@ -1103,20 +1103,28 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strBrdExplain = resBrd.getBrdExplain();
 		String strResLocation = resBrd.getResLocation();
 		//String strOwnDeptID = resBrd.getOwnDeptID();
-		String strOwnerID = resBrd.getOwnerID().split(",")[0];
+//		String strOwnerID = "";
+//		if (resBrd.getOwnerID() != null && resBrd.getOwnerID() != "") {
+//			strOwnerID = resBrd.getOwnerID().split(",")[0];
+//		}
 		//String strOwnerCall = resBrd.getOwnerCall();
 		//String strMakeDate = ezResourceService.getLocalTime(resBrd.getMakeDate() + " " + EgovDateUtil.getCurrentDate("HH:mm:ss"));
 		String strApproveFlag = resBrd.getApproveFlag();
 		String strOwnerCall = resBrd.getOwnerCall();
 		String strBrdAccess = resBrd.getBrdAccess();
-		String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId());
+		String strOwnerID = "";
+		String pAdminFg = "N";
+		//String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId());
 		
-		String[] OwnerList = strOwnerID.split(",");
-		for(int i=1; i<OwnerList.length; i++) {
-			if(OwnerList[i].equals(userInfo.getId())) {
-				pAdminFg = "Y";
-			}
-		}
+//		if (strOwnerID != null && strOwnerID != "") {
+//			String[] OwnerList = strOwnerID.split(",");
+//			for(int i=1; i<OwnerList.length; i++) {
+//				if(OwnerList[i].equals(userInfo.getId())) {
+//					pAdminFg = "Y";
+//				}
+//			}
+//		}
+		
 		/*if (req.getParameter("cuid") != null) {
 			cUserIDStr = req.getParameter("cuid");
 		}*/
