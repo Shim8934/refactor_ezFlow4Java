@@ -176,7 +176,7 @@
 				 { text : SurveyMessages.strDropdown, value: 9, selected: false, imageSrc: "/images/ezSurvey/dropdown.png"   }];
 			
 			// question input 및 img 생성
-			createQuestionDiv();
+			//createQuestionDiv();
 			addQstnEvent();
 			
 			// question selectBox 생성
@@ -529,7 +529,7 @@
 				wrapper.find(".quesDiv").remove();
 				wrapper.find(".qstnForm").remove();
 			}
-			
+/////////////////////////////////////////////////////////////////////////////////////////			
 			// 단일선택 질문 생성 
 			function mkSelectQstn(status, thisEl, question) {
 				var qstId        = question.id;
@@ -593,12 +593,59 @@
 					if (status == 'save') {
 						createQuestionDiv();
 						createQuestionSelectBox();
-					}
-					else {
+					} else {
 						return;
 					}
 			}
 			
+			function mkMatrixQstn(status, thisEl, question) {
+				console.log(thisEl);
+				console.log(question);
+				
+				var qstId        = question.id;
+				var qstnContents = question.qstnContents;
+				var qstnAtt      = question.questionAttach;
+				var qstnType     = question.qstnType;
+				var option       = question.option;
+				var required     = question.required;
+				var other        = question.other
+				
+				var html = "";
+					html += "<div class='usrQstnWrapper' id='" + qstId + "' qstnType='" + qstnType + "'>";
+					html += "<div class='question-panel'>";
+					html += "<div class='mvBtn'></div>";
+					html += "<div class='question-header'>";
+					html += "<div class='question-content' id='" + qstId + "'>" + qstnContents;
+					html += required == 'Y' ? "<strong class='imptt'>*</strong></div>" : "</div>";
+					html += "<div class='tooltip-bttns'>";
+					html += "<span class='modifyBtn'></span>";
+					html += "<span class='copyBtn'></span>";
+					html += "<span class='deleteBtn'></span>";
+					html += "</div></div>";
+					
+					if (qstnAtt) {
+						html += "<div class='question-attach'>"
+						html += "<img alt='' src='" + qstnAtt.fpath + "' class='qstnImg'>";
+						html += "</div>"
+					}
+					
+					html += "<div class='question-opts'>";
+					
+					
+					
+					
+					html += "</div>";
+					
+					thisEl.parents(".qstnWrapper").prepend(html);
+					
+					if (status == 'save') {
+						createQuestionDiv();
+						createQuestionSelectBox();
+					} else {
+						return;
+					}
+			}
+///////////////////////////////////////////////////////////////////////////////////////////			
 			function rmPrevEl(thisEl) {
 				// 질문을 수정하면 숨겨뒀던 userInterface를 지움 
 				thisEl.parents(".qstnWrapper").prev().remove();
@@ -692,6 +739,8 @@
 				
 				if (qstnType == 1 || qstnType == 2) {
 					mkSelectQstn(status, thisEl, question); // 질문 폼 생성
+				} else if (qstnType == 3 || qstnType == 4) {
+					mkMatrixQstn(status, thisEl, question);
 				}
 				
 				rmQstnForm(thisEl);                     // 설문 생성 폼 삭제
