@@ -101,8 +101,6 @@
 
 				$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 				$("#Edatepicker").datepicker('setDate', EDate);
-				
-				$("#skin"+skinValue).prop("checked", "checked");
 			});
 
 			$(function () {
@@ -137,15 +135,37 @@
 					showMonthAfterYear: true
 				};
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-				var skinObjs = document.getElementsByClassName('skins');
-				for(var i=0; i<4; i++) {
-					skinObjs[i].addEventListener('click', addSkinEvent);
-				}
-				
+				setSkinVal();
 			});
 
-			var addSkinEvent = function(obj) {
-				alert($(this)[0].id);
+
+			var setSkinVal = function() {
+				var doc = window.document;
+				var skinObjs = doc.getElementsByClassName('skins');
+				for(var i=0; i<4; i++) {
+					skinObjs[i].classList.add('unchecked');
+					skinObjs[i].addEventListener('click', addSkinEvent);
+				}
+
+				if(flag === "mod") {
+					var skinDom = doc.getElementById('skin' + skinValue);
+					skinDom.classList.remove('unchecked');	
+					skinDom.classList.add('checked');
+				}
+			}
+
+
+			var addSkinEvent = function() {
+				var doc = window.document;
+				var skinDom = doc.getElementById('skin' + skinValue);
+				skinDom.classList.remove('checked');
+				skinDom.classList.add('unchecked');
+				
+				skinValue = this.id.substring(4);
+
+				skinDom = doc.getElementById('skin' + skinValue);
+				skinDom.classList.remove('unchecked');
+				skinDom.classList.add('checked');
 			}
 
 
@@ -237,7 +257,6 @@
 
 				var tmpStartDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
 				var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
-				var skinVal = $('input:radio[name="skin"]:checked').val();
 
 				$.ajax({
 					type : "POST",
@@ -253,7 +272,7 @@
 							height : wHeight.value,
 							position : document.getElementById("selectPos").value,
 							content : message.GetEditorContent(),
-							skinValue : skinVal
+							skinValue : skinValue
 							},
 					dataType : "text",
 					success : function (result) {
@@ -316,12 +335,13 @@
 				message.SetEditorContent("${personalPopupVO.content}");
 			}
 		</script>
-<style type="text/css">
-.skinList li {float:left; margin:10px;}
-.skinList .skins {position: relative; background-color: white; width: 100px; height: 100px; text-align: center; border: 1px solid #cecece; cursor: pointer;}
-.skinList .skinImages {position: relative; width: 75px; height: 60px; top: 10px; border: 1px solid #cecece;}
-.skinList .skinTitle{ position: relative; top: 12px;}
-</style>
+		<style type="text/css">
+			.skinList {margin-left:-10px; list-style:none;}
+			li {float:left; margin:10px;}
+			.skins {position: relative; width: 140px; height: 37px; text-align: center; border: 1px solid #cecece; cursor: pointer;}
+			.skinImages {position: relative; width: 100%; height: 35px;  border: 1px solid #cecece;}
+			.checked {background-color: #edf7ff; border: 1px solid #2196f3;}
+		</style>
 	</head>
 	<body class = "popup">
 		<xmp id="sigBody" style="display:none;"><c:out value = '${personalPopupVO.content}' /></xmp>
@@ -351,7 +371,8 @@
 						<option value="2"><spring:message code = 'ezPersonal.tt6' /></option>
 						<option value="3"><spring:message code = 'ezPersonal.tt7' /></option>
 						<option value="4"><spring:message code = 'ezPersonal.tt8' /></option>
-					</select> </td> 
+					</select>
+				</td> 
 			</tr> 
 			<tr> 
 				<th><spring:message code = 'ezPersonal.t154' /></th>
@@ -384,55 +405,33 @@
 				</tr> 
 				<tr>
 					<th>스킨선택</th>
-					<td id="skinView" style="padding:3px; height:100px">
-						<!-- <input type="radio" name="skin" class="skins" id="skin0" value="0">
-						<label for="skin0">스킨0</label>	
-						<input type="radio" name="skin" class="skins" id="skin1" value="1">
-						<label for="skin1">스킨1</label>
-						<input type="radio" name="skin" class="skins" id="skin2" value="2">
-						<label for="skin2">스킨2</label>	
-						<input type="radio" name="skin" class="skins" id="skin3" value="3">
-						<label for="skin3">스킨3</label>
-						<input type="radio" name="skin" class="skins" id="skin4" value="4">
-						<label for="skin4">스킨4</label>	 -->
-						<ul class="skinList" id ="skinList" style=" list-style:none;">
+					<td id="skinView" style="padding:3px; height:40px">
+						<ul class="skinList" id ="skinList">
 							<li>
-								<div class="skins" id="skin0" checked="">
+								<div class="skins" id="skin0">
 									<div class="skinImg">
 										<img src="/images/admin/first.png" class="skinImages">
-									</div>
-									<div class="skinTitle" id="skinTitle0">
-										<span class="skinName">Skin0</span>
 									</div>
 								</div>	
 							</li>
 							<li>
-								<div class="skins" id="skin1" checked="">
+								<div class="skins" id="skin1">
 									<div class="skinImg">
 										<img src="/images/admin/inuse_end.png" class="skinImages">
 									</div>
-									<div class="skinTitle" id="skinTitle1">
-										<span class="skinName">Skin1</span>
-									</div>
 								</div>
 							</li>
 							<li>
-								<div class="skins" id="skin2" checked="">
+								<div class="skins" id="skin2">
 									<div class="skinImg">
 										<img src="/images/admin/inuse.png" class="skinImages">
 									</div>
-									<div class="skinTitle" id="skinTitle2">
-										<span class="skinName">Skin2</span>
-									</div>
 								</div>
 							</li>
 							<li>
-								<div class="skins" id="skin3" checked="">
+								<div class="skins" id="skin3">
 									<div class="skinImg">
 										<img src="/images/admin/icon_cancel.png" class="skinImages">
-									</div>
-									<div class="skinTitle" id="skinTitle3">
-										<span class="skinName">Skin3</span>
 									</div>
 								</div>
 							</li>
