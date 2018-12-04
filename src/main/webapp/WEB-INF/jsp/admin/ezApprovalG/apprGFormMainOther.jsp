@@ -215,6 +215,7 @@
 	                    //위임전결
 // 		                    document.getElementById("ApvForm_sub6").style.display = "";
 	                    document.getElementById("rootTD").style.display = "";
+	                    message.SetEditorContent('');
 	                } else {
 // 		                    document.getElementById("btn_OpinionSave").style.display = "";
 	                }
