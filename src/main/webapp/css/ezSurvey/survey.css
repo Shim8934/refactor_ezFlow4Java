@@ -306,13 +306,14 @@ input[type=range]::-ms-tooltip {display: none;}
 .option .delImg {width: 30px; height: 30px; cursor: pointer; margin-bottom: -11px;}
 
 .qstnForm .other {padding-top: 10px;}
+.qstnForm .addBtns {text-align: left; padding-bottom: 15px;}
+
 .optArea .option {padding-left: 30px;}
 .optArea .optFileInfo {margin-left: 23px;}
 .optArea .optFileInfo ul {margin-left: -32px;}
 .quesBacgr .qstnForm .optPart .optArea .optAtt .optionFile {display: none;}
 
 .additionalPart {padding-top: 15px;}
-.additionalPart .addBtns {text-align: left; padding-bottom: 15px;}
 .additionalPart .required {text-align: left; font-size: 13px; padding-bottom: 15px;}
 .additionalPart .required input[type='checkbox'] {vertical-align: middle;}
 .additionalPart .btns {text-align: right;}

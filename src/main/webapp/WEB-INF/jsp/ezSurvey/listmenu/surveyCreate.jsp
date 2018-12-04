@@ -647,81 +647,29 @@
 				question['qstnType'] = qstnType;
 				
 				if (qstnType == 1 || qstnType == 2) {
-					var opt = qstnForm.find(".optPart");
+					var sltObj = mkSltObj(qstnForm);
+					var option = sltObj.option;
+					var other = sltObj.other;
 					
-					// 보기의 개수 확인
-					if (opt.length > 0) {
-						var option = [];
-						
-						for (var i = 0; i < opt.length; i++) {
-							var optObj = {};
-							// 보기가 비어있는지 확인
-							var optVal      = opt[i].childNodes[0].childNodes[0].childNodes[0].value;
-							optObj['level'] = i;
-							
-							if (optVal) {optObj['contents'] = optVal; }
-							
-							// 첨부 파일이 있는지 확인
-							var fObj      = opt[i].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
-							var optAttach = {};
-							
-							// 첨부파일이 있는 경우만 파일 내용 추가
-							if (fObj) {
-								var fName              = fObj.getAttribute("fname");
-								var fPath              = fObj.getAttribute("path");
-								var fSize              = fObj.getAttribute("fsize");
-								optAttach['fname']     = fName;
-								optAttach['fpath']     = fPath;
-								optAttach['fsize']     = fSize;
-								optObj['optionAttach'] = optAttach;
-							}
-							
-							option.push(optObj);
-						}
-						
-						question['option'] = option; 
+					if (option) {
+						question['option'] = option;
 					}
-					
-					// 기타
-					var oth   = qstnForm.find(".other");
-					var other = {};
-					// 기타의 유무 확인
-					if (oth.length != 0) {
-						var othVal = oth[0].childNodes[0].childNodes[0].childNodes[0].value;
-						var othObj = oth[0].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
-						
-						if (othVal) {other['contents'] = othVal;}
-						
-						if (othObj) {
-							var otherAttach = {};
-							var othFName         = othObj.getAttribute("fname");
-							var othFPath         = othObj.getAttribute("path");
-							var othFSize         = othObj.getAttribute("fsize");
-							otherAttach['fname'] = othFName;
-							otherAttach['fpath'] = othFPath;
-							otherAttach['fsize'] = othFSize;
-							other['otherAttach'] = otherAttach;
-						}
-						// 질문 객체에 기타 객체 추가
+					if (other) {
 						question['other'] = other;
 					}
-				} 
+					
+				}
 				else if (qstnType == 3 || qstnType == 4) {
-					var row = [];
-					var rows = qstnForm.find(".row");
+					var mtrObj = mkMtrObj(qstnForm);
+					var row = mtrObj.row;
+					var col = mtrObj.col;
 					
-					if (rows) {
-						for(var i = 0; i < rows.length; i++) {
-							var rowObj = {};
-							var rowVal = rows[i].find(".rowInput").val();
-							rowObj['level'] = i;
-							rowObj['contents'] = rowVal;
-							
-							row.push(rowObj);
-						}
+					if (row) {
+						question['row'] = row;
 					}
-					
-					//var col = qstnForm.find(".colArea");
+					if (col) {
+						question['col'] = mtrObj.col;
+					}
 				}
 				
 				// 필수 확인
@@ -752,11 +700,121 @@
 					console.log(SurveyCreate.getQs());
 				}
 				
+				console.log("최종");
+				console.log(SurveyCreate.getQs());
+				
 				if (qstnType == 1 || qstnType == 2) {
 					mkSelectQstn(status, thisEl, question); // 질문 폼 생성
-					
 				}
+				
 				rmQstnForm(thisEl);                     // 설문 생성 폼 삭제
+			}
+			
+			function mkSltObj(qstnForm) {
+				var sltObj = {};
+				
+				var opt = qstnForm.find(".optPart");
+				
+				// 보기의 개수 확인
+				if (opt.length > 0) {
+					var option = [];
+					
+					for (var i = 0; i < opt.length; i++) {
+						var optObj = {};
+						// 보기가 비어있는지 확인
+						var optVal      = opt[i].childNodes[0].childNodes[0].childNodes[0].value;
+						optObj['level'] = i;
+						
+						if (optVal) {optObj['contents'] = optVal; }
+						
+						// 첨부 파일이 있는지 확인
+						var fObj      = opt[i].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
+						var optAttach = {};
+						
+						// 첨부파일이 있는 경우만 파일 내용 추가
+						if (fObj) {
+							var fName              = fObj.getAttribute("fname");
+							var fPath              = fObj.getAttribute("path");
+							var fSize              = fObj.getAttribute("fsize");
+							optAttach['fname']     = fName;
+							optAttach['fpath']     = fPath;
+							optAttach['fsize']     = fSize;
+							optObj['optionAttach'] = optAttach;
+						}
+						
+						option.push(optObj);
+					}
+					sltObj['option'] = option;
+					//question['option'] = option; 
+				}
+				
+				// 기타
+				var oth   = qstnForm.find(".other");
+				var other = {};
+				// 기타의 유무 확인
+				if (oth.length != 0) {
+					var othVal = oth[0].childNodes[0].childNodes[0].childNodes[0].value;
+					var othObj = oth[0].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
+					
+					if (othVal) {other['contents'] = othVal;}
+					
+					if (othObj) {
+						var otherAttach = {};
+						var othFName         = othObj.getAttribute("fname");
+						var othFPath         = othObj.getAttribute("path");
+						var othFSize         = othObj.getAttribute("fsize");
+						otherAttach['fname'] = othFName;
+						otherAttach['fpath'] = othFPath;
+						otherAttach['fsize'] = othFSize;
+						other['otherAttach'] = otherAttach;
+					}
+					// 질문 객체에 기타 객체 추가
+					//question['other'] = other;
+					sltObj['other'] = other;
+				}
+				
+				return sltObj;
+			}
+			
+			function mkMtrObj(qstnForm) {
+				var rows = qstnForm.find(".row");
+				
+				//var mtrArr = [];
+				var mtrObj = {};
+				if (rows) {
+					var row = [];
+					
+					for(var i = 0; i < rows.length; i++) {
+						var rowObj = {};
+						var rowVal = rows[i].childNodes[0].value;
+						rowObj['level'] = i;
+						rowObj['contents'] = rowVal;
+						
+						row.push(rowObj);
+					}
+					//mtrArr.push(row);
+					mtrObj['row'] = row;
+				}
+				
+				var cols = qstnForm.find(".col");
+				
+				if (cols) {
+					var col = [];
+					
+					for(var i = 0; i < cols.length; i++) {
+						var colObj = {};
+						var colVal = cols[i].childNodes[0].value;
+						colObj['level'] = i;
+						colObj['contents'] = colVal;
+						
+						col.push(colObj);
+					}
+					//mtrArr.push(col);
+					mtrObj['col'] = col;
+				}
+				
+				//return mtrArr;
+				return mtrObj;
 			}
 			
 			function mkOpt(type, options, action) {
@@ -826,12 +884,6 @@
 			function mkAddtionalPart(required, action) {
 				var html = "";
 					html += "<div class='additionalPart'>";
-					/* 
-					html += "<div class='addBtns'>";
-					html += "<button class='addOpt'>추가</button>";
-					html += "<button class='addOther'>기타추가</button>";
-					html += "</div>";
-					 */
 					html += "<div class='required'>";
 					html += required == 'Y' ? "<input type='checkbox' name='checkbox' checked='checked'>" : "<input type='checkbox' name='checkbox'>";
 					html += "<strong>필수 답변</strong>";
