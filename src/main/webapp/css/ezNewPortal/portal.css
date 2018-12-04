@@ -165,9 +165,13 @@ nav > .countBox .hidden_nav_count {position: absolute; right: 0px; top: 6px; dis
 
 /* portlet_title */
 .portlet_title{ margin:0px; padding:0px; height:46px; line-height:44px; border-bottom:1px solid #e7e7e7; box-sizing:border-box; overflow:hidden;}
-.portlet_title .portletText{ margin:0px; padding:0px 0px 0px 10px; font-size:16px; color:#333; font-weight:bold; letter-spacing:-1px; float:left; overflow:hidden;}
+.portlet_title .portletText{ margin:0px; padding:0px 0px 0px 10px; font-size:16px; color:#333; font-weight:bold; letter-spacing:-1px; float:left; overflow:hidden; width:80%; text-overflow:ellipsis; white-space:nowrap;}
 .portlet_title .portletPlus{ margin:0px; padding:0px; float:right; overflow:hidden; cursor:pointer;}
-.sortablePortlet:hover {cursor : move;}
+.sortablePortlet:hover {cursor : move;} 
+/* photoboard 클래스가 있을 경우 text너비 변경*/
+ .portlet_title.photo_board .portletText {width:61%;}
+/*schedule포틀릿과 weather 포틀릿도 너비 변경*/
+.portlet_title.portlet_schedule .portletText, .weather .portlet_title .portletText {width:70%;} 
 
 /* portlet_list */
 .portlet_list{ margin:0px; padding:12px 0px; list-style:none; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} 
