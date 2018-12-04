@@ -172,6 +172,10 @@
 
 
 			var addSkinDblEvent = function(obj) {
+				if(document.getElementById("skinPopup")) {
+					document.getElementById("skinPopup").remove();
+				}
+
 				var skinId       = this.id.substring(4);
 				var content      = document.getElementsByClassName("content")[0];
 				var skinDiv      = document.createElement("div");

@@ -322,9 +322,9 @@
 				var compid = document.getElementById("ListCompany").value;
 
 				if (CrossYN()) {
-					window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popupList + "&flag=mod", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
+					window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popupList + "&flag=mod", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=730,width=820,top=" + pTop + ",left=" + pLeft, "");
 				} else {
-					window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popupList + "&flag=mod", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=620,width=820,top=" + pTop + ",left=" + pLeft, "");
+					window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popupList + "&flag=mod", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=730,width=820,top=" + pTop + ",left=" + pLeft, "");
 				} 
 				popupList = "";
 			}
