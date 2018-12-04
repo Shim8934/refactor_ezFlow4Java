@@ -490,7 +490,7 @@
 					case 1  :
 					case 2  : html += handleModifySelectQuestion(question); break;
 					case 3  : 
-					case 4  : break;
+					case 4  : html += handleModifyMatrixQuestion(question);break;
 					case 5  : break;
 					case 6  : html += handleModifyParagraphQuesion()      ; break;
 					case 7  : break;
@@ -516,10 +516,54 @@
 				}
 				
 				if (other) {htmlTxt += "<div class='other'>" + mkOpt("other", other) + "</div>";}
+				htmlTxt += "<div class='addBtns'>";
+				htmlTxt += "<button class='addOpt'>추가</button>";
+				htmlTxt += "<button class='addOther'>기타추가</button>";
+				htmlTxt += "</div>";
 				
 				return htmlTxt;
 			}
-			
+//////////////////////////////////////////////////////////////////////////////			
+			function handleModifyMatrixQuestion(question) {
+				var html = "";
+				var row = question.row;
+				var col = question.col;
+
+				html += "<div class='mtrPart'>";
+				html += "<div class='rowArea'>";
+				html += "<div class='rName' style='float: left; width: 10%;'>";
+				html += "<span>행</span>";
+				html += "</div>";
+				html += "<div class='rows' style='float: left; width: 90%;'>";
+				
+				if (row) {
+					for (var i = 0; i < row.length; i++) {
+						html += mkRow(row[i]);
+					}
+				}
+				html += "</div>";
+				html += "<div class='rowBtn'>";
+				html += "<button class='addRow'>추가</button>";
+				html += "</div></div>";
+				html += "<div class='colArea'>";
+				html += "<div class='cName' style='float: left; width: 10%;'>";
+				html += "<span>열</span>";
+				html += "</div>";
+				html += "<div class='cols' style='float: left; width: 90%;'>";
+				
+				if (col) {
+					for (var i = 0; i < col.length; i++) {
+						html += mkCol(col[i]);
+					}
+				}
+				html += "</div>";
+				html += "<div class='colBtn'>";
+				html += "<button class='addCol'>추가</button>";
+				html += "</div></div></div>";
+				
+				return html;
+			}
+//////////////////////////////////////////////////////////////////////////////			
 			function handleModifyParagraphQuesion() {
 				var htmlTxt = "<div class='paragraph-wrap'>";
 				htmlTxt    += "<textarea class='paragraph' maxlength='500' placeholder='내용을 입력해주세요'></textarea>";
@@ -556,24 +600,8 @@
 				var other       = question.other;
 				
 				var html = "";
-					html += "<div class='usrQstnWrapper' id='" + qstId + "' qstnType='" + qstnType + "'>";
-					html += "<div class='question-panel'>";
-					html += "<div class='mvBtn'></div>";
-					html += "<div class='question-header'>";
-					html += "<div class='question-content' id='" + qstId + "'>" + qstnContent;
-					html += required == 'Y' ? "<strong class='imptt'>*</strong></div>" : "</div>";
-					html += "<div class='tooltip-bttns'>";
-					html += "<span class='modifyBtn'></span>";
-					html += "<span class='copyBtn'></span>";
-					html += "<span class='deleteBtn'></span>";
-					html += "</div></div>";
-					
-				if (qstnAtt) {
-					html += "<div class='question-attach'>"
-					html += "<img alt='' src='" + qstnAtt.fpath + "' class='qstnImg'>";
-					html += "</div>"
-				}
-				
+				html += makeQuestionHeaderPanel(qstId, option, qstnContent, qstnContent, qstnAtt);
+
 				html += "<div class='question-opts'>";
 				// 보기
 				if (option) {
@@ -624,23 +652,8 @@
 				var row 		= question.row;
 
 				var html = "";
-					html += "<div class='usrQstnWrapper' id='" + qstId + "' qstnType='" + qstnType + "'>";
-					html += "<div class='question-panel'>";
-					html += "<div class='mvBtn'></div>";
-					html += "<div class='question-header'>";
-					html += "<div class='question-content'>" + qstnContent;
-					html += required == 'Y' ? "<strong class='imptt'>*</strong></div>" : "</div>";
-					html += "<div class='tooltip-bttns'>";
-					html += "<span class='modifyBtn'></span>";
-					html += "<span class='copyBtn'></span>";
-					html += "<span class='deleteBtn'></span>";
-					html += "</div></div>";
+					html += makeQuestionHeaderPanel(qstId, qstnType, qstnContent, required, qstnAtt);
 					
-					if (qstnAtt) {
-						html += "<div class='question-attach'>"
-						html += "<img alt='' src='" + qstnAtt.fpath + "' class='qstnImg'>";
-						html += "</div>"
-					}
 					html += "<div class='question-opts'>";
 					html += "<table class='matrix'>";
 					html += "<thead>";
@@ -902,10 +915,18 @@
 				return html;
 			}
 			
-			function mkRow() {
+			function mkRow(row) {
+				var contents = "";
+				var level = "";
+
+				if (row) {
+					level = row.level;
+					contents = row.contents;
+				}
+				
 				var html = "";
-					html += "<div class='row'>";
-					html += "<input class='rowInput'>";
+					html += "<div class='row' level='" + level + "'>";
+					html += "<input class='rowInput' value='" + contents + "'>";
 					html += "<img alt='' src='/images/ezSurvey/minus.jpg' class='delRow' style='width: 30px;height: 30px; cursor: pointer;'>";
 					html += "</div>";
 				
@@ -913,10 +934,18 @@
 			}
 			
 			// 열 생성
-			function mkCol() {
+			function mkCol(col) {
+				var contents = "";
+				var level = "";
+
+				if (col) {
+					level = col.level;
+					contents = col.contents;
+				}
+				
 				var html = "";
-					html += "<div class='col'>";
-					html += "<input class='colInput'>";
+					html += "<div class='col' level='" + level + "'>";
+					html += "<input class='colInput' value='" + contents + "'>";
 					html += "<img alt='' src='/images/ezSurvey/minus.jpg' class='delCol' style='width: 30px;height: 30px; cursor: pointer;'>";
 					html += "</div>";
 				
