@@ -4,6 +4,7 @@ var SurveyMessages = {
 	strNext      : "다음",
 	strTotal     : "총",
 	strItem      : "개",
+	strSelect    : "선택 해주세요",
 	strParamErr  : "파라미터가 부족합니다.",
 	strTreeErr   : "데이터 오류",
 	strNoSearch  : "검색결과가 없습니다.",
@@ -39,4 +40,5 @@ var SurveyMessages = {
 	strSlider1   : "왼쪽 최소값을 입력하세요.",
 	strSlider2   : "오른쪽 최대값을 입력하세요.",
 	strSlider3   : "최소값을 최대값보다 작게 지정하세요.",
+	strOptErr    : "최소 2개 이상의 보기가 필요합니다.",
 }

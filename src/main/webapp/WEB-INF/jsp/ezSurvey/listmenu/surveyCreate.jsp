@@ -239,9 +239,9 @@
 						fileUpload($(this), $(this)[0].files);
 					});
 				}
+				
 				// selectBox 생성
 				function createQuestionSelectBox(question) {
-					
 					$(".selectBox").ddslick({
 						data :optionData,
 						imagePosition: "left",
@@ -282,7 +282,7 @@
 						
 					if (questionType == 1 || questionType == 2) {
 						for (var i = 0; i < 2; i++) {
-							html += "<div class='optPart'>" + mkOpt() + "</div>";
+							html += mkOpt("opt");
 						}
 					}
 					
@@ -331,48 +331,52 @@
 				
 				// 버튼 이벤트
 				function addOptEvent() {
-					/* selection 버튼 이벤트 */
+					$(".quesBacgr").on("click", ".addOpttions", function() {
+						var thisEl    = $(this).parents(".qstnForm");
+						var classType = parseInt(thisEl.attr("questiontype")) == 8 ? "ranking" : "dropdown";
+						var optCnt    = thisEl.find(".textInput").length;
+						
+						thisEl.find("." + classType + "-select").last().after(mkOptions(classType, optCnt + 1, ""));
+					});
+					
+					$(".quesBacgr").on("click", ".delOption", function() {
+						var thisElmt  = $(this);
+						var qstForm   = thisElmt.parents(".qstnForm");
+						var classType = parseInt(qstForm.attr("questiontype")) == 8 ? "ranking" : "dropdown";
+						var optCnt    = qstForm.find(".textInput").length;
+						
+						if (optCnt <= 2) {alert(SurveyMessages.strOptErr); return;}
+						
+						thisElmt.parents("." + classType + "-select").remove();
+					});
+					
 					// 보기 추가
 					$(".quesBacgr").on("click", ".addOpt", function() {
-						var type = "opt";
-						
 						var thisEl = $(this).parents(".qstnForm");
-						var html   = "<div class='optPart'>" + mkOpt(type) + "</div>";
-						
-						thisEl.find(".optPart").last().after(html);
+						thisEl.find(".optPart").last().after(mkOpt("opt"));
 					});
+					
 					// 기타 추가
 					$(".quesBacgr").on("click", ".addOther", function() {
-						var type = "other";
-						
 						var thisEl = $(this).parents(".qstnForm");
-						var other  = thisEl.find(".other");
+						if (thisEl.find(".other").length > 0) {alert("기타는 하나만 추가 가능합니다."); return;}
 						
-						if (other.length == 0) {
-							var html = "<div class='other'>" + mkOpt(type) + "</div>";
-							
-							thisEl.find(".optPart").last().after(html);
-						}
-						else {
-							alert("기타는 하나만 추가 가능합니다.");
-						}
+						thisEl.find(".optPart").last().after(mkOpt("other"));
 					});
+					
 					// 보기, 기타 삭제
 					$(".quesBacgr").on("click", ".delImg", function() {
-						var thisEl    = $(this);
+						var thisEl        = $(this);
 						var optAreaLength = thisEl.parents(".qstnForm").find(".optArea").length;
-						// 보기와 기타의 합계가 2개 이상일 때만 삭제
-						if (optAreaLength > 2) {
-							// 삭제할 요소가 option인지 other인지 확인
-							if (thisEl.parents(".optPart").length == 1) {
-								thisEl.parents(".optPart").remove();
-							}
-							else {
-								thisEl.parents(".other").remove();
-							}
+						
+						if (optAreaLength <= 2) {alert(SurveyMessages.strOptErr); return}
+						
+						// 삭제할 요소가 option인지 other인지 확인
+						if (thisEl.parents(".optPart").length == 1) {
+							thisEl.parents(".optPart").remove();
 						}
 						else {
-							alert("최소 2개 이상의 보기가 필요합니다.");
+							thisEl.parents(".other").remove();
 						}
 					});
 					
@@ -501,6 +505,21 @@
 						var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
 						outputElmt.textContent = this.value;
 					}).trigger("change");
+					
+					$(".quesBacgr").sortable({
+						handle: '.mvBtn',
+						cursor: 'move',
+						containment: 'parent',
+						tolerance: 'pointer',
+						axis: "y",
+						update: function(event, ui) {
+							/* var i = 0;
+							$(this).find('.ranking-order').each(function() {
+								$(this).text(i + 1);
+								i++;
+							}); */
+						}
+					});
 				}
 				// 첨부파일의 x버튼 클릭
 				function clickXButton(thisWrapper) {
@@ -544,14 +563,14 @@
 					
 					switch(parseInt(qstType)) {
 						case 1  :
-						case 2  : html += handleModifySelectQuestion(question); break;
+						case 2  : html += handleModifySelectQuestion(question)                 ; break;
 						case 3  : 
-						case 4  : html += handleModifyMatrixQuestion(question);break;
+						case 4  : html += handleModifyMatrixQuestion(question)                 ; break;
 						case 5  : break;
-						case 6  : html += handleModifyParagraphQuesion()      ; break;
-						case 7  : break;
-						case 8  : break;
-						case 9  : break;
+						case 6  : html += handleModifyParagraphQuesion()                       ; break;
+						case 7  : html += handleModifySliderQuesion(question)                  ; break;
+						case 8  : html += handleModifyRankDropDownQuesion("ranking" , question); break;
+						case 9  : html += handleModifyRankDropDownQuesion("dropdown", question); break;;
 						default : alert(SurveyMessages.strError); return;
 					}
 					
@@ -567,11 +586,11 @@
 					
 					if (options) {
 						for (var i = 0, len = options.length; i < len; i++) {
-							htmlTxt += "<div class='optPart'>" + mkOpt("opt", options[i]) + "</div>";
+							htmlTxt += mkOpt("opt", options[i]);
 						}
 					}
 					
-					if (other) {htmlTxt += "<div class='other'>" + mkOpt("other", other) + "</div>";}
+					if (other) {htmlTxt += mkOpt("other", other);}
 					
 					htmlTxt += "<div class='addBtns'>";
 					htmlTxt += "<button class='addOpt'>추가</button>";
@@ -640,6 +659,29 @@
 					return htmlTxt;
 				}
 				
+				function handleModifyRankDropDownQuesion(type, question) {
+					var htmlTxt = "<div class='" + type + "-wrap'>";
+					
+					if (question) {
+						var optionList = question["option"];
+						
+						for (var i = 0, len = optionList.length; i < len; i++) {
+							htmlTxt += mkOptions(type, i + 1, optionList[i]["contents"]);
+						}
+					}
+					else {
+						for (var i = 0; i < 3; i++) {
+							htmlTxt += mkOptions(type, i + 1, "");
+						}
+					}
+					
+					htmlTxt += "<div class='addBtns'>";
+					htmlTxt += "<button class='addOpttions'>추가</button>";
+					htmlTxt += "</div></div>";
+					
+					return htmlTxt;
+				}
+				
 				// 첨부파일 있을 시 태그 생성
 				function mkImgTag(qstnAtt) {
 					if (!qstnAtt) {return "";}
@@ -673,7 +715,6 @@
 							
 							if (qstnType == 2) {
 								html += "<input class='optChb' type='checkbox' value='" + option[i].level + "'/>";
-								
 							}
 							else {
 								html += "<input class='optRdo' type='radio' value='" + option[i].level + "'/>";
@@ -698,6 +739,7 @@
 						html += "<input class='othInput' type='text'/>";
 						html += "</div></div>";
 					}
+					
 					html += "</div>";
 					
 					wrapperElmt.prepend(html);
@@ -770,13 +812,13 @@
 					switch(parseInt(qstnType)) {
 						case 1  :
 						case 2  : var sltObj = mkSltObj(qstnForm);
-								  if (sltObj.option) {question['option'] = sltObj.option;}
-								  if (sltObj.other)  {question['other']  = sltObj.other ;}
+								  if (sltObj.option) {question["option"] = sltObj.option;}
+								  if (sltObj.other)  {question["other"]  = sltObj.other ;}
 								  mkSelectQstn(qstnWrapper, question); break;
 						case 3  : 
 						case 4  : var mtrObj = mkMtrObj(qstnForm);
-								  if (mtrObj.row) {question['row'] = mtrObj.row;}
-								  if (mtrObj.col) {question['col'] = mtrObj.col;}
+								  if (mtrObj.row) {question["row"] = mtrObj.row;}
+								  if (mtrObj.col) {question["col"] = mtrObj.col;}
 								  mkMatrixQstn(qstnWrapper, question); break;
 						case 5  : break;
 						case 6  : mkParagraphQstn(qstnWrapper, question); break;
@@ -785,8 +827,14 @@
 								  question["lowest"]  = sliderObj["lowest"];
 								  question["highest"] = sliderObj["highest"];
 								  mkSliderQstn(qstnWrapper, question); break;
-						case 8  : break;
-						case 9  : break;
+						case 8  : var rankingObj = mkRankingDropDownObj("ranking", qstnForm);
+								  if (rankingObj.error) {alert(SurveyMessages[rankingObj.error]); return;}
+								  question["option"] = rankingObj.option;
+								  mkRankingQstn(qstnWrapper, question); break;
+						case 9  : var dropDownObj = mkRankingDropDownObj("dropdown", qstnForm);
+								  if (dropDownObj.error) {alert(SurveyMessages[rankingObj.error]); return;}
+								  question["option"] = dropDownObj.option;
+								  mkDropDownQstn(qstnWrapper, question); break;
 						default : alert(SurveyMessages.strError); return;
 					}
 					
@@ -827,6 +875,48 @@
 					wrapperElmt.prepend(html);
 				}
 				
+				function mkRankingQstn(wrapperElmt, question) {
+					var options = question["option"];
+					var html    = makeQuestionHeaderPanel(question);
+					html       += "<div class='question-ranking'>";
+					html       += "<div class='ranking-wrap'>";
+					var strSlct = "<select>";
+					strSlct    += "<option selected>" + SurveyMessages.strSelect + "</option>";
+					
+					for (var j = 0, len = options.length; j < len; j++) {
+						strSlct += "<option>" + options[j]["contents"] + "</option>";
+					}
+					
+					strSlct += "</select>";
+					
+					for (var i = 0, len = options.length; i < len; i++) {
+						html += "<div class='ranking-select'>";
+						html += "<span class='rank-order'>" + (i + 1) + ".</span>";
+						html += strSlct;
+						html += "</div>";
+					}
+					
+					html += "</div></div>";
+					wrapperElmt.prepend(html);
+				}
+				
+				function mkDropDownQstn(wrapperElmt, question) {
+					var options = question["option"];
+					var html    = makeQuestionHeaderPanel(question);
+					html       += "<div class='question-dropdown'>";
+					html       += "<div class='dropdown-wrap'>";
+					html       += "<select>";
+					html       += "<option selected>" + SurveyMessages.strSelect + "</option>";
+					
+					for (var j = 0, len = options.length; j < len; j++) {
+						html += "<option>" + options[j]["contents"] + "</option>";
+					}
+					
+					html += "</select>";
+					html += "</div></div>";
+					wrapperElmt.prepend(html);
+				}
+				
 				function makeQuestionHeaderPanel(question) {
 					var htmlTxt  = "";
 					var qstId    = question.id;
@@ -853,6 +943,29 @@
 					}
 					
 					return htmlTxt;
+				}
+				
+				function mkRankingDropDownObj(type, qstnForm) {
+					var returnObj = {};
+					var optList   = qstnForm.find("." + type + "-select");
+					var optCnt    = optList.length;
+					var option    = [];
+					
+					for (var i = 0; i < optCnt; i++) {
+						var optObj   = {};
+						var optValue = optList[i].querySelector("input[class='textInput']").value;
+						
+						if (optValue) {
+							optObj['contents'] = optValue;
+							optObj['level']    = i;
+							option.push(optObj);
+						}
+					}
+					
+					if (option.length < 2) {returnObj['error'] = "strOptErr"; return returnObj;}
+					
+					returnObj['option'] = option;
+					return returnObj;
 				}
 				
 				function mkSliderObj(qstnForm) {
@@ -964,29 +1077,42 @@
 					return mtrObj;
 				}
 				
+				// make ranking/dropdown options
+				function mkOptions(type, order, content) {
+					var html = "<div class='" + type + "-select'>";
+					html     += "<span class='" + type + "-order'>" + order + "</span>";
+					html     += "<input class='textInput' type='text' value='" + content + "' placeholder='" + SurveyMessages.strContent + "'/>";
+					html     += "<span class='delOption'></span>";
+					html     += "</div>";
+					return html;
+				}
+				
 				// option 생성
 				function mkOpt(type, options) {
 					var optAtt = "";
 					var attEl  = "";
-					var html   = "";
-						html  += "<div class='optArea'>";
+					var html   = "<div class='optArea'>";
 						html  += "<div class='option'>";
 						
 					if (type == 'other') {
+						html = "<div class='other'>" + html;
+						
 						if (options) {
-							html += "<input class='textInput' type='text' value='" + options.contents + "'/>";
-							
+							html  += "<input class='textInput' type='text' value='" + options.contents + "' placeholder='기타' />";
 							optAtt = options.otherAttach;
-						} else {
+						}
+						else {
 							html += "<input class='textInput' type='text' placeholder='기타'>";
 						}
 					}
 					else {
+						html = "<div class='optPart'>" + html;
+						
 						if (options) {
-							html += "<input class='textInput' type='text' value='" + options.contents + "'/>";
-							
+							html  += "<input class='textInput' type='text' value='" + options.contents + "' placeholder='" + SurveyMessages.strContent + "' />";
 							optAtt = options.optionAttach;
-						} else {
+						}
+						else {
 							html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
 						}
 					}
@@ -1003,7 +1129,7 @@
 					html += "</div></div></div>";
 					html += "<div class='optAtt'>";
 					html += "<input type='file' class='optionFile' style='display:none;'/>";
-					html += "</div>";
+					html += "</div></div>";
 					
 					return html;
 				}
@@ -1071,68 +1197,16 @@
 				
 				function makeRankingQuestion(mainDivElmt, questionType) {
 					var html = makeQuestionForm(questionType);
-					html += "<div class='ranking-wrap'>";
-					html += "<div class='ranking-select'>";
-					html += "<span class='ranking-order'>1</span>";
-					html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
-					html += "<span class='ranking-del'></span>";
-					html += "</div>";
-					html += "<div class='ranking-select'>";
-					html += "<span class='ranking-order'>2</span>";
-					html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
-					html += "<span class='ranking-del'></span>";
-					html += "</div>";
-					html += "<div class='ranking-select'>";
-					html += "<span class='ranking-order'>3</span>";
-					html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
-					html += "<span class='ranking-del'></span>";
-					html += "</div>";
-					html += "<div class='addBtns'>";
-					html += "<button class='addOpt'>추가</button>";
-					html += "</div>";
-					html += "<div class='additionalPart'>";
-					html += "<div class='required'>";
-					html += "<input type='checkbox' name='checkbox'>";
-					html += "<strong>필수 답변</strong>";
-					html += "</div>";
-					html += "<div class='btns'>";
-					html += "<button class='save'>저장</button>";
-					html += "<button class='cancel'>취소</button>";
-					html += "</div></div>";
+					html    += handleModifyRankDropDownQuesion("ranking");
+					html    += mkAddtionalPart();
 					
 					mainDivElmt.append(html);
 				}
 				
 				function makeDropdownQuestion(mainDivElmt, questionType) {
 					var html = makeQuestionForm(questionType);
-					html += "<div class='dropdown-wrap'>";
-					html += "<div class='dropdown-select'>";
-					html += "<span class='dropdown-order'>1</span>";
-					html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
-					html += "<span class='dropdown-del'></span>";
-					html += "</div>";
-					html += "<div class='dropdown-select'>";
-					html += "<span class='dropdown-order'>2</span>";
-					html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
-					html += "<span class='dropdown-del'></span>";
-					html += "</div>";
-					html += "<div class='dropdown-select'>";
-					html += "<span class='dropdown-order'>3</span>";
-					html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
-					html += "<span class='dropdown-del'></span>";
-					html += "</div>";
-					html += "<div class='addBtns'>";
-					html += "<button class='addOpt'>추가</button>";
-					html += "</div>";
-					html += "<div class='additionalPart'>";
-					html += "<div class='required'>";
-					html += "<input type='checkbox' name='checkbox'>";
-					html += "<strong>필수 답변</strong>";
-					html += "</div>";
-					html += "<div class='btns'>";
-					html += "<button class='save'>저장</button>";
-					html += "<button class='cancel'>취소</button>";
-					html += "</div></div>";
+					html    += handleModifyRankDropDownQuesion("dropdown");
+					html    += mkAddtionalPart();
 					
 					mainDivElmt.append(html);
 				}
