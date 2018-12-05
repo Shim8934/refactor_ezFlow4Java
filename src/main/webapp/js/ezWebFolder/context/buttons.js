@@ -1,4 +1,8 @@
 var buttons = (function() {
+	function add_onclick_Complete(szName) {
+		DivPopUpHidden();
+		refreshView();
+	}
 	function getSelectedFoldersAndFiles() {
 		var selectedRows = rowContext.getSelectedRows();
 		var selectedLength = selectedRows.length;
@@ -74,7 +78,7 @@ var buttons = (function() {
 					var result = data.status;
 					
 					if (result != "ok") {
-						alert(messages.strLang13);
+						alert(messages.strLang30);
 					} else {
 						openLeftPanel();
 						DivPopUpShow(450, 250, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString()+"&folderList=" + selected.folders.toString());
