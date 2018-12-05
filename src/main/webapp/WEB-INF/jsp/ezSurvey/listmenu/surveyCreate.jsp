@@ -895,7 +895,7 @@
 							if (fObj) {optObj['optionAttach'] = getAttachFileInfo(fObj);}
 							
 							if (optVal != "" || fObj != undefined) {
-								optObj['level'] = option.length + 1;
+								optObj['level'] = option.length;
 								option.push(optObj);
 							}
 						}
@@ -934,27 +934,30 @@
 						for(var i = 0, len = rows.length; i < len; i++) {
 							var rowObj         = {};
 							var rowVal         = rows[i].childNodes[0].value;
-							rowObj['level']    = i;
-							rowObj['contents'] = rowVal;
 							
-							row.push(rowObj);
+							if (rowVal != "") {
+								rowObj['level']    = row.length;
+								rowObj['contents'] = rowVal;
+								
+								row.push(rowObj);
+							}
 						}
-						
 						mtrObj['row'] = row;
 					}
-					
 					if (cols) {
 						var col = [];
 						
 						for(var i = 0; i < cols.length; i++) {
 							var colObj         = {};
 							var colVal         = cols[i].childNodes[0].value;
-							colObj['level']    = i;
-							colObj['contents'] = colVal;
 							
-							col.push(colObj);
+							if (colVal != "") {
+								colObj['level']    = col.length;
+								colObj['contents'] = colVal;
+								
+								col.push(colObj);
+							}
 						}
-						
 						mtrObj['col'] = col;
 					}
 					
