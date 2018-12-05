@@ -188,7 +188,7 @@
 			    			$("#date5").text(today5Time + "시");
 				        },
 				        error: function(error) {
-				        	alert(error);
+				        	console.log(error);
 				        }
 			    	});	
 				});

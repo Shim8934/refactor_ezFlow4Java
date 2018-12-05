@@ -29,7 +29,7 @@ function votePoll() {
 			}
 		},
 		error: function(error) {
-			alert(error);
+			console.log(error);
 		}
 	});
 

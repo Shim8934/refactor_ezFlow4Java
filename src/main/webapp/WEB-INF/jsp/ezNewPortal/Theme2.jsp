@@ -644,12 +644,13 @@
 			attiClock();
 		}
 		
-		//생일자 조회 기능 연동
+		//테마2에서는 생일자 안씀
+		/* //생일자 조회 기능 연동
 		$("#birthdayNext").on("click", {isNext : true}, getMonthlyBirthdayEmployees);
 		$("#birthdayPrev").on("click", {isNext : false}, getMonthlyBirthdayEmployees);
 		
 		//이번달 생일자 목록 불러오기
-		getMonthlyBirthdayEmployees();
+		getMonthlyBirthdayEmployees(); */
 		
 		//이달의 우수사원 불러오기
 		//getMonthlyBestEmployee();
