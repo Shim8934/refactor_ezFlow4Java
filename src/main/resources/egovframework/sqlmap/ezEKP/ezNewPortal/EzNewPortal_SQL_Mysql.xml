@@ -447,23 +447,63 @@ SELECT
     quicklinkname, 
     quicklinkname2, 
     quicklinkname3, 
-    linktype, 
+    linktype,
+    linktypeurl, 
     url,
-    size_ as size
-FROM 
-	tbl_ps_quicklink as Q
-JOIN 
-	tbl_usermaster as U
-ON 
-	Q.tenant_id = U.tenant_id
-AND 
-	Q.reguserid = U.cn
-WHERE 
-	Q.TENANT_ID = #tenantId#
-AND 
-	U.PHYSICALDELIVERYOFFICENAME = #companyId#
+    size
+FROM (
+	SELECT
+		Q.quicklinkid, 
+	    Q.quicklinkname, 
+	    Q.quicklinkname2, 
+	    Q.quicklinkname3, 
+	    Q.linktype, 
+	    Q.linktypeurl,
+	    Q.url,
+	    Q.size_ as size,
+	    IFNULL(USER.view_flag, IFNULL(DEPT.view_flag, IFNULL(COMP.view_flag, IFNULL(EVERY.view_flag, 'N')))) as viewflag,
+	    Q.linkorder
+	FROM 
+		tbl_ps_quicklink as Q
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL USER
+	ON
+		USER.quicklinkid = Q.quicklinkid
+	AND
+		USER.tenant_id = Q.tenant_id
+	AND
+		USER.accessid = #userId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL DEPT
+	ON
+		DEPT.quicklinkid = Q.quicklinkid
+	AND
+		DEPT.tenant_id = Q.tenant_id
+	AND
+		DEPT.accessid = #deptId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL COMP
+	ON
+		COMP.quicklinkid = Q.quicklinkid
+	AND
+		COMP.tenant_id = Q.tenant_id
+	AND
+		COMP.accessid = #companyId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL EVERY
+	ON
+		EVERY.quicklinkid = Q.quicklinkid
+	AND
+		EVERY.tenant_id = Q.tenant_id
+	AND
+		EVERY.accessid = 'everyone'
+	WHERE 
+		Q.TENANT_ID = #tenantId#
+	) acl
+WHERE
+	viewflag = 'Y'
 ORDER BY
-    Q.REGDATE DESC
+	LINKORDER ASC
 LIMIT #limit#
 OFFSET #offset#
 ]]>	
@@ -474,18 +514,57 @@ OFFSET #offset#
 <![CDATA[
 SELECT
 	count(*)
-FROM 
-	tbl_ps_quicklink as Q
-JOIN 
-	tbl_usermaster as U
-ON 
-	Q.tenant_id = U.tenant_id
-AND 
-	Q.reguserid = U.cn
-WHERE 
-	Q.TENANT_ID = #tenantId#
-AND 
-	U.PHYSICALDELIVERYOFFICENAME = #companyId#
+FROM (
+	SELECT
+		Q.quicklinkid, 
+	    Q.quicklinkname, 
+	    Q.quicklinkname2, 
+	    Q.quicklinkname3, 
+	    Q.linktype, 
+	    Q.url,
+	    Q.size_ as size,
+	    IFNULL(USER.view_flag, IFNULL(DEPT.view_flag, IFNULL(COMP.view_flag, IFNULL(EVERY.view_flag, 'N')))) as viewflag
+	FROM 
+		tbl_ps_quicklink as Q
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL USER
+	ON
+		USER.quicklinkid = Q.quicklinkid
+	AND
+		USER.tenant_id = Q.tenant_id
+	AND
+		USER.accessid = #userId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL DEPT
+	ON
+		DEPT.quicklinkid = Q.quicklinkid
+	AND
+		DEPT.tenant_id = Q.tenant_id
+	AND
+		DEPT.accessid = #deptId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL COMP
+	ON
+		COMP.quicklinkid = Q.quicklinkid
+	AND
+		COMP.tenant_id = Q.tenant_id
+	AND
+		COMP.accessid = #companyId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL EVERY
+	ON
+		EVERY.quicklinkid = Q.quicklinkid
+	AND
+		EVERY.tenant_id = Q.tenant_id
+	AND
+		EVERY.accessid = 'everyone'
+	WHERE 
+		Q.TENANT_ID = #tenantId#
+	ORDER BY
+	    Q.REGDATE DESC
+	) acl
+WHERE
+	viewflag = 'Y'
 ]]>		
 </select>
 
