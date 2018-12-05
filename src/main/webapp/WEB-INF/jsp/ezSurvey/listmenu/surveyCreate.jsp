@@ -225,7 +225,13 @@
 				function addQstnEvent() {
 					// question 첨부파일 트리거
 					$(".quesBacgr").on("click", ".atchImg", function() {
-						$(this).parent().next().find(".qstnFile").click();
+						var li = $(this).closest(".quesDiv").find(".fileList").find("li");
+						
+						if (li.length == 0) {
+							$(this).parent().next().find(".qstnFile").click();
+						} else {
+							alert("첨부파일은 1개만 추가 가능합니다.");
+						}
 					});
 					
 					// question 첨부파일 추가
@@ -412,7 +418,15 @@
 					/* 공통 버튼 이벤트 */
 					// 첨부파일 버튼 클릭 이벤트
 					$(".quesBacgr").on("click", ".attImg", function() {
-						$(this).parents(".optArea").next().find(".optionFile").click();
+						var optArea = $(this).closest(".optArea");
+						var li = optArea.find(".fileList").find("li");
+						
+						if (li.length == 0) {
+							optArea.next().find(".optionFile").click();
+						} else {
+							alert("첨부파일은 1개만 추가 가능합니다.");
+						}
+						
 					});
 					// 첨부파일 버튼 이벤트
 					$(".quesBacgr").on("change", ".optionFile", function (e) {
