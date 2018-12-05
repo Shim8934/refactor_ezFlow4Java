@@ -437,8 +437,11 @@
 				});
 				// 질문 생성 폼의 취소 버튼 클릭
 				$(".quesBacgr").on("click", ".cancel", function() {
-					$(this).parents(".qstnForm").remove();
-					createQuestionSelectBox();
+					var thisWrapper = $(this).closest(".qstnWrapper");
+
+					thisWrapper.find(".quesDiv").find(".questnTitle").val("");
+					setSelectBox(thisWrapper);
+					thisWrapper.find(".qstnForm").remove();
 				});
 				// 저장 버튼 클릭 이벤트
 				$(".quesBacgr").on("click", ".save", function() {
@@ -495,7 +498,13 @@
 					outputElmt.textContent = this.value;
 				}).trigger("change");
 			}
-			
+////////////////////////////////////////////////////////////////////////////////////////			
+			function setSelectBox(thisWrapper) {
+				// dd-selected 태그의 html 제거 후 내용 변경 
+				thisWrapper.find(".dd-selected").html("");
+				thisWrapper.find(".dd-selected")[0].innerText = '질문 유형 선택';
+			}
+////////////////////////////////////////////////////////////////////////////////////////
 			// 생성된 질문을 붙일 부분과 질문 유형을 파라미터로 받아 질문 영역 생성
 			function handleModifyQuestion(qstnWrapper, question) {
 				var qstType = question.type;
