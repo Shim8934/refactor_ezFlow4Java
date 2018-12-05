@@ -153,7 +153,7 @@
 					var inuse = acList.children[1].children[i].getAttribute("inuse");
 					var jinhangFlag = acList.children[1].children[i].children[5].innerHTML;
 					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq +"' onchange='inputFunc(event,"+seq+")'></input>";
-					acList.children[1].children[i].children[6].innerHTML = "<td class='portletInfoTD'><label class='switch' id='switch" + seq + "' inuse='" + inuse +"'><input type='checkbox'><span class='slider round'></span></label>";
+					acList.children[1].children[i].children[6].innerHTML = "<label class='switch' id='switch" + seq + "' inuse='" + inuse +"' onclick='inUseUpdate(event," + seq +")'><input type='checkbox'><span class='slider round'></span></label>";
 
 					if(jinhangFlag == 1) {
 						acList.children[1].children[i].children[5].innerHTML = "<img src='/images/admin/inuse.png' border='0' class='jinhang'>";
@@ -169,7 +169,6 @@
 						$("#switch"+seq).find("input").prop("checked", false);
 					}
 				}
-				inUseUpdate();
 			}
 
 
@@ -204,41 +203,47 @@
 
 
 			// 사용여부 업데이트
-			function inUseUpdate() {
-				$(".slider").click(function(){
-					event.stopPropagation();
-					var itemseq = $("#" + $(this)[0].parentNode.id)[0].id.substring(6);
-					var inuse = $("#switch" + itemseq).attr("inuse");
-					if(inuse == 0) {
-						inuse = 1;
-					} else {
-						inuse = 0;
-					}
+			var useFlag =true;
+			function inUseUpdate(event, seq) {
+				event.stopPropagation();
 
-					$.ajax({
-						type : "POST",
-						url : "/admin/ezPersonal/setPopupUse.do",
-						async : false,
-						data : {
-							"itemSeq" : itemseq,
-							"inUse" : inuse
-						},
-						dataType : "text",
-						success : function (result) {
-							if(result === "OK") {
-								$("#switch" + itemseq).attr("inuse", inuse);
-								$("#switch" + itemseq)[0].parentNode.parentNode.setAttribute("inuse", inuse);
-							}
-						}, error: function(xhr, option, error) {
-							alert(xhr.status);
-							if(inuse == 1) {
-								$("#switch"+seq).find("input").prop("checked", false);
-							} else {
-								$("#switch"+seq).find("input").prop("checked", true);
-							}
+				if(!useFlag) {
+					useFlag = true;
+					return;
+				}
+
+				var inuse = $("#switch" + seq).attr("inuse");
+
+				if(inuse == 0) {
+					inuse = 1;
+				} else {
+					inuse = 0;
+				}
+
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezPersonal/setPopupUse.do",
+					async : false,
+					data : {
+						"itemSeq" : seq,
+						"inUse" : inuse
+					},
+					dataType : "text",
+					success : function (result) {
+						if(result === "OK") {
+							$("#switch" + seq).attr("inuse", inuse);
+							$("#switch" + seq)[0].parentNode.parentNode.setAttribute("inuse", inuse);
 						}
-					}); 
+					}, error: function(xhr, option, error) {
+						console.log(xhr.status);
+						if(inuse == 1) {
+							$("#switch"+seq).find("input").prop("checked", false);
+						} else {
+							$("#switch"+seq).find("input").prop("checked", true);
+						}
+					}
 				});
+				useFlag = false;
 			}
 
 
