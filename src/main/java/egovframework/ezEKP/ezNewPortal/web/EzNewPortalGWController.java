@@ -480,20 +480,21 @@ public class EzNewPortalGWController {
 			List<PortalUserInfoVO> birthdayList = ezNewPortalService.getMonthlyBirthdayEmployees(companyId, tenantId, month, count, startRow);
 			
 			LOGGER.debug("birthdayListCount : " + birthdayListCount);
-			int birthdayCurPage = 0;
 
 			if (birthdayListCount != 0) {
-				if (startRow > birthdayListCount) {
-					birthdayCurPage = 0;
+				int page = birthdayListCount / 6;
+				
+				if (page == curPage) {
+					curPage = 0;
 				} else {
-					birthdayCurPage += 1;
+					curPage += 1;
 				}
 			}
 
 			JSONObject data = new JSONObject();
 			data.put("birthdayList", birthdayList);
 			data.put("birthdayListCount", birthdayListCount);
-			data.put("birthdayCurPage", birthdayCurPage);
+			data.put("birthdayCurPage", curPage);
 
 			result.put("status", "ok");
 			result.put("code", 0);
