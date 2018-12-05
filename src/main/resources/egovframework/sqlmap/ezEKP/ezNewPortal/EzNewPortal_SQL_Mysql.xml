@@ -1468,20 +1468,8 @@ LIMIT
 				NAME.portlet_name AS portletName,
 				COMP.board_id AS boardId,
 				IFNULL(COMP.connection_url, A.portlet_url) AS portletUrl,
-				IFNULL((SELECT
-							portlet_order
-						FROM
-							TBL_PORTAL_PORTLET_USER AS USER
-						WHERE
-							USER.tenant_id = #tenantId#
-						AND
-							USER.company_id = #companyId#
-						AND
-							USER.portlet_id = A.portlet_id
-						AND
-							USER.menu_id = A.menu_id
-						AND
-							USER.user_id = #userId#), IFNULL(COMP.portlet_order, A.default_order)) AS portletOrder,
+				IFNULL(USER.portlet_order, IFNULL(THEME.portlet_order, A.default_order)) AS portletOrder,
+                IFNULL(USER.portlet_used, IFNULL(THEME.portlet_used, IFNULL(COMP.portlet_used, 1))) AS portletUsed,
 		]]>
 		
 		<isEmpty property="deptId">
@@ -1505,6 +1493,18 @@ LIMIT
 				A.portlet_id = NAME.portlet_id
 			AND
 				A.menu_id = NAME.menu_id
+			JOIN
+				TBL_PORTAL_THEME_PORTLET AS THEME
+			ON
+				NAME.tenant_id = THEME.tenant_id
+			AND
+				NAME.company_id = THEME.company_id
+			AND
+				A.portlet_id = THEME.portlet_id
+			AND
+				A.menu_id = THEME.menu_id
+			AND
+				THEME.theme_id = #themeId#
 			JOIN
 				TBL_PORTAL_PORTLET_COMP AS COMP
 			ON
@@ -1542,6 +1542,17 @@ LIMIT
 		</isNotEmpty>
 		
 		<![CDATA[
+			LEFT JOIN
+				TBL_PORTAL_PORTLET_USER AS USER
+			ON
+				COMP.tenant_id = USER.tenant_id
+			AND
+				COMP.company_id = USER.company_id
+			AND
+				COMP.portlet_id = USER.portlet_id
+			AND
+				USER.user_id = #userId#
+				
 			WHERE
 				NAME.tenant_id = #tenantId#
 			AND
@@ -1549,7 +1560,7 @@ LIMIT
 			AND
 				NAME.portlet_lang = #portletLang#
 			AND
-				COMP.portlet_used = 1
+				(COMP.portlet_used = 1 && THEME.portlet_used = 1)
 		]]>
 		
 		<isEmpty property="deptId" prepend="AND">
@@ -1557,9 +1568,41 @@ LIMIT
 				(AUTH.access_yn IS NOT NULL)
 			]]>
 		</isEmpty>
+		
+		<isNotEqual property="config" compareValue="true" prepend="AND">
+			<![CDATA[
+				USER.portlet_used != 0
+			]]>
+		</isNotEqual>
+		
 		<![CDATA[
 			ORDER BY
 				portletOrder;
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getThemeId" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				IFNULL(USER.used_theme, theme_id) AS themeId
+			FROM
+				TBL_PORTAL_THEME_COMP AS COMP
+			LEFT JOIN
+				TBL_PORTAL_THEME_USER AS USER
+			ON
+				COMP.tenant_id = USER.tenant_id
+			AND
+				COMP.company_id = USER.company_id
+			AND
+				USER.user_id = #userId#
+			WHERE
+				COMP.tenant_id = #tenantId#
+			AND
+				COMP.company_id = #companyId#
+			AND
+				COMP.theme_default = 1
+			AND
+				COMP.theme_used = 1
 		]]>
 	</select>
 	

@@ -302,8 +302,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	@ResponseBody
 	public JSONObject getUserPortletList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getUserPortletList Start");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String userId = userInfo.getId();		
+		
+		String userId = userInfo.getId();
+		
 		String url = "/rest/ezPortal/portlets/users/" + userId;	
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "GET", null);
 		String status = resultBody.get("status").toString();	
