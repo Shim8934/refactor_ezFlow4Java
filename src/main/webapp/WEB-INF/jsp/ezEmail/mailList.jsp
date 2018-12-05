@@ -228,15 +228,6 @@
 		        if (pPreviewMode != "OFF") {
 		            g_bPrevShow = true;
 		            
-		            /* 단암 일정사이즈 이하로 width가 줄어도 좌우 미리보기 유지
-		            if (parseInt(document.documentElement.clientWidth) < 1000) { 
-		                document.getElementById("PreViewleft").style.display = "none";
-		                pPreviewShow_HOW = "W";
-		            }
-		            else {
-		                document.getElementById("PreViewleft").style.display = "";
-		            }*/
-
 		            if (pPreviewShow_HOW == "W") {
 		
 		                if (pMailListDiv == 0 || pMailPreVDiv == 0) {
@@ -1230,8 +1221,31 @@
 			            	<dt class="prepic"><img id="preHSenderImage" width="55px" height="55px"></dt>
 			                <dd class="pretext">
 			                	<ul class="pretextUL">
-			                    	<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject" style="display:none;"><span class="subjectText" id="PreH_sub_subject"></span></span></li>
-			                        <li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezEmail.t693" /></span> <span id="PreH_MailSender"><span id="PreH_sub_MailSender"></span></span></span><span class="t_right"><span class="cblack"><spring:message code="ezEmail.t657" /> : </span><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span></li>
+			                    	<li class="preSubject">
+			                    		<span class="popup_open" onclick="MailReadOpen();">
+			                    			<img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />">
+			                    		</span>
+			                    		<span class="subjectText" id="PreH_subject" style="display:none;">
+			                    			<span class="subjectText" id="PreH_sub_subject"></span>
+			                    		</span>
+			                    	</li>
+			                        <li class="preT_list">
+			                        	<span class="t_left">
+			                        		<span class="cblack"><spring:message code="ezEmail.t693" /></span>
+			                        		<span id="PreH_MailSender">
+			                        			<span id="PreH_sub_MailSender"></span>
+			                        		</span>
+			                        	</span>
+			                        	<span class="t_right">
+			                        		 <c:if test="${folderType == 'sent' or folderType == 'draft'}">
+				                        		<span class="cblack"><spring:message code="ezEmail.t704" /> : </span>
+                  							</c:if>
+			                        		 <c:if test="${folderType != 'sent' and folderType != 'draft'}">
+				                        		<span class="cblack"><spring:message code="ezEmail.t657" /> : </span>
+                  							</c:if>
+			                        		<span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span>
+			                        	</span>
+			                        </li>
 			                        <li class="preT_list"><span class="cblack"><spring:message code="ezEmail.t527" /></span> <span id="PreH_MailReceiver" style="display:inline-block"></span>
 				                    	<span id="PreH_MailReceiver_sub"></span>
 				                    	<span class="icon_graydown" onclick="ReceiverDetail_view(this);" id="PreH_ReceiverDetail"></span>
@@ -1263,8 +1277,35 @@
 			            	<dt class="prepic"><img id="preWSenderImage" width="55px" height="55px"></dt>
 			                <dd class="pretext">
 			                	<ul class="pretextUL">
-			                    	<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreW_subject" style="display:none;"><span class="subjectText" id="PreW_sub_subject"></span></span></li>
-			                        <li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezEmail.t693" /></span> <span id="PreW_MailSender"><span id="PreW_sub_MailSender"></span></span></span><span class="t_right"><span class="cblack"><spring:message code="ezEmail.t657" /> : </span><span id="PreW_date"><span id="PreW_sub_date" style="display:none;"></span></span></span></li>
+			                    	<li class="preSubject">
+			                    		<span class="popup_open" onclick="MailReadOpen();">
+			                    			<img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />">
+			                    		</span>
+			                    		<span class="subjectText" id="PreW_subject" style="display:none;">
+			                    			<span class="subjectText" id="PreW_sub_subject"></span>
+			                    		</span>
+			                    	</li>
+			                        <li class="preT_list">
+			                        	<span class="t_left">
+			                        		<span class="cblack">
+			                        			<spring:message code="ezEmail.t693" />
+			                        		</span>
+				                        	<span id="PreW_MailSender">
+				                        		<span id="PreW_sub_MailSender"></span>
+				                        	</span>
+			                        	</span>
+			                        	<span class="t_right">
+			                        		<c:if test="${folderType == 'sent' or folderType == 'draft'}">
+				                        		<span class="cblack"><spring:message code="ezEmail.t704" /> : </span>
+                  							</c:if>
+			                        		 <c:if test="${folderType != 'sent' and folderType != 'draft'}">
+				                        		<span class="cblack"><spring:message code="ezEmail.t657" /> : </span>
+                 							</c:if>
+			                        		<span id="PreW_date">
+			                        			<span id="PreW_sub_date" style="display:none;"></span>
+			                        		</span>
+			                        	</span>
+			                        </li>
 			                        <li class="preT_list">
 			                        	<span class="cblack"><spring:message code="ezEmail.t527" /></span> 
 			                        	<span id="PreW_MailReceiver" style="display:inline-block"></span>
