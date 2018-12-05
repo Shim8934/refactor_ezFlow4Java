@@ -29,6 +29,8 @@
 			var g_PortalGubun = "${portalGubun}";
 			var g_intPage  = "${intPage}";
 			var g_totalPage= "${totalPage}";
+			var BlockSize = 10;
+			var pageNum = 1;
 			var pDefaultPageUID = "${defaultPageUID}";
 			
 			document.onselectstart = function () {
@@ -39,6 +41,7 @@
 			};
 			
 			function window_onload() {
+				makePageSelPage();
 			}
 			
 			function setValue(pUID, pGubunFG, pUseFG, pObj)
@@ -127,6 +130,101 @@
 				if (window.event.keyCode == 13)
 					btnSearch_onClick();
 			}
+			
+			function makePageSelPage() {
+		        var strtext;
+		        var PagingHTML = "";
+		        document.getElementById("tblPageRayer").innerHTML = "";
+		        strtext = "<div class='pagenavi'>";
+		        PagingHTML += strtext;
+		        
+		        if (g_totalPage > 1 && g_intPage != 1) {
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+		            PagingHTML += strtext;
+		        } else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        if (g_totalPage > BlockSize) {
+		            if (g_intPage > BlockSize) {
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+		                PagingHTML += strtext;
+		            } else {
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+		                PagingHTML += strtext;
+		            }
+		        } else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        var MaxNum;
+		        var i;
+		        var startNum = (parseInt((g_intPage - 1) / BlockSize) * BlockSize) + 1;
+		        if (g_totalPage >= (startNum + parseInt(BlockSize))) {
+		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
+		        } else {
+		            MaxNum = g_totalPage;
+		        }
+		        
+		        for (i = startNum; i <= MaxNum; i++) {
+		            if (i == g_intPage) {
+		                strtext = "<span class='on'>" + i + "</span>";
+		                PagingHTML += strtext;
+		            } else {
+		                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+		                PagingHTML += strtext;
+		            }
+		        }
+		        if (i == 1) {
+	            	strtext = "<span class='on'>" + i + "</span>";
+                    PagingHTML += strtext;
+	            }
+		        
+		        if (g_totalPage > BlockSize) {
+		            if (g_totalPage >= parseInt(((parseInt((g_intPage - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+		                PagingHTML += strtext;
+		            } else {
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+		                PagingHTML += strtext;
+		            }
+		        } else {
+		            strtext = "";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        if (g_totalPage > 1 && g_totalPage != 1 && (g_totalPage != g_intPage)) {
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + g_totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+		            PagingHTML += strtext;
+		        } else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        PagingHTML += "</div>";
+		        document.getElementById("tblPageRayer").innerHTML = PagingHTML;
+		    }
+			
+			function goToPageByNum(Value) {
+		        pageNum = Value;
+		        makePageSelPage();
+		        pageChange(pageNum);
+		    }
+			
+			function selafterBlock() {
+		        pageNum = ((parseInt((g_intPage - 1) / BlockSize) + 1) * BlockSize) + 1;
+		        pageChange(pageNum);
+		    }
+			
+			function selbeforeBlock() {
+		        pageNum = ((parseInt(g_intPage / BlockSize) - 1) * BlockSize) + 1;
+		        pageChange(pageNum);
+		    }
 			
 			// 페이지 이동
 			function goToPage( r_value )
@@ -363,26 +461,6 @@
         		<li><span onclick="DefaultPageSet('N')"><spring:message code='ezPortal.t990018'/></span></li>
     		</ul>
     	</div>
-		<div class="page">
-			<c:choose>
-				<c:when test="${intPage != '1'}">
-					<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onClick="goToPage('front')" style="cursor:pointer"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
-				</c:when>
-				<c:otherwise>
-					<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onClick="goToPage('front')"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
-				</c:otherwise>
-			</c:choose>
-		
-  			<input type="text"name="txt_PageInputNum" style="width:30px" value='${intPage}' onKeyPress="if ( window.event.keyCode == 13 ) { goToPage('page'); }">
-  			<c:choose>
-  				<c:when test="${intPage != totalPage}">
-  					<img src="/images/page_next.gif" align="absmiddle" hspace="2" style="cursor:pointer" onClick="goToPage('next')">
-  				</c:when>
-  				<c:otherwise>
-  					<img src="/images/page_next.gif" align="absmiddle" hspace="2">
-  				</c:otherwise>
-  			</c:choose>
-		</div>
 		<div style="width:100%; border: 1px solid #e8e8e8; border-top:0px; border-bottom:0px;">
 			<table class="mainlist" style="width:100%"> 
 				<tr>
@@ -400,6 +478,36 @@
 			<script type="text/javascript">
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			</script>
+		</div>
+		<div id="tblPageRayer">
+			 <%-- <div class="pagenavi">
+				<c:choose>
+					<c:when test="${intPage != '1'}">
+						<span class="btnimg">
+							<img src="/images/sub/btn_p_prev01.gif" align="absmiddle" hspace="2" onClick="goToPage('front')" style="cursor:pointer"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
+						</span>
+					</c:when>
+					<c:otherwise>
+						<span class="btnimg">
+							<img src="/images/sub/btn_prev01.gif" align="absmiddle" hspace="2" onClick="goToPage('front')"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
+						</span>
+					</c:otherwise>
+				</c:choose>
+			
+	  			<input type="text"name="txt_PageInputNum" style="width:30px" value='${intPage}' onKeyPress="if ( window.event.keyCode == 13 ) { goToPage('page'); }">
+	  			<c:choose>
+	  				<c:when test="${intPage != totalPage}">
+	  					<span class="btnimg">
+	  						<img src="/images/sub/btn_next01.gif" align="absmiddle" hspace="2" style="cursor:pointer" onClick="goToPage('next')">
+	  					</span>
+	  				</c:when>
+	  				<c:otherwise>
+	  					<span class="btnimg">
+	  						<img src="/images/sub/btn_n_next01.gif" align="absmiddle" hspace="2">
+	  					</span>
+	  				</c:otherwise>
+	  			</c:choose>
+			</div>  --%>
 		</div>
 	</body>
 </html>
