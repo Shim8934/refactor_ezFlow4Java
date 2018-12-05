@@ -680,7 +680,11 @@
 							}
 							// 첨부파일이 있는지 확인
 							html += option[i].optionAttach ? "<img alt='' src='" + option[i].optionAttach.fpath + "' class='optImg'>" : "";
-							html += "<span class='optSpan'>" + option[i].contents + "</span>";
+							var optContent = "";
+							if (option[i].contents) {
+								optContent = option[i].contents;	
+							}
+							html += "<span class='optSpan'>" + optContent + "</span>";
 							html += "</div>";
 						}
 					}
@@ -883,7 +887,6 @@
 						for (var i = 0; i < optCnt; i++) {
 							var optObj      = {};
 							var optVal      = opt[i].childNodes[0].childNodes[0].childNodes[0].value; // 보기가 비어있는지 확인
-							//optObj['level'] = i;
 							
 							if (optVal != "") {optObj['contents'] = optVal;}
 							
@@ -906,7 +909,11 @@
 						var othVal = oth[0].childNodes[0].childNodes[0].childNodes[0].value;
 						var othObj = oth[0].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
 						
-						if (othVal) {other['contents']    = othVal;}
+						if (othVal != "") {
+							other['contents']    = othVal;
+						} else {
+							other['contents']    = "기타";
+						}
 						if (othObj) {other['otherAttach'] = getAttachFileInfo(othObj);}
 						
 						sltObj['other'] = other;
