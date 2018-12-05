@@ -4185,7 +4185,7 @@ e.printStackTrace();
 			
 			List<PortletInfoVO> themePortletList = ezNewPortalService.getThemePortletList(themeId, tenantId, companyId, lang);
 			
-			if (themePortletList == null) {
+			if (themePortletList == null || themePortletList.isEmpty()) {
 				themePortletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang));
 			}
 			
