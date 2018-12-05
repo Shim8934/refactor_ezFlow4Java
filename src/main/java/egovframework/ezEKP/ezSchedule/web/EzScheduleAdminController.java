@@ -92,7 +92,7 @@ public class EzScheduleAdminController {
 	 * 관리자 일정관리 일정공유관리 화면
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleAdminShareManage.do")
-	public String  scheduleAdminShareManage(@CookieValue("loginCookie") String loginCookie) throws Exception {
+	public String  scheduleAdminShareManage(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		
 		logger.debug("============ scheduleAdminShareManage started ============");
 		
@@ -102,6 +102,20 @@ public class EzScheduleAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("companyList", resultList);
+		model.addAttribute("userInfo", userInfo);
+		
 		return "/admin/ezSchedule/scheduleAdminShareManage";
 	}
 	
@@ -110,13 +124,19 @@ public class EzScheduleAdminController {
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleGetShareManage.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String  scheduleGetShareManage(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO) throws Exception {
+	public String  scheduleGetShareManage(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleGetShareManage started ============");
 		
 		loginVO = commonUtil.userInfo(loginCookie);
+		
+		String companyID = request.getParameter("companyID");
+		
+		if (companyID == null || companyID.equals("")) {
+			companyID = loginVO.getCompanyID();
+		}
 				
-		String result = ezScheduleAdminService.scheduleGetShareManage(loginVO.getPrimary(), loginVO.getTenantId(), loginVO.getCompanyID());
+		String result = ezScheduleAdminService.scheduleGetShareManage(loginVO.getPrimary(), loginVO.getTenantId(), companyID);
 		
 		return result;
 	}
@@ -166,7 +186,11 @@ public class EzScheduleAdminController {
 		int tenantID = loginVO.getTenantId();
 		String userID = request.getParameter("userID");
 		String deptID = request.getParameter("deptID");
-		String companyID = loginVO.getCompanyID();
+		String companyID = request.getParameter("companyID");
+		
+		if (companyID == null || companyID.equals("")) {
+			companyID = loginVO.getCompanyID();
+		}
 		
 		int checkCnt = ezScheduleAdminService.scheduleShareCheck(userID, deptID, tenantID, companyID);
 		
@@ -463,8 +487,10 @@ public class EzScheduleAdminController {
 		}else{
 			
 			loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
-			/*String cID = request.getParameter("COMPANYID");*/
-			String cID = loginSimpleVO.getCompanyID();
+			String cID = request.getParameter("COMPANYID");
+			if (cID == null || cID.equals("")){
+				cID = loginSimpleVO.getCompanyID();
+			}
 			String regi = request.getParameter("PREVIOSLYREGIUSE");
 			
 			String count = ezScheduleService.scheduleGetRegi(cID, loginSimpleVO.getTenantId());

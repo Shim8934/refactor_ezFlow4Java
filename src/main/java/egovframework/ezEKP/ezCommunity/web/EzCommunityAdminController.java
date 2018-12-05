@@ -199,20 +199,24 @@ public class EzCommunityAdminController {
 		
 		/* 관리자 > 커뮤니티검색화면 표출(하단 리스트) 시 companyID 조건 추가, deptID 가져오기 */
 		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(userInfo.getPrimary(), iQueryCount, select , query, userInfo.getCompanyID(), userInfo.getTenantId());
-
-		// 이미 companyID로 걸러진 커뮤니티를 가지고 후작업
-		for(CommunityClubVO club : clubList) {
-			/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 겸직하는 userID 가져올때 companyID로 조건 추가 */
-			club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId()));
-			club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", " "));
+		if(clubList.size() > 0) {
+			// 이미 companyID로 걸러진 커뮤니티를 가지고 후작업
+			for(CommunityClubVO club : clubList) {
+				/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 겸직하는 userID 가져올때 companyID로 조건 추가 */
+				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId()));
+				club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", " "));
+			}
+			model.addAttribute("clubList", clubList);
+		} else {
+			model.addAttribute("clubList", "");
 		}
+
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("curPage", curPage);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("totalCount", keywordCount);
-		model.addAttribute("clubList", clubList);
 		
 		return "/admin/ezCommunity/communitySearchKey";
 	}
@@ -347,9 +351,6 @@ public class EzCommunityAdminController {
         int keywordCount = ezCommunityAdminService.aspCloseComGet2(keyword, sRadio, userInfo.getCompanyID(), tenantID);
         int totalPage = keywordCount / comNoPerPage;
 		
-        
-        logger.debug("현재 당신의 companyID      ::      " + userInfo.getCompanyID());
-        
         /* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
         List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), sort1, sort2, userInfo.getCompanyID(), tenantID);
         
@@ -396,7 +397,7 @@ public class EzCommunityAdminController {
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), tenantID);
 		
 		CommunityClubVO clubVO = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
-		CommunityMemberInfoVO memberVO = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang(), tenantID), clubVO.getC_SysopID().trim(), userInfo.getCompanyID(), tenantID);
+		CommunityMemberInfoVO memberVO = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), clubVO.getC_SysopID().trim(), userInfo.getCompanyID(), tenantID);
 		
 		String strCategory = ezCommunityService.categoryPrint(clubVO.getC_Cate_A().trim(), clubVO.getC_Cate_B().trim(), clubVO.getC_Cate_C().trim(), userInfo);
 		

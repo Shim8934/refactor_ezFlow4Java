@@ -65,7 +65,7 @@
 </head>
 <body style="margin-left: 10px; margin-right: 10px;">
 	<br/>
-	<h2><spring:message code="ezWebFolder.t238" /></h2>
+	<%-- <h2><spring:message code="ezWebFolder.t238" /></h2> --%>
 	<span class="txt">▒&nbsp;<spring:message code="ezWebFolder.t240"/></span>
 	<br />
 	<table class="content" style="width: 623px;margin-top:5px">

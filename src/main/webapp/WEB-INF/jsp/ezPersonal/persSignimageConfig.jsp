@@ -244,8 +244,9 @@
 	</head>
 	<body> 
 		<br/>
-		<h2>▒&nbsp;<spring:message code='ezPersonal.t3011'/></h2>
-		<table style="width: 300px; height: 150px; margin-top:5px" border="0">
+		<%-- <h2>▒&nbsp;<spring:message code='ezPersonal.t3011'/></h2> --%>
+		<span class="txt">▒ <spring:message code='ezPersonal.t3011' /></span>
+		<table style="width: 300px; height: 150px; margin-top:10px" border="0">
 			<tr>
 	            <td>
 	                <div style="border: 1px solid #dbdbda; width: 200px; height: 200px; border-top: 0px; overflow: auto;">
