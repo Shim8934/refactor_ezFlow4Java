@@ -377,7 +377,15 @@
 					});
 					// matrix 열 추가
 					$(".quesBacgr").on("click", ".addCol", function() {
-						$(this).parents(".colArea").find(".cols").append(mkRowCol("col"));
+						
+						var cols = $(this).parents(".colArea").find(".cols");
+						var colLength = cols.find(".col").length;
+						
+						if (colLength < 10) {
+							cols.append(mkRowCol("col"));
+						} else {
+							alert("컬럼은 최대 10개까지 추가 가능합니다.");
+						}
 					});
 					// matrix 행 삭제
 					$(".quesBacgr").on("click", ".delRow", function(e) {
