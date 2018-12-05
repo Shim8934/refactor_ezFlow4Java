@@ -413,9 +413,13 @@
 					// 질문 생성 폼의 취소 버튼 클릭
 					$(".quesBacgr").on("click", ".cancel", function() {
 						var thisWrapper = $(this).closest(".qstnWrapper");
-
+						// 질문 내용 삭제
 						thisWrapper.find(".quesDiv").find(".questnTitle").val("");
+						// 첨부 파일 삭제
+						clickXButton(thisWrapper);
+						// 셀렉트 박스  내용 변경
 						setSelectBox(thisWrapper);
+						// 질문 폼 삭제
 						thisWrapper.find(".qstnForm").remove();
 					});
 					// 저장 버튼 클릭 이벤트
@@ -475,6 +479,18 @@
 						var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
 						outputElmt.textContent = this.value;
 					}).trigger("change");
+				}
+				// 첨부파일의 x버튼 클릭
+				function clickXButton(thisWrapper) {
+	
+					var li = thisWrapper.find(".fileList").find("li");
+					
+					if (li) {
+						for (var i = 0; i < li.length; i++) {
+							var delImg = li[i].childNodes[0].childNodes[0];
+							delImg.click();
+						}
+					}
 				}
 				// 설문 작성 취소, 수정시 셀렉트 박스 내용 변경
 				function setSelectBox(thisWrapper, modify, qstnType) {
@@ -944,7 +960,7 @@
 					html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
 					html += "</div>";
 					html += "<div class='optFileInfo'>";
-					html += "<div>";
+					html += "<div class='fileList'>";
 					
 					if (optAtt) {attEl = mkImgTag(optAtt);}
 					

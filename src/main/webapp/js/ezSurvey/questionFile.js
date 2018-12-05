@@ -56,9 +56,7 @@ var QuestionFile = function() {
 			if (!isStart) {
 				divfileListElmt.className = "fileList";
 				var divInformElmt         = fileDivElmt.querySelector("div[class='divInform']");
-				//var helpDivElmt           = document.getElementById("helpTxt");
 				if (divInformElmt) {fileDivElmt.removeChild(divInformElmt);}
-				//if (helpDivElmt)   {helpDivElmt.className = "cabUploadHelp";}
 			}
 			
 			var liElmt        = document.createElement("li");
@@ -174,16 +172,6 @@ var QuestionFile = function() {
 			divChildElmt1.removeChild(canvasElmt);
 			divChildElmt1.appendChild(imgElmt);
 			
-			/*totalCap                = totalCap + fileSize;
-			var fileCapacityDivElmt = document.getElementById("fileCapacityDiv");
-			var spanElmt            = fileCapacityDivElmt.querySelector("span");
-			
-			if(!spanElmt) {
-				spanElmt = document.createElement("span");
-				fileCapacityDivElmt.appendChild(spanElmt);
-			}
-			
-			spanElmt.textContent     = CabinetMessages.strStorage + getFileSize(totalCap);*/
 		}
 		
 		function deleteFile(event, fileSize) {
