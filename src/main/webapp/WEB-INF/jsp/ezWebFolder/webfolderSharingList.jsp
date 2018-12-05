@@ -303,11 +303,13 @@
 						$('#uploadBtn').css('display','none');
 						$('#modifyShareBtn').css('display','none');
 						$('#deleteShareBtn').css('display','none');
+						$('#newFolder').css('display','');
 						
 						$('#addShareBtn').css('display','');
 					} else {
 						$('#uploadBtn').css('display','none');
 						$('#addShareBtn').css('display','none');
+						$('#newFolder').css('display','none');
 						
 						$('#modifyShareBtn').css('display','');
 						$('#deleteShareBtn').css('display','');
@@ -315,6 +317,7 @@
 				} else {
 					$('#modifyShareBtn').css('display','none');
 					$('#deleteShareBtn').css('display','none');
+					$('#newFolder').css('display','');
 					
 					$('#uploadBtn').css('display','');
 					$('#addShareBtn').css('display','');
