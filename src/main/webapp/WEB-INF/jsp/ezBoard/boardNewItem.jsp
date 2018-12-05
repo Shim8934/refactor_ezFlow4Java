@@ -1034,8 +1034,9 @@
 		            if (Content.indexOf("id=\"_BigAttachListHtml\"") != -1) {
 		            	Content = ReplaceText(Content, "<td width=\"75%\"", "<td width=\"65%\"");
 		            	Content = ReplaceText(Content, "<td width=\"30%\"", "<td width=\"35%\"");
-		            }
-		            
+		            }    
+		            Content = '<div '+defaultFontAndSize+'>' + Content + '</div>';
+			
 		            message.SetEditorContent(Content);
 		            
 		            if (mailXml.getElementsByTagName("OVERSIZE").length > 0) {
