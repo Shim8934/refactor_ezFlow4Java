@@ -566,6 +566,9 @@
 					doc.getElementById("ifrmPreViewH").style.display = "";
 					//}
 					doc.getElementById("ifrmPreViewH").style.height = conlistH + 47 + "px";
+					if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
+						doc.getElementById("ifrmPreViewH").style.height = conH + 20 + "px";
+					} 
 					break;
 				}
 				
@@ -731,6 +734,9 @@
 				if(isPreview == 0) {
 					doc.getElementById("contentlist").style.height = height + "px";
 					doc.getElementById("contentlist").style.overflow = "auto";
+					if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
+						doc.getElementById("ifrmPreViewH").style.height = conH - 20 + "px";
+					}
 				} else if ( isPreview == 2) {
 					doc.getElementById("contentlist").style.height = height + "px";
 					doc.getElementById("contentlist").style.overflow = "auto";
@@ -739,7 +745,7 @@
 					doc.getElementById("ifrmPreViewH").style.height = height + 11 + "px";
 					if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
 						doc.getElementById("ifrmPreViewH").style.height = conH - 20 + "px";
-					} 
+					}
 				}
 			}
 
