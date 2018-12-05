@@ -39,7 +39,16 @@
 	
 	        function SetEditorContent(Data) {
 	            try {
-	                CKEDITOR.instances.editor1.editable().setHtml(Data);
+					if (Data === '' || Data === undefined) {
+						var pTag = document.createElement('p');
+						pTag.style.fontSize = defaultFontSize;
+						pTag.style.fontFamily = defaultFontFamily;
+						
+						CKEDITOR.instances.editor1.setData(pTag.outerHTML);	
+					} else {
+						//CKEDITOR.instances.editor1.setData(Data);
+						CKEDITOR.instances.editor1.editable().setHtml(Data);
+					}
 	                if ("${type}" == "APPROVAL" || "${type}" == "APPROVALG"){
 	                    Set_CellLocked();
 	                }

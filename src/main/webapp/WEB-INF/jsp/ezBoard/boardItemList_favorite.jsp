@@ -103,9 +103,11 @@
 						Tab1_SelectID = "overSpan";
 					}
 					
-					if (document.getElementById("tabpart01UL")) {
+					/* 2018-12-04 홍승비- '...'탭이 없는 경우 접근 시 스크립트 에러 수정 */
+					if (document.getElementById("tabpart01UL") !== null || document.getElementById("tabpart01UL")) {
 						document.getElementById("tabpart01UL").style.display = "none";
 					}
+					
 				}
 	        }
 	        function GetMyBoardItem() {

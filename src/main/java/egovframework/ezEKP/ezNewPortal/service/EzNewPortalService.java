@@ -61,7 +61,7 @@ public interface EzNewPortalService {
 	public String getBoardAuthCheck(String boardId, String accessId, int tenantId, String companyId);
 	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId, String deptId);
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId);
-	public void updatePortletOrderUser(String userId, String companyId, int tenantId, List<Map<String, Integer>> portletOrder, String portletLang);
+	public void updatePortletOrderUser(String userId, String companyId, int tenantId, JSONArray portletOrder, String portletLang) throws Exception;
 	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow);
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month);
 	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId);
@@ -83,7 +83,7 @@ public interface EzNewPortalService {
 	public void updateCompanyDefaultTheme(int themeId, String companyId, int tenantId);
 	public void deleteCompanyLogo(String companyId, int tenantId, String logoType);
 	public void resetCompanyMenuOrder(String companyId, int tenantId);
-	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId) throws Exception;
+	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId, String lang) throws Exception;
 	public void updateThemePortletUsed(int themeId, int tenantId, String companyId, JSONArray themePortletList) throws Exception;
 	/**
 	 * 이효진

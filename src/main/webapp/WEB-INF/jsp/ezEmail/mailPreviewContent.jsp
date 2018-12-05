@@ -196,11 +196,11 @@
 		    
 		    function AttachDetail_view(obj) {
 		       
-		    	if (obj.className == "icon_graydown") {
-		            obj.className = "icon_grayup"
+		    	if (obj.className == "attach_btn_down") {
+		            obj.className = "attach_btn_up"
 		            document.getElementById("PreviewAttachList").style.display = "";
 		        } else {
-		            obj.className = "icon_graydown"
+		            obj.className = "attach_btn_down"
 		            document.getElementById("PreviewAttachList").style.display = "none";
 		        }
 		    }
@@ -484,7 +484,7 @@
 	<body onload="javascript:window_onload()" onclick="frameClick();">
 		<div class="attachedfile" id="ifrmPreViewRayer" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;font-family:<spring:message code='main.t246' />">
 			<ul class="attachedfile_title">
-				<li class="titleText"><span class="titleT"><spring:message code='ezEmail.t99000003' /><span>${pAttachListHtmlSub}</span><span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span></span></li>
+				<li class="titleText"><span class="titleT"><spring:message code='ezEmail.t99000003' /><span>${pAttachListHtmlSub}</span></span><span class="attach_btn_up" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span></li>
 	    		<li class="titleSave"><span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span></li>
 	    	</ul>
 			<ul class="attachedfile_list" id="PreviewAttachList">

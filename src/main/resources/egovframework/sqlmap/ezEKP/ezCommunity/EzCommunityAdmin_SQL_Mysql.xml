@@ -197,8 +197,6 @@
 			</isNotEqual>
 		<![CDATA[
 			AND
-				B.companyid = #companyID#
-			AND
 				TBL_C_CLUB.companyid = #companyID#
 			AND
 				C1.tenant_id = #tenantID#
@@ -243,7 +241,7 @@
 				LEFT OUTER JOIN
 					TBL_USERMASTER C
 				ON
-					A.c_sysopid = C.CN
+					RTRIM(A.c_sysopid) = C.CN
 				AND
 					A.tenant_id = C.tenant_id
 				WHERE
@@ -317,7 +315,7 @@
 				LEFT OUTER JOIN
 					TBL_USERMASTER C
 				ON
-					A.c_sysopid = C.CN
+					RTRIM(A.c_sysopid) = C.CN
 				AND
 					A.tenant_id = C.tenant_id
 				WHERE
@@ -382,7 +380,7 @@
 			LEFT OUTER JOIN
 				TBL_USERMASTER C
 			ON
-				A.c_sysopid = C.CN
+				TRIM(A.c_sysopid) = C.CN
 			AND
 				A.tenant_id = C.tenant_id
 			WHERE
