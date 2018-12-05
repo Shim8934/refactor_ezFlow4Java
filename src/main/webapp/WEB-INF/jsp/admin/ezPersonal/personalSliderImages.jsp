@@ -21,7 +21,7 @@
 		ul .slider-body {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px}
 		ul .slider-head {margin:0px; position: absolute;cursor:move; border:none; width:285px; height:40px; line-height:38px; border-radius:0px; background: rgba(0, 0, 0, 0.5);}
 		ul .slider-header-add {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px;background: rgba(0, 0, 0, 0.5); width:270px; z-index: 2;}
-		ul .slider-header-modify {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;background-color:#2196f3; border:1px solid #2196f3; width:268px;}
+		ul .slider-header-modify {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;background: rgba(0, 0, 0, 0.5); z-index: 2;}
 		ul .slider-content {margin:0px; position: absolute;cursor:move; border:none; width:285px; border-radius:0px; background: rgba(0, 0, 0, 0.5); top: 405px;}
 		ul .slider-imagePage {width:225px; height:210px;}
 		ul .addSlider {border:1px dashed #aab2ba; display:inline-block; text-align:center; vertical-align : top; height:19.3em; border-radius:0px; width:285px; height:515px; position:relative;}
@@ -33,13 +33,16 @@
 		.cancelNewSliderBtn img {height:25px; float:right; padding: 3px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 		.addNewSliderBttn img {height:25px; float:right; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 		.sliderAddBody {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px}
+		.sliderModifyBody {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px}
 		.addImageBtn span {height:25px; background-color:#f4f4f4; border:1px solid #e7e7e7;  float:right; padding: 0px 9px; line-height: 23px; display:block; text-align: center; margin-top:50%; margin-right:35%}
+		.addImageBtnModify span {height:25px; background-color:#f4f4f4; border:1px solid #e7e7e7;  float:right; padding: 0px 9px; line-height: 23px; display:block; text-align: center; margin-top:50%; margin-right:35%}
 		.slider-content-add {margin:0px; position: absolute;cursor:move; border:none; width:285px; border-radius:0px; background: rgba(0, 0, 0, 0.5); top: 400px; right: 1px; z-index: 2;}
 		#UploadSliderImage {position:relative; bottom:210px;}
 		.imgbtn {position: relative;}
 		.sliderListmodify {display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
 		.cancelNewSliderBtnmodify img {height:25px; float:right; padding: 3px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 		.sliderURL {display: block; width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff;}
+		.slider-content-modify {margin:0px; position: absolute;cursor:move; border:none; width:285px; border-radius:0px; background: rgba(0, 0, 0, 0.5); top: 400px; z-index: 2;}
 	}
 		</style>
 		<script type="text/javascript">
@@ -215,22 +218,6 @@
 		    	sliderHTML += "<span class = 'addImage' id='addImage' onclick='addImage()'>이미지 선택</span></a>";
 		    	sliderHTML += "<img id='UploadSliderImage' src='' onload ='imgdisplay()' style='width:285px;height:515px;display:none'>";
 		    	sliderHTML += "</div>";
-		    	/* sliderHTML += "<div class = 'slider-header-add' style='background-color:#f4f4f4;border:1px solid #e7e7e7;color:#b1b1b1'>";
-		    	sliderHTML += "<a class = 'cancelNewSliderBtn' id='cancelNewSliderBtn'>";
-		    	sliderHTML += "<span class ='addCancel'><img src='/images/close_xBtn.png'></span></a>";
-		    	sliderHTML += "</div>";
-		    	sliderHTML += "<div class = 'slider-content' style='width:285px;height:515px'>";
-		    	sliderHTML += "<a class ='addImageBtn'>";
-		    	sliderHTML += "<span class = 'addImage' id='addImage' onclick='addImage()'>이미지 선택</span></a>";
-		    	sliderHTML += "<img id='UploadSliderImage' src='' onload ='imgdisplay()' style='width:285px;height:515px;display:none'>";
-		    	sliderHTML += "</div>";
-		    	sliderHTML += "<div class = 'slider-content'>";
-		    	sliderHTML += "<table class = 'sliderInfo'>";
-		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL</td>";
-		    	sliderHTML += "<td><input id='txtDisplayName3' type='text' maxlength='50'></td></tr>";
-		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>사용여부</td><td class= 'slideIsUse'><label class='switch'><input id='slideIsUseAdd' type='checkbox' checked='checked'><span class='slider round'></label></td>";
-		    	sliderHTML += "<td><a href='#' class='imgbtn'><span onclick='btnSave_click();'><spring:message code = 'ezPersonal.t34' /></span></a></td>";
-		    	sliderHTML += "</tr></table></div>"; */
 		    	sliderHTML += "</div>";
 		    	sliderHTML += "</li>";
 		    	
@@ -450,48 +437,147 @@
 		    		
 		    		if(preFind != null){
 		    			preFind.remove();
-		    			getSliderList();
 		    		}
 		    	}
 		    	
 		    	var sliderID = obj.getAttribute("data3");
-		    	var sliderList = obj.parentNode.parentNode;
-		    	/* var name1 = sliderList.querySelector("#sliderName").getAttribute("data4");
-		    	var name2 = sliderList.querySelector("#sliderName2").getAttribute("data5"); */
+		    	var sliderList = obj.parentNode.parentNode.parentNode;
 		    	var url = sliderList.querySelector("#sliderURL").getAttribute("data6");
-		    	//var regDate = sliderList.querySelector("#sliderRegDate").getAttribute("data7");
+		    	console.log(sliderList);
 		    	
-		    	var sliderHTML = "";
-		    	sliderHTML += "<li class = 'sliderListmodify' id = 'sliderListmodify'>";
-		    	sliderHTML += "<div class = 'slider-header-add' style='background-color:#f4f4f4;border:1px solid #e7e7e7;color:#b1b1b1'>";
-		    	sliderHTML += "<a class = 'cancelNewSliderBtnmodify' id='cancelNewSliderBtnmodify'>";
-		    	sliderHTML += "<span class ='addCancel-modify'><img src='/images/admin/icon_cancel.png'></span></a>";
-		    	sliderHTML += "</div>";
-		    	sliderHTML += "<div class = 'slider-content' style='width:285px;height:515px'>";
+		    	var liElmt   = document.createElement("li");
+		    	var divElmt  = document.createElement("div");
+		    	var divElmt2 = document.createElement("div");
+		    	var divElmt3 = document.createElement("div");
+		    	var aElmt    = document.createElement("a");
+		    	var spaElmt  = document.createElement("span");
+		    	var imgElmt  = document.createElement("img");
+		    	var tabElmt  = document.createElement("table");
+		    	
+		    	liElmt.className = "sliderListmodify";
+		    	liElmt.setAttribute("id", "sliderListmodify");
+		    	
+		    	divElmt.className = "sliderModifyBody";
+		    	divElmt.setAttribute("style", "color:#b1b1b1");
+		    	divElmt2.className = "slider-header-modify";
+		    	
+		    	aElmt.className = "cancelNewSliderBtnmodify";
+		    	aElmt.setAttribute("id", "cancelNewSliderBtnmodify");
+		    	spaElmt.className = "addCancel";
+		    	
+		    	liElmt.appendChild(divElmt);
+		    	
+		    	divElmt.appendChild(divElmt2);
+		    	divElmt2.appendChild(aElmt);
+		    	aElmt.appendChild(spaElmt);
+		    	spaElmt.appendChild(imgElmt);
+		    	
+		    	imgElmt.setAttribute("src", "/images/admin/slideDelete.png");
+		    	
+		    	divElmt3.className = "slider-content-modify";
+		    	tabElmt.className = "sliderInfo";
+		    	divElmt.appendChild(divElmt3);
+		    	divElmt3.appendChild(tabElmt);
+		    	
+		    	var trElmt1 = document.createElement("tr");
+		    	var trElmt2 = document.createElement("tr");
+		    	var tdElmt1 = document.createElement("td");
+		    	var tdElmt2 = document.createElement("td");
+		    	var tdElmt3 = document.createElement("td");
+		    	var tdElmt4 = document.createElement("td");
+		    	var tdElmt5 = document.createElement("td");
+		    	var ipElmt1 = document.createElement("input");
+		    	var ipElmt2 = document.createElement("input");
+		    	var ipElmt3 = document.createElement("input");
+		    	var aElmt2  = document.createElement("a");
+		    	var lalElmt = document.createElement("label");
+		    	var spaElmt2  = document.createElement("span");
+		    	var aElmt3  = document.createElement("a");
+		    	var spaElmt3 = document.createElement("span");
+		    	var spaElmt4  = document.createElement("span");
+		    	
+		    	tdElmt1.className = "sliderInfoTDadd";
+		    	tdElmt1.innerText = "URL";
+		    	ipElmt1.setAttribute("id", "txtDisplayName3");
+		    	ipElmt1.setAttribute("type", "text");
+		    	ipElmt1.setAttribute("maxlength", 50);
+		    	ipElmt1.setAttribute("value", url);
+		    	
+		    	tdElmt3.className = "sliderInfoTDadd";
+		    	tdElmt3.innerText = "사용여부";
+		    	tdElmt4.className = "slideIsUse";
+		    	lalElmt.className = "switch";
+		    	ipElmt3.setAttribute("id", "slideIsUseModify");
+		    	ipElmt3.setAttribute("type", "checkbox");
+		    	ipElmt3.setAttribute("checked", "checked");
+		    	spaElmt2.className = "slider round";
+		    	aElmt3.className = "imgbtn";
+		    	aElmt3.setAttribute("href", "#");
+		    	aElmt3.setAttribute("data", sliderID);
+		    	spaElmt4.addEventListener("click", function(event) {btnSave_click_modify(this);});
+		    	spaElmt4.innerText = "<spring:message code = 'ezPersonal.t34' />";
+		    	
+		    	tabElmt.appendChild(trElmt1);
+		    	trElmt1.appendChild(tdElmt1);
+		    	trElmt1.appendChild(tdElmt2);
+		    	tdElmt2.appendChild(ipElmt1);
+		    	tabElmt.appendChild(trElmt2);
+		    	trElmt2.appendChild(tdElmt3);
+		    	trElmt2.appendChild(tdElmt4);
+		    	trElmt2.appendChild(tdElmt5);
+		    	tdElmt4.appendChild(lalElmt);
+		    	lalElmt.appendChild(ipElmt3);
+		    	lalElmt.appendChild(spaElmt2);
+		    	trElmt2.appendChild(tdElmt5);
+		    	tdElmt5.appendChild(aElmt3);
+		    	aElmt3.appendChild(spaElmt4);
+		    	
+		    	var imgElmt2 = document.createElement("img");
+		    	
+		    	aElmt2.className = "addImageBtnModify";
+		    	spaElmt3.className = "addImage";
+		    	spaElmt3.setAttribute("id", "addImage");
+		    	spaElmt3.innerText = "이미지선택";
+		    	spaElmt3.addEventListener("click", function(event) {addImage();});
+		    	imgElmt2.setAttribute("id", "UploadSliderImage");
+		    	imgElmt2.setAttribute("src", "");
+		    	imgElmt2.setAttribute("style", "width:285px;height:515px;display:none");
+		    	imgElmt2.addEventListener("load", function(event){imgdisplay();});
+		    	
+		    	divElmt.appendChild(aElmt2);
+		    	aElmt2.appendChild(spaElmt3);
+		    	divElmt.appendChild(imgElmt2);
+		    	
+		    	sliderList.prepend(liElmt);
+		    	
+		    	/* var sliderHTML = "";
+		    	sliderHTML += "<li class = 'sliderList' id = 'sliderList'>";
+		    	sliderHTML += "<div class = 'sliderAddBody' id = 'sliderAddBody'>";
+		    	sliderHTML += "<div class = 'slider-header-add'>";
+		    	sliderHTML += "<a class = 'cancelNewSliderBtn' id='cancelNewSliderBtn'>";
+		    	sliderHTML += "<span class ='addCancel'><img src='/images/admin/slideDelete.png'></span></a></div>";
+		    	sliderHTML += "<div class = 'slider-content-add'>";
+		    	sliderHTML += "<table class = 'sliderInfo'>";
+		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL</td>";
+		    	sliderHTML += "<td><input id='txtDisplayName3' type='text' maxlength='50'></td></tr>";
+		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>사용여부</td><td class= 'slideIsUse'><label class='switch'><input id='slideIsUseAdd' type='checkbox' checked='checked'><span class='slider round'></label></td>";
+		    	sliderHTML += "<td><a href='#' class='imgbtn'><span onclick='btnSave_click();'><spring:message code = 'ezPersonal.t34' /></span></a></td>";
+		    	sliderHTML += "</tr></table></div>";
 		    	sliderHTML += "<a class ='addImageBtn'>";
 		    	sliderHTML += "<span class = 'addImage' id='addImage' onclick='addImage()'>이미지 선택</span></a>";
 		    	sliderHTML += "<img id='UploadSliderImage' src='' onload ='imgdisplay()' style='width:285px;height:515px;display:none'>";
 		    	sliderHTML += "</div>";
-		    	sliderHTML += "<div class = 'slider-content'>";
-		    	sliderHTML += "<table class = 'sliderInfo'>";
-		    	/* sliderHTML += "<tr><td class ='sliderInfoTDadd'>한글<input id ='txtDisplayName' value='"+name1+"' type='text' maxlength='50'></td></tr>";
-		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>영어";
-		    	sliderHTML += "<input id ='txtDisplayName2' value='"+name2+"' type='text' maxlength='50'></td></tr>"; */
-		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL</td>";
-		    	sliderHTML += "<td><input id='txtDisplayName3' value='"+url+"'type='text' maxlength='50'></td></tr>";
-		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>사용여부</td><td class= 'slideIsUse'><label class='switch' style='right:10px'><input id='slideIsUseModify' type='checkbox' checked='checked'><span class='slider round'></label></td>";
-		    	sliderHTML += "<td><a href='#' class='imgbtn'><span data='"+sliderID+"' onclick='btnSave_click_modify(this);'><spring:message code = 'ezPersonal.t34' /></span></a></td></tr>";
-		    	sliderHTML += "</table>"
 		    	sliderHTML += "</div>";
 		    	sliderHTML += "</li>";
 		    	
-		    	sliderList.innerHTML = sliderHTML;
+		    	sliderList.append(sliderHTML);   */
 		    	
 		    	$(".cancelNewSliderBtnmodify").on("click", addCancelModify);
 		    }
 		    
 		    function btnSave_click_modify(obj){
-		    	var sliderID = obj.getAttribute("data");
+		    	console.log(obj);
+		    	var sliderID = obj.parentNode.getAttribute("data");
 		    	
 		    	/* if (specialChk(document.getElementById("txtDisplayName").value)) {
 			    	alert("<spring:message code='ezResource.special' />");

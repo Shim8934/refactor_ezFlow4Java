@@ -16,7 +16,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/slick.js')}"></script>
 		<style type="text/css">
-		.calSlider {width: 85% !important; margin-left: 25px; border-top: 2px solid; border-bottom: 1px solid #c8ccd0;}
+		.calSlider {width: 85% !important; margin: 0px auto; border-top: 2px solid; border-bottom: 1px solid #c8ccd0;}
 		.slick-slide {margin: 0px 3px;}
 		.slick-slide img {width: 100% !important;}
 		.slick-prev:before, .slick-next:before {color: black;}
@@ -38,6 +38,7 @@
 		.calendarright {margin: 0px;}
 		.tree_delete {margin: 0px; cursor: pointer;}
 		.slick-slide {outline: none !important;}
+		.mainlist {margin-left: 110px;}
 		</style>
 		<script type="text/javascript">
 			var nowYear = new Date().getFullYear();
@@ -335,7 +336,7 @@
 				<div class="regular calSlider" id="regular"></div>
 				
 				<!-- 이달의우수사원 리스트 영역 -->
-				<ul id="mainlist"></ul>
+				<ul id="mainlist" class="mainlist"></ul>
 			</div>
 	    </form>
 	</body>
