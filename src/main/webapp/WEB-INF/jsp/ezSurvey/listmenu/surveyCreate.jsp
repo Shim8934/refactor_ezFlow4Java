@@ -215,7 +215,8 @@
 				if (qstnWrapper) {
 					qstnWrapper.after(html);
 					
-				} else {
+				}
+				else {
 					$(".quesBacgr").append(html);
 				}
 			}
@@ -323,7 +324,7 @@
 					html += "<div class='rows' style='float: left; width: 90%;'>";
 					
 					for (var i = 0; i < 2; i++) {
-						html += mkRow();
+						html += mkRowCol("row");
 					}
 					
 					html += "</div>";
@@ -336,7 +337,7 @@
 					html += "</div>";
 					html += "<div class='cols' style='float: left; width: 90%;'>";
 					for (var i = 0; i < 2; i++) {
-						html += "" + mkCol() + "";
+						html += mkRowCol("col");
 					}
 					html += "</div>";
 					html += "<div class='colBtn'>";
@@ -397,13 +398,11 @@
 				/* matrix 버튼 이벤트 */
 				// matrix 행 추가
 				$(".quesBacgr").on("click", ".addRow", function() {
-					var html = mkRow();
-					$(this).parents(".rowArea").find(".rows").append(html);
+					$(this).parents(".rowArea").find(".rows").append(mkRowCol("row"));
 				});
 				// matrix 열 추가
 				$(".quesBacgr").on("click", ".addCol", function() {
-					var html = mkCol();
-					$(this).parents(".colArea").find(".cols").append(html);
+					$(this).parents(".colArea").find(".cols").append(mkRowCol("col"));
 				});
 				// matrix 행 삭제
 				$(".quesBacgr").on("click", ".delRow", function(e) {
@@ -490,6 +489,11 @@
 					// 수정 폼 삭제
 					thisWrapper.remove();
 				});
+				
+				$(".quesBacgr").on("input", ".slider-range", function() {
+					var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
+					outputElmt.textContent = this.value;
+				}).trigger("change");
 			}
 			
 			// 생성된 질문을 붙일 부분과 질문 유형을 파라미터로 받아 질문 영역 생성
@@ -537,9 +541,9 @@
 			// 수정시 새로 생성하는 행렬질문 
 			function handleModifyMatrixQuestion(question) {
 				var html = "";
-				var row = question.row;
-				var col = question.col;
-
+				var row  = question.row;
+				var col  = question.col;
+				
 				html += "<div class='mtrPart'>";
 				html += "<div class='rowArea'>";
 				html += "<div class='rName' style='float: left; width: 10%;'>";
@@ -549,7 +553,7 @@
 				
 				if (row) {
 					for (var i = 0; i < row.length; i++) {
-						html += mkRow(row[i]);
+						html += mkRowCol("row", row[i]);
 					}
 				}
 				html += "</div>";
@@ -564,7 +568,7 @@
 				
 				if (col) {
 					for (var i = 0; i < col.length; i++) {
-						html += mkCol(col[i]);
+						html += mkRowCol("col", col[i]);
 					}
 				}
 				html += "</div>";
@@ -574,7 +578,6 @@
 				
 				return html;
 			}
-			
 			function handleModifyParagraphQuesion() {
 				var htmlTxt = "<div class='paragraph-wrap'>";
 				htmlTxt    += "<textarea class='paragraph' maxlength='500' placeholder='내용을 입력해주세요'></textarea>";
@@ -599,21 +602,15 @@
 				wrapper.find(".quesDiv").remove();
 				wrapper.find(".qstnForm").remove();
 			}
-
+			
 			// 단일선택 질문 생성 
-			function mkSelectQstn(status, wrapperElmt, question) {
-				var qstId       = question.id;
-				var qstnContent = question.content;
-				var qstnAtt     = question.attach;
-				var qstnType    = question.type;
-				var option      = question.option;
-				var required    = question.required;
-				var other       = question.other;
+			function mkSelectQstn(wrapperElmt, question) {
+				var option   = question.option;
+				var other    = question.other;
+				var qstnType = question.type;
+				var html     = makeQuestionHeaderPanel(question);
+				html        += "<div class='question-opts'>";
 				
-				var html = "";
-				html += makeQuestionHeaderPanel(qstId, option, qstnContent, qstnContent, qstnAtt);
-
-				html += "<div class='question-opts'>";
 				// 보기
 				if (option) {
 					for (var i = 0; i < option.length; i++) {
@@ -632,6 +629,7 @@
 						html += "</div>";
 					}
 				}
+				
 				// 기타
 				if (other) {
 					html += "<div class='opt'>";
@@ -644,59 +642,42 @@
 				html += "</div>";
 				
 				wrapperElmt.prepend(html);
-				
-				if (status == 'save') {
-					createQuestionDiv();
-					createQuestionSelectBox();
-				}
 			}
 			
 			function mkMatrixQstn(status, wrapperElmt, question) {
-				var qstId       = question.id;
-				var qstnContent = question.content;
-				var qstnAtt     = question.attach;
-				var qstnType    = question.type;
-				var option      = question.option;
-				var required    = question.required;
-				var other       = question.other
-				var col 		= question.col;
-				var row 		= question.row;
-
-				var html = "";
-					html += makeQuestionHeaderPanel(qstId, qstnType, qstnContent, required, qstnAtt);
-					
+				var col   = question.col;
+				var row   = question.row;
+				var html  = makeQuestionHeaderPanel(question);
 					html += "<div class='question-opts'>";
 					html += "<table class='matrix'>";
 					html += "<thead>";
 					html += "<tr>";
 					html += "<td></td>";
 					
-					for (var i = 0; i < col.length; i++) {
-						html += "<td>" + col[i].contents + "</td>";
+				for (var i = 0; i < col.length; i++) {
+					html += "<td>" + col[i].contents + "</td>";
+				}
+				
+				html += "</tr>";
+				html += "</thead>";
+				html += "<tbody>";
+				
+				for (var i = 0; i < row.length; i++) {
+					html += "<tr>";
+					html += "<td>" + row[i].contents + "</td>";
+					
+					for (var j = 0; j < col.length; j++) {
+						html += "<td><input type='radio' value='(" + row[i].level + ", " + col[j].level + ")'></td>";
 					}
+					
 					html += "</tr>";
-					html += "</thead>";
-					html += "<tbody>";
-					
-					for (var i = 0; i < row.length; i++) {
-						html += "<tr>";
-						html += "<td>" + row[i].contents + "</td>";
-						
-						for (var j = 0; j < col.length; j++) {
-							html += "<td><input type='radio' value='(" + row[i].level + ", " + col[j].level + ")'></td>";
-						}
-						html += "</tr>";
-					}
-					html += "</tbody>";
-					html += "</table>";
-					html += "</div>";
-					
-					wrapperElmt.prepend(html);
-					
-					if (status == 'save') {
-						createQuestionDiv();
-						createQuestionSelectBox();
-					}
+				}
+				
+				html += "</tbody>";
+				html += "</table>";
+				html += "</div>";
+				
+				wrapperElmt.prepend(html);
 			}
 			
 			function rmPrevEl(wrapperElmt) {wrapperElmt.prev().remove();}
@@ -707,6 +688,7 @@
 				var qstnWrapper  = thisEl.parents(".qstnWrapper");
 				var qstnArea     = qstnWrapper.find(".quesDiv");
 				var qstnContent  = qstnArea.find(".questnTitle").val();
+				var questionList = SurveyCreate.getQs();
 				
 				//Save common question information
 				if (!qstnContent) {alert(SurveyMessages.strQsContent); return;}
@@ -720,76 +702,90 @@
 				
 				//Check question attach files
 				var qstnFObj = qstnArea.find(".qstnFileInfo")[0].childNodes[0].childNodes[0].childNodes[0];
-				
 				if (qstnFObj) {question['attach']  = getAttachFileInfo(qstnFObj);}
 				
 				//Question order
-				if (status == 'save') {
-					// 질문 array에 들어있는 질문의 개수를 가져옴
-					var qstnList   = SurveyCreate.getQs();
-					question['id'] = qstnList.length + 1;
-					SurveyCreate.setQs(question);
-				}
-				else if (status == 'modify') {
-					rmPrevEl(qstnWrapper);
-					var qstId        = qstnWrapper.attr("id");
-					question['id']   = qstId;
-					var questionList = SurveyCreate.getQs();
-					
-					questionList.splice(qstId - 1, 1);           // 질문 배열에서 해당 순번의 객체 삭제
-					questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
-				}
+				var qstId      = qstnWrapper.attr("id") ? parseInt(qstnWrapper.attr("id")) : questionList.length + 1;
+				question['id'] = qstId;
+				
 				switch(parseInt(qstnType)) {
 					case 1  :
 					case 2  : var sltObj = mkSltObj(qstnForm);
 							  if (sltObj.option) {question['option'] = sltObj.option;}
 							  if (sltObj.other)  {question['other']  = sltObj.other ;}
-							  mkSelectQstn(status, qstnWrapper, question); break;
+							  mkSelectQstn(qstnWrapper, question); break;
 					case 3  : 
 					case 4  : var mtrObj = mkMtrObj(qstnForm);
 							  if (mtrObj.row) {question['row'] = mtrObj.row;}
 							  if (mtrObj.col) {question['col'] = mtrObj.col;}
-							  mkMatrixQstn(status, qstnWrapper, question); break;
+							  mkMatrixQstn(qstnWrapper, question); break;
 					case 5  : break;
-					case 6  : mkParagraphQstn(status, qstnWrapper, question); break;
-					case 7  : break;
+					case 6  : mkParagraphQstn(qstnWrapper, question); break;
+					case 7  : var sliderObj = mkSliderObj(qstnForm[0]);
+							  if (sliderObj.error) {alert(SurveyMessages[sliderObj.error]); return;}
+							  question["lowest"]  = sliderObj["lowest"];
+							  question["highest"] = sliderObj["highest"];
+							  mkSliderQstn(qstnWrapper, question); break;
 					case 8  : break;
 					case 9  : break;
 					default : alert(SurveyMessages.strError); return;
 				}
 				
 				rmQstnForm(qstnWrapper);
+				
+				if (status == 'save') {
+					createQuestionDiv();
+					createQuestionSelectBox();
+					SurveyCreate.setQs(question);
+				}
+				else if (status == 'modify') {
+					rmPrevEl(qstnWrapper);
+					questionList.splice(qstId - 1, 1);           // 질문 배열에서 해당 순번의 객체 삭제
+					questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
+				}
 			}
 			
-			function mkParagraphQstn(status, wrapperElmt, question) {
-				var qstId       = question.id;
-				var qstnContent = question.content;
-				var qstnType    = question.type;
-				var required    = question.required;
-				var html        = "";
-				html           += makeQuestionHeaderPanel(qstId, qstnType, qstnContent, required, null);
-				html           += "<div class='question-paragraph'>";
-				html           += "<textarea class='paragraph' maxlength='500' placeholder='내용을 입력해주세요'></textarea>";
-				html           += "</div></div>";
+			function mkParagraphQstn(wrapperElmt, question) {
+				var html = makeQuestionHeaderPanel(question);
+				html    += "<div class='question-paragraph'>";
+				html    += "<textarea class='paragraph' maxlength='500' placeholder='내용을 입력해주세요'></textarea>";
+				html    += "</div></div>";
 				
 				wrapperElmt.prepend(html);
-				
-				if (status == 'save') {createQuestionDiv(); createQuestionSelectBox();}
 			}
 			
-			function makeQuestionHeaderPanel(qstId, qstnType, qstnContent, required, qstnAtt) {
-				var htmlTxt = "";
-				htmlTxt    += "<div class='usrQstnWrapper' id='" + qstId + "' qstnType='" + qstnType + "'>";
-				htmlTxt    += "<div class='question-panel'>";
-				htmlTxt    += "<div class='mvBtn'></div>";
-				htmlTxt    += "<div class='question-header'>";
-				htmlTxt    += "<div class='question-content'>" + qstId + ". " + qstnContent;
-				htmlTxt    += required == 'Y' ? "<strong class='imptt'>*</strong></div>" : "</div>";
-				htmlTxt    += "<div class='tooltip-bttns'>";
-				htmlTxt    += "<span class='modifyBtn'></span>";
-				htmlTxt    += "<span class='copyBtn'></span>";
-				htmlTxt    += "<span class='deleteBtn'></span>";
-				htmlTxt    += "</div></div>";
+			function mkSliderQstn(wrapperElmt, question) {
+				var html = makeQuestionHeaderPanel(question);
+				html    += "<div class='question-silder'>";
+				html    += "<div class='silder-wrap'>";
+				html    += "<span>" + question["lowest"] + "</span>";
+				html    += "<input type='range' class='slider-range' name='slider" + question.id + "' min='" + question["lowest"] + "' max='" + question["highest"] + "'/>";
+				html    += "<span>" + question["highest"] + "</span>";
+				html    += "</div>";
+				html    += "<output for='slider" + question.id + "' class='slider-output'></output>";
+				html    += "</div>";
+				
+				wrapperElmt.prepend(html);
+			}
+			
+			function makeQuestionHeaderPanel(question) {
+				var htmlTxt  = "";
+				var qstId    = question.id;
+				var content  = question.content;
+				var qstnType = question.type;
+				var required = question.required;
+				var qstnAtt  = question.attach;
+				htmlTxt     += "<div class='usrQstnWrapper' id='" + qstId + "' qstnType='" + qstnType + "'>";
+				htmlTxt     += "<div class='question-panel'>";
+				htmlTxt     += "<div class='mvBtn'></div>";
+				htmlTxt     += "<div class='question-header'>";
+				htmlTxt     += "<div class='question-content'>" + qstId + ". " + content;
+				htmlTxt     += required == 'Y' ? "<strong class='imptt'>*</strong></div>" : "</div>";
+				htmlTxt     += "<div class='tooltip-bttns'>";
+				htmlTxt     += "<span class='modifyBtn'></span>";
+				htmlTxt     += "<span class='copyBtn'></span>";
+				htmlTxt     += "<span class='deleteBtn'></span>";
+				htmlTxt     += "</div></div>";
 				
 				if (qstnAtt) {
 					htmlTxt += "<div class='question-attach'>"
@@ -798,6 +794,24 @@
 				}
 				
 				return htmlTxt;
+			}
+			
+			function mkSliderObj(qstnForm) {
+				var sliderObj    = {};
+				var lowestInput  = qstnForm.querySelector("input[class='slider-lw']");
+				var highestInput = qstnForm.querySelector("input[class='slider-up']");
+				var lowestValue  = lowestInput  ? lowestInput.value  : "";
+				var highestValue = highestInput ? highestInput.value : "";
+				
+				//Check slider requirements
+				if (!isValid(lowestValue))       {sliderObj.error = "strSlider1"; return sliderObj;}
+				if (!isValid(highestValue))      {sliderObj.error = "strSlider2"; return sliderObj;}
+				if (lowestValue >= highestValue) {sliderObj.error = "strSlider3"; return sliderObj;}
+				
+				sliderObj["lowest"]  = lowestValue;
+				sliderObj["highest"] = highestValue;
+				
+				return sliderObj;
 			}
 			
 			// select 질문 객체 생성
@@ -860,6 +874,7 @@
 						
 						row.push(rowObj);
 					}
+					
 					mtrObj['row'] = row;
 				}
 				
@@ -874,6 +889,7 @@
 						
 						col.push(colObj);
 					}
+					
 					mtrObj['col'] = col;
 				}
 				
@@ -913,9 +929,7 @@
 				html += "<div class='optFileInfo'>";
 				html += "<div>";
 				
-				if (optAtt) {
-					attEl = mkImgTag(optAtt);
-				}
+				if (optAtt) {attEl = mkImgTag(optAtt);}
 				
 				html += "<ul>" + attEl + "</ul>";
 				html += "</div></div></div>";
@@ -926,38 +940,20 @@
 				return html;
 			}
 			
-			function mkRow(row) {
+			function mkRowCol(type, elment) {
 				var contents = "";
-				var level = "";
-
-				if (row) {
-					level = row.level;
-					contents = row.contents;
+				var level    = "";
+				var elClass  = type == "row" ? "delRow" : "delCol";
+				
+				if (elment) {
+					level    = elment.level;
+					contents = elment.contents;
 				}
 				
 				var html = "";
-					html += "<div class='row' level='" + level + "'>";
-					html += "<input class='rowInput' value='" + contents + "'>";
-					html += "<img alt='' src='/images/ezSurvey/minus.jpg' class='delRow' style='width: 30px;height: 30px; cursor: pointer;'>";
-					html += "</div>";
-				
-				return html;
-			}
-			
-			// 열 생성
-			function mkCol(col) {
-				var contents = "";
-				var level = "";
-
-				if (col) {
-					level = col.level;
-					contents = col.contents;
-				}
-				
-				var html = "";
-					html += "<div class='col' level='" + level + "'>";
-					html += "<input class='colInput' value='" + contents + "'>";
-					html += "<img alt='' src='/images/ezSurvey/minus.jpg' class='delCol' style='width: 30px;height: 30px; cursor: pointer;'>";
+					html += "<div class='" + type + "' level='" + level + "'>";
+					html += "<input class='" + type + "Input' value='" + contents + "'>";
+					html += "<img alt='' src='/images/ezSurvey/minus.jpg' class='" + elClass + "' style='width: 30px;height: 30px; cursor: pointer;'>";
 					html += "</div>";
 				
 				return html;
@@ -1000,19 +996,11 @@
 			function makeSliderQuestion(mainDivElmt, questionType) {
 				var html = makeQuestionForm(questionType);
 				html += "<div class='silder-wrap'>";
-				html += "<input type='input' class='slider-input'/>";
-				html += "<input type='range' class='slider-main' />";
-				html += "<input type='input' class='slider-input'/>";
+				html += "<input type='input' class='slider-lw'  />";
+				html += "<input type='range' class='slider-main'/>";
+				html += "<input type='input' class='slider-up'  />";
 				html += "</div>";
-				html += "<div class='additionalPart'>";
-				html += "<div class='required'>";
-				html += "<input type='checkbox' name='checkbox'>";
-				html += "<strong>필수 답변</strong>";
-				html += "</div>";
-				html += "<div class='btns'>";
-				html += "<button class='save'>저장</button>";
-				html += "<button class='cancel'>취소</button>";
-				html += "</div></div>";
+				html += mkAddtionalPart();
 				
 				mainDivElmt.append(html);
 			}
@@ -1092,6 +1080,8 @@
 				attchObj['fsize'] = elmtObj.getAttribute("fsize");
 				return attchObj;
 			}
+			
+			function isValid(value) {if (!isNaN(value) && parseFloat(value) > 0 && value % 1 === 0) {return true;} else {return false;}}
 		}());
 		
 		</script>
