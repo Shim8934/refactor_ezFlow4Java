@@ -199,7 +199,7 @@
 					html += "<div class='qstnWrapper' id='" + qstId + "'>";
 					html += "<div class='quesDiv'>";
 					html += "<div class='qstnRow'>";
-					html += "<input class='questnTitle' value='" + qstContent + "' placeholder='내용을 입력해주세요'/>";
+					html += "<input class='questnTitle' value='" + qstContent + "' placeholder='" + SurveyMessages.strContent + "'/>";
 					html += "<img alt='' src='/images/ezSurvey/attach.png' class='atchImg'>";
 					html += "<div class='selectBox'></div>";
 					html += "</div>";
@@ -531,6 +531,7 @@
 					}
 					
 					if (other) {htmlTxt += "<div class='other'>" + mkOpt("other", other) + "</div>";}
+					
 					htmlTxt += "<div class='addBtns'>";
 					htmlTxt += "<button class='addOpt'>추가</button>";
 					htmlTxt += "<button class='addOther'>기타추가</button>";
@@ -581,7 +582,7 @@
 				}
 				function handleModifyParagraphQuesion() {
 					var htmlTxt = "<div class='paragraph-wrap'>";
-					htmlTxt    += "<textarea class='paragraph' maxlength='500' placeholder='내용을 입력해주세요'></textarea>";
+					htmlTxt    += "<textarea class='paragraph' maxlength='500' placeholder='" + SurveyMessages.strContent + "'></textarea>";
 					htmlTxt    += "</div>";
 					return htmlTxt;
 				}
@@ -761,7 +762,7 @@
 				function mkParagraphQstn(wrapperElmt, question) {
 					var html = makeQuestionHeaderPanel(question);
 					html    += "<div class='question-paragraph'>";
-					html    += "<textarea class='paragraph' maxlength='500' placeholder='내용을 입력해주세요'></textarea>";
+					html    += "<textarea class='paragraph' maxlength='500' placeholder='" + SurveyMessages.strContent + "'></textarea>";
 					html    += "</div></div>";
 					
 					wrapperElmt.prepend(html);
@@ -932,7 +933,7 @@
 							
 							optAtt = options.optionAttach;
 						} else {
-							html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
+							html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
 						}
 					}
 					
@@ -1019,17 +1020,17 @@
 					html += "<div class='ranking-wrap'>";
 					html += "<div class='ranking-select'>";
 					html += "<span class='ranking-order'>1</span>";
-					html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
+					html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
 					html += "<span class='ranking-del'></span>";
 					html += "</div>";
 					html += "<div class='ranking-select'>";
 					html += "<span class='ranking-order'>2</span>";
-					html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
+					html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
 					html += "<span class='ranking-del'></span>";
 					html += "</div>";
 					html += "<div class='ranking-select'>";
 					html += "<span class='ranking-order'>3</span>";
-					html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
+					html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
 					html += "<span class='ranking-del'></span>";
 					html += "</div>";
 					html += "<div class='addBtns'>";
@@ -1053,17 +1054,17 @@
 					html += "<div class='dropdown-wrap'>";
 					html += "<div class='dropdown-select'>";
 					html += "<span class='dropdown-order'>1</span>";
-					html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
+					html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
 					html += "<span class='dropdown-del'></span>";
 					html += "</div>";
 					html += "<div class='dropdown-select'>";
 					html += "<span class='dropdown-order'>2</span>";
-					html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
+					html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
 					html += "<span class='dropdown-del'></span>";
 					html += "</div>";
 					html += "<div class='dropdown-select'>";
 					html += "<span class='dropdown-order'>3</span>";
-					html += "<input class='textInput' type='text' placeholder='내용을 입력해주세요'/>";
+					html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
 					html += "<span class='dropdown-del'></span>";
 					html += "</div>";
 					html += "<div class='addBtns'>";

@@ -344,7 +344,7 @@ color: rgba(132, 206, 66, 1);}
 .question-opts .opt .optImg {width: 40px; height: 40px; padding-left: 10px;}
 .question-opts .opt .othInput {border-radius: 4px; height: 27px; outline: none; padding: 0px 5px; margin-left: 10px;}
 .question-panel .question-attach {width: 100px; height: 100px; padding: 10px 35px;}
-.question-attach .qstnImg {width: 100%; height: 100%;}
+.question-attach .qstnImg {width: auto; height: 100%;}
 
 /* matrix */
 .mtrPart .rowArea {padding-bottom: 20px; padding-left: 20px;}
