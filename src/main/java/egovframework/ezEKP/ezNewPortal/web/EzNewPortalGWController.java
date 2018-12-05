@@ -4200,4 +4200,173 @@ e.printStackTrace();
 		LOGGER.debug("ezNewPortal G/W updateSlideOrder ended.");
 		return result;
 	}
+	
+	/**
+	 * 포탈개인화 G/W [GET] 테마별 포틀릿 사용 유무 리스트 불러오기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/portlets/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getThemePortletList(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W updateSlideOrder started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			String lang = userInfo.getLang();
+			
+			List<PortletInfoVO> themePortletList = ezNewPortalService.getThemePortletList(themeId, tenantId, companyId);
+			
+			if (themePortletList == null) {
+				themePortletList = ezNewPortalService.getPortletList(companyId, tenantId, Integer.parseInt(lang));
+			}
+			
+			//1. tenant config가 NO인 경우 관리자 포틀릿 관리에서도 나오면 안됨
+			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
+			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
+			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티)
+			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
+			String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
+			String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
+			String useVote = ezCommonService.getTenantConfig("useBallotSystem", tenantId);
+			String useJournal = ezCommonService.getTenantConfig("USE_JOURNAL", tenantId);
+			String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", tenantId);
+			String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", tenantId);
+			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
+			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
+			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+			
+			if (useAttitude == null || useAttitude.equals("")) {
+				useAttitude = "YES";
+			}
+			
+			if (useMemo == null || useMemo.equals("")) {
+				useMemo = "YES";
+			}
+			
+			if (useLadder == null || useLadder.equals("")) {
+				useLadder = "YES";
+			}
+			
+			if (useCabinet == null || useCabinet.equals("")) {
+				useCabinet = "YES";
+			}
+			
+			if (useVote == null || useVote.equals("")) {
+				useVote = "YES";
+			}
+			
+			if (useJournal == null || useJournal.equals("")) {
+				useJournal = "YES";
+			}
+			
+			if (useCircular == null || useCircular.equals("")) {
+				useCircular = "YES";
+			}
+			
+			if (useQuestion == null || useQuestion.equals("")) {
+				useQuestion = "YES";
+			}
+			
+			if (useWebfolder == null || useWebfolder.equals("")) {
+				useWebfolder = "YES";
+			}
+			
+			if (useCommunity == null || useCommunity.equals("")) {
+				useCommunity = "YES";
+			}
+			
+			if (useEzPMS == null || useEzPMS.equals("")) {
+				useEzPMS = "YES";
+			}
+			
+			if (useQuestion.equals("NO")) {
+				themePortletList.removeIf(vo -> (vo.getMenuId() == 14));
+			}
+			
+			if (useMemo.equals("NO")) {
+				themePortletList.removeIf(vo -> (vo.getMenuId() == 18));
+			}
+			
+			if (useLadder.equals("NO")) {
+				themePortletList.removeIf(vo -> (vo.getMenuId() == 16));
+			}
+			
+			if (useCabinet.equals("NO")) {
+				themePortletList.removeIf(vo -> (vo.getMenuId() == 11));
+			}
+			
+			if (useVote.equals("NO")) {
+				themePortletList.removeIf(vo -> (vo.getMenuId() == 15));
+			}
+			
+			if (useJournal.equals("NO")) {
+				themePortletList.removeIf(vo -> (vo.getMenuId() == 8));
+			}
+			
+			if (useCircular.equals("NO")) {
+				themePortletList.removeIf(vo -> (vo.getMenuId() == 7));
+			}
+			
+			if (useAttitude.equals("NO")) {
+				themePortletList.removeIf(vo -> (vo.getMenuId() == 9));
+			}
+			
+			if (useWebfolder.equals("NO")) {
+				themePortletList.removeIf(vo -> (vo.getMenuId() == 10));
+			}
+			
+			if (useEzPMS.equals("NO")) {
+				themePortletList.removeIf(vo -> (vo.getMenuId() == 12));
+			}
+			
+			if (useCommunity.equals("NO")) {
+				themePortletList.removeIf(vo -> (vo.getMenuId() == 5));
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", themePortletList);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W updateSlideOrder ended.");
+		return result;
+	}
+	
+	/**
+	 * 포탈개인화 G/W [PATCH] 테마별 포틀릿 사용 유무 설정
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/portlets/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	public JSONObject updateThemePortletUsed(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId, @RequestBody JSONObject jsonParam) throws Exception {
+		LOGGER.debug("ezNewPortal G/W updateThemePortletUsed started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = jsonParam.get("userId").toString();
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			
+			JSONArray themePortletList = (JSONArray) jsonParam.get("themePortletList");
+			
+			ezNewPortalService.updateThemePortletUsed(themeId, tenantId, companyId, themePortletList);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W updateThemePortletUsed ended.");
+		return result;
+	}
 }

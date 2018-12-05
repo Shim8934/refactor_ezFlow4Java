@@ -4088,7 +4088,7 @@
 					AND
 						TBL_C_CLUBUSER.tenant_id = #tenantID#
 					AND
-						TBL_C_MEMBERINFO.companyID = #companyID#
+						TBL_C_CLUBUSER.companyID = #companyID#
 				]]>
 			</isEqual>
 			<isNotEqual property="v_S_RADIO" compareValue="NAME">
