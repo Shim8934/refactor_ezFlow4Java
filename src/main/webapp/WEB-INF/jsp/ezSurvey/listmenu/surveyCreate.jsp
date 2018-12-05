@@ -883,15 +883,18 @@
 						for (var i = 0; i < optCnt; i++) {
 							var optObj      = {};
 							var optVal      = opt[i].childNodes[0].childNodes[0].childNodes[0].value; // 보기가 비어있는지 확인
-							optObj['level'] = i;
+							//optObj['level'] = i;
 							
-							if (optVal) {optObj['contents'] = optVal;}
+							if (optVal != "") {optObj['contents'] = optVal;}
 							
 							// 첨부 파일이 있는지 확인
 							var fObj = opt[i].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
 							if (fObj) {optObj['optionAttach'] = getAttachFileInfo(fObj);}
 							
-							option.push(optObj);
+							if (optVal != "" || fObj != undefined) {
+								optObj['level'] = option.length + 1;
+								option.push(optObj);
+							}
 						}
 						
 						sltObj['option'] = option;
