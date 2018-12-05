@@ -604,9 +604,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		List<PortletInfoVO> notSelectedPortletList = ezNewPortalDAO.getPortletListNotSelected(map);
 		
 		if (notSelectedPortletList != null) {
-			int portletCount = notSelectedPortletList.size();
+			int portletCount = portletOrder.size();
+			int notSelectedPortletListCount = notSelectedPortletList.size();
 			
-			for (int i = 0; i < portletCount; i++) {
+			for (int i = 0; i < notSelectedPortletListCount; i++) {
 				portletCount++;
 				map.put("portletOrder", portletCount);
 				map.put("portletId", notSelectedPortletList.get(i).getPortletId());
