@@ -539,9 +539,7 @@ function getBirthdayEmployeesList() {
 		success : function(result) {
 			birthdayTotalCount = result.birthdayTotalCount;
 			
-			if (birthdayCurPage != 0) {
-				birthdayCurPage = result.birthdayCurPage;
-			}
+			birthdayCurPage = result.birthdayCurPage;
 			
 			var birthdayList = result.birthdayList;
 			
@@ -587,7 +585,7 @@ function getBirthdayEmployeesList() {
 			// 프로젝트 종료 시 주석 해제
 			timer = window.setInterval(function() {
 				if (birthdayTotalCount > 6) {
-					birthdayCurPage++;
+					//birthdayCurPage++;
 					getBirthdayEmployeesList();
 				}
 			}, 5000);
