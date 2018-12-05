@@ -140,14 +140,18 @@
 		    function BoardRedirect() {
 		        var spans = document.getElementById("TopBoardsList").getElementsByTagName("span");
 		        var cnt = 0;
+		        var redirectOK = "";
 		        for (var i = 0 ; i < spans.length ; i++) {
 		            if (spans[i].getAttribute("value") == RedirectBoardGroupID) {
 		                LoadTreeViewByPath(spans[i], RedirectBoardID, RedirectBoardGroupID);
 		                cnt++;
+		                redirectOK = "OK";
 		            }
 		        }
-		        if (cnt == 0) { //권한이 없을 경우
-		        	var rightFrameDoc = "";
+		        /* 2018-12-04 홍승비 - 접근권한 없는 게시판에 포탈 포틀릿 등으로 접근 시, 오류메세지 표출하도록 수정 */
+		        if (cnt == 0 && redirectOK != "OK") {
+					var rightFrameDoc = "";
+					
 		        	if (typeof window.parent.frames["right"] == "undefined") {
 		        		rightFrameDoc = rightFrame.document;
 		        	} else {
