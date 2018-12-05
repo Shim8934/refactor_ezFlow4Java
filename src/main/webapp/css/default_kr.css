@@ -2524,6 +2524,14 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .btn_leftframe{background-position:-52px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 왼쪽 */
 .btn_arrow_down{background-position:-78px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 아래화살표 */
 
+/* icon16 popup */
+.popup_icon16_delete{background-position:8px 6px !important; width:16px; height:16px; display:inline-block; margin: 0px; cursor:pointer; background-color: white !important;} /* icon16 삭제아이콘 */
+.popup_icon16_print{background-position:-70px -46px !important; width:16px; height:16px; display:inline-block; margin: 0px; cursor:pointer; background-color: white !important;} /* icon16 인쇄아이콘 */
+.popup_icon16_refresh{background-position:-18px 6px !important; width:16px; height:16px; display:inline-block; margin: 0px; cursor:pointer; background-color: white !important;} /* icon16 새로고침아이콘 */
+.popup_icon16_search{background-position:-174px -46px !important; width:16px; height:16px; display:inline-block; margin: 0px; cursor:pointer; background-color: white !important;} /* icon16 검색버튼아이콘 */
+.popup_icon16_star{background-position:-200px -46px !important; width:16px; height:16px; display:inline-block; margin: 0px; cursor:pointer; background-color: white !important;} /* icon16 즐겨찾기 별 아이콘 */
+.popup_icon16_mail{background-position:-96px 6px !important; width:16px; height:16px; display:inline-block; margin: 0px; cursor:pointer; background-color: white !important;} /* icon16 메일쓰기 아이콘 */
+
 /* icon16 hover */
 .sub_frameIcon .btn_noframe:hover, .btn_onnoframe{background-position:0px -104px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 없음 오버 */
 .sub_frameIcon .btn_bottomframe:hover, .btn_onbottomframe{background-position:-26px -104px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 하단 오버 */

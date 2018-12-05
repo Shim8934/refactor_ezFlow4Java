@@ -274,9 +274,9 @@
 	    <div class="txt" style="margin-top:3px">▒ <spring:message code='ezSchedule.t00008' /></div>
 	    <div id="mainmenu" style="margin-top:20px">
 	        <ul>
-	            <li><span onClick="add_group()"><spring:message code='ezSchedule.t191' /></span></li>
+	            <li class="important"><span onClick="add_group()"><spring:message code='ezSchedule.t191' /></span></li>
 	            <li><span onClick="show_groupinfo2('show')"><spring:message code='ezSchedule.t00001' /></span></li>
-	            <li><span onclick='del_group();'><spring:message code='ezSchedule.t215' /></span></li>
+	            <li><span class="icon16 icon16_delete" onclick='del_group();'></span></li>
 	        </ul>
 	    </div>
 	    <table class="mainlist" style="width:70%;">
