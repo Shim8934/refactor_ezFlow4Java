@@ -168,53 +168,7 @@ public class EzNewPortalGWController {
 			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId);
 			LOGGER.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame());
 			
-			/*// 사용자 포틀릿 순서 가져오기
-			List<PortletInfoVO> portletOrder = ezNewPortalService.getPortletOrderUser(portletLang, userId, tenantId, companyId, deptId);
-			// 권한체크가 끝난 포틀릿 리스트를 담을 리스트선언
-			List<PortletInfoVO> resultPortletList = new ArrayList<PortletInfoVO>();
-			
-			JSONObject data = new JSONObject();
-			// 사용자 설정 포틀릿 순서가 없으면 회사의 포틀릿 순서를 따름
-			if (portletOrder.isEmpty()) {
-				portletOrder = ezNewPortalService.getPortletOrderComp(portletLang, tenantId, companyId, deptId, userId);
-				data.put("portletOrder", portletOrder);
-			} else {
-				//개인별 포틀릿 에서 메뉴아이디 가져와서 권한체크 들어간다
-				String userAuth = "";
-				String deptAuth = "";
-				String comAuth = "";
-				for (PortletInfoVO pVO : portletOrder) {
-//					boolean resultAuth = ezNewPortalService.getCheckAuth(pVO.getMenuId(), userId, deptId, companyId, tenantId);
-//						LOGGER.debug(pVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
-//						if (resultAuth) {
-//							resultPortletList.add(pVO);
-//						}
-					userAuth = pVO.getUserAuth();
-					deptAuth = pVO.getDeptAuth();
-					comAuth = pVO.getComAuth();
-					
-					if (userAuth != null && userAuth != "") {
-						if (userAuth.equals("1")) {
-							resultPortletList.add(pVO);
-						} 
-					} else {
-						if (deptAuth != null && deptAuth != "") {
-							if (deptAuth.equals("1")) {
-								resultPortletList.add(pVO);
-							}
-						} else {
-							if (comAuth != null && comAuth != "") {
-								if (comAuth.equals("1")) {
-									resultPortletList.add(pVO);
-								}
-							}
-						}
-					} 
-				}
-				data.put("portletOrder", portletOrder);
-			}*/
-			
-			List<PortletInfoVO> portletOrder = ezNewPortalService.getUserPortletList(portletLang, userId, tenantId, companyId, deptId, true);
+			List<PortletInfoVO> portletOrder = ezNewPortalService.getUserPortletList(userThemeSetting.getUsedTheme(), portletLang, userId, tenantId, companyId, deptId, true);
 			
 			//1. tenant config가 NO인 경우 사용자 포틀릿 순서에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -1107,9 +1061,12 @@ e.printStackTrace();
 			String companyId = info.getCompanyId();
 			String portletLang = info.getLang();
 			String deptId = info.getDeptId();
+			
 			JSONObject data = new JSONObject();
 			
-			List<PortletInfoVO> portletList = ezNewPortalService.getUserPortletList(portletLang, userId, tenantId, companyId, deptId, false);
+			int themeId = ezNewPortalService.getThemeId(userId, companyId, tenantId);
+			
+			List<PortletInfoVO> portletList = ezNewPortalService.getUserPortletList(themeId, portletLang, userId, tenantId, companyId, deptId, false);
 			
 			//tenant config가 NO인 경우 포틀릿 리스트에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -1221,6 +1178,7 @@ e.printStackTrace();
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

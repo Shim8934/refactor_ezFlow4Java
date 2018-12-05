@@ -269,8 +269,10 @@
 							console.error(xhr.responseText);	
 						}
 					}
+					
 					xhr.open('GET', '/ezNewPortal/getUserPortletList.do');
-					xhr.send();	
+					xhr.send();
+					
 				}
 				
 				getUserFrameList();

@@ -44,7 +44,7 @@ public interface EzNewPortalService {
 	public List<?> getQuickLinkList(String companyId, int tenantId, int page, int limit) throws Exception; 
 	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit) throws Exception;
 //	public List<?> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception;
-	public List<PortletInfoVO> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId, boolean config) throws Exception;
+	public List<PortletInfoVO> getUserPortletList(int themeId, String portletLang, String userId, int tenantId, String companyId, String deptId, boolean config) throws Exception;
 	public List<?> getUserFrameListAndSelectedFrame(String companyId, int tenantId, String userId) throws Exception;
 	public void updateUserUsedFrame(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
 	public void updateUserUsedPortlet(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
@@ -95,6 +95,10 @@ public interface EzNewPortalService {
 	 * @param admin true(admin) false(user)
 	 */
 	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId) throws Exception;
+	/**
+	 * 유저의 테마Id 조회 -> 테마별 포틀릿 추가되면서 테마Id가 필요한 경우가 생김
+	 */
+	public int getThemeId(String userId, String companyId, int tenantId) throws Exception;
 	/**
 	 * 관리자 테마상세정보조회
 	 */

@@ -300,6 +300,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<PortletInfoVO>) list("ezNewPortal.getPortletForUser", map);
 	}
 	
+	public int getThemeId(Map<String, Object> map) throws Exception {
+		return (int) select("ezNewPortal.getThemeId", map);
+	}
+	
 	//여기서부터 관리잔데 걍 다만들고 dao옮기자
 	@SuppressWarnings("unchecked")
 	public List<ThemeInfoVO> getCompanyThemes(Map<String, Object> map) throws Exception {

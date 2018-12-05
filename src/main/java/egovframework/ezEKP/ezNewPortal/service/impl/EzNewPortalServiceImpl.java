@@ -381,8 +381,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("[Serivce] updateUserUsedPortlet Ended");
 	}
 	
-	// 사용자 포틀릿 리스트 가져오기
-	public List<PortletInfoVO> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId, boolean config) throws Exception {
+	/**
+	 * config true이면 유저세팅목록조회, false이면 유저별목록조회
+	 */
+	@Override
+	public List<PortletInfoVO> getUserPortletList(int themeId, String portletLang, String userId, int tenantId, String companyId, String deptId, boolean config) throws Exception {
 		LOGGER.debug("[Serivce] getUserPortletList Started");
 		/**
 		 * 2018-11-21 신규작성
@@ -392,6 +395,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("userId", userId);
 		map.put("deptId", "");
+		map.put("themeId", themeId);
 		map.put("portletLang", portletLang);
 		
 		String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
@@ -433,29 +437,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		//여기까지가 권한체크된 모든 포틀릿 리스트
-		
-		//세팅에서 use보여주려면 이게 잇어야할꺼같아서 비교해야겟네
-		//유저에 있는거랑 내가 꺼낸거랑 비교 해서 잇으면 사용 없으면 미사용인가
-		List<PortletInfoVO> userResult = getPortletOrderUser(portletLang, userId, tenantId, companyId, deptId);
-		
-		for (PortletInfoVO resultPortlet : result) {
-			for (PortletInfoVO userPortlet : userResult) {
-				resultPortlet.setPortletUsed(false);
-				
-				if (userPortlet.getPortletId() == resultPortlet.getPortletId()) {
-					resultPortlet.setPortletUsed(true);
-					break;
-				}
-			}
-			
-			if (userResult.size() == 0) {
-				resultPortlet.setPortletUsed(true);
-			}
-		}
-		
-		if (config) {
-			result.removeIf(resultPortlet -> !resultPortlet.isPortletUsed());
-		}
 		
 		//order에 따라 다시 소팅
 		Collections.sort(result, new Comparator<PortletInfoVO>() {
@@ -1690,6 +1671,22 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getApprovalStatistics ended.");
 		
 		return result;
+	}
+	
+	@Override
+	public int getThemeId(String userId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getThemeId started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		int themeId = ezNewPortalDAO.getThemeId(map);
+		
+		LOGGER.debug("getThemeId ended. themeId = " + themeId);
+		
+		return themeId;
 	}
 	
 	/** -------------------- */
