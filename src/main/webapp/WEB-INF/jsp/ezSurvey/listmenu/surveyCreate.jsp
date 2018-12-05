@@ -494,10 +494,10 @@
 					case 1  :
 					case 2  : html += handleModifySelectQuestion(question); break;
 					case 3  : 
-					case 4  : html += handleModifyMatrixQuestion(question);break;
+					case 4  : html += handleModifyMatrixQuestion(question); break;
 					case 5  : break;
 					case 6  : html += handleModifyParagraphQuesion()      ; break;
-					case 7  : break;
+					case 7  : html += handleModifySliderQuesion(question) ; break;
 					case 8  : break;
 					case 9  : break;
 					default : alert(SurveyMessages.strError); return;
@@ -527,6 +527,7 @@
 				
 				return htmlTxt;
 			}
+			
 //////////////////////////////////////////////////////////////////////////////
 			function handleModifyMatrixQuestion(question) {
 				var html = "";
@@ -571,6 +572,18 @@
 			function handleModifyParagraphQuesion() {
 				var htmlTxt = "<div class='paragraph-wrap'>";
 				htmlTxt    += "<textarea class='paragraph' maxlength='500' placeholder='내용을 입력해주세요'></textarea>";
+				htmlTxt    += "</div>";
+				return htmlTxt;
+			}
+			
+			function handleModifySliderQuesion(question) {
+				var htmlTxt = "";
+				var lowest  = question ? question["lowest"]  : "";
+				var highest = question ? question["highest"] : "";
+				htmlTxt    += "<div class='silder-wrap'>";
+				htmlTxt    += "<input type='input' class='slider-lw' value='" + lowest  + "'/>";
+				htmlTxt    += "<input type='range' class='slider-main'/>";
+				htmlTxt    += "<input type='input' class='slider-up' value='" + highest + "'/>";
 				htmlTxt    += "</div>";
 				return htmlTxt;
 			}
@@ -634,7 +647,7 @@
 				wrapperElmt.prepend(html);
 			}
 			
-			function mkMatrixQstn(status, wrapperElmt, question) {
+			function mkMatrixQstn(wrapperElmt, question) {
 				var col   = question.col;
 				var row   = question.row;
 				var html  = makeQuestionHeaderPanel(question);
@@ -985,12 +998,8 @@
 			
 			function makeSliderQuestion(mainDivElmt, questionType) {
 				var html = makeQuestionForm(questionType);
-				html += "<div class='silder-wrap'>";
-				html += "<input type='input' class='slider-lw'  />";
-				html += "<input type='range' class='slider-main'/>";
-				html += "<input type='input' class='slider-up'  />";
-				html += "</div>";
-				html += mkAddtionalPart();
+				html    += handleModifySliderQuesion();
+				html    += mkAddtionalPart();
 				
 				mainDivElmt.append(html);
 			}
