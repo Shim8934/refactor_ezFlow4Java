@@ -18,6 +18,7 @@
 		body {background-color : white;}
 		.ui-sortable{ margin:0px; padding:0px 0px 0px 15px;}
 		ul .sliderList {margin:10px 30px 20px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
+		ul .addsliderList {margin:10px 30px 20px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
 		ul .slider-body {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px}
 		ul .slider-head {margin:0px; position: absolute;cursor:move; border:none; width:285px; height:40px; line-height:38px; border-radius:0px; background: rgba(0, 0, 0, 0.5);}
 		ul .slider-header-add {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px;background: rgba(0, 0, 0, 0.5); width:270px; z-index: 2;}
@@ -216,7 +217,7 @@
 		    	}
 		    	
 		    	var sliderHTML = "";
-		    	sliderHTML += "<li class = 'sliderList' id = 'sliderList'>";
+		    	sliderHTML += "<li class = 'addsliderList' id = 'addsliderList'>";
 		    	sliderHTML += "<div class = 'sliderAddBody' id = 'sliderAddBody'>";
 		    	sliderHTML += "<div class = 'slider-header-add'>";
 		    	sliderHTML += "<a class = 'cancelNewSliderBtn' id='cancelNewSliderBtn'>";
