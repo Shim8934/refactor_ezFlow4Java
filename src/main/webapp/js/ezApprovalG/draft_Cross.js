@@ -4223,3 +4223,19 @@ function getAddress(puserIDs) {
     return result;
     
 }
+//재기안 시, 문서내 기안일자와 현재일자가 다르면 현재일자로 수정되게
+function compareDocDateCurDate() {
+	try {
+		var fields = message.GetFieldsList();
+		if (!fields) return;
+		
+		var field = message.GetListItem(fields, "draftdate");
+		
+		var DocumentDate = field.textContent;	//문서내 기안일자
+		var CurrentDate = getGyulJeDate();		//현재일자
+		
+		if (DocumentDate != "" && CurrentDate != "" && DocumentDate != CurrentDate) {
+			field.textContent = CurrentDate;
+		}
+	} catch(e){ console.log("ERROR::::compareDocDateCurDate() " + e.description); }
+}

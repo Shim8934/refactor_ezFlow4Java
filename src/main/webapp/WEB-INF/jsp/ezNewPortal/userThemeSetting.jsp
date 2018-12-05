@@ -46,7 +46,7 @@ function deleteUserThemeSetting() {
 			parent.parent.location.reload();
 		},
 		fail : function() {
-			alert("<spring:message code='ezNewPortal.t032' />");
+			//alert("<spring:message code='ezNewPortal.t032' />");
 		}
 	});
 }
@@ -63,7 +63,7 @@ function updateUserThemeSetting(event) {
 			parent.parent.location.reload();
 		},
 		fail : function() {
-			alert("<spring:message code='ezNewPortal.t032' />");
+			//alert("<spring:message code='ezNewPortal.t032' />");
 		}
 	});
 }

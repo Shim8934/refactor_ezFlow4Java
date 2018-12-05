@@ -1112,7 +1112,48 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			LOGGER.debug("resetMenuOrder ended.");
 		}
 	}
+
+	@RequestMapping(value = "/admin/ezNewPortal/getThemePortletList.do")
+	@ResponseBody
+	public JSONArray getThemePortletList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("getThemePortletList started");
+		JSONArray result = new JSONArray();
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String themeId = paramMap.get("themeId").toString();
+		String companyId = paramMap.get("companyId").toString();
+		String userId = userInfo.getId();
 		
+		String url = "/rest/admin/ezPortal/themes/" + themeId + "/portlets/companies/" + companyId;
+		paramMap.put("userId", userId);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			result = (JSONArray) resultBody.get("data");
+		}
+		
+		LOGGER.debug("getThemePortletList ended");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezNewPortal/updateThemePortletUsed.do")
+	@ResponseBody
+	public void updateThemePortletUsed(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject json, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("updateThemePortletUsed started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String themeId = json.get("themeId").toString();
+		String companyId = json.get("companyId").toString();
+		String userId = userInfo.getId();
+		
+		String url = "/rest/admin/ezPortal/themes/" + themeId + "/portlets/companies/" + companyId;
+		json.put("userId", userId);
+		
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, request, "patch", json);
+		
+		LOGGER.debug("updateThemePortletUsed ended");
+	}
 	/**
 	 * 슬라이드 이미지 설정 화면
 	 * @param loginCookie
