@@ -853,7 +853,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 }
 
 @media only screen and (max-width: 1685px){
-	#theme2Body .section1_bg{margin:0px 0px 25px 0px;}
+	#theme2Body .section1_bg{margin:0px 0px 0px 0px;}
 	#theme2Body .section1 .sec1Layout_left{width:40%;}
 	#theme2Body .section1 .sec1Layout_middle{width:42%;}
 	#theme2Body .section1 .sec1Layout_right{width:18%;}
@@ -881,7 +881,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 #theme2Body .section_main{ overflow:hidden; padding:0px 0px 20px 0px; float:none; min-width:1170px; max-width:1920px; box-sizing:border-box; background:#fff;}
 #theme2Body .box_shadow{background: #fff; padding:0px; margin:0px;  box-shadow:none; border:1px solid #e0e0e0; width:410px; height:250px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow: hidden;} /*장진혁 */
 #theme2Body .info_left{float:left; width:181px !important; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
-#theme2Body .info_right{width:calc(100% - 194px) !important; background:#ffffff;}
+#theme2Body .info_right{width:calc(100% - 192px) !important; background:#ffffff;}
 #theme2Body .portlet_list li.first_approval{margin:0px; padding:0px; height:113px; box-sizing:border-box; background-color: #fff;}
 #theme2Body .rolling_info .info .infoSet{ margin:0px; padding:0px; position:absolute; right:10px; top:10px; cursor:pointer;}
 #theme2Body .countingIcon dl{ margin:0px; padding:0px 13px; position:relative; float:left; cursor:pointer;}
@@ -933,9 +933,9 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	#theme2Body .section_main .mainLayout_right{ clear:both; width:50%;}
 	#theme2Body .section_main .mainLayout_left{ width:50%;}
 	#theme2Body .section_main .mainLayout_middle{ width:50%;}
-	#theme2Body .box_shadow{width:100%;}
+	#theme2Body .box_shadow{width:99.8%;}
 	#theme2Body .portlet{width:100%;}
-	#theme2Body .portlet{width:48%; float:left; margin:5px 5px 15px 16px; height: 252px;}
+	#theme2Body .portlet{width:48%; float:left; margin:30px 5px -8px 16px; height: 252px;}
 	#theme2Body .stats_graph{ float:left; overflow:hidden;}
 	#theme2Body .groupware_banner{ float:left; margin-top:0px}
 	
