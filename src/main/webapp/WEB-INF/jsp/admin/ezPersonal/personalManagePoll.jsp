@@ -211,8 +211,8 @@
 					}
 				});
 			}
-			
-			
+
+
 			function rowListSelect() {
 				var len = rowList.length;
 				for(var i=0; i<len; i++) {
@@ -230,7 +230,8 @@
 					$("#checkAll").prop("checked",false);
 				}
 			}
-			
+
+
 			var itemseq;
 			function PollList_onClick(obj) {
 				var doc = window.document;
@@ -277,6 +278,16 @@
 				var top = (heigth - 400) / 2;
 
 				checkItems();
+				window.open("/ezPersonal/pollResult.do?itemSeq=" + itemseq, "", "height=400px,width=455px, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
+			}
+
+
+			var showPollPage = function() {
+				var heigth = window.screen.availHeight;
+				var width = window.screen.availWidth;
+				var left = (width - 455) / 2;
+				var top = (heigth - 400) / 2;
+
 				window.open("/ezPersonal/pollResult.do?itemSeq=" + itemseq, "", "height=400px,width=455px, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
 			}
 
@@ -824,7 +835,7 @@
 							<span class="previewmail_info" style="display: block; width: 100%; border-top: 1px solid #e8e8e8; ">
 								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
 									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 10px 0px 0px 0px; height: 36px; line-height: 37px;">
-										<span class="icon_btn" style="margin-left:13px;"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
+										<span class="icon_btn" style="margin-left:13px;"><span onclick="showPollPage();" style="cursor: pointer; padding-right: 5px;">
 											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" style="position:absolute; margin-top:-6px;" class="title_blodtxt"></span></span>
 										<span class="mail_date" style="margin-right: 10px; display: inline-block; float:right;margin-top:-7px;"><span id="PreH_date" style="font-weight:normal;"><span id="PreH_sub_date" style="display: none;"></span></span></span>
 									</p>

@@ -14,20 +14,20 @@
 
 		<script type="text/javascript">
 			var UserAgentState = navigator.userAgent.toLowerCase();
-		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
-		    var pUse_Editor = "<c:out value = '${useEditor}' />";
-		    var pNoneActiveX = "<c:out value = '${noneActiveX}' />";
+			var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
+			var pUse_Editor = "<c:out value = '${useEditor}' />";
+			var pNoneActiveX = "<c:out value = '${noneActiveX}' />";
 			var TotalCount;
 			var totalPage = "";
 			var BlockSize = 10;
 			var pageNum = 1;
 			var PageSize = 15;
-			
+
 			var strLang1 = "<spring:message code = 'ezPersonal.t10002' />";
 			var strLang2 = "<spring:message code = 'ezPersonal.t10000' />";
 			var strLang3 = "<spring:message code = 'ezPersonal.t10001' />";
 			var strLang4 = "<spring:message code = 'ezPersonal.t223' />";
-			
+
 			window.onload = function () {
 				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "선택된 공지사항이 없습니다.";
 			}
@@ -424,51 +424,96 @@
 			}
 
 
-		    var pUse_Editor = "<c:out value = '${useEditor}' />";
-		    function PopupList_onDblclick(obj) {
-		        var popup_number = document.getElementById(obj).getAttribute("DATA1");
-		        var wWidth = document.getElementById(obj).getAttribute("DATA2");
-		        var wHeight = document.getElementById(obj).getAttribute("DATA3");
-		        var wPosition = document.getElementById(obj).getAttribute("DATA4");
-		        var wVertical, wHorizontal;
-	
-		        if (wPosition == 0) {
-		            wVertical = Math.floor(screen.height / 2) - (wHeight / 2);
-		            wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
-		        } else if (wPosition == 1) {
-		            wVertical = 100;
-		            wHorizontal = 100;
-		        } else if (wPosition == 2) {
-		            wVertical = screen.height - wHeight - 100;
-		            wHorizontal = 100;
-		        } else if (wPosition == 3) {
-		            wVertical = 100;
-		            wHorizontal = screen.width - wWidth - 100;
-		        } else if (wPosition == 4) {
-		            wVertical = screen.height - wHeight - 100;
-		            wHorizontal = screen.width - wWidth - 100;
-		        } else if (wPosition == 5) {
-		            wVertical = 100;
-		            wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
-		        } else if (wPosition == 6) {
-		            wVertical = screen.height - wHeight - 100;
-		            wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
-		        } else {
-		            wVertical = 0;
-		            wHorizontal = 0;
-		        }
-	
-		        if (wVertical < 0) {
-		            wVertical = 0;
-		        }
-		        
-		        if (wHorizontal < 0) {
-		            wHorizontal = 0;
-		        }
-		        
-		        window.open("/admin/ezPersonal/showPopup.do?itemSeq=" + popup_number +
-		            "&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
-		}
+			var pUse_Editor = "<c:out value = '${useEditor}' />";
+			function PopupList_onDblclick(obj) {
+				var popup_number = document.getElementById(obj).getAttribute("DATA1");
+				var wWidth = document.getElementById(obj).getAttribute("DATA2");
+				var wHeight = document.getElementById(obj).getAttribute("DATA3");
+				var wPosition = document.getElementById(obj).getAttribute("DATA4");
+				var wVertical, wHorizontal;
+
+				if (wPosition == 0) {
+					wVertical = Math.floor(screen.height / 2) - (wHeight / 2);
+					wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
+				} else if (wPosition == 1) {
+					wVertical = 100;
+					wHorizontal = 100;
+				} else if (wPosition == 2) {
+					wVertical = screen.height - wHeight - 100;
+					wHorizontal = 100;
+				} else if (wPosition == 3) {
+					wVertical = 100;
+					wHorizontal = screen.width - wWidth - 100;
+				} else if (wPosition == 4) {
+					wVertical = screen.height - wHeight - 100;
+					wHorizontal = screen.width - wWidth - 100;
+				} else if (wPosition == 5) {
+					wVertical = 100;
+					wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
+				} else if (wPosition == 6) {
+					wVertical = screen.height - wHeight - 100;
+					wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
+				} else {
+					wVertical = 0;
+					wHorizontal = 0;
+				}
+
+				if (wVertical < 0) {
+					wVertical = 0;
+				}
+
+				if (wHorizontal < 0) {
+					wHorizontal = 0;
+				}
+
+				window.open("/admin/ezPersonal/showPopup.do?itemSeq=" + popup_number +
+					"&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+			}
+
+
+			var showPopupPage = function() {
+				var wWidth = $("#"+itemseq)[0].parentNode.parentNode.getAttribute('DATA2');
+				var wHeight = $("#"+itemseq)[0].parentNode.parentNode.getAttribute('DATA3');
+				var wPosition = $("#"+itemseq)[0].parentNode.parentNode.getAttribute('DATA4');
+				var wVertical, wHorizontal;
+
+				if (wPosition == 0) {
+					wVertical = Math.floor(screen.height / 2) - (wHeight / 2);
+					wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
+				} else if (wPosition == 1) {
+					wVertical = 100;
+					wHorizontal = 100;
+				} else if (wPosition == 2) {
+					wVertical = screen.height - wHeight - 100;
+					wHorizontal = 100;
+				} else if (wPosition == 3) {
+					wVertical = 100;
+					wHorizontal = screen.width - wWidth - 100;
+				} else if (wPosition == 4) {
+					wVertical = screen.height - wHeight - 100;
+					wHorizontal = screen.width - wWidth - 100;
+				} else if (wPosition == 5) {
+					wVertical = 100;
+					wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
+				} else if (wPosition == 6) {
+					wVertical = screen.height - wHeight - 100;
+					wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
+				} else {
+					wVertical = 0;
+					wHorizontal = 0;
+				}
+
+				if (wVertical < 0) {
+					wVertical = 0;
+				}
+
+				if (wHorizontal < 0) {
+					wHorizontal = 0;
+				}
+
+				window.open("/admin/ezPersonal/showPopup.do?itemSeq=" + itemseq +
+					"&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+			}
 
 
 			// 팝업공지 config 조회
@@ -488,7 +533,8 @@
 					}
 				});
 			}
-			
+
+
 			// 팝업공지 config 업데이트
 			var isPreview = 0;
 			function PreviewRayerChange(direction) {
@@ -502,7 +548,7 @@
 						isPreview = 2;
 						break;
 				}
-							  
+
 				$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -519,16 +565,16 @@
 					}
 				});
 			}
-			
+
 			// 미리보기 버튼 교체
 			function changeImg(previewNum) {
 				var doc = window.document;
 				var noneImage = doc.getElementById("PreViewNone");
 				var leftImage = doc.getElementById("PreViewleft");
-				
+
 				noneImage.className = "icon16 btn_noframe";
 				leftImage.className = "icon16 btn_leftframe";
-				
+
 				switch(previewNum) {
 					case 0 :
 						noneImage.className = "icon16 btn_onnoframe";
@@ -539,7 +585,8 @@
 						break;
 				}
 			}
-			
+
+
 			// 미리보기창 show
 			function setPreview(previewNum) {
 				var conlistH = conH
@@ -549,7 +596,7 @@
 				var PreviewRayerH = doc.getElementById("PreviewRayerH");
 				var contentlistH = doc.getElementById("contentlist");
 				var previewmail_bar_h = doc.getElementById("previewmail_bar_h");
-				
+
 				switch(previewNum) {
 				case 0 :
 					previewH.style.display = "none";
@@ -576,150 +623,161 @@
 					} 
 					break;
 				}
-				
+
 				//row가 선택 되어 있다면
 				if(itemseq) {
 					showPreview(isPreview, itemseq);
 				}
 			}
-			
-			
+
+
 			function td_Create1(strtext) {
-		        document.getElementById("tblPageRayer").innerHTML = strtext;
-		    }
-		    
-		    function makePageSelPage() {
-		        var strtext;
-		        var PagingHTML = "";
-		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("mailBoxInfo").innerHTML = "<span style='color:#017BEC;'> " + TotalCount + " </span>";
-		        strtext = "<div class='pagenavi'>";
-		        PagingHTML += strtext;
-		        
-		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
-		            PagingHTML += strtext;
-		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
-		            PagingHTML += strtext;
-		        }
-		        
-		        if (totalPage > BlockSize) {
-		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
-		                PagingHTML += strtext;
-		            } else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
-		                PagingHTML += strtext;
-		            }
-		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
-		            PagingHTML += strtext;
-		        }
-		        
-		        var MaxNum;
-		        var i;
-		        var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
-		        if (totalPage >= (startNum + parseInt(BlockSize))) {
-		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
-		        } else {
-		            MaxNum = totalPage;
-		        }
-		        
-		        for (i = startNum; i <= MaxNum; i++) {
-		            if (i == pageNum) {
-		                strtext = "<span class='on'>" + i + "</span>";
-		                PagingHTML += strtext;
-		            } else {
-		                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
-		                PagingHTML += strtext;
-		            }
-		        }
-		        
-		        //2018-08-02 김보미 - 데이터가 하나도 없을때 디폴트 페이징
-	            if (i == 1) {
-	            	strtext = "<span class='on'>" + i + "</span>";
-                    PagingHTML += strtext;
-	            }
-		        
-		        if (totalPage > BlockSize) {
-		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
-		                PagingHTML += strtext;
-		            } else {
-		                strtext = "";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
-		                PagingHTML += strtext;
-		            }
-		        } else {
-		            strtext = "";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
-		            PagingHTML += strtext;
-		        }
-		        
-		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
-		            PagingHTML += strtext;
-		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
-		            PagingHTML += strtext;
-		        }
-		        
-		        PagingHTML += "</div>";
-		        td_Create1(PagingHTML);
-		    }
-		    
-		    function goToPageByNum(Value) {
-		        pageNum = Value;
-		        makePageSelPage();
-		        makelist();
-		    }
-		    
-		    function selbeforeBlock() {
-		        pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
-		        goToPageByNum(pageNum);
-		    }
-		    
-		    function selbeforeBlock_one() {
-		        if (parseInt(pageNum - 1) > 0) {
-		            goToPageByNum(parseInt(pageNum - 1));
-		        } else {
-		            return;
-		        }
-		    }
-		    
-		    function selafterBlock() {
-		        pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
-		        goToPageByNum(pageNum);
-		    }
-		    
-		    function selafterBlock_one() {
-		        if (parseInt(pageNum + 1) <= totalPage) {
-		            goToPageByNum(parseInt(pageNum + 1));
-		        } else {
-		            return;
-		        }
-		    }
-		    
-		    function selNum(pselNum) {
-		        pageNum = pselNum;
-		        makelist();
-		    }
-		    
-		    function selNext() {
-		        pageNum = pageNum + 1;
-		        makelist();
-		    }
-		    
-		    function selPrev() {
-		        pageNum = pageNum - 1;
-		        makelist();
-		    }
-		    
-		    function td_Create(strtext) {
-		        tblPageNum.innerHTML = tblPageNum.innerHTML + strtext;
-		    }
+				document.getElementById("tblPageRayer").innerHTML = strtext;
+			}
+
+
+			function makePageSelPage() {
+				var strtext;
+				var PagingHTML = "";
+				document.getElementById("tblPageRayer").innerHTML = "";
+				document.getElementById("mailBoxInfo").innerHTML = "<span style='color:#017BEC;'> " + TotalCount + " </span>";
+				strtext = "<div class='pagenavi'>";
+				PagingHTML += strtext;
+
+				if (totalPage > 1 && pageNum != 1) {
+					strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+					PagingHTML += strtext;
+				}
+
+				if (totalPage > BlockSize) {
+					if (pageNum > BlockSize) {
+						strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+						PagingHTML += strtext;
+					}
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+					PagingHTML += strtext;
+				}
+
+				var MaxNum;
+				var i;
+				var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+				if (totalPage >= (startNum + parseInt(BlockSize))) {
+					MaxNum = (startNum + parseInt(BlockSize)) - 1;
+				} else {
+					MaxNum = totalPage;
+				}
+
+				for (i = startNum; i <= MaxNum; i++) {
+					if (i == pageNum) {
+						strtext = "<span class='on'>" + i + "</span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+						PagingHTML += strtext;
+					}
+				}
+
+				//2018-08-02 김보미 - 데이터가 하나도 없을때 디폴트 페이징
+				if (i == 1) {
+					strtext = "<span class='on'>" + i + "</span>";
+					PagingHTML += strtext;
+				}
+
+				if (totalPage > BlockSize) {
+					if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+						strtext = "";
+						strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "";
+						strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+						PagingHTML += strtext;
+					}
+				} else {
+					strtext = "";
+					strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+					PagingHTML += strtext;
+				}
+
+				if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+					strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+					PagingHTML += strtext;
+				}
+
+				PagingHTML += "</div>";
+				td_Create1(PagingHTML);
+			}
+
+
+			function goToPageByNum(Value) {
+				pageNum = Value;
+				makePageSelPage();
+				makelist();
+			}
+
+
+			function selbeforeBlock() {
+				pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+				goToPageByNum(pageNum);
+			}
+
+
+			function selbeforeBlock_one() {
+				if (parseInt(pageNum - 1) > 0) {
+					goToPageByNum(parseInt(pageNum - 1));
+				} else {
+					return;
+				}
+			}
+
+
+			function selafterBlock() {
+				pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+				goToPageByNum(pageNum);
+			}
+
+
+			function selafterBlock_one() {
+				if (parseInt(pageNum + 1) <= totalPage) {
+					goToPageByNum(parseInt(pageNum + 1));
+				} else {
+					return;
+				}
+			}
+
+
+			function selNum(pselNum) {
+				pageNum = pselNum;
+				makelist();
+			}
+
+
+			function selNext() {
+				pageNum = pageNum + 1;
+				makelist();
+			}
+
+
+			function selPrev() {
+				pageNum = pageNum - 1;
+				makelist();
+			}
+
+
+			function td_Create(strtext) {
+				tblPageNum.innerHTML = tblPageNum.innerHTML + strtext;
+			}
+
 
 			$(window).on("resize", function(){
 				windowResize();
@@ -874,7 +932,7 @@
 							<span class="previewmail_info" style="display: block; width: 100%; border-top: 1px solid #e8e8e8; ">
 								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
 									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 10px 0px 0px 0px; height: 36px; line-height: 37px;">
-										<span class="icon_btn" style="margin-left:13px;"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
+										<span class="icon_btn" style="margin-left:13px;"><span onclick="showPopupPage();" style="cursor: pointer; padding-right: 5px;">
 											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" style="position:absolute; margin-top:-6px;" class="title_blodtxt"></span></span>
 										<span class="mail_date" style="margin-right: 10px; display: inline-block; float:right;margin-top:-7px;"><span id="PreH_date" style="font-weight:normal;"><span id="PreH_sub_date" style="display: none;"></span></span></span>
 									</p>

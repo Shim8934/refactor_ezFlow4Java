@@ -146,7 +146,7 @@
 				for(var i=0; i<4; i++) {
 					skinObjs[i].classList.add('unchecked');
 					skinObjs[i].addEventListener('click', addSkinEvent);
-					skinObjs[i].addEventListener('dblclick', addSkinDblEvent);
+					//skinObjs[i].addEventListener('dblclick', addSkinDblEvent);
 				}
 
 				if(flag === "mod") {
