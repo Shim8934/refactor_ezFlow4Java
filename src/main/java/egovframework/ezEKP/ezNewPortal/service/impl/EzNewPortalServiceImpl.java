@@ -265,7 +265,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	// 퀵링크 가져오기
-	public List<?> getQuickLinkList(String companyId, int tenantId, int page, int limit) throws Exception {
+	public List<?> getQuickLinkList(String companyId, int tenantId, int page, int limit, String userId, String deptId) throws Exception {
 		LOGGER.debug("[Serivce] getQuickLinkList Started");
 		
 		int offset = (page-1) * limit;
@@ -275,17 +275,21 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("limit", limit);
 		map.put("offset", offset);
+		map.put("userId", userId);
+		map.put("deptId", deptId);
 		
 		LOGGER.debug("[Serivce] getQuickLinkList Ended");
 		return ezNewPortalDAO.getQuickLinkList(map);
 	}
 	// 퀵링크 전체 페이지 개수 가져오기
-	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit) throws Exception {
+	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit, String userId, String deptId) throws Exception {
 		LOGGER.debug("[Serivce] getQuickLinkTotalPageCnt Started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("deptId", deptId);
 		
 		int totalCnt = ezNewPortalDAO.getQuickLinkTotalCnt(map);
 		

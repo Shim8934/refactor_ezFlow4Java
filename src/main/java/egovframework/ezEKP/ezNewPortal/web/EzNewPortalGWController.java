@@ -1010,17 +1010,20 @@ e.printStackTrace();
 			int limit = 5; // 한 페이지에 뿌려지는 리스트 개수 // 다르게 처리할 수 있는 방법 찾아보기
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
+			String deptId = info.getDeptId();
+			String userId = request.getParameter("userId");
 			
-			List<?> quickLinkList= ezNewPortalService.getQuickLinkList(companyId, tenantId, page, limit);
+			List<?> quickLinkList= ezNewPortalService.getQuickLinkList(companyId, tenantId, page, limit, userId, deptId);
 			data.put("quickLinkList", quickLinkList);
 			
-			int totalPageCnt = ezNewPortalService.getQuickLinkTotalPageCnt(companyId, tenantId, limit);
+			int totalPageCnt = ezNewPortalService.getQuickLinkTotalPageCnt(companyId, tenantId, limit, userId, deptId);
 			data.put("totalPageCnt", totalPageCnt);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
