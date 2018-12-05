@@ -37,6 +37,11 @@
 	 			padding:2px 2px;
 	 			border:1px solid #ffffff;
 			}	
+			.ui-slider-handle{
+				/* outline:none; select-dummy: expression(this.hideFocus=true); */
+				border:0;
+				outline:none;
+			}	/* IE slider 점선 처리 */
     	</style>
 
 		<script type="text/javascript">
@@ -154,7 +159,6 @@
 		        document.body.appendChild(form);
 		        form.submit();
 		    }
-		    
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
