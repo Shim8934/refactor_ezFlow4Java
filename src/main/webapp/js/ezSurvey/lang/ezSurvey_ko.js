@@ -35,4 +35,7 @@ var SurveyMessages = {
 	strDel       : "삭제하였습니다.",
 	strCreator   : "작&nbsp;성&nbsp;자",
 	strQsContent : "질문 내용을 입력해주세요.",
+	strSlider1   : "왼쪽 최소값을 입력하세요.",
+	strSlider2   : "오른쪽 최대값을 입력하세요.",
+	strSlider3   : "최소값을 최대값보다 작게 지정하세요.",
 }

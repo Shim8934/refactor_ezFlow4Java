@@ -257,8 +257,8 @@
 
 /* slider css */
 .silder-wrap {display: flex; padding: 10px 0px; align-items: center;}
-.slider-input {width: 40px; min-width: 40px; padding: 0px 5px; height: 32px; outline: none;}
-.slider-main {-webkit-appearance: none; border: 1px solid white; flex: 1; cursor: pointer; margin: 0px 10px; padding: 0px;}
+.slider-lw, .slider-up {width: 40px; min-width: 40px; padding: 0px 5px; height: 32px; outline: none;}
+.slider-main, .slider-range {-webkit-appearance: none; border: 1px solid white; flex: 1; cursor: pointer; margin: 0px 10px; padding: 0px;}
 input[type=range]::-webkit-slider-runnable-track {width: 100%;  height: 24px; background: rgb(224, 224, 224); border: none; border-radius: 12px;}
 input[type=range]::-webkit-slider-thumb {-webkit-appearance: none; border: none; height: 28px; width: 28px; border-radius: 50%; background: goldenrod; margin-top: -2px;}
 input[type=range]:focus {outline: none;}
@@ -272,6 +272,12 @@ input[type=range]::-ms-thumb {border: none; height: 28px; width: 28px; border-ra
 input[type=range]:focus::-ms-fill-lower {background: rgb(224, 224, 224);}
 input[type=range]:focus::-ms-fill-upper {background: rgb(224, 224, 224);}
 input[type=range]::-ms-tooltip {display: none;}
+.slider-output {display: block; height: 30px;
+text-align: center;
+width: 100%;
+font-size: 2em;
+font-family: 'Advent Pro', sans-serif;
+color: rgba(132, 206, 66, 1);}
 
 /* ranking css */
 .ranking-del, .dropdown-del {width: 30px; height: 30px; cursor: pointer; background-repeat: no-repeat; background-size: 24px 24px; background-position: center; background-image: url('/images/ezSurvey/minus.jpg');}
@@ -330,7 +336,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .tooltip-bttns .copyBtn {background-image: url('/images/ezSurvey/copy.png');}
 .tooltip-bttns .deleteBtn {background-image: url('/images/ezSurvey/trash.png');}
 .question-content .imptt {color: rgba(255, 0, 0, 1);}
-.usrQstnWrapper .question-opts, .usrQstnWrapper .question-paragraph {padding: 10px 35px 20px;}
+.question-opts, .question-paragraph, .question-silder {padding: 10px 35px 20px;}
 
 .question-opts .opt {width: 100%; height: 50px; display: flex; align-items: center;}
 .question-opts .opt >input[type='radio'], .question-opts .opt >input[type='checkbox'] {width: 20px; height: 20px; margin: 0px;}
