@@ -233,16 +233,13 @@
 					fileUpload($(this), $(this)[0].files);
 				});
 			}
-			
 			// selectBox 생성
 			function createQuestionSelectBox(question) {
-				// set selectbox default value
-				var selectText = question ? getSelectedOpt(question) : SurveyMessages.strQselect;
 				
 				$(".selectBox").ddslick({
 					data :optionData,
 					imagePosition: "left",
-					selectText: selectText,
+					selectText: SurveyMessages.strQselect,
 					onSelected: function(data) {
 						var selectedEl   = data.selectedItem;
 						var grandParent  = selectedEl.parents(".qstnWrapper");
@@ -263,28 +260,6 @@
 						}
 					}
 				});
-			}
-			
-			// 셀렉트 박스 선택시
-			// 셀렉트 박스에 나타낼 문구
-			function getSelectedOpt(question) {
-				var qstnType = parseInt(question.type);
-				var selectText;
-				
-				switch (qstnType) {
-					case   1: selectText = SurveyMessages.strSlOne   ; break;
-					case   2: selectText = SurveyMessages.strSlMtp   ; break;
-					case   3: selectText = SurveyMessages.strTblOne  ; break;
-					case   4: selectText = SurveyMessages.strTblMtp  ; break;
-					case   5: selectText = SurveyMessages.strShortQs ; break;
-					case   6: selectText = SurveyMessages.strLongQs  ; break;
-					case   7: selectText = SurveyMessages.strSlider  ; break;
-					case   8: selectText = SurveyMessages.strRanking ; break;
-					case   9: selectText = SurveyMessages.strDropdown; break;
-					default : selectText = SurveyMessages.strQselect ; break;
-				}
-				
-				return selectText;
 			}
 			
 			// 셀렉트 박스 선택시
@@ -450,17 +425,20 @@
 				});
 				// 우상단 수정 버튼 클릭 이벤트
 				$(".quesBacgr").on("click", ".modifyBtn", function() {
+					var modify = 'modify';
 					var tmpQstnWpr  = $(this).parents(".usrQstnWrapper");
 					var qstnWrapper = $(this).parents(".qstnWrapper");
-					// 수정할 질문 id
+					// 수정할 질문 id와 타입
 					var qstnId      = parseInt(tmpQstnWpr.attr("id"));
 					var arrNum      = qstnId - 1;
+					var qstnType    = tmpQstnWpr.attr("qstntype");
 					// 넘길 질문 객체
 					var qstnList    = SurveyCreate.getQs();
 					var qstn        = qstnList[arrNum];
 					
 					createQuestionDiv(qstnWrapper, qstn);
 					createQuestionSelectBox(qstn);
+					setSelectBox(qstnWrapper, modify, qstnType);
 					handleModifyQuestion(qstnWrapper, qstn);
 					
 					//수정을 취소할 경우를 고려해 숨김 처리
@@ -498,13 +476,29 @@
 					outputElmt.textContent = this.value;
 				}).trigger("change");
 			}
-////////////////////////////////////////////////////////////////////////////////////////			
-			function setSelectBox(thisWrapper) {
+			// 설문 작성 취소, 수정시 셀렉트 박스 내용 변경
+			function setSelectBox(thisWrapper, modify, qstnType) {
 				// dd-selected 태그의 html 제거 후 내용 변경 
-				thisWrapper.find(".dd-selected").html("");
-				thisWrapper.find(".dd-selected")[0].innerText = '질문 유형 선택';
+				var ddSelected = "";
+				
+				if (modify) {
+					ddSelected = thisWrapper.next().find(".dd-selected").html("");
+					
+					var optData = optionData[parseInt(qstnType - 1)];
+					var text = optData.text;
+					var img = optData.imageSrc;
+					
+					var html = "";
+					html += "<img class='dd-selected-image' src='" + img + "'>";
+					html += "<label class='dd-selected-text'>" + text + "</label>";
+					
+					ddSelected.append(html);
+					
+				} else {
+					ddSelected = thisWrapper.find(".dd-selected").html("");
+					ddSelected[0].innerText = SurveyMessages.strQselect;
+				}
 			}
-////////////////////////////////////////////////////////////////////////////////////////
 			// 생성된 질문을 붙일 부분과 질문 유형을 파라미터로 받아 질문 영역 생성
 			function handleModifyQuestion(qstnWrapper, question) {
 				var qstType = question.type;
