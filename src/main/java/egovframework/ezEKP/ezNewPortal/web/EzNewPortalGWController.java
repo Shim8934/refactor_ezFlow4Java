@@ -168,7 +168,7 @@ public class EzNewPortalGWController {
 			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId);
 			LOGGER.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame());
 			
-			List<PortletInfoVO> portletOrder = ezNewPortalService.getUserPortletList(userThemeSetting.getUsedTheme(), portletLang, userId, tenantId, companyId, deptId, true);
+			List<PortletInfoVO> portletOrder = ezNewPortalService.getUserPortletList(userThemeSetting.getUsedTheme(), portletLang, userId, tenantId, companyId, deptId, false);
 			
 			//1. tenant config가 NO인 경우 사용자 포틀릿 순서에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -1066,7 +1066,7 @@ e.printStackTrace();
 			
 			int themeId = ezNewPortalService.getThemeId(userId, companyId, tenantId);
 			
-			List<PortletInfoVO> portletList = ezNewPortalService.getUserPortletList(themeId, portletLang, userId, tenantId, companyId, deptId, false);
+			List<PortletInfoVO> portletList = ezNewPortalService.getUserPortletList(themeId, portletLang, userId, tenantId, companyId, deptId, true);
 			
 			//tenant config가 NO인 경우 포틀릿 리스트에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
