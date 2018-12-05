@@ -97,7 +97,7 @@ function getBirthdayList() {
 			}, 5000);
 		},
 		error : function() {
-			alert(messages.strLang2);
+			//alert(messages.strLang2);
 		}
 	});
 }
