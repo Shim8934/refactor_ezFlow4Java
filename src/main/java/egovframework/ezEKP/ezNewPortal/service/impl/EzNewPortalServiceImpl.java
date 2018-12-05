@@ -401,6 +401,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("deptId", "");
 		map.put("themeId", themeId);
 		map.put("portletLang", portletLang);
+		map.put("config", config);
 		
 		String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 		
@@ -409,6 +410,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		Collections.reverse(deptIds);
 		
 		//유저권한체크
+		LOGGER.debug("getPortletForUser deptId = " + userId);
 		List<PortletInfoVO> result = ezNewPortalDAO.getPortletForUser(map);
 		List<PortletInfoVO> deptResult = null;
 		
@@ -416,6 +418,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		List<Integer> portletIds = new ArrayList<Integer>();
 		
 		for (PortletInfoVO vo : result) {
+			LOGGER.debug("user portletId = " + vo.getPortletId());
+			
 			portletIds.add(vo.getPortletId());
 		}
 		
@@ -424,18 +428,23 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//부서 및 상위부서권한체크(유저 나 하위부서에서 권한체크걸린건 추가안함
 		for(String pathId : deptIds) {
 			map.put("deptId", pathId);
+			LOGGER.debug("getPortletForUser deptId = " + pathId);
 			
 			deptResult = ezNewPortalDAO.getPortletForUser(map);
 			
 			//권한잇는것들 && 기존 권한체크안된것들 추가
 			for (PortletInfoVO deptPortlet : deptResult) {
+				LOGGER.debug("deptPortlet id = " + deptPortlet.getPortletId() + " || isAccessYN = " + deptPortlet.isAccessYN() + " || isUsed = " + deptPortlet.isPortletUsed());
 				int portletId = deptPortlet.getPortletId();
-				
+								
 				if (portletIds.indexOf(portletId) == -1) {
+					LOGGER.debug("portletIds.indexOf(portletId) == -1");
 					portletIds.add(portletId);
 					
 					if (deptPortlet.isAccessYN()) {
+						LOGGER.debug("deptPortlet.isAccessYN()");
 						result.add(deptPortlet);
+						LOGGER.debug("resultSize = " + result.size());
 					}
 				}
 			}
