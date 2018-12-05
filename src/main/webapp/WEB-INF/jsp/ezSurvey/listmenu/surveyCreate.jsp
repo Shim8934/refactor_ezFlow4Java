@@ -446,8 +446,7 @@
 					// 해당 질문의 객체 생성
 					mkQstnObj("save", $(this));
 				});
-				// 수정 버튼 클릭 이벤트
-				// 생성된 질문의 오른쪽 위에 뜬 수정 버튼 클릭시
+				// 우상단 수정 버튼 클릭 이벤트
 				$(".quesBacgr").on("click", ".modifyBtn", function() {
 					var tmpQstnWpr  = $(this).parents(".usrQstnWrapper");
 					var qstnWrapper = $(this).parents(".qstnWrapper");
@@ -465,6 +464,18 @@
 					//수정을 취소할 경우를 고려해 숨김 처리
 					qstnWrapper.css("display", "none");
 				});
+				// 우상단 삭제 버튼 클릭 이벤트
+				$(".quesBacgr").on("click", ".deleteBtn", function() {
+					var thisWrapper = $(this).closest(".qstnWrapper");
+					var qstnId = thisWrapper.attr("id");
+					
+					var qstnList = SurveyCreate.getQs();
+					// 질문 배열에서 해당 순번의 질문객체 삭제
+					qstnList.splice(qstnId - 1, 1);
+					// 질문 폼 삭제
+					thisWrapper.remove();
+				});
+				
 				// 수정 버튼 클릭 이벤트
 				// 질문 객체 수정
 				$(".quesBacgr").on("click", ".modify", function (e) {
@@ -503,7 +514,7 @@
 				
 				qstnWrapper.next().append(html);
 			}
-			
+			// 수정시 새로 생성하는 선택질문
 			function handleModifySelectQuestion(question) {
 				var htmlTxt = "";
 				var options = question.option;
@@ -523,7 +534,7 @@
 				
 				return htmlTxt;
 			}
-//////////////////////////////////////////////////////////////////////////////			
+			// 수정시 새로 생성하는 행렬질문 
 			function handleModifyMatrixQuestion(question) {
 				var html = "";
 				var row = question.row;
@@ -563,7 +574,7 @@
 				
 				return html;
 			}
-//////////////////////////////////////////////////////////////////////////////			
+			
 			function handleModifyParagraphQuesion() {
 				var htmlTxt = "<div class='paragraph-wrap'>";
 				htmlTxt    += "<textarea class='paragraph' maxlength='500' placeholder='내용을 입력해주세요'></textarea>";
