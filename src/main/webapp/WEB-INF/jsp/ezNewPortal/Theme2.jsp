@@ -17,6 +17,9 @@
 	#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}
 	.top_two_column {margin : 0px 0px 25px 0px;}
 	.orbit-wrapper .timer {display:none;}
+	.linkIcon {display: block; margin: 0 auto; padding: 9px 0px 5px 0px; text-align: center;}
+	.linkIcon img {height: 30px; width: 30px;}
+	.linkTxt {display: block; width: 78px; text-align: center; color: #333; font-size: 12px; height: 27px; letter-spacing: 0px; overflow: hidden;margin: 0 auto; padding: 2px 0px 0px 0px; word-break: break-all; line-height: 15px;}
 </style>
 </head>
 
@@ -352,8 +355,30 @@
  		
 		quickList.forEach(function (item, index) {
 			var li = document.createElement('li');
+			
+			// 아이콘 추가
+			var iconSpan = document.createElement('span');
+			var txtSpan  = document.createElement('span');
+			var iconImg  = document.createElement('img');
+			
 			li.classList.add('linkText');
-			li.textContent = item.quickLinkName;
+			iconSpan.classList.add('linkIcon');
+			txtSpan.classList.add('linkTxt');
+			
+			switch(item.linkType) {
+			case "A" : iconImg.setAttribute("src", "/images/kr/main/link_externalSite.png") ; break;
+			case "B" : iconImg.setAttribute("src", "/images/kr/main/link_homePage.png") ; break;
+			case "C" : iconImg.setAttribute("src", "/images/kr/main/link_intranet.png") ; break;
+			case "D" : iconImg.setAttribute("src", "/images/kr/main/link_connectedPrograms.png"); break;
+			case "E" : iconImg.setAttribute("src", "/images/kr/main/link_blog.png"); break;
+			default :  iconImg.setAttribute("src", item.linkTypeUrl); break;
+			}
+			
+			txtSpan.textContent = item.quickLinkName;
+			
+			iconSpan.appendChild(iconImg);
+			li.appendChild(iconSpan);
+			li.appendChild(txtSpan);
 			
 			// 이벤트 등록
 			li.addEventListener('click', function(){

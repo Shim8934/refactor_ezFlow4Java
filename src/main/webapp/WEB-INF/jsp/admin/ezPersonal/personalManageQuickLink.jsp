@@ -636,6 +636,7 @@
 				objNode = createNodeInsert(xmlpara, objNode, "parameter");
 				
 				if(mode == "new") {
+					guid = "{" + GetGUID() + "}";
 					createNodeAndInsertText(xmlpara, objNode, "pQuickLinkID", guid);
 				} else {
 					createNodeAndInsertText(xmlpara, objNode, "pQuickLinkID", itemId);
