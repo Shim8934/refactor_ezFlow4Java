@@ -363,7 +363,7 @@
 		            return; 
 		        } */
 		        //} else if (document.getElementById("UploadSliderImage").src.indexOf("upload_portal") == -1) {
-		        if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
+		        if (document.getElementById("UploadSliderImage").style.display == "none") {	
 		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
 		            return;
 		        } else if (document.getElementById("txtDisplayName3").value == "") {
@@ -460,7 +460,6 @@
 		    	var sliderList = obj.parentNode.parentNode.parentNode;
 		    	var url = sliderList.querySelector("#sliderURL").getAttribute("data6");
 		    	sliderList.querySelector("#slider-body").style.display = "none";
-		    	console.log(sliderList);
 		    	
 		    	var liElmt   = document.createElement("li");
 		    	var divElmt  = document.createElement("div");
@@ -489,7 +488,7 @@
 		    	aElmt.appendChild(spaElmt);
 		    	spaElmt.appendChild(imgElmt);
 		    	
-		    	imgElmt.setAttribute("src", "/images/admin/slideDelete.png");
+		    	imgElmt.setAttribute("src", "/images/admin/icon_cancel.png");
 		    	
 		    	divElmt3.className = "slider-content-modify";
 		    	tabElmt.className = "sliderInfo";
@@ -571,9 +570,7 @@
 		    }
 		    
 		    function btnSave_click_modify(obj){
-		    	console.log(obj);
 		    	var sliderID = obj.parentNode.getAttribute("data");
-		    	
 		    	/* if (specialChk(document.getElementById("txtDisplayName").value)) {
 			    	alert("<spring:message code='ezResource.special' />");
 			    	return;
@@ -585,7 +582,7 @@
 		            alert("<spring:message code = 'ezPersonal.t1027' />");
 		            return; } */
 		        //} else if (document.getElementById("UploadSliderImage").src.indexOf("upload_portal") == -1) {
-		        if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
+		        if (document.getElementById("UploadSliderImage").style.display == "none") {	
 		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
 		            return;
 		        } else if (document.getElementById("txtDisplayName3").value == "") {
@@ -598,13 +595,11 @@
 		    	var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("${uploadPortalPath}"));
 		    	var isUseCk = document.getElementById("slideIsUseModify").checked;
 		    	var isUse = "";
-		    	console.log(isUseCk);
 		    	if (isUseCk) {
 		    		isUse = 1;
 		    	} else {
 		    		isUse = 0;
 		    	}
-		    	console.log(isUse);
 
 		        var item;
 		        var mode;
