@@ -447,7 +447,8 @@ SELECT
     quicklinkname, 
     quicklinkname2, 
     quicklinkname3, 
-    linktype, 
+    linktype,
+    linktypeurl, 
     url,
     size
 FROM (
@@ -457,9 +458,11 @@ FROM (
 	    Q.quicklinkname2, 
 	    Q.quicklinkname3, 
 	    Q.linktype, 
+	    Q.linktypeurl,
 	    Q.url,
 	    Q.size_ as size,
-	    IFNULL(USER.view_flag, IFNULL(DEPT.view_flag, IFNULL(COMP.view_flag, IFNULL(EVERY.view_flag, 'N')))) as viewflag
+	    IFNULL(USER.view_flag, IFNULL(DEPT.view_flag, IFNULL(COMP.view_flag, IFNULL(EVERY.view_flag, 'N')))) as viewflag,
+	    Q.linkorder
 	FROM 
 		tbl_ps_quicklink as Q
 	LEFT JOIN
@@ -496,11 +499,11 @@ FROM (
 		EVERY.accessid = 'everyone'
 	WHERE 
 		Q.TENANT_ID = #tenantId#
-	ORDER BY
-	    Q.REGDATE DESC
 	) acl
 WHERE
 	viewflag = 'Y'
+ORDER BY
+	LINKORDER ASC
 LIMIT #limit#
 OFFSET #offset#
 ]]>	

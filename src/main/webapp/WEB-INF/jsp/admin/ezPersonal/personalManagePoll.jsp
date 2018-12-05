@@ -173,16 +173,13 @@
 
 
 			function inputFunc(event, itemseq) {
-				event.stopPropagation();
-				if(checkFlag) {
-					var objID = $("#"+itemseq)[0].parentNode.parentNode.id;
-					if($("#"+itemseq).prop("checked")) {
-						$("#" + objID + " td").css("background-color", "rgb(255, 255, 255)");
-						$("#" + itemseq).prop("checked", false);
-					} else {
-						$("#" + objID + " td").css("background-color", "rgb(241, 248, 255)");
-						$("#" + itemseq).prop("checked", true);
-					}
+				checkItems();
+				$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+
+				for(var i=0; i<rowList.length; i++) {
+					var objID = $("#"+rowList[i])[0].parentNode.parentNode.id;
+					$("#" + objID + " td").css("background-color", "rgb(241, 248, 255)");
+					$("#" + rowList[i]).prop("checked", true);
 				}
 			}
 
@@ -234,6 +231,11 @@
 
 			var itemseq;
 			function PollList_onClick(obj) {
+				var className = window.event.target.getAttribute('class');
+				if(className === 'checks') {
+					return;
+				}
+
 				var doc = window.document;
 				itemseq = document.getElementById(obj).getAttribute("DATA1");
 				if(itemseq == "0") {
