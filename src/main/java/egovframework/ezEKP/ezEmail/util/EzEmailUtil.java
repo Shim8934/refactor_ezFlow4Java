@@ -581,7 +581,15 @@ public class EzEmailUtil {
             }
             
             // 제목 중간에 Unicode 0x0(NULL)이 들어가 XML 파싱시 에러가 발생하는 메일이 발견되어 추가함.
-            subject = subject.replaceAll("[\\000]+", "");            
+            subject = subject.replaceAll("[\\000]+", "");   
+            
+            // Non US-ASCII 문자로 인코딩된 제목 중에 unfolding이 제대로
+            // 되지 않아 줄바꿈 문자가 포함되는 경우가 있어 추가함
+            if (subject.contains("\\\r\n ")) {
+                logger.debug("still folded subject=" + subject);
+                
+                subject = subject.replace("\\\r\n ", "");                
+            }            
         }
         
         return subject;

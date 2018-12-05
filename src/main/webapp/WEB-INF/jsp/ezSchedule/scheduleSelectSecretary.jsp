@@ -18,6 +18,7 @@
 		<script type="text/javascript">
 			var g_xmlHTTP;
 		    var ReturnFunction;
+		    var companyID = opener.companyID;
 	
 		    window.onload = function () {
 		        try {
@@ -40,7 +41,7 @@
 	
 		    function getDeptFullTree(deptid) {
 		        g_xmlHTTP = createXMLHttpRequest();
-		        var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+		        var strQuery = "<DATA><DEPTID></DEPTID><TOPID>"+companyID+"/other</TOPID><PROP></PROP></DATA>";
 	
 		        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
