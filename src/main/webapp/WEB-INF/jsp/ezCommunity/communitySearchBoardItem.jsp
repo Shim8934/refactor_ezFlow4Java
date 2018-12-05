@@ -850,10 +850,10 @@
 			<ul>
 				<li><span onClick="BoardItemList()"><spring:message code='ezCommunity.t987'/></span></li>
 				<li><span onClick="SetRead_onclick()"><spring:message code='ezCommunity.t915'/></span></li>
-				<li><span onClick="DeleteItem_onclick()"><spring:message code='ezCommunity.t208'/></span></li>
+				<li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
 <%-- 				<li><span onClick="CopyItem_onclick()"><spring:message code='ezCommunity.t911'/></span></li> --%>
 <%-- 				<li><span onClick="Print_onclick()"><spring:message code='ezCommunity.t951'/></span></li> --%>
-				<li><span onClick="refresh_onclick()"><spring:message code='ezCommunity.t912'/></span></li>				
+				<li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>				
 			</ul>
 		</div>
 		
@@ -868,7 +868,7 @@
 			</tr>
 			<tr>
 				<th><spring:message code='ezCommunity.t138'/></th>
-				<td><input class="inputText" type="text" id="txtWriterName" style="width:100px" value="${writerName}"></td>
+				<td><input class="inputText" type="text" id="txtWriterName" style="width:100%" value="${writerName}"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezCommunity.t124'/></th>
@@ -882,7 +882,7 @@
 				<th><spring:message code='ezCommunity.t434'/></th>
 				<td>
 					<input class="inputText" type="text" id="Sdatepicker" style="width:80px;text-align:center"> ~ <input class="inputText" type="text" id="Edatepicker" style="width:80px;text-align:center">&nbsp;
-					<a class="imgbtn"><span onClick= "btn_PostDate_Clear()" popupLocation='bottomright'><spring:message code='ezCommunity.t444'/></span></a>&nbsp;<a class="imgbtn"><span onClick="search()"><spring:message code='ezCommunity.t31'/></span></a>
+					<a class="imgbtn imgbck"><span onClick= "btn_PostDate_Clear()" popupLocation='bottomright'><spring:message code='ezCommunity.t444'/></span></a>&nbsp;<a class="imgbtn imgbck"><span onClick="search()"><spring:message code='ezCommunity.t31'/></span></a>
 				</td>
 			</tr>
 			<form id="listXML" name="frmOutbox" action="/ezCommunity/boardItemList.do" method="post">

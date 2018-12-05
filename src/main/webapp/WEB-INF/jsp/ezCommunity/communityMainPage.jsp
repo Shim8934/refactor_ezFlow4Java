@@ -207,7 +207,7 @@
 					 var dt = document.createElement("DT");
 					 
 		             var img = document.createElement("IMG");
-		             img.src = "/images/kr/main/nodata.png";
+		             img.src = "/images/kr/main/noData_sIcon.png";
 		             
 		             var dd = document.createElement("DD");
 		             dd.innerHTML = strLang535;
@@ -327,7 +327,7 @@
 					 var dt = document.createElement("DT");
 					 
 		             var img = document.createElement("IMG");
-		             img.src = "/images/kr/main/nodata.png";
+		             img.src = "/images/kr/main/noData_sIcon.png";
 		             
 		             var dd = document.createElement("DD");
 		             dd.innerHTML = strLang535;
@@ -425,7 +425,7 @@
 					var dt = document.createElement("DT");
 					 
 		            var img = document.createElement("IMG");
-		            img.src = "/images/kr/main/nodata.png";
+		            img.src = "/images/kr/main/noData_sIcon.png";
 		             
 		            var dd = document.createElement("DD");
 		            dd.innerHTML = strLang535;
@@ -1112,7 +1112,7 @@
 					var dt = document.createElement("DT");
 					 
 		            var img = document.createElement("IMG");
-		            img.src = "/images/kr/main/nodata.png";
+		            img.src = "/images/kr/main/noData_sIcon.png";
 		             
 		            var dd = document.createElement("DD");
 		            dd.innerHTML = strLang535;
@@ -1839,7 +1839,7 @@
 		            	<c:choose>
 		            		<c:when test="${fn:length(cNoticeList) eq 0 }"> 
 		            			<dl class="nodata_sIcon">
-									<dt><img src="/images/kr/main/nodata.png"></dt>
+									<dt><img src="/images/kr/main/noData_sIcon.png"></dt>
 								    <dd>"<spring:message code='ezCommunity.kmsc01'/>"</dd>
 								</dl>
 		            		</c:when>
