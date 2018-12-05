@@ -17,16 +17,16 @@
 		<style type="text/css">
 		body {background-color : white;}
 		.ui-sortable{ margin:0px; padding:0px 0px 0px 15px;}
-		ul .sliderList {margin:0px 30px 15px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
+		ul .sliderList {margin:10px 30px 20px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
 		ul .slider-body {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px}
 		ul .slider-head {margin:0px; position: absolute;cursor:move; border:none; width:285px; height:40px; line-height:38px; border-radius:0px; background: rgba(0, 0, 0, 0.5);}
 		ul .slider-header-add {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px;background: rgba(0, 0, 0, 0.5); width:270px; z-index: 2;}
 		ul .slider-header-modify {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;background: rgba(0, 0, 0, 0.5); z-index: 2;}
 		ul .slider-content {margin:0px; position: absolute;cursor:move; border:none; width:285px; border-radius:0px; background: rgba(0, 0, 0, 0.5); top: 405px;}
 		ul .slider-imagePage {width:225px; height:210px;}
-		ul .addSlider {border:1px dashed #aab2ba; display:inline-block; text-align:center; vertical-align : top; height:19.3em; border-radius:0px; width:285px; height:515px; position:relative;}
+		ul .addSlider {border:1px dashed #aab2ba; display:inline-block; text-align:center; vertical-align : top; border-radius:0px; width:285px; height:515px; position:relative; margin: 10px 5px 5px 0px;}
 		.sliderInfoTD {padding:5px 15px 5px 15px; color: #fff;}
-		.sliderInfoTDadd {padding:10px 15px 10px 15px;}
+		.sliderInfoTDadd {padding:10px 15px 10px 15px; color: #fff;}
 		.sliderInfoModify {padding:10px 15px 10px 15px;}
 		ul .addSlider:hover {cursor:pointer;}
 		ul .slideIsUse {padding: 15px 10px 0px 10px;}
@@ -201,6 +201,20 @@
 		    function btn_Select() {
 		    	$(".addSlider").remove();
 		    	
+		    	var preList = $(".sliderList");
+		    	var preListlength = preList.length;
+		    	var preFind = "";
+		    	var preShow = "";
+		    	
+		    	for (var i = 0; i<preListlength; i++){
+		    		preFind = preList[i].querySelector(".sliderListmodify");
+		    		preShow = preList[i].querySelector("#slider-body");
+		    		if(preFind != null){
+		    			preFind.remove();
+		    			preShow.style.display = "";
+		    		}
+		    	}
+		    	
 		    	var sliderHTML = "";
 		    	sliderHTML += "<li class = 'sliderList' id = 'sliderList'>";
 		    	sliderHTML += "<div class = 'sliderAddBody' id = 'sliderAddBody'>";
@@ -349,7 +363,7 @@
 		            return; 
 		        } */
 		        //} else if (document.getElementById("UploadSliderImage").src.indexOf("upload_portal") == -1) {
-		         if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
+		        if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
 		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
 		            return;
 		        } else if (document.getElementById("txtDisplayName3").value == "") {
@@ -431,18 +445,21 @@
 		    	var preList = $(".sliderList");
 		    	var preListlength = preList.length;
 		    	var preFind = "";
+		    	var preShow = "";
 		    	
-		    	for(var i = 0; i<preListlength; i++){
+		    	for (var i = 0; i<preListlength; i++){
 		    		preFind = preList[i].querySelector(".sliderListmodify");
-		    		
+		    		preShow = preList[i].querySelector("#slider-body");
 		    		if(preFind != null){
 		    			preFind.remove();
+		    			preShow.style.display = "";
 		    		}
 		    	}
 		    	
 		    	var sliderID = obj.getAttribute("data3");
 		    	var sliderList = obj.parentNode.parentNode.parentNode;
 		    	var url = sliderList.querySelector("#sliderURL").getAttribute("data6");
+		    	sliderList.querySelector("#slider-body").style.display = "none";
 		    	console.log(sliderList);
 		    	
 		    	var liElmt   = document.createElement("li");
@@ -550,28 +567,6 @@
 		    	
 		    	sliderList.prepend(liElmt);
 		    	
-		    	/* var sliderHTML = "";
-		    	sliderHTML += "<li class = 'sliderList' id = 'sliderList'>";
-		    	sliderHTML += "<div class = 'sliderAddBody' id = 'sliderAddBody'>";
-		    	sliderHTML += "<div class = 'slider-header-add'>";
-		    	sliderHTML += "<a class = 'cancelNewSliderBtn' id='cancelNewSliderBtn'>";
-		    	sliderHTML += "<span class ='addCancel'><img src='/images/admin/slideDelete.png'></span></a></div>";
-		    	sliderHTML += "<div class = 'slider-content-add'>";
-		    	sliderHTML += "<table class = 'sliderInfo'>";
-		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL</td>";
-		    	sliderHTML += "<td><input id='txtDisplayName3' type='text' maxlength='50'></td></tr>";
-		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>사용여부</td><td class= 'slideIsUse'><label class='switch'><input id='slideIsUseAdd' type='checkbox' checked='checked'><span class='slider round'></label></td>";
-		    	sliderHTML += "<td><a href='#' class='imgbtn'><span onclick='btnSave_click();'><spring:message code = 'ezPersonal.t34' /></span></a></td>";
-		    	sliderHTML += "</tr></table></div>";
-		    	sliderHTML += "<a class ='addImageBtn'>";
-		    	sliderHTML += "<span class = 'addImage' id='addImage' onclick='addImage()'>이미지 선택</span></a>";
-		    	sliderHTML += "<img id='UploadSliderImage' src='' onload ='imgdisplay()' style='width:285px;height:515px;display:none'>";
-		    	sliderHTML += "</div>";
-		    	sliderHTML += "</div>";
-		    	sliderHTML += "</li>";
-		    	
-		    	sliderList.append(sliderHTML);   */
-		    	
 		    	$(".cancelNewSliderBtnmodify").on("click", addCancelModify);
 		    }
 		    
@@ -590,9 +585,12 @@
 		            alert("<spring:message code = 'ezPersonal.t1027' />");
 		            return; } */
 		        //} else if (document.getElementById("UploadSliderImage").src.indexOf("upload_portal") == -1) {
-		         if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
+		        if (document.getElementById("UploadSliderImage").src.indexOf("${uploadPortalPath}") == -1) {	
 		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
 		            return;
+		        } else if (document.getElementById("txtDisplayName3").value == "") {
+		            alert("URL을 입력하세요.");
+		            return; 
 		        }
 		        
 		        var displayName = "";
