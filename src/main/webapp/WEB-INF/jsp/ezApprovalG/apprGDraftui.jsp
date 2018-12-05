@@ -503,6 +503,10 @@
 			    			window.close();
 			    			return;
 				    	}
+		        		//재기안 시, 문서내 기안일자와 현재일자가 다른지 체크 추가
+		        		if (pDraftFlag == "REDRAFT") {
+		        			compareDocDateCurDate();
+		        		}
 		        	
 			        	var result = "";
 			        	
