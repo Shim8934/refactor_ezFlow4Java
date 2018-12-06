@@ -726,8 +726,8 @@
 	
 	        function Editor_Complete() {
 	            try {
-	                //iframe_content.SetEditorContent(div_BODY.innerHTML);
-	                iframe_content.SetEditorContent();
+	                iframe_content.SetEditorContent(div_BODY.innerHTML);
+// 	                iframe_content.SetEditorContent();
 	                if (isConDoc) {
 	                    parent.Conn_Initial();
 	                }
