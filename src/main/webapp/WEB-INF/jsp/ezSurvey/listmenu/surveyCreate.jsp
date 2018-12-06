@@ -214,7 +214,6 @@
 					
 					if (qstnWrapper) {
 						qstnWrapper.after(html);
-						
 					}
 					else {
 						$(".quesBacgr").append(html);
@@ -255,15 +254,15 @@
 							var checkResult = checkPrevWrapper(grandParent);
 							
 							switch (parseInt(questionType)) {
-								case 1: makeSelectQuestion(grandParent, questionType, checkResult)   ; break;
-								case 2: makeSelectQuestion(grandParent, questionType, checkResult)   ; break;
-								case 3: makeMatrixQuestion(grandParent, questionType, checkResult)   ; break;
-								case 4: break;
-								case 5: break;
-								case 6: makeParagraphQuestion(grandParent, questionType); break;
-								case 7: makeSliderQuestion(grandParent, questionType)   ; break;
-								case 8: makeRankingQuestion(grandParent, questionType)  ; break;
-								case 9: makeDropdownQuestion(grandParent, questionType) ; break;
+								case 1: 
+								case 2: makeSelectQuestion(grandParent, questionType, checkResult); break;
+								case 3: 
+								case 4: makeMatrixQuestion(grandParent, questionType, checkResult); break;
+								case 5: makeTextQuestion(grandParent, questionType, "shortanswer"); break;
+								case 6: makeTextQuestion(grandParent, questionType, "paragraph"  ); break;
+								case 7: makeSliderQuestion(grandParent, questionType)             ; break;
+								case 8: makeRankingQuestion(grandParent, questionType)            ; break;
+								case 9: makeDropdownQuestion(grandParent, questionType)           ; break;
 							}
 						}
 					});
@@ -337,9 +336,11 @@
 						html += "<span>열</span>";
 						html += "</div>";
 						html += "<div class='cols' style='float: left; width: 90%;'>";
+						
 						for (var i = 0; i < 2; i++) {
 							html += mkRowCol("col");
 						}
+						
 						html += "</div>";
 						html += "<div class='colBtn'>";
 						html += "<button class='addCol'>추가</button>";
@@ -475,7 +476,6 @@
 					});
 					// 우상단 수정 버튼 클릭 이벤트
 					$(".quesBacgr").on("click", ".modifyBtn", function() {
-						var modify = 'modify';
 						var tmpQstnWpr  = $(this).parents(".usrQstnWrapper");
 						var qstnWrapper = $(this).parents(".qstnWrapper");
 						// 수정할 질문 id와 타입
@@ -488,8 +488,8 @@
 						
 						createQuestionDiv(qstnWrapper, qstn);
 						createQuestionSelectBox(qstn);
-						setSelectBox(qstnWrapper, modify, qstnType);
-						handleModifyQuestion(qstnWrapper, qstn);
+						setSelectBox(qstnWrapper, "modify", qstnType);
+						handleModifyQuestion(qstnWrapper, qstn, "modify");
 						
 						//수정을 취소할 경우를 고려해 숨김 처리
 						qstnWrapper.css("display", "none");
@@ -521,6 +521,23 @@
 						thisWrapper.remove();
 					});
 					
+					$(".quesBacgr").on("click", ".copyBtn", function() {
+						var tmpQstnWpr  = $(this).parents(".usrQstnWrapper");
+						var qstnWrapper = $(this).parents(".qstnWrapper");
+						// 수정할 질문 id와 타입
+						var qstnId      = parseInt(tmpQstnWpr.attr("id"));
+						var arrNum      = qstnId - 1;
+						var qstnType    = tmpQstnWpr.attr("qstntype");
+						// 넘길 질문 객체
+						var qstnList    = SurveyCreate.getQs();
+						var qstn        = qstnList[arrNum];
+						
+						createQuestionDiv(qstnWrapper, qstn);
+						createQuestionSelectBox(qstn);
+						setSelectBox(qstnWrapper, "modify", qstnType);
+						handleModifyQuestion(qstnWrapper, qstn, "copy");
+					});
+					
 					$(".quesBacgr").on("input", ".slider-range", function() {
 						var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
 						outputElmt.textContent = this.value;
@@ -543,7 +560,6 @@
 				}
 				// 첨부파일의 x버튼 클릭
 				function clickXButton(thisWrapper) {
-	
 					var li = thisWrapper.find(".fileList").find("li");
 					
 					if (li) {
@@ -577,7 +593,7 @@
 					}
 				}
 				// 생성된 질문을 붙일 부분과 질문 유형을 파라미터로 받아 질문 영역 생성
-				function handleModifyQuestion(qstnWrapper, question) {
+				function handleModifyQuestion(qstnWrapper, question, mode) {
 					var qstType = question.type;
 					var html    = makeQuestionForm(qstType);
 					
@@ -586,12 +602,12 @@
 						case 2  : html += handleModifySelectQuestion(question)                 ; break;
 						case 3  : 
 						case 4  : html += handleModifyMatrixQuestion(question)                 ; break;
-						case 5  : break;
-						case 6  : html += handleModifyParagraphQuesion()                       ; break;
+						case 5  : html += handleModifyTextQuesion("shortanswer", "make")       ; break;
+						case 6  : html += handleModifyTextQuesion("paragraph"  , "make")       ; break;
 						case 7  : html += handleModifySliderQuesion(question)                  ; break;
 						case 8  : html += handleModifyRankDropDownQuesion("ranking" , question); break;
-						case 9  : html += handleModifyRankDropDownQuesion("dropdown", question); break;;
-						default : alert(SurveyMessages.strError); return;
+						case 9  : html += handleModifyRankDropDownQuesion("dropdown", question); break;
+						default : alert(SurveyMessages.strError)                               ; return;
 					}
 					
 					html += mkAddtionalPart("modify", question.required);
@@ -638,6 +654,7 @@
 							html += mkRowCol("row", row[i]);
 						}
 					}
+					
 					html += "</div>";
 					html += "<div class='rowBtn'>";
 					html += "<button class='addRow'>추가</button>";
@@ -653,6 +670,7 @@
 							html += mkRowCol("col", col[i]);
 						}
 					}
+					
 					html += "</div>";
 					html += "<div class='colBtn'>";
 					html += "<button class='addCol'>추가</button>";
@@ -660,10 +678,19 @@
 					
 					return html;
 				}
-				function handleModifyParagraphQuesion() {
-					var htmlTxt = "<div class='paragraph-wrap'>";
-					htmlTxt    += "<textarea class='paragraph' maxlength='500' placeholder='" + SurveyMessages.strContent + "'></textarea>";
-					htmlTxt    += "</div>";
+				
+				function handleModifyTextQuesion(type, mode) {
+					var className = mode == "make" ? type + "-wrap" : "question-" + type;
+					var htmlTxt   = "<div class='" + className + "'>";
+					
+					if (type == "paragraph") {
+						htmlTxt  += "<textarea class='" + type +"' maxlength='500' placeholder='" + SurveyMessages.strContent + "'></textarea>";
+					}
+					else {
+						htmlTxt  += "<input class='" + type +"' maxlength='80' placeholder='" + SurveyMessages.strContent + "'/>";
+					}
+					
+					htmlTxt += "</div>";
 					return htmlTxt;
 				}
 				
@@ -698,7 +725,6 @@
 					htmlTxt += "<div class='addBtns'>";
 					htmlTxt += "<button class='addOpttions'>추가</button>";
 					htmlTxt += "</div></div>";
-					
 					return htmlTxt;
 				}
 				
@@ -761,7 +787,6 @@
 					}
 					
 					html += "</div>";
-					
 					wrapperElmt.prepend(html);
 				}
 				
@@ -840,7 +865,7 @@
 								  if (mtrObj.row) {question["row"] = mtrObj.row;}
 								  if (mtrObj.col) {question["col"] = mtrObj.col;}
 								  mkMatrixQstn(qstnWrapper, question); break;
-						case 5  : break;
+						case 5  : mkShortAnswerQstn(qstnWrapper, question); break;
 						case 6  : mkParagraphQstn(qstnWrapper, question); break;
 						case 7  : var sliderObj = mkSliderObj(qstnForm[0]);
 								  if (sliderObj.error) {alert(SurveyMessages[sliderObj.error]); return;}
@@ -872,12 +897,15 @@
 					}
 				}
 				
+				function mkShortAnswerQstn(wrapperElmt, question) {
+					var html = makeQuestionHeaderPanel(question);
+					html    += handleModifyTextQuesion("shortanswer", "modify");
+					wrapperElmt.prepend(html);
+				}
+				
 				function mkParagraphQstn(wrapperElmt, question) {
 					var html = makeQuestionHeaderPanel(question);
-					html    += "<div class='question-paragraph'>";
-					html    += "<textarea class='paragraph' maxlength='500' placeholder='" + SurveyMessages.strContent + "'></textarea>";
-					html    += "</div></div>";
-					
+					html    += handleModifyTextQuesion("paragraph", "modify");
 					wrapperElmt.prepend(html);
 				}
 				
@@ -1169,7 +1197,7 @@
 						html += "<input class='" + type + "Input' value='" + contents + "'>";
 						html += "<img alt='' src='/images/ezSurvey/minus.jpg' class='" + elClass + "' style='width: 30px;height: 30px; cursor: pointer;'>";
 						html += "</div>";
-					
+						
 					return html;
 				}
 				
@@ -1193,15 +1221,14 @@
 					}
 					
 					html += "</div>";
-					
 					return html;
 				}
 				
 				function makeQuestionForm(questionType) {return "<div class='qstnForm' questionType='" + questionType + "'>";}
 				
-				function makeParagraphQuestion(mainDivElmt, questionType) {
+				function makeTextQuestion(mainDivElmt, questionType, type) {
 					var html = makeQuestionForm(questionType);
-					html    += handleModifyParagraphQuesion();
+					html    += handleModifyTextQuesion(type, "make");
 					html    += mkAddtionalPart();
 					
 					mainDivElmt.append(html);

@@ -199,6 +199,7 @@
 .slt-listDiv .mainlist tr:first-child td {color: #333; background-color: #f8f8fa;}
 .slt-listDiv .mainlist tr:not(first-child) td:first-child {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .dd-option-image, .dd-selected-image {height: 24px; width: 24px;}
+.dd-option-text, .dd-selected-text {cursor: pointer;}
 
 .headpanel {height: 40px; margin: 15px 0px 1px;}
 .headpanel >span:first-child {border-left: 1px solid #d7d7d7 !important;}
@@ -252,7 +253,7 @@
 /* paragraph css */
 .qstnWrapper {width: 1000px; margin: 0px auto; padding: 10px 0px;}
 .paragraph-wrap, .question-paragraph {height: 120px;}
-.paragraph {padding: 6px 12px; width: 100%; height: 100%; background: #fff; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; resize: none; font-size: 14px; line-height: 20px; pointer-events: none; user-select: none; outline: 0px;}
+.paragraph {padding: 6px 12px; width: 100%; height: 100%; background: #fff; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; resize: none; font-size: 14px; line-height: 20px; outline: 0px;}
 
 /* slider css */
 .silder-wrap {display: flex; padding: 10px 0px; align-items: center;}
@@ -282,8 +283,12 @@ input[type=range]::-ms-tooltip {display: none;}
 .ranking-select .rank-order {width: 30px; height: 30px; font-size: 14px; text-align: center; line-height: 30px;}
 .ranking-select >select, .dropdown-wrap select {height: 27px; outline: 0px; padding-left: 5px; font-size: 14px;}
 .ranking-select >select:focus, .dropdown-wrap select:focus, .searchTblTd input[type='text']:focus, .othInput:focus, .topSearchSpan >select:focus, .questnTitle:focus {border-color:#66afe9; outline: 0px; -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6); box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
-
 .textInput:focus {border-bottom: 1px solid #03a9f4 !important;}
+
+/* short-answer css */
+.shortanswer-wrap {/* user-select: none; pointer-events: none; */}
+.shortanswer {font-size: 14px; height: 40px; width: 500px; padding: 0px 10px; outline: none;}
+
 /* 2018.11.22 추가 */
 #surveyListBody {height: 400px;}
 .surveyTbody {width: 100%; text-algin: center;}
@@ -335,7 +340,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .tooltip-bttns .copyBtn {background-image: url('/images/ezSurvey/copy.png');}
 .tooltip-bttns .deleteBtn {background-image: url('/images/ezSurvey/trash.png');}
 .question-content .imptt {color: rgba(255, 0, 0, 1);}
-.question-opts, .question-paragraph, .question-silder, .question-ranking, .question-dropdown {padding: 10px 35px 20px;}
+.question-opts, .question-paragraph, .question-shortanswer, .question-silder, .question-ranking, .question-dropdown {padding: 10px 35px 20px;}
 
 .question-opts .opt {width: 100%; height: 50px; display: flex; align-items: center;}
 .question-opts .opt >input[type='radio'], .question-opts .opt >input[type='checkbox'] {width: 20px; height: 20px; margin: 0px;}
