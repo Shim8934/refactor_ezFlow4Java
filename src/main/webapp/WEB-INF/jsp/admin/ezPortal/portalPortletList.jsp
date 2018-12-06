@@ -346,11 +346,11 @@
   			</c:choose>  			
   		</div> --%>
   		<br>
-  		<div style="width:100%; border: 1px solid #e8e8e8; border-bottom:0px;">
+  		<div style="width:100%; height:530px; /* border: 1px solid #e8e8e8; */ border-bottom:0px;">
 		<table class="mainlist" style="width:100%;">	
 		<tr>
-			<th style="width: 300px; border-top:0px;"><spring:message code='ezPortal.t130'/></th>
-			<th style="border-top:0px;"><spring:message code='ezPortal.t260'/></th>
+			<th style="width: 300px; border-top:1px solid #e8e8e8;"><spring:message code='ezPortal.t130'/></th>
+			<th style="border-top:1px solid #e8e8e8;"><spring:message code='ezPortal.t260'/></th>
 		</tr>
 		</table>		
 		<table class="mainlist" style="width:100%">
