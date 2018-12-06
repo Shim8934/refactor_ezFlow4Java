@@ -251,7 +251,6 @@ img { border:0px;}
 #cmhome_type1 .icon_gray {
 	display:inline-block;
 	padding:0px 3px 0px 0px;
-	background:url(../images/kr/community/type1/icon_graybg.gif) no-repeat top right;
 	 line-height:17px;
 	 *line-height:15px
 	 ;text-decoration:none !important;
@@ -263,7 +262,7 @@ img { border:0px;}
 #cmhome_type1 .icon_gray span {
 	display:block;
 	padding:0px 0px 0 4px;
-	background:url(../images/kr/community/type1/icon_graybg.gif) no-repeat top left;
+	
 	height:15px; 
 	color:#797e82; 
 	vertical-align:bottom; 
@@ -488,7 +487,6 @@ img { border:0px;}
 #cmhome_type2 .icon_gray {
 	display:inline-block;
 	padding:0px 3px 0px 0px;
-	background:url(../images/kr/community/type1/icon_graybg.gif) no-repeat top right;
 	 line-height:17px;
 	 *line-height:15px
 	 ;text-decoration:none !important;
@@ -499,8 +497,7 @@ img { border:0px;}
  }
 #cmhome_type2 .icon_gray span {
 	display:block;
-	padding:0px 0px 0 4px;
-	background:url(../images/kr/community/type1/icon_graybg.gif) no-repeat top left;
+	padding:0px 0px 0 4px;	
 	height:15px; 
 	color:#797e82; 
 	vertical-align:bottom; 
@@ -719,7 +716,6 @@ img { border:0px;}
 #cmhome_type3 .icon_gray {
 	display:inline-block;
 	padding:0px 3px 0px 0px;
-	background:url(../images/kr/community/type1/icon_graybg.gif) no-repeat top right;
 	 line-height:17px;
 	 *line-height:15px
 	 ;text-decoration:none !important;
@@ -731,7 +727,6 @@ img { border:0px;}
 #cmhome_type3 .icon_gray span {
 	display:block;
 	padding:0px 0px 0 4px;
-	background:url(../images/kr/community/type1/icon_graybg.gif) no-repeat top left;
 	height:15px; 
 	color:#797e82; 
 	vertical-align:bottom; 
@@ -949,7 +944,6 @@ img { border:0px;}
 #cmhome_type4 .icon_gray {
 	display:inline-block;
 	padding:0px 3px 0px 0px;
-	background:url(../images/kr/community/type1/icon_graybg.gif) no-repeat top right;
 	 line-height:17px;
 	 *line-height:15px
 	 ;text-decoration:none !important;
@@ -961,7 +955,6 @@ img { border:0px;}
 #cmhome_type4 .icon_gray span {
 	display:block;
 	padding:0px 0px 0 4px;
-	background:url(../images/kr/community/type1/icon_graybg.gif) no-repeat top left;
 	height:15px; 
 	color:#797e82; 
 	vertical-align:bottom; 
@@ -1196,7 +1189,6 @@ _list li {
 #cmhome_type5 .icon_gray {
 	display:inline-block;
 	padding:0px 3px 0px 0px;
-	background:url(../images/kr/community/type1/icon_graybg.gif) no-repeat top right;
 	 line-height:17px;
 	 *line-height:15px
 	 ;text-decoration:none !important;
@@ -1208,7 +1200,6 @@ _list li {
 #cmhome_type5 .icon_gray span {
 	display:block;
 	padding:0px 0px 0 4px;
-	background:url(../images/kr/community/type1/icon_graybg.gif) no-repeat top left;
 	height:15px; 
 	color:#797e82; 
 	vertical-align:bottom; 
@@ -1488,11 +1479,10 @@ _list li {
 	font-size:15px;
 	font-weight:bold;
 	padding:0px 0px 5px;
-	margin:0px 0px 15px;
+	margin:5px 0px 10px;
 	color:#333;
 	height:20px;
 	line-height:20px;
-	border-bottom:1px solid #eee;
 }
 
 .cmhome_body .type1_h2 {

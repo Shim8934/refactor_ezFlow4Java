@@ -60,7 +60,7 @@
                 </dl>
             </div>
             <div class="personal_content">
-            	<p><spring:message code='ezNewPortal.t125' /></p>
+            	<p>&nbsp;</p>
             <c:choose>
             	<c:when test="${useAttitude eq 'YES' }">
 	                <dl class="commute">
@@ -215,8 +215,8 @@
         	<p class="title"><span><spring:message code='ezNewPortal.t127' /></span><span class="color"><spring:message code='ezNewPortal.t128' /></span></p>
             <dl class="excellent_info" id="excellentcontent">
             	<dt class="pic" id="emPic"></dt>
-                <dt id="exellentDeptName"></dt>
-                <dt id="exellentEmpName"></dt>
+                <dt id="exellentEmpName" style="font-size:15px"></dt>
+                <dt id="exellentDeptName" style="font-size:13px; color:#777; font-weight: normal"></dt>
                 <dd><img src="/images/ezNewPortal/theme2Img/icon_excellent.png"></dd>
             </dl>
         </article>
@@ -468,7 +468,7 @@
 					emPic.appendChild(img);
 					
 					document.getElementById("exellentDeptName").innerText = bestEmployee.userDeptName;
-					document.getElementById("exellentEmpName").innerText = bestEmployee.userName;
+					document.getElementById("exellentEmpName").innerText = '"' + bestEmployee.userName + '"';
 				}
 			}
 		});
@@ -523,7 +523,6 @@
 		if(data.length === 0) {
 			var dl = document.createElement('dl');
 			dl.className = 'nodata';
-			dl.style.marginLeft = '-18px';
 			
 			var dt = document.createElement('dt');
 			var img = document.createElement('img');

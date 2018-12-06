@@ -69,7 +69,7 @@
 				</tr>
 				<tr> 
 					<th><spring:message code='ezCommunity.t557' /></th>
-					<td style="padding:3px"><textarea name=memo id=memo style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;height:250px;resize:none;overflow: auto;"></textarea></td>
+					<td style="padding:3px"><textarea name=memo id=memo style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;height:400px;resize:none;overflow: auto;"></textarea></td>
 				</tr>
 			</form>
 		</table>

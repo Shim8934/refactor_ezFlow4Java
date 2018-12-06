@@ -202,7 +202,7 @@
 							</c:if>
 							<c:if test="${strWriterID == userInfo.id ||fn:indexOf(userInfo.rollInfo, 'c=1') > -1 || fn:indexOf(userInfo.rollInfo, 'k=1') > -1}">
 								<li id="btn_Modify"><span  onclick="btn_Modify_Onclick()" ><spring:message code='ezCommunity.t6' /></span></li>
-								<li id="btn_Delete"><span  onclick="btn_Delete_Onclick()" ><spring:message code='ezCommunity.t208' /></span></li>
+								<li id="btn_Delete"><span class="icon16 popup_icon16_delete" onclick="btn_Delete_Onclick()"></span></li>
 		          			</c:if>
 						</ul>
 					</div>

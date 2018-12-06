@@ -124,14 +124,11 @@
 	                if (Bodytd[i].height != "") {
 	                    Bodytd[i].style.height = Bodytd[i].height + "px";
 	                }
-	            }
-	            
-	            document.getElementById("message").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
+	            }	            
 	            document.getElementById("message").style.height = window.innerHeight - 233 + "px";
 	        }
 			
 	        window.onresize = function () {
-	        	document.getElementById("message").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
 	        	document.getElementById("message").style.height = window.innerHeight - 233 + "px";
 	        }
 	        
@@ -409,13 +406,8 @@
                         	<c:if test="${adminFg eq 'Y' || writerID eq userInfo.id}">
                         		<li id="btn_modify"><span onclick="btn_modify()"><spring:message code="ezResource.t54" /></span></li>
                         	</c:if>
-	                        <li><span onclick="print_onClick2( false )"><spring:message code="ezResource.t186" /></span></li>
-	                        <c:if test="${adminFg eq 'Y' || writerID eq userInfo.id}">
-                        		<li id="deletebtbn"><span onclick="delSchedule_onClick('${num}','${ownerID}')"><spring:message code="ezResource.t65" /></span></li>
-                        	</c:if>
-							
+	                        
 							<c:if test = "${typeVal ne 'Readonly'}">
-									<%-- cmdStr에 lowCase --%>
 								<c:if test="${approveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}">
 									<c:choose>
 										<c:when test="${saveApproveFlag eq '1'}">
@@ -426,7 +418,13 @@
 										</c:otherwise>
 									</c:choose>
 								</c:if>
-							</c:if>	                            
+							</c:if>
+							
+							<c:if test="${adminFg eq 'Y' || writerID eq userInfo.id}">
+                        		<li id="deletebtbn"><span class="icon16 popup_icon16_delete" onclick="delSchedule_onClick('${num}','${ownerID}')"></span></li>
+                        	</c:if>
+                        	
+                        	<li><span class="icon16 popup_icon16_print" onclick="print_onClick2( false )"></span></li>
                     	</ul>
                 	</div>
                 	<div id="close">
