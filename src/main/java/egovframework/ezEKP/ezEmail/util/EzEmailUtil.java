@@ -1165,8 +1165,11 @@ public class EzEmailUtil {
 				
 				// 안드로이드 삼성 메일앱이 메일 발송 시 Sent 폴더에 넣은 메일이 
 				// alternative part가 아닌 mixed part에 text/html과 text/plain을 함께
-				// 넣어 메일이 두 번 반복해 보이는 현상이 있어 추가함
-				if (isHtmlPartAlreadyProcessed && p.isMimeType("text/plain")) {
+				// 넣어 메일이 두 번 반복해 보이는 현상이 있어 추가함.
+				// text/plain 타입이 첨부된 경우 첨부파일이 나타나지 않는 현상이 있어 다음 조건 추가함
+				//  - !((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)))
+				if (isHtmlPartAlreadyProcessed && p.isMimeType("text/plain")
+						&& !((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)))) {
 					logger.debug("contentType=" + p.getContentType());
 					logger.debug("disposition=" + p.getDisposition());	
 				} else {				
