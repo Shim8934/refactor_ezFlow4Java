@@ -1156,22 +1156,22 @@
 						html = "<div class='other'>" + html;
 						
 						if (options) {
-							html  += "<input class='textInput' type='text' value='" + options.contents + "' placeholder='" + SurveyMessages.strOther + "'/>";
+							html  += "<input class='textInput' type='text' value='" + options.contents + "' maxlength='40' placeholder='" + SurveyMessages.strOther + "'/>";
 							optAtt = options.otherAttach;
 						}
 						else {
-							html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strOther + "'>";
+							html += "<input class='textInput' type='text' maxlength='40' placeholder='" + SurveyMessages.strOther + "'>";
 						}
 					}
 					else {
 						html = "<div class='optPart'>" + html;
 						
 						if (options) {
-							html  += "<input class='textInput' type='text' value='" + options.contents + "' placeholder='" + SurveyMessages.strContent + "' />";
+							html  += "<input class='textInput' type='text' value='" + options.contents + "' maxlength='40' placeholder='" + SurveyMessages.strContent + "' />";
 							optAtt = options.optionAttach;
 						}
 						else {
-							html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>";
+							html += "<input class='textInput' type='text' maxlength='40' placeholder='" + SurveyMessages.strContent + "'/>";
 						}
 					}
 					
@@ -1202,7 +1202,7 @@
 					
 					var html = "";
 						html += "<div class='" + type + "' level='" + level + "'>";
-						html += "<input class='" + type + "Input' value='" + contents + "'>";
+						html += "<input class='" + type + "Input' maxlength='33' value='" + contents + "'>";
 						html += "<img alt='' src='/images/ezSurvey/minus.jpg' class='" + elClass + "' style='width: 30px;height: 30px; cursor: pointer;'>";
 						html += "</div>";
 						
