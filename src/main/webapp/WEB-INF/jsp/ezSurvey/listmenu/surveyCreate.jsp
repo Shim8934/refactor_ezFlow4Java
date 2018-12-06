@@ -238,7 +238,6 @@
 						fileUpload($(this), $(this)[0].files);
 					});
 				}
-//////////////////////////////////////////////////////////////////////////				
 				// selectBox 생성
 				function createQuestionSelectBox(question) {
 					$(".selectBox").ddslick({
@@ -267,7 +266,7 @@
 						}
 					});
 				}
-//////////////////////////////////////////////////////////////////////////				
+				// 현재 상태(최초 저장인지 수정 중인지) 체크
 				function checkPrevWrapper(grandParent) {
 					var checkResult = {};
 					var thisId = parseInt(grandParent.attr("id"));
@@ -283,7 +282,6 @@
 					
 					return checkResult;
 				}
-//////////////////////////////////////////////////////////////////////////				
 				// 셀렉트 박스 선택시
 				// 셀렉트 박스 아래의 질문 폼 삭제
 				function rmQstnFormBfSave(grandParent) {
@@ -610,7 +608,7 @@
 						default : alert(SurveyMessages.strError)                               ; return;
 					}
 					
-					html += mkAddtionalPart("modify", question.required);
+					html += mkAddtionalPart(mode, question.required);
 					
 					qstnWrapper.next().append(html);
 				}
@@ -895,6 +893,9 @@
 						questionList.splice(qstId - 1, 1);           // 질문 배열에서 해당 순번의 객체 삭제
 						questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
 					}
+					
+					console.log("최종");
+					console.log(SurveyCreate.getQs());
 				}
 				
 				function mkShortAnswerQstn(wrapperElmt, question) {
