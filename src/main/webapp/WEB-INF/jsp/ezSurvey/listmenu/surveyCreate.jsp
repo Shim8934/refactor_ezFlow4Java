@@ -436,7 +436,7 @@
 						var deep = Object.assign({}, qstn, {'id': nextId}); 
 						
 						// 복사한 질문 객체 이후의 객체들 아이디값 +1
-						setNewId(qstnId, qstnList);
+						setNewId(qstnId, qstnList, 'copy');
 						
 						// 복사한 질문 객체를 배열에 추가
 						qstnList.splice(qstnId, 0, deep);
@@ -451,12 +451,16 @@
 					});
 					// 우상단 삭제 버튼 클릭 이벤트
 					$(".quesBacgr").on("click", ".deleteBtn", function() {
-						var thisWrapper = $(this).closest(".qstnWrapper");
+						var thisWrapper = $(this).parents(".qstnWrapper");
 						var qstnId      = thisWrapper.attr("id");
 						var qstnList    = SurveyCreate.getQs();
 						
 						qstnList.splice(qstnId - 1, 1); // 질문 배열에서 해당 순번의 질문객체 삭제
 						thisWrapper.remove();           // 질문 폼 삭제
+						
+						console.log(qstnList);
+						setNewId(qstnId, qstnList, 'delete');
+
 					});
 					
 					// 수정 버튼 클릭 이벤트 질문 객체 수정
@@ -493,22 +497,48 @@
 					
 					$(".quesBacgr").on("click", ".delImage", function() {questionFile.deleteFile(this);});
 				}
-				// 아이디 값을 +1씩 올림
-				function setNewId(qstnId, qstnList) {
-					for (var i = qstnList.length - 1; i >= qstnId; i--) {
-						// 해당 아이디 값을 가진 태그 캐치
-						var qstn = qstnList[i];
-						var oldId = qstn.id;
-						var type = qstn.type;
-						
-						var newId = oldId + 1;
-						qstnList[i].id = newId;
-						
-						var thisWrapper = $("#" + oldId);
-						thisWrapper.html("");
-						thisWrapper.attr("id", newId);
-						
-						mkQstnsByType(thisWrapper, type, qstn);
+				// 아이디 값을 변경함
+				function setNewId(qstnId, qstnList, action) {
+					
+					var qstn = "";
+					var oldId = "";
+					var type = "";
+					var newId = "";
+					var thisWrapper = "";
+					
+					if (action == 'delete') {
+						for (var i = qstnId - 1; i < qstnList.length; i++) {
+							qstn = qstnList[i];
+							oldId = qstn.id;
+							type = qstn.type;
+							
+							newId = oldId - 1;
+							qstnList[i].id = newId;
+							
+							// 해당 아이디 값을 가진 엘리먼트 캐치
+							thisWrapper = $("#" + oldId);
+							thisWrapper.html("");
+							thisWrapper.attr("id", newId);
+							
+							mkQstnsByType(thisWrapper, type, qstn);
+							
+						}
+					} else if (action == 'copy') {
+						for (var i = qstnList.length - 1; i >= qstnId; i--) {
+							qstn = qstnList[i];
+							oldId = qstn.id;
+							type = qstn.type;
+							
+							newId = oldId + 1;
+							qstnList[i].id = newId;
+							
+							// 해당 아이디 값을 가진 엘리먼트 캐치
+							thisWrapper = $("#" + oldId);
+							thisWrapper.html("");
+							thisWrapper.attr("id", newId);
+							
+							mkQstnsByType(thisWrapper, type, qstn);
+						}
 					}
 				}
 				// 사용자용 질문 폼 생성
