@@ -57,7 +57,7 @@
 				$("#Sdatepicker").datepicker('disable');
 		        $("#Edatepicker").datepicker('disable');
 		        
-		        var height = parseInt(document.documentElement.clientHeight - 300);
+		        var height = parseInt(document.documentElement.clientHeight - 340);
 		        document.getElementById("divList").style.height = height + "px";
 		        getBoardList_after(loadXMLString("${listHeader}"));
 				
@@ -477,34 +477,36 @@
 	<table class="content" style="width:100%;">
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.t185' /></th>
-			<td style="text-align: left" colspan="3">
-			<a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="selectBoard()"><spring:message code='ezBoard.khj2' /></span></a>
-			<span id="selectedBoardName" style="height: 100%; vertical-align: middle; overflow: hidden; display: inline-block; line-height: 27px"></span> 
-			<input type ="text" id="selectedBoard" style="display:none;" value="">
-			<input type ="text" id="selectedBoardParentBoardID" style="display:none;" value="">
+			<td style="text-align: left">
+				<a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="selectBoard()"><spring:message code='ezBoard.khj2' /></span></a>
+				<span id="selectedBoardName" style="height: 100%; vertical-align: middle; overflow: hidden; display: inline-block; line-height: 27px"></span> 
+				<input type ="text" id="selectedBoard" style="display:none;" value="">
+				<input type ="text" id="selectedBoardParentBoardID" style="display:none;" value="">
 			</td>
-			<th rowspan=4 style="background-color: white">
-				<a class="imgbtn imgbck" style="vertical-align:middle;height:45px;line-height: 43px"><span onClick="search('basic')" style="vertical-align: middle"><spring:message code='ezBoard.t188' /></span></a>
-			</th>
 		</tr>
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.t223' /></th>
 			<td style="width:50%; white-space:nowrap"><input type="text" id="txtWriterName" style="width: 100%" value="" onkeypress="return search_keypress()"></td>
+		</tr>
+		<tr>	
 			<th style="text-align: center"><spring:message code='ezBoard.t208' /></th>
 			<td style="width:50%; white-space:nowrap"><input type="text" id="txtTitle" style="width: 100%" value="" onkeypress="return search_keypress()"></td>
 		</tr>
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.garm01' /></th>
 			<td style="width:50%; white-space:nowrap"><input type="text" id="txtContent" style="width: 100%" value="" onkeypress="return search_keypress()"></td>
+		</tr>
+		<tr>	
 			<th style="text-align: center"><spring:message code='ezBoard.t209' /></th>
 			<td style="width:50%; white-space:nowrap"><input type="text" id="txtAbstract" style="width: 100%" value="" onkeypress="return search_keypress()"></td>
 		</tr>
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.t210' /></th>
-			<td colspan="3">
+			<td>
 				<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code='ezCircular.t138'/></label>
 				<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly"> ~
 				<input type="text" id="Edatepicker" style="width: 80px; text-align: center" readonly="readonly">
+				<a class="imgbtn imgbck" style="vertical-align:middle;margin-left:10px;"><span onClick="search('basic')" style="vertical-align: middle"><spring:message code='ezBoard.t188' /></span></a>
 			</td>
 		</tr>
 	</table>

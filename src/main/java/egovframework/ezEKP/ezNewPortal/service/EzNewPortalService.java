@@ -3,8 +3,6 @@ package egovframework.ezEKP.ezNewPortal.service;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -28,7 +26,6 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
-import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzNewPortalService {
 
@@ -44,10 +41,10 @@ public interface EzNewPortalService {
 	public List<MenuInfoVO> getCompanyMenuList(String companyId, int tenantId, String langType, String userId, String deptId) throws Exception;
 	public void updateUserMenuOrder(String companyId, int tenantId, String userId, JSONObject jObj) throws Exception;
 	public void deleteUserMenuOrder(String companyId, int tenantId, String userId) throws Exception;
-	public List<?> getQuickLinkList(String companyId, int tenantId, int page, int limit) throws Exception; 
-	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit) throws Exception;
+	public List<?> getQuickLinkList(String companyId, int tenantId, int page, int limit, String userId, String deptId) throws Exception; 
+	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit, String userId, String deptId) throws Exception;
 //	public List<?> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception;
-	public List<PortletInfoVO> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId, boolean config) throws Exception;
+	public List<PortletInfoVO> getUserPortletList(int themeId, String portletLang, String userId, int tenantId, String companyId, String deptId, boolean config) throws Exception;
 	public List<?> getUserFrameListAndSelectedFrame(String companyId, int tenantId, String userId) throws Exception;
 	public void updateUserUsedFrame(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
 	public void updateUserUsedPortlet(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
@@ -63,9 +60,8 @@ public interface EzNewPortalService {
 	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) throws Exception;
 	public String getBoardAuthCheck(String boardId, String accessId, int tenantId, String companyId);
 	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId, String deptId);
-	public List<PortletInfoVO> getPortletOrderComp(String portletLang, int tenantId, String companyId, String deptId, String userId) throws Exception;
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId);
-	public void updatePortletOrderUser(String userId, String companyId, int tenantId, List<Map<String, Integer>> portletOrder, String portletLang);
+	public void updatePortletOrderUser(String userId, String companyId, int tenantId, JSONArray portletOrder, String portletLang) throws Exception;
 	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow);
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month);
 	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId);
@@ -87,7 +83,7 @@ public interface EzNewPortalService {
 	public void updateCompanyDefaultTheme(int themeId, String companyId, int tenantId);
 	public void deleteCompanyLogo(String companyId, int tenantId, String logoType);
 	public void resetCompanyMenuOrder(String companyId, int tenantId);
-	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId) throws Exception;
+	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId, String lang) throws Exception;
 	public void updateThemePortletUsed(int themeId, int tenantId, String companyId, JSONArray themePortletList) throws Exception;
 	/**
 	 * 이효진
@@ -99,6 +95,10 @@ public interface EzNewPortalService {
 	 * @param admin true(admin) false(user)
 	 */
 	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId) throws Exception;
+	/**
+	 * 유저의 테마Id 조회 -> 테마별 포틀릿 추가되면서 테마Id가 필요한 경우가 생김
+	 */
+	public int getThemeId(String userId, String companyId, int tenantId) throws Exception;
 	/**
 	 * 관리자 테마상세정보조회
 	 */

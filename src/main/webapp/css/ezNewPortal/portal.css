@@ -757,8 +757,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 /* ============ theme2 =========== */
 
 /* section1 영역 */
-#theme2Body .section1_bg{width:100%; height:250px; margin:0px; padding:0px; background:#e9f7fd;}
-#theme2Body .section1{margin:0px; padding:0px; vertical-align:top; overflow:hidden; padding-bottom:20px; float:none; min-width:1170px; max-width:1920px; box-sizing:border-box;}
+#theme2Body .section1_bg{width:100%; height:280px; margin:0px; padding:0px; background:#d8f1fb;}
+#theme2Body .section1{margin:0px; padding:0px; vertical-align:top; overflow:hidden; padding-bottom:14px; padding-top:14px; float:none; min-width:1170px; max-width:1920px; box-sizing:border-box;}
 #theme2Body .section1 .sec1Layout_left{overflow:hidden; float:left; padding:0px 0px 0px 20px; box-sizing:border-box;}
 #theme2Body .section1 .sec1Layout_middle{overflow:hidden; float:left; padding:0px 0px 0px 20px; box-sizing:border-box;}
 #theme2Body .section1 .sec1Layout_right{overflow:hidden; float:left; padding:0px 0px 0px 20px; box-sizing:border-box;}
@@ -790,7 +790,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 #theme2Body .bannerlink_area{float:right; width:calc(50% - 20px); margin:24px 0px 0px 0px; padding:0px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
 #theme2Body .writebanner{margin:0px; padding:0px;}
 #theme2Body .writebanner .writebannerUL{overflow:hidden; list-style:none; margin:0px; padding:0px;}
-#theme2Body .writebanner .writebannerUL li{float:left; width:33.33%; margin:0px 0px 15px 0px; padding:0px; text-align:center; cursor:pointer;}
+#theme2Body .writebanner .writebannerUL li{float:left; width:33.33%; margin:0px 0px 19px 0px; padding:0px; text-align:center; cursor:pointer;}
 #theme2Body .writebanner .writebannerDL{position:relative; margin:0px; padding:0px;}
 #theme2Body .writebanner .writebannerDL dt{margin:4px 0px; padding:0px; text-align:center; color:#000000; font-size:13px; letter-spacing:-1px;}
 #theme2Body .writebanner .writebannerDL dd{position:absolute; top:-6px; left:50%; margin:0px 0px 0px 16px; padding:1px 6px 2px 6px; color:#ffffff; text-align:center; font-size:14px; font-weight:bold; background:#0079e8; border:2px solid #e9f7fd; border-radius:40px;-webkit-border-radius:40px;-moz-border-radius:40px;}
@@ -801,7 +801,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 #theme2Body .main_schedule{float:left; width:100%; margin:19px 0px; padding:0px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
 #theme2Body .main_schedule .list{float:left; width:50%; margin:0px 0px 0px 0px; padding:0px; font-size:9px;}
 #theme2Body .maintab01{width:100%; height:36px; margin:0px 0px 6px 0px; padding:0px 0px 0px 1px;}
-#theme2Body .maintab01 p{float:left; display:block; overflow:hidden; width:50%; height:36px; line-height:34px; margin:0px 0px 0px -1px; padding:0px; box-sizing:border-box; font-size:16px; font-weight:bold; text-align:center; cursor:pointer;}
+#theme2Body .maintab01 p{float:left; display:block; overflow:hidden; width:50%; height:36px; line-height:31px; margin:0px 0px 0px -1px; padding:0px; box-sizing:border-box; font-size:14px; font-weight:bold; text-align:center; cursor:pointer;}
 #theme2Body .maintab01 .left{background:#ffffff; border:2px solid #00a0e9; box-sizing: border-box;color: #b3aebc; border-top-right-radius:3px; border-bottom-right-radius:3px;}
 #theme2Body .maintab01 .right{background:#ffffff; border:2px solid #00a0e9; box-sizing: border-box;color: #b3aebc; border-top-right-radius:3px; border-bottom-right-radius:3px;}
 #theme2Body .maintab01 .left_on{background:#00a0e9; color:#ffffff; border-top-left-radius:3px; border-bottom-left-radius:3px;border:2px solid #00a0e9;}
@@ -818,6 +818,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 #theme2Body .scalendar_mini_title .btn_next{width:27px; height:25px; padding:0px 1px; cursor:pointer;}
 #theme2Body .scalendar_mini{table-layout:fixed; font-size:11px; border-collapse:collapse;}
 #theme2Body .scalendar_mini th{width:14.2%; height:18px; margin:0px; padding:0px 0px 3px 0px; border-top:0px; border-left:0px; color:#333333; font-size:13px; font-weight:bold;}
+#theme2Body .layDIV .scalendar_mini th{padding:2px 0px 13px 0px;}
 #theme2Body .scalendar_mini th.sun{color:#fc4a4a;}
 #theme2Body .scalendar_mini th.sat{color:#46abfc;}
 #theme2Body .scalendar_mini td{width:14.2%; height:24px; line-height:24px; text-align:center; color:#333333; font-size:13px; cursor:pointer;}
@@ -825,17 +826,19 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 #theme2Body .scalendar_mini td.sat{color:#46abfc;}
 #theme2Body .scalendar_mini td.sun{color:#fc4a4a;}
 #theme2Body .scalendar_mini td.main_today{color:#ffffff; background:#0470e4; border-radius:40px; -webkit-border-radius:40px; -moz-border-radius:40px;}
+#theme2Body .scalendar_mini td.today{color:#fff; background:#0470e4; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
+#theme2Body #CalendarMini_Top .scalendar_mini td.today{color:#fff; background:#00a0e9; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 #theme2Body .event{overflow:hidden; float:left; width:calc(60% - 2px); height:210px; margin:20px 0px; padding:0px; border:1px solid #cddee6; border-radiue:3px;-webkit-border-radius:3px;-moz-border-radius:3px;}
 #theme2Body .event p{width:100%; height:100%; margin:0px; padding:0px; background:url(/images/ezNewPortal/theme2Img/event_pic02.png) #effaff center center no-repeat;}
-#theme2Body .exellentEmployee{float:right; width:calc(40% - 42px); height:210px; margin:20px 20px 20px 20px; padding:0px; background:#fff; border:1px solid #cddee6;}
+#theme2Body .exellentEmployee{float:right; width:calc(40% - 42px); height:210px; margin:20px 20px 20px 20px; padding:0px; background:#fff; border:1px solid #cddee6; border-radius:3px}
 #theme2Body .exellentEmployee .title{margin:0px 10px; padding:10px 0px; border-bottom:1px solid #cddee6; text-align:center;font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
 #theme2Body .exellentEmployee .title span{display:inline-block; margin:0px 5px; color:#555; font-size:14px; font-weight:bold;font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
-#theme2Body .exellentEmployee .title span.color{color:#0470e4; font-size:16px; margin:0px;}
+#theme2Body .exellentEmployee .title span.color{color:#0470e4; font-size:15px; margin:0px;}
 #theme2Body .excellent_info{position:relative; margin:0px; padding:0px;}
 #theme2Body .excellent_info dt{margin:0px; padding:0px; text-align:center; color:#212121; font-size:14px; font-weight:bold; line-height:18px;font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
-#theme2Body .excellent_info dt.pic{overflow:hidden; width:80px; height:88px; margin:20px auto 10px; padding:0px; border:2px solid #e9f7fd; border-radius:90px;-webkit-border-radius:90px;-moz-border-radius:90px;}
+#theme2Body .excellent_info dt.pic{overflow:hidden; width:61px; height:64px; margin:20px auto 17px; padding:0px; border:2px solid #e9f7fd; border-radius:90px;-webkit-border-radius:90px;-moz-border-radius:90px;}
 #theme2Body .excellent_info dd{position:absolute; top:0px; left:50%; margin:-16px 0px 0px -18px; padding:0px;}
-
+#theme2Body .portlet_tab{height:45px; margin:0px 00px 0px 0px; background:#f5f5f5; overflow:hidden;white-space:nowrap; font-size:14px; border-bottom:1px solid #e7e7e7; box-sizing:border-box; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
 /* 미디어쿼리 적용 */
 @media only screen and (min-width: 1921px){
 	#theme2Body .section1 .sec1Layout_left{width:33.3%;}
@@ -843,17 +846,14 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	#theme2Body .section1 .sec1Layout_right{width:33.3%;}
 }
 
-@media only screen and (max-width: 1920px) and (min-width: 1581px){
+@media only screen and (max-width: 1920px) and (min-width: 1620px){
 	#theme2Body .section1 .sec1Layout_left{width:33.3%;}
 	#theme2Body .section1 .sec1Layout_middle{width:33.3%;}
 	#theme2Body .section1 .sec1Layout_right{width:33.3%;}
 }
 
 @media only screen and (max-width: 1685px){
-	#theme2Body .section1_bg{margin:0px 0px 25px 0px;}
-}
-
-@media only screen and (max-width: 1580px){
+	#theme2Body .section1_bg{margin:0px 0px 0px 0px;}
 	#theme2Body .section1 .sec1Layout_left{width:40%;}
 	#theme2Body .section1 .sec1Layout_middle{width:42%;}
 	#theme2Body .section1 .sec1Layout_right{width:18%;}
@@ -861,7 +861,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	#theme2Body .exellentEmployee{display:none;}
 }
 
-@media only screen and (max-width: 1380px){
+@media only screen and (max-width: 1420px){
 	#theme2Body .section1 .sec1Layout_left{width:calc(50% - 20px);}
 	#theme2Body .section1 .sec1Layout_middle{width:calc(50% - 20px);}
 	#theme2Body .section1 .sec1Layout_right{display:none;}
@@ -879,9 +879,9 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 #theme2Body{ background:#fff;}
 #theme2Body .section_main{ overflow:hidden; padding:0px 0px 20px 0px; float:none; min-width:1170px; max-width:1920px; box-sizing:border-box; background:#fff;}
-#theme2Body .box_shadow{background: #fff; padding:0px; margin:0px;  box-shadow:none; border:1px solid #e7e7e7; width:410px; height:250px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow: hidden;} /*장진혁 */
+#theme2Body .box_shadow{background: #fff; padding:0px; margin:0px;  box-shadow:none; border:1px solid #d6d6d6; border-radius:3px; width:410px; height:250px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow: hidden;} /*장진혁 */
 #theme2Body .info_left{float:left; width:181px !important; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
-#theme2Body .info_right{width:calc(100% - 194px) !important; background:#ffffff;}
+#theme2Body .info_right{width:calc(100% - 192px) !important; background:#ffffff;}
 #theme2Body .portlet_list li.first_approval{margin:0px; padding:0px; height:113px; box-sizing:border-box; background-color: #fff;}
 #theme2Body .rolling_info .info .infoSet{ margin:0px; padding:0px; position:absolute; right:10px; top:10px; cursor:pointer;}
 #theme2Body .countingIcon dl{ margin:0px; padding:0px 13px; position:relative; float:left; cursor:pointer;}
@@ -912,7 +912,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 #theme2Body .info .infoMail{width:90%;  margin :20px 0px 0px 0px; padding:0px 0px 0px 18px; color:#444445; font-size:14px; background:url(/images/ezNewPortal/theme3Img/infoicon_mail.png )no-repeat 0px 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 /* main media query */
 @media only screen and (min-width :1921px) {
-	#theme2Body .portlet{ width:609px; float:left; margin:30px 2px -8px 16px; height: 252px;}
+	#theme2Body .portlet{ width:609px; float:left; margin:30px 4px -8px 16px; height: 252px;}
 	#theme2Body .box_shadow{ width:auto;}
 }
 
@@ -923,7 +923,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	#theme2Body .section_main .mainLayout_middle{ width:33.3%;}
 	#theme2Body .box_shadow.info_left{display:inline-block;float:left; width:187px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
 	#theme2Body .box_shadow{ width:auto;}
-	#theme2Body .portlet{ width:32%; float:left; margin:30px 2px -8px 16px; height: 252px;}
+	#theme2Body .portlet{ width:32%; float:left; margin:30px 4px -8px 16px; height: 252px;}
 	#theme2Body .bannerText{ padding:73px 18px 0px 0px;}
 }
 
@@ -933,9 +933,9 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	#theme2Body .section_main .mainLayout_right{ clear:both; width:50%;}
 	#theme2Body .section_main .mainLayout_left{ width:50%;}
 	#theme2Body .section_main .mainLayout_middle{ width:50%;}
-	#theme2Body .box_shadow{width:100%;}
+	#theme2Body .box_shadow{width:99.8%;}
 	#theme2Body .portlet{width:100%;}
-	#theme2Body .portlet{width:48%; float:left; margin:5px 5px 15px 16px; height: 252px;}
+	#theme2Body .portlet{width:48%; float:left; margin:30px 5px -8px 16px; height: 252px;}
 	#theme2Body .stats_graph{ float:left; overflow:hidden;}
 	#theme2Body .groupware_banner{ float:left; margin-top:0px}
 	
@@ -974,7 +974,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 #theme2Body .collaborate_list .listtype_txt span.txt{float:left; width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 #theme2Body .collaborate_list .listtype_txt span.team{float:right;}
 #theme2Body .collaborate_list .listtype_txt span.name{float:right; margin:0px 0px 0px 10px;}
-#theme2Body .portlet_title{overflow:hidden; height:46px; margin:0px; padding:0px; line-height:44px;  border-bottom:1px solid #e7e7e7; box-sizing:border-box;}
+#theme2Body .portlet_title{overflow:hidden; height:46px; margin:0px; padding:0px; line-height:44px;  border-bottom:1px solid #d6d6d6; background:#f5f5f5; box-sizing:border-box;}
 #theme2Body .weather_mini dl dd{float:left; width:50%; margin:0px; padding:0px; color:#000; font-size:15px; text-align:left;}
 
 /* ============ theme3 =========== */
@@ -995,7 +995,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 #theme3Body .portlet_list{ margin:0px; padding:12px 0px; list-style:none; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; background:#ffffff; height: inherit;}
 #theme3Body .noti_portlet_list{margin:0px; padding:18px 10px;list-style:none;font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;height:169px;overflow:hidden; background:#ffffff;}
 #theme3Body .portlet_list li.first_approval{margin:0px; padding:0px; height:113px; box-sizing:border-box; background-color: #fff;}
-#theme3Body .portlet_tab{height:45px; margin:0px 00px 0px 0px; overflow:hidden;white-space:nowrap; font-size:14px; border-bottom:1px solid #e7e7e7; box-sizing:border-box; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; background:rgba(255,255,255,0.7);}
+#theme3Body .portlet_tab{height:45px; margin:0px 0px 0px 0px; overflow:hidden;white-space:nowrap; font-size:14px; border-bottom:1px solid #e7e7e7; box-sizing:border-box; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; background:rgba(255,255,255,0.7);}
 #theme3Body .portlet_tab dt{float:left; height:45px; line-height:43px; border:none; margin:-1px 0px 0px -1px;  color:#333; cursor:pointer; font-weight:bold; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; max-width:170px; background:url(/images/ezNewPortal/theme3Img/portlet_tabDT_bg.png) right center no-repeat;}
 #theme3Body .portlet_tab dt.on{float:left; height:43px; line-height:43px; border-bottom:2px solid #0470e4; margin:-1px 0px 0px -1px; color:#005fc5; font-weight:bold; cursor:pointer;}
 #theme3Body .portlet_tab dt:hover{float:left; height:43px; line-height:43px; border-bottom:2px solid #0470e4; margin:-1px 0px 0px -1px; color:#005fc5; font-weight:bold; cursor:pointer;}

@@ -130,11 +130,11 @@
 	<body class="popup" >
 		<form method="post">
 		  <div id="normalScreen">
-		    <div id="menu">
+		    <div id="menu" style="margin-top:7px;margin-bottom:19px;">
 		      <ul style="margin:0;">
 		        <li><span onClick="modify_address()"><spring:message code='ezAddress.t174' /></span></li>
-		        <li><span onClick="window.print()"><spring:message code='ezAddress.t283' /></span></li>
-		        <li><span onClick="send_email()"><spring:message code='ezAddress.t285' /></span></li>
+		        <li><span class="icon16 popup_icon16_print" onClick="window.print()"></span></li>
+		        <li><span class="icon16 popup_icon16_mail" onClick="send_email()"></span></li>
 		      </ul>
 		    </div>
 		    <div id="close">

@@ -182,7 +182,7 @@
 		</script>
 	</head>
 	<body class="popup">
-	    <div id="menu" style="margin-bottom:10px">
+	    <div id="menu" style="margin-top:7px;">
 	        <ul>
 	            <li><span id="btnDraft" onclick="check()"><spring:message code='ezCommunity.t1011' /></span></li>
 	        </ul>
@@ -202,7 +202,7 @@
             <input type="hidden" name="sNewID">
             <input type="hidden" name="sNewSubID">
             
-	    	<table class="content" style="width:100%; margin-top:16px;">
+	    	<table class="content" style="width:100%; margin-top:19px;">
 	            <tr>
 	                <th><spring:message code='ezCommunity.t1012' /></th>
 	                <td colspan="2">

@@ -483,7 +483,7 @@
 	            </tr>
 	        </table>
 		</form>    
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionJsp">
 	        <a class="imgbtn" name="Submit" id="outok" onclick="poll_send();"><span><spring:message code='ezCommunity.t613' /></span></a>
 	        <a class="imgbtn" name="Submit2" id="outcancel" onclick="cancel_click();"><span><spring:message code='ezCommunity.t246' /></span></a>
 	    </div>

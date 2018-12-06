@@ -899,13 +899,14 @@
 	<select id="ezNewPortal.getThemePortletList" parameterClass="Map" resultClass="PortletInfoVO">
 	<![CDATA[
 		SELECT
-			A.theme_id,
-			A.tenant_id,
-			A.company_id,
-			A.portlet_id,
-			A.portlet_used,
-			A.portlet_order,
-			A.menu_id
+			A.theme_id as themeid,
+			A.tenant_id as tenantid,
+			A.company_id as companyid,
+			A.portlet_id as portletid,
+			A.portlet_used as portletused,
+			B.portlet_order as portletorder,
+			A.menu_id as menuid,
+			C.portlet_name as portletname
 		FROM
 			TBL_PORTAL_THEME_PORTLET A
 		JOIN
@@ -918,6 +919,16 @@
 			A.tenant_id = B.tenant_id
 		AND
 			B.portlet_used = 1
+		LEFT JOIN
+			TBL_PORTAL_PORTLET_NAME C
+		ON
+			A.portlet_id = C.portlet_id
+		AND
+			A.company_id = C.company_id
+		AND
+			A.tenant_id = C.tenant_id
+		AND
+			C.portlet_lang = #lang#
 		WHERE
 			A.theme_id = #themeId#
 		AND
@@ -937,7 +948,8 @@
 			#menuId#
 		) 
 		ON DUPLICATE KEY UPDATE
-			portlet_used = #portletUsed#
+			portlet_used = #portletUsed#,
+			portlet_order = #portletOrder#
 	]]>
 	</update>
 	

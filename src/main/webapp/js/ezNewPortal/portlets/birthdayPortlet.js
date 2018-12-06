@@ -43,9 +43,7 @@ function getBirthdayList() {
 		success : function(result) {
 			ptlBirthTotalCount = result.birthdayTotalCount;
 			
-			if (ptlBirthCurPage != 0) {
-				ptlBirthCurPage = result.birthdayCurPage;
-			}
+			ptlBirthCurPage = result.birthdayCurPage;
 			
 			var birthdayList = result.birthdayList;
 			
@@ -91,13 +89,13 @@ function getBirthdayList() {
 			// 프로젝트 종료 시 주석 해제
 			ptlTimer = window.setInterval(function() {
 				if (ptlBirthTotalCount > 6) {
-					ptlBirthCurPage++;
+					//ptlBirthCurPage++;
 					getBirthdayList();
 				}
 			}, 5000);
 		},
 		error : function() {
-			alert(messages.strLang2);
+			//alert(messages.strLang2);
 		}
 	});
 }
