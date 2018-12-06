@@ -717,7 +717,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.groupware_banner{ float:left; margin-top:0px;}
 }
 
-@media only screen and (max-width :1589px) and (min-width :1463px) {
+@media only screen and (max-width :1589px) and (min-width :1465px) {
 	.section_main .mainLayout_right_move{ width:50%;}
 	.section_main .mainLayout_right{ clear:both; width:50%;}
 	.section_main .mainLayout_left{ width:50%;}
@@ -728,7 +728,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.groupware_banner{ float:left; margin-top:0px;}
 }
 
-@media only screen and (max-width :1462px) and (min-width :1365px) {
+@media only screen and (max-width :1464px) and (min-width :1365px) {
 	.section_main .mainLayout_right_move{ width:50%;}
 	.section_main .mainLayout_right{ clear:both; width:50%;}
 	.section_main .mainLayout_left{ width:50%;}
