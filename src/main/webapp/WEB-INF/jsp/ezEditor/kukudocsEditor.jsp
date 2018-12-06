@@ -232,7 +232,7 @@
 	            errorImageURL : '/js/ezEditor/kukudocsEditor/images/error.png',
 	            imageUploadURL : imageUploadURL,
 	            Editor_Complete : Editor_Complete,
-	            cell_lock_name : 'free',
+// 	            cell_lock_name : 'free',
 	            lockImageURL : '/js/ezEditor/kukudocsEditor/images/lock.png',
 	            colorPicker : colorPicker
 	        });
