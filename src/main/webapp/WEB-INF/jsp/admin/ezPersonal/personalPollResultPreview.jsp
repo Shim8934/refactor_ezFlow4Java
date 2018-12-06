@@ -19,8 +19,8 @@
 				width: 100%;
 				font-size: 12px;
 				border-bottom: 1px dashed rgb(229, 229, 229);
-				height:20px;
-				line-height: 20px;
+				height:36px;
+				line-height: 36px;
 			}
 			.question {
 				background: #f2f2f2 0px 0px;
@@ -67,6 +67,7 @@
 
 			.Pt_QstOptTitleDiv {
 				width: 22%;
+				overflow: hidden;
 			}
 
 			.graphbar1 {
@@ -84,29 +85,54 @@
 				background: #0470e4;
 			}
 			
-			li:nth-child(4n) .Vnum {
-				background: #0dbeff;
+			.poll_list1 .graphbar1 {
+				margin: 11px 0px 10px 0px;
+				padding: 0px;
+				border: 1px solid #eee;
+				height: 13px;
+				background-color: #d5d5d5;
+				border-radius:25px;
 			}
-			li:nth-child(4n+1) .Vnum {
+
+			li:nth-child(1) .Vnum, li:nth-child(1) .graphbar1 .gx_bar11 {
 				background: #0470e4;
+				border: 1px solid #0470e4;
 			}
-			li:nth-child(4n+2) .Vnum {
+			li:nth-child(2) .Vnum, li:nth-child(2) .graphbar1 .gx_bar11 {
 				background: #81bc3d;
+				border: 1px solid #81bc3d;
 			}
-			li:nth-child(4n+3) .Vnum {
+			li:nth-child(3) .Vnum, li:nth-child(3) .graphbar1 .gx_bar11 {
 				background: #fa9900;
+				border: 1px solid #fa9900;
 			}
-			li:nth-child(4n) .graphbar1 .gx_bar11 {
+			li:nth-child(4) .Vnum, li:nth-child(4) .graphbar1 .gx_bar11 {
 				background: #0dbeff;
+				border: 1px solid #0dbeff;
 			}
-			li:nth-child(4n+1) .graphbar1 .gx_bar11 {
+			li:nth-child(5) .Vnum, li:nth-child(5) .graphbar1 .gx_bar11 {
+				background: #0dbeff;
+				border: 1px solid #0dbeff;
+			}
+			li:nth-child(6) .Vnum, li:nth-child(6) .graphbar1 .gx_bar11 {
 				background: #0470e4;
+				border: 1px solid #0470e4;
 			}
-			li:nth-child(4n+2) .graphbar1 .gx_bar11 {
+			li:nth-child(7) .Vnum, li:nth-child(7) .graphbar1 .gx_bar11 {
 				background: #81bc3d;
+				border: 1px solid #81bc3d;
 			}
-			li:nth-child(4n+3) .graphbar1 .gx_bar11 {
+			li:nth-child(8) .Vnum, li:nth-child(8) .graphbar1 .gx_bar11 {
 				background: #fa9900;
+				border: 1px solid #fa9900;
+			}
+			li:nth-child(9) .Vnum, li:nth-child(9) .graphbar1 .gx_bar11 {
+				background: #0dbeff;
+				border: 1px solid #0dbeff;
+			}
+			li:nth-child(10) .Vnum, li:nth-child(10) .graphbar1 .gx_bar11 {
+				background: #0470e4;
+				border: 1px solid #0470e4;
 			}
 			li:nth-last-child(1) {
 				border-bottom: 0px;

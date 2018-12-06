@@ -300,6 +300,11 @@
 					return;
 				}
 
+				if($(".skins").hasClass("checked") === false) {
+					alert("스킨을 선택해주세요.");
+					return;
+				}
+
 				var tmpStartDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
 				var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
 
