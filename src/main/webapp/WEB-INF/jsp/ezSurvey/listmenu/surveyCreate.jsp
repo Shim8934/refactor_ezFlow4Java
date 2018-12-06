@@ -239,7 +239,7 @@
 						fileUpload($(this), $(this)[0].files);
 					});
 				}
-				
+//////////////////////////////////////////////////////////////////////////				
 				// selectBox 생성
 				function createQuestionSelectBox(question) {
 					$(".selectBox").ddslick({
@@ -252,11 +252,12 @@
 							var questionType = data.selectedData.value;
 							
 							rmQstnFormBfSave(grandParent);
+							var checkResult = checkPrevWrapper(grandParent);
 							
 							switch (parseInt(questionType)) {
-								case 1: makeSelectQuestion(grandParent, questionType)   ; break;
-								case 2: makeSelectQuestion(grandParent, questionType)   ; break;
-								case 3: makeMatrixQuestion(grandParent, questionType)   ; break;
+								case 1: makeSelectQuestion(grandParent, questionType, checkResult)   ; break;
+								case 2: makeSelectQuestion(grandParent, questionType, checkResult)   ; break;
+								case 3: makeMatrixQuestion(grandParent, questionType, checkResult)   ; break;
 								case 4: break;
 								case 5: break;
 								case 6: makeParagraphQuestion(grandParent, questionType); break;
@@ -267,7 +268,23 @@
 						}
 					});
 				}
-				
+//////////////////////////////////////////////////////////////////////////				
+				function checkPrevWrapper(grandParent) {
+					var checkResult = {};
+					var thisId = parseInt(grandParent.attr("id"));
+					
+					if (thisId) {
+						var qstnObj = SurveyCreate.getQs();
+
+						console.log(qstnObj);
+						checkResult["action"] = "modify";
+						checkResult["required"] = qstnObj[thisId - 1].required;
+						
+					}
+					
+					return checkResult;
+				}
+//////////////////////////////////////////////////////////////////////////				
 				// 셀렉트 박스 선택시
 				// 셀렉트 박스 아래의 질문 폼 삭제
 				function rmQstnFormBfSave(grandParent) {
@@ -277,7 +294,7 @@
 				
 				// 셀렉트 박스 선택시 만들어지는 질문 폼
 				// 선택 질문 생성
-				function makeSelectQuestion(grandParent, questionType) {
+				function makeSelectQuestion(grandParent, questionType, checkResult) {
 					var html = makeQuestionForm(questionType);
 						
 					if (questionType == 1 || questionType == 2) {
@@ -290,12 +307,15 @@
 					html += "<button class='addOpt'>추가</button>";
 					html += "<button class='addOther'>기타추가</button>";
 					html += "</div>";
-					html += mkAddtionalPart();
+					var action = checkResult.action;
+					var required = checkResult.required;
+					
+					html += mkAddtionalPart(action, required);
 					grandParent.append(html);
 				}
 				// 셀렉트 박스 선택시 만들어지는 질문 폼
 				// 행렬 질문 생성
-				function makeMatrixQuestion(grandParent, questionType) {
+				function makeMatrixQuestion(grandParent, questionType, action) {
 					var html  = makeQuestionForm(questionType);
 						html += "<div class='mtrPart'>";
 						html += "<div class='rowArea'>";
@@ -324,7 +344,7 @@
 						html += "<div class='colBtn'>";
 						html += "<button class='addCol'>추가</button>";
 						html += "</div></div></div>";
-						html += mkAddtionalPart();
+						html += mkAddtionalPart(action);
 						
 						grandParent.append(html);
 				}
@@ -574,7 +594,7 @@
 						default : alert(SurveyMessages.strError); return;
 					}
 					
-					html += mkAddtionalPart(question.required, "modify");
+					html += mkAddtionalPart("modify", question.required);
 					
 					qstnWrapper.next().append(html);
 				}
@@ -1154,7 +1174,7 @@
 				}
 				
 				// 필수, 저장, 수정, 취소 버튼 생성
-				function mkAddtionalPart(required, action) {
+				function mkAddtionalPart(action, required) {
 					var html = "";
 						html += "<div class='additionalPart'>";
 						html += "<div class='required'>";
