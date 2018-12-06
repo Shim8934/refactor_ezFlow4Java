@@ -32,6 +32,7 @@
 	            	url : "/admin/ezSchedule/scheduleGetShareManage.do",
 	            	dataType : "xml",
 	            	async : true,
+	            	cache : false,
 	            	data : {companyID : selectedCompanyID},	            	
 	            	success : function(text){
 	            		MakeSliderList(text);
@@ -97,7 +98,7 @@
 		    }
 		    var _RowObject = null;
 		    function event_click(obj) {
-		        if (_RowObject != null) {
+		        if (_RowObject != null && _RowObject.childNodes.length != 0) {
 		            _RowObject.childNodes.item(0).style.backgroundColor = "#ffffff";
 		            _RowObject.childNodes.item(1).style.backgroundColor = "#ffffff";
 		            _RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
@@ -123,7 +124,8 @@
 	                var rtnValue = window.showModalDialog("/admin/ezSchedule/scheduleAdminPopupShareDept.do", "","dialogHeight:180px;dialogwidth:360px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
 	                
 	                if (typeof (rtnValue) != "unlimited" && rtnValue == "OK") {
-	                    window.location.reload(false);
+	                	schedule_get_sharemanage();
+	                    //window.location.reload(false);
 	                }
 	            }
 	        }
@@ -149,7 +151,8 @@
 						},
 						success : function(text){
 							alert(strLang85);
-							window.location.reload(false);	
+							//window.location.reload(false);	
+							schedule_get_sharemanage();
 						},
 						error : function(err){
 							alert(strLang86);	
