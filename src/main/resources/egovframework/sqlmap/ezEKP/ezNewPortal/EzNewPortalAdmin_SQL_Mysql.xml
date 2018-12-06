@@ -935,6 +935,8 @@
 			A.tenant_id = #tenantId#
 		AND
 			A.company_id = #companyId#
+		ORDER BY
+			B.portlet_order
 	]]>
 	</select>
 	
