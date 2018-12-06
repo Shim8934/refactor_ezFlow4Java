@@ -435,11 +435,11 @@
 						var nextId = qstnId + 1;
 						var deep = Object.assign({}, qstn, {'id': nextId}); 
 						
+						// 복사한 질문 객체 이후의 객체들 아이디값 +1
+						setNewId(qstnId, qstnList);
+						
 						// 복사한 질문 객체를 배열에 추가
 						qstnList.splice(qstnId, 0, deep);
-						
-						// 복사한 질문 객체 이후의 객체들 아이디값 +1
-						setNewId(nextId, qstnList);
 						
 						// 복사한 객체로 사용자용 질문폼 생성
 						var copyHtml = "<div class='qstnWrapper' id='" + nextId + "'></div>";
@@ -493,9 +493,9 @@
 					
 					$(".quesBacgr").on("click", ".delImage", function() {questionFile.deleteFile(this);});
 				}
-				
-				function setNewId(nextId, qstnList) {
-					for (var i = nextId; i < qstnList.length; i++) {
+				// 아이디 값을 +1씩 올림
+				function setNewId(qstnId, qstnList) {
+					for (var i = qstnList.length - 1; i >= qstnId; i--) {
 						// 해당 아이디 값을 가진 태그 캐치
 						var qstn = qstnList[i];
 						var oldId = qstn.id;
@@ -506,13 +506,13 @@
 						
 						var thisWrapper = $("#" + oldId);
 						thisWrapper.html("");
+						thisWrapper.attr("id", newId);
 						
-						mkQstnsByType(thisWrapper, type, qstn);	
+						mkQstnsByType(thisWrapper, type, qstn);
 					}
 				}
-				
+				// 사용자용 질문 폼 생성
 				function mkQstnsByType(qstnWrapper, qstnType, question) {
-					
 					switch(parseInt(qstnType)) {
 						case 1  :
 						case 2  : mkSelectQstn(qstnWrapper, question); break;
@@ -595,7 +595,7 @@
 					}
 					else {
 						for (var i = 0; i < 2; i++) {
-							html += mkOpt("opt");
+							htmlTxt += mkOpt("opt");
 						}
 					}
 					
