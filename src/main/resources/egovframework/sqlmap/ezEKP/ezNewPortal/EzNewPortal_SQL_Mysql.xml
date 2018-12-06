@@ -1558,7 +1558,7 @@ LIMIT
 				NAME.portlet_name AS portletName,
 				COMP.board_id AS boardId,
 				IFNULL(COMP.connection_url, A.portlet_url) AS portletUrl,
-				IFNULL(USER.portlet_order, IFNULL(THEME.portlet_order, A.default_order)) AS portletOrder,
+				IFNULL(USER.portlet_order, IFNULL(THEME.portlet_order, IFNULL(COMP.portlet_used, A.default_order))) AS portletOrder,
                 IFNULL(USER.portlet_used, IFNULL(THEME.portlet_used, IFNULL(COMP.portlet_used, 1))) AS portletUsed,
 		]]>
 		
