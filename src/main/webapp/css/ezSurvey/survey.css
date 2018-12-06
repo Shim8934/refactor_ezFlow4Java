@@ -338,7 +338,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .optFileInfo .attFileInf {text-align: left;}
 
 /* 2018.11.28 단일선택 사용자 폼 css */
-.usrQstnWrapper {box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.69);}
+.usrQstnWrapper {box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.45);}
 .question-panel .mvBtn {margin: 0px auto; width: 32px; height: 16px; background-image: url(/images/ezSurvey/move.png); background-repeat: no-repeat; background-size: 18px 18px; background-position: center; border: 1px solid #ddd; box-sizing: border-box; border-top: 0px; cursor: move;}
 .question-header {display: flex; height: 32px;}
 .question-header .question-content {flex: 1; line-height: 32px; font-size: 16px; font-weight: bold; padding-left: 15px; cursor: default;}
@@ -379,7 +379,8 @@ input[type=range]::-ms-tooltip {display: none;}
  
 .matrix {width: 70%; text-align: center;}
 .matrix tr {height: 30px;}
-.matrix td {border: 1px solid rgba(204, 204, 204, 1)}
+.matrix td {border: 1px solid rgba(204, 204, 204, 1); font-size: 14px;}
+.matrix input {height: 15px; width: 15px;}
 
 
 

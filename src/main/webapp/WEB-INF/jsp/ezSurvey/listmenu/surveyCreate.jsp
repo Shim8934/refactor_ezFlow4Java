@@ -110,6 +110,7 @@
 					listTabElmt[1].className = "crust selected";
 					document.getElementById("tab1").className = "hidden-tab";
 					document.getElementById("tab2").className = "select-tab";
+					focusonQuestionTitle();
 				}
 				
 				function selectStep(tabIdx, spanElemt) {
@@ -122,7 +123,15 @@
 					var selectTab       = document.querySelector("div[class='select-tab']");
 					tabElmt.className   = "select-tab";
 					selectTab.className = "hidden-tab";
+					
+					switch(parseInt(tabIdx)) {
+						case 1: focusonQuestionTitleStep1(); break;
+						case 2: focusonQuestionTitleStep2(); break;
+					}
 				}
+				
+				function focusonQuestionTitleStep1() {document.querySelector("input[class='info-input-ttl']").focus();}
+				function focusonQuestionTitleStep2() {document.querySelector("div[class='quesDiv']").querySelector("input[class='questnTitle']").focus();}
 				
 				function toggleSelectTargetBttn() {
 					var sltBoxElmt       = document.getElementById("selectTarget");
@@ -161,6 +170,7 @@
 			
 			$(function() {
 				var questionFile = new SurveyFile("images");
+				var config       = {modify : "modify", required : "required", action : "action",}
 					
 				// 셀렉트 박스에 들어갈 질문 유형 데이터 
 				var optionData = 
@@ -207,20 +217,14 @@
 					html += "<ul class='qstUl'>" + qstAtt + "</ul>";
 					html += "<input type='file' class='qstnFile' accept='image/*'/>";
 					html += "</div></div></div></div>";
-					/* html += "<div class='qstnAtt'>";
-					html += "<div class='qstnFileInfo'>";
-					html += "<div class='fileList'>";
-					html += "<ul>" + qstAtt + "</ul>";
-					html += "</div></div>";
-					html += "<div class='qstnAtt'>";
-					html += "<input type='file' class='qstnFile' style='display:none;'/>";
-					html += "</div></div></div></div>"; */
 					
 					if (qstnWrapper) {
 						qstnWrapper.after(html);
+						qstnWrapper.next().find(".questnTitle")[0].focus();
 					}
 					else {
 						$(".quesBacgr").append(html);
+						$(".quesBacgr").find(".qstnWrapper").find(".questnTitle")[0].focus();
 					}
 				}
 				
@@ -229,18 +233,12 @@
 					// question 첨부파일 트리거
 					$(".quesBacgr").on("click", ".atchImg", function() {
 						var li = $(this).closest(".quesDiv").find(".fileList").find("li");
-						
-						if (li.length == 0) {
-							$(this).parent().next().find(".qstnFile").click();
-						} else {
-							alert("첨부파일은 1개만 추가 가능합니다.");
-						}
+						if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
+						$(this).parent().next().find(".qstnFile").click();
 					});
 					
 					// question 첨부파일 추가
-					$(".quesBacgr").on("change", ".qstnFile", function(e) {
-						fileUpload(this);
-					});
+					$(".quesBacgr").on("change", ".qstnFile", function(e) {fileUpload(this);});
 				}
 				// selectBox 생성
 				function createQuestionSelectBox(question) {
@@ -277,8 +275,8 @@
 					
 					if (thisId) {
 						var qstnObj = SurveyCreate.getQs();
-						checkResult["action"]   = "modify";
-						checkResult["required"] = qstnObj[thisId - 1].required;
+						checkResult[config["action"]]   = config["modify"];
+						checkResult[config["required"]] = qstnObj[thisId - 1].required;
 					}
 					
 					return checkResult;
@@ -290,59 +288,20 @@
 					if (qstnForm.length != 0) {qstnForm.remove();}
 				}
 				
-				// 셀렉트 박스 선택시 만들어지는 질문 폼
-				// 선택 질문 생성
+				// 셀렉트 박스 선택시 만들어지는 질문 폼 선택 질문 생성
 				function makeSelectQuestion(grandParent, questionType, checkResult) {
 					var html = makeQuestionForm(questionType);
-						
-					if (questionType == 1 || questionType == 2) {
-						for (var i = 0; i < 2; i++) {
-							html += mkOpt("opt");
-						}
-					}
-					
-					html += "<div class='addBtns'>";
-					html += "<button class='addOpt'>추가</button>";
-					html += "<button class='addOther'>기타추가</button>";
-					html += "</div>";
-					html += mkAddtionalPart(checkResult["action"], checkResult["required"]);
+					html    += handleModifySelectQuestion();
+					html    += mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
 					grandParent.append(html);
 				}
-				// 셀렉트 박스 선택시 만들어지는 질문 폼
-				// 행렬 질문 생성
+				
+				// 셀렉트 박스 선택시 만들어지는 질문 폼 행렬 질문 생성
 				function makeMatrixQuestion(grandParent, questionType, checkResult) {
-					var html  = makeQuestionForm(questionType);
-						html += "<div class='mtrPart'>";
-						html += "<div class='rowArea'>";
-						html += "<div class='rName' style='float: left; width: 10%;'>";
-						html += "<span>행</span>";
-						html += "</div>";
-						html += "<div class='rows' style='float: left; width: 90%;'>";
-						
-						for (var i = 0; i < 2; i++) {
-							html += mkRowCol("row");
-						}
-						
-						html += "</div>";
-						html += "<div class='rowBtn'>";
-						html += "<button class='addRow'>추가</button>";
-						html += "</div></div>";
-						html += "<div class='colArea'>";
-						html += "<div class='cName' style='float: left; width: 10%;'>";
-						html += "<span>열</span>";
-						html += "</div>";
-						html += "<div class='cols' style='float: left; width: 90%;'>";
-						
-						for (var i = 0; i < 2; i++) {
-							html += mkRowCol("col");
-						}
-						
-						html += "</div>";
-						html += "<div class='colBtn'>";
-						html += "<button class='addCol'>추가</button>";
-						html += "</div></div></div>";
-						html += mkAddtionalPart(checkResult["action"], checkResult["required"]);
-						grandParent.append(html);
+					var html = makeQuestionForm(questionType);
+					html    += handleModifyMatrixQuestion();
+					html    += mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+					grandParent.append(html);
 				}
 				
 				// 버튼 이벤트
@@ -373,7 +332,7 @@
 					// 기타 추가
 					$(".quesBacgr").on("click", ".addOther", function() {
 						var thisEl = $(this).parents(".qstnForm");
-						if (thisEl.find(".other").length > 0) {alert("기타는 하나만 추가 가능합니다."); return;}
+						if (thisEl.find(".other").length > 0) {alert(SurveyMessages.strOneOther); return;}
 						thisEl.find(".optPart").last().after(mkOpt("other"));
 					});
 					
@@ -393,7 +352,6 @@
 						}
 					});
 					
-					/* matrix 버튼 이벤트 */
 					// matrix 행 추가
 					$(".quesBacgr").on("click", ".addRow", function() {
 						$(this).parents(".rowArea").find(".rows").append(mkRowCol("row"));
@@ -403,53 +361,32 @@
 						var cols = $(this).parents(".colArea").find(".cols");
 						var colLength = cols.find(".col").length;
 						
-						if (colLength < 10) {
-							cols.append(mkRowCol("col"));
-						}
-						else {
-							alert("컬럼은 최대 10개까지 추가 가능합니다.");
-						}
+						if (colLength > 10) {alert(SurveyMessages.strColumnLm); return;}
+						cols.append(mkRowCol("col"));
 					});
 					// matrix 행 삭제
 					$(".quesBacgr").on("click", ".delRow", function(e) {
 						var lowLength = $(this).closest(".rows").find(".row").length;
-						
-						if (lowLength > 1) {
-							$(this).closest(".row").remove();
-						}
-						else {
-							alert(SurveyMessages.strMaxtrix1);
-						}
+						if (lowLength <= 1) {alert(SurveyMessages.strMaxtrix1); return;}
+						$(this).closest(".row").remove();
 					});
 					// matrix 열 삭제
 					$(".quesBacgr").on("click", ".delCol", function() {
 						var colLength = $(this).closest(".cols").find(".col").length;
-						
-						if (colLength > 1) {
-							$(this).closest(".col").remove();
-						}
-						else {
-							alert(SurveyMessages.strMaxtrix2);
-						}
+						if (colLength <= 1) {alert(SurveyMessages.strMaxtrix2); return;}
+						$(this).closest(".col").remove();
 					});
 					
-					/* 공통 버튼 이벤트 */
 					// 첨부파일 버튼 클릭 이벤트
 					$(".quesBacgr").on("click", ".attImg", function() {
 						var optArea = $(this).closest(".optArea");
 						var li      = optArea.find(".fileList").find("li");
-						
-						if (li.length == 0) {
-							optArea.find(".optionFile").click();
-						}
-						else {
-							alert("첨부파일은 1개만 추가 가능합니다.");
-						}
+						if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
+						optArea.find(".optionFile").click();
 					});
-					// 첨부파일 버튼 이벤트
-					$(".quesBacgr").on("change", ".optionFile", function (e) {
-						fileUpload(this);
-					});
+					
+					$(".quesBacgr").on("change", ".optionFile", function (e) {fileUpload(this);}); // 첨부파일 버튼 이벤트
+					
 					// 질문 생성 폼의 취소 버튼 클릭
 					$(".quesBacgr").on("click", ".cancel", function() {
 						var thisWrapper = $(this).closest(".qstnWrapper");
@@ -458,10 +395,9 @@
 						setSelectBox(thisWrapper);                                 // 셀렉트 박스  내용 변경
 						thisWrapper.find(".qstnForm").remove();                    // 질문 폼 삭제
 					});
+					
 					// 저장 버튼 클릭 이벤트
-					$(".quesBacgr").on("click", ".save", function() {
-						mkQstnObj("save", $(this)); // 해당 질문의 객체 생성
-					});
+					$(".quesBacgr").on("click", ".save", function() {mkQstnObj("save", $(this));});// 해당 질문의 객체 생성
 					
 					// 우상단 수정 버튼 클릭 이벤트
 					$(".quesBacgr").on("click", ".modifyBtn", function() {
@@ -477,8 +413,8 @@
 						
 						createQuestionDiv(qstnWrapper, qstn);
 						createQuestionSelectBox(qstn);
-						setSelectBox(qstnWrapper, "modify", qstnType);
-						handleModifyQuestion(qstnWrapper, qstn, "modify");
+						setSelectBox(qstnWrapper, config["modify"], qstnType);
+						handleModifyQuestion(qstnWrapper, qstn, config["modify"]);
 						
 						//수정을 취소할 경우를 고려해 숨김 처리
 						qstnWrapper.css("display", "none");
@@ -516,29 +452,25 @@
 					// 우상단 삭제 버튼 클릭 이벤트
 					$(".quesBacgr").on("click", ".deleteBtn", function() {
 						var thisWrapper = $(this).closest(".qstnWrapper");
-						var qstnId = thisWrapper.attr("id");
+						var qstnId      = thisWrapper.attr("id");
+						var qstnList    = SurveyCreate.getQs();
 						
-						var qstnList = SurveyCreate.getQs();
-						// 질문 배열에서 해당 순번의 질문객체 삭제
-						qstnList.splice(qstnId - 1, 1);
-						// 질문 폼 삭제
-						thisWrapper.remove();
+						qstnList.splice(qstnId - 1, 1); // 질문 배열에서 해당 순번의 질문객체 삭제
+						thisWrapper.remove();           // 질문 폼 삭제
 					});
 					
-					// 수정 버튼 클릭 이벤트
-					// 질문 객체 수정
+					// 수정 버튼 클릭 이벤트 질문 객체 수정
 					$(".quesBacgr").on("click", ".modify", function (e) {
-						mkQstnObj("modify", $(this));
+						mkQstnObj(config["modify"], $(this));
 					});
-					// 수정 취소 버튼 클릭 이벤트
-					// 수정 폼 삭제
+					
+					// 수정 취소 버튼 클릭 이벤트 수정 폼 삭제
 					$(".quesBacgr").on("click", ".mdfCancel", function() {
 						var thisWrapper = $(this).parents(".qstnWrapper");
-						// 숨김 처리했던 사용자 폼 다시 보임 처리
-						thisWrapper.prev().css("display", "");
-						// 수정 폼 삭제
-						thisWrapper.remove();
+						thisWrapper.prev().css("display", ""); // 숨김 처리했던 사용자 폼 다시 보임 처리
+						thisWrapper.remove();                  // 수정 폼 삭제
 					});
+					
 					$(".quesBacgr").on("input", ".slider-range", function() {
 						var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
 						outputElmt.textContent = this.value;
@@ -559,9 +491,7 @@
 						}
 					});
 					
-					$(".quesBacgr").on("click", ".delImage", function() {
-						questionFile.deleteFile(this);
-					});
+					$(".quesBacgr").on("click", ".delImage", function() {questionFile.deleteFile(this);});
 				}
 				
 				function setNewId(nextId, qstnList) {
@@ -650,20 +580,28 @@
 				// 수정시 새로 생성하는 선택질문
 				function handleModifySelectQuestion(question) {
 					var htmlTxt = "";
-					var options = question.option;
-					var other   = question.other;
 					
-					if (options) {
-						for (var i = 0, len = options.length; i < len; i++) {
-							htmlTxt += mkOpt("opt", options[i]);
+					if (question) {
+						var options = question.option;
+						var other   = question.other;
+						
+						if (options) {
+							for (var i = 0, len = options.length; i < len; i++) {
+								htmlTxt += mkOpt("opt", options[i]);
+							}
+						}
+						
+						if (other) {htmlTxt += mkOpt("other", other);}
+					}
+					else {
+						for (var i = 0; i < 2; i++) {
+							html += mkOpt("opt");
 						}
 					}
 					
-					if (other) {htmlTxt += mkOpt("other", other);}
-					
 					htmlTxt += "<div class='addBtns'>";
-					htmlTxt += "<button class='addOpt'>추가</button>";
-					htmlTxt += "<button class='addOther'>기타추가</button>";
+					htmlTxt += "<button class='addOpt'>" + SurveyMessages.strAdd + "</button>";
+					htmlTxt += "<button class='addOther'>" + SurveyMessages.strAddOther + "</button>";
 					htmlTxt += "</div>";
 					
 					return htmlTxt;
@@ -672,13 +610,13 @@
 				// 수정시 새로 생성하는 행렬질문 
 				function handleModifyMatrixQuestion(question) {
 					var html = "";
-					var row  = question.row;
-					var col  = question.col;
+					var row  = question ? question.row : "";
+					var col  = question ? question.col : "";
 					
 					html += "<div class='mtrPart'>";
 					html += "<div class='rowArea'>";
 					html += "<div class='rName' style='float: left; width: 10%;'>";
-					html += "<span>행</span>";
+					html += "<span>" + SurveyMessages.strRow + "</span>";
 					html += "</div>";
 					html += "<div class='rows' style='float: left; width: 90%;'>";
 					
@@ -687,14 +625,19 @@
 							html += mkRowCol("row", row[i]);
 						}
 					}
+					else {
+						for (var i = 0; i < 2; i++) {
+							html += mkRowCol("row");
+						}
+					}
 					
 					html += "</div>";
 					html += "<div class='rowBtn'>";
-					html += "<button class='addRow'>추가</button>";
+					html += "<button class='addRow'>" + SurveyMessages.strAdd + "</button>";
 					html += "</div></div>";
 					html += "<div class='colArea'>";
 					html += "<div class='cName' style='float: left; width: 10%;'>";
-					html += "<span>열</span>";
+					html += "<span>" + SurveyMessages.strColumn + "</span>";
 					html += "</div>";
 					html += "<div class='cols' style='float: left; width: 90%;'>";
 					
@@ -703,10 +646,15 @@
 							html += mkRowCol("col", col[i]);
 						}
 					}
+					else {
+						for (var i = 0; i < 2; i++) {
+							html += mkRowCol("col");
+						}
+					}
 					
 					html += "</div>";
 					html += "<div class='colBtn'>";
-					html += "<button class='addCol'>추가</button>";
+					html += "<button class='addCol'>" + SurveyMessages.strAdd + "</button>";
 					html += "</div></div></div>";
 					
 					return html;
@@ -756,7 +704,7 @@
 					}
 					
 					htmlTxt += "<div class='addBtns'>";
-					htmlTxt += "<button class='addOpttions'>추가</button>";
+					htmlTxt += "<button class='addOpttions'>" + SurveyMessages.strAdd + "</button>";
 					htmlTxt += "</div></div>";
 					return htmlTxt;
 				}
@@ -858,7 +806,7 @@
 				}
 				
 				function rmPrevEl(wrapperElmt) {wrapperElmt.prev().remove();}
-//////////////////////////////////////////////////////////////////////////////////				
+				
 				// 질문 객체 생성
 				function mkQstnObj(status, thisEl) {
 					var question     = {};
@@ -875,7 +823,7 @@
 					var qstnType         = qstnForm.attr("questiontype");
 					question['type']     = qstnType;
 					var rqrd             = qstnForm.find(".additionalPart").find("input[name='checkbox']");
-					question['required'] = rqrd.is(":checked") == true ? 'Y' : 'N';
+					question[config["required"]] = rqrd.is(":checked") == true ? 'Y' : 'N';
 					
 					//Check question attach files
 					var qstnFObj = qstnArea.find(".qstnFileInfo")[0].childNodes[0].childNodes[0].childNodes[0];
@@ -900,8 +848,8 @@
 								  if (mtrObj.row)   {question["row"] = mtrObj.row;}
 								  if (mtrObj.col)   {question["col"] = mtrObj.col;}
 								  mkMatrixQstn(qstnWrapper, question); break;
-						case 5  : mkShortAnswerQstn(qstnWrapper, question); break;
-						case 6  : mkParagraphQstn(qstnWrapper, question); break;
+						case 5  : mkTextQstn(qstnWrapper, question, "shortanswer"); break;
+						case 6  : mkTextQstn(qstnWrapper, question, "paragraph"  ); break;
 						case 7  : var sliderObj = mkSliderObj(qstnForm[0]);
 								  if (sliderObj.error) {alert(SurveyMessages[sliderObj.error]); return;}
 								  question["lowest"]  = sliderObj["lowest"];
@@ -925,22 +873,16 @@
 						createQuestionSelectBox();
 						SurveyCreate.setQs(question);
 					}
-					else if (status == 'modify') {
+					else if (status == config["modify"]) {
 						rmPrevEl(qstnWrapper);
 						questionList.splice(qstId - 1, 1);           // 질문 배열에서 해당 순번의 객체 삭제
 						questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
 					}
 				}
-//////////////////////////////////////////////////////////////////////////////////				
-				function mkShortAnswerQstn(wrapperElmt, question) {
-					var html = makeQuestionHeaderPanel(question);
-					html    += handleModifyTextQuesion("shortanswer", "modify");
-					wrapperElmt.prepend(html);
-				}
 				
-				function mkParagraphQstn(wrapperElmt, question) {
+				function mkTextQstn(wrapperElmt, question, type) {
 					var html = makeQuestionHeaderPanel(question);
-					html    += handleModifyTextQuesion("paragraph", "modify");
+					html    += handleModifyTextQuesion(type, config["modify"]);
 					wrapperElmt.prepend(html);
 				}
 				
@@ -1104,7 +1046,7 @@
 						var other         = {};
 						var othVal        = oth[0].childNodes[0].childNodes[0].childNodes[0].value;
 						var othObj        = oth[0].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
-						other['contents'] = othVal ? othVal : "기타";
+						other['contents'] = othVal ? othVal : SurveyMessages.strOther;
 						
 						if (othObj) {other['otherAttach'] = getAttachFileInfo(othObj);}
 						
@@ -1165,7 +1107,7 @@
 				
 				// make ranking/dropdown options
 				function mkOptions(type, order, content) {
-					var html = "<div class='" + type + "-select'>";
+					var html  = "<div class='" + type + "-select'>";
 					html     += "<span class='" + type + "-order'>" + order + "</span>";
 					html     += "<input class='textInput' type='text' value='" + content + "' placeholder='" + SurveyMessages.strContent + "'/>";
 					html     += "<span class='delOption'></span>";
@@ -1184,11 +1126,11 @@
 						html = "<div class='other'>" + html;
 						
 						if (options) {
-							html  += "<input class='textInput' type='text' value='" + options.contents + "' placeholder='기타' />";
+							html  += "<input class='textInput' type='text' value='" + options.contents + "' placeholder='" + SurveyMessages.strOther + "'/>";
 							optAtt = options.otherAttach;
 						}
 						else {
-							html += "<input class='textInput' type='text' placeholder='기타'>";
+							html += "<input class='textInput' type='text' placeholder='" + SurveyMessages.strOther + "'>";
 						}
 					}
 					else {
@@ -1243,17 +1185,17 @@
 						html += "<div class='additionalPart'>";
 						html += "<div class='required'>";
 						html += required == 'Y' ? "<input type='checkbox' name='checkbox' checked='checked'>" : "<input type='checkbox' name='checkbox'>";
-						html += "<strong>필수 답변</strong>";
+						html += "<strong>" + SurveyMessages.strRequired + "</strong>";
 						html += "</div>";
 						html += "<div class='btns'>";
 						
-					if (action == 'modify') {
-						html += "<button class='modify'>수정</button>";
-						html += "<button class='mdfCancel'>취소</button>";
+					if (action == config["modify"]) {
+						html += "<button class='modify'>" + SurveyMessages.strModify + "</button>";
+						html += "<button class='mdfCancel'>" + SurveyMessages.strCancel + "</button>";
 					}
 					else {
-						html += "<button class='save'>저장</button>";
-						html += "<button class='cancel'>취소</button>";
+						html += "<button class='save'>" + SurveyMessages.strSaveTxt + "</button>";
+						html += "<button class='cancel'>" + SurveyMessages.strCancel + "</button>";
 					}
 					
 					html += "</div>";
@@ -1265,7 +1207,7 @@
 				function makeTextQuestion(mainDivElmt, questionType, type, checkResult) {
 					var html = makeQuestionForm(questionType);
 					html    += handleModifyTextQuesion(type, "make");
-					html    += mkAddtionalPart(checkResult["action"], checkResult["required"]);
+					html    += mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
 					
 					mainDivElmt.append(html);
 				}
@@ -1273,7 +1215,7 @@
 				function makeSliderQuestion(mainDivElmt, questionType, checkResult) {
 					var html = makeQuestionForm(questionType);
 					html    += handleModifySliderQuesion();
-					html    += mkAddtionalPart(checkResult["action"], checkResult["required"]);
+					html    += mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
 					
 					mainDivElmt.append(html);
 				}
@@ -1281,7 +1223,7 @@
 				function makeRankingQuestion(mainDivElmt, questionType, checkResult) {
 					var html = makeQuestionForm(questionType);
 					html    += handleModifyRankDropDownQuesion("ranking");
-					html    += mkAddtionalPart(checkResult["action"], checkResult["required"]);
+					html    += mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
 					
 					mainDivElmt.append(html);
 				}
@@ -1289,7 +1231,7 @@
 				function makeDropdownQuestion(mainDivElmt, questionType, checkResult) {
 					var html = makeQuestionForm(questionType);
 					html    += handleModifyRankDropDownQuesion("dropdown");
-					html    += mkAddtionalPart(checkResult["action"], checkResult["required"]);
+					html    += mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
 					
 					mainDivElmt.append(html);
 				}
