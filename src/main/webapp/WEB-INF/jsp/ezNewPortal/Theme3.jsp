@@ -390,15 +390,9 @@
 				$(".info_right").css("width", "calc(100% - 194px)");
 				$(".info_right").css("background", "#ffffff");
 			} else if (media1589.matches) {
-				$(".portlet").addClass("two_column");
-				$(".info_left").css("display", "none");
-				$(".info_right").css("width", "100%");
-				$(".info_right").css("margin-left", "0px !important");
+				$(".portlet").removeClass("two_column");
 			} else if (media1279.matches) {
-				$(".portlet").css("width", "");
-				$(".box_shadow.info_left").css("display", "none");
-				$(".box_shadow.info_right").css("width", "100%");
-				$(".box_shadow.info_right").css("margin-left", "0px !important");
+				$(".portlet").removeClass("two_column");
 			}
 		}
 	}
