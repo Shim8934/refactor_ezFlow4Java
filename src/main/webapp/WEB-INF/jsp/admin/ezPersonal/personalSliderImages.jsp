@@ -21,9 +21,10 @@
 		ul .addsliderList {margin:10px 30px 20px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
 		ul .slider-body {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px}
 		ul .slider-head {margin:0px; position: absolute;cursor:move; border:none; width:285px; height:40px; line-height:38px; border-radius:0px; background: rgba(0, 0, 0, 0.5);}
+		ul .slider-header {margin:0px;position: relative;cursor:move;border:none;font-size:14px;font-weight:bold;height:40px;line-height:38px;border-radius:0px;color:#393939;width:285px;height:515px;}
 		ul .slider-header-add {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px;background: rgba(0, 0, 0, 0.5); width:270px; z-index: 2;}
 		ul .slider-header-modify {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;background: rgba(0, 0, 0, 0.5); z-index: 2;}
-		ul .slider-content {margin:0px; position: absolute;cursor:move; border:none; width:285px; border-radius:0px; background: rgba(0, 0, 0, 0.5); top: 405px;}
+		ul .slider-content {margin:0px; position: absolute;cursor:move; border:none; width:285px; border-radius:0px; background: rgba(0, 0, 0, 0.5); top: 400px; height: 115px;}
 		ul .slider-imagePage {width:225px; height:210px;}
 		ul .addSlider {border:1px dashed #aab2ba; display:inline-block; text-align:center; vertical-align : top; border-radius:0px; width:285px; height:515px; position:relative; margin: 10px 5px 5px 0px;}
 		.sliderInfoTD {padding:5px 15px 5px 15px; color: #fff;}
@@ -33,8 +34,8 @@
 		ul .slideIsUse {padding: 15px 10px 0px 10px;}
 		.cancelNewSliderBtn img {height:25px; float:right; padding: 3px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 		.addNewSliderBttn img {height:25px; float:right; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
-		.sliderAddBody {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px}
-		.sliderModifyBody {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px}
+		.sliderAddBody {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px; list-style: none;}
+		.sliderModifyBody {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px;}
 		.addImageBtn span {height:25px; background-color:#f4f4f4; border:1px solid #e7e7e7;  float:right; padding: 0px 9px; line-height: 23px; display:block; text-align: center; margin-top:50%; margin-right:35%}
 		.addImageBtnModify span {height:25px; background-color:#f4f4f4; border:1px solid #e7e7e7;  float:right; padding: 0px 9px; line-height: 23px; display:block; text-align: center; margin-top:50%; margin-right:35%}
 		.slider-content-add {margin:0px; position: absolute;cursor:move; border:none; width:285px; border-radius:0px; background: rgba(0, 0, 0, 0.5); top: 400px; right: 1px; z-index: 2;}
@@ -200,7 +201,6 @@
 		    
 		    //슬라이더 이미지 추가
 		    function btn_Select() {
-		    	$(".addSlider").remove();
 		    	
 		    	var preList = $(".sliderList");
 		    	var preListlength = preList.length;
@@ -216,7 +216,111 @@
 		    		}
 		    	}
 		    	
-		    	var sliderHTML = "";
+		    	var liElmt   = document.createElement("li");
+		    	var divElmt  = document.createElement("div");
+		    	var divElmt2 = document.createElement("div");
+		    	var divElmt3 = document.createElement("div");
+		    	var aElmt    = document.createElement("a");
+		    	var spaElmt  = document.createElement("span");
+		    	var imgElmt  = document.createElement("img");
+		    	var tabElmt  = document.createElement("table");
+		    	
+		    	liElmt.className = "addsliderList";
+		    	liElmt.setAttribute("id", "addsliderList");
+		    	
+		    	divElmt.className = "slider-header";
+		    	divElmt.setAttribute("style", "color:#b1b1b1");
+		    	divElmt2.className = "slider-header-add";
+		    	
+		    	aElmt.className = "cancelNewSliderBtn";
+		    	aElmt.setAttribute("id", "cancelNewSliderBtn");
+		    	spaElmt.className = "addCancel";
+		    	
+		    	liElmt.appendChild(divElmt);
+		    	
+		    	divElmt.appendChild(divElmt2);
+		    	divElmt2.appendChild(aElmt);
+		    	aElmt.appendChild(spaElmt);
+		    	spaElmt.appendChild(imgElmt);
+		    	
+		    	imgElmt.setAttribute("src", "/images/admin/icon_cancel.png");
+		    	
+		    	divElmt3.className = "slider-content-add";
+		    	tabElmt.className = "sliderInfo";
+		    	divElmt.appendChild(divElmt3);
+		    	divElmt3.appendChild(tabElmt);
+		    	
+		    	var trElmt1 = document.createElement("tr");
+		    	var trElmt2 = document.createElement("tr");
+		    	var tdElmt1 = document.createElement("td");
+		    	var tdElmt2 = document.createElement("td");
+		    	var tdElmt3 = document.createElement("td");
+		    	var tdElmt4 = document.createElement("td");
+		    	var tdElmt5 = document.createElement("td");
+		    	var ipElmt1 = document.createElement("input");
+		    	var ipElmt2 = document.createElement("input");
+		    	var ipElmt3 = document.createElement("input");
+		    	var aElmt2  = document.createElement("a");
+		    	var lalElmt = document.createElement("label");
+		    	var spaElmt2  = document.createElement("span");
+		    	var aElmt3  = document.createElement("a");
+		    	var spaElmt3 = document.createElement("span");
+		    	var spaElmt4  = document.createElement("span");
+		    	
+		    	tdElmt1.className = "sliderInfoTDadd";
+		    	tdElmt1.innerText = "URL";
+		    	ipElmt1.setAttribute("id", "txtDisplayName3");
+		    	ipElmt1.setAttribute("type", "text");
+		    	ipElmt1.setAttribute("maxlength", 50);
+		    	
+		    	tdElmt3.className = "sliderInfoTDadd";
+		    	tdElmt3.innerText = "사용여부";
+		    	tdElmt4.className = "slideIsUse";
+		    	lalElmt.className = "switch";
+		    	ipElmt3.setAttribute("id", "slideIsUseAdd");
+		    	ipElmt3.setAttribute("type", "checkbox");
+		    	ipElmt3.setAttribute("checked", "checked");
+		    	spaElmt2.className = "slider round";
+		    	aElmt3.className = "imgbtn";
+		    	aElmt3.setAttribute("href", "#");
+		    	spaElmt4.addEventListener("click", function(event) {btnSave_click();});
+		    	spaElmt4.innerText = "<spring:message code = 'ezPersonal.t34' />";
+		    	
+		    	tabElmt.appendChild(trElmt1);
+		    	trElmt1.appendChild(tdElmt1);
+		    	trElmt1.appendChild(tdElmt2);
+		    	tdElmt2.appendChild(ipElmt1);
+		    	tabElmt.appendChild(trElmt2);
+		    	trElmt2.appendChild(tdElmt3);
+		    	trElmt2.appendChild(tdElmt4);
+		    	trElmt2.appendChild(tdElmt5);
+		    	tdElmt4.appendChild(lalElmt);
+		    	lalElmt.appendChild(ipElmt3);
+		    	lalElmt.appendChild(spaElmt2);
+		    	trElmt2.appendChild(tdElmt5);
+		    	tdElmt5.appendChild(aElmt3);
+		    	aElmt3.appendChild(spaElmt4);
+		    	
+		    	var imgElmt2 = document.createElement("img");
+		    	
+		    	aElmt2.className = "addImageBtn";
+		    	spaElmt3.className = "addImage";
+		    	spaElmt3.setAttribute("id", "addImage");
+		    	spaElmt3.innerText = "이미지선택";
+		    	spaElmt3.addEventListener("click", function(event) {addImage();});
+		    	imgElmt2.setAttribute("id", "UploadSliderImage");
+		    	imgElmt2.setAttribute("src", "");
+		    	imgElmt2.setAttribute("style", "width:285px;height:515px;display:none");
+		    	imgElmt2.addEventListener("load", function(event){imgdisplay();});
+		    	
+		    	divElmt.appendChild(aElmt2);
+		    	aElmt2.appendChild(spaElmt3);
+		    	divElmt.appendChild(imgElmt2);
+		    	
+		    	$("#addSlider").hide();
+		    	$("#sliderContainer").append(liElmt);
+		    	//$("#addSlider").hide();
+		    	/* var sliderHTML = "";
 		    	sliderHTML += "<li class = 'addsliderList' id = 'addsliderList'>";
 		    	sliderHTML += "<div class = 'sliderAddBody' id = 'sliderAddBody'>";
 		    	sliderHTML += "<div class = 'slider-header-add'>";
@@ -236,7 +340,7 @@
 		    	sliderHTML += "</div>";
 		    	sliderHTML += "</li>";
 		    	
-		    	document.getElementById("sliderContainer").insertAdjacentHTML('beforeend', sliderHTML);
+		    	document.getElementById("sliderContainer").insertAdjacentHTML('beforeend', sliderHTML); */
 		    	
 		    	$(".cancelNewSliderBtn").on("click", addCancel);
 		    } 
@@ -444,6 +548,7 @@
 		    //슬라이더 수정 함수
 		    function modifySlider(obj) {
 		    	var preList = $(".sliderList");
+		    	var addList = $(".addsliderList");
 		    	var preListlength = preList.length;
 		    	var preFind = "";
 		    	var preShow = "";
@@ -455,6 +560,11 @@
 		    			preFind.remove();
 		    			preShow.style.display = "";
 		    		}
+		    	}
+		    	
+		    	if(addList != null){
+		    		addList.remove();
+		    		$(".addSlider").show();
 		    	}
 		    	
 		    	var sliderID = obj.getAttribute("data3");
