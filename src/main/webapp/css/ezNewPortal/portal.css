@@ -704,7 +704,40 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.box_shadow.info_right {width:100%; margin-left:0px !important;}
 }
 
-@media only screen and (max-width :1685px) and (min-width :1280px) {
+@media only screen and (max-width :1685px) and (min-width :1590px) {
+	.section_main .mainLayout_right_move{ width:50%;}
+	.section_main .mainLayout_right{ clear:both; width:50%;}
+	.section_main .mainLayout_left{ width:50%;}
+	.section_main .mainLayout_middle{ width:50%;}
+	.portlet{width:48.3%; float:left;}
+	.vote{ margin:0px 2px; float:left; overflow:hidden;}
+	.stats_graph{ float:left; overflow:hidden;}
+	.groupware_banner{ float:left; margin-top:0px;}
+}
+
+@media only screen and (max-width :1589px) and (min-width :1463px) {
+	.section_main .mainLayout_right_move{ width:50%;}
+	.section_main .mainLayout_right{ clear:both; width:50%;}
+	.section_main .mainLayout_left{ width:50%;}
+	.section_main .mainLayout_middle{ width:50%;}
+	.portlet{width:48.1%; float:left;}
+	.vote{ margin:0px 2px; float:left; overflow:hidden;}
+	.stats_graph{ float:left; overflow:hidden;}
+	.groupware_banner{ float:left; margin-top:0px;}
+}
+
+@media only screen and (max-width :1462px) and (min-width :1365px) {
+	.section_main .mainLayout_right_move{ width:50%;}
+	.section_main .mainLayout_right{ clear:both; width:50%;}
+	.section_main .mainLayout_left{ width:50%;}
+	.section_main .mainLayout_middle{ width:50%;}
+	.portlet{width:47.9%; float:left;}
+	.vote{ margin:0px 2px; float:left; overflow:hidden;}
+	.stats_graph{ float:left; overflow:hidden;}
+	.groupware_banner{ float:left; margin-top:0px;}
+}
+
+@media only screen and (max-width :1364px) and (min-width :1280px) {
 	.section_main .mainLayout_right_move{ width:50%;}
 	.section_main .mainLayout_right{ clear:both; width:50%;}
 	.section_main .mainLayout_left{ width:50%;}
