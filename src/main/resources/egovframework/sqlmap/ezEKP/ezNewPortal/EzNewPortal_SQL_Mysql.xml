@@ -1661,7 +1661,7 @@ LIMIT
 		
 		<isNotEqual property="config" compareValue="true" prepend="AND">
 			<![CDATA[
-				USER.portlet_used != 0
+				(USER.portlet_used = 1 OR USER.portlet_used IS NULL)
 			]]>
 		</isNotEqual>
 		
