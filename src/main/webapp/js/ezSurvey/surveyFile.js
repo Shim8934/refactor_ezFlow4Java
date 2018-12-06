@@ -1,10 +1,11 @@
 var SurveyFile = function() {
-	return function(data) {
-		var lineWidth = 4;
-		var start     = 4.72;
-		var isStart   = false;
-		var fillColor = "#09F";
-		var totalCap  = 0;
+	return function(type) {
+		var lineWidth  = 4;
+		var start      = 4.72;
+		var isStart    = false;
+		var fillColor  = "#09F";
+		var totalCap   = 0;
+		var uploadType = !type ? "all" : "images";
 		
 		function onDragEnter(evt) {
 			evt.dataTransfer.dropEffect = "copy";
@@ -16,6 +17,21 @@ var SurveyFile = function() {
 			evt.dataTransfer.dropEffect = "copy";
 			evt.stopPropagation();
 			evt.preventDefault();
+		}
+		
+		function handleAllUpload(param) {
+			var uploadHandler = uploadType == "all" ? onStartUpload : onImagesUpload;
+			uploadHandler(param);
+		}
+		
+		function onImagesUpload(fileElmt) {
+			var fileList  = fileElmt.files;
+			
+			if (fileList.length == 0) {return;}
+			if (fileList[0]["type"].split("/")[0] != "image") {alert(SurveyMessages.strOnlyImage); return;}
+			
+			fileupload(fileList[0], fileElmt);
+			fileElmt.value = null;
 		}
 		
 		function onStartUpload(evt) {
@@ -47,46 +63,51 @@ var SurveyFile = function() {
 			if (!evt) {document.getElementById("fileBttn").value = null;}
 		}
 		
-		function fileupload(fileItem) {
-			var fd              = new FormData();
-			var filePath        = null;
-			var fileName        = fileItem.name;
-			var fileSize        = fileItem.size;
-			var fileDivElmt     = document.getElementById("fileDiv");
-			var divfileListElmt = fileDivElmt.firstElementChild;
-			var ulElmt          = divfileListElmt.firstElementChild;
-			
-			if (!isStart) {
-				divfileListElmt.className = "fileList";
-				var divInformElmt         = fileDivElmt.querySelector("div[class='divInform']");
-				var helpDivElmt           = document.getElementById("helpTxt");
-				if (divInformElmt) {fileDivElmt.removeChild(divInformElmt);}
-				if (helpDivElmt)   {helpDivElmt.className = "uploadHelp";}
-			}
-			
+		function fileupload(fileItem, fileElmt) {
+			var fd            = new FormData();
+			var filePath      = null;
+			var fileName      = fileItem.name;
+			var fileSize      = fileItem.size;
+			var ulElmt        = null;
 			var liElmt        = document.createElement("li");
 			var divMainElmt   = document.createElement("div");
 			var divChildElmt1 = document.createElement("div");
-			var divChildElmt2 = document.createElement("div");
 			var canvasElmt    = document.createElement("canvas");
-			var spanChild1    = document.createElement("span");
-			var spanChild2    = document.createElement("span");
 			
 			canvasElmt.setAttribute("width" , "40");
 			canvasElmt.setAttribute("height", "40");
 			divChildElmt1.className = "attImgAva";
 			divChildElmt1.appendChild(canvasElmt);
-			
-			spanChild1.textContent  = fileName;
-			spanChild1.setAttribute("title", fileName);
-			spanChild2.textContent  = getFileSize(fileSize);
-			divChildElmt2.className = "attFileInf";
-			divChildElmt2.appendChild(spanChild1);
-			divChildElmt2.appendChild(spanChild2);
-			
-			divMainElmt.className = "attDivFile";
+			divMainElmt.className   = "attDivFile";
 			divMainElmt.appendChild(divChildElmt1);
-			divMainElmt.appendChild(divChildElmt2);
+			
+			if (fileElmt) {
+				ulElmt                  = fileElmt.parentElement.firstElementChild;
+			}
+			else {
+				var fileDivElmt         = document.getElementById("fileDiv");
+				var divfileListElmt     = fileDivElmt.firstElementChild;
+				ulElmt                  = divfileListElmt.firstElementChild;
+				var divChildElmt2       = document.createElement("div");
+				var spanChild1          = document.createElement("span");
+				var spanChild2          = document.createElement("span");
+				spanChild1.textContent  = fileName;
+				spanChild1.setAttribute("title", fileName);
+				spanChild2.textContent  = getFileSize(fileSize);
+				divChildElmt2.className = "attFileInf";
+				divChildElmt2.appendChild(spanChild1);
+				divChildElmt2.appendChild(spanChild2);
+				divMainElmt.appendChild(divChildElmt2);
+				
+				if (!isStart) {
+					divfileListElmt.className = "fileList";
+					var divInformElmt         = fileDivElmt.querySelector("div[class='divInform']");
+					var helpDivElmt           = document.getElementById("helpTxt");
+					if (divInformElmt) {fileDivElmt.removeChild(divInformElmt);}
+					if (helpDivElmt)   {helpDivElmt.className = "uploadHelp";}
+				}
+			}
+			
 			liElmt.setAttribute("fname", fileName);
 			liElmt.appendChild(divMainElmt);
 			ulElmt.appendChild(liElmt);
@@ -153,7 +174,7 @@ var SurveyFile = function() {
 		}
 		
 		function afterUploadSuccessfully(liElmt, filename, filePath, fileSize) {
-			if (!isStart) {
+			if (!isStart && uploadType == "all") {
 				var fileDivElmt = document.getElementById("fileDiv");
 				if (fileDivElmt) {fileDivElmt.onclick = function(e) {return null;};}
 			}
@@ -161,8 +182,8 @@ var SurveyFile = function() {
 			isStart            = true;
 			var checkImageFile = isImage(filename);
 			var delImg         = document.createElement("img");
-			delImg.src         = "/images/survey/file_del.gif";
-			delImg.addEventListener("click", function(e) {deleteFile(e, fileSize);}, false);
+			delImg.src         = "/images/ezSurvey/file_del.gif";
+			delImg.addEventListener("click", function(e) {deleteFile(this, e);}, false);
 			liElmt.appendChild(delImg);
 			liElmt.setAttribute("path", filePath);
 			
@@ -175,9 +196,9 @@ var SurveyFile = function() {
 			divChildElmt1.appendChild(imgElmt);
 		}
 		
-		function deleteFile(event, fileSize) {
-			event.stopPropagation();
-			var imgObj   = event.currentTarget;
+		function deleteFile(imgObj, event) {
+			if (event) {event.stopPropagation();}
+			
 			var liElmt   = imgObj.parentElement;
 			var filePath = liElmt.getAttribute("path");
 			
@@ -260,12 +281,29 @@ var SurveyFile = function() {
 			};
 		}
 		
+		function mkImgTag(fileObj) {
+			var fileName = fileObj.fname;
+			var fileSize = fileObj.fsize;
+			var filePath = fileObj.fpath;
+			
+			var html = "<li fname='" + fileObj.fname + "' fsize='" + fileObj.fsize + "' path='" + fileObj.fpath + "'>";
+				html += "<div class='attDivFile'>";
+				html += "<div class='attImgAva'>";
+				html += "<img alt='' src='" + fileObj.fpath + "'>";
+				html += "</div></div>";
+				html += "<img class='delImage' src='/images/ezSurvey/file_del.gif'>";
+				html += "</li>";
+			
+			return html;
+		}
+		
 		return {
-			upload     : onStartUpload,
+			upload     : handleAllUpload,
 			dragEnter  : onDragEnter,
 			dragOver   : onDragOver,
 			deleteFile : deleteFile,
-			check      : checkUploadStatus
+			check      : checkUploadStatus,
+			mkImgTag   : mkImgTag
 		};
 	}
 }();

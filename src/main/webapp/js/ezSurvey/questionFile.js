@@ -24,8 +24,8 @@ var QuestionFile = function() {
 			evt.preventDefault();
 		}
 		
-		function onStartUpload(thisEl, thisFile) {
-			
+		function onStartUpload(thisEl) {
+			var fileList = thisEl.files;
 			if (thisFile.length == 0) {return;}
 			
 			for (var i = 0; i < thisFile.length; i++) {
