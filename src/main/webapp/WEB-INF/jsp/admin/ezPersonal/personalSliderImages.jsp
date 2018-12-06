@@ -178,7 +178,7 @@
 		    		preFind = preList[i].querySelector(".sliderListmodify");
 		    		preShow = preList[i].querySelector("#slider-body");
 		    		if(preFind != null){
-		    			preFind.remove();
+		    			preFind.parentNode.removeChild(preFind);
 		    			preShow.style.display = "";
 		    		}
 		    	}
@@ -496,7 +496,7 @@
 		    		preFind = preList[i].querySelector(".sliderListmodify");
 		    		preShow = preList[i].querySelector("#slider-body");
 		    		if(preFind != null){
-		    			preFind.remove();
+		    			preFind.parentNode.removeChild(preFind);
 		    			preShow.style.display = "";
 		    		}
 		    	}
@@ -510,7 +510,6 @@
 		    	var sliderList = obj.parentNode.parentNode.parentNode;
 		    	var url = sliderList.querySelector("#sliderURL").getAttribute("data6");
 		    	var sliderIsUse = sliderList.querySelector("#toggleButton").checked;
-		    	console.log(sliderIsUse);
 		    	sliderList.querySelector("#slider-body").style.display = "none";
 		    	
 		    	var liElmt   = document.createElement("li");
@@ -624,8 +623,7 @@
 		    	aElmt2.appendChild(spaElmt3);
 		    	divElmt.appendChild(imgElmt2);
 		    	
-		    	sliderList.prepend(liElmt);
-		    	
+		    	sliderList.appendChild(liElmt);
 		    	$(".cancelNewSliderBtnmodify").on("click", addCancelModify);
 		    }
 		    
