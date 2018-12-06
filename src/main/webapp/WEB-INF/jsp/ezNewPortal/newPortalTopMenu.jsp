@@ -236,7 +236,7 @@
 				str += '		<div id="editMenuBtn">'
 				str += '			<span class="topMenuBtn" id="editMenuCancel"><spring:message code="ezNewPortal.t001" /></span>';
 				str += '			<span class="topMenuBtn" id="editMenuSave"><spring:message code="ezNewPortal.t002" /></span>';
-				str += '			<span class="topMenuBtn initOrder" id="editcompanyOrder"><spring:message code="ezNewPortal.t003" /></span>';
+				/* str += '			<span class="topMenuBtn initOrder" id="editcompanyOrder"><spring:message code="ezNewPortal.t003" /></span>'; */
 				str += '		</div>';
 				str += '	</div>';				
 				str += '</div>';
@@ -516,7 +516,7 @@
 			});			
 			
 			// 메뉴 순서 초기화 버튼
-			var editcompanyOrder = document.getElementById('editcompanyOrder');
+			/* var editcompanyOrder = document.getElementById('editcompanyOrder');
 			editcompanyOrder.addEventListener('click', function() {
  
 				var elements = document.getElementById('toggleMenu').childNodes;
@@ -546,7 +546,7 @@
 				
 				// 메뉴 순서 초기화 값 true로 변경
 				newPortalTopMenu.isInitOrder = true;
-			});			
+			});	 */		
 		}			
 		
 		// 확장메뉴 이벤트 모아둔 곳
