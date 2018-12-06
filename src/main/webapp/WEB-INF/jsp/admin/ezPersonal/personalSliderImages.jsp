@@ -7,6 +7,7 @@
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="/css/ezPersonal/sliderImages.css" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
@@ -14,39 +15,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 		
-		<style type="text/css">
-		body {background-color : white;}
-		.ui-sortable{ margin:0px; padding:0px 0px 0px 15px;}
-		ul .sliderList {margin:10px 30px 20px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
-		ul .addsliderList {margin:10px 30px 20px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
-		ul .slider-body {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px}
-		ul .slider-head {margin:0px; position: absolute;cursor:move; border:none; width:285px; height:40px; line-height:38px; border-radius:0px; background: rgba(0, 0, 0, 0.5);}
-		ul .slider-header {margin:0px;position: relative;cursor:move;border:none;font-size:14px;font-weight:bold;height:40px;line-height:38px;border-radius:0px;color:#393939;width:285px;height:515px;}
-		ul .slider-header-add {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px;background: rgba(0, 0, 0, 0.5); width:270px; z-index: 2;}
-		ul .slider-header-modify {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;background: rgba(0, 0, 0, 0.5); z-index: 2;}
-		ul .slider-content {margin:0px; position: absolute;cursor:move; border:none; width:285px; border-radius:0px; background: rgba(0, 0, 0, 0.5); top: 400px; height: 115px;}
-		ul .slider-imagePage {width:225px; height:210px;}
-		ul .addSlider {border:1px dashed #aab2ba; display:inline-block; text-align:center; vertical-align : top; border-radius:0px; width:285px; height:515px; position:relative; margin: 10px 5px 5px 0px;}
-		.sliderInfoTD {padding:5px 15px 5px 15px; color: #fff;}
-		.sliderInfoTDadd {padding:10px 15px 10px 15px; color: #fff;}
-		.sliderInfoModify {padding:10px 15px 10px 15px;}
-		ul .addSlider:hover {cursor:pointer;}
-		ul .slideIsUse {padding: 15px 10px 0px 10px;}
-		.cancelNewSliderBtn img {height:25px; float:right; padding: 3px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
-		.addNewSliderBttn img {height:25px; float:right; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
-		.sliderAddBody {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px; list-style: none;}
-		.sliderModifyBody {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px;}
-		.addImageBtn span {height:25px; background-color:#f4f4f4; border:1px solid #e7e7e7;  float:right; padding: 0px 9px; line-height: 23px; display:block; text-align: center; margin-top:50%; margin-right:35%}
-		.addImageBtnModify span {height:25px; background-color:#f4f4f4; border:1px solid #e7e7e7;  float:right; padding: 0px 9px; line-height: 23px; display:block; text-align: center; margin-top:50%; margin-right:35%}
-		.slider-content-add {margin:0px; position: absolute;cursor:move; border:none; width:285px; border-radius:0px; background: rgba(0, 0, 0, 0.5); top: 400px; right: 1px; z-index: 2;}
-		#UploadSliderImage {position:relative; bottom:210px;}
-		.imgbtn {position: relative;}
-		.sliderListmodify {display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
-		.cancelNewSliderBtnmodify img {height:25px; float:right; padding: 3px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
-		.sliderURL {display: block; width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff;}
-		.slider-content-modify {margin:0px; position: absolute;cursor:move; border:none; width:285px; border-radius:0px; background: rgba(0, 0, 0, 0.5); top: 400px; z-index: 2;}
-	}
-		</style>
 		<script type="text/javascript">
 		  var sliderid = "<c:out value = '${sliderID}' />";
 		  var guid = "{" + GetGUID() + "}";
@@ -74,7 +42,6 @@
 		        	url : "/admin/ezPersonal/getSlider.do",
 		        	async : false,
 		        	success : function (result) {
-		        		//MakeSliderList(loadXMLString(result));
 		        		MakeSliderList(result);
 		        	}
 		        });
@@ -109,7 +76,7 @@
 		    		sliderHTML += "<div class = 'slider-body' id= 'slider-body'>";
 		    		sliderHTML += "<div class='slider-head' id='slider-head'>";
 		    		sliderHTML += "<span class = 'cancelNewSliderBtn' id='cancelNewSliderBtn' data2 = '"+sliderID+"' onclick='deleteSlider(this)'>";
-			    	sliderHTML += "<img src='/images/admin/slideDelete.png'></span>";
+			    	sliderHTML += "<img src='/images/admin/icon_delete.png'></span>";
 			    	sliderHTML += "<span class= 'addNewSliderBttn' id= 'addNewSliderBttn"+i+"' data3 = '"+sliderID+"' onclick='modifySlider(this)'>";
 			    	sliderHTML += "<img src='/images/admin/icon_modify.png' ></span>";
 		    		sliderHTML += "</div>";
@@ -319,35 +286,11 @@
 		    	
 		    	$("#addSlider").hide();
 		    	$("#sliderContainer").append(liElmt);
-		    	//$("#addSlider").hide();
-		    	/* var sliderHTML = "";
-		    	sliderHTML += "<li class = 'addsliderList' id = 'addsliderList'>";
-		    	sliderHTML += "<div class = 'sliderAddBody' id = 'sliderAddBody'>";
-		    	sliderHTML += "<div class = 'slider-header-add'>";
-		    	sliderHTML += "<a class = 'cancelNewSliderBtn' id='cancelNewSliderBtn'>";
-		    	sliderHTML += "<span class ='addCancel'><img src='/images/admin/slideDelete.png'></span></a></div>";
-		    	sliderHTML += "<div class = 'slider-content-add'>";
-		    	sliderHTML += "<table class = 'sliderInfo'>";
-		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>URL</td>";
-		    	sliderHTML += "<td><input id='txtDisplayName3' type='text' maxlength='50'></td></tr>";
-		    	sliderHTML += "<tr><td class ='sliderInfoTDadd'>사용여부</td><td class= 'slideIsUse'><label class='switch'><input id='slideIsUseAdd' type='checkbox' checked='checked'><span class='slider round'></label></td>";
-		    	sliderHTML += "<td><a href='#' class='imgbtn'><span onclick='btnSave_click();'><spring:message code = 'ezPersonal.t34' /></span></a></td>";
-		    	sliderHTML += "</tr></table></div>";
-		    	sliderHTML += "<a class ='addImageBtn'>";
-		    	sliderHTML += "<span class = 'addImage' id='addImage' onclick='addImage()'>이미지 선택</span></a>";
-		    	sliderHTML += "<img id='UploadSliderImage' src='' onload ='imgdisplay()' style='width:285px;height:515px;display:none'>";
-		    	sliderHTML += "</div>";
-		    	sliderHTML += "</div>";
-		    	sliderHTML += "</li>";
-		    	
-		    	document.getElementById("sliderContainer").insertAdjacentHTML('beforeend', sliderHTML); */
-		    	
 		    	$(".cancelNewSliderBtn").on("click", addCancel);
 		    } 
 		    //슬라이드 이미지 생성 취소
 		    var addCancel = function() {
 		    	getSliderList();
-		    	//window.location.reload();
 		    }
 		    
 		    //슬라이드 이미지 추가
@@ -532,7 +475,6 @@
 		        
 		    }
 		    
-		    //수정한 슬라이드 저장
 		    //슬라이드 아이디 16진수 랜덤으로 등록
 		    function S4() {
 		        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -542,9 +484,6 @@
 		        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 		    }
 		    
-		    /* function btn_Select_Complete() {
-		        window.location.reload(false);
-		    }  */
 		    //슬라이더 수정 함수
 		    function modifySlider(obj) {
 		    	var preList = $(".sliderList");
@@ -570,6 +509,8 @@
 		    	var sliderID = obj.getAttribute("data3");
 		    	var sliderList = obj.parentNode.parentNode.parentNode;
 		    	var url = sliderList.querySelector("#sliderURL").getAttribute("data6");
+		    	var sliderIsUse = sliderList.querySelector("#toggleButton").checked;
+		    	console.log(sliderIsUse);
 		    	sliderList.querySelector("#slider-body").style.display = "none";
 		    	
 		    	var liElmt   = document.createElement("li");
@@ -629,15 +570,23 @@
 		    	ipElmt1.setAttribute("type", "text");
 		    	ipElmt1.setAttribute("maxlength", 50);
 		    	ipElmt1.setAttribute("value", url);
-		    	
 		    	tdElmt3.className = "sliderInfoTDadd";
 		    	tdElmt3.innerText = "사용여부";
-		    	tdElmt4.className = "slideIsUse";
-		    	lalElmt.className = "switch";
-		    	ipElmt3.setAttribute("id", "slideIsUseModify");
-		    	ipElmt3.setAttribute("type", "checkbox");
-		    	ipElmt3.setAttribute("checked", "checked");
-		    	spaElmt2.className = "slider round";
+		    	
+		    	if (sliderIsUse == true){
+		    		tdElmt4.className = "slideIsUse";
+		    		lalElmt.className = "switch";
+		    		ipElmt3.setAttribute("id", "slideIsUseModify");
+		    		ipElmt3.setAttribute("type", "checkbox");
+		    		ipElmt3.setAttribute("checked", "checked");
+		    		spaElmt2.className = "slider round";
+		    	} else {
+		    		tdElmt4.className = "slideIsUse";
+		    		lalElmt.className = "switch";
+		    		ipElmt3.setAttribute("id", "slideIsUseModify");
+		    		ipElmt3.setAttribute("type", "checkbox");
+		    		spaElmt2.className = "slider round";
+		    	}
 		    	aElmt3.className = "imgbtn";
 		    	aElmt3.setAttribute("href", "#");
 		    	aElmt3.setAttribute("data", sliderID);
@@ -782,109 +731,6 @@
 		        }); 
 		    } 
 	
-		    /* function MakeDescription(filepath) {
-		        document.getElementById("ContentDescription").innerHTML = "<IMG src = '"+filepath+"' style='width:280px;height:515px' />";
-		    } */
-	
-		    /* function Reload() {
-		        window.location.reload(false);
-		    } */
-		    
-		    /* function Priority_UP() {
-		    	if (CrossYN()) {
-		            if (_RowObject == null) {
-		                alert("<spring:message code = 'ezPersonal.t1022' />");
-		                return;
-		            }
-		            var ChangeRow = null;
-		            for (var i = 0; i < _RowObject.parentNode.children.length ; i++) {
-		                if (_RowObject.parentNode.children.item(i) == _RowObject) {
-		                    if (i == 0) {
-		                        return;
-		                    }
-		                    ChangeRow = i - 1;
-		                    if (event_ChangePriority(_RowObject.getAttribute("DATA1"), _RowObject.getAttribute("DATA5"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("DATA1"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("DATA5"))) {
-		                    swapNodes(_RowObject, _RowObject.parentNode.children.item(ChangeRow));
-		                    }
-		                    break;
-		                }
-		            }
-		    	} else {
-		    	    if (_RowObject == null) {
-		                alert("<spring:message code = 'ezPersonal.t1022' />");
-		                return;
-		            }
-		            
-		            var ChangeRow = null;
-		            for (var i = 0; i < _RowObject.parentNode.childNodes.length - 1; i++) {
-		                if (_RowObject.parentNode.childNodes.item(i) == _RowObject) {
-		                    if (i == 0) {
-		                        return;
-		                    }
-		                    ChangeRow = i - 1;
-		                    if (event_ChangePriority(_RowObject.getAttribute("DATA1"), _RowObject.getAttribute("DATA5"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("DATA1"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("DATA5")))
-		                    swapNodes(_RowObject, _RowObject.parentNode.childNodes.item(ChangeRow));
-		                    break;
-		                }
-		            }
-		    	}
-		    } */
-		    
-		    /* function Priority_DOWN() {
-		        if (_RowObject == null) {
-		            alert("<spring:message code = 'ezPersonal.t1022' />");
-		            return;
-		        }
-		        
-		        var ChangeRow = null;
-		        for (var i = 0; i < _RowObject.parentNode.childNodes.length - 1; i++) {
-		            if (_RowObject.parentNode.childNodes.item(i) == _RowObject) {
-		                if (i == _RowObject.parentNode.childNodes.length - 1) {
-		                    return;
-		                }
-		                ChangeRow = i + 1;
-		                
-		                if (event_ChangePriority(_RowObject.getAttribute("DATA1"), _RowObject.getAttribute("DATA5"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("DATA1"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("DATA5"))) {
-		                	swapNodes(_RowObject, _RowObject.parentNode.childNodes.item(ChangeRow));
-		                }
-		                
-		                break;
-		            }
-		        }
-		    } */
-		    
-		    /* function event_ChangePriority(A_itemid, A_priority, B_itemid, B_priority) {
-		        var ret = null;
-		        $.ajax({
-		        	type : "POST",
-		        	url : "/admin/ezPersonal/statusChangeSlider.do",
-		        	async : false,
-		        	dataType : "text",
-		        	data : {aRuleID : A_itemid, aPriority : B_priority, bRuleID : B_itemid, bPriority : A_priority, mode : "P"},
-		        	success : function(result) {
-		        		if (result == "OK") {
-		        			ret = true;
-		        		} else {
-		        			alert(result);
-		        			
-		        			ret = false;
-		        		}
-		        	}
-		        });
-		        
-		        return ret;
-		    } */
-		    
-		    /* function swapNodes(item1, item2) {
-		        var itemtmp = item1.cloneNode(1);
-		        var parent = item1.parentNode;
-		        item2 = parent.replaceChild(itemtmp, item2);
-		        item1.setAttribute("DATA5", item2.getAttribute("DATA5"));
-		        item2.setAttribute("DATA5", itemtmp.getAttribute("DATA5"));
-		        parent.replaceChild(item2, item1);
-		        parent.replaceChild(item1, itemtmp);
-		        itemtmp = null;
-		    } */
 			//슬라이드 이미지 사용여부
 		    function event_statuschange(check, sliderId) {
 		       var isUse = "";
@@ -910,24 +756,6 @@
 		        });
 		    } 
 	
-		    /* function event_dbclick(clickitem) {
-		        if (CrossYN()) {
-		            selectimage_dialogArguments[1] = btn_Select_Complete;
-		            
-		            var SelectImage = window.open("/admin/ezPersonal/selectImage.do?item=" + document.getElementById(clickitem).getAttribute("DATA1"), "SelectImage", GetOpenWindowfeature(410, 750));
-		            try { SelectImage.focus(); } catch (e) {
-		            }
-		        }
-		        else {
-		            var url = "/admin/ezPersonal/selectImage.do?item=" + document.getElementById(clickitem).getAttribute("DATA1") + "";
-		            var feature = "center:yes;status:no;dialogWidth:410px;dialogHeight:750px;edge:sunken;scroll:no" + GetShowModalPosition(410, 750);
-		            feature = feature + GetShowModalPosition(410, 750);
-	
-		            window.showModalDialog(url, "", feature);
-	
-		            window.location.reload(false);
-		        }
-		    } */
 		</script>
 	</head>
 	<body class = "mainbody">
@@ -939,33 +767,6 @@
 	    
 	    </ul>
 	   
-		<%-- <table style="width:750px;height:215px;">
-	    	<tr>
-	            <td>
-	            <!-- 18-05-10 김민성 - 관리자 > 슬라이드 이미지 테이블 크기 수정 -->
-	            	<div style="border:1px solid #dbdbda;width:560px;height:530px;border-top:0px;overflow-y:auto;overflow-x:hidden">
-					<!-- <div style="border:1px solid #dbdbda;width:435px;height:215px;border-top:0px;overflow-y:auto;overflow-x:hidden"> -->
-	                	<%--<div id="lvDocList"></div>
-	                <table class="mainlist" style="width:100%;">
-		                    <tr>
-		                        <td style="width:8%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;"><span><spring:message code = 'ezPersonal.t937' /></span></td>
-		                        <td style="width:60%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;"><span style="padding-left:10px;"><spring:message code = 'ezPersonal.t9' /></span></td>
-		                        <td style="width:32%;background-color:#f8f8f8;text-align:center;border-bottom:2px solid #dbdbda;"><span><spring:message code = 'ezPersonal.t1024' /></span></td>
-		                    </tr>
-		                </table>
-					</div>
-	            </td>
-	            <!-- <td style="vertical-align:top">
-	            	<div style="border:1px solid #dbdbda;width:295px;height:530px;overflow-y:auto;margin:0px 5px 0px 5px;">
-	                	<div id="ContentDescription" style="margin-top:1px;margin:5px 5px 5px 5px;">
-	                	</div>
-	            	</div>
-	            </td> -->
-	        </tr>
-		</table> --%>
-		<!-- <script>
-			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-		</script> -->
 		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	     <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="width:1px;height:1px">
 	        <input type="file" name="file1" id="file1" onchange="btn_attach()" style="display: none;" multiple="false" />
