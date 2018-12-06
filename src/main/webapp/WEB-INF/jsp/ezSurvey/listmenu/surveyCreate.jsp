@@ -468,7 +468,7 @@
 						var tmpQstnWpr  = $(this).parents(".usrQstnWrapper");
 						var qstnWrapper = $(this).parents(".qstnWrapper");
 						// 수정할 질문 id와 타입
-						var qstnId      = parseInt(tmpQstnWpr.attr("id"));
+						var qstnId      = parseInt(qstnWrapper.attr("id"));
 						var arrNum      = qstnId - 1;
 						var qstnType    = tmpQstnWpr.attr("qstntype");
 						// 넘길 질문 객체
@@ -483,10 +483,10 @@
 						//수정을 취소할 경우를 고려해 숨김 처리
 						qstnWrapper.css("display", "none");
 					});
-////////////////////////////////////////////////////////////					
+////////////////////////////////////////////////////////////
+					// 우상단 복사 버튼 클릭 이벤트
 					$(".quesBacgr").on("click", ".copyBtn", function() {
 						var action = "copy";
-						console.log(SurveyCreate.getQs());
 						
 						var tmpQstnWpr  = $(this).parents(".usrQstnWrapper");
 						var qstnWrapper = $(this).parents(".qstnWrapper");
@@ -502,30 +502,35 @@
 						var nextId = qstnId + 1;
 						var deep = Object.assign({}, qstn, {'id': nextId}); 
 						
+						// 복사한 질문 객체를 배열에 추가
 						qstnList.splice(qstnId, 0, deep);
 						console.log(qstnList);
 						
-						for (var i = nextId; i < qstnList.length; i++) {
+						// 복사한 질문 객체 이후의 객체들 아이디값 +1
+						changeUsrQstnByNewId(nextId, qstnList);
+						
+						/* for (var i = nextId; i < qstnList.length; i++) {
 							console.log(qstnList[i]);
+							// 해당 아이디 값을 가진 태그 캐치
+							var qstn = qstnList[i];
+							var objId = qstn.id;
+							var objType = qstn.qstnType;
 							
-							var objId = qstnList[i].id;
 							var newId = objId + 1;
 							qstnList[i].id = newId;
-						}
+							var thisWrapper = $("#objId");
+							thisWrapper.html("");
+							
+							mkQstnsByType(thisWrapper, objType, qstn);	
+						} */
 						console.log(qstnList);
 						
-///////////////////////////////////////////
+						// 복사한 객체로 사용자용 질문폼 생성
 						var copyHtml = "<div class='qstnWrapper' id='" + nextId + "'></div>";
 						qstnWrapper.after(copyHtml);
 						
 						var copyQstnWrapper = qstnWrapper.next();
-						console.log(copyQstnWrapper);
-///////////////////////////////////////////
-						
-						switch(parseInt(qstnType)) {
-							case 1  :
-							case 2  : mkSelectQstn(copyQstnWrapper, deep); break;
-						}
+						mkQstnsByType(copyQstnWrapper, qstnType, deep);
 						
 					});
 ////////////////////////////////////////////////////////////					
@@ -555,24 +560,6 @@
 						// 수정 폼 삭제
 						thisWrapper.remove();
 					});
-					/* 
-					$(".quesBacgr").on("click", ".copyBtn", function() {
-						var tmpQstnWpr  = $(this).parents(".usrQstnWrapper");
-						var qstnWrapper = $(this).parents(".qstnWrapper");
-						// 수정할 질문 id와 타입
-						var qstnId      = parseInt(tmpQstnWpr.attr("id"));
-						var arrNum      = qstnId - 1;
-						var qstnType    = tmpQstnWpr.attr("qstntype");
-						// 넘길 질문 객체
-						var qstnList    = SurveyCreate.getQs();
-						var qstn        = qstnList[arrNum];
-						
-						createQuestionDiv(qstnWrapper, qstn);
-						createQuestionSelectBox(qstn);
-						setSelectBox(qstnWrapper, "modify", qstnType);
-						handleModifyQuestion(qstnWrapper, qstn, "copy");
-					});
-					 */
 					$(".quesBacgr").on("input", ".slider-range", function() {
 						var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
 						outputElmt.textContent = this.value;
@@ -596,6 +583,33 @@
 					$(".quesBacgr").on("click", ".delImage", function() {
 						questionFile.deleteFile(this);
 					});
+				}
+				
+				function changeUsrQstnByNewId(nextId, qstnList) {
+					
+					for (var i = nextId; i < qstnList.length; i++) {
+						console.log(qstnList[i]);
+						// 해당 아이디 값을 가진 태그 캐치
+						var qstn = qstnList[i];
+						var oldId = qstn.id;
+						var type = qstn.type;
+						
+						var newId = oldId + 1;
+						qstnList[i].id = newId;
+						var thisWrapper = $("#oldId");
+						thisWrapper.html("");
+						
+						mkQstnsByType(thisWrapper, type, qstn);	
+					}
+				}
+				
+				function mkQstnsByType(copyQstnWrapper, qstnType, deep) {
+					
+					switch(parseInt(qstnType)) {
+						case 1  :
+						case 2  : mkSelectQstn(copyQstnWrapper, deep); break;
+					
+					}
 				}
 				
 				// 첨부파일의 x버튼 클릭
@@ -886,6 +900,8 @@
 					//Question order
 					var qstId      = qstnWrapper.attr("id") ? parseInt(qstnWrapper.attr("id")) : questionList.length + 1;
 					question['id'] = qstId;
+					//Set id
+					qstnWrapper.attr("id", qstId);
 					
 					switch(parseInt(qstnType)) {
 						case 1  :
@@ -1006,7 +1022,7 @@
 					var qstnType = question.type;
 					var required = question.required;
 					var qstnAtt  = question.attach;
-					var htmlTxt  = "<div class='usrQstnWrapper' id='" + qstId + "' qstnType='" + qstnType + "'>";
+					var htmlTxt  = "<div class='usrQstnWrapper' qstnType='" + qstnType + "'>";
 					htmlTxt     += "<div class='question-panel'>";
 					htmlTxt     += "<div class='mvBtn'></div>";
 					htmlTxt     += "<div class='question-header'>";
