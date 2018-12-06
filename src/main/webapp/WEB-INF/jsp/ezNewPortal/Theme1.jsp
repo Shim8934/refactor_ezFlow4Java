@@ -569,8 +569,8 @@
 		if (frameSetId == "Frame3" || frameSetId == "Frame4") {
 			var media1746 = window.matchMedia("only screen and (min-width: 1746px)");
 			var media1590 = window.matchMedia("only screen and (max-width :1745px) and (min-width :1590px)");
-			var media1463 = window.matchMedia("only screen and (max-width :1589px) and (min-width :1463px)");
-			var media1365 = window.matchMedia("only screen and (max-width :1462px) and (min-width :1365px)");
+			var media1463 = window.matchMedia("only screen and (max-width :1589px) and (min-width :1465px)");
+			var media1365 = window.matchMedia("only screen and (max-width :1464px) and (min-width :1365px)");
 			var media1322 = window.matchMedia("only screen and (max-width :1364px) and (min-width :1322px)");
 			var media1321 = window.matchMedia("only screen and (max-width :1321px)");
 			
