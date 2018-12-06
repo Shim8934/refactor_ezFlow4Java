@@ -2454,12 +2454,13 @@ public class EzEmailUtil {
 			
 			logger.debug("fileName=" + fileName);
 			
-			if (fileName != null) {
+			if (fileName != null
+					|| (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))) {
 				logger.debug("getAttachPart ended.");
 				
 				return p;
 			// 코린도에서 수신된 메일 중 multipart/mixed 파트 안에 multipart/alternative와 multipart/mixed 파트가
-			// 또 들어 있는 경우가 있어 선택된 파트가 첨부 파일 파트가 아닌 경우엔(filename이 있는 지 여부로 구분)
+			// 또 들어 있는 경우가 있어 선택된 파트가 첨부 파일 파트가 아닌 경우엔(filename이 있는 지 혹은 Content-Disposition: attachment 가 있는 지 여부로 구분)
 			// 또 다른 multipart를 찾도록 한다.
 			} else {
 	            int count = mp.getCount();
