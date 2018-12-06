@@ -123,7 +123,8 @@
 	                var rtnValue = window.showModalDialog("/admin/ezSchedule/scheduleAdminPopupShareDept.do", "","dialogHeight:180px;dialogwidth:360px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
 	                
 	                if (typeof (rtnValue) != "unlimited" && rtnValue == "OK") {
-	                    window.location.reload(false);
+	                	schedule_get_sharemanage();
+	                    //window.location.reload(false);
 	                }
 	            }
 	        }
@@ -149,7 +150,8 @@
 						},
 						success : function(text){
 							alert(strLang85);
-							window.location.reload(false);	
+							//window.location.reload(false);	
+							schedule_get_sharemanage();
 						},
 						error : function(err){
 							alert(strLang86);	

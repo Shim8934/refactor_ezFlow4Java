@@ -445,7 +445,7 @@ function ListView() {
         var strToday = GetTodayDate();
 
         // 2018-12-04 김민성 - 관리자 > 조직도/메일관리 > 공용배포그룹관리 > 데이터 없을 때 처리
-        if(_rowCount == 0 && _thisID == "lvUserList") {
+        if(_rowCount == 0 && ( _thisID == "lvUserList" || _thisID =="sharedMailbox")) {
         	 var objTr = document.createElement("TR");
              objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
              oTbody.appendChild(objTr);
