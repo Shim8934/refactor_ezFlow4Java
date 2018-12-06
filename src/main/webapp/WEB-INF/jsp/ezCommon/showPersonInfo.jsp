@@ -90,7 +90,7 @@
 	<body class = "popup" id = "mainbody">
 		<form method = "POST">
 			<div id="normalScreen">
-			    <div id="menu">
+			    <div id="menu" style="margin-top:7px;margin-bottom:19px;">
 					<ul>
 			        	<li><span onClick="window.print()"><spring:message code='main.t73' /></span></li>
 					</ul>

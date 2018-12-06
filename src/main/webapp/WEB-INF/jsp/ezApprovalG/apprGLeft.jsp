@@ -1187,11 +1187,6 @@
                        	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL8" onclick="setPresentValue('<spring:message code='ezApprovalG.t1275'/>');convMain('8','')"><spring:message code='ezApprovalG.t1275'/></span></span></li>
 					</c:if>
                    	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" id="APPROVAL21" onclick="setPresentValue('<spring:message code='ezApprovalG.t3000'/>');convMain('21','')"><spring:message code='ezApprovalG.t3000'/><span id=count21></span></span></li>
-		        </ul>	       
-		        <h2 class="off" id="recH2">
-		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('rec')">수신문서</span>
-		        </h2>
-		        <ul class="lnbUL off" id="recUL">
                    	<c:if test="${hideSusin != 'N'}">
                        	<li><span class="sub_iconLNB tree_appr_department"></span><span class="list_text" id="APPROVAL4" onclick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><spring:message code='ezApprovalG.t1749'/><span id=count4></span></span></li>
 					</c:if>
@@ -1205,7 +1200,7 @@
                        	<li><span class="sub_iconLNB tree_appr_receive"></span><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><spring:message code='ezApprovalG.t10011'/><span id="count99"></span></span></li>
 					</c:if>	
 		        </ul>
-		         <h2 class="off" id="compH2">
+		        <h2 class="off" id="compH2">
 		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('comp')">완료문서</span>
 		        </h2>
 		        <ul class="lnbUL off" id="compUL">
