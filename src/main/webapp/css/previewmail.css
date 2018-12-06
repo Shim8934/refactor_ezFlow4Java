@@ -47,3 +47,12 @@ padding:0px 0px 0px 0px; height:36px; line-height:37px;}/* 20130416 수정 */
 .previewmail_addfile .icon_btn img {vertical-align:middle;}
 .previewmail_addfile  span { font-size:12px; }
 .previewmail_addfile .attachFileName { display:inline-block; width:90%;  white-space:nowrap; overflow:hidden;text-overflow:ellipsis;}
+
+/* 메일 미리보기_첨파이미지 20181206*/
+.previewmail_addImage { position:relative ;margin:18px 0px 10px 0px; padding:0px 0px 0px 0px; width:100%;  font-size:12px;} /* 20130417 max-width:900px 제거 */
+.previewmail_addImage .title { color:#333; font-weight:bold; padding:0px 0px 0px 10px; margin:0px 0px 1px 0px; height:20px;}
+.previewIamgelist >div {float: left; width: 220px; padding: 10px; box-sizing: border-box;}
+.attachImageeName { text-align: center; display:inline-block; width:90%;  white-space:nowrap; overflow:hidden;text-overflow:ellipsis; color:#333; font-weight:bold; padding:0px 0px 0px 10px; margin:0px 0px 1px 0px; height:20px;}
+.previewIamgelist div p a img {display: block; margin: auto;}
+.imageArea {display: flex; height: 200px; align-items: center; padding: 0px; margin: 0px; width: 200px; border: 1px solid #ddd; box-sizing: border-box; margin-bottom: 5px;}
+.imageArea >a {flex: 1;}

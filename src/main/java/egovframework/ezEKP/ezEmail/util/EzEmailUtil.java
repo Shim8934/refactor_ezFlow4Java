@@ -703,6 +703,7 @@ public class EzEmailUtil {
 		String filesize = "0";
 		String filecnt = "0";
 		String isAttach = "";
+		String previewImageListHtml = "";
 		
 		logger.debug("contentType=" + part.getContentType());
 		logger.debug("disposition=" + part.getDisposition());
@@ -917,6 +918,13 @@ public class EzEmailUtil {
 				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
 			}
 			
+			if (part.getContentType().contains("IMAGE")) {
+				String aitem = "?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
+				previewImageListHtml += " <div><p class=imageArea><a target=_blank href='" + "/ezEmail/readAttachIamge.do" + aitem + "'>";
+				previewImageListHtml += " <img class src='" + "/ezEmail/downloadAttach.do" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' width='100%' height='90%'></a></p>";
+				previewImageListHtml += " <p onclick=\"DownloadAttach('" + "/ezEmail/downloadAttach.do" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachImageeName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</p></div>";
+			}
+
 			isAttach = "OK";
 			filesize = (Double.parseDouble(filesize) + size) + "";
 			filecnt = (Integer.parseInt(filecnt) + 1) + "";
@@ -1132,6 +1140,7 @@ public class EzEmailUtil {
 					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, locale, extraMap);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
+					previewImageListHtml += tempList.get(5);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
 					
@@ -1173,6 +1182,7 @@ public class EzEmailUtil {
 					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
+					previewImageListHtml += tempList.get(5);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
 					
@@ -1197,6 +1207,7 @@ public class EzEmailUtil {
 					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
+					previewImageListHtml += tempList.get(5);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
 					
@@ -1228,6 +1239,7 @@ public class EzEmailUtil {
 						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 						htmlBody += tempList.get(0);
 						pAttachListHtml += tempList.get(1);
+						previewImageListHtml += tempList.get(5);
 						filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 						filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
 						
@@ -1246,6 +1258,7 @@ public class EzEmailUtil {
 				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 				htmlBody += tempList.get(0);
 				pAttachListHtml += tempList.get(1);
+				previewImageListHtml += tempList.get(5);
 				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
 				filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
 				
@@ -1308,12 +1321,13 @@ public class EzEmailUtil {
 			filesize = (Double.parseDouble(filesize) + size) + "";
 			filecnt = (Integer.parseInt(filecnt) + 1) + "";				
 		}
-
+		
 		resultList.add(htmlBody);
 		resultList.add(pAttachListHtml);
 		resultList.add(filesize);
 		resultList.add(filecnt);
 		resultList.add(isAttach);
+		resultList.add(previewImageListHtml);
 			
 		return resultList;
 	}
