@@ -565,6 +565,14 @@ public interface EzApprovalGService {
 	/**
 	 * 폼빌더 양식 여부를 반환
 	 * 
+	 * @param formUrl
+	 *            양식 아이디
+	 */
+	boolean isReform(String formUrl) throws Exception;
+	
+	/**
+	 * 폼빌더 양식 여부를 반환
+	 * 
 	 * @param formId
 	 *            양식 아이디
 	 * @param companyId

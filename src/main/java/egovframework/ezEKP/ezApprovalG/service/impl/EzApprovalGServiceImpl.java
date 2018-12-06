@@ -27091,6 +27091,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
+	public boolean isReform(String formUrl) throws Exception {
+		Matcher matcher = Pattern.compile("/fileroot/(\\d)/files/upload_approvalG/(.*)/form/(.*)\\..{0,3}").matcher(formUrl);
+		
+		if (matcher.find() && matcher.groupCount() == 3) {
+			String formId = matcher.group(3);
+			String companyId = matcher.group(2);
+			
+			int tenantId = Integer.parseInt(matcher.group(1));
+			
+			return isReform(formId, companyId, tenantId);
+		}
+		
+		return false;
+	}
+	
+	@Override
 	public boolean isReform(String formId, String companyId, int tenantId) throws Exception {
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("formId", formId);

@@ -800,15 +800,15 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
         openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
         openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
         
-        // FormBuilder
-        if (window.reformflag == null) {
-        	// reformflag null 값이라면
-        	reformflag = GetAttribute(pCurSelRow, "REFORMFLAG");
-        }
-        
-    	if (reformflag.length > 0) {
-            openLocation += "&reformflag=" + encodeURI(reformflag);
-    	}
+//        // FormBuilder
+//        if (window.reformflag == null) {
+//        	// reformflag null 값이라면
+//        	reformflag = GetAttribute(pCurSelRow, "REFORMFLAG");
+//        }
+//        
+//    	if (reformflag.length > 0) {
+//            openLocation += "&reformflag=" + encodeURI(reformflag);
+//    	}
     } else {
     	if (!isIE()) {
             alert("한글양식은 IE에서만 기안 할 수 있습니다.");

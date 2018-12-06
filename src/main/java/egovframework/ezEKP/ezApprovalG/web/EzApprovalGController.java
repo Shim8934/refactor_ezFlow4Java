@@ -879,7 +879,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String isUsed = request.getParameter("isUsed");
 		String nonElecRec = request.getParameter("nonElecRec");
 		// FormBuilder
-		String reformflag = request.getParameter("reformflag");
+		// String reformflag = request.getParameter("reformflag");
 		
 		if (nonElecRec == null) {
 			nonElecRec = "";
@@ -1020,7 +1020,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("apprReuseConfig", apprReuseConfig);
 		model.addAttribute("nonElecRec", nonElecRec);
 		// FormBuilder
-		model.addAttribute("reformflag", reformflag);
+		model.addAttribute("reformflag", ezApprovalGService.isReform(formURL) ? "Y" : "N");
 		
 		logger.debug("draftui ended.");
 
