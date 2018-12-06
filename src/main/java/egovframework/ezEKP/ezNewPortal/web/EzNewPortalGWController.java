@@ -799,6 +799,111 @@ e.printStackTrace();
 //					resultMenuList.add(mVO);
 //				}
 //			}
+			
+			//tenant config가 NO인 경우 사용자 메뉴 순서에서도 나오면 안됨
+			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
+			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
+			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티)
+			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
+			String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
+			String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
+			String useVote = ezCommonService.getTenantConfig("useBallotSystem", tenantId);
+			String useJournal = ezCommonService.getTenantConfig("USE_JOURNAL", tenantId);
+			String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", tenantId);
+			String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", tenantId);
+			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
+			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
+			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+
+			if (useAttitude == null || useAttitude.equals("")) {
+				useAttitude = "YES";
+			}
+			
+			if (useMemo == null || useMemo.equals("")) {
+				useMemo = "YES";
+			}
+			
+			if (useLadder == null || useLadder.equals("")) {
+				useLadder = "YES";
+			}
+			
+			if (useCabinet == null || useCabinet.equals("")) {
+				useCabinet = "YES";
+			}
+			
+			if (useVote == null || useVote.equals("")) {
+				useVote = "YES";
+			}
+			
+			if (useJournal == null || useJournal.equals("")) {
+				useJournal = "YES";
+			}
+			
+			if (useCircular == null || useCircular.equals("")) {
+				useCircular = "YES";
+			}
+			
+			if (useQuestion == null || useQuestion.equals("")) {
+				useQuestion = "YES";
+			}
+			
+			if (useWebfolder == null || useWebfolder.equals("")) {
+				useWebfolder = "YES";
+			}
+			
+			if (useCommunity == null || useCommunity.equals("")) {
+				useCommunity = "YES";
+			}
+			
+			if (useEzPMS == null || useEzPMS.equals("")) {
+				useEzPMS = "YES";
+			}
+			
+			if (useQuestion.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 14));
+			}
+			
+			if (useMemo.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 18));
+			}
+			
+			if (useLadder.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 16));
+			}
+			
+			if (useCabinet.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 11));
+			}
+			
+			if (useVote.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 15));
+			}
+			
+			if (useJournal.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 8));
+			}
+			
+			if (useCircular.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 7));
+			}
+			
+			if (useAttitude.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 9));
+			}
+			
+			if (useWebfolder.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 10));
+			}
+			
+			if (useEzPMS.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 12));
+			}
+			
+			if (useCommunity.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuId() == 5));
+			}
+			
 			data.put("menuList", menuList);
 
 			result.put("status", "ok");
