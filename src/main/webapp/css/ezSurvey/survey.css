@@ -44,7 +44,7 @@
 .selectedNode {font-weight: bold;}
 .searchPanel {z-index: 2000; position: fixed; border:1px solid #666; background-color: #fff;; border-radius: 5px; height: auto; width: 464px;}
 .searchPanel h1 {margin-top: 0px !important;}
-.hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off {display: none;}
+.hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off, .qstnFile, .optionFile {display: none;}
 .uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
 .receiver_tltype01 >span {min-width: 45px;}
 .organImg {width: 18px; height: 18px; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
@@ -53,6 +53,12 @@
 .closeImgBttn >ul {margin: 0px; padding: 0px; list-style: none;}
 .closeImgBttn >ul >li {display: block; float: left; margin: 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
 .closeImgBttn >ul >li >span {display: inline-block; width: 25px; height: 28px; background-image: url(/images/close_xBtn.png); background-repeat: no-repeat; background-position: 4px 6px;}
+.fileList .qstUl {margin: 0px; padding: 0px;}
+.fileList .optUl {margin: 0px; padding: 0px 40px;}
+.fileList .qstUl >li {position: relative; padding: 15px 15px 0px;}
+.fileList .optUl >li {position: relative; padding: 10px 10px 0px;}
+.qstUl >li >img {position: absolute; top: 15px; left: 15px; cursor: pointer;}
+.optUl >li >img {position: absolute; top: 10px; left: 10px; cursor: pointer;}
 
 .searchtable {border-collapse: collapse; width:100%; margin-bottom: 15px;}
 .searchtable .layerHeader >img {vertical-align: middle; padding-bottom: 1px; width: 16px;}
@@ -129,10 +135,12 @@
 .fileList {width: 100%; height: auto;}
 .ulFiles {margin: 0px; padding: 0px; list-style: none;}
 .ulFiles li {float: left; width: 100%; min-width: 100%; height: 65px; position: relative; border-bottom: 1px dashed #ddd; box-sizing: border-box;}
-.ulFiles li >img {position: absolute; top: 4.5px; right: 2.5px;}
+.ulFiles li >img {position: absolute; top: 2.5px; right: 2.5px; cursor: pointer;}
 .ulFiles li:lastChild {padding-bottom: 5px;}
 .attDivFile {display: flex; width: 100%; height: 100%; cursor: pointer;}
 .attDivFile .attImgAva {height: 40px; width: 40px; min-width: 40px; margin: 10px 5px;}
+.qstUl .attDivFile .attImgAva, .optUl .attDivFile .attImgAva {height: 80px; margin: 0px;}
+.qstUl .attDivFile .attImgAva >img, .optUl .attDivFile .attImgAva >img {height: 100%; width: auto;}
 .attDivFile .attImgAva >img {height: 100%; width: 100%;}
 .attDivFile .attFileInf {display: flex; flex: 1; flex-flow: column; overflow: hidden; padding-top: 8px;}
 .attDivFile .attFileInf >span:first-child {padding: 6px 4px 4px 0px; max-height: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
@@ -306,7 +314,7 @@ input[type=range]::-ms-tooltip {display: none;}
 
 /* 추가 */ 
 .quesBacgr .qstnForm {width:100%; height:50%; padding-top: 15px;}
-.qstnForm .optPart {padding-top: 10px;}
+.qstnForm .optPart + .optPart {padding-top: 10px;}
 .quesBacgr .qstnForm .optPart .optArea .optAtt .optionFile {display: none;}
 
 .option .textInput, .ranking-select .textInput, .dropdown-select .textInput {height: 30px; border-width: 0px 0px 1px; border-style: dotted; border-color: rgb(224, 224, 224) rgb(51, 51, 51) rgb(190, 190, 190); outline: none; line-height: 30px; font-size: 15px;}
