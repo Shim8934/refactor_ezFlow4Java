@@ -265,7 +265,7 @@
 
 /* slider css */
 .silder-wrap {display: flex; padding: 10px 0px; align-items: center;}
-.slider-lw, .slider-up {width: 40px; min-width: 40px; padding: 0px 5px; height: 32px; outline: 0px;}
+.slider-lw, .slider-up {width: 32px; min-width: 32px; padding: 0px 5px; height: 32px; outline: 0px; border-radius: 50%;}
 .slider-main, .slider-range {-webkit-appearance: none; border: 1px solid white; flex: 1; cursor: pointer; margin: 0px 10px; padding: 0px;}
 input[type=range]::-webkit-slider-runnable-track {width: 100%;  height: 24px; background: rgb(224, 224, 224); border: none; border-radius: 12px;}
 input[type=range]::-webkit-slider-thumb {-webkit-appearance: none; border: none; height: 28px; width: 28px; border-radius: 50%; background: goldenrod; margin-top: -2px;}

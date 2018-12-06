@@ -518,8 +518,8 @@
 						case 2  : mkSelectQstn(qstnWrapper, question); break;
 						case 3  : 
 						case 4  : mkMatrixQstn(qstnWrapper, question); break;
-						case 5  : mkShortAnswerQstn(qstnWrapper, question); break;
-						case 6  : mkParagraphQstn(qstnWrapper, question); break;
+						case 5  : mkTextQstn(qstnWrapper, question, "shortanswer"); break;
+						case 6  : mkTextQstn(qstnWrapper, question, "paragraph")  ; break;
 						case 7  : mkSliderQstn(qstnWrapper, question); break;
 						case 8  : mkRankingQstn(qstnWrapper, question); break;
 						case 9  : mkDropDownQstn(qstnWrapper, question); break;
