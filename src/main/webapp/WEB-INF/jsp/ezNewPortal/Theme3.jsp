@@ -40,7 +40,7 @@
 	.right_float {float:right;}
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
-	.two_column {width:48.4%;}
+	#theme3Body .two_column {width:48.4%;}
 	.orbit-wrapper .timer {display:none;}
 </style>
 </head>

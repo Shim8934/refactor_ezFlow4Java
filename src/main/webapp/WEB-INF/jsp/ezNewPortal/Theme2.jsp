@@ -12,7 +12,7 @@
 <%-- <link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">  --%>
 <link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
 <style type="text/css">
-	.two_column{width:48%;}
+	#theme2Body .two_column{width:48%;}
 	.mainbg {min-width:1280px;}
 	#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}
 	.top_two_column {margin : 0px 0px 25px 0px;}
@@ -303,7 +303,7 @@
 
 	var frameSetting = function (frameSetId) {
 		frameId = frameSetId;
-		
+		console.log(frameSetId);
 		if (frameSetId == "Frame2") {
 			var media1921 = window.matchMedia("only screen and (min-width: 1921px)");
 			var media1686 = window.matchMedia("only screen and (max-width :1920px) and (min-width :1686px)");
