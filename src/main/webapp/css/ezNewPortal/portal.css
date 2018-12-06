@@ -173,7 +173,7 @@ nav > .countBox .hidden_nav_count {position: absolute; right: 0px; top: 6px; dis
 /* schedule포틀릿과 weather 포틀릿도 너비 변경 */
 .portlet_title.portlet_schedule .portletText, .weather .portlet_title .portletText {width:70%;} 
 /* mail 포틀릿 너비 변경 */
-.mail .portlet_title .portletText {width:35%;}
+.mail .portlet_title .portletText {width:34%;}
 
 /* portlet_list */
 .portlet_list{ margin:0px; padding:12px 0px; list-style:none; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} 
