@@ -20,6 +20,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<!-- <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/datepicker.htc.js')}"></script> -->
 		<!-- <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/composeappt.js')}"></script> -->
+		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/adminPopup.css')}">
 		
 		<script type="text/javascript">
 			var compid = "<c:out value = '${companyID}' />";
@@ -62,9 +63,9 @@
 					document.getElementById("selectPos").selectedIndex = 2;
 			}
 
-			window.onresize = function () {
+			/* window.onresize = function () {
 				document.getElementById("addPopEditor").style.height = document.documentElement.clientHeight - 293 + "PX";
-			}
+			} */
 
 			$(function () {
 				$("#Sdatepicker").datepicker({
@@ -296,12 +297,12 @@
 
 				days = (Edate - Sdate) / 86400000
 				if(days<0) {
-					alert("종료일을 다시 설정해주세요.")
+					alert("<spring:message code = 'ezPersonal.hyh10' />")
 					return;
 				}
 
 				if($(".skins").hasClass("checked") === false) {
-					alert("스킨을 선택해주세요.");
+					alert("<spring:message code = 'ezPersonal.hyh15' />");
 					return;
 				}
 
@@ -385,17 +386,6 @@
 				message.SetEditorContent("${personalPopupVO.content}");
 			}
 		</script>
-		<style type="text/css">
-			.skinList {margin-left:-10px; list-style:none;}
-			li {float:left; margin:10px;}
-			.skins {position: relative; width: 140px; height: 37px; text-align: center; border: 1px solid #cecece; cursor: pointer;}
-			.skinImages {position: relative; width: 100%; height: 35px;  border: 1px solid #cecece;}
-			.checked {background-color: #edf7ff; border: 1px solid #2196f3;}
-			.skinPopup {width: 500px; height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px; top: 100px; left: 150px;}
-			.skinDivTop {display: inline-block; float: right; width: 40px; margin-top: 15px;}
-			.skinPopImg {width: 400px; height: 400px; position: relative; top: 50px; left: 45px;}
-			.skinCloseBtn {cursor: pointer; font-size: 25px;}
-		</style>
 	</head>
 	<body class = "popup">
 		<xmp id="sigBody" style="display:none;"><c:out value = '${personalPopupVO.content}' /></xmp>
@@ -458,7 +448,7 @@
 					</td>
 				</tr> 
 				<tr>
-					<th>스킨선택</th>
+					<th><spring:message code = 'ezPersonal.hyh16' /></th>
 					<td id="skinView" style="padding:3px; height:40px">
 						<ul class="skinList" id ="skinList">
 							<li>

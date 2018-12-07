@@ -1038,13 +1038,19 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			map.put("v_pAnswer" + (i + 1), doc.getElementsByTagName("ANSWER").item(i).getTextContent());
 		}
 
+		int startPoint = Integer.parseInt(selectCount);
 		StringBuilder sbQuery = new StringBuilder();
-		for (int i = Integer.parseInt(selectCount); i < 10; i++) {
+		for (int i = startPoint; i < 10; i++) {
 			map.put("v_pAnswer" + (i + 1), " ");
 			sbQuery.append(i+1);
 			sbQuery.append(",");
 		}
-		sbQuery.deleteCharAt(sbQuery.length() - 1);
+
+		if(startPoint != 10){
+			sbQuery.deleteCharAt(sbQuery.length() - 1);
+		} else {
+			sbQuery.append(-1);
+		}
 
 		try {
 			// 현재 진행중인 설문 종료시간 업데이트

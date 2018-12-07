@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>설문조사</title>
+		<title><spring:message code = 'ezPersonal.hyh1' /></title>
 		<link rel="stylesheet"  href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -148,7 +148,7 @@
 	</head>
 	<body style="overflow:hidden;height:100%">
 		<div class="popup">
-			<h1>설문조사</h1>
+			<h1><spring:message code = 'ezPersonal.hyh1' /></h1>
 			<div id="close">
 				<ul>
 					<li><span onclick="window.close()"></span></li>

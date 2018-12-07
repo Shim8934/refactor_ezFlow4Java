@@ -1,0 +1,15 @@
+var strLanghyh1 = "新規アンケートを登録すると、現在進行中のアンケートは自動終了となります。新規アンケートを登録しますか？";
+var strLanghyh2 = "선택된 설문이 없습니다.";
+var strLanghyh3 = "하나의 설문만 선택 해주세요.";
+var strLanghyh4 = "진행중인 설문을 삭제하시겠습니까?";
+var strLanghyh5 = "설문을 삭제하시겠습니까?";
+var strLanghyh6 = "설문을 삭제하였습니다.";
+var strLanghyh7 = "설문을 삭제하는 도중 오류 발생.";
+var strLanghyh8 = "등록된 공지사항이 없습니다.";
+var strLanghyh9 = "선택된 공지사항이 없습니다.";
+var strLanghyh10 = "하나의 공지사항만 선택해주세요.";
+var strLanghyh11 = "선택된 공지사항이 없습니다.";
+var strLanghyh12 = "진행중인 공지사항을 삭제하시겠습니까?";
+var strLanghyh13 = "공지사항을 삭제하시겠습니까?";
+var strLanghyh14 = "お知らせを削除中にエラーが発生しました。";
+var strLanghyh15 = "お知らせを削除しました。";

@@ -267,27 +267,27 @@
 
 				// startDate
 				if (!Sdate) {
-					alert("시작일을 설정해주세요.");
+					alert("<spring:message code = 'ezPersonal.hyh7'/>");
 					return;
 				}
 
 				var days = (Sdate - nowDate) / 86400000;
 				if(flag === "add") {
 					if(days<=-1) {
-						alert("시작일을 다시 설정해주세요.");
+						alert("<spring:message code = 'ezPersonal.hyh8'/>");
 						return;
 					}
 				}
 
 				// endDate
 				if (!Edate) {
-					alert("종료일을 설정해주세요.");
+					alert("<spring:message code = 'ezPersonal.hyh9'/>");
 					return;
 				}
 
 				days = (Edate - Sdate) / 86400000
 				if(days<0) {
-					alert("종료일을 다시 설정해주세요.")
+					alert("<spring:message code = 'ezPersonal.hyh10'/>");
 					return;
 				}
 
@@ -321,7 +321,7 @@
 					if(totalCount == 0) {
 						checkPollCount();
 						if(totalCount>0) {
-							alert("결과가 선택된 설문은 수정할 수 없습니다.");
+							alert("<spring:message code = 'ezPersonal.hyh11'/>");
 							window.location.reload();
 							return;
 						}
@@ -336,11 +336,11 @@
 						var tempED = strToDate(onUseVO.endDate);
 
 						if((Sdate<= tempSD) && (tempSD <= Edate)) {
-							if(!confirm("진행중인 설문이 종료되고, 새로 시작됩니다")) {
+							if(!confirm("<spring:message code = 'ezPersonal.hyh12'/>")) {
 								return;
 							};
 						} else if((Sdate <= tempED) && (tempED <= Edate)) {
-							if(!confirm("진행중인 설문이 종료되고, 새로 시작됩니다")) {
+							if(!confirm("<spring:message code = 'ezPersonal.hyh12'/>")) {
 								return;
 							};
 						}
@@ -372,7 +372,7 @@
 					if(flag === "add") {
 						alert("<spring:message code = 'ezPersonal.t219' />");
 					} else {
-						alert("설문을 수정하였습니다.");
+						alert("<spring:message code = 'ezPersonal.hyh13'/>");
 					}
 
 					if (ReturnFunction != null) {
@@ -446,7 +446,7 @@
 					<spring:message code = 'ezPersonal.t220' />
 				</c:when>
 				<c:otherwise>
-					설문 수정
+					<spring:message code = 'ezPersonal.hyh6' />
 				</c:otherwise>
 			</c:choose>
 		</h1>
