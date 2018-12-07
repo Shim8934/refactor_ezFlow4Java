@@ -177,7 +177,7 @@
                     
                     var copName = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME");
 
-                    span2.innerHTML = copName + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />"+")";
+                    span2.innerHTML = MakeXMLString(copName) + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />"+")";
                     span2.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO").trim());
                     span2.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
                     span2.style.cursor = "pointer";
@@ -241,7 +241,7 @@
                     
                     var copName = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME");
                     
-                    span2.innerHTML = copName + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />" + ")";
+                    span2.innerHTML = MakeXMLString(copName) + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />" + ")";
                     span2.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO").trim());
                     span2.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
                     span2.style.cursor = "pointer";
@@ -297,6 +297,7 @@
                 
                 for (var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length; i++) {
                     var copno;
+                    var clubname;
 
                     if (i == 0 || SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim() != copno) {
                         copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim();
@@ -309,9 +310,11 @@
                         var dt = document.createElement("DT");
 
                         if (primary == "1") {
-                            dt.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME");
+                        	clubname = MakeXMLString(SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME"));
+                            dt.innerHTML = clubname;
                         } else {
-                            dt.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME2");
+                        	clubname = MakeXMLString(SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME2"));
+                            dt.innerHTML = clubname;
                         }
                         
                         var dd = document.createElement("DD");
@@ -386,6 +389,7 @@
                     var copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim();
                     var gubun = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "GUBUN");
                     var writeDate = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITEDATE");
+                    var title = MakeXMLString(SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE"));
                     td.style.cursor = "pointer";
                     td.setAttribute("boardid", boardid);
                     td.setAttribute("itemid", itemid);
@@ -399,7 +403,7 @@
                     }
                     
                     if (primary == "1") {
-                        td.innerHTML += "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE") + "</div>";
+                        td.innerHTML += "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + title + "</div>";
                         /* 2018-05-07 홍승비 - 커뮤니티 메인 MY커뮤니티 새글에서 댓글 표시하기 */
                         if (SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") > 0) {
                         	td.innerHTML += " <SPAN style='color:#c64200'; position: absolute;> [" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") + "]</SPAN><td style='width:20px;'></td>";
@@ -841,14 +845,14 @@
                     strong.onclick = function () { move_cop(this); };
                     
                     if (primary == "1") {
-                        strong.innerHTML = clubVO.c_ClubName;
+                        strong.innerHTML = MakeXMLString(clubVO.c_ClubName);
                     } else {
-                        strong.innerHTML = clubVO.c_ClubName2;
+                        strong.innerHTML = MakeXMLString(clubVO.c_ClubName2);
                     }
                     
                     dd.appendChild(strong);
                     var dd2 = document.createElement("DD");
-                    dd2.innerHTML = clubVO.c_ClubDesc;
+                    dd2.innerHTML = MakeXMLString(clubVO.c_ClubDesc);
 
                     var dd3 = document.createElement("DD");
                     
@@ -1046,9 +1050,9 @@
                 var dt = document.createElement("DT");
                 
                 if(primary == "1") {
-                    dt.innerHTML = result["clubVO"]["c_ClubName"];
+                    dt.innerHTML = MakeXMLString(result["clubVO"]["c_ClubName"]);
                 } else {
-                    dt.innerHTML = result["clubVO"]["c_ClubName2"];
+                    dt.innerHTML = MakeXMLString(result["clubVO"]["c_ClubName2"]);
                 }
 
                 var dd = document.createElement("DD");
