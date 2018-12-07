@@ -32,6 +32,7 @@
 	            	url : "/admin/ezSchedule/scheduleGetShareManage.do",
 	            	dataType : "xml",
 	            	async : true,
+	            	cache : false,
 	            	data : {companyID : selectedCompanyID},	            	
 	            	success : function(text){
 	            		MakeSliderList(text);
@@ -97,7 +98,7 @@
 		    }
 		    var _RowObject = null;
 		    function event_click(obj) {
-		        if (_RowObject != null) {
+		        if (_RowObject != null && _RowObject.childNodes.length != 0) {
 		            _RowObject.childNodes.item(0).style.backgroundColor = "#ffffff";
 		            _RowObject.childNodes.item(1).style.backgroundColor = "#ffffff";
 		            _RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
