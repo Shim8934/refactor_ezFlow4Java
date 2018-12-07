@@ -431,22 +431,22 @@
 						var qstnList    = SurveyCreate.getQs();
 						var qstn        = qstnList[arrNum];
 						
-						//var deep = Array.prototype.slice.call(qstn);
 						var nextId = qstnId + 1;
-						var deep = Object.assign({}, qstn, {'id': nextId}); 
+						var deepCopy = JSON.parse(JSON.stringify(qstn)); 
+						deepCopy.id = nextId;
 						
 						// 복사한 질문 객체 이후의 객체들 아이디값 +1
 						setNewId(qstnId, qstnList, 'copy');
 						
 						// 복사한 질문 객체를 배열에 추가
-						qstnList.splice(qstnId, 0, deep);
+						qstnList.splice(qstnId, 0, deepCopy);
 						
 						// 복사한 객체로 사용자용 질문폼 생성
 						var copyHtml = "<div class='qstnWrapper' id='" + nextId + "'></div>";
 						qstnWrapper.after(copyHtml);
 						
 						var copyQstnWrapper = qstnWrapper.next();
-						mkQstnsByType(copyQstnWrapper, qstnType, deep);
+						mkQstnsByType(copyQstnWrapper, qstnType, deepCopy);
 						
 					});
 					// 우상단 삭제 버튼 클릭 이벤트
@@ -458,7 +458,6 @@
 						qstnList.splice(qstnId - 1, 1); // 질문 배열에서 해당 순번의 질문객체 삭제
 						thisWrapper.remove();           // 질문 폼 삭제
 						
-						console.log(qstnList);
 						setNewId(qstnId, qstnList, 'delete');
 
 					});
