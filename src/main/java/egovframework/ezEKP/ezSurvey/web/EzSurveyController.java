@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezSurvey.web;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyRestService;
@@ -38,6 +41,9 @@ public class EzSurveyController extends EgovFileMngUtil {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	@RequestMapping(value = "/ezSurvey/surveyMain.do")
 	public String jspGetSurveyMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) {
@@ -81,9 +87,12 @@ public class EzSurveyController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value="/ezSurvey/surveyList.do")
-	public String jspGetSurveyList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public String jspGetSurveyList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale) throws Exception {
 		logger.debug("jspGetSurveyList started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String mode        = request.getParameter("mode") != null ? request.getParameter("mode") : "1";
+		String pageName    = "";
+		
 		/*String cabinetId   = request.getParameter("cabinetId");
 		
 		JSONObject resultObj = cabinetRestService.getCabinetInfo(request, user.getId(), cabinetId);
@@ -109,6 +118,15 @@ public class EzSurveyController extends EgovFileMngUtil {
 			model.addAttribute("config", userConfig);
 		}
 		
+		switch(mode) {
+			case "processing" : pageName = egovMessageSource.getMessage("ezSurvey.t02", locale); break;
+			case "finish"     : pageName = egovMessageSource.getMessage("ezSurvey.t03", locale); break;
+			case "my"         : pageName = egovMessageSource.getMessage("ezSurvey.t04", locale); break;
+			case "draft"      : pageName = egovMessageSource.getMessage("ezSurvey.t05", locale); break;
+		}
+		
+		model.addAttribute("pageName", pageName);
+		
 		logger.debug("jspGetSurveyList ended");
 		return "ezSurvey/listmenu/surveyList";
 	}
@@ -120,14 +138,6 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		logger.debug("jspGetCreateSurveyPage ended");
 		return "ezSurvey/listmenu/surveyCreate";
-	}
-	
-	@RequestMapping(value="/ezSurvey/addQuestionPage.do")
-	public String jspAddQuestionPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("jspAddQuestionPage started");
-		
-		logger.debug("jspAddQuestionPage ended");
-		return "ezSurvey/listmenu/questionCreate";
 	}
 	
 	@RequestMapping(value="/ezSurvey/statisticsPage.do")

@@ -17,22 +17,22 @@
 			</div>
 			<div class="survey-infrow">
 				<span><spring:message code="ezSurvey.t41"/></span>
-				<select>
+				<select id="public-slbox">
 					<option><spring:message code="ezSurvey.t42"/></option>
 					<option><spring:message code="ezSurvey.t43"/></option>
 				</select>
 				<span><spring:message code="ezSurvey.t44"/></span>
-				<input class="date-input">
+				<input class="date-input" value="0">
 				<span><spring:message code="ezSurvey.t45"/></span>
 			</div>
 			<div class="survey-infrow">
 				<span><spring:message code="ezSurvey.t46"/></span>
-				<select>
+				<select id="anonymous-slbox">
 					<option><spring:message code="ezSurvey.t47"/></option>
 					<option><spring:message code="ezSurvey.t48"/></option>
 				</select>
 				<span><spring:message code="ezSurvey.t49"/></span>
-				<select>
+				<select id="multiple-slbox">
 					<option><spring:message code="ezSurvey.t50"/></option>
 					<option><spring:message code="ezSurvey.t51"/></option>
 				</select>
@@ -43,7 +43,7 @@
 					<option><spring:message code="ezSurvey.t53"/></option>
 					<option><spring:message code="ezSurvey.t54"/></option>
 				</select>
-				<span class="target-select" id="targetBttn"><spring:message code="ezSurvey.t55"/></span>
+				<button class="target-select" id="targetBttn"><spring:message code="ezSurvey.t55"/></button>
 			</div>
 		</div>
 	</div>

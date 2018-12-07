@@ -42,14 +42,17 @@
 					/* initToggleList(document.getElementById("left"), "h2", "ul", "li"); */
 					document.getElementById("surveyConfig"    ).addEventListener("click", function(e) {getConfigPage()          ;});
 					document.getElementById("processingSurvey").addEventListener("click", function(e) {getProcessingSurveyList();});
-					document.getElementById("finishedSurvey"  ).addEventListener("click", function(e) {getCreateSurveyPage()    ;});
-					document.getElementById("mySurvey"  ).addEventListener("click", function(e) {addQuestionPage()    ;});
+					document.getElementById("finishedSurvey"  ).addEventListener("click", function(e) {getFinishedSurveyPage()  ;});
+					document.getElementById("mySurvey"        ).addEventListener("click", function(e) {getMySurveyPage()        ;});
+					document.getElementById("draftSurvey"     ).addEventListener("click", function(e) {getDraftSurveyPage()     ;});
+					getProcessingSurveyList();
 				}
 				
 				function getConfigPage()           {window.parent.frames["right"].location.href = "/ezSurvey/surveyConfig.do";}
-				function getProcessingSurveyList() {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=process";}
-				function getCreateSurveyPage()     {window.parent.frames["right"].location.href = "/ezSurvey/createSurvey.do";}
-				function addQuestionPage()     	   {window.parent.frames["right"].location.href = "/ezSurvey/addQuestionPage.do";}
+				function getProcessingSurveyList() {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";}
+				function getFinishedSurveyPage()   {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=finish";}
+				function getMySurveyPage()         {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=my";}
+				function getDraftSurveyPage()      {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=draft";}
 				
 				return {
 					

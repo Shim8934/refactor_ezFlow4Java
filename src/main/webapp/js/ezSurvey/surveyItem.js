@@ -179,7 +179,7 @@ var SurveyItem = function() {
 		var delBttn  = document.getElementById("deleteBttn");
 		var ruseBttn = document.getElementById("reuseBttn");
 		var srchBttn = document.getElementById("searchBttn");
-		if (addBttn)  {addBttn.firstElementChild.onclick  = function(e) {addFile()          ;};}
+		if (addBttn)  {addBttn.firstElementChild.onclick  = function(e) {createNewSurvey()  ;};}
 		if (delBttn)  {delBttn.firstElementChild.onclick  = function(e) {deleteFileConfirm();};}
 		if (ruseBttn) {ruseBttn.firstElementChild.onclick = function(e) {reuseSurvey()      ;};}
 		if (srchBttn) {srchBttn.firstElementChild.onclick = function(e) {toggleSearchPanel();};}
@@ -874,6 +874,7 @@ var SurveyItem = function() {
 		if(userWindow) {userWindow.close();}
 	}
 	
+	function createNewSurvey()  {window.parent.frames["right"].location.href = "/ezSurvey/createSurvey.do";}
 	function getIframeContent() {return documentCont;}
 	
 	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {

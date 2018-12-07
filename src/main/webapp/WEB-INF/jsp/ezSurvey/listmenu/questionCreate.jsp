@@ -5,4 +5,6 @@
 	<div class="sryFirst2"></div>
 	<span class="sryTxt"><c:out value="설문제목"></c:out> </span>
 </div>
-<div class="quesBacgr"></div>
+<div class="questions-wrap">
+	<div class="quesBacgr"></div>
+</div>

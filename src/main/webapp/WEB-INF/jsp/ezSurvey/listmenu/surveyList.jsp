@@ -14,7 +14,7 @@
 	</head>
 	<body class="mainbody overY">
 		<h1 id="cabInfo">
-			<c:out value='${cabinet.cabinetName}'/>
+			<c:out value='${pageName}'/>
 			<span id="surveyInfo" class="surveyTtlInf"></span>
 			<span class="topSearchSpan">
 				<select id="searchCheck">
@@ -152,13 +152,13 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')             }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js')     }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyPreview.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyNavi.js')   }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyTable.js')  }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyItem.js')   }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyPreview.js')  }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyNavi.js')     }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyTable.js')    }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyItem.js')     }"></script>
 		<script type="text/javascript">
 			$(function () {
-				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+				$.datepicker.regional["<spring:message code='main.t0619'/>"] = {
 					closeText: "<spring:message code='main.t3' />",
 					prevText: "<spring:message code='main.t0604' />",
 					nextText: "<spring:message code='main.t0605' />",
