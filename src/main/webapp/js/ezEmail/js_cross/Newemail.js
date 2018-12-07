@@ -1057,6 +1057,14 @@ function prevShow_Clear() {
         if (sentDateStr != null) {
         	sentDateStr.style.display = "none";
         }
+        
+        var innerFrame  = document.getElementById("ifrmPreView" + pPreviewShow_HOW);
+        innerFrame.onload = function () {
+        	var innerDoc = innerFrame.contentDocument || innerFrame.contentWindow.document;
+        	if (innerDoc.getElementById("ifrmviewEmptyText").innerText == "") {
+        		innerDoc.getElementById("ifrmviewEmptyText").innerText = strLangJYH01;
+        	}
+        }
     }
     else {
     	var sentDateStr = document.body.querySelector("#PreContent_RayerH #sentDateStr");
@@ -1065,6 +1073,14 @@ function prevShow_Clear() {
         
         if (sentDateStr != null) {
         	sentDateStr.style.display = "none";
+        }
+        
+        var innerFrame  = document.getElementById("ifrmPreView" + pPreviewShow_HOW);
+        innerFrame.onload = function () {
+        	var innerDoc = innerFrame.contentDocument || innerFrame.contentWindow.document;
+        	if (innerDoc.getElementById("ifrmviewEmptyText").innerText == "") {
+        		innerDoc.getElementById("ifrmviewEmptyText").innerText = strLangJYH01;
+        	}
         }
     }
 }
