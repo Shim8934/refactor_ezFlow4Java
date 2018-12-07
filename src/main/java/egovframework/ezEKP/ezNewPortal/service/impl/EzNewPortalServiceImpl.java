@@ -1037,7 +1037,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("tenantId", tenantId);
 				
 				ezNewPortalDAO.updateCompanyPortletOrder(map);
-				ezNewPortalDAO.updateAllThemePortletOrder(map);
+				/*ezNewPortalDAO.updateAllThemePortletOrder(map);*/ //테마별 포틀릿 순서에 적용하여 자동 저장
 			}
 		}
 		LOGGER.debug("updateCompanyPortletOrder ended.");
