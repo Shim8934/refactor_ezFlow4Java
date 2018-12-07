@@ -1037,6 +1037,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("tenantId", tenantId);
 				
 				ezNewPortalDAO.updateCompanyPortletOrder(map);
+				ezNewPortalDAO.updateAllThemePortletOrder(map);
 			}
 		}
 		LOGGER.debug("updateCompanyPortletOrder ended.");
