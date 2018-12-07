@@ -607,6 +607,36 @@
 						tolerance: "pointer",
 						axis: "y",
 						update: function(event, ui) {
+							
+							console.log(ui.item);
+							var catchedQs = ui.item;
+							
+							var catchedQsId = parseInt(ui.item.attr("id"));
+							
+							var prevQsId = parseInt(catchedQs.prev().attr("id"));
+							
+							var nextQsId = parseInt(catchedQs.next().attr("id"));
+							
+							var comparedQsId = "";
+							
+							if (prevQsId != undefined) {
+								if (nextQsId == undefined || catchedQsId > prevQsId && catchedQsId > nextQsId) {
+									comparedQsId = prevQsId; 
+									
+								} else {
+									comparedQsId = nextQsId;
+								}
+							} else if (nextQsId != undefined) {
+								if (prevQsId == undefined || catchedQsId < prevQsId && catchedQsId < nextQsId) {
+									comparedQsId = nextQsId;
+								} else {
+									comparedQsId = prevQsId;
+								}
+							}
+							
+							
+							reOrder(catchedQsId, comparedQsId);
+							
 							/* var i = 0;
 							$(this).find('.ranking-order').each(function() {
 								$(this).text(i + 1);
@@ -617,6 +647,40 @@
 					
 					$(".quesBacgr").on("click", ".delImage", function() {questionFile.deleteFile(this);});
 				}
+				
+				function reOrder(catchedQsId, comparedQsId) {
+					
+					console.log("catched");
+					console.log(catchedQsId);
+					console.log("compared");
+					console.log(comparedQsId);
+					
+					var qstnList = SurveyCreate.getQs();
+					// 뒤에서 앞으로 이동한 경우
+					if (catchedQsId > comparedQsId) {
+						
+						var catched = qstnList[catchedQsId-1];
+						// 내 오른쪽 id 객체부터 원래의 나 바로 앞까지 변경
+						for (var i = catchedQsId - 2; i >= comparedQsId; i--) {
+							console.log(qstnList[i]);
+							
+							var oldId = qstnList[i].id;
+							qstnList[i].id = oldId + 1;
+						}
+						catched.id = comparedQsId + 1;
+						console.log(qstnList);
+						
+					// 앞에서 뒤로 이동한 경우
+					} else {
+						// 내 왼쪽 id 객체부터 원래의 나 바로 앞까지 변경
+						for (var i = comparedQsId; i < catchedQsId; i--) {
+							console.log(qstnList[i]);
+						}
+					}
+					
+					
+				}
+				
 				// 아이디 값을 변경함
 				function setNewId(qstnId, qstnList, action) {
 					var qstn        = "";
