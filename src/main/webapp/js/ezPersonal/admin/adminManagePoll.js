@@ -288,6 +288,7 @@ function add_poll_Complete(rtv) {
 
 // 수정 method
 var mod_poll = function() {
+	pollList = "";
 	var modCnt = 0;
 	$("input:checkbox[name='checks']").each(function(){
 		if($(this).is(":checked")) {
@@ -329,6 +330,7 @@ var mod_poll = function() {
 var pollList = "";
 var del_poll = function() {
 	var delCnt = 0;
+	pollList = "";
 
 	// 진행여부 설문 유무  체크
 	var inUseFlag = false;

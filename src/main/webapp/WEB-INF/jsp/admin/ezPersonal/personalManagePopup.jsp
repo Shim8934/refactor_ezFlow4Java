@@ -89,7 +89,7 @@
 						<WIDTH>80</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code = 'ezPersonal.hyh5' /></NAME>
+						<NAME><spring:message code = 'ezPersonal.hyh14' /></NAME>
 					    <WIDTH>80</WIDTH>
 					</HEADER>
 			    </HEADERS>

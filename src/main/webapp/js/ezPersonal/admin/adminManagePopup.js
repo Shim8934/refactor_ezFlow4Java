@@ -94,11 +94,11 @@ function checkbox_header() {
 		acList.children[1].children[i].children[6].innerHTML = "<label class='switch' id='switch" + seq + "' inuse='" + inuse +"' onclick='inUseUpdate(event," + seq +")'><input type='checkbox'><span class='slider round'></span></label>";
 
 		if(jinhangFlag == 1) {
-			acList.children[1].children[i].children[5].innerHTML = "<img src='/images/admin/inuse.png' border='0' class='jinhang'>";
+			acList.children[1].children[i].children[5].innerHTML = "<img src='/images/admin/inuse.png' border='0' class='jinhang' progress='1'>";
 		} else if(jinhangFlag == 0) {
-			acList.children[1].children[i].children[5].innerHTML = "<img src='/images/admin/inuse_end.png' border='0' class='jinhang'>";
+			acList.children[1].children[i].children[5].innerHTML = "<img src='/images/admin/inuse_end.png' border='0' class='jinhang' progress='0'>";
 		} else {
-			acList.children[1].children[i].children[5].innerHTML = "<img src='/images/admin/inuse_schedule.png' border='0' class='jinhang'>";
+			acList.children[1].children[i].children[5].innerHTML = "<img src='/images/admin/inuse_schedule.png' border='0' class='jinhang' progress='2'>";
 		}
 
 		if(inuse == 1) {
@@ -373,6 +373,7 @@ var add_popup = function() {
 // 수정 method
 var mod_popup = function() {
 	var modCnt = 0;
+	popupList = "";
 	$("input:checkbox[name='checks']").each(function(){
 		if($(this).is(":checked")) {
 			popupList += this.value;
@@ -407,13 +408,15 @@ var mod_popup = function() {
 // 삭제 method
 var popupList ="";
 var del_popup = function () {
+	popupList = "";
 	var delCnt = 0;
 	var inUseFlag = false;
 	$("input:checkbox[name='checks']").each(function(){
 		if($(this).is(":checked")) {
-			popupList += this.value + ";"
+			var tempID = $(this)[0].id;
+			popupList += tempID + ";"
 			delCnt = delCnt + 1;
-			var tempUse = $(this)[0].parentNode.parentNode.children[5].innerHTML;
+			var tempUse = $("#" + tempID)[0].parentNode.parentNode.children[5].children[0].getAttribute('progress');
 			if(tempUse === "1") {
 				inUseFlag = true;
 			}
