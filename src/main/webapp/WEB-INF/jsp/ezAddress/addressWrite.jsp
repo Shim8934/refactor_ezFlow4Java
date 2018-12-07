@@ -447,8 +447,8 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
-		<form method="post" runat="server">
-		  <div id="menu">
+		<form method="post">
+		  <div id="menu" style="margin-bottom:19px;">
 		    <ul>
 		      <!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezAddress.t339 => t300 -->
 		      <li><span onClick="insert_address()"><spring:message code='ezAddress.t300' /></span></li>

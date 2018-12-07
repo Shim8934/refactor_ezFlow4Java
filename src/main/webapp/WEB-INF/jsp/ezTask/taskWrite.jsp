@@ -615,7 +615,7 @@
 				                           <c:when test="${taskID == ''}">				                              
 				                              <li style="display:none"><span onClick="check_name()"><spring:message code='ezTask.t11' /></span></li>
 											  <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
-				                              <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
+				                              <li><span class="icon16 popup_icon16_print" onClick="beforeprint()"></span></li>
 				                              <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
 				                           </c:when>
 				                           <c:otherwise>				                              

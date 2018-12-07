@@ -35,6 +35,12 @@ function getMailList() {
 			listHTML += "</span>";
 			
 			document.getElementById("mailGraph").innerHTML = listHTML;
+
+			if (!mailPercent || mailPercent == "") {
+				mailPercent = 0;
+			}
+			$("#mGraphSpan").css("width", mailPercent + "px");
+			
 			if (mailList.length < 1) {
 				listHTML2 += "<dl class='nodata'>";
 				listHTML2 += "<dt><img src='/images/kr/main/nodata.png'></dt>";
@@ -59,7 +65,7 @@ function getMailList() {
 			document.getElementById("MailList").innerHTML = listHTML2;
 		},
 		error:function(request,status,error){
-    	    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+    	    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 	   }
 	});
 }

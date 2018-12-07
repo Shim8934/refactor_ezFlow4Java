@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezNewPortal.service.impl;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -14,6 +15,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -363,7 +366,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);		
 		
 		// 삭제할 때 
-		ezNewPortalDAO.deleteUserUsedPortlet(map);
+		/*ezNewPortalDAO.deleteUserUsedPortlet(map);*/
 		
 		List<Map<String, Object>> portletList = (List<Map<String, Object>>) param.get("portletList");
 		LOGGER.debug("portletList: " + portletList.toString());
@@ -377,6 +380,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			portletMap.put("portletId", portletList.get(i).get("portletId"));
 			portletMap.put("portletOrder", portletList.get(i).get("portletOrder"));
 			portletMap.put("menuId", portletList.get(i).get("menuId"));
+			portletMap.put("portletUsed", Boolean.parseBoolean(portletList.get(i).get("portletUsed").toString()));
 			
 			LOGGER.debug("portletMap:" + portletMap.toString());
 			ezNewPortalDAO.insertUserUsedPortlet(portletMap);
@@ -386,23 +390,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("[Serivce] updateUserUsedPortlet Ended");
 	}
 	
-	public List<PortletInfoVO> getPortletOrderCompForUser(String portletLang, int tenantId, String companyId, String deptId, String userId) throws Exception {
-		LOGGER.debug("[Serivce] getPortletOrderCompForUser Started");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("portletLang", portletLang);
-		map.put("tenantId", tenantId);
-		map.put("companyId", companyId);
-		map.put("deptId", deptId);
-		map.put("userId", userId);
-		
-		List<PortletInfoVO> portletOrderComp = ezNewPortalDAO.getPortletOrderCompForUser(map);
-
-		LOGGER.debug("[Serivce] getPortletOrderCompForUser Ended");
-		return portletOrderComp;		
-	}
-	
-	// 사용자 포틀릿 리스트 가져오기
-	public List<PortletInfoVO> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId, boolean config) throws Exception {
+	/**
+	 * config true이면 유저세팅목록조회, false이면 유저별목록조회
+	 */
+	@Override
+	public List<PortletInfoVO> getUserPortletList(int themeId, String portletLang, String userId, int tenantId, String companyId, String deptId, boolean config) throws Exception {
 		LOGGER.debug("[Serivce] getUserPortletList Started");
 		/**
 		 * 2018-11-21 신규작성
@@ -412,7 +404,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("userId", userId);
 		map.put("deptId", "");
+		map.put("themeId", themeId);
 		map.put("portletLang", portletLang);
+		map.put("config", config);
 		
 		String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 		
@@ -421,6 +415,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		Collections.reverse(deptIds);
 		
 		//유저권한체크
+		LOGGER.debug("getPortletForUser deptId = " + userId);
 		List<PortletInfoVO> result = ezNewPortalDAO.getPortletForUser(map);
 		List<PortletInfoVO> deptResult = null;
 		
@@ -428,6 +423,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		List<Integer> portletIds = new ArrayList<Integer>();
 		
 		for (PortletInfoVO vo : result) {
+			LOGGER.debug("user portletId = " + vo.getPortletId());
+			
 			portletIds.add(vo.getPortletId());
 		}
 		
@@ -436,46 +433,28 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//부서 및 상위부서권한체크(유저 나 하위부서에서 권한체크걸린건 추가안함
 		for(String pathId : deptIds) {
 			map.put("deptId", pathId);
+			LOGGER.debug("getPortletForUser deptId = " + pathId);
 			
 			deptResult = ezNewPortalDAO.getPortletForUser(map);
 			
 			//권한잇는것들 && 기존 권한체크안된것들 추가
 			for (PortletInfoVO deptPortlet : deptResult) {
+				LOGGER.debug("deptPortlet id = " + deptPortlet.getPortletId() + " || isAccessYN = " + deptPortlet.isAccessYN() + " || isUsed = " + deptPortlet.isPortletUsed());
 				int portletId = deptPortlet.getPortletId();
-				
+								
 				if (portletIds.indexOf(portletId) == -1) {
+					LOGGER.debug("portletIds.indexOf(portletId) == -1");
 					portletIds.add(portletId);
 					
 					if (deptPortlet.isAccessYN()) {
+						LOGGER.debug("deptPortlet.isAccessYN()");
 						result.add(deptPortlet);
+						LOGGER.debug("resultSize = " + result.size());
 					}
 				}
 			}
 		}
 		//여기까지가 권한체크된 모든 포틀릿 리스트
-		
-		//세팅에서 use보여주려면 이게 잇어야할꺼같아서 비교해야겟네
-		//유저에 있는거랑 내가 꺼낸거랑 비교 해서 잇으면 사용 없으면 미사용인가
-		List<PortletInfoVO> userResult = getPortletOrderUser(portletLang, userId, tenantId, companyId, deptId);
-		
-		for (PortletInfoVO resultPortlet : result) {
-			for (PortletInfoVO userPortlet : userResult) {
-				resultPortlet.setPortletUsed(false);
-				
-				if (userPortlet.getPortletId() == resultPortlet.getPortletId()) {
-					resultPortlet.setPortletUsed(true);
-					break;
-				}
-			}
-			
-			if (userResult.size() == 0) {
-				resultPortlet.setPortletUsed(true);
-			}
-		}
-		
-		if (config) {
-			result.removeIf(resultPortlet -> !resultPortlet.isPortletUsed());
-		}
 		
 		//order에 따라 다시 소팅
 		Collections.sort(result, new Comparator<PortletInfoVO>() {
@@ -585,25 +564,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 
 	@Override
-	public List<PortletInfoVO> getPortletOrderComp(String portletLang, int tenantId, String companyId, String deptId, String userId) throws Exception {
-		LOGGER.debug("[Serivce] getPortletOrderComp Started");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("portletLang", portletLang);
-		map.put("tenantId", tenantId);
-		map.put("companyId", companyId);
-		
-		List<PortletInfoVO> portletOrderComp = getPortletOrderCompForUser(portletLang, tenantId, companyId, deptId, userId);
-		
-		if (portletOrderComp == null || portletOrderComp.size() == 0) {
-			map.put("order", "default");
-			portletOrderComp = ezNewPortalDAO.getPortletOrderComp(map);
-		}
-
-		LOGGER.debug("[Serivce] getPortletOrderComp Ended");
-		return portletOrderComp;
-	}
-	
-	@Override
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId) {
 		LOGGER.debug("[Serivce] getUserPortalSetting Started");
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -629,19 +589,51 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return userPortalSetting;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void updatePortletOrderUser(String userId, String companyId, int tenantId,
-			List<Map<String, Integer>> portletOrder, String portletLang) {
+			JSONArray portletOrder, String portletLang) throws Exception {
 		LOGGER.debug("updatePortletOrderUser started.");
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userId);
-		map.put("companyId", companyId);
-		map.put("tenantId", tenantId);
-		map.put("portletLang", portletLang);
 
-		int portletOrderCount = portletOrder.size();
+		List<Integer> portletIdList = new ArrayList<Integer>();
+	
+		//포틀릿 순서 업데이트 (없으면 insert)
+		for (Object item : portletOrder) {
+			if (item instanceof JSONObject) {
+				JSONObject portlet = (JSONObject) item;
+				
+				map = new ObjectMapper().readValue(portlet.toJSONString(), Map.class);
+				map.put("userId", userId);
+				map.put("companyId", companyId);
+				map.put("tenantId", tenantId);
+				map.put("portletLang", portletLang);
+				
+				ezNewPortalDAO.updatePortletOrderUser(map);
+				
+				int portletId = Integer.parseInt(portlet.get("portletId").toString());
+				portletIdList.add(portletId);
+			}
+		}
+				
+		//tbl_portal_portlet_user에는 있는데 포틀릿 순서에 없었던 목록 가져오기
+		map.put("portletIdList", portletIdList);
 		
-		//portletOrder를 사용자가 설정한 정보가 있는지 확인
+		List<PortletInfoVO> notSelectedPortletList = ezNewPortalDAO.getPortletListNotSelected(map);
+		
+		if (notSelectedPortletList != null) {
+			int portletCount = portletOrder.size();
+			int notSelectedPortletListCount = notSelectedPortletList.size();
+			
+			for (int i = 0; i < notSelectedPortletListCount; i++) {
+				portletCount++;
+				map.put("portletOrder", portletCount);
+				map.put("portletId", notSelectedPortletList.get(i).getPortletId());
+				
+				ezNewPortalDAO.updatePortletOrderUser(map);
+			}
+		}
+		/*//portletOrder를 사용자가 설정한 정보가 있는지 확인
 		List<PortletInfoVO> userPortletOrder = ezNewPortalDAO.getPortletOrderUser(map);
 
 		if (userPortletOrder == null || userPortletOrder.isEmpty()) {//없으면 insert
@@ -661,7 +653,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("portletId", portletOrder.get(i).get("portletId"));
 				ezNewPortalDAO.insertPortletOrderUser(map);
 			}
-		}
+		}*/
 		
 		LOGGER.debug("updatePortletOrderUser ended.");
 	}
@@ -1165,13 +1157,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId) throws Exception {
+	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId, String lang) throws Exception {
 		LOGGER.debug("getThemePortletList started.");
 		List<PortletInfoVO> themePortletList = new ArrayList<PortletInfoVO>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("themeId", themeId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
+		map.put("lang", lang);
 		
 		themePortletList = ezNewPortalDAO.getThemePortletList(map);
 		LOGGER.debug("getThemePortletList ended.");
@@ -1181,7 +1174,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateThemePortletUsed(int themeId, int tenantId, String companyId, JSONArray themePortletList) throws Exception {
-		LOGGER.debug("getThemePortletList started.");
+		LOGGER.debug("updateThemePortletUsed started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		for (Object item : themePortletList) {
@@ -1197,7 +1190,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
-		LOGGER.debug("getThemePortletList ended.");
+		LOGGER.debug("updateThemePortletUsed ended.");
 	}
 	/**
 	 * 이효진
@@ -1697,6 +1690,22 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("getApprovalStatistics ended.");
 		
 		return result;
+	}
+	
+	@Override
+	public int getThemeId(String userId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getThemeId started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		int themeId = ezNewPortalDAO.getThemeId(map);
+		
+		LOGGER.debug("getThemeId ended. themeId = " + themeId);
+		
+		return themeId;
 	}
 	
 	/** -------------------- */

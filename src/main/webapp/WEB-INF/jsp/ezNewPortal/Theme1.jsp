@@ -37,11 +37,16 @@
 	.portlet {height:250px; margin:20px 0px 0px 20px;background-color:#ffffff;}
 	.infoImg img {width:60px; height:60px; border-radius:90px;-webkit-border-radius:90px;}
 	.attitudePtl {border:none;}
-	.two_column{width:47.7%;}
 	.orbit-wrapper .timer {display:none;}
 	.linkIcon {display: block; margin: 0 auto; padding: 9px 0px 5px 0px; text-align: center;}
 	.linkIcon img {height: 30px; width: 30px;}
 	.linkTxt {display: block; width: 78px; text-align: center; color: #333; font-size: 12px; height: 27px; letter-spacing: 0px; overflow: hidden;margin: 0 auto; padding: 2px 0px 0px 0px; word-break: break-all; line-height: 15px; text-overflow: ellipsis; white-space: nowrap;}
+	.two_column1750 {width : 48.3%;}
+	.two_column1593 {width : 48.2%;}
+	.two_column1468 {width : 48%;}
+	.two_column1369 {width : 47.8%;}
+	.two_column1327 {width : 47.5%;}
+	.two_column1326 {width : 47.4%;}
 </style>
 </head>
 <body class="mainbg" id="theme1Body">
@@ -591,14 +596,15 @@
 		frameId = frameSetId;
 		
 		if (frameSetId == "Frame3" || frameSetId == "Frame4") {
-			var media1921 = window.matchMedia("only screen and (min-width: 1921px)");
-			var media1686 = window.matchMedia("only screen and (max-width :1920px) and (min-width :1686px)");
-			var media1685 = window.matchMedia("only screen and (max-width :1685px) and (min-width :1590px)");
-			var media1589 = window.matchMedia("only screen and (max-width :1589px) and (min-width :1280px)");
-			var media1279 = window.matchMedia("only screen and (max-width :1279px)");
+			var media1746 = window.matchMedia("only screen and (min-width: 1750px)");
+			var media1590 = window.matchMedia("only screen and (max-width :1749px) and (min-width :1593px)");
+			var media1463 = window.matchMedia("only screen and (max-width :1592px) and (min-width :1468px)");
+			var media1365 = window.matchMedia("only screen and (max-width :1467px) and (min-width :1369px)");
+			var media1322 = window.matchMedia("only screen and (max-width :1368px) and (min-width :1327px)");
+			var media1321 = window.matchMedia("only screen and (max-width :1326px)");
 			
-			if (media1921.matches) {
-				$(".portlet").addClass("two_column");
+			if (media1746.matches) {
+				$(".portlet").attr("class", "portlet two_column1750");
 				$(".info_left").css("display", "inline-block");
 				$(".info_left").css("float", "left");
 				$(".info_left").css("width", "189px");
@@ -606,8 +612,8 @@
 				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
 				$(".info_right").css("width", "calc(100% - 194px)");
 				$(".info_right").css("background", "#ffffff");
-			} else if (media1686.matches) {
-				$(".portlet").addClass("two_column");
+			} else if (media1590.matches) {
+				$(".portlet").attr("class", "portlet two_column1593");
 				$(".info_left").css("display", "inline-block");
 				$(".info_left").css("float", "left");
 				$(".info_left").css("width", "189px");
@@ -615,8 +621,8 @@
 				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
 				$(".info_right").css("width", "calc(100% - 194px)");
 				$(".info_right").css("background", "#ffffff");
-			} else if (media1685.matches) {
-				$(".portlet").addClass("two_column");
+			} else if (media1463.matches) {
+				$(".portlet").attr("class", "portlet two_column1468");
 				$(".info_left").css("display", "inline-block");
 				$(".info_left").css("float", "left");
 				$(".info_left").css("width", "189px");
@@ -624,13 +630,18 @@
 				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
 				$(".info_right").css("width", "calc(100% - 194px)");
 				$(".info_right").css("background", "#ffffff");
-			} else if (media1589.matches) {
-				$(".portlet").addClass("two_column");
+			} else if (media1365.matches) {
+				$(".portlet").attr("class", "portlet two_column1369");
 				$(".info_left").css("display", "none")
 				$(".info_right").css("width", "100%");
-				$(".info_right").css("margin-left", "0px !important");
-			} else if (media1279.matches) {
-				$(".portlet").addClass("two_column");
+				$(".info_right").css("margin-left", "0px !important"); 
+			} else if (media1322.matches) {
+				$(".portlet").attr("class", "portlet two_column1327");
+				$(".info_left").css("display", "none")
+				$(".info_right").css("width", "100%");
+				$(".info_right").css("margin-left", "0px !important"); 
+			} else if (media1321.matches) {
+				$(".portlet").attr("class", "portlet two_column1326");
 				$(".box_shadow.info_left").css("display", "none");
 				$(".box_shadow.info_right").css("width", "100%");
 				$(".box_shadow.info_right").css("margin-left", "0px !important");

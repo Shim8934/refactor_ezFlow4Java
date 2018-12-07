@@ -400,7 +400,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					
 					if (bcount.equals("-1")) {
 						if (fd.getUnreadMessageCount() > 0) {
-							subFolderXML.append(" caption='" + displayName + "(" + fd.getUnreadMessageCount() + ")'");
+							subFolderXML.append(" caption='" + displayName + "'");
+							subFolderXML.append(" foldercount='" + fd.getUnreadMessageCount() + "'");
 						} else {
 							subFolderXML.append(" caption='" + displayName + "'");
 						}
@@ -452,7 +453,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					
 					if (bcount.equals("-1")) {
 						if (fd.getUnreadMessageCount() > 0) {
-							subFolderXML.append(" caption='" + displayName + "(" + fd.getUnreadMessageCount() + ")'");
+							subFolderXML.append(" caption='" + displayName + "'");
+							subFolderXML.append(" foldercount='" + fd.getUnreadMessageCount() + "'");
 						} else {
 							subFolderXML.append(" caption='" + displayName + "'");
 						}

@@ -24,7 +24,7 @@ $(function(){
 	    fadeIn : 0
 	}).flipster('jump', $("#T" + "<c:out value='${usedTheme}'/>"));
 	
-	$("#themeInit").on("click", deleteUserThemeSetting);
+	/* $("#themeInit").on("click", deleteUserThemeSetting); */
 	
 	var themeList = JSON.parse('${themeList }');
 	var themeListCount = themeList.length;
@@ -46,7 +46,7 @@ function deleteUserThemeSetting() {
 			parent.parent.location.reload();
 		},
 		fail : function() {
-			alert("<spring:message code='ezNewPortal.t032' />");
+			//alert("<spring:message code='ezNewPortal.t032' />");
 		}
 	});
 }
@@ -63,7 +63,7 @@ function updateUserThemeSetting(event) {
 			parent.parent.location.reload();
 		},
 		fail : function() {
-			alert("<spring:message code='ezNewPortal.t032' />");
+			//alert("<spring:message code='ezNewPortal.t032' />");
 		}
 	});
 }
@@ -81,6 +81,7 @@ function updateUserThemeSetting(event) {
 }
 #themeList {
 	height : 700px;
+	margin-top : 50px;
 }
 .themeContent {
 	padding: 10px 10px;
@@ -106,11 +107,11 @@ function updateUserThemeSetting(event) {
 </head>
 <body class="mainbody">
 	<h1><spring:message code='ezNewPortal.t034' /></h1>
-	<div id="mainmenu">
+	<%-- <div id="mainmenu">
 		<ul>
 			<li id="themeInit"><span><spring:message code='ezNewPortal.t035' /></span></li>
 		</ul>
-	</div>
+	</div> --%>
 	<div id="themeList">
 		<ul>
 			<c:forEach items="${themeList }" var="theme">

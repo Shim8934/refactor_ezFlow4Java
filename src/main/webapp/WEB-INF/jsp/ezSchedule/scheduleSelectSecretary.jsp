@@ -10,6 +10,7 @@
 	    <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />	    
 	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/lang/ezSchedule.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
@@ -18,6 +19,7 @@
 		<script type="text/javascript">
 			var g_xmlHTTP;
 		    var ReturnFunction;
+		    var companyID = opener.companyID;
 	
 		    window.onload = function () {
 		        try {
@@ -40,7 +42,7 @@
 	
 		    function getDeptFullTree(deptid) {
 		        g_xmlHTTP = createXMLHttpRequest();
-		        var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+		        var strQuery = "<DATA><DEPTID></DEPTID><TOPID>"+companyID+"/other</TOPID><PROP></PROP></DATA>";
 	
 		        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -299,14 +301,14 @@
 		        var length = listview.GetSelectedRows().length;
 	
 		        if (length == 0) {
-		            alert(strLang91);
+		            alert(strLang93);
 		            return;
 		        }
 	
-		        if (length > 1) {
+		        /* if (length > 1) {
 		            alert(strLang92);
 		            return;
-		        }
+		        } */
 	
 		        var selRow = listview.GetSelectedIndexes();
 		        if (ReturnFunction != null)
