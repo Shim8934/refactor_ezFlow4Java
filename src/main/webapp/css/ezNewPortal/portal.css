@@ -168,10 +168,12 @@ nav > .countBox .hidden_nav_count {position: absolute; right: 0px; top: 6px; dis
 .portlet_title .portletText{ margin:0px; padding:0px 0px 0px 10px; font-size:16px; color:#333; font-weight:bold; letter-spacing:-1px; float:left; overflow:hidden; width:80%; text-overflow:ellipsis; white-space:nowrap;}
 .portlet_title .portletPlus{ margin:0px; padding:0px; float:right; overflow:hidden; cursor:pointer;}
 .sortablePortlet:hover {cursor : move;} 
-/* photoboard 클래스가 있을 경우 text너비 변경*/
+/* photoboard 클래스가 있을 경우 text너비 변경 */
  .portlet_title.photo_board .portletText {width:61%;}
-/*schedule포틀릿과 weather 포틀릿도 너비 변경*/
+/* schedule포틀릿과 weather 포틀릿도 너비 변경 */
 .portlet_title.portlet_schedule .portletText, .weather .portlet_title .portletText {width:70%;} 
+/* mail 포틀릿 너비 변경 */
+.mail .portlet_title .portletText {width:34%;}
 
 /* portlet_list */
 .portlet_list{ margin:0px; padding:12px 0px; list-style:none; font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} 
@@ -658,7 +660,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 /* main media query */
 @media only screen and (min-width :1921px) {
-	.portlet{ width:511px; float:left;}
+	.portlet{ width:31.9%; float:left;}
 	.box_shadow.info_left {display:none;}
 	.box_shadow.info_right {width:100%; margin-left:0px !important;}
 }
@@ -704,7 +706,40 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.box_shadow.info_right {width:100%; margin-left:0px !important;}
 }
 
-@media only screen and (max-width :1685px) and (min-width :1280px) {
+@media only screen and (max-width :1685px) and (min-width :1590px) {
+	.section_main .mainLayout_right_move{ width:50%;}
+	.section_main .mainLayout_right{ clear:both; width:50%;}
+	.section_main .mainLayout_left{ width:50%;}
+	.section_main .mainLayout_middle{ width:50%;}
+	.portlet{width:48.3%; float:left;}
+	.vote{ margin:0px 2px; float:left; overflow:hidden;}
+	.stats_graph{ float:left; overflow:hidden;}
+	.groupware_banner{ float:left; margin-top:0px;}
+}
+
+@media only screen and (max-width :1589px) and (min-width :1465px) {
+	.section_main .mainLayout_right_move{ width:50%;}
+	.section_main .mainLayout_right{ clear:both; width:50%;}
+	.section_main .mainLayout_left{ width:50%;}
+	.section_main .mainLayout_middle{ width:50%;}
+	.portlet{width:48.1%; float:left;}
+	.vote{ margin:0px 2px; float:left; overflow:hidden;}
+	.stats_graph{ float:left; overflow:hidden;}
+	.groupware_banner{ float:left; margin-top:0px;}
+}
+
+@media only screen and (max-width :1464px) and (min-width :1365px) {
+	.section_main .mainLayout_right_move{ width:50%;}
+	.section_main .mainLayout_right{ clear:both; width:50%;}
+	.section_main .mainLayout_left{ width:50%;}
+	.section_main .mainLayout_middle{ width:50%;}
+	.portlet{width:47.9%; float:left;}
+	.vote{ margin:0px 2px; float:left; overflow:hidden;}
+	.stats_graph{ float:left; overflow:hidden;}
+	.groupware_banner{ float:left; margin-top:0px;}
+}
+
+@media only screen and (max-width :1364px) and (min-width :1280px) {
 	.section_main .mainLayout_right_move{ width:50%;}
 	.section_main .mainLayout_right{ clear:both; width:50%;}
 	.section_main .mainLayout_left{ width:50%;}

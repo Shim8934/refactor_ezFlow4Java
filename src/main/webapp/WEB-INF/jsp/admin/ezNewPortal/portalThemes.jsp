@@ -75,6 +75,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript">
 		var defaultTheme = "";
+		var isBtnClicked = false;
 		
 		$(function() {
 			getCompanies();
@@ -84,8 +85,26 @@
 		});
 		
 		function selectTheme(val01) {
+			var compThemeId = $(".selectTheme").attr("id");
 			$(".selectTheme").removeClass("selectTheme");
 			$("#"+val01.id).addClass("selectTheme");
+			
+			defineDetailsSlideUp(compThemeId, val01.id);
+		}
+		
+		function defineDetailsSlideUp(beforeThemeId, themeId) {
+			console.log(isBtnClicked);
+			if (!isBtnClicked) {
+				if (beforeThemeId != themeId) {
+					$(".portletList").slideUp(function(){
+						$(".portletList").remove();
+					});
+					
+					$(".themeDetails").slideUp(function(){
+						$(".themeDetails").remove();
+					});
+				}
+			}
 		}
 		
 		var openThemeDetail = function (event) {
@@ -216,6 +235,9 @@
 		}
 		
 		var getThemeDetail = function(themeId) {
+			
+			isBtnClicked = true;
+			
 			var companiesObj = document.getElementById("ListCompany");
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			
@@ -277,11 +299,16 @@
 						if (nowShowDetails == undefined) {
 							$("#themeList").after(themesHTML);
 							
-							$(".themeDetails").slideDown();
+							$(".themeDetails").slideDown(function(){
+								isBtnClicked = false;
+							});
+							
 						} else {
 							$("#themeList").after(themesHTML);
 							
-							$(".themeDetails").slideDown();
+							$(".themeDetails").slideDown(function(){
+								isBtnClicked = false;
+							});
 						}
 					}
 					
@@ -487,6 +514,9 @@
 		
 		//2018-12-03 ~ 2018-12-06 테마별 포틀릿 on/off 개발
 		var getThemePortletList = function (event) {
+			
+			isBtnClicked = true;
+			
 			var themeId = event.data.themeId;
 			var companiesObj = document.getElementById("ListCompany");
 			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
@@ -557,11 +587,15 @@
 						if (nowShowList == null || nowShowList == undefined) {
 							$("#themeList").after(listHTML);
 							
-							$(".portletList").slideDown();
+							$(".portletList").slideDown(function(){
+								isBtnClicked = false;
+							});
 						} else {
 							$("#themeList").after(listHTML);
 							
-							$(".portletList").slideDown();
+							$(".portletList").slideDown(function(){
+								isBtnClicked = false;
+							});
 						}
 					}
 					
