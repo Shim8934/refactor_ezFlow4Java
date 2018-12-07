@@ -158,7 +158,7 @@
                                 _img.setAttribute("src", "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + encodeURIComponent(copLogo));
 
                             _span.appendChild(_img);
-                            _li.innerHTML = _span.outerHTML + copName;
+                            _li.innerHTML = _span.outerHTML + MakeXMLString(copName);
                             document.getElementById("list_thumbnail").appendChild(_li);
                         }
                     }
