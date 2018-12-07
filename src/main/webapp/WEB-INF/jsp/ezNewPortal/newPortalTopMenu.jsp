@@ -42,6 +42,7 @@
 	</head>
 	<body>
 		<header id="top"></header>
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 		
 		<script type="text/javascript">
 		
@@ -665,7 +666,17 @@
 			setExpandMenuListEvent();// 확장메뉴 이벤트 설정
 			setExpandMenuEvent();    // 확장메뉴 이벤트 설정
 			
-		}		
+		}
+ 		
+ 		var showProgress = function() {
+		    document.getElementById("progressPanel").style.display = "block";
+		    document.getElementById("progressPanel").style.opacity = 0.5;
+		    document.getElementById("progressPanel").style.background = "rgba(0,0,0,0.7)";
+		}
+        
+        var hideProgress = function() {
+        	document.getElementById("progressPanel").style.display = "none";
+        }
  		
  		// 시작지점
 		newPortalTopMenuFunc();	
