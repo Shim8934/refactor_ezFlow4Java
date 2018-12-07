@@ -314,11 +314,11 @@
 			if (useHTMLMode == "NO") {
 				CKEDITOR.config.removePlugins = "sourcearea";
 			}
-			
 			CKEDITOR.config.imageUploadUrl = uploadUrl;
 			CKEDITOR.config.contentsCss = "/js/ezEditor/ckEditor/contents.css";
 		    CKEDITOR.config.font_defaultLabel = defaultFontFamily;
 		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";
+		    CKEDITOR.config.fontSize_defaultLabel = defaultFontSize;
 		    CKEDITOR.config.language = "<spring:message code='main.t0619' />";
 		</script>
 	</body>

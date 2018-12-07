@@ -581,7 +581,15 @@ public class EzEmailUtil {
             }
             
             // 제목 중간에 Unicode 0x0(NULL)이 들어가 XML 파싱시 에러가 발생하는 메일이 발견되어 추가함.
-            subject = subject.replaceAll("[\\000]+", "");            
+            subject = subject.replaceAll("[\\000]+", "");   
+            
+            // Non US-ASCII 문자로 인코딩된 제목 중에 unfolding이 제대로
+            // 되지 않아 줄바꿈 문자가 포함되는 경우가 있어 추가함
+            if (subject.contains("\\\r\n ")) {
+                logger.debug("still folded subject=" + subject);
+                
+                subject = subject.replace("\\\r\n ", "");                
+            }            
         }
         
         return subject;
@@ -1157,8 +1165,11 @@ public class EzEmailUtil {
 				
 				// 안드로이드 삼성 메일앱이 메일 발송 시 Sent 폴더에 넣은 메일이 
 				// alternative part가 아닌 mixed part에 text/html과 text/plain을 함께
-				// 넣어 메일이 두 번 반복해 보이는 현상이 있어 추가함
-				if (isHtmlPartAlreadyProcessed && p.isMimeType("text/plain")) {
+				// 넣어 메일이 두 번 반복해 보이는 현상이 있어 추가함.
+				// text/plain 타입이 첨부된 경우 첨부파일이 나타나지 않는 현상이 있어 다음 조건 추가함
+				//  - !((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)))
+				if (isHtmlPartAlreadyProcessed && p.isMimeType("text/plain")
+						&& !((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)))) {
 					logger.debug("contentType=" + p.getContentType());
 					logger.debug("disposition=" + p.getDisposition());	
 				} else {				
@@ -2443,12 +2454,13 @@ public class EzEmailUtil {
 			
 			logger.debug("fileName=" + fileName);
 			
-			if (fileName != null) {
+			if (fileName != null
+					|| (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))) {
 				logger.debug("getAttachPart ended.");
 				
 				return p;
 			// 코린도에서 수신된 메일 중 multipart/mixed 파트 안에 multipart/alternative와 multipart/mixed 파트가
-			// 또 들어 있는 경우가 있어 선택된 파트가 첨부 파일 파트가 아닌 경우엔(filename이 있는 지 여부로 구분)
+			// 또 들어 있는 경우가 있어 선택된 파트가 첨부 파일 파트가 아닌 경우엔(filename이 있는 지 혹은 Content-Disposition: attachment 가 있는 지 여부로 구분)
 			// 또 다른 multipart를 찾도록 한다.
 			} else {
 	            int count = mp.getCount();

@@ -199,20 +199,24 @@ public class EzCommunityAdminController {
 		
 		/* 관리자 > 커뮤니티검색화면 표출(하단 리스트) 시 companyID 조건 추가, deptID 가져오기 */
 		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(userInfo.getPrimary(), iQueryCount, select , query, userInfo.getCompanyID(), userInfo.getTenantId());
-
-		// 이미 companyID로 걸러진 커뮤니티를 가지고 후작업
-		for(CommunityClubVO club : clubList) {
-			/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 겸직하는 userID 가져올때 companyID로 조건 추가 */
-			club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId()));
-			club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", " "));
+		if(clubList.size() > 0) {
+			// 이미 companyID로 걸러진 커뮤니티를 가지고 후작업
+			for(CommunityClubVO club : clubList) {
+				/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 겸직하는 userID 가져올때 companyID로 조건 추가 */
+				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId()));
+				club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", " "));
+			}
+			model.addAttribute("clubList", clubList);
+		} else {
+			model.addAttribute("clubList", "");
 		}
+
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("curPage", curPage);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("totalCount", keywordCount);
-		model.addAttribute("clubList", clubList);
 		
 		return "/admin/ezCommunity/communitySearchKey";
 	}

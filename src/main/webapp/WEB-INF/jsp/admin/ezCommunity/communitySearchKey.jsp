@@ -293,7 +293,7 @@
 						</c:if>
 						<c:if test="${clubList eq null || clubList eq ''}">
 							<tr>
-								<td colspan="5"><spring:message code = 'main.t00026' /></td>
+								<td colspan="5" style="text-align:center;"><spring:message code = 'main.t00026' /></td>
 							</tr>
 						</c:if>	
 					</table>
