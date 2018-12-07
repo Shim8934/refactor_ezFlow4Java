@@ -1582,6 +1582,8 @@ AND
 							LINEINFO.aprtype <> '015'
 						AND
 							DOCINFO.docstate <> '017'
+						AND
+							DOCINFO.functiontype IS NOT NULL
 						ORDER BY
 							STARTDATE DESC
 					) INFO
