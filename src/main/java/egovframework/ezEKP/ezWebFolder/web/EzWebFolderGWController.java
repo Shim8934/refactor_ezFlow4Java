@@ -715,6 +715,7 @@ public class EzWebFolderGWController {
 		String serverName   = request.getHeader("x-user-host")   != null ? request.getHeader("x-user-host")  : "";
 		String newName      = request.getParameter("newName")  != null ? request.getParameter("newName") : "";
 		String fileExt      = request.getParameter("fileExt")  != null ? request.getParameter("fileExt") : "";
+		String webFlag		= request.getParameter("webFlag")  != null ? request.getParameter("webFlag") : "";
 		JSONObject result   = new JSONObject();
 		
 		logger.debug("UserId: " + userId + " || Servername: " + serverName + " || Newname: " + newName + " || FileId: " + fileId);
@@ -753,24 +754,29 @@ public class EzWebFolderGWController {
 			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
 			
 			FileVO fileVO    = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
-			if (newName == "") {
-				// newName이 비어있다는 말은 확장자를 수정
-				newName = fileVO.getFileName();
-				String[] arryStrings = newName.split("\\.");
-				String oldFileName = arryStrings[0];
-				newName = oldFileName;
-			}
-			
-			if (fileExt == "") {
-				// 확장자가 비어있다는 말 : 이름을 수정
-				fileExt   = fileVO.getFileExt();
-				realFileExt   = fileVO.getFileExt();
-			} else {
-				// 확장자를 수정하겠다 -> updateDate, filePath, fileExt, fileTypeId를 수정해야함
-				String filePath = fileVO.getFilePath();
-				String[] arryStrings = filePath.split("\\.");
-				String oldFilePath = arryStrings[0];
-				String newFilePath = oldFilePath + "." + fileExt;
+
+			String updateFileName = "";
+				
+			String newFilePath = "";
+			String filePath = fileVO.getFilePath();
+			String[] arryStrings = filePath.split("\\.");
+			String oldFilePath = arryStrings[0];
+			if ( webFlag.equals("")) {
+				// -> updateDate, filePath, fileExt, fileTypeId를 수정해야함
+				
+				if (fileExt == "") {
+					 updateFileName = newName;
+					 fileExt = "unknown";
+					 newFilePath = oldFilePath;
+				} else {
+					if (fileExt.equals("unknown")) {
+						newFilePath = oldFilePath;
+						updateFileName = newName;
+					} else {
+						newFilePath = oldFilePath + "." + fileExt;
+						updateFileName = newName + "." + fileExt;
+					}
+				}
 				realFileExt = fileExt;
 				
 				// file의 이름을 바꿔주는것에 사용
@@ -795,9 +801,17 @@ public class EzWebFolderGWController {
 				if (isMoved == true) {
 					logger.debug("isMoved" + isMoved);
 				}
-				
+			} else { 
+				// 이건 웹이다
+				// 확장자가 비었다  : 이름만 변경한다. 
+				fileExt   = fileVO.getFileExt();
+				if (fileExt.equals("unknown")) {
+					updateFileName = newName;
+				} else {
+					updateFileName = newName + "." + fileExt;
+				}
 			}
-			ezWebFolderService.updateFileName(fileId, newName + "." + realFileExt, timeUTC, tenantId);
+			ezWebFolderService.updateFileName(fileId, updateFileName, timeUTC, tenantId);
 			ezWebFolderService.saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 			
 			result.put("status", "ok");
