@@ -260,6 +260,61 @@ public class EzEmailUtil {
 		return strSize;
 	}
 	
+	private String decodeMultiLineQPEncodedName(String rawHeader, String name) {
+		try {
+			if (rawHeader.startsWith("=?")) {
+				String fromName = name;
+	            int secondQuestionPos = rawHeader.indexOf("?", 2);
+	            int thirdQuestionPos = rawHeader.indexOf("?", secondQuestionPos + 1);
+	            String charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1); 
+	            String encoding = rawHeader.substring(secondQuestionPos + 1, thirdQuestionPos);                                        
+	            
+	            // 일부 Mailer에서 RFC 2047에서 정의된 encoded word를 2개 이상의 라인으로 구성할 때
+	            // 한글의 한 글자를 표현하는 Byte Array 중간에서 분리하는 경우가 있어(QP 인코딩을 사용하면서) 
+	            // 이 경우 JavaMail에서 디코딩할 때 글자가 깨지는 현상이 발생하여 한 줄로 합치는 작업을 직접 수행하도록 함.  
+	            // 글자가 깨지는 경우 Unicode의 Replacement Character인 �가 나타남.
+	            // From: =?utf-8?Q?=28=EC=A3=BC=29=EC=BC=80=EC=9D=B4=ED=88=AC=EC=BD=94=EB?=
+	            //		 =?utf-8?Q?=A6=AC=EC=95=84?= <ecount@ecounterp.com>		                    
+	            if (fromName.contains("�")
+	                    && encoding.equalsIgnoreCase("Q")) {
+	                String[] sequences = rawHeader.split(charSetAndEncoding.replaceAll("\\?", "\\\\?"));
+	                
+	                if (sequences.length > 2) {
+	                    logger.debug("broken multiple sequences. combining them...");
+	                    logger.debug("original rawHeader:" + rawHeader);
+	                    
+	                    StringBuilder combined = new StringBuilder();                        
+	                    combined.append(charSetAndEncoding);
+	                    
+	                    for (int i = 1; i < sequences.length; i++) {
+	                        String sequence = sequences[i].trim();
+	                        
+	                        logger.debug("sequence[" + i + "]:" + sequence);
+	                        
+	                        sequence = sequence.substring(0, sequence.lastIndexOf("?"));
+	                        combined.append(sequence);                            
+	                    }
+	                    
+	                    combined.append("?=");
+	                    rawHeader = combined.toString();
+	                    
+	                    logger.debug("combined rawHeader:" + rawHeader);
+	                    
+	                    fromName = MimeUtility.decodeText(rawHeader);
+	                    
+	                    logger.debug("fromName=" + fromName);
+	                    
+	                    name = fromName;
+	                }
+	            }		
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return name;
+	}
+	
 	/**
 	 * 메일의 From 헤더로부터 보낸 사람의 이름을 반환한다. 이름을 반환할 수 없는 경우엔 이메일 주소를 대신 반환한다. 
 	 * 예외가 발생하였거나 유효한 From 헤더값이 존재하지 않는 경우엔 empty string을 반환한다.
@@ -300,54 +355,7 @@ public class EzEmailUtil {
 						//     =?ks_c_5601-1987?B?uei03iC1x8H2IL7KwL06IHRlc3Q=?=
 						addressStr = MimeUtility.decodeText(addressStr);
 						
-						String rawHeader = fromHeader;
-						
-						if (rawHeader.startsWith("=?")) {
-							String fromName = addressStr;
-		                    int secondQuestionPos = rawHeader.indexOf("?", 2);
-		                    int thirdQuestionPos = rawHeader.indexOf("?", secondQuestionPos + 1);
-		                    String charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1); 
-		                    String encoding = rawHeader.substring(secondQuestionPos + 1, thirdQuestionPos);                                        
-		                    
-		                    // 일부 Mailer에서 RFC 2047에서 정의된 encoded word를 2개 이상의 라인으로 구성할 때
-		                    // 한글의 한 글자를 표현하는 Byte Array 중간에서 분리하는 경우가 있어(QP 인코딩을 사용하면서) 
-		                    // 이 경우 JavaMail에서 디코딩할 때 글자가 깨지는 현상이 발생하여 한 줄로 합치는 작업을 직접 수행하도록 함.  
-		                    // 글자가 깨지는 경우 Unicode의 Replacement Character인 �가 나타남.
-		                    // From: =?utf-8?Q?=28=EC=A3=BC=29=EC=BC=80=EC=9D=B4=ED=88=AC=EC=BD=94=EB?=
-		                    //		 =?utf-8?Q?=A6=AC=EC=95=84?= <ecount@ecounterp.com>		                    
-		                    if (fromName.contains("�")
-		                            && encoding.equalsIgnoreCase("Q")) {
-		                        String[] sequences = rawHeader.split(charSetAndEncoding.replaceAll("\\?", "\\\\?"));
-		                        
-		                        if (sequences.length > 2) {
-		                            logger.debug("broken multiple sequences. combining them...");
-		                            logger.debug("original rawHeader:" + rawHeader);
-		                            
-		                            StringBuilder combined = new StringBuilder();                        
-		                            combined.append(charSetAndEncoding);
-		                            
-		                            for (int i = 1; i < sequences.length; i++) {
-		                                String sequence = sequences[i].trim();
-		                                
-		                                logger.debug("sequence[" + i + "]:" + sequence);
-		                                
-		                                sequence = sequence.substring(0, sequence.lastIndexOf("?"));
-		                                combined.append(sequence);                            
-		                            }
-		                            
-		                            combined.append("?=");
-		                            rawHeader = combined.toString();
-		                            
-		                            logger.debug("combined rawHeader:" + rawHeader);
-		                            
-		                            fromName = MimeUtility.decodeText(rawHeader);
-		                            
-		                            logger.debug("fromName=" + fromName);
-		                            
-		                            addressStr = fromName;
-		                        }
-		                    }		
-						}
+						addressStr = decodeMultiLineQPEncodedName(fromHeader, addressStr);
 					}
 				}
 			// From 헤더가 존재하더라도 이름만 있고 유효한 이메일 주소가 없는 경우에도 이 부분이 실행될 수 있다.				
@@ -413,6 +421,8 @@ public class EzEmailUtil {
 					}
 					else {					
 						name = MimeUtility.decodeText(name);
+						
+						name = decodeMultiLineQPEncodedName(fromHeader, name);
 					}
 					
 					addressBuilder.append(name + " <" + addressStr + ">");					
