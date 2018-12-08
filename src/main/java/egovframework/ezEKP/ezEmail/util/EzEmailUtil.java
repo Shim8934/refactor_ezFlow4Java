@@ -585,6 +585,8 @@ public class EzEmailUtil {
             
             // Non US-ASCII 문자로 인코딩된 제목 중에 unfolding이 제대로
             // 되지 않아 줄바꿈 문자가 포함되는 경우가 있어 추가함
+            // Subject: 메일발송 실패:"대합일반산단 진입도로 공\
+            //	 고문 및 자기소개서 양식"            
             if (subject.contains("\\\r\n ")) {
                 logger.debug("still folded subject=" + subject);
                 
