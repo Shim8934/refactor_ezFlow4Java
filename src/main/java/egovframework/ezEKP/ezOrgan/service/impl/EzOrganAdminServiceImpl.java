@@ -1109,9 +1109,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public void addJob(String userID, String titleInfo, int tenantID) throws Exception {
+	public void addJob(String userID, String titleInfo, String jobID, int tenantID) throws Exception {
 	    logger.debug("addJob started");
-	    logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",tenantID=" + tenantID);
+	    logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",jobID=" + jobID + ",tenantID=" + tenantID);
 	    
 		String sTitle1 = "";
         String sTitle2 = "";
@@ -1121,6 +1121,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
             
         	String[] addJobinfo = titleInfo.split(";");
+        	String[] jobIDinfo = jobID.split(";");
         	
             for (int i = 0; i < addJobinfo.length; i++) {
             	String[] userInfo = addJobinfo[i].split(":");
@@ -1155,6 +1156,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_TITLE2", sTitle2);
             		map.put("v_EXTATTR15", "0");
             		map.put("v_PARENTCN", pDeptID);
+            		map.put("v_JOBID", jobIDinfo[i]);
             		
             		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             		date.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -2014,6 +2016,41 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("getTitleCnt ended.");
 		return rtnCnt;
+	}
+	
+	@Override
+	public String getJobOptionInfo(String type, String companyID, int tenantID) throws Exception {
+		logger.debug("getJobOptionInfo started. type = "+type);
+		
+		StringBuffer rtnVal = new StringBuffer();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		List<OrganJobVO> jobList = ezOrganAdminDao.getTitleList(map);
+		
+		if (jobList != null && jobList.size() > 0) {
+			rtnVal.append("<DATA>");
+			rtnVal.append("<TYPE>" + type + "</TYPE>");
+			rtnVal.append("<ROWS>");
+			for (int i = 0; i < jobList.size(); i++) {
+				rtnVal.append("<ROW>");
+				rtnVal.append("<SORT>" + jobList.get(i).getSort() + "</SORT>");
+				rtnVal.append("<NAME1><![CDATA[" + jobList.get(i).getDisplayName() + "]]></NAME1>");
+				rtnVal.append("<NAME2><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></NAME2>");
+				rtnVal.append("<JOBID>" + jobList.get(i).getJobID() + "</JOBID>");
+				rtnVal.append("<USEFLAG>" + jobList.get(i).getUseFlag() + "</USEFLAG>");
+				rtnVal.append("</ROW>");
+			}			
+			rtnVal.append("</ROWS></DATA>");
+		} else {
+			rtnVal.append("<DATA><ROWS></ROWS></DATA>");
+		}
+		
+		logger.debug("getJobOptionInfo ended.");
+		return rtnVal.toString();
 	}
 
 }

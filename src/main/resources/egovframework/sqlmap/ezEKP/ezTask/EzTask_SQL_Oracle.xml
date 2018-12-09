@@ -43,13 +43,16 @@
 				PERSONCONTENTPATH,
 				MEMO,
 				REPETITION,
-				TOTALREP
+				TOTALREP,
+				COMPANYID
 			FROM
 				TBL_TASK
 			WHERE
 				TENANTID = #tenantID#
 			AND
 				TASKID = #taskID#
+			AND
+				COMPANYID = #companyID#
 		]]>
 	</select>
 	
@@ -190,6 +193,8 @@
 				A.TENANTID = B.TENANTID
 			WHERE
 				A.TENANTID = #tenantID#
+			and
+        		A.companyid = #v_COMPANYID#
 		]]>
 		
 		<isEqual property="taskStatusCount" compareValue="1" prepend="AND">
@@ -337,6 +342,8 @@
 			WHERE
 					A.TENANTID = #tenantID#
 				AND
+        			A.companyid = #v_COMPANYID#
+				AND
 						((A.CREATORID = #userID# AND A.TASKTYPE = 1)
 					OR
 						(A.PERSONID = #userID# AND (A.TASKTYPE = 2 OR A.TASKTYPE = 3))
@@ -389,6 +396,8 @@
 				A.TENANTID = B.TENANTID
 			WHERE
 				A.TENANTID = #tenantID#
+			AND
+        		A.companyid = #v_COMPANYID#
 			AND
 				(A.CREATORID = #userID# AND ((A.TASKTYPE = 2 OR A.TASKTYPE = 3) OR ((A.TASKTYPE = 5 OR A.TASKTYPE = 6) AND A.TOTALREP != 0)))
 
@@ -446,6 +455,8 @@
 				A.TENANTID = B.TENANTID
 			WHERE
 				A.TENANTID = #tenantID#
+			AND
+        		A.companyid = #v_COMPANYID#
 			AND
 				(
 						((A.CREATORID = #userID#) AND (A.TASKTYPE = 4 AND A.TOTALREP != 0))
@@ -508,6 +519,8 @@
 				A.TENANTID = B.TENANTID
 			WHERE
 				A.TENANTID = #tenantID#
+			AND
+        		A.companyid = #v_COMPANYID#
 			AND
 				(
 					(A.CREATORID = #userID# AND ((A.TASKTYPE = 2 OR A.TASKTYPE = 3 OR A.TASKTYPE = 1) OR ((A.TASKTYPE = 4 OR A.TASKTYPE = 5 OR A.TASKTYPE = 6) AND A.TOTALREP != 0)))
@@ -586,7 +599,8 @@
 				MEMO,
 				REPETITION,
 				TOTALREP,
-				TENANTID)
+				TENANTID,
+				companyid)
 			VALUES
 		]]>
 		
@@ -622,7 +636,8 @@
 				NVL(#memo#, ' '),
 				#repetition#,
 				#totalrepetition#,
-				#tenantID#)
+				#tenantID#,
+				#v_COMPANYID#)
 			]]>
 		</isNull>
 		

@@ -537,6 +537,9 @@ function getDocListjson(pageNum) {
 					CurPage = res.currPage;
 					totalPage = res.totalPage;
 					totalCount = res.totalcnt;
+					if(totalCount === 0 && totalPage === 0) {
+						totalPage = 1;
+					}					
 					searchStartTime = res.startdate;
 					searchEndTime = res.endDate;
 					

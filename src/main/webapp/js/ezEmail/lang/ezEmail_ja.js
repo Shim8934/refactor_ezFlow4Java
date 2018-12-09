@@ -141,7 +141,7 @@ var strLang172 = "ファイル名を入力してください。";
 var strLang175 = "同じ名前の保存フォルダが存在します。";
 var strLang176 = "最上位の保存フォルダは削除できません。";
 var strLang181 = "上記のメールは、有料会員のみインポートできます。";
-var strLang182 = "受信者数が多いので、個別送信機能を使用することはできません。\n個別送信を解除してメールを送信しますか？";
+var strLang182 = "受信者数が多いので、一括送信機能を使用することはできません。\n一括送信を解除してメールを送信しますか？";
 var strLang183 = "添付ファイルを削除中にエラーが発生しました。";
 var strLang184 = "以前のメールがありません。";
 var strLang185 = "次のメールがありません。";
@@ -290,7 +290,7 @@ var strLangKMS01 = "添付ファイルが";
 var strLangKMS02 = "添付フォイルのサイズが ";
 var strLangKMS03 = "メールがありません";
 var strLangKMS04 = "受信者の数が";
-var strLangKMS05 = "人より多いため、個別送信機能を使用することができません。\n個別送信設定を解除してメールを送信してよろしいですか？";
+var strLangKMS05 = "人より多いため、一括送信機能を使用することができません。\n一括送信設定を解除してメールを送信してよろしいですか？";
 var strLangKMS06 = "ファイルをアップロード中にエラーが発生しました。";
 var strLangKMS07 = "ユーザによってアップロードがキャンセルされたか、接続が中断されている可能性があります。";
 var strLangKMS08 = "フォルダはアップロードすることができません。";
@@ -301,6 +301,10 @@ var strLangSharedMailbox01 = "共有メールボックス";
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "この掲示は";
 var strLangHSB02 = "で照会できます。";
+
+/* 2018-11-22 이효진 주소록 등록, 수정 시 메시지 통일  번역 -> message property */
+var strLangLHJ01 = "部署の管理者のみ作成できます。";
+var strLangLHJ02 = "会社の管理者のみ作成できます。";
 
 function GetLocalTime(Offset , pDateTime)
 {

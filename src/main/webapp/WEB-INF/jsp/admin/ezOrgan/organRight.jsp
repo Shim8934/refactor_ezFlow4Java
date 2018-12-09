@@ -167,6 +167,12 @@
 				        
 				        if (CrossYN()) {
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+				            $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
+				            	if($(this).find("DATA3").text() == "addJob"){
+				            		var orgPosition = $(this).find("CELL").eq(2).find("VALUE").text();
+				            		$(this).find("CELL").eq(2).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            	}
+				            });
 				            var Node = headerData.importNode(xmlRtn, true);
 				            headerData.documentElement.appendChild(Node);
 				        }else{
@@ -300,11 +306,11 @@
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = add_dept_Complete;
 				    
-				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 490));
+				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 320));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else{
-				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args,"dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 440));
+				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args,"dialogHeight:320px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 320));
                     
 				    if (typeof (rtnValue) != "undefined"){
 				        getDeptFullTree(rtnValue);
@@ -387,11 +393,11 @@
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = info_dept_Complete;
 				    
-				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 490));
+				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 320));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else {
-				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 440));
+				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args, "dialogHeight:320px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 320));
 
 				    if (typeof (rtnValue) != "undefined") {
 				        alert("<spring:message code='ezOrgan.t7' />");
@@ -709,7 +715,10 @@
 			    } else if (listview.GetSelectedRows().length > 1) {
 					alert("<spring:message code='ezOrgan.t51' />");
 					return;
-				}
+				} else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+		    		alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+			    }
 
 			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
 			}
@@ -977,7 +986,10 @@
 		        } else if (listview.GetSelectedRows().length > 1) {
 		            alert("<spring:message code='ezOrgan.t44' />");
 		            return;
-		        }
+		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+		    		alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+			    }
 		        
 		        var agent = navigator.userAgent.toLowerCase();
 	            if (agent.indexOf("chrome") != -1) {
@@ -1001,7 +1013,10 @@
 				} else if (listview.GetSelectedRows().length > 1) {
 		            alert("<spring:message code='ezOrgan.t46' />");
 		            return;
-		        }
+		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+		    		alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+			    }
 		        
 		        //2016-04-15 장진혁과장 -- cross 버전으로 통일하기 위한 주석처리
 		        //if (CrossYN()){
@@ -1029,7 +1044,10 @@
 				} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
                     alert(strLang13);
                     return;
-				}
+				} else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+		    		alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+			    }
 		        changePassLength = listview.GetSelectedRows().length;
 		        
 		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
@@ -1095,6 +1113,11 @@
 				    if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
 	                    alert(strLang13);
 	                    return;
+				    } else {
+				    	if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+				    		alert("<spring:message code='ezOrgan.psb02' />");
+							return;
+				    	}
 				    }
 				}
 	            
@@ -1156,6 +1179,11 @@
 				    if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
 				    	alert(strLang13);
 	                    return;
+				    } else {
+				    	if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
+				    		alert("<spring:message code='ezOrgan.psb02' />");
+							return;
+				    	}
 				    }
 				}
 		        
@@ -1338,6 +1366,25 @@
 	            });				
 			}
 		    
+		    function syncOrganAccounts() {
+	            $.ajax({
+	            	type : "POST",
+	            	dataType : "text",
+	            	url : "/admin/ezOrgan/syncOrganAccounts.do",
+	            	async : true,
+	            	success : function(result) {
+	            	    if (result == "OK") {
+	            	        alert("<spring:message code='ezOrgan.lhm6' />");
+	            	    } else {
+	            	        alert("<spring:message code='ezQuestion.t263' />");
+	            	    }
+	            	},
+	            	error : function(error) {
+	            	    alert("<spring:message code='ezQuestion.t263' /> " + error);
+	            	}
+	            });
+		    }
+		    
 		    function syncWithBizmekaTalkAccounts() {
 	            $.ajax({
 	            	type : "POST",
@@ -1386,9 +1433,9 @@
 		    	var agent = navigator.userAgent.toLowerCase();
 		    	
 		    	if (agent.indexOf("chrome") != -1) {
-		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 200));
+		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 300));
 		    	} else {
-			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 200));
+			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 300));
 		    	}
 		    } 
 		   
@@ -1524,7 +1571,7 @@
 		<spring:message code='main.t24' />
 		</c:if>
 		</h1>
-		<table style="margin-top:10px;width:900px;border:1px solid #ddd">
+		<table style="height:630px;margin-top:10px;width:900px;border:1px solid #ddd">
 			<tr>
 				<th style="height:30px;border-bottom:0px"><spring:message code='ezOrgan.t73' /></th>
 				<th style="border-bottom:0px">
@@ -1594,7 +1641,12 @@
 						</tr>		
 						<tr>
 							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></a></td>
-						</tr>		                
+						</tr>
+						<c:if test="${useSyncServer == 'YES'}">			
+							<tr>
+			                	<td><a class="imgbtn" id="usermenu24"><span onClick="syncOrganAccounts()"><spring:message code='ezOrgan.lhm5' /></span></a></td>
+			                </tr>
+		                </c:if>
 						<c:if test="${useBizmekaTalk == 'YES'}">			
 							<tr>
 			                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
@@ -1619,7 +1671,7 @@
 					<a class="imgbtn" style="vertical-align:middle"><span onClick="deptsearch_click()"><spring:message code='main.t74' />/<spring:message code='ezOrgan.t93' /></span></a>
 				</th>
 				<th style="border-top:0px">
-					<select id="search_type" style="WIDTH:60px; height:22px;">
+					<select id="search_type" style="WIDTH:100px; height:22px;">
 						<option selected value="displayname"><spring:message code='ezOrgan.t67' /></option>
 						<option value="cn"><spring:message code='ezOrgan.t94' /></option>
 						<option value="description"><spring:message code='ezOrgan.t68' /></option>

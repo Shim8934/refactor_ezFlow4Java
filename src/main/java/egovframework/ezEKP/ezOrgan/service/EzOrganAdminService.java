@@ -75,7 +75,7 @@ public interface EzOrganAdminService {
 	
 	public void insertDBData_user(OrganUserVO vo, String oriPass) throws Exception;
 
-	public void addJob(String userID, String titleInfo, int tenantID) throws Exception;
+	public void addJob(String userID, String titleInfo, String jobID, int tenantID) throws Exception;
 	
     public void deleteJob(String userID, String titleInfo, int tenantID) throws Exception;	
 
@@ -118,4 +118,6 @@ public interface EzOrganAdminService {
 	public int getTitleUserListCnt(String type, String jobID, String companyID, int tenantID) throws Exception;
 
 	public int getTitleCnt(String type, String jobID, String mode, String displayName, String displayName2, String companyID, int tenantID) throws Exception;
+	
+	public String getJobOptionInfo(String type, String companyID, int tenantID) throws Exception;
 }

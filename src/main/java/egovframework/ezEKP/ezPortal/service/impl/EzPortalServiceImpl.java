@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPortal.dao.EzPortalDAO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
@@ -63,6 +64,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPortalService")
@@ -84,6 +86,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
+	
+	@Resource(name = "EzOrganService")
+	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -2011,11 +2016,31 @@ logger.debug("map.toString()" + map.toString());
 	
 	public String getUtilMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
 		logger.debug("getUtilMenuHTML started");
-
 		List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID, userInfo.getTenantId());
 		StringBuilder sb = new StringBuilder();
-		sb.append("<article class='utmenu'>\n");
-		sb.append("<ul>\n");
+		
+		// 20181126 조진호 - 마지막 로그인 시각을 탑메뉴 오른쪽 상단에 표기
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		if(packageType.equalsIgnoreCase("mail") || packageType.equalsIgnoreCase("basic")) {
+			String lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
+			String loginIP = "";
+			if (lastLogin != null) {
+				lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+				lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
+				loginIP = ezOrganService.getLoginIP(userInfo.getId(), userInfo.getTenantId());
+			} else {
+				lastLogin = "";
+				loginIP = "";
+			}
+			
+			sb.append("<article class='utmenu'>\n");
+			sb.append("<ul>\n");
+			sb.append("<li title=" + loginIP + ">" + egovMessageSource.getMessage("main.t00016", userInfo.getLocale()) + " " + lastLogin + "</li>");
+			// 끝
+		} else {
+			sb.append("<article class='utmenu'>\n");
+			sb.append("<ul>\n");
+		}
 		
 		String lastLogout = "";
 		logger.debug("resultSize="+result.size());

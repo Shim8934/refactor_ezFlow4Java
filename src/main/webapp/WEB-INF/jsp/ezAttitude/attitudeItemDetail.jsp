@@ -105,7 +105,7 @@
 								try {
 									window.opener.getList();
 								} catch (e) {
-									window.opener.getAttitudeCheckList();
+									window.opener.getAttitudeMainList();
 								}
 								window.close();
 							} else {

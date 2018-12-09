@@ -302,6 +302,10 @@ var strLangSharedMailbox01 = "Shared mailbox";
 var strLangHSB01 = "이 게시물은 ";
 var strLangHSB02 = "에서 열람하실 수 있습니다.";
 
+/* 2018-11-22 이효진 주소록 등록, 수정 시 메시지 통일  번역 -> message property */
+var strLangLHJ01 = "You can only be created department administrator.";
+var strLangLHJ02 = "You can only be created company administrator.";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

@@ -43,7 +43,10 @@
 	            cursor: pointer;
             	margin: 1px;
         	}
-        	input[type=radio] { vertical-align: middle }
+        	input[type=radio] { 
+        		vertical-align: middle; 
+        		margin-top: -3px; 
+        	}
         	/* 2018-07-26 김보미 */ 
         	.line_ellipsis {
 				overflow: hidden;

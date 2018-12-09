@@ -624,6 +624,14 @@ public class EzPortalController extends EgovFileMngUtil {
 			isCrossBrowser = false;
 		}
 		
+		// 20181129 조진호 - 패키지 타입이 mail 또는 basic 일때 탑메뉴 상단에 최종 접속 시간 표시에 사용
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		String lastLoginYN = "NO";
+		
+		if(packageType.equalsIgnoreCase("mail") || packageType.equalsIgnoreCase("basic")) {
+			lastLoginYN = "YES";
+		}
+		
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("pageID", pageID);
 		model.addAttribute("parentPageID", parentPageID);
@@ -643,6 +651,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
 		model.addAttribute("useHWP", useHWP);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("lastLoginYN", lastLoginYN);
 		
 		logger.debug("topMenu ended");
 		return "/ezPortal/portalTopMenu";
@@ -3018,12 +3027,21 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 		}
 		
+		int startPage = ((intPage - 1) / 10) * 10 + 1;
+		int endPage = startPage + 10 - 1;
+		
+		if (endPage > totalPage) {
+		    endPage = totalPage;
+		}
+		
 		logger.debug("resultHTML="+resultHTML);
 		
 		model.addAttribute("searchNewMyPortalPageList", searchNewMyPortalPageList);
 		model.addAttribute("resultHTML", resultHTML);
 		model.addAttribute("intPage", intPage);
 		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
 		model.addAttribute("pSearchString", pSearchString);
 		model.addAttribute("portalGubun", portalGubun);
 		

@@ -21,6 +21,7 @@
     <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jqplot.barRenderer.min.js')}"></script>    
     <script type="text/javascript">
     var xmlHttp = null;
+    var adminOrganVal = "<c:out value='${adminOrganVal}'/>";
 	
 	document.onselectstart = function () {
     if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -410,7 +411,7 @@
         	dataType : "text",
         	url : "/ezOrgan/getSearchList.do",
         	async : false,
-        	data : {search : "displayname::" + deptkeyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group"},
+        	data : {search : "displayname::" + deptkeyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group", adminOrgan : adminOrganVal},
         	success : function(result){	
         		xmlDom = loadXMLString(result);
                 adCount = xmlDom.getElementsByTagName("ROW").length;
@@ -430,9 +431,9 @@
             g_xmlHTTP = createXMLHttpRequest();
 
             if (CrossYN())
-                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>${companyID}</TOPID><PROP></PROP></DATA>";
             else
-                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>${companyID}</TOPID><PROP></PROP></DATA>";
 
             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -459,7 +460,7 @@
             if (rgParams["deptid"] != "") {
                 bSearch = true;
                 g_xmlHTTP = createXMLHttpRequest();
-                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>${companyID}</TOPID><PROP>mail</PROP></DATA>";
                 g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
                 g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
                 g_xmlHTTP.send(strQuery);
@@ -471,7 +472,7 @@
    	 if (deptid != "") {
             bSearch = true;
             g_xmlHTTP = createXMLHttpRequest();
-            var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+            var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>${companyID}</TOPID><PROP>mail</PROP></DATA>";
             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
             g_xmlHTTP.send(strQuery);
@@ -533,7 +534,7 @@
     </tr>
 </table>
 <br />
-<h2 id="ToTitle" class="receiver_tltype01">
+<h2 id="ToTitle" class="receiver_tltype01" style="border-bottom:0px">
     <span style="min-width: 45px;"><spring:message code='ezStatistics.t1014' /></span>
 </h2>
 <table style="width: 1180px;height:630px ;border:1px solid #ddd"> 

@@ -16,9 +16,13 @@
 	        var treeView = new TreeView();
 	        var pType = "${type}";
 	        var pBoardID = "${boardID}";
+	        var isChanged = "";
 	
+	        /* 2018-11-28 홍승비 - 마이게시판 관리 시 변화가 없다면 좌측 마이게시판 확장하지 않음 */
 			window.onunload = function () {
-	            try {window.opener.parent.frames["left"].ShowMyBoardItem();} catch (e) {}
+				if (isChanged == "Y") {
+	            	try {window.opener.parent.frames["left"].ShowMyBoardItem();} catch (e) {}
+				} else {}
 	        };
 	
 	        window.onload = function () {
@@ -135,6 +139,7 @@
 	                if (Addxmlhttp.readyState == 4 && Addxmlhttp.status == 200) {
 	                    if (getNodeText(GetChildNodes(Addxmlhttp.responseXML)[0]) == "OK") {
 	                        alert("<spring:message code='ezBoard.t10048'/>");
+	                        isChanged = "Y";
 	                        makeTreeList();
 	                        SelectedBoardID = "";
 	                        SelectedBoardName = "";
@@ -172,6 +177,7 @@
 	            if (Addxmlhttp.readyState == 4 && Addxmlhttp.status == 200) {
 	                if (getNodeText(GetChildNodes(Addxmlhttp.responseXML)[0]) == "OK") {
 	                    alert("<spring:message code='ezBoard.t10048'/>");
+	                    isChanged = "Y";
 	                    makeTreeList();
 	                    SelectedBoardID = "";
 	                    SelectedBoardName = "";
@@ -223,6 +229,7 @@
 	                if (Addxmlhttp.readyState == 4 && Addxmlhttp.status == 200) {
 	                    if (getNodeText(GetChildNodes(Addxmlhttp.responseXML)[0]) == "OK") {
 	                        alert("<spring:message code='ezBoard.t999054'/>");
+	                        isChanged = "Y";
 	                        makeTreeList();
 	                        SelectedBoardID = "";
 	                        SelectedBoardName = "";
@@ -255,6 +262,7 @@
 	            if (Addxmlhttp.readyState == 4 && Addxmlhttp.status == 200) {
 	                if (getNodeText(GetChildNodes(Addxmlhttp.responseXML)[0]) == "OK") {
 	                    alert("<spring:message code='ezBoard.t999054'/>");
+	                    isChanged = "Y";
 	                    makeTreeList();
 	                    SelectedBoardID = "";
 	                    SelectedBoardName = "";
@@ -297,6 +305,7 @@
 	                }
 	                if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "OK") {
 	                    alert("<spring:message code='ezBoard.t268'/>");
+	                    isChanged = "Y";
 	                    makeTreeList();
 	                }
 	                SelectedBoardID = "";
@@ -340,6 +349,7 @@
 	                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 	                    if (getNodeText(GetChildNodes(xmlhttp.responseXML)[0]) == "OK") {
 	                        alert("<spring:message code='ezBoard.t10042'/>");
+	                        isChanged = "Y";
 	                        makeTreeList();
 	                    }
 	                }
@@ -363,18 +373,21 @@
 	                if (moveUrl == undefined)
 	                    return;
 	
-	                if (moveUrl == "TRUE")
-	                    makeTreeList();
-	            }
-	            
+					if (moveUrl == "TRUE") {
+						isChanged = "Y";
+						makeTreeList();
+					}
+				}
 	        }
 	        function move_onclick_Complete(moveUrl) {
 	            DivPopUpHidden();
 	            if (moveUrl == undefined)
 	                return;
 	
-	            if (moveUrl == "TRUE")
-	                makeTreeList();
+	            if (moveUrl == "TRUE") {
+	            	isChanged = "Y";
+	            	makeTreeList();
+	            }
 	        }
 	        function S4() {
 	            return ((CustomRandom() * 0x10000) | 0).toString(16).substring(1);

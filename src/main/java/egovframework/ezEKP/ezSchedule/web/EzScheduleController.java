@@ -742,10 +742,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 		List<ScheduleGroupListVO> mList = ezScheduleService.getGroupMemberList(groupID, loginVO.getPrimary(),loginVO.getTenantId(), offSetMin ,loginVO.getCompanyID());
 		
-		for (ScheduleGroupListVO sg : mList) {
-			logger.debug("결과가 어떻게 나오나~~ : " + sg.getMemberId());
-		}
-		
 		model.addAttribute("userInfo", loginVO);
 		model.addAttribute("groupID", groupID);
 		model.addAttribute("memberList", mList);
@@ -1225,6 +1221,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		String cID = request.getParameter("COMPANYID");
 		
+		if (cID == null) {
+			cID = loginSimpleVO.getCompanyID();
+		}
+		
 		String result = ezScheduleService.scheduleGetLunarUse(cID, loginSimpleVO.getTenantId());
 		
 		return result;
@@ -1242,7 +1242,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String userID = request.getParameter("userID");
-		String companyID = request.getParameter("companyID");
+		String companyID = "";
+		
+		if(request.getParameter("companyID") != null && !request.getParameter("companyID").equals("")) {
+			companyID = request.getParameter("companyID");
+		}
+		else {
+			companyID = loginSimpleVO.getCompanyID();
+		}
 		
 		String cumDeptID = ezScheduleService.getCumDeptId(userID,loginSimpleVO.getTenantId(), companyID);
 		
@@ -1261,6 +1268,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String cID = request.getParameter("COMPANYID");
+		if (cID == null || cID.equals("")){
+			cID = loginSimpleVO.getCompanyID();
+		}
 		
 		//2018-11-01 김혜정 일정드래그앤드랍을 위해 추가
 		if (cID == null) {
@@ -1874,8 +1884,21 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		String DeptID = ezScheduleService.getCumDeptId(idList, userInfo.getTenantId(), userInfo.getCompanyID());
 		String CompanyID = userInfo.getCompanyID();
+		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(idList, userInfo.getTenantId() ,userInfo.getCompanyID());
 		
 		String dcidList = "'" + DeptID + "'" + ",'" + CompanyID + "'";
+		
+		for(int i = 0; i < gList.size(); i++){
+			if(i == 0){
+				dcidList += ",";
+			}			
+			ScheduleGroupListVO data = gList.get(i);			
+			dcidList += "'" + data.getGroupId() + "'";
+			
+			if(i != gList.size()-1){
+				dcidList += ",";
+			}	
+		}
 		
 		startDate = startDate + " 00:00:00";
 		endDate = endDate + " 23:59:59";
@@ -1883,7 +1906,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String utcStartTime = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
 		String utcEndTime = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
 
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, dcidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getId());
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, dcidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, "",userInfo.getTenantId(), userInfo.getCompanyID(), idList);
 		
 		StringBuilder sb = new StringBuilder("<DATA>");
 		
@@ -2059,6 +2082,11 @@ public class EzScheduleController extends EgovFileMngUtil {
         if (vo.getDateType().equals("3")){        	
         	_repeatcount = request.getParameter("repeatcount");
         	_date = request.getParameter("date");
+        	//일정관리 참석자 초대메세지에서 반복일정 걸려있는 일정 조회 시, 회차랑 시작일자를 null로 받아와서 null검사 추가 #14484
+        	if (_repeatcount == null)
+        		_repeatcount = "1";
+        	if (_date == null)
+        		_date = vo.getStartDate().substring(0,10);
         	
         	if (vo.getRepetition().split("\\|")[1].equals("1")) {
         		dateString = msg.getMessage("ezSchedule.t343", locale) + " (" + _repeatcount + msg.getMessage("ezSchedule.t329", locale) + " " + _date + " (" + msg.getMessage("ezSchedule.t280", locale);
@@ -2137,6 +2165,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         	}
         }
         
+        model.addAttribute("companyID", companyID);
         model.addAttribute("scheduleInfo", vo);        
         model.addAttribute("_date", _date);
         model.addAttribute("_scheduleid", _scheduleid);

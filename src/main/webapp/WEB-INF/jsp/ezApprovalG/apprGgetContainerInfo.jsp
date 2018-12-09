@@ -1613,7 +1613,8 @@
 	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>
-		        	<c:if test = "${approvalFlag != 'G'}">
+		        	<c:if test = "${approvalFlag != 'G' && sQuery != 'usercontlist'}">
+		        	
 		        		<div id="sel_status_div" style="display:inline;">
 						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
 							<option value="ALL"><spring:message code='ezPoll.t104'/></option>

@@ -1105,7 +1105,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		}
 		CircularListVO result = new CircularListVO();
 
-		if (user.get(0).getMemberID().equals("")) {	
+		if (!user.get(0).getMemberID().equals("")) {	
 			userMyID = user.get(0).getMemberID();
 			userMyName = user.get(0).getMemberName();
 			userMyName2 = user.get(0).getMemberName2();
@@ -2012,8 +2012,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String circularIDList = request.getParameter("circularIDList");
+		String endDate = commonUtil.getTodayUTCTime("");
 		
-		ezCircularService.circularClose(circularIDList, userInfo.getTenantId());
+		ezCircularService.circularClose(circularIDList, userInfo.getTenantId(), endDate);
 		
 		logger.debug("circularClose ended");
 		

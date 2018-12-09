@@ -318,7 +318,7 @@
 					</div>
 				</td>
 				<td style="vertical-align:top; border-bottom:0;">
-					<div style="margin-left:5px; width:300px; height:380px;">
+					<div style="margin-left:5px; width:500px; height:380px;">
 						<div id="sharedMailboxUser" style="width:100%; height:100%; padding:10px; overflow-y:auto; border-color:#dbdbda; border-width:1px; border-style:solid;"></div>
 					</div>
 				</td>

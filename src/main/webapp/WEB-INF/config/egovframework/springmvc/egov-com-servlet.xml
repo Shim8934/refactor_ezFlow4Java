@@ -67,8 +67,9 @@
             <mvc:exclude-mapping path="/ezSystem/util/getSysMonitorInfo  "/>          
             <mvc:exclude-mapping path="/ezPortal/componentListTransfer.do"/>      
             <mvc:exclude-mapping path="/ezTalkGate/main.do"/>      
-            <mvc:exclude-mapping path="/ezTalkGate/login.do"/>      
-            <mvc:exclude-mapping path="/ezConn/**"/>      
+            <mvc:exclude-mapping path="/ezTalkGate/login.do"/>
+            <mvc:exclude-mapping path="/ezTalkGate/tokenLogin.do"/>  
+            <mvc:exclude-mapping path="/ezConn/**"/>
             <mvc:exclude-mapping path="/ezUCMessenger/**"/>  
 		    <bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
@@ -76,7 +77,14 @@
         <mvc:interceptor>            
             <mvc:mapping path="/mobile/**"/>
             <mvc:mapping path="/rest/**"/>
+            <mvc:exclude-mapping path="/rest/ezwebfolder/**"/>
 		    <bean class="egovframework.com.cmm.interceptor.MAuthenticInterceptor" />
+        </mvc:interceptor>    
+
+        <mvc:interceptor>            
+            <mvc:mapping path="/rest/ezwebfolder/**"/>
+            <mvc:exclude-mapping path="/rest/ezwebfolder/login"/>
+		    <bean class="egovframework.com.cmm.interceptor.WebfolderAuthenticInterceptor" />
         </mvc:interceptor>    
 	</mvc:interceptors>
 

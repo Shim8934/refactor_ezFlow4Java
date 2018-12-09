@@ -164,9 +164,9 @@
 	
 				            for (var i = 0; i < objAttachNodes.length; i++) {
 				                if (pMode == "boardContent" || pMode == "boardAttach"){
-				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + "|";
+				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "") + "|";
 				                }else{
-				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + "|";
+				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "") + "|";
 				                }
 				            }
 			            }
@@ -1034,8 +1034,9 @@
 		            if (Content.indexOf("id=\"_BigAttachListHtml\"") != -1) {
 		            	Content = ReplaceText(Content, "<td width=\"75%\"", "<td width=\"65%\"");
 		            	Content = ReplaceText(Content, "<td width=\"30%\"", "<td width=\"35%\"");
-		            }
-		            
+		            }    
+		            Content = '<div '+defaultFontAndSize+'>' + Content + '</div>';
+			
 		            message.SetEditorContent(Content);
 		            
 		            if (mailXml.getElementsByTagName("OVERSIZE").length > 0) {
@@ -1263,7 +1264,7 @@
 		                var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
 		                var strRet = "";
 		                for (i = 0; i < nodes.length; i++) {
-		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
+		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "");
 		                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
 		                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
 		                    	filepath = filepath + ".ezd";
@@ -1297,7 +1298,7 @@
 			                var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
 			                var strRet = "";
 			                for (i = 0; i < nodes.length; i++) {
-			                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
+			                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "");
 			                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
 			                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
 			                    	filepath = filepath + ".ezd";

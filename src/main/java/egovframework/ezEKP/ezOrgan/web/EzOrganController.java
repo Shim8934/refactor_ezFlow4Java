@@ -75,12 +75,15 @@ public class EzOrganController {
         String userCompanyID = userInfo.getCompanyID();
         String [] adminOrganChk = topID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
         String orgCompanyID = doc.getElementsByTagName("orgCompanyID").getLength() != 1 ? "" : doc.getElementsByTagName("orgCompanyID").item(0).getTextContent(); // 전자결재 orgCompanyID
+        String adminChk = doc.getElementsByTagName("ADMINCHK").getLength() != 1 ? "" : doc.getElementsByTagName("ADMINCHK").item(0).getTextContent(); // 전체관리자 = true (ip접속관리 관리자페이지)
         
         if (adminDist.equals("true") || (adminOrganChk.length > 1 && adminOrganChk[1].equals("other"))) {
         	topID = adminOrganChk[0];
-        } else if (adminOrganChk.length > 1 && adminOrganChk[1].equals("organ")) {
+        } else if (adminOrganChk.length > 1 && adminOrganChk[1].equals("organ")) { // 전체 관리자 관리자페이지 일부에서 조직도 전체 트리 보여줌
 		} else if (!orgCompanyID.equals("") && !orgCompanyID.equals("undefined")) {
 			topID = orgCompanyID;
+		} else if (!topID.equals(userCompanyID) && adminChk.equals("true")) {
+			deptID = topID;
 		} else {
         	topID = userCompanyID;
         }
