@@ -328,7 +328,9 @@
 					}
 				}
 
-				// 진행중인 설문 종료할지 체크
+				// 진행중인 설문의 종료시간 업데이트 여부 flag 
+				var updateFlag= "yes";
+				// 행중인 설문 종료할지 체크
 				getOnUsePoll();
 				if(onUseVO) {
 					if(!(itemSeq == onUseVO.itemSeq)) {
@@ -343,6 +345,8 @@
 							if(!confirm("<spring:message code = 'ezPersonal.hyh12'/>")) {
 								return;
 							};
+						} else if ((Edate < tempSD)) {
+							updateFlag = "no";
 						}
 					}
 				}
@@ -358,6 +362,7 @@
 				createNodeAndInsertText(xmlDom, objNode, "ENDDATE", tmpEndDateTime);
 				createNodeAndInsertText(xmlDom, objNode, "NUM", document.getElementById("selectnum").value);
 				createNodeAndInsertText(xmlDom, objNode, "ITEMSEQ", itemSeq);
+				createNodeAndInsertText(xmlDom, objNode, "UPDATEFLAG", updateFlag);
 
 				for (var i=1; i<11; i++) {
 					createNodeAndInsertText(xmlDom, objNode, "ANSWER", eval("answer" + i).value);

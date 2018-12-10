@@ -43,7 +43,6 @@
 	#theme3Body .two_column {width:48.4%;}
 	.orbit-wrapper .timer {display:none;}
 	.linkIcon {display: block; margin: 0 auto; padding: 9px 0px 5px 0px; text-align: center;}
-	.linkIcon img {height: 30px; width: 30px;}
 	.linkTxt {display: block; width: 78px; text-align: center; color: #333; font-size: 12px; height: 27px; letter-spacing: 0px; overflow: hidden;margin: 0 auto; padding: 2px 0px 0px 0px; word-break: break-all; line-height: 15px; text-overflow: ellipsis; white-space: nowrap;}
 </style>
 </head>
@@ -161,11 +160,11 @@
 			txtSpan.classList.add('linkTxt');
 			
 			switch(item.linkType) {
-			case "A" : iconImg.setAttribute("src", "/images/kr/main/link_externalSite.png") ; break;
-			case "B" : iconImg.setAttribute("src", "/images/kr/main/link_homePage.png") ; break;
-			case "C" : iconImg.setAttribute("src", "/images/kr/main/link_intranet.png") ; break;
-			case "D" : iconImg.setAttribute("src", "/images/kr/main/link_connectedPrograms.png"); break;
-			case "E" : iconImg.setAttribute("src", "/images/kr/main/link_blog.png"); break;
+			case "A" : iconImg.setAttribute("src", "/images/kr/main/portal_externalSite.png") ; break;
+			case "B" : iconImg.setAttribute("src", "/images/kr/main/portal_homePage.png") ; break;
+			case "C" : iconImg.setAttribute("src", "/images/kr/main/portal_intranet.png") ; break;
+			case "D" : iconImg.setAttribute("src", "/images/kr/main/portal_connectedPrograms.png"); break;
+			case "E" : iconImg.setAttribute("src", "/images/kr/main/portal_blog.png"); break;
 			default :  iconImg.setAttribute("src", item.linkTypeUrl); break;
 			}
 			

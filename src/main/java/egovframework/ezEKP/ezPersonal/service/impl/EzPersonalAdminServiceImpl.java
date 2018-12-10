@@ -1012,6 +1012,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
 		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 		String itemSeq = doc.getElementsByTagName("ITEMSEQ").item(0).getTextContent();
+		String updateFlag = doc.getElementsByTagName("UPDATEFLAG").item(0).getTextContent();
 
 		if (pollTitle2.equals("")) {
 			pollTitle2 = pollTitle;
@@ -1054,10 +1055,12 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 
 		try {
 			// 현재 진행중인 설문 종료시간 업데이트
-			if (companyID != null && companyID.equals("Top")) {
-				ezPersonalAdminDAO.insertPoll_U1(map);
-			} else {
-				ezPersonalAdminDAO.insertPoll_U2(map);
+			if(updateFlag.equals("yes")){
+				if (companyID != null && companyID.equals("Top")) {
+					ezPersonalAdminDAO.insertPoll_U1(map);
+				} else {
+					ezPersonalAdminDAO.insertPoll_U2(map);
+				}
 			}
 
 			// 수정된 설문 업데이트
