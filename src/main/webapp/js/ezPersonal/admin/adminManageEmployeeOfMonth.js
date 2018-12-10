@@ -187,7 +187,7 @@ function btn_add_Complete(rtv) {
 	$.ajax({
 		type : "POST",
 		url : "/admin/ezPersonal/setEmployeeMonth.do",
-		async : false,
+		async : true,
 		data : {type : "INS", userID : userId, deptID : deptId, term : selectedTerm},
 		dataType : "text",
 		success : function (result) {
@@ -224,7 +224,7 @@ function btn_modify_Complete(rtv) {
 	$.ajax({
 		type : "POST",
 		url : "/admin/ezPersonal/setEmployeeMonth.do",
-		async : false,
+		async : true,
 		data : {type : "UPD", userID : userId, deptID : deptId, term : selectedTerm},
 		dataType : "text",
 		success : function (result) {
