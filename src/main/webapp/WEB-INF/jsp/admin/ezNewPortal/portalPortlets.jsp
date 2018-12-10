@@ -8,7 +8,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title><spring:message code='ezNewPortal.t056' /></title>
 	<link rel="stylesheet"  href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css">
-	<link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">
+	<link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/default.css')}" />
@@ -372,7 +372,9 @@
 		request.setRequestHeader('content-type', 'application/json');
 		
 		request.onload = function() { 
-			showToastMessage(portletId);
+			if (request.status >= 200 && request.status < 300) {
+				showToastMessage(portletId);
+			}
 		};
 		
 		request.onerror = function() {}
@@ -696,11 +698,27 @@
 		toastArea.id = "toast" + portletId;
 		
 		$("#portlet" + portletId).prepend(toastArea);
+
+		var isUsedPortlet = $("#portlet" + portletId).find(".switch").find("input[type='checkbox']").prop("checked");
+		
+		if (isUsedPortlet) {
+			$("#portlet" + portletId).find(".portlet-header").css("background-color", "rgb(237, 247, 255)");
+			$("#portlet" + portletId).find(".portlet-header").css("border", "");
+			$("#portlet" + portletId).find(".portlet-header").css("color", "");
+			$("#portlet" + portletId).find(".portlet-header").find("span").attr("class", "spanOn");
+			var changedName = $("#portlet" + portletId).find(".portletName[data1='1']").val();
+			$("#portlet" + portletId).find(".portlet-header").find(".portlet_header_name").text(changedName);
+		} else {
+			$("#portlet" + portletId).find(".portlet-header").css("background-color", "rgb(244,244,244)");
+			$("#portlet" + portletId).find(".portlet-header").css("border", "1px solid rgb(231, 231, 231)");
+			$("#portlet" + portletId).find(".portlet-header").css("color", "rgb(177, 177, 177)");
+			$("#portlet" + portletId).find(".portlet-header").find("span").attr("class", "spanOff");
+			var changedName = $("#portlet" + portletId).find(".portletName[data1='1']").val();
+			$("#portlet" + portletId).find(".portlet-header").find(".portlet_header_name").text(changedName);
+		}
 		
 		setTimeout(function() {
 			$("#toast" + portletId).fadeOut(1000, function() {
-				getPortletList(); 
-				
 				var parent = doc.getElementById("portlet" + portletId);
 				parent.removeChild(toastArea);
 			});

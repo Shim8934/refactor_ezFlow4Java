@@ -96,12 +96,6 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (int) select("ezNewPortal.getQuickLinkTotalCnt", map);
 	}
 
-	// 사용자가 볼수 있는 회사 포틀릿
-	@SuppressWarnings("unchecked")
-	public List<PortletInfoVO> getPortletOrderCompForUser(Map<String, Object> map) throws Exception {
-		return (List<PortletInfoVO>) list("ezNewPortal.getPortletOrderCompForUser", map);
-	}
-	
 	// 사용자 사용가능 프레임 리스트
 	@SuppressWarnings("unchecked")
 	public List<FrameInfoVO> getUserUsableFrameList(Map<String, Object> map) throws Exception {
@@ -164,12 +158,6 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<PortletInfoVO>) list("ezNewPortal.getPortletOrderUser", map);
 	}
 	
-	//회사 포틀릿 순서 가져오기
-	@SuppressWarnings("unchecked")
-	public List<PortletInfoVO> getPortletOrderComp(Map<String, Object> map) {
-		return (List<PortletInfoVO>) list("ezNewPortal.getPortletOrderComp", map);
-	}
-
 	//포틀릿 정보 가져오기
 	public PortletInfoVO getCompanyPortletInfo(Map<String, Object> map) {
 		return (PortletInfoVO) select("ezNewPortal.getCompanyPortletInfo", map);
@@ -256,6 +244,28 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<BoardListVO> getBoardPortletInfo (Map<String, Object> map) {
 		return (List<BoardListVO>) list("ezNewPortal.getBoardPortletInfo", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortletInfoVO> getThemePortletList(Map<String, Object> map) {
+		return (List<PortletInfoVO>) list("ezNewPortal.getThemePortletList", map);
+	}
+	
+	public void updateThemePortletUsed(Map<String, Object> map) {
+		update("ezNewPortal.updateThemePortletUsed", map);
+	}
+	
+	public void updatePortletOrderUser(Map<String, Object> map) {
+		update("ezNewPortal.updatePortletOrderUser", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortletInfoVO> getPortletListNotSelected (Map<String, Object> map) {
+		return (List<PortletInfoVO>) list("ezNewPortal.getPortletListNotSelected", map);
+	}
+	
+	public void updateAllThemePortletOrder (Map<String, Object> map) {
+		update("ezNewPortal.updateAllThemePortletOrder", map);
+	}
 	/**
 	 * 이효진
 	 */
@@ -292,6 +302,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<PortletInfoVO> getPortletForUser(Map<String, Object> map) throws Exception {
 		return (List<PortletInfoVO>) list("ezNewPortal.getPortletForUser", map);
+	}
+	
+	public int getThemeId(Map<String, Object> map) throws Exception {
+		return (int) select("ezNewPortal.getThemeId", map);
 	}
 	
 	//여기서부터 관리잔데 걍 다만들고 dao옮기자
@@ -603,5 +617,4 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void updateSlideOrder(Map<String, Object> map) {
 		update("ezNewPortal.updateSlideOrder", map);
 	}
-
 }

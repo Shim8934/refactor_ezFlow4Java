@@ -301,8 +301,8 @@
 		<div id="mainmenu">
 			<ul>
 				<li><span onClick="BoardItemList()"><spring:message code='ezCommunity.t987' /></span></li>
-			    <li><span onClick="DeleteItem_onclick()"><spring:message code='ezCommunity.t208' /></span></li>
-			    <li><span onClick="refresh_onclick()"><spring:message code='ezCommunity.t912' /></span></li>		    
+			    <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
+			    <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
 			</ul>
 		</div>
 		

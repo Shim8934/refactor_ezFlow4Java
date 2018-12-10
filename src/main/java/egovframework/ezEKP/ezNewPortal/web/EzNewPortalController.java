@@ -21,14 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-
-
-
-
-
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -309,8 +302,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	@ResponseBody
 	public JSONObject getUserPortletList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getUserPortletList Start");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String userId = userInfo.getId();		
+		
+		String userId = userInfo.getId();
+		
 		String url = "/rest/ezPortal/portlets/users/" + userId;	
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "GET", null);
 		String status = resultBody.get("status").toString();	

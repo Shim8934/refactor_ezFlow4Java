@@ -1860,7 +1860,7 @@
 		        for (var i = 0; i < rows.length; i++) {
 		        	var dataNodes = GetChildNodes(rows[i]);
 			        objRow = createNodeAndAppandNode(xmlpara, objRoot, objRow, "ROW");
-					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[0], "VALUE").trim());
+					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim() + (SelectSingleNodeValue(dataNodes[2], "VALUE").trim() == "" ? "<spring:message code='ezApprovalG.lhj18'/>" : ""));
 					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTID", SelectSingleNodeValue(dataNodes[0], "DATA1").trim());
 					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTNAME", SelectSingleNodeValue(dataNodes[0], "DATA2").trim());
 					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "EXTRECEPTYN", SelectSingleNodeValue(dataNodes[0], "DATA3").trim());

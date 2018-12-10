@@ -7,7 +7,7 @@
 		<title>TopMenu</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">
+		<link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
 
         <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>			
@@ -42,6 +42,7 @@
 	</head>
 	<body>
 		<header id="top"></header>
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 		
 		<script type="text/javascript">
 		
@@ -236,7 +237,7 @@
 				str += '		<div id="editMenuBtn">'
 				str += '			<span class="topMenuBtn" id="editMenuCancel"><spring:message code="ezNewPortal.t001" /></span>';
 				str += '			<span class="topMenuBtn" id="editMenuSave"><spring:message code="ezNewPortal.t002" /></span>';
-				str += '			<span class="topMenuBtn initOrder" id="editcompanyOrder"><spring:message code="ezNewPortal.t003" /></span>';
+				/* str += '			<span class="topMenuBtn initOrder" id="editcompanyOrder"><spring:message code="ezNewPortal.t003" /></span>'; */
 				str += '		</div>';
 				str += '	</div>';				
 				str += '</div>';
@@ -516,7 +517,7 @@
 			});			
 			
 			// 메뉴 순서 초기화 버튼
-			var editcompanyOrder = document.getElementById('editcompanyOrder');
+			/* var editcompanyOrder = document.getElementById('editcompanyOrder');
 			editcompanyOrder.addEventListener('click', function() {
  
 				var elements = document.getElementById('toggleMenu').childNodes;
@@ -546,7 +547,7 @@
 				
 				// 메뉴 순서 초기화 값 true로 변경
 				newPortalTopMenu.isInitOrder = true;
-			});			
+			});	 */		
 		}			
 		
 		// 확장메뉴 이벤트 모아둔 곳
@@ -591,7 +592,7 @@
 			});
 			var viewCnt = totalMenuCnt*1 - (menuCnt*1);
 			if (viewCnt > 0) {
-				$('.hidden_nav_count').css('background','#ff2323');
+				$('.hidden_nav_count').css('background','#3d8fea');
 				document.getElementById('nav_count').innerHTML = '+' + (totalMenuCnt*1 - (menuCnt*1));
 			} else {
 				$('.hidden_nav_count').css('background','none');
@@ -665,7 +666,17 @@
 			setExpandMenuListEvent();// 확장메뉴 이벤트 설정
 			setExpandMenuEvent();    // 확장메뉴 이벤트 설정
 			
-		}		
+		}
+ 		
+ 		var showProgress = function() {
+		    document.getElementById("progressPanel").style.display = "block";
+		    document.getElementById("progressPanel").style.opacity = 0.5;
+		    document.getElementById("progressPanel").style.background = "rgba(0,0,0,0.7)";
+		}
+        
+        var hideProgress = function() {
+        	document.getElementById("progressPanel").style.display = "none";
+        }
  		
  		// 시작지점
 		newPortalTopMenuFunc();	

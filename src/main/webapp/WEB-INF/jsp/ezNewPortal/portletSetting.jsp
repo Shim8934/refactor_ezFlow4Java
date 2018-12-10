@@ -6,7 +6,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezNewPortal.t009' /></title>
 		<link href="${util.addVer('main.e15', 'msg')}" rel="stylesheet" type="text/css">
-		<link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">
+		<link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet"  href="${util.addVer('/css/ezNewPortal/jquery.flipster.min.css')}" type="text/css">
 		<link rel="stylesheet"  href="${util.addVer('/css/ezMemo/jquery.mCustomScrollbar.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -18,8 +18,8 @@
 			html { height: 100%; }
 			#set-body { background-color: white; }
 			h3 { padding-left: 20px; margin-top: 25px; margin-bottom: 10px; font-size:14px; }
-			.set-head { background-color: #687077; height:44px; line-height:42px; display: flex; align-items: center; margin:0px; padding:0px;}
-			.set-head h1 { font-size: 16px; margin-left: 20px; color:#fff;}
+			.set-head { background-color: rgb(228, 238, 254); height:44px; line-height:42px; display: flex; align-items: center; margin:0px; padding:0px;}
+			.set-head h1 { font-size: 16px; margin-left: 20px; color:black;}
 			.set-action { height: 9%; display: flex; justify-content: center; align-items: center;} 
 			.ui-portlet { position:relative;  width: 230px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
 			.ui-portlet-on { background-color: #f0f0f0; }
@@ -269,8 +269,10 @@
 							console.error(xhr.responseText);	
 						}
 					}
+					
 					xhr.open('GET', '/ezNewPortal/getUserPortletList.do');
-					xhr.send();	
+					xhr.send();
+					
 				}
 				
 				getUserFrameList();
@@ -281,21 +283,48 @@
 				saveBtn.addEventListener('click', function (){
 					var portletList = [];
 					var classList = document.getElementsByClassName('ui-portlet-span');
+					var orderCount = 1;
 					// 반복문 돌면서 데이터 쌓기
 					HTMLCollection.prototype.forEach = Array.prototype.forEach;
+					
  					classList.forEach(function (item, index) {			
 						var switchBtn = document.getElementById('portletid_' + item.dataset.portletid);
+						
 						if (switchBtn.getAttribute('checked')) {
 							var obj = {
 								portletId: item.dataset.portletid,
-								portletOrder: item.dataset.portletorder,
-								menuId: item.dataset.menuid
+								portletOrder: orderCount,
+								menuId: item.dataset.menuid,
+								portletUsed : switchBtn.getAttribute('checked')
 							}
+							
+							orderCount++;
 							portletList.push(obj);				
 						}
 					});
  					
-					// 유저 포틀릿 순서로 재정의
+ 					classList.forEach(function (item, index) {			
+						var switchBtn = document.getElementById('portletid_' + item.dataset.portletid);
+						var portletUsed = false;
+						
+						if (switchBtn.getAttribute('checked') == null)  {
+							portletUsed = false;
+						}
+						
+						if (!switchBtn.getAttribute('checked')) {
+							var obj = {
+								portletId: item.dataset.portletid,
+								portletOrder: orderCount,
+								menuId: item.dataset.menuid,
+								portletUsed : portletUsed
+							}
+
+							orderCount++;
+							portletList.push(obj);				
+						}
+					});
+ 					
+					/* // 유저 포틀릿 순서로 재정의
 					var temp = [];
 					for(var i=0; i<portletList.length; i++) {
 						for(var j=i; j<portletList.length; j++) {
@@ -322,7 +351,7 @@
 							item.portletOrder = arrIndex;
 							arrIndex++;
 						}
-					});
+					}); */
 					// 순서 재정렬 끝
 					console.log('portletList ', portletList);
 					
@@ -332,7 +361,7 @@
 						portletList: portletList,
 					}					
 					
-					console.log('param', param.portletList);					
+					console.log('param', portletList);					
 					
 					if(param.portletList.length < 1) {
 						alert('<spring:message code="ezNewPortal.t011" />');	

@@ -539,26 +539,25 @@
         					<c:choose>
         						<c:when test="${typeVal ne 'Readonly'}">
         							<div id="menuTable1" >
-        							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezResource.t185 => t114 -->
-          							<li><span onClick="btn_Save()"> <spring:message code="ezResource.t114"/></span></li>
-          							<li><span onClick="print_onClick( false )"> <spring:message code="ezResource.t186"/></span></li>
-          							<li id="deletebtbn"><span onClick="delSchedule_onClick('${num}','${ownerID}')"> <spring:message code="ezResource.t65"/></span></li>
-          							
-       								<c:if test="${typeVal ne 'Instance' && typeVal ne 'Readonly'}" >
-       									<li><span id="Span2" name="ScheRep" id="ScheRep" name="ScheRep" onClick="Schedule_Repetition_onclick()"> <spring:message code="ezResource.t195"/></span></li>
-       								</c:if>
-
-       								<c:if test="${approveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}" >
-       									<c:choose>
-       										<c:when test="${saveApproveFlag eq '1'}">
-				    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '0')"><spring:message code="ezResource.t190"/></span></li>
-       										</c:when>
-       										<c:otherwise>
-				    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '1')"><spring:message code="ezResource.t191"/></span></li>
-       										</c:otherwise>
-       									</c:choose>
-        					 		</c:if> 
-          							
+	        							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezResource.t185 => t114 -->
+	          							<li><span onClick="btn_Save()"> <spring:message code="ezResource.t114"/></span></li>
+	          							<li id="deletebtbn" style="display:none"><span class="icon16 popup_icon16_delete" onClick="delSchedule_onClick('${num}','${ownerID}')"></span></li>
+	          							
+	       								<c:if test="${typeVal ne 'Instance' && typeVal ne 'Readonly'}" >
+	       									<li><span id="Span2" name="ScheRep" id="ScheRep" name="ScheRep" onClick="Schedule_Repetition_onclick()"> <spring:message code="ezResource.t195"/></span></li>
+	       								</c:if>
+	
+	       								<c:if test="${approveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}" >
+	       									<c:choose>
+	       										<c:when test="${saveApproveFlag eq '1'}">
+					    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '0')"><spring:message code="ezResource.t190"/></span></li>
+	       										</c:when>
+	       										<c:otherwise>
+					    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '1')"><spring:message code="ezResource.t191"/></span></li>
+	       										</c:otherwise>
+	       									</c:choose>
+	        					 		</c:if>
+	        					 		<li><span class="icon16 popup_icon16_print" onClick="print_onClick( false )"></span></li>
 	          						</div>          
 	          						<div id="menuTable2" style='display:none'>								
 	          							<li><span  onClick="btn_Save()"> <spring:message code="ezResource.t185"/></span></li>

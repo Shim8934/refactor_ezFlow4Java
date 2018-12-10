@@ -64,7 +64,7 @@
 		        }
 		        
 		        if (SelectNodes(xmlDoc, "DATA/ROW").length == 0) {
-		        	var strstr = "<img src='/images/kr/main/nodata_plan.png'><br/><span style='color:#d0d0d0;font-weight:bold'><spring:message code='ezCommunity.t926' /></span>";
+		        	var strstr = "<img src='/images/kr/main/noData_sIcon.png'><br/><span style='color:#d0d0d0;font-weight:bold'><spring:message code='ezCommunity.t926' /></span>";
 		        	html += "<table class=\"content\" style=\"margin-top:10px;margin-bottom:10px;border-left:1px solid #eaeaea;border-right:1px solid #eaeaea;width:100%;height:180px;text-align:center\">";
 		        	html += "<tr style=\"border-left:1px solid #eaeaea;border-right:1px solid #eaeaea;\" ><td style='color:#777;background-color:#fafafa;border:1px solid #dfdfdf !important'>" + strstr +"</td></tr></table>";
 		        }
@@ -418,27 +418,20 @@
 				<c:if test="${keyword != '' }">
 					<li><span onClick="goPage(2)" ><spring:message code='ezCommunity.t168' /></span></li>
 				</c:if>
+				<div style="float:right;margin-top:5px;">
+					<select name="s_radio" id ="s_radio" style="vertical-align: middle; height: 24px !important; margin-top:1px">
+						<option selected value="titleContent" ><spring:message code='ezCommunity.t585' /></option>
+						<option value="writer"><spring:message code='ezCommunity.t445' /></option>
+					</select>
+					<input class="inputText" type="text" name="keyword" id ="keyword" onKeyDown="return keyword_onkeydown(event)" style="vertical-align: middle; width:200px; border-color:#ddd">
+					<a class="imgbtn imgbck" style="vertical-align: middle;height:22px;margin:0px"><span onClick="search();" style="height:22px;line-height:22px"><spring:message code='ezCommunity.t31' /></span></a>
+				</div>
    			</ul>
 		</div>
 		
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-
-		<table class="content" style="width:100%;border:0px;border-top:1px solid #ddd">
-			<tr>
-	  			<td style="border:0px">
-	  				<div style="margin-top:8px;">
-						<select name="s_radio" id ="s_radio" style="vertical-align: middle; height: 25px;margin-top:1px">
-							<option selected value="titleContent" ><spring:message code='ezCommunity.t585' /></option>
-							<option value="writer"><spring:message code='ezCommunity.t445' /></option>
-						</select>
-						<input class="inputText" type="text" name="keyword" id ="keyword" onKeyDown="return keyword_onkeydown(event)" style="vertical-align: middle; width:200px">
-						<a class="imgbtn" style="vertical-align: middle;height:22px;margin:0px"><span onClick="search();" style="height:22px;line-height:22px"><spring:message code='ezCommunity.t31' /></span></a>
-					</div>	
-	  			</td>
-			</tr>
-		</table>
 		
 		<form name="del" id= "formDel" action = "/ezCommunity/guestEditOk.do" method = "post">
 			<input type=hidden name=code value="<c:out value='${code}' />">

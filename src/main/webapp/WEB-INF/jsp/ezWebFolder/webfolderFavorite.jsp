@@ -31,12 +31,20 @@
 <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 <script type="text/javascript">
 	"use strict";
+	var folderType = "";
+	var userId = "${userId}";
+	var folderId = "";
+	var inputNameDlg_cross_dialogArguments = new Array();
+	
 	var context = (function() {
 		var isFavoriteMode = false;
 		
 		var currentFolderId = 0;
 		var currentFolderType = "";
 		
+		var inputNameDlg_cross_dialogArguments = new Array();
+// 		var parentId = folderId;
+
 		// event listener
 		var onListTypeChangeEvent = function(isFavoriteMode) {};
 		
@@ -66,6 +74,7 @@
 		};
 		
 		var setList = function(folderId, folderType, isAsync) {
+			window.folderId = folderId;
 			currentFolderId = folderId;
 			
 			if (isFavoriteMode) {
@@ -246,6 +255,8 @@
         };
         
         $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+        var folderId = context.getfolderId;
+        
 	});
 	
 	function initDomElement() {
@@ -313,6 +324,7 @@
 				hideProgress();
 			}
 		})
+		
 	}
 
 	function loadList(folderId, folderType, isAsync) {
@@ -548,6 +560,7 @@
 			row.setAttribute("class", "bnkWebFolder");
 			row.setAttribute("targetId", resultJson[columnMap.id]);
 			row.setAttribute("targetPath", resultJson[columnMap.path]);
+			row.setAttribute("targetCreater", result[i]["createId"]);
 			row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 			
 			if (!isFromFolder && isFolder) {
@@ -854,6 +867,7 @@
 		blockLeft.style.height = "100%";
 		blockLeft.style.display = "none";
 	}
+	
 </script>
 </head>
 <body class="mainbody" favoritemode>
@@ -868,6 +882,7 @@
 			<ul>
 				<li favoritemenu onclick="buttons.fileDownload()" class="important"><span><spring:message code='ezWebFolder.t186'/></span></li>
 				<li id="upload" onclick="buttons.fileUpload()" class="important"><span><spring:message code='ezWebFolder.t187'/></span></li>
+				<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
 				<li favoritemenu onclick="buttons.fileRename()"><span><spring:message code='ezWebFolder.t273'/></span></li>
 				<li onclick="buttons.fileMoveAndCopy()"><span><spring:message code='ezWebFolder.t275'/></span></li>
 				<li onclick="shareContext.addShareView()"><span><spring:message code='ezWebFolder.t254'/></span></li>			

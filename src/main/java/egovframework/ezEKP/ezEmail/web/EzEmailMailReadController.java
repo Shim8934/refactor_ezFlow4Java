@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1712,11 +1711,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		if (fromEmail != null && !fromEmail.equals("")) {
 			fromId = ezOrganService.getCNByEmail(fromEmail, loginInfo.getTenantId());
 			
+			//email이 alias 메일이어서 id를 못가져왔을 경우
+			//alias mail인지 check후 원래 이메일 주소에서 id를 가져온다.
 			if (fromId == null || fromId.equals("")) {
 				List<String> aliasAddress = new ArrayList<String>();
 				aliasAddress.add(fromEmail);
 				Map<String, String> targetAddress = ezEmailService.getAliasAddressMap(aliasAddress, loginInfo.getTenantId());
-			
+				
 				if (targetAddress != null) {
 					String resultTargetAddress = targetAddress.get(fromEmail);
 					logger.debug("resultAddress=" + resultTargetAddress);
@@ -1728,6 +1729,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							logger.debug("fromId=" + fromId);
 						}
 					}
+					
 				}
 			}
 			
@@ -1858,7 +1860,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
     					double size = Double.parseDouble(bodyInfoList.get(2));
     					String strSize = ezEmailUtil.getSizeWithUnit(size);
-    					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
+    					pAttachListHtmlSub = " <span class='cblue'>" + bodyInfoList.get(3) + "</span> (" + strSize + ")";
     	
     					if (!folderPath.equals(ezEmailUtil.getSentFolderId(locale))) {
                             String[] messageIds = message.getHeader("Message-ID");

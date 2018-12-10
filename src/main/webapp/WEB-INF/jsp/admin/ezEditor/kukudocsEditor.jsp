@@ -462,7 +462,7 @@
 	            Editor_Complete : Editor_Complete,
 	            Mouse_event : {'keyup' : CellCheckField},
 	            Key_event : {'mouseup' : CellCheckField},
-	            cell_lock_name : 'free',
+	            cell_lock_name : 'cell_lock',
 	            lockImageURL : '/js/ezEditor/kukudocsEditor/images/lock.png',
 	            colorPicker : colorPicker
 	        });

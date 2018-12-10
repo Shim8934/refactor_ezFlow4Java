@@ -207,7 +207,7 @@
 					 var dt = document.createElement("DT");
 					 
 		             var img = document.createElement("IMG");
-		             img.src = "/images/kr/main/nodata.png";
+		             img.src = "/images/kr/main/noData_sIcon.png";
 		             
 		             var dd = document.createElement("DD");
 		             dd.innerHTML = strLang535;
@@ -247,7 +247,7 @@
                     
                     var copName = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME");
 
-                    span2.innerHTML = copName + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />"+")";
+                    span2.innerHTML = MakeXMLString(copName) + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />"+")";
                     span2.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO").trim());
                     span2.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
                     span2.style.cursor = "pointer";
@@ -327,7 +327,7 @@
 					 var dt = document.createElement("DT");
 					 
 		             var img = document.createElement("IMG");
-		             img.src = "/images/kr/main/nodata.png";
+		             img.src = "/images/kr/main/noData_sIcon.png";
 		             
 		             var dd = document.createElement("DD");
 		             dd.innerHTML = strLang535;
@@ -367,7 +367,7 @@
                     
                     var copName = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME");
                     
-                    span2.innerHTML = copName + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />" + ")";
+                    span2.innerHTML = MakeXMLString(copName) + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />" + ")";
                     span2.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO").trim());
                     span2.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
                     span2.style.cursor = "pointer";
@@ -425,7 +425,7 @@
 					var dt = document.createElement("DT");
 					 
 		            var img = document.createElement("IMG");
-		            img.src = "/images/kr/main/nodata.png";
+		            img.src = "/images/kr/main/noData_sIcon.png";
 		             
 		            var dd = document.createElement("DD");
 		            dd.innerHTML = strLang535;
@@ -500,6 +500,7 @@
               
                 for (var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length; i++) {
                     var copno;
+                    var clubname;
 
                     if (i == 0 || SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim() != copno) {
                         copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim();
@@ -512,9 +513,11 @@
                         var dt = document.createElement("DT");
 
                         if (primary == "1") {
-                            dt.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME");
+                        	clubname = MakeXMLString(SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME"));
+                            dt.innerHTML = clubname;
                         } else {
-                            dt.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME2");
+                        	clubname = MakeXMLString(SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME2"));
+                            dt.innerHTML = clubname;
                         }
                         
                         var dd = document.createElement("DD");
@@ -589,6 +592,7 @@
                     var copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim();
                     var gubun = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "GUBUN");
                     var writeDate = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITEDATE");
+                    var title = MakeXMLString(SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE"));
                     td.style.cursor = "pointer";
                     td.setAttribute("boardid", boardid);
                     td.setAttribute("itemid", itemid);
@@ -1112,7 +1116,7 @@
 					var dt = document.createElement("DT");
 					 
 		            var img = document.createElement("IMG");
-		            img.src = "/images/kr/main/nodata.png";
+		            img.src = "/images/kr/main/noData_sIcon.png";
 		             
 		            var dd = document.createElement("DD");
 		            dd.innerHTML = strLang535;
@@ -1247,14 +1251,14 @@
                     strong.onclick = function () { move_cop(this); };
                     
                     if (primary == "1") {
-                        strong.innerHTML = clubVO.c_ClubName;
+                        strong.innerHTML = MakeXMLString(clubVO.c_ClubName);
                     } else {
-                        strong.innerHTML = clubVO.c_ClubName2;
+                        strong.innerHTML = MakeXMLString(clubVO.c_ClubName2);
                     }
                     
                     dd.appendChild(strong);
                     var dd2 = document.createElement("DD");
-                    dd2.innerHTML = clubVO.c_ClubDesc;
+                    dd2.innerHTML = MakeXMLString(clubVO.c_ClubDesc);
 
                     var dd3 = document.createElement("DD");
                     
@@ -1452,9 +1456,9 @@
                 var dt = document.createElement("DT");
                 
                 if(primary == "1") {
-                    dt.innerHTML = result["clubVO"]["c_ClubName"];
+                    dt.innerHTML = MakeXMLString(result["clubVO"]["c_ClubName"]);
                 } else {
-                    dt.innerHTML = result["clubVO"]["c_ClubName2"];
+                    dt.innerHTML = MakeXMLString(result["clubVO"]["c_ClubName2"]);
                 }
 
                 var dd = document.createElement("DD");
@@ -1839,7 +1843,7 @@
 		            	<c:choose>
 		            		<c:when test="${fn:length(cNoticeList) eq 0 }"> 
 		            			<dl class="nodata_sIcon">
-									<dt><img src="/images/kr/main/nodata.png"></dt>
+									<dt><img src="/images/kr/main/noData_sIcon.png"></dt>
 								    <dd>"<spring:message code='ezCommunity.kmsc01'/>"</dd>
 								</dl>
 		            		</c:when>

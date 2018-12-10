@@ -10,10 +10,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
 <%-- <link href="${util.addVer('/css/ezNewPortal/newPortal_css.css')}" rel="stylesheet" type="text/css">  --%>
-<link href="${util.addVer('/css/ezNewPortal/theme2_main.css')}" rel="stylesheet" type="text/css">
-<link href="${util.addVer('/css/ezNewPortal/theme2.css')}" rel="stylesheet" type="text/css">
+<link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
 <style type="text/css">
-	.two_column{width:48%;}
+	#theme2Body .two_column{width:48%;}
 	.mainbg {min-width:1280px;}
 	#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}
 	.top_two_column {margin : 0px 0px 25px 0px;}
@@ -61,7 +60,7 @@
                 </dl>
             </div>
             <div class="personal_content">
-            	<p><spring:message code='ezNewPortal.t125' /></p>
+            	<p>&nbsp;</p>
             <c:choose>
             	<c:when test="${useAttitude eq 'YES' }">
 	                <dl class="commute">
@@ -216,8 +215,8 @@
         	<p class="title"><span><spring:message code='ezNewPortal.t127' /></span><span class="color"><spring:message code='ezNewPortal.t128' /></span></p>
             <dl class="excellent_info" id="excellentcontent">
             	<dt class="pic" id="emPic"></dt>
-                <dt id="exellentDeptName"></dt>
-                <dt id="exellentEmpName"></dt>
+                <dt id="exellentEmpName" style="font-size:15px"></dt>
+                <dt id="exellentDeptName" style="font-size:13px; color:#777; font-weight: normal"></dt>
                 <dd><img src="/images/ezNewPortal/theme2Img/icon_excellent.png"></dd>
             </dl>
         </article>
@@ -304,7 +303,7 @@
 
 	var frameSetting = function (frameSetId) {
 		frameId = frameSetId;
-		
+		console.log(frameSetId);
 		if (frameSetId == "Frame2") {
 			var media1921 = window.matchMedia("only screen and (min-width: 1921px)");
 			var media1686 = window.matchMedia("only screen and (max-width :1920px) and (min-width :1686px)");
@@ -469,7 +468,7 @@
 					emPic.appendChild(img);
 					
 					document.getElementById("exellentDeptName").innerText = bestEmployee.userDeptName;
-					document.getElementById("exellentEmpName").innerText = bestEmployee.userName;
+					document.getElementById("exellentEmpName").innerText = '"' + bestEmployee.userName + '"';
 				}
 			}
 		});
@@ -524,7 +523,6 @@
 		if(data.length === 0) {
 			var dl = document.createElement('dl');
 			dl.className = 'nodata';
-			dl.style.marginLeft = '-18px';
 			
 			var dt = document.createElement('dt');
 			var img = document.createElement('img');
@@ -645,12 +643,13 @@
 			attiClock();
 		}
 		
-		//생일자 조회 기능 연동
+		//테마2에서는 생일자 안씀
+		/* //생일자 조회 기능 연동
 		$("#birthdayNext").on("click", {isNext : true}, getMonthlyBirthdayEmployees);
 		$("#birthdayPrev").on("click", {isNext : false}, getMonthlyBirthdayEmployees);
 		
 		//이번달 생일자 목록 불러오기
-		getMonthlyBirthdayEmployees();
+		getMonthlyBirthdayEmployees(); */
 		
 		//이달의 우수사원 불러오기
 		//getMonthlyBestEmployee();

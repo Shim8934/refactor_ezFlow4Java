@@ -244,7 +244,7 @@ public class EzStatisticsApprController {
 		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 			topid = userInfo.getCompanyID();
 		} else {
-			topid = "Top";
+			topid = "Top/organ";
 		}
 		
 		model.addAttribute("companyID", topid);					
@@ -286,7 +286,7 @@ public class EzStatisticsApprController {
 		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 			topid = userInfo.getCompanyID();
 		} else {
-			topid = "Top";
+			topid = "Top/organ";
 		}
 		
 		model.addAttribute("companyID", topid);					
@@ -359,7 +359,7 @@ public class EzStatisticsApprController {
 		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 			topid = userInfo.getCompanyID();
 		} else {
-			topid = "Top";
+			topid = "Top/organ";
 		}
 		
 		model.addAttribute("companyID", topid);					
@@ -435,7 +435,7 @@ public class EzStatisticsApprController {
 		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 			topid = userInfo.getCompanyID();
 		} else {
-			topid = "Top";
+			topid = "Top/organ";
 		}
 		
 		model.addAttribute("companyID", topid);					
@@ -530,7 +530,7 @@ public class EzStatisticsApprController {
 		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 			topid = userInfo.getCompanyID();
 		} else {
-			topid = "Top";
+			topid = "Top/organ";
 		}
 		
 		model.addAttribute("companyID", topid);					
@@ -572,7 +572,7 @@ public class EzStatisticsApprController {
 		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 			topid = userInfo.getCompanyID();
 		} else {
-			topid = "Top";
+			topid = "Top/organ";
 		}
 		
 		model.addAttribute("companyID", topid);					

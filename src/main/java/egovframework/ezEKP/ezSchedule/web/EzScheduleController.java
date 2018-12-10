@@ -1272,6 +1272,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String cID = request.getParameter("COMPANYID");
+		if (cID == null || cID.equals("")){
+			cID = loginSimpleVO.getCompanyID();
+		}
 		
 		//2018-11-01 김혜정 일정드래그앤드랍을 위해 추가
 		if (cID == null) {
@@ -2086,6 +2089,11 @@ public class EzScheduleController extends EgovFileMngUtil {
         if (vo.getDateType().equals("3")){        	
         	_repeatcount = request.getParameter("repeatcount");
         	_date = request.getParameter("date");
+        	//일정관리 참석자 초대메세지에서 반복일정 걸려있는 일정 조회 시, 회차랑 시작일자를 null로 받아와서 null검사 추가 #14484
+        	if (_repeatcount == null)
+        		_repeatcount = "1";
+        	if (_date == null)
+        		_date = vo.getStartDate().substring(0,10);
         	
         	if (vo.getRepetition().split("\\|")[1].equals("1")) {
         		dateString = msg.getMessage("ezSchedule.t343", locale) + " (" + _repeatcount + msg.getMessage("ezSchedule.t329", locale) + " " + _date + " (" + msg.getMessage("ezSchedule.t280", locale);

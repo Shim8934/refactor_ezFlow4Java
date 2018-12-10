@@ -45,6 +45,7 @@ public class EzWebFolderController_m {
 	public String webfolderSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
+		model.addAttribute("userId", userInfo.getId());
 		return "ezWebFolder/webfolderSharingList";
 	}
 	
@@ -75,6 +76,7 @@ public class EzWebFolderController_m {
 	public String webfolderSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
+		model.addAttribute("userId", userInfo.getId());
 		return "ezWebFolder/webfolderSharedList";
 	}
 	
@@ -518,6 +520,10 @@ public class EzWebFolderController_m {
 	@RequestMapping(value = "/ezWebFolder/favorite.do")
 	public String favor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		logger.debug("favorite started.");
+		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
+		
+		model.addAttribute("userId",user.getId());
+		
 		logger.debug("favorite ended.");
 		return "ezWebFolder/webfolderFavorite";
 	}

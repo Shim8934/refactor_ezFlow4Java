@@ -12,7 +12,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
-	    <script type="text/javascript">			
+	    <script type="text/javascript">	
+	    	var selectedCompanyID = "";
+	    
 			document.onselectstart = function () {
 	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	            return false;
@@ -25,10 +27,13 @@
 	        }
 	        
 	        function schedule_get_sharemanage() {	            
+	        	selectedCompanyID = $("#ListCompany").val();
 	            $.ajax({
 	            	url : "/admin/ezSchedule/scheduleGetShareManage.do",
 	            	dataType : "xml",
 	            	async : true,
+	            	cache : false,
+	            	data : {companyID : selectedCompanyID},	            	
 	            	success : function(text){
 	            		MakeSliderList(text);
 	            	}	            	
@@ -93,7 +98,7 @@
 		    }
 		    var _RowObject = null;
 		    function event_click(obj) {
-		        if (_RowObject != null) {
+		        if (_RowObject != null && _RowObject.childNodes.length != 0) {
 		            _RowObject.childNodes.item(0).style.backgroundColor = "#ffffff";
 		            _RowObject.childNodes.item(1).style.backgroundColor = "#ffffff";
 		            _RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
@@ -119,13 +124,15 @@
 	                var rtnValue = window.showModalDialog("/admin/ezSchedule/scheduleAdminPopupShareDept.do", "","dialogHeight:180px;dialogwidth:360px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
 	                
 	                if (typeof (rtnValue) != "unlimited" && rtnValue == "OK") {
-	                    window.location.reload(false);
+	                	schedule_get_sharemanage();
+	                    //window.location.reload(false);
 	                }
 	            }
 	        }
 	        function share_new_Complete(retVal) {
 	            if (typeof (retVal) != "unlimited" && retVal == "OK") {
-	                window.location.reload(false);
+	            	schedule_get_sharemanage();
+// 	                window.location.reload(false);
 	            }
 	        }
 	
@@ -144,7 +151,8 @@
 						},
 						success : function(text){
 							alert(strLang85);
-							window.location.reload(false);	
+							//window.location.reload(false);	
+							schedule_get_sharemanage();
 						},
 						error : function(err){
 							alert(strLang86);	
@@ -157,6 +165,13 @@
 	<body class="mainbody">
 	    <h1><spring:message code='ezSchedule.t36' /></h1>
 	    <div id="mainmenu">
+	    	<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+			    <select id="ListCompany" onChange="schedule_get_sharemanage()">
+		        	<c:forEach var="item" items="${companyList}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+			    </select><br /><br />
+		    </span>
 		    <ul>
 		        <li class="important"><span onClick="share_new()"><spring:message code='ezSchedule.t6' /></span></li>
 		        <li><span class="icon16 icon16_delete" onClick="share_delete()"></span></li>

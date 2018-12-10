@@ -328,7 +328,7 @@ function addEmptyMemo(flag) {
 	
 	if(flag != 'layer') {		// 메모 게시판 게시물 없을 때
 		var div = document.createElement("div");
-		
+		div.setAttribute("class", "emptyDiv");
 		div.style.marginTop = "70px";
 		div.innerHTML = "<dl class='nodata_sIcon'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd>" + strLangMemo7 + "</dd></dl>";		
 		
