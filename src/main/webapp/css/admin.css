@@ -1,4 +1,4 @@
-TD,input, text, div,select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: malgun gothic, arial,verdana;}
+TD,input, text, div:not(.slick-slide.slick-current.slick-center),select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: malgun gothic, arial,verdana;}
 input,SELECT{HEIGHT: 20px}
 .td{empty-cells:show}
 TEXTAREA{padding:5px}
@@ -222,3 +222,28 @@ li:nth-last-child(1) {border-bottom:0px;}
 .linkType img {margin-top: 5px;}
 .hideDetails {display: none;}
 .linkChoice {background: #edf7ff; border: 1px solid #2196f3; color: #0470e3;}
+
+/* Employee of Month */
+.calSlider {width: 85% !important; margin: 0px auto; border-top: 2px solid; border-bottom: 1px solid #c8ccd0;}
+.slick-slide {margin: 0px 3px;}
+.slick-slide img {width: 100% !important;}
+.slick-center {color: red;}
+.slick-prev:before, .slick-next:before {color: black;}
+.yearDiv {height: 38px; /* border: 1px solid #c8ccd0; */ }
+.yearSpan {text-align: center; font-size: 20px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; letter-spacing: -1px; line-height: 31px;}
+.employee {vertical-align: top; display: inline-block; width: 180px; border: 1px solid #d9d9d9; margin: 20px 60px 0px 0px; height: 240px;}
+.empBttn {text-align: right; padding: 10px 10px 0px 0px; height: 27px;}
+.empBttn > img:first-child {margin-right: 7px;}
+.empAdd dl dt {margin: 0px;}
+.empAdd dl dt img {margin: 10px 0px 20px 60px; cursor: pointer;}
+.empAdd dl dd {color: #999; font-size: 15px; line-height: 21px; text-align: center; margin: 0px;}
+.empImg dl dd {font-size: 15px; line-height: 19px; text-align: center; margin: 0px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.empImg dl dt img {margin-left: 40px; height: 95px; width: 95px; cursor:pointer;}
+.empInfo {border-bottom: 3px solid; margin: 0px 25px 0px 25px;}
+.empInfo p {margin: 0px; text-align: center; font-size: 20px; font-weight: bold;}
+.empCompany {font-weight: bold; font-size: 20px;}
+.calendarleft {margin: 0px;}
+.calendarright {margin: 0px;}
+.tree_delete {margin: 0px; cursor: pointer;}
+.slick-slide {outline: none !important;}
+.mainlist {margin-left: 110px;}
