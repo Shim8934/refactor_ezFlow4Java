@@ -770,13 +770,13 @@ function ListView() {
 //                        objTd.style.fontWeight = "BOLD";
 //                    }
                     if (getNodeText(oDatas[6]) == "Y") {
-                        titleImage = titleImage + "<img src='/images/i_new.gif'>&nbsp;";                        
+                        titleImage = titleImage + "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block;'><img src='/images/i_new.gif'></div>&nbsp;";                        
                     }
                     if (getNodeText(oDatas[4]) == "0") {
                         objTd.style.fontWeight = "BOLD";
                     }
                     if (getNodeText(oDatas[10]) != "0" && Use_OneLineCount == "YES")
-                        titleOneLineCnt = "<span style='color:#c64200'>[" + getNodeText(oDatas[10]) + "]</span>";
+                        titleOneLineCnt = "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block;'><span style='color:#c64200'>[" + getNodeText(oDatas[10]) + "]</span></div>";
                     
                 }
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "BOARDNAME") {
@@ -868,6 +868,8 @@ function ListView() {
                     } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('TITLE') > -1) { //2018-01-09 강민수92 공지일 때 docNo 안보이게
                     	if (getNodeText(oDatas[10]) != "0"){
                     		objTd.innerHTML = titleImage + "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>" + MakeXMLString(strValue) + "</div> " + titleOneLineCnt;
+                        }else if (getNodeText(oDatas[6]) == "Y"){
+                        	objTd.innerHTML = titleImage + "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>" + MakeXMLString(strValue) + "</div> ";
                         }else{
                         	objTd.innerHTML = titleImage + MakeXMLString(strValue);
                         }

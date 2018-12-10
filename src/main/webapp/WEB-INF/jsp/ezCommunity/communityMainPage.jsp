@@ -184,7 +184,7 @@
                     span2.onclick = function () { move_cop(this); };
 
                     var dd2 = document.createElement("DD");
-                    dd2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBDESC");
+                    dd2.innerHTML = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBDESC"));
 
                     span.appendChild(img2);
                     dt.appendChild(img);
