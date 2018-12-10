@@ -608,18 +608,20 @@
 						axis: "y",
 						update: function(event, ui) {
 							
-							var catchedQs = ui.item;
-							var catchedQsId = parseInt(ui.item.attr("id"));
-							var prevQsId = parseInt(catchedQs.prev().attr("id"));
-							var nextQsId = parseInt(catchedQs.next().attr("id"));
+							//var catchedQs = ui.item;
+							var catchedWrapper = ui.item;
+							var catchedQsId = parseInt(catchedWrapper.attr("id"));
+							var prevQsId = parseInt(catchedWrapper.prev().attr("id"));
+							var nextQsId = parseInt(catchedWrapper.next().attr("id"));
 							var comparedQsId = "";
 							var qstnList    = SurveyCreate.getQs();
 							var catchedQsObj = qstnList[catchedQsId-1];
-							var catchedWrapper = $("#" + catchedQsObj.id);
+							//var catchedWrapper = $("#" + catchedQsObj.id);
+							
 							var type = catchedQsObj["type"];
 							
-							if (nextQsId != NaN) {
-								if (prevQsId != NaN) {
+							if (!isNaN(nextQsId)) {
+								if (!isNaN(prevQsId)) {
 									if (prevQsId > catchedQsId && nextQsId > catchedQsId) {
 										comparedQsId = prevQsId;
 									} else {
@@ -648,57 +650,12 @@
 							catchedWrapper.attr("id", comparedQsId);
 							
 							mkQstnsByType(catchedWrapper, type, deepCopy);
-							
 						}
 					});
 					
 					$(".quesBacgr").on("click", ".delImage", function() {questionFile.deleteFile(this);});
 				}
-				/* 
-				function reOrder(catchedQsId, comparedQsId) {
-					
-					console.log("catched");
-					console.log(catchedQsId);
-					console.log("compared");
-					console.log(comparedQsId);
-					
-					var qstnList = SurveyCreate.getQs();
-					console.log(qstnList);
-					
-					// 뒤에서 앞으로 이동한 경우
-					if (catchedQsId > comparedQsId) {
-						var catched = qstnList[catchedQsId-1];
-						// 내 오른쪽 id 객체부터 원래의 나 바로 앞까지 변경
-						for (var i = catchedQsId - 2; i >= comparedQsId - 1; i--) {
-							console.log(qstnList[i]);
-							
-							var oldId = qstnList[i].id;
-							qstnList[i].id = oldId + 1;
-							
-							// 옮겨진 qstn 폼들만 새로 생성
-							setNewId(catchedQsId, qstnList, 'reOrder', comparedQsId);
-						}
-						// 옮겨진 객체의 아이디 변경
-						catched.id = comparedQsId;
-						// 해당번째 객체 복사
-						var deepCopy    = JSON.parse(JSON.stringify(catched));
-						// 해당 해당 번째 객체 삭제
-						qstnList.splice(catchedQsId - 1, 1);
-						// 해당 번째 객체 끼워넣기
-						qstnList.splice(comparedQsId - 1, 0, deepCopy);
-						
-						console.log(qstnList);
-						
-					// 앞에서 뒤로 이동한 경우
-					} else {
-						// 내 왼쪽 id 객체부터 원래의 나 바로 앞까지 변경
-						for (var i = comparedQsId; i < catchedQsId; i--) {
-							console.log(qstnList[i]);
-						}
-					}
-					
-				}
-				 */
+				
 				// 아이디 값을 변경함
 				function setNewId(qstnId, qstnList, action, compareId) {
 					var qstn        = "";
@@ -742,11 +699,8 @@
 
 						// 뒤에서 앞으로 이동한 경우
 						if (qstnId > compareId) {
-							
-							// 내 오른쪽 id 객체부터 원래의 나 바로 앞까지 변경
+							// 현 위치의 오른쪽 id 객체부터 기존 위치의 바로 앞 id객체까지 변경
 							for (var i = qstnId - 2; i >= compareId - 1; i--) {
-								console.log(qstnList[i]);
-
 								qstn              = qstnList[i];
 								oldId             = qstn["id"];
 								type              = qstn["type"];
@@ -759,23 +713,24 @@
 								// 옮겨진 qstn 폼들만 새로 생성
 								mkQstnsByType(thisWrapper, type, qstn);
 							}
-							
-							console.log(qstnList);
-							
 						// 앞에서 뒤로 이동한 경우
-						} else {
-							// 내 왼쪽 id 객체부터 원래의 나 바로 앞까지 변경
-							for (var i = comparedQsId; i < catchedQsId; i--) {
+						} else if(compareId > qstnId) {
+							// 기존 위치의 바로 뒤 id객체부터 현 위치의 왼쪽 id 객체까지 변경
+							for (var i = qstnId; i < compareId; i++) {
 								console.log(qstnList[i]);
+								qstn              = qstnList[i];
+								oldId             = qstn["id"];
+								type              = qstn["type"];
+								newId = oldId - 1;
+								qstnList[i].id = newId;
+								
+								thisWrapper = $("#" + oldId);
+								thisWrapper.html("");
+								thisWrapper.attr("id", newId);
+								// 옮겨진 qstn 폼들만 새로 생성
+								mkQstnsByType(thisWrapper, type, qstn);
 							}
 						}
-						
-						
-						
-						/* for (var i = start; i < end; i++) {
-							var id = qstnList[i];
-							
-						} */
 					}
 				}
 				
