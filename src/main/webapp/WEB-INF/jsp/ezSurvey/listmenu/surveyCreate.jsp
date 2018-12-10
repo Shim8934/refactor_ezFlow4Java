@@ -562,7 +562,7 @@
 						deepCopy.id     = nextId;
 						
 						// 복사한 질문 객체 이후의 객체들 아이디값 +1
-						setNewId(qstnId, qstnList, "copy");
+						checkActionForNewId(qstnId, qstnList, "copy");
 						
 						// 복사한 질문 객체를 배열에 추가
 						qstnList.splice(qstnId, 0, deepCopy);
@@ -580,7 +580,7 @@
 						
 						qstnList.splice(qstnId - 1, 1); // 질문 배열에서 해당 순번의 질문객체 삭제
 						thisWrapper.remove();           // 질문 폼 삭제
-						setNewId(qstnId, qstnList, "delete");
+						checkActionForNewId(qstnId, qstnList, "delete");
 					});
 					
 					// 수정 버튼 클릭 이벤트 질문 객체 수정
@@ -634,7 +634,7 @@
 								comparedQsId = prevQsId;
 							}
 							// drag & drop된 객체 이외의 객체 id 및 ui 변경
-							setNewId(catchedQsId, qstnList, 'reOrder', comparedQsId);
+							checkActionForNewId(catchedQsId, qstnList, 'reOrder', comparedQsId);
 							
 							// drag & drop된 객체 아이디 변경
 							catchedQsObj.id = comparedQsId;
@@ -656,82 +656,55 @@
 					$(".quesBacgr").on("click", ".delImage", function() {questionFile.deleteFile(this);});
 				}
 				
-				// 아이디 값을 변경함
-				function setNewId(qstnId, qstnList, action, compareId) {
-					var qstn        = "";
-					var oldId       = "";
-					var type        = "";
-					var newId       = "";
-					var thisWrapper = "";
+				// 아이디 변경을 위한 action체크
+				function checkActionForNewId(qstnId, qstnList, action, compareId) {
 					
 					if (action == "delete") {
 						for (var i = qstnId - 1, len = qstnList.length; i < len; i++) {
-							qstn              = qstnList[i];
-							oldId             = qstn["id"];
-							type              = qstn["type"];
-							newId             = oldId - 1;
-							qstnList[i]["id"] = newId;
-							
-							// 해당 아이디 값을 가진 엘리먼트 캐치
-							thisWrapper = $("#" + oldId);
-							thisWrapper.html("");
-							thisWrapper.attr("id", newId);
-							
-							mkQstnsByType(thisWrapper, type, qstn);
+							remkFormAfterSetNewId(qstnList[i], action);
 						}
-					}
-					else if (action == "copy") {
+					} else if (action == "copy") {
 						for (var i = qstnList.length - 1; i >= qstnId; i--) {
-							qstn              = qstnList[i];
-							oldId             = qstn["id"];
-							type              = qstn["type"];
-							newId             = oldId + 1;
-							qstnList[i]["id"] = newId;
-							
-							// 해당 아이디 값을 가진 엘리먼트 캐치
-							thisWrapper = $("#" + oldId);
-							thisWrapper.html("");
-							thisWrapper.attr("id", newId);
-							
-							mkQstnsByType(thisWrapper, type, qstn);
+								remkFormAfterSetNewId(qstnList[i], action);
 						}
 					} else if (action == "reOrder") {
-
-						// 뒤에서 앞으로 이동한 경우
+						// 아래에서 위으로 이동한 경우
 						if (qstnId > compareId) {
-							// 현 위치의 오른쪽 id 객체부터 기존 위치의 바로 앞 id객체까지 변경
+							var result = 1;
+							// 현 위치의 아래 id 객체부터 기존 위치의 바로 위 id객체까지 변경
 							for (var i = qstnId - 2; i >= compareId - 1; i--) {
-								qstn              = qstnList[i];
-								oldId             = qstn["id"];
-								type              = qstn["type"];
-								newId = oldId + 1;
-								qstnList[i].id = newId;
-								
-								thisWrapper = $("#" + oldId);
-								thisWrapper.html("");
-								thisWrapper.attr("id", newId);
-								// 옮겨진 qstn 폼들만 새로 생성
-								mkQstnsByType(thisWrapper, type, qstn);
+								remkFormAfterSetNewId(qstnList[i], action, result);
 							}
 						// 앞에서 뒤로 이동한 경우
 						} else if(compareId > qstnId) {
-							// 기존 위치의 바로 뒤 id객체부터 현 위치의 왼쪽 id 객체까지 변경
+							var result = -1;
+							// 기존 위치의 바로 아래 id객체부터 현 위치의 위 id 객체까지 변경
 							for (var i = qstnId; i < compareId; i++) {
-								console.log(qstnList[i]);
-								qstn              = qstnList[i];
-								oldId             = qstn["id"];
-								type              = qstn["type"];
-								newId = oldId - 1;
-								qstnList[i].id = newId;
-								
-								thisWrapper = $("#" + oldId);
-								thisWrapper.html("");
-								thisWrapper.attr("id", newId);
-								// 옮겨진 qstn 폼들만 새로 생성
-								mkQstnsByType(thisWrapper, type, qstn);
+								remkFormAfterSetNewId(qstnList[i], action, result);
 							}
 						}
 					}
+				}
+				// 아이디 세팅 및 폼 변경
+				function remkFormAfterSetNewId(qstn, action, result) {
+					var oldId       = qstn["id"];
+					var type        = qstn["type"];
+					var newId       = "";
+					var thisWrapper = "";
+					
+					if (action == "delete" || action == "reOrder" && result == -1) {
+						newId             = oldId - 1;
+					} else if (action == "copy" || action == "reOrder" && result == 1) {
+						newId             = oldId + 1;
+					}
+					qstn["id"] = newId;
+					
+					// old id의 form 변경
+					thisWrapper = $("#" + oldId);
+					thisWrapper.html("");
+					thisWrapper.attr("id", newId);
+					
+					mkQstnsByType(thisWrapper, type, qstn);
 				}
 				
 				// 사용자용 질문 폼 생성
