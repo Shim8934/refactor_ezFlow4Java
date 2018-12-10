@@ -193,7 +193,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value = "/ezWebFolder/fileDuplicatedConfirm.do")
-	public String fileDuplicatedConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String fileDuplicatedConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("fileDuplicateConfirm start");
 		
 		boolean isFolder = request.getParameter("isFolder") != null;
@@ -209,48 +209,52 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			String newDateStr = request.getParameter("newDate");
 			String newSizeStr = request.getParameter("newSize");
 			String oldSizeStr = request.getParameter("oldSize");
-			
+
 			try {
 				newDateStr = dateFormatter.format(new Date(Long.parseLong(newDateStr)));
 			} catch (Exception ex) {
 				newDateStr = dateFormatter.format(new Date());
 			}
-			
+
 			try {
 				newSizeStr = humanReadableByteCount(Long.parseLong(newSizeStr));
 			} catch (Exception ex) {
 				// ignore
 			}
-			
+
 			try {
 				oldSizeStr = humanReadableByteCount(Long.parseLong(oldSizeStr));
 			} catch (Exception ex) {
 				// ignore
 			}
-			
+
 			model.addAttribute("fileName", request.getParameter("fileName"));
 			model.addAttribute("newDate", newDateStr);
 			model.addAttribute("newSize", newSizeStr);
 			model.addAttribute("oldDate", request.getParameter("oldDate"));
 			model.addAttribute("oldSize", oldSizeStr);
-			
-//			model.addAttribute("newDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+
+			LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+			String oldOwnerId = request.getParameter("oldOwnerId");
+			boolean isOwner = oldOwnerId.equals(userInfo.getId());
+
+			model.addAttribute("isOwner", isOwner);
 		}
 
-		logger.debug("fileDuplicateConfirm start");
+		logger.debug("fileDuplicateConfirm end");
 		return "ezWebFolder/fileDuplicateConfirm";
 	}
 	
 	private String humanReadableByteCount(long bytes) {
 		int unit = 1024;
-		
+
 		if (bytes < unit) {
 			return bytes + " B";
 		}
-		
+
 		int exp = (int) (Math.log(bytes) / Math.log(unit));
 		String pre = ("KMGTPE").charAt(exp - 1) + "";
-		
+
 		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
 	}
 	

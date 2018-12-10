@@ -109,6 +109,11 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public List<FileVO> getDuplicatedNameFiles(Map<String, Object> map) {
 		return (List<FileVO>) list("EzWebFolderDAO.getDuplicatedNameFiles", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<FolderVO> getDuplicatedNameFolders(Map<String, Object> map) {
+		return (List<FolderVO>) list("EzWebFolderDAO.getDuplicatedNameFolders", map);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<FileVO> getAllFilesInFolder(Map<String, Object> map) {

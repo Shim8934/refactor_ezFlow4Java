@@ -37,6 +37,6 @@ var messages = {
 	strLang36 : "관리자만  관리가 가능한 폴더입니다.",			// ezWebFolder.t329
 	strLang37 : "폴더 생성자가 아니면 폴더명을 수정 할 수 없습니다.",	// ezWebFolder.t258
 	strLang38 : "선택된 파일이나 폴더가 없습니다.",	
-	completeDuplicatedJob : "작업을 완료했습니다."
-		
+	completeDuplicatedJob : "작업을 완료했습니다.",
+	resultErrDuplicatedRename : "중복되는 이름으로 변경할 수 없습니다."
 }

@@ -464,12 +464,47 @@
 			FROM
 				TBL_WEBFOLDER_FILE f LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
 			WHERE
-				f.FOLDER_ID = #folderId#
+				f.FOLDER_ID = #parentFolderId#
 				AND f.USE_STATUS = 'Y'
 				AND f.TENANT_ID = #tenantId#
 				AND f.FILE_NAME IN
 		]]>
 		<iterate property="fileNames" open="(" close=")" conjunction=",">
+			#fileNames[]#
+		</iterate>
+	</select>
+	
+	<select id="EzWebFolderDAO.getDuplicatedNameFolders" resultMap="folderVO">
+		<![CDATA[
+			SELECT
+				FOLDER_ID                                       AS FOLDER_ID,
+				FOLDER_NAME1                                    AS FOLDER_NAME1,
+				FOLDER_NAME2                                    AS FOLDER_NAME2,
+				FOLDER_TYPE                                     AS FOLDER_TYPE,
+				FOLDER_PATH                                     AS FOLDER_PATH,
+				FOLDER_STEP                                     AS FOLDER_STEP,
+				FOLDER_LEVEL                                    AS FOLDER_LEVEL,
+				FOLDER_UPPER                                    AS FOLDER_UPPER,
+				USE_STATUS                                      AS USE_STATUS,
+				OWNER_ID                                        AS OWNER_ID,
+				CREATE_ID                                       AS CREATE_ID,
+				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				CREATE_NAME1                                    AS CREATE_NAME1,
+				CREATE_NAME2                                    AS CREATE_NAME2,
+				UPDATE_ID                                       AS UPDATE_ID,
+				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				COMPANY_ID                                      AS COMPANY_ID,
+				DELETER_ID                                      AS DELETER_ID,
+				TENANT_ID                                       AS TENANT_ID
+			FROM
+				TBL_WEBFOLDER_FOLDER
+			WHERE
+				FOLDER_UPPER = #parentFolderId#
+				AND USE_STATUS = 'Y'
+				AND TENANT_ID = #tenantId#
+				AND FOLER_NAME1 IN
+		]]>
+		<iterate property="folderNames" open="(" close=")" conjunction=",">
 			#fileNames[]#
 		</iterate>
 	</select>

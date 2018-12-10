@@ -38,7 +38,7 @@
 				return;
 			}
 			
-			parent.duplicatedExecutor.onClosePopup({
+			parent.duplicateFile.onClosePopup({
 				code: "RENAME",
 				newFileName: newName,
 				looping: false
