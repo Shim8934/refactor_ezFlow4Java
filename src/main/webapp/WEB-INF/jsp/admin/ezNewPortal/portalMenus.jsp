@@ -75,7 +75,7 @@
 		$(function(){
 			getCompanies();
 			getMenus();
-			document.getElementById("menuOrderReset").addEventListener("click", resetMenuOrder);
+			/* document.getElementById("menuOrderReset").addEventListener("click", resetMenuOrder); */
 		});
 		
 		var resetMenuOrder = function() {

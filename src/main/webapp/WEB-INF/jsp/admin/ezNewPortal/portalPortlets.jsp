@@ -117,7 +117,7 @@
 			$("#ListCompany").on("change", getPortletList);
 			getPortletList();	
 			//이벤트 세팅
-			$("#portletOrderReset").on("click", portletOrderReset);
+			/* $("#portletOrderReset").on("click", portletOrderReset); */
 		});
 		
 		
