@@ -204,7 +204,7 @@ public class EzCommunityAdminController {
 			for(CommunityClubVO club : clubList) {
 				/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 겸직하는 userID 가져올때 companyID로 조건 추가 */
 				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId()));
-				club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", " "));
+				//club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", " "));
 			}
 			model.addAttribute("clubList", clubList);
 		} else {
@@ -232,7 +232,8 @@ public class EzCommunityAdminController {
 		
 		CommunityClubVO club = ezCommunityAdminService.admCommunityInfoEdit(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), code, userInfo.getTenantId());
 		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId()));
-		club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", "\r\n"));
+		//club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", "\r\n"));
+		club.setC_ClubName(commonUtil.cleanValue(club.getC_ClubName()));
 		
 		String idSpanValue = ezCommunityService.getCategory(club.getC_Cate_A(), club.getC_Cate_B(), club.getC_Cate_C(), userInfo);
 		

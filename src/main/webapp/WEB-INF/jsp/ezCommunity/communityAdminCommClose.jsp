@@ -34,7 +34,8 @@
 					async : false,
 					url : "/ezCommunity/adminCommCloseOk.do",
 					data : {code	:	code,
-							reason	:	ConvMakeXMLString(document.getElementById("closereason").value)
+							reason	:	document.getElementById("closereason").value
+											/* ConvMakeXMLString(document.getElementById("closereason").value) */
 						   },
 					success	:	function(result) {
 						var resultXML = loadXMLString(result);
