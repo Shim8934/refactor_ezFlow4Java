@@ -13,7 +13,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/admin/adminManagePoll.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezPersonal.h1', 'msg')}"></script>
-		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/adminPoll.css')}">
+		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/admin.css')}">
 		<script type="text/javascript">
 			var totalCount = "";
 			var progressPollFlag = "";
