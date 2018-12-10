@@ -56,11 +56,11 @@
 			<select class="companySelect" id="ListCompany"></select>
 		</h1>
 		
-		<div id="mainmenu">
+		<%-- <div id="mainmenu">
 			<ul style="margin-top: 15px;">
 				<li class="menuOrderResetButton" id="menuOrderReset"><span><spring:message code='ezNewPortal.t003' /></span></li>
 			</ul>
-		</div>
+		</div> --%>
 		<ul id="menuList">
 		</ul>
 	</body>
@@ -75,7 +75,7 @@
 		$(function(){
 			getCompanies();
 			getMenus();
-			document.getElementById("menuOrderReset").addEventListener("click", resetMenuOrder);
+			/* document.getElementById("menuOrderReset").addEventListener("click", resetMenuOrder); */
 		});
 		
 		var resetMenuOrder = function() {

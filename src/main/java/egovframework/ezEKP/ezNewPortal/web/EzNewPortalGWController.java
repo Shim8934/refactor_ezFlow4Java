@@ -77,7 +77,6 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -97,9 +96,6 @@ public class EzNewPortalGWController {
 
 	@Resource(name = "jspw")
 	private String jspw;
-
-	@Autowired
-	private LoginService loginService;
 
 	@Resource(name = "EzNewPortalService")
 	private EzNewPortalService ezNewPortalService;
@@ -156,10 +152,8 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			LoginVO info2 = commonUtil.getUserForGw(userId, serverName);
 			String companyId = info.getCompanyId();
 			String deptId = info.getDeptId();
-			String deptPath = info2.getDeptPathCode();
 			int tenantId = info.getTenantId();
 			String portletLang = info.getPrimary();
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
@@ -1403,7 +1397,6 @@ e.printStackTrace();
 			String portletLang = info.getLang();
 			String offset = info.getOffSet();
 			String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
-			String idList = "T";
 			String deptId = info.getDeptId();
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
@@ -3171,7 +3164,6 @@ e.printStackTrace();
 			int portletId = Integer.parseInt(request.getParameter("portletId"));
 			String portletLang = info.getLang();
 			int limit = 3; // 공지사항 갯수
-			String offset = info.getOffset();
 			
 			// 회사의 포토게시판의 포틀릿 정보 가져오기
 			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
@@ -3579,7 +3571,6 @@ e.printStackTrace();
 		boolean authCheck = false;
 		String[] deptPathSplit = deptPath.split(",");
 		int deptPathCount = deptPathSplit.length;
-		String rootBoardID = "top";
 
 		try {
 			String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(boardId, userId, deptId, companyId, tenantId);
@@ -4104,7 +4095,6 @@ e.printStackTrace();
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			String realPath = request.getServletContext().getRealPath("");
 					
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			

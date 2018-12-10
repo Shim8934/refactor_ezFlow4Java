@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezNewPortal.service.impl;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -15,8 +14,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -1607,7 +1604,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		//TODO 2018-11-06 이효진 포틀릿 삭제로직 포함시켜라
 		//deletePortlet ---- 2018-11-07 유은정 개발
 		//메뉴아이디에 포함되어있는 포틀릿 아이디 목록 가져오기
 		List<Integer> portletList = ezNewPortalDAO.getPortletIdsByMenuId(map);

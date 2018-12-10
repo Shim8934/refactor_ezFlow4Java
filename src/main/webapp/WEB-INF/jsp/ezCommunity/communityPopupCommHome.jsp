@@ -274,10 +274,10 @@
 	            document.getElementById("homeimg").appendChild(_img);
 
 	            if (primary == "1") {
-	                document.getElementById("copname").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME");
+	                document.getElementById("copname").innerHTML = MakeXMLString(SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME"));
 	                document.title = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME");
 	            } else {
-	                document.getElementById("copname").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME2");
+	                document.getElementById("copname").innerHTML = MakeXMLString(SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME2"));
 	                document.title = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME2");
 	            }
 
@@ -330,7 +330,7 @@
 		                break;
 	        	}
 	        	
-	        	document.getElementById("copdesc").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBDESC");
+	        	document.getElementById("copdesc").innerHTML = MakeXMLString(SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBDESC"));
 
 		    }
 		    
