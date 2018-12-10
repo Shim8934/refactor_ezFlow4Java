@@ -558,7 +558,7 @@
 						var qstnList    = SurveyCreate.getQs();
 						var qstn        = qstnList[qstnId - 1];
 						var nextId      = qstnId + 1;
-						var deepCopy    = JSON.parse(JSON.stringify(qstn)); 
+						var deepCopy    = JSON.parse(JSON.stringify(qstn));
 						deepCopy.id     = nextId;
 						
 						// 복사한 질문 객체 이후의 객체들 아이디값 +1
@@ -608,46 +608,53 @@
 						axis: "y",
 						update: function(event, ui) {
 							
-							console.log(ui.item);
 							var catchedQs = ui.item;
-							
 							var catchedQsId = parseInt(ui.item.attr("id"));
-							
 							var prevQsId = parseInt(catchedQs.prev().attr("id"));
-							
 							var nextQsId = parseInt(catchedQs.next().attr("id"));
-							
 							var comparedQsId = "";
+							var qstnList    = SurveyCreate.getQs();
+							var catchedQsObj = qstnList[catchedQsId-1];
+							var catchedWrapper = $("#" + catchedQsObj.id);
+							var type = catchedQsObj["type"];
 							
-							if (prevQsId != undefined) {
-								if (nextQsId == undefined || catchedQsId > prevQsId && catchedQsId > nextQsId) {
-									comparedQsId = prevQsId; 
-									
+							if (nextQsId != NaN) {
+								if (prevQsId != NaN) {
+									if (prevQsId > catchedQsId && nextQsId > catchedQsId) {
+										comparedQsId = prevQsId;
+									} else {
+										comparedQsId = nextQsId;
+									}
 								} else {
 									comparedQsId = nextQsId;
 								}
-							} else if (nextQsId != undefined) {
-								if (prevQsId == undefined || catchedQsId < prevQsId && catchedQsId < nextQsId) {
-									comparedQsId = nextQsId;
-								} else {
-									comparedQsId = prevQsId;
-								}
+							} else {
+								comparedQsId = prevQsId;
 							}
+							// drag & drop된 객체 이외의 객체 id 및 ui 변경
+							setNewId(catchedQsId, qstnList, 'reOrder', comparedQsId);
 							
+							// drag & drop된 객체 아이디 변경
+							catchedQsObj.id = comparedQsId;
+							// 그 객체 복사
+							var deepCopy    = JSON.parse(JSON.stringify(catchedQsObj));
+							// 그 객체 삭제
+							qstnList.splice(catchedQsId - 1, 1);
+							// 그 객체 제자리에 끼워넣기
+							qstnList.splice(comparedQsId - 1, 0, deepCopy);
 							
-							reOrder(catchedQsId, comparedQsId);
+							// 그 객체 ui 변경 작업
+							catchedWrapper.html("");
+							catchedWrapper.attr("id", comparedQsId);
 							
-							/* var i = 0;
-							$(this).find('.ranking-order').each(function() {
-								$(this).text(i + 1);
-								i++;
-							}); */
+							mkQstnsByType(catchedWrapper, type, deepCopy);
+							
 						}
 					});
 					
 					$(".quesBacgr").on("click", ".delImage", function() {questionFile.deleteFile(this);});
 				}
-				
+				/* 
 				function reOrder(catchedQsId, comparedQsId) {
 					
 					console.log("catched");
@@ -656,18 +663,30 @@
 					console.log(comparedQsId);
 					
 					var qstnList = SurveyCreate.getQs();
+					console.log(qstnList);
+					
 					// 뒤에서 앞으로 이동한 경우
 					if (catchedQsId > comparedQsId) {
-						
 						var catched = qstnList[catchedQsId-1];
 						// 내 오른쪽 id 객체부터 원래의 나 바로 앞까지 변경
-						for (var i = catchedQsId - 2; i >= comparedQsId; i--) {
+						for (var i = catchedQsId - 2; i >= comparedQsId - 1; i--) {
 							console.log(qstnList[i]);
 							
 							var oldId = qstnList[i].id;
 							qstnList[i].id = oldId + 1;
+							
+							// 옮겨진 qstn 폼들만 새로 생성
+							setNewId(catchedQsId, qstnList, 'reOrder', comparedQsId);
 						}
-						catched.id = comparedQsId + 1;
+						// 옮겨진 객체의 아이디 변경
+						catched.id = comparedQsId;
+						// 해당번째 객체 복사
+						var deepCopy    = JSON.parse(JSON.stringify(catched));
+						// 해당 해당 번째 객체 삭제
+						qstnList.splice(catchedQsId - 1, 1);
+						// 해당 번째 객체 끼워넣기
+						qstnList.splice(comparedQsId - 1, 0, deepCopy);
+						
 						console.log(qstnList);
 						
 					// 앞에서 뒤로 이동한 경우
@@ -678,11 +697,10 @@
 						}
 					}
 					
-					
 				}
-				
+				 */
 				// 아이디 값을 변경함
-				function setNewId(qstnId, qstnList, action) {
+				function setNewId(qstnId, qstnList, action, compareId) {
 					var qstn        = "";
 					var oldId       = "";
 					var type        = "";
@@ -720,6 +738,44 @@
 							
 							mkQstnsByType(thisWrapper, type, qstn);
 						}
+					} else if (action == "reOrder") {
+
+						// 뒤에서 앞으로 이동한 경우
+						if (qstnId > compareId) {
+							
+							// 내 오른쪽 id 객체부터 원래의 나 바로 앞까지 변경
+							for (var i = qstnId - 2; i >= compareId - 1; i--) {
+								console.log(qstnList[i]);
+
+								qstn              = qstnList[i];
+								oldId             = qstn["id"];
+								type              = qstn["type"];
+								newId = oldId + 1;
+								qstnList[i].id = newId;
+								
+								thisWrapper = $("#" + oldId);
+								thisWrapper.html("");
+								thisWrapper.attr("id", newId);
+								// 옮겨진 qstn 폼들만 새로 생성
+								mkQstnsByType(thisWrapper, type, qstn);
+							}
+							
+							console.log(qstnList);
+							
+						// 앞에서 뒤로 이동한 경우
+						} else {
+							// 내 왼쪽 id 객체부터 원래의 나 바로 앞까지 변경
+							for (var i = comparedQsId; i < catchedQsId; i--) {
+								console.log(qstnList[i]);
+							}
+						}
+						
+						
+						
+						/* for (var i = start; i < end; i++) {
+							var id = qstnList[i];
+							
+						} */
 					}
 				}
 				
