@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -15,7 +16,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
-
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -578,7 +579,7 @@ public class EzWebFolderGWController {
 			}
 
 			List<FileVO> duplicatedFiles = ezWebFolderService.getDuplicatedNameFiles(fileNames, folderId, userInfo.getOffset(), userInfo.getTenantId());
-			
+
 			result.put("status", "ok");
 			result.put("duplicatedFiles", duplicatedFiles);
 			result.put("code", 0);
@@ -620,7 +621,7 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		try {
+		process: try {
 			LoginVO userInfo  = commonUtil.getUserForGw(userId, serverName);
 			String primary    = userInfo.getPrimary();
 			String offset     = userInfo.getOffset();
@@ -640,6 +641,47 @@ public class EzWebFolderGWController {
 			double limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Double.parseDouble(webfolderConfig.getUploadLimit());
 			double totalUploadSize              = 0;
 			
+			// ---------- 중복 되는 파일은 업로드에서 제외하기 ----------
+			
+			List<String> onlyNameArray = ((List<JSONObject>) nameArray).stream().map(obj -> obj.get("originalFilename")).map(String.class::cast).collect(Collectors.toList());
+			
+			// 이름이 중복되는 파일 VO 리스트
+			List<FileVO> duplicatedNameFiles = ezWebFolderService.getDuplicatedNameFiles(onlyNameArray, folderId, offset, userInfo.getTenantId());
+			// FileVO 타입 리스트를 fileName 필드로 하여금 String 타입으로 맵핑한 리스트
+			List<String> duplicatedNames = duplicatedNameFiles.stream().map(FileVO::getFileName).collect(Collectors.toList());
+
+			Iterator<MultipartFile> multiFileIterator = multiFileLists.iterator();
+			Iterator<Object> nameIterator = nameArray.iterator();
+
+			Iterator<String> onlyNameIterator = onlyNameArray.iterator();
+
+			// nameArray 및 multiFileLists에서 중복되는 이름의 파일을 제거하되, 같은 인덱스의 것을 제거해야함
+			while (onlyNameIterator.hasNext()) {
+				multiFileIterator.next();
+				nameIterator.next();
+
+				// 중복되는 파일이라면 삭제함
+				if (duplicatedNames.contains(onlyNameIterator.next())) {
+					multiFileIterator.remove();
+					nameIterator.remove();
+				}
+			}
+			// ---------- 중복 되는 파일은 업로드에서 제외하기  ----------
+			
+			// 업로드 가능한 파일이 없으면 result 처리
+			if (multiFileLists.isEmpty()) {
+				logger.debug("have no uploadable file.");
+				logger.debug("duplicated files: {}", String.join(",", duplicatedNames.toArray(new String[duplicatedNames.size()])));
+				
+				// 중복된 파일이 존재하여 코드를 달리하여 중복된 파일 리스트를 넘겨줌
+				result.put("duplicatedFiles", duplicatedNameFiles);
+				result.put("status", "ok");
+				result.put("code", 8);
+				
+				// 조기 리턴
+				break process;
+			}
+
 			for (int i = 0; i < multiFileLists.size(); i++) {
 				totalUploadSize += multiFileLists.get(i).getSize();
 			}
@@ -670,9 +712,14 @@ public class EzWebFolderGWController {
 				result.put("status", "error");
 				result.put("code", 2);
 			}
-			else {
+			else if (duplicatedNameFiles.isEmpty()) {
 				result.put("status", "ok");
 				result.put("code", 0);
+			} else {
+				// 중복된 파일이 존재하여 코드를 달리하여 중복된 파일 리스트를 넘겨줌
+				result.put("duplicatedFiles", duplicatedNameFiles);
+				result.put("status", "ok");
+				result.put("code", 8);
 			}
 		}
 		catch (Exception e) {

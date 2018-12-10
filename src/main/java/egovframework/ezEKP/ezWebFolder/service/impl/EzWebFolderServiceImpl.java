@@ -298,15 +298,27 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 	
 	@Override
-	public List<FileVO> getDuplicatedNameFiles(List<String> fileNames, String folderId, String offset, int tenantId) throws Exception {
+	public List<FileVO> getDuplicatedNameFiles(List<String> fileNames, String parentFolderId, String offset, int tenantId) throws Exception {
 		Map<String, Object> sqlParams = new HashMap<>();
 		
 		sqlParams.put("fileNames", fileNames);
-		sqlParams.put("folderId", folderId);
+		sqlParams.put("parentFolderId", parentFolderId);
 		sqlParams.put("offset", offset);
 		sqlParams.put("tenantId", tenantId);
 		
 		return ezWebFolderDAO.getDuplicatedNameFiles(sqlParams); 
+	}
+	
+	@Override
+	public List<FolderVO> getDuplicatedNameFolders(List<String> folderNames, String parentFolderId, String offset, int tenantId) throws Exception {
+		Map<String, Object> sqlParams = new HashMap<>();
+		
+		sqlParams.put("folderNames", folderNames);
+		sqlParams.put("parentFolderId", parentFolderId);
+		sqlParams.put("offset", offset);
+		sqlParams.put("tenantId", tenantId);
+		
+		return ezWebFolderDAO.getDuplicatedNameFolders(sqlParams); 
 	}
 
 	@Override

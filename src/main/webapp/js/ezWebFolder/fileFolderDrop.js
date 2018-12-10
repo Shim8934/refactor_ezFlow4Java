@@ -66,21 +66,29 @@ function fileupload() {
 					// FileVO 배열을 파일이름 배열로 변환
 					var duplicatedNameArray = resultFileArray.map(function(fileValueObj) {return fileValueObj.fileName});
 
-					// 중복 여부에 따라서 두 개의 배열로 나눠줌
+					// 중복되지 않는 파일은 uploadableFileArray, 중복되는 파일은 duplicatedFileInfoArray
+					// old 데이터는 FileVO 정보로 하고 new 데이터는 업로드 파일의 메타데이터로 세팅함
 					tempFileArray.forEach(function(fileObj) {
 						var index = duplicatedNameArray.indexOf(fileObj.name);
 						
+						// 중복되지 않는건 -1
 						if (index == -1) {
 							uploadableFileArray.push(fileObj);
 						} else {
+							var fileVO = resultFileArray[index];
+
 							duplicatedFileInfoArray.push({
+								// fileObject 는 업로드에서만 있는데,
+								// overwrire, rename 작업을 할 때 서버로 업로드 하기 위함
 								fileObject: fileObj,
 								fileName: fileObj.name,
-								fileId: resultFileArray[index].fileId,
+								fileId: fileVO.fileId,
 								newDate: fileObj.lastModified,
 								newSize: fileObj.size,
-								oldDate: resultFileArray[index].createDate.substring(0, 19),
-								oldSize: resultFileArray[index].fileSize
+								// yyyy-MM-dd HH:mm:ss
+								oldDate: fileVO.createDate.substring(0, 19),
+								oldSize: fileVO.fileSize,
+								oldOwnerId: fileVO.createId
 							});
 						}
 					});
@@ -95,12 +103,6 @@ function fileupload() {
 				case 3:
 					alert(resultErr3);
 					break;
-				case 4:
-					alert(resultErr4);
-					break;
-				case 5:
-					alert(resultErr5);
-					break;
 			}
 		}
 	});
@@ -109,8 +111,8 @@ function fileupload() {
 	
 	// 중복된 파일들만 있다면
 	if (uploadableFileArray.length === 0) {
-		// 이름 중복된 파일 처리
-		duplicatedExecutor.startPopupForDuplicatedFiles(duplicatedFileInfoArray, folderId);
+		// 중복 처리 팝업 띄우고 리턴함
+		duplicateFile.process("upload", duplicatedFileInfoArray, folderId);
 		return;
 	}
 	
@@ -136,7 +138,8 @@ function fileupload() {
 			var code = data.code;
 			
 			switch(code) {
-				case 0: 
+				case 0:
+					// 중복되는 파일이 없으면 작업 완료 얼럿트 띄움
 					if (duplicatedFileInfoArray.length === 0) {
 						alert(strSuccess);
 					}
@@ -167,7 +170,7 @@ function fileupload() {
 	.complete(function(res){
 		ajaxUploadComplete();
 		// 이름 중복된 파일 처리
-		duplicatedExecutor.startPopupForDuplicatedFiles(duplicatedFileInfoArray, folderId);
+		duplicateFile.process("upload", duplicatedFileInfoArray, folderId);
 	});
 }
 
@@ -200,256 +203,6 @@ function ajaxUploadComplete() {
 	var height = dragZone.clientHeight;
 	dragZone.style.height = height + 34 + "px";
 }
-
-var duplicatedExecutor = (function(){
-	var fileInfoQueue = [];
-	var currentFolderId = "";
-	var currentFileInfo = null;
-	var isLooping = false;
-	
-	function completeJob() {
-		fileInfoQueue = [];
-		currentFolderId = "";
-		currentFileInfo = null;
-		isLooping = false;
-		
-		alert(messages.completeDuplicatedJob);
-	}
-	
-	function executeJob(result) {
-		switch (result.code) {
-		case 'OVERWRITE':
-			var fd = new FormData();
-			
-			fd.append("folderId", currentFolderId);
-			fd.append("fileToUpload", currentFileInfo.fileObject);
-			fd.append("fileIdArray", JSON.stringify([{fileIdArray: currentFileInfo.fileId}]));
-			
-			var dragZone = document.getElementById("dragDropArea");
-			var height   = dragZone.clientHeight;
-			dragZone.style.height = height - 34 + "px";
-			
-			$.ajax({
-				url : "/ezWebFolder/uploadFileOverwrite.do",
-				type: "POST",
-				data : fd,
-				contentType: false,
-				dataType: "JSON",
-				cache: false,
-				processData:false,
-				xhr: ajaxUploadXhr,
-				mimeType:"multipart/form-data",
-				success : function(data) {
-					var code = data.code;
-					
-					switch(code) {
-						case 0: 
-							//alert(strSuccess);
-							refreshView();
-							break;
-						case 1:
-							alert(resultErr1);
-							break;
-						case 2:
-							alert(resultErr2);
-							break;
-						case 3:
-							alert(resultErr3);
-							break;
-						case 4:
-							alert(resultErr4);
-							break;
-						case 5:
-							alert(resultErr5);
-							break;
-					}
-				},
-				error : function(error) {
-					alert(strErr);
-				}
-			})
-			.complete(function(res){
-				ajaxUploadXhr();
-				nextJob(result);
-			});
-			break;
-		case 'SKIP':
-			setTimeout(function() {
-				nextJob(result);
-			}, 0);
-			break;
-		case 'RENAME':
-			// https://stackoverflow.com/questions/190852/how-can-i-get-file-extensions-with-javascript
-			var fileExtension = currentFileInfo.fileName.slice((currentFileInfo.fileName.lastIndexOf(".") - 1 >>> 0) + 2);
-			var newFileName = result.newFileName + "." + fileExtension
-			
-			var isDuplicatedName = false;
-			var duplicatedFileId = "";
-			
-			$.ajax({
-				url: "/ezWebFolder/getDuplicatedFiles.do",
-				type: "POST",
-				async: false,
-				data: JSON.stringify({
-					fileNames : [newFileName],
-					folderId: currentFolderId
-				}),
-				contentType: "application/json; charset=utf-8",
-				dataType: "JSON",
-				success: function(data) {
-					switch(data.code) {
-						case 0: 
-							if (data.duplicatedFiles.length > 0) {
-								isDuplicatedName = true;
-								duplicatedFileId = data.duplicatedFiles[0].fileId;
-							}
-							
-							break;
-						case 1:
-							alert(resultErr1);
-							break;
-						case 2:
-							alert(resultErr2);
-							break;
-						case 3:
-							alert(resultErr3);
-							break;
-						case 4:
-							alert(resultErr4);
-							break;
-						case 5:
-							alert(resultErr5);
-							break;
-					}
-				}
-			});
-			
-			var fd = new FormData();
-			
-			
-			fd.append("folderId", currentFolderId);
-			fd.append("fileToUpload", currentFileInfo.fileObject);
-			
-			if (isDuplicatedName) {
-				fd.append("fileIdArray", JSON.stringify([{fileIdArray: duplicatedFileId}]));
-			} else {
-				fd.append("nameArray", JSON.stringify([newFileName]));
-			}
-			
-			var dragZone = document.getElementById("dragDropArea");
-			var height   = dragZone.clientHeight;
-			dragZone.style.height = height - 34 + "px";
-			
-			$.ajax({
-				url : isDuplicatedName ? "/ezWebFolder/uploadFileOverwrite.do" : "/ezWebFolder/uploadFile.do",
-				type: "POST",
-				data : fd,
-				contentType: false,
-				dataType: "JSON",
-				cache: false,
-				processData:false,
-				xhr: ajaxUploadXhr,
-				mimeType:"multipart/form-data",
-				success : function(data) {
-					var code = data.code;
-					
-					switch(code) {
-						case 0: 
-							//alert(strSuccess);
-							refreshView();
-							break;
-						case 1:
-							alert(resultErr1);
-							break;
-						case 2:
-							alert(resultErr2);
-							break;
-						case 3:
-							alert(resultErr3);
-							break;
-						case 4:
-							alert(resultErr4);
-							break;
-						case 5:
-							alert(resultErr5);
-							break;
-					}
-				},
-				error : function(error) {
-					alert(strErr);
-				}
-			})
-			.complete(function(res){
-				ajaxUploadXhr();
-				nextJob(result);
-			});
-			break;
-		}
-	}
-	
-	function onClosePopup(result) {
-		executeJob(result);
-	}
-	
-	function nextJob(result) {
-		if (!hasNextJob()) {
-			completeJob();
-			return;
-		}
-		
-		currentFileInfo = fileInfoQueue.pop();
-		
-		if (currentFileInfo === undefined) {
-			return;
-		}
-		
-		if (result && result.looping) {
-			executeJob(result);
-			return;
-		}
-		
-		var url = "/ezWebFolder/fileDuplicatedConfirm.do?";
-		
-		url += "fileName=" + currentFileInfo.fileName;
-		url += "&newDate=" + currentFileInfo.newDate;
-		url += "&newSize=" + currentFileInfo.newSize;
-		url += "&oldDate=" + currentFileInfo.oldDate;
-		url += "&oldSize=" + currentFileInfo.oldSize;
-		
-		// After the popup closes execute
-		setTimeout(function() {
-			openLeftPanel();
-			DivPopUpShow(450, 300, url);
-		}, 0);
-	}
-	
-	function hasNextJob() {
-		return fileInfoQueue.length > 0;
-	}
-	
-	function startPopupForDuplicatedFiles(fileInfoArray, folderId) {
-		// 아직 끝나지 않았을 때 메소드 진입 막기
-		if (fileInfoQueue.length > 0) {
-			return;
-		}
-		
-		// 필요없는 처리 return
-		if (fileInfoArray.length === 0) {
-			return;
-		}
-		
-		currentFolderId = folderId;
-		fileInfoQueue = Array.prototype.slice.call(fileInfoArray);
-		fileInfoQueue.reverse();
-		
-		nextJob();
-	}
-	
-	return {
-		onClosePopup: onClosePopup,
-		startPopupForDuplicatedFiles: startPopupForDuplicatedFiles
-	}
-}());
 
 function getFileSize(fileSize) {
 	var fileSize_ = "";

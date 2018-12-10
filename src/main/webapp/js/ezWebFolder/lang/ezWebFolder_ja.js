@@ -32,5 +32,6 @@ var messages = {
 	strLang31 : "공유대상자가 없습니다.",
 	strLang32 : "공유를 취소하시겠습니까?",
 	strLang33 : "공유를 취소했습니다.",
-	completeDuplicatedJob : "작업을 완료했습니다."
+	completeDuplicatedJob : "작업을 완료했습니다.",
+	resultErrDuplicatedRename : "중복되는 이름으로 변경할 수 없습니다."
 }
