@@ -989,7 +989,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 				vo.setFilePath("/ezCommon/downloadAttach.do?&filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + vo.getFilePath());
 			}
 			else{
-				vo.setFilePath("/images/kr/main/bestEmployee_pic_none.png");
+				vo.setFilePath("/images/kr/main/employee_default.png");
 			}
 		}
 		
