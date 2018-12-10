@@ -7061,10 +7061,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						doc.getElementById(tempSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 						doc.getElementById(tempSeumyungDate).html(lastCnt);
 						
-						if(userInfo.getPrimary().equalsIgnoreCase("1")) {
-							doc.getElementById(tempApproDept).html(description);
-						} else {
-							doc.getElementById(tempApproDept).html(description2);
+						if (doc.getElementById(tempApproDept) != null) {
+							if(userInfo.getPrimary().equalsIgnoreCase("1")) {
+								doc.getElementById(tempApproDept).html(description);
+							} else {
+								doc.getElementById(tempApproDept).html(description2);
+							}
 						}
 						
 						signInfo = tempSign;
@@ -7080,10 +7082,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						doc.getElementById(signAdd + "sign" + tmps).html(messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + "<BR/><P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 						doc.getElementById(tempSeumyungDate).html(lastCnt);
 						
-						if(userInfo.getPrimary().equalsIgnoreCase("1")) {
-							doc.getElementById(tempApproDept).html(description);
-						} else {
-							doc.getElementById(tempApproDept).html(description2);
+						if (doc.getElementById(tempApproDept) != null) {
+							if(userInfo.getPrimary().equalsIgnoreCase("1")) {
+								doc.getElementById(tempApproDept).html(description);
+							} else {
+								doc.getElementById(tempApproDept).html(description2);
+							}
 						}
 						
 						signInfo = tempSign;
