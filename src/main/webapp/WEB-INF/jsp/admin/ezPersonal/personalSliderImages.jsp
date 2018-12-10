@@ -85,9 +85,9 @@
 		    		sliderHTML += "<tr><td class ='sliderInfoTD'>URL</td>";
 		    		sliderHTML += "<td class ='sliderURL' id = 'sliderURL' data6 ='"+sliderURL+"'style='padding: 10px;'>"+sliderURL+"</td></tr>"
 		    		if(sliderIsUse == 1){
-		    			sliderHTML += "<tr><td class ='sliderInfoTD'>사용여부</td><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' checked='checked' data7='"+sliderIsUse+"' onchange='toggleButton(this)'><span class='slider round'></label></td>";
+		    			sliderHTML += "<tr><td class ='sliderInfoTD'><spring:message code = 'ezPersonal.mse1' /></td><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' checked='checked' data7='"+sliderIsUse+"' onchange='toggleButton(this)'><span class='slider round'></label></td>";
 		    		}else {
-		    			sliderHTML += "<tr><td class ='sliderInfoTD'>사용여부</td><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' data7='"+sliderIsUse+"' onchange='toggleButton(this)'><span class='slider round'></label></td>";
+		    			sliderHTML += "<tr><td class ='sliderInfoTD'><spring:message code = 'ezPersonal.mse1' /></td><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' data7='"+sliderIsUse+"' onchange='toggleButton(this)'><span class='slider round'></label></td>";
 		    		}
 		    		
 		    		sliderHTML += "</tr></table></div>";
@@ -235,13 +235,13 @@
 		    	var spaElmt4  = document.createElement("span");
 		    	
 		    	tdElmt1.className = "sliderInfoTDadd";
-		    	tdElmt1.innerText = "URL";
+		    	tdElmt1.innerText = "<spring:message code = 'ezPersonal.mse3' />";
 		    	ipElmt1.setAttribute("id", "txtDisplayName3");
 		    	ipElmt1.setAttribute("type", "text");
 		    	ipElmt1.setAttribute("maxlength", 50);
 		    	
 		    	tdElmt3.className = "sliderInfoTDadd";
-		    	tdElmt3.innerText = "사용여부";
+		    	tdElmt3.innerText = "<spring:message code = 'ezPersonal.mse1' />";
 		    	tdElmt4.className = "slideIsUse";
 		    	lalElmt.className = "switch";
 		    	ipElmt3.setAttribute("id", "slideIsUseAdd");
@@ -273,7 +273,7 @@
 		    	aElmt2.className = "addImageBtn";
 		    	spaElmt3.className = "addImage";
 		    	spaElmt3.setAttribute("id", "addImage");
-		    	spaElmt3.innerText = "이미지선택";
+		    	spaElmt3.innerText = "<spring:message code = 'ezPersonal.mse2' />";
 		    	spaElmt3.addEventListener("click", function(event) {addImage();});
 		    	imgElmt2.setAttribute("id", "UploadSliderImage");
 		    	imgElmt2.setAttribute("src", "");
@@ -415,7 +415,7 @@
 		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
 		            return;
 		        } else if (document.getElementById("txtDisplayName3").value == "") {
-		            alert("URL을 입력하세요.");
+		            alert("<spring:message code = 'ezPersonal.mse4' />");
 		            return; 
 		        }
 		         
@@ -564,13 +564,13 @@
 		    	var spaElmt4  = document.createElement("span");
 		    	
 		    	tdElmt1.className = "sliderInfoTDadd";
-		    	tdElmt1.innerText = "URL";
+		    	tdElmt1.innerText = "<spring:message code = 'ezPersonal.mse3' />";
 		    	ipElmt1.setAttribute("id", "txtDisplayName3");
 		    	ipElmt1.setAttribute("type", "text");
 		    	ipElmt1.setAttribute("maxlength", 50);
 		    	ipElmt1.setAttribute("value", url);
 		    	tdElmt3.className = "sliderInfoTDadd";
-		    	tdElmt3.innerText = "사용여부";
+		    	tdElmt3.innerText = "<spring:message code = 'ezPersonal.mse1' />";
 		    	
 		    	if (sliderIsUse == true){
 		    		tdElmt4.className = "slideIsUse";
@@ -612,7 +612,7 @@
 		    	aElmt2.className = "addImageBtnModify";
 		    	spaElmt3.className = "addImage";
 		    	spaElmt3.setAttribute("id", "addImage");
-		    	spaElmt3.innerText = "이미지선택";
+		    	spaElmt3.innerText = "<spring:message code = 'ezPersonal.mse2' />";
 		    	spaElmt3.addEventListener("click", function(event) {addImage();});
 		    	imgElmt2.setAttribute("id", "UploadSliderImage");
 		    	imgElmt2.setAttribute("src", "");
@@ -644,7 +644,7 @@
 		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
 		            return;
 		        } else if (document.getElementById("txtDisplayName3").value == "") {
-		            alert("URL을 입력하세요.");
+		            alert("<spring:message code = 'ezPersonal.mse4' />");
 		            return; 
 		        }
 		        
@@ -759,7 +759,7 @@
 	<body class = "mainbody">
 		<h1><spring:message code = 'ezPersonal.t20004' /></h1>
 	    <span class="txt" style="line-height:19px">&nbsp;*&nbsp;<spring:message code = 'ezPersonal.t20009' /></span><br />
-	    <span class="txt" style="line-height:19px">&nbsp;*&nbsp;등록된 이미지는 285 * 515(가로*세로)으로 홈 화면에 보여지게 됩니다.</span><br />
+	    <span class="txt" style="line-height:19px">&nbsp;*&nbsp;<spring:message code = 'ezPersonal.mse5' /></span><br />
 		</span>
 	    <ul id="sliderContainer" class="ui-sortable" style="margin-top: 25px;">
 	    
