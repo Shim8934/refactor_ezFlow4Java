@@ -74,10 +74,7 @@
 					autoSize: true,
 					showOn: "both",
 					buttonImage: "/images/ImgIcon/calendar-month.png",
-					buttonImageOnly: true,
-					onSelect: function(selected) {
-						$('Edatepicker').datepicker("option", "minDate", selected);
-					}
+					buttonImageOnly: true
 				});
 				
 				
@@ -88,10 +85,7 @@
 					autoSize: true,
 					showOn: "both",
 					buttonImage: "/images/ImgIcon/calendar-month.png",
-					buttonImageOnly: true,
-					onSelect: function(selected) {
-						$('#Sdatepicker').datepicker("option", "maxDate", selected)
-					}
+					buttonImageOnly: true
 				});
 
 				var SDate;
