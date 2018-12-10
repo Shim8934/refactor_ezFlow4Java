@@ -119,24 +119,24 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 	line-height:29px;
 	font-size:13px;
 }
-#adminmenu li.on span{height:30px;line-height: 30px;color: #2271ca;}
+#adminmenu li.on span{height:30px;line-height: 30px;color: #2271ca;} 
 .adminsub{background-color:#f5f5f5;height:25px}
 .ui-sortable{ margin:0px; padding:0px 0px 0px 15px;}
-ul .sliderList {margin:10px 30px 20px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
-ul .addsliderList {margin:10px 30px 20px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
-ul .slider-body {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px}
-ul .slider-head {margin:0px; position: absolute;cursor:move; border:none; width:285px; height:40px; line-height:38px; border-radius:0px; background: rgba(0, 0, 0, 0.5);}
-ul .slider-header {margin:0px;position: relative;cursor:move;border:none;font-size:14px;font-weight:bold;height:40px;line-height:38px;border-radius:0px;color:#393939;width:285px;height:515px;}
-ul .slider-header-add {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px;background: rgba(0, 0, 0, 0.5); width:270px; z-index: 2;}
-ul .slider-header-modify {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;background: rgba(0, 0, 0, 0.5); z-index: 2;}
-ul .slider-content {margin:0px; position: absolute;cursor:move; border:none; width:285px; border-radius:0px; background: rgba(0, 0, 0, 0.5); top: 400px; height: 115px;}
-ul .slider-imagePage {width:225px; height:210px;}
-ul .addSlider {border:1px dashed #aab2ba; display:inline-block; text-align:center; vertical-align : top; border-radius:0px; width:285px; height:515px; position:relative; margin: 10px 5px 5px 0px;}
+.sliderList {margin:10px 30px 20px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
+.addsliderList {margin:10px 30px 20px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
+.slider-body {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px}
+.slider-head {margin:0px; position: absolute;cursor:move; border:none; width:285px; height:40px; line-height:38px; border-radius:0px; background: rgba(0, 0, 0, 0.5);}
+.slider-header {margin:0px;position: relative;cursor:move;border:none;font-size:14px;font-weight:bold;height:40px;line-height:38px;border-radius:0px;color:#393939;width:285px;height:515px;}
+.slider-header-add {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px;background: rgba(0, 0, 0, 0.5); width:270px; z-index: 2;}
+.slider-header-modify {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939;background: rgba(0, 0, 0, 0.5); z-index: 2;}
+.slider-content {margin:0px; position: absolute;cursor:move; border:none; width:285px; border-radius:0px; background: rgba(0, 0, 0, 0.5); top: 400px; height: 115px;}
+.slider-imagePage {width:225px; height:210px;}
+.addSlider {border:1px dashed #aab2ba; display:inline-block; text-align:center; vertical-align : top; border-radius:0px; width:285px; height:515px; position:relative; margin: 10px 5px 5px 0px;}
 .sliderInfoTD {padding:5px 15px 5px 15px; color: #fff;}
 .sliderInfoTDadd {padding:10px 15px 10px 15px; color: #fff;}
 .sliderInfoModify {padding:10px 15px 10px 15px;}
-ul .addSlider:hover {cursor:pointer;}
-ul .slideIsUse {padding: 15px 10px 0px 10px;}
+.addSlider:hover {cursor:pointer;}
+.slideIsUse {padding: 15px 10px 0px 10px;}
 .cancelNewSliderBtn img {height:25px; float:right; padding: 3px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 .addNewSliderBttn img {height:25px; float:right; padding: 0px 9px; line-height: 23px; display: inline-block; margin:7px 7px 0px 0px; color: #fff; box-sizing: border-box; cursor:pointer; border-radius:2px;}
 .sliderAddBody {margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; width:285px;height:515px; list-style: none;}
@@ -157,7 +157,7 @@ ul .slideIsUse {padding: 15px 10px 0px 10px;}
 .portletInfoTD input[type='text'] {width:100%;height:27px;font-size:12px;padding:0px 0px 0px 5px;color:#393939;}
 
 .skinList {margin-left:-10px;list-style:none;}
-li {float:left;margin:10px;}
+/* li {float:left;margin:10px;} */
 .skins {position:relative;width:140px;height:37px;text-align:center;border:1px solid #cecece;cursor:pointer;}
 .skinImages {position:relative;width:100%;height:35px; border:1px solid #cecece;}
 .checked {background-color:#edf7ff;border:1px solid #2196f3;}
