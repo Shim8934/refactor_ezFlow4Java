@@ -1,12 +1,13 @@
 /**
  * 구해안
  */
-var clubNo = "";
 var CommuSize = $('#CommuSize').val();
 var userId = $('#userId').val();
 
 function view_bestCommunity(event) {
-	console.log('clubNo : ' + clubNo + ' ,  userId : '+userId);
+	var $target = $(event.target);
+	$target = $target.is('dl') ? $target : $target.closest('dl');
+	
 	var clubType = "";
 	$.ajax({
 		type : "POST",
@@ -15,7 +16,7 @@ function view_bestCommunity(event) {
 		url : "/ezNewPortal/getCommunityPermit.do",
 		data : {
 				//꺼내쓸때 event.data.변수명 으로 꺼낸다
-				clubNo	:	event.data.iClubNo,
+				clubNo	:	$target.data("clubno"),
 			   },
 		success: function(result){
 			console.log('clubType : ' + result);
@@ -28,7 +29,7 @@ function view_bestCommunity(event) {
 		dataType : "text",
 		async : true,
 		url : "/ezCommunity/remote/getACL.do",
-		data : { cID	:	event.data.iClubNo,
+		data : { cID	:	$target.data("clubno"),
 				 uID	:	userId
 		},
 		success: function(result){
@@ -45,7 +46,7 @@ function view_bestCommunity(event) {
                 var left = (width - wWeight) / 2;
                 var top = (heigth - wHeight) / 2 - 30;
 
-                var ret = window.open("/ezCommunity/checkCommHome.do?communityCD=" + encodeURIComponent(clubNo), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+                var ret = window.open("/ezCommunity/checkCommHome.do?communityCD=" + encodeURIComponent($target.data("clubno")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 			}
 		}
 	});
