@@ -69,6 +69,7 @@
 					showOn         : "both",
 					buttonImage    : "/images/ImgIcon/calendar-month.gif",
 					buttonImageOnly: true,
+					minDate        : 0,
 					dateFormat     : "yy-mm-dd"
 				};
 				

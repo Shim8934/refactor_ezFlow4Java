@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezSurvey.vo.QuestionVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyItemSearchVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -60,8 +61,8 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (List<String>)list("EzSurveyDAO.getUserDepartmentIdList", map);
 	}
 	
-	public List<SurveyVO> getReceivedSurveyListForPermission(Map<String, Object> map) {
-		return (List<SurveyVO>)list("EzSurveyDAO.getReceivedSurveyListForPermission", map);
+	public List<Long> getReceivedSurveyList(Map<String, Object> map) {
+		return (List<Long>)list("EzSurveyDAO.getReceivedSurveyList", map);
 	}
 	
 	public void saveSurveyItem(SurveyVO survey) {
@@ -96,6 +97,11 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		insert("EzSurveyDAO.saveSurveyUsers", surveyUser);
 	}
 	
+	public int getTotalReceivedSurveyItemsCnt(SurveyItemSearchVO searchVO) {
+		return (int)select("EzSurveyDAO.getTotalReceivedSurveyItemsCnt", searchVO);
+	}
 	
-	
+	public List<SurveyVO> getTotalReceivedSurveyItems(SurveyItemSearchVO searchVO) {
+		return (List<SurveyVO>)list("EzSurveyDAO.getTotalReceivedSurveyItems", searchVO);
+	}
 }

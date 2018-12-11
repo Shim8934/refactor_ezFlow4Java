@@ -10,10 +10,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 public interface EzSurveyRestService {
 	//Company Tree and users information
 	public JSONObject getCompanyTree(HttpServletRequest request, String userId, String companyId) throws Exception;
-	public JSONObject getDeptSubNodes(HttpServletRequest request, String id, String deptId, String level) throws Exception;
-	public JSONObject getDeptMembers(HttpServletRequest request, String id, String deptId, String currentPage) throws Exception;
-	public JSONObject getUserListType(HttpServletRequest request, String id) throws Exception;
-	public JSONObject getSearchMember(HttpServletRequest request, String id, String srchOption, String srchValue, String currentPage) throws Exception;
+	public JSONObject getDeptSubNodes(HttpServletRequest request, String userId, String deptId, String level) throws Exception;
+	public JSONObject getDeptMembers(HttpServletRequest request, String userId, String deptId, String currentPage) throws Exception;
+	public JSONObject getUserListType(HttpServletRequest request, String userId) throws Exception;
+	public JSONObject getSearchMember(HttpServletRequest request, String userId, String srchOption, String srchValue, String currentPage) throws Exception;
 	
 	//User preview configuration
 	public JSONObject getUserPreviewConfig(HttpServletRequest request, String userId) throws Exception;
@@ -26,4 +26,5 @@ public interface EzSurveyRestService {
 	
 	//Save survey item
 	public JSONObject saveSurveyItem(HttpServletRequest request, JSONObject surveyItem) throws Exception;
+	public JSONObject getSurveyItems(HttpServletRequest request, String userId, String pageMode, String title, String creatorName, String startDate, String endDate, String column, String order, String srchMode, String srchOption, String listCntSize, String currentPage) throws Exception;
 }

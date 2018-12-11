@@ -3,10 +3,11 @@ var SurveyItem = function() {
 	var crrPreMode     = null;
 	var surveyNavi     = null;
 	var surveyTable    = null;
+	var pageMode       = null;
+	var startTime      = null;
 	var searchMode     = "0"; //0: normal, 1: simple, 2: detail
 	var startDateStr   = "";
 	var endDateStr     = "";
-	var recursiveMode  = "";
 	var titelStr       = "";
 	var summaryStr     = "";
 	var creatorNameStr = "";
@@ -142,8 +143,9 @@ var SurveyItem = function() {
 		}
 	}
 	
-	function initEvents(height, width, prevMode) {
+	function initEvents(height, width, prevMode, mode) {
 		setData(height, width, prevMode);
+		pageMode = mode;
 		
 		//Initial page navigation
 		var naviMessages = {
@@ -157,8 +159,8 @@ var SurveyItem = function() {
 			messages : naviMessages,
 			divId    : "tblPageRayer",
 			divClass : "pagenavi",
-			headerId : "cabinetInfo",
-			callback : startSearchCabinet
+			headerId : "surveyInfo",
+			callback : startSearchSurvey
 		});
 		
 		//Initial table
@@ -182,11 +184,11 @@ var SurveyItem = function() {
 		var searchBttnElmt = document.getElementById("searchBttnSp");
 		searchBttnElmt.addEventListener("click", function(e) {startSimpleSearch();}, false);
 		
-		document.getElementById("preViewNone").addEventListener("click"  , function(e) {changePreview("off")   ;}, false);
-		document.getElementById("preViewBottom").addEventListener("click", function(e) {changePreview("h")     ;}, false);
-		document.getElementById("preViewleft").addEventListener("click"  , function(e) {changePreview("w")     ;}, false);
-		document.getElementById("sltView").addEventListener("click"      , function(e) {toggleOptionView(this) ;}, false);
-		document.getElementById("listcount").addEventListener("change"   , function(e) {startSearchCabinet("1");}, false);
+		document.getElementById("preViewNone").addEventListener("click"  , function(e) {changePreview("off")  ;}, false);
+		document.getElementById("preViewBottom").addEventListener("click", function(e) {changePreview("h")    ;}, false);
+		document.getElementById("preViewleft").addEventListener("click"  , function(e) {changePreview("w")    ;}, false);
+		document.getElementById("sltView").addEventListener("click"      , function(e) {toggleOptionView(this);}, false);
+		document.getElementById("listcount").addEventListener("change"   , function(e) {startSearchSurvey("1");}, false);
 		
 		var topFrame    = window.parent.parent.document.getElementById("topFrame"); 
 		var leftFrame   = window.parent.document.getElementsByName("left")[0];
@@ -217,7 +219,7 @@ var SurveyItem = function() {
 		$("#Sdatepicker").datepicker(datepickerSt);
 		$("#Edatepicker").datepicker(datepickerSt);
 		
-		//startSearchCabinet("1");
+		startSearchSurvey("1");
 		preProcessing();
 	}
 	
@@ -318,7 +320,7 @@ var SurveyItem = function() {
 	function searchCallBack() {
 		var crrPage = surveyNavi.get().currentPage;
 		crrPage     = crrPage ? crrPage : 1;
-		startSearchCabinet(crrPage);
+		startSearchSurvey(crrPage);
 	}
 	
 	function refreshAllFrames() {
@@ -345,29 +347,28 @@ var SurveyItem = function() {
 	/* Search Panel end*/
 	
 	/* Main search */
-	function startSearchCabinet(pPage) {
-		ShowMailProgress();
+	function startSearchSurvey(pPage) {
+		showMailProgress();
 		
 		var orderInf  = surveyTable.getOrderInfo();
 		var listCnt   = document.getElementById("listcount").value;
 		var searchOpt = document.getElementById("searchCheck").value;
 		
 		$.ajax({
-			type: "POST",
-			url: "/ezCabinet/getCabinetItems.do",
+			type: "GET",
+			url: "/ezSurvey/getSurveyItems.do",
 			data: {
-				"currentPage" : pPage,
-				"title"       : titelStr,
-				"summary"     : summaryStr,
-				"recursive"   : recursiveMode,
-				"creatorName" : creatorNameStr,
-				"startDate"   : startDateStr,
-				"endDate"     : endDateStr,
-				"column"      : orderInf.col ? orderInf.col : "",
-				"order"       : orderInf.ord ? orderInf.ord : "",
-				"srchMode"    : searchMode,
-				"srchOption"  : searchOpt,
-				"listCntSize" : listCnt
+				pageMode    : pageMode,
+				currentPage : pPage,
+				title       : titelStr,
+				creatorName : creatorNameStr,
+				startDate   : startDateStr,
+				endDate     : endDateStr,
+				column      : orderInf.col ? orderInf.col : "",
+				order       : orderInf.ord ? orderInf.ord : "",
+				srchMode    : searchMode,
+				srchOption  : searchOpt,
+				listCntSize : listCnt
 			},
 			dataType: "JSON",
 			async: false,
@@ -379,40 +380,37 @@ var SurveyItem = function() {
 			}
 		});
 		
-		CompleteProgress();
+		completeProgress();
 	}
 	
-	//2018-09-27 문성업 - 프로그래스바		
-	function ShowMailProgress() {
-	    startTime = new Date();//프로그래스바 시작시간
-		CurrenWidth = document.body.clientWidth;
-	
-	    document.getElementById("mailPanel").style.display = "";
-	    document.getElementById("MailProgress").style.top = "400px";
-	    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
-	    document.getElementById("MailProgress").style.display = "";
+	function showMailProgress() {
+		startTime    = new Date(); //프로그래스바 시작시간
+		var currenWidth  = document.body.clientWidth;
+		var progressImg  = document.getElementById("processImage");
+		document.getElementById("progressPanel").className = "loadingPanel on";
+		progressImg.style.top  = "400px";
+		progressImg.style.left = (currenWidth / 2) - 100 + "px";
+		progressImg.className  = "loadingProgress on";
 	}
 	
-	function CompleteProgress() {
+	function completeProgress() {
 		//2018-09-27 문성업 - 프로그레스바
-        endTime = new Date();//프로그래스바 종료시간
-		var timeDiff = endTime - startTime;
-		timeDiff /= 1000;
-		var seconds = (timeDiff % 60).toFixed(1);
+		var endTime  = new Date();//프로그래스바 종료시간
+		var timeDiff = (endTime - startTime)/1000;
+		var seconds  = (timeDiff % 60).toFixed(1);
 		
 		if (seconds <= 0.3) { //0.3초보다 적으면
 			seconds = 300 - (timeDiff * 1000);
-			setTimeout(function() {
-				HiddenMailProgress();
-			}, seconds);
-		} else {
-	        HiddenMailProgress();
+			setTimeout(function() {hiddenProgressPanel();}, seconds);
+		}
+		else {
+			hiddenProgressPanel();
 		}
 	}
 	
-	function HiddenMailProgress() {
-	    document.getElementById("mailPanel").style.display = "none";
-	    document.getElementById("MailProgress").style.display = "none";
+	function hiddenProgressPanel() {
+	    document.getElementById("progressPanel").className = "loadingPanel";
+	    document.getElementById("processImage").className  = "loadingProgress";
 	}
 	
 	function checkingData(data) {
@@ -426,6 +424,7 @@ var SurveyItem = function() {
 	}
 	
 	function processData(data) {
+		console.log(data);
 		surveyTable.setDataSource(data.itemList);
 		surveyTable.renderTable();
 		surveyNavi.init(data.currentPage, data.totalRows, data.totalPages);
@@ -500,7 +499,6 @@ var SurveyItem = function() {
 		var title      = document.getElementById("sCabTitle").value;
 		var summary    = document.getElementById("sCabSum").value;
 		var userName   = document.getElementById("sUserName").value;
-		var sRecursive = document.getElementById("dCheckBox").checked ? "1" : "0";
 		var sDate      = document.getElementById("Sdatepicker").value;
 		var eDate      = document.getElementById("Edatepicker").value;
 		
@@ -512,13 +510,12 @@ var SurveyItem = function() {
 		titelStr       = title;
 		summaryStr     = summary;
 		creatorNameStr = userName;
-		recursiveMode  = sRecursive;
 		startDateStr   = sDate;
 		endDateStr     = eDate;
 		
 		searchMode = "2";
 		toggleSearchPanel();
-		startSearchCabinet("1");
+		startSearchSurvey("1");
 	}
 	/* Main search end*/
 	
@@ -534,7 +531,7 @@ var SurveyItem = function() {
 		var searchOpt = document.getElementById("searchCheck").value;
 		if (searchOpt == "title") {titelStr = searchStr;} else {summaryStr = searchStr;}
 		
-		startSearchCabinet("1");
+		startSearchSurvey("1");
 	}
 	
 	function clearKeyword(inputElmt) {inputElmt.value = "";}

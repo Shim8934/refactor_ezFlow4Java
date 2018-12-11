@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,7 @@ import egovframework.ezEKP.ezSurvey.vo.QuestionVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyItemSearchVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -197,16 +199,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			return result;
 		}
 		
-		List<Long> listOtherSurveyId = otherSurvey.stream().map(SurveyVO::getSurveyId).collect(Collectors.toList());
-		map.put("deptId",      userInfo.getDeptID());
-		List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(map);
-		map.put("deptList",    userDeptList);
-		map.put("others",      listOtherSurveyId);
+		List<Long> listOtherSurveyId  = otherSurvey.stream().map(SurveyVO::getSurveyId).collect(Collectors.toList());
+		List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo);
 		
-		List<SurveyVO> listReceivedCabinet = ezSurveyDAO.getReceivedSurveyListForPermission(map);
-		List<Long> listReceivedSurveyId = listReceivedCabinet.stream().map(SurveyVO::getSurveyId).collect(Collectors.toList());
-		
-		if (listReceivedSurveyId.containsAll(listOtherSurveyId)) {
+		if (listReceivedSurvey.containsAll(listOtherSurveyId)) {
 			result.put("code", 0);
 		}
 		else {
@@ -303,7 +299,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public synchronized JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, LoginVO userInfo) throws Exception {
+	public synchronized JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, LoginVO userInfo) throws Exception {
 		JSONObject result          = new JSONObject();
 		int tenantId               = userInfo.getTenantId();
 		String companyId           = userInfo.getCompanyID();
@@ -332,7 +328,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		survey.setPurpose(purpose);
 		survey.setCreateDate(timeUTC);
 		survey.setUpdateDate(timeUTC);
-		survey.setUseStatus(1);
+		survey.setUseStatus(useStatus);
 		survey.setStartDate(startDate);
 		survey.setEndDate(endDate);
 		
@@ -391,11 +387,11 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				ezSurveyDAO.saveOptionItem(option);
 			}
 			
-			String questionTitle   = questionObj.get("content").toString();
-			int questionLogic      = questionObj.get("logic") != null ? ((Long)questionObj.get("logic")).intValue() : 0;
-			int questionOrder      = ((Long)questionObj.get("id")).intValue();
+			String questionTitle = questionObj.get("content").toString();
+			int questionLogic    = questionObj.get("logic") != null ? ((Long)questionObj.get("logic")).intValue() : 0;
+			int questionOrder    = ((Long)questionObj.get("id")).intValue();
+			QuestionVO question  = new QuestionVO();
 			
-			QuestionVO question    = new QuestionVO();
 			question.setSurveyId(maxSurveyId);
 			question.setTenantId(tenantId);
 			question.setCompanyId(companyId);
@@ -475,6 +471,139 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		//Save attach
 		ezSurveyDAO.saveAttachItem(attach);
+	}
+
+	@Override
+	public JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String sqlQuery, String srchMode, String srchOption, String order, String column, LoginVO userInfo) throws Exception {
+		JSONObject result     = new JSONObject();
+		String userId         = userInfo.getId();
+		int tenantId          = userInfo.getTenantId();
+		String companyId      = userInfo.getCompanyID();
+		String primary        = userInfo.getPrimary();
+		String offset         = userInfo.getOffset();
+		String offsetMinute   = commonUtil.getMinuteUTC(offset);
+		int startPoint        = 0;
+		int totalItems        = 0;
+		int totalPages        = 0;
+		
+		if (!column.equals("") && !order.equals("")) {
+			switch(column) {
+				case "it": sqlQuery = "item_type "   + order; break;
+				case "tt": sqlQuery = "title "       + order; break;
+				case "un": sqlQuery = primary.equals("1") ? "creator_name1 " + order : "creator_name2 " + order; break;
+				case "cd": sqlQuery = "create_date " + order; break;
+				case "is": sqlQuery = "item_size "   + order; break;
+				default  : sqlQuery = "item_type "   + order; break;
+			}
+		}
+		
+		if (!startDate.equals("")) {
+			String startDateTmp = startDate + " 00:00:00";
+			String endDateTmp   = endDate + " 23:59:59";
+			startDate           = commonUtil.getDateStringInUTC(startDateTmp, offset, true);
+			endDate             = commonUtil.getDateStringInUTC(endDateTmp  , offset, true);
+		}
+		
+		title       = title.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
+		creatorName = creatorName.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
+		
+		SurveyItemSearchVO searchVO = new SurveyItemSearchVO(pageMode, listCntSize, tenantId, userId, primary, offsetMinute, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption);
+		List<SurveyVO> itemList     = new ArrayList<>();
+		
+		if (pageMode.equals("processing") || pageMode.equals("finish")) {
+			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo);
+			SimpleDateFormat formatter    = new SimpleDateFormat("yyyy-MM-dd");
+			String timeUTC                = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
+			searchVO.setSurveyIds(listReceivedSurvey);
+			searchVO.setToday(timeUTC);
+		}
+		
+		totalItems  = ezSurveyDAO.getTotalReceivedSurveyItemsCnt(searchVO);
+		totalPages  = (totalItems + listCntSize - 1) / listCntSize;
+		currentPage = currentPage > totalPages ? totalPages : currentPage;
+		currentPage = currentPage == 0         ? 1          : currentPage;
+		startPoint  = (currentPage - 1) * listCntSize;
+		searchVO.setStartPoint(startPoint);
+		itemList    = ezSurveyDAO.getTotalReceivedSurveyItems(searchVO);
+		
+		/*CabinetItemSearchVO searchVO = new CabinetItemSearchVO(Integer.parseInt(cabinetId), listCntSize, tenantId, userId, primary, offsetMinute, title, summary, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption);
+		List<CabinetItemVO> itemList = new ArrayList<>();
+		
+		if (srchMode.equals("2") && recursive.equals("1")) {
+			CabinetVO cabinet = getCabinetById(cabinetId, userInfo.getTenantId());
+			
+			if (!cabinet.getCreatorId().equals(userId)) {
+				String cabinetPath    = cabinet.getCabinetPath();
+				cabinetPath           = cabinetPath.substring(1, cabinetPath.length() - 1);
+				List<Integer> nodeIds = Arrays.asList(cabinetPath.split("\\|")).stream().map(Integer::parseInt).collect(Collectors.toList());
+				nodeIds.remove(nodeIds.size() - 1);
+				Map<String,Object> map = new HashMap<String, Object>();
+				map.put("cabinetId", cabinetId);
+				map.put("tenantId",  tenantId);
+				map.put("sharerId",  cabinet.getCreatorId());
+				map.put("sharedId",  userId);
+				map.put("listNodes", nodeIds);
+				
+				//Get user dept list
+				map.put("deptId",    userInfo.getDeptID());
+				map.put("companyId", userInfo.getCompanyID());
+				map.put("userId",    userId);
+				List<String> userDeptList = ezCabinetDAO.getUserDepartmentIdList(map);
+				map.put("deptList", userDeptList);
+				
+				List<CabinetShareVO> listShared = ezCabinetDAO.checkSubPermission(map);
+				
+				if (listShared != null && listShared.size() > 0) {
+					searchVO.setCabinetPath(cabinet.getCabinetPath());
+					subSearchflag = true;
+				}
+			}
+			else {
+				searchVO.setCabinetPath(cabinet.getCabinetPath());
+				subSearchflag = true;
+			}
+		}
+		
+		if (subSearchflag == true) {
+			totalItems  = getTotalItemsRecursive(searchVO);
+			totalPages  = (totalItems + listCntSize - 1) / listCntSize;
+			currentPage = currentPage > totalPages ? totalPages : currentPage;
+			currentPage = currentPage == 0         ? 1          : currentPage;
+			startPoint  = (currentPage - 1) * listCntSize;
+			searchVO.setStartPoint(startPoint);
+			itemList    = getItemsRecursive(searchVO);
+		}
+		else {
+			totalItems  = getTotalItems(searchVO);
+			totalPages  = (totalItems + listCntSize - 1) / listCntSize;
+			currentPage = currentPage > totalPages ? totalPages : currentPage;
+			currentPage = currentPage == 0         ? 1          : currentPage;
+			startPoint  = (currentPage - 1) * listCntSize;
+			searchVO.setStartPoint(startPoint);
+			itemList    = getItems(searchVO);
+		}*/
+		
+		result.put("itemList",    itemList);
+		result.put("totalPages",  totalPages);
+		result.put("totalRows",   totalItems);
+		result.put("currentPage", currentPage);
+		result.put("status", "ok");
+		result.put("code", 0);
+		
+		return result;
+	}
+
+	private List<Long> getUserReceivedSurveyList(LoginVO userInfo) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId",  userInfo.getTenantId());
+		map.put("deptId",    userInfo.getDeptID());
+		map.put("companyId", userInfo.getCompanyID());
+		map.put("userId",    userInfo.getId());
+		List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(map);
+		map.put("deptList", userDeptList);
+		List<Long> result = ezSurveyDAO.getReceivedSurveyList(map);
+		
+		return result != null ? result : new ArrayList<>();
 	}
 	
 	
