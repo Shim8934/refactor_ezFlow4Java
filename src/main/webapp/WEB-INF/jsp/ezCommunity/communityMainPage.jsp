@@ -184,7 +184,7 @@
                     span2.onclick = function () { move_cop(this); };
 
                     var dd2 = document.createElement("DD");
-                    dd2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBDESC");
+                    dd2.innerHTML = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBDESC"));
 
                     span.appendChild(img2);
                     dt.appendChild(img);
@@ -406,7 +406,7 @@
                         td.innerHTML += "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + title + "</div>";
                         /* 2018-05-07 홍승비 - 커뮤니티 메인 MY커뮤니티 새글에서 댓글 표시하기 */
                         if (SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") > 0) {
-                        	td.innerHTML += " <SPAN style='color:#c64200'; position: absolute;> [" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") + "]</SPAN><td style='width:20px;'></td>";
+                        	td.innerHTML += " <SPAN style='color:#c64200; position: absolute;'> [" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") + "]</SPAN><td style='width:20px;'></td>";
                         }
                         td2.className = "team";
                         td2.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERDEPTNAME");
