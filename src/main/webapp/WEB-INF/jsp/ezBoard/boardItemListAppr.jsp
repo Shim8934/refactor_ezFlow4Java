@@ -877,7 +877,7 @@
 		    }
 		
 		    function Appr_onclick(pFlag) {
-		        if (strListInfo == "") {
+		        if (strListInfo == ""|| strListInfo === "undefined") {
 		            alert("<spring:message code='ezBoard.t198'/>");
 		            return;
 		        }
