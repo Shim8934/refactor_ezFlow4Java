@@ -257,11 +257,14 @@ function TreeNode() {
 
             if (pRequestHandler == "")
                 pRequestHandler = "null";
-
-            if (pNodeDblClick != "")
-                spnNode.setAttribute("ondblclick", "pNodeDblClick(\"" + this.NodeID + "\", \"" + this.NodeName + "\"); treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + imgNode.id + "\");");
-            else
-                spnNode.setAttribute("ondblclick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + imgNode.id + "\");");
+            
+            if (pNodeDblClick != "") {
+                //spnNode.setAttribute("ondblclick", "pNodeDblClick(\"" + this.NodeID + "\", \"" + this.NodeName + "\"); treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + imgNode.id + "\");");
+                spnNode.setAttribute("ondblclick", "pNodeDblClick(\"" + this.NodeID + "\", \"" + this.NodeName + "\"); treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + spanNode.id + "\");");
+            } else {
+               // spnNode.setAttribute("ondblclick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + imgNode.id + "\");");
+                spnNode.setAttribute("ondblclick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + spanNode.id + "\");");
+            }
         }
 
         treeDiv.innerHTML += spnNode.outerHTML;
