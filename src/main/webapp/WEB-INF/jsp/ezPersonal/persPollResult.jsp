@@ -13,7 +13,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<!-- 2018-07-25 김보미 - 투표모듈 css맞추기 위해 추가 -->
 		<link rel="stylesheet" href="${util.addVer('/css/ezPoll/vote.css')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('/css/admin.css')}">
+		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/adminPoll.css')}">
 		<script type="text/javascript">
 			var ReturnFunction;
 			var parent;
