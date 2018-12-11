@@ -1,8 +1,8 @@
 package egovframework.ezEKP.ezSurvey.vo;
 
 public class SurveyVO {
-	private int surveyId;
-	private int companyId;
+	private long surveyId;
+	private String companyId;
 	private int tenantId;
 	private String tittle;
 	private String purpose;
@@ -22,19 +22,19 @@ public class SurveyVO {
 	private int multiAnswerFlag;
 	private int paritipateFlag;
 	
-	public int getSurveyId() {
+	public long getSurveyId() {
 		return surveyId;
 	}
 	
-	public void setSurveyId(int surveyId) {
+	public void setSurveyId(long surveyId) {
 		this.surveyId = surveyId;
 	}
 	
-	public int getCompanyId() {
+	public String getCompanyId() {
 		return companyId;
 	}
 	
-	public void setCompanyId(int companyId) {
+	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
 	}
 	

@@ -51,14 +51,47 @@
 			</div>
 		</div>
 		
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyFile.js')}"></script>
 		<script type="text/javascript">
 			var SurveyCreate    = function() {
+				var surveyFile  = new SurveyFile();
 				var selectPopup = null;
 				var finishStep  = null;
 				var surveyObj   = {
-					infor : {},
+					infor     : {},
 					questions : []
 				};
+				
+				var datepickerSt   = {
+					changeMonth    : true,
+					changeYear     : true,
+					autoSize       : true,
+					showOn         : "both",
+					buttonImage    : "/images/ImgIcon/calendar-month.gif",
+					buttonImageOnly: true,
+					dateFormat     : "yy-mm-dd"
+				};
+				
+				$.datepicker.regional[SurveyMessages["strLocale"]] = {
+					closeText         : SurveyMessages["strClose"],
+					prevText          : SurveyMessages["prevMonth"],
+					nextText          : SurveyMessages["nextMonth"],
+					currentText       : SurveyMessages["strToday"],
+					monthNames        : SurveyMessages["monthNames"],
+					monthNamesShort   : SurveyMessages["monthNames"],
+					dayNames          : SurveyMessages["dayNames"],
+					dayNamesShort     : SurveyMessages["dayNames"],
+					dayNamesMin       : SurveyMessages["dayNames"],
+					weekHeader        : "Wk",
+					dateFormat        : "yy-mm-dd",
+					firstDay          : 0,
+					isRTL             : false,
+					duration          : 200,
+					showAnim          : "show",
+					showMonthAfterYear: true
+				};
+					
+				$.datepicker.setDefaults($.datepicker.regional[SurveyMessages["strLocale"]]);
 				
 				initEvents();
 				
@@ -72,27 +105,8 @@
 					document.getElementById("public-slbox" ).addEventListener("change", toggleDaysInput       , false);
 					
 					var today = new Date();
-					
-					$("#startDate").datepicker({
-						changeMonth: true,
-						changeYear: true,
-						autoSize: true,
-						showOn: "both",
-						buttonImage: "/images/ImgIcon/calendar-month.gif",
-						buttonImageOnly: true,
-						dateFormat: "yy-mm-dd"
-					});
-					
-					$("#endDate").datepicker({
-						changeMonth: true,
-						changeYear: true,
-						autoSize: true,
-						showOn: "both",
-						buttonImage: "/images/ImgIcon/calendar-month.gif",
-						buttonImageOnly: true,
-						dateFormat: "yy-mm-dd"
-					});
-					
+					$("#startDate").datepicker(datepickerSt);
+					$("#endDate").datepicker(datepickerSt);
 					$("#startDate").datepicker("setDate", today);
 					$("#endDate").datepicker("setDate", today);
 					
@@ -103,14 +117,24 @@
 						tabElmt.onclick  = (function(idx, elmt) {return function() {selectStep(idx, elmt);};})(i + 1, tabElmt);
 						spanElmt.onclick = (function(idx, elmt) {return function() {selectStep(idx, elmt);};})(i + 1, tabElmt);
 					}
+					
+					var fileUploadBttn      = document.getElementById("fileBttn");
+					fileUploadBttn.onchange = function(e) {surveyFile.upload();};
+					var addFileBttn         = document.getElementById("addFileBttn");
+					addFileBttn.onclick     = function(e) {startUpload();};
+					var fileDivElmt         = document.getElementById("fileDiv");
+					fileDivElmt.onclick     = function(e) {startUpload();};
+					
+					fileDivElmt.addEventListener("dragenter", function(e) {surveyFile.dragEnter(e);}, false);
+					fileDivElmt.addEventListener("dragover" , function(e) {surveyFile.dragOver(e);} , false);
+					fileDivElmt.addEventListener("drop"     , function(e) {surveyFile.upload(e);}   , false);
 				}
 				
+				function startUpload() {document.getElementById("fileBttn").click();}
 				function cancleThisSurvey() {saveSurvey();/* Add function later */}
 				
 				function saveSurvey() {
 					saveSurveyInformation();
-					
-					console.log(JSON.stringify(surveyObj));
 				}
 				
 				function saveSurveyInformation() {
@@ -119,6 +143,8 @@
 					var surveyAttWrap  = document.querySelector("div[class='survey-attach']");
 					var surveyTitle    = surveyInfoWrap.querySelector("input[class='info-input-ttl']").value;
 					var surveyPurpose  = surveyInfoWrap.querySelector("input[class='info-input-pp']").value;
+					var startDate      = document.getElementById("startDate").value;
+					var endDate        = document.getElementById("endDate").value;
 					var publicFlag     = 1 - document.getElementById("public-slbox").selectedIndex;
 					var anonymousFlag  = 1 - document.getElementById("anonymous-slbox").selectedIndex;
 					var multipleFlag   = document.getElementById("multiple-slbox").selectedIndex;
@@ -128,7 +154,7 @@
 					if (publicFlag == 1) {
 						var daysVal = surveyInfoWrap.querySelector("input[class='date-input']").value;
 						if (!isValid(daysVal)) {alert(SurveyMessages.strInvalid); return;}
-						surveyInfo["annouceDays"]  = parseInt(daysVal);
+						surveyInfo["publicDays"] = parseInt(daysVal);
 					}
 					
 					surveyInfo["title"]     = surveyTitle;
@@ -136,6 +162,8 @@
 					surveyInfo["public"]    = publicFlag;
 					surveyInfo["anonymous"] = anonymousFlag;
 					surveyInfo["multiple"]  = multipleFlag;
+					surveyInfo["startDate"] = startDate;
+					surveyInfo["endDate"]   = endDate;
 					
 					if (liFileList.length > 0) {
 						for (var i = 0, len = liFileList.length; i < len; i++) {
@@ -149,6 +177,33 @@
 					surveyInfo["attach"] = attachList;
 					surveyInfo["users"]  = surveyObj["infor"]["users"];
 					surveyObj["infor"]   = surveyInfo;
+					
+					console.log(JSON.stringify(surveyObj));
+					
+					$.ajax({
+						type: "POST",
+						url: "/ezSurvey/saveSurvey.do",
+						data: JSON.stringify(surveyObj),
+						contentType: "application/json; charset=utf-8",
+						dataType: "JSON",
+						async: false,
+						success : function(data) {
+							afterSaveSuccessfully(data);
+						},
+						error : function(error) {
+							alert(SurveyMessages.strError);
+						}
+					});
+				}
+				
+				function afterSaveSuccessfully(data) {
+					var code = data.code;
+					switch(code) {
+						case 0 : alert(SurveyMessages.strSave)    ; break;
+						case 1 : alert(SurveyMessages.strParamErr); break;
+						case 2 : alert(SurveyMessages.strError)   ; break;
+						default: alert(SurveyMessages.strError)   ; return;
+					}
 				}
 				
 				function gotoSecondStep() {
@@ -778,8 +833,10 @@
 					var htmlTxt = "";
 					
 					if (question) {
-						var options = question.option;
-						var other   = question.other;
+						var opts    = question.option;
+						var options = opts.filter(function(opt) {return opt["otherFlag"] == 0;});
+						var others  = opts.filter(function(opt) {return opt["otherFlag"] == 1;});
+						var other   = (others && others.length > 0) ? others[0] : null;
 						
 						if (options) {
 							for (var i = 0, len = options.length; i < len; i++) {
@@ -806,8 +863,14 @@
 				// 수정시 새로 생성하는 행렬질문 
 				function handleModifyMatrixQuestion(question) {
 					var html = "";
-					var row  = question ? question.row : "";
-					var col  = question ? question.col : "";
+					var row  = null;
+					var col  = null;
+					
+					if (question) {
+						var options = question["option"];
+						row         = options.filter(function(row) {return row["colLevel"] == -1;});
+						col         = options.filter(function(col) {return col["rowLevel"] == -1;});
+					}
 					
 					html += "<div class='mtrPart'>";
 					html += "<div class='rowArea'>";
@@ -873,8 +936,15 @@
 				
 				function handleModifySliderQuesion(question) {
 					var htmlTxt = "";
-					var lowest  = question ? question["lowest"]  : "";
-					var highest = question ? question["highest"] : "";
+					var lowest  = "";
+					var highest = "";
+					
+					if (question) {
+						var options = question.option;
+						lowest      = options.filter(function(val) {return val["level"] == 0;})[0]["content"];
+						highest     = options.filter(function(val) {return val["level"] == 1;})[0]["content"];
+					}
+					
 					htmlTxt    += "<div class='silder-wrap'>";
 					htmlTxt    += "<input type='input' class='slider-lw' value='" + lowest  + "'/>";
 					htmlTxt    += "<input type='range' class='slider-main'/>";
@@ -925,27 +995,29 @@
 				
 				// 단일선택 질문 생성 
 				function mkSelectQstn(wrapperElmt, question) {
-					var option   = question.option;
-					var other    = question.other;
-					var qstnType = question.type;
-					var html     = makeQuestionHeaderPanel(question);
-					html        += "<div class='question-opts'>";
+					var totalOptions = question.option;
+					var options      = totalOptions.filter(function(opt) {return opt["otherFlag"] == 0;});
+					var others       = totalOptions.filter(function(opt) {return opt["otherFlag"] == 1;});
+					var other        = (others && others.length > 0) ? others[0] : null;
+					var qstnType     = question.type;
+					var html         = makeQuestionHeaderPanel(question);
+					html            += "<div class='question-opts'>";
 					
 					// 보기
-					if (option) {
-						for (var i = 0; i < option.length; i++) {
-							html += "<div class='opt' level='" + option[i].level + "'>";
+					if (options) {
+						for (var i = 0; i < options.length; i++) {
+							html += "<div class='opt' level='" + options[i].level + "'>";
 							
 							if (qstnType == 2) {
-								html += "<input class='optChb' type='checkbox' value='" + option[i].level + "'/>";
+								html += "<input class='optChb' type='checkbox' value='" + options[i].level + "'/>";
 							}
 							else {
-								html += "<input class='optRdo' type='radio' value='" + option[i].level + "'/>";
+								html += "<input class='optRdo' type='radio' value='" + options[i].level + "'/>";
 							}
 							
 							// 첨부파일이 있는지 확인
-							html          += option[i]["attach"]  ? "<img alt='' src='" + option[i]["attach"].fpath + "' class='optImg'>" : "";
-							var optContent = option[i]["content"] ? option[i]["content"] : "";
+							html          += options[i]["attach"]  ? "<img alt='' src='" + options[i]["attach"].fpath + "' class='optImg'>" : "";
+							var optContent = options[i]["content"] ? options[i]["content"] : "";
 							html          += "<span class='optSpan'>" + optContent + "</span>";
 							html          += "</div>";
 						}
@@ -954,7 +1026,14 @@
 					// 기타
 					if (other) {
 						html += "<div class='opt'>";
-						html += "<input class='optRdo' type='radio' value='" + other + "'/>";
+						
+						if (qstnType == 2) {
+							html += "<input class='optChb' type='checkbox' value='" + other.level + "'/>";
+						}
+						else {
+							html += "<input class='optRdo' type='radio' value='" + other.level + "'/>";
+						}
+						
 						html += other["attach"] ? "<img alt='' src='" + other["attach"].fpath + "' class='optImg'>" : ""; // 첨부파일이 있는지 확인
 						html += "<span class='optSpan'>" + other["content"] + "</span>";
 						html += "<input class='othInput' type='text'/>";
@@ -966,8 +1045,11 @@
 				}
 				
 				function mkMatrixQstn(wrapperElmt, question) {
-					var col   = question.col;
-					var row   = question.row;
+					var inpType  = question.type == 3 ? "radio" : "checkbox";
+					var opts     = question["option"];
+					var col      = opts.filter(function(col) {return col["rowLevel"] == -1;});
+					var row      = opts.filter(function(row) {return row["colLevel"] == -1;});
+					
 					var html  = makeQuestionHeaderPanel(question);
 						html += "<div class='question-opts'>";
 						html += "<table class='matrix'>";
@@ -988,7 +1070,7 @@
 						html += "<td>" + row[i]["content"] + "</td>";
 						
 						for (var j = 0; j < col.length; j++) {
-							html += "<td><input type='radio' value='(" + row[i].level + ", " + col[j].level + ")'></td>";
+							html += "<td><input type='" + inpType + "' value='(" + row[i]["rowLevel"] + ", " + col[j]["colLevel"] + ")'></td>";
 						}
 						
 						html += "</tr>";
@@ -1017,7 +1099,7 @@
 					question["content"]  = qstnContent;
 					var qstnForm         = qstnWrapper.find(".quesDiv").next();
 					var qstnType         = qstnForm.attr("questiontype");
-					question["type"]     = qstnType;
+					question["type"]     = parseInt(qstnType);
 					var rqrd             = qstnForm.find(".additionalPart").find("input[name='checkbox']");
 					question[config["required"]] = rqrd.is(":checked") == true ? "Y" : "N";
 					
@@ -1036,20 +1118,21 @@
 						case 2  : var sltObj = mkSltObj(qstnForm);
 								  if (sltObj.error)  {alert(SurveyMessages[sltObj.error]); return;}
 								  if (sltObj.option) {question["option"] = sltObj.option;}
-								  if (sltObj.other)  {question["other"]  = sltObj.other ;}
 								  mkSelectQstn(qstnWrapper, question); break;
 						case 3  : 
 						case 4  : var mtrObj = mkMtrObj(qstnForm);
-								  if (mtrObj.error) {alert(SurveyMessages[mtrObj.error]); return;}
-								  if (mtrObj.row)   {question["row"] = mtrObj.row;}
-								  if (mtrObj.col)   {question["col"] = mtrObj.col;}
+								  if (mtrObj.error)  {alert(SurveyMessages[mtrObj.error]); return;}
+								  if (mtrObj.option) {question["option"] = mtrObj.option;}
 								  mkMatrixQstn(qstnWrapper, question); break;
-						case 5  : mkTextQstn(qstnWrapper, question, "shortanswer"); break;
-						case 6  : mkTextQstn(qstnWrapper, question, "paragraph"  ); break;
+						case 5  : var shortAnswerObj = mkTxtObj();
+								  question["option"] = shortAnswerObj.option;
+								  mkTextQstn(qstnWrapper, question, "shortanswer"); break;
+						case 6  : var paragraphObj   = mkTxtObj();
+								  question["option"] = paragraphObj.option;
+								  mkTextQstn(qstnWrapper, question, "paragraph"  ); break;
 						case 7  : var sliderObj = mkSliderObj(qstnForm[0]);
 								  if (sliderObj.error) {alert(SurveyMessages[sliderObj.error]); return;}
-								  question["lowest"]  = sliderObj["lowest"];
-								  question["highest"] = sliderObj["highest"];
+								  if (sliderObj.option) {question["option"] = sliderObj.option;}
 								  mkSliderQstn(qstnWrapper, question); break;
 						case 8  : var rankingObj = mkRankingDropDownObj("ranking", qstnForm);
 								  if (rankingObj.error) {alert(SurveyMessages[rankingObj.error]); return;}
@@ -1083,12 +1166,15 @@
 				}
 				
 				function mkSliderQstn(wrapperElmt, question) {
-					var html = makeQuestionHeaderPanel(question);
+					var options = question.option;
+					var lowest  = options.filter(function(val) {return val["level"] == 0;})[0]["content"];
+					var highest = options.filter(function(val) {return val["level"] == 1;})[0]["content"];
+					var html    = makeQuestionHeaderPanel(question);
 					html    += "<div class='question-silder'>";
 					html    += "<div class='silder-wrap'>";
-					html    += "<span>" + question["lowest"] + "</span>";
-					html    += "<input type='range' class='slider-range' name='slider" + question.id + "' min='" + question["lowest"] + "' max='" + question["highest"] + "'/>";
-					html    += "<span>" + question["highest"] + "</span>";
+					html    += "<span>" + lowest + "</span>";
+					html    += "<input type='range' class='slider-range' name='slider" + question.id + "' min='" + lowest + "' max='" + highest + "'/>";
+					html    += "<span>" + highest + "</span>";
 					html    += "</div>";
 					html    += "<output for='slider" + question.id + "' class='slider-output'></output>";
 					html    += "</div>";
@@ -1188,21 +1274,31 @@
 					return returnObj;
 				}
 				
+				function mkTxtObj() {
+					var textObj = {};
+					var option  = [];
+					option.push({content : "", level : 0});
+					textObj["option"] = option;
+					return textObj;
+				}
+				
 				function mkSliderObj(qstnForm) {
 					var sliderObj    = {};
 					var lowestInput  = qstnForm.querySelector("input[class='slider-lw']");
 					var highestInput = qstnForm.querySelector("input[class='slider-up']");
-					var lowestValue  = lowestInput  ? lowestInput.value  : "";
-					var highestValue = highestInput ? highestInput.value : "";
+					var lowestValue  = lowestInput  ? parseInt(lowestInput.value)  : -1;
+					var highestValue = highestInput ? parseInt(highestInput.value) : -1;
 					
 					//Check slider requirements
 					if (!isValid(lowestValue))       {sliderObj.error = "strSlider1"; return sliderObj;}
 					if (!isValid(highestValue))      {sliderObj.error = "strSlider2"; return sliderObj;}
 					if (lowestValue >= highestValue) {sliderObj.error = "strSlider3"; return sliderObj;}
 					
-					sliderObj["lowest"]  = lowestValue;
-					sliderObj["highest"] = highestValue;
+					var option = [];
+					option.push({content : lowestValue, level : 0});
+					option.push({content : highestValue, level : 1});
 					
+					sliderObj["option"]  = option;
 					return sliderObj;
 				}
 				
@@ -1212,46 +1308,44 @@
 					var opt      = qstnForm.find(".optPart");
 					var oth      = qstnForm.find(".other");
 					var optCnt   = opt.length;
-					var checkCnt = 0;
+					var option   = [];
 					
 					// 보기의 개수 확인
 					if (optCnt > 0) {
-						var option = [];
-						
 						for (var i = 0; i < optCnt; i++) {
 							var optVal = opt[i].childNodes[0].childNodes[0].childNodes[0].value; // 보기가 비어있는지 확인
 							var fObj   = opt[i].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
 							
 							if (optVal || fObj) {
-								var optObj      = {};
-								optObj["level"] = option.length;
+								var optObj          = {};
+								optObj["level"]     = option.length;
+								optObj["otherFlag"] = 0;
 								
 								if (optVal) {optObj["content"] = optVal                 ;}
 								if (fObj)   {optObj["attach"]  = getAttachFileInfo(fObj);}
 								
 								option.push(optObj);
-								checkCnt ++;
 							}
 						}
-						
-						sltObj["option"] = option;
 					}
 					
 					// 기타의 유무 확인
 					if (oth.length != 0) {
-						var other        = {};
-						var othVal       = oth[0].childNodes[0].childNodes[0].childNodes[0].value;
-						var othObj       = oth[0].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
-						other["content"] = othVal ? othVal : SurveyMessages.strOther;
+						var other          = {};
+						var othVal         = oth[0].childNodes[0].childNodes[0].childNodes[0].value;
+						var othObj         = oth[0].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
+						other["content"]   = othVal ? othVal : SurveyMessages.strOther;
+						other["otherFlag"] = 1;
+						other["level"]     = option.length;
 						
 						if (othObj) {other["attach"] = getAttachFileInfo(othObj);}
 						
-						sltObj["other"] = other;
-						checkCnt ++;
+						option.push(other);
 					}
 					
-					if (checkCnt < 2) {sltObj["error"] = "strOptErr";}
+					if (option.length < 2) {sltObj["error"] = "strOptErr";}
 					
+					sltObj["option"] = option;
 					return sltObj;
 				}
 				
@@ -1260,6 +1354,7 @@
 					var rows   = qstnForm.find(".row");
 					var cols   = qstnForm.find(".col");
 					var mtrObj = {};
+					var option = [];
 					
 					if (rows) {
 						var row = [];
@@ -1269,35 +1364,37 @@
 							var rowVal = rows[i].childNodes[0].value;
 							
 							if (rowVal) {
-								rowObj["level"]   = row.length;
-								rowObj["content"] = rowVal;
+								rowObj["colLevel"] = -1;
+								rowObj["rowLevel"] = row.length;
+								rowObj["content"]  = rowVal;
 								row.push(rowObj);
 							}
 						}
 						
 						if (row.length == 0) {mtrObj["error"] = "strMaxtrix1"; return mtrObj;}
-						
-						mtrObj["row"] = row;
+						Array.prototype.push.apply(option, row);
 					}
 					
 					if (cols) {
 						var col = [];
 						
-						for (var i = 0; i < cols.length; i++) {
+						for (var i = 0, len = cols.length; i < len; i++) {
 							var colObj = {};
 							var colVal = cols[i].childNodes[0].value;
 							
 							if (colVal) {
-								colObj["level"]   = col.length;
-								colObj["content"] = colVal;
+								colObj["colLevel"] = col.length;
+								colObj["rowLevel"] = -1;
+								colObj["content"]  = colVal;
 								col.push(colObj);
 							}
 						}
 						
 						if (col.length == 0) {mtrObj["error"] = "strMaxtrix2"; return mtrObj;}
-						mtrObj["col"] = col;
+						Array.prototype.push.apply(option, col);
 					}
 					
+					mtrObj["option"] = option;
 					return mtrObj;
 				}
 				

@@ -5,8 +5,11 @@ import java.util.List;
 public class SimpleDeptVO {
 	private String deptId;
 	private String deptName;
+	private String deptName1;
+	private String deptName2;
 	private String hasSub;
 	private String level;
+	private String mail;
 	private List<SimpleDeptVO> subDepts;
 	
 	public String getDeptId() {
@@ -47,5 +50,29 @@ public class SimpleDeptVO {
 	
 	public void setLevel(String level) {
 		this.level = level;
+	}
+	
+	public String getDeptName1() {
+		return deptName1;
+	}
+	
+	public void setDeptName1(String deptName1) {
+		this.deptName1 = deptName1;
+	}
+	
+	public String getDeptName2() {
+		return deptName2;
+	}
+	
+	public void setDeptName2(String deptName2) {
+		this.deptName2 = deptName2;
+	}
+	
+	public String getMail() {
+		return mail;
+	}
+	
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 }

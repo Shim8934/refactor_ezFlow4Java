@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.compress.utils.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -94,14 +93,20 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 			default      : method = HttpMethod.GET   ; break;
 		}
 		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
-		JSONParser jp                 = new JSONParser();
 		JSONObject resultBody         = null;
 		
 		try {
-			resultBody = (JSONObject) jp.parse(result.getBody());
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
+			JSONParser jp                 = new JSONParser();
+			
+			try {
+				resultBody = (JSONObject) jp.parse(result.getBody());
+			}
+			catch (org.json.simple.parser.ParseException e) {
+				e.printStackTrace();
+			}
 		}
-		catch (org.json.simple.parser.ParseException e) {
+		catch(Exception e) {
 			e.printStackTrace();
 		}
 		
@@ -146,15 +151,27 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		return resultBody;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveUserConfig(HttpServletRequest request, String userId, String prevMode, String listCount, String contentWPrev, String contentHPrev) throws Exception {
 		String url                = "/rest/ezsurvey/config/id/" + userId;
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("prevMode",  prevMode);
-		param.put("listCount", listCount);
-		param.put("contentW",  contentWPrev);
-		param.put("contentH",  contentHPrev);
-		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		JSONObject jsonBody       = new JSONObject();
+		jsonBody.put("prevMode",  prevMode);
+		jsonBody.put("listCount", listCount);
+		jsonBody.put("contentW",  contentWPrev);
+		jsonBody.put("contentH",  contentHPrev);
+		
+		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
+		
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject saveSurveyItem(HttpServletRequest request, JSONObject surveyItem) throws Exception {
+		String url            = "/rest/ezsurvey/survey-item/save";
+		logger.debug(surveyItem.toJSONString());
+		
+		JSONObject resultBody = getJsonResult(url, null, request, "put", surveyItem);
 		return resultBody;
 	}
 	

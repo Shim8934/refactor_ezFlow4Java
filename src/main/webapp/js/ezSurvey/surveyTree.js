@@ -20,6 +20,7 @@ function CabinetTree() {
 	var _minusImg     = null;
 	var _name1        = null;
 	var _name2        = null;
+	var _email        = null;
 	var _strErr       = null;
 	var _paramErr     = null;
 	var _treeErr      = null;
@@ -60,8 +61,9 @@ function CabinetTree() {
 				_nodeSub   = "subDepts";
 				_rootImg   = "/images/OrganTree_cross/ic-company.gif";
 				_nodeImg   = "/images/OrganTree_cross/ic-open.gif";
-				_name1     = "";
-				_name2     = "";
+				_name1     = "deptName1";
+				_name2     = "deptName2";
+				_email     = "mail";
 				break;
 		}
 	}
@@ -136,8 +138,9 @@ function CabinetTree() {
 		spanDeptName.className   = "spanName";
 		spanDeptName.setAttribute("role", list[_nodeId]);
 		
-		if (list[_name1]) {spanDeptName.setAttribute("name1", list[_name1]); spanDeptName.setAttribute("name2", list[_name2]);}
-		
+		spanDeptName.setAttribute("name1", list[_name1]);
+		spanDeptName.setAttribute("name2", list[_name2]);
+		spanDeptName.setAttribute("email", list[_email]);
 		spanDeptName.setAttribute("level", list[_levelName]);
 		spanDeptName.addEventListener("click", function(e) {getSelected(this);}, false);
 		

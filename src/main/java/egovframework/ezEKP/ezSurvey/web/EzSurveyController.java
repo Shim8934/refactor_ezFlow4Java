@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -161,6 +161,19 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		logger.debug("jspGetSelectUesrPage ended");
 		return "ezSurvey/user/selectUser";
+	}
+	
+	@RequestMapping(value="/ezSurvey/saveSurvey.do", method = RequestMethod.POST, produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String jsonSaveSurveyItem(@RequestBody JSONObject surveyItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jsonSaveSurveyItem started");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		surveyItem.put("userId", user.getId());
+		
+		JSONObject resultObj = surveyRestService.saveSurveyItem(request, surveyItem);
+		
+		logger.debug("jsonSaveSurveyItem ended");
+		return resultObj.toString();
 	}
 	
 	@RequestMapping(value="/ezSurvey/getCompanyTree.do")

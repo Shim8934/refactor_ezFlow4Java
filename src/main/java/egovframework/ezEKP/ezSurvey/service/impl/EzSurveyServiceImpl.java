@@ -4,13 +4,14 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,9 +27,13 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezSurvey.dao.EzSurveyDAO;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
+import egovframework.ezEKP.ezSurvey.vo.AttachVO;
+import egovframework.ezEKP.ezSurvey.vo.OptionVO;
+import egovframework.ezEKP.ezSurvey.vo.QuestionVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -175,6 +180,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("surveyList", surveyList);
 		map.put("userId"    , userId);
 		map.put("tenantId"  , userInfo.getTenantId());
+		map.put("companyId" , userInfo.getCompanyID());
 		
 		List<SurveyVO> listSurvey  = ezSurveyDAO.getSurveyListForPermission(map);
 		
@@ -191,15 +197,14 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			return result;
 		}
 		
-		List<Integer> listOtherSurveyId = otherSurvey.stream().map(SurveyVO::getSurveyId).collect(Collectors.toList());
+		List<Long> listOtherSurveyId = otherSurvey.stream().map(SurveyVO::getSurveyId).collect(Collectors.toList());
 		map.put("deptId",      userInfo.getDeptID());
-		map.put("companyId",   userInfo.getCompanyID());
 		List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(map);
 		map.put("deptList",    userDeptList);
 		map.put("others",      listOtherSurveyId);
 		
 		List<SurveyVO> listReceivedCabinet = ezSurveyDAO.getReceivedSurveyListForPermission(map);
-		List<Integer> listReceivedSurveyId = listReceivedCabinet.stream().map(SurveyVO::getSurveyId).collect(Collectors.toList());
+		List<Long> listReceivedSurveyId = listReceivedCabinet.stream().map(SurveyVO::getSurveyId).collect(Collectors.toList());
 		
 		if (listReceivedSurveyId.containsAll(listOtherSurveyId)) {
 			result.put("code", 0);
@@ -295,4 +300,216 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	private String getSurveyDirPath(int tenantId) {
 		return commonUtil.getUploadPath("upload_survey.ROOT", tenantId) + commonUtil.separator;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public synchronized JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, LoginVO userInfo) throws Exception {
+		JSONObject result          = new JSONObject();
+		int tenantId               = userInfo.getTenantId();
+		String companyId           = userInfo.getCompanyID();
+		String userId              = userInfo.getId();
+		SurveyVO survey            = new SurveyVO();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(new Date()), userInfo.getOffset(), true);
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId" , tenantId);
+		long maxSurveyId           = ezSurveyDAO.getMaxSurveyId(map);
+		long maxQuestionId         = ezSurveyDAO.getMaxQuestionId(map);
+		long maxOptionId           = ezSurveyDAO.getMaxOptionId(map);
+		
+		survey.setTenantId(tenantId);
+		survey.setCompanyId(companyId);
+		survey.setCreatorId(userId);
+		survey.setUpdateUser(userId);
+		survey.setCreatorName1(userInfo.getDisplayName1());
+		survey.setCreatorName2(userInfo.getDisplayName2());
+		survey.setMultiAnswerFlag(multipleFlag);
+		survey.setParitipateFlag(userFlag);
+		survey.setResultPublicFlag(publicFlag);
+		survey.setAnonymousFlag(anonymousFlag);
+		survey.setTittle(title);
+		survey.setPurpose(purpose);
+		survey.setCreateDate(timeUTC);
+		survey.setUpdateDate(timeUTC);
+		survey.setUseStatus(1);
+		survey.setStartDate(startDate);
+		survey.setEndDate(endDate);
+		
+		if (publicFlag == 1) {
+			survey.setOpenDays(publicDays);
+		}
+		
+		//Save questions
+		for (int i = 0; i < questions.size(); i++, maxQuestionId++) {
+			JSONObject questionObj = (JSONObject)questions.get(i);
+			int requiredFlag       = questionObj.get("required").toString().equals("Y") ? 1 : 0;
+			int questionType       = ((Long)questionObj.get("type")).intValue();
+			JSONObject questionAtt = (JSONObject)questionObj.get("attach");
+			JSONArray options      = (JSONArray)questionObj.get("option");
+			
+			if (options == null || options.size() == 0) {
+				result.put("status", "error");
+				result.put("code", 1);
+				return result;
+			}
+			
+			for (int j = 0; j < options.size(); j++, maxOptionId++) {
+				JSONObject optionObj = (JSONObject)options.get(j);
+				JSONObject optionAtt = (JSONObject)optionObj.get("attach");
+				String optionContent = optionObj.get("content").toString();
+				int optionLevel      = optionObj.get("level")     != null ? ((Long)optionObj.get("level")).intValue()     : 0;
+				int otherFlag        = optionObj.get("otherFlag") != null ? ((Long)optionObj.get("otherFlag")).intValue() : 0;
+				int logicNum         = optionObj.get("logic")     != null ? ((Long)optionObj.get("logic")).intValue()     : -1;
+				OptionVO option      = new OptionVO();
+				option.setQuestionId(maxQuestionId);
+				option.setSurveyId(maxSurveyId);
+				option.setQuestionType(questionType);
+				option.setContent(optionContent);
+				option.setLevels(optionLevel);
+				option.setOtherFlag(otherFlag);
+				option.setCompanyId(companyId);
+				option.setTenantId(tenantId);
+				
+				if (logicNum != -1) {
+					option.setLogicNum(logicNum);
+				}
+				
+				if (questionType == 3 || questionType == 4) {
+					int rowLevel = ((Long)optionObj.get("rowLevel")).intValue();
+					int colLevel = ((Long)optionObj.get("colLevel")).intValue();
+					option.setRowLevel(rowLevel);
+					option.setColumnLevel(colLevel);
+				}
+				
+				//Save option attach file
+				if (optionAtt != null) {
+					saveAttachFile(realPath, optionAtt, maxOptionId, companyId, tenantId, "option");
+				}
+				
+				//Save option
+				ezSurveyDAO.saveOptionItem(option);
+			}
+			
+			String questionTitle   = questionObj.get("content").toString();
+			int questionLogic      = questionObj.get("logic") != null ? ((Long)questionObj.get("logic")).intValue() : 0;
+			int questionOrder      = ((Long)questionObj.get("id")).intValue();
+			
+			QuestionVO question    = new QuestionVO();
+			question.setSurveyId(maxSurveyId);
+			question.setTenantId(tenantId);
+			question.setCompanyId(companyId);
+			question.setTittle(questionTitle);
+			question.setQuestionType(questionType);
+			question.setLevels(questionOrder);
+			question.setUseStatus(1);
+			question.setLogicFlag(questionLogic);
+			question.setRequiredFlag(requiredFlag);
+			
+			if (questionType == 7) {
+				if (questionObj.get("logicPoint") != null && questionLogic == 1) {
+					question.setSliderLogicPoint(((Long)questionObj.get("logicPoint")).intValue());
+				}
+			}
+			
+			//Save question attach file
+			if (questionAtt != null) {
+				saveAttachFile(realPath, questionAtt, maxQuestionId, companyId, tenantId, "question");
+			}
+			
+			//Save question
+			ezSurveyDAO.saveQuestionItem(question);
+		}
+		
+		//Save survey attach list
+		if (attchList != null && attchList.size() > 0) {
+			for (int i = 0; i < attchList.size(); i++) {
+				JSONObject surveyAtt = (JSONObject)attchList.get(i);
+				saveAttachFile(realPath, surveyAtt, maxSurveyId, companyId, tenantId, "survey");
+			}
+		}
+		
+		//Save survey users
+		if (userFlag == 1) {
+			for (int i = 0; i < users.size(); i++) {
+				JSONObject userObj             = (JSONObject)users.get(i);
+				SurveyParticipantVO surveyUser = new SurveyParticipantVO();
+				surveyUser.setSurveyId(maxSurveyId);
+				surveyUser.setCompanyId(companyId);
+				surveyUser.setTenantId(tenantId);
+				surveyUser.setUserId(userObj.get("userId").toString());
+				surveyUser.setDeptId(userObj.get("deptId").toString());
+				surveyUser.setUserType(userObj.get("userType").toString());
+				surveyUser.setUserName1(userObj.get("userName1").toString());
+				surveyUser.setUserName2(userObj.get("userName2").toString());
+				surveyUser.setDeptName1(userObj.get("deptName1").toString());
+				surveyUser.setDeptName2(userObj.get("deptName2").toString());
+				surveyUser.setEmail(userObj.get("email").toString());
+				
+				ezSurveyDAO.saveSurveyUsers(surveyUser);
+			}
+		}
+		
+		//Save survey
+		ezSurveyDAO.saveSurveyItem(survey);
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+
+	private synchronized void saveAttachFile(String realPath, JSONObject attachObj, long targetId, String companyId, int tenantId, String targetType) {
+		String fileName      = attachObj.get("fname").toString();
+		String filePath      = attachObj.get("fpath").toString();
+		File attFile         = new File(realPath + filePath);
+		long fileSize        = attFile.length();
+		AttachVO attach      = new AttachVO();
+		
+		attach.setCompanyId(companyId);
+		attach.setTenantId(tenantId);
+		attach.setTargetId(targetId);
+		attach.setTargetType(targetType);
+		attach.setFilePath(filePath);
+		attach.setFileSize(fileSize);
+		attach.setFileName(fileName);
+		
+		//Save attach
+		ezSurveyDAO.saveAttachItem(attach);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

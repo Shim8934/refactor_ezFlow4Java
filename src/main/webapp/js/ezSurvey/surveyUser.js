@@ -219,10 +219,15 @@
 				trElmt.appendChild(tdElmt3);
 				trElmt.appendChild(tdElmt4);
 				trElmt.className = unselectClass;
-				trElmt.setAttribute("role", result[i]["userId"]);
-				trElmt.setAttribute("deptId", result[i]["deptId"]);
-				trElmt.setAttribute("deptName", result[i]["deptName"]);
-				trElmt.setAttribute("userName", result[i]["userName"]);
+				trElmt.setAttribute("role"     , result[i]["userId"   ]);
+				trElmt.setAttribute("email"    , result[i]["mail"     ]);
+				trElmt.setAttribute("deptId"   , result[i]["deptId"   ]);
+				trElmt.setAttribute("deptName" , result[i]["deptName" ]);
+				trElmt.setAttribute("deptName1", result[i]["deptName1"]);
+				trElmt.setAttribute("deptName2", result[i]["deptName2"]);
+				trElmt.setAttribute("userName" , result[i]["userName" ]);
+				trElmt.setAttribute("userName1", result[i]["userName1"]);
+				trElmt.setAttribute("userName2", result[i]["userName2"]);
 				trElmt.addEventListener("click", function(e) {clickRow(e);}, false);
 				trElmt.addEventListener("dblclick", function(e) {addUser(this, "one")}, false);
 				
@@ -260,8 +265,14 @@
 		if (checkElmt) {if(mode) {alert(SurveyMessages.strExist);}; return;}
 		
 		var userName      = trElmt.getAttribute("userName");
+		var userMail      = trElmt.getAttribute("email");
+		var deptId        = trElmt.getAttribute("deptId");
+		var userName1     = trElmt.getAttribute("userName1");
+		var userName2     = trElmt.getAttribute("userName2");
 		var deptName      = trElmt.getAttribute("deptName");
-		addUserToSelectList(userId, userName, "user", deptName);
+		var deptName1     = trElmt.getAttribute("deptName1");
+		var deptName2     = trElmt.getAttribute("deptName2");
+		addUserToSelectList(userId, userName, "user", deptName, deptId, userName1, userName2, deptName1, deptName2, userMail);
 	}
 	
 	function addUsers() {
@@ -284,7 +295,7 @@
 		}
 	}
 	
-	function addUserToSelectList(userId, userName, userType, deptName) {
+	function addUserToSelectList(userId, userName, userType, deptName, deptId, userName1, userName2, deptName1, deptName2, email) {
 		var selectedTable       = document.getElementById("selectedTable");
 		var newTrElmt           = document.createElement("tr");
 		var newTdElmt1          = document.createElement("td");
@@ -298,10 +309,16 @@
 		newTrElmt.appendChild(newTdElmt2);
 		
 		newTrElmt.className = "bnkCabNormal";
-		newTrElmt.setAttribute("role", userId);
-		newTrElmt.setAttribute("deptName", deptName);
-		newTrElmt.setAttribute("userName", userName);
-		newTrElmt.setAttribute("userType", userType);
+		newTrElmt.setAttribute("role"     , userId);
+		newTrElmt.setAttribute("deptId"   , deptId);
+		newTrElmt.setAttribute("deptName" , deptName);
+		newTrElmt.setAttribute("userName" , userName);
+		newTrElmt.setAttribute("userName1", userName1);
+		newTrElmt.setAttribute("userName2", userName2);
+		newTrElmt.setAttribute("deptName1", deptName1);
+		newTrElmt.setAttribute("deptName2", deptName2);
+		newTrElmt.setAttribute("userType" , userType);
+		newTrElmt.setAttribute("email"    , email);
 		
 		selectedTable.appendChild(newTrElmt);
 		selectedUsers.resetEvents();
@@ -335,12 +352,18 @@
 		if (!listUser || listUser.length == 0) {return;}
 		
 		for (var i = 0, len = listUser.length; i < len; i++) {
-			var userId   = listUser[i]["userId"];
-			var userName = listUser[i]["userName"];
-			var deptName = listUser[i]["deptName"];
-			var userType = convertUserType(listUser[i]["userType"]);
+			var userId    = listUser[i]["userId"   ];
+			var deptId    = listUser[i]["deptId"   ];
+			var userName  = listUser[i]["userName" ];
+			var userName1 = listUser[i]["userName1"];
+			var userName2 = listUser[i]["userName2"];
+			var deptName  = listUser[i]["deptName" ];
+			var deptName1 = listUser[i]["deptName1"];
+			var deptName2 = listUser[i]["deptName2"];
+			var userType  = listUser[i]["userType" ];
+			var userMail  = listUser[i]["email"    ];
 			
-			addUserToSelectList(userId, userName, userType, deptName);
+			addUserToSelectList(userId, userName, userType, deptName, deptId, userName1, userName2, deptName1, deptName2, userMail);
 		}
 	}
 	
@@ -370,13 +393,16 @@
 		if (!selectedNode) {alert(SurveyMessages.strError); return;}
 		
 		var deptName      = selectedNode.textContent;
+		var deptName1     = selectedNode.getAttribute("name1");
+		var deptName2     = selectedNode.getAttribute("name2");
+		var deptMail      = selectedNode.getAttribute("email");
 		var deptId        = selectedNode.getAttribute("role");
 		var deptLevel     = selectedNode.getAttribute("level");
 		var userType      = deptLevel != "0" ? "dept" : "comp";
 		var checkElmt     = selectedTable.querySelector("tr[role='" + deptId + "'][userType='"+ userType + "']");
 		if (checkElmt) {alert(SurveyMessages.strExist); return;}
 		
-		addUserToSelectList(deptId, deptName, userType, deptName);
+		addUserToSelectList(deptId, deptName, userType, deptName, deptId, deptName1, deptName2, deptName1, deptName2, deptMail);
 	}
 	
 	function saveSelectUsers() {
@@ -385,11 +411,29 @@
 		var userList      = [];
 		
 		for (var i = 1, len = listTr.length; i < len; i++) {
-			var userId   = listTr[i].getAttribute("role");
-			var userType = listTr[i].getAttribute("userType");
-			var userName = listTr[i].getAttribute("userName");
-			var deptName = listTr[i].getAttribute("deptName");
-			userList.push({userId: userId, userType : userType, userName: userName, deptName: deptName});
+			var userId    = listTr[i].getAttribute("role");
+			var deptId    = listTr[i].getAttribute("deptId");
+			var userType  = listTr[i].getAttribute("userType");
+			var userName  = listTr[i].getAttribute("userName");
+			var userName1 = listTr[i].getAttribute("userName1");
+			var userName2 = listTr[i].getAttribute("userName2");
+			var deptName  = listTr[i].getAttribute("deptName");
+			var deptName1 = listTr[i].getAttribute("deptName1");
+			var deptName2 = listTr[i].getAttribute("deptName2");
+			var userEmail = listTr[i].getAttribute("email");
+			
+			userList.push({
+				userId    : userId,
+				userType  : userType,
+				deptId    : deptId,
+				userName  : userName,
+				deptName  : deptName,
+				userName1 : userName1,
+				userName2 : userName2,
+				deptName1 : deptName1,
+				deptName2 : deptName2,
+				email     : userEmail
+			});
 		}
 		
 		if (window.opener.SurveyCreate) {
@@ -406,16 +450,4 @@
 	function onStartSimpleSearch(event) {if(event.keyCode == "13") {searchUserList();}}
 	function clearKeyword(inputElmt) {inputElmt.value = "";}
 	function removeUser(trElmt) {trElmt.parentElement.removeChild(trElmt);}
-	
-	function convertUserType(userType) {
-		var type = "";
-		
-		switch(parseInt(userType)) {
-			case 0 : type = "comp"; break;
-			case 1 : type = "dept"; break;
-			case 2 : type = "user"; break;
-		}
-		
-		return type;
-	}
 })();

@@ -1,11 +1,11 @@
 package egovframework.ezEKP.ezSurvey.web;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,12 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
@@ -392,12 +392,12 @@ public class EzSurveyGWController {
 	}
 	
 	@RequestMapping(value="/rest/ezsurvey/config/id/{userid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject saveUserConfig(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+	public JSONObject saveUserConfig(@RequestBody JSONObject configItem, @PathVariable(value="userid") String userId, HttpServletRequest request) {
 		String serverName    = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
-		String prevMode      = request.getParameter("prevMode")  != null ? request.getParameter("prevMode")  : "";
-		int listCount        = request.getParameter("listCount") != null ? Integer.parseInt(request.getParameter("listCount")) : -1;
-		int contentWPrev     = request.getParameter("contentW")  != null ? Integer.parseInt(request.getParameter("contentW"))  : -1;
-		int contentHPrev     = request.getParameter("contentH")  != null ? Integer.parseInt(request.getParameter("contentH"))  : -1;
+		String prevMode      = configItem.get("prevMode")  != null ? configItem.get("prevMode").toString()  : "";
+		int listCount        = configItem.get("listCount") != null ? Integer.parseInt(configItem.get("listCount").toString()) : -1;
+		int contentWPrev     = configItem.get("contentW")  != null ? Integer.parseInt(configItem.get("contentW").toString())  : -1;
+		int contentHPrev     = configItem.get("contentH")  != null ? Integer.parseInt(configItem.get("contentH").toString())  : -1;
 		JSONObject result    = new JSONObject();
 		
 		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || Preview Mode: " + prevMode + " || List count: " + listCount + " || ContentHPreview: " + contentHPrev + " || ContentWPreview: " + contentWPrev);
@@ -429,4 +429,60 @@ public class EzSurveyGWController {
 		
 		return result;
 	}
+	
+	@RequestMapping(value="/rest/ezsurvey/survey-item/save", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveSurveyItem(@RequestBody JSONObject surveyItem, HttpServletRequest request, Locale locale) throws Exception {
+		JSONObject result   = new JSONObject();
+		JSONParser jp       = new JSONParser();
+		
+		try {
+			JSONObject survey   = (JSONObject) jp.parse(surveyItem.toJSONString());
+			JSONObject infor    = survey.get("infor")     != null ? (JSONObject) survey.get("infor")    : null;
+			JSONArray questions = survey.get("questions") != null ? (JSONArray) survey.get("questions") : null;
+			String serverName   = request.getHeader("host-name") != null ? request.getHeader("host-name")         : "";
+			String userId       = surveyItem.get("userId")       != null ? surveyItem.get("userId").toString()    : "";
+			
+			logger.debug("ServerName: " + serverName + " || User id: " + userId + " || question list: " + questions.toJSONString() + " || survey information: " + infor.toJSONString());
+			
+			if (serverName.equals("") || userId.equals("") || questions == null || questions.size() == 0 || infor == null || infor.toJSONString().equals("")) {
+				logger.debug("Parameter error!");
+				result.put("status", "error");
+				result.put("code", 1);
+				return result;
+			}
+			
+			String title            = infor.get("title")      != null ? infor.get("title").toString()              : "";
+			String purpose          = infor.get("purpose")    != null ? infor.get("purpose").toString()            : "";
+			String startDate        = infor.get("startDate")  != null ? infor.get("startDate").toString()          : "";
+			String endDate          = infor.get("endDate")    != null ? infor.get("endDate").toString()            : "";
+			int publicFlag          = infor.get("public")     != null ? ((Long)infor.get("public")).intValue()     : -1;
+			int anonymousFlag       = infor.get("anonymous")  != null ? ((Long)infor.get("anonymous")).intValue()  : -1;
+			int multipleFlag        = infor.get("multiple")   != null ? ((Long)infor.get("multiple")).intValue()   : -1;
+			int publicDays          = infor.get("publicDays") != null ? ((Long)infor.get("publicDays")).intValue() : -1;
+			JSONArray attchList     = infor.get("attach")     != null ? (JSONArray)infor.get("attach")             : null;
+			JSONArray users         = infor.get("users")      != null ? (JSONArray)infor.get("users")              : null;
+			int userFlag            = (users == null || users.size() == 0) ? 0 : 1;
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			
+			if (title.equals("") || purpose.equals("") || startDate.equals("") || endDate.equals("") || format.parse(startDate).compareTo(format.parse(endDate)) > 0 || publicFlag == -1 || anonymousFlag == -1 || multipleFlag == -1 || (publicFlag == 1 && publicDays == -1)) {
+				logger.debug("Parameter error!");
+				result.put("status", "error");
+				result.put("code", 1);
+				return result;
+			}
+			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String realPath  = request.getServletContext().getRealPath("");
+			result           = surveyService.saveSurveyItem(realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	
 }

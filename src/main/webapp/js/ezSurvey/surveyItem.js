@@ -19,6 +19,36 @@ var SurveyItem = function() {
 	var itemPopup      = null;
 	var documentCont   = null;
 	var userWindow     = null;
+	var datepickerSt   = {
+		changeMonth    : true,
+		changeYear     : true,
+		autoSize       : true,
+		showOn         : "both",
+		buttonImage    : "/images/ImgIcon/calendar-month.gif",
+		buttonImageOnly: true,
+		dateFormat     : "yy-mm-dd"
+	};
+	
+	$.datepicker.regional[SurveyMessages["strLocale"]] = {
+		closeText         : SurveyMessages["strClose"],
+		prevText          : SurveyMessages["prevMonth"],
+		nextText          : SurveyMessages["nextMonth"],
+		currentText       : SurveyMessages["strToday"],
+		monthNames        : SurveyMessages["monthNames"],
+		monthNamesShort   : SurveyMessages["monthNames"],
+		dayNames          : SurveyMessages["dayNames"],
+		dayNamesShort     : SurveyMessages["dayNames"],
+		dayNamesMin       : SurveyMessages["dayNames"],
+		weekHeader        : "Wk",
+		dateFormat        : "yy-mm-dd",
+		firstDay          : 0,
+		isRTL             : false,
+		duration          : 200,
+		showAnim          : "show",
+		showMonthAfterYear: true
+	};
+	
+	$.datepicker.setDefaults($.datepicker.regional[SurveyMessages["strLocale"]]);
 	
 	/* Preview option */
 	function setData(height, width, prevMode) {
@@ -184,25 +214,8 @@ var SurveyItem = function() {
 		if (ruseBttn) {ruseBttn.firstElementChild.onclick = function(e) {reuseSurvey()      ;};}
 		if (srchBttn) {srchBttn.firstElementChild.onclick = function(e) {toggleSearchPanel();};}
 		
-		$("#Sdatepicker").datepicker({
-			changeMonth: true,
-			changeYear: true,
-			autoSize: true,
-			showOn: "both",
-			buttonImage: "/images/ImgIcon/calendar-month.gif",
-			buttonImageOnly: true,
-			dateFormat: "yy-mm-dd"
-		});
-		
-		$("#Edatepicker").datepicker({
-			changeMonth: true,
-			changeYear: true,
-			autoSize: true,
-			showOn: "both",
-			buttonImage: "/images/ImgIcon/calendar-month.gif",
-			buttonImageOnly: true,
-			dateFormat: "yy-mm-dd"
-		});
+		$("#Sdatepicker").datepicker(datepickerSt);
+		$("#Edatepicker").datepicker(datepickerSt);
 		
 		//startSearchCabinet("1");
 		preProcessing();

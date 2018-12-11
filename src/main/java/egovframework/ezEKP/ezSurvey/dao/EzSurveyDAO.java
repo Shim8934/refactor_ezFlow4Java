@@ -3,9 +3,13 @@ package egovframework.ezEKP.ezSurvey.dao;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
+import egovframework.ezEKP.ezSurvey.vo.AttachVO;
+import egovframework.ezEKP.ezSurvey.vo.OptionVO;
+import egovframework.ezEKP.ezSurvey.vo.QuestionVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -55,9 +59,43 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public List<String> getUserDepartmentIdList(Map<String, Object> map) {
 		return (List<String>)list("EzSurveyDAO.getUserDepartmentIdList", map);
 	}
-
+	
 	public List<SurveyVO> getReceivedSurveyListForPermission(Map<String, Object> map) {
 		return (List<SurveyVO>)list("EzSurveyDAO.getReceivedSurveyListForPermission", map);
 	}
+	
+	public void saveSurveyItem(SurveyVO survey) {
+		insert("EzSurveyDAO.saveSurveyItem", survey);
+	}
+	
+	public long getMaxSurveyId(Map<String, Object> map) {
+		return (long)select("EzSurveyDAO.getMaxSurveyId", map);
+	}
+	
+	public long getMaxQuestionId(Map<String, Object> map) {
+		return (long)select("EzSurveyDAO.getMaxQuestionId", map);
+	}
+	
+	public void saveQuestionItem(QuestionVO question) {
+		insert("EzSurveyDAO.saveQuestionItem", question);
+	}
+	
+	public void saveOptionItem(OptionVO option) {
+		insert("EzSurveyDAO.saveOptionItem", option);
+	}
+	
+	public long getMaxOptionId(Map<String, Object> map) {
+		return (long)select("EzSurveyDAO.getMaxOptionId", map);
+	}
+	
+	public void saveAttachItem(AttachVO attach) {
+		insert("EzSurveyDAO.saveAttachItem", attach);
+	}
+	
+	public void saveSurveyUsers(SurveyParticipantVO surveyUser) {
+		insert("EzSurveyDAO.saveSurveyUsers", surveyUser);
+	}
+	
+	
+	
 }
-

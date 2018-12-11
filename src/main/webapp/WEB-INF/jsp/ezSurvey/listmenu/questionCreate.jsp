@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"  %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <div class="surveyCrtTt2">
 	<div class="sryFirst2"></div>
-	<span class="sryTxt"><c:out value="설문제목"></c:out> </span>
+	<span class="sryTxt"><spring:message code='ezSurvey.t39'/></span>
 </div>
 <div class="questions-wrap">
 	<div class="quesBacgr"></div>

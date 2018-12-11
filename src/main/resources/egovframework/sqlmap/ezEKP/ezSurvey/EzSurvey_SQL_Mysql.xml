@@ -2,17 +2,24 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezSurvey">
-	<typeAlias alias="SurveySimpleDeptVO" type="egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO"      />
-	<typeAlias alias="SurveySimpleUserVO" type="egovframework.ezEKP.ezSurvey.vo.SimpleUserVO"      />
-	<typeAlias alias="UserConfigVO"       type="egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO"   />
-	<typeAlias alias="SurveyVO"           type="egovframework.ezEKP.ezSurvey.vo.SurveyVO"          />
+	<typeAlias alias="SurveySimpleDeptVO" type="egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO"        />
+	<typeAlias alias="SurveySimpleUserVO" type="egovframework.ezEKP.ezSurvey.vo.SimpleUserVO"        />
+	<typeAlias alias="UserConfigVO"       type="egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO"     />
+	<typeAlias alias="SurveyVO"           type="egovframework.ezEKP.ezSurvey.vo.SurveyVO"            />
+	<typeAlias alias="QuestionVO"         type="egovframework.ezEKP.ezSurvey.vo.QuestionVO"          />
+	<typeAlias alias="OptionVO"           type="egovframework.ezEKP.ezSurvey.vo.OptionVO"            />
+	<typeAlias alias="AttachVO"           type="egovframework.ezEKP.ezSurvey.vo.AttachVO"            />
+	<typeAlias alias="ParticipantVO"      type="egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO" />
 	
 	<!-- SimpleDept resultMap -->
 	<resultMap id="simpleDeptVO" class="SurveySimpleDeptVO">
 		<result property="deptId"            column="dept_id"                columnIndex="1"/>
 		<result property="deptName"          column="dept_name"              columnIndex="2"/>
-		<result property="level"             column="dept_level"             columnIndex="3"/>
-		<result property="hasSub"            column="has_sub"                columnIndex="4"/>
+		<result property="deptName1"         column="dept_name1"             columnIndex="3"/>
+		<result property="deptName2"         column="dept_name2"             columnIndex="4"/>
+		<result property="mail"              column="mail"                   columnIndex="5"/>
+		<result property="level"             column="dept_level"             columnIndex="6"/>
+		<result property="hasSub"            column="has_sub"                columnIndex="7"/>
 	</resultMap>
 	
 	<!-- UserConfig resultMap -->
@@ -28,14 +35,18 @@
 	
 	<!-- SimpleUser resultMap -->
 	<resultMap id="deptMemberInfo" class="SurveySimpleUserVO">
-		<result property="userId"           column="cn"                     columnIndex="1"/>
-		<result property="position"         column="position"               columnIndex="2"/>
-		<result property="userName"         column="displayName"            columnIndex="3"/>
-		<result property="deptId"           column="department"             columnIndex="4"/>
-		<result property="deptName"         column="departmentName"         columnIndex="5"/>
-		<result property="telNumber"        column="telephoneNumber"        columnIndex="6"/>
-		<result property="mail"             column="mail"                   columnIndex="7"/>
-		<result property="userImg"          column="userImage"              columnIndex="8"/>
+		<result property="userId"           column="cn"                     columnIndex="1" />
+		<result property="position"         column="position"               columnIndex="2" />
+		<result property="userName"         column="displayName"            columnIndex="3" />
+		<result property="userName1"        column="displayName1"           columnIndex="4" />
+		<result property="userName2"        column="displayName2"           columnIndex="5" />
+		<result property="deptId"           column="department"             columnIndex="6" />
+		<result property="deptName"         column="departmentName"         columnIndex="7" />
+		<result property="deptName1"        column="departmentName1"        columnIndex="8" />
+		<result property="deptName2"        column="departmentName2"        columnIndex="9" />
+		<result property="telNumber"        column="telephoneNumber"        columnIndex="10"/>
+		<result property="mail"             column="mail"                   columnIndex="11"/>
+		<result property="userImg"          column="userImage"              columnIndex="12"/>
 	</resultMap>
 	
 	<!-- SurveyVO resultMap -->
@@ -48,8 +59,8 @@
 		<result property="creatorId"        column="user_id"             columnIndex="6" />
 		<result property="createDate"       column="create_date"         columnIndex="7" />
 		<result property="updateDate"       column="update_date"         columnIndex="8" />
-		<result property="startDate"        column="survey_start_date"   columnIndex="9" />
-		<result property="endDate"          column="survey_end_date"     columnIndex="10" />
+		<result property="startDate"        column="start_date"          columnIndex="9" />
+		<result property="endDate"          column="end_date"            columnIndex="10" />
 		<result property="creatorName1"     column="user_name1"          columnIndex="11"/>
 		<result property="creatorName2"     column="user_name2"          columnIndex="12"/>
 		<result property="deleteUser"       column="delete_user"         columnIndex="13"/>
@@ -74,6 +85,9 @@
 		select
 			a.cn                                                                                                                                        as dept_id,
 			case when #primary# = '1' then a.displayname else a.displayname2 end                                                                        as dept_name,
+			a.displayname                                                                                                                               as dept_name1,
+			a.displayname2                                                                                                                              as dept_name2,
+			a.mail                                                                                                                                      as mail, 
 			#level#                                                                                                                                     as dept_level,
 			case when (select count(b.cn) from tbl_deptmaster b where a.cn = b.extensionattribute1 and a.tenant_id = b.tenant_id) = 0 then 0 else 1 end as has_sub
 		from
@@ -87,6 +101,9 @@
 			select
 				a.cn                                                                                                                                                                          as dept_id,
 				case when #primary# = '1' then a.displayname else a.displayname2 end                                                                                                          as dept_name,
+				a.displayname                                                                                                                                                                 as dept_name1,
+				a.displayname2                                                                                                                                                                as dept_name2,
+				a.mail                                                                                                                                                                        as mail,
 				#level#                                                                                                                                                                       as dept_level,
 				case when (select count(b.cn) from tbl_deptmaster b where a.cn = b.extensionattribute1 and b.cn <> b.extensionattribute2 and a.tenant_id = b.tenant_id) = 0 then 0 else 1 end as has_sub
 			from
@@ -127,19 +144,27 @@
 				AA.CN                  AS CN,
 				AA.POSITION            AS POSITION,
 				AA.DISPLAYNAME         AS DISPLAYNAME,
+				AA.DISPLAYNAME1        AS DISPLAYNAME1,
+				AA.DISPLAYNAME2        AS DISPLAYNAME2,
 				AA.DEPARTMENT          AS DEPARTMENT,
 				AA.DEPARTMENTNAME      AS DEPARTMENTNAME,
+				AA.DEPARTMENTNAME1     AS DEPARTMENTNAME1,
+				AA.DEPARTMENTNAME2     AS DEPARTMENTNAME2,
 				AA.TELEPHONENUMBER     AS TELEPHONENUMBER,
-				AA.MAIL                AS MAIL, 
+				AA.MAIL                AS MAIL,
 				AA.EXTENSIONATTRIBUTE2 AS USERIMAGE
 			FROM (
 				SELECT
 					CN                                                                                                                           AS CN,
 					CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                          AS POSITION,
 					CASE WHEN #primary# = '1'THEN DISPLAYNAME ELSE DISPLAYNAME2 END                                                              AS DISPLAYNAME,
+					DISPLAYNAME                                                                                                                  AS DISPLAYNAME1,
+					DISPLAYNAME2                                                                                                                 AS DISPLAYNAME2,
 					CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
 					DEPARTMENT                                                                                                                   AS DEPARTMENT,
 					CASE WHEN #primary# = '1'THEN DESCRIPTION ELSE DESCRIPTION2 END                                                              AS DEPARTMENTNAME,
+					DESCRIPTION                                                                                                                  AS DEPARTMENTNAME1,
+					DESCRIPTION2                                                                                                                 AS DEPARTMENTNAME2,
 					TELEPHONENUMBER                                                                                                              AS TELEPHONENUMBER,
 					MAIL                                                                                                                         AS MAIL,
 					EXTENSIONATTRIBUTE2                                                                                                          AS EXTENSIONATTRIBUTE2
@@ -160,9 +185,13 @@
 					A.CN                                                                                                                         AS CN,
 					CASE WHEN #primary# = '1'THEN A.TITLE ELSE A.TITLE2 END                                                                      AS POSITION,
 					CASE WHEN #primary# = '1'THEN A.DISPLAYNAME ELSE A.DISPLAYNAME2 END                                                          AS DISPLAYNAME,
+					A.DISPLAYNAME                                                                                                                AS DISPLAYNAME1,
+					A.DISPLAYNAME2                                                                                                               AS DISPLAYNAME2,
 					CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
 					A.DEPARTMENT                                                                                                                 AS DEPARTMENT,
 					CASE WHEN #primary# = '1'THEN A.DESCRIPTION ELSE A.DESCRIPTION2 END                                                          AS DEPARTMENTNAME,
+					A.DESCRIPTION                                                                                                                AS DEPARTMENTNAME1,
+					A.DESCRIPTION2                                                                                                               AS DEPARTMENTNAME2,
 					A.TELEPHONENUMBER                                                                                                            AS TELEPHONENUMBER,
 					A.MAIL                                                                                                                       AS MAIL,
 					A.EXTENSIONATTRIBUTE2                                                                                                        AS EXTENSIONATTRIBUTE2
@@ -209,8 +238,12 @@
 				AA.CN                  AS CN,
 				AA.POSITION            AS POSITION,
 				AA.DISPLAYNAME         AS DISPLAYNAME,
+				AA.DISPLAYNAME1        AS DISPLAYNAME1,
+				AA.DISPLAYNAME2        AS DISPLAYNAME2,
 				AA.DEPARTMENT          AS DEPARTMENT,
 				AA.DEPARTMENTNAME      AS DEPARTMENTNAME,
+				AA.DEPARTMENTNAME1     AS DEPARTMENTNAME1,
+				AA.DEPARTMENTNAME2     AS DEPARTMENTNAME2,
 				AA.TELEPHONENUMBER     AS TELEPHONENUMBER,
 				AA.MAIL                AS MAIL, 
 				AA.EXTENSIONATTRIBUTE2 AS USERIMAGE
@@ -219,9 +252,13 @@
 					CN                                                                                                                           AS CN,
 					CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                          AS POSITION,
 					CASE WHEN #primary# = '1'THEN DISPLAYNAME ELSE DISPLAYNAME2 END                                                              AS DISPLAYNAME,
+					DISPLAYNAME                                                                                                                  AS DISPLAYNAME1,
+					DISPLAYNAME2                                                                                                                 AS DISPLAYNAME2,
 					CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
 					DEPARTMENT                                                                                                                   AS DEPARTMENT,
 					CASE WHEN #primary# = '1'THEN DESCRIPTION ELSE DESCRIPTION2 END                                                              AS DEPARTMENTNAME,
+					DESCRIPTION                                                                                                                  AS DEPARTMENTNAME1,
+					DESCRIPTION2                                                                                                                 AS DEPARTMENTNAME2,
 					TELEPHONENUMBER                                                                                                              AS TELEPHONENUMBER,
 					MAIL                                                                                                                         AS MAIL,
 					EXTENSIONATTRIBUTE2                                                                                                          AS EXTENSIONATTRIBUTE2
@@ -289,7 +326,7 @@
 				where
 					s1.survey_id in
 					<iterate property="surveyList" open="(" close=")" conjunction=",">#surveyList[]#</iterate>
-					<![CDATA[and s1.use_status != 0 and s1.tenant_id = #tenantId#]]>
+					<![CDATA[and s1.use_status != 0 and s1.tenant_id = #tenantId# and s1.company_id = #companyId#]]>
 			) s2
 		
 	</select>
@@ -313,7 +350,7 @@
 			s1.*
 		from
 			(
-				select s.* from tbl_survey s join tbl_survey_participant p on s.survey_id = p.survey_id and s.tenant_id = p.tenant_id
+				select s.* from tbl_survey s join tbl_survey_participant p on s.survey_id = p.survey_id and s.tenant_id = p.tenant_id and s.company_id = p.company_id
 				where
 					p.survey_id in
 				<iterate property="others" open="(" close=")" conjunction=",">
@@ -326,7 +363,104 @@
 					</iterate> and (p.user_type = 0 or p.user_type = 1)
 					)
 				)
-				and s.use_status = 1 and s.tenant_id = #tenantId#
+				and s.use_status = 1 and s.tenant_id = #tenantId# and s.company_id = #companyId#
 			) s1
 	</select>
+	
+	<!--***********************************************************************************
+	**                               Survey item process                                **
+	************************************************************************************-->
+	
+	<insert id="EzSurveyDAO.saveSurveyItem" parameterClass="SurveyVO">
+		<![CDATA[
+			insert into tbl_survey (
+				title,        purpose,     user_id,     create_date,        start_date,     end_date,          user_name1,
+				user_name2,   use_status,  open_days,   result_public_flag, anonymous_flag, multi_answer_flag, participate_flag,
+				delete_user,  update_user, update_date, company_id,         tenant_id
+			)
+			values (
+				#tittle#,       #purpose#,    #creatorId#,  #createDate#,       #startDate#,     #endDate#,         #creatorName1#,
+				#creatorName2#, #useStatus#,  #openDays#,   #resultPublicFlag#, #anonymousFlag#, #multiAnswerFlag#, #paritipateFlag#,
+				#deleteUser#,   #updateUser#, #updateDate#, #companyId#,        #tenantId#
+			)
+		]]>
+	</insert>
+	
+	<select id="EzSurveyDAO.getMaxSurveyId" resultClass="Long">
+		<![CDATA[select ifnull(max(survey_id), 0) from tbl_survey where tenant_id = #tenantId# and company_id = #companyId#]]>
+	</select>
+	
+	<!--***********************************************************************************
+	**                               Question item process                               **
+	************************************************************************************-->
+	
+	<insert id="EzSurveyDAO.saveQuestionItem" parameterClass="QuestionVO">
+		<![CDATA[
+			insert into tbl_survey_question (
+				survey_id,      question_type,  title,               levels,     use_status,
+				required_flag,  logic_flag,     slider_logic_point,  company_id, tenant_id
+			)
+			values (
+				#surveyId#,      #questionType#,  #tittle#,           #levels#,     #useStatus#,
+				#requiredFlag#,  #logicFlag#,     #sliderLogicPoint#, #companyId#,  #tenantId#
+			)
+		]]>
+	</insert>
+	
+	<select id="EzSurveyDAO.getMaxQuestionId" resultClass="Long">
+		<![CDATA[select ifnull(max(question_id), 0) from tbl_survey_question where tenant_id = #tenantId# and company_id = #companyId#]]>
+	</select>
+	
+	<!--***********************************************************************************
+	**                               Option item process                               **
+	************************************************************************************-->
+	
+	<insert id="EzSurveyDAO.saveOptionItem" parameterClass="OptionVO">
+		<![CDATA[
+			insert into tbl_survey_option (
+				survey_id,  question_id,  question_type,  content,     levels,    other_flag,
+				logic_num,  row_level,    column_level,   company_id,  tenant_id
+			)
+			values (
+				#surveyId#,  #questionId#,  #questionType#,  #content#,    #levels#,     #otherFlag#,
+				#logicNum#,  #rowLevel#,    #columnLevel#,   #companyId#,  #tenantId#
+			)
+		]]>
+	</insert>
+	
+	<select id="EzSurveyDAO.getMaxOptionId" resultClass="Long">
+		<![CDATA[select ifnull(max(option_id), 0) from tbl_survey_option where tenant_id = #tenantId# and company_id = #companyId#]]>
+	</select>
+	
+	<!--***********************************************************************************
+	**                               Attach item process                               **
+	************************************************************************************-->
+	
+	<insert id="EzSurveyDAO.saveAttachItem" parameterClass="AttachVO">
+		<![CDATA[
+			insert into tbl_survey_attachfile (
+				target_id,  target_type,  file_nm,    file_size,  file_path,  company_id,  tenant_id
+			)
+			values (
+				#targetId#, #targetType#, #fileName#, #fileSize#, #filePath#, #companyId#, #tenantId#
+			)
+		]]>
+	</insert>
+	
+	<!--***********************************************************************************
+	**                                Survey Users process                               **
+	************************************************************************************-->
+	
+	<insert id="EzSurveyDAO.saveSurveyUsers" parameterClass="ParticipantVO">
+		<![CDATA[
+			insert into tbl_survey_participant (
+				survey_id,  user_type,   user_id,     user_name1,  user_name2,  email,
+				dept_id,    dept_name1,  dept_name2,  company_id,  tenant_id
+			)
+			values (
+				#surveyId#, #userType#,  #userId#,    #userName1#, #userName2#, #email#,
+				#deptId#,   #deptName1#, #deptName2#, #companyId#, #tenantId#
+			)
+		]]>
+	</insert>
 </sqlMap>

@@ -33,4 +33,7 @@ public interface EzSurveyService {
 	String saveUploadFile(List<MultipartFile> multiFileLists, JSONArray nameArray, String realPath, int tenantId) throws Exception;
 	void deleteAttachFile(String filePath, String realPath, int tenantId) throws Exception;
 	void getDownloadedFile(String fileName, String filePath, String realPath, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception;
+	
+	//Save survery item
+	JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, LoginVO userInfo) throws Exception;
 }

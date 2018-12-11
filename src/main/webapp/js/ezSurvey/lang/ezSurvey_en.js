@@ -6,4 +6,11 @@ var SurveyMessages = {
 	strItem      : "개",
 	strParamErr  : "파라미터가 부족합니다.",
 	strTreeErr   : "데이터 오류",
+	strLocale    : "en",
+	strClose     : "Close",
+	prevMonth    : "Prev",
+	nextMonth    : "Next",
+	strToday     : "today",
+	monthNames   : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+	dayNames     : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
 }

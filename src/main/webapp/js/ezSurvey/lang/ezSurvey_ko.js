@@ -66,4 +66,13 @@ var SurveyMessages = {
 	strSaveTxt   : "저장",
 	strQuestion  : "질문 작성 단계들어와주세요.",
 	strInvalid   : "정수 값을 입력하세요.",
+	strLocale    : "ko",
+	strClose     : "닫기",
+	prevMonth    : "이전달",
+	nextMonth    : "다음달",
+	strToday     : "오늘",
+	monthNames   : ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+	dayNames     : ["일", "월", "화", "수", "목", "금", "토"],
+	
+	
 }
