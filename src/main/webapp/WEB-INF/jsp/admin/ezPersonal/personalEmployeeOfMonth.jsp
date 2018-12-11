@@ -60,7 +60,7 @@
 				<div class="regular calSlider" id="regular"></div>
 				
 				<!-- 이달의우수사원 리스트 영역 -->
-				<ul id="mainlist" class="mainlist"></ul>
+				<ul id="mainlist" class="employeeList"></ul>
 			</div>
 	    </form>
 	</body>
