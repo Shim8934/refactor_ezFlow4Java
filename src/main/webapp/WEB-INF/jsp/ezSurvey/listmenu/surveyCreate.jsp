@@ -103,6 +103,7 @@
 					document.getElementById("selectTarget" ).addEventListener("change", toggleSelectTargetBttn, false);
 					document.getElementById("targetBttn"   ).addEventListener("click" , showSelectPopUp       , false);
 					document.getElementById("gotoSecondTab").addEventListener("click" , gotoSecondStep        , false);
+					document.getElementById("gotoThirdTab" ).addEventListener("click" , gotoThirdStep        , false);
 					document.getElementById("cancelSurvey1").addEventListener("click" , cancleThisSurvey      , false);
 					document.getElementById("public-slbox" ).addEventListener("change", toggleDaysInput       , false);
 					
@@ -219,6 +220,18 @@
 					document.getElementById("tab2").className = "select-tab";
 				}
 				
+				function gotoThirdStep() {
+					var checkObj = prepareForStep3();
+					if (checkObj["error"]) {alert(checkObj["error"]); return;}
+					
+					var listTabElmt          = document.getElementsByClassName("headpanel")[0].children;
+					listTabElmt[0].className = "crust";
+					listTabElmt[1].className = "crust";
+					listTabElmt[2].className = "crust selected";
+					document.getElementById("tab2").className = "hidden-tab";
+					document.getElementById("tab3").className = "select-tab";
+				}
+				
 				function selectStep(tabIdx, spanElemt) {
 					var crrSpan = document.querySelector("span[class='crust selected']");
 					if (crrSpan == spanElemt) {return;}
@@ -249,9 +262,7 @@
 				
 				function focusonQuestionTitleStep1() {document.querySelector("input[class='info-input-ttl']").focus();}
 				function focusonQuestionTitleStep2() {document.querySelector("div[class='quesDiv']").querySelector("input[class='questnTitle']").focus();}
-				function getSurveyPreview() {
-					//prevQstn();
-				}
+				function getSurveyPreview() {/* prevQstn(); */}
 				
 				function prepareForStep2() {
 					var returnObj = {};
@@ -715,9 +726,9 @@
 					});
 					
 					$(".quesBacgr").on("click", ".delImage", function() {questionFile.deleteFile(this);});
-////////////////////////////					
+					
+					// 임시 이벤트
 					$("#prevQsButton").click(function() {
-						console.log("클릭");
 						prevQstn();
 					});
 				}
@@ -1556,6 +1567,8 @@
 				
 				// 미리보기 질문 폼 생성
 				function prevQstn() {
+					$(".prevQsArea").html("");
+
 					var qstnList = SurveyCreate.getQs();
 					
 					if (qstnList.length != 0) {
@@ -1598,12 +1611,14 @@
 					html += "<div class='question-panel'>";
 					html += "<div class='question-header'>";
 					html += "<div class='question-content'>" + qstId + ". " + content;
-					html += required == 'Y' ? "<strong class='imptt'>*</strong></div>" : "</div>";
 
-					if (qstnType == 1 || qstnType == 2 || qstnType == 7) {
-						html += "<img class='logicBtn' src='/images/ezSurvey/shuffle.png' />";
+					if (required == 'Y') {
+						html += "<strong class='imptt'>*</strong>";
 					}
-					html += "</div></div></div>";
+					if (qstnType == 1 || qstnType == 2 || qstnType == 7) {
+						html += "<img id='logic" + qstId + "' class='logicBtn' src='/images/ezSurvey/shuffle.png'/>";
+					}
+					html += "</div></div></div></div>";
 					
 					if (qstnAtt) {
 						html += "<div class='question-attach'>"

@@ -384,7 +384,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsWrapper .question-attach {width: 100px; height: 100px; padding: 10px 35px;}
 .prevQsWrapper .qstnImg {width: auto; height: 100%;}
 .prevQsWrapper .question-header .question-content {line-height: 32px; font-size: 16px; font-weight: bold; padding-left: 15px; cursor: default;}
-.prevQsWrapper .question-header .logicBtn {width: 16px;}
+.prevQsWrapper .question-header .logicBtn {width: 20px; padding-left: 15px; margin-bottom: -3px; cursor: pointer;}
 
 
 
