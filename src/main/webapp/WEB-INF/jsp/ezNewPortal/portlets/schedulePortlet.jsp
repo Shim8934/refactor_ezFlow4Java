@@ -25,7 +25,7 @@
 						<div class="sCalendarArea">
 							<dl class="portlet_title portlet_schedule sortablePortlet">
 								<dt class="portletText">
-									<spring:message code='main.t203' />
+									<c:out value='${portletName }'/>
 								</dt>
 								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
 									<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">

@@ -904,7 +904,7 @@
 			A.company_id as companyid,
 			A.portlet_id as portletid,
 			A.portlet_used as portletused,
-			B.portlet_order as portletorder,
+			A.portlet_order as portletorder,
 			A.menu_id as menuid,
 			C.portlet_name as portletname
 		FROM
@@ -936,7 +936,7 @@
 		AND
 			A.company_id = #companyId#
 		ORDER BY
-			B.portlet_order
+			A.portlet_order
 	]]>
 	</select>
 	

@@ -672,29 +672,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		for (int i = 0; i < birthdayListCount; i++) {
 			PortalUserInfoVO portalUserInfo = tempList.get(i);
-			String imgPath = "";
 			
 			if (portalUserInfo.isSolar()) {
-				if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
-					imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
-				} else {
-					imgPath = "/images/default_pic.gif";
-				}
-				
-				portalUserInfo.setUserImg(imgPath);
 				birthdayList.add(portalUserInfo);
 			} else {
 				String toSolarDate = convertLunarToSolar(portalUserInfo.getUserBirthday(), month);
 				
 				if (!toSolarDate.equals("")) {
-					if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
-						imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
-					} else {
-						imgPath = "/images/default_pic.gif";
-					}
-					
 					portalUserInfo.setUserBirthday(toSolarDate);
-					portalUserInfo.setUserImg(imgPath);
 					birthdayList.add(portalUserInfo);
 				}
 			}
@@ -713,7 +698,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow) {
+	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow,String lang) {
 		LOGGER.debug("getMonthlyBirthdayEmployees started.");
 		String monthStr = "";
 		
@@ -727,6 +712,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("month", monthStr);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
+		map.put("lang", lang);
 		
 		List<PortalUserInfoVO> tempList = ezNewPortalDAO.getMonthlyBirthdayEmployees(map);
 		int birthdayListCount = tempList.size();
@@ -830,12 +816,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId ) {
+	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId, String lang) {
 		LOGGER.debug("getMonthlyBestEmployee started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("yearAndMonth", yearAndMonth);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
+		map.put("lang", lang);
 		String imgPath = "";
 		PortalUserInfoVO portalUserInfo = ezNewPortalDAO.getMonthlyBestEmployee(map);
 		

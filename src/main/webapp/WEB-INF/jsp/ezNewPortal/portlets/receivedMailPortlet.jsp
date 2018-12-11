@@ -13,7 +13,7 @@
 		<div class="layDIV">
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">
-					<spring:message code='main.t00038' />
+					<c:out value='${portletName }'/>
 				</dt>
 				<dd class="portletPlus" onclick="Mailmore_btnClick()">
 					<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">

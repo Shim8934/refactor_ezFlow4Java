@@ -62,9 +62,9 @@ public interface EzNewPortalService {
 	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId, String deptId);
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId);
 	public void updatePortletOrderUser(String userId, String companyId, int tenantId, JSONArray portletOrder, String portletLang) throws Exception;
-	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow);
+	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow, String lang);
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month);
-	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId);
+	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId, String lang);
 	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId);
 	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId) throws Exception;
 	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId) throws Exception;

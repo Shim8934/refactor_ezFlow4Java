@@ -14,5 +14,6 @@ var messages = {
 	strLang13 : "투표를 수정하고 있습니다.기다려주세요.",
 	strLang14 : "해당 게시판에 대한 권한이 없습니다.",
 	strLang15 : "일요일;월요일;화요일;수요일;목요일;금요일;토요일",
-	strLang16 : "한글양식은 Cross Browser 를 지원하지 않습니다."
+	strLang16 : "한글양식은 Cross Browser 를 지원하지 않습니다.",
+	strLang17 : "지정된 게시판이 없습니다."
 }
