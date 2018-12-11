@@ -261,13 +261,18 @@
 		            case "MailEnv_div3":
 		                {
 		                    if (pUseBackGround == "TRUE") {
-		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 330 + "PX";
 		                        if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
 		                    }
 		                    else {
-		                    	if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
-		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                    	if ("${boardInfo.guBun}" == "2") {
+				                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                    	} else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
+				                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
+		                    	} else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
+				        	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+		                    	}
 		                    }
 		                    break;
 		                }
@@ -1541,23 +1546,31 @@
 		            case "MailEnv_div1":
 		                document.getElementById("tab01").style.display = "";
 		                document.getElementById("tab02").style.display = "none";
-		                if ("${boardInfo.guBun}" == "2")
+		                if ("${boardInfo.guBun}" == "2") {
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		                else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
+		                } else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
-		                else if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
+		                } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+		                }
 		                break;
 		            case "MailEnv_div3":
 		                document.getElementById("tab01").style.display = "none";
 		                document.getElementById("tab02").style.display = "";
 		                if (pUseBackGround == "TRUE") {
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 330 + "PX";
-		                    if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
+		                    if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
+		                    }
 		                }
-		                else{
-		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                else {
+		                	 if ("${boardInfo.guBun}" == "2") {
+		                    	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                    } else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
+			                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
+		                    } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
+			                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+		                    }
 		                }
 		        }
 		        
