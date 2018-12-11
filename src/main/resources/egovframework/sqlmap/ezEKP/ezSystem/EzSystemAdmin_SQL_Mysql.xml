@@ -272,7 +272,7 @@
 	
 	<select id="EzSystemAdminDAO.selectModuleSize" parameterClass="java.util.Map" resultClass="java.lang.Long">
 		SELECT 
-			SUM(DATA_LENGTH + INDEX_LENGTH) AS MODULESIZE
+			SUM(AVG_ROW_LENGTH * TABLE_ROWS) AS MODULESIZE
 		FROM
 			INFORMATION_SCHEMA.TABLES
 		WHERE
