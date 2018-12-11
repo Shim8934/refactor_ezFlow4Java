@@ -914,7 +914,7 @@
 					}     			
 				});
 		        
-		       	$(document.getElementById("applyCount")).text("(" + applyCount + ")");
+		       	$(document.getElementById("applyCount")).text(" " + applyCount);
 		       	
 		       	if (typeof window.parent.frames["right"] == "undefined") {
 					rightFrame.src = "/ezBoard/boardItemListAppr.do";
@@ -1035,7 +1035,7 @@
 			        <ul class="lnbUL">
                        	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span></li>
                     	<c:if test="${applyFlag == 'OK'}">
-                           	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="Apprboard()"><spring:message code="ezBoard.t999001" /><span id="applyCount">${applyCount}</span></span></li>
+                           	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="Apprboard()"><spring:message code="ezBoard.t999001" /><span id="applyCount"> ${applyCount}</span></span></li>
                     	</c:if>
 			        </ul>
 				</div>	
