@@ -307,8 +307,8 @@
 			<isNotEmpty property="title"   prepend=" and ">i.title like concat('%', concat(#title#, '%')) escape '\'</isNotEmpty>
 			<isNotEmpty property="summary" prepend=" and ">i.summary like concat('%', concat(#summary#, '%')) escape '\'</isNotEmpty>
 			<isNotEmpty property="creatorName" prepend=" and ">
-				<isEqual property="primary"    compareValue="1">i.creator_name1 like concat('%', concat(#creatorName#, '%'))</isEqual>
-				<isNotEqual property="primary" compareValue="1">i.creator_name2 like concat('%', concat(#creatorName#, '%'))</isNotEqual>
+				<isEqual property="primary"    compareValue="1">i.creator_name1 like concat('%', concat(#creatorName#, '%')) escape '\'</isEqual>
+				<isNotEqual property="primary" compareValue="1">i.creator_name2 like concat('%', concat(#creatorName#, '%')) escape '\'</isNotEqual>
 			</isNotEmpty>
 			<isNotEmpty property="startDate">
 				<isNotEmpty property="endDate" prepend=" and ">

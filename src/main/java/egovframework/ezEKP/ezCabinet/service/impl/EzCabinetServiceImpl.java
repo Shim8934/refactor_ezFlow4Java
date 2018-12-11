@@ -1359,13 +1359,9 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			endDate             = commonUtil.getDateStringInUTC(endDateTmp, offset, true);
 		}
 		
-		if (!title.equals("")) {
-			title = title.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
-		}
-		
-		if (!summary.equals("")) {
-			summary = summary.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
-		}
+		title       = title.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
+		summary     = summary.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
+		creatorName = creatorName.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
 		
 		CabinetItemSearchVO searchVO = new CabinetItemSearchVO(Integer.parseInt(cabinetId), listCntSize, tenantId, userId, primary, offsetMinute, title, summary, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption);
 		List<CabinetItemVO> itemList = new ArrayList<>();
