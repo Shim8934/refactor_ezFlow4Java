@@ -206,7 +206,7 @@
 						<dl class="portlet_title sortablePortlet">
 					</c:otherwise>
 				</c:choose>
-		        	<dt class="portletText"><spring:message code='ezNewPortal.yej03' /></dt>
+		        	<dt class="portletText"><c:out value='${portletName }'/></dt>
 		            <dd class="portletPlus">
 		            	<select id="cityList" class="weatherSelect">
 		                </select>

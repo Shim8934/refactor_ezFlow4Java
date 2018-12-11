@@ -430,6 +430,7 @@
 		$(".portlet_area").html(portletHTML);
  		frameSetting(frameId);
 		
+ 		//포틀릿별로 정보 및 포틀릿 jsp불러오기
 		for (var i = 0; i < portletCount; i++) {
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;

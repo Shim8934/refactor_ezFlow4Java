@@ -105,6 +105,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalNoticePortlet Start");
 		String usedTheme = req.getParameter("usedTheme");
 		
+		model.addAttribute("portletName", req.getParameter("portletName"));
 		model.addAttribute("usedTheme", usedTheme);
 		return "/ezNewPortal/portlets/noticePortlet";
 	}
@@ -151,6 +152,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String usedTheme = req.getParameter("usedTheme");
 		
+		model.addAttribute("portletName", req.getParameter("portletName"));
 		model.addAttribute("usedTheme", usedTheme);
 		
 		logger.debug("portalReceivedMailPortlet End");
@@ -237,6 +239,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String usedTheme = req.getParameter("usedTheme");
 		
+		model.addAttribute("portletName", req.getParameter("portletName"));
 		model.addAttribute("usedTheme", usedTheme);
 		
 		return "/ezNewPortal/portlets/pollPortlet";
@@ -269,6 +272,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String usedTheme = req.getParameter("usedTheme");
 		
+		model.addAttribute("portletName", req.getParameter("portletName"));
 		model.addAttribute("usedTheme", usedTheme);
 		
 		logger.debug("portalSchedulePortlet End");
@@ -649,7 +653,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	}	
 	
 	/**
-	 * 포틀릿 - 공지사항
+	 * 포틀릿 - 도움말
 	 */
 	@RequestMapping(value = "/ezNewPortal/helpPortlet.do")
 	public String portalHelpPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
@@ -699,6 +703,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String usedTheme = req.getParameter("usedTheme");
 		
 		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("portletName", req.getParameter("portletName"));
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -806,6 +811,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String usedTheme = req.getParameter("usedTheme");
 		
 		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("portletName", req.getParameter("portletName"));
 		
 		Calendar cal = Calendar.getInstance();
 		String nowMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
