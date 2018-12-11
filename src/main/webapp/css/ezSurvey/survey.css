@@ -376,11 +376,14 @@ input[type=range]::-ms-tooltip {display: none;}
 .matrix input {height: 15px; width: 15px;}
 
 
+/* preview.jsp */
+.prevQsArea {background-color: #fff; padding: 20px; min-height: 400px; border: 1px solid #d7d7d7; margin-bottom: 15px;}
+.requiredInfo {font-size: 14px; color: red;}
 
-
-
-
-
+.prevQsWrapper .question-attach {width: 100px; height: 100px; padding: 10px 35px;}
+.prevQsWrapper .qstnImg {width: auto; height: 100%;}
+.prevQsWrapper .question-header .question-content {line-height: 32px; font-size: 16px; font-weight: bold; padding-left: 15px; cursor: default;}
+.prevQsWrapper .question-header .logicBtn {width: 16px;}
 
 
 
