@@ -30,7 +30,7 @@ function event_QuickList(result) {
 		divElmt.className = "linkBttn";
 		
 		delElmt.setAttribute("src", "/images/admin/slideDelete.png");
-		delElmt.addEventListener("click", function(event) {btn_delete(itemId);});
+		delElmt.addEventListener("click", function(event) {btn_delete(itemId, event);});
 		
 		divElmt.appendChild(delElmt);
 		
@@ -160,7 +160,9 @@ function btn_modify(obj) {
 	});
 }
 
-function btn_delete(itemId) {
+function btn_delete(itemId, event) {
+	event.stopPropagation();
+	
 	if (!confirm(strLangkhj24)) {
 		return;
 	}
