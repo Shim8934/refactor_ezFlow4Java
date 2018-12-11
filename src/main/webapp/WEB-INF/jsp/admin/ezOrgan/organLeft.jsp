@@ -149,7 +149,7 @@
 		<div id="left" class="lnb" style="overflow: auto">
   			<div class="admin_left_title" title="<spring:message code='main.t23' />">
 	  			<c:if test="${dotNetIntegration != 'YES'}"><spring:message code='main.t23' /></c:if>
-	  			<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.turl = "/admin/ezEmail/signatureMain.do";24' /></c:if>
+	  			<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.t24' /></c:if>
   			</div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 	  			<c:if test="${dotNetIntegration != 'YES'}">
@@ -175,6 +175,12 @@
 	  				<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
 	    			<ul></ul>    			
 	  			</h2>  
+	  			<c:if test="${useSharedMailbox == 'YES'}">
+		  			<h2>
+		  				<span onClick="goPage(33)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.sharedMailbox01' /></span>
+		    			<ul></ul>
+		  			</h2>
+	  			</c:if>
 	  			<!--
 	  			<h2>
 	  				<span onClick="goPage(20)" style="display:inline-block;width:100%;"><spring:message code='main.t1000' /></span>

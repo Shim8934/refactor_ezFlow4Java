@@ -938,14 +938,15 @@
 	        return xmlReturnValue;
 	    }
 	
+	    /* 2018-12-10 홍승비 - IE에서 게시판, 커뮤니티 게시물 메일발송 시 다국어 폰트 적용 */
 	    var pOrgAttachListXml = "";
 	    function Editor_Complete() {
 	        if (initFlag == false) {
 	            if (Org_cmd == "board") {
-	                GetBoardItemInfo_New("${boardID}", "${itemID}", "${retransType}");
+	                GetBoardItemInfo_New("${boardID}", "${itemID}", "${retransType}", g_font);
 	            }
 	            else if (Org_cmd == "Community") {
-	                GetBoardItemInfo_New3("${boardID}", "${itemID}");
+	                GetBoardItemInfo_New3("${boardID}", "${itemID}", g_font);
 	            }
 	            else if (Org_cmd == "report") {
 	                GetUpmooItemInfo_New("${itemID}", "${docHref}")
