@@ -26,6 +26,7 @@
 .loadingProgress {width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;}
 .loadingProgress >img {padding-top: 20px;}
 .loadingProgress >div {padding-top: 10px; vertical-align: middle; font-weight: bold; font-size: 1.2em;}
+.loadingPanel.on, .loadingProgress.on {display: block;}
 
 .ui-resizable-e, .ui-resizable-s {border: 1px solid #ddd; background-repeat: no-repeat;}
 .ui-resizable-e {background-image: url('/images/prevview_hbar_dotted.gif'); width: 5px !important; background-position: center;}

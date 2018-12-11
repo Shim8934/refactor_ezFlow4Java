@@ -459,6 +459,7 @@ public class EzSurveyGWController {
 			int anonymousFlag       = infor.get("anonymous")  != null ? ((Long)infor.get("anonymous")).intValue()  : -1;
 			int multipleFlag        = infor.get("multiple")   != null ? ((Long)infor.get("multiple")).intValue()   : -1;
 			int publicDays          = infor.get("publicDays") != null ? ((Long)infor.get("publicDays")).intValue() : -1;
+			int useStatus           = infor.get("status")     != null ? ((Long)infor.get("status")).intValue()     : 1;
 			JSONArray attchList     = infor.get("attach")     != null ? (JSONArray)infor.get("attach")             : null;
 			JSONArray users         = infor.get("users")      != null ? (JSONArray)infor.get("users")              : null;
 			int userFlag            = (users == null || users.size() == 0) ? 0 : 1;
@@ -473,7 +474,7 @@ public class EzSurveyGWController {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = surveyService.saveSurveyItem(realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, userInfo);
+			result           = surveyService.saveSurveyItem(realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -483,6 +484,52 @@ public class EzSurveyGWController {
 		
 		return result;
 	}
+	
+	@RequestMapping(value="/rest/ezsurvey/survey-item/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getItems(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName    = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
+		String userId        = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
+		String title         = request.getParameter("title")       != null ? request.getParameter("title")                         : "";
+		String pageMode      = request.getParameter("pageMode")    != null ? request.getParameter("pageMode")                      : "";
+		String creatorName   = request.getParameter("creatorName") != null ? request.getParameter("creatorName")                   : "";
+		String startDate     = request.getParameter("startDate")   != null ? request.getParameter("startDate")                     : "";
+		String endDate       = request.getParameter("endDate")     != null ? request.getParameter("endDate")                       : "";
+		String column        = request.getParameter("column")      != null ? request.getParameter("column")                        : "";
+		String order         = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
+		String srchMode      = request.getParameter("srchMode")    != null ? request.getParameter("srchMode")                      : "";
+		String srchOption    = request.getParameter("srchOption")  != null ? request.getParameter("srchOption")                    : "";
+		int listCntSize      = request.getParameter("listCntSize") != null ? Integer.parseInt(request.getParameter("listCntSize")) : -1;
+		int currentPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
+		String sqlQuery      = "";
+		JSONObject result    = new JSONObject();
+		
+		logger.debug("pageMode: " + pageMode + " || Title: " + title + " || Creator name: " + creatorName + " || Start Date: " + startDate + " || End Date: " + endDate + " || Column: " + column + " || Order: " + order + " || Search mode: " + srchMode + " || Search option: " + srchOption + " || List count: " + listCntSize);
+		
+		if (serverName.equals("") || pageMode.equals("") || userId.equals("") || currentPage < 1 || listCntSize < 1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			result = surveyService.getItemsBySearching(pageMode, currentPage, listCntSize, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption, order, column, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 }

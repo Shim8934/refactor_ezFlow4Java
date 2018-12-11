@@ -126,6 +126,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("pageName", pageName);
+		model.addAttribute("mode"    , mode);
 		
 		logger.debug("jspGetSurveyList ended");
 		return "ezSurvey/listmenu/surveyList";
@@ -173,6 +174,39 @@ public class EzSurveyController extends EgovFileMngUtil {
 		JSONObject resultObj = surveyRestService.saveSurveyItem(request, surveyItem);
 		
 		logger.debug("jsonSaveSurveyItem ended");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezSurvey/getSurveyItems.do")
+	@ResponseBody
+	public String jsonGetSurveyItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonGetSurveyItems start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String currentPage   = request.getParameter("currentPage") != null ? request.getParameter("currentPage") : "";
+		String pageMode      = request.getParameter("pageMode")    != null ? request.getParameter("pageMode")    : "";
+		String title         = request.getParameter("title")       != null ? request.getParameter("title")       : "";
+		String creatorName   = request.getParameter("creatorName") != null ? request.getParameter("creatorName") : "";
+		String startDate     = request.getParameter("startDate")   != null ? request.getParameter("startDate")   : "";
+		String endDate       = request.getParameter("endDate")     != null ? request.getParameter("endDate")     : "";
+		String column        = request.getParameter("column")      != null ? request.getParameter("column")      : "";
+		String order         = request.getParameter("order")       != null ? request.getParameter("order")       : "";
+		String srchMode      = request.getParameter("srchMode")    != null ? request.getParameter("srchMode")    : "";
+		String srchOption    = request.getParameter("srchOption")  != null ? request.getParameter("srchOption")  : "";
+		String listCntSize   = request.getParameter("listCntSize") != null ? request.getParameter("listCntSize") : "";
+		
+		logger.debug("pageMode: " + pageMode + " || Title: " + title + " || Creator name: " + creatorName + " || Start Date: " + startDate + " || End Date: " + endDate + " || Column: " + column + " || Order: " + order + " || Search mode: " + srchMode + " || Search option: " + srchOption + " || List count: " + listCntSize + " || Current page: " + currentPage);
+		
+		JSONObject resultObj = new JSONObject();
+		
+		if (pageMode.equals("") || listCntSize.equals("") || currentPage.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = surveyRestService.getSurveyItems(request, user.getId(), pageMode, title, creatorName, startDate, endDate, column, order, srchMode, srchOption, listCntSize, currentPage);
+		
+		logger.debug("jsonGetSurveyItems end");
 		return resultObj.toString();
 	}
 	
@@ -340,82 +374,4 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("jsonSaveUserConfig end");
 		return resultObj.toString();
 	}
-	
-	@RequestMapping(value = "/ezSurvey/uploadFile.do", produces = "text/plain; charset=utf-8")
-	@ResponseBody
-	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletResponse response) throws Exception {		
-		logger.debug("Upload file is running!");		
-		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
-		List<MultipartFile> multiFile = request.getFiles("fileToUpload"); 
-		int cnt = multiFile.size();
-		
-		String realPath = request.getServletContext().getRealPath("");
-		String[] pFileName = new String[cnt];
-        Long[] fileSize = new Long[cnt];        
-        String[] resultUpload = new String[cnt];
-        String[] sGUID = new String[cnt];
-        String[] pUploadSN = new String[cnt];        
-        String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", loginSimpleVO.getTenantId());
-
-        for (int i = 0; i < cnt; i++) {
-            resultUpload[i] = "false";
-            sGUID[i] = UUID.randomUUID().toString();
-            pUploadSN[i] = "{" + sGUID[i] + "}";
-        }
-
-        if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {        	
-            for (int i = 0; i < cnt; i++) {
-                String _pFileName = multiFile.get(i).getOriginalFilename();
-                
-                if (_pFileName.indexOf(commonUtil.separator) > 0) {
-                    _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
-                }
-                
-                pFileName[i] = _pFileName;
-            }
-        }
-
-/*        for (int i = 0; i < cnt; i++) {
-            pFileName[i] = pFileName[i].replace("+", "%2b");
-            pFileName[i] = pFileName[i].replace(";", "%3b");
-        }    */       
-        
-        String pDirPath = commonUtil.getUploadPath("upload_vote.ROOT", loginSimpleVO.getTenantId());
-        pDirPath = realPath + pDirPath;
-        
-        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
-        	pDirPath = pDirPath + commonUtil.separator;
-        }
-        
-        File file = new File(pDirPath + "uploadFile");
-
-        if (!file.exists()) {
-        	file.mkdir();        
-        }
-
-        StringBuffer strXML = new StringBuffer();
-        strXML.append("<ROOT><NODES>");
-        
-        for (int i = 0; i < cnt; i++) {        	
-        	fileSize[i] = multiFile.get(i).getSize();
-            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
-            String newFileName = pUploadSN[i] + "." + extend;
-            
-            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {           	
-				strXML.append("<DATA><![CDATA[" + newFileName + "/" + pFileName[i] + "/" + fileSize[i] + "]]></DATA>");
-				strXML.append("<DATA2><![CDATA[]]></DATA2>");
-				strXML.append("<DATA3><![CDATA[denied]]></DATA3>");
-            } 
-            else {
-				writeUploadedFile(multiFile.get(i), newFileName, pDirPath + "uploadFile");
-				strXML.append("<DATA><![CDATA[" + newFileName + "/" + pFileName[i] + "/" + fileSize[i] + "]]></DATA>");
-				strXML.append("<DATA2><![CDATA[]]></DATA2>");
-				strXML.append("<DATA3><![CDATA[OK]]></DATA3>");
-            }
-        }
-        strXML.append("</NODES></ROOT>");        
-       
-        logger.debug("Upload file finishes!");        
-        return strXML.toString();
-    }
 }

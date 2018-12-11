@@ -13,7 +13,7 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
 	</head>
 	<body class="mainbody overY">
-		<h1 id="cabInfo">
+		<h1>
 			<c:out value='${pageName}'/>
 			<span id="surveyInfo" class="surveyTtlInf"></span>
 			<span class="topSearchSpan">
@@ -142,8 +142,8 @@
 			 </div>
 		</div>
 		
-		<div class="loadingPanel" id="mailPanel">&nbsp;</div>
-		<div class="loadingProgress" id="MailProgress">
+		<div class="loadingPanel" id="progressPanel">&nbsp;</div>
+		<div class="loadingProgress" id="processImage">
 			<img src="/images/email/progress_img.gif">
 			<div id="progressNum"></div>
 		</div>
@@ -157,7 +157,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyTable.js')    }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyItem.js')     }"></script>
 		<script type="text/javascript">
-			SurveyItem.start("<c:out value='${config.contentHpercent}'/>", "<c:out value='${config.contentWpercent}'/>", "<c:out value='${config.previewMode}'/>");
-		</script>
+			SurveyItem.start("<c:out value='${config.contentHpercent}'/>", "<c:out value='${config.contentWpercent}'/>", "<c:out value='${config.previewMode}'/>", "<c:out value='${mode}'/>");
+			</script>
 	</body>
 </html>

@@ -175,6 +175,26 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		return resultBody;
 	}
 	
+	@Override
+	public JSONObject getSurveyItems(HttpServletRequest request, String userId, String pageMode, String title, String creatorName, String startDate, String endDate, String column, String order, String srchMode, String srchOption, String listCntSize, String currentPage) throws Exception {
+		String url                = "/rest/ezsurvey/survey-item/get";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",      userId);
+		param.put("title",       title);
+		param.put("pageMode",    pageMode);
+		param.put("creatorName", creatorName);
+		param.put("startDate",   startDate);
+		param.put("endDate",     endDate);
+		param.put("column",      column);
+		param.put("order",       order);
+		param.put("srchMode",    srchMode);
+		param.put("srchOption",  srchOption);
+		param.put("listCntSize", listCntSize);
+		param.put("currentPage", currentPage);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject uploadAttachFile(MultipartHttpServletRequest request, String userId, List<MultipartFile> multiFiles) throws Exception {
