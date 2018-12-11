@@ -21,7 +21,7 @@
 	.ui-widget-header {background : none;}
   	.column {width: 1820px; padding-bottom: 100px;}
   	.portlet, .newPortlet {margin:0px 15px 15px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
-  	.portlet-header {padding:0px 0px 0px 15px;margin:0px;position: relative;cursor:move; border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; border:1px solid #2196f3;}
+  	.portlet-header {padding:0px 0px 0px 15px;margin:0px;position: relative;border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; border:1px solid #2196f3;}
   	.portlet-toggle {top: 50%;right: 0;float:right;}
   	.portlet-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:215px;}
   	.portlet-placeholder {border: 1px dotted black; margin: 0 1em 1em 0; height: 50px;}
@@ -238,8 +238,8 @@
 			request.send(data);
 		}
 		
-		//순서변경
-		var updatePortletOrder = function () {
+		//순서변경 -- 사용안함
+		/* var updatePortletOrder = function () {
 			var companiesObj = document.getElementById("ListCompany");
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			
@@ -271,9 +271,9 @@
 			});
 			 
 			request.send(data);
-		}
+		} */
 		
-		//순서초기화
+		//순서초기화 -- 사용안함
 		/* var portletOrderReset = function() {
 	 		var companiesObj = document.getElementById("ListCompany");
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
@@ -589,28 +589,12 @@
 			request.send(data);
 		}
 		  
-		function loadAfter() { //데이터 로드 다 된 후
-			$( ".col-container" ).sortable({ //drag and drop 
-				items : "li.col",
-			    handle: ".portlet-header",
-			    cancel: ".portlet-toggle",
-			    update : function(event, ui) {
-			    	updatePortletOrder();
-			    }
-			});
-			
+		function loadAfter() { //데이터 로드 다 된 후			
 			$( ".portlet" )
 				.addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
 				.find( ".portlet-header" )
 				.addClass( "ui-widget-header ui-corner-all" )
 				//.prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
-			 
-			/* $( ".portlet-toggle" ).on( "click", function() {
-				var icon = $( this );
-				icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
-				icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
-				
-			}); */
 			
 			$(".addPortlet").on("click", showAddPortletForm); //click event
 		}
