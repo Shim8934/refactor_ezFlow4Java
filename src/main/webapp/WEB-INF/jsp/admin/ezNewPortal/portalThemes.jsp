@@ -55,6 +55,7 @@
 			.portlet_switch .slider {z-index:10;}
 			.admin_theme_portlet {width : 987px;}
 			.bottomBtn {clear:both;}
+			#themePortletList {display:inline-block;}
 		</style>
 	</head>
 	

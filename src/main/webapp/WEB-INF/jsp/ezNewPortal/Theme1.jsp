@@ -435,7 +435,7 @@
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
-
+			
 			if (portletUrl.indexOf("ezNewPortal") != -1) {
 		  		(function (portletId, portletUrl, portletName) {
 					$.ajax({

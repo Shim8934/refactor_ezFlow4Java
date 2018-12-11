@@ -91,14 +91,28 @@
 								<c:out value="${portletName }" />
 							</dt>
 					</dl>
-					<ul class="portlet_list">
-						<dl class="nodata">
-							<dt>
-								<img src="/images/ezNewPortal/nodata.png">
-							</dt>
-							<dd>"<spring:message code='ezNewPortal.t039' />"</dd>
-						</dl>
-					</ul>
+					<c:choose>
+						<c:when test="${empty boardId }">
+							<ul class="portlet_list">
+								<dl class="nodata">
+									<dt>
+										<img src="/images/ezNewPortal/nodata.png">
+									</dt>
+									<dd>"<spring:message code='ezNewPortal.t129' />"</dd>
+								</dl>
+							</ul>
+						</c:when>
+						<c:otherwise>
+							<ul class="portlet_list">
+								<dl class="nodata">
+									<dt>
+										<img src="/images/ezNewPortal/nodata.png">
+									</dt>
+									<dd>"<spring:message code='ezNewPortal.t039' />"</dd>
+								</dl>
+							</ul>
+						</c:otherwise>
+					</c:choose>
 				</c:when>
 				<c:otherwise>
 					<dl class="portlet_title photo_board sortablePortlet">

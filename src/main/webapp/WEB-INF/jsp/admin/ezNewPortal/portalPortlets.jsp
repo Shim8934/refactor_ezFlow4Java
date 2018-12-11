@@ -16,6 +16,7 @@
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}" />
 	<style type="text/css">
 	body {min-width: 520px;background-color:white;}
+	.mainbody h1 {margin-bottom: 24px;}
 	.ui-widget-header .ui-icon {background-image : url(/js/jquery-ui/images/ui-icons_444444_256x240.png);}
 	.ui-widget-content {background : none;}
 	.ui-widget-header {background : none;}

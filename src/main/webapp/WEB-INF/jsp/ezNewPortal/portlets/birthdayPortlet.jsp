@@ -13,7 +13,7 @@
 		<dl class="portlet_title photo_board sortablePortlet">
 			<dt class="portletText">
 				<span id="curMonth"><c:out value="${nowMonth }" /></span>
-				<spring:message code='ezNewPortal.t017'/> <c:out value='${portletName }'/>
+				<spring:message code='main.t00049'/> <c:out value='${portletName }'/>
 			</dt>
 			<!-- 		<dd class="portletPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd> -->
 			<dd id="birthNext" class="nextBtn">

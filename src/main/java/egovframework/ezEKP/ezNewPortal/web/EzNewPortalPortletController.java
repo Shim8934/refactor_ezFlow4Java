@@ -130,6 +130,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			JSONObject data = (JSONObject) resultBody.get("data");
 			String access = data.get("access").toString();
 			
+			model.addAttribute("boardId", data.get("boardId")); //게시판 아이디 넘기기
+			model.addAttribute("access", access);
+			
 			if (access.equals("true")) {
 				if (data.get("noticeList") != null) {
 					JSONArray noticeList = (JSONArray) data.get("noticeList");
