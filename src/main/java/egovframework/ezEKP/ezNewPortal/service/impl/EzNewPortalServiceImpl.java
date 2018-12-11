@@ -1779,13 +1779,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId) {
+	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId, String usePrimaryLangOnly, String primaryLang) {
 		LOGGER.debug("getPortletNameList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("portletId", portletId);
+		
+		if (usePrimaryLangOnly.equals("YES")) {
+			map.put("primaryLang", primaryLang);
+		}
 		
 		List<PortletNameInfoVO> portetList = ezNewPortalDAO.getPortletNameList(map);
 		

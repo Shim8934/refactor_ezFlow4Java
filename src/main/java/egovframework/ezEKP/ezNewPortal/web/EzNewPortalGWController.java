@@ -2212,6 +2212,8 @@ e.printStackTrace();
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			
+			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
+			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "YES";
@@ -2302,7 +2304,7 @@ e.printStackTrace();
 			}
 			
 			for (PortletInfoVO pvo : portletList) {
-				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId());
+				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId(), usePrimaryLangOnly, primaryLang);
 				pvo.setPortletNameList(portletNameList);
 			}
 						
