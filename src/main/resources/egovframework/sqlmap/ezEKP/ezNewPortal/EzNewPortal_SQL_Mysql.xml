@@ -579,6 +579,8 @@ AND
 	fcomp.company_id = tuser.company_id
 AND 
 	fcomp.theme_id = tuser.used_theme
+AND
+	tuser.is_default = 1
 WHERE 
 	fcomp.company_id = #companyId#
 AND 
@@ -622,9 +624,9 @@ AND
 <update id="ezNewPortal.updateUserUsedFrame" parameterClass="Map">
 <![CDATA[
 INSERT INTO 
-	tbl_portal_theme_user(USER_ID, COMPANY_ID, TENANT_ID, USED_THEME, USED_FRAME)
+	tbl_portal_theme_user(USER_ID, COMPANY_ID, TENANT_ID, USED_THEME, USED_FRAME, is_default)
 VALUES 
-	(#userId#, #companyId#, #tenantId#, #themeId#, #frameId#)
+	(#userId#, #companyId#, #tenantId#, #themeId#, #frameId#, #isDefault#)
 ON DUPLICATE KEY 
 	UPDATE USED_FRAME = #frameId#
 ]]>	
@@ -1112,7 +1114,7 @@ SELECT
 	A.theme_id,
 	A.theme_name,
     A.theme_content,
-    if(isnull(D.used_theme),  0, 1) as theme_used,
+    ifnull(D.is_default, 0) as theme_used,
     B.theme_default,
     C.frame_id as frame_default
 FROM
@@ -1207,8 +1209,7 @@ AND
 UPDATE
 	TBL_PORTAL_THEME_USER
 SET
-	used_theme = #usedTheme#,
-	used_frame = #usedFrame#
+	is_default = CASE WHEN used_theme = #usedTheme# THEN 1 ELSE 0 END
 WHERE
 	user_id = #userId#
 AND	
@@ -1221,9 +1222,9 @@ AND
 <insert id="ezNewPortal.insertUserThemeSetting" parameterClass="Map">
 <![CDATA[
 INSERT INTO TBL_PORTAL_THEME_USER (
-	user_id,	company_id,		tenant_id,		used_theme,		used_frame
+	user_id,	company_id,		tenant_id,		used_theme,		used_frame, is_default
 ) VALUES (
-	#userId#,	#companyId#,	#tenantId#,		#usedTheme#,	#usedFrame#
+	#userId#,	#companyId#,	#tenantId#,		#usedTheme#,	#usedFrame#, #isDefault#
 )
 ]]>
 </insert>
@@ -1689,6 +1690,8 @@ LIMIT
 				COMP.company_id = USER.company_id
 			AND
 				USER.user_id = #userId#
+			AND
+				USER.is_default = 1
 			WHERE
 				COMP.tenant_id = #tenantId#
 			AND
@@ -1739,6 +1742,18 @@ LIMIT
 	AND
 		A.TENANT_ID = #tenantId#
 ]]>
+<isNull property="usedTheme">
+<![CDATA[
+	AND
+		A.is_default = 1
+]]>
+</isNull>
+<isNotNull property="usedTheme">
+<![CDATA[
+	AND
+		A.used_theme = #usedTheme#
+]]>
+</isNotNull>
 </select>
 
 <!-- 사용자 포탈 설정 없을 때 회사 포탈 설정 가져오기 -->

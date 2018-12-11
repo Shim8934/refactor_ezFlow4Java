@@ -339,9 +339,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("frameId", param.get("frameId"));
 		map.put("themeId", param.get("themeId"));
+		map.put("isDefault", 1);
+		map.put("usedTheme", param.get("themeId"));
 		
 		LOGGER.debug("map.toString() : " + map.toString());
 		
+		ezNewPortalDAO.updateUserThemeSetting(map);
 		ezNewPortalDAO.updateUserUsedFrame(map);
 		
 		LOGGER.debug("[Serivce] updateUserUsedFrame Ended");
@@ -902,12 +905,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
+		map.put("isDefault", 1);
 		
 		UserPortalSettingVO portalSetting = ezNewPortalDAO.getUserPortalSetting(map);
 		
 		if (portalSetting == null) {
 			LOGGER.debug("DAO insertUserThemeSetting started.");
 			ezNewPortalDAO.insertUserThemeSetting(map);
+			ezNewPortalDAO.updateUserThemeSetting(map);
 		} else {
 			LOGGER.debug("DAO updateUserThemeSetting started.");
 			ezNewPortalDAO.updateUserThemeSetting(map);
