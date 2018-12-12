@@ -1418,7 +1418,7 @@
 	                    </div>
 	                </div>
 	                <div id="Organ">
-	                    <div style="overflow: auto; height: 550px; width: 395px; background-color: #FFFFFF; border: 1px solid #ddd;border-top:0px" id="TreeView"></div>
+	                    <div style="overflow-x: hidden; overflow-y: auto; height: 550px; width: 395px; background-color: #FFFFFF; border: 1px solid #ddd;border-top:0px" id="TreeView"></div>
 	                </div>
 	                <!-- 즐겨찾기 -->
 	                <div id="ReceptTemp" style="display: none; padding-left: 5px">

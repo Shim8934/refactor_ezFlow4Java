@@ -791,7 +791,7 @@
     		<tr> 
         		<td width="195" valign="top">
             		<h2><spring:message code='ezQuestion.t33' /></h2>
-            		<div style="OVERFLOW-Y:auto;OVERFLOW-X:auto;WIDTH:280px;HEIGHT:270px;BACKGROUND-COLOR:#ffffff;" id="TreeView" class="box"></div>
+            		<div style="overflow-x: hidden; overflow-y: auto;WIDTH:280px;HEIGHT:270px;BACKGROUND-COLOR:#ffffff;" id="TreeView" class="box"></div>
         		</td>
         		<td width="30" align="center" valign="middle"> 
             		<div><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_dept()" style="cursor:pointer"></div>

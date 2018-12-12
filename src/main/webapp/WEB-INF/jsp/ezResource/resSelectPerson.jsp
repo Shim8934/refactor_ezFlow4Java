@@ -1433,7 +1433,7 @@
 			    <table style="margin-top: 3px;">
 			        <tr>
 			            <td class="box">
-			            	<div id="TreeView" style="height: 400px; width: 250px; overflow-x: auto; overflow-y: auto;"></div></td>
+			            	<div id="TreeView" style="height: 400px; width: 250px; overflow-x: hidden; overflow-y: auto;"></div></td>
 			            <td style="width: 5px;">&nbsp;</td>
 			            <td class="listview" style="width: 425px;" id="orglistView">
 			                <!-- <div id="OrganListView" style="border:0;width: 415px; height: 400px; overflow-x: hidden; overflow-y: auto;"></div> -->

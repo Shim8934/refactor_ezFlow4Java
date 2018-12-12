@@ -139,7 +139,7 @@
 	    <table>
 			<tr>
         		<td style="padding-right:5px">
-            		<div style="border: 1px solid #ddd; height: 326px; width: 253px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
+            		<div style="border: 1px solid #ddd; height: 326px; width: 253px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
         		</td>
 			</tr>
 		</table>

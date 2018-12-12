@@ -374,7 +374,7 @@
 	    	<tr>
 	        	<td>
 	                <h2><span id="menu01" ><spring:message code='ezSchedule.t1104' /></span></h2>
-	                <div class="box" style="height:300px;width:245px;overflow-x:auto;overflow-y:auto;" id="TreeView"></div>
+	                <div class="box" style="height:300px;width:245px;overflow-x: hidden; overflow-y: auto;" id="TreeView"></div>
 	            </td>
 	            <td style="width: 30px; text-align: center;">
                     <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;margin-top:22px" onclick="InsertReceiver()"><br/>
