@@ -376,7 +376,7 @@
 	        <tr>
 	            <td style="vertical-align: top;">
 	                <h2 style="margin-top:7px;"><spring:message code='ezApprovalG.t232'/></h2>
-	                <div class="box" style="overflow: auto; height: 242px; width: 200px" id="TreeView"></div>
+	                <div class="box" style="overflow-x: hidden; overflow-y: auto; height: 242px; width: 200px" id="TreeView"></div>
 	            </td>
 	            <td style="vertical-align: top;padding-left:10px;">
 	                <h2 style="margin-top:7px;float:left"><spring:message code='ezApprovalG.t233'/></h2>

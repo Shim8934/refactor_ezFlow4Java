@@ -231,7 +231,7 @@
 	        </tr>
 	        <tr>
 	            <td>
-	                <div style="border: 0px solid #ddd; margin-top:5px; height: 250px; width: auto; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
+	                <div style="border: 0px solid #ddd; margin-top:5px; height: 250px; width: auto; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
 	            </td>
 	        </tr>
 	    </table>

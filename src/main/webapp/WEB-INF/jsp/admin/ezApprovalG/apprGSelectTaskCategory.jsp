@@ -219,7 +219,7 @@
 	        </tr>
     	</table>
     	<!-- 2018-10-08 김민성 - 버튼 및 테이블 style 수정 -->
-    	<div style="BORDER: #ddd 1px solid; border-top:0px; OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 99.5%; HEIGHT: 260px; BACKGROUND-COLOR: #ffffff" id="TreeView"></div>
+    	<div style="BORDER: #ddd 1px solid; border-top:0px; overflow-x: hidden; overflow-y: auto; WIDTH: 99.5%; HEIGHT: 260px; BACKGROUND-COLOR: #ffffff" id="TreeView"></div>
     	<div class="btnpositionNew">
         	<a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code = 'ezApprovalG.t413' /></span></a>
     	</div>

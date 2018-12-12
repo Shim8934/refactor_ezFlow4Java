@@ -343,7 +343,8 @@
 				$("#topMenuFull").fadeOut(0, function() {
 					$("#topMenuFull").attr("class", "full_nav on");
 					$("#topMenuFull").fadeIn(100);
-				});				
+					$("#nav_count").attr("class", "hidden_nav_count_on");
+				});
 				var screenHeight = screen.height;
 				topFrame.style.position = 'relative';
 				topFrame.style.minHeight = screenHeight+"px";
@@ -354,6 +355,7 @@
 					$("#topMenuFull").fadeOut(100, function() {
 						$("#topMenuFull").attr("class", "full_nav off");
 						$("#topMenuFull").fadeIn(100);
+						$("#nav_count").attr("class", "hidden_nav_count");
 					});
 				}
 				
@@ -558,10 +560,18 @@
 				if (topMenuFull.className.indexOf('on') > -1) { // 닫을 때
 					subMenuClickEvent('off');
 				} else if (topMenuFull.className.indexOf('off') > -1) { // 열 때
-					//setExpandMenuList();
 					subMenuClickEvent('on');
 				}
-			});		
+			});
+			
+			var topMenuFullRight = $('.countBox');
+			topMenuFullRight.click(function () {
+				if (topMenuFull.className.indexOf('on') > -1) { // 닫을 때
+					subMenuClickEvent('off');
+				} else if (topMenuFull.className.indexOf('off') > -1) { // 열 때
+					subMenuClickEvent('on');
+				}
+			});
 		}		
 		
 		// 메뉴 리스트의 사이즈 구하기
@@ -592,10 +602,10 @@
 			});
 			var viewCnt = totalMenuCnt*1 - (menuCnt*1);
 			if (viewCnt > 0) {
-				$('.hidden_nav_count').css('background','#3d8fea');
+				$('#nav_count').attr('class','hidden_nav_count');
 				document.getElementById('nav_count').innerHTML = '+' + (totalMenuCnt*1 - (menuCnt*1));
 			} else {
-				$('.hidden_nav_count').css('background','none');
+				$('#nav_count').attr('class','hidden_nav_count_off');
 			}
 		}
 		

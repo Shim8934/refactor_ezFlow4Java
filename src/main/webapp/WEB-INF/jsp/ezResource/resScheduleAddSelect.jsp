@@ -551,7 +551,7 @@
            <tr>
                <td>
                    <h2><span id="menu01" ><spring:message code="ezResource.t342" /></span></h2>
-                   <div class="box" id="TreeView" style="height:285px;width:230px;overflow-x:auto;overflow-y:auto; vertical-align:top"></div>             
+                   <div class="box" id="TreeView" style="height:285px;width:230px;overflow-x: hidden; overflow-y: auto; vertical-align:top"></div>             
                </td>
                <td style="padding:26px 6px 6px 6px">
                    <img src="/images/kr/cm/arr_right.gif" alt="" style="cursor:pointer; width:16px; height:16px; border:0px" onClick="InsertReceiver()"><br/>
