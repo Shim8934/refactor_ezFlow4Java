@@ -333,7 +333,7 @@
 								   'table','table_insert_left','table_insert_right','table_insert_top','table_insert_bottom','table_remove_col','table_remove_row','table_remove_table',
 								   'table_merge','table_split_col','table_split_row','cell_horizontal_size','cell_vertical_size','table_background_color','table_border_style','align_left','align_center','align_right','align_justify','paragraph_margin',
 								   'template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strike_through','remove_format','color','backgroundColor',
-								   'cellLock', 'cellFree', 'tableLock', 'tableFree'];
+								   'cell_lock', 'table_lock'];
 			
 			// 이미지 업로드 URL 설정
 			var imageUploadURL = "/ezEditor/kukudocsUpload.do?type=" + type;
@@ -389,7 +389,7 @@
 			}];
 			
 			// 커스텀 버튼 설정
-			var customButtonMenuItem = [
+			/* var customButtonMenuItem = [
 				{
 					id : "cellLock", 
 					name : "cell lock", 
@@ -418,7 +418,7 @@
 					style : "background:url('/js/ezEditor/kukudocsEditor/images/emoticon/animal3.png'); background-size:20px 18px;", 
 					action : tableFree
 				}
-			];
+			]; */
 			
 			//Color Picker 값 수정
 		    var colorPicker = {
@@ -443,7 +443,6 @@
 	            fontSize : fontSize,
 	            fontFamily : fontFamily,
 	            defaultTableWidth : 700,
-	            customButtonMenuItem : customButtonMenuItem,
 	            customMagicLineStyle : 'background-color:#888;',
 	            customAlignMenu : customAlignMenu,
 	            useMenuBar : false,
@@ -462,8 +461,9 @@
 	            Editor_Complete : Editor_Complete,
 	            Mouse_event : {'keyup' : CellCheckField},
 	            Key_event : {'mouseup' : CellCheckField},
+	            useLockMenu : true,
 	            cell_lock_name : 'cell_lock',
-	            lockImageURL : '/js/ezEditor/kukudocsEditor/images/lock.png',
+	            lockImageURL : '/images/lock.png',
 	            colorPicker : colorPicker
 	        });
 		</script>
