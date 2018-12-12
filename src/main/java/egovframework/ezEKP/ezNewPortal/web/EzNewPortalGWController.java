@@ -1993,9 +1993,11 @@ e.printStackTrace();
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
+			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
+			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 			
 			MenuInfoVO menuInfo = ezNewPortalService.getMenuInfo(menuId, companyId, tenantId);
-			List<MenuNameVO> menuNames = ezNewPortalService.getMenuNames(menuId, companyId, tenantId);
+			List<MenuNameVO> menuNames = ezNewPortalService.getMenuNames(menuId, usePrimaryLangOnly, primaryLang, companyId, tenantId);
 			
 			JSONObject data = new JSONObject();
 			data.put("menuInfo", menuInfo);
