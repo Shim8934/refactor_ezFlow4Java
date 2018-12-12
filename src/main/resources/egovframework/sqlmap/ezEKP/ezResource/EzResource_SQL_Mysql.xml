@@ -734,6 +734,8 @@
 				SCH.OWNERID = BRD.BRD_ID 
 			AND
 				SCH.TENANT_ID = BRD.TENANT_ID	
+			AND
+				SCH.COMPANYID = BRD.BRD_COMPANY
 			WHERE
 				STARTDATE <= STR_TO_DATE(#v_pStartDate#, '%Y-%m-%d %T')
         	AND
@@ -1872,6 +1874,8 @@
     		BRD_ID = #v_P_ownerID#
     	AND
     		TENANT_ID = #tenantID#	
+    	AND
+    		BRD_COMPANY = #v_P_companyID#
 	</select>
 	
 	<insert id="EzResourceDAO.addRessch" parameterClass="Map">
