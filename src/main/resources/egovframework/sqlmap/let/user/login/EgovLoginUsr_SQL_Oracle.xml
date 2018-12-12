@@ -32,6 +32,7 @@
         <result property="gyumJik"              column="gyumJik"                	columnIndex="22"/>
         <result property="userFileUrl"          column="userFileUrl"                columnIndex="23"/>
         <result property="sabun"              	column="sabun"                		columnIndex="24"/>
+		<result property="password_updatedt"    column="password_updatedt"			columnIndex="25"/>
 	</resultMap>	
 	
     <resultMap id="tenantServerName" class="egovframework.let.user.login.vo.TenantServerNameVO">
@@ -68,7 +69,8 @@
 	                loginCnt,
 	                extensionattribute4 as gyumJik,
 	                extensionattribute2 as userFileUrl,
-	                extensionattribute14 as sabun
+	                extensionattribute14 as sabun,
+	                password_updatedt
 			  	FROM 
 			  		TBL_USERMASTER a
 			 	WHERE 
@@ -121,7 +123,8 @@
 					u.loginCnt,
 					u.extensionattribute4 as gyumJik,
 					u.extensionattribute2 as userFileUrl,
-					u.extensionattribute14 as sabun
+					u.extensionattribute14 as sabun,
+					u.password_updatedt
 				FROM 
 					TBL_USERMASTER u
 				inner join
@@ -165,7 +168,8 @@
 	                loginCnt,
 	                extensionattribute4 as gyumJik,
 	                extensionattribute2 as userFileUrl,
-	                extensionattribute14 as sabun
+	                extensionattribute14 as sabun,
+	                password_updatedt
 	            FROM 
 	                TBL_USERMASTER a
 	            WHERE 
@@ -218,7 +222,8 @@
 					u.loginCnt,
 					u.extensionattribute4 as gyumJik,
 					u.extensionattribute2 as userFileUrl,
-					u.extensionattribute14 as sabun
+					u.extensionattribute14 as sabun,
+					u.password_updatedt
 				FROM 
 					TBL_USERMASTER u
 				inner join
