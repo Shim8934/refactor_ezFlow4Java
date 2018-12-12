@@ -116,7 +116,8 @@
 						if (xhr.status >= 200 && xhr.status < 300) {
 							var ul = document.getElementById('frameUl');
 							var frameList = JSON.parse(xhr.responseText).data.frameList;
-						
+							var usedIndex = 0;
+							
 							frameList.forEach(function (item, index) {
 								var li = document.createElement('li');
 								var div = document.createElement('div');
@@ -125,8 +126,9 @@
 								// 최초 회사 frame 설정
 								if(item.frameDefault) {
 									div.classList.add('select-flipster');
-									portletSetting.selectedFrame = index;
-									portletSetting.usedTheme = item.themeId;						
+									portletSetting.selectedFrame = item.usedFrame;
+									portletSetting.usedTheme = item.themeId;	
+									usedIndex = index;
 								}
 								
 								// 사용자가 선택한 frame 설정
@@ -137,12 +139,13 @@
 										selectFlipster.classList.remove('select-flipster');
 									}
 									div.classList.add('select-flipster');
-									portletSetting.selectedFrame = index;
+									portletSetting.selectedFrame = item.usedFrame;
 									portletSetting.usedTheme = item.themeId;
+									usedIndex = index;
 								}
-								div.dataset.frameid = item.frameId
-								div.dataset.themeid = item.themeId;
 								
+								div.dataset.frameid = item.frameId;
+								div.dataset.themeid = item.themeId;
 								// 프레임 이미지 나오면 변경하자!!
 								var img = document.createElement('img');
 								img.src = '/images/admin/theme' + item.themeId + "_frame" + item.frameId + ".png";
@@ -158,7 +161,7 @@
 							    spacing: -0.4,
 							    nav: false,
 							    buttons: true,
-							    start: (portletSetting.selectedFrame*1),
+							    start: (usedIndex*1),
 							    fadeIn : 0,
 							});					
 
