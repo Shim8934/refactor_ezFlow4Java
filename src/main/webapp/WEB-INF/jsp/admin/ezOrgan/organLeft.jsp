@@ -127,7 +127,7 @@
 		<div id="left">
   			<div class="left_admin" title="<spring:message code='main.t23' />"><img src="/images/admin/first.png" width="13px" height="13px"/>
 	  			<c:if test="${dotNetIntegration != 'YES'}"><spring:message code='main.t23' /></c:if>
-	  			<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.turl = "/admin/ezEmail/signatureMain.do";24' /></c:if>
+	  			<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.t24' /></c:if>
   			</div>   
   			<h2>
   				<span onClick="goPage(1)" style="display:inline-block;width:100%;">

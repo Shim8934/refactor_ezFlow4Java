@@ -228,7 +228,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 280) / 2;
 		        var pLeft = (pwidth - 450) / 2;
-		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?company="+document.getElementById('ListCompany')[document.getElementById('ListCompany').selectedIndex].value,"", "height = 290px, width = 450px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?company="+document.getElementById('ListCompany')[document.getElementById('ListCompany').selectedIndex].value,"", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		    }
 	
 		    function event_dbclick() {    	

@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript">
 			var ReturnFunction;
 			var m_dialogArguments;
@@ -23,14 +24,18 @@
 		    }
 
 		    function btnOk_Click() {
-		        document.getElementById("chk_Instance").checked == true ? m_dialogArguments["InstanceType"] = "Instance" : m_dialogArguments["InstanceType"] = "Master";
-		        
-		        m_dialogArguments["CancelOpen"] = false;
-		        if (ReturnFunction != null) {
-		            ReturnFunction(m_dialogArguments);
-		        } else {
-		            window.close();
-		        }
+		    	var ans = confirm("" + strLang90 + "");
+		    	
+		    	if (ans) {
+			        document.getElementById("chk_Instance").checked == true ? m_dialogArguments["InstanceType"] = "Instance" : m_dialogArguments["InstanceType"] = "Master";
+			        
+			        m_dialogArguments["CancelOpen"] = false;
+			        if (ReturnFunction != null) {
+			            ReturnFunction(m_dialogArguments);
+			        } else {
+			            window.close();
+			        }
+		    	}
 		    }
 
 		    function btnCancel_Click() {

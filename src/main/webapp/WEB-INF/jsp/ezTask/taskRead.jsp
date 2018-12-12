@@ -405,7 +405,7 @@
 			function downloadAll(checks) {
 				if (checks.item(suffix)) {
 					if (checks.item(suffix).checked) {
-						location.href = "/ezTask/downloadAttach.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + encodeURIComponent(GetAttribute(checks.item(suffix++), "fileName"));
+						location.href = "/ezTask/downloadAttach.do?filePath=" + encodeURIComponent(GetAttribute(checks.item(suffix), "filePath")) + "&fileName=" + encodeURIComponent(GetAttribute(checks.item(suffix++), "fileName"));
 						setTimeout(function () { downloadAll(checks) }, 1000);
 					} else {
 						suffix++;

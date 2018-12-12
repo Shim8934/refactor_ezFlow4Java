@@ -2131,6 +2131,8 @@ public class EzScheduleController extends EgovFileMngUtil {
         		String fileType = avo.getFileName().substring(avo.getFileName().lastIndexOf(".") + 1).toLowerCase();
         		avo.setFileType(fileType);        		
         		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
+        		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
+        		avo.setFilePath(URLEncoder.encode(avo.getFilePath(),"UTF-8"));					// 2018-12-11 김민성 - 파일경로 인코딩 처리
         		
         		String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
         		avo.setFileTranSize(fileSize);
