@@ -578,10 +578,10 @@ public class EzWebFolderGWController {
 				}
 			}
 
-			List<FileVO> duplicatedFiles = ezWebFolderService.getDuplicatedNameFiles(fileNames, folderId, userInfo.getOffset(), userInfo.getTenantId());
+			List<FileVO> duplicateFiles = ezWebFolderService.getDuplicateNameFiles(fileNames, folderId, userInfo.getOffset(), userInfo.getTenantId());
 
 			result.put("status", "ok");
-			result.put("duplicatedFiles", duplicatedFiles);
+			result.put("duplicateFiles", duplicateFiles);
 			result.put("code", 0);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -642,13 +642,13 @@ public class EzWebFolderGWController {
 			double totalUploadSize              = 0;
 			
 			// ---------- 중복 되는 파일은 업로드에서 제외하기 ----------
-			
+
 			List<String> onlyNameArray = ((List<JSONObject>) nameArray).stream().map(obj -> obj.get("originalFilename")).map(String.class::cast).collect(Collectors.toList());
-			
+
 			// 이름이 중복되는 파일 VO 리스트
-			List<FileVO> duplicatedNameFiles = ezWebFolderService.getDuplicatedNameFiles(onlyNameArray, folderId, offset, userInfo.getTenantId());
+			List<FileVO> duplicateNameFiles = ezWebFolderService.getDuplicateNameFiles(onlyNameArray, folderId, offset, userInfo.getTenantId());
 			// FileVO 타입 리스트를 fileName 필드로 하여금 String 타입으로 맵핑한 리스트
-			List<String> duplicatedNames = duplicatedNameFiles.stream().map(FileVO::getFileName).collect(Collectors.toList());
+			List<String> duplicateNames = duplicateNameFiles.stream().map(FileVO::getFileName).collect(Collectors.toList());
 
 			Iterator<MultipartFile> multiFileIterator = multiFileLists.iterator();
 			Iterator<Object> nameIterator = nameArray.iterator();
@@ -661,7 +661,7 @@ public class EzWebFolderGWController {
 				nameIterator.next();
 
 				// 중복되는 파일이라면 삭제함
-				if (duplicatedNames.contains(onlyNameIterator.next())) {
+				if (duplicateNames.contains(onlyNameIterator.next())) {
 					multiFileIterator.remove();
 					nameIterator.remove();
 				}
@@ -671,13 +671,13 @@ public class EzWebFolderGWController {
 			// 업로드 가능한 파일이 없으면 result 처리
 			if (multiFileLists.isEmpty()) {
 				logger.debug("have no uploadable file.");
-				logger.debug("duplicated files: {}", String.join(",", duplicatedNames.toArray(new String[duplicatedNames.size()])));
-				
+				logger.debug("duplicate files: {}", String.join(",", duplicateNames.toArray(new String[duplicateNames.size()])));
+
 				// 중복된 파일이 존재하여 코드를 달리하여 중복된 파일 리스트를 넘겨줌
-				result.put("duplicatedFiles", duplicatedNameFiles);
+				result.put("duplicateFiles", duplicateNameFiles);
 				result.put("status", "ok");
 				result.put("code", 8);
-				
+
 				// 조기 리턴
 				break process;
 			}
@@ -712,12 +712,13 @@ public class EzWebFolderGWController {
 				result.put("status", "error");
 				result.put("code", 2);
 			}
-			else if (duplicatedNameFiles.isEmpty()) {
+			else if (duplicateNameFiles.isEmpty()) {
+				// 중복된 파일이 없으면 0 리턴
 				result.put("status", "ok");
 				result.put("code", 0);
 			} else {
 				// 중복된 파일이 존재하여 코드를 달리하여 중복된 파일 리스트를 넘겨줌
-				result.put("duplicatedFiles", duplicatedNameFiles);
+				result.put("duplicateFiles", duplicateNameFiles);
 				result.put("status", "ok");
 				result.put("code", 8);
 			}
@@ -902,7 +903,7 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		try {
+		process: try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			String userName1 = userInfo.getDisplayName1();
 			String userName2 = userInfo.getDisplayName2();
@@ -911,7 +912,6 @@ public class EzWebFolderGWController {
 			String offset    = userInfo.getOffset();
 			String realPath  = request.getServletContext().getRealPath("");
 			realPath = realPath.substring(0, realPath.length()-1);
-			String realFileExt = "";
 
 			String path = commonUtil.getUploadPath("upload_webfolder.ROOT", tenantId) + commonUtil.separator;
 			path = path.substring(0, path.length()-1);
@@ -929,6 +929,8 @@ public class EzWebFolderGWController {
 			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
 			
 			FileVO fileVO    = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
+			
+			boolean isWindowsExplorer = webFlag.isEmpty();
 
 			String updateFileName = "";
 				
@@ -936,7 +938,7 @@ public class EzWebFolderGWController {
 			String filePath = fileVO.getFilePath();
 			String[] arryStrings = filePath.split("\\.");
 			String oldFilePath = arryStrings[0];
-			if ( webFlag.equals("")) {
+			if (isWindowsExplorer) {
 				// -> updateDate, filePath, fileExt, fileTypeId를 수정해야함
 				
 				if (fileExt == "") {
@@ -952,7 +954,31 @@ public class EzWebFolderGWController {
 						updateFileName = newName + "." + fileExt;
 					}
 				}
-				realFileExt = fileExt;
+			} else { 
+				// 이건 웹이다
+				// 확장자가 비었다  : 이름만 변경한다. 
+				fileExt   = fileVO.getFileExt();
+				if (fileExt.equals("unknown")) {
+					updateFileName = newName;
+				} else {
+					updateFileName = newName + "." + fileExt;
+				}
+			}
+			
+			// 새 이름으로 중복되는 게 있는지 확인
+			List<FileVO> duplicateFiles = ezWebFolderService.getDuplicateNameFiles(new ArrayList<>(Arrays.asList(updateFileName)), fileVO.getFolderId(), offset, tenantId);
+			
+			if (duplicateFiles.size() > 0) {
+				logger.debug("Duplicate file name: {}", updateFileName);
+				
+				result.put("status", "error");
+				result.put("code", 8);
+				
+				break process;
+			}
+			
+			if (isWindowsExplorer) {
+				String realFileExt = fileExt;
 				
 				// file의 이름을 바꿔주는것에 사용
 				File file = new File(realPath +  filePath);
@@ -976,16 +1002,9 @@ public class EzWebFolderGWController {
 				if (isMoved == true) {
 					logger.debug("isMoved" + isMoved);
 				}
-			} else { 
-				// 이건 웹이다
-				// 확장자가 비었다  : 이름만 변경한다. 
-				fileExt   = fileVO.getFileExt();
-				if (fileExt.equals("unknown")) {
-					updateFileName = newName;
-				} else {
-					updateFileName = newName + "." + fileExt;
-				}
 			}
+			
+			
 			ezWebFolderService.updateFileName(fileId, updateFileName, timeUTC, tenantId);
 			ezWebFolderService.saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 			
@@ -1009,6 +1028,8 @@ public class EzWebFolderGWController {
 		String serverName   = request.getHeader("x-user-host")     != null ? request.getHeader("x-user-host")     : "";
 		String folderId     = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
 		String privileges   = request.getParameter("privileges") != null ? request.getParameter("privileges") : "";
+		// nullable
+		String nameListStr = request.getParameter("nameList");
 		JSONObject result   = new JSONObject();
 		
 		logger.debug("FileId list: " + fileList + " || UserId: " + userId + " || Servername: " + serverName + " || FolderId: " + folderId + " || Privileges: " + privileges + " || mode: " + mode);
@@ -1032,7 +1053,15 @@ public class EzWebFolderGWController {
 			}
 			
 			String realPath = request.getServletContext().getRealPath("");
-			result          = ezWebFolderService.moveFiles(folderId, fileList, mode, privileges, locale, realPath, userInfo);
+			
+			if (nameListStr == null) {
+				// 기존 파일 move & copy
+				result = ezWebFolderService.moveFiles(folderId, fileList, mode, privileges, locale, realPath, userInfo);
+			} else {
+				// 이름 바꾸고 move & copy
+				JSONArray nameList = (JSONArray) new JSONParser().parse(nameListStr);
+				result = ezWebFolderService.moveRenameFilesForRest(folderId, fileList, nameList, mode, privileges, realPath, userInfo);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");

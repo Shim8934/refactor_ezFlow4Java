@@ -12,6 +12,7 @@ import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
@@ -30,6 +31,7 @@ public interface EzWebFolderService {
 	void updateFileUseStatus(String userId, String fileId, String timeUTC, int tenantId) throws Exception;
 	void updateFileName(String fileId, String newName, String timeUTC, int tenantId) throws Exception;
 	void moveFile(String fileId, String folderId, int tenantId) throws Exception;
+	void moveRenameFile(String fileId, String folderId, String newFileName, int tenantId) throws Exception;
 	String getFileLogSequence(int tenantId) throws Exception;
 	FolderVO getFolderByFolderId(String folderId, String offset, int tenantId) throws Exception;
 	FolderSimpleVO getSimpleFolder(String folderId, int tenantId) throws Exception;
@@ -43,8 +45,10 @@ public interface EzWebFolderService {
 	String getMaxFolderStep(String folderId, int tenantId) throws Exception;
 	String getFolderUserSequence(int tenantId) throws Exception;
 	void updateFolderUseStatus(FolderVO folder, LoginVO userInfo) throws Exception;
-	List<FileVO> getDuplicatedNameFiles(List<String> fileNames, String parentFolderId, String offset, int tenantId) throws Exception;
-	List<FolderVO> getDuplicatedNameFolders(List<String> folderNames, String parentFolderId, String offset, int tenantId) throws Exception;
+	List<FileVO> getDuplicateNameFiles(List<String> fileNames, String parentFolderId, String offset, int tenantId) throws Exception;
+	List<FolderVO> getDuplicateNameFolders(List<String> folderNames, String parentFolderId, String offset, int tenantId) throws Exception;
+	List<DuplicateInfoVO> getDuplicateFileInfo(String fileId, String targetFolderId, String offset, int tenantId) throws Exception;
+	List<DuplicateInfoVO> getDuplicateRenameFileInfo(String fileId, String targetFolderId, String newFileName, String offset, int tenantId) throws Exception;
 	List<FileVO> getAllFilesInFolder(String sqlCode, String order, String folderId, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception;
 	List<FileVO> getAllFiles(String sqlCode, String order, String folderPath, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception;
 	int getTotalFileCnt(String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, int tenantId) throws Exception;
@@ -77,6 +81,7 @@ public interface EzWebFolderService {
 	void saveLog(String string, String companyId, String offset, String userId, String userName1, String userName2, String fileName, long fileSize, String fileExt, String fileTypeName, int tenantId) throws Exception;
 	String getMaxFileID(int tenantId) throws Exception;
 	JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, Locale locale, String realPath, LoginVO userInfo) throws Exception;
+	JSONObject moveRenameFilesForRest(String folderId, String fileList, List<String> nameList, String mode, String privileges, String realPath, LoginVO userInfo) throws Exception;
 	Map<String, String> getAllFolderNameMap(List<String> testbnk, String primary, int tenantId);
 	List<String> getFolderListFromFileId(List<String> fileIds, int tenantId) throws Exception;
 	String getWebFolderDirPath(int tenantId);

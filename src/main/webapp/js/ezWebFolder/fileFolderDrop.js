@@ -39,14 +39,14 @@ function fileupload() {
 	// 2018.11.28 파일명 중복 체크 -------------
 	
 	// 업로드 가능한 파일들
-	var uploadableFileArray = [];
+	var uploadableFiles = [];
 	// 중복된 파일들
-	var duplicatedFileInfoArray = [];
+	var duplicateInfoArray = [];
 	// FileList to Array
 	var tempFileArray = Array.prototype.slice.call(file);
 	
 	$.ajax({
-		url: "/ezWebFolder/getDuplicatedFiles.do",
+		url: "/ezWebFolder/getDuplicateFiles.do",
 		type: "POST",
 		async: false,
 		data: JSON.stringify({
@@ -62,22 +62,22 @@ function fileupload() {
 			switch(code) {
 				case 0: 
 					// FileVO 배열
-					var resultFileArray = data.duplicatedFiles;
+					var resultFileArray = data.duplicateFiles;
 					// FileVO 배열을 파일이름 배열로 변환
-					var duplicatedNameArray = resultFileArray.map(function(fileValueObj) {return fileValueObj.fileName});
+					var duplicateNameArray = resultFileArray.map(function(fileValueObj) {return fileValueObj.fileName});
 
-					// 중복되지 않는 파일은 uploadableFileArray, 중복되는 파일은 duplicatedFileInfoArray
+					// 중복되지 않는 파일은 uploadableFiles, 중복되는 파일은 duplicateInfoArray
 					// old 데이터는 FileVO 정보로 하고 new 데이터는 업로드 파일의 메타데이터로 세팅함
 					tempFileArray.forEach(function(fileObj) {
-						var index = duplicatedNameArray.indexOf(fileObj.name);
+						var index = duplicateNameArray.indexOf(fileObj.name);
 						
 						// 중복되지 않는건 -1
 						if (index == -1) {
-							uploadableFileArray.push(fileObj);
+							uploadableFiles.push(fileObj);
 						} else {
 							var fileVO = resultFileArray[index];
 
-							duplicatedFileInfoArray.push({
+							duplicateInfoArray.push({
 								// fileObject 는 업로드에서만 있는데,
 								// overwrire, rename 작업을 할 때 서버로 업로드 하기 위함
 								fileObject: fileObj,
@@ -110,14 +110,19 @@ function fileupload() {
 	// 2018.11.28 파일명 중복 체크 -------------
 	
 	// 중복된 파일들만 있다면
-	if (uploadableFileArray.length === 0) {
+	if (uploadableFiles.length === 0) {
 		// 중복 처리 팝업 띄우고 리턴함
-		duplicateFile.process("upload", duplicatedFileInfoArray, folderId);
+		duplicateFile.process({
+			workType: "upload",
+			infoArray: duplicateInfoArray,
+			folderId: folderId
+		});
+		
 		return;
 	}
 	
-	for (var i = 0; i < uploadableFileArray.length; i++) {
-		fd.append("fileToUpload", uploadableFileArray[i]);
+	for (var i = 0; i < uploadableFiles.length; i++) {
+		fd.append("fileToUpload", uploadableFiles[i]);
 	}
 	
 	var dragZone = document.getElementById("dragDropArea");
@@ -140,7 +145,7 @@ function fileupload() {
 			switch(code) {
 				case 0:
 					// 중복되는 파일이 없으면 작업 완료 얼럿트 띄움
-					if (duplicatedFileInfoArray.length === 0) {
+					if (duplicateInfoArray.length === 0) {
 						alert(strSuccess);
 					}
 					
@@ -169,8 +174,13 @@ function fileupload() {
 	})
 	.complete(function(res){
 		ajaxUploadComplete();
+		
 		// 이름 중복된 파일 처리
-		duplicateFile.process("upload", duplicatedFileInfoArray, folderId);
+		duplicateFile.process({
+			workType: "upload",
+			infoArray: duplicateInfoArray,
+			folderId: folderId
+		});
 	});
 }
 

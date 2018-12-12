@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
@@ -52,6 +53,10 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 
 	public void moveFile(Map<String, Object> map) {
 		update("EzWebFolderDAO.moveFile", map);
+	}
+
+	public void moveRenameFile(Map<String, Object> map) {
+		update("EzWebFolderDAO.moveRenameFile", map);
 	}
 
 	public String getFileLogSequence(Map<String, Object> map) {
@@ -106,13 +111,18 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<FileVO> getDuplicatedNameFiles(Map<String, Object> map) {
-		return (List<FileVO>) list("EzWebFolderDAO.getDuplicatedNameFiles", map);
+	public List<FileVO> getDuplicateNameFiles(Map<String, Object> map) {
+		return (List<FileVO>) list("EzWebFolderDAO.getDuplicateNameFiles", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<FolderVO> getDuplicatedNameFolders(Map<String, Object> map) {
-		return (List<FolderVO>) list("EzWebFolderDAO.getDuplicatedNameFolders", map);
+	public List<FolderVO> getDuplicateNameFolders(Map<String, Object> map) {
+		return (List<FolderVO>) list("EzWebFolderDAO.getDuplicateNameFolders", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<DuplicateInfoVO> getDuplicateFileInfo(Map<String, Object> map) {
+		return (List<DuplicateInfoVO>) list("EzWebFolderDAO.getDuplicateFileInfo", map);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -187,7 +187,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String userId 				= (String) jsonObject.get("userId");
 
 		MCommonVO common;
-		try {
+		process: try {
 			common = mOptionService.commonInfoWeb(serverName, userId);
 			String folderUppId 			= (String) jsonObject.get("folderUppId");
 			String newFolderName1 		= (String) jsonObject.get("newFolderName1");
@@ -209,6 +209,18 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				jsonObj.put("code"	, 3);
 				LOGGER.debug("folderInsert method ended");
 				return jsonObj;
+			}
+			
+			// 추가되는 이름으로 중복되는 게 있는지 확인
+			List<FolderVO> duplicateFolders = ezWebFolderService.getDuplicateNameFolders(new ArrayList<>(Arrays.asList(newFolderName1)), folderUppId, offset, tenantId);
+			
+			if (duplicateFolders.size() > 0) {
+				LOGGER.debug("Duplicate folder name: {}", newFolderName1);
+				
+				jsonObj.put("status", "error");
+				jsonObj.put("code", 8);
+				
+				break process;
 			}
 			
 			// foldervo 가지고 와서 상위의 폴더의 vo를 추린다. 
@@ -246,7 +258,8 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String serverName 	= request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host") : "";
 		String userId 		= (String) jsonObject.get("userId");
 		MCommonVO common;
-		try {
+
+		process: try {
 			common = mOptionService.commonInfoWeb(serverName, userId);
 			String newFolderName1 		= (String) jsonObject.get("newFolderName1");
 			String newFolderName2 		= (String) jsonObject.get("newFolderName2");
@@ -267,6 +280,19 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				return jsonObj;
 			}
 			
+			// 새 이름으로 중복되는 게 있는지 확인
+			FolderVO targetFolderVO = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			List<FolderVO> duplicateFolders = ezWebFolderService.getDuplicateNameFolders(new ArrayList<>(Arrays.asList(newFolderName1)), targetFolderVO.getFolderUpper(), offset, tenantId);
+			
+			if (duplicateFolders.size() > 0) {
+				LOGGER.debug("Duplicate folder name: {}", newFolderName1);
+				
+				jsonObj.put("status", "error");
+				jsonObj.put("code", 8);
+				
+				break process;
+			}
+			
 			service.updateFolder(folderId, tenantId, userId, comId, newFolderName1, newFolderName2, timeUTC);
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
@@ -275,6 +301,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
 		}
+
 		LOGGER.debug("folderUpdate ended");
 		return jsonObj;
 	}

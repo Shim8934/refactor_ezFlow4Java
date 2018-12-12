@@ -307,6 +307,15 @@
 						case 4:
 							alert("<spring:message code='ezWebFolder.t250' />");
 							break;
+						case 8:
+							parent.duplicateFile.process({
+								workType: "copy",
+								infoArray: data.duplicateInfoArray, 
+								folderId: selectedFolder
+							});
+							
+							afterSuccess();
+							break;
 					}
 				},
 				error : function(error) {
@@ -363,6 +372,15 @@
 							break;
 						case 4:
 							alert("<spring:message code='ezWebFolder.t243' />");
+							break;
+						case 8:
+							parent.duplicateFile.process({
+								workType: "move",
+								infoArray: data.duplicateInfoArray, 
+								folderId: selectedFolder
+							});
+							
+							afterSuccess();
 							break;
 					}
 				},

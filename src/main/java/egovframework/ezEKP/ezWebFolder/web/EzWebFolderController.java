@@ -192,8 +192,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return "ezWebFolder/webfolderGeneral";
 	}
 	
-	@RequestMapping(value = "/ezWebFolder/fileDuplicatedConfirm.do")
-	public String fileDuplicatedConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	@RequestMapping(value = "/ezWebFolder/fileDuplicateConfirm.do")
+	public String fileDuplicateConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("fileDuplicateConfirm start");
 		
 		boolean isFolder = request.getParameter("isFolder") != null;
@@ -259,10 +259,10 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	}
 	
 	
-	@RequestMapping(value="/ezWebFolder/getDuplicatedFiles.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value="/ezWebFolder/getDuplicateFiles.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public String duplicateFileCheck(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> parameter, HttpServletRequest request) throws Exception {
-		logger.debug("getDuplicatedFiles start");
+		logger.debug("getDuplicateFiles start");
 
 		// user id 추가
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -284,7 +284,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		JSONParser jp = new JSONParser();
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 
-		logger.debug("getDuplicatedFiles end");
+		logger.debug("getDuplicateFiles end");
 		return resultBody.toString();
 	}
 	
@@ -556,18 +556,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		logger.debug("fileRenameConfirm start");
 		return "/ezWebFolder/fileRename";
 	}
-	
-	@RequestMapping(value="/ezWebFolder/fileDuplicateConfirm.do")
-	public String fileDuplicateConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-		logger.debug("fileDuplicateConfirm start");
-		String fileId = request.getParameter("fileId") != null ? request.getParameter("fileId") : "";
-		
-		logger.debug("File Id: " + fileId);
-		
-		model.addAttribute("fileId", fileId);
-		logger.debug("fileRenameConfirm start");
-		return "/ezWebFolder/duplicateConfirm";
-	}
 
 	@RequestMapping(value="/ezWebFolder/renameFile.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -661,11 +649,12 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		logger.debug("moveFile start");
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String fileList     = request.getParameter("fileList");
+		String nameList     = request.getParameter("nameList");
 		String folderId     = request.getParameter("folderId");
 		String mode         = request.getParameter("mode");
 		String privileges   = request.getParameter("privileges");
 		
-		logger.debug("FileId list: " + fileList + " || Folder Id: " + folderId + " || mode: " + mode + " || privileges: " + privileges);
+		logger.debug("FileId list: " + fileList + " || Folder Id: " + folderId + " || mode: " + mode + " || privileges: " + privileges + " || nameList: " + nameList);
 		
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
 		String url          = gwServerUrl + "/rest/ezwebfolder/filemove/modes/" + mode;
@@ -675,6 +664,10 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("userId", user.getId())
 										.queryParam("privileges", privileges)
 										.queryParam("folderId", folderId);
+		
+		if (nameList != null) {
+			builder.queryParam("nameList", nameList);
+		}
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

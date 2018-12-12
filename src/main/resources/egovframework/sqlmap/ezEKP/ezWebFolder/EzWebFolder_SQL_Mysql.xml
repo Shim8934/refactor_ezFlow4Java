@@ -11,6 +11,7 @@
 	<typeAlias  alias="webFolderSimpleUserVO"        type="egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO"  />
 	<typeAlias  alias="OrganDeptVO"                  type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"       />
 	<typeAlias  alias="EnvVO"                        type="egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO"/>
+	<typeAlias  alias="duplicateInfoVO"              type="egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO"/>
 	
 	<sql id="getAllFilesInFolderCont">
 		WHERE
@@ -435,7 +436,7 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO.getDuplicatedNameFiles" resultMap="fileVO2">
+	<select id="EzWebFolderDAO.getDuplicateNameFiles" resultMap="fileVO2">
 		<![CDATA[
 			SELECT
 				f.FILE_ID,
@@ -474,7 +475,7 @@
 		</iterate>
 	</select>
 	
-	<select id="EzWebFolderDAO.getDuplicatedNameFolders" resultMap="folderVO">
+	<select id="EzWebFolderDAO.getDuplicateNameFolders" resultMap="folderVO">
 		<![CDATA[
 			SELECT
 				FOLDER_ID                                       AS FOLDER_ID,
@@ -502,11 +503,40 @@
 				FOLDER_UPPER = #parentFolderId#
 				AND USE_STATUS = 'Y'
 				AND TENANT_ID = #tenantId#
-				AND FOLER_NAME1 IN
+				AND FOLDER_NAME1 IN
 		]]>
 		<iterate property="folderNames" open="(" close=")" conjunction=",">
-			#fileNames[]#
+			#folderNames[]#
 		</iterate>
+	</select>
+	
+	<select id="EzWebFolderDAO.getDuplicateFileInfo" resultClass="duplicateInfoVO">
+		SELECT
+			f2.FILE_NAME as FILENAME,
+			f.FILE_ID as FILEID,
+			DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS OLDDATE,
+			f.FILE_SIZE as OLDSIZE,
+			f2.FILE_ID AS NEWFILEID,
+			DATE_ADD(f2.UPDATE_DATE, INTERVAL #offset# MINUTE) AS NEWDATE,
+			f2.FILE_SIZE as NEWSIZE,
+			f2.CREATE_ID as OLDOWNERID
+		FROM
+			TBL_WEBFOLDER_FILE f
+		INNER JOIN
+			TBL_WEBFOLDER_FILE f2
+		ON
+		<isPropertyAvailable property="fileName">
+			f2.FILE_NAME = #fileName#
+		</isPropertyAvailable>
+		<isNotPropertyAvailable property="fileName">
+			f.FILE_NAME = f2.FILE_NAME
+		</isNotPropertyAvailable>
+			AND f2.FOLDER_ID = #targetFolderId#
+			AND f.TENANT_ID = f2.TENANT_ID
+		WHERE
+			f.FILE_ID = #fileId#
+			AND f.USE_STATUS = 'Y'
+			AND f.TENANT_ID = #tenantId#;
 	</select>
 	
 	<select id="EzWebFolderDAO.getAllFilesInFolder" resultMap="fileVO2">
@@ -888,6 +918,20 @@
 				TBL_WEBFOLDER_FILE
 			SET
 				FOLDER_ID = #folderId#
+			WHERE
+				FILE_ID = #fileId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzWebFolderDAO.moveRenameFile" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FILE
+			SET
+				FOLDER_ID = #folderId#,
+				FILE_NAME = #newFileName#
 			WHERE
 				FILE_ID = #fileId#
 			AND

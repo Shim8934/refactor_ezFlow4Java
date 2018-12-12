@@ -812,6 +812,9 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				case "R" : newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t111", locale)); break;
 				case "P" : newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t19",  locale)); break;
 				case "RE": newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t287", locale)); break;
+				case "MV": newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t121", locale)); break;
+				case "CP": newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t122", locale)); break;
+				case "WR": newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t506", locale)); break;
 			}
 			
 			newRow1.createCell(5).setCellValue(fileLog.getCreateDate().substring(0, 19));

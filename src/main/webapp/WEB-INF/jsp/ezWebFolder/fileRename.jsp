@@ -8,6 +8,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
 	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>	
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -117,7 +118,22 @@
 					},
 					dataType: "JSON",
 					success : function (data) {
-						alert("<spring:message code='ezWebFolder.t263'/>");
+						switch(data.code) {
+						case 0: 
+							alert("<spring:message code='ezWebFolder.t263'/>");
+							break;
+						case 1:
+							alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							alert("<spring:message code='ezWebFolder.t300' />");
+							break;
+						case 8:
+							alert(messages.resultErrDuplicateCreate);
+						}
 					}
 	        	});
 			} else if (functionType == "update" && fileId == 0) {
@@ -131,7 +147,22 @@
 					},
 					dataType: "JSON",
 					success : function (data) {
-						alert("<spring:message code='ezWebFolder.t264'/>");
+						switch(data.code) {
+						case 0: 
+							alert("<spring:message code='ezWebFolder.t264'/>");
+							break;
+						case 1:
+							alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							alert("<spring:message code='ezWebFolder.t300' />");
+							break;
+						case 8:
+							alert(messages.resultErrDuplicateRename);
+						}
 					}
 				});
 			} else {
@@ -160,6 +191,8 @@
 							case 3:
 								alert("<spring:message code='ezWebFolder.t300' />");
 								break;
+							case 8:
+								alert(messages.resultErrDuplicateRename);
 						}
 					},
 					error : function(jqXHR, textStatus, errorThrown) {

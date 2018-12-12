@@ -32,6 +32,7 @@ var messages = {
 	strLang31 : "You do not have anyone to share with. ",
 	strLang32 : "Are you sure you want to cancel sharing?",
 	strLang33 : "You canceled sharing.",
-	completeDuplicatedJob : "Processing completed.",
-	resultErrDuplicatedRename : "You can not change the duplicate names."
+	completeDuplicateJob : "Processing completed.",
+	resultErrDuplicateRename : "You can not change the duplicate names.",
+	resultErrDuplicateCreate : "You can not create duplicate names."
 }
