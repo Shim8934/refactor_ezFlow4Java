@@ -1001,7 +1001,7 @@
                             <table style="margin-top: 3px;">
                                 <tr>
                                     <td class="box">
-                                        <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+                                        <div style="width: 220px; height: 465px; overflow-x: hidden; overflow-y: auto;" id="TreeView"></div>
                                     </td>
                                     <td></td>
                                     <td class="listview" style="width: 426px" id="orglistView">

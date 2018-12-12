@@ -2011,7 +2011,7 @@ WHERE
 	PRIMARYLANG = #primaryLang#
 <isEqual property="cityCode" compareValue="none">
 	AND
-		SN = "1"
+		SN = '1'
 </isEqual>
 <isNotEqual property="cityCode" compareValue="none">
 	AND 

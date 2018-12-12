@@ -645,7 +645,7 @@
     <table style="width: 1150px;height:640px ;border:1px solid #ddd"> 
         <tr>
             <td style="vertical-align:top">
-                <div style="width: 310px; height: 310px; overflow-x: auto; overflow-y: auto; border-right: 1px solid #ddd;" id="TreeView"></div>
+                <div style="width: 310px; height: 310px; overflow-x: hidden; overflow-y: auto; border-right: 1px solid #ddd;" id="TreeView"></div>
                 <div id="UserList" style="Width: 310px; Height: 330px; overflow: auto; border-right: 1px solid #ddd"></div>
             </td>
             <td style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">

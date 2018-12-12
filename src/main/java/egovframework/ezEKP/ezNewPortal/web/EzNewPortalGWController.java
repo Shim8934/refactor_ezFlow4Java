@@ -1642,6 +1642,7 @@ e.printStackTrace();
 			LoginVO userInfo = new LoginVO();
 			String primary = "";
 			int tenantId = 0;
+			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 			
 			if (userId == null) {
 				tenantId = ezNewPortalService.getTnenantIdByServerName(serverName);
@@ -1660,6 +1661,7 @@ e.printStackTrace();
 
 			result.put("data", resultList);
 			result.put("primary", primary);
+			result.put("usePrimaryLangOnly", usePrimaryLangOnly);
 			result.put("status", "ok");
 			result.put("code", 0);
 

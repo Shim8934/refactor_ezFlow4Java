@@ -90,11 +90,6 @@
 				A.tenant_id = #tenantId#
 			AND
 				A.company_id = #companyId#
-			]]>
-			<isNotEmpty property="primaryLang" prepend="AND">
-				
-			</isNotEmpty>
-			<![CDATA[
 			ORDER BY
 				defaultorder
 		]]>

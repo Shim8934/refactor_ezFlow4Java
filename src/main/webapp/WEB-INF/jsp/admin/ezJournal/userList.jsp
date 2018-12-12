@@ -69,7 +69,7 @@
 	        //부서별 사원 수 출력
 	        function memberCountInfo() {
 	        	var html = "<img src='/images/OrganTree_cross/ic-open.gif' style='vertical-align:middle;padding-right: 3px;'>";
-	        	html += keyword;
+	        	html += "<span id='spn_deptName'>" + keyword + "</span>";
 				if (containLow == "YES") {
 					var expanded = $("li[aria-selected=true]").eq(0).attr("aria-expanded");
 

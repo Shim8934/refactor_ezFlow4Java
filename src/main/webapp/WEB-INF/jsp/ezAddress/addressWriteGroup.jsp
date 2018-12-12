@@ -2086,7 +2086,7 @@
 	                        <table style="border-collapse: collapse; border-spacing: 0; padding: 0px; margin-top:3px;">
 	                            <tr>
 	                                <td class="box" style="border-right: 0px">
-	                                    <div style="height: 470px; width: 220px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+	                                    <div style="height: 470px; width: 220px; overflow-x: hidden; overflow-y: auto;" id="TreeView"></div>
 	                                </td>	                                
 	                                <td id ="OrganListView" class="listview" style="overflow-y: auto; overflow-x: auto;">
 	                                    <table style="width: 100%; back" class="popup_mainlist">

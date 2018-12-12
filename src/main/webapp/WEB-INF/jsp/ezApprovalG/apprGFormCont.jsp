@@ -520,7 +520,7 @@
 	    <table id="formtable" style="margin-top: 5px;width: 697px;display:none">
 	        <tr>
 	            <td rowspan="2" style="vertical-align: top;">
-	                <div id="TreeView" style="height: 384px; width: 280px; overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff; padding: 4px,6px,6px,4px"></div>
+	                <div id="TreeView" style="height: 384px; width: 280px; overflow-x: hidden; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff; padding: 4px,6px,6px,4px"></div>
 	            </td> 
 	            <td style="padding-left: 5px; vertical-align: top;">
 	                <div class="border_gray" style="border-bottom: 0px; width:408px;"> 
