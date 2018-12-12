@@ -355,7 +355,7 @@
                    
 	            var feature = GetOpenPosition(790, 760);
 	            
-				window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "", "height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				window.open("/ezSchedule/scheduleWrite.do?defaultid=0&pageFrom=left", "", "height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 	        
 	        function leftResize(){

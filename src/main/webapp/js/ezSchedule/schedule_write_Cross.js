@@ -402,7 +402,9 @@ function save_schedule(pageFrom)
 	    alert(strLang18);
 	    if(pageFrom == 'Portal'){
 	    	try { window.opener.location.reload(); } catch (e) { }
-	    }else{
+	    } else if (pageFrom == 'left'){
+	    	try { window.opener.parent.frames['right'].RefreshView(); } catch (e) { }
+	    } else{
 	    	try { window.opener.RefreshView() } catch (e) { }
 	    }
 	    
