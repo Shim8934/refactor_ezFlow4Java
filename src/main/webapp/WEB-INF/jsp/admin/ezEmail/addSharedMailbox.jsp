@@ -69,6 +69,7 @@
                 createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
                 createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
+                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            xmlHTTP.send(xmlpara);
 	            recevieListview("MsgToList", "ListViewMsgTo");

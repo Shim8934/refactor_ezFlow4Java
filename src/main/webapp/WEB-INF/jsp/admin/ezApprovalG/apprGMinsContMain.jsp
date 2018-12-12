@@ -53,7 +53,7 @@
 
 		        Tree_setconfig();
 		        
-		        TreeViewinitialize("", P_companyID, "extensionAttribute2;extensionAttribute3", "<c:out value='${serverName}'/>");
+		        TreeViewinitialize("", P_companyID, "extensionAttribute2;extensionAttribute3", "<c:out value='${serverName}'/>", null, null, true);
 		        getDocType();
 		        
 		        if (gState == "U") {
