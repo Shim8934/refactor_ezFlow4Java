@@ -643,7 +643,7 @@
 			MERGE INTO TBL_PORTAL_LOGO
 			USING DUAL
 			ON (
-					company_id = #tenantId#
+					company_id = #companyId#
 				AND
 					tenant_id = #tenantId#
 				AND
