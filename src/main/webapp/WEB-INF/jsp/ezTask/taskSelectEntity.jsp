@@ -1313,7 +1313,7 @@
 	                                                </div>
 	                                            </td>
 	                                            <td>
-	                                                <div style="float: right; margin-right: 5px;">
+	                                                <div style="float: right; margin-right: 5px; position:relative;">
 	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezTask.t1004' /></span></a>
 	                                                </div>
 	                                            </td>
@@ -1332,7 +1332,7 @@
 	                                            <tr>
 	                                                <th style="white-space:normal;background-color: white;border-top:0px solid #ddd;border-bottom:1px solid #eaeaea">
 	                                                    <span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
-	                                                    <span style="float:right;">
+	                                                    <span style="float:right; position:relative;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
 	                                                        <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
 	                                                    </span>

@@ -936,57 +936,114 @@
 	                }
 	            }
 	            else if (m_selectedTree == TreeView) {
-	                for (var i = 0; i < listContentArry.length; i++) {
-	                    var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
-	                    var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
-	                    var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-	
-	                    var getlistview = new ListView();
-	                    getlistview.LoadFromID("MsgToList");
-	                    var bFlag = getlistview.ExistRow("DATA2", strEmail);
-	
-	                    if (bFlag) {
-	                        alert(strName + "<spring:message code='ezAddress.t1101' />");
-	                        continue;
-	                    }
-	                    else {
-	
-	                        pparsingXML2 = "";
+	            	/* 20181212 김수아 : 주소록 - 그룹주소록 부서 선택 가능하게 수정 */
+	            	if (p_ListOrderObject == null || p_ListOrderObject == "" || listContentArry == "") { // 부서 선택
+						var organTree = new TreeView();
+	    	            
+		                organTree.LoadFromID("FromTreeView"); // 부서트리 
+		                var nodeIdx = organTree.GetSelectNode();
+		                var strId = nodeIdx.GetNodeData("cn");
+		                var strName = nodeIdx.NodeName;
+		                var strEmail = nodeIdx.GetNodeData("mail");
+		                
+		                var listid = "MsgToList";
+		                var getlistview = new ListView();
+	                    getlistview.LoadFromID(listid);
+		                var bFlag = getlistview.ExistRow("data1", strId);
+		                
+		                console.log(nodeIdx);
+		                if (!bFlag) {
+		                    pparsingXML2 = "";
 	                        pparsingXML = "";
 	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1><![CDATA[" + strName + "]]></DATA1>";
 	                        pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
-	                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strDeptNM + "]]></DATA3>";
+	                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strId + "]]></DATA3>";
 	                        pparsingXML = pparsingXML + "<DATA4>" + strEmail + "</DATA4>";
 	                        pparsingXML = pparsingXML + "<DATA5>email</DATA5>";
 	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " <" + strEmail + ">" + "]]></VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
-	
-	                        var listview = new ListView();
-	                        listview.LoadFromID("MsgToList");
-	
-	                        var MaxID = 0;
-	                        var InitTr = listview.GetDataRows();
-	                        var MaxCntNum = 0;
-	                        for (var j = 0  ; j < InitTr.length  ; j++) {
-	                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                            if (MaxID < curnum) {
-	                                MaxID = curnum;
-	                                MaxCntNum = j;
-	                            }
-	                        }
-	
-	                        var objTr = listview.AddRow(InitTr.length);
-	                        if (MaxCntNum != 0)
-	                            MaxCntNum = MaxCntNum + 1;
-	                        var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1);
-	                        SetAttribute(objTr, "id", trid);
-	                        listview.AddDataRow(objTr, Resultxml);
-	                        document.getElementById(trid).style.whiteSpace = "nowrap";
-	                        document.getElementById("MsgToList").className = "receiver_list";
-	                    }
-	                }
+
+		                    var MaxID = 0;
+		                    var InitTr = getlistview.GetDataRows();
+		                    var MaxCntNum = 0;
+		
+		                    for (var j = 0; j < InitTr.length; j++) {
+		                        var curnum = Number(getlistview.GetSelectedRowID(j).substring(getlistview.GetSelectedRowID(j).lastIndexOf('_') + 1), getlistview.GetSelectedRowID(j).length);
+		                        if (MaxID < curnum) {
+		                            MaxID = curnum;
+		                            MaxCntNum = j;
+		                        }
+		                    }
+		
+		                    var objTr = getlistview.AddRow(InitTr.length);
+		                    if (MaxCntNum != 0) {
+		                        MaxCntNum = MaxCntNum + 1;
+		                    }
+
+		                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                    getlistview.AddDataRow(objTr, Resultxml);
+		                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+
+		                    for (var y = 0; y < _tdlength; y++) {
+		                        document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+		                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+		                    }
+	                    } // bflag if END
+	            	} else { // 사원 선택
+		                for (var i = 0; i < listContentArry.length; i++) {
+		                    var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
+		                    var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
+		                    var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
+		
+		                    var getlistview = new ListView();
+		                    getlistview.LoadFromID("MsgToList");
+		                    var bFlag = getlistview.ExistRow("DATA2", strEmail);
+		
+		                    if (bFlag) {
+		                        alert(strName + "<spring:message code='ezAddress.t1101' />");
+		                        continue;
+		                    }
+		                    else {
+		
+		                        pparsingXML2 = "";
+		                        pparsingXML = "";
+		                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+		                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1><![CDATA[" + strName + "]]></DATA1>";
+		                        pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
+		                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strDeptNM + "]]></DATA3>";
+		                        pparsingXML = pparsingXML + "<DATA4>" + strEmail + "</DATA4>";
+		                        pparsingXML = pparsingXML + "<DATA5>email</DATA5>";
+		                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " <" + strEmail + ">" + "]]></VALUE></CELL></ROW>";
+		                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+		                        Resultxml = loadXMLString(pparsingXML2);
+		
+		                        var listview = new ListView();
+		                        listview.LoadFromID("MsgToList");
+		
+		                        var MaxID = 0;
+		                        var InitTr = listview.GetDataRows();
+		                        var MaxCntNum = 0;
+		                        for (var j = 0  ; j < InitTr.length  ; j++) {
+		                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                            if (MaxID < curnum) {
+		                                MaxID = curnum;
+		                                MaxCntNum = j;
+		                            }
+		                        }
+		
+		                        var objTr = listview.AddRow(InitTr.length);
+		                        if (MaxCntNum != 0)
+		                            MaxCntNum = MaxCntNum + 1;
+		                        var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1);
+		                        SetAttribute(objTr, "id", trid);
+		                        listview.AddDataRow(objTr, Resultxml);
+		                        document.getElementById(trid).style.whiteSpace = "nowrap";
+		                        document.getElementById("MsgToList").className = "receiver_list";
+		                    }
+		                }
+	            	} // 부서 or 사원 if else END
 	            }
 	        }
 	        if (gubunpage == "direct") {
