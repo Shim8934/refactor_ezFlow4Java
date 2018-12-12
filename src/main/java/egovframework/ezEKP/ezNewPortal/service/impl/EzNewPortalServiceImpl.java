@@ -344,7 +344,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		LOGGER.debug("map.toString() : " + map.toString());
 		
-		ezNewPortalDAO.updateUserThemeSetting(map);
+		//ezNewPortalDAO.updateUserThemeSetting(map);
 		ezNewPortalDAO.updateUserUsedFrame(map);
 		
 		LOGGER.debug("[Serivce] updateUserUsedFrame Ended");
@@ -375,6 +375,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			portletMap.put("portletId", portletList.get(i).get("portletId"));
 			portletMap.put("portletOrder", portletList.get(i).get("portletOrder"));
 			portletMap.put("menuId", portletList.get(i).get("menuId"));
+			portletMap.put("themeId", param.get("themeId"));
 			portletMap.put("portletUsed", Boolean.parseBoolean(portletList.get(i).get("portletUsed").toString()));
 			
 			LOGGER.debug("portletMap:" + portletMap.toString());
@@ -587,7 +588,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updatePortletOrderUser(String userId, String companyId, int tenantId,
-			JSONArray portletOrder, String portletLang) throws Exception {
+			JSONArray portletOrder, String portletLang, int themeId) throws Exception {
 		LOGGER.debug("updatePortletOrderUser started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -603,6 +604,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
 				map.put("portletLang", portletLang);
+				map.put("themeId", themeId);
 				
 				ezNewPortalDAO.updatePortletOrderUser(map);
 				
@@ -624,6 +626,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				portletCount++;
 				map.put("portletOrder", portletCount);
 				map.put("portletId", notSelectedPortletList.get(i).getPortletId());
+
+				map.put("themeId", themeId);
 				
 				ezNewPortalDAO.updatePortletOrderUser(map);
 			}

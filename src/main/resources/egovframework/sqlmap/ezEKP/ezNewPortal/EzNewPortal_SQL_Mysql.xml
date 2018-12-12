@@ -657,10 +657,10 @@ values
 <insert id="ezNewPortal.insertUserUsedPortlet" parameterClass="Map">
 <![CDATA[
 INSERT INTO TBL_PORTAL_PORTLET_USER (
-		user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id, portlet_used
+		user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id, portlet_used, theme_id
 	) VALUES (
 		#userId#, #tenantId#, #companyId#, #portletId#,	#portletOrder#, 
-		(SELECT MENU_ID FROM TBL_PORTAL_PORTLET WHERE PORTLET_ID = #portletId#), #portletUsed#
+		(SELECT MENU_ID FROM TBL_PORTAL_PORTLET WHERE PORTLET_ID = #portletId#), #portletUsed#, #themeId#
 	)
 	ON DUPLICATE KEY UPDATE
 		portlet_used = #portletUsed#,
@@ -1647,7 +1647,8 @@ LIMIT
 				COMP.portlet_id = USER.portlet_id
 			AND
 				USER.user_id = #userId#
-				
+			AND
+				USER.theme_id = #themeId#
 			WHERE
 				NAME.tenant_id = #tenantId#
 			AND
@@ -2138,10 +2139,10 @@ ORDER BY
 <update id="ezNewPortal.updatePortletOrderUser" parameterClass="Map">
 <![CDATA[
 	INSERT INTO TBL_PORTAL_PORTLET_USER (
-		user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id, portlet_used
+		user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id, portlet_used, theme_id
 	) VALUES (
 		#userId#, #tenantId#, #companyId#, #portletId#,	#portletOrder#, 
-		(SELECT MENU_ID FROM TBL_PORTAL_PORTLET WHERE PORTLET_ID = #portletId#), 1
+		(SELECT MENU_ID FROM TBL_PORTAL_PORTLET WHERE PORTLET_ID = #portletId#), 1, #themeId#
 	)
 	ON DUPLICATE KEY UPDATE
 	portlet_order = #portletOrder#

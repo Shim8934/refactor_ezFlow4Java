@@ -3,7 +3,7 @@
  */
 
 //포틀릿 순서 업데이트
-function updatePortletOrderUser() {
+function updatePortletOrderUser(usedTheme) {
 	var portlets = $(".portlet");
 	var updateOrder = [];
 	var portletsCount = portlets.length;
@@ -18,6 +18,7 @@ function updatePortletOrderUser() {
 	}
 	
 	var data = {
+		themeId : usedTheme,
 		updateOrder : updateOrder
 	};
 	

@@ -434,12 +434,14 @@ public class EzNewPortalGWController {
 			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
 			
 			JSONArray portletOrder = (JSONArray) jsonParam.get("updateOrder");
+			int themeId = Integer.parseInt(jsonParam.get("themeId").toString());
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
+			LOGGER.debug("themeId : " + themeId);
 			
-			ezNewPortalService.updatePortletOrderUser(userId, companyId, tenantId, portletOrder, portletLang);
+			ezNewPortalService.updatePortletOrderUser(userId, companyId, tenantId, portletOrder, portletLang, themeId);
 
 			result.put("status", "ok");
 			result.put("code", 0);
