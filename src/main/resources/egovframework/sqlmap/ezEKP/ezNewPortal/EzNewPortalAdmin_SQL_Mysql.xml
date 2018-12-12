@@ -156,6 +156,11 @@
 				A.company_id = #companyId#
 			AND
 				A.menu_id = #menuId#
+		]]>
+			<isNotEmpty property="primaryLang" prepend="AND">
+				A.menu_lang = #primaryLang#
+			</isNotEmpty>
+		<![CDATA[
 			ORDER BY
 				CASE A.menu_lang WHEN B.company_lang
 					THEN 1

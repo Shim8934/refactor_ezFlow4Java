@@ -344,8 +344,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		LOGGER.debug("map.toString() : " + map.toString());
 		
-		//ezNewPortalDAO.updateUserThemeSetting(map);
 		ezNewPortalDAO.updateUserUsedFrame(map);
+		ezNewPortalDAO.updateUserThemeSetting(map);
 		
 		LOGGER.debug("[Serivce] updateUserUsedFrame Ended");
 	}
@@ -1422,13 +1422,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return vo;
 	}
 	
-	public List<MenuNameVO> getMenuNames(int menuId, String companyId, int tenantId) throws Exception {
+	public List<MenuNameVO> getMenuNames(int menuId, String usePrimaryLangOnly, String primaryLang, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getMenuNames started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("menuId", menuId);
+		
+		if (usePrimaryLangOnly.equals("YES")) {
+			map.put("primaryLang", primaryLang);
+		}
 		
 		List<MenuNameVO> list = ezNewPortalDAO.getMenuNames(map);
 		

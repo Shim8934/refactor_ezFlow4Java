@@ -205,7 +205,7 @@
        	<table>
             <tr>
                 <td class="box" style="width: 250px; height: 465px;">
-                    <div style="width: 250px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+                    <div style="width: 250px; height: 470px; overflow-x: hidden; overflow-y: auto; overflow-y: auto;" id="treeview"></div>
                 </td>
                 <td style="width: 30px; text-align: center;" rowspan="2">                            
                 	<img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>

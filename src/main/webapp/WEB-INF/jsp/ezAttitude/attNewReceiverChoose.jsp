@@ -1126,7 +1126,7 @@
 	                                <tr>
 	                                    <td class="box" style="border-right:0px;padding: 0px;">
 <!-- 	                                        <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div> -->
-	                                        <div style="width: 220px; height: 485px; overflow-x: auto; overflow-y: auto; padding: 0px;" id="TreeView"></div>
+	                                        <div style="width: 220px; height: 485px; overflow-x: hidden; overflow-y: auto; padding: 0px;" id="TreeView"></div>
 	                                    </td>
 	                                    <td></td>
 	                                    <td class="listview" style="width: 432px" id="orglistView">

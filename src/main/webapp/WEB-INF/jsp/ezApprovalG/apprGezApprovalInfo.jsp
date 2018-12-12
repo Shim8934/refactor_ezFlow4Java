@@ -1845,7 +1845,7 @@
 									 <tr>
 	                                    <td style="vertical-align: top;">	                                    	
 	                                        <span>	                                        	
-	                                            <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 247px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 1px;"></div>
+	                                            <div id="TreeView" style="margin-top: 5px; overflow-x: hidden; overflow-y: auto; height: 247px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 1px;"></div>
 	                                            <div class="border_gray" style="Width: 388px; Height: 273px;">
 	                                                <div id="UserList" style="margin: 0px 1px 1px 1px; Width: 386px; Height: 100%; overflow: auto;"></div>
 	                                            </div>
@@ -1856,7 +1856,7 @@
 	                            <c:if test="${approvalFlag =='S'}">
 	                               <tr>
                                     <td style="vertical-align: top;">                                    	
-                                        <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+                                        <div id="TreeView" style="margin-top: 5px; overflow-x: hidden; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
                                         </div>
                                     </td>
                                	 	</tr>
@@ -2604,7 +2604,7 @@
 			                	<table style="width:99.5%;table-layout: fixed">
 			                		<tr>
 	                                    <td style="vertical-align: top;">                                    	
-	                                        <div id="TreeViewCC" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+	                                        <div id="TreeViewCC" style="margin-top: 5px; overflow-x: hidden; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 	                                        </div>
 	                                    </td>
                                	 	</tr>
@@ -2667,7 +2667,7 @@
 		                    	</table>
 			                </div>
 			            </td>
-			            <td style="vertical-align: top;">
+			            <td>
 			                <h2 class="h2_dot"><spring:message code='ezApprovalG.hyj20'/>
 			                </h2>
 			                <div class="border_gray" style="margin-top:7px; margin-left:4px;">
