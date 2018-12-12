@@ -434,7 +434,7 @@
 		        </tr>
         		<tr> 
             		<th><spring:message code='ezPersonal.t1820'/><br><spring:message code='ezPersonal.t182'/></th> 
-            		<td colspan="3"><textarea id="txtInfo" style="WIDTH:99.3%;HEIGHT:80px;margin-top:3px;margin-bottom:3px; resize:none;" maxlength="450">${txtInfo}</textarea></td> 
+            		<td colspan="3"><textarea id="txtInfo" style="WIDTH:99.1%;HEIGHT:80px;margin-top:3px;margin-bottom:3px; padding-right:0px; resize:none;" maxlength="450">${txtInfo}</textarea></td> 
         		</tr> 
     		</table> 
     		<div class="btnpositionJsp">
