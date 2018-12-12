@@ -388,38 +388,6 @@
 						 {name : 'Vacation', type : 'url', value : '/js/ezEditor/kukudocsEditor/template/vacation.html'}]
 			}];
 			
-			// 커스텀 버튼 설정
-			/* var customButtonMenuItem = [
-				{
-					id : "cellLock", 
-					name : "cell lock", 
-					style : "background:url('/js/ezEditor/kukudocsEditor/images/emoticon/animal0.png'); background-size:20px 18px;", 
-					action : function() {
-						kukudocsEditor.SetCellLockByFocus(true);
-					}
-				},
-				{
-					id : "cellFree", 
-					name : "cell free", 
-					style : "background:url('/js/ezEditor/kukudocsEditor/images/emoticon/animal1.png'); background-size:20px 18px;", 
-					action : function() {
-						kukudocsEditor.SetCellLockByFocus(false);
-					}
-				},
-			    {
-					id : "tableLock", 
-					name : "table lock", 
-					style : "background:url('/js/ezEditor/kukudocsEditor/images/emoticon/animal2.png'); background-size:20px 18px;", 
-					action : tableLock
-				},
-			    {
-					id : "tableFree", 
-					name : "table free", 
-					style : "background:url('/js/ezEditor/kukudocsEditor/images/emoticon/animal3.png'); background-size:20px 18px;", 
-					action : tableFree
-				}
-			]; */
-			
 			//Color Picker 값 수정
 		    var colorPicker = {
 		        simpleColor :   ["ffffff", "000000", "eeece1", "1f497d", "4f81bd", "c0504d", "9bbb59", "8064a2", "4bacc6", "f79646"],
