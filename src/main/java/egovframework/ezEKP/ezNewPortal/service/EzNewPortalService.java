@@ -122,7 +122,7 @@ public interface EzNewPortalService {
 	/**
 	 * 관리자 메뉴상세정보 메뉴이름조회
 	 */
-	public List<MenuNameVO> getMenuNames(int menuId, String companyId, int tenantId) throws Exception;
+	public List<MenuNameVO> getMenuNames(int menuId, String usePrimaryLangOnly, String primaryLang, String companyId, int tenantId) throws Exception;
 	/**
 	 * 관리자 메뉴별 권한목록조회
 	 */
