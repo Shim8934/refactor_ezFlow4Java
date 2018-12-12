@@ -638,13 +638,13 @@
 			document.getElementById("portletListContainer").insertAdjacentHTML('beforeend', listHTML);
 			
 			//jquery ui - sortable(드래그앤드랍)
-			$(".col-container").sortable("destroy");
+			/* $(".col-container").sortable("destroy");
 	
 			$( ".col-container" ).sortable({
 				items : "li.col",
 			    handle: ".portlet-header",
 			    cancel: ".portlet-toggle"
-			});
+			}); */
 			
 			$( ".newPortlet")
 			.addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
