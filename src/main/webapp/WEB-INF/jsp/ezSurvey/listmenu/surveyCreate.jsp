@@ -320,10 +320,17 @@
 				}
 				
 				function toggleSelectTargetBttn() {
-					var sltBoxElmt       = document.getElementById("selectTarget");
-					var targetBttn       = document.getElementById("targetBttn");
-					var sltedIdx         = sltBoxElmt.selectedIndex;
-					targetBttn.className = sltedIdx == 0 ? "target-select" : "target-select on";
+					var sltBoxElmt = document.getElementById("selectTarget");
+					var targetBttn = document.getElementById("targetBttn");
+					var sltedIdx   = sltBoxElmt.selectedIndex;
+					
+					if (sltedIdx == 0) {
+						targetBttn.className        = "target-select";
+						surveyObj["infor"]["users"] = null;
+					}
+					else {
+						targetBttn.className = "target-select on";
+					}
 				}
 				
 				function getOpenWindowfeature(popUpW, popUpH) {

@@ -21,7 +21,7 @@
 					<table id="TreeViewTD">
 						<tr>
 							<!-- left -->
-							<td>
+							<td class="left-tdtbl">
 								<table class="infor-tbl">
 									<tr>
 										<th>전자 설문</th>
@@ -115,7 +115,7 @@
 								<div class="slt-listDiv">
 									<div>
 										<table id="selectedTable" class="mainlist">
-											<tr>
+											<tr class="no-sort">
 												<td><spring:message code='ezSurvey.t70'/></td>
 												<td><spring:message code='ezSurvey.t71'/></td>
 											</tr>
@@ -135,11 +135,11 @@
 		</div>
 		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js')     }"></script>
 		<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg')           }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyTree.js')     }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyNavi.js')     }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyTable.js')    }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyUser.js')     }"></script>
-		<!-- <script type="text/javascript">CabinetShareItem.init("<c:out value='${cabinetId}'/>", "<c:out value='${userId}'/>");</script> -->
 	</body>
 </html>

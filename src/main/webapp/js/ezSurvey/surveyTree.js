@@ -27,6 +27,7 @@ function CabinetTree() {
 	var _imgClass     = null;
 	var _plusClass    = null;
 	var _minClass     = null;
+	var _dragFunct    = null;
 	
 	//set public functions
 	this.makeTree     = getInitalData;
@@ -40,6 +41,7 @@ function CabinetTree() {
 		_getSubUrl     = data["extendUrl"];
 		_clickHandle   = data["click"];
 		_dblClickHdl   = data["dblClick"];
+		_dragFunct     = data["dragHandler"]  ? data["dragHandler"] : null;
 		_companyId     = data["companyId"];
 		_genType       = data["type"]      ? data["type"]       : _genType;
 		_transImg      = data["transImg"]  ? data["transImg"]   : "/images/OrganTree_cross/dot_continue.gif";
@@ -143,6 +145,11 @@ function CabinetTree() {
 		spanDeptName.setAttribute("email", list[_email]);
 		spanDeptName.setAttribute("level", list[_levelName]);
 		spanDeptName.addEventListener("click", function(e) {getSelected(this);}, false);
+		
+		if (_dragFunct) {
+			spanDeptName.setAttribute("draggable", "true");
+			spanDeptName.ondragstart = function(e) {_dragFunct(e)};
+		}
 		
 		if (_clickHandle != null) {spanDeptName.addEventListener("click", function(e) {_clickHandle(this);}, false);}
 		if (_dblClickHdl != null) {spanDeptName.ondblclick = function() {_dblClickHdl(this)};}
