@@ -703,9 +703,14 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
         //objSpan.setAttribute("style", "color:" + eval(preSelectID).getAttribute("DATA4", "0"));
     }
 
+    /* 2018-12-12 홍승비 - 게시판명이 기본 색상(rgb(0, 0, 0))인 경우, 푸른색으로 볼드처리 */
     if (pNodeID != "" && pNodeID != "undefined") {
         var objSpan = document.getElementById("spn_" + pNodeID);
         objSpan.className = TreeClasses["selected"];
+        
+        if (objSpan.style.color == "rgb(0, 0, 0)") {
+        	objSpan.style.color = "";
+        }
 
         //if (objSpan.getAttribute("style") != "")
         //    objSpan.removeAttribute("style");
