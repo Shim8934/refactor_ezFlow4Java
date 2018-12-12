@@ -168,7 +168,7 @@ public interface EzNewPortalService {
 	 * @throws Exception
 	 */
 	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang);
-	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId);
+	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId, String usePrimaryLangOnly, String primaryLang);
 	public void setWeather() throws Exception;
 	public Map<String, Object> getWeather(String cityCode, int primary);
 	public List<WeatherVO> getCityList(int primaryLang);

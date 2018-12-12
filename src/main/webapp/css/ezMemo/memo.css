@@ -162,6 +162,6 @@ h1 {  font-size:13px; margin:0px 0px 10px 0px; height:24px; line-height:15px; pa
 .ui-widget-content {border:none; background: #727272; border-radius:0px;}
 .ui-slider-handle:active, .ui-slider-handle:hover, .ui-slider-handle:focus, .ui-slider-handle:default{background: #0470e4; height: 13px; width: 13px; margin-top:-1px; outline: none; border:none;}
 .ui-slider-horizontal, .ui-slider-range {border-radius:0px;}	
-.emptyDiv { height: 140px; padding-top: 100px; color: #d0d0d0; font-size: 12px; font-weight: bold; }
+.emptyDiv { height: 140px; padding-top: 75px; color: #d0d0d0; font-size: 12px; font-weight: bold; }
 
 .toastArea { padding : 10px; position : absolute; background : rgba(0, 0, 0, 0.33); display : block; color : #ffffff; font-size: 12px; border-radius: 3px;}
