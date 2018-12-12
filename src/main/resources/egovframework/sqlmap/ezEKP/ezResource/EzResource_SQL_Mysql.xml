@@ -1872,6 +1872,8 @@
     		BRD_ID = #v_P_ownerID#
     	AND
     		TENANT_ID = #tenantID#	
+    	AND
+    		BRD_COMPANY = #v_P_companyID#
 	</select>
 	
 	<insert id="EzResourceDAO.addRessch" parameterClass="Map">
