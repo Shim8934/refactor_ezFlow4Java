@@ -9,7 +9,7 @@
 				<title><spring:message code='ezPersonal.t299'/></title>
 			</c:when>
 			<c:otherwise>
-				<title><spring:message code='ezPersonal.t59'/></title>
+				<title><spring:message code='ezPersonal.gha01'/></title>
 			</c:otherwise>
 		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
