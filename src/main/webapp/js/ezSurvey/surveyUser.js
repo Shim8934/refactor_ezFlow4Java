@@ -56,30 +56,35 @@
 		document.getElementById("addDeptBttn").addEventListener("click", function(e) {addDeptToSelectList();}, false);
 		document.getElementById("userInfBttn").addEventListener("click", function(e) {viewUserInfo()       ;}, false);
 		
+		var dropDivElmt = document.getElementById("selectedTable").parentElement;
+		dropDivElmt.addEventListener("drop"    , function(e) {dropUser(e)    ;}, false);
+		dropDivElmt.addEventListener("dragover", function(e) {dragOverUser(e);}, false);
+		
 		var sSearchInputElmt   = document.getElementById("keyword");
 		sSearchInputElmt.addEventListener("keypress" , function(e) {onStartSimpleSearch(e);}, false);
 		sSearchInputElmt.addEventListener("mousedown", function(e) {clearKeyword(this)    ;}, false);
 		
 		//Set Company Tree
 		var treeMessages = {
-				errStr   : SurveyMessages.strError,
-				paramErr : SurveyMessages.strParamErr,
-				treeErr  : SurveyMessages.strTreeErr
+			errStr   : SurveyMessages.strError,
+			paramErr : SurveyMessages.strParamErr,
+			treeErr  : SurveyMessages.strTreeErr
 		};
 		
 		companyTree.setTreeInfo({
-			treeId     : "treeView",
-			treeType   : "organ",
-			type       : "normal",
-			initialUrl : "/ezSurvey/getCompanyTree.do",
-			extendUrl  : "/ezSurvey/getSubNodes.do",
-			imgclass   : "organImg",
-			plusclass  : "org-plus",
-			minclass   : "org-minus",
-			messages   : treeMessages,
-			click      : getSelectedList,
-			dblClick   : null,
-			companyId  : ""
+			treeId      : "treeView",
+			treeType    : "organ",
+			type        : "normal",
+			initialUrl  : "/ezSurvey/getCompanyTree.do",
+			extendUrl   : "/ezSurvey/getSubNodes.do",
+			imgclass    : "organImg",
+			plusclass   : "org-plus",
+			minclass    : "org-minus",
+			dragHandler : dragDepartment,
+			messages    : treeMessages,
+			click       : getSelectedList,
+			dblClick    : null,
+			companyId   : ""
 		});
 		
 		companyTree.makeTree();
@@ -95,6 +100,14 @@
 		var crrList = [];
 		if (window.opener.SurveyCreate) {crrList = window.opener.SurveyCreate.getUsers();}
 		loadSelectedList(crrList);
+		
+		$("#selectedTable").sortable({
+			cursor: "move",
+			containment: "parent",
+			tolerance: "pointer",
+			axis: "y",
+			items: "tr:not(.no-sort)",
+		});
 	}
 	
 	function getSelectedList(node) {
@@ -219,6 +232,8 @@
 				trElmt.appendChild(tdElmt3);
 				trElmt.appendChild(tdElmt4);
 				trElmt.className = unselectClass;
+				trElmt.setAttribute("draggable", "true");
+				trElmt.ondragstart = function(e) {dragUserInfor(e);};
 				trElmt.setAttribute("role"     , result[i]["userId"   ]);
 				trElmt.setAttribute("email"    , result[i]["mail"     ]);
 				trElmt.setAttribute("deptId"   , result[i]["deptId"   ]);
@@ -259,20 +274,11 @@
 	}
 	
 	function addUser(trElmt, mode) {
-		var selectedTable = document.getElementById("selectedTable");
-		var userId        = trElmt.getAttribute("role");
-		var checkElmt     = selectedTable.querySelector("tr[role='" + userId + "'][userType='user']");
+		var selectedTable  = document.getElementById("selectedTable");
+		var userInf        = getUserInforFromTr(trElmt);
+		var checkElmt      = selectedTable.querySelector("tr[role='" + userInf["userId"] + "'][userType='user']");
 		if (checkElmt) {if(mode) {alert(SurveyMessages.strExist);}; return;}
-		
-		var userName      = trElmt.getAttribute("userName");
-		var userMail      = trElmt.getAttribute("email");
-		var deptId        = trElmt.getAttribute("deptId");
-		var userName1     = trElmt.getAttribute("userName1");
-		var userName2     = trElmt.getAttribute("userName2");
-		var deptName      = trElmt.getAttribute("deptName");
-		var deptName1     = trElmt.getAttribute("deptName1");
-		var deptName2     = trElmt.getAttribute("deptName2");
-		addUserToSelectList(userId, userName, "user", deptName, deptId, userName1, userName2, deptName1, deptName2, userMail);
+		addUserToSelectList(userInf);
 	}
 	
 	function addUsers() {
@@ -295,30 +301,30 @@
 		}
 	}
 	
-	function addUserToSelectList(userId, userName, userType, deptName, deptId, userName1, userName2, deptName1, deptName2, email) {
+	function addUserToSelectList(userInf) {
 		var selectedTable       = document.getElementById("selectedTable");
 		var newTrElmt           = document.createElement("tr");
 		var newTdElmt1          = document.createElement("td");
 		var newTdElmt2          = document.createElement("td");
 		
-		newTdElmt1.textContent = deptName;
-		newTdElmt1.setAttribute("title", deptName);
-		newTdElmt2.textContent = userName;
-		newTdElmt2.setAttribute("title", userName);
+		newTdElmt1.textContent = userInf["deptName"];
+		newTdElmt1.setAttribute("title", userInf["deptName"]);
+		newTdElmt2.textContent = userInf["userName"];
+		newTdElmt2.setAttribute("title", userInf["userName"]);
 		newTrElmt.appendChild(newTdElmt1);
 		newTrElmt.appendChild(newTdElmt2);
 		
 		newTrElmt.className = "bnkCabNormal";
-		newTrElmt.setAttribute("role"     , userId);
-		newTrElmt.setAttribute("deptId"   , deptId);
-		newTrElmt.setAttribute("deptName" , deptName);
-		newTrElmt.setAttribute("userName" , userName);
-		newTrElmt.setAttribute("userName1", userName1);
-		newTrElmt.setAttribute("userName2", userName2);
-		newTrElmt.setAttribute("deptName1", deptName1);
-		newTrElmt.setAttribute("deptName2", deptName2);
-		newTrElmt.setAttribute("userType" , userType);
-		newTrElmt.setAttribute("email"    , email);
+		newTrElmt.setAttribute("role"     , userInf["userId"]);
+		newTrElmt.setAttribute("deptId"   , userInf["deptId"]);
+		newTrElmt.setAttribute("deptName" , userInf["deptName"]);
+		newTrElmt.setAttribute("userName" , userInf["userName"]);
+		newTrElmt.setAttribute("userName1", userInf["userName1"]);
+		newTrElmt.setAttribute("userName2", userInf["userName2"]);
+		newTrElmt.setAttribute("deptName1", userInf["deptName1"]);
+		newTrElmt.setAttribute("deptName2", userInf["deptName2"]);
+		newTrElmt.setAttribute("userType" , userInf["userType"]);
+		newTrElmt.setAttribute("email"    , userInf["email"]);
 		
 		selectedTable.appendChild(newTrElmt);
 		selectedUsers.resetEvents();
@@ -352,18 +358,7 @@
 		if (!listUser || listUser.length == 0) {return;}
 		
 		for (var i = 0, len = listUser.length; i < len; i++) {
-			var userId    = listUser[i]["userId"   ];
-			var deptId    = listUser[i]["deptId"   ];
-			var userName  = listUser[i]["userName" ];
-			var userName1 = listUser[i]["userName1"];
-			var userName2 = listUser[i]["userName2"];
-			var deptName  = listUser[i]["deptName" ];
-			var deptName1 = listUser[i]["deptName1"];
-			var deptName2 = listUser[i]["deptName2"];
-			var userType  = listUser[i]["userType" ];
-			var userMail  = listUser[i]["email"    ];
-			
-			addUserToSelectList(userId, userName, userType, deptName, deptId, userName1, userName2, deptName1, deptName2, userMail);
+			addUserToSelectList(listUser[i]);
 		}
 	}
 	
@@ -392,17 +387,11 @@
 		var selectedNode  = organTreeElmt.querySelector("span[class='selectedNode']");
 		if (!selectedNode) {alert(SurveyMessages.strError); return;}
 		
-		var deptName      = selectedNode.textContent;
-		var deptName1     = selectedNode.getAttribute("name1");
-		var deptName2     = selectedNode.getAttribute("name2");
-		var deptMail      = selectedNode.getAttribute("email");
-		var deptId        = selectedNode.getAttribute("role");
-		var deptLevel     = selectedNode.getAttribute("level");
-		var userType      = deptLevel != "0" ? "dept" : "comp";
-		var checkElmt     = selectedTable.querySelector("tr[role='" + deptId + "'][userType='"+ userType + "']");
+		var deptInf       = getDeptInfoFromTree(selectedNode);
+		var checkElmt     = selectedTable.querySelector("tr[role='" + deptInf["deptId"] + "'][userType='"+ deptInf["userType"] + "']");
 		if (checkElmt) {alert(SurveyMessages.strExist); return;}
 		
-		addUserToSelectList(deptId, deptName, userType, deptName, deptId, deptName1, deptName2, deptName1, deptName2, deptMail);
+		addUserToSelectList(deptInf);
 	}
 	
 	function saveSelectUsers() {
@@ -411,29 +400,8 @@
 		var userList      = [];
 		
 		for (var i = 1, len = listTr.length; i < len; i++) {
-			var userId    = listTr[i].getAttribute("role");
-			var deptId    = listTr[i].getAttribute("deptId");
-			var userType  = listTr[i].getAttribute("userType");
-			var userName  = listTr[i].getAttribute("userName");
-			var userName1 = listTr[i].getAttribute("userName1");
-			var userName2 = listTr[i].getAttribute("userName2");
-			var deptName  = listTr[i].getAttribute("deptName");
-			var deptName1 = listTr[i].getAttribute("deptName1");
-			var deptName2 = listTr[i].getAttribute("deptName2");
-			var userEmail = listTr[i].getAttribute("email");
-			
-			userList.push({
-				userId    : userId,
-				userType  : userType,
-				deptId    : deptId,
-				userName  : userName,
-				deptName  : deptName,
-				userName1 : userName1,
-				userName2 : userName2,
-				deptName1 : deptName1,
-				deptName2 : deptName2,
-				email     : userEmail
-			});
+			var userInf = getUserInforFromTr(listTr[i]);
+			userList.push(userInf);
 		}
 		
 		if (window.opener.SurveyCreate) {
@@ -443,6 +411,79 @@
 		else {
 			alert(SurveyMessages.strError); return;
 		}
+	}
+	
+	function getUserInforFromTr(trElmt) {
+		var userInfo  = {};
+		var userId    = trElmt.getAttribute("role");
+		var deptId    = trElmt.getAttribute("deptId");
+		var userType  = trElmt.getAttribute("userType") ? trElmt.getAttribute("userType") : "user";
+		var userName  = trElmt.getAttribute("userName");
+		var userName1 = trElmt.getAttribute("userName1");
+		var userName2 = trElmt.getAttribute("userName2");
+		var deptName  = trElmt.getAttribute("deptName");
+		var deptName1 = trElmt.getAttribute("deptName1");
+		var deptName2 = trElmt.getAttribute("deptName2");
+		var userEmail = trElmt.getAttribute("email");
+		
+		userInfo = {
+			userId    : userId   , userType  : userType,
+			deptId    : deptId   , userName  : userName,
+			deptName  : deptName , userName1 : userName1,
+			userName2 : userName2, deptName1 : deptName1,
+			deptName2 : deptName2, email     : userEmail
+		}
+		
+		return userInfo;
+	}
+	
+	function getDeptInfoFromTree(selectedNode) {
+		var deptInfo      = {};
+		var deptName      = selectedNode.textContent;
+		var deptName1     = selectedNode.getAttribute("name1");
+		var deptName2     = selectedNode.getAttribute("name2");
+		var deptMail      = selectedNode.getAttribute("email");
+		var deptId        = selectedNode.getAttribute("role");
+		var deptLevel     = selectedNode.getAttribute("level");
+		var userType      = deptLevel != "0" ? "dept" : "comp";
+		
+		deptInfo = {
+			userId    : deptId   , userType  : userType,
+			deptId    : deptId   , userName  : deptName,
+			deptName  : deptName , userName1 : deptName1,
+			userName2 : deptName2, deptName1 : deptName1,
+			deptName2 : deptName2, email     : deptMail
+		}
+		
+		return deptInfo;
+	}
+	
+	function dragUserInfor(evt) {
+		var trElmt           = evt.target;
+		var userInfo         = getUserInforFromTr(trElmt);
+		evt.dataTransfer.setData("text", JSON.stringify(userInfo));
+	}
+	
+	function dragDepartment(evt) {
+		var spanElmt = evt.target;
+		var deptInfo = getDeptInfoFromTree(spanElmt);
+		evt.dataTransfer.setData("text", JSON.stringify(deptInfo));
+	}
+	
+	function dropUser(evt) {
+		evt.preventDefault();
+		var userInfo      = JSON.parse(evt.dataTransfer.getData("text"));
+		var selectedTable = document.getElementById("selectedTable");
+		var checkElmt     = selectedTable.querySelector("tr[role='" + userInfo["userId"] + "'][userType='"+ userInfo["userType"] + "']");
+		if (checkElmt) {alert(SurveyMessages.strExist); return;}
+		addUserToSelectList(userInfo);
+	}
+	
+	function dragOverUser(evt) {
+		evt.stopPropagation();
+		evt.preventDefault();
+		evt.dataTransfer.dropEffect    = "copy";
+		evt.dataTransfer.effectAllowed = "copy";
 	}
 	
 	function closeWindow() {window.close();}
