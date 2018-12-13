@@ -82,7 +82,7 @@
 		    		sliderHTML += "</div>";
 		    		sliderHTML += "<div class = 'slider-content'>";
 		    		sliderHTML += "<table class = 'sliderInfo'>";
-		    		sliderHTML += "<tr><td class ='sliderInfoTD'>URL</td>";
+		    		sliderHTML += "<tr><td class ='sliderInfoTD'><spring:message code = 'ezPersonal.mse3' /></td>";
 		    		sliderHTML += "<td class ='sliderURL' id = 'sliderURL' data6 ='"+sliderURL+"'style='padding: 10px;'>"+sliderURL+"</td></tr>"
 		    		if(sliderIsUse == 1){
 		    			sliderHTML += "<tr><td class ='sliderInfoTD'><spring:message code = 'ezPersonal.mse1' /></td><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' checked='checked' data7='"+sliderIsUse+"' onchange='toggleButton(this)'><span class='slider round'></label></td>";
