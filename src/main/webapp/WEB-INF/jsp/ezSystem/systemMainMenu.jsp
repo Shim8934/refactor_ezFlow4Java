@@ -232,7 +232,7 @@
 					</td>
 				</tr>
 	            <tr><th><spring:message code="ezSystem.x0009"/></th><td><input id="USE_FileExtension" type="text" value="${configMap.USE_FileExtension}"> (<spring:message code="ezSystem.x0012"/>, <spring:message code="ezSystem.x0013"/>: jpg,doc,xls)</td></tr>
-	            <tr><th><spring:message code="ezSystem.x0016"/></th><td><input id="LicenseKey" size="60" maxlength="60" type="text" value="${configMap.LicenseKey}"> (<spring:message code="ezSystem.x0017"/>: ${licensedUserCount}, <spring:message code="ezSystem.x0018"/>: ${userCount})</td></tr>
+	            <tr><th><spring:message code="ezSystem.x0016"/></th><td><input id="LicenseKey" size="200" maxlength="200" type="text" value="${configMap.LicenseKey}"> (<spring:message code="ezSystem.x0017"/>: ${licensedUserCount}, <spring:message code="ezSystem.x0018"/>: ${userCount})</td></tr>
 	            <tr><th><spring:message code="ezSystem.x0020"/></th><td><select id="Use_FromAddress"><option <c:if test="${configMap.Use_FromAddress == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.Use_FromAddress == null or configMap.Use_FromAddress == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
 	            <tr><th><spring:message code="ezSystem.lhj1"/></th><td><select id="Use_HTMLMode"><option <c:if test="${configMap.USE_HTMLMODE == null or configMap.USE_HTMLMODE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.USE_HTMLMODE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
 

@@ -164,9 +164,9 @@
 	
 				            for (var i = 0; i < objAttachNodes.length; i++) {
 				                if (pMode == "boardContent" || pMode == "boardAttach"){
-				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + "|";
+				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "") + "|";
 				                }else{
-				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + "|";
+				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "") + "|";
 				                }
 				            }
 			            }
@@ -261,13 +261,18 @@
 		            case "MailEnv_div3":
 		                {
 		                    if (pUseBackGround == "TRUE") {
-		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 330 + "PX";
 		                        if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
 		                    }
 		                    else {
-		                    	if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
-		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                    	if ("${boardInfo.guBun}" == "2") {
+				                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                    	} else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
+				                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
+		                    	} else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
+				        	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+		                    	}
 		                    }
 		                    break;
 		                }
@@ -1034,8 +1039,9 @@
 		            if (Content.indexOf("id=\"_BigAttachListHtml\"") != -1) {
 		            	Content = ReplaceText(Content, "<td width=\"75%\"", "<td width=\"65%\"");
 		            	Content = ReplaceText(Content, "<td width=\"30%\"", "<td width=\"35%\"");
-		            }
-		            
+		            }    
+		            Content = '<div '+defaultFontAndSize+'>' + Content + '</div>';
+			
 		            message.SetEditorContent(Content);
 		            
 		            if (mailXml.getElementsByTagName("OVERSIZE").length > 0) {
@@ -1263,7 +1269,7 @@
 		                var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
 		                var strRet = "";
 		                for (i = 0; i < nodes.length; i++) {
-		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
+		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "");
 		                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
 		                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
 		                    	filepath = filepath + ".ezd";
@@ -1297,7 +1303,7 @@
 			                var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
 			                var strRet = "";
 			                for (i = 0; i < nodes.length; i++) {
-			                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
+			                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "");
 			                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
 			                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
 			                    	filepath = filepath + ".ezd";
@@ -1540,23 +1546,31 @@
 		            case "MailEnv_div1":
 		                document.getElementById("tab01").style.display = "";
 		                document.getElementById("tab02").style.display = "none";
-		                if ("${boardInfo.guBun}" == "2")
+		                if ("${boardInfo.guBun}" == "2") {
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		                else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
+		                } else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
-		                else if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
+		                } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+		                }
 		                break;
 		            case "MailEnv_div3":
 		                document.getElementById("tab01").style.display = "none";
 		                document.getElementById("tab02").style.display = "";
 		                if (pUseBackGround == "TRUE") {
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 330 + "PX";
-		                    if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
+		                    if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
+		                    }
 		                }
-		                else{
-		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                else {
+		                	 if ("${boardInfo.guBun}" == "2") {
+		                    	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                    } else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
+			                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
+		                    } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
+			                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+		                    }
 		                }
 		        }
 		        

@@ -32,6 +32,7 @@
         <result property="gyumJik"              column="gyumJik"                	columnIndex="22"/>
         <result property="userFileUrl"          column="userFileUrl"                columnIndex="23"/>
         <result property="sabun"              	column="sabun"                		columnIndex="24"/>
+		<result property="password_updatedt"    column="password_updatedt"			columnIndex="25"/>
 	</resultMap>	
 	
     <resultMap id="tenantServerName" class="egovframework.let.user.login.vo.TenantServerNameVO">
@@ -68,7 +69,8 @@
 	                loginCnt,
 	                extensionattribute4 as gyumJik,
 	                extensionattribute2 as userFileUrl,
-	                extensionattribute14 as sabun
+	                extensionattribute14 as sabun,
+	                password_updatedt
 			  	FROM 
 			  		TBL_USERMASTER a
 			 	WHERE 
@@ -121,7 +123,8 @@
 					u.loginCnt,
 					u.extensionattribute4 as gyumJik,
 					u.extensionattribute2 as userFileUrl,
-					u.extensionattribute14 as sabun
+					u.extensionattribute14 as sabun,
+					u.password_updatedt
 				FROM 
 					TBL_USERMASTER u
 				inner join
@@ -165,7 +168,8 @@
 	                loginCnt,
 	                extensionattribute4 as gyumJik,
 	                extensionattribute2 as userFileUrl,
-	                extensionattribute14 as sabun
+	                extensionattribute14 as sabun,
+	                password_updatedt
 	            FROM 
 	                TBL_USERMASTER a
 	            WHERE 
@@ -218,7 +222,8 @@
 					u.loginCnt,
 					u.extensionattribute4 as gyumJik,
 					u.extensionattribute2 as userFileUrl,
-					u.extensionattribute14 as sabun
+					u.extensionattribute14 as sabun,
+					u.password_updatedt
 				FROM 
 					TBL_USERMASTER u
 				inner join
@@ -279,7 +284,8 @@
 			UPDATE TBL_USERMASTER
 			SET
 				password = #password#,
-				updatedt = SYS_EXTRACT_UTC(SYSTIMESTAMP)
+				updatedt = SYS_EXTRACT_UTC(SYSTIMESTAMP),
+				password_updatedt = SYS_EXTRACT_UTC(SYSTIMESTAMP)
 			WHERE
 				cn = #id# AND tenant_id = #tenantId#
 		]]>
@@ -333,6 +339,82 @@
             AND 
             	tenant_id = #tenantId#
         ]]>
+    </select>
+    
+    <select id="loginDAO.selectAllReceivers" resultMap="login">
+        <!-- 일반회원 -->       
+        <![CDATA[
+            SELECT 
+                cn,
+                password,               
+                displayname,
+                displayname2,
+                department,              
+                description,
+                description2,
+                title,
+                title2,
+                physicaldeliveryofficename as companyid,
+                company,
+                company2,
+                updatedt,
+                extensionattribute1 as rollinfo,
+                telephonenumber,
+                mail,
+                extensionattribute10 as jikchek,
+                tenant_id,
+                (SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primary,
+                loginCnt,
+                extensionattribute4 as gyumJik,
+                extensionattribute2 as userFileUrl,
+                extensionattribute14 as sabun
+            FROM 
+                TBL_USERMASTER a
+            WHERE 
+                (DEPARTMENT = #id# OR EXTENSIONATTRIBUTE4 LIKE '%' || #id# || '%')
+            AND 
+                cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+            AND  
+            	tenant_id = #tenantId#
+        ]]>
     </select> 
- 
+ 	<select id="loginDAO.selectAllMemberOfCompany" resultMap="login">
+        <!-- 일반회원 -->       
+        <![CDATA[
+            SELECT 
+                cn,
+                password,               
+                displayname,
+                displayname2,
+                department,              
+                description,
+                description2,
+                title,
+                title2,
+                physicaldeliveryofficename as companyid,
+                company,
+                company2,
+                updatedt,
+                extensionattribute1 as rollinfo,
+                telephonenumber,
+                mail,
+                extensionattribute10 as jikchek,
+                tenant_id,
+                (SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primary,
+                loginCnt,
+                extensionattribute4 as gyumJik,
+                extensionattribute2 as userFileUrl,
+                extensionattribute14 as sabun
+            FROM 
+                TBL_USERMASTER a
+            WHERE 
+                PHYSICALDELIVERYOFFICENAME = #company_id#
+            AND 
+                cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)           
+            AND
+				tenant_id = #tenantId#
+        ]]>
+    </select>
 </sqlMap>

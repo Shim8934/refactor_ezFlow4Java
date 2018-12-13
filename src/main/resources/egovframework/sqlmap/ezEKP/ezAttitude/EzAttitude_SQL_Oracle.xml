@@ -666,7 +666,7 @@
 			                THEN #startDate#
 			                ELSE TO_CHAR(START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
 			            END
-			            , 'YYYY-MM-DD HH24:MI:SS'), 0)) + COUNT(TYPE_ID)AS COUNT,
+			            , 'YYYY-MM-DD HH24:MI:SS'), 0)) + COUNT(TYPE_ID) AS COUNT,
 			       TYPE_ID
 			FROM   
 				tbl_attitude

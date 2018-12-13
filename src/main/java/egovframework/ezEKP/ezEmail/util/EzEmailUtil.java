@@ -260,6 +260,61 @@ public class EzEmailUtil {
 		return strSize;
 	}
 	
+	private String decodeMultiLineQPEncodedName(String rawHeader, String name) {
+		try {
+			if (rawHeader.startsWith("=?")) {
+				String fromName = name;
+	            int secondQuestionPos = rawHeader.indexOf("?", 2);
+	            int thirdQuestionPos = rawHeader.indexOf("?", secondQuestionPos + 1);
+	            String charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1); 
+	            String encoding = rawHeader.substring(secondQuestionPos + 1, thirdQuestionPos);                                        
+	            
+	            // 일부 Mailer에서 RFC 2047에서 정의된 encoded word를 2개 이상의 라인으로 구성할 때
+	            // 한글의 한 글자를 표현하는 Byte Array 중간에서 분리하는 경우가 있어(QP 인코딩을 사용하면서) 
+	            // 이 경우 JavaMail에서 디코딩할 때 글자가 깨지는 현상이 발생하여 한 줄로 합치는 작업을 직접 수행하도록 함.  
+	            // 글자가 깨지는 경우 Unicode의 Replacement Character인 �가 나타남.
+	            // From: =?utf-8?Q?=28=EC=A3=BC=29=EC=BC=80=EC=9D=B4=ED=88=AC=EC=BD=94=EB?=
+	            //		 =?utf-8?Q?=A6=AC=EC=95=84?= <ecount@ecounterp.com>		                    
+	            if (fromName.contains("�")
+	                    && encoding.equalsIgnoreCase("Q")) {
+	                String[] sequences = rawHeader.split(charSetAndEncoding.replaceAll("\\?", "\\\\?"));
+	                
+	                if (sequences.length > 2) {
+	                    logger.debug("broken multiple sequences. combining them...");
+	                    logger.debug("original rawHeader:" + rawHeader);
+	                    
+	                    StringBuilder combined = new StringBuilder();                        
+	                    combined.append(charSetAndEncoding);
+	                    
+	                    for (int i = 1; i < sequences.length; i++) {
+	                        String sequence = sequences[i].trim();
+	                        
+	                        logger.debug("sequence[" + i + "]:" + sequence);
+	                        
+	                        sequence = sequence.substring(0, sequence.lastIndexOf("?"));
+	                        combined.append(sequence);                            
+	                    }
+	                    
+	                    combined.append("?=");
+	                    rawHeader = combined.toString();
+	                    
+	                    logger.debug("combined rawHeader:" + rawHeader);
+	                    
+	                    fromName = MimeUtility.decodeText(rawHeader);
+	                    
+	                    logger.debug("fromName=" + fromName);
+	                    
+	                    name = fromName;
+	                }
+	            }		
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return name;
+	}
+	
 	/**
 	 * 메일의 From 헤더로부터 보낸 사람의 이름을 반환한다. 이름을 반환할 수 없는 경우엔 이메일 주소를 대신 반환한다. 
 	 * 예외가 발생하였거나 유효한 From 헤더값이 존재하지 않는 경우엔 empty string을 반환한다.
@@ -299,6 +354,8 @@ public class EzEmailUtil {
 						//     =?utf-8?B?Z2lzYTE=?=
 						//     =?ks_c_5601-1987?B?uei03iC1x8H2IL7KwL06IHRlc3Q=?=
 						addressStr = MimeUtility.decodeText(addressStr);
+						
+						addressStr = decodeMultiLineQPEncodedName(fromHeader, addressStr);
 					}
 				}
 			// From 헤더가 존재하더라도 이름만 있고 유효한 이메일 주소가 없는 경우에도 이 부분이 실행될 수 있다.				
@@ -364,6 +421,8 @@ public class EzEmailUtil {
 					}
 					else {					
 						name = MimeUtility.decodeText(name);
+						
+						name = decodeMultiLineQPEncodedName(fromHeader, name);
 					}
 					
 					addressBuilder.append(name + " <" + addressStr + ">");					
@@ -581,7 +640,17 @@ public class EzEmailUtil {
             }
             
             // 제목 중간에 Unicode 0x0(NULL)이 들어가 XML 파싱시 에러가 발생하는 메일이 발견되어 추가함.
-            subject = subject.replaceAll("[\\000]+", "");            
+            subject = subject.replaceAll("[\\000]+", "");   
+            
+            // Non US-ASCII 문자로 인코딩된 제목 중에 unfolding이 제대로
+            // 되지 않아 줄바꿈 문자가 포함되는 경우가 있어 추가함
+            // Subject: 메일발송 실패:"대합일반산단 진입도로 공\
+            //	 고문 및 자기소개서 양식"            
+            if (subject.contains("\\\r\n ")) {
+                logger.debug("still folded subject=" + subject);
+                
+                subject = subject.replace("\\\r\n ", "");                
+            }            
         }
         
         return subject;
@@ -1157,8 +1226,11 @@ public class EzEmailUtil {
 				
 				// 안드로이드 삼성 메일앱이 메일 발송 시 Sent 폴더에 넣은 메일이 
 				// alternative part가 아닌 mixed part에 text/html과 text/plain을 함께
-				// 넣어 메일이 두 번 반복해 보이는 현상이 있어 추가함
-				if (isHtmlPartAlreadyProcessed && p.isMimeType("text/plain")) {
+				// 넣어 메일이 두 번 반복해 보이는 현상이 있어 추가함.
+				// text/plain 타입이 첨부된 경우 첨부파일이 나타나지 않는 현상이 있어 다음 조건 추가함
+				//  - !((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)))
+				if (isHtmlPartAlreadyProcessed && p.isMimeType("text/plain")
+						&& !((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)))) {
 					logger.debug("contentType=" + p.getContentType());
 					logger.debug("disposition=" + p.getDisposition());	
 				} else {				
@@ -2443,12 +2515,13 @@ public class EzEmailUtil {
 			
 			logger.debug("fileName=" + fileName);
 			
-			if (fileName != null) {
+			if (fileName != null
+					|| (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))) {
 				logger.debug("getAttachPart ended.");
 				
 				return p;
 			// 코린도에서 수신된 메일 중 multipart/mixed 파트 안에 multipart/alternative와 multipart/mixed 파트가
-			// 또 들어 있는 경우가 있어 선택된 파트가 첨부 파일 파트가 아닌 경우엔(filename이 있는 지 여부로 구분)
+			// 또 들어 있는 경우가 있어 선택된 파트가 첨부 파일 파트가 아닌 경우엔(filename이 있는 지 혹은 Content-Disposition: attachment 가 있는 지 여부로 구분)
 			// 또 다른 multipart를 찾도록 한다.
 			} else {
 	            int count = mp.getCount();

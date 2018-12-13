@@ -310,7 +310,7 @@
     </div>
     <div id="JournalEnv_content1" style="margin-left:10px; width:100%;height:90%; padding-top:10px; display:none">
     	<br/>	
-   		<h2><spring:message code="ezJournal.t115" /></h2>
+   		<%-- <h2><spring:message code="ezJournal.t115" /></h2> --%>
    		<span class="txt"><spring:message code="ezJournal.t117" /></span>
        	<br />    
        	<table class="content" style="width: 480px;margin-top:5px">
@@ -373,7 +373,7 @@
 	</div>		
     <div id="JournalEnv_content2" style="margin-left:10px; width:100%;height:90%; padding-top:10px; display:none">
 	    <br/>	
-   		<h2><spring:message code="ezJournal.t116" /></h2>
+   		<%-- <h2><spring:message code="ezJournal.t116" /></h2> --%>
    		<span class="txt"><spring:message code="ezJournal.t121" /></span>
        	<br />    
     	<table class="content" style="width:480px; margin-top:5px">

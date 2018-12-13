@@ -60,6 +60,11 @@
 	            try {
 	                parent.DocumentComplete();
 	                document.execCommand("AutoUrlDetect", false, false);
+	                document.querySelector("div").addEventListener("paste", function(e) {
+	                    e.preventDefault();
+	                    var text = e.clipboardData.getData("text/plain");
+	                    document.execCommand("insertHTML", false, text);
+	                });
 	            }
 	            catch (e)
 	            { }
@@ -727,6 +732,7 @@
 	        function Editor_Complete() {
 	            try {
 	                iframe_content.SetEditorContent(div_BODY.innerHTML);
+// 	                iframe_content.SetEditorContent();
 	                if (isConDoc) {
 	                    parent.Conn_Initial();
 	                }

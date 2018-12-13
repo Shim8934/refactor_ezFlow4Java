@@ -333,7 +333,7 @@
 								   'table','table_insert_left','table_insert_right','table_insert_top','table_insert_bottom','table_remove_col','table_remove_row','table_remove_table',
 								   'table_merge','table_split_col','table_split_row','cell_horizontal_size','cell_vertical_size','table_background_color','table_border_style','align_left','align_center','align_right','align_justify','paragraph_margin',
 								   'template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strike_through','remove_format','color','backgroundColor',
-								   'cellLock', 'cellFree', 'tableLock', 'tableFree'];
+								   'cell_lock', 'table_lock'];
 			
 			// 이미지 업로드 URL 설정
 			var imageUploadURL = "/ezEditor/kukudocsUpload.do?type=" + type;
@@ -388,37 +388,16 @@
 						 {name : 'Vacation', type : 'url', value : '/js/ezEditor/kukudocsEditor/template/vacation.html'}]
 			}];
 			
-			// 커스텀 버튼 설정
-			var customButtonMenuItem = [
-				{
-					id : "cellLock", 
-					name : "cell lock", 
-					style : "background:url('/js/ezEditor/kukudocsEditor/images/emoticon/animal0.png'); background-size:20px 18px;", 
-					action : function() {
-						kukudocsEditor.SetCellLockByFocus(true);
-					}
-				},
-				{
-					id : "cellFree", 
-					name : "cell free", 
-					style : "background:url('/js/ezEditor/kukudocsEditor/images/emoticon/animal1.png'); background-size:20px 18px;", 
-					action : function() {
-						kukudocsEditor.SetCellLockByFocus(false);
-					}
-				},
-			    {
-					id : "tableLock", 
-					name : "table lock", 
-					style : "background:url('/js/ezEditor/kukudocsEditor/images/emoticon/animal2.png'); background-size:20px 18px;", 
-					action : tableLock
-				},
-			    {
-					id : "tableFree", 
-					name : "table free", 
-					style : "background:url('/js/ezEditor/kukudocsEditor/images/emoticon/animal3.png'); background-size:20px 18px;", 
-					action : tableFree
-				}
-			];
+			//Color Picker 값 수정
+		    var colorPicker = {
+		        simpleColor :   ["ffffff", "000000", "eeece1", "1f497d", "4f81bd", "c0504d", "9bbb59", "8064a2", "4bacc6", "f79646"],
+		        standardColor : ["f2f2f2", "808080", "ddd9c3", "c6d9f1", "dce6f2", "f2dcdb", "ebf1de", "e6e0ec", "dbeee0", "fdeada",
+		                        "d9d9d9", "595959", "c4bd97", "8eb4e3", "b9cde5", "e6b9b8", "d7e4bd", "ccc1da", "b7dee8", "fcd5b5",
+		                        "bfbfbf", "404040", "948a54", "558ed5", "95b3d7", "d99694", "c3d69b", "b3a2c7", "93cddd", "fac090",
+		                        "a6a6a6", "262626", "4a452a", "17375e", "376092", "953735", "77933c", "604a7b", "31859c", "e46c0a",
+		                        "808080", "0d0d0d", "1e1c11", "10243f", "254061", "632523", "4f6228", "403152", "215968", "984807"],
+		        normalColor   : ["c00000", "ff0000", "ffc000", "ffff00", "92d050", "00b050", "00b0f0", "0000ff", "002060", "7030a0"]
+		    };
 			
 			var kukudocsEditor = new KuKudocsEditor('editor1', {
 				minHeight : 0,
@@ -432,7 +411,6 @@
 	            fontSize : fontSize,
 	            fontFamily : fontFamily,
 	            defaultTableWidth : 700,
-	            customButtonMenuItem : customButtonMenuItem,
 	            customMagicLineStyle : 'background-color:#888;',
 	            customAlignMenu : customAlignMenu,
 	            useMenuBar : false,
@@ -450,7 +428,11 @@
 	            imageUploadURL : imageUploadURL,
 	            Editor_Complete : Editor_Complete,
 	            Mouse_event : {'keyup' : CellCheckField},
-	            Key_event : {'mouseup' : CellCheckField}
+	            Key_event : {'mouseup' : CellCheckField},
+	            useLockMenu : true,
+	            cell_lock_name : 'cell_lock',
+	            lockImageURL : '/images/lock.png',
+	            colorPicker : colorPicker
 	        });
 		</script>
 	</body>

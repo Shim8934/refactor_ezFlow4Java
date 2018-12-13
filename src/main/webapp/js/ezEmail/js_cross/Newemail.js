@@ -523,6 +523,7 @@ function event_Mail_CopyPostSend() {
 	        	MailListRefresh();
 	            refreshUnreadCount();
 	            if(event_Mail_CopyPostSend.mode=="MOVE") {
+	            	prevShow_Clear();
 	            	alert(MoveMsg);
 	            } else if (event_Mail_CopyPostSend.mode=="COPY") {
 	            	alert(CopyMsg);
@@ -771,14 +772,19 @@ function prevShow() {
         if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         	var sentDateStr = document.querySelector("#PreContent_Rayer" + pPreviewShow_HOW).getElementsByClassName("sentDateStr")[0];
         	
-        	document.getElementById("ifrmPreView" + pPreviewShow_HOW).src = strLangLHM18;
+        	var innerFrame  = document.getElementById("ifrmPreViewW_div");
             document.getElementById("Preview_Header" + pPreviewShow_HOW).style.display = "none";
             
             if (sentDateStr != null) {
             	sentDateStr.style.display = "none";
             }
             
-            return;
+            innerFrame.onload = function () {
+            	var innerDoc = innerFrame.contentDocument || innerFrame.contentWindow.document;
+            	if (innerDoc.getElementById("ifrmviewEmptyText").innerText == "") {
+            		innerDoc.getElementById("ifrmviewEmptyText").innerText = strLangJYH01;
+            	}
+            }
         }
         else {
             var Preview_Href;
@@ -790,22 +796,22 @@ function prevShow() {
                 Preview_Href = document.getElementById(listSubContentArry[listSubContentArry.length - 1]).getAttribute("_href");
                 xmlhttp_mailPreviewObject = document.getElementById(listSubContentArry[listSubContentArry.length - 1]);
             }
+            //if (Old_Preview_Href == Preview_Href)
+            //    return;
+            Old_Preview_Href = Preview_Href;
+            var strQuery = "<URL>" + Preview_Href + "</URL>";
+            xmlhttp_mailPreview = createXMLHttpRequest();
+            
+            var previewUrl = "/ezEmail/mailPrevShow.do?MSGFLAG=N";
+            
+            if (typeof(shareId) != "undefined" && shareId != "") {
+            	previewUrl += "&shareId=" + encodeURIComponent(shareId);
+            }
+            
+            xmlhttp_mailPreview.open("POST", previewUrl, true);
+            xmlhttp_mailPreview.onreadystatechange = event_xmlhttp_mailPreview_Complete;
+            xmlhttp_mailPreview.send(strQuery);
         }
-        //if (Old_Preview_Href == Preview_Href)
-        //    return;
-        Old_Preview_Href = Preview_Href;
-        var strQuery = "<URL>" + Preview_Href + "</URL>";
-        xmlhttp_mailPreview = createXMLHttpRequest();
-        
-        var previewUrl = "/ezEmail/mailPrevShow.do?MSGFLAG=N";
-        
-        if (typeof(shareId) != "undefined" && shareId != "") {
-        	previewUrl += "&shareId=" + encodeURIComponent(shareId);
-        }
-        
-        xmlhttp_mailPreview.open("POST", previewUrl, true);
-        xmlhttp_mailPreview.onreadystatechange = event_xmlhttp_mailPreview_Complete;
-        xmlhttp_mailPreview.send(strQuery);
 
     } catch (e) { }
 }
@@ -1052,6 +1058,14 @@ function prevShow_Clear() {
         if (sentDateStr != null) {
         	sentDateStr.style.display = "none";
         }
+        
+        var innerFrame  = document.getElementById("ifrmPreView" + pPreviewShow_HOW);
+        innerFrame.onload = function () {
+        	var innerDoc = innerFrame.contentDocument || innerFrame.contentWindow.document;
+        	if (innerDoc.getElementById("ifrmviewEmptyText").innerText == "") {
+        		innerDoc.getElementById("ifrmviewEmptyText").innerText = strLangJYH01;
+        	}
+        }
     }
     else {
     	var sentDateStr = document.body.querySelector("#PreContent_RayerH #sentDateStr");
@@ -1060,6 +1074,14 @@ function prevShow_Clear() {
         
         if (sentDateStr != null) {
         	sentDateStr.style.display = "none";
+        }
+        
+        var innerFrame  = document.getElementById("ifrmPreView" + pPreviewShow_HOW);
+        innerFrame.onload = function () {
+        	var innerDoc = innerFrame.contentDocument || innerFrame.contentWindow.document;
+        	if (innerDoc.getElementById("ifrmviewEmptyText").innerText == "") {
+        		innerDoc.getElementById("ifrmviewEmptyText").innerText = strLangJYH01;
+        	}
         }
     }
 }

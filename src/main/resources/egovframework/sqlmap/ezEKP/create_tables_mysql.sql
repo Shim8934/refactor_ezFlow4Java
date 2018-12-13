@@ -4904,7 +4904,7 @@ DROP TABLE IF EXISTS `tbl_dev_master`;
 CREATE TABLE `tbl_dev_master` (
   `DEVSEQ` bigint(20) NOT NULL AUTO_INCREMENT,
   `DEVID` varchar(64) CHARACTER SET utf8 NOT NULL,
-  `DEVTYPE` varchar(4) CHARACTER SET utf8 DEFAULT NULL,
+  `DEVTYPE` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
   `SUBTYPE` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
   `USERID` varchar(100) CHARACTER SET utf8 NOT NULL,
   `TOKEN` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
@@ -11097,6 +11097,24 @@ CREATE TABLE `tbl_webfolder_user` (
   `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   PRIMARY KEY (`CN`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 사용자';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_ps_shareapproval`
+--
+
+DROP TABLE IF EXISTS `tbl_ps_shareapproval`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_ps_shareapproval` (
+  `OWNERID` varchar(80) NOT NULL,
+  `SHAREUSERID` varchar(80) NOT NULL,
+  `SHAREDATE` datetime DEFAULT NULL,
+  `SHAREUSERDEPTID` varchar(200) DEFAULT NULL,
+  `TENANTID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(160) NOT NULL,
+  PRIMARY KEY (`OWNERID`,`TENANTID`,`SHAREUSERID`,`COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

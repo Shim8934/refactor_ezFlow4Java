@@ -274,10 +274,10 @@
 	            document.getElementById("homeimg").appendChild(_img);
 
 	            if (primary == "1") {
-	                document.getElementById("copname").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME");
+	                document.getElementById("copname").innerHTML = MakeXMLString(SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME"));
 	                document.title = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME");
 	            } else {
-	                document.getElementById("copname").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME2");
+	                document.getElementById("copname").innerHTML = MakeXMLString(SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME2"));
 	                document.title = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME2");
 	            }
 
@@ -299,7 +299,8 @@
 	            if (userImage != "") {
 	                _img.src = "/admin/ezOrgan/getPersonalInfo.do?type=PERSONAL&fileName=" + userImage;
 	            } else {
-	                _img.src = "/images/OrganTree/porson_noimg.gif";
+// 	                _img.src = "/images/OrganTree/porson_noimg.gif";
+	                _img.src = "<spring:message code='main.e14' />";
 	            }
 	            
 	            _img.style.width = "51px";
@@ -329,7 +330,7 @@
 		                break;
 	        	}
 	        	
-	        	document.getElementById("copdesc").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBDESC");
+	        	document.getElementById("copdesc").innerHTML = MakeXMLString(SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBDESC"));
 
 		    }
 		    

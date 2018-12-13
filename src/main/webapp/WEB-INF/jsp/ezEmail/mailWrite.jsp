@@ -937,14 +937,15 @@
 	        return xmlReturnValue;
 	    }
 	
+	    /* 2018-12-10 홍승비 - IE에서 게시판, 커뮤니티 게시물 메일발송 시 다국어 폰트 적용 */
 	    var pOrgAttachListXml = "";
 	    function Editor_Complete() {
 	        if (initFlag == false) {
 	            if (Org_cmd == "board") {
-	                GetBoardItemInfo_New("${boardID}", "${itemID}", "${retransType}");
+	                GetBoardItemInfo_New("${boardID}", "${itemID}", "${retransType}", g_font);
 	            }
 	            else if (Org_cmd == "Community") {
-	                GetBoardItemInfo_New3("${boardID}", "${itemID}");
+	                GetBoardItemInfo_New3("${boardID}", "${itemID}", g_font);
 	            }
 	            else if (Org_cmd == "report") {
 	                GetUpmooItemInfo_New("${itemID}", "${docHref}")
@@ -1791,9 +1792,9 @@
 						.append(
 								"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 										+ item.value
-										+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
-										+ item.dept
 										+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.dept
+										+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 										+ item.title
 										+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 										+ item.email + "</td></tr></table></a>")
@@ -1864,9 +1865,9 @@
 				.append(
 						"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 								+ item.value
-								+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
-								+ item.dept
 								+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+								+ item.dept
+								+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 								+ item.title
 								+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 								+ item.email + "</td></tr></table></a>")
@@ -1937,9 +1938,9 @@
 				.append(
 						"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 								+ item.value
-								+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
-								+ item.dept
 								+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+								+ item.dept
+								+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 								+ item.title
 								+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 								+ item.email + "</td></tr></table></a>")

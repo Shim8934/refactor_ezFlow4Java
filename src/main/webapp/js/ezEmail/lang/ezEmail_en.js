@@ -297,6 +297,7 @@ var strLangKMS08 = "Folders can not be uploaded."
 var strLangKYJ03 = "Spaces can not be entered."
 var strLangLSD02 = "The non-members of the department.";
 var strLangSharedMailbox01 = "Shared mailbox";
+var strLangJYH01 = "Not selected mail.";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "이 게시물은 ";

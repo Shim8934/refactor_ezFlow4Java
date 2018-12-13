@@ -139,7 +139,7 @@ public class EzStatisticsController {
 				if (i == 0) {
 					row = sheet.createRow(0);				
 				} else {
-					row = sheet.createRow(6);
+					row = sheet.createRow(8);
 				}
 				
 				for (int j=0; j<tableHeadNode.getChildNodes().getLength(); j++) {
@@ -161,7 +161,7 @@ public class EzStatisticsController {
 					}				
 				} else {
 					for (int j=0; j<tableBodyNode.getChildNodes().getLength()-1; j++) {
-						row = sheet.createRow(j+7);
+						row = sheet.createRow(j+9);
 						Node tr = tableBodyNode.getChildNodes().item(j+1);
 						
 						for (int k=0; k<tr.getChildNodes().getLength(); k++) {

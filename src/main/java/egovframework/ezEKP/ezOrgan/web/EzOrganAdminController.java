@@ -130,6 +130,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addDeptMasterManualFlag();
     	ezCommonService.createJMochaMailSignatureTemplate();
     	ezCommonService.createJobMasterTable();
+    	ezCommonService.addUserMasterPasswordUpdateDT();
     	ezCommonService.addJobMasterJobID();
     	ezCommonService.createWebfolderToken();
     	
@@ -207,6 +208,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
+		String useSyncServer = ezCommonService.getTenantConfig("useSyncServer", user.getTenantId());
 		String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", user.getTenantId());
 		String useDisablePop3Imap = ezCommonService.getTenantConfig("UseDisablePopImap", user.getTenantId());
 		String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", user.getTenantId());
@@ -223,6 +225,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useBizmekaTalk", useBizmekaTalk);
 		model.addAttribute("deptTreeTopId", deptTreeTopId);
 		model.addAttribute("useMobileManagemant", useMobileManagemant);
+		model.addAttribute("useSyncServer", useSyncServer);
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
@@ -2884,6 +2887,46 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * ezSyncServer를 호출하여 인사 정보를 동기화한다.
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/syncOrganAccounts.do")
+	@ResponseBody
+	public String syncOrganAccounts(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("syncOrganAccounts started.");
+		
+		String returnValue = "ERROR";
+		
+		try {
+			// 전체관리자 권한 체크
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+				return returnValue;
+			}
+			
+			String ezSyncServerUrl = ezCommonService.getTenantConfig("ezSyncServerUrl", userInfo.getTenantId());
+			String inputParams = "tenantId=" + userInfo.getTenantId();
+			
+			String resultCode = ezEmailUtil.getWebServiceResult(ezSyncServerUrl, inputParams);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject obj = (JSONObject) parser.parse(resultCode);
+			logger.debug("ezSyncServer getWebServerResult=" + obj.toJSONString());
+			
+			if (!obj.get("resultCode").equals("ERROR") && obj.get("resultCode") != null) {
+				returnValue = "OK";
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("syncOrganAccounts ended.");
+		
+		return returnValue;
+	}
+	
+	/**
 	 * POP3/IMAP 설정 화면을 출력한다.
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/configPopImap.do")
@@ -3484,14 +3527,29 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-//		String cn = request.getParameter("cn");
-		String jobID = request.getParameter("jobID");
+		String cn = request.getParameter("cn");
 		
-		OrganUserVO vo = ezOrganAdminService.getUserInfo(jobID, userInfo.getPrimary(), userInfo.getTenantId());
+		OrganUserVO vo = ezOrganAdminService.getUserInfo(cn, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		String companyID = vo.getPhysicalDeliveryOfficeName();
 		
 		logger.debug("getUserCompanyID ended.");
 		return companyID;
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/getJobOptionInfo.do", produces="application/text; charset=utf8")
+	@ResponseBody
+	public String getJobOptionInfo(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("getJobOptionInfo started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String type = request.getParameter("type");
+		String companyID = request.getParameter("companyID");
+		
+		String rtnXml = ezOrganAdminService.getJobOptionInfo(type, companyID, userInfo.getTenantId());
+		
+		logger.debug("getJobOptionInfo ended.");
+		return rtnXml;
 	}
 }
