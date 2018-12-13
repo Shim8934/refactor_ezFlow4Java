@@ -1067,7 +1067,7 @@
        		</c:if>
        	</select>
 		<input id="searchValue" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
-		<a href="#" style="float: right"><img src="../../images/bsearch_new.gif" border="0" onclick="quickSearch()"></a>
+		<a style="float: right"><img src="../../images/bsearch_new.gif" border="0" onclick="quickSearch()"></a>
 	</span>
 	</h1>
 	<div id="mainmenu">

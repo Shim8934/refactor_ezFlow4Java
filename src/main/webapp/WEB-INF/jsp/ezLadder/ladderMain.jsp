@@ -97,7 +97,7 @@
 				  <option value="writer" <c:if test = "${searchSelect eq 'writer' }" >selected="selected"</c:if>><spring:message code="ezLadder.t004"/></option>
 				  <option value="participant" <c:if test = "${searchSelect eq 'participant' }" >selected="selected"</c:if>><spring:message code="ezLadder.t013"/></option>
 				</select>
-				<a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onclick="searchLadder()" ></a>
+				<a style="float:right"><img src="/images/bsearch_new.gif" border="0" onclick="searchLadder()" ></a>
 				<input type="text" name="searchInput" id="searchInput" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;margin-left:5px;float:right" value="<c:out value='${searchInput}'/>">								
 				<select id="ladderType" style="height: 27px; width:150px; margin-left:5px; float:right;">
 				  <option value="0" <c:if test = "${searchInput eq '0' }" >selected="selected"</c:if>><spring:message code="ezLadder.t101"/></option>
