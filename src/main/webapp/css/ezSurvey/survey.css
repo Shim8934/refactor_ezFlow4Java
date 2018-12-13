@@ -391,15 +391,14 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsWrapper .question-header .saveLogic {width: 20px; padding-left: 15px; margin-bottom: -3px; cursor: pointer;}
 .prevQsWrapper .question-header .cancelLogic {width: 20px; padding-left: 15px; margin-bottom: -3px; cursor: pointer;}
 
-/* .prevQsOpt .question-opts .prevSltArrow {padding: 0px 30px;} */
-
 .prevQsOpt .sltLogicArea {display: flex;}
 .prevQsOpt .sltLogicArea .prevSltArrow {padding: 0px 30px;}
 .prevQsOpt .sltLogicArea .logicSpan {font-size: 16px; margin-top: 2px;}
 
-.prevQsOpt .slidLogicArea {display: flex;}
+.prevQsOpt .slidLogicArea {display: flex; align-items: center; justify-content: center;}
 .prevQsOpt .slidLogicArea .prevSlidSpan {padding-top: 6px; padding-left: 15px;}
 .prevQsOpt .slidLogicArea .prevSlidArrow {padding: 0px 30px;}
+.prevQsOpt .slidLogicArea .logicSpan {font-size: 16px; margin-top: 2px;}
 
 .prevQsOpt .drdwLogicArea {padding-left: 35px; padding-bottom: 30px;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow {display: flex;}

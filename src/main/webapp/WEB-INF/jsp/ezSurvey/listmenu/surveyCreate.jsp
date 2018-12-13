@@ -699,16 +699,16 @@
 						switch(thisType) {
 						case 1 :
 						case 2 :
-							sltQsLogic(prevWrapper, option, thisQstn);
+							sltLogicForm(prevWrapper, option, thisQstn);
 							break;
 						case 7:
-							slidQsLogic(prevWrapper, option, thisQstn);
+							slidLogicForm(prevWrapper, option, thisQstn);
 							break;
 						/* case 8:
 							rankQsLogic(prevWrapper, option, thisQstn);
 							break; */
 						case 9:
-							drdwQsLogic(prevWrapper, option, thisQstn);
+							drdwLogicForm(prevWrapper, option, thisQstn);
 							break;
 						}
 					});
@@ -718,6 +718,7 @@
 						$(this).css("display", "none").next().css("display", "none");
 						$(this).prev().css("display", "");
 						
+						var result = "";
 						var prevWrapper = $(this).parents(".prevQsWrapper");
 						var thisType = parseInt(prevWrapper.attr("type"));
 						var thisId = parseInt(prevWrapper.attr("id"));
@@ -733,14 +734,14 @@
 						case 2 :
 							addSltLogic(thisId, qstn);
 							break;
-						/* case 7:
-							addSlidLogic(thisId);
-							break; */
+						case 7:
+							addSlidLogic(thisId, qstn);
+							break;
 						case 9:
 							addDrdwLogic(thisId, qstn);
 							break;
 						}
-						
+
 					});
 					
 					// 로직 취소 버튼 이벤트
@@ -749,14 +750,22 @@
 						$(this).prev().prev().css("display", "");
 						
 						var prevWrapper = $(this).parents(".prevQsWrapper");
-						var opts = prevWrapper.find(".prevQsOpt").find(".opt");
-						var optLength = opts.length;
+						var type = parseInt(prevWrapper.attr("type"));
+						var id = parseInt(prevWrapper.attr("id"));
 						
-						for (var i = 0; i < optLength; i++) {
-							var opt = opts[i];
-							opt.removeChild(opt.childNodes[2]);
+						// 로직 추가, ui 변경
+						if (type == 1 || type == 2) {
+							//var wrapper = $("#"+id);
+							var opt = prevWrapper.find(".opt");
+							var optLength = opt.length;
+							
+							for (var i = 0; i < optLength; i++) {
+								$("#logic" + id + i).remove();
+							}
+
+						} else if (type == 7 || type == 9) {
+							$("#logic" + id).remove();
 						}
-						
 					});
 					
 					$(".quesBacgr").on("input", ".slider-range", function() {
@@ -1723,8 +1732,8 @@
 					}
 					return html;
 				}
-				
-				function sltQsLogic(prevWrapper, option, question) {
+				// select 질문 로직 폼 생성
+				function sltLogicForm(prevWrapper, option, question) {
 					var qstnId = question.id;
 					var qstnOpt = question.option;
 					
@@ -1747,7 +1756,7 @@
 					}
 				}
 				
-				function slidQsLogic(prevWrapper, option, question) {
+				function slidLogicForm(prevWrapper, option, question) {
 					var qstnId = question.id;
 					var qstnOpt = question.option;
 					var prevQsOpt = prevWrapper.find(".prevQsOpt");
@@ -1764,14 +1773,14 @@
 					}
 					
 					var html = "";
-						html += "<input class='prevSlidInput' type='number' minVal='" + minVal + "' maxVal='" + maxVal + "'>";
+						html += "<input id='slidLogicInput" + qstnId + "' class='prevSlidInput' type='text' minVal='" + minVal + "' maxVal='" + maxVal + "'>";
 						html += "<span class='prevSlidSpan'>이상</span>";
 						html += "<img class='prevSlidArrow' src='/images/ezSurvey/arrow.png'>";
 					
-					var slidDiv = $("<div id='logic" + qstnId + "0' class='slidLogicArea'></div>");
+					var slidDiv = $("<div id='logic" + qstnId + "' class='slidLogicArea'></div>");
 					slidDiv.append(html);
 					
-					var selectBox = $("<select class='logicSelect' name='slt" + qstnId + "0'></select>");
+					var selectBox = $("<select class='logicSelect' name='slt" + qstnId + "'></select>");
 					selectBox.html(option);
 					slidDiv.append(selectBox);
 					
@@ -1794,7 +1803,7 @@
 					
 				} */
 				
-				function drdwQsLogic(prevWrapper, option, question) {
+				function drdwLogicForm(prevWrapper, option, question) {
 					var qstnId = question.id;
 					var qstnOpt = question.option;
 					
@@ -1827,7 +1836,6 @@
 				// select question에 로직 추가
 				function addSltLogic(id, qstn) {
 					var wrapper = $("#"+id);
-					console.log(wrapper);
 					var opt = wrapper.find(".opt");
 					var optLength = opt.length;
 					
@@ -1840,22 +1848,38 @@
 						$("#logic" + id + i).append("<span class='logicSpan' id='sltVal" + id + i + "'>" + logicNum + "</span>");
 					}
 				}
-				/* 
-				function addSlidLogic(thisId) {
+				
+				function addSlidLogic(id, qstn) {
+					var inputVal = parseInt($("#slidLogicInput" + id).val());
+					var maxVal = parseInt(qstn.option[1]['content']);
+					var logicNum = parseInt($("select[name=slt" + id + "] option:selected").val());
 					
+					if (!isNaN(inputVal) && inputVal < maxVal) {
+						if (!isNaN(logicNum)) {
+							qstn['slidLogicPoint'] = inputVal;
+							qstn.option[0]['logic'] = logicNum;
+							
+							$("select[name=slt" + id + "]").css("display", "none");
+							$("#logic" + id).append("<span class='logicSpan' id='sltVal" + id + "'>" + logicNum + "</span>");
+						} else {
+							alert("분기를 선택해 주세요.");
+							return;
+						}
+					} else {
+						alert("최소값과 최대값 사이의 숫자를 입력해 주세요.");
+						return;
+					}
+
 				}
-				 */
+				
 				// dropdown question에 로직 추가
 				function addDrdwLogic(id, qstn) {
-					var wrapper = $("#"+id);
-					
 					var logicArea = $("#logic" + id);
 					var rows = logicArea.find(".drdwLogicRow");
 					var optLength = rows.length;
 					
 					for (var i = 0; i < optLength; i++) {
 						var logicNum = $("select[name=slt" + id  + i +"] option:selected").val();
-						// option 객체에 logic 추가
 						qstn.option[i]['logic'] = logicNum;
 						
 						$("select[name=slt" + id + i + "]").css("display", "none");
