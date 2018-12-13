@@ -128,7 +128,7 @@
 	        var treeView = new TreeView();
 	        treeView.LoadFromID("FromTreeView");
 	        var nodeIdx = treeView.GetSelectNode();
-	        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >"
+	        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >"
 	    		+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
 	    		+ "<span id='countInfo'></span>";
 	        SelectDeptNM.setAttribute("countinfo", "")
@@ -509,7 +509,7 @@
 	            document.getElementById("Search_txtlist_table").style.display = "none";
 	            
 	            if (pSeach) {
-	                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + strLang44 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + "</span>";
+	                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang44 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span class='countColor'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + "</span></span>";
 	                SelectDeptNM.setAttribute("countinfo", "1");
 	            }
 	        } else {
@@ -522,7 +522,7 @@
                 } else {
                     document.getElementById("Search_txtlist_table").style.display = "";
                     document.getElementById("txtlist_table").style.display = "none";
-                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + strLang44 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + "</span>";
+                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang44 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span class='countColor'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + "</span></span>";
                     SelectDeptNM.setAttribute("countinfo", "1")
                 }
             }
@@ -1313,7 +1313,7 @@
 	                                                </div>
 	                                            </td>
 	                                            <td>
-	                                                <div style="float: right; margin-right: 5px;">
+	                                                <div style="float: right; margin-right: 5px; position:relative;">
 	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezTask.t1004' /></span></a>
 	                                                </div>
 	                                            </td>
@@ -1324,7 +1324,7 @@
 	                            <table style="margin-top: 3px;">
 	                                <tr>
 	                                    <td class="box" style="border-right:0px">
-	                                        <div style="width: 220px; height: 505px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+	                                        <div style="width: 220px; height: 505px; overflow-x: hidden; overflow-y: auto;" id="TreeView"></div>
 	                                    </td>
 	                                    <td></td>
 	                                    <td class="listview" style="width: 426px" id="orglistView">
@@ -1332,7 +1332,7 @@
 	                                            <tr>
 	                                                <th style="white-space:normal;background-color: white;border-top:0px solid #ddd;border-bottom:1px solid #eaeaea">
 	                                                    <span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
-	                                                    <span style="float:right;">
+	                                                    <span style="float:right; position:relative;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
 	                                                        <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
 	                                                    </span>

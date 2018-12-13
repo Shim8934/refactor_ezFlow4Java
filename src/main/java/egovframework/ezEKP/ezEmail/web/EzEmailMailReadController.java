@@ -1711,11 +1711,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		if (fromEmail != null && !fromEmail.equals("")) {
 			fromId = ezOrganService.getCNByEmail(fromEmail, loginInfo.getTenantId());
 			
+			//email이 alias 메일이어서 id를 못가져왔을 경우
+			//alias mail인지 check후 원래 이메일 주소에서 id를 가져온다.
 			if (fromId == null || fromId.equals("")) {
-				List<String> addressList = ezEmailService.aliasMailCheck(fromEmail);
+				List<String> aliasAddress = new ArrayList<String>();
+				aliasAddress.add(fromEmail);
+				Map<String, String> targetAddress = ezEmailService.getAliasAddressMap(aliasAddress, loginInfo.getTenantId());
 				
-				if (addressList.size() > 0) {
-					String resultTargetAddress = addressList.get(0);
+				if (targetAddress != null) {
+					String resultTargetAddress = targetAddress.get(fromEmail);
 					logger.debug("resultAddress=" + resultTargetAddress);
 					
 					if (resultTargetAddress != null) {
@@ -1725,6 +1729,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							logger.debug("fromId=" + fromId);
 						}
 					}
+					
 				}
 			}
 			

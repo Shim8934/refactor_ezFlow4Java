@@ -198,7 +198,7 @@ FROM (
 		AND 
 			A.TENANT_ID = #tenantId#
 		AND 
-			A.WRITERCOMPANYID = #companyId#
+			(A.WRITERCOMPANYID = B.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 		ORDER BY 
 			TO_NUMBER(A.PARENTWRITEDATE) DESC, 
 			TO_CHAR(A.UPPERITEMIDTREE) ASC
@@ -503,29 +503,56 @@ FROM (
 	SELECT 
 		INFO.*, ROWNUM AS RNUM
 	FROM (
-		SELECT
-			quicklinkid, 
-		    quicklinkname, 
-		    quicklinkname2, 
-		    quicklinkname3, 
-		    linktype, 
-		    url,
-		    size_ as quicksize
+			SELECT
+			Q.quicklinkid, 
+		    Q.quicklinkname, 
+		    Q.quicklinkname2, 
+		    Q.quicklinkname3, 
+		    Q.linktype, 
+		    Q.url,
+		    Q.size_ as quicksize,
+		    NVL(U.view_flag, NVL(DEPT.view_flag, NVL(COMP.view_flag, NVL(EVERY.view_flag, 'N')))) as viewflag
 		FROM 
 			tbl_ps_quicklink Q
-		JOIN 
-			tbl_usermaster U
-		ON 
-			Q.tenant_id = U.tenant_id
-		AND 
-			Q.reguserid = U.cn
+		LEFT JOIN
+			TBL_PS_QUICKLINK_ACL U
+		ON
+			U.quicklinkid = Q.quicklinkid
+		AND
+			U.tenant_id = Q.tenant_id
+		AND
+			U.accessid = #userId#
+		LEFT JOIN
+			TBL_PS_QUICKLINK_ACL DEPT
+		ON
+			DEPT.quicklinkid = Q.quicklinkid
+		AND
+			DEPT.tenant_id = Q.tenant_id
+		AND
+			DEPT.accessid = #deptId#
+		LEFT JOIN
+			TBL_PS_QUICKLINK_ACL COMP
+		ON
+			COMP.quicklinkid = Q.quicklinkid
+		AND
+			COMP.tenant_id = Q.tenant_id
+		AND
+			COMP.accessid = #companyId#
+		LEFT JOIN
+			TBL_PS_QUICKLINK_ACL EVERY
+		ON
+			EVERY.quicklinkid = Q.quicklinkid
+		AND
+			EVERY.tenant_id = Q.tenant_id
+		AND
+			EVERY.accessid = 'everyone'
 		WHERE 
 			Q.TENANT_ID = #tenantId#
-		AND 
-			U.PHYSICALDELIVERYOFFICENAME = #companyId#
 		ORDER BY
-    		Q.REGDATE DESC
+		    Q.REGDATE DESC
 	) INFO
+	WHERE
+		INFO.viewflag = 'Y'
 ) A
 WHERE 
 	A.RNUM > #offset# 
@@ -539,18 +566,57 @@ AND
 <![CDATA[
 SELECT
 	count(*)
-FROM 
-	tbl_ps_quicklink Q
-JOIN 
-	tbl_usermaster U
-ON 
-	Q.tenant_id = U.tenant_id
-AND 
-	Q.reguserid = U.cn
-WHERE 
-	Q.TENANT_ID = #tenantId#
-AND 
-	U.PHYSICALDELIVERYOFFICENAME = #companyId#
+FROM (
+	SELECT
+		Q.quicklinkid, 
+	    Q.quicklinkname, 
+	    Q.quicklinkname2, 
+	    Q.quicklinkname3, 
+	    Q.linktype, 
+	    Q.url,
+	    Q.size_ as quicksize,
+	    NVL(U.view_flag, NVL(DEPT.view_flag, NVL(COMP.view_flag, NVL(EVERY.view_flag, 'N')))) as viewflag
+	FROM 
+		tbl_ps_quicklink Q
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL U
+	ON
+		U.quicklinkid = Q.quicklinkid
+	AND
+		U.tenant_id = Q.tenant_id
+	AND
+		U.accessid = #userId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL DEPT
+	ON
+		DEPT.quicklinkid = Q.quicklinkid
+	AND
+		DEPT.tenant_id = Q.tenant_id
+	AND
+		DEPT.accessid = #deptId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL COMP
+	ON
+		COMP.quicklinkid = Q.quicklinkid
+	AND
+		COMP.tenant_id = Q.tenant_id
+	AND
+		COMP.accessid = #companyId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL EVERY
+	ON
+		EVERY.quicklinkid = Q.quicklinkid
+	AND
+		EVERY.tenant_id = Q.tenant_id
+	AND
+		EVERY.accessid = 'everyone'
+	WHERE 
+		Q.TENANT_ID = #tenantId#
+	ORDER BY
+	    Q.REGDATE DESC
+	) acl
+WHERE
+	acl.viewflag = 'Y'
 ]]>		
 </select>
 
@@ -573,6 +639,8 @@ AND
 	fcomp.company_id = tuser.company_id
 AND 
 	fcomp.theme_id = tuser.used_theme
+AND
+	tuser.is_default = 1
 WHERE 
 	fcomp.company_id = #companyId#
 AND 
@@ -622,15 +690,17 @@ ON (	user_id = #userId#
 		tenant_id = #tenantId#
 	AND
 		company_id = #companyId#
+	AND
+		USED_THEME = #themeId#
 	)
 WHEN MATCHED THEN
 	UPDATE SET
 		USED_FRAME = #frameId#
 WHEN NOT MATCHED THEN
 	INSERT (
-		USER_ID, COMPANY_ID, TENANT_ID, USED_THEME, USED_FRAME
+		USER_ID, COMPANY_ID, TENANT_ID, USED_THEME, USED_FRAME, IS_DEFAULT
 	) VALUES (
-		#userId#, #companyId#, #tenantId#, #themeId#, #frameId#
+		#userId#, #companyId#, #tenantId#, #themeId#, #frameId#, #isDefault#
 	)
 ]]>	
 </update>
@@ -648,12 +718,41 @@ AND
 ]]>		
 </delete>
 
-<insert id="ezNewPortal.insertUserUsedPortlet" parameterClass="Map">
+<!-- <insert id="ezNewPortal.insertUserUsedPortlet" parameterClass="Map">
 <![CDATA[
 INSERT INTO 
 	tbl_portal_portlet_user(user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id)
 values
 	 (#userId#, #tenantId#, #companyId#, #portletId#, #portletOrder#, #menuId#)
+]]>		
+</insert> -->
+
+<insert id="ezNewPortal.insertUserUsedPortlet" parameterClass="Map">
+<![CDATA[
+MERGE INTO TBL_PORTAL_PORTLET_USER
+USING DUAL
+ON (
+		user_id = #userId#
+	AND 
+		tenant_id = #tenantId#
+	AND
+		company_id = #companyId#
+	AND
+		portlet_id = #portletId#
+	AND
+		theme_id = #themeId#
+	)
+WHEN MATCHED THEN
+	UPDATE SET
+		portlet_used = #portletUsed#,
+		portlet_order = #portletOrder#
+WHEN NOT MATCHED THEN
+	INSERT (
+			user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id, portlet_used, theme_id
+		) VALUES (
+			#userId#, #tenantId#, #companyId#, #portletId#,	#portletOrder#, 
+			(SELECT MENU_ID FROM TBL_PORTAL_PORTLET WHERE PORTLET_ID = #portletId#), #portletUsed#, #themeId#
+		)
 ]]>		
 </insert>
 
@@ -1078,9 +1177,9 @@ INSERT INTO TBL_PORTAL_PORTLET_USER (
 <select id="ezNewPortal.getMonthlyBirthdayEmployees" parameterClass="Map" resultMap="PortalUserInfoVO">
 <![CDATA[
 SELECT
-	DISPLAYNAME AS USER_NAME,
+	DISPLAYNAME$lang$ AS USER_NAME,
 	CN,
-	DESCRIPTION AS DEPT_NAME,
+	DESCRIPTION$lang$ AS DEPT_NAME,
 	BIRTH,
 	(CASE TO_CHAR(BIRTHTYPE) WHEN 'Y' THEN 1 ELSE 0 END) AS IS_SOLAR,
 	EXTENSIONATTRIBUTE2 AS USER_IMG
@@ -1098,13 +1197,15 @@ WHERE
 	 	TENANT_ID = #tenantId#
 	 AND
 	 	PHYSICALDELIVERYOFFICENAME = #companyId#
+	 AND
+	 	CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 ]]>
 </select>
 
 <select id="ezNewPortal.getMonthlyBestEmployee" parameterClass="Map" resultMap="BestEmpVO">
 <![CDATA[
 SELECT	
-	A.DISPLAYNAME AS USER_NAME,
+	A.DISPLAYNAME$lang$ AS USER_NAME,
 	NVL(A.TITLE, '') AS TITLE,
 	A.DESCRIPTION AS DEPT_NAME,
 	B.EXTENSIONATTRIBUTE2 AS USER_IMG,
@@ -1132,7 +1233,7 @@ SELECT
 	A.theme_id,
 	A.theme_name,
     A.theme_content,
-    NVL2(D.used_theme,  1, 0) as theme_used,
+    NVL(D.is_default, 0) as theme_used,
     B.theme_default,
     C.frame_id as frame_default
 FROM
@@ -1227,8 +1328,7 @@ AND
 UPDATE
 	TBL_PORTAL_THEME_USER
 SET
-	used_theme = #usedTheme#,
-	used_frame = #usedFrame#
+	is_default = CASE WHEN used_theme = #usedTheme# THEN 1 ELSE 0 END
 WHERE
 	user_id = #userId#
 AND	
@@ -1241,9 +1341,9 @@ AND
 <insert id="ezNewPortal.insertUserThemeSetting" parameterClass="Map">
 <![CDATA[
 INSERT INTO TBL_PORTAL_THEME_USER (
-	user_id,	company_id,		tenant_id,		used_theme,		used_frame
+	user_id,	company_id,		tenant_id,		used_theme,		used_frame,		is_default
 ) VALUES (
-	#userId#,	#companyId#,	#tenantId#,		#usedTheme#,	#usedFrame#
+	#userId#,	#companyId#,	#tenantId#,		#usedTheme#,	#usedFrame#,	#isDefault#
 )
 ]]>
 </insert>
@@ -1287,13 +1387,13 @@ FROM (
 			AND 
 				A.TENANT_ID = C.TENANT_ID
 			AND 
-				A.WRITERCOMPANYID = C.COMPANYID
+				(A.WRITERCOMPANYID = C.COMPANYID OR C.COMPANYID IS NULL)
 			WHERE
 				A.TENANT_ID = #tenantId#
 			AND
 				A.BOARDID = #boardId#
 			AND
-				A.WRITERCOMPANYID = #companyId#
+				(A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
 			ORDER BY
 				A.WRITEDATE DESC
 		) INFO
@@ -1582,6 +1682,8 @@ AND
 							LINEINFO.aprtype <> '015'
 						AND
 							DOCINFO.docstate <> '017'
+						AND
+							DOCINFO.functiontype IS NOT NULL
 						ORDER BY
 							STARTDATE DESC
 					) INFO
@@ -1663,20 +1765,8 @@ AND
 				N.portlet_name AS portletName,
 				COMP.board_id AS boardId,
 				NVL(COMP.connection_url, A.portlet_url) AS portletUrl,
-				NVL((SELECT
-							portlet_order
-						FROM
-							TBL_PORTAL_PORTLET_USER U
-						WHERE
-							U.tenant_id = #tenantId#
-						AND
-							U.company_id = #companyId#
-						AND
-							U.portlet_id = A.portlet_id
-						AND
-							U.menu_id = A.menu_id
-						AND
-							U.user_id = #userId#), NVL(COMP.portlet_order, A.default_order)) AS portletOrder,
+				NVL(U.portlet_order, NVL(THEME.portlet_order, NVL(COMP.portlet_used, A.default_order))) AS portletOrder,
+                NVL(U.portlet_used, NVL(THEME.portlet_used, NVL(COMP.portlet_used, 1))) AS portletUsed,
 		]]>
 		
 		<isEmpty property="deptId">
@@ -1700,6 +1790,18 @@ AND
 				A.portlet_id = N.portlet_id
 			AND
 				A.menu_id = N.menu_id
+			JOIN
+				TBL_PORTAL_THEME_PORTLET THEME
+			ON
+				N.tenant_id = THEME.tenant_id
+			AND
+				N.company_id = THEME.company_id
+			AND
+				A.portlet_id = THEME.portlet_id
+			AND
+				A.menu_id = THEME.menu_id
+			AND
+				THEME.theme_id = #themeId#
 			JOIN
 				TBL_PORTAL_PORTLET_COMP COMP
 			ON
@@ -1737,6 +1839,18 @@ AND
 		</isNotEmpty>
 		
 		<![CDATA[
+			LEFT JOIN
+				TBL_PORTAL_PORTLET_USER U
+			ON
+				COMP.tenant_id = U.tenant_id
+			AND
+				COMP.company_id = U.company_id
+			AND
+				COMP.portlet_id = U.portlet_id
+			AND
+				U.user_id = #userId#
+			AND
+				U.theme_id = #themeId#
 			WHERE
 				N.tenant_id = #tenantId#
 			AND
@@ -1744,7 +1858,7 @@ AND
 			AND
 				N.portlet_lang = #portletLang#
 			AND
-				COMP.portlet_used = 1
+				(COMP.portlet_used = 1 AND THEME.portlet_used = 1)
 		]]>
 		
 		<isEmpty property="deptId" prepend="AND">
@@ -1752,9 +1866,43 @@ AND
 				(AUTH.access_yn IS NOT NULL)
 			]]>
 		</isEmpty>
+		
+		<isNotEqual property="config" compareValue="true" prepend="AND">
+			<![CDATA[
+				(U.portlet_used = 1 OR U.portlet_used IS NULL)
+			]]>
+		</isNotEqual>
+		
 		<![CDATA[
 			ORDER BY
 				portletOrder
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getThemeId" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(U.used_theme, theme_id) AS themeId
+			FROM
+				TBL_PORTAL_THEME_COMP COMP
+			LEFT JOIN
+				TBL_PORTAL_THEME_USER U
+			ON
+				COMP.tenant_id = U.tenant_id
+			AND
+				COMP.company_id = U.company_id
+			AND
+				U.user_id = #userId#
+			AND
+				U.is_default = 1
+			WHERE
+				COMP.tenant_id = #tenantId#
+			AND
+				COMP.company_id = #companyId#
+			AND
+				COMP.theme_default = 1
+			AND
+				COMP.theme_used = 1
 		]]>
 	</select>
 	
@@ -1797,6 +1945,18 @@ AND
 	AND
 		A.TENANT_ID = #tenantId#
 ]]>
+<isNull property="usedTheme">
+<![CDATA[
+	AND
+		A.is_default = 1
+]]>
+</isNull>
+<isNotNull property="usedTheme">
+<![CDATA[
+	AND
+		A.used_theme = #usedTheme#
+]]>
+</isNotNull>
 </select>
 
 <!-- 사용자 포탈 설정 없을 때 회사 포탈 설정 가져오기 -->
@@ -1867,13 +2027,12 @@ FROM (
 				  		  COMPANYID 
 			 	     FROM TBL_BOARD_MYBOARDS 
 			  		WHERE TENANT_ID = #tenantId#
-			  		  AND COMPANYID = #companyId#
+			  		  AND (COMPANYID = #companyId# OR COMPANYID = '*')
 			 		  AND USERID = #userId#
 			 		) B 
 				 ON A.TENANT_ID = B.TENANT_ID
 				AND	A.BOARDID = B.BOARDID                
 				AND A.TENANT_ID = #tenantId#
-				AND A.WRITERCOMPANYID = #companyId#
                 AND A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS')
                 AND A.STARTDATE <= #nowDate#
 		      	AND A.ENDDATE > #nowDate#						
@@ -1892,7 +2051,7 @@ FROM (
 			  JOIN TBL_BOARD_BOARDINFO C
 			    ON A.BOARDID = C.BOARDID
 			   AND A.TENANT_ID = C.TENANT_ID
-			   AND A.WRITERCOMPANYID = C.COMPANYID
+			   AND (A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
 			  ORDER BY STARTDATE DESC
         ) INFO
     ) P
@@ -1924,9 +2083,9 @@ FROM (
 			  JOIN TBL_BOARD_BOARDINFO B
 			    ON A.BOARDID = B.BOARDID
 			   AND A.TENANT_ID = B.TENANT_ID
-			   AND A.WRITERCOMPANYID = B.COMPANYID
+			   AND (A.WRITERCOMPANYID = B.COMPANYID OR B.COMPANYID IS NULL)
 			 WHERE A.BOARDID = #boardId#
-			   AND A.WRITERCOMPANYID = #companyId#
+			   AND (A.WRITERCOMPANYID = B.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 			   AND A.TENANT_ID = #tenantId#
 			 ORDER BY STARTDATE DESC
 		) INFO
@@ -1998,7 +2157,8 @@ SELECT A.PORTLET_ID,
        A.BOARD_ID,
        D.BOARDNAME,
        D.BOARDNAME2,
-       E.MENU_NAME
+       E.MENU_NAME,
+       F.PORTLET_NAME
   FROM TBL_PORTAL_PORTLET_COMP A
   JOIN TBL_PORTAL_PORTLET C
     ON A.PORTLET_ID = C.PORTLET_ID
@@ -2007,28 +2167,49 @@ SELECT A.PORTLET_ID,
   	AND A.COMPANY_ID = D.COMPANYID
   	AND	A.TENANT_ID = D.TENANT_ID
   LEFT JOIN TBL_PORTAL_MENU_NAME E
- ON	A.menu_id = E.menu_id
- AND A.COMPANY_ID = E.COMPANY_ID
- AND A.tenant_id = E.tenant_id
- AND E.menu_lang = #menuLang#
- WHERE A.COMPANY_ID = #companyId#
-   AND A.TENANT_ID = #tenantId#
- ORDER BY A.portlet_order
+ 	ON	A.menu_id = E.menu_id
+ 	AND A.COMPANY_ID = E.COMPANY_ID
+ 	AND A.tenant_id = E.tenant_id
+ 	AND E.menu_lang = #menuLang#
+  LEFT JOIN TBL_PORTAL_PORTLET_NAME F
+ 	ON A.COMPANY_ID = F.COMPANY_ID
+ 	AND A.TENANT_ID = F.TENANT_ID
+ 	AND A.PORTLET_ID = F.PORTLET_ID
+ 	AND F.PORTLET_LANG = #menuLang# 
+  WHERE A.COMPANY_ID = #companyId#
+    AND A.TENANT_ID = #tenantId#
+  ORDER BY A.portlet_order
 ]]>
 </select>
 
 <select id="ezNewPortal.getPortletNameList"	parameterClass="Map" resultMap="PortletNameInfoVO">
- SELECT B.PORTLET_LANG,
-		  B.PORTLET_NAME,
-          A.PORTLET_ID
-  FROM TBL_PORTAL_PORTLET_COMP A
-  JOIN TBL_PORTAL_PORTLET_NAME B
-	ON A.COMPANY_ID = B.COMPANY_ID
-   AND A.TENANT_ID = B.TENANT_ID
-   AND A.PORTLET_ID = B.PORTLET_ID  
- WHERE A.COMPANY_ID = #companyId#
-   AND A.TENANT_ID = #tenantId#
-   AND A.PORTLET_ID = #portletId#
+	<![CDATA[
+		SELECT
+			B.portlet_lang,
+			B.portlet_name,
+			A.portlet_id
+		FROM
+			TBL_PORTAL_PORTLET_COMP A
+		JOIN
+			TBL_PORTAL_PORTLET_NAME B
+		ON
+			A.company_id = B.company_id
+		AND
+			A.tenant_id = B.tenant_id
+		AND
+			A.portlet_id = B.portlet_id  
+		WHERE
+			A.company_id = #companyId#
+		AND
+			A.tenant_id = #tenantId#
+		AND
+			A.portlet_id = #portletId#
+	]]>
+	<isNotEmpty property="primaryLang" prepend="AND">
+	<![CDATA[
+		B.portlet_lang = #primaryLang#
+	]]>
+	</isNotEmpty>
 </select>
 
 <select id="ezNewPortal.getPrimaryLangList" resultClass="String">
@@ -2108,7 +2289,13 @@ WHERE
 <select id="ezNewPortal.getCityList" parameterClass="Integer" resultMap="WeatherVO">
 <![CDATA[
 SELECT
-	* 
+	SN,
+	CITYCODE,
+	CITYNAME,
+	DISPLAYCITYNAME,
+	PRIMARYLANG,
+	CURRENTWEATHER,
+	TODAYWEATHER
 FROM
 	TBL_WEATHER
 WHERE
@@ -2222,5 +2409,53 @@ AND
 	comp.TENANT_ID = #tenantId#
 ORDER BY
 	company_order asc	
+</select>
+<!-- 18.12.04 수정 -->
+<update id="ezNewPortal.updatePortletOrderUser" parameterClass="Map">
+<![CDATA[
+	MERGE INTO TBL_PORTAL_PORTLET_USER 
+	USING DUAL
+	ON (	user_id = #userId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			company_id = #companyId#
+		AND
+			portlet_id = #portletId#
+		AND
+			THEME_ID = #themeId#
+		)
+	WHEN MATCHED THEN
+		UPDATE SET
+			portlet_order = #portletOrder#
+	WHEN NOT MATCHED THEN
+		INSERT (
+			user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id, portlet_used, theme_id
+		) VALUES (
+			#userId#, #tenantId#, #companyId#, #portletId#,	#portletOrder#, 
+			(SELECT MENU_ID FROM TBL_PORTAL_PORTLET WHERE PORTLET_ID = #portletId#), 1, #themeId#
+		)
+	
+]]>
+</update>
+
+<select id="ezNewPortal.getPortletListNotSelected" parameterClass="Map" resultClass="PortletInfoVO">
+<![CDATA[
+	SELECT 
+		portlet_id as portletid
+	FROM
+		TBL_PORTAL_PORTLET_USER
+	WHERE
+		user_id = #userId#
+	AND
+		tenant_id = #tenantId#
+	AND
+		company_id = #companyId#
+]]>
+	<iterate prepend="AND portlet_id NOT IN " property="portletIdList" open="(" conjunction="," close=")">
+		<![CDATA[
+			#portletIdList[]#
+		]]>
+	</iterate>
 </select>
 </sqlMap>

@@ -723,7 +723,7 @@
 		                  <table style="margin-top: 4px;">
 		                      <tr>
 		                            <td>
-		                                <div style="OVERFLOW-Y:auto;OVERFLOW-X:auto;WIDTH:270px;HEIGHT:440px;BACKGROUND-COLOR:#ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
+		                                <div style="overflow-x: hidden; overflow-y: auto;WIDTH:270px;HEIGHT:440px;BACKGROUND-COLOR:#ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
 		                            </td>
 		                            <td width="5"></td>
 		                            <td>

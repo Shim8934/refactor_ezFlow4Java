@@ -355,6 +355,11 @@
 	                return;
 	            }
 	        }
+	        if (!isReceiverChk(treeView.GetSelectNode().GetNodeData("CN"))) {
+	            var pAlertContent = strLang1101 + strLang1102;
+	            OpenAlertUI(pAlertContent);
+	            return;
+	        }
 	        if (lastRowIdx < 1) {
 	            strXML = "<LISTVIEWDATA><HEADERS>";
 	            strXML = strXML + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t428'/>" + "</NAME><WIDTH>156</WIDTH></HEADER>";
@@ -645,7 +650,9 @@
 	
 	                if (objNodes.length > 0) {
 	                    for (var i = 0; i < objNodes.length; i++) {
-	                        insertInnerDept(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue, objNodes[i].getElementsByTagName("VALUE")[0].childNodes[0].nodeValue);
+	                    	if (!isReceiverChk(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue)) {
+		                        insertInnerDept(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue, objNodes[i].getElementsByTagName("VALUE")[0].childNodes[0].nodeValue);
+	                    	}
 	                    }
 	                }
 	            }
@@ -681,6 +688,11 @@
 	                OpenAlertUI(pAlertContent);
 	                return;
 	            }
+	        }
+	        if (!isReceiverChk(STRDEPTID)) {
+	        	var pAlertContent = strLang1101 + strLang1102;
+                OpenAlertUI(pAlertContent);
+	        	return;
 	        }
 	        if (lastRowIdx < 1) {
 	            strXML = "<LISTVIEWDATA><HEADERS>";
@@ -799,7 +811,7 @@
 	        }
 	        return rtnVal;
 	    }
-	    function isReceiverChk(DeptID) {
+	    /* function isReceiverChk(DeptID) {
 	        var xmlhttp = createXMLHttpRequest();
 	        var xmlpara = createXmlDom();
 	
@@ -814,7 +826,7 @@
 	            return false;
 	        else
 	            return true;
-	    }
+	    } */
 	    function removeAllReception() {
 	        var listview = new ListView();
 	        listview.LoadFromID("listAPRLINE1");
@@ -1353,6 +1365,32 @@
 	            alert("ezReceiveDistributeUI_Cross_SetBaeBuList::" + e.description);
 	        }
 	    }
+	    /* 수발신담당자 체크로직 */
+	    function isReceiverChk(DeptID)
+	    {
+	    	var result = "";
+	    	
+	    	$.ajax({
+	    		type : "POST",
+	    		dataType : "text",
+	    		async : false,
+	    		url : "/ezApprovalG/receiverChk.do",
+	    		data : {
+	    				deptID   : DeptID 
+	    				},
+	    		success: function(text){
+	    			result = text;
+	    		},
+	    		error : function () {
+	    			result = "false";
+	    		}
+	    	});
+	    	
+	    	if(result == "false") 
+	    	    return false;
+	    	else
+	    	    return true;
+	    }
 	    </script>
 	    <style>
 	    	.mainlist tr th {border-top:0px}
@@ -1380,7 +1418,7 @@
 	                    </div>
 	                </div>
 	                <div id="Organ">
-	                    <div style="overflow: auto; height: 550px; width: 395px; background-color: #FFFFFF; border: 1px solid #ddd;border-top:0px" id="TreeView"></div>
+	                    <div style="overflow-x: hidden; overflow-y: auto; height: 550px; width: 395px; background-color: #FFFFFF; border: 1px solid #ddd;border-top:0px" id="TreeView"></div>
 	                </div>
 	                <!-- 즐겨찾기 -->
 	                <div id="ReceptTemp" style="display: none; padding-left: 5px">

@@ -417,7 +417,7 @@
 					<table style="margin-top: 4px;">
 			            <tr>
 			                <td class="box" style="border-right: 0px; height: 465px;">
-			                    <div style="width: 250px; height: 481px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+			                    <div style="width: 250px; height: 481px; overflow-x: hidden; overflow-y: auto;" id="treeview"></div>
 			                </td>
 			                <td></td>
 			                <td class="listview" style="width: 426px" id="orglistView">

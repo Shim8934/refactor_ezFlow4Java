@@ -10919,9 +10919,10 @@ CREATE TABLE `tbl_portal_theme_user` (
   `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
   `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
   `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
-  `used_theme` int(11) DEFAULT NULL COMMENT '사용자가 사용하는 테마 아이디',
+  `used_theme` int(11) NOT NULL DEFAULT '0' COMMENT '사용자가 사용하는 테마 아이디',
   `used_frame` int(11) DEFAULT NULL COMMENT '사용자가 사용하는 프레임 아이디',
-  PRIMARY KEY (`user_id`,`company_id`,`tenant_id`),
+  `is_default` int(11) DEFAULT '0',
+  PRIMARY KEY (`user_id`,`company_id`,`tenant_id`,`used_theme`),
   KEY `FK_tbl_portal_theme_user_used_theme_tbl_portal_theme_theme_id` (`used_theme`),
   KEY `FK_tbl_portal_theme_user_used_frame_tbl_portal_frame_frame_id` (`used_frame`),
   CONSTRAINT `FK_tbl_portal_theme_user_used_frame_tbl_portal_frame_frame_id` FOREIGN KEY (`used_frame`) REFERENCES `tbl_portal_frame` (`frame_id`),
@@ -11093,8 +11094,29 @@ CREATE TABLE `tbl_portal_portlet_user` (
   `portlet_order` int(11) DEFAULT NULL COMMENT '포틀릿 순서',
   `menu_id` int(11) DEFAULT NULL COMMENT '포틀릿과 연관된 메뉴 아이디',
   `portlet_used` int(11) DEFAULT '1',
-  PRIMARY KEY (`user_id`,`tenant_id`,`company_id`,`portlet_id`)
+  `theme_id` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`user_id`,`tenant_id`,`company_id`,`portlet_id`,`theme_id`),
+  KEY `FK_tbl_portlet_user_idx` (`portlet_id`,`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='사용자별 포틀릿 순서 설정 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_theme_portlet`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_theme_portlet`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_theme_portlet` (
+  `theme_id` int(11) NOT NULL,
+  `tenant_id` mediumint(9) NOT NULL DEFAULT '0',
+  `company_id` varchar(100) NOT NULL DEFAULT '',
+  `portlet_id` int(11) NOT NULL DEFAULT '0',
+  `portlet_used` int(11) DEFAULT NULL,
+  `portlet_order` int(11) DEFAULT NULL,
+  `menu_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`theme_id`,`tenant_id`,`company_id`,`portlet_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='테마별 포틀릿 사용여부 관련 테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

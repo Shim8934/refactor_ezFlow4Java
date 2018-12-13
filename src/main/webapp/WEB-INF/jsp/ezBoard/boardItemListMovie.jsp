@@ -948,21 +948,10 @@
 		</c:choose>
 	<c:if test="${buttonHidden == 'N'}">
 		<div id="mainmenu">
-		  <ul>
-		        <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
+			<ul>
+		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204'/></span></li>
-			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89'/></span></li>
-			    <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-		        <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205'/></span></li>
-		        <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188'/></span></li>
-		        <li><span onClick="AddToMyBoards()"><spring:message code='ezBoard.t10051'/></span></li>
-		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052'/></span></li> 
-		        <!-- <li id="right">
-	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
-					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
-					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
-				</li> -->
+		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052'/></span></li>
 				<div id="right" class="sub_frameIcon" style="float:right">	
 					<div class="sub_frameIconUL" style="width:57px !important">
 					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
@@ -971,11 +960,15 @@
 					<div class="sub_frameIconUL02">
 					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this);"></span></p>  
 					</div>
-				 </div>
+				</div>
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
-			        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
+			        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li>
 		        </c:if>
-		  </ul>
+		        <li><span class="icon16 icon16_star" onClick="AddToMyBoards()"></span></li>
+		        <li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup(this)"></span></li>
+		        <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
+		        <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
+			</ul>
 		</div>
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

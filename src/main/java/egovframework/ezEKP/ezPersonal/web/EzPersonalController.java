@@ -1841,4 +1841,33 @@ public class EzPersonalController extends EgovFileMngUtil {
 		logger.debug("checkDuplShareUser ended");
 		return rtnValue;
 	}
+
+
+	
+	/**
+	 * 2018-12-07 홍승비 - 포탈 환경설정 개인정보관리 사진정보만 가져오는 메서드
+	 */
+	@RequestMapping(value = "/ezPersonal/getUserPhoto.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getLiteralPhoto(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale) throws Exception {
+		logger.debug("getUserPhoto started");
+
+		userInfo = commonUtil.userInfo(loginCookie);	
+		String literalPhoto = "";
+		
+		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute2", userInfo.getPrimary(), userInfo.getTenantId());
+		Document xmlDom = commonUtil.convertStringToDocument(result);
+		
+		if (xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() == null || xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("")) {
+			literalPhoto = "<img id=myimg " + messageSource.getMessage("ezPersonal.i1",locale) + ">";
+		} else {
+			literalPhoto = "<img id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + "/" + xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
+		}
+		
+		model.addAttribute("literalPhoto", literalPhoto);
+		model.addAttribute("locale", userInfo.getLocale());
+		
+		logger.debug("getUserPhoto ended");
+		return literalPhoto;
+	}
 }

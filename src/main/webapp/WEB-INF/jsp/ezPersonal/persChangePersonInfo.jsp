@@ -117,8 +117,19 @@
 			        }
 			    }
 			    
+			    /* 2018-12-07 홍승비 - 사원 사진 등록, 변경 시 사진 div만 리로드하도록 수정 */
 			    function btnPhoto_onclick_Complete() {
-			        window.location.reload(true);
+					$.ajax({
+			    		type : "POST",
+			    		dataType : "html",
+			    		url : "/ezPersonal/getUserPhoto.do",
+			    		success : function(result) {
+							document.getElementById("LiteralPhoto").innerHTML = result;
+						},
+			    		error : function() {
+							window.location.reload(true);
+			    		}
+			    	});
 			    }
 	
 			    var address_zip_select_dialogArguments = new Array();
