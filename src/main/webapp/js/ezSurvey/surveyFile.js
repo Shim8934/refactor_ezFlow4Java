@@ -68,6 +68,7 @@ var SurveyFile = function() {
 			var filePath      = null;
 			var fileName      = fileItem.name;
 			var fileSize      = fileItem.size;
+			var fileSizeStr   = getFileSize(fileSize);
 			var ulElmt        = null;
 			var liElmt        = document.createElement("li");
 			var divMainElmt   = document.createElement("div");
@@ -93,7 +94,7 @@ var SurveyFile = function() {
 				var spanChild2          = document.createElement("span");
 				spanChild1.textContent  = fileName;
 				spanChild1.setAttribute("title", fileName);
-				spanChild2.textContent  = getFileSize(fileSize);
+				spanChild2.textContent  = fileSizeStr;
 				divChildElmt2.className = "attFileInf";
 				divChildElmt2.appendChild(spanChild1);
 				divChildElmt2.appendChild(spanChild2);
@@ -109,6 +110,7 @@ var SurveyFile = function() {
 			}
 			
 			liElmt.setAttribute("fname", fileName);
+			liElmt.setAttribute("fsize", fileSizeStr);
 			liElmt.appendChild(divMainElmt);
 			ulElmt.appendChild(liElmt);
 			
@@ -302,6 +304,7 @@ var SurveyFile = function() {
 			dragEnter  : onDragEnter,
 			dragOver   : onDragOver,
 			deleteFile : deleteFile,
+			chImage    : isImage,
 			check      : checkUploadStatus,
 			mkImgTag   : mkImgTag
 		};

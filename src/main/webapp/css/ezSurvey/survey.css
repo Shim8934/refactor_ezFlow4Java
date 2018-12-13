@@ -43,14 +43,15 @@
 .spanName, .selectedNode {height: 22px; line-height: 22px; color: #000; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}
 .spanName:hover {color: #9b9b9b;}
 .selectedNode {font-weight: bold;}
-.searchPanel {z-index: 2000; position: fixed; border:1px solid #666; background-color: #fff;; border-radius: 5px; height: auto; width: 464px;}
+.searchPanel, .userPanel {z-index: 2000; position: fixed; border:1px solid #666; background-color: #fff;; border-radius: 5px; height: auto; width: 464px;}
 .searchPanel h1 {margin-top: 0px !important;}
-.hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off, .qstnFile, .optionFile {display: none;}
+.userPanel {height: 262px;}
+.hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off, .qstnFile, .optionFile, .userPanel.off, .attach-zone.off, .surveyinfo-wrap.off {display: none;}
 .uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
 .receiver_tltype01 >span {min-width: 45px;}
 .organImg {width: 18px; height: 18px; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
 .org-minus, .org-plus {width: 18px; height: 18px; cursor: pointer;}
-.closeImgBttn {position: absolute; right: 10px; top: 10px;}
+.closeImgBttn {position: absolute; right: 10px; top: 8px;}
 .closeImgBttn >ul {margin: 0px; padding: 0px; list-style: none;}
 .closeImgBttn >ul >li {display: block; float: left; margin: 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
 .closeImgBttn >ul >li >span {display: inline-block; width: 25px; height: 28px; background-image: url(/images/close_xBtn.png); background-repeat: no-repeat; background-position: 4px 6px;}
@@ -109,10 +110,10 @@
 .prevItem .ddRes {padding: 0px 0px 2px 70px !important;}
 .zoomDiv {text-align: left; padding: 5px; margin: 0px; line-height: 0px;}
 .zoomDiv >img {cursor: pointer;}
-.survey-infrow {display: flex; font-family: HanSans, Gulim; margin: 5px 0px;}
+.survey-infrow, .survey-infrow-pv {display: flex; font-family: HanSans, Gulim; margin: 5px 0px;}
 .survey-infrow select {outline: none;}
-.survey-infrow >span {margin: 0px 10px; line-height: 32px; font-size: 14px;}
-.survey-infrow >span:FIRST-CHILD {margin-left: 0px !important; min-width: 80px;}
+.survey-infrow >span, .survey-infrow-pv >span {margin: 0px 10px; line-height: 32px; font-size: 14px;}
+.survey-infrow >span:first-child, .survey-infrow-pv >span:first-child {margin-left: 0px !important; min-width: 80px;}
 .survey-infrow .target-select {border-radius: 3px; outline: none; background-color: rgba(204, 204, 204, 0.46); padding: 0px 5px; font-size: 13px; line-height: 27px; cursor: pointer; margin: 0px 10px; border: 1px solid #ddd; display: none;}
 .target-select.on {display: block;}
 .survey-infrow .date-input {width: 60px; outline: 0px; border: 1px solid #ddd; padding-left: 5px;}
@@ -123,8 +124,9 @@
 .info-input-pp {font-size: 16px;}
 .survey-otherinf {margin: 15px 0px 0px;}
 .survey-attach {height: 400px; border: 1px solid #ddd; background-color: #fff; margin-bottom: 20px;}
-.survey-dropzone {height: 329px; padding: 15px 15px 0px;}
-.mainzone {border: 1px dashed #ddd; height: 100%; box-sizing: border-box;}
+.survey-dropzone {height: 326px; padding: 15px 15px 0px;}
+.attach-zone {height: 326px; padding : 15px; background: #fff;}
+.mainzone {border: 1px dashed #ddd; height: 100%; box-sizing: border-box; overflow-y: auto;}
 .survey-attbttn {height: 56px;}
 .survey-attbttn >div {float: left; background-color: rgb(52, 152, 219); border-radius: 4px; height: 28px; line-height: 28px; margin: 14px 10px; padding: 0px 5px; font-size: 14px; color: #fff; cursor: pointer;}
 .survey-infbttn {float: left; width: 36px; height: 36px; margin-left: 10px; cursor: pointer;}
@@ -381,6 +383,28 @@ input[type=range]::-ms-tooltip {display: none;}
 
 
 /* preview.jsp */
+.surveyinfo-wrap .survey-purpose {font-size: 15px; line-height: 27px; font-style: italic;}
+.inf-survey {font-size: 13px !important; color: blue;}
+.survey-bold {font-weight: bold;}
+.survey-user-pv {display: flex; align-items: center; margin: 0px 10px;}
+.survey-user-pv .inf-survey {line-height: 32px;}
+.user-more {margin: 4px; width: 24px; height: 24px; background-image: url('/images/ezSurvey/more.png'); background-repeat: no-repeat; background-size: 14px 14px; background-position: center; border-radius: 50%; border: 1px solid #aeaeae; cursor: pointer;}
+.total-user {color: red; font-size: 13px; margin-left: 5px;}
+.survey-pass {margin: 0px !important;}
+.user-tbl {width: 100%; border-right: 1px solid #ddd !important; border-left: 1px solid #ddd !important;}
+.user-tbl tr th, .user-tbl tr td {padding-left: 12px !important;}
+.center-field {text-align: center !important;}
+.right-field {padding-right: 32px !important;}
+.user-field2 {width: 75%;}
+.user-field  {cursor: pointer !important; width: 75%;}
+.popup-header {background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top; height: 44px; border-top-left-radius: 5px; border-top-right-radius: 5px;}
+.popup-title {font-size: 11pt; font-weight: bold;color: black; height: 44px; margin-left: 1px; line-height: 46px; padding-left: 10px;}
+.popup-body {padding: 15px;}
+.popup-wrapdiv {max-height: 156px; overflow-y: auto; overflow-x: hidden;}
+.survey-user-pv em {padding: 0px 2px;}
+.survey-user-pv .user-inf {font-size: 13px !important; color: #333; cursor: pointer;}
+.survey-user-pv .user-inf:hover, .user-field:hover {color: blue;}
+
 .prevQsArea {background-color: #fff; padding: 20px; min-height: 400px; border: 1px solid #d7d7d7; margin-bottom: 15px;}
 .requiredInfo {font-size: 14px; color: red;}
 

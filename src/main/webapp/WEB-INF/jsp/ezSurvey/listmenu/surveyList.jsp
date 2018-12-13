@@ -67,7 +67,6 @@
 					<a class="srchBttn"><span><spring:message code='ezSurvey.t18'/></span></a>
 				</div>
 			</div>
-			<span class="cabCloseBttn"></span>
 		</div>
 		
 		<div id="layerPopup" class="viewPopupMain" style="left: 0px; top: 0px; display: none;">
