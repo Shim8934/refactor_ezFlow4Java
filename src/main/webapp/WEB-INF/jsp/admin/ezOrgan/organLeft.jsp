@@ -182,7 +182,10 @@
 	  				<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
 	    			<ul></ul>
 	  			</h2>  
-	  			
+	  			<h2>
+	  				<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
+	    			<ul></ul>
+	  			</h2>
 	  			<h2>
 	  				<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
 	    			<ul></ul>    			
@@ -203,10 +206,6 @@
 	    			<ul></ul>
 	  			</h2>
 	            -->     
-				<h2>
-	  				<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
-	    			<ul></ul>
-	  			</h2>
 	  			</c:if>			
 	  			<!-- 2016-04-05 장진혁 편지지등록 / REQUEST에 MSIE 또는 TRIDENT가 포함될 시에만 메뉴 보여줌으로 되어있었음  -->
 	  			
