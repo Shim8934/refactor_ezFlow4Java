@@ -638,13 +638,13 @@
 			document.getElementById("portletListContainer").insertAdjacentHTML('beforeend', listHTML);
 			
 			//jquery ui - sortable(드래그앤드랍)
-			$(".col-container").sortable("destroy");
+			/* $(".col-container").sortable("destroy");
 	
 			$( ".col-container" ).sortable({
 				items : "li.col",
 			    handle: ".portlet-header",
 			    cancel: ".portlet-toggle"
-			});
+			}); */
 			
 			$( ".newPortlet")
 			.addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
@@ -696,11 +696,15 @@
 			var doc = window.document;
 			var alertMessage = "<spring:message code='ezNewPortal.t102' />";
 			var toastArea = doc.createElement("div");
+			var width = $("#portlet" + portletId).width();
+			var height = $("#portlet" + portletId).height();
+			var topPosition = (height / 2) - 10;
+			var leftPosition = (width / 2) - 47;
 			
 			toastArea.innerHTML = alertMessage;
 			toastArea.setAttribute("class", "toastArea");
-			toastArea.style.top = "115px";
-			toastArea.style.left = "115px";
+			toastArea.style.top = topPosition + "px";
+			toastArea.style.left = leftPosition + "px";
 			toastArea.style.display = "block";
 			toastArea.id = "toast" + portletId;
 			

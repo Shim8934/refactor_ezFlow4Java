@@ -240,7 +240,7 @@
 			    	<td colspan="2">
 			       		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~ 
 			       		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
-						<a href="#" class="imgbtn imgbck">
+						<a class="imgbtn imgbck">
 							<span onClick="search()"><spring:message code='ezSchedule.t24' /></span>
 						</a>
 					</td>
