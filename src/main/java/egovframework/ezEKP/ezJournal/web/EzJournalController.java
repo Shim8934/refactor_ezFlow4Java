@@ -1,10 +1,16 @@
 package egovframework.ezEKP.ezJournal.web;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -1205,6 +1212,61 @@ public class EzJournalController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("journalAttachDown ended");
+	}
+	
+	/**
+	 * 업무일지 모든 첨부파일 다운로드
+	 */
+	@RequestMapping(value = "/ezJournal/journalAllAttachDown.do")
+	public void journalAllAttachDown(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("journalAllAttachDown started");
+		
+		request.setCharacterEncoding("UTF-8");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String journalId = request.getParameter("journalId");
+		String journalTitle = request.getParameter("journalTitle");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("userId", userInfo.getId());
+		param.put("filePathS", request.getParameter("filePathS"));
+		param.put("fileNameS", request.getParameter("fileNameS"));
+		
+		String restUrl = "/rest/ezjournal/journals/" + journalId + "/allattachfiles";
+		JSONObject result = new JSONObject();
+		
+		result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+		
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) result.get("data");
+			String bytes = (String) data.get("bytes");
+			int fileSize = ((Number) data.get("fileSize")).intValue();
+			
+			String mimetype = "application/octet-stream";
+			byte[] tempBytes = Base64.getDecoder().decode(bytes);
+			
+			journalTitle = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), journalTitle);
+			
+			try (InputStream is = new ByteArrayInputStream(tempBytes)) {
+				response.setBufferSize(BUFF_SIZE);
+				response.setContentType(mimetype);
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + journalTitle + ".zip\"");
+				response.setContentLength(fileSize);
+				
+				FileCopyUtils.copy(is, response.getOutputStream());
+				
+				response.getOutputStream().flush();
+				response.getOutputStream().close();
+			} catch (Exception e) {
+				logger.debug("error");
+			}	
+		}
+		
+		logger.debug("journalAllAttachDown ended");
 	}
 	
 	/**
