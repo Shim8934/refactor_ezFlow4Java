@@ -1642,6 +1642,7 @@ e.printStackTrace();
 			LoginVO userInfo = new LoginVO();
 			String primary = "";
 			int tenantId = 0;
+			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 			
 			if (userId == null) {
 				tenantId = ezNewPortalService.getTnenantIdByServerName(serverName);
@@ -1660,6 +1661,7 @@ e.printStackTrace();
 
 			result.put("data", resultList);
 			result.put("primary", primary);
+			result.put("usePrimaryLangOnly", usePrimaryLangOnly);
 			result.put("status", "ok");
 			result.put("code", 0);
 
@@ -1952,19 +1954,14 @@ e.printStackTrace();
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			String mode = request.getParameter("mode");
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
-			if (mode != null && mode.equals("reset")) {
-				ezNewPortalService.resetCompanyMenuOrder(companyId, userInfo.getTenantId());
-			} else {
-				JSONParser jp = new JSONParser();
-				jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
 				
-				JSONArray menus = (JSONArray) jsonParam.get("menus");
-				ezNewPortalService.udpateMenuOrder(menus, companyId, userInfo.getTenantId());
-			}
+			JSONArray menus = (JSONArray) jsonParam.get("menus");
+			ezNewPortalService.udpateMenuOrder(menus, companyId, userInfo.getTenantId());
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1993,9 +1990,11 @@ e.printStackTrace();
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
+			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
+			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 			
 			MenuInfoVO menuInfo = ezNewPortalService.getMenuInfo(menuId, companyId, tenantId);
-			List<MenuNameVO> menuNames = ezNewPortalService.getMenuNames(menuId, companyId, tenantId);
+			List<MenuNameVO> menuNames = ezNewPortalService.getMenuNames(menuId, usePrimaryLangOnly, primaryLang, companyId, tenantId);
 			
 			JSONObject data = new JSONObject();
 			data.put("menuInfo", menuInfo);

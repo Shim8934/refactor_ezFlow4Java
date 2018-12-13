@@ -435,12 +435,12 @@
 
                 g_nodeCount++;
 
-                var nodeHtml = "<div style='height:" + g_imageHeight + "px;overflow-y:hidden;' noWrap>";
+                var nodeHtml = "<div style='height:" + g_imageHeight + ";overflow:hidden;white-space:nowrap'>";
                 for (var j = 0; j < depth; j++) {
                     if (g_nodeArray["depth"][nodeIdx].charAt(j) == "1")
                         nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "'>");
                     else
-                        nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                        nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "'>");
                 }
 
                 if (childXML.documentElement.attributes.getNamedItem("hassub") != null)
@@ -516,12 +516,12 @@
 
                 g_nodeCount++;
 
-                var nodeHtml = "<div style='height:" + g_imageHeight + "px;overflow-y:hidden;' noWrap>";
+                var nodeHtml = "<div style='height:" + g_imageHeight + ";overflow:hidden;white-space:nowrap'>";
                 for (var j = 0; j < depth; j++) {
                     if (g_nodeArray["depth"][nodeIdx].charAt(j) == "1")
                         nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "'>");
                     else
-                        nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                        nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "'>");
                 }
 
                 if (childXML.documentElement.attributes.getNamedItem("hassub") != null)
@@ -913,13 +913,13 @@
             g_nodeCount++;
             var mydepth = depth;
             var childNode = nodeXML[i];
-            var nodeHtml = "<div><div style='height:" + g_imageHeight + "px;overflow-y:hidden;' noWrap>";
+            var nodeHtml = "<div><div style='height:" + g_imageHeight + ";overflow:hidden;white-space:nowrap'>";
 
             for (var j = 0; j < depth.length; j++) {
                 if (depth.charAt(j) == "1")
-                    nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "'>");
                 else
-                    nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                    nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "'>");
             }
 
             var bParent = (childNode.childNodes.length > 0) ? true : false;
@@ -938,7 +938,7 @@
                     mydepth += "0";
                 }
 
-                nodeHtml += ("' style='cursor:pointer' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                nodeHtml += ("' style='cursor:pointer' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "'>");
             }
             else {
                 if (!bEndNode) {
@@ -950,7 +950,7 @@
                     mydepth += "0";
                 }
 
-                nodeHtml += ("' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+                nodeHtml += ("' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "'>");
             }
 
             var _imgsrc;
@@ -979,7 +979,7 @@
                     break;
 
             }
-            nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='" + _imgsrc + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+            nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='" + _imgsrc + "' width='" + g_imageWidth + "'>");
             nodeHtml += ("<span id='" + g_nodeid + g_nodeCount + "' class='" +
                     g_baseClass["normal"] + "' ");
 
@@ -1077,7 +1077,8 @@
         imageNodes = null;
 
         g_imageWidth = GetAttribute(SelectNodes(g_configXML, "tree/config/size")[0], "width");
-        g_imageHeight = GetAttribute(SelectNodes(g_configXML, "tree/config/size")[0], "height");
+        //g_imageHeight = GetAttribute(SelectNodes(g_configXML, "tree/config/size")[0], "height");
+        g_imageHeight = "24px";
     }
 
     function MakeHTMLStr(orgStr) {

@@ -71,6 +71,8 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 	<script type="text/javascript">
 		var menuAuths = [];
+		var usePrimaryLangOnly = "";
+		var primary = "";
 		
 		$(function(){
 			getCompanies();
@@ -109,6 +111,8 @@
 					
 					var userCompany = result.userCompany;
 					var companyList = result.list;
+					usePrimaryLangOnly = result.usePrimaryLangOnly;
+					primary = result.primary;
 					
 					companyList.forEach(function (item, index) {
 						companiesHTML += "<option value=" + item.cn + ((item.cn == userCompany) ? ' selected>' : '>') + item.displayName + "</option>";
@@ -240,9 +244,10 @@
 						menusHTML += "<dd class='admenuIcon_up iconBtn'><spring:message code='ezNewPortal.t075' /></dd>";
 					}
 					
-					menusHTML += "</dl><table class='iconTable01' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
+					menusHTML += "</dl><table class='iconTable01' border='0' cellpadding='0' cellspacing='0' style='clear:none;'>";
 					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t076' /></th><td colspan='2' class='menuIconTD'><label class='switch menuSwitch'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
-					menusHTML += "<tr><th rowspan='3' class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
+					menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' value='" +ReplaceText(ReplaceText(ConvertCharToEntityReference(menuInfo.menuUrl), '\"', "&#39;"), "\'", "&#34;") + "' maxlength='100'></td></tr>"
+					menusHTML += "<tr><th rowspan='" + menuNames.length + "' class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
 					
 					menuNames.forEach(function(item, index) {
 						if (index != 0) {
@@ -265,8 +270,8 @@
 						menusHTML += "</tr>";
 					});
 					
-					menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' value='" +ReplaceText(ReplaceText(ConvertCharToEntityReference(menuInfo.menuUrl), '\"', "&#39;"), "\'", "&#34;") + "' maxlength='100'></td></tr></table>";
-					menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
+					menusHTML += "</table>";
+					menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none;'>";
 					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'>";
 					
 					if (menuAuthsY != null && menuAuthsY.length != 0) {
@@ -308,95 +313,6 @@
 						menusHTML += "<a class='btnA deleteMenu'><spring:message code='ezNewPortal.t124' /></a>";
 					}
 					menusHTML += "</div></div></div></li>"
-					
-					/* if (menuInfo.menuType == "A") {
-						menusHTML += "<div class='btnpositionJsp deleteMenu'><a class='imgbtn deleteMenuBtn'><span>메뉴 삭제</span></a></div>";
-					} */
-					
-					/* menusHTML += "<div id='close' class='close'><ul><li><span></li></ul></div>";
-					menusHTML += "</div>";
-					menusHTML += "<hr/>";
-					menusHTML += "<div class='btnpositionJsp updateMenu'><a class='imgbtn updateMenuBtn'><span>저장</span></a></div>";
-					menusHTML += "<div class='menuIconInfo'>";
-					menusHTML += "<div class='menuIcon'>";
-					menusHTML += "<span class='" + menuInfo.iconUrl + "'></span>";
-					menusHTML += "</div>";
-					
-					if (menuInfo.menuType != "G") { //기본 메뉴는 아이콘 변경이 불가능함
-						menusHTML += "<div class='btnpositionJsp iconBtn'><a class='imgbtn'><span>아이콘등록</span></a></div>";
-					}
-					
-					menusHTML += "</div>";
-					menusHTML += "<div class='menuInfo'>";
-					menusHTML += "<ul>";
-					menusHTML += "<li class='menuSwitch'>[메뉴 사용]<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>";
-					menusHTML += "<li class='menuName'>[메뉴명]<table class='menuNameTbl'>"
-					
-					menuNames.forEach(function(item, index) {
-						menusHTML += "<tr>";
-						menusHTML += "<th>메뉴명("; 
-						
-						var country = "";
-						if (item.menuLang == 1) {
-							country = "한국어";
-						} else if (item.menuLang == 2) {
-							country = "영어";
-						} else if (item.menuLang == 3) {
-							country = "일본어";
-						}
-						
-						menusHTML += country + ")</th>";
-						menusHTML += "<td><input class='menuNameInput' id='menu" +  item.menuLang + "' type='text' value='" + item.menuName + "' maxlength='50'></td>";
-						menusHTML += "</tr>";
-					});
-					
-					menusHTML += "</table></li>";
-					menusHTML += "<li class='conUrl'>[연결 URL]<input type='text' value='" + menuInfo.menuUrl + "' maxlength='100'></li>"
-					menusHTML += "</ul></div>";
-					menusHTML += "<div class='menuAuth'><div class='btnpositionJsp menuAuthBtn'><a class='imgbtn'><span>권한 설정</span></a></div>";
-					menusHTML += "<div class='accessOK'>[접근 허용]"
-					menusHTML += "<div>";
-					
-					if (menuAuthsY != null && menuAuthsY.length != 0) {
-						var menuAuthsYList = "";
-						
-						menuAuthsY.forEach(function(item, index) {
-							if (item.userType) {
-								menuAuthsYList += ", " + item.userName;
-								menuAuthsYList += "(" + item.userDeptName + ")";
-							} else {
-								menuAuthsYList += ", " + item.userDeptName;
-							}
-						});
-						
-						menusHTML += menuAuthsYList.substring(1);
-					}
-					
-					menusHTML += "</div>";
-					menusHTML += "</div>";
-					menusHTML += "<div class='accessNO'>[접근 불가]"
-					menusHTML += "<div>"; */
-					
-					/* if (menuAuthsN != null && menuAuthsN.length != 0) {
-						var menuAuthsNList = "";
-						
-						menuAuthsN.forEach(function(item, index) {
-							if (item.userType) {
-								menuAuthsNList += "," + item.userName;
-								menuAuthsNList += "(" + item.userDeptName + ")";
-							} else {
-								menuAuthsNList += "," + item.userDeptName;
-							}
-						});
-						
-						menusHTML += menuAuthsNList.substring(1);
-					}
-					
-					menusHTML += "</div>";
-					menusHTML += "</div>";
-					menusHTML += "</div>";
-					menusHTML += "</div>";
-					menusHTML += "</li>"; */
 					
 					var nowShowDetails = $(".menuDetails").children().attr("id");
 		
@@ -456,6 +372,9 @@
 					if (menuInfo.menuType == "A") {
 						$(".deleteMenu").on("click", {"menuId" : menuInfo.menuId}, deleteMenu);
 					}
+					
+					//메뉴 상세보기 iconTable01 height 지정
+					$(".iconTable01, .iconTable02").css("height", (106 + 33 * (menuNames.length -1)) + "px");
 				}
 			}
 			
@@ -588,59 +507,41 @@
 			menusHTML += "<dd class='admenuIcon_up iconBtn'><spring:message code='ezNewPortal.t075' /></dd></dl>";
 			menusHTML += "<table class='iconTable01' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
 			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t076' /></th><td colspan='2' class='menuIconTD'><label class='switch menuSwitch'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
-			menusHTML += "<tr><th rowspan='3' class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
-			menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t078' />)</td>";
-			menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
-			menusHTML += "</tr>";
-			menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t079' />)</td>";
-			menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu2' type='text' maxlength='50'></td>";
-			menusHTML += "</tr>";
-			menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t080' />)</td>";
-			menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu3' type='text' maxlength='50'></td>";
-			menusHTML += "</tr>";
-			menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' maxlength='100'></td></tr></table>";
+			menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' maxlength='100'></td></tr>";
+			
+			if (usePrimaryLangOnly == "YES") {
+				menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
+				if (primary == "1") {
+					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t078' />)</td>";
+					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
+					menusHTML += "</tr>";	
+				} else if (primary == "2") {
+					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t079' />)</td>";
+					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
+					menusHTML += "</tr>";	
+				} else if (primary == "3") {
+					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t080' />)</td>";
+					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
+					menusHTML += "</tr>";	
+				}
+			} else {
+				menusHTML += "<tr><th rowspan='3' class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
+				menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t078' />)</td>";
+				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
+				menusHTML += "</tr>";
+				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t079' />)</td>";
+				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu2' type='text' maxlength='50'></td>";
+				menusHTML += "</tr>";
+				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t080' />)</td>";
+				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu3' type='text' maxlength='50'></td>";
+				menusHTML += "</tr>";
+			}
+			menusHTML += "</table>";
 			menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
 			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'></td></tr>";
 			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'></td></tr></table>";
 			menusHTML += "<div class='bottomBtn'><a class='btnA addMenuBtn'><spring:message code='ezNewPortal.t002' /></a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t086' /></a>";
 			menusHTML += "</div></div></div></li>"
-			
-			/* menusHTML += "<div class='btnpositionJsp addMenu'><a class='imgbtn addMenuBtn'><span>저장</span></a></div>";
-			menusHTML += "<div class='menuIconInfo'>";
-			menusHTML += "<div class='menuIcon'>";
-			menusHTML += "<span></span>";
-			menusHTML += "</div>";
-			menusHTML += "<div class='btnpositionJsp iconBtn'><a class='imgbtn'><span>아이콘등록</span></a></div>";
-			
-			menusHTML += "</div>";
-			menusHTML += "<div class='menuInfo'>";
-			menusHTML += "<ul>";
-			menusHTML += "<li class='menuSwitch'>[메뉴 사용]<label class='switch'><input type='checkbox'><span class='slider round'></span></label></li>";
-			menusHTML += "<li class='menuName'>[메뉴명]<table class='menuNameTbl'>"
-			
-			//메뉴 언어
-			menusHTML += "<tr>";
-			menusHTML += "<th>메뉴명(한국어)</th>";
-			menusHTML += "<td><input class='menuNameInput' id='menu1' type='text' maxlength='50'></td>";
-			menusHTML += "</tr>";
-			menusHTML += "<tr>";
-			menusHTML += "<th>메뉴명(영어)</th>";
-			menusHTML += "<td><input class='menuNameInput' id='menu2' type='text' maxlength='50'></td>";
-			menusHTML += "</tr>";
-			menusHTML += "<tr>";
-			menusHTML += "<th>메뉴명(일본어)</th>";
-			menusHTML += "<td><input class='menuNameInput' id='menu3' type='text' maxlength='50'></td>";
-			menusHTML += "</tr>";
-			
-			menusHTML += "</table></li>";
-			menusHTML += "<li class='conUrl'>[연결 URL]<input type='text' maxlength='100'></li>"
-			menusHTML += "</ul></div>";
-			menusHTML += "<div class='menuAuth'><div class='btnpositionJsp menuAuthBtn'><a class='imgbtn'><span>권한 설정</span></a></div>";
-			menusHTML += "<div class='accessOK'>[접근 허용]<div></div></div>";
-			menusHTML += "<div class='accessNO'>[접근 불가]<div></div></div>";
-			menusHTML += "</div>";
-			menusHTML += "</div>";
-			menusHTML += "</li>"; */
 			
 			var nowShowDetails = $(".menuDetails").children().attr("id");
 			
@@ -680,6 +581,9 @@
 			
 			//저장기능
 			$(".addMenuBtn").on("click", insertMenu);
+			
+			//메뉴 추가 iconTable01 height 지정
+			$(".iconTable01, .iconTable02").css("height", (usePrimaryLangOnly == "YES" ? 106 : 172) + "px");
 		}
 		
 		var insertMenu = function() {

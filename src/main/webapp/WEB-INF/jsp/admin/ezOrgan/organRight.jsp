@@ -1689,7 +1689,7 @@
 			</tr>
 		    <tr>
 		        <th style="padding: 3px; text-align: left; font-weight: normal;vertical-align:top">
-		            <div style="border: 1px solid #ddd; height: 510px; width: 375px; margin:10px; overflow: auto; background-color: #FFFFFF" id="TreeView"></div>
+		            <div style="border: 1px solid #ddd; height: 510px; width: 375px; margin:10px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
 		        </th>
 		        <th style="padding: 3px; text-align: left;vertical-align:top">
 		            <div class="listview" style="margin:10px;margin-bottom:2px">

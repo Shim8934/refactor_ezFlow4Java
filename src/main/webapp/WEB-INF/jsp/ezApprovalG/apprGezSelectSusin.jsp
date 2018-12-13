@@ -806,7 +806,7 @@
 					<table>
 						<tr>
 		                    <td style="vertical-align:top" colspan="2" ><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t232'/></h2>									
-		                        <div class="box" style="overflow:auto;height:305px;width:300px;" id="TreeView"></div>
+		                        <div class="box" style="overflow-x: hidden; overflow-y: auto;height:305px;width:300px;" id="TreeView"></div>
 		                    </td>
 						</tr>
 						<tr>

@@ -76,13 +76,12 @@ public interface EzNewPortalService {
 	public void insertPortlet(JSONObject portletInfo, JSONArray portletNames,  String companyId, int tenantId) throws Exception;
 	public void updateCompanyPortletInfo(JSONObject portletInfo, JSONArray portletNames,  String companyId, int tenantId) throws Exception;
 	public void updateCompanyPortletOrder(JSONArray portletList, int tenantId, String companyId) throws Exception ;
-	public void deletePortlet(int portletId, int menuId, String companyId, int tenantId);
+	public void deletePortlet(int portletId, int menuId, String companyId, int tenantId) throws Exception;
 	public void updateCompanyLogo(String companyId, int tenantId, String logoType, String logoUrl);
 	public List<PortalLogoVO> getCompanyLogoList(String companyId, int tenantId);
 	public int getTnenantIdByServerName(String serverName);
 	public void updateCompanyDefaultTheme(int themeId, String companyId, int tenantId);
 	public void deleteCompanyLogo(String companyId, int tenantId, String logoType);
-	public void resetCompanyMenuOrder(String companyId, int tenantId);
 	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId, String lang) throws Exception;
 	public void updateThemePortletUsed(int themeId, int tenantId, String companyId, JSONArray themePortletList) throws Exception;
 	/**
@@ -122,7 +121,7 @@ public interface EzNewPortalService {
 	/**
 	 * 관리자 메뉴상세정보 메뉴이름조회
 	 */
-	public List<MenuNameVO> getMenuNames(int menuId, String companyId, int tenantId) throws Exception;
+	public List<MenuNameVO> getMenuNames(int menuId, String usePrimaryLangOnly, String primaryLang, String companyId, int tenantId) throws Exception;
 	/**
 	 * 관리자 메뉴별 권한목록조회
 	 */
