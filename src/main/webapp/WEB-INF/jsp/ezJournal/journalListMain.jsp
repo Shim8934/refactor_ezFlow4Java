@@ -239,7 +239,9 @@
 		                    document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
 							document.getElementById("Preview_ContentH").style.height = (CurrentHeight - $(".previewmail").eq(0).height()) + "px";
 		                    document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
-		                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+		                    if(document.getElementById("PreH_subject")!=null){
+			                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+		                    }
 		                    
 		                    /* 좌우 리사이징 시 round로 인해 비율의 합이 100%가 되지 않아
 		                       오른쪽 끝에 여백이 발생하여 제거함
@@ -633,7 +635,9 @@
 // 							$("#Preview_ContentH").css("height", textContentSize);
 // 							textContentSize = $("#PreviewRayerW").height()-$(".previewmail_info").height()-50;
 // 							$("#Preview_ContentW").css("height", textContentSize);
-							document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+							if(document.getElementById("PreH_subject")!=null){
+			                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+		                    }
 // 		   					ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 // 		   					ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 							Window_resize();
@@ -1315,7 +1319,9 @@
 	            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
 // 	            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
 	            document.getElementById("Preview_ContentH").style.height = (CurrentHeight - 65) + "px";
-	            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+	            if(document.getElementById("PreH_subject")!=null){
+                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+                }
 	            pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
 	            pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
 
