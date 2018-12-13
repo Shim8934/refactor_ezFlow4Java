@@ -20,7 +20,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<!-- <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/datepicker.htc.js')}"></script> -->
 		<!-- <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/composeappt.js')}"></script> -->
-		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/adminPopup.css')}">
+		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/popup.css')}">
 		
 		<script type="text/javascript">
 			var compid = "<c:out value = '${companyID}' />";

@@ -1,0 +1,9 @@
+.skinList {margin-left:-10px;list-style:none;}
+.skinList li {float:left;margin:10px;}
+.skins {position:relative;width:140px;height:37px;text-align:center;border:1px solid #cecece;cursor:pointer;}
+.skinImages {position:relative;width:100%;height:35px; border:1px solid #cecece;}
+.checked {background-color:#edf7ff;border:1px solid #2196f3;}
+.skinPopup {width:500px;height:500px;position:absolute;background:rgba(0,0,0,0.4);border-radius:30px;top:100px;left:150px;}
+.skinDivTop {display:inline-block;float:right;width:40px;margin-top:15px;}
+.skinPopImg {width:400px;height:400px;position:relative;top:50px;left:45px;}
+.skinCloseBtn {cursor:pointer;font-size:25px;}

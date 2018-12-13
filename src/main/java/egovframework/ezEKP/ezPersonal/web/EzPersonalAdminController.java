@@ -943,6 +943,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("content", content);
 		model.addAttribute("user", userInfo.getId());
 		model.addAttribute("flag", flag);
+		model.addAttribute("skinValue", vo.getSkinValue());
 		
 		logger.debug("showPopup ended");
 		return "admin/ezPersonal/personalShowPopup";

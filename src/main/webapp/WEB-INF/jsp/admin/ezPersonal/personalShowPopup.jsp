@@ -29,6 +29,9 @@
 		
 		<script type="text/javascript">
 			var flag = "<c:out value = '${flag}' />";
+			// skinValue 0 ~ 3
+			var skinValue = "<c:out value = '${skinValue}' />";
+
 			$(document).ready(function() {
 				popupcontent.style.height = document.documentElement.clientHeight - 136 + "px";
 			});
