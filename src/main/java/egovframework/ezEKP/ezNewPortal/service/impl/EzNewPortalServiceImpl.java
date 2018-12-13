@@ -1052,7 +1052,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 	}
 	@Override
-	public void deletePortlet(int portletId, int menuId, String companyId, int tenantId) {
+	public void deletePortlet(int portletId, int menuId, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("deletePortlet started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("portletId", portletId);
@@ -1071,6 +1071,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		//tbl_portal_portlet 지우기
 		ezNewPortalDAO.deletePortlet(map);
+		
+		ezNewPortalDAO.deleteThemePortlet(map);
+		
 		
 		LOGGER.debug("deletePortlet ended.");
 	}

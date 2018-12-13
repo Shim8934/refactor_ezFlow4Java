@@ -76,7 +76,7 @@ public interface EzNewPortalService {
 	public void insertPortlet(JSONObject portletInfo, JSONArray portletNames,  String companyId, int tenantId) throws Exception;
 	public void updateCompanyPortletInfo(JSONObject portletInfo, JSONArray portletNames,  String companyId, int tenantId) throws Exception;
 	public void updateCompanyPortletOrder(JSONArray portletList, int tenantId, String companyId) throws Exception ;
-	public void deletePortlet(int portletId, int menuId, String companyId, int tenantId);
+	public void deletePortlet(int portletId, int menuId, String companyId, int tenantId) throws Exception;
 	public void updateCompanyLogo(String companyId, int tenantId, String logoType, String logoUrl);
 	public List<PortalLogoVO> getCompanyLogoList(String companyId, int tenantId);
 	public int getTnenantIdByServerName(String serverName);
