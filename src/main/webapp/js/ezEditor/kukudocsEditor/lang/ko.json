@@ -619,6 +619,8 @@
     "table_split_row": "행 분할",
     "cell_horizontal_size": "너비를 같게",
     "cell_vertical_size": "높이를 같게",
+    "table_lock": "테이블 잠금",
+    "cell_lock": "셀 잠금",
     "table_background_color": "표 바탕색",
     "table_border_style": "선 스타일",
     "menuToolName": "도구",
@@ -727,7 +729,8 @@
     "notFoundTextErrorMessage": "문자열을 찾을 수 없습니다.",
     "errorParsingError" : "변환도중 에러가 발생되었습니다.",
     "pasteParsingError" : "붙여넣기 도중 에러가 발생되었습니다.",
-    "invalidBrowserError" : "지원하지 않는 브라우저 입니다."
+    "invalidBrowserError" : "지원하지 않는 브라우저 입니다.",
+    "notSetCellLockNameError" : "잠금 이름이 설정되지 않았습니다."
   },
   "processingMessage" : "변환 중 ...",
   "paragraphInsert": "문단 추가",

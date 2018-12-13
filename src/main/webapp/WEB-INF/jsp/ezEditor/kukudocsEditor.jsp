@@ -233,7 +233,7 @@
 	            imageUploadURL : imageUploadURL,
 	            Editor_Complete : Editor_Complete,
 	            cell_lock_name : 'cell_lock',
-	            lockImageURL : '/js/ezEditor/kukudocsEditor/images/lock.png',
+	            lockImageURL : '/images/lock.png',
 	            colorPicker : colorPicker
 	        });
 		</script>

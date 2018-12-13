@@ -275,7 +275,7 @@
 	            } catch (e) {
 	            }
 	            
-	            if (approvalFlag != 'G') {
+	            if (approvalFlag != 'G' &&  LoadSquery != 'usercontlist') {
 		            AddOption(sel_status, '<spring:message code="ezApprovalG.t1434"/>', 'H');
 		            AddOption(sel_status,'<spring:message code="ezApprovalG.t1422"/>', 'I');
 		            AddOption(sel_status, '<spring:message code="ezApprovalG.t1687"/>', 'N');
@@ -1614,7 +1614,6 @@
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>
 		        	<c:if test = "${approvalFlag != 'G' && sQuery != 'usercontlist'}">
-		        	
 		        		<div id="sel_status_div" style="display:inline;">
 						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
 							<option value="ALL"><spring:message code='ezPoll.t104'/></option>
