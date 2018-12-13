@@ -606,6 +606,19 @@
 	]]>
 	</delete>
 	
+	<delete id="ezNewPortal.deleteThemePortlet" parameterClass="map">
+		<![CDATA[
+			DELETE FROM
+				TBL_PORTAL_THEME_PORTLET
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				portlet_id = #poortletId#
+		]]>
+	</delete>
+	
 	<update id="ezNewPortal.updateCompanyPortletOrder" parameterClass="Map">
 	<![CDATA[
 		UPDATE 
@@ -648,7 +661,7 @@
 			MERGE INTO TBL_PORTAL_LOGO
 			USING DUAL
 			ON (
-					company_id = #tenantId#
+					company_id = #companyId#
 				AND
 					tenant_id = #tenantId#
 				AND
