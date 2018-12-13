@@ -44,7 +44,7 @@
 						</c:if>
 						</dl>
 						<c:choose>
-							<c:when test="${not empty photoBoardList}">
+							<c:when test="${not empty photoBoardList || photoBoardList != ''}">
 								<ul class="photoList" id="photoul">
 									<c:forEach items="${photoBoardList }" var="photo">
 										<li><img src="${photo.filePath }" data1="${photo.boardID }"

@@ -68,7 +68,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 			str += "</dl>";
 		}
 	} else {
-		if (portletBoardId == null) {
+		if (portletBoardId == null || portletBoardId == "") {
 			str += "<ul class='portlet_list'>";
 			str += "<dl class='nodata'>";
 			str += "<dt>";

@@ -48,7 +48,7 @@ function setStartPage(event) {
 			menuId = selId.substring(1);
 		}
 	} else {
-		mmenuId = event.data.menuId;
+		menuId = event.data.menuId;
 	}
 	
 	var menuName = $("#M" + menuId).find("td").eq(1).text();
@@ -61,8 +61,10 @@ function setStartPage(event) {
 			data : {"menuId" : menuId},
 			url : "/ezNewPortal/updateUserStartPage.do",
 			success : function() {
-				$("#M" + oldStartPageId).find("td").eq(2).text("");
+				$(".start_page").text("");
+				$("td").removeClass("start_page");
 				$("#M" + menuId).find("td").eq(2).text("<spring:message code='ezNewPortal.t031' />");
+				$("#M" + menuId).find("td").eq(2).addClass("start_page");
 			},
 			fail : function () {
 				//alert("<spring:message code='ezNewPortal.t032' />");
@@ -122,7 +124,7 @@ function setStartPage(event) {
 			<td><spring:message code='ezNewPortal.t033' /></td>
 		<c:choose>
 			<c:when test="${menuId eq 0 }">
-				<td><spring:message code='ezNewPortal.t031' /></td>
+				<td class='start_page'><spring:message code='ezNewPortal.t031' /></td>
 			</c:when>
 			<c:otherwise>
 				<td></td>
@@ -136,7 +138,7 @@ function setStartPage(event) {
 				<tr id="M${menu.menuId }">
 					<td></td>
 					<td>${menu.menuName }</td>
-					<td><spring:message code='ezNewPortal.t031' /></td>
+					<td class='start_page'><spring:message code='ezNewPortal.t031' /></td>
 			        <td></td>	
 				</tr>
 			</c:when>
