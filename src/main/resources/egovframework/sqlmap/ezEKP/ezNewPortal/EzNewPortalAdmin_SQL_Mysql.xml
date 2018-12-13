@@ -732,21 +732,6 @@
 	]]>
 	</insert>
 	
-	<update id="ezNewPortal.resetCompanyMenuOrder" parameterClass="Map">
-	<![CDATA[
-		UPDATE 
-			TBL_PORTAL_MENU_COMP A, TBL_PORTAL_MENU B
-		SET
-			A.company_order = B.default_order
-		WHERE
-			A.menu_id = B.menu_id
-		AND
-			company_id = #companyId#
-		AND
-			tenant_id = #tenantId#
-	]]>
-	</update>
-	
 	<update id="ezNewPortal.updateUserThemeAndFrameDefault" parameterClass="Map">
 	<![CDATA[
 		UPDATE 

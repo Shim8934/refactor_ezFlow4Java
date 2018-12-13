@@ -477,10 +477,6 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		insert("ezNewPortal.insertMenuAuth", map);
 	}
 	
-	public void resetCompanyMenuOrder (Map<String, Object> map) {
-		update("ezNewPortal.resetCompanyMenuOrder", map);
-	}
-	
 	public void updateUserThemeAndFrameDefault(Map<String, Object> map) {
 		update("ezNewPortal.updateUserThemeAndFrameDefault", map);
 	}

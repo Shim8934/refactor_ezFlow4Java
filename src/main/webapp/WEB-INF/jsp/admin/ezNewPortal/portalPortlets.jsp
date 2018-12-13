@@ -637,32 +637,12 @@
 			
 			document.getElementById("portletListContainer").insertAdjacentHTML('beforeend', listHTML);
 			
-			//jquery ui - sortable(드래그앤드랍)
-			/* $(".col-container").sortable("destroy");
-	
-			$( ".col-container" ).sortable({
-				items : "li.col",
-			    handle: ".portlet-header",
-			    cancel: ".portlet-toggle"
-			}); */
 			
 			$( ".newPortlet")
 			.addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
 			.find( ".portlet-header" )
 			.addClass( "ui-widget-header ui-corner-all" );
 			//jquery ui - 끝
-			
-			/* var categoryList = document.querySelectorAll("input[name='category']");
-			
-			[].forEach.call(categoryList, function(category) {
-				category.addEventListener("click", function(){
-					if (this.value == "B" && this.checked) {
-						document.getElementById("newPortlet").querySelector(".setBoard").style.display = "table-row";
-					} else {
-						document.getElementById("newPortlet").querySelector(".setBoard").style.display = "none";
-					}
-				});
-			}); */
 			
 			$("#newPortlet").find(".menuSetting").on("click", {"portletId" : null}, openMenuList);
 			

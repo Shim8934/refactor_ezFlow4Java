@@ -1150,17 +1150,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public void resetCompanyMenuOrder(String companyId, int tenantId) {
-		LOGGER.debug("resetCompanyMenuOrder started.");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyId", companyId);
-		map.put("tenantId", tenantId);
-		
-		ezNewPortalDAO.resetCompanyMenuOrder(map);
-		LOGGER.debug("resetCompanyMenuOrder ended.");
-	}
-	
-	@Override
 	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId, String lang) throws Exception {
 		LOGGER.debug("getThemePortletList started.");
 		List<PortletInfoVO> themePortletList = new ArrayList<PortletInfoVO>();
