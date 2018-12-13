@@ -20,13 +20,13 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<!-- module -->
-		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/buttons.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/search.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/share.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
 		<script type="text/javascript">
 			var folderId = "";
 			var isShareMode = true;
@@ -289,6 +289,7 @@
 						renderList2(result.fileList);
 						setNamePath(result.folderPath, result.originalPath);
 						setMailBoxInfo(result.fldCnt, result.fileCnt);
+						
 					},
 					error : function(error) {
 						hideProgress();
@@ -519,7 +520,20 @@
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", resultJson["folderFileType"]);
-					row.setAttribute("targetCreater", resultJson["createId"]);
+					row.setAttribute("targetPath", result[i]["folderPath"]);
+					
+					var functionType = ""
+					if (result[i]["folderType"]) {
+						row.setAttribute("targetFunction", result[i]["folderType"]);
+					}
+					
+					var creator = ""
+					if (!result[i]["creatorId"]) {
+						row.setAttribute("targetCreater", result[i]["createId"]);
+					} else {
+						row.setAttribute("targetCreater", result[i]["creatorId"]);
+					}
+					
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					inputElement = document.createElement("input");
@@ -708,7 +722,19 @@
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", isFolder ? "D" : "F");
-					row.setAttribute("targetCreater", resultJson["createId"]);
+					row.setAttribute("targetPath", result[i]["filePosition"]);
+					
+					var functionType = ""
+					if (result[i]["folderType"]) {
+						row.setAttribute("targetFunction", result[i]["folderType"]);
+					}
+					
+					var creator = ""
+					if (!result[i]["creatorId"]) {
+						row.setAttribute("targetCreater", result[i]["createId"]);
+					} else {
+						row.setAttribute("targetCreater", result[i]["creatorId"]);
+					}
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					inputElement = document.createElement("input");
@@ -968,6 +994,7 @@
 				alert(messages.strLang33);
 				refreshView();
 			}
+			
 		</script>
 	</head>
 	<body class="mainbody">

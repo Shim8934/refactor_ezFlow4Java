@@ -377,6 +377,18 @@
 					trElmt.setAttribute("targetId", result[i]["fileId"]);
 					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'D' : 'F');
 					trElmt.setAttribute("targetCreater", result[i]["createId"]);
+					trElmt.setAttribute("targetPath", result[i]["filePosition"]);
+					
+					if (result[i]["targetType"]) {
+						trElmt.setAttribute("targetFunction", resultJson["folderType"]);
+					}
+					
+					var creator = ""
+					if (!result[i]["creatorId"]) {
+						trElmt.setAttribute("targetCreater", result[i]["createId"]);
+					} else {
+						trElmt.setAttribute("targetCreater", result[i]["creatorId"]);
+					}
 					trElmt.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					if (result[i]["fileTypeName"] != 'folder') {

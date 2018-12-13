@@ -533,7 +533,20 @@
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", resultJson["folderFileType"]);
-					row.setAttribute("targetCreater", result[i]["createId"]);
+					row.setAttribute("targetPath", result[i]["folderPath"]);
+					
+					var functionType = ""
+					if (result[i]["folderType"]) {
+						row.setAttribute("targetFunction", result[i]["folderType"]);
+					}
+					
+					var creator = ""
+					if (!result[i]["creatorId"]) {
+						row.setAttribute("targetCreater", result[i]["createId"]);
+					} else {
+						row.setAttribute("targetCreater", result[i]["creatorId"]);
+					}
+					
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					inputElement = document.createElement("input");
@@ -722,6 +735,20 @@
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", isFolder ? "D" : "F");
 					row.setAttribute("targetCreater", result[i]["createId"]);
+					row.setAttribute("targetPath", result[i]["filePosition"]);
+					
+					var functionType = ""
+					if (result[i]["folderType"]) {
+						row.setAttribute("targetFunction", result[i]["folderType"]);
+					}
+					
+					var creator = ""
+					if (!result[i]["creatorId"]) {
+						row.setAttribute("targetCreater", result[i]["createId"]);
+					} else {
+						row.setAttribute("targetCreater", result[i]["creatorId"]);
+					}
+					
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					inputElement = document.createElement("input");

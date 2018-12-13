@@ -3,18 +3,24 @@ var buttons = (function() {
 		DivPopUpHidden();
 		refreshView();
 	}
+	function getPathSplit (data) {
+		var jbSplit = data.split('/');
+		return jbSplit;
+	}
 	function getSelectedFoldersAndFiles() {
 		var selectedRows = rowContext.getSelectedRows();
 		var selectedLength = selectedRows.length;
 		
 		if (selectedLength <= 0) {
-			alert(messages.strLang5);
+			alert(messages.strLang38);
 			return undefined;
 		}
 		
 		var files  = [];
 		var folders = [];
 		var creater = [];
+		var targetFunction = [];
+		var targetPath = [];
 		var rowInfo;
 		
 		for (var i = 0; i < selectedLength; i++) {
@@ -23,6 +29,9 @@ var buttons = (function() {
 			if (rowInfo.type === 'D') {
 				folders.push(rowInfo.id);
 				creater.push(rowInfo.creator);
+				targetFunction.push(rowInfo.targetFunction);
+				functionType = targetFunction[0];
+				targetPath.push(getPathSplit(rowInfo.targetPath).length);
 			} else {
 				files.push(rowInfo.id);
 			}
@@ -31,7 +40,9 @@ var buttons = (function() {
 		return {
 			folders : folders,
 			files : files,
-			creater : creater
+			creater : creater,
+			targetFunction : targetFunction ,
+			targetPath : targetPath
 		}
 	}
 	
@@ -56,13 +67,38 @@ var buttons = (function() {
 			var selected = getSelectedFoldersAndFiles();
 			
 			if (selected === undefined) {
-				alert(messages.strLang38);
 				return;
 			}
 			
 			if (selected.files.length < 1 && selected.folders.length < 1 ) {
-				alert(messages.strLang38);
+				alert(messages.strLang39);
 				return;
+			}
+			var fileId = selected.files[0];
+			var selectedFolderId = selected.folders[0];
+			
+			var targetPathLength = selected.targetPath;
+			var selectedCreatorId = selected.creater[0]
+			
+			if (selected.targetFunction[0] != null || selected.targetFunction[0] == "") {
+				folderType = selected.targetFunction[0];
+			}
+			
+			if (folderType == "S") {
+				if (parentId == 'root' || targetPathLength[0] < 2) {
+					alert(messages.strLang34);
+					return;
+				}
+			} else if (folderType == "C") {
+				if (parentId == 'root' || targetPathLength[0] < 2) {
+					alert(messages.strLang36);
+					return;
+				}
+			} else {
+				if (targetPathLength[0] < 1) {
+					alert(messages.strLang35);
+					return;
+				}
 			}
 				
 			$.ajax({
@@ -99,7 +135,7 @@ var buttons = (function() {
 			}
 			
 			if (selected.files.length > 1 || selected.folders.length > 1 ) {
-				alert(messages.strLang38);
+				alert(messages.strLang39);
 				return;
 			}
 			
@@ -131,19 +167,24 @@ var buttons = (function() {
 				});
 				
 			} else {
+				if (selected.targetFunction[0] != null || selected.targetFunction[0] == "") {
+					folderType = selected.targetFunction[0];
+				}
+				var targetPathLength = selected.targetPath;
 				var selectedCreatorId = selected.creater[0];
+				
 				if (folderType == "S") {
-					if (parentId == 'root') {
+					if (parentId == 'root' || targetPathLength[0] < 2) {
 						alert(messages.strLang34);
 						return;
 					}
 				} else if (folderType == "C") {
-					if (parentId == 'root') {
+					if (parentId == 'root' || targetPathLength[0] < 2) {
 						alert(messages.strLang36);
 						return;
 					}
 				} else {
-					if (folderId == "root") {
+					if (folderId == "root" || targetPathLength[0] < 1) {
 						alert(messages.strLang35);
 						return;
 					}
@@ -211,10 +252,14 @@ var buttons = (function() {
 			}
 			
 			if (folderType == "C") {
-				if (parentId == 'root' || parentId == undefined) {
+				if (parentId == 'root' || parentId == undefined ) {
 					alert(messages.strLang36);
 					return;
 				}
+//				if (parentId == 'root' || targetPathLength[0] < 2) {
+//					alert(messages.strLang36);
+//					return;
+//				}
 			}
 			
 			functionType = "insert";

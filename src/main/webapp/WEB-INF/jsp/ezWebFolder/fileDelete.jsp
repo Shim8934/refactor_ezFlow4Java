@@ -65,13 +65,13 @@
 	</script>
 </head>
 <body class="popup" style="overflow: hidden;"> 
-	<h1 id ="topMenu" style="margin:0px;margin-top:2px"><spring:message code='ezWebFolder.t117'/></h1>
+	<h1 id ="topMenu" style="margin:0px;margin-top:2px"><spring:message code='ezWebFolder.t512'/></h1>
 	<div id="close">
         <ul>
             <li><span id="btnCancel" onclick="wClose();"></span></li>
         </ul>
     </div>
-	<div style="margin: 0px 0px 12px;height:110px;border:1px solid #ddd;padding:15px;font-size:12px;"><spring:message code='ezWebFolder.t109'/></div>	
+	<div style="margin: 0px 0px 12px;height:110px;border:1px solid #ddd;padding:15px;font-size:12px;"><spring:message code='ezWebFolder.t513'/></div>	
 	<div class="btnpositionNew">
 		<a id="btnSave" class="imgbtn" onclick="ok_Click();"><span><spring:message code='ezWebFolder.t111'/></span></a>
 	</div>

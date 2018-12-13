@@ -47,6 +47,12 @@ var rowContext = (function() {
 		
 		var selectedLength = getSelectedRows().length;
 		var isDuplicateFocus = (selectedLength === 1 && firstSelected === rowElement);
+		if (folderType =="S") {
+			var selectedRows = rowContext.getSelectedRows();
+			var rowInfo = rowContext.getRowInfo(selectedRows[0]);
+			
+			folderType = rowInfo.targetFunction;
+		}
 		
 		if (event.ctrlKey || isDuplicateFocus) {
 			setSelectState(rowElement, !isSelected(rowElement));
@@ -88,12 +94,16 @@ var rowContext = (function() {
 		var targetType = rowElement.getAttribute("targetType");
 		var isFavorite = rowElement.hasAttribute("favorite");
 		var creator = rowElement.getAttribute("targetCreater");
+		var targetType2 = rowElement.getAttribute("targetFunction");
+		var targetPath = rowElement.getAttribute("targetPath");
 		
 		return {
 			id: targetId,
 			type: targetType,
 			isFavorite: isFavorite,
-			creator : creator
+			creator : creator,
+			targetFunction : targetType2,
+			targetPath :targetPath
 		}
 	}
 	

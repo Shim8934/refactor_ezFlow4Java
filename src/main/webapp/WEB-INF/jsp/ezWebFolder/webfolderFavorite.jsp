@@ -35,6 +35,7 @@
 	var userId = "${userId}";
 	var folderId = "";
 	var inputNameDlg_cross_dialogArguments = new Array();
+	var parentId = "";
 	
 	var context = (function() {
 		var isFavoriteMode = false;
@@ -398,6 +399,7 @@
 				renderList(data.fileList, true);
 				setNamePath(data.folderPath, data.originalPath);
 				setMailBoxInfo(data.fldCnt, data.fileCnt);
+				window.folderType = folderType;
 			},
 			error: function(error) {
 				hideProgress();
@@ -560,7 +562,18 @@
 			row.setAttribute("class", "bnkWebFolder");
 			row.setAttribute("targetId", resultJson[columnMap.id]);
 			row.setAttribute("targetPath", resultJson[columnMap.path]);
-			row.setAttribute("targetCreater", result[i]["createId"]);
+			
+			var functionType = ""
+			if (result[i]["targetType"]) {
+				functionType = splitTargetType(result[i]["targetType"]);
+				row.setAttribute("targetFunction", functionType);
+			}
+			var creator = ""
+			if (!result[i]["creatorId"]) {
+				row.setAttribute("targetCreater", result[i]["createId"]);
+			} else {
+				row.setAttribute("targetCreater", result[i]["creatorId"]);
+			}
 			row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 			
 			if (!isFromFolder && isFolder) {
@@ -796,6 +809,50 @@
 		blockLeft.style.display = "none";
 	}
 	
+	function splitTargetType(data) {
+		var jbString = data;
+		var jbSplit = jbString.split('_');
+		return jbSplit[1];
+	}
+	
+	function getSelectedFoldersAndFiles() {
+		var selectedRows = rowContext.getSelectedRows();
+		var selectedLength = selectedRows.length;
+		
+		if (selectedLength <= 0) {
+			alert(messages.strLang5);
+			return undefined;
+		}
+		
+		var files  = [];
+		var folders = [];
+		var creater = [];
+		var targetFunction = [];
+		var targetPath = [];
+		var rowInfo;
+		
+		for (var i = 0; i < selectedLength; i++) {
+			rowInfo = rowContext.getRowInfo(selectedRows[i]);
+			
+			if (rowInfo.type === 'D') {
+				folders.push(rowInfo.id);
+				creater.push(rowInfo.creator);
+				targetFunction.push(rowInfo.targetFunction);
+				functionType = targetFunction[0];
+				targetPath.push(getPathSplit(rowInfo.targetPath).length);
+			} else {
+				files.push(rowInfo.id);
+			}
+		}
+		
+		return {
+			folders : folders,
+			files : files,
+			creater : creater,
+			targetFunction : targetFunction ,
+			targetPath : targetPath
+		}
+	}
 </script>
 </head>
 <body class="mainbody" favoritemode>
