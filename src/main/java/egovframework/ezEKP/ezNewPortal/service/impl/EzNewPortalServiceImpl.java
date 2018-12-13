@@ -949,6 +949,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map = new ObjectMapper().readValue(portletInfo.toJSONString(), Map.class);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		boolean portletUsed = Boolean.parseBoolean(map.get("portletUsed").toString());
 		
 		//포틀릿 insert 후에 아이디 가져옴
 		int portletId = ezNewPortalDAO.insertPortlet(map);
@@ -976,6 +977,20 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				ezNewPortalDAO.insertCompanyPortletNameInfo(map);
 			}
 		}
+		
+		//테마별 포틀릿에도 추가
+		//테마 리스트 불러오기
+		List<ThemeInfoVO> themeList = ezNewPortalDAO.getCompanyThemes(map);
+		int themeCount = themeList.size();
+		
+		//테마별로 넣어주기
+		for (int i = 0; i < themeCount; i ++) {
+			map.put("themeId", themeList.get(i).getThemeId());
+			map.put("portletUsed", portletUsed);
+			map.put("portletId", portletId);
+			ezNewPortalDAO.updateThemePortletUsed(map);
+		}
+		
 		LOGGER.debug("insertPortlet ended.");
 	}
 	@SuppressWarnings("unchecked")
