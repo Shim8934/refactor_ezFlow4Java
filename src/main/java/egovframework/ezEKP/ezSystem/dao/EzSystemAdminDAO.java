@@ -4,10 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
-import org.stringtemplate.v4.compiler.CodeGenerator.list_return;
-import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;

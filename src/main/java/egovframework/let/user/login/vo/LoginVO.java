@@ -139,6 +139,8 @@ public class LoginVO implements Serializable {
     private String realPath;
     /** 사용자사번*/
     private String sabun;
+    /** 마지막 비밀번호 변경 날짜*/
+    private Date password_updatedt;    
 
 	public String getId() {
 		return id;
@@ -489,5 +491,12 @@ public class LoginVO implements Serializable {
 	public void setSabun(String sabun) {
 		this.sabun = sabun;
 	}
+	public Date getPassword_updatedt() {
+		return password_updatedt;
+	}
+	public void setPassword_updatedt(Date password_updatedt) {
+		this.password_updatedt = password_updatedt;
+	}
+	
 
 }

@@ -53,8 +53,13 @@
 					alert("<spring:message code='ezEmail.t604' />");
 				}
 			}
-		    function View_ReservationMail(pMessageID, pSendDate) {
-		    	var sendDate = new Date(pSendDate);
+			
+			function View_ReservationMail(pMessageID, pSendDate) {
+		    	var date = pSendDate.split(" ");
+		    	var yyyymmdd = date[0].split("-");
+		    	var hms = date[1].split(":");
+		    	
+		    	var sendDate = new Date(yyyymmdd[0], yyyymmdd[1]-1, yyyymmdd[2], hms[0], hms[1], "00");
 		    	var nowDate = new Date();
 		    	var gap = sendDate.getTime() - nowDate.getTime();
 		    	var pWidth = "";
