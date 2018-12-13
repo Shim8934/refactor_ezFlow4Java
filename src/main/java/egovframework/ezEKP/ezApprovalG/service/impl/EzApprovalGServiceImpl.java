@@ -1242,7 +1242,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				listString = getListHeader("012", companyID, lang, tenantID);
 			} else if (mode.equals("COD")) {
 				//결재진행문서
-				listString = getListHeader("013", companyID, lang, tenantID);
+				listString = getListHeader("012", companyID, lang, tenantID);
 			} else {
 				listString = getListHeader("013", companyID, lang, tenantID);
 			}
