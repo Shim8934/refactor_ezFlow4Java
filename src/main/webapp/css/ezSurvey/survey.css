@@ -402,9 +402,10 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsOpt .slidLogicArea .prevSlidArrow {padding: 0px 30px;}
 
 .prevQsOpt .drdwLogicArea {padding-left: 35px; padding-bottom: 30px;}
-.prevQsOpt .drdwLogicRow {display: flex;}
-.prevQsOpt .drdwLogicRow .prevDrdwSpan {font-size: 16px; padding-top: 3px;}
-.prevQsOpt .drdwLogicRow .prevDrdwArrow {padding: 0px 30px;}
+.prevQsOpt .drdwLogicArea .drdwLogicRow {display: flex;}
+.prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwSpan {font-size: 16px; padding-top: 3px;}
+.prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwArrow {padding: 0px 30px;}
+.prevQsOpt .drdwLogicArea .drdwLogicRow .logicSpan {font-size: 16px; margin-top: 2px;}
 
 
 
