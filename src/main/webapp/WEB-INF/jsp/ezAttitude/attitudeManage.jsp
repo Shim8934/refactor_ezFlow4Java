@@ -216,7 +216,7 @@
 	        
 	        function windowResize() {
 	        	var height = document.documentElement.clientHeight - 92 - document.getElementById("mainmenu").clientHeight;
-	        	document.getElementById("contentlist").style.height = (height - 100) + "px";
+	        	document.getElementById("contentlist").style.height = (height - 118) + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
 	        
@@ -839,8 +839,8 @@
 	</head>
 	<body class="mainbody">
 		<h1><p style="padding-left:5px"><spring:message code='ezAttitude.t73'/></p></h1>
-	    <div class="portlet_tabpart01" style="margin-bottom:16px;">
-	        <div class="portlet_tabpart01_top" id="tab1">
+	    <div class="portlet_tabnew01" style="margin-bottom:16px;">
+	        <div class="portlet_tabnew01_top" id="tab1">
 	            <p><span id="modify" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t5'/></span></p>
 	            <p><span id="absent" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t6'/></span></p>
 	            <p><span id="history" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t57'/></span></p>
@@ -867,7 +867,7 @@
 		      	<div id="miniTitle" style="margin-bottom:10px;padding-left:2px;margin-top:15px"><spring:message code='ezAttitude.t74'/></div>
 		  	</div>
 	    </div>
-	    <div id="contentlist" style="width:100%; overflow:auto; height:660px;">
+	    <div id="contentlist" style="width:100%; overflow:auto; height:642px;">
 			<table class="mainlist" style="width:100%;">
 				<thead></thead>
 				<tbody></tbody>

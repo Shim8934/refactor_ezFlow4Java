@@ -48,11 +48,14 @@
 			.ui-portlet-on { background-color: #f0f0f0; }
 			.ui-portlet-off { background-color: #f0f0f0; }
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
-			.ui-portlet-content { font-weight: bold; display: inline-block;}
+			.ui-portlet-content { font-weight: bold; display: inline-block; float: left;cursor:move;}
 			.ui-portlet-list { padding-left: 20px; height: 335px; width: 97%;}
 			.ui-portlet-span { display: inline-block; width: 69%; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-bottom:-4px;}
 			.portlet_switch {position:relative;display:inline-block;width:60px;height:18px;margin-top:15px;}
+			.portlet_switch .slider {z-index:10;}
 			.admin_theme_portlet {width : 987px;}
+			.bottomBtn {clear:both;}
+			#themePortletList {display:inline-block;}
 		</style>
 	</head>
 	
@@ -73,6 +76,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 	<script type="text/javascript">
 		var defaultTheme = "";
 		var isBtnClicked = false;
@@ -82,6 +86,7 @@
 			getThemes();
 			
 			$("#setDefaultTheme").on("click", updateDefaultTheme);
+			
 		});
 		
 		function selectTheme(val01) {
@@ -538,6 +543,7 @@
 					listHTML += "<dd class='admin_menuX'></dd>";
 					listHTML += "</dl>";
 					listHTML += "<div class='admin_menu_content'>";
+					listHTML += "<div id='themePortletList'>";
 					
 					portletList.forEach(function (item, index) {
 						listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content' data-portletid='" + item.portletId + "' data-menuid='" + item.menuId + "'>";
@@ -556,6 +562,7 @@
 						listHTML += "</div>";
 					});
 					
+					listHTML += "</div>";
 					listHTML += "<div class='bottomBtn'><a class='btnA updateThemePortletBtn'><spring:message code='ezNewPortal.t002'/></a></div>";
 					listHTML += "</div>";
 					listHTML += "</div>";
@@ -598,6 +605,13 @@
 							});
 						}
 					}
+					
+					//drag and drop
+					$("#themePortletList").sortable({
+						items : ".portlets"
+					});
+					
+					$("#themePortletList").disableSelection();
 					
 					//저장버튼 활성화
 					$(".updateThemePortletBtn").on("click", {"themeId" : themeId}, updateThemePortlet);

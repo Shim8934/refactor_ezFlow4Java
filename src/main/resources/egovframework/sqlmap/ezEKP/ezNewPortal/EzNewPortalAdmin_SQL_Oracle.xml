@@ -92,7 +92,7 @@
 				A.company_id = #companyId#
 			ORDER BY
 				defaultorder
-		]]>
+			]]>
 	</select>
 	
 	<!-- 메뉴쪽은 일단 만들어놓고 쓰다가 필요없는거 날려야할듯 -->
@@ -156,12 +156,17 @@
 				A.company_id = #companyId#
 			AND
 				A.menu_id = #menuId#
+			]]>
+			<isNotEmpty property="primaryLang" prepend="AND">
+				A.menu_lang = #primaryLang#
+			</isNotEmpty>
+			<![CDATA[
 			ORDER BY
 				CASE A.menu_lang WHEN B.company_lang
 					THEN 1
 					ELSE 2
 				END
-		]]>
+			]]>
 	</select>
 	
 	<!-- 언어는 좀따해야지 -->
@@ -601,6 +606,19 @@
 	]]>
 	</delete>
 	
+	<delete id="ezNewPortal.deleteThemePortlet" parameterClass="map">
+		<![CDATA[
+			DELETE FROM
+				TBL_PORTAL_THEME_PORTLET
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				portlet_id = #poortletId#
+		]]>
+	</delete>
+	
 	<update id="ezNewPortal.updateCompanyPortletOrder" parameterClass="Map">
 	<![CDATA[
 		UPDATE 
@@ -643,7 +661,7 @@
 			MERGE INTO TBL_PORTAL_LOGO
 			USING DUAL
 			ON (
-					company_id = #tenantId#
+					company_id = #companyId#
 				AND
 					tenant_id = #tenantId#
 				AND
@@ -789,24 +807,6 @@
 	)
 	]]>
 	</insert>
-	
-	<update id="ezNewPortal.resetCompanyMenuOrder" parameterClass="Map">
-	<![CDATA[
-		MERGE INTO
-			TBL_PORTAL_MENU_COMP A
-		USING
-			TBL_PORTAL_MENU B
-		ON
-			(A.menu_id = B.menu_id)
-		WHEN MATCHED THEN
-			UPDATE SET
-				A.company_order = B.default_order
-			WHERE
-					A.company_id = #companyId#
-			AND
-				A.tenant_id = #tenantId#
-	]]>
-	</update>
 	
 	<update id="ezNewPortal.updateUserThemeAndFrameDefault" parameterClass="Map">
 	<![CDATA[
@@ -960,4 +960,95 @@
 			SLIDERID = #slideId#
 	]]>
 	</update>
+	<!-- 18.12.03 테마별 포틀릿 사용여부 설정 관련 개발 ===== 시작 -->
+	<select id="ezNewPortal.getThemePortletList" parameterClass="Map" resultClass="PortletInfoVO">
+	<![CDATA[
+		SELECT
+			A.theme_id as themeid,
+			A.tenant_id as tenantid,
+			A.company_id as companyid,
+			A.portlet_id as portletid,
+			A.portlet_used as portletused,
+			A.portlet_order as portletorder,
+			A.menu_id as menuid,
+			C.portlet_name as portletname
+		FROM
+			TBL_PORTAL_THEME_PORTLET A
+		JOIN
+			TBL_PORTAL_PORTLET_COMP B
+		ON
+			A.portlet_id = B.portlet_id
+		AND
+			A.company_id = B.company_id
+		AND
+			A.tenant_id = B.tenant_id
+		AND
+			B.portlet_used = 1
+		LEFT JOIN
+			TBL_PORTAL_PORTLET_NAME C
+		ON
+			A.portlet_id = C.portlet_id
+		AND
+			A.company_id = C.company_id
+		AND
+			A.tenant_id = C.tenant_id
+		AND
+			C.portlet_lang = #lang#
+		WHERE
+			A.theme_id = #themeId#
+		AND
+			A.tenant_id = #tenantId#
+		AND
+			A.company_id = #companyId#
+		ORDER BY
+			A.portlet_order
+	]]>
+	</select>
+	
+	<update id="ezNewPortal.updateThemePortletUsed" parameterClass="Map">
+	<![CDATA[
+		MERGE INTO TBL_PORTAL_THEME_PORTLET
+		USING DUAL
+		ON (
+				theme_id = #themeId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				portlet_id = #portletId#
+			)
+		WHEN MATCHED THEN
+			UPDATE SET
+				portlet_used = #portletUsed#,
+				portlet_order = #portletOrder#
+		WHEN NOT MATCHED THEN
+			INSERT (
+				theme_id, tenant_id, company_id, portlet_id, portlet_used, portlet_order, menu_id
+			) VALUES (
+				#themeId#, #tenantId#, #companyId#, #portletId#, #portletUsed#, 
+				(SELECT portlet_order FROM TBL_PORTAL_PORTLET_COMP WHERE company_id = #companyId# AND tenant_id = #tenantId# AND portlet_id = #portletId#),
+				#menuId#
+			) 
+	]]>
+	</update>
+	
+	
+
+	<update id="ezNewPortal.updateAllThemePortletOrder" parameterClass="Map">
+	<![CDATA[
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET
+			portlet_order = #portletOrder#
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			company_id = #companyId#
+		AND
+			portlet_id = #portletId#
+	]]>
+	</update>
+
+	<!-- 18.12.03 테마별 포틀릿 사용여부 설정 관련 개발 ===== 끝-->
 </sqlMap>

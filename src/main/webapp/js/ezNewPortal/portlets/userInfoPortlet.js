@@ -3,7 +3,6 @@
  */
 //근태관리 연동
 function ptlGetAttitudeList(usedTheme) {
-	console.log(usedTheme);
 	$.ajax({
 		type : "POST",
 		dataType : "json",

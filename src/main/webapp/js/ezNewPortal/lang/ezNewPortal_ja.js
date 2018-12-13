@@ -14,5 +14,6 @@ var messages = {
 	strLang13 : "作成者が投票を修正中です。",
 	strLang14 : "権限がありません。",
 	strLang15 : "日曜日;月曜日;火曜日;水曜日;木曜日;金曜日;土曜日",
-	strLang16 : "HWP is not supported."
+	strLang16 : "HWP is not supported.",
+	strLang17 : "지정된 게시판이 없습니다."
 }

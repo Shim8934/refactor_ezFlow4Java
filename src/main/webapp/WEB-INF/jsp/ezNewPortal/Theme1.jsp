@@ -430,11 +430,12 @@
 		$(".portlet_area").html(portletHTML);
  		frameSetting(frameId);
 		
+ 		//포틀릿별로 정보 및 포틀릿 jsp불러오기
 		for (var i = 0; i < portletCount; i++) {
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
-
+			
 			if (portletUrl.indexOf("ezNewPortal") != -1) {
 		  		(function (portletId, portletUrl, portletName) {
 					$.ajax({
@@ -559,7 +560,7 @@
 				}); */
 			},
 			update : function(event, ui) {
-				updatePortletOrderUser();
+				updatePortletOrderUser(usedTheme);
 			}
 		});
 		

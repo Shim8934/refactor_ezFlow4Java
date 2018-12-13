@@ -402,6 +402,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void deleteMenuAuth(Map<String, Object> map) throws Exception {
 		delete("ezNewPortal.deleteMenuAuth", map);
 	}
+	
+	public void deleteThemePortlet(Map<String, Object> map) throws Exception {
+		delete("ezNewPortal.deleteThemePortlet", map);
+	}
 	/** -------------------- */
 	@SuppressWarnings("unchecked")
 	public List<PortalBoardTreeVO> getBoardTree(Map<String, Object> map) throws Exception {
@@ -475,10 +479,6 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	
 	public void insertMenuAuth (Map<String, Object> map) {
 		insert("ezNewPortal.insertMenuAuth", map);
-	}
-	
-	public void resetCompanyMenuOrder (Map<String, Object> map) {
-		update("ezNewPortal.resetCompanyMenuOrder", map);
 	}
 	
 	public void updateUserThemeAndFrameDefault(Map<String, Object> map) {

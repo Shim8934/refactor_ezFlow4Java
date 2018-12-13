@@ -3,7 +3,7 @@
  */
 
 //포틀릿 순서 업데이트
-function updatePortletOrderUser() {
+function updatePortletOrderUser(usedTheme) {
 	var portlets = $(".portlet");
 	var updateOrder = [];
 	var portletsCount = portlets.length;
@@ -18,6 +18,7 @@ function updatePortletOrderUser() {
 	}
 	
 	var data = {
+		themeId : usedTheme,
 		updateOrder : updateOrder
 	};
 	
@@ -238,8 +239,7 @@ function eventSetting(portletId, themeId) { //포틀릿 아이디별로 자바�
 				$("#communityPlus").on("click", viewCommuList);
 				
 				for (var i=1; i < 3; i ++) {
-					clubNo = $('.comListDL0'+i).attr('data1');
-					$('.comListDL0'+i).on("click",{ iClubNo : encodeURIComponent(clubNo) }, view_bestCommunity);
+					$('.comListDL0'+i).on("click", view_bestCommunity);
 				}
 			} catch(err) {
 				console.log(err);
@@ -316,7 +316,7 @@ function eventSetting(portletId, themeId) { //포틀릿 아이디별로 자바�
 			try {
 				//근태관리 연동
 				var useAttitude = $("#useAttitude").val();
-				console.log(nowTheme);
+				
 				if (useAttitude === "YES") {
 					ptlParseDate();
 					ptlAttiClock();

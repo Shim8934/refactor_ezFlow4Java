@@ -344,7 +344,7 @@
 				}); */
 			},
 			update : function(event, ui) {
-				updatePortletOrderUser();
+				updatePortletOrderUser(usedTheme);
 			}
 		});
 		

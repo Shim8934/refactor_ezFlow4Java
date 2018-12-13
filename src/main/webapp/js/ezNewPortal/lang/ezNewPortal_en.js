@@ -14,5 +14,6 @@ var messages = {
 	strLang13 : "Voting is being modified.Please wait.",
 	strLang14 : "You do not have permission on that bulletin.",
 	strLang15 : "JAN;FEB;MAR;APR;MAY;JUN;JUL;AUG;SEP;OCT;NOV;DEC",
-	strLang16 : "HWP is not supported."
+	strLang16 : "HWP is not supported.",
+	strLang17 : "There is no designated bulletin boards."
 }

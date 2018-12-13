@@ -1,10 +1,12 @@
 /* 공지사항 데이터 조합 */
-var assembleNoticeList = function(noticeList) {
+var assembleNoticeList = function(noticeList, portletBoardId, access) {
 	/* HTMLColllection에도 forEach 추가*/
 	HTMLCollection.prototype.forEach = Array.prototype.forEach;
 	var str = '';
 	var viewCnt = 3; // 보여주는 공지사항 갯수
 	var boardId = '';
+	console.log(portletBoardId);
+	console.log(access);
 	var noticeDetail = function() {
 		var height = window.screen.availHeight;
 		var width = window.screen.availWidth;
@@ -48,20 +50,41 @@ var assembleNoticeList = function(noticeList) {
 			text = '<li class="notiLI" data1="'+data.itemID+'" data2="'+data.boardID+'" data3="'+data.guBun+'"><dl class="notiDL0'+index+'"><dt class="noti_num">'+index+'</dt><dt class="N"></dt><dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd></dl></li>'; 
 		}
 		return text;
-	};	
-	if (noticeList && noticeList.length != 0) {
-		str += "<ul class='noti_portlet_list'>";
-		noticeList.forEach(function(item, index){
-			str += dataAssembler(item, index);
-		});
+	};
+	
+	if (access == "true") {
+		if (noticeList && noticeList.length != 0) {
+			str += "<ul class='noti_portlet_list'>";
+			noticeList.forEach(function(item, index){
+				str += dataAssembler(item, index);
+			});
+		} else {
+			str += "<ul class='portlet_list'>";
+			str += "<dl class='nodata'>";
+			str += "<dt>";
+			str += "<img src='/images/ezNewPortal/nodata.png'>";
+			str += "</dt>";
+			str += "<dd>&#34;" + messages.strLang1 + "&#34;</dd>";
+			str += "</dl>";
+		}
 	} else {
-		str += "<ul class='portlet_list'>";
-		str += "<dl class='nodata'>";
-		str += "<dt>";
-		str += "<img src='/images/ezNewPortal/nodata.png'>";
-		str += "</dt>";
-		str += "<dd>&#34;" + messages.strLang14 + "&#34;</dd>";
-		str += "</dl>";
+		if (portletBoardId == null || portletBoardId == "") {
+			str += "<ul class='portlet_list'>";
+			str += "<dl class='nodata'>";
+			str += "<dt>";
+			str += "<img src='/images/ezNewPortal/nodata.png'>";
+			str += "</dt>";
+			str += "<dd>&#34;" + messages.strLang17 + "&#34;</dd>";
+			str += "</dl>";
+		} else {
+			str += "<ul class='portlet_list'>";
+			str += "<dl class='nodata'>";
+			str += "<dt>";
+			str += "<img src='/images/ezNewPortal/nodata.png'>";
+			str += "</dt>";
+			str += "<dd>&#34;" + messages.strLang14 + "&#34;</dd>";
+			str += "</dl>";
+		} 
 	}
 
 	var noticeCnt = str.match(/notiLI/g); // 공지사항 갯수 확인.
@@ -92,7 +115,9 @@ var getNoticePortletList = function () {
 	xhr.onload = function () {
 		if(xhr.status >= 200 && xhr.status < 300) {
 			var noticeList = JSON.parse(xhr.responseText).noticeList;
-			assembleNoticeList(noticeList);
+			var boardId = JSON.parse(xhr.responseText).boardId;
+			var access = JSON.parse(xhr.responseText).access;
+			assembleNoticeList(noticeList, boardId, access);
 		} else {
 			console.error(xhr.responseText);
 		}

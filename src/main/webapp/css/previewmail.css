@@ -58,7 +58,7 @@ padding:0px 0px 0px 0px; height:36px; line-height:37px;}/* 20130416 수정 */
 .attachedfile_title .titleSave{ margin:0px; padding:0px; float:left;}
 .attachedfile_title .titleSave span{ font-size:12px; background:#fff; border-left:1px solid #c7c7c7; border-right:1px solid #c7c7c7; border-top:1px solid #c7c7c7; border-bottom:1px solid #909193; padding:1px 3px 2px 3px; letter-spacing:-0.5px; margin:0px 0px 0px 10px; cursor:pointer;}
 .attachedfile_list{ padding:10px 20px; margin:0px; list-style:none; border-bottom:1px solid #e5e5e5;}
-.attachedfile_list li{ line-height:28px; height:30px; font-size:13px;}
+.attachedfile_list li{ line-height:28px; min-height:30px; font-size:13px;}
 .attachedfile_list li span a {color: #393939; text-decoration: none;}
 .attachedfile_list li span a:hover {color: #164aad;}
 .attachedfile_list .downList{ margin:0px; padding:0px;}
