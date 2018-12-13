@@ -50,6 +50,31 @@
 				setCookie("POPUP_${itemSeq}_${user}", "1", 1); 
 				window.close();
 			}
+
+			/*
+			// skinValue 값에 따라 styleSheet 호출
+			var setPopupSkin = function() {
+
+				var linkElem = document.createElement('link');
+				document.getElementsByTagName('head')[0].appendChild(linkElem);
+				linkElem.rel = 'stylesheet';
+				linkElem.type = 'text/css';
+
+				switch (skinValue) {
+					case 1 : 
+						linkElem.href = '/css/ezPersonal/type1.css';
+						break;
+					case 2 :
+						linkElem.href = '/css/ezPersonal/type2.css';
+						break;
+					case 3 : 
+						linkElem.href = '/css/ezPersonal/type3.css';
+						break;
+					case 4 : 
+						linkElem.href = '/css/ezPersonal/type4.css';
+						break;
+				}
+			}*/
 		</script>
 		
 	</head>
