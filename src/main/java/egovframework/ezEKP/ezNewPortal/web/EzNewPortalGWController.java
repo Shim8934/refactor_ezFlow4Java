@@ -3116,7 +3116,7 @@ e.printStackTrace();
 			int photoCount = Integer.parseInt(request.getParameter("photoCount"));
 			String portletLang = info.getLang();
 			String deptPath = info.getDeptPathCode();
-			deptPath += "everyone," + deptPath + "," + userId;
+			deptPath = "everyone," + deptPath + "," + userId;
 			JSONObject data = new JSONObject();
 
 			// 회사의 포토게시판의 포틀릿 정보 가져오기
@@ -3171,7 +3171,7 @@ e.printStackTrace();
 			int tenantId = info.getTenantId();
 			String deptId = info.getDeptID();
 			String deptPath = info.getDeptPathCode();
-			deptPath += "everyone," + deptPath + "," + userId;
+			deptPath = "everyone," + deptPath + "," + userId;
 			String companyId = info.getCompanyID();
 			String rollInfo = info.getRollInfo();
 			int portletId = Integer.parseInt(request.getParameter("portletId"));
@@ -3585,7 +3585,7 @@ e.printStackTrace();
 
 	// //////board 권한 체크
 	public boolean boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId, String deptId, String userId, String rollInfo) throws Exception {
-		LOGGER.debug("boardAuthCheck started");
+ 		LOGGER.debug("boardAuthCheck started");
 		boolean authCheck = false;
 		String[] deptPathSplit = deptPath.split(",");
 		int deptPathCount = deptPathSplit.length;
@@ -3611,12 +3611,17 @@ e.printStackTrace();
 							deptAcl = "Y";
 						}
 						
-						if (access.equals("1") && deptAcl.equals("Y")) {
-							authCheck = true;
+						if (access.equals("1")) {
+							if (deptAcl.equals("Y")) {
+								authCheck = true;
+							}
+							
+							if (authInfo.getAccessID().equals(deptId)) {
+								authCheck = true;
+							}
 						} else if (access.equals("0") && deptAcl.equals("Y")) {
 							authCheck = false;
 						}
-						
 					}
 					
 					
@@ -4057,7 +4062,7 @@ e.printStackTrace();
 			int itemCount = Integer.parseInt(request.getParameter("photoCount"));
 			String portletLang = info.getLang();
 			String deptPath = info.getDeptPathCode();
-			deptPath += "everyone," + deptPath + "," + userId;
+			deptPath = "everyone," + deptPath + "," + userId;
 			JSONObject data = new JSONObject();
 
 			// 회사의 포틀릿 정보 가져오기
