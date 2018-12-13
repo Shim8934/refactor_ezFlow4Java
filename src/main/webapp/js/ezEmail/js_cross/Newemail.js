@@ -523,6 +523,7 @@ function event_Mail_CopyPostSend() {
 	        	MailListRefresh();
 	            refreshUnreadCount();
 	            if(event_Mail_CopyPostSend.mode=="MOVE") {
+	            	prevShow_Clear();
 	            	alert(MoveMsg);
 	            } else if (event_Mail_CopyPostSend.mode=="COPY") {
 	            	alert(CopyMsg);
