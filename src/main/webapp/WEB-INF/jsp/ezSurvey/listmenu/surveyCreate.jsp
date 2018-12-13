@@ -667,6 +667,85 @@
 						thisWrapper.remove();                  // 수정 폼 삭제
 					});
 					
+					// 로직 생성 버튼 이벤트
+					$(".prevQsArea").on("click", ".addLogic", function() {
+						$(this).css("display", "none");
+						$(this).siblings().css("display", "");
+						
+						var prevWrapper = $(this).parents(".prevQsWrapper");
+						var thisType = parseInt(prevWrapper.attr("type"));
+						var thisId = parseInt(prevWrapper.attr("id"));
+
+						var qstnList = SurveyCreate.getQs();
+						var thisQstn = qstnList[thisId - 1];
+						
+						var option = "";
+						option += "<option value=''>분기 없음</option>"; 
+						
+						for (var i = 0; i < qstnList.length; i++) {
+							var qstnId = qstnList[i]['id'];
+							if (qstnId > thisId) {
+								option += "<option value='" + qstnId + "'>" + qstnId + "</option>"; 
+							}
+						}
+						
+						switch(thisType) {
+						case 1 :
+						case 2 :
+							sltQsLogic(prevWrapper, option, thisQstn);
+							break;
+						case 7:
+							slidQsLogic(prevWrapper, option, thisQstn);
+							break;
+						/* case 8:
+							rankQsLogic(prevWrapper, option, thisQstn);
+							break; */
+						case 9:
+							drdwQsLogic(prevWrapper, option, thisQstn);
+							break;
+						}
+					});
+					
+					// 로직 저장 버튼 이벤트
+					$(".prevQsArea").on("click", ".saveLogic", function() {
+						$(this).css("display", "none").next().css("display", "none");
+						$(this).prev().css("display", "");
+						
+						var prevWrapper = $(this).parents(".prevQsWrapper");
+						var thisType = parseInt(prevWrapper.attr("type"));
+						var thisId = parseInt(prevWrapper.attr("id"));
+						
+						switch(thisType) {
+						case 1 :
+						case 2 :
+							addSltLogic(thisId);
+							break;
+						case 7:
+							addSlidLogic(thisId);
+							break;
+						case 9:
+							addDrdwLogic(thisId);
+							break;
+						}
+						
+					});
+					
+					// 로직 취소 버튼 이벤트
+					$(".prevQsArea").on("click", ".cancelLogic", function() {
+						$(this).css("display", "none").prev().css("display", "none");
+						$(this).prev().prev().css("display", "");
+						
+						var prevWrapper = $(this).parents(".prevQsWrapper");
+						var opts = prevWrapper.find(".prevQsOpt").find(".opt");
+						var optLength = opts.length;
+						
+						for (var i = 0; i < optLength; i++) {
+							var opt = opts[i];
+							opt.removeChild(opt.childNodes[2]);
+						}
+						
+					});
+					
 					$(".quesBacgr").on("input", ".slider-range", function() {
 						var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
 						outputElmt.textContent = this.value;
@@ -1579,7 +1658,7 @@
 							var qstnType = question.type;
 							html += "<div class='prevQsWrapper' id='" + qstnId + "'type='" + qstnType + "'>";
 							
-							html += prevQsHeader(question);
+							html += prevQsHeader(question, qstnList);
 							
 							html += "<div class='prevQsOpt'>";
 							switch(parseInt(qstnType)) {
@@ -1600,7 +1679,7 @@
 					}
 				}
 				// 미리보기 질문의 헤더
-				function prevQsHeader(question) {
+				function prevQsHeader(question, qstnList) {
 					var qstId    = question.id;
 					var content  = question.content;
 					var qstnType = question.type;
@@ -1615,8 +1694,12 @@
 					if (required == 'Y') {
 						html += "<strong class='imptt'>*</strong>";
 					}
-					if (qstnType == 1 || qstnType == 2 || qstnType == 7) {
-						html += "<img id='logic" + qstId + "' class='logicBtn' src='/images/ezSurvey/shuffle.png'/>";
+					if (qstId < qstnList.length) {
+						if (qstnType == 1 || qstnType == 2 || qstnType == 7 || qstnType == 9) {
+							html += "<img class='addLogic' src='/images/ezSurvey/shuffle.png'/>";
+							html += "<img class='saveLogic' src='/images/ezSurvey/save.png' style='display:none;'/>";
+							html += "<img class='cancelLogic' src='/images/ezSurvey/xBtn.png' style='display:none;'/>";
+						}
 					}
 					html += "</div></div></div></div>";
 					
@@ -1628,7 +1711,127 @@
 					return html;
 				}
 				
+				function sltQsLogic(prevWrapper, option, question) {
+					var qstnId = question.id;
+					var qstnOpt = question.option;
+					
+					var opts = prevWrapper.find(".prevQsOpt").find(".opt");
+					var optLength = opts.length;
+					
+					for (var i = 0; i < optLength; i++) {
+						var optLevel = qstnOpt[i].level;
+						
+						var sltLogicArea = $("<div id='logic" + qstnId + "" + optLevel + "' class='sltLogicArea'></div>");
+						var prevSltArrow = $("<img class='prevSltArrow' src='/images/ezSurvey/arrow.png'>");
+						sltLogicArea.append(prevSltArrow[0]);
+						
+						var selectBox = $("<select class='logicSelect' name='slt" + qstnId + "" + optLevel + "' id='slt" + qstnId + "" + optLevel + "'></select>");
+						selectBox.html(option);
+						sltLogicArea.append(selectBox[0]);
+
+						var opt = opts[i];
+						opt.append(sltLogicArea[0]);
+					}
+				}
+				
+				function slidQsLogic(prevWrapper, option, question) {
+					var qstnId = question.id;
+					var qstnOpt = question.option;
+					var prevQsOpt = prevWrapper.find(".prevQsOpt");
+					
+					var minVal = "";
+					var maxVal = "";
+
+					for (var i = 0; i < qstnOpt.length; i++) {
+						if (i == 0) {
+							minVal = qstnOpt[0].content;
+						} else {
+							maxVal = qstnOpt[1].content;
+						}
+					}
+					
+					var html = "";
+						html += "<input class='prevSlidInput' type='number' minVal='" + minVal + "' maxVal='" + maxVal + "'>";
+						html += "<span class='prevSlidSpan'>이상</span>";
+						html += "<img class='prevSlidArrow' src='/images/ezSurvey/arrow.png'>";
+					
+					var slidDiv = $("<div id='logic" + qstnId + "0' class='slidLogicArea'></div>");
+					slidDiv.append(html);
+					
+					var selectBox = $("<select class='logicSelect' name='slt" + qstnId + "0'></select>");
+					selectBox.html(option);
+					slidDiv.append(selectBox);
+					
+					prevQsOpt.append(slidDiv);
+				}
+				
+				// 로직 들어갈 시 이상해짐
+				/* function rankQsLogic(prevWrapper, option) {
+					var prevQsOpt = prevWrapper.find(".prevQsOpt");
+					var rankingSelect = prevQsOpt.find(".ranking-select");
+					var rankingLength = rankingSelect.length;
+					
+					for (var i = 0; i < rankingLength; i++) {
+						var rkSelect = rankingSelect[i];
+						var selectBox = $("<select class='logicSelect'></select>");
+						
+						selectBox.html(option);
+						rkSelect.append(selectBox[0]);
+					}
+					
+				} */
+				
+				function drdwQsLogic(prevWrapper, option, question) {
+					var qstnId = question.id;
+					var qstnOpt = question.option;
+					
+					var prevQsOpt = prevWrapper.find(".prevQsOpt");
+					
+					var drdwLogic = $("<div id='logic" + qstnId + "' class='drdwLogicArea'></div>");
+					var drdwOpt = question.option;
+					var optLength = drdwOpt.length
+					
+					for (var i = 0; i < optLength; i++) {
+						var opt = drdwOpt[i];
+						var optLevel = qstnOpt[i].level;
+						
+						var drdwDiv = $("<div class='drdwLogicRow'></div>");
+						var html = "";
+						html += "<span class='prevDrdwSpan'>" + opt.content + "</span>";
+						html += "<img class='prevDrdwArrow' src='/images/ezSurvey/arrow.png'>";
+						
+						drdwDiv.append(html);
+						
+						var selectBox = $("<select class='logicSelect' name='slt" + qstnId + "" + optLevel + "'></select>");
+						selectBox.html(option);
+						
+						drdwDiv.append(selectBox);
+						drdwLogic.append(drdwDiv);
+					}
+					prevQsOpt.append(drdwLogic);
+				}
+				// select question에 로직 추가
+				function addSltLogic(id) {
+					var wrapper = $("#"+id);
+					var opt = wrapper.find(".opt");
+					var optLength = opt.length;
+					
+					var qstnList    = SurveyCreate.getQs();
+					var qstn        = qstnList[id - 1];
+					qstn['logicFlag'] = 'Y';
+					
+					for (var i = 0; i < optLength; i++) {
+						var logicNum = $("select[name=slt" + id  + i +"] option:selected").val();
+						// option 객체에 logic 추가
+						qstn.option[i]['logic'] = logicNum;
+						
+						$("select[name=slt" + id + i + "]").css("display", "none");
+						$("#logic" + id + i + "").append("<span class='logicSpan' id='sltVal" + id + i + "'>" + logicNum + "</span>");
+					}
+				}
+				
 			}());
 		</script>
 	</body>
 </html>
+
