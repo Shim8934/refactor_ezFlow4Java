@@ -77,7 +77,6 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -97,9 +96,6 @@ public class EzNewPortalGWController {
 
 	@Resource(name = "jspw")
 	private String jspw;
-
-	@Autowired
-	private LoginService loginService;
 
 	@Resource(name = "EzNewPortalService")
 	private EzNewPortalService ezNewPortalService;
@@ -156,12 +152,13 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			LoginVO info2 = commonUtil.getUserForGw(userId, serverName);
 			String companyId = info.getCompanyId();
 			String deptId = info.getDeptId();
-			String deptPath = info2.getDeptPathCode();
 			int tenantId = info.getTenantId();
-			String portletLang = info.getPrimary();
+			String portletLang = info.getLang();
+			
+			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
+			LOGGER.debug("primaryLang=" + primaryLang);
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
 			
 			// 사용자 설정 테마/프레임 가져오기
@@ -298,7 +295,7 @@ public class EzNewPortalGWController {
 			}
 			
 			// 회원정보 불러오기
-			if (portletLang.equals("1")) {
+			if (portletLang.equals(primaryLang)) {
 				userName = info.getUserName();
 				userTitle = info.getTitle();
 				deptName = info.getDeptName();
@@ -437,12 +434,14 @@ public class EzNewPortalGWController {
 			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
 			
 			JSONArray portletOrder = (JSONArray) jsonParam.get("updateOrder");
+			int themeId = Integer.parseInt(jsonParam.get("themeId").toString());
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
+			LOGGER.debug("themeId : " + themeId);
 			
-			ezNewPortalService.updatePortletOrderUser(userId, companyId, tenantId, portletOrder, portletLang);
+			ezNewPortalService.updatePortletOrderUser(userId, companyId, tenantId, portletOrder, portletLang, themeId);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -473,11 +472,13 @@ public class EzNewPortalGWController {
 			int curPage = Integer.parseInt(request.getParameter("birthdayCurPage"));
 			int count = Integer.parseInt(request.getParameter("birthdayCount"));
 			int startRow = curPage * count;
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
-			LOGGER.debug("curPage : " + curPage + ", count : " + count + ", startRow : " + startRow);
+			LOGGER.debug("curPage : " + curPage + ", count : " + count + ", startRow : " + startRow + ", lang : " + lang);
 			
 			int birthdayListCount = ezNewPortalService.getMonthlyBirthdayEmployeesCount(companyId, tenantId, month);
-			List<PortalUserInfoVO> birthdayList = ezNewPortalService.getMonthlyBirthdayEmployees(companyId, tenantId, month, count, startRow);
+			List<PortalUserInfoVO> birthdayList = ezNewPortalService.getMonthlyBirthdayEmployees(companyId, tenantId, month, count, startRow, lang);
 			
 			LOGGER.debug("birthdayListCount : " + birthdayListCount);
 
@@ -523,13 +524,14 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			Calendar cal = Calendar.getInstance();
 			String nowYear = String.valueOf(cal.get(Calendar.YEAR));
-
+			
 			String yearAndMonth = nowYear + "-" + month;
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			
 			LOGGER.debug("yearAndMonth : " + yearAndMonth);
-			PortalUserInfoVO bestEmployee = ezNewPortalService.getMonthlyBestEmployee(yearAndMonth, companyId, tenantId);
+			PortalUserInfoVO bestEmployee = ezNewPortalService.getMonthlyBestEmployee(yearAndMonth, companyId, tenantId, lang);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -760,7 +762,7 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-e.printStackTrace();
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1404,7 +1406,6 @@ e.printStackTrace();
 			String portletLang = info.getLang();
 			String offset = info.getOffSet();
 			String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
-			String idList = "T";
 			String deptId = info.getDeptId();
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
@@ -1642,6 +1643,7 @@ e.printStackTrace();
 			LoginVO userInfo = new LoginVO();
 			String primary = "";
 			int tenantId = 0;
+			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 			
 			if (userId == null) {
 				tenantId = ezNewPortalService.getTnenantIdByServerName(serverName);
@@ -1660,6 +1662,7 @@ e.printStackTrace();
 
 			result.put("data", resultList);
 			result.put("primary", primary);
+			result.put("usePrimaryLangOnly", usePrimaryLangOnly);
 			result.put("status", "ok");
 			result.put("code", 0);
 
@@ -1993,9 +1996,11 @@ e.printStackTrace();
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
+			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
+			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 			
 			MenuInfoVO menuInfo = ezNewPortalService.getMenuInfo(menuId, companyId, tenantId);
-			List<MenuNameVO> menuNames = ezNewPortalService.getMenuNames(menuId, companyId, tenantId);
+			List<MenuNameVO> menuNames = ezNewPortalService.getMenuNames(menuId, usePrimaryLangOnly, primaryLang, companyId, tenantId);
 			
 			JSONObject data = new JSONObject();
 			data.put("menuInfo", menuInfo);
@@ -2214,6 +2219,8 @@ e.printStackTrace();
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			
+			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
+			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "YES";
@@ -2304,7 +2311,7 @@ e.printStackTrace();
 			}
 			
 			for (PortletInfoVO pvo : portletList) {
-				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId());
+				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId(), usePrimaryLangOnly, primaryLang);
 				pvo.setPortletNameList(portletNameList);
 			}
 						
@@ -3123,18 +3130,22 @@ e.printStackTrace();
 			String boardId = portlet.getPortletBoardId();
 			data.put("boardId", boardId);
 			data.put("portletName", portlet.getPortletName());
-
-			// 게시판 권한 체크
-			boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
-
-			if (!accessCheck) {
-				data.put("access", "false");
+			
+			if (boardId == null) {
+				data.put("access", false);
 			} else {
-				// 권한이 true이면 boardList불러오기
-				List<BoardItemVO> photoBoardList = ezNewPortalService.getPhotoBoardPortletInfo(tenantId, boardId, startRow, photoCount);
+				// 게시판 권한 체크
+				boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
 
-				data.put("access", "true");
-				data.put("photoBoardList", photoBoardList);
+				if (!accessCheck) {
+					data.put("access", "false");
+				} else {
+					// 권한이 true이면 boardList불러오기
+					List<BoardItemVO> photoBoardList = ezNewPortalService.getPhotoBoardPortletInfo(tenantId, boardId, startRow, photoCount);
+
+					data.put("access", "true");
+					data.put("photoBoardList", photoBoardList);
+				}
 			}
 
 			result.put("status", "ok");
@@ -3172,34 +3183,38 @@ e.printStackTrace();
 			int portletId = Integer.parseInt(request.getParameter("portletId"));
 			String portletLang = info.getLang();
 			int limit = 3; // 공지사항 갯수
-			String offset = info.getOffset();
 			
 			// 회사의 포토게시판의 포틀릿 정보 가져오기
 			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
 			String boardId = portlet.getPortletBoardId();
-			
+
 			// 게시판 권한 체크
 			boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
 			
 			// 여기에 데이터를 put해서 넘기면 됨.
 			JSONObject data = new JSONObject();
+			data.put("boardId", boardId); // 포틀릿 정보 중 boardId 가져오기
 			
-			if (!accessCheck) {
+			if (boardId == null) {
 				data.put("access", "false");
 			} else {
-				// 권한이 true이면 boardList불러오기
-				List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
-				noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, limit);
-				int noticeCount = noticeList.size();
-				
-				for (int i = 0; i < noticeCount; i++) {
-					String writeDate = noticeList.get(i).getWriteDate();
+				if (!accessCheck) {
+					data.put("access", "false");
+				} else {
+					// 권한이 true이면 boardList불러오기
+					List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
+					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, limit);
+					int noticeCount = noticeList.size();
 					
-					noticeList.get(i).setWriteDate(commonUtil.getDateStringInUTC(writeDate, info.getOffset(), false));
+					for (int i = 0; i < noticeCount; i++) {
+						String writeDate = noticeList.get(i).getWriteDate();
+						
+						noticeList.get(i).setWriteDate(commonUtil.getDateStringInUTC(writeDate, info.getOffset(), false));
+					}
+					
+					data.put("access", "true");
+					data.put("noticeList", noticeList);
 				}
-				
-				data.put("access", "true");
-				data.put("noticeList", noticeList);
 			}
 
 			result.put("status", "ok");
@@ -3581,7 +3596,6 @@ e.printStackTrace();
 		boolean authCheck = false;
 		String[] deptPathSplit = deptPath.split(",");
 		int deptPathCount = deptPathSplit.length;
-		String rootBoardID = "top";
 
 		try {
 			String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(boardId, userId, deptId, companyId, tenantId);
@@ -4106,7 +4120,6 @@ e.printStackTrace();
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			String realPath = request.getServletContext().getRealPath("");
 					
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			

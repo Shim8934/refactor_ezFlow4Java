@@ -116,7 +116,8 @@
 						if (xhr.status >= 200 && xhr.status < 300) {
 							var ul = document.getElementById('frameUl');
 							var frameList = JSON.parse(xhr.responseText).data.frameList;
-						
+							var usedIndex = 0;
+							
 							frameList.forEach(function (item, index) {
 								var li = document.createElement('li');
 								var div = document.createElement('div');
@@ -125,8 +126,9 @@
 								// 최초 회사 frame 설정
 								if(item.frameDefault) {
 									div.classList.add('select-flipster');
-									portletSetting.selectedFrame = index;
-									portletSetting.usedTheme = item.themeId;						
+									portletSetting.selectedFrame = item.usedFrame;
+									portletSetting.usedTheme = item.themeId;	
+									usedIndex = index;
 								}
 								
 								// 사용자가 선택한 frame 설정
@@ -137,12 +139,13 @@
 										selectFlipster.classList.remove('select-flipster');
 									}
 									div.classList.add('select-flipster');
-									portletSetting.selectedFrame = index;
+									portletSetting.selectedFrame = item.usedFrame;
 									portletSetting.usedTheme = item.themeId;
+									usedIndex = index;
 								}
-								div.dataset.frameid = item.frameId
-								div.dataset.themeid = item.themeId;
 								
+								div.dataset.frameid = item.frameId;
+								div.dataset.themeid = item.themeId;
 								// 프레임 이미지 나오면 변경하자!!
 								var img = document.createElement('img');
 								img.src = '/images/admin/theme' + item.themeId + "_frame" + item.frameId + ".png";
@@ -158,7 +161,7 @@
 							    spacing: -0.4,
 							    nav: false,
 							    buttons: true,
-							    start: (portletSetting.selectedFrame*1),
+							    start: (usedIndex*1),
 							    fadeIn : 0,
 							});					
 
@@ -287,83 +290,41 @@
 					// 반복문 돌면서 데이터 쌓기
 					HTMLCollection.prototype.forEach = Array.prototype.forEach;
 					
- 					classList.forEach(function (item, index) {			
+ 					classList.forEach(function (item, index) {
 						var switchBtn = document.getElementById('portletid_' + item.dataset.portletid);
+						var obj = null;
 						
 						if (switchBtn.getAttribute('checked')) {
-							var obj = {
+							obj = {
 								portletId: item.dataset.portletid,
 								portletOrder: orderCount,
 								menuId: item.dataset.menuid,
 								portletUsed : switchBtn.getAttribute('checked')
 							}
-							
-							orderCount++;
-							portletList.push(obj);				
-						}
-					});
- 					
- 					classList.forEach(function (item, index) {			
-						var switchBtn = document.getElementById('portletid_' + item.dataset.portletid);
-						var portletUsed = false;
-						
-						if (switchBtn.getAttribute('checked') == null)  {
-							portletUsed = false;
-						}
-						
-						if (!switchBtn.getAttribute('checked')) {
-							var obj = {
+						} else {
+							obj = {
 								portletId: item.dataset.portletid,
 								portletOrder: orderCount,
 								menuId: item.dataset.menuid,
-								portletUsed : portletUsed
+								portletUsed : false
 							}
-
-							orderCount++;
-							portletList.push(obj);				
 						}
+						
+						orderCount++;
+						portletList.push(obj);
 					});
  					
-					/* // 유저 포틀릿 순서로 재정의
-					var temp = [];
-					for(var i=0; i<portletList.length; i++) {
-						for(var j=i; j<portletList.length; j++) {
-							if(portletList[i].portletOrder*1 > portletList[j].portletOrder*1) {
-								temp = portletList[i];
-								portletList[i] = portletList[j];
-								portletList[j] = temp;
-							}
-						}
-					}
-
-					// var reAssemble = [];
-					// 순서 재정렬 시작
-					var arrIndex = 1;
-					portletList.forEach(function (item, index) {
-						if(item.portletOrder*1 !== 0 ) {
-							item.portletOrder = arrIndex;
-							arrIndex++;
-						}
-					});
-					
-					portletList.forEach(function (item, index) {
-						if(item.portletOrder*1 === 0) {
-							item.portletOrder = arrIndex;
-							arrIndex++;
-						}
-					}); */
-					// 순서 재정렬 끝
 					console.log('portletList ', portletList);
 					
 					var param = {
 						frameId: portletSetting.selectedFrame,
 						themeId: portletSetting.usedTheme,
 						portletList: portletList,
-					}					
+					}
 					
-					console.log('param', portletList);					
+					console.log('param', portletList);
 					
-					if(param.portletList.length < 1) {
+					if (param.portletList.length < 1) {
 						alert('<spring:message code="ezNewPortal.t011" />');	
 						return;
 					}
@@ -381,6 +342,7 @@
 							console.error('failure', xhr.responseText);
 						}
 					}
+					
 					xhr.open('PATCH', '/ezNewPortal/updateUserFrameAndPortelt.do');
 					xhr.setRequestHeader('Content-Type', 'application/json');
 					xhr.send(JSON.stringify({param: param}));

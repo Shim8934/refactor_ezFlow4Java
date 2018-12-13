@@ -619,7 +619,7 @@
             	<td style="vertical-align: top;">
                  	<%-- <h2><spring:message code='ezApprovalG.t232'/></h2> --%>
                 	<h2 class="h2_dot" style="padding-top:0px"><spring:message code='ezApprovalG.t232'/></h2>
-                	<div class="box" style="overflow: auto; height: 320px; width: 360px;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)"></div>
+                	<div class="box" style="overflow-x: hidden; overflow-y: auto; height: 320px; width: 360px;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)"></div>
             	</td>
             	<td style="width: 30px; text-align: center;">
                 	<img src="/images/arr_right.gif" onclick="return insertCont_onclick()" style="cursor: pointer">

@@ -1168,7 +1168,7 @@
 	                <!-- 조직도 -->
 					<div id="Organ" style="width:390px">
 	                    <div class="listview" style="margin-top: 1px">
-	                        <div style="overflow: auto; height: 306px; width: 387px;" id="TreeView"></div>
+	                        <div style="overflow-x: hidden; overflow-y: auto; height: 306px; width: 387px;" id="TreeView"></div>
 	                	</div>
 	                	<div class="listview" style="margin-top: 1px">
 	                        <div id="UserList" style="overflow: auto; Width: 387px; Height: 237px; border: 0; margin: 1px 1px 1px 1px;"></div>

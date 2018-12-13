@@ -628,12 +628,18 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("comId", comId);
 		map.put("userId", userId);
 		map.put("timeUTC", timeUTC);
+		FolderVO folder = getFolderDetail(folderId, userId, tenantId, comId);
 		int result = 0;
 
 		LOGGER.debug("folderId : " + folderId + "comId : " + comId + "userId"
 				+ userId + "deleteSubFldAFile  Method");
+		
+		if (folder.getFolderType().equals("U") && folder.getOwnerId().equals(userId)) {
+			result = 1;
+		} else {
+			result = checkCreater(folderId, tenantId, comId, userId);
+		}
 
-		result = checkCreater(folderId, tenantId, comId, userId);
 		// result 가 1이 아니면 creater가 자신이 아닌 폴더가 있다는 말
 		if (result == 1) {
 			// result 1이면 creater가 모두 자신이라는 의미

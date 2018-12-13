@@ -794,8 +794,9 @@ public class EzBoardController extends EgovFileMngUtil{
 					   
 					   strName = "";
 					   
+					   /* 2018-12-11 홍승비 - 마이게시판리스트 우측 게시물 갯수에서 괄호 제거 */
 					   if (intCount != 0) {
-						   strName = "(" + intCount + ")";
+						   strName = " " + intCount;
 					   }
 					   
 					   nList.item(i).getChildNodes().item(0).setTextContent(nList.item(i).getChildNodes().item(0).getTextContent() + strName);

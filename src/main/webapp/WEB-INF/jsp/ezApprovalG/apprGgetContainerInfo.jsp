@@ -275,7 +275,7 @@
 	            } catch (e) {
 	            }
 	            
-	            if (approvalFlag != 'G') {
+	            if (approvalFlag != 'G' &&  LoadSquery != 'usercontlist') {
 		            AddOption(sel_status, '<spring:message code="ezApprovalG.t1434"/>', 'H');
 		            AddOption(sel_status,'<spring:message code="ezApprovalG.t1422"/>', 'I');
 		            AddOption(sel_status, '<spring:message code="ezApprovalG.t1687"/>', 'N');

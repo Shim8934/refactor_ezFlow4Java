@@ -262,6 +262,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<PortletInfoVO> getPortletListNotSelected (Map<String, Object> map) {
 		return (List<PortletInfoVO>) list("ezNewPortal.getPortletListNotSelected", map);
 	}
+	
+	public void updateAllThemePortletOrder (Map<String, Object> map) {
+		update("ezNewPortal.updateAllThemePortletOrder", map);
+	}
 	/**
 	 * 이효진
 	 */
