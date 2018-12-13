@@ -33,6 +33,7 @@ a{
 	color: #393939;
 	text-decoration: none;
 	ime-mode:active;
+	cursor:pointer;
 }
 span {
 	font-size:12px;
