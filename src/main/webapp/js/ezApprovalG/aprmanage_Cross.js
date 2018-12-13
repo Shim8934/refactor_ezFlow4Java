@@ -626,6 +626,8 @@ function getAprLine(tr) {
     	} else {
     		pMode = "APR";
     	}
+    } else if (pListTypeValue == "3") {
+    	pMode = "COD";
     } else {
     	pMode = "APR";
     }
