@@ -9,12 +9,12 @@ function getBoardPortletInfo(portletId) {
 		data : data,
 		url : "/ezNewPortal/getCustomBoardInfo.do",
 		success : function(result) { 
-			getBoardList(result);
+			getBoardList(result, portletId);
 		}
 	})
 }
 
-function getBoardList(data) {
+function getBoardList(data, portletId) {
 	var boardList = data;
 	var boardCount = boardList.length;
 	var boardHTML = "";
@@ -37,7 +37,7 @@ function getBoardList(data) {
 		boardHTML += "<span class='name'>" + item.writerName + "</span>";
 		boardHTML += "</li>";
 	}
-	$("#customBoardList").html(boardHTML);
+	$("#customBoardList" + portletId).html(boardHTML);
 }
 
 function openDoc_section4_Type(pItemID, pType, oBoardID) {
