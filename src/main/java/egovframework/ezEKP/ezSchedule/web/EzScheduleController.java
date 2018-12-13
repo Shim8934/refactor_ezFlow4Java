@@ -3147,8 +3147,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			if (typeCal.equals("0")) { 
 				startDate    = dropDay + infoStartTime;
-				endDate      = dropDay + infoEndTime;
 				delStartDate = dragDay.substring(4, 14) + infoStartTime;
+				
+				if (dragDay.contains("ALL")) {
+					endDate = getDropEndDate(sdf1, dropDay, info) + infoEndTime;
+				}
+				else{
+					endDate = dropDay + infoEndTime;
+				}
 			}
 			else {
 				if (dropDay.contains("ALL")) {
