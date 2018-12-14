@@ -460,8 +460,8 @@
 	                            <th style="white-space:nowrap">
 	                                <spring:message code='ezSchedule.t311' />
 	                            </th>
-	                            <td colspan="3" width="100%">
-	                                <div style="overflow-y: auto; height: 30px; padding-top: 2px" id="LabelAttendant">	                                
+	                            <td colspan="3" width="100%" style="overflow-y:auto; height:30px; padding-top:1px; padding-bottom:1px;">
+	                                <div style="max-height:30px;" id="LabelAttendant">	                                
 	                                	<c:forEach var="item" items="${attendantList}" varStatus="status">	                                		  		
 	                                	 	<span title="<spring:message code='ezSchedule.t162'/>" style="cursor:pointer" onclick="show_personinfo('${item.attendantId}')">
 	                                	 		<!-- 2018-08-08 김보미 -->

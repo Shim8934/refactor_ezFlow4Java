@@ -68,6 +68,13 @@
 				if ("${pNewsBoardID }" == "") {
 					document.getElementById("Board2_Newboard").style.display = "none";
 				}
+				/* 2018-12-11 홍승비 - 포틀릿에 게시판이 하나도 등록되어있지 않은 경우 nodata 이미지 표출 */
+				if ("${pCompanyBoard }" == "" && "${pDeptBoardID }" == "" && "${pNewsBoardID }" == "") {
+					var nodata = "<div class='nodata_portlet '>";
+                    nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
+                    nodata += "<p>" + strLang2_NewBoard + "</p></div>";
+                    document.getElementById("BoardList_NewBoard").innerHTML = nodata;
+				}
 				
             	try { top.onresize() } catch (e) { }
         	}

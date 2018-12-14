@@ -229,7 +229,7 @@
 	<body style="background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top">
 		<div id="close">
             <ul>
-                <li><span onclick="letterPopUpClose()"></span></li>
+                <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
 		<div id="leTop">

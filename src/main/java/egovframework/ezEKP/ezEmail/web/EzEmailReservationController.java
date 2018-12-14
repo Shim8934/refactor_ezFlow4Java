@@ -699,4 +699,39 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		return returnValue;
 	}
 	
+	/**
+	 * 메일 메시지 화면 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailMessage.do")
+	public String mailMessage(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailMessage started.");
+		
+		String pReservedSaveTime = "";
+		String pCDOMessageID = "";
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		if (request.getParameter("messageid") != null && !request.getParameter("messageid").trim().equals("")) { 
+			pCDOMessageID = request.getParameter("messageid").trim();
+			
+			pReservedSaveTime = ezEmailService.getMailReservedTime(pCDOMessageID);
+			
+			//utc에서 timezone으로 시간변경
+			pReservedSaveTime = commonUtil.getDateStringInUTC(pReservedSaveTime, loginInfo.getOffset(), false);
+			
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.MINUTE, 30);
+			Date currentTime = cal.getTime();
+
+			SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			Date reservedSaveTime = transFormat.parse(pReservedSaveTime);
+
+			//예약발송 시간 30분 전에는 수정 불가
+			if (reservedSaveTime.before(currentTime)) { 
+				model.addAttribute("pMessage", egovMessageSource.getMessage("ezEmail.lhm07", locale));
+				logger.debug(egovMessageSource.getMessage("ezEmail.lhm07", locale));
+			}
+		}
+		logger.debug("mailMessage ended.");
+		return "ezEmail/mailMessage";
+	}
+	
 }
