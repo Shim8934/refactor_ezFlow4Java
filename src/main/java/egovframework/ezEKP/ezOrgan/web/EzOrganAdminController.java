@@ -1927,10 +1927,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             result.append("</CELL>");
             result.append("<CELL>");
             result.append("<VALUE>" + commonUtil.cleanValue(vo.getCn()) + "</VALUE>");
-            result.append("<DATA1>" + commonUtil.cleanValue(vo.getCn()) + "</DATA1>");
-            result.append("<DATA2>" + commonUtil.cleanValue(vo.getExtensionAttribute4()) + "</DATA2>");
-            result.append("<DATA3>" + commonUtil.cleanValue(vo.getDisplayName()) + "</DATA3>");
-            result.append("<DATA4>" + commonUtil.cleanValue(vo.getMail()) + "</DATA4>");
             result.append("</CELL>");
             result.append("<CELL>");
             result.append("<VALUE>" + commonUtil.cleanValue(vo.getDisplayName()) + "</VALUE>");
