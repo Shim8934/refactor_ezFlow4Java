@@ -40,7 +40,7 @@
     				</dl>
     				<div class="bottom"></div>
     			</div>
-    			<div class="personal_content" style="${isCircularUsed == 'Y' ? '' : 'display:none'}">
+    			<div class="personal_content" style="${useCircular == 'YES' ? '' : 'display:none'}">
 					<a id="NewMail" onClick="btnSumming_click(this)">
 						<ul>
 							<li class="count">
@@ -110,7 +110,7 @@
                     		</c:choose>
 						</ul>						
 					</a>
-					<c:if test="${isCircularUsed == 'Y'}">
+					<c:if test="${useCircular == 'YES'}">
 					<a id="Circular" onClick="btnSumming_click(this)">
 						<ul class="last">
 							<li class="count">
