@@ -82,7 +82,7 @@
 			                location.href = encodeURIComponent(GetAttribute(checks.item(suffix++), "filepath"));
 			            } else {
 			            //	console.log("filePath : " + GetAttribute(checks.item(suffix), "filePath"));
-		                	location.href = "/ezJournal/journalAttachDown.do?filePath=" + encodeURIComponent(GetAttribute(checks.item(suffix), "filePath")) + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName") + "&journalId=" + journalId;
+		                	location.href = "/ezJournal/journalAttachDown.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName") + "&journalId=" + journalId;
 			            }
 	                	setTimeout(function () { downloadAll(checks) }, 1000);
 		            }
