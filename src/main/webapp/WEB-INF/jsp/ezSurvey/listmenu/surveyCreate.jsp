@@ -728,14 +728,14 @@
 						var tmpQstnWpr  = $(this).parents(".usrQstnWrapper");
 						var qstnWrapper = $(this).parents(".qstnWrapper");
 						// 수정할 질문 id와 타입
-						var qstnId      = parseInt(qstnWrapper.attr("id"));
+						var qstnId      = parseInt(qstnWrapper.attr("id").replace("qstn", ""));
 						var qstnType    = tmpQstnWpr.attr("qstntype");
 						// 넘길 질문 객체
 						var qstnList    = SurveyCreate.getQs();
 						var qstn        = qstnList[qstnId - 1];
 						var nextId      = qstnId + 1;
 						var deepCopy    = JSON.parse(JSON.stringify(qstn));
-						deepCopy.id     = nextId;
+						deepCopy.id     = "qstn" + nextId;
 						
 						// 복사한 질문 객체 이후의 객체들 아이디값 +1
 						checkActionForNewId(qstnId, qstnList, "copy");
@@ -773,57 +773,23 @@
 					
 					// 로직 생성 버튼 이벤트
 					$(".prevQsArea").on("click", ".addLogic", function() {
-						$(this).css("display", "none");
-						$(this).siblings().css("display", "");
+						var thisId = $(this).attr("id").replace("addLogic", "");
 						
-						var prevWrapper = $(this).parents(".prevQsWrapper");
-						var thisType = parseInt(prevWrapper.attr("type"));
-						var thisId = parseInt(prevWrapper.attr("id"));
-
-						var qstnList = SurveyCreate.getQs();
-						var thisQstn = qstnList[thisId - 1];
+						mkLogicForm(thisId);
 						
-						var option = "";
-						option += "<option value=''>분기 없음</option>"; 
+						$("#frstBtnGrp" + thisId).css("display", "none");
+						$("#scndBtnGrp" + thisId).css("display", "");
 						
-						for (var i = 0; i < qstnList.length; i++) {
-							var qstnId = qstnList[i]['id'];
-							if (qstnId > thisId) {
-								option += "<option value='" + qstnId + "'>" + qstnId + "</option>"; 
-							}
-						}
-						
-						switch(thisType) {
-						case 1 :
-						case 2 :
-							sltLogicForm(prevWrapper, option, thisQstn);
-							break;
-						case 7:
-							slidLogicForm(prevWrapper, option, thisQstn);
-							break;
-						/* case 8:
-							rankQsLogic(prevWrapper, option, thisQstn);
-							break; */
-						case 9:
-							drdwLogicForm(prevWrapper, option, thisQstn);
-							break;
-						}
 					});
-					
+///////////////////////////					
 					// 로직 저장 버튼 이벤트
 					$(".prevQsArea").on("click", ".saveLogic", function() {
-						$(this).css("display", "none").next().css("display", "none");
-						$(this).prev().css("display", "");
 						
-						var result = "";
-						var prevWrapper = $(this).parents(".prevQsWrapper");
-						var thisType = parseInt(prevWrapper.attr("type"));
-						var thisId = parseInt(prevWrapper.attr("id"));
-						
+						var thisId = parseInt($(this).attr("id").replace("saveLogic", ""));
 						// 로직 flag 저장
-						var qstnList    = SurveyCreate.getQs();
-						var qstn        = qstnList[thisId - 1];
-						qstn['logicFlag'] = 'Y';
+						var qstnList = SurveyCreate.getQs();
+						var qstn = qstnList[thisId - 1];
+						var thisType = qstn.type;
 						
 						// 로직 추가, ui 변경
 						switch(thisType) {
@@ -838,7 +804,12 @@
 							addDrdwLogic(thisId, qstn);
 							break;
 						}
-
+						qstn['logicFlag'] = 'Y';
+						
+						$("#scndBtnGrp" + thisId).css("display", "none");
+						$("#thrdBtnGrp" + thisId).css("display", "");
+						
+						console.log(qstnList);
 					});
 					
 					// 로직 취소 버튼 이벤트
@@ -1334,7 +1305,7 @@
 					var qstId      = qstnWrapper.attr("id") ? parseInt(qstnWrapper.attr("id")) : questionList.length + 1;
 					question["id"] = qstId;
 					//Set id
-					qstnWrapper.attr("id", qstId);
+					qstnWrapper.attr("id", "qstn" + qstId);
 					
 					var html       = makeQuestionHeaderPanel(question);
 					
@@ -1771,12 +1742,12 @@
 					confirmSurveyInfo(qstInf);
 					
 					if (qstnList.length != 0) {
-						var html = "";
 						for (var i = 0; i < qstnList.length; i++) {
+							var html = "";
 							var question = qstnList[i];
 							var qstnId = question.id;
 							var qstnType = question.type;
-							html += "<div class='prevQsWrapper' id='" + qstnId + "'type='" + qstnType + "'>";
+							html += "<div class='prevQsWrapper' id='prevQstn" + qstnId + "'type='" + qstnType + "'>";
 							
 							html += prevQsHeader(question, qstnList);
 							
@@ -1794,8 +1765,13 @@
 								default : alert(SurveyMessages.strError)             ; return;
 							}
 							html += "</div></div>";
+
+							$(".prevQsArea").append(html);
+							
+							if (question.logicFlag == 'Y') {
+								mkLogicForm(qstnId);
+							}
 						}
-						$(".prevQsArea").append(html);
 					}
 				}
 				// 미리보기 질문의 헤더
@@ -1816,9 +1792,19 @@
 					}
 					if (qstId < qstnList.length) {
 						if (qstnType == 1 || qstnType == 2 || qstnType == 7 || qstnType == 9) {
-							html += "<img class='addLogic' src='/images/ezSurvey/shuffle.png'/>";
-							html += "<img class='saveLogic' src='/images/ezSurvey/save.png' style='display:none;'/>";
-							html += "<img class='cancelLogic' src='/images/ezSurvey/xBtn.png' style='display:none;'/>";
+							html += "<span id='frstBtnGrp" + qstId + "' class='frstBtnGrp'>"
+							html += "<img id='addLogic" + qstId + "' class='addLogic' src='/images/ezSurvey/shuffle.png'/>";
+							html += "</span>"
+							
+							html += "<span id='scndBtnGrp" + qstId + "' class='scndBtnGrp' style='display:none;'>"
+							html += "<img id='saveLogic" + qstId + "' class='saveLogic' src='/images/ezSurvey/save.png'/>";
+							html += "<img id='cancelLogic" + qstId + "' class='cancelLogic' src='/images/ezSurvey/xBtn.png' />";
+							html += "</span>"
+							
+							html += "<span id='thrdBtnGrp" + qstId + "' class='thrdBtnGrp' style='display:none;'>"
+							html += "<img id='mdfLogic" + qstId + "' class='saveLogic' src='/images/ezSurvey/correct.png'/>";
+							html += "<img id='mdfCancelLogic" + qstId + "' class='cancelLogic' src='/images/ezSurvey/trash.png'/>";
+							html += "</span>"
 						}
 					}
 					html += "</div></div></div></div>";
@@ -1830,34 +1816,85 @@
 					}
 					return html;
 				}
-				// select 질문 로직 폼 생성
-				function sltLogicForm(prevWrapper, option, question) {
-					var qstnId = question.id;
-					var qstnOpt = question.option;
+				
+				// 로직 폼 생성
+				function mkLogicForm(id) {
+					var prevWrapper = $("#prevQstn" + id);
 					
+					var qstnList = SurveyCreate.getQs();
+					var thisQstn = qstnList[id - 1];
+					var type = thisQstn.type;
+					
+					var htmlOption = "";
+					htmlOption += "<option value=''>분기 없음</option>"; 
+					
+					for (var i = 0; i < qstnList.length; i++) {
+						var qstnId = qstnList[i]['id'];
+						if (qstnId > id) {
+							htmlOption += "<option value='" + qstnId + "'>" + qstnId + "</option>"; 
+						}
+					}
+					
+					switch(type) {
+					case 1 :
+					case 2 :
+						sltLogicForm(prevWrapper, htmlOption, thisQstn, id);
+						break;
+					case 7:
+						slidLogicForm(prevWrapper, htmlOption, thisQstn, id);
+						break;
+					case 9:
+						drdwLogicForm(prevWrapper, htmlOption, thisQstn, id);
+						break;
+					}
+				}
+//////////////////////////////////////////////////////////////////////////				
+				// select 질문에 logic form 추가
+				function sltLogicForm(prevWrapper, htmlOption, question, qstnId) {
+					var id = "";
+					var logicNum = "";
+
+					var qstnOpt = question.option;
 					var opts = prevWrapper.find(".prevQsOpt").find(".opt");
 					var optLength = opts.length;
 					
+					if (qstnId) {
+						id = qstnId;
+					}
+
 					for (var i = 0; i < optLength; i++) {
 						var optLevel = qstnOpt[i].level;
+	
+						var html = "";
+						html += "<div id='logic" + id + optLevel + "' class='sltLogicArea'>";
+						html += "<img class='prevSltArrow' src='/images/ezSurvey/arrow.png'>";
+						html += "<select class='logicSelect' name='slt" + id + optLevel + "' id='slt" + id + optLevel + "'>";
+						html += htmlOption;
+						html += "</select>";
+						html += "<span class='logicSpan' id='sltVal" + id + i + "'></span>";
+						html += "</div>";
 						
-						var sltLogicArea = $("<div id='logic" + qstnId + "" + optLevel + "' class='sltLogicArea'></div>");
-						var prevSltArrow = $("<img class='prevSltArrow' src='/images/ezSurvey/arrow.png'>");
-						sltLogicArea.append(prevSltArrow[0]);
-						
-						var selectBox = $("<select class='logicSelect' name='slt" + qstnId + "" + optLevel + "' id='slt" + qstnId + "" + optLevel + "'></select>");
-						selectBox.html(option);
-						sltLogicArea.append(selectBox[0]);
-
 						var opt = opts[i];
-						opt.append(sltLogicArea[0]);
+						opt.append($(html)[0]);
+						
+						if (question.logicFlag == 'Y') {
+							$("#addLogic" + id).css("display", "none");
+							
+							logicNum = qstnOpt[i].logic;
+							$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
+							$("#sltVal" + id + i).text(logicNum).css("dispaly", "");
+						}
 					}
 				}
-				
-				function slidLogicForm(prevWrapper, option, question) {
-					var qstnId = question.id;
+				// slider 질문에 logic form 추가
+				function slidLogicForm(prevWrapper, htmlOption, question, qstnId) {
+					var id = "";
 					var qstnOpt = question.option;
 					var prevQsOpt = prevWrapper.find(".prevQsOpt");
+					
+					if (qstnId) {
+						id = qstnId;
+					}
 					
 					var minVal = "";
 					var maxVal = "";
@@ -1871,18 +1908,26 @@
 					}
 					
 					var html = "";
-						html += "<input id='slidLogicInput" + qstnId + "' class='prevSlidInput' type='text' minVal='" + minVal + "' maxVal='" + maxVal + "'>";
+						html += "<div id='logic" + id + "' class='slidLogicArea'>";
+						html += "<input id='slidLogicInput" + id + "' class='prevSlidInput' type='text' minVal='" + minVal + "' maxVal='" + maxVal + "'>";
 						html += "<span class='prevSlidSpan'>이상</span>";
 						html += "<img class='prevSlidArrow' src='/images/ezSurvey/arrow.png'>";
+						html += "<select id='slt" + id + "' class='logicSelect' name='slt" + id + "'>";
+						html += htmlOption;
+						html += "</select>";
+						html += "<span class='logicSpan' id='sltVal" + id + "'></span>";
+						html += "</div>";
 					
-					var slidDiv = $("<div id='logic" + qstnId + "' class='slidLogicArea'></div>");
-					slidDiv.append(html);
+					prevQsOpt.append($(html)[0]);
 					
-					var selectBox = $("<select class='logicSelect' name='slt" + qstnId + "'></select>");
-					selectBox.html(option);
-					slidDiv.append(selectBox);
-					
-					prevQsOpt.append(slidDiv);
+					if (question.logicFlag == 'Y') {
+						$("#addLogic" + id).css("display", "none");
+						
+						logicNum = qstnOpt[0].logic;
+						$("#slidLogicInput" + id).val(question.slidLogicPoint);
+						$("#slt" + id).val(logicNum).prop("selected", true).css("display", "none");
+						$("#sltVal" + id).text(logicNum).css("dispaly", "");
+					}
 				}
 				
 				// 로직 들어갈 시 이상해짐
@@ -1901,39 +1946,48 @@
 					
 				} */
 				
-				function drdwLogicForm(prevWrapper, option, question) {
-					var qstnId = question.id;
-					var qstnOpt = question.option;
-					
+				// dropdown 질문에 logic form 추가
+				function drdwLogicForm(prevWrapper, htmlOption, question, qstnId) {
+					var id = "";
+					if (qstnId) {
+						id = qstnId;
+					}
 					var prevQsOpt = prevWrapper.find(".prevQsOpt");
-					
-					var drdwLogic = $("<div id='logic" + qstnId + "' class='drdwLogicArea'></div>");
 					var drdwOpt = question.option;
-					var optLength = drdwOpt.length
+					var optLength = drdwOpt.length;
+					
+					var drdwLogicArea = $("<div id='logic" + id + "' class='drdwLogicArea'>");
 					
 					for (var i = 0; i < optLength; i++) {
 						var opt = drdwOpt[i];
-						var optLevel = qstnOpt[i].level;
+						var optLevel = opt.level;
 						
-						var drdwDiv = $("<div class='drdwLogicRow' id='drdw" + qstnId + i + "'></div>");
 						var html = "";
+						html += "<div class='drdwLogicRow' id='drdw" + id + i + "'>";
 						html += "<span class='prevDrdwSpan'>" + opt.content + "</span>";
 						html += "<img class='prevDrdwArrow' src='/images/ezSurvey/arrow.png'>";
+						html += "<select id='slt" + id + i + "' class='logicSelect' name='slt" + id + i + "'>";
+						html += htmlOption;
+						html += "</select>";
+						html += "<span class='logicSpan' id='sltVal" + id + i + "'></span>";
+						html += "</div>";
 						
-						drdwDiv.append(html);
+						drdwLogicArea.append($(html)[0]);
+						prevQsOpt.append(drdwLogicArea);
 						
-						var selectBox = $("<select class='logicSelect' name='slt" + qstnId + "" + optLevel + "'></select>");
-						selectBox.html(option);
-						
-						drdwDiv.append(selectBox);
-						drdwLogic.append(drdwDiv);
+						if (question.logicFlag == 'Y') {
+							$("#addLogic" + id).css("display", "none");
+							
+							logicNum = opt.logic;
+							$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
+							$("#sltVal" + id + i).text(logicNum).css("dispaly", "");
+						}
 					}
-					prevQsOpt.append(drdwLogic);
 				}
 				
-				// select question에 로직 추가
+				// select 질문 객체, ui에 로직 value 추가
 				function addSltLogic(id, qstn) {
-					var wrapper = $("#"+id);
+					var wrapper = $("#prevQstn"+id);
 					var opt = wrapper.find(".opt");
 					var optLength = opt.length;
 					
@@ -1943,10 +1997,10 @@
 						qstn.option[i]['logic'] = logicNum;
 						
 						$("select[name=slt" + id + i + "]").css("display", "none");
-						$("#logic" + id + i).append("<span class='logicSpan' id='sltVal" + id + i + "'>" + logicNum + "</span>");
+						$("#sltVal" + id + i).text(logicNum);
 					}
 				}
-				
+				// slider 질문 객체, ui에 로직 value 추가
 				function addSlidLogic(id, qstn) {
 					var inputVal = parseInt($("#slidLogicInput" + id).val());
 					var maxVal = parseInt(qstn.option[1]['content']);
@@ -1958,7 +2012,7 @@
 							qstn.option[0]['logic'] = logicNum;
 							
 							$("select[name=slt" + id + "]").css("display", "none");
-							$("#logic" + id).append("<span class='logicSpan' id='sltVal" + id + "'>" + logicNum + "</span>");
+							$("#sltVal" + id).text(logicNum);
 						} else {
 							alert("분기를 선택해 주세요.");
 							return;
@@ -1967,10 +2021,9 @@
 						alert("최소값과 최대값 사이의 숫자를 입력해 주세요.");
 						return;
 					}
-
 				}
 				
-				// dropdown question에 로직 추가
+				// dropdown 질문 객체, ui에 로직 value 추가
 				function addDrdwLogic(id, qstn) {
 					var logicArea = $("#logic" + id);
 					var rows = logicArea.find(".drdwLogicRow");
@@ -1981,7 +2034,8 @@
 						qstn.option[i]['logic'] = logicNum;
 						
 						$("select[name=slt" + id + i + "]").css("display", "none");
-						$("#drdw" + id + i).append("<span class='logicSpan' id='sltVal" + id + i + "'>" + logicNum + "</span>");
+						console.log($("#sltVal" + id + i));
+						$("#sltVal" + id + i).text(logicNum);
 					}
 				}
 				

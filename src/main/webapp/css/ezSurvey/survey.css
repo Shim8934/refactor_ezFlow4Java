@@ -425,7 +425,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsOpt .slidLogicArea .logicSpan {font-size: 16px; margin-top: 2px;}
 
 .prevQsOpt .drdwLogicArea {padding-left: 35px; padding-bottom: 30px;}
-.prevQsOpt .drdwLogicArea .drdwLogicRow {display: flex;}
+.prevQsOpt .drdwLogicArea .drdwLogicRow {display: flex; padding: 10px 0px;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwSpan {font-size: 16px; padding-top: 3px;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwArrow {padding: 0px 30px;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow .logicSpan {font-size: 16px; margin-top: 2px;}
