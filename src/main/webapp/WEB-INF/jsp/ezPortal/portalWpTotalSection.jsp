@@ -97,7 +97,7 @@
 						<ul>
 							<li class="count">
 								<div>
-									<span><c:if test="${fn:length(pollNum) > 2}">99+</c:if><c:if test="${fn:length(pollNum) <= 2}">${pollNum}</c:if></span>
+									<span><c:if test="${pollNum > 99}">99+</c:if><c:if test="${pollNum <= 99}">${pollNum}</c:if></span>
 								</div>
 							</li>
                     		<c:choose>
@@ -221,32 +221,11 @@
 			select {
 				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;
 			}
+			
 			select::-ms-expand {
 			    display: none;
 			}
-		</style>
-		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/jindo.all.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/selectbox.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/scrollbox.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>		
-		<script type="text/javascript">
-		 	var UserOffset = "${userOffset}";
-		</script>
-		<c:choose>
-			<c:when test="${checkBrowser == true}">
-				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_IEEIP.js')}"></script>
-			</c:when>
-			<c:otherwise>
-				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_EIP.js')}"></script>
-			</c:otherwise>
-		</c:choose>
-		
-		<script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<style>
+			
 			#atti_area span{
 				width:35px;
 				margin-left:7px;
@@ -278,23 +257,33 @@
 				height:20px;
 				font-family: Malgun Gothic, Meiryo UI;
 			}
-		</style>   
+		</style>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/jindo.all.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/selectbox.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/scrollbox.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>		
+		<c:choose>
+			<c:when test="${checkBrowser == true}">
+				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_IEEIP.js')}"></script>
+			</c:when>
+			<c:otherwise>
+				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_EIP.js')}"></script>
+			</c:otherwise>
+		</c:choose>
+		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
+			var UserOffset = "${userOffset}";
 		    var pMode = "P";
 		    var date = "";
 		    var strLang1_total = "<spring:message code='main.t00025' />";
 		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
 			var isCircularUsed = "${isCircularUsed}";
-		    
-			$(document).ready(function(){
-				if (isCircularUsed != 'Y') {
-					$(".personal_content a ul").css({'width': 100/$(".personal_content a ul").length + '%'});
-					$(".personal_content a ul:last").attr("class","last");
-					$(".personal_content").show();
-				}
-			});
-		    
 		    var year = sDate.getFullYear();
 		 	var mon = leadingZeros((sDate.getMonth() + 1), 2);
 		 	var day = sDate.getDate();		 	
@@ -351,9 +340,6 @@
 		            overflowY: "scroll" // auto, scroll
 		        });
 
-// 		        draw_clock();
-// 		        yourClock();
-
 		        try { top.onresize() } catch (e) { }
 		        
 		        //ajax로 각 모듈 counting 및 list 호출
@@ -361,6 +347,12 @@
 		        getnewapprovalcount();		        
 		        getScheduleList(nowDay, pMode);
 		        getNewCircularCount();
+		        
+		        if (isCircularUsed != 'Y') {
+					$(".personal_content a ul").css({'width': 100/$(".personal_content a ul").length + '%'});
+					$(".personal_content a ul:last").attr("class","last");
+					$(".personal_content").show();
+				}
 			}
 
 			function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date, pageFrom) {
