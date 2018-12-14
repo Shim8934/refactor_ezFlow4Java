@@ -134,7 +134,7 @@
 	  				<c:if test="${dotNetIntegration != 'YES'}"><spring:message code='main.t56' /></c:if>
 	  				<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.t24' /></c:if>
   				</span>
-  			</h2>  
+  			</h2>
   			<c:if test="${dotNetIntegration != 'YES'}">
     		<ul>
 		        <li><span id="Organ" style="width: 100%; display: inline-block;" onClick="goPage(1)" ><spring:message code='main.t56' /></span></li>
@@ -143,6 +143,22 @@
 		        <li><span id="JobInfo" style="width: 100%; display: inline-block;" onClick="goPage(31)"><spring:message code='ezOrgan.csj01' /></span></li>
 		    </ul>   
 		    </c:if>
+  			<c:if test="${cChk == '1'}">
+			<h2>
+				<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
+			    <ul></ul>
+			</h2>
+			</c:if>
+			<c:if test="${cChk == '1'}">
+  			<h2>
+  				<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
+    			<ul></ul>
+  			</h2>
+  			</c:if>
+  			<h2>
+  				<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
+    			<ul></ul>
+  			</h2>   
   			<h2>
   				<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
     			<ul></ul>    			
@@ -154,26 +170,9 @@
     			<ul></ul>
   			</h2>
   			</c:if>
-  			
-  			<!--
-  			<h2>
-  				<span onClick="goPage(20)" style="display:inline-block;width:100%;"><spring:message code='main.t1000' /></span>
-    			<ul></ul>
-  			</h2>
-  			<h2>
-  				<span onClick="goPage(21)" style="display:inline-block;width:100%;"><spring:message code='main.t1001' /></span>
-    			<ul></ul>
-  			</h2>
-            -->     
-  			<c:if test="${cChk == '1'}">
-  			<h2>
-  				<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
-    			<ul></ul>
-  			</h2>  
-  			</c:if>			
   			<!-- 2016-04-05 장진혁 편지지등록 / REQUEST에 MSIE 또는 TRIDENT가 포함될 시에만 메뉴 보여줌으로 되어있었음  -->
   			
-  			<!-- 2018-02-20 재은 수정 (편지지 등록) -->
+  			<!-- 2018-02-20 재은 수정 (편지지 관리) -->
   			
   			<c:if test="${useLetter == 'YES'}">
   			<h2>
@@ -181,27 +180,9 @@
 			    <ul></ul>
 			</h2>
 		    </c:if>
-  			<!--							
-			<h2>
-				<span onClick="goPage(5)" style="display:inline-block;width:100%;"><spring:message code='main.t374' /></span>
-			    <ul></ul>
-			</h2>
-			-->
-			<!-- 편지지등록 끝 -->
-			<%-- <spring:message code='main.t58' /> --%>
-			<h2>
-  				<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
-    			<ul></ul>
-  			</h2>
   			<c:if test="${useSignatureTemplate == 'YES'}">
   			<h2>
 				<span onClick="goPage(32)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.jje05'/></span>
-			    <ul></ul>
-			</h2>
-			</c:if>
-  			<c:if test="${cChk == '1'}">
-			<h2>
-				<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
 			    <ul></ul>
 			</h2>
 			</c:if>
