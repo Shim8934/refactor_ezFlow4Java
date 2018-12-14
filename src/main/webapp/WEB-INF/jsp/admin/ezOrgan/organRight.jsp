@@ -1367,19 +1367,25 @@
 			}
 		    
 		    function syncOrganAccounts() {
+		    	showProgress();
+		    	
 	            $.ajax({
 	            	type : "POST",
 	            	dataType : "text",
 	            	url : "/admin/ezOrgan/syncOrganAccounts.do",
 	            	async : true,
 	            	success : function(result) {
-	            	    if (result == "OK") {
+	            		hideProgress();
+	            		
+	            		if (result == "OK") {
 	            	        alert("<spring:message code='ezOrgan.lhm6' />");
 	            	    } else {
 	            	        alert("<spring:message code='ezQuestion.t263' />");
 	            	    }
 	            	},
 	            	error : function(error) {
+	            		hideProgress();
+	            		
 	            	    alert("<spring:message code='ezQuestion.t263' /> " + error);
 	            	}
 	            });
