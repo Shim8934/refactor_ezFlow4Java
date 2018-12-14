@@ -1898,7 +1898,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
 	
 		model.addAttribute("curMon", curMon);	
-		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("primary", userInfo.getPrimary());
 		
 		return "/ezPortal/portalWpNewBirth";
 	}
