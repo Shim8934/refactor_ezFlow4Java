@@ -404,6 +404,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("portletLang", portletLang);
 		map.put("config", config);
 		
+		String lang = commonUtil.getMultiData(portletLang, tenantId);
+		map.put("lang", lang);
+		
 		String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 		
 		//path 거꾸로 돌려야해서

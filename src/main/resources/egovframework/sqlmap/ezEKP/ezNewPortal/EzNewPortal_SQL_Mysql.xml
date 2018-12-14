@@ -130,7 +130,6 @@
 <result property="portletUsed" 				column="PORTLET_USED" 		javaType="boolean"/>
 <result property="menuId" 					column="MENU_ID" />
 <result property="boardName1" 				column="BOARDNAME" />
-<result property="boardName2" 				column="BOARDNAME2" />
 <result property="portletBoardId" 			column="BOARD_ID" />
 <result property="menuName" 				column="MENU_NAME" />
 <result property="portletName" 				column="PORTLET_NAME" />
@@ -1899,8 +1898,7 @@ SELECT A.PORTLET_ID,
        C.DEFAULT_ORDER,
        C.PORTLET_URL,
        A.BOARD_ID,
-       D.BOARDNAME,
-       D.BOARDNAME2,
+       D.BOARDNAME$lang$ AS BOARDNAME,
        E.MENU_NAME,
        F.PORTLET_NAME
   FROM TBL_PORTAL_PORTLET_COMP A
@@ -1908,7 +1906,7 @@ SELECT A.PORTLET_ID,
     ON A.PORTLET_ID = C.PORTLET_ID
   LEFT JOIN TBL_BOARD_BOARDINFO D
   	ON A.BOARD_ID = D.BOARDID
-  	AND A.COMPANY_ID = D.COMPANYID
+  	AND (A.COMPANY_ID = D.COMPANYID OR TRIM(D.COMPANYID) = '' OR D.COMPANYID IS NULL)
   	AND	A.TENANT_ID = D.TENANT_ID
   LEFT JOIN TBL_PORTAL_MENU_NAME E
  	ON	A.menu_id = E.menu_id
