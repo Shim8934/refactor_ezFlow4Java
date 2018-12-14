@@ -82,6 +82,7 @@
 		                listview.SetHeightFree(true);
 		                listview.DataSource(headerData);
 		                listview.DataBind("AddJobListView");
+		                checkbox_header();
 		        	},
 		        	error : function(error){
 		        		alert("<spring:message code='ezOrgan.t2' />" + error);
@@ -470,12 +471,47 @@
 		        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(MsgTo), "",
                         "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		    }
+		    
+			// xml data -> input checkbox method
+			var cnt;
+			var checkbox_header = function() {
+				var doc = window.document;
+				var th = doc.getElementById("lvAddJobList_TH_0");
+				var acList = doc.getElementById("lvAddJobList");
+				th.innerHTML = "<input type='checkbox' id = 'checkAll' onchange='checkboxHeaderClick()'></input>";
+
+				cnt = acList.children[1].childElementCount;
+
+				var i = 0;
+				for (i; i < cnt; i++) {
+					var seq = acList.children[1].children[i].children[0].innerHTML;
+					var jinhangFlag = acList.children[1].children[i].children[5].innerHTML;
+					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq + "' onchange='inputFunc(event," + seq + ")'></input>";
+				}
+			}
+
+			// 체크박스 헤더 클릭 method
+			var checkFlag = false;
+			function checkboxHeaderClick() {
+				if (checkFlag) {
+					checkFlag = false;
+					$(".checks").prop("checked", false);
+					$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+				} else {
+					checkFlag = true;
+					$(".checks").prop("checked", true);
+					$("#contentlist tr td").css("background-color", "rgb(241, 248, 255)");
+				}
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
 	    <xml id="listviewheader" style="display:none">
 			<LISTVIEWDATA>
 		    	<HEADERS>
+		    		<HEADER>
+						<WIDTH>20</WIDTH>
+					</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t218' /></NAME>
 		        		<WIDTH>10%</WIDTH>
