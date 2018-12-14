@@ -1291,6 +1291,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		*/
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("pPreviewShow_HOW", request.getParameter("pPreviewShow_HOW"));
 //		param.put("viewDate", viewDate);
 		
 		String journalId = request.getParameter("journalId");
@@ -1763,6 +1764,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("pPreviewShow_HOW", request.getParameter("pPreviewShow_HOW"));
 		
 		String journalId = request.getParameter("journalId");
 		
@@ -1774,6 +1776,8 @@ public class EzJournalController extends EgovFileMngUtil {
 		if (status.equals("ok")) {			
 			journal = (JSONObject) resultBody.get("data");
 			model.addAttribute("journalContent",((String) journal.get("journalContent")));
+			model.addAttribute("journal",journal);
+			model.addAttribute("journalType",request.getParameter("journalType"));
 		}
 		
 		logger.debug("getJournalContent ended");

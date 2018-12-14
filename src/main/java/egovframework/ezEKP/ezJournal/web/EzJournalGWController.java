@@ -698,6 +698,7 @@ public class EzJournalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String pPreviewShow_HOW = request.getParameter("pPreviewShow_HOW");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			/*
 			String viewDate = "";
@@ -706,7 +707,7 @@ public class EzJournalGWController {
 			}
 			*/
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			JournalVO journal = ezJournalService.getJournal(journalId, userId, info.getTenantId(), lang, info.getOffSet());
+			JournalVO journal = ezJournalService.getJournal(journalId, userId, info.getTenantId(), lang, info.getOffSet(), pPreviewShow_HOW);
 			
 			if (journal.getFileList().size() > 0) {
 				List<JournalFileVO> fileList = journal.getFileList();

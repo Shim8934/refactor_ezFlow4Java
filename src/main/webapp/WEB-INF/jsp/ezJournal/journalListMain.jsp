@@ -607,8 +607,8 @@
 	   			var vc = $(parentElem).find(".viewCount");
 	   			$(parentElem).find("input[type='checkbox']").prop("checked","true");
 	   			var journalId=$(parentElem).attr("id");
-	   			if (pPreviewShow_HOW == 'W' || pPreviewShow_HOW == 'H') {
-		   			if($(parentElem).hasClass("noView")){
+// 	   			if (pPreviewShow_HOW == 'W' || pPreviewShow_HOW == 'H') {
+		   			if($(parentElem).hasClass("noView") && (pPreviewShow_HOW == 'W' || pPreviewShow_HOW == 'H')){
 		   				if($(parentElem).attr("mine") == 'N'){
 		   	   				$(vc).text(parseInt($(vc).text())+1);
 		   				}
@@ -623,7 +623,7 @@
 		   				success : function(journal){
 							$("#Preview_ContentW").html(journal);
 							$("#Preview_ContentH").html(journal);
-							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId=" + journalId);
+							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId=" + journalId+"&journalType=p&pPreviewShow_HOW="+pPreviewShow_HOW);
 							if(listType == 'recv'){
 								parent.left.setRecvCount();
 // 								setJournalList();
@@ -643,7 +643,7 @@
 							Window_resize();
 		   				}
 		   			});
-				}
+// 				}
 			}
 			
 			//체크박스 전체선택 혹은 해제
@@ -745,8 +745,8 @@
 						document.getElementById("journalListBody").style.height = (CurrentHeight - 100) + "px";
 						g_bPrevShow = false;
 						onPreview=false;
-						$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
-						$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 						$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 						$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
 					} else if (pGubun == "W") {
 						document.getElementById("MailListRayer").style.display = "inline-block";
 						document.getElementById("PreviewRayerW").style.display = "block";
@@ -775,10 +775,10 @@
 // 						document.getElementById("Preview_HeaderH").style.display = "none";
 						g_bPrevShow = true;
 						
-						if(onPreview == false){
-							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
-							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
-						}
+// 						if(onPreview == false){
+// 							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 						}
 						onPreview = true;
 					} else if (pGubun == "H") {
 						if (parent.document.getElementById("tab1")) {
@@ -823,10 +823,10 @@
 
 						g_bPrevShow = true;
 						
-						if(onPreview == false){
-							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
-							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
-						}
+// 						if(onPreview == false){
+// 							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 						}
 						onPreview = true;
 					}
 					
@@ -994,6 +994,8 @@
 						success : function() {
 							alert("<spring:message code='ezJournal.t138'/>");
 							setJournalList();
+							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
 						},
 						error : function() {
 							alert("<spring:message code='ezJournal.t149'/>");
@@ -1024,6 +1026,9 @@
 		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
 		    	});
+		    	$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+				$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+
 // 				if(pPreviewShow_HOW=='H'){
 // 					PreviewH_Move = true;
 // 				} else if(pPreviewShow_HOW=='W'){
@@ -1462,7 +1467,7 @@
 								+ feature);
 			Openwin.focus();
 		} else {
-			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "",
+			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId + "&pPreviewShow_HOW=D", "",
 					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 					+ feature);
 			Openwin.focus();
