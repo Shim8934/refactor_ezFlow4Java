@@ -346,12 +346,11 @@
 		        var selRow = tr[0];
 		        if ("${buJaeId}" == selRow.getAttribute("DATA2")) {
 					if ("${type}" != "EMP") {
-						//2018-08-10 êµ¬í´ì ëì¤ì resource ì¶ê°
 						alert("<spring:message code='main.t0629'/>");
 						return;
 					}
 		        }
-		     	//2018-08-10 ì ììì ë¶ìë¥¼ ë½ì¼ë©´ ìëê³  ë¶ì¬ìì ë¶ìë¥¼ ë½ìì¼ íë¤.
+		     	//2018-08-10 대리 수신자 기능 미구현으로 주석처리
 		        /* if (type == "Proxy") {
 		            if ("${userInfo.deptID}" != selRow.getAttribute("DATA3")) {
 		                alert("<spring:message code='ezPersonal.t400'/>");
