@@ -226,7 +226,6 @@ public class LoginController {
         	return "forward:/user/login/login.do";
         // 사용자 ID 혹은 사원번호가 발견된 경우
 		} else {
-			
 			resultVO.setIp(ClientUtil.getClientIP(request));
 			resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
 			resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
@@ -420,9 +419,18 @@ public class LoginController {
     		            	cal.add(Calendar.DATE, realPeriod);
     		            	
     		            	baseDT = cal.getTime();
-    		            	Date lastDT = resultVO.getUpdateDT();
+    		            	Date passwordUpdateDT = resultVO.getPassword_updatedt();
+    		            	
+    		            	if (passwordUpdateDT == null) {
+    		            		passwordUpdateDT = resultVO.getUpdateDT();
+    		            	}
+    		            	
+    		            	logger.debug("passwordUpdateDT=" + passwordUpdateDT);
+    		            	logger.debug("baseDT=" + baseDT);
+    		            	
     		            	//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
-    		    			diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
+    		    			diff = EgovDateUtil.getDaysDiff(baseDT, passwordUpdateDT);
+    		    			logger.debug("diff=" + diff);
     		        	}	        	
     	        	}        	        	
     	        		        	

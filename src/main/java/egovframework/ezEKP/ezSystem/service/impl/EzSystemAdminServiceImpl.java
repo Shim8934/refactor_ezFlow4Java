@@ -1,18 +1,26 @@
 package egovframework.ezEKP.ezSystem.service.impl;
 
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -22,15 +30,18 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.CheckName;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.DataForModulesEnum;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
+import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzSystemAdminService")
 public class EzSystemAdminServiceImpl implements EzSystemAdminService {
@@ -42,6 +53,9 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	@Override
 	public List<SysParamVO> getSysParam(int tenantID) throws Exception {	
@@ -507,5 +521,103 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		}
 		
 		logger.debug("insertAccessId ended.");
+	}
+	
+	/** 
+	 * 각 모듈별 스토리지 사용량과 데이터베이스 사용량, 총 사용량을 구한다.
+	 * @param moduleNamesStr
+	 * @param realPath
+	 * @param userInfo
+	 *  */
+	@Override
+	public ModuleSizeVO getModuleUsage(List<String> moduleNames, String realPath, LoginVO userInfo) throws Exception {
+		logger.debug("getModuleUsage started.");
+		
+		ModuleSizeVO moduleSizeVO = new ModuleSizeVO(true);
+		int tenantId = userInfo.getTenantId();
+		
+		long totalStorageSize = 0;
+		long totalTableSize = 0;
+		
+		for(String moduleName : moduleNames) {
+			ModuleSizeVO tempModuleSizeVO = getModuleUsage(moduleName, realPath, tenantId);
+			
+			totalStorageSize += tempModuleSizeVO.getStorageSize();
+			totalTableSize += tempModuleSizeVO.getTableSize();
+			
+			moduleSizeVO.putModuleMap(moduleName, tempModuleSizeVO);
+		}
+		
+		moduleSizeVO.putModuleMap("total", setModuleSize(totalStorageSize, totalTableSize));
+		
+		logger.debug("getModuleUsage ended.");
+		
+		return moduleSizeVO;
+	}
+	
+	public ModuleSizeVO getModuleUsage(String moduleName, String realPath, int tenantId) throws Exception {
+		DataForModulesEnum module = DataForModulesEnum.valueOf(moduleName.toUpperCase());
+		
+		long storageSize = 0;
+		long tableSize = 0;
+		
+		// get file size
+		if(module.getFilerootName() != null) {
+			int filerootNameLen = module.getFilerootName().length;
+			AtomicLong storageSizeByte = new AtomicLong(0);
+			
+			for(int i = 0; i < filerootNameLen; i++) {
+				String uploadPath = commonUtil.getUploadPath(module.getFilerootName()[i], tenantId);
+				
+				Path filePath = Paths.get(realPath + uploadPath);
+				if(filePath.toFile().exists()) {
+					Files.walkFileTree(filePath, new SimpleFileVisitor<Path>() {
+						
+						@Override
+						public FileVisitResult visitFile(Path file,	BasicFileAttributes attrs) throws IOException {
+							
+							storageSizeByte.addAndGet(attrs.size());
+							
+							return FileVisitResult.CONTINUE;
+						}
+						
+					});
+				}
+			}
+			
+			storageSize = storageSizeByte.longValue();
+		}
+		// end
+		
+		// get table size
+		tableSize = ezSystemAdminDAO.selectModuleSize(module.getTableName(), module.getNotTableName());
+		// end
+		
+		return setModuleSize(storageSize, tableSize);
+	}
+	
+	/**
+	 * 모듈별 사용량을 구해서 ModuleSizeVO에 set한다.
+	 * @param storageSize
+	 * @param tableSize
+	 * */
+	public ModuleSizeVO setModuleSize(long storageSize, long tableSize) throws Exception {
+		logger.debug("setModuleSize started.");
+		
+		ModuleSizeVO module = new ModuleSizeVO();
+		
+		long totalSize = storageSize + tableSize;
+		
+		module.setStorageSize(storageSize);
+		module.setTableSize(tableSize);
+		module.setTotalSizePerModule(totalSize);
+		
+		module.setStorageSizeStr(commonUtil.byteCalculation(String.valueOf(storageSize)));
+		module.setTableSizeStr(commonUtil.byteCalculation(String.valueOf(tableSize)));
+		module.setTotalSizePerModuleStr(commonUtil.byteCalculation(String.valueOf(totalSize)));
+		
+		logger.debug("setModuleSize ended.");
+		
+		return module;
 	}
 }
