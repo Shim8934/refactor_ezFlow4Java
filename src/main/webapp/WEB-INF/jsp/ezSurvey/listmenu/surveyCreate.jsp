@@ -160,7 +160,6 @@
 				}
 				
 				function saveSurveyInformation() {
-					var surveyInfo     = {};
 					var surveyInfoWrap = document.querySelector("div[class='surveyinfo-wrap']");
 					var surveyAttWrap  = document.querySelector("div[class='survey-attach']");
 					var surveyTitle    = surveyInfoWrap.querySelector("input[class='info-input-ttl']").value;
@@ -175,18 +174,18 @@
 					var attachList     = [];
 					
 					if (publicFlag == 1) {
-						var daysVal              = surveyInfoWrap.querySelector("input[class='date-input']").value;
-						surveyInfo["publicDays"] = parseInt(daysVal);
+						var daysVal                      = surveyInfoWrap.querySelector("input[class='date-input']").value;
+						surveyObj["infor"]["publicDays"] = parseInt(daysVal);
 					}
 					
-					surveyInfo["title"]     = surveyTitle;
-					surveyInfo["purpose"]   = surveyPurpose;
-					surveyInfo["public"]    = publicFlag;
-					surveyInfo["anonymous"] = anonymousFlag;
-					surveyInfo["multiple"]  = multipleFlag;
-					surveyInfo["startDate"] = startDate;
-					surveyInfo["endDate"]   = endDate;
-					surveyInfo["userflag"]  = userFlag;
+					surveyObj["infor"]["title"]     = surveyTitle;
+					surveyObj["infor"]["purpose"]   = surveyPurpose;
+					surveyObj["infor"]["public"]    = publicFlag;
+					surveyObj["infor"]["anonymous"] = anonymousFlag;
+					surveyObj["infor"]["multiple"]  = multipleFlag;
+					surveyObj["infor"]["startDate"] = startDate;
+					surveyObj["infor"]["endDate"]   = endDate;
+					surveyObj["infor"]["userflag"]  = userFlag;
 					
 					if (liFileList.length > 0) {
 						for (var i = 0, len = liFileList.length; i < len; i++) {
@@ -198,11 +197,8 @@
 						}
 					}
 					
-					surveyInfo["attach"] = attachList;
-					surveyInfo["users"]  = surveyObj["infor"]["users"];
-					surveyObj["infor"]   = surveyInfo;
-					
-					console.log(JSON.stringify(surveyObj));
+					surveyObj["infor"]["attach"] = attachList;
+					console.log(JSON.stringify(surveyObj["infor"]["users"]));
 				}
 				
 				function afterSaveSuccessfully(data) {
@@ -321,7 +317,7 @@
 						if (!isValid(daysInput.value)) {returnObj["error"] = SurveyMessages.strInvalid; daysInput.focus(); return returnObj;}
 					}
 					
-					if (userFlag == 1 && (!userList || userList.length == 0)) {returnObj["error"] = SurveyMessages.strUser1; return returnObj;}
+					if (userFlag == 1 && !userList) {returnObj["error"] = SurveyMessages.strUser1; return returnObj;}
 					
 					var surveyttlList = document.querySelectorAll("span[class='sryTxt']");
 					for (var i = 0, len = surveyttlList.length; i < len; i++) {
@@ -458,7 +454,7 @@
 				function getSurveyQuestions() {return surveyObj["questions"];}
 				function setSurveyQuestions(question) {surveyObj["questions"].push(question);}
 				function getSurveyUsers() {return surveyObj["infor"]["users"];}
-				function setSurveyUsers(userList) {surveyObj["infor"]["users"] = userList;}
+				function setSurveyUsers(userList) {surveyObj["infor"]["users"] = JSON.parse(JSON.stringify(userList));}
 				function getSurveyInfo() {return surveyObj["infor"];}
 				function isValid(value) {if (!isNaN(value) && parseFloat(value) >= 0 && value % 1 === 0) {return true;} else {return false;}}
 				
