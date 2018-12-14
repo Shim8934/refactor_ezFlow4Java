@@ -781,42 +781,38 @@
 					
 					// 로직 저장 버튼 이벤트
 					$(".prevQsArea").on("click", ".saveLogic", function() {
-						
-						var thisId = parseInt($(this).attr("id").replace("saveLogic", ""));
+						var id = parseInt($(this).attr("id").replace("saveLogic", ""));
 						// 로직 flag 저장
 						var qstnList = SurveyCreate.getQs();
-						var qstn = qstnList[thisId - 1];
+						var qstn = qstnList[id - 1];
 						var thisType = qstn.type;
 						
 						// 로직 추가, ui 변경
 						switch(thisType) {
 						case 1 :
 						case 2 :
-							addSltLogic(thisId, qstn);
+							addSltLogic(id, qstn);
 							break;
 						case 7:
-							addSlidLogic(thisId, qstn);
+							addSlidLogic(id, qstn);
 							break;
 						case 9:
-							addDrdwLogic(thisId, qstn);
+							addDrdwLogic(id, qstn);
 							break;
 						}
 						qstn['logicFlag'] = 'Y';
 						
-						$("#scndBtnGrp" + thisId).css("display", "none");
-						$("#thrdBtnGrp" + thisId).css("display", "");
+						$("#thrdBtnGrp" + id).siblings().css("display", "none");
+						$("#thrdBtnGrp" + id).css("display", "");
 					});
 					
 					// 로직 취소 버튼 이벤트
 					$(".prevQsArea").on("click", ".cancelLogic", function() {
-						$(this).css("display", "none").prev().css("display", "none");
-						$(this).prev().prev().css("display", "");
-						
 						var prevWrapper = $(this).parents(".prevQsWrapper");
 						var type = parseInt(prevWrapper.attr("type"));
-						var id = parseInt(prevWrapper.attr("id"));
+						var id = parseInt(prevWrapper.attr("id").replace("qstn", ""));
 						
-						// 로직 추가, ui 변경
+						// 로직 삭제, ui 변경
 						if (type == 1 || type == 2) {
 							//var wrapper = $("#"+id);
 							var opt = prevWrapper.find(".opt");
@@ -829,6 +825,52 @@
 						} else if (type == 7 || type == 9) {
 							$("#logic" + id).remove();
 						}
+						
+						$("#frstBtnGrp" + id).siblings().css("display", "none");
+						$("#frstBtnGrp" + id).css("display", "");
+					});
+					
+					// 로직 삭제 버튼 이벤트
+					$(".prevQsArea").on("click", ".delLogic", function() {
+						var id = parseInt($(this).attr("id").replace("delLogic", ""));
+						
+						var prevWrapper = $(this).parents(".prevQsWrapper");
+						var type = parseInt(prevWrapper.attr("type"));
+						
+						var qstnList = SurveyCreate.getQs();
+						var qstn = qstnList[id - 1];
+						
+						// 로직 삭제, ui 변경
+						if (type == 1 || type == 2) {
+							//var wrapper = $("#"+id);
+							var opt = prevWrapper.find(".opt");
+							var optLength = opt.length;
+							
+							for (var i = 0; i < optLength; i++) {
+								qstn.option[i]['logic'] = undefined; 
+								$("#logic" + id + i).remove();
+							}
+							
+						} else if (type == 7) {
+							qstn.option[0].logic = undefined;
+							qstn.slidLogicPoint = undefined;
+							$("#logic" + id).remove();
+							
+						} else if (type == 9) {
+							var row = prevWrapper.find(".drdwLogicRow");
+							var optLength = row.length;
+							
+							for (var i = 0; i < optLength; i++) {
+								qstn.option[i]['logic'] = undefined; 
+								$("#logic" + id + i).remove();
+							}
+							$("#logic" + id).remove();
+						}
+						qstn.logicFlag = undefined;
+						
+						$("#frstBtnGrp" + id).siblings().css("display", "none");
+						$("#frstBtnGrp" + id).css("display", "");
+						
 					});
 					
 					$(".quesBacgr").on("input", ".slider-range", function() {
@@ -1799,8 +1841,8 @@
 							html += "</span>"
 							
 							html += "<span id='thrdBtnGrp" + qstId + "' class='thrdBtnGrp' style='display:none;'>"
-							html += "<img id='mdfLogic" + qstId + "' class='saveLogic' src='/images/ezSurvey/correct.png'/>";
-							html += "<img id='mdfCancelLogic" + qstId + "' class='cancelLogic' src='/images/ezSurvey/trash.png'/>";
+							html += "<img id='mdfLogic" + qstId + "' class='mdfLogic' src='/images/ezSurvey/correct.png'/>";
+							html += "<img id='delLogic" + qstId + "' class='delLogic' src='/images/ezSurvey/trash.png'/>";
 							html += "</span>"
 						}
 					}
@@ -1845,7 +1887,7 @@
 						break;
 					}
 				}
-//////////////////////////////////////////////////////////////////////////				
+				
 				// select 질문에 logic form 추가
 				function sltLogicForm(prevWrapper, htmlOption, question, qstnId) {
 					var id = "";
@@ -1875,7 +1917,8 @@
 						opt.append($(html)[0]);
 						
 						if (question.logicFlag == 'Y') {
-							$("#addLogic" + id).css("display", "none");
+							$("#frstBtnGrp" + id).css("display", "none");
+							$("#thrdBtnGrp" + id).css("display", "");
 							
 							logicNum = qstnOpt[i].logic;
 							$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
@@ -1918,7 +1961,8 @@
 					prevQsOpt.append($(html)[0]);
 					
 					if (question.logicFlag == 'Y') {
-						$("#addLogic" + id).css("display", "none");
+						$("#frstBtnGrp" + id).css("display", "none");
+						$("#thrdBtnGrp" + id).css("display", "");
 						
 						logicNum = qstnOpt[0].logic;
 						$("#slidLogicInput" + id).val(question.slidLogicPoint);
@@ -1973,7 +2017,8 @@
 						prevQsOpt.append(drdwLogicArea);
 						
 						if (question.logicFlag == 'Y') {
-							$("#addLogic" + id).css("display", "none");
+							$("#frstBtnGrp" + id).css("display", "none");
+							$("#thrdBtnGrp" + id).css("display", "");
 							
 							logicNum = opt.logic;
 							$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");

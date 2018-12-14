@@ -415,6 +415,8 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsWrapper .question-header .addLogic {width: 20px; padding-left: 15px; margin-bottom: -3px; cursor: pointer;}
 .prevQsWrapper .question-header .saveLogic {width: 20px; padding-left: 15px; margin-bottom: -3px; cursor: pointer;}
 .prevQsWrapper .question-header .cancelLogic {width: 20px; padding-left: 15px; margin-bottom: -3px; cursor: pointer;}
+.prevQsWrapper .question-header .mdfLogic {width: 20px; padding-left: 15px; margin-bottom: -3px; cursor: pointer;}
+.prevQsWrapper .question-header .delLogic {width: 20px; padding-left: 15px; margin-bottom: -3px; cursor: pointer;}
 
 .prevQsOpt .sltLogicArea {display: flex;}
 .prevQsOpt .sltLogicArea .prevSltArrow {padding: 0px 30px;}
