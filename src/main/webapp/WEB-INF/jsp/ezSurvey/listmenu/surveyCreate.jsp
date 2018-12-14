@@ -768,7 +768,7 @@
 						thisWrapper.remove();                  // 수정 폼 삭제
 					});
 					
-					// 로직 생성 버튼 이벤트
+					// 로직 폼 생성 버튼 이벤트
 					$(".prevQsArea").on("click", ".addLogic", function() {
 						var thisId = $(this).attr("id").replace("addLogic", "");
 						
@@ -812,9 +812,8 @@
 						var type = parseInt(prevWrapper.attr("type"));
 						var id = parseInt(prevWrapper.attr("id").replace("qstn", ""));
 						
-						// 로직 삭제, ui 변경
+						// 로직 ui 변경
 						if (type == 1 || type == 2) {
-							//var wrapper = $("#"+id);
 							var opt = prevWrapper.find(".opt");
 							var optLength = opt.length;
 							
@@ -842,7 +841,6 @@
 						
 						// 로직 삭제, ui 변경
 						if (type == 1 || type == 2) {
-							//var wrapper = $("#"+id);
 							var opt = prevWrapper.find(".opt");
 							var optLength = opt.length;
 							
@@ -870,7 +868,6 @@
 						
 						$("#frstBtnGrp" + id).siblings().css("display", "none");
 						$("#frstBtnGrp" + id).css("display", "");
-						
 					});
 					
 					$(".quesBacgr").on("input", ".slider-range", function() {
@@ -1865,7 +1862,7 @@
 					var type = thisQstn.type;
 					
 					var htmlOption = "";
-					htmlOption += "<option value=''>분기 없음</option>"; 
+					htmlOption += "<option value=''>" + SurveyMessages.strNoLogic + "</option>"; 
 					
 					for (var i = 0; i < qstnList.length; i++) {
 						var qstnId = qstnList[i]['id'];
@@ -2056,11 +2053,11 @@
 							$("select[name=slt" + id + "]").css("display", "none");
 							$("#sltVal" + id).text(logicNum);
 						} else {
-							alert("분기를 선택해 주세요.");
+							alert(SurveyMessages.strchooseNum);
 							return;
 						}
 					} else {
-						alert("최소값과 최대값 사이의 숫자를 입력해 주세요.");
+						alert(SurveyMessages.strBetweenNum);
 						return;
 					}
 				}
