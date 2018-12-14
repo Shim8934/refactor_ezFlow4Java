@@ -705,7 +705,7 @@
 						var tmpQstnWpr  = $(this).parents(".usrQstnWrapper");
 						var qstnWrapper = $(this).parents(".qstnWrapper");
 						// 수정할 질문 id와 타입
-						var qstnId      = parseInt(qstnWrapper.attr("id"));
+						var qstnId      = parseInt(qstnWrapper.attr("id").replace("qstn", ""));
 						var qstnType    = tmpQstnWpr.attr("qstntype");
 						// 넘길 질문 객체
 						var qstnList    = SurveyCreate.getQs();
@@ -719,6 +719,7 @@
 						//수정을 취소할 경우를 고려해 숨김 처리
 						qstnWrapper.css("display", "none");
 					});
+					
 					// 우상단 복사 버튼 클릭 이벤트
 					$(".quesBacgr").on("click", ".copyBtn", function() {
 						var tmpQstnWpr  = $(this).parents(".usrQstnWrapper");
@@ -731,7 +732,7 @@
 						var qstn        = qstnList[qstnId - 1];
 						var nextId      = qstnId + 1;
 						var deepCopy    = JSON.parse(JSON.stringify(qstn));
-						deepCopy.id     = "qstn" + nextId;
+						deepCopy.id     = nextId;
 						
 						// 복사한 질문 객체 이후의 객체들 아이디값 +1
 						checkActionForNewId(qstnId, qstnList, "copy");
@@ -740,14 +741,14 @@
 						qstnList.splice(qstnId, 0, deepCopy);
 						
 						// 복사한 객체로 사용자용 질문폼 생성
-						qstnWrapper.after("<div class='qstnWrapper' id='" + nextId + "'></div>");
+						qstnWrapper.after("<div class='qstnWrapper' id='qstn" + nextId + "'></div>");
 						mkQstnsByType(qstnWrapper.next(), qstnType, deepCopy);
 					});
 					
 					// 우상단 삭제 버튼 클릭 이벤트
 					$(".quesBacgr").on("click", ".deleteBtn", function() {
 						var thisWrapper = $(this).parents(".qstnWrapper");
-						var qstnId      = thisWrapper.attr("id");
+						var qstnId      = parseInt(thisWrapper.attr("id").replace("qstn", ""));
 						var qstnList    = SurveyCreate.getQs();
 						
 						qstnList.splice(qstnId - 1, 1); // 질문 배열에서 해당 순번의 질문객체 삭제
@@ -777,7 +778,7 @@
 						$("#scndBtnGrp" + thisId).css("display", "");
 						
 					});
-///////////////////////////					
+					
 					// 로직 저장 버튼 이벤트
 					$(".prevQsArea").on("click", ".saveLogic", function() {
 						
@@ -804,8 +805,6 @@
 						
 						$("#scndBtnGrp" + thisId).css("display", "none");
 						$("#thrdBtnGrp" + thisId).css("display", "");
-						
-						console.log(qstnList);
 					});
 					
 					// 로직 취소 버튼 이벤트
@@ -847,9 +846,9 @@
 							
 							//var catchedQs = ui.item;
 							var catchedWrapper = ui.item;
-							var catchedQsId = parseInt(catchedWrapper.attr("id"));
-							var prevQsId = parseInt(catchedWrapper.prev().attr("id"));
-							var nextQsId = parseInt(catchedWrapper.next().attr("id"));
+							var catchedQsId = parseInt(catchedWrapper.attr("id").replace("qstn", ""));
+							var prevQsId = parseInt(catchedWrapper.prev().attr("id").replace("qstn", ""));
+							var nextQsId = parseInt(catchedWrapper.next().attr("id").replace("qstn", ""));
 							var comparedQsId = "";
 							var qstnList    = SurveyCreate.getQs();
 							var catchedQsObj = qstnList[catchedQsId-1];
@@ -884,7 +883,7 @@
 							
 							// 그 객체 ui 변경 작업
 							catchedWrapper.html("");
-							catchedWrapper.attr("id", comparedQsId);
+							catchedWrapper.attr("id", "qstn" + comparedQsId);
 							
 							mkQstnsByType(catchedWrapper, type, deepCopy);
 						}
@@ -942,9 +941,9 @@
 					qstn["id"] = newId;
 					
 					// old id의 form 변경
-					thisWrapper = $("#" + oldId);
+					thisWrapper = $("#qstn" + oldId);
 					thisWrapper.html("");
-					thisWrapper.attr("id", newId);
+					thisWrapper.attr("id", "qstn" + newId);
 					
 					mkQstnsByType(thisWrapper, type, qstn);
 				}
@@ -1601,7 +1600,7 @@
 					return html;
 				}
 				
-				// option 생성
+				// selection 질문의 보기 생성
 				function mkOpt(type, options) {
 					var optAtt = "";
 					var attEl  = "";
@@ -1646,6 +1645,7 @@
 					return html;
 				}
 				
+				// 행렬 질문의 row, col 생성
 				function mkRowCol(type, elment) {
 					var content = "";
 					var level   = "";
@@ -1770,6 +1770,7 @@
 						}
 					}
 				}
+////////////////////////////////////				
 				// 미리보기 질문의 헤더
 				function prevQsHeader(question, qstnList) {
 					var qstId    = question.id;
