@@ -1155,9 +1155,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String companyNm = "";
 		String lastLogin = "";
 		String loginIP = "";
-		String userPhoto = "";
 		String userOffset = userInfo.getOffset().split("\\|")[1];
-		String userApprovalG = config.getProperty("config.UserInfo_ApprovalG");
 		/*근태관리 추가*/
 		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		String accessID = ezPortalService.getAccessList(userInfo);
@@ -1191,17 +1189,12 @@ public class EzPortalController extends EgovFileMngUtil {
 		int pollNum = ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset(), userInfo.getCompanyID());
 		
 		//유저이미지
-		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
-		
-		if (result != null && !result.equals("")) {
-			userPhoto = "<img id=myimg src='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=61 height=64>";
+		String userPhoto = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
+		if (userPhoto != null && !userPhoto.equals("")) {
+			userPhoto = "<img id=myimg src='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + userPhoto + "' width=61 height=64>";
 		} else {
 			userPhoto = "";
 		}
-		logger.debug("userPhoto="+userPhoto);
-		
-		//새로고침 시간 컨피그화
-		String refreshSecond = config.getProperty("refreshSecond");
 		
 		boolean checkBrowser;
 		if (req.getHeader("User-Agent").indexOf("Trident") < 0 && req.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
@@ -1229,9 +1222,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("userPhoto", userPhoto);
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("refreshSecond", refreshSecond);
+		model.addAttribute("refreshSecond", config.getProperty("refreshSecond"));
 		model.addAttribute("host", userInfo.getServerName());
-		model.addAttribute("userApprovalG", userApprovalG);
+		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("checkBrowser", checkBrowser);
 		model.addAttribute("companyList", companyList);
 		model.addAttribute("loginIP", loginIP);
