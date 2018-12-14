@@ -184,7 +184,7 @@ public class EzNewPortalGWController {
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			
 			if (useAttitude == null || useAttitude.equals("")) {
-				useAttitude = "YES";
+				useAttitude = "NO";
 			}
 			
 			if (useMemo == null || useMemo.equals("")) {
@@ -192,11 +192,11 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useLadder == null || useLadder.equals("")) {
-				useLadder = "YES";
+				useLadder = "NO";
 			}
 			
 			if (useCabinet == null || useCabinet.equals("")) {
-				useCabinet = "YES";
+				useCabinet = "NO";
 			}
 			
 			if (useVote == null || useVote.equals("")) {
@@ -204,7 +204,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useJournal == null || useJournal.equals("")) {
-				useJournal = "YES";
+				useJournal = "NO";
 			}
 			
 			if (useCircular == null || useCircular.equals("")) {
@@ -212,11 +212,11 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion == null || useQuestion.equals("")) {
-				useQuestion = "YES";
+				useQuestion = "NO";
 			}
 			
 			if (useWebfolder == null || useWebfolder.equals("")) {
-				useWebfolder = "YES";
+				useWebfolder = "NO";
 			}
 			
 			if (useCommunity == null || useCommunity.equals("")) {
@@ -224,7 +224,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useEzPMS == null || useEzPMS.equals("")) {
-				useEzPMS = "YES";
+				useEzPMS = "NO";
 			}
 			
 			if (useQuestion.equals("NO")) {
@@ -650,7 +650,7 @@ public class EzNewPortalGWController {
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 
 			if (useAttitude == null || useAttitude.equals("")) {
-				useAttitude = "YES";
+				useAttitude = "NO";
 			}
 			
 			if (useMemo == null || useMemo.equals("")) {
@@ -658,11 +658,11 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useLadder == null || useLadder.equals("")) {
-				useLadder = "YES";
+				useLadder = "NO";
 			}
 			
 			if (useCabinet == null || useCabinet.equals("")) {
-				useCabinet = "YES";
+				useCabinet = "NO";
 			}
 			
 			if (useVote == null || useVote.equals("")) {
@@ -670,7 +670,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useJournal == null || useJournal.equals("")) {
-				useJournal = "YES";
+				useJournal = "NO";
 			}
 			
 			if (useCircular == null || useCircular.equals("")) {
@@ -678,11 +678,11 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion == null || useQuestion.equals("")) {
-				useQuestion = "YES";
+				useQuestion = "NO";
 			}
 			
 			if (useWebfolder == null || useWebfolder.equals("")) {
-				useWebfolder = "YES";
+				useWebfolder = "NO";
 			}
 			
 			if (useCommunity == null || useCommunity.equals("")) {
@@ -690,7 +690,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useEzPMS == null || useEzPMS.equals("")) {
-				useEzPMS = "YES";
+				useEzPMS = "NO";
 			}
 			
 			if (useQuestion.equals("NO")) {
@@ -819,7 +819,7 @@ public class EzNewPortalGWController {
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 
 			if (useAttitude == null || useAttitude.equals("")) {
-				useAttitude = "YES";
+				useAttitude = "NO";
 			}
 			
 			if (useMemo == null || useMemo.equals("")) {
@@ -827,11 +827,11 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useLadder == null || useLadder.equals("")) {
-				useLadder = "YES";
+				useLadder = "NO";
 			}
 			
 			if (useCabinet == null || useCabinet.equals("")) {
-				useCabinet = "YES";
+				useCabinet = "NO";
 			}
 			
 			if (useVote == null || useVote.equals("")) {
@@ -839,7 +839,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useJournal == null || useJournal.equals("")) {
-				useJournal = "YES";
+				useJournal = "NO";
 			}
 			
 			if (useCircular == null || useCircular.equals("")) {
@@ -847,11 +847,11 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion == null || useQuestion.equals("")) {
-				useQuestion = "YES";
+				useQuestion = "NO";
 			}
 			
 			if (useWebfolder == null || useWebfolder.equals("")) {
-				useWebfolder = "YES";
+				useWebfolder = "NO";
 			}
 			
 			if (useCommunity == null || useCommunity.equals("")) {
@@ -859,7 +859,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useEzPMS == null || useEzPMS.equals("")) {
-				useEzPMS = "YES";
+				useEzPMS = "NO";
 			}
 			
 			if (useQuestion.equals("NO")) {
@@ -959,7 +959,7 @@ public class EzNewPortalGWController {
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 
 			if (useAttitude == null || useAttitude.equals("")) {
-				useAttitude = "YES";
+				useAttitude = "NO";
 			}
 			
 			if (useMemo == null || useMemo.equals("")) {
@@ -967,11 +967,11 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useLadder == null || useLadder.equals("")) {
-				useLadder = "YES";
+				useLadder = "NO";
 			}
 			
 			if (useCabinet == null || useCabinet.equals("")) {
-				useCabinet = "YES";
+				useCabinet = "NO";
 			}
 			
 			if (useVote == null || useVote.equals("")) {
@@ -979,7 +979,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useJournal == null || useJournal.equals("")) {
-				useJournal = "YES";
+				useJournal = "NO";
 			}
 			
 			if (useCircular == null || useCircular.equals("")) {
@@ -987,11 +987,11 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion == null || useQuestion.equals("")) {
-				useQuestion = "YES";
+				useQuestion = "NO";
 			}
 			
 			if (useWebfolder == null || useWebfolder.equals("")) {
-				useWebfolder = "YES";
+				useWebfolder = "NO";
 			}
 			
 			if (useCommunity == null || useCommunity.equals("")) {
@@ -999,7 +999,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useEzPMS == null || useEzPMS.equals("")) {
-				useEzPMS = "YES";
+				useEzPMS = "NO";
 			}
 			
 			if (useQuestion.equals("NO")) {
@@ -1196,7 +1196,7 @@ public class EzNewPortalGWController {
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 
 			if (useAttitude == null || useAttitude.equals("")) {
-				useAttitude = "YES";
+				useAttitude = "NO";
 			}
 			
 			if (useMemo == null || useMemo.equals("")) {
@@ -1204,11 +1204,11 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useLadder == null || useLadder.equals("")) {
-				useLadder = "YES";
+				useLadder = "NO";
 			}
 			
 			if (useCabinet == null || useCabinet.equals("")) {
-				useCabinet = "YES";
+				useCabinet = "NO";
 			}
 			
 			if (useVote == null || useVote.equals("")) {
@@ -1216,7 +1216,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useJournal == null || useJournal.equals("")) {
-				useJournal = "YES";
+				useJournal = "NO";
 			}
 			
 			if (useCircular == null || useCircular.equals("")) {
@@ -1224,11 +1224,11 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion == null || useQuestion.equals("")) {
-				useQuestion = "YES";
+				useQuestion = "NO";
 			}
 			
 			if (useWebfolder == null || useWebfolder.equals("")) {
-				useWebfolder = "YES";
+				useWebfolder = "NO";
 			}
 			
 			if (useCommunity == null || useCommunity.equals("")) {
@@ -1236,7 +1236,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useEzPMS == null || useEzPMS.equals("")) {
-				useEzPMS = "YES";
+				useEzPMS = "NO";
 			}
 			
 			if (useQuestion.equals("NO")) {
@@ -1841,7 +1841,7 @@ e.printStackTrace();
 			
 
 			if (useAttitude == null || useAttitude.equals("")) {
-				useAttitude = "YES";
+				useAttitude = "NO";
 			}
 			
 			if (useMemo == null || useMemo.equals("")) {
@@ -1849,11 +1849,11 @@ e.printStackTrace();
 			}
 			
 			if (useLadder == null || useLadder.equals("")) {
-				useLadder = "YES";
+				useLadder = "NO";
 			}
 			
 			if (useCabinet == null || useCabinet.equals("")) {
-				useCabinet = "YES";
+				useCabinet = "NO";
 			}
 			
 			if (useVote == null || useVote.equals("")) {
@@ -1861,7 +1861,7 @@ e.printStackTrace();
 			}
 			
 			if (useJournal == null || useJournal.equals("")) {
-				useJournal = "YES";
+				useJournal = "NO";
 			}
 			
 			if (useCircular == null || useCircular.equals("")) {
@@ -1869,11 +1869,11 @@ e.printStackTrace();
 			}
 			
 			if (useQuestion == null || useQuestion.equals("")) {
-				useQuestion = "YES";
+				useQuestion = "NO";
 			}
 			
 			if (useWebfolder == null || useWebfolder.equals("")) {
-				useWebfolder = "YES";
+				useWebfolder = "NO";
 			}
 			
 			if (useCommunity == null || useCommunity.equals("")) {
@@ -1881,7 +1881,7 @@ e.printStackTrace();
 			}
 			
 			if (useEzPMS == null || useEzPMS.equals("")) {
-				useEzPMS = "YES";
+				useEzPMS = "NO";
 			}
 			
 			if (useQuestion.equals("NO")) {
@@ -2217,7 +2217,7 @@ e.printStackTrace();
 			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 
 			if (useAttitude == null || useAttitude.equals("")) {
-				useAttitude = "YES";
+				useAttitude = "NO";
 			}
 			
 			if (useMemo == null || useMemo.equals("")) {
@@ -2225,11 +2225,11 @@ e.printStackTrace();
 			}
 			
 			if (useLadder == null || useLadder.equals("")) {
-				useLadder = "YES";
+				useLadder = "NO";
 			}
 			
 			if (useCabinet == null || useCabinet.equals("")) {
-				useCabinet = "YES";
+				useCabinet = "NO";
 			}
 			
 			if (useVote == null || useVote.equals("")) {
@@ -2237,7 +2237,7 @@ e.printStackTrace();
 			}
 			
 			if (useJournal == null || useJournal.equals("")) {
-				useJournal = "YES";
+				useJournal = "NO";
 			}
 			
 			if (useCircular == null || useCircular.equals("")) {
@@ -2245,11 +2245,11 @@ e.printStackTrace();
 			}
 			
 			if (useQuestion == null || useQuestion.equals("")) {
-				useQuestion = "YES";
+				useQuestion = "NO";
 			}
 			
 			if (useWebfolder == null || useWebfolder.equals("")) {
-				useWebfolder = "YES";
+				useWebfolder = "NO";
 			}
 			
 			if (useCommunity == null || useCommunity.equals("")) {
@@ -2257,7 +2257,7 @@ e.printStackTrace();
 			}
 			
 			if (useEzPMS == null || useEzPMS.equals("")) {
-				useEzPMS = "YES";
+				useEzPMS = "NO";
 			}
 			
 			if (useQuestion.equals("NO")) {
@@ -4325,7 +4325,7 @@ e.printStackTrace();
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			
 			if (useAttitude == null || useAttitude.equals("")) {
-				useAttitude = "YES";
+				useAttitude = "NO";
 			}
 			
 			if (useMemo == null || useMemo.equals("")) {
@@ -4333,11 +4333,11 @@ e.printStackTrace();
 			}
 			
 			if (useLadder == null || useLadder.equals("")) {
-				useLadder = "YES";
+				useLadder = "NO";
 			}
 			
 			if (useCabinet == null || useCabinet.equals("")) {
-				useCabinet = "YES";
+				useCabinet = "NO";
 			}
 			
 			if (useVote == null || useVote.equals("")) {
@@ -4345,7 +4345,7 @@ e.printStackTrace();
 			}
 			
 			if (useJournal == null || useJournal.equals("")) {
-				useJournal = "YES";
+				useJournal = "NO";
 			}
 			
 			if (useCircular == null || useCircular.equals("")) {
@@ -4353,11 +4353,11 @@ e.printStackTrace();
 			}
 			
 			if (useQuestion == null || useQuestion.equals("")) {
-				useQuestion = "YES";
+				useQuestion = "NO";
 			}
 			
 			if (useWebfolder == null || useWebfolder.equals("")) {
-				useWebfolder = "YES";
+				useWebfolder = "NO";
 			}
 			
 			if (useCommunity == null || useCommunity.equals("")) {
@@ -4365,7 +4365,7 @@ e.printStackTrace();
 			}
 			
 			if (useEzPMS == null || useEzPMS.equals("")) {
-				useEzPMS = "YES";
+				useEzPMS = "NO";
 			}
 			
 			if (useQuestion.equals("NO")) {
