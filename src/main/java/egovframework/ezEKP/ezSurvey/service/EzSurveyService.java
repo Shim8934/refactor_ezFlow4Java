@@ -23,7 +23,7 @@ public interface EzSurveyService {
 	List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int listcnt, String sqlQuery, String srchValue, int tenantId) throws Exception;
 	
 	//Check user permission
-	JSONObject checkPermission(List<Integer> surveyList, LoginVO userInfo) throws Exception;
+	JSONObject checkPermission(List<Long> surveyList, int mode, LoginVO userInfo) throws Exception;
 	
 	//User preview config functions
 	SurveyGeneralVO getUserPreviewConfig(String userId, String companyID, int tenantId) throws Exception;
@@ -37,4 +37,5 @@ public interface EzSurveyService {
 	//Save survery item
 	JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, LoginVO userInfo) throws Exception;
 	JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String sqlQuery, String srchMode, String srchOption, String order, String column, LoginVO userInfo) throws Exception;
+	void deleteItems(List<Long> itemIdList, LoginVO userInfo) throws Exception;
 }

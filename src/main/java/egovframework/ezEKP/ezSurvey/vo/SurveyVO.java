@@ -11,6 +11,7 @@ public class SurveyVO {
 	private String updateDate;
 	private String startDate;
 	private String endDate;
+	private String creatorName;
 	private String creatorName1;
 	private String creatorName2;
 	private String deleteUser;
@@ -21,6 +22,7 @@ public class SurveyVO {
 	private int anonymousFlag;
 	private int multiAnswerFlag;
 	private int paritipateFlag;
+	private int attachFlag;
 	
 	public long getSurveyId() {
 		return surveyId;
@@ -180,5 +182,21 @@ public class SurveyVO {
 	
 	public void setParitipateFlag(int paritipateFlag) {
 		this.paritipateFlag = paritipateFlag;
+	}
+	
+	public int getAttachFlag() {
+		return attachFlag;
+	}
+	
+	public void setAttachFlag(int attachFlag) {
+		this.attachFlag = attachFlag;
+	}
+	
+	public String getCreatorName() {
+		return creatorName;
+	}
+	
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
 	}
 }

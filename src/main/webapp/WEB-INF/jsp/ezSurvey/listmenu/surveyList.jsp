@@ -107,12 +107,6 @@
 							<th headers="is" class="publicTh" ><spring:message code='ezSurvey.t31'/></th>
 							<th headers="is" class="anoynmTh" ><spring:message code='ezSurvey.t32'/></th>
 							<th headers="is" class="statisTh" ><spring:message code='ezSurvey.t33'/></th>
-							<%-- <th headers=""   class="inputTh"><input type="checkbox"></th>
-							<th headers="it" class="typeTh" ><spring:message code='ezCabinet.t61'/></th>
-							<th headers="tt" class="ttlTh"  ><spring:message code='ezCabinet.t62'/></th>
-							<th headers="un" class="userTh" ><spring:message code='ezCabinet.t63'/></th>
-							<th headers="cd" class="dateTh" ><spring:message code='ezCabinet.t64'/></th>
-							<th headers="is" class="sizeTh" ><spring:message code='ezCabinet.t65'/></th> --%>
 						</tr>
 					</table>
 				</div>

@@ -104,4 +104,8 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public List<SurveyVO> getTotalReceivedSurveyItems(SurveyItemSearchVO searchVO) {
 		return (List<SurveyVO>)list("EzSurveyDAO.getTotalReceivedSurveyItems", searchVO);
 	}
+	
+	public void deleteItems(Map<String, Object> map) {
+		update("EzSurveyDAO.deleteItems", map);
+	}
 }

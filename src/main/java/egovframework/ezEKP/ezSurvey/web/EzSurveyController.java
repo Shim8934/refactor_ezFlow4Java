@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -174,6 +175,25 @@ public class EzSurveyController extends EgovFileMngUtil {
 		JSONObject resultObj = surveyRestService.saveSurveyItem(request, surveyItem);
 		
 		logger.debug("jsonSaveSurveyItem ended");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezSurvey/deleteItems.do")
+	@ResponseBody
+	public String jsonDeleteItems(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "itemList") List<String> itemList, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonDeleteItems start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		JSONObject resultObj = new JSONObject();
+		
+		if (itemList.size() == 0) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = surveyRestService.deleteItems(request, user.getId(), itemList);
+		
+		logger.debug("jsonDeleteItems end");
 		return resultObj.toString();
 	}
 	

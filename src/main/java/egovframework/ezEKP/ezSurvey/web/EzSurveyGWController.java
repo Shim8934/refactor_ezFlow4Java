@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezSurvey.web;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -525,7 +527,47 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	
+	@RequestMapping(value="/rest/ezsurvey/survey-item/delete", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject deleteItems(@RequestParam(value = "itemList") List<String> itemList, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
+		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || itemList: " + String.join(",", itemList));
+		
+		if (serverName.equals("") || itemList.size() == 0 || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo       = commonUtil.getUserForGw(userId, serverName);
+			List<Long> itemIdList  = itemList.stream().map(Long::parseLong).collect(Collectors.toList());
+			
+			//Add checking permission here
+			JSONObject permission  = surveyService.checkPermission(itemIdList, 1, userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			surveyService.deleteItems(itemIdList, userInfo);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
 	
 	
 	

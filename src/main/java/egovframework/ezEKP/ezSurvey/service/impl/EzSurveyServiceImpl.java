@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
@@ -26,6 +25,8 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSurvey.dao.EzSurveyDAO;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.ezEKP.ezSurvey.vo.AttachVO;
@@ -48,7 +49,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	private CommonUtil commonUtil;
 	
 	@Autowired
-	private Properties config;
+	private EzOrganService ezOrganService;
 	
 	@Resource(name = "EzSurveyDAO")
 	private EzSurveyDAO ezSurveyDAO;
@@ -175,7 +176,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject checkPermission(List<Integer> surveyList, LoginVO userInfo) throws Exception {
+	public JSONObject checkPermission(List<Long> surveyList, int mode, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		String userId          = userInfo.getId();
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -183,6 +184,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("userId"    , userId);
 		map.put("tenantId"  , userInfo.getTenantId());
 		map.put("companyId" , userInfo.getCompanyID());
+		map.put("primary"   , userInfo.getPrimary());
 		
 		List<SurveyVO> listSurvey  = ezSurveyDAO.getSurveyListForPermission(map);
 		
@@ -194,21 +196,34 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		List<SurveyVO> otherSurvey = listSurvey.stream().filter(i -> !i.getCreatorId().equals(userId)).collect(Collectors.toList());
 		
-		if (otherSurvey.size() == 0) {
-			result.put("code", 0);
-			return result;
+		if (mode == 1) { //delete mode
+			if (otherSurvey.size() > 0) {
+				result.put("code", 1);
+				result.put("reason", 1);
+				return result;
+			}
 		}
-		
-		List<Long> listOtherSurveyId  = otherSurvey.stream().map(SurveyVO::getSurveyId).collect(Collectors.toList());
-		List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo);
-		
-		if (listReceivedSurvey.containsAll(listOtherSurveyId)) {
-			result.put("code", 0);
+		else if (mode == 2) { //participate mode
+			if (otherSurvey.size() < listSurvey.size()) {
+				result.put("code", 1);
+				result.put("reason", 1);
+				return result;
+			}
 		}
 		else {
-			result.put("code", 1);
+			if (otherSurvey.size() > 0) {
+				List<Long> listOtherSurveyId  = otherSurvey.stream().map(SurveyVO::getSurveyId).collect(Collectors.toList());
+				List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo);
+				
+				if (!listReceivedSurvey.containsAll(listOtherSurveyId)) {
+					result.put("code", 1);
+					result.put("reason", 1);
+					return result;
+				}
+			}
 		}
 		
+		result.put("code", 0);
 		return result;
 	}
 	
@@ -300,19 +315,24 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	@SuppressWarnings("unchecked")
 	@Override
 	public synchronized JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, LoginVO userInfo) throws Exception {
-		JSONObject result          = new JSONObject();
-		int tenantId               = userInfo.getTenantId();
-		String companyId           = userInfo.getCompanyID();
-		String userId              = userInfo.getId();
-		SurveyVO survey            = new SurveyVO();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(new Date()), userInfo.getOffset(), true);
-		Map<String,Object> map     = new HashMap<String, Object>();
+		JSONObject result              = new JSONObject();
+		int tenantId                   = userInfo.getTenantId();
+		String companyId               = userInfo.getCompanyID();
+		String userId                  = userInfo.getId();
+		String offset                  = userInfo.getOffset();
+		String primary                 = userInfo.getPrimary();
+		SurveyVO survey                = new SurveyVO();
+		SurveyParticipantVO surveyUser = new SurveyParticipantVO();
+		SimpleDateFormat formatter     = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeUTC                 = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
+		String startDateUTC            = commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true);
+		String endDateUTC              =  commonUtil.getDateStringInUTC(endDate  + " 23:59:59", offset, true);
+		Map<String,Object> map         = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId" , tenantId);
-		long maxSurveyId           = ezSurveyDAO.getMaxSurveyId(map);
-		long maxQuestionId         = ezSurveyDAO.getMaxQuestionId(map);
-		long maxOptionId           = ezSurveyDAO.getMaxOptionId(map);
+		long maxSurveyId               = ezSurveyDAO.getMaxSurveyId(map);
+		long maxQuestionId             = ezSurveyDAO.getMaxQuestionId(map);
+		long maxOptionId               = ezSurveyDAO.getMaxOptionId(map);
 		
 		survey.setTenantId(tenantId);
 		survey.setCompanyId(companyId);
@@ -329,8 +349,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		survey.setCreateDate(timeUTC);
 		survey.setUpdateDate(timeUTC);
 		survey.setUseStatus(useStatus);
-		survey.setStartDate(startDate);
-		survey.setEndDate(endDate);
+		survey.setStartDate(startDateUTC);
+		survey.setEndDate(endDateUTC);
 		
 		if (publicFlag == 1) {
 			survey.setOpenDays(publicDays);
@@ -423,13 +443,14 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				JSONObject surveyAtt = (JSONObject)attchList.get(i);
 				saveAttachFile(realPath, surveyAtt, maxSurveyId, companyId, tenantId, "survey");
 			}
+			
+			survey.setAttachFlag(1);
 		}
 		
 		//Save survey users
 		if (userFlag == 1) {
 			for (int i = 0; i < users.size(); i++) {
-				JSONObject userObj             = (JSONObject)users.get(i);
-				SurveyParticipantVO surveyUser = new SurveyParticipantVO();
+				JSONObject userObj = (JSONObject)users.get(i);
 				surveyUser.setSurveyId(maxSurveyId);
 				surveyUser.setCompanyId(companyId);
 				surveyUser.setTenantId(tenantId);
@@ -445,6 +466,22 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				ezSurveyDAO.saveSurveyUsers(surveyUser);
 			}
 		}
+		else {
+			OrganDeptVO company = ezOrganService.getDeptInfo(companyId, primary, tenantId);
+			surveyUser.setSurveyId(maxSurveyId);
+			surveyUser.setCompanyId(companyId);
+			surveyUser.setTenantId(tenantId);
+			surveyUser.setUserId(companyId);
+			surveyUser.setDeptId(companyId);
+			surveyUser.setUserType("comp");
+			surveyUser.setUserName1(company.getDisplayName1());
+			surveyUser.setUserName2(company.getDisplayName2());
+			surveyUser.setDeptName1(company.getDisplayName1());
+			surveyUser.setDeptName2(company.getDisplayName2());
+			surveyUser.setEmail(company.getMail());
+			
+			ezSurveyDAO.saveSurveyUsers(surveyUser);
+		}
 		
 		//Save survey
 		ezSurveyDAO.saveSurveyItem(survey);
@@ -453,13 +490,13 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		result.put("code", 0);
 		return result;
 	}
-
+	
 	private synchronized void saveAttachFile(String realPath, JSONObject attachObj, long targetId, String companyId, int tenantId, String targetType) {
-		String fileName      = attachObj.get("fname").toString();
-		String filePath      = attachObj.get("fpath").toString();
-		File attFile         = new File(realPath + filePath);
-		long fileSize        = attFile.length();
-		AttachVO attach      = new AttachVO();
+		String fileName = attachObj.get("fname").toString();
+		String filePath = attachObj.get("fpath").toString();
+		File attFile    = new File(realPath + filePath);
+		long fileSize   = attFile.length();
+		AttachVO attach = new AttachVO();
 		
 		attach.setCompanyId(companyId);
 		attach.setTenantId(tenantId);
@@ -472,13 +509,13 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		//Save attach
 		ezSurveyDAO.saveAttachItem(attach);
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String sqlQuery, String srchMode, String srchOption, String order, String column, LoginVO userInfo) throws Exception {
 		JSONObject result     = new JSONObject();
 		String userId         = userInfo.getId();
 		int tenantId          = userInfo.getTenantId();
-		String companyId      = userInfo.getCompanyID();
 		String primary        = userInfo.getPrimary();
 		String offset         = userInfo.getOffset();
 		String offsetMinute   = commonUtil.getMinuteUTC(offset);
@@ -498,10 +535,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		}
 		
 		if (!startDate.equals("")) {
-			String startDateTmp = startDate + " 00:00:00";
-			String endDateTmp   = endDate + " 23:59:59";
-			startDate           = commonUtil.getDateStringInUTC(startDateTmp, offset, true);
-			endDate             = commonUtil.getDateStringInUTC(endDateTmp  , offset, true);
+			startDate = commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true);
+			endDate   = commonUtil.getDateStringInUTC(endDate   + " 23:59:59", offset, true);
 		}
 		
 		title       = title.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
@@ -512,7 +547,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		if (pageMode.equals("processing") || pageMode.equals("finish")) {
 			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo);
-			SimpleDateFormat formatter    = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat formatter    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String timeUTC                = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
 			searchVO.setSurveyIds(listReceivedSurvey);
 			searchVO.setToday(timeUTC);
@@ -526,63 +561,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		searchVO.setStartPoint(startPoint);
 		itemList    = ezSurveyDAO.getTotalReceivedSurveyItems(searchVO);
 		
-		/*CabinetItemSearchVO searchVO = new CabinetItemSearchVO(Integer.parseInt(cabinetId), listCntSize, tenantId, userId, primary, offsetMinute, title, summary, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption);
-		List<CabinetItemVO> itemList = new ArrayList<>();
-		
-		if (srchMode.equals("2") && recursive.equals("1")) {
-			CabinetVO cabinet = getCabinetById(cabinetId, userInfo.getTenantId());
-			
-			if (!cabinet.getCreatorId().equals(userId)) {
-				String cabinetPath    = cabinet.getCabinetPath();
-				cabinetPath           = cabinetPath.substring(1, cabinetPath.length() - 1);
-				List<Integer> nodeIds = Arrays.asList(cabinetPath.split("\\|")).stream().map(Integer::parseInt).collect(Collectors.toList());
-				nodeIds.remove(nodeIds.size() - 1);
-				Map<String,Object> map = new HashMap<String, Object>();
-				map.put("cabinetId", cabinetId);
-				map.put("tenantId",  tenantId);
-				map.put("sharerId",  cabinet.getCreatorId());
-				map.put("sharedId",  userId);
-				map.put("listNodes", nodeIds);
-				
-				//Get user dept list
-				map.put("deptId",    userInfo.getDeptID());
-				map.put("companyId", userInfo.getCompanyID());
-				map.put("userId",    userId);
-				List<String> userDeptList = ezCabinetDAO.getUserDepartmentIdList(map);
-				map.put("deptList", userDeptList);
-				
-				List<CabinetShareVO> listShared = ezCabinetDAO.checkSubPermission(map);
-				
-				if (listShared != null && listShared.size() > 0) {
-					searchVO.setCabinetPath(cabinet.getCabinetPath());
-					subSearchflag = true;
-				}
-			}
-			else {
-				searchVO.setCabinetPath(cabinet.getCabinetPath());
-				subSearchflag = true;
-			}
-		}
-		
-		if (subSearchflag == true) {
-			totalItems  = getTotalItemsRecursive(searchVO);
-			totalPages  = (totalItems + listCntSize - 1) / listCntSize;
-			currentPage = currentPage > totalPages ? totalPages : currentPage;
-			currentPage = currentPage == 0         ? 1          : currentPage;
-			startPoint  = (currentPage - 1) * listCntSize;
-			searchVO.setStartPoint(startPoint);
-			itemList    = getItemsRecursive(searchVO);
-		}
-		else {
-			totalItems  = getTotalItems(searchVO);
-			totalPages  = (totalItems + listCntSize - 1) / listCntSize;
-			currentPage = currentPage > totalPages ? totalPages : currentPage;
-			currentPage = currentPage == 0         ? 1          : currentPage;
-			startPoint  = (currentPage - 1) * listCntSize;
-			searchVO.setStartPoint(startPoint);
-			itemList    = getItems(searchVO);
-		}*/
-		
 		result.put("itemList",    itemList);
 		result.put("totalPages",  totalPages);
 		result.put("totalRows",   totalItems);
@@ -592,7 +570,22 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		return result;
 	}
-
+	
+	@Override
+	public void deleteItems(List<Long> itemIdList, LoginVO userInfo) throws Exception {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("tenantId",   userInfo.getTenantId());
+		map.put("companyId",  userInfo.getCompanyID());
+		map.put("itemList",   itemIdList);
+		map.put("userId",     userInfo.getId());
+		map.put("updateTime", timeUTC);
+		
+		ezSurveyDAO.deleteItems(map);
+	}
+	
 	private List<Long> getUserReceivedSurveyList(LoginVO userInfo) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("tenantId",  userInfo.getTenantId());
@@ -605,7 +598,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		return result != null ? result : new ArrayList<>();
 	}
-	
 	
 	
 	

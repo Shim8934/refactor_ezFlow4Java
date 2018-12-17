@@ -171,8 +171,8 @@ input::-ms-clear {display: none;}
 .organ-tbl .listview {width: 440px; border-top: none !important;}
 .organ-tbl tr td:first-child {border-right: 0px;}
 .bnkOrgTree {width: 220px; height: 518px; overflow-x: auto; overflow-y: auto; white-space: nowrap;}
-.bnkCabSelect {background-color: #e9f1ff; cursor: pointer;}
-.bnkCabNormal:hover {background-color: #f4f5f5; cursor: pointer;}
+.bnkCabSelect, .bnkSurveySl {background-color: #e9f1ff; cursor: pointer;}
+.bnkCabNormal:hover, .bnkSurveyNor:hover {background-color: #f4f5f5; cursor: pointer;}
 .bnkCabSelect2, .bnkCabNormal2 {cursor: pointer;}
 .bnkCabSelect2 .imgCabDivMain, .bnkCabSelect2 .txtCabTd {background-color: #e9f1ff;}
 .bnkCabNormal2:hover .imgCabDivMain {background-color: #f4f5f5;}

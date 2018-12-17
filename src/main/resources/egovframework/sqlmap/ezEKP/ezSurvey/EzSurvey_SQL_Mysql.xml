@@ -61,34 +61,59 @@
 		<result property="updateDate"       column="update_date"         columnIndex="8" />
 		<result property="startDate"        column="start_date"          columnIndex="9" />
 		<result property="endDate"          column="end_date"            columnIndex="10" />
-		<result property="creatorName1"     column="user_name1"          columnIndex="11"/>
-		<result property="creatorName2"     column="user_name2"          columnIndex="12"/>
-		<result property="deleteUser"       column="delete_user"         columnIndex="13"/>
-		<result property="updateUser"       column="update_user"         columnIndex="14"/>
-		<result property="useStatus"        column="use_status"          columnIndex="15"/>
-		<result property="openDays"         column="open_days"           columnIndex="16"/>
-		<result property="resultPublicFlag" column="result_public_flag"  columnIndex="17"/>
-		<result property="anonymousFlag"    column="anonymous_flag"      columnIndex="18"/>
-		<result property="multiAnswerFlag"  column="multi_answer_flag"   columnIndex="19"/>
-		<result property="paritipateFlag"   column="participate_flag"    columnIndex="20"/>
+		<result property="creatorName"      column="user_name"           columnIndex="11"/>
+		<result property="deleteUser"       column="delete_user"         columnIndex="12"/>
+		<result property="updateUser"       column="update_user"         columnIndex="13"/>
+		<result property="useStatus"        column="use_status"          columnIndex="14"/>
+		<result property="openDays"         column="open_days"           columnIndex="15"/>
+		<result property="resultPublicFlag" column="result_public_flag"  columnIndex="16"/>
+		<result property="anonymousFlag"    column="anonymous_flag"      columnIndex="17"/>
+		<result property="multiAnswerFlag"  column="multi_answer_flag"   columnIndex="18"/>
+		<result property="paritipateFlag"   column="participate_flag"    columnIndex="19"/>
+		<result property="attachFlag"       column="attach_flag"         columnIndex="20"/>
 	</resultMap>
 	
+	<sql id="surveySelect">
+		select
+			survey_id,
+			company_id,
+			tenant_id,
+			title,
+			purpose,
+			user_id,
+			create_date,
+			update_date,
+			start_date,
+			end_date,
+			case when #primary# = '1' then user_name1 else user_name2 end as user_name,
+			delete_user,
+			update_user,
+			use_status,
+			open_days,
+			result_public_flag,
+			anonymous_flag,
+			multi_answer_flag,
+			participate_flag,
+			attach_flag
+		from tbl_survey
+	</sql>
+	
 	<sql id="surveyItemList">
-		use_status = 1 and tenant_id = #tenantId#
+		where use_status = 1 and tenant_id = #tenantId#
 		<isEqual property="searchMode" compareValue="1">
 			<isEqual property="searchOption" compareValue="title" prepend=" and ">
 				title like concat('%', concat(#title#, '%'))
 			</isEqual>
 			<isEqual property="searchOption" compareValue="creator" prepend=" and ">
-				<isEqual    property="primary" compareValue="1">creator_name1 like concat('%', concat(#creatorName#, '%'))</isEqual>
-				<isNotEqual property="primary" compareValue="1">creator_name2 like concat('%', concat(#creatorName#, '%'))</isNotEqual>
+				<isEqual    property="primary" compareValue="1">user_name1 like concat('%', concat(#creatorName#, '%'))</isEqual>
+				<isNotEqual property="primary" compareValue="1">user_name2 like concat('%', concat(#creatorName#, '%'))</isNotEqual>
 			</isEqual>
 		</isEqual>
 		<isEqual property="searchMode" compareValue="2">
 			<isNotEmpty property="title"       prepend=" and ">title like concat('%', concat(#title#, '%'))</isNotEmpty>
 			<isNotEmpty property="creatorName" prepend=" and ">
-				<isEqual    property="primary" compareValue="1">creator_name1 like concat('%', concat(#creatorName#, '%'))</isEqual>
-				<isNotEqual property="primary" compareValue="1">creator_name2 like concat('%', concat(#creatorName#, '%'))</isNotEqual>
+				<isEqual    property="primary" compareValue="1">user_name1 like concat('%', concat(#creatorName#, '%'))</isEqual>
+				<isNotEqual property="primary" compareValue="1">user_name2 like concat('%', concat(#creatorName#, '%'))</isNotEqual>
 			</isNotEmpty>
 			<isNotEmpty property="startDate">
 				<isNotEmpty property="endDate" prepend=" and ">
@@ -98,12 +123,14 @@
 		</isEqual>
 		<isEqual property="pageMode" compareValue="processing" prepend=" and ">
 			<![CDATA[(start_date <= #today# and end_date >= #today#)]]>
+			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1)</isEmpty>
 			<isNotEmpty property="surveyIds" prepend=" and ">
 				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
 			</isNotEmpty>
 		</isEqual>
 		<isEqual property="pageMode" compareValue="finish" prepend=" and ">
 			<![CDATA[(end_date < #today#)]]>
+			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1)</isEmpty>
 			<isNotEmpty property="surveyIds" prepend=" and ">
 				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
 			</isNotEmpty>
@@ -365,13 +392,11 @@
 			s2.*
 		from
 			(
-				select * from tbl_survey s1
-				where
-					s1.survey_id in
+				<include refid="surveySelect"/>
+				where survey_id in
 					<iterate property="surveyList" open="(" close=")" conjunction=",">#surveyList[]#</iterate>
-					<![CDATA[and s1.use_status != 0 and s1.tenant_id = #tenantId# and s1.company_id = #companyId#]]>
+					<![CDATA[and use_status != 0 and tenant_id = #tenantId# and company_id = #companyId#]]>
 			) s2
-		
 	</select>
 	
 	<select id="EzSurveyDAO.getUserDepartmentIdList" resultClass="String">
@@ -409,33 +434,49 @@
 			insert into tbl_survey (
 				title,        purpose,     user_id,     create_date,        start_date,     end_date,          user_name1,
 				user_name2,   use_status,  open_days,   result_public_flag, anonymous_flag, multi_answer_flag, participate_flag,
-				delete_user,  update_user, update_date, company_id,         tenant_id
+				attach_flag,  delete_user, update_user, update_date,        company_id,     tenant_id
 			)
 			values (
 				#tittle#,       #purpose#,    #creatorId#,  #createDate#,       #startDate#,     #endDate#,         #creatorName1#,
 				#creatorName2#, #useStatus#,  #openDays#,   #resultPublicFlag#, #anonymousFlag#, #multiAnswerFlag#, #paritipateFlag#,
-				#deleteUser#,   #updateUser#, #updateDate#, #companyId#,        #tenantId#
+				#attachFlag#,   #deleteUser#, #updateUser#, #updateDate#,       #companyId#,     #tenantId#
 			)
 		]]>
 	</insert>
 	
 	<select id="EzSurveyDAO.getMaxSurveyId" resultClass="Long">
-		<![CDATA[select ifnull(max(survey_id), 0) from tbl_survey where tenant_id = #tenantId# and company_id = #companyId#]]>
+		<![CDATA[select ifnull(max(survey_id) + 1, 1) from tbl_survey]]>
 	</select>
 	
 	<select id="EzSurveyDAO.getTotalReceivedSurveyItemsCnt" resultClass="Integer">
-		<![CDATA[select count(survey_id) from tbl_survey where]]>
+		<![CDATA[select count(survey_id) from tbl_survey]]>
 		<include refid="surveyItemList"/>
 	</select>
 	
 	<select id="EzSurveyDAO.getTotalReceivedSurveyItems" resultMap="surveyVO">
-		select * from tbl_survey where
-			<include refid="surveyItemList"/>
+		<include refid="surveySelect"/>
+		<include refid="surveyItemList"/>
 			order by
 				<isEmpty property="sqlOrder">update_date desc, survey_id desc</isEmpty>
 				<isNotEmpty property="sqlOrder">$sqlOrder$, update_date desc, survey_id desc</isNotEmpty>
 			limit #startPoint#, #listCount#
 	</select>
+	
+	<update id="EzSurveyDAO.deleteItems" parameterClass="Map">
+		<![CDATA[
+			update
+				tbl_survey
+			set
+				update_date = #updateTime#,
+				delete_user = #userId#,
+				use_status  = 0
+			where
+				tenant_id = #tenantId# and company_id = #companyId# and use_status != 0 and survey_id in
+		]]>
+		<iterate property="itemList" open="(" close=")" conjunction=",">
+			#itemList[]#
+		</iterate>
+	</update>
 	
 	<!--***********************************************************************************
 	**                               Question item process                               **
@@ -455,7 +496,7 @@
 	</insert>
 	
 	<select id="EzSurveyDAO.getMaxQuestionId" resultClass="Long">
-		<![CDATA[select ifnull(max(question_id), 0) from tbl_survey_question where tenant_id = #tenantId# and company_id = #companyId#]]>
+		<![CDATA[select ifnull(max(question_id) + 1, 1) from tbl_survey_question]]>
 	</select>
 	
 	<!--***********************************************************************************
@@ -476,7 +517,7 @@
 	</insert>
 	
 	<select id="EzSurveyDAO.getMaxOptionId" resultClass="Long">
-		<![CDATA[select ifnull(max(option_id), 0) from tbl_survey_option where tenant_id = #tenantId# and company_id = #companyId#]]>
+		<![CDATA[select ifnull(max(option_id) + 1, 1) from tbl_survey_option]]>
 	</select>
 	
 	<!--***********************************************************************************

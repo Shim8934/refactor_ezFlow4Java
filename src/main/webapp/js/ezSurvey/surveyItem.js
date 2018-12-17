@@ -9,14 +9,11 @@ var SurveyItem = function() {
 	var startDateStr   = "";
 	var endDateStr     = "";
 	var titelStr       = "";
-	var summaryStr     = "";
 	var creatorNameStr = "";
 	var minWPercent    = 40;
 	var maxWPercent    = 75;
 	var minHPercent    = 30;
 	var maxHPercent    = 65;
-	var sharePopup     = null;
-	var addPopup       = null;
 	var itemPopup      = null;
 	var documentCont   = null;
 	var userWindow     = null;
@@ -164,7 +161,7 @@ var SurveyItem = function() {
 		});
 		
 		//Initial table
-		surveyTable = new SurveyTable({normal : "bnkCabNormal", selected : "bnkCabSelect"});
+		surveyTable = new SurveyTable({normal : "bnkSurveyNor", selected : "bnkSurveySl"});
 		
 		surveyTable.setTableType("cabinet");
 		surveyTable.setTableElement("tblSurveyList", "id");
@@ -228,7 +225,7 @@ var SurveyItem = function() {
 		var rightFrame  = window.parent.frames["right"].document;
 		var searchPanel = rightFrame.getElementById("searchPanel");
 		if (searchPanel.className == "searchPanel off") {
-			addFogPanel("search");
+			addFogPanel();
 			var position            = getPosition(466, 210);
 			searchPanel.style.top   = position[0] + "px";
 			searchPanel.style.right = position[1] + "px";
@@ -240,29 +237,19 @@ var SurveyItem = function() {
 		}
 		
 		//Clear all fields
-		rightFrame.getElementById("Sdatepicker").value = "";
-		rightFrame.getElementById("Edatepicker").value = "";
-		rightFrame.getElementById("dCheckBox").checked = false;
-		rightFrame.getElementById("sUserName").value   = "";
-		rightFrame.getElementById("sCabTitle").value   = "";
-		rightFrame.getElementById("sCabSum").value     = "";
+		rightFrame.getElementById("Sdatepicker").value  = "";
+		rightFrame.getElementById("Edatepicker").value  = "";
+		rightFrame.getElementById("sCreatedUser").value = "";
+		rightFrame.getElementById("sSurveyTtl").value   = "";
 	}
 	
-	function addFogPanel(mode) {
-		var handleClickFunct = null;
-		
-		switch(mode) {
-			case "search": handleClickFunct = toggleSearchPanel; break;
-			case "move"  : handleClickFunct = toggleMovePopup  ; break;
-			default      : alert(SurveyMessages.strError)      ; return;
-		}
-		
+	function addFogPanel() {
 		var fogPanel                 = document.createElement("div");
 		fogPanel.className           = "rfogPanel";
 		var leftFogPanel             = document.createElement("div");
 		leftFogPanel.className       = "blockLeft";
-		fogPanel.onclick             = function(e) {handleClickFunct();};
-		leftFogPanel.onclick         = function(e) {handleClickFunct();};
+		fogPanel.onclick             = function(e) {toggleSearchPanel();};
+		leftFogPanel.onclick         = function(e) {toggleSearchPanel();};
 		var leftFrameBody            = window.parent.frames["left"].document.body;
 		leftFrameBody.style.overflow = "hidden";
 		
@@ -325,13 +312,9 @@ var SurveyItem = function() {
 	
 	function refreshAllFrames() {
 		searchCallBack();
-		var leftFrame = window.parent.frames["left"];
-		if (leftFrame) {leftFrame.CabUserLeft.draw();}
 		
 		//Check preview
-		if (crrPreMode != "off") {
-			removePreviewDiv();
-		}
+		if (crrPreMode != "off") {removePreviewDiv();}
 	}
 	
 	function removePreviewDiv() {
@@ -348,7 +331,7 @@ var SurveyItem = function() {
 	
 	/* Main search */
 	function startSearchSurvey(pPage) {
-		showMailProgress();
+		showProgressPanel();
 		
 		var orderInf  = surveyTable.getOrderInfo();
 		var listCnt   = document.getElementById("listcount").value;
@@ -383,8 +366,8 @@ var SurveyItem = function() {
 		completeProgress();
 	}
 	
-	function showMailProgress() {
-		startTime    = new Date(); //프로그래스바 시작시간
+	function showProgressPanel() {
+		startTime    = new Date();
 		var currenWidth  = document.body.clientWidth;
 		var progressImg  = document.getElementById("processImage");
 		document.getElementById("progressPanel").className = "loadingPanel on";
@@ -394,12 +377,11 @@ var SurveyItem = function() {
 	}
 	
 	function completeProgress() {
-		//2018-09-27 문성업 - 프로그레스바
-		var endTime  = new Date();//프로그래스바 종료시간
+		var endTime  = new Date();
 		var timeDiff = (endTime - startTime)/1000;
 		var seconds  = (timeDiff % 60).toFixed(1);
 		
-		if (seconds <= 0.3) { //0.3초보다 적으면
+		if (seconds <= 0.3) {
 			seconds = 300 - (timeDiff * 1000);
 			setTimeout(function() {hiddenProgressPanel();}, seconds);
 		}
@@ -445,16 +427,20 @@ var SurveyItem = function() {
 		else {
 			var len = itemList.length;
 			for (var i = 0; i < len; i++) {
-				/*var trElmt  = document.createElement("tr");
-				var tdElmt1 = document.createElement("td");
-				var tdElmt2 = document.createElement("td");
-				var tdElmt3 = document.createElement("td");
-				var tdElmt4 = document.createElement("td");
-				var tdElmt5 = document.createElement("td");
-				var tdElmt6 = document.createElement("td");
+				var trElmt   = document.createElement("tr");
+				var tdElmt1  = document.createElement("td");
+				var tdElmt2  = document.createElement("td");
+				var tdElmt3  = document.createElement("td");
+				var tdElmt4  = document.createElement("td");
+				var tdElmt5  = document.createElement("td");
+				var tdElmt6  = document.createElement("td");
+				var tdElmt7  = document.createElement("td");
+				var tdElmt8  = document.createElement("td");
+				var tdElmt9  = document.createElement("td");
+				var tdElmt10 = document.createElement("td");
 				
 				trElmt.setAttribute("class", unselectClass);
-				trElmt.setAttribute("role",  itemList[i]["itemId"]);
+				trElmt.setAttribute("role",  itemList[i]["surveyId"]);
 				trElmt.onclick    = function(event) {clickRowFunct(event);};
 				trElmt.ondblclick = function(event) {itemDblClickHandler(this);};
 				
@@ -463,26 +449,42 @@ var SurveyItem = function() {
 				inputElmt.onclick = function(event) {getCheckedFunct(event);};
 				tdElmt1.appendChild(inputElmt);
 				
-				tdElmt2.textContent = getItemType(itemList[i]["itemType"]);
-				tdElmt2.setAttribute("title", tdElmt2.textContent);
+				if (itemList[i]["attachFlag"] == 1) {
+					var imgAttch  = document.createElement("img");
+					imgAttach.src = "/images/newAttach.gif";
+					tdElmt2.appendChild(imgAttch);
+				}
 				
-				tdElmt3.textContent = itemList[i]["title"];
-				tdElmt3.setAttribute("title", tdElmt3.textContent);
+				if (itemList[i]["useStatus"] == 1) {
+					var imgStatus  = document.createElement("img");
+					imgStatus.src  = "/images/ImgIcon/view-importance.gif";
+					tdElmt3.appendChild(imgStatus);
+				}
+				else if (itemList[i]["useStatus"] == 2) {
+					var imgStatistic  = document.createElement("img");
+					imgStatistic.src  = "/images/ezSurvey/statistic.png";
+					tdElmt10.appendChild(imgStatistic);
+				}
 				
-				tdElmt4.textContent = itemList[i]["creatorName"];
+				tdElmt4.textContent  = itemList[i]["tittle"];
+				tdElmt5.textContent  = itemList[i]["endDate"].substring(0, 19);
+				tdElmt6.textContent  = itemList[i]["paritipateFlag"] == 0   ? SurveyMessages.strUser7    : SurveyMessages.strUser8;
+				tdElmt7.textContent  = itemList[i]["creatorName"];
+				tdElmt8.textContent  = itemList[i]["resultPublicFlag"] == 1 ? SurveyMessages.strPublic1  : SurveyMessages.strPublic2;
+				tdElmt9.textContent  = itemList[i]["anonymousFlag"]    == 1 ? SurveyMessages.strAnoynym1 : SurveyMessages.strAnoynym2;
 				tdElmt4.setAttribute("title", tdElmt4.textContent);
+				tdElmt7.setAttribute("title", tdElmt7.textContent);
 				
-				tdElmt5.textContent = itemList[i]["createdDate"].substring(0, 19);
-				tdElmt5.setAttribute("title", tdElmt5.textContent);
-				
-				tdElmt6.textContent = getFileSize(itemList[i]["itemSize"]);
-				
-				tdElmt1.className = "inputTh";
-				tdElmt2.className = "typeTh";
-				tdElmt3.className = "ttlTh cabTxtOver";
-				tdElmt4.className = "userTh cabTxtOver";
-				tdElmt5.className = "dateTh cabTxtOver";
-				tdElmt6.className = "sizeTh cabTxtOver";
+				tdElmt1.className  = "inputTh";
+				tdElmt2.className  = "inputTh";
+				tdElmt3.className  = "inputTh";
+				tdElmt4.className  = "ttlTh";
+				tdElmt5.className  = "endDateTh";
+				tdElmt6.className  = "targetTh";
+				tdElmt7.className  = "createTh";
+				tdElmt8.className  = "publicTh";
+				tdElmt9.className  = "anoynmTh";
+				tdElmt10.className = "statisTh";
 				
 				trElmt.appendChild(tdElmt1);
 				trElmt.appendChild(tdElmt2);
@@ -490,25 +492,27 @@ var SurveyItem = function() {
 				trElmt.appendChild(tdElmt4);
 				trElmt.appendChild(tdElmt5);
 				trElmt.appendChild(tdElmt6);
-				tableDataElmt.appendChild(trElmt);*/
+				trElmt.appendChild(tdElmt7);
+				trElmt.appendChild(tdElmt8);
+				trElmt.appendChild(tdElmt9);
+				trElmt.appendChild(tdElmt10);
+				tableDataElmt.appendChild(trElmt);
 			}
 		}
 	}
 	
 	function onMainSearch() {
-		var title      = document.getElementById("sCabTitle").value;
-		var summary    = document.getElementById("sCabSum").value;
-		var userName   = document.getElementById("sUserName").value;
+		var title      = document.getElementById("sSurveyTtl").value;
+		var userName   = document.getElementById("sCreatedUser").value;
 		var sDate      = document.getElementById("Sdatepicker").value;
 		var eDate      = document.getElementById("Edatepicker").value;
 		
-		if (!title && !summary && !userName && !sDate && !eDate) {alert(SurveyMessages.strSearch); return;}
+		if (!title && !userName && !sDate && !eDate) {alert(SurveyMessages.strSearch); return;}
 		if ((!sDate && eDate)) {alert(SurveyMessages.strDate3); return;}
 		if ((sDate && !eDate)) {alert(SurveyMessages.strDate2); return;}
 		if (sDate && eDate)    {if (sDate > eDate) {alert(SurveyMessages.strDate1); return;}}
 		
 		titelStr       = title;
-		summaryStr     = summary;
 		creatorNameStr = userName;
 		startDateStr   = sDate;
 		endDateStr     = eDate;
@@ -529,7 +533,7 @@ var SurveyItem = function() {
 		
 		searchMode    = "1";
 		var searchOpt = document.getElementById("searchCheck").value;
-		if (searchOpt == "title") {titelStr = searchStr;} else {summaryStr = searchStr;}
+		if (searchOpt == "title") {titelStr = searchStr;} else {creatorNameStr = searchStr;}
 		
 		startSearchSurvey("1");
 	}
@@ -571,9 +575,11 @@ var SurveyItem = function() {
 	
 	/* Option View end */
 	function deleteFileConfirm() {
-		if (getSelectedItems().length == 0) {alert(SurveyMessages.strItemErr); return;}
+		var itemArr = getSelectedItems();
+		if (itemArr.length == 0) {alert(SurveyMessages.strItemErr); return;}
+		
 		if (confirm(SurveyMessages.strDelete)) {
-			var url  = "/ezCabinet/deleteItems.do";
+			var url  = "/ezSurvey/deleteItems.do";
 			var data = {itemList : itemArr.toString()};
 			
 			makeAjaxCall(data, "GET", url, afterDeleteItem, null, true, null);
@@ -596,15 +602,10 @@ var SurveyItem = function() {
 		refreshAllFrames();
 	}
 	
-	function openFileDetail(itemId) {
-		if(itemPopup) {itemPopup.close();}
-		itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(780, 750));
-	}
-	
 	function getSelectedItems() {
 		var result        = [];
 		var itemListElmt  = document.getElementById("surveyList");
-		var selectedItems = itemListElmt.querySelectorAll("tr[class='bnkCabSelect']");
+		var selectedItems = itemListElmt.querySelectorAll("tr[class='bnkSurveySl']");
 		
 		for (var i = 0, len = selectedItems.length; i< len; i++) {
 			result.push(selectedItems[i].getAttribute("role"));
@@ -617,7 +618,7 @@ var SurveyItem = function() {
 		var itemId   = trObj.getAttribute("role");
 		var crrClass = trObj.className;
 		
-		if (crrClass == "bnkCabSelect") {
+		if (crrClass == "bnkSurveySl") {
 			if (crrPreMode == "off") {return;}
 			
 			var url  = "/ezCabinet/getFileDetail.do";
@@ -629,6 +630,11 @@ var SurveyItem = function() {
 	function itemDblClickHandler(trObj) {
 		var itemId   = trObj.getAttribute("role");
 		openFileDetail(itemId);
+	}
+	
+	function openFileDetail(itemId) {
+		if(itemPopup) {itemPopup.close();}
+		itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(780, 750));
 	}
 	
 	function generatePreviewElmt(divElmt) {
@@ -803,7 +809,7 @@ var SurveyItem = function() {
 				divChildElmt1.appendChild(imgElmt);
 				
 				spanChild1.textContent  = fileName;
-				spanChild2.textContent  = getFileSize(fileSize);
+				spanChild2.textContent  = fileSize;
 				divChildElmt2.className = "cabFileInf";
 				divChildElmt2.appendChild(spanChild1);
 				divChildElmt2.appendChild(spanChild2);
@@ -825,62 +831,14 @@ var SurveyItem = function() {
 		attachFrame.src = downloadUrl;
 	}
 	
-	function isImage(fileName) {
-		var fileExt  = (/[.]/.exec(fileName)) ? /[^.]+$/.exec(fileName) : "";
-		var imgCheck = false;
-		var urlImg   = "";
-		
-		switch (fileExt.toString().toLowerCase()) {
-			case "jpg"  :
-			case "gif"  :
-			case "bmp"  :
-			case "png"  :
-			case "jpeg" : imgCheck = true                       ; break;
-			case "pdf"  : urlImg   = "/images/cabinet/pdf.png"  ; break;
-			case "ppt"  : urlImg   = "/images/cabinet/ppt.png"  ; break;
-			case "pptx" : urlImg   = "/images/cabinet/pptx.png" ; break;
-			case "doc"  : urlImg   = "/images/cabinet/doc.png"  ; break;
-			case "docx" : urlImg   = "/images/cabinet/docx.png" ; break;
-			case "xls"  : urlImg   = "/images/cabinet/xls.png"  ; break;
-			case "xlsx" : urlImg   = "/images/cabinet/xlsx.png" ; break;
-			case "hwp"  : urlImg   = "/images/cabinet/hwp.png"  ; break;
-			case "txt"  : urlImg   = "/images/cabinet/txt.png"  ; break;
-			case "mp4"  : urlImg   = "/images/cabinet/mp4.png"  ; break;
-			case "flv"  : urlImg   = "/images/cabinet/flv.png"  ; break;
-			case "mkv"  : urlImg   = "/images/cabinet/mkv.png"  ; break;
-			case "iso"  : urlImg   = "/images/cabinet/iso.png"  ; break;
-			case "rar"  : urlImg   = "/images/cabinet/rar.png"  ; break;
-			case "zip"  : urlImg   = "/images/cabinet/zip.png"  ; break;
-			default     : urlImg   = "/images/cabinet/none.png" ; break;
-		}
-		
-		return {
-			isImage  : imgCheck,
-			urlImage : urlImg
-		};
-	}
-	
 	function showUserInfoFromId(userId) {
 		var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
 		feature = feature + getOpenWindowfeature(420, 500);
 		userWindow = window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
 	}
 	
-	function getFileSize(fileSize) {
-		var result = fileSize + "B";
-		
-		switch(true) {
-			case fileSize > 1073741824 : result = parseFloat(fileSize / 1073741824).toFixed(2) + "GB"; break;
-			case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2)    + "MB"; break;
-			case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2)       + "KB"; break;
-		}
-		return result;
-	}
-	
 	function closeAllPopups() {
 		if(itemPopup)  {itemPopup.close();}
-		if(sharePopup) {sharePopup.close();}
-		if(addPopup)   {addPopup.close();}
 		if(userWindow) {userWindow.close();}
 	}
 	
