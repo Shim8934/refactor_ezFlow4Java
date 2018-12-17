@@ -109,6 +109,10 @@
 		                listview.SetHeightFree(true);
 		                listview.DataSource(headerData);
 		                listview.DataBind("AdminListView");
+		                
+		                var a = document.getElementById("lvPermissionList_TR_0");
+		                a.style.backgroundColor = "rgb(255, 255, 255)";
+		                
 		                checkbox_header();
 		                checkItems();
 		                makePageSelPage();
