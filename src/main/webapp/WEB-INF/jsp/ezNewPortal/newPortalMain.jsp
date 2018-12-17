@@ -6,7 +6,7 @@
 	<head>
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
+		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
