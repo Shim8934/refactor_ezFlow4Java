@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezSystem.web;
 
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,9 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -24,9 +22,14 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -41,7 +44,6 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
@@ -49,6 +51,7 @@ import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
+import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -117,9 +120,16 @@ public class EzSystemAdminController {
 			useIPAccessMenu = "NO";
 		}
 		
-		logger.debug("useIPAccessMenu=" + useIPAccessMenu);
+		String useModuleUsage = ezCommonService.getTenantConfig("useModuleUsage", userInfo.getTenantId());
+		if(userInfo == null || useModuleUsage == null || useModuleUsage.equals("")) {
+			useModuleUsage = "NO";
+		}
 		
 		model.addAttribute("useIPAccessMenu", useIPAccessMenu);
+		model.addAttribute("useModuleUsage", useModuleUsage);
+		
+		logger.debug("useIPAccessMenu=" + useIPAccessMenu);
+		
 		return "/ezSystem/systemLeftMenu";
 	}
 	
@@ -971,6 +981,57 @@ public class EzSystemAdminController {
 		
 		logger.debug("checkUseSession ended");
 		return useSession;
+	}
+	
+	@RequestMapping(value = "/admin/ezSystem/systemModuleMonitor.do")
+	public String systemModuleMonitor(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		
+		model.addAttribute("packageType", packageType);
+		
+		return "/ezSystem/systemModuleMonitor";
+	}
+	
+	@RequestMapping(value = "/admin/ezSystem/getModuleMonitor.do")
+	public ResponseEntity<ModuleSizeVO> getModuleMonitor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("systemModuleMonitorOMS started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		String useModuleUsage = ezCommonService.getTenantConfig("useModuleUsage", userInfo.getTenantId());
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		
+		ModuleSizeVO moduleSizeVO = null;
+		
+		if(userInfo != null) {
+			if(useModuleUsage != null && useModuleUsage.equalsIgnoreCase("yes")) {
+				List<String> moduleNames = null;
+				
+				switch (packageType) {
+				case CommonUtil.PT_STANDARD:
+					moduleNames = Arrays.asList("mail", "schedule", "board", "approval", "community", "resource");
+					break;
+				case CommonUtil.PT_BASIC:
+					moduleNames = Arrays.asList("mail", "schedule", "board");
+					break;
+				case CommonUtil.PT_MAIL:
+					moduleNames = Arrays.asList("mail");
+					break;
+				}
+				
+				String realPath = commonUtil.getRealPath(request);
+				
+				moduleSizeVO = ezSystemAdminService.getModuleUsage(moduleNames, realPath, userInfo);
+			}
+		}
+		
+		logger.debug("systemModuleMonitorOMS ended");
+		
+		return ResponseEntity.ok()
+				.contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+				.body(moduleSizeVO);
 	}
 
 }

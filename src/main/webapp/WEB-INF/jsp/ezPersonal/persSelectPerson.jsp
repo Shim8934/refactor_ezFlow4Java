@@ -359,11 +359,19 @@
 		        var tr = listview.GetSelectedRows();
 		        var length = tr.length;
 		        if (length == 0) {
-		            alert("<spring:message code='ezPersonal.t65'/>");
+		        	if (type == "EMP") {
+		        		alert("<spring:message code='ezPersonal.bhs01'/>");
+		        	} else {
+			            alert("<spring:message code='ezPersonal.t65'/>");
+		        	}
 		            return;
 		        }
 		        if (length > 1) {
-		            alert("<spring:message code='ezPersonal.t66'/>");
+		        	if (type == "EMP") {
+		        		alert("<spring:message code='ezPersonal.bhs02'/>");
+		        	} else {
+			            alert("<spring:message code='ezPersonal.t66'/>");
+		        	}
 		            return;
 		        }
 		        var selRow = tr[0];
