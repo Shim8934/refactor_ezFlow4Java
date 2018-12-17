@@ -219,21 +219,21 @@
 						<c:if test="${firstScreen_Mail != 'YES'}">
 							<c:choose>
 								<c:when test="${portalEnv == '0'}">
-	                            	<li><span class="sub_iconLNB tree_appr"></span><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900002' /></span></li>
-	                            	<li><span class="sub_iconLNB tree_appr"></span><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900005' /></span></li>
+	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900002' /></span></li>
+	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900005' /></span></li>
 			                    </c:when>
 			                    <c:when test="${portalEnv == '1'}">
-	                            	<li><span class="sub_iconLNB tree_appr"></span><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900002' /></span></li>
+	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900002' /></span></li>
 			                    </c:when>
 			                    <c:when test="${portalEnv == '2'}">
-	                            	<li><span class="sub_iconLNB tree_appr"></span><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900005' /></span></li>
+	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900005' /></span></li>
 			                    </c:when>
 								<c:otherwise></c:otherwise>
 							</c:choose>
 						</c:if>
 		            </c:if>
-                   	<li><span class="sub_iconLNB tree_appr"></span><span class="list_text" id="UserInfo" name="UserInfo" onClick="Open_Func(this)"><spring:message code='ezPersonal.t172' /></span></li>
-                   	<li><span class="sub_iconLNB tree_appr"></span><span class="list_text" id="TimeZone" name="TimeZone" onClick="Open_Func(this)"><spring:message code='ezPersonal.t999900010' /></span></li>
+                   	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="UserInfo" name="UserInfo" onClick="Open_Func(this)"><spring:message code='ezPersonal.t172' /></span></li>
+                   	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="TimeZone" name="TimeZone" onClick="Open_Func(this)"><spring:message code='ezPersonal.t999900010' /></span></li>
 		        </ul>
 		        <h2 class="on">
 	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezPersonal.jjh02' /></span>
