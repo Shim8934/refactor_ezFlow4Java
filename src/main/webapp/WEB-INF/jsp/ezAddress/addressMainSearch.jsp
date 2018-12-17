@@ -359,7 +359,7 @@
 	            <li><span onclick="move_address()"><spring:message code='ezAddress.t176' /></span></li>
 	            <li onclick="delete_address()"><span class="icon16 icon16_delete"></span></li>
 	            <li onclick="window.location.reload(false)"><span class="icon16 icon16_refresh"></span></li>
-	            <li><span class="icon16 icon16_mail" onclick="write_letter()"></span></li>
+	            <li><span class="icon16 icon16_mail_gray" onclick="write_letter()"></span></li>
 	            <li style="background:none;float:right">
 	                <select id="ListViewType" onchange="View_Change();">
 	                    <option value="card" <c:if test="${pListType == 'card'}"> selected</c:if>><spring:message code='ezAddress.t2000' /></option>
