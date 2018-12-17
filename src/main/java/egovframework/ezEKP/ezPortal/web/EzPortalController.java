@@ -135,7 +135,9 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/portalMain.do")
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
-		logger.debug("portalMain Start");
+		return "redirect:/ezNewPortal/newPortalMain.do";
+		
+		/*logger.debug("portalMain Start");
 				
 		String companyID = req.getParameter("companyID");
 		String deptID = req.getParameter("deptID");
@@ -251,7 +253,7 @@ public class EzPortalController extends EgovFileMngUtil {
 							resp.setCharacterEncoding("UTF-8");
 							resp.setContentType("text/html; charset=UTF-8");
 							resp.getWriter().write(commentHtml);
-							/*resp.getWriter().flush();*/
+							resp.getWriter().flush();
 				}
 			}
 		}
@@ -390,7 +392,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("topHeight", topHeight);
 		model.addAttribute("memoFlag", memoFlag);
 		
-		return "/ezPortal/portalMain";
+		return "/ezPortal/portalMain";*/
 	}
 	
 	/**
