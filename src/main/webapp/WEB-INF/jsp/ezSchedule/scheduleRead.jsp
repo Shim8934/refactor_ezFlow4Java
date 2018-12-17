@@ -47,6 +47,7 @@
 			var _otherid = "<c:out value='${otherid}' />";
 	        var pUse_Editor = "CK";
 	        var ResourceInfo = "<c:out value='${resourceCnt}' />";	        
+	        var ResourceDel = "FALSE";
 	        
 	        <%-- var parentid = "<%= _parentid %>"; --%>			
 			<%-- var admin = "<%= _admin %>"; --%>
@@ -177,13 +178,16 @@
 	        function repetiton_check() {	
 	        	schedule_delete_confirm_cross_dialogArguments[0] = "";
 	        	schedule_delete_confirm_cross_dialogArguments[1] = deleteSchedule_Complete;
-	            GetOpenWindow("/ezSchedule/scheduleDeleteConfirm.do", "schedule_delete_confirm_Cross", 500, 170);
+	            GetOpenWindow("/ezSchedule/scheduleDeleteConfirm.do?resourceInfo="+ResourceInfo, "schedule_delete_confirm_Cross", 500, 170);
 	        }
 	        
 	        function deleteSchedule_Complete(ret) {	        	
-				if (ret == "0") {
+	        	var optionStr = ret[0];
+	        	ResourceDel = ret[1];
+	        	
+				if (optionStr == "0") {
 					once_delete_schedule();
-				} else if (ret == "1") {
+				} else if (optionStr == "1") {
 					delete_schedule();
 				} 
 		    }
@@ -202,10 +206,11 @@
 	            //if (!confirm("<spring:message code='ezSchedule.t209' />"))
 	            //    return;
 	
-	            var ResourceDel = "FALSE";;
+	            /* 2018-12-17 김민성 - 부모창에서 confirm창 뜨도록 변경 */
+	            /* var ResourceDel = "FALSE";;
 	            if (ResourceInfo != "0") {
 	                confirm("<spring:message code='ezSchedule.t1300' />") ? ResourceDel = "TRUE" : ResourceDel = "FALSE";
-	            }           
+	            }  */          
 	            
 	            $.ajax({
 					type : "POST",
