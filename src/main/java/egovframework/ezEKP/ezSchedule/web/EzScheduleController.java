@@ -2188,9 +2188,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 일정보기 > 반복일정 선택 후 삭제시 팝업 
 	 */	
 	@RequestMapping(value="/ezSchedule/scheduleDeleteConfirm.do")	
-	public String scheduleDeleteConfirm() throws Exception {
-		
+	public String scheduleDeleteConfirm(Model model, HttpServletRequest request) throws Exception {
 		logger.debug("============ scheduleDeleteConfirm started ============");
+		
+		String resourceInfo = request.getParameter("resourceInfo");
+		model.addAttribute("resourceInfo", resourceInfo);
+		
+		logger.debug("============ scheduleDeleteConfirm ended ============");
 		
 		return "ezSchedule/scheduleDeleteConfirm";
 	}
