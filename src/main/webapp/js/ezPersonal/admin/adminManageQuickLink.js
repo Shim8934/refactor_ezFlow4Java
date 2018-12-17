@@ -292,7 +292,7 @@ function openLinkDetail(item, itemId) {
 	linksHTML += "<table class='content perm'>";
 	linksHTML += "<tr>";
 	linksHTML += "<th>" + strLangkhj16 +"</th>";
-	linksHTML += "<td style='border-left: 1px solid #d2d2d2;'><div class='listview' id='AccessList'></div></td>";	
+	linksHTML += "<td class='perList'><div class='listview' id='AccessList'></div></td>";	
 	linksHTML += "</tr>";
 	linksHTML += "<tr>";
 	linksHTML += "<td colspan='2'>"
