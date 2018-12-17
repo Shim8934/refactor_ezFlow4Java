@@ -104,7 +104,8 @@
 		                var listview = new ListView();
 		                listview.SetID("lvPermissionList");
 		                listview.SetMulSelectable(false);
-		                listview.SetRowOnDblClick("Permissions_View");
+		                listview.SetRowOnClick("Permissions_View");
+		                listview.SetRowOnDblClick("PermissionsDb_View");
 		                listview.SetHeightFree(true);
 		                listview.DataSource(headerData);
 		                listview.DataBind("AdminListView");
@@ -123,7 +124,7 @@
 				var doc = window.document;
 				var th = doc.getElementById("lvPermissionList_TH_0");
 				var acList = doc.getElementById("lvPermissionList");
-				console.log(acList);
+				
 				th.innerHTML = "<input type= 'checkbox' id = 'checkAll' onchange= 'checkboxHeaderClick()'></input>";
 				
 				cnt = acList.children[1].childElementCount;
@@ -131,7 +132,12 @@
 				var i = 0;
 				for (i; i < cnt; i++) {
 					var seq = acList.children[1].children[i].children[0].innerHTML;
-					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq + "'></input>";
+					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" 
+					+ seq 
+					+ "' value='" 
+					+ seq 
+					+ "' onchange='inputFunc(event,"
+					+ seq + ")'></input>";
 				} 
 			}
 			
@@ -153,12 +159,81 @@
 			function checkItems() {
 				rowList = [];
 				$("input:checkbox[name='checks']").each(function(){
-					if($(this).is("checked")){
+					if($(this).is(":checked")){
 						rowList.push(this.value);
 					}
 				});
 			}
 			
+			function inputFunc(event, itemseq) {
+				checkItems();
+				
+				$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+
+				for (var i = 0; i < rowList.length; i++) {
+					var objID = $("#" + rowList[i])[0].parentNode.parentNode.id;
+					$("#" + objID + " td").css("background-color", "rgb(241, 248, 255)");
+					$("#" + rowList[i]).prop("checked", true);
+				}
+			}
+			
+			var itemseq;
+			
+			function Permissions_View(obj) {
+				var className = window.event.target.getAttribute('class');
+				if(className === 'checks') {
+					return;
+				}
+
+				var doc = window.document;
+				itemseq = document.getElementById(obj).getAttribute("DATA1");
+				if(itemseq == "0") {
+					return;
+				}
+
+				if(checkFlag) {
+					if($("#"+itemseq).prop("checked")) {
+						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				} else {
+					$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+					$(".checks").prop("checked",false);
+					if($("#" + itemseq).is(":checked")) {
+						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				}
+
+				checkItems();
+			}
+			
+			function PermissionsDb_View() {
+				
+		        var listview = new ListView();
+		        listview.LoadFromID("lvPermissionList");
+
+		        if (listview.GetSelectedRows().length == 0) {
+		            alert(strLang13);
+		            return;
+		        }
+		        
+		        var id = listview.GetSelectedRows()[0].getAttribute("DATA1");
+
+		        if (CrossYN()) {
+		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?userID=" + encodeURI(id) + "&companyID=" + document.getElementById("ListCompany").value, "Permissions_Check", GetOpenWindowfeature(970, 580));
+		            try { OpenWin.focus(); } catch (e) { }
+		        } else {
+		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?userID=" + encodeURI(id) + "&companyID=" + document.getElementById("ListCompany").value, "", "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(970, 580));
+		        } 
+				
+		    }
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
 		    }
@@ -289,24 +364,6 @@
 		        td_Create1(PagingHTML);
 		    }
 			
-			function Permissions_View() {
-		        var listview = new ListView();
-		        listview.LoadFromID("lvPermissionList");
-
-		        if (listview.GetSelectedRows().length == 0) {
-		            alert(strLang13);
-		            return;
-		        }
-		        
-		        var id = listview.GetSelectedRows()[0].getAttribute("DATA1");
-
-		        if (CrossYN()) {
-		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?userID=" + encodeURI(id) + "&companyID=" + document.getElementById("ListCompany").value, "Permissions_Check", GetOpenWindowfeature(970, 580));
-		            try { OpenWin.focus(); } catch (e) { }
-		        } else {
-		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?userID=" + encodeURI(id) + "&companyID=" + document.getElementById("ListCompany").value, "", "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(970, 580));
-		        }
-		    }
 			
 			var Tab1_SelectID = "";
 		    function Tab1_MouserOver(obj) {
