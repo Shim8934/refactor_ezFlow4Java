@@ -1821,7 +1821,8 @@ e.printStackTrace();
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
-			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, userInfo.getTenantId());
+			String menuLang = userInfo.getLang();
+			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, userInfo.getTenantId(), menuLang);
 			
 			//tenant config가 NO인 경우 관리자 메뉴 관리에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -1992,8 +1993,9 @@ e.printStackTrace();
 			int tenantId = userInfo.getTenantId();
 			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+			String menuLang = userInfo.getLang();
 			
-			MenuInfoVO menuInfo = ezNewPortalService.getMenuInfo(menuId, companyId, tenantId);
+			MenuInfoVO menuInfo = ezNewPortalService.getMenuInfo(menuId, companyId, tenantId, menuLang);
 			List<MenuNameVO> menuNames = ezNewPortalService.getMenuNames(menuId, usePrimaryLangOnly, primaryLang, companyId, tenantId);
 			
 			JSONObject data = new JSONObject();
