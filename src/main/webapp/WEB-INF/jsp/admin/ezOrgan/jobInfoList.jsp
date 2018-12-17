@@ -18,6 +18,11 @@
 	<script type="text/javascript">
 		var Tab1_flag = true;
 		var Tab1_SelectID = "";	//001:직위관리, 002:직책관리
+		var totalCount;
+		var totalPage = "";
+		var blockSize = 10;
+		var pageNum = 1;
+		var pageSize = 15;
 		
 		$(document).ready(function() {
 			compChange();
@@ -46,7 +51,8 @@
             	data : 
             	{
             		type : type,
-            		companyID : companyID
+            		companyID : companyID,
+            		page: pageNum
             	},
             	success : function (result) {
             		xmldom = loadXMLString(result);
@@ -76,6 +82,12 @@
             listview.SetHeightFree(true);
             listview.DataSource(headerData);
             listview.DataBind("JobListView");
+			
+			totalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
+			pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
+			totalPage = Math.ceil(new Number(totalCount / pageSize));
+			
+			makePageSelPage();
 		}
 		/* 추가, 수정, 삭제 Button Action (mode=Add,Mod,Del) */
 		var titleInfo_dialogArguments = new Array();
@@ -325,7 +337,8 @@
             	data : 
             	{
             		type : type,
-            		companyID : companyID
+            		companyID : companyID,
+            		page: pageNum
             	},
             	success : function (result) {
             		xmldom = loadXMLString(result);
@@ -355,6 +368,12 @@
             listview.SetHeightFree(true);
             listview.DataSource(headerData);
             listview.DataBind("JobListView");
+			
+			totalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
+			pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
+			totalPage = Math.ceil(new Number(totalCount / pageSize));
+			
+			makePageSelPage();
 		}
 		/* 직책을 사용중인 유저리스트 호출 Method */
 		function JobPosition_UserList() {
@@ -410,6 +429,7 @@
 			document.getElementById("JobListView").innerHTML = "";
 			document.getElementById("JobUserListView").innerHTML = "";
 			
+			pageNum = 1;
 			if (obj.id == "001") {
 				JobTitle_List();
 				JobTitle_UserList();
@@ -461,6 +481,124 @@
 	        }
 	    }
 	    /* Tab관련 메소드들 ↑ */
+		
+		/* 페이징 관련 메소드 */
+		function makePageSelPage() {
+			var strtext;
+			var pagingHTML = "<div class='pagenavi'>";
+			
+			document.getElementById("tblPageRayer").innerHTML = "";
+			//document.getElementById("mailBoxInfo").innerHTML = "<span style='color:#017BEC;'> " + totalCount + " </span>";
+			
+			if (totalPage > 1 && pageNum != 1) {
+				strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+				pagingHTML += strtext;
+			} else {
+				strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+				pagingHTML += strtext;
+			}	
+
+			if (totalPage > blockSize) {
+				if (pageNum > blockSize) {
+					strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+					pagingHTML += strtext;
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+					pagingHTML += strtext;
+				}
+			} else {
+				strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+				pagingHTML += strtext;
+			}
+
+			var MaxNum;
+			var i;
+			var startNum = (parseInt((pageNum - 1) / blockSize) * blockSize) + 1;
+			
+			if (totalPage >= (startNum + parseInt(blockSize))) {
+				MaxNum = (startNum + parseInt(blockSize)) - 1;
+			} else {
+				MaxNum = totalPage;
+			}
+			
+			for (i = startNum; i <= MaxNum; i++) {
+				if (i == pageNum) {
+					strtext = "<span class='on'>" + i + "</span>";
+					pagingHTML += strtext;
+				} else {
+					strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+					pagingHTML += strtext;
+				}
+			}
+			
+			if (i == 1) {
+				strtext = "<span class='on'>" + i + "</span>";
+				pagingHTML += strtext;
+			}
+			
+			if (totalPage > blockSize) {
+				if (totalPage >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
+					strtext = "";
+					strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+					pagingHTML += strtext;
+				} else {
+					strtext = "";
+					strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+					pagingHTML += strtext;
+				}
+			} else {
+				strtext = "";
+				strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+				pagingHTML += strtext;
+			}
+			
+			if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+				strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+				pagingHTML += strtext;
+			} else {
+				strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+				pagingHTML += strtext;
+			}
+					
+			pagingHTML += "</div>";
+			td_Create(pagingHTML);
+		}
+		
+		function td_Create(strtext) {
+			document.getElementById("tblPageRayer").innerHTML = strtext;
+		}
+		
+		function goToPageByNum(Value) {
+			pageNum = Value;
+			compChange();
+			makePageSelPage();
+		}
+		
+		function selbeforeBlock() {
+			pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+			goToPageByNum(pageNum);
+		}
+		
+		function selbeforeBlock_one() {
+			if (parseInt(pageNum - 1) > 0) {
+				goToPageByNum(parseInt(pageNum - 1));
+			} else {
+				return;
+			}
+		}
+		
+		function selafterBlock() {
+			pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+			goToPageByNum(pageNum);
+		}
+		
+		function selafterBlock_one() {
+			if (parseInt(pageNum + 1) <= totalPage) {
+				goToPageByNum(parseInt(pageNum + 1));
+			} else {
+				return;
+			}
+		}
 	</script>
 </head>
 <body class="mainbody">
@@ -496,6 +634,7 @@
 			<td>
 				<div class="listview">
 					<div id="JobListView" style="height: 550px; width: 550px; overflow-y:auto;"></div>
+					<div id="tblPageRayer"></div>
 				</div>
 			</td>
 			<td>

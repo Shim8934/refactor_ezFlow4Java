@@ -4254,6 +4254,8 @@
 			TENANT_ID = #v_TENANTID#
 		ORDER BY
 			SORT
+		LIMIT
+			#v_START#, #v_COUNT#
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleInfo" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
 	<![CDATA[

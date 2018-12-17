@@ -1815,7 +1815,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String getTitleList(String type, String companyID, int tenantID) throws Exception {
+	public String getTitleList(String type, String companyID, int totalCount, int pageCount, int pageSize, int currentPage, int tenantID) throws Exception {
 		logger.debug("getTitleList started.");
 
 		StringBuffer rtnVal = new StringBuffer();
@@ -1823,12 +1823,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TYPE", type);
 		map.put("v_COMPANYID", companyID);
+		map.put("v_COUNT", pageSize);
+		map.put("v_START", (currentPage - 1 ) * pageSize);
 		map.put("v_TENANTID", tenantID);
 		
 		List<OrganJobVO> jobList = ezOrganAdminDao.getTitleList(map);
 		
 		if (jobList != null && jobList.size() > 0) {
-			rtnVal.append("<LISTVIEWDATA><ROWS>");
+			rtnVal.append("<LISTVIEWDATA>");
+			rtnVal.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+			rtnVal.append("<PAGECNT>" + pageCount + "</PAGECNT>");
+			rtnVal.append("<CURPAGE>" + currentPage + "</CURPAGE>");
+			rtnVal.append("<ROWS>");
 			
 			for (int i = 0; i < jobList.size(); i++) {
 				rtnVal.append("<ROW>");
