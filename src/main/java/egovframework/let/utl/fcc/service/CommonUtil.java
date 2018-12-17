@@ -1550,4 +1550,21 @@ public class CommonUtil {
 	    
 	    return map;
 	}
+	
+	//첨부파일 사이즈 계산
+	public String getProperSizeDisplay(String pSize) throws Exception {
+		String strSize;
+		
+		int size = Integer.parseInt(pSize);
+
+		if (size > 1024 * 1024) {
+			strSize = Math.floor(size / 1024 / 1024 * 10) / 10 + "MB";
+		} else if (size > 1024) {
+			strSize = (int)(size/1024) + "KB";
+		} else {
+			strSize = (int)size + "B";
+		}
+
+		return strSize;
+	}
 }

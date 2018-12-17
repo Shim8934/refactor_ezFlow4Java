@@ -14,6 +14,9 @@
 		margin-top: 0px;
 		margin-bottom: 0px;
 	}
+	a {
+		text-decoration: none;
+	}
 </style>
 <script type="text/javascript">
 	function AttachDetail_view(obj) {
@@ -62,7 +65,7 @@
 				<ul class="attachedfile_title">
 					<li class="titleText">
 						<span class="titleT">
-							<spring:message code='ezEmail.t99000003' />
+							<spring:message code='ezJournal.t105' />
 							<span>
 								<span class='cblue'>${fn:length(journal.fileList)}</span> (${journal.fileTotalSize })
 							</span>
