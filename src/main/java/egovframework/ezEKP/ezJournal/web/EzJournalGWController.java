@@ -709,7 +709,7 @@ public class EzJournalGWController {
 					vo.setFileType(fileType);
 					vo.setFileEncodeName(URLEncoder.encode(vo.getFileName(), "UTF-8"));
 					vo.setFilePath(URLEncoder.encode(vo.getFilePath(), "UTF-8"));
-						
+
 					String fileSize = commonUtil.byteCalculation(Long.toString(vo.getFileSize()));
 					vo.setFileTransSize(fileSize);
 					LOGGER.debug("##fileType: " + vo.getFileType() + ", EncodeFileName: " + vo.getFileEncodeName() + ", transSize: " + vo.getFileTransSize());
