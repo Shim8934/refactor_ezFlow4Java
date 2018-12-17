@@ -342,7 +342,10 @@
 				$("#topMenuFull").fadeOut(0, function() {
 					$("#topMenuFull").attr("class", "full_nav on");
 					$("#topMenuFull").fadeIn(100);
-					$("#nav_count").attr("class", "hidden_nav_count_on");
+					
+					if ($("#nav_count").html() != "") {
+						$("#nav_count").attr("class", "hidden_nav_count_on");
+					}
 				});
 				var screenHeight = screen.height;
 				topFrame.style.position = 'relative';
@@ -354,7 +357,10 @@
 					$("#topMenuFull").fadeOut(100, function() {
 						$("#topMenuFull").attr("class", "full_nav off");
 						$("#topMenuFull").fadeIn(100);
-						$("#nav_count").attr("class", "hidden_nav_count");
+						
+						if ($("#nav_count").html() != "") {
+							$("#nav_count").attr("class", "hidden_nav_count");
+						}
 					});
 				}
 				
@@ -603,8 +609,12 @@
 			if (viewCnt > 0) {
 				$('#nav_count').attr('class','hidden_nav_count');
 				document.getElementById('nav_count').innerHTML = '+' + (totalMenuCnt*1 - (menuCnt*1));
+				
+				$('.countBox').css("display", "block");
 			} else {
 				$('#nav_count').attr('class','hidden_nav_count_off');
+				
+				$('.countBox').css("display", "none");
 			}
 		}
 		
