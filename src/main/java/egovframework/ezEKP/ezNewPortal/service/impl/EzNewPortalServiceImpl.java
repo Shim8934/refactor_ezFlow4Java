@@ -208,16 +208,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return result;
 	}
 	
-	public List<MenuInfoVO> getCompanyMenuList(String companyId, int tenantId, String langType, String userId, String deptId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyId", companyId);
-		map.put("tenantId", tenantId);
-		map.put("langType", langType);
-		map.put("userId", userId);
-		map.put("deptId", deptId);		
-		return ezNewPortalDAO.getCompanyMenuList(map);
-	}
-	
 	// 사용자 메뉴 순서 변경
 	@SuppressWarnings("unchecked")
 	public void updateUserMenuOrder(String companyId, int tenantId, String userId, JSONObject jObj) throws Exception {
@@ -547,21 +537,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("[Serivce] getBoardAuthCheck Ended");
 		return ezNewPortalDAO.getBoardAuthCheck(map);
 	}
-
-	@Override
-	public List<PortletInfoVO> getPortletOrderUser(String portletLang, String userId, int tenantId, String companyId, String deptPath) {
-		LOGGER.debug("[Serivce] getPortletOrderUser Started");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("portletLang", portletLang);
-		map.put("userId", userId);
-		map.put("tenantId", tenantId);
-		map.put("companyId", companyId);
-		map.put("deptId", deptPath);
-
-		LOGGER.debug("[Serivce] getPortletOrderUser Ended");
-		return ezNewPortalDAO.getPortletOrderUser(map);
-	}
-
+	
 	@Override
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId) {
 		LOGGER.debug("[Serivce] getUserPortalSetting Started");

@@ -16,7 +16,6 @@
 	    	var EndCnt = 6;
 	    	var timer;
 	    	var xmlhttp;
-	    	window.onload = window_onload_NewBirth;
 	    	var strLang1_NewBirth = "<spring:message code='main.t00026'/>";
 	    	document.onselectstart = function () { return false; };
 	    	
@@ -44,24 +43,23 @@
 	    	
 	    	function getbirthUserList() {
 	    		window.clearTimeout(timer);
-
-	        	$.ajax({
-    	        	type : "POST",
-    	        	dataType : "text",
-    	        	url : "/ezPersonal/mainBirthUserList.do",
-    	        	data : {
-    	        		mon   : month, 
-    	        	},
-    	        	success : function(xml){		        		
-    	        		getbirthUserList_after(loadXMLString(xml));
-    	        	},
-    	        	error : function(error){
-    	        		console.log(error);	
-    	        	}
-	    	    });
+	    		
+	    		var request = new XMLHttpRequest();
+				request.open('POST', '/ezPersonal/mainBirthUserList.do', true);
+				request.setRequestHeader('Content-Type', 'application/json');
+				
+				request.onload = function() {
+					getbirthUserList_after(loadXMLString(request.responseText));
+				}
+				
+				var data = JSON.stringify({
+					mon : month
+				});
+				
+				request.send(data);
 	    	}
 	    	
-	    	var userPrimary = "${userInfo.primary}";
+	    	var userPrimary = "${primary}";
 	    	
 	    	function getbirthUserList_after(xml) {
 		        if (xml == null) return;
@@ -190,6 +188,8 @@
 	        	
 	        	window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 	    	}
+	    	
+	    	window_onload_NewBirth();
 		</script>
 	</head>
 	<body>
