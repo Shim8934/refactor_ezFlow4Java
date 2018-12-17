@@ -1551,11 +1551,11 @@ public class CommonUtil {
 	    return map;
 	}
 	
-	//첨부파일 사이즈 계산
-	public String getProperSizeDisplay(String pSize) throws Exception {
+	/**
+	 * returns a string containing size with a size unit(MB or KB or B) 
+	 */
+	public String getSizeWithUnit(double size) {		
 		String strSize;
-		
-		int size = Integer.parseInt(pSize);
 
 		if (size > 1024 * 1024) {
 			strSize = Math.floor(size / 1024 / 1024 * 10) / 10 + "MB";

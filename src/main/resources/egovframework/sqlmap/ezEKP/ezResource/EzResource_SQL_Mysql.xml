@@ -894,6 +894,8 @@
 				SCH.OWNERID = BRD.BRD_ID
 			AND
 				SCH.TENANT_ID = BRD.TENANT_ID	
+			AND
+				SCH.COMPANYID = BRD.BRD_COMPANY				
         	WHERE
         		STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND 

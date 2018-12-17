@@ -719,7 +719,7 @@ public class EzJournalGWController {
 					vo.setFileEncodeName(URLEncoder.encode(vo.getFileName(), "UTF-8"));
 //					vo.setFilePath(URLEncoder.encode(vo.getFilePath(), "UTF-8"));
 						
-					String fileSize = commonUtil.getProperSizeDisplay(Long.toString(vo.getFileSize()));
+					String fileSize = commonUtil.getSizeWithUnit(vo.getFileSize());
 					vo.setFileTransSize(fileSize);
 					
 					fileTotalSizeLong+=vo.getFileSize();
@@ -728,7 +728,7 @@ public class EzJournalGWController {
 				}
 				
 				journal.setFileList(fileList);
-				String totalFileSize = commonUtil.getProperSizeDisplay(Long.toString(fileTotalSizeLong));
+				String totalFileSize = commonUtil.getSizeWithUnit(fileTotalSizeLong);
 				journal.setFileTotalSize(totalFileSize);
 			}
 			

@@ -139,13 +139,13 @@
 <result property="portletName" 				column="PORTLET_NAME" />
 </resultMap>
 <resultMap class="WeatherVO" id="WeatherVO">
-<result property="sn" 				column="SN" />
+<result property="sn" 						column="SN" />
 <result property="cityCode" 				column="CITYCODE" />
 <result property="cityName" 				column="CITYNAME" />
 <result property="displayName" 				column="DISPLAYCITYNAME" />
 <result property="primaryLang" 				column="PRIMARYLANG" />
-<result property="currentWeather" 				column="CURRENTWEATHER" />
-<result property="todayWeather" 				column="TODAYWEATHER" />
+<result property="currentWeather" 			column="CURRENTWEATHER" nullValue=" "/>
+<result property="todayWeather" 			column="TODAYWEATHER"  nullValue=" "/>
 </resultMap>
 <resultMap class="QuickLinkVO" id="QuickLinkVO">
 <result property="quickLinkName"		column="quicklinkname"/>
