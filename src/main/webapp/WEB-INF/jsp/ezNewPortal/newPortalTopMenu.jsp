@@ -7,8 +7,7 @@
 		<title>TopMenu</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
-
+		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>			
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
