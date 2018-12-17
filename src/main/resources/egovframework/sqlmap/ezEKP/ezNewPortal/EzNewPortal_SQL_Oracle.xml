@@ -311,121 +311,6 @@ AND
 </isNotNull>
 </select>
 
-<!-- 사용자 접근 가능 메뉴 리스트 -->
-<select id="ezNewPortal.getUserMenuList" parameterClass="Map" resultClass="MenuInfoVO">
-SELECT
-	A.MENU_ID          AS MENUID,
-    B.MENU_NAME        AS MENUNAME,
-    A.MENU_USED        AS MENUUSED,
-	A.COMPANY_LANG     AS COMPANYLANG,
-	D.MENU_URL         AS MENUURL,
-    D.ICON_URL         AS ICONURL,
-    A.company_order    AS COMPANYORDER,
-    NVL(C.menu_order, A.company_order) AS MENUORDER
-FROM 
-	tbl_portal_menu_comp A
-JOIN 
-	tbl_portal_menu D
-ON 
-	A.MENU_ID = D.MENU_ID
-JOIN 
-	tbl_portal_menu_name B
-ON 
-	A.MENU_ID = B.MENU_ID
-AND 
-	A.COMPANY_ID = B.COMPANY_ID
-AND 
-	A.TENANT_ID = B.TENANT_ID
-AND 
-	A.COMPANY_LANG = B.MENU_LANG		
-LEFT OUTER JOIN
-	tbl_portal_menu_user C
-ON
-	A.company_id = C.company_id
-AND
-	A.tenant_id = C.tenant_id
-AND
-	A.menu_id = C.menu_id
-AND
-	C.user_id = #userId#
-WHERE 
-	A.MENU_USED = 1
-AND 
-	A.COMPANY_ID = #companyId#
-AND
-	A.COMPANY_LANG = #langType#
-AND
-	A.TENANT_ID = #tenantId#
-ORDER BY 
-	menu_order ASC NULLS LAST, menu_order asc, company_order asc	
-</select>
-
-<!-- 회사 접근 가능한 메뉴 리스트 -->
-<select id="ezNewPortal.getCompanyMenuList" parameterClass="Map" resultClass="MenuInfoVO">
-<![CDATA[
-SELECT
-	comp.MENU_ID          AS MENUID,
-    name.MENU_NAME        AS MENUNAME,
-    comp.MENU_USED        AS MENUUSED,
-	comp.COMPANY_LANG     AS COMPANYLANG,
-	main.MENU_URL         AS MENUURL,
-    main.ICON_URL         AS ICONURL,
-    comp.company_order    AS COMPANYORDER
-FROM 
-	tbl_portal_menu_comp comp
-JOIN 
-	tbl_portal_menu main
-ON 
-	comp.MENU_ID = main.MENU_ID
-JOIN 
-	tbl_portal_menu_name name
-ON 
-	comp.MENU_ID = name.MENU_ID
-AND 
-	comp.COMPANY_ID = name.COMPANY_ID
-AND 
-	comp.TENANT_ID = name.TENANT_ID
-AND 
-	comp.COMPANY_LANG = name.MENU_LANG		
-LEFT OUTER JOIN
-	(
-       SELECT * FROM tbl_portal_menu_auth
-       WHERE tenant_id = #tenantId#
-       AND company_id = #companyId#
-       AND access_YN = 0
-       AND user_id = #userId#
-       AND user_type = '1'
-       
-       UNION
-       
-       SELECT * FROM tbl_portal_menu_auth
-       WHERE tenant_id = #tenantId#
-       AND company_id = #companyId#
-       AND access_YN = 0
-       AND user_id = #deptId#
-       AND user_type = '0'     	
-	) as auth
-ON
-	comp.COMPANY_ID = auth.COMPANY_ID
-AND
-	comp.TENANT_ID = auth.TENANT_ID
-AND
-	comp.MENU_ID = auth.MENU_ID
-WHERE 
-	comp.MENU_USED = 1
-AND 
-	comp.COMPANY_ID = #companyId#
-AND
-	comp.COMPANY_LANG = #langType#
-AND
-	comp.TENANT_ID = #tenantId#
-AND 
-	auth.access_yn IS NULL	
-ORDER BY
-	company_order asc	
-]]>		
-</select>
-
 <select id="ezNewPortal.getUserMenuOrderCnt" parameterClass="Map" resultClass="Integer">
 <![CDATA[
 SELECT	
@@ -716,15 +601,6 @@ AND
 	company_id = #companyId#
 ]]>		
 </delete>
-
-<!-- <insert id="ezNewPortal.insertUserUsedPortlet" parameterClass="Map">
-<![CDATA[
-INSERT INTO 
-	tbl_portal_portlet_user(user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id)
-values
-	 (#userId#, #tenantId#, #companyId#, #portletId#, #portletOrder#, #menuId#)
-]]>		
-</insert> -->
 
 <insert id="ezNewPortal.insertUserUsedPortlet" parameterClass="Map">
 <![CDATA[
@@ -1040,70 +916,6 @@ AND
                 menuOrder
             ]]>
     </select>
-
-<!-- 회사 포틀릿 순서 불러오기 -->
-<select id="ezNewPortal.getPortletOrderComp" parameterClass="Map" resultClass="PortletInfoVO">
-<isNull property="order">
-<![CDATA[
-SELECT
-	A.PORTLET_ID as portletid, 
-	A.PORTLET_ORDER as portletorder, 
-	B.PORTLET_NAME as portletname, 
-	C.PORTLET_URL as portleturl,
-	A.BOARD_ID as portletBoardId,
-	A.MENU_ID as menuid
-FROM	
-	TBL_PORTAL_PORTLET_COMP A
-JOIN
-	TBL_PORTAL_PORTLET_NAME B
-ON
-	A.PORTLET_ID = B.PORTLET_ID
-AND
-	A.MENU_ID = B.MENU_ID
-AND
-	A.COMPANY_ID = B.COMPANY_ID
-AND
-	B.PORTLET_LANG = #portletLang#
-JOIN
-	TBL_PORTAL_PORTLET C
-ON
-	A.PORTLET_ID = C.PORTLET_ID
-WHERE
-	A.TENANT_ID = #tenantId#
-AND
-	A.COMPANY_ID = #companyId#
-AND
-	A.PORTLET_USED = 1
-ORDER BY
-	A.PORTLET_ORDER
-]]>
-</isNull>
-<isNotNull property="order">
-<![CDATA[
-SELECT DISTINCT
-	A.PORTLET_ID as portletid, 
-	A.PORTLET_ORDER as portletorder, 
-	B.PORTLET_NAME as portletname, 
-	C.PORTLET_URL as portleturl,
-	A.BOARD_ID as portletBoardId,
-	A.MENU_ID as menuid
-FROM	
-	tbl_portal_portlet A
-JOIN
-	TBL_PORTAL_PORTLET_NAME B
-ON
-	A.PORTLET_ID = B.PORTLET_ID
-WHERE
-	B.PORTLET_LANG = #portletLang#
-AND
-	B.TENANT_ID = 99
-AND
-	B.COMPANY_ID = ''
-ORDER BY
-	A.DEFAULT_ORDER
-]]>
-</isNotNull>
-</select>
 
 <!-- 포틀릿 정보 불러오기 -->
 <select id="ezNewPortal.getCompanyPortletInfo" parameterClass="Map" resultMap="PortletInfoVO">
