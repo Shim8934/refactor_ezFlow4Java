@@ -203,7 +203,7 @@
 // 	                filename = ReplaceText(filename, "%3b", ";");
 // 	                filename = ReplaceText(filename, "%7e", "~");
 // 	                filename = ReplaceText(filename, "%3d", "=");
-	                filesize = parseInt(getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize")));
+	                filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 	
 	                var strTarget = "target=''";
 	                var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
@@ -220,7 +220,7 @@
 	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
 	                //2018-07-12 김보미 - a태그 속성값 추가(파일 모두저장)
 // 	                strAttach += "<a name='filename' href='/ezCircular/downloadAttach.do?circularFileID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
-	                strAttach += "<a name='filename' href='/ezCircular/downloadAttach.do?circularFileID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + "' filePath='" + filepath + "' fileName='" + filename + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
+	                strAttach += "<a name='filename' href='/ezCircular/downloadAttach.do?circularFileID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + "' filePath='" + filepath + "' fileName='" + filename + "'>" + filename + " (" + filesize + ")</a>";
 	                strAttach += "</span>";
 	                strAttach += "</li>";
 	            }
