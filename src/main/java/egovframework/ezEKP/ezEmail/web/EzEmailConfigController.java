@@ -406,15 +406,15 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 
 		String forwardAddress = doc.getElementsByTagName("ADDRESS").item(0).getTextContent();
-
+		String checkMyAddress = forwardAddress;
 		String strResult = "Error";
 		
 		List<String> realAddress = ezEmailService.aliasMailCheck(forwardAddress);
 		if (realAddress != null && realAddress.size() > 0) {
-			forwardAddress = realAddress.get(0);
+			checkMyAddress = realAddress.get(0);
 		}
 
-		if (!forwardAddress.equalsIgnoreCase(userEmail)) {
+		if (!checkMyAddress.equalsIgnoreCase(userEmail)) {
 			try {				
 				InternetAddress internetAddress = new InternetAddress(forwardAddress);
 				strResult = setMailForwardAddress(userEmail, internetAddress.getAddress());
