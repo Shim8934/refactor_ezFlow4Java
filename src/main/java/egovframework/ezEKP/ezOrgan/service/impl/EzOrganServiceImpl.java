@@ -389,36 +389,40 @@ public class EzOrganServiceImpl implements EzOrganService {
 			sb.append("<DATA>");
 			
 			OrganDeptVO obj = list.get(i);			
-            
-			// 멤버가 사원인 경우
-            if (obj.getType().toLowerCase().equals("user")) {
-            	map1.put("v_CN", obj.getCn());
-        		map1.put("v_DEPTCD", pDeptID);
-        		map1.put("v_LANGDATA", pLangCode);
-        		map1.put("v_TENANT_ID", tenantID);
-        		
-        		// 사원의 상세 정보를 가져온다.
-        		Object userVO = ezOrganDAO.getTBLUserMaster(map1);        		
-                sb.append(commonUtil.getQueryResult(userVO));
-            // 멤버가 부서인 경우
-            } else {
-            	map1.put("v_CN", obj.getCn());
-        		map1.put("v_LANGDATA", pLangCode);
-        		map1.put("v_TENANT_ID", tenantID);
-        		                
-        		// 자식 부서의 상세 정보를 가져온다.
-        		Object deptVO = ezOrganDAO.getTBLDeptMaster(map1);                
-                sb.append(commonUtil.getQueryResult(deptVO));
-            }
-            
-            sb.append("</DATA>");
-            
-            String cn = obj.getCn();
 
-            memberInfo[memberCount] = getMemberInfo(sb.toString(), pCellList, pPropList, cn, obj.getType());
-            memberCount++;
-        }
-		
+			// 멤버가 사원인 경우
+			if (obj.getType().toLowerCase().equals("user")) {
+				map1.put("v_CN", obj.getCn());
+				map1.put("v_DEPTCD", pDeptID);
+				map1.put("v_LANGDATA", pLangCode);
+				map1.put("v_TENANT_ID", tenantID);
+
+				// 사원의 상세 정보를 가져온다.
+				Object userVO = ezOrganDAO.getTBLUserMaster(map1);        		
+				sb.append(commonUtil.getQueryResult(userVO));
+				// 멤버가 부서인 경우
+			} else {
+				map1.put("v_CN", obj.getCn());
+				map1.put("v_LANGDATA", pLangCode);
+				map1.put("v_TENANT_ID", tenantID);
+
+				// 자식 부서의 상세 정보를 가져온다.
+				Object deptVO = ezOrganDAO.getTBLDeptMaster(map1);                
+				sb.append(commonUtil.getQueryResult(deptVO));
+			}
+
+			sb.append("</DATA>");
+
+			String cn = obj.getCn();
+
+			memberInfo[memberCount] = getMemberInfo(sb.toString(), pCellList, pPropList, cn, obj.getType());
+			// 멤버가 사원인 경우
+			if (obj.getType().toLowerCase().equals("user")) {
+				memberInfo[memberCount] = memberInfo[memberCount].replaceAll("</ROW>", "<CELL><VALUE></VALUE></CELL><CELL><VALUE></VALUE></CELL><CELL><VALUE></VALUE></CELL></ROW>");
+			}
+			memberCount++;
+		}
+
 		map2.put("v_CN", pDeptID);
 		map2.put("v_TENANT_ID", tenantID);
 		
