@@ -3410,7 +3410,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezOrganAdminService.getTitleList(type, companyID, userInfo.getTenantId());
+		int currentPage = 1, pageSize = 15;
+		
+		int totalCount = ezOrganAdminService.getTitleListCnt(type, companyID, userInfo.getTenantId());
+		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
+		
+		if (request.getParameter("page") != null) {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		}
+		
+		String result = ezOrganAdminService.getTitleList(type, companyID, totalCount, pageCount, pageSize, currentPage, userInfo.getTenantId());
 		
 		logger.debug("jobTitleListView ended.");
 		return result;

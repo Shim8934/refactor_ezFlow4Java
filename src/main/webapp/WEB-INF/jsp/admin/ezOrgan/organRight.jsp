@@ -181,21 +181,21 @@
 				        }
 		                document.getElementById("OrganListView").innerHTML = "";
 
-				        var pUserList = new ListView();
-				        pUserList.SetID("lvUserList");
-				        pUserList.SetMulSelectable(true);
-				        pUserList.SetRowOnDblClick("info_user");
-				        pUserList.SetSelectFlag(false);
-				        pUserList.SetHeightFree(true);
-				        pUserList.DataSource(headerData);
-				        pUserList.DataBind("OrganListView");
-
-				        moveDisplay(false);
-		        	},
-		        	error : function(error){
-		        		alert("<spring:message code='ezOrgan.t2'/>" + error);	
-		        	}
-		        });	
+						var pUserList = new ListView();
+						pUserList.SetID("lvUserList");
+						pUserList.SetMulSelectable(true);
+						pUserList.SetRowOnDblClick("info_user");
+						pUserList.SetSelectFlag(false);
+						pUserList.SetHeightFree(true);
+						pUserList.DataSource(headerData);
+						pUserList.DataBind("OrganListView");
+						sawonDataParsing();
+						moveDisplay(false);
+					},
+					error : function(error){
+						alert("<spring:message code='ezOrgan.t2'/>" + error);	
+					}
+				});	
 			}			
 			
 			var companyinfo_dialogArguments = new Array();
@@ -1521,8 +1521,65 @@
 		    		$(".moveWrap").css("display","block");	
 		    	}
 		    }
-		    
-	    </script>
+			
+			// xml data -> input checkbox method
+			var cnt;
+			var sawonDataParsing = function() {
+				var doc = window.document;
+				var acList = doc.getElementById("lvUserList");
+
+				cnt = acList.children[1].childElementCount;
+
+				var i = 0;
+				for (i; i < cnt; i++) {
+					var tempLV = doc.getElementById('lvUserList_TR_' + i);
+					var userID = tempLV.getAttribute('DATA2');
+					// 3 암호관리 4 사원이동 5 퇴직
+					tempLV.children[3].innerHTML = "<span><img id='" + userID +"'class='pwd' onclick='mod_pwd(event)' src='/images/admin/inuse.png'></span>";
+					tempLV.children[4].innerHTML = "<span><img class='move'  src='/images/admin/inuse.png'></span>";
+					tempLV.children[5].innerHTML = "<span><img class='retire' src='/images/admin/inuse.png'></span>";
+				}
+			}
+
+			// 암호관리 수정 팝업
+			var userID;
+			function mod_pwd(event) {
+				event.stopPropagation();
+				changePassLength = 1;
+				userID = event.target.id;
+				inputpassword_dialogArguments[1] = mod_pwd_complete;
+
+				//크롬일때 alert창 크기때문에 크롬일때 구별
+				var agent = navigator.userAgent.toLowerCase();
+				if (agent.indexOf("chrome") != -1) {
+					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));
+				} else {
+					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));	
+				}
+			}
+
+			// 암호관리 수정 수행
+			function mod_pwd_complete(rtnValue){
+				if (typeof (rtnValue) != "undefined") {
+					var data = userID;
+
+					$.ajax({
+						type : "POST",
+						dataType : "xml",
+						url : "/admin/ezOrgan/changePassword.do",
+						async : false,
+						data : {password : rtnValue, cn : data},
+						success : function(result){
+							alert("비밀번호를 수정하였습니다.");
+						},
+						error : function(){
+							alert("<spring:message code='ezOrgan.t41' />");
+						}
+					});
+				}
+				userID = "";
+			}
+		</script>
 	</head>
 	<body class="mainbody">
 		<input type="hidden" name="selectedCN" id="selectedCN" />
@@ -1544,6 +1601,18 @@
 					</HEADER>
 					<HEADER>
 						<NAME><spring:message code='ezOrgan.t69' /></NAME>
+						<WIDTH>50</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME>암호관리</NAME>
+						<WIDTH>50</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME>사원이동</NAME>
+						<WIDTH>50</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME>퇴직</NAME>
 						<WIDTH>50</WIDTH>
 					</HEADER>
 				</HEADERS>
