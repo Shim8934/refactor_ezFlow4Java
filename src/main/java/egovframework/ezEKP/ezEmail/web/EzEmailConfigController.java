@@ -375,7 +375,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("mailAutoForward stated.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String userEmail = userInfo.getEmail();
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
+
 		String forwardAddress = getMailForwardAddress(userEmail);
 
 		model.addAttribute("userId", userInfo.getId());
