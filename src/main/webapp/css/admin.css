@@ -212,7 +212,8 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 .primary > td {border: 0px;}
 .popInput {width:30px;}
 .type tr th, .perm tr th {vertical-align: top;}
-.listview {height: 169px; overflow-y: auto; overflow-x: hidden; border-bottom: 0px; border-width: 0px; border: 1px solid #ddd; margin-left: 7px;}
+.perList {border-left: 1px solid #d2d2d2 !important;}
+.perList > .listview {height: 169px; overflow-y: auto; overflow-x: hidden; border-bottom: 0px; border-width: 0px; border: 1px solid #ddd; margin-left: 7px;}
 .perm tr:ntn-child(2) > td {padding:0px; border-left: 1px solid #ddd;}
 .perm tr:ntn-child(2) > td > div {text-align: right;}
 .linkType {width:280px; height: 169px; margin-left:5px; border: 1px solid #d2d2d2;}
