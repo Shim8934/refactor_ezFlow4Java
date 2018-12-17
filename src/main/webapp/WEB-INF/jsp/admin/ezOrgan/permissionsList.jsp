@@ -112,7 +112,9 @@
 		                
 		                var a = document.getElementById("lvPermissionList_TR_0");
 		                a.style.backgroundColor = "rgb(255, 255, 255)";
-		                
+		                $("#lvPermissionList_TR_0").mouseout(function(){
+		                	$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
+		                });
 		                checkbox_header();
 		                checkItems();
 		                makePageSelPage();
