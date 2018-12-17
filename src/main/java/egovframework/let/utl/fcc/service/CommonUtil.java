@@ -1436,4 +1436,21 @@ public class CommonUtil {
 
 		return sb.toString();
 	}
+	
+	/**
+	 * returns a string containing size with a size unit(MB or KB or B) 
+	 */
+	public String getSizeWithUnit(double size) {		
+		String strSize;
+
+		if (size > 1024 * 1024) {
+			strSize = Math.floor(size / 1024 / 1024 * 10) / 10 + "MB";
+		} else if (size > 1024) {
+			strSize = (int)(size/1024) + "KB";
+		} else {
+			strSize = (int)size + "B";
+		}
+
+		return strSize;
+	}
 }

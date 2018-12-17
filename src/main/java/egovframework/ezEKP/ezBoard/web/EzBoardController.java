@@ -4390,7 +4390,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			resultXML.append("<GUID>" + boardAttachVOList.get(i).getGuid().trim() + "</GUID>");
 			resultXML.append("<FilePath>" + commonUtil.cleanValue(boardAttachVOList.get(i).getFilePath()) + "</FilePath>");
 			resultXML.append("<FileName>" + commonUtil.cleanValue(boardAttachVOList.get(i).getFileName()) + "</FileName>");
-			resultXML.append("<FileSize>" + getProperSizeDisplay(boardAttachVOList.get(i).getFileSize()) + "</FileSize>");
+			resultXML.append("<FileSize>" + commonUtil.getSizeWithUnit(Double.parseDouble(boardAttachVOList.get(i).getFileSize())) + "</FileSize>");
 			resultXML.append("<FileSize2>" + boardAttachVOList.get(i).getFileSize() + "</FileSize2>");
 			resultXML.append("</NODE>");
 		}
