@@ -506,6 +506,10 @@ public class EzWebFolderController_m {
 		if (status.equals("ok")) {
 			model.addAttribute("status","ok");
 			model.addAttribute("code",code);
+			
+			if (resultBody.containsKey("duplicateInfoArray")) {
+				model.addAttribute("duplicateInfoArray", resultBody.get("duplicateInfoArray"));
+			}
 		}else {
 			model.addAttribute("reason", resultBody.get("reason").toString());
 			model.addAttribute("status","error");

@@ -23,6 +23,7 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
@@ -905,7 +906,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public int restoreFile(FileVO fileVO, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
+	public boolean restoreFile(FileVO fileVO, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("fileId",   fileVO.getFileId());
@@ -913,22 +914,22 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("userId",   userId);
 		map.put("timeUTC",  timeUTC);
 		
-		int isFail = 0;
 		int result = ezWebFolderDAO.restoreFile(map);
 		
 		if (result > 0) {
 			ezWebFolderService.saveLog("RE", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 			LOGGER.debug("restoreFile is success");
+			
+			return true;
 		} else {
 			LOGGER.debug("restoreFile is fail");
-			isFail =  1;
+			
+			return false;
 		}
-		
-		return isFail;
 	}
 	
 	@Override
-	public int restoreFolder(String folderId, int tenantId, String userId, String timeUTC) throws Exception{
+	public boolean restoreFolder(String folderId, int tenantId, String userId, String timeUTC) throws Exception{
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
@@ -940,71 +941,92 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		if (result > 0) {
 			LOGGER.debug("restoreFolder is success");
+			
+			return true;
 		} else {
 			LOGGER.debug("restoreFolder is fail");
+			
+			return false;
 		}
-		
-		return result;
 	}
 	
 	@Override
-	public int restoreTrashCan(String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC, String userName1, String userName2) throws Exception {
-		int failType = 0;
-		int isFail = 0;
+	public Map<String, Object> restoreTrashCan(String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC, String userName1, String userName2) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		List<DuplicateInfoVO> duplicateList = new ArrayList<>();
+		
+		boolean isAllRestored = true;
+		boolean hasAllParentFolder = true;
 		
 		for (String file : fileIDList) {
-			if (!file.equals("")) {
-				FileVO fileVO  = ezWebFolderService.getFileByFileId(file, offset, tenantId);
-				
-				if (fileVO != null) {
-					FolderVO folderVO = ezWebFolderService.getFolderByFolderId(fileVO.getFolderId(), offset, tenantId);
-					
-					if (folderVO != null && folderVO.getUseStatus().equals("Y")) {
-						isFail = restoreFile(fileVO, tenantId,  userId, timeUTC, companyId, offset, userName1, userName2);
-						
-						if (isFail == 1) {
-							failType = 2;
-						}
-					
-					} else {
-						failType = 4;
-					}
+			if (file == null || file.isEmpty()) {
+				continue;
+			}
+			
+			FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
+
+			if (fileVO == null) {
+				continue;
+			}
+			
+			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(fileVO.getFolderId(), offset, tenantId);
+
+			if ("Y".equals(folderVO.getUseStatus())) {
+				// 중복된 파일이 있으면 스킵 및 list에 추가
+				if (duplicateList.addAll(ezWebFolderService.getAllDuplicateInfo(DuplicateInfoVO.Type.FILE, file, fileVO.getFolderId(), offset, tenantId))) {
+					continue;
 				}
+				
+				// 불대수 곱 연산
+				isAllRestored &= restoreFile(fileVO, tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
+			} else {
+				isAllRestored = false;
+				hasAllParentFolder = false;
 			}
 		}
 		
 		for (String folder : folderIDList) {
-			if (!folder.equals("")) {
-				FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
-				FolderVO upperFolderVO = ezWebFolderService.getFolderByFolderId(folderVO.getFolderUpper(), offset, tenantId);
-				
-				if (upperFolderVO != null && upperFolderVO.getUseStatus().equals("Y")) {
-					
-					List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId());
-					
-					for (String lowerFolder : lowerFolders) {
-						int isRestored = restoreFolder(lowerFolder, tenantId, userId, timeUTC);
-						
-						if (isRestored > 0) {
-							
-							isFail  = restoreFileInFolder(lowerFolder, tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
-							
-							if (isFail == 1) {
-								failType =2 ;
-							}
-						}
-					}
-				} else {
-					failType = 4;
+			if (folder.isEmpty()) {
+				continue;
+			}
+
+			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
+			FolderVO upperFolderVO = ezWebFolderService.getFolderByFolderId(folderVO.getFolderUpper(), offset, tenantId);
+			
+			if ("Y".equals(upperFolderVO.getUseStatus())) {
+				// 중복된 파일이 있으면 스킵 및 list에 추가
+				if (duplicateList.addAll(ezWebFolderService.getAllDuplicateInfo(DuplicateInfoVO.Type.DIRECTORY, folder, folderVO.getFolderUpper(), offset, tenantId))) {
+					continue;
 				}
+				
+				List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId());
+				
+				for (String lowerFolder : lowerFolders) {
+					if (restoreFolder(lowerFolder, tenantId, userId, timeUTC)) {
+						// 불대수 곱 연산
+						isAllRestored &= restoreFileInFolder(lowerFolder, tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
+					}
+				}
+			} else {
+				isAllRestored = false;
+				hasAllParentFolder = false;
 			}
 		}
 		
-		return failType;
+		if (isAllRestored && duplicateList.isEmpty()) {
+			// 중복되지 않고 성공했다면 0
+			resultMap.put("code", 0);
+		} else {
+			resultMap.put("duplicateInfoArray", duplicateList);
+			// 부모 폴더가 없어 실패한 게 있으면 4, 아니면 8
+			resultMap.put("code", hasAllParentFolder ? 8 : 4);
+		}
+		
+		return resultMap;
 	}
 	
 	@Override
-	public int restoreFileInFolder(String folderId, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
+	public boolean restoreFileInFolder(String folderId, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId",   folderId);
@@ -1012,7 +1034,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("userId",     userId);
 		map.put("timeUTC",    timeUTC);
 		
-		int isFail = 0;
+		boolean success = true;
 		List<String> searchFiles = ezWebFolderDAO.selectAllFilesInFolder(map);
 		
 		for (String file : searchFiles) {
@@ -1026,12 +1048,12 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				
 				LOGGER.debug("restoreFileInFolder is success");
 			} else {
-				isFail = 1;
+				success = false;
 				LOGGER.debug("restoreFileInFolder is fail");
 			}
 		}
 		
-		return isFail;
+		return success;
 	}
 			
 	@Override

@@ -1,11 +1,17 @@
 package egovframework.ezEKP.ezWebFolder.vo;
 
 public class DuplicateInfoVO {
+	public enum Type {
+		DIRECTORY, FILE
+	}
+
 	private String fileName;
-	private String fileId;
+	private Type newType;
+	private String newId;
 	private String newDate;
 	private String newSize;
-	private String oldFileId;
+	private Type oldType;
+	private String oldId;
 	private String oldDate;
 	private String oldSize;
 	private String oldOwnerId;
@@ -18,12 +24,20 @@ public class DuplicateInfoVO {
 		this.fileName = fileName;
 	}
 
-	public String getFileId() {
-		return fileId;
+	public Type getNewType() {
+		return newType;
 	}
 
-	public void setFileId(String fileId) {
-		this.fileId = fileId;
+	public void setNewType(Type newType) {
+		this.newType = newType;
+	}
+
+	public String getNewId() {
+		return newId;
+	}
+
+	public void setNewId(String newId) {
+		this.newId = newId;
 	}
 
 	public String getNewDate() {
@@ -42,12 +56,20 @@ public class DuplicateInfoVO {
 		this.newSize = newSize;
 	}
 
-	public String getOldFileId() {
-		return oldFileId;
+	public Type getOldType() {
+		return oldType;
 	}
 
-	public void setOldFileId(String oldFileId) {
-		this.oldFileId = oldFileId;
+	public void setOldType(Type oldType) {
+		this.oldType = oldType;
+	}
+
+	public String getOldId() {
+		return oldId;
+	}
+
+	public void setOldId(String oldId) {
+		this.oldId = oldId;
 	}
 
 	public String getOldDate() {
@@ -72,5 +94,9 @@ public class DuplicateInfoVO {
 
 	public void setOldOwnerId(String oldOwnerId) {
 		this.oldOwnerId = oldOwnerId;
+	}
+
+	public boolean isAllFiles() {
+		return newType == Type.FILE && oldType == Type.FILE;
 	}
 }

@@ -15,7 +15,7 @@ var duplicateFile = (function() {
 				fd.append("folderId", current.folderId);
 				fd.append("fileToUpload", current.info.fileObject);
 				fd.append("fileIdArray", JSON.stringify([ {
-					fileIdArray: current.info.fileId
+					fileIdArray: current.info.oldId
 				} ]));
 				
 				var dragZone = document.getElementById("dragDropArea");
@@ -37,23 +37,23 @@ var duplicateFile = (function() {
 						
 						switch (code) {
 						case 0:
-							// alert(strSuccess);
+							alert(strSuccess);
 							refreshView();
 							break;
 						case 1:
-							alert(resultErr1);
+							alert(messages.parameterError);
 							break;
 						case 2:
-							alert(resultErr2);
+							alert(messages.serverError);
 							break;
 						case 3:
-							alert(resultErr3);
+							alert(messages.permissionError);
 							break;
 						case 4:
-							alert(resultErr4);
+							alert(messages.outOfStorageSpaceForOneTime);
 							break;
 						case 5:
-							alert(resultErr5);
+							alert(messages.outOfStorageSpace);
 							break;
 						}
 					},
@@ -98,23 +98,23 @@ var duplicateFile = (function() {
 					success: function(data) {
 						switch (data.code) {
 						case 0:
-							// alert(strSuccess);
+							alert(strSuccess);
 							refreshView();
 							break;
 						case 1:
-							alert(resultErr1);
+							alert(messages.parameterError);
 							break;
 						case 2:
-							alert(resultErr2);
+							alert(messages.serverError);
 							break;
 						case 3:
-							alert(resultErr3);
+							alert(messages.permissionError);
 							break;
 						case 4:
-							alert(resultErr4);
+							alert(messages.outOfStorageSpaceForOneTime);
 							break;
 						case 5:
-							alert(resultErr5);
+							alert(messages.outOfStorageSpace);
 							break;
 						case 8:
 							alert(messages.resultErrDuplicateRename);
@@ -132,7 +132,46 @@ var duplicateFile = (function() {
 		},
 		move: {
 			overwrite: function(result) {
-
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/moveFile.do",
+					data: {
+						"fileList": current.info.newId,
+						"folderId": current.folderId,
+						"privileges": current.mode,
+						"mode": "move",
+						"overwritable": true
+					},
+					dataType: "JSON",
+					async: true,
+					success: function(data) {
+						var code = data.code;
+						
+						switch (code) {
+						case 0:
+							alert(messages.successMoveFile);
+							refreshView();
+							break;
+						case 1:
+							alert(messages.parameterError);
+							break;
+						case 2:
+							alert(messages.serverError);
+							break;
+						case 3:
+							alert(messages.permissionError);
+							break;
+						case 4:
+							alert(messages.strLang13);
+							break;
+						}
+					},
+					error: function(error) {
+						alert(strErr);
+					}
+				}).complete(function(res) {
+					nextJob(result);
+				});
 			},
 			skip: function(result) {
 				setTimeout(function() {
@@ -140,16 +179,12 @@ var duplicateFile = (function() {
 				}, 0);
 			},
 			rename: function(result) {
-				// https://stackoverflow.com/questions/190852/how-can-i-get-file-extensions-with-javascript
-				var fileExtension = current.info.fileName.slice((current.info.fileName.lastIndexOf(".") - 1 >>> 0) + 2);
-				var newFileName = result.newFileName + "." + fileExtension
-
 				$.ajax({
 					type: "POST",
 					url: "/ezWebFolder/moveFile.do",
 					data: {
-						"fileList": current.info.fileId,
-						"nameList": [ newFileName ],
+						"fileList": current.info.newId,
+						"nameList": JSON.stringify([ result.newFileName ]),
 						"folderId": current.folderId,
 						"privileges": current.mode,
 						"mode": "move"
@@ -161,20 +196,20 @@ var duplicateFile = (function() {
 						
 						switch (code) {
 						case 0:
-							// alert("<spring:message code='ezWebFolder.t247'/>");
+							alert(messages.successMoveFile);
 							refreshView();
 							break;
 						case 1:
-							alert(resultErr1);
+							alert(messages.parameterError);
 							break;
 						case 2:
-							alert(resultErr2);
+							alert(messages.serverError);
 							break;
 						case 3:
-							alert(resultErr3);
+							alert(messages.permissionError);
 							break;
 						case 4:
-							alert(strLang13);
+							alert(messages.strLang13);
 							break;
 						case 8:
 							alert(messages.resultErrDuplicateRename);
@@ -182,14 +217,55 @@ var duplicateFile = (function() {
 						}
 					},
 					error: function(error) {
-						alert("<spring:message code='ezWebFolder.t134'/>");
+						alert(strErr);
 					}
+				}).complete(function(res) {
+					nextJob(result);
 				});
 			}
 		},
 		copy: {
 			overwrite: function(result) {
-
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/moveFile.do",
+					data: {
+						"fileList": current.info.newId,
+						"folderId": current.folderId,
+						"mode": "copy",
+						"overwritable": true
+					},
+					dataType: "JSON",
+					async: true,
+					success: function(data) {
+						switch (data.code) {
+						case 0:
+							alert(messages.successCopyFile);
+							refreshView();
+							break;
+						case 1:
+							alert(messages.parameterError);
+							break;
+						case 2:
+							alert(messages.serverError);
+							break;
+						case 3:
+							alert(messages.permissionError);
+							break;
+						case 4:
+							alert(messages.outOfStorageSpace);
+							break;
+						case 8:
+							alert(messages.resultErrDuplicateRename);
+							break;
+						}
+					},
+					error: function(error) {
+						alert(strErr);
+					}
+				}).complete(function(res) {
+					nextJob(result);
+				});
 			},
 			skip: function(result) {
 				setTimeout(function() {
@@ -197,7 +273,46 @@ var duplicateFile = (function() {
 				}, 0);
 			},
 			rename: function(result) {
-
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/moveFile.do",
+					data: {
+						"fileList": current.info.newId,
+						"nameList": JSON.stringify([ result.newFileName ]),
+						"folderId": current.folderId,
+						"mode": "copy"
+					},
+					dataType: "JSON",
+					async: true,
+					success: function(data) {
+						switch (data.code) {
+						case 0:
+							alert(messages.successCopyFile);
+							refreshView();
+							break;
+						case 1:
+							alert(messages.parameterError);
+							break;
+						case 2:
+							alert(messages.serverError);
+							break;
+						case 3:
+							alert(messages.permissionError);
+							break;
+						case 4:
+							alert(messages.outOfStorageSpace);
+							break;
+						case 8:
+							alert(messages.resultErrDuplicateRename);
+							break;
+						}
+					},
+					error: function(error) {
+						alert(strErr);
+					}
+				}).complete(function(res) {
+					nextJob(result);
+				});
 			}
 		}
 	};
@@ -209,21 +324,30 @@ var duplicateFile = (function() {
 		current = null;
 		
 		// 완료 알림 띄우기
-		alert(messages.completeDuplicateJob);
+		// alert(messages.completeDuplicateJob);
 	}
 
 	var executeJob = function(result) {
 		// workType에 맞는 덮어쓰기, 건너뛰기, 이름바꾸기 작업 실행
-		work[current.workType][result.code.toLowerCase()](result);
+		var jobs = work[current.workType];
+		var detailJob = jobs[result.code.toLowerCase()];
+		
+		detailJob(result);
 	}
 
 	var onClosePopup = function(result) {
+		//if (!isEmptyInfo()) {
 		executeJob(result);
+		//}
+	}
+	
+	var isEmptyInfo = function(result) {
+		return infoQueue.length === 0;
 	}
 
 	var nextJob = function(result) {
 		// 큐가 비어있으면 작업 끝내기
-		if (infoQueue.length === 0) {
+		if (isEmptyInfo()) {
 			completeJob();
 			return;
 		}
@@ -244,8 +368,10 @@ var duplicateFile = (function() {
 		var currentInfo = current.info;
 		
 		url += "fileName=" + currentInfo.fileName;
+		url += "&newType=" + currentInfo.newType;
 		url += "&newDate=" + currentInfo.newDate;
 		url += "&newSize=" + currentInfo.newSize;
+		url += "&oldType=" + currentInfo.oldType;
 		url += "&oldDate=" + currentInfo.oldDate;
 		url += "&oldSize=" + currentInfo.oldSize;
 		url += "&oldOwnerId=" + currentInfo.oldOwnerId;
@@ -259,7 +385,7 @@ var duplicateFile = (function() {
 
 	var process = function(params) {
 		// 아직 끝나지 않았을 때 메소드 진입 막기
-		if (infoQueue.length > 0) {
+		if (infoQueue.length > 0 || current) {
 			throw new Error("other processing is in progress.");
 		}
 		

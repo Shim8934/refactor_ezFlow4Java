@@ -19,8 +19,15 @@
 		parent.closeAllPopup();
 		window.close();
 	}
-
-	<c:if test="${isOwner}">
+	
+	function onClickCancel() {
+		onClickClose({
+			code: "SKIP",
+			looping: false
+		});
+	}
+	
+	<c:if test="${isOwner && isAllFiles}">
 	function onClickOverwrite() {
 		onClickClose({
 			code: "OVERWRITE",
@@ -36,9 +43,11 @@
 		});
 	}
 
+	<c:if test="${not isFolder}">
 	function onClickRename() {
 		parent.DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?isUploading");
 	}
+	</c:if>
 </script>
 <style>
 table.content-inner td {
@@ -54,16 +63,16 @@ table.content-inner td>h2 {
 	<h1 id="topMenu" style="margin: 2px;">
 		<c:choose>
 			<c:when test="${isFolder}">
-				<spring:message code='ezWebFolder.t510' />
+				<spring:message code='webfolder.duplicate.folder.title' />
 			</c:when>
 			<c:otherwise>
-				<spring:message code='ezWebFolder.t500' />
+				<spring:message code='webfolder.duplicate.file.title' />
 			</c:otherwise>
 		</c:choose>
 	</h1>
 	<div id="close">
 		<ul>
-			<li><span id="btnCancel" onclick="onClickClose('SKIP')"></span></li>
+			<li><span id="btnCancel" onclick="onClickCancel()"></span></li>
 		</ul>
 	</div>
 	<table class="content" style="border-top: none; width: 100%;">
@@ -71,7 +80,7 @@ table.content-inner td>h2 {
 			<td style="padding: 15px 0;">
 				<c:choose>
 					<c:when test="${isFolder}">
-						<div style="text-align: center;"><spring:message code='ezWebFolder.t501' /></div>
+						<div style="text-align: center;"><spring:message code='webfolder.duplicate.content' /></div>
 						<table class="content-inner" style="width: 100%; margin: 10px 0;">
 							<colgroup>
 								<col style="width: 20%;">
@@ -79,13 +88,13 @@ table.content-inner td>h2 {
 								<col style="width: 20%;">
 							</colgroup>
 							<tr>
-								<td><h2><spring:message code='ezWebFolder.t511' /></h2></td>
-								<td colspan="2">${folderName}</td>
+								<td><h2><spring:message code='webfolder.duplicate.table.name' /></h2></td>
+								<td colspan="2">${fileName}</td>
 							</tr>
 						</table>
 					</c:when>
 					<c:otherwise>
-						<div style="text-align: center;"><spring:message code='ezWebFolder.t501' /></div>
+						<div style="text-align: center;"><spring:message code='webfolder.duplicate.content' /><br><spring:message code='webfolder.duplicate.file.content' /></div>
 						<table class="content-inner" style="width: 100%; margin: 10px 0;">
 							<colgroup>
 								<col style="width: 20%;">
@@ -93,24 +102,23 @@ table.content-inner td>h2 {
 								<col style="width: 20%;">
 							</colgroup>
 							<tr>
-								<td><h2><spring:message code='ezWebFolder.t503' /></h2></td>
+								<td><h2><spring:message code='webfolder.duplicate.table.name' /></h2></td>
 								<td colspan="2">${fileName}</td>
 							</tr>
-		
 							<tr>
-								<td><h2><spring:message code='ezWebFolder.t504' /></h2></td>
+								<td><h2><spring:message code='webfolder.duplicate.table.new' /></h2></td>
 								<td id="current-date">${newDate}</td>
 								<td style="text-align: center;">${newSize}</td>
 							</tr>
 							<tr>
-								<td><h2><spring:message code='ezWebFolder.t505' /></h2></td>
+								<td><h2><spring:message code='webfolder.duplicate.table.old' /></h2></td>
 								<td>${oldDate}</td>
 								<td style="text-align: center;">${oldSize}</td>
 							</tr>
 						</table>
 						<div style="text-align: center;">
-							<input id="all-apply" type="checkbox" style="vertical-align: middle;"> <label for="all-apply" style="vertical-align: middle;"><spring:message code='ezWebFolder.t502' /></label>
-							<c:if test="${not isOwner}"><p style="margin: 10px 0 0 0; color: red;"><spring:message code='ezWebFolder.t509' /></p></c:if>
+							<c:if test="${not isFolder}"><input id="all-apply" type="checkbox" style="vertical-align: middle;"> <label for="all-apply" style="vertical-align: middle;"><spring:message code='webfolder.duplicate.looping' /></label></c:if>
+							<c:if test="${not isOwner && isAllFiles}"><p style="margin: 10px 0 0 0; color: red;"><spring:message code='webfolder.duplicate.permission' /></p></c:if>
 						</div>
 					</c:otherwise>
 				</c:choose>
@@ -118,9 +126,9 @@ table.content-inner td>h2 {
 		</tr>
 	</table>
 	<div class="btnpositionNew">
-		<c:if test="${isOwner}"><a class="imgbtn" onclick="onClickOverwrite();"><span><spring:message code='ezWebFolder.t506' /></span></a></c:if>
-		<a class="imgbtn" onclick="onClickSkip();"><span><spring:message code='ezWebFolder.t507' /></span></a>
-		<c:if test="${not isFolder}"><a class="imgbtn" onclick="onClickRename();"><span><spring:message code='ezWebFolder.t508' /></span></a></c:if>
+		<c:if test="${isOwner && isAllFiles}"><a class="imgbtn" onclick="onClickOverwrite();"><span><spring:message code='webfolder.duplicate.button.overwrite' /></span></a></c:if>
+		<a class="imgbtn" onclick="onClickSkip();"><span><spring:message code='webfolder.duplicate.button.skip' /></span></a>
+		<c:if test="${not isFolder}"><a class="imgbtn" onclick="onClickRename();"><span><spring:message code='webfolder.duplicate.button.rename' /></span></a></c:if>
 	</div>
 </body>
 </html>

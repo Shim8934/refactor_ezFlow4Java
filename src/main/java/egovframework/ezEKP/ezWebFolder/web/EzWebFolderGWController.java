@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
@@ -46,6 +47,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
@@ -577,11 +579,15 @@ public class EzWebFolderGWController {
 					return permissionResult;
 				}
 			}
-
-			List<FileVO> duplicateFiles = ezWebFolderService.getDuplicateNameFiles(fileNames, folderId, userInfo.getOffset(), userInfo.getTenantId());
+			
+			List<DuplicateInfoVO> duplicateInfoList = new ArrayList<>();
+			
+			for (String fileName : fileNames) {
+				duplicateInfoList.addAll(ezWebFolderService.getAllDuplicateInfo(fileName, folderId, userInfo.getOffset(), userInfo.getTenantId()));
+			}
 
 			result.put("status", "ok");
-			result.put("duplicateFiles", duplicateFiles);
+			result.put("duplicateInfoArray", duplicateInfoList);
 			result.put("code", 0);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -641,40 +647,39 @@ public class EzWebFolderGWController {
 			double limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Double.parseDouble(webfolderConfig.getUploadLimit());
 			double totalUploadSize              = 0;
 			
-			// ---------- 중복 되는 파일은 업로드에서 제외하기 ----------
-
 			List<String> onlyNameArray = ((List<JSONObject>) nameArray).stream().map(obj -> obj.get("originalFilename")).map(String.class::cast).collect(Collectors.toList());
-
-			// 이름이 중복되는 파일 VO 리스트
-			List<FileVO> duplicateNameFiles = ezWebFolderService.getDuplicateNameFiles(onlyNameArray, folderId, offset, userInfo.getTenantId());
-			// FileVO 타입 리스트를 fileName 필드로 하여금 String 타입으로 맵핑한 리스트
-			List<String> duplicateNames = duplicateNameFiles.stream().map(FileVO::getFileName).collect(Collectors.toList());
-
-			Iterator<MultipartFile> multiFileIterator = multiFileLists.iterator();
-			Iterator<Object> nameIterator = nameArray.iterator();
-
+			List<DuplicateInfoVO> duplicateInfoList = new ArrayList<>();
+			
 			Iterator<String> onlyNameIterator = onlyNameArray.iterator();
-
-			// nameArray 및 multiFileLists에서 중복되는 이름의 파일을 제거하되, 같은 인덱스의 것을 제거해야함
+			Iterator<MultipartFile> multiFileIterator = multiFileLists.iterator();
+			
 			while (onlyNameIterator.hasNext()) {
+				String fileName = onlyNameIterator.next();
+				
 				multiFileIterator.next();
-				nameIterator.next();
 
-				// 중복되는 파일이라면 삭제함
-				if (duplicateNames.contains(onlyNameIterator.next())) {
+				// 파일 이름으로 중복 정보 가져오기
+				Optional<DuplicateInfoVO> firstInfo = ezWebFolderService.getAllDuplicateInfo(fileName, folderId, offset, userInfo.getTenantId())
+						.stream()
+						.findFirst();
+
+				// 중복 정보가 존재한다면
+				if (firstInfo.isPresent()) {
+					// multifile 리스트에서 삭제 (업로드 제외됨)
+					onlyNameIterator.remove();
 					multiFileIterator.remove();
-					nameIterator.remove();
+					// 중복 정보 리스트에 추가
+					duplicateInfoList.add(firstInfo.get());
 				}
 			}
-			// ---------- 중복 되는 파일은 업로드에서 제외하기  ----------
-			
+
 			// 업로드 가능한 파일이 없으면 result 처리
 			if (multiFileLists.isEmpty()) {
-				logger.debug("have no uploadable file.");
-				logger.debug("duplicate files: {}", String.join(",", duplicateNames.toArray(new String[duplicateNames.size()])));
+				logger.debug("have no uploadable file. duplicateInfoArray:");
+				duplicateInfoList.stream().map(Object::toString).forEach(logger::debug);
 
 				// 중복된 파일이 존재하여 코드를 달리하여 중복된 파일 리스트를 넘겨줌
-				result.put("duplicateFiles", duplicateNameFiles);
+				result.put("duplicateInfoList", duplicateInfoList);
 				result.put("status", "ok");
 				result.put("code", 8);
 
@@ -712,13 +717,13 @@ public class EzWebFolderGWController {
 				result.put("status", "error");
 				result.put("code", 2);
 			}
-			else if (duplicateNameFiles.isEmpty()) {
+			else if (duplicateInfoList.isEmpty()) {
 				// 중복된 파일이 없으면 0 리턴
 				result.put("status", "ok");
 				result.put("code", 0);
 			} else {
 				// 중복된 파일이 존재하여 코드를 달리하여 중복된 파일 리스트를 넘겨줌
-				result.put("duplicateFiles", duplicateNameFiles);
+				result.put("duplicateInfoList", duplicateInfoList);
 				result.put("status", "ok");
 				result.put("code", 8);
 			}
@@ -966,7 +971,7 @@ public class EzWebFolderGWController {
 			}
 			
 			// 새 이름으로 중복되는 게 있는지 확인
-			List<FileVO> duplicateFiles = ezWebFolderService.getDuplicateNameFiles(new ArrayList<>(Arrays.asList(updateFileName)), fileVO.getFolderId(), offset, tenantId);
+			List<DuplicateInfoVO> duplicateFiles = ezWebFolderService.getAllDuplicateInfo(updateFileName, fileVO.getFolderId(), offset, tenantId);
 			
 			if (duplicateFiles.size() > 0) {
 				logger.debug("Duplicate file name: {}", updateFileName);
@@ -1030,6 +1035,7 @@ public class EzWebFolderGWController {
 		String privileges   = request.getParameter("privileges") != null ? request.getParameter("privileges") : "";
 		// nullable
 		String nameListStr = request.getParameter("nameList");
+		boolean isOverwritable = request.getParameter("overwritable") != null;
 		JSONObject result   = new JSONObject();
 		
 		logger.debug("FileId list: " + fileList + " || UserId: " + userId + " || Servername: " + serverName + " || FolderId: " + folderId + " || Privileges: " + privileges + " || mode: " + mode);
@@ -1056,11 +1062,11 @@ public class EzWebFolderGWController {
 			
 			if (nameListStr == null) {
 				// 기존 파일 move & copy
-				result = ezWebFolderService.moveFiles(folderId, fileList, mode, privileges, locale, realPath, userInfo);
+				result = ezWebFolderService.moveFiles(folderId, fileList, mode, privileges, locale, realPath, userInfo, isOverwritable);
 			} else {
 				// 이름 바꾸고 move & copy
 				JSONArray nameList = (JSONArray) new JSONParser().parse(nameListStr);
-				result = ezWebFolderService.moveRenameFilesForRest(folderId, fileList, nameList, mode, privileges, realPath, userInfo);
+				result = ezWebFolderService.moveFiles(folderId, fileList, nameList, mode, privileges, realPath, userInfo, isOverwritable);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

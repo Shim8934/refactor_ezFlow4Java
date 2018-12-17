@@ -39,6 +39,7 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
@@ -212,12 +213,13 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			}
 			
 			// 추가되는 이름으로 중복되는 게 있는지 확인
-			List<FolderVO> duplicateFolders = ezWebFolderService.getDuplicateNameFolders(new ArrayList<>(Arrays.asList(newFolderName1)), folderUppId, offset, tenantId);
+			List<DuplicateInfoVO> duplicateInfoList = ezWebFolderService.getAllDuplicateInfo(newFolderName1, folderUppId, offset, tenantId);
 			
-			if (duplicateFolders.size() > 0) {
+			if (duplicateInfoList.size() > 0) {
 				LOGGER.debug("Duplicate folder name: {}", newFolderName1);
 				
 				jsonObj.put("status", "error");
+				jsonObj.put("duplicateInfoArray", duplicateInfoList);
 				jsonObj.put("code", 8);
 				
 				break process;
@@ -282,12 +284,13 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			
 			// 새 이름으로 중복되는 게 있는지 확인
 			FolderVO targetFolderVO = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
-			List<FolderVO> duplicateFolders = ezWebFolderService.getDuplicateNameFolders(new ArrayList<>(Arrays.asList(newFolderName1)), targetFolderVO.getFolderUpper(), offset, tenantId);
+			List<DuplicateInfoVO> duplicateInfoList = ezWebFolderService.getAllDuplicateInfo(newFolderName1, targetFolderVO.getFolderUpper(), offset, tenantId);
 			
-			if (duplicateFolders.size() > 0) {
+			if (duplicateInfoList.size() > 0) {
 				LOGGER.debug("Duplicate folder name: {}", newFolderName1);
 				
 				jsonObj.put("status", "error");
+				jsonObj.put("duplicateInfoArray", duplicateInfoList);
 				jsonObj.put("code", 8);
 				
 				break process;

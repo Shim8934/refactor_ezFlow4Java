@@ -19,13 +19,23 @@
 			return regex.test(str);
 		}
 		
-		<c:choose>
-		<c:when test="${isUploading}">
 		function wClose() {
 			parent.closeAllPopup();
+			skipRename();
 			window.close();
 		}
 		
+		function skipRename() {
+			if (parent.duplicateFile) {
+				parent.duplicateFile.onClosePopup({
+					code: "SKIP",
+					looping: false
+				});
+			}
+		}
+		
+		<c:choose>
+		<c:when test="${isUploading}">
 		function ok_Click() {
 			var newName = document.getElementById("nameInput").value;
 			
@@ -74,11 +84,6 @@
             	$('#fileNamediv').text('<spring:message code='ezWebFolder.t514'/>');
             	$('#nameInput').attr("placeholder","<spring:message code='ezWebFolder.t314'/>");
             } 		
-		}
-		
-		function wClose() {
-			parent.closeAllPopup();
-			window.close();
 		}
 		
 		function afterDeleteSuccess() {

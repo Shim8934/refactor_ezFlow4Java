@@ -39,7 +39,14 @@ var messages = {
 	strLang38 : "파일이나 폴더를 선택하세요.",
 	strLang39 : "하나의 파일 또는 폴더를 선택하세요.",
 	strLang40 : "폴더 생성자가 아니면 폴더를 삭제 할 수 없습니다.",
-	completeDuplicatedJob : "작업을 완료했습니다.",
-	resultErrDuplicatedRename : "중복되는 이름으로 변경할 수 없습니다.",
-	resultErrDuplicateCreate : "중복되는 이름으로 생성할 수 없습니다."
+	completeDuplicateJob : "작업을 완료했습니다.",
+	parameterError: "파라메터가 부족합니다.",
+	serverError: "에러가 발생했습니다.",
+	permissionError: "접근 권한이 없습니다.",
+	resultErrDuplicateRename : "중복되는 이름으로 변경할 수 없습니다.",
+	resultErrDuplicateCreate : "중복되는 이름으로 생성할 수 없습니다.",
+	successMoveFile: "파일 이동을 성공하셨습니다.",
+	successCopyFile: "파일 복사를 성공하셨습니다.",
+	outOfStorageSpaceForOneTime: "1회 업로드 용량을 초과하였습니다.",
+	outOfStorageSpace: "용량을 초과하였습니다."
 }

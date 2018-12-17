@@ -1218,17 +1218,10 @@ public class EzWebFolderGWController_m {
 				}
 			}
 			
-			int failType = ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId,
+			Map<String, Object> resultMap = ezWebFolderService_m.restoreTrashCan(fileIDList, folderIDList, tenantId,
 					userId, offset, companyId, timeUTC, userInfo.getDisplayName1(), userInfo.getDisplayName2());
 			
-			if (failType == 0) {
-				result.put("code", 0);
-			 } else if (failType == 2) {
-				 result.put("code", 2);
-			 } else if (failType == 4) {
-				 result.put("code", 4);
-			 }
-			
+			result.putAll(resultMap);
 			result.put("status", "ok");
 		} catch (Exception e) {
 			e.printStackTrace();

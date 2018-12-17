@@ -40,7 +40,7 @@ function fileupload() {
 	
 	// 업로드 가능한 파일들
 	var uploadableFiles = [];
-	// 중복된 파일들
+	// 중복된 파일 정보 리스트
 	var duplicateInfoArray = [];
 	// FileList to Array
 	var tempFileArray = Array.prototype.slice.call(file);
@@ -61,10 +61,10 @@ function fileupload() {
 			
 			switch(code) {
 				case 0: 
-					// FileVO 배열
-					var resultFileArray = data.duplicateFiles;
-					// FileVO 배열을 파일이름 배열로 변환
-					var duplicateNameArray = resultFileArray.map(function(fileValueObj) {return fileValueObj.fileName});
+					// DuplicateInfoVO 배열
+					duplicateInfoArray = data.duplicateInfoArray;
+					// DuplicateInfoVO 배열을 파일이름 배열로 변환
+					var duplicateNameArray = duplicateInfoArray.map(function(duplicateInfo) {return duplicateInfo.fileName});
 
 					// 중복되지 않는 파일은 uploadableFiles, 중복되는 파일은 duplicateInfoArray
 					// old 데이터는 FileVO 정보로 하고 new 데이터는 업로드 파일의 메타데이터로 세팅함
@@ -75,21 +75,12 @@ function fileupload() {
 						if (index == -1) {
 							uploadableFiles.push(fileObj);
 						} else {
-							var fileVO = resultFileArray[index];
-
-							duplicateInfoArray.push({
-								// fileObject 는 업로드에서만 있는데,
-								// overwrire, rename 작업을 할 때 서버로 업로드 하기 위함
-								fileObject: fileObj,
-								fileName: fileObj.name,
-								fileId: fileVO.fileId,
-								newDate: fileObj.lastModified,
-								newSize: fileObj.size,
-								// yyyy-MM-dd HH:mm:ss
-								oldDate: fileVO.createDate.substring(0, 19),
-								oldSize: fileVO.fileSize,
-								oldOwnerId: fileVO.createId
-							});
+							var duplicateInfo = duplicateInfoArray[index];
+							
+							duplicateInfo.fileObject = fileObj;
+							// not supported safari
+							duplicateInfo.newDate = fileObj.lastModified;
+							duplicateInfo.newSize = fileObj.size;
 						}
 					});
 					

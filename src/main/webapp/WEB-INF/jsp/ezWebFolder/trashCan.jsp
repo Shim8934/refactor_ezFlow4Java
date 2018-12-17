@@ -432,8 +432,15 @@
 					   alert("<spring:message code = 'ezWebFolder.t292'/>");
 					} else if (data.code == 3) {
 						alert("<spring:message code = 'ezWebFolder.t28'/>");
-					} else if (data.code == 4) {
-						alert("<spring:message code = 'ezWebFolder.t290'/>");
+					} else {
+						if (data.code == 4) {
+							alert("<spring:message code = 'ezWebFolder.t290'/>");
+						}
+						
+						// 중복된 정보가 존재한다면 알림
+						if (data.duplicateInfoArray) {
+							alert("<spring:message code = 'webfolder.duplicate.restore.error'/>");
+						}
 					}
 				},
 				error : function(error) {

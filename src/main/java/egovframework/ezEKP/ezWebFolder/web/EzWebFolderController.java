@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +53,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -195,51 +197,61 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezWebFolder/fileDuplicateConfirm.do")
 	public String fileDuplicateConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("fileDuplicateConfirm start");
-		
-		boolean isFolder = request.getParameter("isFolder") != null;
-		
-		logger.debug("Is folder: " + isFolder);
-		
-		model.addAttribute("isFolder", isFolder);
-		
-		if (isFolder) {
-			model.addAttribute("folderName", request.getParameter("folderName"));
-		} else {
-			SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String newDateStr = request.getParameter("newDate");
-			String newSizeStr = request.getParameter("newSize");
-			String oldSizeStr = request.getParameter("oldSize");
+
+		String fileName = request.getParameter("fileName");
+
+		String newDate = request.getParameter("newDate");
+		String newSize = request.getParameter("newSize");
+		String oldDate = request.getParameter("oldDate");
+		String oldSize = request.getParameter("oldSize");
+		String oldOwnerId = request.getParameter("oldOwnerId");
+
+		Type newType = Type.valueOf(request.getParameter("newType"));
+		Type oldType = Type.valueOf(request.getParameter("oldType"));
+
+		// newDate 같은 경우는 업로드일 때를 대비해서 long 형태를 시간으로 변경
+		if (newDate == null || newDate.length() < 19) {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 			try {
-				newDateStr = dateFormatter.format(new Date(Long.parseLong(newDateStr)));
-			} catch (Exception ex) {
-				newDateStr = dateFormatter.format(new Date());
-			}
-
-			try {
-				newSizeStr = humanReadableByteCount(Long.parseLong(newSizeStr));
+				newDate = formatter.format(new Date(Long.parseLong(newDate)));
 			} catch (Exception ex) {
 				// ignore
 			}
-
-			try {
-				oldSizeStr = humanReadableByteCount(Long.parseLong(oldSizeStr));
-			} catch (Exception ex) {
-				// ignore
-			}
-
-			model.addAttribute("fileName", request.getParameter("fileName"));
-			model.addAttribute("newDate", newDateStr);
-			model.addAttribute("newSize", newSizeStr);
-			model.addAttribute("oldDate", request.getParameter("oldDate"));
-			model.addAttribute("oldSize", oldSizeStr);
-
-			LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-			String oldOwnerId = request.getParameter("oldOwnerId");
-			boolean isOwner = oldOwnerId.equals(userInfo.getId());
-
-			model.addAttribute("isOwner", isOwner);
+		} else if (newDate.length() == 21) {
+			newDate = newDate.substring(0, 19);
 		}
+
+		// mysql 끝자리 .0 지우기
+		oldDate = Optional.ofNullable(oldDate)
+				.filter(str -> str.length() == 21)
+				.map(str -> str = str.substring(0, 19))
+				.orElse("");
+
+		try {
+			newSize = humanReadableByteCount(Long.parseLong(newSize));
+		} catch (Exception ex) {
+			// ignore
+		}
+
+		try {
+			oldSize = humanReadableByteCount(Long.parseLong(oldSize));
+		} catch (Exception ex) {
+			// ignore
+		}
+
+		model.addAttribute("fileName", fileName);
+		model.addAttribute("newDate", newDate);
+		model.addAttribute("newSize", newSize);
+		model.addAttribute("oldDate", oldDate);
+		model.addAttribute("oldSize", oldSize);
+		model.addAttribute("isAllFiles", newType == Type.FILE && oldType == Type.FILE);
+		model.addAttribute("isFolder", newType == Type.DIRECTORY);
+
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		boolean isOwner = oldOwnerId.equals(userInfo.getId());
+
+		model.addAttribute("isOwner", isOwner);
 
 		logger.debug("fileDuplicateConfirm end");
 		return "ezWebFolder/fileDuplicateConfirm";
@@ -653,6 +665,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String folderId     = request.getParameter("folderId");
 		String mode         = request.getParameter("mode");
 		String privileges   = request.getParameter("privileges");
+		String overwritable = request.getParameter("overwritable");
 		
 		logger.debug("FileId list: " + fileList + " || Folder Id: " + folderId + " || mode: " + mode + " || privileges: " + privileges + " || nameList: " + nameList);
 		
@@ -664,6 +677,10 @@ public class EzWebFolderController extends EgovFileMngUtil {
 										.queryParam("userId", user.getId())
 										.queryParam("privileges", privileges)
 										.queryParam("folderId", folderId);
+		
+		if (overwritable != null) {
+			builder.queryParam("overwritable", overwritable);
+		}
 		
 		if (nameList != null) {
 			builder.queryParam("nameList", nameList);

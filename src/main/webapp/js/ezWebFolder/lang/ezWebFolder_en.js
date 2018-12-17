@@ -33,6 +33,13 @@ var messages = {
 	strLang32 : "Are you sure you want to cancel sharing?",
 	strLang33 : "You canceled sharing.",
 	completeDuplicateJob : "Processing completed.",
+	parameterError: "Insufficient parameters.",
+	serverError: "An error has occurred.",
+	permissionError: "You do not have permission.",
 	resultErrDuplicateRename : "You can not change the duplicate names.",
-	resultErrDuplicateCreate : "You can not create duplicate names."
+	resultErrDuplicateCreate : "You can not create duplicate names.",
+	successMoveFile: "You have successfully moved the file.",
+	successCopyFile: "You have successfully copied the files.",
+	outOfStorageSpaceForOneTime: "It has exceeded the one-time upload capacity.",
+	outOfStorageSpace: "The capacity has been exceeded."
 }
