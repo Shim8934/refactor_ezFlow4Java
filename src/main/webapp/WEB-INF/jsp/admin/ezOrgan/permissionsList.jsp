@@ -108,6 +108,8 @@
 		                listview.SetHeightFree(true);
 		                listview.DataSource(headerData);
 		                listview.DataBind("AdminListView");
+		                checkbox_header();
+		                checkItems();
 		                makePageSelPage();
 		        	},
 		        	error : function(error){
@@ -115,6 +117,47 @@
 		        	}
 		        });		        
 		    }
+			
+			var cnt;
+			function checkbox_header() {
+				var doc = window.document;
+				var th = doc.getElementById("lvPermissionList_TH_0");
+				var acList = doc.getElementById("lvPermissionList");
+				console.log(acList);
+				th.innerHTML = "<input type= 'checkbox' id = 'checkAll' onchange= 'checkboxHeaderClick()'></input>";
+				
+				cnt = acList.children[1].childElementCount;
+				
+				var i = 0;
+				for (i; i < cnt; i++) {
+					var seq = acList.children[1].children[i].children[0].innerHTML;
+					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq + "'></input>";
+				} 
+			}
+			
+			var checkFlag = false;
+			function checkboxHeaderClick() {
+				if (checkFlag) {
+					checkFlag = false;
+					$(".checks").prop("checked", false);
+					$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+				} else {
+					checkFlag = true;
+					$(".checks").prop("checked", true);
+					$("#contentlist tr td").css("background-color", "rgb(241, 248, 255)");
+				}
+				checkItems();
+			}
+			
+			var rowList = new Array();
+			function checkItems() {
+				rowList = [];
+				$("input:checkbox[name='checks']").each(function(){
+					if($(this).is("checked")){
+						rowList.push(this.value);
+					}
+				});
+			}
 			
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
@@ -457,6 +500,9 @@
 	    <xml id="listviewheader" style="display:none">
 			<LISTVIEWDATA>
 		    	<HEADERS>
+		    	    <HEADER>
+						<WIDTH>20</WIDTH>
+					</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t218' /></NAME>
 		        		<WIDTH>15%</WIDTH>
