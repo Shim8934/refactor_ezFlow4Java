@@ -731,12 +731,10 @@ function ListView() {
                     	ImgElement.style.filter = "brightness(75%)";
                     	
 	                    var ImgElementPlay = document.createElement("IMG");
-	                    ImgElementPlay.src = "/images/ezLadder/btn_play.png";
-	                    ImgElementPlay.style.height = "30px";
-	                    ImgElementPlay.style.width = "30px";
+	                    ImgElementPlay.src = "/images/playButton_small.png";
 	                    ImgElementPlay.style.position = "absolute";
-	                    ImgElementPlay.style.left = "21px";
-	                    ImgElementPlay.style.top = "11px";
+	                    ImgElementPlay.style.left = "24px";
+	                    ImgElementPlay.style.top = "13px";
 	                    
 	                    var imgCell = document.createElement("TD");
 	                    imgCell.style.borderBottom = "0px";

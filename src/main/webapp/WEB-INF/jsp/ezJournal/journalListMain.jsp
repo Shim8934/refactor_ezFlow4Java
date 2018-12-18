@@ -239,7 +239,9 @@
 		                    document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
 							document.getElementById("Preview_ContentH").style.height = (CurrentHeight - $(".previewmail").eq(0).height()) + "px";
 		                    document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
-		                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+		                    if(document.getElementById("PreH_subject")!=null){
+			                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+		                    }
 		                    
 		                    /* 좌우 리사이징 시 round로 인해 비율의 합이 100%가 되지 않아
 		                       오른쪽 끝에 여백이 발생하여 제거함
@@ -605,8 +607,8 @@
 	   			var vc = $(parentElem).find(".viewCount");
 	   			$(parentElem).find("input[type='checkbox']").prop("checked","true");
 	   			var journalId=$(parentElem).attr("id");
-	   			if (pPreviewShow_HOW == 'W' || pPreviewShow_HOW == 'H') {
-		   			if($(parentElem).hasClass("noView")){
+// 	   			if (pPreviewShow_HOW == 'W' || pPreviewShow_HOW == 'H') {
+		   			if($(parentElem).hasClass("noView") && (pPreviewShow_HOW == 'W' || pPreviewShow_HOW == 'H')){
 		   				if($(parentElem).attr("mine") == 'N'){
 		   	   				$(vc).text(parseInt($(vc).text())+1);
 		   				}
@@ -621,7 +623,7 @@
 		   				success : function(journal){
 							$("#Preview_ContentW").html(journal);
 							$("#Preview_ContentH").html(journal);
-							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId=" + journalId);
+							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId=" + journalId+"&journalType=p&pPreviewShow_HOW="+pPreviewShow_HOW);
 							if(listType == 'recv'){
 								parent.left.setRecvCount();
 // 								setJournalList();
@@ -633,13 +635,15 @@
 // 							$("#Preview_ContentH").css("height", textContentSize);
 // 							textContentSize = $("#PreviewRayerW").height()-$(".previewmail_info").height()-50;
 // 							$("#Preview_ContentW").css("height", textContentSize);
-							document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+							if(document.getElementById("PreH_subject")!=null){
+			                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+		                    }
 // 		   					ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 // 		   					ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 							Window_resize();
 		   				}
 		   			});
-				}
+// 				}
 			}
 			
 			//체크박스 전체선택 혹은 해제
@@ -741,8 +745,8 @@
 						document.getElementById("journalListBody").style.height = (CurrentHeight - 100) + "px";
 						g_bPrevShow = false;
 						onPreview=false;
-						$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
-						$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 						$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 						$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
 					} else if (pGubun == "W") {
 						document.getElementById("MailListRayer").style.display = "inline-block";
 						document.getElementById("PreviewRayerW").style.display = "block";
@@ -771,10 +775,10 @@
 // 						document.getElementById("Preview_HeaderH").style.display = "none";
 						g_bPrevShow = true;
 						
-						if(onPreview == false){
-							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
-							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
-						}
+// 						if(onPreview == false){
+// 							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 						}
 						onPreview = true;
 					} else if (pGubun == "H") {
 						if (parent.document.getElementById("tab1")) {
@@ -819,10 +823,10 @@
 
 						g_bPrevShow = true;
 						
-						if(onPreview == false){
-							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
-							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
-						}
+// 						if(onPreview == false){
+// 							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 						}
 						onPreview = true;
 					}
 					
@@ -990,6 +994,8 @@
 						success : function() {
 							alert("<spring:message code='ezJournal.t138'/>");
 							setJournalList();
+							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
 						},
 						error : function() {
 							alert("<spring:message code='ezJournal.t149'/>");
@@ -1020,6 +1026,9 @@
 		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
 		    	});
+		    	$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+				$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+
 // 				if(pPreviewShow_HOW=='H'){
 // 					PreviewH_Move = true;
 // 				} else if(pPreviewShow_HOW=='W'){
@@ -1063,7 +1072,7 @@
        		</c:if>
        	</select>
 		<input id="searchValue" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
-		<a href="#" style="float: right"><img src="../../images/bsearch_new.gif" border="0" onclick="quickSearch()"></a>
+		<a style="float: right"><img src="../../images/bsearch_new.gif" border="0" onclick="quickSearch()"></a>
 	</span>
 	</h1>
 	<div id="mainmenu">
@@ -1315,7 +1324,9 @@
 	            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
 // 	            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
 	            document.getElementById("Preview_ContentH").style.height = (CurrentHeight - 65) + "px";
-	            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+	            if(document.getElementById("PreH_subject")!=null){
+                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+                }
 	            pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
 	            pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
 
@@ -1456,7 +1467,7 @@
 								+ feature);
 			Openwin.focus();
 		} else {
-			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "",
+			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId + "&pPreviewShow_HOW=D", "",
 					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 					+ feature);
 			Openwin.focus();

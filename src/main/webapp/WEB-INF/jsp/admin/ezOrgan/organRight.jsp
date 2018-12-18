@@ -7,19 +7,20 @@
 		<title><spring:message code="ezBoard.t84" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />
-	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
-	    <style>
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+		<style>
 	    	.mainlist_free tr th {
 	    		border-top: 0px;
 	    	}
-	    </style>		
-	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" language="javascript">		
+		</style>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/css/admin.css')}">
+		<script type="text/javascript">
 			var topid = "<c:out value='${topid}'/>";
 		    var useOCS = "<c:out value='${useOCS}'/>";
 		    var g_xmlHTTP = null;
@@ -197,8 +198,6 @@
 					}
 				});	
 			}			
-			
-			var companyinfo_dialogArguments = new Array();
 			
 			function add_company(){
 		        var treeView = new TreeView();
@@ -1034,67 +1033,6 @@
 		    
 		    var inputpassword_dialogArguments = new Array();
 		    
-			function mod_password() {
-		        var listview = new ListView();
-		        listview.LoadFromID("lvUserList");
-
-		        if (listview.GetSelectedRows().length == 0) {
-					alert("<spring:message code='ezOrgan.t39' />");
-					return;
-				} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
-                    alert(strLang13);
-                    return;
-				} else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
-		    		alert("<spring:message code='ezOrgan.psb02' />");
-					return;
-			    }
-		        changePassLength = listview.GetSelectedRows().length;
-		        
-		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
-		        inputpassword_dialogArguments[1] = mod_password_Complete;
-		        
-		      //크롬일때 alert창 크기때문에 크롬일때 구별
-	            var agent = navigator.userAgent.toLowerCase();
-	            if (agent.indexOf("chrome") != -1) {
-	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));	
-	            } else {
-	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));	
-	            }
-	            
-		        try { OpenWin.focus(); } catch (e) { }
-			}
-			
-		    function mod_password_Complete(rtnValue) {
-		        if (typeof (rtnValue) != "undefined") {
-		            var listview = new ListView();
-		            listview.LoadFromID("lvUserList");
-
-		            var length = listview.GetSelectedRows().length;
-         			var data = "";
-		            for (var i = 0; i < length; i++) {
-		            	data += listview.GetSelectedRows()[i].getAttribute("DATA2");
-		            	
-		            	if(i != length-1){
-		            		data = data + ",";
-		            	}		                
-		            }
-		            
-		            $.ajax({
-		            	type : "POST",
-		            	dataType : "xml",
-		            	url : "/admin/ezOrgan/changePassword.do",
-		            	async : false,
-		            	data : {password : rtnValue, cn : data},
-		            	success : function(result){
-		            		alert(length + "<spring:message code='ezOrgan.t42' />");
-		            	},
-		            	error : function(){
-		            		alert("<spring:message code='ezOrgan.t41' />");		            		
-		            	}
-		            });
-	            }		        
-		    }		    
-		    
 		    function Retire_user(){
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
@@ -1161,139 +1099,7 @@
 		    
 		    var selectdept_cross_dialogArguments = new Array();
 		    
-			function mov_user(){
-			 	var treeView = new TreeView();
-		        treeView.LoadFromID("FromTreeView");
-		        
-		        var nodeIdx = treeView.GetSelectNode();
-		        var treeNode = new TreeNode();
-		        treeNode.LoadFromID(nodeIdx.NodeID);
-			        
-		        var listview = new ListView();
-		        listview.LoadFromID("lvUserList");
 
-		        if (listview.GetSelectedRows().length == 0){
-					alert("<spring:message code='ezOrgan.t12' />");
-					return;
-				} else {
-				    if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
-				    	alert(strLang13);
-	                    return;
-				    } else {
-				    	if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
-				    		alert("<spring:message code='ezOrgan.psb02' />");
-							return;
-				    	}
-				    }
-				}
-		        
-		        //2016-04-18 장진혁 과장 -- Cross 버전 사용으로 인한 주석 처리
-			    //if (CrossYN()) {
-		    	document.getElementById("selectedCN").value = treeNode.GetNodeData("CN");
-		    	
-		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t13' />";
-		        selectdept_cross_dialogArguments[1] = move_user_CompleteWithTimeout;
-		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
-		        try { OpenWin.focus(); } catch (e) { }
-			    <%-- }else {
-			        var rtnValue = '';
-			        rtnValue = window.showModalDialog("SelectDept_Cross.aspx", "<%=RM.GetString("t13")%>", "dialogHeight:390px; dialogWidth:302px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(302, 390));
-
-			        if (typeof (rtnValue) != "undefined") {
-			            var length = listview.GetSelectedRows().length;
-			            if (!confirm(length + "<%=RM.GetString("t14")%>"))
-			                return;
-
-			            var xmlDom = createXmlDom();
-			            var xmlHTTP = createXMLHttpRequest();
-
-			            var objNode = "";
-			            createNodeInsert(xmlDom, objNode, "DATA");
-			            createNodeAndInsertText(xmlDom, objNode, "PARENTCN", rtnValue);
-			            for (var i = 0; i < length; i++) {
-			                createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[i].getAttribute("DATA2"));
-			            }
-
-			            xmlHTTP.open("POST", "MovUser.aspx", false);
-			            xmlHTTP.send(xmlDom);
-
-			            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-			                alert("<%=RM.GetString("t15")%>");
-			            else
-			                alert(length + "<%=RM.GetString("t16")%>");
-
-			            var treeView = new TreeView();
-			            treeView.LoadFromID("FromTreeView");
-			            var nodeIdx = treeView.GetSelectNode();
-			            var treeNode = new TreeNode();
-			            treeNode.LoadFromID(nodeIdx.NodeID);
-			            displayUserList(treeNode.GetNodeData("CN"));
-			        }
-			    } --%>
-			}
-			
-            function move_user_CompleteWithTimeout(rtnValue) {
-                setTimeout(function() {
-                    mov_user_Complete(rtnValue);
-                }, 10);
-            }
-            
-		    function mov_user_Complete(rtnValue) {
-		        if (typeof (rtnValue) != "undefined") {
-		        	var listview = new ListView();
-			        listview.LoadFromID("lvUserList");
-			        
-		            var selectedCN = document.getElementById("selectedCN").value;
-		            if (rtnValue.toLowerCase() == selectedCN.toLowerCase()) {
-		                alert("<spring:message code='ezOrgan.t21' />");
-		                return;
-		            }
-		            
-		            var length = listview.GetSelectedRows().length;
-		            if (!confirm(length + "<spring:message code='ezOrgan.t14' />")){
-		                return;
-		            }
-		            
-		            var data = "";
-		            for (var i = 0; i < length; i++) {
-		            	data += listview.GetSelectedRows()[i].getAttribute("DATA2");
-		            	
-		            	if(i != length-1){
-		            		data = data + ",";
-		            	}		                
-		            }
-
-		            $.ajax({
-		            	type : "POST",
-		            	dataType : "html",
-		            	url : "/admin/ezOrgan/movUser.do",
-		            	async : false,
-		            	data : {parentCn : rtnValue, cn : data},
-		            	success : function(result) {
-		            		if (result == "EMAIL_ERROR") {
-		            			alert("<spring:message code='ezOrgan.t15' />");
-		            		} else if (result == "SAME") {
-		            			alert("<spring:message code='ezOrgan.t15' />");
-		            		} else if (result == "DIFF_COMPANY") {
-		            			alert("<spring:message code='ezOrgan.lhm4' />");
-		            		} else {
-		            			alert(length + "<spring:message code='ezOrgan.t16' />");
-		            		}
-		            	},
-		            	error : function() {
-		            		alert("<spring:message code='ezOrgan.t15' />");
-		            	}
-		            });
-
-		            var treeView = new TreeView();
-		            treeView.LoadFromID("FromTreeView");
-		            var nodeIdx = treeView.GetSelectNode();
-		            var treeNode = new TreeNode();
-		            treeNode.LoadFromID(nodeIdx.NodeID);
-		            displayUserList(treeNode.GetNodeData("CN"));
-		        }
-		    }
-		    
 		    function del_user(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -1534,10 +1340,11 @@
 				for (i; i < cnt; i++) {
 					var tempLV = doc.getElementById('lvUserList_TR_' + i);
 					var userID = tempLV.getAttribute('DATA2');
+					var gyumInfo = tempLV.getAttribute('DATA3');
 					// 3 암호관리 4 사원이동 5 퇴직
-					tempLV.children[3].innerHTML = "<span><img id='" + userID +"'class='pwd' onclick='mod_pwd(event)' src='/images/admin/inuse.png'></span>";
-					tempLV.children[4].innerHTML = "<span><img class='move'  src='/images/admin/inuse.png'></span>";
-					tempLV.children[5].innerHTML = "<span><img class='retire' src='/images/admin/inuse.png'></span>";
+					tempLV.children[3].innerHTML = "<span><img id='pwd" + userID +"' class='pwd' onclick='mod_pwd(event)' src='/images/admin/inuse.png'></span>";
+					tempLV.children[4].innerHTML = "<span><img id='move" + userID +"' class='move' onclick='move_user(event)' src='/images/admin/inuse_end.png'></span>";
+					tempLV.children[5].innerHTML = "<span><img id='retire" + userID +"' data1='" + gyumInfo + "' class='retire' onclick='retire_user(event)' src='/images/admin/inuse.png'></span>";
 				}
 			}
 
@@ -1547,6 +1354,8 @@
 				event.stopPropagation();
 				changePassLength = 1;
 				userID = event.target.id;
+				var indexCN = userID.indexOf("pwd") + 3;
+				userID = userID.substring(indexCN);
 				inputpassword_dialogArguments[1] = mod_pwd_complete;
 
 				//크롬일때 alert창 크기때문에 크롬일때 구별
@@ -1578,6 +1387,134 @@
 					});
 				}
 				userID = "";
+			}
+
+			// 사원이동 호출
+			function move_user(event){
+				event.stopPropagation();
+				
+				userID = event.target.id;
+				var indexCN = userID.indexOf("move") + 4;
+				userID = userID.substring(indexCN);
+				
+				// 조직도 load
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+
+				var nodeIdx = treeView.GetSelectNode();
+				var treeNode = new TreeNode();
+				treeNode.LoadFromID(nodeIdx.NodeID);
+				document.getElementById("selectedCN").value = treeNode.GetNodeData("CN");
+
+				selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t13' />";
+				selectdept_cross_dialogArguments[1] = move_user_CompleteWithTimeout;
+				var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
+				try { OpenWin.focus(); } catch (e) { }
+			}
+
+			// tree load 시간
+			function move_user_CompleteWithTimeout(rtnValue) {
+				setTimeout(function() {
+					move_user_Complete(rtnValue);
+				}, 10);
+			}
+
+			// 사원이동 수행
+			function move_user_Complete(rtnValue) {
+				if (typeof (rtnValue) != "undefined") {
+
+					// 동일 부서 체크
+					var selectedCN = document.getElementById("selectedCN").value;
+					if (rtnValue.toLowerCase() == selectedCN.toLowerCase()) {
+						alert("<spring:message code='ezOrgan.t21' />");
+						return;
+					}
+
+					// 사원이동 confirm
+					if (!confirm("사원을 이동하시겠습니까?")){
+						return;
+					}
+
+					var data = userID;
+
+					$.ajax({
+						type : "POST",
+						dataType : "html",
+						url : "/admin/ezOrgan/movUser.do",
+						async : false,
+						data : {parentCn : rtnValue, cn : data},
+						success : function(result) {
+							if (result == "EMAIL_ERROR") {
+								alert("<spring:message code='ezOrgan.t15' />");
+							} else if (result == "SAME") {
+								alert("<spring:message code='ezOrgan.t15' />");
+							} else if (result == "DIFF_COMPANY") {
+								alert("<spring:message code='ezOrgan.lhm4' />");
+							} else {
+								alert("사원을 이동하였습니다.");
+							}
+						},
+						error : function() {
+							alert("<spring:message code='ezOrgan.t15' />");
+						}
+					});
+
+					// 이동 후 tree 재 호출
+					var treeView = new TreeView();
+					treeView.LoadFromID("FromTreeView");
+					var nodeIdx = treeView.GetSelectNode();
+					var treeNode = new TreeNode();
+					treeNode.LoadFromID(nodeIdx.NodeID);
+					displayUserList(treeNode.GetNodeData("CN"));
+				}
+			}
+
+			// 사원 퇴직
+			var retire_user = function(event) {
+				event.stopPropagation();
+				
+				userID = event.target.id;
+				var indexCN = userID.indexOf("retire") + 6;
+				userID = userID.substring(indexCN);
+
+				// 겸직유무 체크
+				var gyumInfo = event.target.getAttribute('data1')
+				if (gyumInfo === 'addJob'){
+					alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+				}
+
+				var data = userID;
+				if (!confirm("사원을 퇴직 처리하겠습니까?")){
+					return;
+				}
+
+				$.ajax({
+					type : "POST",
+					dataType : "html",
+					url : "/admin/ezOrgan/retireUser.do",
+					async : false,
+					data : {cn : data},
+					success : function(result) {
+						if (result == "OK") {
+							alert(strLang3);
+						} else {
+							alert(strLang4);
+						}
+					},
+					error : function(){
+						alert(strLang4);
+					}
+				});
+
+				if (treeNode.selectedIndex != -1){
+					var treeView = new TreeView();
+					treeView.LoadFromID("FromTreeView");
+					var nodeIdx = treeView.GetSelectNode();
+					var treeNode = new TreeNode();
+					treeNode.LoadFromID(nodeIdx.NodeID);
+					displayUserList(treeNode.GetNodeData("CN"));
+				}
 			}
 		</script>
 	</head>
@@ -1761,12 +1698,12 @@
 		            <div style="border: 1px solid #ddd; height: 510px; width: 375px; margin:10px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
 		        </th>
 		        <th style="padding: 3px; text-align: left;vertical-align:top">
-		            <div class="listview" style="margin:10px;margin-bottom:2px">
+		            <div class="listview organ">
 		            	<c:if test="${dotNetIntegration != 'YES'}">
-		                <div id="OrganListView" style="border: 0px solid #ddd; Width: 375px; Height: 510px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; "></div>
+		                <div id="OrganListView" class="OrganListView"></div>
 		                </c:if>
 		                <c:if test="${dotNetIntegration == 'YES'}">
-		                <div id="OrganListView" style="border: 0px solid #ddd; Width: 375px; Height: 540px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; "></div>
+		                <div id="OrganListView" class="OrganListView"></div>
 		                </c:if>
 		            </div>
 		            <div style="height: 5px; overflow: hidden">&nbsp;</div>

@@ -1197,8 +1197,8 @@
 	                                </td>    
 	                                <td>
 	                                	<div style="float: right; margin-right: 5px; position: relative;">
-                                            <a href="#" class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10"><spring:message code='ezEmail.t596'/></span></a>
-                                            <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597'/></span></a>
+                                            <a class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10"><spring:message code='ezEmail.t596'/></span></a>
+                                            <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597'/></span></a>
                                         </div>
                                     </td>
 	                            </tr>

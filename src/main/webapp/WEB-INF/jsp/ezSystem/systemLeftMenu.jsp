@@ -60,6 +60,9 @@
 	    		//parent.frames[1].location.href = "/admin/ezSystem/sysMonitor.do";
 	    		parent.frames[1].location.href = "/admin/ezSystem/sysREST.do";
 	    		break;	    		
+	    	case "MODMONITOR":
+	    		parent.frames[1].location.href = "/admin/ezSystem/systemModuleMonitor.do";
+	    		break;
 	    }
     }
 
@@ -93,7 +96,6 @@
 
     </script>
     </head>
-
     <body class="newLeft"> 
 	    <div id="left" class="lnb" style="overflow: auto">
 		    <div class="admin_left_title" title="<spring:message code='main.t10011' />"><spring:message code='main.t10011' /></div>
@@ -107,6 +109,9 @@
 	            </c:if>
 	            <c:if test="${cChk == '1' }">
 	            <h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span></h2>
+	            </c:if>
+	            <c:if test="${useModuleUsage == 'YES'}">
+	            <h2><span id="MODMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('MODMONITOR')" ><spring:message code='ezSystem.kbh1' /></span></h2>
 	            </c:if>
             </div>
       	</div>

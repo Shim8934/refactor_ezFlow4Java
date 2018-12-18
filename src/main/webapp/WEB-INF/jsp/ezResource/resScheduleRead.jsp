@@ -61,7 +61,7 @@
 	        var cmd = "${cmdStr}";
 	        
 	        window.onload = function () {
-	            document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal +"','" + deptID + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
+	            document.getElementById("displayNM").innerHTML = "<a onClick=MemberInfo_onClick('" + writerIDVal +"','" + deptID + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
 
 	            if (brdName != "" && resID != "") {
 	                ItemArray[0] = Array(resID);

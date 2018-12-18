@@ -56,16 +56,6 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (String) select("ezNewPortal.getPortalLogoInfo", map);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<MenuInfoVO> getUserMenuList(Map<String, Object> map) throws Exception {
-		return (List<MenuInfoVO>) list("ezNewPortal.getUserMenuList", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<MenuInfoVO> getCompanyMenuList(Map<String, Object> map) throws Exception {
-		return (List<MenuInfoVO>) list("ezNewPortal.getCompanyMenuList", map);
-	}	
-	
 	// 현재 사용자 메뉴 순서 존재여부 확인
 	public int getUserMenuOrderCnt(Map<String, Object> map) throws Exception {
 		return (int) select("ezNewPortal.getUserMenuOrderCnt", map);
@@ -150,12 +140,6 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	//게시판 권한 체크
 	public String getBoardAuthCheck(Map<String, Object> map) {
 		return (String) select("ezNewPortal.getBoardAuthCheck", map);
-	}
-	
-	//사용자 포틀릿 순서 가져오기
-	@SuppressWarnings("unchecked")
-	public List<PortletInfoVO> getPortletOrderUser(Map<String, Object> map) {
-		return (List<PortletInfoVO>) list("ezNewPortal.getPortletOrderUser", map);
 	}
 	
 	//포틀릿 정보 가져오기
@@ -402,6 +386,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void deleteMenuAuth(Map<String, Object> map) throws Exception {
 		delete("ezNewPortal.deleteMenuAuth", map);
 	}
+	
+	public void deleteThemePortlet(Map<String, Object> map) throws Exception {
+		delete("ezNewPortal.deleteThemePortlet", map);
+	}
 	/** -------------------- */
 	@SuppressWarnings("unchecked")
 	public List<PortalBoardTreeVO> getBoardTree(Map<String, Object> map) throws Exception {
@@ -475,10 +463,6 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	
 	public void insertMenuAuth (Map<String, Object> map) {
 		insert("ezNewPortal.insertMenuAuth", map);
-	}
-	
-	public void resetCompanyMenuOrder (Map<String, Object> map) {
-		update("ezNewPortal.resetCompanyMenuOrder", map);
 	}
 	
 	public void updateUserThemeAndFrameDefault(Map<String, Object> map) {

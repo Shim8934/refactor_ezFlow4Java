@@ -718,10 +718,10 @@
                                 </div>
                             </td>
                             <td class="pos2">	                                
-                                <a href="#" class="imgbtn imgbck">
+                                <a class="imgbtn imgbck">
                                 	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezCircular.t112' /></span>
                                 </a><br/>	                                
-                                <a href="#" class="imgbtn imgbck">
+                                <a class="imgbtn imgbck">
                                 	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezCircular.t25' /></span>
                                 </a>
                             </td>

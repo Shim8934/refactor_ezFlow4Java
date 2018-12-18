@@ -2112,7 +2112,7 @@
 	                        </table>
 	                        <div style="text-align: center">
 	                        	<div class="btnpositionJsp">
-	                        		<a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a>
+	                        		<a class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a>
 	                        	</div>	
 	                        </div>
 	                    </div>

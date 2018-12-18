@@ -112,7 +112,10 @@
 		                
 		                var a = document.getElementById("lvPermissionList_TR_0");
 		                a.style.backgroundColor = "rgb(255, 255, 255)";
-		                
+		                a.setAttribute("selected", "false");
+		                $("#lvPermissionList_TR_0").mouseout(function(){
+		                	$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
+		                });
 		                checkbox_header();
 		                checkItems();
 		                makePageSelPage();
@@ -619,7 +622,7 @@
 		            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
 		            <li><span class="icon16 icon16_delete" onClick="Permissions_Del('MOD')"></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		            <li onClick="email_onclick()"><span class="icon16 icon16_mail"></span></li>
+		            <li onClick="email_onclick()"><span class="icon16 icon16_mail_gray"></span></li>
 		            <span style="float: right; font-weight: normal; color: black; clear:inherit;margin-left:1px">
 		            	<select id="searchType" style="width:80px;">
 							<option selected="" value="displayname"><spring:message code='ezOrgan.t67' /></option>
@@ -632,7 +635,7 @@
 						</select>
 						
 						<input id="searchValue" onkeypress="if(event.keyCode==13) {searchList(); return false;}" onfocus="clearSearchVal();" style="height: 29px;border: 1px solid #cbcbcb; border-right:0px;">
-						<a href="#" style="float: right"><img src="/images/bsearch_new.gif" border="0" onclick="searchList()" style="height:29px;"></a>
+						<a style="float: right"><img src="/images/bsearch_new.gif" border="0" onclick="searchList()" style="height:29px;"></a>
 		            </span>
 		        </ul>
 		    </div>

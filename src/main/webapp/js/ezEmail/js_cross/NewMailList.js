@@ -460,10 +460,8 @@ function MakeListInfoHTML(ConentObject) {
             				if (useShowSystemCountry == "YES") {
             					
             					var _img = document.createElement("img");
-            					_img.style.width = "18px";
-            					_img.style.height = "18px";
-            					_img.style.verticalAlign = "bottom";
-            					_img.style.padding = "0px 0px 1px 0px";
+            					_img.style.verticalAlign = "middle";
+            					_img.style.padding = "0px 0px 3px 0px";
             					
             					if (p_countryCode == "unknown") {
             						p_countryCode = "qm";
@@ -475,10 +473,8 @@ function MakeListInfoHTML(ConentObject) {
             					// 본인국가 표시 안함 
             					if ( p_countryCode != systemCountryCode.toLowerCase() ) {
             						var _img = document.createElement("img");
-            						_img.style.width = "18px";
-            						_img.style.height = "18px";
-            						_img.style.verticalAlign = "bottom";
-            						_img.style.padding = "0px 0px 1px 0px";
+            						_img.style.verticalAlign = "middle";
+            						_img.style.padding = "0px 0px 3px 0px";
             						
             						if (p_countryCode == "unknown") {
             							p_countryCode = "qm";

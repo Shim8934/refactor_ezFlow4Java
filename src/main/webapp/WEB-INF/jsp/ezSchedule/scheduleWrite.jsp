@@ -580,7 +580,7 @@
 	                            <div id="schedule2" style="display: none">
 	                                <table class="content">
 	                                    <tr id="repeateTR">
-	                                        <th><a href="#" class="imgbtn"><span onclick="config_repeat()"><spring:message code='ezSchedule.t367'/></span></a></th>
+	                                        <th><a class="imgbtn"><span onclick="config_repeat()"><spring:message code='ezSchedule.t367'/></span></a></th>
 	                                        <td class="pos1">
 	                                            <div id="repeatinfo" style="height: 100%; width: 100%; vertical-align: middle; display: table-cell;">&nbsp;</div>
 	                                        </td>
@@ -607,7 +607,7 @@
                                         </tr>
                                         </c:if>
                                         <tr id="receiverTr1">
-                                            <th rowspan="2"><a href="#" id="imgbutton" class="imgbtn"><span id="clickbtn" onclick="manage_attendant()"><spring:message code='ezSchedule.t364'/></span></a></th>
+                                            <th rowspan="2"><a id="imgbutton" class="imgbtn"><span id="clickbtn" onclick="manage_attendant()"><spring:message code='ezSchedule.t364'/></span></a></th>
                                             <td class="pos1">
                                                 <input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" onkeyup="return on_keydown(event)">
 											</td>
@@ -624,14 +624,14 @@
 	                            <div id="schedule3" style="display: none">
 	                                <table class="content">
                                         <tr ID="HolderWriteTr1">
-                                            <th><a href="#" id="resourcebutton" class="imgbtn"><span id="resourcebtn" onclick="manage_resource()"><spring:message code='ezSchedule.t1101'/></span></a></th>
+                                            <th><a id="resourcebutton" class="imgbtn"><span id="resourcebtn" onclick="manage_resource()"><spring:message code='ezSchedule.t1101'/></span></a></th>
                                             <td class="pos1">
                                                 <div id="resourcelist" style="height: 100%; width: 100%; vertical-align: middle; display: table-cell;"></div>
                                             </td>
                                             <td class="pos2"></td>
                                         </tr>
                                         <tr ID="HolderWriteTr2">
-                                            <th><a href="#" class="imgbtn"><span onclick="config_repeat_resource()"><spring:message code='ezSchedule.t1102'/></span></a></th>
+                                            <th><a class="imgbtn"><span onclick="config_repeat_resource()"><spring:message code='ezSchedule.t1102'/></span></a></th>
                                             <td class="pos1">
                                                 <div id="resourcerepeatinfo" style="height: 100%; width: 100%; vertical-align: middle; display: table-cell;">&nbsp;</div>
                                             </td>

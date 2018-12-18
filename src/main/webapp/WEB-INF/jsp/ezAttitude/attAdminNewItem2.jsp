@@ -647,7 +647,7 @@
 	                    <td style="height: 20px">
 	                        <table id="attiwriteForm" class="content" style="margin-top:5px">
 	                        	<tr id="userName" fixed="fix">
-	                        		<th><a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 35px; text-align: center;"><spring:message code='ezAttitude.t219'/></span></a></th>
+	                        		<th><a class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 35px; text-align: center;"><spring:message code='ezAttitude.t219'/></span></a></th>
 	                        		<td id="forName"></td>
 	                        	</tr>
 	                        	<tr id="userId" fixed="fix" style="display:none;">
