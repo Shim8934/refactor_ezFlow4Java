@@ -74,6 +74,7 @@
 		 	
 		 	$(window).resize(function() {
 		 		browserResize();
+		 		setGadgetPositionResize();
 		 	});
 		 	
 		    $(function() {
@@ -175,7 +176,7 @@
 		<div class="noteBlock">
 			
 			<!-- 메모 레이어 -->
-			<div id="layer-popup" class="memo_wrap layerControl" style="display:none;">
+			<div id="layer-popup" class="memo_wrap layerControl" style="display:none; ">
 				<div class="memo_header_wrapper">
 					<input type="hidden" id="layerFlag" value="layer" />
 				 	<div class="memo_header">

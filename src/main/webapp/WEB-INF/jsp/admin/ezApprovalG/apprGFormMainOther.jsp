@@ -106,9 +106,9 @@
 		        MakeListXML(pDocType);
 		        
 		        if (approvalFlag == "G") {
-			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", "aprG");
+			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", "aprG", null, true);
 		        } else {
-			        TreeViewinitialize("", companyID+"/other", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
+			        TreeViewinitialize("", companyID+"/other", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", true);
 		        }
 		        $("#tr_setAutoItemCode").hide();
 		        
@@ -298,11 +298,10 @@
 		            var objNode;
 		            createNodeInsert(xmlpara, objNode, "DATA");
 		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptid);
-
 		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyID}");
-
 		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
-		
+		            createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
+		            
 		            var xmlHTTP = createXMLHttpRequest();
 		            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 		            xmlHTTP.send(xmlpara);

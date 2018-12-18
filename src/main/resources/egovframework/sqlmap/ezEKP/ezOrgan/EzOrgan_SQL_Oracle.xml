@@ -223,6 +223,16 @@
 		              				EXTENSIONATTRIBUTE2 <> CN
 		              		]]>
               			</isEmpty>
+              			
+              			<isEmpty property="displayTrashDept">
+              				<![CDATA[
+		              			AND
+		              				EXTENSIONATTRIBUTE1 NOT LIKE 'trash\_dept\_%' ESCAPE '\'
+		              			AND
+		              				CN NOT LIKE 'trash\_dept\_%' ESCAPE '\'
+		              		]]>
+              			</isEmpty>
+              			
               			AND
               				TENANT_ID = #v_TENANT_ID#	 ) A
         	ORDER BY A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
