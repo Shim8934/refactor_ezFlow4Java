@@ -113,6 +113,7 @@
 	                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
 	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
 	                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+	                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	                xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	                xmlHTTP.send(xmlpara);
 	                xmlTree = loadXMLString(xmlHTTP.responseText);
