@@ -614,6 +614,68 @@
 			AND NEW.TENANT_ID = #tenantId#;
 	</select>
 	
+	<select id="EzWebFolderDAO.getAllDuplicateInfoForFolder" resultClass="duplicateInfoVO">
+		SELECT
+			NEW.FOLDER_NAME1 AS FILENAME,
+			'DIRECTORY' AS NEWTYPE,
+			NEW.FOLDER_ID AS NEWID,
+			DATE_ADD(NEW.UPDATE_DATE, INTERVAL #offset# MINUTE) AS NEWDATE,
+			'-' AS NEWSIZE,
+			'DIRECTORY' AS OLDTYPE,
+			OLD.FOLDER_ID AS OLDID,
+			DATE_ADD(OLD.UPDATE_DATE, INTERVAL #offset# MINUTE) AS OLDDATE,
+			'-' AS OLDSIZE,
+			OLD.CREATE_ID as OLDOWNERID
+		FROM
+			TBL_WEBFOLDER_FOLDER NEW
+		INNER JOIN
+			TBL_WEBFOLDER_FOLDER OLD
+		ON
+		<isNotEmpty property="newName">
+			OLD.FOLDER_NAME1 = #newName#
+		</isNotEmpty>
+		<isEmpty property="newName">
+			NEW.FOLDER_NAME1 = OLD.FOLDER_NAME1
+		</isEmpty>
+			AND OLD.FOLDER_UPPER = #targetFolderId#
+			AND NEW.TENANT_ID = OLD.TENANT_ID
+			AND OLD.USE_STATUS = 'Y'
+		WHERE
+			NEW.FOLDER_ID = #originElementId#
+			AND NEW.TENANT_ID = #tenantId#
+			
+		UNION
+		
+		SELECT
+			NEW.FOLDER_NAME1 AS FILENAME,
+			'DIRECTORY' AS NEWTYPE,
+			NEW.FOLDER_ID AS NEWID,
+			DATE_ADD(NEW.UPDATE_DATE, INTERVAL #offset# MINUTE) AS NEWDATE,
+			'-' AS NEWSIZE,
+			'FILE' AS OLDTYPE,
+			OLD.FILE_ID AS OLDID,
+			DATE_ADD(OLD.UPDATE_DATE, INTERVAL #offset# MINUTE) AS OLDDATE,
+			OLD.FILE_SIZE AS OLDSIZE,
+			OLD.CREATE_ID as OLDOWNERID
+		FROM
+			TBL_WEBFOLDER_FOLDER NEW
+		INNER JOIN
+			TBL_WEBFOLDER_FILE OLD
+		ON
+		<isNotEmpty property="newName">
+			OLD.FILE_NAME = #newName#
+		</isNotEmpty>
+		<isEmpty property="newName">
+			NEW.FOLDER_NAME1 = OLD.FILE_NAME
+		</isEmpty>
+			AND OLD.FOLDER_ID = #targetFolderId#
+			AND NEW.TENANT_ID = OLD.TENANT_ID
+			AND OLD.USE_STATUS = 'Y'
+		WHERE
+			NEW.FOLDER_ID = #originElementId#
+			AND NEW.TENANT_ID = #tenantId#;
+	</select>
+	
 	<select id="EzWebFolderDAO.getAllFilesInFolder" resultMap="fileVO2">
 		<![CDATA[
 			SELECT

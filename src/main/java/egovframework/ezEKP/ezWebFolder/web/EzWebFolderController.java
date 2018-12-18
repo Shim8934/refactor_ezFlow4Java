@@ -611,14 +611,15 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/fileMoveConfirm.do")
 	public String fileMoveConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("fileMoveConfirm start");
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String fileIdList  = request.getParameter("fileList")   != null ? request.getParameter("fileList") : "";
-		String mode        = request.getParameter("mode")       != null ? request.getParameter("mode")     : "normal";
-		String type        = request.getParameter("type")       != null ? request.getParameter("type")     : "";
+		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
+		String fileIdList   = request.getParameter("fileList")   != null ? request.getParameter("fileList")   : "";
+		String folderIdList = request.getParameter("folderList") != null ? request.getParameter("folderList") : "";
+		String mode         = request.getParameter("mode")       != null ? request.getParameter("mode")       : "normal";
+		String type         = request.getParameter("type")       != null ? request.getParameter("type")       : "";
 		
-		logger.debug("FileId list: " +fileIdList + " || mode: " + mode + " || type: " + type);
+		logger.debug("FileId list: " + fileIdList + " || FolderId List: " + folderIdList + " || mode: " + mode + " || type: " + type);
 		
-		if (fileIdList.equals("")) {
+		if (fileIdList.isEmpty() && folderIdList.isEmpty()) {
 			logger.debug("File Move Confirm illegal arguments!");
 			return "cmm/error/egovError";
 		}
@@ -647,6 +648,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("fileIdList", fileIdList);
+		model.addAttribute("folderIdList", folderIdList);
 		model.addAttribute("primary", user.getLang());
 		model.addAttribute("mode", mode);
 		model.addAttribute("type", type);
@@ -661,6 +663,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		logger.debug("moveFile start");
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
 		String fileList     = request.getParameter("fileList");
+		String folderList   = request.getParameter("folderList");
 		String nameList     = request.getParameter("nameList");
 		String folderId     = request.getParameter("folderId");
 		String mode         = request.getParameter("mode");
@@ -674,6 +677,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("fileList", fileList)
+										.queryParam("folderList", folderList)
 										.queryParam("userId", user.getId())
 										.queryParam("privileges", privileges)
 										.queryParam("folderId", folderId);

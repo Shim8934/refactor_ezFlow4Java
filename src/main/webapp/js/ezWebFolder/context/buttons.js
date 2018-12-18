@@ -219,13 +219,24 @@ var buttons = (function() {
 				return;
 			}
 			
-			if (selected.folders.length > 0) {
+			// 폴더도 되게 수정 
+			/* if (selected.folders.length > 0) {
 				alert(messages.strLang1);
 				return;
+			} */
+			
+			var params = [];
+			
+			if (selected.files.length > 0) {
+				params.push("fileList=" + encodeURIComponent(selected.files.toString()));
+			}
+			
+			if (selected.folders.length > 0) {
+				params.push("folderList=" + encodeURIComponent(selected.folders.toString()));
 			}
 			
 			openLeftPanel();
-			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString());
+			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?" + params.join("&"));
 		},
 		
 		fileCopy: function() {

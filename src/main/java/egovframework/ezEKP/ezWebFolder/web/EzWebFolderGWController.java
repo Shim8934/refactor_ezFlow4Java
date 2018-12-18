@@ -1029,42 +1029,76 @@ public class EzWebFolderGWController {
 	public JSONObject putFileMove(@PathVariable(value="mode") String mode, Locale locale, HttpServletRequest request) {
 		logger.debug("putFileMove start");
 		String fileList     = request.getParameter("fileList")   != null ? request.getParameter("fileList")   : "";
+		String folderList   = request.getParameter("folderList") != null ? request.getParameter("folderList") : "";
 		String userId       = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
-		String serverName   = request.getHeader("x-user-host")     != null ? request.getHeader("x-user-host")     : "";
-		String folderId     = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
+		String serverName   = request.getHeader("x-user-host")   != null ? request.getHeader("x-user-host")   : "";
+		String destFolderId = request.getParameter("folderId")   != null ? request.getParameter("folderId")   : "";
 		String privileges   = request.getParameter("privileges") != null ? request.getParameter("privileges") : "";
 		// nullable
 		String nameListStr = request.getParameter("nameList");
 		boolean isOverwritable = request.getParameter("overwritable") != null;
-		JSONObject result   = new JSONObject();
+		Map<String, Object> result   = new HashMap<>();
 		
-		logger.debug("FileId list: " + fileList + " || UserId: " + userId + " || Servername: " + serverName + " || FolderId: " + folderId + " || Privileges: " + privileges + " || mode: " + mode);
+		logger.debug("FileId list: " + fileList + "FolderId list: " + folderList + " || UserId: " + userId + " || Servername: " + serverName + " || FolderId: " + destFolderId + " || Privileges: " + privileges + " || mode: " + mode);
 		
-		if (fileList.equals("") || mode.equals("") || serverName.equals("") || userId.equals("")) {
+		if ((fileList.isEmpty() && folderList.isEmpty()) || mode.isEmpty() || serverName.isEmpty() || userId.isEmpty()) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
-			return result;
+			return new JSONObject(result);
 		}
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			if (!isWebfolderAdmin(userInfo)){
-				JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, fileList, userInfo.getTenantId());
+				JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), destFolderId, fileList, userInfo.getTenantId());
 				
 				if ("error".equals(permissionResult.get("status"))) {
 					return permissionResult;
 				}
 			}
 			
-			if (nameListStr == null) {
-				// 기존 파일 move & copy
-				result = ezWebFolderService.moveFiles(folderId, fileList, mode, privileges, userInfo, isOverwritable);
-			} else {
-				// 이름 바꾸고 move & copy
-				JSONArray nameList = (JSONArray) new JSONParser().parse(nameListStr);
-				result = ezWebFolderService.moveFiles(folderId, fileList, nameList, mode, privileges, userInfo, isOverwritable);
+			if (fileList.length() > 0) {
+				if (nameListStr == null) {
+					// 기존 파일 move & copy
+					result = ezWebFolderService.moveFiles(destFolderId, fileList, mode, privileges, userInfo, isOverwritable);
+				} else {
+					// 이름 바꾸고 move & copy
+					JSONArray nameList = (JSONArray) new JSONParser().parse(nameListStr);
+					result = ezWebFolderService.moveFiles(destFolderId, fileList, nameList, mode, privileges, userInfo, isOverwritable);
+				}	
+			}
+			
+			// folderList 가 있을 때
+			if (folderList.length() > 0) {
+				JSONObject folderResult = ezWebFolderService.moveFolders(folderList, destFolderId, mode, privileges, userInfo);
+				
+				if (result.isEmpty()) {
+					result = folderResult;
+				} else if (result.get("status").equals("ok")) {
+					result.put("code", folderResult.get("code"));
+					
+					// 중복 정보가 있으면
+					if (folderResult.containsKey("duplicateInfoArray")) {
+						List<DuplicateInfoVO> duplicateList = (List<DuplicateInfoVO>) folderResult.get("duplicateInfoArray");
+						
+						// 파일 중복 정보가 있을 때
+						if (result.containsKey("duplicateInfoArray")) {
+							// 폴더 중복 + 파일 중복 순서로 add
+							duplicateList.addAll((List<DuplicateInfoVO>) result.get("duplicateInfoArray"));
+						}
+						
+						// 중복 정보를 result 맵에 put
+						result.put("duplicateInfoArray", duplicateList);
+					}
+					
+					// 폴더 에러 목록이 있으면
+					if (folderResult.containsKey("folderErrorArray")) {
+						// result 맵에 put
+						result.put("folderErrorArray", folderResult.get("folderErrorArray"));
+					}
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1073,7 +1107,7 @@ public class EzWebFolderGWController {
 		}
 		
 		logger.debug("putFileMove end");
-		return result;
+		return new JSONObject(result);
 	}
 
 	@RequestMapping(value="/rest/ezwebfolderadmin/webfolderadmin-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")

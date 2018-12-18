@@ -83,6 +83,7 @@ public interface EzWebFolderService {
 	String getMaxFileID(int tenantId) throws Exception;
 	JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, LoginVO userInfo, boolean isOverwritable) throws Exception;
 	JSONObject moveFiles(String folderId, String fileList, List<String> nameList, String mode, String privileges, LoginVO userInfo, boolean isOverwritable) throws Exception;
+	JSONObject moveFolders(String folderList, String destFolderId, String mode, String privileges, LoginVO userInfo) throws Exception;
 	Map<String, String> getAllFolderNameMap(List<String> testbnk, String primary, int tenantId);
 	List<String> getFolderListFromFileId(List<String> fileIds, int tenantId) throws Exception;
 	String getWebFolderDirPath(int tenantId);

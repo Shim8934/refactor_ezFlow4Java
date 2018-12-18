@@ -1407,6 +1407,79 @@ public List<DuplicateInfoVO> getAllDuplicateInfo(String fileName, String targetF
 		
 		return new JSONObject(result);
 	}
+	
+
+	@Override
+	public JSONObject moveFolders(String folderList, String destFolderId, String mode, String privileges, LoginVO userInfo) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		List<DuplicateInfoVO> duplicateInfoList = new ArrayList<>();
+		List<Object> errorList = new ArrayList<>();
+
+		result.put("status", "ok");
+		result.put("code", 0);
+
+		if (folderList == null || folderList.isEmpty()) {
+			return new JSONObject(result);
+		}
+
+		String[] folderIdList = folderList.split(",");
+
+		String offset = userInfo.getOffset();
+		int tenantId = userInfo.getTenantId();
+		int code;
+
+		forStatement: for (String folderId : folderIdList) {
+			// 이미 중복된 이름의 폴더라면 중복 리스트에 넣기 및 건너뛰기
+			if (duplicateInfoList.addAll(getAllDuplicateInfo(Type.DIRECTORY, folderId, destFolderId, offset, tenantId))) {
+				continue;
+			}
+
+			FolderVO folder = getFolderByFolderId(folderId, offset, tenantId);
+
+			process: {
+				FolderVO destFolder = getFolderByFolderId(destFolderId, offset, tenantId);
+
+				// 같은 폴더인지는 js 단에서 처리하니까 상관 없을듯
+				// Check copy/move conditions
+				// if (folder.getFolderUpper().equals(destFolderId)) {
+				// code = 4;
+				// break trial;
+				// }
+
+				int pos = destFolder.getFolderPath().indexOf(folder.getFolderPath());
+
+				if (pos != -1) {
+					code = 5;
+					break process;
+				}
+
+				String realPath = servletContext.getRealPath("");
+				ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, realPath, userInfo);
+
+				continue forStatement;
+			}
+
+			// 에러 처리
+			Map<String, Object> errorMap = new HashMap<>();
+
+			errorMap.put("folder", folder);
+			errorMap.put("status", "error");
+			errorMap.put("code", code);
+
+			errorList.add(errorMap);
+		}
+
+		if (errorList.size() > 0) {
+			result.put("folderErrorArray", errorList);
+		}
+
+		if (duplicateInfoList.size() > 0) {
+			result.put("duplicateInfoArray", duplicateInfoList);
+			result.put("code", 8);
+		}
+
+		return new JSONObject(result);
+	}
 
 	@Override
 	public double getTotalFilesSize(String fileList, int tenantId) throws Exception {

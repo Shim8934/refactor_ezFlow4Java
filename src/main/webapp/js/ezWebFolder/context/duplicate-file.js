@@ -457,10 +457,12 @@ var duplicateFile = (function() {
 		url += "&oldOwnerId=" + currentInfo.oldOwnerId;
 		
 		// 기존 팝업이 닫히는거 기다리기
-		setTimeout(function() {
-			openLeftPanel();
-			DivPopUpShow(450, 300, url);
-		}, 0);
+		setTimeout((function(height) {
+			return function() {
+				openLeftPanel();
+				DivPopUpShow(450, height, url);
+			}
+		})(currentInfo.newType === "FILE" ? 300 : 200), 0);
 	}
 
 	var process = function(params) {

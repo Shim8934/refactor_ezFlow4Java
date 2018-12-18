@@ -36,14 +36,23 @@
 	}
 	</c:if>
 
+	<c:if test="${isFolder}">
+	function onClickSkip() {
+		onClickClose({
+			code: "SKIP",
+			looping: false
+		});
+	}
+	</c:if>
+
+	<c:if test="${not isFolder}">
 	function onClickSkip() {
 		onClickClose({
 			code: "SKIP",
 			looping: document.getElementById("all-apply").checked
 		});
 	}
-
-	<c:if test="${not isFolder}">
+	
 	function onClickRename() {
 		parent.DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?isUploading");
 	}
@@ -127,7 +136,7 @@ table.content-inner td>h2 {
 	</table>
 	<div class="btnpositionNew">
 		<c:if test="${isOwner && isAllFiles}"><a class="imgbtn" onclick="onClickOverwrite();"><span><spring:message code='webfolder.duplicate.button.overwrite' /></span></a></c:if>
-		<a class="imgbtn" onclick="onClickSkip();"><span><spring:message code='webfolder.duplicate.button.skip' /></span></a>
+		<a class="imgbtn" onclick="onClickSkip();"><span><c:choose><c:when test="${isFolder}"><spring:message code="ezWebFolder.t116" /></c:when><c:otherwise><spring:message code="webfolder.duplicate.button.skip" /></c:otherwise></c:choose></span></a>
 		<c:if test="${not isFolder}"><a class="imgbtn" onclick="onClickRename();"><span><spring:message code='webfolder.duplicate.button.rename' /></span></a></c:if>
 	</div>
 </body>

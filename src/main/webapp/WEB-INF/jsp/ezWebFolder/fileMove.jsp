@@ -15,6 +15,7 @@
 	<script type="text/javascript">
 		var primary        = "<c:out value='${primary}'/>";
 		var fileList       = "<c:out value='${fileIdList}'/>";
+		var folderList     = "<c:out value='${folderIdList}'/>";
 		var selectedFolder = null;
 		var selectedLevel  = null;
 		var currentFolders = [];
@@ -282,6 +283,7 @@
 				url: "/ezWebFolder/moveFile.do",
 				data: {
 					"fileList" : fileList,
+					"folderList" : folderList,
 					"folderId" : selectedFolder,
 					"mode"     : "copy"
 				},
@@ -347,6 +349,7 @@
 				url: "/ezWebFolder/moveFile.do",
 				data: {
 					"fileList"   : fileList,
+					"folderList" : folderList,
 					"folderId"   : selectedFolder,
 					"privileges" : mode,
 					"mode"       : "move"
