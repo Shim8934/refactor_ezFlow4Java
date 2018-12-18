@@ -93,4 +93,5 @@ var SurveyMessages = {
 	strNoLogic   : "분기 없음",
 	strchooseNum : "분기를 선택해 주세요.",
 	strBetweenNum: "최소값과 최대값 사이의 정수를 입력해 주세요.",
+	strQs		 : "질문",
 }

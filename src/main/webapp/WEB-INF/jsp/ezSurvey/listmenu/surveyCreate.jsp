@@ -815,7 +815,7 @@
 					$(".prevQsArea").on("click", ".cancelLogic", function() {
 						var prevWrapper = $(this).parents(".prevQsWrapper");
 						var type = parseInt(prevWrapper.attr("type"));
-						var id = parseInt(prevWrapper.attr("id").replace("qstn", ""));
+						var id = parseInt(prevWrapper.attr("id").replace("prevQstn", ""));
 						
 						// 로직 ui 변경
 						if (type == 1 || type == 2) {
@@ -833,7 +833,7 @@
 						$("#frstBtnGrp" + id).siblings().css("display", "none");
 						$("#frstBtnGrp" + id).css("display", "");
 					});
-/////////////////////////////					
+					
 					// 로직 수정 버튼 이벤트
 					$(".prevQsArea").on("click", ".mdfLogic", function() {
 						var id = parseInt($(this).attr("id").replace("mdfLogic", ""));
@@ -1920,6 +1920,7 @@
 				function sltLogicForm(prevWrapper, htmlOption, question, qstnId) {
 					var id = "";
 					var logicNum = "";
+					var logic = "";
 
 					var qstnOpt = question.option;
 					var opts = prevWrapper.find(".prevQsOpt").find(".opt");
@@ -1949,8 +1950,12 @@
 							$("#thrdBtnGrp" + id).css("display", "");
 							
 							logicNum = qstnOpt[i].logic;
+							
+							if (logicNum != "") {
+								logic = "질문 " + logicNum; 
+							}
 							$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
-							$("#sltVal" + id + i).text(logicNum).css("dispaly", "");
+							$("#sltVal" + id + i).text(logic).css("dispaly", "");
 						}
 					}
 				}
@@ -1960,7 +1965,7 @@
 					var qstnOpt = question.option;
 					var prevQsOpt = prevWrapper.find(".prevQsOpt");
 					var logicPoint = "";
-					console.log(question);
+					
 					if (qstnId) {
 						id = qstnId;
 						logicPoint = question.option[0]['logic'];
@@ -1979,9 +1984,9 @@
 					
 					var html = "";
 						html += "<div id='logic" + id + "' class='slidLogicArea'>";
-						html += "<input id='slidLogicInput" + id + "' class='prevSlidInput' type='text' minVal='" + minVal + "' maxVal='" + maxVal + "'>";
+						html += "<input id='slidLogicInput" + id + "' class='prevSlidInput' type='text'>";
 						html += "<span id='LogicPoint" + id + "' class='logicSpan'></span>";
-						html += "<span class='prevSlidSpan'>이상</span>";
+						html += "<span class='logicSpan'>이상</span>";
 						html += "<img class='prevSlidArrow' src='/images/ezSurvey/arrow.png'>";
 						html += "<select id='slt" + id + "' class='logicSelect' name='slt" + id + "'>";
 						html += htmlOption;
@@ -1992,13 +1997,17 @@
 					prevQsOpt.append($(html)[0]);
 					
 					if (question.logicFlag == 'Y') {
+						logicNum = qstnOpt[0].logic;
+						logic = (logicNum != "") ? "질문 " + logicNum : "";
+						
 						$("#frstBtnGrp" + id).css("display", "none");
 						$("#thrdBtnGrp" + id).css("display", "");
 						
-						logicNum = qstnOpt[0].logic;
-						$("#slidLogicInput" + id).val(question.slidLogicPoint);
+						$("#slidLogicInput" + id).val(logicPoint).css("display", "none");
+						$("#LogicPoint" + id).text(logicPoint).css("display", "");
+						
 						$("#slt" + id).val(logicNum).prop("selected", true).css("display", "none");
-						$("#sltVal" + id).text(logicNum).css("dispaly", "");
+						$("#sltVal" + id).text(logic).css("dispaly", "");
 					}
 				}
 				
@@ -2027,6 +2036,7 @@
 					var prevQsOpt = prevWrapper.find(".prevQsOpt");
 					var drdwOpt = question.option;
 					var optLength = drdwOpt.length;
+					var logic = "";
 					
 					var drdwLogicArea = $("<div id='logic" + id + "' class='drdwLogicArea'>");
 					
@@ -2048,12 +2058,14 @@
 						prevQsOpt.append(drdwLogicArea);
 						
 						if (question.logicFlag == 'Y') {
+							logicNum = opt.logic;
+							logic = (logicNum != "") ? "질문 " + logicNum : ""; 
+
 							$("#frstBtnGrp" + id).css("display", "none");
 							$("#thrdBtnGrp" + id).css("display", "");
 							
-							logicNum = opt.logic;
 							$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
-							$("#sltVal" + id + i).text(logicNum).css("dispaly", "");
+							$("#sltVal" + id + i).text(logic).css("dispaly", "");
 						}
 					}
 				}
@@ -2076,24 +2088,22 @@
 					var wrapper = $("#prevQstn"+id);
 					var opt = wrapper.find(".opt");
 					var optLength = opt.length;
+					var logic = "";
 					
 					for (var i = 0; i < optLength; i++) {
 						var logicNum = $("select[name=slt" + id  + i +"] option:selected").val();
 						// option 객체에 logic 추가
 						qstn.option[i]['logic'] = logicNum;
 						
-						if (logicNum == "") {
-							logicNum == "분기 없음";
-						}
+						logic = (logicNum == "") ? "분기 없음" : "질문 " + logicNum;
 						$("select[name=slt" + id + i + "]").css("display", "none");
-						$("#sltVal" + id + i).text(logicNum).css("display", "");
+						$("#sltVal" + id + i).text(logic).css("display", "");
 					}
 					console.log(qstn);
 				}
 				
 				// slider 질문 logic form 나타내기
 				function showSlidLogicForm(id, qstn) {
-					console.log(qstn);
 					var prevQsWrapper = $("#prevQstn" + id);
 					
 					var logicPoint = qstn['slidLogicPoint'];
@@ -2104,7 +2114,6 @@
 					
 					$("#sltVal" + id).css("display", "none");
 					$("#slt" + id).val(logicNum).prop("selected", true).css("display", "");
-					
 				}
 				
 				// slider 질문 객체, ui에 로직 value 추가
@@ -2112,6 +2121,7 @@
 					var inputVal = parseInt($("#slidLogicInput" + id).val());
 					var maxVal = parseInt(qstn.option[1]['content']);
 					var logicNum = parseInt($("select[name=slt" + id + "] option:selected").val());
+					var logic = "";
 					
 					if (!isNaN(inputVal) && inputVal < maxVal) {
 						if (!isNaN(logicNum)) {
@@ -2121,8 +2131,9 @@
 							$("#slidLogicInput" + id).css("display", "none");
 							$("#LogicPoint" + id).text(inputVal).css("display", "");
 							
+							logic = (logicNum == "") ? "" : "질문 " + logicNum;
 							$("select[name=slt" + id + "]").css("display", "none");
-							$("#sltVal" + id).text(logicNum).css("display", "");
+							$("#sltVal" + id).text(logic).css("display", "");
 						} else {
 							alert(SurveyMessages.strchooseNum);
 							return;
@@ -2154,16 +2165,15 @@
 					var logicArea = $("#logic" + id);
 					var rows = logicArea.find(".drdwLogicRow");
 					var optLength = rows.length;
+					var logic = "";
 					
 					for (var i = 0; i < optLength; i++) {
 						var logicNum = $("select[name=slt" + id  + i +"] option:selected").val();
 						qstn.option[i]['logic'] = logicNum;
 						
-						if (logicNum == "") {
-							logicNum == "분기 없음";
-						}
+						logic = (logicNum == "") ? "분기 없음" : "질문 " + logicNum;
 						$("select[name=slt" + id + i + "]").css("display", "none");
-						$("#sltVal" + id + i).text(logicNum).css("display", "");
+						$("#sltVal" + id + i).text(logic).css("display", "");
 					}
 					console.log(qstn);
 				}
