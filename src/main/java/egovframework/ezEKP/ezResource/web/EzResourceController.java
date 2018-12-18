@@ -390,10 +390,10 @@ public class EzResourceController extends EgovFileMngUtil {
 							resultXML += "<owner_nm>"+orderXML.getElementsByTagName("owner_nm").item(i).getTextContent()+"</owner_nm>";
 							resultXML += "<dept_name>"+"<![CDATA["+ orderXML.getElementsByTagName("dept_name").item(i).getTextContent()+"]]></dept_name>";
 							resultXML += "<writeDay>"+orderXML.getElementsByTagName("writeDay").item(i).getTextContent()+"</writeDay>";
-							resultXML += "<owner_nm2>"+orderXML.getElementsByTagName("owner_nm2").item(i).getTextContent()+"</owner_nm2>";
-							resultXML += "<dept_name2>"+"<![CDATA["+ orderXML.getElementsByTagName("dept_name2").item(i).getTextContent()+"]]></dept_name2>";
-							resultXML += "<jobtitle>"+"<![CDATA["+orderXML.getElementsByTagName("jobtitle").item(i).getTextContent()+"]]></jobtitle>";
-							resultXML += "<jobtitle2>"+"<![CDATA[" +orderXML.getElementsByTagName("jobtitle2").item(i).getTextContent()+"]]></jobtitle2>";
+							resultXML += "<owner_nm2>"+"</owner_nm2>";
+							resultXML += "<dept_name2>"+"</dept_name2>";
+							resultXML += "<jobtitle>"+"</jobtitle>";
+							resultXML += "<jobtitle2>"+"</jobtitle2>";
 							resultXML += "</appointment>";
 						} 
 					}
@@ -474,10 +474,14 @@ public class EzResourceController extends EgovFileMngUtil {
 						resultXML1 += "<owner_nm>"+tempXML.getElementsByTagName("owner_nm").item(i).getTextContent()+"</owner_nm>";
 						resultXML1 += "<dept_name>"+"<![CDATA[" +tempXML.getElementsByTagName("dept_name").item(i).getTextContent()+"]]></dept_name>";
 						resultXML1 += "<writeDay>"+tempXML.getElementsByTagName("writeDay").item(i).getTextContent()+"</writeDay>";
-						resultXML1 += "<owner_nm2>"+tempXML.getElementsByTagName("owner_nm2").item(i).getTextContent()+"</owner_nm2>";
+						resultXML1 += "<owner_nm2>"+"</owner_nm2>";
+						resultXML1 += "<dept_name2>"+"</dept_name2>";
+						resultXML1 += "<jobtitle>"+"</jobtitle>";
+						resultXML1 += "<jobtitle2>"+"</jobtitle2>";
+						/*resultXML1 += "<owner_nm2>"+tempXML.getElementsByTagName("owner_nm2").item(i).getTextContent()+"</owner_nm2>";
 						resultXML1 += "<dept_name2>"+"<![CDATA["+tempXML.getElementsByTagName("dept_name2").item(i).getTextContent()+"]]></dept_name2>";
 						resultXML1 += "<jobtitle>"+"<![CDATA["+tempXML.getElementsByTagName("jobtitle").item(i).getTextContent()+"]]></jobtitle>";
-						resultXML1 += "<jobtitle2>"+"<![CDATA["+tempXML.getElementsByTagName("jobtitle2").item(i).getTextContent()+"]]></jobtitle2>";
+						resultXML1 += "<jobtitle2>"+"<![CDATA["+tempXML.getElementsByTagName("jobtitle2").item(i).getTextContent()+"]]></jobtitle2>";*/
 						resultXML1 += "<count>"+tempXML.getElementsByTagName("count").item(i).getTextContent()+"</count>";
 						resultXML1 += "</appointment>";
 					}

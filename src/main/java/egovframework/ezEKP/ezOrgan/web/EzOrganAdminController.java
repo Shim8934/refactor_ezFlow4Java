@@ -191,24 +191,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String topid = "";
-		String deptTreeTopId = "";
-		
-		if (user.getRollInfo().indexOf("c=1") == -1) {
-			topid = user.getCompanyID();
-			deptTreeTopId = topid;
-		} else {
-			topid = "Top";
-			deptTreeTopId = topid + "/organ";
-		}
-		
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
 		String useSyncServer = ezCommonService.getTenantConfig("useSyncServer", user.getTenantId());
 		String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", user.getTenantId());
 		String useDisablePop3Imap = ezCommonService.getTenantConfig("UseDisablePopImap", user.getTenantId());
 		String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", user.getTenantId());
-
+		
+		String topid = "";
+		String deptTreeTopId = "";
+		
+		if (user.getRollInfo().indexOf("c=1") == -1) {
+			topid = user.getCompanyID();
+			deptTreeTopId = topid;
+			useSyncServer = "NO";
+			useBizmekaTalk = "NO";
+		} else {
+			topid = "Top";
+			deptTreeTopId = topid + "/organ";
+		}
+		
 		if (useDisablePop3Imap.equals("")) {
 			useDisablePop3Imap = "NO";
 		}
@@ -2853,10 +2855,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String returnValue = "ERROR";
 		
 		try {
-			// 관리자 권한 체크
+			// 전체관리자 권한 체크
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
-			if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 				return returnValue;
 			}
 			
