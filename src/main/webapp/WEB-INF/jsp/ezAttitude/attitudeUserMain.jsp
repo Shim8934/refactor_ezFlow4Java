@@ -230,6 +230,18 @@
 				border-left :1px solid #e2e2e1;
 			}
 			
+			#contentlist .mainlist tr.sat {
+				background:#f7f9fd;
+			}
+			
+			#contentlist .mainlist tr.sun {
+				background:#fdf7f7;
+			}
+			
+			#contentlist .mainlist tr.today {
+				background:#f0f6ff;
+			}
+			
 			#contentlist .mainlist td span.sat {
 				color:rgb(0, 72, 149);
 			}
@@ -255,6 +267,8 @@
 				overflow: hidden; 
 				text-overflow: ellipsis; 
 				white-space: nowrap;
+				border: 1px solid #c8ccd0;
+				background: #e4e8ec;
 			}
 			#attiTableListTB .mainlist td.textCenter {
 				text-align: center;
@@ -325,10 +339,8 @@
 				
 				$("#btnTableList span").click();
 				
-				//브라우저 체크 후 크롬이면!!
-	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-					$("#contentlist").css("height","725px");
-	        	}
+	        	var height = parseInt(document.documentElement.clientHeight - 200);
+	        	$("#contentlist").css("height", height +"px");
 			}
 			
 	        /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
@@ -1675,6 +1687,8 @@
 				var tbodyHtml = "";
 								
 				//td
+				var cal = new Date();
+				var today = cal.getFullYear() + "-" + (cal.getMonth()+1) + "-" + cal.getDate();
 				var year = endDate.substring(0,4);
 				var month  = endDate.substring(5,7);
 				var endDay = Number(endDate.split("-")[2]) + 1;
@@ -1692,8 +1706,11 @@
 	    				dayClass = "sat";	
 	    			} else if (dayIdx == 0) {
 	    				dayClass = "sun";
-	    			} else { }
+	    			}
 	    			
+	    			if (year + "-" + month + "-" + j == today) {
+	    				dayClass = "today";
+	    			}
 	    			
 	    			//음력
 					var lunarDate2; // 음력월.음력일 => 달력에 음력일을 표시해주기 위한 변수
@@ -1709,16 +1726,16 @@
 						}
 	    			}
 	    			
-	    			tbodyHtml += "<tr id='" + year + "-" + month + "-" + j + "'>";
+	    			tbodyHtml += "<tr class='" + dayClass + "' id='" + year + "-" + month + "-" + j + "'>";
 	    			if (LunarUse) {
-		    			tbodyHtml += "<td class='borderLeft textCenter' style='width:9%'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ")</span></td>";//날짜
+		    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ")</span></td>";//날짜
 	    			} else {
-		    			tbodyHtml += "<td class='borderLeft textCenter' style='width:9%'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
+		    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
 	    			}
-	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:7%'></td>";
-	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:7%'></td>";
-	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:8%'></td>";
-	    			tbodyHtml += "<td class='borderLeft textLeft' style='width:18%'></td>";
+	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
+	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
+	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
+	    			tbodyHtml += "<td class='borderLeft textLeft' style='width:20%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textLeft'></td>";
 	    			tbodyHtml += "</tr>";
 	    		}
@@ -1988,7 +2005,7 @@
 	    <c:if test="${deptFlag != 'true'}">
 	    <div class="mainmenuTab">
 	        <ul class="mainmenuTabUL">
-				<li id="btnTableList"><span onClick="getAttitudeTableList()">리스트보기</span></li>
+				<li id="btnTableList"><span onClick="getAttitudeTableList()">표 보기</span></li>
 	            <li id="btnCalList"><span onClick="getAttitudeCalList()">달력보기</span></li>
 	        </ul>
 	    </div>
@@ -2016,16 +2033,17 @@
 			<table class='mainlist' style='width: 100%;'>
 				<tr> 
 <!-- 				<th style='width:13%' colspan="2">날짜</th>  -->
-				<th style='width:9%'><spring:message code='ezAttitude.t133'/></th>
-				<th style='width:7%'><spring:message code='ezAttitude.t232'/></th>
-				<th style='width:7%'><spring:message code='ezAttitude.t233'/></th> 
-				<th style='width:8%'><spring:message code='ezAttitude.t134'/></th>
-				<th style='width:18%'><spring:message code='ezAttitude.t149'/></th>
-				<th ><spring:message code='ezAttitude.t46'/></th>
+					<th style='width:12%'><spring:message code='ezAttitude.t133'/></th>
+					<th style='width:12%'><spring:message code='ezAttitude.t232'/></th>
+					<th style='width:12%'><spring:message code='ezAttitude.t233'/></th> 
+					<th style='width:12%'><spring:message code='ezAttitude.t134'/></th>
+					<th style='width:20%'><spring:message code='ezAttitude.t149'/></th>
+					<th style="width:32%; border-right-color:transparent"><spring:message code='ezAttitude.t46'/></th>
+					<th style='width:7px;border-left:0px;'>&nbsp;</th>
 				</tr> 
 			</table>
 			
-			<div id='contentlist' name='contentlist' style='height: 665px; overflow-y: auto;'>
+			<div id='contentlist' name='contentlist' style='overflow-y: auto;'>
 				<table class='mainlist' style='width: 100%;'>
 				</table>
 			</div>
