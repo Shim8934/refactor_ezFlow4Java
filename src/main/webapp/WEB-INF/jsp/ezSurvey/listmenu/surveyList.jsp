@@ -19,7 +19,7 @@
 			<span class="topSearchSpan">
 				<select id="searchCheck">
 					<option value="title" selected><spring:message code='ezSurvey.t23'/></option>
-					<option value="createuser"    ><spring:message code='ezSurvey.t24'/></option>
+					<option value="creator"       ><spring:message code='ezSurvey.t24'/></option>
 				</select>
 				
 				<input name="keyword" type="text" id="ssInput">
@@ -98,15 +98,15 @@
 					<table class="mainlist surveyTbl" id="tblSurveyList">
 						<tr>
 							<th headers=""   class="inputTh"><input type="checkbox"></th>
-							<th headers=""   class="inputTh"><img src="/images/newAttach.gif"></th>
-							<th headers=""   class="inputTh"><img src="/images/ImgIcon/view-importance.gif"></th>
+							<th headers="at" class="inputTh"><img src="/images/newAttach.gif"></th>
+							<th headers="st" class="inputTh"><img src="/images/ImgIcon/view-importance.gif"></th>
 							<th headers="tt" class="ttlTh"    ><spring:message code='ezSurvey.t23'/></th>
-							<th headers="it" class="endDateTh"><spring:message code='ezSurvey.t29'/></th>
-							<th headers="un" class="targetTh" ><spring:message code='ezSurvey.t30'/></th>
-							<th headers="cd" class="createTh" ><spring:message code='ezSurvey.t24'/></th>
-							<th headers="is" class="publicTh" ><spring:message code='ezSurvey.t31'/></th>
-							<th headers="is" class="anoynmTh" ><spring:message code='ezSurvey.t32'/></th>
-							<th headers="is" class="statisTh" ><spring:message code='ezSurvey.t33'/></th>
+							<th headers="ed" class="endDateTh"><spring:message code='ezSurvey.t29'/></th>
+							<th headers="ut" class="targetTh" ><spring:message code='ezSurvey.t30'/></th>
+							<th headers="ct" class="createTh" ><spring:message code='ezSurvey.t24'/></th>
+							<th headers="pl" class="publicTh" ><spring:message code='ezSurvey.t31'/></th>
+							<th headers="an" class="anoynmTh" ><spring:message code='ezSurvey.t32'/></th>
+							<th headers=""   class="statisTh" ><spring:message code='ezSurvey.t33'/></th>
 						</tr>
 					</table>
 				</div>

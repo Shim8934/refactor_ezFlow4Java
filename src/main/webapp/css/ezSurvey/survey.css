@@ -167,6 +167,10 @@ input::-ms-clear {display: none;}
 .inf-searchTbl tr td:nth-child(1) >div >input[type='text'] {width: 130px; margin: 0px; height: 21px; padding-left: 5px;}
 .inf-searchTbl tr td:nth-child(2) >div {float: right; margin-right: 5px; position: relative;}
 
+.spanDown, .spanUp {cursor:pointer; border-radius: 50%; text-align: center; line-height: 14px; margin-top: -1px; position: relative; width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-left: 2px; box-sizing: border-box;}
+.spanDown:before   {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 5px 4px 0px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
+.spanUp:before     {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 0px 4px 5px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
+
 .organ-tbl {margin-top: 3px;}
 .organ-tbl .listview {width: 440px; border-top: none !important;}
 .organ-tbl tr td:first-child {border-right: 0px;}
@@ -240,7 +244,7 @@ input::-ms-clear {display: none;}
 
 .quesDiv {text-align: center; align-items: center; justify-content: center; padding-top: 10px;}
 .quesDiv .qstnRow {display: flex; align-items: center;}
-.quesDiv .qstnRow .questnTitle {background-color: rgb(236, 239, 239); flex: 1; height: 60px; outline: 0px; padding: 0px 8px; font-size: 16px;}
+.quesDiv .qstnRow .questnTitle {background-color: rgb(236, 239, 239); flex: 1; height: 50px; outline: 0px; padding: 0px 8px; font-size: 16px;}
 .quesDiv .qstnRow .atchImg {width: 40px; height: 40px; padding: 5px 10px; cursor: pointer;}
 
 .quesDiv .qstnRow .dd-container {width: 25%; height: 50px; border-radius: 10px; display: inline-block;}
@@ -433,5 +437,6 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwArrow {padding: 0px 30px;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow .logicSpan {font-size: 16px; margin-top: 2px;}
 
-
+.dd-options {right: 0px; width: 540px !important;}
+.dd-options >li {display: block; float:left; width: 33.33%;}
 

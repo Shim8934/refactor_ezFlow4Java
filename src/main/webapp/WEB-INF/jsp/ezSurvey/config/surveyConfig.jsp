@@ -13,7 +13,7 @@
 	<body class="mainbody">
 		<h1><spring:message code="ezSurvey.t08"/></h1>
 		<div class="portlet_tabpart01">
-			<div class="portlet_tabpart01_top" id="tab1">
+			<div class="portlet_tabpart01_top" id="tab1" class="tabon">
 				<p><span role="surveyEnv_div1" id="1tab1"><spring:message code="ezSurvey.t01"/></span></p>
 			</div>
 		</div>
@@ -22,11 +22,11 @@
 		<script type="text/javascript">
 			(function() {
 				var selectedTabId = "";
-				window.addEventListener("load", init, false);
-				window.addEventListener("resize", resizeWindow, false);
+				init();
 				
 				function init() {
 					document.onselectstart = function (e) {return false;};
+					window.addEventListener("resize", resizeWindow, false);
 					
 					if (navigator.userAgent.indexOf('Firefox') != -1) {
 						document.body.style.MozUserSelect    = 'none';

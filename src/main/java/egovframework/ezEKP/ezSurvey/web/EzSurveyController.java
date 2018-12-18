@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezSurvey.web;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -90,28 +91,9 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/surveyList.do")
 	public String jspGetSurveyList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale) throws Exception {
 		logger.debug("jspGetSurveyList started");
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String mode        = request.getParameter("mode") != null ? request.getParameter("mode") : "1";
-		String pageName    = "";
-		
-		/*String cabinetId   = request.getParameter("cabinetId");
-		
-		JSONObject resultObj = cabinetRestService.getCabinetInfo(request, user.getId(), cabinetId);
-		
-		if (resultObj.get("status").toString().equals("ok")) {
-			JSONObject cabinet = (JSONObject) resultObj.get("cabinet");
-			model.addAttribute("cabinet", cabinet);
-		}
-		
-		JSONObject configObj = cabinetRestService.getUserPreviewConfig(request, user.getId());
-		
-		if (configObj.get("status").toString().equals("ok")) {
-			JSONObject userConfig = (JSONObject)configObj.get("config");
-			model.addAttribute("config", userConfig);
-		}
-		
-		model.addAttribute("cabinetId", cabinetId);*/
-		
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String mode          = request.getParameter("mode") != null ? request.getParameter("mode") : "1";
+		String pageName      = "";
 		JSONObject configObj = surveyRestService.getUserPreviewConfig(request, user.getId());
 		
 		if (configObj.get("status").toString().equals("ok")) {
@@ -142,6 +124,39 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return "ezSurvey/listmenu/surveyCreate";
 	}
 	
+	@RequestMapping(value="/ezSurvey/ReuseItem.do")
+	public String jspGetReuseSurveyPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetReuseSurveyPage started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String itemId      = request.getParameter("") != null ? request.getParameter("") : "";
+		
+		if (itemId.equals("")) {
+			model.addAttribute("reasonMessage", "ezCabinet.t160");
+			return "ezSurvey/surveyAccessDenied";
+		}
+		
+		List<String> itemList = new ArrayList<>();
+		itemList.add(itemId);
+		JSONObject checkObj = surveyRestService.checkSurveyItems(request, user.getId(), itemList);
+		
+		if (((Long)checkObj.get("code")).intValue() != 0) {
+			int reasonCode = ((Long)checkObj.get("code")).intValue();
+			String messageCode = "";
+			
+			switch(reasonCode) {
+				case 1: messageCode = "ezSurvey.err1"; break;
+				case 2: messageCode = "ezSurvey.err2"; break;
+				case 3: messageCode = "ezSurvey.err3"; break;
+			}
+			
+			model.addAttribute("reasonMessage", messageCode);
+			return "ezSurvey/surveyAccessDenied";
+		}
+		
+		logger.debug("jspGetReuseSurveyPage ended");
+		return "ezSurvey/listmenu/surveyCreate";
+	}
+	
 	@RequestMapping(value="/ezSurvey/statisticsPage.do")
 	public String jspStatisticsPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspStatisticsPage started");
@@ -163,6 +178,25 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		logger.debug("jspGetSelectUesrPage ended");
 		return "ezSurvey/user/selectUser";
+	}
+	
+	@RequestMapping(value="/ezSurvey/checkReusePermission.do")
+	@ResponseBody
+	public String jsonCheckItems(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "itemList") List<String> itemList, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonCheckItems start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		JSONObject resultObj = new JSONObject();
+		
+		if (itemList.size() == 0) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = surveyRestService.checkSurveyItems(request, user.getId(), itemList);
+		
+		logger.debug("jsonCheckItems end");
+		return resultObj.toString();
 	}
 	
 	@RequestMapping(value="/ezSurvey/saveSurvey.do", method = RequestMethod.POST, produces="application/json;charset=utf-8")
