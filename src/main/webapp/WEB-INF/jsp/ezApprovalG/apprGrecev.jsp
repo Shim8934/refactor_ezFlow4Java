@@ -589,7 +589,7 @@
 		                    }
 		                }
 		                SetBtnStateTrue();
-		                pAlertContent = "[<spring:message code='ezApprovalG.t147'/>";
+		                pAlertContent = "<spring:message code='ezApprovalG.t147'/>";
 		                OpenAlertUI(pAlertContent);
 		                return;
 		            }
