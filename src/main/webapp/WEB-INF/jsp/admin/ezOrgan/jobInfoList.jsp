@@ -22,7 +22,8 @@
 		.previewmail_bar_h {display: inline-block; width: 5px; height: 690px;}
 		.preContent_RayerH {position: absolute; display: inline-block; width: 49%;}
 		.preview_header {margin: 0px 0px 5px 0px; padding: 10px 0px 0px 0px; font-weight: bold; height: 36px; line-height: 37px;}
-		.preview_title {position: absolute; margin-top: -6px; margin-left: 13px;}
+		.preview_title {display: inline-block; margin-top: -6px; margin-left: 13px;}
+		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC;}
 		.preview_content {width: 97%; height: 630px; border: solid 0px green; display: inline-block; padding:10px;}
 		.preview_nodata {position: absolute; display: inline-block; width: 49%; vertical-align: middle; text-align: center; margin-top: 70px;}
 	</style>
@@ -257,7 +258,10 @@
 				
 				var selectedId = oArrRows[0].getAttribute("id");
 				var selectedTitle = document.getElementById(selectedId).getElementsByTagName("td")[0].textContent;
+				var count = SelectSingleNodeValueNew(xmldom, "TOTALCNT");
+				
 				document.getElementById("preview_title").textContent = selectedTitle + " 리스트";
+				document.getElementById("preview_count").textContent = count;
 				
 				var oRows = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
 			    if (oRows.length > 0) {
@@ -432,7 +436,10 @@
 				
 				var selectedId = oArrRows[0].getAttribute("id");
 				var selectedTitle = document.getElementById(selectedId).getElementsByTagName("td")[0].textContent;
+				var count = SelectSingleNodeValueNew(xmldom, "TOTALCNT");
+				
 				document.getElementById("preview_title").textContent = selectedTitle + " 리스트";
+				document.getElementById("preview_count").textContent = count;
 				
 				var oRows = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
 			    if (oRows.length > 0) {
@@ -684,6 +691,7 @@
 					<div id="Preview_HeaderH">
 						<p class="preview_header">
 							<span class="preview_title" id="preview_title"></span>
+							<span class="preview_count" id="preview_count"></span>
 						</p>
 					</div>
 				</div>

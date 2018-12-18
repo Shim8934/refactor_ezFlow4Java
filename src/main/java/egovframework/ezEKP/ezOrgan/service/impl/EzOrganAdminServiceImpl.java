@@ -1829,13 +1829,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		List<OrganJobVO> jobList = ezOrganAdminDao.getTitleList(map);
 		
+		rtnVal.append("<LISTVIEWDATA>");
+		rtnVal.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		rtnVal.append("<PAGECNT>" + pageCount + "</PAGECNT>");
+		rtnVal.append("<CURPAGE>" + currentPage + "</CURPAGE>");
+		rtnVal.append("<ROWS>");
+		
 		if (jobList != null && jobList.size() > 0) {
-			rtnVal.append("<LISTVIEWDATA>");
-			rtnVal.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
-			rtnVal.append("<PAGECNT>" + pageCount + "</PAGECNT>");
-			rtnVal.append("<CURPAGE>" + currentPage + "</CURPAGE>");
-			rtnVal.append("<ROWS>");
-			
 			for (int i = 0; i < jobList.size(); i++) {
 				rtnVal.append("<ROW>");
 				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName() + "]]></VALUE>");
@@ -1848,11 +1848,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getSort() + "</VALUE></CELL>");
 				rtnVal.append("</ROW>");
 			}
-			
-			rtnVal.append("</ROWS></LISTVIEWDATA>");
-		} else {
-			rtnVal.append("<LISTVIEWDATA><ROWS></ROWS></LISTVIEWDATA>");
 		}
+		
+		rtnVal.append("</ROWS></LISTVIEWDATA>");
 		
 		logger.debug("getTitleList ended.");
 		
@@ -1957,9 +1955,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		List<OrganUserVO> userList = ezOrganAdminDao.getTitleUserList(map);
 		
+		rtnVal.append("<LISTVIEWDATA>");
+		rtnVal.append("<TOTALCNT>" + userList.size() + "</TOTALCNT>");
+		rtnVal.append("<ROWS>");
+		
 		if (userList != null && userList.size() > 0) {
-			rtnVal.append("<LISTVIEWDATA><ROWS>");
-			
 			for (int i = 0; i < userList.size(); i++) {
 				rtnVal.append("<ROW>");
 				rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getCn() +"]]></VALUE>");
@@ -1977,11 +1977,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getTelephoneNumber() +"]]></VALUE></CELL>");
 				rtnVal.append("</ROW>");
 			}
-			
-			rtnVal.append("</ROWS></LISTVIEWDATA>");
-		} else {
-			rtnVal.append("<LISTVIEWDATA><ROWS></ROWS></LISTVIEWDATA>");
 		}
+		
+		rtnVal.append("</ROWS></LISTVIEWDATA>");
 		
 		logger.debug("getTitleUserList ended.");
 		
