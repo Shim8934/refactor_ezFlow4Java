@@ -151,7 +151,7 @@ span.pause.active {
    ================================================== */
 
 div.slider-nav {
-    display: block }
+    display: none }
 
 div.slider-nav span {
     width: 24px;

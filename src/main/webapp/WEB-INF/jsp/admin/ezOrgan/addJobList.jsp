@@ -557,7 +557,7 @@
 		            <li><span onClick="AddJob_Del('ALL', '')"><spring:message code='ezOrgan.t00016' /></span></li>
 		            <li><span class="icon16 icon16_delete" onClick="AddJob_Del('DEL', '')"></span></li>
 					<!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		            <li onClick="email_onclick()"><span class="icon16 icon16_mail"></span></li>
+		            <li onClick="email_onclick()"><span class="icon16 icon16_mail_gray"></span></li>
 		        </ul>
 		    </div>
 		    <script type="text/javascript">

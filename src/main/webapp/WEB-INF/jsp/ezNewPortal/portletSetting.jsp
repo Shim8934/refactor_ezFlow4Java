@@ -6,7 +6,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezNewPortal.t009' /></title>
 		<link href="${util.addVer('main.e15', 'msg')}" rel="stylesheet" type="text/css">
-		<link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
+		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet"  href="${util.addVer('/css/ezNewPortal/jquery.flipster.min.css')}" type="text/css">
 		<link rel="stylesheet"  href="${util.addVer('/css/ezMemo/jquery.mCustomScrollbar.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>

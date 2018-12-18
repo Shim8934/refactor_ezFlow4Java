@@ -84,8 +84,8 @@
 				A.company_id = C.company_id
 			AND
 				A.menu_id = C.menu_id
-			AND
-				A.company_lang = C.menu_lang
+			AND 
+				C.menu_lang = #menuLang#
 			WHERE
 				A.tenant_id = #tenantId#
 			AND
@@ -125,7 +125,7 @@
 			AND
 				A.menu_id = C.menu_id
 			AND
-				A.company_lang = C.menu_lang
+				C.menu_lang = #menuLang#
 			WHERE
 				A.tenant_id = #tenantId#
 			AND
@@ -565,6 +565,19 @@
 	]]>
 	</delete>
 	
+	<delete id="ezNewPortal.deleteThemePortlet" parameterClass="map">
+		<![CDATA[
+			DELETE FROM
+				TBL_PORTAL_THEME_PORTLET
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+			AND
+				portlet_id = #poortletId#
+		]]>
+	</delete>
+	
 	<update id="ezNewPortal.updateCompanyPortletOrder" parameterClass="Map">
 	<![CDATA[
 		UPDATE 
@@ -731,21 +744,6 @@
 	)
 	]]>
 	</insert>
-	
-	<update id="ezNewPortal.resetCompanyMenuOrder" parameterClass="Map">
-	<![CDATA[
-		UPDATE 
-			TBL_PORTAL_MENU_COMP A, TBL_PORTAL_MENU B
-		SET
-			A.company_order = B.default_order
-		WHERE
-			A.menu_id = B.menu_id
-		AND
-			company_id = #companyId#
-		AND
-			tenant_id = #tenantId#
-	]]>
-	</update>
 	
 	<update id="ezNewPortal.updateUserThemeAndFrameDefault" parameterClass="Map">
 	<![CDATA[
@@ -951,7 +949,7 @@
 			theme_id, tenant_id, company_id, portlet_id, portlet_used, portlet_order, menu_id
 		) VALUES (
 			#themeId#, #tenantId#, #companyId#, #portletId#, #portletUsed#, 
-			(SELECT portlet_order FROM TBL_PORTAL_PORTLET_COMP WHERE company_id = #companyId# AND tenant_id = #tenantId# AND portlet_id = #portlet_id#),
+			(SELECT portlet_order FROM TBL_PORTAL_PORTLET_COMP WHERE company_id = #companyId# AND tenant_id = #tenantId# AND portlet_id = #portletId#),
 			#menuId#
 		) 
 		ON DUPLICATE KEY UPDATE

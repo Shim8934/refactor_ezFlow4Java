@@ -8,7 +8,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title><spring:message code='ezNewPortal.t056' /></title>
 	<link rel="stylesheet"  href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css">
-	<link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
+	<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/default.css')}" />
@@ -92,36 +92,61 @@
 <body class="mainbody" marginwidth="0" marginheight="0">
 	<h1>
 		<spring:message code='ezNewPortal.t056' />
-		<select class="companySelect" id="ListCompany">
-        	<c:forEach var="item" items="${companyList}">
-           		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-           	</c:forEach>
-	    </select>
+		<select class="companySelect" id="ListCompany"></select>
 	</h1>
-	<%-- <div id="mainmenu">
-		<ul style="margin-top: 15px;">
-			<li id="portletOrderReset"><span><spring:message code='ezNewPortal.t103' /></span></li>
-		</ul>
-	</div> --%>
 		
-	<ul id="portletListContainer" class="col-container">
-			
-	</ul>
+	<ul id="portletListContainer" class="col-container"></ul>
 	
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript">	
 		var lang = "${lang}";
 		var arrayLang = Number(lang) - 1;
+		var usePrimaryLangOnly = "";
+		var primary = "";
 		
 		$(function() {
-			$("#ListCompany").on("change", getPortletList);
+			getCompanies();
 			getPortletList();	
 			//이벤트 세팅
 			/* $("#portletOrderReset").on("click", portletOrderReset); */
 		});
 		
-		
+		var getCompanies = function() {
+			var request = new XMLHttpRequest();
+			request.open('POST', '/admin/ezNewPortal/getCompanies.do', false);
+			request.setRequestHeader('Content-Type', 'application/json');
+			var companiesHTML = "";
+	
+			request.onload = function() {
+				if (request.status >= 200 && request.status < 400) {
+					var result = JSON.parse(request.responseText);
+					
+					var userCompany = result.userCompany;
+					var companyList = result.list;
+					usePrimaryLangOnly = result.usePrimaryLangOnly;
+					primary = result.primary;
+					
+					companyList.forEach(function (item, index) {
+						companiesHTML += "<option value=" + item.cn + ((item.cn == userCompany) ? ' selected>' : '>') + item.displayName + "</option>";
+					});
+					
+					document.getElementById("ListCompany").innerHTML = companiesHTML;
+					
+					document.getElementById("ListCompany").addEventListener('change', function() {
+						getMenus();
+					});
+				} else {
+					// We reached our target server, but it returned an error
+				}
+			};
+	
+			request.onerror = function() {
+			  // There was a connection error of some sort
+			};
+			
+			request.send();
+		}
 		
 		//포틀릿 추가
 		var portletAdd = function() {
@@ -239,78 +264,6 @@
 			request.send(data);
 		}
 		
-		//순서변경 -- 사용안함
-		/* var updatePortletOrder = function () {
-			var companiesObj = document.getElementById("ListCompany");
-			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
-			
-			//포틀릿 순서가져오기
-			var portletList = $(".col");
-			var portletListCount = portletList.length;
-			var portletOrderList = [];
-			
-			for (var i = 0; i < portletListCount; i++) {
-				var order = i + 1;
-				var portletId = portletList[i].id;
-				portletId = portletId.substring(7);
-				
-				portletOrderList.push({"portletOrder" : order, "portletId" : portletId});
-			}
-			
-	 		var request = new XMLHttpRequest();
-			
-			request.open('POST', '/admin/ezNewPortal/updatePortletOrder.do', true);
-			request.setRequestHeader('content-type', 'application/json');
-			
-			request.onload = function() {};
-			
-			request.onerror = function() {}
-			
-			var data = JSON.stringify({
-				companyId : companyValue,
-				portlets : portletOrderList
-			});
-			 
-			request.send(data);
-		} */
-		
-		//순서초기화 -- 사용안함
-		/* var portletOrderReset = function() {
-	 		var companiesObj = document.getElementById("ListCompany");
-			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
-			
-			//포틀릿 순서가져오기
-			var portletList = document.getElementsByClassName("col");
-			var portletListCount = portletList.length;
-			var portletOrderList = [];
-			
-			for (var i = 0; i < portletListCount; i++) {
-				var order = portletList[i].getAttribute("data1");
-				var portletId = portletList[i].id;
-				portletId = portletId.substring(7);
-				
-				portletOrderList.push({"portletOrder" : order, "portletId" : portletId});
-			}
-			
-			var request = new XMLHttpRequest();
-			
-			request.open('POST', '/admin/ezNewPortal/updatePortletOrder.do', true);
-			request.setRequestHeader('content-type', 'application/json');
-			
-			request.onload = function() { 
-				getPortletList(); 
-			};
-			
-			request.onerror = function() {}
-			
-			var data = JSON.stringify({
-				companyId : companyValue,
-				portlets : portletOrderList
-			});
-			 
-			request.send(data);
-		} */
-	
 		//게시판 설정 
 		var openBoardTree = function(event) {
 			var portletId = event.data.portletId;
@@ -613,9 +566,24 @@
 			listHTML += "</tr>";
 			
 			//언어
-			listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(<spring:message code='ezNewPortal.t078' />) </th><td class='portletInfoTD'><input class='portletName' data1='1' type='text' maxlength='50'></td></tr>";
-			listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(<spring:message code='ezNewPortal.t079' />) </th><td class='portletInfoTD'><input class='portletName' data1='2' type='text' maxlength='50'></td></tr>";
-			listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(<spring:message code='ezNewPortal.t080' />) </th><td class='portletInfoTD'><input class='portletName' data1='3' type='text' maxlength='50'></td></tr>";
+			if (usePrimaryLangOnly == "YES") {
+				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />";
+				
+				if (primary == "1") {
+					listHTML += "(<spring:message code='ezNewPortal.t078' />) </th><td class='portletInfoTD'><input class='portletName' data1='1' type='text' maxlength='50'></td></tr>";
+				} else if (primary == "2") {
+					listHTML += "(<spring:message code='ezNewPortal.t079' />) </th><td class='portletInfoTD'><input class='portletName' data1='2' type='text' maxlength='50'></td></tr>";
+				} else if (primary == "3") {
+					listHTML += "(<spring:message code='ezNewPortal.t080' />) </th><td class='portletInfoTD'><input class='portletName' data1='3' type='text' maxlength='50'></td></tr>";
+				} else {
+					
+				}
+			} else {
+				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(<spring:message code='ezNewPortal.t078' />) </th><td class='portletInfoTD'><input class='portletName' data1='1' type='text' maxlength='50'></td></tr>";
+				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(<spring:message code='ezNewPortal.t079' />) </th><td class='portletInfoTD'><input class='portletName' data1='2' type='text' maxlength='50'></td></tr>";
+				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(<spring:message code='ezNewPortal.t080' />) </th><td class='portletInfoTD'><input class='portletName' data1='3' type='text' maxlength='50'></td></tr>";
+			}
+			
 			listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t098' /> </th><td class='portletInfoTD'>";
 			listHTML += "<input id='newPortletMenu' type='text' readonly>";
 			listHTML += "<div class='btnpositionJsp menuSetting'>";
@@ -633,32 +601,12 @@
 			
 			document.getElementById("portletListContainer").insertAdjacentHTML('beforeend', listHTML);
 			
-			//jquery ui - sortable(드래그앤드랍)
-			/* $(".col-container").sortable("destroy");
-	
-			$( ".col-container" ).sortable({
-				items : "li.col",
-			    handle: ".portlet-header",
-			    cancel: ".portlet-toggle"
-			}); */
 			
 			$( ".newPortlet")
 			.addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
 			.find( ".portlet-header" )
 			.addClass( "ui-widget-header ui-corner-all" );
 			//jquery ui - 끝
-			
-			/* var categoryList = document.querySelectorAll("input[name='category']");
-			
-			[].forEach.call(categoryList, function(category) {
-				category.addEventListener("click", function(){
-					if (this.value == "B" && this.checked) {
-						document.getElementById("newPortlet").querySelector(".setBoard").style.display = "table-row";
-					} else {
-						document.getElementById("newPortlet").querySelector(".setBoard").style.display = "none";
-					}
-				});
-			}); */
 			
 			$("#newPortlet").find(".menuSetting").on("click", {"portletId" : null}, openMenuList);
 			

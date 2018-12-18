@@ -70,7 +70,7 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 .util_frame{background-position: -155px -124px; width: 21px; height: 21px;}/* 프레임아이콘 */
 
 .full_menu { background-position: -35px -155px; width: 25px; height: 24px; }/* 전체메뉴 */
-.icon_count_arrow { background-position: -187px -0px; width: 21px; height: 21px; }/* 대메뉴 카운트 화살표 */
+.icon_count_arrow { background-position: -188px -0px; width: 21px; height: 21px; }/* 대메뉴 카운트 화살표 */
 .icon_nav_mail{ background-position: 0px -61px; width: 21px; height: 21px; }/* 메일 */
 .icon_nav_addressbook { background-position: -31px -62px; width: 21px; height: 21px; }/* 주소록 */
 .icon_nav_approval { background-position: -62px -62px; width: 21px; height: 21px; }/* 전자결재 */

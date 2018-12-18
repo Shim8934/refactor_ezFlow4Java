@@ -475,7 +475,7 @@
 					<!-- <input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0;" > -->					
 					<%-- <a class="pollImgbtn" onClick="menu_Search()" ><span style="height: 23px;"><spring:message code="ezPoll.t227"/></span></a> --%>
 					<input type="text" name="searchInput" id="searchInput" onkeypress="check_key(event);" value="<c:out value='${strSearch1}'/>">
-					<a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onclick="menu_Search()"></a>
+					<a style="float:right"><img src="/images/bsearch_new.gif" border="0" onclick="menu_Search()"></a>
 			</span>
 		</h1>
 		<div id="mainmenu">

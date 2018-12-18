@@ -816,7 +816,7 @@
 				<li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup()"></span></li>
 				<li onClick="delete_address()"><span class="icon16 icon16_delete"></span></li>
 				<li onClick="window.location.reload(false)"><span class="icon16 icon16_refresh"></span></li>
-				<li><span class="icon16 icon16_mail" onClick="write_letter()"></span></li>
+				<li><span class="icon16 icon16_mail_gray" onClick="write_letter()"></span></li>
 				<li style="background:none;float:right">
 					<select id="ListViewType" onchange="View_Change();">
 						<option value="card" <c:if test="${pListType == 'card'}"> selected</c:if>><spring:message code='ezAddress.t2000' /></option>

@@ -179,7 +179,7 @@
 		    	<th><spring:message code='ezOrgan.t286'/></th>
 		    	<td colspan="3">
 		    		<input id="ZipCode" style="WIDTH: 100px;" maxlength="6" readonly />
-		      		<a href="#" class="imgbtn"><span onClick="GetPostCode()"><spring:message code='ezOrgan.t286'/></span></a>
+		      		<a class="imgbtn"><span onClick="GetPostCode()"><spring:message code='ezOrgan.t286'/></span></a>
 		      	</td>
 		 	</tr>
 		  	<tr style="display:none">
