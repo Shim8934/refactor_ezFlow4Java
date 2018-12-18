@@ -284,7 +284,7 @@
 			else {
 				document.getElementById("PreContent_RayerH").style.display = "none";
 				document.getElementById("preview_nodata").style.display = "";
-				document.getElementById("nodata_title").textContent = "선택된 직책이 없습니다.";
+				document.getElementById("nodata_title").textContent = "선택된 직위가 없습니다.";
 			}
 		}
 		/* 유저리스트 Row더블클릭 Action */
@@ -462,7 +462,7 @@
 			else {
 				document.getElementById("PreContent_RayerH").style.display = "none";
 				document.getElementById("preview_nodata").style.display = "";
-				document.getElementById("nodata_title").textContent = "선택된 직위가 없습니다.";
+				document.getElementById("nodata_title").textContent = "선택된 직책이 없습니다.";
 			}
 		}
 		
