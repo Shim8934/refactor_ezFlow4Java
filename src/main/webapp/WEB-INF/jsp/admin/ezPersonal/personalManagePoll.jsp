@@ -113,9 +113,8 @@
 							<p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
 						</div>
 					</div>
-			 </div>
 				</ul>
-			</div>
+			 </div>
 			
 			<script type="text/javascript">
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

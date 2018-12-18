@@ -229,7 +229,8 @@
 			        }
 			    }
 			}
-			
+
+			var companyinfo_dialogArguments = new Array();
 		    function add_company_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		            getDeptFullTree(rtnValue);
@@ -1517,6 +1518,9 @@
 				}
 			}
 		</script>
+		<style>
+		.OrganListView {width:470px;}
+		</style>
 	</head>
 	<body class="mainbody">
 		<input type="hidden" name="selectedCN" id="selectedCN" />
@@ -1570,13 +1574,47 @@
 			</LISTVIEWDATA>
 		</xml>
 		<h1>
-		<c:if test="${dotNetIntegration != 'YES'}">
-		<spring:message code='main.t56' />
-		</c:if>
-		<c:if test="${dotNetIntegration == 'YES'}">
-		<spring:message code='main.t24' />
-		</c:if>
+			<c:if test="${dotNetIntegration != 'YES'}">
+				<spring:message code='main.t56' />
+			</c:if>
+			<c:if test="${dotNetIntegration == 'YES'}">
+				<spring:message code='main.t24' />
+			</c:if>
 		</h1>
+
+		<div id="mainmenu">
+			<ul style="margin-top:15px">
+				<c:if test="${dotNetIntegration != 'YES'}">
+					<li id="companybutton3"><span onClick="info_company()"><spring:message code='ezCommunity.t1070' /></span></li>
+					<li id="companybutton1"><span onClick="add_company()"><spring:message code='ezOrgan.t76' /></span></li>
+					<li id="companybutton2"><span onClick="del_company()"><spring:message code='ezOrgan.t78' /></span></li>
+					<li><span onClick="info_dept()"><spring:message code='ezOrgan.t79' /></span></li>
+					<li><span onClick="add_dept()"><spring:message code='ezOrgan.t80' /></span></li>
+					<li id="usermenu10"><span onClick="del_dept()"><spring:message code='ezOrgan.t81' /></span></li>
+					<li id="usermenu8"><span onClick="mov_dept()"><spring:message code='ezOrgan.t82' /></span></li>
+					<li id="usermenu3"><span onClick="info_user()"><spring:message code='ezOrgan.t83' /></span></li>
+					<li><span onClick="add_user()"><spring:message code='ezOrgan.t84' /></span></li>
+					<c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>
+					<c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>
+					<li id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></li>
+				</c:if>
+				<li id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
+				<li id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></li>
+				<c:if test="${useSyncServer == 'YES'}">			
+					<li id="usermenu24"><span onClick="syncOrganAccounts()"><spring:message code='ezOrgan.lhm5' /></span></li>
+				</c:if>
+				<c:if test="${useBizmekaTalk == 'YES'}">
+					<li id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></li>
+				</c:if>
+				<c:if test="${useDisablePopImap == 'YES'}">
+					<li id="usermenu22"><span onClick="mod_pop3Imap()">POP3/IMAP</span></li>
+				</c:if>
+				<c:if test="${useMobileManagemant == 'YES' }">
+					<li id="usermenu23"><span onClick="mobile_managed()"><spring:message code='ezPersonal.t998' /></span></li>
+				</c:if>
+			</ul>
+		 </div>
+
 		<table style="height:630px;margin-top:10px;width:900px;border:1px solid #ddd">
 			<tr>
 				<th style="height:30px;border-bottom:0px"><spring:message code='ezOrgan.t73' /></th>
@@ -1584,92 +1622,7 @@
 					<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>					
 					<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
 				</th>
-				<th style="width:80px;text-align:center;" rowspan="3">
-					<table>
-                        <tr id="companybutton3">
-                            <td><a class="imgbtn"><span onClick="info_company()"><spring:message code='ezCommunity.t1070' /></span></a></td>
-                        </tr>     
-						<c:if test="${dotNetIntegration != 'YES'}">
-						<tr id="companybutton1">
-							<td><a class="imgbtn"><span onClick="add_company()"><spring:message code='ezOrgan.t76' /></span></a></td>
-						</tr>
-						<tr id="companybutton2">
-							<td><a class="imgbtn"><span onClick="del_company()"><spring:message code='ezOrgan.t78' /></span></a></td>
-						</tr>
-						<tr>
-							<td height="15"><img <spring:message code='ezOrgan.i1' /> style="margin-bottom:3px"></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn"><span onClick="info_dept()"><spring:message code='ezOrgan.t79' /></span></a></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn"><span onClick="add_dept()"><spring:message code='ezOrgan.t80' /></span></a></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn" id="usermenu10"><span onClick="del_dept()"><spring:message code='ezOrgan.t81' /></span></a></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn" id="usermenu8"><span onClick="mov_dept()"><spring:message code='ezOrgan.t82' /></span></a></td>
-						</tr>
-						<tr>
-							<td height="15"><img <spring:message code='ezOrgan.i1' /> style="margin-bottom:3px"></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn" id="usermenu3"><span onClick="info_user()"><spring:message code='ezOrgan.t83' /></span></a></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn"><span onClick="add_user()"><spring:message code='ezOrgan.t84' /></span></a></td>
-						</tr>
-						<tr style="display:none">
-							<td><a class="imgbtn" id="usermenu2"><span onClick="del_user()"><spring:message code='ezOrgan.t85' /></span></a></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn" id="usermenu1"><span onClick="mov_user()"><spring:message code='ezOrgan.t86' /></span></a></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn" id="userRetire"><span onClick="Retire_user()"><spring:message code='ezOrgan.t310' /></span></a></td>
-						</tr>      
-						<tr <c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>>
-							<td height="15"><img <spring:message code='ezOrgan.i1' /> style="margin-bottom:3px"></td>
-						</tr>
-						<tr <c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>>
-							<td><a class="imgbtn" id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></a></td>
-						</tr>
-						<tr>
-							<td height="15"><img <spring:message code='ezOrgan.i1' /> style="margin-bottom:3px"></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn" id="usermenu5"><span onClick="mod_password()"><spring:message code='ezOrgan.t90' /></span></a></td>
-						</tr>
-						</c:if>
-						<tr>
-							<td><a class="imgbtn" id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></a></td>
-						</tr>		
-						<tr>
-							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></a></td>
-						</tr>
-						<c:if test="${useSyncServer == 'YES'}">			
-							<tr>
-			                	<td><a class="imgbtn" id="usermenu24"><span onClick="syncOrganAccounts()"><spring:message code='ezOrgan.lhm5' /></span></a></td>
-			                </tr>
-		                </c:if>
-						<c:if test="${useBizmekaTalk == 'YES'}">			
-							<tr>
-			                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
-			                </tr>
-		                </c:if>
-		                <c:if test="${useDisablePopImap == 'YES'}">
-							<tr>
-			                	<td><a class="imgbtn" id="usermenu22"><span onClick="mod_pop3Imap()">POP3/IMAP</span></a></td>
-			                </tr>
-		                </c:if>
-		                <c:if test="${useMobileManagemant == 'YES' }">
-		                	<tr>
-			                	<td><a class="imgbtn" id="usermenu23"><span onClick="mobile_managed()"><spring:message code='ezPersonal.t998' /></pan></a></td>
-			                </tr>
-			            </c:if>
-					</table>
-				</th>
+				
 			</tr>
 			<tr>
 				<th style="height:30px;border-top:0px">
