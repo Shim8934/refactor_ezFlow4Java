@@ -110,12 +110,12 @@
 .prevItem .ddRes {padding: 0px 0px 2px 70px !important;}
 .zoomDiv {text-align: left; padding: 5px; margin: 0px; line-height: 0px;}
 .zoomDiv >img {cursor: pointer;}
-.survey-infrow, .survey-infrow-pv {display: flex; font-family: HanSans, Gulim; margin: 5px 0px;}
+.survey-infrow, .survey-infrow-pv {display: flex; font-family: HanSans, Gulim; margin: 5px 0px; align-items: center;}
 .survey-infrow select {outline: none;}
 .survey-infrow >span, .survey-infrow-pv >span {margin: 0px 10px; line-height: 32px; font-size: 14px;}
 .survey-infrow >span:first-child, .survey-infrow-pv >span:first-child {margin-left: 0px !important; min-width: 80px;}
-.survey-infrow .target-select {border-radius: 3px; outline: none; background-color: rgba(204, 204, 204, 0.46); padding: 0px 5px; font-size: 13px; line-height: 27px; cursor: pointer; margin: 0px 10px; border: 1px solid #ddd; display: none;}
-.target-select.on {display: block;}
+.survey-infrow .target-select {border-radius: 3px; outline: none; background-color: rgba(204, 204, 204, 0.46); padding: 0px 5px; font-size: 13px; line-height: 27px; cursor: pointer; margin: 0px 10px; border: 1px solid #ddd;}
+.user-mainDiv.on {display: flex;}
 .survey-infrow .date-input {width: 60px; outline: 0px; border: 1px solid #ddd; padding-left: 5px;}
 .survey-infrow input, .survey-infrow select, .survey-infrow .target-select {height: 27px;}
 .surveyinfo-wrap {border: 1px solid #d7d7d7; padding: 20px 40px; background-color: #fff; margin-bottom: 15px;}
@@ -216,7 +216,6 @@ input::-ms-clear {display: none;}
 .slt-listDiv >div{width: 100%; overflow-x: auto; overflow-y: auto;}
 .slt-listDiv >div {height: 554px;}
 .slt-listDiv .mainlist {width: 100%;}
-.slt-listDiv .mainlist tr:first-child td {color: #333; background-color: #f8f8fa;}
 .slt-listDiv .mainlist tr:not(first-child) td:first-child {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .dd-option-image, .dd-selected-image {height: 24px; width: 24px;}
 .dd-option-text, .dd-selected-text {cursor: pointer;}
@@ -240,7 +239,7 @@ input::-ms-clear {display: none;}
 
 .btns button, .addBtns button, .rowBtn button, .colBtn button {background-color: rgba(224, 224, 224, 0.88); border-radius: 5px; border-width: 1px; border-style: solid; box-shadow: none; border-color: rgb(224, 224, 224); padding: 4px 8px; font-size: 14px; cursor: pointer;}
 .btns button + button, .addBtns button + button {margin-left: 7px;}
-.btns button:hover, .addBtns button:hover, .rowBtn button:hover, .colBtn button:hover, .target-select.on:hover {color: #fff; background-color: #2196f3; border-color: #2196f3;}
+.btns button:hover, .addBtns button:hover, .rowBtn button:hover, .colBtn button:hover, .target-select:hover {color: #fff; background-color: #2196f3; border-color: #2196f3;}
 
 .quesDiv {text-align: center; align-items: center; justify-content: center; padding-top: 10px;}
 .quesDiv .qstnRow {display: flex; align-items: center;}
@@ -438,3 +437,10 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwArrow {padding: 0px 30px;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow .logicSpan {font-size: 16px; margin-top: 2px;}
 
+.user-mainDiv {display: none; align-items: center;}
+.user-listDiv {flex: 1; border: none; outline: none; padding: 0px 5px; max-height: 30px; height: 25px; line-height: 25px; overflow-y: auto;}
+.user-listDiv span {padding-right: 5px; font-size: 12px; word-break: break-all;}
+.user-listDiv span >u {cursor: pointer; color: #333; text-decoration: underline; line-height: 20px;}
+.user-listDiv span:hover >u {text-decoration:none; text-shadow: 1px 1px 1px #ccc;}
+.user-listDiv span >em {padding-right: 5px; font-style: normal;}
+.user-listDiv span >img {width: 10px; height: 10px; cursor: pointer;}

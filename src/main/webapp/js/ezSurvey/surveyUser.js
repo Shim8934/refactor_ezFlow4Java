@@ -105,8 +105,7 @@
 			cursor: "move",
 			containment: "parent",
 			tolerance: "pointer",
-			axis: "y",
-			items: "tr:not(.no-sort)",
+			axis: "y"
 		});
 	}
 	
@@ -302,17 +301,12 @@
 	}
 	
 	function addUserToSelectList(userInf) {
-		var selectedTable       = document.getElementById("selectedTable");
-		var newTrElmt           = document.createElement("tr");
-		var newTdElmt1          = document.createElement("td");
-		var newTdElmt2          = document.createElement("td");
-		
-		newTdElmt1.textContent = userInf["deptName"];
-		newTdElmt1.setAttribute("title", userInf["deptName"]);
-		newTdElmt2.textContent = userInf["userName"];
-		newTdElmt2.setAttribute("title", userInf["userName"]);
-		newTrElmt.appendChild(newTdElmt1);
-		newTrElmt.appendChild(newTdElmt2);
+		var selectedTable      = document.getElementById("selectedTable");
+		var newTrElmt          = document.createElement("tr");
+		var newTdElmt          = document.createElement("td");
+		newTdElmt.textContent  = userInf["userName"];
+		newTdElmt.setAttribute("title", userInf["userName"]);
+		newTrElmt.appendChild(newTdElmt);
 		
 		newTrElmt.className = "bnkCabNormal";
 		newTrElmt.setAttribute("role"     , userInf["userId"]);
@@ -399,7 +393,7 @@
 		var listTr        = selectedUsers.rows;
 		var userList      = [];
 		
-		for (var i = 1, len = listTr.length; i < len; i++) {
+		for (var i = 0, len = listTr.length; i < len; i++) {
 			var userInf = getUserInforFromTr(listTr[i]);
 			userList.push(userInf);
 		}

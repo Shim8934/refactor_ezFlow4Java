@@ -43,7 +43,11 @@
 					<option><spring:message code="ezSurvey.t53"/></option>
 					<option><spring:message code="ezSurvey.t54"/></option>
 				</select>
-				<button class="target-select" id="targetBttn"><spring:message code="ezSurvey.t55"/></button>
+				<%-- <button class="target-select" id="targetBttn"><spring:message code="ezSurvey.t55"/></button> --%>
+				<div id="userWrapDiv" class="user-mainDiv">
+					<button class="target-select" id="targetBttn"><spring:message code="ezSurvey.t55"/></button>
+					<div style="border: 1px solid #ddd; width: 600px; height: 27px; box-sizing: border-box; display: flex; align-items: center;"><div id="userListDiv" class="user-listDiv"></div></div>
+				</div>
 			</div>
 		</div>
 	</div>
