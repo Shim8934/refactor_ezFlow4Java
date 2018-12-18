@@ -1,8 +1,19 @@
-﻿function TreeViewinitialize(targetDeptID, TopDeptID, tProperty, ServerName, mode, orgCompanyID) {
+﻿function TreeViewinitialize(targetDeptID, TopDeptID, tProperty, ServerName, mode, orgCompanyID, displayTrashDept) {
     try {
         var xmlHTTP = createXMLHttpRequest();    
         
-        var strQuery = "<DATA><DEPTID>" + targetDeptID + "</DEPTID><TOPID>" + TopDeptID + "</TOPID><PROP>" + tProperty + "</PROP><orgCompanyID>" + orgCompanyID + "</orgCompanyID></DATA>";
+        var orgCompanyIDStr = "";
+        if (typeof(orgCompanyID) != "undefined" && orgCompanyID != null) {
+        	orgCompanyIDStr = "<orgCompanyID>" + orgCompanyID + "</orgCompanyID>";
+        }
+        
+        var displayTrashDeptStr = "";
+        if (displayTrashDept) {
+        	displayTrashDeptStr = "<DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT>";
+        }
+        
+        var strQuery = "<DATA><DEPTID>" + targetDeptID + "</DEPTID><TOPID>" + TopDeptID + "</TOPID><PROP>" + tProperty + "</PROP>" + orgCompanyIDStr + displayTrashDeptStr + "</DATA>";
+        
         xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
         xmlHTTP.send(strQuery);
         
