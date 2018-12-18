@@ -914,20 +914,27 @@
 						axis: "y",
 						update: function(event, ui) {
 							
-							//var catchedQs = ui.item;
 							var catchedWrapper = ui.item;
 							var catchedQsId = parseInt(catchedWrapper.attr("id").replace("qstn", ""));
-							var prevQsId = parseInt(catchedWrapper.prev().attr("id").replace("qstn", ""));
-							var nextQsId = parseInt(catchedWrapper.next().attr("id").replace("qstn", ""));
+							var prevQsId = "";
+							var nextQsId = "";
+							var prev = catchedWrapper.prev();
+							var next = catchedWrapper.next();
+							
+							if (prev.length != 0) {
+								prevQsId = parseInt(prev.attr("id").replace("qstn", ""));
+							}
+
+							if (next.length != 0) {
+								nextQsId = parseInt(next.attr("id").replace("qstn", ""));
+							}
 							var comparedQsId = "";
 							var qstnList    = SurveyCreate.getQs();
 							var catchedQsObj = qstnList[catchedQsId-1];
-							//var catchedWrapper = $("#" + catchedQsObj.id);
-							
 							var type = catchedQsObj["type"];
 							
-							if (!isNaN(nextQsId)) {
-								if (!isNaN(prevQsId)) {
+							if (nextQsId != "") {
+								if (prevQsId != "") {
 									if (prevQsId > catchedQsId && nextQsId > catchedQsId) {
 										comparedQsId = prevQsId;
 									} else {
@@ -1952,7 +1959,7 @@
 							logicNum = qstnOpt[i].logic;
 							
 							if (logicNum != "") {
-								logic = "질문 " + logicNum; 
+								logic = SurveyMessages.strQs + " " + logicNum; 
 							}
 							$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
 							$("#sltVal" + id + i).text(logic).css("dispaly", "");
@@ -1986,7 +1993,7 @@
 						html += "<div id='logic" + id + "' class='slidLogicArea'>";
 						html += "<input id='slidLogicInput" + id + "' class='prevSlidInput' type='text'>";
 						html += "<span id='LogicPoint" + id + "' class='logicSpan'></span>";
-						html += "<span class='logicSpan'>이상</span>";
+						html += "<span class='logicSpan'>" + SurveyMessages.strMore + "</span>";
 						html += "<img class='prevSlidArrow' src='/images/ezSurvey/arrow.png'>";
 						html += "<select id='slt" + id + "' class='logicSelect' name='slt" + id + "'>";
 						html += htmlOption;
@@ -1998,7 +2005,7 @@
 					
 					if (question.logicFlag == 'Y') {
 						logicNum = qstnOpt[0].logic;
-						logic = (logicNum != "") ? "질문 " + logicNum : "";
+						logic = (logicNum != "") ? SurveyMessages.strQs + " " + logicNum : "";
 						
 						$("#frstBtnGrp" + id).css("display", "none");
 						$("#thrdBtnGrp" + id).css("display", "");
@@ -2095,7 +2102,7 @@
 						// option 객체에 logic 추가
 						qstn.option[i]['logic'] = logicNum;
 						
-						logic = (logicNum == "") ? "분기 없음" : "질문 " + logicNum;
+						logic = (logicNum == "") ? SurveyMessages.strNoLogic : "질문 " + logicNum;
 						$("select[name=slt" + id + i + "]").css("display", "none");
 						$("#sltVal" + id + i).text(logic).css("display", "");
 					}
@@ -2171,7 +2178,7 @@
 						var logicNum = $("select[name=slt" + id  + i +"] option:selected").val();
 						qstn.option[i]['logic'] = logicNum;
 						
-						logic = (logicNum == "") ? "분기 없음" : "질문 " + logicNum;
+						logic = (logicNum == "") ? SurveyMessages.strNoLogic : SurveyMessages.strQs + " " + logicNum;
 						$("select[name=slt" + id + i + "]").css("display", "none");
 						$("#sltVal" + id + i).text(logic).css("display", "");
 					}
