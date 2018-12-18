@@ -58,6 +58,7 @@ var SurveyMessages = {
 	strDate2     : "검색기간의 종료일을 지정해 주세요.",
 	strDate3     : "검색기간의 시작일을 지정해 주세요.",
 	strItemErr   : "설문을 선택하세요.",
+	strItemErr1  : "설문을 하나만 선택하세요.",
 	strDelete    : "설문을 삭제하시겠습니까?",
 	strPerm      : "권한이 없습니다.",
 	strDel       : "삭제 되었습니다.",

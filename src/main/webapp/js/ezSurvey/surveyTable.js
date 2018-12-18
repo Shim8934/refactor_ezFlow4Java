@@ -110,13 +110,13 @@ function SurveyTable(data) {
 			
 			if (cell.cellIndex != _selectedCell) {
 				var lastSelectedCell = _tableElmt.rows[0].cells[_selectedCell];
-				lastSelectedCell.removeChild(lastSelectedCell.firstElementChild);
+				lastSelectedCell.removeChild(lastSelectedCell.lastElementChild);
 				var spanElmt = document.createElement("span");
 				cell.appendChild(spanElmt);
 			}
 			
-			var spanElmt       = cell.firstElementChild;
-			spanElmt.className = orderOption == "DESC" ? "spanDown" : "spanUp";
+			var spanImg       = cell.lastElementChild;
+			spanImg.className = orderOption == "DESC" ? "spanDown" : "spanUp";
 		}
 		else {
 			cell.setAttribute("orderoption", "DESC");

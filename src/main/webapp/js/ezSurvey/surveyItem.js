@@ -204,14 +204,14 @@ var SurveyItem = function() {
 		listBttns[1].onclick    = function(e) {onMainSearch();};
 		listBttns[2].onclick    = function(e) {toggleSearchPanel();};
 		
-		var addBttn  = document.getElementById("createBttn");
-		var delBttn  = document.getElementById("deleteBttn");
-		var ruseBttn = document.getElementById("reuseBttn");
-		var srchBttn = document.getElementById("searchBttn");
-		if (addBttn)  {addBttn.firstElementChild.onclick  = function(e) {createNewSurvey()  ;};}
-		if (delBttn)  {delBttn.firstElementChild.onclick  = function(e) {deleteFileConfirm();};}
-		if (ruseBttn) {ruseBttn.firstElementChild.onclick = function(e) {reuseSurvey()      ;};}
-		if (srchBttn) {srchBttn.firstElementChild.onclick = function(e) {toggleSearchPanel();};}
+		var addBttn   = document.getElementById("createBttn");
+		var delBttn   = document.getElementById("deleteBttn");
+		var reuseBttn = document.getElementById("reuseBttn");
+		var srchBttn  = document.getElementById("searchBttn");
+		if (addBttn)   {addBttn.firstElementChild.onclick   = function(e) {createNewSurvey()   ;};}
+		if (delBttn)   {delBttn.firstElementChild.onclick   = function(e) {deleteFileConfirm() ;};}
+		if (reuseBttn) {reuseBttn.firstElementChild.onclick = function(e) {reuseSurveyConfirm();};}
+		if (srchBttn)  {srchBttn.firstElementChild.onclick  = function(e) {toggleSearchPanel() ;};}
 		
 		$("#Sdatepicker").datepicker(datepickerSt);
 		$("#Edatepicker").datepicker(datepickerSt);
@@ -367,7 +367,7 @@ var SurveyItem = function() {
 	}
 	
 	function showProgressPanel() {
-		startTime    = new Date();
+		startTime        = new Date();
 		var currenWidth  = document.body.clientWidth;
 		var progressImg  = document.getElementById("processImage");
 		document.getElementById("progressPanel").className = "loadingPanel on";
@@ -391,8 +391,8 @@ var SurveyItem = function() {
 	}
 	
 	function hiddenProgressPanel() {
-	    document.getElementById("progressPanel").className = "loadingPanel";
-	    document.getElementById("processImage").className  = "loadingProgress";
+		document.getElementById("progressPanel").className = "loadingPanel";
+		document.getElementById("processImage").className  = "loadingProgress";
 	}
 	
 	function checkingData(data) {
@@ -406,7 +406,6 @@ var SurveyItem = function() {
 	}
 	
 	function processData(data) {
-		console.log(data);
 		surveyTable.setDataSource(data.itemList);
 		surveyTable.renderTable();
 		surveyNavi.init(data.currentPage, data.totalRows, data.totalPages);
@@ -600,6 +599,14 @@ var SurveyItem = function() {
 	function afterDeleteSuccessfully() {
 		alert(SurveyMessages.strDel);
 		refreshAllFrames();
+	}
+	
+	function reuseSurveyConfirm() {
+		var itemArr = getSelectedItems();
+		if (itemArr.length == 0) {alert(SurveyMessages.strItemErr) ; return;}
+		if (itemArr.length > 1)  {alert(SurveyMessages.strItemErr1); return;}
+		
+		window.parent.frames["right"].location.href = "/ezSurvey/ReuseItem.do?itemId=" + itemArr[0];
 	}
 	
 	function getSelectedItems() {
@@ -842,8 +849,8 @@ var SurveyItem = function() {
 		if(userWindow) {userWindow.close();}
 	}
 	
-	function createNewSurvey()  {window.parent.frames["right"].location.href = "/ezSurvey/createSurvey.do";}
-	function getIframeContent() {return documentCont;}
+	function createNewSurvey()   {window.parent.frames["right"].location.href = "/ezSurvey/createSurvey.do";}
+	function getIframeContent()  {return documentCont;}
 	
 	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {
 		$.ajax({

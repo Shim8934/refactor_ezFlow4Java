@@ -8,8 +8,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
@@ -189,24 +191,21 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		List<SurveyVO> listSurvey  = ezSurveyDAO.getSurveyListForPermission(map);
 		
 		if (listSurvey == null || listSurvey.size() == 0) {
-			result.put("code", 1);
-			result.put("reason", 1);
+			result.put("code", 3);
 			return result;
 		}
 		
 		List<SurveyVO> otherSurvey = listSurvey.stream().filter(i -> !i.getCreatorId().equals(userId)).collect(Collectors.toList());
 		
-		if (mode == 1) { //delete mode
+		if (mode == 1) { //delete, reuse check
 			if (otherSurvey.size() > 0) {
-				result.put("code", 1);
-				result.put("reason", 1);
+				result.put("code", 3);
 				return result;
 			}
 		}
-		else if (mode == 2) { //participate mode
+		else if (mode == 2) { //participate check
 			if (otherSurvey.size() < listSurvey.size()) {
-				result.put("code", 1);
-				result.put("reason", 1);
+				result.put("code", 3);
 				return result;
 			}
 		}
@@ -216,8 +215,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo);
 				
 				if (!listReceivedSurvey.containsAll(listOtherSurveyId)) {
-					result.put("code", 1);
-					result.put("reason", 1);
+					result.put("code", 3);
 					return result;
 				}
 			}
@@ -513,24 +511,27 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String sqlQuery, String srchMode, String srchOption, String order, String column, LoginVO userInfo) throws Exception {
-		JSONObject result     = new JSONObject();
-		String userId         = userInfo.getId();
-		int tenantId          = userInfo.getTenantId();
-		String primary        = userInfo.getPrimary();
-		String offset         = userInfo.getOffset();
-		String offsetMinute   = commonUtil.getMinuteUTC(offset);
-		int startPoint        = 0;
-		int totalItems        = 0;
-		int totalPages        = 0;
+		JSONObject result   = new JSONObject();
+		String userId       = userInfo.getId();
+		int tenantId        = userInfo.getTenantId();
+		String primary      = userInfo.getPrimary();
+		String offset       = userInfo.getOffset();
+		String offsetMinute = commonUtil.getMinuteUTC(offset);
+		int startPoint      = 0;
+		int totalItems      = 0;
+		int totalPages      = 0;
 		
 		if (!column.equals("") && !order.equals("")) {
 			switch(column) {
-				case "it": sqlQuery = "item_type "   + order; break;
-				case "tt": sqlQuery = "title "       + order; break;
-				case "un": sqlQuery = primary.equals("1") ? "creator_name1 " + order : "creator_name2 " + order; break;
-				case "cd": sqlQuery = "create_date " + order; break;
-				case "is": sqlQuery = "item_size "   + order; break;
-				default  : sqlQuery = "item_type "   + order; break;
+				case "at": sqlQuery = "attach_flag "                                              + order; break;
+				case "st": sqlQuery = "use_status "                                               + order; break;
+				case "tt": sqlQuery = "title "                                                    + order; break;
+				case "ed": sqlQuery = "end_date "                                                 + order; break;
+				case "ut": sqlQuery = "participate_flag "                                         + order; break;
+				case "ct": sqlQuery = primary.equals("1") ? "user_name1 " + order : "user_name2 " + order; break;
+				case "pl": sqlQuery = "result_public_flag "                                       + order; break;
+				case "an": sqlQuery = "anonymous_flag "                                           + order; break;
+				default  : sqlQuery = "title "                                                    + order; break;
 			}
 		}
 		
@@ -594,9 +595,12 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("userId",    userInfo.getId());
 		List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(map);
 		map.put("deptList", userDeptList);
-		List<Long> result = ezSurveyDAO.getReceivedSurveyList(map);
+		List<Long> result         = ezSurveyDAO.getReceivedSurveyList(map);
+		Set<Long> setSurveyIds    = new HashSet<>(result);
+		result.clear();
+		result.addAll(setSurveyIds);
 		
-		return result != null ? result : new ArrayList<>();
+		return result;
 	}
 	
 	
