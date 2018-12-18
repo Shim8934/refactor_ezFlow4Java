@@ -459,7 +459,22 @@
 		</script>
 	</head>
 	<body class="mainbody" style="min-width: 750px;">
-		<h1><spring:message code="ezPoll.t103"/>
+		<h1 id="pollMainName">
+		<c:choose>
+			<c:when test="${pollType eq '2' }">
+				<spring:message code="ezPoll.t101"/>
+			</c:when>
+			<c:when test="${pollType eq '1' }">
+				<spring:message code="ezPoll.t237"/>
+			</c:when>
+			<c:when test="${pollType eq '4' }">
+				<spring:message code="ezPoll.t251"/>
+			</c:when>
+			<c:when test="${pollType eq '3' }">
+				<spring:message code="ezPoll.t102"/>
+			</c:when>
+		</c:choose>
+		<spring:message code="ezPoll.t103"/>
 			<span id="mailBoxInfo"></span>
 			<span style="float: right; font-weight:normal;color:black;">
 				<select id="selectType">
@@ -489,19 +504,19 @@
 				<%--<li id="btnHid"><a onClick="menu_Hide()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t203"/></span></a></li>
 				<li><a onClick="menu_Show()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				
 				<li><input id="seeAll" type="checkbox" style="float:left; margin:6px 4px 0px 5px;"><spring:message code="ezPoll.t205" /></li> --%>
-				<li style="float:right; font-weight:normal; color:black; padding-right: 5px; border:0px; background: white;">
+				<li style="display:none; float:right; font-weight:normal; color:black; padding-right: 5px; border:0px; background: white;">
 					<input id="btnRadio1" type="radio" name="processCheck" style="vertical-align:middle; padding-right: 20px;" onclick="selectCheck()" value="3" ${pollType == '3'? 'checked' : ''} >
 					<label for="btnRadio1"><spring:message code='ezPoll.t145' /></label>					
 				</li>
-				<li style="float:right; font-weight:normal; color:black; border:0px; background: white;">
+				<li style="display:none; float:right; font-weight:normal; color:black; border:0px; background: white;">
 					<input id="btnRadio2" type="radio" name="processCheck" style="vertical-align:middle;" onclick="selectCheck()" value="2" ${pollType == '2'? 'checked' : ''}>
 					<label for="btnRadio2"><spring:message code='ezPoll.t146' /></label>					
 				</li>
-				<li style="float:right; font-weight:normal; color:black; border:0px; background: white;">
+				<li style="display:none; float:right; font-weight:normal; color:black; border:0px; background: white;">
 					<input id="btnRadio4" type="radio" name="processCheck" style="vertical-align:middle;" onclick="selectCheck()" value="4" ${pollType == '4'? 'checked' : ''}>
 					<label for="btnRadio4"><spring:message code='ezPoll.t251' /></label>		
 				</li>
-				<li style="float:right; font-weight:normal; color:black; border:0px; background: white;">
+				<li style="display:none; float:right; font-weight:normal; color:black; border:0px; background: white;">
 					<input id="btnRadio3" type="radio" name="processCheck" style="vertical-align:middle;" onclick="selectCheck()" value="1" ${pollType == '1'? 'checked' : ''}>
 					<label for="btnRadio3"><spring:message code='ezPoll.t237' /></label>		
 				</li>

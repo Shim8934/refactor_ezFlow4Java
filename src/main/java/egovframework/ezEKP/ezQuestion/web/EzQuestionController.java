@@ -110,7 +110,29 @@ public class EzQuestionController extends EgovFileMngUtil {
 	private EzCommonService ezCommonService;
 	
 	/**
-	 * 전자설문 설문리스트 메인 화면 호출 함수
+	 * 전자설문 메인 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezQuestion/qstMain.do")
+	public String qstMain() throws Exception{
+		logger.debug("qstMain Start");
+		
+		logger.debug("qstMain End");
+		return "/ezQuestion/qstMain";
+	}
+	
+	/**
+	 * 전자설문 레프트 메뉴 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezQuestion/qstLeft.do")
+	public String qstLeft() throws Exception{
+		logger.debug("qstLeft Start");
+		
+		logger.debug("qstLeft End");
+		return "/ezQuestion/qstLeft";
+	}
+	
+	/**
+	 * 전자설문 설문리스트 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezQuestion/qstList.do")
 	public String qstList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, QstListVO qstListVO) throws Exception{
