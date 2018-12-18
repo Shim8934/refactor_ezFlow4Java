@@ -17,7 +17,8 @@ function setPanelPointer() {
 			setGadgetPosition();
 
 			defaultPointer();
-		}
+		},
+		scroll: false 
 	}).on("mouseup", function() {
 		$(".noteBlock").css("visibility", "hidden");
 		$("#open-memo").css("visibility", "visible");
@@ -222,7 +223,8 @@ function layerExpand() {
     		$("#layer-popup .ui-resizable-handle").css("display", "none");
     		
     		$("#layer-popup").draggable({
-    			disabled: true
+    			disabled: true,
+    			scroll: false
     		});
     		setMemoLayerMode(1);
     	}
@@ -242,7 +244,8 @@ function layerExpand() {
     		$("#layer-popup .ui-resizable-handle").css("display", "");
     		
     		$("#layer-popup").draggable({
-    			disabled: false
+    			disabled: false,
+    			scroll: false
     		});
     		setMemoLayerMode(0);
     	}
@@ -425,13 +428,15 @@ function getMemoConfig() {
 	        		$(".noteBlock .ui-resizable-handle").css("display", "none");
 	        		
 	        		$("#layer-popup").draggable({
-	        			disabled: true
+	        			disabled: true,
+	        			scroll: false
 	        		});
 				} else {
 					$("#layer-popup").removeClass("layerFullScreen").addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");
 	        		$("#layer-popup .ui-resizable-handle").css("display", "");
 	        		$("#layer-popup").draggable({
-	        			disabled: false
+	        			disabled: false,
+	        			scroll: false
 	        		});
 					return;
 				}
