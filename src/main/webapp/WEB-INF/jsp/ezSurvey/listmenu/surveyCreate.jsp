@@ -800,7 +800,12 @@
 							addDrdwLogic(id, qstn);
 							break;
 						}
-						qstn['logicFlag'] = 'Y';
+						
+						var logicFlag = qstn['logicFlag'];
+						
+						if (logicFlag == undefined) {
+							qstn['logicFlag'] = 'Y';
+						}
 						
 						$("#thrdBtnGrp" + id).siblings().css("display", "none");
 						$("#thrdBtnGrp" + id).css("display", "");
@@ -828,6 +833,32 @@
 						$("#frstBtnGrp" + id).siblings().css("display", "none");
 						$("#frstBtnGrp" + id).css("display", "");
 					});
+/////////////////////////////					
+					// 로직 수정 버튼 이벤트
+					$(".prevQsArea").on("click", ".mdfLogic", function() {
+						var id = parseInt($(this).attr("id").replace("mdfLogic", ""));
+						// 로직 flag 저장
+						var qstnList = SurveyCreate.getQs();
+						var qstn = qstnList[id - 1];
+						var type = qstn.type;
+						
+						// 로직 수정, ui 변경
+						switch(type) {
+						case 1 :
+						case 2 :
+							showSltLogicForm(id, qstn);
+							break;
+						case 7:
+							showSlidLogicForm(id, qstn);
+							break;
+						case 9:
+							showDrdwLogicForm(id, qstn);
+							break;
+						}
+						$("#scndBtnGrp" + id).siblings().css("display", "none");
+						$("#scndBtnGrp" + id).css("display", "");
+					});
+					
 					
 					// 로직 삭제 버튼 이벤트
 					$(".prevQsArea").on("click", ".delLogic", function() {
@@ -1809,7 +1840,7 @@
 						}
 					}
 				}
-////////////////////////////////////				
+				
 				// 미리보기 질문의 헤더
 				function prevQsHeader(question, qstnList) {
 					var qstId    = question.id;
@@ -1928,9 +1959,11 @@
 					var id = "";
 					var qstnOpt = question.option;
 					var prevQsOpt = prevWrapper.find(".prevQsOpt");
-					
+					var logicPoint = "";
+					console.log(question);
 					if (qstnId) {
 						id = qstnId;
+						logicPoint = question.option[0]['logic'];
 					}
 					
 					var minVal = "";
@@ -1947,6 +1980,7 @@
 					var html = "";
 						html += "<div id='logic" + id + "' class='slidLogicArea'>";
 						html += "<input id='slidLogicInput" + id + "' class='prevSlidInput' type='text' minVal='" + minVal + "' maxVal='" + maxVal + "'>";
+						html += "<span id='LogicPoint" + id + "' class='logicSpan'></span>";
 						html += "<span class='prevSlidSpan'>이상</span>";
 						html += "<img class='prevSlidArrow' src='/images/ezSurvey/arrow.png'>";
 						html += "<select id='slt" + id + "' class='logicSelect' name='slt" + id + "'>";
@@ -2023,6 +2057,19 @@
 						}
 					}
 				}
+				// select 질문 logic form 나타내기
+				function showSltLogicForm(id, qstn) {
+					var prevQsWrapper = $("#prevQstn" + id);
+					var opt = prevQsWrapper.find(".prevQsOpt").find(".opt");
+					
+					var qstnOpt = qstn.option;
+					
+					for (var i = 0; i < opt.length; i++) {
+						var logicNum = qstnOpt[i]['logic'];
+						$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "");
+						$("#sltVal" + id + i).css("display", "none");
+					}
+				}
 				
 				// select 질문 객체, ui에 로직 value 추가
 				function addSltLogic(id, qstn) {
@@ -2035,10 +2082,31 @@
 						// option 객체에 logic 추가
 						qstn.option[i]['logic'] = logicNum;
 						
+						if (logicNum == "") {
+							logicNum == "분기 없음";
+						}
 						$("select[name=slt" + id + i + "]").css("display", "none");
-						$("#sltVal" + id + i).text(logicNum);
+						$("#sltVal" + id + i).text(logicNum).css("display", "");
 					}
+					console.log(qstn);
 				}
+				
+				// slider 질문 logic form 나타내기
+				function showSlidLogicForm(id, qstn) {
+					console.log(qstn);
+					var prevQsWrapper = $("#prevQstn" + id);
+					
+					var logicPoint = qstn['slidLogicPoint'];
+					var logicNum = qstn.option[0]['logic'];
+					
+					$("#slidLogicInput" + id).val(logicPoint).css("display", "");
+					$("#LogicPoint" + id).css("display", "none");
+					
+					$("#sltVal" + id).css("display", "none");
+					$("#slt" + id).val(logicNum).prop("selected", true).css("display", "");
+					
+				}
+				
 				// slider 질문 객체, ui에 로직 value 추가
 				function addSlidLogic(id, qstn) {
 					var inputVal = parseInt($("#slidLogicInput" + id).val());
@@ -2050,8 +2118,11 @@
 							qstn['slidLogicPoint'] = inputVal;
 							qstn.option[0]['logic'] = logicNum;
 							
+							$("#slidLogicInput" + id).css("display", "none");
+							$("#LogicPoint" + id).text(inputVal).css("display", "");
+							
 							$("select[name=slt" + id + "]").css("display", "none");
-							$("#sltVal" + id).text(logicNum);
+							$("#sltVal" + id).text(logicNum).css("display", "");
 						} else {
 							alert(SurveyMessages.strchooseNum);
 							return;
@@ -2059,6 +2130,22 @@
 					} else {
 						alert(SurveyMessages.strBetweenNum);
 						return;
+					}
+					console.log(qstn);
+				}
+				
+				// dropdown 질문 logic form 나타내기
+				function showDrdwLogicForm(id, qstn) {
+					var prevQsWrapper = $("#prevQstn" + id);
+					var logicRow = prevQsWrapper.find("#logic" + id).find(".drdwLogicRow");
+					var RowLength = logicRow.length;
+					
+					var qstnOpt = qstn.option;
+					
+					for (var i = 0; i < RowLength; i++) {
+						var logicNum = qstnOpt[i]['logic'];
+						$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "");
+						$("#sltVal" + id + i).css("display", "none");
 					}
 				}
 				
@@ -2072,10 +2159,13 @@
 						var logicNum = $("select[name=slt" + id  + i +"] option:selected").val();
 						qstn.option[i]['logic'] = logicNum;
 						
+						if (logicNum == "") {
+							logicNum == "분기 없음";
+						}
 						$("select[name=slt" + id + i + "]").css("display", "none");
-						console.log($("#sltVal" + id + i));
-						$("#sltVal" + id + i).text(logicNum);
+						$("#sltVal" + id + i).text(logicNum).css("display", "");
 					}
+					console.log(qstn);
 				}
 				
 				function confirmSurveyInfo(qstInf) {
