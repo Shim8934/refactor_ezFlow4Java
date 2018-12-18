@@ -926,8 +926,11 @@
 							}
 
 							if (next.length != 0) {
-								nextQsId = parseInt(next.attr("id").replace("qstn", ""));
+								if (next.attr("id") != "") {
+									nextQsId = parseInt(next.attr("id").replace("qstn", ""));
+								}
 							}
+							
 							var comparedQsId = "";
 							var qstnList    = SurveyCreate.getQs();
 							var catchedQsObj = qstnList[catchedQsId-1];
