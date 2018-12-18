@@ -81,8 +81,8 @@ public interface EzWebFolderService {
 	void deleteSelectedFilesFolders (String[] fileIDList, String[] folderIDList ,LoginVO userInfo) throws Exception ;
 	void saveLog(String string, String companyId, String offset, String userId, String userName1, String userName2, String fileName, long fileSize, String fileExt, String fileTypeName, int tenantId) throws Exception;
 	String getMaxFileID(int tenantId) throws Exception;
-	JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, Locale locale, String realPath, LoginVO userInfo, boolean isOverwritable) throws Exception;
-	JSONObject moveFiles(String folderId, String fileList, List<String> nameList, String mode, String privileges, String realPath, LoginVO userInfo, boolean isOverwritable) throws Exception;
+	JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, LoginVO userInfo, boolean isOverwritable) throws Exception;
+	JSONObject moveFiles(String folderId, String fileList, List<String> nameList, String mode, String privileges, LoginVO userInfo, boolean isOverwritable) throws Exception;
 	Map<String, String> getAllFolderNameMap(List<String> testbnk, String primary, int tenantId);
 	List<String> getFolderListFromFileId(List<String> fileIds, int tenantId) throws Exception;
 	String getWebFolderDirPath(int tenantId);

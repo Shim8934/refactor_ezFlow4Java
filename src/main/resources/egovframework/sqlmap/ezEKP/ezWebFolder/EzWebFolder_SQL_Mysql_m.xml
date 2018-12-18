@@ -1917,6 +1917,9 @@
 			UPDATE
 				TBL_WEBFOLDER_FILE
 			SET
+			<isNotEmpty property="newName">
+				FILE_NAME = #newName#,
+			</isNotEmpty>
 				FOLDER_ID = #folderId#,
 				USE_STATUS = 'Y',
 				UPDATE_DATE = #timeUTC#,

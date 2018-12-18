@@ -23,6 +23,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
 import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
@@ -1242,6 +1243,12 @@ public class EzWebFolderGWController_m {
 		String serverName   = orElse(request.getHeader("x-user-host"), "");
 		String fileList = orElse(request.getParameter("fileList"), "");
 		String folderList = orElse(request.getParameter("folderList"), "");
+		String fileNameList = orElse(request.getParameter("fileNameList"), "");
+		
+		boolean isOverwritable = request.getParameter("overwritable") != null;
+		boolean hasNameList = fileNameList.trim().length() > 0;
+		// 폴더는 덮어쓰기, 이름변경 둘 다 지원하지 않음
+		// String folderNameList = orElse(request.getParameter("folderNameList"), "");
 		
 		logger.debug("moveTrashCan Started.");
 		logger.debug("userId : " + userId + " || folderId : " + folderId + " || serverName : " + serverName);
@@ -1250,6 +1257,7 @@ public class EzWebFolderGWController_m {
 		
 		String[] fileIDList = fileList.split(",");
 		String[] folderIDList = folderList.split(",");
+		String[] fileNameArray = hasNameList ? fileNameList.split(",") : null;
 		JSONObject result = new JSONObject();
 		
 		if (fileIDList.length == 0 & folderIDList.length == 0|| serverName.equals("") || userId.equals("") || folderId.equals("")) {
@@ -1259,30 +1267,44 @@ public class EzWebFolderGWController_m {
 			return result;
 		}
 		
+		if (hasNameList && fileNameArray.length != fileIDList.length) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", "1");
+			return result;
+		}
+		
 		try {
-			
-			MCommonVO user = mOptionService.commonInfoWeb(serverName, userId);
-			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
-			int tenantId  = common.getTenantId();
-			String offset = common.getOffSet();
-			String lang = common.getLang();
+			LoginVO user = commonUtil.getUserForGw(userId, serverName);
 			
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date                  = new Date();
-			String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+			String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), user.getOffset(), true);
 		
 			if (!isWebfolderAdmin(user.getRollInfo())) {
-				JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, user.getDeptId(), user.getCompanyId(), folderList, fileList, tenantId);
+				JSONObject permissionCheckResult = ezWebFolderService_y.checkPermissions(userId, user.getDeptID(), user.getCompanyID(), folderList, fileList, user.getTenantId());
 				
 				if ("error".equals(permissionCheckResult.get("status"))) {
 					return permissionCheckResult;
 				}
 			}
 			
-			ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, folderId, tenantId, userId, offset, user.getCompanyId(), user.getUserName(), user.getUserName2(), timeUTC);
+			List<DuplicateInfoVO> duplicateList;
+			
+			if (isOverwritable || hasNameList) {
+				duplicateList = ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, fileNameArray, folderId, timeUTC, user, isOverwritable);
+			} else {
+				duplicateList = ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, folderId, timeUTC, user);
+			}
+			
+			if (duplicateList.isEmpty()) {
+				result.put("code", 0);
+			} else {
+				result.put("code", 8);
+				result.put("duplicateInfoArray", duplicateList);
+			}
 			
 			result.put("status", "ok");
-			result.put("code", 0);
 		} catch (Exception e) {
 			e.printStackTrace();
 			

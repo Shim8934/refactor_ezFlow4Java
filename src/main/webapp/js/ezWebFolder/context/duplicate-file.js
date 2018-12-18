@@ -314,6 +314,86 @@ var duplicateFile = (function() {
 					nextJob(result);
 				});
 			}
+		},
+		trashMove: {
+			overwrite: function(result) {
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/moveTrashCanForDuplicate.do",
+					dataType: "json",
+					data: {
+						"id": current.info.newId,
+						"type": current.info.newType,
+						"folderId": current.folderId,
+						"overwritable": true
+					},
+					success: function(data) {
+						switch (data.code) {
+						case 0:
+							alert(messages.successMoveFile);
+							refreshView();
+							break;
+						case 1:
+							alert(messages.parameterError);
+							break;
+						case 2:
+							alert(messages.serverError);
+							break;
+						case 3:
+							alert(messages.permissionError);
+							break;
+						}
+					},
+					error: function(error) {
+						alert(strErr);
+					}
+				}).complete(function(res) {
+					nextJob(result);
+				});
+			},
+			skip: function(result) {
+				setTimeout(function() {
+					nextJob(result);
+				}, 0);
+			},
+			rename: function(result) {
+				$.ajax({
+					type: "POST",
+					url: "/ezWebFolder/moveTrashCanForDuplicate.do",
+					dataType: "json",
+					data: {
+						"id": current.info.newId,
+						"type": current.info.newType,
+						"folderId": current.folderId,
+						"newName": result.newFileName
+					},
+					success: function(data) {
+						switch (data.code) {
+						case 0:
+							alert(messages.successMoveFile);
+							refreshView();
+							break;
+						case 1:
+							alert(messages.parameterError);
+							break;
+						case 2:
+							alert(messages.serverError);
+							break;
+						case 3:
+							alert(messages.permissionError);
+							break;
+						case 8:
+							alert(messages.resultErrDuplicateRename);
+							break;
+						}
+					},
+					error: function(error) {
+						alert(strErr);
+					}
+				}).complete(function(res) {
+					nextJob(result);
+				});
+			}
 		}
 	};
 	
@@ -336,11 +416,11 @@ var duplicateFile = (function() {
 	}
 
 	var onClosePopup = function(result) {
-		//if (!isEmptyInfo()) {
+		// if (!isEmptyInfo()) {
 		executeJob(result);
-		//}
+		// }
 	}
-	
+
 	var isEmptyInfo = function(result) {
 		return infoQueue.length === 0;
 	}

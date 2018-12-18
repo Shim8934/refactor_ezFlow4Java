@@ -1205,13 +1205,13 @@ public List<DuplicateInfoVO> getAllDuplicateInfo(String fileName, String targetF
 	}
 
 	@Override
-	public JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, Locale locale, String realPath, LoginVO userInfo, boolean isOverwritable) throws Exception {
+	public JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, LoginVO userInfo, boolean isOverwritable) throws Exception {
 		// 기존 파일 이동
-		return moveFiles(folderId, fileList, null, mode, privileges, realPath, userInfo, isOverwritable);
+		return moveFiles(folderId, fileList, null, mode, privileges, userInfo, isOverwritable);
 	}
 	
 	@Override
-	public JSONObject moveFiles(String folderId, String fileListStr, List<String> nameList, String mode, String privileges, String realPath, LoginVO userInfo, boolean isOverwritable) throws Exception {
+	public JSONObject moveFiles(String folderId, String fileListStr, List<String> nameList, String mode, String privileges, LoginVO userInfo, boolean isOverwritable) throws Exception {
 		Map<String, Object> result = new HashMap<>();
 
 		String userName1 = userInfo.getDisplayName1();
@@ -1222,6 +1222,8 @@ public List<DuplicateInfoVO> getAllDuplicateInfo(String fileName, String targetF
 		String primary = userInfo.getPrimary();
 		int tenantId = userInfo.getTenantId();
 		String filesForQuery = ("'" + fileListStr + "'").replace(",", "','");
+		
+		String realPath = servletContext.getRealPath("");
 		
 		// id 배열에서 vo 리스트로 변경
 		String[] fileIdArray = fileListStr.split(",");

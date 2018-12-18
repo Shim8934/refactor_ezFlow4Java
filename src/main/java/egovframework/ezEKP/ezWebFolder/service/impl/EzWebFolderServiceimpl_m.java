@@ -1193,36 +1193,102 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 		return ezWebFolderDAO.deleteFavoritesInFolder(parameterMap);
 	}
+	
+	@Override
+	public List<DuplicateInfoVO> moveTrashCan(String[] fileIDList, String[] folderIDList,String folderId, String timeUTC, LoginVO userInfo) throws Exception {
+		return moveTrashCan(fileIDList, folderIDList, null, folderId, timeUTC, userInfo, false);
+	}
 
 	@Override
-	public void moveTrashCan(String[] fileIDList, String[] folderIDList,String folderId, int tenantId, 
-			String userId, String offset, String companyId, String userName1, String userName2, String timeUTC) throws Exception {
-		for (String file : fileIDList) {
-			if (!file.equals("")) {
+	public List<DuplicateInfoVO> moveTrashCan(String[] fileIDList, String[] folderIDList, String[] fileNameList, String folderId, String timeUTC, LoginVO userInfo, boolean overwritable) throws Exception {
+		List<DuplicateInfoVO> duplicateList = new ArrayList<>();
+		List<String> overwriteList = new ArrayList<>();
+		
+		String userName1 = userInfo.getDisplayName1();
+		String userName2 = userInfo.getDisplayName2();
+		String companyId = userInfo.getCompanyID();
+		String userId = userInfo.getId();
+		String offset = userInfo.getOffset();
+		int tenantId = userInfo.getTenantId();
+		
+		boolean useRename = fileNameList != null;
+		
+		for (int index = 0; index < fileIDList.length; index++) {
+			String file = fileIDList[index];
+			
+			if (file.isEmpty()) {
+				continue;
+			}
+			
+			// 이름 바꾸기를 사용한다면
+			if (useRename) {
 				FileVO fileVO  = ezWebFolderService.getFileByFileId(file, offset, tenantId);
+				// 확장자 붙여서 newFileName 완성
+				String newFileName = fileNameList[index];
+				newFileName += "." + fileVO.getFileExt();
 				
-				if (fileVO != null) {
-					moveFile (file, folderId, tenantId , timeUTC);
-					ezWebFolderService.saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+				// 중복된다면 continue
+				if (duplicateList.addAll(ezWebFolderService.getAllDuplicateInfo(newFileName, folderId, offset, tenantId))) {
+					continue;
+				}
+				
+				// 이름 바꾸고 continue
+				moveRenameFile(file, newFileName, folderId, tenantId, timeUTC);
+				continue;
+			}
+			
+			// 중복 체크
+			List<DuplicateInfoVO> duplicateInfos = ezWebFolderService.getAllDuplicateInfo(DuplicateInfoVO.Type.FILE, file, folderId, offset, tenantId);
+			// 이름이 중복되는 파일이라면 리스트에 넣고 continue			
+			if (duplicateInfos.size() > 0) {
+				// 덮어쓰기라면
+				if (overwritable) {
+					// 덮어쓰기 리스트에 추가한다
+					overwriteList.add(file);
+				} else {
+					duplicateList.addAll(duplicateInfos);
+				}
+				
+				continue;
+			}
+			
+			FileVO fileVO  = ezWebFolderService.getFileByFileId(file, offset, tenantId);
+			
+			if (fileVO != null) {
+				moveFile (file, folderId, tenantId , timeUTC);
+				
+				ezWebFolderService.saveLog("U", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+			}
+		}
+		
+		if (overwriteList.size() > 0) {
+			ezWebFolderService.moveFiles(folderId, String.join(",", overwriteList), null, "move", "normal", userInfo, true);
+		}
+		
+		for (String folder : folderIDList) {
+			if (folder.isEmpty()) {
+				continue;
+			}
+			
+			// 이름이 중복되는 폴더라면 리스트에 넣고 continue
+			if (duplicateList.addAll(ezWebFolderService.getAllDuplicateInfo(DuplicateInfoVO.Type.DIRECTORY, folder, folderId, offset, tenantId))) {
+				continue;
+			}
+			
+			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
+			FolderVO destFolderVO = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId());
+
+			if (destFolderVO != null) {
+				for (String lowerFolder : lowerFolders) {
+					FolderVO lowerFolderVO = ezWebFolderService.getFolderByFolderId(lowerFolder, offset, tenantId);
+					moveFolder(lowerFolderVO, destFolderVO, userId, offset, tenantId, timeUTC);
+					restoreFileInFolder(lowerFolderVO.getFolderId(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
 				}
 			}
 		}
 		
-		for (String folder : folderIDList) {
-			if (!folder.equals("")) {
-				FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
-				FolderVO destFolderVO = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
-				List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId());
-
-				if (destFolderVO != null) {
-					for (String lowerFolder : lowerFolders) {
-						FolderVO lowerFolderVO = ezWebFolderService.getFolderByFolderId(lowerFolder, offset, tenantId);
-						moveFolder(lowerFolderVO, destFolderVO, userId, offset, tenantId, timeUTC);
-						restoreFileInFolder(lowerFolderVO.getFolderId(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
-					}
-				}
-			}
-		}
+		return duplicateList;
 	}
 	
 	@Override
@@ -1273,6 +1339,18 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("folderId", folderId);
 		map.put("tenantId", tenantId);
 		map.put("timeUTC",    timeUTC);
+		
+		ezWebFolderDAO.moveFile(map);
+	}
+	
+	@Override
+	public void moveRenameFile(String fileId, String newName, String folderId, int tenantId, String timeUTC) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fileId", fileId);
+		map.put("newName", newName);
+		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
+		map.put("timeUTC", timeUTC);
 		
 		ezWebFolderDAO.moveFile(map);
 	}

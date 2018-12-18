@@ -1058,15 +1058,13 @@ public class EzWebFolderGWController {
 				}
 			}
 			
-			String realPath = request.getServletContext().getRealPath("");
-			
 			if (nameListStr == null) {
 				// 기존 파일 move & copy
-				result = ezWebFolderService.moveFiles(folderId, fileList, mode, privileges, locale, realPath, userInfo, isOverwritable);
+				result = ezWebFolderService.moveFiles(folderId, fileList, mode, privileges, userInfo, isOverwritable);
 			} else {
 				// 이름 바꾸고 move & copy
 				JSONArray nameList = (JSONArray) new JSONParser().parse(nameListStr);
-				result = ezWebFolderService.moveFiles(folderId, fileList, nameList, mode, privileges, realPath, userInfo, isOverwritable);
+				result = ezWebFolderService.moveFiles(folderId, fileList, nameList, mode, privileges, userInfo, isOverwritable);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

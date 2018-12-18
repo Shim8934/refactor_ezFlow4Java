@@ -29,6 +29,8 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
+	<!-- module -->
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 	<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
    		var lang = ${userInfo.lang};
@@ -495,11 +497,27 @@
 						
 				}
 			}
-			 
 			/*var lastTh = $("#BoardList_TH th").last();
 			if (lastTh.attr("id") == null) {
 				lastTh.css("display", "none");
 			}*/
+		}
+		
+		function openLeftPanel() {
+			var leftFrame = window.parent.frames["left"].document;
+			var blockLeft = leftFrame.getElementById("bnkBlockLeft");
+			var height    = Math.max(leftFrame.documentElement.clientHeight, leftFrame.documentElement.scrollHeight);
+			leftFrame.body.style.overflow = "hidden";
+			blockLeft.style.height        = height + "px";
+			blockLeft.style.display       = "";
+		}
+
+		function closeLeftPanel() {
+			var leftFrame = window.parent.frames["left"].document;
+			var blockLeft = leftFrame.getElementById("bnkBlockLeft");
+			leftFrame.body.style.overflow = "auto";
+			blockLeft.style.height        = "100%";
+			blockLeft.style.display       = "none";
 		}
     </script>
 </head>

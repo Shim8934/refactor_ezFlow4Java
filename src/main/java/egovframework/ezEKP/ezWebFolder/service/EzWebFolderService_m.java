@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.FavoriteVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
@@ -97,11 +98,15 @@ public interface EzWebFolderService_m {
 	
 	boolean restoreFileInFolder (String folderId, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
 
-	void moveTrashCan (String[] fileIDList, String[] folderIDList,String folderId, int tenantId, String userId, String offset, String companyId, String userName1, String userName2, String timeUTC) throws Exception;
+	List<DuplicateInfoVO> moveTrashCan (String[] fileIDList, String[] folderIDList,String folderId, String timeUTC, LoginVO userInfo) throws Exception;
+
+	List<DuplicateInfoVO> moveTrashCan(String[] fileIDList, String[] folderIDList, String[] fileNameList, String folderId, String timeUTC, LoginVO userInfo, boolean overwritable) throws Exception;
 
 	void moveFolder (FolderVO folderVO, FolderVO destFoldeVO, String userId, String offset, int tenantId, String timeUTC) throws Exception;
 
 	void moveFile (String fileId, String folderId, int tenantId, String timeUTC) throws Exception;
+	
+	void moveRenameFile(String fileId, String newName, String folderId, int tenantId, String timeUTC) throws Exception;
 
 	List<String> getAllFolderIdNotInFolder(String folderPath, String folderId) throws Exception;
 }
