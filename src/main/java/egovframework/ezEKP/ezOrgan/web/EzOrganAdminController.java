@@ -2812,7 +2812,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         try {
             //관리자 권한 체크
             LoginVO userInfo = commonUtil.userInfo(loginCookie);
-            if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+            if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
                 return returnValue;
             }
             
@@ -2861,7 +2861,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			// 전체관리자 권한 체크
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
-			if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 				return returnValue;
 			}
 			
