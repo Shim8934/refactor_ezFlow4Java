@@ -3722,15 +3722,17 @@ e.printStackTrace();
 			String useAttitude2 = ezCommonService.getTenantConfig("USE_ATTITUDE", info.getTenantId());
 			
 			if (useAttitude2 == null || useAttitude2.equals("")) {
-				useAttitude2 = "YES";
+				useAttitude2 = "NO";
 			}
 			
-			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(info.getCompanyId(), info.getTenantId(), info.getLang(), userId, info.getDeptId());
-			
-			for (MenuInfoVO mVO : menuList) {
-				if (mVO.getMenuId()==9 && useAttitude2.equals("YES")) {
-					useAttitude = "YES";
-				}	
+			if (useAttitude2.equals("YES")) {
+				List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(info.getCompanyId(), info.getTenantId(), info.getLang(), userId, info.getDeptId());
+				
+				for (MenuInfoVO mVO : menuList) {
+					if (mVO.getMenuId()==9 && useAttitude2.equals("YES")) {
+						useAttitude = "YES";
+					}	
+				}
 			}
 			
 			//마지막(최종)접속시간
@@ -3799,7 +3801,7 @@ e.printStackTrace();
 			
 			// 2. 메뉴에 권한이 있는지 ================ 수정하기 start
 			if (useQuestion == null || useQuestion.equals("")) {
-				useQuestion = "YES";
+				useQuestion = "NO";
 			}
 			
 			if (useCircular == null || useCircular.equals("")) {

@@ -27,7 +27,7 @@
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
 			.ui-portlet-content { font-weight: bold; display: inline-block;}
 			.ui-portlet-list { padding-left: 20px; height: 335px; width: 97%;}
-			.ui-portlet-span { display: inline-block; width: 69%; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-bottom:-4px;}
+			.ui-portlet-span { display: inline-block; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-bottom:-4px;}
 			.flipsterLi { width:95px; height: 64px; margin-top:20px; margin-left:20px; padding:20px; background:#fff;}
 			.frameList { height: 151px; /* background-color: #e0e3e4; */ margin-left: 20px; margin-right: 20px;}
 			
@@ -38,6 +38,24 @@
 			.flipster__container {margin-left:-20px;}
 			.mCSB_container {margin-right:10px !important;}
 			.flipster__button {height:65px;}
+			.fixed_span {width:67%; display:inline-block;}
+			.fixed_span img {width:20px; height:20px; vertical-align:middle; margin-right:5px;}
+			/* Tooltip text */
+			.fixed_span .tooltiptext {visibility: hidden;width: 130px;background-color: rgba(0,0,0, 0.5);color: #fff;text-align: center;padding: 5px 0;
+										border-radius: 6px;position: absolute;z-index: 1; top:6px; opacity:0; transition : opacity 1s;}
+			
+			/* Show the tooltip text when you mouse over the tooltip container */
+			.fixed_span img:hover ~ .tooltiptext {visibility: visible;opacity: 1;}
+			.fixed_span .tooltiptext::after {
+				content: " ";
+				position: absolute;
+				top: 40%;
+				right: 100%;
+				margin-top: -5px;
+				border-width: 5px;
+				border-style: solid;
+				border-color: transparent rgba(0,0,0, 0.5) transparent transparent;
+			}
 		</style>
 	</head>
 	<body id="set-body">
@@ -90,12 +108,9 @@
 			
 			
 			$(function() {
-				
 				$("#closeBtn").on("click", popupClose);
 				$("#cancelBtn").on("click", popupClose);
 			
-			
-				
 				var selectFrame = function () {
 					var selectedFrame = document.querySelector('div.select-flipster');
 					selectedFrame && selectedFrame.classList.remove('select-flipster');
@@ -212,13 +227,29 @@
 				 				var div = document.createElement('div');
 				 				div.classList.add('ui-portlet');
 				 				// 사용중인 포틀릿
-				 				if (item.portletUsed === true) {
+				 				if (item.portletUsed === true || item.fixed === true) {
 				 					div.classList.add('ui-portlet-on');
 				 				} else {
 				 					div.classList.add('ui-portlet-off');
-				 				}	 				
+				 				}
 				 				
 				 				div.classList.add('ui-portlet-content');
+				 				
+				 				//2018-12-18 유은정 - 포틀릿 필수 사용 지정 관련 개발
+				 				var fixedSpan = document.createElement('div');
+			 					fixedSpan.className = 'fixed_span';
+				 				var fixedImg = "";
+				 				var tooltipText = "";
+				 				
+				 				if (item.fixed === true) {
+				 					fixedImg = document.createElement('img');
+				 					fixedImg.src = "/images/ImgIcon/circular_temp.gif"; 
+				 					tooltipText = document.createElement('span');
+				 					tooltipText.className = 'tooltiptext';
+				 					var contents = document.createTextNode("<spring:message code='ezNewPortal.t130' />");
+				 					tooltipText.appendChild(contents);
+				 				}
+				 				
 								var nameSpan = document.createElement('span');
 								nameSpan.className = 'ui-portlet-span';
 								nameSpan.textContent = item.portletName;
@@ -232,15 +263,16 @@
 								var input = document.createElement('input');
 								input.type = 'checkbox';
 								input.id = 'portletid_' + item.portletId;
+								input.dataset.isfixed = item.fixed;
 			
 				 				// 사용중인 포틀릿
-				 				if (item.portletUsed === true) {
+				 				if (item.portletUsed === true || item.fixed === true) {
 				 					input.setAttribute('checked', true);
 				 				}
 				 				
 				 				// checkbox click event
 				 				input.addEventListener('click', function() {
-				 					if(this.getAttribute('checked')) {
+				 					if(this.getAttribute('checked') && !this.getAttribute("data-isfixed")) {
 				 						this.removeAttribute('checked');	
 				 						div.classList.remove('ui-portlet-on');
 				 						div.classList.add('ui-portlet-off');
@@ -257,12 +289,22 @@
 								
 								label.appendChild(input);
 								label.appendChild(slideSpan);
-								div.appendChild(nameSpan);
+								
+								if (fixedImg != "") {
+									fixedSpan.appendChild(fixedImg);
+									fixedSpan.appendChild(tooltipText);
+								}
+								
+								fixedSpan.appendChild(nameSpan);
+								div.appendChild(fixedSpan);
 								div.appendChild(label);			
 								
 								portletList.appendChild(div);
 							});
-			
+							
+							//event setting
+							$(".switch").find("input").on("change", checkIsFixed);
+							
 							$(".ui-portlet-list").mCustomScrollbar({
 								theme : "dark",
 								mouseWheelPixels: 70, 
@@ -294,20 +336,11 @@
 						var switchBtn = document.getElementById('portletid_' + item.dataset.portletid);
 						var obj = null;
 						
-						if (switchBtn.getAttribute('checked')) {
-							obj = {
-								portletId: item.dataset.portletid,
-								portletOrder: orderCount,
-								menuId: item.dataset.menuid,
-								portletUsed : switchBtn.getAttribute('checked')
-							}
-						} else {
-							obj = {
-								portletId: item.dataset.portletid,
-								portletOrder: orderCount,
-								menuId: item.dataset.menuid,
-								portletUsed : false
-							}
+						obj = {
+							portletId: item.dataset.portletid,
+							portletOrder: orderCount,
+							menuId: item.dataset.menuid,
+							portletUsed : switchBtn.checked
 						}
 						
 						orderCount++;
@@ -347,9 +380,18 @@
 					xhr.setRequestHeader('Content-Type', 'application/json');
 					xhr.send(JSON.stringify({param: param}));
 				});
-			
 			});
 			
+			//2018-12-18 유은정 - 포틀릿 필수 사용 지정 관련 개발
+			var checkIsFixed = function() {
+				var isFixed = this.getAttribute("data-isfixed");
+				
+				if (isFixed === "true") {
+					alert('<spring:message code="ezNewPortal.t131" />');
+					$(this).prop("checked", true);
+					return;
+				}
+			}
 			
 			function popupClose() {
 				bodyFrameSetting('off');

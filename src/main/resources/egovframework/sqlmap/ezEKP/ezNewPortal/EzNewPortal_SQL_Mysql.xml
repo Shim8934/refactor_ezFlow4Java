@@ -1375,6 +1375,7 @@ LIMIT
 				IFNULL(COMP.connection_url, A.portlet_url) AS portletUrl,
 				IFNULL(USER.portlet_order, IFNULL(THEME.portlet_order, IFNULL(COMP.portlet_used, A.default_order))) AS portletOrder,
                 IFNULL(USER.portlet_used, IFNULL(THEME.portlet_used, IFNULL(COMP.portlet_used, 1))) AS portletUsed,
+            	THEME.is_fixed as isFixed,
 		]]>
 		
 		<isEmpty property="deptId">
@@ -1477,7 +1478,7 @@ LIMIT
 		
 		<isNotEqual property="config" compareValue="true" prepend="AND">
 			<![CDATA[
-				(USER.portlet_used = 1 OR USER.portlet_used IS NULL)
+				(USER.portlet_used = 1 OR USER.portlet_used IS NULL OR THEME.is_fixed = 1)
 			]]>
 		</isNotEqual>
 		
@@ -1954,7 +1955,8 @@ ORDER BY
 		(SELECT MENU_ID FROM TBL_PORTAL_PORTLET WHERE PORTLET_ID = #portletId#), 1, #themeId#
 	)
 	ON DUPLICATE KEY UPDATE
-	portlet_order = #portletOrder#
+	portlet_order = #portletOrder#,
+	portlet_used = #portletUsed#
 	
 ]]>
 </update>

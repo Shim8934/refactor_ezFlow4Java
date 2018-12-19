@@ -3717,7 +3717,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	/**
-	 * 전자결재 결재환경설정 부재자설정 지정 호출 Method
+	 * 관리자페이지 > 전자결재 > 부재자 설정 관리 > 부재자 지정 호출 Method
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/selectPerson.do")
 	public String selectPerson(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
@@ -3743,7 +3743,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재 결재환경설정 부재자설정 지정 호출 Method
+	 * 관리자페이지 > 전자결재 > 부재자 설정 관리 > 대리 결재자 지정 호출 Method
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/DselectPerson.do")
 	public String DselectPerson(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
