@@ -209,14 +209,17 @@ public class EzConnController {
 					resultPage = "/admin/ezOrgan/organMain.do";
 				} else if (requestUri.equals("/ezConn/admin/scheduleMain.do")) {
 					resultPage = "/admin/ezSchedule/scheduleMain.do";
-				} else {																
-					String subCode = "1";
-					
-					if (request.getParameter("subCode") != null) {
-						subCode = request.getParameter("subCode");
+				} else {				
+					String funCode = request.getParameter("funCode") != null ? request.getParameter("funCode") : "";
+					if(funCode.equalsIgnoreCase("")) {
+						String subCode = "1";
+						if (request.getParameter("subCode") != null) {
+							subCode = request.getParameter("subCode");
+						}
+						resultPage = "/ezEmail/mailMain.do?subCode=" + subCode;
+					} else { // 20181218 조진호 - 개인화포탈시 주소록 탑메뉴로 분리
+						resultPage = "/ezEmail/mailMain.do?funCode=" + funCode;
 					}
-					
-					resultPage = "/ezEmail/mailMain.do?subCode=" + subCode;
 				}
 			}
 		} catch (Exception e) {

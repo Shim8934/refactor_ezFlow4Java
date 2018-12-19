@@ -11115,6 +11115,7 @@ CREATE TABLE `tbl_portal_theme_portlet` (
   `portlet_used` int(11) DEFAULT NULL,
   `portlet_order` int(11) DEFAULT NULL,
   `menu_id` int(11) DEFAULT NULL,
+  `is_fixed` int(11) DEFAULT 0,
   PRIMARY KEY (`theme_id`,`tenant_id`,`company_id`,`portlet_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='테마별 포틀릿 사용여부 관련 테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;

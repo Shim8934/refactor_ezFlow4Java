@@ -329,7 +329,8 @@
                 loginCnt,
                 extensionattribute4 as gyumJik,
                 extensionattribute2 as userFileUrl,
-                extensionattribute14 as sabun
+                extensionattribute14 as sabun,
+                password_updatedt
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -368,7 +369,8 @@
                 loginCnt,
                 extensionattribute4 as gyumJik,
                 extensionattribute2 as userFileUrl,
-                extensionattribute14 as sabun
+                extensionattribute14 as sabun,
+                password_updatedt
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -406,7 +408,8 @@
                 loginCnt,
                 extensionattribute4 as gyumJik,
                 extensionattribute2 as userFileUrl,
-                extensionattribute14 as sabun
+                extensionattribute14 as sabun,
+                password_updatedt
             FROM 
                 TBL_USERMASTER a
             WHERE 

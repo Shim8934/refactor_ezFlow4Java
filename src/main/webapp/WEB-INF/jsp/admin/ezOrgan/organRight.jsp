@@ -61,7 +61,7 @@
 		    
 		    function getDeptFullTree(deptid){
 			    g_xmlHTTP = createXMLHttpRequest();
-				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
+				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 
 				g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 				g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -623,7 +623,7 @@
 					return;
 				}else if (adCount == 1){
 				    g_xmlHTTP = createXMLHttpRequest();
-				    var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
+				    var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 				    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 					g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 					g_xmlHTTP.send(strQuery);
@@ -643,7 +643,7 @@
 					    if (rgParams["deptid"] != "") {
 					        g_xmlHTTP = createXMLHttpRequest();
 					        // 20110412 사용자 추가시 필요 정보 추가처리.
-					        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";					        
+					        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";					        
 					        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 					        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 					        g_xmlHTTP.send(strQuery);
@@ -658,7 +658,7 @@
 		    function deptsearch_click_Complete() {
 		        if (rgParams["deptid"] != "") {
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";		            
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";		            
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -1199,19 +1199,25 @@
 			}
 		    
 		    function syncOrganAccounts() {
+		    	showProgress();
+		    	
 	            $.ajax({
 	            	type : "POST",
 	            	dataType : "text",
 	            	url : "/admin/ezOrgan/syncOrganAccounts.do",
-	            	async : true,
+	            	async : false,
 	            	success : function(result) {
-	            	    if (result == "OK") {
+	            		hideProgress();
+	            		
+	            		if (result == "OK") {
 	            	        alert("<spring:message code='ezOrgan.lhm6' />");
 	            	    } else {
 	            	        alert("<spring:message code='ezQuestion.t263' />");
 	            	    }
 	            	},
 	            	error : function(error) {
+	            		hideProgress();
+	            		
 	            	    alert("<spring:message code='ezQuestion.t263' /> " + error);
 	            	}
 	            });

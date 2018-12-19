@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.LocaleResolver;
@@ -789,29 +790,21 @@ public class EzPersonalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 메인 생일자 리스트 호출 Method
 	 */
-	@RequestMapping(value = "/ezPersonal/mainBirthUserList.do", produces = "text/xml;charset=utf-8")
-	@ResponseBody
-	public String mainBirthUserList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception{
+	@RequestMapping(value = "/ezPersonal/mainBirthUserList.do")
+	public String mainBirthUserList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, @RequestBody HashMap<String, Integer> paramMap, HttpServletRequest request) throws Exception{
 		logger.debug("mainBirthUserList started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		int month = paramMap.get("month");
+		logger.debug("month = " + month);
 		
-		String curMon = "";
-		
-		if (req.getParameter("mon") != null && !req.getParameter("mon").equals("")) {
-			curMon = req.getParameter("mon");
-			if (Integer.parseInt(curMon) < 10 && curMon.length() == 1) {
-				curMon = "0" + curMon;
-			}
-		} else {
-			Calendar cal = Calendar.getInstance();
-			curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
-		}
-		
-		String result = ezPersonalService.getBirthUserList(userInfo.getCompanyID(), curMon, userInfo.getTenantId());
+		List<OrganUserVO> list = ezPersonalService.getBirthUserList(userInfo.getCompanyID(), userInfo.getTenantId(), month, userInfo.getLang());
 
+		model.addAttribute("list", list);
+		
 		logger.debug("mainBirthUserList ended");
-		return result;
+		
+		return "json";
 	}
 	
 	/**

@@ -142,7 +142,7 @@
 					<div style="float:left">
 			    		<img src="/images/help/help.gif" width="135">
 					</div>
-					<div style="float:right;font-size:17px;font-family: Malgun Gothic; font-weight: bold; padding:10px;color:white" >ezFlow v6.3.4</div>
+					<div style="float:right;font-size:17px;font-family: Malgun Gothic; font-weight: bold; padding:10px;color:white" >ezFlow v6.4.0.STD_20181217</div>
 					<div style="clear:both"></div>
 				<table onstalled="width:100%;" border="0" style="background:url(/images/help/topmenu_bg.gif) repeat-x; height:26px;">
 			  <tr>

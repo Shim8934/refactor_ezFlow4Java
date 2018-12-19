@@ -1842,34 +1842,36 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		}
 		
 		if (fromEmail != null && !fromEmail.equals("")) {
-			fromId = ezOrganService.getCNByEmail(fromEmail, loginInfo.getTenantId());
-			
-			//email이 alias 메일이어서 id를 못가져왔을 경우
-			//alias mail인지 check후 원래 이메일 주소에서 id를 가져온다.
-			if (fromId == null || fromId.equals("")) {
-				List<String> aliasAddress = new ArrayList<String>();
-				aliasAddress.add(fromEmail);
-				Map<String, String> targetAddress = ezEmailService.getAliasAddressMap(aliasAddress, loginInfo.getTenantId());
+			if (fromEmail.contains("@")) {
+				fromId = ezOrganService.getCNByEmail(fromEmail, loginInfo.getTenantId());
 				
-				if (targetAddress != null) {
-					String resultTargetAddress = targetAddress.get(fromEmail);
-					logger.debug("resultAddress=" + resultTargetAddress);
+				//email이 alias 메일이어서 id를 못가져왔을 경우
+				//alias mail인지 check후 원래 이메일 주소에서 id를 가져온다.
+				if (fromId == null || fromId.equals("")) {
+					List<String> aliasAddress = new ArrayList<String>();
+					aliasAddress.add(fromEmail);
+					Map<String, String> targetAddress = ezEmailService.getAliasAddressMap(aliasAddress, loginInfo.getTenantId());
 					
-					if (resultTargetAddress != null) {
-						int atSignPos = resultTargetAddress.indexOf("@");
-						if (atSignPos != -1) {
-							fromId = resultTargetAddress.substring(0, atSignPos);
-							logger.debug("fromId=" + fromId);
+					if (targetAddress != null) {
+						String resultTargetAddress = targetAddress.get(fromEmail);
+						logger.debug("resultAddress=" + resultTargetAddress);
+						
+						if (resultTargetAddress != null) {
+							int atSignPos = resultTargetAddress.indexOf("@");
+							if (atSignPos != -1) {
+								fromId = resultTargetAddress.substring(0, atSignPos);
+								logger.debug("fromId=" + fromId);
+							}
 						}
+						
 					}
-					
 				}
-			}
-			
-			senderProfileImageName = ezOrganService.getPropertyValue(fromId, "EXTENSIONATTRIBUTE2", loginInfo.getTenantId());
-			logger.debug("senderProfileImageName=" + senderProfileImageName);
-			if (senderProfileImageName == null) {
-				senderProfileImageName = "";
+				
+				senderProfileImageName = ezOrganService.getPropertyValue(fromId, "EXTENSIONATTRIBUTE2", loginInfo.getTenantId());
+				logger.debug("senderProfileImageName=" + senderProfileImageName);
+				if (senderProfileImageName == null) {
+					senderProfileImageName = "";
+				}
 			}
 		}
 		
