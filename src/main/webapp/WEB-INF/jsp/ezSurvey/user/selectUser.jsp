@@ -114,12 +114,7 @@
 									
 								<div class="slt-listDiv">
 									<div>
-										<table id="selectedTable" class="mainlist">
-											<tr class="no-sort">
-												<td><spring:message code='ezSurvey.t70'/></td>
-												<td><spring:message code='ezSurvey.t71'/></td>
-											</tr>
-										</table>
+										<table id="selectedTable" class="mainlist"></table>
 									</div>
 								</div>
 							</td>

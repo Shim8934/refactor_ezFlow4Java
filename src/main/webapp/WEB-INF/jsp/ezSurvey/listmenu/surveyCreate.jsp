@@ -60,6 +60,8 @@
 				var finishStep  = null;
 				var lastStep    = 1;
 				var userWindow  = null;
+				var lastScrollY = 0;
+				var scrolled    = true;
 				var surveyObj   = {
 					infor     : {},
 					questions : []
@@ -137,6 +139,7 @@
 					
 					var userMoreElmt = document.querySelector("span[class='user-more']");
 					if (userMoreElmt) {userMoreElmt.onclick = function(e) {toggleUserPreview();};}
+					document.getElementById("userListDiv").onscroll = function(e) {scrollListOfUser(this);}
 				}
 				
 				function startUpload() {document.getElementById("fileBttn").click();}
@@ -338,15 +341,15 @@
 				
 				function toggleSelectTargetBttn() {
 					var sltBoxElmt = document.getElementById("selectTarget");
-					var targetBttn = document.getElementById("targetBttn");
+					var divUserWrp = document.getElementById("userWrapDiv");
 					var sltedIdx   = sltBoxElmt.selectedIndex;
 					
 					if (sltedIdx == 0) {
-						targetBttn.className        = "target-select";
+						divUserWrp.className        = "user-mainDiv";
 						surveyObj["infor"]["users"] = null;
 					}
 					else {
-						targetBttn.className = "target-select on";
+						divUserWrp.className = "user-mainDiv on";
 					}
 				}
 				
@@ -450,11 +453,59 @@
 					if(userWindow)  {userWindow.close();}
 				}
 				
-				function showSelectPopUp() {selectPopup = window.open("/ezSurvey/selectUsers.do", "selectUser", getOpenWindowfeature(1125, 700));}
+				function scrollListOfUser(divElmt) {
+					if (scrolled) {
+						scrolled          = false;
+						var distance      = divElmt.scrollTop < lastScrollY ? -25 : 25;
+						divElmt.scrollTop = lastScrollY + distance;
+						setTimeout(function () {scrolled = true; lastScrollY = divElmt.scrollTop;}, 500);
+					}
+				}
+				
+				function showUserList() {
+					var userArr = surveyObj["infor"]["users"];
+					var divElmt = document.getElementById("userListDiv");
+					
+					while (divElmt.firstElementChild) {
+						divElmt.removeChild(divElmt.firstElementChild);
+					}
+					
+					for (var i = 0, len = userArr.length; i < len; i++) {
+						var spanElmt = document.createElement("span");
+						var uElmt    = document.createElement("u");
+						var imgElmt  = document.createElement("img");
+						var divideEm = document.createElement("em");
+						uElmt.setAttribute("role", userArr[i]["userId"]);
+						uElmt.textContent    = userArr[i]["userName"];
+						uElmt.onclick        = (function(userId){return function() {showUserInfoFromId(userId);};})(userArr[i]["userId"]);
+						imgElmt.onclick      = (function(userId, userType){return function() {removeUser(this, userId, userType);};})(userArr[i]["userId"], userArr[i]["userType"]);
+						spanElmt.className   = "rlSpanBnk";
+						divideEm.textContent = ";";
+						imgElmt.src          = "/images/icon/oneline_delete.gif";
+						spanElmt.appendChild(uElmt);
+						spanElmt.appendChild(divideEm);
+						spanElmt.appendChild(imgElmt);
+						divElmt.appendChild(spanElmt);
+					}
+				}
+				
+				function removeUser(imgElmt, userId, userType) {
+					var userArr = surveyObj["infor"]["users"];
+					
+					for (var i = 0 ; i < userArr.length; i++) {
+						if (userArr[i]["userId"] == userId && userArr[i]["userType"] == userType) {console.log("Here!"); userArr.splice(i, 1);}
+					}
+					
+					surveyObj["infor"]["users"] = userArr;
+					var spanElmt = imgElmt.parentElement;
+					spanElmt.parentElement.removeChild(spanElmt);
+				}
+				
+				function showSelectPopUp() {selectPopup = window.open("/ezSurvey/selectUsers.do", "selectUser", getOpenWindowfeature(964, 700));}
 				function getSurveyQuestions() {return surveyObj["questions"];}
 				function setSurveyQuestions(question) {surveyObj["questions"].push(question);}
 				function getSurveyUsers() {return surveyObj["infor"]["users"];}
-				function setSurveyUsers(userList) {surveyObj["infor"]["users"] = JSON.parse(JSON.stringify(userList));}
+				function setSurveyUsers(userList) {surveyObj["infor"]["users"] = JSON.parse(JSON.stringify(userList)); showUserList();}
 				function getSurveyInfo() {return surveyObj["infor"];}
 				function isValid(value) {if (!isNaN(value) && parseFloat(value) >= 0 && value % 1 === 0) {return true;} else {return false;}}
 				

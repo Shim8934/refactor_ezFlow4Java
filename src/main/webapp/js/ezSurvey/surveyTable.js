@@ -46,7 +46,8 @@ function SurveyTable(data) {
 		if (_tableElmt == null) {throw new Error('Table not found'); return;}
 		
 		var currentStyle = _tableElmt.getAttribute("style");
-		_tableElmt.setAttribute("style", "-webkit-touch-callout: none;-webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; " + currentStyle);
+		var styleStr     = currentStyle != null ? currentStyle : "";
+		_tableElmt.setAttribute("style", "-webkit-touch-callout: none;-webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; " + styleStr);
 		
 		if (_tableMode == null) {
 			var headerRow    = _tableElmt.rows[0];
