@@ -894,7 +894,7 @@
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
 										<div style="width: 500px; height: 150px; text-align: center;">
-											<a href="#" onclick="start(<c:out value="${vo.ladderId}" />); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top:20px" /></a>
+											<a onclick="start(<c:out value="${vo.ladderId}" />); return false;"><img src ='/images/ezLadder/btn_play.png' style="margin-top:40px" /></a>
 										</div>
 									</c:when>
 									<c:otherwise>
@@ -933,7 +933,7 @@
 									</ul>
 								</div>
 								<div id="lineDiv" style="position: relative; height: 400px; z-index: 1;">
-									<div id="blackBox" style="height: 398px;background: whiteSmoke; position: absolute;left: -50px;right: 0;border-top:1px solid #ddd;border-bottom:1px solid #ddd">
+									<div id="blackBox" style="height: 398px;background: whiteSmoke; position: absolute;left: -50px;right: 0;border-top:1px solid #333;border-bottom:1px solid #333">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>

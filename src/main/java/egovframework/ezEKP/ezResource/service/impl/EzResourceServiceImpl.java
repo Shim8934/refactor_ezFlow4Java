@@ -764,10 +764,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String jobTitle = "";
 			String jobTitle2 = "";
 				
-			if (pType == null || pType.equals("")) {
+			/*if (pType == null || pType.equals("")) {
 				 jobTitle = scheRSDom.getElementsByTagName("jobtitle").item(i).getTextContent();
 				 jobTitle2 = scheRSDom.getElementsByTagName("jobtitle2").item(i).getTextContent();
-			}
+			}*/
 			if (app.equals("0")) {
 				returnStr.append("<appointment>");
 					
@@ -851,12 +851,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<dept_name><![CDATA[" + scheRSDom.getElementsByTagName("dept_name").item(i).getTextContent() + "]]></dept_name>");
 				returnStr.append("<writeDay>"+ writeDay +"</writeDay>");
 					
-				if (pType == null || pType.equals("")) {
+				/*if (pType == null || pType.equals("")) {
 					returnStr.append("<owner_nm2><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm2").item(i).getTextContent() + "]]></owner_nm2>");
 					returnStr.append("<dept_name2><![CDATA[" + scheRSDom.getElementsByTagName("dept_name2").item(i).getTextContent() + "]]></dept_name2>");
 					returnStr.append("<jobtitle><![CDATA[" +jobTitle + "]]></jobtitle>");
 					returnStr.append("<jobtitle2><![CDATA[" + jobTitle2 + "]]></jobtitle2>");
-				}
+				}*/
 				returnStr.append("</appointment>");
 			}
 		}
@@ -1118,10 +1118,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						temp.setApproveFlag(getScheduleListRept.get(i).getApproveFlag());
 						temp.setOwnerNm(getScheduleListRept.get(i).getOwnerNm());
 						temp.setDeptNm(getScheduleListRept.get(i).getDeptNm());
-						temp.setOwnerNm2(getScheduleListRept.get(i).getOwnerNm2());
+						/*temp.setOwnerNm2(getScheduleListRept.get(i).getOwnerNm2());
 						temp.setDeptNm2(getScheduleListRept.get(i).getOwnerNm2());
 						temp.setJobTitle(getScheduleListRept.get(i).getJobTitle());
-						temp.setJobTitle2(getScheduleListRept.get(i).getJobTitle2());
+						temp.setJobTitle2(getScheduleListRept.get(i).getJobTitle2());*/
 						
 						getScheduleList.add(temp);
 					}
@@ -1196,12 +1196,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<owner_nm><![CDATA[" + returnDom1.getElementsByTagName("OWNERNM").item(m).getTextContent() + "]]></owner_nm>");
 				returnStr.append("<dept_name><![CDATA[" + returnDom1.getElementsByTagName("DEPTNM").item(m).getTextContent() + "]]></dept_name>");
 				
-				if (pType.equals("")) {
+				/*if (pType.equals("")) {
 					returnStr.append("<owner_nm2><![CDATA[" + returnDom1.getElementsByTagName("OWNERNM2").item(m).getTextContent() + "]]></owner_nm2>");
 					returnStr.append("<dept_name2><![CDATA[" + returnDom1.getElementsByTagName("DEPTNM2").item(m).getTextContent() + "]]></dept_name2>");
 					returnStr.append("<jobtitle><![CDATA[" + returnDom1.getElementsByTagName("JOBTITLE").item(m).getTextContent() + "]]></jobtitle>");
 					returnStr.append("<jobtitle2><![CDATA[" + returnDom1.getElementsByTagName("JOBTITLE2").item(m).getTextContent() + "]]></jobtitle2>");
-				}
+				}*/
 				
 				returnStr.append("</ROW>");
 			}

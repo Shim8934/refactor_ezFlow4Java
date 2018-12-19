@@ -1417,8 +1417,8 @@
 		                                                <div style="float: right; margin-right: 5px;">
 		                                                    <%-- 2018-05-07 천성준 - 하위부서포함 체크박스 주석처리 (하위부서 쿼리 에러 관련 주석처리) --%>
 		                                                    <%-- <input type="checkbox" id="chk_subTree" /><span style="vertical-align:top; padding-top:3px;display:inline-block"><spring:message code='ezSchedule.t39' /></span> --%>
-		                                                    <a href="#" class="imgbtn"><span onclick="Add_Dept()"><spring:message code='ezSchedule.t00004' /></span></a>
-		                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezSchedule.t1052' /></span></a>
+		                                                    <a class="imgbtn"><span onclick="Add_Dept()"><spring:message code='ezSchedule.t00004' /></span></a>
+		                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezSchedule.t1052' /></span></a>
 		                                                </div>
 		                                            </td>
 		                                        </tr>

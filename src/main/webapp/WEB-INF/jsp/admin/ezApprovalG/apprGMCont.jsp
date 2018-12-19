@@ -34,7 +34,7 @@
 		    	document.getElementById("SCompID").value = CompanyID;
 	            InitListView();
 	            Tree_setconfig();
-	            TreeViewinitialize("", CompanyID, "extensionAttribute2", "<c:out value='${serverName}'/>", "", CompanyID);
+	            TreeViewinitialize("", CompanyID, "extensionAttribute2", "<c:out value='${serverName}'/>", "", CompanyID, true);
 		    });
 		    
 		    function Tree_setconfig() {
@@ -102,7 +102,7 @@
 		        if (CompanyID != document.getElementById("SCompID").value) {
 		            CompanyID = document.getElementById("SCompID").value;
 		            
-		            TreeViewinitialize("", CompanyID, "extensionAttribute2", "<c:out value='${serverName}'/>", "", CompanyID);
+		            TreeViewinitialize("", CompanyID, "extensionAttribute2", "<c:out value='${serverName}'/>", "", CompanyID, true);
 		        }
 		    }
 		    

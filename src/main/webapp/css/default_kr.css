@@ -33,6 +33,7 @@ a{
 	color: #393939;
 	text-decoration: none;
 	ime-mode:active;
+	cursor:pointer;
 }
 span {
 	font-size:12px;
@@ -459,7 +460,7 @@ form{display:inline;margin:0}
 /* mainmenu 의 아이콘 */
 #mainmenu li span.icon16 {margin-left:4px; margin-right:4px;}
 
-#mainmenu li.important{ border:1px solid #0470e4; color:#0470e4;}
+#mainmenu li.important{color: #0470e4; border-top: 1px solid #62aaf9; border-left: 1px solid #62aaf9; border-right: 1px solid #62aaf9; border-bottom: 1px solid #0470e4;}
 #mainmenu li.important:hover{ background:#f1f8ff;}
 
 #mainmenu li span img, #mainmenu li span.off img{
@@ -2519,6 +2520,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .icon16_search{background-position:-182px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 검색버튼아이콘 */
 .icon16_star{background-position:-208px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 즐겨찾기 별 아이콘 */
 .icon16_mail{background-position:-104px 0px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 메일쓰기 아이콘 */
+.icon16_mail_gray{background-position: -104px -78px !important;width:16px;height:16px;display:inline-block;margin: 6px 0px 0px 0px;cursor:pointer;} /* icon16 메일쓰기 회색 아이콘 */
 .btn_noframe{background-position:0px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 없음 */
 .btn_bottomframe{background-position:-26px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 하단 */
 .btn_leftframe{background-position:-52px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 왼쪽 */
@@ -2748,6 +2750,8 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .nodata_bIcon dd{margin:0px; padding:0px; font-size:17px; color:#c0c0c0; font-weight: bold;}
 
 .nodata_bIconGray{background:#ebeef1;}
+
+.hidden_area{ margin:0px; padding:0px;}
 
 /* 장진혁 */
 h2, #menu span {font-size: 12px;}

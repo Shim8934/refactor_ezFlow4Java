@@ -12,7 +12,8 @@
         <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>        
 		<title><spring:message code='ezSchedule.jjh01'/></title>
 		<script>
-			var optionStr = "";
+			var optionStr = new Array();
+			var ResourceInfo = "<c:out value='${resourceInfo}' />";	
 		    var ReturnFunction;
 	
 		    window.onload = function () {
@@ -28,10 +29,18 @@
 		    function Schedule_Confirm(id) {
 		    	if (confirm("<spring:message code='ezSchedule.t209' />")) {
 			        if (radio1.checked) {
-			            optionStr = "0";
+			            optionStr[0] = "0";
 			        } else {
-			            optionStr = "1";
+			            optionStr[0] = "1";
 			        }
+			        
+			        /* 2018-12-17 김민성 - 부모창에서 confirm창 뜨도록 변경 */
+			        var ResourceDel = "FALSE";
+		            if (ResourceInfo != "0") {
+		                confirm("<spring:message code='ezSchedule.t1300' />") ? ResourceDel = "TRUE" : ResourceDel = "FALSE";
+		            }
+		            
+		            optionStr[1] = ResourceDel; 
 			        
 			        if (ReturnFunction != null)
 			            ReturnFunction(optionStr);

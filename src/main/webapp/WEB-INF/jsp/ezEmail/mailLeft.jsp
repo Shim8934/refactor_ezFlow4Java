@@ -196,47 +196,50 @@
             // 환경설정에서 기존설정값과 신규설정값이 다르면 트리를 재호출하여 적용시킨다. 
             // 편지함 관리에서도 닫기버튼을 누르면 트리를 재호출하여 적용시킨다.
 	        function previewSubTreeCall(type){
-        		
-        		if (typeof type != "undefined") {
+				if (typeof type != "undefined") {
         			previewSubTree = type;
 
             		if (usePreviewSubTree == "YES" && previewSubTree == "N") {
-    	            	var treeArrNum = $('.plusTreeImg').length;
+    	            	var treeArrNum = $('.tree_plus').length;
 
     		          	for (var i = 0; i < treeArrNum; i++) {
-    		        	    var getSubtree = $('.plusTreeImg').eq(i).attr('name');
+    		        	    var getSubtree = $('.tree_plus').eq(i).attr('name');
     		        	    var idx = getSubtree.split('PostTreeView_img_');
     		        	    
     		        	    if (typeof idx[1] != "undefined") {
-    		        	    	var attr = $('#PostTreeView_img_' + idx[1]).attr("src").split('/');
+    		        	    	var attr = $('#PostTreeView_img_' + idx[1]).attr("class").split(' ');
     		        	    	
-    		        	    	if (attr[3] != "plus.gif") {
+    		        	    	if (attr[1] != "tree_plus") {
     			        	    	PostTreeView.toggle(idx[1]);
     		        	    	}
     		        	    }
-    		        	    
-    	        	    	treeArrNum = $('.plusTreeImg').length;
+    		          	}
+    		          	treeArrNum = $('.tree_plus').length;
+    		          	if(treeArrNum > 0){
+    		          		previewSubTreeCall(type);
     		          	}
     	            }
         		}
 	           
-        		if (usePreviewSubTree == "YES" && previewSubTree == "Y") {
-		            var treeArrNum = $('.plusTreeImg').length;
+        		 if (usePreviewSubTree == "YES" && previewSubTree == "Y") {
+		            var treeArrNum = $('.tree_plus').length;
 
-		          	for (var i = 0; i < treeArrNum; i++) {
-		        	    var getSubtree = $('.plusTreeImg').eq(i).attr('name');
+		          	while(treeArrNum > 0) {
+		        	    var getSubtree = $('.tree_plus').eq(0).attr('name');
 		        	    var idx = getSubtree.split('PostTreeView_img_');
 		        	    
 		        	    if (typeof idx[1] != "undefined") {
 		        	    	var childxml = get_childXML(PostTreeView.getvalue(idx[1], "href"), false, true, false);
 		        	    	PostTreeView.putchildxml(idx[1], childxml);
-		        	    	$('#PostTreeView_img_' + idx[1]).attr("src", "/images/OrganTree_cross/minus.gif");
+		        	    	$('#PostTreeView_img_' + idx[1]).attr("class", "sub_iconLNB tree_minus");
+		        	    	treeArrNum--;
 		        	    }
-		        	    
-	        	    	treeArrNum = $('.plusTreeImg').length;
 		          	}
-	            } 
-
+		          	treeArrNum = $('.tree_plus').length;
+		          	if(treeArrNum > 0){
+		          		previewSubTreeCall();
+		          	}
+	            }
 	        }
         	
 	        function write_Letter() {
@@ -653,7 +656,7 @@
 	        function address_foldermanage_Complete(ret) {
 	            if (ret != undefined) {
 	            	var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("GET", "/ezAddress/getRootAddressXML.do", false);
+		            xmlHTTP.open("POST", "/ezAddress/getRootAddressXML.do", false);
 		            xmlHTTP.send();
 	            	
 		            document.getElementById("AddressFolderXML").innerHTML = xmlHTTP.responseText;

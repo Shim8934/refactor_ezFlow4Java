@@ -7,6 +7,9 @@
 	<head>
 	    <title></title>
 	    <style type="text/css">
+	    	.attachedfile {
+			    margin: 0;
+			}
 	    </style>
 	    <script type="text/javascript">
 	        var nowZoom = 100;
@@ -32,7 +35,7 @@
 	        }
 	    </script>
 	</head>
-	<body>
+	<body>		
 		<div class="previewmail">
 			<div class="previewmail_info" style="border: none; display: block; width: 100%;">
 				<dl class="previewmailDL" id="Preview_HeaderH">
@@ -55,7 +58,7 @@
 					</dd>
 				</dl>
 	        </div>
-		</div>	        
+		</div>
 		<iframe src="" class="journalPreviewContentIframe" style="text-align:center; padding:0; width:100%; height:100%; overflow:auto; border:none;"></iframe>
 	</body>
 </html>

@@ -82,7 +82,7 @@
 			                location.href = encodeURIComponent(GetAttribute(checks.item(suffix++), "filepath"));
 			            } else {
 			            //	console.log("filePath : " + GetAttribute(checks.item(suffix), "filePath"));
-		                	location.href = "/ezJournal/journalAttachDown.do?filePath=" + encodeURIComponent(GetAttribute(checks.item(suffix), "filePath")) + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName") + "&journalId=" + journalId;
+		                	location.href = "/ezJournal/journalAttachDown.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName") + "&journalId=" + journalId;
 			            }
 	                	setTimeout(function () { downloadAll(checks) }, 1000);
 		            }
@@ -258,7 +258,7 @@
 	</table>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;" id="mailPanel">&nbsp;</div>
 	<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
-		<iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
+		<iframe src="" style="border: none;" id="iFrameLayer"></iframe>
 	</div>
 
 	<script type="text/javascript">

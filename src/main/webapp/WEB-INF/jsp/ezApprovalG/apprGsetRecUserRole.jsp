@@ -557,7 +557,7 @@
 		</td>
 
 		<td style="width:25px;text-align:center">
-			<a href="#">
+			<a>
 				<img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" onClick="return AddUser_onclick()">
 				<img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" onClick="return DelUser_onclick()">
 			</a>

@@ -359,7 +359,7 @@
 	            <li><span onclick="move_address()"><spring:message code='ezAddress.t176' /></span></li>
 	            <li onclick="delete_address()"><span class="icon16 icon16_delete"></span></li>
 	            <li onclick="window.location.reload(false)"><span class="icon16 icon16_refresh"></span></li>
-	            <li><span class="icon16 icon16_mail" onclick="write_letter()"></span></li>
+	            <li><span class="icon16 icon16_mail_gray" onclick="write_letter()"></span></li>
 	            <li style="background:none;float:right">
 	                <select id="ListViewType" onchange="View_Change();">
 	                    <option value="card" <c:if test="${pListType == 'card'}"> selected</c:if>><spring:message code='ezAddress.t2000' /></option>
@@ -393,7 +393,7 @@
 	                    <option value="S_HOMEPAGE"><spring:message code='ezAddress.t293' /></option>
 	                </select>
 	                <input type="text" name="search_text" id="search_text" class="textarea" onkeypress="return search_keypress()" onmousedown="Search_Clear();" style="height:22px;">
-	                <a href="#" class="imgbtn imgbck" style="vertical-align: middle;margin-top:2px"><span onclick="search_start()"><spring:message code='ezAddress.t142' /></span></a></td>
+	                <a class="imgbtn imgbck" style="vertical-align: middle;margin-top:2px"><span onclick="search_start()"><spring:message code='ezAddress.t142' /></span></a></td>
 	        </tr>
 	    </table>
 	    <br>	    
