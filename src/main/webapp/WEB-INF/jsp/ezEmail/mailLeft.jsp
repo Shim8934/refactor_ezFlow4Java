@@ -424,9 +424,8 @@
 	                        //PostTreeView.putstyle(PostTreeView.selectedIndex(), "font-weight : bold");
 	                    }
 	                    
-	                    var pageTitle = parent.frames["right"].document.title;
-
-	                    if (pageTitle == "mail_list") {
+	                    var pageSrc = parent.frames["right"].document.location.toString();
+	                    if (pageSrc.indexOf("mailList.do") != -1) {
                         	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) { }
 	                    }
 	                    
