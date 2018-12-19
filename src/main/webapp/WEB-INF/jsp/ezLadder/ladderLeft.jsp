@@ -48,7 +48,7 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        
-		        ladder_Func(1);
+		        ladderClick('part');
 		
 		        leftResize();
 		        $(".boardListBox").mCustomScrollbar({
@@ -56,37 +56,13 @@
 	        	});	
 		    };
 		    
-		    function ladder_Func(idx) {
-				$("h2.on").attr("class", "off");
-				$("#TopBoardsList .lnbUL").attr("class","lnbUL off");
-	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
-				
-				if (typeof window.parent.frames["right"] == "undefined") {
-					rightFrame.src = "/ezLadder/ladderMain.do?brdID=7";
-				}
-				else {
-					if (CrossYN()) {
-						window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
-			        } else {
-			        	window.parent.frames["right"].location.href = "/ezLadder/ladderMain.do?brdID=7";
-			        }
-		            SetTreeviewUnSelect("");
-				}
-			}
-		    
-		    function pollClick(num){
-		    	var g_BrdID = "6";		    	
-		    	
-				var szUrl = "/ezPoll/pollList.do?brdID=" + g_BrdID + "&see=0&currPage=1&mode=&search=&mode1=sub&searchN=&pollType=" + num;			
+		    function ladderClick(mode){
+				var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=1&searchSelect=none&searchInput=&sort=basic&sortFlag=desc";			
 				window.parent.frames["right"].location.href = szUrl;
 		    }
 		    
-		    function pollConfig(){
-		    	window.parent.frames["right"].location.href = "/ezPoll/pollConfig.do";
-		    }
-		    
-		    function pollWrite(){
-		    	window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
+		    function ladderWrite(){
+		    	window.parent.frames["right"].location.href = '/ezLadder/selectLadderType.do';
 		    }
 		    
 		    function leftResize(){
@@ -102,19 +78,19 @@
 	</head>
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
-	    	<div class="left_title" title="<spring:message code='ezBoard.t371'/>">
+	    	<div class="left_title" title="<spring:message code='ezBoard.l001'/>">
 	    		<spring:message code="ezBoard.l001" />
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01" onclick="pollWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezLadder.t018"/></p>
+	        	<p class="btn_write01" onclick="ladderWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezLadder.t018"/></p>
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
 		        <div class="lnb_lay">
-			        <h2 onclick="ladder_Func(1);">
-			        	<span class="sub_iconLNB tree_board_ladder"></span><span class="h2Title" onclick="ladder_Func(1)"><spring:message code="ezLadder.t012" /><spring:message code="ezBoard.l001" /></span>
+			        <h2 onclick="ladderClick('part');">
+			        	<span class="sub_iconLNB tree_board_ladder"></span><span class="h2Title" onclick="ladder_Func(1)"><spring:message code="ezLadder.t012" /> <spring:message code="ezBoard.l001" /></span>
 			        </h2>
-			        <h2 onclick="ladder_Func(1);">
-			        	<span class="sub_iconLNB tree_board_ladder"></span><span class="h2Title" onclick="ladder_Func(1)"><spring:message code="ezLadder.t011" /><spring:message code="ezBoard.l001" /></span>
+			        <h2 onclick="ladderClick('all');">
+			        	<span class="sub_iconLNB tree_board_ladder"></span><span class="h2Title" onclick="ladder_Func(1)"><spring:message code="ezLadder.t011" /> <spring:message code="ezBoard.l001" /></span>
 			        </h2>
 				</div>	
 			</div>	        

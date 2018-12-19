@@ -125,20 +125,20 @@
 	    		<span onclick="pollConfig();" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezBoard.t0005" />"></span>
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01" onclick="pollWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezPoll.t144" /></p>
+	        	<p class="btn_write01" onclick="pollWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code='ezBoard.t371'/> <spring:message code="ezPoll.t144" /></p>
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
 		        <div class="lnb_lay">
 			        <h2 onclick="pollClick(2);">
 			        	<span class="sub_iconLNB tree_board_poll"></span><span class="h2Title"><spring:message code="ezPoll.t101" /> <spring:message code="ezBoard.t371" /></span>
 			        </h2>
-			        <h2 onclick="pollClick(3);">
+			        <h2 onclick="pollClick(1);">
 			        	<span class="sub_iconLNB tree_board_poll"></span><span class="h2Title"><spring:message code="ezPoll.t237" /> <spring:message code="ezBoard.t371" /></span>
 			        </h2>
 			        <h2 onclick="pollClick(4);">
 			        	<span class="sub_iconLNB tree_board_poll"></span><span class="h2Title"><spring:message code="ezPoll.t251" /> <spring:message code="ezBoard.t371" /></span>
 			        </h2>
-			        <h2 onclick="pollClick(1);">
+			        <h2 onclick="pollClick(3);">
 			        	<span class="sub_iconLNB tree_board_poll"></span><span class="h2Title"><spring:message code="ezPoll.t102" /> <spring:message code="ezBoard.t371" /></span>
 			        </h2>
 				</div>	

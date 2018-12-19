@@ -88,7 +88,16 @@
 		</style>
 	</head>
 	<body class="mainbody" style="overflow: hidden;">
-		<h1><spring:message code="ezLadder.t001"/>
+		<h1>
+			<c:choose>
+				<c:when test="${mode eq 'part' }">
+					<spring:message code="ezLadder.t012" />
+				</c:when>
+				<c:when test="${mode eq 'all' }">
+					<spring:message code="ezLadder.t011" />
+				</c:when>
+			</c:choose>
+			<spring:message code="ezLadder.t001"/>
 			<span id="mailBoxInfo"></span>
 			<span style="float: right; font-weight:normal;color:black;">
 				<select id="searchOption" style="height:27px; border-color: #c8c8c8">
@@ -110,7 +119,7 @@
 		<div id="mainmenu">
 			<ul style="width:100%;">
 				<li class="important" id="btnInsert" onClick="newLad()" ><span><spring:message code="ezLadder.t018"/></span></li>
-				<li style="float:right; font-weight:normal; position: relative; top:4px; right:5px; border:0px;">
+				<li style="display:none; float:right; font-weight:normal; position: relative; top:4px; right:5px; border:0px;">
 					<input type="radio" class="participantBtn" id="part" onclick="participant(this.value)" value="part">
 					<label for="part"><spring:message code='ezLadder.t012' /></label>	
 					<input type="radio" class="participantBtn" id="all" onclick="participant(this.value)" value="all">
