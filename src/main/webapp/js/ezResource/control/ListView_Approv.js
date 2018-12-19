@@ -634,12 +634,12 @@ function ListView() {
             //DATA1, DATA2, DATA3... 등의 값 세팅
             var oDatas = GetDataElements(oCells[0]);
             for (var j = 0; j < oDatas.length; j++) {
-                var strData = oDatas[j].tagName;
-                var strValue = "";
-                if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null)
-                    strValue = oDatas[j].firstChild.nodeValue;
-
-                objTr.setAttribute(strData, strValue);
+        		var strData = oDatas[j].tagName;
+        		var strValue = "";
+        		if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null)
+        			strValue = oDatas[j].firstChild.nodeValue;
+        		
+        		objTr.setAttribute(strData, strValue);
             }
 
             oTbody.appendChild(objTr);
@@ -662,7 +662,7 @@ function ListView() {
                         oText.style.paddingLeft = "5px";
                     }
                 }
-                else if (j == 8) {
+                else if (j == 7) {
                     oText = document.createElement("IMG");
                     if (strValue == 1) {
                         oText.src = "/images/checkblue.png";
