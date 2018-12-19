@@ -44,18 +44,38 @@
 			.themePortlet img {cursor:pointer;background-color:#b9b9b9;}
 			.themePortlet {float:left; margin-top:3px; margin-left:13px;}
 			
-			.ui-portlet { position:relative;  width: 230px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
+			.ui-portlet { position:relative;  width: 244px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
 			.ui-portlet-on { background-color: #f0f0f0; }
 			.ui-portlet-off { background-color: #f0f0f0; }
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
 			.ui-portlet-content { font-weight: bold; display: inline-block; float: left;cursor:move; border:1px dotted #000;}
 			.ui-portlet-list { padding-left: 20px; height: 335px; width: 97%;}
-			.ui-portlet-span { display: inline-block; width: 69%; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
-			.portlet_switch {position:relative;display:inline-block;width:60px;height:18px;margin-top:15px;}
+			.ui-portlet-span { display: inline-block; width: 60%; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
+			.portlet_switch {position:relative;display:inline-block;width:60px;height:18px;margin:13px 0px 10px 0px; vertical-align:top;}
 			.portlet_switch .slider {z-index:10;}
-			.admin_theme_portlet {width : 987px;}
+			.admin_theme_portlet {width : 1042px;}
 			.bottomBtn {clear:both;}
 			#themePortletList {display:inline-block;}
+			
+			/* Hide the browser's default checkbox */
+	        .IDcontainer input {display:none; cursor: pointer; }
+	        /* Create a custom checkbox */
+	        .checkmark {float:left; height: 16px; width: 16px; margin-top:3px; background-color: #53d0ff; border-radius:3px;margin-right:10px;}
+	        /* When the checkbox is checked, add a blue background */
+	        .IDcontainer input:checked ~ .checkmark { background-color: #53d0ff; }
+	        /* Create the checkmark/indicator (hidden when not checked) */
+	        .checkmark:after { content: ""; display: none; }
+	        /* Show the checkmark when checked */
+	        .IDcontainer input:checked ~ .checkmark:after { display: block; }
+	        /* Style the checkmark/indicator */
+	        .IDcontainer .checkmark:after {position:relative; width: 4px; height: 8px; margin:2px auto 0px auto; border: solid white; border-width: 0 2px 2px 0; -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); }
+	        .IDcontainer span { font-family: Malgun Gothic, malgun gothic; }
+	        /* 2018-08-03 김보미 - 클릭시마다 앞의 체크박스 ui 틀어지는 현상 막기 */
+	        .IDcontainer .checkSelect { display: none; }
+	        /* 추가  디자인 */
+	        .IDcontainer {width : 70%; margin : 13px 0px 10px 0px; display:inline-block;padding:0px;}
+	        .chk_portlet {visibility: hidden;} 
+	        .portlet_switch input {opacity: 0;width: 0;height: 0;}
 		</style>
 	</head>
 	
@@ -98,7 +118,6 @@
 		}
 		
 		function defineDetailsSlideUp(beforeThemeId, themeId) {
-			console.log(isBtnClicked);
 			if (!isBtnClicked) {
 				if (beforeThemeId != themeId) {
 					$(".portletList").slideUp(function(){
@@ -546,16 +565,29 @@
 					listHTML += "<div id='themePortletList'>";
 					
 					portletList.forEach(function (item, index) {
-						listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content' data-portletid='" + item.portletId + "' data-menuid='" + item.menuId + "'>";
+						var portletId = item.portletId;
+						
+						listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content' data-portletid='" + portletId + "' data-menuid='" + item.menuId + "'>";
+						
+						listHTML += "<label class='IDcontainer fixed_switch'>";
+						
+						if (item.fixed) {
+							listHTML += "<input type='checkbox' checked name='chk_fixed' id='fixedPortlet" + portletId + "' class='checkSelect'>";
+						} else {
+							listHTML += "<input type='checkbox' name='chk_fixed' id='fixedPortlet" + portletId + "' class='checkSelect'>";
+						}
+
+						listHTML += "<span class='checkmark'></span>";
 						listHTML += "<span class='ui-portlet-span'>";
 						listHTML += ConvertCharToEntityReference(item.portletName);
 						listHTML += "</span>";
-						listHTML += "<label class='portlet_switch'>";
+						listHTML += "</label>";
+						listHTML += "<label class='portlet_switch switch'>";
 						
 						if (item.portletUsed) {
-							listHTML += "<input type='checkbox' id='portlet" + item.portletId + "' checked='true'>";
+							listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "' checked>";
 						} else {
-							listHTML += "<input type='checkbox' id='portlet" + item.portletId + "'>";
+							listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "'>";
 						}
 						
 						listHTML += "<span class='slider round'></span></label>";
@@ -591,6 +623,7 @@
 					}
 					
 					if (nowShowList != themeId) {
+						
 						if (nowShowList == null || nowShowList == undefined) {
 							$("#themeList").after(listHTML);
 							
@@ -599,7 +632,7 @@
 							});
 						} else {
 							$("#themeList").after(listHTML);
-							
+							  
 							$(".portletList").slideDown(function(){
 								isBtnClicked = false;
 							});
@@ -615,6 +648,10 @@
 					
 					//저장버튼 활성화
 					$(".updateThemePortletBtn").on("click", {"themeId" : themeId}, updateThemePortlet);
+					//2018-12-18 유은정 - 포틀릿 필수 사용 지정 관련 개발
+					$(".portlet_switch").find("input").on("change", checkFixedInput);
+					$(".fixed_switch").find("input").on("change", checkPortletUsed);
+					
 				}else {
 					// We reached our target server, but it returned an error
 				}
@@ -647,8 +684,9 @@
 				var portletId = portlet.getAttribute("data-portletid");
 				var menuId = portlet.getAttribute("data-menuid");
 				var portletUsed = $("#portlet" + portletId).prop("checked");
+				var isFixed = $("#fixedPortlet" + portletId).prop("checked");
 				
-				themePortlet.push({"portletId" : portletId, "menuId" : menuId, "portletUsed" : portletUsed, "portletOrder" : i + 1});
+				themePortlet.push({"portletId" : portletId, "menuId" : menuId, "portletUsed" : portletUsed, "portletOrder" : i + 1, "isFixed" : isFixed});
 			}
 			
 			var request = new XMLHttpRequest();
@@ -670,6 +708,33 @@
 			});
 			
 			request.send(data);
+		}
+		
+		//2018-12-18 유은정 - 포틀릿 필수 사용 지정 관련 개발
+		var checkFixedInput = function() {			
+			var portletId = this.id;
+			portletId = portletId.substring(7);
+			
+			var isFixed = $("#fixedPortlet" + portletId).prop("checked");
+			
+			if (isFixed) {
+				alert("<spring:message code='ezNewPortal.t132' />");
+				$(this).prop("checked", true);
+				return;
+			}
+		}
+		
+		var checkPortletUsed = function() {
+			var portletId = this.id;
+			portletId = portletId.substring(12);
+			
+			var isPortletUsed = $("#portlet" + portletId).prop("checked");
+			
+			if (!isPortletUsed) {
+				alert("<spring:message code='ezNewPortal.t133' />");
+				$(this).prop("checked", false);
+				return;
+			}
 		}
 	</script>
 </html>
