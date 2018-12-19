@@ -409,10 +409,16 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			}
 			
 			String realPath = request.getServletContext().getRealPath("");
-			ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, resmode, realPath, userInfo);
+			List<DuplicateInfoVO> duplicateList = ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, resmode, realPath, userInfo);
 			
-			result.put("status", "ok");
-			result.put("code", 0);
+			if (duplicateList.isEmpty()) {
+				result.put("status", "ok");
+				result.put("code", 0);
+			} else {
+				result.put("status", "ok");
+				result.put("code", 8);
+				result.put("duplicateInfoArray", duplicateList);
+			}
 		}catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");

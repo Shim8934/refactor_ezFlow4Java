@@ -71,9 +71,14 @@ var duplicateFile = (function() {
 				}, 0);
 			},
 			rename: function(result) {
+				var newFileName = result.newFileName;
+				
 				// https://stackoverflow.com/questions/190852/how-can-i-get-file-extensions-with-javascript
 				var fileExtension = current.info.fileName.slice((current.info.fileName.lastIndexOf(".") - 1 >>> 0) + 2);
-				var newFileName = result.newFileName + "." + fileExtension
+				
+				if (fileExtension.length > 0) {
+					newFileName += "." + fileExtension;
+				}
 
 				var fd = new FormData();
 				
@@ -416,9 +421,14 @@ var duplicateFile = (function() {
 	}
 
 	var onClosePopup = function(result) {
-		// if (!isEmptyInfo()) {
-		executeJob(result);
-		// }
+		if (current) {
+			executeJob(result);
+		}
+	}
+	
+	// 팝업 닫힐때 이걸로 판단하여 onClosePopup을 호출함
+	var isProcessing = function(result) {
+		return infoQueue.length > 0 || current !== null;
 	}
 
 	var isEmptyInfo = function(result) {
@@ -467,7 +477,7 @@ var duplicateFile = (function() {
 
 	var process = function(params) {
 		// 아직 끝나지 않았을 때 메소드 진입 막기
-		if (infoQueue.length > 0 || current) {
+		if (isProcessing()) {
 			throw new Error("other processing is in progress.");
 		}
 		
@@ -495,6 +505,7 @@ var duplicateFile = (function() {
 
 	return {
 		onClosePopup: onClosePopup,
+		isProcessing: isProcessing,
 		process: process
 	};
 }());

@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +46,8 @@ import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderAdminDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
@@ -300,12 +303,19 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 	
 	@Override
-	public void addCompanyFolder(String pFolderId, String folderUsers, String folderName, String folderName2, LoginVO userInfo) throws Exception {
+	public List<DuplicateInfoVO> addCompanyFolder(String pFolderId, String folderUsers, String folderName, String folderName2, LoginVO userInfo) throws Exception {
+		String offset              = userInfo.getOffset();
+		int tenantId               = userInfo.getTenantId();
+		List<DuplicateInfoVO> duplicateList = ezWebFolderService.getAllDuplicateInfo(folderName, pFolderId, offset, tenantId);
+		
+		// 중복 정보가 있으면 바로 리턴
+		if (duplicateList.size() > 0) {
+			return duplicateList;
+		}
+		
 		String userName1           = userInfo.getDisplayName1();
 		String userName2           = userInfo.getDisplayName2();
-		int tenantId               = userInfo.getTenantId();
 		String userId              = userInfo.getId();
-		String offset              = userInfo.getOffset();
 		FolderVO parentFolder      = ezWebFolderService.getFolderByFolderId(pFolderId, offset, tenantId);
 		FolderVO folder            = new FolderVO();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -337,11 +347,19 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		
 		//Insert new folder users
 		insertListFolderUsers(userId, folderId, folder.getCompanyId(), folderUsers, timeUTC, tenantId);
+		
+		return duplicateList;
 	}
 	
 	@Override
-	public void updateCompanyFolder(String userId, String folderId, String folderUsers, String folderName, String folderName2, String offset, int tenantId) throws Exception {
+	public List<DuplicateInfoVO> updateCompanyFolder(String userId, String folderId, String folderUsers, String folderName, String folderName2, String offset, int tenantId) throws Exception {
+		List<DuplicateInfoVO> duplicateList = new ArrayList<>();
 		FolderVO folder            = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+		
+		if (duplicateList.addAll(ezWebFolderService.getAllDuplicateInfo(folderName, folder.getFolderUpper(), offset, tenantId))) {
+			return duplicateList;
+		}
+		
 		String folderPath          = folder.getFolderPath();
 		folderPath                 = folderPath.substring(1, folderPath.length() - 1);
 		String ancestorId          = folderPath.split("\\|")[1];
@@ -372,6 +390,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			//Insert new folder users
 			insertListFolderUsers(userId, folderId, folder.getCompanyId(), folderUsers, timeUTC, tenantId);
 		}
+		
+		return duplicateList;
 	}
 	
 	@Override
@@ -500,13 +520,12 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 	
 	@Override
-	public void moveCompanyFolder(FolderVO folder, FolderVO destFolder, String mode, String realPath, LoginVO userInfo) throws Exception {
+	public List<DuplicateInfoVO> moveCompanyFolder(FolderVO folder, FolderVO destFolder, String mode, String realPath, LoginVO userInfo) throws Exception {
 		if (mode.equals("move")) {
-			moveFolder(folder, destFolder, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
+			return moveFolder(folder, destFolder, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
 		}
-		else {
-			copyFolder(folder, destFolder, realPath, userInfo);
-		}
+		
+		return copyFolder(folder, destFolder, realPath, userInfo);
 	}
 	
 	public String getMaxFolderUserSeq(int tenantId) throws Exception {
@@ -534,7 +553,13 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		return currentMaxStep;
 	}
 	
-	private void moveFolder(FolderVO folder, FolderVO parentFolder, String userId, String offset, int tenantId) throws Exception {
+	private List<DuplicateInfoVO> moveFolder(FolderVO folder, FolderVO parentFolder, String userId, String offset, int tenantId) throws Exception {
+		List<DuplicateInfoVO> duplicateList = ezWebFolderService.getAllDuplicateInfo(Type.DIRECTORY, folder.getFolderId(), parentFolder.getFolderId(), offset, tenantId);
+		
+		if (duplicateList.size() > 0) {
+			return duplicateList;
+		}
+		
 		String oldPath             = folder.getFolderPath();
 		String newPath             = parentFolder.getFolderPath() + folder.getFolderId() + "|";
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -578,6 +603,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		
 		//Update list sub folders
 		moveListSubFolders(userId, parentFolder.getFolderType(), oldPath, newPath, timeUTC, parentFolder.getOwnerId(), levelDistance, tenantId);
+		
+		return duplicateList;
 	}
 	
 	private void moveListSubFolders(String userId, String folderType, String oldPath, String newPath, String timeUTC, String ownerId, int levelDistance, int tenantId) throws Exception {
@@ -594,10 +621,16 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		ezWebFolderAdminDAO.moveListSubFolders(map);
 	}
 
-	private void copyFolder(FolderVO folder, FolderVO parentFolder, String realPath, LoginVO userInfo) throws Exception {
+	private List<DuplicateInfoVO> copyFolder(FolderVO folder, FolderVO parentFolder, String realPath, LoginVO userInfo) throws Exception {
+		String offset = userInfo.getOffset();
+		int tenantId = userInfo.getTenantId();
+		List<DuplicateInfoVO> duplicateList = ezWebFolderService.getAllDuplicateInfo(Type.DIRECTORY, folder.getFolderId(), parentFolder.getFolderId(), offset, tenantId);
+		
+		if (duplicateList.size() > 0) {
+			return duplicateList;
+		}
+		
 		String userId                = userInfo.getId();
-		String offset                = userInfo.getOffset();
-		int tenantId                 = userInfo.getTenantId();
 		String folderId              = folder.getFolderId();
 		//String oldPath               = folder.getFolderPath();
 		String newId                 = getMaxFolderID(tenantId);
@@ -639,6 +672,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		
 		//copy all sub folders
 		copySubFolders(folderId, parentFolder.getFolderType(), newPath, timeUTC, parentFolder.getOwnerId(), levelDistance, realPath, userInfo);
+		
+		return duplicateList;
 	}
 
 

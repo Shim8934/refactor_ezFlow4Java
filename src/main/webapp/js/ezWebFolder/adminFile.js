@@ -101,7 +101,16 @@ function setButtons(mode) {
 	fileUpElmt.onclick      = function() {this.value = null;};
 	
 	var mailPanelElmt       = document.getElementById("mailPanel");
-	mailPanelElmt.onclick   = function() {closeAllPopups();};
+	mailPanelElmt.onclick   = function() {
+		if (duplicateFile && duplicateFile.isProcessing()) {
+			duplicateFile.onClosePopup({
+				code: "SKIP",
+				looping: false
+			});
+		}
+		
+		closeAllPopups();
+	};
 	
 	toggleUploadBttn(folderLevel);
 }

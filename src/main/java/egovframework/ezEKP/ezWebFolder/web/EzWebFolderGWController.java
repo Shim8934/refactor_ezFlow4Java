@@ -1325,9 +1325,16 @@ public class EzWebFolderGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			ezWebFolderAdminService.addCompanyFolder(pFolderId, folderUsers, folderName, folderName2, userInfo);
-			result.put("status", "ok");
-			result.put("code", 0);
+			List<DuplicateInfoVO> duplicateList = ezWebFolderAdminService.addCompanyFolder(pFolderId, folderUsers, folderName, folderName2, userInfo);
+			
+			if (duplicateList.isEmpty()) {
+				result.put("status", "ok");
+				result.put("code", 0);
+			} else {
+				result.put("status", "ok");
+				result.put("code", 8);
+				result.put("duplicateInfoArray", duplicateList);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -1370,10 +1377,16 @@ public class EzWebFolderGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId     = userInfo.getTenantId();
 			String offset    = userInfo.getOffset();
-			ezWebFolderAdminService.updateCompanyFolder(userId, folderId, folderUsers, folderName, folderName2, offset, tenantId);
+			List<DuplicateInfoVO> duplicateList = ezWebFolderAdminService.updateCompanyFolder(userId, folderId, folderUsers, folderName, folderName2, offset, tenantId);
 			
-			result.put("status", "ok");
-			result.put("code", 0);
+			if (duplicateList.isEmpty()) {
+				result.put("status", "ok");
+				result.put("code", 0);
+			} else {
+				result.put("status", "ok");
+				result.put("code", 8);
+				result.put("duplicateInfoArray", duplicateList);
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1870,10 +1883,16 @@ public class EzWebFolderGWController {
 			}
 			
 			String realPath = request.getServletContext().getRealPath("");
-			ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, realPath, userInfo);
+			List<DuplicateInfoVO> duplicateList = ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, realPath, userInfo);
 			
-			result.put("status", "ok");
-			result.put("code", 0);
+			if (duplicateList.isEmpty()) {
+				result.put("status", "ok");
+				result.put("code", 0);
+			} else {
+				result.put("status", "ok");
+				result.put("code", 8);
+				result.put("duplicateInfoArray", duplicateList);
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
