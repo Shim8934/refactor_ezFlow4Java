@@ -260,6 +260,77 @@ public class EzEmailUtil {
 		return strSize;
 	}
 	
+	private String decodeMultiLineQPEncodedName(String rawHeader, String name) {
+		try {
+			if (rawHeader.startsWith("=?")) {
+				String fromName = name;
+	            int secondQuestionPos = rawHeader.indexOf("?", 2);
+	            int thirdQuestionPos = rawHeader.indexOf("?", secondQuestionPos + 1);
+	            String charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1); 
+	            String encoding = rawHeader.substring(secondQuestionPos + 1, thirdQuestionPos);                                        
+	            
+	            // 일부 Mailer에서 RFC 2047에서 정의된 encoded word를 2개 이상의 라인으로 구성할 때
+	            // 한글의 한 글자를 표현하는 Byte Array 중간에서 분리하는 경우가 있어(QP 인코딩을 사용하면서) 
+	            // 이 경우 JavaMail에서 디코딩할 때 글자가 깨지는 현상이 발생하여 한 줄로 합치는 작업을 직접 수행하도록 함.  
+	            // 글자가 깨지는 경우 Unicode의 Replacement Character인 �가 나타남.
+	            // From: =?utf-8?Q?=28=EC=A3=BC=29=EC=BC=80=EC=9D=B4=ED=88=AC=EC=BD=94=EB?=
+	            //		 =?utf-8?Q?=A6=AC=EC=95=84?= <ecount@ecounterp.com>		                    
+	            if (fromName.contains("�")
+	                    && encoding.equalsIgnoreCase("Q")) {
+	                String[] sequences = rawHeader.split(charSetAndEncoding.replaceAll("\\?", "\\\\?"));
+	                
+	                if (sequences.length > 2) {
+	                    logger.debug("broken multiple sequences. combining them...");
+	                    logger.debug("original rawHeader:" + rawHeader);
+	                    
+	                    StringBuilder combined = new StringBuilder();                        
+	                    combined.append(charSetAndEncoding);
+	                    
+	                    for (int i = 1; i < sequences.length; i++) {
+	                        String sequence = sequences[i].trim();
+	                        
+	                        logger.debug("sequence[" + i + "]:" + sequence);
+	                        
+	                        sequence = sequence.substring(0, sequence.lastIndexOf("?"));
+	                        combined.append(sequence);                            
+	                    }
+	                    
+	                    combined.append("?=");
+	                    rawHeader = combined.toString();
+	                    
+	                    logger.debug("combined rawHeader:" + rawHeader);
+	                    
+	                    fromName = MimeUtility.decodeText(rawHeader);
+	                    
+	                    logger.debug("fromName=" + fromName);
+	                    
+	                    name = fromName;
+	                }
+	            }		
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return name;
+	}
+	
+	public String changeCharSet(String rawHeader, String oldCharSet, String newCharSet) {
+		if (rawHeader.startsWith("=?")) {
+			int secondQuestionPos = rawHeader.indexOf("?", 2);
+			
+			if (secondQuestionPos > -1) {
+                String charSet = rawHeader.substring(2, secondQuestionPos).toLowerCase();
+                
+                if (charSet.equals(oldCharSet)) {
+                	rawHeader = rawHeader.replace(charSet, newCharSet);	                        
+                }                
+			}
+		}
+		
+		return rawHeader;
+	}
+	
 	/**
 	 * 메일의 From 헤더로부터 보낸 사람의 이름을 반환한다. 이름을 반환할 수 없는 경우엔 이메일 주소를 대신 반환한다. 
 	 * 예외가 발생하였거나 유효한 From 헤더값이 존재하지 않는 경우엔 empty string을 반환한다.
@@ -294,11 +365,27 @@ public class EzEmailUtil {
 						
 						addressStr = decodeNonAsciiBytes(rawBytes);
 					} else {
+	                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
+	                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
+						String newFromHeader = changeCharSet(fromHeader, "gb2312", "gbk");
+						
+						// gb2312에서 gbk로 변경된 경우
+						if (!newFromHeader.equals(fromHeader)) {
+				            int endPos = newFromHeader.indexOf("?=", 2);
+				            
+				            // 주소 부분을 제외한 이름 파트만 분리한다.
+				            if (endPos > -1) {
+					            addressStr = newFromHeader.substring(0, endPos + 2);
+				            }
+						}
+												
 						// decoding is needed for the name part
 						// ex) =?UTF-8?B?44WC44WC?=
 						//     =?utf-8?B?Z2lzYTE=?=
 						//     =?ks_c_5601-1987?B?uei03iC1x8H2IL7KwL06IHRlc3Q=?=
 						addressStr = MimeUtility.decodeText(addressStr);
+						
+						addressStr = decodeMultiLineQPEncodedName(fromHeader, addressStr);
 					}
 				}
 			// From 헤더가 존재하더라도 이름만 있고 유효한 이메일 주소가 없는 경우에도 이 부분이 실행될 수 있다.				
@@ -364,6 +451,8 @@ public class EzEmailUtil {
 					}
 					else {					
 						name = MimeUtility.decodeText(name);
+						
+						name = decodeMultiLineQPEncodedName(fromHeader, name);
 					}
 					
 					addressBuilder.append(name + " <" + addressStr + ">");					
@@ -440,6 +529,64 @@ public class EzEmailUtil {
 							name = decodeNonAsciiBytes(rawBytes);
 						}
 						else {						
+							name = MimeUtility.decodeText(name);
+						}
+					} catch (UnsupportedEncodingException e) {
+					}
+					
+					addressBuilder.append(name + " <" + addressStr + ">");					
+				}
+				else {
+					addressBuilder.append(addressStr + " <" + addressStr + ">");
+				}
+				
+				addressBuilder.append(",");
+			}
+			stringList = addressBuilder.toString();
+			stringList = stringList.substring(0, stringList.length() - 1);
+		}
+		
+		return stringList;
+	}
+	
+	public String getStringListOfAddresses(Address[] addresses, String[] recipientHeaderArray, boolean isPureAscii) {
+		String stringList = "";
+		
+		if (addresses != null) {
+			StringBuilder addressBuilder = new StringBuilder();
+			for (int i = 0; i < addresses.length; i++) {
+				Address address = addresses[i];
+				String addressStr = ((InternetAddress)address).getAddress(); // email address part				
+				String name = ((InternetAddress)address).getPersonal(); // name part
+				
+				if (name != null) {
+					try {
+						// if the name contains Non-Ascii characters(violating the standard), 
+						// try to decode it by examining the characters.
+						if (!isPureAscii) {
+							byte[] rawBytes = name.getBytes("iso-8859-1");
+							
+							name = decodeNonAsciiBytes(rawBytes);
+						}
+						else {						
+							if (recipientHeaderArray != null) {
+								String recipientHeader = recipientHeaderArray[i];
+								
+			                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
+			                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
+								String newHeader = changeCharSet(recipientHeader, "gb2312", "gbk");
+								
+								// gb2312에서 gbk로 변경된 경우
+								if (!newHeader.equals(recipientHeader)) {
+						            int endPos = newHeader.indexOf("?=", 2);
+						            
+						            // 주소 부분을 제외한 이름 파트만 분리한다.
+						            if (endPos > -1) {
+						            	name = newHeader.substring(0, endPos + 2);
+						            }
+								}										
+							}
+							
 							name = MimeUtility.decodeText(name);
 						}
 					} catch (UnsupportedEncodingException e) {
@@ -572,9 +719,11 @@ public class EzEmailUtil {
                     
                     if (charSet.equals("ks_c_5601-1987")) {
                         rawHeader = rawHeader.replace(charSet, "ms949");
-                        
-//                        logger.debug("subject changed ks_c_5601-1987 to ms949.");
-                        
+                                                
+                        subject = MimeUtility.decodeText(rawHeader);
+                    } else if (charSet.equals("gb2312")) {
+                        rawHeader = rawHeader.replace(charSet, "gbk");
+                                                
                         subject = MimeUtility.decodeText(rawHeader);
                     }                        
                 }
@@ -585,6 +734,8 @@ public class EzEmailUtil {
             
             // Non US-ASCII 문자로 인코딩된 제목 중에 unfolding이 제대로
             // 되지 않아 줄바꿈 문자가 포함되는 경우가 있어 추가함
+            // Subject: 메일발송 실패:"대합일반산단 진입도로 공\
+            //	 고문 및 자기소개서 양식"            
             if (subject.contains("\\\r\n ")) {
                 logger.debug("still folded subject=" + subject);
                 
@@ -843,6 +994,12 @@ public class EzEmailUtil {
                 logger.debug("originalFilename changed ks_c_5601-1987 to ms949.");
                 
                 filename = MimeUtility.decodeText(originalFilename);
+            } else if (originalFilename != null && originalFilename.startsWith("=?gb2312")) {
+                originalFilename = originalFilename.replace("gb2312", "gbk");
+                
+                logger.debug("originalFilename changed gb2312 to gbk.");
+                
+                filename = MimeUtility.decodeText(originalFilename);
             } else if (filename != null) {
 				if (isPureAscii(filename)) {
 				    // Content-Disposition 헤더에 있는 filename 속성의 값이 Non-Ascii 문자를 포함할 경우에는 직접 디코딩을 처리한다.
@@ -949,6 +1106,19 @@ public class EzEmailUtil {
 							logger.debug("text/html changed ks_c_5601-1987 to ms949.");
 							
 							strContent = new String(buf, "ms949");
+						}											
+					}
+				} else if (contentType.toLowerCase().contains("gb2312")) {
+					if (strContent.contains("�")) {
+						InputStream is = getContentInputStream(part);
+						
+						if (is.available() > 0) {
+							byte[] buf = new byte[is.available()];
+							is.read(buf);
+							
+							logger.debug("text/html changed gb2312 to gbk.");
+							
+							strContent = new String(buf, "gbk");
 						}											
 					}
 				}
@@ -1081,7 +1251,22 @@ public class EzEmailUtil {
 								strContent = new String(buf, "ms949");
 							}											
 						}
-					}
+					} else if (contentType.toLowerCase().contains("gb2312")) {
+			            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+			            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.								
+						if (strContent.contains("�")) {
+							InputStream is = getContentInputStream(part);
+							
+							if (is.available() > 0) {
+								byte[] buf = new byte[is.available()];
+								is.read(buf);
+								
+								logger.debug("text/plain changed gb2312 to gbk.");
+								
+								strContent = new String(buf, "gbk");
+							}											
+						}
+					}					
 					
 				// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
 				// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"

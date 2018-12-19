@@ -2131,6 +2131,8 @@ public class EzScheduleController extends EgovFileMngUtil {
         		String fileType = avo.getFileName().substring(avo.getFileName().lastIndexOf(".") + 1).toLowerCase();
         		avo.setFileType(fileType);        		
         		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
+        		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
+        		avo.setFilePath(URLEncoder.encode(avo.getFilePath(),"UTF-8"));					// 2018-12-11 김민성 - 파일경로 인코딩 처리
         		
         		String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
         		avo.setFileTranSize(fileSize);
@@ -2186,9 +2188,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 일정보기 > 반복일정 선택 후 삭제시 팝업 
 	 */	
 	@RequestMapping(value="/ezSchedule/scheduleDeleteConfirm.do")	
-	public String scheduleDeleteConfirm() throws Exception {
-		
+	public String scheduleDeleteConfirm(Model model, HttpServletRequest request) throws Exception {
 		logger.debug("============ scheduleDeleteConfirm started ============");
+		
+		String resourceInfo = request.getParameter("resourceInfo");
+		model.addAttribute("resourceInfo", resourceInfo);
+		
+		logger.debug("============ scheduleDeleteConfirm ended ============");
 		
 		return "ezSchedule/scheduleDeleteConfirm";
 	}
@@ -3138,8 +3144,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			if (typeCal.equals("0")) { 
 				startDate    = dropDay + infoStartTime;
-				endDate      = dropDay + infoEndTime;
 				delStartDate = dragDay.substring(4, 14) + infoStartTime;
+				
+				if (dragDay.contains("ALL")) {
+					endDate = getDropEndDate(sdf1, dropDay, info) + infoEndTime;
+				}
+				else{
+					endDate = dropDay + infoEndTime;
+				}
 			}
 			else {
 				if (dropDay.contains("ALL")) {

@@ -118,7 +118,11 @@
 			        alert("<spring:message code='ezOrgan.t28'/>"); 
 			        return;
 			    }			    
-		        var ret = confirm(CheckBoxArr.length + strLang5);
+		        var ret = confirm(strLangLHM02 + " " + CheckBoxArr.length + strLang5);
+		        
+		        if (ret) {
+		        	ret = confirm(strLangLHM03);
+		        }
 		        
 			    if (ret) {
 			        var data = "";

@@ -1001,6 +1001,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			} else {
 				boardInfo.setBoardName(strProp.getBoardName());
 			}
+			/* 2018-12-18 홍승비 - 마이게시판의 다국어 저장을 위한 속성 추가 */
+			if (strProp.getBoardName2() != null) {
+				boardInfo.setBoardName2(strProp.getBoardName2());
+			}
 			
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
 			boardInfo.setGuBun(strProp.getGuBun());
@@ -4390,7 +4394,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			resultXML.append("<GUID>" + boardAttachVOList.get(i).getGuid().trim() + "</GUID>");
 			resultXML.append("<FilePath>" + commonUtil.cleanValue(boardAttachVOList.get(i).getFilePath()) + "</FilePath>");
 			resultXML.append("<FileName>" + commonUtil.cleanValue(boardAttachVOList.get(i).getFileName()) + "</FileName>");
-			resultXML.append("<FileSize>" + getProperSizeDisplay(boardAttachVOList.get(i).getFileSize()) + "</FileSize>");
+			resultXML.append("<FileSize>" + commonUtil.getSizeWithUnit(Double.parseDouble(boardAttachVOList.get(i).getFileSize())) + "</FileSize>");
 			resultXML.append("<FileSize2>" + boardAttachVOList.get(i).getFileSize() + "</FileSize2>");
 			resultXML.append("</NODE>");
 		}

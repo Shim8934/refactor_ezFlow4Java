@@ -40,7 +40,7 @@
 	
 	            Tree_setconfig();
 	
-	            TreeViewinitialize("", topID, "extensionAttribute2;extensionAttribute3", "${serverName}");
+	            TreeViewinitialize("", topID, "extensionAttribute2;extensionAttribute3", "${serverName}", null, null, true);
 	            Para[0] = "";
 	            Para[1] = "";
 	            window.returnValue = Para;

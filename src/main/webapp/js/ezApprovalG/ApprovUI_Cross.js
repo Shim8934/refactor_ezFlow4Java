@@ -274,7 +274,6 @@ function ApprovMappingSign(ret) {
         var signID;
         var seumyungID;
         var seumyungdateID;
-        var approdeptID;
         
         var pSusinSN2 = "";
     	if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N")) {
@@ -314,8 +313,7 @@ function ApprovMappingSign(ret) {
         	signID = pSusinSN2 + "sign" + LastKyulSN;
             seumyungID = pSusinSN2 + "jikwe" + LastKyulSN;
             seumyungdateID = pSusinSN2 + "seumyungdate" + LastKyulSN;
-            approdeptID = pSusinSN2 + "approdept" + LastKyulSN;
-        	
+            
             var field = message.GetListItem(fields, seumyungdateID);
             if (field) {
                 setNodeText(field , s);
@@ -326,17 +324,6 @@ function ApprovMappingSign(ret) {
                 setNodeText(field , getNodeText(field) + PositionText);
             }
             
-            field = message.GetListItem(fields, approdeptID); // '부서' 출력
-	        if (field && arr_userinfo) {
-	        	var userDeptInfo;
-	        	if(Number(arr_userinfo[17]) === 1) {
-	        		userDeptInfo = arr_userinfo[15];
-	        	} else {
-	        		userDeptInfo = arr_userinfo[16];
-	        	}
-	        	setNodeText(field, userDeptInfo);	
-	        }
-        	
             var field = message.GetListItem(fields, signID);
             if (field) {
             	//전자결재 일반에는 대결없음
@@ -414,8 +401,7 @@ function ApprovMappingSign(ret) {
     		signID = pSusinSN2 + "sign" + pAprMemberSignSN;
             seumyungID = pSusinSN2 + "jikwe" + pAprMemberSignSN;
             seumyungdateID = pSusinSN2 + "seumyungdate" + pAprMemberSignSN;
-            approdeptID = pSusinSN2 + "approdept" + pAprMemberSignSN;
-
+            
             var field = message.GetListItem(fields, seumyungdateID);
             if (field) {
                 setNodeText(field , s);
@@ -426,17 +412,6 @@ function ApprovMappingSign(ret) {
                 setNodeText(field , getNodeText(field) + PositionText);
             }
             
-            field = message.GetListItem(fields, approdeptID); // '부서' 출력
-	        if (field && arr_userinfo) {
-	        	var userDeptInfo;
-	        	if(Number(arr_userinfo[17]) === 1) {
-	        		userDeptInfo = arr_userinfo[15];
-	        	} else {
-	        		userDeptInfo = arr_userinfo[16];
-	        	}
-	        	setNodeText(field, userDeptInfo);	
-	        }            
-        	
             var field = message.GetListItem(fields, signID);
             if (field) {
             	//전자결재 일반에는 대결없음
@@ -520,7 +495,6 @@ function ApprovMappingSign(ret) {
     	var signID;
     	var seumyungID;
     	var seumyungdateID;
-    	var approdeptId;
     	
     	//S버젼 추가
     	//approvalFlag == "S" && pAprLineType == strAprType4인 경우는 없음(위에서 처리하였음)
@@ -552,12 +526,10 @@ function ApprovMappingSign(ret) {
             signID = pSusinSN + "sign" + pAprMemberSignSN;
             seumyungID = pSusinSN + "jikwe" + pAprMemberSignSN;
             seumyungdateID = pSusinSN + "seumyungdate" + pAprMemberSignSN;
-            approdeptId = pSusinSN + "approdept" + pAprMemberSignSN;
         } else {
             signID = "sign" + pAprMemberSignSN;
             seumyungID = "jikwe" + pAprMemberSignSN;
             seumyungdateID = "seumyungdate" + pAprMemberSignSN;
-            approdeptId = "approdept" + pAprMemberSignSN;
         }
 
         var field = message.GetListItem(fields, seumyungdateID); 
@@ -569,17 +541,7 @@ function ApprovMappingSign(ret) {
         if (field) {
             setNodeText(field , getNodeText(field) + PositionText); // '직위' 출력
         }
-
-        field = message.GetListItem(fields, approdeptId); // '부서' 출력
-        if (field && arr_userinfo) {
-        	var userDeptInfo;
-        	if(Number(arr_userinfo[17]) === 1) {
-        		userDeptInfo = arr_userinfo[15];
-        	} else {
-        		userDeptInfo = arr_userinfo[16];
-        	}
-        	setNodeText(field, userDeptInfo);	
-        }
+        
         /**
          * 기안 작성시 결재자의 결재유형을 '대결'로 설정한 경우
          *  16 : 대결
@@ -2144,6 +2106,14 @@ function SReAprLineSingMapping(ret) {
             if (new RegExp(/Firefox/).test(navigator.userAgent))
                 field.innerHTML = "<br type='_moz'>";
         }
+        
+        fieldname = susinSN + "approdept" + i;
+        field = message.GetListItem(fields, fieldname);
+        if (field) {
+            setNodeText(field , " ");
+            if (new RegExp(/Firefox/).test(navigator.userAgent))
+                field.innerHTML = "<br type='_moz'>";
+        }
     }
     for (i = 1; i < 50; i++) {
         name = susinSN + "habyuidate" + i
@@ -2167,6 +2137,14 @@ function SReAprLineSingMapping(ret) {
                 }
 
                 fieldname = susinSN + "habyuipositon" + i;
+                field = message.GetListItem(fields, fieldname);
+                if (field) {
+                    setNodeText(field , " ");
+                    if (new RegExp(/Firefox/).test(navigator.userAgent))
+                        field.innerHTML = "<br type='_moz'>";
+                }
+                
+                fieldname = susinSN + "habyuiapprodept" + i;
                 field = message.GetListItem(fields, fieldname);
                 if (field) {
                     setNodeText(field , " ");
@@ -2247,7 +2225,12 @@ function SReAprLineSingMapping(ret) {
                     field = message.GetListItem(fields, fieldname)
                     if (field)
                         field.innerHTML = OrderName[i] + "<br>" + OrderReason[i];
-
+                    
+                    fieldname = susinSN + "approdept" + idx;
+                    field = message.GetListItem(fields, fieldname);
+                    if (field) {
+                    	setNodeText(field, OrderDept[i]);
+                    }
                     idx = idx + 1;
                     continue;
                 }
@@ -2270,6 +2253,12 @@ function SReAprLineSingMapping(ret) {
             if (field) {
                 field.innerHTML = OrderName[i];
             }
+            
+            fieldname = susinSN + "approdept" + idx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	setNodeText(field, OrderDept[i]);
+            }
             idx = idx + 1;
         }
 
@@ -2290,6 +2279,12 @@ function SReAprLineSingMapping(ret) {
             field = message.GetListItem(fields, fieldname);
             if (field) {
                 setNodeText(field , OrderJobtitle[i]);
+            }
+            
+            fieldname = susinSN + "habyuiapprodept" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	setNodeText(field , OrderDept[i]);
             }
             hidx = hidx + 1;
         }

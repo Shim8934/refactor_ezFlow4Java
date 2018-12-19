@@ -113,10 +113,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	// 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
 	@Override
-	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String primary, int tenantID) throws Exception {
+	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String primary, String displayTrashDept, int tenantID) throws Exception {
 	    logger.debug("getDeptTreeInfo started");
 	    logger.debug("pUserID=" + pUserID + ",pDeptID=" + pDeptID + ",pTopID=" + pTopID
-	            + ",pPropList=" + pPropList + ",primary=" + primary + ",tenantID=" + tenantID);
+	            + ",pPropList=" + pPropList + ",primary=" + primary + ",displayTrashDept=" + displayTrashDept + ",tenantID=" + tenantID);
 	    
 	    String [] adminOrganChk = pTopID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
 	    
@@ -149,6 +149,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 			map.put("v_LANGDATA", primary);
 			map.put("v_TENANT_ID", tenantID);
 			map.put("isOrgan", isOrgan);
+			map.put("displayTrashDept", displayTrashDept);
 			
 			// 지정된 부서의 자식 부서 목록을 가져온다.
 			List<OrganDeptVO> list = ezOrganDAO.getDeptTreeInfo(map);
