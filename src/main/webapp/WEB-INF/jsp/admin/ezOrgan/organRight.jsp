@@ -46,9 +46,10 @@
 					companybutton2.style.display = "none";
 					companybutton3.style.display = "none";
 				}
-		    });		    
-		    
-		    function Tree_setconfig(){
+				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+			});
+
+			function Tree_setconfig(){
 			    var xmlHTTP = createXMLHttpRequest();
 			    xmlHTTP.open("GET", "/xml/common/organtree_config3.xml", false);			    
 			    xmlHTTP.send();
@@ -165,7 +166,25 @@
 				        }else{
 				            headerData = loadXMLString(listviewheader2.innerHTML.toUpperCase());
 				        }
-				        
+
+						// 암호관리, 사원이동, 퇴직 cell append
+						var cnt = result.getElementsByTagName('ROWS')[0].childElementCount;
+						var i = 0;
+						for(i;i<cnt;i++) {
+							var cell1 = result.createElement("CELL");
+							var value1 = result.createElement("VALUE");
+							cell1.appendChild(value1);
+							var cell2 = result.createElement("CELL");
+							var value2 = result.createElement("VALUE");
+							cell2.appendChild(value2);
+							var cell3 = result.createElement("CELL");
+							var value3 = result.createElement("VALUE");
+							cell3.appendChild(value3);
+							result.getElementsByTagName("ROW")[i].appendChild(cell1);
+							result.getElementsByTagName("ROW")[i].appendChild(cell2);
+							result.getElementsByTagName("ROW")[i].appendChild(cell3);
+						}
+
 				        if (CrossYN()) {
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
 				            $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
@@ -667,7 +686,25 @@
 		        		result=loadXMLString(xml);
 		        		var listview = new ListView();
 				        listview.LoadFromID("lvUserList");
-						
+
+						// 암호관리, 사원이동, 퇴직 cell append
+						var cnt = result.getElementsByTagName('ROWS')[0].childElementCount;
+						var i = 0;
+						for(i;i<cnt;i++) {
+							var cell1 = result.createElement("CELL");
+							var value1 = result.createElement("VALUE");
+							cell1.appendChild(value1);
+							var cell2 = result.createElement("CELL");
+							var value2 = result.createElement("VALUE");
+							cell2.appendChild(value2);
+							var cell3 = result.createElement("CELL");
+							var value3 = result.createElement("VALUE");
+							cell3.appendChild(value3);
+							result.getElementsByTagName("ROW")[i].appendChild(cell1);
+							result.getElementsByTagName("ROW")[i].appendChild(cell2);
+							result.getElementsByTagName("ROW")[i].appendChild(cell3);
+						}
+				        
 				        var headerData = createXmlDom();
 				        if (listOpt1.checked == true)
 				            headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
@@ -684,15 +721,15 @@
 				        }
 		                document.getElementById("OrganListView").innerHTML = "";
 
-				        var pUserList = new ListView();
-				        pUserList.SetID("lvUserList");
-				        pUserList.SetRowOnDblClick("info_user");
-				        pUserList.SetSelectFlag(false);
-				        pUserList.SetHeightFree(true);
-				        pUserList.DataSource(headerData);
-				        pUserList.DataBind("OrganListView");
-				        
-				        moveDisplay(true);
+						var pUserList = new ListView();
+						pUserList.SetID("lvUserList");
+						pUserList.SetRowOnDblClick("info_user");
+						pUserList.SetSelectFlag(false);
+						pUserList.SetHeightFree(true);
+						pUserList.DataSource(headerData);
+						pUserList.DataBind("OrganListView");
+						sawonDataParsing();
+						moveDisplay(true);
 					},
 					error : function(error){
 						alert("<spring:message code='ezOrgan.t59' />" + error);
@@ -722,64 +759,52 @@
 
 			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
 			}
-		    
-			function Change_List(){
-		        var treeView = new TreeView();
-		        treeView.LoadFromID("FromTreeView");
-		        
-		        var nodeIdx = treeView.GetSelectNode();
-		        var treeNode = new TreeNode();
-		        treeNode.LoadFromID(nodeIdx.NodeID);
 
-		        if (listOpt1.checked == true) {
-		            usermenu1.disabled = false;
-		            usermenu2.disabled = false;
-		            usermenu3.disabled = false;
-		             
-		            usermenu4.disabled = false;
-		            usermenu5.disabled = false;
-		            usermenu6.disabled = false;
-		            
-		            usermenu7.disabled = false;
-		            usermenu8.disabled = false;
-		            try {
-		                usermenu9.disabled = false;
-		            } catch (e) { }
-		            usermenu10.disabled = false;
-		            //usermenu13.disabled = false;
-		            userRetire.disabled = false;
-		            if(useOCS == "YES"){
-		                usermenusipuri.disabled = false;
-		            }
-		        }else{
-		            usermenu1.disabled = true;
-		            usermenu2.disabled = true;
-		            usermenu3.disabled = true;
-		            
-		            usermenu4.disabled = true;
-		            usermenu5.disabled = true;
-		            usermenu6.disabled = true;
-		            
-		            usermenu7.disabled = true;
-		            usermenu8.disabled = true;
-		            
-		            try {
-		                usermenu9.disabled = false;
-		            } catch (e) { }
-		            usermenu10.disabled = true;
-		            //usermenu13.disabled = true;
-		            userRetire.disabled = true;
-		            
-		            if (useOCS == "YES"){
-		                usermenusipuri.disabled = true;
-		            }
-		        }
-		        		        
-		        if (TreeView.selectedIndex != -1){
-		            displayUserList(treeNode.GetNodeData("CN"));
-		        }
-		    }
-			
+			function Change_List(){
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+				var nodeIdx = treeView.GetSelectNode();
+				var treeNode = new TreeNode();
+				treeNode.LoadFromID(nodeIdx.NodeID);
+
+				if (listOpt1.checked == true) {
+					usermenu3.disabled = false;
+					usermenu4.disabled = false;
+					usermenu6.disabled = false;
+					usermenu7.disabled = false;
+					usermenu8.disabled = false;
+
+					try {
+						usermenu9.disabled = false;
+					} catch (e) { }
+					usermenu10.disabled = false;
+					//usermenu13.disabled = false;
+					if(useOCS == "YES"){
+						usermenusipuri.disabled = false;
+					}
+				}else{
+					usermenu3.disabled = true;
+					usermenu4.disabled = true;
+					usermenu6.disabled = true;
+					usermenu7.disabled = true;
+					usermenu8.disabled = true;
+
+					try {
+						usermenu9.disabled = false;
+					} catch (e) { }
+					usermenu10.disabled = true;
+					//usermenu13.disabled = true;
+
+					if (useOCS == "YES"){
+						usermenusipuri.disabled = true;
+					}
+				}
+
+				if (TreeView.selectedIndex != -1){
+					displayUserList(treeNode.GetNodeData("CN"));
+				}
+			}
+
 			function MoveUp_onclick(){
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
@@ -1336,6 +1361,12 @@
 				var acList = doc.getElementById("lvUserList");
 
 				cnt = acList.children[1].childElementCount;
+				// 사원이 없을 경우
+				if(cnt == 1) {
+					if(acList.children[1].children[0].id === "lvUserList_TR_noItems") {
+						return;
+					}
+				}
 
 				var i = 0;
 				for (i; i < cnt; i++) {
@@ -1343,9 +1374,9 @@
 					var userID = tempLV.getAttribute('DATA2');
 					var gyumInfo = tempLV.getAttribute('DATA3');
 					// 3 암호관리 4 사원이동 5 퇴직
-					tempLV.children[3].innerHTML = "<span><img id='pwd" + userID +"' class='pwd' onclick='mod_pwd(event)' src='/images/admin/inuse.png'></span>";
-					tempLV.children[4].innerHTML = "<span><img id='move" + userID +"' class='move' onclick='move_user(event)' src='/images/admin/inuse_end.png'></span>";
-					tempLV.children[5].innerHTML = "<span><img id='retire" + userID +"' data1='" + gyumInfo + "' class='retire' onclick='retire_user(event)' src='/images/admin/inuse.png'></span>";
+					tempLV.children[3].innerHTML = "<span><img id='pwd" + userID +"' class='pwd' onclick='mod_pwd(event)' src='/images/admin/password.png'></span>";
+					tempLV.children[4].innerHTML = "<span><img id='move" + userID +"' class='move' onclick='move_user(event)' src='/images/admin/move_sawon.png'></span>";
+					tempLV.children[5].innerHTML = "<span><img id='retire" + userID +"' data1='" + gyumInfo + "' class='retire' onclick='retire_user(event)' src='/images/admin/retire.png'></span>";
 				}
 			}
 
@@ -1461,12 +1492,7 @@
 					});
 
 					// 이동 후 tree 재 호출
-					var treeView = new TreeView();
-					treeView.LoadFromID("FromTreeView");
-					var nodeIdx = treeView.GetSelectNode();
-					var treeNode = new TreeNode();
-					treeNode.LoadFromID(nodeIdx.NodeID);
-					displayUserList(treeNode.GetNodeData("CN"));
+					curTreeNodeReload()
 				}
 			}
 
@@ -1499,6 +1525,7 @@
 					success : function(result) {
 						if (result == "OK") {
 							alert(strLang3);
+							curTreeNodeReload();
 						} else {
 							alert(strLang4);
 						}
@@ -1507,15 +1534,15 @@
 						alert(strLang4);
 					}
 				});
-
-				if (treeNode.selectedIndex != -1){
-					var treeView = new TreeView();
-					treeView.LoadFromID("FromTreeView");
-					var nodeIdx = treeView.GetSelectNode();
-					var treeNode = new TreeNode();
-					treeNode.LoadFromID(nodeIdx.NodeID);
-					displayUserList(treeNode.GetNodeData("CN"));
-				}
+			}
+			
+			function curTreeNodeReload() {
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+				var nodeIdx = treeView.GetSelectNode();
+				var treeNode = new TreeNode();
+				treeNode.LoadFromID(nodeIdx.NodeID);
+				displayUserList(treeNode.GetNodeData("CN"));
 			}
 		</script>
 		<style>
@@ -1534,7 +1561,7 @@
 				<HEADERS>
 					<HEADER>
 						<NAME><spring:message code='ezOrgan.t67' /></NAME>
-						<WIDTH>40</WIDTH>
+						<WIDTH>60</WIDTH>
 					</HEADER>
 					<HEADER>
 						<NAME><spring:message code='ezOrgan.t68' /></NAME>
@@ -1554,7 +1581,7 @@
 					</HEADER>
 					<HEADER>
 						<NAME>퇴직</NAME>
-						<WIDTH>50</WIDTH>
+						<WIDTH>30</WIDTH>
 					</HEADER>
 				</HEADERS>
 			</LISTVIEWDATA>
@@ -1581,8 +1608,30 @@
 				<spring:message code='main.t24' />
 			</c:if>
 		</h1>
-
-		<div id="mainmenu">
+		
+		<div style="overflow:hidden;width:100%;padding:0;margin:0;height:31px;border: 1px solid #d2d2d2;">
+			<div style="width:50px;border-right:1px solid #d2d2d2; float:left; background: #f8f8fa; padding:8px;"><span>검색대상</span></div>
+			<div style="float:left; margin-left: 13px;  padding: 5px;">
+				<span>
+					<select id="search_type" style="WIDTH:100px; height:22px;">
+						<option selected value="displayname"><spring:message code='ezOrgan.t67' /></option>
+						<option value="cn"><spring:message code='ezOrgan.t94' /></option>
+						<option value="description"><spring:message code='ezOrgan.t68' /></option>
+						<option value="title"><spring:message code='ezOrgan.t69' /></option>
+						<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
+						<option value="mobile"><spring:message code='ezOrgan.t96' /></option>
+						<option value="HomePhone"><spring:message code='ezOrgan.t97' /></option>
+						<option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98' /></option>
+						<option value="mail"><spring:message code='ezOrgan.t99' /></option>
+						<option value="streetAddress"><spring:message code='ezOrgan.t100' /></option>
+					</select>
+				</span>
+				<span style="margin-left:10px;"><input id="keyword" onKeyPress="search_press()" style="WIDTH:120px; height:22px;" /></span>
+			</div>
+			<div style="width:50px;float:right; padding: 6px;  background: #f8f8fa; border-left:1px solid #d2d2d2;"><a class="imgbtn" style="vertical-align:middle; width: 35px; "><span onClick="search_click()"><spring:message code='ezOrgan.t101' /></span></a></div>
+		</div>
+		
+		<div id="mainmenu" style="margin-top:-3px;">
 			<ul style="margin-top:15px">
 				<c:if test="${dotNetIntegration != 'YES'}">
 					<li id="companybutton3"><span onClick="info_company()"><spring:message code='ezCommunity.t1070' /></span></li>
@@ -1613,8 +1662,8 @@
 					<li id="usermenu23"><span onClick="mobile_managed()"><spring:message code='ezPersonal.t998' /></span></li>
 				</c:if>
 			</ul>
-		 </div>
-
+		</div>
+		
 		<table style="height:630px;margin-top:10px;width:900px;border:1px solid #ddd">
 			<tr>
 				<th style="height:30px;border-bottom:0px"><spring:message code='ezOrgan.t73' /></th>
@@ -1624,7 +1673,7 @@
 				</th>
 				
 			</tr>
-			<tr>
+		<%-- 	<tr>
 				<th style="height:30px;border-top:0px">
 					<input id="deptkeyword" onKeyPress="deptsearch_press();" style="WIDTH:130px; height:22px;" />
 					<a class="imgbtn" style="vertical-align:middle"><span onClick="deptsearch_click()"><spring:message code='main.t74' />/<spring:message code='ezOrgan.t93' /></span></a>
@@ -1645,32 +1694,32 @@
 					<input id="keyword" onKeyPress="search_press()" style="WIDTH:120px; height:22px;" />
 					<a class="imgbtn" style="vertical-align:middle"><span onClick="search_click()"><spring:message code='ezOrgan.t101' /></span></a>
 				</th>
+			</tr> --%>
+			<tr>
+				<th style="padding: 3px; text-align: left; font-weight: normal;vertical-align:top">
+					<div style="border: 1px solid #ddd; height: 510px; width: 375px; margin:10px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
+				</th>
+				<th style="padding: 3px; text-align: left;vertical-align:top">
+					<div class="listview organ">
+						<c:if test="${dotNetIntegration != 'YES'}">
+							<div id="OrganListView" class="OrganListView"></div>
+						</c:if>
+						<c:if test="${dotNetIntegration == 'YES'}">
+							<div id="OrganListView" class="OrganListView"></div>
+						</c:if>
+					</div>
+					<div style="height: 5px; overflow: hidden">&nbsp;</div>
+					<c:if test="${dotNetIntegration != 'YES'}">
+						<div class="moveWrap" style="width:100%; vertical-align:middle; text-align:center">
+							<img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
+							<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
+							<a class="imgbtn" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a>
+						</div>
+					</c:if>
+				</th>
 			</tr>
-		    <tr>
-		        <th style="padding: 3px; text-align: left; font-weight: normal;vertical-align:top">
-		            <div style="border: 1px solid #ddd; height: 510px; width: 375px; margin:10px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
-		        </th>
-		        <th style="padding: 3px; text-align: left;vertical-align:top">
-		            <div class="listview organ">
-		            	<c:if test="${dotNetIntegration != 'YES'}">
-		                <div id="OrganListView" class="OrganListView"></div>
-		                </c:if>
-		                <c:if test="${dotNetIntegration == 'YES'}">
-		                <div id="OrganListView" class="OrganListView"></div>
-		                </c:if>
-		            </div>
-		            <div style="height: 5px; overflow: hidden">&nbsp;</div>
-		            <c:if test="${dotNetIntegration != 'YES'}">
-		            <div class="moveWrap" style="width:100%; vertical-align:middle; text-align:center">
-		            	<img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
-						<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
-		                <a class="imgbtn" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a>
-		            </div>
-		            </c:if>
-		        </th>
-		    </tr>
 		</table>
-     <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
-     <span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>  
+	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
+	<span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>  
 	</body>
 </html>
