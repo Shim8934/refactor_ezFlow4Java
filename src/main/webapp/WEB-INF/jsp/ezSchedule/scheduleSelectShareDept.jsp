@@ -37,7 +37,7 @@
 	
 		    function getDeptFullTree(deptid) {
 		        g_xmlHTTP = createXMLHttpRequest();
-		        var strQuery = "<DATA><DEPTID></DEPTID><TOPID>"+companyID+"/other</TOPID><PROP></PROP></DATA>";
+		        var strQuery = "<DATA><DEPTID></DEPTID><TOPID>"+companyID+"/other</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	
 		        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -140,7 +140,7 @@
 	    <table>
 	    	<tr>
 	        	<td style="padding-right:5px">
-	            	<div style="border: 1px solid #ddd; padding-top:3px; height: 476px; width:278px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
+	            	<div style="border: 1px solid #ddd; padding-top:3px; height: 476px; width:278px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
 	        	</td>
 	        </tr>
 	    </table>	    

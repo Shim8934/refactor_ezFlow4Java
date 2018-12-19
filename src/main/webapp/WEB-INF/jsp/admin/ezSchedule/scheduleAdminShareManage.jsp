@@ -105,9 +105,9 @@
 		        }
 		
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(0).style.backgroundColor = "#f1f8ff";
+		        obj.childNodes.item(1).style.backgroundColor = "#f1f8ff";
+		        obj.childNodes.item(2).style.backgroundColor = "#f1f8ff";
 		    }
 		
 		    function event_dbclick() {}
@@ -173,8 +173,8 @@
 			    </select><br /><br />
 		    </span>
 		    <ul>
-		        <li><span onClick="share_new()"><spring:message code='ezSchedule.t6' /></span></li>
-		        <li><span onClick="share_delete()"><spring:message code='ezSchedule.t41' /></span></li>
+		        <li class="important"><span onClick="share_new()"><spring:message code='ezSchedule.t6' /></span></li>
+		        <li><span class="icon16 icon16_delete" onClick="share_delete()"></span></li>
 		    </ul>
 		</div>
 	    <table style="width: 750px; height: 500px; border-bottom:1px solid #e8e8e8" >

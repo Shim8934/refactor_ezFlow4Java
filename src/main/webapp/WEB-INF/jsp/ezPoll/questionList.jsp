@@ -309,7 +309,7 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalQuestions + " </span>" + strLang42 + "]";
+		        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span style='color:#017BEC;'>" + totalQuestions + "</span>";
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = currentPage;
@@ -475,7 +475,7 @@
 					<!-- <input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0;" > -->					
 					<%-- <a class="pollImgbtn" onClick="menu_Search()" ><span style="height: 23px;"><spring:message code="ezPoll.t227"/></span></a> --%>
 					<input type="text" name="searchInput" id="searchInput" onkeypress="check_key(event);" value="<c:out value='${strSearch1}'/>">
-					<a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onclick="menu_Search()"></a>
+					<a style="float:right"><img src="/images/bsearch_new.gif" border="0" onclick="menu_Search()"></a>
 			</span>
 		</h1>
 		<div id="mainmenu">
@@ -484,24 +484,24 @@
 					<input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0; border-radius:3px;" >
 					<a class="pollImgbtn" onClick="menu_Search()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t227"/></span></a>
 				</li> --%>
-				<li id="btnInsert"><a onClick="menu_Insert()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t144"/></span></a></li>
-				<li id="btnDel" style="display: ${(deleteBttn == 1 || adminPrivilege == 1) ? 'block' : 'none'}"><a onClick="menu_Delete()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t202"/></span></a></li>
+				<li class="important" id="btnInsert"><span onClick="menu_Insert()"><spring:message code="ezPoll.t144"/></span></li>
+				<li id="btnDel" style="display: ${(deleteBttn == 1 || adminPrivilege == 1) ? 'block' : 'none'}"><span class="icon16 icon16_delete" onClick="menu_Delete()"></span></li>
 				<%--<li id="btnHid"><a onClick="menu_Hide()" style="margin-top: 3px;"><span><spring:message code="ezPoll.t203"/></span></a></li>
 				<li><a onClick="menu_Show()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				
 				<li><input id="seeAll" type="checkbox" style="float:left; margin:6px 4px 0px 5px;"><spring:message code="ezPoll.t205" /></li> --%>
-				<li style="float:right; font-weight:normal; color:black; padding-right: 20px;">
+				<li style="float:right; font-weight:normal; color:black; padding-right: 5px; border:0px; background: white;">
 					<input id="btnRadio1" type="radio" name="processCheck" style="vertical-align:middle; padding-right: 20px;" onclick="selectCheck()" value="3" ${pollType == '3'? 'checked' : ''} >
 					<label for="btnRadio1"><spring:message code='ezPoll.t145' /></label>					
 				</li>
-				<li style="float:right; font-weight:normal; color:black;">
+				<li style="float:right; font-weight:normal; color:black; border:0px; background: white;">
 					<input id="btnRadio2" type="radio" name="processCheck" style="vertical-align:middle;" onclick="selectCheck()" value="2" ${pollType == '2'? 'checked' : ''}>
 					<label for="btnRadio2"><spring:message code='ezPoll.t146' /></label>					
 				</li>
-				<li style="float:right; font-weight:normal; color:black;">
+				<li style="float:right; font-weight:normal; color:black; border:0px; background: white;">
 					<input id="btnRadio4" type="radio" name="processCheck" style="vertical-align:middle;" onclick="selectCheck()" value="4" ${pollType == '4'? 'checked' : ''}>
 					<label for="btnRadio4"><spring:message code='ezPoll.t251' /></label>		
 				</li>
-				<li style="float:right; font-weight:normal; color:black;">
+				<li style="float:right; font-weight:normal; color:black; border:0px; background: white;">
 					<input id="btnRadio3" type="radio" name="processCheck" style="vertical-align:middle;" onclick="selectCheck()" value="1" ${pollType == '1'? 'checked' : ''}>
 					<label for="btnRadio3"><spring:message code='ezPoll.t237' /></label>		
 				</li>

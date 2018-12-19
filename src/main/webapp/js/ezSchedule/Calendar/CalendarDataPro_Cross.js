@@ -1586,7 +1586,7 @@ function leadingZeros(n, digits) {
 }
 
 function MonthlyViewHeader_onMouseOver(pThis) {
-    pThis.style.backgroundColor = "#edf4fd";
+    pThis.style.backgroundColor = "#f1f8ff";
 }
 
 
@@ -1601,7 +1601,7 @@ function Schedule_onMouseClick(event) {
             document.getElementById(g_szCurrentApptDivID).style.backgroundColor = "";
         }
 
-        event.style.backgroundColor = "#edf4fd";
+        event.style.backgroundColor = "#f1f8ff";
 
         g_szCurrentApptDivID = GetAttribute(event, "id");
     }
@@ -1653,7 +1653,7 @@ function showTooltip_MouseOver(thisID, e, pTime, pSubject, pScheduleType, pSched
     tTable.setAttribute("width", "100%");
     tTable.setAttribute("style", "word-break : break-all");
     tTh.setAttribute("scope", "col");
-    tTh.style.background = "#edf4fd";
+    tTh.style.background = "#f1f8ff";
     tTh.style.border = "1px solid #d1ddec";
     var oText = document.createTextNode(pSubject);        
     //tTh.innerHTML = pSubject;

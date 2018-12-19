@@ -185,6 +185,7 @@
 		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value = '${companyID}' />");
 // 		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2");
 					createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
+					createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	
 		            var xmlHTTP = createXMLHttpRequest();
 		            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
@@ -963,7 +964,7 @@
                     <td style="width:400px; vertical-align:top; padding-top:5px; border:none">
                         <h2><spring:message code = 'ezApprovalG.t232' /></h2>
 <!--                         <div id="divUserContTree" style="height: 775px; width: 100%; overflow-x: auto; overflow-y: auto; border: #ddd 1px solid; BACKGROUND-COLOR: #ffffff;"></div> -->
-                        <div id="TreeView" style="<c:if test="${approvalFlag != 'S'}">height: 775px;</c:if><c:if test="${approvalFlag == 'S'}">height: 355px;</c:if> width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
+                        <div id="TreeView" style="<c:if test="${approvalFlag != 'S'}">height: 775px;</c:if><c:if test="${approvalFlag == 'S'}">height: 355px;</c:if> width: 100%; overflow-x: hidden; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
                         <c:if test="${approvalFlag == 'S'}"><br /></c:if>
                         <div class="div_scroll" style="border:none; <c:if test="${approvalFlag != 'S'}">display:none;</c:if>">
                             <div id="UserList" style="height: 405px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>

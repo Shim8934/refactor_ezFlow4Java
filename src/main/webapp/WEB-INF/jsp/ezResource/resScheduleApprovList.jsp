@@ -32,7 +32,7 @@
 	            	changeYear: true,
 	            	autoSize: true,
 	            	showOn: "both",
-	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            	buttonImage: "/images/ImgIcon/calendar-month.png",
 	            	buttonImageOnly: true
 	        	});
 	        	$("#Sdatepicker2").datepicker({
@@ -40,7 +40,7 @@
 	            	changeYear: true,
 	            	autoSize: true,
 	            	showOn: "both",
-	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            	buttonImage: "/images/ImgIcon/calendar-month.png",
 	            	buttonImageOnly: true
 	        	});
 	        	var startdate = "${startDate}";
@@ -169,15 +169,20 @@
 	                	list += "</CELL><CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "subject")[i]) + "]]></VALUE></CELL>";
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "dtstart")[i]).substring(0, 16).replace("T", " ") + "</VALUE></CELL>";
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "dtend")[i]).substring(0, 16).replace("T", " ") + "</VALUE></CELL>";
-	                	if (userPrimary == "1") {
+	                	
+	                	list += "<CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "dept_name")[i]) + "]]></VALUE></CELL>";
+                    	// list += "<CELL><VALUE><![CDATA[" + "]]></VALUE></CELL>"; 
+                    	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "owner_nm")[i]) + "</VALUE></CELL>";
+                    	
+	                	/* if (userPrimary == "1") {
 		                    list += "<CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "dept_name")[i]) + "]]></VALUE></CELL>";
 	                    	list += "<CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "jobtitle")[i]) + "]]></VALUE></CELL>";
 	                    	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "owner_nm")[i]) + "</VALUE></CELL>";
 	                	} else {
 	                    	list += "<CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "dept_name2")[i]) + "]]></VALUE></CELL>";
 	                    	list += "<CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "jobtitle2")[i]) + "]]></VALUE></CELL>";
-	                    	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "owner_nm2")[i]) + "</VALUE></CELL>";
-	                	}
+	                    	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "owner_nm2")[i]) + "</VALUE></CELL>"; 
+	                	} */
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "instancetype")[i]) + "</VALUE></CELL>";
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "writeDay")[i]).substring(0, 10) + "</VALUE></CELL></ROW>";
 	            	}
@@ -806,12 +811,12 @@
         			</HEADER>
         			<HEADER>
             			<NAME><spring:message code='ezResource.t132'/></NAME>
-            			<WIDTH>5%</WIDTH>
+            			<WIDTH>8%</WIDTH>
         			</HEADER>  
-        			<HEADER>
+        			<%-- <HEADER>
             			<NAME><spring:message code='ezResource.t37'/></NAME>
             			<WIDTH>5%</WIDTH>
-        			</HEADER>  
+        			</HEADER> --%>
         			<HEADER>
             			<NAME><spring:message code='ezResource.t2003'/></NAME>
             			<WIDTH>5%</WIDTH>
@@ -837,7 +842,7 @@
   			<ul>
     			<li><span id="Span1" onClick="btn_Approv()"><spring:message code='ezResource.t191'/></span></li>
     			<li><span id="pn_img" onClick="btn_ApprovCancel()"><spring:message code='ezResource.t190'/></span></li>
-    			<li><span onclick='btn_Delete();'><spring:message code='ezResource.t65'/></span></li>
+    			<li><span class="icon16 icon16_delete" onclick='btn_Delete();'></span></li>
     			<li><span onclick='ViewCalendar()'><spring:message code='ezResource.t255'/></span></li>
     			<li style="background:none;float:right">
         			<select id="listviewtype" onchange="getCalendarList('search')">

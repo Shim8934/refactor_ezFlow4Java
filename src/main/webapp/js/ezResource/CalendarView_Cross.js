@@ -61,10 +61,10 @@ function CalendarView(pTagetID) {
             oTable.setAttribute("cellspacing", "0");
             oTable.setAttribute("border", "0");
             oTable.setAttribute("width", "100%");
-            oTh.setAttribute("id", "calTitle");
+            //oTh.setAttribute("id", "calTitle");
             /*oTh.style.padding = "1px 0px 1px 0px";*/
-            oTh.style.fontSize = "15px";
-            oTh.colSpan = "2";
+            //oTh.style.fontSize = "15px";
+            //oTh.colSpan = "2";
             if (typeCal == 2) {
                 var tempyear = sDate.getFullYear();
                 var tempmemorial;
@@ -133,10 +133,10 @@ function CalendarView(pTagetID) {
 
 
                     var current_day = new Date(sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2));
-                    if (current_day.getDay() == "0" || isholiday)
+                    /*if (current_day.getDay() == "0" || isholiday)
                         oTh.style.color = "#ee1c25";
                     else if (current_day.getDay() == "6")
-                        oTh.style.color = "rgb(0, 72, 149)";
+                        oTh.style.color = "rgb(0, 72, 149)";*/
 
                 }
                 else
@@ -148,23 +148,22 @@ function CalendarView(pTagetID) {
             }
 
             var mSpan = document.createElement("SPAN");
-            mSpan.className = "btn_prev";
-            var mImg = document.createElement("IMG");
-            mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_prev.gif");
-            mImg.setAttribute("border", "0");
+            mSpan.className = "icon16 calendarleft";
+            
             if (typeCal == 0)
-                mImg.setAttribute("onclick", "preMonth()");
+            	mSpan.setAttribute("onclick", "preMonth()");
             else
-                mImg.setAttribute("onclick", "preDay()");
-
-            mSpan.appendChild(mImg);
-            oTh.appendChild(mSpan);
+            	mSpan.setAttribute("onclick", "preDay()");
+            
+            $("#preM").html("");
+            $("#preM").append(mSpan);
             
             /*2018-06-04 구해안 dayText 대신에 DatePicker 시작*/
            
             var oText = document.createTextNode(" " + dayText + " ");            
             
-            oTh.appendChild(oText);           
+            $("#calTitle").html("");
+            $("#calTitle").append(oText);           
             
             var uploadSDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
             var datePick = document.createElement("INPUT");
@@ -173,26 +172,19 @@ function CalendarView(pTagetID) {
             datePick.setAttribute("class", "datePick");
             datePick.setAttribute("value", uploadSDate);
             
-            oTh.appendChild(datePick);
+            $("#calTitle").append(datePick);
             
             /*2018-06-04 구해안 dayText 대신에 DatePicker 끝*/
-            var kSpan = document.createElement("SPAN");
-            kSpan.setAttribute("width", "10px");
-            oTh.appendChild(kSpan);
             var mSpan = document.createElement("SPAN");
-            mSpan.className = "btn_next";
-            var mImg = document.createElement("IMG");
-            mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_next.gif");
-            mImg.setAttribute("border", "0");
+            mSpan.className = "icon16 calendarright";
+            
             if (typeCal == 0)
-                mImg.setAttribute("onclick", "nextMonth()");
+            	mSpan.setAttribute("onclick", "nextMonth()");
             else
-                mImg.setAttribute("onclick", "nextDay()");
-            mSpan.appendChild(mImg);
-            oTh.appendChild(mSpan);
-
-            oTr.appendChild(oTh);
-            oTBody.appendChild(oTr);
+            	mSpan.setAttribute("onclick", "nextDay()");
+            
+            $("#preN").html("");
+            $("#preN").append(mSpan);
 
             if (typeCal == 2) {
                 var oTr = document.createElement("TR");
@@ -263,7 +255,7 @@ function CalendarView(pTagetID) {
 
         }
         else {
-            var oTable = document.createElement("TABLE");
+            /*var oTable = document.createElement("TABLE");
             oTable.className = "calendar_week_navi";
             oTable.setAttribute("cellpadding", "0");
             oTable.setAttribute("cellspacing", "0");
@@ -277,7 +269,7 @@ function CalendarView(pTagetID) {
             objTr.appendChild(objTd);
             oTbody.appendChild(objTr);
             oTable.appendChild(oTbody);
-            objElm.appendChild(oTable);
+            objElm.appendChild(oTable);*/
 
             var oTBody = GetWeekTopObj();
             objElm.appendChild(oTBody);
@@ -334,7 +326,7 @@ function CalendarView(pTagetID) {
     	changeYear: true,
     	autoSize: true,
     	showOn: "both",
-    	buttonImage: "/images/ImgIcon/calendar-month.gif",
+    	buttonImage: "/images/ImgIcon/calendar-month.png",
     	buttonImageOnly: true,
     	onSelect: function (dateText, inst) {
     	   var iMonth = parseInt($('.datePick').val().substring(5,7),10)-1;
@@ -379,7 +371,7 @@ function CalendarView(pTagetID) {
     		changeYear: true,
     		autoSize: true,
     		showOn: "both",
-    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+    		buttonImage: "/images/ImgIcon/calendar-month.png",
     		buttonImageOnly: true,
     		dateFormat: 'yy-mm-dd',
     		showMonthAfterYear: true, 
@@ -416,7 +408,7 @@ function CalendarView(pTagetID) {
     		changeYear: true,
     		autoSize: true,
     		showOn: "both",
-    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+    		buttonImage: "/images/ImgIcon/calendar-month.png",
     		buttonImageOnly: true,
     		dateFormat: 'yy-mm-dd',
     		showMonthAfterYear: true, 
@@ -451,7 +443,7 @@ function CalendarView(pTagetID) {
     }else{   
             $(".datePick").monthpicker({
             	showOn: "both",
-        		buttonImage: "/images/ImgIcon/calendar-month.gif",
+        		buttonImage: "/images/ImgIcon/calendar-month.png",
         		buttonImageOnly: true,
         		onSelect: function (dateText, inst) {
         			var iMonth = parseInt($('.datePick').val().substring(5,7),10)-1;
@@ -716,7 +708,7 @@ function MultiSelectItems(obj) {
 
         for (var i = 0; i <= 41; i++) {
             if (StartIdex <= i && Endidex >= i)
-                document.getElementById("index_" + i).style.backgroundColor = "#edf4fd";
+                document.getElementById("index_" + i).style.backgroundColor = "#f1f8ff";
             else
                 document.getElementById("index_" + i).style.backgroundColor = "";
         }
@@ -731,7 +723,7 @@ function MultiSelectEnd(obj) {
         DragEndItemID = "";
         return;
     }
-    obj.style.backgroundColor = "#edf4fd";
+    obj.style.backgroundColor = "#f1f8ff";
     Write();
 }
 function Write() {	
@@ -855,18 +847,11 @@ function GetWeekBodyObj() {
 
     var oText = document.createTextNode(" " + startYear + "-" + leadingZeros((startMonth + 1), 2) + "-" + leadingZeros(startDate, 2) + " ~ " + endYear + "-" + leadingZeros((endMonth + 1), 2) + "-" + leadingZeros(endDate, 2) + " ");
     var mSpan = document.createElement("SPAN");
-    mSpan.className = "btn_prev";
-    var mImg = document.createElement("IMG");
-    mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_prev.gif");
-    mImg.setAttribute("border", "0");
-    mImg.setAttribute("onclick", "preWeek()");
-    mSpan.appendChild(mImg);
-    document.getElementById("list_Top").appendChild(mSpan);
-
-    document.getElementById("list_Top").appendChild(oText);
     
-    /*2018-06-04 구해안 dayText 대신에 DatePicker 시작*/
+    mSpan.className = "icon16 calendarleft";
+    mSpan.setAttribute("onclick", "preWeek()");
     
+    /*2018-06-04 구해안 dayText 대신에 DatePicker 시작*/    
     var uploadSDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
     var datePick = document.createElement("INPUT");
     datePick.setAttribute("type", "hidden");
@@ -874,18 +859,19 @@ function GetWeekBodyObj() {
     datePick.setAttribute("class", "datePick");
     datePick.setAttribute("value", uploadSDate);
     
-    document.getElementById("list_Top").appendChild(datePick);
+    var mSpan2 = document.createElement("SPAN");
+    mSpan2.className = "icon16 calendarright";
+    mSpan2.setAttribute("onclick", "nextWeek()");
     
-    /*2018-06-04 구해안 dayText 대신에 DatePicker 끝*/
-
-    var mSpan = document.createElement("SPAN");
-    mSpan.className = "btn_next";
-    var mImg = document.createElement("IMG");
-    mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_next.gif");
-    mImg.setAttribute("border", "0");
-    mImg.setAttribute("onclick", "nextWeek()");
-    mSpan.appendChild(mImg);
-    document.getElementById("list_Top").appendChild(mSpan);
+    $("#preM").html("");
+    $("#preM").append(mSpan);
+    
+    $("#calTitle").html("");
+    $("#calTitle").append(oText);
+    $("#calTitle").append(datePick);
+    
+    $("#preN").html("");
+    $("#preN").append(mSpan2);
 
     for (var k = 0; k < 24; k++) {
         var dTable = document.createElement("TABLE")

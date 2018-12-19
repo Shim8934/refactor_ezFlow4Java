@@ -277,7 +277,7 @@
             	(            		
             		(startdate >= #v_PSTARTDATE# and startdate <= #v_PENDDATE#) 
             		or
-            		(ENDDATE >= #v_PSTARTDATE# and enddate < #v_PENDDATE#) 
+            		(ENDDATE > #v_PSTARTDATE# and enddate < #v_PENDDATE#) 
             		or
             		(startdate < #v_PSTARTDATE# and enddate >= #v_PENDDATE#) 
             		or 
@@ -368,7 +368,7 @@
             	(            		
             		(startdate >= #v_PSTARTDATE# and startdate <= #v_PENDDATE#) 
             		or
-            		(ENDDATE >= #v_PSTARTDATE# and enddate < #v_PENDDATE#) 
+            		(ENDDATE > #v_PSTARTDATE# and enddate < #v_PENDDATE#) 
             		or
             		(startdate < #v_PSTARTDATE# and enddate >= #v_PENDDATE#) 
             		or 

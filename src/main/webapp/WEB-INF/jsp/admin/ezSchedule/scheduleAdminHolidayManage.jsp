@@ -213,13 +213,13 @@
 		        }
 	
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(3).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(4).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(5).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(6).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(0).style.backgroundColor = "#f1f8ff";
+		        obj.childNodes.item(1).style.backgroundColor = "#f1f8ff";
+		        obj.childNodes.item(2).style.backgroundColor = "#f1f8ff";
+		        obj.childNodes.item(3).style.backgroundColor = "#f1f8ff";
+		        obj.childNodes.item(4).style.backgroundColor = "#f1f8ff";
+		        obj.childNodes.item(5).style.backgroundColor = "#f1f8ff";
+		        obj.childNodes.item(6).style.backgroundColor = "#f1f8ff";
 		    }
 	
 	
@@ -301,19 +301,20 @@
 		</script>
 	</head>
 	<body class="mainbody"> 
-		<h1><spring:message code='ezSchedule.t4003' /></h1>
+		<h1>
+			<spring:message code='ezSchedule.t4003' />
+			<select class="companySelect" id="ListCompany" onchange="schedule_get_holiday()">
+            	<c:forEach var="item" items="${list}">
+       				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+   				</c:forEach>
+            </select>
+		</h1>
 		<form id="Form1" method="post">
 			<div id="mainmenu">
-		       		<span><b><spring:message code='ezResource.t28' /> : </b></span>
-		            <select id="ListCompany" onchange="schedule_get_holiday()">
-		            	<c:forEach var="item" items="${list}">
-            				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-           				</c:forEach>
-		            </select>
 			    <ul style="margin-top: 15px;">
-			        <li><span onClick="add_holiday()"><spring:message code='ezSchedule.t4004' /></span></li>
+			        <li class="important"><span onClick="add_holiday()"><spring:message code='ezSchedule.t4004' /></span></li>
 			        <li><span onClick="event_dbclick()"><spring:message code='ezSchedule.t4005' /></span></li>
-			        <li><span onClick="del_holiday()"><spring:message code='ezSchedule.t4006' /></span></li>			        
+			        <li><span class="icon16 icon16_delete" onClick="del_holiday()"></span></li>			        
 			    </ul>
 			</div>
 			<table style="width: 750px; height: 500px;" border="0">

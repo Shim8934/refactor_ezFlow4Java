@@ -47,6 +47,8 @@
 	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListPhoto.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    } else if (pBoardType == 4) {
 	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListThumbnail.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
+	                    } else if (pBoardType == 7) {
+	                    	document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListMovie.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    } else {	      
 	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemList.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    }
@@ -115,9 +117,9 @@
 	</head>
 	<body class="mainbody" style="margin:0px;overflow-y:hidden">
 		<div style="margin-left:10px">
-			<h1><p style="padding-left:5px">${boardName}</p></h1>
-		    <div class="portlet_tabpart01">
-		        <div class="portlet_tabpart01_top" id="tab1">
+			<h1>${boardName}</h1>
+		    <div class="portlet_tabnew01">
+		        <div class="portlet_tabnew01_top" id="tab1">
 		            <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="1tab1"><spring:message code="ezBoard.t338" /></span></p>
 		            <p id="BoardEnv_sub2"><span divname="BoardEnv_div2" id="1tab2"><spring:message code="ezBoard.t60" /></span></p>
 		            <p id="BoardEnv_sub3"><span divname="BoardEnv_div3" id="1tab3"><spring:message code="ezBoard.t63" /></span></p>

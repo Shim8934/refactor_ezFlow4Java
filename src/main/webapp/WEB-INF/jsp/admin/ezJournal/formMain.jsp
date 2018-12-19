@@ -176,28 +176,28 @@
 			}
 			
 			#formType tr:hover,  #formList tr:hover {background:#eee; color:#fff; cursor: pointer;}
-			.active {background: #edf4fd;}
+			.active {background: #f1f8ff;}
 			
 		</style>
 	</head>
 	<body class="mainbody"> 
-		<h1><spring:message code='ezJournal.t3' /></h1>
+		<h1>
+			<spring:message code='ezJournal.t3' />
+			<select class="companySelect" id="SCompID" name="SCompID" onchange="selectCompanyList(this.value)">
+            	<c:forEach var="company" items="${companyList}">
+            		<option value="<c:out value='${company.companyId}'/>"
+            		<c:if test="${company.selected eq 'selected'}">
+	            		 selected
+            		</c:if>
+	            		 ><c:out value='${company.companyName}'/></option>
+            	</c:forEach>
+            </select>
+		</h1>
 		<div id="mainmenu" style="padding-left: 5px;">
-			<span><b><spring:message code = 'ezJournal.t11' /></b>
-	            <select id="SCompID" name="SCompID" onchange="selectCompanyList(this.value)">
-	            	<c:forEach var="company" items="${companyList}">
-	            		<option value="<c:out value='${company.companyId}'/>"
-	            		<c:if test="${company.selected eq 'selected'}">
-		            		 selected
-	            		</c:if>
-		            		 ><c:out value='${company.companyName}'/></option>
-	            	</c:forEach>
-	            </select><br/><br/>
-            </span>
             <ul>
-            	<li id="btnInsertForm"><span onclick="return btnInsForm()"><spring:message code='ezJournal.t17' /></span></li>
+            	<li class="important" id="btnInsertForm"><span onclick="return btnInsForm()"><spring:message code='ezJournal.t17' /></span></li>
             	<li id="btnModForm"><span onclick="return btnModForm()"><spring:message code='ezJournal.t18' /></span></li>
-            	<li id="btnDeleteForm"><span onclick="return btnDelForm()"><spring:message code='ezJournal.t19' /></span></li>
+            	<li id="btnDeleteForm"><span class="icon16 icon16_delete" onclick="return btnDelForm()"></span></li>
             </ul>
 		</div>
 		<script type="text/javascript">

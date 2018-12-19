@@ -13,8 +13,9 @@
 	    		padding-left:15px;	    		
 	    	}
 	    	
-	    	.mainlist_free tr td {
+	    	.mainlist_free tr th, .mainlist_free tr td {
 			    height: 0px;
+			    padding-left:15px;
 			}
 			
 	    	/* 조직도 #SelectDeptNM(부서명[사원수]) 부분 */
@@ -219,7 +220,7 @@
 	                document.getElementById("ListMsgTo").setAttribute("rowspan", "3");
 	                document.getElementById("ListMsgCC").style.display = "none";
 	                document.getElementById("ListMsgBCC").style.display = "none";
-	                document.getElementById("ListViewMsgTo").style.height = "508px";
+	                document.getElementById("ListViewMsgTo").style.height = "517px";
 	                SelectReceiverWindow(ToTitle, ListViewMsgTo);
 	            }
 	            else if (type == "rule") {
@@ -1584,7 +1585,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right:3px; \" >"
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
 	            	+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
 	            	+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
@@ -1626,9 +1627,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang300 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang300 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang300 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -1642,9 +1643,9 @@
 				});
 	        }
 	        
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#f1f8ff";
 		    var m_strColorOver = "#f4f5f5";
-		    var m_strColorDefault = "#ffffff";
+		    var m_strColorDefault = "";
 		    var p_ListOrderObject = null;
 		    function event_listMover(obj) {
 		        for (var i = 0; i < listContentArry.length; i++) {
@@ -1850,7 +1851,7 @@
 		            
 		            if (typeof pSeach !== "undefined") {
 			            if (pSeach) {
-			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 			                SelectDeptNM.setAttribute("countinfo", "1")
 			            }
 		            }
@@ -1868,7 +1869,7 @@
 			            else {
 			                document.getElementById("Search_txtlist_table").style.display = "";
 			                document.getElementById("txtlist_table").style.display = "none";
-			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 			                SelectDeptNM.setAttribute("countinfo", "1")
 			            }
 		            }
@@ -2289,9 +2290,9 @@
 	            addressList = null;
 	            document.getElementById('totalcount').textContent = xmlDom.getElementsByTagName("PAGECOUNT").item(0).firstChild.nodeValue;
 	            if (CrossYN())
-	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue + strLang300;
+	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
 	            else
-	                document.getElementById('addressFolderCnt').innerText = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue + strLang300;
+	                document.getElementById('addressFolderCnt').innerText = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
 	            document.getElementById('txt_PageInputNum').value = "1";
 	            //page = document.getElementById('txt_PageInputNum').value;
 	            totalPage = Math.ceil(xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue / 25);
@@ -2972,7 +2973,7 @@
 	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.getElementById('totalcount').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
-	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue + strLang300;
+	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
 	                document.getElementById('txt_PageInputNum').value = pGubun == "page" ? xmlDom.getElementsByTagName("CURRENTPAGE").item(0).firstChild.nodeValue : "1";
 	                page = document.getElementById('txt_PageInputNum').value;
 	
@@ -2981,7 +2982,7 @@
 	            }
 	            else if (CrossYN()) {
 	                document.getElementById('totalcount').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
-	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue + strLang300;
+	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue;
 	                document.getElementById('txt_PageInputNum').value = pGubun == "page" ? xmlDom.getElementsByTagName("CURRENTPAGE").item(0).firstChild.nodeValue : "1";
 	                page = document.getElementById('txt_PageInputNum').value;
 	
@@ -2990,7 +2991,7 @@
 	            }
 	            else {
 	                document.getElementById('totalcount').innerText = xmlDom.getElementsByTagName("TOTALCN").item(0).text;
-	                document.getElementById('addressFolderCnt').innerText = xmlDom.getElementsByTagName("TOTALCN").item(0).text + strLang300;
+	                document.getElementById('addressFolderCnt').innerText = xmlDom.getElementsByTagName("TOTALCN").item(0).text;
 	                document.getElementById('txt_PageInputNum').value = pGubun == "page" ? xmlDom.getElementsByTagName("CURRENTPAGE").item(0).text : "1";
 	                page = document.getElementById('txt_PageInputNum').value;
 	
@@ -3750,7 +3751,7 @@
 	                <table id="TreeViewTD">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                            <div class="portlet_tabpart03" style="background-color: #f1f3f5; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
 	                                <div class="portlet_tabpart03_top" id="tab1" style="border-bottom: 0px; height:26px;">
 	                                    <table style="margin-top: 4px; width: 100%;">
 	                                        <tr>
@@ -3775,8 +3776,8 @@
 	                                            </td>
 	                                            <td>
 	                                                <div style="float: right; margin-right: 5px; position: relative;">
-	                                                    <a href="#" class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10"><spring:message code='ezEmail.t596' /></span></a>
-	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
+	                                                    <a class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10"><spring:message code='ezEmail.t596' /></span></a>
+	                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                        </tr>
@@ -3786,14 +3787,14 @@
 	                            <table style="margin-top: 3px;">
 	                                <tr>
 	                                    <td class="box" style="border-right:0px">
-	                                        <div id="TreeView" style="width: 220px; height: 469px; overflow-x: auto; overflow-y: auto;" ></div>
+	                                        <div id="TreeView" style="width: 220px; height: 474px; overflow-x: hidden; overflow-y: auto;" ></div>
 	                                    </td>
 	                                    <td></td>
 	                                    <td class="listview" style="width: 432px" id="orglistView">
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
-	                                            <tr>
+	                                            <tr style="height:35px">
 	                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
-														<span id="SelectDeptNM" style="font-weight: normal; width: 385px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+														<span id="SelectDeptNM" style="font-weight: normal; width: 385px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: top;"></span>
 	                                                    <span style="float:right; position: relative;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');">
 	                                                            <img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
@@ -3803,24 +3804,24 @@
 	                                                </th>
 	                                            </tr>
 	                                        </table>
-	                                        <div id="txtlist_Layer" style="vertical-align: top; width: 446px; height: 398px; overflow: auto;" >
+	                                        <div id="txtlist_Layer" style="vertical-align: top; width: 446px; height: 395px; overflow: auto;" >
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t31' /></td>
-	                                                    <td style="width: 130px;color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t28' /></td>
-	                                                    <td style="color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t99000045' /></td>
+	                                                    <td style="width: 150px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t31' /></td>
+	                                                    <td style="width: 130px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t28' /></td>
+	                                                    <td style="color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t99000045' /></td>
 	                                                </tr>
 	                                            </table>
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 110px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezEmail.t26' /></td>
-	                                                    <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezEmail.t31' /></td>
-	                                                    <td style="width: 80px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezEmail.t28' /></td>
-	                                                    <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t99000045' /></td>
+	                                                    <td style="width: 110px; color:#333;background-color: #f1f3f5" class="td_gray"><spring:message code='ezEmail.t26' /></td>
+	                                                    <td style="width: 90px; color:#333;background-color: #f1f3f5" class="td_gray"><spring:message code='ezEmail.t31' /></td>
+	                                                    <td style="width: 80px; color:#333;background-color: #f1f3f5" class="td_gray"><spring:message code='ezEmail.t28' /></td>
+	                                                    <td class="td_gray" style="color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t99000045' /></td>
 	                                                </tr>
 	                                            </table>
 	                                        </div>
-	                                        <div style="vertical-align: top; text-align: center; height: 394px; overflow: auto; display: none; width: 446px;" id="DeptUserImgList"></div>
+	                                        <div style="vertical-align: top; text-align: center; height: 395px; overflow: auto; display: none; width: 446px;" id="DeptUserImgList"></div>
 	                                        <div id="tblPageRayer2"  style="text-align:center;"></div>
 	                                	</td>
 	                                </tr>
@@ -3834,7 +3835,7 @@
 	                            <table style="width: 100%;">
 	                                <tr>
 	                                    <td id="AddrSearch">
-	                                        <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                                        <div class="portlet_tabpart03" style="background-color: #f1f3f5; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
 	                                            <div class="portlet_tabpart03_top" id="Div1" style="border-bottom: 0px; height:26px;">
 	                                                <table style="margin-top: 4px; width: 100%;">
 	                                                    <tr>
@@ -3849,7 +3850,7 @@
 	                                                                        <spring:message code='ezEmail.t713' /></option>
 	                                                                </select>
 	                                                                <input id="search_text" value="" onkeyup="AddrSearch_press()" style="width: 130px; margin: 0px; height:21px" name="Input">
-	                                                                <a href="#" class="imgbtn">
+	                                                                <a class="imgbtn">
 	                                                                    <span onclick="AddrSearch_click()"><spring:message code='ezEmail.t37' /></span>
 	                                                                </a>
 	
@@ -3857,7 +3858,7 @@
 	                                                        </td>
 	                                                        <td>
 	                                                            <div style="float: right; margin-right: 5px;">
-	                                                                <a href="#" class="imgbtn"><span onclick="groupmember_click()"><spring:message code='ezEmail.t598' /></span></a>
+	                                                                <a class="imgbtn"><span onclick="groupmember_click()"><spring:message code='ezEmail.t598' /></span></a>
 	                                                            </div>
 	                                                        </td>
 	                                                    </tr>
@@ -3871,16 +3872,16 @@
 	                    </tr>
 	                    <tr>
 	                        <td>
-	                            <div id="AddressTreeView" style="overflow-x: auto; overflow-y: auto; width: 221px; height: 469px;  border: 1px solid #ddd; background-color: #FFFFFF; margin-top: 3px;padding-top:5px;border-right:0px;"></div>
+	                            <div id="AddressTreeView" style="overflow-x: auto; overflow-y: auto; width: 221px; height: 472px;  border: 1px solid #ddd; background-color: #FFFFFF; margin-top: 3px;padding-top:5px;border-right:0px;"></div>
 	                        </td>
 	                        <td></td>
 	                        <td style="vertical-align: top;">
 	                            <div style="margin-top: 3px; vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 23px; padding-top: 7px; padding-left: 5px;">
-	                                <img src="/images/ImgIcon/fldr.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
+	                                <img src="/images/ImgIcon/fldr.gif" align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
 	                                <span id="addressFolderName" style="font-weight: normal;"></span>
-	                                -[<span id="addressFolderCnt" style="color: #017BEC;"></span>]
+	                                &nbsp;<span id="addressFolderCnt" style="color: #017BEC;"></span>
 	                            </div>
-	                            <div id="AddressListView" class="border_gray" style="width: 446px; height: 396px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea">
+	                            <div id="AddressListView" class="border_gray" style="width: 446px; height: 399px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea">
 	                            </div>
 	                            <div id="tblPageRayer" style="left: 446px; vertical-align: middle; border: 1px solid #ddd; border-top: 0px; width:auto !important"></div>
 	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 446px; border: 1px solid #ddd; border-top: 0px; height: 27px;">
@@ -3902,19 +3903,19 @@
 	                <table id="ListViewDLTD" style="display: none">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                            <div class="portlet_tabpart03" style="background-color: white; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
 	                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom: 0px; height:26px;">
 	                                    <table style="margin-top: 4px; width: 100%;">
 	                                        <tr>
 	                                            <td id="dlmember" style="display: none">
-	                                                <a href="#" class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="dlmember_click()">
+	                                                <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="dlmember_click()">
 	                                                    <spring:message code='ezEmail.t598' /></span></a>
 	                                            </td>
 	                                        </tr>
 	                                    </table>
 	                                </div>
 	                            </div>
-	                            <div style="width: 668px; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
+	                            <div style="width: 668px; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -3922,19 +3923,19 @@
 	                <table id="ListViewSharedMailboxTD" style="display: none">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                            <div class="portlet_tabpart03" style="background-color: white; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
 	                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom: 0px; height:26px;">
 	                                    <table style="margin-top: 4px; width: 100%;">
 	                                        <tr>
 	                                            <td id="sharedMailboxMember" style="display: none">
-	                                                <a href="#" class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="sharedMailboxMember_click()">
+	                                                <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="sharedMailboxMember_click()">
 	                                                    <spring:message code='ezEmail.sharedMailbox21' /></span></a>
 	                                            </td>
 	                                        </tr>
 	                                    </table>
 	                                </div>
 	                            </div>
-	                            <div style="width: 668px; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewSharedMailbox" class="border_gray">
+	                            <div style="width: 668px; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewSharedMailbox" class="border_gray">
 	                            </div>
 	                        </td>
 	                    </tr>

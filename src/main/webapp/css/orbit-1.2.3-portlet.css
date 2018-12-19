@@ -1,0 +1,201 @@
+/* CSS for jQuery Orbit Plugin 1.2.3
+ * www.ZURB.com/playground
+ * Copyright 2010, ZURB
+ * Free to use under the MIT license.
+ * http://www.opensource.org/licenses/mit-license.php
+ 
+ 
+ 
+/* PUT IN YOUR SLIDER ID AND SIZE TO MAKE LOAD BEAUTIFULLY
+   ================================================== */
+/* 슬라이드 포틀릿 부분 */ 
+#roll_featured { 
+	width: 467px;
+	height: 200px;
+	background: url('/images/WebPartSliderCI/loading.gif') no-repeat center center;
+	overflow: hidden; }
+#roll_featured>img,  
+#roll_featured>div,
+#roll_featured>a { display: none; }
+
+
+
+/* CONTAINER
+   ================================================== */
+
+div.orbit2-wrapper {
+    width: 1px;
+    height: 1px;
+    position: relative; }
+
+div.orbit2 {
+    width: 1px;
+    height: 1px;
+    position: relative;
+    overflow: hidden }
+
+div.orbit2>img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none; }
+
+div.orbit2>a {
+    border: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    line-height: 0; 
+    display: none; }
+
+.orbit2>div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; }
+
+/* Note: If your slider only uses content or anchors, you're going to want to put the width and height declarations on the ".orbit>div" and "div.orbit>a" tags in addition to just the .orbit-wrapper */
+
+
+/* TIMER
+   ================================================== */
+
+div.timer2 {
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: .6;
+    cursor: pointer;
+    z-index: 1001; }
+
+span.rotator2 {
+    display: block;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 0;
+    left: -20px;
+    background: url(/images/WebPartSliderCI/rotator-black.png) no-repeat;
+    z-index: 3; }
+
+span.mask2 {
+    display: block;
+    width: 20px;
+    height: 40px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    overflow: hidden; }
+
+span.rotator2.move2 {
+    left: 0 }
+
+span.mask2.move2 {
+    width: 40px;
+    left: 0;
+    background: url(/images/WebPartSliderCI/timer-black.png) repeat 0 0; }
+
+span.pause2 {
+    display: block;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: url(/images/WebPartSliderCI/pause-black.png) no-repeat;
+    z-index: 4;
+    opacity: 0; }
+
+span.pause2.active2 {
+    background: url(/images/WebPartSliderCI/pause-black.png) no-repeat 0 -40px }
+
+div.timer2:hover span.pause2,
+span.pause2.active2 {
+    opacity: 1 }
+
+
+/* CAPTIONS
+   ================================================== */
+
+.orbit2-caption {
+    display: none;
+}
+
+.orbit2-wrapper .orbit2-caption {
+    background: #000;
+    background: rgba(0,0,0,.6);
+    z-index: 1000;
+    color: #fff;
+	text-align: center;
+	padding: 7px 0;
+    font-size: 13px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 100%; }
+
+
+/* DIRECTIONAL NAV
+   ================================================== */
+
+div.slider-nav2 {
+    display: block }
+
+div.slider-nav2 span {
+    width: 24px;
+    height: 39px;
+    text-indent: -9999px;
+    position: absolute;
+    z-index: 1000;
+    top: 50%;
+    margin-top: -20px;
+    cursor: pointer; }
+
+div.slider-nav2 span.right {
+    /* background: url(/images/WebPartSliderCI/right-arrow.png); */
+    right: 0; }
+
+div.slider-nav2 span.left {
+    /* background: url(/images/WebPartSliderCI/left-arrow.png); */
+    left: 0; }
+
+/* BULLET NAV
+   ================================================== */
+
+.orbit2-bullets {
+    position: absolute;
+    z-index: 1000;
+    list-style: none;
+    bottom: -40px;
+    left: 50%;
+	margin-left: -50px;
+    padding: 0; }
+
+.orbit2-bullets li {
+    float: left;
+    margin-left: 5px;
+    cursor: pointer;
+    color: #999;
+    text-indent: -9999px;
+    background: url(/images/WebPartSliderCI/bullets.jpg) no-repeat 4px 0;
+    width: 13px;
+    height: 12px;
+    overflow: hidden; }
+
+.orbit2-bullets li.active2 {
+    color: #222;
+    background-position: -8px 0; }
+    
+.orbit2-bullets li.has-thumb2 {
+    background: none;
+    width: 100px;
+    height: 75px; }
+
+.orbit2-bullets li.active2.has-thumb2 {
+    background-position: 0 0;
+    border-top: 2px solid #000; }

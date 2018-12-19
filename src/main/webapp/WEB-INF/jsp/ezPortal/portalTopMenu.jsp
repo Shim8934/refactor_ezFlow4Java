@@ -6,7 +6,6 @@
 	<head>
 		<title>TopMenu</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<c:choose>
 			<c:when test="${mode != 'view'}">
 				<link href="${util.addVer('ezPortal.i2', 'msg')}" rel="stylesheet" type="text/css">
@@ -14,8 +13,112 @@
 			<c:otherwise>
 				<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 			</c:otherwise>
-		</c:choose>	
-
+		</c:choose>
+	</head>
+		<c:choose>
+			<c:when test="${mode != 'view'}">
+				<body class="mainbody">
+			</c:when>
+			<c:otherwise>
+				<body>
+			</c:otherwise>
+		</c:choose>
+		<c:if test="${approvalFlag == 'G' && useHWP == 'YES'}">
+			<script type="text/javascript">
+				ezIcd_ActiveX("i_icd2");
+			</script>
+		</c:if>  
+		<div id="objectDiv"></div>
+		<c:choose>
+			<c:when test="${mode != 'view'}">
+				<!-- 메뉴 -->
+				<h1><spring:message code='ezPortal.t363' /></h1>
+					<div id="mainmenu">
+						<ul>
+							<li><span onClick="save()"><spring:message code='ezPortal.t62' /></span></li>
+							<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
+							<li><span onClick="layoutmode()"><spring:message code='ezPortal.t322' /></span></li>
+							<li><span onClick="editingmode()"><spring:message code='ezPortal.t323' /></span></li>					
+							<li><span onClick="preview()"><spring:message code='ezPortal.t63' /></span></li>
+							<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
+							<li><span onClick="insertpage()"><spring:message code='ezPortal.t325' /></span></li>
+							<li><span onClick="removecell('field')"><spring:message code='ezPortal.t326' /></span></li>
+							<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
+							<li><span onClick="insertcell()"><spring:message code='ezPortal.t327' /></span></li>
+							<li><span onClick="removecell()"><spring:message code='ezPortal.t328' /></span></li>
+							<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
+							<li><span onClick="insertrow()"><spring:message code='ezPortal.t329' /></span></li>
+							<li><span onClick="removerow()"><spring:message code='ezPortal.t330' /></span></li>
+							<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
+							<li><span onClick="swaprow('up')"><spring:message code='ezPortal.t331' /></span></li>
+							<li><span onClick="swaprow('down')"><spring:message code='ezPortal.t332' /></span></li>
+							<li><span onClick="swaprow('left')"><spring:message code='ezPortal.t72' /></span></li>
+							<li><span onClick="swaprow('right')"><spring:message code='ezPortal.t74' /></span></li>					
+						</ul>
+					</div>
+					<script type="text/javascript">
+						selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+					</script>
+					<table width="1020" class="popuplist" >
+						<tr>
+							<th height="30" style="width:100px"><spring:message code='ezPortal.t359' /></th>
+							<td>
+				    			<table style="width:100%;">
+			            			<tr class="primary">
+				            			<th style="width:80px;">${langPrimary}</th>
+				            			<td><input type="text" id="txtDisplayName" value="${displayName}" style="width:100%;" maxLength="255"></td>	
+			            			</tr>
+			            			<tr class="secondary">
+				            			<th style="width:80px;">${langSecondary}</th>
+				            			<td><input type="text" id="txtDisplayName2" value="${displayName2}" style="width:100%;" maxLength="255"></td>	
+			            			</tr>
+		            			</table>
+							</td>
+						</tr>
+					</table>
+					<br>
+					<table style="width:1020px; background-color:#F5f5f5;"class="box">
+						<tr>
+			  				<td style="padding-left:10px; height:30px;">
+			  					<spring:message code='ezPortal.t334' />
+			  					<input type="text" id="txtWidth" name="txtWidth" style="WIDTH:50px" maxLength="10">
+								px * 
+								<spring:message code='ezPortal.t335' />
+								<input type="text" id="txtHeight" name="txtHeight" style="WIDTH:50px" maxLength="10">
+								 px 
+								<a class="imgbtn">
+									<span onClick="resizeTable()">
+										<spring:message code='ezPortal.t336' />
+									</span>
+								</a>
+			  				</td>
+                			<td style="width:60px;"><spring:message code='ezPortal.t990022' />:</td>
+                			<td style="width:135px;">
+                    			<select id="Themeinfo" style="width:130px; height: 23px;">
+			                        ${pThemeSelectObject}
+                    			</select>
+                			</td>
+						</tr>
+					</table>
+				<div style="WIDTH:1020px">
+					${strHTML}
+				</div>
+			</c:when>
+			<c:otherwise>
+				${strHTML}
+			</c:otherwise>
+		</c:choose>
+		<!-- 표준모듈 (2007.03.15) 수정: .NET Framework 2.0에서는 RegisterStartupScript 메서드 지원하지 않음. -->
+		${script1}
+		<div id="objectProgressDiv"></div>
+		<c:if test="${approvalFlag == 'G' && useHWP == 'YES'}">
+			<iframe id=if_Progress style="display:none" src="/ezPortal/progress.do"></iframe>
+		</c:if>
+		<iframe id=ifmpopup style="display:none" src=""></iframe>
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
+		
+		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>			
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -42,11 +145,9 @@
 			var useHWP = "${useHWP}";
 			var lastLoginYN = "${lastLoginYN}";
 			
-			// 2009.11.25 - 소스보기시 개인정보 유출방지
-			var pwd = "";
 			document.onselectstart = function () { return false; };
 			
-			window.onload = function() {
+			var windowOnloadFunc = function() {
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
 			        document.body.style.MozUserSelect = 'none';
 			        document.body.style.WebkitUserSelect = 'none';
@@ -58,9 +159,6 @@
 				if (editmode == "new_inherit") bInherit = true;
 				
 				if (mode == "edit") AttachEvents(main_table);
-				
-				// 2009.11.25 - 소스보기시 개인정보 유출방지
-				//pwd = CheckPwd();
 				
 				// 검색UI 설정
 				try {
@@ -89,7 +187,6 @@
 					//브라우저 정보 가져오기
 					var userAgent = window.navigator.userAgent;
 					
-					//좀 더러운데 다하고 정리
 				    if ((/msie/i.test(userAgent)) || (/rv:11.0/i.test(userAgent))) {
 				    	if (useHWP == "YES") {
 				    		//한글기안기 사용일때는 ie9,10,11 전부 activeX 설치
@@ -97,15 +194,7 @@
 						    	 GetObject();
 							}
 				    	}
-				    	/* } else {
-				    		//IE9 일때만 ActiveX 설치하게 설정
-							if (userAgent.indexOf("Trident/5.0") > 0) {
-						    	 GetObject();
-						    	 ezNotieSetting();
-							}
-				    	} */
 				    } 
-	//				window.setInterval("update_connectinfo()", 30000);	
 				}
 			
 				if(lastLoginYN == "YES"){
@@ -118,16 +207,6 @@
 			}
 			
 			function ezNotieSetting() {
-			    <%-- var g_serverpath = document.location.protocol + "//" + document.location.hostname + "/LoginToRedirect.aspx"; try {
-			        var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
-	                <% if ("${useRSA}" == "YES") {%>
-			            ezUtil.ExecuteNoti4("", "${userInfo.id}", pwd, "", g_serverpath);
-			        <% } else { %>
-			            ezUtil.ExecuteNoti3("", "${userInfo.id}", pwd, "", g_serverpath);
-	                <%}%>
-					ezUtil = null;
-	            } catch (e) {
-	            } --%>
 	        }
 			
 			function GetObject() {
@@ -141,30 +220,6 @@
                 } else {
                     finish_download();
                 }
-                
-			    /* var agentObj;
-			    
-			    i_icd2.SetDocumentDisp(window.document);
-			    
-				try {
-			    	i_icd2.xmlURL = "http://" + document.location.hostname + "/ezPortal/componentListTransfer.do";
-				    i_icd2.CheckVersion();
-				    var nCount = i_icd2.nNeedDownload;
-				    if (nCount) {
-		        		if_Progress.StartOn();
-		    		} else {
-		        		finish_download();
-		    		}
-				} catch (e) {
-			    	i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/ezPortal/componentListTransfer.do";
-				    i_icd2.CheckVersion();
-				    var nCount = i_icd2.nNeedDownload;
-				    if (nCount) {
-		        		if_Progress.StartOn();
-		    		} else {
-		        		finish_download();
-		    		}
-				} */
 			}
 	
 			function finish_download() {
@@ -173,38 +228,6 @@
 	
 			function OfficeBugPatch() {
 			}
-			
-			// 2009.11.25 - 소스보기시 개인정보 유출방지
-	        function CheckPwd() {
-                var strPwd = "";
-                var xmlhttp = createXMLHttpRequest();
-                xmlhttp.open("POST", "interASP/CheckPwd.aspx", false);
-                xmlhttp.send();        
-                strPwd = xmlhttp.responseText;
-                
-                if (strPwd == "FALSE") {
-					xmlhttp = null;        
-					return "FALSE";
-                }
-                
-                xmlhttp = null;
-                return strPwd;
-	        }
-			
-			var xmlHTTP = null;
-			var blogout = false;
-		
-		// 2016-07-27 임시로 주석	
-		/* 	function update_connectinfo()
-			{
-				if (blogout)
-					return;
-					
-				xmlHTTP = createXMLHttpRequest();
-				xmlHTTP.open("POST", "/myoffice/main/update_connectinfo.aspx", true);
-				xmlHTTP.onreadystatechange = event_update_connectinfo;
-				xmlHTTP.send();
-			} */
 			
 			var bLogOutNOTICE = false;
 			
@@ -219,10 +242,6 @@
 				}
 			}
 			
-			function change_menu(idx, navigation_info) {
-				
-			}
-	
 			function OpenInformationUI(pInformationContent) {
 				var parameter = pInformationContent;
 				var url = "/myoffice/ezApproval/ezAPROPINION.htm";
@@ -1139,6 +1158,34 @@
 				location.href = "/ezPortal/topMenu.do?mode=new";
 			}
 	
+			function subMenuClick() {
+				var sh = screen.height;
+				
+				if (parent.document.getElementById("topFrame").style.position == "") {
+					$("#topMenuFull").fadeOut(0, function(){
+						$("#topMenuFull").attr("class", "full_nav on");
+						$("#topMenuFull").fadeIn(100);
+					});					
+					
+					parent.document.getElementById("topFrame").style.position = "relative";
+					parent.document.getElementById("topFrame").style.minHeight = sh+"px";
+					parent.document.getElementById("topFrame").style.backgroundColor = "rgba(0,0,0,0.3)";
+					//$(".full_menu_toggle").css("display", "");
+					$(".full_menu_toggle").slideDown(200);
+				} else {
+					$("#topMenuFull").fadeOut(100, function(){
+						$("#topMenuFull").attr("class", "full_nav off");
+						$("#topMenuFull").fadeIn(100);
+					});
+					
+					parent.document.getElementById("topFrame").style.minHeight = "260px";
+					parent.document.getElementById("topFrame").style.backgroundColor = "rgba(0,0,0,0)";
+					$(".full_menu_toggle").slideUp(200, function(){
+						parent.document.getElementById("topFrame").style.position = "";
+					});
+				}
+			}
+			
 			/* 2018-03-07 장진혁 서브메뉴 수정 현재 이미지 관리 및 롤오버시 이미지 변환 함수 */			
 			var subPath = "";
 			var menuName = "";
@@ -1175,7 +1222,7 @@
 					document.getElementById("menu_"+obj.id).style.display = "none";
 				}
 			    
-			    parent.document.getElementById("topFrame").style.position = "";
+			    parent.document.getElementById("topFrame").style.position = "";			    
 			}
 	
 			function submenuover(subObj) {				
@@ -1186,6 +1233,27 @@
 	
 			function submenuout(subObj) {
 			    img_onMouseOut(tempobj);
+			}
+			
+			function cntCalculaor() {
+				var cnt = 0;
+				
+				$(".navUL > li").each(function(index) {
+					if ($(this).offset().top > 10) {
+						cnt++;
+					}
+				});
+				
+				if (cnt > 0) {
+					$("nav > .countBox").css("display", "block");
+					$("#topNav").css("max-width", "1102px");
+					/* $("#topNav").css("max-width", "902px"); */
+					$(".hidden_nav_count").html("+" + cnt);
+				} else {
+					$("#topNav").css("max-width", "1102px");
+					/* $("#topNav").css("max-width", "902px"); */
+					$("nav > .countBox").css("display", "none");
+				}
 			}
 			
 			window.onresize = function () {
@@ -1200,6 +1268,7 @@
 			        
 			        document.getElementById(clickmenusub).style.left = LeftMargin + "px";
 			    }
+			    cntCalculaor();
 			}
 	
 			function sub_toggle(subfolder) {
@@ -1375,6 +1444,30 @@
 			var clickmenuName = "";
 			
 			function OpenWindow(evt, url, location, option) {
+				if ($(".full_menu_toggle").css("display") != "none") {
+					$(".full_menu_toggle").slideUp(200, function(){
+						parent.document.getElementById("topFrame").style.backgroundColor = "rgba(0,0,0,0)";
+						parent.document.getElementById("topFrame").style.position = "";
+						$(".full_menu_toggle").css("display", "none");
+						
+						if ($("#topMenuFull").attr("class") == "full_nav on") {
+							$("#topMenuFull").attr("class", "full_nav off");
+						}
+						
+						if (url == "/ezPersonal/personSearch.do") {
+							option = GetOpenWindowfeature(750, 550);
+						}
+						
+						window.open(url, location, option);
+					});
+				} else {
+					if (url == "/ezPersonal/personSearch.do") {
+						option = GetOpenWindowfeature(750, 550);
+					}
+					
+					window.open(url, location, option);
+				}
+				
 				/* if (option != "") {
 	    			var width = 0, height = 0;
 	    			var leftPosition = "", topPosition = "";
@@ -1427,44 +1520,9 @@
 	 		            }
 	 		        }
 				} */
-				
-				/* 2018-07-16 천성준 - 직원조회 팝업 가운데로 나오게  */
-				if (url == "/ezPersonal/personSearch.do") {
-					option = GetOpenWindowfeature(750, 550);
-				}
-				
-				window.open(url, location, option);
 			}
 			
 			function OpenWindow2(targetid, url, location, option) {
-				/* if (option != "") {
-	    			var width = 0, height = 0;
-	    			var leftPosition = "", topPosition = "";
-	    			var opt = option.split(',');
-	    			
-	    			for (var i = 0 ; i < opt.length ; i++) {
-	        			if (opt[i].indexOf('height') > -1) {
-	            			height = opt[i].substring(opt[i].indexOf('=') + 1, opt[i].indexOf('px'))
-	            			var top = (window.screen.height / 2) - ((height / 2) + 50);
-	            			topPosition = ", top=" + top + ", screenY=" + top;
-	        			}
-	        			
-	        			if (opt[i].indexOf('width') > -1) {
-	            			width = opt[i].substring(opt[i].indexOf('=') + 1, opt[i].indexOf('px'))
-	            			left = (window.screen.width / 2) - ((width / 2) + 10);
-	            			leftPosition = ", left=" + left + ", screenX=" + left;
-	        			}
-	    			}
-	    			option = option + topPosition + leftPosition;
-				}
-
-    			if (targetid != "") {
-        			clickmenusub = subPath;
-        			if (menuName != clickmenuName) {
-            			clickmenuPath = oldPath;
-            			clickmenuName = menuName;
-        			}
-    			} */
 				window.open(url, location, option);
 			}
 		    
@@ -1540,14 +1598,16 @@
 				        break; 
 	        	}
 	        }
+	        
+	        windowOnloadFunc();
 		</script>
 	</head>
 		<c:choose>
 			<c:when test="${mode != 'view'}">
-				<body class="mainbody">
+				<body class="mainbody" style="background-color: transparent;overflow:hidden;min-width:1280px">
 			</c:when>
 			<c:otherwise>
-				<body>
+				<body style="background-color: transparent;overflow:hidden;min-width:1280px">
 			</c:otherwise>
 		</c:choose>
 		<c:if test="${approvalFlag == 'G' && useHWP == 'YES'}">

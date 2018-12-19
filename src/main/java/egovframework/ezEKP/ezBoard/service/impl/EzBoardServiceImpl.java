@@ -436,6 +436,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String tempString = ezBoardDAO.getBoardApprJoinItem(myFavoriteVO);
 		int rtnCount = 0;
 		
+		 /* 2018-09-14 홍승비 - 포틀릿에 표출되는 게시판에서 공지사항 리스트 제거 */
+		if (myFavoriteVO.getType().equals("portletBoard")) {
+			myFavoriteVO.setType("1");
+		}
+		
 		if (tempString != null && !tempString.equals("")) {
 			rtnCount = ezBoardDAO.getBrdTotalItemCount(myFavoriteVO);
 		} else {
@@ -655,7 +660,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		ezBoardDAO.deleteBoardReply(map);
 		ezBoardDAO.deleteBoardItemRead2(map);
 		
-		if (mode != null && mode.equals("PHOTO")) {
+		if (mode != null && (mode.equals("PHOTO") || mode.equals("MOVIE"))) {
 			BoardListVO boardListVO = new BoardListVO();
 			boardListVO.setItemID(itemID);
 			boardListVO.setTenantID(tenantID);
@@ -871,6 +876,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Override
 	public List<HashMap<String, Object>> getBoardListItem(String boardID, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, int tenantID) throws Exception {
 		logger.debug("getBoardListItem started");
+		String pType = type;
 
 		if (orderOption1.length() > 0) {
 			if (orderOption1.indexOf("WRITEDATE") > -1) {
@@ -894,12 +900,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		String tempString = ezBoardDAO.getBoardApprJoinItem(boardMyFavoriteVO);
 		
+		/* 2018-09-14 홍승비 - 포틀릿에 표출되는 게시판에서 공지사항 리스트 제거 */
+		if (pType.equals("portletBoard")) {
+			pType = "1";		
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PUSERID", userID);
 		map.put("v_PBOARDID", boardID);
 		map.put("v_TENANTID", tenantID);
-		map.put("type", type);
+		map.put("type", pType);
 		map.put("startRow", startRow);
 		map.put("endRow", endRow);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
@@ -1924,6 +1935,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getItemXML started");
 
 		StringBuilder sb = new StringBuilder();
+		String userImg = "";
 		
 		if (boardID != null) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -1970,6 +1982,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			sb.append("<ExtensionAttribute9>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute9()) + "</ExtensionAttribute9>");
 			sb.append("<ExtensionAttribute10>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
 			sb.append("<BoardID>" + commonUtil.cleanValue(itemInfo.getBoardID()) + "</BoardID>");
+			
+			/* 2018-12-03 홍승비 - 게시물 정보에 사원이미지 추가 */
+			if (itemInfo.getUserImageFile() != null && !itemInfo.getUserImageFile().equals("")) {
+				userImg = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + itemInfo.getUserImageFile();
+			} else {
+				userImg = "/images/kr/main/bestEmployee_pic_none.png";
+			}			
+			sb.append("<UserIMG>" + commonUtil.cleanValue(userImg) + "</UserIMG>");
+			
 			sb.append("</NODE>");
 			sb.append("</NODES>");
 		} else {
@@ -1996,6 +2017,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		BoardListVO itemInfo = ezBoardDAO.getBrdGetItemInfoTemp(map);
 		
 		StringBuilder sb = new StringBuilder();
+		String userImg = "";
 		
 		sb.append("<NODES>");
 		sb.append("<NODE>");
@@ -2023,6 +2045,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		sb.append("<ExtensionAttribute4>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute4()) + "</ExtensionAttribute4>");
 		sb.append("<ExtensionAttribute5>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute5()) + "</ExtensionAttribute5>");
 		sb.append("<MainContent>" + commonUtil.cleanValue(itemInfo.getMainContent()) + "</MainContent>");   
+		sb.append("<GUBUN>" + commonUtil.cleanValue(itemInfo.getGuBun()) + "</GUBUN>");
 		//확장값 추가
 		sb.append("<ExtensionAttribute6>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute6()) + "</ExtensionAttribute6>");
 		sb.append("<ExtensionAttribute7>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute7()) + "</ExtensionAttribute7>");
@@ -2030,6 +2053,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		sb.append("<ExtensionAttribute9>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute9()) + "</ExtensionAttribute9>");
 		sb.append("<ExtensionAttribute10>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
 		sb.append("<BoardID>" + commonUtil.cleanValue(itemInfo.getBoardID()) + "</BoardID>");
+		
+		/* 2018-12-03 홍승비 - 게시물 정보에 사원이미지 추가 */
+		if (itemInfo.getUserImageFile() != null && !itemInfo.getUserImageFile().equals("")) {
+			userImg = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + itemInfo.getUserImageFile();
+		} else {
+			userImg = "/images/kr/main/bestEmployee_pic_none.png";
+		}			
+		sb.append("<UserIMG>" + commonUtil.cleanValue(userImg) + "</UserIMG>");
+		
 		sb.append("</NODE>");
 		sb.append("</NODES>");
 
@@ -2326,17 +2358,67 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		String strFilePath = "";
 		
-		for (int i = 0; i < boardListVO.getImageCount(); i++) {
-			strFilePath = boardListVO.getExtensionAttribute5().split("\\|")[i];
+		// 포토게시판, 썸네일게시판
+		if (!boardListVO.getGuBun().equals("7")) {
+			for (int i = 0; i < boardListVO.getImageCount(); i++) {
+				strFilePath = boardListVO.getExtensionAttribute5().split("\\|")[i];
+				File file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
+				strFilePath = commonUtil.getUploadPath("upload_board.ROOT", boardListVO.getTenantID()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().split("\\|")[i].replace("tempUploadFile", "");
+				File mvFile = new File(boardListVO.getRealPath() + commonUtil.separator + strFilePath);
+				
+				if(!mvFile.exists()){
+					FileUtils.copyFile(file, mvFile);
+				}
+				
+				map.put("v_pIMAGEID", boardListVO.getImagePath().split(";")[i].trim());
+				map.put("v_pItemID", boardListVO.getItemID());
+				map.put("v_pBoardID", boardListVO.getBoardID());
+				map.put("v_pWriterID", boardListVO.getWriterID());
+				map.put("v_pWriterName", boardListVO.getWriterName());
+				map.put("v_pWriterDeptID", boardListVO.getWriterDeptID());
+				map.put("v_pFilePath", strFilePath);
+				map.put("v_pWriteDate", boardListVO.getWriteDate());
+				map.put("v_TENANTID", boardListVO.getTenantID());
+				map.put("mainImageID", boardListVO.getMainImageID());
+				
+				try {
+					map.put("v_pFileContent", boardListVO.getImageContent().split(";:;")[i]);
+				} catch (Exception e) {
+					map.put("v_pFileContent", "");
+				}
+				map.put("v_pImageName", boardListVO.getImageNames().split("\\|")[i]);
+				
+				ezBoardDAO.deletePhotoImageItem(map);
+				ezBoardDAO.photoSaveDB(map);
+			}
+		} // 동영상게시판
+		else {
+			String tempFilePath = "";
+			strFilePath = boardListVO.getExtensionAttribute5();
+			tempFilePath = strFilePath.substring(0, strFilePath.lastIndexOf("{")) + "s_";
+			tempFilePath += strFilePath.substring(strFilePath.lastIndexOf("{"), strFilePath.length());
+			tempFilePath = tempFilePath.substring(0, tempFilePath.lastIndexOf(".") + 1) + "png";
+			
 			File file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
-			strFilePath = commonUtil.getUploadPath("upload_board.ROOT", boardListVO.getTenantID()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().split("\\|")[i].replace("tempUploadFile", "");
+			File s_file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + tempFilePath);
+			
+			// 썸네일파일의 고유 ID는 동영상 파일과 같고, 파일명에 's_'가 추가된 .png 파일
+			strFilePath = commonUtil.getUploadPath("upload_board.ROOT", boardListVO.getTenantID()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().replace("tempUploadFile", "");
+			tempFilePath = strFilePath.substring(0, strFilePath.lastIndexOf("{")) + "s_";
+			tempFilePath += strFilePath.substring(strFilePath.lastIndexOf("{"), strFilePath.length());
+			tempFilePath = tempFilePath.substring(0, tempFilePath.lastIndexOf(".") + 1) + "png";
+			
 			File mvFile = new File(boardListVO.getRealPath() + commonUtil.separator + strFilePath);
+			File s_mvfile = new File(boardListVO.getRealPath() + commonUtil.separator + tempFilePath);
 			
 			if(!mvFile.exists()){
 				FileUtils.copyFile(file, mvFile);
 			}
+			if(!s_mvfile.exists()) { // 동영상의 썸네일 이미지 파일
+				FileUtils.copyFile(s_file, s_mvfile);
+			}
 			
-			map.put("v_pIMAGEID", boardListVO.getImagePath().split(";")[i].trim());
+			map.put("v_pIMAGEID", boardListVO.getImagePath().trim());
 			map.put("v_pItemID", boardListVO.getItemID());
 			map.put("v_pBoardID", boardListVO.getBoardID());
 			map.put("v_pWriterID", boardListVO.getWriterID());
@@ -2348,11 +2430,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			map.put("mainImageID", boardListVO.getMainImageID());
 			
 			try {
-				map.put("v_pFileContent", boardListVO.getImageContent().split(";:;")[i]);
+				map.put("v_pFileContent", boardListVO.getImageContent());
 			} catch (Exception e) {
 				map.put("v_pFileContent", "");
 			}
-			map.put("v_pImageName", boardListVO.getImageNames().split("\\|")[i]);
+			map.put("v_pImageName", boardListVO.getImageNames());
 			
 			ezBoardDAO.deletePhotoImageItem(map);
 			ezBoardDAO.photoSaveDB(map);
@@ -3081,6 +3163,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardListVO.setImagePath(doc.getElementsByTagName("IMAGE_ID").item(0).getTextContent());
 			boardListVO.setImageContent(doc.getElementsByTagName("CONTENT2").item(0).getTextContent());
 			boardListVO.setImageNames(doc.getElementsByTagName("IMAGE_FILENAME").item(0).getTextContent());
+			
+			/* 2018-11-06 홍승비 - 포토/썸네일/동영상게시판 구분용 설정 추가 */
+			if (doc.getElementsByTagName("GUBUN").item(0).getTextContent() != null) {
+				boardListVO.setGuBun(doc.getElementsByTagName("GUBUN").item(0).getTextContent());
+			} else {
+				boardListVO.setGuBun("");
+			}
 			
 			if (mode.equals("modify")) {
 				brdUpdateItem(boardListVO, "PHOTO");

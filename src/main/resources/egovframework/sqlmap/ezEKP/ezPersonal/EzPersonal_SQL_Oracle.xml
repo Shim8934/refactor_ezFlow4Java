@@ -33,6 +33,8 @@
              			COMPANYID = #v_COMPANYID#
              		AND
              			TENANT_ID = #tenantID#	
+             		AND
+             			IMAGEPATH like '%SLIDERIMAGE%'
               		ORDER BY
               			SN
 				]]>
@@ -81,7 +83,9 @@
                 AND
                 	ISUSE = 1
                 AND
-                	TENANT_ID = #tenantID#	
+                	TENANT_ID = #tenantID#
+                AND
+           			IMAGEPATH like '%SLIDERIMAGE%'	
            		ORDER BY
            			SN
 			]]>

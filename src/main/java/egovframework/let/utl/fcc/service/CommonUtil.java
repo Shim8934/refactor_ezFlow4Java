@@ -17,12 +17,16 @@
 
 package egovframework.let.utl.fcc.service;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
@@ -68,6 +72,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -1145,54 +1151,70 @@ public class CommonUtil {
 	 */
 	public JSONObject getJsonFromRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
 		logger.debug("getJsonFromRestApi started");
-		String gwServerUrl = config.getProperty("config.journalGWServerURL");
-		String url = gwServerUrl + restUrl ;
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
-
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-		
-		if (param != null) {
-			for(String key : param.keySet()){
-				builder.queryParam(key, param.get(key));
-			}
-		}
-		
-		RestTemplate rest = new RestTemplate();
-		
-		HttpMethod method = null;
-		switch (methodType) {
-		case "get":
-			method = HttpMethod.GET;
-			break;
-		case "put":
-			method = HttpMethod.PUT;
-			break;
-		case "post":
-			method = HttpMethod.POST;
-			break;
-		case "delete":
-			method = HttpMethod.DELETE;
-			break;
-		default:
-			method = HttpMethod.GET;
-			break;
-		}
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		
 		JSONObject resultBody = null;
 		
-		try {
-			resultBody = (JSONObject) jp.parse(result.getBody());
-		} catch (org.json.simple.parser.ParseException e) {
+		try{
+			String gwServerUrl = config.getProperty("config.journalGWServerURL");
+			String url = gwServerUrl + restUrl ;
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+			
+			if (param != null) {
+				for(String key : param.keySet()){
+					builder.queryParam(key, param.get(key));
+				}
+			}
+			
+			RestTemplate rest = null;
+			
+			if (methodType.equals("patch")) {
+				ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+				rest = new RestTemplate(httpRequestFactory);
+			} else {
+				rest = new RestTemplate();
+			}
+			
+			HttpMethod method = null;
+			switch (methodType) {
+			case "get":
+				method = HttpMethod.GET;
+				break;
+			case "put":
+				method = HttpMethod.PUT;
+				break;
+			case "post":
+				method = HttpMethod.POST;
+				break;
+			case "delete":
+				method = HttpMethod.DELETE;
+				break;
+			case "patch":
+				method = HttpMethod.PATCH;
+				break;
+			default:
+				method = HttpMethod.GET;
+				break;
+			}
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			
+			
+			try {
+				resultBody = (JSONObject) jp.parse(result.getBody());
+			} catch (org.json.simple.parser.ParseException e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		logger.debug("getJsonFromRestApi ended");
 		return resultBody;
 	}
@@ -1259,6 +1281,7 @@ public class CommonUtil {
 			String userLang = ezCommonService.selectUserGetLang(userId, tenantId);
 			String timeZone = ezCommonService.selectUserGetTimeZone(userId, tenantId);
 			user.setOffset(timeZone);
+			user.setLang(userLang);
 			
 			if (userLang != null) {
 				if (user.getPrimary().equals(userLang)) {
@@ -1345,6 +1368,70 @@ public class CommonUtil {
 	 * @param request
 	 * @return
 	 */
+	public JSONObject getJsonFromRestApi(String gwServerUrl, String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
+		logger.debug("getJsonFromRestApi started.");
+		String url = gwServerUrl + restUrl ;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		if (param != null) {
+			for(String key : param.keySet()){
+				builder.queryParam(key, param.get(key));
+			}
+		}
+		
+		RestTemplate rest = null;
+		
+		if (methodType.equals("patch")) {
+			ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+			rest = new RestTemplate(httpRequestFactory);
+		} else {
+			rest = new RestTemplate();
+		}
+		
+		HttpMethod method = null;
+		switch (methodType) {
+		case "get":
+			method = HttpMethod.GET;
+			break;
+		case "put":
+			method = HttpMethod.PUT;
+			break;
+		case "post":
+			method = HttpMethod.POST;
+			break;
+		case "delete":
+			method = HttpMethod.DELETE;
+			break;
+		case "patch":
+			method = HttpMethod.PATCH;
+			break;
+		default:
+			method = HttpMethod.GET;
+			break;
+		}
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = null;
+		
+		try {
+			resultBody = (JSONObject) jp.parse(result.getBody());
+		} catch (org.json.simple.parser.ParseException e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("getJsonFromRestApi ended.");
+		return resultBody;
+	}
+	
 	public JSONObject getJsonFromMemoRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
 		logger.debug("getJsonFromMemoRestApi started");
 		String gwServerUrl = config.getProperty("config.memoGwServerURL");
@@ -1395,10 +1482,10 @@ public class CommonUtil {
 		} catch (org.json.simple.parser.ParseException e) {
 			e.printStackTrace();
 		}
-		logger.debug("getJsonFromMemoRestApi ended");
+		logger.debug("getJsonFromMemoRestApi ended.");
 		return resultBody;
 	}
-
+	
 	public String getWildcardEscapedString(String s, int dbName) {
 		if (dbName == ORACLE) {
 			if ((s.indexOf('%') == -1) && (s.indexOf('_') == -1) && (s.indexOf('\\') == -1)) {
@@ -1435,5 +1522,49 @@ public class CommonUtil {
 		}
 
 		return sb.toString();
+	}
+	
+	public Map<String, Object> transBean2Map(Object obj) {
+	    Map<String, Object> map = new HashMap();
+	    
+	    if (obj == null) {
+	        return map;
+	    }
+	    
+	    try {
+	        BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+	        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+	        
+	        for (PropertyDescriptor property : propertyDescriptors) {
+	            String key = property.getName();
+	            
+	            if (!key.equals("class")) {
+	                Method getter = property.getReadMethod();
+	                Object value = getter.invoke(obj);
+	                map.put(key, value);
+	            }
+	        }
+	    } catch (Exception e) {
+	        logger.error("transBean2Map Error " + e);
+	    }
+	    
+	    return map;
+	}
+	
+	/**
+	 * returns a string containing size with a size unit(MB or KB or B) 
+	 */
+	public String getSizeWithUnit(double size) {		
+		String strSize;
+
+		if (size > 1024 * 1024) {
+			strSize = Math.floor(size / 1024 / 1024 * 10) / 10 + "MB";
+		} else if (size > 1024) {
+			strSize = (int)(size/1024) + "KB";
+		} else {
+			strSize = (int)size + "B";
+		}
+
+		return strSize;
 	}
 }

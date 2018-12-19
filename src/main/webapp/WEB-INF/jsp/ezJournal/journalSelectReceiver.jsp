@@ -666,7 +666,7 @@
 				                                </td>
 				                                <td>
 				                                    <div style="float: right; margin-right: 5px; position: relative;">
-				                                    	<a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezCircular.t161' /></span></a>  
+				                                    	<a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezCircular.t161' /></span></a>  
 				                                    </div>
 				                                </td> 
 				                                <td></td>   
@@ -677,7 +677,7 @@
 								<table style="margin-top: 3px;">
 						            <tr>
 						                <td class="box" style="border-right: 0px; height: 465px;">
-						                    <div style="width: 250px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+						                    <div style="width: 250px; height: 470px; overflow-x: hidden; overflow-y: auto;" id="treeview"></div>
 						                </td>
 						                <td></td>
 						                <td class="listview" style="width: 426px" id="orglistView">
@@ -764,7 +764,7 @@
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

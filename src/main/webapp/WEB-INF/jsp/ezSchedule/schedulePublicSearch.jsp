@@ -160,7 +160,7 @@
 	        schedule_select_entity_dialogArguments[0] = g_entity;
 	        schedule_select_entity_dialogArguments[1] = select_entity_Complete;
 	        var OpenWin = GetOpenWindow("/ezSchedule/scheduleSelectEntity.do?title=" + encodeURIComponent("<spring:message code='ezSchedule.t288' />"), "scheduleSelectEntity", 970, 655);
-	        try { OpenWin.focus(); } catch (e) { }
+	        try {} catch (e) { }
 	    }
 
 	    function select_entity_Complete(rtn) {

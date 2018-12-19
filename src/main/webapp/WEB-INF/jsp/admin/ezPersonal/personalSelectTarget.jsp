@@ -68,7 +68,7 @@
  	            //applyCurrentData();
 	
 	            g_xmlHTTP = createXMLHttpRequest();
-	            var strQuery = "<DATA><DEPTID>${userInfo.deptID}</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail;displayName</PROP></DATA>";
+	            var strQuery = "<DATA><DEPTID>${userInfo.deptID}</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	            g_xmlHTTP.send(strQuery);
@@ -588,11 +588,11 @@
 		            g_xmlHTTP = createXMLHttpRequest();
 		            if (CrossYN()) {
 		                var strQuery = "<DATA><DEPTID>" + GetElementsByTagName(xmlDOM, "DATA3")[0].textContent +
-		                        "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		                        "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		            }
 		            else {
 		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA3").item(0).text +
-		                      "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		                      "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		            }
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -607,7 +607,7 @@
 		            if (rgParams["deptid"] != "") {
 		                bSearch = true;
 		                g_xmlHTTP = createXMLHttpRequest();
-		                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail;DisplayName</PROP></DATA>";
+		                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail;DisplayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		                g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		                g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		                g_xmlHTTP.send(strQuery);
@@ -762,7 +762,7 @@
 	                            <table>
 	                                <tr>
 	                                    <td>
-	                                        <div style="OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 225px; HEIGHT: 370px; BACKGROUND-COLOR: #ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
+	                                        <div style="overflow-x: hidden; overflow-y: auto; WIDTH: 225px; HEIGHT: 370px; BACKGROUND-COLOR: #ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
 	                                    </td>
 	                                    <td>
 	                                        <div class="listview" style="margin-left: 2px;">

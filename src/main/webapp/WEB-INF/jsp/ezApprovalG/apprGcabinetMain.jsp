@@ -1609,7 +1609,7 @@
 					<option value="rad_Writer" id="rad2"><spring:message code='ezApprovalG.t445'/></option>
 				</select>
 				<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true" onmousedown="keyword_Clear();"> 
-				<a href="#" style="float:right;"><img src="/images/bsearch_new.gif" border="0" onclick="search()"></a>
+				<a style="float:right;"><img src="/images/bsearch_new.gif" border="0" onclick="search()"></a>
 			</span>
 	    </h1>
 	
@@ -1685,7 +1685,7 @@
 	            </select>    </li>
 	        </ul>
 	    </div>
-	    <div class="div_scroll" style="width: 100%; HEIGHT: 360px; overflow: AUTO" id="divList">
+	    <div class="div_scroll" style="width: 100%; HEIGHT: 375px; overflow: AUTO" id="divList">
 	        <div id="lvtDoclist"></div>
 	    </div>	    
 	    <div id="tblPageRayer"></div>

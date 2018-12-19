@@ -7,13 +7,20 @@
 		<title><spring:message code="ezResource.t20" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
-		<link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" />
+		<link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" />
+		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
+		<style>
+			#mCSB_1_container {
+				margin-right: 0px;
+			} 
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/organtreeview.htc.js')}"></script> 
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/admin/gwAdmin.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 			var pUserID		= '${userInfo.id}';
 			var pDeptID		= '${userInfo.deptID}';
@@ -152,39 +159,52 @@
 		        } catch (e) {
 		        }
 		    }
+		    
+		    $(document).ready(function() {
+				leftResize();
+		        $(".adminListBox").mCustomScrollbar({
+		    		theme : "dark"
+		    	});
+			});
+	        
+	        function leftResize(){
+	        	$(".adminListBox").height(window.innerHeight-30);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+	    	});
 	</script>
 	</head>
-	<body class="leftbody" style="overflow-y: auto;overflow-x: hidden">	
-		<div id="left">
-  			<div class="left_admin"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code="ezResource.t17" /></div>
-			<div><h1 id="ToTitle" class="receiver_tltype01" style="border-bottom:0px;margin-left:8px;"><spring:message code="ezResource.t71" /></h1></div>
-    		<div id="TreeView" valign="top" style="behavior:url(/js/ezResource/organtreeview.htc); height:250px; width:200px; overflow-x:hidden;overflow-y:auto;
-    			BORDER:#eaeaea 1px solid; BACKGROUND-COLOR:white; margin-top:5px; margin-left:8px;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
-				onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" onclick="brdlistsInit()">
+	<body class="newLeft">	
+		<div id="left" class="lnb" style="overflow: auto">
+  			<div class="admin_left_title"><spring:message code="ezResource.t17" /></div>
+  			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
+				<div><h1 id="ToTitle" class="receiver_tltype01" style="border-bottom:0px;margin-left:8px;"><spring:message code="ezResource.t71" /></h1></div>
+	    		<div id="TreeView" valign="top" style="behavior:url(/js/ezResource/organtreeview.htc); height:250px; overflow-x: hidden; overflow-y: auto;
+	    			BORDER:#e4e8ec 1px solid; BACKGROUND-COLOR:#e4e8ec; margin-top:5px; margin-left:3px;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
+					onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" onclick="brdlistsInit()">
+				</div>
+				<h2 style="border-top:1px solid #cdd2d9"><span onClick="NavigateBrdAdmin_Res('MOD')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t22" /></span></h2>
+				<h2><span onClick="NavigateBrdAdmin_Res('NEW')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t23" /></span></h2>
+				<h2><span onClick="NavigateBrdAdmin_Res('ACL')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t24" /></span></h2>
+				<h2><span onClick="brdlistsInit();NavigateBrdAdmin_Res('STEP')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t25" /></span></h2>
+				<h2><span onClick="NavigateBrdAdmin_Res('MOV')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t26" /></span></h2>
+				<h2><span onClick="NavigateBrdAdmin_Res('DEL')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t27" /></span></h2>
+				<div class="point" style="margin-top:10px; margin-left:5px" >
+					<%-- <spring:message code="ezResource.t28" /> --%>
+					<select id="SCompID" name="SCompID" onChange="changeTree()" style="width: 145px; display: none;"></select>
+				</div>
+	    		<br />
+	    		
+				<form name="brds">
+					<input type="hidden" id="up_id" name="up_id" value="0">
+					<input type="hidden" id="up_nm" name="up_nm" value="<spring:message code="ezResource.t29" />">
+					<input type="hidden" id="up_step" name="up_step" value="0">
+					<input type="hidden" id="up_level" name="up_level" value="0">
+					<input type="hidden" id="brdlists" name="brdlists" value="0">
+				</form>
 			</div>
-			<br />
-			<h2><span onClick="NavigateBrdAdmin_Res('MOD')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t22" /></span><ul></ul></h2>
-			<h2><span onClick="NavigateBrdAdmin_Res('NEW')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t23" /></span><ul></ul></h2>
-			<h2><span onClick="NavigateBrdAdmin_Res('ACL')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t24" /></span><ul></ul></h2>
-			<h2><span onClick="brdlistsInit();NavigateBrdAdmin_Res('STEP')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t25" /></span><ul></ul></h2>
-			<h2><span onClick="NavigateBrdAdmin_Res('MOV')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t26" /></span><ul></ul></h2>
-			<h2><span onClick="NavigateBrdAdmin_Res('DEL')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t27" /></span><ul></ul></h2>
-			<div class="point" style="margin-top:10px; margin-left:5px" >
-				<script type="text/javascript">
-					initToggleList(document.getElementById("left"), "h2", "ul", "li");
-				</script>
-				<%-- <spring:message code="ezResource.t28" /> --%>
-				<select id="SCompID" name="SCompID" onChange="changeTree()" style="width: 145px; display: none;"></select>
-			</div>
-    		<br />
-    		
-			<form name="brds">
-				<input type="hidden" id="up_id" name="up_id" value="0">
-				<input type="hidden" id="up_nm" name="up_nm" value="<spring:message code="ezResource.t29" />">
-				<input type="hidden" id="up_step" name="up_step" value="0">
-				<input type="hidden" id="up_level" name="up_level" value="0">
-				<input type="hidden" id="brdlists" name="brdlists" value="0">
-			</form>
 		</div>
 	</body>
 </html>

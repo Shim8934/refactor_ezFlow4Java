@@ -270,9 +270,9 @@
 	            	</c:forEach>	      		
 	      	</select>
 			<ul>
-				<li><span onClick="add_dl()"><spring:message code='ezEmail.t60' /></span></li>
+				<li class="important"><span onClick="add_dl()"><spring:message code='ezEmail.t60' /></span></li>
 		    	<li><span onClick="mod_dl()"><spring:message code='ezEmail.t61' /></span></li>
-		      	<li><span onClick="del_dl()"><spring:message code='ezEmail.t62' /></span></li>
+		      	<li><span class="icon16 icon16_delete" onClick="del_dl()"></span></li>
 		    </ul>
 	  </div>
 	  <script type="text/javascript">

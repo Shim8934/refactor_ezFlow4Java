@@ -1194,11 +1194,11 @@
 		
 		//리스트 총 갯수
 		function TotalCount(pTotalCnt){
-			if(pTotalCnt != null || pTotalCnt != undefined) {
-				document.getElementById("TitleInfo").innerHTML = "-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + "]";
-				}
+			if (pTotalCnt != null || pTotalCnt != undefined) {
+				document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>";
+			}
 			else {
-	            document.getElementById("TitleInfo").innerHTML = "-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
+	            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>&nbsp;/ " + period;
 			}
 			
 		}
@@ -1488,7 +1488,7 @@
 	    		</c:when>
 	    	</c:choose> --%>
     		
-	    <div class="div_scroll" style="width: 100%; HEIGHT: 360px; overflow: AUTO" id="divList">
+	    <div class="div_scroll" style="width: 100%; HEIGHT: 375px; overflow: AUTO" id="divList">
 	        <div id="lvtDoclist"></div>
 	    </div>
 	    <div id="tblPageRayer"></div>

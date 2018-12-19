@@ -47,6 +47,7 @@
 			var _otherid = "<c:out value='${otherid}' />";
 	        var pUse_Editor = "CK";
 	        var ResourceInfo = "<c:out value='${resourceCnt}' />";	        
+	        var ResourceDel = "FALSE";
 	        
 	        <%-- var parentid = "<%= _parentid %>"; --%>			
 			<%-- var admin = "<%= _admin %>"; --%>
@@ -99,7 +100,15 @@
 	                document.getElementById("messagetd").style.height = document.body.clientHeight - 298 + "PX";
 	            }
 	        }
-				
+	        
+		    window.onbeforeunload = function () {
+		        try {
+		    		window.opener.openerCalendarMiniView("CalendarMini");	    		
+		    		window.opener.openerCalendarMiniDataSource();
+		            window.opener.getScheduleList(window.opener.nowDay, "P");
+		        } catch (e) { }
+		    }
+				    
 	        function show_personinfo(userid) {
 	        	var deptID = "";
 	        	
@@ -177,13 +186,16 @@
 	        function repetiton_check() {	
 	        	schedule_delete_confirm_cross_dialogArguments[0] = "";
 	        	schedule_delete_confirm_cross_dialogArguments[1] = deleteSchedule_Complete;
-	            GetOpenWindow("/ezSchedule/scheduleDeleteConfirm.do", "schedule_delete_confirm_Cross", 500, 170);
+	            GetOpenWindow("/ezSchedule/scheduleDeleteConfirm.do?resourceInfo="+ResourceInfo, "schedule_delete_confirm_Cross", 500, 170);
 	        }
 	        
 	        function deleteSchedule_Complete(ret) {	        	
-				if (ret == "0") {
+	        	var optionStr = ret[0];
+	        	ResourceDel = ret[1];
+	        	
+				if (optionStr == "0") {
 					once_delete_schedule();
-				} else if (ret == "1") {
+				} else if (optionStr == "1") {
 					delete_schedule();
 				} 
 		    }
@@ -202,10 +214,11 @@
 	            //if (!confirm("<spring:message code='ezSchedule.t209' />"))
 	            //    return;
 	
-	            var ResourceDel = "FALSE";;
+	            /* 2018-12-17 김민성 - 부모창에서 confirm창 뜨도록 변경 */
+	            /* var ResourceDel = "FALSE";;
 	            if (ResourceInfo != "0") {
 	                confirm("<spring:message code='ezSchedule.t1300' />") ? ResourceDel = "TRUE" : ResourceDel = "FALSE";
-	            }           
+	            }  */          
 	            
 	            $.ajax({
 					type : "POST",
@@ -366,18 +379,18 @@
 	                    <div id="menu">
 	                        <ul>
 	                        	<c:if test="${_editPosible == 'Y'}">
-                                <li>
-                                	<span onclick="edit_schedule()"><spring:message code='ezSchedule.t302' /></span>
-                                </li>
-                                <li>
-                                	<span onclick="check_schedule()"><spring:message code='ezSchedule.t215' /></span>
-                                </li>	                                
-                                <li id ="manageli">
-                                	<span id=managespan onclick="manage_attendant()"><spring:message code='ezSchedule.t303' /></span>
-                                </li>
+	                                <li>
+	                                	<span onclick="edit_schedule()"><spring:message code='ezSchedule.t302' /></span>
+	                                </li>
+	                                <li id ="manageli">
+	                                	<span id=managespan onclick="manage_attendant()"><spring:message code='ezSchedule.t303' /></span>
+	                                </li>
+	                                <li>
+	                                	<span class="icon16 popup_icon16_delete" onclick="check_schedule()"></span>
+	                                </li>
                                 </c:if>
                             	<li>
-                            		<span onclick="Print_onClick()"><spring:message code='ezSchedule.t217' /></span>
+                            		<span class="icon16 popup_icon16_print" onclick="Print_onClick()"></span>
                             	</li>                            	
 	                        </ul>
 	                    </div>	                    
@@ -561,10 +574,10 @@
 	                                </div>
 	                            </td>
 	                            <td class="pos2">	                                
-	                                <a href="#" class="imgbtn imgbck">
+	                                <a class="imgbtn imgbck">
 	                                	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezSchedule.t317' /></span>
 	                                </a><br/>	                                
-	                                <a href="#" class="imgbtn imgbck">
+	                                <a class="imgbtn imgbck">
 	                                	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezSchedule.t157' /></span>
 	                                </a>
 	                            </td>

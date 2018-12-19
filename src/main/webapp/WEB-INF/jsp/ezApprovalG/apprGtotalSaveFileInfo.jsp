@@ -158,7 +158,7 @@
 	        {
 	            document.getElementById('cbx_all').checked = false;
 	            if (obj.checked) {
-	                obj.parentElement.parentElement.style.backgroundColor = "#edf4fd";
+	                obj.parentElement.parentElement.style.backgroundColor = "#f1f8ff";
 	                strPathInfo = strPathInfo + obj.value + "|||";
 	                strTypeInfo = strTypeInfo + GetAttribute(obj, "data1") + "|||";
 	                strFileName = strFileName + GetAttribute(obj, "data2") + "|||";
@@ -180,10 +180,10 @@
 	
 	                    document.getElementById('chk_' + i).checked = true;
 	                    if (CrossYN())
-	                        GetChildNodes(document.getElementById('table_filelist'))[i].style.backgroundColor = "#edf4fd";
+	                        GetChildNodes(document.getElementById('table_filelist'))[i].style.backgroundColor = "#f1f8ff";
 	                    else {
-	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[0].style.backgroundColor = "#edf4fd";
-	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[1].style.backgroundColor = "#edf4fd";
+	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[0].style.backgroundColor = "#f1f8ff";
+	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[1].style.backgroundColor = "#f1f8ff";
 	                    }
 	
 	                    strPathInfo += document.getElementById('chk_' + i).value + "|||";

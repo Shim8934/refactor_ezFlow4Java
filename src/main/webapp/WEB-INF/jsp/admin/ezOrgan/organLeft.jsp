@@ -6,10 +6,17 @@
 	<head>
 		<title><spring:message code="main.t23" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">	   	   	
-	    <link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">		
+	    <link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">	
+	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">	
+	    <style>
+			#mCSB_1_container {
+				margin-right: 0px;
+			} 
+		</style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript" language="javascript">
 			document.onselectstart = function (){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -121,94 +128,130 @@
 				}
 				window.open(url,"right");
 			}
+		    
+		    $(document).ready(function() {
+				leftResize();
+		        $(".adminListBox").mCustomScrollbar({
+		    		theme : "dark"
+		    	});
+			});
+	        
+	        function leftResize(){
+	        	$(".adminListBox").height(window.innerHeight-58);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+	    	});
 	    </script>
 	</head>
-	<body class="leftbody" style="margin:0px 0px 0px 0px">
-		<div id="left">
-  			<div class="left_admin" title="<spring:message code='main.t23' />"><img src="/images/admin/first.png" width="13px" height="13px"/>
+	<body class="newLeft">
+		<div id="left" class="lnb" style="overflow: auto">
+  			<div class="admin_left_title" title="<spring:message code='main.t23' />">
 	  			<c:if test="${dotNetIntegration != 'YES'}"><spring:message code='main.t23' /></c:if>
 	  			<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.t24' /></c:if>
-  			</div>   
-  			<h2>
-  				<span onClick="goPage(1)" style="display:inline-block;width:100%;">
-	  				<c:if test="${dotNetIntegration != 'YES'}"><spring:message code='main.t56' /></c:if>
-	  				<c:if test="${dotNetIntegration == 'YES'}"><spring:message code='main.t24' /></c:if>
-  				</span>
-  			</h2>
-  			<c:if test="${dotNetIntegration != 'YES'}">
-    		<ul>
-		        <li><span id="Organ" style="width: 100%; display: inline-block;" onClick="goPage(1)" ><spring:message code='main.t56' /></span></li>
-		        <li><span id="CheckAdmin" style="width: 100%; display: inline-block;" onClick="goPage(12)" ><spring:message code='main.t00062' /></span></li>
-		        <li><span id="Addjob" style="width: 100%; display: inline-block;" onClick="goPage(13)" ><spring:message code='main.t00063' /></span></li>
-		        <li><span id="JobInfo" style="width: 100%; display: inline-block;" onClick="goPage(31)"><spring:message code='ezOrgan.csj01' /></span></li>
-		    </ul>   
-		    </c:if>
-  			<c:if test="${cChk == '1'}">
-			<h2>
-				<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
-			    <ul></ul>
-			</h2>
-			</c:if>
-			<c:if test="${cChk == '1'}">
-  			<h2>
-  				<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
-    			<ul></ul>
-  			</h2>
-  			</c:if>
-  			<h2>
-  				<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
-    			<ul></ul>
-  			</h2>   
-  			<h2>
-  				<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
-    			<ul></ul>    			
-  			</h2>
-  			
-  			<c:if test="${useSharedMailbox == 'YES'}">
-  			<h2>
-  				<span onClick="goPage(33)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.sharedMailbox01' /></span>
-    			<ul></ul>
-  			</h2>
-  			</c:if>
-  			<!-- 2016-04-05 장진혁 편지지등록 / REQUEST에 MSIE 또는 TRIDENT가 포함될 시에만 메뉴 보여줌으로 되어있었음  -->
-  			
-  			<!-- 2018-02-20 재은 수정 (편지지 관리) -->
-  			
-  			<c:if test="${useLetter == 'YES'}">
-  			<h2>
-				<span onClick="goPage(30)" style="display:inline-block;width:100%;"><spring:message code='main.t374' /></span>
-			    <ul></ul>
-			</h2>
-		    </c:if>
-  			<c:if test="${useSignatureTemplate == 'YES'}">
-  			<h2>
-				<span onClick="goPage(32)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.jje05'/></span>
-			    <ul></ul>
-			</h2>
-			</c:if>
-			<h2>
-				<span onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
-			    <ul></ul>
-			</h2>
-			<c:if test="${dotNetIntegration == 'YES'}">
-            <h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="goPage(14)" ><spring:message code='main.kms1' /></span>
-            <ul class="on"></ul>
-            </h2>		
-      	    <h2><span id="MAIL" style="display:inline-block;width:100%;" onClick="goPage(23)"><spring:message code='ezStatistics.t2' /></span></h2>
-		    <ul>
-			    <li><span style="display:inline-block;width:100%;" onClick="goPage(23)"><spring:message code='ezStatistics.t1001' /></span></li>
-			    <li><span style="display:inline-block;width:100%;" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span></li>
-                <li><span style="display:inline-block;width:100%;" onclick="goPage(25)"><spring:message code='ezStatistics.t1018' /></span></li>
-                <li><span style="display:inline-block;width:100%;" onclick="goPage(26)"><spring:message code='ezStatistics.t1023' /></span></li>
-                <li><span style="display:inline-block;width:100%;" onclick="goPage(27)"><spring:message code='ezStatistics.t1025' /></span></li>
-                <li><span style="display:inline-block;width:100%;" onclick="goPage(28)"><spring:message code='ezStatistics.kyj1' /></span></li>
-                <li><span style="display:inline-block;width:100%;" onclick="goPage(29)"><spring:message code='ezStatistics.kyj2' /></span></li>
-		    </ul>			            				
-            </c:if>						
+  			</div>
+  			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
+	  			<c:if test="${dotNetIntegration != 'YES'}">
+		  			<h2 class="on">
+		  				<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='main.t56' /></span>
+		  			</h2>
+	  			</c:if>
+	  			<c:if test="${dotNetIntegration == 'YES'}">
+		  			<h2 onClick="goPage(1)">
+		  				<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='main.t24' /></span>
+	  				</h2>
+	  			</c:if>
+	  			  
+	  			<c:if test="${dotNetIntegration != 'YES'}">
+		    		<ul class="lnbUL">
+       					<li><span class="sub_iconLNB tree_admin_organization"></span><span class="list_text" id="Organ" onClick="goPage(1)" ><spring:message code='main.t56' /></span></li>
+       					<li><span class="sub_iconLNB tree_admin_organization"></span><span class="list_text" id="CheckAdmin" onClick="goPage(12)" ><spring:message code='main.t00062' /></span></li>
+       					<li><span class="sub_iconLNB tree_admin_organization"></span><span class="list_text" id="Addjob" onClick="goPage(13)" ><spring:message code='main.t00063' /></span></li>
+       					<li><span class="sub_iconLNB tree_admin_organization"></span><span class="list_text" id="JobInfo" onClick="goPage(31)"><spring:message code='ezOrgan.csj01' /></span></li>
+				    </ul>   
+			    </c:if>
+			    <c:if test="${cChk == '1'}">
+				<h2>
+					<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
+				    <ul></ul>
+				</h2>
+				</c:if>
+				<c:if test="${cChk == '1'}">
+	  			<h2>
+	  				<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
+	    			<ul></ul>
+	  			</h2>  
+	  			<h2>
+	  				<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
+	    			<ul></ul>
+	  			</h2>
+	  			<h2>
+	  				<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
+	    			<ul></ul>    			
+	  			</h2>  
+	  			<c:if test="${useSharedMailbox == 'YES'}">
+		  			<h2>
+		  				<span onClick="goPage(33)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.sharedMailbox01' /></span>
+		    			<ul></ul>
+		  			</h2>
+	  			</c:if>
+	  			<!--
+	  			<h2>
+	  				<span onClick="goPage(20)" style="display:inline-block;width:100%;"><spring:message code='main.t1000' /></span>
+	    			<ul></ul>
+	  			</h2>
+	  			<h2>
+	  				<span onClick="goPage(21)" style="display:inline-block;width:100%;"><spring:message code='main.t1001' /></span>
+	    			<ul></ul>
+	  			</h2>
+	            -->     
+	  			</c:if>			
+	  			<!-- 2016-04-05 장진혁 편지지등록 / REQUEST에 MSIE 또는 TRIDENT가 포함될 시에만 메뉴 보여줌으로 되어있었음  -->
+	  			
+	  			<!-- 2018-02-20 재은 수정 (편지지 등록) -->
+	  			
+	  			<c:if test="${useLetter == 'YES'}">
+	  			<h2>
+					<span onClick="goPage(30)" style="display:inline-block;width:100%;"><spring:message code='main.t374' /></span>
+				    <ul></ul>
+				</h2>
+			    </c:if>
+	  			<!--							
+				<h2>
+					<span onClick="goPage(5)" style="display:inline-block;width:100%;"><spring:message code='main.t374' /></span>
+				    <ul></ul>
+				</h2>
+				-->
+				<!-- 편지지등록 끝 -->
+				<%-- <spring:message code='main.t58' /> --%>
+  				<c:if test="${useSignatureTemplate == 'YES'}">
+  					<h2>
+						<span onClick="goPage(32)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.jje05'/></span>
+			    		<ul></ul>
+					</h2>
+				</c:if>
+				<h2>
+					<span onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
+				    <ul></ul>
+				</h2>
+				<c:if test="${dotNetIntegration == 'YES'}">
+	            <h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="goPage(14)" ><spring:message code='main.kms1' /></span>
+	            <ul class="on"></ul>
+	            </h2>		
+	      	    <h2><span id="MAIL" style="display:inline-block;width:100%;" onClick="goPage(23)"><spring:message code='ezStatistics.t2' /></span></h2>
+			    <ul>
+				    <li><span style="display:inline-block;width:100%;" onClick="goPage(23)"><spring:message code='ezStatistics.t1001' /></span></li>
+				    <li><span style="display:inline-block;width:100%;" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span></li>
+	                <li><span style="display:inline-block;width:100%;" onclick="goPage(25)"><spring:message code='ezStatistics.t1018' /></span></li>
+	                <li><span style="display:inline-block;width:100%;" onclick="goPage(26)"><spring:message code='ezStatistics.t1023' /></span></li>
+	                <li><span style="display:inline-block;width:100%;" onclick="goPage(27)"><spring:message code='ezStatistics.t1025' /></span></li>
+	                <li><span style="display:inline-block;width:100%;" onclick="goPage(28)"><spring:message code='ezStatistics.kyj1' /></span></li>
+	                <li><span style="display:inline-block;width:100%;" onclick="goPage(29)"><spring:message code='ezStatistics.kyj2' /></span></li>
+			    </ul>			            				
+	            </c:if>		
+            </div>
 		</div>
-		<script type="text/javascript">
-			initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		</script>	    
         <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
 	</body>
 </html>

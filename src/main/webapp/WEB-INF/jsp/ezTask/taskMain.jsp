@@ -41,6 +41,8 @@
 		    var userlang = "${userInfo.lang}";
 		    var primary = "${userInfo.primary}";
 		    var useTodoMemo = "${useTodoMemo }";
+		    var taskFlag = "<c:out value='${taskFlag}' />";
+		    var currentTab;
 		    
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -54,6 +56,7 @@
 		        var height = parseInt(document.documentElement.clientHeight - 215);
 
 		        document.getElementById("list").style.height = height + "px";
+		        
 		        if (changeTab == "taskre") {
 			        ChangeTab(document.getElementById("1tab3"));
 			        $("#1tab3").click();
@@ -65,6 +68,21 @@
 		        	$("#1tab1").click();
 		        }
 		        
+		        switch(taskFlag) {
+		        	case "normal":
+		        		ChangeTab(document.getElementById("1tab1"));
+		        		//currentTab = "1tab1";
+			        	$("#1tab1").click();
+			        	break;
+		        	case "repeat":
+		        		ChangeTab(document.getElementById("1tab3"));
+			        	$("#1tab3").click();
+			        	break;
+		        	case "send":
+		        		ChangeTab(document.getElementById("1tab2"));
+			        	$("#1tab2").click();
+			        	break;
+		        }
 		        selectelem = "";
 		    }
 		    
@@ -117,7 +135,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#edf4fd";
+		        elem.style.backgroundColor = "#f1f8ff";
 		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
 
 		        // 목록화면 나오고 처음 선택할 때 strListInfo 값 셋팅
@@ -143,15 +161,15 @@
                 window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 820px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 	
-		    function WriteTask() {
+		    function WriteTask(flag) {
 		    	var feature = "";
-		    	
+		    	taskFlag = currentTab;
 		    	if (useTodoMemo == 'YES') {
 		    		feature = GetOpenPosition(790, 830);
-	                window.open("/ezTask/taskWrite.do", "", "height=830px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+	                window.open("/ezTask/taskWrite.do?flag=" + flag, "", "height=830px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    	} else {
 		    		feature = GetOpenPosition(790, 775);
-	                window.open("/ezTask/taskWrite.do", "", "height=775px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+	                window.open("/ezTask/taskWrite.do?flag=" + flag, "", "height=775px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    	}
 		    }
 	
@@ -164,7 +182,7 @@
 			    var strtext;
 			    var PagingHTML = "";
 			    document.getElementById("tblPageRayer").innerHTML = "";
-			    document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + allCnt + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
+			    
 			    strtext = "<div class='pagenavi'>";
 			    PagingHTML += strtext;
 			    var totalPage = totalpage;
@@ -644,10 +662,12 @@
 		    function RefreshView() {
 		        isrefresh = true;
 		        selectelem = null;
-
+		        if(filter !== "" ) {
+		        	searchFlag = true;
+		        }
 		        DateChange();
 		    }
-
+			
 		    function DeleteTask() {
 		        if (strListIdInfo == null || strListIdInfo == "") {
 		            alert("<spring:message code='ezTask.t104' />");
@@ -704,6 +724,7 @@
 		        getTaskList();
 		    }
 
+		    var cnt, cnt2, cnt3;
 		    function after_DateChange(xml) {
 	            listdom = loadXMLString(xml);
 
@@ -725,11 +746,15 @@
 	                currentpage = 1;	            	
 	            }
 
-	            var cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
-	            var cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
-	            var cnt3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
-	            allCnt = getNodeText(listdom.documentElement.getElementsByTagName("ALLCNT")[0]);
-
+	            
+	            if(!searchFlag){
+	            	cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
+		            cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
+		            cnt3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
+		            allCnt = getNodeText(listdom.documentElement.getElementsByTagName("ALLCNT")[0]);
+	            }
+	            
+	            // 왼쪽메뉴 카운트 수
 	            if ($(".tabon").attr("divname") == "taskprog") {
 	            	document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t200901' />" + " (" + currentCount + ")";
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t200903' />" + " (" + cnt2 + ")";
@@ -746,10 +771,45 @@
 		            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t200902' />" + " (" + currentCount + ")";
 		            $(".sort_radio").show();
 	            }
-
+	            
+	            // 업무 작성, 삭제시 카운트 refresh
+	            switch (currentTab) {
+		            case "normal":
+		                type = "1";
+		                cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
+		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200901' />";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + currentCount + "</span>";
+		                currentTab = "normal";
+		                if(chkValue === "memo") {
+		                	cnt = currentCount;
+		                }
+		                break;
+		            case "send":
+		                type = "2";
+		                cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
+		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200903' />";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + currentCount + "</span>";
+		                currentTab = "send";
+		                if(chkValue === "memo") {
+		                	cnt2 = currentCount;
+		                }
+		                break;
+		            case "repeat":
+		                type = "3";
+		                cnt3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
+		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200902' />";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + currentCount + "</span>";
+		                currentTab = "repeat"
+		                if(chkValue === "memo") {
+			                cnt3 = currentCount;
+						}
+		                break;
+		        }
+				
 	            show_page();
 	            makePageSelPage();
-
+	            window.parent.frames["left"].cntLoad();
+	            searchFlag = false;
 	            return;
 		    }
 
@@ -805,12 +865,21 @@
 		        switch (pSelectTab) {
 		            case "taskprog":
 		                type = "1";
+		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200901' />";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + cnt + "</span>";
+		                currentTab = "normal";
 		                break;
 		            case "taskdictate":
 		                type = "2";
+		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200903' />";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + cnt2 + "</span>";
+		                currentTab = "send";
 		                break;
 		            case "taskrepetition":
 		                type = "3";
+		                document.getElementById("presentcell").innerHTML = "<spring:message code='ezTask.t200902' />";
+		                document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + cnt3 + "</span>";
+		                currentTab = "repeat"
 		                break;
 		        }
 
@@ -829,6 +898,7 @@
 
 		    var chkValue = "";
 		    var filter = "";
+		    searchFlag = false;
 		    function search() {
 		        if ($.trim($("#txt_keyword").val()) == "") {
 		        	alert("<spring:message code='ezTask.t990' />");
@@ -849,6 +919,7 @@
 		            return;
 		        }
 		        
+		        searchFlag = true;
 		        getTaskList();
 		    }
 		    
@@ -899,7 +970,7 @@
 					strListInfo = "";
 
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body").css("background", "#edf4fd");
+					$(".row_body").css("background", "#f1f8ff");
 
 					$(":checkbox[name=myCheckbox]:checked").each(function(){
 						deleteList.push($(this).attr("creatorid") + ";");
@@ -928,7 +999,7 @@
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	
-		<h1><spring:message code='ezTask.t84' /><span id="mailBoxInfo"></span>
+		<h1><span id="presentcell"></span><span id="mailBoxInfo"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
 		    <!-- 2018-07-17 구해안 라디오박스 검색창 select box로 변경 및 스타일 다른 모듈과 같도록 수정-->
 		    <select id="formId" name="searchCheck" style="width:80px; height:27px; border-color: #c8c8c8;">
@@ -940,24 +1011,24 @@
 		         <%--  <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t118' /></label>
 		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t2005' /></label> --%>				  
 				  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		          <a href="#" style="float:right;"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
+		          <a style="float:right;"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 		    </span>
 		</h1>
 		
-		<div class="portlet_tabpart01" style="margin-top:3px;text-align:right">
+		<div class="portlet_tabpart01" id="portlet_tabpart01" style="margin-top:3px;text-align:right;display:none">
 		    <div class="portlet_tabpart01_top" id="tab1">
 		        <p><span id="1tab1" divname="taskprog"><spring:message code='ezTask.t200901' /></span></p>
 		        <p><span id="1tab3" divname="taskrepetition"><spring:message code='ezTask.t200902' /></span></p>
 		        <p><span id="1tab2" divname="taskdictate"><spring:message code='ezTask.t200903' /></span></p>		        
 		    </div>
+		    <br />
 		</div>
-		<br />
 		<div id="mainmenu">
 			<ul>
 				<!-- 2018-05-24 구해안 이미지 이동 -->
-				<li><span id="pn_img" onClick="WriteTask()"><spring:message code='ezTask.t113' /></span></li>
-				<li><span onClick="DeleteTask()"><spring:message code='ezTask.t115' /></span></li>
-				<li><span onClick="RefreshView()"><spring:message code='ezTask.t116' /></span></li>
+				<li class="important"><span id="pn_img" onClick="WriteTask('right')"><spring:message code='ezTask.t113' /></span></li>
+				<li onClick="DeleteTask()"><span class="icon16 icon16_delete"></span></li>
+				<li onClick="RefreshView()"><span class="icon16 icon16_refresh"></span></li>
 
 				<!-- 완료 -->
 				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;padding-right: 20px;">
@@ -981,7 +1052,7 @@
 		</div>
 		
 		<script type="text/javascript">
-			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+			//selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
 		<table style="WIDTH: 100%;overflow:AUTO;" id="list">
@@ -1066,8 +1137,4 @@
 		
 		<div id="tblPageRayer"></div>
 	</body>
-	
-	<script type="text/javascript">
-	    Tab1_NewTabIni("tab1");
-	</script>
 </html>

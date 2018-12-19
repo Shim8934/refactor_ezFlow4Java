@@ -3,6 +3,7 @@ var strLang1 = "오전"
 var strLang2 = "오후"
 var strLang3 = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월"
 var strLang4 = "일요일;월요일;화요일;수요일;목요일;금요일;토요일"
+var strLang4_1 = "일요일;월요일;화요일;수요일;목요일;금요일;토요일"
 var strLang5 = "일;월;화;수;목;금;토"
 var strLang6 = "월;화;수;목;금;토;일"
 var strLang5_1 = "일;월;화;수;목;금;토"
@@ -129,11 +130,15 @@ var strLang122 = "월";
 var strLang123 = "일";
 var strLang124 = "종일일정";
 var strLang125 = "개인일정";
+var strLang125_1 = "개인일정";
 var strLang126 = "부서일정";
+var strLang126_1 = "부서일정";
 var strLang127 = "회사일정";
+var strLang127_1 = "회사일정";
 var strLang128 = "시";
 var strLang129 = "분";
 var strLang130 = "그룹일정";
+var strLang130_1 = "그룹일정";
 
 var strLang253 = "선택된 자원이 없습니다."
 var strLang254 = "선택된 자원은 삭제할 수 없습니다."
@@ -170,6 +175,8 @@ var strLang275 = "시작일을 오늘 이전으로 등록할 수 없습니다.";
 var strLangKMS1 = "100회 이하만 반복가능합니다.";
 /*2018-07-16*/
 var strLang276 = "구성원 보기를 할 그룹을 하나만 선택해주세요.";
+/*2018-09-27*/
+var strLang277 = "일정을 등록하세요"
 //2018-10-24
 var strLangKHJ1 = "날짜를 지정해 주세요.";
 var strLangKHJ2 = "시작일을 지정해 주세요.";

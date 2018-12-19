@@ -152,7 +152,7 @@
 	        </tr>
 	    </table>
 	    <div class="btnpositionNew">
-	    	<a href="#" class="imgbtn"><span onClick="return btn_MoveCopy_onclick('MOVE')"><spring:message code='ezBoard.t134'/></span></a>
+	    	<a class="imgbtn"><span onClick="return btn_MoveCopy_onclick('MOVE')"><spring:message code='ezBoard.t134'/></span></a>
 	    </div>	
 	</body>
 </html>

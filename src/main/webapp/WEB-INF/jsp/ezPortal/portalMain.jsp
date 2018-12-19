@@ -74,6 +74,7 @@
 		 	
 		 	$(window).resize(function() {
 		 		browserResize();
+		 		setGadgetPositionResize();
 		 	});
 		 	
 		    $(function() {
@@ -126,6 +127,9 @@
 			    			$(this).parent().nextAll(".color_popup").css("visibility", "hidden"); 
 			    		}
 			    	});
+			    	
+			    	/* 2018-12-18 김민성 - 메모 레이어 팝업 드래그시 화면 밀림 현상 수정 */
+			    	$("#layer-popup").draggable("option", "scroll", false);
 		    	} else {
 		    		$(".noteBlock").css("pointer-events", "none");
 		    	}
@@ -162,8 +166,8 @@
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
-		<div style="height:56px;"><iframe src="${topUrl}" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;min-height:400px" frameborder="0"></iframe></div>
-		<iframe src="${mainUrl}" name="main" id="mainFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;height:100%;" frameborder="0"></iframe>
+		<div style="height:56px;"><iframe src="${topUrl}" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;min-height:260px;" frameborder="0"></iframe></div>
+		<iframe src="${mainUrl}" name="main" id="mainFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;height:100%;min-width:1280px" frameborder="0"></iframe>
 		<%-- <div style="height:${topHeight}px"><iframe src="${topUrl}" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe></div>
 		<iframe src="${mainUrl}" name="main" id="mainFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe> --%>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
@@ -175,7 +179,7 @@
 		<div class="noteBlock">
 			
 			<!-- 메모 레이어 -->
-			<div id="layer-popup" class="memo_wrap layerControl" style="display:none;">
+			<div id="layer-popup" class="memo_wrap layerControl" style="display:none; ">
 				<div class="memo_header_wrapper">
 					<input type="hidden" id="layerFlag" value="layer" />
 				 	<div class="memo_header">

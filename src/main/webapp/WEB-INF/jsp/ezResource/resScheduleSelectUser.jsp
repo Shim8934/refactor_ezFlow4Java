@@ -399,10 +399,10 @@
    		<table>
      			<tr>
        			<td style="padding-right:5px">
-           			<div style="border: 1px solid #ddd; height: 416px; width: 280px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
+           			<div style="border: 1px solid #ddd; height: 416px; width: 280px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
 		            <div class="box" style="margin-top:3px;border:0px" >
            			    <input id="deptkeyword" onkeypress="deptsearch_press()" style="WIDTH:115px;margin-bottom:2px;height:22px" />
-               			<a href="#" class="imgbtn imgbck"><span onclick="deptsearch_click()"><spring:message code='ezResource.t134'/></span></a>
+               			<a class="imgbtn imgbck"><span onclick="deptsearch_click()"><spring:message code='ezResource.t134'/></span></a>
            			</div>
        			</td>
        			<td valign="top" style="padding-left:5px">
@@ -417,7 +417,7 @@
                  				<option value="telephonenumber"><spring:message code='ezResource.t11'/></option>
                			</select>
                			<input id="keyword" onkeypress="search_press()" style="WIDTH:130px; margin-bottom:2px;height:22px" />
-               			<a href="#" class="imgbtn imgbck"><span onclick="search_click()"><spring:message code='ezResource.t14'/></span></a>
+               			<a class="imgbtn imgbck"><span onclick="search_click()"><spring:message code='ezResource.t14'/></span></a>
            			</div>
        			</td>
      			</tr>

@@ -63,7 +63,7 @@
 	    	
 	    	window.onload = function () {
 	    		$("#message").contents().find("body").css("word-wrap", "break-word");
-	    		$("#message").contents().find("body").css("font-family", "Gulim, arial, verdana");
+	    		$("#message").contents().find("body").css("font-family", "malgun gothic, arial, verdana");
 				$("#message").contents().find("body").css("font-size", "13px");
 	    		
 	    	    try {
@@ -870,7 +870,7 @@
 	                    		
 	                    		<c:when test="${pReservedItem == 'true' }">
 									<li id='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezCommunity.t6'/></span></li>
-			                        <li id='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezCommunity.t208'/></span></li>
+			                        <li id='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 								</c:when>
 								
 								<c:otherwise>
@@ -878,27 +878,26 @@
 										<c:when test="${boardInfo.gubun == '2' }">
 											<li id='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezCommunity.t207'/></span></li>
 					                        <li id='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezCommunity.t6'/></span></li>
-					                        <li id='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezCommunity.t208'/></span></li>
-					                        <li id='btn_Mail'><span onclick='mail_boarditem()'><spring:message code='ezCommunity.t950'/></span></li>
-					                        <li id='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezCommunity.t951'/></span></li>
+					                        <li id='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
+					                        <li id='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
+					                        <li id='btn_Mail'><span class="icon16 popup_icon16_mail" onclick='mail_boarditem()'></span></li>
 										</c:when>
 										
 										<c:when test="${item.writerID == userInfo.id}">
 											<li id='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezCommunity.t207'/></span></li>
 					                        <li id='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezCommunity.t6'/></span></li>
-					                        <li id='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezCommunity.t208'/></span></li>
 					                        
 					                        <c:if test="${boardInfo.gubun != '2' }">
 					                        	<li id='btn_Move'><span onclick='btn_Copy_Onclick()'><spring:message code='ezCommunity.t911'/></span></li>
 					                        </c:if>
 					                        
-					                        <li id='btn_Mail'><span onclick='mail_boarditem()'><spring:message code='ezCommunity.t950'/></span></li>
-					                        
 					                        <c:if test="${boardInfo.gubun != '2' }">
 					                        	<li id='btn_ReaderList'><span onclick='ReaderList()'><spring:message code='ezCommunity.t952'/></span></li>
 					                        </c:if>
 					                        
-					                        <li id='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezCommunity.t951'/></span></li>
+					                        <li id='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
+					                        <li id='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
+					                        <li id='btn_Mail'><span class="icon16 popup_icon16_mail" onclick='mail_boarditem()'></span></li>
 										</c:when>
 										
 										<c:otherwise>
@@ -906,12 +905,16 @@
 				                        	
 				                        	<c:if test="${cAdmin == 'admin' || gcAdmin == 'OK' || boardInfo.boardAdmin_FG == 'true' }">
 				                        		<li id='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezCommunity.t6'/></span></li>
-					                        	<li id='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezCommunity.t208'/></span></li>
 				                        	</c:if>
 					                        
 				                        	<li id='btn_ReaderList'><span onclick='ReaderList()'><spring:message code='ezCommunity.t952'/></span></li>
-					                        <li id='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezCommunity.t951'/></span></li>
-					                        <li id='btn_Mail'><span onclick='mail_boarditem()'><spring:message code='ezCommunity.t953'/></span></li>
+				                        	
+				                        	<c:if test="${cAdmin == 'admin' || gcAdmin == 'OK' || boardInfo.boardAdmin_FG == 'true' }">
+				                        		<li id='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
+				                        	</c:if>
+				                        	
+					                        <li id='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
+					                        <li id='btn_Mail'><span class="icon16 popup_icon16_mail" onclick='mail_boarditem()'></span></li>
 										</c:otherwise>
 									</c:choose>
 									
@@ -1079,7 +1082,7 @@
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	        <iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
 	</body>
 </html>

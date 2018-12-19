@@ -245,9 +245,9 @@ function datanameweek(year, month, day, contral)
     }
     else if(contral == "HEARDER")
     {
-        DateReslut = String(year) + strLang277 + " " + 
-        String(((month < 10) ? "0" + month : month)) + strLang279 + " " +
-        String(((day < 10) ? "0" + day : day)) + strLang278;
+        DateReslut = String(year) + "-" + 
+        String(((month < 10) ? "0" + month : month)) + "-" +
+        String(((day < 10) ? "0" + day : day));
     }
     else if (contral == "ADD")
     {
@@ -512,9 +512,10 @@ function tableListControl_Week()
             _mtd.setAttribute("ondblclick", "newSchedule_onclick(event)");
             //_mtd.ondblclick = new Function("newSchedule_onclick(event);");
             if(title_name[k].split("/")[2] == "1")
-                _mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+                //_mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+            	_mtd.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             else
-                _mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
+                _mtd.innerHTML = "<span class='sub_iconLNB tree_resource_standard' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             _mtr2.appendChild(_mtd);
             
             if (DefaultView == 0) { //일요일시작
@@ -914,9 +915,11 @@ function tableListControl_today() {
 
         var current_day = new Date(TodayDatename);
         if (current_day.getDay() == "6")
-            document.getElementById("divViewHeader").style.color = "rgb(0, 72, 149)";
+            //document.getElementById("divViewHeader").style.color = "rgb(0, 72, 149)";
+        	document.getElementById("divViewHeader").style.color = "";
         else if (current_day.getDay() == "0")
-            document.getElementById("divViewHeader").style.color = "#ee1c25";
+            //document.getElementById("divViewHeader").style.color = "#ee1c25";
+        	document.getElementById("divViewHeader").style.color = "";
         else
             document.getElementById("divViewHeader").style.color = "";
 
@@ -987,9 +990,11 @@ function tableListControl_today() {
             _TD.onselectstart = function () { return false; };
 
             if (title_name[k].split("/")[2] == "1")
-                _TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+                //_TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+            	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             else
-                _TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
+                //_TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
+            	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_no' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             
             _TD.style.verticalAlign = "middle";
             _Tr2.appendChild(_TD);
@@ -1179,9 +1184,11 @@ function tableListControl_today() {
                         _TD.onselectstart = function () { return false; };
 
                         if (title_name[k].split("/")[2] == "1")
-                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                            //_TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                        	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_no' style='margin-top:0px'></span>&nbsp;" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
                         else
-                            _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                            //_TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                        	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px'></span>&nbsp;" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
                         
                         _TD.style.verticalAlign = "middle";
                         _Tr2.appendChild(_TD);
@@ -1458,7 +1465,7 @@ function showTooltip_MouseOver(obj, e) {
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
     tTh.setAttribute("scope", "col");
-    tTh.style.background = "#edf4fd";
+    tTh.style.background = "#f1f8ff";
     tTh.style.border = "1px solid #d1ddec";
     setNodeText(tTh,GetAttribute(obj,"subject").split("&apos;").join("'"));
     tTr.appendChild(tTh);
@@ -1483,17 +1490,23 @@ function showTooltip_MouseOver(obj, e) {
     sTd.className = "individual";
 
     var sSpan = document.createElement("SPAN");
-    var _img = document.createElement("IMG");
+    //var _img = document.createElement("IMG");
     if (GetAttribute(obj,"approveFlag") == "1") {
-        _img.src = "/images/calendar/icon_resource_ok.png"
-        _img.style.verticalAlign = "bottom";
-        sSpan.appendChild(_img);
+        //_img.src = "/images/calendar/icon_resource_ok.png"
+        //_img.style.verticalAlign = "bottom";
+    	//sSpan.appendChild(_img);
+    	sSpan.className = "sub_iconLNB tree_resource_ok";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang307;
     } else {
-        _img.src = "/images/calendar/icon_resource_no.png"
-        _img.style.verticalAlign = "bottm";
-        sSpan.appendChild(_img);
+        //_img.src = "/images/calendar/icon_resource_no.png"
+        //_img.style.verticalAlign = "bottm";
+        //sSpan.appendChild(_img);
+    	sSpan.className = "sub_iconLNB tree_resource_no";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang308;
     }
@@ -1575,7 +1588,7 @@ function showTooltip_MouseOver(obj, e) {
     var sSpan = document.createElement("SPAN");
     //sSpan.className = "width_16";
     sTd.appendChild(sSpan);
-    sTd.innerHTML += "<span>[" + strLang571 + "]</span><br /><span style='margin-top:2px;display:block;'>" + GetAttribute(obj,"owner_nm") +"</span>";
+    sTd.innerHTML += "<span>[" + strLang571 + "]</span><br /><span style='margin-top:2px;display:block;'>" + GetAttribute(obj,"owner_nm") + "(" + GetAttribute(obj,"dept_name") + ")" +"</span>";
     sTr.appendChild(sTd);
     sTable.appendChild(sTr);
     tTd.appendChild(sTable);

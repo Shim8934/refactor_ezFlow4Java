@@ -100,6 +100,16 @@
 	                document.getElementById("txtContent").innerHTML = "";
 	                var _img1;
 	                var _img2;
+	                
+	                var xmldom = loadXMLString(AttachText);
+	                var _attchDIV;
+	                if (SelectNodes(xmldom, "NODES/NODE").length > 0) {
+	                    var AttchHTML = SetAttachmentInfo(xmldom);
+	                    _attchDIV = document.createElement("DIV");
+	                    _attchDIV.id = "attchdivContent";
+	                    _attchDIV.innerHTML = AttchHTML;
+	                    document.getElementById("txtContent").appendChild(_attchDIV);
+	                }
 	
 	                _img1 = document.createElement("IMG");
 	                _img1.id = "smallImg";
@@ -124,16 +134,6 @@
 	                document.getElementById("txtContent").appendChild(_img1);
 	                document.getElementById("txtContent").appendChild(_img2);
 	
-	                var xmldom = loadXMLString(AttachText);
-	                var _attchDIV;
-	                if (SelectNodes(xmldom, "NODES/NODE").length > 0) {
-	                    var AttchHTML = SetAttachmentInfo(xmldom);
-	                    _attchDIV = document.createElement("DIV");
-	                    _attchDIV.id = "attchdivContent";
-	                    _attchDIV.innerHTML = AttchHTML;
-	                    document.getElementById("txtContent").appendChild(_attchDIV);
-	                }
-	
 	                var _div = document.createElement("DIV");
 	                _div.id = "divContent";
 	                _div.innerHTML = responseText;
@@ -152,8 +152,9 @@
 	            var strAttach = "";
 	            var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
 	            var regData = GetbrowserLanguage();
-	
-	            strAttach += "<div class='previewmail_addfile' id='ifrmPreViewRayer' style='margin-bottom:10px;'>";
+				var fontfam = "<spring:message code='main.t246'/>";
+	            
+	            strAttach += "<div class='attachedfile' id='ifrmPreViewRayer' style='margin:-13px; margin-bottom:10px; margin-top:-8px; font-family:"+ fontfam +"'>";
 	
 	            var totalSize = 0;
 	            for (var j = 0; j < xmldomNodes.length; j++) {
@@ -161,9 +162,9 @@
 	            }
 	
 	            var strSize = "";
-	            strAttach += "<p class='title'>" + strLang1+" - " + "<span><b>" + xmldomNodes.length + strLang2 + "(" + File_Size(totalSize) + ")</b></span><span class='icon_grayup' id='BtnAttachDetail' onclick='AttachDetail_view(this);'></span>";
-	            strAttach += "<span class='title_btn' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' onclick='AttachAllDownload();'>" + strLang3 + "</span></p>";
-	            strAttach += "<ul class='list' id='PreviewAttachList'>";
+	            strAttach += "<ul class='attachedfile_title'><li class='titleText'><span class='titleT'>" + strLang1+ "<span class='cblue'> " + xmldomNodes.length + "</span> (" + File_Size(totalSize) + ")</span><span class='attach_btn_up' id='BtnAttachDetail' onclick='AttachDetail_view(this);'></span>";
+	            strAttach += "<li class='titleSave' onclick='AttachAllDownload();'><span>" + strLang3 + "</span></li></ul>"; 
+	            strAttach += "<ul class='attachedfile_list' id='PreviewAttachList'>";
 	
 				/* 2018-07-16 홍승비 - 게시물 미리보기 시 첨부파일 특수문자 처리 */
 	            for (i = 0; i < xmldomNodes.length; i++) {
@@ -177,7 +178,7 @@
 // 	                filename = ReplaceText(filename, "%7e", "~");
 // 	                filename = ReplaceText(filename, "%3d", "=");
 	               // filepath = "/upload_board/" + filepath;
-	                filesize = parseInt(getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize2")));
+	                filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 	
 	                var strTarget = "target=''";
 	                var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
@@ -194,7 +195,7 @@
 	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
 	                
 	                /* 2018-10-11 홍승비 - 모두저장용 filePath 속성 추가 */
-	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "' filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "'>" + filename + " (" + File_Size(filesize) + ")</a>";	                
+	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "' filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "'>" + filename + " (" + filesize + ")</a>";	                
 	              	strAttach += "</span>";
 	                strAttach += "</li>";
 	            }
@@ -229,12 +230,12 @@
 	        }
 	
 	        function AttachDetail_view(obj) {
-	            if (obj.className == "icon_graydown") {
-	                obj.className = "icon_grayup";
+	            if (obj.className == "attach_btn_down") {
+	                obj.className = "attach_btn_up";
 	                document.getElementById("PreviewAttachList").style.display = "";
 	            }
 	            else {
-	                obj.className = "icon_graydown";
+	                obj.className = "attach_btn_down";
 	                document.getElementById("PreviewAttachList").style.display = "none";
 	            }
 	        }

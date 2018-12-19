@@ -39,6 +39,9 @@
 			.password_reset .passwordForm li.grayText{ color:#8e8e8e; font-size:12px; margin:0px; padding:0px}
 			#exDiv3 dl{margin-top: 20px;}
 			#layerTitle{margin-bottom: 20px;}
+			
+			/* 2018-11-06 포탈개인화 로고 설정 - 유은정 */
+			.logo img {width:137px; height:38px;}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -222,7 +225,7 @@
 	                	<input type="hidden" name="encryptPass"/>
 	                	
 	                    <fieldset>		                    	
-	                    	<p class="logo"><img src="/images/kr/login/logo.gif"></p>   
+	                    	<p class="logo"><img src="<c:out value='${logoUrl }'/>"></p>   
 	                        <p class="id">
 	                        	<input id="uid" name="id" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />
 	                        </p>		                 

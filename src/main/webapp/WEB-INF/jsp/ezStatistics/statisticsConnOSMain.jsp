@@ -53,7 +53,7 @@
                 changeYear: true,
                 autoSize: true,
                 showOn: "both",
-                buttonImage: "/images/ImgIcon/calendar-month.gif",
+                buttonImage: "/images/ImgIcon/calendar-month.png",
                 buttonImageOnly: true
             });
             $("#Sdatepicker2").datepicker({
@@ -61,7 +61,7 @@
                 changeYear: true,
                 autoSize: true,
                 showOn: "both",
-                buttonImage: "/images/ImgIcon/calendar-month.gif",
+                buttonImage: "/images/ImgIcon/calendar-month.png",
                 buttonImageOnly: true
             });
             var NowDate = new Date();
@@ -359,7 +359,7 @@
                 </span>
             </td>
             <td>
-                <div id="mainmenu" style="height: 28px;margin:3px 0px !important">
+                <div id="mainmenu" style="height: 31px;margin:3px 0px !important">
                     <ul>
                         <li><span style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
                     </ul>

@@ -477,7 +477,8 @@ function MakeNoDateList() {
         var DivLayer = document.createElement("DIV");
         DivLayer.style.textAlign = "center";
         DivLayer.className = "emptyDiv";
-        DivLayer.innerHTML = "<img src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px'>" + strLang100 + "</div>";
+        /*DivLayer.innerHTML = "<img src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px'>" + strLang100 + "</div>";*/
+        DivLayer.innerHTML = "<dl class='nodata_sIcon'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd>" + strLang100 + "</dd></dl>";
         document.getElementById("MailListCard").appendChild(DivLayer);
     }
 }
@@ -547,7 +548,7 @@ function makePageSelPage() {
     totalPage = Math.ceil(pTotalCnt / pPageSize);
     var pageNum = pCurrentPage;
     if (!searchFlag || strLang_1 == "")
-        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + " <span style='color:#017BEC;'>" + pTotalCnt + "</span> " + strLang42 + "]";
+        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + "</span>";
     else {
         document.getElementById("mailBoxInfo").className = "h2_dot"; 
         document.getElementById("mailBoxInfo").innerHTML = strLang_1 + "&nbsp;<span class='point'>" + pTotalCnt + "</span> " + strLang_2;

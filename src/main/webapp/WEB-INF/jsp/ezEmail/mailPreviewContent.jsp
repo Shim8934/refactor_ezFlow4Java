@@ -196,11 +196,11 @@
 		    
 		    function AttachDetail_view(obj) {
 		       
-		    	if (obj.className == "icon_graydown") {
-		            obj.className = "icon_grayup"
+		    	if (obj.className == "attach_btn_down") {
+		            obj.className = "attach_btn_up"
 		            document.getElementById("PreviewAttachList").style.display = "";
 		        } else {
-		            obj.className = "icon_graydown"
+		            obj.className = "attach_btn_down"
 		            document.getElementById("PreviewAttachList").style.display = "none";
 		        }
 		    }
@@ -470,6 +470,7 @@
 			    		"width" : "100%",
 			        	"padding" : "0px 0px 0px 10px",
 			    		"margin" : "0px",
+			    		"font-family" : "malgun gothic",
 			    		"font-size" : "12px",
 			    		"color" : "#333"
 			    	});
@@ -480,7 +481,18 @@
 	    </script> 
 	</head>
 
-	<body style="margin:10px 13px" onload="javascript:window_onload()" onclick="frameClick();">
+	<body onload="javascript:window_onload()" onclick="frameClick();">
+		<div class="attachedfile" id="ifrmPreViewRayer" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;font-family:<spring:message code='main.t246' />">
+			<ul class="attachedfile_title">
+				<li class="titleText"><span class="titleT"><spring:message code='ezEmail.t99000003' /><span>${pAttachListHtmlSub}</span></span><span class="attach_btn_up" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span></li>
+	    		<li class="titleSave"><span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span></li>
+	    	</ul>
+			<ul class="attachedfile_list" id="PreviewAttachList">
+	            ${pAttachListHtml}
+			</ul>
+		</div>
+		<div id="MailBigAttachRayer" class="previewmail_addfile">
+		</div>
 		<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' onclick='Smaller()' style='cursor:pointer;' />
 		<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; margin-left: -4px;' />
 		<c:if test="${shareId == null or (shareId != '' and sendPermission == 'Y')}">
@@ -488,16 +500,6 @@
 				<img src="/images/ImgIcon/PrereplyAll.gif" title="<spring:message code='ezEmail.t512' />" style='cursor:pointer;' onclick="Mail_Acton('ALLRE');" /><img src="/images/ImgIcon/Prereply.gif" title="<spring:message code='ezEmail.t511' />"  style='cursor:pointer;' onclick="Mail_Acton('RE');"/><img src="/images/ImgIcon/Preforward.gif" title="<spring:message code='ezEmail.t513' />"  style='cursor:pointer;' onclick="Mail_Acton('FW');"/>
 			</span>
 		</c:if>
-		
-		<div class="previewmail_addfile" id="ifrmPreViewRayer" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;font-family:<spring:message code='main.t246' />">
-			<p class="title"><spring:message code='ezEmail.t99000003' /><span>${pAttachListHtmlSub}</span><span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span>
-	    	<span class="title_btn" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span></p>
-			<ul class="list" id="PreviewAttachList">
-	            ${pAttachListHtml}
-			</ul>
-		</div>
-		<div id="MailBigAttachRayer" class="previewmail_addfile">
-		</div>
 		<div id="normalScreen" style="margin-top:5px; word-wrap:break-word;">
 		${htmlBody}
 		<!---->

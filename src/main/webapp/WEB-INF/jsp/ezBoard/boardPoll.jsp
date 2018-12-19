@@ -10,7 +10,7 @@
     	<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
     	<style type="text/css">
     		.pollImgbtn1{ white-space:nowrap; display:inline-block; cursor: pointer; height:17px; vertical-align:top; cursor:pointer; margin-top: 0px;}
-			.pollImgbtn1 span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:16px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:17px;}
+			.pollImgbtn1 span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:16px; font:12px malgun gothic; letter-spacing:-1; vertical-align:top; line-height:17px;}
     	</style>    	
     	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>

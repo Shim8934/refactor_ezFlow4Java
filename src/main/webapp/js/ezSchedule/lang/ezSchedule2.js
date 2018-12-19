@@ -3,6 +3,7 @@ var strLang1 = "AM"
 var strLang2 = "PM"
 var strLang3 = "JAN;FEB;MAR;APR;MAY;JUN;JUL;AUG;SEP;OCT;NOV;DEC"
 var strLang4 = "SUN;MON;TUE;WED;THU;FRI;SAT"
+var strLang4_1 = "SUN;MON;TUE;WED;THU;FRI;SAT"
 var strLang5 = "SUN;MON;TUE;WED;THU;FRI;SAT"
 var strLang6 = "MON;TUE;WED;THU;FRI;SAT;SUN"
 var strLang5_1 = "Su;Mo;Tu;We;Th;Fr;Sa"
@@ -129,11 +130,15 @@ var strLang122 = ".";
 var strLang123 = "";
 var strLang124 = "all day long";
 var strLang125 = "Personal schedule";
+var strLang125_1 = "Personal schedule";
 var strLang126 = "Department schedule";
+var strLang126_1 = "Department schedule";
 var strLang127 = "Company Schedule";
+var strLang127_1 = "Company Schedule";
 var strLang128 = ".";
 var strLang129 = "";
 var strLang130 = "Group Schedule";
+var strLang130_1 = "Group Schedule";
 
 var strLang253 = "Do not have the resources selected."
 var strLang254 = "The selected resource can not be deleted."
@@ -168,8 +173,10 @@ var strLang1003 = "You have already registered a certain share information.";
 var strLang275 = "Unable to register prior to the start today.";
 //2018.02.22
 var strLangKMS1 = "You can only repeat more than 100 times.";
-/ * 2018-07-16 * /
+/* 2018-07-16 */
 var strLang276 = "Please select one group to view members";
+/*2018-09-27*/
+var strLang277 = "Please insert schedule";
 //2018.10.24
 var strLangKHJ1 = "Please specify a date.";
 var strLangKHJ2 = "Please specify a start date.";

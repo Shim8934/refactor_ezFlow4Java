@@ -81,6 +81,7 @@
         <result property="docNo" 					column="DOCNO" 					columnIndex="32"/>
 		<result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="33"/>
         <result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="34"/>
+        <result property="userImageFile" 		column="USERIMAGEFILE" 		columnIndex="35"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -115,6 +116,8 @@
         <result property="docNo" 					column="DOCNO" 					columnIndex="29"/>
 		<result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="30"/>
 		<result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="31"/>
+		<result property="guBun" 					column="GUBUN" 					columnIndex="32"/>
+		<result property="userImageFile" 		column="USERIMAGEFILE" 		columnIndex="33"/>
 	</resultMap>
 	
 	<!-- baonk added -->
@@ -1072,7 +1075,7 @@
                       AND 
                       	ITEMID <> #v_PITEMID#
                       AND 
-                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE #v_PUPPERITEMIDTREE# || '%'
                       AND 
                       	STARTDATE <= #nowDate#
                       AND 
@@ -1106,7 +1109,7 @@
                       AND 
                       	ITEMID <> #v_PITEMID#
                       AND 
-                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE #v_PUPPERITEMIDTREE# || '%'
                       AND 
                       	STARTDATE <= #nowDate#
                       AND 
@@ -2662,7 +2665,8 @@
 	            EXTENSIONATTRIBUTE9 ,
 	            EXTENSIONATTRIBUTE10 ,
 	            A.BOARDID,
-	            A.DOCNO
+	            A.DOCNO,
+	            (SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE
 	        FROM 
 	        	TBL_Board_Item A
             JOIN 
@@ -2706,16 +2710,24 @@
 	            EXTENSIONATTRIBUTE4 ,
 	            EXTENSIONATTRIBUTE5 ,
 	            MAINCONTENT ,
+	            B.GUBUN ,
 	            EXTENSIONATTRIBUTE6 ,
 	            EXTENSIONATTRIBUTE7 ,
 	            EXTENSIONATTRIBUTE8 ,
 	            EXTENSIONATTRIBUTE9 ,
 	            EXTENSIONATTRIBUTE10,
-	            DOCNO 
+	            DOCNO,
+	            (SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE
 	        FROM 
-	        	TBL_Board_Item_temp 
+	        	TBL_Board_Item_temp A
+	        JOIN
+	        	TBL_Board_BoardInfo B
+            ON
+            	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.BoardID = B.BoardID
        		WHERE
-       			TENANT_ID = #v_TENANTID#
+       			A.TENANT_ID = #v_TENANTID#
        		AND  
        			ItemID = #v_pItemID#
 		]]>
@@ -2918,7 +2930,7 @@
        		WHERE  
        			tenant_id = #v_TENANTID#
        		AND
-       			TO_CHAR(UpperItemIDTree) LIKE CONCAT(CONCAT('%', #v_pItemID#), '%')
+       			TO_CHAR(UpperItemIDTree) LIKE '%' || #v_pItemID# || '%'
             AND 
             	ItemID <> #v_pItemID#
 		]]>
@@ -3672,7 +3684,7 @@
             AND 
             	parentwritedate = #v_PPARENTWRITEDATE#
             AND 
-            	TO_CHAR(upperitemidtree) LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+            	TO_CHAR(upperitemidtree) LIKE #v_PUPPERITEMIDTREE# || '%'
             AND 
             	startdate <= #nowDate#
             AND 
@@ -4116,7 +4128,7 @@
 			AND 
 				BoardID = #boardID# 
 			AND 
-				ItemID like CONCAT(#itemTreeID#, '%')
+				ItemID like #itemTreeID# || '%'
 		]]>
 	</select>
 	

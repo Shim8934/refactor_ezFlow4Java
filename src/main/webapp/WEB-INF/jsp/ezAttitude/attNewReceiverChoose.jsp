@@ -20,13 +20,13 @@
 	    		padding-left:15px;
 	    	}
 	    	#left h2 {
-	    		background: url('/images/OrganTree_cross/ic-open.gif') no-repeat 6px;
+	    		background: url('/images/OrganTree_cross/ic-open.gif') no-repeat 6px 7px;
 	    	}
 	    	
 	    	#left h2.on, #TopBoards h2.on {
 	    	    font-weight: bold;
-			    background: url('/images/OrganTree_cross/ic-open.gif') no-repeat 6px;
-			    background-color: #edf4fd;
+			    background: url('/images/OrganTree_cross/ic-open.gif') no-repeat 6px 7px;
+			    background-color: #f1f8ff;
 			    color: #333333;
     			border-top: 1px solid #d1ddec;
     			border-bottom: 1px solid #d1ddec;
@@ -241,7 +241,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;margin-right:3px\" >" + nodeIdx.GetNodeData("VALUE");
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;margin-right:3px;margin-top:-2px;\" >" + nodeIdx.GetNodeData("VALUE");
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -269,7 +269,7 @@
 		        });
 	        }
 	        
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#f1f8ff";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;
@@ -443,7 +443,7 @@
 		        
 		        var UserListHTML = "";
 		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+		            SelectDeptNM.innerHTML += "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
 		        if (pListType == "IMG") {
@@ -453,7 +453,7 @@
 		            document.getElementById("txtlist_table").style.display = "none";
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; margin-right:3px; margin-top:-2px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
@@ -468,7 +468,7 @@
 		            else {
 		                document.getElementById("Search_txtlist_table").style.display = "";
 		                document.getElementById("txtlist_table").style.display = "none";
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; margin-right:3px; margin-top:-2px;\" >" + strLang_2 + "" + "&nbsp;&nbsp;<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "</span>";
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
@@ -492,7 +492,7 @@
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };
-		                M_TR.ondblclick = function () { event_listDBclick(this); };
+		                /* M_TR.ondblclick = function () { event_listDBclick(this); }; */
 		                M_TR.onselectstart = function () { return false; };
 // 		                M_TR.setAttribute("draggable", true);
 		                if (CrossYN())
@@ -594,7 +594,7 @@
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };
-		                M_TR.ondblclick = function () { event_listDBclick(this); };
+		                /* M_TR.ondblclick = function () { event_listDBclick(this); }; */
 		                M_TR.onselectstart = function () { return false; };
 		                M_TR.setAttribute("draggable", true);
 		                if (CrossYN())
@@ -1115,7 +1115,7 @@
 	                                            </td>
 	                                            <td>
 	                                                <div style="float: right; margin-right: 5px; position: relative;">
-	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
+	                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                        </tr>
@@ -1126,14 +1126,14 @@
 	                                <tr>
 	                                    <td class="box" style="border-right:0px;padding: 0px;">
 <!-- 	                                        <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div> -->
-	                                        <div style="width: 220px; height: 473px; overflow-x: auto; overflow-y: auto; padding: 0px;" id="TreeView"></div>
+	                                        <div style="width: 220px; height: 485px; overflow-x: hidden; overflow-y: auto; padding: 0px;" id="TreeView"></div>
 	                                    </td>
 	                                    <td></td>
 	                                    <td class="listview" style="width: 432px" id="orglistView">
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr>
 	                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
-	                                                    <span id="SelectDeptNM" style="font-weight: normal;margin-top:2px; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+	                                                    <span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: middle;"></span>
 	                                                    <span style="float:right; position: relative;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');">
 	                                                            <img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>

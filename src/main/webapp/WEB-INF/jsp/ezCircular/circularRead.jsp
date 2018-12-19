@@ -553,14 +553,12 @@
                 	    	<!-- 회람확인이 뜨는 사람 - 회람 작성자 이외의 사람 -->
                 	    	<c:if test="${result.confirmStatus == '0'}">
 								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t195' /></span></li>
-								<!-- <li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li> -->
                 	    	</c:if>
                 	    	
                 	    	<!-- 회람종료가 뜨는 사람 - 회람 작성자 -->
                 	    	<c:if test="${result.memberID == userInfo.id && result.status == '0'}">
 		                        <li><span onClick="CircularClose_onclick()"><spring:message code='ezCircular.t57'/></span></li>
-		                        <!-- <li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li> -->
-		                     </c:if>
+		                    </c:if>
 
                	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}/${totalCommentCount }]</span></li>
 	                        
@@ -570,13 +568,13 @@
 		                        	<li><span onclick="circularModify()"><spring:message code='ezCircular.t184' /></span></li>
 		                        </c:if>		                       
 	                        </c:if>
-	                        <c:if test="${type != 'new'}">
-	                        	<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
-	                        </c:if>
 	                        <c:if test="${result.memberID == userInfo.id}">
 	                        	 <li><span onclick="circularReUse()"><spring:message code='ezCircular.t183' /></span></li>
 	                        </c:if>
-	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>	                        
+	                        <c:if test="${type != 'new'}">
+	                        	<li id="deletebtbn"><span class="icon16 popup_icon16_delete" onclick="btn_delete()"></span></li>
+	                        </c:if>
+	                        <li><span class="icon16 popup_icon16_print" onclick="print_onClick()"></span></li>	                        
                     	</ul>
                 	</div>
                 	<div id="close">
@@ -720,10 +718,10 @@
                                 </div>
                             </td>
                             <td class="pos2">	                                
-                                <a href="#" class="imgbtn imgbck">
+                                <a class="imgbtn imgbck">
                                 	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezCircular.t112' /></span>
                                 </a><br/>	                                
-                                <a href="#" class="imgbtn imgbck">
+                                <a class="imgbtn imgbck">
                                 	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezCircular.t25' /></span>
                                 </a>
                             </td>

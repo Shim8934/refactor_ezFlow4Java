@@ -39,7 +39,7 @@
 		    
 		    function getDeptFullTree(deptid){
 			    g_xmlHTTP = createXMLHttpRequest();
-				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + topid + "/organ" + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
+				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + topid + "/organ" + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 
 				g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 				g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -137,7 +137,7 @@
                 <li><span id="btnCancel" onclick="window.close()"></span></li>
             </ul>
         </div>		
-		<div style="border: 1px solid #ddd; height: 266px; width: 283px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
+		<div style="border: 1px solid #ddd; height: 266px; width: 283px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
 		<div class="btnpositionNew">
 		    <a id="btnSave" class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezOrgan.t124' /></span></a>
 		</div>

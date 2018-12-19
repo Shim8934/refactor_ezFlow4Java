@@ -214,7 +214,7 @@
 			changeYear: true,
 			autoSize: true,
 			showOn: "both",
-			buttonImage: "/images/ImgIcon/calendar-month.gif",
+			buttonImage: "/images/ImgIcon/calendar-month.png",
 			buttonImageOnly: true
 		});
 		
@@ -394,7 +394,7 @@
 	}
 
 	function setMailBoxInfo(folderCount, fileCount) {
-		dom.mailBoxInfo.innerHTML = " - [" + messages.strLang15 + " <span style='color:#017BEC;'>" + folderCount + " </span>" + messages.strLang11 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " + fileCount + " </span>" + messages.strLang11 + "]";
+		dom.mailBoxInfo.innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + folderCount + " </span> / " + messages.strLang16 + " <span style='color:#017BEC;'> " + fileCount + " </span>";
 		$("#listcount").val(pagination.listSize()).prop("selected", true);
 	}
 
@@ -866,20 +866,20 @@
 		</div>
 		<div id="mainmenu">
 			<ul>
-				<li favoritemenu onclick="buttons.fileDownload()"><span><spring:message code='ezWebFolder.t186'/></span></li>
-				<li id="upload" onclick="buttons.fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
-				<li favoritemenu onclick="buttons.fileDelete()"><span><spring:message code='ezWebFolder.t274'/></span></li>
+				<li favoritemenu onclick="buttons.fileDownload()" class="important"><span><spring:message code='ezWebFolder.t186'/></span></li>
+				<li id="upload" onclick="buttons.fileUpload()" class="important"><span><spring:message code='ezWebFolder.t187'/></span></li>
 				<li favoritemenu onclick="buttons.fileRename()"><span><spring:message code='ezWebFolder.t273'/></span></li>
 				<li onclick="buttons.fileMoveAndCopy()"><span><spring:message code='ezWebFolder.t275'/></span></li>
 				<li onclick="shareContext.addShareView()"><span><spring:message code='ezWebFolder.t254'/></span></li>			
 				<!-- <li favoritemenu><img src="/images/i_bar.gif"></li> -->
-				<li favoritemenu onclick="favoriteContext.toggleAll()"><span><spring:message code='ezWebFolder.t281'/></span></li>
+				<li favoritemenu onclick="favoriteContext.toggleAll()"><span class="icon16 icon16_star"></span></li>
 				<!-- <li><img src="/images/i_bar.gif"></li> -->
-				<li id="SearchOption" favoritemenu mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
+				<li id="SearchOption" favoritemenu mode="off" onclick="doLayerPopup(this)"><span class="icon16 icon16_search"></span></li>
+				<li favoritemenu onclick="buttons.fileDelete()"><span class="icon16 icon16_delete"></span></li>
 				<!-- <li><img src="/images/i_bar.gif"></li> -->
-				<li favoritemenu onclick="context.refreshList(true)"><span><spring:message code='ezWebFolder.t139'/></span></li>
+				<li favoritemenu onclick="context.refreshList(true)"><span class="icon16 icon16_refresh"></span></li>
 				<!-- <li favoritemenu><img src="/images/i_bar.gif"></li> -->
-				<li favoritemenu style="height: 28px;">
+				<li favoritemenu>
 					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value);">
 						<option value=""><spring:message code='ezWebFolder.t191'/></option>
 						<option value="document"><spring:message code='ezWebFolder.t192'/></option>
@@ -891,7 +891,12 @@
 						<option value="unknown"><spring:message code='ezWebFolder.t311'/></option>
 					</select>
 				</li>
-				<li id="right" favoritemenu style="float: right;"><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
+				<!-- <li id="right" favoritemenu style="float: right;"><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li> -->
+				<div class="sub_frameIcon" style="float:right">
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+					</div>
+				</div>
 			</ul>
 		</div>
 

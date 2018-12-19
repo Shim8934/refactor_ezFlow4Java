@@ -86,7 +86,7 @@
 	            var strtext;
 	            var PagingHTML = "";
 	            document.getElementById("tblPageRayer").innerHTML = "";
-	            document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang82 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang83 + "]";
+	            document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
 	            strtext = "<div class='pagenavi'>";
 	            PagingHTML += strtext;
 	            var pageNum = CurPage;
@@ -243,10 +243,10 @@
 	<body class="mainbody" onload = "makePageSelPage()">
 		<c:choose>
 			<c:when test="${bName == 'tbl_c_notice' }">
-				<h1><spring:message code = 'ezCommunity.t2001' /><span id="mailBoxInfo"></span></h1>
+				<h1><spring:message code='main.t272'/>&nbsp;<spring:message code='ezCommunity.t863'/><span id="mailBoxInfo"></span></h1>
 			</c:when>
 			<c:when test="${bName == 'tbl_c_board' }">
-				<h1><spring:message code = 'ezCommunity.t2001' /><span id="mailBoxInfo"></span></h1>
+				<h1><spring:message code='main.t272'/>&nbsp;<spring:message code='ezCommunity.t863'/><span id="mailBoxInfo"></span></h1>
 			</c:when>
 			<c:otherwise>
 				<h1><c:out value = '${titleName}' /><span id="mailBoxInfo"></span></h1>
@@ -257,11 +257,11 @@
   			<ul>
 				<c:choose>
 					<c:when test="${bName == 'tbl_c_board' }">
-						<li><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t167' /></span></li>
+						<li class="important"><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t167' /></span></li>
 					</c:when>
 					
 					<c:when test="${fn:indexOf(rollInfo, 'k=1') > -1 && bName == 'tbl_c_notice'}">
-						<li><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t167' /></span></li>
+						<li class="important"><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t167' /></span></li>
 					</c:when>
 				</c:choose>
 				
@@ -276,11 +276,11 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 
-		<table class="content" >
+		<table class="content" style="height:35px">
 			<form name="page">
 				<tr>
-					<th><spring:message code = 'ezCommunity.t28' /></th>
-					<td>
+					<th style="border:0px"><spring:message code = 'ezCommunity.t28' /></th>
+					<td style="border-left:0px; background: #f8f8fa;">
 						<select name="s_radio" style="vertical-align:middle">
 							<option value="title" selected><spring:message code = 'ezCommunity.t124' /></option>
 							<option value="titleContent"><spring:message code = 'ezCommunity.t169' /></option>
@@ -294,9 +294,7 @@
 			</form>
 		</table>
 		
-		<br>
-		
-		<table class="mainlist" style="width:100%">
+		<table class="mainlist" style="width:100%;margin-top:5px">
 			<span id="idSpan">${idSpanValue}</span>
 		</table>
 		

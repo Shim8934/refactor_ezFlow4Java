@@ -241,7 +241,7 @@
 				LEFT OUTER JOIN
 					TBL_USERMASTER C
 				ON
-					A.c_sysopid = C.CN
+					RTRIM(A.c_sysopid) = C.CN
 				AND
 					A.tenant_id = C.tenant_id
 				WHERE
@@ -315,7 +315,7 @@
 				LEFT OUTER JOIN
 					TBL_USERMASTER C
 				ON
-					A.c_sysopid = C.CN
+					RTRIM(A.c_sysopid) = C.CN
 				AND
 					A.tenant_id = C.tenant_id
 				WHERE
@@ -374,13 +374,13 @@
 			INNER JOIN
 				TBL_C_MEMBERINFO B
 			ON
-				A.c_sysopid = B.userID
+				TRIM(A.c_sysopid) = TRIM(B.userID)
 			AND
 				A.tenant_id = B.tenant_id
 			LEFT OUTER JOIN
 				TBL_USERMASTER C
 			ON
-				A.c_sysopid = C.CN
+				TRIM(A.c_sysopid) = C.CN
 			AND
 				A.tenant_id = C.tenant_id
 			WHERE

@@ -329,17 +329,7 @@ function addEmptyMemo(flag) {
 	if(flag != 'layer') {		// 메모 게시판 게시물 없을 때
 		var div = document.createElement("div");
 		div.setAttribute("class", "emptyDiv");
-		div.style.textAlign = "center";
-		
-		var div2 = document.createElement("img");
-		div2.setAttribute("src", "/images/kr/main/nodata_plan.png");
-		
-		var div3 = document.createElement("div");
-		div3.style.marginTop = "10px";
-		div3.innerHTML = strLangMemo7;
-			
-		div.appendChild(div2);
-		div.appendChild(div3);
+		div.innerHTML = "<dl class='nodata_sIcon'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd>" + strLangMemo7 + "</dd></dl>";		
 		
 		$("#boardMemoList").parent().prepend(div);
 		

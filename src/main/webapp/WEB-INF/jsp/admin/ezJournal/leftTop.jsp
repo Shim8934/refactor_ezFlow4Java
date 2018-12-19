@@ -7,8 +7,16 @@
 		<title>left_Top</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
+		<style>
+			#mCSB_1_container {
+				margin-right: 0px;
+			} 
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript">
 			
 			document.onselectstart = function () {
@@ -35,19 +43,31 @@
 				}
 				window.open(url,"right");
 			}    
+			
+			$(document).ready(function() {
+				leftResize();
+		        $(".adminListBox").mCustomScrollbar({
+		    		theme : "dark"
+		    	});
+			});
+	        
+	        function leftResize(){
+	        	$(".adminListBox").height(window.innerHeight-58);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+	    	});
 		</script>
 	</head>
-	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
-		<div id="left">
-			
-			<div class="left_admin" title="<spring:message code='ezJournal.t1'/>"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code='ezJournal.t1'/></div>
-			
-				<h2><span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t2'/></span><ul></ul></h2>	
-				<h2><span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t3'/></span><ul></ul></h2>	
-				<h2><span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t4'/></span><ul></ul></h2>	
+	<body class="newLeft"> 
+		<div id="left" class="lnb" style="overflow: auto">
+			<div class="admin_left_title" title="<spring:message code='ezJournal.t1'/>"><spring:message code='ezJournal.t1'/></div>			
+			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
+				<h2><span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t2'/></span></h2>	
+				<h2><span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t3'/></span></h2>	
+				<h2><span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t4'/></span></h2>	
+			</div>
 		</div>
-		<script type="text/javascript">
-			initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		</script>	
 	</body>
 </html>

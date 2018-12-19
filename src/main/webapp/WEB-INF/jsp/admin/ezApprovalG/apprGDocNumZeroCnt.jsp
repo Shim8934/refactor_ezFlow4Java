@@ -103,17 +103,15 @@
 	</script>
 </head>
 <body class="mainbody">
-	<h1><spring:message code='ezApprovalG.csj02'/></h1>
-	<div id="mainmenu" style="width: 350px;">
-		<span>
-			<b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			<select id="ListCompany" onChange="ListChange()">
-				<c:forEach var="item" items="${list}">
-					<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-				</c:forEach>
-			</select>
-			<br/><br/>
-		</span>
+	<h1>
+		<spring:message code='ezApprovalG.csj02'/>
+		<select class="companySelect" id="ListCompany" onChange="ListChange()">
+			<c:forEach var="item" items="${list}">
+				<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+			</c:forEach>
+		</select>
+	</h1>
+	<div id="mainmenu" style="width: 350px;margin-top:30px">
 		<div style="margin-top:3px;">▒&nbsp;<spring:message code='ezApprovalG.csj04'/></div>
 		<div style="margin-top:3px;">▒&nbsp;<spring:message code='ezApprovalG.csj12'/></div>
 		<br/>

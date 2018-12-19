@@ -1,0 +1,60 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Board Portlet</title>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/boardPortlet.js')}"/>
+<script type="text/javascript">
+$(function() {
+	var boardPortlet = "<c:out value='${portletId}'/>";
+	$(".customBoard").find(".portletPlus").on("click", Boardmore_NewBoardSTD_btnClick);
+	getBoardPortletInfo(boardPortlet);
+});
+</script>
+</head>
+<body>
+	<article class="customBoard box_shadow">
+		<div class="layDIV">
+			<dl class="portlet_title sortablePortlet">
+				<dt class="portletText">
+					<c:out value="${portletName }"/>
+				</dt>
+				<dd class="portletPlus" data1="<c:out value='${boardId }'/>">
+					<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+				</dd>
+			</dl>
+			<c:choose>
+			<c:when test="${not empty boardList}">
+			<ul id="customBoardList${portletId }" class="portlet_list">
+			</ul>
+			</c:when>
+			<c:when test="${access eq false }">
+					<ul class="portlet_list">
+						<dl class="nodata">
+							<dt>
+								<img src="/images/ezNewPortal/nodata.png">
+							</dt>
+							<dd>"<spring:message code='ezNewPortal.t039' />"</dd>
+						</dl>
+					</ul>
+			</c:when>
+			<c:otherwise>
+					<ul class="portlet_list">
+						<dl class="nodata">
+							<dt>
+								<img src="/images/ezNewPortal/nodata.png">
+							</dt>
+							<dd>"<spring:message code='ezNewPortal.t018' />"</dd>
+						</dl>
+					</ul>
+			</c:otherwise>
+			</c:choose>
+		</div>
+	</article>
+</body>
+</html>

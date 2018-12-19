@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,18 +123,45 @@ public class LoginController {
     	logger.debug("ezOffice365Auth=" + ezOffice365Auth);
     	
         if (ezOffice365Auth.equals("YES")) {        	
-        	return "redirect:/ezPortal/portalMain.do";         	
+//        	return "redirect:/ezPortal/portalMain.do";
+        	return "redirect:/ezNewPortal/newPortalMain.do";         	
         }
         
     	if (commonUtil.isLoginCookieExists(request, response)) {
-    	    return "redirect:/ezPortal/portalMain.do"; 
+//        	return "redirect:/ezPortal/portalMain.do";
+        	return "redirect:/ezNewPortal/newPortalMain.do"; 
     	}
         	
     	String pbm = egovFileScrty.getPbm();
     	
+    	//2018-11-05 유은정 - 포탈 개인화 관련 logo 추가
+    	String logo = "";
+    	
+    	String companyId = null;
+    	String logoUrl = "/rest/admin/ezPortal/logos/companies/" + companyId;
+    	JSONObject logoResult = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), logoUrl, null, request, "get", null);
+    	String logoStatus = logoResult.get("status").toString();
+    	
+    	if (logoStatus.equals("ok")) {
+    		JSONArray logoList = (JSONArray) logoResult.get("data");
+    		int logoListCount = logoList.size();
+    		
+    		for (int i = 0; i < logoListCount; i++) {
+    			JSONObject logoJson = (JSONObject) logoList.get(i);
+    			
+    			if (logoJson.get("logoType").equals("L")) {
+    				logo = logoJson.get("logoUrl").toString();
+    				break;
+    			}
+    		}
+    	}
+    	
+    	logger.debug("logoUrl : " + logo);
+    	//유은정 끝
+    	
 		model.addAttribute("publicModulus", pbm);
 		model.addAttribute("publicExponent", "10001");
-    
+		model.addAttribute("logoUrl", logo);
 		CommonUtil.addXUACompatibleHeaderToResponse(request, response);
 		
     	return "/user/login/login";
@@ -359,9 +388,8 @@ public class LoginController {
 	        			session.setMaxInactiveInterval(sessionTime * 60);	// 세션 유지 시간 설정
 	        		}
 	        	}
-	        	
-	        
-	        	return "redirect:/ezPortal/portalMain.do";
+//	        	return "redirect:/ezPortal/portalMain.do";
+	        	return "redirect:/ezNewPortal/newPortalMain.do";
         		
         	} else {
         		//Check login state of the user
@@ -452,6 +480,9 @@ public class LoginController {
     		        	cookieName.setPath("/");
     		        	response.addCookie(cookieName);
     		        	
+    		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
+    		        	//session = request.getSession();
+    		        	
     		        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
     		        	if (!useSession.equals("")) {
     		        		int sessionTime = Integer.parseInt(useSession);
@@ -462,8 +493,8 @@ public class LoginController {
 		    		        	session.setMaxInactiveInterval(sessionTime * 60);		// 세션의 유지 시간 설정
 	    		        	}
     		        	}
-    		        	
-    		        	return "redirect:/ezPortal/portalMain.do";
+//    		        	return "redirect:/ezPortal/portalMain.do";
+    		        	return "redirect:/ezNewPortal/newPortalMain.do";
     		        	
     				}
     			// 해당 사용자의 로그인이 블록된 경우

@@ -1,0 +1,1973 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ezNewPortal">
+
+<typeAlias alias="PollQuestionVO" type="egovframework.ezEKP.ezPoll.vo.PollQuestionVO"/>
+<typeAlias alias="PollAnswerVO" type="egovframework.ezEKP.ezPoll.vo.PollAnswerVO"/>
+<typeAlias alias="BoardItemVO" type="egovframework.ezEKP.ezBoard.vo.BoardItemVO"/>
+<typeAlias alias="PortletInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO"/>
+<typeAlias alias="ThemeInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO"/>
+<typeAlias alias="UserPortalSettingVO" type="egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO"/>
+<typeAlias alias="FavoriteBoardVO" type="egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO"/>
+<typeAlias alias="CommunityMyCommunityVO" type="egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO"/>
+<typeAlias alias="CommunityCClubUserVO" type="egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO"/>
+<typeAlias alias="PortalUserInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO"/>
+<typeAlias alias="QuickLinkVO" type="egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO"/>
+<typeAlias alias="MenuInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO"/>
+<typeAlias alias="PortletNameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO"/>
+<typeAlias alias="MenuAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuAuthVO"/>
+<typeAlias alias="MenuNameVO" type="egovframework.ezEKP.ezNewPortal.vo.MenuNameVO"/>
+<typeAlias alias="FrameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO"/>
+<typeAlias alias="WeatherVO" type="egovframework.ezEKP.ezNewPortal.vo.WeatherVO"/>
+<typeAlias alias="BoardListVO" type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
+
+<resultMap class="PollQuestionVO" id="PollQuestionVO">
+<result property="qstId" 					column="ID" />
+<result property="title" 					column="TITLE" />
+</resultMap>
+<resultMap class="PollAnswerVO" id="PollAnswerVO">
+<result property="qstId" 					column="QST_ID" />
+<result property="votesNumber" 				column="VOTES_NUM" />
+<result property="content"					column="CONTENT"/>
+</resultMap>
+<resultMap class="BoardItemVO" id="BoardItemVO">
+<result property="itemID" 					column="ITEMID" />
+<result property="title" 					column="TITLE" />
+<result property="boardID" 					column="BOARDID" />
+<result property="filePath" 				column="FILEPATH" />
+</resultMap>
+<resultMap class="PortletInfoVO" id="PortletOrderVO">
+<result property="portletId" 				column="PORTLET_ID" />
+<result property="portletOrder" 			column="PORTLET_ORDER" />
+<result property="portletName" 				column="PORTLET_NAME" />
+<result property="portletUrl" 				column="PORTLET_URL" />
+<result property="portletBoardId" 			column="BOARD_ID" />
+<result property="menuId" 					column="MENU_ID" />
+<result property="userAuth" 				column="userAuth" nullValue=""/>
+<result property="deptAuth" 				column="deptAuth" nullValue=""/>
+<result property="comAuth" 					column="comAuth" nullValue=""/>
+</resultMap>
+<resultMap class="PortletInfoVO" id="PortletInfoVO">
+<result property="portletId" 				column="PORTLET_ID" />
+<result property="portletOrder" 			column="PORTLET_ORDER" />
+<result property="portletName" 				column="PORTLET_NAME" />
+<result property="portletUrl" 				column="PORTLET_URL" />
+<result property="isGeneral" 				column="IS_GENERAL" 		javaType="boolean"/>
+<result property="defaultOrder" 			column="DEFAULT_ORDER" />
+<result property="portletCategory" 			column="PORTLET_CATEGORY" />
+<result property="connectionUrl" 			column="CONNECTION_URL" />
+<result property="portletUsed" 				column="PORTLET_USED" 		javaType="boolean"/>
+<result property="portletBoardId" 			column="BOARD_ID" />
+</resultMap>
+<resultMap class="BoardListVO" id="BoardListVO">
+<result property="itemID" 				column="ITEMID" />
+<result property="boardID" 				column="BOARDID" />
+<result property="title" 				column="TITLE" />
+<result property="guBun" 				column="GUBUN" />
+<result property="writeDate" 			column="WRITEDATE" />
+</resultMap>
+<resultMap class="PersonalLightPollVO" id="PersonalLightPollVO">
+<result property="itemSeq"              column="ITEMSEQ"  nullValue=""/>
+<result property="pollTitle"            column="POLLTITLE" nullValue=""/>
+<result property="pollSelectionCount"   column="POLLSELECTIONCOUNT" nullValue=""/>
+<result property="answer1"              column="ANSWER1" nullValue=""/>
+<result property="answer2"              column="ANSWER2" nullValue=""/>
+<result property="answer3"              column="ANSWER3" nullValue=""/>
+<result property="answer4"              column="ANSWER4" nullValue=""/>
+<result property="answer5"              column="ANSWER5" nullValue=""/>
+<result property="answer6"              column="ANSWER6" nullValue=""/>
+<result property="answer7"              column="ANSWER7" nullValue=""/>
+<result property="answer8"              column="ANSWER8" nullValue=""/>
+<result property="answer9"              column="ANSWER9" nullValue=""/>
+<result property="answer10"             column="ANSWER10" nullValue=""/>
+<result property="result"               column="RESULT" nullValue=""/>
+<result property="count"                column="COUNT" nullValue=""/>
+</resultMap>
+<resultMap class="ThemeInfoVO" id="ThemeInfoVO">
+<result property="themeId" 					column="THEME_ID" />
+<result property="themeName" 				column="THEME_NAME" />
+<result property="themeContent" 			column="THEME_CONTENT" />
+<result property="themeUsed" 				column="THEME_USED" />
+<result property="themeDefault" 			column="THEME_DEFAULT" />
+<result property="frameDefault" 			column="FRAME_DEFAULT" />
+</resultMap>
+<resultMap class="UserPortalSettingVO" id="UserPortalSettingVO">
+<result property="userId" 					column="USER_ID" />
+<result property="usedTheme" 				column="USED_THEME" />
+<result property="usedFrame" 				column="USED_FRAME" />
+</resultMap>
+<resultMap class="FavoriteBoardVO" id="FavoriteBoardVO">
+<result property="title" 				column="TITLE" />
+<result property="writerName" 			column="WRITERNAME" />
+<result property="startDate" 			column="STARTDATE" />
+<result property="itemId" 				column="ITEMID" />
+<result property="boardId" 				column="BOARDID" />
+<result property="gubun" 				column="GUBUN" nullValue=""/>
+</resultMap>
+<resultMap class="PortalUserInfoVO" id="PortalUserInfoVO">
+<result property="userName"				column="USER_NAME"/>
+<result property="userId"				column="CN"/>
+<result property="userDeptName"			column="DEPT_NAME"/>
+<result property="userBirthday"			column="BIRTH"/>
+<result property="isSolar"				column="IS_SOLAR"/>
+<result property="userImg"				column="USER_IMG"/>
+</resultMap>
+<resultMap class="PortalUserInfoVO" id="BestEmpVO">
+<result property="userName"				column="USER_NAME"/>
+<result property="userId"				column="CN"/>
+<result property="userDeptName"			column="DEPT_NAME"/>
+<result property="userImg"				column="USER_IMG"/>
+<result property="title"				column="TITLE"/>
+</resultMap>
+<resultMap class="PortletInfoVO" id="PortletInfoCompVO">
+<result property="portletId" 				column="PORTLET_ID" />
+<result property="portletOrder" 			column="PORTLET_ORDER" />
+<result property="portletUrl" 				column="PORTLET_URL" />
+<result property="isGeneral" 				column="IS_GENERAL" 		javaType="boolean"/>
+<result property="defaultOrder" 			column="DEFAULT_ORDER" />
+<result property="portletCategory" 			column="PORTLET_CATEGORY" />
+<result property="connectionUrl" 			column="CONNECTION_URL" />
+<result property="portletUsed" 				column="PORTLET_USED" 		javaType="boolean"/>
+<result property="menuId" 					column="MENU_ID" />
+<result property="boardName1" 				column="BOARDNAME" />
+<result property="portletBoardId" 			column="BOARD_ID" />
+<result property="menuName" 				column="MENU_NAME" />
+<result property="portletName" 				column="PORTLET_NAME" />
+</resultMap>
+<resultMap class="PortletNameInfoVO" id="PortletNameInfoVO">
+<result property="portletId" 				column="PORTLET_ID" />
+<result property="portletLang" 				column="PORTLET_LANG" />
+<result property="portletName" 				column="PORTLET_NAME" />
+</resultMap>
+<resultMap class="WeatherVO" id="WeatherVO">
+<result property="sn" 				column="SN" />
+<result property="cityCode" 				column="CITYCODE" />
+<result property="cityName" 				column="CITYNAME" />
+<result property="displayName" 				column="DISPLAYCITYNAME" />
+<result property="primaryLang" 				column="PRIMARYLANG" />
+<result property="currentWeather" 				column="CURRENTWEATHER" />
+<result property="todayWeather" 				column="TODAYWEATHER" />
+</resultMap>
+
+<!-- 공지사항 포틀릿 가져오기 -->
+<select id="ezNewPortal.getNoticePortletList" parameterClass="Map" resultMap="BoardListVO">
+<![CDATA[
+SELECT 
+	B.GUBUN,
+	A.BOARDID,
+    A.ITEMID,
+    A.TITLE,
+    A.WRITEDATE
+FROM 
+	TBL_BOARD_ITEM AS A
+JOIN
+	TBL_BOARD_BOARDINFO AS B
+ON
+	A.BOARDID = B.BOARDID
+AND
+	A.TENANT_ID = B.TENANT_ID
+WHERE 
+	A.BOARDID = (
+	            SELECT 
+	            	BOARD_ID
+	            FROM
+	            	TBL_PORTAL_PORTLET_COMP
+	            WHERE
+	            	COMPANY_ID = #companyId#
+	            AND
+	            	TENANT_ID = #tenantId#
+	            AND
+					PORTLET_ID = #portletId#	            
+	            )
+AND 
+	A.TENANT_ID = #tenantId#
+AND 
+	(A.WRITERCOMPANYID = B.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
+ORDER BY 
+	A.PARENTWRITEDATE DESC, 
+	A.UPPERITEMIDTREE ASC
+LIMIT #limit#
+]]>
+</select>
+
+<!-- 설문조사 리스트 출력 -->
+<select id="ezNewPortal.getPollPortlet" parameterClass="Map" resultMap="PersonalLightPollVO">
+<![CDATA[
+SELECT
+	 A.ITEMSEQ ,
+     STARTDATE ,
+     POLLSELECTIONCOUNT ,
+     POLLTITLE ,
+     POLLTITLE2 ,
+     ANSWER1 ,
+     ANSWER2 ,
+     ANSWER3 ,
+     ANSWER4 ,
+     ANSWER5 ,
+     ANSWER6 ,
+     ANSWER7 ,
+     ANSWER8 ,
+     ANSWER9 ,
+     ANSWER10 ,
+     IFNULL(B.RESULT, 0) Result,
+     (SELECT COUNT(*) FROM tbl_ps_lightpollresult WHERE itemSeq = A.ITEMSEQ AND TENANT_ID = #tenantId#) as count  
+FROM
+	TBL_PS_LIGHTPOLL A
+LEFT JOIN
+	TBL_PS_LIGHTPOLLRESULT B
+ON
+	A.TENANT_ID = B.TENANT_ID
+AND
+	A.ITEMSEQ = B.ITEMSEQ
+AND
+	USERID = #userId#
+WHERE
+	COMPANYID = #companyId#
+AND
+	ENDDATE IS NULL
+AND
+   	A.TENANT_ID = #tenantId#	
+ORDER BY
+	A.ITEMSEQ DESC
+LIMIT
+	1
+]]>
+</select>
+
+<select id="ezNewPortal.getPollPortletResult" parameterClass="Map" resultClass="PersonalLightPollVO">
+SELECT
+	result,
+	COUNT(RESULT) AS count  
+FROM
+	TBL_PS_LIGHTPOLLRESULT 
+WHERE
+	ITEMSEQ = #itemSeq#
+AND
+	TENANT_ID = #tenantId#	
+GROUP BY
+	RESULT
+ORDER BY
+	COUNT DESC, RESULT ASC
+</select>
+
+<select id="ezNewPortal.getPortalLogoInfo" parameterClass="Map" resultClass="String">
+<![CDATA[
+SELECT
+	LOGO_URL
+FROM 
+	TBL_PORTAL_LOGO
+WHERE 
+	TENANT_ID = #tenantId#
+AND 
+	LOGO_TYPE = #logoType#
+]]>	
+<isNotNull property="companyId">
+<![CDATA[
+AND
+	company_id = #companyId#
+]]>
+</isNotNull>
+</select>
+
+<select id="ezNewPortal.getUserMenuOrderCnt" parameterClass="Map" resultClass="Integer">
+<![CDATA[
+SELECT	
+	count(*)
+FROM
+	tbl_portal_menu_user 
+WHERE 
+	tenant_id = #tenantId#
+AND 
+	company_id = #companyId#
+AND 
+	user_id = #userId#
+]]>	
+</select>
+
+<insert id="ezNewPortal.insertUserMenuOrder" parameterClass="Map">
+<![CDATA[
+INSERT INTO
+	tbl_portal_menu_user ( user_id, tenant_id, company_id, menu_id, menu_order)
+VALUES
+	( #userId#, #tenantId#, #companyId#, #menuId#, #order# )
+]]>
+</insert>
+
+<update id="ezNewPortal.updateUserMenuOrder" parameterClass="Map">
+<![CDATA[
+INSERT INTO tbl_portal_menu_user (
+	user_id,		tenant_id,		company_id,		menu_id,	menu_order
+) VALUES (
+	#userId#,		#tenantId#,		#companyId#,		#menuId#,	#order#
+)
+ON DUPLICATE KEY UPDATE
+	menu_order = #order#
+]]>	
+</update>
+
+<delete id="ezNewPortal.deleteUserMenuOrder" parameterClass="Map">
+<![CDATA[
+DELETE FROM
+	tbl_portal_menu_user 
+WHERE 
+	tenant_id = #tenantId#
+AND 
+	company_id = #companyId#
+AND 
+	user_id = #userId#
+]]>	
+</delete>
+
+<!-- 퀵 링크 불러오기 -->
+<select id="ezNewPortal.getQuickLinkList" parameterClass="Map" resultClass="QuickLinkVO">
+<![CDATA[
+SELECT
+	quicklinkid, 
+    quicklinkname, 
+    quicklinkname2, 
+    quicklinkname3, 
+    linktype, 
+    url,
+    size
+FROM (
+	SELECT
+		Q.quicklinkid, 
+	    Q.quicklinkname, 
+	    Q.quicklinkname2, 
+	    Q.quicklinkname3, 
+	    Q.linktype, 
+	    Q.url,
+	    Q.size_ as size,
+	    IFNULL(USER.view_flag, IFNULL(DEPT.view_flag, IFNULL(COMP.view_flag, IFNULL(EVERY.view_flag, 'N')))) as viewflag
+	FROM 
+		tbl_ps_quicklink as Q
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL USER
+	ON
+		USER.quicklinkid = Q.quicklinkid
+	AND
+		USER.tenant_id = Q.tenant_id
+	AND
+		USER.accessid = #userId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL DEPT
+	ON
+		DEPT.quicklinkid = Q.quicklinkid
+	AND
+		DEPT.tenant_id = Q.tenant_id
+	AND
+		DEPT.accessid = #deptId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL COMP
+	ON
+		COMP.quicklinkid = Q.quicklinkid
+	AND
+		COMP.tenant_id = Q.tenant_id
+	AND
+		COMP.accessid = #companyId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL EVERY
+	ON
+		EVERY.quicklinkid = Q.quicklinkid
+	AND
+		EVERY.tenant_id = Q.tenant_id
+	AND
+		EVERY.accessid = 'everyone'
+	WHERE 
+		Q.TENANT_ID = #tenantId#
+	ORDER BY
+	    Q.REGDATE DESC
+	) acl
+WHERE
+	viewflag = 'Y'
+LIMIT #limit#
+OFFSET #offset#
+]]>	
+</select>
+
+<!-- 퀵 링크 전체 개수 가져오기 -->
+<select id="ezNewPortal.getQuickLinkTotalCnt" parameterClass="Map" resultClass="Integer">
+<![CDATA[
+SELECT
+	count(*)
+FROM (
+	SELECT
+		Q.quicklinkid, 
+	    Q.quicklinkname, 
+	    Q.quicklinkname2, 
+	    Q.quicklinkname3, 
+	    Q.linktype, 
+	    Q.url,
+	    Q.size_ as size,
+	    IFNULL(USER.view_flag, IFNULL(DEPT.view_flag, IFNULL(COMP.view_flag, IFNULL(EVERY.view_flag, 'N')))) as viewflag
+	FROM 
+		tbl_ps_quicklink as Q
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL USER
+	ON
+		USER.quicklinkid = Q.quicklinkid
+	AND
+		USER.tenant_id = Q.tenant_id
+	AND
+		USER.accessid = #userId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL DEPT
+	ON
+		DEPT.quicklinkid = Q.quicklinkid
+	AND
+		DEPT.tenant_id = Q.tenant_id
+	AND
+		DEPT.accessid = #deptId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL COMP
+	ON
+		COMP.quicklinkid = Q.quicklinkid
+	AND
+		COMP.tenant_id = Q.tenant_id
+	AND
+		COMP.accessid = #companyId#
+	LEFT JOIN
+		TBL_PS_QUICKLINK_ACL EVERY
+	ON
+		EVERY.quicklinkid = Q.quicklinkid
+	AND
+		EVERY.tenant_id = Q.tenant_id
+	AND
+		EVERY.accessid = 'everyone'
+	WHERE 
+		Q.TENANT_ID = #tenantId#
+	ORDER BY
+	    Q.REGDATE DESC
+	) acl
+WHERE
+	viewflag = 'Y'
+]]>		
+</select>
+
+<!-- 유저가 사용 가능한 프레임 리스트 -->
+<select id="ezNewPortal.getUserUsableFrameList" parameterClass="Map" resultClass="FrameInfoVO">
+<![CDATA[
+SELECT 
+	theme_id as themeId,
+    frame_id as frameId,
+    frame_used as frameUsed,
+    frame_default as frameDefault,
+    used_frame as usedFrame
+FROM 
+	tbl_portal_frame_comp as fcomp
+JOIN 
+	tbl_portal_theme_user as tuser
+ON 
+	fcomp.tenant_id = tuser.tenant_id
+AND 
+	fcomp.company_id = tuser.company_id
+AND 
+	fcomp.theme_id = tuser.used_theme
+AND
+	tuser.is_default = 1
+WHERE 
+	fcomp.company_id = #companyId#
+AND 
+	fcomp.tenant_id = #tenantId#
+AND 
+	tuser.user_id = #userId#
+AND
+	fcomp.frame_used = 1
+]]>	
+</select>
+
+<!-- 회사가 설정한 테마에서 사용가능한 프레임 리스트 -->
+<select id="ezNewPortal.getCompUsableFrameList" parameterClass="Map" resultClass="FrameInfoVO">
+<![CDATA[
+SELECT 
+	fcomp.theme_id as themeId,
+    fcomp.frame_id as frameId,
+    fcomp.frame_used as frameUsed,
+    fcomp.frame_default as frameDefault 
+FROM 
+	tbl_portal_frame_comp as fcomp
+JOIN 
+	tbl_portal_theme_comp as tcomp
+ON 
+	fcomp.tenant_id = tcomp.tenant_id
+AND 
+	fcomp.company_id = tcomp.company_id
+AND 
+	fcomp.theme_id = tcomp.theme_id
+WHERE 
+	fcomp.company_id = #companyId#
+AND 
+	fcomp.tenant_id = #tenantId#
+AND 
+	tcomp.theme_default = 1
+AND
+	fcomp.frame_used = 1
+]]>		
+</select>
+
+<update id="ezNewPortal.updateUserUsedFrame" parameterClass="Map">
+<![CDATA[
+INSERT INTO 
+	tbl_portal_theme_user(USER_ID, COMPANY_ID, TENANT_ID, USED_THEME, USED_FRAME, is_default)
+VALUES 
+	(#userId#, #companyId#, #tenantId#, #themeId#, #frameId#, #isDefault#)
+ON DUPLICATE KEY 
+	UPDATE USED_FRAME = #frameId#
+]]>	
+</update>
+
+<delete id="ezNewPortal.deleteUserUsedPortlet" parameterClass="Map">
+<![CDATA[
+DELETE FROM 
+	tbl_portal_portlet_user
+WHERE 
+	user_id = #userId#
+AND 
+	tenant_id = #tenantId#
+AND 
+	company_id = #companyId#
+]]>		
+</delete>
+
+<insert id="ezNewPortal.insertUserUsedPortlet" parameterClass="Map">
+<![CDATA[
+INSERT INTO TBL_PORTAL_PORTLET_USER (
+		user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id, portlet_used, theme_id
+	) VALUES (
+		#userId#, #tenantId#, #companyId#, #portletId#,	#portletOrder#, 
+		(SELECT MENU_ID FROM TBL_PORTAL_PORTLET WHERE PORTLET_ID = #portletId#), #portletUsed#, #themeId#
+	)
+	ON DUPLICATE KEY UPDATE
+		portlet_used = #portletUsed#,
+		portlet_order = #portletOrder#
+]]>		
+</insert>
+
+<!-- 현재 진행중이면서 참여하고 있는 투표 개수  -->
+<select id="ezNewPortal.getVotePortletCount" parameterClass="Map" resultClass="Integer">
+<![CDATA[
+SELECT
+	COUNT(ID)
+FROM
+	tbl_vote_question A
+JOIN 
+	tbl_vote_user_and_question B
+ON 
+	A.ID = B.QST_ID
+AND
+	A.TENANT_ID = B.TENANT_ID
+WHERE
+	A.END_DATE > date_format(now(), '%Y-%m-%d %H:%i:%s')
+AND
+(
+	(
+		B.USER_ID = #userId#
+		AND
+		B.user_type = 'user'
+	)
+    OR
+    (
+		B.USER_type = 'company'
+        AND
+		B.USER_ID = #companyId#
+	)
+    OR
+	(
+		B.user_type = 'dept'
+		AND
+        B.USER_ID
+		IN
+			(
+				SELECT 
+					C.CN 
+				FROM 
+					TBL_DEPTMASTER C 
+				WHERE 
+					(FIND_IN_SET (CN, #deptPath#) 
+					OR CN = 'Top') 
+				AND C.TENANT_ID = #tenantId#
+			)
+	)
+)
+AND
+	a.TENANT_ID = #tenantId#
+]]>
+</select>
+<!-- 은정 -->
+<!-- 가장 최근에 만들어진 진행중이면서 사용자가 참여 중인 투표 정보 가져오기 -->
+<select id="ezNewPortal.getVotePortletInfo" parameterClass="Map" resultMap="PollQuestionVO">
+<![CDATA[
+SELECT	
+	A.ID,	 
+	A.TITLE	
+FROM	
+	tbl_vote_question A
+JOIN 
+	tbl_vote_user_and_question B
+ON 
+	A.ID = B.QST_ID
+AND
+	A.TENANT_ID = B.TENANT_ID
+WHERE
+	A.END_DATE > date_format(now(), '%Y-%m-%d %H:%i:%s')
+AND
+(
+	(
+		B.USER_ID = #userId#
+		AND
+		B.user_type = 'user'
+	)
+    OR
+    (
+		B.USER_type = 'company'
+        AND
+		B.USER_ID = #companyId#
+	)
+    OR
+	(
+		B.user_type = 'dept'
+		AND
+        B.USER_ID
+		IN
+			(
+				SELECT 
+					C.CN 
+				FROM 
+					TBL_DEPTMASTER C 
+				WHERE 
+					(FIND_IN_SET (CN, #deptPath#) 
+					OR CN = 'Top') 
+				AND C.TENANT_ID = #tenantId#
+			)
+	)
+)
+AND
+	a.TENANT_ID = #tenantId#
+ORDER BY 
+	CREATE_DATE DESC
+LIMIT 
+	1
+]]>
+</select>
+<!-- 해당 투표의 답변 정보 -->
+<select id="ezNewPortal.getVotePortletAnswer" parameterClass="Map" resultMap="PollAnswerVO">
+<![CDATA[
+SELECT 
+	QST_ID, VOTES_NUM, CONTENT
+FROM 
+	TBL_VOTE_ANSWER
+WHERE 
+	QST_ID = #qstId#
+AND
+	TENANT_ID = #tenantId#
+]]>
+</select>
+<!-- 포토게시판 게시물(대표사진 정보)불러오기 -->
+<select id="ezNewPortal.getPhotoBoardPortletInfo" parameterClass="Map" resultMap="BoardItemVO">
+<![CDATA[
+SELECT	
+	A.BOARDID,
+	A.ITEMID,
+	A.TITLE,
+	B.FILEPATH
+FROM
+	TBL_BOARD_ITEM A
+INNER JOIN
+	TBL_PHOTO_IMAGEITEM B
+ON
+	A.TENANT_ID = B.TENANT_ID
+AND
+	A.ITEMID = B.ITEMID
+WHERE
+	A.TENANT_ID = #tenantId#
+AND
+	A.BOARDID = #boardId#
+AND
+	B.MAIN_FLAG = 'y'
+ORDER BY
+	A.WRITEDATE DESC
+LIMIT
+	#startRow#, #photoCount#
+]]>
+</select>
+
+<!-- 게시판 권한 불러오기 -->
+<select id="ezNewPortal.getBoardAuthCheck" parameterClass="Map" resultClass="String">
+<![CDATA[
+SELECT
+	READ_FG
+FROM
+	TBL_BOARD_BOARDMANAGE
+WHERE
+	BOARDID = #boardId#
+AND
+	ACCESSID = #accessId#
+AND
+	TENANT_ID = #tenantId#
+AND
+	COMPANYID = #companyId#
+]]>
+</select>
+
+	<select id="ezNewPortal.getMenuForUser" parameterClass="Map" resultClass="MenuInfoVO">
+        <![CDATA[
+            SELECT
+                A.menu_id AS menuId,
+                NAME.menu_name AS menuName,
+                IFNULL((SELECT
+                            menu_order
+                        FROM
+                            tbl_portal_menu_user AS USER
+                        WHERE
+                            USER.tenant_id = #tenantId#
+                        AND
+                            USER.company_id = #companyId#
+                        AND
+                            USER.menu_id = A.menu_id
+                        AND
+                            USER.user_id = #userId#), IFNULL(COMP.company_order, A.default_order)) AS menuOrder,
+                AUTH.access_yn AS accessYN,
+                COMP.menu_used        AS menuUsed,
+                COMP.company_lang     AS companyLang,
+                A.menu_url         AS menuUrl,
+                A.icon_urL         AS iconUrl,
+                COMP.company_order    AS companyOrder
+            FROM
+                tbl_portal_menu AS A
+            JOIN
+                tbl_portal_menu_name AS NAME
+            ON
+                A.menu_id = NAME.menu_id
+            JOIN
+                TBL_PORTAL_MENU_COMP AS COMP
+            ON
+                NAME.tenant_id = COMP.tenant_id
+            AND
+                NAME.company_id = COMP.company_id
+            AND
+                A.menu_id = COMP.menu_id
+            LEFT JOIN
+                TBL_PORTAL_MENU_AUTH AS AUTH
+            ON
+                COMP.tenant_id = AUTH.tenant_id
+            AND
+                COMP.company_id = AUTH.company_id
+            AND
+                A.menu_id = AUTH.menu_id
+       ]]>
+        
+        <isEmpty property="deptId">
+            <![CDATA[
+                AND
+                    AUTH.user_type = 1
+                AND
+                    AUTH.user_id = #userId#
+            ]]>
+        </isEmpty>
+        
+        <isNotEmpty property="deptId">
+            <![CDATA[
+                AND
+                    AUTH.user_type = 0
+                AND
+                    AUTH.user_id = #deptId#
+            ]]>
+        </isNotEmpty>
+            <![CDATA[
+            WHERE
+                NAME.tenant_id = #tenantId#
+            AND
+                NAME.company_id = #companyId#
+            AND
+                NAME.menu_lang = #langType#
+            AND
+                COMP.menu_used = 1        
+            AND
+            (AUTH.access_yn IS NOT NULL)    
+            ORDER BY
+                menuOrder;
+            ]]>
+    </select>
+
+<!-- 포틀릿 정보 불러오기 -->
+<select id="ezNewPortal.getCompanyPortletInfo" parameterClass="Map" resultMap="PortletInfoVO">
+<![CDATA[
+SELECT
+	A.PORTLET_ID, 
+    B.PORTLET_ORDER, 
+    C.PORTLET_NAME,
+    A.PORTLET_URL,
+    IF(A.PORTLET_TYPE = 'G', 1, 0) AS IS_GENERAL,
+    A.DEFAULT_ORDER,
+    B.PORTLET_CATEGORY,
+    B.CONNECTION_URL,
+    B.PORTLET_USED AS PORTLET_USED,
+    B.BOARD_ID
+FROM
+	TBL_PORTAL_PORTLET A
+JOIN
+	TBL_PORTAL_PORTLET_COMP B
+ON
+	A.PORTLET_ID = B.PORTLET_ID
+AND
+	A.MENU_ID = B.MENU_ID
+JOIN 
+	TBL_PORTAL_PORTLET_NAME C
+ON
+	B.PORTLET_ID = C.PORTLET_ID
+AND
+	B.MENU_ID = C.MENU_ID
+AND
+	B.COMPANY_ID = C.COMPANY_ID
+AND
+	B.TENANT_ID = C.TENANT_ID
+AND
+	C.PORTLET_LANG = #portletLang#
+WHERE
+	B.COMPANY_ID = #companyId#
+AND
+	B.TENANT_ID = #tenantId#
+AND
+	A.PORTLET_ID = #portletId#;
+]]>
+</select>
+
+<delete id="ezNewPortal.deletePortletOrderUser" parameterClass="map">
+<![CDATA[
+DELETE FROM
+	TBL_PORTAL_PORTLET_USER
+WHERE
+	USER_ID = #userId#
+AND
+	COMPANY_ID = #companyId#
+AND
+	TENANT_ID = #tenantId#
+]]>
+</delete>
+
+<insert id="ezNewPortal.insertPortletOrderUser" parameterClass="Map">
+<![CDATA[
+INSERT INTO TBL_PORTAL_PORTLET_USER (
+	USER_ID,	TENANT_ID,		COMPANY_ID,		PORTLET_ID,		PORTLET_ORDER,		
+	MENU_ID
+) VALUES (
+	#userId#,	#tenantId#,		#companyId#,	#portletId#,	#portletOrder#,		
+	(SELECT MENU_ID FROM TBL_PORTAL_PORTLET WHERE PORTLET_ID = #portletId#)
+)
+]]>
+</insert>
+
+<select id="ezNewPortal.getMonthlyBirthdayEmployees" parameterClass="Map" resultMap="PortalUserInfoVO">
+<![CDATA[
+SELECT
+	DISPLAYNAME$lang$ AS USER_NAME, 
+	CN,
+	DESCRIPTION$lang$ AS DEPT_NAME,
+	BIRTH,
+	IF(BIRTHTYPE = 'Y', 1, 0) AS IS_SOLAR,
+	EXTENSIONATTRIBUTE2 AS USER_IMG
+FROM
+	TBL_USERMASTER
+WHERE
+	(
+		(BIRTH LIKE CONCAT('%-', #month#, '-%') 
+	 	AND BIRTHTYPE = 'Y')
+	OR
+		(BIRTH <> ''
+	 	AND BIRTHTYPE = 'N')
+	 )
+	 AND
+	 	TENANT_ID = #tenantId#
+	 AND
+	 	PHYSICALDELIVERYOFFICENAME = #companyId#
+	 AND
+	 	CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+]]>
+</select>
+
+<select id="ezNewPortal.getMonthlyBestEmployee" parameterClass="Map" resultMap="BestEmpVO">
+<![CDATA[
+SELECT	
+	A.DISPLAYNAME$lang$ AS USER_NAME,
+	IFNULL(A.TITLE$lang$, ' ') AS TITLE,
+	A.DESCRIPTION$lang$ AS DEPT_NAME,
+	B.EXTENSIONATTRIBUTE2 AS USER_IMG,
+	A.CN
+FROM
+	TBL_PS_EMPMONTH A
+JOIN
+	TBL_USERMASTER B
+ON
+	A.CN = B.CN
+AND
+	A.TENANT_ID = B.TENANT_ID  
+WHERE
+	TERM = #yearAndMonth#
+AND
+	A.TENANT_ID = #tenantId#
+AND
+	A.PHYSICALDELIVERYOFFICENAME = #companyId#
+]]>
+</select>
+
+<select id="ezNewPortal.getUserThemeList" parameterClass="Map" resultMap="ThemeInfoVO">
+<![CDATA[
+SELECT
+	A.theme_id,
+	A.theme_name,
+    A.theme_content,
+    ifnull(D.is_default, 0) as theme_used,
+    B.theme_default,
+    C.frame_id as frame_default
+FROM
+	TBL_PORTAL_THEME A
+JOIN
+	TBL_PORTAL_THEME_COMP B
+ON
+	A.theme_id = B.theme_id
+JOIN
+	TBL_PORTAL_FRAME_COMP C
+ON
+	B.theme_id = C.theme_id
+LEFT OUTER JOIN
+	TBL_PORTAL_THEME_USER D
+ON
+	A.theme_id = D.used_theme
+AND
+	D.user_id = #userId#
+WHERE
+	B.company_id = #companyId#
+AND
+	C.company_id = #companyId#
+AND
+	B.tenant_id = #tenantId#
+AND
+	B.theme_used = 1
+AND
+	C.frame_default = 1
+]]>
+</select>
+
+<select id="ezNewPortal.getUserStartPage" parameterClass="Map" resultClass="MenuInfoVO">
+<![CDATA[
+SELECT
+	A.menu_id AS menuid,
+    B.menu_url AS menuurl
+FROM
+	TBL_PORTAL_STARTPAGE A
+JOIN
+	TBL_PORTAL_MENU B
+ON
+	A.menu_id = B.menu_id
+WHERE
+	A.user_id = #userId#
+AND
+	A.tenant_id = #tenantId#
+AND
+	A.company_id = #companyId#
+]]>
+</select>
+
+<insert id="ezNewPortal.insertUserStartPage" parameterClass="Map">
+<![CDATA[
+INSERT INTO TBL_PORTAL_STARTPAGE (
+	user_id,		tenant_id,		company_id,		menu_id
+) VALUES (
+	#userId#,		#tenantId#,		#companyId#,	#menuId#
+)
+]]>
+</insert>
+
+<update id="ezNewPortal.updateUserStartPage" parameterClass="Map">
+<![CDATA[
+UPDATE 
+	TBL_PORTAL_STARTPAGE
+SET
+	menu_id = #menuId#
+WHERE
+	user_id = #userId#
+AND
+	tenant_id = #tenantId#
+AND
+	company_id = #companyId#
+]]>
+</update>
+
+<delete id="ezNewPortal.deleteUserThemeSetting" parameterClass="Map">
+<![CDATA[
+DELETE FROM	
+	TBL_PORTAL_THEME_USER
+WHERE
+	user_id = #userId#
+AND
+	company_id = #companyId#
+AND
+	tenant_id = #tenantId#
+]]>
+</delete>
+
+<update id="ezNewPortal.updateUserThemeSetting" parameterClass="Map">
+<![CDATA[
+UPDATE
+	TBL_PORTAL_THEME_USER
+SET
+	is_default = CASE WHEN used_theme = #usedTheme# THEN 1 ELSE 0 END
+WHERE
+	user_id = #userId#
+AND	
+	company_id = #companyId#
+AND
+	tenant_id = #tenantId#
+]]>
+</update>
+
+<insert id="ezNewPortal.insertUserThemeSetting" parameterClass="Map">
+<![CDATA[
+INSERT INTO TBL_PORTAL_THEME_USER (
+	user_id,	company_id,		tenant_id,		used_theme,		used_frame, is_default
+) VALUES (
+	#userId#,	#companyId#,	#tenantId#,		#usedTheme#,	#usedFrame#, #isDefault#
+)
+]]>
+</insert>
+
+<select id="ezNewPortal.getBoardPortletInfo" parameterClass="Map" resultClass="BoardListVO">
+<![CDATA[
+SELECT	
+	A.BOARDID,
+	A.ITEMID,
+	A.TITLE,
+	A.WRITERID,
+	A.WRITERNAME,
+	A.WRITERNAME2,
+	A.WRITERDEPTID,
+	A.WRITERDEPTNAME,
+	A.WRITERDEPTNAME2,
+	A.startdate,
+	C.GUBUN
+FROM
+	TBL_BOARD_ITEM A
+JOIN 
+	TBL_BOARD_BOARDINFO C
+ON 
+	A.BOARDID = C.BOARDID
+AND 
+	A.TENANT_ID = C.TENANT_ID
+AND 
+	(A.WRITERCOMPANYID = C.COMPANYID OR C.COMPANYID IS NULL)
+WHERE
+	A.TENANT_ID = #tenantId#
+AND
+	A.BOARDID = #boardId#
+AND
+	(A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
+ORDER BY
+	A.WRITEDATE DESC
+LIMIT
+	0, #itemCount#
+]]>
+</select>
+
+
+<!-- 이효진--> 
+	<select id="ezNewPortal.getApprovalDoingList" parameterClass="Map" resultClass="ApprGDocListVO">
+		<![CDATA[
+			SELECT
+				DOCINFO.docid,
+			    DOCINFO.docstate,
+			    DOCINFO.functiontype,
+			    DOCINFO.doctitle,
+			    DATE_ADD(DATE_FORMAT(DOCINFO.startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startdate,
+			    DOCINFO.writerid,
+			    DOCINFO.writername,
+			    DOCINFO.writername2,
+			    DOCINFO.href,
+			    DOCINFO.companyid,
+	            LINEINFO.aprmemberdeptid,
+	            LINEINFO.aprmemberdeptname,
+	            LINEINFO.aprmemberid,
+	            LINEINFO.aprmembername
+			FROM
+				TBL_APRDOCINFO AS DOCINFO
+			JOIN
+				TBL_APRLINEINFO AS LINEINFO
+			ON
+				DOCINFO.tenant_id = LINEINFO.tenant_id
+			AND
+				DOCINFO.companyid = LINEINFO.companyid
+			AND
+				DOCINFO.docid = LINEINFO.docid
+			WHERE
+				DOCINFO.tenant_id = #tenantId#
+			AND
+				DOCINFO.companyid IN (SELECT
+										extensionattribute2
+									FROM
+										TBL_DEPTMASTER
+									JOIN
+										TBL_ADDJOBMASTER
+									ON
+										TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+									AND
+										TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid
+									WHERE
+										TBL_ADDJOBMASTER.tenant_id = #tenantId#
+									AND
+										TBL_ADDJOBMASTER.cn = #userId#
+									UNION ALL
+									SELECT
+										physicaldeliveryofficename
+									FROM
+										TBL_USERMASTER
+									WHERE
+										cn = #userId#
+									AND
+										tenant_id = #tenantId#
+									)
+			AND
+				LINEINFO.aprmemberid = #userId#
+			AND
+				DOCINFO.functiontype = '002'
+			AND
+				LINEINFO.aprstate = '002'
+			AND
+				DOCINFO.docstate not in ('015')   
+			ORDER BY
+				DOCINFO.startdate DESC
+			LIMIT
+				3
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getApprovalDoingLines" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		<![CDATA[
+			SELECT
+		        LINEINFO.aprmembersn AS aprmembersn,
+		        LINEINFO.aprstate AS aprstate,
+		        CODEINFO.name$lang$ AS ext1,
+		        CODEINFO.name2 AS name2,
+		        CODEINFO.name3 AS name3,
+		        CODEINFO.name4 AS name4,
+		        LINEINFO.aprmemberid AS aprmemberid,
+		        LINEINFO.aprmembername AS aprmembername,
+		        LINEINFO.aprmembername2 AS aprmembername2,
+		        USER.extensionattribute2 AS ext2
+		    FROM 
+		        TBL_APRLINEINFO AS LINEINFO
+		    JOIN 
+		        TBL_CODELIST AS CODEINFO
+		    ON 
+		        LINEINFO.tenant_id = CODEINFO.tenant_id
+		    AND 
+		        LINEINFO.companyid = CODEINFO.companyid
+		    AND 
+		        LINEINFO.aprstate = CODEINFO.code2
+		    JOIN
+		        TBL_USERMASTER AS USER
+		    ON
+		        LINEINFO.tenant_id = USER.tenant_id
+		    AND
+		        LINEINFO.companyid = USER.physicaldeliveryofficename
+		    AND
+		        LINEINFO.aprmemberid = USER.cn
+		    WHERE 
+		        LINEINFO.docid = #docId#
+		    AND 
+		        LINEINFO.tenant_id = #tenantId#
+		    AND 
+		        LINEINFO.companyid = #companyId#
+		    AND 
+		        CODEINFO.code1 = #code1#
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getApprovalRejectList" parameterClass="Map" resultClass="ApprGDocListVO">
+		<![CDATA[
+			SELECT
+				docid,
+			    docstate,
+			    functiontype,
+			    doctitle,
+			    DATE_ADD(DATE_FORMAT(startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startdate,
+			    writerid,
+			    writername,
+			    writername2,
+			    href,
+			    companyid
+			FROM
+				TBL_APRDOCINFO
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				companyid IN (SELECT
+									extensionattribute2
+								FROM
+									TBL_DEPTMASTER
+								JOIN
+									TBL_ADDJOBMASTER
+								ON
+									TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+								AND
+									TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid
+								WHERE
+									TBL_ADDJOBMASTER.tenant_id = #tenantId#
+								AND
+									TBL_ADDJOBMASTER.cn = #userId#
+								UNION ALL
+								SELECT
+									physicaldeliveryofficename
+								FROM
+									TBL_USERMASTER
+								WHERE
+									cn = #userId#
+								AND
+									tenant_id = #tenantId#
+								)
+			AND
+				writerid = #userId#
+			AND
+				functiontype = '004'
+			ORDER BY
+				startdate DESC
+			LIMIT
+				5
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getApprovalDraftList" parameterClass="Map" resultClass="ApprGDocListVO">
+		<![CDATA[
+			SELECT  
+				DOCINFO.docid,
+			    DOCINFO.docstate,
+			    DOCINFO.functiontype,
+			    DOCINFO.doctitle,
+			    DATE_ADD(DATE_FORMAT(DOCINFO.startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startdate,
+			    DOCINFO.writerid,
+			    DOCINFO.writername,
+			    DOCINFO.writername2,
+			    DOCINFO.href,
+			    DOCINFO.companyid
+			FROM
+				TBL_APRDOCINFO AS DOCINFO
+			JOIN
+				TBL_APRLINEINFO AS LINEINFO
+			ON
+				DOCINFO.tenant_id = LINEINFO.tenant_id
+			AND
+				DOCINFO.companyid = LINEINFO.companyid
+			AND
+				DOCINFO.docid = LINEINFO.docid
+			WHERE
+				DOCINFO.tenant_id = #tenantId#
+			AND
+				DOCINFO.companyid IN (SELECT
+										extensionattribute2
+									FROM
+										TBL_DEPTMASTER
+									JOIN
+										TBL_ADDJOBMASTER
+									ON
+										TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+									AND
+										TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid
+									WHERE
+										TBL_ADDJOBMASTER.tenant_id = #tenantId#
+									AND
+										TBL_ADDJOBMASTER.cn = #userId#
+									UNION ALL
+									SELECT
+										physicaldeliveryofficename
+									FROM
+										TBL_USERMASTER
+									WHERE
+										cn = #userId#
+									AND
+										tenant_id = #tenantId#
+									)
+			AND
+				LINEINFO.aprmemberid = #userId#
+			AND
+				LINEINFO.aprmembersn = 1
+			AND
+				LINEINFO.aprtype <>'015'
+			AND
+				DOCINFO.docstate <> '017'
+			AND
+				DOCINFO.functiontype IS NOT NULL
+			ORDER BY
+				STARTDATE DESC
+			LIMIT
+				5
+		]]>
+	</select>
+
+	<select id="ezNewPortal.getFavoriteForms" parameterClass="Map" resultClass="ApprGFormVO">
+		<![CDATA[
+			SELECT
+				TBL_FORMINFO.*
+			FROM
+				TBL_FORMINFO
+			INNER JOIN
+				TBL_FORMUSERINFO
+			ON
+				TBL_FORMINFO.tenant_id = TBL_FORMUSERINFO.tenant_id
+			AND
+				TBL_FORMINFO.companyid = TBL_FORMUSERINFO.companyid
+			AND
+				TBL_FORMINFO.formid = TBL_FORMUSERINFO.formid
+			WHERE
+				TBL_FORMUSERINFO.tenant_id = #tenantId#
+			AND
+				TBL_FORMUSERINFO.companyid = #companyId#
+			AND
+				TBL_FORMUSERINFO.userid = #userId#
+			ORDER BY
+				FORMORDER
+			LIMIT
+				0, 5
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getApprovalStatistics" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT
+	            COUNT(CASE WHEN (DOCINFO.startdate >= DATE_ADD(now(), INTERVAL -6 HOUR))=1 THEN 1 END) AS hour,
+	            COUNT(CASE WHEN (DOCINFO.startdate >= DATE_ADD(now(), INTERVAL -1 DAY) AND DATE_ADD(now(), INTERVAL -6 HOUR) > DOCINFO.STARTDATE)=1 THEN 1 END) AS day,
+	            COUNT(CASE WHEN (DOCINFO.startdate >= DATE_ADD(now(), INTERVAL -1 WEEK) AND DATE_ADD(now(), INTERVAL -1 DAY) > DOCINFO.STARTDATE)=1 THEN 1 END) AS week,
+	            COUNT(CASE WHEN (DOCINFO.startdate >= DATE_ADD(now(), INTERVAL -1 MONTH) AND DATE_ADD(now(), INTERVAL -1 WEEK) > DOCINFO.STARTDATE)=1 THEN 1 END) AS month,
+	            COUNT(CASE WHEN (DATE_ADD(now(), INTERVAL -1 MONTH) > DOCINFO.startdate)=1 THEN 1 END) AS other
+			FROM 
+				TBL_APRDOCINFO AS DOCINFO
+			JOIN 
+				TBL_APRLINEINFO AS LINEINFO
+			ON 
+				DOCINFO.docid = LINEINFO.docid
+			WHERE 
+				DOCINFO.tenant_id = #tenantId#
+			AND 
+				DOCINFO.companyid = #companyId#
+			AND 
+				LINEINFO.aprmemberid = #userId#  
+			AND 
+				DOCINFO.functiontype = '002'      
+			AND 
+				LINEINFO.aprstate = '002'         
+			AND 
+				DOCINFO.docstate not in ('015')
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getPortletForUser" parameterClass="Map" resultClass="PortletInfoVO" remapResults="true">
+		<![CDATA[
+			SELECT
+				A.portlet_id AS portletId,
+				A.menu_id AS menuId,
+				NAME.portlet_name AS portletName,
+				COMP.board_id AS boardId,
+				IFNULL(COMP.connection_url, A.portlet_url) AS portletUrl,
+				IFNULL(USER.portlet_order, IFNULL(THEME.portlet_order, IFNULL(COMP.portlet_used, A.default_order))) AS portletOrder,
+                IFNULL(USER.portlet_used, IFNULL(THEME.portlet_used, IFNULL(COMP.portlet_used, 1))) AS portletUsed,
+		]]>
+		
+		<isEmpty property="deptId">
+			<![CDATA[
+				AUTH.access_yn AS accessYN
+			]]>
+		</isEmpty>
+		
+		<isNotEmpty property="deptId">
+			<![CDATA[
+				IFNULL(AUTH.access_yn, 1) AS accessYN
+			]]>
+		</isNotEmpty>
+		
+		<![CDATA[
+			FROM
+				TBL_PORTAL_PORTLET AS A
+			JOIN
+				TBL_PORTAL_PORTLET_NAME AS NAME
+			ON
+				A.portlet_id = NAME.portlet_id
+			AND
+				A.menu_id = NAME.menu_id
+			JOIN
+				TBL_PORTAL_THEME_PORTLET AS THEME
+			ON
+				NAME.tenant_id = THEME.tenant_id
+			AND
+				NAME.company_id = THEME.company_id
+			AND
+				A.portlet_id = THEME.portlet_id
+			AND
+				A.menu_id = THEME.menu_id
+			AND
+				THEME.theme_id = #themeId#
+			JOIN
+				TBL_PORTAL_PORTLET_COMP AS COMP
+			ON
+				NAME.tenant_id = COMP.tenant_id
+			AND
+				NAME.company_id = COMP.company_id
+			AND
+				A.portlet_id = COMP.portlet_id
+			AND
+				A.menu_id = COMP.menu_id
+			LEFT JOIN
+				TBL_PORTAL_MENU_AUTH AS AUTH
+			ON
+				COMP.tenant_id = AUTH.tenant_id
+			AND
+				COMP.company_id = AUTH.company_id
+			AND
+				A.menu_id = AUTH.menu_id
+		]]>
+		
+		<isEmpty property="deptId" prepend="AND">
+			<![CDATA[
+					AUTH.user_type = 1
+				AND
+					AUTH.user_id = #userId#
+			]]>
+		</isEmpty>
+		
+		<isNotEmpty property="deptId" prepend="AND">
+			<![CDATA[
+					AUTH.user_type = 0
+				AND
+					AUTH.user_id = #deptId#
+			]]>
+		</isNotEmpty>
+		
+		<![CDATA[
+			LEFT JOIN
+				TBL_PORTAL_PORTLET_USER AS USER
+			ON
+				COMP.tenant_id = USER.tenant_id
+			AND
+				COMP.company_id = USER.company_id
+			AND
+				COMP.portlet_id = USER.portlet_id
+			AND
+				USER.user_id = #userId#
+			AND
+				USER.theme_id = #themeId#
+			WHERE
+				NAME.tenant_id = #tenantId#
+			AND
+				NAME.company_id = #companyId#
+			AND
+				NAME.portlet_lang = #portletLang#
+			AND
+				(COMP.portlet_used = 1 && THEME.portlet_used = 1)
+		]]>
+		
+		<isEmpty property="deptId" prepend="AND">
+			<![CDATA[
+				(AUTH.access_yn IS NOT NULL)
+			]]>
+		</isEmpty>
+		
+		<isNotEqual property="config" compareValue="true" prepend="AND">
+			<![CDATA[
+				(USER.portlet_used = 1 OR USER.portlet_used IS NULL)
+			]]>
+		</isNotEqual>
+		
+		<![CDATA[
+			ORDER BY
+				portletOrder;
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getThemeId" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				IFNULL(USER.used_theme, theme_id) AS themeId
+			FROM
+				TBL_PORTAL_THEME_COMP AS COMP
+			LEFT JOIN
+				TBL_PORTAL_THEME_USER AS USER
+			ON
+				COMP.tenant_id = USER.tenant_id
+			AND
+				COMP.company_id = USER.company_id
+			AND
+				USER.user_id = #userId#
+			AND
+				USER.is_default = 1
+			WHERE
+				COMP.tenant_id = #tenantId#
+			AND
+				COMP.company_id = #companyId#
+			AND
+				COMP.theme_default = 1
+			AND
+				COMP.theme_used = 1
+		]]>
+	</select>
+	
+	<select id="ezNewPortal.getCompanyThemes" parameterClass="Map" resultClass="ThemeInfoVO">
+		<![CDATA[
+			SELECT
+			    B.theme_id AS themeid,
+				B.theme_name AS themename,
+			    B.theme_content AS themecontent,
+			    A.theme_used AS themeused,
+			    A.theme_default AS themedefault
+			FROM
+				TBL_PORTAL_THEME_COMP A
+			JOIN
+				TBL_PORTAL_THEME B
+			ON
+				A.theme_id = B.theme_id
+			WHERE
+				A.tenant_id = #tenantId#
+			AND
+				A.company_id = #companyId#
+		]]>
+	</select>
+
+<!-- 사용자 포탈 설정 가져오기(테마, 프레임) -->
+<select id="ezNewPortal.getUserPortalSetting" parameterClass="Map" resultMap="UserPortalSettingVO">
+<![CDATA[
+	SELECT	
+		A.USER_ID, A.USED_THEME, B.FRAME_NAME AS USED_FRAME
+	FROM
+		TBL_PORTAL_THEME_USER A
+	JOIN
+		TBL_PORTAL_FRAME B
+	ON
+		A.USED_FRAME = B.FRAME_ID
+	WHERE
+		A.USER_ID = #userId#
+	AND
+		A.COMPANY_ID = #companyId#
+	AND
+		A.TENANT_ID = #tenantId#
+]]>
+<isNull property="usedTheme">
+<![CDATA[
+	AND
+		A.is_default = 1
+]]>
+</isNull>
+<isNotNull property="usedTheme">
+<![CDATA[
+	AND
+		A.used_theme = #usedTheme#
+]]>
+</isNotNull>
+</select>
+
+<!-- 사용자 포탈 설정 없을 때 회사 포탈 설정 가져오기 -->
+<select id="ezNewPortal.getCompPortalSetting" parameterClass="Map" resultMap="UserPortalSettingVO">
+<![CDATA[
+	SELECT
+		#userId# AS USER_ID,
+		THEME_ID AS USED_THEME,
+		(SELECT B.FRAME_NAME
+			FROM TBL_PORTAL_FRAME_COMP A
+			JOIN TBL_PORTAL_FRAME B
+			ON A.FRAME_ID = B.FRAME_ID
+			WHERE A.COMPANY_ID = #companyId#
+			AND A.TENANT_ID = #tenantId#
+			AND A.FRAME_DEFAULT = 1
+			AND A.THEME_ID = (SELECT THEME_ID FROM TBL_PORTAL_THEME_COMP WHERE COMPANY_ID = #companyId# AND TENANT_ID = #tenantId# AND THEME_DEFAULT = 1)) AS USED_FRAME
+	FROM
+		TBL_PORTAL_THEME_COMP
+	WHERE
+		COMPANY_ID = #companyId#
+	AND
+		TENANT_ID = #tenantId#
+	AND
+		THEME_DEFAULT = 1
+	LIMIT
+		1
+]]>
+</select>
+
+<!-- 즐겨찾기 포틀릿  새게시물 가져오기 -->
+<select id="ezNewPortal.getNewItemList" parameterClass="Map" resultMap="FavoriteBoardVO">
+<![CDATA[
+SELECT A.BOARDID,
+	   A.ITEMID,
+	   A.WRITERNAME,
+	   DATE_ADD(A.STARTDATE, interval +#v_OFFSETMIN# minute) as STARTDATE,
+	   A.TITLE,
+	   C.GUBUN
+  FROM TBL_BOARD_ITEM A 
+  JOIN 
+	   ( 
+	   SELECT BOARDID, 
+	   		  BOARDNAME, 
+	   		  BOARDNAME2,
+	   		  TENANT_ID,
+	  		  COMPANYID 
+ 	     FROM TBL_BOARD_MYBOARDS 
+  		WHERE TENANT_ID = #tenantId#
+  		  AND (COMPANYID = #companyId# OR COMPANYID = '*')
+ 		  AND USERID = #userId#
+ 		) B 
+	 ON A.TENANT_ID = B.TENANT_ID
+	AND	A.BOARDID = B.BOARDID                
+	AND A.TENANT_ID = #tenantId#
+	AND A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY) 
+	AND A.STARTDATE <= #nowDate#
+	AND A.ENDDATE > #nowDate#					
+	AND (
+		NOT EXISTS (
+		 		   SELECT USERID 
+					 FROM TBL_BOARD_ITEM_READ S 
+					WHERE S.TENANT_ID = A.TENANT_ID
+					  AND S.BOARDID = A.BOARDID 
+					  AND S.ITEMID = A.ITEMID 
+					  AND S.TENANT_ID = #tenantId#
+					  AND S.USERID = #userId# 
+					  AND S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+				   )
+	    )
+  JOIN TBL_BOARD_BOARDINFO C
+    ON A.BOARDID = C.BOARDID
+   AND A.TENANT_ID = C.TENANT_ID
+   AND (A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
+  ORDER BY STARTDATE DESC
+  LIMIT #limit#
+]]>
+</select>
+
+<select id="ezNewPortal.getItemList" parameterClass="Map" resultMap="FavoriteBoardVO">
+<![CDATA[
+SELECT A.TITLE,
+	   A.WRITERNAME,
+	   DATE_ADD(A.STARTDATE, interval +#v_OFFSETMIN# minute) as STARTDATE,
+	   A.ITEMID,
+	   A.BOARDID,
+	   B.GUBUN
+  FROM TBL_BOARD_ITEM A
+  JOIN TBL_BOARD_BOARDINFO B
+    ON A.BOARDID = B.BOARDID
+   AND A.TENANT_ID = B.TENANT_ID
+   AND (A.WRITERCOMPANYID = B.COMPANYID OR B.COMPANYID IS NULL)
+ WHERE A.BOARDID = #boardId#
+   AND (A.WRITERCOMPANYID = B.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
+   AND A.TENANT_ID = #tenantId#
+ ORDER BY STARTDATE DESC
+ LIMIT #limit#
+ ]]>
+</select>
+
+<!-- 커뮤니티 포틀릿 -->
+<select id="ezNewPortal.getCommunityList" parameterClass="Map" resultClass="CommunityMyCommunityVO"  remapResults="true">
+<![CDATA[
+SELECT (SUBSTR(C_CLUBNAME$v_LANG$, 1, 18)) AS C_CLUBNAME,
+	   C_CLUBNO,
+	   C_CLUBGUBUN,
+	   C_CLUBDESC,
+	   C_LOGO_THUMBNAIL,
+	   C_MEMBERCNT,
+	   C_CLUBCONFIRMTYPE
+  FROM TBL_C_CLUB A
+  JOIN TBL_USERMASTER B
+    ON RTRIM(A.C_SYSOPID) = RTRIM(B.CN)
+   AND A.TENANT_ID = B.TENANT_ID
+ WHERE C_ADMINCONFIRM = 'Y'
+   AND A.COMPANYID = #companyId#
+   AND A.TENANT_ID = #tenantId#
+ ORDER BY C_MEMBERCNT DESC
+ LIMIT 3
+]]>
+</select>
+
+<select id="ezNewPortal.getCommunityPermit"	parameterClass="Map" resultClass="CommunityCClubUserVO">
+<![CDATA[
+SELECT c_id,
+	   permit
+  FROM TBL_C_CLUBUSER
+ WHERE RTRIM(c_clubno) = #clubNo#
+   AND RTRIM(c_id) = #userId#
+   AND tenant_id = #tenantId#
+]]>
+</select>
+
+<select id="ezNewPortal.getPortletList"	parameterClass="Map" resultMap="PortletInfoCompVO">
+<![CDATA[
+SELECT A.PORTLET_ID,
+	   A.PORTLET_CATEGORY,
+	   IF(C.PORTLET_TYPE = 'G', 1, 0) AS IS_GENERAL,
+	   C.portlet_url as connection_url,
+	   A.PORTLET_ORDER,
+       A.PORTLET_USED AS PORTLET_USED,
+       C.MENU_ID,
+       C.DEFAULT_ORDER,
+       C.PORTLET_URL,
+       A.BOARD_ID,
+       D.BOARDNAME$lang$ AS BOARDNAME,
+       E.MENU_NAME,
+       F.PORTLET_NAME
+  FROM TBL_PORTAL_PORTLET_COMP A
+  JOIN TBL_PORTAL_PORTLET C
+    ON A.PORTLET_ID = C.PORTLET_ID
+  LEFT JOIN TBL_BOARD_BOARDINFO D
+  	ON A.BOARD_ID = D.BOARDID
+  	AND (A.COMPANY_ID = D.COMPANYID OR TRIM(D.COMPANYID) = '' OR D.COMPANYID IS NULL)
+  	AND	A.TENANT_ID = D.TENANT_ID
+  LEFT JOIN TBL_PORTAL_MENU_NAME E
+ 	ON	A.menu_id = E.menu_id
+ 	AND A.COMPANY_ID = E.COMPANY_ID
+ 	AND A.tenant_id = E.tenant_id
+ 	AND E.menu_lang = #menuLang#
+  LEFT JOIN TBL_PORTAL_PORTLET_NAME F
+ 	ON A.COMPANY_ID = F.COMPANY_ID
+ 	AND A.TENANT_ID = F.TENANT_ID
+ 	AND A.PORTLET_ID = F.PORTLET_ID
+ 	AND F.PORTLET_LANG = #menuLang# 
+  WHERE A.COMPANY_ID = #companyId#
+    AND A.TENANT_ID = #tenantId#
+  ORDER BY A.portlet_order
+]]>
+</select>
+
+<select id="ezNewPortal.getPortletNameList"	parameterClass="Map" resultMap="PortletNameInfoVO">
+	<![CDATA[
+		SELECT
+			B.portlet_lang,
+			B.portlet_name,
+			A.portlet_id
+		FROM
+			TBL_PORTAL_PORTLET_COMP A
+		JOIN
+			TBL_PORTAL_PORTLET_NAME B
+		ON
+			A.company_id = B.company_id
+		AND
+			A.tenant_id = B.tenant_id
+		AND
+			A.portlet_id = B.portlet_id  
+		WHERE
+			A.company_id = #companyId#
+		AND
+			A.tenant_id = #tenantId#
+		AND
+			A.portlet_id = #portletId#
+	]]>
+	<isNotEmpty property="primaryLang" prepend="AND">
+		B.portlet_lang = #primaryLang#
+	</isNotEmpty>
+</select>
+
+<select id="ezNewPortal.getPrimaryLangList" resultClass="String">
+<![CDATA[
+SELECT distinct PROPERTY_VALUE  
+  FROM tbl_tenant_config 
+ WHERE PROPERTY_NAME = 'PrimaryLang' 
+   AND PROPERTY_VALUE <> '';
+]]>
+</select>
+
+<select id="ezNewPortal.getWeatherKeyList" parameterClass="Integer" resultClass="String">
+<![CDATA[
+SELECT PROPERTY_VALUE  
+  FROM tbl_tenant_config 
+ WHERE PROPERTY_NAME = 'weatherKey'
+ LIMIT 0,#size# 
+]]>
+</select>
+
+<select id="ezNewPortal.getCityCodeList" parameterClass="String" resultClass="String">
+<![CDATA[
+SELECT CITYCODE
+  FROM TBL_WEATHER
+ WHERE PRIMARYLANG = #primaryLang#
+]]>
+</select>
+
+<update id="ezNewPortal.setCurrentWeather" parameterClass="Map">
+<![CDATA[
+UPDATE 
+	TBL_WEATHER
+SET 
+	CURRENTWEATHER = #currentWeather#
+WHERE 
+	CITYCODE = #cityCode#
+]]>	
+</update>
+
+<update id="ezNewPortal.setTodayWeather" parameterClass="Map">
+<![CDATA[
+UPDATE 
+	TBL_WEATHER
+SET 
+	TODAYWEATHER = #todayWeather#
+WHERE 
+	CITYCODE = #cityCode#
+]]>	
+</update>
+
+<select id="ezNewPortal.getWeather" parameterClass="Map" resultClass="HashMap">
+SELECT
+	* 
+FROM
+	TBL_WEATHER
+WHERE
+	PRIMARYLANG = #primaryLang#
+<isEqual property="cityCode" compareValue="none">
+	AND
+		SN = '1'
+</isEqual>
+<isNotEqual property="cityCode" compareValue="none">
+	AND 
+		CITYCODE = #cityCode#
+</isNotEqual>	
+</select>
+
+<select id="ezNewPortal.getCityList" parameterClass="int" resultMap="WeatherVO">
+<![CDATA[
+SELECT
+	SN,
+	CITYCODE,
+	CITYNAME,
+	DISPLAYCITYNAME,
+	PRIMARYLANG,
+	CURRENTWEATHER,
+	TODAYWEATHER
+FROM
+	TBL_WEATHER
+WHERE
+	PRIMARYLANG = #primaryLang#
+ORDER BY
+	SN asc
+]]>
+</select>
+
+<select id="ezNewPortal.getUserCityCode" parameterClass="Map" resultClass="String">
+SELECT
+	CITYCODE 
+FROM
+	TBL_WEATHER_USER
+WHERE
+	USERID = #userId#
+AND
+	TENANT_ID = #tenantId#
+</select>
+
+<update id="ezNewPortal.setUserCityCode" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_WEATHER_USER
+			(USERID, TENANT_ID, CITYCODE)
+		VALUES
+			(#userId#, #tenantId#, #cityCode#)
+		ON DUPLICATE KEY UPDATE
+			CITYCODE = #cityCode#
+			
+	]]>
+</update>
+
+<select id="ezNewPortal.getCheckUserAuth" parameterClass="Map" resultClass="MenuAuthVO">
+<![CDATA[
+SELECT ACCESS_YN as accessYN
+  FROM TBL_PORTAL_MENU_AUTH
+ WHERE MENU_ID = #menuId#
+   AND USER_ID = #userId#
+   AND USER_TYPE = #userType#
+   AND TENANT_ID = #tenantId#
+   AND COMPANY_ID = #companyId#
+]]>
+</select>
+
+<select id="ezNewPortal.getCheckDeptAuth" parameterClass="Map" resultClass="MenuAuthVO">
+<![CDATA[
+SELECT ACCESS_YN as accessYN
+  FROM TBL_PORTAL_MENU_AUTH
+ WHERE MENU_ID = #menuId#
+   AND USER_ID = #userId#
+   AND USER_TYPE = #userType#
+   AND TENANT_ID = #tenantId#
+   AND COMPANY_ID = #companyId#
+]]>
+</select>
+
+<select id="ezNewPortal.getCheckcomAuth" parameterClass="Map" resultClass="MenuAuthVO">
+<![CDATA[
+SELECT ACCESS_YN as accessYN
+  FROM TBL_PORTAL_MENU_AUTH
+ WHERE MENU_ID = #menuId#
+   AND USER_ID = #userId#
+   AND USER_TYPE = #userType#
+   AND TENANT_ID = #tenantId#
+   AND COMPANY_ID = #companyId#
+   AND USER_ID=COMPANY_ID
+]]>
+</select>
+
+<select id="ezNewPortal.getAllCompanyMenus" parameterClass="Map" resultClass="MenuInfoVO">
+SELECT
+	comp.MENU_ID          AS MENUID,
+    name.MENU_NAME        AS MENUNAME,
+    comp.MENU_USED        AS MENUUSED,
+	comp.COMPANY_LANG     AS COMPANYLANG,
+	main.MENU_URL         AS MENUURL,
+    main.ICON_URL         AS ICONURL,
+    comp.company_order    AS COMPANYORDER
+FROM 
+	tbl_portal_menu_comp as comp
+JOIN 
+	tbl_portal_menu as main
+ON 
+	comp.MENU_ID = main.MENU_ID
+JOIN 
+	tbl_portal_menu_name as name
+ON 
+	comp.MENU_ID = name.MENU_ID
+AND 
+	comp.COMPANY_ID = name.COMPANY_ID
+AND 
+	comp.TENANT_ID = name.TENANT_ID
+AND 
+	comp.COMPANY_LANG = name.MENU_LANG
+WHERE 
+	comp.MENU_USED = 1
+AND 
+	comp.COMPANY_ID = #companyId#
+AND
+	comp.COMPANY_LANG = #langType#
+AND
+	comp.TENANT_ID = #tenantId#
+ORDER BY
+	company_order asc	
+</select>
+
+<!-- 18.12.04 수정 -->
+<update id="ezNewPortal.updatePortletOrderUser" parameterClass="Map">
+<![CDATA[
+	INSERT INTO TBL_PORTAL_PORTLET_USER (
+		user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id, portlet_used, theme_id
+	) VALUES (
+		#userId#, #tenantId#, #companyId#, #portletId#,	#portletOrder#, 
+		(SELECT MENU_ID FROM TBL_PORTAL_PORTLET WHERE PORTLET_ID = #portletId#), 1, #themeId#
+	)
+	ON DUPLICATE KEY UPDATE
+	portlet_order = #portletOrder#
+	
+]]>
+</update>
+
+<select id="ezNewPortal.getPortletListNotSelected" parameterClass="Map" resultClass="PortletInfoVO">
+<![CDATA[
+	SELECT 
+		portlet_id as portletid
+	FROM
+		TBL_PORTAL_PORTLET_USER
+	WHERE
+		user_id = #userId#
+	AND
+		tenant_id = #tenantId#
+	AND
+		company_id = #companyId#
+]]>
+	<iterate prepend="AND portlet_id NOT IN " property="portletIdList" open="(" conjunction="," close=")">
+		<![CDATA[
+			#portletIdList[]#
+		]]>
+	</iterate>
+</select>
+</sqlMap>

@@ -282,7 +282,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -290,7 +290,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		
@@ -660,7 +660,9 @@
 
 		        if (obj.getAttribute("DATA10") == "4" || obj.getAttribute("DATA10") == "3") {
 		            window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=790,top=" + pTop + ",left=" + pLeft, "");
-		        } else {
+		        } else if (obj.getAttribute("DATA10") == "7") {
+					window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "",  "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=764,top=" + pTop + ",left=" + pLeft, "");
+	            } else {
 		            window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
 		        }
 		    }
@@ -1275,7 +1277,7 @@
 			    			<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 		    			</select>
 					  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-			          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+			          <a style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
 			        </span>
 				</h1>
 			</c:when>
@@ -1289,7 +1291,7 @@
 		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 				  </select>
 				  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+		          <a style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
 		        </span>
 			    <br />
 			</c:otherwise>
@@ -1297,31 +1299,39 @@
 		<c:if test="${boardInfo.buttonHidden == 'N'}">
 			<div id="mainmenu">
 			  <ul>
-		        <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321' /></span></li>
+		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321' /></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204' /></span></li>
-			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89' /></span></li>
 		        <li id="btn_copy"><span onClick="CopyItem_onclick()"><spring:message code='ezBoard.t274' /></span></li>
 		        <li id="btn_move"><span onClick="MoveItem_onclick()"><spring:message code='ezBoard.t134' /></span></li>
-			    <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-		        <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205' /></span></li>
-		        <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188' /></span></li>
-		        <li><span onClick="AddToMyBoards()"><spring:message code='ezBoard.t10051' /></span></li>
 		        <%-- <c:if test="${boardInfo.guBun ne '2'}">
 		        	<li><span onClick="ReservationItem_onclick()"><spring:message code='ezBoard.t276' /></span></li> 
 		        </c:if> --%>
 		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052' /></span></li> 
-		        <li id="right">
+		        <!-- <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
-				</li>
+				</li> -->
+				<div id="right" class="sub_frameIcon" style="float:right">	
+					<div class="sub_frameIconUL">
+					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_bottomframe" id="PreViewBottom" onclick="PreviewRayerChange('W')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
+					</div>
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this);"></span></p>  
+					</div>
+				 </div>
 				<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li id="noti" style="display:none"><span onClick="ChangeNotiOrder()"><spring:message code='ezBoard.t4000' /></span></li> 
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
 			        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
 		        </c:if>
+		        <li><span class="icon16 icon16_star" onClick="AddToMyBoards()"></span></li>
+		        <li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup(this)"></span></li>
+		        <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
+		        <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
 			  </ul>
 			</div>
 			<script type="text/javascript">
@@ -1377,59 +1387,53 @@
 		        <div id="tblPageRayer" style="text-align:center"></div>
 		    </span>
 		
-		    <span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
-		        <span class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
+		    <div id="PreviewRayerH" style="border:0px; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
+		        <div class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
 		            <p class="hbar_dotted">
 		                <img src="/images/prevview_hbar_dotted.gif">
 		            </p>
-		        </span>
-		        <span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
-		            <span style="width: 100%; height: 100px; display: block;">
-		                <span class="previewmail_info" style="display: block; width: 100%;">
-		                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
-		                        <p class="mail_title" style="margin-left: 0px;">
-		                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
-		                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
-		                        </p>
-		                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
-		                        <dl class="mail_item">
-		                            <dt><spring:message code='ezBoard.t223' />:
-		                                <span id="PreH_MailReceiver" style="display: inline-block"></span>
-		                            </dt>
-		                        </dl>
-		                    </div>
-		                </span>
-		                
+		        </div>
+		        <div id="PreContent_RayerH" style="position: absolute; border: 0px; margin-left:7px;">
+		            <div class="previewmail">
+		                <div class="previewmail_info">
+		                	<dl class="previewmailDL" id="Preview_HeaderH" style="display:none;">
+								<dt class="prepic"><img id="userImgH" src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
+								<dd class="pretext">
+									<ul class="pretextUL">
+										<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject"><span class="subjectText" id="PreH_sub_subject"></span></span></li>
+										<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t223" /></span> : <span id="PreH_MailReceiver"></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t224" /> : </span><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span></li>
+										
+									</ul>
+								</dd>
+							</dl>
+		                </div>
 		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
-		            </span>
-		        </span>
-		    </span>
-		
-		    <span id="PreviewRayerW" style="border: 0px solid red; width: 100%; height: 300px; overflow: hidden; display: none;">
-		        <span onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
+		            </div>
+		        </div>
+		    </div>		
+		    <div id="PreviewRayerW" style="border: 0px; width: 100%; height: 300px; overflow: hidden; display: none;">
+		        <div onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
 		            <img src="/images/prevview_bar_dotted.gif">
-		        </span>
-		        <span id="PreContent_RayerW" style="display: block;">
-		            <span style="width: 100%; height: 100px; display: block;">
-		                <span class="previewmail_info" style="display: block; width: 100%;">
-		                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
-		                        <p class="mail_title">
-		                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
-		                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
-		                        </p>
-		                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
-		                        <dl class="mail_item">
-		                            <dt><spring:message code='ezBoard.t223' />:</dt>
-		                            <dd style="padding-left:44px; margin-top:-20px;"><span id="PreW_MailReceiver" style="display: inline-block"></span>
-		                            </dd>
-		                        </dl>
-		                    </div>
-		                </span>
+		        </div>
+		        <div id="PreContent_RayerW" style="display: block;">
+		            <div class="previewmail">
+		                <div class="previewmail_info" style="display: block; width: 100%;">
+		                	<dl class="previewmailDL" id="Preview_HeaderW" style="display:none;">
+								<dt class="prepic"><img id="userImgW" src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
+								<dd class="pretext">
+									<ul class="pretextUL">
+										<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreW_subject"><span class="subjectText" id="PreW_sub_subject"></span></span></li>
+										<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t223" /></span> : <span id="PreW_MailReceiver"></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t224" /> : </span><span id="PreW_date"><span id="PreW_sub_date" style="display:none;"></span></span></span></li>
+										
+									</ul>
+								</dd>
+							</dl>
+		                </div>
 		                
 		                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
-		            </span>
-		        </span>
-		    </span>
+		            </div>
+		        </div>
+		    </div>
 		    <div id="ListInfo" style="display:none"></div>
 		    <%-- <c:choose>
 		    <c:when test="${boardInfo.adminType == 'y'}"> --%>

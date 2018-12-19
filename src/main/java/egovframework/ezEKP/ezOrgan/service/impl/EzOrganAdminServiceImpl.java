@@ -709,6 +709,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				
 				//회사 생성시 서브 메뉴 아이템 insert
 				ezOrganAdminDao.insertCompanyInfo_I22(map1);
+				
+				//회사 생성시 포탈 개인화 기본값 설정 insert
+				ezOrganAdminDao.insertCompanyInfo_I23(map1);
+				ezOrganAdminDao.insertCompanyInfo_I24(map1);
+				ezOrganAdminDao.insertCompanyInfo_I25(map1);
+				ezOrganAdminDao.insertCompanyInfo_I26(map1);
+				ezOrganAdminDao.insertCompanyInfo_I27(map1);
+				ezOrganAdminDao.insertCompanyInfo_I28(map1);
+				ezOrganAdminDao.insertCompanyInfo_I29(map1);
+				ezOrganAdminDao.insertCompanyInfo_I30(map1);
+				
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
                 e.printStackTrace();

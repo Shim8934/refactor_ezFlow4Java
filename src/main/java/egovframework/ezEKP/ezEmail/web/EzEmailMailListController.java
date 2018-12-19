@@ -1654,15 +1654,11 @@ public class EzEmailMailListController {
 	        
 	        Message[] messages = null;
 	        
-	        // set mailCount
  			int mailCount = 7;
  			int unreadCount = ia.getUnreadCount(folderPath);
- 			if (unreadCount < mailCount) {
- 				mailCount = unreadCount;
- 			}
  			
 	        messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, null, false, 
-	        		true, false, "receivedDate", false, 0, mailCount, false, null, userInfo.getTenantId());
+	        		false, false, "receivedDate", false, 0, mailCount, false, null, userInfo.getTenantId());
 	        
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -1693,11 +1689,14 @@ public class EzEmailMailListController {
 					subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"12\" />" + subject;
 				}
 				
+				int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
+				
 				sb.append("<NODE>");
 				sb.append("<HREF><![CDATA[" + href + "]]></HREF>");
 				sb.append("<DATE><![CDATA[" + receivedDateStr + "]]></DATE>");
 				sb.append("<SENDER><![CDATA[" + sender + "]]></SENDER>");
 				sb.append("<SUBJECT><![CDATA[" + subject + "]]></SUBJECT>");
+				sb.append("<READ><![CDATA[" + readFlag + "]]></READ>");
 				sb.append("</NODE>");
 			}
 			

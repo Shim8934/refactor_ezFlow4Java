@@ -265,14 +265,13 @@ logger.debug("map.toString()" + map.toString());
 		map.put("v_pCOMPANYID", companyID);
 		map.put("tenantID", tenantID);
 		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String nowDate = date.format(new Date());
-		map.put("nowDate", nowDate);
-		
 		String temp = ezPortalDAO.getUserInfo3_S(map);
 		
 		if (temp != null && temp.equals("1")) {
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			date.setTimeZone(TimeZone.getTimeZone("GMT"));
+			map.put("nowDate", date.format(new Date()));
+			
 			ezPortalDAO.getUserInfo3_I1(map);
 			ezPortalDAO.getUserInfo3_I2(map);
 		}
@@ -381,33 +380,41 @@ logger.debug("map.toString()" + map.toString());
 		return ezPortalDAO.topSearchTopMenu3(map);
 	}
 	
+	/**
+	 * TBL_USERINFO table에 값 하나도 안들어가 있어서 인자값 상관없이 무조건 null 반환
+	 */
 	@Override
 	public PortalTBLUserInfoVO topGetUserInfo2(String pUserID, String pLang, int tenantID) throws Exception {
 		logger.debug("topGetUserInfo2 started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pUSERID", pUserID);
 		map.put("v_pLANG", pLang);
 		map.put("tenantID", tenantID);
 
+		PortalTBLUserInfoVO result = ezPortalDAO.topGetUserInfo2(map);
+		
 		logger.debug("topGetUserInfo2 ended");
 		
-		return ezPortalDAO.topGetUserInfo2(map);
+		return result;
 	}
 	
+	/**
+	 * TBL_USERINFO table에 값 하나도 안들어가 있어서 인자값 상관없이 무조건 null 반환
+	 */
 	@Override
 	public PortalTBLUserInfoVO topGetUserInfo(String pUserID, int tenantID) throws Exception {
 		logger.debug("topGetUserInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("v_pUSERID", pUserID);
 		map.put("tenantID", tenantID);
 
-		logger.debug("topGetUserInfo ended");
+		PortalTBLUserInfoVO result = ezPortalDAO.topGetUserInfo(map);
 		
-		return ezPortalDAO.topGetUserInfo(map);
+		logger.debug("topGetUserInfo ended.");
+		
+		return result;
 	}
 	
 	@Override
@@ -1167,7 +1174,6 @@ logger.debug("map.toString()" + map.toString());
 		}
 
 		logger.debug("getAccessList ended");
-		
 		return ret;
 	}
 	
@@ -1438,10 +1444,8 @@ logger.debug("map.toString()" + map.toString());
 				sb.append("</TR>\n");
 			} else { 
 				if (menuItemMenuItemType.equals("0")) {
-					/*System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + sb.toString());*/
 					sb.append(getMenuItemHTML(pCallingMenuID, menuItemUID, userInfo));
 				} else {
-					/*System.out.println("######################################### " + sb.toString());*/
 					sb.append(getRenderedTopMenuHTMLInsert(pCallingMenuID, menuItemUID, "", "view", userInfo, userInfo.getTenantId()));
 				}
 			}
@@ -1803,9 +1807,10 @@ logger.debug("map.toString()" + map.toString());
 		
 		switch (result) {
 		case 1:
-			strHTML = "<div class='logo'>";
+			strHTML = "<ul class='contentlayout'><li class='contentlayout_left'>";
 			strHTML += getLogoHTML(pCallingMenuID, pUID, userInfo);
-			strHTML += "</div>";
+			strHTML += "</li>";
+			
 			break;
 		case 2:
 			strHTML = getUtilMenuHTML(pCallingMenuID, pUID, userInfo);
@@ -1814,7 +1819,7 @@ logger.debug("map.toString()" + map.toString());
 			strHTML = getMainMenuHTML(pCallingMenuID, pUID, userInfo);
 			break;
 		case 4:
-			strHTML = getSubMenuHTML(pCallingMenuID, pUID, userInfo);
+			/*strHTML = getSubMenuHTML(pCallingMenuID, pUID, userInfo);*/
 			break;
 		case 5:
 			/*strHTML = getSearchHTML(pCallingMenuID, pUID);*/
@@ -2018,29 +2023,9 @@ logger.debug("map.toString()" + map.toString());
 		logger.debug("getUtilMenuHTML started");
 		List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID, userInfo.getTenantId());
 		StringBuilder sb = new StringBuilder();
-		
-		// 20181126 조진호 - 마지막 로그인 시각을 탑메뉴 오른쪽 상단에 표기
-		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
-		if(packageType.equalsIgnoreCase("mail") || packageType.equalsIgnoreCase("basic")) {
-			String lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
-			String loginIP = "";
-			if (lastLogin != null) {
-				lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
-				lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
-				loginIP = ezOrganService.getLoginIP(userInfo.getId(), userInfo.getTenantId());
-			} else {
-				lastLogin = "";
-				loginIP = "";
-			}
-			
-			sb.append("<article class='utmenu'>\n");
-			sb.append("<ul>\n");
-			sb.append("<li title=" + loginIP + ">" + egovMessageSource.getMessage("main.t00016", userInfo.getLocale()) + " " + lastLogin + "</li>");
-			// 끝
-		} else {
-			sb.append("<article class='utmenu'>\n");
-			sb.append("<ul>\n");
-		}
+
+		//포탈개인화에서 쓰이지 않는 부분입니다. 충돌 날 시 기존거 살려주시고 조진호씨가 작업한 부분은 없애주세요
+		sb.append("<li class='contentlayout_right'><ul class='util'>");		
 		
 		String lastLogout = "";
 		logger.debug("resultSize="+result.size());
@@ -2079,43 +2064,85 @@ logger.debug("map.toString()" + map.toString());
 				sb.append(getUtilImageHTML(menuitemDisplayName, pCallingMenuID, menuitemImageUID, lastLogout, pUID, userInfo) + "\n");
 			} else {
 				if (menuitemLinkURL != null && !menuitemLinkURL.equals("")) {
-					/* 2018-03-06 장진혁 유틸메뉴 이미지화 작업 */
+					
 					String defaultIcon = "";
 					
 					if (menuitemLinkURL.equals("/admin/main.do")) {
-						defaultIcon = "/images/kr/main/admin.png";
+						defaultIcon = "icon_topmenu util_admin";
 					} else if (menuitemLinkURL.equals("/ezPersonal/personSearch.do")) {
-						defaultIcon = "/images/kr/main/person.png";
+						defaultIcon = "icon_topmenu util_employee_search";
 					} else if (menuitemLinkURL.equals("/ezPortal/environmentMain.do")) {
-						defaultIcon = "/images/kr/main/env.png";
+						defaultIcon = "icon_topmenu util_set";
 					} else if (menuitemLinkURL.equals("/ezPortal/help/help.do")) {
-						defaultIcon = "/images/kr/main/help.png";
+						defaultIcon = "icon_topmenu util_help";
 					} else if (menuitemLinkURL.equals("/user/login/actionLogout.do")) {
-						defaultIcon = "/images/kr/main/logout.png";
+						defaultIcon = "icon_topmenu util_logout";
 					} else {
 						defaultIcon = "/images/kr/main/common.png";
 					}
 					
-					if (i == result.size() - 1) {
-						/*sb.append("<li " + lastLogout + "><span style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"'>" + menuitemDisplayName +"</span></li>\n");*/						
-						sb.append("<li><img src='" + defaultIcon + "' style='cursor:pointer' onclick='top.location.href = \"" + menuitemLinkURL + "\"' title='" + menuitemDisplayName +"' /></li>\n");
-					} else {
-						sb.append("<li><img src='" + defaultIcon + "' style='cursor:pointer' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
-						sb.append(", \"" + menuitemLinkLocation + "\"");
-                        //sb.append(", \"" + menuitemWindowOption.trim() + "\")'>" + menuitemDisplayName + "</span></li>\n");
-						sb.append(", \"" + menuitemWindowOption + "\")' title='" + menuitemDisplayName + "' /></li>\n");
-					}
-                      
+					sb.append("<li><span class='" + defaultIcon + "' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+					sb.append(", \"" + menuitemLinkLocation + "\"");
+					sb.append(", \"" + menuitemWindowOption + "\")' title='" + menuitemDisplayName + "' /></span></li>\n");
 				} else {
 					sb.append("<li " + lastLogout + ">" + menuitemDisplayName + "</li>\n");
 				}
 			}
 		}
-		sb.append("</ul></article>\n");
+		/* 2018-09-19 Quick 메뉴 */
+		//sb.append("<li><span class='icon_topmenu util_systemlink' onclick='javascript:viewQuick()' /></span></li>\n");
+		
+		sb.append("</ul></li>\n");
 		logger.debug("sb="+sb.toString());
 		logger.debug("getUtilMenuHTML ended");
 		
 		return sb.toString();
+	}
+	
+	public String getMenuClass(String url) {
+		String str = "";
+		
+		if (url.equals("/ezEmail/mailMain.do")) { //메일
+			str = "icon_topmenu icon_nav_mail";
+		} else if (url.equals("/ezSchedule/scheduleIndex.do?funCode=2")) { //일정관리
+			str ="icon_topmenu icon_nav_calendar";
+		} else if (url.equals("/ezApprovalG/apprGMain.do")) { //전자결재
+			str ="icon_topmenu icon_nav_approval";
+		} else if (url.equals("/ezBoard/boardMain.do")) { //게시판
+			str ="icon_topmenu icon_nav_board";
+		} else if (url.equals("/ezCommunity/communityMain.do")) { //커뮤니티
+			str ="icon_topmenu icon_nav_community";
+		} else if (url.equals("/ezResource/resMain.do")) { //자원관리
+			str ="icon_topmenu icon_nav_resource";
+		} else if (url.equals("/ezCircular/circularIndex.do")) { //회람판
+			str ="icon_topmenu icon_nav_circular_edition";
+		} else if (url.equals("/ezJournal/journalMain.do")) { //업무일지
+			str ="icon_topmenu icon_nav_workdiary";
+		} else if (url.equals("/ezWebFolder/webfolderMain.do")) { //웹폴더
+			str ="icon_topmenu icon_nav_webfolder";
+		} else if (url.equals("/ezAttitude/attitudeMain.do")) { //근태관리
+			str ="icon_topmenu icon_nav_absenteeism";
+		} else if (url.equals("/ezPMS/pmsMain.do")) { //프로젝트관리
+			str ="icon_topmenu icon_nav_project";
+		} else if (url.equals("/ezEmail/mailMain.do?funCode=2")) { //주소록
+			str ="icon_topmenu icon_nav_addressbook";
+		} else if (url.equals("/ezSchedule/scheduleIndex.do?funCode=3")) { //업무관리
+			str ="icon_topmenu icon_nav_work";
+		} else if (url.equals("/ezBoard/boardMain.do?func=1")) { //전자설문
+			str ="icon_topmenu icon_nav_survey";
+		} else if (url.equals("/ezBoard/boardMain.do?func=3")) { //투표
+			str ="icon_topmenu icon_nav_voting";
+		} else if (url.equals("/ezBoard/boardMain.do?func=4")) { //사다리
+			str ="icon_topmenu icon_nav_laddergame";
+		} else if (url.equals("http://space.kaoni.com/myoffice/ezWorkspace/Account/SSO")) { //협업
+			str ="icon_topmenu icon_nav_collaboration";
+		} else if (url.equals("/ezCabinet/cabinetMain.do")) { //캐비넷
+			str ="icon_topmenu icon_nav_cabinet";
+		} else if (url.equals("/ezBoard/boardMain.do?func=5")) { //메모
+			str ="icon_topmenu icon_nav_memo";
+		} 
+		
+		return str;
 	}
 	
 	public String getMainMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
@@ -2126,6 +2153,8 @@ logger.debug("map.toString()" + map.toString());
 		//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
 		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
 		String use_journal = ezCommonService.getTenantConfig("USE_JOURNAL", userInfo.getTenantId());
+		/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가 */
+		String use_community = ezCommonService.getTenantConfig("USE_COMMUNITY", userInfo.getTenantId());
 		
 		// 20181018 조진호 - 탑메뉴 구분을 위해 패키지 타입 추가
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
@@ -2136,42 +2165,44 @@ logger.debug("map.toString()" + map.toString());
 		if (use_journal == null || use_journal.equals("")) {
 			use_journal = "YES";
 		}
+		if (use_community == null || use_community.equals("")) {
+			use_community = "YES";
+		}
 		
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();		
+		sb.append("<li class='contentlayout_none'><ul class='contentlayout topmenu'><li class='contentlayout_none' style='margin:0 auto'>");
+		sb.append("<nav id='topNav' class='topNavCls'><div id='topMenuFull' class='full_nav off' onclick='subMenuClick()'><span class='icon_topmenu full_menu'></span></div>");
+		sb.append("<div class='countBox'><span class='hidden_nav_count'>+0</span><span class='icon_topmenu icon_count_arrow'></span></div>");
+		sb.append("<ul class='navUL'>");		
 		
-		/*if (userInfo.getTheme().equals("BASIC")) {
-			sb.append("</header>\n");
-		}*/
+		StringBuilder sbSub = new StringBuilder();
+		StringBuilder sbSubMain = new StringBuilder();
+		StringBuilder sbSubSub = new StringBuilder();
+		sbSub.append("<div class='full_menu_toggle' style='display:none'><ul class='full_menu_toggleUL'>");		
 		
-		sb.append("<nav>\n");
-		sb.append("<ul class='topmenu'>");
-		
-		for (int i=0; i<result.size(); i++) {
+		for (int i=0; i < result.size(); i++) {
 			if (!checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
 				continue;
 			}
 			
 			/* 2018-05-24 장진혁 홈 메뉴 pass */
-			String menuitemLinkURL = result.get(i).getLinkURL();
-			
-			/*
-			 * 2018-06-14 장진혁 홈 메뉴 안보이게 작업한거 주석처리
-			if (menuitemLinkURL.equals("/ezPortal/myPortal.do")) {
-				continue;
-			}*/
-			
+			String menuitemLinkURL = result.get(i).getLinkURL();			
 			String menuitemUID = result.get(i).getuID();
 			String menuitemDisplayName = result.get(i).getDisplayName();
+
 			/*String menuitemImageUID = result.get(i).getImageUId();*/
 			String menuitemLinkLocation = result.get(i).getLinkLocation();
 			String menuitemWindowOption = result.get(i).getWindowOption();
-			/*String menuitemNormalImagePath = result.get(i).getNormalImagePath();*/
 			
 			//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
 			if (menuitemLinkURL.equals("/ezJournal/journalMain.do") && use_journal.equals("NO")) {
 				continue;
 			}
 			if (menuitemLinkURL.equals("/ezAttitude/attitudeMain.do") && use_attitude.equals("NO")) {
+				continue;
+			}
+			/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가 */
+			if (menuitemLinkURL.equals("/ezCommunity/communityMain.do") && use_community.equals("NO")) {
 				continue;
 			}
 			
@@ -2184,10 +2215,9 @@ logger.debug("map.toString()" + map.toString());
 			}
 
 			/* 2018-03-06 장진혁 탑메뉴 이미지 제거 후 text로 변경 */
-			sb.append("<li ");
-			
+			/* 2018-08-17 장진혁 메인 대메뉴 가져오기 */
 			if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
-				sb.append("id='" + menuitemUID + "' onmouseover='img_onMouseOver(this);' onmouseout='img_onMouseOut(this);' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+				sb.append("<li id='" + menuitemUID + "' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
 				
 				if (menuitemLinkLocation != null && !menuitemLinkLocation.trim().equals("")) {
 					sb.append(", \"" + menuitemLinkLocation + "\"");
@@ -2196,57 +2226,136 @@ logger.debug("map.toString()" + map.toString());
 				}
 				
 				sb.append(", \"" + menuitemWindowOption + "\")'");
+				sb.append(">" + menuitemDisplayName + "</li>");
 			}
 			
-			sb.append(">" + menuitemDisplayName + "</li>");
+			/* 2018-08-17 장진혁 서브메뉴화면에 메인 대메뉴 데이터 가져오기 */
+			if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
+				if (menuitemLinkURL.equals("/ezPortal/myPortal.do")) {
+					continue;
+				}
+				sbSubMain.append("<li><dl class='full_menu_toggleDL' ");
+				sbSubMain.append("id='" + menuitemUID + "' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+				sbSubMain.append(", \"" + "main" + "\"");
+				sbSubMain.append(", \"" + menuitemWindowOption + "\")'");
+				sbSubMain.append("><dt><span class='");
+				/* 2018-08-17 장진혁 매뉴 class 호출 */
+				sbSubMain.append(getMenuClass(menuitemLinkURL));
+				sbSubMain.append("'></span></dt><dd>" + menuitemDisplayName + "</dd></dl></li>");
+			}
 			
-			/* 2018-03-06 장진혁 탑메뉴 이미지 제거 */
-			/* if (menuitemImageUID != null && !menuitemImageUID.trim().equals("") && menuitemNormalImagePath != null && !menuitemNormalImagePath.trim().equals("")) {
-				sb.append("<li>" + getImageHTML(pCallingMenuID, menuitemImageUID, false, menuitemUID, userInfo) + "</li>");
-			} else {
-				sb.append("<li ");
-				
-				if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
-					sb.append(" onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
-					sb.append(", \"" + menuitemLinkLocation + "\"");
-					sb.append(", \"" + menuitemWindowOption.trim() + "\")'");
+			List<PortalMenuItemItemsMenuItemsSVO> result2 = getSubMenuHtml2(result.get(i).getuID(), userInfo.getTenantId());			
+			
+			for (int j=0; j<result2.size(); j++) {				
+				if (!checkViewRightBln(result2.get(j).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
+					continue;
 				}
 				
-				sb.append(">" + menuitemDisplayName + "</li>");
-			}*/
+				String menuitemDisplayNameSub = result2.get(j).getDisplayName();
+				String menuitemLinkURLSub = result2.get(j).getLinkURL();
+				
+				//baonk 추가
+				if (menuitemLinkURLSub.equals("/ezBoard/boardMain.do?func=3")) {
+					if (!ezCommonService.getTenantConfig("useBallotSystem", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+			        	continue;
+			        }
+				}
+				//end
+				
+				// 2018-07-27 황윤호 추가 
+				// tenant_config 테이블 useLadder가 yes이면 활성화, no이거나 row가 없으면 비활성화
+				if (menuitemLinkURLSub.equals("/ezBoard/boardMain.do?func=4")) {
+					if (!ezCommonService.getTenantConfig("useLadder", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+			        	continue;
+			        }
+				}
+				
+				String menuitemLinkLocationSub = result2.get(j).getLinkLocation();
+				String menuitemWindowOptionSub = result2.get(j).getWindowOption();
+				
+				sbSubSub.append("<li class='subMenu'><dl class='full_menu_toggleDL' onclick=\"OpenWindow(event, '" + menuitemLinkURLSub + topLoadGetParameters(menuitemLinkURLSub, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocationSub + "', '" + menuitemWindowOptionSub + "')\"><dt><span class='");
+				/* 2018-08-17 장진혁 매뉴 class 호출 */
+				sbSubSub.append(getMenuClass(menuitemLinkURLSub));
+				sbSubSub.append("'></span></dt><dd>" + menuitemDisplayNameSub + "</dd></dl></li>\n");			
+			}
 		}
 		
-		sb.append("</ul></nav>");
-		
-		if (userInfo.getTheme().equals("BASIC")) {
-			sb.append("</header>\n");
-		}
-
+		sb.append("</ul>");
+		sb.append(sbSub.toString());
+		sb.append(sbSubMain.toString());
+		sb.append(sbSubSub.toString());
+		sb.append("</ul></div></nav></li></ul></li></ul></header></div>\n");
+logger.debug("sbSubMain.toString() : " + sbSubMain.toString());
+logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		logger.debug("getMainMenuHTML ended");
         
 		return sb.toString();
 	}
 	
 	public String getSubMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
-		logger.debug("getSubMenuHTML started");
-System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
-		List<PortalMenuItemItemsMenuItemsVO> result = getSubMenuHtml(pCallingMenuID, pUID, userInfo.getTenantId());
+		logger.debug("getSubMenuHTML started");		
 		
-		StringBuilder sb = new StringBuilder();
-		sb.append(" <div class=\"topSubMenu\">");
+		StringBuilder sb = new StringBuilder();		
+		sb.append("<div class='full_menu_toggle' style='display:none'><ul class='full_menu_toggleUL'>");
+		
+		/* 새로운 서브페이지 */
+		List<PortalGetMainMenuHtmlVO> result = getMainMenuHtml("203", pCallingMenuID, Integer.parseInt(userInfo.getSkinNum()), userInfo.getTenantId());
+
+		//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
+		String use_journal = ezCommonService.getTenantConfig("USE_JOURNAL", userInfo.getTenantId());
+		/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가 */
+		String use_community = ezCommonService.getTenantConfig("USE_COMMUNITY", userInfo.getTenantId());
+		//List<PortalMenuItemItemsMenuItemsVO> result = getSubMenuHtml(pCallingMenuID, pUID, userInfo.getTenantId());
+		
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
+		if (use_journal == null || use_journal.equals("")) {
+			use_journal = "YES";
+		}
+		if (use_community == null || use_community.equals("")) {
+			use_community = "YES";
+		}
 		
 		for (int i=0; i<result.size(); i++) {
-			String leftMargin = result.get(i).getLeftMargin();
-			List<PortalMenuItemItemsMenuItemsSVO> result2 = getSubMenuHtml2(result.get(i).getParentMenuID(), userInfo.getTenantId());
-			
-			if (result2.size() == 0) {
-				sb.append("<ul id=\"menu" + result.get(i).getParentMenuID() + "\" id=\"menu01_sub\" style=\"DISPLAY:none;top:0px;left:" + leftMargin + "px\"></ul>");
+			if (!checkViewRightBln(result.get(i).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
 				continue;
 			}
 			
-			String parentMenuID = result2.get(0).getParentMenuID();
-			sb.append("<ul id=\"menu_" + parentMenuID + "\" id=\"menu01_sub\" style=\"DISPLAY:none;top:0px;left:" + leftMargin + "px\" onmouseover=\"submenuover(this)\" onmouseout=\"submenuout(this)\"><li class=\"left\">");
+			/* 2018-05-24 장진혁 홈 메뉴 pass */
+			String menuitemLinkURL = result.get(i).getLinkURL();
+			String menuitemUID = result.get(i).getuID();
+			String menuitemDisplayName = result.get(i).getDisplayName();
+			String menuitemWindowOption = result.get(i).getWindowOption();
 			
+			//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
+			if (menuitemLinkURL.equals("/ezJournal/journalMain.do") && use_journal.equals("NO")) {
+				continue;
+			}
+			if (menuitemLinkURL.equals("/ezAttitude/attitudeMain.do") && use_attitude.equals("NO")) {
+				continue;
+			}
+			/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가 */
+			if (menuitemLinkURL.equals("/ezCommunity/communityMain.do") && use_community.equals("NO")) {
+				continue;
+			}
+			
+			/* 2018-03-06 장진혁 탑메뉴 이미지 제거 후 text로 변경 */
+			sb.append("<li ");
+			
+			if (menuitemLinkURL != null && !menuitemLinkURL.trim().equals("")) {
+				sb.append("id='" + menuitemUID + "' onclick='OpenWindow(event, \"" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result.get(i).getuID(), userInfo) + "\"");
+				sb.append(", \"" + "main" + "\"");
+				sb.append(", \"" + menuitemWindowOption + "\")'");
+			}
+			
+			sb.append(">" + menuitemDisplayName + "</li>");			
+		}		
+		
+		for (int i=0; i<result.size(); i++) {
+			List<PortalMenuItemItemsMenuItemsSVO> result2 = getSubMenuHtml2(result.get(i).getuID(), userInfo.getTenantId());
+						
 			for (int j=0; j<result2.size(); j++) {
 				if (!checkViewRightBln(result2.get(j).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
 					continue;
@@ -2286,12 +2395,12 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 				if (menuitemImageUID != null && !menuitemImageUID.trim().equals("")) {
 					sb.append("<li class=\"subtd\">" + getImageHTML(pCallingMenuID, menuitemImageUID, false, pUID, userInfo) + "</li>\n");
 				} else {
-					sb.append("<li onclick=\"OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\">" + menuitemDisplayName + "</li>\n");
+					sb.append("<li><dl class='full_menu_toggleDL' onclick=\"OpenWindow(event, '" + menuitemLinkURL + topLoadGetParameters(menuitemLinkURL, result2.get(j).getuID(), userInfo) + "', '" + menuitemLinkLocation + "', '" + menuitemWindowOption + "')\"><dt><span class='icon_topmenu icon_nav_mail'></span></dt><dd>" + menuitemDisplayName + "</dd></dl></li>\n");
 				}
 			}
-			sb.append("<li class=\"right\"></ul>");
 		}
-		sb.append("</div>\n");
+
+		sb.append("</ul></div></nav></li></ul></li></ul></header></div>\n");
 
 		logger.debug("getSubMenuHTML ended");
 		
@@ -2488,7 +2597,7 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 			sb.append("<tr id='main_row'>\n");
 		} else {
 			if (userInfo.getTheme().equals("BASIC")) {
-				sb.append("<div id=\"Center\">");
+				sb.append("<div id=\"center\">");
 			}
 		}
 		
@@ -2560,7 +2669,7 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		return sb.toString();
 	}
 	
-	public String getRenderedPortalPageHTMLInsert (String pCallingPageID , String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo) throws Exception {
+	public String getRenderedPortalPageHTMLInsert (String pCallingPageID , String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo, int number) throws Exception {
 		logger.debug("getRenderedPortalPageHTMLInsert started");
 		
 		StringBuilder sb = new StringBuilder();
@@ -2614,6 +2723,17 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
             sb.append("<tr id=\"main_row\">\n");
         }
         
+        if (number == 1) {
+			sb.append("<div class='mainLayout_left'>");
+		} else if (number == 2) {
+			sb.append("<div class='mainLayout_middle'>");
+			pageColumnLength = (Integer.parseInt(pageColumnLength) + 2) + "";			
+		} else if (number == 3) {
+			sb.append("<div class='mainLayout_right'>");
+		} else if (number == 4) {
+			sb.append("<div class='mainLayout_right_move'>");
+		}
+        
         for (i=0; i<Integer.parseInt(pageColumnLength); i++) {
         	if (pMode.equals("edit")) {
         		String columnWidth = "*";
@@ -2663,12 +2783,16 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
                 
                 if (pMode.equals("edit")) {
                 	sb.append("<TR style=\"WIDTH: 100%; HEIGHT: 10px\" onclick=\"selectcellTitle(event)\"><td align=center>" + columnWidth + "</td></TR>\n");
-                    sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
+                    sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo, number));
                     sb.append("</tbody>\n</table>\n</td>\n");
                 }
         	} else {
         		if (userInfo.getTableViewOption().equals("D")) {
-        			sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
+					if (number == 4) {
+						sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, Integer.parseInt(pageColumnLength) - i, pMode, userInfo, number));
+					} else {
+						sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo, number));
+					}
         		} else {
         			String columnWidth = "*";
         			
@@ -2697,11 +2821,13 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
             		}
             		
             		if (pMode.equals("edit")) sb.append(columnWidth);
-            		sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
+            		sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo, number));
                     sb.append("</td>\n");
         		}
         	}
         }
+        
+        sb.append("</div>");
         
         if (pMode.equals("edit")) {
 			sb.append("</tr>\n</table>\n");
@@ -2809,51 +2935,54 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 						sb.append("<TD id=\"subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + "\" style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
 					}
 				} else {
-					sb.append("<TD id=\"subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + "\" style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
+					sb.append("<TD id=\"subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + "\" style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo, i) + "</TD>\n");
 				}
 				sb.append("</TR>\n");
 			} else {
 				logger.debug("no edit");
 				logger.debug("userInfo tableViewOption="+userInfo.getTableViewOption());
-				
+				/* jjh */
 				if (userInfo.getTableViewOption().equals("D")) {
 					if (i == 0) {
-						sb.append("<div class='section1_bg'><section class='section1'>\n");
-					} else {
-						logger.debug("userInfo getTheme="+userInfo.getTheme());
-						if (userInfo.getTheme() != null && !userInfo.getTheme().equals("BASIC") && loadFlag) {
-							sb.append("<div id='Center'>");
-							loadFlag = false;
-						}
+						sb.append("<section class='section_left'>\n");
+					} else if (i == 1) {
+						sb.append("<aside id='quickSide'><p class='linkBtn_open' onclick='javascript:viewQuick()'><img src='/images/kr/main/linkBtn_open.png'></p><div class='aside_quick'><p class='quickmenu_title'>Quick</p><ul class='quickmenu'>");
+						sb.append("<li id='mailwrite' onclick='btnWrite_onclick(this)'><span class='icon'><img src='/images/kr/main/quick01.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezPortal.pgj02", userInfo.getLocale())+"</span></li>");
+						sb.append("<li id='approvalwrite' onclick='btnWrite_onclick(this)'><span class='icon'><img src='/images/kr/main/quick02.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezPortal.pgj01", userInfo.getLocale())+"</span></li>");
+						sb.append("<li id='schedulewrite' onclick='btnWrite_onclick(this)'><span class='icon'><img src='/images/kr/main/quick03.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezSchedule.t214", userInfo.getLocale())+"</span></li>");
+						sb.append("<li id='organ' onclick='javascript:openQuickMenu(this.id)'><span class='icon'><img src='/images/kr/main/quick04.png'></span><span class='txt'>"+egovMessageSource.getMessage("ezAddress.t351", userInfo.getLocale())+"</span></li></ul></div>");
+						sb.append("<div class='aside_link'><p class='linkmenu_title'>Link</p><ul class='linkmenu' id='QuickUl'></ul>");
+						sb.append("<div class='linkBtn'><p class='btnLay'><span class='linkBtn_pre' id='preBtn' onclick='QuickMove(1)'><img src='/images/kr/main/link_preBtn_dis.png'></span><span class='linkBtn_next' id='nextBtn' onclick='QuickMove(2)'><img src='/images/kr/main/link_nextBtn_dis.png'></span></p></div></div></aside>");
 						
-						sb.append("<section class='section" + (i + 1) + "'>\n");
+						sb.append("<section class='section_main'>\n");
 					}
+
 					if (portletType == 0) {
 						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
 							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
 							sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 						}
 					} else {
-						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
+						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo, i) + "\n");
 					}
 					if (i == 0) {
-						sb.append("</section></div>\n");
-					} else {
+						sb.append("</section>\n");
+					} else if (i == result.size()-1){
 						sb.append("</section>\n");
 					}
 				} else {
 					if (i == 0) {
-						sb.append("<div class='section1_bg'><section class='section1'>\n");
+						sb.append("<section class='section_left'>\n");
 						if (portletType == 0) {
 							if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
 								portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
 								sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 							}
 						} else {
-							sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
+							sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo, i) + "\n");
 						}
 						if (i == 0) {
-							sb.append("</section></div>\n");
+							sb.append("</section>\n");
 						} else {
 							sb.append("</section>\n");
 						}
@@ -2872,7 +3001,7 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 								sb.append("<TD id=\"subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + "\" style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +" align=middle valign=top\" uid=\"" + portletUID + "\" canremove=\"" + portletCanRemove + "\" canresize=\"" + portletCanResize + "\" canreplace=\"" + portletCanReplace + "\" style=\"padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "\"><iframe width=100% height=100% border=0 src=\"" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "\" frameborder=0 scrolling=no></iframe></TD>\n");
 							}
 						} else {
-							sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
+							sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo, i));
 						}
 						sb.append("</TR>\n");
 						
@@ -2893,7 +3022,19 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 	
 	}
 	
-	public String getRenderedPortalPageColumnInsert (String pPortalPageID, String pCallingPageID, String pAccessIDList, int pColumnIndex, String pMode, LoginVO userInfo) throws Exception {
+	public String newPotletParam(String pURL, String strParam) {
+		if (!strParam.equals("")) {
+			if (pURL.indexOf("?") == -1) {			
+				strParam = "?type=" + strParam;			
+			} else {
+				strParam = "&type=" + strParam;
+			}
+		}
+		
+		return strParam;
+	}
+	
+	public String getRenderedPortalPageColumnInsert (String pPortalPageID, String pCallingPageID, String pAccessIDList, int pColumnIndex, String pMode, LoginVO userInfo, int number) throws Exception {
 		logger.debug("getRenderedPortalPageColumnInsert started");
 
 		List<PortalTBLPortalPageItemsVO> result = new ArrayList<PortalTBLPortalPageItemsVO>();
@@ -2901,6 +3042,23 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		String strSQL = "";
 		String parentPortalPageID = pCallingPageID;
 		int count = 0;
+		String paramVal = "";
+		
+		if (number == 2) {			
+			if (pColumnIndex == 1) {
+				paramVal = "mail";
+				pColumnIndex = 1;
+			} else if (pColumnIndex == 2) {
+				paramVal = "appr";
+				pColumnIndex = 1;
+			} else if (pColumnIndex == 3) {
+				paramVal = "favo";
+				pColumnIndex = 1;
+			} else {				
+				paramVal = "";
+				pColumnIndex = 2;
+			}
+		}
 		   
 		strSQL = "SELECT * FROM TBL_PortalPage_Items  WHERE  TENANT_ID ='"+userInfo.getTenantId()+"' AND PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID, userInfo.getTenantId()) + "'" ;
 		
@@ -2953,7 +3111,7 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 						sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
 					}
 				} else {
-					sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
+					sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo, i) + "</TD>\n");
 				}
 				sb.append("</TR>\n");
 			} else {
@@ -2961,15 +3119,40 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 					if (portletType == 0) {
 						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
 							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
-							if (portletWidth == 9999) {
-								portletWidthStr = "100%"; 
-								sb.append("<iframe width=\"" + portletWidthStr + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-							} else {
-								sb.append("<iframe width=\"" + portletWidth + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+							portletHeight = 270;
+							String cls = "box_shadow";
+
+							if (number == 0) {
+								portletHeight = 1131;
+							} else if (number == 1) {
+								if (pColumnIndex == 2) {
+									portletHeight = 544;
+									cls = "schedule " + cls;
+								}
+							} else if (number == 3) {
+								if (pColumnIndex == 2) {
+									cls = "vote " + cls;
+								} else {
+									cls = "photo_board " + cls;
+								} 
+							} else if (number == 4) {
+								if (pColumnIndex == 2) {
+									cls = "stats_graph " + cls;
+								} else {
+									cls = "groupware_banner " + cls;
+								}
+							}
+							
+							if ((number != 3 || pColumnIndex != 1) && (number != 4 || pColumnIndex != 3)) {
+								if (number == 0) {								
+									sb.append("<iframe width='100%' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+								} else {
+									sb.append("<article class='" + cls +"'><iframe class='mainIframe' width='100%' height=" + portletHeight + " border=0 src='" + portletMoveURL + newPotletParam(portletMoveURL, paramVal)  + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></article>\n");
+								}
 							}
 						}
 					} else {
-						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
+						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo, i) + "\n");
 						
 					}
 				} else {
@@ -2985,7 +3168,7 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 							sb.append("<iframe width=\"" + portletWidthStr + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 						}
 					} else {
-						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
+						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo, i));
 					}
 				}
 			}
@@ -3073,8 +3256,9 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 	
 	public String getPorletPropertiesStr(String pUID, int tenantID, String companyID) throws Exception {
 		logger.debug("getPorletPropertiesStr started");
-
+		
 		PortalPortletGeneralVO result = getPorletProperties(pUID, tenantID, companyID);
+		
 		String resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 
 		logger.debug("getPorletPropertiesStr ended");
@@ -3148,6 +3332,8 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 	/* 2018-06-22 홍승비 - 포탈메인 커뮤니티 호출 companyID 구분 추가 */
 	public String addBestTable (LoginVO userInfo) throws Exception {
 		logger.debug("addBestTable started");
+		
+		Locale locale = userInfo.getLocale();
 
 		StringBuilder strData = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -3156,88 +3342,59 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		map.put("tenantID", userInfo.getTenantId());
 		
 		List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(map);
-
-		/* 2018-06-28 홍승비 - 커뮤니티가 존재하지 않는 경우, 1개만 존재하는 경우 분기 처리 */
-		if (list.size() == 0) {
-			return strData.toString();
-		}
-		else if (list.size() == 1) {
-			strData.append("<dl class='listtype_photo'>");
-			strData.append("<dt class='tit' style='cursor:pointer'");
-			
-			if (list.get(0).getC_ClubGubun() != null && list.get(0).getC_ClubGubun().equals("3")) {
-				strData.append("onclick=\"go_best('" + list.get(0).getC_ClubNo() + "','" + memberChk(list.get(0).getC_ClubNo(), userInfo) + "')\">");
+		
+		/* 2018-06-04 홍승비 - 포탈 메일 커뮤니티 포틀릿 > 2개까지 동일 방식으로 표출하도록 수정 */
+		/* 2018-09-07 구해안 - 포탈 포틀릿 소스코드 수정*/
+		if (list != null){
+			int mainCnt = list.size();
+			if (mainCnt > 2) {
+				mainCnt = 2;
+			}
+			CommunityMyCommunityVO commu;
+			if (mainCnt > 0) {
+				for (int i=0; i<mainCnt; i++) {
+					commu = list.get(i);
+					strData.append("<dl class='comListDL0"+(i+1)+"' style='cursor:pointer'");			
+					
+					if (commu.getC_ClubGubun() != null && commu.getC_ClubGubun().equals("3")) {
+						strData.append("onclick=\"go_best('" + commu.getC_ClubNo() + "','" + memberChk(commu.getC_ClubNo(), userInfo) + "')\">");
+					} else {
+						strData.append("onclick=\"go_best('" + commu.getC_ClubNo() + "','" + "0" + "')\">");
+					}
+					
+					strData.append("<dt class='comPic'>");
+					
+					if (i == 0) {
+						strData.append("<span class='best'><img src='/images/kr/main/com_best.png'></span>");
+					}
+					
+					String bannerSrc = "";
+					
+					if (commu.getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
+						bannerSrc = "/images/ezCommunity/logo/" + commu.getC_Logo_Thumbnail().trim();
+					} else {
+						bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+commu.getC_Logo_Thumbnail();
+					}
+					
+					logger.debug("bannerSrc="+bannerSrc);
+					
+					strData.append("<img src='" + bannerSrc + "'></dt>");			
+					strData.append("<dd class='comTit'>\"" + commu.getC_ClubName() + "\"</dd>");
+					strData.append("<dd class='comText'>" + commu.getC_ClubDesc() + "</dd></dl>");
+				}
+				if (mainCnt == 1) {
+					strData.append("<dl class='comListDL02'>");
+					strData.append("<dt class='comPic'><img src='/images/kr/main/comImg_none.png'></dt>");
+					strData.append("<dd class='comTit_none'>\""+egovMessageSource.getMessage("main.t00026",locale) +"\"</dd>");
+					strData.append(" </dl>");
+				}
 			} else {
-				strData.append("onclick=\"go_best('" + list.get(0).getC_ClubNo() + "','" + "0" + "')\">");
+				strData.append("");
 			}
-			
-			strData.append("<strong>");
-			strData.append(list.get(0).getC_ClubName());
-			strData.append("</strong></dt>");
-			strData.append("<dd class='photo'>");
-			
-			String bannerSrc = "";
-			
-			if (list.get(0).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
-				bannerSrc = "/images/ezCommunity/logo/" + list.get(0).getC_Logo_Thumbnail().trim();
-			} else {
-				bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(0).getC_Logo_Thumbnail();
-			}
-			
-			logger.debug("bannerSrc="+bannerSrc);
-			
-			strData.append("<img src='" + bannerSrc + "' width='86' height='61'>");
-			strData.append("<span class='iconbest'></span>");
-			strData.append("</dd'>");
-			strData.append("<dd  class='txt'>");
-			strData.append(list.get(0).getC_ClubDesc());
-			strData.append("</dd>");
-			strData.append("</dl>");
+		} else {
+			strData.append("");
 		}
-		else {
-		/* 2018-06-04 홍승비 - 포탈 커뮤니티 포틀릿 > 2개까지 동일 방식으로 표출하도록 수정 */
-			for (int i=0; i<2; i++) {
-				
-				if (i == 1) { // 마지막 dl 표출에서는 하단 border 제거
-					strData.append("<dl class='listtype_photo' style='border-bottom:none;'>");
-				}
-				else {
-					strData.append("<dl class='listtype_photo'>");
-				}
-				
-				strData.append("<dt class='tit' style='cursor:pointer'");
-				
-				if (list.get(i).getC_ClubGubun() != null && list.get(i).getC_ClubGubun().equals("3")) {
-					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
-				} else {
-					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
-				}
-				
-				strData.append("<strong>");
-				strData.append(list.get(i).getC_ClubName());
-				strData.append("</strong></dt>");
-				strData.append("<dd class='photo'>");
-				
-				String bannerSrc = "";
-				
-				if (list.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
-					bannerSrc = "/images/ezCommunity/logo/" + list.get(i).getC_Logo_Thumbnail().trim();
-				} else {
-					bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(i).getC_Logo_Thumbnail();
-				}
-				
-				logger.debug("bannerSrc="+bannerSrc);
-				
-				strData.append("<img src='" + bannerSrc + "' width='86' height='61'>");
-				strData.append("<span class='iconbest'></span>");
-				strData.append("</dd'>");
-				strData.append("<dd  class='txt'>");
-				strData.append(list.get(i).getC_ClubDesc());
-				strData.append("</dd>");
-				strData.append("</dl>");
-				
-			}
-		}
+		
 		return strData.toString();
 	}
 	
@@ -3765,6 +3922,14 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		logger.debug("ezCkAdminACL ended");
 		
 		return "OK";
+	}
+	
+	public String getWorkspaceUID(int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		
+		return ezPortalDAO.getWorkspaceUID(map);
 	}
 
 	@Override

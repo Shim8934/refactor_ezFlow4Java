@@ -206,7 +206,7 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("mailBoxInfo").innerHTML = " &nbsp;[" + strLang1 + "<span style='color:#017BEC;'> " + TotalCount + " </span>" + strLang4 + "]";
+		        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + TotalCount + "</span>";
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        
@@ -379,17 +379,17 @@
 		</xml>
 		
 	    <form method="post">
-	        <h1>Quick Poll<span id="mailBoxInfo" style="display:none"></span></h1>
+	        <h1>
+	        	Quick Poll<span id="mailBoxInfo"></span>
+	        	<select class="companySelect" id="ListCompany" onChange="company_change()">
+		        	<c:forEach var="item" items="${list}">
+						<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+			    </select>
+	        </h1>
 	        <div id="mainmenu">
-	        	<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-				    <select id="ListCompany" onChange="company_change()">
-			        	<c:forEach var="item" items="${list}">
-							<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-		            	</c:forEach>
-				    </select><br /><br />
-			    </span>
 				<ul style="margin-top:15px">	            	
-	                <li><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
+	                <li class="important"><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
 	            </ul>
 		  	</div>
 	        

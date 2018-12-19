@@ -39,6 +39,7 @@
 	<typeAlias  alias="ApprGDeleteCabinetInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGDeleteCabinetInfoVO"/>
 	<typeAlias  alias="ApprGRelayVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO"/>
 	<typeAlias  alias="ApprGRecordTempVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGRecordTempVO"/>
+	<typeAlias  alias="egovMap"                         type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
 	<typeAlias  alias="PortalTopOtherCompanyAddJobVO" 	type="egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO"/>
 	
 	<resultMap class="PortalTopOtherCompanyAddJobVO" 	id="PortalTopOtherCompanyAddJobMap">
@@ -1663,6 +1664,178 @@
 		</isNotEqual>
 		
 	</select>
+	<!-- 포틀릿 결재할 문서 -->
+	<select id="EzApprovalG.getAprPortletList_progress" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		SELECT 
+			 docinfo.DOCID             AS DOCID
+		    ,docinfo.DOCSTATE          AS DOCSTATE
+		    ,docinfo.FUNCTIONTYPE      AS FUNCTIONTYPE
+		    ,docinfo.DOCTITLE          AS DOCTITLE
+		    ,docinfo.STARTDATE         AS STARTDATE
+		    ,docinfo.WRITERID          AS WRITERID
+		    ,docinfo.WRITERNAME        AS WRITERNAME
+		    ,docinfo.WRITERNAME2       AS WRITERNAME2
+		    ,docinfo.HREF              AS HREF
+            ,lineinfo.APRMEMBERDEPTID  AS APRMEMBERDEPTID
+            ,lineinfo.APRMEMBERDEPTNAME AS APRMEMBERDEPTNAME
+            ,lineinfo.APRMEMBERID      AS APRMEMBERID
+            ,lineinfo.APRMEMBERNAME    AS APRMEMBERNAME		    
+		FROM 
+			tbl_aprdocinfo AS docinfo
+		JOIN 
+			tbl_aprlineinfo AS lineinfo
+		ON 
+			docinfo.docid = lineinfo.docid
+		WHERE 
+			docinfo.COMPANYID = #companyID#
+		AND 
+			docinfo.TENANT_ID = #tenantID#
+		AND 
+			lineinfo.APRMEMBERID = #pUserID#  
+		AND 
+			docinfo.FUNCTIONTYPE = '002'      
+		AND 
+			lineinfo.APRSTATE = '002'         
+		AND 
+			docinfo.DOCSTATE not in ('015')   
+		ORDER BY docinfo.STARTDATE DESC	
+		LIMIT #limit#
+	</select>
+	<!-- 포틀릿 반송 문서 -->
+	<select id="EzApprovalG.getAprPortletList_reject" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		SELECT 
+			 DOCID             AS DOCID
+		    ,DOCSTATE          AS DOCSTATE
+		    ,FUNCTIONTYPE      AS FUNCTIONTYPE
+		    ,DOCTITLE          AS DOCTITLE
+		    ,STARTDATE         AS STARTDATE
+		    ,WRITERID          AS WRITERID
+		    ,WRITERNAME        AS WRITERNAME
+		    ,WRITERNAME2       AS WRITERNAME2
+		    ,HREF              AS HREF
+		    ,COMPANYID		   AS COMPANYID
+		FROM 
+			tbl_aprdocinfo
+		WHERE 
+			TENANT_ID = #tenantID#
+		AND 
+			COMPANYID = #companyID#
+		AND 
+			WRITERID = #pUserID#
+		AND FUNCTIONTYPE = '004'
+		ORDER BY STARTDATE DESC
+		LIMIT #limit#		
+	</select>
+	<!-- 포틀릿 기안문서 -->
+	<select id="EzApprovalG.getAprPortletList_draft" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		<!-- SELECT  
+			 DOCID             AS DOCID
+		    ,DOCSTATE          AS DOCSTATE
+		    ,FUNCTIONTYPE      AS FUNCTIONTYPE
+		    ,DOCTITLE          AS DOCTITLE
+		    ,STARTDATE         AS STARTDATE
+		    ,WRITERID          AS WRITERID
+		    ,WRITERNAME        AS WRITERNAME
+		    ,WRITERNAME2       AS WRITERNAME2
+		    ,HREF              AS HREF
+		FROM 
+			tbl_aprdocinfo		    
+		WHERE 
+			TENANT_ID = #tenantID#
+		AND 
+			COMPANYID = #companyID#
+		AND 
+			WRITERID = #pUserID#
+		ORDER BY STARTDATE DESC
+		LIMIT #limit# -->
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				VAPRWILLDOCLIST
+			WHERE
+				APRMEMBERID = #pUserID#
+			AND
+				APRMEMBERSN = 1
+			AND
+				APRTYPE <> '015'
+			AND
+				DocState <> '017'
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			ORDER BY STARTDATE DESC
+			LIMIT #limit#
+		]]>
+	</select>
+	<!-- 포틀릿 결재할 문서 상세 -->
+	<select id="EzApprovalG.getAprPortletList_progressDtl" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		SELECT 
+		     lineinfo.APRMEMBERSN          AS APRMEMBERSN
+		    ,lineinfo.APRSTATE             AS APRSTATE
+		    ,codeinfo.NAME$lang$           AS EXT1
+		    ,codeinfo.NAME2                AS NAME2
+		    ,codeinfo.NAME3                AS NAME3
+		    ,codeinfo.NAME4                AS NAME4
+		    ,lineinfo.APRMEMBERID          AS APRMEMBERID
+		    ,lineinfo.APRMEMBERNAME        AS APRMEMBERNAME
+		    ,lineinfo.APRMEMBERNAME2       AS APRMEMBERNAME2
+		    ,user.EXTENSIONATTRIBUTE2      AS EXT2
+		FROM 
+			tbl_aprlineinfo AS lineinfo
+		JOIN 
+			tbl_codelist AS codeinfo
+		ON 
+			lineinfo.tenant_id = codeinfo.tenant_id
+		AND 
+			lineinfo.COMPANYID = codeinfo.COMPANYID
+		AND 
+			lineinfo.APRSTATE = codeinfo.CODE2
+		JOIN
+			tbl_usermaster AS user
+		ON
+			lineinfo.TENANT_ID = user.TENANT_ID
+		AND
+			lineinfo.COMPANYID = user.PHYSICALDELIVERYOFFICENAME
+		AND
+			lineinfo.APRMEMBERID = user.CN
+		WHERE 
+			lineinfo.docid = #docID#
+		AND 
+			lineinfo.tenant_id = #tenantID#
+		AND 
+			lineinfo.companyid = #companyID#
+		AND 
+			codeinfo.code1 = #code1#	
+	</select>	
+	<!-- 포틀릿 결재할 문서 갯수 확인 -->
+	<select id="EzApprovalG.getPortletApprGapTime" parameterClass="Map" resultClass="egovMap">
+		SELECT
+            COUNT(CASE WHEN (docinfo.STARTDATE >= DATE_ADD(now(), INTERVAL -6 HOUR))=1 THEN 1 END) AS SIX,
+            COUNT(CASE WHEN (docinfo.STARTDATE >= DATE_ADD(now(), INTERVAL -1 DAY) AND DATE_ADD(now(), INTERVAL -6 HOUR) > docinfo.STARTDATE)=1 THEN 1 END) AS DAY,
+            COUNT(CASE WHEN (docinfo.STARTDATE >= DATE_ADD(now(), INTERVAL -1 WEEK) AND DATE_ADD(now(), INTERVAL -1 DAY) > docinfo.STARTDATE)=1 THEN 1 END) AS WEEK,
+            COUNT(CASE WHEN (docinfo.STARTDATE >= DATE_ADD(now(), INTERVAL -1 MONTH) AND DATE_ADD(now(), INTERVAL -1 WEEK) > docinfo.STARTDATE)=1 THEN 1 END) AS MONTH,
+            COUNT(CASE WHEN (DATE_ADD(now(), INTERVAL -1 MONTH) > docinfo.STARTDATE)=1 THEN 1 END) AS OTHER
+		FROM 
+			tbl_aprdocinfo AS docinfo
+		JOIN 
+			tbl_aprlineinfo AS lineinfo
+		ON 
+			docinfo.docid = lineinfo.docid
+		WHERE 
+			docinfo.COMPANYID = #companyID#
+		AND 
+			docinfo.TENANT_ID = #tenantID#
+		AND 
+			lineinfo.APRMEMBERID = #pUserID#  
+		AND 
+			docinfo.FUNCTIONTYPE = '002'      
+		AND 
+			lineinfo.APRSTATE = '002'         
+		AND 
+			docinfo.DOCSTATE not in ('015');
+	</select>				
 <!-- 	<procedure id="EzApprovalG.sendoffercheck_enddocinfo" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true"> -->
 <!-- 		{CALL EZSP_SENDOFFERCHECK_ENDDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -3754,7 +3927,10 @@
          			COMPANYID = #companyID#
 		</isNotEqual>
 		</isNotEqual>
-		ORDER BY FORMORDER
+		ORDER BY FORMORDER 
+		<isEqual property="isPortal" compareValue="Y">
+			LIMIT 0, 5
+		</isEqual>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormContainerInfo" parameterClass="Map" resultClass="ApprGFormVO"> -->
@@ -14566,7 +14742,7 @@
                 AND
                 	TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
                 WHERE 
-                	TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> ''Y''
+                	TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
                 AND 
                 	(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#
                 AND 

@@ -915,7 +915,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	        
 	        StringBuilder bodyContent = new StringBuilder();
 
-	        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+	        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: malgun gothic,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
 	        
 	        if (userInfo.getPrimary().equals("1")) {
 	        	bodyContent.append(userInfo.getDisplayName() +"[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));

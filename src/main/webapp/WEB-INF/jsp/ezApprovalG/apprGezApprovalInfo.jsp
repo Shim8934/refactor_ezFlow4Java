@@ -211,7 +211,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 				
@@ -1845,7 +1845,7 @@
 									 <tr>
 	                                    <td style="vertical-align: top;">	                                    	
 	                                        <span>	                                        	
-	                                            <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 247px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 1px;"></div>
+	                                            <div id="TreeView" style="margin-top: 5px; overflow-x: hidden; overflow-y: auto; height: 247px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 1px;"></div>
 	                                            <div class="border_gray" style="Width: 388px; Height: 273px;">
 	                                                <div id="UserList" style="margin: 0px 1px 1px 1px; Width: 386px; Height: 100%; overflow: auto;"></div>
 	                                            </div>
@@ -1856,7 +1856,7 @@
 	                            <c:if test="${approvalFlag =='S'}">
 	                               <tr>
                                     <td style="vertical-align: top;">                                    	
-                                        <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+                                        <div id="TreeView" style="margin-top: 5px; overflow-x: hidden; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
                                         </div>
                                     </td>
                                	 	</tr>
@@ -1929,7 +1929,7 @@
 	                            </table>
 	                        </div>
 	                    </td>
-	                    <td style="vertical-align: top">
+	                    <td style="vertical-align: top;">
 	                    <c:if test="${approvalFlag == 'G' }">
 	                        <table style="margin-left: 5px;">
 	                    </c:if>
@@ -1938,7 +1938,7 @@
 	                    </c:if>
 	                            <tr>
 	                                <td style="vertical-align: top;">
-	                                    <h2 class="h2_dot"><spring:message code='ezApprovalG.t407'/>
+	                                    <h2 class="h2_dot" style="margin-top:6px;"><spring:message code='ezApprovalG.t407'/>
 	                                        <div style="text-align: right; margin-top: -23px;">
 	                                            <a class="imgbtn" onclick="AprlineUpper_onclick();" style="height:22px;box-shadow:0px 2px 0px 0px rgba(0,0,0,0.1)"><span>
 	                                                <img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezApprovalG.pjj28'/>" style="vertical-align:middle"/></span></a>
@@ -2329,7 +2329,7 @@
 	                                </td>
 	                                <td>
 	                                    <span style="float: right;">
-	                                        <select id="selSearchOption" style="vertical-align: middle;height:22px">
+	                                        <select id="selSearchOption" style="vertical-align: top;height:22px">
 	                                            <option id="ITEMNAME">
 	                                                <spring:message code='ezApproval.t79'/>
 	                                            </option>
@@ -2604,7 +2604,7 @@
 			                	<table style="width:99.5%;table-layout: fixed">
 			                		<tr>
 	                                    <td style="vertical-align: top;">                                    	
-	                                        <div id="TreeViewCC" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+	                                        <div id="TreeViewCC" style="margin-top: 5px; overflow-x: hidden; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #ddd; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
 	                                        </div>
 	                                    </td>
                                	 	</tr>
@@ -2667,7 +2667,7 @@
 		                    	</table>
 			                </div>
 			            </td>
-			            <td style="vertical-align: top;">
+			            <td>
 			                <h2 class="h2_dot"><spring:message code='ezApprovalG.hyj20'/>
 			                </h2>
 			                <div class="border_gray" style="margin-top:7px; margin-left:4px;">

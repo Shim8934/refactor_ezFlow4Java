@@ -108,22 +108,23 @@
 							<c:if test="${journal.mine eq 'yes' }">
 								<!-- 		        	수정 -->
 								<li><span onclick='journalModify()'> <spring:message code='ezJournal.t107' /></span></li>
-								<!-- 	        		삭제 -->
-								<li><span onclick='journalDelete()'> <spring:message code='ezJournal.t108' /></span></li>
-								<!-- 		        	재사용 -->
-								<li><span onclick='journalReuse()'> <spring:message code='ezQuestion.t700' /></span></li>
 							</c:if>
-							<!-- 		        	메일로발송 -->
-							<li><span onclick='fromJournalToMail()'> <spring:message code='ezJournal.t103' /></span></li>
 							<!-- 		        	조회자정보 -->
 							<li><span onclick='journalViewerList();'> <spring:message code='ezBoard.t1006' /></span></li>
+							<c:if test="${journal.mine eq 'yes' }">	
+								<!-- 		        	재사용 -->
+								<li><span onclick='journalReuse()'> <spring:message code='ezQuestion.t700' /></span></li>
+								<!-- 	        		삭제 -->
+								<li><span class="icon16 popup_icon16_delete" onclick='journalDelete()'></span></li>
+							</c:if>
 							<!-- 	        		수신확인 -->
 							<c:if test="${journal.totalRecv gt 0 }">
 								<li><span onclick='journalReceiverList();'> <spring:message code='ezJournal.t113' />(${journal.checkRecv }/${journal.totalRecv })</span></li>
 							</c:if>
 							<!-- 		        	인쇄 -->
-							<li><span onclick='printJournal();'> <spring:message code='main.t73' /></span></li>
-	
+							<li><span class="icon16 popup_icon16_print" onclick='printJournal();'></span></li>
+							<!-- 		        	메일로발송 -->
+							<li><span class="icon16 popup_icon16_mail" onclick='fromJournalToMail()'></span></li>
 							<c:set var="userAgentInfo" value="${fn:toLowerCase(header['User-Agent'])}" />
 <%-- 							<c:if test="${fn:indexOf(userAgentInfo,'trident') eq -1}"> --%>
 <!-- 									        		엑셀저장 -->
@@ -257,7 +258,7 @@
 	</table>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;" id="mailPanel">&nbsp;</div>
 	<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
-		<iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
+		<iframe src="" style="border: none;" id="iFrameLayer"></iframe>
 	</div>
 
 	<script type="text/javascript">

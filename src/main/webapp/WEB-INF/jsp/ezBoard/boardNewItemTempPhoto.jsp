@@ -527,6 +527,8 @@
 	            strXML += "<IMAGE_FILENAME>" + MakeXMLString(filename) + "</IMAGE_FILENAME>";
 	            strXML += "<MAINIMAGEID>" + mainImageID + "</MAINIMAGEID>";
 	
+	            /* 2018-11-06 홍승비 - 게시판 체크용 구분값 추가 */
+	            strXML += "<GUBUN>" + gubun + "</GUBUN>";
 	            strXML += "</NODE>";
 	            strXML += "</NODES>";
 	

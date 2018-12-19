@@ -263,7 +263,7 @@
             </ul>
         </div>
 	    <h2 style="font-weight: normal">▒ <spring:message code = 'ezPersonal.t20002' /></h2>
-	    <table style="width:500px" id="toggle_tbl1" class="content">
+	    <table style="width:380px" id="toggle_tbl1" class="content">
 			<tr>
 				<th>
 					<spring:message code = 'ezPersonal.jjs03' />
@@ -295,10 +295,10 @@
 					<a class="imgbtn"><span onclick="SliderImage()"><spring:message code = 'ezPersonal.t20003' /></span></a>
 				</th>
 				<td>
-					<table style="width:471px;height:217px" border="0">
+					<table style="width:283px;height:530px" border="0">
 						<tr>
-							<td id="tdNormalImage" style="width:467px;height:200px">
-								<img id="UploadSliderImage" src="" onload ="imgdisplay()" style="width:467px;height:200px;display:none">
+							<td id="tdNormalImage" style="width:283px;height:530px">
+								<img id="UploadSliderImage" src="" onload ="imgdisplay()" style="width:280px;height:515px;display:none">
 							</td>
 						</tr>
 					</table>
@@ -306,7 +306,7 @@
 			</tr>
 		</table>
 	    <div class="btnpositionNew">
-	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code = 'ezPersonal.t34' /></span></a>
+	        <a class="imgbtn"><span onclick="btnSave_click();"><spring:message code = 'ezPersonal.t34' /></span></a>
 	    </div>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	     <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="width:1px;height:1px">

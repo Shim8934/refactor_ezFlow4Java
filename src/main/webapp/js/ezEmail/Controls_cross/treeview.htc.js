@@ -91,8 +91,41 @@
     function ex_toggle(nodeIdx) {
         if (nodeIdx > g_nodeCount || nodeIdx < 1)
             return;
+        
+       /* if (document.getElementById(g_toggleid + nodeIdx).className.indexOf(g_baseImage["plus_normal"]) == -1 &&
+                document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_normal"]) == -1 &&
+                document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_end"]) == -1 &&
+                document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_end"]) == -1)
+                return;*/
+        if (document.getElementById(g_toggleid + nodeIdx)) {
+	        if (document.getElementById(g_childid + nodeIdx).style.display == "none") {
+	            document.getElementById(g_childid + nodeIdx).style.display = "inline-block";
+	            if (document.getElementById(g_toggleid + nodeIdx).className.indexOf("sub_iconLNB tree_plus") >= 0)
+	                document.getElementById(g_toggleid + nodeIdx).className = "sub_iconLNB tree_minus";
+	            else
+	            	document.getElementById(g_toggleid + nodeIdx).className = "sub_iconLNB tree_minus";
+	
+	            if (document.getElementById(g_childid + nodeIdx).innerHTML == "") {
+	                if (g_nodeArray["nodeXML"][nodeIdx].childNodes.length == 0) {
+	                    var oEvent = {};
+	                    oEvent.nodeIdx = nodeIdx;
+	                    window[thisid].onrequestdata(oEvent);
+	                }
+	                else {
+	                    document.getElementById(g_childid + nodeIdx).appendChild(make_childHtml(nodeIdx));
+	                }
+	            }
+	        }
+	        else {
+	            document.getElementById(g_childid + nodeIdx).style.display = "none";
+	            if (document.getElementById(g_toggleid + nodeIdx).className.indexOf("sub_iconLNB tree_minus") >= 0)
+	            	document.getElementById(g_toggleid + nodeIdx).className = "sub_iconLNB tree_plus";
+	            else
+	            	document.getElementById(g_toggleid + nodeIdx).className = "sub_iconLNB tree_plus";
+	        }
+        }
 
-        if (document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_normal"]) == -1 &&
+        /*if (document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_normal"]) == -1 &&
             document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_normal"]) == -1 &&
             document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["plus_end"]) == -1 &&
             document.getElementById(g_toggleid + nodeIdx).src.indexOf(g_baseImage["minus_end"]) == -1)
@@ -122,7 +155,7 @@
                 document.getElementById(g_toggleid + nodeIdx).src = g_baseImage["plus_normal"];
             else
                 document.getElementById(g_toggleid + nodeIdx).src = g_baseImage["plus_end"];
-        }
+        }*/
     }
 
     this.getvalue = ex_getvalue;
@@ -604,7 +637,7 @@
     var g_bdragdrop = false;
     var g_imageWidth = -1;
     var g_imageHeight = -1;
-    var g_selectedNode = null;
+    var g_selectedNode = null;    
 
     function make_childHtml(nodeIdx) {
 
@@ -622,7 +655,7 @@
         
         var SPAN1 = document.createElement("SPAN");
         SPAN1.style.display = "block";
-        SPAN1.style.width = "150px";
+        //SPAN1.style.width = "150px";
         var childLength = nodeXML.length;
 
         for (var i = 0; i < childLength; i++) {
@@ -632,8 +665,8 @@
 
             var SPAN2 = document.createElement("SPAN");
             SPAN2.style.display = "block";
-            var SPAN3 = document.createElement("SPAN");
-            if (CrossYN())
+            var SPAN3 = document.createElement("DIV");
+            /*if (CrossYN())
             {
                 SPAN3.style.height = "20px";
                 SPAN3.style.overflowY = "hidden";
@@ -645,10 +678,14 @@
                 SPAN3.style.overflowY = "hidden";
                 SPAN3.style.whiteSpace = "nowrap";
                 SPAN3.style.display = "inline-block";
-            }
-
+            }*/
+            SPAN3.setAttribute("class", "node_div");
+            
             for (var j = 0; j < depth.length; j++) {
-                var IMG_TAG = document.createElement("IMG");
+            	var imgSpan = document.createElement("SPAN");
+                imgSpan.setAttribute("class", "sub_iconLNB tree_blank");
+                SPAN3.appendChild(imgSpan);	
+                /*var IMG_TAG = document.createElement("IMG");
                 if (depth.charAt(j) == "1") {
                     IMG_TAG.setAttribute("src", g_baseImage["dot_continue"]);
                     IMG_TAG.setAttribute("width", g_imageWidth);
@@ -662,6 +699,7 @@
 
                 SPAN3.appendChild(IMG_TAG);
                 IMG_TAG = null;
+                */
             }
 
             var bParent = (GetChildNodes(childNode).length > 0) ? true : false;
@@ -671,80 +709,113 @@
 
             var IMG_TAG = document.createElement("IMG");
             if (bParent) {
-                if (!bEndNode) {
-                    IMG_TAG.setAttribute("src", g_baseImage["plus_normal"]);
-                    mydepth += "1";
+            	var imgSpan = document.createElement("SPAN");
+            	
+                if (!bEndNode) {                	
+                    //IMG_TAG.setAttribute("src", g_baseImage["plus_normal"]);
+                	imgSpan.setAttribute("class", "sub_iconLNB tree_plus");
+                    mydepth += "1";                    
                 }
                 else {
-                    IMG_TAG.setAttribute("src", g_baseImage["plus_end"]);
-                    mydepth += "0";
+                    //IMG_TAG.setAttribute("src", g_baseImage["plus_end"]);
+                	imgSpan.setAttribute("class", "sub_iconLNB tree_plus");
+                    mydepth += "0";                    
                 }
+                
+                imgSpan.setAttribute("id", g_toggleid + g_nodeCount);
+                imgSpan.setAttribute("name", g_toggleid + g_nodeCount);
 
-                IMG_TAG.setAttribute("class", "plusTreeImg");
-                IMG_TAG.setAttribute("id", g_toggleid + g_nodeCount);
-                IMG_TAG.setAttribute("name", g_toggleid + g_nodeCount);
-                IMG_TAG.setAttribute("width", g_imageWidth);
-                IMG_TAG.setAttribute("height", g_imageHeight);
-                IMG_TAG.style.cursor = "pointer";
-
-                SPAN3.appendChild(IMG_TAG);
+                //SPAN3.appendChild(IMG_TAG);
+                SPAN3.appendChild(imgSpan);
                 IMG_TAG = null;
             }
             else {
                 if (!bEndNode) {
-                    IMG_TAG.setAttribute("src", g_baseImage["dot_normal"]);
+                    //IMG_TAG.setAttribute("src", g_baseImage["dot_normal"]);
                     mydepth += "1";
                 }
                 else {
-                    IMG_TAG.setAttribute("src", g_baseImage["dot_end"]);
+                    //IMG_TAG.setAttribute("src", g_baseImage["dot_end"]);
                     mydepth += "0";
                 }
 
-                IMG_TAG.setAttribute("id", g_toggleid + g_nodeCount);
+                /*IMG_TAG.setAttribute("id", g_toggleid + g_nodeCount);
                 IMG_TAG.setAttribute("name", g_toggleid + g_nodeCount);
                 IMG_TAG.setAttribute("width", g_imageWidth);
-                IMG_TAG.setAttribute("height", g_imageHeight);
-
-                SPAN3.appendChild(IMG_TAG);
-                IMG_TAG = null;
+                IMG_TAG.setAttribute("height", g_imageHeight);*/
+                
+                //SPAN3.appendChild(IMG_TAG);
+                //IMG_TAG = null;
+                
+                var imgSpan = document.createElement("SPAN");
+                imgSpan.setAttribute("class", "sub_iconLNB tree_blank");
+                SPAN3.appendChild(imgSpan);
             }
 
             var _imgsrc;
+            var spanId;
             var _foldername = GetAttribute(childNode, 'href') != null ? GetAttribute(childNode, 'fullcaption') : null;
             var _tempStatus;
             
             switch (_foldername) {
                 case '_INBOX':
                     _imgsrc = '/images/ImgIcon/inbox.gif';
+                    spanClass = "sub_iconLNB tree_mail";
+                    spanId = "inboxMail";
                     _tempStatus = "Y";
                     break;
                 case '_SENT':
                     _imgsrc = '/images/ImgIcon/outbox.gif';
+                    spanClass = "sub_iconLNB tree_outmail";
+                    spanId = "sentMail";
                     _tempStatus = "Y";
                     break;
                 case '_DRAFT':
                     _imgsrc = '/images/ImgIcon/drafts.gif';
+                    spanClass = "sub_iconLNB tree_outbox";
+                    spanId = "draftMail";
                     _tempStatus = "Y";
                     break;
                 case '_JUNK':
                     _imgsrc = '/images/ImgIcon/junkemail.gif';
+                    spanClass = "sub_iconLNB tree_junk";
+                    spanId = "junkMail";
                     _tempStatus = "Y";
                     break;
                 case '_DELETE':
                     _imgsrc = '/images/ImgIcon/deleted.gif';
+                    spanClass = "sub_iconLNB tree_delete";
+                    spanId = "deleteMail";
                     _tempStatus = "Y";
                     break;
                 case '_PERSONAL':
                     _imgsrc = '/images/ImgIcon/sentitems.gif';
+                    spanClass = "sub_iconLNB tree_individual";
+                    spanId = "personalMail";
                     _tempStatus = "Y";
                     break;
                 default:
                     _imgsrc = '/images/ImgIcon/fldr.gif';
+                	spanClass = "sub_iconLNB tree_tree";
+                	spanId = "defaultMail";
                 	_tempStatus = "N";
                     break;
             }
-
-            var IMG_TAG = document.createElement("IMG");
+            
+            if (g_nodeid + g_nodeCount == "AddressTreeView_node_1") {
+            	spanClass = "sub_iconLNB tree_adress_individual";
+            } else if (g_nodeid + g_nodeCount == "AddressTreeView_node_2") {
+            	spanClass = "sub_iconLNB tree_adress_department";
+            } else if (g_nodeid + g_nodeCount == "AddressTreeView_node_3") {
+            	spanClass = "sub_iconLNB tree_adress_company";
+            }
+            
+            var imgSpan2 = document.createElement("SPAN");
+            imgSpan2.setAttribute("class", spanClass);
+            imgSpan2.setAttribute("id", spanId);
+            SPAN3.appendChild(imgSpan2);
+            
+/*          var IMG_TAG = document.createElement("IMG");
             IMG_TAG.setAttribute("id", g_imageid + g_nodeCount);
             IMG_TAG.setAttribute("name", g_imageid + g_nodeCount);
             IMG_TAG.setAttribute("src", _imgsrc);
@@ -757,34 +828,67 @@
             	IMG_TAG.setAttribute("height", g_imageHeight);
             }
 
-            SPAN3.appendChild(IMG_TAG);
+            SPAN3.appendChild(IMG_TAG);*/
             IMG_TAG = null;
 
             var SPAN_TAG = document.createElement("SPAN");
             SPAN_TAG.setAttribute("id", g_nodeid + g_nodeCount);
             SPAN_TAG.setAttribute("name", g_nodeid + g_nodeCount);
             SPAN_TAG.setAttribute("class", g_baseClass["normal"]);
-            if (GetAttribute(childNode, "style") != null) {
+            
+            /*if (GetAttribute(childNode, "style") != null) {
                 SPAN_TAG.setAttribute("style", "display:inline-block;" + GetAttribute(childNode, "style"));
             }
             else {
                 SPAN_TAG.setAttribute("style", "display:inline-block;");
             }
-
-            if (GetAttribute(childNode, "title") != null)
-            {
+*/
+            if (GetAttribute(childNode, "title") != null) {
                 SPAN_TAG.setAttribute("title",GetAttribute(childNode, "title"));
             }
-
-            SPAN_TAG.innerText = GetAttribute(childNode, "caption");
+            
+            var folderCount = GetAttribute(childNode, "foldercount");
+            if (folderCount > 0) {
+            	SPAN_TAG.innerHTML = GetAttribute(childNode, "caption") + "&nbsp;&nbsp;" + folderCount;
+            } else {
+            	SPAN_TAG.innerHTML = GetAttribute(childNode, "caption");
+            }
+            
             try {
                 SPAN_TAG.addEventListener('dragover', event_ondragover_span, false);
                 SPAN_TAG.addEventListener('drop', event_ondrop_span, false);
             } catch (e) {
 
             }
-
+            
             SPAN3.appendChild(SPAN_TAG);
+            
+            if (document.getElementById("left")) {
+	            if (_foldername == "_INBOX") {
+		            var SPAN_TAG_MNG = document.createElement("SPAN");
+		            SPAN_TAG_MNG.setAttribute("class", "sub_iconLNB tree_manage");
+		            SPAN_TAG_MNG.setAttribute("onclick", "folder_manage()");
+		            
+		            SPAN3.appendChild(SPAN_TAG_MNG);
+	            } else if (_foldername == "_SENT") {
+	            	/*if (useMailReceiveScreen == "YES") {
+			            var SPAN_TAG_MNG = document.createElement("SPAN");
+			            SPAN_TAG_MNG.setAttribute("class", "confirmation");
+			            SPAN_TAG_MNG.setAttribute("onclick", "reception_check()");
+			            SPAN_TAG_MNG.innerHTML = receiveText;
+			            
+			            SPAN3.appendChild(SPAN_TAG_MNG);
+	            	}*/
+	            }
+	            
+	            if (g_nodeid + g_nodeCount == "AddressTreeView_node_1") {
+	            	var SPAN_TAG_MNG = document.createElement("SPAN");
+	            	SPAN_TAG_MNG.setAttribute("class", "sub_iconLNB tree_manage");
+		            SPAN_TAG_MNG.setAttribute("onclick", "address_foldermanage()");
+		            
+		            SPAN3.appendChild(SPAN_TAG_MNG);
+	            }
+            }
             
             //2017-06-15 이효민 : 편지함관리 > 구독지정 관련 추가 start
             var subscribeImg = '/images/ImgIcon/subscribe.png';
@@ -809,6 +913,11 @@
             g_nodeArray["depth"][g_nodeCount] = mydepth;
 
             SPAN1.appendChild(SPAN2);
+            
+            /*if (g_nodeid + g_nodeCount == "AddressTreeView_node_1") {
+            	alert(g_nodeid + g_nodeCount)
+            	alert($("#"+g_nodeid + g_nodeCount).closest("div").length);
+            }*/
         }
 
         return SPAN1;

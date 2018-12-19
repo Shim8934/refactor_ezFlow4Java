@@ -8,23 +8,26 @@
 	    <title></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css">
-	    <style>
-	    	#left ul li.on{
-				font-weight:bold;
-				color:black;
-			}
-			 #left ul li.ing{
-				font-weight:normal;
-				color:#9b9b9b;
-			}
+	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
+	    <style type="text/css">
+	    	#mCSB_1_container {
+				margin-right: 0px;
+			}  
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
+		
 	    <script type="text/javascript">
 	  		document.onselectstart = function () { return false; };
 	        window.onload = function () {
 	        	$("#fmenu").click();
+	        	
+	        	leftResize();
+		        $(".journalListBox").mCustomScrollbar({
+	        		theme : "dark"
+	        	});
 	        }
 	        
 	        function goJournalList(elem) {
@@ -46,9 +49,9 @@
 	   				url:"/ezJournal/leftRecvCount.do",
 	   				success: function(data){
 	   					if(data != 0){
-		   					$("#recvCount").text("(" + data + ")");
+		   					$("#recvCount").html("&nbsp;&nbsp;" + data);
 	   					}else{
-		   					$("#recvCount").text("");
+		   					$("#recvCount").html("");
 	   					}
 	   				}
 	   			});
@@ -59,10 +62,133 @@
 	        	setRecvCount();
 	        }
 	        
+	        function writejournal() {
+	        	var tID;
+	        	
+	        	<c:if test="${not empty typeList }">
+    				<c:forEach var="item" items="${typeList}" begin="0" end="0">
+    					tID = "${item.journaltypeId}";
+    				</c:forEach>    			
+	        	
+					var feature = GetOpenPosition(820, 850);
+					var Openwin = window.open("/ezJournal/journalWrite.do?typeId=" + tID + "&mode=new", "", "width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+					
+					Openwin.focus();
+				</c:if>	
+			}
+	        
+	        function openFolder(val01) {
+	        	if ($("#"+val01+"UL").attr("class") == "lnbUL off") {
+	        		$(".lnb H2").not("#option").attr("class", "off");
+	        		$(".lnb UL").not("#option").attr("class", "lnbUL off");
+	        		
+	        		$("#"+val01+"H2").attr("class", "on");
+	        		$("#"+val01+"UL").attr("class", "lnbUL on");
+	        		$("#"+val01).attr("class", "sub_iconLNB tree_arrow_up");
+	        	} else {
+	        		$("#"+val01+"H2").attr("class", "off");
+	        		$("#"+val01+"UL").attr("class", "lnbUL off");	        		
+	        		$("#"+val01).attr("class", "");
+	        	}
+	        }
+	        
+	        function leftResize(){
+	        	$(".journalListBox").height(window.innerHeight-105);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+        	});
+	        
 	    </script>
 	</head>
-	<body class="leftbody">
-	    <div id="left">
+	<body class="newLeft">
+		<div id="left" class="lnb" style="overflow: auto">
+	    	<!-- <div class="lnb_btn"></div> -->
+	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
+	    	<div class="left_title" title="<spring:message code='ezJournal.t1'/>"><spring:message code='ezJournal.t1'/>
+	        	<span class="sub_iconLNB tree_leftconfig" onClick="journalConfig()" title="<spring:message code='ezJournal.t53'/>"></span>
+	        </div>
+	        <div class="btn_writeBox" onclick="writejournal()">
+	        	<p class="btn_write01"><span class="sub_iconLNB tree_write" ></span>일지작성</p>
+	        </div>
+	        <div class="journalListBox" style="overflow:hidden; padding-right: 0;">
+		        <h2 class="on" id="deptFolderH2">
+	            	<span id="deptFolder" class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('deptFolder')"><spring:message code='ezJournal.t49'/></span>
+		        </h2>
+		        <ul class="lnbUL" id="deptFolderUL">		        	
+               		<c:choose>
+			    		<c:when test="${not empty typeList }">
+			    			<c:forEach items="${typeList }" var="type">
+			    				<li>						    				
+				    				<c:choose>
+				    					<c:when test="${type.journaltypeId eq 'ezJournal.t05'}">
+				    						<span class="sub_iconLNB tree_businessLog_day"></span>
+				    					</c:when>
+				    					<c:when test="${type.journaltypeId eq 'ezJournal.t06'}">
+				    						<span class="sub_iconLNB tree_businessLog_week"></span>
+				    					</c:when>
+				    					<c:when test="${type.journaltypeId eq 'ezJournal.t07'}">
+				    						<span class="sub_iconLNB tree_businessLog_month"></span>
+				    					</c:when>
+				    					<c:when test="${type.journaltypeId eq 'ezJournal.t08'}">
+				    						<span class="sub_iconLNB tree_businessLog_half"></span>
+				    					</c:when>
+				    					<c:when test="${type.journaltypeId eq 'ezJournal.t09'}">
+				    						<span class="sub_iconLNB tree_businessLog_quarter"></span>
+				    					</c:when>
+				    					<c:otherwise>
+				    						<span class="sub_iconLNB tree_businessLog_year"></span>
+				    					</c:otherwise>
+				    				</c:choose>
+				    				<span class="list_text" id="fmenu" listType='department' typeId='${type.journaltypeId }' onClick="goJournalList(this);"><spring:message code="${type.journaltypeId}"/></span>
+			    				</li>
+			    			</c:forEach>
+			    		</c:when>
+			    	</c:choose>
+		        </ul>
+		        <h2 class="off" id="myFolderH2">
+		            <span id="myFolder" class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('myFolder')"><spring:message code='ezJournal.t50'/></span>
+		        </h2>
+		        <ul class="lnbUL off" id="myFolderUL">
+	        		<c:choose>
+			    		<c:when test="${not empty typeList }">
+			    			<c:forEach items="${typeList }" var="type">
+							    <li>
+								    <c:choose>
+				    					<c:when test="${type.journaltypeId eq 'ezJournal.t05'}">
+				    						<span class="sub_iconLNB tree_businessLog_day"></span>
+				    					</c:when>
+				    					<c:when test="${type.journaltypeId eq 'ezJournal.t06'}">
+				    						<span class="sub_iconLNB tree_businessLog_week"></span>
+				    					</c:when>
+				    					<c:when test="${type.journaltypeId eq 'ezJournal.t07'}">
+				    						<span class="sub_iconLNB tree_businessLog_month"></span>
+				    					</c:when>
+				    					<c:when test="${type.journaltypeId eq 'ezJournal.t08'}">
+				    						<span class="sub_iconLNB tree_businessLog_half"></span>
+				    					</c:when>
+				    					<c:when test="${type.journaltypeId eq 'ezJournal.t09'}">
+				    						<span class="sub_iconLNB tree_businessLog_quarter"></span>
+				    					</c:when>
+				    					<c:otherwise>
+				    						<span class="sub_iconLNB tree_businessLog_year"></span>
+				    					</c:otherwise>
+				    				</c:choose>
+				    				<span class="list_text" listType='mine' typeId='${type.journaltypeId }' onClick="goJournalList(this);"><spring:message code="${type.journaltypeId}"/></span>
+							    </li>
+			    			</c:forEach>
+			    		</c:when>
+			    	</c:choose>
+		        </ul>
+		        <ul id="option" class="lnbUL">
+                   	<li><span class="sub_iconLNB tree_businessLog_receive"></span><span class="list_text" listType='recv' onClick="goJournalList(this);"><spring:message code='ezJournal.t51'/><c:if test="${recvCount ne 0 }"><span id="recvCount">&nbsp;&nbsp;${recvCount}</span></c:if></span></li>
+                   	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" listType='temp' onClick="goJournalList(this);"><spring:message code='ezJournal.t52'/></span></li>
+		        </ul>
+	        </div>
+	    </div>
+	
+	    <%-- <div id="left">
 	        <div class="left_circular" title="<spring:message code='ezJournal.t1'/>">
 	        	<span><spring:message code='ezJournal.t1'/></span>
 	        </div>
@@ -138,7 +264,7 @@
 		</div>		
 	    <script type="text/javascript">
 		    initToggleList(document.getElementById("left"), "h2", "ul", "li");
-	    </script>
+	    </script> --%>
 	    
 	</body>
 </html>

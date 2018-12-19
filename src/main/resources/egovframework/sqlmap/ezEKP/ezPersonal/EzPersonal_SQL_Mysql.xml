@@ -32,7 +32,9 @@
              		WHERE
              			COMPANYID = #v_COMPANYID#
              		AND
-             			TENANT_ID = #tenantID#	
+             			TENANT_ID = #tenantID#
+             		AND
+             			IMAGEPATH like '%SLIDERIMAGE%'
               		ORDER BY
               			SN
 				]]>
@@ -82,6 +84,8 @@
                 	ISUSE = 1
                 AND
                 	TENANT_ID = #tenantID#	
+                AND
+           			IMAGEPATH like '%SLIDERIMAGE%'
            		ORDER BY
            			SN
 			]]>
@@ -594,7 +598,7 @@
             AND
                 B.TENANT_ID = #tenantID#
             ORDER BY
-                A.REGDATE DESC    	
+                A.REGDATE DESC
 		]]>
 	</select>
 	

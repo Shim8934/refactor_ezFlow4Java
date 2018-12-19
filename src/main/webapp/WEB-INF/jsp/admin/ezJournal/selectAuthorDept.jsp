@@ -305,7 +305,7 @@
 			tr.hover:hover{background:#eee; color:#fff;}
 			
 			.selectTR{
-				background-color: #edf4fd;
+				background-color: #f1f8ff;
 			}
 		</style>
 	</head>
@@ -320,7 +320,7 @@
        	<table>
             <tr>
                 <td class="box" style="width: 250px; height: 455px;">
-                    <div style="width: 250px; height: 455px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+                    <div style="width: 250px; height: 455px; overflow-x: hidden; overflow-y: auto;" id="treeview"></div>
                 </td>
                 <td style="width: 30px; text-align: center;" rowspan="2">                            
                       <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>

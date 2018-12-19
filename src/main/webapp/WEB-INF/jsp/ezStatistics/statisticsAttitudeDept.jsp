@@ -53,6 +53,7 @@
         createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptId}");
         createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyId}");
         createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2");
+        createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
         xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
         xmlHTTP.send(xmlpara);
         xmlTree = loadXMLString(xmlHTTP.responseText);
@@ -379,9 +380,9 @@
             g_xmlHTTP = createXMLHttpRequest();
 
             if (CrossYN()) {
-                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
             } else {
-                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
             }
 
             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
@@ -408,7 +409,7 @@
             if (rgParams["deptid"] != "") {
                 bSearch = true;
                 g_xmlHTTP = createXMLHttpRequest();
-                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
                 g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
                 g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
                 g_xmlHTTP.send(strQuery);
@@ -420,7 +421,7 @@
    	 if (deptid != "") {
             bSearch = true;
             g_xmlHTTP = createXMLHttpRequest();
-            var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP></DATA>";
+            var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>Top</TOPID><PROP>extensionAttribute2</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
             g_xmlHTTP.send(strQuery);
@@ -507,7 +508,7 @@
     <table style="width: 1150px;height:640px ;border:1px solid #ddd"> 
         <tr>
             <td style="vertical-align:top">
-                <div style="width: 300px; height: 640px; overflow-x: auto; overflow-y: auto;border-right:1px solid #ddd;" id="TreeView"></div>
+                <div style="width: 300px; height: 640px; overflow-x: hidden; overflow-y: auto;border-right:1px solid #ddd;" id="TreeView"></div>
             </td>
             <td style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
                 <div id="viewdata">

@@ -356,7 +356,7 @@
 		            var strtext;
 		            var PagingHTML = "";
 		            document.getElementById("tblPageRayer").innerHTML = "";
-		            document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
+		            document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
 		            strtext = "<div class='pagenavi'>";
 		            PagingHTML += strtext;
 		            var pageNum = CurPage;
@@ -507,7 +507,9 @@
 		
 		            if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
 		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=793,width=764,top=" + pTop + ",left=" + pLeft, "");
-		            }else {
+		            } else if (obj.getAttribute("DATA10") == "7") {
+						window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=764,top=" + pTop + ",left=" + pLeft, "");
+		            } else {
 	                    window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		            
@@ -948,7 +950,7 @@
 		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 		    	</select>
 				<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-				<a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+				<a style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
 			</span>
 	    </h1>
 	    <div id="mainmenu">
@@ -956,12 +958,22 @@
 	            <li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005'/></span></li>
 	            <li><span onClick="Appr_onclick('C')"><spring:message code='ezBoard.t999014'/></span></li>
 	            <li style="display:none;"><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188'/></span></li>
-	            <li id="right">
+	            <!-- <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this, 'N');" />
-				</li>      
+				</li> -->      
+				<div id="right" class="sub_frameIcon" style="float:right">	
+					<div class="sub_frameIconUL">
+					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_bottomframe" id="PreViewBottom" onclick="PreviewRayerChange('W')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
+					</div>
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this, 'N');"></span></p>  
+					</div>
+				 </div>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
@@ -1006,62 +1018,54 @@
 	        <div id="tblPageRayer" style="text-align:center"></div>
 	    </span>
 	
-	
-	    <span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
-	        <span id="previewmail_bar_h" class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
-	            <p class="hbar_dotted">
-	                <img src="/images/prevview_hbar_dotted.gif">
-	            </p>
-	        </span>
-	        <span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
-	            <span style="width: 100%; height: 100px; display: block;">
-	                <span class="previewmail_info" style="display: block; width: 100%;">
-	                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
-	                        <p class="mail_title" style="margin-left: 0px;">
-	                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
-	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
-	                        </p>
-	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
-	                        <dl class="mail_item">
-	                            <dt><spring:message code='ezBoard.t223'/>:
-	                                <span id="PreH_MailReceiver" style="display: inline-block"></span>
-	                            </dt>
-	                        </dl>
-	                    </div>
-	                </span>
+	    <div id="PreviewRayerH" style="border:0px; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
+		        <div class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
+		            <p class="hbar_dotted">
+		                <img src="/images/prevview_hbar_dotted.gif">
+		            </p>
+		        </div>
+		        <div id="PreContent_RayerH" style="position: absolute; border: 0px; margin-left:7px;">
+		            <div class="previewmail">
+		                <div class="previewmail_info">
+		                	<dl class="previewmailDL" id="Preview_HeaderH" style="display:none;">
+								<dt class="prepic"><img id="userImgH" src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
+								<dd class="pretext">
+									<ul class="pretextUL">
+										<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject"><span class="subjectText" id="PreH_sub_subject"></span></span></li>
+										<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t223" /></span> : <span id="PreH_MailReceiver"></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t224" /> : </span><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span></li>
+										
+									</ul>
+								</dd>
+							</dl>
+		                </div>
 	                <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: none;"></iframe>
 	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
-	            </span>
-	        </span>
-	    </span>
-	
-	
-	    <span id="PreviewRayerW" style="border: 0px solid red; width: 100%; height: 300px; overflow: hidden; display: none;">
-	        <span onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
-	            <img src="/images/prevview_bar_dotted.gif">
-	        </span>
-	        <span id="PreContent_RayerW" style="display: block;">
-	            <span style="width: 100%; height: 100px; display: block;">
-	                <span class="previewmail_info" style="display: block; width: 100%;">
-	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
-	                        <p class="mail_title">
-	                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
-	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
-	                        </p>
-	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
-	                        <dl class="mail_item">
-	                            <dt><spring:message code='ezBoard.t223'/>:</dt>
-	                            <dd style="padding-left:44px; margin-top:-20px;"><span id="PreW_MailReceiver" style="display: inline-block"></span>
-	                            </dd>
-	                        </dl>
-	                    </div>
-	                </span>
+	            </div>
+	        </div>
+	    </div>
+		<div id="PreviewRayerW" style="border: 0px; width: 100%; height: 300px; overflow: hidden; display: none;">
+		        <div onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
+		            <img src="/images/prevview_bar_dotted.gif">
+		        </div>
+		        <div id="PreContent_RayerW" style="display: block;">
+		            <div class="previewmail">
+		                <div class="previewmail_info" style="display: block; width: 100%;">
+		                	<dl class="previewmailDL" id="Preview_HeaderW" style="display:none;">
+								<dt class="prepic"><img id="userImgW" src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
+								<dd class="pretext">
+									<ul class="pretextUL">
+										<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreW_subject"><span class="subjectText" id="PreW_sub_subject"></span></span></li>
+										<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t223" /></span> : <span id="PreW_MailReceiver"></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t224" /> : </span><span id="PreW_date"><span id="PreW_sub_date" style="display:none;"></span></span></span></li>
+										
+									</ul>
+								</dd>
+							</dl>
+		                </div>
 	                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
 	                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
-	            </span>
-	        </span>
-	    </span>
-	
+	            </div>
+	        </div>
+	    </div>
 	
 	    <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
 	          <div class="popupwrap1">

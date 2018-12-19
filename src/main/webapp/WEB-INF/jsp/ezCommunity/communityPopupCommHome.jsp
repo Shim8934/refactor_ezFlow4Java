@@ -303,8 +303,8 @@
 	                _img.src = "<spring:message code='main.e14' />";
 	            }
 	            
-	            _img.style.width = "51px";
-	            _img.style.height = "54px";
+	            _img.style.width = "48px";
+	            _img.style.height = "48px";
 
 	            document.getElementById("pic").appendChild(_img);
 				var sConfirmType = "";
@@ -900,7 +900,7 @@
 		                </div>
 		                
 		                <c:if test="${checkSysop }">
-		                	<div class="admin_menu"><span id="btn_Manager" onclick ="go_menu(this)"><spring:message code='ezCommunity.t565' /></span></div>
+		                	<div class="admin_menu" style="height:auto"><span id="btn_Manager" onclick ="go_menu(this)"><spring:message code='ezCommunity.t565' /></span></div>
 		                </c:if>
 		                
 		            </div>
@@ -944,8 +944,8 @@
         		<iframe id="rightfrm" style="width:100%; height:560px; border:0; display:none" frameborder="0"></iframe>
         		<div class="makeguide" id="makeguide" style="display: none;">
             		<p><img src="<spring:message code='ezCommunity.i5' />"></p>
-            		<p><a href="#" id="btn_Manager_home1" onclick ="go_menu(this)"><img src="<spring:message code='ezCommunity.i6' />" alt="<spring:message code='ezCommunity.t2010' />"></a></p>
-            		<p><a href="#" id="btn_Manager_home2" onclick ="go_menu(this)"><img src="<spring:message code='ezCommunity.i7' />" alt="<spring:message code='ezCommunity.t2011' />"></a></p>
+            		<p><a id="btn_Manager_home1" onclick ="go_menu(this)"><img src="<spring:message code='ezCommunity.i6' />" alt="<spring:message code='ezCommunity.t2010' />"></a></p>
+            		<p><a id="btn_Manager_home2" onclick ="go_menu(this)"><img src="<spring:message code='ezCommunity.i7' />" alt="<spring:message code='ezCommunity.t2011' />"></a></p>
             		<p><img src="/images/kr/community/type1/makeguide_img04.gif"></p>
         		</div>
     		</div>

@@ -230,7 +230,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("lang", loginVO.getLang());
 		model.addAttribute("userOffset", userOffset);
 		
-		return "/ezSchedule/scheduleLeft";
+		if(funCode.equals("3")) {
+			return "/ezTask/taskLeft";
+		} else {
+			return "/ezSchedule/scheduleLeft";
+		}
 	}
 	
 	/**
@@ -1286,10 +1290,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 환경설정 메인
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleConfigMain.do")
-	public String scheduleConfigMain() throws Exception {
-		
+	public String scheduleConfigMain(Model model, HttpServletRequest request) throws Exception {
 		logger.debug("============ scheduleConfigMain started ============");
 		
+		String flag = request.getParameter("flag") == null ? "" : request.getParameter("flag");
+		model.addAttribute("flag", flag);
+		
+		logger.debug("============ scheduleConfigMain ended ============");
 		return "/ezSchedule/scheduleConfigMain";
 	}
 	
@@ -2188,9 +2195,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 일정보기 > 반복일정 선택 후 삭제시 팝업 
 	 */	
 	@RequestMapping(value="/ezSchedule/scheduleDeleteConfirm.do")	
-	public String scheduleDeleteConfirm() throws Exception {
-		
+	public String scheduleDeleteConfirm(Model model, HttpServletRequest request) throws Exception {
 		logger.debug("============ scheduleDeleteConfirm started ============");
+		
+		String resourceInfo = request.getParameter("resourceInfo");
+		model.addAttribute("resourceInfo", resourceInfo);
+		
+		logger.debug("============ scheduleDeleteConfirm ended ============");
 		
 		return "ezSchedule/scheduleDeleteConfirm";
 	}

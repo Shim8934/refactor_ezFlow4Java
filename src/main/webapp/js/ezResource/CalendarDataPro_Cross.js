@@ -1420,7 +1420,7 @@ function mfFormatTime(iMin) {
 
 //날짜에 마우스 오버시
 function MonthlyViewHeader_onMouseOver(pThis) {
-    pThis.style.backgroundColor = "#edf4fd";
+    pThis.style.backgroundColor = "#f1f8ff";
 }
 
 //마우스 아웃시
@@ -1439,7 +1439,7 @@ function Schedule_onMouseClick(event, type) {
         if (g_szCurrentApptDivID != null && document.getElementById(g_szCurrentApptDivID))
             document.getElementById(g_szCurrentApptDivID).style.backgroundColor = "";
 
-        event.style.backgroundColor = "rgba(255, 250, 250, 1)";
+        event.style.backgroundColor = "#f1f8ff";
 
         //M:월, W:주, D:일
         if (type == "M") {
@@ -1450,7 +1450,7 @@ function Schedule_onMouseClick(event, type) {
                 var bgColor = "rgb(250, 255, 243)";
                 var checkOwnerID = GetAttribute(resDate[i].parentNode,"num");
                 if (eventOwnerID == checkOwnerID) {
-                    resDate[i].parentNode.style.backgroundColor = bgColor;
+                    //resDate[i].parentNode.style.backgroundColor = bgColor;
                 } else {
                     resDate[i].parentNode.style.backgroundColor = "";
                 }
@@ -1465,7 +1465,7 @@ function Schedule_onMouseClick(event, type) {
                 //시간영역
                 var checkOwnerID = GetAttribute(resDate[i],"num");
                 if (eventOwnerID == checkOwnerID) {
-                    resDate[i].style.backgroundColor = bgColor;
+                    //resDate[i].style.backgroundColor = bgColor;
                 } else {
                     resDate[i].style.backgroundColor = "";
                 }
@@ -1490,7 +1490,7 @@ function Schedule_onMouseClick(event, type) {
                 if (eventOwnerID == checkOwnerID) {
                     //헤더영역 - 하루종일 일때는 하위태그가 SPAN으로 되어있음 
                     if (resDate[i].childNodes[0].tagName == "SPAN") {
-                        resDate[i].style.backgroundColor = bgColor;
+                        //resDate[i].style.backgroundColor = bgColor;
                     }
                 } else {
                     resDate[i].style.backgroundColor = "";
@@ -1527,7 +1527,7 @@ function Schedule_onMouseClick(event, type) {
                 var bgColor = "rgb(250, 255, 243)";
                 var checkOwnerID = GetAttribute(resDate[i].parentNode,"num");
                 if (eventOwnerID == checkOwnerID) {
-                    resDate[i].parentNode.style.backgroundColor = bgColor;
+                    //resDate[i].parentNode.style.backgroundColor = bgColor;
                 } else {
                     resDate[i].parentNode.style.backgroundColor = "";
                 }
@@ -1542,7 +1542,7 @@ function Schedule_onMouseClick(event, type) {
                 //시간영역
                 var checkOwnerID = GetAttribute(resDate[i],"num");
                 if (eventOwnerID == checkOwnerID) {
-                    resDate[i].style.backgroundColor = bgColor;
+                    //resDate[i].style.backgroundColor = bgColor;
                 } else {
                     resDate[i].style.backgroundColor = "";
                 }
@@ -1566,7 +1566,7 @@ function Schedule_onMouseClick(event, type) {
                 if (eventOwnerID == checkOwnerID) {
                     //헤더영역 - 하루종일 일때는 하위태그가 SPAN으로 되어있음 
                     if (resDate[i].childNodes[0].tagName == "SPAN") {
-                        resDate[i].style.backgroundColor = bgColor;
+                        //resDate[i].style.backgroundColor = bgColor;
                     }
                 } else {
                     resDate[i].style.backgroundColor = "";
@@ -1631,18 +1631,24 @@ function showTooltip_MouseOver(nextTo, e, pTime, pSubject, pApproveFlag) {
     sTd.className = "individual";
 
     var sSpan = document.createElement("SPAN");
-    var _img = document.createElement("IMG");
+    //var _img = document.createElement("IMG");
     if (pApproveFlag == "1") {
-        _img.src = "/images/calendar/icon_resource_ok.png"
-        _img.style.verticalAlign = "bottom";
-        sSpan.appendChild(_img);
+        //_img.src = "/images/calendar/icon_resource_ok.png"
+        //_img.style.verticalAlign = "bottom";
+        //sSpan.appendChild(_img);
+    	sSpan.className = "sub_iconLNB tree_resource_ok";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang307;
     }
     else {
-        _img.src = "/images/calendar/icon_resource_no.png"
-        _img.style.verticalAlign = "middle";
-        sSpan.appendChild(_img);
+        //_img.src = "/images/calendar/icon_resource_no.png"
+        //_img.style.verticalAlign = "middle";
+        //sSpan.appendChild(_img);
+    	sSpan.className = "sub_iconLNB tree_resource_no";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang308;
     }

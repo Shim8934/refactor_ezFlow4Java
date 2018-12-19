@@ -69,6 +69,7 @@
                 createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
                 createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
+                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            xmlHTTP.send(xmlpara);
 	            recevieListview("MsgToList", "ListViewMsgTo");
@@ -1303,7 +1304,7 @@
 	                                            </td>
 	                                            <td>
 	                                                <div style="float: right; margin-right: 5px; position: relative;">
-	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
+	                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                        </tr>
@@ -1313,7 +1314,7 @@
 	                            <table style="margin-top: 3px;">
 	                                <tr>
 	                                    <td class="box" style="border-right:0px">
-	                                        <div style="width: 220px; height: 445px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+	                                        <div style="width: 220px; height: 445px; overflow-x: hidden; overflow-y: auto;" id="TreeView"></div>
 	                                    </td>
 	                                    <td></td>
 	                                    <td class="listview" style="width: 432px" id="orglistView">

@@ -8,6 +8,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
     <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+    <style>
+    	.node_normal, .node_selected { width :auto;}
+    	.node_div img { margin-bottom: 5px; }
+    </style>
 	<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email_tree.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/treeview.htc.js')}"></script>

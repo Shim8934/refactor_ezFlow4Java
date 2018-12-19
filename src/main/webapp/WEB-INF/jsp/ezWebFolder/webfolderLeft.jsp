@@ -12,7 +12,14 @@
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <link rel="stylesheet" href="${util.addVer('/js/ezWebFolder/jsTree/dist/themes/default/style.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/jsTree/dist/jstree.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 	    <link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
+	    <style>
+	    	#mCSB_1_container {
+				margin-right: 0px;
+			}
+	    </style>
 		<script type="text/javascript" >
 		    var companyFolderId = "";
 		    var deptFolderId    = "";
@@ -33,6 +40,11 @@
 		    $(function() { 
 				folderList('C');
 		    	folderType = 'C';
+		    	
+		    	leftResize();
+		        $(".webfolderListBox").mCustomScrollbar({
+	        		theme : "dark"
+	        	});
 			});
 		    
 		    function refreshView(){
@@ -95,7 +107,7 @@
 							},
 							"types" : {
 								"default": {
-									"icon" :"/images/webfolder/fldr.png"
+									"icon" :"/images/OrganTree_cross/fldr.gif"
 								}
 							},
 							"grid": {
@@ -141,8 +153,28 @@
 								var colorClass  = "myBar_green";
 								var barElmt     = document.getElementById("myBar");
 								var volumeInf   = document.getElementsByClassName("volumes")[0];
+
+								$("#myBar").css({
+									"width" : percent + "%"
+								});
+
+		                 	    $("#usePer").text(percent+"%");
+			                 	   
+			                 	   //용량 체크(색깔로)
+		                 	    if (percent >= 80) {
+		                 	   		colorClass = "myBar_red";
+		                 	       	//$(".volumeDL dd").css("color", "#ff4040");
+		                 	    } else if (percent >= 70) {
+							   		colorClass = "myBar_yellow";
+							   		//$(".volumeDL dd").css("color", "#ff9c00");
+		                 	    } else {
+		                 		  	colorClass = "myBar_green";
+		                 		  	//$(".volumeDL dd").css("color", "#0470e4");
+		                 	    }                  		   
+			                 	            
+			                 	$("#myBar").addClass(colorClass);
 								
-								if (percent < 100) {
+								/* if (percent < 100) {
 									barElmt.style.width = percent + "%";
 								} else {
 									barElmt.style.width = "100%";
@@ -159,7 +191,7 @@
 								} else {
 									barElmt.className = "myBar_green";
 									$(".volumeDL dd").css("color", "#0470e4");
-								}
+								} */
 						}
 					},
 					error : function(error) {
@@ -242,94 +274,224 @@
 			function wfAdministrator() {
 				window.open("/admin/ezWebFolder/webFolderConfig.do", "", "");
 			}
+			
+			function leftResize(){
+	        	$(".webfolderListBox").height(window.innerHeight-105);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+        	});
+	        
+	        function openFolder(val01) {
+	        	if ($("#"+val01+"UL").attr("class") == "lnbUL off") {
+	        		$(".lnb H2").not("#option").attr("class", "off");
+	        		$(".lnb UL").not("#option").attr("class", "lnbUL off");
+	        		
+	        		$("#"+val01+"H2").attr("class", "on");
+	        		$("#"+val01+"UL").attr("class", "lnbUL on");
+	        		$("#"+val01).attr("class", "sub_iconLNB tree_arrow_up");
+	        		
+	        		if (val01 == "company") {
+	        			folderList('C')
+	        		} else if (val01 == "dept") {
+	        			folderList('D');
+	        		} else if (val01 == "personal") {
+	        			folderList('U');
+	        		} 
+	        	} else {
+	        		$("#"+val01+"H2").attr("class", "off");
+	        		$("#"+val01+"UL").attr("class", "lnbUL off");	        		
+	        		$("#"+val01).attr("class", "");
+	        	}
+	        }
 		</script>
 	</head>
 	<style>
-		.jstree-span-title {display:inline-block; text-overflow:ellipsis; overflow-x:hidden;}
+		.jstree-span-title {display:inline-block; text-overflow:ellipsis; overflow-x:hidden; margin-left:3px}
 	</style>
-	<body class="leftbody" style="overflow: auto; height:100%" onload="drawVolume();">
-		<div id="left" style="overflow: none">
+	<body class="newLeft" onload="drawVolume();">
+		<div id="left" class="lnb" style="overflow: auto">
+	    	<!-- <div class="lnb_btn"></div> -->
+	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
+	    	<div class="left_title" title="<spring:message code='ezWebFolder.t10' />"><spring:message code='ezWebFolder.t10' />
+	        	<span class="sub_iconLNB tree_leftconfig" onclick="wfConfig();" title="<spring:message code="ezWebFolder.t236" />"></span>
+	        </div>
+	        <!--<div class="btn_writeBox">
+	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span>게시글 등록</p>
+	        </div>-->
+	        <div class="webfolderListBox" style="overflow:hidden; padding-right: 0;">
+		        <h2 class="on" id="companyH2">
+	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('company')"><spring:message code='ezWebFolder.t233' /></span>
+		        </h2>
+		        <ul class="lnbUL" id="companyUL">
+	    			<div id="tree" class="webfolderTree" ></div>
+			    </ul>
+			    <h2 class="off" id="deptH2">
+	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('dept')"><spring:message code='ezWebFolder.t234' /></span>
+		        </h2>
+		        <ul class="lnbUL off" id="deptUL">
+    				<div id ="treeDept" class="webfolderTree"></div>
+			    </ul>
+			    <h2 class="off" id="personalH2">
+	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('personal')"><spring:message code='ezWebFolder.t235' /></span>
+		        </h2>
+		        <ul class="lnbUL off" id="personalUL">
+    				<div id ="treePer" class="webfolderTree" ></div>
+			    </ul>
+			    <h2 class="off" id="shareH2">
+	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('share')"><spring:message code='ezWebFolder.t266' /></span>
+		        </h2>
+			    <ul class="lnbUL off" id="shareUL">
+                   	<li><span class="sub_iconLNB tree_appr"></span><span class="list_text" onclick="getSharedList();"><spring:message code='ezWebFolder.t214' /></span></li>
+                   	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" onclick="getSharingList();"><spring:message code='ezWebFolder.t267' /></span></li>
+				</ul>
+				<ul class="lnbUL" id="option">
+                   	<li><span class="sub_iconLNB tree_board_star"></span><span class="list_text" onclick="moveFavorPage();"><spring:message code='ezWebFolder.t216'/></span></li>
+                   	<li><span class="sub_iconLNB tree_delete"></span><span class="list_text" onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span></li>
+                   	<li><span class="sub_iconLNB tree_manage" style="float:left"></span><span class="list_text" onClick="folder_Manage()"><spring:message code='ezWebFolder.t268'/></span></li>
+                   	<c:if test="${isWfAdmin == '1'}">
+						<li><span class="sub_iconLNB tree_appr_department"></span><span class="list_text" onclick="wfAdministrator();"><spring:message code="ezWebFolder.t25" /></span></li><!-- 웹폴더 관리자 -->
+					</c:if>
+				</ul>
+			</div>	
+			<div class="mail_space">
+	        	<span class="mail_spaceText"><spring:message code="ezWebFolder.t148" />&nbsp;<span class="userPer" id="usePer"></span></span><span  id="myBar" class="mailBar"></span>
+	        </div>
+	        <!-- <ul class="lnbUL">
+	        	<div class="tree">
+	            	<span>
+	                	<span>
+	                    	<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_plus"></span><span class="sub_iconLNB tree_webfolder_company"></span><span class="h2_text">회사폴더</span><span class="sub_iconLNB tree_manage"></span>
+	                            </div>
+	                    	</span>
+	                        <span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_minus"></span><span class="sub_iconLNB tree_webfolder_team"></span><span class="h2_text">부서폴더</span>
+	                            </div>
+	                    	</span>
+	                        <span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_folder"></span><span class="h2_text">IT솔루션본부</span>
+	                            </div>
+	                    	</span>
+	                        <span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_folder"></span><span class="h2_text">가온아이</span>
+	                            </div>
+	                    	</span>
+	                        <span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_webfolder_individual"></span><span class="h2_text">개인폴더</span>
+	                            </div>
+	                    	</span>
+	                        <span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_delete"></span><span class="h2_text">휴지통</span>
+	                            </div>
+	                    	</span>
+	                    </span>        
+	                </span>
+	            </div>
+	        </ul>
+	        <ul class="lnbUL">
+	        	<div class="tree">
+	            	<span>
+	                	<span>
+	                    	<span>
+	                        	<div class="node_div">
+	                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_search"></span><span class="h2_text">웹폴더 검색</span>
+	                            </div>
+	                    	</span>
+	                    </span>        
+	                </span>
+	            </div>
+	        </ul>
+	    </div> -->
+		<%-- <div id="left" style="overflow: none">
 			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10' />"><span><spring:message code='ezWebFolder.t10' /></span>
 			</div>
-			<h2>
-  				<span style="display:inline-block;width:100%;" onclick="folderList('C');"><spring:message code='ezWebFolder.t233' /></span>
-  			</h2>  
-    		<ul >
-    			<li style="padding: 0px; background: none;">
-	    			<div id="tree" class="webfolderTree" ></div>
-    			</li>
-		    </ul>  	
-		    <h2>
-  				<span style="display:inline-block; width:100%;" onclick="folderList('D');"><spring:message code='ezWebFolder.t234' /></span>
-  			</h2>  
-    		<ul >
-    			<li style="padding: 0px; background: none;">
-    				<div id ="treeDept" class="webfolderTree"></div>
-    			</li>
-		    </ul>  
-		    	
-		   	<h2>
-  				<span style="display:inline-block;width:100%;" onclick="folderList('U');"><spring:message code='ezWebFolder.t235' /></span>
-  			</h2>  
-    		<ul>
-	    		<li style="padding: 0px; background: none;">
-	    			<div id ="treePer" class="webfolderTree" ></div>
-	    		</li>
-		    </ul>  
-		    
-		    <h2>
-				<span style="display:inline-block;width:100%;" onclick="getSharedList();"><spring:message code='ezWebFolder.t266' /></span>
-			</h2>
-			<ul>
-				<li><span style="width: 100%; display: inline-block;" onclick="getSharedList();"><spring:message code='ezWebFolder.t214' /></span></li>
-				<li><span style="width: 100%; display: inline-block;" onclick="getSharingList();"><spring:message code='ezWebFolder.t267' /></span></li>
-			</ul>
-		    
-		    <h2>
-  				<span style="display:inline-block;width:100%;" onclick="moveFavorPage();"><spring:message code='ezWebFolder.t216'/></span>
-  			</h2>  
-    		<ul>
-		    </ul>
-		    <h2>
-  				<span style="display:inline-block;width:100%;" onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span>
-  			</h2>
-    		<ul>
-			</ul>			
-			<!-- <div style="border:1px solid #e8e8e8;margin:10px 10px 2px;background-color:#f8f8fa">
-			    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
-			    <div style="width:80%">
-			    	<div id='myBar'></div>
-			    </div>	
-			    <div style='text-align:center; margin-top:10px;margin-bottom:5px;font-weight: bold;font-family: dotum;' class="volumes"></div>
-		    </div> -->
-		    <div class="mail_volume">
-		    	<p class="volume_num"><img src="/images/volume_num.png" /></p>
-		        <p class="volume_graph" id='myProgress'><span id='myBar'></span></p>
-		        <dl class="volumeDL" >
-		        	<dt id="useVol"></dt>
-		            <dd id="usePer"></dd>
-		        </dl>
-		    </div>		    
-			<h3 style="border-top:0px;">
-		        <span onClick="folder_Manage()" style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t268'/></span><!-- 폴더관리 -->
-		    </h3>
-			<h3 style="border-top:0px;margin-top:-4px">
-				<span onclick="wfConfig();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t236" /></span><!-- 환경설정 -->
-			</h3>
-			<c:if test="${isWfAdmin == '1'}">
+			<div class="webfolderListBox" style="overflow:hidden; padding-right: 0;">
+				<h2>
+	  				<span style="display:inline-block;width:100%;" onclick="folderList('C');"><spring:message code='ezWebFolder.t233' /></span>
+	  			</h2>  
+	    		<ul >
+	    			<li style="padding: 0px; background: none;">
+		    			<div id="tree" class="webfolderTree" ></div>
+	    			</li>
+			    </ul>  	
+			    <h2>
+	  				<span style="display:inline-block; width:100%;" onclick="folderList('D');"><spring:message code='ezWebFolder.t234' /></span>
+	  			</h2>  
+	    		<ul >
+	    			<li style="padding: 0px; background: none;">
+	    				<div id ="treeDept" class="webfolderTree"></div>
+	    			</li>
+			    </ul>  
+			    	
+			   	<h2>
+	  				<span style="display:inline-block;width:100%;" onclick="folderList('U');"><spring:message code='ezWebFolder.t235' /></span>
+	  			</h2>  
+	    		<ul>
+		    		<li style="padding: 0px; background: none;">
+		    			<div id ="treePer" class="webfolderTree" ></div>
+		    		</li>
+			    </ul>  
+			    
+			    <h2>
+					<span style="display:inline-block;width:100%;" onclick="getSharedList();"><spring:message code='ezWebFolder.t266' /></span>
+				</h2>
+				<ul>
+					<li><span style="width: 100%; display: inline-block;" onclick="getSharedList();"><spring:message code='ezWebFolder.t214' /></span></li>
+					<li><span style="width: 100%; display: inline-block;" onclick="getSharingList();"><spring:message code='ezWebFolder.t267' /></span></li>
+				</ul>
+			    
+			    <h2>
+	  				<span style="display:inline-block;width:100%;" onclick="moveFavorPage();"><spring:message code='ezWebFolder.t216'/></span>
+	  			</h2>  
+	    		<ul>
+			    </ul>
+			    <h2>
+	  				<span style="display:inline-block;width:100%;" onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span>
+	  			</h2>
+	    		<ul>
+				</ul>			
+				<!-- <div style="border:1px solid #e8e8e8;margin:10px 10px 2px;background-color:#f8f8fa">
+				    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
+				    <div style="width:80%">
+				    	<div id='myBar'></div>
+				    </div>	
+				    <div style='text-align:center; margin-top:10px;margin-bottom:5px;font-weight: bold;font-family: dotum;' class="volumes"></div>
+			    </div> -->
+			    <div class="mail_volume">
+			    	<p class="volume_num"><img src="/images/volume_num.png" /></p>
+			        <p class="volume_graph" id='myProgress'><span id='myBar'></span></p>
+			        <dl class="volumeDL" >
+			        	<dt id="useVol"></dt>
+			            <dd id="usePer"></dd>
+			        </dl>
+			    </div>		    
+				<h3 style="border-top:0px;">
+			        <span onClick="folder_Manage()" style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t268'/></span><!-- 폴더관리 -->
+			    </h3>
 				<h3 style="border-top:0px;margin-top:-4px">
-					<span  onclick="wfAdministrator();" style="width:100%; display:inline-block;" ><spring:message code="ezWebFolder.t25" /></span><!-- 웹폴더 관리자 -->
+					<span onclick="wfConfig();" style="width:100%; display:inline-block;"><spring:message code="ezWebFolder.t236" /></span><!-- 환경설정 -->
 				</h3>
-			</c:if>
-			<!-- <div id='myProgress' style='margin-left:20px;'>
-				<div id='myBar'></div>
-			</div> -->
-			<!-- <div style='text-align:center; margin-top:10px; margin-bottom:10px; font-weight:bold;' class="volumes"></div> -->
-   		    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderLeftPanel">&nbsp;</div>
-	    </div>
+				<c:if test="${isWfAdmin == '1'}">
+					<h3 style="border-top:0px;margin-top:-4px">
+						<span  onclick="wfAdministrator();" style="width:100%; display:inline-block;" ><spring:message code="ezWebFolder.t25" /></span><!-- 웹폴더 관리자 -->
+					</h3>
+				</c:if>
+				<!-- <div id='myProgress' style='margin-left:20px;'>
+					<div id='myBar'></div>
+				</div> -->
+				<!-- <div style='text-align:center; margin-top:10px; margin-bottom:10px; font-weight:bold;' class="volumes"></div> -->
+	   		    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderLeftPanel">&nbsp;</div>
+   		    </div>
+	    </div> --%>
+	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderLeftPanel">&nbsp;</div>
 	    <div id="bnkBlockLeft" class="blockLeft" style="width:100%; height:100%; display: none; z-index: 10;"></div>
-	    <script type="text/javascript">
-	        initToggleList(document.getElementById("left"), "h2", "ul", "li");	        
-	    </script>
 	</body>
 </html>

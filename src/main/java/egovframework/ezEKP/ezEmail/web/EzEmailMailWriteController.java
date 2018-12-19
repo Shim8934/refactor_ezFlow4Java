@@ -238,6 +238,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		} else {
 			tempStr = "NEW";
 		}
+		
+		//내게쓰기 
+		String isMailToMe = "NO";
+		if (request.getParameter("isMailToMe") != null) {
+			isMailToMe = request.getParameter("isMailToMe");
+		}
 
 		if (!(tempStr.equals("") || tempStr.equals("REPLY") || tempStr.equals("REPLYALL") || tempStr.equals("FORWARD") || tempStr.equals("READ") 
 				|| tempStr.equals("EDIT") || tempStr.equals("NEW") || tempStr.equals("BOARD") || tempStr.equals("COMMUNITY") || tempStr.equals("DOCSEND")
@@ -807,21 +813,62 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							// retrieve the TO addresses from the reply message.
 							addresses = replyMessage.getRecipients(Message.RecipientType.TO);
 							String[] rawHeaders = orgMessage.getHeader("From");
-							String rawHeader = rawHeaders != null ? rawHeaders[0] : "";		
-							boolean isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
+							String fromHeader = rawHeaders != null ? rawHeaders[0] : "";
+							rawHeaders = orgMessage.getHeader("To");
+							String toHeader = rawHeaders != null ? rawHeaders[0] : "";							
+							boolean isPureAscii = ezEmailUtil.isPureAscii(fromHeader);
+							
 							if (isPureAscii) {
-								rawHeaders = orgMessage.getHeader("To");
-								rawHeader = rawHeaders != null ? rawHeaders[0] : "";
-								isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
+								isPureAscii = ezEmailUtil.isPureAscii(toHeader);
 							}
-							to = ezEmailUtil.getStringListOfAddresses(addresses, isPureAscii);
+							 
+							String[] toHeaderArray = null;
+							
+							if (fromHeader.contains("=?gb2312") || toHeader.contains("=?gb2312")) {
+								toHeader = MimeUtility.unfold(toHeader);
+								String combinedHeader = fromHeader + "," + toHeader;
+								
+								logger.debug("combinedHeader=" + combinedHeader);
+								
+								toHeaderArray = combinedHeader.split(",");
+								
+								for (int i = 0; i < toHeaderArray.length; i++) {
+									toHeaderArray[i] = toHeaderArray[i].trim();
+								}
+							}												
+							
+							if (toHeaderArray != null) {
+								to = ezEmailUtil.getStringListOfAddresses(addresses, toHeaderArray, isPureAscii);
+							} else {
+								to = ezEmailUtil.getStringListOfAddresses(addresses, isPureAscii);
+							}
 	
 							// retrieve the CC addresses from the reply message.
 							addresses = replyMessage.getRecipients(Message.RecipientType.CC);
+							
 							if (addresses != null) {
 								rawHeaders = orgMessage.getHeader("Cc");
-								rawHeader = rawHeaders != null ? rawHeaders[0] : "";																					
-								cc = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(rawHeader));
+								String ccHeader = rawHeaders != null ? rawHeaders[0] : "";	
+								
+								String[] ccHeaderArray = null;
+								
+								if (ccHeader.contains("=?gb2312")) {
+									ccHeader = MimeUtility.unfold(ccHeader);
+									
+									logger.debug("ccHeader=" + ccHeader);
+									
+									ccHeaderArray = ccHeader.split(",");
+									
+									for (int i = 0; i < ccHeaderArray.length; i++) {
+										ccHeaderArray[i] = ccHeaderArray[i].trim();
+									}
+								}												
+								
+								if (ccHeaderArray != null) {
+									cc = ezEmailUtil.getStringListOfAddresses(addresses, ccHeaderArray, ezEmailUtil.isPureAscii(ccHeader));
+								} else {
+									cc = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(ccHeader));
+								}
 							}
 							
 							// retrieve the BCC addresses from the reply message.
@@ -1217,6 +1264,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 추가
 		model.addAttribute("drafts", ezEmailUtil.getDraftsFolderId(locale)); // 임시보관함 스트링 추가 (윤진) 
 		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
+		model.addAttribute("isMailToMe", isMailToMe); // 내게쓰기 버튼 클릭시  checkobx checked
 		
 		//업무일지 아이디
 		model.addAttribute("journalId", journalId);

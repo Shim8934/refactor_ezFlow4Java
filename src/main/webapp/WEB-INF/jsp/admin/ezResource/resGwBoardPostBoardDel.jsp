@@ -100,7 +100,7 @@
     			</div>
 			</div>
 	    <br>
-		<div class="btnposition">
+		<div class="btnpositionJsp">
 			<c:if test="${blnChkDelBtn eq true}">
 				<a class="imgbtn"><span onclick="cmdDel_onclick()" ><spring:message code="ezResource.t65" /></span></a>
 			</c:if>

@@ -1,7 +1,7 @@
 var blockSize = 10; // 화면에 보여질 블록갯수
 var listSize = 20; // 게시판에 보여질 게시물갯수
 
-var m_strColorSelect = "#edf4fd"; //리스트 선택시 색상
+var m_strColorSelect = "#f1f8ff"; //리스트 선택시 색상
 var m_strColorDefault =  "#FFFFFF"; //리스트 기본값
 var m_strColorOver = "#f4f5f5"; //리스트 마우스오버 시 색상
 
@@ -85,7 +85,7 @@ function makePageSelPageAtti() {
 	$("#tblPageLayer").html("");
 	var pagingHtml = "";
 	
-	$("#mailBoxInfo").html(" - [총<span style='color:#017BEC;'> " + totalCount + " </span>개]");
+	$("#mailBoxInfo").html("&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>");
 	
 	pagingHtml = "<div class='pagenavi'>";
 	//|< 버튼 셋팅 ==> 1번페이지로 이동

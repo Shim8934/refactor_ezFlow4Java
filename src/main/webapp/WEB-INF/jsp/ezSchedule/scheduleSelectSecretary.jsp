@@ -42,7 +42,7 @@
 	
 		    function getDeptFullTree(deptid) {
 		        g_xmlHTTP = createXMLHttpRequest();
-		        var strQuery = "<DATA><DEPTID></DEPTID><TOPID>"+companyID+"/other</TOPID><PROP></PROP></DATA>";
+		        var strQuery = "<DATA><DEPTID></DEPTID><TOPID>"+companyID+"/other</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	
 		        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -254,7 +254,7 @@
 		            return;
 		        } else if (adCount == 1) {
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2").item(0)) + "</DEPTID><TOPID>"+companyID+"</TOPID><PROP></PROP><orgCompanyID>"+companyID+"</orgCompanyID></DATA>";
+		            var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2").item(0)) + "</DEPTID><TOPID>"+companyID+"</TOPID><PROP></PROP><orgCompanyID>"+companyID+"</orgCompanyID><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -276,7 +276,7 @@
 	                	if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 	                    	g_xmlHTTP = createXMLHttpRequest();
-	                    	var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                    	var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	                    	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	                    	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	                    	g_xmlHTTP.send(strQuery);
@@ -288,7 +288,7 @@
 		    function deptsearch_click_Complete(retVal) {
 		        if (retVal["deptid"] != "") {
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + retVal["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";		            
+		            var strQuery = "<DATA><DEPTID>" + retVal["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";		            
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -364,9 +364,9 @@
 	        	<td style="padding-right:4px">
 	        		<div class="box" style="margin-bottom:4px; background-color: #f8f8fa; border: 1px solid #eaeaea; height:26px;" >
 		                <input id="deptkeyword" onkeypress="deptsearch_press()" style="width:120px; height:22px; margin-left:4px; margin-top :2px;" />
-	                	<a href="#" class="imgbtn" style="margin-top :2px;"><span onclick="deptsearch_click()"><spring:message code='ezSchedule.t17' /></span></a>
+	                	<a class="imgbtn" style="margin-top :2px;"><span onclick="deptsearch_click()"><spring:message code='ezSchedule.t17' /></span></a>
 	            	</div>
-	            	<div style="border: 1px solid #ddd; padding-top:2px;height: 444px; width: 280px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>	            	
+	            	<div style="border: 1px solid #ddd; padding-top:2px;height: 444px; width: 280px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>	            	
 	        	</td>
 	        	<td valign="top">
 	        		<div class="box" style="margin-bottom:4px; background-color: #f8f8fa; border: 1px solid #eaeaea; height:26px;" >
@@ -382,7 +382,7 @@
 		                  	<option value="streetAddress"><spring:message code='ezSchedule.t23' /></option> 
 		                </select>
 		                <input id="keyword" onkeypress="search_press()" style="width:130px; height:22px; margin-bottom:2px;" />
-		                <a href="#" class="imgbtn" style="margin-top :2px;"><span onclick="search_click()"><spring:message code='ezSchedule.t24' /></span></a>
+		                <a class="imgbtn" style="margin-top :2px;"><span onclick="search_click()"><spring:message code='ezSchedule.t24' /></span></a>
 		            </div>
 	            	<div class="listview" style="border-top:0px;">
 	                	<div id="OrganListView" style="border: 0px solid #ddd; Width: 100%; min-width:687px; Height: 446px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto;"></div>

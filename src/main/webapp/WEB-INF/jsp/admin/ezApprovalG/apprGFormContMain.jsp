@@ -255,7 +255,7 @@
 			    var compDeptid = "";
 
 			    Tree_setconfig();
-			    TreeViewinitialize("", "<c:out value = '${topID}' />/other", "extensionAttribute2;extensionAttribute3", "<c:out value = '${serverName}' />");
+			    TreeViewinitialize("", "<c:out value = '${topID}' />/other", "extensionAttribute2;extensionAttribute3", "<c:out value = '${serverName}' />", null, null, true);
 			}
 			
 			function Tree_setconfig() {
@@ -493,7 +493,7 @@
 	        <tr>
 	            <td valign="top" style="width:43%; max-width: 336px;">
 	            	<div><h2 class="h2_dot"><span style="min-width: 45px;"><spring:message code = 'main.t8' /></span></h2></div>
-	                <div id="TreeView" style="border: #ddd 1px solid;width: 100%; height: 404px; background-color: #ffffff;overflow:auto"></div>
+	                <div id="TreeView" style="border: #ddd 1px solid;width: 100%; height: 404px; background-color: #ffffff;overflow-x: hidden; overflow-y: auto;"></div>
 	            </td>
 	            <td class = 'approvalG' align="center" style="width:5%">
 	            	<img id="btnManage" style="cursor:pointer; display:none" src="../../images/kr/cm/arr_right.gif" width="16" height="16" onclick="btnManage_onclick()"><br><br>

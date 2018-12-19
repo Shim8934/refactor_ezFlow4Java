@@ -7385,306 +7385,6 @@ CREATE TABLE `tbl_portal_acl` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_portal_frame`
---
-
-DROP TABLE IF EXISTS `tbl_portal_frame`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_frame` (
-  `frame_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '프레임아이디',
-  `frame_name` varchar(100) DEFAULT NULL COMMENT '프레임 이름',
-  `theme_id` int(11) DEFAULT NULL COMMENT '프레임이 속한 테마 아이디',
-  PRIMARY KEY (`frame_id`),
-  KEY `FK_tbl_portal_frame_theme_id_tbl_portal_theme_theme_id` (`theme_id`),
-  CONSTRAINT `FK_tbl_portal_frame_theme_id_tbl_portal_theme_theme_id` FOREIGN KEY (`theme_id`) REFERENCES `tbl_portal_theme` (`theme_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='프레임 정보 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_frame_comp`
---
-
-DROP TABLE IF EXISTS `tbl_portal_frame_comp`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_frame_comp` (
-  `company_id` varchar(100) NOT NULL COMMENT '회사 아이디',
-  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
-  `theme_id` int(11) NOT NULL DEFAULT '0' COMMENT '테마 아이디',
-  `frame_id` int(11) NOT NULL DEFAULT '0' COMMENT '프레임 아이디',
-  `frame_used` int(11) DEFAULT '0' COMMENT '활성화(Y), 비활성화(N)',
-  `frame_default` int(11) DEFAULT '0' COMMENT '기본(Y), 기본아님(N)',
-  PRIMARY KEY (`company_id`,`tenant_id`,`theme_id`,`frame_id`),
-  KEY `FK_tbl_portal_frame_comp_frame_id_tbl_portal_frame_frame_id` (`frame_id`),
-  KEY `FK_tbl_portal_frame_comp_theme_id_tbl_portal_theme_theme_id` (`theme_id`),
-  CONSTRAINT `FK_tbl_portal_frame_comp_frame_id_tbl_portal_frame_frame_id` FOREIGN KEY (`frame_id`) REFERENCES `tbl_portal_frame` (`frame_id`),
-  CONSTRAINT `FK_tbl_portal_frame_comp_theme_id_tbl_portal_theme_theme_id` FOREIGN KEY (`theme_id`) REFERENCES `tbl_portal_theme` (`theme_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='회사별 프레임 설정 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_logo`
---
-
-DROP TABLE IF EXISTS `tbl_portal_logo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_logo` (
-  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
-  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
-  `logo_type` varchar(6) NOT NULL DEFAULT '' COMMENT '대표이미지(R), 로그인(L), 포탈 내부(P)',
-  `logo_url` varchar(200) DEFAULT NULL COMMENT '로고 이미지 경로',
-  PRIMARY KEY (`company_id`,`tenant_id`,`logo_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='회사별 로고관리 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_menu`
---
-
-DROP TABLE IF EXISTS `tbl_portal_menu`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_menu` (
-  `menu_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '메뉴 아이디',
-  `menu_url` varchar(100) DEFAULT NULL COMMENT '메뉴 연동 URL',
-  `menu_type` varchar(5) DEFAULT 'G' COMMENT '기본(G), 추가(A)',
-  `icon_url` varchar(200) DEFAULT NULL COMMENT '메뉴 아이콘 이미지 경로',
-  `default_order` int(11) DEFAULT NULL COMMENT '제공된 메뉴의 기본 순서',
-  PRIMARY KEY (`menu_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='메뉴 정보 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_menu_auth`
---
-
-DROP TABLE IF EXISTS `tbl_portal_menu_auth`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_menu_auth` (
-  `menu_id` int(11) NOT NULL COMMENT '메뉴 아이디',
-  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
-  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
-  `user_id` varchar(100) NOT NULL DEFAULT '' COMMENT '사용자/부서 아이디',
-  `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
-  `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
-  PRIMARY KEY (`menu_id`,`company_id`,`tenant_id`,`user_id`),
-  CONSTRAINT `FK_tbl_portal_menu_auth_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='메뉴권한 설정 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_menu_comp`
---
-
-DROP TABLE IF EXISTS `tbl_portal_menu_comp`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_menu_comp` (
-  `company_id` varchar(100) NOT NULL COMMENT '회사 아이디',
-  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
-  `menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '메뉴 아이디',
-  `menu_used` int(11) DEFAULT '0' COMMENT '활성화(Y), 비활성화(N)',
-  `company_lang` varchar(45) DEFAULT NULL,
-  `company_order` int(11) DEFAULT NULL,
-  PRIMARY KEY (`company_id`,`tenant_id`,`menu_id`),
-  KEY `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
-  CONSTRAINT `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='회사별 메뉴 설정 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_menu_name`
---
-
-DROP TABLE IF EXISTS `tbl_portal_menu_name`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_menu_name` (
-  `menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '메뉴 아이디',
-  `menu_lang` varchar(45) NOT NULL DEFAULT '' COMMENT '메뉴 이름의 언어',
-  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
-  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
-  `menu_name` varchar(100) DEFAULT NULL COMMENT '메뉴 이름(언어별)',
-  PRIMARY KEY (`menu_id`,`menu_lang`,`company_id`,`tenant_id`),
-  CONSTRAINT `FK_tbl_portal_menu_name_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='메뉴 이름 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_menu_user`
---
-
-DROP TABLE IF EXISTS `tbl_portal_menu_user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_menu_user` (
-  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
-  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
-  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
-  `menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '메뉴 아이디',
-  `menu_order` int(11) DEFAULT NULL COMMENT '메뉴 순서',
-  PRIMARY KEY (`user_id`,`tenant_id`,`company_id`,`menu_id`),
-  KEY `FK_tbl_portal_menu_user_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
-  CONSTRAINT `FK_tbl_portal_menu_user_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='개인별 메뉴 순서 설정 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_portlet`
---
-
-DROP TABLE IF EXISTS `tbl_portal_portlet`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_portlet` (
-  `portlet_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '포틀릿 아이디',
-  `menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '포틀릿에 연결된 메뉴 아이디',
-  `portlet_url` varchar(200) DEFAULT NULL COMMENT '포틀릿 연결 URL',
-  `portlet_type` varchar(5) DEFAULT 'G' COMMENT '기본(G), 추가(A)',
-  `default_order` int(11) DEFAULT NULL COMMENT '제공된 포틀릿 기본 순서',
-  PRIMARY KEY (`portlet_id`,`menu_id`),
-  KEY `FK_tbl_portal_portlet_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
-  CONSTRAINT `FK_tbl_portal_portlet_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='포틀릿 정보 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_portlet_comp`
---
-
-DROP TABLE IF EXISTS `tbl_portal_portlet_comp`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_portlet_comp` (
-  `company_id` varchar(100) NOT NULL COMMENT '회사 아이디',
-  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
-  `portlet_id` int(11) NOT NULL DEFAULT '0' COMMENT '포틀릿 아이디',
-  `menu_id` int(11) DEFAULT NULL COMMENT '메뉴 아이디',
-  `portlet_category` varchar(5) DEFAULT NULL COMMENT '게시판(B), 메일(M), 결재(A), 외부링크(L)',
-  `connection_url` varchar(200) DEFAULT NULL COMMENT '타입별 모듈 아이디 / URL',
-  `portlet_used` int(11) DEFAULT '0' COMMENT '포틀릿 보임(Y)/숨김(N)',
-  `portlet_order` int(11) DEFAULT NULL COMMENT '포틀릿 순서',
-  `board_id` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`company_id`,`tenant_id`,`portlet_id`),
-  KEY `FK_tbl_portlet_comp` (`menu_id`,`portlet_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='회사별 포틀릿 설정 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_portlet_name`
---
-
-DROP TABLE IF EXISTS `tbl_portal_portlet_name`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_portlet_name` (
-  `portlet_id` int(11) NOT NULL DEFAULT '0' COMMENT '포틀릿 아이디',
-  `menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '메뉴 아이디',
-  `portlet_lang` varchar(100) NOT NULL DEFAULT '' COMMENT '이름의 언어',
-  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
-  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
-  `portlet_name` varchar(100) DEFAULT NULL COMMENT '포틀릿 이름(언어별)',
-  PRIMARY KEY (`portlet_id`,`menu_id`,`portlet_lang`,`tenant_id`,`company_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='포틀릿 이름 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_portlet_user`
---
-
-DROP TABLE IF EXISTS `tbl_portal_portlet_user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_portlet_user` (
-  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
-  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
-  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
-  `portlet_id` int(11) NOT NULL DEFAULT '0' COMMENT '포틀릿 아이디',
-  `portlet_order` int(11) DEFAULT NULL COMMENT '포틀릿 순서',
-  `menu_id` int(11) DEFAULT NULL COMMENT '포틀릿과 연관된 메뉴 아이디',
-  PRIMARY KEY (`user_id`,`tenant_id`,`company_id`,`portlet_id`),
-  KEY `FK_tbl_portlet_user_idx` (`portlet_id`,`menu_id`),
-  CONSTRAINT `FK_tbl_portlet_user` FOREIGN KEY (`portlet_id`, `menu_id`) REFERENCES `tbl_portal_portlet` (`portlet_id`, `menu_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='사용자별 포틀릿 순서 설정 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_startpage`
---
-
-DROP TABLE IF EXISTS `tbl_portal_startpage`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_startpage` (
-  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
-  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
-  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
-  `menu_id` int(11) DEFAULT NULL COMMENT '메뉴 아이디',
-  PRIMARY KEY (`user_id`,`tenant_id`,`company_id`),
-  KEY `FK_tbl_portal_startpage_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
-  CONSTRAINT `FK_tbl_portal_startpage_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_theme`
---
-
-DROP TABLE IF EXISTS `tbl_portal_theme`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_theme` (
-  `theme_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '테마아이디',
-  `theme_name` varchar(100) DEFAULT NULL COMMENT '테마 이름',
-  `theme_content` varchar(400) DEFAULT NULL COMMENT '테마 설명(내용)',
-  PRIMARY KEY (`theme_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='테마 정보 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_theme_comp`
---
-
-DROP TABLE IF EXISTS `tbl_portal_theme_comp`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_theme_comp` (
-  `company_id` varchar(100) NOT NULL COMMENT '회사 아이디',
-  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
-  `theme_id` int(11) NOT NULL DEFAULT '0' COMMENT '테마 아이디',
-  `theme_used` int(4) DEFAULT '0' COMMENT '활성화(Y), 비활성화(N)',
-  `theme_default` int(4) DEFAULT '0' COMMENT '기본(Y), 기본아님(N)',
-  PRIMARY KEY (`company_id`,`tenant_id`,`theme_id`),
-  KEY `FK_tbl_portal_theme_comp_theme_id_tbl_portal_theme_theme_id` (`theme_id`),
-  CONSTRAINT `FK_tbl_portal_theme_comp_theme_id_tbl_portal_theme_theme_id` FOREIGN KEY (`theme_id`) REFERENCES `tbl_portal_theme` (`theme_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='회사별 테마 설정 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_portal_theme_user`
---
-
-DROP TABLE IF EXISTS `tbl_portal_theme_user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_portal_theme_user` (
-  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
-  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
-  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
-  `used_theme` int(11) DEFAULT NULL COMMENT '사용자가 사용하는 테마 아이디',
-  `used_frame` int(11) DEFAULT NULL COMMENT '사용자가 사용하는 프레임 아이디',
-  PRIMARY KEY (`user_id`,`company_id`,`tenant_id`),
-  KEY `FK_tbl_portal_theme_user_used_theme_tbl_portal_theme_theme_id` (`used_theme`),
-  KEY `FK_tbl_portal_theme_user_used_frame_tbl_portal_frame_frame_id` (`used_frame`),
-  CONSTRAINT `FK_tbl_portal_theme_user_used_frame_tbl_portal_frame_frame_id` FOREIGN KEY (`used_frame`) REFERENCES `tbl_portal_frame` (`frame_id`),
-  CONSTRAINT `FK_tbl_portal_theme_user_used_theme_tbl_portal_theme_theme_id` FOREIGN KEY (`used_theme`) REFERENCES `tbl_portal_theme` (`theme_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='사용자별 테마 & 프레임 설정 테이블';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_portalpage_cache`
 --
 
@@ -11100,6 +10800,342 @@ CREATE TABLE `tbl_webfolder_user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_weather`
+--
+
+DROP TABLE IF EXISTS `tbl_weather`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_weather` (
+  `SN` varchar(3) NOT NULL,
+  `CITYCODE` varchar(20) CHARACTER SET utf8mb4 NOT NULL,
+  `CITYNAME` varchar(50) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DISPLAYCITYNAME` varchar(50) CHARACTER SET utf8mb4 NOT NULL,
+  `PRIMARYLANG` varchar(10) CHARACTER SET utf8mb4 NOT NULL,
+  `CURRENTWEATHER` varchar(200) DEFAULT NULL,
+  `TODAYWEATHER` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`CITYCODE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `tbl_weather_user`
+--
+
+DROP TABLE IF EXISTS `tbl_weather_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_weather_user` (
+  `USERID` varchar(80) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `CITYCODE` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`USERID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `tbl_portal_theme`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_theme`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_theme` (
+  `theme_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '테마아이디',
+  `theme_name` varchar(100) DEFAULT NULL COMMENT '테마 이름',
+  `theme_content` varchar(400) DEFAULT NULL COMMENT '테마 설명(내용)',
+  PRIMARY KEY (`theme_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='테마 정보 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_theme_comp`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_theme_comp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_theme_comp` (
+  `company_id` varchar(100) NOT NULL COMMENT '회사 아이디',
+  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
+  `theme_id` int(11) NOT NULL DEFAULT '0' COMMENT '테마 아이디',
+  `theme_used` int(4) DEFAULT '0' COMMENT '활성화(Y), 비활성화(N)',
+  `theme_default` int(4) DEFAULT '0' COMMENT '기본(Y), 기본아님(N)',
+  PRIMARY KEY (`company_id`,`tenant_id`,`theme_id`),
+  KEY `FK_tbl_portal_theme_comp_theme_id_tbl_portal_theme_theme_id` (`theme_id`),
+  CONSTRAINT `FK_tbl_portal_theme_comp_theme_id_tbl_portal_theme_theme_id` FOREIGN KEY (`theme_id`) REFERENCES `tbl_portal_theme` (`theme_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='회사별 테마 설정 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_frame`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_frame`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_frame` (
+  `frame_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '프레임아이디',
+  `frame_name` varchar(100) DEFAULT NULL COMMENT '프레임 이름',
+  `theme_id` int(11) DEFAULT NULL COMMENT '프레임이 속한 테마 아이디',
+  PRIMARY KEY (`frame_id`),
+  KEY `FK_tbl_portal_frame_theme_id_tbl_portal_theme_theme_id` (`theme_id`),
+  CONSTRAINT `FK_tbl_portal_frame_theme_id_tbl_portal_theme_theme_id` FOREIGN KEY (`theme_id`) REFERENCES `tbl_portal_theme` (`theme_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COMMENT='프레임 정보 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_frame_comp`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_frame_comp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_frame_comp` (
+  `company_id` varchar(100) NOT NULL COMMENT '회사 아이디',
+  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
+  `theme_id` int(11) NOT NULL DEFAULT '0' COMMENT '테마 아이디',
+  `frame_id` int(11) NOT NULL DEFAULT '0' COMMENT '프레임 아이디',
+  `frame_used` int(11) DEFAULT '0' COMMENT '활성화(Y), 비활성화(N)',
+  `frame_default` int(11) DEFAULT '0' COMMENT '기본(Y), 기본아님(N)',
+  PRIMARY KEY (`company_id`,`tenant_id`,`theme_id`,`frame_id`),
+  KEY `FK_tbl_portal_frame_comp_frame_id_tbl_portal_frame_frame_id` (`frame_id`),
+  KEY `FK_tbl_portal_frame_comp_theme_id_tbl_portal_theme_theme_id` (`theme_id`),
+  CONSTRAINT `FK_tbl_portal_frame_comp_frame_id_tbl_portal_frame_frame_id` FOREIGN KEY (`frame_id`) REFERENCES `tbl_portal_frame` (`frame_id`),
+  CONSTRAINT `FK_tbl_portal_frame_comp_theme_id_tbl_portal_theme_theme_id` FOREIGN KEY (`theme_id`) REFERENCES `tbl_portal_theme` (`theme_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='회사별 프레임 설정 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_theme_user`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_theme_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_theme_user` (
+  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
+  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
+  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
+  `used_theme` int(11) NOT NULL DEFAULT '0' COMMENT '사용자가 사용하는 테마 아이디',
+  `used_frame` int(11) DEFAULT NULL COMMENT '사용자가 사용하는 프레임 아이디',
+  `is_default` int(11) DEFAULT '0',
+  PRIMARY KEY (`user_id`,`company_id`,`tenant_id`,`used_theme`),
+  KEY `FK_tbl_portal_theme_user_used_theme_tbl_portal_theme_theme_id` (`used_theme`),
+  KEY `FK_tbl_portal_theme_user_used_frame_tbl_portal_frame_frame_id` (`used_frame`),
+  CONSTRAINT `FK_tbl_portal_theme_user_used_frame_tbl_portal_frame_frame_id` FOREIGN KEY (`used_frame`) REFERENCES `tbl_portal_frame` (`frame_id`),
+  CONSTRAINT `FK_tbl_portal_theme_user_used_theme_tbl_portal_theme_theme_id` FOREIGN KEY (`used_theme`) REFERENCES `tbl_portal_theme` (`theme_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='사용자별 테마 & 프레임 설정 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_menu`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_menu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_menu` (
+  `menu_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '메뉴 아이디',
+  `menu_url` varchar(100) DEFAULT NULL COMMENT '메뉴 연동 URL',
+  `menu_type` varchar(5) DEFAULT 'G' COMMENT '기본(G), 추가(A)',
+  `icon_url` varchar(200) DEFAULT NULL COMMENT '메뉴 아이콘 이미지 경로',
+  `default_order` int(11) DEFAULT NULL COMMENT '제공된 메뉴의 기본 순서',
+  PRIMARY KEY (`menu_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COMMENT='메뉴 정보 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_menu_comp`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_menu_comp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_menu_comp` (
+  `company_id` varchar(100) NOT NULL COMMENT '회사 아이디',
+  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
+  `menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '메뉴 아이디',
+  `menu_used` int(11) DEFAULT '0' COMMENT '활성화(Y), 비활성화(N)',
+  `company_lang` varchar(45) DEFAULT NULL,
+  `company_order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`company_id`,`tenant_id`,`menu_id`),
+  KEY `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
+  CONSTRAINT `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='회사별 메뉴 설정 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_menu_name`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_menu_name`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_menu_name` (
+  `menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '메뉴 아이디',
+  `menu_lang` varchar(45) NOT NULL DEFAULT '' COMMENT '메뉴 이름의 언어',
+  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
+  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
+  `menu_name` varchar(100) DEFAULT NULL COMMENT '메뉴 이름(언어별)',
+  PRIMARY KEY (`menu_id`,`menu_lang`,`company_id`,`tenant_id`),
+  CONSTRAINT `FK_tbl_portal_menu_name_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='메뉴 이름 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_menu_auth`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_menu_auth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_menu_auth` (
+  `menu_id` int(11) NOT NULL COMMENT '메뉴 아이디',
+  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
+  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
+  `user_id` varchar(100) NOT NULL DEFAULT '' COMMENT '사용자/부서 아이디',
+  `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
+  `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
+  PRIMARY KEY (`menu_id`,`company_id`,`tenant_id`,`user_id`),
+  CONSTRAINT `FK_tbl_portal_menu_auth_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='메뉴권한 설정 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_portlet`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_portlet`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_portlet` (
+  `portlet_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '포틀릿 아이디',
+  `menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '포틀릿에 연결된 메뉴 아이디',
+  `portlet_url` varchar(200) DEFAULT NULL COMMENT '포틀릿 연결 URL',
+  `portlet_type` varchar(5) DEFAULT 'G' COMMENT '기본(G), 추가(A)',
+  `default_order` int(11) DEFAULT NULL COMMENT '제공된 포틀릿 기본 순서',
+  PRIMARY KEY (`portlet_id`,`menu_id`),
+  KEY `FK_tbl_portal_portlet_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
+  CONSTRAINT `FK_tbl_portal_portlet_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COMMENT='포틀릿 정보 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_portlet_comp`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_portlet_comp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_portlet_comp` (
+  `company_id` varchar(100) NOT NULL COMMENT '회사 아이디',
+  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
+  `portlet_id` int(11) NOT NULL DEFAULT '0' COMMENT '포틀릿 아이디',
+  `menu_id` int(11) DEFAULT NULL COMMENT '메뉴 아이디',
+  `portlet_category` varchar(5) DEFAULT NULL COMMENT '게시판(B), 메일(M), 결재(A), 외부링크(L)',
+  `connection_url` varchar(200) DEFAULT NULL COMMENT '타입별 모듈 아이디 / URL',
+  `portlet_used` int(11) DEFAULT '0' COMMENT '포틀릿 보임(Y)/숨김(N)',
+  `portlet_order` int(11) DEFAULT NULL COMMENT '포틀릿 순서',
+  `board_id` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`company_id`,`tenant_id`,`portlet_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='회사별 포틀릿 설정 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_portlet_name`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_portlet_name`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_portlet_name` (
+  `portlet_id` int(11) NOT NULL DEFAULT '0' COMMENT '포틀릿 아이디',
+  `menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '메뉴 아이디',
+  `portlet_lang` varchar(100) NOT NULL DEFAULT '' COMMENT '이름의 언어',
+  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
+  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
+  `portlet_name` varchar(100) DEFAULT NULL COMMENT '포틀릿 이름(언어별)',
+  PRIMARY KEY (`portlet_id`,`menu_id`,`portlet_lang`,`tenant_id`,`company_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='포틀릿 이름 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_menu_user`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_menu_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_menu_user` (
+  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
+  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
+  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
+  `menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '메뉴 아이디',
+  `menu_order` int(11) DEFAULT NULL COMMENT '메뉴 순서',
+  PRIMARY KEY (`user_id`,`tenant_id`,`company_id`,`menu_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='개인별 메뉴 순서 설정 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_portlet_user`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_portlet_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_portlet_user` (
+  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
+  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
+  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
+  `portlet_id` int(11) NOT NULL DEFAULT '0' COMMENT '포틀릿 아이디',
+  `portlet_order` int(11) DEFAULT NULL COMMENT '포틀릿 순서',
+  `menu_id` int(11) DEFAULT NULL COMMENT '포틀릿과 연관된 메뉴 아이디',
+  `portlet_used` int(11) DEFAULT '1',
+  `theme_id` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`user_id`,`tenant_id`,`company_id`,`portlet_id`,`theme_id`),
+  KEY `FK_tbl_portlet_user_idx` (`portlet_id`,`menu_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='사용자별 포틀릿 순서 설정 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_theme_portlet`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_theme_portlet`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_theme_portlet` (
+  `theme_id` int(11) NOT NULL,
+  `tenant_id` mediumint(9) NOT NULL DEFAULT '0',
+  `company_id` varchar(100) NOT NULL DEFAULT '',
+  `portlet_id` int(11) NOT NULL DEFAULT '0',
+  `portlet_used` int(11) DEFAULT NULL,
+  `portlet_order` int(11) DEFAULT NULL,
+  `menu_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`theme_id`,`tenant_id`,`company_id`,`portlet_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='테마별 포틀릿 사용여부 관련 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_startpage`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_startpage`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_startpage` (
+  `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
+  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
+  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
+  `menu_id` int(11) DEFAULT NULL COMMENT '메뉴 아이디',
+  PRIMARY KEY (`user_id`,`tenant_id`,`company_id`),
+  KEY `FK_tbl_portal_startpage_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
+  CONSTRAINT `FK_tbl_portal_startpage_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  --
 -- Table structure for table `tbl_ps_shareapproval`
 --
 
@@ -11116,6 +11152,23 @@ CREATE TABLE `tbl_ps_shareapproval` (
   PRIMARY KEY (`OWNERID`,`TENANTID`,`SHAREUSERID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_logo`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_logo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_logo` (
+  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
+  `tenant_id` mediumint(9) NOT NULL DEFAULT '0' COMMENT '테넌트 아이디',
+  `logo_type` varchar(6) NOT NULL DEFAULT '' COMMENT '대표이미지(R), 로그인(L), 포탈 내부(P)',
+  `logo_url` varchar(200) DEFAULT NULL COMMENT '로고 이미지 경로',
+  PRIMARY KEY (`company_id`,`tenant_id`,`logo_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='회사별 로고관리 테이블';
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 --
 -- Temporary view structure for view `vaprdoingdoclist`

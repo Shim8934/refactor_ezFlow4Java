@@ -53,7 +53,7 @@
 
 		        Tree_setconfig();
 		        
-		        TreeViewinitialize("", P_companyID, "extensionAttribute2;extensionAttribute3", "<c:out value='${serverName}'/>");
+		        TreeViewinitialize("", P_companyID, "extensionAttribute2;extensionAttribute3", "<c:out value='${serverName}'/>", null, null, true);
 		        getDocType();
 		        
 		        if (gState == "U") {
@@ -308,7 +308,7 @@
 			</tr>
 			<tr>
 				<td style="vertical-align:top;">
-					<div id="TreeView" style="padding-top:5px;BORDER:#ddd 1px solid; OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:275px; HEIGHT:230px; BACKGROUND-COLOR:#ffffff"></div>
+					<div id="TreeView" style="padding-top:5px;BORDER:#ddd 1px solid; overflow-x: hidden; overflow-y: auto; WIDTH:275px; HEIGHT:230px; BACKGROUND-COLOR:#ffffff"></div>
 				</td>
 				<td style="width:70px;text-align:center;white-space:nowrap;">
 					<img src="/images/arr_right.gif" id="btnAppdept" name="Image191" onClick="return btnAppdept_onclick()" style="padding-top: 5px; cursor: pointer;"><br/>					

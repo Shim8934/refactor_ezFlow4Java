@@ -115,7 +115,7 @@
 	            changeYear: true,
 	            autoSize: true,
 	            showOn: "both",
-	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImage: "/images/ImgIcon/calendar-month.png",
 	            buttonImageOnly: true
 	        });
 	
@@ -199,8 +199,8 @@
 					$('#tblFileList tr td').remove();
 					renderFileListElement(trashCanList);
 					makePageSelPage();
-					document.getElementById("mailBoxInfo").innerHTML = " - [ 폴더 " + "<span style='color:#017BEC;'>" 
-					+ folderCnt +" </span>"+ strLang42 +" / 파일 " + "<span style='color:#017BEC;'>" + fileCnt +" </span>" + strLang42 + "]";
+					document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; 폴더 " + "<span style='color:#017BEC;'>" 
+					+ folderCnt +" </span> / 파일 " + "<span style='color:#017BEC;'>" + fileCnt +" </span>";
 					hideProgress();
 				},
 				error : function(error) {
@@ -503,10 +503,14 @@
 			<li><span onClick="restoreTrashCan()"><spring:message code='ezWebFolder.t287'/></span></li>
 			<li><span onClick="moveTraschCan()"><spring:message code='ezWebFolder.t282'/></span></li>
 			<li><span onClick="filePermanentDelete()"><spring:message code='ezWebFolder.t19'/></span></li>
-			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
-			<li id="right" style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
-			<!-- <li><img src="/images/i_bar.gif"></li> -->
-			<li id="right" style="float:left; height: 28px;">
+			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span class="icon16 icon16_search"></span></li>
+			<!-- <li id="right" style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li> -->
+			<div class="sub_frameIcon" style="float:right">
+				<div class="sub_frameIconUL02">
+				  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+				</div>
+			</div>
+			<li>
 				<select class="select" id="idSelect" onchange="changeValue(this.value);">
 					<option value=""><spring:message code='ezWebFolder.t191'/></option>
 					<option value="document"><spring:message code='ezWebFolder.t192'/></option>

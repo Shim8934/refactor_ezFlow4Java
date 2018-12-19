@@ -6,7 +6,8 @@
         else
             document.getElementById("layer_Viewpopup").style.top = "100px";
         document.getElementById("layer_Viewpopup").style.display = "";
-        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+        //obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+        obj.setAttribute("class", "icon16 btn_onarrow_down");
         obj.setAttribute("mode", "on");
     }
     else {
@@ -26,7 +27,8 @@ function MailOptionHiddenOutside(e) {
 function MailOptionHidden() {
     document.getElementById("layer_Viewpopup").style.display = "none";
     document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
-    document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
+    //document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+    document.getElementById("maillistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
 }
 
 function PreviewRayerChange(pGubun) {
@@ -148,9 +150,9 @@ function PreviewRayerChange(pGubun) {
 
             document.getElementById("divList").style.overflow = "auto";
             document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
-            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
+            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 5) + "px";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
-            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 200) + "px";
+            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
             
             pPreviewShow_HOW = "H";
             pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
@@ -175,7 +177,7 @@ var SetConfig = true;
 
 function PreviewMode_ChangeBtn() {
     try {
-    document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_noframe.gif");
+    /*document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_noframe.gif");
     if (document.getElementById("PreViewBottom") != null)
         document.getElementById("PreViewBottom").setAttribute("src", "/images/kr/cm/btn_bottomframe.gif");
     document.getElementById("PreViewleft").setAttribute("src", "/images/kr/cm/btn_leftframe.gif");
@@ -186,7 +188,30 @@ function PreviewMode_ChangeBtn() {
             document.getElementById("PreViewBottom").setAttribute("src", "/images/kr/cm/btn_onbottomframe.gif");
     }
     else
-        document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_onnoframe.gif");
+        document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_onnoframe.gif");*/
+    	
+    	document.getElementById("PreViewNone").className = "icon16 btn_noframe";
+    	
+    	if (document.getElementById("PreViewBottom")) {
+    		document.getElementById("PreViewBottom").className = "icon16 btn_bottomframe";
+    	}
+    	
+    	if (document.getElementById("PreViewleft")) {
+    		document.getElementById("PreViewleft").className = "icon16 btn_leftframe";
+    	}
+    	
+    	if (pPreviewShow_HOW == "H") {
+    		if (document.getElementById("PreViewleft")) {
+    			document.getElementById("PreViewleft").className = "icon16 btn_onleftframe";
+    		}
+    	} else if (pPreviewShow_HOW == "W") {
+    		if (document.getElementById("PreViewBottom")) {
+    			document.getElementById("PreViewBottom").className = "icon16 btn_onbottomframe";
+    		}
+    	} else {
+            document.getElementById("PreViewNone").className = "icon16 btn_onnoframe";
+    	}
+    	
     } catch (e) { }
 }
 
@@ -238,6 +263,7 @@ var RegDate;
 var Content;
 var status;
 var option;
+var memberFile;
 
 function event_ItemPreviewRead() {
     if ((xmlhttp != null && xmlhttp.readyState == 4) && (xmlhttp2 != null && xmlhttp2.readyState == 4)) {
@@ -256,6 +282,13 @@ function event_ItemPreviewRead() {
             Content = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/Content");
             status = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/Status");
             option = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/Option");
+            memberFile = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/MemberFile");
+            
+            if (memberFile == null || memberFile == "null") {
+            	document.getElementById("Pre" + pPreviewShow_HOW + "_userPic").innerHTML = "<img src='/images/kr/main/bestEmployee_pic_none.png' width='55px' height='55px'>";
+            } else {
+            	document.getElementById("Pre" + pPreviewShow_HOW + "_userPic").innerHTML = "<img src='/admin/ezOrgan/getPersonalInfo.do?fileName=" + memberFile + "' width='55px' height='55px'>";
+            }
 
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
@@ -283,8 +316,10 @@ function event_ItemPreviewRead() {
 function previewItemSet() {
     document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
     document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").setAttribute("title", Title);
-    document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = MemberName;
+    document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + MemberName
+	+ "' onclick='MemberInfo_onclick(\"" + MemberId + "\")'>" + MemberName + "</span>";
     document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = RegDate.substring(0, 16);
+    
     var readHTML = Content;
     var tempText = xmlhttp2.responseText;
     
@@ -392,9 +427,9 @@ function MailPreviewEnd(e) {
             document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
             document.getElementById("divList").style.height = (CurrentHeight - 60) + "px";
             document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
-            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
+            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 5) + "px";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
-            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 200) + "px";
+            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
             pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
             pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
 
@@ -565,9 +600,9 @@ function Window_resize() {
 
                 document.getElementById("divList").style.overflow = "auto";
                 document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
-                document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
+                document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 5) + "px";
                 document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
-                document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 200) + "px";
+                document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
                 pPreviewShow_HOW = "H";
                 pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
                 pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
@@ -643,4 +678,10 @@ function javaURLEncode(str) {
 	    .replace(/\(/g, "%28")
 	    .replace(/\)/g, "%29")
 	    .replace(/~/g, "%7E");
+}
+
+function MemberInfo_onclick(pUserID, pDeptID) {
+	var feature = "width=420px, height=450px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+    feature = feature + GetOpenPosition(420, 450);
+    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 }
