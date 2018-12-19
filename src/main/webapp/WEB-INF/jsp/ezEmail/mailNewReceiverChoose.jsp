@@ -3776,8 +3776,8 @@
 	                                            </td>
 	                                            <td>
 	                                                <div style="float: right; margin-right: 5px; position: relative;">
-	                                                    <a href="#" class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10"><spring:message code='ezEmail.t596' /></span></a>
-	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
+	                                                    <a class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10"><spring:message code='ezEmail.t596' /></span></a>
+	                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                        </tr>
@@ -3850,7 +3850,7 @@
 	                                                                        <spring:message code='ezEmail.t713' /></option>
 	                                                                </select>
 	                                                                <input id="search_text" value="" onkeyup="AddrSearch_press()" style="width: 130px; margin: 0px; height:21px" name="Input">
-	                                                                <a href="#" class="imgbtn">
+	                                                                <a class="imgbtn">
 	                                                                    <span onclick="AddrSearch_click()"><spring:message code='ezEmail.t37' /></span>
 	                                                                </a>
 	
@@ -3858,7 +3858,7 @@
 	                                                        </td>
 	                                                        <td>
 	                                                            <div style="float: right; margin-right: 5px;">
-	                                                                <a href="#" class="imgbtn"><span onclick="groupmember_click()"><spring:message code='ezEmail.t598' /></span></a>
+	                                                                <a class="imgbtn"><span onclick="groupmember_click()"><spring:message code='ezEmail.t598' /></span></a>
 	                                                            </div>
 	                                                        </td>
 	                                                    </tr>
@@ -3908,7 +3908,7 @@
 	                                    <table style="margin-top: 4px; width: 100%;">
 	                                        <tr>
 	                                            <td id="dlmember" style="display: none">
-	                                                <a href="#" class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="dlmember_click()">
+	                                                <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="dlmember_click()">
 	                                                    <spring:message code='ezEmail.t598' /></span></a>
 	                                            </td>
 	                                        </tr>
@@ -3928,7 +3928,7 @@
 	                                    <table style="margin-top: 4px; width: 100%;">
 	                                        <tr>
 	                                            <td id="sharedMailboxMember" style="display: none">
-	                                                <a href="#" class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="sharedMailboxMember_click()">
+	                                                <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="sharedMailboxMember_click()">
 	                                                    <spring:message code='ezEmail.sharedMailbox21' /></span></a>
 	                                            </td>
 	                                        </tr>

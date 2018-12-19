@@ -74,6 +74,7 @@
 		 	
 		 	$(window).resize(function() {
 		 		browserResize();
+		 		setGadgetPositionResize();
 		 	});
 		 	
 		    $(function() {
@@ -126,6 +127,9 @@
 			    			$(this).parent().nextAll(".color_popup").css("visibility", "hidden"); 
 			    		}
 			    	});
+			    	
+			    	/* 2018-12-18 김민성 - 메모 레이어 팝업 드래그시 화면 밀림 현상 수정 */
+			    	$("#layer-popup").draggable("option", "scroll", false);
 		    	} else {
 		    		$(".noteBlock").css("pointer-events", "none");
 		    	}
@@ -175,7 +179,7 @@
 		<div class="noteBlock">
 			
 			<!-- 메모 레이어 -->
-			<div id="layer-popup" class="memo_wrap layerControl" style="display:none;">
+			<div id="layer-popup" class="memo_wrap layerControl" style="display:none; ">
 				<div class="memo_header_wrapper">
 					<input type="hidden" id="layerFlag" value="layer" />
 				 	<div class="memo_header">

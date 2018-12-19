@@ -84,8 +84,8 @@
 				A.company_id = C.company_id
 			AND
 				A.menu_id = C.menu_id
-			AND
-				A.company_lang = C.menu_lang
+			AND 
+				C.menu_lang = #menuLang#
 			WHERE
 				A.tenant_id = #tenantId#
 			AND
@@ -124,8 +124,8 @@
 				A.company_id = C.company_id
 			AND
 				A.menu_id = C.menu_id
-			AND
-				A.company_lang = C.menu_lang
+			AND 
+				C.menu_lang = #menuLang#
 			WHERE
 				A.tenant_id = #tenantId#
 			AND
@@ -661,7 +661,7 @@
 			MERGE INTO TBL_PORTAL_LOGO
 			USING DUAL
 			ON (
-					company_id = #companyId#
+					company_id = #tenantId#
 				AND
 					tenant_id = #tenantId#
 				AND

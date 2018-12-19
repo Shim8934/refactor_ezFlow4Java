@@ -123,13 +123,13 @@ public class LoginController {
     	logger.debug("ezOffice365Auth=" + ezOffice365Auth);
     	
         if (ezOffice365Auth.equals("YES")) {        	
-        	return "redirect:/ezPortal/portalMain.do";
-//        	return "redirect:/ezNewPortal/newPortalMain.do";         	
+//        	return "redirect:/ezPortal/portalMain.do";
+        	return "redirect:/ezNewPortal/newPortalMain.do";         	
         }
         
     	if (commonUtil.isLoginCookieExists(request, response)) {
-        	return "redirect:/ezPortal/portalMain.do";
-//        	return "redirect:/ezNewPortal/newPortalMain.do"; 
+//        	return "redirect:/ezPortal/portalMain.do";
+        	return "redirect:/ezNewPortal/newPortalMain.do"; 
     	}
         	
     	String pbm = egovFileScrty.getPbm();
@@ -226,7 +226,6 @@ public class LoginController {
         	return "forward:/user/login/login.do";
         // 사용자 ID 혹은 사원번호가 발견된 경우
 		} else {
-			
 			resultVO.setIp(ClientUtil.getClientIP(request));
 			resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
 			resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
@@ -389,8 +388,8 @@ public class LoginController {
 	        			session.setMaxInactiveInterval(sessionTime * 60);	// 세션 유지 시간 설정
 	        		}
 	        	}
-	        	return "redirect:/ezPortal/portalMain.do";
-//	        	return "redirect:/ezNewPortal/newPortalMain.do";
+//	        	return "redirect:/ezPortal/portalMain.do";
+	        	return "redirect:/ezNewPortal/newPortalMain.do";
         		
         	} else {
         		//Check login state of the user
@@ -420,9 +419,18 @@ public class LoginController {
     		            	cal.add(Calendar.DATE, realPeriod);
     		            	
     		            	baseDT = cal.getTime();
-    		            	Date lastDT = resultVO.getUpdateDT();
+    		            	Date passwordUpdateDT = resultVO.getPassword_updatedt();
+    		            	
+    		            	if (passwordUpdateDT == null) {
+    		            		passwordUpdateDT = resultVO.getUpdateDT();
+    		            	}
+    		            	
+    		            	logger.debug("passwordUpdateDT=" + passwordUpdateDT);
+    		            	logger.debug("baseDT=" + baseDT);
+    		            	
     		            	//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
-    		    			diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
+    		    			diff = EgovDateUtil.getDaysDiff(baseDT, passwordUpdateDT);
+    		    			logger.debug("diff=" + diff);
     		        	}	        	
     	        	}        	        	
     	        		        	
@@ -485,8 +493,8 @@ public class LoginController {
 		    		        	session.setMaxInactiveInterval(sessionTime * 60);		// 세션의 유지 시간 설정
 	    		        	}
     		        	}
-    		        	return "redirect:/ezPortal/portalMain.do";
-//    		        	return "redirect:/ezNewPortal/newPortalMain.do";
+//    		        	return "redirect:/ezPortal/portalMain.do";
+    		        	return "redirect:/ezNewPortal/newPortalMain.do";
     		        	
     				}
     			// 해당 사용자의 로그인이 블록된 경우

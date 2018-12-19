@@ -59,40 +59,47 @@ public class EzOrganController {
 	public String getDeptTreeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    logger.debug("getDeptTreeInfo started.");
 	    
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	    String deptInfo = null;
 		
-        int tenantID = userInfo.getTenantId();        
-        
-        logger.debug("tenantID=" + tenantID);       
+	    try {
+	    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+	        int tenantID = userInfo.getTenantId();        
+	        
+	        logger.debug("tenantID=" + tenantID);       
+			
+			Document doc = commonUtil.convertStringToDocument(data);
+			
+			String userID = "";
+			String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();
+	        String topID = doc.getElementsByTagName("TOPID").item(0).getTextContent();
+	        String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
+	        String adminDist = doc.getElementsByTagName("ADMINDIST").getLength() != 1 ? "false" : doc.getElementsByTagName("ADMINDIST").item(0).getTextContent(); // 관리자 > 공용배포그룹
+	        String displayTrashDept = doc.getElementsByTagName("DISPLAYTRASHDEPT").getLength() != 1 ? "" : doc.getElementsByTagName("DISPLAYTRASHDEPT").item(0).getTextContent(); // 조직도에서 폐지부서 표출 여부
+	        String userCompanyID = userInfo.getCompanyID();
+	        String [] adminOrganChk = topID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
+	        String orgCompanyID = doc.getElementsByTagName("orgCompanyID").getLength() != 1 ? "" : doc.getElementsByTagName("orgCompanyID").item(0).getTextContent(); // 전자결재 orgCompanyID
+	        String adminChk = doc.getElementsByTagName("ADMINCHK").getLength() != 1 ? "" : doc.getElementsByTagName("ADMINCHK").item(0).getTextContent(); // 전체관리자 = true (ip접속관리 관리자페이지)
+	        
+	        if (adminDist.equals("true") || (adminOrganChk.length > 1 && adminOrganChk[1].equals("other"))) {
+	        	topID = adminOrganChk[0];
+	        } else if (adminOrganChk.length > 1 && adminOrganChk[1].equals("organ")) { // 전체 관리자 관리자페이지 일부에서 조직도 전체 트리 보여줌
+			} else if (!orgCompanyID.equals("") && !orgCompanyID.equals("undefined")) {
+				topID = orgCompanyID;
+			} else if (!topID.equals(userCompanyID) && adminChk.equals("true")) {
+				deptID = topID;
+			} else {
+	        	topID = userCompanyID;
+	        }
+	        
+	        logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList + ",userCompanyID=" + userCompanyID + ",displayTrashDept=" + displayTrashDept);
+	        
+	        // 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
+	        deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary(), displayTrashDept, tenantID);
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
 		
-		Document doc = commonUtil.convertStringToDocument(data);
-		
-		String userID = "";
-		String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();
-        String topID = doc.getElementsByTagName("TOPID").item(0).getTextContent();
-        String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
-        String adminDist = doc.getElementsByTagName("ADMINDIST").getLength() != 1 ? "false" : doc.getElementsByTagName("ADMINDIST").item(0).getTextContent(); // 관리자 > 공용배포그룹
-        String userCompanyID = userInfo.getCompanyID();
-        String [] adminOrganChk = topID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
-        String orgCompanyID = doc.getElementsByTagName("orgCompanyID").getLength() != 1 ? "" : doc.getElementsByTagName("orgCompanyID").item(0).getTextContent(); // 전자결재 orgCompanyID
-        String adminChk = doc.getElementsByTagName("ADMINCHK").getLength() != 1 ? "" : doc.getElementsByTagName("ADMINCHK").item(0).getTextContent(); // 전체관리자 = true (ip접속관리 관리자페이지)
-        
-        if (adminDist.equals("true") || (adminOrganChk.length > 1 && adminOrganChk[1].equals("other"))) {
-        	topID = adminOrganChk[0];
-        } else if (adminOrganChk.length > 1 && adminOrganChk[1].equals("organ")) { // 전체 관리자 관리자페이지 일부에서 조직도 전체 트리 보여줌
-		} else if (!orgCompanyID.equals("") && !orgCompanyID.equals("undefined")) {
-			topID = orgCompanyID;
-		} else if (!topID.equals(userCompanyID) && adminChk.equals("true")) {
-			deptID = topID;
-		} else {
-        	topID = userCompanyID;
-        }
-        
-        logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList + ",userCompanyID=" + userCompanyID);
-        
-        // 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
-        String deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary(), tenantID);
-        
         logger.debug("getDeptTreeInfo ended.");
         
 		return deptInfo;

@@ -105,6 +105,7 @@
                 createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
                 createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
+                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            xmlHTTP.send(xmlpara);
 	            ListTypeChangeIcon();
@@ -491,9 +492,9 @@
 	                g_xmlHTTP = createXMLHttpRequest();
 	
 	                if (CrossYN()) {
-	                    var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+	                    var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	                } else {
-	                    var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+	                    var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	                }
 	
 	                g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
@@ -516,7 +517,7 @@
 	                    if (rgParams["deptid"] != "") {
 	                        bSearch = true;
 	                        g_xmlHTTP = createXMLHttpRequest();
-	                        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	                        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	                        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	                        g_xmlHTTP.send(strQuery);
@@ -529,7 +530,7 @@
 	            if (rgParams["deptid"] != "") {
 	                bSearch = true;
 	                g_xmlHTTP = createXMLHttpRequest();
-	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	                g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	                g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	                g_xmlHTTP.send(strQuery);
@@ -2687,8 +2688,8 @@
 		                                            </td>
 		                                            <td>
 		                                                <div style="float: right; margin-right: 5px; position: relative;">
-		                                                    <a href="#" class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10"><spring:message code='ezEmail.t596' /></span></a>
-		                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
+		                                                    <a class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10"><spring:message code='ezEmail.t596' /></span></a>
+		                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
 		                                                </div>
 		                                            </td>
 		                                        </tr>
@@ -2761,14 +2762,14 @@
 		                                                                        <spring:message code='ezEmail.t713' /></option>
 		                                                                </select>
 		                                                                <input id="search_text" value="" onkeyup="AddrSearch_press()" style="width: 130px; margin: 0px; height:21px" name="Input">
-		                                                                <a href="#" class="imgbtn">
+		                                                                <a class="imgbtn">
 		                                                                    <span onclick="AddrSearch_click()"><spring:message code='ezEmail.t37' /></span>
 		                                                                </a>
 		                                                            </div>
 		                                                        </td>
 		                                                        <td>
 		                                                            <div style="float: right; margin-right: 5px;">
-		                                                                <a href="#" class="imgbtn"><span onclick="groupmember_click()"><spring:message code='ezEmail.t598' /></span></a>
+		                                                                <a class="imgbtn"><span onclick="groupmember_click()"><spring:message code='ezEmail.t598' /></span></a>
 		                                                            </div>
 		                                                        </td>
 		                                                    </tr>
@@ -2818,7 +2819,7 @@
 		                                    <table style="margin-top: 3px; width: 100%;">
 		                                        <tr>
 		                                            <td id="dlmember" style="display: none">
-		                                                <a href="#" class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="dlmember_click()">
+		                                                <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="dlmember_click()">
 		                                                    <spring:message code='ezEmail.t598' /></span></a>
 		                                            </td>
 		                                        </tr>
@@ -2850,7 +2851,7 @@
 	                        			</table>
 	                        			<div style="text-align: center">
 	                        				<div class="btnpositionJsp">
-	                        					<a href="#" class="imgbtn">
+	                        					<a class="imgbtn">
 	                        						<span onclick="inputAddress()">
 	                        							<spring:message code='ezAddress.t173' />
 	                        						</span>

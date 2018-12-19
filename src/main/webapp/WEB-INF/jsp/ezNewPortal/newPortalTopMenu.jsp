@@ -7,8 +7,7 @@
 		<title>TopMenu</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
-
+		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>			
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -343,7 +342,10 @@
 				$("#topMenuFull").fadeOut(0, function() {
 					$("#topMenuFull").attr("class", "full_nav on");
 					$("#topMenuFull").fadeIn(100);
-					$("#nav_count").attr("class", "hidden_nav_count_on");
+					
+					if ($("#nav_count").html() != "") {
+						$("#nav_count").attr("class", "hidden_nav_count_on");
+					}
 				});
 				var screenHeight = screen.height;
 				topFrame.style.position = 'relative';
@@ -355,7 +357,10 @@
 					$("#topMenuFull").fadeOut(100, function() {
 						$("#topMenuFull").attr("class", "full_nav off");
 						$("#topMenuFull").fadeIn(100);
-						$("#nav_count").attr("class", "hidden_nav_count");
+						
+						if ($("#nav_count").html() != "") {
+							$("#nav_count").attr("class", "hidden_nav_count");
+						}
 					});
 				}
 				
@@ -604,8 +609,12 @@
 			if (viewCnt > 0) {
 				$('#nav_count').attr('class','hidden_nav_count');
 				document.getElementById('nav_count').innerHTML = '+' + (totalMenuCnt*1 - (menuCnt*1));
+				
+				$('.countBox').css("display", "block");
 			} else {
 				$('#nav_count').attr('class','hidden_nav_count_off');
+				
+				$('.countBox').css("display", "none");
 			}
 		}
 		

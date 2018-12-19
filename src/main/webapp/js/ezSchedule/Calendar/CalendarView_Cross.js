@@ -462,7 +462,12 @@ function CalendarView(pTagetID,chk_str) {
     		var typeCal = 0;
     		var dragId  = ui.draggable.children().attr("scheduleid");
     		var dragDay = ui.draggable.children().attr("id");
+    		var dragType = ui.draggable.children().attr("datetype");
     		var dropDay = $(this).attr("day");
+    		
+    		if (dragType == "2") {
+    			dragDay += "ALL";
+    		}
     		
     		if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
     			RefreshView();

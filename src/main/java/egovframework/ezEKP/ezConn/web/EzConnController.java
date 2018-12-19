@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -25,7 +26,6 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.web.LoginController;
-import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /**
  * 
@@ -209,14 +209,17 @@ public class EzConnController {
 					resultPage = "/admin/ezOrgan/organMain.do";
 				} else if (requestUri.equals("/ezConn/admin/scheduleMain.do")) {
 					resultPage = "/admin/ezSchedule/scheduleMain.do";
-				} else {																
-					String subCode = "1";
-					
-					if (request.getParameter("subCode") != null) {
-						subCode = request.getParameter("subCode");
+				} else {				
+					String funCode = request.getParameter("funCode") != null ? request.getParameter("funCode") : "";
+					if(funCode.equalsIgnoreCase("")) {
+						String subCode = "1";
+						if (request.getParameter("subCode") != null) {
+							subCode = request.getParameter("subCode");
+						}
+						resultPage = "/ezEmail/mailMain.do?subCode=" + subCode;
+					} else { // 20181218 조진호 - 개인화포탈시 주소록 탑메뉴로 분리
+						resultPage = "/ezEmail/mailMain.do?funCode=" + funCode;
 					}
-					
-					resultPage = "/ezEmail/mailMain.do?subCode=" + subCode;
 				}
 			}
 		} catch (Exception e) {
@@ -347,5 +350,45 @@ public class EzConnController {
 		
 		logger.debug("changePassword ended. result=" + result);
 		return result;
+	}
+	
+	@RequestMapping(value="/ezConn/oms/moduleMonitor.do", method = RequestMethod.GET)
+	public String cloudOrgan(HttpServletRequest request, HttpServletResponse response) {
+		String resultPage = "";
+		
+		try {
+			String id = "masteradmin";
+			logger.debug("id=" + id);
+			
+			if (id != null && !id.equals("")) {
+				int atSignPos = id.indexOf("@");
+				
+				if (atSignPos != -1) {
+					id = id.substring(0, atSignPos);
+				}
+				
+				if (!id.equals("")) {
+					String serverName = request.getServerName();
+					int tenantId = loginService.getTenantId(serverName);
+					
+					logger.debug("tenantId=" + tenantId + ", serverName=" + serverName);
+					
+					LoginVO resultVO = getUserInfoById(id, tenantId);
+					
+					loginController.createLoginCookie(resultVO.getId(), "", "", tenantId, request, response, "", "");
+					
+					// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
+					// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함
+					response.setHeader("P3P", "CP=\"Potato\"");
+					
+					resultPage = "redirect:/admin/ezSystem/getModuleMonitor.do";
+					
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return resultPage;
 	}
 }

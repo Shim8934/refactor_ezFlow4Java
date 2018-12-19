@@ -115,6 +115,7 @@
 	                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
 	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "${topID}");
 	                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+	                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	                xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	                xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	                xmlHTTP.send(xmlpara);
@@ -991,7 +992,7 @@
                                             </td>
                                             <td>
                                                 <div style="float: right; margin-right: 5px;">
-                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezPortal.t47'/></span></a>
+                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezPortal.t47'/></span></a>
                                                 </div>
                                             </td>
                                         </tr>

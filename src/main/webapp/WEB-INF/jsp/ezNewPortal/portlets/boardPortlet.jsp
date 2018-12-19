@@ -10,9 +10,8 @@
 <title>Board Portlet</title>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/boardPortlet.js')}"/>
 <script type="text/javascript">
-var boardPortlet = "<c:out value='${portletId}'/>";
-
 $(function() {
+	var boardPortlet = "<c:out value='${portletId}'/>";
 	$(".customBoard").find(".portletPlus").on("click", Boardmore_NewBoardSTD_btnClick);
 	getBoardPortletInfo(boardPortlet);
 });

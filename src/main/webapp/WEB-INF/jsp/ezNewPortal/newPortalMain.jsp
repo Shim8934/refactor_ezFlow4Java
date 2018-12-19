@@ -6,7 +6,7 @@
 	<head>
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link href="${util.addVer('/css/ezNewPortal/portal.css')}" rel="stylesheet" type="text/css">
+		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
@@ -65,6 +65,7 @@
 		 	
 		 	$(window).resize(function() {
 		 		browserResize();
+		 		setGadgetPositionResize();
 		 	});
 		 	
 		 	$(function() {
@@ -117,6 +118,9 @@
 			    			$(this).parent().nextAll(".color_popup").css("visibility", "hidden"); 
 			    		}
 			    	});
+			    	
+			    	/* 2018-12-18 김민성 - 메모 레이어 팝업 드래그시 화면 밀림 현상 수정 */
+			    	$("#layer-popup").draggable("option", "scroll", false);
 		    	} else {
 		    		$(".noteBlock").css("pointer-events", "none");
 		    	}

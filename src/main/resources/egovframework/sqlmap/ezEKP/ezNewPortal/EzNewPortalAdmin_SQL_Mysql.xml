@@ -84,8 +84,8 @@
 				A.company_id = C.company_id
 			AND
 				A.menu_id = C.menu_id
-			AND
-				A.company_lang = C.menu_lang
+			AND 
+				C.menu_lang = #menuLang#
 			WHERE
 				A.tenant_id = #tenantId#
 			AND
@@ -125,7 +125,7 @@
 			AND
 				A.menu_id = C.menu_id
 			AND
-				A.company_lang = C.menu_lang
+				C.menu_lang = #menuLang#
 			WHERE
 				A.tenant_id = #tenantId#
 			AND

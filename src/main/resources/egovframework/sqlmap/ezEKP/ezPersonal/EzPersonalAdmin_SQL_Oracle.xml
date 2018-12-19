@@ -140,7 +140,7 @@
            				FROM
            					TBL_PS_LIGHTPOLL 
           				WHERE
-          					COMPANYID = #v_pCompanyID#
+          					COMPANYID = UPPER(#v_pCompanyID#)
           				AND
           					TENANT_ID = #tenantID#	
            				ORDER BY ITEMSEQ DESC )
@@ -168,7 +168,7 @@
                   									FROM
                   										TBL_PS_LIGHTPOLL 
                    									WHERE
-                   										COMPANYID = #v_pCompanyID#
+                   										COMPANYID = UPPER(#v_pCompanyID#)
                    									AND
                    										TENANT_ID = #tenantID#	
                     								ORDER BY
@@ -448,14 +448,14 @@
 	<select id="EzPersonalAdmin.EZSP_GETPOLLCOUNT" parameterClass="Map"		resultClass="Integer">
 		<isEqual property="v_pMode" compareValue="A">
 			<![CDATA[
-				SELECT
-					COUNT(ITEMSEQ)
-           		FROM
-           			TBL_PS_LIGHTPOLL 
-          		WHERE
-          			COMPANYID = #v_pCompanyID#
-          		AND
-          			TENANT_ID = #tenantID#	
+					SELECT
+						COUNT(ITEMSEQ)
+	           		FROM
+	           			TBL_PS_LIGHTPOLL 
+	          		WHERE
+	          			COMPANYID = UPPER(#v_pCompanyID#)
+	          		AND
+	          			TENANT_ID = #tenantID#	
 			]]>
 		</isEqual>
 		<isNotEqual property="v_pMode" compareValue="A">
@@ -465,7 +465,7 @@
            		FROM
            			TBL_PS_LIGHTPOLL 
           		WHERE
-          			COMPANYID = #v_pCompanyID#
+          			COMPANYID = UPPER(#v_pCompanyID#)
                 OR
                 	COMPANYID = 'Top'
                 AND

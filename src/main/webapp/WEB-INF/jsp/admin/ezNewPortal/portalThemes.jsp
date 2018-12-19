@@ -41,16 +41,16 @@
 			.frameList td {text-align : center; border:1px solid #e1e1e1;}
 			.frameList th {width:61px;}
 			
-			.themePortlet img {cursor:pointer;background-color:#b9b9b9;border:1px solid #b9b9b9;}
+			.themePortlet img {cursor:pointer;background-color:#b9b9b9;}
 			.themePortlet {float:left; margin-top:3px; margin-left:13px;}
 			
 			.ui-portlet { position:relative;  width: 230px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
 			.ui-portlet-on { background-color: #f0f0f0; }
 			.ui-portlet-off { background-color: #f0f0f0; }
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
-			.ui-portlet-content { font-weight: bold; display: inline-block; float: left;cursor:move;}
+			.ui-portlet-content { font-weight: bold; display: inline-block; float: left;cursor:move; border:1px dotted #000;}
 			.ui-portlet-list { padding-left: 20px; height: 335px; width: 97%;}
-			.ui-portlet-span { display: inline-block; width: 69%; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-bottom:-4px;}
+			.ui-portlet-span { display: inline-block; width: 69%; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
 			.portlet_switch {position:relative;display:inline-block;width:60px;height:18px;margin-top:15px;}
 			.portlet_switch .slider {z-index:10;}
 			.admin_theme_portlet {width : 987px;}
@@ -175,7 +175,7 @@
 						themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/Theme" + item.themeId + ".JPG' class='themeThumbnails' alt='img02'/>";
 						themesHTML += "</div><div>";
 						themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
-						themesHTML += "<span class='themePortlet' id='themePortlet" + item.themeId + "'><img src='/images/admin/frameSetting.png'></span>";
+						themesHTML += "<span class='themePortlet' id='themePortlet" + item.themeId + "'><img src='/images/admin/frameSetting3.png'></span>";
 						themesHTML += "<span class='themeName'>" + item.themeName + "</span>";
 						themesHTML += "<span class='themeSetting' id='"+item.themeId+"'><img src='/images/kr/left/icon_setup.gif'/></span>";
 						themesHTML += "</div>";

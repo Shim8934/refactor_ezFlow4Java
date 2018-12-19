@@ -395,7 +395,7 @@
 		        } else {		        	
 		            var pheight = window.screen.availHeight;
 		            var pwidth = window.screen.availWidth;
-		            var pTop = (pheight - 660) / 2;
+		            var pTop = (pheight - 670) / 2;
 		            var pLeft = (pwidth - 790) / 2;
 		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
                                 "height = 670px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
@@ -889,9 +889,9 @@
 		    }
 
 		    function open_schedule(scheduleid) {
-		        var feature = GetOpenPosition(790, 660);
+		        var feature = GetOpenPosition(790, 670);
 		        window.open("/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleid), "",
-					"height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+					"height = 670px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 
 		    function ShowSchedule() {

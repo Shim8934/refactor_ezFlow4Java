@@ -49,8 +49,8 @@
 		  		<li onClick="close_onclick()"><span></span></li>
 		    </ul>
 		  </div>
-	      <div style="width:100%; height:305px" id="divList">
-	            <table class="mainlist" id="otherJournalList" style="width:100%">
+	      <div style="width:100%; height:290px; overflow: auto;" id="divList">
+	            <table class="mainlist" id="otherJournalList" style="width: 100%; border: 1px solid #ddd !important; border-top: none;">
 	            <c:choose>
 		            <c:when test="${fn:length(journalList) ne 0 }">
 			            <c:forEach items="${journalList }" var="journal" varStatus="status">
