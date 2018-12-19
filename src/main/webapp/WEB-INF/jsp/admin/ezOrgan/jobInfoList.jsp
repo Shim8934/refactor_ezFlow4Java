@@ -22,7 +22,8 @@
 		.previewmail_bar_h {display: inline-block; width: 5px; height: 690px;}
 		.preContent_RayerH {position: absolute; display: inline-block; width: 49%;}
 		.preview_header {margin: 0px 0px 5px 0px; padding: 10px 0px 0px 0px; font-weight: bold; height: 36px; line-height: 37px;}
-		.preview_title {position: absolute; margin-top: -6px; margin-left: 13px;}
+		.preview_title {display: inline-block; margin-top: -6px; margin-left: 13px;}
+		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC;}
 		.preview_content {width: 97%; height: 630px; border: solid 0px green; display: inline-block; padding:10px;}
 		.preview_nodata {position: absolute; display: inline-block; width: 49%; vertical-align: middle; text-align: center; margin-top: 70px;}
 	</style>
@@ -98,6 +99,7 @@
 			pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
 			totalPage = Math.ceil(new Number(totalCount / pageSize));
 			
+			makeCheckBoxCol();
 			makePageSelPage();
 		}
 		/* 추가, 수정, 삭제 Button Action (mode=Add,Mod,Del) */
@@ -256,8 +258,11 @@
 	            });
 				
 				var selectedId = oArrRows[0].getAttribute("id");
-				var selectedTitle = document.getElementById(selectedId).getElementsByTagName("td")[0].textContent;
+				var selectedTitle = document.getElementById(selectedId).getElementsByTagName("td")[1].textContent;
+				var count = SelectSingleNodeValueNew(xmldom, "TOTALCNT");
+				
 				document.getElementById("preview_title").textContent = selectedTitle + " 리스트";
+				document.getElementById("preview_count").textContent = count;
 				
 				var oRows = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
 			    if (oRows.length > 0) {
@@ -280,7 +285,7 @@
 			else {
 				document.getElementById("PreContent_RayerH").style.display = "none";
 				document.getElementById("preview_nodata").style.display = "";
-				document.getElementById("nodata_title").textContent = "선택된 직책이 없습니다.";
+				document.getElementById("nodata_title").textContent = "선택된 직위가 없습니다.";
 			}
 		}
 		/* 유저리스트 Row더블클릭 Action */
@@ -396,6 +401,7 @@
 			pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
 			totalPage = Math.ceil(new Number(totalCount / pageSize));
 			
+			makeCheckBoxCol();
 			makePageSelPage();
 		}
 		/* 직책을 사용중인 유저리스트 호출 Method */
@@ -432,7 +438,10 @@
 				
 				var selectedId = oArrRows[0].getAttribute("id");
 				var selectedTitle = document.getElementById(selectedId).getElementsByTagName("td")[0].textContent;
+				var count = SelectSingleNodeValueNew(xmldom, "TOTALCNT");
+				
 				document.getElementById("preview_title").textContent = selectedTitle + " 리스트";
+				document.getElementById("preview_count").textContent = count;
 				
 				var oRows = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
 			    if (oRows.length > 0) {
@@ -455,7 +464,7 @@
 			else {
 				document.getElementById("PreContent_RayerH").style.display = "none";
 				document.getElementById("preview_nodata").style.display = "";
-				document.getElementById("nodata_title").textContent = "선택된 직위가 없습니다.";
+				document.getElementById("nodata_title").textContent = "선택된 직책이 없습니다.";
 			}
 		}
 		
@@ -637,11 +646,44 @@
 		
 		/* 체크박스 컬럼 추가 메소드 */
 		function makeCheckBoxCol() {
+			var listTable = document.getElementById("lvJobTitleList");
+			var noItem    = document.getElementById("lvJobTitleList_TR_noItems");
+			if (!listTable) {
+				listTable = document.getElementById("lvJobPositionList");
+				noItem    = document.getElementById("lvJobPositionList_TR_noItems");
+			}
 			
+			var listHeader = listTable.childNodes[0].childNodes[0];
+			var listTbody  = listTable.childNodes[1];
+			var listBody   = listTbody.childNodes;
+			
+			var length = listBody.length;
+			for (var i = 0; i < length; i++) {
+				var tdElmt  = document.createElement("td");
+				tdElmt.style.width = "20px";
+				
+				if (!noItem) {
+					var tdInputElmt = document.createElement("input");
+					tdInputElmt.setAttribute("type", "checkbox");
+					tdElmt.appendChild(tdInputElmt);
+				}
+				
+				listTbody.childNodes[i].insertBefore(tdElmt, listTbody.childNodes[i].childNodes[0]);
+			}
+			
+			var thElmt      = document.createElement("th");
+			var thInputElmt = document.createElement("input");
+			
+			thInputElmt.setAttribute("type", "checkbox");
+			
+			thElmt.style.width = "20px";
+			thElmt.appendChild(thInputElmt);
+			
+			listHeader.insertBefore(thElmt, listHeader.childNodes[0]);
 		}
 	</script>
 </head>
-<body class="mainbody">
+<body class="mainbody" style="overflow: hidden;">
 	<h1>
 		<spring:message code='ezOrgan.csj01' />
 		<select class="companySelect" id="ListCompany" onChange="compChange()">
@@ -671,7 +713,7 @@
 	</script>
 	<div class="mainview">
 		<div class="listview" style="border: 0px;">
-			<div id="JobListView" style="height: 600px; width: 792px; overflow-y:auto;"></div>
+			<div id="JobListView" style="height: 600px; width: 100%; overflow-y:auto;"></div>
 			<div id="tblPageRayer"></div>
 		</div>
 	</div>
@@ -684,6 +726,7 @@
 					<div id="Preview_HeaderH">
 						<p class="preview_header">
 							<span class="preview_title" id="preview_title"></span>
+							<span class="preview_count" id="preview_count"></span>
 						</p>
 					</div>
 				</div>
@@ -691,7 +734,7 @@
 			
 			<div class="preview_content">
 				<div class="listview">
-					<div id="JobUserListView" style="height: 610px; width: 806px; overflow-y:auto;"></div>
+					<div id="JobUserListView" style="height: 610px; width: 100%; overflow-y:auto;"></div>
 				</div>
 			</div>
 		</div>
@@ -714,19 +757,19 @@
 			</HEADER> --%>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj04' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
-			<WIDTH>240</WIDTH>
+			<WIDTH>220</WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj04' />(<spring:message code='ezApprovalG.t1765'/>)</NAME>
-			<WIDTH>240</WIDTH>
+			<WIDTH>220</WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
-			<WIDTH>140</WIDTH>
+			<WIDTH>160</WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
-			<WIDTH>140</WIDTH>
+			<WIDTH>160</WIDTH>
 			</HEADER>
     	</HEADERS>
   	</LISTVIEWDATA>
@@ -767,19 +810,19 @@
 			</HEADER> --%>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj17' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
-			<WIDTH>240</WIDTH>
+			<WIDTH>220</WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj17' />(<spring:message code='ezApprovalG.t1765'/>)</NAME>
-			<WIDTH>240</WIDTH>
+			<WIDTH>220</WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
-			<WIDTH>140</WIDTH>
+			<WIDTH>160</WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
-			<WIDTH>140</WIDTH>
+			<WIDTH>160</WIDTH>
 			</HEADER>
     	</HEADERS>
   	</LISTVIEWDATA>
