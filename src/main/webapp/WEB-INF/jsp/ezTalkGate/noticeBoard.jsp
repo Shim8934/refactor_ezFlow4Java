@@ -47,7 +47,7 @@
 		function moreView() {
 			console.log("boardId=" + SelectBoardID);
 			var openUrl = "/ezTalkGate/noticeBoardDetailList.do?boardType=" + gubun 
-						+ "&ezTalkId=" + URLEncoder.encode(ezTalkId) + "&ezTalkPw=" + URLEncoder.encode(ezTalkPw); 
+						+ "&ezTalkId=" + encodeURIComponent(ezTalkId) + "&ezTalkPw=" + encodeURIComponent(ezTalkPw); 
 			console.log("openUrl=" + openUrl);
 			window.open(openUrl, "_blank", "width=1152, height=790, resizable=yes, toolbar=yes");
 		}
