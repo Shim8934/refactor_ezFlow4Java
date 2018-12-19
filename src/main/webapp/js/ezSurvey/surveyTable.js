@@ -275,9 +275,14 @@ function SurveyTable(data) {
 				_tableDataElmt.deleteRow(0);
 			}
 		}
-		else {
+		else if (_tableMode != "received") {
 			while (_tableElmt.rows.length > 1) {
 				_tableElmt.deleteRow(1);
+			}
+		}
+		else if (_tableMode == "received") {
+			while (_tableDataElmt.rows.length > 0) {
+				_tableDataElmt.deleteRow(0);
 			}
 		}
 	}
@@ -288,7 +293,7 @@ function SurveyTable(data) {
 		var listOfRows = _tableElmt.rows;
 		
 		for (var i = 0, len = listOfRows.length; i < len; i++) {
-			listOfRows[i].onclick = function(e) {clickRow(e);};
+			listOfRows[i].onclick    = function(e) {clickRow(e);};
 			listOfRows[i].ondblclick = function(e) {_dblClickHandler(this);};
 		}
 	}

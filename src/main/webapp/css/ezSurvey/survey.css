@@ -62,8 +62,6 @@
 .qstUl >li >img {position: absolute; top: 15px; left: 15px; cursor: pointer;}
 .optUl >li >img {position: absolute; top: 10px; left: 10px; cursor: pointer;}
 .left-tdtbl {width: 664px;}
-.bnkCabSelect td, .bnkCabNormal td {padding: 5px 4px 3px !important; border: 0px !important; font-weight: normal !important; font-size: 12px !important; color: #5b5a5a !important; border-spacing: 0 !important; word-wrap: break-word !important; width: 196px !important;}
-.bnkCabSelect, .bnkCabNormal {border-bottom: 1px solid #eaeaea !important; line-height: 22px;}
 
 .searchtable {border-collapse: collapse; width:100%; margin-bottom: 15px;}
 .searchtable .layerHeader >img {vertical-align: middle; padding-bottom: 1px; width: 16px;}

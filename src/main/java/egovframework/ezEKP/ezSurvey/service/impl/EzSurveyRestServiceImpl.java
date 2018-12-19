@@ -93,7 +93,7 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 			default      : method = HttpMethod.GET   ; break;
 		}
 		
-		JSONObject resultBody         = null;
+		JSONObject resultBody = null;
 		
 		try {
 			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);

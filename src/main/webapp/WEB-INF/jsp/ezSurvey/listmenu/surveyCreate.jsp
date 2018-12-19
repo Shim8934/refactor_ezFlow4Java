@@ -1081,7 +1081,9 @@
 				
 				// 사용자용 질문 폼 생성
 				function mkQstnsByType(qstnWrapper, qstnType, question, prev) {
-					var html     = makeQuestionHeaderPanel(question);
+					var newQsDiv = makeQuestionHeaderPanel(question);
+					var qsPanel  = newQsDiv.querySelector("div[class='question-panel']");
+					qstnWrapper.appendChild(newQsDiv);
 					
 					switch(parseInt(qstnType)) {
 						case 1  :
@@ -1095,6 +1097,7 @@
 						case 9  : html += mkDropDownQstn(question)           ; break;
 						default : alert(SurveyMessages.strError)                  ; return;
 					}
+					
 					qstnWrapper.prepend(html);
 				}
 				// 첨부파일의 x버튼 클릭
@@ -1322,6 +1325,8 @@
 					var qstnType     = question.type;
 					var html         = "";
 					html            += "<div class='question-opts'>";
+					var divOpts       = document.createElement("div");
+					divOpts.className = "question-opts";
 					
 					// 보기
 					if (options) {
@@ -1548,31 +1553,63 @@
 				}
 				
 				function makeQuestionHeaderPanel(question) {
-					var qstId    = question.id;
-					var content  = question.content;
-					var qstnType = question.type;
-					var required = question.required;
-					var qstnAtt  = question.attach;
-
-					var htmlTxt  = "<div class='usrQstnWrapper' qstnType='" + qstnType + "'>";
-					htmlTxt     += "<div class='question-panel'>";
-					htmlTxt     += "<div class='mvBtn'></div>";
-					htmlTxt     += "<div class='question-header'>";
-					htmlTxt     += "<div class='question-content'>" + qstId + ". " + content;
-					htmlTxt     += required == 'Y' ? "<strong class='imptt'>*</strong></div>" : "</div>";
-					htmlTxt     += "<div class='tooltip-bttns'>";
-					htmlTxt     += "<span class='modifyBtn'></span>";
-					htmlTxt     += "<span class='copyBtn'></span>";
-					htmlTxt     += "<span class='deleteBtn'></span>";
-					htmlTxt     += "</div></div>";
+					var qstId         = question.id;
+					var content       = question.content;
+					var qstnType      = question.type;
+					var required      = question.required;
+					var qstnAtt       = question.attach;
+					var wrapDiv       = document.createElement("div");
+					var divPanel      = document.createElement("div");
+					var moveBttn      = document.createElement("div");
+					var divHeader     = document.createElement("div");
+					var divQsContent  = document.createElement("div");
+					var divTools      = document.createElement("div");
+					var modSpan       = document.createElement("span");
+					var copSpan       = document.createElement("span");
+					var delSpan       = document.createElement("span");
+					
+					//question content process
+					divQsContent.textContent = qstId + ". " + content;
+					divQsContent.className   = "question-content";
+					
+					if (required == "Y") {
+						var strongElmt         = document.createElement("strong");
+						strongElmt.className   = "imptt";
+						strongElmt.textContent = "*";
+						divQsContent.appendChild(strongElmt);
+					}
+					
+					//Tools div process
+					modSpan.className   = "modifyBtn";
+					copSpan.className   = "copyBtn";
+					delSpan.className   = "deleteBtn";
+					divTools.className  = "tooltip-bttns";
+					divHeader.className = "question-header";
+					divTools.appendChild(modSpan);
+					divTools.appendChild(copSpan);
+					divTools.appendChild(delSpan);
+					divHeader.appendChild(divQsContent);
+					divHeader.appendChild(divTools);
+					divPanel.appendChild(moveBttn);
+					divPanel.appendChild(divHeader);
 					
 					if (qstnAtt) {
-						htmlTxt += "<div class='question-attach'>"
-						htmlTxt += "<img alt='' src='" + qstnAtt.fpath + "' class='qstnImg'>";
-						htmlTxt += "</div>"
+						var attDiv       = document.createElement("div");
+						var attImg       = document.createElement("img");
+						attImg.src       = qstnAtt["fpath"];
+						attImg.className = "qstnImg";
+						attDiv.className = "question-attach";
+						attDiv.appendChild(attImg);
+						divPanel.appendChild(attDiv);
 					}
-					console.log(htmlTxt);
-					return htmlTxt;
+					
+					moveBttn.className = "mvBtn";
+					divPanel.className = "question-panel";
+					wrapDiv.className  = "usrQstnWrapper";
+					wrapDiv.setAttribute("qstnType", qstnType);
+					wrapDiv.appendChild(divPanel);
+					
+					return wrapDiv;
 				}
 				
 				function mkRankingDropDownObj(type, qstnForm) {
