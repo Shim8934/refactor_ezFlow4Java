@@ -64,9 +64,69 @@ public class EzTalkGateController {
 	
 	@Autowired
 	private Properties config;
-	
+
     @Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
+    
+    @RequestMapping("/ezTalkGate/tokenLogin.do")
+    @ResponseBody
+    public String ezTalkTokenLogin(
+    			@RequestParam String ezTalkId,
+    			HttpServletRequest request,
+    			HttpServletResponse response
+    		) throws Exception{
+    	logger.debug("ezTalkTokenLogin started.");
+		String result = "Y";
+
+		String serverName = request.getServerName();
+		int tenantId = loginService.getTenantId(serverName);
+		logger.debug("serverName=" + serverName + ",tenantId=" + tenantId);
+
+		String userId = ezTalkGateUtil.decryptEzTalkAES(ezTalkId);
+		logger.debug("userId=" + userId);
+
+		try {
+			String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", tenantId);
+			logger.debug("useMobileManagemant=" + useMobileManagemant);
+
+			if (useMobileManagemant.equals("YES")) {
+				String notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId, "notUseMobileLogin");
+				String adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId,
+				        "adminOrderNotUsedMobileLogin");
+
+				// 전체 사용안함. 사용자, 관리자 설정
+				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
+					logger.debug("userId=" + userId + ", no use mobile login by userconfig.");
+					result = "N";
+				} else {
+					// 기능 사용하며, 기기별 검색
+					String inputParams = "userId=" + userId + "&deviceId=";
+					logger.debug("userId=" + userId + ",deviceId=");
+
+					String requestURL = "/ezTalkGate/getUserMobileDeviceUsedInfo";
+					String getResult = ezEmailUtil
+					        .getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+					logger.debug("getResult=" + getResult);
+
+					JSONParser parser = new JSONParser();
+					JSONObject resultObj = (JSONObject) parser.parse(getResult);
+					int mobileUsed = (resultObj.get("data").equals("")) ? 0
+					        : Integer.valueOf(String.valueOf(resultObj.get("data")));
+
+					if (mobileUsed > 0) {
+						logger.debug("userId=" + userId + ", no use mobile login by deviceInfo.");
+						result = "N";
+					}
+				}
+			}
+		} catch (Exception e) {
+			result = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("ezTalkTokenLogin ended. mobileUsed=" + result);
+		return result;
+    }
 	
     @RequestMapping("/ezTalkGate/login.do")
     @ResponseBody
@@ -176,7 +236,7 @@ public class EzTalkGateController {
 			} else if (ezTalkSsoType.equals("portal")) { 
 				return "redirect:/ezPortal/portalMain.do";
 			} else if (ezTalkSsoType.equals("noticeBoard")) { 
-				return "redirect:/ezTalkGate/noticeBoard.do";
+				return "redirect:/ezTalkGate/noticeBoard.do?ezTalkId=" + orgId + "&ezTalkPw=" + ezTalkPw;
 			} else if (ezTalkSsoType.equals("noticeBoard2")) { 
 				return "redirect:/ezTalkGate/noticeBoard2.do";
 			} else if (ezTalkSsoType.equals("mailWrite")) { 
@@ -203,22 +263,81 @@ public class EzTalkGateController {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
+	@RequestMapping("/ezTalkGate/noticeBoardDetailList.do")
+	public String noticeBoardDetailList(
+			@RequestParam String boardType,
+			@RequestParam String ezTalkId,
+			@RequestParam String ezTalkPw,
+			HttpServletRequest request, 
+			HttpServletResponse response) {
+		logger.debug("noticeBoardDetailList started.");
+		
+		String redirectUrl = "redirect:/user/login/login.do";
+		
+		try {
+			String orgId = ezTalkId;
+			String orgPw = ezTalkGateUtil.decryptEzTalkAES(ezTalkPw);
+			logger.debug("ezTalkId=" + orgId + ",ezTalkPw=" + orgPw);
+			
+			String serverName = request.getServerName();
+			int serverPort = request.getServerPort();
+			int tenantId = loginService.getTenantId(serverName);
+			logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
+			
+			boolean isUserExists = checkIfUserExists(orgId, orgPw, tenantId);
+			logger.debug("isUserExists=" + isUserExists);
+			
+			if (isUserExists) {
+				String encryptPw = EgovFileScrty.encryptPassword(orgPw, orgId);
+				
+				LoginVO setVo = new LoginVO();
+				setVo.setId(orgId);
+				setVo.setTenantId(tenantId);
+				setVo.setPassword(encryptPw);
+				
+				LoginVO vo = loginService.selectUser(setVo);
+				logger.debug("id=" + orgId + ", pw=" + encryptPw + ", companyId=" + vo.getCompanyID());
+				
+				String ezTalkGateNoticeBoardId = ezBoardService.getEzTalkGateNoticeBoardId(vo.getCompanyID(), tenantId);
+				logger.debug("ezTalkGateNoticeBoardId=" + ezTalkGateNoticeBoardId);
+				
+				loginController.createLoginCookie(orgId, orgPw, encryptPw, tenantId, request, response, "", "");
+				
+				redirectUrl = "redirect:/ezBoard/boardItemList.do?boardID=" 
+								+ URLEncoder.encode(ezTalkGateNoticeBoardId) + "&boardType=" + boardType;
+				logger.debug("redirectUrl=" + redirectUrl);
+			}
+			 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("noticeBoardDetailList ended.");
+		return redirectUrl;
+	}
+	
 	@RequestMapping("/ezTalkGate/noticeBoard.do")
 	public String noticeBoard(
 					@CookieValue("loginCookie") String loginCookie,
-					Model model
+					Model model,
+					HttpServletRequest request,
+					HttpServletResponse response
 					) throws Exception {
 		logger.debug("noticeBoard started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
 		logger.debug("id=" + userInfo.getId() + ",tenantId=" + userInfo.getTenantId());
 		
-		String ezTalkGateNoticeBoardId = ezCommonService.getTenantConfig("ezTalkGateNoticeBoardId", userInfo.getTenantId());
+		String ezTalkId = request.getParameter("ezTalkId") != null ? request.getParameter("ezTalkId") : "";
+		String ezTalkPw = request.getParameter("ezTalkPw") != null ? request.getParameter("ezTalkPw") : "";
 		
+		String ezTalkGateNoticeBoardId = ezBoardService.getEzTalkGateNoticeBoardId(userInfo.getCompanyID(), userInfo.getTenantId());
 		logger.debug("ezTalkGateNoticeBoardId=" + ezTalkGateNoticeBoardId);
 		
-		List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(ezTalkGateNoticeBoardId, userInfo.getId(), 1, 5, 0, "", "", "1", userInfo.getTenantId());		
+		List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(ezTalkGateNoticeBoardId, 
+				userInfo.getId(), 1, 5, 0, "", "", "1", userInfo.getTenantId());		
+		logger.debug("boardItemList=" + boardItemList);
 		
 		String nowDate = commonUtil.getTodayUTCTime("");
 	    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
@@ -233,6 +352,8 @@ public class EzTalkGateController {
 		
 		model.addAttribute("boardItemList", boardItemList);
 		model.addAttribute("noticeBoardID", ezTalkGateNoticeBoardId);
+		model.addAttribute("ezTalkId", ezTalkId);
+		model.addAttribute("ezTalkPw", ezTalkPw);
 		
 		logger.debug("noticeBoard ended.");
 		

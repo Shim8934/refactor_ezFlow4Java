@@ -4116,4 +4116,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getSearchApprBoardItemList(map);
 	}
 
+	@Override
+	public String getEzTalkGateNoticeBoardId(String companyID, int tenantID) throws Exception {
+		logger.debug("getEzTalkGateNoticeBoardId started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		ezBoardDAO.getEzTalkGateNoticeBoardId(map);
+		map.put("v_companyID", companyID);
+		map.put("v_tenantID", tenantID);
+		
+		String resultBoradID = ezBoardDAO.getEzTalkGateNoticeBoardId(map);
+		
+		logger.debug("getEzTalkGateNoticeBoardId ended.");
+		return resultBoradID;
+	}
+
 }
