@@ -17,7 +17,8 @@ function setPanelPointer() {
 			setGadgetPosition();
 
 			defaultPointer();
-		}
+		},
+		scroll: false 
 	}).on("mouseup", function() {
 		$(".noteBlock").css("visibility", "hidden");
 		$("#open-memo").css("visibility", "visible");
@@ -111,6 +112,7 @@ function layerClose() {
     		$("#open-memo").css("display", "");
     	} else {
     		$("#open-memo").css("display", "none");
+    		setGadgetPositionResize();
     	}
     	
     });	
