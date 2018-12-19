@@ -1320,61 +1320,65 @@
 	<select id="EzOrganDAO.getBirthUserList" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			SELECT
-				displayname$lang$ AS displayname, 
-				cn,
-				title$lang$ AS title,
-				birth,
-				birthtype
+				*
 			FROM
-				TBL_USERMASTER
-			WHERE
-				((birth LIKE CONCAT('%-', #month#, '-%') AND birthtype = 'Y')
-			OR
-				(birth <> '' AND birthtype = 'N'))
-			AND
-				tenant_id = #tenantId#
-			AND
-				physicaldeliveryofficename = #companyId#
-			AND
-				cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
+				(
+				SELECT
+					displayname$lang$ AS displayname, 
+					cn,
+					title$lang$ AS title,
+					birth,
+					birthtype
+				FROM
+					TBL_USERMASTER
+				WHERE
+					((birth LIKE CONCAT('%-', CONCAT(#month#, '-%')) AND birthtype = 'Y')
+				OR
+					(birth <> '' AND birthtype = 'N'))
+				AND
+					tenant_id = #tenantId#
+				AND
+					physicaldeliveryofficename = #companyId#
+				AND
+					cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
+					
+				UNION ALL
+				
+				SELECT
+					C.displayname$lang$ AS displayname, 
+					A.cn,
+					A.title$lang$ AS title,
+					C.birth,
+					C.birthtype AS birthtype
+				FROM
+					TBL_ADDJOBMASTER A
+				JOIN
+					TBL_DEPTMASTER B
+				ON
+					A.tenant_id = B.tenant_id
+				AND
+					A.deptid = B.cn
+				AND
+					B.extensionattribute2 = #companyId#
+				JOIN
+					TBL_USERMASTER C
+				ON
+					A.tenant_id = C.tenant_id
+				AND
+					A.cn = C.cn
+				WHERE
+					((C.birth LIKE CONCAT('%-', CONCAT(#month#, '-%')) AND C.birthtype = 'Y')
+				OR
+					(C.birth <> '' AND C.birthtype = 'N'))
+				AND
+					A.tenant_id = #tenantId#
+				AND
+					C.physicaldeliveryofficename <> #companyId#
+				AND
+					A.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
+				)
 			ORDER BY
 				SUBSTR(birth, 8, 10)
-			UNION ALL
-			
-			SELECT
-				C.displayname$lang$ AS displayname, 
-				A.cn,
-				A.title$lang$ AS title,
-				C.birth,
-				C.birthtype AS birthtype
-			FROM
-				TBL_ADDJOBMASTER A
-			JOIN
-				TBL_DEPTMASTER B
-			ON
-				A.tenant_id = B.tenant_id
-			AND
-				A.deptid = B.cn
-			AND
-				B.extensionattribute2 = #companyId#
-			JOIN
-				TBL_USERMASTER C
-			ON
-				A.tenant_id = C.tenant_id
-			AND
-				A.cn = C.cn
-			WHERE
-				((C.birth LIKE CONCAT('%-', #month#, '-%') AND C.birthtype = 'Y')
-			OR
-				(C.birth <> '' AND C.birthtype = 'N'))
-			AND
-				A.tenant_id = #tenantId#
-			AND
-				C.physicaldeliveryofficename <> #companyId#
-			AND
-				A.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
-			ORDER BY
-				SUBSTR(C.birth, 8, 10)
 		]]>
 	</select>
 	

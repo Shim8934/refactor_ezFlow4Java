@@ -1299,8 +1299,6 @@
 				physicaldeliveryofficename = #companyId#
 			AND
 				cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
-			ORDER BY
-				SUBSTR(birth, 8, 10)
 				
 			UNION ALL
 			
@@ -1337,7 +1335,7 @@
 			AND
 				A.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
 			ORDER BY
-				SUBSTR(C.birth, 8, 10)
+				SUBSTR(birth, 8, 10)
 		]]>
 	</select>
 		
