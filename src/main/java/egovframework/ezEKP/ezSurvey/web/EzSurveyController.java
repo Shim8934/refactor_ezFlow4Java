@@ -128,6 +128,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	public String jspGetReuseSurveyPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetReuseSurveyPage started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		logger.debug("아이디" + request);
 		String itemId      = request.getParameter("") != null ? request.getParameter("") : "";
 		
 		if (itemId.equals("")) {

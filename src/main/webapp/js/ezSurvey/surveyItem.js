@@ -605,7 +605,7 @@ var SurveyItem = function() {
 		var itemArr = getSelectedItems();
 		if (itemArr.length == 0) {alert(SurveyMessages.strItemErr) ; return;}
 		if (itemArr.length > 1)  {alert(SurveyMessages.strItemErr1); return;}
-		
+		console.log(itemArr);
 		window.parent.frames["right"].location.href = "/ezSurvey/ReuseItem.do?itemId=" + itemArr[0];
 	}
 	

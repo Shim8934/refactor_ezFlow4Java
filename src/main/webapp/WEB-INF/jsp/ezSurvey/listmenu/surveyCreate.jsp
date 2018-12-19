@@ -1502,6 +1502,7 @@
 					var qstnType = question.type;
 					var required = question.required;
 					var qstnAtt  = question.attach;
+
 					var htmlTxt  = "<div class='usrQstnWrapper' qstnType='" + qstnType + "'>";
 					htmlTxt     += "<div class='question-panel'>";
 					htmlTxt     += "<div class='mvBtn'></div>";
@@ -1519,7 +1520,7 @@
 						htmlTxt += "<img alt='' src='" + qstnAtt.fpath + "' class='qstnImg'>";
 						htmlTxt += "</div>"
 					}
-					
+					console.log(htmlTxt);
 					return htmlTxt;
 				}
 				
