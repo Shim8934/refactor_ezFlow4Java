@@ -642,18 +642,25 @@
 				
 				// 셀렉트 박스 선택시 만들어지는 질문 폼 선택 질문 생성
 				function makeSelectQuestion(grandParent, questionType, checkResult) {
-					var html = makeQuestionForm(questionType);
-					html    += handleModifySelectQuestion();
-					html    += mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
-					grandParent.append(html);
+					var QuestionForm = makeQuestionForm(questionType);
+					var slt = handleModifySelectQuestion();
+					var addtional = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+
+					QuestionForm.append(slt);
+					QuestionForm.append(addtional);
+					grandParent.append(QuestionForm);
+					
 				}
 				
 				// 셀렉트 박스 선택시 만들어지는 질문 폼 행렬 질문 생성
 				function makeMatrixQuestion(grandParent, questionType, checkResult) {
-					var html = makeQuestionForm(questionType);
-					html    += handleModifyMatrixQuestion();
-					html    += mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
-					grandParent.append(html);
+					var QuestionForm = makeQuestionForm(questionType);
+					var mtr = handleModifyMatrixQuestion();
+					var addtional = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+					
+					QuestionForm.append(mtr);
+					QuestionForm.append(addtional);
+					grandParent.append(QuestionForm);
 				}
 				
 				// 버튼 이벤트
@@ -1081,24 +1088,24 @@
 				
 				// 사용자용 질문 폼 생성
 				function mkQstnsByType(qstnWrapper, qstnType, question, prev) {
-					var newQsDiv = makeQuestionHeaderPanel(question);
-					var qsPanel  = newQsDiv.querySelector("div[class='question-panel']");
-					qstnWrapper.appendChild(newQsDiv);
+					var header = makeQuestionHeaderPanel(question);
+					var body = "";
 					
 					switch(parseInt(qstnType)) {
 						case 1  :
-						case 2  : html += mkSelectQstn(question)             ; break;
+						case 2  : body = mkSelectQstn(question)             ; break;
 						case 3  : 
-						case 4  : html += mkMatrixQstn(question)             ; break;
-						case 5  : html += mkTextQstn(question, "shortanswer"); break;
-						case 6  : html += mkTextQstn(question, "paragraph")  ; break;
-						case 7  : html += mkSliderQstn(question)             ; break;
-						case 8  : html += mkRankingQstn(question)            ; break;
-						case 9  : html += mkDropDownQstn(question)           ; break;
-						default : alert(SurveyMessages.strError)                  ; return;
+						case 4  : body = mkMatrixQstn(question)             ; break;
+						case 5  : body = mkTextQstn(question, "shortanswer"); break;
+						case 6  : body = mkTextQstn(question, "paragraph")  ; break;
+						case 7  : body = mkSliderQstn(question)             ; break;
+						case 8  : body = mkRankingQstn(question)            ; break;
+						case 9  : body = mkDropDownQstn(question)           ; break;
+						default : alert(SurveyMessages.strError)            ; return;
 					}
 					
-					qstnWrapper.prepend(html);
+					header.append(body[0]);
+					qstnWrapper.append(header);
 				}
 				// 첨부파일의 x버튼 클릭
 				function clickXButton(thisWrapper) {
@@ -1132,28 +1139,31 @@
 				// 생성된 질문을 붙일 부분과 질문 유형을 파라미터로 받아 질문 영역 생성
 				function handleModifyQuestion(qstnWrapper, question, mode) {
 					var qstType = question.type;
-					var html    = makeQuestionForm(qstType);
+					var body = "";
+					var additional = "";
+					var QuestionForm = makeQuestionForm(qstType);
 					
 					switch(parseInt(qstType)) {
 						case 1  :
-						case 2  : html += handleModifySelectQuestion(question)                 ; break;
+						case 2  : body = handleModifySelectQuestion(question)                 ; break;
 						case 3  : 
-						case 4  : html += handleModifyMatrixQuestion(question)                 ; break;
-						case 5  : html += handleModifyTextQuesion("shortanswer", "make")       ; break;
-						case 6  : html += handleModifyTextQuesion("paragraph"  , "make")       ; break;
-						case 7  : html += handleModifySliderQuesion(question)                  ; break;
-						case 8  : html += handleModifyRankDropDownQuesion("ranking" , question); break;
-						case 9  : html += handleModifyRankDropDownQuesion("dropdown", question); break;
+						case 4  : body = handleModifyMatrixQuestion(question)                 ; break;
+						case 5  : body = handleModifyTextQuesion("shortanswer", "make")       ; break;
+						case 6  : body = handleModifyTextQuesion("paragraph"  , "make")       ; break;
+						case 7  : body = handleModifySliderQuesion(question)                  ; break;
+						case 8  : body = handleModifyRankDropDownQuesion("ranking" , question); break;
+						case 9  : body = handleModifyRankDropDownQuesion("dropdown", question); break;
 						default : alert(SurveyMessages.strError)                               ; return;
 					}
-					
-					html += mkAddtionalPart(mode, question.required);
-					
-					qstnWrapper.next().append(html);
+					additional = mkAddtionalPart(mode, question.required);
+
+					QuestionForm.append(body);
+					QuestionForm.append(additional);
+					qstnWrapper.next().append(QuestionForm);
 				}
 				// 수정시 새로 생성하는 선택질문
 				function handleModifySelectQuestion(question) {
-					var htmlTxt = "";
+					var optionWrapper = $("<div class='optionWrapper'></div>");
 					
 					if (question) {
 						var opts    = question.option;
@@ -1161,26 +1171,34 @@
 						var others  = opts.filter(function(opt) {return opt["otherFlag"] == 1;});
 						var other   = (others && others.length > 0) ? others[0] : null;
 						
+						var opt = "";
+						
 						if (options) {
 							for (var i = 0, len = options.length; i < len; i++) {
-								htmlTxt += mkOpt("opt", options[i]);
+								opt = mkOpt("opt", options[i]);
+								optionWrapper.append(opt);
 							}
 						}
 						
-						if (other) {htmlTxt += mkOpt("other", other);}
-					}
-					else {
+						if (other) {
+							opt = mkOpt("other", other);
+							optionWrapper.append(opt);
+							}
+					} else {
 						for (var i = 0; i < 2; i++) {
-							htmlTxt += mkOpt("opt");
+							opt = mkOpt("opt");
+							optionWrapper.append(opt);
 						}
 					}
 					
-					htmlTxt += "<div class='addBtns'>";
+					var htmlTxt = "<div class='addBtns'>";
 					htmlTxt += "<button class='addOpt'>" + SurveyMessages.strAdd + "</button>";
 					htmlTxt += "<button class='addOther'>" + SurveyMessages.strAddOther + "</button>";
 					htmlTxt += "</div>";
 					
-					return htmlTxt;
+					optionWrapper.append(htmlTxt);
+					
+					return optionWrapper;
 				}
 				
 				// 수정시 새로 생성하는 행렬질문 
@@ -1194,7 +1212,6 @@
 						row         = options.filter(function(row) {return row["colLevel"] == -1;});
 						col         = options.filter(function(col) {return col["rowLevel"] == -1;});
 					}
-					
 					html += "<div class='mtrPart'>";
 					html += "<div class='rowArea'>";
 					html += "<div class='rName'>";
@@ -1212,7 +1229,6 @@
 							html += mkRowCol("row");
 						}
 					}
-					
 					html += "</div>";
 					html += "<div class='rowBtn'>";
 					html += "<button class='addRow'>" + SurveyMessages.strAdd + "</button>";
@@ -1233,28 +1249,28 @@
 							html += mkRowCol("col");
 						}
 					}
-					
 					html += "</div>";
 					html += "<div class='colBtn'>";
 					html += "<button class='addCol'>" + SurveyMessages.strAdd + "</button>";
 					html += "</div></div></div>";
 					
-					return html;
+					return $(html);
 				}
 				
 				function handleModifyTextQuesion(type, mode) {
 					var className = mode == "make" ? type + "-wrap" : "question-" + type;
-					var htmlTxt   = "<div class='" + className + "'>";
+					var textQstnDiv = $("<div class='" + className + "'>");
 					
 					if (type == "paragraph") {
-						htmlTxt  += "<textarea class='" + type +"' maxlength='500' placeholder='" + SurveyMessages.strContent + "'></textarea>";
+						var textarea = $("<textarea class='" + type +"' maxlength='500' placeholder='" + SurveyMessages.strContent + "'></textarea>");
+						textQstnDiv.append(textarea);
 					}
 					else {
-						htmlTxt  += "<input class='" + type +"' maxlength='80' placeholder='" + SurveyMessages.strContent + "'/>";
+						var input = $("<input class='" + type +"' maxlength='80' placeholder='" + SurveyMessages.strContent + "'/>");
+						textQstnDiv.append(input);
 					}
 					
-					htmlTxt += "</div>";
-					return htmlTxt;
+					return textQstnDiv;
 				}
 				
 				function handleModifySliderQuesion(question) {
@@ -1267,35 +1283,44 @@
 						lowest      = options.filter(function(val) {return val["level"] == 0;})[0]["content"];
 						highest     = options.filter(function(val) {return val["level"] == 1;})[0]["content"];
 					}
+					var slidWrap = $("<div class='silder-wrap'></div>");
+					var sliderLw = $("<input type='input' class='slider-lw' value='" + lowest  + "'/>");
+					slidWrap.append(sliderLw);
 					
-					htmlTxt    += "<div class='silder-wrap'>";
-					htmlTxt    += "<input type='input' class='slider-lw' value='" + lowest  + "'/>";
-					htmlTxt    += "<input type='range' class='slider-main'/>";
-					htmlTxt    += "<input type='input' class='slider-up' value='" + highest + "'/>";
-					htmlTxt    += "</div>";
-					return htmlTxt;
+					var slideMain = $("<input type='range' class='slider-main'/>");
+					slidWrap.append(slideMain);
+					
+					var sliderUp = $("<input type='input' class='slider-up' value='" + highest + "'/>");
+					slidWrap.append(sliderUp);
+					
+					return slidWrap;
 				}
 				
 				function handleModifyRankDropDownQuesion(type, question) {
-					var htmlTxt = "<div class='" + type + "-wrap'>";
+					var wrap = $("<div class='" + type + "-wrap'></div>");
+					var option = "";
 					
 					if (question) {
 						var optionList = question["option"];
 						
 						for (var i = 0, len = optionList.length; i < len; i++) {
-							htmlTxt += mkOptions(type, i + 1, optionList[i]["content"]);
+							option = mkOptions(type, i + 1, optionList[i]["content"]);
+							wrap.append(option);
 						}
 					}
 					else {
 						for (var i = 0; i < 3; i++) {
-							htmlTxt += mkOptions(type, i + 1, "");
+							option = mkOptions(type, i + 1, "");
+							wrap.append(option);
 						}
 					}
 					
-					htmlTxt += "<div class='addBtns'>";
+					var htmlTxt = "<div class='addBtns'>";
 					htmlTxt += "<button class='addOpttions'>" + SurveyMessages.strAdd + "</button>";
-					htmlTxt += "</div></div>";
-					return htmlTxt;
+					htmlTxt += "</div>";
+					wrap.append($(htmlTxt));
+					
+					return wrap;
 				}
 				
 				// 첨부파일 있을 시 태그 생성
@@ -1478,22 +1503,22 @@
 								  body = mkMatrixQstn(question); break;
 						case 5  : var shortAnswerObj = mkTxtObj();
 								  question["option"] = shortAnswerObj.option;
-								  html += mkTextQstn(question, "shortanswer"); break;
+								  body = mkTextQstn(question, "shortanswer"); break;
 						case 6  : var paragraphObj   = mkTxtObj();
 								  question["option"] = paragraphObj.option;
-								  html += mkTextQstn(question, "paragraph"  ); break;
+								  body = mkTextQstn(question, "paragraph"  ); break;
 						case 7  : var sliderObj = mkSliderObj(qstnForm[0]);
 								  if (sliderObj.error) {alert(SurveyMessages[sliderObj.error]); return;}
 								  if (sliderObj.option) {question["option"] = sliderObj.option;}
-								  html += mkSliderQstn(question); break;
+								  body = mkSliderQstn(question); break;
 						case 8  : var rankingObj = mkRankingDropDownObj("ranking", qstnForm);
 								  if (rankingObj.error) {alert(SurveyMessages[rankingObj.error]); return;}
 								  question["option"] = rankingObj.option;
-								  html += mkRankingQstn(question); break;
+								  body = mkRankingQstn(question); break;
 						case 9  : var dropDownObj = mkRankingDropDownObj("dropdown", qstnForm);
 								  if (dropDownObj.error) {alert(SurveyMessages[rankingObj.error]); return;}
 								  question["option"] = dropDownObj.option;
-								  html += mkDropDownQstn(question); break;
+								  body = mkDropDownQstn(question); break;
 						default : alert(SurveyMessages.strError); return;
 					}
 					header.append(body[0]);
@@ -1523,59 +1548,71 @@
 					var options = question.option;
 					var lowest  = options.filter(function(val) {return val["level"] == 0;})[0]["content"];
 					var highest = options.filter(function(val) {return val["level"] == 1;})[0]["content"];
-					var html    = "";
-					html    += "<div class='question-silder'>";
-					html    += "<div class='silder-wrap'>";
-					html    += "<span>" + lowest + "</span>";
-					html    += "<input type='range' class='slider-range' name='slider" + question.id + "' min='" + lowest + "' max='" + highest + "'/>";
-					html    += "<span>" + highest + "</span>";
-					html    += "</div>";
-					html    += "<output for='slider" + question.id + "' class='slider-output'></output>";
-					html    += "</div>";
 					
-					return html;
+					var questionSilder = $("<div class='question-silder'></div>");
+					var silderWrap = $("<div class='silder-wrap'></div>");
+					var low = $("<span>" + lowest + "</span>");
+					var input = $("<input type='range' class='slider-range' name='slider" + question.id + "' min='" + lowest + "' max='" + highest + "'/>");
+					var high = $("<span>" + highest + "</span>");
+					var output = $("<output for='slider" + question.id + "' class='slider-output'></output>");
+
+					silderWrap.append(low);
+					silderWrap.append(input);
+					silderWrap.append(high);
+					
+					questionSilder.append(silderWrap);
+					questionSilder.append(output);
+					
+					return questionSilder;
 				}
 				
 				function mkRankingQstn(question) {
 					var options = question["option"];
-					var html    = "";
-					html       += "<div class='question-ranking'>";
-					html       += "<div class='ranking-wrap'>";
+					var questionRanking = $("<div class='question-ranking'>");
+					var rankingWrap = $("<div class='ranking-wrap'>");
+					var opt = "";
+					
 					var strSlct = "<select>";
 					strSlct    += "<option selected>" + SurveyMessages.strSelect + "</option>";
 					
 					for (var j = 0, len = options.length; j < len; j++) {
 						strSlct += "<option>" + options[j]["content"] + "</option>";
 					}
-					
 					strSlct += "</select>";
 					
 					for (var i = 0, len = options.length; i < len; i++) {
-						html += "<div class='ranking-select'>";
-						html += "<span class='rank-order'>" + (i + 1) + ".</span>";
-						html += strSlct;
-						html += "</div>";
+						var rankingSelect = $("<div class='ranking-select'></div>");
+						var rankOrder = $("<span class='rank-order'>" + (i + 1) + ".</span>");
+						
+						rankingSelect.append(rankOrder);
+						rankingSelect.append(strSlct);
+						rankingWrap.append(rankingSelect);
 					}
+					questionRanking.append(rankingWrap);
 					
-					html += "</div></div>";
-					return html;
+					return questionRanking;
 				}
 				
 				function mkDropDownQstn(question) {
 					var options = question["option"];
-					var html    = "";
-					html       += "<div class='question-dropdown'>";
-					html       += "<div class='dropdown-wrap'>";
-					html       += "<select>";
-					html       += "<option selected>" + SurveyMessages.strSelect + "</option>";
+					
+					var questionDropdown = $("<div class='question-dropdown'></div>");
+					var dropdownWrap = $("<div class='dropdown-wrap'></div>");
+					
+					var select = $("<select></select>");
+					var defaultOpt = $("<option selected>" + SurveyMessages.strSelect + "</option>");
+					select.append(defaultOpt);
 					
 					for (var j = 0, len = options.length; j < len; j++) {
-						html += "<option>" + options[j]["content"] + "</option>";
+						var opt = $("<option></option>");
+						
+						opt[0].textContent = options[j]["content"];
+						select.append(opt);
 					}
+					dropdownWrap.append(select);
+					questionDropdown.append(dropdownWrap);
 					
-					html += "</select>";
-					html += "</div></div>";
-					return html;
+					return questionDropdown;
 				}
 				
 				function makeQuestionHeaderPanel(question) {
@@ -1787,12 +1824,18 @@
 				
 				// make ranking/dropdown options
 				function mkOptions(type, order, content) {
-					var html  = "<div class='" + type + "-select'>";
-					html     += "<span class='" + type + "-order'>" + order + "</span>";
-					html     += "<input class='textInput' type='text' value='" + content + "' placeholder='" + SurveyMessages.strContent + "'/>";
-					html     += "<span class='delOption'></span>";
-					html     += "</div>";
-					return html;
+					var options = $("<div class='" + type + "-select'></div>");
+					var span = $("<span class='" + type + "-order'>" + order + "</span>");
+					options.append(span);
+					
+					var contents = $("<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>");
+					contents[0].textContext = content;
+					options.append(contents);
+					
+					var delOption = $("<span class='delOption'></span>");
+					options.append(delOption);
+					
+					return options;
 				}
 				
 				// selection 질문의 보기 생성
@@ -1801,43 +1844,41 @@
 					var attEl  = "";
 					var html   = "<div class='optArea'>";
 						html  += "<div class='option'>";
-						
+					var opt = "";
 					if (type == "other") {
 						html = "<div class='other'>" + html;
 						
 						if (options) {
 							html  += "<input class='textInput' type='text' value='" + options["content"] + "' maxlength='40' placeholder='" + SurveyMessages.strOther + "'/>";
-							optAtt = options["attach"];
 						}
 						else {
 							html += "<input class='textInput' type='text' maxlength='40' placeholder='" + SurveyMessages.strOther + "'>";
 						}
-					}
-					else {
+					} else {
 						html = "<div class='optPart'>" + html;
 						
 						if (options) {
 							html  += "<input class='textInput' type='text' value='" + options["content"] + "' maxlength='40' placeholder='" + SurveyMessages.strContent + "' />";
 							optAtt = options["attach"];
+							
 						}
 						else {
 							html += "<input class='textInput' type='text' maxlength='40' placeholder='" + SurveyMessages.strContent + "'/>";
 						}
 					}
-					
 					html += "<img src='/images/ezSurvey/attach.png' class='attImg'>";
 					html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
 					html += "</div>";
 					html += "<div class='optFileInfo'>";
 					html += "<div class='fileList'>";
-					
+
 					if (optAtt) {attEl = mkImgTag(optAtt);}
 					
 					html += "<ul class='optUl'>" + attEl + "</ul>";
 					html += "<input type='file' class='optionFile' accept='image/*'/>";
 					html += "</div></div></div></div>";
 					
-					return html;
+					return $(html);
 				}
 				
 				// 행렬 질문의 row, col 생성
@@ -1878,41 +1919,49 @@
 					}
 					
 					html += "</div>";
-					return html;
+					return $(html);
 				}
 				
-				function makeQuestionForm(questionType) {return "<div class='qstnForm' questionType='" + questionType + "'>";}
+				function makeQuestionForm(questionType) {return $("<div class='qstnForm' questionType='" + questionType + "'>");}
 				
 				function makeTextQuestion(mainDivElmt, questionType, type, checkResult) {
-					var html = makeQuestionForm(questionType);
-					html    += handleModifyTextQuesion(type, "make");
-					html    += mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
-					
-					mainDivElmt.append(html);
+					var QuestionForm = makeQuestionForm(questionType);
+					var textQs = handleModifyTextQuesion(type, "make");
+					var addtional = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+
+					QuestionForm.append(textQs);
+					QuestionForm.append(addtional);
+					mainDivElmt.append(QuestionForm);
 				}
 				
 				function makeSliderQuestion(mainDivElmt, questionType, checkResult) {
-					var html = makeQuestionForm(questionType);
-					html    += handleModifySliderQuesion();
-					html    += mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
-					
-					mainDivElmt.append(html);
+					var QuestionForm = makeQuestionForm(questionType);
+					var slider = handleModifySliderQuesion();
+					var addtional = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+
+					QuestionForm.append(slider);
+					QuestionForm.append(addtional);
+					mainDivElmt.append(QuestionForm);
 				}
 				
 				function makeRankingQuestion(mainDivElmt, questionType, checkResult) {
-					var html = makeQuestionForm(questionType);
-					html    += handleModifyRankDropDownQuesion("ranking");
-					html    += mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
-					
-					mainDivElmt.append(html);
+					var QuestionForm = makeQuestionForm(questionType);
+					var raking =  handleModifyRankDropDownQuesion("ranking");
+					var addtional = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+
+					QuestionForm.append(raking);
+					QuestionForm.append(addtional);
+					mainDivElmt.append(QuestionForm);
 				}
 				
 				function makeDropdownQuestion(mainDivElmt, questionType, checkResult) {
-					var html = makeQuestionForm(questionType);
-					html    += handleModifyRankDropDownQuesion("dropdown");
-					html    += mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
-					
-					mainDivElmt.append(html);
+					var QuestionForm = makeQuestionForm(questionType);
+					var drdw = handleModifyRankDropDownQuesion("dropdown");
+					var addtional = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+
+					QuestionForm.append(drdw);
+					QuestionForm.append(addtional);
+					mainDivElmt.append(QuestionForm);
 				}
 				
 				function getAttachFileInfo(elmtObj) {
