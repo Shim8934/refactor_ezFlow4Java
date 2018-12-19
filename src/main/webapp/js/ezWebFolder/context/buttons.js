@@ -219,11 +219,36 @@ var buttons = (function() {
 				return;
 			}
 			
-			// 폴더도 되게 수정 
-			/* if (selected.folders.length > 0) {
-				alert(messages.strLang1);
-				return;
-			} */
+			for (var i = 0; i < selected.folders.length; i++) {
+				if (selected.targetFunction[i] != null || selected.targetFunction[i] == "") {
+					folderType = selected.targetFunction[i];
+				}
+				
+				var targetPathLength = selected.targetPath;
+				var selectedCreatorId = selected.creater[i];
+				
+				if (folderType == "S") {
+					if (parentId == 'root' || targetPathLength[i] < 2) {
+						alert(messages.strLang34);
+						return;
+					}
+				} else if (folderType == "C") {
+					if (parentId == 'root' || targetPathLength[i] < 2) {
+						alert(messages.strLang36);
+						return;
+					}
+				} else {
+					if (folderId == "root" || targetPathLength[i] < 1) {
+						alert(messages.strLang35);
+						return;
+					}
+				}
+				
+				if (selectedCreatorId != userId) {
+					alert(messages.strLang37);
+					return;
+				}
+			}
 			
 			var params = [];
 			

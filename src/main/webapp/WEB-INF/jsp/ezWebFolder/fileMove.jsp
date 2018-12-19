@@ -292,6 +292,19 @@
 				success : function(data) {
 					var code = data.code;
 					
+					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 start
+					if (code == 0 || code == 8) {
+						if (data.folderErrorArray) {
+							alert("<spring:message code='ezWebFolder.t245' />");
+							
+							if (code == 0) {
+								afterSuccess();
+								return;
+							}
+						}
+					}
+					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 end
+					
 					switch(code) {
 						case 0: 
 							alert("<spring:message code='ezWebFolder.t248'/>");
@@ -358,6 +371,19 @@
 				async: true,
 				success : function(data) {
 					var code = data.code;
+					
+					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 start
+					if (code == 0 || code == 8) {
+						if (data.folderErrorArray) {
+							alert("<spring:message code='ezWebFolder.t245' />");
+							
+							if (code == 0) {
+								afterSuccess();
+								return;
+							}
+						}
+					}
+					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 end
 					
 					switch(code) {
 						case 0: 
