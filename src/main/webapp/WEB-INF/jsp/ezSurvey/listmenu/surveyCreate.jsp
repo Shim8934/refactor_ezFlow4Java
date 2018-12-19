@@ -1315,7 +1315,7 @@
 					wrapper.find(".quesDiv").remove();
 					wrapper.find(".qstnForm").remove();
 				}
-				
+//////////////////////////////////////////				
 				// 단일선택 질문 생성 
 				function mkSelectQstn(question) {
 					var totalOptions = question.option;
@@ -1323,50 +1323,65 @@
 					var others       = totalOptions.filter(function(opt) {return opt["otherFlag"] == 1;});
 					var other        = (others && others.length > 0) ? others[0] : null;
 					var qstnType     = question.type;
-					var html         = "";
-					html            += "<div class='question-opts'>";
-					var divOpts       = document.createElement("div");
-					divOpts.className = "question-opts";
+					var questionOpts = $("<div class='question-opts'></div>");
+					var opt = "";
+					var optRdo = "";
+					var optChb = "";
+					var optAttach = "";
+					var optContent = "";
+					var span = "";
+					var othInput = "";
 					
 					// 보기
 					if (options) {
 						for (var i = 0; i < options.length; i++) {
-							html += "<div class='opt' level='" + options[i].level + "'>";
-							
+							opt = $("<div class='opt' level='" + options[i].level + "'></div>");
 							if (qstnType == 2) {
-								html += "<input class='optChb' type='checkbox' value='" + options[i].level + "'/>";
+								optChb = $("<input class='optChb' type='checkbox' value='" + options[i].level + "'/>");
+								opt.append(optChb);
+							} else {
+								optRdo = $("<input class='optRdo' type='radio' value='" + options[i].level + "'/>");
+								opt.append(optRdo);
 							}
-							else {
-								html += "<input class='optRdo' type='radio' value='" + options[i].level + "'/>";
-							}
+							optAttach = options[i]["attach"]  ? $("<img alt='' src='" + options[i]["attach"].fpath + "' class='optImg'>") : "";
+							opt.append(optAttach);
 							
-							// 첨부파일이 있는지 확인
-							html          += options[i]["attach"]  ? "<img alt='' src='" + options[i]["attach"].fpath + "' class='optImg'>" : "";
-							var optContent = options[i]["content"] ? options[i]["content"] : "";
-							html          += "<span class='optSpan'>" + optContent + "</span>";
-							html          += "</div>";
+							optContent = options[i]["content"] ? options[i]["content"] : "";
+							
+							optSpan = $("<span class='optSpan'></span>");
+							optSpan[0].textContent = optContent;
+							opt.append(optSpan);
+							
+							questionOpts.append(opt);
 						}
 					}
 					
 					// 기타
 					if (other) {
-						html += "<div class='opt'>";
-						
+						var opt = $("<div class='opt'></div>");
+
 						if (qstnType == 2) {
-							html += "<input class='optChb' type='checkbox' value='" + other.level + "'/>";
-						}
-						else {
-							html += "<input class='optRdo' type='radio' value='" + other.level + "'/>";
+							optChb = $("<input class='optChb' type='checkbox' value='" + other.level + "'/>");
+							opt.append(optChb);
+						} else {
+							optRdo = $("<input class='optRdo' type='radio' value='" + other.level + "'/>");
+							opt.append(optRdo);
 						}
 						
-						html += other["attach"] ? "<img alt='' src='" + other["attach"].fpath + "' class='optImg'>" : ""; // 첨부파일이 있는지 확인
-						html += "<span class='optSpan'>" + other["content"] + "</span>";
-						html += "<input class='othInput' type='text'/>";
-						html += "</div></div>";
+						optAttach = other["attach"] ? $("<img alt='' src='" + other["attach"].fpath + "' class='optImg'>") : "";
+						opt.append(optAttach);
+						
+						optSpan = $("<span class='optSpan'></span>");
+						optSpan[0].textContent = other["content"];
+						opt.append(optSpan);
+						
+						othInput = $("<input class='othInput' type='text'/>");
+						opt.append(othInput);
+						
+						questionOpts.append(opt);
 					}
 					
-					html += "</div>";
-					return html;
+					return questionOpts;
 				}
 				
 				function mkMatrixQstn(question) {
@@ -1375,41 +1390,51 @@
 					var col      = opts.filter(function(col) {return col["rowLevel"] == -1;});
 					var row      = opts.filter(function(row) {return row["colLevel"] == -1;});
 					
-					var html  = "";
-						html += "<div class='question-opts'>";
-						html += "<table class='matrix'>";
-						html += "<thead>";
-						html += "<tr>";
-						html += "<td></td>";
-						
-					for (var i = 0; i < col.length; i++) {
-						html += "<td>" + col[i]["content"] + "</td>";
-					}
+					var questionOpts = $("<div class='question-opts'></div>");
+					var table = $("<table class='matrix'></table>");
+					var head = $("<thead></head>");
+					var headTr = $("<tr><td></td></tr>");
 					
-					html += "</tr>";
-					html += "</thead>";
-					html += "<tbody>";
+					var dynamicTd = "";
+					var body = "";
+					var bodyTr = "";
+					var bodyTd = "";
+					var inputTd = "";
+					var Input = "";
+					
+					for (var i = 0; i < col.length; i++) {
+						dynamicTd = $("<td></td>");
+						dynamicTd[0].textContent = col[i]["content"];
+						headTr.append(dynamicTd);
+					}
+					head.append(headTr);
+					table.append(head);
+					body = $("<tbody></body>");
 					
 					for (var i = 0; i < row.length; i++) {
-						html += "<tr>";
-						html += "<td>" + row[i]["content"] + "</td>";
+						bodyTr = $("<tr></tr>");
+						
+						bodyTd = $("<td></td>");
+						bodyTd[0].textContent = row[i]["content"];
+						bodyTr.append(bodyTd);
 						
 						for (var j = 0; j < col.length; j++) {
-							html += "<td><input type='" + inpType + "' value='(" + row[i]["rowLevel"] + ", " + col[j]["colLevel"] + ")'></td>";
+							inputTd = $("<td></td>");
+							Input = $("<input type='" + inpType + "'>");
+							Input.val("(" + row[i]["rowLevel"] + ", " + col[j]["colLevel"] + ")");
+							inputTd.append(Input);
+							bodyTr.append(inputTd);
 						}
-						
-						html += "</tr>";
+						body.append(bodyTr);
 					}
+					table.append(body);
+					questionOpts.append(table);
 					
-					html += "</tbody>";
-					html += "</table>";
-					html += "</div>";
-					
-					return html;
+					return questionOpts;
 				}
-				
+				// 이전 요소 삭제
 				function rmPrevEl(wrapperElmt) {wrapperElmt.prev().remove();}
-				
+/////////////////////////////////////				
 				// 질문 객체 생성
 				function mkQstnObj(status, thisEl) {
 					var question     = {};
@@ -1438,20 +1463,19 @@
 					//Set id
 					qstnWrapper.attr("id", "qstn" + qstId);
 					
-					var html       = makeQuestionHeaderPanel(question);
-					
+					var header       = makeQuestionHeaderPanel(question);
+					var body = "";
 					switch(parseInt(qstnType)) {
 						case 1  :
 						case 2  : var sltObj = mkSltObj(qstnForm);
 								  if (sltObj.error)  {alert(SurveyMessages[sltObj.error]); return;}
 								  if (sltObj.option) {question["option"] = sltObj.option;}
-								  html += mkSelectQstn(question); 
-								  break;
+								  body = mkSelectQstn(question); break;
 						case 3  : 
 						case 4  : var mtrObj = mkMtrObj(qstnForm);
 								  if (mtrObj.error)  {alert(SurveyMessages[mtrObj.error]); return;}
 								  if (mtrObj.option) {question["option"] = mtrObj.option;}
-								  html += mkMatrixQstn(question); break;
+								  body = mkMatrixQstn(question); break;
 						case 5  : var shortAnswerObj = mkTxtObj();
 								  question["option"] = shortAnswerObj.option;
 								  html += mkTextQstn(question, "shortanswer"); break;
@@ -1472,7 +1496,9 @@
 								  html += mkDropDownQstn(question); break;
 						default : alert(SurveyMessages.strError); return;
 					}
-					qstnWrapper.prepend(html);
+					header.append(body[0]);
+					
+					qstnWrapper.prepend(header);
 					
 					rmQstnForm(qstnWrapper);
 					
