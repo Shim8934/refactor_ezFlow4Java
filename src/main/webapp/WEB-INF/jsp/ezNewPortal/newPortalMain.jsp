@@ -65,6 +65,7 @@
 		 	
 		 	$(window).resize(function() {
 		 		browserResize();
+		 		setGadgetPositionResize();
 		 	});
 		 	
 		 	$(function() {
@@ -117,6 +118,9 @@
 			    			$(this).parent().nextAll(".color_popup").css("visibility", "hidden"); 
 			    		}
 			    	});
+			    	
+			    	/* 2018-12-18 김민성 - 메모 레이어 팝업 드래그시 화면 밀림 현상 수정 */
+			    	$("#layer-popup").draggable("option", "scroll", false);
 		    	} else {
 		    		$(".noteBlock").css("pointer-events", "none");
 		    	}
