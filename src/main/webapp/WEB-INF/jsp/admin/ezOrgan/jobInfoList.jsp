@@ -648,7 +648,7 @@
 		}
 	</script>
 </head>
-<body class="mainbody">
+<body class="mainbody" style="overflow: hidden;">
 	<h1>
 		<spring:message code='ezOrgan.csj01' />
 		<select class="companySelect" id="ListCompany" onChange="compChange()">
@@ -678,7 +678,7 @@
 	</script>
 	<div class="mainview">
 		<div class="listview" style="border: 0px;">
-			<div id="JobListView" style="height: 600px; width: 792px; overflow-y:auto;"></div>
+			<div id="JobListView" style="height: 600px; width: 100%; overflow-y:auto;"></div>
 			<div id="tblPageRayer"></div>
 		</div>
 	</div>
@@ -699,7 +699,7 @@
 			
 			<div class="preview_content">
 				<div class="listview">
-					<div id="JobUserListView" style="height: 610px; width: 806px; overflow-y:auto;"></div>
+					<div id="JobUserListView" style="height: 610px; width: 100%; overflow-y:auto;"></div>
 				</div>
 			</div>
 		</div>
