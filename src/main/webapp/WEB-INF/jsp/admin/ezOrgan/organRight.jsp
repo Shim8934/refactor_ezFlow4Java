@@ -1546,7 +1546,7 @@
 			}
 		</script>
 		<style>
-		.OrganListView {width:470px;}
+		.OrganListView {width:100%;}
 		</style>
 	</head>
 	<body class="mainbody">
@@ -1561,27 +1561,27 @@
 				<HEADERS>
 					<HEADER>
 						<NAME><spring:message code='ezOrgan.t67' /></NAME>
-						<WIDTH>60</WIDTH>
+						<WIDTH></WIDTH>
 					</HEADER>
 					<HEADER>
 						<NAME><spring:message code='ezOrgan.t68' /></NAME>
-						<WIDTH>80</WIDTH>
+						<WIDTH>25%</WIDTH>
 					</HEADER>
 					<HEADER>
 						<NAME><spring:message code='ezOrgan.t69' /></NAME>
-						<WIDTH>50</WIDTH>
+						<WIDTH>20%</WIDTH>
 					</HEADER>
 					<HEADER>
 						<NAME>암호관리</NAME>
-						<WIDTH>50</WIDTH>
+						<WIDTH>10%</WIDTH>
 					</HEADER>
 					<HEADER>
 						<NAME>사원이동</NAME>
-						<WIDTH>50</WIDTH>
+						<WIDTH>10%</WIDTH>
 					</HEADER>
 					<HEADER>
 						<NAME>퇴직</NAME>
-						<WIDTH>30</WIDTH>
+						<WIDTH>10%</WIDTH>
 					</HEADER>
 				</HEADERS>
 			</LISTVIEWDATA>
@@ -1664,15 +1664,28 @@
 			</ul>
 		</div>
 		
-		<table style="height:630px;margin-top:10px;width:900px;border:1px solid #ddd">
-			<tr>
-				<th style="height:30px;border-bottom:0px"><spring:message code='ezOrgan.t73' /></th>
-				<th style="border-bottom:0px">
-					<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>					
-					<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
-				</th>
+		<div>
+			<div style="border: 1px solid #ddd; height: 510px; width: 30%; margin:10px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
+					
+			<div class="listview organ" style="float:left; width:60%;">
+				<c:if test="${dotNetIntegration != 'YES'}">
+					<div id="OrganListView" class="OrganListView"></div>
+				</c:if>
+				<c:if test="${dotNetIntegration == 'YES'}">
+					<div id="OrganListView" class="OrganListView"></div>
+				</c:if>
+			</div>
+		</div>	
+		<c:if test="${dotNetIntegration != 'YES'}">
+			<div class="moveWrap" style="width:50%; vertical-align:middle; text-align:center;">
+				<img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
+				<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
+				<a class="imgbtn" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a>
+			</div>
+		</c:if>
 				
-			</tr>
+			
+		<table style="height:630px;margin-top:10px;width:900px;border:1px solid #ddd; display:none;">
 		<%-- 	<tr>
 				<th style="height:30px;border-top:0px">
 					<input id="deptkeyword" onKeyPress="deptsearch_press();" style="WIDTH:130px; height:22px;" />
@@ -1695,7 +1708,7 @@
 					<a class="imgbtn" style="vertical-align:middle"><span onClick="search_click()"><spring:message code='ezOrgan.t101' /></span></a>
 				</th>
 			</tr> --%>
-			<tr>
+			<%-- <tr>
 				<th style="padding: 3px; text-align: left; font-weight: normal;vertical-align:top">
 					<div style="border: 1px solid #ddd; height: 510px; width: 375px; margin:10px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
 				</th>
@@ -1717,8 +1730,12 @@
 						</div>
 					</c:if>
 				</th>
-			</tr>
+			</tr> --%>
 		</table>
+		<div style="border-bottom:0px;visibility:hidden;">
+			<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>					
+			<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
+		</div>
 	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
 	<span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>  
 	</body>
