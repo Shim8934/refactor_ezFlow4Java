@@ -2549,7 +2549,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .sub_frameIcon .sub_frameIconUL02 .frameIconLI{ margin:0px !important; padding:6px 5px 5px 6px !important; overflow:hidden !important; cursor:pointer !important; border:none !important;}
 
 /* previewmail */
-.previewmail_bar_h{ border:1px solid #e5e5e5 !important}
+.previewmail_bar_h{ border:1px solid #e5e5e5 !important; border-top:0px !important;}
 
 .previewmail{margin:0px; padding:0px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; overflow:hidden; }
 .previewmail .previewmail_info{background:#f1f3f5; margin:0px; padding:0px; overflow:hidden; border-top:1px solid #e5e5e5;}
