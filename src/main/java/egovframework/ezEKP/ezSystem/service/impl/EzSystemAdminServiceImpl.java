@@ -620,4 +620,18 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		return module;
 	}
+	
+	public void deleteWebfolderLog(int keepLogPeriod, int tenantID) throws Exception {
+		logger.debug("deleteWebfolderLog started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_KEEP_LOG_PERIOD", keepLogPeriod*60);
+        map.put("v_TENANT_ID", tenantID);		
+        
+        ezSystemAdminDAO.deleteWebfolderLog(map);
+        
+		logger.debug("deleteWebfolderLog end.");
+		
+	}
 }

@@ -99,4 +99,8 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		
 		return (long) select("EzSystemAdminDAO.selectModuleSize", paramMap);
 	}
+	
+	public void deleteWebfolderLog(Map<String, Object> map) throws Exception {
+        delete("EzSystemAdminDAO.deleteWebfolderLog", map);
+    }
 }

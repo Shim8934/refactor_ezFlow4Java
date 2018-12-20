@@ -637,6 +637,14 @@ public class EzEmailScheduler extends EgovFileMngUtil {
             	e.printStackTrace();
             }
             
+            try {
+            	// 보존 기간이 지난 웹폴더 파일 로그를 삭제한다.
+            	ezSystemAdminService.deleteWebfolderLog(keepLogPeriodNum, tenant.getTenantId());
+            } catch (Exception e) { 
+            	logger.debug("deleteWebfolderLog delete fail. ");
+            	e.printStackTrace();
+            }
+            
             // 메일 건수, 크기 등 통계 현황을 통계 테이블에 저장하는 API를 호출한다.
             // 보존 기간이 지난 메일 수발신 로그를 삭제하는 기능도 수행한다.
             String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/processMailStatLogs";

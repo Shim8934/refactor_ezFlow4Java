@@ -337,4 +337,15 @@
 		)
 	</select>
 	
+	<delete id="EzSystemAdminDAO.deleteWebfolderLog" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_WEBFOLDER_LOG
+            WHERE
+            	TENANT_ID = #v_TENANT_ID#	
+            AND
+            	CREATE_DATE < sysdate - #v_KEEP_LOG_PERIOD#
+		]]>
+	</delete>
+	
 </sqlMap>
