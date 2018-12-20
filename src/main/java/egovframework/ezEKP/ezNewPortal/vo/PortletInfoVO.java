@@ -23,6 +23,8 @@ public class PortletInfoVO {
 	private String deptAuth;
 	private String comAuth;
 	private boolean accessYN;
+	private boolean isFixed; // 관리자가 포틀릿을 끌 수 없도록 지정 : 
+							//포틀릿 미사용 불가(true), 포틀릿 미사용 가능(false) 
 	
 	public String getUserAuth() {
 		return userAuth;
@@ -139,11 +141,17 @@ public class PortletInfoVO {
 	public void setAccessYN(boolean accessYN) {
 		this.accessYN = accessYN;
 	}
+	public boolean isFixed() {
+		return isFixed;
+	}
+	public void setFixed(boolean isFixed) {
+		this.isFixed = isFixed;
+	}
 	@Override
 	public String toString() {
 		return "PortletInfoVO [portletId=" + portletId + ", portletOrder=" + portletOrder + ", portletName=" + portletName + ", menuId=" + menuId + ", portletUrl=" + portletUrl + ", isGeneral="
 				+ isGeneral + ", defaultOrder=" + defaultOrder + ", portletCategory=" + portletCategory + ", connectionUrl=" + connectionUrl + ", portletUsed=" + portletUsed + ", portletBoardId="
 				+ portletBoardId + ", portletNameList=" + portletNameList + ", boardName1=" + boardName1 + ", boardName2=" + boardName2 + ", menuName=" + menuName + ", userAuth=" + userAuth
-				+ ", deptAuth=" + deptAuth + ", comAuth=" + comAuth + ", accessYN=" + accessYN + "]";
+				+ ", deptAuth=" + deptAuth + ", comAuth=" + comAuth + ", accessYN=" + accessYN + ", isFixed=" + isFixed + "]";
 	}
 }

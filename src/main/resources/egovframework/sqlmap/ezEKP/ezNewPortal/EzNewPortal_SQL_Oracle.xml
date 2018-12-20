@@ -1578,6 +1578,7 @@ AND
 				NVL(COMP.connection_url, A.portlet_url) AS portletUrl,
 				NVL(U.portlet_order, NVL(THEME.portlet_order, NVL(COMP.portlet_used, A.default_order))) AS portletOrder,
                 NVL(U.portlet_used, NVL(THEME.portlet_used, NVL(COMP.portlet_used, 1))) AS portletUsed,
+                THEME.is_fixed as isFixed,
 		]]>
 		
 		<isEmpty property="deptId">
@@ -1680,7 +1681,7 @@ AND
 		
 		<isNotEqual property="config" compareValue="true" prepend="AND">
 			<![CDATA[
-				(U.portlet_used = 1 OR U.portlet_used IS NULL)
+				(U.portlet_used = 1 OR U.portlet_used IS NULL OR THEME.is_fixed = 1)
 			]]>
 		</isNotEqual>
 		
@@ -2237,7 +2238,8 @@ ORDER BY
 		)
 	WHEN MATCHED THEN
 		UPDATE SET
-			portlet_order = #portletOrder#
+			portlet_order = #portletOrder#,
+			portlet_used = #portletUsed#
 	WHEN NOT MATCHED THEN
 		INSERT (
 			user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id, portlet_used, theme_id

@@ -971,7 +971,8 @@
 			A.portlet_used as portletused,
 			A.portlet_order as portletorder,
 			A.menu_id as menuid,
-			C.portlet_name as portletname
+			C.portlet_name as portletname,
+			A.is_fixed as isFixed
 		FROM
 			TBL_PORTAL_THEME_PORTLET A
 		JOIN
@@ -1021,14 +1022,15 @@
 		WHEN MATCHED THEN
 			UPDATE SET
 				portlet_used = #portletUsed#,
-				portlet_order = #portletOrder#
+				portlet_order = #portletOrder#,
+				is_fixed = #isFixed#
 		WHEN NOT MATCHED THEN
 			INSERT (
-				theme_id, tenant_id, company_id, portlet_id, portlet_used, portlet_order, menu_id
+				theme_id, tenant_id, company_id, portlet_id, portlet_used, portlet_order, menu_id, is_fixed
 			) VALUES (
 				#themeId#, #tenantId#, #companyId#, #portletId#, #portletUsed#, 
 				(SELECT portlet_order FROM TBL_PORTAL_PORTLET_COMP WHERE company_id = #companyId# AND tenant_id = #tenantId# AND portlet_id = #portletId#),
-				#menuId#
+				#menuId#, #isFixed#
 			) 
 	]]>
 	</update>
