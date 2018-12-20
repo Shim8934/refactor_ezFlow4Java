@@ -253,7 +253,7 @@
 				}
 			}
 				
-			select_memorialDays(uselang);			
+			/* select_memorialDays(uselang); */
 			
 			/* 2018-06-11 left에서 holiday 호출할 필요 없어서 주석처리 */	   	    
 		    /* function schedule_get_holiday() {

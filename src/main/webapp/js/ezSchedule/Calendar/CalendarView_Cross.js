@@ -51,12 +51,12 @@ function CalendarView(pTagetID,chk_str) {
         tDiv.innerHTML = "";
         objElm.appendChild(tDiv);
 
-        if (sDate.getFullYear() > 1800 && sDate.getFullYear() <= 2101) {
-            if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 1)
-                memorialDays[1].day = 29;
-            else if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 2)
-                memorialDays[1].day = 30;
-        }
+//        if (sDate.getFullYear() > 1800 && sDate.getFullYear() <= 2101) {
+//            if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 1)
+//                memorialDays[1].day = 29;
+//            else if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 2)
+//                memorialDays[1].day = 30;
+//        }
 
         if (typeCal != 1) {
             var oTable = document.createElement("TABLE");

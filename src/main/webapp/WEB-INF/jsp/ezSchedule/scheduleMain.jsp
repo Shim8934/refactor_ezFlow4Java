@@ -73,7 +73,7 @@
 		    var pStartday = "<c:out value='${startDay}'/>";
 		    var pUse_Editor = "<c:out value='${useEditor}'/>";
 		    var LunarUse = false;		    
-		    select_memorialDays(uselang);
+		    /* select_memorialDays(uselang); */
 		    
 		    /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
 	        window.onunload = function () {
