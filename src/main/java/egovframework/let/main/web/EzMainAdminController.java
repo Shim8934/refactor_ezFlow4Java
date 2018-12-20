@@ -81,8 +81,15 @@ public class EzMainAdminController {
 		}
 		//end
 		
+		String useActiveX = ezCommonService.getTenantConfig("useActiveX", userInfo.getTenantId());
+		if(useActiveX == null || useActiveX.equals("")) {
+			useActiveX = "NO";
+		}
+		
+
 		model.addAttribute("AdminActiveX", AdminActiveX);
 		model.addAttribute("useHWP", useHWP);
+		model.addAttribute("useActiveX", useActiveX);
 		
         String packageType = commonUtil.getPackageType(userInfo.getTenantId());
         

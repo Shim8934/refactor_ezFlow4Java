@@ -756,6 +756,18 @@ public class EzNewPortalGWController {
 			
 			data.put("logoUrl", logoUrl);
 			data.put("roleInfo", roleInfo);
+			
+			//한글기안기 activeX 설치할지 확인하는 용도
+			String useActiveX = ezCommonService.getTenantConfig("useActiveX", tenantId);
+			
+			if(useActiveX == null || useActiveX.equals("")) {
+				useActiveX = "NO";
+			}
+			
+			data.put("useActiveX", useActiveX);
+			//end
+			
+
 			LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			result.put("status", "ok");
 			result.put("code", 0);
