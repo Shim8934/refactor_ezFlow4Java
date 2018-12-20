@@ -1374,4 +1374,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.addUserMasterPasswordUpdateDT();
 	}
 	
+	@Override
+	public void addPortalThemePortletIsFixed() throws Exception {
+		ezCommonDAO.addPortalThemePortletIsFixed();
+	}
+	
 }
