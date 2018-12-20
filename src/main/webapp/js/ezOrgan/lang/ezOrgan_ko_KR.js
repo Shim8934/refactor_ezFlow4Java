@@ -32,3 +32,5 @@ var strLang31 = "전체관리자 권한을 지정할 수 없습니다.";
 var strLang32 = "의 모든 권한을 삭제 하시겠습니까?";
 var strLang535 = "데이터가 없습니다.";
 var strLangLHM01 = "타 회사로의 복구는 지원되지 않습니다.";
+var strLangLHM02 = "삭제 시 해당 사용자와 관련된 데이터가 삭제되며 복구할 수 없습니다.";
+var strLangLHM03 = "정말로 삭제하시겠습니까?";

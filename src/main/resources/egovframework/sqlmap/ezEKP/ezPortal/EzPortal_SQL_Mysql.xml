@@ -2623,4 +2623,32 @@
 			group by companyID, companyName, deptID, deptName
 		]]>
 	</select>
+	
+	<select id="EzPortalDAO.getEzTalkGateNoticeBoardId" parameterClass="map" resultClass="String">
+		SELECT
+			PARAMVALUE
+		FROM
+			tbl_portlet_general A
+		INNER JOIN
+			tbl_portlet_parameters B
+		ON
+			A.TENANT_ID = B.TENANT_ID
+		AND
+			A.UID_ = B.UID_
+		INNER JOIN
+			tbl_portlet_url C
+		ON
+			A.TENANT_ID = C.TENANT_ID
+		AND
+			A.UID_ = C.UID_
+		WHERE
+			A.TENANT_ID = #v_tenantID#
+		AND
+			COMPANYID= #v_companyID#
+		AND
+			PARAMNAME='companyBoardID'
+		AND
+			C.URL = '/ezPortal/wpNewBoard.do'
+	</select>
+	
 </sqlMap>

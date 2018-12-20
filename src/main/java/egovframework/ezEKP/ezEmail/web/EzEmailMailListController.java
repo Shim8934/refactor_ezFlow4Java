@@ -844,7 +844,6 @@ public class EzEmailMailListController {
 						
 						if (ctryCode != null && ctryCode[0] != null) {
 							countryCode = ctryCode[0].toLowerCase();
-							logger.debug("countryCode=" + countryCode);
 						}
 						
 						sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", countryCode));

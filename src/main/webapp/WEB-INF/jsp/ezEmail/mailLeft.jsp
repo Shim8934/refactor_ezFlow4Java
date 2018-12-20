@@ -397,9 +397,8 @@
 	                    	eval(treeviewStr).putstyle(eval(treeviewStr).selectedIndex(), "font-weight : bold");
 	                    }
 	                    
-	                    var pageTitle = parent.frames["right"].document.title;
-
-	                    if (pageTitle == "mail_list") {
+	                    var pageSrc = parent.frames["right"].document.location.toString();
+	                    if (pageSrc.indexOf("mailList.do") != -1) {
                         	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) { }
 	                    }
 	                    
@@ -624,7 +623,7 @@
 	        function address_foldermanage_Complete(ret) {
 	            if (ret != undefined) {
 	            	var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("GET", "/ezAddress/getRootAddressXML.do", false);
+		            xmlHTTP.open("POST", "/ezAddress/getRootAddressXML.do", false);
 		            xmlHTTP.send();
 	            	
 		            document.getElementById("AddressFolderXML").innerHTML = xmlHTTP.responseText;

@@ -458,6 +458,24 @@
 		 )
 	</statement>
 	
+	<select id="EzCommonDAO.checkUserMasterPasswordUpdateDT" resultClass="String">
+		<![CDATA[
+			SELECT 
+				PASSWORD_UPDATEDT
+			FROM 
+				TBL_USERMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addUserMasterPasswordUpdateDT"> 
+		ALTER TABLE 
+			TBL_USERMASTER
+		ADD 
+			PASSWORD_UPDATEDT DATE DEFAULT NULL
+	</statement>
+	
 	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
 		INSERT INTO tbl_tenant_config
 		(tenant_id, property_name, property_value, description, config_name, regdate)
