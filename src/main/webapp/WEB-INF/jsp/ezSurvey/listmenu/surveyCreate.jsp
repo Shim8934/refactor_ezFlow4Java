@@ -71,6 +71,21 @@
 				var lastScrollY = 0;
 				var scrolled    = true;
 				var resuseFlag  = null;
+				var questionFile = new SurveyFile("images");
+				var config       = {modify : "modify", required : "required", action : "action",}
+					
+				// 셀렉트 박스에 들어갈 질문 유형 데이터 
+				var optionData = 
+					[{ text : SurveyMessages.strSlOne   , value: 1, selected: false, imageSrc: "/images/ezSurvey/oneselect.png"  },
+					 { text : SurveyMessages.strSlMtp   , value: 2, selected: false, imageSrc: "/images/ezSurvey/multiplesl.png" },
+					 { text : SurveyMessages.strTblOne  , value: 3, selected: false, imageSrc: "/images/ezSurvey/tblone.png"     },
+					 { text : SurveyMessages.strTblMtp  , value: 4, selected: false, imageSrc: "/images/ezSurvey/tblmultiple.png"},
+					 { text : SurveyMessages.strShortQs , value: 5, selected: false, imageSrc: "/images/ezSurvey/shorttext.png"  },
+					 { text : SurveyMessages.strLongQs  , value: 6, selected: false, imageSrc: "/images/ezSurvey/paragraph.png"  },
+					 { text : SurveyMessages.strSlider  , value: 7, selected: false, imageSrc: "/images/ezSurvey/slider.png"     },
+					 { text : SurveyMessages.strRanking , value: 8, selected: false, imageSrc: "/images/ezSurvey/ranking.png"    },
+					 { text : SurveyMessages.strDropdown, value: 9, selected: false, imageSrc: "/images/ezSurvey/dropdown.png"   }];
+				
 				var surveyObj   = {
 					infor     : {},
 					questions : []
@@ -157,6 +172,13 @@
 					document.getElementById("cancelSurvey1").addEventListener("click" , cancleThisSurvey      , false);
 					document.getElementById("public-slbox" ).addEventListener("change", toggleDaysInput       , false);
 					document.getElementById("closeUserPanel").addEventListener("click", toggleUserPreview     , false);
+					
+					// question input 및 img 생성
+					createQuestionDiv();
+					
+					// question selectBox 생성
+					createQuestionSelectBox();
+					addOptEvent();
 				}
 				
 				function startUpload() {document.getElementById("fileBttn").click();}
@@ -555,42 +577,6 @@
 				function getSurveyInfo() {return surveyObj["infor"];}
 				function isValid(value) {if (!isNaN(value) && parseFloat(value) >= 0 && value % 1 === 0) {return true;} else {return false;}}
 				
-				return {
-					getUsers : getSurveyUsers,
-					setUsers : setSurveyUsers,
-					getQs    : getSurveyQuestions,
-					setQs    : setSurveyQuestions,
-					getInfo  : getSurveyInfo,
-					userMore : toggleUserPreview,
-					showUser : showUserInfoFromId,
-					start    : initEvents,
-				};
-			}();
-			
-			$(function() {
-				var questionFile = new SurveyFile("images");
-				var config       = {modify : "modify", required : "required", action : "action",}
-					
-				// 셀렉트 박스에 들어갈 질문 유형 데이터 
-				var optionData = 
-					[{ text : SurveyMessages.strSlOne   , value: 1, selected: false, imageSrc: "/images/ezSurvey/oneselect.png"  },
-					 { text : SurveyMessages.strSlMtp   , value: 2, selected: false, imageSrc: "/images/ezSurvey/multiplesl.png" },
-					 { text : SurveyMessages.strTblOne  , value: 3, selected: false, imageSrc: "/images/ezSurvey/tblone.png"     },
-					 { text : SurveyMessages.strTblMtp  , value: 4, selected: false, imageSrc: "/images/ezSurvey/tblmultiple.png"},
-					 { text : SurveyMessages.strShortQs , value: 5, selected: false, imageSrc: "/images/ezSurvey/shorttext.png"  },
-					 { text : SurveyMessages.strLongQs  , value: 6, selected: false, imageSrc: "/images/ezSurvey/paragraph.png"  },
-					 { text : SurveyMessages.strSlider  , value: 7, selected: false, imageSrc: "/images/ezSurvey/slider.png"     },
-					 { text : SurveyMessages.strRanking , value: 8, selected: false, imageSrc: "/images/ezSurvey/ranking.png"    },
-					 { text : SurveyMessages.strDropdown, value: 9, selected: false, imageSrc: "/images/ezSurvey/dropdown.png"   }];
-				
-				// question input 및 img 생성
-				createQuestionDiv();
-				addQstnEvent();
-				
-				// question selectBox 생성
-				createQuestionSelectBox();
-				addOptEvent();
-				
 				// question input 및 img 생성
 				function createQuestionDiv(qstnWrapper, question) {
 					//var html       = "";
@@ -638,18 +624,6 @@
 					}
 				}
 				
-				// question event 추가
-				function addQstnEvent() {
-					// question 첨부파일 트리거
-					$(".quesBacgr").on("click", ".atchImg", function() {
-						var li = $(this).closest(".quesDiv").find(".fileList").find("li");
-						if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
-						$(this).parent().next().find(".qstnFile").click();
-					});
-					
-					// question 첨부파일 추가
-					$(".quesBacgr").on("change", ".qstnFile", function(e) {fileUpload(this);});
-				}
 				// selectBox 생성
 				function createQuestionSelectBox(question) {
 					$(".selectBox").ddslick({
@@ -723,6 +697,16 @@
 				
 				// 버튼 이벤트
 				function addOptEvent() {
+					// question 첨부파일 트리거
+					$(".quesBacgr").on("click", ".atchImg", function() {
+						var li = $(this).closest(".quesDiv").find(".fileList").find("li");
+						if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
+						$(this).parent().next().find(".qstnFile").click();
+					});
+					
+					// question 첨부파일 추가
+					$(".quesBacgr").on("change", ".qstnFile", function(e) {fileUpload(this);});
+					
 					$(".quesBacgr").on("click", ".addOpttions", function() {
 						var thisEl    = $(this).parents(".qstnForm");
 						var classType = parseInt(thisEl.attr("questiontype")) == 8 ? "ranking" : "dropdown";
@@ -2560,7 +2544,18 @@
 					
 					return stUserType;
 				}
-			}());
+				
+				return {
+					getUsers : getSurveyUsers,
+					setUsers : setSurveyUsers,
+					getQs    : getSurveyQuestions,
+					setQs    : setSurveyQuestions,
+					getInfo  : getSurveyInfo,
+					userMore : toggleUserPreview,
+					showUser : showUserInfoFromId,
+					start    : initEvents,
+				};
+			}();
 		</script>
 		
 		<c:choose>
