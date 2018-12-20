@@ -1145,7 +1145,7 @@
 			        				<li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 			                        <c:if test="${guBun != '3'}">
 			                        	<li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
-			                        	<li ID='btn_Move' ><span class="icon16 popup_icon16_mail" onclick='mail_boarditem()' ></span></li>
+			                        	<li ID='btn_Move' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
 <%-- 			        				<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
 			                        </c:if>
 			        			</c:when>
@@ -1173,7 +1173,7 @@
 			                    	<li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 			                    	<c:if test="${guBun != '3'}">
 			                        	<li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
-			                        	<li ID='btn_Move' ><span class="icon16 popup_icon16_mail" onclick='mail_boarditem()' ></span></li>
+			                        	<li ID='btn_Move' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
 			                        </c:if>
 			        			</c:when>
 			        			<c:otherwise>
@@ -1189,7 +1189,7 @@
 				                        </c:if>
 				                        <li ID='btn_Read' ><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
 				                        <li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
-				                        <li ID='btn_Move' style="display:none;"><span class="icon16 popup_icon16_mail" onclick='mail_boarditem()' ></span></li>
+				                        <li ID='btn_Move' style="display:none;"><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
 				                    </c:if>
 			        			</c:otherwise>
 		        			</c:choose>

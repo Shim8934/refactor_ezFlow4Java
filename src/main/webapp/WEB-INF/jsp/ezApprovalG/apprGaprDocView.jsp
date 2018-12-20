@@ -632,7 +632,7 @@
 		          <li id="btnhistory"><span onClick="btnhistory_onclick()" ><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
                   <li id="btnPrint" ><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()" ></span></li>
-                  <li id="btnMail"><span class="icon16 popup_icon16_mail" onClick="return btnMail_onclick()" ></span></li>
+                  <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()" ></span></li>
 		        </ul>
 		      </div>
 		      <div id="close">
