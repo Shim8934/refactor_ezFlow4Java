@@ -1147,9 +1147,6 @@
 			</LISTVIEWDATA>
 		</xml>
 	    <div id="menu">
-	        <ul>
-	            <li><span onclick="OK_Click()"><spring:message code='ezOrgan.t167'/></span></li>
-	        </ul>
 	    </div>
 	    <div id="close">
 	        <ul>
@@ -1267,5 +1264,8 @@
 	            </td>
 	        </tr>
 	    </table>
+	    <div class="btnposition btnpositionNew">
+	        <a class="imgbtn" onclick="OK_Click()"><span><spring:message code='ezOrgan.t167'/></span></a>
+	    </div>
 	</body>	
 </html>
