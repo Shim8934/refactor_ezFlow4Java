@@ -139,6 +139,7 @@
 		                    RecordList_onclick();
 		                    break;
 		                case "m02":
+		                	PageSize = 20;
 		                    isPeriodYear = false;
 		                    CabinetList_onclick();
 		                    break;
