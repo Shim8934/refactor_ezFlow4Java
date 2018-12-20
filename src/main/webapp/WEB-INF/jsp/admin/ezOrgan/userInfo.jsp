@@ -29,6 +29,10 @@
 	    	var useBizmekaSpambox = "${useBizmekaSpambox}";
 	    	var locale = "<c:out value='${locale}'/>";
 	    	var companyID;
+	    	var pUserTitleID = "";
+	    	var pUserPositionID = "";
+	    	var jobTitleID, jobTitleName, jobTitleName2;
+	    	var jobPositionID, jobPositionName, jobPositionName2;
 	    	
 			$(document).ready(function(){
 				var toYear = new Date().getFullYear();
@@ -94,8 +98,6 @@
 	            	} else {
 			        	companyID = RetValue[4];
 	            	}
-			        getTitleOption();
-			        getPositionOption();
 		        }
 
 	            /* dhlee: Safari에서 영문 입력이 되지 않아 제거함.
@@ -132,6 +134,11 @@
 		            DeptID = RetValue[0];	
 		            document.getElementById('btn_PhotoAdd').style.display = "none";
 		            document.getElementById('btn_PhotoDel').style.display = "none";
+		            
+		            getJobOptionInfo("001");
+		            getJobOptionInfo("002");
+                	titleChange();
+                	positionChange();
 		        }else{
 		            OrgUserID = RetValue[2];
 		            document.getElementById("DeptName").value = RetValue[1];
@@ -176,14 +183,24 @@
 			                
 			                try {
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim() != "") {
-				                	document.getElementById(SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim()).selected = "true";
-				                	titleChange();
+				                	pUserTitleID = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim();
+				                	getJobOptionInfo("001");
+				                	document.getElementById(pUserTitleID).selected = "true";
+				                } else {
+				                	getJobOptionInfo("001");
 				                }
+				                
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim() != "") {
-				                	document.getElementById(SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim()).selected = "true";
-				                	positionChange();
+				                	pUserPositionID = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim();
+				                	getJobOptionInfo("002");
+				                	document.getElementById(pUserPositionID).selected = "true";
+				                } else {
+				                	getJobOptionInfo("002");
 				                }
 			                } catch(e) {}
+			                
+		                	titleChange();
+		                	positionChange();
 			                
 			                if (SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == "Y" || SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == ""){
 			                    eval("birth_S").checked = true;
@@ -426,10 +443,10 @@
 					url : "/admin/ezOrgan/saveUserInfo.do",
 					async : true,
 					data : {parentCn : DeptID, cn : document.getElementById("UserID").value, displayName : UserName.value, displayName2 : UserName2.value, password : Password.value,
-						    mailNickName : mailNickName, title : jobTitle, title2 : jobTitle2, extensionAttribute15 : SortNum.value, extensionAttribute6 : SecurityLevel.value,
-						    extensionAttribute14 : SocialNum.value, extensionAttribute10 : jobPosition, extensionAttribute102 : jobPosition2, telephoneNumber : PhoneNumber.value,
+						    mailNickName : mailNickName, title : jobTitleName, title2 : jobTitleName2, extensionAttribute15 : SortNum.value, extensionAttribute6 : SecurityLevel.value,
+						    extensionAttribute14 : SocialNum.value, extensionAttribute10 : jobPositionName, extensionAttribute102 : jobPositionName2, telephoneNumber : PhoneNumber.value,
 						    homePhone : HomePhone.value, facsimileTelephoneNumber : FaxNum.value, mobile : Mobile.value, postalCode : ZipCode.value, streetAddress : HomeAddr.value,
-						    birthType : birthtype, birth : document.getElementById("txtBirth").value, manualFlag : "Y", extensionAttribute7 : jobID, extensionAttribute8 : jobID2 
+						    birthType : birthtype, birth : document.getElementById("txtBirth").value, manualFlag : "Y", extensionAttribute7 : jobTitleID, extensionAttribute8 : jobPositionID 
 					},
 					success : function(result) {
 					    if (useBizmekaSpambox == "YES") {
@@ -558,16 +575,16 @@
 					}
 				});
 		    }
-		    var jobTitle, jobTitle2, jobID;
-		    function getTitleOption() {
-		    	var xmldom, rtnVal, flag, i;
+		    
+		    function getJobOptionInfo(pType) {
+		    	var xmldom; 
 		    	
 		    	$.ajax({
 					type : "POST",
 					dataType : "text",
-					url : "/admin/ezOrgan/jobTitleListView.do",
+					url : "/admin/ezOrgan/getJobOptionInfo.do",
 					data : {
-						type : "001",
+						type : pType,
 						companyID : companyID
 					},
 					async : false,
@@ -578,109 +595,82 @@
 					}
 				});
 		    	
-		    	var oRows = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
-			    if (oRows.length > 0) {
-			    	flag = true;
-			    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;' onchange='titleChange()'>";
-			    	for (i = 0; i < oRows.length; i++) {
-			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
-				    		if (flag) {
-					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1");
-					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
-					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
-					    		flag = false;
-				    		}
-				    		
-				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1")) 
-						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
-						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) + "'>";
-					    		
-				    		if ("${userPrimary}" == "1") {
-					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE"));
-				    		} else {
-					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE"));
-				    		}
-				    		
-				    		rtnVal += "</option>";
+		    	var _select;
+		    	var oRows = SelectNodes(xmldom, "DATA/ROWS/ROW");
+		    	if (oRows.length > 0) {
+		    		if (pType == "001") {
+		    			_select = "<select id='titleSelector' style='width:100%;height:25px;' onchange='titleChange()'>";
+		    			
+		    			for (var i = 0; i < oRows.length; i++) {
+		    				if (SelectSingleNodeValueNew(oRows[i], "USEFLAG") != "N" || SelectSingleNodeValueNew(oRows[i], "JOBID") == pUserTitleID) {
+				    			_select += "<option id='" + SelectSingleNodeValueNew(oRows[i], "JOBID") + "' nmval='" + SelectSingleNodeValueNew(oRows[i], "NAME1") + "' nmval2='" + SelectSingleNodeValueNew(oRows[i], "NAME2") + "'>";
+				    			
+				    			if ("${userPrimary}" == "1") {
+					    			_select += SelectSingleNodeValueNew(oRows[i], "NAME1");
+				    			} else {
+					    			_select += SelectSingleNodeValueNew(oRows[i], "NAME2");
+				    			}
+				    			_select += "</option>";
+		    				}
 			    		}
-			    	}
-			    	rtnVal += "</select>";
-			    } else {
-			    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;'></select>";
-			    	jobID = ""; jobTitle = ""; jobTitle2 = "";
-			    }
-			    
-		    	document.getElementById("JobTitleOption").innerHTML = rtnVal;
+		    			_select += "</select>";
+		    			
+		    			document.getElementById("JobTitleOption").innerHTML = _select;
+		    			
+		    		} else {
+		    			_select = "<select id='positionSelector' style='width:100%;height:25px;' onchange='positionChange()'>";
+		    			
+		    			for (var i = 0; i < oRows.length; i++) {
+		    				if (SelectSingleNodeValueNew(oRows[i], "USEFLAG") != "N" || SelectSingleNodeValueNew(oRows[i], "JOBID") == pUserPositionID) {
+				    			_select += "<option id='" + SelectSingleNodeValueNew(oRows[i], "JOBID") + "' nmval='" + SelectSingleNodeValueNew(oRows[i], "NAME1") + "' nmval2='" + SelectSingleNodeValueNew(oRows[i], "NAME2") + "'>";
+				    			
+				    			if ("${userPrimary}" == "1") {
+					    			_select += SelectSingleNodeValueNew(oRows[i], "NAME1");
+				    			} else {
+					    			_select += SelectSingleNodeValueNew(oRows[i], "NAME2");
+				    			}
+				    			_select += "</option>";
+		    				}
+			    		}
+		    			_select += "</select>";
+		    			
+		    			document.getElementById("JobPositionOption").innerHTML = _select;
+		    		}
+		    	} else {
+		    		if (pType == "001") {
+		    			document.getElementById("JobTitleOption").innerHTML = "<select id='titleSelector' style='width:100%;height:25px;'></select>";
+		    		} else {
+		    			document.getElementById("JobPositionOption").innerHTML = "<select id='positionSelector' style='width:100%;height:25px;'></select>";
+		    		}
+		    	}
 		    }
 		    function titleChange() {
 		    	var target = document.getElementById("titleSelector");
 		    	var option = target.options[target.options.selectedIndex];
-		    	jobID = option.id;
-		    	jobTitle = option.getAttribute("nmval");
-		    	jobTitle2 = option.getAttribute("nmval2");
-		    }
-		    
-		    var jobPosition, jobPosition2, jobID2;
-		    function getPositionOption() {
-		    	var xmldom, rtnVal, flag, i;
-		    	
-		    	$.ajax({
-					type : "POST",
-					dataType : "text",
-					url : "/admin/ezOrgan/jobTitleListView.do",
-					data : {
-						type : "002",
-						companyID : companyID
-					},
-					async : false,
-					success : function(result){
-						xmldom = loadXMLString(result);
-					},
-					error : function(){
-					}
-				});
-		    	
-		    	var oRows = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
-			    if (oRows.length > 0) {
-			    	flag = true;
-			    	rtnVal = "<select id='positionSelector' style='width:100%;height:25px;' onchange='positionChange()'>";
-			    	for (i = 0; i < oRows.length; i++) {
-			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
-			    			if (flag) {
-					    		jobID2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1");
-					    		jobPosition = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
-					    		jobPosition2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
-					    		flag = false;
-				    		}
-				    		
-				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1")) 
-						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
-						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) + "'>";
-					    		
-				    		if ("${userPrimary}" == "1") {
-					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE"));
-				    		} else {
-					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE"));
-				    		}
-				    		
-				    		rtnVal += "</option>";
-			    		}
-			    	}
-			    	rtnVal += "</select>";
-			    } else {
-			    	rtnVal = "<select id='positionSelector' style='width:100%;height:25px;'></select>";
-			    	jobID2 = ""; jobPosition = ""; jobPosition2 = "";
-			    }
-			    
-		    	document.getElementById("JobPositionOption").innerHTML = rtnVal;
+		    	if (typeof (option) != "undefined") {
+			    	jobTitleID = option.id;
+			    	jobTitleName = option.getAttribute("nmval");
+			    	jobTitleName2 = option.getAttribute("nmval2");
+		    	} else {
+			    	jobTitleID = "";
+			    	jobTitleName = "";
+			    	jobTitleName2 = "";
+		    	}
 		    }
 		    function positionChange() {
 		    	var target = document.getElementById("positionSelector");
 		    	var option = target.options[target.options.selectedIndex];
-		    	jobID2 = option.id;
-		    	jobPosition = option.getAttribute("nmval");
-		    	jobPosition2 = option.getAttribute("nmval2");
+		    	if (typeof (option) != "undefined") {
+			    	jobPositionID = option.id;
+			    	jobPositionName = option.getAttribute("nmval");
+			    	jobPositionName2 = option.getAttribute("nmval2");
+		    	} else {
+			    	jobPositionID = "";
+			    	jobPositionName = "";
+			    	jobPositionName2 = "";
+		    	}
 		    }
+		    
 		    function getUserCompanyID(userID) {
 		    	var rtnVal = "";
 		    	$.ajax({

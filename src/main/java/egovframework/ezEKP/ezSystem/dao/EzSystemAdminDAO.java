@@ -1,13 +1,11 @@
 package egovframework.ezEKP.ezSystem.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
-import org.stringtemplate.v4.compiler.CodeGenerator.list_return;
-import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
@@ -94,4 +92,11 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		insert("EzSystemAdminDAO.insertAccessId", map);
 	}
 	
+	public long selectModuleSize(String tableNames, String notTableNames) throws Exception {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("tableNames", tableNames);
+		paramMap.put("notTableNames", notTableNames);
+		
+		return (long) select("EzSystemAdminDAO.selectModuleSize", paramMap);
+	}
 }

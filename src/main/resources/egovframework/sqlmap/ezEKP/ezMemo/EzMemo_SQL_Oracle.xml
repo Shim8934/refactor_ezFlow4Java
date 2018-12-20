@@ -26,7 +26,7 @@
 	<select id="EzMemoDAO.getMemoFolderInfo" resultClass="MemoFolderVO">
 		<![CDATA[
 			SELECT
-				C.FOLDER_ID, C.FOLDER_NAME, NVL(D.COUNT, 0) AS COUNT, TO_CHAR(TO_DATE(C.REG_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') REG_DATE 
+				C.FOLDER_ID, C.FOLDER_NAME, NVL(D.COUNT, 0) AS COUNT, TO_CHAR(C.REG_DATE, 'YYYY-MM-DD HH24:MI:SS') REG_DATE 
 			FROM (
 				SELECT CC.*, ROW_NUMBER() OVER (PARTITION BY CC.FOLDER_ID ORDER BY ROWNUM) CNT 
 				FROM ( SELECT 
@@ -109,9 +109,9 @@
 			<isNotEmpty property="startDate" >
 				<![CDATA[
 	              AND
-	              		WRITE_DATE >= TO_CHAR(TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') 
+	              		WRITE_DATE >= TO_CHAR(#startDate#, 'YYYY-MM-DD HH24:MI:SS') 
 	              AND 
-	              		WRITE_DATE <= TO_CHAR(TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') 
+	              		WRITE_DATE <= TO_CHAR(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
 	             ]]> 
             </isNotEmpty>
 			<isNotEqual property="folder_id" compareValue="0">
@@ -178,6 +178,9 @@
             VALUES
                 (SEQ_TBL_MEMO.NEXTVAL, #user_id#, TO_DATE(#write_date#, 'YYYY-MM-DD HH24:MI:SS'), #folder_id#, #orders#,  #company_id#, #tenant_id#, #color_id#)
          ]]>
+         <selectKey keyProperty="memo_id" resultClass="Integer">
+			SELECT max(memo_id) from tbl_memo
+		</selectKey>
 	</insert>
 	
 	<update id="EzMemoDAO.setMemoConfig" parameterClass="hashmap">
@@ -397,6 +400,9 @@
             VALUES
                 (SEQ_TBL_MEMO.NEXTVAL, #user_id#, TO_DATE(#write_date#, 'YYYY-MM-DD HH24:MI:SS'), #folder_id#, #orders#,  #company_id#, #tenant_id#, #color_id#, #contents#)
          ]]>
+         <selectKey keyProperty="memo_id" resultClass="Integer">
+			SELECT max(memo_id) from tbl_memo
+		</selectKey>
 	</insert>
 
 	<update id="EzMemoDAO.setMemoColor">

@@ -129,12 +129,29 @@
 		    };
 		    function BoardRedirect() {
 		        var spans = document.getElementById("TopBoardsList").getElementsByTagName("div");
+		        var redirectOK = "";
 		        for (var i = 0 ; i < spans.length ; i++) {
 		            if (spans[i].getAttribute("value") == RedirectBoardGroupID) {
 		                LoadTreeViewByPath(spans[i], RedirectBoardID, RedirectBoardGroupID);
+		                redirectOK = "OK";
 		            }
 		        }
+		        
+		        /* 2018-12-04 홍승비 - 접근권한 없는 게시판에 포탈 포틀릿 등으로 접근 시, 오류메세지 표출하도록 수정 */
+		        if (redirectOK != "OK") {
+					var rightFrameDoc = "";
+		        	if (typeof window.parent.frames["right"] == "undefined") {
+		        		rightFrameDoc = rightFrame.document;
+		        	} else {
+		        		rightFrameDoc = window.parent.frames["right"].document;
+		        	}
+		        	
+		        	rightFrameDoc.head.innerHTML = "<link rel='stylesheet' href='${util.addVer('ezBoard.i1', 'msg')}' type='text/css'>";
+		        	rightFrameDoc.body.className = "mainbody";
+		        	rightFrameDoc.body.innerHTML = "<div style='margin-top:100px;text-align:center'><spring:message code='ezBoard.t272'/></div>";	
+				}
 		    }
+		    
 		    function LoadTreeViewByPath(pObjSpan, pBoardID, pBoardGroupID) {
 		        pObjSpan.parentElement.onclick();
 		        var TreeCtrl = getFirstChild(pObjSpan.parentElement);

@@ -223,6 +223,16 @@
 		              				EXTENSIONATTRIBUTE2 <> CN
 		              		]]>
               			</isEmpty>
+              			
+              			<isEmpty property="displayTrashDept">
+              				<![CDATA[
+		              			AND
+		              				EXTENSIONATTRIBUTE1 NOT LIKE 'trash\_dept\_%' ESCAPE '\'
+		              			AND
+		              				CN NOT LIKE 'trash\_dept\_%' ESCAPE '\'
+		              		]]>
+              			</isEmpty>
+              			
               			AND
               				TENANT_ID = #v_TENANT_ID#	 ) A
         	ORDER BY A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
@@ -1310,28 +1320,65 @@
 	<select id="EzOrganDAO.getBirthUserList" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			SELECT
-				CN ,
-             	BIRTHTYPE ,
-             	BIRTH ,
-             	DISPLAYNAME ,
-             	DISPLAYNAME2 ,
-             	TITLE ,
-             	TITLE2 ,
-             	DESCRIPTION ,
-             	DESCRIPTION2 ,
-             	EXTENSIONATTRIBUTE2 
-      		FROM
-      			TBL_USERMASTER 
-      		WHERE
-      			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
-            AND 
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
-      		AND
-      			TENANT_ID = #v_TENANT_ID#
-      		AND
-      			NVL(BIRTH, ' ') <> ' '
+				*
+			FROM
+				(
+				SELECT
+					displayname$lang$ AS displayname, 
+					cn,
+					title$lang$ AS title,
+					birth,
+					birthtype
+				FROM
+					TBL_USERMASTER
+				WHERE
+					((birth LIKE CONCAT('%-', CONCAT(#month#, '-%')) AND birthtype = 'Y')
+				OR
+					(birth <> '' AND birthtype = 'N'))
+				AND
+					tenant_id = #tenantId#
+				AND
+					physicaldeliveryofficename = #companyId#
+				AND
+					cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
+					
+				UNION ALL
+				
+				SELECT
+					C.displayname$lang$ AS displayname, 
+					A.cn,
+					A.title$lang$ AS title,
+					C.birth,
+					C.birthtype AS birthtype
+				FROM
+					TBL_ADDJOBMASTER A
+				JOIN
+					TBL_DEPTMASTER B
+				ON
+					A.tenant_id = B.tenant_id
+				AND
+					A.deptid = B.cn
+				AND
+					B.extensionattribute2 = #companyId#
+				JOIN
+					TBL_USERMASTER C
+				ON
+					A.tenant_id = C.tenant_id
+				AND
+					A.cn = C.cn
+				WHERE
+					((C.birth LIKE CONCAT('%-', CONCAT(#month#, '-%')) AND C.birthtype = 'Y')
+				OR
+					(C.birth <> '' AND C.birthtype = 'N'))
+				AND
+					A.tenant_id = #tenantId#
+				AND
+					C.physicaldeliveryofficename <> #companyId#
+				AND
+					A.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
+				)
 			ORDER BY
-				substr(birth, 8, 10)
+				SUBSTR(birth, 8, 10)
 		]]>
 	</select>
 	

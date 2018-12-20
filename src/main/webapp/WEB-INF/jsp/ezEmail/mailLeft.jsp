@@ -397,9 +397,8 @@
 	                    	eval(treeviewStr).putstyle(eval(treeviewStr).selectedIndex(), "font-weight : bold");
 	                    }
 	                    
-	                    var pageTitle = parent.frames["right"].document.title;
-
-	                    if (pageTitle == "mail_list") {
+	                    var pageSrc = parent.frames["right"].document.location.toString();
+	                    if (pageSrc.indexOf("mailList.do") != -1) {
                         	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) { }
 	                    }
 	                    
@@ -624,7 +623,7 @@
 	        function address_foldermanage_Complete(ret) {
 	            if (ret != undefined) {
 	            	var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("GET", "/ezAddress/getRootAddressXML.do", false);
+		            xmlHTTP.open("POST", "/ezAddress/getRootAddressXML.do", false);
 		            xmlHTTP.send();
 	            	
 		            document.getElementById("AddressFolderXML").innerHTML = xmlHTTP.responseText;
@@ -1226,6 +1225,7 @@
 		    <h4 onclick="operatorSendMail()"><span><spring:message code="ezEmail.0hun01" /></span></h4>
 		    </c:if>
 	        <h3 onclick="mail_Config()" style="border-top:0px"><span style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
+	        <%--
 	        <c:if test="${isDotNetAdmin == true}">
   			<h2>
   				<span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
@@ -1264,7 +1264,8 @@
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(11)"><spring:message code='ezStatistics.kyj1' /></span></li>
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(12)"><spring:message code='ezStatistics.kyj2' /></span></li>
 		    </ul>			
-			</c:if>		        
+			</c:if>		 
+			--%>       
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");

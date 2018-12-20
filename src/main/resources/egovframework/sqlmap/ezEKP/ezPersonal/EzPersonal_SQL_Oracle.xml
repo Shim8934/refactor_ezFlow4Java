@@ -304,7 +304,7 @@
            		FROM
            			TBL_PS_LIGHTPOLL 
           		WHERE
-          			COMPANYID = #v_pCompanyID#
+          			COMPANYID = UPPER(#v_pCompanyID#)
           		AND
           			TENANT_ID = #tenantID#	
 			]]>
@@ -316,7 +316,7 @@
            		FROM
            			TBL_PS_LIGHTPOLL 
           		WHERE
-          			( COMPANYID = #v_pCompanyID#
+          			( COMPANYID = UPPER(#v_pCompanyID#)
                 OR
                 	COMPANYID = 'Top' )
                 AND
@@ -340,7 +340,7 @@
            			FROM
            				TBL_PS_LIGHTPOLL 
           			WHERE
-          				( COMPANYID = #v_pCompanyID#
+          				( COMPANYID = UPPER(#v_pCompanyID#)
                    	OR
                    		COMPANYID = 'Top' )
                    	AND
@@ -375,7 +375,7 @@
                   				FROM
                   					TBL_PS_LIGHTPOLL 
                    				WHERE
-                   					(	COMPANYID = #v_pCompanyID#
+                   					(	COMPANYID = UPPER(#v_pCompanyID#)
                             		OR
                             			COMPANYID = 'Top' )
                             		AND
@@ -425,7 +425,7 @@
                	AND
                		USERID = #v_pUserID#
        			WHERE
-       				( 	COMPANYID = #v_pCompanyID#
+       				( 	COMPANYID = UPPER(#v_pCompanyID#)
                 	OR
                 		COMPANYID = 'Top' )
                 	AND

@@ -398,6 +398,14 @@ function SGetDraftAprLineInfo(ret) {
                             if (new RegExp(/Firefox/).test(navigator.userAgent))
                                 field.innerHTML = "<br type='_moz'>";
                         }
+                        
+                        fieldname = "habyuiapprodept" + i;
+                        field = message.GetListItem(fields, fieldname);
+                        if (field) {
+                        	setNodeText(field, "");
+                        	if (new RegExp(/Firefox/).test(navigator.userAgent))
+                                field.innerHTML = "<br type='_moz'>";
+                        }
                     }
                 } else {
                     break;
@@ -447,6 +455,14 @@ function SGetDraftAprLineInfo(ret) {
                     if (field) {
                         setNodeText(field , "");
                         if (new RegExp(/Firefox/).test(navigator.userAgent))
+                            field.innerHTML = "<br type='_moz'>";
+                    }
+                    
+                    fieldname = "habyuiapprodept" + i;
+                    field = message.GetListItem(fields, fieldname);
+                    if (field) {
+                    	setNodeText(field, "");
+                    	if (new RegExp(/Firefox/).test(navigator.userAgent))
                             field.innerHTML = "<br type='_moz'>";
                     }
                 } else {
@@ -664,6 +680,12 @@ function SGetDraftAprLineInfo(ret) {
                         if (field) {
                             setNodeText(field , OrderJobtitle[i]);
                         }
+                        
+                        fieldname = "habyuiapprodept" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+                        if (field) {
+                        	setNodeText(field, OrderDept[i]);
+                        }
                     } else if (xmlReDraft == "C") {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
@@ -698,6 +720,12 @@ function SGetDraftAprLineInfo(ret) {
                             setNodeText(field , OrderJobtitle[i]);
                         }
                         
+                        fieldname = "habyuiapprodept" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+                        
+                        if (field && OrderStat[i] != strLangS26) {
+                        	setNodeText(field, OrderDept[i]);
+                        }
                         IsSkipDrafter = "TRUE";
                     } else {
                         fieldname = "habyui" + hapyuiCnt;
@@ -731,6 +759,13 @@ function SGetDraftAprLineInfo(ret) {
 
                         if (field) {
                             setNodeText(field , OrderJobtitle[i]);
+                        }
+                        
+                        fieldname = "habyuiapprodept" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+                        
+                        if (field) {
+                        	setNodeText(field, OrderDept[i]);
                         }
                     }
                     hapyuiCnt = hapyuiCnt + 1;
@@ -766,6 +801,12 @@ function SGetDraftAprLineInfo(ret) {
                         if (field) {
                             setNodeText(field , OrderJobtitle[i]);
                         }
+                        
+                        fieldname = "habyuiapprodept" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+                        if (field) {
+                        	setNodeText(field, OrderDept[i]);
+                        }
                     }
                     else if (xmlReDraft == "C") {
                         fieldname = "habyui" + hapyuiCnt;
@@ -799,6 +840,12 @@ function SGetDraftAprLineInfo(ret) {
 
                         if (field && OrderStat[i] != strLangS26) {
                             setNodeText(field , OrderJobtitle[i]);
+                        }
+                        
+                        fieldname = "habyuiapprodept" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+                        if (field && OrderStat[i] != strLangS26) {
+                        	setNodeText(field, OrderDept[i]);
                         }
                         IsSkipDrafter = "TRUE";
                     }
@@ -834,6 +881,12 @@ function SGetDraftAprLineInfo(ret) {
 
                         if (field) {
                             setNodeText(field , OrderJobtitle[i]);
+                        }
+                        
+                        fieldname = "habyuiapprodept" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+                        if (field) {
+                        	setNodeText(field, OrderDept[i]);
                         }
                     }
                     hapyuiCnt = hapyuiCnt + 1;
@@ -869,6 +922,12 @@ function SGetDraftAprLineInfo(ret) {
                         if (field) {
                             setNodeText(field , OrderJobtitle[i]);
                         }
+                        
+                        fieldname = "habyuiapprodept" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+                        if (field) {
+                        	setNodeText(field, OrderDept[i]);
+                        }
                     }
                     else if (xmlReDraft == "C") {
                         fieldname = "habyui" + hapyuiCnt;
@@ -902,6 +961,12 @@ function SGetDraftAprLineInfo(ret) {
 
                         if (field && OrderStat[i] != strLangS57) {
                             setNodeText(field , OrderJobtitle[i]);
+                        }
+                        
+                        fieldname = "habyuiapprodept" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+                        if (field && OrderStat[i] != strLangS57) {
+                        	setNodeText(field, OrderDept[i]);
                         }
                         IsSkipDrafter = "TRUE";
                     }
@@ -937,6 +1002,12 @@ function SGetDraftAprLineInfo(ret) {
 
                         if (field) {
                             setNodeText(field , OrderJobtitle[i]);
+                        }
+                        
+                        fieldname = "habyuiapprodept" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+                        if (field) {
+                        	setNodeText(field, OrderDept[i]);
                         }
                     }
                     hapyuiCnt = hapyuiCnt + 1;
@@ -976,6 +1047,12 @@ function SGetDraftAprLineInfo(ret) {
                         if (field) {
                             setNodeText(field , OrderJobtitle[i]);
                         }
+                        
+                        fieldname = "habyuiapprodept" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+                        if (field) {
+                        	setNodeText(field, OrderDept[i]);
+                        }
                     }
                     else if (xmlReDraft == "C") {
                         fieldname = "habyui" + hapyuiCnt;
@@ -1009,6 +1086,12 @@ function SGetDraftAprLineInfo(ret) {
 
                         if (field && OrderStat[i] != strLangS26) {
                             setNodeText(field , OrderJobtitle[i]);
+                        }
+                        
+                        fieldname = "habyuiapprodept" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+                        if (field && OrderStat[i] != strLangS26) {
+                        	setNodeText(field, OrderDept[i]);
                         }
                         IsSkipDrafter = "TRUE";
                     }
@@ -1044,6 +1127,12 @@ function SGetDraftAprLineInfo(ret) {
 
                         if (field) {
                             setNodeText(field , OrderJobtitle[i]);
+                        }
+                        
+                        fieldname = "habyuiapprodept" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+                        if (field) {
+                        	setNodeText(field, OrderDept[i]);
                         }
                     }
                     hapyuiCnt = hapyuiCnt + 1;
@@ -1125,6 +1214,15 @@ function SGetDraftAprLineInfo(ret) {
                         field.innerHTML = "<br type='_moz'>";
 
                 }
+                
+                fieldname = susinSN + "approdept" + i
+                field = message.GetListItem(fields, fieldname)
+                if (field) {
+                    field.innerHTML = "&nbsp;";
+                    if (new RegExp(/Firefox/).test(navigator.userAgent))
+                        field.innerHTML = "<br type='_moz'>";
+
+                }
             } else {
                 break;
             }
@@ -1178,7 +1276,17 @@ function SGetDraftAprLineInfo(ret) {
                     if (new RegExp(/Firefox/).test(navigator.userAgent) && trim(getNodeText(field)) == "")
                         field.innerHTML = "<br type='_moz'>";
                 }
+                
+                fieldname = susinSN + "approdept" + idx;
+                field = message.GetListItem(fields, fieldname);
+                
+                if (field) {
+                    setNodeText(field , OrderDept[i]);
 
+                    if (new RegExp(/Firefox/).test(navigator.userAgent) && trim(getNodeText(field)) == "")
+                        field.innerHTML = "<br type='_moz'>";
+                }
+                
                 fieldname = susinSN + "sign" + idx;
                 field = message.GetListItem(fields, fieldname);
 
@@ -4222,4 +4330,20 @@ function getAddress(puserIDs) {
     
     return result;
     
+}
+//재기안 시, 문서내 기안일자와 현재일자가 다르면 현재일자로 수정되게
+function compareDocDateCurDate() {
+	try {
+		var fields = message.GetFieldsList();
+		if (!fields) return;
+		
+		var field = message.GetListItem(fields, "draftdate");
+		
+		var DocumentDate = field.textContent;	//문서내 기안일자
+		var CurrentDate = getGyulJeDate();		//현재일자
+		
+		if (DocumentDate != "" && CurrentDate != "" && DocumentDate != CurrentDate) {
+			field.textContent = CurrentDate;
+		}
+	} catch(e){ console.log("ERROR::::compareDocDateCurDate() " + e.description); }
 }

@@ -708,4 +708,9 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.getSearchApprBoardItemList", map);
 	}
 	
+	// 20181210 김윤진 - ezTalk Notice Board ID 가져오기.
+	public String getEzTalkGateNoticeBoardId(Map<String, Object> map) throws Exception {
+		return (String) select("EzPortalDAO.getEzTalkGateNoticeBoardId", map);
+	}
+	
 }

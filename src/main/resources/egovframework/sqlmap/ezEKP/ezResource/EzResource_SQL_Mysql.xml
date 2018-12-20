@@ -60,11 +60,7 @@
 		<result property="characterID"			column="CHARACTERID"			columnIndex="18"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="20"/>
-		<result property="ownerNm2"			    column="OWNERNM2"			    columnIndex="21"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
-		<result property="deptNm2"				column="DEPTNM2"				columnIndex="23"/>
-		<result property="jobTitle"				column="JOBTITLE"				columnIndex="24"/>
-		<result property="jobTitle2"			column="JOBTITLE2"				columnIndex="25"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="21"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO"            id="resGetScheduleListMainVO">
@@ -228,11 +224,7 @@
 		<result property="characterID"			column="CHARACTERID"			columnIndex="19"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="20"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
-		<result property="ownerNm2"			    column="OWNERNM2"			    columnIndex="22"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="23"/>
-		<result property="deptNm2"				column="DEPTNM2"				columnIndex="24"/>
-		<result property="jobTitle"				column="JOBTITLE"				columnIndex="25"/>
-		<result property="jobTitle2"			column="JOBTITLE2"				columnIndex="26"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" 		    id="resGetRepResourceVO">
@@ -598,56 +590,10 @@
                 ATTACHFLAG ,
                 CHARACTERID ,
                 APPROVEFLAG ,
-                BB.OWNERNM  ,
-                BB.OWNERNM2  ,
-                BB.DEPTNM  ,
-                BB.DEPTNM2  ,
-                BB.JOBTITLE  ,
-                BB.JOBTITLE2  
+                OWNERNM  ,
+                DEPTNM  
            	FROM 
-           		ryobimigration.tbl_rs_schedule A
-			JOIN
-				(	SELECT 
-						d.DISPLAYNAME OWNERNM  ,
-						d.DISPLAYNAME2 OWNERNM2  ,
-						d.DESCRIPTION DEPTNM  ,
-						d.DESCRIPTION2 DEPTNM2  ,
-						d.TITLE JOBTITLE  ,
-						d.TITLE2 JOBTITLE2  ,
-						D.CN ,
-	                    D.TENANT_ID
-					FROM 
-						TBL_USERMASTER D
-					WHERE 
-						D.TENANT_ID = #tenantID# AND D.physicaldeliveryofficename = #v_PCOMPANYID#
-					UNION ALL
-					SELECT 
-						B.DISPLAYNAME OWNERNM  ,
-						B.DISPLAYNAME2 OWNERNM2  ,
-						C.DISPLAYNAME DEPTNM  ,
-						C.DISPLAYNAME2 DEPTNM2  ,
-						AA.TITLE JOBTITLE  ,
-						AA.TITLE2 JOBTITLE2 ,
-						B.CN ,
-	                    B.TENANT_ID
-					FROM 
-						TBL_USERMASTER B 
-					INNER JOIN 
-						TBL_ADDJOBMASTER AA 
-					ON 
-						AA.CN = B.CN 
-					AND 
-						AA.TENANT_ID = B.TENANT_ID       
-					RIGHT JOIN 
-						TBL_DEPTMASTER C
-					ON 
-						AA.DEPTID = C.CN
-					AND 
-						B.TENANT_ID = C.TENANT_ID 
-					WHERE 
-						AA.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# AND B.physicaldeliveryofficename <> #v_PCOMPANYID# ) BB
-			ON
-				A.WRITERID = BB.CN AND A.TENANT_ID = BB.TENANT_ID
+           		TBL_RS_SCHEDULE A
           	WHERE
 				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
@@ -659,9 +605,9 @@
 			AND
 				REFLAG = '0'
 			AND 
-                ( BB.OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') OR BB.OWNERNM2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
+                ( OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%')  )
 			AND 
-				( BB.DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR BB.DEPTNM2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
+				( DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
 			AND
 				A.TENANT_ID = #tenantID#	
 			GROUP BY
@@ -734,6 +680,8 @@
 				SCH.OWNERID = BRD.BRD_ID 
 			AND
 				SCH.TENANT_ID = BRD.TENANT_ID	
+			AND
+				SCH.COMPANYID = BRD.BRD_COMPANY
 			WHERE
 				STARTDATE <= STR_TO_DATE(#v_pStartDate#, '%Y-%m-%d %T')
         	AND
@@ -775,60 +723,12 @@
             	A.companyID ,
             	CHARACTERID ,
             	APPROVEFLAG ,
-                BB.OWNERNM  ,
-                BB.OWNERNM2  ,
-                BB.DEPTNM  ,
-                BB.DEPTNM2  ,
-                BB.JOBTITLE  ,
-                BB.JOBTITLE2  
+                OWNERNM  ,
+                DEPTNM  
 			FROM
 				ryobimigration.tbl_rs_schedule A
 			JOIN
-				( SELECT 
-						d.DISPLAYNAME OWNERNM  ,
-						d.DISPLAYNAME2 OWNERNM2  ,
-						d.DESCRIPTION DEPTNM  ,
-						d.DESCRIPTION2 DEPTNM2  ,
-						d.TITLE JOBTITLE  ,
-						d.TITLE2 JOBTITLE2  ,
-						D.CN ,
-	                    D.TENANT_ID
-					FROM 
-						TBL_USERMASTER D
-					WHERE 
-						D.TENANT_ID = #tenantID# AND D.physicaldeliveryofficename = #v_PCOMPANYID#
-					UNION ALL
-					SELECT 
-						B.DISPLAYNAME OWNERNM  ,
-						B.DISPLAYNAME2 OWNERNM2  ,
-						CC.DISPLAYNAME DEPTNM  ,
-						CC.DISPLAYNAME2 DEPTNM2  ,
-						AA.TITLE JOBTITLE  ,
-						AA.TITLE2 JOBTITLE2 ,
-						B.CN ,
-	                    B.TENANT_ID
-					FROM 
-						TBL_USERMASTER B 
-					INNER JOIN 
-						TBL_ADDJOBMASTER AA 
-					ON 
-						AA.CN = B.CN 
-					AND 
-						AA.TENANT_ID = B.TENANT_ID       
-					RIGHT JOIN 
-						TBL_DEPTMASTER CC
-					ON 
-						AA.DEPTID = CC.CN
-					AND 
-						B.TENANT_ID = CC.TENANT_ID 
-					WHERE 
-						AA.TENANT_ID = #tenantID# AND CC.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# AND B.physicaldeliveryofficename <> #v_PCOMPANYID#) BB   
-			ON
-				A.writerID = BB.CN
-			AND
-				A.TENANT_ID = BB.TENANT_ID	
-			JOIN
-				ryobimigration.tbl_rs_scheduleRepetition C 
+				TBL_RS_SCHEDULERepetition C 
 			ON 
 				A.ownerID = C.ownerID
 			AND
@@ -846,9 +746,9 @@
 			AND
 				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
 			AND
-				( A.OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') OR BB.OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') OR BB.OWNERNM2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
+				( OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') )
 			AND
-				( A.DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR BB.DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR BB.DEPTNM2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
+				( DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
 			AND 
 				A.TENANT_ID = #tenantID#	
 			GROUP BY
@@ -892,6 +792,8 @@
 				SCH.OWNERID = BRD.BRD_ID
 			AND
 				SCH.TENANT_ID = BRD.TENANT_ID	
+			AND
+				SCH.COMPANYID = BRD.BRD_COMPANY				
         	WHERE
         		STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND 
@@ -1872,6 +1774,8 @@
     		BRD_ID = #v_P_ownerID#
     	AND
     		TENANT_ID = #tenantID#	
+    	AND
+    		BRD_COMPANY = #v_P_companyID#
 	</select>
 	
 	<insert id="EzResourceDAO.addRessch" parameterClass="Map">

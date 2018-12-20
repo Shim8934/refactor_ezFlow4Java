@@ -86,5 +86,7 @@ public interface EzCommonService {
 
 	public void createWebfolderToken() throws Exception;
 
+	public void addUserMasterPasswordUpdateDT() throws Exception;
+
 }
 
