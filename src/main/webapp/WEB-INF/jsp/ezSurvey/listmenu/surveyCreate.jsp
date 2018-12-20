@@ -599,7 +599,7 @@
 					var qstAtt     = "";
 					
 					if (question) {
-						qstId      = question.id;
+						qstId      = question.level;
 						qstContent = question.content;
 						qstAtt     = mkImgTag(question.attach);
 					}
@@ -848,7 +848,7 @@
 						var qstn        = qstnList[qstnId - 1];
 						var nextId      = qstnId + 1;
 						var deepCopy    = JSON.parse(JSON.stringify(qstn));
-						deepCopy.id     = nextId;
+						deepCopy.level  = nextId;
 						
 						// 복사한 질문 객체 이후의 객체들 아이디값 +1
 						checkActionForNewId(qstnId, qstnList, "copy");
@@ -1028,7 +1028,6 @@
 						tolerance: "pointer",
 						axis: "y",
 						update: function(event, ui) {
-							
 							var catchedWrapper = ui.item;
 							var catchedQsId = parseInt(catchedWrapper.attr("id").replace("qstn", ""));
 							var prevQsId = "";
@@ -1068,9 +1067,9 @@
 							checkActionForNewId(catchedQsId, qstnList, 'reOrder', comparedQsId);
 							
 							// drag & drop된 객체 아이디 변경
-							catchedQsObj.id = comparedQsId;
+							catchedQsObj.level = comparedQsId;
 							// 그 객체 복사
-							var deepCopy    = JSON.parse(JSON.stringify(catchedQsObj));
+							var deepCopy       = JSON.parse(JSON.stringify(catchedQsObj));
 							// 그 객체 삭제
 							qstnList.splice(catchedQsId - 1, 1);
 							// 그 객체 제자리에 끼워넣기
@@ -1609,9 +1608,9 @@
 					var questionSilder = $("<div class='question-silder'></div>");
 					var silderWrap = $("<div class='silder-wrap'></div>");
 					var low = $("<span>" + lowest + "</span>");
-					var input = $("<input type='range' class='slider-range' name='slider" + question.id + "' min='" + lowest + "' max='" + highest + "'/>");
+					var input = $("<input type='range' class='slider-range' name='slider" + question["level"] + "' min='" + lowest + "' max='" + highest + "'/>");
 					var high = $("<span>" + highest + "</span>");
-					var output = $("<output for='slider" + question.id + "' class='slider-output'></output>");
+					var output = $("<output for='slider" + question["level"] + "' class='slider-output'></output>");
 
 					silderWrap.append(low);
 					silderWrap.append(input);
@@ -1673,7 +1672,7 @@
 				}
 				
 				function makeQuestionHeaderPanel(question) {
-					var qstId         = question.id;
+					var qstId         = question.level;
 					var content       = question.content;
 					var qstnType      = question.type;
 					var required      = question.required;
@@ -2055,7 +2054,7 @@
 					if (qstnList.length != 0) {
 						for (var i = 0; i < qstnList.length; i++) {
 							var question = qstnList[i];
-							var qstnId = question.id;
+							var qstnId = question.level;
 							var qstnType = question.type;
 							var wrapper = $("<div class='prevQsWrapper' id='prevQstn" + qstnId + "'type='" + qstnType + "'></div>");
 							
@@ -2090,7 +2089,7 @@
 				
 				// 미리보기 질문의 헤더
 				function prevQsHeader(question, qstnList) {
-					var qstId    = question.id;
+					var qstId    = question.level;
 					var content  = question.content;
 					var qstnType = question.type;
 					var required = question.required;

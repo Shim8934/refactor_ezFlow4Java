@@ -409,7 +409,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			
 			String questionTitle = questionObj.get("content").toString();
 			int questionLogic    = questionObj.get("logicFlag") != null ? ((Long)questionObj.get("logicFlag")).intValue() : 0;
-			int questionOrder    = ((Long)questionObj.get("id")).intValue();
+			int questionOrder    = ((Long)questionObj.get("level")).intValue();
 			QuestionVO question  = new QuestionVO();
 			
 			question.setSurveyId(maxSurveyId);
