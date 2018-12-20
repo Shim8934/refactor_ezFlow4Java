@@ -1824,7 +1824,6 @@
 				
 				// make ranking/dropdown options
 				function mkOptions(type, order, content) {
-					console.log(content);
 					var options = $("<div class='" + type + "-select'></div>");
 					var span = $("<span class='" + type + "-order'>" + order + "</span>");
 					options.append(span);
@@ -1972,7 +1971,7 @@
 				}
 				
 				function isValid(value) {if (!isNaN(value) && parseFloat(value) >= 0 && value % 1 === 0) {return true;} else {return false;}}
-////////////////////////////////////////////////////////////////////////////				
+				
 				// 미리보기 질문 폼 생성
 				function prevQstn() {
 					var prevQsArea = $(".prevQsArea");
@@ -2285,7 +2284,6 @@
 						$("select[name=slt" + id + i + "]").css("display", "none");
 						$("#sltVal" + id + i).text(logic).css("display", "");
 					}
-					console.log(qstn);
 				}
 				
 				// slider 질문 logic form 나타내기
@@ -2328,7 +2326,6 @@
 						alert(SurveyMessages.strBetweenNum);
 						return;
 					}
-					console.log(qstn);
 				}
 				
 				// dropdown 질문 logic form 나타내기
@@ -2361,7 +2358,6 @@
 						$("select[name=slt" + id + i + "]").css("display", "none");
 						$("#sltVal" + id + i).text(logic).css("display", "");
 					}
-					console.log(qstn);
 				}
 				
 				function confirmSurveyInfo(qstInf) {
