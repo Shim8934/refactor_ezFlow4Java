@@ -124,7 +124,7 @@
 							<!-- 		        	인쇄 -->
 							<li><span class="icon16 popup_icon16_print" onclick='printJournal();'></span></li>
 							<!-- 		        	메일로발송 -->
-							<li><span class="icon16 popup_icon16_mail" onclick='fromJournalToMail()'></span></li>
+							<li><span class="icon16 popup_icon16_mail_gray" onclick='fromJournalToMail()'></span></li>
 							<c:set var="userAgentInfo" value="${fn:toLowerCase(header['User-Agent'])}" />
 <%-- 							<c:if test="${fn:indexOf(userAgentInfo,'trident') eq -1}"> --%>
 <!-- 									        		엑셀저장 -->

@@ -880,7 +880,7 @@
 					                        <li id='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezCommunity.t6'/></span></li>
 					                        <li id='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 					                        <li id='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
-					                        <li id='btn_Mail'><span class="icon16 popup_icon16_mail" onclick='mail_boarditem()'></span></li>
+					                        <li id='btn_Mail'><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()'></span></li>
 										</c:when>
 										
 										<c:when test="${item.writerID == userInfo.id}">
@@ -897,7 +897,7 @@
 					                        
 					                        <li id='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 					                        <li id='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
-					                        <li id='btn_Mail'><span class="icon16 popup_icon16_mail" onclick='mail_boarditem()'></span></li>
+					                        <li id='btn_Mail'><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()'></span></li>
 										</c:when>
 										
 										<c:otherwise>
@@ -914,7 +914,7 @@
 				                        	</c:if>
 				                        	
 					                        <li id='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
-					                        <li id='btn_Mail'><span class="icon16 popup_icon16_mail" onclick='mail_boarditem()'></span></li>
+					                        <li id='btn_Mail'><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()'></span></li>
 										</c:otherwise>
 									</c:choose>
 									
