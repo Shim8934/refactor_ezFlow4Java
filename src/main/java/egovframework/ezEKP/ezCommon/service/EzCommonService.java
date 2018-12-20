@@ -88,5 +88,7 @@ public interface EzCommonService {
 
 	public void addUserMasterPasswordUpdateDT() throws Exception;
 
+	public void addPortalThemePortletIsFixed() throws Exception;
+
 }
 

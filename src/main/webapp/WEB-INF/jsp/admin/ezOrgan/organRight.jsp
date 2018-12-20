@@ -1671,7 +1671,7 @@
 		</div>
 		
 		<div>
-			<div style="border: 1px solid #ddd; height: 510px; width: 30%; margin:10px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
+			<div style="border: 1px solid #ddd; height: 510px; width: 30%; margin-left:10px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
 					
 			<div class="listview organ" style="float:left; width:60%;">
 				<c:if test="${dotNetIntegration != 'YES'}">

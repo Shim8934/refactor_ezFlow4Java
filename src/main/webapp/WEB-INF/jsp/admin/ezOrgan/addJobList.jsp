@@ -564,18 +564,18 @@
 		        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");        
 		    </script>
 		    <div class="portlet_tabpart01" style="padding-bottom:3px">
-		        <div class="portlet_tabpart01_top" id="tab1" style="width:752px;">
+		        <%-- <div class="portlet_tabpart01_top" id="tab1" style="width:752px;">
 	                <p id="AddJob_sub1"><span divname="AddJob1" id="1tab1"><spring:message code='ezOrgan.t00017' /></span></p>               
-		        </div>
-		    </div>
-		    <table style="width:750px">
+		        </div> --%>
+		    </div> 
+		    <table style="width:750px; border-collapse: separate;">
 		        <tr>
 		            <td style="width:750px">
 		                <div class="listview" style="Width:750px;">
 		                    <div id="AddJobListView" style="border: 0px solid #ddd; Width: 750px; Height:540PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 		                </div>
 		            </td>
-		            <td style="padding-left:3px; vertical-align:top">            
+		            <td style="padding-left:3px; vertical-align:top; border: 1px solid #ddd;">            
 		                 <div style="height:100%; width:450px;" id="AddJobList" >
 		                </div>      
 		            </td>

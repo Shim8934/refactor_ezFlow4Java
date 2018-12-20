@@ -453,11 +453,25 @@
 		        var listview = new ListView();
 		        listview.LoadFromID("lvPermissionList");
 		        var cData = "";
+		        
 
 		        if (listview.GetSelectedRows().length == 0) {
 		            alert(strLang13);
 		            return;
 		        }
+		        
+		        var data1List = new Array();
+		        var listArr = document.getElementById("lvPermissionList");
+		        var checkArr = listArr.children[1];
+		        
+		        for (var i=0; i<document.getElementsByName("checks").length; i++) {
+		        	if(document.getElementsByName("checks").item(i).checked == true) {
+		        		//console.log(checkArr.children[i]);
+		        		data1List[data1List.length] = checkArr.children[i].getAttribute("DATA2");
+		        	}
+		        }
+		       console.log(data1List);
+
 
 		        if (mode == "ALL") {
 		        	cData = listview.GetSelectedRows()[0].getAttribute("DATA3") + strLang19 + " " + "<spring:message code='ezAddress.t362' />" + strLang20;		                
