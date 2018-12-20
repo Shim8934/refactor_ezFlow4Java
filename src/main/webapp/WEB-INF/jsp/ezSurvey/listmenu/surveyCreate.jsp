@@ -1824,12 +1824,12 @@
 				
 				// make ranking/dropdown options
 				function mkOptions(type, order, content) {
+					console.log(content);
 					var options = $("<div class='" + type + "-select'></div>");
 					var span = $("<span class='" + type + "-order'>" + order + "</span>");
 					options.append(span);
 					
-					var contents = $("<input class='textInput' type='text' placeholder='" + SurveyMessages.strContent + "'/>");
-					contents[0].textContext = content;
+					var contents = $("<input class='textInput' type='text' value='" + content + "' placeholder='" + SurveyMessages.strContent + "'/>");
 					options.append(contents);
 					
 					var delOption = $("<span class='delOption'></span>");
