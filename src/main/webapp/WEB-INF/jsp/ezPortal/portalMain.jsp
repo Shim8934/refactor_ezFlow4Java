@@ -9,19 +9,22 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
-		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
-		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/memo.css')}">
-		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
+		<c:if test="${memoFlag eq 'YES'}">
+			<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
+			<link rel="stylesheet" href="${util.addVer('/css/ezMemo/memo.css')}">
+			<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
+		</c:if>
 		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memoPortal.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mousewheel.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script>
+		<c:if test="${memoFlag eq 'YES'}">
+			<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
+			<script type="text/javascript" src="${util.addVer('/js/ezMemo/memoPortal.js')}"></script>
+			<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mousewheel.min.js')}"></script>
+			<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
+			<script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script>
+		</c:if>
 		<style>
 			.layerpopup {
 				-webkit-border-top-left-radius: 5px;
@@ -74,8 +77,10 @@
 		 	}
 		 	
 		 	$(window).resize(function() {
-		 		browserResize();
-		 		setGadgetPositionResize();
+		 		if(memoFlag === "YES") {
+			 		browserResize();
+			 		setGadgetPositionResize();
+		 		}
 		 	});
 		 	
 		    $(function() {
@@ -176,39 +181,38 @@
     		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		
-		<!-- memo note -->
-		<div class="noteBlock">
-			
-			<!-- 메모 레이어 -->
-			<div id="layer-popup" class="memo_wrap layerControl" style="display:none; ">
-				<div class="memo_header_wrapper">
-					<input type="hidden" id="layerFlag" value="layer" />
-				 	<div class="memo_header">
-				     	<ul class="memoHeaderUL">
-				         	<li class="memoSelect">
-				            	<select id="memoFolderList"></select>
-				            </li>
-							<li class="memoClose memoIcon30"></li>
-			                <li class="memoExpand_s memoIcon30" id="controllable" style="display:none;"></li>
-			                <li class="memoExpand memoIcon30" id="fullScreen"></li>
-			                <li class="memoPlus memoIcon30" id="addMemo"></li>
-				         </ul>
-				     </div>
-			     </div>
-			     
-			     <div class="memoListBox" id="mLBox" style="overflow:hidden;">
-			     	<div class="memo_main" id="memoMain"></div>
-			     </div>
-				 
-			     <div class="memobgBar">
-			     	<div id="slider-range"></div>
-			     </div>
+		<c:if test="${memoFlag eq 'YES'}">
+			<!-- memo note -->
+			<div class="noteBlock">
+				
+				<!-- 메모 레이어 -->
+				<div id="layer-popup" class="memo_wrap layerControl" style="display:none; ">
+					<div class="memo_header_wrapper">
+						<input type="hidden" id="layerFlag" value="layer" />
+						<div class="memo_header">
+							<ul class="memoHeaderUL">
+								<li class="memoSelect">
+									<select id="memoFolderList"></select>
+								</li>
+								<li class="memoClose memoIcon30"></li>
+								<li class="memoExpand_s memoIcon30" id="controllable" style="display:none;"></li>
+								<li class="memoExpand memoIcon30" id="fullScreen"></li>
+								<li class="memoPlus memoIcon30" id="addMemo"></li>
+							</ul>
+						</div>
+					</div>
+	
+					<div class="memoListBox" id="mLBox" style="overflow:hidden;">
+						<div class="memo_main" id="memoMain"></div>
+					</div>
+	
+					<div class="memobgBar">
+						<div id="slider-range"></div>
+					</div>
+				</div>
+				<div id="open-memo" class="memoBtn" style="display: none;"><span><spring:message code='ezMemo.t001'/></span></div>
 			</div>
-			
-			<div id="open-memo" class="memoBtn" style="display: none;"><span><spring:message code='ezMemo.t001'/></span></div>
-			
-		</div>
-		
+		</c:if>
 	</body>
 	<script type="text/javascript">
     	var Main_DialogArguments = new Array();
