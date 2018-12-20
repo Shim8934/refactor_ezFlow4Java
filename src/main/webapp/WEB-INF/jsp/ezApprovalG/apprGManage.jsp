@@ -104,6 +104,7 @@
 		    var currentpage = 1;
 		    var selRowChangeFlag = false;
 		    var orgCompanyID = "";
+		    var useHWP = "${useHWP}";
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
