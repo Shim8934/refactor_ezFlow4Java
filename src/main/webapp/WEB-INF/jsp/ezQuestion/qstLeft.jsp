@@ -109,11 +109,9 @@
 	        	<p class="btn_write01" onclick="qstWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezBoard.t367" /></p>
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
-		        <div class="lnb_lay">
-			        <h2 onclick="Open_Func(1);">
-			        	<span class="sub_iconLNB tree_board_qst"></span><span class="h2Title"><spring:message code="ezBoard.t365" /></span>
-			        </h2>
-				</div>	
+				<ul class="lnbUL">
+					<li><span class="sub_iconLNB tree_board_qst"></span><span class="node_selected" onclick="Open_Func(1)"><spring:message code="ezBoard.t365" /></span></li>
+				</ul>
 			</div>	        
 	    </div>
 	</body>

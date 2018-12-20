@@ -91,13 +91,12 @@
 		<h1>
 			<c:choose>
 				<c:when test="${mode eq 'part' }">
-					<spring:message code="ezLadder.t012" />
+					<spring:message code="ezLadder.t108" />
 				</c:when>
 				<c:when test="${mode eq 'all' }">
-					<spring:message code="ezLadder.t011" />
+					<spring:message code="ezLadder.t011" /> <spring:message code="ezLadder.t001"/>
 				</c:when>
-			</c:choose>
-			<spring:message code="ezLadder.t001"/>
+			</c:choose>			
 			<span id="mailBoxInfo"></span>
 			<span style="float: right; font-weight:normal;color:black;">
 				<select id="searchOption" style="height:27px; border-color: #c8c8c8">

@@ -92,8 +92,18 @@
 				}
 		    }
 		    
-		    function pollClick(num){
-		    	var g_BrdID = "6";		    	
+		    function resetNodeSelected(){
+		    	$(".node_selected").attr("class","node_normal");
+		    	$(".node_normal").eq(0).attr("class","node_selected");
+		    }
+		    
+		    function pollClick(elem){
+		    	var g_BrdID = "6";	
+		    	
+		    	$(".node_selected").attr("class","node_normal");
+		    	
+		    	var num = $(elem).attr("pollId");
+		    	$(elem).attr("class","node_selected");
 		    	
 				var szUrl = "/ezPoll/pollList.do?brdID=" + g_BrdID + "&see=0&currPage=1&mode=&search=&mode1=sub&searchN=&pollType=" + num;			
 				window.parent.frames["right"].location.href = szUrl;
@@ -128,20 +138,11 @@
 	        	<p class="btn_write01" onclick="pollWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code='ezBoard.t371'/> <spring:message code="ezPoll.t144" /></p>
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
-		        <div class="lnb_lay">
-			        <h2 onclick="pollClick(2);">
-			        	<span class="sub_iconLNB tree_board_poll"></span><span class="h2Title"><spring:message code="ezPoll.t101" /> <spring:message code="ezBoard.t371" /></span>
-			        </h2>
-			        <h2 onclick="pollClick(1);">
-			        	<span class="sub_iconLNB tree_board_poll"></span><span class="h2Title"><spring:message code="ezPoll.t237" /> <spring:message code="ezBoard.t371" /></span>
-			        </h2>
-			        <h2 onclick="pollClick(4);">
-			        	<span class="sub_iconLNB tree_board_poll"></span><span class="h2Title"><spring:message code="ezPoll.t251" /> <spring:message code="ezBoard.t371" /></span>
-			        </h2>
-			        <h2 onclick="pollClick(3);">
-			        	<span class="sub_iconLNB tree_board_poll"></span><span class="h2Title"><spring:message code="ezPoll.t102" /> <spring:message code="ezBoard.t371" /></span>
-			        </h2>
-				</div>	
+				<ul class="lnbUL">
+					<li class="pollDiv"><span class="sub_iconLNB tree_board_poll"></span><span class="node_selected" onclick="pollClick(this)" pollId="2"><spring:message code="ezPoll.psb256" /></span></li>
+					<li class="pollDiv"><span class="sub_iconLNB tree_board_poll"></span><span class="node_normal" onclick="pollClick(this)" pollId="4"><spring:message code="ezPoll.psb257" /></span></li>
+					<li class="pollDiv"><span class="sub_iconLNB tree_board_poll"></span><span class="node_normal" onclick="pollClick(this)" pollId="3"><spring:message code="ezPoll.psb258" /></span></li>
+				</ul>
 			</div>	        
 	    </div>
 	</body>

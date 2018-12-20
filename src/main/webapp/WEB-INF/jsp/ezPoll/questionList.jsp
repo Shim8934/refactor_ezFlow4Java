@@ -349,15 +349,19 @@
 		            MaxNum = totalPages;
 		        }
 		        
-		        for (i = startNum; i <= MaxNum; i++) {
-		            if (i == pageNum) {
-		                strtext = "<span class='on'>" + i + "</span>";
-		                PagingHTML += strtext;
-		            }
-		            else {
-						strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i + "</span>";
-		                PagingHTML += strtext;
-		            }
+		        if(MaxNum == 0){
+		        	PagingHTML += "<span class='on'>1</span>"
+		        } else {
+			        for (i = startNum; i <= MaxNum; i++) {
+			            if (i == pageNum) {
+			                strtext = "<span class='on'>" + i + "</span>";
+			                PagingHTML += strtext;
+			            }
+			            else {
+							strtext = "<span onClick='goToPageByNum(" + i + ")'>" + i + "</span>";
+			                PagingHTML += strtext;
+			            }
+			        }
 		        }
 		        
 		        if (totalPages > blockSize) {
@@ -462,19 +466,18 @@
 		<h1 id="pollMainName">
 		<c:choose>
 			<c:when test="${pollType eq '2' }">
-				<spring:message code="ezPoll.t101"/>
+				<spring:message code="ezPoll.psb256"/>
 			</c:when>
 			<c:when test="${pollType eq '1' }">
 				<spring:message code="ezPoll.t237"/>
 			</c:when>
 			<c:when test="${pollType eq '4' }">
-				<spring:message code="ezPoll.t251"/>
+				<spring:message code="ezPoll.psb257"/>
 			</c:when>
 			<c:when test="${pollType eq '3' }">
-				<spring:message code="ezPoll.t102"/>
+				<spring:message code="ezPoll.psb258"/>
 			</c:when>
 		</c:choose>
-		<spring:message code="ezPoll.t103"/>
 			<span id="mailBoxInfo"></span>
 			<span style="float: right; font-weight:normal;color:black;">
 				<select id="selectType">

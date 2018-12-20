@@ -49,7 +49,7 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        
-		        memoClick('0', '<spring:message code="ezPoll.t237"/> <spring:message code="ezMemo.t001" />');
+		        memoClick($(".node_selected"));
 		
 		        leftResize();
 		        $(".boardListBox").mCustomScrollbar({
@@ -57,7 +57,18 @@
 	        	});	
 		    };
 		    
-		    function memoClick(folderId, folderName, configView){
+		    function memoClick(elem, configView){
+		    	if(elem == null || elem == undefined){
+		    		elem = $(".node_selected");
+		    	}
+		    	
+				$(".node_selected").attr("class","node_normal");
+		    	
+		    	$(elem).attr("class","node_selected");
+		    	
+		    	var folderId = $(elem).attr("folderId");
+		    	var folderName = $(elem).attr("folderName");
+		    	
 	        	window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8&folderId="+folderId+"&folderName="+folderName+"&configView="+configView;
 		    	configView = false;
 		    }
@@ -69,7 +80,7 @@
 		    
 		    function memoWrite(){
 		    	if (configView){
-			    	memoClick('0', '<spring:message code="ezPoll.t237"/> <spring:message code="ezMemo.t001" />', configView);
+		    		memoClick($(".node_selected"), configView);
 		    	} else {
 			    	window.parent.frames["right"].newMemo();
 		    	}
@@ -97,16 +108,12 @@
 	        	<p class="btn_write01" onclick="memoWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezMemo.t0014" /></p>
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
-		        <div class="lnb_lay">
-			        <h2 onclick="memoClick('0', '<spring:message code="ezPoll.t237"/> <spring:message code="ezMemo.t001" />');">
-			        	<span class="sub_iconLNB tree_board_memo"></span><span class="h2Title"><spring:message code="ezPoll.t237"/> <spring:message code="ezMemo.t001" /></span>
-			        </h2>
-		        	<c:forEach items="${folders }" var="folder">
-		        		<h2 onclick="memoClick('${folder.folder_id}','${folder.folder_name}');">
-				        	<span class="sub_iconLNB tree_board_memo"></span><span class="h2Title"><c:out value="${folder.folder_name}"></c:out></span>
-				        </h2>
-		        	</c:forEach>
-				</div>	
+	        	<ul class="lnbUL">
+	        		<li class="memo"><span class="sub_iconLNB tree_board_memo"></span><span class="node_selected" onclick="memoClick(this);" folderId="0" folderName="<spring:message code="ezMemo.t0064"/>"><spring:message code="ezMemo.t0064"/></span></li>
+	        		<c:forEach items="${folders }" var="folder">
+		        		<li class="memo"><span class="sub_iconLNB tree_board_memo"></span><span class="node_normal" onclick="memoClick(this);" folderId="${folder.folder_id}" folderName="${folder.folder_name}"><c:out value="${folder.folder_name}"></c:out></span></li>
+	        		</c:forEach>
+				</ul>	
 			</div>	        
 	    </div>
 	</body>

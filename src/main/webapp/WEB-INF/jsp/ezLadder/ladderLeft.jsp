@@ -48,7 +48,9 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        
-		        ladderClick('part');
+		        var defaultNode = $(".node_selected");
+		        
+		        ladderClick(defaultNode);
 		
 		        leftResize();
 		        $(".boardListBox").mCustomScrollbar({
@@ -56,13 +58,23 @@
 	        	});	
 		    };
 		    
-		    function ladderClick(mode){
+		    function ladderClick(elem){
+				$(".node_selected").attr("class","node_normal");
+		    	
+		    	var mode = $(elem).attr("mode");
+		    	$(elem).attr("class","node_selected");
+		    	
 				var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=1&searchSelect=none&searchInput=&sort=basic&sortFlag=desc";			
 				window.parent.frames["right"].location.href = szUrl;
 		    }
 		    
 		    function ladderWrite(){
 		    	window.parent.frames["right"].location.href = '/ezLadder/selectLadderType.do';
+		    }
+		    
+		    function resetNodeSelected(){
+		    	$(".node_selected").attr("class","node_normal");
+		    	$(".node_normal").eq(0).attr("class","node_selected");
 		    }
 		    
 		    function leftResize(){
@@ -85,14 +97,10 @@
 	        	<p class="btn_write01" onclick="ladderWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezLadder.t018"/></p>
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
-		        <div class="lnb_lay">
-			        <h2 onclick="ladderClick('part');">
-			        	<span class="sub_iconLNB tree_board_ladder"></span><span class="h2Title" onclick="ladder_Func(1)"><spring:message code="ezLadder.t012" /> <spring:message code="ezBoard.l001" /></span>
-			        </h2>
-			        <h2 onclick="ladderClick('all');">
-			        	<span class="sub_iconLNB tree_board_ladder"></span><span class="h2Title" onclick="ladder_Func(1)"><spring:message code="ezLadder.t011" /> <spring:message code="ezBoard.l001" /></span>
-			        </h2>
-				</div>	
+				<ul class="lnbUL">
+					<li class="ladder"><span class="sub_iconLNB tree_board_ladder"></span><span class="node_selected" onclick="ladderClick(this);" mode="all"><spring:message code="ezLadder.t011" /> <spring:message code="ezBoard.l001" /></span></li>
+					<li class="ladder"><span class="sub_iconLNB tree_board_ladder"></span><span class="node_normal" onclick="ladderClick(this);" mode="part"><spring:message code="ezLadder.t108" /></span></li>
+				</ul>	
 			</div>	        
 	    </div>
 	</body>

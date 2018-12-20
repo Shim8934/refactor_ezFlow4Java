@@ -987,6 +987,7 @@
 						item.value = items[i];
 					});
 				}
+				window.parent.frames["left"].resetNodeSelected();
 				$("#ladMakeForm").submit();
 			} 
 	
