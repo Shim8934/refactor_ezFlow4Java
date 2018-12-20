@@ -665,6 +665,7 @@
 				if (!noItem) {
 					var tdInputElmt = document.createElement("input");
 					tdInputElmt.setAttribute("type", "checkbox");
+					tdInputElmt.onclick = function(e) { selectCheckBox(); }
 					tdElmt.appendChild(tdInputElmt);
 				}
 				
@@ -675,11 +676,44 @@
 			var thInputElmt = document.createElement("input");
 			
 			thInputElmt.setAttribute("type", "checkbox");
+			thInputElmt.onclick = function(e) { selectAllCheckBox(listTable, this.checked); }
 			
 			thElmt.style.width = "20px";
 			thElmt.appendChild(thInputElmt);
 			
 			listHeader.insertBefore(thElmt, listHeader.childNodes[0]);
+		}
+		
+		/* 체크박스 전체 선택 */
+		function selectAllCheckBox(listTable, checkFlag) {
+			var length = listTable.rows.length;
+			for (var i = 0; i < length; i++) {
+				if (checkFlag) {
+					listTable.rows[i].style.backgroundColor = "rgb(241, 248, 255)";
+					listTable.rows[i].firstElementChild.firstElementChild.checked = true;
+				}
+				else {
+					listTable.rows[i].style.backgroundColor = "rgb(255, 255, 255)";
+					listTable.rows[i].firstElementChild.firstElementChild.checked = false;
+				}
+			}
+		}
+		
+		/* 체크박스  선택 */
+		function selectCheckBox() {
+			event.stopPropagation();
+			
+			var checkboxElmt = event.currentTarget;
+			var currentRow   = checkboxElmt.parentElement.parentElement;
+			
+			if (checkboxElmt.checked) {
+				currentRow.setAttribute("selected", "true");
+				currentRow.style.backgroundColor = "rgb(241, 248, 255)";
+			}
+			else {
+				currentRow.setAttribute("selected", "false");
+				currentRow.style.backgroundColor = "rgb(255, 255, 255)";
+			}
 		}
 	</script>
 </head>
