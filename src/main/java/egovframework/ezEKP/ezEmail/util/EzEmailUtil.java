@@ -1078,7 +1078,7 @@ public class EzEmailUtil {
 			if (part.getContentType().contains("IMAGE")) {
 				String aitem = "?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
 				previewImageListHtml += " <div><p class=imageArea><a target=_blank href='" + "/ezEmail/readAttachIamge.do" + aitem + "'>";
-				previewImageListHtml += " <img class src='" + "/ezEmail/downloadAttach.do" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' width='100%' height='90%'></a></p>";
+				previewImageListHtml += " <img src='" + "/ezEmail/downloadAttach.do" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;'></a></p>";
 				previewImageListHtml += " <p onclick=\"DownloadAttach('" + "/ezEmail/downloadAttach.do" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachImageeName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</p></div>";
 			}
 
