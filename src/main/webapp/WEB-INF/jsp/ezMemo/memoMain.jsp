@@ -51,6 +51,7 @@
 		var endDate;
 		var dayArray = ["<spring:message code='main.t00052'/>", "<spring:message code='main.t00053'/>", "<spring:message code='main.t00054'/>", "<spring:message code='main.t00055'/>", "<spring:message code='main.t00056'/>", "<spring:message code='main.t00057'/>", "<spring:message code='main.t00058'/>"];
 		var checkOpt="off";
+		var configView = "<c:out value='${configView}' />";
 		
 		window.onunload = Window_onunload;
 		
@@ -77,6 +78,11 @@
 			getMemoSortable();
 			getMemoConfig();
 			getFolderList();
+			
+			if(folderId != null && folderId != ""){
+				$("#memoType").val(folderId);
+			}
+			
 			getMemoList();
 			bodyClearSelection();
 			
@@ -120,6 +126,10 @@
 	    			$(this).parent().nextAll(".color_popup").css("visibility", "hidden"); 
 	    		}
 	    	});
+	    	
+	    	if(configView == 'true'){
+	    		newMemo();
+	    	}
 
 	    }
 	    
@@ -174,7 +184,7 @@
 		
 	</script>
 	<body class="mainbody" style="overflow: hidden;" marginwidth="0" marginheight="0">
-		<h1><spring:message code='ezMemo.t001'/><span id="mailBoxInfo"></span></h1>
+		<h1><c:out value="${folderName }"></c:out><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 		  <ul>
 		        <li class="important"><span onclick="newMemo()"><spring:message code='ezMemo.t0014'/></span></li>
@@ -190,7 +200,7 @@
 					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this);"></span></p>  
 					</div>
 				 </div>
-				 <li style="float:right;height:27px;"><select id="memoType" style="width:175px; height:27px !important; line-height: 25px !important;" onchange="getMemoList('folder')"></select></li>
+				 <li style="display: none; float:right;height:27px;"><select id="memoType" style="width:175px; height:27px !important; line-height: 25px !important;" onchange="getMemoList('folder')"></select></li>
 		  </ul>
 		</div>
 		<div style="width:100%; border-bottom: 1px solid #e8e8e8;"></div>

@@ -386,7 +386,7 @@ function InitGlobals(ListFlag, ListType, MenuType) {
         try {
             if (trSubInfoTab) {
                 document.getElementById("trSubInfoTab").style.display = "none";
-                document.getElementById("divList").style.height = "740px";
+                document.getElementById("divList").style.height = "730px";
 
                 //PageSize = 10;
                 Block_Size = 10;
@@ -399,7 +399,7 @@ function InitGlobals(ListFlag, ListType, MenuType) {
         try {
             if (trSubInfoTab) {
                 document.getElementById("trSubInfoTab").style.display = "";
-                document.getElementById("divList").style.height = "310";
+                document.getElementById("divList").style.height = "375px";
                 //PageSize = 10;
                 Block_Size = 10;
             }
