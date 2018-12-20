@@ -386,7 +386,7 @@ function InitGlobals(ListFlag, ListType, MenuType) {
         try {
             if (trSubInfoTab) {
                 document.getElementById("trSubInfoTab").style.display = "none";
-                document.getElementById("divList").style.height = "385";
+                document.getElementById("divList").style.height = "740px";
 
                 //PageSize = 10;
                 Block_Size = 10;

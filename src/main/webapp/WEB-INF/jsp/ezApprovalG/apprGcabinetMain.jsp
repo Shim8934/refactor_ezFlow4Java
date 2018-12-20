@@ -95,32 +95,6 @@
 		        var ext= "";
 		        document.onselectstart = function () { return false; };
 		
-		        $(function () {
-		        	/* 2018-06-20 김민성 - 전자결재 selectbox 기본으로 변경 */
-		            /* $("#rec_year").selectmenu({
-		                change: function (event, data) {
-		                    onSelect_Year(data.item.value);
-		                }
-		            });
-		
-		            $("#cab_year").selectmenu({
-		                change: function (event, data) {
-		                    onSelect_Year(data.item.value);
-		                }
-		            });
-		
-		            $("#del_year").selectmenu({
-		                change: function (event, data) {
-		                    onSelect_Year(data.item.value);
-		                }
-		            }); */
-		
-		            /* $("#number")
-		              .selectmenu()
-		              .selectmenu("menuWidget")
-		                .addClass("overflow"); */
-		        });
-		
 		        window.onload = function () {
 		            var toDay = new Date();
 		            var toDayYear = parseInt(toDay.getFullYear());
