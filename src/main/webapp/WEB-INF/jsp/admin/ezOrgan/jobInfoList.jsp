@@ -13,7 +13,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
-	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/admin/ListView_list.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<style>
 		.mainview {margin-top: 5px; width:50%; float:left;}
@@ -87,7 +87,7 @@
             
             var listview = new ListView();
             listview.SetID("lvJobTitleList");
-            listview.SetMulSelectable(false);
+            listview.SetMulSelectable(true);
             listview.SetRowOnClick("JobTitle_UserList");
             listview.SetSelectFlag(false);
             listview.SetRowOnDblClick("JobTitleView");
@@ -389,7 +389,7 @@
             
             var listview = new ListView();
             listview.SetID("lvJobPositionList");
-            listview.SetMulSelectable(false);
+            listview.SetMulSelectable(true);
             listview.SetRowOnClick("JobPosition_UserList");
             listview.SetSelectFlag(false);
             listview.SetRowOnDblClick("JobTitleView");
