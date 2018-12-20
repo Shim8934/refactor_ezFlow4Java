@@ -1972,10 +1972,11 @@
 				}
 				
 				function isValid(value) {if (!isNaN(value) && parseFloat(value) >= 0 && value % 1 === 0) {return true;} else {return false;}}
-				
+////////////////////////////////////////////////////////////////////////////				
 				// 미리보기 질문 폼 생성
 				function prevQstn() {
-					$(".prevQsArea").html("");
+					var prevQsArea = $(".prevQsArea");
+					prevQsArea.html("");
 					
 					var qstnList = SurveyCreate.getQs();
 					var qstInf   = SurveyCreate.getInfo();
@@ -1983,30 +1984,32 @@
 					
 					if (qstnList.length != 0) {
 						for (var i = 0; i < qstnList.length; i++) {
-							var html = "";
 							var question = qstnList[i];
 							var qstnId = question.id;
 							var qstnType = question.type;
-							html += "<div class='prevQsWrapper' id='prevQstn" + qstnId + "'type='" + qstnType + "'>";
+							var wrapper = $("<div class='prevQsWrapper' id='prevQstn" + qstnId + "'type='" + qstnType + "'></div>");
 							
-							html += prevQsHeader(question, qstnList);
+							var header = prevQsHeader(question, qstnList);
+							var prevQsOpt = $("<div class='prevQsOpt'></div>");
 							
-							html += "<div class='prevQsOpt'>";
+							var body = "";
 							switch(parseInt(qstnType)) {
 								case 1  :
-								case 2  : html += mkSelectQstn(question)             ; break;
+								case 2  : body = mkSelectQstn(question)             ; break;
 								case 3  : 
-								case 4  : html += mkMatrixQstn(question)             ; break;
-								case 5  : html += mkTextQstn(question, "shortanswer"); break;
-								case 6  : html += mkTextQstn(question, "paragraph")  ; break;
-								case 7  : html += mkSliderQstn(question)             ; break;
-								case 8  : html += mkRankingQstn(question)            ; break;
-								case 9  : html += mkDropDownQstn(question)           ; break;
-								default : alert(SurveyMessages.strError)             ; return;
+								case 4  : body = mkMatrixQstn(question)             ; break;
+								case 5  : body = mkTextQstn(question, "shortanswer"); break;
+								case 6  : body = mkTextQstn(question, "paragraph")  ; break;
+								case 7  : body = mkSliderQstn(question)             ; break;
+								case 8  : body = mkRankingQstn(question)            ; break;
+								case 9  : body = mkDropDownQstn(question)           ; break;
+								default : alert(SurveyMessages.strError)            ; return;
 							}
-							html += "</div></div>";
-
-							$(".prevQsArea").append(html);
+							
+							wrapper.append(header);
+							prevQsOpt.append(body);
+							wrapper.append(prevQsOpt);
+							prevQsArea.append(wrapper);
 							
 							if (question.logicFlag == 'Y') {
 								mkLogicForm(qstnId);
@@ -2023,11 +2026,13 @@
 					var required = question.required;
 					var qstnAtt  = question.attach;
 					
-					var html = "<div class='prevQsContent'>";
-					html += "<div class='question-panel'>";
-					html += "<div class='question-header'>";
-					html += "<div class='question-content'>" + qstId + ". " + content;
-
+					var prevQsContent = $("<div class='prevQsContent'></div>");
+					var questionPanel = $("<div class='question-panel'></div>");
+					var questionHeader = $("<div class='question-header'></div>");
+					var questionContent = $("<div class='question-content'></div>");
+					questionContent[0].textContent = qstId + ". " + content;
+					
+					var html = "";
 					if (required == 'Y') {
 						html += "<strong class='imptt'>*</strong>";
 					}
@@ -2048,14 +2053,21 @@
 							html += "</span>"
 						}
 					}
-					html += "</div></div></div></div>";
+					questionContent.append(html);
+					questionHeader.append(questionContent);
 					
+					var questionAttach = "";
 					if (qstnAtt) {
-						html += "<div class='question-attach'>"
-						html += "<img alt='' src='" + qstnAtt.fpath + "' class='qstnImg'>";
-						html += "</div>"
+						questionAttach += "<div class='question-attach'>"
+						htquestionAttachml += "<img alt='' src='" + qstnAtt.fpath + "' class='qstnImg'>";
+						questionAttach += "</div>"
+						
+						questionHeader.append(questionAttach);
 					}
-					return html;
+					questionPanel.append(questionHeader);
+					prevQsContent.append(questionPanel);
+					
+					return prevQsContent;
 				}
 				
 				// 로직 폼 생성
