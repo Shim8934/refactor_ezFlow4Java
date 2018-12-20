@@ -401,7 +401,6 @@
 			pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
 			totalPage = Math.ceil(new Number(totalCount / pageSize));
 			
-			makeCheckBoxCol();
 			makePageSelPage();
 		}
 		/* 직책을 사용중인 유저리스트 호출 Method */
