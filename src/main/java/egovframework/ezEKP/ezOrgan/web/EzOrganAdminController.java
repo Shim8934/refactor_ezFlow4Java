@@ -2335,6 +2335,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         String selCompany = (request.getParameter("companyID") != null ? request.getParameter("companyID") : "");
 		String topID = "";
 		String deptTreeTopId = "";
+		String delType = (request.getParameter("DelType") !=null ? request.getParameter("DelType") : "");
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topID = user.getCompanyID();
@@ -2364,6 +2365,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("use_attitude", use_attitude);
 		model.addAttribute("deptTreeTopId", deptTreeTopId);
 		model.addAttribute("useWebfolder", useWebfolder);
+		model.addAttribute("DelType", delType);
 		
 		logger.debug("permissionsCheck ended.");
 		

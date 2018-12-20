@@ -54,6 +54,7 @@
 		    var isfirst = true;
 		    var deptTreeTopId = "${deptTreeTopId}";
 			var isAdmin = "${isAdmin}";
+			var delType = "<c:out value='${DelType}'/>";
 			
 		    $(document).ready(function(){
 		    	try {
@@ -223,7 +224,46 @@
 		    }
 		    
 		    function displayUserList(DeptID) {
-		        $.ajax({
+		        // 2018-12-20 권한명에 따라 권한 리스트 텍스트 출력 - 문성업 
+		        if (delType == "c") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t291' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t291' />";
+		        } else if (delType == "k") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t293' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t293' />";
+		        } else if (delType == "g"){
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t295' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t295' />";
+		        } else if (delType == "a") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t292' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t292' />";
+		        } else if (delType == "i") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t294' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t294' />";
+		        } else if (delType == "n") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t297' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t297' />";
+		        } else if (delType == "l") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t296' />";
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t296' />";
+		        } else if (delType == "w") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t301' />";
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t301' />";
+		        } else if (delType == "m") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t300' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t300' />";
+		        } else if (delType == "f") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.lhj1' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.lhj1' />";
+		        } else if (delType == "wf") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t303' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t303' />";
+		        } else if (delType == "wa") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.kbm01' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.kbm01' />";
+		        }
+		        
+		    	$.ajax({
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
@@ -1147,6 +1187,7 @@
 			</LISTVIEWDATA>
 		</xml>
 	    <div id="menu">
+	       <div id ="authorText" style="font-weight: bold;"></div>
 	    </div>
 	    <div id="close">
 	        <ul>
@@ -1237,7 +1278,8 @@
 	                    <tr>
 	                        <td>
 	                            <h2 id="Permission" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="margin-left:1px; border-bottom:0px;">
-	                                <span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezOrgan.t00011'/></span>
+	                                <%-- <span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezOrgan.t00011'/></span> --%>
+	                                <span style="min-width: 45px;" id="PermissionStr"></span>
 	                            </h2>
 	                            <div class="receiver_borderbox" style="border-top: 1px solid #565b66; margin-top:1px;">
 	                                <div id="PermissionBasic" style="width: 250px; Height: 210px; overflow-x: auto; overflow-y: auto;" ondblclick="InsertReceiver()"></div>
