@@ -153,6 +153,7 @@ function ListView() {
     var _Align = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     var _ListType = 0;
     var _SetHeightFree = false;
+    var _useCheckBoxCol = false;
     /* Private Member 선언 끝 */
 
     //ID 지정
@@ -532,6 +533,8 @@ function ListView() {
                 
                 //체크박스  헤더 세팅
                 if (strColName == "CHECKBOX") {
+                    _useCheckBoxCol = true;
+                    
                     var inputElmt = document.createElement("input");
                     inputElmt.setAttribute("type", "checkbox");
                     inputElmt.onclick = function(e) { selectAllCheckBox(_thisID, this.checked); }
@@ -631,12 +634,14 @@ function ListView() {
             oTbody.appendChild(objTr);
             
             //체크박스 바디 세팅
-            var newTdElmt = document.createElement("TD");
-            var inputElmt = document.createElement("input");
-            inputElmt.setAttribute("type", "checkbox");
-            inputElmt.onclick = function(e) { selectCheckBox(); }
-            newTdElmt.appendChild(inputElmt);
-            objTr.appendChild(newTdElmt);
+            if(_useCheckBoxCol) {
+                var newTdElmt = document.createElement("TD");
+                var inputElmt = document.createElement("input");
+                inputElmt.setAttribute("type", "checkbox");
+                inputElmt.onclick = function(e) { selectCheckBox(); }
+                newTdElmt.appendChild(inputElmt);
+                objTr.appendChild(newTdElmt);
+            }
             
             for (var j = 0; j < oCells.length; j++) {
                 var strValue = SelectSingleNodeValue(oCells[j], "VALUE");

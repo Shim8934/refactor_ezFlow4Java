@@ -99,7 +99,6 @@
 			pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
 			totalPage = Math.ceil(new Number(totalCount / pageSize));
 			
-			makeCheckBoxCol();
 			makePageSelPage();
 		}
 		/* 추가, 수정, 삭제 Button Action (mode=Add,Mod,Del) */
