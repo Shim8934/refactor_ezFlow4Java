@@ -5,10 +5,12 @@ public class SurveyParticipantVO {
 	private String userId;
 	private long   surveyId;
 	private String userType;
+	private String userName;
 	private String userName1;
 	private String userName2;
 	private String email;
 	private String deptId;
+	private String deptName;
 	private String deptName1;
 	private String deptName2;
 	private String companyId;
@@ -108,5 +110,21 @@ public class SurveyParticipantVO {
 	
 	public void setParticipantId(long participantId) {
 		this.participantId = participantId;
+	}
+	
+	public String getUserName() {
+		return userName;
+	}
+	
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	
+	public String getDeptName() {
+		return deptName;
+	}
+	
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
 	}
 }

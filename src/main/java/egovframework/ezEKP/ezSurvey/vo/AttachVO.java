@@ -1,12 +1,12 @@
 package egovframework.ezEKP.ezSurvey.vo;
 
 public class AttachVO {
-	private long attachId;
-	private long targetId;
+	private long   attachId;
+	private long   targetId;
 	private String targetType;
-	private String fileName;
+	private String fname;
 	private long   fileSize;
-	private String filePath;
+	private String fpath;
 	private String companyId;
 	private int    tenantId;
 	
@@ -34,14 +34,6 @@ public class AttachVO {
 		this.targetType = targetType;
 	}
 	
-	public String getFileName() {
-		return fileName;
-	}
-	
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-	
 	public long getFileSize() {
 		return fileSize;
 	}
@@ -50,12 +42,20 @@ public class AttachVO {
 		this.fileSize = fileSize;
 	}
 	
-	public String getFilePath() {
-		return filePath;
+	public String getFname() {
+		return fname;
 	}
 	
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
+	public void setFname(String fname) {
+		this.fname = fname;
+	}
+	
+	public String getFpath() {
+		return fpath;
+	}
+	
+	public void setFpath(String fpath) {
+		this.fpath = fpath;
 	}
 	
 	public String getCompanyId() {

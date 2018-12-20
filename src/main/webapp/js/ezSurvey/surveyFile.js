@@ -307,6 +307,47 @@ var SurveyFile = function() {
 			return li;
 		}
 		
+		function renderAttachList(attachList) {
+			var mainZone     = document.getElementById("fileDiv");
+			var ulElmt       = mainZone.querySelector("ul[class='ulFiles']");
+			isStart          = true;
+			mainZone.onclick = function(e) {return null;};
+			
+			for (var i = 0; i < attachList.length; i++) {
+				var liElmt = document.createElement("li");
+				var attDiv = document.createElement("div");
+				var avaDiv = document.createElement("div");
+				var attInf = document.createElement("div");
+				var delImg = document.createElement("img");
+				var attImg = document.createElement("img");
+				var sName  = document.createElement("span");
+				var sSize  = document.createElement("span");
+				var check  = isImage(attachList[i]["fname"]);
+				attImg.src = check.isImage == true ? attachList[i]["fpath"] : check.urlImage;
+				delImg.src = "/images/ezSurvey/file_del.gif";
+				
+				avaDiv.className  = "attImgAva";
+				attDiv.className  = "attDivFile";
+				attInf.className  = "attFileInf";
+				sSize.textContent = getFileSize(attachList[i]["fileSize"]);
+				sName.textContent = attachList[i]["fname"];
+				sName.setAttribute("title", sName.textContent);
+				delImg.addEventListener("click", function(e) {deleteFile(this, e);}, false);
+				
+				attInf.appendChild(sName);
+				attInf.appendChild(sSize);
+				avaDiv.appendChild(attImg);
+				attDiv.appendChild(avaDiv);
+				attDiv.appendChild(attInf);
+				liElmt.setAttribute("fname", attachList[i]["fname"]);
+				liElmt.setAttribute("fsize", attachList[i]["fileSize"]);
+				liElmt.setAttribute("path" , attachList[i]["fpath"]);
+				liElmt.appendChild(attDiv);
+				liElmt.appendChild(delImg);
+				ulElmt.appendChild(liElmt);
+			}
+		}
+		
 		return {
 			upload     : handleAllUpload,
 			dragEnter  : onDragEnter,
@@ -314,7 +355,8 @@ var SurveyFile = function() {
 			deleteFile : deleteFile,
 			chImage    : isImage,
 			check      : checkUploadStatus,
-			mkImgTag   : mkImgTag
+			mkImgTag   : mkImgTag,
+			render     : renderAttachList
 		};
 	}
 }();

@@ -211,7 +211,27 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId",   userId);
 		param.put("itemList", String.join(",", itemList));
-		JSONObject resultBody     = getJsonResult(url, param, request, "delete", null);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject getSurveyInformation(HttpServletRequest request, String userId, String itemId) throws Exception {
+		String url                = "/rest/ezsurvey/survey-item/info";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("itemId", itemId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject getSurveyQuestions(HttpServletRequest request, String userId, String itemId) throws Exception {
+		String url                = "/rest/ezsurvey/survey-item/questions";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("itemId", itemId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
 	
@@ -341,4 +361,5 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 			return contentLength == null || contentLength < 0 ? null : contentLength;
 		}
 	}
+	
 }

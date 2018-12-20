@@ -1,17 +1,37 @@
 package egovframework.ezEKP.ezSurvey.vo;
 
+import java.util.List;
+
 public class QuestionVO {
 	private long questionId;
 	private long surveyId;
 	private String companyId;
 	private int tenantId;
-	private int questionType;
-	private String tittle;
-	private int levels;
+	private int type;
+	private String content;
+	private int level;
 	private int useStatus;
-	private int requiredFlag;
+	private int required;
 	private int logicFlag;
 	private int sliderLogicPoint;
+	private List<OptionVO> option;
+	private AttachVO attach;
+	
+	public AttachVO getAttach() {
+		return attach;
+	}
+	
+	public void setAttach(AttachVO attach) {
+		this.attach = attach;
+	}
+	
+	public List<OptionVO> getOption() {
+		return option;
+	}
+	
+	public void setOption(List<OptionVO> option) {
+		this.option = option;
+	}
 	
 	public long getQuestionId() {
 		return questionId;
@@ -45,30 +65,30 @@ public class QuestionVO {
 		this.tenantId = tenantId;
 	}
 	
-	public int getQuestionType() {
-		return questionType;
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 	
-	public void setQuestionType(int questionType) {
-		this.questionType = questionType;
+	public int getLevel() {
+		return level;
 	}
-	
-	public String getTittle() {
-		return tittle;
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
-	
-	public void setTittle(String tittle) {
-		this.tittle = tittle;
-	}
-	
-	public int getLevels() {
-		return levels;
-	}
-	
-	public void setLevels(int levels) {
-		this.levels = levels;
-	}
-	
+
 	public int getUseStatus() {
 		return useStatus;
 	}
@@ -77,14 +97,14 @@ public class QuestionVO {
 		this.useStatus = useStatus;
 	}
 	
-	public int getRequiredFlag() {
-		return requiredFlag;
+	public int getRequired() {
+		return required;
 	}
-	
-	public void setRequiredFlag(int requiredFlag) {
-		this.requiredFlag = requiredFlag;
+
+	public void setRequired(int required) {
+		this.required = required;
 	}
-	
+
 	public int getLogicFlag() {
 		return logicFlag;
 	}

@@ -42,7 +42,14 @@
 		
 		<div id="bodyPanel">
 			<div id="tab1" class="select-tab">
-				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyInfomation.jsp"></jsp:include>
+				<c:choose>
+					<c:when test="${not empty survey}">
+						<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyInfomationReuse.jsp"></jsp:include>
+					</c:when>
+					<c:otherwise>
+						<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyInfomation.jsp"></jsp:include>
+					</c:otherwise>
+				</c:choose>
 			</div>
 			<div id="tab2" class="hidden-tab">
 				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/questionCreate.jsp"></jsp:include>
@@ -56,12 +63,14 @@
 		<script type="text/javascript">
 			var SurveyCreate    = function() {
 				var surveyFile  = new SurveyFile();
+				var surveyItem  = null;
 				var selectPopup = null;
 				var finishStep  = null;
 				var lastStep    = 1;
 				var userWindow  = null;
 				var lastScrollY = 0;
 				var scrolled    = true;
+				var resuseFlag  = null;
 				var surveyObj   = {
 					infor     : {},
 					questions : []
@@ -99,24 +108,29 @@
 					
 				$.datepicker.setDefaults($.datepicker.regional[SurveyMessages["strLocale"]]);
 				
-				initEvents();
-				
-				function initEvents() {
-					document.onselectstart = function() {return false;};
-					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
-					document.getElementById("selectTarget" ).addEventListener("change", toggleSelectTargetBttn, false);
-					document.getElementById("targetBttn"   ).addEventListener("click" , showSelectPopUp       , false);
-					document.getElementById("gotoSecondTab").addEventListener("click" , gotoSecondStep        , false);
-					document.getElementById("gotoThirdTab" ).addEventListener("click" , gotoThirdStep         , false);
-					document.getElementById("cancelSurvey1").addEventListener("click" , cancleThisSurvey      , false);
-					document.getElementById("public-slbox" ).addEventListener("change", toggleDaysInput       , false);
-					document.getElementById("closeUserPanel").addEventListener("click", toggleUserPreview     , false);
+				function initEvents(reuseSurvey) {
+					console.log(reuseSurvey);
+					surveyItem      = reuseSurvey ? reuseSurvey.surveyId : null;
+					var fileDivElmt = document.getElementById("fileDiv");
 					
-					var today = new Date();
 					$("#startDate").datepicker(datepickerSt);
 					$("#endDate").datepicker(datepickerSt);
-					$("#startDate").datepicker("setDate", today);
-					$("#endDate").datepicker("setDate", today);
+					
+					if (!surveyItem) {
+						var today = new Date();
+						$("#startDate").datepicker("setDate", today);
+						$("#endDate").datepicker("setDate", today);
+						fileDivElmt.onclick = function(e) {startUpload();};
+					}
+					else {
+						if (reuseSurvey["paritipateFlag"] == 1) {setSurveyUsers(reuseSurvey["userList"]);}
+						if (reuseSurvey["attachFlag"] == 1) {surveyFile.render(reuseSurvey["attachList"]);}
+						getReuseQuestions();
+					}
+					
+					fileDivElmt.addEventListener("dragenter", function(e) {surveyFile.dragEnter(e);}, false);
+					fileDivElmt.addEventListener("dragover" , function(e) {surveyFile.dragOver(e);} , false);
+					fileDivElmt.addEventListener("drop"     , function(e) {surveyFile.upload(e);}   , false);
 					
 					var listTabElmt = document.getElementsByClassName("headpanel")[0].children;
 					for (var i = 0, len = listTabElmt.length; i < len; i++) {
@@ -130,16 +144,19 @@
 					fileUploadBttn.onchange = function(e) {surveyFile.upload();};
 					var addFileBttn         = document.getElementById("addFileBttn");
 					addFileBttn.onclick     = function(e) {startUpload();};
-					var fileDivElmt         = document.getElementById("fileDiv");
-					fileDivElmt.onclick     = function(e) {startUpload();};
-					
-					fileDivElmt.addEventListener("dragenter", function(e) {surveyFile.dragEnter(e);}, false);
-					fileDivElmt.addEventListener("dragover" , function(e) {surveyFile.dragOver(e);} , false);
-					fileDivElmt.addEventListener("drop"     , function(e) {surveyFile.upload(e);}   , false);
-					
-					var userMoreElmt = document.querySelector("span[class='user-more']");
+					var userMoreElmt        = document.querySelector("span[class='user-more']");
 					if (userMoreElmt) {userMoreElmt.onclick = function(e) {toggleUserPreview();};}
+					
 					document.getElementById("userListDiv").onscroll = function(e) {scrollListOfUser(this);}
+					document.onselectstart = function() {return false;};
+					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
+					document.getElementById("selectTarget" ).addEventListener("change", toggleSelectTargetBttn, false);
+					document.getElementById("targetBttn"   ).addEventListener("click" , showSelectPopUp       , false);
+					document.getElementById("gotoSecondTab").addEventListener("click" , gotoSecondStep        , false);
+					document.getElementById("gotoThirdTab" ).addEventListener("click" , gotoThirdStep         , false);
+					document.getElementById("cancelSurvey1").addEventListener("click" , cancleThisSurvey      , false);
+					document.getElementById("public-slbox" ).addEventListener("change", toggleDaysInput       , false);
+					document.getElementById("closeUserPanel").addEventListener("click", toggleUserPreview     , false);
 				}
 				
 				function startUpload() {document.getElementById("fileBttn").click();}
@@ -165,8 +182,8 @@
 				function saveSurveyInformation() {
 					var surveyInfoWrap = document.querySelector("div[class='surveyinfo-wrap']");
 					var surveyAttWrap  = document.querySelector("div[class='survey-attach']");
-					var surveyTitle    = surveyInfoWrap.querySelector("input[class='info-input-ttl']").value;
-					var surveyPurpose  = surveyInfoWrap.querySelector("input[class='info-input-pp']").value;
+					var surveyTitle    = document.getElementById("info-input-ttl").value;
+					var surveyPurpose  = document.getElementById("info-input-pp").value;
 					var startDate      = document.getElementById("startDate").value;
 					var endDate        = document.getElementById("endDate").value;
 					var publicFlag     = 1 - document.getElementById("public-slbox").selectedIndex;
@@ -270,7 +287,7 @@
 					selectTab.className = "hidden-tab";
 				}
 				
-				function focusonQuestionTitleStep1() {document.querySelector("input[class='info-input-ttl']").focus();}
+				function focusonQuestionTitleStep1() {document.getElementById("info-input-ttl").focus();}
 				function focusonQuestionTitleStep2() {document.querySelector("div[class='quesDiv']").querySelector("input[class='questnTitle']").focus();}
 				function getSurveyPreview() {/* prevQstn(); */}
 				
@@ -301,8 +318,8 @@
 				
 				function checkStep1() {
 					var returnObj  = {};
-					var surveyTtl  = document.querySelector("input[class='info-input-ttl']");
-					var surveyPp   = document.querySelector("input[class='info-input-pp' ]");
+					var surveyTtl  = document.getElementById("info-input-ttl");
+					var surveyPp   = document.getElementById("info-input-pp");
 					var sDate      = document.getElementById("startDate").value;
 					var eDate      = document.getElementById("endDate").value;
 					var publicFlag = 1 - document.getElementById("public-slbox").selectedIndex;
@@ -493,7 +510,7 @@
 					var userArr = surveyObj["infor"]["users"];
 					
 					for (var i = 0 ; i < userArr.length; i++) {
-						if (userArr[i]["userId"] == userId && userArr[i]["userType"] == userType) {console.log("Here!"); userArr.splice(i, 1);}
+						if (userArr[i]["userId"] == userId && userArr[i]["userType"] == userType) {userArr.splice(i, 1);}
 					}
 					
 					surveyObj["infor"]["users"] = userArr;
@@ -501,9 +518,38 @@
 					spanElmt.parentElement.removeChild(spanElmt);
 				}
 				
+				function getReuseQuestions() {
+					$.ajax({
+						type: "GET",
+						url: "/ezSurvey/getSurveyQuestions.do",
+						data: {surveyId : surveyItem},
+						contentType: "application/json; charset=utf-8",
+						dataType: "JSON",
+						async: true,
+						success : function(data) {
+							afterGetSurveyQuestions(data);
+						},
+						error : function(error) {
+							alert(SurveyMessages.strError);
+						}
+					});
+				}
+				
+				function afterGetSurveyQuestions(data) {
+					console.log(data);
+					var code = data.code;
+					switch(code) {
+						case 0 : convertQuestions(data)           ; break;
+						case 1 : alert(SurveyMessages.strParamErr); break;
+						case 2 : alert(SurveyMessages.strError)   ; break;
+						default: alert(SurveyMessages.strError)   ; return;
+					}
+				}
+				
+				function convertQuestions(data) {setSurveyQuestions(data["questions"]);}
 				function showSelectPopUp() {selectPopup = window.open("/ezSurvey/selectUsers.do", "selectUser", getOpenWindowfeature(964, 700));}
 				function getSurveyQuestions() {return surveyObj["questions"];}
-				function setSurveyQuestions(question) {surveyObj["questions"].push(question);}
+				function setSurveyQuestions(question) {surveyObj["questions"] = []; surveyObj["questions"].push(question);}
 				function getSurveyUsers() {return surveyObj["infor"]["users"];}
 				function setSurveyUsers(userList) {surveyObj["infor"]["users"] = JSON.parse(JSON.stringify(userList)); showUserList();}
 				function getSurveyInfo() {return surveyObj["infor"];}
@@ -517,6 +563,7 @@
 					getInfo  : getSurveyInfo,
 					userMore : toggleUserPreview,
 					showUser : showUserInfoFromId,
+					start    : initEvents,
 				};
 			}();
 			
@@ -870,10 +917,8 @@
 							break;
 						}
 						
-						var logicFlag = qstn['logicFlag'];
-						
-						if (logicFlag == undefined) {
-							qstn['logicFlag'] = 'Y';
+						if (!qstn['logicFlag'] || qstn['logicFlag'] == 0) {
+							qstn['logicFlag'] = 1;
 						}
 						
 						$("#thrdBtnGrp" + id).siblings().css("display", "none");
@@ -945,13 +990,13 @@
 							var optLength = opt.length;
 							
 							for (var i = 0; i < optLength; i++) {
-								qstn.option[i]['logic'] = undefined; 
+								qstn.option[i]['logic'] = -1; 
 								$("#logic" + id + i).remove();
 							}
 							
 						} else if (type == 7) {
-							qstn.option[0].logic = undefined;
-							qstn.slidLogicPoint = undefined;
+							qstn.option[0].logic  = -1;
+							qstn.sliderLogicPoint = -1;
 							$("#logic" + id).remove();
 							
 						} else if (type == 9) {
@@ -959,12 +1004,13 @@
 							var optLength = row.length;
 							
 							for (var i = 0; i < optLength; i++) {
-								qstn.option[i]['logic'] = undefined; 
+								qstn.option[i]['logic'] = -1; 
 								$("#logic" + id + i).remove();
 							}
 							$("#logic" + id).remove();
 						}
-						qstn.logicFlag = undefined;
+						
+						qstn.logicFlag = 0;
 						
 						$("#frstBtnGrp" + id).siblings().css("display", "none");
 						$("#frstBtnGrp" + id).css("display", "");
@@ -1077,7 +1123,7 @@
 				}
 				// 아이디 세팅 및 폼 변경
 				function remkFormAfterSetNewId(qstn, action, result) {
-					var oldId       = qstn["id"];
+					var oldId       = qstn["level"];
 					var type        = qstn["type"];
 					var newId       = "";
 					var thisWrapper = "";
@@ -1087,7 +1133,7 @@
 					} else if (action == "copy" || action == "reOrder" && result == 1) {
 						newId             = oldId + 1;
 					}
-					qstn["id"] = newId;
+					qstn["level"] = newId;
 					
 					// old id의 form 변경
 					thisWrapper = $("#qstn" + oldId);
@@ -1487,20 +1533,21 @@
 					var qstnType         = qstnForm.attr("questiontype");
 					question["type"]     = parseInt(qstnType);
 					var rqrd             = qstnForm.find(".additionalPart").find("input[name='checkbox']");
-					question[config["required"]] = rqrd.is(":checked") == true ? "Y" : "N";
+					question[config["required"]] = rqrd.is(":checked") == true ? 1 : 0;
 					
 					//Check question attach files
 					var qstnFObj = qstnArea.find(".qstnFileInfo")[0].childNodes[0].childNodes[0].childNodes[0];
-					if (qstnFObj) {question["attach"]  = getAttachFileInfo(qstnFObj);}
+					if (qstnFObj) {question["attach"] = getAttachFileInfo(qstnFObj);}
 					
 					//Question order
-					var qstId      = qstnWrapper.attr("id") ? parseInt(qstnWrapper.attr("id")) : questionList.length + 1;
-					question["id"] = qstId;
+					var qstId         = qstnWrapper.attr("id") ? parseInt(qstnWrapper.attr("id")) : questionList.length + 1;
+					question["level"] = qstId;
 					//Set id
 					qstnWrapper.attr("id", "qstn" + qstId);
 					
 					var header       = makeQuestionHeaderPanel(question);
-					var body = "";
+					var body         = "";
+					
 					switch(parseInt(qstnType)) {
 						case 1  :
 						case 2  : var sltObj = mkSltObj(qstnForm);
@@ -1532,10 +1579,9 @@
 								  body = mkDropDownQstn(question); break;
 						default : alert(SurveyMessages.strError); return;
 					}
+					
 					header.append(body[0]);
-					
 					qstnWrapper.prepend(header);
-					
 					rmQstnForm(qstnWrapper);
 					
 					if (status == "save") {
@@ -1646,7 +1692,7 @@
 					divQsContent.textContent = qstId + ". " + content;
 					divQsContent.className   = "question-content";
 					
-					if (required == "Y") {
+					if (required == 1) {
 						var strongElmt         = document.createElement("strong");
 						strongElmt.className   = "imptt";
 						strongElmt.textContent = "*";
@@ -1928,7 +1974,7 @@
 				function mkAddtionalPart(action, required) {
 					var html = "<div class='additionalPart'>";
 						html += "<div class='required'>";
-						html += required == 'Y' ? "<input type='checkbox' name='checkbox' checked='checked'>" : "<input type='checkbox' name='checkbox'>";
+						html += required == 1 ? "<input type='checkbox' name='checkbox' checked='checked'>" : "<input type='checkbox' name='checkbox'>";
 						html += "<strong>" + SurveyMessages.strRequired + "</strong>";
 						html += "</div>";
 						html += "<div class='btns'>";
@@ -2035,7 +2081,7 @@
 							wrapper.append(prevQsOpt);
 							prevQsArea.append(wrapper);
 							
-							if (question.logicFlag == 'Y') {
+							if (question.logicFlag == 1) {
 								mkLogicForm(qstnId);
 							}
 						}
@@ -2057,7 +2103,7 @@
 					questionContent[0].textContent = qstId + ". " + content;
 					
 					var html = "";
-					if (required == 'Y') {
+					if (required == 1) {
 						html += "<strong class='imptt'>*</strong>";
 					}
 					if (qstId < qstnList.length) {
@@ -2155,13 +2201,13 @@
 						var opt = opts[i];
 						opt.append($(html)[0]);
 						
-						if (question.logicFlag == 'Y') {
+						if (question.logicFlag == 1) {
 							$("#frstBtnGrp" + id).css("display", "none");
 							$("#thrdBtnGrp" + id).css("display", "");
 							
 							logicNum = qstnOpt[i].logic;
 							
-							if (logicNum != "") {
+							if (logicNum && logicNum != -1) {
 								logic = SurveyMessages.strQs + " " + logicNum; 
 							}
 							$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
@@ -2206,7 +2252,7 @@
 					
 					prevQsOpt.append($(html)[0]);
 					
-					if (question.logicFlag == 'Y') {
+					if (question.logicFlag == 1) {
 						logicNum = qstnOpt[0].logic;
 						logic = (logicNum != "") ? SurveyMessages.strQs + " " + logicNum : "";
 						
@@ -2267,7 +2313,7 @@
 						drdwLogicArea.append($(html)[0]);
 						prevQsOpt.append(drdwLogicArea);
 						
-						if (question.logicFlag == 'Y') {
+						if (question.logicFlag == 1) {
 							logicNum = opt.logic;
 							logic = (logicNum != "") ? "질문 " + logicNum : ""; 
 
@@ -2315,7 +2361,7 @@
 				function showSlidLogicForm(id, qstn) {
 					var prevQsWrapper = $("#prevQstn" + id);
 					
-					var logicPoint = qstn['slidLogicPoint'];
+					var logicPoint = qstn['sliderLogicPoint'];
 					var logicNum = qstn.option[0]['logic'];
 					
 					$("#slidLogicInput" + id).val(logicPoint).css("display", "");
@@ -2332,9 +2378,9 @@
 					var logicNum = parseInt($("select[name=slt" + id + "] option:selected").val());
 					var logic = "";
 					
-					if (!isNaN(inputVal) && inputVal < maxVal) {
-						if (!isNaN(logicNum)) {
-							qstn['slidLogicPoint'] = inputVal;
+					if (inputVal != -1 && inputVal < maxVal) {
+						if (logicNum != -1) {
+							qstn['sliderLogicPoint'] = inputVal;
 							qstn.option[0]['logic'] = logicNum;
 							
 							$("#slidLogicInput" + id).css("display", "none");
@@ -2517,6 +2563,16 @@
 				}
 			}());
 		</script>
+		
+		<c:choose>
+			<c:when test="${not empty survey}">
+				<script type="text/javascript">SurveyCreate.start(${survey});</script>
+			</c:when>
+			<c:otherwise>
+				<script type="text/javascript">SurveyCreate.start();</script>
+			</c:otherwise>
+		</c:choose>
+		
 	</body>
 </html>
 

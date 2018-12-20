@@ -128,11 +128,10 @@ public class EzSurveyController extends EgovFileMngUtil {
 	public String jspGetReuseSurveyPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetReuseSurveyPage started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		
-		String itemId      = request.getParameter("") != null ? request.getParameter("") : "";
+		String itemId      = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
 		
 		if (itemId.equals("")) {
-			model.addAttribute("reasonMessage", "ezCabinet.t160");
+			model.addAttribute("reasonMessage", "ezSurvey.err1");
 			return "ezSurvey/surveyAccessDenied";
 		}
 		
@@ -152,6 +151,13 @@ public class EzSurveyController extends EgovFileMngUtil {
 			
 			model.addAttribute("reasonMessage", messageCode);
 			return "ezSurvey/surveyAccessDenied";
+		}
+		
+		JSONObject surveyInf = surveyRestService.getSurveyInformation(request, user.getId(), itemId);
+		
+		if (((Long)surveyInf.get("code")).intValue() == 0) {
+			JSONObject survey = (JSONObject)surveyInf.get("survey");
+			model.addAttribute("survey", survey);
 		}
 		
 		logger.debug("jspGetReuseSurveyPage ended");
@@ -179,6 +185,26 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		logger.debug("jspGetSelectUesrPage ended");
 		return "ezSurvey/user/selectUser";
+	}
+	
+	@RequestMapping(value="/ezSurvey/getSurveyQuestions.do")
+	@ResponseBody
+	public String jsonGetSurveyQuestions(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonGetSurveyQuestions start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String itemId        = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		JSONObject resultObj = new JSONObject();
+		
+		if (itemId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = surveyRestService.getSurveyQuestions(request, user.getId(), itemId);
+		
+		logger.debug("jsonGetSurveyQuestions end");
+		return resultObj.toString();
 	}
 	
 	@RequestMapping(value="/ezSurvey/checkReusePermission.do")

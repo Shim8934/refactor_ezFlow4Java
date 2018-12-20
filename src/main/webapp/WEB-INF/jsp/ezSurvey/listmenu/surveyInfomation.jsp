@@ -4,8 +4,8 @@
 <div class="surveyinfo-wrap">
 	<div>
 		<div>
-			<input class="info-input-ttl" placeholder="<spring:message code='ezSurvey.t39'/>">
-			<input class="info-input-pp"  placeholder="<spring:message code='ezSurvey.t40'/>">
+			<input id="info-input-ttl" class="info-input-ttl" placeholder="<spring:message code='ezSurvey.t39'/>">
+			<input id="info-input-pp"  class="info-input-pp"  placeholder="<spring:message code='ezSurvey.t40'/>">
 		</div>
 		
 		<div class="survey-otherinf">
@@ -43,10 +43,10 @@
 					<option><spring:message code="ezSurvey.t53"/></option>
 					<option><spring:message code="ezSurvey.t54"/></option>
 				</select>
-				<%-- <button class="target-select" id="targetBttn"><spring:message code="ezSurvey.t55"/></button> --%>
+				
 				<div id="userWrapDiv" class="user-mainDiv">
 					<button class="target-select" id="targetBttn"><spring:message code="ezSurvey.t55"/></button>
-					<div style="border: 1px solid #ddd; width: 600px; height: 27px; box-sizing: border-box; display: flex; align-items: center;"><div id="userListDiv" class="user-listDiv"></div></div>
+					<div class="target-wrapper"><div id="userListDiv" class="user-listDiv"></div></div>
 				</div>
 			</div>
 		</div>

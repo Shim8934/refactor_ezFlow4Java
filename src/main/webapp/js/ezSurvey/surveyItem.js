@@ -450,7 +450,7 @@ var SurveyItem = function() {
 				
 				if (itemList[i]["attachFlag"] == 1) {
 					var imgAttch  = document.createElement("img");
-					imgAttach.src = "/images/newAttach.gif";
+					imgAttch.src  = "/images/newAttach.gif";
 					tdElmt2.appendChild(imgAttch);
 				}
 				
@@ -465,7 +465,7 @@ var SurveyItem = function() {
 					tdElmt10.appendChild(imgStatistic);
 				}
 				
-				tdElmt4.textContent  = itemList[i]["tittle"];
+				tdElmt4.textContent  = itemList[i]["title"];
 				tdElmt5.textContent  = itemList[i]["endDate"].substring(0, 19);
 				tdElmt6.textContent  = itemList[i]["paritipateFlag"] == 0   ? SurveyMessages.strUser7    : SurveyMessages.strUser8;
 				tdElmt7.textContent  = itemList[i]["creatorName"];

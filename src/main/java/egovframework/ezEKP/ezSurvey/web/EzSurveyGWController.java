@@ -569,7 +569,7 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezsurvey/survey-item/check", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezsurvey/survey-item/check", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject checkItems(@RequestParam(value = "itemList") List<String> itemList, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
 		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
@@ -588,6 +588,72 @@ public class EzSurveyGWController {
 			LoginVO userInfo      = commonUtil.getUserForGw(userId, serverName);
 			List<Long> itemIdList = itemList.stream().map(Long::parseLong).collect(Collectors.toList());
 			result                = surveyService.checkPermission(itemIdList, 1, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezsurvey/survey-item/info", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getItemInfo(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
+		String itemId     = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || itemId: " + itemId);
+		
+		if (serverName.equals("") || itemId.equals("")|| userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			Long surveyId    = Long.parseLong(itemId);
+			String realPath  = request.getServletContext().getRealPath("");
+			result           = surveyService.getItemInfoToReuse(surveyId, realPath, userInfo);
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezsurvey/survey-item/questions", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getSurveyQuestions(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
+		String itemId     = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || itemId: " + itemId);
+		
+		if (serverName.equals("") || itemId.equals("")|| userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			Long surveyId    = Long.parseLong(itemId);
+			String realPath  = request.getServletContext().getRealPath("");
+			result           = surveyService.getSurveyQuestions(surveyId, realPath, userInfo);
+			result.put("status", "ok");
+			result.put("code", 0);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

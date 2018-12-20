@@ -8,11 +8,20 @@ public class OptionVO {
 	private int tenantId;
 	private int questionType;
 	private String content;
-	private int levels;
+	private int level;
 	private int otherFlag;
-	private int logicNum;
+	private int logic;
 	private int rowLevel;
-	private int columnLevel;
+	private int colLevel;
+	private AttachVO attach;
+	
+	public AttachVO getAttach() {
+		return attach;
+	}
+	
+	public void setAttach(AttachVO attach) {
+		this.attach = attach;
+	}
 	
 	public long getOptionId() {
 		return optionId;
@@ -69,12 +78,12 @@ public class OptionVO {
 		this.content = content;
 	}
 	
-	public int getLevels() {
-		return levels;
+	public int getLevel() {
+		return level;
 	}
 	
-	public void setLevels(int levels) {
-		this.levels = levels;
+	public void setLevel(int levels) {
+		this.level = levels;
 	}
 	
 	public int getOtherFlag() {
@@ -85,12 +94,12 @@ public class OptionVO {
 		this.otherFlag = otherFlag;
 	}
 	
-	public int getLogicNum() {
-		return logicNum;
+	public int getLogic() {
+		return logic;
 	}
 	
-	public void setLogicNum(int logicNum) {
-		this.logicNum = logicNum;
+	public void setLogic(int logicNum) {
+		this.logic = logicNum;
 	}
 	
 	public int getRowLevel() {
@@ -101,11 +110,11 @@ public class OptionVO {
 		this.rowLevel = rowLevel;
 	}
 	
-	public int getColumnLevel() {
-		return columnLevel;
+	public int getColLevel() {
+		return colLevel;
 	}
 	
-	public void setColumnLevel(int columnLevel) {
-		this.columnLevel = columnLevel;
+	public void setColLevel(int columnLevel) {
+		this.colLevel = columnLevel;
 	}
 }

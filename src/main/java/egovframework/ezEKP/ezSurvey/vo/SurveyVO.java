@@ -1,10 +1,12 @@
 package egovframework.ezEKP.ezSurvey.vo;
 
+import java.util.List;
+
 public class SurveyVO {
 	private long surveyId;
 	private String companyId;
 	private int tenantId;
-	private String tittle;
+	private String title;
 	private String purpose;
 	private String creatorId;
 	private String createDate;
@@ -23,6 +25,8 @@ public class SurveyVO {
 	private int multiAnswerFlag;
 	private int paritipateFlag;
 	private int attachFlag;
+	private List<SurveyParticipantVO> userList;
+	private List<AttachVO> attachList;
 	
 	public long getSurveyId() {
 		return surveyId;
@@ -48,12 +52,12 @@ public class SurveyVO {
 		this.tenantId = tenantId;
 	}
 	
-	public String getTittle() {
-		return tittle;
+	public String getTitle() {
+		return title;
 	}
 	
-	public void setTittle(String tittle) {
-		this.tittle = tittle;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	
 	public String getPurpose() {
@@ -198,5 +202,21 @@ public class SurveyVO {
 	
 	public void setCreatorName(String creatorName) {
 		this.creatorName = creatorName;
+	}
+	
+	public List<AttachVO> getAttachList() {
+		return attachList;
+	}
+	
+	public void setAttachList(List<AttachVO> attachList) {
+		this.attachList = attachList;
+	}
+	
+	public List<SurveyParticipantVO> getUserList() {
+		return userList;
+	}
+	
+	public void setUserList(List<SurveyParticipantVO> userList) {
+		this.userList = userList;
 	}
 }

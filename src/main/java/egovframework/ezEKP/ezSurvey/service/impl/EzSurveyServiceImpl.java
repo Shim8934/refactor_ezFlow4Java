@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -17,6 +18,9 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.tools.ant.taskdefs.Apt.Option;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -187,6 +191,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("tenantId"  , userInfo.getTenantId());
 		map.put("companyId" , userInfo.getCompanyID());
 		map.put("primary"   , userInfo.getPrimary());
+		map.put("offset"    , commonUtil.getMinuteUTC(userInfo.getOffset()));
 		
 		List<SurveyVO> listSurvey  = ezSurveyDAO.getSurveyListForPermission(map);
 		
@@ -342,7 +347,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		survey.setParitipateFlag(userFlag);
 		survey.setResultPublicFlag(publicFlag);
 		survey.setAnonymousFlag(anonymousFlag);
-		survey.setTittle(title);
+		survey.setTitle(title);
 		survey.setPurpose(purpose);
 		survey.setCreateDate(timeUTC);
 		survey.setUpdateDate(timeUTC);
@@ -357,7 +362,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		//Save questions
 		for (int i = 0; i < questions.size(); i++, maxQuestionId++) {
 			JSONObject questionObj = (JSONObject)questions.get(i);
-			int requiredFlag       = questionObj.get("required").toString().equals("Y") ? 1 : 0;
+			int requiredFlag       = ((Long)questionObj.get("required")).intValue();
 			int questionType       = ((Long)questionObj.get("type")).intValue();
 			JSONObject questionAtt = (JSONObject)questionObj.get("attach");
 			JSONArray options      = (JSONArray)questionObj.get("option");
@@ -380,20 +385,17 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				option.setSurveyId(maxSurveyId);
 				option.setQuestionType(questionType);
 				option.setContent(optionContent);
-				option.setLevels(optionLevel);
+				option.setLevel(optionLevel);
 				option.setOtherFlag(otherFlag);
 				option.setCompanyId(companyId);
 				option.setTenantId(tenantId);
-				
-				if (logicNum != -1) {
-					option.setLogicNum(logicNum);
-				}
+				option.setLogic(logicNum);
 				
 				if (questionType == 3 || questionType == 4) {
 					int rowLevel = ((Long)optionObj.get("rowLevel")).intValue();
 					int colLevel = ((Long)optionObj.get("colLevel")).intValue();
 					option.setRowLevel(rowLevel);
-					option.setColumnLevel(colLevel);
+					option.setColLevel(colLevel);
 				}
 				
 				//Save option attach file
@@ -406,23 +408,23 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			}
 			
 			String questionTitle = questionObj.get("content").toString();
-			int questionLogic    = questionObj.get("logic") != null ? ((Long)questionObj.get("logic")).intValue() : 0;
+			int questionLogic    = questionObj.get("logicFlag") != null ? ((Long)questionObj.get("logicFlag")).intValue() : 0;
 			int questionOrder    = ((Long)questionObj.get("id")).intValue();
 			QuestionVO question  = new QuestionVO();
 			
 			question.setSurveyId(maxSurveyId);
 			question.setTenantId(tenantId);
 			question.setCompanyId(companyId);
-			question.setTittle(questionTitle);
-			question.setQuestionType(questionType);
-			question.setLevels(questionOrder);
+			question.setContent(questionTitle);
+			question.setType(questionType);
+			question.setLevel(questionOrder);
 			question.setUseStatus(1);
 			question.setLogicFlag(questionLogic);
-			question.setRequiredFlag(requiredFlag);
+			question.setRequired(requiredFlag);
 			
 			if (questionType == 7) {
-				if (questionObj.get("logicPoint") != null && questionLogic == 1) {
-					question.setSliderLogicPoint(((Long)questionObj.get("logicPoint")).intValue());
+				if (questionObj.get("sliderLogicPoint") != null && questionLogic == 1) {
+					question.setSliderLogicPoint(((Long)questionObj.get("sliderLogicPoint")).intValue());
 				}
 			}
 			
@@ -500,9 +502,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		attach.setTenantId(tenantId);
 		attach.setTargetId(targetId);
 		attach.setTargetType(targetType);
-		attach.setFilePath(filePath);
+		attach.setFpath(filePath);
 		attach.setFileSize(fileSize);
-		attach.setFileName(fileName);
+		attach.setFname(fileName);
 		
 		//Save attach
 		ezSurveyDAO.saveAttachItem(attach);
@@ -601,6 +603,129 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		result.addAll(setSurveyIds);
 		
 		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject getItemInfoToReuse(Long surveyId, String realPath, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		//long startTime         = System.nanoTime(); //Only for test
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId",  tenantId);
+		map.put("companyId", userInfo.getCompanyID());
+		map.put("primary",   userInfo.getPrimary());
+		map.put("offset",    commonUtil.getMinuteUTC(userInfo.getOffset()));
+		map.put("userId",    userInfo.getId());
+		map.put("surveyId",  surveyId);
+		
+		SurveyVO survey                     = ezSurveyDAO.getSurveyInfo(map);
+		List<SurveyParticipantVO> listUsers = ezSurveyDAO.getSurveyUsers(map);
+		List<AttachVO> surveyAttach         = ezSurveyDAO.getSurveyAttachList(map);
+		
+		//Clone attach files
+		cloneAttachFiles(surveyAttach, realPath, getSurveyDirPath(tenantId));
+		
+		survey.setAttachList(surveyAttach);
+		survey.setUserList(listUsers);
+		result.put("survey", survey);
+		
+		//long endTime   = System.nanoTime();
+		//long totalTime = endTime - startTime;
+		//logger.debug("TOTAL TIME: " + totalTime);
+		
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject getSurveyQuestions(Long surveyId, String realPath, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId",  tenantId);
+		map.put("companyId", userInfo.getCompanyID());
+		map.put("primary",   userInfo.getPrimary());
+		map.put("offset",    commonUtil.getMinuteUTC(userInfo.getOffset()));
+		map.put("userId",    userInfo.getId());
+		map.put("surveyId",  surveyId);
+		
+		List<QuestionVO> questions = ezSurveyDAO.getAllQuestionsOfSurvey(map);
+		List<OptionVO>   options   = ezSurveyDAO.getAllOptionsOfSurvey(map);
+		List<Long> questionIds     = questions.stream().map(QuestionVO::getQuestionId).collect(Collectors.toList());
+		List<Long> optionIds       = options.stream().map(OptionVO::getOptionId).collect(Collectors.toList());
+		map.put("questionIds", questionIds);
+		map.put("optionIds"  , optionIds);
+		List<AttachVO> attachs     = ezSurveyDAO.getAllAttachForQsAndOpt(map);
+		
+		//Clone list of attach
+		cloneAttachFiles(attachs, realPath, getSurveyDirPath(tenantId));
+		
+		//Seperate
+		List<AttachVO> qstAttch    = attachs.stream().filter(a -> a.getTargetType().equals("question")).collect(Collectors.toList());
+		attachs.removeAll(qstAttch);
+		
+		long startTime = System.nanoTime();
+		
+		for (QuestionVO question : questions) {
+			List<OptionVO> qsOption = new ArrayList<>();
+			ListIterator<AttachVO> qsAtIter = qstAttch.listIterator();
+			ListIterator<OptionVO> optionIter = options.listIterator();
+			
+			while (optionIter.hasNext()) {
+				OptionVO option = optionIter.next();
+				if (option.getQuestionId() == question.getQuestionId()) {
+					ListIterator<AttachVO> attIter = attachs.listIterator();
+					while (attIter.hasNext()) {
+						AttachVO attach = attIter.next();
+						if (attach.getTargetId() == option.getOptionId()) {
+							option.setAttach(attach);
+							attIter.remove();
+						}
+					}
+					
+					qsOption.add(option);
+					optionIter.remove();
+				}
+			}
+			
+			question.setOption(qsOption);
+			
+			while (qsAtIter.hasNext()) {
+				AttachVO qsAttach = qsAtIter.next();
+				if (qsAttach.getTargetId() == question.getQuestionId()) {
+					question.setAttach(qsAttach);
+					qsAtIter.remove();
+				}
+			}
+		}
+		
+		long endTime   = System.nanoTime();
+		long totalTime = endTime - startTime;
+		logger.debug("TOTAL TIME: " + totalTime);
+		
+		result.put("questions", questions);
+		return result;
+	}
+
+	private void cloneAttachFiles(List<AttachVO> attachs, String realPath, String dirPath) {
+		for (AttachVO attach : attachs) {
+			String fileName = attach.getFname();
+			int dotPos      = fileName.lastIndexOf(".");
+			String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
+			String newName  = UUID.randomUUID().toString() + "." + extend;
+			String newPath  = dirPath + newName;
+			File srcFile    = new File(realPath + attach.getFpath());
+			File destFile   = new File(realPath + newPath);
+			
+			try {
+				FileUtils.copyFile(srcFile, destFile);
+				attach.setFpath(newPath);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	
