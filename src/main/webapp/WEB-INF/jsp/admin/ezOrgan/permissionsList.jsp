@@ -435,7 +435,7 @@
 		        if (CrossYN()) {
 		            permissions_check_dialogArguments[0] = Params;
 		            permissions_check_dialogArguments[1] = Permissions_Add_Complete;
-		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value, "Permissions_Check", GetOpenWindowfeature(970, 580));
+		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value + "&DelType="+DelType, "Permissions_Check", GetOpenWindowfeature(1000, 600));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value, Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(970, 580));
@@ -460,29 +460,32 @@
 		            return;
 		        }
 		        
-		        var data1List = new Array();
+		        var dataList = new Array();
+		        var dataList2 = new Array();
 		        var listArr = document.getElementById("lvPermissionList");
 		        var checkArr = listArr.children[1];
 		        
-		        for (var i=0; i<document.getElementsByName("checks").length; i++) {
-		        	if(document.getElementsByName("checks").item(i).checked == true) {
-		        		//console.log(checkArr.children[i]);
-		        		data1List[data1List.length] = checkArr.children[i].getAttribute("DATA2");
-		        	}
-		        }
-		       console.log(data1List);
-
+		        $("input[name='checks']:checked").each(function(){
+		        	dataList.push(this.parentElement.parentElement.getAttribute("DATA2"));
+		        });
+		        
+		        $("input[name='checks']:checked").each(function(){
+		        	dataList2.push(this.parentElement.parentElement.getAttribute("DATA1"));
+		        });
+		        
 
 		        if (mode == "ALL") {
-		        	cData = listview.GetSelectedRows()[0].getAttribute("DATA3") + strLang19 + " " + "<spring:message code='ezAddress.t362' />" + strLang20;		                
+		        	//cData = listview.GetSelectedRows()[0].getAttribute("DATA3") + strLang19 + " " + "<spring:message code='ezAddress.t362' />" + strLang20;
+		        	cData = dataList.length + "<spring:message code='ezOrgan.mse1' />" + strLang19 + " " + "<spring:message code='ezAddress.t362' />" + strLang20;
 	            } else {
-	            	cData = listview.GetSelectedRows()[0].getAttribute("DATA3") + strLang19 + document.getElementById(clickTabID).innerText + " " + strLang20;
+	            	//cData = listview.GetSelectedRows()[0].getAttribute("DATA3") + strLang19 + document.getElementById(clickTabID).innerText + " " + strLang20;
+	            	cData = dataList.length + "<spring:message code='ezOrgan.mse1' />" + strLang19 + document.getElementById(clickTabID).innerText + " " + strLang20;
 	            }
 		        
 		        if (confirm(cData)) {
 		        	var data2;
 		        	
-		            if (mode == "ALL") {
+		            /* if (mode == "ALL") {
 		            	data2 = "";		                
 		            } else {
 		                var tempDelType = DelType;
@@ -494,14 +497,33 @@
 		                    tempDelType = tempDelType + "=0";
 		                }
 		                data2 = listview.GetSelectedRows()[0].getAttribute("DATA2").replace(DelValue, tempDelType);		                
+		            } */
+		            
+		            for (var i =0; i< dataList.length; i++) {
+		            	if (mode == "ALL") {
+			            	data2 = "";		                
+			            } else {
+			                var tempDelType = DelType;
+			                var DelValue = tempDelType + "=1";
+			                
+			                if (tempDelType == "") {
+			                    tempDelType = "c=0";
+			                } else {
+			                    tempDelType = tempDelType + "=0";
+			                }
+			                dataList[i] = dataList[i].replace(DelValue, tempDelType);
+			            }
 		            }
+		            
+		            console.log(dataList);
+		            console.log(dataList2);
 
 		            $.ajax({
 		            	type : "POST",
 		            	dataType : "html",
 		            	url : "/admin/ezOrgan/saveUserInfo.do",
 		            	async : false,
-		            	data : {parentCn : "", cn : listview.GetSelectedRows()[0].getAttribute("DATA1"), extensionAttribute1 : data2},
+		            	data : {parentCn : "", cn : dataList2, extensionAttribute1 : dataList},
 		            	success : function(result){
 		            		if (mode == "ALL") {
 			                    alert(strLang21);
