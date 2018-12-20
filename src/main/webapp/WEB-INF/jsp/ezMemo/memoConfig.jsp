@@ -22,27 +22,20 @@
                 document.body.style.oUserSelect = 'none';
                 document.body.style.UserSelect = 'none';
             }
-            document.getElementById("1tab1").setAttribute("class", "tabon");
-            Tab1_SelectID = "1tab1";
-            ChangeTab(document.getElementById("1tab1"));
+            document.getElementById("1tab4").setAttribute("class", "tabon");
+            Tab1_SelectID = "1tab4";
+            ChangeTab(document.getElementById("1tab4"));
+            
             window_resize();
         }
         window.onresize = window_resize;
         function window_resize() {
             document.getElementById("BoardEnv_ifrm").style.height = (document.documentElement.clientHeight - 120) + "PX";
         }
+        
         function ChangeTab(obj) {
             var pSelectTab = obj.getAttribute("divname");
             switch (pSelectTab) {
-                case "BoardEnv_div1":
-                    document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardGeneral.do";
-                    break;
-                case "BoardEnv_div2":
-                    document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardFavorite.do";
-                    break;
-                case "BoardEnv_div3":
-                    document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardPollSetting.do";
-                    break;
                 case "BoardEnv_div4":
                 	document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardMemoSetting.do"; 
                     break;
@@ -52,6 +45,7 @@
                    
             }
         }
+        
         var Tab1_SelectID = "";
         function Tab1_MouserOver(obj) {
             obj.className = "tabover";
@@ -90,11 +84,11 @@
     </script>
 </head>
 <body class="mainbody">
-    <h1><spring:message code="ezBoard.t10010" /></h1>
+    <h1><spring:message code='ezMemo.t001'/><spring:message code="ezBoard.t0005" /></h1>
     <div class="portlet_tabpart01">
         <div class="portlet_tabpart01_top" id="tab1">
-            <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="1tab1"><spring:message code="ezBoard.t0006" /></span></p>
-            <p id="BoardEnv_sub2"><span divname="BoardEnv_div2" id="1tab2"><spring:message code="ezBoard.t00010" /></span></p>
+            <p id="BoardEnv_sub4"><span divname="BoardEnv_div4" id="1tab4"><spring:message code="ezMemo.t001" /></span></p>
+            <p id="BoardEnv_sub5"><span divname="BoardEnv_div5" id="1tab5"><spring:message code="ezMemo.t0040" /></span></p>
         </div>
     </div>
     <iframe id="BoardEnv_ifrm" style="width: 100%; height: 100%;" frameborder="0" ></iframe>

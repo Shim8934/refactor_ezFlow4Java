@@ -2498,11 +2498,11 @@ INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_ord
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (11, '/ezCabinet/cabinetMain.do', 'G', 'icon_topmenu icon_nav_cabinet', 11);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (12, '/ezPMS/pmsMain.do', 'G', 'icon_topmenu icon_nav_project', 12);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (13, '/ezEmail/mailMain.do?funCode=2', 'G', 'icon_topmenu icon_nav_addressbook', 13);
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (14, '/ezBoard/boardMain.do?func=1', 'G', 'icon_topmenu icon_nav_survey', 14);
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (15, '/ezBoard/boardMain.do?func=3', 'G', 'icon_topmenu icon_nav_voting', 15);
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (16, '/ezBoard/boardMain.do?func=4', 'G', 'icon_topmenu icon_nav_laddergame', 16);
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (14, '/ezQuestion/qstMain.do', 'G', 'icon_topmenu icon_nav_survey', 14);
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (15, '/ezPoll/pollMain.do', 'G', 'icon_topmenu icon_nav_voting', 15);
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (16, '/ezLadder/ladderMainPage.do', 'G', 'icon_topmenu icon_nav_laddergame', 16);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (17, '/ezSchedule/scheduleIndex.do?funCode=3', 'G', 'icon_topmenu icon_nav_work', 17);
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (18, '/ezBoard/boardMain.do?func=5', 'G', 'icon_topmenu icon_nav_memo', 18);
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (18, '/ezMemo/memoMainPage.do', 'G', 'icon_topmenu icon_nav_memo', 18);
 UPDATE TBL_PORTAL_MENU SET menu_id = 0 WHERE default_order = 0;
 
 INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (1, 'Frame1', 1);

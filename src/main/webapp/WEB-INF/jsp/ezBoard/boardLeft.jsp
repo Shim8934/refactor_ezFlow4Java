@@ -1021,18 +1021,6 @@
 				        </ul>
 				    </c:if>
 			        <ul class="lnbUL">
-                		<c:if test="${useQuestion == 'YES'}">
-                           	<li><span class="sub_iconLNB tree_board_qst"></span><span class="list_text" onclick="Open_Func(1)"><spring:message code="ezBoard.t365" /></span></li>
-                    	</c:if>
-						<li class="pollDiv" style="display: ${(pollFlag == 'YES') ? 'block' : 'none'};"><span class="sub_iconLNB tree_board_poll"></span><span class="list_text" onclick="Poll_Open(1)"><spring:message code="ezBoard.t371" /></span></li>
-                    	<c:if test="${ladderFlag == 'YES'}">
-                           	<li class="ladder"><span class="sub_iconLNB tree_board_ladder"></span><span class="list_text" onclick="ladder_Func(1)"><spring:message code="ezBoard.l001" /></span></li>
-	                    </c:if>	
-	                    <c:if test="${memoFlag == 'YES'}">
-                           	<li class="memo"><span class="sub_iconLNB tree_board_memo"></span><span class="list_text" onclick="memo_Func(1)"><spring:message code="ezMemo.t001" /></span></li>
-                    	</c:if>
-			        </ul>
-			        <ul class="lnbUL">
                        	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span></li>
                     	<c:if test="${applyFlag == 'OK'}">
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="Apprboard()"><spring:message code="ezBoard.t999001" /><span id="applyCount"> ${applyCount}</span></span></li>
