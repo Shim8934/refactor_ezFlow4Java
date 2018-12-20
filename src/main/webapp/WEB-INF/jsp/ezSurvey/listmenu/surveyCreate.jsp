@@ -546,7 +546,7 @@
 				
 				// question input 및 img 생성
 				function createQuestionDiv(qstnWrapper, question) {
-					var html       = "";
+					//var html       = "";
 					var qstId      = "";
 					var qstContent = "";
 					var qstAtt     = "";
@@ -557,25 +557,36 @@
 						qstAtt     = mkImgTag(question.attach);
 					}
 					
-					html += "<div class='qstnWrapper' id='" + qstId + "'>";
-					html += "<div class='quesDiv'>";
-					html += "<div class='qstnRow'>";
-					html += "<input class='questnTitle' value='" + qstContent + "' placeholder='" + SurveyMessages.strContent + "'/>";
-					html += "<img alt='' src='/images/ezSurvey/attach.png' class='atchImg'>";
-					html += "<div class='selectBox'></div>";
-					html += "</div>";
-					html += "<div class='qstnFileInfo'>";
-					html += "<div class='fileList'>";
-					html += "<ul class='qstUl'>" + qstAtt + "</ul>";
-					html += "<input type='file' class='qstnFile' accept='image/*'/>";
-					html += "</div></div></div></div>";
+					var wrapper = $("<div class='qstnWrapper' id='" + qstId + "'></div>");
+					var quesDiv = $("<div class='quesDiv'></div>");
+					var qstnRow = $("<div class='qstnRow'></div>");
+					var questnTitle = $("<input class='questnTitle' value='" + qstContent + "' placeholder='" + SurveyMessages.strContent + "' />");
+					var atchImg = $("<img class='atchImg' src='/images/ezSurvey/attach.png' />");
+					var selectBox = $("<div class='selectBox'></div>");
+					var qstnFileInfo = $("<div class='qstnFileInfo'></div>");
+					var fileList = $("<div class='fileList'></div>");
+					var qstUl = $("<ul class='qstUl'></ul>");
+					var qstnFile = $("<input type='file' class='qstnFile' accept='image/*'/>");
+					
+					qstnRow.append(questnTitle);
+					qstnRow.append(atchImg);
+					qstnRow.append(selectBox);
+					quesDiv.append(qstnRow);
+
+					qstUl.append(qstAtt);
+					fileList.append(qstUl);
+					fileList.append(qstnFile);
+					qstnFileInfo.append(fileList);
+					
+					quesDiv.append(qstnFileInfo);
+					wrapper.append(quesDiv);
 					
 					if (qstnWrapper) {
-						qstnWrapper.after(html);
+						qstnWrapper.after(wrapper);
 						qstnWrapper.next().find(".questnTitle")[0].focus();
 					}
 					else {
-						$(".quesBacgr").append(html);
+						$(".quesBacgr").append(wrapper);
 						$(".quesBacgr").find(".qstnWrapper").find(".questnTitle")[0].focus();
 					}
 				}
@@ -1340,7 +1351,7 @@
 					wrapper.find(".quesDiv").remove();
 					wrapper.find(".qstnForm").remove();
 				}
-//////////////////////////////////////////				
+				
 				// 단일선택 질문 생성 
 				function mkSelectQstn(question) {
 					var totalOptions = question.option;
@@ -1459,7 +1470,7 @@
 				}
 				// 이전 요소 삭제
 				function rmPrevEl(wrapperElmt) {wrapperElmt.prev().remove();}
-/////////////////////////////////////				
+				
 				// 질문 객체 생성
 				function mkQstnObj(status, thisEl) {
 					var question     = {};
@@ -1841,43 +1852,57 @@
 				function mkOpt(type, options) {
 					var optAtt = "";
 					var attEl  = "";
-					var html   = "<div class='optArea'>";
-						html  += "<div class='option'>";
 					var opt = "";
+					var textInput = "";
+					var optArea = $("<div class='optArea'></div>");
+					var option = $("<div class='option'></div>");
+					
 					if (type == "other") {
-						html = "<div class='other'>" + html;
-						
+						opt = $("<div class='other'></div>");
 						if (options) {
-							html  += "<input class='textInput' type='text' value='" + options["content"] + "' maxlength='40' placeholder='" + SurveyMessages.strOther + "'/>";
+							textInput = $("<input class='textInput' type='text' value='" + options["content"] + "' maxlength='40' placeholder='" + SurveyMessages.strOther + "'/>");
 						}
 						else {
-							html += "<input class='textInput' type='text' maxlength='40' placeholder='" + SurveyMessages.strOther + "'>";
+							textInput = $("<input class='textInput' type='text' maxlength='40' placeholder='" + SurveyMessages.strOther + "'>");
 						}
 					} else {
-						html = "<div class='optPart'>" + html;
-						
+						opt = $("<div class='optPart'></div>");
 						if (options) {
-							html  += "<input class='textInput' type='text' value='" + options["content"] + "' maxlength='40' placeholder='" + SurveyMessages.strContent + "' />";
+							textInput = $("<input class='textInput' type='text' value='" + options["content"] + "' maxlength='40' placeholder='" + SurveyMessages.strContent + "' />");
 							optAtt = options["attach"];
 							
 						}
 						else {
-							html += "<input class='textInput' type='text' maxlength='40' placeholder='" + SurveyMessages.strContent + "'/>";
+							textInput = $("<input class='textInput' type='text' maxlength='40' placeholder='" + SurveyMessages.strContent + "'/>");
 						}
 					}
-					html += "<img src='/images/ezSurvey/attach.png' class='attImg'>";
-					html += "<img src='/images/ezSurvey/minus.jpg' class='delImg'>";
-					html += "</div>";
-					html += "<div class='optFileInfo'>";
-					html += "<div class='fileList'>";
+					var attImg = $("<img src='/images/ezSurvey/attach.png' class='attImg'>");
+					var minsImg = $("<img src='/images/ezSurvey/minus.jpg' class='delImg'>");
+					
+					option.append(textInput);
+					option.append(attImg);
+					option.append(minsImg);
+					
+					var optFileInfo = $("<div class='optFileInfo'></div>");
+					var fileList = $("<div class='fileList'></div>");
 
 					if (optAtt) {attEl = mkImgTag(optAtt);}
 					
-					html += "<ul class='optUl'>" + attEl + "</ul>";
-					html += "<input type='file' class='optionFile' accept='image/*'/>";
-					html += "</div></div></div></div>";
+					var optUl = $("<ul class='optUl'></ul>");
+					var optionFile = $("<input type='file' class='optionFile' accept='image/*'/>");
+					optUl.append(attEl);
 					
-					return $(html);
+					fileList.append(optUl);
+					fileList.append(optionFile);
+					
+					optFileInfo.append(fileList);
+					
+					optArea.append(option);
+					optArea.append(optFileInfo);
+					
+					opt.append(optArea);
+					
+					return opt;
 				}
 				
 				// 행렬 질문의 row, col 생성

@@ -288,15 +288,23 @@ var SurveyFile = function() {
 			var fileSize = fileObj.fsize;
 			var filePath = fileObj.fpath;
 			
-			var html = "<li fname='" + fileObj.fname + "' fsize='" + fileObj.fsize + "' path='" + fileObj.fpath + "'>";
-				html += "<div class='attDivFile'>";
-				html += "<div class='attImgAva'>";
-				html += "<img alt='' src='" + fileObj.fpath + "'>";
-				html += "</div></div>";
-				html += "<img class='delImage' src='/images/ezSurvey/file_del.gif'>";
-				html += "</li>";
+			var li = $("<li></li>");
+			var attDivFile = $("<div class='attDivFile'></div>");
+			var attImgAva = $("<div class='attImgAva'></div>");
+			var realImg = $("<img />");
+			var delImg = $("<img class='delImage' src='/images/ezSurvey/file_del.gif' />");
+
+			li.attr("fname", fileObj.fname);
+			li.attr("fsize", fileObj.fsize);
+			li.attr("path", fileObj.fpath);
+			realImg.attr("src", fileObj.fpath);
 			
-			return html;
+			attImgAva.append(realImg);
+			attDivFile.append(attImgAva);
+			li.append(attDivFile);
+			li.append(delImg);
+
+			return li;
 		}
 		
 		return {

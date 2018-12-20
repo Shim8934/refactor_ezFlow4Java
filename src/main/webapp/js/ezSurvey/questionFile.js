@@ -1,7 +1,5 @@
 var QuestionFile = function() {
 	
-	// console.log("QuestionFile");
-	
 	return function(data) {
 		var lineWidth = 4;
 		var start     = 4.72;
@@ -269,21 +267,32 @@ var QuestionFile = function() {
 			var fileSize        = fileObj.fsize;
 			var filePath        = fileObj.fpath;
 
-			var html = "";
-				html += "<li fname='" + fileObj.fname + "' fsize='" + fileObj.fsize + "' path='" + fileObj.fpath + "'>";
-				html += "<div class='attDivFile'>";
-				html += "<img style='height: 50%;' src='/images/ezSurvey/file_del.gif' onclick='deleteFile(e);'>";
-				html += "<div class='attImgAva'>";
-				html += "<img alt='' src='" + fileObj.fpath + "'>";
-				html += "</div>";
-				html += "<div class='attFileInf'>";
-				html += "<span title='" + fileObj.fname + "'>" + fileObj.fname + "</span>";
-				html += "<span>" + fileObj.fsize + "</span>";
-				html += "</div>";
-				html += "</div>";
-				html += "</li>";
+			var li = $("<li></li>");
+			var attDivFile = $("<div class='attDivFile'></div>");
+			var deleteImg = $("<img style='height: 50%;' src='/images/ezSurvey/file_del.gif' onclick='deleteFile(e);'>");
+			var attImgAva = $("<div class='attImgAva'></div>");
+			var realImg = $("<img alt=''>");
+			var attFileInf = $("<div class='attFileInf'></div>");
+			var ttlSpan = $("<span></span>");
+			var sizSpan = $("<span></span>");
+
+			realImg.attr("src", fileObj.fpath);
+			li.attr("fname", fileObj.fname);
+			li.attr("fsize", fileObj.fsize);
+			li.attr("fpath", fileObj.fpath);
+			ttlSpan.attr("title", fileObj.fname);
+			ttlSpan[0].textContent = fileObj.fname;
+			sizSpan[0].textContent = fileObj.fsize;
 			
-			return html;
+			attDivFile.append(deleteImg);
+			attImgAva.append(realImg);
+			attDivFile.append(attDivFile);
+			attFileInf.append(ttlSpan);
+			attFileInf.append(sizSpan);
+			attDivFile.append(attFileInf);
+			li.append(attDivFile);
+			
+			return li;
 			
 		}
 		
