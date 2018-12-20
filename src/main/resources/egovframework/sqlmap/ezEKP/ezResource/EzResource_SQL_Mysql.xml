@@ -287,20 +287,20 @@
                   	   A.BRD_ACCESS brd_access ,
                   	   A.ATTACH_SIZE attach_size ,
                   	   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
-                         FROM ryobimigration.tbl_rs_brd 
+                         FROM TBL_RS_BRD 
                          WHERE BRD_UPPER = A.BRD_ID
                      	 AND Brd_Company = #v_P_CompanyID#
                      	 AND Brd_GB = '1'
                      	 AND TENANT_ID = #tenantID# ) sub_clscnt ,
                    	   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
-                   		 FROM ryobimigration.tbl_rs_brd 
+                   		 FROM TBL_RS_BRD 
                  		 WHERE  BRD_UPPER = A.BRD_ID
                          AND Brd_Company = #v_P_CompanyID#
                          AND Brd_GB = '2'
                          AND TENANT_ID = #tenantID# ) sub_rescnt ,
                    	   '0' Access_Lvl ,
 					   A.APPROVEFLAG 
-				FROM ryobimigration.tbl_rs_brd A
+				FROM TBL_RS_BRD A
             	WHERE  BRD_ID = 1
 				AND Brd_Company = #v_P_CompanyID#
 				AND TENANT_ID = #tenantID# 
@@ -322,20 +322,20 @@
                     	   A.BRD_ACCESS brd_access ,
                     	   A.ATTACH_SIZE attach_size ,
 						   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
-							 FROM ryobimigration.tbl_rs_brd 
+							 FROM TBL_RS_BRD 
                     		 WHERE  BRD_UPPER = A.BRD_ID
                     		 AND Brd_Company = #v_P_CompanyID#
                     		 AND Brd_GB = '1'
             				 AND TENANT_ID = #tenantID# ) sub_clscnt ,
 						   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
-							 FROM ryobimigration.tbl_rs_brd 
+							 FROM TBL_RS_BRD 
 							 WHERE  BRD_UPPER = A.BRD_ID
 							 AND Brd_Company = #v_P_CompanyID#
 							 AND Brd_GB = '2' 
 							 AND TENANT_ID = #tenantID# ) sub_rescnt ,
 						   '0' Access_Lvl ,
 						   A.APPROVEFLAG 
-					FROM ryobimigration.tbl_rs_brd A
+					FROM TBL_RS_BRD A
 					WHERE Brd_Upper = IFNULL(#v_P_ParentID#,0)
 					AND Brd_Company = #v_P_CompanyID#
 					AND TENANT_ID = #tenantID#
@@ -357,20 +357,20 @@
 						   A.BRD_ACCESS brd_access ,
 						   A.ATTACH_SIZE attach_size ,
 						   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
-							 FROM ryobimigration.tbl_rs_brd 
+							 FROM TBL_RS_BRD 
 							 WHERE BRD_UPPER = A.BRD_ID
 							 AND Brd_Company = #v_P_CompanyID#
 							 AND Brd_GB = '1' 
 							 AND TENANT_ID = #tenantID# ) sub_clscnt ,
 						   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
-							 FROM ryobimigration.tbl_rs_brd 
+							 FROM TBL_RS_BRD 
 							 WHERE  BRD_UPPER = A.BRD_ID
 							 AND Brd_Company = #v_P_CompanyID#
 							 AND Brd_GB = '1' 
 							 AND TENANT_ID = #tenantID# ) sub_rescnt ,
 						   '0' Access_Lvl ,
 						   A.APPROVEFLAG 
-					FROM ryobimigration.tbl_rs_brd A
+					FROM TBL_RS_BRD A
 					WHERE Brd_Upper = IFNULL(#v_P_ParentID#,0)
 					AND Brd_Company = #v_P_CompanyID#
 					AND Brd_GB = '1'
@@ -400,7 +400,7 @@
                     ( SELECT
                         IFNULL(COUNT(BRD_ID) , 0) 
                       FROM
-                        ryobimigration.tbl_rs_brd 
+                        TBL_RS_BRD 
                       WHERE
                         BRD_UPPER = A.BRD_ID
                       AND
@@ -412,7 +412,7 @@
                     ( SELECT
                       	IFNULL(COUNT(BRD_ID) , 0) 
                       FROM
-                      	ryobimigration.tbl_rs_brd 
+                      	TBL_RS_BRD 
                       WHERE
                       	BRD_UPPER = A.BRD_ID
                       AND
@@ -424,7 +424,7 @@
                     '0' ACCESS_LVL ,
                     A.APPROVEFLAG 
                 FROM
-                	ryobimigration.tbl_rs_brd A
+                	TBL_RS_BRD A
                 LEFT JOIN
                 	TBL_RS_RESACL B
                 ON
@@ -459,7 +459,7 @@
       				(SELECT
                          IFNULL(COUNT(BRD_ID), 0)
                      FROM
-                         ryobimigration.tbl_rs_brd  
+                         TBL_RS_BRD  
       				 WHERE
                          BRD_UPPER = A.BRD_ID
       				 AND
@@ -471,7 +471,7 @@
       				 (SELECT
                         IFNULL(COUNT(BRD_ID), 0)
                       FROM
-                        ryobimigration.tbl_rs_brd  
+                        TBL_RS_BRD  
       				  WHERE
                          BRD_UPPER = A.BRD_ID
       				  AND
@@ -483,7 +483,7 @@
       				'' AS ACCESS_LVL,		
       				A.APPROVEFLAG
       			FROM
-                	ryobimigration.tbl_rs_brd A
+                	TBL_RS_BRD A
                 LEFT JOIN
                 	TBL_RS_RESACL B
       			ON
@@ -521,7 +521,7 @@
 					'' AS ACCESS_LVL,	
 					A.APPROVEFLAG
       			FROM
-                    ryobimigration.tbl_rs_brd A
+                    TBL_RS_BRD A
                 LEFT JOIN
                     TBL_RS_RESACL B
       			ON
@@ -554,7 +554,7 @@
 			    END BRD_NM,
 				APPROVEFLAG 
 			FROM
-				ryobimigration.tbl_rs_brd 
+				TBL_RS_BRD 
 			WHERE
 				BRD_UPPER = #v_BRD_ID#
 			AND
@@ -624,7 +624,7 @@
                 DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE,
                 DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE
            	FROM 
-           		ryobimigration.tbl_rs_schedule
+           		TBL_RS_SCHEDULE
           	WHERE
 				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
@@ -673,9 +673,9 @@
             	DEPTNM ,
             	SCH.COMPANYID 
 			FROM
-				ryobimigration.tbl_rs_schedule SCH
+				TBL_RS_SCHEDULE SCH
         	JOIN
-        		ryobimigration.tbl_rs_brd BRD
+        		TBL_RS_BRD BRD
 			ON
 				SCH.OWNERID = BRD.BRD_ID 
 			AND
@@ -726,7 +726,7 @@
                 OWNERNM  ,
                 DEPTNM  
 			FROM
-				ryobimigration.tbl_rs_schedule A
+				TBL_RS_SCHEDULE A
 			JOIN
 				TBL_RS_SCHEDULERepetition C 
 			ON 
@@ -785,9 +785,9 @@
              	DEPTNM ,
              	SCH.companyID 
         	FROM
-        		ryobimigration.tbl_rs_schedule SCH
+        		TBL_RS_SCHEDULE SCH
         	JOIN
-        		ryobimigration.tbl_rs_brd BRD
+        		TBL_RS_BRD BRD
 			ON
 				SCH.OWNERID = BRD.BRD_ID
 			AND
@@ -828,7 +828,7 @@
 				RECOUNT, 
 				TENANT_ID
 			FROM
-				ryobimigration.tbl_rs_scheduleREPETITION 
+				TBL_RS_SCHEDULEREPETITION 
 			WHERE
 				COMPANYID = #v_pCompanyID#
 			AND
@@ -851,7 +851,7 @@
                 OWNERID,  $v_POWNERNM$  AS OWNERNM,  $v_POWNERPOSITION$   AS OWNERPOSITION, 
                 REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG 
 			FROM
-				ryobimigration.tbl_rs_brd  
+				TBL_RS_BRD  
 			WHERE
 				BRD_UPPER = #v_PBRDID#
 			AND
@@ -870,7 +870,7 @@
 			SELECT
 				COUNT(BRD_ID) cnt 
 			FROM
-				ryobimigration.tbl_rs_brd 
+				TBL_RS_BRD 
 			WHERE  
 				BRD_UPPER = #v_PBRDID#
             AND
@@ -903,7 +903,7 @@
              	IFNULL(APPROVEFLAG, '0') APPROVEFLAG ,
              	BRD_ACCESS 
         	FROM
-        		ryobimigration.tbl_rs_brd 
+        		TBL_RS_BRD 
 			WHERE
 				BRD_ID = #v_pBrdID#
        		AND
@@ -918,7 +918,7 @@
 	<delete id="EzResourceDAO.delResData" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
-				ryobimigration.tbl_rs_brd
+				TBL_RS_BRD
 			WHERE
 				BRD_ID = #v_P_Brd_ID#
 			AND
@@ -931,13 +931,13 @@
 	<update id="EzResourceDAO.delResData_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				ryobimigration.tbl_rs_brd
+				TBL_RS_BRD
     		SET
     			BRD_STEP = BRD_STEP - 1
 			WHERE
 				BRD_UPPER = ( SELECT S1.BRD_UPPER 
 							  FROM ( SELECT *
-                         	  		 FROM ryobimigration.tbl_rs_brd 
+                         	  		 FROM TBL_RS_BRD 
                          	  		 WHERE BRD_ID = #v_P_Brd_ID#
                          	  		 AND BRD_COMPANY = #v_P_CompanyID# 
                          	  		 AND TENANT_ID = #tenantID# 
@@ -946,7 +946,7 @@
     		AND
     			BRD_STEP > ( SELECT S2.BRD_STEP 
     						 FROM ( SELECT *
-							 		FROM ryobimigration.tbl_rs_brd 
+							 		FROM TBL_RS_BRD 
                      		 		WHERE BRD_ID = #v_P_Brd_ID#
 							 		AND BRD_COMPANY = #v_P_CompanyID#
 							 		AND TENANT_ID = #tenantID# 
@@ -960,7 +960,7 @@
 	<delete id="EzResourceDAO.delResData1" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
-				ryobimigration.tbl_rs_schedule
+				TBL_RS_SCHEDULE
    			WHERE  
    				OWNERID = #v_P_Brd_ID#
    			AND 
@@ -973,7 +973,7 @@
 	<delete id="EzResourceDAO.delResData3" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
-				ryobimigration.tbl_rs_scheduleREPETITION
+				TBL_RS_SCHEDULEREPETITION
    			WHERE  
    				OWNERID = #v_P_Brd_ID#
    			AND 
@@ -986,7 +986,7 @@
 	<update id="EzResourceDAO.modifyResData" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				ryobimigration.tbl_rs_brd
+				TBL_RS_BRD
       		SET 
       			OWNDEPTID = #v_P_ODeptID#,
           		OWNDEPTNM = #v_P_ODeptNm#,
@@ -1016,7 +1016,7 @@
 			SELECT 
 				(IFNULL(MAX(BRD_ID) , 0) + 1)
    			FROM
-   				ryobimigration.tbl_rs_brd 
+   				TBL_RS_BRD 
    			WHERE
 	   			TENANT_ID = #tenantID# 
 		]]>
@@ -1027,7 +1027,7 @@
 			SELECT
 				(BRD_LEVEL + 1)
     		FROM 
-    			ryobimigration.tbl_rs_brd 
+    			TBL_RS_BRD 
     		WHERE  
     			BRD_ID = #v_P_ClassGB#
     		AND 
@@ -1042,7 +1042,7 @@
 			SELECT
 				(IFNULL(MAX(Brd_Step) , 0) + 1)
     		FROM
-    			ryobimigration.tbl_rs_brd 
+    			TBL_RS_BRD 
     		WHERE
     			BRD_UPPER = #v_P_ClassGB#
     		AND
@@ -1054,7 +1054,7 @@
 	
 	<insert id="EzResourceDAO.addResData" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO ryobimigration.tbl_rs_brd ( 
+			INSERT INTO TBL_RS_BRD ( 
 				BRD_UPPER, OWNDEPTID, OWNDEPTNM, OWNERID, OWNERNM, OWNERPOSITION, OWNERCALL, BRD_NM, RESLOCATION, BRD_EXPLAIN, BRD_COMPANY, 
 				BRD_ID, BRD_GB, BRD_LEVEL, BRD_STEP, MAKEDATE, ATTACH_SIZE, BRD_GROUP, BRD_URL, BRD_ACCESS, BRD_POSTTERM, BRD_COUNT, BRD_REF, APPROVEFLAG, 
 				BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, TENANT_ID
@@ -1070,7 +1070,7 @@
 	<update id="EzResourceDAO.updateSchedule" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
-				ryobimigration.tbl_rs_schedule
+				TBL_RS_SCHEDULE
       		SET
       			APPROVEFLAG = #v_PAPPROVE#
     		WHERE  
@@ -1087,7 +1087,7 @@
 	<update id="EzResourceDAO.updateScheduleDateTime" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				ryobimigration.tbl_rs_schedule
+				TBL_RS_SCHEDULE
       		SET 
       			STARTDATE = STR_TO_DATE(#v_pStartDate#, '%Y-%m-%d %T'),
           		ENDDATE = STR_TO_DATE(#v_pEndDate#, '%Y-%m-%d %T')
@@ -1105,7 +1105,7 @@
 	<update id="EzResourceDAO.updateScheduleRepetition" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				ryobimigration.tbl_rs_scheduleREPETITION
+				TBL_RS_SCHEDULEREPETITION
       		SET 
       			STARTDATETIME = STR_TO_DATE(#v_pStartDateTime#, '%Y-%m-%d %T'),
           		ENDDATETIME = STR_TO_DATE(#v_pEndDateTime#, '%Y-%m-%d %T'), 
@@ -1158,9 +1158,9 @@
 				A.SCHEDULEID, 
 				A.TENANT_ID
       		FROM
-      			ryobimigration.tbl_rs_schedule A
+      			TBL_RS_SCHEDULE A
       		LEFT JOIN
-      			ryobimigration.tbl_rs_scheduleREPETITION B
+      			TBL_RS_SCHEDULEREPETITION B
 	      			ON
 	      				A.COMPANYID = B.COMPANYID
 	      			AND 
@@ -1183,7 +1183,7 @@
 	<insert id="EzResourceDAO.insertScheduleRepetition" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO 
-				ryobimigration.tbl_rs_scheduleREPETITION (NUM, OWNERID, STARTDATETIME, ENDDATETIME, REWAY, REDAY, RENUM, REYOIL, REMONTH, REORD, ENDFLAG, RECOUNT, COMPANYID, TENANT_ID)
+				TBL_RS_SCHEDULEREPETITION (NUM, OWNERID, STARTDATETIME, ENDDATETIME, REWAY, REDAY, RENUM, REYOIL, REMONTH, REORD, ENDFLAG, RECOUNT, COMPANYID, TENANT_ID)
      		VALUES
      			( #v_pNum#, #v_pOwnerID#, STR_TO_DATE(#v_pStartDateTime#, '%Y-%m-%d %T'), STR_TO_DATE(#v_pEndDateTime#, '%Y-%m-%d %T'), 
      			  #v_pReWay#, #v_pReDay#, #v_pReNum#, #v_pReYoil#, #v_pReMonth#, 
@@ -1221,7 +1221,7 @@
 				SCHEDULEID, 
 				TENANT_ID 
         	FROM
-        		ryobimigration.tbl_rs_schedule 
+        		TBL_RS_SCHEDULE 
        		WHERE  
        			COMPANYID = #v_pCompanyID#
 			AND
@@ -1238,7 +1238,7 @@
 	<delete id="EzResourceDAO.deleteRepetition" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
-				ryobimigration.tbl_rs_scheduleREPETITION 
+				TBL_RS_SCHEDULEREPETITION 
    			WHERE
    				OWNERID = #v_pOwnerID#
    			AND
@@ -1255,7 +1255,7 @@
 			SELECT
 				RESID , BRDNM , FORMTEXT 
         	FROM
-        		ryobimigration.tbl_rs_scheduleFORM 
+        		TBL_RS_SCHEDULEFORM 
        		WHERE
        			RESID = #v_pRESID#
        		AND
@@ -1268,7 +1268,7 @@
 			SELECT 
 				OWNERID
 			FROM
-				ryobimigration.tbl_rs_brd 
+				TBL_RS_BRD 
 			WHERE
 				BRD_COMPANY = #v_PCOMPANYID#
 			AND
@@ -1283,7 +1283,7 @@
 			SELECT
 				BRD_UPPER
             FROM
-            	ryobimigration.tbl_rs_brd 
+            	TBL_RS_BRD 
             WHERE  
             	BRD_COMPANY = #v_PCOMPANYID#
             AND 
@@ -1315,7 +1315,7 @@
 			SELECT
 				IFNULL(APPROVEFLAG, '0') APPROVEFLAG  
         	FROM
-        		ryobimigration.tbl_rs_brd 
+        		TBL_RS_BRD 
        		WHERE  
        			BRD_ID = #v_PBRDID#
 			AND
@@ -1332,7 +1332,7 @@
 			SELECT
 				COUNT(*)
     		FROM
-    			ryobimigration.tbl_rs_scheduleFORM 
+    			TBL_RS_SCHEDULEFORM 
     		WHERE  
     			RESID = #v_RESID#
 			AND
@@ -1373,7 +1373,7 @@
 	<insert id="EzResourceDAO.insertForm_I" parameterClass="Map" >
 		<![CDATA[
 			INSERT INTO 
-				ryobimigration.tbl_rs_scheduleFORM
+				TBL_RS_SCHEDULEFORM
             	( RESID, BRDNM, FORMTEXT, TENANT_ID )
             VALUES
             	( #v_RESID#, #v_BRDNM3#, #v_FORMTEXT#, #tenantID# )
@@ -1383,7 +1383,7 @@
 	<update id="EzResourceDAO.insertForm_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
-				ryobimigration.tbl_rs_scheduleFORM
+				TBL_RS_SCHEDULEFORM
 			SET
 				BRDNM = #v_BRDNM#,
 				FORMTEXT = #v_FORMTEXT#
@@ -1397,7 +1397,7 @@
 	<delete id="EzResourceDAO.delFormID" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
-				ryobimigration.tbl_rs_scheduleFORM
+				TBL_RS_SCHEDULEFORM
    			WHERE 
    				RESID = #v_DELCODE#
    			AND
@@ -1415,7 +1415,7 @@
 	         	EXISTS ( SELECT
 	         				* 
 	                     FROM
-	                     	ryobimigration.tbl_rs_schedule 
+	                     	TBL_RS_SCHEDULE 
 	                     WHERE  
 	                     	COMPANYID = #v_P_companyID#
 	                     AND 
@@ -1431,7 +1431,7 @@
 	<update id="EzResourceDAO.delResSch_U" parameterClass="Map" >
 		<![CDATA[
 			UPDATE
-				ryobimigration.tbl_rs_schedule
+				TBL_RS_SCHEDULE
 			SET
 				REFLAG = '4'
 			WHERE
@@ -1450,7 +1450,7 @@
 			SELECT
 				IFNULL(MAX(num) , 0) + 1 
 			FROM
-				ryobimigration.tbl_rs_schedule 
+				TBL_RS_SCHEDULE 
 			WHERE  
 				COMPANYID = #v_P_companyID#
 			AND
@@ -1462,7 +1462,7 @@
 	
 	<insert id="EzResourceDAO.delResSch_I" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO ryobimigration.tbl_rs_schedule ( 
+			INSERT INTO TBL_RS_SCHEDULE ( 
 				num, pnum, ownerID, writerID, deptNM, ownerNM, title, location, timeDisplay, startDate, endDate, 
 				alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, 
 				companyID, characterID, attachFlag, tenant_ID
@@ -1492,7 +1492,7 @@
 	         	ATTACHFLAG ,
 	         	tenant_ID
 	        FROM 
-	        	ryobimigration.tbl_rs_schedule 
+	        	TBL_RS_SCHEDULE 
 			WHERE
 				COMPANYID = #v_P_companyID#
 			AND
@@ -1509,7 +1509,7 @@
 	<delete id="EzResourceDAO.delResSch_D1" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
-				ryobimigration.tbl_rs_schedule
+				TBL_RS_SCHEDULE
             WHERE  
             	COMPANYID = #v_P_companyID#
             AND
@@ -1524,7 +1524,7 @@
 	<delete id="EzResourceDAO.delResSch_D2" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
-				ryobimigration.tbl_rs_scheduleREPETITION
+				TBL_RS_SCHEDULEREPETITION
             WHERE  
             	COMPANYID = #v_P_companyID#
             AND 
@@ -1539,7 +1539,7 @@
 	<delete id="EzResourceDAO.delResSch_D3" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
-				ryobimigration.tbl_rs_schedule
+				TBL_RS_SCHEDULE
             WHERE 
             	COMPANYID = #v_P_companyID#
             AND
@@ -1556,7 +1556,7 @@
 			SELECT
 				OWNERNM
           	FROM
-          		ryobimigration.tbl_rs_schedule 
+          		TBL_RS_SCHEDULE 
           	WHERE
           		COMPANYID = #v_P_companyID#
           	AND
@@ -1573,7 +1573,7 @@
 			SELECT 
 				DEPTNM
           	FROM
-          		ryobimigration.tbl_rs_schedule 
+          		TBL_RS_SCHEDULE 
           	WHERE
           		COMPANYID = #v_P_companyID#
           	AND
@@ -1624,7 +1624,7 @@
 	<delete id="EzResourceDAO.modifyResSch_D1" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
-				ryobimigration.tbl_rs_schedule
+				TBL_RS_SCHEDULE
           	WHERE 
 				( COMPANYID = #v_P_companyID#
 					AND
@@ -1648,7 +1648,7 @@
 	
 	<insert id="EzResourceDAO.modifyResSch_I1" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO ryobimigration.tbl_rs_schedule (
+			INSERT INTO TBL_RS_SCHEDULE (
 				num, ownerID, writerID, title, location, timeDisplay, 
 				startDate, endDate, alertTime, CONTENT, importance, 
 				reFlag, gresFlag, entryList, allDay, writeDay, attachFlag, 
@@ -1666,7 +1666,7 @@
 	<update id="EzResourceDAO.modifyResSch_U1" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				ryobimigration.tbl_rs_schedule
+				TBL_RS_SCHEDULE
             SET 
             	TITLE = #v_P_title#,
 				LOCATION = #v_P_location#,
@@ -1699,7 +1699,7 @@
 			SELECT 
 				(IFNULL(MAX(num) , 0) + 1)
 			FROM
-				ryobimigration.tbl_rs_schedule 
+				TBL_RS_SCHEDULE 
 			WHERE
 				COMPANYID = #v_P_companyID#
 			AND
@@ -1709,7 +1709,7 @@
 		</selectKey>
 		<![CDATA[
 			INSERT INTO 
-				ryobimigration.tbl_rs_schedule
+				TBL_RS_SCHEDULE
 				( num, pnum, ownerID, writerID, title, location, timeDisplay, startDate, endDate, alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, attachFlag, companyID, characterID, TENANT_ID )
 			VALUES
 				( #maxNum#, #v_P_pnum#, #v_P_ownerID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, #v_P_startDate#, #v_P_endDate#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, 3, #v_P_gresFlag#, #v_P_entryList#, #v_P_allDay#, #nowDate#, #v_P_attachFlag#, #v_P_companyID#, #v_P_characterID#, #tenantID# )
@@ -1719,7 +1719,7 @@
 	<delete id="EzResourceDAO.modifyResSch_D2" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
-				ryobimigration.tbl_rs_schedule
+				TBL_RS_SCHEDULE
             WHERE  
             	COMPANYID = #v_P_companyID#
             AND 
@@ -1736,7 +1736,7 @@
 	<update id="EzResourceDAO.modifyResSch_U2" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
-				ryobimigration.tbl_rs_schedule
+				TBL_RS_SCHEDULE
 			SET
 				TITLE = #v_P_title#,
 				LOCATION = #v_P_location#,
@@ -1769,7 +1769,7 @@
 		SELECT
 			APPROVEFLAG 
      	FROM
-     		ryobimigration.tbl_rs_brd 
+     		TBL_RS_BRD 
     	WHERE
     		BRD_ID = #v_P_ownerID#
     	AND
@@ -1783,7 +1783,7 @@
 			SELECT
 				(IFNULL(MAX(num) , 0) + 1) 
 		    FROM
-		    	ryobimigration.tbl_rs_schedule 
+		    	TBL_RS_SCHEDULE 
     		WHERE  
     			COMPANYID = #v_P_companyID#
              AND 
@@ -1794,7 +1794,7 @@
 			
 		<![CDATA[
 			INSERT INTO
-				ryobimigration.tbl_rs_schedule
+				TBL_RS_SCHEDULE
      			( OWNERID, NUM, PNUM, COMPANYID, WRITERID, DEPTNM, OWNERNM, TITLE, LOCATION, TIMEDISPLAY, STARTDATE, ENDDATE, ALLDAY, ALERTTIME, CONTENT, IMPORTANCE
      			, REFLAG, GRESFLAG, WRITEDAY, ENTRYLIST, CHARACTERID, ATTACHFLAG, APPROVEFLAG, SCHEDULEID, TENANT_ID )
      		VALUES
@@ -1809,7 +1809,7 @@
 		SELECT
 			IFNULL(MAX(num), 0)
      	FROM
-     		ryobimigration.tbl_rs_schedule 
+     		TBL_RS_SCHEDULE 
     	WHERE  
    			COMPANYID = #v_P_companyID#
         AND 
@@ -1836,7 +1836,7 @@
 				RECOUNT, 
 				TENANT_ID
       		FROM
-      			ryobimigration.tbl_rs_scheduleREPETITION 
+      			TBL_RS_SCHEDULEREPETITION 
        		WHERE
        			COMPANYID = #v_pCompanyID#
        		AND
@@ -1866,9 +1866,9 @@
              	C.reCount as reCount,
              	B.allDay  as allDay
         	FROM
-        		ryobimigration.tbl_rs_schedule B
+        		TBL_RS_SCHEDULE B
 			JOIN
-				ryobimigration.tbl_rs_scheduleREPETITION C
+				TBL_RS_SCHEDULEREPETITION C
 			ON
 				B.ownerID = C.ownerID
 			AND
@@ -1925,7 +1925,7 @@
                HR.DISPLAYNAME OWNERNM ,
                HR.MAIL MAILADDRESS  
             FROM
-               ryobimigration.tbl_rs_brd RES
+               TBL_RS_BRD RES
             JOIN
                 TBL_USERMASTER HR
              ]]>
@@ -1954,9 +1954,9 @@
 				T.BRD_NM, 
 				HR.MAIL
 			FROM
-				ryobimigration.tbl_rs_schedule S
+				TBL_RS_SCHEDULE S
 			INNER JOIN
-				ryobimigration.tbl_rs_brd T
+				TBL_RS_BRD T
 			ON
 				S.OWNERID = T.BRD_ID
 			AND
@@ -1981,7 +1981,7 @@
         	SELECT
 	        	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE
 	        FROM 
-	        	ryobimigration.tbl_rs_schedule 
+	        	TBL_RS_SCHEDULE 
 			WHERE
 				PNUM = #v_P_pNum#
 			AND
