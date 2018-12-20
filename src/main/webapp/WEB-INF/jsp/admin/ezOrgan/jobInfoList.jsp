@@ -643,78 +643,6 @@
 				return;
 			}
 		}
-		
-		/* 체크박스 컬럼 추가 메소드 */
-		function makeCheckBoxCol() {
-			var listTable = document.getElementById("lvJobTitleList");
-			var noItem    = document.getElementById("lvJobTitleList_TR_noItems");
-			if (!listTable) {
-				listTable = document.getElementById("lvJobPositionList");
-				noItem    = document.getElementById("lvJobPositionList_TR_noItems");
-			}
-			
-			var listHeader = listTable.childNodes[0].childNodes[0];
-			var listTbody  = listTable.childNodes[1];
-			var listBody   = listTbody.childNodes;
-			
-			var length = listBody.length;
-			for (var i = 0; i < length; i++) {
-				var tdElmt  = document.createElement("td");
-				tdElmt.style.width = "20px";
-				
-				if (!noItem) {
-					var tdInputElmt = document.createElement("input");
-					tdInputElmt.setAttribute("type", "checkbox");
-					tdInputElmt.onclick = function(e) { selectCheckBox(); }
-					tdElmt.appendChild(tdInputElmt);
-				}
-				
-				listTbody.childNodes[i].insertBefore(tdElmt, listTbody.childNodes[i].childNodes[0]);
-			}
-			
-			var thElmt      = document.createElement("th");
-			var thInputElmt = document.createElement("input");
-			
-			thInputElmt.setAttribute("type", "checkbox");
-			thInputElmt.onclick = function(e) { selectAllCheckBox(listTable, this.checked); }
-			
-			thElmt.style.width = "20px";
-			thElmt.appendChild(thInputElmt);
-			
-			listHeader.insertBefore(thElmt, listHeader.childNodes[0]);
-		}
-		
-		/* 체크박스 전체 선택 */
-		function selectAllCheckBox(listTable, checkFlag) {
-			var length = listTable.rows.length;
-			for (var i = 0; i < length; i++) {
-				if (checkFlag) {
-					listTable.rows[i].style.backgroundColor = "rgb(241, 248, 255)";
-					listTable.rows[i].firstElementChild.firstElementChild.checked = true;
-				}
-				else {
-					listTable.rows[i].style.backgroundColor = "rgb(255, 255, 255)";
-					listTable.rows[i].firstElementChild.firstElementChild.checked = false;
-				}
-			}
-		}
-		
-		/* 체크박스  선택 */
-		function selectCheckBox() {
-			event.stopPropagation();
-			
-			var checkboxElmt = event.currentTarget;
-			var currentRow   = checkboxElmt.parentElement.parentElement;
-			
-			if (checkboxElmt.checked) {
-				currentRow.setAttribute("selected", "true");
-				currentRow.style.backgroundColor = "rgb(241, 248, 255)";
-			}
-			else {
-				currentRow.setAttribute("selected", "false");
-				currentRow.style.backgroundColor = "rgb(255, 255, 255)";
-			}
-		}
 	</script>
 </head>
 <body class="mainbody" style="overflow: hidden;">
@@ -790,6 +718,11 @@
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER> --%>
 			<HEADER>
+			<NAME></NAME>
+			<WIDTH>20</WIDTH>
+			<COLNAME>CHECKBOX</COLNAME>
+			</HEADER>
+			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj04' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
 			<WIDTH>220</WIDTH>
 			</HEADER>
@@ -842,6 +775,11 @@
 			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER> --%>
+			<HEADER>
+			<NAME></NAME>
+			<WIDTH>20</WIDTH>
+			<COLNAME>CHECKBOX</COLNAME>
+			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj17' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
 			<WIDTH>220</WIDTH>

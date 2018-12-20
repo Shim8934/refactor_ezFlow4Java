@@ -529,7 +529,15 @@ function ListView() {
                     _TableWidth = _TableWidth + parseInt(strWidth);
                 }
                 //objTd.setAttribute("height", "30px");
-
+                
+                //체크박스  헤더 세팅
+                if (strColName == "CHECKBOX") {
+                    var inputElmt = document.createElement("input");
+                    inputElmt.setAttribute("type", "checkbox");
+                    inputElmt.onclick = function(e) { selectAllCheckBox(_thisID, this.checked); }
+                    objTd.appendChild(inputElmt);
+                }
+                
                 var oText = document.createTextNode(strName);
                 objTd.appendChild(oText);
                 objTr.appendChild(objTd);
@@ -621,7 +629,15 @@ function ListView() {
             }
 
             oTbody.appendChild(objTr);
-
+            
+            //체크박스 바디 세팅
+            var newTdElmt = document.createElement("TD");
+            var inputElmt = document.createElement("input");
+            inputElmt.setAttribute("type", "checkbox");
+            inputElmt.onclick = function(e) { selectCheckBox(); }
+            newTdElmt.appendChild(inputElmt);
+            objTr.appendChild(newTdElmt);
+            
             for (var j = 0; j < oCells.length; j++) {
                 var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
                 var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
@@ -1262,6 +1278,40 @@ function tr_unselectedAll(pTableID) {
         }
         objTr = null;
     }
+}
+
+//모든 CHECKBOX 선택/선택 해제하는 함수
+function selectAllCheckBox(pTableID, checkFlag) {
+	var oList = document.getElementById(pTableID);
+	if (!oList)
+		return;
+	
+	for (var i = 0; i < oList.rows.length; i++) {
+		if (checkFlag) {
+			oList.rows[i].firstElementChild.firstElementChild.checked = true;
+			oList.rows[i].style.backgroundColor = m_strColorSelect;
+		}
+		else {
+			oList.rows[i].style.backgroundColor = m_strColorDefault;
+			oList.rows[i].firstElementChild.firstElementChild.checked = false;
+		}
+	}
+}
+// CHECKBOX 선택/선택 해제하는 함수
+function selectCheckBox() {
+	event.stopPropagation();
+	
+	var checkboxElmt = event.currentTarget;
+	var currentRow   = checkboxElmt.parentElement.parentElement;
+	
+	if (checkboxElmt.checked) {
+		currentRow.setAttribute("selected", "true");
+		currentRow.style.backgroundColor = m_strColorSelect;
+	}
+	else {
+		currentRow.setAttribute("selected", "false");
+		currentRow.style.backgroundColor = m_strColorDefault;
+	}
 }
 
 //컨트롤 혹은 쉬프트 키를 이용한 멀티 선택 함수
