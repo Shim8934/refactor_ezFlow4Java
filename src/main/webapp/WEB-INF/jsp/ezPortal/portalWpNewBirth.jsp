@@ -78,14 +78,14 @@
 	    		
 	    		var request = new XMLHttpRequest();
 				request.open('POST', '/ezPersonal/mainBirthUserList.do', true);
-				request.setRequestHeader('Content-Type', 'application/json');
+				request.setRequestHeader('content-type', 'application/json');
 				
 				request.onload = function() {
-					getbirthUserList_after(loadXMLString(request.responseText));
+					getbirthUserList_after(JSON.parse(request.responseText));
 				}
 				
 				var data = JSON.stringify({
-					mon : month
+					month : month
 				});
 				
 				request.send(data);
@@ -93,54 +93,53 @@
 	    	
 	    	var userPrimary = "${primary}";
 	    	
-	    	function getbirthUserList_after(xml) {
-		        if (xml == null) return;
+	    	function getbirthUserList_after(result) {
+		        if (result == null) {
+		        	return;
+		        }
 
-		        if (document.getElementById("userlist").innerHTML != "") document.getElementById("userlist").innerHTML = "";
-
-	    	    if (SelectSingleNodeNew(xml, "DATA/ROW") != null) {
-	        	    totalCnt = GetChildNodes(SelectSingleNodeNew(xml, "DATA")).length;
-	            	totalPage = Math.ceil(totalCnt / EndCnt);
-
-	            	document.getElementById("birthcont").style.display = "";
+		        if (document.getElementById("userlist").innerHTML != "") {
+		        	document.getElementById("userlist").innerHTML = "";
+		        }
+		        
+		        birthList = result.list;
+		        
+		        if (birthList.length != 0) {
+			        totalCnt = birthList.length;
+			        totalPage = Math.ceil(totalCnt / EndCnt);
+			        
+		        	document.getElementById("birthcont").style.display = "";
 	            	document.getElementById("nodata_NewBirth").style.display = "none";
-	            	
-	            	for (var i = 0; i < totalCnt; i++) {
-		                var cn = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "CN");
-	                    
-		                var birthType = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "BIRTHTYPE");
-	                    
-	    	            var birthDate = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "BIRTH");
-	                    
-	        	        var userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME");
+		        }
+		        
+		        birthList.forEach(function (item, index) {
+		        	var cn = item.cn;
+	                var birthType = item.birthType;
+    	            var birthDate = item.birth.substr(5, 10);
+        	        var userName = item.displayName;
+                	var userTitle = item.title;
+                    
+	                var _li = document.createElement("li");
+	                _li.style.display = "none";
+    	            _li.style.cursor = "pointer";
+        	        _li.onclick = new Function("OpenUserInfo('" + cn + "');");
+        	        
+            	    if (CrossYN())
+                	    _li.textContent = "[" + birthDate + "]" + userName + " " + userTitle;
+                	else
+                    	_li.innerText = "[" + birthDate + "]" + userName + " " + userTitle;
+            	    
+                	document.getElementById("userlist").appendChild(_li);
 
-	            	    if (userPrimary != "1")
-	                	    userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME2");
-
-	                	var userTitle = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "TITLE");
-	                	
-	                	if (userPrimary != "1")
-		                    userTitle = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "TITLE2");
-	                    
-		                var _li = document.createElement("li");
-		                _li.style.display = "none";
-	    	            _li.style.cursor = "pointer";
-	        	        _li.onclick = new Function("OpenUserInfo('" + cn + "');");
-	        	        
-	            	    if (CrossYN())
-	                	    _li.textContent = "[" + birthDate + "]" + userName + " " + userTitle;
-	                	else
-	                    	_li.innerText = "[" + birthDate + "]" + userName + " " + userTitle;
-	            	    
-	                	document.getElementById("userlist").appendChild(_li);
-
-	                	if (i >= (curPage * 10) && i < (curPage + 1) * 10) {
-		                    document.getElementById('userlist').getElementsByTagName('li')[i].style.display = 'block';
-	                	} else {
-	                    	document.getElementById('userlist').getElementsByTagName('li')[i].style.display = 'none';
-	                	}
-		            }
-		            curPage++;
+                	if (index >= (curPage * 10) && index < (curPage + 1) * 10) {
+	                    document.getElementById('userlist').getElementsByTagName('li')[index].style.display = 'block';
+                	} else {
+                    	document.getElementById('userlist').getElementsByTagName('li')[index].style.display = 'none';
+                	}
+		        });
+		        
+		        if (birthList.length != 0) {
+					curPage++;
 		            
 	    	        if (curPage >= totalPage) {
 	        	        curPage = 0;
@@ -149,10 +148,10 @@
 	            	if (totalCnt > EndCnt) {
 		                timer = window.setInterval("intervalList()", 5000);
 		            }
-	    	    } else {
-	            	document.getElementById("birthcont").style.display = "none";
+		        } else {
+		        	document.getElementById("birthcont").style.display = "none";
 	            	document.getElementById("nodata_NewBirth").style.display = "";
-	        	}
+		        }
 		    }
 
 		    function intervalList() {

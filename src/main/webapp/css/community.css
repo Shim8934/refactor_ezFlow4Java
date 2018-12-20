@@ -1391,9 +1391,10 @@ _list li {
 }
 
 /* 2018-05-18 홍승비 -  커뮤니티 팝업홈 게시판 리스트 제목 width 수정 */
+/* 2018-12-20 김민성 - 폰트 변경으로 인한 width 조절 */
 .btype_list ul li .txt {
 	float:left;
-	width:72%;
+	width:71%;
 	white-space:nowrap; 
 	overflow:hidden; 
 	text-overflow:ellipsis;
