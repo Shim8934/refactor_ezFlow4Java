@@ -546,10 +546,10 @@
 					}
 				}
 				
-				function convertQuestions(data) {setSurveyQuestions(data["questions"]);}
+				function convertQuestions(data) {surveyObj["questions"] = JSON.parse(JSON.stringify(data["questions"]));}
 				function showSelectPopUp() {selectPopup = window.open("/ezSurvey/selectUsers.do", "selectUser", getOpenWindowfeature(964, 700));}
 				function getSurveyQuestions() {return surveyObj["questions"];}
-				function setSurveyQuestions(question) {surveyObj["questions"] = []; surveyObj["questions"].push(question);}
+				function setSurveyQuestions(question) {surveyObj["questions"].push(question);}
 				function getSurveyUsers() {return surveyObj["infor"]["users"];}
 				function setSurveyUsers(userList) {surveyObj["infor"]["users"] = JSON.parse(JSON.stringify(userList)); showUserList();}
 				function getSurveyInfo() {return surveyObj["infor"];}
@@ -2151,7 +2151,7 @@
 					htmlOption += "<option value=''>" + SurveyMessages.strNoLogic + "</option>"; 
 					
 					for (var i = 0; i < qstnList.length; i++) {
-						var qstnId = qstnList[i]['id'];
+						var qstnId = qstnList[i]["level"];
 						if (qstnId > id) {
 							htmlOption += "<option value='" + qstnId + "'>" + qstnId + "</option>"; 
 						}
