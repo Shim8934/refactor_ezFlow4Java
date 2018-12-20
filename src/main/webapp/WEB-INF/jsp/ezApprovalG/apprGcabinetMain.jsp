@@ -139,6 +139,7 @@
 		                    RecordList_onclick();
 		                    break;
 		                case "m02":
+		                	PageSize = 20;
 		                    isPeriodYear = false;
 		                    CabinetList_onclick();
 		                    break;
@@ -314,7 +315,7 @@
 		        try {
 		            if (trSubInfoTab) {
 		                document.getElementById("trSubInfoTab").style.display = "";
-		                document.getElementById("divList").style.height = "310";
+		                document.getElementById("divList").style.height = "375px;";
 		                //PageSize = 10;
 		                Block_Size = 10;
 		            }
@@ -1619,9 +1620,9 @@
 	        </ul>
 	
 	        <ul id="trRecSubMenu" style="Display: none;">
-	            <li id="tdichange_Rec"><span id="ichange_Rec" onclick="return ichange_onclick()">
+	            <li class="important" id="tdichange_Rec"><span id="ichange_Rec" onclick="return ichange_onclick()">
 	               <spring:message code='ezApprovalG.t939'/></span></li>
-	            <li id="tdReSend"><span id="ReSend" onclick="return btnReSend_onclick()">
+	            <li class="important" id="tdReSend"><span id="ReSend" onclick="return btnReSend_onclick()">
 	                <spring:message code='ezApprovalG.t940'/></span></li>
 	            <!-- <li id="tbar3" style="background: none; padding-right: 2px;">
 	                <img src="/images/i_bar.gif"></li> -->	            
