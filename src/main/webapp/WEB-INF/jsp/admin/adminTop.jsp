@@ -28,7 +28,7 @@
 					window.open("/admin/ezPersonal/personalMain.do", "bottom");
 				</c:if>
 				
-				<c:if test="${useHWP == 'YES' && approvalFlag == 'G'}">
+				<c:if test="${useActiveX == 'YES'}">
 					var userAgent = window.navigator.userAgent;
 					
 					if ((/msie/i.test(userAgent)) || (/rv:11.0/i.test(userAgent))) {
@@ -136,7 +136,7 @@
 		</script>
 	</head>
 	<body class="admin_top" onload="javascript:window_onload()">
-		<c:if test="${useHWP == 'YES' && approvalFlag == 'G'}">
+		<c:if test="${useActiveX == 'YES'}">
 			<script type="text/javascript">
 				ezIcd_ActiveX("i_icd2");
 			</script>
@@ -209,7 +209,7 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("adminmenu"), "ul", "li", "0");
 		</script>
-		<c:if test="${useHWP == 'YES' && approvalFlag == 'G'}">
+		<c:if test="${useActiveX == 'YES'}">
 			<iframe id=if_Progress style="display:none" src="/admin/ezApprovalG/progressAdmin.do?"></iframe>
 		</c:if>
 	</body>

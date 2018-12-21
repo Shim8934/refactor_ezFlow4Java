@@ -18,6 +18,9 @@
 	        .instance.sbHolder{
 	            width: 100%;
 	        }
+	        .sbOptions {
+	        	z-index: 50;
+	        }
 	        /* 2018-04-30 천성준 - (#12523)선택메뉴 bold체로 표시안됨 */
 	        #left ul li.on, #TopBoards ul li.on{
 				font-weight:bold;
