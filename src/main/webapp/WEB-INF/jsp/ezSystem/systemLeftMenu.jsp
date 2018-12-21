@@ -63,6 +63,9 @@
 	    	case "MODMONITOR":
 	    		parent.frames[1].location.href = "/admin/ezSystem/systemModuleMonitor.do";
 	    		break;
+	    	case "MULTILOGIN":
+	    		parent.frames[1].location.href = "/admin/ezSystem/multiLoginManager.do";
+	    		break;
 	    }
     }
 
@@ -113,6 +116,7 @@
 	            <c:if test="${useModuleUsage == 'YES'}">
 	            <h2><span id="MODMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('MODMONITOR')" ><spring:message code='ezSystem.kbh1' /></span></h2>
 	            </c:if>
+	            <h2><span id="MULTILOGIN" style="display:inline-block;width:100%;" onClick="menu_change('MULTILOGIN')" >멀티로그인관리</span></h2>
             </div>
       	</div>
     </body>
