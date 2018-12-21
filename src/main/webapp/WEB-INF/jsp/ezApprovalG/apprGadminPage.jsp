@@ -1345,11 +1345,11 @@
 	    		<c:when test="${initFlag == '4'}">
 				    <div id="mainmenu">
 				        <ul>
-				            <li id="tdConfirmEndY"><span onclick="return btnConfirmEndY_onclick('0')"><spring:message code='ezApprovalG.t524'/></span></li>
-				            <li id="tdConfirmEndYAll"><span onclick="return btnConfirmEndY_onclick('1')"><spring:message code='ezApprovalG.t540'/></span></li>
+				            <li id="tdConfirmEndY"><span onclick="return btnConfirmEndY_onclick('0')">종료연기승인</span></li>
+				            <li id="tdConfirmEndYAll"><span onclick="return btnConfirmEndY_onclick('1')">전체승인</span></li>
 				            <!-- <li id="tbar5" style="background: none; padding-right: 2px;">
 				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
-				            <li id="tdCancelDelayEndY"><span onclick="return btnConfirmEndY_onclick('2')"><spring:message code='ezApprovalG.t541'/></span></li>
+				            <li id="tdCancelDelayEndY"><span onclick="return btnConfirmEndY_onclick('2')">종료연기취소</span></li>
 				            <li id="tdViewCabList"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
 				            <li id="tdViewRecList"><span onclick="return ViewRecListInCab()"><spring:message code='ezApprovalG.t526'/></span></li>
 				            <!-- <li id="tbar6" style="background: none; padding-right: 2px;">

@@ -158,6 +158,7 @@
 		                    DelayEndYRequest_onclick();
 		                    break;
 		                case "m08":
+		                	PageSize = 20;
 		                    isPeriodYear = false;
 		                    ArrTargetList_onclick();
 		                    break;
