@@ -2125,7 +2125,7 @@ public class EzEmailAdminController {
 		for (int i = 0; i < list.size(); i++) {
 			OrganDeptVO vo = list.get(i);
 
-			if (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID())) {
+			if (userInfo.getRollInfo().contains("c=1") || userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID())) {
 				resultList.add(vo);
 			}
 
