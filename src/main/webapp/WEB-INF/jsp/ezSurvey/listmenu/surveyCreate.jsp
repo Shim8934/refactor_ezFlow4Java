@@ -172,7 +172,7 @@
 					document.getElementById("cancelSurvey1").addEventListener("click" , cancleThisSurvey      , false);
 					document.getElementById("public-slbox" ).addEventListener("change", toggleDaysInput       , false);
 					document.getElementById("closeUserPanel").addEventListener("click", toggleUserPreview     , false);
-/////////////////////////////////////////////					
+					
 					if (reuseSurvey == undefined) {
 						// question input 및 img 생성
 						createQuestionDiv();
@@ -541,7 +541,7 @@
 					var spanElmt = imgElmt.parentElement;
 					spanElmt.parentElement.removeChild(spanElmt);
 				}
-/////////////////////////////				
+				
 				function getReuseQuestions() {
 					$.ajax({
 						type: "GET",
@@ -798,7 +798,8 @@
 						optArea.find(".optionFile").click();
 					});
 					
-					$(".quesBacgr").on("change", ".optionFile", function (e) {fileUpload(this);}); // 첨부파일 버튼 이벤트
+					// 첨부파일 버튼 이벤트
+					$(".quesBacgr").on("change", ".optionFile", function (e) {fileUpload(this);});
 					
 					// 질문 생성 폼의 취소 버튼 클릭
 					$(".quesBacgr").on("click", ".cancel", function() {
@@ -810,7 +811,7 @@
 					});
 					
 					// 저장 버튼 클릭 이벤트
-					$(".quesBacgr").on("click", ".save", function() {mkQstnObj("save", $(this));});// 해당 질문의 객체 생성
+					$(".quesBacgr").on("click", ".save", function() {mkQstnObj("save", $(this));});
 					
 					// 우상단 수정 버튼 클릭 이벤트
 					$(".quesBacgr").on("click", ".modifyBtn", function() {
@@ -888,7 +889,6 @@
 						
 						$("#frstBtnGrp" + thisId).css("display", "none");
 						$("#scndBtnGrp" + thisId).css("display", "");
-						
 					});
 					
 					// 로직 저장 버튼 이벤트
@@ -934,22 +934,25 @@
 						var prevWrapper = $(this).parents(".prevQsWrapper");
 						var type = parseInt(prevWrapper.attr("type"));
 						var id = parseInt(prevWrapper.attr("id").replace("prevQstn", ""));
-						
-						// 로직 ui 변경
-						if (type == 1 || type == 2) {
-							var opt = prevWrapper.find(".opt");
-							var optLength = opt.length;
-							
-							for (var i = 0; i < optLength; i++) {
-								$("#logic" + id + i).remove();
-							}
 
-						} else if (type == 7 || type == 9) {
-							$("#logic" + id).remove();
-						}
+						var qstnList = surveyObj["questions"];
+						var qstn = qstnList[id - 1];
+						var logicFlag = qstn.logicFlag;
 						
-						$("#frstBtnGrp" + id).siblings().css("display", "none");
-						$("#frstBtnGrp" + id).css("display", "");
+						// 질문에 로직이 있는 경우
+						if (logicFlag == 1) {
+							cnclLogicMdf(id, qstn, type);
+							
+							$("#thrdBtnGrp" + id).siblings().css("display", "none");
+							$("#thrdBtnGrp" + id).css("display", "");
+						
+						// 질문에 로직이 없는 경우
+						} else if (logicFlag == undefined || logicFlag == 0) {
+							dltLogicForm(type, id);
+							
+							$("#frstBtnGrp" + id).siblings().css("display", "none");
+							$("#frstBtnGrp" + id).css("display", "");
+						}
 					});
 					
 					// 로직 수정 버튼 이벤트
@@ -1593,7 +1596,7 @@
 						questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
 					}
 				}
-///////////////////////////////////////////////////////////////////				
+				// 재사용시 질문 폼 생성
 				function reuseQstns(questions) {
 					var qstn = questions;
 					var qstnLength = qstn.length;
@@ -1691,6 +1694,7 @@
 					return questionDropdown;
 				}
 				
+				// 질문 헤더 생성
 				function makeQuestionHeaderPanel(question) {
 					var qstId         = question.level;
 					var content       = question.content;
@@ -1751,6 +1755,7 @@
 					return wrapDiv;
 				}
 				
+				// 순위, dropdown 질문 객체 생성
 				function mkRankingDropDownObj(type, qstnForm) {
 					var returnObj = {};
 					var optList   = qstnForm.find("." + type + "-select");
@@ -1774,6 +1779,7 @@
 					return returnObj;
 				}
 				
+				// 단, 장문형 질문 객체 생성
 				function mkTxtObj() {
 					var textObj = {};
 					var option  = [];
@@ -1782,6 +1788,7 @@
 					return textObj;
 				}
 				
+				// 슬라이더 질문 객체 생성
 				function mkSliderObj(qstnForm) {
 					var sliderObj    = {};
 					var lowestInput  = qstnForm.querySelector("input[class='slider-lw']");
@@ -2191,7 +2198,7 @@
 						break;
 					}
 				}
-/////////////////////				
+				
 				// select 질문에 logic form 추가
 				function sltLogicForm(prevWrapper, htmlOption, question, qstnId) {
 					var id = "";
@@ -2439,6 +2446,63 @@
 					}
 					return "success";
 				}
+				
+				// 로직 폼 제거
+				function dltLogicForm(type, id) {
+					if (type == 1 || type == 2) {
+						var prevWrapper = $("#prevQstn" + id);
+						var opt = prevWrapper.find(".opt");
+						var optLength = opt.length;
+						
+						for (var i = 0; i < optLength; i++) {
+							$("#logic" + id + i).remove();
+						}
+
+					} else if (type == 7 || type == 9) {
+						$("#logic" + id).remove();
+					}
+				}
+				
+				// 기존의 logicNum 나타냄
+				function cnclLogicMdf(id, qstn, type) {
+					if (type == 7) {
+						var inputVal = qstn['sliderLogicPoint'];
+						var logicNum = qstn.option[0]['logic'];
+						var logic = "";
+						
+						$("#slidLogicInput" + id).val(inputVal).css("display", "none");
+						$("#LogicPoint" + id).text(inputVal).css("display", "");
+						
+						logic = SurveyMessages.strQs + " " + logicNum;
+						$("select[name=slt" + id + "]").css("display", "none");
+						$("#sltVal" + id).text(logic).css("display", "");
+						
+					} else {
+						var wrapper = $("#prevQstn"+id);
+						var opt = "";
+						var optLength = "";
+						
+						if (type == 1 || type == 2) {
+							opt = wrapper.find(".opt");
+							optLength = opt.length;
+							
+						} else if (type == 9) {
+							opt = wrapper.find(".drdwLogicRow");
+							optLength = opt.length;
+						}
+						
+						for (var i = 0; i < optLength; i++) {
+							var logic = "";
+							var logicNum = qstn.option[i]['logic'];
+							logic = (logicNum != "") ? SurveyMessages.strQs + " " + logicNum : SurveyMessages.strNoLogic;
+	
+							!isNaN(logicNum) ? $("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none") : $("#slt" + id + i).val('').prop("selected", true).css("display", "none");
+							$("#sltVal" + id + i).text(logic).css("display", "");
+						}
+					}
+					
+				}
+				
 				
 				function checkLogicNum(id, qstn, type) {
 					var logicArr = []; 
