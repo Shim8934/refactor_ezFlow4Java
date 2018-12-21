@@ -434,76 +434,89 @@ function setCountSetting(countName, count) {
 	case "poll" : 
 		if (count > 99) {
 			count = "99+";
-			$("#pollCount").attr("class", "iconCount");
+			document.getElementById("pollCount").classList.remove("iconCount_none");
+			document.getElementById("pollCount").classList.add("iconCount");
 		} else if (count == 0) {
-			$("#pollCount").attr("class", "iconCount_none");
+			document.getElementById("pollCount").classList.remove("iconCount");
+			document.getElementById("pollCount").classList.add("iconCount_none");
 		} else {
-			$("#pollCount").attr("class", "iconCount");
+			document.getElementById("pollCount").classList.remove("iconCount_none");
+			document.getElementById("pollCount").classList.add("iconCount");
 		}
-		
-		$("#pollCount").text(count);
+
+		document.getElementById("pollCount").textContent = count;
 		
 		break;
 	case "circular" :
 		if (count > 99) {
 			count = "99+";
-			$("#circularCount").attr("class", "iconCount");
+			document.getElementById("circularCount").classList.remove("iconCount_none");
+			document.getElementById("circularCount").classList.add("iconCount");
 		} else if (count == 0) {
-			$("#circularCount").attr("class", "iconCount_none");
+			document.getElementById("circularCount").classList.remove("iconCount");
+			document.getElementById("circularCount").classList.add("iconCount_none");
 		} else {
-			$("#circularCount").attr("class", "iconCount");
+			document.getElementById("circularCount").classList.remove("iconCount_none");
+			document.getElementById("circularCount").classList.add("iconCount");
 		}
-		
-		$("#circularCount").text(count);
+
+		document.getElementById("circularCount").textContent = count;
 		
 		break;
 	case "schedule" :  
 		if (count > 99) {
 			count = "99+";
-			$("#scheduleCount").attr("class", "iconCount");
+			document.getElementById("scheduleCount").classList.remove("iconCount_none");
+			document.getElementById("scheduleCount").classList.add("iconCount");
 		} else if (count == 0) {
-			$("#scheduleCount").attr("class", "iconCount_none");
+			document.getElementById("scheduleCount").classList.remove("iconCount");
+			document.getElementById("scheduleCount").classList.add("iconCount_none");
 		} else {
-			$("#scheduleCount").attr("class", "iconCount");
+			document.getElementById("scheduleCount").classList.remove("iconCount_none");
+			document.getElementById("scheduleCount").classList.add("iconCount");
 		}
-		
-		$("#scheduleCount").text(count);
+
+		document.getElementById("scheduleCount").textContent = count;
 		
 		break;
 	case "approval" :
 		if (count > 99) {
 			count = "99+";
-			$("#approvalCount").attr("class", "iconCount");
+			document.getElementById("approvalCount").classList.remove("iconCount_none");
+			document.getElementById("approvalCount").classList.add("iconCount");
 		} else if (count == 0) {
-			$("#approvalCount").attr("class", "iconCount_none");
+			document.getElementById("approvalCount").classList.remove("iconCount");
+			document.getElementById("approvalCount").classList.add("iconCount_none");
 		} else {
-			$("#approvalCount").attr("class", "iconCount");
+			document.getElementById("approvalCount").classList.remove("iconCount_none");
+			document.getElementById("approvalCount").classList.add("iconCount");
 		}
-		
-		$("#approvalCount").text(count);
+
+		document.getElementById("approvalCount").textContent = count;
 		
 		break;
 	case "unreadMail" :
 		if (count > 99) {
 			count = "99+";
-			$("#unreadMailCount").attr("class", "iconCount");
+			document.getElementById("unreadMailCount").classList.remove("iconCount_none");
+			document.getElementById("unreadMailCount").classList.add("iconCount");
 		} else if (count == 0) {
-			$("#unreadMailCount").attr("class", "iconCount_none");
+			document.getElementById("unreadMailCount").classList.remove("iconCount");
+			document.getElementById("unreadMailCount").classList.add("iconCount_none");
 		} else {
-			$("#unreadMailCount").attr("class", "iconCount");
+			document.getElementById("unreadMailCount").classList.remove("iconCount_none");
+			document.getElementById("unreadMailCount").classList.add("iconCount");
 		}
 		
-		$("#unreadMailCount").text(count);
+		document.getElementById("unreadMailCount").textContent = count;
 		
 		break;
 	}
 }
 
 //생일자 목록 month 세팅
-function getMonthlyBirthdayEmployees(event) {
-	if (event  != undefined) {
-		var isNext = event.data.isNext;
-		
+function getMonthlyBirthdayEmployees(isNext) {
+	if (isNext  != undefined) {
 		if (isNext) {
 			if (birthdayMonth === 12) {
 				birthdayMonth = 1;
@@ -873,12 +886,11 @@ function setAttiBtnHover() {
 }
 
 //메뉴 열기
-function quickMenuOpen(event) {
+function quickMenuOpen(menu) {
 	var url = "";
 	var location = "";
 	var option = " ";
-	var menu = event.data.menu;
-	
+	console.log(menu);
 	switch (menu) {
 		case "NewMail" : 
 			url = "/ezEmail/mailMain.do";
@@ -910,7 +922,7 @@ function quickMenuOpen(event) {
 			location = "main";
 			break;
 		case "Poll" :
-			url = "/ezBoard/boardMain.do?func=1";
+			url = "/ezQuestion/qstMain.do";
 			location = "main";
 			break;
 	    case "Circular":
@@ -967,11 +979,11 @@ function viewQuick() {
 }
 
 // 퀵메뉴
-function quickMenuOpenRight(event) {
+function quickMenuOpenRight(menu) {
 	var url = '';
 	var location = '';
 	var option = '';
-	var menu = event.data.menu;
+	//var menu = event.data.menu;
 	
 	var pheight = window.screen.availHeight;
 	var conHeight = pheight * 0.8;
@@ -1019,17 +1031,13 @@ function openForm() {
     var parameter = new Array();
     parameter[0] = "${userInfo.deptID}";
     parameter[1] = "A01000";
-
-    if ("${userApprovalG}" == ("YES")) {
-        url = "/ezApprovalG/getFormCont.do";
-    } else {
-        url = "/ezApproval/getFormCont.do";
-    }
+    
+    url = "/ezApprovalG/getFormCont.do";
     
     if (CrossYN()) {
         getformcont_cross_dialogArguments[0] = parameter;
         getformcont_cross_dialogArguments[1] = openForm_Complete;
-        var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+        var getFormCont_Cross = window.open(url, "/ezApprovalG/getFormCont.do", GetOpenWindowfeature(713, 570));
         
         try { getFormCont_Cross.focus(); } catch (e) {}
     } else {
