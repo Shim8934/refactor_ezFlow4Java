@@ -55,6 +55,13 @@
 		    var deptTreeTopId = "${deptTreeTopId}";
 			var isAdmin = "${isAdmin}";
 			var delType = "<c:out value='${DelType}'/>";
+			var type = "<c:out value='${type}'/>";
+			var companyId = "<c:out value='${companyID}'/>";
+			var totalCnt = 0;
+	        var CurPage = 1;
+	        var totalPage = 0;
+	        var pageSize = 1000;
+	        var BlockSize = 10;
 			
 		    $(document).ready(function(){
 		    	try {
@@ -94,6 +101,8 @@
 		        if (isAdmin == "false") {
 		        	$("#lvPermissionBasic").find("tbody tr:first").css("display","none");
 		        }
+		        
+		        Permissions_List();
 		    });
 		    
 		    function ListTypeChangeIcon() {
@@ -1076,7 +1085,64 @@
 	          	}
 	        	
 	        	$("#spn_deptName").css("width", deptNameWidth);
-	        }		        
+	        }
+		    
+	        function Permissions_List() {
+		        $.ajax({
+		        	type : "POST",
+		        	dataType : "text",
+		        	url : "/admin/ezOrgan/getPopUpPermissionsList.do",		        	
+		        	data : {companyID : companyId, type : type, pageNum : CurPage, pageSize : pageSize, searchType : "", searchValue : ""},
+		        	success : function(xml){
+		        		result=loadXMLString(xml);
+		        		if (result.xml != "") {
+		                    if (result.documentElement.getElementsByTagName("TOTALCNT")[0] != null) {
+		                        totalCnt = getNodeText(result.documentElement.getElementsByTagName("TOTALCNT")[0]);
+		                        totalPage = Math.ceil(new Number(totalCnt / pageSize));
+		                    }
+		                } else {
+		                    totalCnt = 0;
+		                    totalPage = 0;
+		                }
+		                var xmldom = result;
+		                var headerData = createXmlDom();
+		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                
+		                if (CrossYN()) {
+		                    var xmlRtn = xmldom.documentElement.getElementsByTagName("ROWS")[0];
+		                    var Node = headerData.importNode(xmlRtn, true);
+		                    headerData.documentElement.appendChild(Node);
+		                } else {
+		                    var xmlRtn = xmldom.documentElement.getElementsByTagName("ROWS")[0];
+		                    headerData.documentElement.appendChild(xmlRtn);
+		                }
+
+		                document.getElementById("PermissionPopUpList").innerHTML = "";
+
+		                var listview = new ListView();
+		                listview.SetID("lvPermissionList");
+		                listview.SetMulSelectable(false);
+		                //listview.SetRowOnClick("PermissionsPopUp_View");
+		                //listview.SetRowOnDblClick("PermissionsDbPopUp_View");
+		                listview.SetHeightFree(true);
+		                listview.DataSource(headerData);
+		                listview.DataBind("PermissionPopUpList");
+		                
+		               /*  var a = document.getElementById("lvPermissionList_TR_0");
+		                a.style.backgroundColor = "rgb(255, 255, 255)";
+		                a.setAttribute("selected", "false");
+		                $("#lvPermissionList_TR_0").mouseout(function(){
+		                	$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
+		                }); */
+		                
+		                var a = document.getElementById("lvPermissionList_THEAD");
+		                a.style.display = "none";
+		        	},
+		        	error : function(error){
+		        	    alert("부서 구성원을 가져오는중 오류가 발생했습니다. - 	" + error);
+		        	}
+		        });		        
+		    }
 	    </script>
 	</head>
 	<body class="popup">
@@ -1187,7 +1253,7 @@
 			</LISTVIEWDATA>
 		</xml>
 	    <div id="menu">
-	       <div id ="authorText" style="font-weight: bold;"></div>
+	       <div id ="authorText" style="font-weight: bold; margin-top: 10px;"></div>
 	    </div>
 	    <div id="close">
 	        <ul>
@@ -1273,7 +1339,7 @@
 	                    </tr>
 	                </table>
 	            </td>        
-	            <td style="vertical-align:top; padding-top:4px; padding-left:8px;">
+	            <td style="vertical-align:top; padding-top:4px; padding-left:25px;">
 	                <table>
 	                    <tr>
 	                        <td>
@@ -1282,25 +1348,27 @@
 	                                <span style="min-width: 45px;" id="PermissionStr"></span>
 	                            </h2>
 	                            <div class="receiver_borderbox" style="border-top: 1px solid #565b66; margin-top:1px;">
-	                                <div id="PermissionBasic" style="width: 250px; Height: 210px; overflow-x: auto; overflow-y: auto;" ondblclick="InsertReceiver()"></div>
-	                            </div>
+	                                <!-- <div id="PermissionBasic" style="width: 250px; Height: 210px; overflow-x: auto; overflow-y: auto;" ondblclick="InsertReceiver()"></div> -->
+	                                <div id="PermissionPopUpList" style="width: 250px; Height: 450px; overflow-x: auto; overflow-y: auto;"></div>
+	                            </div> 
 	                        </td>
 	                    </tr>
 	                    <tr>
-	                        <td style="text-align:center; padding-top:1px;">
+	                        <!-- <td style="text-align:center; padding-top:1px;">
 	                            <img src="../../../images/kr/cm/arr_down.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver()" />
 	                            <img src="../../../images/kr/cm/arr_up.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()" />
-	                        </td>
+	                        </td> -->
 	                    </tr>
 	                    <tr>
-	                        <td>
+	                        <%-- <td>
 	                            <h2 id="UserAcl" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="margin-left:1px; border-bottom:0px;">
 	                                <span style="min-width: 45px;" id="Span1"><spring:message code='ezOrgan.t00012'/></span>
 	                            </h2>
+	                            
 	                            <div class="receiver_borderbox" style="border-top: 1px solid #565b66;">
 	                                <div id="UserAclList" style="width: 250px; Height: 211px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver()"></div>
 	                            </div>
-	                        </td>
+	                        </td> --%>
 	                    </tr>
 	                </table>                                      
 	            </td>

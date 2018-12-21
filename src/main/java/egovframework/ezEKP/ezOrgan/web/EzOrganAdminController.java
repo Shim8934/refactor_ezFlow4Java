@@ -2336,6 +2336,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String topID = "";
 		String deptTreeTopId = "";
 		String delType = (request.getParameter("DelType") !=null ? request.getParameter("DelType") : "");
+		String type = (request.getParameter("type") !=null ? request.getParameter("type") : "");
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topID = user.getCompanyID();
@@ -2366,6 +2367,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("deptTreeTopId", deptTreeTopId);
 		model.addAttribute("useWebfolder", useWebfolder);
 		model.addAttribute("DelType", delType);
+		model.addAttribute("type", type);
 		
 		logger.debug("permissionsCheck ended.");
 		
@@ -3571,5 +3573,64 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("getJobOptionInfo ended.");
 		return rtnXml;
+	}
+	
+	/**
+	 * 조직도관리 권한관리 팝업관리 리스트 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/getPopUpPermissionsList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getPopUpPermissionsList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	    logger.debug("getPermissionsPopUpList started.");
+	    
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantID = userInfo.getTenantId();        
+        
+        logger.debug("tenantID=" + tenantID);
+	    
+		String companyID = request.getParameter("companyID");
+		String type = request.getParameter("type");
+		String strLang = userInfo.getPrimary();
+		String searchType = request.getParameter("searchType");
+		String searchValue = request.getParameter("searchValue");
+		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
+		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
+		int startRow = (pageSize * (pageNum - 1)) + 1;
+        int endRow = pageSize * pageNum;
+                
+        int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, searchType, searchValue, strLang, tenantID);
+
+        logger.debug("companyID=" + companyID + ",type=" + type + ",strLang=" + strLang);
+        
+        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, searchType, searchValue, strLang, startRow, endRow, tenantID);
+        
+		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
+		result.append("<ROWS>");
+		result.append("<TOTALCNT>");
+		result.append(cnt);
+		result.append("</TOTALCNT>");
+        
+        for (int i = 0; i < list.size(); i++) {
+        	OrganUserVO vo = list.get(i);
+        	
+        	result.append("<ROW>");
+        	result.append("<CELL>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getDisplayName()) + "</VALUE>");
+            result.append("</CELL>");
+        	result.append("<CELL>");
+        	//result.append("<VALUE>" + commonUtil.cleanValue(vo.getCn()) + "</VALUE>");
+            result.append("<DATA1>" + commonUtil.cleanValue(vo.getCn()) + "</DATA1>");
+            result.append("<DATA2>" + commonUtil.cleanValue(vo.getExtensionAttribute1()) + "</DATA2>");
+            result.append("<DATA3>" + commonUtil.cleanValue(vo.getDisplayName()) + "</DATA3>");
+            result.append("<DATA4>" + commonUtil.cleanValue(vo.getMail()) + "</DATA4>");
+            result.append("</CELL>");
+            result.append("</ROW>");
+        }
+        result.append("</ROWS>");
+        result.append("</LISTVIEWDATA>");
+        
+        logger.debug("getPermissionPopUpsList ended.");
+        
+		return result.toString();
 	}
 }
