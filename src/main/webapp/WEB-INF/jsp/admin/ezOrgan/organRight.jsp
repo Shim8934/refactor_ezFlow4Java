@@ -145,27 +145,27 @@
 				var typeContent;
 				
 				if (listOpt1.checked == true){
-					cellContent = "displayname;description;title";
+					cellContent = "extensionAttribute9;displayname;cn;description;title;extensionAttribute10"
 					typeContent = "userWithMasterAdmin";
 				}else{
 					cellContent = "displayname;extensionAttribute9";
 					typeContent = "group";
 				}
 				
-		        $.ajax({
-		        	type : "POST",
-		        	dataType : "text",
-		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : cellContent, prop : "userType", type : typeContent},
-		        	success : function(xml){
-		        		result=loadXMLString(xml);
-		        		var headerData = createXmlDom();
-		        		
-				        if (listOpt1.checked == true){
-				            headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
-				        }else{
-				            headerData = loadXMLString(listviewheader2.innerHTML.toUpperCase());
-				        }
+			$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/ezOrgan/getDeptMemberList.do",
+					data : {deptID : DeptID, cell : cellContent, prop : "userType", type : typeContent},
+					success : function(xml){
+						result=loadXMLString(xml);
+						var headerData = createXmlDom();
+
+						if (listOpt1.checked == true){
+							headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
+						}else{
+							headerData = loadXMLString(listviewheader2.innerHTML.toUpperCase());
+						}
 
 						// 암호관리, 사원이동, 퇴직 cell append
 						var cnt = result.getElementsByTagName('ROWS')[0].childElementCount;
@@ -681,7 +681,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department", type : "user", adminOrgan : "y"},
+		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;cn;description;title;extensionAttribute10", prop : "department", type : "user", adminOrgan : "y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var listview = new ListView();
@@ -1380,9 +1380,12 @@
 					var userID = tempLV.getAttribute('DATA2');
 					var gyumInfo = tempLV.getAttribute('DATA3');
 					// 3 암호관리 4 사원이동 5 퇴직
-					tempLV.children[3].innerHTML = "<span><img id='pwd" + userID +"' class='pwd' onclick='mod_pwd(event)' src='/images/admin/password.png'></span>";
-					tempLV.children[4].innerHTML = "<span><img id='move" + userID +"' class='move' onclick='move_user(event)' src='/images/admin/move_sawon.png'></span>";
-					tempLV.children[5].innerHTML = "<span><img id='retire" + userID +"' data1='" + gyumInfo + "' class='retire' onclick='retire_user(event)' src='/images/admin/retire.png'></span>";
+					if(tempLV.children[0].innerHTML != "") {
+						tempLV.children[0].innerHTML = "<span><img id='pwd" + userID +"' class='pwd' onclick='mod_pwd(event)' src='/images/admin/password.png'></span>";
+					}
+					tempLV.children[6].innerHTML = "<span><img id='pwd" + userID +"' class='pwd' onclick='mod_pwd(event)' src='/images/admin/password.png'></span>";
+					tempLV.children[7].innerHTML = "<span><img id='move" + userID +"' class='move' onclick='move_user(event)' src='/images/admin/move_sawon.png'></span>";
+					tempLV.children[8].innerHTML = "<span><img id='retire" + userID +"' data1='" + gyumInfo + "' class='retire' onclick='retire_user(event)' src='/images/admin/retire.png'></span>";
 				}
 			}
 
@@ -1566,28 +1569,40 @@
 			<LISTVIEWDATA>
 				<HEADERS>
 					<HEADER>
+						<NAME></NAME>
+						<WIDTH>4%</WIDTH>
+					</HEADER>
+					<HEADER>
 						<NAME><spring:message code='ezOrgan.t67' /></NAME>
 						<WIDTH></WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezOrgan.t68' /></NAME>
-						<WIDTH>25%</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code='ezOrgan.t69' /></NAME>
+						<NAME>아이디</NAME>
 						<WIDTH>20%</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME>암호관리</NAME>
+						<NAME><spring:message code='ezOrgan.t68' /></NAME>
+						<WIDTH>15%</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME><spring:message code='ezOrgan.t69' /></NAME>
 						<WIDTH>10%</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME>직책</NAME>
+						<WIDTH>10%</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME>암호관리</NAME>
+						<WIDTH>8%</WIDTH>
 					</HEADER>
 					<HEADER>
 						<NAME>사원이동</NAME>
-						<WIDTH>10%</WIDTH>
+						<WIDTH>8%</WIDTH>
 					</HEADER>
 					<HEADER>
 						<NAME>퇴직</NAME>
-						<WIDTH>10%</WIDTH>
+						<WIDTH>7%</WIDTH>
 					</HEADER>
 				</HEADERS>
 			</LISTVIEWDATA>
@@ -1671,9 +1686,9 @@
 		</div>
 		
 		<div>
-			<div style="border: 1px solid #ddd; height: 510px; width: 30%; margin-left:10px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
+			<div style="border: 1px solid #ddd; height: 510px; width: 30%;  overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
 					
-			<div class="listview organ" style="float:left; width:60%;">
+			<div class="listview organ" style="width:69%; float:right;">
 				<c:if test="${dotNetIntegration != 'YES'}">
 					<div id="OrganListView" class="OrganListView"></div>
 				</c:if>
@@ -1683,7 +1698,7 @@
 			</div>
 		</div>	
 		<c:if test="${dotNetIntegration != 'YES'}">
-			<div class="moveWrap" style="width:50%; vertical-align:middle; text-align:center;">
+			<div class="moveWrap" style="width:80%; vertical-align:middle; text-align:center;float:left;">
 				<img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
 				<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
 				<a class="imgbtn" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a>
@@ -1738,7 +1753,7 @@
 				</th>
 			</tr> --%>
 		</table>
-		<div style="border-bottom:0px;visibility:hidden;">
+		<div style="border-bottom:0px;/* visibility:hidden; */">
 			<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>					
 			<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
 		</div>

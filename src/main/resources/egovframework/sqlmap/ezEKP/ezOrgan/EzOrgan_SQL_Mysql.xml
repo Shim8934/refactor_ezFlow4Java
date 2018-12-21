@@ -929,7 +929,34 @@
 	            EXTENSIONATTRIBUTE6 ,
 	            EXTENSIONATTRIBUTE7 ,
 	            EXTENSIONATTRIBUTE8 ,
-	            EXTENSIONATTRIBUTE9 ,
+				(
+					CASE
+					WHEN
+						CN = (
+								SELECT
+									D.EXTENSIONATTRIBUTE9 
+								FROM
+									TBL_DEPTMASTER D
+								WHERE
+									D.CN = DEPARTMENT
+								AND
+									D.TENANT_ID = #v_TENANT_ID#
+							)
+					THEN
+					(
+						SELECT
+							E.EXTENSIONATTRIBUTE9 
+						FROM
+							TBL_DEPTMASTER E
+						WHERE
+							E.CN = DEPARTMENT
+						AND
+							E.TENANT_ID = #v_TENANT_ID#
+						)
+					ELSE
+						EXTENSIONATTRIBUTE9
+					END
+				) EXTENSIONATTRIBUTE9,
 	            EXTENSIONATTRIBUTE10 ,
 	            EXTENSIONATTRIBUTE11 ,
 	            EXTENSIONATTRIBUTE12 ,
@@ -1018,7 +1045,34 @@
              A.EXTENSIONATTRIBUTE6 ,
              A.EXTENSIONATTRIBUTE7 ,
              A.EXTENSIONATTRIBUTE8 ,
-             A.EXTENSIONATTRIBUTE9 ,
+			(
+				CASE
+				WHEN
+					A.CN = (
+							SELECT
+								F.EXTENSIONATTRIBUTE9 
+							FROM
+								TBL_DEPTMASTER F
+							WHERE
+								F.CN = DEPARTMENT
+							AND
+								F.TENANT_ID = #v_TENANT_ID#
+						)
+				THEN
+					(
+						SELECT
+							G.EXTENSIONATTRIBUTE9 
+						FROM
+							TBL_DEPTMASTER G
+						WHERE
+							G.CN = DEPARTMENT
+						AND
+							G.TENANT_ID = #v_TENANT_ID#
+					)
+				ELSE
+					A.EXTENSIONATTRIBUTE9
+				END
+			) EXTENSIONATTRIBUTE9,
              A.EXTENSIONATTRIBUTE10 ,
              A.EXTENSIONATTRIBUTE11 ,
              A.EXTENSIONATTRIBUTE12 ,
