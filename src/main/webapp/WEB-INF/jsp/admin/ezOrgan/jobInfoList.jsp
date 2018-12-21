@@ -95,8 +95,18 @@
             listview.DataSource(headerData);
             listview.DataBind("JobListView");
 			
-			totalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
-			pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
+			if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
+				totalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
+				pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
+			} else if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
+				//IE11일때 추가
+				totalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
+				pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
+			} else {
+				totalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
+				pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
+			}
+			
 			totalPage = Math.ceil(new Number(totalCount / pageSize));
 			
 			makePageSelPage();
@@ -396,9 +406,17 @@
             listview.DataSource(headerData);
             listview.DataBind("JobListView");
 			
-			totalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
-			pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
-			totalPage = Math.ceil(new Number(totalCount / pageSize));
+			if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
+				totalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
+				pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
+			} else if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
+				//IE11일때 추가
+				totalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
+				pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
+			} else {
+				totalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
+				pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
+			}
 			
 			makePageSelPage();
 		}
