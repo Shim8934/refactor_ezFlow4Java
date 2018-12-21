@@ -254,10 +254,10 @@
 		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t297' />";
 		        } else if (delType == "l") {
 		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t296' />";
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t296' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t296' />";
 		        } else if (delType == "w") {
 		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t301' />";
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t301' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t301' />";
 		        } else if (delType == "m") {
 		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t300' />";
 		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t300' />";
@@ -646,10 +646,10 @@
 	                    listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
 	                }
 	            }
-	            Permissions_Check(GetAttribute(p_ListOrderObject, "_data2"));
-	        }
+	            //Permissions_Check(GetAttribute(p_ListOrderObject, "_data2")); 
+	        } 
 	        
-	        function Permissions_Check(UserID) {
+	        /* function Permissions_Check(UserID) {
 	            var listview = new ListView();
 	            listview.LoadFromID("lvUserList");
 
@@ -711,10 +711,10 @@
 		                pAclList.DataBind("UserAclList");
 					}
 				});
-	        }
+	        } */
 	        
 	        function InsertReceiver() {
-	            var pparsingXML = "";
+	            /* var pparsingXML = "";
 	            var pparsingXML2 = "";
 	            var strSIP = "";
 	            var pAddFlag = false;
@@ -782,7 +782,7 @@
 	                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                    }
 	                }
-	            }
+	            } */
 	        }
 
 	        function DeleteReceiver() {
@@ -993,7 +993,7 @@
 			}
 		    
 		    function OK_Click() {
-	            var PermissionList = new ListView();
+	            /* var PermissionList = new ListView();
 	            PermissionList.LoadFromID("lvPermissionBasic");
 
 	            var Acllistview = new ListView();
@@ -1036,7 +1036,7 @@
 	            	error : function(){
 	            		alert(strLang15);
 	            	}
-	            });
+	            }); */
 	        }
 		    
 	        function setOrganListType(pListType) {
@@ -1338,8 +1338,13 @@
 	                        </td>    
 	                    </tr>
 	                </table>
-	            </td>        
-	            <td style="vertical-align:top; padding-top:4px; padding-left:25px;">
+	            </td>
+	                 <td style="width: 30px; text-align: center;">                            
+	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver()"><br>
+	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()">
+	                 </td>   
+	            <td style="vertical-align:top; padding-top:4px; padding-left:4
+	            px;">
 	                <table>
 	                    <tr>
 	                        <td>

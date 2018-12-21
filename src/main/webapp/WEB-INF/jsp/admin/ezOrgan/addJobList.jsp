@@ -83,6 +83,7 @@
 		                listview.DataSource(headerData);
 		                listview.DataBind("AddJobListView");
 		                checkbox_header();
+		                
 		        	},
 		        	error : function(error){
 		        		alert("<spring:message code='ezOrgan.t2' />" + error);
@@ -109,6 +110,7 @@
 		    }
 		    function Tab1_MouseClick(obj) {
 		        obj.className = "tabon";
+		        
 		        if (obj.id != Tab1_SelectID) {
 		            if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
 		                document.getElementById(Tab1_SelectID).className = "";
@@ -575,7 +577,13 @@
 		                    <div id="AddJobListView" style="border: 0px solid #ddd; Width: 750px; Height:540PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 		                </div>
 		            </td>
-		            <td style="padding-left:3px; vertical-align:top; border: 1px solid #ddd;">            
+		            <td style="padding-left:3px; vertical-align:top; border: 1px solid #ddd;">
+		                 <div id="preview_nodata" class="preview_nodata">
+			                  <dl class="nodata_sIcon">
+				              <dt><img src="/images/kr/main/noData_sIcon.png"></dt>
+				              <dd id="nodata_title" style="font-family: malgun gothic">선택된 겸직이 없습니다.</dd>
+			                  </dl>
+		                 </div>
 		                 <div style="height:100%; width:450px;" id="AddJobList" >
 		                </div>      
 		            </td>
@@ -584,6 +592,6 @@
 		</form>         
 	</body>
 	<script type="text/javascript">
-	   /*  Tab1_NewTabIni("tab1"); */
+	    /* Tab1_NewTabIni("tab1"); */
 	</script>
 </html>
