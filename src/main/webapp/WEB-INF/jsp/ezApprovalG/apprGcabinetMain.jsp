@@ -445,8 +445,9 @@
 		                }
 		
 		                if (ListTypeFlag == "8" && (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") && g_sFlag != "m09") {
-		                    document.getElementById("tdbtnEndProduce").style.display = "";
-		                    document.getElementById("tdbtnCancelEndProd").style.display = "";
+		                	//2018-12-21 천성준 정리대상목록에 데이터가 없을 때, 편철확인 편철확인취소 버튼이 표출되는 현상 때문에 주석처리 (버튼의 표출여부는 리스트 데이터가 무엇이 선택 되었는지에 따라 표출됨.)
+// 		                    document.getElementById("tdbtnEndProduce").style.display = "";
+// 		                    document.getElementById("tdbtnCancelEndProd").style.display = "";
 		                }
 		                else {
 		                    document.getElementById("tdbtnEndProduce").style.display = "none";
