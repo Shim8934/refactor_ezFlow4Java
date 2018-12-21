@@ -142,6 +142,16 @@
 		    		}	    		
 		        });
 		    }
+		    
+		    $('#repeatHoliday')on( "click", function() {
+		    	var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - 280) / 2;
+		        var pLeft = (pwidth - 450) / 2;
+		        
+		    	window.open("/admin/ezSchedule/scheduleAdminPopupHolidayRepeat.do?id=" + holidayid + "&holidayDate=" + holidayDate, "", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		    });
+		    
 		</script>
 	</head>
 	<body class="popup" style="font-size:12px">

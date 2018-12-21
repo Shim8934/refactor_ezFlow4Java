@@ -552,4 +552,42 @@ public class EzScheduleAdminController {
 		return "/admin/ezSchedule/scheduleAdminHolidyTabList";
 	}
 	
+	/**
+	 * 관리자 일정관리 기념일 등록 탭 페이지(게시판 참조)
+	 */
+	@RequestMapping(value="/admin/ezSchedule/scheduleAdminPopupHolidayRepeat.do")
+	public String  scheduleAdminPopupHolidayRepeat(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		
+		logger.debug("============ scheduleAdminHolidayTab started ============");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String primary = userInfo.getPrimary();
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i =0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("primary", primary);
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
+		
+		logger.debug("============ scheduleAdminHolidayTab ended ============");
+		
+		return "/admin/ezSchedule/scheduleAdminHolidyTabList";
+	}
+	
 }

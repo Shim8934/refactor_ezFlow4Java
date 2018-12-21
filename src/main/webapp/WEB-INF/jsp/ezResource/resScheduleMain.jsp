@@ -88,7 +88,7 @@
 	    
 	    document.onselectstart = function () { return false; };
 	    
-	    select_memorialDays("${userInfo.lang}");
+	    /* select_memorialDays("${userInfo.lang}"); */
 	    
 	    var xmlhttp2 = createXMLHttpRequest();
 	    function schedule_get_holiday() {
