@@ -62,8 +62,21 @@
 	                document.execCommand("AutoUrlDetect", false, false);
 	                document.querySelector("div").addEventListener("paste", function(e) {
 	                    e.preventDefault();
-	                    var text = e.clipboardData.getData("text/plain");
-	                    document.execCommand("insertHTML", false, text);
+	                    var text = '';
+	                    if (e.clipboardData) {
+	                    	text = (e.originalEvent || e).clipboardData.getData('text/plain');
+
+	                        document.execCommand('insertText', false, text);
+	                    }
+	                    else if (window.clipboardData) {
+	                    	text = window.clipboardData.getData('Text');
+							
+	                    	const selection = window.getSelection();
+
+							if (!selection.rangeCount) return false;
+							
+                            selection.getRangeAt(0).insertNode(document.createTextNode(text));
+	                    }
 	                });
 	            }
 	            catch (e)

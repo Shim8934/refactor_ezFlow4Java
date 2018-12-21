@@ -330,12 +330,22 @@ function ListView() {
 
             var oTable = document.createElement("TABLE");
             oTable.id = _thisID;
+            
+            var oDiv = document.createElement("DIV");
+            oDiv.id = _thisID + "_BODY";
+            oDiv.style.height = (document.getElementById("divList").clientHeight - 38) + "px";
+            oDiv.style.overflow = "auto";
 
             oTable.cellSpacing = 0;
             oTable.cellPadding = 0;
 
             oTable.setAttribute("multiselectable", _isMultiSelectable);
             oTable.setAttribute("useocs", _useOcs);
+            oTable.style.minWidth = GetTableMinWidth() + "px";
+            
+            oDiv.setAttribute("multiselectable", _isMultiSelectable);
+            oDiv.setAttribute("useocs", _useOcs);
+            oDiv.style.minWidth = GetTableMinWidth() + "px";
 
             if (_rowonclick != null)
                 oTable.setAttribute("rowonclick", _rowonclick);
@@ -359,7 +369,8 @@ function ListView() {
             }
 
             oTable.appendChild(oTHeader);
-            oTable.appendChild(oTBody);
+            /*oTable.appendChild(oTBody);*/
+            oDiv.appendChild(oTBody);
 
             if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
 
@@ -408,11 +419,13 @@ function ListView() {
             }
 
             objElm.appendChild(oTable);
+            objElm.appendChild(oDiv);
 
             if (_debugMode) yjTest("oTable", objElm.innerHTML);
 
             objElm = null;
         }
+        scroll();
     }
 
     //헤더없이 Row만 존재하는 DataSource를 위한 메소드
@@ -444,6 +457,24 @@ function ListView() {
         oldTbody = null;
         newTBody = null;
         oList = null;
+    }
+    
+    function GetTableMinWidth() {
+    	var oHeaders = _dataSource.getElementsByTagName("HEADER");
+    	var oHeaderMinWidth = 0;
+    	
+    	for (var i = 0; i < oHeaders.length; i++) {
+    		var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
+    		
+    		if(strColName == 'TITLE') {
+    			continue;
+    		}
+    		
+            var strWidth = SelectSingleNodeValue(oHeaders[i], "WIDTH");
+            oHeaderMinWidth += parseInt(strWidth);
+    	}
+    	
+    	return oHeaderMinWidth + 150;
     }
 
     //리스트뷰 헤더 생성
@@ -643,8 +674,14 @@ function ListView() {
 
     //리스트뷰 바디 생성
     function GetTableBodyObj() {
-        var oTbody = document.createElement("TBODY");
+        /*var oTbody = document.createElement("TBODY");
+        oTbody.style.backgroundColor = m_strColorDefault;*/
+    	
+    	var oTbody = document.createElement("TABLE");
         oTbody.style.backgroundColor = m_strColorDefault;
+        oTbody.id = _thisID + "Div";
+        oTbody.style.width = "100%";
+        oTbody.className="mainlist";
 
         var oRows = _dataSource.getElementsByTagName("ROW");
         _rowCount = oRows.length;
@@ -728,11 +765,13 @@ function ListView() {
                 var objTd = document.createElement("TD");
                 var titleImage = "";
                 var titleOneLineCnt = "";
+                
+                objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
             
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TITLE") {
                     objTd.style.padding = "8px 4px";
                     objTd.style.margin = "0";
-                    objTd.style.width = "80%";
+                    objTd.style.width = "70%";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
@@ -743,7 +782,7 @@ function ListView() {
                 }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
-                    objTd.style.textAlign = "left";
+                	objTd.style.textAlign = "left";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
@@ -1375,7 +1414,7 @@ function tr_unselectedAll(pTableID) {
     else {
 
         var SelList = new ListView();
-        SelList.LoadFromID("BoardList");
+        SelList.LoadFromID("BoardListDiv");
 
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
@@ -1388,7 +1427,7 @@ function tr_unselectedAll(pTableID) {
 
 function event_HeaderCheckBoxClick(obj) {
     var SelList = new ListView();
-    SelList.LoadFromID("BoardList");
+    SelList.LoadFromID("BoardListDiv");
 
     if (obj.checked) {
     	if ($("#BoardList tbody tr:eq(0)").attr("id") == "BoardList_TR_noItems") {
