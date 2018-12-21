@@ -855,7 +855,6 @@
 						// 복사한 객체로 사용자용 질문폼 생성
 						qstnWrapper.after("<div class='qstnWrapper' id='qstn" + nextId + "'></div>");
 						mkQstnsByType(qstnWrapper.next(), qstnType, deepCopy);
-						console.log(qstnList);
 					});
 					
 					// 우상단 삭제 버튼 클릭 이벤트
@@ -867,7 +866,6 @@
 						qstnList.splice(qstnId - 1, 1); // 질문 배열에서 해당 순번의 질문객체 삭제
 						thisWrapper.remove();           // 질문 폼 삭제
 						checkActionForNewId(qstnId, qstnList, "delete");
-						console.log(qstnList);
 					});
 					
 					// 수정 버튼 클릭 이벤트 질문 객체 수정
@@ -899,32 +897,36 @@
 						// 로직 flag 저장
 						var qstnList = SurveyCreate.getQs();
 						var qstn = qstnList[id - 1];
-						var thisType = qstn.type;
+						var type = qstn.type;
 						var result = "";
+						var pf = "";
 						
 						// 로직 추가, ui 변경
-						switch(thisType) {
+						switch(type) {
 						case 1 :
 						case 2 :
-							result = addSltLogic(id, qstn);
+							pf = checkLogicNum(id, qstn, type);
+							result = pf == "success" ? addSltLogic(id, qstn) : ""; 
 							break;
 						case 7:
 							result = addSlidLogic(id, qstn);
 							break;
 						case 9:
-							result = addDrdwLogic(id, qstn);
+							pf = checkLogicNum(id, qstn, type);
+							result = pf == "success" ? addDrdwLogic(id, qstn) : "";
 							break;
 						}
 						
-						if (!qstn['logicFlag'] || qstn['logicFlag'] == 0) {
-							qstn['logicFlag'] = 1;
+						if (result == "success") {
+							var logicFlag = qstn['logicFlag'];
+							
+							if (logicFlag == undefined || logicFlag == 0) {
+								qstn['logicFlag'] = 1;
+								$("#thrdBtnGrp" + id).siblings().css("display", "none");
+								$("#thrdBtnGrp" + id).css("display", "");
+							}
 						}
 						
-						if (result == "success") {
-							$("#thrdBtnGrp" + id).siblings().css("display", "none");
-							$("#thrdBtnGrp" + id).css("display", "");
-						}
-						console.log(qstnList);
 					});
 					
 					// 로직 취소 버튼 이벤트
@@ -973,7 +975,6 @@
 						}
 						$("#scndBtnGrp" + id).siblings().css("display", "none");
 						$("#scndBtnGrp" + id).css("display", "");
-						console.log(qstnList);
 					});
 					
 					
@@ -1017,7 +1018,6 @@
 						
 						$("#frstBtnGrp" + id).siblings().css("display", "none");
 						$("#frstBtnGrp" + id).css("display", "");
-						console.log(qstnList);
 					});
 					
 					$(".quesBacgr").on("input", ".slider-range", function() {
@@ -1592,7 +1592,6 @@
 						questionList.splice(qstId - 1, 1);           // 질문 배열에서 해당 순번의 객체 삭제
 						questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
 					}
-					console.log(questionList);
 				}
 ///////////////////////////////////////////////////////////////////				
 				function reuseQstns(questions) {
@@ -2437,6 +2436,48 @@
 						logic = (logicNum != "") ? SurveyMessages.strQs + " " + logicNum : SurveyMessages.strNoLogic;
 						$("select[name=slt" + id + i + "]").css("display", "none");
 						$("#sltVal" + id + i).text(logic).css("display", "");
+					}
+					return "success";
+				}
+				
+				function checkLogicNum(id, qstn, type) {
+					var logicArr = []; 
+					var wrapper = $("#prevQstn"+id);
+					var opt = "";
+					var optLength = "";
+					
+					if (type == 1 || type == 2) {
+						opt = wrapper.find(".opt");
+						optLength = opt.length;
+						
+					} else if (type == 9) {
+						opt = wrapper.find(".drdwLogicRow");
+						optLength = opt.length;
+					}
+					for (var i = 0; i < optLength; i++) {
+						var logicNum = $("select[name=slt" + id  + i +"] option:selected").val();
+
+						if (logicNum != "") {
+							if (i == 0) {
+								logicArr.push(logicNum);
+								
+							} else {
+								for (var j = 0; j < i; j++) {
+									if (logicArr[j] != logicNum) {
+										
+									} else {
+										alert("이미 같은 번호가 존재합니다.");
+										if (confirm("그대로 진행하시겠습니까?") == true) {
+											
+										} else {
+											return "fail";
+										}
+									}
+									
+								}
+								logicArr.push(logicNum);
+							}
+						}
 					}
 					return "success";
 				}
