@@ -92,3 +92,10 @@ th[kk_selected_td] {
     background-color: transparent !important;
     background-repeat: repeat !important;
 }
+
+td[kk_selected_td] td,
+td[kk_selected_td] th,
+th[kk_selected_td] td,
+th[kk_selected_td] th{
+    background: inherit !important;
+}

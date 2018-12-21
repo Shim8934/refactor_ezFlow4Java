@@ -335,7 +335,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("map.toString() : " + map.toString());
 		
 		ezNewPortalDAO.updateUserUsedFrame(map);
-		ezNewPortalDAO.updateUserThemeSetting(map);
+		//ezNewPortalDAO.updateUserThemeSetting(map);
 		
 		LOGGER.debug("[Serivce] updateUserUsedFrame Ended");
 	}
