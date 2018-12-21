@@ -661,36 +661,40 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		//Clone list of attach
 		cloneAttachFiles(attachs, realPath, getSurveyDirPath(tenantId));
 		
-		//Seperate
+		//long startTime = System.nanoTime();
+		
+		//Separate
 		List<AttachVO> qstAttch    = attachs.stream().filter(a -> a.getTargetType().equals("question")).collect(Collectors.toList());
 		attachs.removeAll(qstAttch);
 		
-		long startTime = System.nanoTime();
+		Map<Long, List<OptionVO>> mapOption = new HashMap<>();
+		ListIterator<OptionVO> optionIter = options.listIterator();
 		
-		for (QuestionVO question : questions) {
-			List<OptionVO> qsOption = new ArrayList<>();
-			ListIterator<AttachVO> qsAtIter = qstAttch.listIterator();
-			ListIterator<OptionVO> optionIter = options.listIterator();
-			
-			while (optionIter.hasNext()) {
-				OptionVO option = optionIter.next();
-				if (option.getQuestionId() == question.getQuestionId()) {
-					ListIterator<AttachVO> attIter = attachs.listIterator();
-					while (attIter.hasNext()) {
-						AttachVO attach = attIter.next();
-						if (attach.getTargetId() == option.getOptionId()) {
-							option.setAttach(attach);
-							attIter.remove();
-						}
-					}
-					
-					qsOption.add(option);
-					optionIter.remove();
+		while (optionIter.hasNext()) {
+			OptionVO option = optionIter.next();
+			ListIterator<AttachVO> attIter = attachs.listIterator();
+			while (attIter.hasNext()) {
+				AttachVO attach = attIter.next();
+				if (attach.getTargetId() == option.getOptionId()) {
+					option.setAttach(attach);
+					attIter.remove();
 				}
 			}
 			
-			question.setOption(qsOption);
+			if (mapOption.containsKey(option.getQuestionId())) {
+				mapOption.get(option.getQuestionId()).add(option);
+			}
+			else {
+				List<OptionVO> qsOption = new ArrayList<>();
+				qsOption.add(option);
+				mapOption.put(option.getQuestionId(), qsOption);
+			}
+		}
+		
+		for (QuestionVO question : questions) {
+			question.setOption(mapOption.get(question.getQuestionId()));
 			
+			ListIterator<AttachVO> qsAtIter = qstAttch.listIterator();
 			while (qsAtIter.hasNext()) {
 				AttachVO qsAttach = qsAtIter.next();
 				if (qsAttach.getTargetId() == question.getQuestionId()) {
@@ -700,9 +704,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			}
 		}
 		
-		long endTime   = System.nanoTime();
-		long totalTime = endTime - startTime;
-		logger.debug("TOTAL TIME: " + totalTime);
+		//long endTime   = System.nanoTime();
+		//long totalTime = endTime - startTime;
+		//logger.debug("TOTAL TIME: " + totalTime);
 		
 		result.put("questions", questions);
 		return result;
