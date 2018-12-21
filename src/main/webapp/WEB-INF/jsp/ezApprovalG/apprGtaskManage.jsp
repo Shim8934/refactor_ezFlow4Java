@@ -67,7 +67,15 @@
 		        totalPage = 0;
 		        OrganID = CompanyID;
 		        GetTaskFullList();
+		        DocList_Resizer();
 		    };
+		    window.onresize = function () {
+		    	DocList_Resizer();
+		    };
+		    function DocList_Resizer() {
+		    	var CurrentHeight = document.documentElement.clientHeight;
+		    	document.getElementById("divList").style.height = (CurrentHeight - 105) + "px";
+		    }
 		    function lvtDoclist_onselchanged() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
@@ -114,6 +122,7 @@
 		            }
 		        }
 		    }
+		    
 		</script>
 	</head>
 	<body class="mainbody">
