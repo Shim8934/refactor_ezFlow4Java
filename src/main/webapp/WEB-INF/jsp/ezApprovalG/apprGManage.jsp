@@ -2098,7 +2098,7 @@
 				</c:if>
 			</ul>
 		</div>
-		<div class="div_scroll" style="width:100%;HEIGHT:375px; overflow:AUTO" id="divList">
+		<div class="div_scroll" style="width:100%;HEIGHT:375px; overflow:AUTO; margin-bottom:10px" id="divList">
 			<div id="lvDocList"></div>
 		</div>
 		
