@@ -300,11 +300,16 @@
  		frameSetting(frameId);
 		leftResize();
  	}
- 	
+	
+ 	//반복문 forEach
+	HTMLCollection.prototype.forEach = Array.prototype.forEach;
+	
  	var leftResize = function() {
-		var wwh = $('.section_main').prop("scrollHeight") + 30;
-		$(".section_left").css("height", wwh +"px");
-		$(".section_left").css("min-height", "1133px");
+		var wwh = document.getElementsByClassName("section_main")[0].scrollHeight + 30;
+		var sectionLeft = document.getElementsByClassName("section_left");
+		
+		sectionLeft[0].style.height = wwh + "px";
+		sectionLeft[0].style.minHeight = "1133px";
 	}
  	
  	// 퀵링크 셋팅
@@ -427,7 +432,8 @@
 			portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
 		}
 		
-		$(".portlet_area").html(portletHTML);
+		//$(".portlet_area").html(portletHTML);
+		document.getElementsByClassName("portlet_area")[0].innerHTML = portletHTML;
  		frameSetting(frameId);
 		
  		//포틀릿별로 정보 및 포틀릿 jsp불러오기
@@ -447,7 +453,7 @@
 							$("#" + portletId + "Portlet").append(result);
 							
 							if (portletId == 6) {
-								$("#" + portletId + "Portlet").css("background","none");
+								document.getElementById(portletId + "Portlet").style.background = "none";
 							}
 							
 							eventSetting(portletId, usedTheme);
@@ -457,38 +463,31 @@
 			}
 		}
 
-		//메뉴 이동(왼쪽)
-		$("#NewMail").on("click", {"menu" : "NewMail"}, quickMenuOpen);
-		$("#Schedule").on("click", {"menu" : "Schedule"}, quickMenuOpen);
-		$("#Poll").on("click", {"menu" : "Poll"}, quickMenuOpen);
-		$("#Circular").on("click", {"menu" : "Circular"}, quickMenuOpen);
-		$("#AprSign").on("click", {"menu" : "ApprG"}, quickMenuOpen);
-		
 		var useQuestion = "<c:out value='${useQuestion}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";
 		var useMail = "<c:out value='${useMail}'/>";
 		var useApproval = "<c:out value='${useApproval}'/>";
 		var useSchedule = "<c:out value='${useSchedule}'/>";
 		
-		//권한에 없는거는 이미지 변경
-		if (useQuestion === "NO") {
-			$("#Poll").off("click");
+		//메뉴 이동(왼쪽)
+		if (useMail !== "NO") {
+			document.getElementById("NewMail").addEventListener('click', function(){quickMenuOpen('NewMail');}, false);
 		}
 		
-		if (useCircular === "NO") {
-			$("#Circular").off("click");
+		if (useSchedule !== "NO") {
+			document.getElementById("Schedule").addEventListener('click', function(){quickMenuOpen('Schedule');}, false);
 		}
 		
-		if (useMail === "NO") {
-			$("#NewMail").off("click");
+		if (useQuestion !== "NO") {
+			document.getElementById("Poll").addEventListener('click', function(){quickMenuOpen('Poll');}, false);
 		}
 		
-		if (useApproval === "NO") {
-			$("#AprSign").off("click");
+		if (useCircular !== "NO") {
+			document.getElementById("Circular").addEventListener('click', function(){quickMenuOpen('Circular');}, false);
 		}
 		
-		if (useSchedule === "NO") {
-			$("#Schedule").off("click");
+		if (useApproval !== "NO") {
+			document.getElementById("AprSign").addEventListener('click', function(){quickMenuOpen('ApprG');}, false);
 		}
 		
 		//ajax로 count 불러오기
@@ -510,8 +509,8 @@
 		}
 		
 		//생일자 조회 기능 연동
-		$("#birthdayNext").on("click", {isNext : true}, getMonthlyBirthdayEmployees);
-		$("#birthdayPrev").on("click", {isNext : false}, getMonthlyBirthdayEmployees);
+		document.getElementById("birthdayNext").addEventListener('click', function(){getMonthlyBirthdayEmployees(true);});
+		document.getElementById("birthdayPrev").addEventListener('click', function(){getMonthlyBirthdayEmployees(false);});
 		
 		//이번달 생일자 목록 불러오기
 		getMonthlyBirthdayEmployees();
@@ -520,17 +519,18 @@
 		getMonthlyBestEmployee();
 		
 		//개인환경설정으로 이동 동작 연결
-		$("#personalEnv").on("click", viewPersonalEnv);
-		$("#portletEnv").on("click", viewPortletEnv);
+		document.getElementById("personalEnv").addEventListener('click', viewPersonalEnv);
+		document.getElementById("portletEnv").addEventListener('click', viewPortletEnv);
 
 		
 		//퀵메뉴 on/off 버튼
-		$("#quicklinkBtn").on('click', viewQuick);
+		document.getElementById("quicklinkBtn").addEventListener('click', viewQuick);
+		
 		//퀵메뉴 이동(오른쪽)
-		$("#quickMailwrite").on('click', {'menu' : 'mail'}, quickMenuOpenRight);
-		$("#quickApprovalwrite").on('click', {'menu' : 'appr'}, quickMenuOpenRight);
-		$("#quickSchedulewrite").on('click', {'menu' : 'schedule'}, quickMenuOpenRight);
-		$("#quickOrgan").on('click', {'menu' : 'organ'}, quickMenuOpenRight);
+		document.getElementById("quickMailwrite").addEventListener('click', function(){quickMenuOpenRight('mail');}, false);
+		document.getElementById("quickApprovalwrite").addEventListener('click', function(){quickMenuOpenRight('appr');}, false);
+		document.getElementById("quickSchedulewrite").addEventListener('click', function(){quickMenuOpenRight('schedule');}, false);
+		document.getElementById("quickOrgan").addEventListener('click', function(){quickMenuOpenRight('organ');}, false);
 
 		// 프레임에 따라 퀵링크 위치 변경
 		if(frameId === 'Frame2' || frameId === 'Frame4' ) {
@@ -581,47 +581,119 @@
 			var media1321 = window.matchMedia("only screen and (max-width :1326px)");
 			
 			if (media1746.matches) {
-				$(".portlet").attr("class", "portlet two_column1750");
-				$(".info_left").css("display", "inline-block");
-				$(".info_left").css("float", "left");
-				$(".info_left").css("width", "189px");
-				$(".info_left").css("margin-right", "5px");
-				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
-				$(".info_right").css("width", "calc(100% - 194px)");
-				$(".info_right").css("background", "#ffffff");
+				var portletList = document.getElementsByClassName("portlet");
+				var infoLeft = document.getElementsByClassName("info_left");
+				var infoRight = document.getElementsByClassName("info_right");
+				
+				portletList.forEach(function(item, index) {
+					portletList[index].setAttribute("class", "portlet two_column1750");
+				});
+				
+				infoLeft.forEach(function(item, index) {
+					infoLeft[index].style.display = "inline-block";
+					infoLeft[index].style.width = "189px";
+					infoLeft[index].style.marginRight = "5px";
+					infoLeft[index].style.background = "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat";
+				});
+				
+				infoRight.forEach(function(item, index) {
+					infoRight[index].style.width = "calc(100% - 194px)";
+					infoRight[index].style.background = "#ffffff";
+				});
 			} else if (media1590.matches) {
-				$(".portlet").attr("class", "portlet two_column1593");
-				$(".info_left").css("display", "inline-block");
-				$(".info_left").css("float", "left");
-				$(".info_left").css("width", "189px");
-				$(".info_left").css("margin-right", "5px");
-				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
-				$(".info_right").css("width", "calc(100% - 194px)");
-				$(".info_right").css("background", "#ffffff");
+				var portletList = document.getElementsByClassName("portlet");
+				var infoLeft = document.getElementsByClassName("info_left");
+				var infoRight = document.getElementsByClassName("info_right");
+				
+				portletList.forEach(function(item, index) {
+					portletList[index].setAttribute("class", "portlet two_column1593");
+				});
+				
+				infoLeft.forEach(function(item, index) {
+					infoLeft[index].style.display = "inline-block";
+					infoLeft[index].style.width = "189px";
+					infoLeft[index].style.marginRight = "5px";
+					infoLeft[index].style.background = "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat";
+					infoLeft[index].style.float = "left";
+				});
+				
+				infoRight.forEach(function(item, index) {
+					infoRight[index].style.width = "calc(100% - 194px)";
+					infoRight[index].style.background = "#ffffff";
+				});
 			} else if (media1463.matches) {
-				$(".portlet").attr("class", "portlet two_column1468");
-				$(".info_left").css("display", "inline-block");
-				$(".info_left").css("float", "left");
-				$(".info_left").css("width", "189px");
-				$(".info_left").css("margin-right", "5px");
-				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
-				$(".info_right").css("width", "calc(100% - 194px)");
-				$(".info_right").css("background", "#ffffff");
+				var portletList = document.getElementsByClassName("portlet");
+				var infoLeft = document.getElementsByClassName("info_left");
+				var infoRight = document.getElementsByClassName("info_right");
+				
+				portletList.forEach(function(item, index) {
+					portletList[index].setAttribute("class", "portlet two_column1468");
+				});
+				
+				infoLeft.forEach(function(item, index) {
+					infoLeft[index].style.display = "inline-block";
+					infoLeft[index].style.width = "189px";
+					infoLeft[index].style.marginRight = "5px";
+					infoLeft[index].style.background = "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat";
+					infoLeft[index].style.float = "left";
+				});
+				
+				infoRight.forEach(function(item, index) {
+					infoRight[index].style.width = "calc(100% - 194px)";
+					infoRight[index].style.background = "#ffffff";
+				});
 			} else if (media1365.matches) {
-				$(".portlet").attr("class", "portlet two_column1369");
-				$(".info_left").css("display", "none")
-				$(".info_right").css("width", "100%");
-				$(".info_right").css("margin-left", "0px !important"); 
+				var portletList = document.getElementsByClassName("portlet");
+				var infoLeft = document.getElementsByClassName("info_left");
+				var infoRight = document.getElementsByClassName("info_right");
+				
+				portletList.forEach(function(item, index) {
+					portletList[index].setAttribute("class", "portlet two_column1369");
+				});
+				
+				infoLeft.forEach(function(item, index) {
+					infoLeft[index].style.display = "none";
+				});
+				
+				infoRight.forEach(function(item, index) {
+					infoRight[index].style.width = "100%";
+					infoRight[index].style.marginLeft = "0px !important";
+				});
+				
 			} else if (media1322.matches) {
-				$(".portlet").attr("class", "portlet two_column1327");
-				$(".info_left").css("display", "none")
-				$(".info_right").css("width", "100%");
-				$(".info_right").css("margin-left", "0px !important"); 
+				var portletList = document.getElementsByClassName("portlet");
+				var infoLeft = document.getElementsByClassName("info_left");
+				var infoRight = document.getElementsByClassName("info_right");
+				
+				portletList.forEach(function(item, index) {
+					portletList[index].setAttribute("class", "portlet two_column1327");
+				});
+				
+				infoLeft.forEach(function(item, index) {
+					infoLeft[index].style.display = "none";
+				});
+				
+				infoRight.forEach(function(item, index) {
+					infoRight[index].style.marginLeft = "0px !important";
+					infoRight[index].style.width = "100%";
+				});
 			} else if (media1321.matches) {
-				$(".portlet").attr("class", "portlet two_column1326");
-				$(".box_shadow.info_left").css("display", "none");
-				$(".box_shadow.info_right").css("width", "100%");
-				$(".box_shadow.info_right").css("margin-left", "0px !important");
+				var portletList = document.getElementsByClassName("portlet");
+				var infoLeft = document.getElementsByClassName("info_left");
+				var infoRight = document.getElementsByClassName("info_right");
+				
+				portletList.forEach(function(item, index) {
+					portletList[index].setAttribute("class", "portlet two_column1326");
+				});
+				
+				infoLeft.forEach(function(item, index) {
+					infoLeft[index].style.display = "none";
+				});
+				
+				infoRight.forEach(function(item, index) {
+					infoRight[index].style.marginLeft = "0px !important";
+					infoRight[index].style.width = "100%";
+				});
 			}
 		}
 	}

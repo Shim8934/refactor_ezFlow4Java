@@ -8,6 +8,10 @@
 </head>
 <body>
 <input type="hidden" id="useCircularValue" value="${useCircular}">
+<input type="hidden" id="useMailValue" value="${useMail}">
+<input type="hidden" id="useApprovalValue" value="${useApproval}">
+<input type="hidden" id="useScheduleValue" value="${useSchedule}">
+<input type="hidden" id="useQuestionValue" value="${useQuestion}">
 	<article class="writebanner box_shadow">
 		<div class="layDIV">
 	     	<div class="writebanner_leftContents">
