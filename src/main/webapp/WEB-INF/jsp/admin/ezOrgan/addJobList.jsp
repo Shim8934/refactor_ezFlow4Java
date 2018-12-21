@@ -219,6 +219,9 @@
 		                    SubDivLayer.appendChild(ULTag);
 		                    ULTag.appendChild(UITag1);
 		                    ULTag.appendChild(UITag3);
+		                    
+		                    var a = document.getElementById("preview_nodata");
+		                    a.style.display = "none";
 		                    document.getElementById("AddJobList").appendChild(DivLayer);
 		                }	
 		        	}
@@ -570,7 +573,7 @@
 	                <p id="AddJob_sub1"><span divname="AddJob1" id="1tab1"><spring:message code='ezOrgan.t00017' /></span></p>               
 		        </div> --%>
 		    </div> 
-		    <table style="width:750px; border-collapse: separate;">
+		    <table style="width:1400px; border-collapse: separate;">
 		        <tr>
 		            <td style="width:750px">
 		                <div class="listview" style="Width:750px;">
