@@ -83,7 +83,7 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
-	        PageSize = 10;
+	        PageSize = 20;
 	        Block_Size = 10;
 	        curpage = 1;
 	        nowblock = 0;
@@ -1488,7 +1488,7 @@
 	    		</c:when>
 	    	</c:choose> --%>
     		
-	    <div class="div_scroll" style="width: 100%; HEIGHT: 375px; overflow: AUTO" id="divList">
+	    <div class="div_scroll" style="width: 100%; HEIGHT: 680px; overflow: AUTO" id="divList">
 	        <div id="lvtDoclist"></div>
 	    </div>
 	    <div id="tblPageRayer"></div>

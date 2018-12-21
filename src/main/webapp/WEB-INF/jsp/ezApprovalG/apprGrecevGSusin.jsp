@@ -1563,7 +1563,7 @@
 					<li id="btnReturn"><span  onClick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
 					<li id="btnEdit"><span  onClick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
 					<li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
-					<li id="btnMail"><span class="icon16 popup_icon16_mail" onClick="return btnMail_onclick()"></span></li>
+					<li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()"></span></li>
 				</ul>
 			</div>
 			<div id="close">

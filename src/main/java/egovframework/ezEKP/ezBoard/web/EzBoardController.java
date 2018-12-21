@@ -223,33 +223,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		String pRollInfo = userInfo.getRollInfo();
 		int tenantID = userInfo.getTenantId();
 		
-        //baonk 추가
-        String pollFlag = "";
-        if (ezCommonService.getTenantConfig("useBallotSystem", tenantID).equalsIgnoreCase("YES")) {
-        	pollFlag = "YES";
-        }
-        else {
-        	pollFlag = "NO";
-        }
-        //end
-        
-        // 2018-07-26 황윤호 추가
-        String ladderFlag = "";
-        if (ezCommonService.getTenantConfig("useLadder", tenantID).equalsIgnoreCase("YES")) {
-        	ladderFlag = "YES";
-        }
-        else {
-        	ladderFlag = "NO";
-        }
-        
-        // 2018-08-03 황윤호 추가
-        String memoFlag = "";
-        if (ezCommonService.getTenantConfig("useMemo", tenantID).equalsIgnoreCase("YES")) {
-        	memoFlag = "YES";
-        } else {
-        	memoFlag = "NO";
-        }
-		
 		if (request.getParameter("photoType") != null && !request.getParameter("photoType").equals("")) {
 			photoType  = request.getParameter("photoType");
 		}
@@ -324,12 +297,6 @@ public class EzBoardController extends EgovFileMngUtil{
 			questionAdmin = "true";
 		}
 		
-		String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantID);
-		
-		if (useQuestion == null || useQuestion.equals("")) {
-			useQuestion = "YES";
-		}
-		
 		// 2018-05-08 강민수92 게시물 승인 카운트 출력
 		if (applyFlag.equals("OK")) {
 			int applyCount = 0;
@@ -349,10 +316,6 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("applyFlag",applyFlag);
         modelMap.addAttribute("questionAdmin", questionAdmin);
         modelMap.addAttribute("MyBoardTopFlag", ezCommonService.getTenantConfig("MyBoardTopFlag", tenantID));
-        modelMap.addAttribute("useQuestion", useQuestion);
-        modelMap.addAttribute("pollFlag", pollFlag);
-        modelMap.addAttribute("ladderFlag", ladderFlag);
-        modelMap.addAttribute("memoFlag", memoFlag);
         
 		logger.debug("boardLeft ended");
 

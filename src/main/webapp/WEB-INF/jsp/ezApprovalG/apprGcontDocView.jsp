@@ -777,7 +777,7 @@
 		          	<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 				  </c:if>
 		          <li id="btnPrint"><span class="icon16 popup_icon16_print" id="span_btnPrint" onClick="return btnPrint_onclick()"></span></li>
-		          <li id="btnMail"><span class="icon16 popup_icon16_mail" id="span_btnMail" onClick="return btnMail_onclick()"></span></li>
+		          <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" id="span_btnMail" onClick="return btnMail_onclick()"></span></li>
 		        </ul>
 		      </div>
 		      <div id="close">
