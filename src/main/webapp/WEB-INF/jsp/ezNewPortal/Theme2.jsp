@@ -591,38 +591,31 @@
 			}
 		}
 
-		//메뉴 이동(왼쪽)
-		$("#NewMail").on("click", {"menu" : "NewMail"}, quickMenuOpen);
-		$("#Schedule").on("click", {"menu" : "Schedule"}, quickMenuOpen);
-		$("#Poll").on("click", {"menu" : "Poll"}, quickMenuOpen);
-		$("#Circular").on("click", {"menu" : "Circular"}, quickMenuOpen);
-		$("#AprSign").on("click", {"menu" : "ApprG"}, quickMenuOpen);
-		
 		var useQuestion = "<c:out value='${useQuestion}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";
 		var useMail = "<c:out value='${useMail}'/>";
 		var useApproval = "<c:out value='${useApproval}'/>";
 		var useSchedule = "<c:out value='${useSchedule}'/>";
 		
-		//권한에 없는거는 보여주지 않기
-		if (useQuestion === "NO") {
-			$("#Poll").off("click");
+		//메뉴 이동(위) --- 권한이 YES일 때만 버튼 동작
+		if (useMail !== "NO") {
+			document.getElementById("NewMail").addEventListener('click', function(){quickMenuOpen('NewMail');}, false);
 		}
 		
-		if (useCircular === "NO") {
-			$("#Circular").off("click");
+		if (useSchedule !== "NO") {
+			document.getElementById("Schedule").addEventListener('click', function(){quickMenuOpen('Schedule');}, false);
 		}
 		
-		if (useMail === "NO") {
-			$("#NewMail").off("click");
+		if (useQuestion !== "NO") {
+			document.getElementById("Poll").addEventListener('click', function(){quickMenuOpen('Poll');}, false);
 		}
 		
-		if (useApproval === "NO") {
-			$("#AprSign").off("click");
+		if (useCircular !== "NO") {
+			document.getElementById("Circular").addEventListener('click', function(){quickMenuOpen('Circular');}, false);
 		}
 		
-		if (useSchedule === "NO") {
-			$("#Schedule").off("click");
+		if (useApproval !== "NO") {
+			document.getElementById("AprSign").addEventListener('click', function(){quickMenuOpen('ApprG');}, false);
 		}
 		
 		//ajax로 count 불러오기
@@ -655,16 +648,17 @@
 		getMonthlyBestEmployeeTheme2();
 		
 		//개인환경설정으로 이동 동작 연결
-		$("#main_personalEnv").on("click", viewPersonalEnv);
-		$("#main_portletEnv").on("click", viewPortletEnv);
+		document.getElementById("main_personalEnv").addEventListener('click', viewPersonalEnv);
+		document.getElementById("main_portletEnv").addEventListener('click', viewPortletEnv);
 
 		//퀵메뉴 on/off 버튼
-		$("#quicklinkBtn").on('click', viewQuick);
+		document.getElementById("quicklinkBtn").addEventListener('click', viewQuick);
+		
 		//퀵메뉴 이동(오른쪽)
-		$("#quickMailwrite").on('click', {'menu' : 'mail'}, quickMenuOpenRight);
-		$("#quickApprovalwrite").on('click', {'menu' : 'appr'}, quickMenuOpenRight);
-		$("#quickSchedulewrite").on('click', {'menu' : 'schedule'}, quickMenuOpenRight);
-		$("#quickOrgan").on('click', {'menu' : 'organ'}, quickMenuOpenRight);
+		document.getElementById("quickMailwrite").addEventListener('click', function(){quickMenuOpenRight('mail');}, false);
+		document.getElementById("quickApprovalwrite").addEventListener('click', function(){quickMenuOpenRight('appr');}, false);
+		document.getElementById("quickSchedulewrite").addEventListener('click', function(){quickMenuOpenRight('schedule');}, false);
+		document.getElementById("quickOrgan").addEventListener('click', function(){quickMenuOpenRight('organ');}, false);
 
 		// 퀵링크 호출
 		getQuickLink();		

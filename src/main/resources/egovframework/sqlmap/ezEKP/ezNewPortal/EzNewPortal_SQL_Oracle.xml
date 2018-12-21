@@ -1299,6 +1299,8 @@ AND
 							LINEINFO.aprstate = '002'
 						AND
 							DOCINFO.docstate not in ('015')   
+						AND
+							startdate between to_char(add_months(sysdate,-12),'yyyy-mm-dd HH24:MI:SS') and to_char(sysdate, 'yyyy-mm-dd HH24:MI:SS')								
 						ORDER BY
 							DOCINFO.startdate DESC
 				) INFO
@@ -1411,6 +1413,8 @@ AND
 							writerid = #userId#
 						AND
 							functiontype = '004'
+						AND
+							startdate between to_char(add_months(sysdate,-12),'yyyy-mm-dd HH24:MI:SS') and to_char(sysdate, 'yyyy-mm-dd HH24:MI:SS')		
 						ORDER BY
 							startdate DESC
 					) INFO
@@ -1495,6 +1499,8 @@ AND
 							DOCINFO.docstate <> '017'
 						AND
 							DOCINFO.functiontype IS NOT NULL
+						AND
+							startdate between to_char(add_months(sysdate,-12),'yyyy-mm-dd HH24:MI:SS') and to_char(sysdate, 'yyyy-mm-dd HH24:MI:SS')	
 						ORDER BY
 							STARTDATE DESC
 					) INFO
