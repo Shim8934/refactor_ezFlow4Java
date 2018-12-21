@@ -614,7 +614,7 @@
 					infoLeft[index].style.width = "189px";
 					infoLeft[index].style.marginRight = "5px";
 					infoLeft[index].style.background = "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat";
-					infoLeft[index].style.float = "left";
+					infoLeft[index].style.cssFloat = "left";
 				});
 				
 				infoRight.forEach(function(item, index) {
@@ -635,7 +635,7 @@
 					infoLeft[index].style.width = "189px";
 					infoLeft[index].style.marginRight = "5px";
 					infoLeft[index].style.background = "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat";
-					infoLeft[index].style.float = "left";
+					infoLeft[index].style.cssFloat = "left";
 				});
 				
 				infoRight.forEach(function(item, index) {
