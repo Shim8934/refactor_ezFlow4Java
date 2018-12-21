@@ -1300,7 +1300,7 @@ AND
 						AND
 							DOCINFO.docstate not in ('015')   
 						AND
-							startdate between to_char(add_months(sysdate,-12),'yyyy-mm-dd HH24:MI:SS') and to_char(sysdate, 'yyyy-mm-dd HH24:MI:SS')								
+							DOCINFO.startdate between to_char(add_months(sysdate,-12),'yyyy-mm-dd') and to_char(sysdate, 'yyyy-mm-dd')								
 						ORDER BY
 							DOCINFO.startdate DESC
 				) INFO
@@ -1414,7 +1414,7 @@ AND
 						AND
 							functiontype = '004'
 						AND
-							startdate between to_char(add_months(sysdate,-12),'yyyy-mm-dd HH24:MI:SS') and to_char(sysdate, 'yyyy-mm-dd HH24:MI:SS')		
+							startdate between to_char(add_months(sysdate,-12),'yyyy-mm-dd') and to_char(sysdate, 'yyyy-mm-dd')	
 						ORDER BY
 							startdate DESC
 					) INFO
@@ -1500,7 +1500,7 @@ AND
 						AND
 							DOCINFO.functiontype IS NOT NULL
 						AND
-							startdate between to_char(add_months(sysdate,-12),'yyyy-mm-dd HH24:MI:SS') and to_char(sysdate, 'yyyy-mm-dd HH24:MI:SS')	
+							DOCINFO.STARTDATE between to_char(add_months(sysdate,-12),'yyyy-mm-dd') and to_char(sysdate, 'yyyy-mm-dd')	
 						ORDER BY
 							STARTDATE DESC
 					) INFO
