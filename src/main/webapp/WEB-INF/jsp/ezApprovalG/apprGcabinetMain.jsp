@@ -158,6 +158,7 @@
 		                    DelayEndYRequest_onclick();
 		                    break;
 		                case "m08":
+		                	PageSize = 20;
 		                    isPeriodYear = false;
 		                    ArrTargetList_onclick();
 		                    break;
@@ -570,7 +571,7 @@
 		        GetCaninetList();
 		    }
 		    function DelayEndYRequest_onclick() {
-		        document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.t524'/>";
+		        document.getElementById("imgTitle").innerHTML = "종료연기신청";
 		        document.getElementById("imgTitle").style.display = "";
 		        SwapSubMenuDisplay("1");
 		
@@ -1594,8 +1595,7 @@
 	        <ul id="trCabSubMenu" style="Display: None;">
 	            <li id="tdReqDelayEndY" style="Display: None"><span id="ReqDelayEndY" onclick="return ReqDelayEndY_onclick()">
 	                <spring:message code='ezApprovalG.t907'/></span></li>
-	            <li id="tdCancelDelayEndY" style="Display: None"><span id="CancelDelayEndY" onclick="return CancelDelayEndY_onclick()">
-	                <spring:message code='ezApprovalG.t930'/></span></li>
+	            <li id="tdCancelDelayEndY" style="Display: None"><span id="CancelDelayEndY" onclick="return CancelDelayEndY_onclick()">연기신청취소</span></li>
 	            <li class="important" id="tdbtnEndProduce" style="Display: None"><span id="btnEndProduce" onclick="return btnEndProduce_onclick()">
 	                <spring:message code='ezApprovalG.t931'/></span></li>
 	            <li class="important" id="tdbtnCancelEndProd" style="Display: None"><span id="btnCancelEndProd" onclick="return btnCancelEndProd_onclick()">
