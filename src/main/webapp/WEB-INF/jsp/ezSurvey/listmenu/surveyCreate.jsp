@@ -2466,8 +2466,7 @@
 									if (logicArr[j] != logicNum) {
 										
 									} else {
-										alert("이미 같은 번호가 존재합니다.");
-										if (confirm("그대로 진행하시겠습니까?") == true) {
+										if (confirm("이미 같은 번호가 존재합니다. 그대로 진행하시겠습니까?") == true) {
 											
 										} else {
 											return "fail";
