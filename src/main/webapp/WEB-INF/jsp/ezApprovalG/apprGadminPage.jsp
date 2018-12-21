@@ -1196,10 +1196,10 @@
 		//리스트 총 갯수
 		function TotalCount(pTotalCnt){
 			if (pTotalCnt != null || pTotalCnt != undefined) {
-				document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>";
+				document.getElementById("TitleInfo").innerHTML = "&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>";
 			}
 			else {
-	            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>&nbsp;/ " + period;
+	            document.getElementById("TitleInfo").innerHTML = "&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
 			}
 			
 		}
@@ -1236,16 +1236,16 @@
 	    </h1>
 			<c:choose>
 	    		<c:when test="${initFlag == '0'}">
-		    		<div class="portlet_tabpart01" style="margin:0px;margin-bottom:15px">
-						<div class="portlet_tabpart01_top" id="tabs">
+		    		<div class="portlet_tabnew01" style="margin:0px;margin-bottom:15px">
+						<div class="portlet_tabnew01_top" id="tabs">
 							<p id="tab01"><span onclick="MM_swapImage(1, 'confirm', this);btnConfirmTargetCab_onclick();"class="tabon"><spring:message code='ezApprovalG.t549'/></span></p>
 							<p id="tab02"><span onclick="MM_swapImage(2, 'confirm', this);btnNotArrangedCab_onclick();"><spring:message code='ezApprovalG.t550'/></span></p>
 						</div>
 					</div>
 	    		</c:when>
 	    		<c:when test="${initFlag == '1'}">
-	    			<div class="portlet_tabpart01" style="margin:0px;margin-bottom:15px">
-						<div class="portlet_tabpart01_top" id="tabs">
+	    			<div class="portlet_tabnew01" style="margin:0px;margin-bottom:15px">
+						<div class="portlet_tabnew01_top" id="tabs">
 							<p id="tab08"><span onclick="MM_swapImage(8, 'd');btnProdReportCabList_onclick();"class="tabon"><spring:message code='ezApprovalG.t551'/></span></p>
 							<p id="tab07"><span onclick="MM_swapImage(7, 'd');btnProdReportRecList_onclick();"><spring:message code='ezApprovalG.t552'/></span></p>
 							<p id="tab13"><span onclick="MM_swapImage(13, 'd');GetCabHistList();"><spring:message code='ezApprovalG.t553'/></span></p>
@@ -1257,8 +1257,8 @@
 					</div>
 	    		</c:when>
 	    		<c:when test="${initFlag == '2'}">
-	    			<div class="portlet_tabpart01" style="margin:0px;margin-bottom:15px">
-						<div class="portlet_tabpart01_top" id="tabs">
+	    			<div class="portlet_tabnew01" style="margin:0px;margin-bottom:15px">
+						<div class="portlet_tabnew01_top" id="tabs">
 							<p id="tab08"><span onclick="MM_swapImage(8, 'd');btnProdReportCabList_onclick();"class="tabon"><spring:message code='ezApprovalG.t551'/></span></p>
 							<p id="tab07"><span onclick="MM_swapImage(7, 'd');btnProdReportRecList_onclick();"><spring:message code='ezApprovalG.t552'/></span></p>
 							<p id="tab13"><span onclick="MM_swapImage(13, 'd');GetCabHistList();"><spring:message code='ezApprovalG.t553'/></span></p>
@@ -1269,8 +1269,8 @@
 					</div>
 	    		</c:when>
 	    		<c:when test="${initFlag == '3'}">
-	    			<div class="portlet_tabpart01" style="margin:0px;margin-bottom:15px">
-						<div class="portlet_tabpart01_top" id="tabs">
+	    			<div class="portlet_tabnew01" style="margin:0px;margin-bottom:15px">
+						<div class="portlet_tabnew01_top" id="tabs">
 							<p id="tab01"><span onclick="MM_swapImage(1, 'disuse');btnDelTargetCabList_onclick();"class="tabon"><spring:message code='ezApprovalG.t557'/></span></p>
 							<p id="tab02"><span onclick="MM_swapImage(2, 'disuse');btnDelTargetRecList_onclick();"><spring:message code='ezApprovalG.t558'/></span></p>
 						</div>
@@ -1283,15 +1283,13 @@
 	    		<c:when test="${initFlag == '0'}">
 				    <div id="mainmenu">
 				        <ul>
-				            <li id="tdConfirmList"><span onclick="return btnConfirmList_onclick()"><spring:message code='ezApprovalG.t520'/></span></li>
-				            <li id="tdViewCabList"><span onclick="return btnConfirmTargetCab_onclick()"><spring:message code='ezApprovalG.t525'/></span></li>
-				            <li id="tdViewRecList"><span onclick="return ViewRecListInCab()"><spring:message code='ezApprovalG.t526'/></span></li>
-				            <!-- <li id="tbar1" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
+				            <li class="important" id="tdConfirmList"><span onclick="return btnConfirmList_onclick()"><spring:message code='ezApprovalG.t520'/></span></li>
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdViewContent"><span onclick="return btnViewContent_onclick()"><spring:message code='ezApprovalG.t528'/></span></li>
 				            <li id="tdViewHistory"><span onclick="return btnViewHistory_onclick()"><spring:message code='ezApprovalG.t529'/></span></li>
 				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li>
+				            <li id="tdViewCabList"><span onclick="return btnConfirmTargetCab_onclick()"><spring:message code='ezApprovalG.t525'/></span></li>
+				            <li id="tdViewRecList"><span onclick="return ViewRecListInCab()"><spring:message code='ezApprovalG.t526'/></span></li>
 				        </ul>
 				    </div>
 	    		</c:when>
@@ -1345,18 +1343,14 @@
 	    		<c:when test="${initFlag == '4'}">
 				    <div id="mainmenu">
 				        <ul>
-				            <li id="tdConfirmEndY"><span onclick="return btnConfirmEndY_onclick('0')">종료연기승인</span></li>
-				            <li id="tdConfirmEndYAll"><span onclick="return btnConfirmEndY_onclick('1')">전체승인</span></li>
-				            <!-- <li id="tbar5" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
-				            <li id="tdCancelDelayEndY"><span onclick="return btnConfirmEndY_onclick('2')">종료연기취소</span></li>
-				            <li id="tdViewCabList"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
-				            <li id="tdViewRecList"><span onclick="return ViewRecListInCab()"><spring:message code='ezApprovalG.t526'/></span></li>
-				            <!-- <li id="tbar6" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
+				        	<li class="important" id="tdConfirmEndYAll"><span onclick="return btnConfirmEndY_onclick('1')">종료연기전체승인</span></li>
+				            <li class="important" id="tdConfirmEndY"><span onclick="return btnConfirmEndY_onclick('0')">종료연기승인</span></li>
+				            <li class="important" id="tdCancelDelayEndY"><span onclick="return btnConfirmEndY_onclick('2')">종료연기취소</span></li>
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdViewContent"><span onclick="return btnViewContent_onclick()"><spring:message code='ezApprovalG.t528'/></span></li>
 				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li>
+				            <li id="tdViewCabList"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
+				            <li id="tdViewRecList"><span onclick="return ViewRecListInCab()"><spring:message code='ezApprovalG.t526'/></span></li>
 				        </ul>
 				    </div>
 	    		</c:when>

@@ -31,7 +31,11 @@
 			}
 			.countColor {
 				color:#017BEC;
-			}			
+			}
+
+			.multiple-sortable-selected td{
+				color: #0684f9 !important;
+			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -1400,11 +1404,15 @@
 	            for (var i = 0; i < listContentArry.length; i++) {
 	            	if (keyword.value == "") {
 		            	for (var j = 0; j < 3; j++) {
-		            		document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+		            		if (document.getElementById(listContentArry[i]).childNodes[j]) {
+		            			document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+		            		}
 		            	}
 	            	} else {
 		            	for (var j = 0; j < 4; j++) {
-		            		document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+		            		if (document.getElementById(listContentArry[i]).childNodes[j]) {
+		            			document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+		            		}
 		            	}
 	            	}
 	            	
@@ -1643,7 +1651,7 @@
 				});
 	        }
 	        
-		    var m_strColorSelect = "#f1f8ff";
+		    var m_strColorSelect = "";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "";
 		    var p_ListOrderObject = null;

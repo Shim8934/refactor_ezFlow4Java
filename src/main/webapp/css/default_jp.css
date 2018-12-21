@@ -2423,6 +2423,18 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .tree_appr_turn{ background-position:-130px -26px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 회람완료문서 */
 .tree_appr_department{ background-position:-156px -26px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 부서수신문서 */
 .tree_appr_receive{ background-position:-182px -26px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 회람수신문서 */
+.tree_appr_record1{background-position: 0px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물등록대장 */
+.tree_appr_record2{background-position: -26px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물배부대장 */
+.tree_appr_record3{background-position: -52px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물접수목록 */
+.tree_appr_record4{background-position: -78px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물발송목록 */
+.tree_appr_record5{background-position: -104px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물철등록부 */
+.tree_appr_record6{background-position: -130px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 종료연기신청 */
+.tree_appr_record7{background-position: -156px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 정리대상목록 */
+.tree_appr_record8{background-position: -182px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 인계목록 */
+.tree_appr_record9{background-position: -208px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 단위업무관리 */
+.tree_appr_record10{background-position: -234px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물철인계 */
+.tree_appr_record11{background-position: -260px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 종료연기승인 */
+.tree_appr_record12{background-position: -286px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 편철확정 */
 
 .tree_pims_all{ background-position:-26px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 모든일정 */
 .tree_pims_individual{ background-position:-52px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 개인일정 */
