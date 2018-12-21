@@ -62,12 +62,15 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 
 	@Override
 	public List<ScheGetHolidayVO> getTholiday(String companyId, String userCompany, int tenantId) throws Exception {
+		logger.debug("=====getTholiday Ended=====");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_COMPANYID", companyId);
 		map.put("v_USERCOMPANY", userCompany);
 		map.put("v_TENANTID", tenantId);
 		
-		return ezScheduleDAO.getTholiday(map);
+		List<ScheGetHolidayVO> List = ezScheduleDAO.getTholiday(map); 
+		
+		return List;
 	}
 
 	@Override

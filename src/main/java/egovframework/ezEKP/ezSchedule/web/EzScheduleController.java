@@ -257,6 +257,31 @@ public class EzScheduleController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 일정관리 휴일 함수 호출 함수
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleGetHolidayJson.do", produces = "application/json; charset=utf-8")
+	@ResponseBody
+	public List<ScheGetHolidayVO> scheduleGetHolidayText(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		
+		logger.debug("============ scheduleGetHoliday started ============");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		List<ScheGetHolidayVO> getHoliday = null;
+		
+		String holidayType = request.getParameter("holidayType");
+		if (holidayType.equals("a")) {
+			String cID = request.getParameter("COMPANYID");
+			getHoliday = ezScheduleService.getTholiday(cID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
+		} else {
+			getHoliday = ezScheduleService.getTholiday("STATUTORY", userInfo.getCompanyID(), userInfo.getTenantId());
+		}
+		
+		logger.debug("============ scheduleGetHoliday ended ============");
+		
+		return getHoliday;
+	}
+	
+	/**
 	 * 일정관리 일정 데이터 표출 함수
 	 */
 	@RequestMapping(value = "/ezSchedule/scheduleGetList.do", produces = "text/xml; charset=utf-8")

@@ -29,7 +29,7 @@
 						url = "/admin/ezSchedule/scheduleAdminShareManage.do";
 						break;
 				    case 3:
-				        url = "/admin/ezSchedule/scheduleAdminHolidayManage.do";
+				        url = "/admin/ezSchedule/scheduleAdminHolidayTab.do";
 				        break;
 				    case 4:
 				        url = "/admin/ezSchedule/scheduleAdminLunarUse.do";
