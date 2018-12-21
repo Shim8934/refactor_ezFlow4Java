@@ -83,7 +83,7 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
-	        PageSize = 20;
+	        PageSize = 10;
 	        Block_Size = 10;
 	        curpage = 1;
 	        nowblock = 0;
@@ -93,6 +93,7 @@
 
 	        switch (g_InitFlag) {
 	            case "0":
+	            	PageSize = 15;
 	                btnConfirmTargetCab_onclick();
 	                break;
 	

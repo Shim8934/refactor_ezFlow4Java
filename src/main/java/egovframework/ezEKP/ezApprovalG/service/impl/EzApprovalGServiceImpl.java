@@ -21876,7 +21876,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				 
 				 resultXML.append("<CELL>");
 				 resultXML.append("<VALUE><![CDATA[");
-				
+				 
 				 switch(arrList.getElementsByTagName("DTYPE").item(k).getTextContent().trim()){
 				 case "dtSerialNum" :
 //					 resultXML.append(docXML.getElementsByTagName("ROWNUM_").item(j).getTextContent());
@@ -21921,7 +21921,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					 break;
 	
 				 default:
-					 resultXML.append(makeListField(docXML.getElementsByTagName(fieldName).item(j).getTextContent()));
+					 if (fieldName.equals("DELAYENDYFLAG")) {
+						 if (docXML.getElementsByTagName(fieldName).item(j).getTextContent().equals("Y")) {
+							 resultXML.append("신청");
+						 }
+					 } else {
+						 resultXML.append(makeListField(docXML.getElementsByTagName(fieldName).item(j).getTextContent()));
+					 }
 					 break;
 				 }
 				 
@@ -21935,6 +21941,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					 resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("OWNERDEPTID").item(j).getTextContent().trim()) + "]]></DATA5>");
 					 resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("TERMINATEFLAG").item(j).getTextContent().trim()) + "]]></DATA6>");
 					 resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("TRANSDELAYFLAG").item(j).getTextContent().trim()) + "]]></DATA7>");
+					 resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("DELAYENDYFLAG").item(j).getTextContent().trim()) + "]]></DATA8>");
 				 }
 				 resultXML.append("</CELL>");
 			 }
