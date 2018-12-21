@@ -228,10 +228,13 @@
 	    	}
 
 	    	window.onresize = function () {
-	        	if (navigator.userAgent.indexOf("Chrome") > -1)
-		            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 110 + "px";
-		        else
-	    	        document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 130 + "px";
+	    		if(Mod == "WEEK") {
+		        	if (navigator.userAgent.indexOf("Chrome") > -1)
+			            document.getElementById("res_Div").style.height = document.documentElement.clientHeight - 185 + "px";
+			        else
+		    	        document.getElementById("res_Div").style.height = document.documentElement.clientHeight - 190 + "px";
+		        	scroll();
+	    		}
 	    	}
 
 	    	function btnAdd_Click() {
@@ -411,7 +414,7 @@
         	</tr>
         	<tr>
             	<td style="vertical-align:top;">
-                	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;overflow-y: auto;overflow-x:hidden;" >
+                	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;" >
                 		<table style="width:100%;">
                     		<tr id="weeklyline">
                 				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f0f6ff;">
