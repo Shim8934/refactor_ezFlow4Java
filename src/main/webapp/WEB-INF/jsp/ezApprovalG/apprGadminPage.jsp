@@ -1229,7 +1229,7 @@
 			        <spring:message code='ezApprovalG.t523'/>
 	    		</c:when>
 	    		<c:when test="${initFlag == '4'}">
-			        <spring:message code='ezApprovalG.t524'/>
+			       	 종료연기승인
 	    		</c:when>
 	    	</c:choose>
 	        <span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
