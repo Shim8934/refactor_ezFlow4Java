@@ -432,6 +432,7 @@
 				
 				// 드래그앤드롭
 				$('#toggleMenu').sortable({
+					scroll: false,
 					activate: function () {
 						$("li.ui-sortable-placeholder").css("visibility", "visible");
 						$("li.ui-sortable-placeholder").css("border-right", "1px dashed #898989");

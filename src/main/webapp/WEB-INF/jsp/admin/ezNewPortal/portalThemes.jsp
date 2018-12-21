@@ -641,7 +641,8 @@
 					
 					//drag and drop
 					$("#themePortletList").sortable({
-						items : ".portlets"
+						items : ".portlets",
+						scroll: false
 					});
 					
 					$("#themePortletList").disableSelection();
