@@ -228,11 +228,13 @@
 	    	}
 
 	    	window.onresize = function () {
-	        	if (navigator.userAgent.indexOf("Chrome") > -1)
-		            document.getElementById("res_Div").style.height = document.documentElement.clientHeight - 185 + "px";
-		        else
-	    	        document.getElementById("res_Div").style.height = document.documentElement.clientHeight - 190 + "px";
-	        	scroll();
+	    		if(Mod == "WEEK") {
+		        	if (navigator.userAgent.indexOf("Chrome") > -1)
+			            document.getElementById("res_Div").style.height = document.documentElement.clientHeight - 185 + "px";
+			        else
+		    	        document.getElementById("res_Div").style.height = document.documentElement.clientHeight - 190 + "px";
+		        	scroll();
+	    		}
 	    	}
 
 	    	function btnAdd_Click() {
