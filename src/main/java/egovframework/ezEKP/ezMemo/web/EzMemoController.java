@@ -61,19 +61,80 @@ public class EzMemoController {
 	private SimpMessagingTemplate template;
 	
 	/**
-	 * 메모 호출
+	 * 메모 메인페이지 호출
+	 * */
+	@RequestMapping(value = "/ezMemo/memoMainPage.do")
+	public String memoMainPage(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("memoMainPage started.");
+		
+		logger.debug("memoMainPage ended");
+		return "ezMemo/memoMainPage";
+	}
+	
+	/**
+	 * 메모 메인페이지 호출
+	 * */
+	@RequestMapping(value = "/ezMemo/memoConfig.do")
+	public String memoConfig(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("memoConfig started.");
+		
+		logger.debug("memoConfig ended");
+		return "ezMemo/memoConfig";
+	}
+	
+	/**
+	 * 메모 레프트 메뉴 호출
+	 * */
+	@RequestMapping(value = "/ezMemo/memoLeft.do")
+	public String memoLeft(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("memoLeft started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/users/" + userInfo.getId(), param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {		
+			JSONArray folders = (JSONArray) resultBody.get("data");
+			model.addAttribute("folders", folders);
+		}
+		
+		logger.debug("memoLeft ended");
+		return "ezMemo/memoLeft";
+	}
+	
+	/**
+	 * 메모 리스트 페이지 호출
 	 * */
 	@RequestMapping(value = "/ezMemo/memoMain.do")
 	public String memoMain(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoMain started.");
 		
 		String brdID = "8";
+		String folderId = "0"; 
+		String folderName = egovMessageSource.getMessage("ezMemo.t001"); 
+		String configView = "false";
 		
 		if (request.getParameter("brdID") != null) {
 			brdID = request.getParameter("brdID");
 		}
 		
-		model.addAttribute("folderId", "0");
+		if (request.getParameter("folderId") != null) {
+			folderId = request.getParameter("folderId");
+		}
+		
+		if (request.getParameter("folderName") != null) {
+			folderName = request.getParameter("folderName");
+		}
+		
+		if (request.getParameter("configView") != null) {
+			configView = request.getParameter("configView");
+		}
+		
+		model.addAttribute("folderId", folderId);
+		model.addAttribute("folderName", folderName);
+		model.addAttribute("configView", configView);
 		
 		logger.debug("memoMain ended");
 		return "ezMemo/memoMain";

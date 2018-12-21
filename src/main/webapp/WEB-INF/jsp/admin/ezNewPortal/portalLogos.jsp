@@ -67,9 +67,8 @@
 		<input id="imgFile" type="file" style="display:none" />
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
-			$(function(){
+			window.onload = function(){
 				getCompanies();
 				getLogos();
 				var updateLogoList = document.getElementsByClassName("updateLogoBtn");
@@ -82,7 +81,7 @@
 				}
 	
 				document.getElementById("imgFile").addEventListener("change", imgUpload);
-			});
+			}
 
 			var getCompanies = function() {
 				var request = new XMLHttpRequest();
@@ -135,25 +134,26 @@
 						var logoDefault = result[i].logoDefault;
 						
 						if (logoType == "L") {
-							$(".loginLogo").find(".logoIcon").find("img").attr("src", logoUrl);
+							
+							document.getElementsByClassName("loginLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = logoUrl;
 							
 							if (!logoDefault) {
-								$("#imgLogin").find(".updateLogoBtn").find("span").text("<spring:message code='ezNewPortal.t067' />");
-								$("#imgLogin").find(".deleteLogoBtn").css("display", "inline-block");
+								document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
+								document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
 							} else {
-								$("#imgLogin").find(".updateLogoBtn").find("span").text("<spring:message code='ezNewPortal.t058' />");
-								$("#imgLogin").find(".deleteLogoBtn").css("display", "none");
+								document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
+								document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
 							}
 							
 						} else if (logoType == "P") {
-							$(".portalLogo").find(".logoIcon").find("img").attr("src", logoUrl);
+							document.getElementsByClassName("portalLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = logoUrl;
 							
 							if (!logoDefault) {
-								$("#imgTop").find(".updateLogoBtn").find("span").text("<spring:message code='ezNewPortal.t067' />");
-								$("#imgTop").find(".deleteLogoBtn").css("display", "inline-block");
+								document.getElementById("imgTop").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
+								document.getElementById("imgTop").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
 							} else {
-								$("#imgTop").find(".updateLogoBtn").find("span").text("<spring:message code='ezNewPortal.t058' />");
-								$("#imgTop").find(".deleteLogoBtn").css("display", "none");
+								document.getElementById("imgTop").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
+								document.getElementById("imgTop").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
 							}
 						}
 					}
@@ -215,13 +215,13 @@
 	    				}
 	    				
 	    				if (logoType == "L") {
-	    					$(".loginLogo").find(".logoIcon").find("img").attr("src", result);
-							$("#imgLogin").find(".updateLogoBtn").find("span").text("<spring:message code='ezNewPortal.t067' />");
-							$("#imgLogin").find(".deleteLogoBtn").css("display", "inline-block");
+	    					document.getElementsByClassName("loginLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = result;
+							document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
+							document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
 	    				} else if (logoType == "P") {
-	    					$(".portalLogo").find(".logoIcon").find("img").attr("src", result);
-							$("#imgTop").find(".updateLogoBtn").find("span").text("<spring:message code='ezNewPortal.t067' />");
-							$("#imgTop").find(".deleteLogoBtn").css("display", "inline-block");
+	    					document.getElementsByClassName("portalLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = result;
+							document.getElementById("imgTop").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
+							document.getElementById("imgTop").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
 	    				}
 	    	
 	    			}
@@ -242,7 +242,7 @@
 					if (logoType == "imgLogin") {
 						logoType = "L";
 					} else if (logoType == "imgTop") {
-							logoType = "P";
+						logoType = "P";
 					}
 					
 					var request = new XMLHttpRequest();
@@ -253,16 +253,16 @@
 						var logoUrl = "";
 	    	
 						if (logoType == "L") {
-							$("#imgLogin").find(".updateLogoBtn").find("span").text("등록");
-							$("#imgLogin").find(".deleteLogoBtn").css("display", "none");
+							document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
+							document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
 							logoUrl = "/images/kr/login/logo.gif";
-							document.getElementsByClassName("loginLogo")[0].querySelector(".logoIcon").querySelector("img").setAttribute("src", logoUrl);
+							document.getElementsByClassName("loginLogo")[0].querySelector(".logoIcon").querySelector("img").src = logoUrl;
 							
 						} else if (logoType == "P") {
-							$("#imgTop").find(".deleteLogoBtn").css("display", "none");
-							$("#imgTop").find(".updateLogoBtn").find("span").text("등록");
+							document.getElementById("imgTop").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
+							document.getElementById("imgTop").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
 	    					logoUrl = "/files/upload_portal/Top/Logo/logo.gif";
-	    					document.getElementsByClassName("portalLogo")[0].querySelector(".logoIcon").querySelector("img").setAttribute("src", logoUrl);
+	    					document.getElementsByClassName("portalLogo")[0].querySelector(".logoIcon").querySelector("img").src = logoUrl;
 							
 	    				}
 	    			}

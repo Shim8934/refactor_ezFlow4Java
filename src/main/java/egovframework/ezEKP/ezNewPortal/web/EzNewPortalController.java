@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -178,6 +181,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("roleInfo", data.get("roleInfo"));
 			model.addAttribute("menuList", data.get("menuList"));
 			model.addAttribute("popupNotiList", popupNotiListAfter);
+			model.addAttribute("useActiveX", data.get("useActiveX"));
 			if (data.get("roleInfo").toString().equalsIgnoreCase("admin")) {
 				model.addAttribute("utilAdminUrl", data.get("utilAdminUrl"));
 			}
@@ -669,4 +673,38 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	/**
 	 * ----
 	 */
+	/**
+	 * 포탈 ActiveX 다운로드 실행 함수
+	 */
+	@RequestMapping(value = "/ezNewPortal/progress.do")
+	public String progress() {
+		return "/ezNewPortal/portalProgress";
+	}
+
+	/**
+	 * 포탈 ActiveX 다운로드 목록 호출 함수
+	 */
+	@RequestMapping(value = "/ezNewPortal/componentListTransfer.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String componentListTransfer(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		StringBuilder result = new StringBuilder();
+		String realPath = commonUtil.getRealPath(request); 
+		String path = "xml" + commonUtil.separator + "ezPortal" + commonUtil.separator + "componentlist.xml";
+		path = realPath + commonUtil.separator + path;
+		try {
+			File file = new File(path);
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String line = null;
+	
+			while ((line = br.readLine()) != null) {
+				result.append(line);
+			}
+			
+			br.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		logger.debug("downloadServer="+result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI()))));
+		return result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI())));
+	}
 }

@@ -509,10 +509,9 @@
 	<select id="EzCommonDAO.checkPortalThemePortletIsFixed" resultClass="String">
 		<![CDATA[
 			SELECT 
-				IS_FIXED
+				COUNT(IS_FIXED)
 			FROM 
 				TBL_PORTAL_THEME_PORTLET
-			LIMIT 1
 		]]>
 	</select>
 	
