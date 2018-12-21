@@ -240,7 +240,7 @@ function BoardSearchOptionHidden() {
 
 //새로고침
 function refresh_onclick() {
-    window.location.href = "/ezMemo/memoMain.do";
+	$(window.parent.frames["left"].document.getElementsByClassName("node_selected")).click();
 }
 
 //리스트설정 on/off 설정

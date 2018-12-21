@@ -800,6 +800,8 @@
 		    		document.getElementById("hidModifyInfo").value = qstID;
 		    		flag = 1;
 		    	}
+		    	
+		    	window.parent.frames["left"].resetNodeSelected();
 				
 		    	document.getElementById("hidFilePath").value = document.getElementById("hidFilePath").value.substring(0, document.getElementById("hidFilePath").value.length - 1);               	  
 		    	document.getElementById("hidOptImgFilePath").value = document.getElementById("hidOptImgFilePath").value.substring(0, document.getElementById("hidOptImgFilePath").value.length - 1);               	  

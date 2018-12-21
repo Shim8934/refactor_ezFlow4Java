@@ -271,6 +271,13 @@ public class EzNewPortalGWController {
 				portletOrder.removeIf(vo -> (vo.getMenuId() == 5));
 			}
 			
+			//인터넷 사용이 NO 인 경우에는 weather portlet사용 불가능
+			String useInternet = config.getProperty("config.useInternet");
+			
+			if (useInternet.equals("NO")) {
+				portletOrder.removeIf(vo -> (vo.getPortletId() == 14));
+			}
+			
 			JSONObject data = new JSONObject();
 			data.put("portletOrder", portletOrder);
 
@@ -757,6 +764,18 @@ public class EzNewPortalGWController {
 			
 			data.put("logoUrl", logoUrl);
 			data.put("roleInfo", roleInfo);
+			
+			//한글기안기 activeX 설치할지 확인하는 용도
+			String useActiveX = ezCommonService.getTenantConfig("useActiveX", tenantId);
+			
+			if(useActiveX == null || useActiveX.equals("")) {
+				useActiveX = "NO";
+			}
+			
+			data.put("useActiveX", useActiveX);
+			//end
+			
+
 			LOGGER.debug("TopMenu Data : " + data.toJSONString());
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1284,13 +1303,21 @@ public class EzNewPortalGWController {
 				portletList.removeIf(vo -> (vo.getMenuId() == 5));
 			}
 			
+
+			//인터넷 사용이 NO 인 경우에는 weather portlet사용 불가능
+			String useInternet = config.getProperty("config.useInternet");
+			
+			if (useInternet.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getPortletId() == 14));
+			}
+			
 			data.put("portletList", portletList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-e.printStackTrace();
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -2305,6 +2332,14 @@ e.printStackTrace();
 			
 			if (useCommunity.equals("NO")) {
 				portletList.removeIf(vo -> (vo.getMenuId() == 5));
+			}
+			
+
+			//인터넷 사용이 NO 인 경우에는 weather portlet사용 불가능
+			String useInternet = config.getProperty("config.useInternet");
+			
+			if (useInternet.equals("NO")) {
+				portletList.removeIf(vo -> (vo.getPortletId() == 14));
 			}
 			
 			for (PortletInfoVO pvo : portletList) {
@@ -4416,6 +4451,14 @@ e.printStackTrace();
 			
 			if (useCommunity.equals("NO")) {
 				themePortletList.removeIf(vo -> (vo.getMenuId() == 5));
+			}
+			
+
+			//인터넷 사용이 NO 인 경우에는 weather portlet사용 불가능
+			String useInternet = config.getProperty("config.useInternet");
+			
+			if (useInternet.equals("NO")) {
+				themePortletList.removeIf(vo -> (vo.getPortletId() == 14));
 			}
 			
 			result.put("status", "ok");

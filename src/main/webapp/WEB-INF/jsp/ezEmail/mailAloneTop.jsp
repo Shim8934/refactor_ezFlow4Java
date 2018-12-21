@@ -107,7 +107,7 @@
 
             var agentObj;
             i_icd2.SetDocumentDisp(window.document);
-            i_icd2.xmlURL = "http://" + document.location.hostname + "/ezPortal/componentListTransfer.do";
+            i_icd2.xmlURL = "http://" + document.location.hostname + "/ezNewPortal/componentListTransfer.do";
             i_icd2.CheckVersion();
             var nCount = i_icd2.nNeedDownload;
             if (nCount) {
