@@ -13,7 +13,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
-	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/admin/ListView_list.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<style>
 		.mainview {margin-top: 5px; width:50%; float:left;}
@@ -87,7 +87,7 @@
             
             var listview = new ListView();
             listview.SetID("lvJobTitleList");
-            listview.SetMulSelectable(false);
+            listview.SetMulSelectable(true);
             listview.SetRowOnClick("JobTitle_UserList");
             listview.SetSelectFlag(false);
             listview.SetRowOnDblClick("JobTitleView");
@@ -95,11 +95,20 @@
             listview.DataSource(headerData);
             listview.DataBind("JobListView");
 			
-			totalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
-			pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
+			if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
+				totalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
+				pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
+			} else if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
+				//IE11일때 추가
+				totalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
+				pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
+			} else {
+				totalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
+				pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
+			}
+			
 			totalPage = Math.ceil(new Number(totalCount / pageSize));
 			
-			makeCheckBoxCol();
 			makePageSelPage();
 		}
 		/* 추가, 수정, 삭제 Button Action (mode=Add,Mod,Del) */
@@ -389,7 +398,7 @@
             
             var listview = new ListView();
             listview.SetID("lvJobPositionList");
-            listview.SetMulSelectable(false);
+            listview.SetMulSelectable(true);
             listview.SetRowOnClick("JobPosition_UserList");
             listview.SetSelectFlag(false);
             listview.SetRowOnDblClick("JobTitleView");
@@ -397,11 +406,18 @@
             listview.DataSource(headerData);
             listview.DataBind("JobListView");
 			
-			totalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
-			pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
-			totalPage = Math.ceil(new Number(totalCount / pageSize));
+			if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
+				totalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
+				pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
+			} else if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
+				//IE11일때 추가
+				totalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
+				pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
+			} else {
+				totalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
+				pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
+			}
 			
-			makeCheckBoxCol();
 			makePageSelPage();
 		}
 		/* 직책을 사용중인 유저리스트 호출 Method */
@@ -643,44 +659,6 @@
 				return;
 			}
 		}
-		
-		/* 체크박스 컬럼 추가 메소드 */
-		function makeCheckBoxCol() {
-			var listTable = document.getElementById("lvJobTitleList");
-			var noItem    = document.getElementById("lvJobTitleList_TR_noItems");
-			if (!listTable) {
-				listTable = document.getElementById("lvJobPositionList");
-				noItem    = document.getElementById("lvJobPositionList_TR_noItems");
-			}
-			
-			var listHeader = listTable.childNodes[0].childNodes[0];
-			var listTbody  = listTable.childNodes[1];
-			var listBody   = listTbody.childNodes;
-			
-			var length = listBody.length;
-			for (var i = 0; i < length; i++) {
-				var tdElmt  = document.createElement("td");
-				tdElmt.style.width = "20px";
-				
-				if (!noItem) {
-					var tdInputElmt = document.createElement("input");
-					tdInputElmt.setAttribute("type", "checkbox");
-					tdElmt.appendChild(tdInputElmt);
-				}
-				
-				listTbody.childNodes[i].insertBefore(tdElmt, listTbody.childNodes[i].childNodes[0]);
-			}
-			
-			var thElmt      = document.createElement("th");
-			var thInputElmt = document.createElement("input");
-			
-			thInputElmt.setAttribute("type", "checkbox");
-			
-			thElmt.style.width = "20px";
-			thElmt.appendChild(thInputElmt);
-			
-			listHeader.insertBefore(thElmt, listHeader.childNodes[0]);
-		}
 	</script>
 </head>
 <body class="mainbody" style="overflow: hidden;">
@@ -756,6 +734,11 @@
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER> --%>
 			<HEADER>
+			<NAME></NAME>
+			<WIDTH>20</WIDTH>
+			<COLNAME>CHECKBOX</COLNAME>
+			</HEADER>
+			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj04' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
 			<WIDTH>220</WIDTH>
 			</HEADER>
@@ -808,6 +791,11 @@
 			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER> --%>
+			<HEADER>
+			<NAME></NAME>
+			<WIDTH>20</WIDTH>
+			<COLNAME>CHECKBOX</COLNAME>
+			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj17' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
 			<WIDTH>220</WIDTH>
