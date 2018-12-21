@@ -1293,10 +1293,12 @@ function selectAllCheckBox(pTableID, checkFlag) {
 	
 	for (var i = 0; i < oList.rows.length; i++) {
 		if (checkFlag) {
+			oList.rows[i].setAttribute("selected", true);
 			oList.rows[i].firstElementChild.firstElementChild.checked = true;
 			oList.rows[i].style.backgroundColor = m_strColorSelect;
 		}
 		else {
+			oList.rows[i].setAttribute("selected", false);
 			oList.rows[i].style.backgroundColor = m_strColorDefault;
 			oList.rows[i].firstElementChild.firstElementChild.checked = false;
 		}
@@ -1310,11 +1312,11 @@ function selectCheckBox() {
 	var currentRow   = checkboxElmt.parentElement.parentElement;
 	
 	if (checkboxElmt.checked) {
-		currentRow.setAttribute("selected", "true");
+		currentRow.setAttribute("selected", true);
 		currentRow.style.backgroundColor = m_strColorSelect;
 	}
 	else {
-		currentRow.setAttribute("selected", "false");
+		currentRow.setAttribute("selected", false);
 		currentRow.style.backgroundColor = m_strColorDefault;
 	}
 }
