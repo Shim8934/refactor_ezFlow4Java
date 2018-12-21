@@ -461,11 +461,17 @@ function tableListControl_Week()
                             isholiday = true;
                             holidayName = memorial[k].name;
                         }
+                        else {
+                        	holidayName = memorial[k].name;
+                        }
                     }
                     for (var k = 0; k < yearmemorial.length; k++) {
                         if (yearmemorial[k].holiday) {
                             isholiday = true;
                             holidayName2 = yearmemorial[k].name;
+                        }
+                        else {
+                        	holidayName2 = yearmemorial[k].name;
                         }
                     }
                     if (isholiday) {
@@ -480,7 +486,13 @@ function tableListControl_Week()
                     	_mth.style.color = "#ee1c25";
                     }
                     else {
-                    	_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                    	// 2018-12-21 김민성 - 휴일아닌 기념일 표시
+                    	if(holidayName != "") {
+                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName + "]";
+                    	}
+                    	else {
+                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                    	}
                     }
                 }                
                 //end
