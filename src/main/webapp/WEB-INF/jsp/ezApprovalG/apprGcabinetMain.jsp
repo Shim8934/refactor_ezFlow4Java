@@ -153,6 +153,7 @@
 		                    SendList_onclick();
 		                    break;
 		                case "m07":
+		                	PageSize = 20;
 		                    isPeriodYear = false;
 		                    DelayEndYRequest_onclick();
 		                    break;
