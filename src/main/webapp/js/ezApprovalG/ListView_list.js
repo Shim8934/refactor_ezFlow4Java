@@ -526,14 +526,15 @@ function ListView() {
                 }
                 
                 if (strColName == "TransferFlag") {
-                	objTd.style.textAlign = "center";
+//                	objTd.style.textAlign = "center";
                 }
                
                 if (strColName == "DelayFlag") {
-                	objTd.style.textAlign = "center";
+//                	objTd.style.textAlign = "center";
                 }
                 
-                if (strName == "비치" || strName == "특수목록" || strName == "연기신청" || strName == "수신") {
+//                if (strName == "비치" || strName == "특수목록" || strName == "연기신청" || strName == "수신") {
+            	if (strName == "비치" || strName == "특수목록" || strName == "수신") {
                 	objTd.style.textAlign = "center";
                 }
 
@@ -842,7 +843,7 @@ function ListView() {
                     	objTd.appendChild(oText);
                     }
                     else if (SelectSingleNodeValue(oHeaders[j], "NAME") == "비치" || SelectSingleNodeValue(oHeaders[j], "NAME") == "연기신청") {
-                    	objTd.style.textAlign = "center";
+                    	objTd.style.textAlign = "left";
                     	oText = document.createTextNode(strValue);
                     	objTd.appendChild(oText);
                     }

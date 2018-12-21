@@ -178,6 +178,7 @@
 					$("#menuList").sortable({ 
 						//handle : ".menuSortable",
 						items: "li.menu",
+						scroll: false,
 						start : function(event, ui) {
 							//$(".menuDetails").css("display", "none");
 							$(".menuDetails").remove();
