@@ -131,7 +131,10 @@
 		            }
 		            catch (e) {
 		            }
+		            
+		            settingResize();
 		        };
+		        
 		        var isPeriodYear = true;
 		        function LoadList() {
 		            switch (g_sFlag) {
@@ -1350,11 +1353,18 @@
 		        window.open(url, "", feature);
 		    }
 		
-		    window.onresize = function () {
-		        var height = parseInt(divList.style.height.replace('px', '')) + 200;
-		        var reheight = window.innerHeight - parseInt(height);
-		        //document.getElementById('div_AprLine').style.height = reheight + "px";
+		    window.onresize = function() {
+		    	settingResize();
 		    };
+		    
+		    var settingResize = function() {
+		    	if (document.getElementById('trSubInfoTab').style.display == 'none') {
+		    		var currentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+			        var divListHeight = document.getElementById('divList').style.height;
+			        document.getElementById('divList').style.height = (currentHeight - 69) + "px";
+		    	}
+		    }
+		    
 		    function onkeydown_start_search() {
 		        if (window.event.keyCode == "13") {
 		            search();
@@ -1656,7 +1666,7 @@
 	            </select>    </li>
 	        </ul>
 	    </div>
-	    <div class="div_scroll" style="width: 100%; HEIGHT: 375px; overflow: AUTO; margin-bottom:10px;" id="divList">
+	    <div id="divList" class="div_scroll" style="width: 100%; height: 375px; overflow: AUTO; margin-bottom:10px;">
 	        <div id="lvtDoclist"></div>
 	    </div>	    
 	    <div id="tblPageRayer"></div>
