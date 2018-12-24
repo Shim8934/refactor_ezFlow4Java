@@ -141,8 +141,6 @@
 		    	var currentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
 		        var divListHeight = document.getElementById('divList').style.height;
 		        
-		        console.log('currentHeight = ' + currentHeight + 'divListHeight = ' + divListHeight);
-		        
 		    	if (document.getElementById('tabs')) {
 		    		document.getElementById('divList').style.height = (currentHeight - 133) + "px";
 		    	} else {
