@@ -206,23 +206,20 @@
 		        }
 		    }
 		    
-			var mail_newreceiverchoose_dialogArguments = new Array();
+		    var selectperson_cross_dialogArguments = new Array();
 	        
-	        function SelectReceiver_onClick() {
-	            var type = "auto";
-	            var receiverData = new Array();
+	        function selectDeptMaster() {
+	            var type = "selDeptMaster";
+	            selectperson_cross_dialogArguments[1] = selectDeptMasterComplete;
 	            
-	            receiverData["addReceiver"] = addReceiver;
-	            receiverData["window"] = this;
-	            mail_newreceiverchoose_dialogArguments[0] = receiverData;
-	            mail_newreceiverchoose_dialogArguments[1] = addReceiver;
-	            
-	            var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&ruleKind=MANAGER", "mail_foldermanage_Cross", GetOpenWindowfeature(690, 650));
+	            var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type, "selDeptMaster", GetOpenWindowfeature(760, 535));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	
-	        function addReceiver(strEmail) {
-	            document.getElementById("Manager").value = strEmail;
+	        function selectDeptMasterComplete(rtnValue) {
+	        	if (typeof (rtnValue) != "undefined") {
+	            	document.getElementById("Manager").value = rtnValue;
+	        	}
 	        }
 		    
 		    function OpenAlertUI_Complete() {
@@ -282,7 +279,7 @@
 		    	<th><spring:message code='ezOrgan.t225' /></th> 
 		    	<td>
 		    		<input type="text" id=Manager style="width:75%" maxlength="50">
-		    		<a id="ReceiverSelect" class="imgbtn imgbck" style="width:16%; padding-left: 10px;" onClick="SelectReceiver_onClick()"><span style="width:80%;text-align:center;"><spring:message code='ezEmail.t488' /></span></a>
+		    		<a id="ReceiverSelect" class="imgbtn imgbck" style="width:16%; padding-left: 10px;" onClick="selectDeptMaster()"><span style="width:80%;text-align:center;"><spring:message code='ezEmail.t488' /></span></a>
 		    	</td> 
 		  	</tr> 
 		  	<tr> 
