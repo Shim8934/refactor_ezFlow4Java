@@ -46,6 +46,7 @@
 	        var DocID, pURL, FormID, DocDeptYN, OrganID;
 	        var NodeList, nowblock, totalPage, block, p_page, p_nowblock, Init_Flag, DocList_Flag, DocTitle;
 	        var DeptAdminYN, AdminYN;
+	        //0편철확정, 4종료연기승인만 쓰고잇는건가
 	        var g_InitFlag = "${initFlag}";
 	        var UserID = "${userInfo.id}";
 	        var CompanyID = "${userInfo.companyID}";
@@ -74,7 +75,9 @@
 	        var OpenWin;
 	        var approvalFlag = "${approvalFlag}";
 	        var ext = "";
+	        
 	        document.onselectstart = function () { return false; };
+	        
 	        window.onload = function () {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
@@ -83,444 +86,465 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
-	        PageSize = 10;
-	        Block_Size = 10;
-	        curpage = 1;
-	        nowblock = 0;
-	        totalPage = 0;
-	        DocDeptYN = IsDocDept(DeptID);
-	        OrganID = CompanyID;
-
-	        switch (g_InitFlag) {
-	            case "0":
-	            	PageSize = 15;
-	                btnConfirmTargetCab_onclick();
-	                break;
+	            
+		        PageSize = 10;
+		        Block_Size = 10;
+		        curpage = 1;
+		        nowblock = 0;
+		        totalPage = 0;
+		        DocDeptYN = IsDocDept(DeptID);
+		        OrganID = CompanyID;
 	
-	            case "1":
-	                ListTypeFlag = "2";
-	                DisplayTransStatus("0");
-	                btnProdReportCabList_onclick();
-	
-	                if (DocDeptYN)
-	                    document.getElementById("trTabDist").style.display = "";
-	                else
-	                    document.getElementById("trTabDist").style.display = "none";
-	
-	                break;
-	
-	            case "2":
-	                ListTypeFlag = "3";
-	                DisplayTransStatus("1");
-	                btnTransCabList_onclick();
-	                break;
-	
-	            case "3":
-	                ListTypeFlag = "7";
-	                btnDelTargetCabList_onclick();
-	                break;
-	
-	            case "4":
-	                ListTypeFlag = "11";
-	                GetEndYConfirmList();
-	                break;
-	        }
-	    };
-	    function DisplayTransStatus(szFlag) {
-	        var oXml = GetTransStatus(szFlag);
-	        if (oXml.text == "") {
-	            OpenAlertUI("<spring:message code='ezApprovalG.t458'/>");
-	        }
-	        else if (oXml.text == "FALSE") {
-	            OpenAlertUI("<spring:message code='ezApprovalG.t459'/>");
-	        }
-	        else {
-	            var DeptCode = oXml.documentElement.selectSingleNode("DEPTINFO/DEPTCODE").text;
-	            var DeptName = oXml.documentElement.selectSingleNode("DEPTINFO/DEPTNAME").text;
-	            var StatusCode = parseInt(oXml.documentElement.selectSingleNode("DEPTINFO/STATUSCODE").text);
-	            var StatusString = oXml.documentElement.selectSingleNode("DEPTINFO/STATUSSTRING").text;
-	            var ErrMsg = oXml.documentElement.selectSingleNode("DEPTINFO/ERRMSG").text;
-	            var arrStatus = StatusString.split(":");
-	
-	            document.getElementById("tdDeptInfo").innerText = "<spring:message code='ezApprovalG.t460'/>" + DeptName + "(" + DeptCode + ")";
-	
-	            document.getElementById("tdListTransStatus").innerText = arrStatus[0];
-	            if (typeof (tdFileTransStatus) == "object") document.getElementById("tdFileTransStatus").innerText = arrStatus[1];
-	            if (typeof (tdArchiveRcvStatus) == "object") document.getElementById("tdArchiveRcvStatus").innerText = arrStatus[2];
-	            document.getElementById("tdRcvComplStatus").innerText = arrStatus[3];
-	            if ((StatusCode & 1 == 1 && StatusCode & 2 == 0) || (StatusCode & 4 == 4 && StatusCode & 16 == 0) || (StatusCode & 32 == 32 && StatusCode & 64 == 0))	//오류발생일 때
-	            {
-	                document.getElementById("tdErrMsg").innerText = ErrMsg;
-	                document.getElementById("divErrMsg").style.display = "";
-	            }
-	            else {
-	                document.getElementById("divErrMsg").style.display = "none";
-	            }
-	        }
-	    }
-	    function SwapMenuIcon(StatusCode) {
-	
-	        if ((StatusCode & 2) == 0) {
-	            if (typeof (imgSndProdList) != "undefined" && typeof (imgSndProdList) != "unknown")
-	                SwapIcon(imgSndProdList, "true");
-	
-	            if (typeof (imgSndTransList) != "undefined" && typeof (imgSndTransList) != "unknown")
-	                SwapIcon(imgSndTransList, "true");
-	
-	            if (typeof (imgAddDelayList) != "undefined" && typeof (imgAddDelayList) != "unknown")
-	                SwapIcon(imgAddDelayList, "true");
-	
-	            if (typeof (imgSndTransFile) != "undefined" && typeof (imgSndTransFile) != "unknown")
-	                SwapIcon(imgSndTransFile, "false");
-	
-	            if (typeof (imgTransComplete) != "undefined" && typeof (imgTransComplete) != "unknown")
-	                SwapIcon(imgTransComplete, "false");
-	        }
-	        else if ((StatusCode & 16) == 0) {
-	            if (typeof (imgSndProdList) != "undefined" && typeof (imgSndProdList) != "unknown")
-	                SwapIcon(imgSndProdList, "false");
-	
-	            if (typeof (imgSndTransList) != "undefined" && typeof (imgSndTransList) != "unknown")
-	                SwapIcon(imgSndTransList, "false");
-	
-	            if (typeof (imgAddDelayList) != "undefined" && typeof (imgAddDelayList) != "unknown")
-	                SwapIcon(imgAddDelayList, "false");
-	
-	            if (typeof (imgSndTransFile) != "undefined" && typeof (imgSndTransFile) != "unknown")
-	                SwapIcon(imgSndTransFile, "true");
-	
-	            if (typeof (imgTransComplete) != "undefined" && typeof (imgTransComplete) != "unknown")
-	                SwapIcon(imgTransComplete, "false");
-	        }
-	        else if ((StatusCode & 64) == 0) {
-	            if (typeof (imgSndProdList) != "undefined" && typeof (imgSndProdList) != "unknown")
-	                SwapIcon(imgSndProdList, "false");
-	
-	            if (typeof (imgSndTransList) != "undefined" && typeof (imgSndTransList) != "unknown")
-	                SwapIcon(imgSndTransList, "false");
-	
-	            if (typeof (imgAddDelayList) != "undefined" && typeof (imgAddDelayList) != "unknown")
-	                SwapIcon(imgAddDelayList, "false");
-	
-	            if (typeof (imgSndTransFile) != "undefined" && typeof (imgSndTransFile) != "unknown")
-	                SwapIcon(imgSndTransFile, "false");
-	
-	            if (typeof (imgTransComplete) != "undefined" && typeof (imgTransComplete) != "unknown")
-	                SwapIcon(imgTransComplete, "true");
-	        }
-	        else if ((StatusCode & 256) == 0) {
-	            if (typeof (imgSndProdList) != "undefined" && typeof (imgSndProdList) != "unknown")
-	                SwapIcon(imgSndProdList, "false");
-	
-	            if (typeof (imgSndTransList) != "undefined" && typeof (imgSndTransList) != "unknown")
-	                SwapIcon(imgSndTransList, "false");
-	
-	            if (typeof (imgAddDelayList) != "undefined" && typeof (imgAddDelayList) != "unknown")
-	                SwapIcon(imgAddDelayList, "false");
-	
-	            if (typeof (imgSndTransFile) != "undefined" && typeof (imgSndTransFile) != "unknown")
-	                SwapIcon(imgSndTransFile, "false");
-	
-	            if (typeof (imgTransComplete) != "undefined" && typeof (imgTransComplete) != "unknown")
-	                SwapIcon(imgTransComplete, "false");
-	        }
-	    }
-	    function lvtDoclist_onSel_DBclick() {
-	        if (DocList_Flag == "CABINET") {
-	            btnViewCabInfo_onclick();
-	        }
-	        else {
-	            ViewDoc_onclick();
-	        }
-	    }
-	    function btnClose_onclick() {
-	        window.close();
-	    }
-	    function GetEndYConfirmList() {
-	        ListTypeFlag = "11";
-	        DocList_Flag = "CABINET";
-	        InitSubMenu();
-	        GetCaninetList();
-	    }
-	    var tempFlag;
-	    function btnConfirmEndY_onclick(Flag) {
-	        var listView = new ListView();
-	        listView.LoadFromID("DocList");
-	        var selRow = listView.GetSelectedRows();
-	        var len = selRow.length;
-	        var i;
-	        tempFlag = Flag;
-	        if (Flag == "1") {
-	            if (listView.GetDataRows()[0].id == "DocList_TR_noItems") {
-	                OpenAlertUI("<spring:message code='ezApprovalG.t471'/>");
-	                return;
-	            }
-	            var pInformationContent = "<spring:message code='ezApprovalG.t472'/>";
-	            OpenInformationUI(pInformationContent, btnConfirmEndY_onclick_Complete);
-	        }
-	        else if (Flag == "2") {
-	            if (len > 0) {
-	                var pInformationContent = "<spring:message code='ezApprovalG.t475'/>";
-	                OpenInformationUI(pInformationContent, btnConfirmEndY_onclick_Complete2);
-	            }
-	            else {
-	                OpenAlertUI("<spring:message code='ezApprovalG.t478'/>");
-	            }
-	        }
-	        else {
-	            if (len > 0) {
-	                var pInformationContent = "<spring:message code='ezApprovalG.t479'/>";
-	                OpenInformationUI(pInformationContent, btnConfirmEndY_onclick_Complete3);
-	            }
-	            else {
-	                OpenAlertUI("<spring:message code='ezApprovalG.t478'/>");
-	            }
-	        }
-	    }
-	    function btnConfirmEndY_onclick_Complete(bCon) {
-	        if (bCon) {
-	            var listView = new ListView();
-	            listView.LoadFromID("DocList");
-	            var selRow = listView.GetSelectedRows();
-	            var len = selRow.length;
-	            if (DelayCabEndY("", tempFlag) == "TRUE") {
-	                OpenAlertUI("<spring:message code='ezApprovalG.t473'/>");
-	                GetEndYConfirmList();
-	            }
-	            else {
-	                OpenAlertUI("<spring:message code='ezApprovalG.t474'/>");
-	            }
-	
-	        }
-	    }
-	    function btnConfirmEndY_onclick_Complete2(bCon) {
-	        if (bCon) {
-	            var listView = new ListView();
-	            listView.LoadFromID("DocList");
-	            var selRow = listView.GetSelectedRows();
-	            var len = selRow.length;
-	            var CabClassList = "";
-	            for (i = 0; i < len; i++) {
-	                if (CabClassList != "")
-	                    CabClassList += ",";
-	
-	                CabClassList += selRow[i].getAttribute("DATA2");
-	            }
-	
-	            if (DelayCabEndY(CabClassList, tempFlag) == "TRUE") {
-	                OpenAlertUI("<spring:message code='ezApprovalG.t476'/>");
-	                GetEndYConfirmList();
-	            }
-	            else {
-	                OpenAlertUI("<spring:message code='ezApprovalG.t477'/>");
-	            }
-	        }
-	    }
-	    function btnConfirmEndY_onclick_Complete3(bCon) {
-	        if (bCon) {
-	            var listView = new ListView();
-	            listView.LoadFromID("DocList");
-	            var selRow = listView.GetSelectedRows();
-	            var len = selRow.length;
-	            var CabClassList = "";
-	            for (i = 0; i < len; i++) {
-	                if (CabClassList != "")
-	                    CabClassList += ",";
-	
-	                CabClassList += selRow[i].getAttribute("DATA2");
-	            }
-	
-	            if (DelayCabEndY(CabClassList, tempFlag) == "TRUE") {
-	                OpenAlertUI("<spring:message code='ezApprovalG.t473'/>");
-	                GetEndYConfirmList();
-	            }
-	            else {
-	                OpenAlertUI("<spring:message code='ezApprovalG.t474'/>");
-	            }
-	        }
-	    }
-	function DelayCabEndY(CabClassList, Flag) {
-		var result = "";
+		        switch (g_InitFlag) {
+		            case "0":
+		            	PageSize = 15;
+		                btnConfirmTargetCab_onclick();
+		                break;
 		
-		$.ajax({
-			type : "POST",
-			dataType : "text",
-			async : false,
-			url : "/ezApprovalG/delayCabEndY.do",
-			data : {
-				companyID : CompanyID,
-				deptCode  : DeptID,
-				flag 	  : Flag,
-				cabClassList  : CabClassList
-			},
-			success: function(xml){
-				result = loadXMLString(xml);
-			}, error : function() {
-				return "FALSE";
+		            case "1":
+		                ListTypeFlag = "2";
+		                DisplayTransStatus("0");
+		                btnProdReportCabList_onclick();
+		
+		                if (DocDeptYN)
+		                    document.getElementById("trTabList").style.display = "";
+		                else
+		                    document.getElementById("trTabList").style.display = "none";
+		
+		                break;
+		
+		            case "2":
+		                ListTypeFlag = "3";
+		                DisplayTransStatus("1");
+		                btnTransCabList_onclick();
+		                break;
+		
+		            case "3":
+		                ListTypeFlag = "7";
+		                btnDelTargetCabList_onclick();
+		                break;
+		
+		            case "4":
+		                ListTypeFlag = "11";
+		                GetEndYConfirmList();
+		                break;
+		        }
+		        
+		        settingResize();
+		    };
+		    
+		    window.onresize = function() {
+	        	settingResize();
+	        }
+		    
+		    var settingResize = function() {
+		    	var currentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		        var divListHeight = document.getElementById('divList').style.height;
+		        
+		        console.log('currentHeight = ' + currentHeight + 'divListHeight = ' + divListHeight);
+		        
+		    	if (document.getElementById('tabs')) {
+		    		document.getElementById('divList').style.height = (currentHeight - 133) + "px";
+		    	} else {
+		    		document.getElementById('divList').style.height = (currentHeight - 69) + "px";
+		    	}
+		    }
+		    
+		    function DisplayTransStatus(szFlag) {
+		        var oXml = GetTransStatus(szFlag);
+		        if (oXml.text == "") {
+		            OpenAlertUI("<spring:message code='ezApprovalG.t458'/>");
+		        }
+		        else if (oXml.text == "FALSE") {
+		            OpenAlertUI("<spring:message code='ezApprovalG.t459'/>");
+		        }
+		        else {
+		            var DeptCode = oXml.documentElement.selectSingleNode("DEPTINFO/DEPTCODE").text;
+		            var DeptName = oXml.documentElement.selectSingleNode("DEPTINFO/DEPTNAME").text;
+		            var StatusCode = parseInt(oXml.documentElement.selectSingleNode("DEPTINFO/STATUSCODE").text);
+		            var StatusString = oXml.documentElement.selectSingleNode("DEPTINFO/STATUSSTRING").text;
+		            var ErrMsg = oXml.documentElement.selectSingleNode("DEPTINFO/ERRMSG").text;
+		            var arrStatus = StatusString.split(":");
+		
+		            document.getElementById("tdDeptInfo").innerText = "<spring:message code='ezApprovalG.t460'/>" + DeptName + "(" + DeptCode + ")";
+		
+		            document.getElementById("tdListTransStatus").innerText = arrStatus[0];
+		            if (typeof (tdFileTransStatus) == "object") document.getElementById("tdFileTransStatus").innerText = arrStatus[1];
+		            if (typeof (tdArchiveRcvStatus) == "object") document.getElementById("tdArchiveRcvStatus").innerText = arrStatus[2];
+		            document.getElementById("tdRcvComplStatus").innerText = arrStatus[3];
+		            if ((StatusCode & 1 == 1 && StatusCode & 2 == 0) || (StatusCode & 4 == 4 && StatusCode & 16 == 0) || (StatusCode & 32 == 32 && StatusCode & 64 == 0))	//오류발생일 때
+		            {
+		                document.getElementById("tdErrMsg").innerText = ErrMsg;
+		                document.getElementById("divErrMsg").style.display = "";
+		            }
+		            else {
+		                document.getElementById("divErrMsg").style.display = "none";
+		            }
+		        }
+		    }
+		    function SwapMenuIcon(StatusCode) {
+		
+		        if ((StatusCode & 2) == 0) {
+		            if (typeof (imgSndProdList) != "undefined" && typeof (imgSndProdList) != "unknown")
+		                SwapIcon(imgSndProdList, "true");
+		
+		            if (typeof (imgSndTransList) != "undefined" && typeof (imgSndTransList) != "unknown")
+		                SwapIcon(imgSndTransList, "true");
+		
+		            if (typeof (imgAddDelayList) != "undefined" && typeof (imgAddDelayList) != "unknown")
+		                SwapIcon(imgAddDelayList, "true");
+		
+		            if (typeof (imgSndTransFile) != "undefined" && typeof (imgSndTransFile) != "unknown")
+		                SwapIcon(imgSndTransFile, "false");
+		
+		            if (typeof (imgTransComplete) != "undefined" && typeof (imgTransComplete) != "unknown")
+		                SwapIcon(imgTransComplete, "false");
+		        }
+		        else if ((StatusCode & 16) == 0) {
+		            if (typeof (imgSndProdList) != "undefined" && typeof (imgSndProdList) != "unknown")
+		                SwapIcon(imgSndProdList, "false");
+		
+		            if (typeof (imgSndTransList) != "undefined" && typeof (imgSndTransList) != "unknown")
+		                SwapIcon(imgSndTransList, "false");
+		
+		            if (typeof (imgAddDelayList) != "undefined" && typeof (imgAddDelayList) != "unknown")
+		                SwapIcon(imgAddDelayList, "false");
+		
+		            if (typeof (imgSndTransFile) != "undefined" && typeof (imgSndTransFile) != "unknown")
+		                SwapIcon(imgSndTransFile, "true");
+		
+		            if (typeof (imgTransComplete) != "undefined" && typeof (imgTransComplete) != "unknown")
+		                SwapIcon(imgTransComplete, "false");
+		        }
+		        else if ((StatusCode & 64) == 0) {
+		            if (typeof (imgSndProdList) != "undefined" && typeof (imgSndProdList) != "unknown")
+		                SwapIcon(imgSndProdList, "false");
+		
+		            if (typeof (imgSndTransList) != "undefined" && typeof (imgSndTransList) != "unknown")
+		                SwapIcon(imgSndTransList, "false");
+		
+		            if (typeof (imgAddDelayList) != "undefined" && typeof (imgAddDelayList) != "unknown")
+		                SwapIcon(imgAddDelayList, "false");
+		
+		            if (typeof (imgSndTransFile) != "undefined" && typeof (imgSndTransFile) != "unknown")
+		                SwapIcon(imgSndTransFile, "false");
+		
+		            if (typeof (imgTransComplete) != "undefined" && typeof (imgTransComplete) != "unknown")
+		                SwapIcon(imgTransComplete, "true");
+		        }
+		        else if ((StatusCode & 256) == 0) {
+		            if (typeof (imgSndProdList) != "undefined" && typeof (imgSndProdList) != "unknown")
+		                SwapIcon(imgSndProdList, "false");
+		
+		            if (typeof (imgSndTransList) != "undefined" && typeof (imgSndTransList) != "unknown")
+		                SwapIcon(imgSndTransList, "false");
+		
+		            if (typeof (imgAddDelayList) != "undefined" && typeof (imgAddDelayList) != "unknown")
+		                SwapIcon(imgAddDelayList, "false");
+		
+		            if (typeof (imgSndTransFile) != "undefined" && typeof (imgSndTransFile) != "unknown")
+		                SwapIcon(imgSndTransFile, "false");
+		
+		            if (typeof (imgTransComplete) != "undefined" && typeof (imgTransComplete) != "unknown")
+		                SwapIcon(imgTransComplete, "false");
+		        }
+		    }
+		    function lvtDoclist_onSel_DBclick() {
+		        if (DocList_Flag == "CABINET") {
+		            btnViewCabInfo_onclick();
+		        }
+		        else {
+		            ViewDoc_onclick();
+		        }
+		    }
+		    function btnClose_onclick() {
+		        window.close();
+		    }
+		    function GetEndYConfirmList() {
+		        ListTypeFlag = "11";
+		        DocList_Flag = "CABINET";
+		        InitSubMenu();
+		        GetCaninetList();
+		    }
+		    var tempFlag;
+		    function btnConfirmEndY_onclick(Flag) {
+		        var listView = new ListView();
+		        listView.LoadFromID("DocList");
+		        var selRow = listView.GetSelectedRows();
+		        var len = selRow.length;
+		        var i;
+		        tempFlag = Flag;
+		        if (Flag == "1") {
+		            if (listView.GetDataRows()[0].id == "DocList_TR_noItems") {
+		                OpenAlertUI("<spring:message code='ezApprovalG.t471'/>");
+		                return;
+		            }
+		            var pInformationContent = "<spring:message code='ezApprovalG.t472'/>";
+		            OpenInformationUI(pInformationContent, btnConfirmEndY_onclick_Complete);
+		        }
+		        else if (Flag == "2") {
+		            if (len > 0) {
+		                var pInformationContent = "<spring:message code='ezApprovalG.t475'/>";
+		                OpenInformationUI(pInformationContent, btnConfirmEndY_onclick_Complete2);
+		            }
+		            else {
+		                OpenAlertUI("<spring:message code='ezApprovalG.t478'/>");
+		            }
+		        }
+		        else {
+		            if (len > 0) {
+		                var pInformationContent = "<spring:message code='ezApprovalG.t479'/>";
+		                OpenInformationUI(pInformationContent, btnConfirmEndY_onclick_Complete3);
+		            }
+		            else {
+		                OpenAlertUI("<spring:message code='ezApprovalG.t478'/>");
+		            }
+		        }
+		    }
+		    function btnConfirmEndY_onclick_Complete(bCon) {
+		        if (bCon) {
+		            var listView = new ListView();
+		            listView.LoadFromID("DocList");
+		            var selRow = listView.GetSelectedRows();
+		            var len = selRow.length;
+		            if (DelayCabEndY("", tempFlag) == "TRUE") {
+		                OpenAlertUI("<spring:message code='ezApprovalG.t473'/>");
+		                GetEndYConfirmList();
+		            }
+		            else {
+		                OpenAlertUI("<spring:message code='ezApprovalG.t474'/>");
+		            }
+		
+		        }
+		    }
+		    function btnConfirmEndY_onclick_Complete2(bCon) {
+		        if (bCon) {
+		            var listView = new ListView();
+		            listView.LoadFromID("DocList");
+		            var selRow = listView.GetSelectedRows();
+		            var len = selRow.length;
+		            var CabClassList = "";
+		            for (i = 0; i < len; i++) {
+		                if (CabClassList != "")
+		                    CabClassList += ",";
+		
+		                CabClassList += selRow[i].getAttribute("DATA2");
+		            }
+		
+		            if (DelayCabEndY(CabClassList, tempFlag) == "TRUE") {
+		                OpenAlertUI("<spring:message code='ezApprovalG.t476'/>");
+		                GetEndYConfirmList();
+		            }
+		            else {
+		                OpenAlertUI("<spring:message code='ezApprovalG.t477'/>");
+		            }
+		        }
+		    }
+		    function btnConfirmEndY_onclick_Complete3(bCon) {
+		        if (bCon) {
+		            var listView = new ListView();
+		            listView.LoadFromID("DocList");
+		            var selRow = listView.GetSelectedRows();
+		            var len = selRow.length;
+		            var CabClassList = "";
+		            for (i = 0; i < len; i++) {
+		                if (CabClassList != "")
+		                    CabClassList += ",";
+		
+		                CabClassList += selRow[i].getAttribute("DATA2");
+		            }
+		
+		            if (DelayCabEndY(CabClassList, tempFlag) == "TRUE") {
+		                OpenAlertUI("<spring:message code='ezApprovalG.t473'/>");
+		                GetEndYConfirmList();
+		            }
+		            else {
+		                OpenAlertUI("<spring:message code='ezApprovalG.t474'/>");
+		            }
+		        }
+		    }
+			function DelayCabEndY(CabClassList, Flag) {
+				var result = "";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/delayCabEndY.do",
+					data : {
+						companyID : CompanyID,
+						deptCode  : DeptID,
+						flag 	  : Flag,
+						cabClassList  : CabClassList
+					},
+					success: function(xml){
+						result = loadXMLString(xml);
+					}, error : function() {
+						return "FALSE";
+					}
+				});
+				
+			    var dataNodes = GetChildNodes(result);
+			    
+			    return getNodeText(dataNodes[0]);
 			}
-		});
-		
-	    var dataNodes = GetChildNodes(result);
-	    
-	    return getNodeText(dataNodes[0]);
-	}
-	function btnConfirmTargetCab_onclick() {
-	    if (nSelTab == "2") {
-	        btnNotArrangedCab_onclick();
-	    }
-	    else {
-	        ListTypeFlag = "1";
-	        DocList_Flag = "CABINET";
-	        curpage = 1;
-	        nowblock = 0;
-	        totalPage = 0;
-	        InitSubMenu();
-	        GetCaninetList();
-	    }
-	}
-	function btnNotArrangedCab_onclick() {
-	    ListTypeFlag = "12";
-	    DocList_Flag = "CABINET";
-	    curpage = 1;
-	    nowblock = 0;
-	    totalPage = 0;
-	    InitSubMenu();
-	    GetCaninetList();
-	}
-	function GetConfirmList() {
-	    if (ListTypeFlag == "12")
-	        btnNotArrangedCab_onclick();
-	    else
-	        btnConfirmTargetCab_onclick();
-	}
-	function btnConfirmList_onclick() {
-	    var szDocCnt = getNodeText(NodeList2);
-	    if (parseInt(szDocCnt) <= 0) {
-	        OpenAlertUI("<spring:message code='ezApprovalG.t480'/>");
-	        return;
-	    }
-	    OpenWin = OpenInformationUI("<spring:message code='ezApprovalG.t481'/>", btnConfirmList_onclick_Complete);
-	    
-	}
-	function btnConfirmList_onclick_Complete(bCon) {
-	    if (bCon) {
-	        var DocCount = GetUncabinetedDocCount();
-	        if (parseInt(DocCount) > 0) {
-	            var Msg = "<spring:message code='ezApprovalG.t482'/>" + "<br>";
-	            Msg += "<spring:message code='ezApprovalG.t483'/>" + DocCount + "<spring:message code='ezApprovalG.t484'/>" + "<br>";
-	            Msg += "<spring:message code='ezApprovalG.t485'/>";
-	
-	            OpenAlertUI(Msg);
-	        }
-	        else {
-	            chkIfNotArrangedCabExist();
-	        }
-	    }
-	}
-	function GetUncabinetedDocCount() { 
-		var result = "";
-		
-		$.ajax({
-			type : "POST",
-			dataType : "text",
-			async : false,
-			url : "/ezApprovalG/getUncabinetedDocCount.do",
-			data : {
-				companyID : CompanyID,
-				deptCode  : DeptID,
-			},
-			success: function(xml){
-				result = loadXMLString(xml);
-			}        			
-		});
-		
-	    var dataNodes = GetChildNodes(result);
-	    
-	    return getNodeText(dataNodes[0]);
-	}
-	function chkIfNotArrangedCabExist() {
-		var result = "";
-		
-		$.ajax({
-			type : "POST",
-			dataType : "text",
-			async : false,
-			url : "/ezApprovalG/chkIfNotArrangedCabExist.do",
-			data : {
-				companyID : CompanyID,
-				deptCode  : DeptID,
-			},
-			success: function(xml){
-				result = loadXMLString(xml);
-			}        			
-		});
-		
-	    var dataNodes = GetChildNodes(result);
-	    var rtnTxt = getNodeText(dataNodes[0]);
-	    if (rtnTxt == "FALSE") {
-	        OpenAlertUI("<spring:message code='ezApprovalG.t486'/>");
-	            return false;
-	    } else {
-            if (parseInt(rtnTxt) > 0) {
-                var pInformationContent = "<spring:message code='ezApprovalG.t487'/>" +
-                                          "(<spring:message code='ezApprovalG.t488'/>" + "<spring:message code='ezApprovalG.t489'/>" + "<spring:message code='ezApprovalG.t490'/>";
-                bCon = OpenInformationUI(pInformationContent, chkIfNotArrangedCabExist_Complete);
-
-            }
-            else {
-                chkIfNotArrangedCabExist_Complete(true);
-            }
-        }
-	}
-    function chkIfNotArrangedCabExist_Complete(bCon) {
-        if (bCon) {
-            ConfirmClassfy(DeptID);
-            if (DocList_Flag == "CABINET") {
-                GetCaninetList();
-            }
-            else if (DocList_Flag == "RECORD") {
-                GetRecordList();
-            }
-        }
-    }
-    function ConfirmClassfy(pDeptCode) {
-		var result = "";
-		
-		$.ajax({
-			type : "POST",
-			dataType : "text",
-			async : false,
-			url : "/ezApprovalG/confirmClassfy.do",
-			data : {
-				companyID : CompanyID,
-				deptCode  : pDeptCode,
-			},
-			success: function(xml){
-				result = loadXMLString(xml);
-			}, error: function() {
-				  OpenAlertUI("<spring:message code='ezApprovalG.t491'/>");
+			function btnConfirmTargetCab_onclick() {
+			    if (nSelTab == "2") {
+			        btnNotArrangedCab_onclick();
+			    }
+			    else {
+			        ListTypeFlag = "1";
+			        DocList_Flag = "CABINET";
+			        curpage = 1;
+			        nowblock = 0;
+			        totalPage = 0;
+			        InitSubMenu();
+			        GetCaninetList();
+			    }
 			}
-		});
+			function btnNotArrangedCab_onclick() {
+			    ListTypeFlag = "12";
+			    DocList_Flag = "CABINET";
+			    curpage = 1;
+			    nowblock = 0;
+			    totalPage = 0;
+			    InitSubMenu();
+			    GetCaninetList();
+			}
+			function GetConfirmList() {
+			    if (ListTypeFlag == "12")
+			        btnNotArrangedCab_onclick();
+			    else
+			        btnConfirmTargetCab_onclick();
+			}
+			function btnConfirmList_onclick() {
+			    var szDocCnt = getNodeText(NodeList2);
+			    if (parseInt(szDocCnt) <= 0) {
+			        OpenAlertUI("<spring:message code='ezApprovalG.t480'/>");
+			        return;
+			    }
+			    OpenWin = OpenInformationUI("<spring:message code='ezApprovalG.t481'/>", btnConfirmList_onclick_Complete);
+			    
+			}
+			function btnConfirmList_onclick_Complete(bCon) {
+			    if (bCon) {
+			        var DocCount = GetUncabinetedDocCount();
+			        if (parseInt(DocCount) > 0) {
+			            var Msg = "<spring:message code='ezApprovalG.t482'/>" + "<br>";
+			            Msg += "<spring:message code='ezApprovalG.t483'/>" + DocCount + "<spring:message code='ezApprovalG.t484'/>" + "<br>";
+			            Msg += "<spring:message code='ezApprovalG.t485'/>";
+			
+			            OpenAlertUI(Msg);
+			        }
+			        else {
+			            chkIfNotArrangedCabExist();
+			        }
+			    }
+			}
+			function GetUncabinetedDocCount() { 
+				var result = "";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/getUncabinetedDocCount.do",
+					data : {
+						companyID : CompanyID,
+						deptCode  : DeptID,
+					},
+					success: function(xml){
+						result = loadXMLString(xml);
+					}        			
+				});
+				
+			    var dataNodes = GetChildNodes(result);
+			    
+			    return getNodeText(dataNodes[0]);
+			}
+			function chkIfNotArrangedCabExist() {
+				var result = "";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/chkIfNotArrangedCabExist.do",
+					data : {
+						companyID : CompanyID,
+						deptCode  : DeptID,
+					},
+					success: function(xml){
+						result = loadXMLString(xml);
+					}        			
+				});
+				
+			    var dataNodes = GetChildNodes(result);
+			    var rtnTxt = getNodeText(dataNodes[0]);
+			    if (rtnTxt == "FALSE") {
+			        OpenAlertUI("<spring:message code='ezApprovalG.t486'/>");
+			            return false;
+			    } else {
+		            if (parseInt(rtnTxt) > 0) {
+		                var pInformationContent = "<spring:message code='ezApprovalG.t487'/>" +
+		                                          "(<spring:message code='ezApprovalG.t488'/>" + "<spring:message code='ezApprovalG.t489'/>" + "<spring:message code='ezApprovalG.t490'/>";
+		                bCon = OpenInformationUI(pInformationContent, chkIfNotArrangedCabExist_Complete);
 		
-	}
-	function btnProdReportRecList_onclick() {
-	    DocList_Flag = "RECORD";
-	    curpage = 1;
-	    nowblock = 0;
-	    totalPage = 0;
-	    InitSubMenu();
-	    GetRecordList();
-	}
-	function btnProdReportCabList_onclick() {
-	    DocList_Flag = "CABINET";
-	    curpage = 1;
-	    nowblock = 0;
-	    totalPage = 0;
-	    InitSubMenu();
-	    GetCaninetList();
-	}
-	function btnStaTargetDeli_onclick() {
-	}
+		            }
+		            else {
+		                chkIfNotArrangedCabExist_Complete(true);
+		            }
+		        }
+			}
+		    function chkIfNotArrangedCabExist_Complete(bCon) {
+		        if (bCon) {
+		            ConfirmClassfy(DeptID);
+		            if (DocList_Flag == "CABINET") {
+		                GetCaninetList();
+		            }
+		            else if (DocList_Flag == "RECORD") {
+		                GetRecordList();
+		            }
+		        }
+		    }
+		    function ConfirmClassfy(pDeptCode) {
+				var result = "";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/confirmClassfy.do",
+					data : {
+						companyID : CompanyID,
+						deptCode  : pDeptCode,
+					},
+					success: function(xml){
+						result = loadXMLString(xml);
+					}, error: function() {
+						  OpenAlertUI("<spring:message code='ezApprovalG.t491'/>");
+					}
+				});
+				
+			}
+			function btnProdReportRecList_onclick() {
+			    DocList_Flag = "RECORD";
+			    curpage = 1;
+			    nowblock = 0;
+			    totalPage = 0;
+			    InitSubMenu();
+			    GetRecordList();
+			}
+			function btnProdReportCabList_onclick() {
+			    DocList_Flag = "CABINET";
+			    curpage = 1;
+			    nowblock = 0;
+			    totalPage = 0;
+			    InitSubMenu();
+			    GetCaninetList();
+			}
+			function btnStaTargetDeli_onclick() {
+			}
 	function btnSndProdList_onclick() {
 	    var ConStr = "<spring:message code='ezApprovalG.t492'/>"+ "<br>" +
 	                 " * " + "<spring:message code='ezApprovalG.t912'/>" + "\n" +
@@ -1252,7 +1276,7 @@
 							<p id="tab14"><span onclick="MM_swapImage(14, 'd');GetRecHistList();"><spring:message code='ezApprovalG.t554'/></span></p>
 							<p id="tab15"><span onclick="MM_swapImage(15, 'd');GetSCList();"><spring:message code='ezApprovalG.t94'/></span></p>
 							<p id="tab16"><span onclick="MM_swapImage(16, 'd');GetAttachList();"><spring:message code='ezApprovalG.t555'/></span></p>
-							<p id="trTabDist" style="display: none"><span id="tab17" onclick="MM_swapImage(17, 'd');GetDistList();"><spring:message code='ezApprovalG.t556'/></span></p>
+							<p id="trTabList" style="display: none"><span id="tab17" onclick="MM_swapImage(17, 'd');GetDistList();"><spring:message code='ezApprovalG.t556'/></span></p>
 						</div>
 					</div>
 	    		</c:when>
@@ -1482,8 +1506,16 @@
 	    		<c:when test="${initFlag == '4'}">
 	    		</c:when>
 	    	</c:choose> --%>
-    		
-	    <div class="div_scroll" style="width: 100%; HEIGHT: 680px; overflow: AUTO" id="divList">
+    	
+    	<c:choose>
+    		<c:when test = "${initFlag == '0' }">
+    			<div id="divList" class="div_scroll" style="width: 100%; height: 676px; overflow: AUTO; margin-bottom:10px;">
+    		</c:when>
+    		<c:when test = "${initFlag == '4' }">
+    			<div id="divList" class="div_scroll" style="width: 100%; height: 740px; overflow: AUTO; margin-bottom:10px;">
+    		</c:when>
+	    </c:choose>
+	    
 	        <div id="lvtDoclist"></div>
 	    </div>
 	    <div id="tblPageRayer"></div>
