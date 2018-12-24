@@ -2494,6 +2494,15 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .tree_admin_organization{ background-position:-78px -182px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 관리자 조직도 */
 .tree_admin_stats{ background-position:-104px -182px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 관리자 통계 */
 
+.tree_poll_all{background-position: -52px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 전체투표*/
+.tree_poll_ing{background-position: -78px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 진행투표*/
+.tree_poll_wait{background-position: -104px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 대기투표*/
+.tree_poll_ok{background-position: -130px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 완료투표*/
+.tree_memo_all{background-position: -156px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 모든메모*/
+.tree_memo_default{background-position: -182px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기본메모*/
+.tree_ladder_all{background-position: -208px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 전체사다리*/
+.tree_ladder_in{background-position: -234px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 참여사다리*/
+
 /* left LNB tree text */
 .lnb h2 .h2Title{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:13px; font-weight:bold; color:#393939; padding:0px 0px 0px 0px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; box-sizing:border-box;}
 .h2_text{ font-size:13px; height:30px; line-height:30px; color:#393939; display:inline-block; padding:0px 0px 0px 5px;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; cursor:pointer;white-space:nowrap; text-overflow:ellipsis; overflow: hidden; box-sizing:border-box;}
