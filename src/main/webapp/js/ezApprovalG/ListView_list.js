@@ -522,7 +522,7 @@ function ListView() {
                 }
                 
                 if (strColName == "RejectFlag") {
-                	objTd.style.textAlign = "left";
+                	objTd.style.textAlign = "center";
                 }
                 
                 if (strColName == "TransferFlag") {
