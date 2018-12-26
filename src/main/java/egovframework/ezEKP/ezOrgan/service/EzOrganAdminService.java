@@ -8,6 +8,7 @@ import java.util.List;
 
 
 
+
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -120,4 +121,6 @@ public interface EzOrganAdminService {
 	public int getTitleCnt(String type, String jobID, String mode, String displayName, String displayName2, String companyID, int tenantID) throws Exception;
 	
 	public String getJobOptionInfo(String type, String companyID, int tenantID) throws Exception;
+
+	public String getTitlePageList(String type, String companyID, int tenantID) throws Exception;
 }

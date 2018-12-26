@@ -3406,11 +3406,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	/*
-	 * 직함관리 직위/직책 리스트 호출 메서드
+	 * 직함관리 직위/직책  페이징 처리 리스트 호출 메서드
 	 * */
-	@RequestMapping(value="/admin/ezOrgan/jobTitleListView.do", produces="application/text; charset=utf8")
+	@RequestMapping(value="/admin/ezOrgan/jobTitleListPageView.do", produces="application/text; charset=utf8")
 	@ResponseBody
-	public String jobTitleListView(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+	public String jobTitleListPageView(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobTitleListView started.");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -3428,6 +3428,25 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		String result = ezOrganAdminService.getTitleList(type, companyID, totalCount, pageCount, pageSize, currentPage, userInfo.getTenantId());
+		
+		logger.debug("jobTitleListView ended.");
+		return result;
+	}
+	/*
+	 * 직함관리 직위/직책 리스트 호출 메서드
+	 * */
+	@RequestMapping(value="/admin/ezOrgan/jobTitleListView.do", produces="application/text; charset=utf8")
+	@ResponseBody
+	public String jobTitleListView(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		
+		logger.debug("jobTitleListView started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String type = request.getParameter("type");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezOrganAdminService.getTitlePageList(type, companyID, userInfo.getTenantId());
 		
 		logger.debug("jobTitleListView ended.");
 		return result;

@@ -58,7 +58,7 @@
 			$.ajax({
             	type : "POST",
             	dataType: "text",
-            	url : "/admin/ezOrgan/jobTitleListView.do",
+            	url : "/admin/ezOrgan/jobTitleListPageView.do",
             	async : false,
             	data : 
             	{
@@ -385,7 +385,7 @@
 			$.ajax({
             	type : "POST",
             	dataType: "text",
-            	url : "/admin/ezOrgan/jobTitleListView.do",
+            	url : "/admin/ezOrgan/jobTitleListPageView.do",
             	async : false,
             	data : 
             	{

@@ -1856,6 +1856,43 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		return rtnVal.toString();
 	}
+	
+	@Override
+	public String getTitlePageList(String type, String companyID, int tenantID) throws Exception {
+		logger.debug("getTitlePageList started.");
+
+		StringBuffer rtnVal = new StringBuffer();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		List<OrganJobVO> jobList = ezOrganAdminDao.getTitlePageList(map);
+		
+		rtnVal.append("<LISTVIEWDATA><ROWS>");
+		
+		if (jobList != null && jobList.size() > 0) {
+			for (int i = 0; i < jobList.size(); i++) {
+				rtnVal.append("<ROW>");
+				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName() + "]]></VALUE>");
+				rtnVal.append("<DATA1>" + jobList.get(i).getJobID() + "</DATA1>");
+				rtnVal.append("<DATA2>" + jobList.get(i).getType()  + "</DATA2>");
+				rtnVal.append("<DATA3>" + jobList.get(i).getSort()  + "</DATA3>");
+				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4></CELL>");
+				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></VALUE></CELL>");
+				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getUseFlag() + "</VALUE></CELL>");
+				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getSort() + "</VALUE></CELL>");
+				rtnVal.append("</ROW>");
+			}
+		}
+		
+		rtnVal.append("</ROWS></LISTVIEWDATA>");
+		
+		logger.debug("getTitlePageList ended.");
+		
+		return rtnVal.toString();
+	}
 
 	@Override
 	public String getTitleInfo(String type, String jobID, String companyID, int tenantID) throws Exception {
