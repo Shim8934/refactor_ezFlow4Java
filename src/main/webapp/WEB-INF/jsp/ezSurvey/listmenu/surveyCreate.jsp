@@ -38,6 +38,10 @@
 				<a class="crumb"><span><spring:message code='ezSurvey.t37'/></span></a>
 				<span class="arrow"><span></span></span>
 			</span>
+			<span class="crust">
+				<a class="crumb"><span><spring:message code='ezSurvey.t77'/></span></a>
+				<span class="arrow"><span></span></span>
+			</span>
 		</div>
 		
 		<div id="bodyPanel">
@@ -57,6 +61,9 @@
 			<div id="tab3" class="hidden-tab">
 				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/preview.jsp"></jsp:include>
 			</div>
+			<div id="tab4" class="hidden-tab">
+				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/previewSurvey.jsp"></jsp:include>
+			</div>
 		</div>
 		
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyFile.js')}"></script>
@@ -73,6 +80,7 @@
 				var resuseFlag  = null;
 				var questionFile = new SurveyFile("images");
 				var config       = {modify : "modify", required : "required", action : "action",}
+				var skipLogic      = 'N';
 					
 				// 셀렉트 박스에 들어갈 질문 유형 데이터 
 				var optionData = 
@@ -169,6 +177,7 @@
 					document.getElementById("targetBttn"   ).addEventListener("click" , showSelectPopUp       , false);
 					document.getElementById("gotoSecondTab").addEventListener("click" , gotoSecondStep        , false);
 					document.getElementById("gotoThirdTab" ).addEventListener("click" , gotoThirdStep         , false);
+					document.getElementById("gotoForthTab" ).addEventListener("click" , gotoForthStep         , false);
 					document.getElementById("cancelSurvey1").addEventListener("click" , cancleThisSurvey      , false);
 					document.getElementById("public-slbox" ).addEventListener("change", toggleDaysInput       , false);
 					document.getElementById("closeUserPanel").addEventListener("click", toggleUserPreview     , false);
@@ -280,6 +289,22 @@
 					lastStep = 3;
 				}
 				
+				function gotoForthStep() {
+					console.log("설문 확인 단계");
+					/* 
+					var checkObj = prepareForStep4();
+					if (checkObj["error"]) {alert(checkObj["error"]); return;}
+					 */
+					var listTabElmt          = document.getElementsByClassName("headpanel")[0].children;
+					listTabElmt[0].className = "crust";
+					listTabElmt[1].className = "crust";
+					listTabElmt[2].className = "crust";
+					listTabElmt[3].className = "crust selected";
+					document.getElementById("tab3").className = "hidden-tab";
+					document.getElementById("tab4").className = "select-tab";
+					lastStep = 4;
+				}
+				
 				function selectStep(tabIdx, spanElemt) {
 					var crrSpan = document.querySelector("span[class='crust selected']");
 					if (crrSpan == spanElemt) {return;}
@@ -289,7 +314,7 @@
 						case 1: focusonQuestionTitleStep1(); 
 								toggleStep(spanElemt, crrSpan, tabIdx);
 								lastStep = 1; break;
-						case 2: checkObj = prepareForStep2()
+						case 2: checkObj = prepareForStep2();
 								if (checkObj["error"]) {alert(checkObj["error"]); return;}
 								toggleStep(spanElemt, crrSpan, tabIdx);
 								focusonQuestionTitleStep2();
@@ -299,6 +324,10 @@
 								toggleStep(spanElemt, crrSpan, tabIdx);
 								getSurveyPreview();
 								lastStep = 3; break;
+						case 4: checkObj = prepareForStep4();
+								if (checkObj["error"]) {alert(checkObj["error"]); return;}
+								toggleStep(spanElemt, crrSpan, tabIdx);
+								lastStep = 4; break;
 					}
 				}
 				
@@ -334,9 +363,26 @@
 						if (returnObj["error"]) {return returnObj;}
 						returnObj = checkStep2();
 						if (returnObj["error"]) {return returnObj;}
+						returnObj = checkQsCount();
+						if (returnObj["error"]) {return returnObj;}
 					}
 					
 					document.querySelector("div[class='quesDiv']").querySelector("input[class='questnTitle']").focus();
+					return returnObj;
+				}
+				
+				function prepareForStep4() {
+					var returnObj = {};
+					
+					if (finishStep < 3) {
+						returnObj = checkStep1();
+						if (returnObj["error"]) {return returnObj;}
+						returnObj = checkStep2();
+						if (returnObj["error"]) {return returnObj;}
+						returnObj = checkStep3();
+						if (returnObj["error"]) {return returnObj;}
+					}
+					
 					return returnObj;
 				}
 				
@@ -369,7 +415,6 @@
 					}
 					
 					if (lastStep == 1) {saveSurveyInformation();}
-					
 					return returnObj;
 				}
 				
@@ -377,6 +422,42 @@
 					var returnObj    = {};
 					var questionList = getSurveyQuestions();
 					if (questionList.length == 0) {returnObj["error"] = SurveyMessages.strQuestion; return returnObj;}
+					
+					return returnObj;
+				}
+				
+				function checkQsCount() {
+					var returnObj    = {};
+					var questionList = getSurveyQuestions();
+					
+					if (questionList.length == 1) {returnObj["error"] = SurveyMessages.strQsCount; return returnObj;}
+					return returnObj;
+				}
+				
+				function checkStep3() {
+					var returnObj = {};
+					var questionList = getSurveyQuestions();
+					
+					if (lastStep == 2) {
+						if (skipLogic == 'N') {
+							if (confirm("분기 설정를 건너뛰기 하시겠습니까?") == true) {
+								skipLogic = 'Y';
+								
+							} else {
+								returnObj["error"] = SurveyMessages.strLogic;
+								
+								return returnObj; 
+							}
+						}
+					}
+					var surveyPp   = document.getElementById("info-input-pp");
+					console.log(surveyPp.value);
+					
+					var ppContent = document.querySelectorAll("div[class=ppContent]");
+					for (var i = 0; i < ppContent.length; i++) {
+						ppContent[i].textContent = surveyPp.value; 
+					}
+					
 					return returnObj;
 				}
 				

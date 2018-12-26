@@ -96,4 +96,6 @@ var SurveyMessages = {
 	strBetweenNum: "최소값과 최대값 사이의 정수를 입력해 주세요.",
 	strQs		 : "질문",
 	strMore		 : "이상",
+	strLogic     : "분기를 설정해 주세요.",
+	strQsCount   : "분기 설정은 질문 2개 이상이 필요합니다.",
 }

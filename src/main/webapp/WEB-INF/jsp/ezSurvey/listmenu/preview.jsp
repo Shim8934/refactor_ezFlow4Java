@@ -58,7 +58,3 @@
 </div>
 
 <div class="prevQsArea"></div>
-
-<div id="prevBtn">
-	<button id="prevQsButton">미리보기</button>
-</div>
