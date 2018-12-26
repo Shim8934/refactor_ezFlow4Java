@@ -104,7 +104,9 @@ public interface EzOrganAdminService {
 	
 	public String setTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception;
 	
-	public String getTitleList(String type, String companyID, int totalCount, int pageCount, int pageSize, int currentPage, int tenantID) throws Exception;
+	public String getTitleList(String type, String companyID, int tenantID) throws Exception;
+	
+	public String getTitlePageList(String type, String companyID, int totalCount, int pageCount, int pageSize, int currentPage, int tenantID) throws Exception;
 	
 	public String getTitleInfo(String type, String jobID, String companyID, int tenantID) throws Exception;
 
@@ -122,5 +124,6 @@ public interface EzOrganAdminService {
 	
 	public String getJobOptionInfo(String type, String companyID, int tenantID) throws Exception;
 
-	public String getTitlePageList(String type, String companyID, int tenantID) throws Exception;
+	public void updateDBData_user_new(List<OrganUserVO> vo) throws Exception;
+
 }

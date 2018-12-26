@@ -1813,9 +1813,46 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("setTitle ended. result = " + rtnVal);
 		return rtnVal;
 	}
-
+	
 	@Override
-	public String getTitleList(String type, String companyID, int totalCount, int pageCount, int pageSize, int currentPage, int tenantID) throws Exception {
+	public String getTitleList(String type, String companyID, int tenantID) throws Exception {
+		logger.debug("getTitlePageList started.");
+
+		StringBuffer rtnVal = new StringBuffer();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		List<OrganJobVO> jobList = ezOrganAdminDao.getTitleList(map);
+		
+		rtnVal.append("<LISTVIEWDATA><ROWS>");
+		
+		if (jobList != null && jobList.size() > 0) {
+			for (int i = 0; i < jobList.size(); i++) {
+				rtnVal.append("<ROW>");
+				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName() + "]]></VALUE>");
+				rtnVal.append("<DATA1>" + jobList.get(i).getJobID() + "</DATA1>");
+				rtnVal.append("<DATA2>" + jobList.get(i).getType()  + "</DATA2>");
+				rtnVal.append("<DATA3>" + jobList.get(i).getSort()  + "</DATA3>");
+				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4></CELL>");
+				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></VALUE></CELL>");
+				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getUseFlag() + "</VALUE></CELL>");
+				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getSort() + "</VALUE></CELL>");
+				rtnVal.append("</ROW>");
+			}
+		}
+		
+		rtnVal.append("</ROWS></LISTVIEWDATA>");
+		
+		logger.debug("getTitlePageList ended.");
+		
+		return rtnVal.toString();
+	}
+	
+	@Override
+	public String getTitlePageList(String type, String companyID, int totalCount, int pageCount, int pageSize, int currentPage, int tenantID) throws Exception {
 		logger.debug("getTitleList started.");
 
 		StringBuffer rtnVal = new StringBuffer();
@@ -1827,7 +1864,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_START", (currentPage - 1 ) * pageSize);
 		map.put("v_TENANTID", tenantID);
 		
-		List<OrganJobVO> jobList = ezOrganAdminDao.getTitleList(map);
+		List<OrganJobVO> jobList = ezOrganAdminDao.getTitlePageList(map);
 		
 		rtnVal.append("<LISTVIEWDATA>");
 		rtnVal.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
@@ -1857,43 +1894,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return rtnVal.toString();
 	}
 	
-	@Override
-	public String getTitlePageList(String type, String companyID, int tenantID) throws Exception {
-		logger.debug("getTitlePageList started.");
-
-		StringBuffer rtnVal = new StringBuffer();
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_TYPE", type);
-		map.put("v_COMPANYID", companyID);
-		map.put("v_TENANTID", tenantID);
-		
-		List<OrganJobVO> jobList = ezOrganAdminDao.getTitlePageList(map);
-		
-		rtnVal.append("<LISTVIEWDATA><ROWS>");
-		
-		if (jobList != null && jobList.size() > 0) {
-			for (int i = 0; i < jobList.size(); i++) {
-				rtnVal.append("<ROW>");
-				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName() + "]]></VALUE>");
-				rtnVal.append("<DATA1>" + jobList.get(i).getJobID() + "</DATA1>");
-				rtnVal.append("<DATA2>" + jobList.get(i).getType()  + "</DATA2>");
-				rtnVal.append("<DATA3>" + jobList.get(i).getSort()  + "</DATA3>");
-				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4></CELL>");
-				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></VALUE></CELL>");
-				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getUseFlag() + "</VALUE></CELL>");
-				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getSort() + "</VALUE></CELL>");
-				rtnVal.append("</ROW>");
-			}
-		}
-		
-		rtnVal.append("</ROWS></LISTVIEWDATA>");
-		
-		logger.debug("getTitlePageList ended.");
-		
-		return rtnVal.toString();
-	}
-
 	@Override
 	public String getTitleInfo(String type, String jobID, String companyID, int tenantID) throws Exception {
 		logger.debug("getTitleInfo started.");
@@ -2109,4 +2109,24 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return rtnVal.toString();
 	}
 
+	@Override
+	public void updateDBData_user_new(List<OrganUserVO> vo) throws Exception {
+	
+		logger.debug("updateDBData_user_new started");
+		for(OrganUserVO userVO : vo) {
+			if (userVO.getDisplayName2() == null || userVO.getDisplayName2().equals("")) {
+				userVO.setDisplayName2(userVO.getDisplayName());
+			}
+
+			if (userVO.getTitle2() == null || userVO.getTitle2().equals("")) {
+				userVO.setTitle2(userVO.getTitle());
+			}
+
+			if (userVO.getExtensionAttribute102() == null || userVO.getExtensionAttribute102().equals("")) {
+				userVO.setExtensionAttribute102(userVO.getExtensionAttribute10());
+			}
+			ezOrganAdminDao.updateDBData_user(userVO);
+		}
+		logger.debug("updateDBData_user_new ended");
+	}
 }
