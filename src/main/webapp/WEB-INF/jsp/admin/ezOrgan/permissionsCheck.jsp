@@ -1128,14 +1128,13 @@
 		                listview.DataSource(headerData);
 		                listview.DataBind("PermissionPopUpList");
 		                
-		               /*  var a = document.getElementById("lvPermissionList_TR_0");
-		                a.style.backgroundColor = "rgb(255, 255, 255)";
-		                a.setAttribute("selected", "false");
+		                var a = document.getElementById("lvPermissionList_THEAD");
+		                var noclick = document.getElementById("lvPermissionList_TR_0");
+		                noclick.style.backgroundColor = "rgb(255, 255, 255)";
+		                noclick.setAttribute("selected", "false");
 		                $("#lvPermissionList_TR_0").mouseout(function(){
 		                	$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
-		                }); */
-		                
-		                var a = document.getElementById("lvPermissionList_THEAD");
+		                });
 		                a.style.display = "none";
 		        	},
 		        	error : function(error){

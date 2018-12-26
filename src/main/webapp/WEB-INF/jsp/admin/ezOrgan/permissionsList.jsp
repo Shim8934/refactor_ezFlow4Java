@@ -523,7 +523,7 @@
 		            	dataType : "html",
 		            	url : "/admin/ezOrgan/saveUserInfo.do",
 		            	async : false,
-		            	data : {parentCn : "", cn : dataList2, extensionAttribute1 : dataList},
+		            	data : {parentCn : "", cn : listview.GetSelectedRows()[0].getAttribute("DATA1"), extensionAttribute1 : data2},
 		            	success : function(result){
 		            		if (mode == "ALL") {
 			                    alert(strLang21);
