@@ -109,6 +109,7 @@
 			
 			totalPage = Math.ceil(new Number(totalCount / pageSize));
 			
+			makeUseSwitch();
 			makePageSelPage();
 		}
 		/* 추가, 수정, 삭제 Button Action (mode=Add,Mod,Del) */
@@ -433,6 +434,7 @@
 				pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
 			}
 			
+			makeUseSwitch();
 			makePageSelPage();
 		}
 		/* 직책을 사용중인 유저리스트 호출 Method */
@@ -556,6 +558,88 @@
 	        }
 	    }
 	    /* Tab관련 메소드들 ↑ */
+		
+		/* 사용여부  스위치  추가 메소드 */
+		function makeUseSwitch() {
+			var table  = document.getElementById("lvJobTitleList");
+			if (!table) {
+				table = document.getElementById("lvJobPositionList");
+			}
+			
+			var length = table.rows.length;
+			for (var i = 1; i < length; i++) {
+				var useTd     = table.rows[i].cells[3];
+				
+				var labelElmt = document.createElement("label");
+				var inputElmt = document.createElement("input");
+				var spanElmt  = document.createElement("span");
+				
+				labelElmt.className = "switch";
+				spanElmt.className = "slider round";
+				
+				inputElmt.setAttribute("type", "checkbox");
+				
+				if (useTd.textContent == "Y") {
+					inputElmt.setAttribute("checked", "checked");
+				}
+				
+				labelElmt.onclick = function(event) {inUseUpdate(event, this);};
+				
+				useTd.textContent = "";
+				
+				labelElmt.appendChild(inputElmt);
+				labelElmt.appendChild(spanElmt);
+				
+				useTd.appendChild(labelElmt);
+			}
+		}
+		
+		/* 사용여부 업데이트 */
+		function inUseUpdate(event, obj) {
+			event.stopPropagation();
+			//console.log("tagName" + event.target.tagName);
+			
+			if (event.target.tagName == "INPUT") {
+				var selectedTr    = obj.parentElement.parentElement;
+				var selectedInput = obj.firstElementChild;
+				var useFlag;
+				
+				if (selectedInput.getAttribute("checked")) {
+					useFlag = "N";
+				}
+				else {
+					useFlag = "Y";
+				}
+				
+				$.ajax({
+					type : "POST",
+					dataType: "text",
+					url : "/admin/ezOrgan/jobTitleAction.do",
+					async : false,
+					data :
+					{
+						jobID : selectedTr.getAttribute("DATA1"),
+						type : selectedTr.getAttribute("DATA2"),
+						mode : "Mod",
+						sort : selectedTr.getAttribute("DATA3"),
+						useFlag : useFlag,
+						companyID : selectedTr.getAttribute("DATA4"),
+						displayName1 : selectedTr.children[1].textContent,
+						displayName2 : selectedTr.children[2].textContent
+					},
+					success : function(result) {
+						if (useFlag == "Y") {
+							selectedInput.setAttribute("checked", "checked");
+						} else {
+							selectedInput.setAttribute("checked", "");
+						}
+					},
+					error : function(e) {
+						alert("<spring:message code='main.sp12' />");
+					}
+				});
+			}
+		}
 		
 		/* 페이징 관련 메소드 */
 		function makePageSelPage() {
