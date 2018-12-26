@@ -11,6 +11,7 @@
 
 <div class="navi-button">
 	<div>
+		<div id="gotoFirstTab" class="survey-infbttn"><img src="/images/ezSurvey/prevstep.png"></div>
 		<div id="gotoThirdTab" class="survey-infbttn"><img src="/images/ezSurvey/nextstep.png"></div>
 		<div id="cancelSurvey1" class="survey-infbttn"><img src="/images/ezSurvey/cancel.png"  ></div>
 	</div>

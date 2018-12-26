@@ -83,6 +83,7 @@
 				var skipLogic      = 'N';
 					
 				// 셀렉트 박스에 들어갈 질문 유형 데이터 
+				/* 
 				var optionData = 
 					[{ text : SurveyMessages.strSlOne   , value: 1, selected: false, imageSrc: "/images/ezSurvey/oneselect.png"  },
 					 { text : SurveyMessages.strSlMtp   , value: 2, selected: false, imageSrc: "/images/ezSurvey/multiplesl.png" },
@@ -93,6 +94,17 @@
 					 { text : SurveyMessages.strSlider  , value: 7, selected: false, imageSrc: "/images/ezSurvey/slider.png"     },
 					 { text : SurveyMessages.strRanking , value: 8, selected: false, imageSrc: "/images/ezSurvey/ranking.png"    },
 					 { text : SurveyMessages.strDropdown, value: 9, selected: false, imageSrc: "/images/ezSurvey/dropdown.png"   }];
+				 */
+				var optionData = 
+					[{ text : SurveyMessages.strSlOne   , value: 1, selected: false, imageSrc: "/images/ezSurvey/qsType01.png"},
+					 { text : SurveyMessages.strSlMtp   , value: 2, selected: false, imageSrc: "/images/ezSurvey/qsType02.png"},
+					 { text : SurveyMessages.strTblOne  , value: 3, selected: false, imageSrc: "/images/ezSurvey/qsType03.png"},
+					 { text : SurveyMessages.strTblMtp  , value: 4, selected: false, imageSrc: "/images/ezSurvey/qsType04.png"},
+					 { text : SurveyMessages.strShortQs , value: 5, selected: false, imageSrc: "/images/ezSurvey/qsType05.png"},
+					 { text : SurveyMessages.strLongQs  , value: 6, selected: false, imageSrc: "/images/ezSurvey/qsType06.png"},
+					 { text : SurveyMessages.strSlider  , value: 7, selected: false, imageSrc: "/images/ezSurvey/qsType07.png"},
+					 { text : SurveyMessages.strRanking , value: 8, selected: false, imageSrc: "/images/ezSurvey/qsType08.png"},
+					 { text : SurveyMessages.strDropdown, value: 9, selected: false, imageSrc: "/images/ezSurvey/qsType09.png"}];
 				
 				var surveyObj   = {
 					infor     : {},
@@ -2027,7 +2039,7 @@
 						}
 					}
 					var attImg = $("<img src='/images/ezSurvey/attach.png' class='attImg'>");
-					var minsImg = $("<img src='/images/ezSurvey/minus.jpg' class='delImg'>");
+					var minsImg = $("<img src='/images/ezSurvey/minus.png' class='delImg'>");
 					
 					option.append(textInput);
 					option.append(attImg);
@@ -2068,7 +2080,7 @@
 					
 					var html = "<div class='" + type + "' level='" + level + "'>";
 						html += "<input class='" + type + "Input' maxlength='33' value='" + content + "'>";
-						html += "<img alt='' src='/images/ezSurvey/minus.jpg' class='" + elClass + "' style='width: 30px;height: 30px; cursor: pointer;'>";
+						html += "<img alt='' src='/images/ezSurvey/minus.png' class='" + elClass + "' style='width: 30px;height: 30px; cursor: pointer;'>";
 						html += "</div>";
 						
 					return html;
@@ -2218,7 +2230,7 @@
 							
 							qstnHeader += "<span id='scndBtnGrp" + qstId + "' class='scndBtnGrp' style='display:none;'>"
 							qstnHeader += "<img id='saveLogic" + qstId + "' class='saveLogic' src='/images/ezSurvey/save.png'/>";
-							qstnHeader += "<img id='cancelLogic" + qstId + "' class='cancelLogic' src='/images/ezSurvey/xBtn.png' />";
+							qstnHeader += "<img id='cancelLogic" + qstId + "' class='cancelLogic' src='/images/ezSurvey/cancel.png' />";
 							qstnHeader += "</span>"
 							
 							qstnHeader += "<span id='thrdBtnGrp" + qstId + "' class='thrdBtnGrp' style='display:none;'>"

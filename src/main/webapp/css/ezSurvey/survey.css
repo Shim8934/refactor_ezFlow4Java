@@ -54,7 +54,7 @@
 .closeImgBttn {position: absolute; right: 10px; top: 8px;}
 .closeImgBttn >ul {margin: 0px; padding: 0px; list-style: none;}
 .closeImgBttn >ul >li {display: block; float: left; margin: 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
-.closeImgBttn >ul >li >span {display: inline-block; width: 25px; height: 28px; background-image: url(/images/close_xBtn.png); background-repeat: no-repeat; background-position: 4px 6px;}
+.closeImgBttn >ul >li >span {display: inline-block; width: 25px; height: 28px; background-image: url(/images/cancel.png); background-repeat: no-repeat; background-position: 4px 6px;}
 .fileList .qstUl {margin: 0px; padding: 0px;}
 .fileList .optUl {margin: 0px; padding: 0px 40px;}
 .fileList .qstUl >li {position: relative; padding: 15px 15px 0px;}
@@ -294,7 +294,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .slider-output {display: block; height: 30px; text-align: center; width: 100%; font-size: 2em; font-family: 'Advent Pro', sans-serif; color: rgba(132, 206, 66, 1);}
 
 /* ranking css */
-.delOption {width: 30px; height: 30px; cursor: pointer; background-repeat: no-repeat; background-size: 30px 30px; background-position: center; background-image: url('/images/ezSurvey/minus.jpg');}
+.delOption {width: 30px; height: 30px; cursor: pointer; background-repeat: no-repeat; background-size: 30px 30px; background-position: center; background-image: url('/images/ezSurvey/minus.png');}
 .ranking-select, .dropdown-select {display: flex; align-items: center;}
 .ranking-select + .ranking-select, .dropdown-select + .dropdown-select {margin-top: 10px;}
 .ranking-order, .dropdown-order {width: 30px; height: 30px; line-height: 30px; text-align: center; background-color: #ddd;}
@@ -351,7 +351,7 @@ input[type=range]::-ms-tooltip {display: none;}
 
 /* 2018.11.28 단일선택 사용자 폼 css */
 .usrQstnWrapper {box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.45);}
-.question-panel .mvBtn {margin: 0px auto; width: 32px; height: 16px; background-image: url(/images/ezSurvey/move.png); background-repeat: no-repeat; background-size: 18px 18px; background-position: center; border: 1px solid #ddd; box-sizing: border-box; border-top: 0px; cursor: move;}
+.question-panel .mvBtn {margin: 0px auto; width: 32px; height: 16px; background-image: url(/images/ezSurvey/drag.png); background-repeat: no-repeat; background-size: 18px 18px; background-position: center; border: 1px solid #ddd; box-sizing: border-box; border-top: 0px; cursor: move;}
 .question-header {display: flex; height: 32px;}
 .question-header .question-content {flex: 1; line-height: 32px; font-size: 16px; font-weight: bold; padding-left: 15px; cursor: default;}
 .question-header .tooltip-bttns {display: flex; padding: 0px 10px;}
