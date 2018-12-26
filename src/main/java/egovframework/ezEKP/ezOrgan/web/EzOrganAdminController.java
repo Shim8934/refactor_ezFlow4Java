@@ -38,6 +38,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -3630,5 +3631,50 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         logger.debug("getPermissionPopUpsList ended.");
         
 		return result.toString();
+	}
+	
+
+	/**
+	 * 조직도관리 권한 등록/삭제
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/saveUserPermissionInfo.do", produces = "text/plain; charset=UTF-8")
+	@ResponseBody
+	public String saveUserPermissionInfo(@CookieValue("loginCookie") String loginCookie, String[] cn, String[] extensionAttribute1) throws Exception{
+		logger.debug("saveUserPermissionInfo started.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		// 관리자 권한 체크
+		if (userInfo == null) {
+			return "EMAIL_ERROR";
+		}
+
+		List<OrganUserVO> vo = new ArrayList<OrganUserVO>();
+	
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date()); 
+		
+		for(int i=0; i<cn.length; i++) {
+			OrganUserVO tempVO = new OrganUserVO();
+			tempVO.setCn(cn[i].toLowerCase());
+			tempVO.setExtensionAttribute1(extensionAttribute1[i]);
+			tempVO.setTenantId(userInfo.getTenantId());
+			tempVO.setNowDate(nowDate);
+			vo.add(tempVO);
+		}
+
+
+		String result = "";		
+
+		try {
+			ezOrganAdminService.updateDBData_user_new(vo);
+			result = "OK";
+		} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+			e.printStackTrace();
+			result = "EMAIL_ERROR";
+		}
+		
+		return result;
 	}
 }

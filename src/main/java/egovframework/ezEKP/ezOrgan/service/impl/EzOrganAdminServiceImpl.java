@@ -2072,4 +2072,24 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return rtnVal.toString();
 	}
 
+	@Override
+	public void updateDBData_user_new(List<OrganUserVO> vo) throws Exception {
+	
+		logger.debug("updateDBData_user_new started");
+		for(OrganUserVO userVO : vo) {
+			if (userVO.getDisplayName2() == null || userVO.getDisplayName2().equals("")) {
+				userVO.setDisplayName2(userVO.getDisplayName());
+			}
+
+			if (userVO.getTitle2() == null || userVO.getTitle2().equals("")) {
+				userVO.setTitle2(userVO.getTitle());
+			}
+
+			if (userVO.getExtensionAttribute102() == null || userVO.getExtensionAttribute102().equals("")) {
+				userVO.setExtensionAttribute102(userVO.getExtensionAttribute10());
+			}
+			ezOrganAdminDao.updateDBData_user(userVO);
+		}
+		logger.debug("updateDBData_user_new ended");
+	}
 }
