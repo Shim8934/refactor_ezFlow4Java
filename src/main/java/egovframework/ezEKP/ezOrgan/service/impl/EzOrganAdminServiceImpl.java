@@ -1918,19 +1918,23 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String deleteTitle(String type, String jobID, String companyID, int tenantID) throws Exception {
+	public String deleteTitle(String type, String jobIDList, String companyID, int tenantID) throws Exception {
 		logger.debug("deleteTitle started.");
 		
 		String rtnVal = "";
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_TYPE", type);
-		map.put("v_JOBID", jobID);
-		map.put("v_COMPANYID", companyID);
-		map.put("v_TENANTID", tenantID);
 		
 		try {
-			ezOrganAdminDao.deleteTitle(map);
+			for (String jobID : jobIDList.split(";")) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("v_TYPE", type);
+				map.put("v_JOBID", jobID);
+				map.put("v_COMPANYID", companyID);
+				map.put("v_TENANTID", tenantID);
+				
+				ezOrganAdminDao.deleteTitle(map);
+			}
+			
 			rtnVal = "TRUE";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2068,4 +2072,24 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return rtnVal.toString();
 	}
 
+	@Override
+	public void updateDBData_user_new(List<OrganUserVO> vo) throws Exception {
+	
+		logger.debug("updateDBData_user_new started");
+		for(OrganUserVO userVO : vo) {
+			if (userVO.getDisplayName2() == null || userVO.getDisplayName2().equals("")) {
+				userVO.setDisplayName2(userVO.getDisplayName());
+			}
+
+			if (userVO.getTitle2() == null || userVO.getTitle2().equals("")) {
+				userVO.setTitle2(userVO.getTitle());
+			}
+
+			if (userVO.getExtensionAttribute102() == null || userVO.getExtensionAttribute102().equals("")) {
+				userVO.setExtensionAttribute102(userVO.getExtensionAttribute10());
+			}
+			ezOrganAdminDao.updateDBData_user(userVO);
+		}
+		logger.debug("updateDBData_user_new ended");
+	}
 }

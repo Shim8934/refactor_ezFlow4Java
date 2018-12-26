@@ -109,6 +109,7 @@
 			
 			totalPage = Math.ceil(new Number(totalCount / pageSize));
 			
+			makeUseSwitch();
 			makePageSelPage();
 		}
 		/* 추가, 수정, 삭제 Button Action (mode=Add,Mod,Del) */
@@ -118,7 +119,7 @@
 			var companyNM = $("#ListCompany option:selected").text();
 			var type = Tab1_SelectID;
 // 			var cn;
-			var jobID;
+			var jobIDList = [];
 			
 			var jobList = new ListView();
 			
@@ -129,8 +130,11 @@
 			}
 			
 			var oArrRows = jobList.GetSelectedRows();
+			for (var i = 0; i < oArrRows.length; i ++) {
+				jobIDList.push(oArrRows[i].getAttribute("DATA1"));
+			}
 			
-			/* 수정, 삭제의 경우 선택된 Row가 있나 체크후 CN 추출 */
+			/* 수정, 삭제의 경우 선택된 Row가 있나 체크  */
 			if (mode == "Mod" || mode == "Del") {
 				if (oArrRows == 0) {
 					if (type == "001") {
@@ -139,13 +143,21 @@
 						alert("<spring:message code = 'ezOrgan.csj18'/>");
 					}
 					return;
-				} else {
-// 					cn = oArrRows[0].getAttribute("DATA1");
-					jobID = oArrRows[0].getAttribute("DATA1");
 				}
 			}
 			/* 추가, 수정의 경우 팝업창 호출 */
 			if (mode == "Add" || mode == "Mod") {
+				
+				// 수정의 경우 선택된 Row 가 하나 이상인지 확인
+				if (mode == "Mod" && jobIDList.length > 1) {
+					if (type == "001") {
+						alert("직위를 하나만 선택하세요.");
+					} else if (type == "002") {
+						alert("직책을 하나만 선택하세요.");
+					}
+					return;
+				}
+				
 				var url = "/admin/ezOrgan/jobTitlePopupUI.do?type=" + type + "&mode=" + mode + "&companyID=" + companyID;
 				/* 수정의 경우 CN 추가 GET 파라미터 전송 */
 // 				if (mode == "Mod") {
@@ -155,7 +167,8 @@
 				var args = new Array();
 				args[0] = companyNM;
 // 				args[1] = cn;
-				args[1] = jobID;
+//				args[1] = jobID;
+				args[1] = jobIDList[0];
 				
 				titleInfo_dialogArguments[0] = args;
 			    titleInfo_dialogArguments[1] = titleInfo_Complete;
@@ -164,14 +177,17 @@
 				try { OpenWin.focus(); } catch (e) { }
 			/* 삭제의 경우 직위가 사용중인지 확인 후, 삭제처리 */
 			} else if (mode == "Del") {
-// 				if (!checkTitleUserCnt(cn)) {
-				if (!checkTitleUserCnt(jobID)) {
-					if (type == "001") {
-						alert("<spring:message code = 'ezOrgan.csj13'/>");
-					} else if (type == "002") {
-						alert("<spring:message code = 'ezOrgan.csj22'/>");
+				
+				var length = jobIDList.length;
+				for (var i = 0; i < length; i++) {
+					if (!checkTitleUserCnt(jobIDList[i])) {
+						if (type == "001") {
+							alert("<spring:message code = 'ezOrgan.csj13'/>");
+						} else if (type == "002") {
+							alert("<spring:message code = 'ezOrgan.csj22'/>");
+						}
+						return;
 					}
-					return;
 				}
 				
 				if (confirm("<spring:message code = 'ezOrgan.pjg01'/>")) {
@@ -183,7 +199,7 @@
 		            	data : 
 		            	{
 // 		            		cn : cn,
-		            		jobID : jobID,
+		            		jobIDList : jobIDList.length == 1 ? jobIDList += ";" : jobIDList.join(";"),
 		            		type : type,
 		            		companyID : companyID
 		            	},
@@ -418,6 +434,7 @@
 				pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
 			}
 			
+			makeUseSwitch();
 			makePageSelPage();
 		}
 		/* 직책을 사용중인 유저리스트 호출 Method */
@@ -541,6 +558,88 @@
 	        }
 	    }
 	    /* Tab관련 메소드들 ↑ */
+		
+		/* 사용여부  스위치  추가 메소드 */
+		function makeUseSwitch() {
+			var table  = document.getElementById("lvJobTitleList");
+			if (!table) {
+				table = document.getElementById("lvJobPositionList");
+			}
+			
+			var length = table.rows.length;
+			for (var i = 1; i < length; i++) {
+				var useTd     = table.rows[i].cells[3];
+				
+				var labelElmt = document.createElement("label");
+				var inputElmt = document.createElement("input");
+				var spanElmt  = document.createElement("span");
+				
+				labelElmt.className = "switch";
+				spanElmt.className = "slider round";
+				
+				inputElmt.setAttribute("type", "checkbox");
+				
+				if (useTd.textContent == "Y") {
+					inputElmt.setAttribute("checked", "checked");
+				}
+				
+				labelElmt.onclick = function(event) {inUseUpdate(event, this);};
+				
+				useTd.textContent = "";
+				
+				labelElmt.appendChild(inputElmt);
+				labelElmt.appendChild(spanElmt);
+				
+				useTd.appendChild(labelElmt);
+			}
+		}
+		
+		/* 사용여부 업데이트 */
+		function inUseUpdate(event, obj) {
+			event.stopPropagation();
+			//console.log("tagName" + event.target.tagName);
+			
+			if (event.target.tagName == "INPUT") {
+				var selectedTr    = obj.parentElement.parentElement;
+				var selectedInput = obj.firstElementChild;
+				var useFlag;
+				
+				if (selectedInput.getAttribute("checked")) {
+					useFlag = "N";
+				}
+				else {
+					useFlag = "Y";
+				}
+				
+				$.ajax({
+					type : "POST",
+					dataType: "text",
+					url : "/admin/ezOrgan/jobTitleAction.do",
+					async : false,
+					data :
+					{
+						jobID : selectedTr.getAttribute("DATA1"),
+						type : selectedTr.getAttribute("DATA2"),
+						mode : "Mod",
+						sort : selectedTr.getAttribute("DATA3"),
+						useFlag : useFlag,
+						companyID : selectedTr.getAttribute("DATA4"),
+						displayName1 : selectedTr.children[1].textContent,
+						displayName2 : selectedTr.children[2].textContent
+					},
+					success : function(result) {
+						if (useFlag == "Y") {
+							selectedInput.setAttribute("checked", "checked");
+						} else {
+							selectedInput.setAttribute("checked", "");
+						}
+					},
+					error : function(e) {
+						alert("<spring:message code='main.sp12' />");
+					}
+				});
+			}
+		}
 		
 		/* 페이징 관련 메소드 */
 		function makePageSelPage() {

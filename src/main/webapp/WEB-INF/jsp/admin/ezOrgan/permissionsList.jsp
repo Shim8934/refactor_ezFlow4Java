@@ -449,97 +449,74 @@
 		        Permissions_List();
 		    }
 
-		    function Permissions_Del(mode) {
-		        var listview = new ListView();
-		        listview.LoadFromID("lvPermissionList");
-		        var cData = "";
-		        
+			function Permissions_Del(mode) {
 
-		        if (listview.GetSelectedRows().length == 0) {
-		            alert(strLang13);
-		            return;
-		        }
-		        
-		        var dataList = new Array();
-		        var dataList2 = new Array();
-		        var listArr = document.getElementById("lvPermissionList");
-		        var checkArr = listArr.children[1];
-		        
-		        $("input[name='checks']:checked").each(function(){
-		        	dataList.push(this.parentElement.parentElement.getAttribute("DATA2"));
-		        });
-		        
-		        $("input[name='checks']:checked").each(function(){
-		        	dataList2.push(this.parentElement.parentElement.getAttribute("DATA1"));
-		        });
-		        
+				var dataList = new Array();
+				var dataList2 = new Array();
 
-		        if (mode == "ALL") {
-		        	//cData = listview.GetSelectedRows()[0].getAttribute("DATA3") + strLang19 + " " + "<spring:message code='ezAddress.t362' />" + strLang20;
-		        	cData = dataList.length + "<spring:message code='ezOrgan.mse1' />" + strLang19 + " " + "<spring:message code='ezAddress.t362' />" + strLang20;
-	            } else {
-	            	//cData = listview.GetSelectedRows()[0].getAttribute("DATA3") + strLang19 + document.getElementById(clickTabID).innerText + " " + strLang20;
-	            	cData = dataList.length + "<spring:message code='ezOrgan.mse1' />" + strLang19 + document.getElementById(clickTabID).innerText + " " + strLang20;
-	            }
-		        
-		        if (confirm(cData)) {
-		        	var data2;
-		        	
-		            /* if (mode == "ALL") {
-		            	data2 = "";		                
-		            } else {
-		                var tempDelType = DelType;
-		                var DelValue = tempDelType + "=1";
-		                
-		                if (tempDelType == "") {
-		                    tempDelType = "c=0";
-		                } else {
-		                    tempDelType = tempDelType + "=0";
-		                }
-		                data2 = listview.GetSelectedRows()[0].getAttribute("DATA2").replace(DelValue, tempDelType);		                
-		            } */
-		            
-		            for (var i =0; i< dataList.length; i++) {
-		            	if (mode == "ALL") {
-			            	data2 = "";		                
-			            } else {
-			                var tempDelType = DelType;
-			                var DelValue = tempDelType + "=1";
-			                
-			                if (tempDelType == "") {
-			                    tempDelType = "c=0";
-			                } else {
-			                    tempDelType = tempDelType + "=0";
-			                }
-			                dataList[i] = dataList[i].replace(DelValue, tempDelType);
-			            }
-		            }
-		            
-		            console.log(dataList);
-		            console.log(dataList2);
+				$("input[name='checks']:checked").each(function(){
+					dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
+					dataList2.push(this.parentElement.parentElement.getAttribute("DATA2"));
+				});
 
-		            $.ajax({
-		            	type : "POST",
-		            	dataType : "html",
-		            	url : "/admin/ezOrgan/saveUserInfo.do",
-		            	async : false,
-		            	data : {parentCn : "", cn : listview.GetSelectedRows()[0].getAttribute("DATA1"), extensionAttribute1 : data2},
-		            	success : function(result){
-		            		if (mode == "ALL") {
-			                    alert(strLang21);
-		            		} else {
-			                    alert(strLang22);
-		            		}
-		            	},
-		            	error : function(){
-		            		alert(strLang15);
-		            	}
-		            });
-		        }
-		        CurPage = 1;
-		        Permissions_List();
-		    }
-		    
+				// 선택된 사원이 없을 경우
+				if (dataList.length == 0) {
+					alert(strLang13);
+					return;
+				}
+
+				// 권한 전체삭제
+				var cData = "";
+				if (mode == "ALL") {
+					cData = dataList.length + "<spring:message code='ezOrgan.mse1' />" + strLang19 + " " + "<spring:message code='ezAddress.t362' />" + strLang20;
+				} else {
+					cData = dataList.length + "<spring:message code='ezOrgan.mse1' />" + strLang19 + document.getElementById(clickTabID).innerText + " " + strLang20;
+				}
+
+				if (confirm(cData)) {
+					for (var i =0; i< dataList.length; i++) {
+						if (mode == "ALL") {
+							dataList2[i] = "";
+						} else {
+							var tempDelType = DelType;
+							var DelValue = tempDelType + "=1";
+
+							if (tempDelType == "") {
+								tempDelType = "c=0";
+							} else {
+								tempDelType = tempDelType + "=0";
+							}
+							dataList2[i] = dataList2[i].replace(DelValue, tempDelType);
+						}
+					}
+
+					jQuery.ajaxSettings.traditional = true; 
+
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						url : "/admin/ezOrgan/saveUserPermissionInfo.do",
+						async : false,
+						data : {
+							cn : dataList, 
+							extensionAttribute1: dataList2
+						},
+						success : function(result){
+							if (mode == "ALL") {
+								alert(strLang21);
+							} else {
+								alert(strLang22);
+							}
+						},
+						error : function(){
+							alert(strLang15);
+						}
+					});
+				}
+				CurPage = 1;
+				Permissions_List();
+			}
+
 		    function email_onclick() {
 
 		        var listview = new ListView();
