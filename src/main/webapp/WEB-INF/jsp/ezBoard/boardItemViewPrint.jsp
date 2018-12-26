@@ -330,7 +330,7 @@
 		        <td style="height:20px" class="pad1">
 		          <table class="file2" style="height:100%">
 		            <tr>
-		              <th style="height:100%; "><spring:message code='ezBoard.t292'/></th>
+		              <th style="height:100%; "><spring:message code='ezBoard.t10025'/></th>
 		              <td style="width:100%; height:100%; "><div id="lstAttachLink" style="padding-top:3px;padding-bottom:3px;padding-left:3px;OVERFLOW:visible;  background-color:white; text-align:left"></div></td>
 		              <td id="ItemLevel" style="display:none"></td>
 		            </tr>
