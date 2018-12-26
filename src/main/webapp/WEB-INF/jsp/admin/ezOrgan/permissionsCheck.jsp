@@ -402,7 +402,8 @@
 	                    M_TR.style.cursor = "pointer";
 	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
-	                    M_TR.onclick = function () { event_listclick(this); };                    
+	                    M_TR.onclick = function () { event_listclick(this); };
+	                    M_TR.ondblclick = function () { event_listdblclick(this)};
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };
 	                    
@@ -497,6 +498,7 @@
  	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
 	                    M_TR.onclick = function () { event_listclick(this); };
+	                    M_TR.ondblclick = function () { event_listdblclick(this)};
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };
 	                    
@@ -649,6 +651,10 @@
 	            //Permissions_Check(GetAttribute(p_ListOrderObject, "_data2")); 
 	        } 
 	        
+	        //더블 클릭 할 때
+	        function event_listdblclick(elem) {
+	        	InsertReceiver("lvPermissionList");
+	        }
 	        /* function Permissions_Check(UserID) {
 	            var listview = new ListView();
 	            listview.LoadFromID("lvUserList");
@@ -713,7 +719,97 @@
 				});
 	        } */
 	        
-	        function InsertReceiver() {
+	        //선택한 사원을 오른쪽 리스트에 삽입할 때
+	        function InsertReceiver(elem) {
+	        	var listid = "lvPermissionBasic";
+	        	var getlistview = new ListView();
+	            getlistview.LoadFromID(listid);
+	        	var pparsingXML2 = "";
+        		var pparsingXML = "";
+	            var arrRows = getlistview.GetSelectedRows();
+	            var length = arrRows.length;
+	            
+	            var addJob = GetAttribute(p_ListOrderObject, "_data19");
+	            
+	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
+	                alert(strLang13);
+	                return;
+	            } else if(addJob == "addJob"){
+	            	alert("<spring:message code='ezOrgan.psb01' />");
+	                return;
+	            } else {
+	            	var strId = p_ListOrderObject.getAttribute("_data2");
+	            	var strName = p_ListOrderObject.getAttribute("_data4");
+	            	var strMail = p_ListOrderObject.getAttribute("_data3");
+	            	
+	            	var _listView = new ListView();
+	            	_listView.LoadFromID("lvPermissionList");
+	            	var arrRows = _listView.GetDataRows();
+	            	
+	            	for (var i =0; i < arrRows.length; i++) {
+	            		if (strId == arrRows[i].getAttribute("data1")){
+	            			alert("<spring:message code='ezOrgan.mse2' />");
+	            			return;
+	            		}
+	            	}
+	            	
+	            	$.ajax({
+						type : "POST",
+						dataType : "text",
+						url : "/admin/ezOrgan/getEntryInfo.do",
+						async : false,
+						data : {cn : strId, prop : "extensionAttribute1", pMode : "user" },
+						success : function(xml){
+							result=loadXMLString(xml);
+							xmlDom = result;
+			                var strData = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").toLowerCase().trim();
+			                
+			                var tempDelType = delType;
+			                var DelValue = tempDelType + "=1";
+			                
+			                if (tempDelType == "") {
+			                    tempDelType = "c=0";
+			                } else {
+			                    tempDelType = tempDelType + "=0";
+			                }
+			                strData = strData.replace(tempDelType, DelValue);
+			                
+			                pparsingXML2 = "";
+		            		pparsingXML = "";
+		            		pparsingXML2 = "<LISTVIEWDATA><ROWS>";
+		            		pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+		            		pparsingXML = pparsingXML + "<DATA2>" + strData + "</DATA2>";
+		            		pparsingXML = pparsingXML + "<DATA3>" + strName + "</DATA3>";
+		            		pparsingXML = pparsingXML + "<DATA4>" + strMail + "</DATA4>";
+		            		pparsingXML = pparsingXML + "<VALUE>" + p_ListOrderObject.cells[0].innerText + "</VALUE></CELL></ROW>";
+		            		pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
+		            		Resultxml = loadXMLString(pparsingXML2);
+			                
+		            		var listview = new ListView();
+		            		listview.LoadFromID("lvPermissionList");
+		            		
+		            		var MaxID = 0;
+		        		    var InitTr = listview.GetDataRows();
+		            		var MaxCntNum = 0;
+		            		for (var j = 0  ; j < InitTr.length  ; j++) {
+		                		var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                		if (MaxID < curnum) {
+		                    		MaxID = curnum;
+		                    		MaxCntNum = j;
+		                		}
+		            		}
+		            		
+		            		var objTr = listview.AddRow(InitTr.length);
+		        		    if (MaxCntNum != 0)
+				                MaxCntNum = MaxCntNum + 1;
+		            		SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		            		listview.AddDataRow(objTr, Resultxml);
+						}
+					});
+	            	
+	            	
+	            }
+	        	
 	            /* var pparsingXML = "";
 	            var pparsingXML2 = "";
 	            var strSIP = "";
@@ -786,7 +882,7 @@
 	        }
 
 	        function DeleteReceiver() {
-	            var listid = "lvAclList";
+	            var listid = "lvPermissionList";
 	            var selList = new ListView();
 	            selList.LoadFromID(listid);
 
@@ -1123,7 +1219,7 @@
 		                listview.SetID("lvPermissionList");
 		                listview.SetMulSelectable(false);
 		                //listview.SetRowOnClick("PermissionsPopUp_View");
-		                //listview.SetRowOnDblClick("PermissionsDbPopUp_View");
+		                listview.SetRowOnDblClick("DeleteReceiver");
 		                listview.SetHeightFree(true);
 		                listview.DataSource(headerData);
 		                listview.DataBind("PermissionPopUpList");
@@ -1339,7 +1435,7 @@
 	                </table>
 	            </td>
 	                 <td style="width: 30px; text-align: center;">                            
-	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver()"><br>
+	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver(this)"><br>
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()">
 	                 </td>   
 	            <td style="vertical-align:top; padding-top:4px; padding-left:4
