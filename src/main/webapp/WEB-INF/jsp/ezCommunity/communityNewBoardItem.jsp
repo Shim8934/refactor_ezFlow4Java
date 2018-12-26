@@ -1044,7 +1044,7 @@
 							<table class="file">
 								<form name="multicheck">
 									<tr>
-										<th><spring:message code='ezCommunity.t933' /></th>
+										<th><spring:message code='ezCommunity.t141' /></th>
 										<td class="pos1"><script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans", "125%", "100%");</script>
 											<div id="lstAttachLink"
 												style="display: none; OVERFLOW: auto; HEIGHT: 50px;">&nbsp;</div>
@@ -1070,7 +1070,7 @@
 							<table class="file">
 								<form name="multicheck">
 									<tr>
-										<th><spring:message code='ezCommunity.t933' /></th>
+										<th><spring:message code='ezCommunity.t141' /></th>
 										<td class="pos1">
 											<div id="lstAttachLink">&nbsp;</div>
 										</td>
