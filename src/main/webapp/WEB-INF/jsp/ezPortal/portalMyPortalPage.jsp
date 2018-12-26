@@ -1569,7 +1569,7 @@
 		<c:when test="${mode != 'view'}">
 			<c:choose>
 				<c:when test="${mode != 'view'}">
-					<body class="mainbody" style="OVERFLOW:hidden">
+					<body class="mainbody" style="OVERFLOW-y:auto">
 				</c:when>
 				<c:otherwise>
 					<body class="mainbg" style="OVERFLOW:hidden">
