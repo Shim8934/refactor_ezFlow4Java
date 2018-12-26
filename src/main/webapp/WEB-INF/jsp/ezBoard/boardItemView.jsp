@@ -1462,7 +1462,7 @@
 				    <td class="pad1" style="vertical-align: top;">
 				        <table class="file">
 				        <tr>
-				          <th><spring:message code='ezBoard.t292' /></th>
+				          <th><spring:message code='ezBoard.t10025' /></th>
 				            <td>
 				            	<div style="text-align:left; OVERFLOW: auto; HEIGHT: 50px; background-color:white" id="lstAttachLink" ></div>
 				            </td>
@@ -1479,7 +1479,7 @@
 				    <td class="pad1" style="vertical-align: top; DISPLAY:none;">
 				        <table class="file">
 				        <tr>
-				          <th><spring:message code='ezBoard.t292' /></th>
+				          <th><spring:message code='ezBoard.t10025' /></th>
 				          <td class="pos2">
 				          	  <div style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left" id="lstAttachLink"></div>
 				          </td>
@@ -1502,7 +1502,7 @@
 					    <td class="pad1" style="vertical-align: top; ">
 					        <table class="file">
 					        <tr>
-					          <th><spring:message code='ezBoard.t292' /></th>
+					          <th><spring:message code='ezBoard.t10025' /></th>
 			                     <td >
 					            <div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;background-color:white; text-align:left"></div>
 					          </td>
@@ -1521,7 +1521,7 @@
 					    <td class="pad1" style="vertical-align: top;">
 					        <table class="file">
 					        <tr>
-					          <th><spring:message code='ezBoard.t292' /></th>
+					          <th><spring:message code='ezBoard.t10025' /></th>
 		                      <td class="pos2">
 					            <div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left"></div></td>
 	  				          <td class="pos2">'
