@@ -322,7 +322,7 @@
 		    	<td style="height:20px;" >
 		    		<table class="file">
 				        <tr>
-				        	<th style="border-top: none;"><spring:message code = 'ezCommunity.t933' /></th>
+				        	<th style="border-top: none;"><spring:message code = 'ezCommunity.t141' /></th>
 					        <td style="width:100%;height:100%;border-top: none;"><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;background-color:white;height:auto;text-align:left "></div></td>
 				          	<td id="ItemLevel" style="display:none"></td>
 				        </tr>
