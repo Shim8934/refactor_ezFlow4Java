@@ -1918,19 +1918,23 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String deleteTitle(String type, String jobID, String companyID, int tenantID) throws Exception {
+	public String deleteTitle(String type, String jobIDList, String companyID, int tenantID) throws Exception {
 		logger.debug("deleteTitle started.");
 		
 		String rtnVal = "";
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_TYPE", type);
-		map.put("v_JOBID", jobID);
-		map.put("v_COMPANYID", companyID);
-		map.put("v_TENANTID", tenantID);
 		
 		try {
-			ezOrganAdminDao.deleteTitle(map);
+			for (String jobID : jobIDList.split(";")) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("v_TYPE", type);
+				map.put("v_JOBID", jobID);
+				map.put("v_COMPANYID", companyID);
+				map.put("v_TENANTID", tenantID);
+				
+				ezOrganAdminDao.deleteTitle(map);
+			}
+			
 			rtnVal = "TRUE";
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -109,7 +109,7 @@ public interface EzOrganAdminService {
 
 	public String updateTitle(String type, String jobID, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception;
 	
-	public String deleteTitle(String type, String jobID, String companyID, int tenantID) throws Exception;
+	public String deleteTitle(String type, String jobIDList, String companyID, int tenantID) throws Exception;
 	
 	public String getTitleUserList(String type, String jobID, String primary, String companyID, int tenantID) throws Exception;
 	

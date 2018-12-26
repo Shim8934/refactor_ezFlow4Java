@@ -3443,11 +3443,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 //		String cn = request.getParameter("cn");
-		String jobID = request.getParameter("jobID");
+		String jobIDList = request.getParameter("jobIDList");
 		String type = request.getParameter("type");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezOrganAdminService.deleteTitle(type, jobID, companyID, userInfo.getTenantId());
+		String result = ezOrganAdminService.deleteTitle(type, jobIDList, companyID, userInfo.getTenantId());
 		
 		logger.debug("jobTitleListView ended.");
 		return result;
