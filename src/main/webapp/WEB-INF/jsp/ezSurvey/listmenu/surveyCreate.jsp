@@ -290,11 +290,9 @@
 				}
 				
 				function gotoForthStep() {
-					console.log("설문 확인 단계");
-					/* 
 					var checkObj = prepareForStep4();
 					if (checkObj["error"]) {alert(checkObj["error"]); return;}
-					 */
+					
 					var listTabElmt          = document.getElementsByClassName("headpanel")[0].children;
 					listTabElmt[0].className = "crust";
 					listTabElmt[1].className = "crust";
@@ -322,11 +320,12 @@
 						case 3: checkObj = prepareForStep3();
 								if (checkObj["error"]) {alert(checkObj["error"]); return;}
 								toggleStep(spanElemt, crrSpan, tabIdx);
-								getSurveyPreview();
+								getSurveyPreview(tabIdx);
 								lastStep = 3; break;
 						case 4: checkObj = prepareForStep4();
 								if (checkObj["error"]) {alert(checkObj["error"]); return;}
 								toggleStep(spanElemt, crrSpan, tabIdx);
+								getSurveyPreview(tabIdx);
 								lastStep = 4; break;
 					}
 				}
@@ -342,7 +341,7 @@
 				
 				function focusonQuestionTitleStep1() {document.getElementById("info-input-ttl").focus();}
 				function focusonQuestionTitleStep2() {document.querySelector("div[class='quesDiv']").querySelector("input[class='questnTitle']").focus();}
-				function getSurveyPreview() {prevQstn();}
+				function getSurveyPreview(step) {prevQstn(step);}
 				
 				function prepareForStep2() {
 					var returnObj = {};
@@ -436,7 +435,6 @@
 				
 				function checkStep3() {
 					var returnObj = {};
-					var questionList = getSurveyQuestions();
 					
 					if (lastStep == 2) {
 						if (skipLogic == 'N') {
@@ -451,7 +449,6 @@
 						}
 					}
 					var surveyPp   = document.getElementById("info-input-pp");
-					console.log(surveyPp.value);
 					
 					var ppContent = document.querySelectorAll("div[class=ppContent]");
 					for (var i = 0; i < ppContent.length; i++) {
@@ -2151,7 +2148,7 @@
 				function isValid(value) {if (!isNaN(value) && parseFloat(value) >= 0 && value % 1 === 0) {return true;} else {return false;}}
 				
 				// 미리보기 질문 폼 생성
-				function prevQstn() {
+				function prevQstn(step) {
 					var prevQsArea = $(".prevQsArea");
 					prevQsArea.html("");
 					
@@ -2166,7 +2163,7 @@
 							var qstnType = question.type;
 							var wrapper = $("<div class='prevQsWrapper' id='prevQstn" + qstnId + "'type='" + qstnType + "'></div>");
 							
-							var header = prevQsHeader(question, qstnList);
+							var header = prevQsHeader(question, qstnList, step);
 							var prevQsOpt = $("<div class='prevQsOpt'></div>");
 							
 							var body = "";
@@ -2188,7 +2185,7 @@
 							wrapper.append(prevQsOpt);
 							prevQsArea.append(wrapper);
 							
-							if (question.logicFlag == 1) {
+							if (step == 3 && question.logicFlag == 1) {
 								mkLogicForm(qstnId);
 							}
 						}
@@ -2196,7 +2193,7 @@
 				}
 				
 				// 미리보기 질문의 헤더
-				function prevQsHeader(question, qstnList) {
+				function prevQsHeader(question, qstnList, step) {
 					var qstId    = question.level;
 					var content  = question.content;
 					var qstnType = question.type;
@@ -2213,7 +2210,7 @@
 					if (required == 1) {
 						qstnHeader += "<strong class='imptt'>*</strong>";
 					}
-					if (qstId < qstnList.length) {
+					if (step == 3 && qstId < qstnList.length) {
 						if (qstnType == 1 || qstnType == 2 || qstnType == 7 || qstnType == 9) {
 							qstnHeader += "<span id='frstBtnGrp" + qstId + "' class='frstBtnGrp'>"
 							qstnHeader += "<img id='addLogic" + qstId + "' class='addLogic' src='/images/ezSurvey/shuffle.png'/>";

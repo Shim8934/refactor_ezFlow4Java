@@ -444,4 +444,18 @@ input[type=range]::-ms-tooltip {display: none;}
 .user-listDiv span >em {padding-right: 5px; font-style: normal;}
 .user-listDiv span >img {width: 10px; height: 10px; cursor: pointer;}
 
+.svInfoWrapper {height: 70px; width: auto;}
+.svInfoWrapper .wtInfoArea {float: left;width: 70%; height: 100%;}
+.svInfoWrapper .wtInfoArea .wtImgArea {float: left;height: 50px; padding: 10px; width: 50px;}
+.svInfoWrapper .wtInfoArea img {width: 50px; height: 50px;}
 
+.svInfoWrapper .wtInfoArea .wtInfo {float: left; width: auto; height: 50px; padding: 10px;}
+.svInfoWrapper .wtInfoArea .wtInfo .wtName {height: 50%; font-size: 17px; color: rgba(0, 115, 230, 0.64); float: left; width: 100%;}
+.svInfoWrapper .wtInfoArea .wtInfo .wtTime {height: 50%; font-size: 17px; width: 100%; float: left;}
+
+.svTitle {height: 70px; background-color: #fff; border: 1px solid #d7d7d7; display: flex;}
+.svTitle .sryFirst2 {width: 10px; background-color: rgba(0, 115, 230, 0.64);}
+.svTitle .sryTxt {height: 70px; line-height: 70px; padding: 0px 10px; font-weight: bold; font-size: 20px;}
+
+.svPurpose {width: auto; height: auto; padding: 15px 0px;}
+.svPurpose .ppContent {width: auto; height: auto; background-color:white; padding:15px 10px; border: 1px solid #d7d7d7;}
