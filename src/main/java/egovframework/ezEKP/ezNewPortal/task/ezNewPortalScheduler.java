@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezNewPortal.task;
 
+import java.net.UnknownHostException;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -33,8 +34,12 @@ public class ezNewPortalScheduler {
 		try {
 			ezNewPortalService.setWeather();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    if (e instanceof UnknownHostException) {
+		    	logger.debug("have to connect the internet to use weather scheduler");
+		    }
+		    else {
+		    	e.printStackTrace();
+		    }
 		}
 		
 		logger.debug("receiveWeatherData ended");

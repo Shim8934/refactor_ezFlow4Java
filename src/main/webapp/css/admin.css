@@ -253,4 +253,5 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 .listview.organ{margin-bottom:2px;} 
 .OrganListView {border: 0px solid #ddd; Width: 375px; Height: 510px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll;}
 .pwd, .move {margin-left:15px; margin-top:3px;}
+.deptMaster {float:right;}
 .retire {margin-left:5px; margin-top:3px;}

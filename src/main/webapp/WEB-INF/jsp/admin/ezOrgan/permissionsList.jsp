@@ -435,10 +435,10 @@
 		        if (CrossYN()) {
 		            permissions_check_dialogArguments[0] = Params;
 		            permissions_check_dialogArguments[1] = Permissions_Add_Complete;
-		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value + "&DelType="+DelType, "Permissions_Check", GetOpenWindowfeature(1000, 600));
+		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), "Permissions_Check", GetOpenWindowfeature(1000, 600));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
-		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value, Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(970, 580));
+		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(1000, 600));
 		            clearSearchVal();
 		            Permissions_List();
 		        }
@@ -523,7 +523,7 @@
 		            	dataType : "html",
 		            	url : "/admin/ezOrgan/saveUserInfo.do",
 		            	async : false,
-		            	data : {parentCn : "", cn : dataList2, extensionAttribute1 : dataList},
+		            	data : {parentCn : "", cn : listview.GetSelectedRows()[0].getAttribute("DATA1"), extensionAttribute1 : data2},
 		            	success : function(result){
 		            		if (mode == "ALL") {
 			                    alert(strLang21);

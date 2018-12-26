@@ -1866,7 +1866,7 @@
 			AND
 				containertypeid = #v_CONTTYPEID#
 			AND
-				containerowndepid = (SELECT containerowndepid FROM TBL_CONTAINER WHERE containerID = #v_DEPTID# AND tenant_id = #tenantID#)
+				containerowndepid = (SELECT containerowndepid FROM TBL_CONTAINER WHERE containerID = #v_DEPTID# AND companyid = #companyID# AND tenant_id = #tenantID#)
 		]]>
 	</select>
 

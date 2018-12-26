@@ -1381,7 +1381,7 @@
 					var gyumInfo = tempLV.getAttribute('DATA3');
 					// 3 암호관리 4 사원이동 5 퇴직
 					if(tempLV.children[0].innerHTML != "") {
-						tempLV.children[0].innerHTML = "<span><img id='pwd" + userID +"' class='pwd' onclick='mod_pwd(event)' src='/images/admin/password.png'></span>";
+						tempLV.children[0].innerHTML = "<span><img id='pwd" + userID +"' class='deptMaster' onclick='mod_pwd(event)' src='/images/admin/password.png'></span>";
 					}
 					tempLV.children[6].innerHTML = "<span><img id='pwd" + userID +"' class='pwd' onclick='mod_pwd(event)' src='/images/admin/password.png'></span>";
 					tempLV.children[7].innerHTML = "<span><img id='move" + userID +"' class='move' onclick='move_user(event)' src='/images/admin/move_sawon.png'></span>";
@@ -1574,11 +1574,11 @@
 					</HEADER>
 					<HEADER>
 						<NAME><spring:message code='ezOrgan.t67' /></NAME>
-						<WIDTH></WIDTH>
+						<WIDTH>20%</WIDTH>
 					</HEADER>
 					<HEADER>
 						<NAME>아이디</NAME>
-						<WIDTH>20%</WIDTH>
+						<WIDTH></WIDTH>
 					</HEADER>
 					<HEADER>
 						<NAME><spring:message code='ezOrgan.t68' /></NAME>

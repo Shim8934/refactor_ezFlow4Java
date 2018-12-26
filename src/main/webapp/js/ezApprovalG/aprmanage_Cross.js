@@ -2069,7 +2069,7 @@ function setbuttonenable() {
         document.getElementById("tbtnSimsa").style.display = "none";
         
 		if (approvalFlag == "G") {
-			if(pListTypeValue == "4") {
+			if(pListTypeValue == "4" && useHWP == 'YES') {
 				document.getElementById("tbtnNonElecRec").style.display = "";
 			}
 		}

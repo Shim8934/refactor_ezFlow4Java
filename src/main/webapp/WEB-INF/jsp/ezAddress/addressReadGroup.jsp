@@ -135,7 +135,7 @@
 		      <ul>
 		        <li><span onClick="modify_address()"><spring:message code='ezAddress.t174' /></span></li>
 		        <li><span class="icon16 popup_icon16_print" onClick="window.print()"></span></li>
-		        <li><span class="icon16 popup_icon16_mail" onClick="write_letter()"></span></li>
+		        <li><span class="icon16 popup_icon16_mail_gray" onClick="write_letter()"></span></li>
 		      </ul>
 		    </div>
 		    <div id="close">
