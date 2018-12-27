@@ -187,3 +187,6 @@ var strLangKHJ6 = "ics파일 형식에 맞지 않습니다.";
 var strLangKHJ7 = "ics파일을 저장하는 중 에러발생";
 //2018-11-12
 var strLangKHJ8 = "権限がありません。";
+//2018-12-27
+var strLangKHA1 = "会社記念日";
+var strLangKHA2 = "法定公休日";
