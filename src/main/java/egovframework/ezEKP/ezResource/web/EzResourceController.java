@@ -548,6 +548,8 @@ public class EzResourceController extends EgovFileMngUtil {
 			startDay = 7;
 		}
 		
+		String lunarUse = ezScheduleService.scheduleGetLunarUse(userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		model.addAttribute("childBrd", childBrd);
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("brdNm", brdNm);
@@ -559,7 +561,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("brdCount", brdCount);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("startDay", startDay);
-		model.addAttribute("lang", lang);		
+		model.addAttribute("lang", lang);
+		model.addAttribute("lunarUse", lunarUse);
 		
 		logger.debug("viewResList2 End");
 		return "/ezResource/resViewResList2";

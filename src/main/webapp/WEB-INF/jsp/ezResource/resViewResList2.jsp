@@ -71,7 +71,9 @@
 	    	var pChildBrd = "${childBrd}";
 		    var Mod = "";
 		    var pUse_Editor = "${useEditor}";
-		    var pStartday = "${startDay}";		    
+		    var pStartday = "${startDay}";		
+		    var lunarUseFlag = "${lunarUseFlag}";
+		    var lunarUse = "${lunarUse}";
 		    /* select_memorialDays("${lang}"); */
 		    var dayView = "";
 		    

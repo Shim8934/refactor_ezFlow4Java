@@ -58,7 +58,7 @@
 		    		success: function(result) {
 		    			MakeSliderList(result);
 		    			if (holidayType == 'a') {
-			    			makeSelectBox(result);
+			    			makeSelectBox(result, 'loadnew');
 		    			} 
 		    			
 		    		}	    		
@@ -114,7 +114,7 @@
 		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
 		                        }
 								
-		                        if (holidayType == 'a') {
+		                        /* if (holidayType == 'a') {
 		                        	 if (isRepeat == "1") {
 		                        		_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
 		                        	 } else {
@@ -122,7 +122,8 @@
 		                        	 }
 		                        } else {
 		                        	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
-		                        }
+		                        } */
+		                        _html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
 	
 		                        if (isRepeat == "1") {
 		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
@@ -197,11 +198,11 @@
 		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
 		                        }
 								
-		                        if (holidayType == 'a') {
+		                        /* if (holidayType == 'a') {
 		                       		_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(0, 10) + "</td>";
-		                        } else {
+		                        } else { */
 		                        	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
-		                        }
+		                        //}
 	
 		                        if (isRepeat == "1") {
 		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
@@ -542,17 +543,20 @@
 		    		},
 		    		success: function(result) {
 		    			MakeSliderList(result);
+		    			makeSelectBox(holidayYear, 'select');		    			
 		    		}	    		
 		        });
 		    }
 		    
-		    function makeSelectBox(result) {
+		    function makeSelectBox(holidayYear, type) {
 		    	var _html = "";
-		    	var holidayYear = new Date().getFullYear(); 
+		    	if (type != 'select') {
+		    		holidayYear = new Date().getFullYear(); 
+		    	}
 			    // <option></option>    
 		        try {
 		        	$('#ListYear').css("display", "");
-		        	for (var j = -10; j < 10; j++) {
+		        	for (var j = -10; j < 11; j++) {
 		        		if (j == 0) {
 			        		_html += "<option value='"+(parseInt(holidayYear)+j)+"' selected>"+(parseInt(holidayYear)+j)+"</option>";
 		        		} else {

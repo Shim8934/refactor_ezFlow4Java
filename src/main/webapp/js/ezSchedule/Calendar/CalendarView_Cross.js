@@ -138,19 +138,23 @@ function CalendarView(pTagetID,chk_str) {
                     else
                         //dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
                     	dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
+                    //dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
 
 
                     var current_day = new Date(sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2));
-                    /*if (current_day.getDay() == "6")
-                        oTh.style.color = "rgb(0, 72, 149)";
-                    else if (current_day.getDay() == "0" || isholiday)
-                        oTh.style.color = "#ee1c25";
-*/
+                    if (current_day.getDay() == "0" || isholiday)
+                    	document.getElementById("calTitle").style.color = "#ee1c25";
+                    else if (current_day.getDay() == "6")
+                    	document.getElementById("calTitle").style.color = "rgb(0, 72, 149)";
+                    else
+                    	document.getElementById("calTitle").style.color = "black";
                 }
                 else
                     var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
             }
             else {
+            	document.getElementById("calTitle").style.color = "black"
+            	
                 oTable.className = "calendar_month_navi";
                 var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2);
             }
@@ -269,6 +273,7 @@ function CalendarView(pTagetID,chk_str) {
 
         }
         else {
+        	document.getElementById("calTitle").style.color = "black"
             /*var oTable = document.createElement("TABLE");
             oTable.className = "calendar_week_navi";
             oTable.setAttribute("cellpadding", "0");
