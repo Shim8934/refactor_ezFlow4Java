@@ -11,9 +11,6 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezAttitude/ListView_list.js')}"></script>
-	    <!-- data picker-->		
-		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 	    <style>
 	    	#contentlist table.mainlist tr:not(.tr_noItems) td {
 	    		overflow : hidden;
@@ -85,7 +82,7 @@
 	</head>
 	<body class="mainbody">
 	    <h1>
-	    	<spring:message code = 'ezAttitude.t5' /><span id="mailBoxInfo"></span>
+	    	연차현황관리
 	    	<select class="companySelect" name="ListCompany" id="ListCompany" onchange="company_change()">
 				<c:forEach var = "companyItem" items="${list }">
 					<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
@@ -97,25 +94,28 @@
 	  	<table id="searchTable" style="width:100%;">
 			<tbody>
 				<tr>
-					<td style="width: 3%;"><spring:message code='ezAttitude.t9'/></td>
-					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
+					<td style="width: 3%">년도</td>
+					<td style="width: 12%;">
+						<select id="year">
+						</select>
+					</td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td>
 					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
-					<td style="width: 3%"></td>
-					<td style="width: 12%;">
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
-					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
 					<td style="width: 3%;"></td>
 					<td style="width: 12%;">
+				</tr>
+				<tr>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t9'/></td>
+					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
+					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
 					</td>
 					<td style="width: *;" colspan=2>
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.t121' /></span></a>
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
-						<a class="imgbtn"><span onclick="">엑셀로 등록하기</span></a>
+						<a class="imgbtn"><span onclick="">엑셀로 등록</span></a>
+						<a class="imgbtn"><span onclick="">전체 등록/수정</span></a>
 						
 					</td>
 				</tr>
