@@ -569,6 +569,7 @@
 			var length = table.rows.length;
 			for (var i = 1; i < length; i++) {
 				var useTd     = table.rows[i].cells[3];
+				if (!useTd) { break; }
 				
 				var labelElmt = document.createElement("label");
 				var inputElmt = document.createElement("input");
