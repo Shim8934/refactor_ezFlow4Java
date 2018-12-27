@@ -73,6 +73,7 @@
 		    var pStartday = "<c:out value='${startDay}'/>";
 		    var pUse_Editor = "<c:out value='${useEditor}'/>";
 		    var LunarUse = false;		    
+		    var primaryLang = "<c:out value='${userInfo.primary}'/>";		// 2018-12-26 김민성 - 일정관리 기념일 다국어 처리
 		    /* select_memorialDays(uselang); */
 		    
 		    /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */

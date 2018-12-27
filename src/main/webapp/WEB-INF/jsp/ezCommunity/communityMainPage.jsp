@@ -1308,6 +1308,11 @@
 
 	                var left = (width - wWeight) / 2;
 	                var top = (heigth - wHeight) / 2 - 30;
+	                
+	                /* 2018-12-24 김민성 - 커뮤니티 팝업 해상도 1600*900 이하 height 조절 */
+	                if(wHeight > heigth) {
+                    	wHeight = heigth-100;
+                    }
 
 	                var ret = window.open(url, code, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 	                
