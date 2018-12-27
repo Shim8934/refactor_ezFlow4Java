@@ -99,4 +99,12 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		
 		return (long) select("EzSystemAdminDAO.selectModuleSize", paramMap);
 	}
+	
+	public void insertMultiLogintype(Map<String, Object> paramMap) throws Exception {
+		insert("EzSystemAdminDAO.insertMultiLoginType", paramMap);
+	}
+	
+	public void updateMultiLogintype(Map<String, Object> paramMap) throws Exception {
+		insert("EzSystemAdminDAO.updateMultiLoginType", paramMap);
+	}
 }

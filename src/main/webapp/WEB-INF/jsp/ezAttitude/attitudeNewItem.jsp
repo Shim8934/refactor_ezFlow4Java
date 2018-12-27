@@ -61,7 +61,7 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 				form_change();
-				select_memorialDays(uselang);
+				/* select_memorialDays(uselang); */
 				setHoliday();
 				setTypeName();
 				setInputValue();

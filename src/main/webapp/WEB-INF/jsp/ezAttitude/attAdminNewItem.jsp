@@ -59,7 +59,7 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-				select_memorialDays(uselang);
+				/* select_memorialDays(uselang); */
 				setHoliday();
 				setTypeName();
 			}

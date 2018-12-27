@@ -122,7 +122,7 @@
 		        if (holidayType == "a") {
 		        	companyID = document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value;
 		        } else {
-		        	companyID = "1";
+		        	companyID = "ALL";
 		        }
 		        
 		        

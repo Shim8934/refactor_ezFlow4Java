@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -1032,6 +1034,65 @@ public class EzSystemAdminController {
 		return ResponseEntity.ok()
 				.contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
 				.body(moduleSizeVO);
+	}
+	
+	@RequestMapping(value = "/admin/ezSystem/multiLoginManager.do")
+	public String multiLoginManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("multiLoginManager started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
+		
+		// 현재 유저 회사의 멀티로그인 사용여부 (default : YES)
+		String useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
+		useMultiLogin = Optional.ofNullable(useMultiLogin).filter(StringUtils::isNotEmpty).orElse("YES");
+		
+		// 회사리스트
+		List<OrganDeptVO> companyList = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), tenantID);
+		
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("companyList", companyList);
+		model.addAttribute("useMultiLogin", useMultiLogin);
+		
+		logger.debug("multiLoginManager ended");
+		
+		return "/ezSystem/multiLoginManager";
+	}
+	
+	@RequestMapping(value = "/admin/ezSystem/companyMultiLoginType.do", method = RequestMethod.GET)
+	public ResponseEntity<String> getCompanyMultiLoginType(@CookieValue("loginCookie") String loginCookie, @RequestParam String companyID) throws Exception {
+		logger.debug("getCompanyMultiLoginType started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		// 선택 회사의 멀티로그인 사용여부 (default : YES)
+		String useMultiLogin = ezCommonService.getCompanyConfig(userInfo.getTenantId(), companyID, "useMultiLogin");
+		useMultiLogin = Optional.ofNullable(useMultiLogin).filter(StringUtils::isNotEmpty).orElse("YES");
+		
+		logger.debug("getCompanyMultiLoginType ended");
+		
+		return ResponseEntity.ok()
+				.body(useMultiLogin);
+	}
+	
+	@RequestMapping(value = "/admin/ezSystem/companyMultiLoginType.do", method = RequestMethod.POST)
+	public ResponseEntity<String> setCompanyMultiLoginType(@CookieValue("loginCookie") String loginCookie, @RequestParam String companyID, @RequestParam String multiLoginType) throws Exception {
+		logger.debug("setCompanyMultiLoginType started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		
+		if(userInfo != null) {
+			String useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
+			
+			ezSystemAdminService.setMultiLoginType(multiLoginType, tenantID, companyID, useMultiLogin);
+		}
+		
+		logger.debug("setCompanyMultiLoginType ended");
+		
+		return ResponseEntity.ok()
+				.body("");
 	}
 
 }
