@@ -487,9 +487,11 @@
 	      		</tr>
 	    	</table>	
 	  	</div> 
-  		<div class="previewmail_addImage" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;font-family:<spring:message code='main.t246' />">
-			<p class="title"><spring:message code='ezEmail.0hun05' /></p>
-			<div class="previewIamgelist" id="PreviewAttachList">${previewImageListHtml}</p>
-		</div>
+	  	<c:if test="${previewMailImage == 'Y'}">
+		  	<div class="previewmail_addImage" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;font-family:<spring:message code='main.t246' />">
+				<p class="title"><spring:message code='ezEmail.0hun05' /></p>
+				<div class="previewIamgelist" id="PreviewAttachList">${previewImageListHtml}</p>
+			</div>
+	  	</c:if>
 	</body>
 </html>

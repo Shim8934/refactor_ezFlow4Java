@@ -505,4 +505,22 @@
 		  PRIMARY KEY ("USERID","TENANTID")
 		) 
 	</statement>
+	
+	<select id="EzCommonDAO.checkJmochaMailGenenalPreviewMailImage">
+		<![CDATA[
+			SELECT 
+				PREVIEW_MAIL_IMAGE
+			FROM 
+				JMOCHA_MAIL_GENERAL
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addJmochaMailGenenalPreviewMailImage"> 
+		ALTER TABLE 
+			JMOCHA_MAIL_GENERAL
+		ADD 
+			PREVIEW_MAIL_IMAGE VARCHAR(10) DEFAULT 'Y'
+	</statement>
 </sqlMap>

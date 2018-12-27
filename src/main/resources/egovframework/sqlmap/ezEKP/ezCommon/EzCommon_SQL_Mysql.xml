@@ -483,4 +483,19 @@
 		  PRIMARY KEY (`USERID`,`TENANTID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
+	
+	<select id="EzCommonDAO.checkJmochaMailGenenalPreviewMailImage">
+		SELECT 
+			PREVIEW_MAIL_IMAGE
+		FROM 
+			JMOCHA_MAIL_GENERAL
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addJmochaMailGenenalPreviewMailImage"> 
+		ALTER TABLE 
+			JMOCHA_MAIL_GENERAL
+		ADD 
+			PREVIEW_MAIL_IMAGE VARCHAR(10) DEFAULT 'Y'
+	</statement>
 </sqlMap>

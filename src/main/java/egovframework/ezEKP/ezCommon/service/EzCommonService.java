@@ -85,6 +85,8 @@ public interface EzCommonService {
 	public void addJobMasterJobID() throws Exception;
 
 	public void createWebfolderToken() throws Exception;
+	
+	public void addJmochaMailGenenalPreviewMailImage() throws Exception;
 
 	public void addUserMasterPasswordUpdateDT() throws Exception;
 

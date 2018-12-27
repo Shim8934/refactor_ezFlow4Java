@@ -74,6 +74,7 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
@@ -756,6 +757,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         	memoFlag = "NO";
         }
         
+        // 20181219 김수아 : 첨부파일 이미지 미리보기 사용자 컨피그
+        MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+        String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
+        
         model.addAttribute("htmlBody", htmlBody);
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
@@ -769,6 +774,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("Id", userInfo.getId());
 		model.addAttribute("memoFlag", memoFlag);
 		model.addAttribute("previewImageListHtml", bodyInfoList.get(5)); //이미지 미리보기 
+		
+		model.addAttribute("previewMailImage", previewMailImage);
 		
 		logger.debug("readMailContent ended.");
 		
@@ -2084,6 +2091,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         } else {
         	memoFlag = "NO";
         }
+
+        // 20181219 김수아 : 첨부파일 이미지 미리보기 사용자 컨피그
+        MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+        String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
         
 		logger.debug("readMailContent ended.");
 		model.addAttribute("url", url);
@@ -2094,6 +2105,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
 		model.addAttribute("memoFlag", memoFlag);
 		model.addAttribute("previewImageListHtml", bodyInfoList.get(5)); //이미지 미리보기 
+		model.addAttribute("previewMailImage", previewMailImage);
 		
 		logger.debug("previewContent ended.");
 		
