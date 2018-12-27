@@ -55,7 +55,7 @@
 					<td class="cbTD" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:20px;"><input onchange="checkedCheckbox(this);" type="checkbox" name="journalCheckbox" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td>
 					<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:25px;">
 						<c:if test="${journal.deptShare eq 'N' }">
-							<img src="/images/lock_icon.png">
+							<img src="/images/lock_icon.png" style="vertical-align: middle;">
 							<!-- <img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;"> --> 
 						</c:if>
 					</td>

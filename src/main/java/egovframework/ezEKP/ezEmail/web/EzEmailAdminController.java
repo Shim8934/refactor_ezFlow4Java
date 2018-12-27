@@ -41,6 +41,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
@@ -2122,7 +2125,7 @@ public class EzEmailAdminController {
 		for (int i = 0; i < list.size(); i++) {
 			OrganDeptVO vo = list.get(i);
 
-			if (userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID())) {
+			if (userInfo.getRollInfo().contains("c=1") || userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID())) {
 				resultList.add(vo);
 			}
 
@@ -2364,15 +2367,29 @@ public class EzEmailAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
-		String content = request.getParameter("content");
-		logger.debug("content=" + content);
-		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		OrganUserVO vo = ezOrganAdminService.getUserInfo(userInfo.getId(), "1", userInfo.getTenantId());
-		content = replaceUserInfo(vo, content);
 		
-		model.addAttribute("content", content);
+		JsonObject jsonObj = new JsonObject();
+		jsonObj.addProperty("name", vo.getDisplayName1());
+		jsonObj.addProperty("engName", vo.getDisplayName2());
+		jsonObj.addProperty("email", vo.getMail());
+		jsonObj.addProperty("company", vo.getCompany1());
+		jsonObj.addProperty("engCompany", vo.getCompany2());
+		jsonObj.addProperty("department", vo.getDescription1());
+		jsonObj.addProperty("title", vo.getTitle1() == null ? "" : vo.getTitle1());
+		jsonObj.addProperty("position", vo.getExtensionAttribute101() == null ? "" : vo.getExtensionAttribute101());
+		jsonObj.addProperty("officePhone", vo.getTelephoneNumber() == null ? "" : vo.getTelephoneNumber());
+		jsonObj.addProperty("homePhone", vo.getHomePhone() == null ? "" : vo.getHomePhone());
+		jsonObj.addProperty("fax", vo.getFacsimileTelephoneNumber() == null ? "" : vo.getFacsimileTelephoneNumber());
+		jsonObj.addProperty("mobile", vo.getMobile() == null ? "" : vo.getMobile());
+		jsonObj.addProperty("zipCode", vo.getPostalCode() == null ? "" : vo.getPostalCode());
+		jsonObj.addProperty("address", vo.getStreetAddress() == null ? "" : vo.getStreetAddress());
+		jsonObj.addProperty("birth", vo.getBirth() == null ? "" : vo.getBirth());
+		jsonObj.addProperty("empNo", vo.getExtensionAttribute14() == null ? "" : vo.getExtensionAttribute14());
 
+		model.addAttribute("userObj", jsonObj);
+		
 		logger.debug("signaturePreviewContent ended.");
 		return "admin/ezEmail/signaturePreview";
 

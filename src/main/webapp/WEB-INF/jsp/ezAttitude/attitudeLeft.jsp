@@ -398,14 +398,14 @@
 			    	alert("<spring:message code='ezAttitude.t175'/>");
 			    },
 			    success : function(result){
-			    	if (result == "0") {
+			    	if (result == "0") { 
 			    		result = "";
 			    	} else {
-			    		result = "("+ result +")";
+			    		result = "&nbsp;" + result;
 			    	}
 			    	try {
-						document.getElementsByClassName("attCount")[0].innerText = result;
-						document.getElementsByClassName("attCount")[1].innerText = result;
+						document.getElementsByClassName("attCount")[0].innerHTML = result;
+						document.getElementsByClassName("attCount")[1].innerHTML = result;
 					} catch (e) {	}
 			    }
 	    	})
@@ -448,7 +448,7 @@
                    	<c:if test="${attitudeAdminCheck == true}">
                    		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t7'/>
                    			<c:if test="${totalAtt != 0 }">
-								<span class="attCount">(${totalAtt})</span>
+								<span class="attCount">&nbsp;${totalAtt}</span>
 							</c:if>
                    		</span></li>
                     </c:if>

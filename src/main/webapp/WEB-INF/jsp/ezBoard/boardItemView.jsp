@@ -194,6 +194,8 @@
 // 		                    self.resizeTo(785, (715 + addheight));
 // 		                }
 // 		            }
+						// 에디터 테이블 사이즈 조절 (저해상도 IE 대응)
+						resizeMessageFrame();
 		
 					/* 2018-11-15 홍승비 - 익명게시판 게시자 클릭 시 사원정보 표출되던 부분 수정 */
 		            var Div = document.createElement("DIV");
@@ -260,48 +262,53 @@
 				 */
 		
 		    window.onresize = function () {
-		        if (gubun != "3") { 
-// 			        if (OneLineReplyFlag == "1") {
-// 				        if (pAttributeYN == "Y") {
-// 				            var contentHeight;
-// 				            if (gubun == "2")
-// 				                contentHeight = document.documentElement.clientHeight - 290 - addheight;
-// 				            else
-// 				                contentHeight = document.documentElement.clientHeight - 320 - addheight;
-// 				            document.getElementById("message").style.height = contentHeight + "PX";
-// 				            document.getElementById("pad1").style.height = contentHeight + "PX";
-// 				        } else {
-// 				            var contentHeight;
-// 				            if (gubun == "2")
-// 				                contentHeight = document.documentElement.clientHeight - 290;
-// 				            else
-// 				                contentHeight = document.documentElement.clientHeight - 320;
-// 				            document.getElementById("message").style.height = contentHeight + "PX";
-// 				            document.getElementById("pad1").style.height = contentHeight + "PX";
-// 				        }
-// 				    } else {
-				        if (pAttributeYN == "Y") {
-				            var contentHeight;
-				            if (gubun == "2") {
-				                contentHeight = document.documentElement.clientHeight - 243;
-				            } else {
-				                contentHeight = document.documentElement.clientHeight - 268 - addheight;
-				            }
-				            document.getElementById("message").style.height = contentHeight + "PX";
-				            document.getElementById("pad1").style.height = contentHeight + "PX";
-				        } else {
-				            var contentHeight;
-				            if (gubun == "2") {
-				                contentHeight = document.documentElement.clientHeight - 243;
-				            } else {
-				                contentHeight = document.documentElement.clientHeight - 268;
-				            }
-				            document.getElementById("message").style.height = contentHeight + "PX";
-				            document.getElementById("pad1").style.height = contentHeight + "PX";
-				        }
-// 			        }
-		        }
+				resizeMessageFrame();
 		    };
+		    
+		    /* 2018-12-26 홍승비 - 저해상도 대응을 위해 리사이즈 함수 분리 */
+		    function resizeMessageFrame() {
+		    	 if (gubun != "3") { 
+//	 			        if (OneLineReplyFlag == "1") {
+//	 				        if (pAttributeYN == "Y") {
+//	 				            var contentHeight;
+//	 				            if (gubun == "2")
+//	 				                contentHeight = document.documentElement.clientHeight - 290 - addheight;
+//	 				            else
+//	 				                contentHeight = document.documentElement.clientHeight - 320 - addheight;
+//	 				            document.getElementById("message").style.height = contentHeight + "PX";
+//	 				            document.getElementById("pad1").style.height = contentHeight + "PX";
+//	 				        } else {
+//	 				            var contentHeight;
+//	 				            if (gubun == "2")
+//	 				                contentHeight = document.documentElement.clientHeight - 290;
+//	 				            else
+//	 				                contentHeight = document.documentElement.clientHeight - 320;
+//	 				            document.getElementById("message").style.height = contentHeight + "PX";
+//	 				            document.getElementById("pad1").style.height = contentHeight + "PX";
+//	 				        }
+//	 				    } else {
+					        if (pAttributeYN == "Y") {
+					            var contentHeight;
+					            if (gubun == "2") {
+					                contentHeight = document.documentElement.clientHeight - 243;
+					            } else {
+					                contentHeight = document.documentElement.clientHeight - 268 - addheight;
+					            }
+					            document.getElementById("message").style.height = contentHeight + "PX";
+					            document.getElementById("pad1").style.height = contentHeight + "PX";
+					        } else {
+					            var contentHeight;
+					            if (gubun == "2") {
+					                contentHeight = document.documentElement.clientHeight - 243;
+					            } else {
+					                contentHeight = document.documentElement.clientHeight - 268;
+					            }
+					            document.getElementById("message").style.height = contentHeight + "PX";
+					            document.getElementById("pad1").style.height = contentHeight + "PX";
+					        }
+//	 			        }
+			        }	    	
+		    }
 		
 		    function AddLinkTarget() {
 		        try {
@@ -1462,7 +1469,7 @@
 				    <td class="pad1" style="vertical-align: top;">
 				        <table class="file">
 				        <tr>
-				          <th><spring:message code='ezBoard.t292' /></th>
+				          <th><spring:message code='ezBoard.t10025' /></th>
 				            <td>
 				            	<div style="text-align:left; OVERFLOW: auto; HEIGHT: 50px; background-color:white" id="lstAttachLink" ></div>
 				            </td>
@@ -1479,7 +1486,7 @@
 				    <td class="pad1" style="vertical-align: top; DISPLAY:none;">
 				        <table class="file">
 				        <tr>
-				          <th><spring:message code='ezBoard.t292' /></th>
+				          <th><spring:message code='ezBoard.t10025' /></th>
 				          <td class="pos2">
 				          	  <div style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left" id="lstAttachLink"></div>
 				          </td>
@@ -1502,7 +1509,7 @@
 					    <td class="pad1" style="vertical-align: top; ">
 					        <table class="file">
 					        <tr>
-					          <th><spring:message code='ezBoard.t292' /></th>
+					          <th><spring:message code='ezBoard.t10025' /></th>
 			                     <td >
 					            <div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;background-color:white; text-align:left"></div>
 					          </td>
@@ -1521,7 +1528,7 @@
 					    <td class="pad1" style="vertical-align: top;">
 					        <table class="file">
 					        <tr>
-					          <th><spring:message code='ezBoard.t292' /></th>
+					          <th><spring:message code='ezBoard.t10025' /></th>
 		                      <td class="pos2">
 					            <div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left"></div></td>
 	  				          <td class="pos2">'
