@@ -72,7 +72,7 @@
 		    var Mod = "";
 		    var pUse_Editor = "${useEditor}";
 		    var pStartday = "${startDay}";		    
-		    select_memorialDays("${lang}");
+		    /* select_memorialDays("${lang}"); */
 		    var dayView = "";
 		    
 	    	document.onselectstart = function () { return false; };

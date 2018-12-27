@@ -68,6 +68,19 @@
 		        if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
 					document.getElementsByClassName("h2_dot")[0].style.background = "url(/images/kr/left/left_dot02.gif) no-repeat 0px 67%";
 		        }
+		        
+		        var height = parseInt(document.documentElement.clientHeight - 245);
+		        document.getElementById("todo_BODY").style.height = height + "px";
+		    }
+		    
+		    window.onresize = function () {
+		    	if (navigator.userAgent.indexOf("Chrome") > -1) {
+		            document.getElementById("todo_BODY").style.height = document.documentElement.clientHeight - 245 + "px";
+		    	}
+		    	else {
+	    	        document.getElementById("todo_BODY").style.height = document.documentElement.clientHeight - 250 + "px";
+		    	}
+    	        scroll();
 		    }
 
 		    function select_row(elem) {
@@ -264,10 +277,10 @@
 			function show_page() {
 // 			    makePageSelPage();				
 
-			    var length = list_body.children[1].rows.length;
+			    var length = list_body2.children[1].rows.length;
 
-			    for (var i = 3; i < length; i++) {
-			        list_body.children[1].removeChild(list_body.children[1].rows[3]);			    	
+			    for (var i = 1; i < length; i++) {
+			        list_body2.children[1].removeChild(list_body2.children[1].rows[1]);			    	
 			    }
 
 			    var tr = "";
@@ -375,7 +388,7 @@
 			        setNodeText(tr.cells[9], startdate);
 			        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
 
-			        list_body.children[1].appendChild(tr);
+			        list_body2.children[1].appendChild(tr);
 
 			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
 			        
@@ -404,7 +417,8 @@
 					$("#resultCount").append(" : <span id='searchCount' style='color:#CC3300'>" + searchCount + "&nbsp;</span>");
 					$("#searchCount").after("<spring:message code='ezTask.t191' />");
 			    }
-
+			    
+				scroll();
 			    $(".progressbar").css("display", "inline-table");
 			}
 
@@ -513,6 +527,26 @@
 		    function RefreshView() {
 		        search();
 		    }
+		    
+		    function scroll() {
+		    	var BoardList_BODYHeight = document.getElementById("list_body2").clientHeight;
+		    	var BoardListDivHeight = document.getElementById("todo_BODY").clientHeight;
+		    	
+		    	 if (BoardList_BODYHeight < BoardListDivHeight) {
+		    		if ($("#todo_HEAD tr th#forScroll").length > 0) {
+		    			$("#todo_HEAD tr th#forScroll").remove();
+		    		}
+		    	} else {
+		    		if ($("#todo_HEAD tr th#forScroll").length < 1) {
+		    			
+		    			$("#todo_HEAD tr").append("<th id='forScroll' style='width:8px'></th>");
+		    			
+		    				var lastTh = $("#todo_HEAD tr th").last();
+		    				lastTh.attr("id", "forScroll");
+		    				lastTh.css("width", "8px");
+		    		}
+		    	}
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -571,6 +605,7 @@
 			<col style ="width:130px;">
 			<col style ="width:120px;">
 			<col style ="width:120px;">
+			<tbody id="todo_HEAD">
 			<tr>
 				<th style="text-align:center"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
 				<th style="text-align:center"><img src="/images/ImgIcon/view-importance.gif"></th>
@@ -589,6 +624,7 @@
 				<th style="text-align:center;"><spring:message code='ezTask.t121' /></th>
 				<th style="text-align:center;"><spring:message code='ezTask.t9002' /></th>
 			</tr>
+			</tbody>
 			<!-- 18-05-24 김민성 - 중요도 이미지로 수정 -->
 			<tr class="row_body" id="row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
 				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
@@ -603,10 +639,32 @@
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 			</tr>
+		</table>
+		<div id="todo_BODY" style="height:300px; overflow-y:auto;">
+		<table class="mainlist" id="list_body2" style="WIDTH: 100%;table-layout:fixed; min-width:800px;">
+			<col style ="width:30px;">
+			<col style ="width:50px;">
+			<col style ="width:20px;">
+			<col style ="width:100px;">
+			<c:if test="${useTodoMemo == 'YES'}">
+				<col style = "width:80%;">
+				<col style ="width:30px;">
+				<col style ="width:25%;">
+			</c:if>
+			<c:if test="${useTodoMemo == 'NO'}">
+				<col style = "width:80%;">
+				<col style = "width:30px;">
+				<col style = "width:25%;">
+			</c:if>
+            <col style ="width:120px;">
+			<col style ="width:130px;">
+			<col style ="width:120px;">
+			<col style ="width:120px;">
 			<tr id="tr_ing" style="text-align:center; display: none;">
 				<td colspan="11" style="height:25px;background-color:white;text-align:center"><spring:message code='ezTask.t192' /></td>
 			</tr>
 		</table>
+		</div>
 		<br>
 		<br>
 	</body>

@@ -98,8 +98,8 @@
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
 				<ul class="lnbUL">
-					<li class="ladder"><span class="sub_iconLNB tree_board_ladder"></span><span class="node_selected" onclick="ladderClick(this);" mode="all"><spring:message code="ezLadder.t011" /> <spring:message code="ezBoard.l001" /></span></li>
-					<li class="ladder"><span class="sub_iconLNB tree_board_ladder"></span><span class="node_normal" onclick="ladderClick(this);" mode="part"><spring:message code="ezLadder.t108" /></span></li>
+					<li class="ladder"><span class="sub_iconLNB tree_ladder_all"></span><span class="node_selected" onclick="ladderClick(this);" mode="all"><spring:message code="ezLadder.t011" /> <spring:message code="ezBoard.l001" /></span></li>
+					<li class="ladder"><span class="sub_iconLNB tree_ladder_in"></span><span class="node_normal" onclick="ladderClick(this);" mode="part"><spring:message code="ezLadder.t108" /></span></li>
 				</ul>	
 			</div>	        
 	    </div>

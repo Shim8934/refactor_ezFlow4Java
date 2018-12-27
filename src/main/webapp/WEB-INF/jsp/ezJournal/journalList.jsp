@@ -97,7 +97,7 @@
 					<c:if test="${listType eq 'mine' }">
 						<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:25px;">
 							<c:if test="${journal.deptShare eq 'N' }">
-								<img src="/images/lock_icon.png">
+								<img src="/images/lock_icon.png" style="vertical-align: middle;">
 								<!-- <img src="/images/poll/seeResultBeforeVote_Off.png" style="width: 24px; height: 24px;"> --> 
 							</c:if>
 						</td>

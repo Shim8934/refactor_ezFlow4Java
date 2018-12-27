@@ -51,12 +51,12 @@ function CalendarView(pTagetID,chk_str) {
         tDiv.innerHTML = "";
         objElm.appendChild(tDiv);
 
-        if (sDate.getFullYear() > 1800 && sDate.getFullYear() <= 2101) {
-            if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 1)
-                memorialDays[1].day = 29;
-            else if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 2)
-                memorialDays[1].day = 30;
-        }
+//        if (sDate.getFullYear() > 1800 && sDate.getFullYear() <= 2101) {
+//            if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 1)
+//                memorialDays[1].day = 29;
+//            else if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 2)
+//                memorialDays[1].day = 30;
+//        }
 
         if (typeCal != 1) {
             var oTable = document.createElement("TABLE");
@@ -92,7 +92,7 @@ function CalendarView(pTagetID,chk_str) {
 
                     for (var i = 0; i < tempmemorial.length; i++) {
                         memorial = tempmemorial[i];
-                        if (uselang == "1") {
+                        if (primaryLang == "1") {
                             if (i == tempmemorial.length - 1)
                                 holidayname += memorial.name;
                             else
@@ -110,7 +110,7 @@ function CalendarView(pTagetID,chk_str) {
 
                     for (var i = 0; i < tempyearmemorial.length; i++) {
                         yearmemorial = tempyearmemorial[i];
-                        if (uselang == "1") {
+                        if (primaryLang == "1") {
                             if (i == tempyearmemorial.length - 1)
                                 holidayname2 += yearmemorial.name;
                             else
@@ -638,7 +638,7 @@ function MonthData(oThisDate, TDIndex) {
 
     for (var i = 0; i < tempmemorial.length; i++) {
         memorial = tempmemorial[i];
-        if (uselang == "1") {
+        if (primaryLang == "1") {
             if (i == tempmemorial.length - 1)
                 holidayname += memorial.name;
             else
@@ -656,7 +656,7 @@ function MonthData(oThisDate, TDIndex) {
 
     for (var i = 0; i < tempyearmemorial.length; i++) {
         yearmemorial = tempyearmemorial[i];
-        if (uselang == "1") {
+        if (primaryLang == "1") {
             if (i == tempyearmemorial.length - 1)
                 holidayname2 += yearmemorial.name;
             else
@@ -1018,7 +1018,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
 
         for (var i = 0; i < tempmemorial.length; i++) {
             memorial = tempmemorial[i];
-            if (uselang == "1") {
+            if (primaryLang == "1") {
                 if (i == tempmemorial.length - 1)
                     holidayname += memorial.name;
                 else
@@ -1036,7 +1036,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
 
         for (var i = 0; i < tempyearmemorial.length; i++) {
             yearmemorial = tempyearmemorial[i];
-            if (uselang == "1") {
+            if (primaryLang == "1") {
                 if (i == tempyearmemorial.length - 1)
                     holidayname2 += yearmemorial.name;
                 else

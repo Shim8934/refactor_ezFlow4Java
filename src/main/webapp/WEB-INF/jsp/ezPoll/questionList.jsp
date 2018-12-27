@@ -469,7 +469,7 @@
 				<spring:message code="ezPoll.psb256"/>
 			</c:when>
 			<c:when test="${pollType eq '1' }">
-				<spring:message code="ezPoll.t237"/>
+				<spring:message code="ezPoll.t237"/> <spring:message code="ezPoll.t103" />
 			</c:when>
 			<c:when test="${pollType eq '4' }">
 				<spring:message code="ezPoll.psb257"/>

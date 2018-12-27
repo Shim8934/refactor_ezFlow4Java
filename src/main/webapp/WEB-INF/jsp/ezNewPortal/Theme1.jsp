@@ -572,6 +572,7 @@
 		$(".portlet_area").sortable({
 			handle : ".sortablePortlet",
 			helper : "clone",
+			scroll: false,
 			start : function (event, block) {
 				/* $(".portlet.ui-sortable-helper").css({
 					"width" : $(".portlet").not(block.placeholder).not(block.item).width()

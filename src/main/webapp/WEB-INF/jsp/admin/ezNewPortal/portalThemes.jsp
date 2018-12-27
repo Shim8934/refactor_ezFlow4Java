@@ -50,32 +50,15 @@
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
 			.ui-portlet-content { font-weight: bold; display: inline-block; float: left;cursor:move; border:1px dotted #000;}
 			.ui-portlet-list { padding-left: 20px; height: 335px; width: 97%;}
-			.ui-portlet-span { display: inline-block; width: 60%; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
+			.ui-portlet-span { display: inline-block; width: 68%; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-top:12px;}
 			.portlet_switch {position:relative;display:inline-block;width:60px;height:18px;margin:13px 0px 10px 0px; vertical-align:top;}
 			.portlet_switch .slider {z-index:10;}
 			.admin_theme_portlet {width : 1042px;}
 			.bottomBtn {clear:both;}
 			#themePortletList {display:inline-block;}
 			
-			/* Hide the browser's default checkbox */
-	        .IDcontainer input {display:none; cursor: pointer; }
-	        /* Create a custom checkbox */
-	        .checkmark {float:left; height: 16px; width: 16px; margin-top:3px; background-color: #53d0ff; border-radius:3px;margin-right:10px;}
-	        /* When the checkbox is checked, add a blue background */
-	        .IDcontainer input:checked ~ .checkmark { background-color: #53d0ff; }
-	        /* Create the checkmark/indicator (hidden when not checked) */
-	        .checkmark:after { content: ""; display: none; }
-	        /* Show the checkmark when checked */
-	        .IDcontainer input:checked ~ .checkmark:after { display: block; }
-	        /* Style the checkmark/indicator */
-	        .IDcontainer .checkmark:after {position:relative; width: 4px; height: 8px; margin:2px auto 0px auto; border: solid white; border-width: 0 2px 2px 0; -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); }
-	        .IDcontainer span { font-family: Malgun Gothic, malgun gothic; }
-	        /* 2018-08-03 김보미 - 클릭시마다 앞의 체크박스 ui 틀어지는 현상 막기 */
-	        .IDcontainer .checkSelect { display: none; }
-	        /* 추가  디자인 */
-	        .IDcontainer {width : 70%; margin : 13px 0px 10px 0px; display:inline-block;padding:0px;}
-	        .chk_portlet {visibility: hidden;} 
 	        .portlet_switch input {opacity: 0;width: 0;height: 0;}
+	        .ui-portlet-span img {vertical-align : text-bottom; margin-right:5px;cursor:pointer;}
 		</style>
 	</head>
 	
@@ -568,20 +551,16 @@
 						var portletId = item.portletId;
 						
 						listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content' data-portletid='" + portletId + "' data-menuid='" + item.menuId + "'>";
-						
-						listHTML += "<label class='IDcontainer fixed_switch'>";
+						listHTML += "<span class='ui-portlet-span'>";
 						
 						if (item.fixed) {
-							listHTML += "<input type='checkbox' checked name='chk_fixed' id='fixedPortlet" + portletId + "' class='checkSelect'>";
+							listHTML += "<img class='fixedPortlet' id='fixedPortlet" + portletId + "' src='/images/ezNewPortal/portlet_fixed.png'>";
 						} else {
-							listHTML += "<input type='checkbox' name='chk_fixed' id='fixedPortlet" + portletId + "' class='checkSelect'>";
+							listHTML += "<img class='noneFixedPortlet' id='fixedPortlet" + portletId + "' src='/images/ezNewPortal/portlet_not_fixed.png'>";
 						}
 
-						listHTML += "<span class='checkmark'></span>";
-						listHTML += "<span class='ui-portlet-span'>";
 						listHTML += ConvertCharToEntityReference(item.portletName);
 						listHTML += "</span>";
-						listHTML += "</label>";
 						listHTML += "<label class='portlet_switch switch'>";
 						
 						if (item.portletUsed) {
@@ -641,7 +620,8 @@
 					
 					//drag and drop
 					$("#themePortletList").sortable({
-						items : ".portlets"
+						items : ".portlets",
+						scroll: false
 					});
 					
 					$("#themePortletList").disableSelection();
@@ -649,8 +629,8 @@
 					//저장버튼 활성화
 					$(".updateThemePortletBtn").on("click", {"themeId" : themeId}, updateThemePortlet);
 					//2018-12-18 유은정 - 포틀릿 필수 사용 지정 관련 개발
+					$(".ui-portlet-span").find("img").on("click", changeFixed);
 					$(".portlet_switch").find("input").on("change", checkFixedInput);
-					$(".fixed_switch").find("input").on("change", checkPortletUsed);
 					
 				}else {
 					// We reached our target server, but it returned an error
@@ -684,7 +664,19 @@
 				var portletId = portlet.getAttribute("data-portletid");
 				var menuId = portlet.getAttribute("data-menuid");
 				var portletUsed = $("#portlet" + portletId).prop("checked");
-				var isFixed = $("#fixedPortlet" + portletId).prop("checked");
+				
+				var isFixed = false;
+				var fixedClassList = document.getElementById("fixedPortlet" + portletId).classList;
+				
+				for (var j = 0; j < fixedClassList.length; j++) {
+					if (fixedClassList[j] === "fixedPortlet") {
+						isFixed = true;
+						break;
+					} else if (fixedClassList[j] === "noneFixedPortlet") {
+						isFixed = false;
+						break;
+					}
+				}
 				
 				themePortlet.push({"portletId" : portletId, "menuId" : menuId, "portletUsed" : portletUsed, "portletOrder" : i + 1, "isFixed" : isFixed});
 			}
@@ -715,7 +707,18 @@
 			var portletId = this.id;
 			portletId = portletId.substring(7);
 			
-			var isFixed = $("#fixedPortlet" + portletId).prop("checked");
+			var isFixed = false;
+			var fixedClassList = document.getElementById("fixedPortlet" + portletId).classList;
+			
+			for (var i = 0; i < fixedClassList.length; i++) {
+				if (fixedClassList[i] === "fixedPortlet") {
+					isFixed = true;
+					break;
+				} else if (fixedClassList[i] === "noneFixedPortlet") {
+					isFixed = false;
+					break;
+				}
+			}
 			
 			if (isFixed) {
 				alert("<spring:message code='ezNewPortal.t132' />");
@@ -724,16 +727,41 @@
 			}
 		}
 		
-		var checkPortletUsed = function() {
-			var portletId = this.id;
-			portletId = portletId.substring(12);
-			
+		function checkPortletUsed(portletId) {
 			var isPortletUsed = $("#portlet" + portletId).prop("checked");
 			
 			if (!isPortletUsed) {
 				alert("<spring:message code='ezNewPortal.t133' />");
 				$(this).prop("checked", false);
-				return;
+				return false;
+			} else {
+				return true;
+			}
+		}
+		
+		var changeFixed = function() {
+			var imgId = this.id;
+			var portletId = imgId.substring(12);
+			console.log(this);
+			console.log(imgId);
+			console.log(portletId);
+			var checkPortlet = checkPortletUsed(portletId);
+			
+			if (checkPortlet) {
+				console.log(this.classList);
+				for (var i = 0; i < this.classList.length; i++) {
+					if (this.classList[i] == "fixedPortlet") {
+						this.classList.remove("fixedPortlet");
+						this.classList.add("noneFixedPortlet");
+						this.src = "/images/ezNewPortal/portlet_not_fixed.png";
+						break;
+					} else if (this.classList[i] == "noneFixedPortlet") {
+						this.classList.remove("noneFixedPortlet");
+						this.classList.add("fixedPortlet");
+						this.src = "/images/ezNewPortal/portlet_fixed.png";
+						break;
+					}
+				}
 			}
 		}
 	</script>
