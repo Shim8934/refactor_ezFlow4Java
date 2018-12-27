@@ -154,6 +154,11 @@
 		        document.body.appendChild(form);
 		        form.submit();
 		    }
+		    
+		    function reloadLoginPage(message) {
+		    	var uri = "/user/login/login.do";
+		    	self.location.href = "/user/login/actionLogoutWithRedirectUri.do?redirectUri=" + uri + "&message=" + message;
+		    }
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
