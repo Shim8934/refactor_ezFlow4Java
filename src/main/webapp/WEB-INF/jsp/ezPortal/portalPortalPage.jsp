@@ -255,28 +255,16 @@
 		        }
 		    }
 		    
+		    /* 2018-12-27 홍승비 - 퀵링크 URL 창모드로 열 때 top 위치 화면 중앙으로 수정 */
 		    function openURL(Location, SIZE) {
 		        try {
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
 
-		            var left = 0;
-		            var top = 0;
-
-		            if (window.screen.width > 800) {
-		                var pleftpos;
-
-		                pleftpos = parseInt(width) - 967;
-		                heigth = parseInt(heigth) - 30;
-		                width = parseInt(width) - pleftpos;
-
-		                left = pleftpos / 2;
-		            } else {
-		                heigth = parseInt(heigth) - 30;
-		                width = parseInt(width) - 10;
-		            }
+		            var left = (width - SIZE.split(':')[0]) / 2;
+		            var top = (heigth - SIZE.split(':')[1]) / 2;
 		            
-		            if(SIZE == "FULL") {
+		            if (SIZE == "FULL") {
 		                window.open(Location, "", "toolbar=1,location=1,directories=0,status=1,menubar=1,scrollbars=0,resizable=1,height=" + screen.height + ",width=" + screen.width + ",top=0,left=0" + ",scrollbars = yes");
 		            } else {
 		            	if(navigator.userAgent.indexOf("Chrome"))
