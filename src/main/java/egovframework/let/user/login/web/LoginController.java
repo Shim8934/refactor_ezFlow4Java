@@ -3,19 +3,16 @@ package egovframework.let.user.login.web;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.DispatcherType;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -34,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -103,7 +102,7 @@ public class LoginController {
     
     @Autowired
     private LocaleResolver localeResolver;
-        
+    
 	/**
 	 * 로그인 화면으로 들어간다
 	 * @param vo - 로그인후 이동할 URL이 담긴 LoginVO
@@ -167,7 +166,6 @@ public class LoginController {
     	return "/user/login/login";
     
 	}
-    
     
     public void setLocaleResolver(LocaleResolver localeResolver) {
     	this.localeResolver = localeResolver;
@@ -735,6 +733,20 @@ public class LoginController {
     		ssoLoginCookie.setDomain(useSSOCookie);
     		response.addCookie(ssoLoginCookie);
     	}
+    	
+    	// 멀티로그인 옵션 관련 쿠키 (default : YES)
+    	String multiLoginUserInfo = userId + "_" + tenantId;
+    	String multiLoginTime = String.valueOf(System.currentTimeMillis());
+    	
+    	Cookie multiLoginCookieID = new Cookie("multiLoginCookie", multiLoginTime);
+    	multiLoginCookieID.setPath("/");
+    	response.addCookie(multiLoginCookieID);
+    	
+    	String useMultiLogin = ezCommonService.getCompanyConfig(tenantId, companyID, "useMultiLogin");
+    	if(useMultiLogin.equalsIgnoreCase("NO")) {
+    		commonUtil.setLoginUsers(multiLoginUserInfo, multiLoginTime);
+     	}
+    	// end
     }
     
     /**
@@ -760,8 +772,6 @@ public class LoginController {
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
     				response.addCookie(cookie);
-    				// 2018.10.22 이석화 추가 - 세션 제거 
-    				request.getSession().invalidate();
     			}
     	    }
     	}
@@ -784,6 +794,7 @@ public class LoginController {
 			
         	return "redirect:https://login.microsoftonline.com/common/OAuth2/logout?post_logout_redirect_uri=" + redirectUri;         	
         }
+        
         // 2018.10.22 이석화 추가 - 세션 제거 
        	request.getSession().invalidate();
 
@@ -791,10 +802,13 @@ public class LoginController {
     }
     
     @RequestMapping(value="/user/login/actionLogoutWithRedirectUri.do")
-	public void actionLogoutWithRedirectUri(
+	public String actionLogoutWithRedirectUri(
+//	public void actionLogoutWithRedirectUri(
 					@RequestParam("redirectUri") String redirectUri,
+					@RequestParam(required = false, defaultValue = "") String message,
 					HttpServletRequest request,
-					HttpServletResponse response
+					HttpServletResponse response,
+					RedirectAttributes rttr
 					) throws Exception {
     	logger.debug("redirectUri=" + redirectUri);
     	
@@ -810,8 +824,15 @@ public class LoginController {
     	    }
     	}
     	
+//    	response.sendRedirect(redirectUri);
+    	
     	request.getSession().invalidate();
-    	response.sendRedirect(redirectUri);
+    	
+    	if (!message.equals("")) {
+    		rttr.addFlashAttribute("message", message);
+    	}
+    	
+    	return "redirect:" + redirectUri;
     }
     
     @RequestMapping(value = "/user/login/setPassword.do")

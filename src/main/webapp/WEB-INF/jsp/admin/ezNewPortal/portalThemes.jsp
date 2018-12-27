@@ -59,6 +59,9 @@
 			
 	        .portlet_switch input {opacity: 0;width: 0;height: 0;}
 	        .ui-portlet-span img {vertical-align : text-bottom; margin-right:5px;cursor:pointer;}
+	        .admin_menuDL .admin_menuX {float:right;margin-right:20px;}
+	        .admin_menuX span {margin-right:10px;}
+	        .admin_menuX span img {margin-right:5px; vertical-align:text-bottom;}
 		</style>
 	</head>
 	
@@ -542,7 +545,7 @@
 					listHTML += "<div class='admin_thema admin_theme_portlet'>";
 					listHTML += "<dl class='admin_menuDL'>";
 					listHTML += "<dt class='admin_menuTit'>" + themeName + "</dt>";
-					listHTML += "<dd class='admin_menuX'></dd>";
+					listHTML += "<dd class='admin_menuX'><span class='fixed_info'><img src='/images/ezNewPortal/portlet_fixed.png'><spring:message code='ezNewPortal.t134' /></span></dd>";
 					listHTML += "</dl>";
 					listHTML += "<div class='admin_menu_content'>";
 					listHTML += "<div id='themePortletList'>";
