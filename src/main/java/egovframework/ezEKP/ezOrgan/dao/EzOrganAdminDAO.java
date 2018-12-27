@@ -2119,6 +2119,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		update("EzOrganAdminDAO.updateTitle2", map);
 	}
 	
+	public void updateTitle3(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateTitle3", map);
+	}
+	
 	public void deleteTitle(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteTitle", map);
 	}
