@@ -21,7 +21,9 @@ public class MailGeneralVO {
 	private String mailSenderNm;
 	
 	private String previewSubTree;
-
+	
+	private String previewMailImage;
+	
 	public String getListCount() {
 		return listCount;
 	}
@@ -104,11 +106,18 @@ public class MailGeneralVO {
 		this.previewSubTree = previewSubTree;
 	}
 
+	public String getPreviewMailImage() {
+		return previewMailImage;
+	}
+	
+	public void setPreviewMailImage(String previewMailImage) {
+		this.previewMailImage = previewMailImage;
+	}
 	
 	public String toString() {
 		return "listCount=" + listCount + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength
 				+ ",previewMode=" + previewMode + ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
 				+ ",previewHList=" + previewHList + ",previewHContent=" + previewHContent + ",mailSenderNm=" + mailSenderNm
-				+ ",previewSubtree=" + previewSubTree;
+				+ ",previewSubtree=" + previewSubTree + ",previewmailImage=" + previewMailImage;
 	}
 }

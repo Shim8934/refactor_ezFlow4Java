@@ -39,7 +39,7 @@
 			.mCSB_container {margin-right:10px !important;}
 			.flipster__button {height:65px;}
 			.fixed_span {width:67%; display:inline-block;}
-			.fixed_span img {width:20px; height:20px; vertical-align:middle; margin-right:5px;}
+			.fixed_span img {vertical-align:middle; margin-right:5px;}
 			/* Tooltip text */
 			.fixed_span .tooltiptext {visibility: hidden;width: 130px;background-color: rgba(0,0,0, 0.5);color: #fff;text-align: center;padding: 5px 0;
 										border-radius: 6px;position: absolute;z-index: 1; top:6px; opacity:0; transition : opacity 1s;}
@@ -243,7 +243,7 @@
 				 				
 				 				if (item.fixed === true) {
 				 					fixedImg = document.createElement('img');
-				 					fixedImg.src = "/images/ImgIcon/circular_temp.gif"; 
+				 					fixedImg.src = "/images/ezNewPortal/portlet_fixed.png"; 
 				 					tooltipText = document.createElement('span');
 				 					tooltipText.className = 'tooltiptext';
 				 					var contents = document.createTextNode("<spring:message code='ezNewPortal.t130' />");
