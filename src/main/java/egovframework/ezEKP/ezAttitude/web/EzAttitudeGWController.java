@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezAttitude.web;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -2054,7 +2055,45 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
+		
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/annual] ended.");
+		return result;
+	}
+
+	/**
+	 * G/W 근태관리 [POST] 연차현황 전체 등록/수정
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/changeAllAnnual", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject changeAllAnnual(@PathVariable String companyId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/changeAllAnnual] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("userId", request.getParameter("userId"));
+			map.put("changeReason", request.getParameter("changeReason"));
+			map.put("flagCheck", request.getParameter("flagCheck"));
+			map.put("annualCnt", request.getParameter("annualCnt"));
+			map.put("year", request.getParameter("year"));
+			
+			ezAttitudeService.changeAllAnnual(map, info.getTenantId(), companyId, info.getPrimary());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/changeAllAnnual] ended.");
 		return result;
 	}
 }

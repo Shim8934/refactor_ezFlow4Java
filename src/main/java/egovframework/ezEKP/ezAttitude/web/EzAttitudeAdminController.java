@@ -2208,6 +2208,7 @@ public class EzAttitudeAdminController {
 		headers.set("x-user-host", request.getServerName());
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
 				.queryParam("searchUserName", searchUserName)
@@ -2239,5 +2240,61 @@ public class EzAttitudeAdminController {
 		LOGGER.debug("/admin/ezAttitude/attitudeAnnualList ended");
 		
 		return jObject;
+	}
+	
+	/**
+	 * 근태관리 연차현황관리 전체연차 등록 ,수정
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/changeAllAnnual.do")
+	@ResponseBody
+	public String changeAllAnnual(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("changeAllAnnual started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String companyId = request.getParameter("companyId");
+		String changeReason = request.getParameter("changeReason");
+		String flagCheck = request.getParameter("flagCheck");
+		String annualCnt = request.getParameter("annualCnt");
+		String year = request.getParameter("year");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = "";
+		url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/changeAllAnnual/";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("changeReason", changeReason)
+				.queryParam("flagCheck", flagCheck)
+				.queryParam("annualCnt", annualCnt)
+				.queryParam("year", year);
+				
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<?> result;
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
+		JSONObject resultBody = (JSONObject) result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		String resultStatus = "";
+		
+		if (status.equals("ok")) {
+			resultStatus = "success";
+		} else if (status.equals("failed")) {
+			resultStatus = "failed";
+		} else {
+			resultStatus = "error";
+		}
+		
+		LOGGER.debug("changeAllAnnual ended.");
+		
+		return resultStatus;
 	}
 }
