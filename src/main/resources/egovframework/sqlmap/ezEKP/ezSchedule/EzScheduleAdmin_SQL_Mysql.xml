@@ -70,9 +70,9 @@
 	<insert id="EzScheduleAdminDAO.scheduleSaveHoliday" parameterClass="map">
 		<![CDATA[
 			insert into tbl_holidaylist(
-				holidayname,		holidayname2, 		holidayflag,		holidaydate, 		holidayrepeat,		issolar, 		isrepeat, 		isuse, 		isrest, 		usecompany,			tenant_id 
+				holidayname,		holidayname2, 		holidaydate, 		issolar, 		isrepeat, 		isuse, 		isrest, 		usecompany,			tenant_id 
 			) values (
-				#v_HOLIDAYNAME#,	#v_HOLIDAYNAME2#,	#v_HOLIDAYFLAG#,	#v_HOLIDAYDATE#,	#v_HOLIDAYREPEAT#,	#v_ISSOLAR#,	#v_ISREPEAT#,	1,			#v_ISREST#, 	#v_COMPANYID#,		#v_TENANTID#		
+				#v_HOLIDAYNAME#,	#v_HOLIDAYNAME2#,	#v_HOLIDAYDATE#,	#v_ISSOLAR#,	#v_ISREPEAT#,	1,			#v_ISREST#, 	#v_COMPANYID#,		#v_TENANTID#		
 			)
 		]]>
 	</insert>
@@ -117,9 +117,7 @@
 			set 
 				holidayname = #v_HOLIDAYNAME#,
                 holidayname2 = #v_HOLIDAYNAME2#,
-                holidayflag = #v_HOLIDAYFLAG#,
                 holidaydate = #v_HOLIDAYDATE#,
-                holidayrepeat = #v_HOLIDAYREPEAT#,
                 issolar = #v_ISSOLAR#,
                 isrepeat = #v_ISREPEAT#,
                 isrest = #v_ISREST#,

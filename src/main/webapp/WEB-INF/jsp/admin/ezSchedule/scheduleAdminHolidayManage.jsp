@@ -18,6 +18,7 @@
 		    var companylist = "<c:out value='${companyList}'/>"; //(ex. S907001,가온아이A;S907000,가온아이B;)
 		    var lang = "<c:out value='${lang}'/>";
 		    var holidayType = "<c:out value='${holidayType}'/>";
+		    var holidayYear = new Date().getFullYear(); 
 		    
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -35,9 +36,15 @@
 		    	var COMPANYID = "";
 		    	if (holidayType == "a") {
 		    		COMPANYID = document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value;
+		    		/* if (document.getElementById("ListYear").selectedIndex > -1) {
+				    	holidayYear = document.getElementById("ListYear")[document.getElementById("ListYear").selectedIndex].value;
+		    		} else {
+		    			holidayYear = "";
+		    		} */
 		    	} else {
 		    		COMPANYID = "1";
 		    	}
+		    	
 		    	
 		        $.ajax({
 		    		type : "POST",
@@ -50,6 +57,10 @@
 		    		},
 		    		success: function(result) {
 		    			MakeSliderList(result);
+		    			if (holidayType == 'a') {
+			    			makeSelectBox(result, 'loadnew');
+		    			} 
+		    			
 		    		}	    		
 		        });
 		    }
@@ -68,35 +79,22 @@
 		                        var holidayID = result[i].holidayID;
 		                        var holidayName = result[i].holidayName;
 		                        var holidayName2 = result[i].holidayName2;
-		                        var holidayFlag = result[i].holidayFlag;
 		                        var holidayDate = result[i].holidayDate;
-		                        var holidayRepeat = result[i].holidayRepeat;
 		                        var isSolar = result[i].isSolar;
 		                        var isRepeat = result[i].isRepeat;
 		                        var isRest = result[i].isRest;
 		                        var isUse = result[i].isUse;
 		                        var useCompany = result[i].useCompany;
-		                        if (holidayDate) {
-			                        _html += "<tr style='cursor:pointer' id = '" + holidayID
-			                              + "'holidayname = '" + MakeXMLString(holidayName)
-			                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
-			                              + "'date = '" + holidayDate.substring(0,10)
-			                              + "'issolar = '" + isSolar
-			                              + "'isrepeat = '" + isRepeat
-			                              + "'isrest = '" + isRest
-			                              + "'company = '" + useCompany
-			                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
-		                            } else {
-		                            	 _html += "<tr style='cursor:pointer' id = '" + holidayID
-			                              + "'holidayname = '" + MakeXMLString(holidayName)
-			                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
-		                            	  + "'date = '" + holidayRepeat
-			                              + "'issolar = '" + isSolar
-			                              + "'isrepeat = '" + isRepeat
-			                              + "'isrest = '" + isRest
-			                              + "'company = '" + useCompany
-			                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";	
-		                            }
+		                        _html += "<tr style='cursor:pointer' id = '" + holidayID
+		                              + "'holidayname = '" + MakeXMLString(holidayName)
+		                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
+		                              + "'date = '" + holidayDate.substring(0,10)
+		                              + "'issolar = '" + isSolar
+		                              + "'isrepeat = '" + isRepeat
+		                              + "'isrest = '" + isRest
+		                              + "'company = '" + useCompany
+		                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
+		                           
 								
 		                        if (isUse == "1") {
 		                            _html += "<td style='width:5%;padding-left:5px;'><input  type='checkbox' checked = true onclick='event_statuschange(this);'></td>";
@@ -116,16 +114,16 @@
 		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
 		                        }
 								
-		                        if (!holidayFlag ||  holidayFlag == "" || holidayFlag == "D") {
-		                        	if (holidayDate) {
-			                        	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(0, 10) + "</td>";
-	                            	} 
+		                        /* if (holidayType == 'a') {
+		                        	 if (isRepeat == "1") {
+		                        		_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
+		                        	 } else {
+			                       		_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(0, 10) + "</td>";
+		                        	 }
 		                        } else {
-		                        	var info = holidayRepeat.split("|");
-		                        	var dateRepeatInfo = "";
-		                        	dateRepeatInfo = getMonthString(parseInt(info[0])) + " " + getOdinalString(parseInt(info[1])) + " " + getFullDaystring(parseInt(info[2]));
-		                        	_html += "<td style='width:15%;color:gray;'>" + dateRepeatInfo + "</td>";
-		                        }
+		                        	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
+		                        } */
+		                        _html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
 	
 		                        if (isRepeat == "1") {
 		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
@@ -151,7 +149,9 @@
 			                            }
 			                            _html += "<td style='width:15%;color:gray;'>" + companyname + "</td>";
 			                        }
-								}
+								} else {
+		                        	_html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t267' />" + "</td>";
+		                        }
 	
 		                        _html += "</tr>";
 		                        _html += "</html>";
@@ -163,15 +163,12 @@
 		                        var holidayID = result[i].holidayID;
 		                        var holidayName = result[i].holidayName;
 		                        var holidayName2 = result[i].holidayName2;
-		                        var holidayFlag = result[i].holidayFlag;
 		                        var holidayDate = result[i].holidayDate;
-		                        var holidayRepeat = result[i].holidayRepeat;
 		                        var isSolar = result[i].isSolar;
 		                        var isRepeat = result[i].isRepeat;
 		                        var isRest = result[i].isRest;
 		                        var isUse = result[i].isUse;
 		                        var useCompany = result[i].useCompany;
-	                            if (holidayDate) {
 		                        _html += "<tr style='cursor:pointer' id = '" + holidayID
 		                              + "'holidayname = '" + MakeXMLString(holidayName)
 		                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
@@ -181,17 +178,6 @@
 		                              + "'isrest = '" + isRest
 		                              + "'company = '" + useCompany
 		                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
-	                            } else {
-	                            	 _html += "<tr style='cursor:pointer' id = '" + holidayID
-		                              + "'holidayname = '" + MakeXMLString(holidayName)
-		                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
-	                            	  + "'date = '" + holidayRepeat
-		                              + "'issolar = '" + isSolar
-		                              + "'isrepeat = '" + isRepeat
-		                              + "'isrest = '" + isRest
-		                              + "'company = '" + useCompany
-		                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";	
-	                            }
 	
 		                        if (isUse == "1") {
 		                            _html += "<td style='width:5%;padding-left:5px;'><input  type='checkbox' checked = true onclick='event_statuschange(this);'></td>";
@@ -212,14 +198,11 @@
 		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
 		                        }
 								
-		                        if (!holidayFlag ||  holidayFlag == "" || holidayFlag == "D") {
-			                        _html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(0, 10) + "</td>";
-		                        } else {
-		                        	var info = holidayRepeat.split("|");
-		                        	var dateRepeatInfo = "";
-		                        	dateRepeatInfo = getMonthString(parseInt(info[0])) + " " + getOdinalString(parseInt(info[1])) + " " + getFullDaystring(parseInt(info[2]));
-		                        	_html += "<td style='width:15%;color:gray;'>" + dateRepeatInfo + "</td>";
-		                        }
+		                        /* if (holidayType == 'a') {
+		                       		_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(0, 10) + "</td>";
+		                        } else { */
+		                        	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
+		                        //}
 	
 		                        if (isRepeat == "1") {
 		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
@@ -245,6 +228,8 @@
 			                            }
 			                            _html += "<td style='width:15%;color:gray;'>" + companyname + "</td>";
 			                        }
+		                        } else {
+		                        	_html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t267' />" + "</td>";
 		                        }
 		                        
 		                        _html += "</tr>";
@@ -256,14 +241,13 @@
 		                document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + strLang263 + "</td></tr></table>";
 		            }	
 		        } catch (e) {
-		        	alert('다음과 같은 에러가 발생했습니다: '+ e.message);
 		            document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'>" + strLang263 + "</td></tr></table>";
 		        }
 		      	//음력 양력 숨기기
 		        if (lang != "1")
 	            	$(".onlyUseKo").css("display", "none");
 		    }
-	
+		    
 		    function event_Mover(obj) {
 		        if (obj != _RowObject) {
 		            obj.childNodes.item(0).style.backgroundColor = "#EDEDED";
@@ -316,9 +300,9 @@
 		        var pLeft = (pwidth - 450) / 2;
 		        
 		        if (holidayType == 'a') {
-			        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?holidayType="+holidayType+"&company="+document.getElementById('ListCompany')[document.getElementById('ListCompany').selectedIndex].value,"", "height = 360px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+			        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?holidayType="+holidayType+"&company="+document.getElementById('ListCompany')[document.getElementById('ListCompany').selectedIndex].value,"", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		        } else {
-		            window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?holidayType="+holidayType,"", "height = 360px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no"); 	
+		            window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?holidayType="+holidayType,"", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no"); 	
 		        }
 		    }
 	
@@ -335,21 +319,14 @@
 		        var id = _RowObject.id;
 		        var holidayname = _RowObject.getAttribute("holidayname");
 		        var holidayname2 = _RowObject.getAttribute("holidayname2");
-		        var holidaydateType = _RowObject.getAttribute("date");
-		        
-		        if (holidaydateType.indexOf('yoil|') > -1) {
-		        	holidayRepeat = holidaydateType;
-		        } else {
-		        	holidaydate = holidaydateType;
-		        }
-		        
+		        var holidaydate = _RowObject.getAttribute("date");
 		        var issolar = _RowObject.getAttribute("issolar");
 		        var isrepeat = _RowObject.getAttribute("isrepeat");
 		        var isrest = _RowObject.getAttribute("isrest");
 		        var company = _RowObject.getAttribute("company");
 	
-		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?id=" + id + "&name=" + encodeURIComponent(holidayname) + "&name2=" + encodeURIComponent(holidayname2) + "&date=" + holidaydate + "&isSolar=" + issolar + "&isRepeat=" + isrepeat + "&isRest=" + isrest + "&company=" + company + "&holidayType="+holidayType + "&holidayFlag=" + holidayFlag + "&holidayRepeat=" + holidayRepeat
-		            , "", "height = 360px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?id=" + id + "&name=" + encodeURIComponent(holidayname) + "&name2=" + encodeURIComponent(holidayname2) + "&date=" + holidaydate + "&isSolar=" + issolar + "&isRepeat=" + isrepeat + "&isRest=" + isrest + "&company=" + company + "&holidayType="+holidayType
+		            , "", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		    }
 	
 		    function del_holiday() {
@@ -489,6 +466,111 @@
 		    	}
 		    	return rtnString;
 		    }
+		    
+		    /* function makeSelectBox(result) {
+		    	var _html = "";
+			    // <option></option>    
+		        try {		            		            
+		            var countValue = 0;
+                    var selectYear = [];
+                    var uniqueYear = [];
+		            _html = "<option selected value='ALL'><spring:message code='ezResource.t154' /></option>";
+		            var HolidaySize = result.length;
+		            if (HolidaySize > 0) {
+		            	$('#ListYear').css("display", "");
+		                if (CrossYN()) {
+		                    for (var i = 0; i < HolidaySize; i++) {
+		                        var holidayYear = result[i].holidayDate.substring(0,4);
+		                        if (result[i].isRepeat != '1') {
+			                        selectYear.push(holidayYear);
+		                        }
+		                    }
+		                        $.each(selectYear, function(i, el){
+		                        	if($.inArray(el, uniqueYear) === -1) uniqueYear.push(el);
+		                        })
+		                        for (var j = 0; j < uniqueYear.length; j++) {
+		                        	_html += "<option value='"+uniqueYear[j]+"'>"+uniqueYear[j]+"</option>" 
+		                        }
+		                        document.getElementById("ListYear").innerHTML = _html;
+		                } else {
+		                    for (var i = 0; i < HolidaySize; i++) {
+		                    	var holidayYear = result[i].holidayDate.substring(0,4);
+		                    	if (result[i].isRepeat != '1') {
+			                        selectYear.push(holidayYear);
+		                        }
+		                    }	                    
+		                        $.each(selectYear, function(i, el){
+		                        	if($.inArray(el, uniqueYear) === -1) uniqueYear.push(el);
+		                        })
+		                        for (var j = 0; j < uniqueYear.length; j++) {
+		                        	_html += "<option value='"+uniqueYear[j]+"'>"+uniqueYear[j]+"</option>" 
+		                        }
+		                        document.getElementById("ListYear").innerHTML = _html;
+		                }
+		            } else {
+		            	$('#ListYear').css("display", "none");		                
+		            }	
+		        } catch (e) {
+		        	alert(e.message);
+		            document.getElementById("ListYear").innerHTML = "";
+		        }
+		    } */
+		    
+		    function year_holiday() {
+		    	_RowObject = null;
+		    	var COMPANYID = "";
+		    	if (holidayType == "a") {
+		    		COMPANYID = document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value;
+		    		if (document.getElementById("ListYear").selectedIndex > -1) {
+				    	holidayYear = document.getElementById("ListYear")[document.getElementById("ListYear").selectedIndex].value;
+		    		} else {
+		    			holidayYear = "";
+		    		}
+		    	} else {
+		    		COMPANYID = "1";
+		    	}
+		    	
+		    	
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : true,
+		    		url : "/ezSchedule/scheduleGetHolidayJsonYear.do",
+		    		data : {
+		    			COMPANYID  : COMPANYID,		    			
+		    			holidayType : holidayType,
+		    			holidayYear : holidayYear
+		    		},
+		    		success: function(result) {
+		    			MakeSliderList(result);
+		    			makeSelectBox(holidayYear, 'select');		    			
+		    		}	    		
+		        });
+		    }
+		    
+		    function makeSelectBox(holidayYear, type) {
+		    	var _html = "";
+		    	if (type != 'select') {
+		    		holidayYear = new Date().getFullYear(); 
+		    	}
+			    // <option></option>    
+		        try {
+		        	$('#ListYear').css("display", "");
+		        	for (var j = -10; j < 11; j++) {
+		        		if (j == 0) {
+			        		_html += "<option value='"+(parseInt(holidayYear)+j)+"' selected>"+(parseInt(holidayYear)+j)+"</option>";
+		        		} else {
+		        			_html += "<option value='"+(parseInt(holidayYear)+j)+"'>"+(parseInt(holidayYear)+j)+"</option>";
+		        		}
+		        		
+		        	}
+		        	document.getElementById("ListYear").innerHTML = _html;
+		        } catch (e) {
+		        	$('#ListYear').css("display", "none");	
+		            document.getElementById("ListYear").innerHTML = "";
+		        }
+		    } 
+		    
 		</script>
 	</head>
 	<body class="mainbody"> 
@@ -504,11 +586,16 @@
            				</c:forEach>
 		            </select>
 				</c:if>
-			    <ul style="margin-top: 15px;">
-			        <li class="important"><span onClick="add_holiday()"><spring:message code='ezSchedule.t4004' /></span></li>
-			        <li><span onClick="event_dbclick()"><spring:message code='ezSchedule.t4005' /></span></li>
-			        <li><span class="icon16 icon16_delete" onClick="del_holiday()"></span></li>			        
-			    </ul>
+				<div style="width:750px">
+				    <ul style="margin-top: 15px;">
+				        <li class="important"><span onClick="add_holiday()"><spring:message code='ezSchedule.t4004' /></span></li>
+				        <li><span onClick="event_dbclick()"><spring:message code='ezSchedule.t4005' /></span></li>
+				        <li><span class="icon16 icon16_delete" onClick="del_holiday()"></span></li>
+				        <c:if test="${holidayType eq 'a'}">
+					        <select id="ListYear" onchange="year_holiday()" style="float:right;"></select> 
+				        </c:if>
+				    </ul>
+				</div>
 			</div>
 			<table style="width: 750px; height: 500px;" border="0">
 		        <tr>
@@ -522,9 +609,7 @@
 		                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t4008' /></span></th>
 		                            <th style="width: 10%;"><span><spring:message code='ezSchedule.t4007' /></span></th>
 		                            <th style="width: 10%;"><span><spring:message code='ezSchedule.t4009' /></span></th>
-		                            <c:if test="${holidayType eq 'a'}">
-			                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t2000' /></span></th>
-		                            </c:if>
+		                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t2000' /></span></th>
 		                        </tr>
 		                    </table>
 		                    <div id="contentlist" name="contentlist" style="height: 468px; overflow-y: auto;">

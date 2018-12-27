@@ -967,14 +967,7 @@ function tableListControl_today() {
         var TodayDatename = datanameweek(sz_Year, sz_Month + 1, sz_Date, "YES");
 
         var current_day = new Date(TodayDatename);
-        if (current_day.getDay() == "6")
-            //document.getElementById("divViewHeader").style.color = "rgb(0, 72, 149)";
-        	document.getElementById("divViewHeader").style.color = "";
-        else if (current_day.getDay() == "0")
-            //document.getElementById("divViewHeader").style.color = "#ee1c25";
-        	document.getElementById("divViewHeader").style.color = "";
-        else
-            document.getElementById("divViewHeader").style.color = "";
+        
 
        //baonk added    
         if (current_day.getFullYear() > 1800 && current_day.getFullYear() <= 2101) {               	                                             
@@ -996,13 +989,17 @@ function tableListControl_today() {
                     isholiday = true;                    
                 }
             }
-            if (isholiday) {            	
+            if (current_day.getDay() == "0" || isholiday)
             	document.getElementById("divViewHeader").style.color = "#ee1c25";
-            }
+            	//document.getElementById("divViewHeader").style.color = "";
+            else if (current_day.getDay() == "6")
+            	document.getElementById("divViewHeader").style.color = "rgb(0, 72, 149)";
+            	//document.getElementById("divViewHeader").style.color = "";
+            else
+                document.getElementById("divViewHeader").style.color = "black";
         }                
         //end
         
-
         setNodeText(document.getElementById("divViewHeader"),datanameweek(sz_Year, sz_Month + 1, sz_Date, "HEARDER"));
         var _Table = document.createElement("TABLE");
         _Table.setAttribute("class", "table_layout");

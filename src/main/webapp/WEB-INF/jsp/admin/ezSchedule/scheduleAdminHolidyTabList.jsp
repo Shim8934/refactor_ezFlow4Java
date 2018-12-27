@@ -9,6 +9,7 @@
 	    <!-- <link rel="stylesheet" href="${util.addVer('/css/tab_over.css')}" type="text/css"> -->
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 	    <style type="text/css">
 	    .tabpart01UL{
 	    	position:absolute;
@@ -117,8 +118,8 @@
 	        	var tabId = "a"; // anniversary
 	        	var tabId2 = "s"; // statutory holiday 
 	        	//탭이름 message 처리
-	        	var tabName = "회사기념일";
-	        	var tabName2 = "법정공휴일";
+	        	var tabName = strLangKHA1;
+	        	var tabName2 = strLangKHA2;
 	        	
 	        	tabText += "<p id='FBoard_sub0'>";
 	        	tabText += "<span id='1tab0' divname='FBoard_div0' name='FBoard_div' data1=\'"+tabId+"\' data2=\'"+tabName+"\' data5='0' class='tabover'>"+tabName+"</span>";
@@ -236,11 +237,11 @@
 	</head>
 	<!-- <body class="mainbody" style="height: 89%;"> -->
 	<body class="mainbody" style="height: 95%; overflow:hidden;margin-left:0px;margin-right:0px">
-	 <h1><spring:message code='ezSchedule.t4003' /></h1>
+	 <h1 style="margin-left:10px;"><spring:message code='ezSchedule.t4003' /></h1>
 		<div style="padding-left:10px;padding-right:10px">
 		    <!-- <h1><span id='mailBoxInfo'></span></h1> -->
-		    <div class="portlet_tabpart01">
-		        <div class="portlet_tabpart01_top" id="tab1"></div>
+		    <div class="portlet_tabnew01">
+		        <div class="portlet_tabnew01_top" id="tab1"></div>
 		    </div>
 		</div>    
 	    <iframe id="FBoard_ifrm" style="width: 100%; height: 100%;" frameborder="0"></iframe>

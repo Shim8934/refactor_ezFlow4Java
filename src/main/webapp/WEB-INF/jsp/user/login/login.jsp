@@ -38,7 +38,7 @@
 			.password_reset .passwordForm li .formInput input{font-size:13px; width:199px; height:35px; line-height:35px; border:1px solid #d9d9d9; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; padding:0px 0px 0px 5px;}
 			.password_reset .passwordForm li.grayText{ color:#8e8e8e; font-size:12px; margin:0px; padding:0px}
 			#exDiv3 dl{margin-top: 20px;}
-			#layerTitle{margin-bottom: 20px;}
+			.warning_wrap .layerTitle{margin-bottom: 20px;}
 			
 			/* 2018-11-06 포탈개인화 로고 설정 - 유은정 */
 			.logo img {width:137px; height:38px;}
@@ -115,12 +115,16 @@
 			}
 			
 			function fnInit() {
+			    var message = document.loginForm.message.value;
+			    
 			    // 로그인 페이지가 로드된 프레임이 Top 프레임이 아니면 Top 프레임으로 로드시킨다.
                 if (top != self) {
-                    top.location.href = self.location.href;
+                    //top.location.href = self.location.href;
+                    //멀티 로그인 기능때문에 변경
+                    top.reloadLoginPage(message, self.location.href);
+                    return;
                 }
 			    
-			    var message = document.loginForm.message.value;
 			    if(message == "oldBrowser"){
 			    	alert("<spring:message code='main.t0631'/>"
 			    		+ "\nInternet Explorer 10 <spring:message code='main.t0632'/>"
@@ -131,14 +135,22 @@
 			    if ("${isWrongPass}" == "Y") {
 			    	$("#imgMnt").html("<img src='/images/warning2.png'>");
 			    	$("#exDiv2").modal();
-			    }
-			    else if (message != "") {
+			    } else if(message == "oldBrowser"){
+		    		alert("<spring:message code='main.t0631'/>"
+			    		+ "\nInternet Explorer 10 <spring:message code='main.t0632'/>"
+			    		+ "\n(<spring:message code='main.t0633'/> : Internet Explorer 11)");
+			    	return false;
+			    } else if (message === "multiLoginNoti") {
+					$("#imgMnt3").html("<img src='/images/warning2.png'>");
+			        $("#exDiv4").modal();
+			    } else if (message != "") {
 // 			        alert(message);
 					$("#layerTitle").text(message);
 					$("#imgMnt2").html("<img src='/images/warning2.png'>");
 			        $("#exDiv3").modal();
 			    }
 			    getid(document.loginForm);
+			    document.loginForm.message.value = "";
 			    
 				if ("${isExpireDate}" == "Y") {
 					$("#exDiv").modal();
@@ -352,9 +364,26 @@
 			<div class="warning_wrap" style="padding-left:20px">
 				<p style="border:0px" id="imgMnt2"></p>
 		        <dl>
-					<dt id="layerTitle">${message1}</dt>
+					<dt id="layerTitle" class="layerTitle">${message1}</dt>
 		            <dd><spring:message code='fail.common.login.warning1'/></dd>
 		            <dd><spring:message code='fail.common.login.warning6'/></dd>
+		        </dl>
+		    </div>
+		</div>
+		
+		<!-- 2018-12-24 김보혜 멀티로그인으로 인해 강제 로그아웃 됐을 시 알림 레이어 팝업 -->
+		<div id="exDiv4" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span></span></a></li>
+	            </ul>
+	        </div>
+			<div class="warning_wrap" style="padding-left:20px">
+				<p style="border:0px" id="imgMnt3"></p>
+		        <dl>
+					<dt id="layerTitle1" class="layerTitle"><spring:message code="ezSystem.kbh01" /></dt>
+		            <dd><spring:message code="ezSystem.kbh02" /></dd>
+		            <dd><spring:message code="ezSystem.kbh03" /></dd>
 		        </dl>
 		    </div>
 		</div>
