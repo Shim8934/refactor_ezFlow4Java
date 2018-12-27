@@ -369,6 +369,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		}
 	}
 
+	public void addJmochaMailGenenalPreviewMailImage() {
+		try {
+			select("EzCommonDAO.checkJmochaMailGenenalPreviewMailImage");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_token doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.addJmochaMailGenenalPreviewMailImage");
+		}
+	}
+	
 	public void addPortalThemePortletIsFixed() {
 		try {
 			select("EzCommonDAO.checkPortalThemePortletIsFixed");

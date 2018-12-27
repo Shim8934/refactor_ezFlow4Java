@@ -409,7 +409,7 @@
 		        if (ReturnFunction != null) {
 		            if (type == "EMP") {
 		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.cells[1].textContent + ":" + selRow.cells[3].textContent + ":" + selRow.getAttribute("DATA3"));
-		            } else if (type = "selDeptMaster") {
+		            } else if (type == "selDeptMaster") {
 		                ReturnFunction(selRow.getAttribute("DATA2"));
 		            } else {
 		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3"));
@@ -418,7 +418,7 @@
 		        else {
 		            if (type == "EMP") {
 		                window.returnValue = selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.cells[1].textContent + ":" + selRow.cells[3].textContent + ":" + selRow.getAttribute("DATA3");
-		            } else if (type = "selDeptMaster") {
+		            } else if (type == "selDeptMaster") {
 		                window.returnValue = selRow.getAttribute("DATA2");
 		            } else {
 		                window.returnValue = selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3");
