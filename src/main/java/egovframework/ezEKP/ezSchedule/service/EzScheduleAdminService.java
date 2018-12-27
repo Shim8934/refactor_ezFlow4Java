@@ -12,7 +12,7 @@ public interface EzScheduleAdminService {
 
 	public void scheduleChangeHolidayUse(String holidayID, String isUse, int tenantId) throws Exception;
 
-	public void scheduleSaveHoliday(String holidayName, String holidayName2, String holidayDate, String isSolar, String isRepeat, String isRest, String companyID, int tenantId) throws Exception;
+	public void scheduleSaveHoliday(String holidayName, String holidayName2, String holidayDate,String isSolar, String isRepeat, String isRest, String companyID, int tenantId) throws Exception;
 
 	public void scheduleUpdateHoliday(String holidayName, String holidayName2, String holidayDate, String isSolar, String isRepeat, String isRest, String companyID, int tenantId, String holidayID) throws Exception;
 

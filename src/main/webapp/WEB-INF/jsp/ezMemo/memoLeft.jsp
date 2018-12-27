@@ -109,9 +109,9 @@
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
 	        	<ul class="lnbUL">
-	        		<li class="memo"><span class="sub_iconLNB tree_board_memo"></span><span class="node_selected" onclick="memoClick(this);" folderId="0" folderName="<spring:message code="ezMemo.t0064"/>"><spring:message code="ezMemo.t0064"/></span></li>
+	        		<li class="memo"><span class="sub_iconLNB tree_memo_all"></span><span class="node_selected" onclick="memoClick(this);" folderId="0" folderName="<spring:message code="ezMemo.t0064"/>"><spring:message code="ezMemo.t0064"/></span></li>
 	        		<c:forEach items="${folders }" var="folder">
-		        		<li class="memo"><span class="sub_iconLNB tree_board_memo"></span><span class="node_normal" onclick="memoClick(this);" folderId="${folder.folder_id}" folderName="${folder.folder_name}"><c:out value="${folder.folder_name}"></c:out></span></li>
+		        		<li class="memo"><span class="sub_iconLNB tree_memo_default"></span><span class="node_normal" onclick="memoClick(this);" folderId="${folder.folder_id}" folderName="${folder.folder_name}"><c:out value="${folder.folder_name}"></c:out></span></li>
 	        		</c:forEach>
 				</ul>	
 			</div>	        

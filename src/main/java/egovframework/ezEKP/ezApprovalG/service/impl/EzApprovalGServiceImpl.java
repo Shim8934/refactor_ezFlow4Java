@@ -21921,7 +21921,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					 break;
 	
 				 default:
-					 if (fieldName.equals("DELAYENDYFLAG")) {
+					 if (fieldName.equals("DELAYENDYFLAG") || fieldName.equals("DELAYFLAG")) {
 						 if (docXML.getElementsByTagName(fieldName).item(j).getTextContent().equals("Y")) {
 							 resultXML.append("신청");
 						 }
