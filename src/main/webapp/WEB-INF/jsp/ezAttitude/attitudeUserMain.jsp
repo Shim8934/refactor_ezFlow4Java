@@ -329,7 +329,7 @@
 			window.onload = function() {
 				weekArray = week.split(";");
 				
-				select_memorialDays(uselang); // 공식 휴일 설정 => 언어에 따라 memorialDays에 변수가 담김
+				/* select_memorialDays(uselang); */ // 공식 휴일 설정 => 언어에 따라 memorialDays에 변수가 담김
 				
 				scheduleGetLunarUse();
 				
