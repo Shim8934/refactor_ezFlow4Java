@@ -2286,6 +2286,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             result.append("<DATA2>" + commonUtil.cleanValue(vo.getExtensionAttribute1()) + "</DATA2>");
             result.append("<DATA3>" + commonUtil.cleanValue(vo.getDisplayName()) + "</DATA3>");
             result.append("<DATA4>" + commonUtil.cleanValue(vo.getMail()) + "</DATA4>");
+            result.append("<DATA5>" + commonUtil.cleanValue(vo.getDescription()) + "</DATA5>");
             result.append("</CELL>");
             result.append("<CELL>");
             result.append("<VALUE>" + commonUtil.cleanValue(vo.getCn()) + "</VALUE>");
@@ -3642,6 +3643,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             result.append("<DATA3>" + commonUtil.cleanValue(vo.getDisplayName()) + "</DATA3>");
             result.append("<DATA4>" + commonUtil.cleanValue(vo.getMail()) + "</DATA4>");
             result.append("</CELL>");
+            result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getDescription()) + "</VALUE></CELL>");
             result.append("</ROW>");
         }
         result.append("</ROWS>");

@@ -234,10 +234,10 @@
 		        var id = listview.GetSelectedRows()[0].getAttribute("DATA1");
 
 		        if (CrossYN()) {
-		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?userID=" + encodeURI(id) + "&companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), "Permissions_Check", GetOpenWindowfeature(1000, 600));
+		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?userID=" + encodeURI(id) + "&companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), "Permissions_Check", GetOpenWindowfeature(1000, 620));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
-		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?userID=" + encodeURI(id) + "&companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), "", "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(1000, 060));
+		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?userID=" + encodeURI(id) + "&companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), "", "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(1000, 620));
 		        } 
 				
 		    }
@@ -435,10 +435,10 @@
 		        if (CrossYN()) {
 		            permissions_check_dialogArguments[0] = Params;
 		            permissions_check_dialogArguments[1] = Permissions_Add_Complete;
-		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), "Permissions_Check", GetOpenWindowfeature(1000, 600));
+		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), "Permissions_Check", GetOpenWindowfeature(1000, 620));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
-		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(1000, 600));
+		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(1000, 620));
 		            clearSearchVal();
 		            Permissions_List();
 		        }
@@ -453,10 +453,14 @@
 
 				var dataList = new Array();
 				var dataList2 = new Array();
+				var dataList3 = new Array();
+				var dataList4 = new Array();
 
 				$("input[name='checks']:checked").each(function(){
 					dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
 					dataList2.push(this.parentElement.parentElement.getAttribute("DATA2"));
+					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
+					dataList4.push(this.parentElement.parentElement.getAttribute("DATA5"));
 				});
 
 				// 선택된 사원이 없을 경우
@@ -468,9 +472,9 @@
 				// 권한 전체삭제
 				var cData = "";
 				if (mode == "ALL") {
-					cData = dataList.length + "<spring:message code='ezOrgan.mse1' />" + strLang19 + " " + "<spring:message code='ezAddress.t362' />" + strLang20;
+					cData = "["+dataList3+"]" + strLang19 + " " + "<spring:message code='ezAddress.t362' />" + strLang20;
 				} else {
-					cData = dataList.length + "<spring:message code='ezOrgan.mse1' />" + strLang19 + document.getElementById(clickTabID).innerText + " " + strLang20;
+					cData = "["+dataList3+"]" + strLang19 + document.getElementById(clickTabID).innerText + " " + strLang20;
 				}
 
 				if (confirm(cData)) {
@@ -630,7 +634,7 @@
 		    </h1>
 		    <div id="mainmenu">
 		        <ul style="margin-top:15px;">
-		            <li class="important"><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
+		            <li class="important"><span onClick="Permissions_Add()"><spring:message code='ezOrgan.mse3' /></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
 		            <li><span class="icon16 icon16_delete" onClick="Permissions_Del('MOD')"></span></li>
