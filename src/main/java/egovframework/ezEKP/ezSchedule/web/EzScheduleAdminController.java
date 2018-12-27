@@ -308,6 +308,7 @@ public class EzScheduleAdminController {
 		}
 		
 		String option = "";
+		String radioVal = "";
 		String id = request.getParameter("id");
 		String name = request.getParameter("name");
 		String name2 = request.getParameter("name2");
@@ -316,6 +317,7 @@ public class EzScheduleAdminController {
 		String isRepeat = request.getParameter("isRepeat");
 		String isRest = request.getParameter("isRest");
 		String holidayType = request.getParameter("holidayType");
+		String holidayRepeat = request.getParameter("holidayRepeat");
 		
 		if (holidayType.equals("a")) {
 			String company = request.getParameter("company");	
@@ -335,6 +337,7 @@ public class EzScheduleAdminController {
 			}
 			model.addAttribute("companySel", companySel);
 		}
+		
 		model.addAttribute("lang", userInfo.getLang());
 		model.addAttribute("id", id);
 		model.addAttribute("name", name);
@@ -344,6 +347,7 @@ public class EzScheduleAdminController {
 		model.addAttribute("isRepeat", isRepeat);
 		model.addAttribute("isRest", isRest);
 		model.addAttribute("holidayType", holidayType);
+		model.addAttribute("radioVal", radioVal);
 		
 		return "/admin/ezSchedule/scheduleAdminPopupHoliday";
 	}
@@ -366,14 +370,16 @@ public class EzScheduleAdminController {
 		String isRepeat = request.getParameter("isRepeat");
 		String isRest = request.getParameter("isRest");		
 		String companyID = request.getParameter("companyID");
+		String holidayFlag = request.getParameter("holidayFlag");
+		String holidayRepeat = request.getParameter("holidayRepeat");
 		
 		String type = request.getParameter("type");
 		String holidayID = request.getParameter("holidayID");
 		
 		if (type.equals("0")) {
-			ezScheduleAdminService.scheduleSaveHoliday(holidayName, holidayName2, holidayDate, isSolar, isRepeat, isRest, companyID, loginSimpleVO.getTenantId());
+			ezScheduleAdminService.scheduleSaveHoliday(holidayName, holidayName2, holidayFlag, holidayDate, holidayRepeat, isSolar, isRepeat, isRest, companyID, loginSimpleVO.getTenantId());
 		} else {
-			ezScheduleAdminService.scheduleUpdateHoliday(holidayName, holidayName2, holidayDate, isSolar, isRepeat, isRest, companyID, loginSimpleVO.getTenantId(), holidayID);
+			ezScheduleAdminService.scheduleUpdateHoliday(holidayName, holidayName2, holidayFlag, holidayDate, holidayRepeat, isSolar, isRepeat, isRest, companyID, loginSimpleVO.getTenantId(), holidayID);
 		}		
 	}
 	
@@ -558,7 +564,7 @@ public class EzScheduleAdminController {
 	@RequestMapping(value="/admin/ezSchedule/scheduleAdminPopupHolidayRepeat.do")
 	public String  scheduleAdminPopupHolidayRepeat(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
 		
-		logger.debug("============ scheduleAdminHolidayTab started ============");
+		logger.debug("============ scheduleAdminPopupHolidayRepeat started ============");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -568,26 +574,15 @@ public class EzScheduleAdminController {
 		
 		String primary = userInfo.getPrimary();
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		for (int i =0 ; i < list.size() ; i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-			}
-		}
 		
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("primary", primary);
-		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
 		
-		logger.debug("============ scheduleAdminHolidayTab ended ============");
+		logger.debug("============ scheduleAdminPopupHolidayRepeat ended ============");
 		
-		return "/admin/ezSchedule/scheduleAdminHolidyTabList";
+		return "/admin/ezSchedule/scheduleAdminPopupHolidayRepeat";
 	}
 	
 }

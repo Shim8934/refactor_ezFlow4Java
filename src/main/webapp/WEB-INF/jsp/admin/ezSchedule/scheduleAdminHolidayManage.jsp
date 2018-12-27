@@ -68,21 +68,35 @@
 		                        var holidayID = result[i].holidayID;
 		                        var holidayName = result[i].holidayName;
 		                        var holidayName2 = result[i].holidayName2;
+		                        var holidayFlag = result[i].holidayFlag;
 		                        var holidayDate = result[i].holidayDate;
+		                        var holidayRepeat = result[i].holidayRepeat;
 		                        var isSolar = result[i].isSolar;
 		                        var isRepeat = result[i].isRepeat;
 		                        var isRest = result[i].isRest;
 		                        var isUse = result[i].isUse;
 		                        var useCompany = result[i].useCompany;
-		                        _html += "<tr style='cursor:pointer' id = '" + holidayID
-		                              + "'holidayname = '" + MakeXMLString(holidayName)
-		                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
-		                              + "'date = '" + holidayDate.substring(0,10)
-		                              + "'issolar = '" + isSolar
-		                              + "'isrepeat = '" + isRepeat
-		                              + "'isrest = '" + isRest
-		                              + "'company = '" + useCompany
-		                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
+		                        if (holidayDate) {
+			                        _html += "<tr style='cursor:pointer' id = '" + holidayID
+			                              + "'holidayname = '" + MakeXMLString(holidayName)
+			                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
+			                              + "'date = '" + holidayDate.substring(0,10)
+			                              + "'issolar = '" + isSolar
+			                              + "'isrepeat = '" + isRepeat
+			                              + "'isrest = '" + isRest
+			                              + "'company = '" + useCompany
+			                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
+		                            } else {
+		                            	 _html += "<tr style='cursor:pointer' id = '" + holidayID
+			                              + "'holidayname = '" + MakeXMLString(holidayName)
+			                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
+		                            	  + "'date = '" + holidayRepeat
+			                              + "'issolar = '" + isSolar
+			                              + "'isrepeat = '" + isRepeat
+			                              + "'isrest = '" + isRest
+			                              + "'company = '" + useCompany
+			                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";	
+		                            }
 								
 		                        if (isUse == "1") {
 		                            _html += "<td style='width:5%;padding-left:5px;'><input  type='checkbox' checked = true onclick='event_statuschange(this);'></td>";
@@ -101,8 +115,17 @@
 		                        } else {
 		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
 		                        }
-	
-		                        _html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(0, 10) + "</td>";
+								
+		                        if (!holidayFlag ||  holidayFlag == "" || holidayFlag == "D") {
+		                        	if (holidayDate) {
+			                        	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(0, 10) + "</td>";
+	                            	} 
+		                        } else {
+		                        	var info = holidayRepeat.split("|");
+		                        	var dateRepeatInfo = "";
+		                        	dateRepeatInfo = getMonthString(parseInt(info[0])) + " " + getOdinalString(parseInt(info[1])) + " " + getFullDaystring(parseInt(info[2]));
+		                        	_html += "<td style='width:15%;color:gray;'>" + dateRepeatInfo + "</td>";
+		                        }
 	
 		                        if (isRepeat == "1") {
 		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
@@ -140,21 +163,35 @@
 		                        var holidayID = result[i].holidayID;
 		                        var holidayName = result[i].holidayName;
 		                        var holidayName2 = result[i].holidayName2;
+		                        var holidayFlag = result[i].holidayFlag;
 		                        var holidayDate = result[i].holidayDate;
+		                        var holidayRepeat = result[i].holidayRepeat;
 		                        var isSolar = result[i].isSolar;
 		                        var isRepeat = result[i].isRepeat;
 		                        var isRest = result[i].isRest;
 		                        var isUse = result[i].isUse;
 		                        var useCompany = result[i].useCompany;
+	                            if (holidayDate) {
 		                        _html += "<tr style='cursor:pointer' id = '" + holidayID
 		                              + "'holidayname = '" + MakeXMLString(holidayName)
 		                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
-		                              + "'date = '" + holidayDate.substring(0, 10)
+		                              + "'date = '" + holidayDate.substring(0,10)
 		                              + "'issolar = '" + isSolar
 		                              + "'isrepeat = '" + isRepeat
 		                              + "'isrest = '" + isRest
 		                              + "'company = '" + useCompany
 		                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
+	                            } else {
+	                            	 _html += "<tr style='cursor:pointer' id = '" + holidayID
+		                              + "'holidayname = '" + MakeXMLString(holidayName)
+		                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
+	                            	  + "'date = '" + holidayRepeat
+		                              + "'issolar = '" + isSolar
+		                              + "'isrepeat = '" + isRepeat
+		                              + "'isrest = '" + isRest
+		                              + "'company = '" + useCompany
+		                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";	
+	                            }
 	
 		                        if (isUse == "1") {
 		                            _html += "<td style='width:5%;padding-left:5px;'><input  type='checkbox' checked = true onclick='event_statuschange(this);'></td>";
@@ -174,8 +211,15 @@
 		                        } else {
 		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
 		                        }
-	
-		                        _html += "<td style='width:15%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].text.substring(0, 10) + "</td>";
+								
+		                        if (!holidayFlag ||  holidayFlag == "" || holidayFlag == "D") {
+			                        _html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(0, 10) + "</td>";
+		                        } else {
+		                        	var info = holidayRepeat.split("|");
+		                        	var dateRepeatInfo = "";
+		                        	dateRepeatInfo = getMonthString(parseInt(info[0])) + " " + getOdinalString(parseInt(info[1])) + " " + getFullDaystring(parseInt(info[2]));
+		                        	_html += "<td style='width:15%;color:gray;'>" + dateRepeatInfo + "</td>";
+		                        }
 	
 		                        if (isRepeat == "1") {
 		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
@@ -272,9 +316,9 @@
 		        var pLeft = (pwidth - 450) / 2;
 		        
 		        if (holidayType == 'a') {
-			        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?holidayType="+holidayType+"&company="+document.getElementById('ListCompany')[document.getElementById('ListCompany').selectedIndex].value,"", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+			        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?holidayType="+holidayType+"&company="+document.getElementById('ListCompany')[document.getElementById('ListCompany').selectedIndex].value,"", "height = 360px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		        } else {
-		            window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?holidayType="+holidayType,"", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no"); 	
+		            window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?holidayType="+holidayType,"", "height = 360px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no"); 	
 		        }
 		    }
 	
@@ -291,14 +335,21 @@
 		        var id = _RowObject.id;
 		        var holidayname = _RowObject.getAttribute("holidayname");
 		        var holidayname2 = _RowObject.getAttribute("holidayname2");
-		        var holidaydate = _RowObject.getAttribute("date");
+		        var holidaydateType = _RowObject.getAttribute("date");
+		        
+		        if (holidaydateType.indexOf('yoil|') > -1) {
+		        	holidayRepeat = holidaydateType;
+		        } else {
+		        	holidaydate = holidaydateType;
+		        }
+		        
 		        var issolar = _RowObject.getAttribute("issolar");
 		        var isrepeat = _RowObject.getAttribute("isrepeat");
 		        var isrest = _RowObject.getAttribute("isrest");
 		        var company = _RowObject.getAttribute("company");
 	
-		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?id=" + id + "&name=" + encodeURIComponent(holidayname) + "&name2=" + encodeURIComponent(holidayname2) + "&date=" + holidaydate + "&isSolar=" + issolar + "&isRepeat=" + isrepeat + "&isRest=" + isrest + "&company=" + company
-		            , "", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?id=" + id + "&name=" + encodeURIComponent(holidayname) + "&name2=" + encodeURIComponent(holidayname2) + "&date=" + holidaydate + "&isSolar=" + issolar + "&isRepeat=" + isrepeat + "&isRest=" + isrest + "&company=" + company + "&holidayType="+holidayType + "&holidayFlag=" + holidayFlag + "&holidayRepeat=" + holidayRepeat
+		            , "", "height = 360px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		    }
 	
 		    function del_holiday() {
@@ -344,6 +395,99 @@
 		    			alert(strLang86);
 		    		}
 		        });
+		    }
+		    
+		    function getMonthString(cnt) {					
+		        var rtnString = "";
+		        switch (cnt) {				
+		    		case 1:
+		    			rtnString = strLang67;
+		    			break;
+		    		case 2:
+		    			rtnString = strLang68;
+		    			break;
+		    		case 3:
+		    			rtnString = strLang69;
+		    			break;
+		    		case 4:
+		    			rtnString = strLang70;
+		    			break;
+		    		case 5:
+		    			rtnString = strLang71;
+		    			break;
+		    		case 6:
+		    			rtnString = strLang72;
+		    			break;	
+		    		case 7:
+		    		    rtnString = strLang73;
+		    		    break;	
+		    		case 8:
+		    		    rtnString = strLang74;
+		    		    break;	
+		    		case 9:
+		    		    rtnString = strLang75;
+		    		    break;	
+		    		case 10:
+		    		    rtnString = strLang76;
+		    		    break;	
+		    		case 11:
+		    		    rtnString = strLang77;
+		    		    break;	
+		    		case 12:
+		    		    rtnString = strLang78;
+		    		    break;	
+		    	}
+		    	return rtnString;
+		    }
+		    
+		    function getFullDaystring(cnt) {
+		        var rtnString = "";
+		        switch (cnt) {
+		    		case 0:
+		    			rtnString = strLang60;
+		    			break;
+		    		case 1:
+		    			rtnString = strLang61;
+		    			break;
+		    		case 2:
+		    			rtnString = strLang62;
+		    			break;
+		    		case 3:
+		    			rtnString = strLang63;
+		    			break;
+		    		case 4:
+		    			rtnString = strLang64;
+		    			break;
+		    		case 5:
+		    			rtnString = strLang65;
+		    			break;
+		    		case 6:
+		    			rtnString = strLang66;
+		    			break;	
+		    	}
+		    	return rtnString;
+		    }
+		    
+		    function getOdinalString(cnt) {			
+		        var rtnString = "";
+		        switch (cnt) {					
+		    		case 1:
+		    			rtnString = strLang55;
+		    			break;
+		    		case 2:
+		    			rtnString = strLang56;
+		    			break;
+		    		case 3:
+		    			rtnString = strLang57;
+		    			break;
+		    		case 4:
+		    			rtnString = strLang58;
+		    			break;
+		    		case 5:
+		    			rtnString = strLang59;
+		    			break;					
+		    	}
+		    	return rtnString;
 		    }
 		</script>
 	</head>
