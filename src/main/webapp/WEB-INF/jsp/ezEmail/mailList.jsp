@@ -59,6 +59,7 @@
 		    var pPreviewHContent = "${mailGeneral.previewHContent}";
 		    var pRefreshinterval = "${mailGeneral.refreshInterval}";
 		    var previewSubTree = "${mailGeneral.previewSubTree}";
+		    var previewMailImage = "${mailGeneral.previewMailImage}";
 		    var CurrentHeight = 0;
 		    var CurrenWidth = 0;
 		    var pMailListHeightW = 0;
@@ -489,6 +490,7 @@
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHLIST", parseInt(pMailListDiv_H));
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHCONTENT", parseInt(pMailPreVDiv_H));
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWSUBTREE", previewSubTree);
+	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWMAILIMAGE", previewMailImage);
 	            
 	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", false);
 	            xmlhttp.send(xmlpara);		  

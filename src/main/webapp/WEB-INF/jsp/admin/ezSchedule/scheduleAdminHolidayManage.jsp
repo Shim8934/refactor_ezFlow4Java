@@ -17,6 +17,7 @@
 		    var userlang = "<c:out value='${primary}'/>";
 		    var companylist = "<c:out value='${companyList}'/>"; //(ex. S907001,가온아이A;S907000,가온아이B;)
 		    var lang = "<c:out value='${lang}'/>";
+		    var holidayType = "<c:out value='${holidayType}'/>";
 		    
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -31,137 +32,178 @@
 	
 		    function schedule_get_holiday() {
 		    	_RowObject = null;
+		    	var COMPANYID = "";
+		    	if (holidayType == "a") {
+		    		COMPANYID = document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value;
+		    	} else {
+		    		COMPANYID = "1";
+		    	}
 		    	
 		        $.ajax({
 		    		type : "POST",
-		    		dataType : "text",
+		    		dataType : "json",
 		    		async : true,
-		    		url : "/ezSchedule/scheduleGetHoliday.do",
+		    		url : "/ezSchedule/scheduleGetHolidayJson.do",
 		    		data : {
-		    			COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value		    			
+		    			COMPANYID  : COMPANYID,		    			
+		    			holidayType : holidayType
 		    		},
-		    		success: function(text) {
-		    			MakeSliderList(text);
+		    		success: function(result) {
+		    			MakeSliderList(result);
 		    		}	    		
 		        });
 		    }
 	
-		    function MakeSliderList(text) {
+		    function MakeSliderList(result) {
 		        var _html = "";
 		        
 		        try {		            		            
-		            var XmlNodeText = text;
-		            var XmlNode = loadXMLString(XmlNodeText);
 		            var countValue = 0;
 		            _html = "<table class='mainlist' style='width:100%;'>";
-		            
-		            if (SelectNodes(XmlNode, "DATA/ROW").length > 0) {
+		            var HolidaySize = result.length;
+		            if (HolidaySize > 0) {
 		                if (CrossYN()) {
-		                    for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
+		                    for (var i = 0; i < HolidaySize; i++) {
 		                        var _Value;
-		                        _html += "<tr style='cursor:pointer' id = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYID")[0].textContent
-		                              + "'holidayname = '" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent)
-		                              + "'holidayname2 = '" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent)
-		                              + "'date = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0,10)
-		                              + "'issolar = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent
-		                              + "'isrepeat = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent
-		                              + "'isrest = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent
-		                              + "'company = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "USECOMPANY")[0].textContent
+		                        var holidayID = result[i].holidayID;
+		                        var holidayName = result[i].holidayName;
+		                        var holidayName2 = result[i].holidayName2;
+		                        var holidayDate = result[i].holidayDate;
+		                        var isSolar = result[i].isSolar;
+		                        var isRepeat = result[i].isRepeat;
+		                        var isRest = result[i].isRest;
+		                        var isUse = result[i].isUse;
+		                        var useCompany = result[i].useCompany;
+		                        _html += "<tr style='cursor:pointer' id = '" + holidayID
+		                              + "'holidayname = '" + MakeXMLString(holidayName)
+		                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
+		                              + "'date = '" + holidayDate.substring(0,10)
+		                              + "'issolar = '" + isSolar
+		                              + "'isrepeat = '" + isRepeat
+		                              + "'isrest = '" + isRest
+		                              + "'company = '" + useCompany
 		                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
-	
-		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1")
+		                           
+								
+		                        if (isUse == "1") {
 		                            _html += "<td style='width:5%;padding-left:5px;'><input  type='checkbox' checked = true onclick='event_statuschange(this);'></td>";
-		                        else
+		                        } else {
 		                            _html += "<td style='width:5%;padding-left:5px;'><input type='checkbox' onclick='event_statuschange(this);'></td>";
-	
-		                        if (userlang == "1")
-		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent) + "</td>";
-		                        else
-		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent) + "</td>";
-	
-		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
-		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
-		                        else
-		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
-	
-		                        _html += "<td style='width:15%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10) + "</td>";
-	
-		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1")
-		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
-		                        else
-		                            _html += "<td style='width:10%;color:gray;'>N</td>";
-	
-		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1")
-		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
-		                        else
-		                            _html += "<td style='width:10%;color:gray;'>N</td>";
-	
-		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "USECOMPANY")[0].textContent == "1")
-		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t2001' />" + "</td>";
-		                        else {
-		                            var companyname = "";                           
-		                            var tempcompanylist = companylist.split(";");
-		                            for (var j = 0; j < tempcompanylist.length - 1; j++) {
-		                                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "USECOMPANY")[0].textContent == tempcompanylist[j].split(",")[0])
-		                                    companyname = tempcompanylist[j].split(",")[1];
-		                            }
-		                            _html += "<td style='width:15%;color:gray;'>" + companyname + "</td>";
 		                        }
+	
+		                        if (userlang == "1") {
+		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(holidayName) + "</td>";
+		                        } else {
+		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(holidayName2) + "</td>";
+		                        }
+	
+		                        if (isSolar == "1") {
+		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
+		                        } else {
+		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
+		                        }
+								
+	                        	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(0, 10) + "</td>";
+	
+		                        if (isRepeat == "1") {
+		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
+		                        } else {
+		                            _html += "<td style='width:10%;color:gray;'>N</td>";
+		                        } 
+	
+		                        if (isRest == "1") {
+		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
+		                        } else {
+		                            _html += "<td style='width:10%;color:gray;'>N</td>";
+		                        }
+								if (holidayType == 'a') {
+			                        if (useCompany == "1") {
+			                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t2001' />" + "</td>";
+			                        } else {
+			                            var companyname = "";                           
+			                            var tempcompanylist = companylist.split(";");
+			                            for (var j = 0; j < tempcompanylist.length - 1; j++) {
+			                                if (useCompany == tempcompanylist[j].split(",")[0]) { // [0]아이디
+			                                    companyname = tempcompanylist[j].split(",")[1]; // [1]이름
+			                                }
+			                            }
+			                            _html += "<td style='width:15%;color:gray;'>" + companyname + "</td>";
+			                        }
+								}
 	
 		                        _html += "</tr>";
 		                        _html += "</html>";
 		                        document.getElementById("contentlist").innerHTML = _html;
 		                    }
 		                } else {
-		                    for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
+		                    for (var i = 0; i < HolidaySize; i++) {
 		                        var _Value;
-		                        _html += "<tr style='cursor:pointer' id = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYID")[0].text
-		                              + "'holidayname = '" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].text)
-		                              + "'holidayname2 = '" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].text)
-		                              + "'date = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].text.substring(0, 10)
-		                              + "'issolar = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].text
-		                              + "'isrepeat = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].text
-		                              + "'isrest = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].text
-		                              + "'company = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "USECOMPANY")[0].text
+		                        var holidayID = result[i].holidayID;
+		                        var holidayName = result[i].holidayName;
+		                        var holidayName2 = result[i].holidayName2;
+		                        var holidayDate = result[i].holidayDate;
+		                        var isSolar = result[i].isSolar;
+		                        var isRepeat = result[i].isRepeat;
+		                        var isRest = result[i].isRest;
+		                        var isUse = result[i].isUse;
+		                        var useCompany = result[i].useCompany;
+		                        _html += "<tr style='cursor:pointer' id = '" + holidayID
+		                              + "'holidayname = '" + MakeXMLString(holidayName)
+		                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
+		                              + "'date = '" + holidayDate.substring(0,10)
+		                              + "'issolar = '" + isSolar
+		                              + "'isrepeat = '" + isRepeat
+		                              + "'isrest = '" + isRest
+		                              + "'company = '" + useCompany
 		                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
 	
-		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].text == "1")
+		                        if (isUse == "1") {
 		                            _html += "<td style='width:5%;padding-left:5px;'><input  type='checkbox' checked = true onclick='event_statuschange(this);'></td>";
-		                        else
+		                        } else {
 		                            _html += "<td style='width:5%;padding-left:5px;'><input type='checkbox' onclick='event_statuschange(this);'></td>";
-	
-		                        if (userlang == "1")
-		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].text) + "</td>";
-		                        else
-		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].text) + "</td>";
-	
-		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].text == "1")
-		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
-		                        else
-		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
-	
-		                        _html += "<td style='width:15%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].text.substring(0, 10) + "</td>";
-	
-		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].text == "1")
-		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
-		                        else
-		                            _html += "<td style='width:10%;color:gray;'>N</td>";
-	
-		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].text == "1")
-		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
-		                        else
-		                            _html += "<td style='width:10%;color:gray;'>N</td>";
-		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "USECOMPANY")[0].text == "1")
-		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t2001' />" + "</td>";
-		                        else {
-		                            var companyname = "";
-		                            var tempcompanylist = companylist.split(";");
-		                            for (var j = 0; j < tempcompanylist.length - 1; j++) {
-		                                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "USECOMPANY")[0].text == tempcompanylist[j].split(",")[1])
-		                                    companyname = tempcompanylist[j].split(",")[0];
-		                            }
-		                            _html += "<td style='width:15%;color:gray;'>" + companyname + "</td>";
 		                        }
+	
+		                        if (userlang == "1") {
+		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].text) + "</td>";
+		                        } else {
+		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].text) + "</td>";
+		                        }
+	
+		                        if (isSolar == "1") {
+		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
+		                        	
+		                        } else {
+		                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
+		                        }
+								
+		                        _html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(0, 10) + "</td>";
+	
+		                        if (isRepeat == "1") {
+		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
+		                        } else {
+		                            _html += "<td style='width:10%;color:gray;'>N</td>";
+		                        }
+	
+		                        if (isRest == "1") {
+		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
+		                        } else {
+		                            _html += "<td style='width:10%;color:gray;'>N</td>";
+		                        }
+		                        
+		                        if (holidayType == 'a') {
+			                        if (useCompany == "1") {
+			                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t2001' />" + "</td>";
+			                        } else {
+			                            var companyname = "";
+			                            var tempcompanylist = companylist.split(";");
+			                            for (var j = 0; j < tempcompanylist.length - 1; j++) {
+			                                if (useCompany == tempcompanylist[j].split(",")[1])
+			                                    companyname = tempcompanylist[j].split(",")[0];
+			                            }
+			                            _html += "<td style='width:15%;color:gray;'>" + companyname + "</td>";
+			                        }
+		                        }
+		                        
 		                        _html += "</tr>";
 		                        _html += "</html>";
 		                        document.getElementById("contentlist").innerHTML = _html;
@@ -171,6 +213,7 @@
 		                document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + strLang263 + "</td></tr></table>";
 		            }	
 		        } catch (e) {
+		        	alert(e.message);
 		            document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'>" + strLang263 + "</td></tr></table>";
 		        }
 		      	//음력 양력 숨기기
@@ -228,10 +271,15 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 280) / 2;
 		        var pLeft = (pwidth - 450) / 2;
-		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?company="+document.getElementById('ListCompany')[document.getElementById('ListCompany').selectedIndex].value,"", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		        
+		        if (holidayType == 'a') {
+			        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?holidayType="+holidayType+"&company="+document.getElementById('ListCompany')[document.getElementById('ListCompany').selectedIndex].value,"", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		        } else {
+		            window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?holidayType="+holidayType,"", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no"); 	
+		        }
 		    }
 	
-		    function event_dbclick() {    	
+		    function event_dbclick() {
 		        if (_RowObject == null) {
 		            alert("<spring:message code='ezSchedule.t4001' />");
 		            return;
@@ -250,7 +298,7 @@
 		        var isrest = _RowObject.getAttribute("isrest");
 		        var company = _RowObject.getAttribute("company");
 	
-		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?id=" + id + "&name=" + encodeURIComponent(holidayname) + "&name2=" + encodeURIComponent(holidayname2) + "&date=" + holidaydate + "&isSolar=" + issolar + "&isRepeat=" + isrepeat + "&isRest=" + isrest + "&company=" + company
+		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?id=" + id + "&name=" + encodeURIComponent(holidayname) + "&name2=" + encodeURIComponent(holidayname2) + "&date=" + holidaydate + "&isSolar=" + issolar + "&isRepeat=" + isrepeat + "&isRest=" + isrest + "&company=" + company + "&holidayType="+holidayType
 		            , "", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		    }
 	
@@ -298,19 +346,114 @@
 		    		}
 		        });
 		    }
+		    
+		    function getMonthString(cnt) {					
+		        var rtnString = "";
+		        switch (cnt) {				
+		    		case 1:
+		    			rtnString = strLang67;
+		    			break;
+		    		case 2:
+		    			rtnString = strLang68;
+		    			break;
+		    		case 3:
+		    			rtnString = strLang69;
+		    			break;
+		    		case 4:
+		    			rtnString = strLang70;
+		    			break;
+		    		case 5:
+		    			rtnString = strLang71;
+		    			break;
+		    		case 6:
+		    			rtnString = strLang72;
+		    			break;	
+		    		case 7:
+		    		    rtnString = strLang73;
+		    		    break;	
+		    		case 8:
+		    		    rtnString = strLang74;
+		    		    break;	
+		    		case 9:
+		    		    rtnString = strLang75;
+		    		    break;	
+		    		case 10:
+		    		    rtnString = strLang76;
+		    		    break;	
+		    		case 11:
+		    		    rtnString = strLang77;
+		    		    break;	
+		    		case 12:
+		    		    rtnString = strLang78;
+		    		    break;	
+		    	}
+		    	return rtnString;
+		    }
+		    
+		    function getFullDaystring(cnt) {
+		        var rtnString = "";
+		        switch (cnt) {
+		    		case 0:
+		    			rtnString = strLang60;
+		    			break;
+		    		case 1:
+		    			rtnString = strLang61;
+		    			break;
+		    		case 2:
+		    			rtnString = strLang62;
+		    			break;
+		    		case 3:
+		    			rtnString = strLang63;
+		    			break;
+		    		case 4:
+		    			rtnString = strLang64;
+		    			break;
+		    		case 5:
+		    			rtnString = strLang65;
+		    			break;
+		    		case 6:
+		    			rtnString = strLang66;
+		    			break;	
+		    	}
+		    	return rtnString;
+		    }
+		    
+		    function getOdinalString(cnt) {			
+		        var rtnString = "";
+		        switch (cnt) {					
+		    		case 1:
+		    			rtnString = strLang55;
+		    			break;
+		    		case 2:
+		    			rtnString = strLang56;
+		    			break;
+		    		case 3:
+		    			rtnString = strLang57;
+		    			break;
+		    		case 4:
+		    			rtnString = strLang58;
+		    			break;
+		    		case 5:
+		    			rtnString = strLang59;
+		    			break;					
+		    	}
+		    	return rtnString;
+		    }
 		</script>
 	</head>
 	<body class="mainbody"> 
-		<h1>
-			<spring:message code='ezSchedule.t4003' />
-			<select class="companySelect" id="ListCompany" onchange="schedule_get_holiday()">
-            	<c:forEach var="item" items="${list}">
-       				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-   				</c:forEach>
-            </select>
-		</h1>
+		<%-- <h1><spring:message code='ezSchedule.t4003' /></h1> --%>
 		<form id="Form1" method="post">
+		<br>
 			<div id="mainmenu">
+				<c:if test="${holidayType eq 'a'}">
+		       		<span><b><spring:message code='ezResource.t28' /> : </b></span>
+		            <select id="ListCompany" onchange="schedule_get_holiday()">
+		            	<c:forEach var="item" items="${list}">
+            				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+           				</c:forEach>
+		            </select>
+				</c:if>
 			    <ul style="margin-top: 15px;">
 			        <li class="important"><span onClick="add_holiday()"><spring:message code='ezSchedule.t4004' /></span></li>
 			        <li><span onClick="event_dbclick()"><spring:message code='ezSchedule.t4005' /></span></li>
@@ -329,7 +472,9 @@
 		                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t4008' /></span></th>
 		                            <th style="width: 10%;"><span><spring:message code='ezSchedule.t4007' /></span></th>
 		                            <th style="width: 10%;"><span><spring:message code='ezSchedule.t4009' /></span></th>
-		                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t2000' /></span></th>
+		                            <c:if test="${holidayType eq 'a'}">
+			                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t2000' /></span></th>
+		                            </c:if>
 		                        </tr>
 		                    </table>
 		                    <div id="contentlist" name="contentlist" style="height: 468px; overflow-y: auto;">

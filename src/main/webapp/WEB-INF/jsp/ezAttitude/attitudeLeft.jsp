@@ -92,7 +92,7 @@
 			setAttiBtnHover();
 			getAttitudeList();
 			getHolidayList();
-		    select_memorialDays(uselang);
+		    /* select_memorialDays(uselang); */
 		    
 		    document.getElementById('userAttitude').onclick();
 		    
