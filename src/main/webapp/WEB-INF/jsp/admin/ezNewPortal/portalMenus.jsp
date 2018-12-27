@@ -178,6 +178,7 @@
 					$("#menuList").sortable({ 
 						//handle : ".menuSortable",
 						items: "li.menu",
+						scroll: false,
 						start : function(event, ui) {
 							//$(".menuDetails").css("display", "none");
 							$(".menuDetails").remove();
@@ -245,7 +246,14 @@
 					}
 					
 					menusHTML += "</dl><table class='iconTable01' border='0' cellpadding='0' cellspacing='0' style='clear:none;'>";
-					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t076' /></th><td colspan='2' class='menuIconTD'><label class='switch menuSwitch'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
+					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t076' /></th>";
+					
+					if (menuInfo.menuUsed) {
+						menusHTML += "<td colspan='2' class='menuIconTD'><label class='switch menuSwitch'><input type='checkbox' checked><span class='slider round'></span></label></td></tr>";
+					} else {
+						menusHTML += "<td colspan='2' class='menuIconTD'><label class='switch menuSwitch'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
+					}
+					
 					menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' value='" +ReplaceText(ReplaceText(ConvertCharToEntityReference(menuInfo.menuUrl), '\"', "&#39;"), "\'", "&#34;") + "' maxlength='100'></td></tr>"
 					menusHTML += "<tr><th rowspan='" + menuNames.length + "' class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
 					
@@ -315,7 +323,7 @@
 					menusHTML += "</div></div></div></li>"
 					
 					var nowShowDetails = $(".menuDetails").children().attr("id");
-		
+					
 					if (nowShowDetails == "menuDetails" + menuId) {
 						$(".menuDetails").slideUp(function(){
 							$(".menuDetails").remove();
@@ -331,20 +339,10 @@
 						if (nowShowDetails == undefined) {
 							//$("#menu" + menuId).after(menusHTML);
 							$("#menuAdd").after(menusHTML);
-							
-							if (menuInfo.menuUsed) {
-								$("#menuDetails" + menuInfo.menuId).find(".menuSwitch").find("input[type='checkbox']").prop("checked", true);
-							}
-							
 							$(".menuDetails").slideDown();
 						} else {
 							//$("#menu" + menuId).after(menusHTML);
 							$("#menuAdd").after(menusHTML);
-
-							if (menuInfo.menuUsed) {
-								$("#menuDetails" + menuInfo.menuId).find(".menuSwitch").find("input[type='checkbox']").prop("checked", true);
-							}
-							
 							$(".menuDetails").slideDown();
 						}
 					}

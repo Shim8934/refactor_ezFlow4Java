@@ -1292,6 +1292,8 @@ public class EzEmailUtil {
 				}				
 			}
 			
+			strContent = commonUtil.cleanValue(strContent);
+			
 			String tempText = strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
 			StringBuilder tempText2 = new StringBuilder();
 			String[] tempTexts = tempText.split("<br />");

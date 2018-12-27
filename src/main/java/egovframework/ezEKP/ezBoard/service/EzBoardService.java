@@ -303,5 +303,7 @@ public interface EzBoardService {
 	
 	public List<HashMap<String, Object>> getSearchApprBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 	
-
+	// 20181210 김윤진 - ezTalk Notice Board ID 가져오기.
+	public String getEzTalkGateNoticeBoardId(String companyID, int tenantID) throws Exception;
+	
 }

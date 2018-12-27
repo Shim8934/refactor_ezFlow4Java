@@ -378,4 +378,14 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			update("EzCommonDAO.addJmochaMailGenenalPreviewMailImage");
 		}
 	}
+	
+	public void addPortalThemePortletIsFixed() {
+		try {
+			select("EzCommonDAO.checkPortalThemePortletIsFixed");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme_portlet isFixed column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addPortalThemePortletIsFixed");
+		}
+	}
 }

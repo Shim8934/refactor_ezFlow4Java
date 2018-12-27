@@ -3,8 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
-<html>
-	<head>
+<html>  
+	<head> 
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
         <link rel="stylesheet" href="${util.addVer('/css/olstyle_nonIE.css')}" type="text/css" />
         <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
@@ -73,7 +73,8 @@
 		    var pStartday = "<c:out value='${startDay}'/>";
 		    var pUse_Editor = "<c:out value='${useEditor}'/>";
 		    var LunarUse = false;		    
-		    select_memorialDays(uselang);
+		    var primaryLang = "<c:out value='${userInfo.primary}'/>";		// 2018-12-26 김민성 - 일정관리 기념일 다국어 처리
+		    /* select_memorialDays(uselang); */
 		    
 		    /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
 	        window.onunload = function () {

@@ -888,6 +888,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         String filePath = "";
         String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", tenantID) + commonUtil.separator;
         String domain = request.getServerName() +":" +request.getServerPort();
+        realPath = "C:\\migsample";
         
         filePath = realPath + uploadModule;
         File file = new File(filePath);
@@ -902,7 +903,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         } else if (type.equals("COMMUNITYNOTI")) {
         	url = commonUtil.getUploadPath("upload_community.MAINBOARD", tenantID) + commonUtil.separator + request.getParameter("href");
         } else if (type.equals("SCHEDULECONTENT")) {
-        	url = commonUtil.getUploadPath("upload_schedule.ROOT", tenantID) + itemID;        	
+        	url = itemID;        	
         } else if (type.equals("TASKCONTENT") || type.equals("TASKCONTENT2")) {
         	url = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + itemID;
         }
@@ -1377,6 +1378,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void addJmochaMailGenenalPreviewMailImage() throws Exception {
 		ezCommonDAO.addJmochaMailGenenalPreviewMailImage();
+	}
+	
+	@Override
+	public void addPortalThemePortletIsFixed() throws Exception {
+		ezCommonDAO.addPortalThemePortletIsFixed();
 	}
 	
 }

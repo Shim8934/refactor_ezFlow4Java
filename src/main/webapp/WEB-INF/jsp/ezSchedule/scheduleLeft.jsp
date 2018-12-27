@@ -212,8 +212,8 @@
 				}
 			}
 				
-			select_memorialDays(uselang);
-	
+			/* select_memorialDays(uselang); */
+
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
 	        	leftResize();

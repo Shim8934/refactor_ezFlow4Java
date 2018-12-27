@@ -1299,6 +1299,8 @@ AND
 							LINEINFO.aprstate = '002'
 						AND
 							DOCINFO.docstate not in ('015')   
+						AND
+							DOCINFO.startdate between to_char(add_months(sysdate,-12),'yyyy-mm-dd') and to_char(sysdate, 'yyyy-mm-dd')								
 						ORDER BY
 							DOCINFO.startdate DESC
 				) INFO
@@ -1411,6 +1413,8 @@ AND
 							writerid = #userId#
 						AND
 							functiontype = '004'
+						AND
+							startdate between to_char(add_months(sysdate,-12),'yyyy-mm-dd') and to_char(sysdate, 'yyyy-mm-dd')	
 						ORDER BY
 							startdate DESC
 					) INFO
@@ -1495,6 +1499,8 @@ AND
 							DOCINFO.docstate <> '017'
 						AND
 							DOCINFO.functiontype IS NOT NULL
+						AND
+							DOCINFO.STARTDATE between to_char(add_months(sysdate,-12),'yyyy-mm-dd') and to_char(sysdate, 'yyyy-mm-dd')	
 						ORDER BY
 							STARTDATE DESC
 					) INFO
@@ -1578,6 +1584,7 @@ AND
 				NVL(COMP.connection_url, A.portlet_url) AS portletUrl,
 				NVL(U.portlet_order, NVL(THEME.portlet_order, NVL(COMP.portlet_used, A.default_order))) AS portletOrder,
                 NVL(U.portlet_used, NVL(THEME.portlet_used, NVL(COMP.portlet_used, 1))) AS portletUsed,
+                THEME.is_fixed as isFixed,
 		]]>
 		
 		<isEmpty property="deptId">
@@ -1680,7 +1687,7 @@ AND
 		
 		<isNotEqual property="config" compareValue="true" prepend="AND">
 			<![CDATA[
-				(U.portlet_used = 1 OR U.portlet_used IS NULL)
+				(U.portlet_used = 1 OR U.portlet_used IS NULL OR THEME.is_fixed = 1)
 			]]>
 		</isNotEqual>
 		
@@ -2237,7 +2244,8 @@ ORDER BY
 		)
 	WHEN MATCHED THEN
 		UPDATE SET
-			portlet_order = #portletOrder#
+			portlet_order = #portletOrder#,
+			portlet_used = #portletUsed#
 	WHEN NOT MATCHED THEN
 		INSERT (
 			user_id, tenant_id, company_id, portlet_id, portlet_order, menu_id, portlet_used, theme_id

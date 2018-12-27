@@ -498,4 +498,21 @@
 		ADD 
 			PREVIEW_MAIL_IMAGE VARCHAR(10) DEFAULT 'Y'
 	</statement>
+
+	<select id="EzCommonDAO.checkPortalThemePortletIsFixed" resultClass="String">
+		<![CDATA[
+			SELECT 
+				IS_FIXED
+			FROM 
+				TBL_PORTAL_THEME_PORTLET
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addPortalThemePortletIsFixed"> 
+		ALTER TABLE 
+			TBL_PORTAL_THEME_PORTLET
+		ADD 
+			IS_FIXED INT DEFAULT 0
+	</statement>
 </sqlMap>

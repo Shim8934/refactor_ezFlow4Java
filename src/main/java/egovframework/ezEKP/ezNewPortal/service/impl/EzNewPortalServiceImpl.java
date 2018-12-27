@@ -335,7 +335,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("map.toString() : " + map.toString());
 		
 		ezNewPortalDAO.updateUserUsedFrame(map);
-		ezNewPortalDAO.updateUserThemeSetting(map);
+		//ezNewPortalDAO.updateUserThemeSetting(map);
 		
 		LOGGER.debug("[Serivce] updateUserUsedFrame Ended");
 	}
@@ -584,7 +584,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("tenantId", tenantId);
 				map.put("portletLang", portletLang);
 				map.put("themeId", themeId);
-				
+				map.put("portletUsed", 1);
 				ezNewPortalDAO.updatePortletOrderUser(map);
 				
 				int portletId = Integer.parseInt(portlet.get("portletId").toString());
@@ -593,7 +593,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		}
 				
 		//tbl_portal_portlet_user에는 있는데 포틀릿 순서에 없었던 목록 가져오기
-		map.put("portletIdList", portletIdList);
+		/*map.put("portletIdList", portletIdList);
 		
 		List<PortletInfoVO> notSelectedPortletList = ezNewPortalDAO.getPortletListNotSelected(map);
 		
@@ -607,10 +607,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("portletId", notSelectedPortletList.get(i).getPortletId());
 
 				map.put("themeId", themeId);
+				map.put("portletUsed", 0);
 				
 				ezNewPortalDAO.updatePortletOrderUser(map);
 			}
-		}
+		}*/
 		/*//portletOrder를 사용자가 설정한 정보가 있는지 확인
 		List<PortletInfoVO> userPortletOrder = ezNewPortalDAO.getPortletOrderUser(map);
 

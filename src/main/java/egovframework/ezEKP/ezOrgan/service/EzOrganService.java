@@ -9,7 +9,7 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzOrganService {
 	
-	public OrganDeptVO getDeptInfo(String userID,String primary, int tenantID) throws Exception;	
+	public OrganDeptVO getDeptInfo(String userID, String primary, int tenantID) throws Exception;	
 
 	public String getPropertyValue(String userID, String propName, int tenantID) throws Exception;
 
