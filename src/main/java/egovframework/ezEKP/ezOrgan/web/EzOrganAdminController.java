@@ -3668,12 +3668,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "EMAIL_ERROR";
 		}
 
+		// 권한 널체크
+		if(extensionAttribute1.length == 0) {
+			extensionAttribute1 = new String[1];
+			extensionAttribute1[0] = "";
+		}
+
+		// 아이디, 권한, 날짜, 테턴트 셋
 		List<OrganUserVO> vo = new ArrayList<OrganUserVO>();
-	
+
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date()); 
-		
+
 		for(int i=0; i<cn.length; i++) {
 			OrganUserVO tempVO = new OrganUserVO();
 			tempVO.setCn(cn[i].toLowerCase());
@@ -3682,7 +3689,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			tempVO.setNowDate(nowDate);
 			vo.add(tempVO);
 		}
-
 
 		String result = "";		
 
@@ -3693,7 +3699,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			e.printStackTrace();
 			result = "EMAIL_ERROR";
 		}
-		
+
 		return result;
 	}
 }
