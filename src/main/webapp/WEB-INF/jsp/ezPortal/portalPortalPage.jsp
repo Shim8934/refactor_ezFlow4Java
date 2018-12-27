@@ -180,6 +180,7 @@
 		        xmlhttp.send(xmlpara);
 		    }
 		    
+			/* 2018-12-27 홍승비 - 퀵링크 아이콘과 텍스트 세로 중앙정렬 수정 */
 		    function event_GetQuickLink() {
 		        if (xmlhttp != null && xmlhttp.readyState == 4) {
 		            if (xmlhttp.statusText == "OK") {
@@ -191,10 +192,18 @@
 
 		                    var _li = document.createElement("li");
 		                    _li.style.display = "none";
+		                    _li.style.overflow = "hidden";
+		                    _li.style.height = "69px";
 		                    
 		                    if (trim_Cross(URL) != "") {
 		                        _li.onclick = new Function("openURL('" + URL + "', '"+ SIZE +"');");
 		                    }
+		                    
+		                    var _div = document.createElement("div");
+		                    _div.style.display = "table-cell";
+		                    _div.style.verticalAlign = "middle";
+		                    _div.style.height = "69px";
+		                    _div.style.width = "68px";
 		                    
 		                    var _span1 = document.createElement("span");
 		                    _span1.className = "icon";
@@ -205,6 +214,7 @@
 
 		                    var _span2 = document.createElement("span");
 		                    _span2.className = "txt";
+		                    _span2.style.height = "auto";
 		                    var QuickLang = lang == "1" ? "" : lang;
 		                    
                             if(CrossYN())
@@ -212,9 +222,9 @@
 		                    else
                                 _span2.innerText = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME" + QuickLang); 
                             
-		                    _li.appendChild(_span1);
-		                    _li.appendChild(_span2);
-		                    
+                            _div.appendChild(_span1);
+		                    _div.appendChild(_span2);
+		                    _li.appendChild(_div);
 		                    document.getElementById("QuickUl").appendChild(_li);
 
 		                    if (i < QuickBlockNum) {
