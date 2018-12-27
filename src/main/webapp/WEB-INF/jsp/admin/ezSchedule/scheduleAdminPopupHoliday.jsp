@@ -31,6 +31,9 @@
 		    var isrepeat = "<c:out value='${isRepeat}'/>";
 		    var isrest = "<c:out value='${isRest}'/>";
 		    var lang = "<c:out value='${lang}'/>";
+		    var holidayType = "<c:out value='${holidayType}'/>";
+		    var holidayRepeat = "<c:out value='${holidayRepeat}'/>";
+		    var holidayFlag = "<c:out value='${holidayFlag}'/>";
 	
 		    window.onload = function () {
 		        if (holidayid != "") {
@@ -46,6 +49,17 @@
 		            if (isrest == "1")
 		                document.getElementById("rest").checked = true;
 		        }
+		        if (holidayFlag == 'D') {
+		        	$('#pickDate2').prop("checked", true);
+		        	showMainPattern(1);
+		        	
+		        	var info = holidayRepeat.split("|");
+		        	
+			        list_Month2.value = info[1];
+					list_YearlyEach.value = info[2];
+					list_YearlyDay.value = info[3];
+		        }
+		        
 		        //음력 양력 숨기기
 		        if (lang != "1")
 	            	$(".onlyUseKo").css("display", "none");
@@ -98,52 +112,11 @@
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
 		
-		    /* function save_holiday(type) {
-		    	var holidayName2;
-		    	
-		    	if (specialChk(document.getElementById("holidayname").value) || specialChk(document.getElementById("holidayname2").value)) {
-		    		alert("<spring:message code='ezResource.special' />");
-		    		return;
-		    	}
-		    	
-		        if (document.getElementById("holidayname").value.trim() == "") {
-		            alert("<spring:message code='ezSchedule.t9990004' />");
-		            return;
-		        }        
-		        		
-		        if (document.getElementById("holidayname2").value.trim() == "") {
-		        	holidayName2 = MakeXMLString(document.getElementById("holidayname").value);		            
-		        } else {
-		        	holidayName2 = MakeXMLString(document.getElementById("holidayname2").value);
-		        }
-		        
-		        $.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/admin/ezSchedule/scheduleSaveHoliday.do",
-		    		data : {
-		    			holidayName  : MakeXMLString(document.getElementById("holidayname").value),	
-		    			holidayName2 : holidayName2,
-		    			isSolar : (document.getElementsByName("date")[0].checked ? "1" : "0"),
-		    			holidayDate : $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val(),
-		    			isRepeat : (document.getElementById("repeat").checked ? "1" : "0"),
-		    			isRest : (document.getElementById("rest").checked ? "1" : "0"),
-		    			type : (type == 1 ? "0" : "1"),
-		    			holidayID : (type == 1 ? "0" : holidayid),	
-    					companyID : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value		    			
-		    		},
-		    		success: function(text) {
-		    			alert("<spring:message code='ezSchedule.t4012' />");
-				        window.opener.schedule_get_holiday();				        
-						window.close();
-		    		}	    		
-		        });
-		    } */
 		    <%-- 2018-07-24 천성준 저장/수정시, 특수문자 입력 가능하게 --%>
 		    function save_holiday(type) {
 		    	var holidayName = document.getElementById("holidayname").value.trim();
 		    	var holidayName2 = document.getElementById("holidayname2").value.trim();
+		    	var companyID = "";
 		    	
 		        if (holidayName == "") {
 		            alert("<spring:message code='ezSchedule.t9990004' />");
@@ -152,6 +125,27 @@
 		        		
 		        if (holidayName2 == "")
 		        	holidayName2 = holidayName;		            
+		        
+		        if (holidayType == "a") {
+		        	companyID = document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value;
+		        } else {
+		        	companyID = "1";
+		        }
+		        
+		        holidayFlag = $('input[name="pickDate"]:checked').val();
+		        var holidayRepeat = "";
+		        if (holidayFlag == "D") {
+		        	holidayDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		        	holidayRepeat = "";
+		        } else {
+			        var repetition = "";
+		        	repetition += list_Month2.value;
+					repetition += "|" + list_YearlyEach.value;
+					repetition += "|" + list_YearlyDay.value;
+					
+					holidayRepeat = repetition;
+					holidayDate = "0000-00-00 00:00:00";
+		        }
 		        
 		        $.ajax({
 		    		type : "POST",
@@ -162,12 +156,14 @@
 		    			holidayName  : holidayName,	
 		    			holidayName2 : holidayName2,
 		    			isSolar : (document.getElementsByName("date")[0].checked ? "1" : "0"),
-		    			holidayDate : $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val(),
+		    			holidayDate : holidayDate,
 		    			isRepeat : (document.getElementById("repeat").checked ? "1" : "0"),
 		    			isRest : (document.getElementById("rest").checked ? "1" : "0"),
 		    			type : (type == 1 ? "0" : "1"),
 		    			holidayID : (type == 1 ? "0" : holidayid),	
-    					companyID : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value		    			
+    					companyID : companyID,
+    					holidayRepeat : holidayRepeat,
+    					holidayFlag :holidayFlag 
 		    		},
 		    		success: function(text) {
 		    			alert("<spring:message code='ezSchedule.t4012' />");
@@ -175,6 +171,16 @@
 						window.close();
 		    		}	    		
 		        });
+		    }
+		    
+		    function showMainPattern(idx) {
+		        eAllPatterns = window.document.all['divRecurPatterns'];
+		        
+		        for (var x = 0; x < eAllPatterns.length; x++)
+		        {
+		            eAllPatterns[x].style.display = "none";
+		        }
+		        window.document.all['divRecurPatterns'][idx].style.display = "";
 		    }
 		</script>
 	</head>
@@ -210,17 +216,68 @@
 		            </td>
 		        </tr>
 		        <tr>
-		            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t4008' /></th>
+		            <th style="width:200px; text-align:center">양력/음력</th>
 		            <td>
 		            	<span class="onlyUseKo">
-		                <input id="date" type="radio" name="date" checked style="margin:0px 0px 0px 4px" />
-		                <label for="date"><spring:message code='ezSchedule.t4000' /></label>
-		                <input id="date2" type="radio" name="date" style="margin:0px 0px 0px 4px" />
-		                <label for="date2"><spring:message code='ezSchedule.t101' /></label>
+			                <input id="date" type="radio" name="date" checked style="margin:0px 0px 0px 4px" />
+			                <label for="date"><spring:message code='ezSchedule.t4000' /></label>
+			                <input id="date2" type="radio" name="date" style="margin:0px 0px 0px 4px" />
+			                <label for="date2"><spring:message code='ezSchedule.t101' /></label>
 		            	</span>
-		                <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" />
 		            </td>
 		        </tr>
+		        <tr>
+		            <th style="width:200px; text-align:center" rowspan="2">
+		           		<spring:message code='ezSchedule.t4008' />
+		            </th>
+		            <td>
+		            	<input id="pickDate" type="radio" name="pickDate" value="D" checked style="margin:0px 0px 0px 4px" onClick='showMainPattern(0);' />
+		                <label for="pickDate">날짜</label>
+		                <input id="pickDate2" type="radio" name="pickDate" value="Y" style="margin:0px 0px 0px 4px" onClick='showMainPattern(1);'/>
+		                <label for="pickDate2">요일</label>
+		            </td>
+		        </tr>
+		        <tr>
+		            <td id='divRecurPatterns' >
+		            	<div style="margin:3px 1px">
+		                <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" />
+		                </div>
+		            </td>
+		            <td id='divRecurPatterns' style="display:none">
+		            	<div style="margin:5px 1px">	
+		            	<select name="select" id="list_Month2">
+							<option value="1"><spring:message code='ezSchedule.t382' /></option>
+							<option value="2"><spring:message code='ezSchedule.t383' /></option>
+							<option value="3"><spring:message code='ezSchedule.t384' /></option>
+							<option value="4"><spring:message code='ezSchedule.t385' /></option>
+							<option value="5"><spring:message code='ezSchedule.t386' /></option>
+							<option value="6"><spring:message code='ezSchedule.t387' /></option>
+							<option value="7"><spring:message code='ezSchedule.t388' /></option>
+							<option value="8"><spring:message code='ezSchedule.t389' /></option>
+							<option value="9"><spring:message code='ezSchedule.t390' /></option>
+							<option value="10"><spring:message code='ezSchedule.t391' /></option>
+							<option value="11"><spring:message code='ezSchedule.t392' /></option>
+							<option value="12"><spring:message code='ezSchedule.t393' /></option>
+		            	</select>
+		            	<select name="select" id="list_YearlyEach">
+							<option value="1"><spring:message code='ezSchedule.t92' /></option>
+							<option value="2"><spring:message code='ezSchedule.t93' /></option>
+							<option value="3"><spring:message code='ezSchedule.t94' /></option>
+							<option value="4"><spring:message code='ezSchedule.t95' /></option>
+							<option value="5"><spring:message code='ezSchedule.t96' /></option>
+		            	</select>
+		            	<select name="select" id="list_YearlyDay">
+		              		<option value="0"><spring:message code='ezSchedule.t81' /></option>
+		              		<option value="1"><spring:message code='ezSchedule.t82' /></option>
+		              		<option value="2"><spring:message code='ezSchedule.t83' /></option>
+		              		<option value="3"><spring:message code='ezSchedule.t84' /></option>
+		              		<option value="4"><spring:message code='ezSchedule.t85' /></option>
+		              		<option value="5"><spring:message code='ezSchedule.t86' /></option>
+		              		<option value="6"><spring:message code='ezSchedule.t87' /></option>
+		            	</select>						
+						</div>	
+		            </td> 
+		        </tr>      
 		        <tr>
 		            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t4007' /></th>
 		            <td>
@@ -233,12 +290,14 @@
 		                <input id="rest" type="checkbox" name="rest" />
 		            </td>
 		        </tr>
-		        <tr>
-		            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t2000' /></th>
-		            <td>
-		                <select id="ListCompany">${companySel}</select>               
-		            </td>
-		        </tr>
+		        <c:if test="${holidayType eq 'a'}">
+			        <tr>
+			            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t2000' /></th>
+			            <td>
+			                <select id="ListCompany">${companySel}</select>               
+			            </td>
+			        </tr>
+		        </c:if>
 		    </table>
 		    <div class="btnpositionNew">
 		        <a class="imgbtn" id="add"><span onclick="save_holiday(1)" ><spring:message code='ezSchedule.t157' /></span></a>

@@ -16,11 +16,11 @@ var yearmemorialDays = Array(
 
 
 var memorialDays = Array(
-		new memorialDay("", "", 1, 1, 1, true),        
-		new memorialDay("", "", 1, 1, 2, true)        
+		/*new memorialDay("", "", 1, 1, 1, true),        
+		new memorialDay("", "", 1, 1, 2, true)  */      
 );
 
-function select_memorialDays(val01){
+/*function select_memorialDays(val01){
 	if (val01 != "3") {
 		if (val01 == "5") {
 			var memorialDays_indonesia = Array (
@@ -66,7 +66,7 @@ function select_memorialDays(val01){
 		);
 		memorialDays = memorialDays_japan;
 	}
-}
+}*/
 
 function yearmemorialDay(name, name2, year, month, day, solarLunar, holiday, type) {
     this.name = name;

@@ -339,7 +339,7 @@
 				
 				$("#btnTableList span").click();
 				
-	        	var height = parseInt(document.documentElement.clientHeight - 200);
+	        	var height = parseInt(document.documentElement.clientHeight - 235);
 	        	$("#contentlist").css("height", height +"px");
 			}
 			
@@ -524,8 +524,14 @@
 					},
 					success : function(result) {
 						$(".statsUL dd").text("0");
+						$(".timeCountR").text("0");
+						
 						for (var i = 0; i < result.length; i++) {
 							$("#" + result[i].typeId).text(result[i].count);
+							
+							if (result[i].typeId == "A02" || result[i].typeId == "A11" || result[i].typeId == "A12" || result[i].typeId == "A13") {
+								$("#F" + result[i].typeId).text(result[i].count);
+							}
 						}
 					}
 				})
@@ -1952,6 +1958,35 @@
 						}
 					}
 				});
+				getAttiStatisList();
+			}
+			
+			function slideTd() {
+				if ($("#slideImg").attr("src") == "/images/ImgIcon/slideLeft.png") {
+					$("#attiStatis").css("height", "");
+					
+					$("#attiStatis").animate({
+						width: "151px"
+					}, 500);
+					
+					$("#slideBtn").animate({
+						right: "147px"
+					}, 500, function(){
+						$("#slideImg").attr("src", "/images/ImgIcon/slideRight.png");
+					});
+				} else {
+					$("#attiStatis").animate({
+						width: "0px"
+					}, 500, function(){
+						$("#attiStatis").css("height", "0px");
+					});
+					
+					$("#slideBtn").animate({
+						right: "2px"
+					}, 500, function(){
+						$("#slideImg").attr("src", "/images/ImgIcon/slideLeft.png");
+					});
+				}
 			}
 		</script>
 	</head>
@@ -2001,31 +2036,55 @@
 	            </li>
 	        </ul>
 	    </div>
-	    
+    
 	    <c:if test="${deptFlag != 'true'}">
-	    <div class="mainmenuTab">
-	        <ul class="mainmenuTabUL">
-				<li id="btnTableList"><span onClick="getAttitudeTableList()">표 보기</span></li>
-	            <li id="btnCalList"><span onClick="getAttitudeCalList()">달력보기</span></li>
-	        </ul>
-	    </div>
+		    <div class="mainmenuTab">
+		        <ul class="mainmenuTabUL">
+					<li id="btnTableList"><span onClick="getAttitudeTableList()">표 보기</span></li>
+		            <li id="btnCalList"><span onClick="getAttitudeCalList()">달력보기</span></li>
+		        </ul>
+		    </div>
+		    <div class="timecheck_info">
+		    	<dl class="timeInfo">
+		        	<dt class="timeInfoPic"><img src="images/img.png"></dt>
+		            <dd class="timeInfoText">김영희 대리 ㅣ 오픈솔루션팀</dd>
+		        </dl>
+		        <dl class="timeIcconDL">
+		        	<dt class="timeIconDT"><img src="/images/ImgIcon/late_icon.png"></dt>
+		            <dd class="timeIconDD">지각 <span class="timeCountR" id="FA02">0</span></dd>
+		        </dl>
+		        <dl class="timeIcconDL">
+		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
+		            <dd class="timeIconDD">연차 <span class="timeCountR" id="FA11">0</span></dd>
+		        </dl>
+		        <dl class="timeIcconDL">
+		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
+		            <dd class="timeIconDD">오전반차 <span class="timeCountR" id="FA12">0</span></dd>
+		        </dl>
+		        <dl class="timeIcconDL">
+		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
+		            <dd class="timeIconDD">오후반차 <span class="timeCountR" id="FA13">0</span></dd>
+		        </dl>
+		    </div>
 	    </c:if>
 		
 		<!-- 근태관리 달력형 테이블(개인근태현황, 부서근태현황)-->
 		<table id="attiCalendarTB" <c:if test="${deptFlag != 'true'}">style="display:none"</c:if>>
 			<tr>
-				<td style="vertical-align:top; width:91%;">
+				<td style="vertical-align:top; width:100%;">
 					<div style="vertical-align:top;" id="attiCalendar"></div>
 				</td>
 				<td style="vertical-align:top;">
-					<div style="width:8px">&nbsp;</div>
-				</td>
-				<td style="vertical-align:top; width:9%; margin-left:5px;">
-					<div style="vertical-align:top;" class="time_stats" id="attiStatis">
-					</div>
+					<c:if test="${deptFlag != 'true'}">
+						<div style="vertical-align:top;width:0px;height:0px;overflow:hidden;" class="time_stats" id="attiStatis"></div>
+						<div id="slideBtn" style="position:absolute;top:171px;right:2px;"><img id="slideImg" onclick="javascript:slideTd()" src="/images/ImgIcon/slideLeft.png" /></div>
+					</c:if>
+					<c:if test="${deptFlag == 'true'}">
+						<div style="vertical-align:top;" class="time_stats" id="attiStatis"></div>
+					</c:if>	
 				</td>
 			</tr>
-		</table>
+		</table>		
 		
 		<!-- 근태관리 리스트형 테이블(개인근태현황)-->
 		<c:if test="${deptFlag != 'true'}">

@@ -18,7 +18,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script><c:if test="${memoFlag eq 'YES'}">
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memoPortal.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mousewheel.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script></c:if>
 		<style>

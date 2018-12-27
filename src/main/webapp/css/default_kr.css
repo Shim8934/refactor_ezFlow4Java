@@ -2775,6 +2775,16 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 
 .hidden_area{ margin:0px; padding:0px;}
 
+.timecheck_info{ margin:0px; padding:0px;}
+.timecheck_info .timeInfo{ margin:0px 10px 10px 0px; padding:0px 15px 0px 10px; height:45px; line-height:45px; border-radius:3px; -webkit-border-radius:3px; -moz-border-radius:3px; background:#f7f9fd; float:left; border:1px solid #e7eaf1; box-sizing:border-box;}
+.timecheck_info .timeInfo .timeInfoPic{ margin:5px 0px 0px 0px; padding:0px; border-radius:30px; height:34px; width:34px; border:1px solid #d0d5e2; float:left;}
+.timecheck_info .timeInfo .timeInfoPic img{border-radius:30px;}
+.timecheck_info .timeInfo .timeInfoText{ color:#393939; font-size:13px;}
+.timecheck_info .timeIcconDL{ margin:8px 5px 0px 0px; padding:0px 10px 0px 0px; float:left; overflow:hidden; height:30px; line-height:30px; border-radius:25px; background:#f7f9fd; border:1px solid #e7eaf1; box-sizing:border-box;}
+.timecheck_info .timeIcconDL .timeIconDT{ margin:0px; padding:0px; float:left; overflow:hidden;}
+.timecheck_info .timeIcconDL .timeIconDD{ margin:0px; padding:0px 4px 0px 10px; color:#393939; font-size:12px; float:right; line-height: 25px;}
+.timecheck_info .timeIcconDL .timeIconDD .timeCountR{ color:#ff3030; font-weight:bold; margin:0px; padding:0px 0px 0px 5px;}
+
 /* 장진혁 */
 h2, #menu span {font-size: 12px;}
 .popup .mainlist tr {height:31px;}
