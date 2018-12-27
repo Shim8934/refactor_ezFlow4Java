@@ -118,7 +118,8 @@
 				                "<PREVIEWWCONTENT>" + document.getElementById("WPreUser").value + "</PREVIEWWCONTENT>" +
 				                "<PREVIEWHLIST>" + document.getElementById("HListUser").value + "</PREVIEWHLIST>" +
 				                "<PREVIEWHCONTENT>" + document.getElementById("HPreUser").value + "</PREVIEWHCONTENT>" +
-				                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>";
+				                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>" +
+				                "<PREVIEWMAILIMAGE>" + document.getElementById("previewMailImage").value + "</PREVIEWMAILIMAGE>";
 				
                 if (usePreviewSubTree == "YES") {
                 	sendStr +=  "<PREVIEWSUBTREE>" + previewSubTreeSlb + "</PREVIEWSUBTREE>";
@@ -437,6 +438,15 @@
 			  	</td>
 			  </tr>
 		  </c:if>
+		  <tr>
+		  	<th><spring:message code="ezEmail.ksa05"/> </th>
+		  	<td>
+		  		<select id="previewMailImage">
+		  			<option value="Y" <c:if test="${previewMailImage == 'Y'}">selected</c:if>><spring:message code="ezEmail.t808"/> </option>
+		  			<option value="N" <c:if test="${previewMailImage == 'N'}">selected</c:if>><spring:message code='ezEmail.t99000009' /></option>
+		  		</select>
+		  	</td>
+		  </tr>
 		</table>
 		<div align="center" style="width:680px;">
 			<div class="btnpositionJsp">
