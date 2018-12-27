@@ -14,57 +14,50 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 	    <script type="text/javascript">	
+	    	var flagCheck = 'change';
+	    	var companyId = "<c:out value="${companyId}" />";
+	    	var changeReason = '';
+	    	var annualCnt = '';
+	    	var searchYear = opener.$("#searchYear").val();
 	    
 	    	$(document).ready(function(){
+		    	$("input:text[name=annualCnt]").on("keyup", function() {
+		    	    $(this).val($(this).val().replace(/[^0-9]/g,""));
+		    	});
    			});
-	    	 
-	    	//권한 라디오 체크
-	        function authRadioSet(pauthTypes) {
-	            if (pauthTypes) {
-	            	authTypes = pauthTypes.split(',');
-		        }
-	            
-	        	for (var i = 0; i < deptIds.length; i++) {
-	        		var authType = "";
-	        		if (authTypes[i] == "" || authTypes[i] == null) {
-	        			authType = "R";
-	        		} else {
-	        			authType = authTypes[i];
-	        		}
-	        		$("#contentlist .mainlist input[name='"+ deptIds[i] +"']:input[value='" + authType + "']").prop('checked', true);
- 	        	}
-	        }
 	    	
-	    	//권한 저장
-	    	function saveAuthDept() {
-	    		if (deptIdStr == "" || deptIdStr == null) {
-	    			alert("<spring:message code='ezAttitude.t196' />");
+	    	function setFlagCheck(){
+	    		flagCheck = $("input:radio[name=flagCheck]:checked").val();
+		    }
+	    	 
+	    	
+	    	//전체 연차 등록/수정
+	    	function modifyAllAnnualCnt() {
+	    		changeReason = $("#changeReason").val();
+	    		annualCnt = $("#annualCnt").val();
+	    		if (annualCnt == "" || annualCnt == null) {
+	    			alert("연차수 입력");
+	    			return;
+	    		}
+	    		if (changeReason == "" || changeReason == null) {
+	    			alert("수정사유입력");
 	    			return;
 	    		}
 
-	        	var length = $('#contentlist .mainlist input[type=radio]').length / 2;
-	        	var authlist = "";
-	        	var pdeptIds = deptIdStr.split(",");
-	        	for (var i = 0; i < length; i++) {
-	        		var type = $("#contentlist .mainlist input[name='"+ pdeptIds[i] +"']:checked").val();
-	        		authlist += type + ",";
-	        		if (i == (length-1)) {
-	        			authlist = authlist.slice(0, -1);
-	        		}
-	        	}
 				$.ajax({
 	   				type:"post",
-	   				url:"/admin/ezAttitude/saveAttitudeAuthor.do",
+	   				url:"/admin/ezAttitude/changeAllAnnual.do",
 	   				dataType : "text",
 	   				data:{
-	   					selectedUser : selectedUser,
+	   					year : searchYear,
+	   					changeReason : changeReason,
 	   					companyId : companyId,
-	   					deptIds : deptIdStr,
-	   					authTypes : authlist
+	   					flagCheck : flagCheck,
+	   					annualCnt : annualCnt
 	   				},
 					success : function(resultStatus) {
 	            		if (resultStatus == "success") {
-	   						opener.company_change();
+	   						opener.location.reload();
 	   						window.close();
 	            		} else {
 	            			alert("<spring:message code='ezAttitude.t175' />");
@@ -91,30 +84,30 @@
 	        <tr>
 	            <th style="width:200px; text-align:center" rowspan="2">총 연차수</th>
 	            <td>
-	            	<input name="flagCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange=""/><label for="Radio1">&nbsp;총 연차수를 변경하기</label>
+	            	<input name="flagCheck" id="Radio1" type="radio" value="change" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="setFlagCheck();"/><label for="Radio1">&nbsp;총 연차수를 변경하기</label>
 	            </td>
 	        </tr>
 	        <tr>
 	            <td>
-					<input name="flagCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange=""/><label for="Radio2">&nbsp;현재 총 연차수에서 더하기</label>
+					<input name="flagCheck" id="Radio2" type="radio" value="plus" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="setFlagCheck();"/><label for="Radio2">&nbsp;현재 총 연차수에서 더하기</label>
 	            </td>
 	        </tr>
 	        <tr>
 	        	<th style="width:200px; text-align:center">연차수</th>
 	            <td>
-	            	<input id="annualCnt" type="text" style="width:100%" value="">
+	            	<input id="annualCnt" name="annualCnt" type="text" style="width:100%" value="" maxlength="3">
 	            </td>
 	        </tr>
 	        <tr>
 	        	<th style="width:200px; text-align:center">수정사유</th>
 	            <td>
-	            	<textarea rows="5" id="modifyReason" style="height: 100px; width:338px; resize:none; overflow: auto;" ></textarea>
+	            	<textarea rows="5" id="changeReason" style="height: 100px; width:338px; resize:none; overflow: auto;" ></textarea>
 	            </td>
 	        </tr>
 	    </table>
 	    <br/>
         <div class="btnposition btnpositionNew">
-	        <a class="imgbtn"><span onclick="saveAuthDept();" ><spring:message code='ezAttitude.t16' /></span></a>
+	        <a class="imgbtn"><span onclick="modifyAllAnnualCnt();" ><spring:message code='ezAttitude.t16' /></span></a>
 	    </div>
 	</body>
 </html>

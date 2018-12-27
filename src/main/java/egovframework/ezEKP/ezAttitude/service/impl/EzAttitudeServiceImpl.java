@@ -2397,4 +2397,30 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		return ezAttitudeDAO.getDeptUserList(map);
 	}
+
+	@Override
+	public void changeAllAnnual(Map<String, Object> map, int tenantId, String companyId, String primary) throws Exception {
+		LOGGER.debug("changeAllAnnual started");
+		
+		int result = 0;
+		
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		map.put("primary", primary);
+		
+		if(ezAttitudeDAO.getAllAnnualCount(map) == 0) {
+			ezAttitudeDAO.insertAllAnnualHistory(map);
+			ezAttitudeDAO.insertAllAnnual(map);
+		} else {
+			ezAttitudeDAO.changeAllAnnualHistory(map);
+			ezAttitudeDAO.changeAllAnnual(map);
+		}
+		
+		
+		
+		LOGGER.debug("changeAllAnnual ended");
+	}
 }

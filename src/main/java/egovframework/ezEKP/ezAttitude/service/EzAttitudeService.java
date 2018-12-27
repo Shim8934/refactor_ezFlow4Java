@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezAttitude.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 
@@ -129,4 +130,6 @@ public interface EzAttitudeService {
 	public String getIsAttitude(String typeId, String writerId, String startDate, String offset, String companyId, int tenantId) throws Exception;
 
 	public List<AttitudeAuthorVO> getDeptUserList(int tenantId, String key, String value, String companyId, String lang) throws Exception;
+	
+	public void changeAllAnnual(Map<String, Object> map, int tenantId, String companyId, String primary) throws Exception;
 }

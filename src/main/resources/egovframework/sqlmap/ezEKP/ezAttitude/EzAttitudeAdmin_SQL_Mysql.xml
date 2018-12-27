@@ -1348,4 +1348,101 @@
 		</iterate>
 	</select>
 	
+	<select id="ezAttitudeAdminDAO.getAllAnnualCount" parameterClass="Map" resultClass="INTEGER">
+		<![CDATA[
+			SELECT
+				count(*)
+			FROM
+				tbl_attitude_annual
+			WHERE
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				YEAR = #year#
+		]]>
+	</select>
+	
+	<insert id="ezAttitudeAdminDAO.insertAllAnnualHistory" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO tbl_attitude_annual_history
+				(USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID, YEAR)
+			SELECT
+				CN AS USER_ID,
+				'0' AS ORIGIN_ANNUAL_CNT,
+				'$annualCnt$' AS CHANGE_ANNUAL_CNT,
+				'$changeReason$' AS CHANGE_REASON,
+				NOW() AS CHANGE_DATE,
+				'$userId$' AS CHANGE_USER_ID,
+				physicaldeliveryofficename AS COMPANY_ID,
+				TENANT_ID AS TENANT_ID,
+				'$year$' AS YEAR
+			FROM
+				tbl_usermaster
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				physicaldeliveryofficename = #companyId#
+		]]>
+	</insert>
+	
+	<insert id="ezAttitudeAdminDAO.changeAllAnnualHistory" parameterClass="Map">
+			INSERT INTO tbl_attitude_annual_history
+				(USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID, YEAR)
+			SELECT
+				USER_ID AS USER_ID,
+				TOTAL_ANNUAL_CNT AS ORIGIN_ANNUAL_CNT,
+					<isEqual property="flagCheck" compareValue="change">
+						'$annualCnt$' AS CHANGE_ANNUAL_CNT,
+					</isEqual>
+					<isEqual property="flagCheck" compareValue="plus">
+						TOTAL_ANNUAL_CNT + CONVERT(#annualCnt#, UNSIGNED INTEGER) AS CHANGE_ANNUAL_CNT,
+					</isEqual>
+				'$changeReason$' AS CHANGE_REASON,
+				NOW() AS CHANGE_DATE,
+				'$userId$' AS CHANGE_USER_ID,
+				COMPANY_ID AS COMPANY_ID,
+				TENANT_ID AS TENANT_ID,
+				YEAR AS YEAR
+			FROM
+				tbl_attitude_annual
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				COMPANY_ID = #companyId#
+	</insert>
+	
+	<insert id="ezAttitudeAdminDAO.insertAllAnnual" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO tbl_attitude_annual
+				(USER_ID, YEAR, TOTAL_ANNUAL_CNT, COMPANY_ID, TENANT_ID)
+			SELECT
+				CN AS USER_ID,
+				'$year$' AS YEAR,
+				'$annualCnt$' AS TOTAL_ANNUAL_CNT,
+				physicaldeliveryofficename AS COMPANY_ID,
+				TENANT_ID AS TENANT_ID
+			FROM
+				tbl_usermaster
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				physicaldeliveryofficename = #companyId#
+		]]>
+	</insert>
+	
+	<insert id="ezAttitudeAdminDAO.changeAllAnnual" parameterClass="Map">
+			UPDATE tbl_attitude_annual
+				<isEqual property="flagCheck" compareValue="change">
+					SET TOTAL_ANNUAL_CNT = #annualCnt#
+				</isEqual>
+				<isEqual property="flagCheck" compareValue="plus">
+					SET TOTAL_ANNUAL_CNT = TOTAL_ANNUAL_CNT + CONVERT(#annualCnt#, UNSIGNED INTEGER)
+				</isEqual>
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				COMPANY_ID = #companyId#
+	</insert>
+	
 </sqlMap>

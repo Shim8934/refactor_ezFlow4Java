@@ -353,4 +353,29 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (List<AttitudeAuthorVO>) list("ezAttitudeAdminDAO.getDeptUserList", map);
 	}
     
+    @SuppressWarnings("unchecked")
+    public int getAllAnnualCount(Map<String, Object> map) throws Exception {
+    	return (int) select("ezAttitudeAdminDAO.getAllAnnualCount", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void insertAllAnnualHistory(Map<String, Object> map) throws Exception {
+    	insert("ezAttitudeAdminDAO.insertAllAnnualHistory", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void changeAllAnnualHistory(Map<String, Object> map) throws Exception {
+    	insert("ezAttitudeAdminDAO.changeAllAnnualHistory", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void insertAllAnnual(Map<String, Object> map) throws Exception {
+    	insert("ezAttitudeAdminDAO.insertAllAnnual", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void changeAllAnnual(Map<String, Object> map) throws Exception {
+    	update("ezAttitudeAdminDAO.changeAllAnnual", map);
+    }
+    
 }
