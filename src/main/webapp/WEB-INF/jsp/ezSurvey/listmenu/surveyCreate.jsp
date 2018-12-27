@@ -187,12 +187,33 @@
 					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 					document.getElementById("selectTarget" ).addEventListener("change", toggleSelectTargetBttn, false);
 					document.getElementById("targetBttn"   ).addEventListener("click" , showSelectPopUp       , false);
+					document.getElementById("gotoFirstTab" ).addEventListener("click" , gotoFirstStep        , false);
+					/* 
 					document.getElementById("gotoSecondTab").addEventListener("click" , gotoSecondStep        , false);
 					document.getElementById("gotoThirdTab" ).addEventListener("click" , gotoThirdStep         , false);
 					document.getElementById("gotoForthTab" ).addEventListener("click" , gotoForthStep         , false);
 					document.getElementById("cancelSurvey1").addEventListener("click" , cancleThisSurvey      , false);
-					document.getElementById("public-slbox" ).addEventListener("change", toggleDaysInput       , false);
-					document.getElementById("closeUserPanel").addEventListener("click", toggleUserPreview     , false);
+					 */
+					var secondTab = document.getElementsByClassName("gotoSecondTab");
+					var thirdTab  = document.getElementsByClassName("gotoThirdTab");
+					var forthTab  = document.getElementsByClassName("gotoForthTab");
+					var cancelSv1 = document.getElementsByClassName("cancelSurvey1");
+					
+					for (var i = 0; i < secondTab.length; i++) {
+						secondTab[i].addEventListener("click", gotoSecondStep, false);
+					}
+					for (var i = 0; i < thirdTab.length; i++) {
+						thirdTab[i].addEventListener("click",  gotoThirdStep, false);
+					}
+					for (var i = 0; i < forthTab.length; i++) {
+						forthTab[i].addEventListener("click",  gotoForthStep, false);
+					}
+					for (var i = 0; i < cancelSv1.length; i++) {
+						cancelSv1[i].addEventListener("click",  cancleThisSurvey, false);
+					}
+					document.getElementById("public-slbox"  ).addEventListener("change", toggleDaysInput       , false);
+					document.getElementById("closeUserPanel").addEventListener("click",  toggleUserPreview     , false);
+					document.getElementById("saveSurvey"    ).addEventListener("click",  saveSurvey            , false);
 					
 					if (reuseSurvey == undefined) {
 						// question input 및 img 생성
@@ -205,23 +226,30 @@
 				}
 				
 				function startUpload() {document.getElementById("fileBttn").click();}
-				function cancleThisSurvey() {saveSurvey();/* Add function later */}
+				function cancleThisSurvey() {/* Add function later */ 
+					surveyObj['infor'] = {};
+					surveyObj['questions'] = [];
+					console.log(surveyObj);
+					window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
+				}
 				
 				function saveSurvey() {
-					$.ajax({
-						type: "POST",
-						url: "/ezSurvey/saveSurvey.do",
-						data: JSON.stringify(surveyObj),
-						contentType: "application/json; charset=utf-8",
-						dataType: "JSON",
-						async: false,
-						success : function(data) {
-							afterSaveSuccessfully(data);
-						},
-						error : function(error) {
-							alert(SurveyMessages.strError);
-						}
-					});
+					if(confirm("설문을 저장하시겠습니까?") == true) {
+						$.ajax({
+							type: "POST",
+							url: "/ezSurvey/saveSurvey.do",
+							data: JSON.stringify(surveyObj),
+							contentType: "application/json; charset=utf-8",
+							dataType: "JSON",
+							async: false,
+							success : function(data) {
+								afterSaveSuccessfully(data);
+							},
+							error : function(error) {
+								alert(SurveyMessages.strError);
+							}
+						});
+					}
 				}
 				
 				function saveSurveyInformation() {
@@ -276,14 +304,29 @@
 					}
 				}
 				
+				function gotoFirstStep() {
+					var listTabElmt          = document.getElementsByClassName("headpanel")[0].children;
+					listTabElmt[0].className = "crust selected";
+					listTabElmt[1].className = "crust";
+					listTabElmt[2].className = "crust";
+					listTabElmt[3].className = "crust";
+					
+					$("div[id^=tab]").attr("class", "hidden-tab");
+					document.getElementById("tab1").className = "select-tab";
+					lastStep = 1;
+				}
+				
 				function gotoSecondStep() {
 					var checkObj = prepareForStep2();
 					if (checkObj["error"]) {alert(checkObj["error"]); return;}
-					
+
 					var listTabElmt          = document.getElementsByClassName("headpanel")[0].children;
 					listTabElmt[0].className = "crust";
 					listTabElmt[1].className = "crust selected";
-					document.getElementById("tab1").className = "hidden-tab";
+					listTabElmt[2].className = "crust";
+					listTabElmt[3].className = "crust";
+					
+					$("div[id^=tab]").attr("class", "hidden-tab");
 					document.getElementById("tab2").className = "select-tab";
 					lastStep = 2;
 				}
@@ -296,9 +339,12 @@
 					listTabElmt[0].className = "crust";
 					listTabElmt[1].className = "crust";
 					listTabElmt[2].className = "crust selected";
-					document.getElementById("tab2").className = "hidden-tab";
+					listTabElmt[3].className = "crust";
+					
+					$("div[id^=tab]").attr("class", "hidden-tab");
 					document.getElementById("tab3").className = "select-tab";
 					lastStep = 3;
+					getSurveyPreview(lastStep);
 				}
 				
 				function gotoForthStep() {
@@ -310,9 +356,11 @@
 					listTabElmt[1].className = "crust";
 					listTabElmt[2].className = "crust";
 					listTabElmt[3].className = "crust selected";
-					document.getElementById("tab3").className = "hidden-tab";
+					
+					$("div[id^=tab]").attr("class", "hidden-tab");
 					document.getElementById("tab4").className = "select-tab";
 					lastStep = 4;
+					getSurveyPreview(lastStep);
 				}
 				
 				function selectStep(tabIdx, spanElemt) {
@@ -450,19 +498,18 @@
 					
 					if (lastStep == 2) {
 						if (skipLogic == 'N') {
-							if (confirm("분기 설정를 건너뛰기 하시겠습니까?") == true) {
+							if (confirm(SurveyMessages.strSkipLogic) == true) {
 								skipLogic = 'Y';
 								
 							} else {
 								returnObj["error"] = SurveyMessages.strLogic;
-								
 								return returnObj; 
 							}
 						}
 					}
 					var surveyPp   = document.getElementById("info-input-pp");
-					
 					var ppContent = document.querySelectorAll("div[class=ppContent]");
+					
 					for (var i = 0; i < ppContent.length; i++) {
 						ppContent[i].textContent = surveyPp.value; 
 					}
