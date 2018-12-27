@@ -88,13 +88,11 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 	}
 
 	@Override
-	public void scheduleSaveHoliday(String holidayName, String holidayName2, String holidayFlag, String holidayDate, String holidayRepeat, String isSolar, String isRepeat, String isRest, String companyID, int tenantId) throws Exception {
+	public void scheduleSaveHoliday(String holidayName, String holidayName2, String holidayDate, String isSolar, String isRepeat, String isRest, String companyID, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_HOLIDAYNAME", holidayName);
 		map.put("v_HOLIDAYNAME2", holidayName2);
-		map.put("v_HOLIDAYFLAG", holidayFlag);
 		map.put("v_HOLIDAYDATE", holidayDate);
-		map.put("v_HOLIDAYREPEAT", holidayRepeat);
 		map.put("v_ISSOLAR", isSolar);
 		map.put("v_ISREPEAT", isRepeat);
 		map.put("v_ISREST", isRest);
@@ -105,13 +103,11 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 	}
 
 	@Override
-	public void scheduleUpdateHoliday(String holidayName, String holidayName2, String holidayFlag, String holidayDate, String holidayRepeat, String isSolar, String isRepeat, String isRest, String companyID, int tenantId, String holidayID) throws Exception {
+	public void scheduleUpdateHoliday(String holidayName, String holidayName2, String holidayDate, String isSolar, String isRepeat, String isRest, String companyID, int tenantId, String holidayID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_HOLIDAYNAME", holidayName);
 		map.put("v_HOLIDAYNAME2", holidayName2);
-		map.put("v_HOLIDAYFLAG", holidayFlag);
 		map.put("v_HOLIDAYDATE", holidayDate);
-		map.put("v_HOLIDAYREPEAT", holidayRepeat);
 		map.put("v_ISSOLAR", isSolar);
 		map.put("v_ISREPEAT", isRepeat);
 		map.put("v_ISREST", isRest);

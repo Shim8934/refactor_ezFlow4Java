@@ -236,11 +236,11 @@
 	</head>
 	<!-- <body class="mainbody" style="height: 89%;"> -->
 	<body class="mainbody" style="height: 95%; overflow:hidden;margin-left:0px;margin-right:0px">
-	 <h1><spring:message code='ezSchedule.t4003' /></h1>
+	 <h1 style="margin-left:10px;"><spring:message code='ezSchedule.t4003' /></h1>
 		<div style="padding-left:10px;padding-right:10px">
 		    <!-- <h1><span id='mailBoxInfo'></span></h1> -->
-		    <div class="portlet_tabpart01">
-		        <div class="portlet_tabpart01_top" id="tab1"></div>
+		    <div class="portlet_tabnew01">
+		        <div class="portlet_tabnew01_top" id="tab1"></div>
 		    </div>
 		</div>    
 	    <iframe id="FBoard_ifrm" style="width: 100%; height: 100%;" frameborder="0"></iframe>
