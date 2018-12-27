@@ -2046,8 +2046,17 @@
 		    </div>
 		    <div class="timecheck_info">
 		    	<dl class="timeInfo">
-		        	<dt class="timeInfoPic"><img src="images/img.png"></dt>
-		            <dd class="timeInfoText">김영희 대리 ㅣ 오픈솔루션팀</dd>
+		        	<dt class="timeInfoPic">
+		        		<c:choose>
+							<c:when test="${not empty userInfo.userFileUrl }">
+								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${userInfo.userFileUrl }" width="34px" height="34px">
+							</c:when>
+							<c:otherwise>
+								<img src="/images/kr/main/bestEmployee_pic_none.png" width="34px" height="34px">
+							</c:otherwise>
+						</c:choose>
+		        	</dt>
+		            <dd class="timeInfoText"><span>${userInfo.displayName } ${userInfo.title } ㅣ ${userInfo.deptName }</span></dd>
 		        </dl>
 		        <dl class="timeIcconDL">
 		        	<dt class="timeIconDT"><img src="/images/ImgIcon/late_icon.png"></dt>
