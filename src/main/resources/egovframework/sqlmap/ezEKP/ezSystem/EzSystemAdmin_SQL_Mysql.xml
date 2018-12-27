@@ -284,5 +284,24 @@
 				TABLE_NAME NOT REGEXP #notTableNames#
 		</isNotEmpty>
 	</select>
-		
+	
+	<insert id="EzSystemAdminDAO.insertMultiLoginType" parameterClass="java.util.Map">
+		INSERT INTO
+			TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE)
+		VALUES
+			(#tenantID#, #companyID#, 'useMultiLogin', #multiLoginType#)
+	</insert>
+	
+	<update id="EzSystemAdminDAO.updateMultiLoginType" parameterClass="java.util.Map">
+		UPDATE
+			TBL_COMPANY_CONFIG
+		SET
+			PROPERTY_VALUE = #multiLoginType#
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			COMPANY_ID = #companyID#
+		AND
+			PROPERTY_NAME = 'useMultiLogin'
+	</update>
 </sqlMap>

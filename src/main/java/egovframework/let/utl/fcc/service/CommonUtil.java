@@ -454,7 +454,7 @@ public class CommonUtil {
 			if (session != null) {
 		        if (cookies != null) {
 		            for (Cookie cookie : cookies) {
-		                if("loginCookie".equals(cookie.getName()) && cookie.getMaxAge() != 0){
+		                if("loginCookie".equals(cookie.getName())){
 		                    //접속한 클라이언트 IP
 		                    String ip = ClientUtil.getClientIP(request);
 		                    String cValue = "";
@@ -487,7 +487,7 @@ public class CommonUtil {
 		} else {
 			if (cookies != null) {
 				for (Cookie cookie : cookies) {
-					if("loginCookie".equals(cookie.getName()) && cookie.getMaxAge() != 0){
+					if("loginCookie".equals(cookie.getName())){
 						//접속한 클라이언트 IP
 						String ip = ClientUtil.getClientIP(request);
 						String cValue = "";
@@ -1586,9 +1586,9 @@ public class CommonUtil {
 		try {
 			if(!request.getRequestURI().equals("/user/login/actionLogout.do") && cookies != null) {
 				for(Cookie cookie : cookies) {
-					if(cookie.getName().equalsIgnoreCase("loginCookie") && cookie.getMaxAge() != 0) {
+					if(cookie.getName().equalsIgnoreCase("loginCookie")) {
 						loginCookie = cookie;
-					} else if(cookie.getName().equalsIgnoreCase("multiLoginCookie") && cookie.getMaxAge() != 0) {
+					} else if(cookie.getName().equalsIgnoreCase("multiLoginCookie")) {
 						multiLoginCookie = cookie;
 					}
 				}
