@@ -300,10 +300,10 @@ body{ font-family:'Arial, MalgunGothic, AppleSDGothic'; font-size:12px; /*margin
 .kk_editor .kk_editorArea .kk_editorView .kk_contentView { width:100%; height:100%; border: none; }
 
 .kk_editor .kk_editorArea .kk_htmlView { display: block; position: relative; }
-.kk_editor .kk_editorArea .kk_htmlView .kk_htmlContents { padding: 10px; width: 100%; height: 100%; resize: none; font-size: 14px; outline: none; border: none;}
+.kk_editor .kk_editorArea .kk_htmlView .kk_htmlContents { padding: 10px; width: 100%; height: 100%; resize: none; font-size: 12pt; font-family:"돋움",Dotum,AppleGothic,sans-serif; outline: none; border: none;}
 
 .kk_editor .kk_editorArea .kk_textView { display: block; position: relative; }
-.kk_editor .kk_editorArea .kk_textView .kk_textContents { padding: 10px; width: 100%; height: 100%; resize: none; font-size: 12px; outline: none; border: none;}
+.kk_editor .kk_editorArea .kk_textView .kk_textContents { padding: 10px; width: 100%; height: 100%; resize: none; font-size: 12pt; font-family:"돋움",Dotum,AppleGothic,sans-serif; outline: none; border: none;}
 
 .kk_editor .kk_editorArea .kk_preView {position: relative; -ms-user-select: element;}
 .kk_editor .kk_editorArea .kk_preView .kk_previewContents { width:100%; height:100%; border: none; }

@@ -9,6 +9,7 @@
 	    <!-- <link rel="stylesheet" href="${util.addVer('/css/tab_over.css')}" type="text/css"> -->
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 	    <style type="text/css">
 	    .tabpart01UL{
 	    	position:absolute;
@@ -117,8 +118,8 @@
 	        	var tabId = "a"; // anniversary
 	        	var tabId2 = "s"; // statutory holiday 
 	        	//탭이름 message 처리
-	        	var tabName = "회사기념일";
-	        	var tabName2 = "법정공휴일";
+	        	var tabName = strLangKHA1;
+	        	var tabName2 = strLangKHA2;
 	        	
 	        	tabText += "<p id='FBoard_sub0'>";
 	        	tabText += "<span id='1tab0' divname='FBoard_div0' name='FBoard_div' data1=\'"+tabId+"\' data2=\'"+tabName+"\' data5='0' class='tabover'>"+tabName+"</span>";

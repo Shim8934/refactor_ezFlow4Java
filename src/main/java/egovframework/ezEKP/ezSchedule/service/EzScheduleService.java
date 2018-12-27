@@ -18,7 +18,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 
 public interface EzScheduleService {
 	
-	public List<ScheGetHolidayVO> getTholiday (String companyID, String userCompany, int tenantId) throws Exception;
+	public List<ScheGetHolidayVO> getTholiday (String companyID, String userCompany, int tenantId, String isRest) throws Exception;
 	
 	public List<AttendantListVO> getAttendantList(String scheduleId, String offSetMin, int tenantId, String companyID) throws Exception;
 	
@@ -112,4 +112,6 @@ public interface EzScheduleService {
 	public void updateDragSchedule(String scheduleid, String userId, String displayName1, String displayName2, String utcStartTime, String utcEndTime, int tenantId, String companyID) throws Exception;
 
 	public void copySchedule(String dragDay, String startDate, String endDate, String defaultPath, String offset, int tenantId, String companyId) throws Exception;
+
+	public List<ScheGetHolidayVO> getTholidayYear(String companyID,String userCompany, int tenantId, String isRest, String holidayYear) throws Exception;
 }
