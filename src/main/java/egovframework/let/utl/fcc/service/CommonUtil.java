@@ -147,11 +147,14 @@ public class CommonUtil {
 	private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 	private static CommonUtil commonUtilInstance;
 	
+	private static Map<String, String> loginUsers;
+	
     @PostConstruct
 	public void init() throws Exception {
     	logger.debug("init started.");
 
     	commonUtilInstance = this;
+    	loginUsers = new HashMap<String, String>();
     	
     	logger.debug("init ended.");
     }
@@ -451,7 +454,7 @@ public class CommonUtil {
 			if (session != null) {
 		        if (cookies != null) {
 		            for (Cookie cookie : cookies) {
-		                if("loginCookie".equals(cookie.getName())){
+		                if("loginCookie".equals(cookie.getName()) && cookie.getMaxAge() != 0){
 		                    //접속한 클라이언트 IP
 		                    String ip = ClientUtil.getClientIP(request);
 		                    String cValue = "";
@@ -463,7 +466,7 @@ public class CommonUtil {
 		                            isCookie = true;
 		                        }
 		                    } catch (Exception e) {
-		                        //e.printStackTrace();
+		                        e.printStackTrace();
 		                    }
 		                }
 		            }
@@ -484,7 +487,7 @@ public class CommonUtil {
 		} else {
 			if (cookies != null) {
 				for (Cookie cookie : cookies) {
-					if("loginCookie".equals(cookie.getName())){
+					if("loginCookie".equals(cookie.getName()) && cookie.getMaxAge() != 0){
 						//접속한 클라이언트 IP
 						String ip = ClientUtil.getClientIP(request);
 						String cValue = "";
@@ -496,7 +499,7 @@ public class CommonUtil {
 								isCookie = true;
 							}
 						} catch (Exception e) {
-							//e.printStackTrace();
+							e.printStackTrace();
 						}
 					}
 				}
@@ -1566,5 +1569,52 @@ public class CommonUtil {
 		}
 
 		return strSize;
+	}
+	
+	public void setLoginUsers(String userInfo, String loginTime) {
+		loginUsers.put(userInfo, loginTime);
+	}
+	
+	public boolean checkMultiLogin(HttpServletRequest request, HttpServletResponse response) {
+		boolean result = true;
+		
+		Cookie [] cookies = request.getCookies();
+		Cookie loginCookie = null;
+		Cookie multiLoginCookie = null;
+		String useMultiLogin = "YES";
+		
+		try {
+			if(!request.getRequestURI().equals("/user/login/actionLogout.do") && cookies != null) {
+				for(Cookie cookie : cookies) {
+					if(cookie.getName().equalsIgnoreCase("loginCookie") && cookie.getMaxAge() != 0) {
+						loginCookie = cookie;
+					} else if(cookie.getName().equalsIgnoreCase("multiLoginCookie") && cookie.getMaxAge() != 0) {
+						multiLoginCookie = cookie;
+					}
+				}
+				
+				
+				String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///");
+				
+				String userID = cookieInfo[1];
+				String companyID = cookieInfo[10];
+				String tenantID = cookieInfo[8];
+				String userInfo = userID + "_" + tenantID;
+				
+				useMultiLogin = ezCommonService.getCompanyConfig(Integer.parseInt(tenantID), companyID, "useMultiLogin");
+				
+				if(useMultiLogin.equalsIgnoreCase("NO")) {
+					if(loginUsers.containsKey(userInfo)) {
+						if(!loginUsers.get(userInfo).equals(multiLoginCookie.getValue())) {
+							result = false;
+						}
+					}
+				} 
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 }

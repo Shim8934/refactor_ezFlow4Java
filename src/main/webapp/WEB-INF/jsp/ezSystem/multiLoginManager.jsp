@@ -9,35 +9,35 @@
 	<link rel="stylesheet"  href="${util.addVer('main.e15', 'msg')}" type="text/css">
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}" ></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-	<title>Insert title here</title>
+	<title><spring:message code="ezSystem.kbh08" /></title>
 </head>
 <body class="mainbody" style="overflow:hidden;">
 	<h1>
-		멀티로그인관리
+		<spring:message code="ezSystem.kbh08" />
 		<select class="companySelect" id="companyList">
 			<c:forEach var="company" items="${companyList}">
 				<option value="${company.cn }" ${company.cn eq companyID ? 'selected' : ''}><c:out value='${company.displayName}'/></option>
 			</c:forEach>
 		</select>
 	</h1>
-	<br><span class="txt">▒ 멀티로그인을 제한하면 어쩌구...${useMultiLogin }</span><br><br>
+	<br><span class="txt">▒ <spring:message code="ezSystem.kbh04" /></span><br><br>
 	<table class="content" style="width:600px;">
 		<colgroup>
 			<col style="width: 60px;"/>
 			<col />
 		</colgroup>
 		<tr>
-			<th rowspan="2">허용여부선택</th>
-			<td><input type="radio" name="multiLogin" value="YES" id="multiLogin_YES" ${useMultiLogin eq 'YES' ? 'checked' : ''}><label for="multiLogin_YES"><span style="vertical-align:middle;">허용</span></label></td>
+			<th rowspan="2"><spring:message code="ezSystem.kbh05" /></th>
+			<td><input type="radio" name="multiLogin" value="YES" id="multiLogin_YES" ${useMultiLogin eq 'YES' ? 'checked' : ''}><label for="multiLogin_YES"><span style="vertical-align:middle;"><spring:message code="ezSystem.kbh06" /></span></label></td>
 		</tr>
 		<tr>
-			<td><input type="radio" name="multiLogin" value="NO" id="multiLogin_NO" ${useMultiLogin eq 'NO' ? 'checked' : ''}><label for="multiLogin_NO"><span style="vertical-align:middle;">제한</span></label></td>
+			<td><input type="radio" name="multiLogin" value="NO" id="multiLogin_NO" ${useMultiLogin eq 'NO' ? 'checked' : ''}><label for="multiLogin_NO"><span style="vertical-align:middle;"><spring:message code="ezSystem.kbh07" /></span></label></td>
 		</tr>
 	</table>
 	<div style="width:600px;">
 		<div class="btnpositionJsp">
-			<a id="btn_save" class="imgbtn"><span>저장</span></a>
-			<a id="btn_cancle" class="imgbtn"><span>취소</span></a>
+			<a id="btn_save" class="imgbtn"><span><spring:message code="ezSystem.kbh09" /></span></a>
+			<a id="btn_cancle" class="imgbtn"><span><spring:message code="ezSystem.kbh10" /></span></a>
 		</div>
 	</div>
 	<script type="text/javascript">
@@ -58,11 +58,11 @@
 					multiLoginType: multiLoginType.value
 				},
 				success: function() {
-					alert("저장성공");
+					alert("<spring:message code='ezSystem.kbh11' />");
 					originCheckValueID = multiLoginType.id;
 				},
 				error: function() {
-					alert("저장실패");
+					alert("<spring:message code='ezSystem.kbh12' />");
 				}
 			});
 		}
