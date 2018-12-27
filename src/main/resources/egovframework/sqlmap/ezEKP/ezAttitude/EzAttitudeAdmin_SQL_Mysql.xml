@@ -13,6 +13,7 @@
 	<typeAlias alias="AttitudeAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO"/>
 	<typeAlias alias="AttitudeStatisVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
 	<typeAlias alias="ModApplHistoryVO" type="egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO"/>
+	<typeAlias alias="AttitudeAnnualVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO"/>
 	
 	<resultMap id="attitudeConfig" class="AttitudeConfigVO">
 		<result property="companyId"				column="COMPANY_ID"				columnIndex="1"/>
@@ -1348,4 +1349,67 @@
 		</iterate>
 	</select>
 	
+	<select id="ezAttitudeAdminDAO.getAttitudeAnnualListCount" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				count(*)
+			FROM 
+				tbl_usermaster A
+			LEFT OUTER JOIN 
+				tbl_attitude_annual B
+			ON
+				(A.TENANT_ID = B.TENANT_ID 
+				AND
+				 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID
+				AND 
+				 A.CN = B.USER_ID 
+				AND
+				 B.YEAR = #searchYear#)
+			WHERE
+				A.TENANT_ID = 1
+			AND 
+				A.PHYSICALDELIVERYOFFICENAME = #companyId#
+		]]>
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			A.description LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			A.displayname LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			A.title LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeAnnualList" parameterClass="Map" resultClass="AttitudeAnnualVO">
+		<![CDATA[
+			SELECT 
+				A.CN
+			FROM 
+				tbl_usermaster A
+			LEFT OUTER JOIN 
+				tbl_attitude_annual B
+			ON
+				(A.TENANT_ID = B.TENANT_ID 
+				AND
+				 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID
+				AND 
+				 A.CN = B.USER_ID 
+				AND
+				 B.YEAR = #searchYear#)
+			WHERE
+				A.TENANT_ID = 1
+			AND 
+				A.PHYSICALDELIVERYOFFICENAME = #companyId#
+		]]>
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			A.description LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			A.displayname LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			A.title LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
+	</select>
 </sqlMap>

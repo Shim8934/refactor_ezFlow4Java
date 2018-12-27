@@ -60,6 +60,9 @@
 		    		
 		            company_change();
 		        }
+	    		
+	    		//
+	    		getAnnualList();
 	    	});
 			    
 		    $(window).on("resize", function(){
@@ -77,12 +80,43 @@
 			
 	    	function company_change(){
 	    		pCompanyId = $("select[name=ListCompany]").val();
+	    		getAnnualList();
 	    	}
 	    	
 	    	function modifyAllAnnualPop() {
 	        	var url = "/admin/ezAttitude/modifyAllAnnualPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
 				window.open(url, "modifyAllAnnualPop", GetOpenWindowfeature(500, 435));
 	        }
+	    	
+	    	function getAnnualList() {
+	    		var searchYear = document.getElementById("searchYear");
+	    		
+	    		$.ajax({
+	    			data : "GET",
+	    			dataType : "json",
+	    			async : false,
+	    			url : "/admin/ezAttitude/attitudeAnnualList.do",
+	    			data : {
+	    				companyId : pCompanyId,
+	   					userName : searchUserName,
+	   					deptName : searchDeptName,
+	   					title : searchTitle,
+	   					year : searchYear,
+	   					pageNum : pageNum,
+	   					listSize : listSize,
+	   					orderCell : orderCell,
+	   					orderOption : orderOption
+    				},
+	    			success : function(result){
+// 	    				totalCount = result.totalCount;
+// 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
+// 	    				getAttitudeCheckList_after(result.list);
+	    			},
+	    			error : function() {
+	    				alert("<spring:message code='ezAttitude.t59'/>");
+	    			}
+	    		});
+	    	}
 	    </script>
 	</head>
 	<body class="mainbody">

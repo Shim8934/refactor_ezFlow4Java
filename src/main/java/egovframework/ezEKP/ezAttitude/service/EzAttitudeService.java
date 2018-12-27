@@ -5,6 +5,7 @@ import java.util.List;
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
@@ -129,4 +130,8 @@ public interface EzAttitudeService {
 	public String getIsAttitude(String typeId, String writerId, String startDate, String offset, String companyId, int tenantId) throws Exception;
 
 	public List<AttitudeAuthorVO> getDeptUserList(int tenantId, String key, String value, String companyId, String lang) throws Exception;
+
+	public String getAttitudeAnnualListCount(String searchUserName,	String searchDeptName, String searchTitle, String searchYear, String offsetMin, String companyId, int tenantId);
+
+	public List<AttitudeAnnualVO> getAttitudeAnnualList(String searchUserName,String searchDeptName, String searchTitle, String searchYear,	String orderCell, String orderOption, String offsetMin, String pageNum, String listSize, String companyId, int tenantId, String primary);
 }

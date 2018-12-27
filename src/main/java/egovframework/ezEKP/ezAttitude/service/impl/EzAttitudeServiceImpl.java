@@ -26,6 +26,7 @@ import com.ibm.icu.util.Calendar;
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
@@ -2396,5 +2397,68 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getDeptUserList ended");
 		
 		return ezAttitudeDAO.getDeptUserList(map);
+	}
+
+	@Override
+	public String getAttitudeAnnualListCount(String searchUserName,
+			String searchDeptName, String searchTitle, String searchYear,
+			String offsetMin, String companyId, int tenantId) {
+		LOGGER.debug("getAttitudeAnnualListCount started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("searchUserName", searchUserName);
+		map.put("searchDeptName", searchDeptName);
+		map.put("searchTitle", searchTitle);
+		map.put("searchYear", searchYear);
+		map.put("offsetMin", offsetMin);
+		
+		String totalCount = ezAttitudeDAO.getAttitudeAnnualListCount(map);
+		
+		LOGGER.debug("getAttitudeAnnualListCount ended. totalCount = " + totalCount);
+		
+		return totalCount;
+	}
+
+	@Override
+	public List<AttitudeAnnualVO> getAttitudeAnnualList(String searchUserName,
+			String searchDeptName, String searchTitle, String searchYear,
+			String orderCell, String orderOption, String offsetMin,
+			String pageNum, String listSize, String companyId, int tenantId,
+			String primary) {
+		LOGGER.debug("getAttitudeAnnualList started");
+		
+		int limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+		
+		String searchStartTime = searchYear + "-01-01 00:00:00";
+		String searchEndTime = searchYear + "-12-31 59:59:59";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("searchUserName", searchUserName);
+		map.put("searchDeptName", searchDeptName);
+		map.put("searchTitle", searchTitle);
+		map.put("searchYear", searchYear);
+		map.put("searchStartTime", searchStartTime);
+		map.put("searchEndTime", searchEndTime);
+		map.put("limit", limit);
+		map.put("listSize", listSize);
+		map.put("orderCell", orderCell);
+		map.put("orderOption", orderOption);
+		map.put("offsetMin", offsetMin);
+		map.put("startRow", limit + 1);
+		map.put("endRow", limit + Integer.valueOf(listSize));
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		map.put("primary", primary);
+		
+		List<AttitudeAnnualVO> resultList = ezAttitudeDAO.getAttitudeAnnualList(map);
+		
+		LOGGER.debug("getAttitudeAnnualList ended. resultList size = " + resultList.size());
+		
+		return resultList;
 	}
 }
