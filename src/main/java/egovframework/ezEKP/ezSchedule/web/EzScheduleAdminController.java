@@ -315,7 +315,7 @@ public class EzScheduleAdminController {
 		String name2 = request.getParameter("name2");
 		String isSolar = request.getParameter("isSolar");
 		String date = request.getParameter("date");
-		String isRepeat = request.getParameter("isRepeat");
+		String isRepeat = request.getParameter("isRepeat"); //2018-12-27 확인후 삭제 
 		String isRest = request.getParameter("isRest");
 		String holidayType = request.getParameter("holidayType");
 		
@@ -344,7 +344,7 @@ public class EzScheduleAdminController {
 		model.addAttribute("name2", name2);
 		model.addAttribute("isSolar", isSolar);
 		model.addAttribute("date", date);
-		model.addAttribute("isRepeat", isRepeat);
+		model.addAttribute("isRepeat", isRepeat); //2018-12-27 확인후 삭제
 		model.addAttribute("isRest", isRest);
 		model.addAttribute("holidayType", holidayType);
 		

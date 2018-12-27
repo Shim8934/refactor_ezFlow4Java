@@ -819,14 +819,16 @@ public class EzResourceController extends EgovFileMngUtil {
 				JSONArray jArray = new JSONArray();
 
 				for (int i = 0; i < ownerListVO.size(); i++) {
-				        JSONObject data= new JSONObject();
-				        data.put("ownerId", ownerListVO.get(i).getCn());
-				        data.put("ownerDept", ownerListVO.get(i).getDepartment());
-				        data.put("ownerName", ownerListVO.get(i).getDisplayName());
-				        data.put("ownerName1", ownerListVO.get(i).getTitle());
-				        data.put("ownerDeptName", ownerListVO.get(i).getDescription());
-				        jArray.add(i, data);
-				 }
+			        JSONObject data= new JSONObject();
+			        
+			        data.put("ownerId", ownerListVO.get(i).getCn());
+			        data.put("ownerDept", ownerListVO.get(i).getDepartment());
+			        data.put("ownerName", ownerListVO.get(i).getDisplayName());
+			        data.put("ownerName1", ownerListVO.get(i).getTitle());
+			        data.put("ownerDeptName", ownerListVO.get(i).getDescription());
+			        
+			        jArray.add(i, data);
+				}
 				model.addAttribute("ownerList", jArray);
 			}
 			strBrdID = resBrd.getBrdID();
@@ -1110,27 +1112,20 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strBrdExplain = resBrd.getBrdExplain();
 		String strResLocation = resBrd.getResLocation();
 		//String strOwnDeptID = resBrd.getOwnDeptID();
-//		String strOwnerID = "";
-//		if (resBrd.getOwnerID() != null && resBrd.getOwnerID() != "") {
-//			strOwnerID = resBrd.getOwnerID().split(",")[0];
-//		}
+		String strOwnerID = resBrd.getOwnerID().split(",")[0];
 		//String strOwnerCall = resBrd.getOwnerCall();
 		//String strMakeDate = ezResourceService.getLocalTime(resBrd.getMakeDate() + " " + EgovDateUtil.getCurrentDate("HH:mm:ss"));
 		String strApproveFlag = resBrd.getApproveFlag();
 		String strOwnerCall = resBrd.getOwnerCall();
 		String strBrdAccess = resBrd.getBrdAccess();
-		String strOwnerID = "";
-		String pAdminFg = "N";
-		//String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId());
+		String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId());
 		
-//		if (strOwnerID != null && strOwnerID != "") {
-//			String[] OwnerList = strOwnerID.split(",");
-//			for(int i=1; i<OwnerList.length; i++) {
-//				if(OwnerList[i].equals(userInfo.getId())) {
-//					pAdminFg = "Y";
-//				}
-//			}
-//		}
+		String[] OwnerList = strOwnerID.split(",");
+		for(int i=1; i<OwnerList.length; i++) {
+			if(OwnerList[i].equals(userInfo.getId())) {
+				pAdminFg = "Y";
+			}
+		}
 		
 		/*if (req.getParameter("cuid") != null) {
 			cUserIDStr = req.getParameter("cuid");
