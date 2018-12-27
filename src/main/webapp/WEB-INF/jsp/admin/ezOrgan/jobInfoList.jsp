@@ -470,7 +470,7 @@
 	            });
 				
 				var selectedId = oArrRows[0].getAttribute("id");
-				var selectedTitle = document.getElementById(selectedId).getElementsByTagName("td")[0].textContent;
+				var selectedTitle = document.getElementById(selectedId).getElementsByTagName("td")[1].textContent;
 				var count = SelectSingleNodeValueNew(xmldom, "TOTALCNT");
 				
 				document.getElementById("preview_title").textContent = selectedTitle + " 리스트";
