@@ -1384,7 +1384,13 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeAnnualList" parameterClass="Map" resultClass="AttitudeAnnualVO">
 		<![CDATA[
 			SELECT 
-				A.CN
+				A.cn AS userId,
+			    A.DISPLAYNAME as userName,
+			    A.TITLE as userTitle,
+			    A.DESCRIPTION as userDeptName,
+			    #searchYear# as year,
+			    '0' as useAnnualCnt,
+			    ifnull(B.TOTAL_ANNUAL_CNT, 0) as totalAnnualCnt
 			FROM 
 				tbl_usermaster A
 			LEFT OUTER JOIN 
