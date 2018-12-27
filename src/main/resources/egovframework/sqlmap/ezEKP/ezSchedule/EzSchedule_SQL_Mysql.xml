@@ -930,7 +930,7 @@
 			           	from 
 			           		tbl_holidaylist 
 						where  
-							(usecompany = '1' or usecompany = #v_USERCOMPANY#)
+							(usecompany = 'ALL' or usecompany = #v_USERCOMPANY#)
 						and
 							tenant_id = #v_TENANTID#
 						and
@@ -953,7 +953,7 @@
 				           	from 
 				           		tbl_holidaylist 
 							where  
-								(usecompany = '1' or usecompany = #v_USERCOMPANY#)
+								(usecompany = 'ALL' or usecompany = #v_USERCOMPANY#)
 							and
 								tenant_id = #v_TENANTID#
 							and
@@ -977,7 +977,7 @@
 				           	from 
 				           		tbl_holidaylist 
 							where  
-								(usecompany = '1' or usecompany = #v_USERCOMPANY#)
+								(usecompany = 'ALL' or usecompany = #v_USERCOMPANY#)
 							and
 								tenant_id = #v_TENANTID#							
 						]]>		                   
@@ -1000,7 +1000,7 @@
 						from 
 							tbl_holidaylist 
 						where  
-							usecompany = '1'
+							usecompany = 'ALL'
 						and
 							tenant_id = #v_TENANTID#	
 					]]>
@@ -1048,7 +1048,8 @@
 			and
 				tenant_id = #v_TENANTID#	
 			and
-				(date_format(holidaydate,'%Y') = #holidayYear# or isrepeat = 1)			
+				(date_format(holidaydate,'%Y') = #holidayYear# or isrepeat = 1)		
+				
 		]]>
 	</select>
 	<!-- checked -->

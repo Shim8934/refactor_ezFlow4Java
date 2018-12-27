@@ -59,7 +59,8 @@
 		    			MakeSliderList(result);
 		    			if (holidayType == 'a') {
 			    			makeSelectBox(result);
-		    			}
+		    			} 
+		    			
 		    		}	    		
 		        });
 		    }
@@ -465,7 +466,7 @@
 		    	return rtnString;
 		    }
 		    
-		    function makeSelectBox(result) {
+		    /* function makeSelectBox(result) {
 		    	var _html = "";
 			    // <option></option>    
 		        try {		            		            
@@ -512,7 +513,7 @@
 		        	alert(e.message);
 		            document.getElementById("ListYear").innerHTML = "";
 		        }
-		    }
+		    } */
 		    
 		    function year_holiday() {
 		    	_RowObject = null;
@@ -544,6 +545,27 @@
 		    		}	    		
 		        });
 		    }
+		    
+		    function makeSelectBox(result) {
+		    	var _html = "";
+		    	var holidayYear = new Date().getFullYear(); 
+			    // <option></option>    
+		        try {
+		        	$('#ListYear').css("display", "");
+		        	for (var j = -10; j < 10; j++) {
+		        		if (j == 0) {
+			        		_html += "<option value='"+(parseInt(holidayYear)+j)+"' selected>"+(parseInt(holidayYear)+j)+"</option>";
+		        		} else {
+		        			_html += "<option value='"+(parseInt(holidayYear)+j)+"'>"+(parseInt(holidayYear)+j)+"</option>";
+		        		}
+		        		
+		        	}
+		        	document.getElementById("ListYear").innerHTML = _html;
+		        } catch (e) {
+		        	$('#ListYear').css("display", "none");	
+		            document.getElementById("ListYear").innerHTML = "";
+		        }
+		    } 
 		    
 		</script>
 	</head>
