@@ -78,6 +78,11 @@
 	    	function company_change(){
 	    		pCompanyId = $("select[name=ListCompany]").val();
 	    	}
+	    	
+	    	function modifyAllAnnualPop() {
+	        	var url = "/admin/ezAttitude/modifyAllAnnualPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
+				window.open(url, "modifyAllAnnualPop", GetOpenWindowfeature(500, 435));
+	        }
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -96,7 +101,11 @@
 				<tr>
 					<td style="width: 3%">년도</td>
 					<td style="width: 12%;">
-						<select id="year">
+						<select name="searchYear" id="searchYear" style="padding-right:50px;height:24px">
+							<option value="2017" selected>2017</option>
+							<option value="2018" selected>2018</option>
+							<option value="2019" selected>2019</option>
+							<option value="2020" selected>2020</option>
 						</select>
 					</td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td>
@@ -115,7 +124,7 @@
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
 						<a class="imgbtn"><span onclick="">엑셀로 등록</span></a>
-						<a class="imgbtn"><span onclick="">전체 등록/수정</span></a>
+						<a class="imgbtn"><span onclick="modifyAllAnnualPop();">전체 연차 변경</span></a>
 						
 					</td>
 				</tr>

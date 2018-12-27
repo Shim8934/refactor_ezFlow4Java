@@ -2121,4 +2121,57 @@ public class EzAttitudeAdminController {
 		
 		return "/admin/ezAttitude/attitudeAnnualManage";
 	}
+	
+	/**
+	 * 연차현황관리 전체연차변경 화면
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/modifyAllAnnualPop.do")
+	public String modifyAllAnnualPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("modifyAllAnnualPop started.");
+		
+		String userId = request.getParameter("userId");
+		String userName = request.getParameter("userName");
+		String companyId = request.getParameter("companyId");
+		String isAllDept = "";
+		
+		if (userId != null) {
+			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/attitude-auth";
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId)
+					.queryParam("isAllDept", isAllDept)
+					.queryParam("userId", userId);
+			
+			RestTemplate rest = new RestTemplate();
+			
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			String status = resultBody.get("status").toString();
+			
+			JSONArray authorDeptList = new JSONArray();
+			if (status.equals("ok")) {		
+				authorDeptList = (JSONArray) resultBody.get("data");
+				
+				model.addAttribute("deptList", authorDeptList);
+			}
+			
+			model.addAttribute("selectedUser", userId);
+			model.addAttribute("selectedUserName", userName);
+		}
+		
+		model.addAttribute("companyId", companyId);
+		
+		LOGGER.debug("modifyAllAnnualPop ended.");
+
+		return "/admin/ezAttitude/modifyAllAnnualPop";
+	}
 }
