@@ -1230,25 +1230,25 @@
 		        		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('recordCabinet')">기록물대장</span>
 			        </h2>
 			        <ul class="lnbUL off" id="recordCabinetUL">
-			        	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="m01" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span></li>
-			        	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="m03" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t911'/></span></li>
-			        	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="m05" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t905'/></span></li>
-			        	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="m06" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span></li>
-			        	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="m02" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span></li>
+			        	<li><span class="sub_iconLNB tree_appr_record1"></span><span class="list_text" id="m01" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span></li>
+			        	<li><span class="sub_iconLNB tree_appr_record2"></span><span class="list_text" id="m03" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t911'/></span></li>
+			        	<li><span class="sub_iconLNB tree_appr_record3"></span><span class="list_text" id="m05" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t905'/></span></li>
+			        	<li><span class="sub_iconLNB tree_appr_record4"></span><span class="list_text" id="m06" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span></li>
+			        	<li><span class="sub_iconLNB tree_appr_record5"></span><span class="list_text" id="m02" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span></li>
 			        </ul>
 			        <c:if test="${fn:contains(userInfo.rollInfo, 'm=1') || fn:contains(userInfo.rollInfo, 'w=1') || fn:contains(userInfo.rollInfo, 'c=1')}">
 				        <h2 class="off" id="manageCabinetH2">
 			        		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('manageCabinet')">기록물관리</span>
 				        </h2>
 				        <ul class="lnbUL off" id="manageCabinetUL">
-				        	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="m07" onclick="Open_Func(this)">종료연기신청</span></li>
-				        	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="m08" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t908'/></span></li>
+				        	<li><span class="sub_iconLNB tree_appr_record6"></span><span class="list_text" id="m07" onclick="Open_Func(this)">종료연기신청</span></li>
+				        	<li><span class="sub_iconLNB tree_appr_record7"></span><span class="list_text" id="m08" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t908'/></span></li>
 				        	 <c:if test="${fn:contains(userInfo.rollInfo, 'm=1') || fn:contains(userInfo.rollInfo, 'c=1')}">
-					        	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="m09" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t909'/></span></li>
-					        	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="admin_sub01" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t717'/></span></li>
-					        	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="admin_sub02" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t1754'/></span></li>
-					        	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="admin_sub03" onclick="Menu_Click(this)">종료연기승인</span></li>
-					        	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="admin_sub04" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t520'/></span></li>
+					        	<li><span class="sub_iconLNB tree_appr_record8"></span><span class="list_text" id="m09" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t909'/></span></li>
+					        	<li><span class="sub_iconLNB tree_appr_record9"></span><span class="list_text" id="admin_sub01" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t717'/></span></li>
+					        	<li><span class="sub_iconLNB tree_appr_record10"></span><span class="list_text" id="admin_sub02" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t1754'/></span></li>
+					        	<li><span class="sub_iconLNB tree_appr_record11"></span><span class="list_text" id="admin_sub03" onclick="Menu_Click(this)">종료연기승인</span></li>
+					        	<li><span class="sub_iconLNB tree_appr_record12"></span><span class="list_text" id="admin_sub04" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t520'/></span></li>
 					        </c:if>
 				        </ul>
 			        </c:if>

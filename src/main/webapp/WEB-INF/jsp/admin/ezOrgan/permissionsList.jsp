@@ -26,12 +26,13 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" language="javascript">
 			var pUse_Editor = "<c:out value='${use_editor}'/>";
-	    	var totalCnt = 0;
-	        var CurPage = 1;
-	        var totalPage = 0;
-	        var pageSize = 15;
-	        var BlockSize = 10;
-	    	
+			var totalCnt = 0;
+			var CurPage = 1;
+			var totalPage = 0;
+			var pageSize = 15;
+			var BlockSize = 10;
+			var isAdmin = "<c:out value='${isAdmin}'/>";
+
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -45,7 +46,7 @@
 	        var type = "c=1";
 	    	
 			$(document).ready(function() {
-			    if (${isAdmin}) {
+			    if (isAdmin) {
 			    	type = 'c=1';
 			        Permissions_List();
 			    } else {

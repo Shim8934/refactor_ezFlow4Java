@@ -131,7 +131,10 @@
 		            }
 		            catch (e) {
 		            }
+		            
+		            settingResize();
 		        };
+		        
 		        var isPeriodYear = true;
 		        function LoadList() {
 		            switch (g_sFlag) {
@@ -571,7 +574,7 @@
 		        GetCaninetList();
 		    }
 		    function DelayEndYRequest_onclick() {
-		        document.getElementById("imgTitle").innerHTML = "종료연기신청";
+		        document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.t907'/>";
 		        document.getElementById("imgTitle").style.display = "";
 		        SwapSubMenuDisplay("1");
 		
@@ -1350,11 +1353,18 @@
 		        window.open(url, "", feature);
 		    }
 		
-		    window.onresize = function () {
-		        var height = parseInt(divList.style.height.replace('px', '')) + 200;
-		        var reheight = window.innerHeight - parseInt(height);
-		        //document.getElementById('div_AprLine').style.height = reheight + "px";
+		    window.onresize = function() {
+		    	settingResize();
 		    };
+		    
+		    var settingResize = function() {
+		    	if (document.getElementById('trSubInfoTab').style.display == 'none') {
+		    		var currentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+			        var divListHeight = document.getElementById('divList').style.height;
+			        document.getElementById('divList').style.height = (currentHeight - 69) + "px";
+		    	}
+		    }
+		    
 		    function onkeydown_start_search() {
 		        if (window.event.keyCode == "13") {
 		            search();
@@ -1593,9 +1603,9 @@
 	
 	    <div id="mainmenu">
 	        <ul id="trCabSubMenu" style="Display: None;">
-	            <li id="tdReqDelayEndY" style="Display: None"><span id="ReqDelayEndY" onclick="return ReqDelayEndY_onclick()">
+	            <li class="important" id="tdReqDelayEndY" style="Display: None"><span id="ReqDelayEndY" onclick="return ReqDelayEndY_onclick()">
 	                <spring:message code='ezApprovalG.t907'/></span></li>
-	            <li id="tdCancelDelayEndY" style="Display: None"><span id="CancelDelayEndY" onclick="return CancelDelayEndY_onclick()">연기신청취소</span></li>
+	            <li class="important" id="tdCancelDelayEndY" style="Display: None"><span id="CancelDelayEndY" onclick="return CancelDelayEndY_onclick()"><spring:message code='ezApprovalG.t930'/></span></li>
 	            <li class="important" id="tdbtnEndProduce" style="Display: None"><span id="btnEndProduce" onclick="return btnEndProduce_onclick()">
 	                <spring:message code='ezApprovalG.t931'/></span></li>
 	            <li class="important" id="tdbtnCancelEndProd" style="Display: None"><span id="btnCancelEndProd" onclick="return btnCancelEndProd_onclick()">
@@ -1656,7 +1666,7 @@
 	            </select>    </li>
 	        </ul>
 	    </div>
-	    <div class="div_scroll" style="width: 100%; HEIGHT: 375px; overflow: AUTO; margin-bottom:10px;" id="divList">
+	    <div id="divList" class="div_scroll" style="width: 100%; height: 375px; overflow: AUTO; margin-bottom:10px;">
 	        <div id="lvtDoclist"></div>
 	    </div>	    
 	    <div id="tblPageRayer"></div>

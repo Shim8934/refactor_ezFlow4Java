@@ -63,7 +63,13 @@
 						onSelect: function(selected) {
 							$('#startDatepicker').datepicker("option", "maxDate", selected)
 						}
-					});    	    	
+					});
+					
+					var nowDate = new Date();
+					$("#startDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+					$("#startDatepicker").datepicker('setDate', nowDate);
+					$("#endDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+					$("#endDatepicker").datepicker('setDate', nowDate);
 				});
 				
 				
@@ -475,11 +481,11 @@
 				 retireUserList();
 		    }
 			
-			//**/ 초기화버튼
+			//**/ 날짜 초기화버튼
 			function reset() {
 				$('#startDatepicker').val('');				
 				$('#endDatepicker').val('');				
-				$('#searchKeyword').val('');
+				//$('#searchKeyword').val('');
 			}
 			
 			 //**/ 새로고침 클릭시 이벤트
@@ -489,17 +495,17 @@
 			 
 			 //**/ 퇴직자 검색
 			function retireUserList() {
-				 $.ajax ({
+				$.ajax ({
 					 type : "POST",
 					 async : false,
 					 dataType : "json",
 					 url : "/admin/ezOrgan/getRetireUserList.do",
 					 data : {
 						 "page" : CurPage,						 
-						 "searchStartDate" : $('#startDatepicker').val(),
-						 "searchEndDate" : $('#endDatepicker').val(),
-						 "searchKeycode" : $('#searchKeycode').val(),
-						 "searchKeyword" : $('#searchKeyword').val(),
+						 "searchStartDate" : $('#startDatepicker').is(":enabled")? $('#startDatepicker').val() : "",
+						 "searchEndDate"   : $('#endDatepicker').is(":enabled")? $('#endDatepicker').val() : "",
+						 "searchKeycode"   : $('#searchKeycode').val(),
+						 "searchKeyword"   : $('#searchKeyword').val(),
 						 "searchCompanyID" : $("#ListCompany").val()
 					 },
 					 success : function(data) {
@@ -524,6 +530,7 @@
 								
 								if (lang == '' || lang == 1) {
 									html += "<td>" + (i.description != null ? i.description : " ") + "</td>";
+									html += "<td>" + (i.cn != null ? i.cn : " ") + "</td>";
 									html += "<td style='cursor:pointer' onclick=ShowUserInfo('" + i.cn + "')>" + i.displayName + "</td>";
 									html += "<td>" + (i.title  != null ? i.title : " ") + "</td>";
 									html += "<td>" + (i.extensionAttribute10  != null ? i.extensionAttribute10 : " ")+ "</td>";
@@ -531,11 +538,13 @@
 								
 								else if (lang != '' || lang != 1) {
 									html += "<td>" + (i.description2 != null ? i.description2 : " ") + "</td>";
+									html += "<td>" + (i.cn != null ? i.cn : " ") + "</td>";
 									html += "<td style='cursor:pointer' onclick=ShowUserInfo('" + i.cn + "')>" + i.displayName2 + "</td>";
 									html += "<td>" + (i.title2  != null ? i.title2 : " ") + "</td>";
 									html += "<td>" + (i.extensionAttribute102  != null ? i.extensionAttribute102 : " ")+ "</td>";
 								}
 								
+								html += "<td>" + (i.mobile != null ? i.mobile : " ") + "</td>";
 								html += "<td>" + i.updateDT + "</td>";
 								html += "</tr>";
 							 });
@@ -567,7 +576,19 @@
 		    $(function(){
 	    		windowResize();
 		    });
-
+			
+			var usepostDate = false;
+			function dateSearch() {
+				if (usepostDate){
+					usepostDate = false;
+						$("#startDatepicker").datepicker('disable');
+						$("#endDatepicker").datepicker('disable');
+				} else {
+					usepostDate = true;
+						$("#startDatepicker").datepicker('enable');
+						$("#endDatepicker").datepicker('enable');
+				}
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -588,9 +609,10 @@
                 	<li><span onClick="mod_password()"><spring:message code='ezOrgan.t90'/></span></li>
                 </c:if>
                 <li><span class="icon16 icon16_delete" onClick="Delete_onclick()"></span></li>
+                <li><span class="icon16 icon16_refresh" onClick="reload()"></span></li>
 		  	</ul>
 		</div>
-		<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #ddd;">
+		<%-- <table style="width: 100%; background-color: #f8f8f8; border: 1px solid #ddd;">
 		<tr>
 			<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 				<span id="topmenu" style="width: 500px"><spring:message code='ezOrgan.0hun01'/> : &nbsp;
@@ -617,6 +639,30 @@
 				</span> 
 			</td>
 		</tr>
+		</table> --%>
+		<table class="content">
+			<tr>
+				<th><spring:message code='ezStatistics.t1062'/></th>
+				<td>
+					<select id="searchKeycode" style="height:24px"> 
+						<option value="userName"><spring:message code='ezOrgan.t67'/></option>
+						<option value="deptName"><spring:message code='ezOrgan.t68'/></option>
+						<option value="userId"><spring:message code='ezOrgan.t218'/></option>
+					</select>
+					<input type="text" id="searchKeyword" style="width: 150px; margin-top: 2px; vertical-align: unset;" onKeyDown="return keyword_onkeydown(event)"/>
+					<a class="imgbtn imgbck" style="height:22px; margin-top: 2px;">
+						<span onclick="search();"><spring:message code='ezOrgan.t101'/></span>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<th><spring:message code='ezOrgan.0hun01'/></th>
+				<td>
+					<input type="checkbox" id="usepostdate" onclick="dateSearch()"><label for="usepostdate" style="margin-top: 2px; line-height: 26px;">검색기간 사용</label>
+					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: 2px; vertical-align: unset;" readonly="readonly" disabled/> ~ 
+					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: 2px; vertical-align: unset;" readonly="readonly" disabled/>
+				</td>
+			</tr>
 		</table>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
@@ -627,11 +673,13 @@
 					<thead style> 
 				    	<tr>
 				      		<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" onclick="funCheckBox('set','a')" /></th>
-				      		<th style="width:150px;"><spring:message code='ezOrgan.t68'/></th>
-				      		<th style="width:100px;"><spring:message code='ezOrgan.t67'/></th>
-				      		<th style="width:100px;"><spring:message code='ezOrgan.t69'/></th>
-				      		<th style="width:100px;"><spring:message code='ezOrgan.t1500'/></th>
-				      		<th><spring:message code='ezOrgan.t313'/></th>
+				      		<th style="width:200px;"><spring:message code='ezOrgan.t68'/></th>
+				      		<th style="width:200px;">아이디</th>
+				      		<th style="width:200px;"><spring:message code='ezOrgan.t67'/></th>
+				      		<th style="width:200px;"><spring:message code='ezOrgan.t69'/></th>
+				      		<th style="width:200px;"><spring:message code='ezOrgan.t1500'/></th>
+				      		<th style="width:200px;"><spring:message code='ezOrgan.t96'/></th>
+				      		<th style="width:200px;"><spring:message code='ezOrgan.t313'/></th>
 				   		</tr>
 			   		</thead>
 				   	<!-- list -->

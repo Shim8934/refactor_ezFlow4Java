@@ -470,7 +470,7 @@
 	            });
 				
 				var selectedId = oArrRows[0].getAttribute("id");
-				var selectedTitle = document.getElementById(selectedId).getElementsByTagName("td")[0].textContent;
+				var selectedTitle = document.getElementById(selectedId).getElementsByTagName("td")[1].textContent;
 				var count = SelectSingleNodeValueNew(xmldom, "TOTALCNT");
 				
 				document.getElementById("preview_title").textContent = selectedTitle + " 리스트";
@@ -569,6 +569,7 @@
 			var length = table.rows.length;
 			for (var i = 1; i < length; i++) {
 				var useTd     = table.rows[i].cells[3];
+				if (!useTd) { break; }
 				
 				var labelElmt = document.createElement("label");
 				var inputElmt = document.createElement("input");

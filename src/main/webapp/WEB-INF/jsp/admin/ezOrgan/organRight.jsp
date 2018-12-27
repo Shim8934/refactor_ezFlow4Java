@@ -1348,7 +1348,7 @@
 					var gyumInfo = tempLV.getAttribute('DATA3');
 					// 3 암호관리 4 사원이동 5 퇴직
 					if(tempLV.children[0].innerHTML != "") {
-						tempLV.children[0].innerHTML = "<span><img id='pwd" + userID +"' class='deptMaster' onclick='mod_pwd(event)' src='/images/admin/password.png'></span>";
+						tempLV.children[0].innerHTML = "<span><img id='pwd" + userID +"' class='deptMaster' onclick='mod_pwd(event)' src='/images/admin/deptmaster.png'></span>";
 					}
 					tempLV.children[6].innerHTML = "<span><img id='pwd" + userID +"' class='pwd' onclick='mod_pwd(event)' src='/images/admin/password.png'></span>";
 					tempLV.children[7].innerHTML = "<span><img id='move" + userID +"' class='move' onclick='move_user(event)' src='/images/admin/move_sawon.png'></span>";
@@ -1616,7 +1616,7 @@
 				</span>
 				<span style="margin-left:10px;"><input id="keyword" onKeyPress="search_press()" style="WIDTH:120px; height:22px;" /></span>
 			</div>
-			<div style="width:50px;float:right; padding: 6px;  background: #f8f8fa; border-left:1px solid #d2d2d2;"><a class="imgbtn" style="vertical-align:middle; width: 35px; "><span onClick="search_click()"><spring:message code='ezOrgan.t101' /></span></a></div>
+			<div style="width:50px;float:right; padding: 6px;  background: #f8f8fa; border-left:1px solid #d2d2d2;"><a class="imgbtn search" style="vertical-align:middle; width: 35px; "><span onClick="search_click()"><spring:message code='ezOrgan.t101' /></span></a></div>
 		</div>
 
 		<div id="mainmenu" style="margin-top:-3px;">
@@ -1668,7 +1668,7 @@
 			<div class="moveWrap" style="width:66%; vertical-align:middle; text-align:center; float:right;">
 				<img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
 				<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
-				<a class="imgbtn" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a>
+				<a class="imgbtn order" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a>
 			</div>
 		</c:if>
 

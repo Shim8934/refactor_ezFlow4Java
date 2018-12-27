@@ -44,7 +44,8 @@
 		<result property="extensionAttribute10" 				column="extensionAttribute10" 			columnIndex="8"/>
 		<result property="extensionAttribute102" 				column="extensionAttribute102" 			columnIndex="9"/>
 		<result property="extensionAttribute14" 				column="extensionAttribute14" 			columnIndex="10"/>
-		<result property="updateDT" 							column="UpdateDT" 						columnIndex="11"/>
+		<result property="mobile" 								column="mobile" 						columnIndex="11"/>
+		<result property="updateDT" 							column="UpdateDT" 						columnIndex="12"/>
 	</resultMap>
 	
 	<resultMap id="userCnList" class="OrganUserVO">
@@ -3429,6 +3430,7 @@
 		<![CDATA[
 			SELECT
 				CN ,
+				MOBILE ,
                 DISPLAYNAME ,
                 DISPLAYNAME2 ,
                 DESCRIPTION ,

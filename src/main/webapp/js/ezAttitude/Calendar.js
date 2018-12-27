@@ -338,18 +338,22 @@ function monthDate(oThisDate, TDIndex) {
     var subTable = document.createElement("TABLE");
     subSpan.className = "span_list";
     
-    if (monthHeight < 50) {
-    	monthHeight = 70;
-    }
-    
-    //리스트형, 달력형버튼으로 인한 높이 조정
-    var monthHeight2 = monthHeight; 
-    
     if (deptFlag != "true") { 
-    	monthHeight2 = monthHeight - (31 / 6);
+    	var monthHeight2 = monthHeight - 13.3;
+    	
+    	if (monthHeight2 < 90.66) {
+    		monthHeight2 = 90.66;
+        }
+    	
+    	subSpan.style.height = monthHeight2 + "px"
+    } else {
+    	if (monthHeight < 50) {
+        	monthHeight = 70;
+        }
+    	
+    	subSpan.style.height = monthHeight + "px"
     }
     
-    subSpan.style.height = monthHeight2 + "px"
     subSpan.setAttribute("name", "span_list");
     subTable.setAttribute("id", "TD_" + cell_ID + "_Value");
     subTable.className = "td_list";
