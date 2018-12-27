@@ -53,9 +53,6 @@
 					case 7:
 						url = "/admin/ezAttitude/attitudeAuthorManage.do";
 						break;
-					case 8:
-						url = "/admin/ezAttitude/attitudeAnnualManage.do";
-						break;
 				}
 				window.open(url, "attitude_main");
 			}
@@ -87,7 +84,6 @@
 				<h2><span onClick="moveToPage(5)"><spring:message code = 'ezAttitude.t5' /></span></h2>
 				<h2><span onClick="moveToPage(6)"><spring:message code = 'ezAttitude.t6' /></span></h2>
 				<h2><span onClick="moveToPage(7)"><spring:message code = 'ezAttitude.t8' /></span></h2>
-				<h2><span onClick="moveToPage(8)">근태연차현황관리</span></h2>
 			</div>
 		</div>
 	</body>
