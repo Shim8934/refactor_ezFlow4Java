@@ -551,14 +551,20 @@
 					},
 					success : function(result) {
 						for (var i = 0; i < result.holidayList.length; i++) {
+						var issolar = "";
+						if (result.holidayList[i].isSolar == "1") {
+	                        issolar = "1";
+						} else {
+	                        issolar = "2";
+						}
 							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
 								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
 																  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
-																  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
+																  issolar, result.holidayList[i].isRest == 1 ? true : false));
 							} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
 								yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
 																		  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
-																		  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
+																		  result.holidayList[i].holidayDate.substring(8,10), issolar,
 																		  result.holidayList[i].isRest == 1 ? true : false));
 							}
 						}
@@ -2049,14 +2055,14 @@
 		        	<dt class="timeInfoPic">
 		        		<c:choose>
 							<c:when test="${not empty userInfo.userFileUrl }">
-								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${userInfo.userFileUrl }" width="34px" height="34px">
+								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${userInfo.userFileUrl }" width="48px" height="48px">
 							</c:when>
 							<c:otherwise>
-								<img src="/images/kr/main/bestEmployee_pic_none.png" width="34px" height="34px">
+								<img src="/images/kr/main/bestEmployee_pic_none.png" width="48px" height="48px">
 							</c:otherwise>
 						</c:choose>
 		        	</dt>
-		            <dd class="timeInfoText"><span>${userInfo.displayName } ${userInfo.title } ㅣ ${userInfo.deptName }</span></dd>
+		            <dd class="timeInfoText"><span>${userInfo.displayName }</span><span>${userInfo.title }</span><span style="color:#aaa9a9">${userInfo.deptName }</span></dd>
 		        </dl>
 		        <dl class="timeIcconDL">
 		        	<dt class="timeIconDT"><img src="/images/ImgIcon/late_icon.png"></dt>
@@ -2086,7 +2092,7 @@
 				<td style="vertical-align:top;">
 					<c:if test="${deptFlag != 'true'}">
 						<div style="vertical-align:top;width:0px;height:0px;overflow:hidden;" class="time_stats" id="attiStatis"></div>
-						<div id="slideBtn" style="position:absolute;top:171px;right:2px;"><img id="slideImg" onclick="javascript:slideTd()" src="/images/ImgIcon/slideLeft.png" /></div>
+						<div id="slideBtn" style="position:absolute;top:164px;right:2px;"><img id="slideImg" onclick="javascript:slideTd()" src="/images/ImgIcon/slideLeft.png" /></div>
 					</c:if>
 					<c:if test="${deptFlag == 'true'}">
 						<div style="vertical-align:top;" class="time_stats" id="attiStatis"></div>
