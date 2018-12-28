@@ -4953,7 +4953,8 @@
               AND
                 BOARDID = #boardId#
               AND
-              	APPRFLAG = 'Y'
+              	(APPRFLAG = 'Y' 
+			     OR APPRFLAG IS NULL)
       ]]>
   </select>
   

@@ -156,7 +156,7 @@
 		            	            alert("<spring:message code='ezOrgan.t30' />")
 		            	        }
 		            			
-		    				    refresh_onclick();		            			
+		            	        retireUserList();		          // 2018-12-27 김민성 - 사원 삭제 후 refresh -> 리스트 조회로 변경  			
 		            	    }, 100);
 		            	},
 		            	error : function() {
@@ -167,7 +167,7 @@
 		            	    setTimeout(function() {
 		            			alert("<spring:message code='ezOrgan.t30' />");
 		            			
-		    				    refresh_onclick();		            			
+		            			retireUserList();		            			
 		            	    }, 100);
 		            	}
 		            });					
@@ -247,7 +247,7 @@
 			        	}
 			        });
 
-			        refresh_onclick();
+			        retireUserList();
 			    }
 			}
 			
