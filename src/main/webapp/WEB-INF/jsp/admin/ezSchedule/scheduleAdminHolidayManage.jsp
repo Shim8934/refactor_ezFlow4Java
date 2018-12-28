@@ -34,6 +34,7 @@
 		    function schedule_get_holiday() {
 		    	_RowObject = null;
 		    	var COMPANYID = "";
+		    	var holiday_url = "";
 		    	if (holidayType == "a") {
 		    		COMPANYID = parent.document.getElementById("ListCompany")[parent.document.getElementById("ListCompany").selectedIndex].value;
 		    		if (document.getElementById("ListYear").selectedIndex > -1) {
@@ -41,16 +42,19 @@
 		    		} else {
 		    			holidayYear = new Date().getFullYear();
 		    		}
+			    	holiday_url = "/ezSchedule/scheduleGetHolidayJsonYear.do"	
 		    	} else {
 		    		COMPANYID = "ALL";
+		    		holiday_url = "/ezSchedule/scheduleGetHolidayJson.do"
 		    	}
+		    	
 		    	
 		    	
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "json",
 		    		async : true,
-		    		url : "/ezSchedule/scheduleGetHolidayJsonYear.do",
+		    		url : holiday_url,
 		    		data : {
 		    			COMPANYID  : COMPANYID,		    			
 		    			holidayType : holidayType,
@@ -99,13 +103,13 @@
 		                           
 								
 		                        if (isUse == "1") {
-		                            if (i == (HolidaySize-1)) {
+		                            if (i != 0 && i == (HolidaySize-1)) {
 		                            	_html += "<td style='width:5%;padding-left:5px;border-bottom: none;'><input  type='checkbox' checked = true onclick='event_statuschange(this);'></td>";
 		                            } else {
 			                            _html += "<td style='width:5%;padding-left:5px;'><input  type='checkbox' checked = true onclick='event_statuschange(this);'></td>";
 		                            }
 		                        } else {
-		                            if (i == (HolidaySize-1)) {
+		                            if (i != 0 && i != 0 && i == (HolidaySize-1)) {
 		                            	_html += "<td style='width:5%;padding-left:5px;border-bottom: none;'><input  type='checkbox' onclick='event_statuschange(this);'></td>";
 		                            } else {
 			                            _html += "<td style='width:5%;padding-left:5px;'><input type='checkbox' onclick='event_statuschange(this);'></td>";
@@ -113,13 +117,13 @@
 		                        }
 	
 		                        if (userlang == "1") {
-		                            if (i == (HolidaySize-1)) {
+		                            if (i != 0 && i == (HolidaySize-1)) {
 		                            	_html += "<td style='width:30%;color:gray;border-bottom: none;'>" + MakeXMLString(holidayName) + "</td>";
 		                            } else {
 			                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(holidayName) + "</td>";
 		                            }
 		                        } else {
-		                            if (i == (HolidaySize-1)) {
+		                            if (i != 0 && i == (HolidaySize-1)) {
 		                            	_html += "<td style='width:30%;color:gray;border-bottom: none;'>" + MakeXMLString(holidayName2) + "</td>";
 		                            } else {
 			                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(holidayName2) + "</td>";
@@ -127,13 +131,13 @@
 		                        }
 	
 		                        if (isSolar == "1") {
-		                            if (i == (HolidaySize-1)) {
+		                            if (i != 0 && i == (HolidaySize-1)) {
 		                            	_html += "<td style='width:15%;color:gray;border-bottom: none;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
 		                            } else {
 			                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
 		                            }
 		                        } else {
-		                            if (i == (HolidaySize-1)) {
+		                            if (i != 0 && i == (HolidaySize-1)) {
 		                            	_html += "<td style='width:15%;color:gray;border-bottom: none;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
 		                            } else {
 			                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
@@ -149,20 +153,20 @@
 		                        } else {
 		                        	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
 		                        } */
-		                        if (i == (HolidaySize-1)) {
+		                        if (i != 0 && i == (HolidaySize-1)) {
 			                        _html += "<td style='width:15%;color:gray;border-bottom: none;'>" + holidayDate.substring(5, 10) + "</td>";
 	                            } else {
 	                            	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
 	                            }
 								
 		                        if (isRepeat == "1") {
-			                        if (i == (HolidaySize-1)) {
+			                        if (i != 0 && i == (HolidaySize-1)) {
 			                        	_html += "<td style='width:10%;color:gray;border-bottom: none;'>Y</td>";
 			                        } else{
 			                            _html += "<td style='width:10%;color:gray;'>Y</td>";
 			                        }
 		                        } else {
-		                        	if (i == (HolidaySize-1)) {
+		                        	if (i != 0 && i == (HolidaySize-1)) {
 		                        		_html += "<td style='width:10%;color:gray;border-bottom: none;'>N</td>";
 			                        } else{
 			                        	_html += "<td style='width:10%;color:gray;'>N</td>";
@@ -170,13 +174,13 @@
 		                        } 
 	
 		                        if (isRest == "1") {
-		                        	if (i == (HolidaySize-1)) {
+		                        	if (i != 0 && i == (HolidaySize-1)) {
 		                        		_html += "<td style='width:10%;color:gray;border-bottom: none;'>Y</td>";
 			                        } else{
 			                        	_html += "<td style='width:10%;color:gray;'>Y</td>";
 			                        }
 		                        } else {
-		                        	if (i == (HolidaySize-1)) {
+		                        	if (i != 0 && i == (HolidaySize-1)) {
 		                        		 _html += "<td style='width:10%;color:gray;border-bottom: none;'>N</td>";
 			                        } else{
 			                        	 _html += "<td style='width:10%;color:gray;'>N</td>";
@@ -193,14 +197,14 @@
 			                                    companyname = tempcompanylist[j].split(",")[1]; // [1]이름
 			                                }
 			                            }
-			                            if (i == (HolidaySize-1)) {
+			                            if (i != 0 && i == (HolidaySize-1)) {
 			                            	_html += "<td style='width:15%;color:gray;border-bottom: none;'>" + companyname + "</td>";
 				                        } else{
 				                        	_html += "<td style='width:15%;color:gray;'>" + companyname + "</td>";
 				                        }
 			                        }
 								} else {
-									if (i == (HolidaySize-1)) {
+									if (i != 0 && i == (HolidaySize-1)) {
 										_html += "<td style='width:15%;color:gray;border-bottom: none;'>" + "<spring:message code='ezSchedule.t267' />" + "</td>";
 			                        } else{
 			                        	_html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t267' />" + "</td>";
