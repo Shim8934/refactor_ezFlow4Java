@@ -358,8 +358,21 @@
 						} else if (resultStatus == "success") {
 	            			alert("<spring:message code='ezAttitude.t155'/>");
 			        		try {
-				        		window.opener.getAttitudeMainList();
-				        		window.opener.parent.frames["left"].getAttitudeList();
+			    				var calType = "";
+			    				var btnOnNodes = window.opener.document.getElementsByClassName("on");
+			    				for (var i = 0; i < btnOnNodes.length; i++) {
+			    					if (btnOnNodes[i].getAttribute("id") != null && btnOnNodes[i].getAttribute("id") == "btnTableList") {
+			    						calType = btnOnNodes[i].getAttribute("id");
+			    						break;
+			    					}
+			    				}
+			    				
+			    				if (calType == "btnTableList") {
+			    					window.opener.getAttitudeTableList();
+			    				} else {
+			    					window.opener.getAttitudeMainList();
+			    					window.opener.parent.frames["left"].getAttitudeList();
+			    				}
 			        		} catch (e) {	}
 			        		
 			        		window.close();

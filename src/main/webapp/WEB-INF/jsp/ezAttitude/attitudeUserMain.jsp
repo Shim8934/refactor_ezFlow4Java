@@ -324,6 +324,12 @@
 		        	$("#popup").css("left", popupX);
 		        	$("#popupDay").css("left", popupDayX);
 		        });
+				
+				//리스트형 날짜 클릭시 근태작성창
+				$(document).on('dblclick', '#contentlist .mainlist tr td:nth-child(6n - 5)', function() {
+					pMode = "new";
+					attitudeNewItem(this);
+				});
 			});
 			
 			window.onload = function() {
@@ -1740,7 +1746,7 @@
 	    			
 	    			tbodyHtml += "<tr class='" + dayClass + "' id='" + year + "-" + month + "-" + j + "'>";
 	    			if (LunarUse) {
-		    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ")</span></td>";//날짜
+		    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ")</span></td>";//날짜
 	    			} else {
 		    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
 	    			}
