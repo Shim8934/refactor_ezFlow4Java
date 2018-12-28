@@ -1467,7 +1467,7 @@
 						'$annualCnt$' AS CHANGE_ANNUAL_CNT,
 					</isEqual>
 					<isEqual property="flagCheck" compareValue="plus">
-						TOTAL_ANNUAL_CNT + CONVERT(#annualCnt#, UNSIGNED INTEGER) AS CHANGE_ANNUAL_CNT,
+						TOTAL_ANNUAL_CNT + CONVERT(#annualCnt#, DECIMAL(3,1)) AS CHANGE_ANNUAL_CNT,
 					</isEqual>
 				'$changeReason$' AS CHANGE_REASON,
 				NOW() AS CHANGE_DATE,
@@ -1510,7 +1510,7 @@
 					SET TOTAL_ANNUAL_CNT = #annualCnt#
 				</isEqual>
 				<isEqual property="flagCheck" compareValue="plus">
-					SET TOTAL_ANNUAL_CNT = TOTAL_ANNUAL_CNT + CONVERT(#annualCnt#, UNSIGNED INTEGER)
+					SET TOTAL_ANNUAL_CNT = TOTAL_ANNUAL_CNT + CONVERT(#annualCnt#, DECIMAL(3,1))
 				</isEqual>
 			WHERE
 				TENANT_ID = #tenantId#
