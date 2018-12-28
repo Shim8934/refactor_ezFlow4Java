@@ -1982,7 +1982,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			
 			rtnVal.append("</ROWS></LISTVIEWDATA>");
 		} else {
-			rtnVal.append("<LISTVIEWDATA><ROWS></ROWS></LISTVIEWDATA>");
+			rtnVal.append("<LISTVIEWDATA><TOTALCOUNT>0</TOTALCOUNT><ROWS></ROWS></LISTVIEWDATA>");
 		}
 		
 		logger.debug("getTitleUserList ended.");
