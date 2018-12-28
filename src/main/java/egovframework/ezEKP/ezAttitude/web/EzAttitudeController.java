@@ -654,6 +654,29 @@ public class EzAttitudeController {
 		if (status.equals("ok")) {
 			attitudeConfigVO = (JSONObject) resultBody.get("data");
 			model.addAttribute("attitudeConfigVO", attitudeConfigVO);
+			
+			//근태유형
+			url = gwServerUrl + " /rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudetypes";
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("userId", userInfo.getId())
+					.queryParam("typeIdArr", "A11,A12,A13");
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			
+			JSONArray typeList = new JSONArray();
+			
+			if(status.equals("ok")){
+				typeList = (JSONArray) resultBody.get("data");
+			}
+			
+			model.addAttribute("A11typeInfo", typeList.get(0));
+			model.addAttribute("A12typeInfo", typeList.get(1));
+			model.addAttribute("A13typeInfo", typeList.get(2));
 		}
 		
 		model.addAttribute("userInfo", userInfo);
