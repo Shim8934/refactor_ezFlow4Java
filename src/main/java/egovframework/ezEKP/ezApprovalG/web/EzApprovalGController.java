@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -36,8 +38,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -4394,115 +4394,106 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String[] fileTypes = xmlDom.getElementsByTagName("PTYPEINFO").item(0).getTextContent().split(separators);
 		String[] filePaths = xmlDom.getElementsByTagName("PPATHINFO").item(0).getTextContent().split(separators);
 		String[] fileNames = xmlDom.getElementsByTagName("PFILEINFO").item(0).getTextContent().split(separators);
-		
-		String serverPrimaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
 		ZipOutputStream zout = null;
 		InputStream inpStream = null;
 		String zipFilePath = null;
 		try{
-		File sourceDir = new File(realPath + commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID);
-		
-		if (sourceDir.exists()) {
-			sourceDir.delete();
-		}
-		
-		for (int k = 0; k < filePaths.length; k++) {
-			String sourcePath = realPath + filePaths[k];
-			String targetPath = "";
-			String fileName = fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
-	                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
+			File sourceDir = new File(realPath + commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID);
 			
-			if (fileTypes[k].equals("ATT")) {
-				targetPath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + fileName;
-			} else if (fileTypes[k].equals("ATTDOC")) {
-				// 2018.06.20 - 전자결재 KLIB 암/복호화
-				String fileExt = sourcePath.substring(sourcePath.lastIndexOf(".") + 1);
+			if (sourceDir.exists()) {
+				sourceDir.delete();
+			}
+			
+			for (int k = 0; k < filePaths.length; k++) {
+				String sourcePath = realPath + filePaths[k];
+				String targetPath = "";
+				String fileName = fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
+		                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
 				
+				if (fileTypes[k].equals("ATT")) {
+					targetPath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + fileName;
+				} else if (fileTypes[k].equals("ATTDOC")) {
+					// 2018.06.20 - 전자결재 KLIB 암/복호화
+					String fileExt = sourcePath.substring(sourcePath.lastIndexOf(".") + 1);
+					
+					if (fileExt.equals(EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+						fileExt = sourcePath.substring(0, sourcePath.lastIndexOf("."));
+						fileExt = fileExt.substring(fileExt.lastIndexOf(".") + 1);
+					}
+					
+					targetPath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + fileName + "." + fileExt; 
+				} else {
+					// 2018.06.20 - 전자결재 KLIB 암/복호화
+					// 중복소스코드 일단 제거 안 함 (코드가 추가될 가능성이 있고 사이드이펙트 우려)
+					String fileExt = sourcePath.substring(sourcePath.lastIndexOf(".") + 1);
+					
+					if (fileExt.equals(EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+						fileExt = sourcePath.substring(0, sourcePath.lastIndexOf("."));
+						fileExt = fileExt.substring(fileExt.lastIndexOf(".") + 1);
+					}
+					
+					targetPath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + fileName + "." + fileExt; 
+				}
+	
+				sourcePath = path + sourcePath.replace(realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+				targetPath = path2 + targetPath.replace(commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()), "");
+				
+				String dir = targetPath.substring(0, targetPath.lastIndexOf(commonUtil.separator));
+				File file1 = new File(dir);
+	
+				if (!file1.exists()) {
+					file1.mkdirs();
+				}
+	
+				File file2 = new File(targetPath);
+	
+				if (!file2.exists()) {
+					File file3 = new File(sourcePath);
+					FileUtils.copyFile(file3, file2);
+				}
+			}
+			
+			zipFilePath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + zipFileName + ".zip";
+	
+			byte[] buffer = new byte[1024];
+	
+			zout = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
+			
+			for (int k = 0; k < filePaths.length; k++) {
+				String fileName = fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
+		                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
+	
+				// 2018.06.20 - 전자결재 KLIB 암/복호화
+				String fileExt = filePaths[k].substring(filePaths[k].lastIndexOf(".") + 1);
+				// ezd 확장자로 암호화된 파일이라면 원래 확장자를 반환한다.
 				if (fileExt.equals(EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					fileExt = sourcePath.substring(0, sourcePath.lastIndexOf("."));
+					fileExt = filePaths[k].substring(0, filePaths[k].lastIndexOf("."));
 					fileExt = fileExt.substring(fileExt.lastIndexOf(".") + 1);
+					// 암호화된 파일의 바이트를 읽어온 후 복호화
+					byte[] encryptedFileBytes = Files.readAllBytes(new File(realPath + filePaths[k]).toPath());
+					// 인풋스트림에서 복호화한 바이트 배열을 쓰도록 한다.
+					inpStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedFileBytes));
+				} else {
+					// ezd 확장자가 아니라면 FileInputStream 으로 파일 자체를 읽도록 한다.
+					inpStream = new FileInputStream(new File(realPath + filePaths[k]));
 				}
 				
-				targetPath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + fileName + "." + fileExt; 
-			} else {
-				// 2018.06.20 - 전자결재 KLIB 암/복호화
-				// 중복소스코드 일단 제거 안 함 (코드가 추가될 가능성이 있고 사이드이펙트 우려)
-				String fileExt = sourcePath.substring(sourcePath.lastIndexOf(".") + 1);
-				
-				if (fileExt.equals(EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					fileExt = sourcePath.substring(0, sourcePath.lastIndexOf("."));
-					fileExt = fileExt.substring(fileExt.lastIndexOf(".") + 1);
+				if (fileName.indexOf("." + fileExt) == -1) {
+					fileName = fileName + "." + fileExt;
 				}
 				
-				targetPath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + fileName + "." + fileExt; 
+				zout.putNextEntry(new ZipEntry(fileName));
+	
+				int length = 0;
+				
+				while ((length = inpStream.read(buffer)) > 0) {
+					zout.write(buffer, 0, length);
+				}
+				
+				zout.closeEntry();
+				inpStream.close();
 			}
-
-			sourcePath = path + sourcePath.replace(realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
-			targetPath = path2 + targetPath.replace(commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()), "");
-			
-			String dir = targetPath.substring(0, targetPath.lastIndexOf(commonUtil.separator));
-			File file1 = new File(dir);
-
-			if (!file1.exists()) {
-				file1.mkdirs();
-			}
-
-			File file2 = new File(targetPath);
-
-			if (!file2.exists()) {
-				File file3 = new File(sourcePath);
-				FileUtils.copyFile(file3, file2);
-			}
-		}
-		
-		zipFilePath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + zipFileName + ".zip";
-
-		byte[] buffer = new byte[1024];
-
-		zout = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
-		
-		if (serverPrimaryLang.equals("3")) {
-			zout.setEncoding("shift-jis");
-		} else {
-			zout.setEncoding("EUC-KR");
-		}
-		
-		for (int k = 0; k < filePaths.length; k++) {
-			String fileName = fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
-	                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
-
-			// 2018.06.20 - 전자결재 KLIB 암/복호화
-			String fileExt = filePaths[k].substring(filePaths[k].lastIndexOf(".") + 1);
-			// ezd 확장자로 암호화된 파일이라면 원래 확장자를 반환한다.
-			if (fileExt.equals(EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-				fileExt = filePaths[k].substring(0, filePaths[k].lastIndexOf("."));
-				fileExt = fileExt.substring(fileExt.lastIndexOf(".") + 1);
-				// 암호화된 파일의 바이트를 읽어온 후 복호화
-				byte[] encryptedFileBytes = Files.readAllBytes(new File(realPath + filePaths[k]).toPath());
-				// 인풋스트림에서 복호화한 바이트 배열을 쓰도록 한다.
-				inpStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedFileBytes));
-			} else {
-				// ezd 확장자가 아니라면 FileInputStream 으로 파일 자체를 읽도록 한다.
-				inpStream = new FileInputStream(new File(realPath + filePaths[k]));
-			}
-			
-			// if (fileName.indexOf("." + filePaths[k].substring(filePaths[k].lastIndexOf(".") + 1)) == -1) {
-			// 	fileName = fileName + "." + filePaths[k].substring(filePaths[k].lastIndexOf(".") + 1);
-			// }
-			
-			if (fileName.indexOf("." + fileExt) == -1) {
-				fileName = fileName + "." + fileExt;
-			}
-			
-			zout.putNextEntry(new ZipEntry(fileName));
-
-			int length = 0;
-			
-			while ((length = inpStream.read(buffer)) > 0) {
-				zout.write(buffer, 0, length);
-			}
-		}
 		} catch (FileNotFoundException fnfe) {
 			logger.debug("fnfe: {}", fnfe);
 		} catch (IOException ioe) {
@@ -4510,21 +4501,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} catch (Exception e) {
 			logger.debug("e: {}", e);
 		} finally {
-			if (zout != null) {
+			if (inpStream != null) {
 				try {
-					zout.closeEntry();
+					inpStream.close();
 				} catch (Exception ignore) {
 					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
 		    }
-			if (inpStream != null) {
+			if (zout != null) {
 				try {
-					inpStream.close();
 					zout.close();
 				} catch (Exception ignore) {
 					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
-		    }
+			}
 		}
 		
 		logger.debug("saveTotalDoc ended.");
