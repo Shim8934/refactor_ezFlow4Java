@@ -18,6 +18,8 @@
 	    .mainlist_free tr th:first-child {
 	    		padding-left:10px;
 	    }
+	    .preview_info {background: #f1f3f5; margin: 0px; padding: 0px; overflow: hidden; border-top: 1px solid #e5e5e5; height: 35px;}
+	    .preview_title {display: inline-block;margin-top: -6px;margin-left: 13px;}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -27,6 +29,11 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" language="javascript">
 			var pUse_Editor = "<c:out value='${use_editor}'/>";
+			var totalCnt = 0;
+			var CurPage = 1;
+			var totalPage = 0;
+			var pageSize = 15;
+			var BlockSize = 10;
 	    	
 	    	document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -84,13 +91,151 @@
 		                listview.DataBind("AddJobListView");
 		                checkbox_header();
 		                
+		                var list = document.getElementById("lvAddJobList");
+		                
+		                console.log(list);
+		                var a = document.getElementById("previewmail");
+		                a.style.display = "none";
+		                //2018-12-28 문성업 -페이징 함수
+		                makePageSelPage();
 		        	},
 		        	error : function(error){
 		        		alert("<spring:message code='ezOrgan.t2' />" + error);
 		        	}
 		        });		        
 		    }
+		    //2018-12-28 문성업 -페이징
+		    function td_Create1(strtext) {
+		        document.getElementById("tblPageRayer").innerHTML = strtext;
+		    }
 		    
+		    function goToPageByNum(Value) {
+		        CurPage = Value;
+		        makePageSelPage();
+		        movePage(CurPage);
+		    }
+		    
+		    function selbeforeBlock() {
+		        var pageNum = parseInt(CurPage);
+		        pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+		        goToPageByNum(pageNum);
+		    }
+		    
+		    function selbeforeBlock_one() {
+		        var pageNum = parseInt(CurPage);
+		        if (parseInt(pageNum - 1) > 0) {
+		            goToPageByNum(parseInt(pageNum - 1));
+		        } else {
+		            return;
+		        }
+		    }
+		    
+		    function selafterBlock() {
+		        var pageNum = parseInt(CurPage);
+		        pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+		        goToPageByNum(pageNum);
+		    }
+		    
+		    function selafterBlock_one() {
+		        var pageNum = parseInt(CurPage);
+		        if (parseInt(pageNum + 1) <= totalPage) {
+		            goToPageByNum(parseInt(pageNum + 1));
+		        } else {
+		            return;
+		        }
+		    }
+
+		    function movePage(newPage) {
+		        if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
+		            CurPage = newPage;
+		            AddJob_List();
+		        }
+		    }
+			
+			function makePageSelPage() {
+		        var strtext;
+		        var PagingHTML = "";
+		        document.getElementById("tblPageRayer").innerHTML = "";
+		        strtext = "<div class='pagenavi'>";
+		        PagingHTML += strtext;
+		        var pageNum = CurPage;
+		        
+		        if (totalPage > 1 && pageNum != 1) {
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' /></span>";
+		            PagingHTML += strtext;
+		        } else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' /></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        if (totalPage > BlockSize) {
+		            if (pageNum > BlockSize) {
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' /></span>";
+		                PagingHTML += strtext;
+		            } else {
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' /></span>";
+		                PagingHTML += strtext;
+		            }
+		        } else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' /></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        var MaxNum;
+		        var i;
+		        var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+		        
+		        if (totalPage >= (startNum + parseInt(BlockSize))) {
+		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
+		        } else {
+		            MaxNum = totalPage;
+		        }
+		        
+		        for (i = startNum; i <= MaxNum; i++) {
+		            if (i == pageNum) {
+		                strtext = "<span class='on'>" + i + "</span>";
+		                PagingHTML += strtext;
+		            } else {
+		                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+		                PagingHTML += strtext;
+		            }
+		        }
+		        
+		        if (i == 1) {
+		        	strtext = "<span class='on'>" + i + "</span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        if (totalPage > BlockSize) {
+		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' /></span>";
+		                PagingHTML += strtext;
+		            } else {
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' /></span>";
+		                PagingHTML += strtext;
+		            }
+		        } else {
+		            strtext = "";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' /></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' /></span>";
+		            PagingHTML += strtext;
+		        } else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' /></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        PagingHTML += "</div>";
+		        td_Create1(PagingHTML);
+		    }
+			
+			/*2018-12-28 문성업 -페이징 끝*/
+			
 		    var clickTabID = "1tab1";
 		    function ChangeTab(obj) {
 		        var pSelectTab = obj.getAttribute("divname");
@@ -222,6 +367,16 @@
 		                    
 		                    var a = document.getElementById("preview_nodata");
 		                    a.style.display = "none";
+		                    var b = document.getElementById("previewmail");
+		                    b.style.display = "block";
+		                    
+		                    //2018-12-28 문성업 row 이벤트 추가
+		                    var header_info = listview.GetSelectedRows()[0].getAttribute("id");
+		                    var headerTitle = document.getElementById(header_info).getElementsByTagName("td")[2].textContent;
+		                    var headerTitle2 = document.getElementById(header_info).getElementsByTagName("td")[3].textContent;
+		                    
+		                    document.getElementById("preview_title").textContent = headerTitle;
+		                    document.getElementById("preview_title2").textContent = headerTitle2 +"<spring:message code='ezOrgan.mse4' />";
 		                    document.getElementById("AddJobList").appendChild(DivLayer);
 		                }	
 		        	}
@@ -573,22 +728,33 @@
 	                <p id="AddJob_sub1"><span divname="AddJob1" id="1tab1"><spring:message code='ezOrgan.t00017' /></span></p>               
 		        </div> --%>
 		    </div> 
-		    <table style="width:1400px; border-collapse: separate;">
+		    <table style="width:100%; border-collapse: separate;">
 		        <tr>
 		            <td style="width:750px">
 		                <div class="listview" style="Width:750px;">
-		                    <div id="AddJobListView" style="border: 0px solid #ddd; Width: 750px; Height:540PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+		                    <div id="AddJobListView" style="border: 0px solid #ddd; Width: 750px; Height:700px; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+		                    <div id="tblPageRayer" style="Width:100%;text-align:center;"></div>
 		                </div>
 		            </td>
-		            <td style="padding-left:3px; vertical-align:top; border: 1px solid #ddd;">
+		            <td style="vertical-align:top; border: 1px solid #ddd;">
 		                 <div id="preview_nodata" class="preview_nodata">
 			                  <dl class="nodata_sIcon">
 				              <dt><img src="/images/kr/main/noData_sIcon.png"></dt>
 				              <dd id="nodata_title" style="font-family: malgun gothic">선택된 겸직이 없습니다.</dd>
 			                  </dl>
 		                 </div>
-		                 <div style="height:100%; width:450px;" id="AddJobList" >
-		                </div>      
+		              <div class="previewmail" id="previewmail">
+		                 <div class="preview_info">
+		                     <div id="Preview_HeaderH">
+						<p class="preview_header">
+						   <span class="preview_title" id="preview_title"></span>
+						   <span class="preview_title2" id="preview_title2"></span>
+						</p>
+		              </div>
+		              </div>
+		                 <div id="AddJobList" style="height:100%; width:450px; padding: 20px 10px 0px 10px;">
+		                </div>
+		              </div> 
 		            </td>
 		        </tr>
 		    </table>    
