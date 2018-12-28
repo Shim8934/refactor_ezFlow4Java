@@ -93,12 +93,20 @@
             var listview = new ListView();
             listview.SetID("lvJobList");
             listview.SetMulSelectable(false);
-            listview.SetRowOnClick("job_userList");
+            //listview.SetRowOnClick("job_userList");
+            listview.SetRowOnClick("job_userList_click");
             listview.SetSelectFlag(true);
             listview.SetRowOnDblClick("job_view");
             listview.SetHeightFree(true);
             listview.DataSource(headerData);
             listview.DataBind("jobListView");
+		}
+		
+		function job_userList_click() {
+			pCurPage = 1;
+			pSearchValue = "";
+			$("#searchValue").val("");
+			job_userList();
 		}
 		
 		/* (직위/직책) 사용중인 유저리스트 호출 */
@@ -154,9 +162,9 @@
 			    if (oRows.length > 0) {
 			    	xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
 			    	$(xmlRtn.getElementsByTagName("ROW")).each(function(index) {
-		            	if($(this).find("DATA5").text() == "ADDJOB") {
-		            		var orgPosition = $(this).find("CELL").eq(2).find("VALUE").text();
-		            		$(this).find("CELL").eq(2).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+		            	if($(this).find("DATA5").text() == "addJob") {
+		            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+		            		$(this).find("CELL").eq(3).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
 		            	}
 		            });
 			    	
@@ -292,22 +300,19 @@
 	        
 	        var oArrRows = listview.GetSelectedRows();
 	        if (oArrRows != 0) {
-	        	if (oArrRows[0].getAttribute("DATA5") != "ADDJOB") {
-					var args = new Array();
-						args[0] = oArrRows[0].getAttribute("DATA1");
-						args[1] = oArrRows[0].getAttribute("DATA2");
-						args[2] = oArrRows[0].getAttribute("DATA4");
-						args[3] = oArrRows[0].getAttribute("DATA3");
-						args[4] = pCompanyID;
-					
-				    userinfo_dialogArguments[0] = args;
-				    userinfo_dialogArguments[1] = info_user_complete;
-				    
-				    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
-				    try { OpenWin.focus(); } catch (e) { }
-	        	} else {
-	        		alert("<spring:message code='ezOrgan.psb02' />");
-	        	}
+				var args = new Array();
+					args[0] = oArrRows[0].getAttribute("DATA1");
+					args[1] = oArrRows[0].getAttribute("DATA2");
+					args[2] = oArrRows[0].getAttribute("DATA4");
+					args[3] = oArrRows[0].getAttribute("DATA3");
+					args[4] = pCompanyID;
+					args[5] = oArrRows[0].getAttribute("DATA5");
+				
+			    userinfo_dialogArguments[0] = args;
+			    userinfo_dialogArguments[1] = info_user_complete;
+			    
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
+			    try { OpenWin.focus(); } catch (e) { }
 	        }
 		}
 		
@@ -590,6 +595,11 @@
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
+			<NAME><spring:message code='ezOrgan.t68' /></NAME>
+			<WIDTH>100</WIDTH>
+			<STYLE>border-top:0px;</STYLE>
+			</HEADER>
+			<HEADER>
 			<NAME><spring:message code='ezOrgan.t69' /></NAME>
 			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
@@ -638,6 +648,11 @@
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t67' /></NAME>
+			<WIDTH>100</WIDTH>
+			<STYLE>border-top:0px;</STYLE>
+			</HEADER>
+			<HEADER>
+			<NAME><spring:message code='ezOrgan.t68' /></NAME>
 			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
