@@ -2432,7 +2432,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		int limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
 		
 		String searchStartTime = searchYear + "-01-01 00:00:00";
-		String searchEndTime = searchYear + "-12-31 59:59:59";
+		String searchEndTime = searchYear + "-12-31 23:59:59";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);

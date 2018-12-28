@@ -1417,6 +1417,12 @@
 		<isNotEmpty prepend="AND" property="searchTitle">
 			A.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
+		<isNotEmpty property="limit">
+			<![CDATA[
+				LIMIT
+					#limit#, #listSize#
+			]]>
+		</isNotEmpty>
 	</select>
 
 	<select id="ezAttitudeAdminDAO.getAllAnnualCount" parameterClass="Map" resultClass="INTEGER">

@@ -58,11 +58,8 @@
 			            document.getElementById("ListCompany").selectedIndex = 0;
 		    		}
 		    		
-		            company_change();
+		    		company_change();
 		        }
-	    		
-	    		//
-	    		getAnnualList();
 	    	});
 			    
 		    $(window).on("resize", function(){
@@ -78,8 +75,8 @@
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
 			
-	    	function company_change(){
-	    		pCompanyId = $("select[name=ListCompany]").val();
+	    	function company_change() {
+	    		pCompanyId = document.getElementById("ListCompany").value;
 	    		getAnnualList();
 	    	}
 	    	
@@ -89,7 +86,7 @@
 	        }
 	    	
 	    	function getAnnualList() {
-	    		var searchYear = document.getElementById("searchYear");
+	    		var searchYear = document.getElementById("searchYear").value;
 	    		
 	    		$.ajax({
 	    			data : "GET",
