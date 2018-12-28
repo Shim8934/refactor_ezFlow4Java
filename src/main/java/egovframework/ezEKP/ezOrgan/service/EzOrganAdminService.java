@@ -106,8 +106,6 @@ public interface EzOrganAdminService {
 	
 	public String getTitleList(String type, String companyID, int tenantID) throws Exception;
 	
-	public String getTitlePageList(String type, String companyID, int totalCount, int pageCount, int pageSize, int currentPage, int tenantID) throws Exception;
-	
 	public String getTitleInfo(String type, String jobID, String companyID, int tenantID) throws Exception;
 
 	public String updateTitle(String type, String jobID, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception;

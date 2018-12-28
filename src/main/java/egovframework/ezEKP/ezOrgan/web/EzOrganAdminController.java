@@ -3409,33 +3409,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	/*
-	 * 직함관리 직위/직책  페이징 처리 리스트 호출 메서드
-	 * */
-	@RequestMapping(value="/admin/ezOrgan/jobTitleListPageView.do", produces="application/text; charset=utf8")
-	@ResponseBody
-	public String jobTitleListPageView(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
-		logger.debug("jobTitleListView started.");
-		
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String type = request.getParameter("type");
-		String companyID = request.getParameter("companyID");
-		
-		int currentPage = 1, pageSize = 15;
-		
-		int totalCount = ezOrganAdminService.getTitleListCnt(type, companyID, userInfo.getTenantId());
-		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
-		
-		if (request.getParameter("page") != null) {
-			currentPage = Integer.parseInt(request.getParameter("page"));
-		}
-		
-		String result = ezOrganAdminService.getTitlePageList(type, companyID, totalCount, pageCount, pageSize, currentPage, userInfo.getTenantId());
-		
-		logger.debug("jobTitleListView ended.");
-		return result;
-	}
-	/*
 	 * 직함관리 직위/직책 리스트 호출 메서드
 	 * */
 	@RequestMapping(value="/admin/ezOrgan/jobTitleListView.do", produces="application/text; charset=utf8")

@@ -2139,12 +2139,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		return (List<OrganJobVO>) list("EzOrganAdminDAO.selectTitleList", map);
 	}
     
-    @SuppressWarnings("unchecked")
-	public List<OrganJobVO> getTitlePageList(Map<String, Object> map) throws Exception {
-		return (List<OrganJobVO>) list("EzOrganAdminDAO.selectTitlePageList", map);
-	}
-    
-    
     public OrganJobVO getTitleInfo(Map<String, Object> map) throws Exception {
 		return (OrganJobVO) select("EzOrganAdminDAO.selectTitleInfo", map);
 	}
