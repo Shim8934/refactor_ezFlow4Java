@@ -250,10 +250,11 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 .employeeList {margin-left: 110px;}
 
 /* ManageOrgan */
-.listview.organ{margin-bottom:2px;} 
-.OrganListView {border: 0px solid #ddd; Width: 375px; Height: 510px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll;}
+.listview.organ{border-bottom:none;} 
+.OrganListView {border: 0px solid #ddd; Width: 375px; Height: 482px; overflow-x: hidden; BACKGROUND-COLOR: white;}
 .pwd, .move {margin-left:15px; margin-top:3px;}
 .deptMaster {float:right;}
 .retire {margin-left:5px; margin-top:3px;}
 .imgbtn.search{margin-top:-1px;}
 .imgbtn.order{margin-top:2px;}
+.tblPageRayerOrgan {float:right; border: 1px solid #ddd; border-top:none; margin-top: -20px}
