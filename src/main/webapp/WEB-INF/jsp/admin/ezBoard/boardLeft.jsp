@@ -57,8 +57,9 @@
 	            }
 	        }
  
+	        /* 2018-12-28 홍승비 - 게시판그룹명 > div -> span 태그로 변경된 부분 id 찾도록 수정 */
 		    function BoardRedirect() {
-		        var spans = document.getElementById("TopBoard").getElementsByTagName("div");
+		        var spans = document.getElementById("TopBoard").getElementsByClassName("h2Title");
 		        for (var i = 0 ; i < spans.length ; i++) {
 		            if (spans[i].getAttribute("value") == RedirectBoardGroupID) {
 		                LoadTreeViewByPath(spans[i], RedirectBoardID, RedirectBoardGroupID);
@@ -66,27 +67,30 @@
 		        }
 		    }
 		    
+	        /* 2018-12-28 홍승비 - 하위게시판 찾는 코드 변경된 태그로 수정 */
 		    function LoadTreeViewByPath(pObjSpan, pBoardID, pBoardGroupID) {
-	            pObjSpan.parentElement.onclick();
-	            var TreeCtrl = getFirstChild(pObjSpan.parentElement);
-	            TreeCtrl.onclick();
+	            pObjSpan.onclick();
 
 	            var selectItem;
 	            var totalboard = "";
 	            
+	            // 하위게시판 전체 div를 얻는 부분
 	            if (pObjSpan.parentElement.nextSibling.nodeType == 1) {
 	                totalboard = getFirstChild(pObjSpan.parentElement.nextSibling)
 	            }else{
 	                totalboard = getFirstChild(pObjSpan.parentElement.nextSibling.nextSibling)
 	            }
-
-	            var cnt = totalboard.children[0].getElementsByTagName("div").length;
+	            
+	            var cnt = totalboard.children[0].getElementsByTagName("div").length; 
+	            // 게시판그룹에 속한 하위게시판들의 갯수를 얻는다.         
 
 	            for (var i = 0; i < cnt; i++) {
+	            	
+	            	// 각 하위게시판의 div를 얻는다. (class -> node_div, node_select)
 	                if (RedirectBoardID == totalboard.children[0].getElementsByTagName("div")[i].getAttribute("data1")) {
 	                    selectItem = totalboard.children[0].getElementsByTagName("div")[i];
 	                    break;
-	                }else{
+	                } else { // 리다이렉트 게시판ID와 div의 게시판ID가 일치하지 않는 경우 -> 하위게시판의 하위게시판을 확인
 	                    var parentNodeid = totalboard.children[0].getElementsByTagName("div")[i].id;
 	                    var imgtag = "imgNode_" + totalboard.children[0].getElementsByTagName("div")[i].id;
 	                    
@@ -98,40 +102,47 @@
 	                    cnt += rtnval
 	                }
 	            }
-	            selectItem.getElementsByTagName("span")[0].onclick();
+	            
+	            // img 태그가 span 태그로 바뀌면서 여러 span을 찾게 되므로, 노드레밸을 계산해서 적용
+	            var spanLevel = parseInt(selectItem.getAttribute("nodelevel")) + 2;
+	            selectItem.getElementsByTagName("span")[spanLevel].onclick(); // 일단 기존에 선택한 게시판이 다시 선택된다.
 	            var tempid = selectItem.id.split("_");
-	            var tempidlength = tempid.length;
+	            var tempidlength = tempid.length; // 해당 게시판이 속한 게시판의 하위게시판 갯수만큼 카운트한다.
 	            var clicknode = new Array();
 	            
 	            if (CrossYN()) {
 	                for (var i = 0; i < tempidlength; i++) {
 	                    if (selectItem.getAttribute("DATA3") != pBoardGroupID) {
-	                        if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1){
+	                        if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1) {
 	                            clicknode[i] = selectItem.id;
-	                        }else{
+	                        } else {
 	                            i--;
 	                        }
-	                        selectItem = selectItem.parentElement;
-	                    }else if(selectItem.getAttribute("DATA3") == pBoardGroupID) {
+	                        // 현재 span이 부모로 존재하기 때문에, 여러번 parentElement를 찾아야 한다.
+	                        selectItem = selectItem.parentElement.parentElement.parentElement.parentElement;
+	                    } else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
 	                        selectItem.childNodes[0].onclick();
-	                        var j = clicknode.length;
+	                        var j = clicknode.length; // 목표 게시판의 nodeLevel과 동일하다.
 	                        
-	                        for (var k = j; k > 0; k--) {
+	                        // 마지막 확장(k = 1 -> [0]이 되는 경우)은 불필요하므로 건너뛴다.
+	                        for (var k = j; k > 1; k--) {
+	                        	// 스크립트 에러가 나긴 하는데 익스펜드는 이 이전까지만 되서 정상적임
+	                        	// k가 마지막(1)일때는 클릭을 패스하자.
 	                            document.getElementById(clicknode[k - 1]).childNodes[k - 1].onclick();
 	                        }
 	                        return;
 	                    }
 	                }
-	            }else{
+	            } else {
 	                for (var i = 0; i < tempidlength; i++) {
 	                    if (selectItem.getAttribute("DATA3") != pBoardGroupID) {
-	                        if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1){
+	                        if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1) {
 	                            clicknode[i] = selectItem.id;
-	                        }else{
+	                        } else {
 	                            i--;
 	                        }
 	                        selectItem = selectItem.parentElement;
-	                    }else if(selectItem.getAttribute("DATA3") == pBoardGroupID) {
+	                    } else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
 	                        selectItem.childNodes[0].click();
 	                        var j = clicknode.length;
 	                        
@@ -331,12 +342,14 @@
 	                    break;
 	            }
 	        }
+	        
+	        /* 2018-12-28 홍승비 - '+/-' 아이콘 > img -> span 태그로 변경된 부분 id 찾도록 수정 */
 	        function SearchTreeViewByPath(imgtag, parentNodeid) {
-	            if (imgtag.indexOf("sub") == -1 && document.getElementById(imgtag).src.indexOf("plus") > -1) {
+	            if (imgtag.indexOf("sub") == -1 && document.getElementById(imgtag).className.indexOf("plus") > -1) {
 	                document.getElementById(imgtag).onclick();
 	                document.getElementById(imgtag).onclick();
 	                return 0;
-	            }else{
+	            } else {
 	                return document.getElementById(parentNodeid).childNodes.length;
 	            }
 	        }	   
