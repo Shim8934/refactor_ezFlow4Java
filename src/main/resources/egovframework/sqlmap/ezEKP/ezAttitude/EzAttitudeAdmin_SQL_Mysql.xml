@@ -1520,6 +1520,8 @@
 				TENANT_ID = #tenantId#
 			AND
 				COMPANY_ID = #companyId#
+			AND
+				YEAR = #year#
 	</insert>
 	
 </sqlMap>
