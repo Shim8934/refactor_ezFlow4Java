@@ -21,20 +21,15 @@
 		.previewmail_info {border-bottom: 1px solid #e5e5e5;}
 		.previewmail_bar_h {display: inline-block; width: 5px; height: 690px;}
 		.preContent_RayerH {position: absolute; display: inline-block; width: 49%;}
-		.preview_header {margin: 0px 0px 5px 0px; padding: 10px 0px 0px 0px; font-weight: bold; height: 36px; line-height: 37px;}
+		.preview_header {padding: 0px; font-weight: bold; height: 11px; line-height: 11px;}
 		.preview_title {display: inline-block; margin-top: -6px; margin-left: 13px;}
-		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC;}
+		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC; font-size: 11px;}
 		.preview_content {width: 97%; height: 630px; border: solid 0px green; display: inline-block; padding:10px;}
 		.preview_nodata {position: absolute; display: inline-block; width: 49%; vertical-align: middle; text-align: center; margin-top: 70px;}
 	</style>
 	<script type="text/javascript">
 		var Tab1_flag = true;
 		var Tab1_SelectID = "";	//001:직위관리, 002:직책관리
-		var totalCount;
-		var totalPage = "";
-		var blockSize = 10;
-		var pageNum = 1;
-		var pageSize = 15;
 		
 		$(document).ready(function() {
 			compChange();
@@ -58,13 +53,12 @@
 			$.ajax({
             	type : "POST",
             	dataType: "text",
-            	url : "/admin/ezOrgan/jobTitleListPageView.do",
+            	url : "/admin/ezOrgan/jobTitleListView.do",
             	async : false,
             	data : 
             	{
             		type : type,
-            		companyID : companyID,
-            		page: pageNum
+            		companyID : companyID
             	},
             	success : function (result) {
             		xmldom = loadXMLString(result);
@@ -95,22 +89,7 @@
             listview.DataSource(headerData);
             listview.DataBind("JobListView");
 			
-			if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
-				totalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
-				pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
-			} else if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
-				//IE11일때 추가
-				totalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
-				pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
-			} else {
-				totalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
-				pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
-			}
-			
-			totalPage = Math.ceil(new Number(totalCount / pageSize));
-			
 			makeUseSwitch();
-			makePageSelPage();
 		}
 		/* 추가, 수정, 삭제 Button Action (mode=Add,Mod,Del) */
 		var titleInfo_dialogArguments = new Array();
@@ -385,13 +364,12 @@
 			$.ajax({
             	type : "POST",
             	dataType: "text",
-            	url : "/admin/ezOrgan/jobTitleListPageView.do",
+            	url : "/admin/ezOrgan/jobTitleListView.do",
             	async : false,
             	data : 
             	{
             		type : type,
-            		companyID : companyID,
-            		page: pageNum
+            		companyID : companyID
             	},
             	success : function (result) {
             		xmldom = loadXMLString(result);
@@ -422,20 +400,7 @@
             listview.DataSource(headerData);
             listview.DataBind("JobListView");
 			
-			if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
-				totalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
-				pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
-			} else if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
-				//IE11일때 추가
-				totalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
-				pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
-			} else {
-				totalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
-				pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
-			}
-			
 			makeUseSwitch();
-			makePageSelPage();
 		}
 		/* 직책을 사용중인 유저리스트 호출 Method */
 		function JobPosition_UserList() {
@@ -470,7 +435,7 @@
 	            });
 				
 				var selectedId = oArrRows[0].getAttribute("id");
-				var selectedTitle = document.getElementById(selectedId).getElementsByTagName("td")[0].textContent;
+				var selectedTitle = document.getElementById(selectedId).getElementsByTagName("td")[1].textContent;
 				var count = SelectSingleNodeValueNew(xmldom, "TOTALCNT");
 				
 				document.getElementById("preview_title").textContent = selectedTitle + " 리스트";
@@ -505,7 +470,6 @@
 		function ChangeTab(obj) {
 			document.getElementById("JobListView").innerHTML = "";
 			document.getElementById("JobUserListView").innerHTML = "";
-			pageNum = 1;
 			
 			if (obj.id == "001") {
 				JobTitle_List();
@@ -569,6 +533,7 @@
 			var length = table.rows.length;
 			for (var i = 1; i < length; i++) {
 				var useTd     = table.rows[i].cells[3];
+				if (!useTd) { break; }
 				
 				var labelElmt = document.createElement("label");
 				var inputElmt = document.createElement("input");
@@ -640,124 +605,6 @@
 				});
 			}
 		}
-		
-		/* 페이징 관련 메소드 */
-		function makePageSelPage() {
-			var strtext;
-			var pagingHTML = "<div class='pagenavi'>";
-			
-			document.getElementById("tblPageRayer").innerHTML = "";
-			//document.getElementById("mailBoxInfo").innerHTML = "<span style='color:#017BEC;'> " + totalCount + " </span>";
-			
-			if (totalPage > 1 && pageNum != 1) {
-				strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
-				pagingHTML += strtext;
-			} else {
-				strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
-				pagingHTML += strtext;
-			}	
-
-			if (totalPage > blockSize) {
-				if (pageNum > blockSize) {
-					strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
-					pagingHTML += strtext;
-				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
-					pagingHTML += strtext;
-				}
-			} else {
-				strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
-				pagingHTML += strtext;
-			}
-
-			var MaxNum;
-			var i;
-			var startNum = (parseInt((pageNum - 1) / blockSize) * blockSize) + 1;
-			
-			if (totalPage >= (startNum + parseInt(blockSize))) {
-				MaxNum = (startNum + parseInt(blockSize)) - 1;
-			} else {
-				MaxNum = totalPage;
-			}
-			
-			for (i = startNum; i <= MaxNum; i++) {
-				if (i == pageNum) {
-					strtext = "<span class='on'>" + i + "</span>";
-					pagingHTML += strtext;
-				} else {
-					strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
-					pagingHTML += strtext;
-				}
-			}
-			
-			if (i == 1) {
-				strtext = "<span class='on'>" + i + "</span>";
-				pagingHTML += strtext;
-			}
-			
-			if (totalPage > blockSize) {
-				if (totalPage >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
-					strtext = "";
-					strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
-					pagingHTML += strtext;
-				} else {
-					strtext = "";
-					strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
-					pagingHTML += strtext;
-				}
-			} else {
-				strtext = "";
-				strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
-				pagingHTML += strtext;
-			}
-			
-			if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-				strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
-				pagingHTML += strtext;
-			} else {
-				strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
-				pagingHTML += strtext;
-			}
-					
-			pagingHTML += "</div>";
-			td_Create(pagingHTML);
-		}
-		
-		function td_Create(strtext) {
-			document.getElementById("tblPageRayer").innerHTML = strtext;
-		}
-		
-		function goToPageByNum(Value) {
-			pageNum = Value;
-			compChange();
-			makePageSelPage();
-		}
-		
-		function selbeforeBlock() {
-			pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
-			goToPageByNum(pageNum);
-		}
-		
-		function selbeforeBlock_one() {
-			if (parseInt(pageNum - 1) > 0) {
-				goToPageByNum(parseInt(pageNum - 1));
-			} else {
-				return;
-			}
-		}
-		
-		function selafterBlock() {
-			pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
-			goToPageByNum(pageNum);
-		}
-		
-		function selafterBlock_one() {
-			if (parseInt(pageNum + 1) <= totalPage) {
-				goToPageByNum(parseInt(pageNum + 1));
-			} else {
-				return;
-			}
-		}
 	</script>
 </head>
 <body class="mainbody" style="overflow: hidden;">
@@ -791,7 +638,6 @@
 	<div class="mainview">
 		<div class="listview" style="border: 0px;">
 			<div id="JobListView" style="height: 600px; width: 100%; overflow-y:auto;"></div>
-			<div id="tblPageRayer"></div>
 		</div>
 	</div>
 	
@@ -810,7 +656,7 @@
 			</div>
 			
 			<div class="preview_content">
-				<div class="listview">
+				<div class="listview" style="border-top: 1px solid #ddd; border-left: none; border-right: none; border-bottom: none;">
 					<div id="JobUserListView" style="height: 610px; width: 100%; overflow-y:auto;"></div>
 				</div>
 			</div>
@@ -876,7 +722,7 @@
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t285' /></NAME>
-			<WIDTH>190</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
     	</HEADERS>
@@ -934,7 +780,7 @@
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t285' /></NAME>
-			<WIDTH>190</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
     	</HEADERS>

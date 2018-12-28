@@ -44,7 +44,8 @@
 		<result property="extensionAttribute10" 				column="extensionAttribute10" 			columnIndex="8"/>
 		<result property="extensionAttribute102" 				column="extensionAttribute102" 			columnIndex="9"/>
 		<result property="extensionAttribute14" 				column="extensionAttribute14" 			columnIndex="10"/>
-		<result property="updateDT" 							column="UpdateDT" 						columnIndex="11"/>
+		<result property="mobile" 								column="mobile" 						columnIndex="11"/>
+		<result property="updateDT" 							column="UpdateDT" 						columnIndex="12"/>
 	</resultMap>
 	
 	<resultMap id="userCnList" class="OrganUserVO">
@@ -3429,6 +3430,7 @@
 		<![CDATA[
 			SELECT
 				CN ,
+				MOBILE ,
                 DISPLAYNAME ,
                 DISPLAYNAME2 ,
                 DESCRIPTION ,
@@ -4255,30 +4257,6 @@
 			TENANT_ID = #v_TENANTID#
 		ORDER BY
 			SORT
-	</select>
-	<select id="EzOrganAdminDAO.selectTitlePageList" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
-		SELECT 
-			JOBID,
-			TYPE, 
-			CN, 
-			DISPLAYNAME, 
-			DISPLAYNAME2, 
-			USEFLAG, 
-			SORT, 
-			CREATEDATE,
-			COMPANYID
-		FROM 
-			TBL_USER_JOBMASTER
-		WHERE 
-			TYPE = #v_TYPE#
-		AND
-			COMPANYID = #v_COMPANYID# 
-		AND 
-			TENANT_ID = #v_TENANTID#
-		ORDER BY
-			SORT
-		LIMIT
-			#v_START#, #v_COUNT#
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleInfo" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
 	<![CDATA[

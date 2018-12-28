@@ -1852,49 +1852,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public String getTitlePageList(String type, String companyID, int totalCount, int pageCount, int pageSize, int currentPage, int tenantID) throws Exception {
-		logger.debug("getTitleList started.");
-
-		StringBuffer rtnVal = new StringBuffer();
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_TYPE", type);
-		map.put("v_COMPANYID", companyID);
-		map.put("v_COUNT", pageSize);
-		map.put("v_START", (currentPage - 1 ) * pageSize);
-		map.put("v_TENANTID", tenantID);
-		
-		List<OrganJobVO> jobList = ezOrganAdminDao.getTitlePageList(map);
-		
-		rtnVal.append("<LISTVIEWDATA>");
-		rtnVal.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
-		rtnVal.append("<PAGECNT>" + pageCount + "</PAGECNT>");
-		rtnVal.append("<CURPAGE>" + currentPage + "</CURPAGE>");
-		rtnVal.append("<ROWS>");
-		
-		if (jobList != null && jobList.size() > 0) {
-			for (int i = 0; i < jobList.size(); i++) {
-				rtnVal.append("<ROW>");
-				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName() + "]]></VALUE>");
-				rtnVal.append("<DATA1>" + jobList.get(i).getJobID() + "</DATA1>");
-				rtnVal.append("<DATA2>" + jobList.get(i).getType()  + "</DATA2>");
-				rtnVal.append("<DATA3>" + jobList.get(i).getSort()  + "</DATA3>");
-				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4></CELL>");
-				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></VALUE></CELL>");
-				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getUseFlag() + "</VALUE></CELL>");
-				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getSort() + "</VALUE></CELL>");
-				rtnVal.append("</ROW>");
-			}
-		}
-		
-		rtnVal.append("</ROWS></LISTVIEWDATA>");
-		
-		logger.debug("getTitleList ended.");
-		
-		return rtnVal.toString();
-	}
-	
-	@Override
 	public String getTitleInfo(String type, String jobID, String companyID, int tenantID) throws Exception {
 		logger.debug("getTitleInfo started.");
 

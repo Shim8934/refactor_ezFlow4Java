@@ -17,6 +17,10 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<style>
+			.selectedTR {background-color: #f1f8ff; cursor:pointer;}
+			.unselectedTR:hover {background-color: #f4f5f5; cursor:pointer;}
+		</style>
 		<script type="text/javascript" language="javascript">
 			var CurPage = 1;
 			var totalPage = "${totalPage}";
@@ -63,7 +67,13 @@
 						onSelect: function(selected) {
 							$('#startDatepicker').datepicker("option", "maxDate", selected)
 						}
-					});    	    	
+					});
+					
+					var nowDate = new Date();
+					$("#startDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+					$("#startDatepicker").datepicker('setDate', nowDate);
+					$("#endDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+					$("#endDatepicker").datepicker('setDate', nowDate);
 				});
 				
 				
@@ -188,8 +198,10 @@
 			        for (var i = 0 ; i < document.getElementsByName("chk").length ; i++) {
 			            if (document.getElementsByName('checkbox').item(0).checked == true) {
 			                document.getElementsByName("chk").item(i).checked = true;
+			                document.getElementsByName("chk").item(i).parentElement.parentElement.className = "selectedTR";
 			            } else {
 			                document.getElementsByName("chk").item(i).checked = false;
+			                document.getElementsByName("chk").item(i).parentElement.parentElement.className = "unselectedTR";
 			            }
 			        }
 			    }
@@ -475,31 +487,31 @@
 				 retireUserList();
 		    }
 			
-			//**/ 초기화버튼
+			//**/ 날짜 초기화버튼
 			function reset() {
 				$('#startDatepicker').val('');				
 				$('#endDatepicker').val('');				
-				$('#searchKeyword').val('');
 			}
 			
 			 //**/ 새로고침 클릭시 이벤트
 		    function reload() {
-		    	retireUserList();
+				document.getElementById("checkAll").checked = false;
+				retireUserList();
 		    }
 			 
 			 //**/ 퇴직자 검색
 			function retireUserList() {
-				 $.ajax ({
+				$.ajax ({
 					 type : "POST",
 					 async : false,
 					 dataType : "json",
 					 url : "/admin/ezOrgan/getRetireUserList.do",
 					 data : {
 						 "page" : CurPage,						 
-						 "searchStartDate" : $('#startDatepicker').val(),
-						 "searchEndDate" : $('#endDatepicker').val(),
-						 "searchKeycode" : $('#searchKeycode').val(),
-						 "searchKeyword" : $('#searchKeyword').val(),
+						 "searchStartDate" : $('#startDatepicker').is(":enabled")? $('#startDatepicker').val() : "",
+						 "searchEndDate"   : $('#endDatepicker').is(":enabled")? $('#endDatepicker').val() : "",
+						 "searchKeycode"   : $('#searchKeycode').val(),
+						 "searchKeyword"   : $('#searchKeyword').val(),
 						 "searchCompanyID" : $("#ListCompany").val()
 					 },
 					 success : function(data) {
@@ -517,13 +529,14 @@
 							 html += "</tr>";
 						 } else {
 							 data.list.forEach(function(i,v){
-								html += "<tr>";
+								html += "<tr class='unselectedTR' onclick='clickRow(event)'>";
 								html += "    <td width='20' style='padding:0'>";
-								html += "        <input type='checkbox' name='chk' id='chk' value='" + i.cn + "'/>";
+								html += "        <input type='checkbox' onclick='selectCheckBox()' name='chk' id='chk' value='" + i.cn + "'/>";
 								html += "    </td>";
 								
 								if (lang == '' || lang == 1) {
 									html += "<td>" + (i.description != null ? i.description : " ") + "</td>";
+									html += "<td>" + (i.cn != null ? i.cn : " ") + "</td>";
 									html += "<td style='cursor:pointer' onclick=ShowUserInfo('" + i.cn + "')>" + i.displayName + "</td>";
 									html += "<td>" + (i.title  != null ? i.title : " ") + "</td>";
 									html += "<td>" + (i.extensionAttribute10  != null ? i.extensionAttribute10 : " ")+ "</td>";
@@ -531,11 +544,13 @@
 								
 								else if (lang != '' || lang != 1) {
 									html += "<td>" + (i.description2 != null ? i.description2 : " ") + "</td>";
+									html += "<td>" + (i.cn != null ? i.cn : " ") + "</td>";
 									html += "<td style='cursor:pointer' onclick=ShowUserInfo('" + i.cn + "')>" + i.displayName2 + "</td>";
 									html += "<td>" + (i.title2  != null ? i.title2 : " ") + "</td>";
 									html += "<td>" + (i.extensionAttribute102  != null ? i.extensionAttribute102 : " ")+ "</td>";
 								}
 								
+								html += "<td>" + (i.mobile != null ? i.mobile : " ") + "</td>";
 								html += "<td>" + i.updateDT + "</td>";
 								html += "</tr>";
 							 });
@@ -567,7 +582,49 @@
 		    $(function(){
 	    		windowResize();
 		    });
-
+			
+			var usepostDate = false;
+			function dateSearch() {
+				if (usepostDate){
+					usepostDate = false;
+						$("#startDatepicker").datepicker('disable');
+						$("#endDatepicker").datepicker('disable');
+				} else {
+					usepostDate = true;
+						$("#startDatepicker").datepicker('enable');
+						$("#endDatepicker").datepicker('enable');
+				}
+			}
+			
+			function clickRow(event) {
+				var currentRow = event.currentTarget;
+				var crrClass   = currentRow.className;
+				
+				var tableList  = document.getElementById("retireUserList");
+				var length = tableList.rows.length;
+				
+				for (var i = 0; i < length; i++) {
+					tableList.rows[i].className = "unselectedTR";
+					tableList.rows[i].firstElementChild.firstElementChild.checked = false;
+				}
+					
+				currentRow.className = "selectedTR";
+				currentRow.firstElementChild.firstElementChild.checked = true;
+			}
+			
+			function selectCheckBox() {
+				event.stopPropagation();
+				
+				var checkboxElmt = event.currentTarget;
+				var currentRow   = checkboxElmt.parentElement.parentElement;
+				
+				if (checkboxElmt.checked) {
+					currentRow.className = "selectedTR";
+				}
+				else {
+					currentRow.className = "unselectedTR";
+				}
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -588,50 +645,49 @@
                 	<li><span onClick="mod_password()"><spring:message code='ezOrgan.t90'/></span></li>
                 </c:if>
                 <li><span class="icon16 icon16_delete" onClick="Delete_onclick()"></span></li>
+                <li><span class="icon16 icon16_refresh" onClick="reload()"></span></li>
 		  	</ul>
 		</div>
-		<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #ddd;">
-		<tr>
-			<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
-				<span id="topmenu" style="width: 500px"><spring:message code='ezOrgan.0hun01'/> : &nbsp;
-					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
-					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
-				</span> 
-				&nbsp;&nbsp;
-				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1062'/>: &nbsp;
+		<table class="content">
+			<tr>
+				<th><spring:message code='ezStatistics.t1062'/></th>
+				<td>
 					<select id="searchKeycode" style="height:24px"> 
 						<option value="userName"><spring:message code='ezOrgan.t67'/></option>
 						<option value="deptName"><spring:message code='ezOrgan.t68'/></option>
 						<option value="userId"><spring:message code='ezOrgan.t218'/></option>
 					</select>
-					<input type="text" id="searchKeyword" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
-					<a class="imgbtn" style="height:22px">
+					<input type="text" id="searchKeyword" style="width: 150px; margin-top: 2px; vertical-align: unset;" onKeyDown="return keyword_onkeydown(event)"/>
+					<a class="imgbtn imgbck" style="height:22px; margin-top: 2px;">
 						<span onclick="search();"><spring:message code='ezOrgan.t101'/></span>
 					</a>
-					<a class="imgbtn" style="height:22px">
-						<span onclick="reset();"><spring:message code='ezOrgan.0hun02'/></span>
-					</a>
-					<a class="imgbtn" style="height:22px">
-						<span onclick="reload();"><spring:message code='ezOrgan.0hun03'/></span>
-					</a>
-				</span> 
-			</td>
-		</tr>
+				</td>
+			</tr>
+			<tr>
+				<th><spring:message code='ezOrgan.0hun01'/></th>
+				<td>
+					<input type="checkbox" id="usepostdate" onclick="dateSearch()"><label for="usepostdate" style="margin-top: 2px; line-height: 26px;">검색기간 사용</label>
+					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: 2px; vertical-align: unset;" readonly="readonly" disabled/> ~ 
+					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: 2px; vertical-align: unset;" readonly="readonly" disabled/>
+				</td>
+			</tr>
 		</table>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		<div id="contentlist" style="width:100%; height: 653px; overflow: auto; margin-top:5px">
 			<div>
-				<table class="mainlist" style="width:100%">
+				<table id="retireUserList" class="mainlist" style="width:100%">
 					<thead style> 
 				    	<tr>
-				      		<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" onclick="funCheckBox('set','a')" /></th>
-				      		<th style="width:150px;"><spring:message code='ezOrgan.t68'/></th>
-				      		<th style="width:100px;"><spring:message code='ezOrgan.t67'/></th>
-				      		<th style="width:100px;"><spring:message code='ezOrgan.t69'/></th>
-				      		<th style="width:100px;"><spring:message code='ezOrgan.t1500'/></th>
-				      		<th><spring:message code='ezOrgan.t313'/></th>
+				      		<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
+				      		<th style="width:200px;"><spring:message code='ezOrgan.t68'/></th>
+				      		<th style="width:200px;">아이디</th>
+				      		<th style="width:200px;"><spring:message code='ezOrgan.t67'/></th>
+				      		<th style="width:200px;"><spring:message code='ezOrgan.t69'/></th>
+				      		<th style="width:200px;"><spring:message code='ezOrgan.t1500'/></th>
+				      		<th style="width:200px;"><spring:message code='ezOrgan.t96'/></th>
+				      		<th style="width:200px;"><spring:message code='ezOrgan.t313'/></th>
 				   		</tr>
 			   		</thead>
 				   	<!-- list -->
