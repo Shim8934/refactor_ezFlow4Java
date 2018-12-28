@@ -635,12 +635,12 @@ var SurveyItem = function() {
 	
 	function itemDblClickHandler(trObj) {
 		var itemId   = trObj.getAttribute("role");
-		openFileDetail(itemId);
+		openSurveyDetail(itemId);
 	}
 	
-	function openFileDetail(itemId) {
+	function openSurveyDetail(itemId) {
 		if(itemPopup) {itemPopup.close();}
-		itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(780, 750));
+		itemPopup = window.open("/ezCabinet/surveyDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(780, 750));
 	}
 	
 	function generatePreviewElmt(divElmt) {
@@ -681,7 +681,7 @@ var SurveyItem = function() {
 		var dlElmt      = divElmt.querySelector("dl[class='cabPrevItem']");
 		var parentDiv   = divElmt.parentElement;
 		
-		spanIcon.onclick        = function(e) {openFileDetail(itemInfo["itemId"]);};
+		spanIcon.onclick        = function(e) {openSurveyDetail(itemInfo["itemId"]);};
 		spanSubject.textContent = itemInfo["title"];
 		spanDate.textContent    = itemInfo["createdDate"].substring(0, 19);
 		spanSubject.setAttribute("title", itemInfo["title"]);
