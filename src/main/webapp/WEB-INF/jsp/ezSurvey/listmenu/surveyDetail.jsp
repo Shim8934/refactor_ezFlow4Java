@@ -64,14 +64,25 @@
 	$(function() {
 		var survey = ${survey};
 		var surveyId = survey.surveyId;
+		var logicFlagQs = [];
+		var allLogics = [];
+
 		getQuestions();
 		
 		event();
 		
 		function event() {
 			$(".prevQsArea").on("click", "input[name^=qstn]", function () {
-				var logic = $(this).attr("logic");
-				console.log(logic);
+				var logic = $(this) .attr("logic");
+				/* 
+				var qstnList = SurveyCreate.getQs;
+				for (var i = logic + 1; i < qstnList.length; i++) {
+					var logicFlag = qstnList[i]['logicFlag'];
+					if (logicFlag == undefined || logicFlag == 0) {
+						$("#mask" + (i + 1)).remove();
+					}
+				}
+				 */
 			});
 		}
 		
@@ -91,53 +102,99 @@
 					}
 					SurveyCreate.setQsForm(4);
 					
-					getAllLogicNums();
-					
+					getAllLogicFlagQs();
+					console.log(logicFlagQs);
+					console.log(allLogics);
 				},
 				error : function(error) {
 					alert(SurveyMessages.strError);
 				}
 			});
 		}
-		
-		function getAllLogicNums() {
-			var QsList = SurveyCreate.getQs();
-			var stop = "";
+		// logicFlag가 1인 question id 수집
+		function getAllLogicFlagQs() {
+			var qstnList = SurveyCreate.getQs();
 			
-			for (var i = 0; i < QsList.length; i++) {
-				var array = [];
-				var logicFlag = QsList[i]['logicFlag'];
+			for (var i = 0; i < qstnList.length; i++) {
+				var qstn = qstnList[i];
+				var logicFlag = qstn['logicFlag'];
 				
 				if (logicFlag == 1) {
-					var options = QsList[i]['option'];
-					
-					for (var j = 0; j < options.length; j++) {
-						var option = options[j];
-						var logic = option['logic'];
-						
-						if (logic != -1) {
-							array.push(logic);
-							console.log(array);
-						}
-						
-					}
-					
-					array.sort();
-					qsDisable(array);
-					console.log(array);
+					logicFlagQs.push(i + 1);
 				}
 			}
+			
+			for (var i = 0; i < logicFlagQs.length; i++) {
+				var logicQsNum = logicFlagQs[i] - 1;
+				getLogicNums(logicQsNum);
+			}
+		}
+		// logic을 가진 질문들의 logic number 수집
+		function getLogicNums(qstnNo) {
+			var qstn = SurveyCreate.getQs()[qstnNo];
+			var options = qstn['option'];
+			var arr = [];
+			
+			for (var j = 0; j < options.length; j++) {
+				var option = options[j];
+				var logic = option['logic'];
+				
+				if (logic != -1) {
+					if (j == 0) {
+						arr.push(logic);
+					
+					} else if (j != 0 && arr[0] != logic) {
+						arr.push(logic);
+					}
+				}
+			}
+			test(qstnNo + 1, arr);
+		}
+		// 다음 분기 이전까지의 질문 묶음 생성
+		function test(qstnLevel, array) {
+			array.sort(function(f, n) {return f-n;});
+			
+			var QsList = SurveyCreate.getQs();
+			var bigArr = [];
+			var reArr = [];
+			
+			for (var i = 0; i < array.length; i++) {
+				var start = array[i] - 1;
+				
+				var smallArr = [];
+				for (var j = start; j < QsList.length; j++) {
+					var logicFlag = QsList[j]['logicFlag'];
+					
+					if (logicFlag != 1) {
+						smallArr.push(j + 1);
+					} else {
+						smallArr.push(j + 1);
+						reArr.push(j + 1);
+						break;
+					}
+				}
+				smallArr.splice(0, 0, qstnLevel);
+				bigArr.push(smallArr);
+			}
+			allLogics.push(bigArr);
 		}
 		
+		/* 
 		function qsDisable(array) {
+			array.sort(function(f, n) {return f-n;});
+			console.log(array);
+			//var arrLength = parseInt(array.length);
+			
 			var orders = "";
 			var wrapper = "";
 			var height = "";
 			var width = "";
+			var startNum = array[0];
+			var endNum = array[array.length -1] + 1;
+			//var endNum = lastNum + 1; 
 			
-			for (var i = 0; i < array.length; i++) {
-				orders = array[i];
-				wrapper = $("#prevQstn" + orders);
+			for (var i = startNum; i < endNum; i++) {
+				wrapper = $("#prevQstn" + i);
 				
 				var result = checkMask(wrapper);
 
@@ -145,22 +202,21 @@
 					height = wrapper.height();
 					width = wrapper.width();
 					
-					var mask = $("<div id='mask" + orders + "'></div>");
+					var mask = $("<div id='mask" + i + "'></div>");
 					wrapper.prepend(mask);
-					wrapper.find("#mask" + orders).css({'width': width, 'height': height, 'background-color' : 'gray', 'opacity' : '0.5', 'position' : 'absolute'});
+					wrapper.find("#mask" + i).css({'width': width, 'height': height, 'background-color' : 'gray', 'opacity' : '0.5', 'position' : 'absolute'});
 				}
 			}
 		}
-		
+		 */
 		function checkMask(wrapper) {
-			console.log(wrapper);
 			var mask = wrapper.find("div[id^=mask]");
 			
-			if (mask.length != 0) {
-				return "pass";
+			if (mask.length == 0) {
+				return "make";
 
 			} else {
-				return "make";
+				return "pass";
 			}
 		}
 		

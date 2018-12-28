@@ -222,11 +222,13 @@ var SurveyCreate    = function() {
 		surveyObj["infor"]["attach"] = attachList;
 		console.log(JSON.stringify(surveyObj["infor"]["users"]));
 	}
-	
+////	
 	function afterSaveSuccessfully(data) {
 		var code = data.code;
 		switch(code) {
-			case 0 : alert(SurveyMessages.strSave)    ; break;
+			case 0 : alert(SurveyMessages.strSave)    ;
+			         window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
+			         break;
 			case 1 : alert(SurveyMessages.strParamErr); break;
 			case 2 : alert(SurveyMessages.strError)   ; break;
 			default: alert(SurveyMessages.strError)   ; return;
