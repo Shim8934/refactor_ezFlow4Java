@@ -2068,18 +2068,24 @@
 		        	<dt class="timeIconDT"><img src="/images/ImgIcon/late_icon.png"></dt>
 		            <dd class="timeIconDD">지각 <span class="timeCountR" id="FA02">0</span></dd>
 		        </dl>
-		        <dl class="timeIcconDL">
-		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
-		            <dd class="timeIconDD">연차 <span class="timeCountR" id="FA11">0</span></dd>
-		        </dl>
-		        <dl class="timeIcconDL">
-		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
-		            <dd class="timeIconDD">오전반차 <span class="timeCountR" id="FA12">0</span></dd>
-		        </dl>
-		        <dl class="timeIcconDL">
-		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
-		            <dd class="timeIconDD">오후반차 <span class="timeCountR" id="FA13">0</span></dd>
-		        </dl>
+		        <c:if test="${A11typeInfo.isuse eq '1' }">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
+			            <dd class="timeIconDD">연차 <span class="timeCountR" id="FA11">0</span></dd>
+			        </dl>
+		        </c:if>
+		        <c:if test="${A12typeInfo.isuse eq '1' }">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
+			            <dd class="timeIconDD">오전반차 <span class="timeCountR" id="FA12">0</span></dd>
+			        </dl>
+			    </c:if>
+			    <c:if test="${A13typeInfo.isuse eq '1' }">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
+			            <dd class="timeIconDD">오후반차 <span class="timeCountR" id="FA13">0</span></dd>
+			        </dl>
+			    </c:if>
 		    </div>
 	    </c:if>
 		
