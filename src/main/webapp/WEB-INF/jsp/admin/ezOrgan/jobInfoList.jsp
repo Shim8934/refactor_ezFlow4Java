@@ -33,6 +33,8 @@
 		var searchType = "";
 		var searchValue = "";
 		
+		var lastClickRow;
+		
 		$(document).ready(function() {
 			compChange();
 		});
@@ -221,6 +223,12 @@
 				var pJobNM = oArrRows[0].firstChild.innerText;
 				var pCompanyID = $("#ListCompany option:selected").val();
 				
+				if (lastClickRow != oArrRows[0]) {
+					pCurPage = 1;
+					searchValue = "";
+					document.getElementById("searchValue").value = "";
+				}
+				
 				$.ajax({
 	            	type : "POST",
 	            	dataType: "text",
@@ -262,6 +270,8 @@
 			    
 			    var _html = "<span>&nbsp;" + pJobNM + "-[" + "<span class='countColor'>" + pTotalCnt + "<spring:message code = 'main.t20000'/></span>]</span>";
 			    document.getElementById("jobTotalInfoRayer").innerHTML = _html;
+			    
+			    lastClickRow = oArrRows[0];
 			}
 			
 			document.getElementById("JobUserListView").innerHTML = "";
@@ -403,6 +413,12 @@
 				var pJobNM = oArrRows[0].firstChild.innerText;
 				var pCompanyID = $("#ListCompany option:selected").val();
 				
+				if (lastClickRow != oArrRows[0]) {
+					pCurPage = 1;
+					searchValue = "";
+					document.getElementById("searchValue").value = "";
+				}
+				
 				$.ajax({
 	            	type : "POST",
 	            	dataType: "text",
@@ -438,6 +454,8 @@
 			    
 			    var _html = "<span>&nbsp;" + pJobNM + "-[" + "<span class='countColor'>" + pTotalCnt + "<spring:message code = 'main.t20000'/></span>]</span>";
 			    document.getElementById("jobTotalInfoRayer").innerHTML = _html;
+			    
+			    lastClickRow = oArrRows[0];
 			}
 			
 			document.getElementById("JobUserListView").innerHTML = "";
@@ -459,6 +477,10 @@
 			document.getElementById("JobListView").innerHTML = "";
 			document.getElementById("JobUserListView").innerHTML = "";
 			document.getElementById("jobTotalInfoRayer").innerHTML = "";
+			
+			pCurPage = 1;
+			searchValue = "";
+			document.getElementById("searchValue").value = "";
 			
 			if (obj.id == "001") {
 				JobTitle_List();
@@ -553,7 +575,7 @@
 	    		_html += "<span class='on'>1</span>";
 	    	}
 	    	
-	    	if (parseInt(pCurPage / pBlockSize) < parseInt(pTotalPage / pBlockSize)) {
+	    	if (pTotalPage >= parseInt(((parseInt((pCurPage - 1) / pBlockSize) + 1) * pBlockSize) + 1)) {
 	    		_html += "<span class='btnimg' onclick='return goToNextBlock()'><img src='/images/sub/btn_next.gif'></span>";
 	    	} else {
 	    		_html += "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
@@ -571,16 +593,44 @@
 	    }
 	    function goToPageNum(page) {
 	    	pCurPage = page;
-	    	compChange();
+	    	
+	    	if (Tab1_SelectID == "001") {
+				JobTitle_UserList();
+			} else {
+				JobPosition_UserList();
+			}
 	    }
 	    function goToNextBlock() {
 	    	pCurPage = parseInt((pCurPage - 1) / pBlockSize ) * pBlockSize + pBlockSize + 1;
-	    	compChange();
+	    	
+	    	if (Tab1_SelectID == "001") {
+				JobTitle_UserList();
+			} else {
+				JobPosition_UserList();
+			}
 	    }
 	    function goToPrevBlock() {
 	    	pCurPage = parseInt((pCurPage - 1) / pBlockSize ) * pBlockSize - pBlockSize + 1;
-	    	compChange();
+	    	
+	    	if (Tab1_SelectID == "001") {
+				JobTitle_UserList();
+			} else {
+				JobPosition_UserList();
+			}
 	    }
+	    function search() {
+	    	searchType = document.getElementById("searchType").value;
+	    	searchValue = document.getElementById("searchValue").value;
+	    	
+	    	if (Tab1_SelectID == "001") {
+				JobTitle_UserList();
+			} else {
+				JobPosition_UserList();
+			}
+	    }
+	    function keyword_Clear(obj) {
+		    obj.value = "";
+		}
 	</script>
 </head>
 <body class="mainbody">
@@ -604,7 +654,7 @@
 	<script type="text/javascript">
 		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");        
 	</script>
-	<div class="portlet_tabpart01" style="width: 1160px;">
+	<div class="portlet_tabpart01" style="width: 1210px;">
 		<div class="portlet_tabpart01_top" id="tab1">
 			<p><span id="001"><spring:message code='ezOrgan.csj02' /></span></p>
 			<p><span id="002"><spring:message code='ezOrgan.csj15' /></span></p>
@@ -617,18 +667,23 @@
 		<tr>
 			<td>
 				<div class="listview">
-					<div id="JobListView" style="height: 435px; width: 540px; overflow-y:auto;"></div>
+					<div id="JobListView" style="height: 435px; width: 500px; overflow-y:auto;"></div>
 				</div>
 			</td>
 			<td>
 				<div style="width: 5px;"></div>
 			</td>
 			<td>
-				<div style="border: 1px solid #e8e8e8; border-bottom: 0px; height: 32px;">
-					<div id="jobTotalInfoRayer" style="line-height: 30px;"></div>
+				<div style="border: 1px solid #e8e8e8; border-bottom: 0px; height: 30px;">
+					<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;"></div>
+					<div id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px;">
+						<select id="searchType" style="height: 26px; width: 50px;"><option value="displayname"><spring:message code='main.t76' /></option></select>
+						<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onmousedown="keyword_Clear(this);" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px;">
+						<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.gif" style="width: 26px; height: 26px; margin-top:2px;" border="0" onClick="search()"></a>
+					</div>
 				</div>
 				<div class="listview" style="border-bottom: 0px;">
-					<div id="JobUserListView" style="height: 355px; width: 610px; overflow-y:auto;"></div>
+					<div id="JobUserListView" style="height: 356px; width: 700px; overflow-y:auto;"></div>
 				</div>
 				<div id="JobUserListPageRayer" style="border: 1px solid #ddd; border-top: 0px;"></div>
 			</td>

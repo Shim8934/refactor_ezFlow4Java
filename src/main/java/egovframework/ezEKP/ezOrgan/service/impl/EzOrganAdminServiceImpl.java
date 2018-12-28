@@ -1944,13 +1944,16 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PAGENUM", pageNum);
 		
 		if (!searchType.equals("") && !searchValue.equals("")) {
-			map.put("v_SEARCHTYPE", searchType);
-			map.put("v_SEARCHVALUE", searchValue);
+			StringBuffer sb = new StringBuffer();
+			if (searchType.equals("displayname")) {
+				sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%'");
+			}
+			map.put("v_SUBQUERY", "WHERE " + sb.toString());
 		}
 		
 		List<OrganUserVO> userList = ezOrganAdminDao.getTitleUserList(map);
 		
-		int totalCnt = getTitleUserListCnt(type, jobID, companyID, tenantID);
+		int totalCnt = ezOrganAdminDao.getTitleUserListCnt2(map);
 		
 		if (userList != null && userList.size() > 0) {
 			rtnVal.append("<LISTVIEWDATA>");
