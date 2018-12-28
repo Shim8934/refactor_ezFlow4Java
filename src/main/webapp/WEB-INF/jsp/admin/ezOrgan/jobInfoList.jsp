@@ -15,15 +15,33 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	<style type="text/css">
+		.countColor {
+	    		color:#017BEC;
+    	}
+	</style>
 	<script type="text/javascript">
 		var Tab1_flag = true;
 		var Tab1_SelectID = "";	//001:직위관리, 002:직책관리
+		
+		var pTotalPage = 0;
+		var pTotalCnt = 0;
+		var pPageSize = 10;
+		var pBlockSize = 10;
+		var pCurPage = 1;
+		
+		var searchType = "";
+		var searchValue = "";
+		
+		var lastClickRow;
 		
 		$(document).ready(function() {
 			compChange();
 		});
 		/* 회사선택 SelectBox Action */
 		function compChange() {
+			document.getElementById("jobTotalInfoRayer").innerHTML = "";
+			
 			if (Tab1_SelectID == "001") {
 				JobTitle_List();
 				JobTitle_UserList();
@@ -71,7 +89,7 @@
             listview.SetID("lvJobTitleList");
             listview.SetMulSelectable(false);
             listview.SetRowOnClick("JobTitle_UserList");
-            listview.SetSelectFlag(false);
+            listview.SetSelectFlag(true);
             listview.SetRowOnDblClick("JobTitleView");
             listview.SetHeightFree(true);
             listview.DataSource(headerData);
@@ -83,7 +101,6 @@
 			var companyID = $("#ListCompany option:selected").val();
 			var companyNM = $("#ListCompany option:selected").text();
 			var type = Tab1_SelectID;
-// 			var cn;
 			var jobID;
 			
 			var jobList = new ListView();
@@ -106,21 +123,15 @@
 					}
 					return;
 				} else {
-// 					cn = oArrRows[0].getAttribute("DATA1");
 					jobID = oArrRows[0].getAttribute("DATA1");
 				}
 			}
 			/* 추가, 수정의 경우 팝업창 호출 */
 			if (mode == "Add" || mode == "Mod") {
 				var url = "/admin/ezOrgan/jobTitlePopupUI.do?type=" + type + "&mode=" + mode + "&companyID=" + companyID;
-				/* 수정의 경우 CN 추가 GET 파라미터 전송 */
-// 				if (mode == "Mod") {
-// 					url += "&cn=" + encodeURIComponent(cn);
-// 				}
 				
 				var args = new Array();
 				args[0] = companyNM;
-// 				args[1] = cn;
 				args[1] = jobID;
 				
 				titleInfo_dialogArguments[0] = args;
@@ -130,7 +141,6 @@
 				try { OpenWin.focus(); } catch (e) { }
 			/* 삭제의 경우 직위가 사용중인지 확인 후, 삭제처리 */
 			} else if (mode == "Del") {
-// 				if (!checkTitleUserCnt(cn)) {
 				if (!checkTitleUserCnt(jobID)) {
 					if (type == "001") {
 						alert("<spring:message code = 'ezOrgan.csj13'/>");
@@ -148,7 +158,6 @@
 		            	async : false,
 		            	data : 
 		            	{
-// 		            		cn : cn,
 		            		jobID : jobID,
 		            		type : type,
 		            		companyID : companyID
@@ -210,6 +219,16 @@
 			jobList.LoadFromID("lvJobTitleList");
 			var oArrRows = jobList.GetSelectedRows();
 			if (oArrRows != 0) {
+				var pJobID = oArrRows[0].getAttribute("DATA1");
+				var pJobNM = oArrRows[0].firstChild.innerText;
+				var pCompanyID = $("#ListCompany option:selected").val();
+				
+				if (lastClickRow != oArrRows[0]) {
+					pCurPage = 1;
+					searchValue = "";
+					document.getElementById("searchValue").value = "";
+				}
+				
 				$.ajax({
 	            	type : "POST",
 	            	dataType: "text",
@@ -217,10 +236,13 @@
 	            	async : false,
 	            	data : 
 	            	{
-// 	            		cn : oArrRows[0].getAttribute("DATA1"),
-	            		jobID : oArrRows[0].getAttribute("DATA1"),
+	            		jobID : pJobID,
 	            		type : Tab1_SelectID,
-	            		companyID : $("#ListCompany option:selected").val()
+	            		companyID : pCompanyID,
+	            		pageSize : pPageSize,
+	            		pageNum : pCurPage,
+	            		searchType : searchType,
+	            		searchValue : searchValue
 	            	},
 	            	success : function (result) {
 	            		xmldom = loadXMLString(result);
@@ -232,9 +254,24 @@
 				var oRows = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
 			    if (oRows.length > 0) {
 					xmlRtn = xmldom.documentElement.getElementsByTagName("ROWS")[0];
+					$(xmlRtn.getElementsByTagName("ROW")).each(function(index){
+		            	if($(this).find("DATA5").text() == "ADDJOB"){
+		            		var orgPosition = $(this).find("CELL").eq(2).find("VALUE").text();
+		            		$(this).find("CELL").eq(2).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+		            	}
+		            });
 		            Node = headerData.importNode(xmlRtn, true);
 		            headerData.documentElement.appendChild(Node);
+		            
+		            pTotalCnt = Number(SelectSingleNodeValueNew(xmldom, "LISTVIEWDATA/TOTALCOUNT"));
+			    } else {
+			    	pTotalCnt = 0;
 			    }
+			    
+			    var _html = "<span>&nbsp;" + pJobNM + "-[" + "<span class='countColor'>" + pTotalCnt + "<spring:message code = 'main.t20000'/></span>]</span>";
+			    document.getElementById("jobTotalInfoRayer").innerHTML = _html;
+			    
+			    lastClickRow = oArrRows[0];
 			}
 			
 			document.getElementById("JobUserListView").innerHTML = "";
@@ -247,6 +284,8 @@
             listview.SetHeightFree(true);
             listview.DataSource(headerData);
             listview.DataBind("JobUserListView");
+            
+            makePageRayer();
 		}
 		/* 유저리스트 Row더블클릭 Action */
 		function info_user() {
@@ -260,18 +299,22 @@
 	        
 	        var oArrRows = listview.GetSelectedRows();
 	        if (oArrRows != 0) {
-				var args = new Array();
-				args[0] = oArrRows[0].getAttribute("DATA1");
-				args[1] = oArrRows[0].getAttribute("DATA2");
-				args[2] = oArrRows[0].getAttribute("DATA4");
-				args[3] = oArrRows[0].getAttribute("DATA3");
-				args[4] = $("#ListCompany option:selected").val();
-				
-			    userinfo_dialogArguments = new Array();
-			    userinfo_dialogArguments[0] = args;
-			    userinfo_dialogArguments[1] = info_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
-			    try { OpenWin.focus(); } catch (e) { }
+	        	if (oArrRows[0].getAttribute("DATA5") != "ADDJOB") {
+					var args = new Array();
+					args[0] = oArrRows[0].getAttribute("DATA1");
+					args[1] = oArrRows[0].getAttribute("DATA2");
+					args[2] = oArrRows[0].getAttribute("DATA4");
+					args[3] = oArrRows[0].getAttribute("DATA3");
+					args[4] = $("#ListCompany option:selected").val();
+					
+				    userinfo_dialogArguments = new Array();
+				    userinfo_dialogArguments[0] = args;
+				    userinfo_dialogArguments[1] = info_user_Complete;
+				    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
+				    try { OpenWin.focus(); } catch (e) { }
+	        	} else {
+	        		alert("<spring:message code='ezOrgan.psb02' />");
+	        	}
 	        }
 		}
 		/* 유저정보 팝업 return Complete Method */
@@ -295,7 +338,6 @@
             	async : false,
             	data : 
             	{
-//             		cn : cn,
             		jobID : jobID,
             		type : Tab1_SelectID,
             		companyID : $("#ListCompany option:selected").val()
@@ -350,12 +392,13 @@
             listview.SetID("lvJobPositionList");
             listview.SetMulSelectable(false);
             listview.SetRowOnClick("JobPosition_UserList");
-            listview.SetSelectFlag(false);
+            listview.SetSelectFlag(true);
             listview.SetRowOnDblClick("JobTitleView");
             listview.SetHeightFree(true);
             listview.DataSource(headerData);
             listview.DataBind("JobListView");
 		}
+		
 		/* 직책을 사용중인 유저리스트 호출 Method */
 		function JobPosition_UserList() {
 			var xmldom, xmlRtn, Node;
@@ -366,6 +409,16 @@
 			jobList.LoadFromID("lvJobPositionList");
 			var oArrRows = jobList.GetSelectedRows();
 			if (oArrRows != 0) {
+				var pJobID = oArrRows[0].getAttribute("DATA1");
+				var pJobNM = oArrRows[0].firstChild.innerText;
+				var pCompanyID = $("#ListCompany option:selected").val();
+				
+				if (lastClickRow != oArrRows[0]) {
+					pCurPage = 1;
+					searchValue = "";
+					document.getElementById("searchValue").value = "";
+				}
+				
 				$.ajax({
 	            	type : "POST",
 	            	dataType: "text",
@@ -373,10 +426,13 @@
 	            	async : false,
 	            	data : 
 	            	{
-// 	            		cn : oArrRows[0].getAttribute("DATA1"),
- 	            		jobID : oArrRows[0].getAttribute("DATA1"),
+ 	            		jobID : pJobID,
 	            		type : Tab1_SelectID,
-	            		companyID : $("#ListCompany option:selected").val()
+	            		companyID : pCompanyID,
+	            		pageSize : pPageSize,
+	            		pageNum : pCurPage,
+	            		searchType : searchType,
+	            		searchValue : searchValue
 	            	},
 	            	success : function (result) {
 	            		xmldom = loadXMLString(result);
@@ -390,7 +446,16 @@
 					xmlRtn = xmldom.documentElement.getElementsByTagName("ROWS")[0];
 		            Node = headerData.importNode(xmlRtn, true);
 		            headerData.documentElement.appendChild(Node);
+		            
+		            pTotalCnt = Number(SelectSingleNodeValueNew(xmldom, "LISTVIEWDATA/TOTALCOUNT"));
+			    } else {
+			    	pTotalCnt = 0;
 			    }
+			    
+			    var _html = "<span>&nbsp;" + pJobNM + "-[" + "<span class='countColor'>" + pTotalCnt + "<spring:message code = 'main.t20000'/></span>]</span>";
+			    document.getElementById("jobTotalInfoRayer").innerHTML = _html;
+			    
+			    lastClickRow = oArrRows[0];
 			}
 			
 			document.getElementById("JobUserListView").innerHTML = "";
@@ -403,12 +468,19 @@
             listview.SetHeightFree(true);
             listview.DataSource(headerData);
             listview.DataBind("JobUserListView");
+            
+            makePageRayer();
 		}
 		
 		/* Tab관련 메소드들 ↓ */
 		function ChangeTab(obj) {
 			document.getElementById("JobListView").innerHTML = "";
 			document.getElementById("JobUserListView").innerHTML = "";
+			document.getElementById("jobTotalInfoRayer").innerHTML = "";
+			
+			pCurPage = 1;
+			searchValue = "";
+			document.getElementById("searchValue").value = "";
 			
 			if (obj.id == "001") {
 				JobTitle_List();
@@ -461,6 +533,104 @@
 	        }
 	    }
 	    /* Tab관련 메소드들 ↑ */
+	    
+	    //2018-12-27 천성준 직함관리 유저리스트 페이징
+	   function makePageRayer() {
+	    	var _html = "<div class='pagenavi'>";
+	    	
+	    	var startPageNum = parseInt((pCurPage - 1) / pBlockSize ) * pBlockSize + 1;
+	    	var endPageNum = parseInt((pCurPage - 1) / pBlockSize ) * pBlockSize + pBlockSize;
+	    	
+	    	if ((pTotalCnt % pPageSize) > 0) {
+	    		pTotalPage = parseInt(pTotalCnt / pPageSize) + 1;
+	    	} else {
+	    		pTotalPage = parseInt(pTotalCnt / pPageSize);
+	    	}
+	    	
+	    	if (endPageNum > pTotalPage) {
+	    		endPageNum = pTotalPage;
+	    	}
+	    	
+	    	if (pCurPage > 1) {
+	    		_html += "<span class='btnimg' onclick='return goToPageNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
+	    	} else {
+	    		_html += "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
+	    	}
+	    	
+	    	if (parseInt((pCurPage - 1) / pBlockSize) > 0) {
+	    		_html += "<span class='btnimg' onclick='return goToPrevBlock()'><img src='/images/sub/btn_prev.gif'></span>";
+	    	} else {
+	    		_html += "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+	    	}
+	    	
+	    	if (pTotalCnt > 0) {
+		    	for (var i = startPageNum; i <= endPageNum; i++) {
+		    		if (pCurPage == i) {
+		    			_html += "<span class='on'>" + i + "</span>";
+		    		} else {
+			    		_html += "<span onclick='goToPageNum(" + i + ")'>" + i + "</span>";
+		    		}
+		    	}
+	    	} else {
+	    		_html += "<span class='on'>1</span>";
+	    	}
+	    	
+	    	if (pTotalPage >= parseInt(((parseInt((pCurPage - 1) / pBlockSize) + 1) * pBlockSize) + 1)) {
+	    		_html += "<span class='btnimg' onclick='return goToNextBlock()'><img src='/images/sub/btn_next.gif'></span>";
+	    	} else {
+	    		_html += "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+	    	}
+	    	
+	    	if (pCurPage < pTotalPage) {
+	    		_html += "<span class='btnimg' onclick='return goToPageNum(" + pTotalPage + ")'><img src='/images/sub/btn_n_next.gif'></span>";
+	    	} else {
+	    		_html += "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+	    	}
+	    	
+	    	_html += "</div>";
+	    	
+	    	document.getElementById("JobUserListPageRayer").innerHTML = _html;
+	    }
+	    function goToPageNum(page) {
+	    	pCurPage = page;
+	    	
+	    	if (Tab1_SelectID == "001") {
+				JobTitle_UserList();
+			} else {
+				JobPosition_UserList();
+			}
+	    }
+	    function goToNextBlock() {
+	    	pCurPage = parseInt((pCurPage - 1) / pBlockSize ) * pBlockSize + pBlockSize + 1;
+	    	
+	    	if (Tab1_SelectID == "001") {
+				JobTitle_UserList();
+			} else {
+				JobPosition_UserList();
+			}
+	    }
+	    function goToPrevBlock() {
+	    	pCurPage = parseInt((pCurPage - 1) / pBlockSize ) * pBlockSize - pBlockSize + 1;
+	    	
+	    	if (Tab1_SelectID == "001") {
+				JobTitle_UserList();
+			} else {
+				JobPosition_UserList();
+			}
+	    }
+	    function search() {
+	    	searchType = document.getElementById("searchType").value;
+	    	searchValue = document.getElementById("searchValue").value;
+	    	
+	    	if (Tab1_SelectID == "001") {
+				JobTitle_UserList();
+			} else {
+				JobPosition_UserList();
+			}
+	    }
+	    function keyword_Clear(obj) {
+		    obj.value = "";
+		}
 	</script>
 </head>
 <body class="mainbody">
@@ -484,7 +654,7 @@
 	<script type="text/javascript">
 		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");        
 	</script>
-	<div class="portlet_tabpart01" style="width: 1160px;">
+	<div class="portlet_tabpart01" style="width: 1210px;">
 		<div class="portlet_tabpart01_top" id="tab1">
 			<p><span id="001"><spring:message code='ezOrgan.csj02' /></span></p>
 			<p><span id="002"><spring:message code='ezOrgan.csj15' /></span></p>
@@ -497,16 +667,25 @@
 		<tr>
 			<td>
 				<div class="listview">
-					<div id="JobListView" style="height: 550px; width: 550px; overflow-y:auto;"></div>
+					<div id="JobListView" style="height: 435px; width: 500px; overflow-y:auto;"></div>
 				</div>
 			</td>
 			<td>
 				<div style="width: 5px;"></div>
 			</td>
 			<td>
-				<div class="listview">
-					<div id="JobUserListView" style="height: 550px; width: 600px; overflow-y:auto;"></div>
+				<div style="border: 1px solid #e8e8e8; border-bottom: 0px; height: 30px;">
+					<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;"></div>
+					<div id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px;">
+						<select id="searchType" style="height: 26px; width: 50px;"><option value="displayname"><spring:message code='main.t76' /></option></select>
+						<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px;">
+						<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.gif" style="width: 26px; height: 26px; margin-top:2px;" border="0" onClick="search()"></a>
+					</div>
 				</div>
+				<div class="listview" style="border-bottom: 0px;">
+					<div id="JobUserListView" style="height: 356px; width: 700px; overflow-y:auto;"></div>
+				</div>
+				<div id="JobUserListPageRayer" style="border: 1px solid #ddd; border-top: 0px;"></div>
 			</td>
 		</tr>
 	</table>
