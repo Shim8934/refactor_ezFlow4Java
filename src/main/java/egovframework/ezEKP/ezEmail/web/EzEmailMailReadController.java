@@ -1078,6 +1078,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				file.delete();
 			}
 			
+			e.printStackTrace();
 		} finally {
 			if (ia != null) {
 				ia.close();

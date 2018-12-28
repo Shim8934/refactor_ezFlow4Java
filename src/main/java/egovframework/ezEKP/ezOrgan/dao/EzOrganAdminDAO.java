@@ -2119,6 +2119,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		update("EzOrganAdminDAO.updateTitle2", map);
 	}
 	
+	public void updateTitle3(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateTitle3", map);
+	}
+	
 	public void deleteTitle(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteTitle", map);
 	}
@@ -2134,6 +2138,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
 	public int getTitleUserListCnt(Map<String, Object> map) throws Exception {
 		return (int) select("EzOrganAdminDAO.selectTitleUserListCnt", map);
+	}
+	
+	public int getTitleUserListCnt2(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganAdminDAO.selectTitleUserListCnt2", map);
 	}
 	
 	public int getTitleCnt(Map<String, Object> map) throws Exception {
