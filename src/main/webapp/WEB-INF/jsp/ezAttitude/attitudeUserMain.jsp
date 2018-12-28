@@ -324,6 +324,12 @@
 		        	$("#popup").css("left", popupX);
 		        	$("#popupDay").css("left", popupDayX);
 		        });
+				
+				//리스트형 날짜 클릭시 근태작성창
+				$(document).on('dblclick', '#contentlist .mainlist tr td:nth-child(6n - 5)', function() {
+					pMode = "new";
+					attitudeNewItem(this);
+				});
 			});
 			
 			window.onload = function() {
@@ -1740,7 +1746,7 @@
 	    			
 	    			tbodyHtml += "<tr class='" + dayClass + "' id='" + year + "-" + month + "-" + j + "'>";
 	    			if (LunarUse) {
-		    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ")</span></td>";//날짜
+		    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ")</span></td>";//날짜
 	    			} else {
 		    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
 	    			}
@@ -2068,18 +2074,24 @@
 		        	<dt class="timeIconDT"><img src="/images/ImgIcon/late_icon.png"></dt>
 		            <dd class="timeIconDD">지각 <span class="timeCountR" id="FA02">0</span></dd>
 		        </dl>
-		        <dl class="timeIcconDL">
-		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
-		            <dd class="timeIconDD">연차 <span class="timeCountR" id="FA11">0</span></dd>
-		        </dl>
-		        <dl class="timeIcconDL">
-		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
-		            <dd class="timeIconDD">오전반차 <span class="timeCountR" id="FA12">0</span></dd>
-		        </dl>
-		        <dl class="timeIcconDL">
-		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
-		            <dd class="timeIconDD">오후반차 <span class="timeCountR" id="FA13">0</span></dd>
-		        </dl>
+		        <c:if test="${A11typeInfo.isuse eq '1' }">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
+			            <dd class="timeIconDD">연차 <span class="timeCountR" id="FA11">0</span></dd>
+			        </dl>
+		        </c:if>
+		        <c:if test="${A12typeInfo.isuse eq '1' }">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
+			            <dd class="timeIconDD">오전반차 <span class="timeCountR" id="FA12">0</span></dd>
+			        </dl>
+			    </c:if>
+			    <c:if test="${A13typeInfo.isuse eq '1' }">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
+			            <dd class="timeIconDD">오후반차 <span class="timeCountR" id="FA13">0</span></dd>
+			        </dl>
+			    </c:if>
 		    </div>
 	    </c:if>
 		
