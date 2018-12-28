@@ -3450,6 +3450,18 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String pageNum = request.getParameter("pageNum");
 		String searchType = request.getParameter("searchType");
 		String searchValue = request.getParameter("searchValue");
+
+		if (pageSize == null)
+			pageSize = "";
+		
+		if (pageNum == null)
+			pageNum = "";
+		
+		if (searchType == null)
+			searchType = "";
+		
+		if (searchValue == null)
+			searchValue = "";
 		
 		String result = ezOrganAdminService.getTitleUserList(type, jobID, pageSize, pageNum, searchType, searchValue, userInfo.getPrimary(), companyID, userInfo.getTenantId());
 		

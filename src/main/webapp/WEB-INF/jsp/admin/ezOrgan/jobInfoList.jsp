@@ -678,7 +678,7 @@
 					<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;"></div>
 					<div id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px;">
 						<select id="searchType" style="height: 26px; width: 50px;"><option value="displayname"><spring:message code='main.t76' /></option></select>
-						<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onmousedown="keyword_Clear(this);" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px;">
+						<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px;">
 						<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.gif" style="width: 26px; height: 26px; margin-top:2px;" border="0" onClick="search()"></a>
 					</div>
 				</div>

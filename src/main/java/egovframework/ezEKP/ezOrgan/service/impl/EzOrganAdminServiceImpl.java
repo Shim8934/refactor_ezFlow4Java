@@ -1933,15 +1933,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 		StringBuffer rtnVal = new StringBuffer();
 		
-		pageNum = String.valueOf((Integer.parseInt(pageNum) * Integer.parseInt(pageSize)) - Integer.parseInt(pageSize));
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TYPE", type);
 		map.put("v_JOBID", jobID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
-		map.put("v_PAGESIZE", pageSize);
-		map.put("v_PAGENUM", pageNum);
+		
+		if (!pageNum.equals("") && !pageSize.equals("")) {
+			pageNum = String.valueOf((Integer.parseInt(pageNum) * Integer.parseInt(pageSize)) - Integer.parseInt(pageSize));
+			map.put("v_PAGESIZE", pageSize);
+			map.put("v_PAGENUM", pageNum);
+		}
 		
 		if (!searchType.equals("") && !searchValue.equals("")) {
 			StringBuffer sb = new StringBuffer();
