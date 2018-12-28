@@ -442,11 +442,11 @@
 		                    _li.appendChild(_div);
 		                    document.getElementById("QuickUl").appendChild(_li);
 
-		                    if (i < QuickBlockNum) {
+		                    /* if (i < QuickBlockNum) {
 		                        document.getElementById('QuickUl').getElementsByTagName('li')[i].style.display = 'block';
 		                    } else {
 		                        document.getElementById('QuickUl').getElementsByTagName('li')[i].style.display = 'none';
-		                    }
+		                    } */
 		                }
 		            }
 		        }
