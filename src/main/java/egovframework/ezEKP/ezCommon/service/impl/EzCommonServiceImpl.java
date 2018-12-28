@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
@@ -25,6 +26,12 @@ import java.util.Random;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -736,11 +743,42 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             m_strMHT.append(commonUtil.CRLF);
             //이미지 본문 영역
 
-            String strTemp = m_ImageList[i].substring(0, 4);
+            String strTemp = m_ImageList[i].substring(0, 5);
             ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
             InputStream in = null;
 
-            if (strTemp.equals("http")) {
+            if (strTemp.startsWith("http")) {
+            	if (strTemp.equals("https")) {
+                    // Create a trust manager that does not validate certificate chains
+                    TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
+                            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                                return null;
+                            }
+                            
+                            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                            }
+                            
+                            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                            }
+                        }
+                    };
+             
+                    // Install the all-trusting trust manager
+                    SSLContext sc = SSLContext.getInstance("SSL");
+                    sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                    HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+             
+                    // Create all-trusting host name verifier
+                    HostnameVerifier allHostsValid = new HostnameVerifier() {
+                        public boolean verify(String hostname, SSLSession session) {
+                            return true;
+                        }
+                    };
+             
+                    // Install the all-trusting host verifier
+                    HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);            		
+            	}
+            	
             	URL url = new URL(m_ImageList[i]);
             	in = url.openStream();
                 int len = 0;

@@ -756,11 +756,13 @@ function ListView() {
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
+                    
+                    /* 2018-12-27 홍승비 - 세로 중앙정렬을 위해 답글 아이콘, 새게시물 아이콘, 댓글 태그 수정 및 스타일 추가 */
                     for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++) {
                         titleImage = titleImage + "&nbsp;&nbsp;&nbsp;";
                         
                         if (k == parseInt(getNodeText(oDatas[7])) - 1)
-                            titleImage = titleImage + "<img src='/images/i_rep.gif'>&nbsp;";
+                            titleImage = titleImage + "<img style='vertical-align:middle; display:inline-block;' src='/images/i_rep.gif'>&nbsp;";
                     }
 //                    if (getNodeText(oDatas[3]) == "1") {  // 2018-01-10 강민수92  긴급게시물일 경우 빨간 느낌표 이미지 타이틀에 안뜨게 주석
 //                        titleImage = titleImage + "<img src='/images/i_urgency.gif'>&nbsp;";
@@ -769,14 +771,15 @@ function ListView() {
 //                        titleImage = titleImage + "<img src='/images/i_notice.gif'>&nbsp;";
 //                        objTd.style.fontWeight = "BOLD";
 //                    }
+                    
                     if (getNodeText(oDatas[6]) == "Y") {
-                        titleImage = titleImage + "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block;'><img src='/images/i_new.gif'></div>&nbsp;";                        
+                    	titleImage = titleImage + "<img style='vertical-align:middle; display:inline-block;' src='/images/i_new.gif'>&nbsp;";
                     }
                     if (getNodeText(oDatas[4]) == "0") {
                         objTd.style.fontWeight = "BOLD";
                     }
                     if (getNodeText(oDatas[10]) != "0" && Use_OneLineCount == "YES")
-                        titleOneLineCnt = "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block;'><span style='color:#c64200'>[" + getNodeText(oDatas[10]) + "]</span></div>";
+                        titleOneLineCnt = "<span style='color:#c64200; padding-left:3px;'>[" + getNodeText(oDatas[10]) + "]</span>";
                     
                 }
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "BOARDNAME") {
@@ -866,11 +869,12 @@ function ListView() {
                     		objTd.style.textAlign = "left"; // 강민수92 docno정렬
                     	}
                     } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('TITLE') > -1) { //2018-01-09 강민수92 공지일 때 docNo 안보이게
-                    	if (getNodeText(oDatas[10]) != "0"){
-                    		objTd.innerHTML = titleImage + "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>" + MakeXMLString(strValue) + "</div> " + titleOneLineCnt;
-                        }else if (getNodeText(oDatas[6]) == "Y"){
-                        	objTd.innerHTML = titleImage + "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>" + MakeXMLString(strValue) + "</div> ";
-                        }else{
+                    	/* 2018-12-27 홍승비 - 새게시물, 답변아이콘, 댓글 제목에 붙는 위치 변경 (IE에서의 말줄임표 오류 수정) */
+                    	if (getNodeText(oDatas[10]) != "0") {
+                    		objTd.innerHTML = "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align:middle; width:100%;'>" + titleImage + MakeXMLString(strValue) + titleOneLineCnt + "</div> ";
+                        } else if (getNodeText(oDatas[6]) == "Y") {
+                        	objTd.innerHTML = "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align:middle; width:100%;'>" + titleImage + MakeXMLString(strValue) + "</div> ";
+                        } else {
                         	objTd.innerHTML = titleImage + MakeXMLString(strValue);
                         }
                     } else {
