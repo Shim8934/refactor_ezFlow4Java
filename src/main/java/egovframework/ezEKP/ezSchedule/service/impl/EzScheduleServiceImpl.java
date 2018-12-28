@@ -550,8 +550,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					info = svo.getRepetition().split("\\|");
 					
 					if (i+1 == resultCount && Integer.parseInt(info[0]) < 1){
-						if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+						if (svo.getEndDate().equals(svo.getRealEndDate())) {
+							if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
 							svoIndex.add(i);
+							}
 						}
 						break;
 					} else if (i+1 == resultCount) {
@@ -561,8 +563,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					svoIdAfter = svoAfter.getScheduleId();
 					
 					if (!svoId.equals(svoIdAfter) && Integer.parseInt(info[0]) < 1) {
-						if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
-							svoIndex.add(i);
+						if (svo.getEndDate().equals(svo.getRealEndDate())) {
+							if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+								svoIndex.add(i);
+							}
 						}
 					}
 				}
@@ -609,6 +613,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		innerVO.setEndDate(dateTime2);
 		innerVO.setDateType(newDateType + "");
 		innerVO.setRepeatCount(count);			
+		innerVO.setRealEndDate(vo.getEndDate());
 		
 		return innerVO; 
 	}
