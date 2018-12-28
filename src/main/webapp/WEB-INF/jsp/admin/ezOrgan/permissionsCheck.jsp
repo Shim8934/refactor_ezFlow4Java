@@ -62,6 +62,7 @@
 	        var totalPage = 0;
 	        var pageSize = 1000;
 	        var BlockSize = 10;
+	        var deleteArry = new Array();
 			
 		    $(document).ready(function(){
 		    	try {
@@ -276,7 +277,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype", type : "user", noAddJob : "Y"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute1;extensionAttribute2;usertype", type : "user", noAddJob : "Y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
@@ -741,6 +742,8 @@
 	            	var strId = p_ListOrderObject.getAttribute("_data2");
 	            	var strName = p_ListOrderObject.getAttribute("_data4");
 	            	var strMail = p_ListOrderObject.getAttribute("_data3");
+	            	var strData = p_ListOrderObject.getAttribute("_data9");
+	            	var strDept = p_ListOrderObject.getAttribute("_data14");
 	            	
 	            	var _listView = new ListView();
 	            	_listView.LoadFromID("lvPermissionList");
@@ -753,17 +756,13 @@
 	            		}
 	            	}
 	            	
-	            	$.ajax({
-						type : "POST",
-						dataType : "text",
-						url : "/admin/ezOrgan/getEntryInfo.do",
-						async : false,
-						data : {cn : strId, prop : "extensionAttribute1", pMode : "user" },
-						success : function(xml){
-							result=loadXMLString(xml);
-							xmlDom = result;
-			                var strData = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").toLowerCase().trim();
-			                
+	            	for (var i=0; i < deleteArry.length; i++) {
+	            		if(strId == deleteArry[i].data1){
+	            			console.log(deleteArry[i].data1);
+	            			deleteArry.splice(i, 1);
+	            			console.log(deleteArry);
+	            		}
+	            	}
 			                var tempDelType = delType;
 			                var DelValue = tempDelType + "=1";
 			                
@@ -781,7 +780,8 @@
 		            		pparsingXML = pparsingXML + "<DATA2>" + strData + "</DATA2>";
 		            		pparsingXML = pparsingXML + "<DATA3>" + strName + "</DATA3>";
 		            		pparsingXML = pparsingXML + "<DATA4>" + strMail + "</DATA4>";
-		            		pparsingXML = pparsingXML + "<VALUE>" + p_ListOrderObject.cells[0].innerText + "</VALUE></CELL></ROW>";
+		            		pparsingXML = pparsingXML + "<VALUE>" + strName + "</VALUE></CELL>";
+		            		pparsingXML = pparsingXML + "<CELL><VALUE>" + strDept + "</VALUE></CELL></ROW>";
 		            		pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
 		            		Resultxml = loadXMLString(pparsingXML2);
 			                
@@ -804,10 +804,6 @@
 				                MaxCntNum = MaxCntNum + 1;
 		            		SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
 		            		listview.AddDataRow(objTr, Resultxml);
-						}
-					});
-	            	
-	            	
 	            }
 	        	
 	            /* var pparsingXML = "";
@@ -887,7 +883,27 @@
 	            selList.LoadFromID(listid);
 
 	            var arrRows = selList.GetSelectedRows();
-	            var strName = "";
+	            var strId = arrRows[0].getAttribute("data1");
+	            var strData = arrRows[0].getAttribute("data2")
+	            
+	            var tempDelType = delType;
+			    var DelValue = tempDelType + "=0";
+			                
+			    if (tempDelType == "") {
+			        tempDelType = "c=0";
+			    } else {
+			        tempDelType = tempDelType + "=1";
+			    }
+			    strData = strData.replace(tempDelType, DelValue);
+			    var deleteInfo = new Object();
+			    deleteInfo.data1 = strId;
+			    deleteInfo.data2 = strData;
+			    
+			    	deleteArry.push(deleteInfo);
+			    
+			    
+			    
+			    console.log(deleteArry);
 
 	            for (var i = 0; i < arrRows.length; i++) {
 	                selList.DeleteRow(arrRows[i].id);
@@ -1449,7 +1465,7 @@
 	                            </h2>
 	                            <div class="receiver_borderbox" style="border-top: 1px solid #565b66; margin-top:1px;">
 	                                <!-- <div id="PermissionBasic" style="width: 250px; Height: 210px; overflow-x: auto; overflow-y: auto;" ondblclick="InsertReceiver()"></div> -->
-	                                <div id="PermissionPopUpList" style="width: 250px; Height: 450px; overflow-x: auto; overflow-y: auto;"></div>
+	                                <div id="PermissionPopUpList" style="width: 250px; Height: 475px; overflow-x: auto; overflow-y: auto;"></div>
 	                            </div> 
 	                        </td>
 	                    </tr>
