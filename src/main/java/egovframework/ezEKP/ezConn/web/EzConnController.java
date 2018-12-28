@@ -54,7 +54,7 @@ public class EzConnController {
 	private EzCommonService ezCommonService;
 	
 	@RequestMapping(value={
-						"/ezConn/mailMain.do", "/ezConn/scheduleMain.do",
+						"/ezConn/mailMain.do", "/ezConn/scheduleMain.do", "/ezConn/scheduleWrite.do",
 						"/ezConn/admin/organMain.do", "/ezConn/admin/scheduleMain.do"
 						})
 	public void mailMain(
@@ -205,18 +205,23 @@ public class EzConnController {
 					resultPage = "/ezEmail/mailRead.do?URL=" + URLEncoder.encode(mailFullPath, "UTF-8");
 				} else if (requestUri.equals("/ezConn/scheduleMain.do")) {
 					resultPage = "/ezSchedule/scheduleIndex.do?funCode=2";
+				} else if (requestUri.equals("/ezConn/scheduleWrite.do")) {
+					resultPage = "/ezSchedule/scheduleWrite.do?defaultid=0";
 				} else if (requestUri.equals("/ezConn/admin/organMain.do")) {
 					resultPage = "/admin/ezOrgan/organMain.do";
 				} else if (requestUri.equals("/ezConn/admin/scheduleMain.do")) {
 					resultPage = "/admin/ezSchedule/scheduleMain.do";
 				} else {																
-					String subCode = "1";
-					
-					if (request.getParameter("subCode") != null) {
-						subCode = request.getParameter("subCode");
+					String funCode = request.getParameter("funCode") != null ? request.getParameter("funCode") : "";
+					if(funCode.equalsIgnoreCase("")) {
+						String subCode = "1";
+						if (request.getParameter("subCode") != null) {
+							subCode = request.getParameter("subCode");
+						}
+						resultPage = "/ezEmail/mailMain.do?subCode=" + subCode;
+					} else { // 20181218 조진호 - 개인화포탈시 주소록 탑메뉴로 분리
+						resultPage = "/ezEmail/mailMain.do?funCode=" + funCode;
 					}
-					
-					resultPage = "/ezEmail/mailMain.do?subCode=" + subCode;
 				}
 			}
 		} catch (Exception e) {
