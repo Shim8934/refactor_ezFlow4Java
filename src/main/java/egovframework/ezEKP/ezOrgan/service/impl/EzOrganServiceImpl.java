@@ -958,7 +958,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
     @Override
-    public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID, String companyId) throws Exception {
+    public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID, String companyId, String adminOrgan) throws Exception {
     	logger.debug("getSearchListPagination started");
     	
         String strSQL="";
@@ -1072,6 +1072,12 @@ public class EzOrganServiceImpl implements EzOrganService {
 	         map.put("v_TENANT_ID", tenantID);
 	         map.put("startRowForMySQL", startRow - 1);
 	         map.put("count", 50);        
+	         if(companyId.equals("") && adminOrgan.equals("y")) {
+	        	 map.put("startRow", (Integer.parseInt(page) - 1) * 10 + 1);
+		         map.put("endRow", Integer.parseInt(page) * 10 + 1);
+		         map.put("startRowForMySQL", (Integer.parseInt(page) - 1) * 10);
+	        	 map.put("count", 10);
+	         }
 	         map.put("strSQLCom", strSQLCom);  
 	         map.put("strSQLAddjobCom", strSQLAddjobCom);
 	         
