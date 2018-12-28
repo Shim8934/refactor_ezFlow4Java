@@ -69,8 +69,8 @@
 		        });
 		        var NowDate;
 		        if (holidaydate != "") {
-		            NowDate = new Date(holidaydate.substring(0, 4), holidaydate.substring(5, 7), holidaydate.substring(8, 10));
-		            NowDate.setMonth(NowDate.getMonth() - 1);
+		        	/* 2018-12-28 김민성 - 달력 날짜 가져오는 부분 수정 */
+		            NowDate = new Date(holidaydate.substring(0, 4), holidaydate.substring(5, 7)-1, holidaydate.substring(8, 10));
 		        }
 		        else
 		            NowDate = new Date();
