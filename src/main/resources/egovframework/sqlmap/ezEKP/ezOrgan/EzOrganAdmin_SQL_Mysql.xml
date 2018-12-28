@@ -4258,30 +4258,6 @@
 		ORDER BY
 			SORT
 	</select>
-	<select id="EzOrganAdminDAO.selectTitlePageList" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
-		SELECT 
-			JOBID,
-			TYPE, 
-			CN, 
-			DISPLAYNAME, 
-			DISPLAYNAME2, 
-			USEFLAG, 
-			SORT, 
-			CREATEDATE,
-			COMPANYID
-		FROM 
-			TBL_USER_JOBMASTER
-		WHERE 
-			TYPE = #v_TYPE#
-		AND
-			COMPANYID = #v_COMPANYID# 
-		AND 
-			TENANT_ID = #v_TENANTID#
-		ORDER BY
-			SORT
-		LIMIT
-			#v_START#, #v_COUNT#
-	</select>
 	<select id="EzOrganAdminDAO.selectTitleInfo" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
 	<![CDATA[
 		SELECT 

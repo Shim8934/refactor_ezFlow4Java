@@ -17,6 +17,10 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<style>
+			.selectedTR {background-color: #f1f8ff; cursor:pointer;}
+			.unselectedTR:hover {background-color: #f4f5f5; cursor:pointer;}
+		</style>
 		<script type="text/javascript" language="javascript">
 			var CurPage = 1;
 			var totalPage = "${totalPage}";
@@ -194,8 +198,10 @@
 			        for (var i = 0 ; i < document.getElementsByName("chk").length ; i++) {
 			            if (document.getElementsByName('checkbox').item(0).checked == true) {
 			                document.getElementsByName("chk").item(i).checked = true;
+			                document.getElementsByName("chk").item(i).parentElement.parentElement.className = "selectedTR";
 			            } else {
 			                document.getElementsByName("chk").item(i).checked = false;
+			                document.getElementsByName("chk").item(i).parentElement.parentElement.className = "unselectedTR";
 			            }
 			        }
 			    }
@@ -485,12 +491,12 @@
 			function reset() {
 				$('#startDatepicker').val('');				
 				$('#endDatepicker').val('');				
-				//$('#searchKeyword').val('');
 			}
 			
 			 //**/ 새로고침 클릭시 이벤트
 		    function reload() {
-		    	retireUserList();
+				document.getElementById("checkAll").checked = false;
+				retireUserList();
 		    }
 			 
 			 //**/ 퇴직자 검색
@@ -523,9 +529,9 @@
 							 html += "</tr>";
 						 } else {
 							 data.list.forEach(function(i,v){
-								html += "<tr>";
+								html += "<tr class='unselectedTR' onclick='clickRow(event)'>";
 								html += "    <td width='20' style='padding:0'>";
-								html += "        <input type='checkbox' name='chk' id='chk' value='" + i.cn + "'/>";
+								html += "        <input type='checkbox' onclick='selectCheckBox()' name='chk' id='chk' value='" + i.cn + "'/>";
 								html += "    </td>";
 								
 								if (lang == '' || lang == 1) {
@@ -589,6 +595,36 @@
 						$("#endDatepicker").datepicker('enable');
 				}
 			}
+			
+			function clickRow(event) {
+				var currentRow = event.currentTarget;
+				var crrClass   = currentRow.className;
+				
+				var tableList  = document.getElementById("retireUserList");
+				var length = tableList.rows.length;
+				
+				for (var i = 0; i < length; i++) {
+					tableList.rows[i].className = "unselectedTR";
+					tableList.rows[i].firstElementChild.firstElementChild.checked = false;
+				}
+					
+				currentRow.className = "selectedTR";
+				currentRow.firstElementChild.firstElementChild.checked = true;
+			}
+			
+			function selectCheckBox() {
+				event.stopPropagation();
+				
+				var checkboxElmt = event.currentTarget;
+				var currentRow   = checkboxElmt.parentElement.parentElement;
+				
+				if (checkboxElmt.checked) {
+					currentRow.className = "selectedTR";
+				}
+				else {
+					currentRow.className = "unselectedTR";
+				}
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -612,34 +648,6 @@
                 <li><span class="icon16 icon16_refresh" onClick="reload()"></span></li>
 		  	</ul>
 		</div>
-		<%-- <table style="width: 100%; background-color: #f8f8f8; border: 1px solid #ddd;">
-		<tr>
-			<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
-				<span id="topmenu" style="width: 500px"><spring:message code='ezOrgan.0hun01'/> : &nbsp;
-					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
-					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
-				</span> 
-				&nbsp;&nbsp;
-				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1062'/>: &nbsp;
-					<select id="searchKeycode" style="height:24px"> 
-						<option value="userName"><spring:message code='ezOrgan.t67'/></option>
-						<option value="deptName"><spring:message code='ezOrgan.t68'/></option>
-						<option value="userId"><spring:message code='ezOrgan.t218'/></option>
-					</select>
-					<input type="text" id="searchKeyword" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
-					<a class="imgbtn" style="height:22px">
-						<span onclick="search();"><spring:message code='ezOrgan.t101'/></span>
-					</a>
-					<a class="imgbtn" style="height:22px">
-						<span onclick="reset();"><spring:message code='ezOrgan.0hun02'/></span>
-					</a>
-					<a class="imgbtn" style="height:22px">
-						<span onclick="reload();"><spring:message code='ezOrgan.0hun03'/></span>
-					</a>
-				</span> 
-			</td>
-		</tr>
-		</table> --%>
 		<table class="content">
 			<tr>
 				<th><spring:message code='ezStatistics.t1062'/></th>
@@ -669,10 +677,10 @@
 		</script>
 		<div id="contentlist" style="width:100%; height: 653px; overflow: auto; margin-top:5px">
 			<div>
-				<table class="mainlist" style="width:100%">
+				<table id="retireUserList" class="mainlist" style="width:100%">
 					<thead style> 
 				    	<tr>
-				      		<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" onclick="funCheckBox('set','a')" /></th>
+				      		<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
 				      		<th style="width:200px;"><spring:message code='ezOrgan.t68'/></th>
 				      		<th style="width:200px;">아이디</th>
 				      		<th style="width:200px;"><spring:message code='ezOrgan.t67'/></th>
