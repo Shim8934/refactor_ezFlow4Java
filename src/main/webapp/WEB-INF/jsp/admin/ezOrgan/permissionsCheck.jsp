@@ -62,6 +62,8 @@
 	        var totalPage = 0;
 	        var pageSize = 1000;
 	        var BlockSize = 10;
+	        var orginArry = new Array();
+	        var extraArry = new Array();
 	        var deleteArry = new Array();
 			
 		    $(document).ready(function(){
@@ -763,6 +765,7 @@
 	            			console.log(deleteArry);
 	            		}
 	            	}
+	            	        var extraInfo = new Object();
 			                var tempDelType = delType;
 			                var DelValue = tempDelType + "=1";
 			                
@@ -773,6 +776,13 @@
 			                }
 			                strData = strData.replace(tempDelType, DelValue);
 			                
+			                extraInfo.data1 = strId;
+			                extraInfo.data2 = strData;
+			                
+			                extraArry.push(extraInfo);
+			                
+			                
+			                console.log(extraArry);
 			                pparsingXML2 = "";
 		            		pparsingXML = "";
 		            		pparsingXML2 = "<LISTVIEWDATA><ROWS>";
@@ -895,13 +905,20 @@
 			        tempDelType = tempDelType + "=1";
 			    }
 			    strData = strData.replace(tempDelType, DelValue);
+			    
+			    for (var i=0; i < extraArry.length; i++) {
+            		if(strId == extraArry[i].data1){
+            			console.log(extraArry[i].data1);
+            			extraArry.splice(i, 1);
+            			console.log(extraArry);
+            		}
+            	}
+			    
 			    var deleteInfo = new Object();
 			    deleteInfo.data1 = strId;
 			    deleteInfo.data2 = strData;
 			    
-			    	deleteArry.push(deleteInfo);
-			    
-			    
+			    deleteArry.push(deleteInfo);
 			    
 			    console.log(deleteArry);
 
@@ -1105,6 +1122,36 @@
 			}
 		    
 		    function OK_Click() {
+		    	var totalArry = new Array();
+		    	var data1 = new Array();
+		    	var data2 = new Array();
+		    	
+		    	totalArry = extraArry.concat(deleteArry);
+		    	
+		        for (var i=0; i<totalArry.length; i++){
+		        	data1.push(totalArry[i].data1);
+			        data2.push(totalArry[i].data2);
+		        }
+		        
+		        console.log("1: "+data1+"|| 2: "+data2);
+		        
+		        jQuery.ajaxSettings.traditional = true; 
+		        
+		        $.ajax({
+	            	type : "POST",
+	            	dataType : "text",
+	            	url : "/admin/ezOrgan/saveStoreUserInfo.do",
+	            	async : false,
+	            	data : {parentCn : "", cn : data1, extensionAttribute1 : data2},
+	            	success : function(result){
+	            		//TODO : 2016-05-03 장진혁과장 -- Email 전송메소드 구현 필요
+	            		//sendmail(GetAttribute(p_ListOrderObject, "_data2"), strLang18, AclText)
+	            		 alert(strLang14);
+	            	},
+	            	error : function(){
+	            		alert(strLang15);
+	            	}
+	            });
 	            /* var PermissionList = new ListView();
 	            PermissionList.LoadFromID("lvPermissionBasic");
 
@@ -1247,7 +1294,10 @@
 		                $("#lvPermissionList_TR_0").mouseout(function(){
 		                	$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
 		                });
+		                
 		                a.style.display = "none";
+		               
+		                
 		        	},
 		        	error : function(error){
 		        	    alert("부서 구성원을 가져오는중 오류가 발생했습니다. - 	" + error);
