@@ -21,9 +21,9 @@
 		.previewmail_info {border-bottom: 1px solid #e5e5e5;}
 		.previewmail_bar_h {display: inline-block; width: 5px; height: 690px;}
 		.preContent_RayerH {position: absolute; display: inline-block; width: 49%;}
-		.preview_header {margin: 0px 0px 5px 0px; padding: 10px 0px 0px 0px; font-weight: bold; height: 36px; line-height: 37px;}
+		.preview_header {padding: 0px; font-weight: bold; height: 11px; line-height: 11px;}
 		.preview_title {display: inline-block; margin-top: -6px; margin-left: 13px;}
-		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC;}
+		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC; font-size: 11px;}
 		.preview_content {width: 97%; height: 630px; border: solid 0px green; display: inline-block; padding:10px;}
 		.preview_nodata {position: absolute; display: inline-block; width: 49%; vertical-align: middle; text-align: center; margin-top: 70px;}
 	</style>
@@ -656,7 +656,7 @@
 			</div>
 			
 			<div class="preview_content">
-				<div class="listview">
+				<div class="listview" style="border-top: 1px solid #ddd; border-left: none; border-right: none; border-bottom: none;">
 					<div id="JobUserListView" style="height: 610px; width: 100%; overflow-y:auto;"></div>
 				</div>
 			</div>
@@ -722,7 +722,7 @@
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t285' /></NAME>
-			<WIDTH>190</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
     	</HEADERS>
@@ -780,7 +780,7 @@
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t285' /></NAME>
-			<WIDTH>190</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
     	</HEADERS>
