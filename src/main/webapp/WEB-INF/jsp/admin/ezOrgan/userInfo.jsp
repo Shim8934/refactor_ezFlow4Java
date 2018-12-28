@@ -93,11 +93,13 @@
 	            }
 	            
 	            if (RetValue[4] != "") {
-	            	if (RetValue[5] != "" && RetValue[5] == "addJob") {
+	            	/* if (RetValue[5] != "" && RetValue[5] == "addJob") {
 	            		companyID = getUserCompanyID(RetValue[2]);
 	            	} else {
 			        	companyID = RetValue[4];
-	            	}
+	            	} */
+	            	
+            		companyID = getUserCompanyID(RetValue[2]);
 		        }
 
 	            /* dhlee: Safari에서 영문 입력이 되지 않아 제거함.
