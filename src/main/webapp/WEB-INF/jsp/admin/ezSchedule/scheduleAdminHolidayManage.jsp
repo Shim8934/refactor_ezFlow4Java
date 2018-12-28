@@ -64,6 +64,7 @@
 		    			
 		    		}	    		
 		        });
+		        
 		    }
 	
 		    function MakeSliderList(result) {
@@ -71,7 +72,7 @@
 		        
 		        try {		            		            
 		            var countValue = 0;
-		            _html = "<table class='mainlist' style='width:100%;'>";
+		            _html = "<table id='managelist_body' class='mainlist' style='width:100%;'>";
 		            var HolidaySize = result.length;
 		            if (HolidaySize > 0) {
 		                if (CrossYN()) {
@@ -153,17 +154,33 @@
 	                            } else {
 	                            	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
 	                            }
-	
+								
 		                        if (isRepeat == "1") {
-		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
+			                        if (i == (HolidaySize-1)) {
+			                        	_html += "<td style='width:10%;color:gray;border-bottom: none;'>Y</td>";
+			                        } else{
+			                            _html += "<td style='width:10%;color:gray;'>Y</td>";
+			                        }
 		                        } else {
-		                            _html += "<td style='width:10%;color:gray;'>N</td>";
+		                        	if (i == (HolidaySize-1)) {
+		                        		_html += "<td style='width:10%;color:gray;border-bottom: none;'>N</td>";
+			                        } else{
+			                        	_html += "<td style='width:10%;color:gray;'>N</td>";
+			                        }
 		                        } 
 	
 		                        if (isRest == "1") {
-		                            _html += "<td style='width:10%;color:gray;'>Y</td>";
+		                        	if (i == (HolidaySize-1)) {
+		                        		_html += "<td style='width:10%;color:gray;border-bottom: none;'>Y</td>";
+			                        } else{
+			                        	_html += "<td style='width:10%;color:gray;'>Y</td>";
+			                        }
 		                        } else {
-		                            _html += "<td style='width:10%;color:gray;'>N</td>";
+		                        	if (i == (HolidaySize-1)) {
+		                        		 _html += "<td style='width:10%;color:gray;border-bottom: none;'>N</td>";
+			                        } else{
+			                        	 _html += "<td style='width:10%;color:gray;'>N</td>";
+			                        }
 		                        }
 								if (holidayType == 'a') {
 			                        if (useCompany == "1") {
@@ -176,16 +193,25 @@
 			                                    companyname = tempcompanylist[j].split(",")[1]; // [1]이름
 			                                }
 			                            }
-			                            _html += "<td style='width:15%;color:gray;'>" + companyname + "</td>";
+			                            if (i == (HolidaySize-1)) {
+			                            	_html += "<td style='width:15%;color:gray;border-bottom: none;'>" + companyname + "</td>";
+				                        } else{
+				                        	_html += "<td style='width:15%;color:gray;'>" + companyname + "</td>";
+				                        }
 			                        }
 								} else {
-		                        	_html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t267' />" + "</td>";
+									if (i == (HolidaySize-1)) {
+										_html += "<td style='width:15%;color:gray;border-bottom: none;'>" + "<spring:message code='ezSchedule.t267' />" + "</td>";
+			                        } else{
+			                        	_html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t267' />" + "</td>";
+			                        }
 		                        }
 	
 		                        _html += "</tr>";
 		                        _html += "</html>";
 		                        document.getElementById("contentlist").innerHTML = _html;
 		                    }
+		                        scroll();
 		                } else {
 		                    for (var i = 0; i < HolidaySize; i++) {
 		                        var _Value;
@@ -265,6 +291,7 @@
 		                        _html += "</html>";
 		                        document.getElementById("contentlist").innerHTML = _html;
 		                    }	                    
+		                        scroll();
 		                }
 		            } else {
 		                document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + strLang263 + "</td></tr></table>";
@@ -575,6 +602,7 @@
 		    			makeSelectBox(holidayYear, 'select');		    			
 		    		}	    		
 		        });
+		        
 		    }
 		    
 		    function makeSelectBox(holidayYear, type) {
@@ -600,6 +628,25 @@
 		        }
 		    } 
 		    
+		    function scroll() {
+		    	var BoardList_BODYHeight = document.getElementById("managelist_body").clientHeight;
+		    	var BoardListDivHeight = document.getElementById("Managetable").clientHeight;
+		    	
+		    	 if (BoardList_BODYHeight + 34 < BoardListDivHeight) {
+		    		if ($("#manage_HEAD tr th#forScroll").length > 0) {
+		    			$("#manage_HEAD tr th#forScroll").remove();
+		    		}
+		    	} else {
+		    		if ($("#manage_HEAD tr th#forScroll").length < 1) {
+		    			
+		    			$("#manage_HEAD tr").append("<th></th>");
+		    			
+		    				var lastTh = $("#manage_HEAD tr th").last();
+		    				lastTh.attr("id", "forScroll");
+		    				lastTh.css("width", "8px");
+		    		}
+		    	}
+		    }
 		</script>
 	</head>
 	<body class="mainbody"> 
@@ -617,23 +664,25 @@
 				    </ul>
 				</div>
 			</div>
-			<table style="width: 750px; height: 500px;" border="0">
+			<table id="Managetable" style="width: 750px; height: 500px;" border="0">
 		        <tr>
 		            <td>
 		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 750px; height: 500px;">
 		                    <table class="mainlist" style="width: 100%;">
-		                        <tr>
-		                            <th style="width: 5%;"><span><spring:message code='ezSchedule.t403' /></span></th>
-		                            <th style="width: 30%;"><span><spring:message code='ezSchedule.t9990003' /></span></th>
-		                            <th style="width: 15%;" class="onlyUseKo"><span><spring:message code='ezSchedule.t4000' />/<spring:message code='ezSchedule.t101' /></span></th>
-		                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t4008' /></span></th>
-		                            <th style="width: 10%;"><span><spring:message code='ezSchedule.t4007' /></span></th>
-		                            <th style="width: 10%;"><span><spring:message code='ezSchedule.t4009' /></span></th>
-		                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t2000' /></span></th>
-		                        </tr>
+		                    	<tbody id="manage_HEAD">
+			                        <tr>
+			                            <th style="width: 5%;"><span><spring:message code='ezSchedule.t403' /></span></th>
+			                            <th style="width: 30%;"><span><spring:message code='ezSchedule.t9990003' /></span></th>
+			                            <th style="width: 15%;" class="onlyUseKo"><span><spring:message code='ezSchedule.t4000' />/<spring:message code='ezSchedule.t101' /></span></th>
+			                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t4008' /></span></th>
+			                            <th style="width: 10%;"><span><spring:message code='ezSchedule.t4007' /></span></th>
+			                            <th style="width: 10%;"><span><spring:message code='ezSchedule.t4009' /></span></th>
+			                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t2000' /></span></th>
+			                        </tr>
+		                    	</tbody>
 		                    </table>
 		                    <div id="contentlist" name="contentlist" style="height: 468px; overflow-y: auto;">
-		                        <table class="mainlist" style="width: 100%;">
+		                        <table id="managelist_body" class="mainlist" style="width: 100%;">
 		                            <tr>
 		                                <td style="text-align: center;">
 		                                    <img src="/images/email/progress_img.gif" />
