@@ -578,8 +578,9 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 			}
 			
+			/* 2018-12-27 홍승비 - 공지사항 팝업 스크립트 수정 */
 			if (popUp != null && !popUp.equals("")) {
-				script1 = "<script language='javascript'>" + popUp + "</script>";
+				script1 = popUp;
 			}
 			
 			//스킨정보
