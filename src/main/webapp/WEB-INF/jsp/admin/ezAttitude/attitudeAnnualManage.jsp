@@ -30,17 +30,21 @@
 	    <script type="text/javascript">
 	    	var pCompanyId = ""; //현재 선택된 회사의 아이디
 	    	//검색조건 저장 변수
-	    	var searchUserName = ""; // 검색조건 (사원명)
-	    	var searchDeptName = ""; // 검색조건 (부서명)
-	    	var searchTitle = ""; // 검색조건 (직위)
-	    	var searchAttitudeType = "ALL"; // 검색조건(근태유형)
-	    	var pageNum = 1; // 페이지 ==> 초기값 설정
-	    	var totalCount = "" // 게시물 총 갯수
-	    	var totalPage = ""; // 게시판의 총 페이지갯수
-	    	var orderCell = ""; // 정렬 명
-	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
+	    	var searchYear = ""; //검색조건 (년도)
+	    	var searchUserName = ""; //검색조건 (사원명)
+	    	var searchDeptName = ""; //검색조건 (부서명)
+	    	var searchTitle = ""; //검색조건 (직위)
+	    	var searchAttitudeType = "ALL"; //검색조건(근태유형)
+	    	var pageNum = 1; //페이지 ==> 초기값 설정
+	    	var totalCount = "" //게시물 총 갯수
+	    	var totalPage = ""; //게시판의 총 페이지갯수
+	    	var orderCell = ""; //정렬 명
+	    	var orderOption = ""; //정렬 형식(ASC, DESC)
 	    	var adminCompany = "${adminCompany}";
 	    	var listSize = 15;
+	    	//년도 셀렉트 박스
+			var isfirst = true;
+            var maxyear = "";
 	    	
 	    	$(function(){	
 	    		windowResize();
@@ -58,8 +62,34 @@
 			            document.getElementById("ListCompany").selectedIndex = 0;
 		    		}
 		    		
+		    		makeoptionyear();
+		    		
 		    		company_change();
 		        }
+	    		
+	    		//헤더 클릭 시 정렬
+	    		$(document).on('click', '#contentlist table.mainlist th', function(){
+	    			if ($(this).attr("colname") != "") {
+	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
+	    					src = "";
+	    					orderOption = "";
+	    					orderCell = $(this).attr("colname");
+	    				}
+	    			
+		    			if (orderOption == "" || orderOption == "DESC") {
+		    				src = '/images/etc/view-sortup.gif';
+		    				orderOption = "ASC";
+		    			} else {
+		    				src = '/images/etc/view-sortdown.gif';
+		    				orderOption = "DESC";
+		    			}
+		    			
+		    			$("#contentlist table.mainlist th").find("img").remove();
+		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+		    			
+		    			getAnnualList();
+	    			}
+	    		});
 	    	});
 			    
 		    $(window).on("resize", function(){
@@ -74,6 +104,40 @@
 	        	document.getElementById("contentlist").style.height = height + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
+		    
+	        function makeoptionyear() {
+	            var date = new Date()
+	            var year = date.getFullYear();
+		        var tempyear = "";
+                var selyear = "";
+                
+	            if (isfirst) {
+	                selyear = year;
+	                tempyear = year + 2;
+	                maxyear = year + 2;
+	                isfirst = false;
+	            }
+	            else {
+	                selyear = parseInt(document.getElementById("searchYear").value);
+                    tempyear = selyear + 2;
+	            }
+	            
+	            if (selyear + 2 <= maxyear) {
+	                document.getElementById("searchYear").innerHTML = "";
+	                for (var i = 0; i < 5; i++) {
+	                    var option = document.createElement("OPTION");
+	                    option.value = tempyear;
+	                    option.innerHTML = tempyear;
+	
+	                    if (selyear == tempyear)
+	                        option.selected = true;
+	
+	                    document.getElementById("searchYear").appendChild(option);
+	                    tempyear--;
+	                }
+	                tempyear = selyear + 2;
+	            }
+	        }
 			
 	    	function company_change() {
 	    		pCompanyId = document.getElementById("ListCompany").value;
@@ -86,8 +150,6 @@
 	        }
 	    	
 	    	function getAnnualList() {
-	    		var searchYear = document.getElementById("searchYear").value;
-	    		
 	    		$.ajax({
 	    			data : "GET",
 	    			dataType : "json",
@@ -105,15 +167,92 @@
 	   					orderOption : orderOption
     				},
 	    			success : function(result){
-// 	    				totalCount = result.totalCount;
-// 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
-// 	    				getAttitudeCheckList_after(result.list);
+	    				totalCount = result.totalCount;
+	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
+	    				getAnnualList_after(result.list);
 	    			},
 	    			error : function() {
 	    				alert("<spring:message code='ezAttitude.t59'/>");
 	    			}
 	    		});
 	    	}
+	    	
+	    	function getAnnualList_after(result){
+	    		var resultHtml = "";
+	    		
+	    		$("#contentlist table.mainlist tbody").html("");
+	    		
+	    		var i = ((pageNum - 1) * listSize) + 1;
+	    		
+	    		result.forEach(function(vo, index) {
+	    			resultHtml += "<tr userid='" + vo.userId + "'>";
+	    			resultHtml += "<td style='padding-left: 15px;'>" + i + "</td>";
+	    			resultHtml += "<td>" + vo.userName + "</td>";
+	    			resultHtml += "<td>" + vo.userTitle + "</td>";
+	    			resultHtml += "<td>" + vo.userDeptName + "</td>";
+	    			resultHtml += "<td>" + vo.useAnnualCnt + "</td>";
+	    			resultHtml += "<td>" + vo.totalAnnualCnt + "</td>";
+	    			resultHtml += "<td><a class='imgbtn'><span onclick=''>내역 확인</span></a></td>";
+	    			resultHtml += "<td><a class='imgbtn'><span onclick=''>내역 확인</span></a></td>";
+	    			resultHtml += "<td><a class='imgbtn'><span onclick=''>수정</span></a></td></tr>";
+	    			
+	    			i++;
+	    		});
+	    		
+	    		if (resultHtml == "") {
+	    			resultHtml = "<tr id='List_TR_noItems' class='tr_noItems'><td colspan='9' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
+	    		}
+	    		
+	    		$("#contentlist table.mainlist tbody").append(resultHtml);
+	    		makePageSelPageAtti();
+	    	}
+	    	
+	    	//페이지 이동 함수
+	    	function goToPageByNum(pCurPage){
+	    		if (pCurPage == 0 || totalPage < pCurPage) {
+	    			return;
+	    		} else {
+		    		pageNum = pCurPage;
+	    		}
+	    		
+	    		getAnnualList();
+	    	}
+	    	
+			function searchAnnualList(searchType){
+	    		if (searchType == "search") { //검색
+	    			searchYear = document.getElementById("searchYear").value;
+	    			searchUserName = $("#searchUserName").val();
+	    			searchDeptName = $("#searchDeptName").val();
+	    			searchTitle = $("#searchTitle").val();
+	    		} else { //새로고침
+	    			searchYear = maxyear - 2;
+	    			$("#searchUserName").val("");
+	    			$("#searchDeptName").val("");
+	    			$("#searchTitle").val("");
+	    			
+	    			searchUserName = "";
+	    			searchDeptName = "";
+	    			searchTitle = "";
+	    		}
+	    		
+	    		$("#contentlist table.mainlist th").find("img").remove();
+	    		orderOption = "";
+	    		orderCell = "";
+	    		
+	    		pageNum = 1;
+    			getAnnualList();
+	    	}
+			
+			function searchPress(evt) {
+		        if (window.event) {
+		            if (window.event.keyCode == 13) {
+		            	searchAnnualList('search');
+		            }
+		        } else {
+		            if (evt.which == 13)
+		            	searchAnnualList('search');
+		        }
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -132,12 +271,7 @@
 				<tr>
 					<td style="width: 3%">년도</td>
 					<td style="width: 12%;">
-						<select name="searchYear" id="searchYear" style="padding-right:50px;height:24px">
-							<option value="2017" selected>2017</option>
-							<option value="2018" selected>2018</option>
-							<option value="2019" selected>2019</option>
-							<option value="2020" selected>2020</option>
-						</select>
+						<select name="searchYear" id="searchYear" onchange="makeoptionyear();" style="padding-right:50px;height:24px" ></select>
 					</td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td>
 					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
@@ -151,8 +285,8 @@
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
 					</td>
 					<td style="width: *;" colspan=2>
-						<a class="imgbtn"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.t121' /></span></a>
-						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
+						<a class="imgbtn"><span onclick="searchAnnualList('search');"><spring:message code='ezAttitude.t121' /></span></a>
+						<a class="imgbtn"><span onclick="searchAnnualList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
 						<a class="imgbtn"><span onclick="">엑셀로 등록</span></a>
 						<a class="imgbtn"><span onclick="modifyAllAnnualPop();">전체 연차 변경</span></a>
@@ -170,8 +304,11 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="start_date"><spring:message code='ezAttitude.t133' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="type_name"><spring:message code='ezAttitude.t134' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="useAnnualCnt">사용연차 수</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="totalAnnualCnt">총 연차 수</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname="">사용내역 확인</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname="">수정내역 확인</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname="">수정</th>
 					</tr>
 				</thead>
 				<tbody>

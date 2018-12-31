@@ -1384,29 +1384,61 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeAnnualList" parameterClass="Map" resultClass="AttitudeAnnualVO">
 		<![CDATA[
 			SELECT 
-				A.cn AS userId,
-			    A.DISPLAYNAME as userName,
-			    A.TITLE as userTitle,
-			    A.DESCRIPTION as userDeptName,
-			    #searchYear# as year,
-			    '0' as useAnnualCnt,
-			    ifnull(B.TOTAL_ANNUAL_CNT, 0) as totalAnnualCnt
+				A.CN AS userId,
+			    A.DISPLAYNAME AS userName,
+			    A.TITLE AS userTitle,
+			    A.DESCRIPTION AS userDeptName,
+			    #searchYear# AS year,
+			    ifnull(sum(
+						CASE
+						   WHEN C.TYPE_ID = 'A11' THEN to_days(C.END_DATE) - to_days(C.START_DATE)
+			               WHEN C.TYPE_ID = 'A12' THEN 0.5
+			               WHEN C.TYPE_ID = 'A13' THEN 0.5
+						   ELSE 0
+						END
+				), 0) AS useAnnualCnt,
+			    ifnull(B.TOTAL_ANNUAL_CNT, 0) AS totalAnnualCnt
 			FROM 
-				tbl_usermaster A
+				TBL_USERMASTER A
 			LEFT OUTER JOIN 
-				tbl_attitude_annual B
+				TBL_ATTITUDE_ANNUAL B
 			ON
 				(A.TENANT_ID = B.TENANT_ID 
 				AND
-				 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID
-				AND 
-				 A.CN = B.USER_ID 
+				 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
 				AND
-				 B.YEAR = #searchYear#)
+				 A.CN = B.USER_ID
+				AND B.YEAR = #searchYear#)
+			LEFT OUTER JOIN 
+				TBL_ATTITUDE C
+			ON
+				(A.TENANT_ID = C.TENANT_ID 
+				AND 
+				 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
+				AND
+				 A.CN = C.WRITER_ID
+				AND 
+				 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+				AND 
+				 (
+					   (
+						date_add(C.START_DATE, INTERVAL #offsetMin# minute) >= #searchStartTime#
+						AND date_add(C.START_DATE, INTERVAL #offsetMin# minute) <= #searchEndTime#
+						)
+					OR (
+						date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #searchStartTime#
+						AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) < #searchEndTime#
+						)
+					OR (
+						date_add(C.START_DATE, INTERVAL #offsetMin# minute) < #searchStartTime#
+						AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #searchEndTime#
+						)
+				  )
+				 )
 			WHERE
 				A.TENANT_ID = 1
 			AND 
-				A.PHYSICALDELIVERYOFFICENAME = #companyId#
+				A.PHYSICALDELIVERYOFFICENAME = #companyId#			
 		]]>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			A.description LIKE CONCAT('%', #searchDeptName#, '%')
@@ -1417,6 +1449,21 @@
 		<isNotEmpty prepend="AND" property="searchTitle">
 			A.title LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
+		
+		GROUP BY A.CN
+		
+		<isNotEmpty property="orderCell">
+			<![CDATA[
+				ORDER BY
+					$orderCell$ $orderOption$
+			]]>
+		</isNotEmpty>
+		<isEmpty property="orderCell">
+			<![CDATA[
+				ORDER BY
+					userName
+			]]>
+		</isEmpty>	
 		<isNotEmpty property="limit">
 			<![CDATA[
 				LIMIT
