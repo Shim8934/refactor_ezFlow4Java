@@ -202,7 +202,7 @@
                 else {
                 	 var dl = document.getElementById("newcomm");
 					 dl.className = "nodata_sIcon";
-					 dl.style.paddingTop = "50px";
+					 dl.style.paddingTop = "35px";
 					 
 					 var dt = document.createElement("DT");
 					 
@@ -269,10 +269,10 @@
                     document.getElementById("newcomm").appendChild(dl);
                 } */
                 
-                if( bestcoummunity.length <= 0 ){
+                /* if( bestcoummunity.length <= 0 ){
 	                conts = "<div style='height:170px; text-align:center;margin-top:5px;'><div><img style='margin-top:28px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
 					$("#newcomm").html(conts);
-                }
+                } */
 	        }
 
 	        /* 인기 커뮤니티 표출 */
@@ -322,7 +322,7 @@
                 else {
                	     var dl = document.getElementById("bestcomm");
 					 dl.className = "nodata_sIcon";
-					 dl.style.paddingTop = "50px";
+					 dl.style.paddingTop = "35px";
 					 
 					 var dt = document.createElement("DT");
 					 
@@ -389,10 +389,10 @@
                     document.getElementById("bestcomm").appendChild(dl);
                 } */
                 
-                if( bestcoummunity.length <= 0 ){
+                /* if( bestcoummunity.length <= 0 ){
 	                conts = "<div style='height:170px; text-align:center;margin-top:5px;'><div><img style='margin-top:28px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
 					$("#bestcomm").html(conts);
-                }
+                } */
 	        }
 
 	        function get_myCommunity() {
