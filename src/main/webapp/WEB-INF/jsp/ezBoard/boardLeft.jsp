@@ -627,7 +627,7 @@
 		            treeView.SetNodeClick("TreeCtrl_onNodeClick");
 		            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
 		            treeView.DataBind(obj + "obj");
-		            tempID = ID;		            
+		            tempID = ID;
 
 		            var ctr = $("#TreeCtr"+num[1]).closest("h2");
 		            var ctrobj = $("#"+obj + "obj").closest("ul");
@@ -959,8 +959,22 @@
 	        $( window ).resize(function() {
 	        	leftResize();
         	});
+	        
+	        /* 2018-12-31 홍승비 - 게시판그룹 열린 상태 유지하며 트리뷰를 갱신하는 기존 함수 추가 */
+	        function treeViewRefresh(obj, ID) {
+	            var rootBoardID = ID;
+	            var num = obj.split("TreeCtrl");
+	            document.getElementById(obj + "obj").innerHTML = "";
+	            SetTreeConfig();
+	            var treeView = new TreeView();
+	            treeView.SetID("TreeView" + obj);
+	            treeView.SetRequestData("TreeCtrl_onNodeExpanded");
+	            treeView.SetNodeClick("TreeCtrl_onNodeClick");
+	            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
+	            treeView.DataBind(obj + "obj");
+	            tempID = ID;
+	        }
 		    
-	 
 	    </script>
 	</head>
 	<body class="newLeft">
