@@ -2457,6 +2457,38 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
+	public int deleteUserFromAllSharedMailbox(String userId, int tenantId) throws Exception {
+		logger.debug("deleteUserFromAllSharedMailbox started.");
+		logger.debug("userId=" + userId + ",tenantId=" + tenantId);
+		
+		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		String tenantIdParam = "tenantId=" + tenantId;
+		String inputParams = userIdParam + "&" + tenantIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/deleteUserFromAllSharedMailbox";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		String resultCode = "Error";
+		int reasonCode = -100;
+		
+		if (strJson != null) {
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+	        
+			resultCode = (String)object.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)object.get("reasonCode")).intValue();
+			}
+		}
+		
+		logger.debug("deleteUserFromAllSharedMailbox ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		return reasonCode;
+	}
+	
+	@Override
 	public String delSharedMailboxAllUser(String shareId, int tenantId) throws Exception {
 		logger.debug("delSharedMailboxAllUser started.");
 		logger.debug("shareId=" + shareId + ",tenantId=" + tenantId);
