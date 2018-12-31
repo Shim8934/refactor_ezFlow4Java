@@ -747,6 +747,10 @@
 	            	var strData = p_ListOrderObject.getAttribute("_data9");
 	            	var strDept = p_ListOrderObject.getAttribute("_data14");
 	            	
+	            	if (strData == null || strData == "") {
+	            		strData = "c=0;k=0;g=0;a=0;n=0;l=0;f=0;w=0;wf=0;wa=0";
+	            	}
+	            	
 	            	var _listView = new ListView();
 	            	_listView.LoadFromID("lvPermissionList");
 	            	var arrRows = _listView.GetDataRows();
