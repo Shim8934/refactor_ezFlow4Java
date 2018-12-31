@@ -74,15 +74,13 @@
 	            var selectItem;
 	            var totalboard = "";
 	            
-	            // 하위게시판 전체 div를 얻는 부분
 	            if (pObjSpan.parentElement.nextSibling.nodeType == 1) {
 	                totalboard = getFirstChild(pObjSpan.parentElement.nextSibling)
 	            }else{
 	                totalboard = getFirstChild(pObjSpan.parentElement.nextSibling.nextSibling)
 	            }
 	            
-	            var cnt = totalboard.children[0].getElementsByTagName("div").length; 
-	            // 게시판그룹에 속한 하위게시판들의 갯수를 얻는다.         
+	            var cnt = totalboard.children[0].getElementsByTagName("div").length;
 
 	            for (var i = 0; i < cnt; i++) {
 	            	
@@ -90,7 +88,7 @@
 	                if (RedirectBoardID == totalboard.children[0].getElementsByTagName("div")[i].getAttribute("data1")) {
 	                    selectItem = totalboard.children[0].getElementsByTagName("div")[i];
 	                    break;
-	                } else { // 리다이렉트 게시판ID와 div의 게시판ID가 일치하지 않는 경우 -> 하위게시판의 하위게시판을 확인
+	                } else { // 리다이렉트 게시판ID와 div의 게시판ID가 일치하지 않는 경우 -> 하위게시판을 확인
 	                    var parentNodeid = totalboard.children[0].getElementsByTagName("div")[i].id;
 	                    var imgtag = "imgNode_" + totalboard.children[0].getElementsByTagName("div")[i].id;
 	                    
@@ -103,11 +101,10 @@
 	                }
 	            }
 	            
-	            // img 태그가 span 태그로 바뀌면서 여러 span을 찾게 되므로, 노드레밸을 계산해서 적용
 	            var spanLevel = parseInt(selectItem.getAttribute("nodelevel")) + 2;
-	            selectItem.getElementsByTagName("span")[spanLevel].onclick(); // 일단 기존에 선택한 게시판이 다시 선택된다.
+	            selectItem.getElementsByTagName("span")[spanLevel].onclick();
 	            var tempid = selectItem.id.split("_");
-	            var tempidlength = tempid.length; // 해당 게시판이 속한 게시판의 하위게시판 갯수만큼 카운트한다.
+	            var tempidlength = tempid.length;
 	            var clicknode = new Array();
 	            
 	            if (CrossYN()) {
@@ -118,17 +115,16 @@
 	                        } else {
 	                            i--;
 	                        }
-	                        // 현재 span이 부모로 존재하기 때문에, 여러번 parentElement를 찾아야 한다.
+	                        // 다수의 태그가 부모로 존재 -> 반복해서 parentElement를 찾는다.
 	                        selectItem = selectItem.parentElement.parentElement.parentElement.parentElement;
 	                    } else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
 	                        selectItem.childNodes[0].onclick();
-	                        var j = clicknode.length; // 목표 게시판의 nodeLevel과 동일하다.
+	                        var j = clicknode.length;
 	                        
-	                        // 마지막 확장(k = 1 -> [0]이 되는 경우)은 불필요하므로 건너뛴다.
+	                        // 목표 게시판까지 도달한 경우(k=1), 마지막 확장은 불필요하므로 건너뛴다.
 	                        for (var k = j; k > 1; k--) {
-	                        	// 스크립트 에러가 나긴 하는데 익스펜드는 이 이전까지만 되서 정상적임
-	                        	// k가 마지막(1)일때는 클릭을 패스하자.
-	                            document.getElementById(clicknode[k - 1]).childNodes[k - 1].onclick();
+	                        	var exLevel = parseInt(document.getElementById(clicknode[k - 1]).getAttribute("nodelevel"));
+	                            document.getElementById(clicknode[k - 1]).childNodes[exLevel].onclick();
 	                        }
 	                        return;
 	                    }
@@ -141,13 +137,14 @@
 	                        } else {
 	                            i--;
 	                        }
-	                        selectItem = selectItem.parentElement;
+	                        selectItem = selectItem.parentElement.parentElement.parentElement.parentElement;
 	                    } else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
 	                        selectItem.childNodes[0].click();
 	                        var j = clicknode.length;
 	                        
-	                        for (var k = j; k > 0; k--) {
-	                            document.getElementById(clicknode[k - 1]).childNodes[k - 1].click();
+	                        for (var k = j; k > 1; k--) {
+	                        	var exLevel = parseInt(document.getElementById(clicknode[k - 1]).getAttribute("nodelevel"));
+	                            document.getElementById(clicknode[k - 1]).childNodes[exLevel].click();
 	                        }
 	                        return;
 	                    }
