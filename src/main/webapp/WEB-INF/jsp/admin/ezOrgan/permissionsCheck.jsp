@@ -192,6 +192,44 @@
         		+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
         		+ "<span id='countInfo'></span>";
 		        SelectDeptNM.setAttribute("countinfo", "")
+		        
+		        if (delType == "c") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t291' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t291' />";
+		        } else if (delType == "k") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t293' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t293' />";
+		        } else if (delType == "g"){
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t295' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t295' />";
+		        } else if (delType == "a") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t292' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t292' />";
+		        } else if (delType == "i") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t294' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t294' />";
+		        } else if (delType == "n") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t297' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t297' />";
+		        } else if (delType == "l") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t296' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t296' />";
+		        } else if (delType == "w") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t301' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t301' />";
+		        } else if (delType == "m") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t300' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t300' />";
+		        } else if (delType == "f") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.lhj1' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.lhj1' />";
+		        } else if (delType == "wf") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t303' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t303' />";
+		        } else if (delType == "wa") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.kbm01' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.kbm01' />";
+		        }
 
 		        //if (cn != "") {
 		        if (isfirst && cn != "") {
