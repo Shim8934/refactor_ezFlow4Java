@@ -1373,7 +1373,7 @@
 	            	type : "POST",
 	            	dataType : "text",
 	            	url : "/admin/ezOrgan/syncOrganAccounts.do",
-	            	async : false,
+	            	async : true,
 	            	success : function(result) {
 	            		hideProgress();
 	            		
