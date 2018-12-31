@@ -8,16 +8,11 @@
 		<title><spring:message code = 'ezCommunity.t28' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
-		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
-		
 		<style> 
-	        .pagetd{
+	        .pagetd {
 	        	padding-top:6px;
 	        }
-	        .pcol{
+	        .pcol {
 	        	padding-top:6px;
 	        }
 	        .right_point01 {
@@ -25,7 +20,10 @@
 		        color:#017bec;
 	        }
         </style>
-        
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
         <script type="text/javascript">
 	        var pKeyWord = "<c:out value = '${keyword}' />";
 	        var CurPage = "<c:out value = '${curPage}' />";
