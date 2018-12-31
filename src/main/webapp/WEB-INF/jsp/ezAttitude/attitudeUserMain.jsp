@@ -1755,9 +1755,9 @@
 	    			
 	    			tbodyHtml += "<tr class='" + dayClass + "' id='" + year + "-" + month + "-" + j + "'>";
 	    			if (LunarUse) {
-    					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ") </span></td>";//날짜
+    					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%;cursor:pointer' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ") </span></td>";//날짜
 	    			} else {
-    					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
+    					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%;cursor:pointer'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
 	    			}
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
