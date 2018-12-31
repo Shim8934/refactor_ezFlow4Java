@@ -29,7 +29,14 @@
 	    	function setFlagCheck(){
 	    		flagCheck = $("input:radio[name=flagCheck]:checked").val();
 		    }
-	    	 
+	    	
+	    	function setBancha() {
+	    		if($("input:checkbox[id='bancha']").is(":checked")) {
+	    			$("#banchaTxt").html(".5");
+	    		} else {
+	    			$("#banchaTxt").html("");
+	    		}
+	    	}
 	    	
 	    	//전체 연차 등록/수정
 	    	function modifyAllAnnualCnt() {
@@ -42,6 +49,9 @@
 	    		if (changeReason == "" || changeReason == null) {
 	    			alert("수정사유입력");
 	    			return;
+	    		}
+	    		if($("input:checkbox[id='bancha']").is(":checked")) {
+	    			annualCnt = Number(annualCnt) + 0.5;
 	    		}
 
 				$.ajax({
@@ -95,7 +105,11 @@
 	        <tr>
 	        	<th style="width:200px; text-align:center">연차수</th>
 	            <td>
-	            	<input id="annualCnt" name="annualCnt" type="text" style="width:100%" value="" maxlength="3">
+	            	<input id="annualCnt" name="annualCnt" type="text" style="width:30px;text-align:right;padding-bottom: 5px;" value="" maxlength="3">
+	            	<label id="banchaTxt"></label>일
+	            	<span style="width:100px;padding-right: 30px;"></span>
+	            	<input type="checkbox" id="bancha" name="bancha" onchange="setBancha();">
+	            	<label for="bancha">반차추가</label>
 	            </td>
 	        </tr>
 	        <tr>
