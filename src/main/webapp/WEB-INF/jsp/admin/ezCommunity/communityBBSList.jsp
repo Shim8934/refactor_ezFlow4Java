@@ -48,8 +48,7 @@
 			function refresh_onclick() {
 				window.location.reload(false);
 			}
-		</script>
-		<script type="text/javascript">		    
+			
 			function search() {
 				if (document.page.s_radio.value == "title" ) {
 					var strSearch = "sRadio=title&keyword=" + make_searchstring(document.page.keyword.value);
