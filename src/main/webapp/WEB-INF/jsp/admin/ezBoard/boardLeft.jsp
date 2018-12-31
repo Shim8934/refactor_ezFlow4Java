@@ -67,7 +67,7 @@
 		        }
 		    }
 		    
-	        /* 2018-12-28 홍승비 - 하위게시판 찾는 코드 변경된 태그로 수정 */
+	        /* 2018-12-31 홍승비 - 하위게시판 찾는 코드 변경된 태그로 수정 */
 		    function LoadTreeViewByPath(pObjSpan, pBoardID, pBoardGroupID) {
 	            pObjSpan.onclick();
 
@@ -118,7 +118,10 @@
 	                        // 다수의 태그가 부모로 존재 -> 반복해서 parentElement를 찾는다.
 	                        selectItem = selectItem.parentElement.parentElement.parentElement.parentElement;
 	                    } else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
-	                        selectItem.childNodes[0].onclick();
+	                    	// isleaf 속성이 FALSE인 경우에만 트리 확장 아이콘 진행
+	                    	if (selectItem.getAttribute("isleaf") == "FALSE") {
+	                        	selectItem.childNodes[0].onclick();
+	                        }
 	                        var j = clicknode.length;
 	                        
 	                        // 목표 게시판까지 도달한 경우(k=1), 마지막 확장은 불필요하므로 건너뛴다.
@@ -139,7 +142,9 @@
 	                        }
 	                        selectItem = selectItem.parentElement.parentElement.parentElement.parentElement;
 	                    } else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
-	                        selectItem.childNodes[0].click();
+	                    	if (selectItem.getAttribute("isleaf") == "FALSE") {
+	                        	selectItem.childNodes[0].click();
+	                    	}
 	                        var j = clicknode.length;
 	                        
 	                        for (var k = j; k > 1; k--) {
