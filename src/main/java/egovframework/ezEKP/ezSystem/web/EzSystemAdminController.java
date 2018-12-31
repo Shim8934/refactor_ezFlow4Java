@@ -1050,9 +1050,16 @@ public class EzSystemAdminController {
 		
 		// 회사리스트
 		List<OrganDeptVO> companyList = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), tenantID);
+		List<OrganDeptVO> resultCompanyList = new ArrayList<OrganDeptVO>();
+		
+		for(OrganDeptVO company : companyList) {
+			if(company.getCn().equals(userInfo.getCompanyID()) || userInfo.getRollInfo().indexOf("c=1") != -1) {
+				resultCompanyList.add(company);
+			}
+		}
 		
 		model.addAttribute("companyID", companyID);
-		model.addAttribute("companyList", companyList);
+		model.addAttribute("companyList", resultCompanyList);
 		model.addAttribute("useMultiLogin", useMultiLogin);
 		
 		logger.debug("multiLoginManager ended");
