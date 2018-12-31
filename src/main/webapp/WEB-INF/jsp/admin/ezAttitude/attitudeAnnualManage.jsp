@@ -97,7 +97,7 @@
 	        });
 		    
 		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 212 - document.getElementById("mainmenu").clientHeight;
+	        	var height = document.documentElement.clientHeight - 216 - document.getElementById("mainmenu").clientHeight;
 	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 	        		height = height - 30;
 	        	}
@@ -253,6 +253,21 @@
 		            	searchAnnualList('search');
 		        }
 		    }
+			
+			//엑셀 다운로드
+			function exportExcel() {
+				if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
+					alert("<spring:message code='ezAttitude.t56'/>");
+					return;
+				}
+    			searchYear = document.getElementById("searchYear").value;
+    			searchUserName = $("#searchUserName").val();
+    			searchDeptName = $("#searchDeptName").val();
+    			searchTitle = $("#searchTitle").val();
+				
+		    	exportExcelframe.location.href="/admin/ezAttitude/excelAnnualListExport.do?companyId=" + pCompanyId + "&searchYear=" + searchYear + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&orderCell=" + orderCell + "&orderOption=" + orderOption;
+		    	exportExcelframe.target="_blank";
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -288,7 +303,7 @@
 						<a class="imgbtn"><span onclick="searchAnnualList('search');"><spring:message code='ezAttitude.t121' /></span></a>
 						<a class="imgbtn"><span onclick="searchAnnualList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
-						<a class="imgbtn"><span onclick="">엑셀로 등록</span></a>
+						<a class="imgbtn"><span onclick="exportExcel();">엑셀로 등록</span></a>
 						<a class="imgbtn"><span onclick="modifyAllAnnualPop();">전체 연차 변경</span></a>
 						
 					</td>

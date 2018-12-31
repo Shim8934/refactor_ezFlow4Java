@@ -1,13 +1,22 @@
 package egovframework.ezEKP.ezAttitude.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Row;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -29,15 +38,21 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
+import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -2197,6 +2212,10 @@ public class EzAttitudeAdminController {
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
+		if (searchYear == null || searchYear == "") {
+			searchYear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 4);
+		}
+		
 		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchYear = " + searchYear + " || pageNum = " + pageNum + " || listSize = " + listSize
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption);
 		
@@ -2296,5 +2315,158 @@ public class EzAttitudeAdminController {
 		LOGGER.debug("changeAllAnnual ended.");
 		
 		return resultStatus;
+	}
+	// /admin/ezAttitude/excelAnnualListExport.do
+	/**
+	 * 엑셀 출력
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/excelAnnualListExport.do")
+	public void excelAnnualListExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
+		LOGGER.debug("excelAnnualListExport started."); 
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		String searchYear = request.getParameter("searchYear");
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
+		String searchTitle = request.getParameter("title");
+		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		String userId = userInfo.getId();
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		Locale locale = userInfo.getLocale();
+		
+		
+		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || listSize = " + listSize
+				+ " || orderCell = " + orderCell + " || orderOption = " + orderOption);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/annual";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("searchYear", searchYear)
+				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchDeptName", searchDeptName)
+				.queryParam("searchTitle", searchTitle)
+				.queryParam("userId", userId)
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize)
+				.queryParam("orderCell", orderCell)
+				.queryParam("orderOption", orderOption)
+				.queryParam("offsetMin", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject data = new JSONObject();
+		
+		List<AttitudeAnnualVO> annualList = new ArrayList<AttitudeAnnualVO>();
+
+		Gson gson = new Gson();
+		if(status.equals("ok")){
+			data = (JSONObject) resultBody.get("data");
+			annualList = gson.fromJson(data.get("list").toString(), new TypeToken<List<AttitudeAnnualVO>>(){}.getType()) ;
+		}
+		
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet;
+		  
+		HSSFCellStyle headerStyle= workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		  
+		HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+		
+		HSSFFont font = workbook.createFont();
+		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
+		headerStyle.setFont(font);
+		
+		Row row;
+		      
+		sheet = workbook.createSheet("report");
+		row = sheet.createRow(0);
+		
+		String pFileName = "";
+		pFileName = EgovDateUtil.getToday("-") +"_annualReport.xls";
+		
+		//header
+		row.createCell(0).setCellValue("NO");
+		row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
+		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
+		row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
+		row.createCell(4).setCellValue("사용연차 수");
+		row.createCell(5).setCellValue("총 연차 수");
+		row.getCell(0).setCellStyle(headerStyle);
+		row.getCell(1).setCellStyle(headerStyle);
+		row.getCell(2).setCellStyle(headerStyle);
+		row.getCell(3).setCellStyle(headerStyle);
+		row.getCell(4).setCellStyle(headerStyle);
+		row.getCell(5).setCellStyle(headerStyle);
+		
+		//body
+		for (int i = 0 ; i < annualList.size(); i++) { 
+			AttitudeAnnualVO vo = annualList.get(i);
+			row = sheet.createRow(i + 1);
+			
+			row.createCell(0).setCellValue(i + 1);
+			row.createCell(1).setCellValue(vo.getUserName());
+			row.createCell(2).setCellValue(vo.getUserTitle());
+			row.createCell(3).setCellValue(vo.getUserDeptName());
+			row.createCell(4).setCellValue(vo.getUseAnnualCnt());
+			row.createCell(5).setCellValue(vo.getTotalAnnualCnt());
+			
+			row.getCell(0).setCellStyle(bodyStyle);
+			row.getCell(1).setCellStyle(bodyStyle);
+			row.getCell(2).setCellStyle(bodyStyle);
+			row.getCell(3).setCellStyle(bodyStyle);
+			row.getCell(4).setCellStyle(bodyStyle);
+			row.getCell(5).setCellStyle(bodyStyle);
+		}
+		//width 조정
+		sheet.autoSizeColumn(0);
+		sheet.autoSizeColumn(1);
+		sheet.autoSizeColumn(2);
+		sheet.autoSizeColumn(3);
+		sheet.autoSizeColumn(4);
+		sheet.autoSizeColumn(5);
+		sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
+		sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
+		sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
+		sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
+		sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
+		sheet.setColumnWidth(5, (sheet.getColumnWidth(5)) + 512);
+			
+		
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		workbook.write(response.getOutputStream());
+		
+		workbook.close();
+		
+		LOGGER.debug("excelAnnualListExport ended.");
 	}
 }

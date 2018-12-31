@@ -2429,12 +2429,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String primary) {
 		LOGGER.debug("getAttitudeAnnualList started");
 		
-		int limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if (pageNum != null && pageNum != "") {
+			int limit = 0;
+			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+			map.put("limit", limit);
+			map.put("startRow", limit + 1);
+			map.put("endRow", limit + Integer.valueOf(listSize));
+		}
 		
 		String searchStartTime = searchYear + "-01-01 00:00:00";
 		String searchEndTime = searchYear + "-12-31 23:59:59";
 		
-		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("searchUserName", searchUserName);
@@ -2443,13 +2450,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchYear", searchYear);
 		map.put("searchStartTime", searchStartTime);
 		map.put("searchEndTime", searchEndTime);
-		map.put("limit", limit);
 		map.put("listSize", listSize);
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
 		map.put("offsetMin", offsetMin);
-		map.put("startRow", limit + 1);
-		map.put("endRow", limit + Integer.valueOf(listSize));
 		
 		List<AttitudeAnnualVO> resultList = ezAttitudeDAO.getAttitudeAnnualList(map);
 		
