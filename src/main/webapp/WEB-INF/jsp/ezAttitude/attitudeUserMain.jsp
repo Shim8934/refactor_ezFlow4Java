@@ -550,7 +550,7 @@
 				$.ajax({
 					type : "POST",
 					dataType : "json",
-					async : true,
+					async : false,
 					url : "/ezAttitude/getHolidayList.do",
 					data : {
 						isRest : "all"
@@ -1716,18 +1716,27 @@
 	    			if (j.length == 1) {
 	    				j = "0" + j
 	    			}
+					var oThisDate = new Date(year + "-" + month + "-" + j);
+	    			var memorialResult = setMemorial(oThisDate);
+	    			var isholiday = memorialResult[0];
+	    			var holidayname = memorialResult[1];
+	    			var holidayname2 = memorialResult[2];
 	    			
 	    			//토요일 일요일은 text색상이 다름.
 	    			var dayClass = "";
 	    			var dayIdx = new Date(year + "-" + month + "-" + j).getDay();
-	    			if (dayIdx == 6) {
-	    				dayClass = "sat";	
-	    			} else if (dayIdx == 0) {
+	    			if (dayIdx == 0 || isholiday) {
 	    				dayClass = "sun";
+	    			} else if (dayIdx == 6) {
+	    				dayClass = "sat";	
 	    			}
 	    			
 	    			if (year + "-" + month + "-" + j == today) {
-	    				dayClass = "today";
+	    				if (isholiday) {
+		    				dayClass = "today sun";
+	    				} else {
+	    					dayClass = "today";
+	    				}
 	    			}
 	    			
 	    			//음력
@@ -1746,9 +1755,9 @@
 	    			
 	    			tbodyHtml += "<tr class='" + dayClass + "' id='" + year + "-" + month + "-" + j + "'>";
 	    			if (LunarUse) {
-		    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ")</span></td>";//날짜
+    					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ") </span></td>";//날짜
 	    			} else {
-		    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
+    					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
 	    			}
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
@@ -1999,6 +2008,71 @@
 						$("#slideImg").attr("src", "/images/ImgIcon/slideLeft.png");
 					});
 				}
+			}
+			
+			function setMemorial(oThisDate) {
+				var tempyear = oThisDate.getFullYear();
+				var lunarDate; // 음력 날짜를 저장하기 위한 변수
+				var lunarDate2; // 음력월.음력일 => 달력에 음력일을 표시해주기 위한 변수
+				if (tempyear > 1800 && tempyear <= 2101) { // 음력에 대한 날짜 제공은 1800 ~ 2101
+					lunarDate = lunarCalc(tempyear, oThisDate.getMonth() + 1, oThisDate.getDate(), 1);
+					
+					lunarDate2 = lunarDate.month + "." + lunarDate.day;
+					if (lunarDate.leapMonth) {
+						lunarDate2 = "윤" + lunarDate2;
+					}
+				}
+				
+				var tempmemorial = memorialDayCheck(oThisDate, lunarDate); // 날짜에 해당하는 휴일을 가져온다.
+				var tempyearmemorial = yearmemorialDayCheck(oThisDate, lunarDate);
+				
+				var isholiday = false;
+				var holidayname = "";
+				var holidayname2 = "";
+				
+				for (var i = 0; i < tempmemorial.length; i++) {
+			        memorial = tempmemorial[i];
+			        if (uselang == "1") {
+			            if (i == tempmemorial.length - 1) {
+			            	holidayname += memorial.name;
+			            } else {
+			            	holidayname += memorial.name + ", ";
+			            }
+			        } else {
+			            if (i == tempmemorial.length - 1) {
+			            	holidayname += memorial.name2;
+			            } else {
+			            	holidayname += memorial.name2 + ", ";
+			            }
+			        }
+			        if (memorial.holiday) {
+			        	isholiday = true;
+			        }
+			    }
+	
+			    for (var i = 0; i < tempyearmemorial.length; i++) {
+			        yearmemorial = tempyearmemorial[i];
+			        if (uselang == "1") {
+			            if (i == tempyearmemorial.length - 1) {
+			            	holidayname2 += yearmemorial.name;
+			            } else {
+			            	holidayname2 += yearmemorial.name + ", ";
+			            }
+			        } else {
+			            if (i == tempyearmemorial.length - 1) {
+			            	holidayname2 += yearmemorial.name2;
+			            } else {
+			            	holidayname2 += yearmemorial.name2 + ", ";
+			            }
+			        }
+			        if (yearmemorial.holiday) {
+			        	isholiday = true;
+			        }
+		    	}
+			    
+			    var result = [isholiday, holidayname, holidayname2];
+			    
+			    return result;
 			}
 		</script>
 	</head>
