@@ -715,7 +715,7 @@
 		    </h1>
 		    <div id="mainmenu">
 		        <ul style="margin-top:15px">		            
-		            <li class="important"><span onClick="AddJob_Add()"><spring:message code='ezOrgan.t00014' /></span></li>
+		            <li class="important"><span onClick="AddJob_Add()"><spring:message code='ezOrgan.mse3' /></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="AddJob_Del('ALL', '')"><spring:message code='ezOrgan.t00016' /></span></li>
 		            <li><span class="icon16 icon16_delete" onClick="AddJob_Del('DEL', '')"></span></li>
