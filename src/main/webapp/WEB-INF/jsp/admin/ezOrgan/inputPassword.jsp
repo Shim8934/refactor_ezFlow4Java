@@ -53,7 +53,8 @@
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
-		<table class="content"> 
+		<div style="margin-top: 5px"><span>▒ <spring:message code='main.jjh04'/></span></div>
+		<table class="content" style="margin-top: 3px"> 
 		  <tr> 
 		    <th><spring:message code="ezOrgan.t232" /></th>
 		    <td><input id=NewPassword type=password style="width:98%" maxlength="50"></td>

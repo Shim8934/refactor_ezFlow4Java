@@ -26,6 +26,7 @@
 		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC; font-size: 11px;}
 		.preview_content {width: 97%; height: 630px; border: solid 0px green; display: inline-block; padding:10px;}
 		.preview_nodata {position: absolute; display: inline-block; width: 49%; vertical-align: middle; text-align: center; margin-top: 70px;}
+		.mainlist_free tr td:nth-child(5) {padding-left: 12px;}
 	</style>
 	<script type="text/javascript">
 		var Tab1_flag = true;
