@@ -576,6 +576,11 @@
 	        	document.getElementById("contentlist").style.height = height + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
+		    
+		    function Choose_Del() {
+		    	
+		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do?", "chooseDeletege", 500, 170);
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -638,7 +643,8 @@
 		            <li class="important"><span onClick="Permissions_Add()"><spring:message code='ezOrgan.mse3' /></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
-		            <li><span class="icon16 icon16_delete" onClick="Permissions_Del('MOD')"></span></li>
+		            <!-- <li><span class="icon16 icon16_delete" onClick="Permissions_Del('MOD')"></span></li> -->
+		            <li><span class="icon16 icon16_delete" onClick="Choose_Del()"></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li onClick="email_onclick()"><span class="icon16 icon16_mail_gray"></span></li>
 		            <span style="float: right; font-weight: normal; color: black; clear:inherit;margin-left:1px">

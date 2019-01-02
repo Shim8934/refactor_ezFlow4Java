@@ -18,7 +18,7 @@
 	    .mainlist_free tr th:first-child {
 	    		padding-left:10px;
 	    }
-	    .preview_info {background: #f1f3f5; margin: 0px; padding: 0px; overflow: hidden; border-top: 1px solid #e5e5e5; height: 35px; font-weight: bold;}
+	    .preview_info {background: #f1f3f5; margin: 0px; padding: 0px; overflow: hidden; border-bottom: 1px solid #e5e5e5; height: 36px; font-weight: bold;}
 	    .preview_title {display: inline-block;margin-top: -6px;margin-left: 13px;}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -752,7 +752,7 @@
 		                </div>
 		            </td>
 		            <td style="vertical-align:top; border: 1px solid #ddd;">
-		                 <div id="preview_nodata" class="preview_nodata">
+		                 <div id="preview_nodata" class="preview_nodata" style="margin-top: 70px;">
 			                  <dl class="nodata_sIcon">
 				              <dt><img src="/images/kr/main/noData_sIcon.png"></dt>
 				              <dd id="nodata_title" style="font-family: malgun gothic"><spring:message code='ezOrgan.mse5'/></dd>

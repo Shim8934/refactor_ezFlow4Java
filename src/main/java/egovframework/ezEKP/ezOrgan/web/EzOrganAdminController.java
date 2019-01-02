@@ -3744,4 +3744,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 		return result;
 	}
+	
+	/**
+	 * 권한관리 삭제 메뉴 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/chooseDeletege.do")
+	public String chooseDeletege(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		return "admin/ezOrgan/chooseDeletege";
+	}
 }
