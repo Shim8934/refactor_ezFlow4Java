@@ -292,12 +292,16 @@
 			    FOLDER_LEVEL AS FOLDERLEVEL,
 			    FOLDER_PATH	 AS FOLDERPATH  
 			FROM TBL_WEBFOLDER_FOLDER
-			WHERE USE_STATUS = 'Y'
-			AND FOLDER_TYPE = 'U'
+			WHERE FOLDER_TYPE = 'U'
 			AND TENANT_ID = #tenantId#
 			AND OWNER_ID = #userId#
-			ORDER BY SELECTED DESC, FOLDERNAME1
 		]]>
+		<isNotEqual property="flag" compareValue="delete">
+				AND USE_STATUS = 'Y'
+			</isNotEqual>
+		<![CDATA[	
+	        ORDER BY SELECTED DESC, FOLDERNAME1
+		]]>		
 	</select>
 	
 	<select id="EzWebFolderDAO_y.getDeptFolderTree" resultMap="folderTreeVO" parameterClass="Map">
@@ -1561,6 +1565,20 @@
 				USERID = #userId#
 			AND 
 				TENANTID = #tenantId#
+		]]>
+	</select>
+	<select id="EzWebFolderDAO_y.folderIdByUserIdAndFolderType" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				FOLDER_ID 
+			FROM 
+				TBL_WEBFOLDER_FOLDER 
+			WHERE 
+				FOLDER_UPPER = 'root' 
+			AND 
+				OWNER_ID = #userId#
+			AND 
+				TENANT_ID = #tenantId#
 		]]>
 	</select>
 </sqlMap>
