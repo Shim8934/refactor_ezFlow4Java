@@ -179,6 +179,7 @@
 			        xmlhttp.send(xmlpara);
 			    }
 			    
+				/* 2018-12-27 홍승비 - 퀵링크 아이콘과 텍스트 세로 중앙정렬 수정 */
 			    function event_GetQuickLink() {
 			        if (xmlhttp != null && xmlhttp.readyState == 4) {
 			            if (xmlhttp.statusText == "OK") {
@@ -191,9 +192,19 @@
 	
 			                    var _li = document.createElement("li");
 			                    _li.style.display = "none";
+			                    _li.style.overflow = "hidden";
+			                    _li.style.height = "69px";
+			                    
 			                    if (trim_Cross(URL) != "") {
 			                        _li.onclick = new Function("openURL('" + URL + "', '"+ SIZE +"');");
 			                    }
+			                    
+			                    var _div = document.createElement("div");
+			                    _div.style.display = "table-cell";
+			                    _div.style.verticalAlign = "middle";
+			                    _div.style.height = "69px";
+			                    _div.style.width = "68px";
+			                    
 			                    var _span1 = document.createElement("span");
 			                    _span1.className = "icon";
 	
@@ -203,13 +214,16 @@
 	
 			                    var _span2 = document.createElement("span");
 			                    _span2.className = "txt";
+			                    _span2.style.height = "auto";
 			                    var QuickLang = lang == "1" ? "" : lang;
 	                             if(CrossYN())
 	                                _span2.textContent = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME" + QuickLang);
 			                    else
-	                                _span2.innerText = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME" + QuickLang); 
-			                    _li.appendChild(_span1);
-			                    _li.appendChild(_span2);
+	                                _span2.innerText = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME" + QuickLang);
+	                             
+			                    _div.appendChild(_span1);
+			                    _div.appendChild(_span2);
+			                    _li.appendChild(_div);
 			                    document.getElementById("QuickUl").appendChild(_li);
 	
 	
@@ -219,9 +233,7 @@
 			                    else {
 			                        document.getElementById('QuickUl').getElementsByTagName('li')[i].style.display = 'none';
 			                    }
-			                }
-	
-			                
+			                }                
 			            }
 			        }
 			    }
@@ -243,28 +255,17 @@
 			            }
 			        }
 			    }
+			    
+			    /* 2018-12-27 홍승비 - 퀵링크 URL 창모드로 열 때 top 위치 화면 중앙으로 수정 */
 			    function openURL(Location, SIZE) {
 			        try {
 			            var heigth = window.screen.availHeight;
 			            var width = window.screen.availWidth;
 	
-			            var left = 0;
-			            var top = 0;
-	
-			            if (window.screen.width > 800) {
-			                var pleftpos;
-	
-			                pleftpos = parseInt(width) - 967;
-			                heigth = parseInt(heigth) - 30;
-			                width = parseInt(width) - pleftpos;
-	
-			                left = pleftpos / 2;
-			            } else {
-	
-			                heigth = parseInt(heigth) - 30;
-			                width = parseInt(width) - 10;
-			            }
-			            if(SIZE == "FULL")
+			            var left = (width - SIZE.split(':')[0]) / 2;
+			            var top = (heigth - SIZE.split(':')[1]) / 2;
+			            
+			            if (SIZE == "FULL")
 			                window.open(Location, "", "toolbar=1,location=1,directories=0,status=1,menubar=1,scrollbars=0,resizable=1,height=" + screen.height + ",width=" + screen.width + ",top=0,left=0" + ",scrollbars = yes");
 			            else
 			                window.open(Location, "", "toolbar=1,location=1,directories=0,status=1,menubar=1,scrollbars=0,resizable=1,height=" + SIZE.split(':')[1] + ",width=" + SIZE.split(':')[0] + ",top=" + top + ",left = " + left + ",scrollbars = yes");

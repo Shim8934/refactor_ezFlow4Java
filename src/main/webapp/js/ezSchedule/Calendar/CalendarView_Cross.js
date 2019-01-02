@@ -1067,8 +1067,13 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
             weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "] " + holidayname + " (" + LunarDate2 + ")";
         else
             weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "] " + holidayname;
-        if (isholiday)
-            document.getElementById("list_Title" + pCnt).className += " sun";
+        if (isholiday) {
+        	if (document.getElementById("list_Title" + pCnt).className.indexOf('sat') > -1) {
+        		document.getElementById("list_Title" + pCnt).className = document.getElementById("list_Title" + pCnt).className.replace('sat','sun');
+        	} else {
+        		document.getElementById("list_Title" + pCnt).className += " sun";
+        	}
+        }
     }
     else
         var weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "]";

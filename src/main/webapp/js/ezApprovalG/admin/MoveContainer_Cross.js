@@ -567,6 +567,7 @@ function getDocListjson(pageNum) {
 		makePageSelPage();
 		} else {
 			alert(text2);
+			HiddenMailProgress();				// 2019-01-02 김민성 - 검색결과 없을시 프로그레스바 계속 나타나는 현상 수정
 		}
 }
 

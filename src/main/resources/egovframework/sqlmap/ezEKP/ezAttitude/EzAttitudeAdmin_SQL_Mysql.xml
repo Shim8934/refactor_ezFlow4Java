@@ -286,6 +286,13 @@
 				TYPE_ID NOT IN ('A01', 'A03', 'A05')
 			]]>
 			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="typeIdArr">
+			<iterate prepend="TYPE_ID IN" property="typeIdArr" open="(" close=")" conjunction=",">
+			<![CDATA[
+				#typeIdArr[]#
+			]]>
+			</iterate>
+			</isNotEmpty>
 			AND
 				ISDEL = '0'
 	</select>

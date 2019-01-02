@@ -27,7 +27,6 @@
 		    var userinfo_dialogArguments = new Array();
 		    var useDisablePopImap = "";
 		    var deptTreeTopId = "${deptTreeTopId}";
-		    var changePassLength = 0;
 		    
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -1037,8 +1036,9 @@
 			function mod_password() {
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
-
-		        if (listview.GetSelectedRows().length == 0) {
+		        var length = listview.GetSelectedRows().length;
+		        
+		        if (length == 0) {
 					alert("<spring:message code='ezOrgan.t39' />");
 					return;
 				} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
@@ -1048,12 +1048,11 @@
 		    		alert("<spring:message code='ezOrgan.psb02' />");
 					return;
 			    }
-		        changePassLength = listview.GetSelectedRows().length;
 		        
-		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
+		        inputpassword_dialogArguments[0] = length + "<spring:message code='ezOrgan.t40' />";
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
 		        
-		      //크롬일때 alert창 크기때문에 크롬일때 구별
+		      	//크롬일때 alert창 크기때문에 크롬일때 구별
 	            var agent = navigator.userAgent.toLowerCase();
 	            if (agent.indexOf("chrome") != -1) {
 	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));	
@@ -1373,7 +1372,7 @@
 	            	type : "POST",
 	            	dataType : "text",
 	            	url : "/admin/ezOrgan/syncOrganAccounts.do",
-	            	async : false,
+	            	async : true,
 	            	success : function(result) {
 	            		hideProgress();
 	            		

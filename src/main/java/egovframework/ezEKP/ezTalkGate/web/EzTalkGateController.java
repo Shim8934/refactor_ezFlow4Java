@@ -471,9 +471,16 @@ public class EzTalkGateController {
 		
 		logger.debug("resultVO=" + resultVO);
 		
-		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
-			isUserExists = true;
-		} 
+		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+			// 공유사서함 기능을 사용할 경우 공유사서함 계정으로의 로그인을 막는다.
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+			
+			if (useSharedMailbox.equals("YES") && resultVO.getDeptID() != null && resultVO.getDeptID().startsWith("shared_mailbox_")) {
+				logger.debug("Cannot login with shared mailbox account.");
+			} else {
+				isUserExists = true;
+			}
+		}
 		
 		logger.debug("checkIfUserExists ended.");
 		

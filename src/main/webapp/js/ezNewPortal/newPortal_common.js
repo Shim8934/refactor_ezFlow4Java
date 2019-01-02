@@ -167,9 +167,7 @@ function eventSetting(portletId, themeId) { //포틀릿 아이디별로 자바�
 			try {
 				openerCalendarMiniView = CalendarMiniView;
 				openerCalendarMiniDataSource = CalendarMiniDataSource;
-				
-				CalendarMiniView("CalendarMini");
-				CalendarMiniDataSource();
+				schedule_get_holiday();
 			    
 //				today();
 				
@@ -1100,4 +1098,49 @@ function openDraftUI() {
     openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
     
     openwindow(openLocation, "", 890, 620);
+}
+
+function schedule_get_holiday() {		        
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezSchedule/scheduleGetHoliday.do",
+		data : {
+			COMPANYID  : "VIEW"		    			
+		},
+		success: function(text){
+			XmlNodeText = text;
+            XmlNode = loadXMLString(XmlNodeText);
+            
+            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
+                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
+                    var issolar;
+                    var holiday;
+                    
+                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
+                        issolar = "1";
+                    else
+                        issolar = "2";
+                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1")			                    	
+                        holiday = true;			                    
+                    else
+                        holiday = false;
+                    
+                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
+                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+                    } else {                   	
+                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
+                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+                    }
+                }
+            }			            
+            CalendarMiniView("CalendarMini");
+			CalendarMiniDataSource();
+		}		    		
+    });
 }

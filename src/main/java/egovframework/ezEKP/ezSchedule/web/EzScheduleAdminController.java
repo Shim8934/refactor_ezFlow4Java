@@ -235,29 +235,15 @@ public class EzScheduleAdminController {
 		
 		String primary = userInfo.getPrimary();
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		StringBuffer companyList = new StringBuffer();
-		
-		for (int i =0 ; i < list.size() ; i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-				companyList.append(vo.getCn()+","+vo.getDisplayName()+";");
-			}
-		}
-		
 		String holidayType = request.getParameter("holidayType");
+		String companylist = request.getParameter("companylist");
 		
 		model.addAttribute("primary", primary);
-		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
 		model.addAttribute("lang", userInfo.getLang());
-		model.addAttribute("companyList", companyList);
 		model.addAttribute("holidayType", holidayType);
+		model.addAttribute("companylist", companylist);
+		
 		
 		return "/admin/ezSchedule/scheduleAdminHolidayManage";
 	}
@@ -537,11 +523,14 @@ public class EzScheduleAdminController {
 		
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
+		StringBuffer companyList = new StringBuffer();
+		
 		for (int i =0 ; i < list.size() ; i++) {
 			OrganDeptVO vo = list.get(i);
 			
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 				resultList.add(vo);
+				companyList.append(vo.getCn()+","+vo.getDisplayName()+";");
 			}
 		}
 		
@@ -549,6 +538,8 @@ public class EzScheduleAdminController {
 		model.addAttribute("primary", primary);
 		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyList", companyList);
 		
 		logger.debug("============ scheduleAdminHolidayTab ended ============");
 		
