@@ -1914,12 +1914,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    
 		String companyID = request.getParameter("companyID");
 		String strLang = userInfo.getPrimary();
-				
-		List<OrganUserVO> list = ezOrganAdminService.getAddJobList(companyID, strLang, tenantID);
+			
+		int currentPage = Integer.parseInt(request.getParameter("page")); 
+		int pageSize = Integer.parseInt(request.getParameter("pageSize"));
+		int startRow = (pageSize * (currentPage - 1)) + 1;
+		int endRow = pageSize * currentPage;
+		
+		
+		int totalCount = ezOrganAdminService.getAddJobCount(companyID, tenantID, strLang);
+		
+		List<OrganUserVO> list = ezOrganAdminService.getAddJobList(companyID, strLang, tenantID, totalCount, pageSize, startRow, endRow);
+		
+		logger.debug("companyID=" + companyID  + ",strLang=" + strLang + ",currentPage=" + currentPage
+                + ",pageSize=" + pageSize + ",startRow=" + startRow + ",endRow=" + endRow
+                + ",totalCount=" + totalCount);
 		
 		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
         result.append("<ROWS>");
-        
+        result.append("<TOTALCNT>");
+		result.append(totalCount);
+		result.append("</TOTALCNT>");
         for (int i = 0; i < list.size(); i++) {
         	OrganUserVO vo = list.get(i);
         	

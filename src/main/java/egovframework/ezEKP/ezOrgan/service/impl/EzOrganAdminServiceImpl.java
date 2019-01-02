@@ -94,7 +94,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID) throws Exception {
+	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID, int totalCount, int pageSize, int startRow, int endRow) throws Exception {
 	    logger.debug("getAddJobList started");
 	    logger.debug("companyID=" + companyID + ",strLang=" + strLang + ",tenantID=" + tenantID);
 	    
@@ -103,6 +103,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_LANGDATA", strLang);
+		map.put("v_TOTALCOUNT", totalCount);
+		map.put("v_PAGESIZE", pageSize);
+		map.put("v_STARTROW", startRow);
+		map.put("v_ENDROW", endRow);
+		map.put("v_STARTNUM", startRow - 1);
+        map.put("v_COUNT", endRow - startRow + 1);
 		
 		List<OrganUserVO> addJobList = ezOrganAdminDao.getAddJobList(map);
 		
@@ -2085,5 +2091,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			ezOrganAdminDao.updateDBData_user(userVO);
 		}
 		logger.debug("updateDBData_user_new ended");
+	}
+
+	@Override
+	public int getAddJobCount(String companyID, int tenantId, String strLang) throws Exception {
+		logger.debug("getAddJobCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("strLang", strLang);
+
+		logger.debug("getAddJobCount ended");
+		return ezOrganAdminDao.getAddJobCount(map);
 	}
 }

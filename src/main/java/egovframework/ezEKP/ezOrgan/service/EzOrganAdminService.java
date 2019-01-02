@@ -9,6 +9,7 @@ import java.util.List;
 
 
 
+
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -17,7 +18,7 @@ public interface EzOrganAdminService {
 	
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception;
 	
-	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID) throws Exception;
+	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID, int totalCount, int pageSize, int startRow, int endRow) throws Exception;
 	
 	public List<OrganUserVO> getUserAddJobList(String cn, String strLang, int tenantID) throws Exception;
 	
@@ -123,5 +124,7 @@ public interface EzOrganAdminService {
 	public String getJobOptionInfo(String type, String companyID, int tenantID) throws Exception;
 
 	public void updateDBData_user_new(List<OrganUserVO> vo) throws Exception;
+
+	public int getAddJobCount(String companyID, int tenantId, String strLang) throws Exception;
 
 }

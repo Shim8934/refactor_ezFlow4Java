@@ -62,9 +62,21 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/admin/ezOrgan/getAddJobList.do",
-		        	data : {companyID : document.getElementById("ListCompany").value},
+		        	data : {companyID : document.getElementById("ListCompany").value,
+		        			page      : CurPage,
+		        			pageSize  : pageSize},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
+		        		if (result.xml != "") {
+		                    if (result.documentElement.getElementsByTagName("TOTALCNT")[0] != null) {
+		                        totalCnt = getNodeText(result.documentElement.getElementsByTagName("TOTALCNT")[0]);
+		                        totalPage = Math.ceil(new Number(totalCnt / pageSize));
+		                    }
+		                } else {
+		                    totalCnt = 0;
+		                    totalPage = 0;
+		                }
+		        		
 		        		var xmldom = result;
 		                var headerData = createXmlDom();
 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
@@ -94,8 +106,8 @@
 		                var list = document.getElementById("lvAddJobList");
 		                var listLeg = list.children[1].childElementCount;
 		                
-		                totalCnt = listLeg;
-                        totalPage = Math.ceil(new Number(totalCnt / pageSize));
+		                /* totalCnt = listLeg;
+                        totalPage = Math.ceil(new Number(totalCnt / pageSize)); */
                         
 		                var a = document.getElementById("previewmail");
 		                a.style.display = "none";
