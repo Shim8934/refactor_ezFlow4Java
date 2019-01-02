@@ -44,6 +44,11 @@
 			    }
 				window.close();
 			}
+			function enterCheck(event) {
+				if (event.keyCode == "13") {
+					OK_Click();
+				} 
+			}
 	    </script>
 	</head>
 	<body class="popup">
@@ -61,7 +66,7 @@
 		  </tr>        
 		  <tr> 
 		    <th><spring:message code="ezOrgan.t233" /></th>
-		    <td><input id=ConfirmPassword type=password style="width:98%" maxlength="50"></td>
+		    <td><input id=ConfirmPassword type=password style="width:98%" maxlength="50" onkeydown="enterCheck(event)"></td>
 		  </tr>        
 		</table>
 		  <div class="btnpositionNew">
