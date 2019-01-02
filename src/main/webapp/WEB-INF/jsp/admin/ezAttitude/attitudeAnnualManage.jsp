@@ -192,7 +192,7 @@
 	    			resultHtml += "<td>" + vo.userDeptName + "</td>";
 	    			resultHtml += "<td>" + vo.useAnnualCnt + "</td>";
 	    			resultHtml += "<td>" + vo.totalAnnualCnt + "</td>";
-	    			resultHtml += "<td><a class='imgbtn'><span onclick=''>내역 확인</span></a></td>";
+	    			resultHtml += "<td><a class='imgbtn'><span onclick='useAnnualHistory(this);'>내역 확인</span></a></td>";
 	    			resultHtml += "<td><a class='imgbtn'><span onclick=''>내역 확인</span></a></td>";
 	    			resultHtml += "<td><a class='imgbtn'><span onclick=''>수정</span></a></td></tr>";
 	    			
@@ -267,6 +267,13 @@
 				
 		    	exportExcelframe.location.href="/admin/ezAttitude/excelAnnualListExport.do?companyId=" + pCompanyId + "&searchYear=" + searchYear + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&orderCell=" + orderCell + "&orderOption=" + orderOption;
 		    	exportExcelframe.target="_blank";
+			}
+			
+			function useAnnualHistory (obj) {
+				var searchYear = document.getElementById("searchYear").value;
+				var userId = $(obj).closest("tr").attr("userid");
+				var url = "/admin/ezAttitude/useAnnualHistoryPop.do?userId=" + userId + "&year" + searchYear + "&companyId=" + pCompanyId;
+				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(685, 500));
 			}
 	    </script>
 	</head>

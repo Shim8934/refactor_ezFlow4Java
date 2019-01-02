@@ -386,5 +386,9 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
     public void changeAllAnnual(Map<String, Object> map) throws Exception {
     	update("ezAttitudeAdminDAO.changeAllAnnual", map);
     }
+
+	public List<AdminAttitudeVO> getUserAnnual(Map<String, Object> map) {
+		return (List<AdminAttitudeVO>) list("ezAttitudeAdminDAO.getUserAnnual", map);
+	}
     
 }
