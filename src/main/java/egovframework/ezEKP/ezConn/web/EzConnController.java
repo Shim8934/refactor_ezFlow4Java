@@ -326,8 +326,17 @@ public class EzConnController {
 		
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		
+		// 공유사서함 기능을 사용할 경우 공유사서함 계정으로의 로그인을 막는다.
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+		
+		if (useSharedMailbox.equals("YES")) {
+			if (resultVO != null && resultVO.getDeptID() != null && resultVO.getDeptID().startsWith("shared_mailbox_")) {
+				logger.debug("Cannot login with shared mailbox account.");
+				resultVO = null;
+			}
+		}
+		
 		logger.debug("resultVO=" + resultVO);
-				
 		logger.debug("getUserInfoById ended.");
 		
 		return resultVO;
