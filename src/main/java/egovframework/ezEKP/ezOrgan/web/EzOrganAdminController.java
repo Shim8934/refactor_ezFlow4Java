@@ -2029,7 +2029,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String titleInfo = "";
 		String deleteTitleInfo = "";
 		String jobID = "";
-				
+		String delType = doc.getElementsByTagName("DEPTID").item(0).getTextContent().equals("")? "ALL" : ""; //삭제타입(ALL인경우 전체겸직삭제)
+		
 		for (int i = 0; i < doc.getElementsByTagName("CN").getLength(); i++) {
 			String titleValue = doc.getElementsByTagName("TITLE").item(i).getTextContent();
 			
@@ -2046,24 +2047,46 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     			} else {
     				titleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue; 
     			}
-		    } else {
-                if (deleteTitleInfo.equals("")) {
-                    deleteTitleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
-                } else {
-                    deleteTitleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue; 
-                }		        
-		    }
-		    
+            } else { //선택삭제, 전체겸직삭제인경우
+            	if (doc.getElementsByTagName("DEPTID").item(i).getTextContent().equals("")) { //전체겸직삭제인경우
+            		String cn = doc.getElementsByTagName("CN").item(i).getTextContent();
+            		List<OrganUserVO> organUserVOList = ezOrganAdminService.getUserAddJobList(cn, "1", tenantID);
+            		
+            		for (int j = 0; j < organUserVOList.size(); j++) {
+            			if (deleteTitleInfo.equals("")) {
+            				deleteTitleInfo = organUserVOList.get(j).getDepartment() + ":" + titleValue;
+            			} else {
+            				deleteTitleInfo += ";" + organUserVOList.get(j).getDepartment() + ":" + titleValue; 
+            			}
+            		}
+            		
+            		logger.debug("cn=" + cn + ",titleInfo=" + titleInfo + ",deleteTitleInfo=" + deleteTitleInfo);
+            		
+            		ezOrganAdminService.updateProperty(cn, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID);
+            		ezOrganAdminService.deleteJob(cn, deleteTitleInfo, tenantID);
+            		
+            		deleteTitleInfo = "";
+            	}
+            	else { //선택삭제인경우
+            		if (deleteTitleInfo.equals("")) {
+            			deleteTitleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
+            		} else {
+            			deleteTitleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue; 
+            		}
+            	}
+            }
 		    jobID += doc.getElementsByTagName("JOBID").item(i).getTextContent() + ";";
-		}
+		} //for문완료
 		jobID = jobID.substring(0, jobID.length() - 1);
 		
-		logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",deleteTitleInfo=" + deleteTitleInfo);
+		if (!delType.equals("ALL")) { //전체겸직삭제가 아닌 경우
+			logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",deleteTitleInfo=" + deleteTitleInfo);
+			
+			ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID);
+		}
 		
-		ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID);
-		
-		if (!deleteTitleInfo.equals("")) {
-		    ezOrganAdminService.deleteJob(userID, deleteTitleInfo, tenantID);
+		if (!deleteTitleInfo.equals("") && !delType.equals("ALL")) {
+			ezOrganAdminService.deleteJob(userID, deleteTitleInfo, tenantID);
 		} else {
 		    if (!titleInfo.equals("")) {
 		        List<OrganUserVO> organUserVOList = ezOrganAdminService.getUserAddJobList(userID, "1", tenantID);
@@ -2444,7 +2467,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         logger.debug("tenantID=" + tenantID + ",strLang=" + strLang + ",offset=" + offset);
 		
-		int pPageRow = 20;
+		int pPageRow = 15;
    		int pPage = (request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1);
    		String searchStartDate = (request.getParameter("searchStartDate") != null ? request.getParameter("searchStartDate") : "");
    		String searchEndDate = (request.getParameter("searchEndDate") != null ? request.getParameter("searchEndDate") : "");
