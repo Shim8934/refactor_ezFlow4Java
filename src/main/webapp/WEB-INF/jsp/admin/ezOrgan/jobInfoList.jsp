@@ -33,10 +33,16 @@
 		var pSearchType = "";
 		var pSearchValue = "";
 		
-		var pLastClickRow;
-		
 		var pCompanyID = "${userInfo.companyID}";
 		var pCompanyNM = "${userInfo.companyName}";
+		
+		document.onselectstart = function () {
+            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
+                return false;
+            } else {
+                return true;
+            }
+        };
 		
 		$(document).ready(function() {
 			companyChange();
@@ -128,12 +134,6 @@
 				var pJobID = oArrRows[0].getAttribute("DATA1");
 				var pJobNM = oArrRows[0].firstChild.innerText;
 				
-				if (pLastClickRow != oArrRows[0]) {
-					pCurPage = 1;
-					pSearchValue = "";
-					$("#searchValue").val("");
-				}
-				
 				$.ajax({
 	            	type : "POST",
 	            	dataType: "text",
@@ -174,8 +174,6 @@
 			    
 			    var _html = "<span>&nbsp;" + pJobNM + "-[" + "<span class='countColor'>" + pTotalCnt + "<spring:message code = 'main.t20000'/></span>]</span>";
 			    $("#jobTotalInfoRayer").html(_html);
-			    
-			    pLastClickRow = oArrRows[0];
 			}
 			
 			document.getElementById("jobUserListView").innerHTML = "";
@@ -346,6 +344,7 @@
             		}
             	},
             	error : function(e) {
+            		rtnFlag = false;
             	}
             });
 			
@@ -543,7 +542,7 @@
 					<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;"></div>
 					<div id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px;">
 						<select id="searchType" style="height: 26px; width: 50px;"><option value="displayname"><spring:message code='main.t76' /></option></select>
-						<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px;">
+						<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px;">
 						<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.gif" style="width: 26px; height: 26px; margin-top:2px;" border="0" onClick="search()"></a>
 					</div>
 				</div>
