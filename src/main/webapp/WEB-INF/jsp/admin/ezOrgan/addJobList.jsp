@@ -747,7 +747,7 @@
 		        <tr>
 		            <td style="width:750px">
 		                <div class="listview" style="Width:750px;">
-		                    <div id="AddJobListView" style="border: 0px solid #ddd; Width: 750px; Height:700px; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+		                    <div id="AddJobListView" style="border: 0px solid #ddd; Width: 750px; Height:670px; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 		                    <div id="tblPageRayer" style="Width:100%;text-align:center;"></div>
 		                </div>
 		            </td>
@@ -755,12 +755,12 @@
 		                 <div id="preview_nodata" class="preview_nodata">
 			                  <dl class="nodata_sIcon">
 				              <dt><img src="/images/kr/main/noData_sIcon.png"></dt>
-				              <dd id="nodata_title" style="font-family: malgun gothic">선택된 겸직이 없습니다.</dd>
+				              <dd id="nodata_title" style="font-family: malgun gothic"><spring:message code='ezOrgan.mse5'/></dd>
 			                  </dl>
 		                 </div>
 		              <div class="previewmail" id="previewmail">
 		                 <div class="preview_info">
-		                     <div id="Preview_HeaderH">
+		                     <div id="Preview_HeaderH" style="line-height: 11px;">
 						<p class="preview_header">
 						   <span class="preview_title" id="preview_title"></span>
 						   <span class="preview_title2" id="preview_title2"></span>
