@@ -37,11 +37,11 @@
 		    	var holiday_url = "";
 		    	if (holidayType == "a") {
 		    		COMPANYID = parent.document.getElementById("ListCompany")[parent.document.getElementById("ListCompany").selectedIndex].value;
-		    		if (document.getElementById("ListYear").selectedIndex > -1) {
+		    		/* if (document.getElementById("ListYear").selectedIndex > -1) {
 				    	holidayYear = document.getElementById("ListYear")[document.getElementById("ListYear").selectedIndex].value;
-		    		} else {
+		    		} else { */
 		    			holidayYear = new Date().getFullYear();
-		    		}
+		    		/* } */
 			    	holiday_url = "/ezSchedule/scheduleGetHolidayJsonYear.do"	
 		    	} else {
 		    		COMPANYID = "ALL";
@@ -103,45 +103,21 @@
 		                           
 								
 		                        if (isUse == "1") {
-		                            if (i != 0 && i == (HolidaySize-1)) {
-		                            	_html += "<td style='width:5%;padding-left:5px;border-bottom: none;'><input  type='checkbox' checked = true onclick='event_statuschange(this);'></td>";
-		                            } else {
 			                            _html += "<td style='width:5%;padding-left:5px;'><input  type='checkbox' checked = true onclick='event_statuschange(this);'></td>";
-		                            }
 		                        } else {
-		                            if (i != 0 && i != 0 && i == (HolidaySize-1)) {
-		                            	_html += "<td style='width:5%;padding-left:5px;border-bottom: none;'><input  type='checkbox' onclick='event_statuschange(this);'></td>";
-		                            } else {
 			                            _html += "<td style='width:5%;padding-left:5px;'><input type='checkbox' onclick='event_statuschange(this);'></td>";
-		                            }
 		                        }
 	
 		                        if (userlang == "1") {
-		                            if (i != 0 && i == (HolidaySize-1)) {
-		                            	_html += "<td style='width:30%;color:gray;border-bottom: none;'>" + MakeXMLString(holidayName) + "</td>";
-		                            } else {
 			                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(holidayName) + "</td>";
-		                            }
 		                        } else {
-		                            if (i != 0 && i == (HolidaySize-1)) {
-		                            	_html += "<td style='width:30%;color:gray;border-bottom: none;'>" + MakeXMLString(holidayName2) + "</td>";
-		                            } else {
 			                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(holidayName2) + "</td>";
-		                            }
 		                        }
 	
 		                        if (isSolar == "1") {
-		                            if (i != 0 && i == (HolidaySize-1)) {
-		                            	_html += "<td style='width:15%;color:gray;border-bottom: none;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
-		                            } else {
 			                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
-		                            }
 		                        } else {
-		                            if (i != 0 && i == (HolidaySize-1)) {
-		                            	_html += "<td style='width:15%;color:gray;border-bottom: none;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
-		                            } else {
 			                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
-		                            }
 		                        }
 								
 		                        /* if (holidayType == 'a') {
@@ -153,38 +129,18 @@
 		                        } else {
 		                        	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
 		                        } */
-		                        if (i != 0 && i == (HolidaySize-1)) {
-			                        _html += "<td style='width:15%;color:gray;border-bottom: none;'>" + holidayDate.substring(5, 10) + "</td>";
-	                            } else {
 	                            	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
-	                            }
 								
 		                        if (isRepeat == "1") {
-			                        if (i != 0 && i == (HolidaySize-1)) {
-			                        	_html += "<td style='width:10%;color:gray;border-bottom: none;'>Y</td>";
-			                        } else{
 			                            _html += "<td style='width:10%;color:gray;'>Y</td>";
-			                        }
 		                        } else {
-		                        	if (i != 0 && i == (HolidaySize-1)) {
-		                        		_html += "<td style='width:10%;color:gray;border-bottom: none;'>N</td>";
-			                        } else{
 			                        	_html += "<td style='width:10%;color:gray;'>N</td>";
-			                        }
 		                        } 
 	
 		                        if (isRest == "1") {
-		                        	if (i != 0 && i == (HolidaySize-1)) {
-		                        		_html += "<td style='width:10%;color:gray;border-bottom: none;'>Y</td>";
-			                        } else{
 			                        	_html += "<td style='width:10%;color:gray;'>Y</td>";
-			                        }
 		                        } else {
-		                        	if (i != 0 && i == (HolidaySize-1)) {
-		                        		 _html += "<td style='width:10%;color:gray;border-bottom: none;'>N</td>";
-			                        } else{
 			                        	 _html += "<td style='width:10%;color:gray;'>N</td>";
-			                        }
 		                        }
 								if (holidayType == 'a') {
 			                        if (useCompany == "1") {
@@ -197,18 +153,10 @@
 			                                    companyname = tempcompanylist[j].split(",")[1]; // [1]이름
 			                                }
 			                            }
-			                            if (i != 0 && i == (HolidaySize-1)) {
-			                            	_html += "<td style='width:15%;color:gray;border-bottom: none;'>" + companyname + "</td>";
-				                        } else{
 				                        	_html += "<td style='width:15%;color:gray;'>" + companyname + "</td>";
-				                        }
 			                        }
 								} else {
-									if (i != 0 && i == (HolidaySize-1)) {
-										_html += "<td style='width:15%;color:gray;border-bottom: none;'>" + "<spring:message code='ezSchedule.t267' />" + "</td>";
-			                        } else{
 			                        	_html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t267' />" + "</td>";
-			                        }
 		                        }
 	
 		                        _html += "</tr>";
@@ -321,13 +269,23 @@
 		    }
 		    function event_Mout(obj) {
 		        if (obj != _RowObject) {
-		            obj.childNodes.item(0).style.backgroundColor = "#FFFFFF";
-		            obj.childNodes.item(1).style.backgroundColor = "#FFFFFF";
-		            obj.childNodes.item(2).style.backgroundColor = "#FFFFFF";
-		            obj.childNodes.item(3).style.backgroundColor = "#FFFFFF";
-		            obj.childNodes.item(4).style.backgroundColor = "#FFFFFF";
-		            obj.childNodes.item(5).style.backgroundColor = "#FFFFFF";
-		            obj.childNodes.item(6).style.backgroundColor = "#FFFFFF";
+		        	if (obj.id != $('#managelist_body tbody tr').last().attr('id')) {
+			            obj.childNodes.item(0).style.backgroundColor = "#FFFFFF";
+			            obj.childNodes.item(1).style.backgroundColor = "#FFFFFF";
+			            obj.childNodes.item(2).style.backgroundColor = "#FFFFFF";
+			            obj.childNodes.item(3).style.backgroundColor = "#FFFFFF";
+			            obj.childNodes.item(4).style.backgroundColor = "#FFFFFF";
+			            obj.childNodes.item(5).style.backgroundColor = "#FFFFFF";
+			            obj.childNodes.item(6).style.backgroundColor = "#FFFFFF";
+		        	} else {
+		        		obj.childNodes.item(0).style.backgroundColor = "";
+			            obj.childNodes.item(1).style.backgroundColor = "";
+			            obj.childNodes.item(2).style.backgroundColor = "";
+			            obj.childNodes.item(3).style.backgroundColor = "";
+			            obj.childNodes.item(4).style.backgroundColor = "";
+			            obj.childNodes.item(5).style.backgroundColor = "";
+			            obj.childNodes.item(6).style.backgroundColor = "";
+		        	}
 		        }
 		    }
 		    var _RowObject = null;
@@ -407,7 +365,11 @@
 			    		},
 			    		success: function() {
 			    			alert("<spring:message code='ezSchedule.t4002' />");
-				            schedule_get_holiday();
+			    			if (holidayType == 'a') {
+				    			year_holiday();
+			    			} else {
+					            schedule_get_holiday();
+			    			}
 			    		},
 			    		error: function(err) {
 			    			alert(strLang86);
@@ -639,6 +601,7 @@
 		    	 if (BoardList_BODYHeight + 34 < BoardListDivHeight) {
 		    		if ($("#manage_HEAD tr th#forScroll").length > 0) {
 		    			$("#manage_HEAD tr th#forScroll").remove();
+		    			$('#managelist_body tbody tr').last().find('td').css('border-bottom','');
 		    		}
 		    	} else {
 		    		if ($("#manage_HEAD tr th#forScroll").length < 1) {
@@ -648,6 +611,9 @@
 		    				var lastTh = $("#manage_HEAD tr th").last();
 		    				lastTh.attr("id", "forScroll");
 		    				lastTh.css("width", "8px");
+						
+		    			//마지막 tr 요소 아래선 감추기
+		    			$('#managelist_body tbody tr').last().find('td').css('border-bottom','none');
 		    		}
 		    	}
 		    }

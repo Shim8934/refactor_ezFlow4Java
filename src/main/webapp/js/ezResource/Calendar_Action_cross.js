@@ -460,7 +460,7 @@ function tableListControl_Week()
                 
 
                 if (sz_Year > 1800 && sz_Year <= 2101) {                	
-                    var oThisDate2 = new Date(sz_Year, bnk_Month - 1, bnk_Date);                                      
+                    var oThisDate2 = new Date(sz_Year + 1, bnk_Month - 1, bnk_Date);                                      
                     var month = oThisDate2.getMonth() + 1;
                     
                     LunarDate = lunarCalc(oThisDate2.getFullYear(), month, oThisDate2.getDate(), 1);
