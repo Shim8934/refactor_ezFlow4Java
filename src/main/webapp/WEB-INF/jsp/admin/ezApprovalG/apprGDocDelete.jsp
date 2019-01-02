@@ -910,9 +910,9 @@
 		        });
 			    
 			    function windowResize() {
-		        	var height = document.documentElement.clientHeight - 235;
-		        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-		        		height = height - 30;
+		        	var height = document.documentElement.clientHeight - 265;
+		        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") == -1) {
+		        		height = height - 5;
 		        	}
 		        	document.getElementById("contentlist").style.height = height + "px";
 		        	document.getElementById("contentlist").style.overflow = "auto";
