@@ -31,6 +31,9 @@
 		    var totalCount = "<c:out value = '${keywordCount}' />";
 		    var pUse_Editor = "<c:out value = '${useEditor}' />";
 		    
+		    /* 2019-01-02 홍승비 - IE > 로딩 속도 개선용 DOM 로드 리스너 추가(IE8 이상 지원) */
+		    document.addEventListener("DOMContentLoaded", makePageSelPage);
+		    
 			function keyword_onkeydown(e) {
 			    if (!window.ActiveXObject) {
 			        var keyCode = e.keyCode;
@@ -237,7 +240,7 @@
         </script>
 	</head>
 	
-	<body class="mainbody" onload = "makePageSelPage()">
+	<body class="mainbody">
 		<c:choose>
 			<c:when test="${bName == 'tbl_c_notice' }">
 				<h1><spring:message code='main.t272'/>&nbsp;<spring:message code='ezCommunity.t863'/><span id="mailBoxInfo"></span></h1>
