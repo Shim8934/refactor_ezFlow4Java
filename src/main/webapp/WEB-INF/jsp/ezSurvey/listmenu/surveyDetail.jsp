@@ -65,7 +65,8 @@
 		var survey = ${survey};
 		var surveyId = survey.surveyId;
 		var logicFlagQs = [];
-		var allLogics = [];
+		//var allLogics = [];
+		var allLogics = {};
 
 		getQuestions();
 		
@@ -102,8 +103,8 @@
 					}
 					SurveyCreate.setQsForm(4);
 					
-					getAllLogicFlagQs();
-					console.log(logicFlagQs);
+					setAllLogicFlagQs();
+					// console.log(logicFlagQs);
 					console.log(allLogics);
 				},
 				error : function(error) {
@@ -112,7 +113,7 @@
 			});
 		}
 		// logicFlag가 1인 question id 수집
-		function getAllLogicFlagQs() {
+		function setAllLogicFlagQs() {
 			var qstnList = SurveyCreate.getQs();
 			
 			for (var i = 0; i < qstnList.length; i++) {
@@ -155,7 +156,8 @@
 			array.sort(function(f, n) {return f-n;});
 			
 			var QsList = SurveyCreate.getQs();
-			var bigArr = [];
+			//var bigArr = [];
+			var bigArr = {};
 			var reArr = [];
 			
 			for (var i = 0; i < array.length; i++) {
@@ -169,14 +171,18 @@
 						smallArr.push(j + 1);
 					} else {
 						smallArr.push(j + 1);
-						reArr.push(j + 1);
+						//reArr.push(j + 1);
 						break;
 					}
 				}
-				smallArr.splice(0, 0, qstnLevel);
-				bigArr.push(smallArr);
+				//smallArr.splice(0, 0, qstnLevel);
+				//bigArr.push(smallArr);
+				var length = smallArr.length - 1;
+				var lastNum = smallArr[length];
+				bigArr[lastNum] = smallArr;
 			}
-			allLogics.push(bigArr);
+			//allLogics.push(bigArr);
+			allLogics[qstnLevel] = bigArr;
 		}
 		
 		/* 

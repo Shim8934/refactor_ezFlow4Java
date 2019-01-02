@@ -222,7 +222,7 @@ var SurveyCreate    = function() {
 		surveyObj["infor"]["attach"] = attachList;
 		console.log(JSON.stringify(surveyObj["infor"]["users"]));
 	}
-////	
+	
 	function afterSaveSuccessfully(data) {
 		var code = data.code;
 		switch(code) {
