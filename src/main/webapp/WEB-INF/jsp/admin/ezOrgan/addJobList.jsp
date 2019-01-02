@@ -463,12 +463,17 @@
 		            }
 		            
 		            if (confirm(strLang30)) {
-		                for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
-		                    createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "data1"));
-		                    createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
-		                    createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
-		                    createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
+		                var inputElmt = document.getElementsByName("checks");
+		                var length    = inputElmt.length;
+		                for (var i = 0; i < length; i++) {
+		                	if (inputElmt[i].checked) {
+		                		createNodeAndInsertText(xmlDom, objNode, "CN", inputElmt[i].getAttribute("id"));
+		                		createNodeAndInsertText(xmlDom, objNode, "DEPTID", "");
+		                		createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
+		                		createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
+		                	}
 		                }
+		                
 		            } else {
 		                window.location.reload(false);
 		                return;
