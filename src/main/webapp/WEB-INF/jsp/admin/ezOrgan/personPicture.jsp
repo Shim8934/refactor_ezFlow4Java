@@ -26,15 +26,56 @@
 		    var ReturnFunction;
 		    var RetValue;
 	    	var imageName="";
+	    	var userPhoto = "";
 	    	
 			$(document).ready(function(){
 				try {
 		            RetValue = parent.personpicture_cross_dialogArguments[0];
 		            ReturnFunction = parent.personpicture_cross_dialogArguments[1];
+		            userPhotoYN = parent.personpicture_cross_dialogArguments[2];
+		            if(userPhoto != ""){
+		            	if(CrossYN()){
+							preview.src = "";
+							preview.style.visibility = "hidden";
+							preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userPhoto;
+							preview.style.visibility = "visible";
+						} else {
+							preview.src = "";
+							preview.style.visibility = "hidden";
+							preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userPhoto;
+							preview.style.visibility = "visible";
+						}
+		            }
+		            else {
+		            	preview.src = "";
+						preview.style.visibility = "hidden";
+						preview.src = "/images/default_pic.jpg";
+						preview.style.visibility = "visible";
+		            }
 		        }catch(e){
 		            try {
 		                RetValue = opener.personpicture_cross_dialogArguments[0];
 		                ReturnFunction = opener.personpicture_cross_dialogArguments[1];
+		                userPhotoYN = opener.personpicture_cross_dialogArguments[2];
+		                if(userPhoto != ""){
+			            	if(CrossYN()){
+							    preview.src = "";
+								preview.style.visibility = "hidden";
+								preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userPhoto;
+								preview.style.visibility = "visible";
+							} else {
+								preview.src = "";
+								preview.style.visibility = "hidden";
+								preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userPhoto;
+								preview.style.visibility = "visible";
+							}
+			            }
+		                else {
+			            	preview.src = "";
+							preview.style.visibility = "hidden";
+							preview.src = "/images/default_pic.jpg";
+							preview.style.visibility = "visible";
+			            }
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }
@@ -122,6 +163,23 @@
 		        	document.getElementById("tempFilePath").value = xhr.responseText;
 		        	document.getElementById("imagefile").value = imageName;
 		        }
+		        
+		        if(CrossYN()){
+				    if (document.form.file1.value != "") {
+				        preview.src = "";
+						preview.style.visibility = "hidden";
+						preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + document.getElementById("tempFilePath").value;
+						preview.style.visibility = "visible";
+					}
+				} else {
+					if(imagefile.value != "")
+					{
+						preview.src = "";
+						preview.style.visibility = "hidden";
+						preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + document.getElementById("imagefile").value;
+						preview.style.visibility = "visible";
+					}
+				}
 		        //returnvalue(xhr.responseText);
 		    }
 			
@@ -205,7 +263,7 @@
 		    		<spring:message code='ezOrgan.t241' /><br/>
 		      		119*128px<spring:message code='ezOrgan.t10000' />
 		      		<br/>
-			  		<a class="imgbtn imgbck" style="margin-top:5px"><span onClick="divImageFile_onclick()"><spring:message code='ezOrgan.t244' /></span></a>
+			  		<%-- <a class="imgbtn imgbck" style="margin-top:5px"><span onClick="divImageFile_onclick()"><spring:message code='ezOrgan.t244' /></span></a> --%>
 			  	</td>
 		  	</tr>
 		</table>

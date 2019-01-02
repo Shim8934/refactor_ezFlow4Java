@@ -178,6 +178,7 @@
 			                document.getElementById("DeptName2").value = SelectSingleNodeValueNew(xmlDom, "DATA/DESCRIPTION2").trim();
 			                document.getElementById("SocialNum").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE14").trim();
 			                document.getElementById("txtBirth").value = SelectSingleNodeValueNew(xmlDom, "DATA/BIRTH").trim();
+			                document.getElementById("userPhotoYN").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE2").trim();
 			                
 			                try {
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim() != "") {
@@ -529,6 +530,7 @@
 		        //if (CrossYN()) {
 	            personpicture_cross_dialogArguments[0] = document.getElementById("UserID").value;
 	            personpicture_cross_dialogArguments[1] = btnPhoto_onclick_Complete;
+	            personpicture_cross_dialogArguments[2] = document.getElementById("userPhotoYN").value;
 	            DivPopUpShow(415, 285, "/admin/ezOrgan/personPicture.do");
 		        <%-- }else {
 		            if (navigator.appName.indexOf("Microsoft") > -1)
@@ -863,7 +865,8 @@
 	                <input id="HomeAddr" style="WIDTH: 100%;" maxlength="150"/>
 	            </td>
 	        </tr>
-	    </table>   
+	    </table>
+	    <input type="hidden" id="userPhotoYN">
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
