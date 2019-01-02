@@ -296,7 +296,6 @@ var strLangKMS07 = "The upload has been canceled by the user or the browser drop
 var strLangKMS08 = "Folders can not be uploaded."
 var strLangKYJ03 = "Spaces can not be entered."
 var strLangLSD02 = "The non-members of the department.";
-var strLangSharedMailbox01 = "Shared mailbox";
 var strLangJYH01 = "Not selected mail.";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
@@ -306,6 +305,11 @@ var strLangHSB02 = "에서 열람하실 수 있습니다.";
 /* 2018-11-22 이효진 주소록 등록, 수정 시 메시지 통일  번역 -> message property */
 var strLangLHJ01 = "You can only be created department administrator.";
 var strLangLHJ02 = "You can only be created company administrator.";
+
+var strLangSharedMailbox01 = "Shared mailbox";
+var strLangSharedMailbox02 = "Do you want to change password?";
+var strLangSharedMailbox03 = "Changed password.";
+
 
 function GetLocalTime(Offset , pDateTime)
 {

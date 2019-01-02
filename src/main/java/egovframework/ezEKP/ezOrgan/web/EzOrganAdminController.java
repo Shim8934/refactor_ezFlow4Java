@@ -1128,6 +1128,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					logger.debug("updateGroupDel rc=" + rc);							
 				}
+				
+				// 공유사서함 기능 사용 시 공유사서함의 공유자에서 해당 유저를 제외한다.
+				String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantID);
+	    		
+	    		if (useSharedMailbox.equals("YES")) {
+	    			rc = ezEmailService.deleteUserFromAllSharedMailbox(cn[i], tenantID);
+	    			
+	    			logger.debug("deleteUserFromAllSharedMailbox rc=" + rc);
+	    		}
 			}
 			// dhlee - end
 		}
@@ -1286,7 +1295,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							rc = ezEmailUserAdminService.updateGroupDel(dist, mailAddr);	
 							
 							logger.debug("updateGroupDel rc=" + rc);							
-						}						
+						}
+						
+						// 공유사서함 기능 사용 시 공유사서함의 공유자에서 해당 유저를 제외한다.
+						String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantID);
+			    		
+			    		if (useSharedMailbox.equals("YES")) {
+			    			rc = ezEmailService.deleteUserFromAllSharedMailbox(cn[i], tenantID);
+			    			
+			    			logger.debug("deleteUserFromAllSharedMailbox rc=" + rc);
+			    		}
 					} else {
 						logger.debug("retiring the user '" + mailAddr + "' failed.");
 						
